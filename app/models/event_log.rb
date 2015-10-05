@@ -30,6 +30,6 @@ class EventLog < ActiveRecord::Base
       end
     end
 
-    return result
+    result
   end
 end

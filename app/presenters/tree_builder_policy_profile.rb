@@ -27,7 +27,7 @@ class TreeBuilderPolicyProfile < TreeBuilder
   def x_get_tree_pp_kids(parent, options)
     count_only_or_objects(options[:count_only],
                           parent.miq_policies,
-                          lambda { |a| a.towhat + a.mode + a.description.downcase })
+                          ->(a) { a.towhat + a.mode + a.description.downcase })
   end
 
   # level 3 - conditions & events for policy

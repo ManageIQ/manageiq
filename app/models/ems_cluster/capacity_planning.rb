@@ -97,21 +97,21 @@ module EmsCluster::CapacityPlanning
   #
 
   def capacity_average_resources_per_vm(resource_value)
-    total = self.total_vms
+    total = total_vms
     return 0.0 if total == 0
     resource_value / total.to_f
   end
 
   def capacity_average_resources_per_host(resource_value)
-    total = self.total_hosts
+    total = total_hosts
     return 0.0 if total == 0
     resource_value / total.to_f
   end
 
   def capacity_peak_usage_percentage(resource)
     case resource
-    when :vcpu;   self.max_cpu_usage_rate_average_high_over_time_period_without_overhead     || 100.0
-    when :memory; self.max_mem_usage_absolute_average_high_over_time_period_without_overhead || 100.0
+    when :vcpu then   max_cpu_usage_rate_average_high_over_time_period_without_overhead || 100.0
+    when :memory then max_mem_usage_absolute_average_high_over_time_period_without_overhead || 100.0
     end
   end
 
@@ -121,16 +121,16 @@ module EmsCluster::CapacityPlanning
 
   def capacity_effective_host_resources(profile, resource)
     case capacity_profile_method(profile, resource)
-    when :vcpu_average;                      self.aggregate_logical_cpus
-    when :memory_average, :memory_high_norm; self.effective_memory || self.aggregate_memory.megabytes
-    when :vcpu_high_norm;                    self.effective_cpu    || self.aggregate_cpu_speed
+    when :vcpu_average then                      aggregate_logical_cpus
+    when :memory_average, :memory_high_norm then effective_memory || aggregate_memory.megabytes
+    when :vcpu_high_norm then                    effective_cpu || aggregate_cpu_speed
     end
   end
 
   def capacity_failover_host_resources(profile, resource)
     return 0 if capacity_failover_rule == 'none' || (capacity_failover_rule == 'discovered' && !self.ha_enabled?)
 
-    if self.failover_hosts.length > 0
+    if failover_hosts.length > 0
       capacity_failover_host_resources_with_failover_hosts(profile, resource)
     else
       # TODO: Support the other ways to specify failover
@@ -141,28 +141,28 @@ module EmsCluster::CapacityPlanning
 
   def capacity_failover_host_resources_with_failover_hosts(profile, resource)
     case capacity_profile_method(profile, resource)
-    when :vcpu_average;                      self.aggregate_logical_cpus(self.failover_hosts)
-    when :memory_average, :memory_high_norm; self.aggregate_memory(self.failover_hosts).megabytes
-    when :vcpu_high_norm;                    self.aggregate_cpu_speed(self.failover_hosts)
+    when :vcpu_average then                      aggregate_logical_cpus(failover_hosts)
+    when :memory_average, :memory_high_norm then aggregate_memory(failover_hosts).megabytes
+    when :vcpu_high_norm then                    aggregate_cpu_speed(failover_hosts)
     end
   end
 
   def capacity_failover_host_resources_without_failover_hosts(profile, resource)
     # Take the average resources per 1 Host
     resource_value = case capacity_profile_method(profile, resource)
-    when :vcpu_average;                      self.aggregate_logical_cpus
-    when :memory_average, :memory_high_norm; self.aggregate_memory.megabytes
-    when :vcpu_high_norm;                    self.aggregate_cpu_speed
-    end
+                     when :vcpu_average then                      aggregate_logical_cpus
+                     when :memory_average, :memory_high_norm then aggregate_memory.megabytes
+                     when :vcpu_high_norm then                    aggregate_cpu_speed
+                     end
     capacity_average_resources_per_host(resource_value)
   end
 
   def capacity_used_host_resources(profile, resource)
     case capacity_profile_method(profile, resource)
-    when :vcpu_average;     self.aggregate_vm_cpus
-    when :memory_average;   self.aggregate_vm_memory.megabytes
-    when :vcpu_high_norm;   capacity_available_host_resources(profile, resource) * (capacity_peak_usage_percentage(:vcpu)   / 100.0)
-    when :memory_high_norm; capacity_available_host_resources(profile, resource) * (capacity_peak_usage_percentage(:memory) / 100.0)
+    when :vcpu_average then     aggregate_vm_cpus
+    when :memory_average then   aggregate_vm_memory.megabytes
+    when :vcpu_high_norm then   capacity_available_host_resources(profile, resource) * (capacity_peak_usage_percentage(:vcpu) / 100.0)
+    when :memory_high_norm then capacity_available_host_resources(profile, resource) * (capacity_peak_usage_percentage(:memory) / 100.0)
     end
   end
 
@@ -204,7 +204,7 @@ module EmsCluster::CapacityPlanning
   end
 
   def capacity_projected_vm_count(profile, resource)
-    self.total_vms + capacity_remaining_vm_count(profile, resource)
+    total_vms + capacity_remaining_vm_count(profile, resource)
   end
 
   def capacity_projected_vm_count_based_on_all(profile)

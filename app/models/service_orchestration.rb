@@ -34,21 +34,27 @@ class ServiceOrchestration < Service
     save_option(:stack_name, stname)
   end
 
+  #
+  # deprecated
+  #
   def stack_ems_ref
-    @stack_ems_ref ||= get_option(:stack_ems_ref)
+    orchestration_stack.try(:ems_ref)
   end
 
   def orchestration_stack_status
-    return "check_status_failed", "stack has not been deployed" unless stack_ems_ref
+    return "check_status_failed", "stack has not been deployed" unless orchestration_stack
 
-    orchestration_manager.stack_status(stack_name, stack_ems_ref, stack_options.slice(:tenant_name))
-  rescue MiqException::MiqOrchestrationStatusError => err
+    orchestration_stack.raw_status.normalized_status
+  rescue MiqException::MiqOrchestrationStackNotExistError, MiqException::MiqOrchestrationStatusError => err
     # naming convention requires status to end with "failed"
-    return "check_status_failed", err.message
+    ["check_status_failed", err.message]
   end
 
   def deploy_orchestration_stack
-    @stack_ems_ref = orchestration_manager.stack_create(stack_name, orchestration_template, stack_options)
+    @orchestration_stack =
+      OrchestrationStack.create_stack(orchestration_manager, stack_name, orchestration_template, stack_options)
+    add_resource(@orchestration_stack)
+    @orchestration_stack
   ensure
     # create options may never be saved before unless they were overridden
     save_create_options
@@ -63,8 +69,7 @@ class ServiceOrchestration < Service
   end
 
   def orchestration_stack
-    service_resource = service_resources.find { |sr| sr.resource.kind_of?(OrchestrationStack) }
-    service_resource.resource if service_resource
+    @orchestration_stack ||= service_resources.find { |sr| sr.resource.kind_of?(OrchestrationStack) }.try(:resource)
   end
 
   def build_stack_options_from_dialog(dialog_options)
@@ -93,7 +98,6 @@ class ServiceOrchestration < Service
 
   def save_create_options
     options.merge!(:stack_name     => stack_name,
-                   :stack_ems_ref  => @stack_ems_ref,
                    :create_options => dup_and_process_password(stack_options))
     save!
   end

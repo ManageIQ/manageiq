@@ -1,9 +1,7 @@
 require "spec_helper"
 
 describe ManageIQ::Providers::Redhat::InfraManager::RefreshParser do
-
   context "#vm_inv_to_disk_hashes" do
-
     it "should assign location by boot order and name" do
       disk_inv = {:disks => [
         {
@@ -12,7 +10,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::RefreshParser do
           :bootable        => false,
           :storage_domains => []
         },
-        { 
+        {
           :interface       => 'virtio',
           :name            => 'other disk 1',
           :bootable        => false,
@@ -33,7 +31,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::RefreshParser do
       ]}
 
       result = ManageIQ::Providers::Redhat::InfraManager::RefreshParser.vm_inv_to_disk_hashes(disk_inv, {})
-      result.collect { |d| { :interface => d[:controller_type], :location => d[:location], :device_name => d[:device_name] } }.should == [
+      result.collect { |d| {:interface => d[:controller_type], :location => d[:location], :device_name => d[:device_name]} }.should == [
         {
           :interface   => 'virtio',
           :location    => '0',
@@ -56,7 +54,6 @@ describe ManageIQ::Providers::Redhat::InfraManager::RefreshParser do
         }
       ]
     end
-
   end
 
   context "#vm_inv_to_custom_attribute_hashes" do

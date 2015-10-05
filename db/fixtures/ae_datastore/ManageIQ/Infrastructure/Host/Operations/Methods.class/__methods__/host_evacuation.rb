@@ -69,7 +69,6 @@ target_host = host_suspects.detect { |h| h.id == host_all.first[:id] }
 vms = host.vms.find_all
 
 vms.each do |v|
-
   # Email Results
   emailresults(v.name, target_host.name, host.name)
 

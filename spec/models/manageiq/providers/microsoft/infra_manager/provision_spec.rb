@@ -43,8 +43,11 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Provision do
 
     context "SCVMM provisioning" do
       it "#workflow" do
-        ManageIQ::Providers::Microsoft::InfraManager::ProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
-        vm_prov.workflow.class.should eq ManageIQ::Providers::Microsoft::InfraManager::ProvisionWorkflow
+        workflow_class = ManageIQ::Providers::Microsoft::InfraManager::ProvisionWorkflow
+        workflow_class.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
+
+        expect(vm_prov.workflow.class).to eq workflow_class
+        expect(vm_prov.workflow_class).to eq workflow_class
       end
     end
 

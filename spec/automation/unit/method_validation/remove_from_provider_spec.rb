@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe "remove_from_provider Method Validation" do
-
   before(:each) do
     @zone       = FactoryGirl.create(:zone)
     @ems        = FactoryGirl.create(:ems_vmware, :zone => @zone)
@@ -26,5 +25,4 @@ describe "remove_from_provider Method Validation" do
     @vm_id = nil
     -> { ws }.should raise_error
   end
-
 end

@@ -22,12 +22,12 @@ describe MiqExpression do
 
     context "with :typ=>tag" do
       it "VmInfra" do
-        result = described_class.model_details("ManageIQ::Providers::InfraManager::Vm", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
+        result = described_class.model_details("ManageIQ::Providers::InfraManager::Vm", :typ => "tag", :include_model => true, :include_my_tags => true, :userid => "admin")
         result.map(&:first).should include("Virtual Machine.My Company Tags : Auto Approve - Max CPU")
       end
 
       it "VmCloud" do
-        result = described_class.model_details("ManageIQ::Providers::CloudManager::Vm", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
+        result = described_class.model_details("ManageIQ::Providers::CloudManager::Vm", :typ => "tag", :include_model => true, :include_my_tags => true, :userid => "admin")
         result.map(&:first).should include("Instance.My Company Tags : Auto Approve - Max CPU")
         result.map(&:first).should_not include("Instance.VM and Instance.My Company Tags : Auto Approve - Max CPU")
       end
@@ -38,32 +38,32 @@ describe MiqExpression do
                                                :include_model   => true,
                                                :include_my_tags => true,
                                                :userid          => "admin"
-        )
+                                              )
         result.map(&:first).should include("VM or Template.My Company Tags : Auto Approve - Max CPU")
       end
 
       it "TemplateInfra" do
-        result = described_class.model_details("ManageIQ::Providers::InfraManager::Template", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
+        result = described_class.model_details("ManageIQ::Providers::InfraManager::Template", :typ => "tag", :include_model => true, :include_my_tags => true, :userid => "admin")
         result.map(&:first).should include("Template.My Company Tags : Auto Approve - Max CPU")
       end
 
       it "TemplateCloud" do
-        result = described_class.model_details("ManageIQ::Providers::CloudManager::Template", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
+        result = described_class.model_details("ManageIQ::Providers::CloudManager::Template", :typ => "tag", :include_model => true, :include_my_tags => true, :userid => "admin")
         result.map(&:first).should include("Image.My Company Tags : Auto Approve - Max CPU")
       end
 
       it "MiqTemplate" do
-        result = described_class.model_details("MiqTemplate", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
+        result = described_class.model_details("MiqTemplate", :typ => "tag", :include_model => true, :include_my_tags => true, :userid => "admin")
         result.map(&:first).should include("VM Template and Image.My Company Tags : Auto Approve - Max CPU")
       end
 
       it "EmsInfra" do
-        result = described_class.model_details("ManageIQ::Providers::InfraManager", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
+        result = described_class.model_details("ManageIQ::Providers::InfraManager", :typ => "tag", :include_model => true, :include_my_tags => true, :userid => "admin")
         result.map(&:first).should include("Infrastructure Provider.My Company Tags : Auto Approve - Max CPU")
       end
 
       it "EmsCloud" do
-        result = described_class.model_details("ManageIQ::Providers::CloudManager", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
+        result = described_class.model_details("ManageIQ::Providers::CloudManager", :typ => "tag", :include_model => true, :include_my_tags => true, :userid => "admin")
         result.map(&:first).should include("Cloud Provider.My Company Tags : Auto Approve - Max CPU")
       end
     end

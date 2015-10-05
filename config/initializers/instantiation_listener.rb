@@ -1,4 +1,4 @@
-ActiveSupport::Notifications.subscribe('instantiation.active_record') do |name, start, finish, id, payload|
+ActiveSupport::Notifications.subscribe('instantiation.active_record') do |name, start, finish, _id, payload|
   elapsed = finish - start
   name = payload[:class_name]
   count = payload[:record_count]

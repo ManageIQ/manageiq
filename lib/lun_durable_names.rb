@@ -2,7 +2,7 @@
 class LunDurableName
   attr_accessor :namespace, :namespace_id, :data
 
-  def initialize(vimDn=nil)
+  def initialize(vimDn = nil)
     return if vimDn.nil?
 
     unless vimDn.respond_to?(:xsiType) && vimDn.xsiType == 'ScsiLunDurableName'
@@ -21,7 +21,7 @@ class LunDurableName
 end
 
 class LunDurableNames < Array
-  def initialize(vimDnArray=nil)
+  def initialize(vimDnArray = nil)
     super()
     return if vimDnArray.nil?
     vimDnArray.each { |vdn| self << LunDurableName.new(vdn) }

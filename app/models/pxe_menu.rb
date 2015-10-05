@@ -8,11 +8,11 @@ class PxeMenu < ActiveRecord::Base
   end
 
   def self.model_suffix
-    self.name[7..-1]
+    name[7..-1]
   end
 
   def self.corresponding_image
-    @corresponding_image ||= "PxeImage#{self.model_suffix}".constantize
+    @corresponding_image ||= "PxeImage#{model_suffix}".constantize
   end
 
   def synchronize
@@ -23,10 +23,10 @@ class PxeMenu < ActiveRecord::Base
       self.save!
 
       # If sublass changes type to a different subclass
-      self.pxe_images.destroy_all if self.class != PxeMenu
+      pxe_images.destroy_all if self.class != PxeMenu
 
-      self.update_attribute(:type, klass.name)
-      target = klass.find(self.id)
+      update_attribute(:type, klass.name)
+      target = klass.find(id)
     else
       target = self
     end
@@ -36,29 +36,29 @@ class PxeMenu < ActiveRecord::Base
   end
 
   def synchronize_contents
-    self.contents = self.pxe_server.read_file(self.file_name)
+    self.contents = pxe_server.read_file(file_name)
   end
 
   def synchronize_images
-    _log.info("Synchronizing Menu Items in Menu [#{self.file_name}] on PXE Server [#{self.pxe_server.name}]")
+    _log.info("Synchronizing Menu Items in Menu [#{file_name}] on PXE Server [#{pxe_server.name}]")
 
     stats = {:adds => 0, :updates => 0, :deletes => 0}
-    current = self.pxe_images.index_by(&:name)
+    current = pxe_images.index_by(&:name)
 
-    items = self.class.parse_contents(self.contents)
+    items = self.class.parse_contents(contents)
 
     # Deal with multiple images with the same label in a file
     incoming = items.group_by { |h| h[:label] }
     incoming.each_key do |name|
       array = incoming[name]
-      _log.warn("duplicate name <#{name}> in menu <#{self.file_name}> on PXE Server <#{self.pxe_server.name}>") if array.length > 1
+      _log.warn("duplicate name <#{name}> in menu <#{file_name}> on PXE Server <#{pxe_server.name}>") if array.length > 1
       incoming[name] = array.first
     end
 
     incoming.each do |name, ihash|
-      image                 = current.delete(name) || self.pxe_images.build
-      image.pxe_server      = self.pxe_server
-      image.path            = self.file_name
+      image                 = current.delete(name) || pxe_images.build
+      image.pxe_server      = pxe_server
+      image.path            = file_name
       image.parsed_contents = ihash
       image.save!
 
@@ -67,8 +67,8 @@ class PxeMenu < ActiveRecord::Base
     end
 
     stats[:deletes] = current.length
-    self.pxe_images.delete(current.values)
+    pxe_images.delete(current.values)
 
-    _log.info("Synchronizing Menu Items in Menu [#{self.file_name}] on PXE Server [#{self.pxe_server.name}]... Complete - #{stats.inspect}")
+    _log.info("Synchronizing Menu Items in Menu [#{file_name}] on PXE Server [#{pxe_server.name}]... Complete - #{stats.inspect}")
   end
 end

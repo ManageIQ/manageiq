@@ -34,7 +34,7 @@ def buildDetails(vm)
   body += "<br>VM URL: <a href='https://#{appliance}/VM/show/#{vm.id}'>https://#{appliance}/VM/show/#{vm.id}</a>"
   body += "<br>Hostname: #{vm.hostnames.inspect}"
   body += "<br>IP Address(es): #{vm.ipaddresses.inspect}"
-  body += "<br>vCPU: #{vm.num_cpu}"
+  body += "<br>vCPU: #{vm.logical_cpus}"
   body += "<br>vRAM: #{vm.mem_cpu.to_i} MB"
   body += "<br>Tools Status: #{vm.tools_status}"
   body += "<br>Operating System: #{vm.operating_system['product_name']}"
@@ -71,7 +71,6 @@ def buildDetails(vm)
   options
 end
 
-
 def boolean(string)
   return true if string == true || string =~ (/(true|t|yes|y|1)$/i)
   return false if string == false || string.nil? || string =~ (/(false|f|no|n|0)$/i)
@@ -81,7 +80,7 @@ end
 def emailAlert(options)
   # Get to_email_address from model unless specified below
   to = nil
-  to  ||= $evm.object['to_email_address']
+  to ||= $evm.object['to_email_address']
 
   # Get from_email_address from model unless specified below
   from = nil
@@ -111,4 +110,3 @@ unless vm.nil?
     emailAlert(options)
   end
 end
-

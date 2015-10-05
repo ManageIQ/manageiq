@@ -19,7 +19,7 @@ require 'faraday'
 require 'faraday_middleware'
 
 api_cmd   = File.basename($PROGRAM_NAME)
-api_ver   = "2.0.0"
+api_ver   = "2.1.0"
 cmd_title = "ManageIQ REST API Access Script"
 
 sep       = "_" * 60
@@ -72,7 +72,7 @@ actions              = methods.keys
 methods_needing_data = %w(put post patch)
 scriptdir_actions    = %w(ls run)
 sub_commands         = actions + %w(edit vi) + scriptdir_actions
-api_parameters       = %w(expand attributes limit offset sort_by sort_order filter by_tag provider_class)
+api_parameters       = %w(expand attributes limit offset sort_by sort_order filter by_tag provider_class requester_type)
 multi_params         = %w(filter)
 
 opts = Trollop.options do

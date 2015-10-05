@@ -11,33 +11,33 @@ module VmdbMetric::Purging
     end
 
     def purge_all_timer
-      self.purge_hourly_timer
-      self.purge_daily_timer
+      purge_hourly_timer
+      purge_daily_timer
     end
 
     def purge_daily_timer(ts = nil)
       interval = "daily"
       mode = :date  # Only support :date mode, not :remaining mode
-      ts ||= self.purge_date(interval) || 6.months.ago.utc
-      self.purge_timer(mode, ts, interval)
+      ts ||= purge_date(interval) || 6.months.ago.utc
+      purge_timer(mode, ts, interval)
     end
 
     def purge_hourly_timer(ts = nil)
       interval = "hourly"
       mode = :date  # Only support :date mode, not :remaining mode
-      ts ||= self.purge_date(interval) || 6.months.ago.utc
-      self.purge_timer(mode, ts, interval)
+      ts ||= purge_date(interval) || 6.months.ago.utc
+      purge_timer(mode, ts, interval)
     end
 
     def purge_timer(mode, value, interval)
       MiqQueue.put_unless_exists(
-        :class_name    => self.name,
+        :class_name    => name,
         :method_name   => "purge",
         :role          => "database_operations",
         :queue_name    => "generic",
         :state         => ["ready", "dequeue"],
-        :args_selector => lambda { |args| args.kind_of?(Array) && args.last == interval }
-      ) do |msg, find_options|
+        :args_selector => ->(args) { args.kind_of?(Array) && args.last == interval }
+      ) do |_msg, find_options|
         find_options.merge(:args => [mode, value, interval])
       end
     end
@@ -47,11 +47,11 @@ module VmdbMetric::Purging
     end
 
     def purge_count(mode, value, interval)
-      self.send("purge_count_by_#{mode}", value, interval)
+      send("purge_count_by_#{mode}", value, interval)
     end
 
     def purge(mode, value, interval, window = nil, &block)
-      self.send("purge_by_#{mode}", value, interval, window, &block)
+      send("purge_by_#{mode}", value, interval, window, &block)
     end
 
     private
@@ -61,15 +61,15 @@ module VmdbMetric::Purging
     #
 
     def purge_count_by_date(older_than, interval)
-      self.where(:capture_interval_name => interval).where(self.arel_table[:timestamp].lt(older_than)).count
+      where(:capture_interval_name => interval).where(arel_table[:timestamp].lt(older_than)).count
     end
 
     def purge_by_date(older_than, interval, window = nil, &block)
       _log.info("Purging #{interval} metrics older than [#{older_than}]...")
 
       window ||= purge_window_size
-      t = self.arel_table
-      conditions = [{:capture_interval_name => interval}, self.arel_table[:timestamp].lt(older_than)]
+      t = arel_table
+      conditions = [{:capture_interval_name => interval}, arel_table[:timestamp].lt(older_than)]
       total = purge_in_batches(conditions, window, &block)
 
       _log.info("Purging #{interval} metrics older than [#{older_than}]...Complete - Deleted #{total} records")
@@ -80,14 +80,14 @@ module VmdbMetric::Purging
     #
 
     def purge_in_batches(conditions, window, total = 0)
-      query = self.select(:id).limit(window)
+      query = select(:id).limit(window)
       [conditions].flatten.each { |c| query = query.where(c) }
 
       until (batch = query.dup.to_a).empty?
         ids = batch.collect(&:id)
 
         _log.info("Purging #{ids.length} metrics.")
-        count  = self.delete_all(:id => ids)
+        count  = delete_all(:id => ids)
         total += count
 
         purge_associated_records(ids) if self.respond_to?(:purge_associated_records)

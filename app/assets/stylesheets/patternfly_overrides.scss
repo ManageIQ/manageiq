@@ -186,6 +186,18 @@ table.table tbody td img {
   vertical-align: top;
 }
 
+/* Report widget table customizations */
+
+.panel-body {
+  border: 0px;
+  margin: 0 -2px -1px -1px; /* makes outside table cell border invisible */
+}
+.panel .table {
+  border: 0;
+  margin-bottom: 0;
+}
+
+
 /* override font-weight for dropdowns withing table headers */
 
 .table thead th select {

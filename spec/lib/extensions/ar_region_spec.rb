@@ -31,23 +31,22 @@ describe "AR Regions extension" do
   end
 
   it ".split_id" do
-    ManageIQ::Providers::Vmware::InfraManager::Vm.split_id(5).should     == [0, 5]
-    ManageIQ::Providers::Vmware::InfraManager::Vm.split_id(15).should    == [1, 5]
-    ManageIQ::Providers::Vmware::InfraManager::Vm.split_id(25).should    == [2, 5]
-    ManageIQ::Providers::Vmware::InfraManager::Vm.split_id("5").should   == [0, 5]
+    ManageIQ::Providers::Vmware::InfraManager::Vm.split_id(5).should == [0, 5]
+    ManageIQ::Providers::Vmware::InfraManager::Vm.split_id(15).should == [1, 5]
+    ManageIQ::Providers::Vmware::InfraManager::Vm.split_id(25).should == [2, 5]
+    ManageIQ::Providers::Vmware::InfraManager::Vm.split_id("5").should == [0, 5]
     ManageIQ::Providers::Vmware::InfraManager::Vm.split_id("1r5").should == [1, 5]
     ManageIQ::Providers::Vmware::InfraManager::Vm.split_id("2r5").should == [2, 5]
   end
 
-
   it ".compress_id" do
-    ManageIQ::Providers::Vmware::InfraManager::Vm.compress_id(5).should  == "5"
+    ManageIQ::Providers::Vmware::InfraManager::Vm.compress_id(5).should == "5"
     ManageIQ::Providers::Vmware::InfraManager::Vm.compress_id(15).should == "1r5"
     ManageIQ::Providers::Vmware::InfraManager::Vm.compress_id(25).should == "2r5"
   end
 
   it ".uncompress_id" do
-    ManageIQ::Providers::Vmware::InfraManager::Vm.uncompress_id("5").should   == 5
+    ManageIQ::Providers::Vmware::InfraManager::Vm.uncompress_id("5").should == 5
     ManageIQ::Providers::Vmware::InfraManager::Vm.uncompress_id("1r5").should == 15
     ManageIQ::Providers::Vmware::InfraManager::Vm.uncompress_id("2r5").should == 25
   end
@@ -96,8 +95,8 @@ describe "AR Regions extension" do
     end
 
     it "#region_id" do
-      ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 5).region_id.should  == @base_region
-      ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 9).region_id.should  == @base_region
+      ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 5).region_id.should == @base_region
+      ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 9).region_id.should == @base_region
       ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 15).region_id.should == @base_region + 1
       ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 19).region_id.should == @base_region + 1
       ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 25).region_id.should == @base_region + 2
@@ -107,8 +106,8 @@ describe "AR Regions extension" do
     end
 
     it "#compressed_id" do
-      ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 5).compressed_id.should  == "#{@base_region}r5"
-      ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 9).compressed_id.should  == "#{@base_region}r9"
+      ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 5).compressed_id.should == "#{@base_region}r5"
+      ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 9).compressed_id.should == "#{@base_region}r9"
       ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 15).compressed_id.should == "#{@base_region + 1}r5"
       ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 19).compressed_id.should == "#{@base_region + 1}r9"
       ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 25).compressed_id.should == "#{@base_region + 2}r5"
@@ -118,8 +117,8 @@ describe "AR Regions extension" do
     end
 
     it "#split_id" do
-      ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 5).split_id.should  == [@base_region, 5]
-      ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 9).split_id.should  == [@base_region, 9]
+      ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 5).split_id.should == [@base_region, 5]
+      ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 9).split_id.should == [@base_region, 9]
       ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 15).split_id.should == [@base_region + 1, 5]
       ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 19).split_id.should == [@base_region + 1, 9]
       ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 25).split_id.should == [@base_region + 2, 5]
@@ -127,6 +126,5 @@ describe "AR Regions extension" do
 
       ManageIQ::Providers::Vmware::InfraManager::Vm.new.split_id.should == [ManageIQ::Providers::Vmware::InfraManager::Vm.my_region_number, nil]
     end
-
   end
 end

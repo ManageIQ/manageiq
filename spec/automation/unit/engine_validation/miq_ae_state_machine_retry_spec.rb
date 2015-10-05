@@ -142,7 +142,7 @@ describe "MiqAeStateMachineRetry" do
       expect(ws).to be
     end
 
-    Timecop.travel(@max_time*2 + 2) do
+    Timecop.travel(@max_time * 2 + 2) do
       status, _message, ws = deliver_ae_request_from_queue
       expect(status).not_to be
     end

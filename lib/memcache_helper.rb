@@ -2,7 +2,7 @@ module MemcacheHelper
   def self.setup
     require 'memcache'
     require 'memcache_util'
-    #require 'cached_model'
+    # require 'cached_model'
     require 'memcache_patch'
 
     code = <<-EOL
@@ -20,6 +20,6 @@ module MemcacheHelper
     EOL
     eval(code, TOPLEVEL_BINDING)
 
-    ActionController::CgiRequest::DEFAULT_SESSION_OPTIONS.merge!({ 'cache' => CACHE })
+    ActionController::CgiRequest::DEFAULT_SESSION_OPTIONS.merge!({'cache' => CACHE})
   end
 end

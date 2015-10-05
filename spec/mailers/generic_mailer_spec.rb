@@ -1,14 +1,13 @@
 require "spec_helper"
 
 describe GenericMailer do
-
   before(:each) do
     @miq_server = EvmSpecHelper.local_miq_server
     @args = {
-      :to          => "you@bedrock.gov",
-      :from        => "me@bedrock.gov",
-      :subject     => "GenericMailerTests",
-      :body        => "testing123"
+      :to      => "you@bedrock.gov",
+      :from    => "me@bedrock.gov",
+      :subject => "GenericMailerTests",
+      :body    => "testing123"
     }
     ActionMailer::Base.deliveries.clear
   end
@@ -30,20 +29,20 @@ describe GenericMailer do
     it "call attempts to send message to recipients indivually" do
       # generate message w/ two recipients that
       # raises error when delivered
-      msg = @args.merge({ :to => 'me@bedrock.gov, you@bedrock.gov' })
+      msg = @args.merge(:to => 'me@bedrock.gov, you@bedrock.gov')
       notification = GenericMailer.generic_notification(msg)
       notification.stub(:deliver_now).and_raise(Net::SMTPFatalError)
 
       # send error msg first...
-      GenericMailer.
-        should_receive(:generic_notification).
-        and_return(notification)
+      GenericMailer
+        .should_receive(:generic_notification)
+        .and_return(notification)
 
       # ...after delegate to normal behaviour
-      GenericMailer.
-        should_receive(:generic_notification).
-        twice.
-        and_call_original
+      GenericMailer
+        .should_receive(:generic_notification)
+        .twice
+        .and_call_original
 
       # send message
       GenericMailer.deliver(:generic_notification)
@@ -62,14 +61,14 @@ describe GenericMailer do
       notification.stub(:deliver_now).and_raise(Errno::ECONNREFUSED)
 
       # generate error message on request
-      GenericMailer.
-        should_receive(:generic_notification).
-        and_return(notification)
+      GenericMailer
+        .should_receive(:generic_notification)
+        .and_return(notification)
 
       # send message
-      lambda{
+      lambda do
         GenericMailer.deliver(:generic_notification)
-      }.should_not raise_error
+      end.should_not raise_error
     end
   end
 
@@ -79,7 +78,7 @@ describe GenericMailer do
   end
 
   it "call deliver for generic_notification without a 'from' address" do
-    stub_server_configuration(:smtp => {:from => "test@123.com"} )
+    stub_server_configuration(:smtp => {:from => "test@123.com"})
     new_args = @args.dup
     new_args.delete(:from)
     msg = GenericMailer.deliver(:generic_notification, new_args)
@@ -177,11 +176,11 @@ describe GenericMailer do
 
   it "policy_action_email" do
     @args[:miq_action_hash] = {
-         :header => "Alert Triggered",
-         :policy_detail => "Alert 'Do something on vm start policy', triggered",
-         :event_description => "Vm started event!",
-         :entity_type => "Vm",
-         :entity_name => "My Vm"
+      :header            => "Alert Triggered",
+      :policy_detail     => "Alert 'Do something on vm start policy', triggered",
+      :event_description => "Vm started event!",
+      :entity_type       => "Vm",
+      :entity_name       => "My Vm"
     }
     mail = GenericMailer.policy_action_email(@args)
     mail.parts.length.should == 2

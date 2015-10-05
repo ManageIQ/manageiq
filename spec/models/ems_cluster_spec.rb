@@ -45,17 +45,17 @@ describe EmsCluster do
 
     it('#all_vms')    { @cluster.all_vms.should    match_array [@vm1, @vm2] }
     it('#all_vm_ids') { @cluster.all_vm_ids.should match_array [@vm1.id, @vm2.id] }
-    it('#total_vms')  { @cluster.total_vms.should  == 2 }
+    it('#total_vms')  { @cluster.total_vms.should == 2 }
 
     it('#all_miq_templates')    { @cluster.all_miq_templates.should    match_array [@template1, @template2] }
     it('#all_miq_template_ids') { @cluster.all_miq_template_ids.should match_array [@template1.id, @template2.id] }
-    it('#total_miq_templates')  { @cluster.total_miq_templates.should  == 2 }
+    it('#total_miq_templates')  { @cluster.total_miq_templates.should == 2 }
 
     it('ResourcePool#v_direct_vms') { @rp1.v_direct_vms.should == 1 }
-    it('ResourcePool#v_total_vms')  { @rp1.v_total_vms.should  == 2 }
+    it('ResourcePool#v_total_vms')  { @rp1.v_total_vms.should == 2 }
 
     it('ResourcePool#v_direct_miq_templates') { @rp1.v_direct_vms.should == 1 }
-    it('ResourcePool#v_total_miq_templates')  { @rp1.v_total_vms.should  == 2 }
+    it('ResourcePool#v_total_miq_templates')  { @rp1.v_total_vms.should == 2 }
   end
 
   context("RedHat") do
@@ -103,15 +103,15 @@ describe EmsCluster do
 
     it('#all_vms')    { @cluster.all_vms.should    match_array [@vm1, @vm2] }
     it('#all_vm_ids') { @cluster.all_vm_ids.should match_array [@vm1.id, @vm2.id] }
-    it('#total_vms')  { @cluster.total_vms.should  == 2 }
+    it('#total_vms')  { @cluster.total_vms.should == 2 }
 
     it('#all_miq_templates')    { @cluster.all_miq_templates.should    match_array [@template1, @template2] }
     it('#all_miq_template_ids') { @cluster.all_miq_template_ids.should match_array [@template1.id, @template2.id] }
-    it('#total_miq_templates')  { @cluster.total_miq_templates.should  == 2 }
+    it('#total_miq_templates')  { @cluster.total_miq_templates.should == 2 }
   end
 
   it "#save_drift_state" do
-    #TODO: Beef up with more data
+    # TODO: Beef up with more data
     cluster = FactoryGirl.create(:ems_cluster)
     cluster.save_drift_state
 

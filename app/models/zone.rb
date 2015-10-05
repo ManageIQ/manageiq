@@ -36,7 +36,7 @@ class Zone < ActiveRecord::Base
   override_aggregation_mixin_virtual_columns_uses(:all_vms_and_templates, :vms_and_templates)
 
   def active_miq_servers
-    MiqServer.active_miq_servers.where(:zone_id => self.id)
+    MiqServer.active_miq_servers.where(:zone_id => id)
   end
 
   def find_master_server
@@ -44,15 +44,13 @@ class Zone < ActiveRecord::Base
   end
 
   def self.seed
-    unless exists?(:name => 'default')
+    create_with(:description => "Default Zone").find_or_create_by!(:name => 'default') do |_z|
       _log.info("Creating default zone...")
-      create(:name => "default", :description => "Default Zone")
-      _log.info("Creating default zone... Complete")
     end
   end
 
   def miq_region
-    MiqRegion.where(:region => self.region_id).first
+    MiqRegion.find_by(:region => region_id)
   end
 
   def ntp_settings
@@ -67,11 +65,11 @@ class Zone < ActiveRecord::Base
   end
 
   def role_active?(role_name)
-    self.active_miq_servers.any? {|s| s.has_active_role?(role_name) }
+    active_miq_servers.any? { |s| s.has_active_role?(role_name) }
   end
 
   def role_assigned?(role_name)
-    self.active_miq_servers.any? {|s| s.has_assigned_role?(role_name) }
+    active_miq_servers.any? { |s| s.has_assigned_role?(role_name) }
   end
 
   def active_role_names
@@ -79,7 +77,7 @@ class Zone < ActiveRecord::Base
   end
 
   def self.default_zone
-    self.where(:name => "default").first
+    find_by(:name => "default")
   end
 
   # The zone to use when inserting a record into MiqQueue
@@ -98,7 +96,7 @@ class Zone < ActiveRecord::Base
   end
 
   def last_log_sync_on
-    self.miq_servers.inject(nil) do |d,s|
+    miq_servers.inject(nil) do |d, s|
       last = s.last_log_sync_on
       d ||= last
       d = last if last && last > d
@@ -107,11 +105,11 @@ class Zone < ActiveRecord::Base
   end
 
   def log_collection_active?
-    self.miq_servers.any?(&:log_collection_active?)
+    miq_servers.any?(&:log_collection_active?)
   end
 
   def log_collection_active_recently?(since = nil)
-    self.miq_servers.any? { |s| s.log_collection_active_recently?(since) }
+    miq_servers.any? { |s| s.log_collection_active_recently?(since) }
   end
 
   def host_ids
@@ -147,7 +145,7 @@ class Zone < ActiveRecord::Base
   end
 
   def ems_infras
-    self.ext_management_systems.select { |e| e.kind_of? EmsInfra }
+    ext_management_systems.select { |e| e.kind_of? EmsInfra }
   end
 
   def ems_containers
@@ -155,11 +153,11 @@ class Zone < ActiveRecord::Base
   end
 
   def ems_clouds
-    self.ext_management_systems.select { |e| e.kind_of? EmsCloud }
+    ext_management_systems.select { |e| e.kind_of? EmsCloud }
   end
 
   def availability_zones
-    MiqPreloader.preload(self.ems_clouds, :availability_zones)
+    MiqPreloader.preload(ems_clouds, :availability_zones)
     ems_clouds.flat_map(&:availability_zones)
   end
 
@@ -213,15 +211,15 @@ class Zone < ActiveRecord::Base
   end
 
   # Used by AggregationMixin
-  alias all_storages           storages
-  alias all_hosts              hosts
-  alias all_host_ids           host_ids
-  alias all_vms_and_templates  vms_and_templates
-  alias all_vm_or_template_ids vm_or_template_ids
-  alias all_vms                vms
-  alias all_vm_ids             vm_ids
-  alias all_miq_templates      miq_templates
-  alias all_miq_template_ids   miq_template_ids
+  alias_method :all_storages,           :storages
+  alias_method :all_hosts,              :hosts
+  alias_method :all_host_ids,           :host_ids
+  alias_method :all_vms_and_templates,  :vms_and_templates
+  alias_method :all_vm_or_template_ids, :vm_or_template_ids
+  alias_method :all_vms,                :vms
+  alias_method :all_vm_ids,             :vm_ids
+  alias_method :all_miq_templates,      :miq_templates
+  alias_method :all_miq_template_ids,   :miq_template_ids
 
   def display_name
     name
@@ -234,8 +232,8 @@ class Zone < ActiveRecord::Base
   protected
 
   def check_zone_in_use_on_destroy
-    raise "cannot delete default zone" if self.name == "default"
-    raise "zone name '#{self.name}' is used by a server" unless self.miq_servers.blank?
+    raise "cannot delete default zone" if name == "default"
+    raise "zone name '#{name}' is used by a server" unless miq_servers.blank?
   end
 
   private

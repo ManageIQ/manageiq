@@ -3,7 +3,7 @@ module MiqServer::WorkerManagement::Dequeue
 
   def peek(queue_name, priority, limit)
     MiqQueue.peek(
-      :conditions => { :queue_name => queue_name, :priority => priority, :role => @active_role_names },
+      :conditions => {:queue_name => queue_name, :priority => priority, :role => @active_role_names},
       :select     => "id, lock_version, priority, role",
       :limit      => limit
     )
@@ -15,7 +15,7 @@ module MiqServer::WorkerManagement::Dequeue
 
   def reset_queue_messages
     @queue_messages_lock.synchronize(:EX) do
-      @queue_messages = Hash.new
+      @queue_messages = {}
     end
   end
 
@@ -51,7 +51,7 @@ module MiqServer::WorkerManagement::Dequeue
     @workers_lock.synchronize(:SH) do
       w = @workers[pid]
       msg = get_queue_message_for_worker(w)
-      msg ? [ msg[:id], msg[:lock_version] ] : nil
+      msg ? [msg[:id], msg[:lock_version]] : nil
     end unless @workers_lock.nil?
   end
 
@@ -93,7 +93,7 @@ module MiqServer::WorkerManagement::Dequeue
   def get_worker_count_and_priority_by_queue_name
     queue_names = {}
     @workers_lock.synchronize(:SH) do
-      @workers.each do |pid, w|
+      @workers.each do |_pid, w|
         next if w[:queue_name].nil?
         next if w[:class].nil?
         next unless get_worker_dequeue_method(w[:class]) == :drb
@@ -113,7 +113,7 @@ module MiqServer::WorkerManagement::Dequeue
           @queue_messages[queue_name] ||= {}
           @queue_messages[queue_name][:timestamp] = Time.now.utc
           @queue_messages[queue_name][:messages]  = peek(queue_name, priority, (prefetch_max_per_worker * wcount)).collect do |q|
-            { :id => q.id, :lock_version => q.lock_version, :priority => q.priority, :role => q.role }
+            {:id => q.id, :lock_version => q.lock_version, :priority => q.priority, :role => q.role}
           end
           _log.info("Fetched #{@queue_messages[queue_name][:messages].length} miq_queue rows for queue_name=#{queue_name}, wcount=#{wcount.inspect}, priority=#{priority.inspect}") if @queue_messages[queue_name][:messages].length > 0
         end

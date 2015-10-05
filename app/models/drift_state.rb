@@ -7,7 +7,7 @@ class DriftState < ActiveRecord::Base
 
   def data_obj
     require 'miq-hash_struct'
-    hashes_to_struct(self.data.deep_clone)
+    hashes_to_struct(data.deep_clone)
   end
 
   private

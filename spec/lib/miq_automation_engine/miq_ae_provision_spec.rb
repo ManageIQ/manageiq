@@ -4,40 +4,40 @@ module MiqAeProvisionSpec
   include MiqAeEngine
   describe "MiqAeProvision" do
     EXPECTED_CUSTOMIZATION = {
-      :password => {
+      :password             => {
         :plaintext => "true"
       },
-      :guiUnattended => {
-        :autoLogon => 0,
+      :guiUnattended        => {
+        :autoLogon      => 0,
         :autoLogonCount => 1,
-        :timeZone => 105
+        :timeZone       => 105
       },
-      :identification => {
+      :identification       => {
         :joinWorkgroup => 'WORKGROUP'
       },
       :licenseFilePrintData => {
         :autoMode => 'perSeat'
       },
-      :userData => {
+      :userData             => {
         :fullName  => 'MyCompany',
         :orgName   => 'MyCompany',
         :productId => 'VRXXR-VJC3H-YVWYT-HCPDD-HFMQ3'
       },
-      :globalIPSettings => {
+      :globalIPSettings     => {
         :dnsServerList => ["192.168.254.16", "192.168.254.17"],
         :dnsSuffixList => ["galaxy.local"]
       },
-      :fixedIp => {
+      :fixedIp              => {
         :ipAddress => "192.168.254.125"
       },
-      :ipSettings => {
+      :ipSettings           => {
         :subnetMask    => "255.255.255.0",
         :gateway       => [""],
         :dnsDomain     => "galaxy.local",
         :dnsServerList => ["192.168.254.16", "192.168.254.17"],
       },
-      :winOptions => {
-        :changeSID =>1,
+      :winOptions           => {
+        :changeSID      => 1,
         :deleteAccounts => 0
       }
     }
@@ -101,21 +101,21 @@ module MiqAeProvisionSpec
       it "should instantiate container_info" do
         ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=dev#get_container_info")
         ws.should_not be_nil
-        ws.root("ncpus").should  == 1
+        ws.root("ncpus").should == 1
         ws.root("memory").should == 1
-        ws.root("vlan").should   == "dev"
+        ws.root("vlan").should == "dev"
 
         ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=test#get_container_info")
         ws.should_not be_nil
-        ws.root("ncpus").should  == 2
+        ws.root("ncpus").should == 2
         ws.root("memory").should be_nil
         ws.root("vlan").should be_nil
 
         ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=prod#get_container_info")
         ws.should_not be_nil
         ws.root("ncpus").should be_nil
-        ws.root("memory").should  == 4
-        ws.root("vlan").should =="production"
+        ws.root("memory").should == 4
+        ws.root("vlan").should == "production"
 
         ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=foo#get_container_info")
         ws.should_not be_nil
@@ -171,7 +171,6 @@ module MiqAeProvisionSpec
           }
         }
       end
-
     end
   end
 end

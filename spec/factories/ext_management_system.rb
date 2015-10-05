@@ -130,7 +130,7 @@ FactoryGirl.define do
   end
 
   factory :ems_azure, :aliases => ["manageiq/providers/azure/cloud_manager"], :class => "ManageIQ::Providers::Azure::CloudManager", :parent => :ems_cloud do
-    zone {  Zone.first || FactoryGirl.create(:zone) }
+    zone { Zone.seed }
   end
 
   factory :ems_azure_with_authentication, :parent => :ems_azure do

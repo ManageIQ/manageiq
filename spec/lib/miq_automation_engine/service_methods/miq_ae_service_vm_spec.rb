@@ -2,7 +2,6 @@ require "spec_helper"
 
 module MiqAeServiceVmSpec
   describe MiqAeMethodService::MiqAeServiceVm do
-
     let(:vm)         { FactoryGirl.create(:vm_vmware, :name => "template1", :location => "abc/abc.vmx") }
     let(:service_vm) { MiqAeMethodService::MiqAeServiceManageIQ_Providers_Vmware_InfraManager_Vm.find(vm.id) }
 
@@ -84,7 +83,7 @@ module MiqAeServiceVmSpec
           method = "$evm.root['#{@ae_result_key}'] = $evm.root['vm'].add_to_service($evm.vmdb('service').first)"
           @ae_method.update_attributes(:data => method)
 
-          expect {invoke_ae.root(@ae_result_key)}.to raise_error(MiqAeException::AbortInstantiation)
+          expect { invoke_ae.root(@ae_result_key) }.to raise_error(MiqAeException::AbortInstantiation)
         end
       end
 

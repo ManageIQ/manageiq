@@ -3,11 +3,11 @@ require "spec_helper"
 describe MiqServer do
   GUID_FILE = File.join(Rails.root, "GUID")
   def read_guid
-    (File.open(GUID_FILE, 'r') {|f| f.read }).chomp if File.exist?(GUID_FILE)
+    (File.open(GUID_FILE, 'r', &:read)).chomp if File.exist?(GUID_FILE)
   end
 
   def write_guid(number)
-    File.open(GUID_FILE, 'w') {|f| f.write(number) } if File.exist?(GUID_FILE)
+    File.open(GUID_FILE, 'w') { |f| f.write(number) } if File.exist?(GUID_FILE)
   end
 
   context "with no guid file" do
@@ -15,7 +15,7 @@ describe MiqServer do
       MiqServer.my_guid_cache = nil
       @guid_existed_before = File.exist?(GUID_FILE)
       if @guid_existed_before
-        @orig_guid = self.read_guid
+        @orig_guid = read_guid
         File.delete(GUID_FILE)
       end
     end
@@ -24,7 +24,7 @@ describe MiqServer do
       if File.exist?(GUID_FILE) && !@guid_existed_before
         File.delete(GUID_FILE)
       else
-        self.write_guid(@orig_guid) unless @orig_guid.nil?
+        write_guid(@orig_guid) unless @orig_guid.nil?
       end
     end
 
@@ -39,7 +39,7 @@ describe MiqServer do
       # Test for case 10942
       File.exist?(GUID_FILE).should be_false
       MiqUUID.should_receive(:new_guid).and_raise(StandardError)
-      lambda { MiqServer.my_guid }.should raise_error(StandardError)
+      -> { MiqServer.my_guid }.should raise_error(StandardError)
       File.exist?(GUID_FILE).should be_false
     end
   end
@@ -58,9 +58,9 @@ describe MiqServer do
     end
 
     it "shutdown will raise an event and quiesce" do
-       MiqEvent.should_receive(:raise_evm_event)
-       @miq_server.should_receive(:quiesce)
-       @miq_server.shutdown
+      MiqEvent.should_receive(:raise_evm_event)
+      @miq_server.should_receive(:quiesce)
+      @miq_server.shutdown
     end
 
     it "sync stop will do nothing if stopped" do
@@ -125,7 +125,7 @@ describe MiqServer do
     context "#ntp_reload_queue" do
       before(:each) do
         MiqQueue.destroy_all
-        @cond = {:method_name => 'ntp_reload', :class_name => 'MiqServer', :instance_id => @miq_server.id, :server_guid => @miq_server.guid, :zone => @miq_server.zone.name }
+        @cond = {:method_name => 'ntp_reload', :class_name => 'MiqServer', :instance_id => @miq_server.id, :server_guid => @miq_server.guid, :zone => @miq_server.zone.name}
         @miq_server.ntp_reload_queue
         @message = MiqQueue.where(@cond).first
       end
@@ -215,7 +215,7 @@ describe MiqServer do
 
       it "quiesce_workers_loop will initiate shutdown of workers" do
         @miq_server.should_receive(:stop_worker)
-        @miq_server.instance_variable_set(:@worker_monitor_settings, {:quiesce_loop_timeout => 15.minutes})
+        @miq_server.instance_variable_set(:@worker_monitor_settings, :quiesce_loop_timeout => 15.minutes)
         @miq_server.should_receive(:workers_quiesced?).and_return(true)
         @miq_server.quiesce_workers_loop
       end
@@ -338,7 +338,6 @@ describe MiqServer do
         ].each { |r, max| @server_roles << FactoryGirl.create(:server_role, :name => r, :max_concurrent => max) }
 
         @miq_server.role    = @server_roles.collect(&:name).join(',')
-
       end
 
       it "should have all server roles" do

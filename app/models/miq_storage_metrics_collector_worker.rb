@@ -8,5 +8,4 @@ class MiqStorageMetricsCollectorWorker < MiqQueueWorkerBase
   def friendly_name
     @friendly_name ||= "Storage Metrics Collector"
   end
-
 end

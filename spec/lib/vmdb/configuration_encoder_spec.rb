@@ -41,7 +41,7 @@ describe Vmdb::ConfigurationEncoder do
 
       it "with missing key" do
         hash = {}
-        described_class.dump(hash).should ==  "--- {}\n"
+        described_class.dump(hash).should == "--- {}\n"
       end
     end
   end
@@ -82,7 +82,7 @@ describe Vmdb::ConfigurationEncoder do
       four: one
   YAML
 
-  VMDB_CONFIG_NUMERICS_SYMBOLIZED_HASH = { :"1" => {:"2" => "two"}, :"3" => {:"4" => {5 => "five"}}}
+  VMDB_CONFIG_NUMERICS_SYMBOLIZED_HASH = {:"1" => {:"2" => "two"}, :"3" => {:"4" => {5 => "five"}}}
   VMDB_CONFIG_SYMBOLIZED_HASH = YAML.load(VMDB_CONFIG_SYMBOLIZED)
 
   shared_examples_for '.load' do
@@ -176,7 +176,7 @@ describe Vmdb::ConfigurationEncoder do
     subject { described_class.symbolize!(@config) }
 
     it "should handle two layers deep hash" do
-      @config = {"one"=> {"two"=> {"three" => "four"}}}
+      @config = {"one" => {"two" => {"three" => "four"}}}
       subject.should == {:one => {:two => {"three" => "four"}}}
     end
   end
@@ -185,13 +185,13 @@ describe Vmdb::ConfigurationEncoder do
     subject { described_class.validate!(@hash) }
 
     it "valid" do
-      @hash = { "a" => { "b" => "c" } }
-      subject.should == { :a => { :b => "c" } }
+      @hash = {"a" => {"b" => "c"}}
+      subject.should == {:a => {:b => "c"}}
     end
 
     it "invalid" do
-      @hash = { "a" => "b" }
-      lambda { subject }.should raise_error
+      @hash = {"a" => "b"}
+      -> { subject }.should raise_error
     end
   end
 

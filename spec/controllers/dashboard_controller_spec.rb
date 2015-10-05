@@ -7,9 +7,7 @@ describe DashboardController do
     end
 
     let(:user_with_role) do
-      role = FactoryGirl.create(:miq_user_role)
-      group = FactoryGirl.create(:miq_group, :miq_user_role => role)
-      FactoryGirl.create(:user, :miq_groups => [group])
+      FactoryGirl.create(:user, :role => "random")
     end
 
     it "validates user" do
@@ -37,21 +35,15 @@ describe DashboardController do
     end
 
     it "requires role" do
-      group = FactoryGirl.create(:miq_group)
-      user = FactoryGirl.create(:user, :miq_groups => [group])
+      user = FactoryGirl.create(:user_with_group)
       post :authenticate, :user_name => user.userid, :user_password => "dummy"
       expect_failed_login('Role')
     end
 
-    it "requires VMs" do
+    it "allow users in with no vms" do
+      skip_data_checks
       post :authenticate, :user_name => user_with_role.userid, :user_password => "dummy"
-      expect_failed_login('no providers')
-    end
-
-    it "allows super admin with no vms" do
-      user = FactoryGirl.create(:user_admin)
-      post :authenticate, :user_name => user.userid, :user_password => "dummy"
-      expect_successful_login(user)
+      expect_successful_login(user_with_role)
     end
 
     it "redirects to a proper start page" do
@@ -69,29 +61,26 @@ describe DashboardController do
     end
 
     it "returns flash message when user's group is missing" do
-      user = FactoryGirl.create(:user, :userid => 'wilma')
+      user = FactoryGirl.create(:user)
       User.stub(:authenticate).and_return(user)
       validation = controller.send(:validate_user, user)
       expect(validation.flash_msg).to include('User\'s Group is missing')
     end
 
     it "returns flash message when user's role is missing" do
-      group = FactoryGirl.create(:miq_group, :description => 'test_group')
-      user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
+      user = FactoryGirl.create(:user_with_group)
       User.stub(:authenticate).and_return(user)
       validation = controller.send(:validate_user, user)
       expect(validation.flash_msg).to include('User\'s Role is missing')
     end
 
     it "returns url for the user and sets user's group/role id in session" do
-      role = FactoryGirl.create(:miq_user_role, :name => 'test_role')
-      group = FactoryGirl.create(:miq_group, :description => 'test_group', :miq_user_role => role)
-      user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
+      user = FactoryGirl.create(:user, :role => "test")
       User.stub(:authenticate).and_return(user)
-      controller.stub(:get_vmdb_config).and_return({:product => {}})
+      controller.stub(:get_vmdb_config).and_return(:product => {})
       skip_data_checks('some_url')
       validation = controller.send(:validate_user, user)
-      expect(controller.current_groupid).to eq(group.id)
+      expect(controller.current_groupid).to eq(user.current_group_id)
       expect(validation.flash_msg).to be_nil
       expect(validation.url).to eq('some_url')
     end
@@ -99,19 +88,19 @@ describe DashboardController do
 
   context "Create Dashboard" do
     it "dashboard show" do
-      #create dashboard for a group
-      ws = FactoryGirl.create(:miq_widget_set, :name => "default",
-                              :set_data => {:last_group_db_updated => Time.now.utc,
-                              :col1 => [1], :col2 => [], :col3 =>[]})
+      # create dashboard for a group
+      ws = FactoryGirl.create(:miq_widget_set, :name     => "default",
+                                               :set_data => {:last_group_db_updated => Time.now.utc,
+                              :col1 => [1], :col2 => [], :col3 => []})
 
       ur = FactoryGirl.create(:miq_user_role)
       group = FactoryGirl.create(:miq_group, :miq_user_role => ur, :settings => {:dashboard_order => [ws.id]})
-      user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
+      user = FactoryGirl.create(:user, :miq_groups => [group])
 
-      controller.instance_variable_set(:@sb, {:active_db => ws.name})
+      controller.instance_variable_set(:@sb, :active_db => ws.name)
       controller.instance_variable_set(:@tabs, [])
       login_as user
-      #create a user's dashboard using group dashboard name.
+      # create a user's dashboard using group dashboard name.
       FactoryGirl.create(:miq_widget_set,
                          :name     => "#{user.userid}|#{group.id}|#{ws.name}",
                          :set_data => {:last_group_db_updated => Time.now.utc, :col1 => [1], :col2 => [], :col3 => []})
@@ -133,7 +122,7 @@ describe DashboardController do
     }
     main_tabs.each do |tab, feature|
       it "for tab ':#{tab}'" do
-        seed_specific_product_features(feature)
+        login_as FactoryGirl.create(:user, :features => feature)
         session[:tab_url] = {}
         post :maintab, :tab => tab
         url_controller = Menu::Manager.tab_features_by_id(tab).find { |f| f.ends_with?("_explorer") }
@@ -149,7 +138,7 @@ describe DashboardController do
     end
 
     it "retuns start page url that user has set as startpage in settings" do
-      seed_specific_product_features(%(everything))
+      login_as FactoryGirl.create(:user, :features => "everything")
       controller.instance_variable_set(:@settings, :display => {:startpage => "/dashboard/show"})
 
       controller.stub(:role_allows).and_return(true)
@@ -158,7 +147,7 @@ describe DashboardController do
     end
 
     it "returns first url that user has access to as start page when user doesn't have access to startpage set in settings" do
-      seed_specific_product_features("vm_cloud_explorer")
+      login_as FactoryGirl.create(:user, :features => "vm_cloud_explorer")
       controller.instance_variable_set(:@settings, :display => {:startpage => "/dashboard/show"})
       url = controller.send(:start_url_for_user, nil)
       url.should eq("/vm_cloud/explorer?accordion=instances")
@@ -180,7 +169,6 @@ describe DashboardController do
   end
 
   def skip_data_checks(url = '/')
-    UserValidationService.any_instance.stub(:data_ready?).and_return(true)
     UserValidationService.any_instance.stub(:server_ready?).and_return(true)
     controller.stub(:start_url_for_user).and_return(url)
   end

@@ -28,9 +28,11 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
       end
 
       it "#workflow" do
-        MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
+        workflow_class = ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow
+        workflow_class.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
 
-        @vm_prov.workflow.class.should eq ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow
+        expect(@vm_prov.workflow.class).to eq workflow_class
+        expect(@vm_prov.workflow_class).to eq workflow_class
       end
 
       it "disable_customization_spec" do
@@ -75,9 +77,9 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
         it "with default options" do
           clone_options = @vm_prov.prepare_for_clone_task
 
-          clone_options[:name].should       == @target_vm_name
+          clone_options[:name].should == @target_vm_name
           clone_options[:clone_type].should == :full
-          clone_options[:cluster].should    == @ems_cluster.ems_ref
+          clone_options[:cluster].should == @ems_cluster.ems_ref
         end
 
         it "with linked-clone true" do

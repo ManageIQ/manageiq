@@ -5,7 +5,7 @@ describe VmScan do
     before(:each) do
       @server = EvmSpecHelper.local_miq_server
 
-      #TODO: We should be able to set values so we don't need to stub behavior
+      # TODO: We should be able to set values so we don't need to stub behavior
       MiqServer.any_instance.stub(:is_a_proxy? => true, :has_active_role? => true, :is_vix_disk? => true)
       ManageIQ::Providers::Vmware::InfraManager.any_instance.stub(:authentication_status_ok? => true)
       Vm.stub(:scan_via_ems? => true)
@@ -57,7 +57,7 @@ describe VmScan do
         it "should not be dispatched" do
           JobProxyDispatcher.dispatch
           @job.reload
-          @job.state.should           == "waiting_to_start"
+          @job.state.should == "waiting_to_start"
           @job.dispatch_status.should == "pending"
         end
       end
@@ -70,7 +70,7 @@ describe VmScan do
         it "should not be dispatched" do
           JobProxyDispatcher.dispatch
           @job.reload
-          @job.state.should           == "waiting_to_start"
+          @job.state.should == "waiting_to_start"
           @job.dispatch_status.should == "pending"
         end
       end
@@ -83,7 +83,7 @@ describe VmScan do
         it "should not be dispatched" do
           JobProxyDispatcher.dispatch
           @job.reload
-          @job.state.should           == "waiting_to_start"
+          @job.state.should == "waiting_to_start"
           @job.dispatch_status.should == "pending"
         end
       end
@@ -96,11 +96,10 @@ describe VmScan do
         end
 
         it "should get dispatched" do
-          @job.state.should           == "waiting_to_start"
+          @job.state.should == "waiting_to_start"
           @job.dispatch_status.should == "active"
         end
       end
-
     end
 
     context "#start_user_event_message" do
@@ -156,7 +155,5 @@ describe VmScan do
         args["vmScanProfiles"].should eq profiles
       end
     end
-
   end
-
 end

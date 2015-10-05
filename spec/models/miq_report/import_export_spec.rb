@@ -3,13 +3,13 @@ require "spec_helper"
 describe MiqReport::ImportExport do
   before do
     @user       = FactoryGirl.create(:user_admin)
-    @old_report = FactoryGirl.create(:miq_report, 
+    @old_report = FactoryGirl.create(:miq_report,
                                      :name      => "Test Report",
                                      :rpt_type  => "Custom",
                                      :tz        => "Eastern Time (US & Canada)",
                                      :col_order => ["name", "boot_time", "disks_aligned"],
                                      :cols      => ["name", "boot_time", "disks_aligned"]
-    )
+                                    )
   end
 
   context ".import_from_hash" do

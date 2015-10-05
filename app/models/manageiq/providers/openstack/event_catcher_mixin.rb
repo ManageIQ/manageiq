@@ -5,14 +5,14 @@ module ManageIQ::Providers::Openstack::EventCatcherMixin
     unless @event_monitor_handle
       options = {}
       options[:hostname] = @ems.hostname
-      options[:port]     = self.worker_settings[:amqp_port]
+      options[:port]     = worker_settings[:amqp_port]
       if @ems.has_authentication_type? :amqp
         options[:username] = @ems.authentication_userid(:amqp)
         options[:password] = @ems.authentication_password(:amqp)
       end
-      options[:topics]   = self.worker_settings[:topics]
-      options[:duration] = self.worker_settings[:duration]
-      options[:capacity] = self.worker_settings[:capacity]
+      options[:topics]   = worker_settings[:topics]
+      options[:duration] = worker_settings[:duration]
+      options[:capacity] = worker_settings[:capacity]
 
       options[:client_ip] = server.ipaddress
       @event_monitor_handle = OpenstackEventMonitor.new(options)
@@ -25,37 +25,33 @@ module ManageIQ::Providers::Openstack::EventCatcherMixin
   end
 
   def stop_event_monitor
-    begin
-      @event_monitor_handle.stop unless @event_monitor_handle.nil?
-    rescue Exception => err
-      _log.warn("#{self.log_prefix} Event Monitor Stop errored because [#{err.message}]")
-      _log.warn("#{self.log_prefix} Error details: [#{err.details}]")
-      _log.log_backtrace(err)
-    ensure
-      reset_event_monitor_handle
-    end
+    @event_monitor_handle.stop unless @event_monitor_handle.nil?
+  rescue Exception => err
+    _log.warn("#{log_prefix} Event Monitor Stop errored because [#{err.message}]")
+    _log.warn("#{log_prefix} Error details: [#{err.details}]")
+    _log.log_backtrace(err)
+  ensure
+    reset_event_monitor_handle
   end
 
   def monitor_events
-    begin
-      event_monitor_handle.start
-      event_monitor_handle.each_batch do |events|
-        if events && !events.empty?
-          _log.debug("#{self.log_prefix} Received events #{events.collect { |e| e.payload["event_type"] }}") if _log.debug?
-          @queue.enq events
-        end
-        sleep_poll_normal
+    event_monitor_handle.start
+    event_monitor_handle.each_batch do |events|
+      if events && !events.empty?
+        _log.debug("#{log_prefix} Received events #{events.collect { |e| e.payload["event_type"] }}") if _log.debug?
+        @queue.enq events
       end
-    ensure
-      reset_event_monitor_handle
+      sleep_poll_normal
     end
+  ensure
+    reset_event_monitor_handle
   end
 
   def process_event(event)
-    if self.filtered_events.include?(event.payload[:event_type])
-      _log.info "#{self.log_prefix} Skipping caught event [#{event.payload["event_type"]}]"
+    if filtered_events.include?(event.payload[:event_type])
+      _log.info "#{log_prefix} Skipping caught event [#{event.payload["event_type"]}]"
     else
-      _log.info "#{self.log_prefix} Caught event [#{event.payload["event_type"]}]"
+      _log.info "#{log_prefix} Caught event [#{event.payload["event_type"]}]"
 
       event_hash = {}
       # copy content

@@ -127,15 +127,15 @@ describe OpsController do
     context "#tenant_set_record_vars" do
       before :each do
         @tenant = FactoryGirl.create(:tenant,
-                                    :name        => "Foo",
-                                    :description => "Foo Description",
-                                    :divisible   => 1,
-                                    :parent      => Tenant.root_tenant)
+                                     :name        => "Foo",
+                                     :description => "Foo Description",
+                                     :divisible   => 1,
+                                     :parent      => Tenant.root_tenant)
         controller.instance_variable_set(:@_params,
-                                         :name        => "Foo_Bar",
-                                         :divisible   => "False",
-                                         :parent      => "some_parent"
-        )
+                                         :name      => "Foo_Bar",
+                                         :divisible => "False",
+                                         :parent    => "some_parent"
+                                        )
       end
 
       it "does not change value of parent & divisible fields for existing record" do
@@ -197,14 +197,14 @@ describe OpsController do
 
       it "saves tenant quotas record changes" do
         controller.instance_variable_set(:@_params,
-          :name        => "OneTenant",
-          :quotas      => {
-            :cpu_allocated => {:value => 1024.0},
-            :mem_allocated => {:value => 4096.0}
-          },
-          :id          => @tenant.id,
-          :button      => "save",
-          :divisible   => "true")
+                                         :name      => "OneTenant",
+                                         :quotas    => {
+                                           :cpu_allocated => {:value => 1024.0},
+                                           :mem_allocated => {:value => 4096.0}
+                                         },
+                                         :id        => @tenant.id,
+                                         :button    => "save",
+                                         :divisible => "true")
         controller.should_receive(:render)
         expect(response.status).to eq(200)
         controller.send(:rbac_tenant_manage_quotas)

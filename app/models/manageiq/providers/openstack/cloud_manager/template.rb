@@ -8,18 +8,18 @@ class ManageIQ::Providers::Openstack::CloudManager::Template < ManageIQ::Provide
                           :class_name              => "ManageIQ::Providers::Openstack::CloudManager::CloudTenant"
 
   def provider_object(connection = nil)
-    connection ||= self.ext_management_system.connect
-    connection.images.get(self.ems_ref)
+    connection ||= ext_management_system.connect
+    connection.images.get(ems_ref)
   end
 
   def perform_metadata_scan(ost)
     require 'OpenStackExtract/MiqOpenStackVm/MiqOpenStackImage'
 
-    image_id = self.ems_ref
+    image_id = ems_ref
     _log.debug "image_id = #{image_id}"
     ost.scanTime = Time.now.utc unless ost.scanTime
 
-    ems = self.ext_management_system
+    ems = ext_management_system
 
     #
     # TODO: Convert to use OpenstackHandle.
@@ -40,16 +40,18 @@ class ManageIQ::Providers::Openstack::CloudManager::Template < ManageIQ::Provide
   end
 
   # TODO: Does this code need to be reimplemented?
-  def proxies4job(job=nil)
+  def proxies4job(_job = nil)
     {
       :proxies => [MiqServer.my_server],
       :message => 'Perform SmartState Analysis on this Image'
     }
   end
+
   def has_active_proxy?
-    return true
+    true
   end
+
   def has_proxy?
-    return true
+    true
   end
 end

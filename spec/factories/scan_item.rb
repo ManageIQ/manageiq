@@ -7,7 +7,7 @@ FactoryGirl.define do
       {
         "item_type"  => "category",
         "definition" => {
-          "content" => [{ "target" => "default" } ]
+          "content" => [{"target" => "default"}]
         }
       }
     end
@@ -18,13 +18,13 @@ FactoryGirl.define do
       {
         "item_type"  => "category",
         "definition" => {
-          "content" => [{ "target" => "test" }]
+          "content" => [{"target" => "test"}]
         }
       }
     end
   end
 
   factory :scan_item_file, :parent => :scan_item do
-    attributes  { { "item_type" => "file", "definition" => {} } }
+    attributes  { {"item_type" => "file", "definition" => {}} }
   end
 end

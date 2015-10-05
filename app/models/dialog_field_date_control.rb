@@ -4,11 +4,11 @@ class DialogFieldDateControl < DialogField
   include TimezoneMixin
 
   def show_past_dates
-    self.options[:show_past_dates] || false
+    options[:show_past_dates] || false
   end
 
   def show_past_dates=(value)
-    self.options[:show_past_dates] = value
+    options[:show_past_dates] = value
   end
 
   def automate_output_value

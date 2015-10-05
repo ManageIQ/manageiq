@@ -64,7 +64,7 @@ describe MiqVimBrokerWorker::Runner do
         @miq_vim_broker = double('miq_vim_broker')
         MiqVimBroker.stub(:new).and_return(@miq_vim_broker)
         @miq_vim_broker.stub(:getMiqVim).and_raise(HTTPClient::ConnectTimeoutError)
-        lambda { @vim_broker_worker.start_broker_server(@worker_record.class.emses_to_monitor) }.should_not raise_error
+        -> { @vim_broker_worker.start_broker_server(@worker_record.class.emses_to_monitor) }.should_not raise_error
       end
     end
 
@@ -80,7 +80,7 @@ describe MiqVimBrokerWorker::Runner do
         @vim_broker_worker.instance_variable_set(:@vim_broker_server, double('miq_vim_broker'))
         @vim_broker_worker.instance_variable_set(:@active_roles, ['foo', 'bar'])
 
-        lambda { @vim_broker_worker.after_sync_active_roles }.should_not raise_error
+        -> { @vim_broker_worker.after_sync_active_roles }.should_not raise_error
       end
 
       it "with role change not including 'ems_inventory' role" do
@@ -88,7 +88,7 @@ describe MiqVimBrokerWorker::Runner do
         @vim_broker_worker.instance_variable_set(:@vim_broker_server, double('miq_vim_broker'))
         @vim_broker_worker.instance_variable_set(:@active_roles, ['foo', 'bar'])
 
-        lambda { @vim_broker_worker.after_sync_active_roles }.should_not raise_error
+        -> { @vim_broker_worker.after_sync_active_roles }.should_not raise_error
       end
 
       it "adding 'ems_inventory' role" do
@@ -96,7 +96,7 @@ describe MiqVimBrokerWorker::Runner do
         @vim_broker_worker.instance_variable_set(:@vim_broker_server, double('miq_vim_broker'))
         @vim_broker_worker.instance_variable_set(:@active_roles, ['foo', 'bar', 'ems_inventory'])
 
-        lambda { @vim_broker_worker.after_sync_active_roles }.should raise_error(SystemExit)
+        -> { @vim_broker_worker.after_sync_active_roles }.should raise_error(SystemExit)
       end
 
       it "removing 'ems_inventory' role" do
@@ -104,7 +104,7 @@ describe MiqVimBrokerWorker::Runner do
         @vim_broker_worker.instance_variable_set(:@vim_broker_server, double('miq_vim_broker'))
         @vim_broker_worker.instance_variable_set(:@active_roles, ['foo', 'bar'])
 
-        lambda { @vim_broker_worker.after_sync_active_roles }.should raise_error(SystemExit)
+        -> { @vim_broker_worker.after_sync_active_roles }.should raise_error(SystemExit)
       end
     end
 
@@ -135,7 +135,6 @@ describe MiqVimBrokerWorker::Runner do
         EmsRefresh.should_receive(:queue_refresh).with(emses).once
         @vim_broker_worker.do_before_work_loop
       end
-
     end
 
     context "#create_miq_vim_broker_server" do
@@ -222,9 +221,9 @@ describe MiqVimBrokerWorker::Runner do
           @vim_broker_worker.drain_event
           MiqQueue.count.should == 1
           q = MiqQueue.first
-          q.class_name.should  == "EmsRefresh"
+          q.class_name.should == "EmsRefresh"
           q.method_name.should == "vc_update"
-          q.args.should        == [@ems.id, event]
+          q.args.should == [@ems.id, event]
         end
 
         it "will handle queued Host updates properly" do
@@ -244,42 +243,38 @@ describe MiqVimBrokerWorker::Runner do
           @vim_broker_worker.drain_event
           MiqQueue.count.should == 1
           q = MiqQueue.first
-          q.class_name.should  == "EmsRefresh"
+          q.class_name.should == "EmsRefresh"
           q.method_name.should == "vc_update"
-          q.args.should        == [@ems.id, event]
+          q.args.should == [@ems.id, event]
         end
 
         it "will ignore updates to unknown properties" do
           vm = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems)
-          @vim_broker_worker.instance_variable_get(:@queue).enq({
-            :server       => @ems.address,
-            :username     => @ems.authentication_userid,
-            :objType      => "VirtualMachine",
-            :op           => "update",
-            :mor          => vm.ems_ref_obj,
-            :key          => "testkey",
-            :changedProps => ["test.property"],
-            :changeSet    => [{"name" => "test.property", "op" => "assign", "val" => "test"}]
-          })
+          @vim_broker_worker.instance_variable_get(:@queue).enq(:server       => @ems.address,
+                                                                :username     => @ems.authentication_userid,
+                                                                :objType      => "VirtualMachine",
+                                                                :op           => "update",
+                                                                :mor          => vm.ems_ref_obj,
+                                                                :key          => "testkey",
+                                                                :changedProps => ["test.property"],
+                                                                :changeSet    => [{"name" => "test.property", "op" => "assign", "val" => "test"}])
 
           @vim_broker_worker.drain_event
           MiqQueue.count.should == 0
         end
 
         it "will ignore updates to excluded properties" do
-          @vim_broker_worker.instance_variable_set(:@exclude_props, {"VirtualMachine" => {"summary.runtime.powerState" => nil}})
+          @vim_broker_worker.instance_variable_set(:@exclude_props, "VirtualMachine" => {"summary.runtime.powerState" => nil})
 
           vm = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems)
-          @vim_broker_worker.instance_variable_get(:@queue).enq({
-            :server       => @ems.address,
-            :username     => @ems.authentication_userid,
-            :objType      => "VirtualMachine",
-            :op           => "update",
-            :mor          => vm.ems_ref_obj,
-            :key          => "testkey",
-            :changedProps => ["summary.runtime.powerState"],
-            :changeSet    => [{"name" => "summary.runtime.powerState", "op" => "assign", "val" => "poweredOn"}]
-          })
+          @vim_broker_worker.instance_variable_get(:@queue).enq(:server       => @ems.address,
+                                                                :username     => @ems.authentication_userid,
+                                                                :objType      => "VirtualMachine",
+                                                                :op           => "update",
+                                                                :mor          => vm.ems_ref_obj,
+                                                                :key          => "testkey",
+                                                                :changedProps => ["summary.runtime.powerState"],
+                                                                :changeSet    => [{"name" => "summary.runtime.powerState", "op" => "assign", "val" => "poweredOn"}])
 
           @vim_broker_worker.drain_event
           MiqQueue.count.should == 0
@@ -287,16 +282,14 @@ describe MiqVimBrokerWorker::Runner do
 
         it "will ignore updates to unknown connections" do
           vm = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems)
-          @vim_broker_worker.instance_variable_get(:@queue).enq({
-            :server       => "XXX.XXX.XXX.XXX",
-            :username     => "someuser",
-            :objType      => "VirtualMachine",
-            :op           => "update",
-            :mor          => vm.ems_ref_obj,
-            :key          => "testkey",
-            :changedProps => ["summary.runtime.powerState"],
-            :changeSet    => [{"name" => "summary.runtime.powerState", "op" => "assign", "val" => "poweredOn"}]
-          })
+          @vim_broker_worker.instance_variable_get(:@queue).enq(:server       => "XXX.XXX.XXX.XXX",
+                                                                :username     => "someuser",
+                                                                :objType      => "VirtualMachine",
+                                                                :op           => "update",
+                                                                :mor          => vm.ems_ref_obj,
+                                                                :key          => "testkey",
+                                                                :changedProps => ["summary.runtime.powerState"],
+                                                                :changeSet    => [{"name" => "summary.runtime.powerState", "op" => "assign", "val" => "poweredOn"}])
 
           @vim_broker_worker.drain_event
           MiqQueue.count.should == 0
@@ -321,9 +314,9 @@ describe MiqVimBrokerWorker::Runner do
           @vim_broker_worker.drain_event
           MiqQueue.count.should == 1
           q = MiqQueue.first
-          q.class_name.should  == "EmsRefresh"
+          q.class_name.should == "EmsRefresh"
           q.method_name.should == "vc_update"
-          q.args.should        == [ems2.id, event]
+          q.args.should == [ems2.id, event]
         end
       end
     end

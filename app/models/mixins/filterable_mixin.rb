@@ -9,18 +9,18 @@ module FilterableMixin
       options[:include] = get_include_for_find(options[:include]) unless options.delete(:eager_loading) == false
       if mfilters.blank?
         # do normal find if no filters
-        result = self.find(number, :conditions => options[:conditions],
+        result = find(number, :conditions => options[:conditions],
           :order => options[:order_by] || options[:order],
           :joins => options[:join] || options[:joins], :include => options[:include],
           :select => options[:select])
         total_count = result.length
       else
         # get count of results unfiltered
-        total_count = options[:conditions] ? self.count(options[:conditions]) : self.count
+        total_count = options[:conditions] ? count(options[:conditions]) : count
 
         # do tag find
         # self.find_tagged_with(options.merge(:all => filters, :ns => "*"))
-        result = self.find_tags_by_grouping(mfilters, options.merge(:ns => "*"))
+        result = find_tags_by_grouping(mfilters, options.merge(:ns => "*"))
       end
 
       result = MiqFilter.apply_belongsto_filters(result, bfilters)
@@ -35,7 +35,7 @@ module FilterableMixin
 
     def count_filtered(options = {})
       result = find_filtered(:all, options).first
-      return result ? result.length : 0
+      result ? result.length : 0
     end
   end
 
@@ -49,7 +49,7 @@ module FilterableMixin
 
   def authorized_for_user?(userid)
     user     = User.find_by_userid(userid)
-    mfilters = user ? user.get_managed_filters   : []
+    mfilters = user ? user.get_managed_filters : []
     bfilters = user ? user.get_belongsto_filters : []
     db       = self.class
     result   = true

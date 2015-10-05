@@ -32,16 +32,16 @@ module MiqAeMethodService
     expose :refresh, :method => :refresh_ems
     expose :tenant,                :association => true
 
-    METHODS_WITH_NO_ARGS = %w{start stop suspend unregister collect_running_processes shutdown_guest standby_guest reboot_guest}
+    METHODS_WITH_NO_ARGS = %w(start stop suspend unregister collect_running_processes shutdown_guest standby_guest reboot_guest)
     METHODS_WITH_NO_ARGS.each do |m|
       define_method(m) do
         ar_method do
           MiqQueue.put(
-            :class_name   => @object.class.name,
-            :instance_id  => @object.id,
-            :method_name  => m,
-            :zone         => @object.my_zone,
-            :role         => "ems_operations"
+            :class_name  => @object.class.name,
+            :instance_id => @object.id,
+            :method_name => m,
+            :zone        => @object.my_zone,
+            :role        => "ems_operations"
           )
           true
         end
@@ -59,19 +59,19 @@ module MiqAeMethodService
       args << state
 
       MiqQueue.put(
-        :class_name   => @object.class.name,
-        :instance_id  => @object.id,
-        :method_name  => 'migrate_via_ids',
-        :zone         => @object.my_zone,
-        :role         => 'ems_operations',
-        :args         => args
+        :class_name  => @object.class.name,
+        :instance_id => @object.id,
+        :method_name => 'migrate_via_ids',
+        :zone        => @object.my_zone,
+        :role        => 'ems_operations',
+        :args        => args
       )
       true
     end
 
     def owner
       evm_owner = object_send(:evm_owner)
-      return wrap_results(evm_owner)
+      wrap_results(evm_owner)
     end
     association :owner
 
@@ -88,9 +88,9 @@ module MiqAeMethodService
     end
 
     def scan(scan_categories = nil)
-      options = scan_categories.nil?  ? {} : {:categories => scan_categories}
+      options = scan_categories.nil? ? {} : {:categories => scan_categories}
       job = object_send(:scan, "system", options)
-      return wrap_results(job)
+      wrap_results(job)
     end
 
     def unlink_storage
@@ -115,12 +115,12 @@ module MiqAeMethodService
     def ems_custom_set(attribute, value)
       _log.info "Setting EMS Custom Key on #{@object.class.name} id:<#{@object.id}>, name:<#{@object.name}> with key=#{attribute.inspect} to #{value.inspect}"
       MiqQueue.put(
-        :class_name   => @object.class.name,
-        :instance_id  => @object.id,
-        :method_name  => 'set_custom_field',
-        :zone         => @object.my_zone,
-        :role         => 'ems_operations',
-        :args         => [attribute, value]
+        :class_name  => @object.class.name,
+        :instance_id => @object.id,
+        :method_name => 'set_custom_field',
+        :zone        => @object.my_zone,
+        :role        => 'ems_operations',
+        :args        => [attribute, value]
       )
       true
     end
@@ -143,7 +143,7 @@ module MiqAeMethodService
     end
 
     def owner=(owner)
-      raise ArgumentError, "owner must be nil or a MiqAeServiceUser" unless (owner.nil? || owner.kind_of?(MiqAeMethodService::MiqAeServiceUser))
+      raise ArgumentError, "owner must be nil or a MiqAeServiceUser" unless owner.nil? || owner.kind_of?(MiqAeMethodService::MiqAeServiceUser)
 
       ar_method do
         @object.evm_owner = owner && owner.instance_variable_get("@object")
@@ -153,7 +153,7 @@ module MiqAeMethodService
     end
 
     def group=(group)
-      raise ArgumentError, "group must be nil or a MiqAeServiceMiqGroup" unless (group.nil? || group.kind_of?(MiqAeMethodService::MiqAeServiceMiqGroup))
+      raise ArgumentError, "group must be nil or a MiqAeServiceMiqGroup" unless group.nil? || group.kind_of?(MiqAeMethodService::MiqAeServiceMiqGroup)
 
       ar_method do
         @object.miq_group = group && group.instance_variable_get("@object")

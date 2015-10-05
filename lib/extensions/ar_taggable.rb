@@ -13,17 +13,17 @@ module ActsAsTaggable
 
   def self.split_tag_names(tags, separator)
     tag_names = []
-    if tags.is_a?(Array)
+    if tags.kind_of?(Array)
       tag_names.push(tags)
-    elsif tags.is_a?(String)
-      tag_names.push((separator.is_a?(Proc) ? separator.call(tags) : tags.split(separator)))
+    elsif tags.kind_of?(String)
+      tag_names.push((separator.kind_of?(Proc) ? separator.call(tags) : tags.split(separator)))
     end
     tag_names.flatten.map(&:strip).uniq.compact
   end
 
   module ClassMethods
     def find_tagged_with(options = {})
-      options = { :separator => ' ' }.merge(options)
+      options = {:separator => ' '}.merge(options)
       options[:ns] = Tag.get_namespace(options)
 
       tag_names = ActsAsTaggable.split_tag_names(options[:any] || options[:all], options[:separator])
@@ -33,11 +33,11 @@ module ActsAsTaggable
       tag_ids = Tag.where(:name => fq_tag_names).pluck(:id)
 
       # Bailout if not enough tags were found
-      return self.none if options[:all] && tag_ids.length != fq_tag_names.length
+      return none if options[:all] && tag_ids.length != fq_tag_names.length
 
       taggings = Tagging.arel_table
-      self_arel = self.arel_table
-      query = self.uniq.joins(:taggings).where(taggings[:tag_id].in tag_ids)
+      self_arel = arel_table
+      query = uniq.joins(:taggings).where(taggings[:tag_id].in tag_ids)
 
       if options[:all]
         grouping_cols = [taggings[:taggable_id]] + column_names.collect { |c| self_arel[c] }
@@ -56,19 +56,19 @@ module ActsAsTaggable
       # and honor offset and limit here.
       inner_lists = false
       list.each do |item|
-        if item.is_a?(Array) && item.length > 1
+        if item.kind_of?(Array) && item.length > 1
           inner_lists = true
           break
         end
       end
-      return find_tagged_with(options.merge(:all=>list)) unless inner_lists == true
+      return find_tagged_with(options.merge(:all => list)) unless inner_lists == true
 
       offset = options.delete(:offset)
       limit = options.delete(:limit)
       count = options.delete(:count)
       results = nil
       list.each do |inner_list|
-        ret = find_tagged_with(options.merge(:any=>inner_list))
+        ret = find_tagged_with(options.merge(:any => inner_list))
         if results.nil?
           results = ret
           next
@@ -79,13 +79,13 @@ module ActsAsTaggable
       end
       if limit
         offset ||= 0
-        results = results[offset..offset+limit-1]
+        results = results[offset..offset + limit - 1]
       end
       count ? results.length : results
     end
 
     def tags(options = {})
-      options.merge!(:taggable_type => self.base_class.name)
+      options.merge!(:taggable_type => base_class.name)
       options[:ns] = Tag.get_namespace(options)
       Tag.tags(options)
     end
@@ -98,12 +98,12 @@ module ActsAsTaggable
       # Remove existing tags
       tag = Tag.arel_table
       tagging = Tagging.arel_table
-      Tagging.joins(:tag).
-                where(:taggable_id    => self.id).
-                where(:taggable_type  => self.class.base_class.name).
-                where(tagging[:tag_id].eq(tag[:id])).
-                where(tag[:name].matches "#{ns}/%").
-                destroy_all
+      Tagging.joins(:tag)
+        .where(:taggable_id    => id)
+        .where(:taggable_type  => self.class.base_class.name)
+        .where(tagging[:tag_id].eq(tag[:id]))
+        .where(tag[:name].matches "#{ns}/%")
+        .destroy_all
 
       # Apply new tags
       Tag.parse(list).each do |name|
@@ -131,10 +131,10 @@ module ActsAsTaggable
     # remove taggings from object
     ns = Tag.get_namespace(options)
     Tag.parse(list).each do |name|
-      self.taggings.
-            includes(:tag).
-            where(Tag.arel_table[:name].eq File.join(ns, name)).
-            destroy_all
+      taggings
+        .includes(:tag)
+        .where(Tag.arel_table[:name].eq File.join(ns, name))
+        .destroy_all
     end
   end
 
@@ -142,7 +142,7 @@ module ActsAsTaggable
     tagging = Tagging.arel_table
     query = Tag.includes(:taggings).references(:taggings)
     query = query.where(tagging[:taggable_type].eq self.class.base_class.name)
-    query = query.where(tagging[:taggable_id].eq self.id)
+    query = query.where(tagging[:taggable_id].eq id)
     ns    = Tag.get_namespace(options)
     query = query.where(Tag.arel_table[:name].matches "#{ns}%") if ns
     query
@@ -155,7 +155,7 @@ module ActsAsTaggable
     Array(tags).include?(File.join(ns, tag))
   end
 
-  def is_vtagged_with?(tag, options={})
+  def is_vtagged_with?(tag, options = {})
     ns = Tag.get_namespace(options)
 
     subject = self
@@ -168,7 +168,7 @@ module ActsAsTaggable
       while parts.length > 1
         part = parts.shift
         subject = subject.send(part.to_sym)
-        raise "unable to evaluate tag, '#{tag}', because it contains multi-value reference, '#{part}' that is not the last reference" if subject.is_a?(Array)
+        raise "unable to evaluate tag, '#{tag}', because it contains multi-value reference, '#{part}' that is not the last reference" if subject.kind_of?(Array)
       end
       relationship = parts.pop
       unless relationship
@@ -230,4 +230,3 @@ module ActsAsTaggable
     end
   end
 end
-

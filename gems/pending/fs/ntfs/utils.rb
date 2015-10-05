@@ -4,13 +4,13 @@ module NTFS
   module Utils
     # Make a reference (upper two bytes are seq num, lower six are entry).
     def self.MkRef(ref)
-      ref.divmod(2 ** 48)
+      ref.divmod(2**48)
     end
-    
+
     def self.gotBit?(flags, bit)
-  		(flags & bit) == bit
-  	end
-  	
+      (flags & bit) == bit
+    end
+
     # Process per-sector "fixups" that NTFS uses to detect corruption of
     # multi-sector data structures, like MFT records.
     def self.process_fixups(buf, fixup_offset, usa_offset, usa_count)
@@ -29,7 +29,7 @@ module NTFS
         buf[i * fixup_offset - 2, 2] = buf[i * 2 + usa_offset, 2]
       end
 
-      return buf
+      buf
     end
 
     def self.validate_signature(signature, expected)
@@ -39,6 +39,5 @@ module NTFS
         raise "Invalid Signature <#{signature}>"
       end
     end
-
   end
 end

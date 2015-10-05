@@ -25,7 +25,7 @@ module Vmdb
     #     https://github.com/rails/rails/blob/v3.2.15/railties/lib/rails/application/configuration.rb#L48-L49
     def prepare_asset_precompilation
       Rails.application.config.assets.precompile = [
-        Proc.new do |path|
+        proc do |path|
           file =
             !File.extname(path).in?(['.js', '.css', '']) ||
             path =~ /(?:\/|\\|\A)(application|productization)\.(css|js)$/

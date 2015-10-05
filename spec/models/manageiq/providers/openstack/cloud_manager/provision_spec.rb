@@ -93,8 +93,10 @@ describe ManageIQ::Providers::Openstack::CloudManager::Provision do
   end
 
   it "#workflow" do
-    ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow.any_instance.stub(:get_dialogs => {:dialogs => {}})
+    workflow_class = ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow
+    workflow_class.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
 
-    expect(vm_prov.workflow).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow)
+    expect(vm_prov.workflow.class).to eq workflow_class
+    expect(vm_prov.workflow_class).to eq workflow_class
   end
 end

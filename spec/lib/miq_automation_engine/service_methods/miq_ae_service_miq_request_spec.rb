@@ -123,7 +123,7 @@ module MiqAeServiceMiqRequestSpec
 
       betty_reason = "Where's Barney?"
       betty_approval.deny(betty.userid, betty_reason)
-      #betty_approval.update_attributes(:state => 'denied', :reason => betty_reason)
+      # betty_approval.update_attributes(:state => 'denied', :reason => betty_reason)
       reason = invoke_ae.root(@ae_result_key)
       reason.should == betty_reason
 
@@ -132,7 +132,7 @@ module MiqAeServiceMiqRequestSpec
       @miq_request.miq_approvals << wilma_approval
       wilma_reason = "Where's Fred?"
       wilma_approval.deny(wilma.userid, wilma_reason)
-      #wilma_approval.update_attributes(:state => 'denied', :reason => wilma_reason)
+      # wilma_approval.update_attributes(:state => 'denied', :reason => wilma_reason)
       reasons = invoke_ae.root(@ae_result_key)
       # Order of reasons is indeterminate
       reasons.split('; ').each { |reason| [betty_reason, wilma_reason].include?(reason).should be_true }
@@ -141,7 +141,7 @@ module MiqAeServiceMiqRequestSpec
     it "#options" do
       method = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request'].options"
       @ae_method.update_attributes(:data => method)
-      options = { :a => 1, :b => 'two' }
+      options = {:a => 1, :b => 'two'}
       @miq_request.update_attributes(:options => options)
       invoke_ae.root(@ae_result_key).should == options
     end
@@ -151,15 +151,15 @@ module MiqAeServiceMiqRequestSpec
       method = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request'].get_option('#{key}')"
       @ae_method.update_attributes(:data => method)
 
-      [ ['three hundred', 'three hundred'], [ ['one', 'two'], 'one'] ].each do |value, expected|
-        options = { :a => 1, :b => 'two', key => value }
+      [['three hundred', 'three hundred'], [['one', 'two'], 'one']].each do |value, expected|
+        options = {:a => 1, :b => 'two', key => value}
         @miq_request.update_attributes(:options => options)
         invoke_ae.root(@ae_result_key).should == expected
       end
     end
 
     it "#set_option" do
-      options = { :a => 1, :b => 'two' }
+      options = {:a => 1, :b => 'two'}
       @miq_request.update_attributes(:options => options)
       key     = 'foo'
       value   = 'bar'

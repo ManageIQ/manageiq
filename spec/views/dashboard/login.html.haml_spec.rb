@@ -2,7 +2,6 @@ require "spec_helper"
 include JsHelper
 
 describe "dashboard/login.html.haml" do
-
   context "login_div contains browser and TZ hidden fields" do
     before(:each) do
       EvmSpecHelper.create_guid_miq_server_zone
@@ -53,5 +52,4 @@ describe "dashboard/login.html.haml" do
       end
     end
   end
-
 end

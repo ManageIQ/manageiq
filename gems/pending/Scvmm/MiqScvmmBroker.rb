@@ -2,25 +2,24 @@ require 'drb'
 require 'sync'
 
 class MiqScvmmBroker
-
-	attr_reader :shuttingDown
+  attr_reader :shuttingDown
 
   @@preLoad        = false
   @@debugUpdates   = false
 
-  def initialize(mode=:client, port="*")
+  def initialize(mode = :client, port = "*")
     @mode = mode
     if mode == :client
-      #require 'MiqVimDump'
+      # require 'MiqVimDump'
       DRb.start_service
       @broker = DRbObject.new(nil, "druby://localhost:#{port}")
     elsif mode == :server
       require 'MiqScvmmBrokerMods' # only needed by the server
-			@shuttingDown = false
-			@connectionHash = Hash.new
-      @badConnections = Array.new
+      @shuttingDown = false
+      @connectionHash = {}
+      @badConnections = []
       @connectionLock = Sync.new
-      #DRb.start_service("druby://localhost:#{port}", self)
+      # DRb.start_service("druby://localhost:#{port}", self)
       DRb.start_service(nil, self)
       puts DRb.uri
     else
@@ -49,11 +48,11 @@ class MiqScvmmBroker
 
     if @mode == :client
       svr = @broker.getServerHandle(server, username, password)
-      #vim.instance_eval("extend MiqVimDump")
+      # vim.instance_eval("extend MiqVimDump")
     else
       key = "#{server}_#{username}"
       @connectionLock.synchronize(:EX) do
-				raise "MiqScvmmBroker is shutting down" if @shuttingDown
+        raise "MiqScvmmBroker is shutting down" if @shuttingDown
         svr = @connectionHash[key]
         if svr
           $log.info "MiqScvmmBroker.getMiqVim: found connection for #{key}"
@@ -70,7 +69,7 @@ class MiqScvmmBroker
       end
     end
 
-    return(svr)
+    (svr)
   end
 
   def removeServerHandle(svr_handle)
@@ -78,44 +77,42 @@ class MiqScvmmBroker
     key = "#{svr_handle.server}_#{svr_handle.username}"
     $log.info "MiqScvmmBroker.removeMiqVim: removing connection for #{key}"
     @connectionLock.synchronize(:EX) do
-			return if @shuttingDown
-      return if !(svr = @connectionHash[key])
+      return if @shuttingDown
+      return unless (svr = @connectionHash[key])
       return if svr != svr_handle
-      #svr.stopUpdateMonitor
+      # svr.stopUpdateMonitor
       @badConnections << svr
       @connectionHash.delete(key)
     end
   end
 
-	def shutdown
-		raise "MiqScvmmBroker: shutdown cannot be called from client" if @mode == :client
-		$log.info "MiqScvmmBroker shutting down..."
-		@connectionLock.synchronize(:EX) do
-			@shuttingDown = true
-			@connectionHash.each do |id, svr|
-				$log.info "MiqScvmmBroker: closing connection #{id}"
-				#svr.stopUpdateMonitor
-				begin
-					svr.updateThread.join
-				rescue => err
-				end
-				svr.serverPrivateDisconnect
-				@connectionHash.delete(id)
-			end
-		end
-		$log.info "MiqScvmmBroker shutdown complete"
-	end
+  def shutdown
+    raise "MiqScvmmBroker: shutdown cannot be called from client" if @mode == :client
+    $log.info "MiqScvmmBroker shutting down..."
+    @connectionLock.synchronize(:EX) do
+      @shuttingDown = true
+      @connectionHash.each do |id, svr|
+        $log.info "MiqScvmmBroker: closing connection #{id}"
+        # svr.stopUpdateMonitor
+        begin
+          svr.updateThread.join
+        rescue => err
+        end
+        svr.serverPrivateDisconnect
+        @connectionHash.delete(id)
+      end
+    end
+    $log.info "MiqScvmmBroker shutdown complete"
+  end
 
-	def serverAlive?
-		if @mode == :client
-			begin
-				return @broker.serverAlive?
-			rescue DRb::DRbConnError => err
-				return false
-			end
-		end
-		return true
-	end
-
+  def serverAlive?
+    if @mode == :client
+      begin
+        return @broker.serverAlive?
+      rescue DRb::DRbConnError => err
+        return false
+      end
+    end
+    true
+  end
 end # class MiqScvmmBroker
-

@@ -1,5 +1,5 @@
-#TODO: add appropriate requires instead of depending on appliance_console.rb.
-#TODO: Further refactor these unrelated methods.
+# TODO: add appropriate requires instead of depending on appliance_console.rb.
+# TODO: Further refactor these unrelated methods.
 require "appliance_console/internal_database_configuration"
 require "util/postgres_admin"
 require "awesome_spawn"
@@ -8,9 +8,9 @@ module ApplianceConsole
   module Utilities
     def self.db_connections
       result = AwesomeSpawn.run("bin/rails runner",
-        :params => ["exit EvmDatabaseOps.database_connections"],
-        :chdir  => RAILS_ROOT
-      )
+                                :params => ["exit EvmDatabaseOps.database_connections"],
+                                :chdir  => RAILS_ROOT
+                               )
       Integer(result.exit_status)
     end
 
@@ -25,9 +25,9 @@ module ApplianceConsole
 
     def self.db_host_type_database
       result = AwesomeSpawn.run("bin/rails runner",
-        :params => ["puts MiqDbConfig.current.options.values_at(:host, :adapter, :database)"],
-        :chdir  => RAILS_ROOT
-      )
+                                :params => ["puts MiqDbConfig.current.options.values_at(:host, :adapter, :database)"],
+                                :chdir  => RAILS_ROOT
+                               )
 
       host, type, database = result.output.split("\n").last(3)
       host = "localhost" if host.blank?
@@ -44,7 +44,7 @@ module ApplianceConsole
 
     def self.pg_status
       system("service #{PostgresAdmin.service_name} status > /dev/null 2>&1")
-      return $?.exitstatus == 0 ? "running" : "not running"
+      $?.exitstatus == 0 ? "running" : "not running"
     end
 
     def self.test_network

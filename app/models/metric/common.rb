@@ -49,35 +49,35 @@ module Metric::Common
     interval, mode = vcol.to_s.split("_")[1..2]
     col = vcol.to_s.split("_")[3..-1].join("_")
 
-    return nil unless interval == "daily" && self.capture_interval == 1.day
+    return nil unless interval == "daily" && capture_interval == 1.day
 
     cond = ["resource_type = ? and resource_id = ? and capture_interval_name = 'hourly' and timestamp >= ? and timestamp < ?",
-      self.resource_type, self.resource_id, self.timestamp.to_date.to_s,  (self.timestamp + 1.day).to_date.to_s]
+            resource_type, resource_id, timestamp.to_date.to_s,  (timestamp + 1.day).to_date.to_s]
     direction = mode == "min" ? "ASC" : "DESC"
     rec = MetricRollup.where(cond).order("#{col} #{direction}").first
-    return rec.nil? ? nil : rec.send(col)
+    rec.nil? ? nil : rec.send(col)
   end
 
   def v_derived_storage_used
-    return nil if self.derived_storage_total.nil? || self.derived_storage_free.nil?
-    self.derived_storage_total - self.derived_storage_free
+    return nil if derived_storage_total.nil? || derived_storage_free.nil?
+    derived_storage_total - derived_storage_free
   end
 
   def min_max_v_derived_storage_used(mode)
     cond = ["resource_type = ? and resource_id = ? and capture_interval_name = 'hourly' and timestamp >= ? and timestamp < ?",
-      self.resource_type, self.resource_id, self.timestamp.to_date.to_s, (self.timestamp + 1.day).to_date.to_s]
+            resource_type, resource_id, timestamp.to_date.to_s, (timestamp + 1.day).to_date.to_s]
     meth = mode == :min ? :first : :last
     recs = MetricRollup.where(cond)
-    rec = recs.sort {|a,b| ( a.v_derived_storage_used && b.v_derived_storage_used ) ? ( a.v_derived_storage_used <=> b.v_derived_storage_used ) : ( a.v_derived_storage_used ? 1 : -1 ) }.send(meth)
-    return rec.nil? ? nil : rec.v_derived_storage_used
+    rec = recs.sort { |a, b| (a.v_derived_storage_used && b.v_derived_storage_used) ? (a.v_derived_storage_used <=> b.v_derived_storage_used) : (a.v_derived_storage_used ? 1 : -1) }.send(meth)
+    rec.nil? ? nil : rec.v_derived_storage_used
   end
 
   def min_v_derived_storage_used
-    @min_v_derived_storage_used ||= self.min_max_v_derived_storage_used(:min)
+    @min_v_derived_storage_used ||= min_max_v_derived_storage_used(:min)
   end
 
   def max_v_derived_storage_used
-    @max_v_derived_storage_used ||= self.min_max_v_derived_storage_used(:max)
+    @max_v_derived_storage_used ||= min_max_v_derived_storage_used(:max)
   end
 
   CHILD_ROLLUP_INTERVAL = {
@@ -87,53 +87,53 @@ module Metric::Common
   }
   def v_calc_pct_of_cpu_time(vcol)
     col = vcol.to_s.split("_")[2..-1].join("_")
-    return nil if self.send(col).nil?
+    return nil if send(col).nil?
 
-    int, default_intervals_in_rollup = CHILD_ROLLUP_INTERVAL[self.capture_interval_name]
-    ints_in_rollup = if self.capture_interval_name == 'hourly'
-      self.resource_type == 'VmOrTemplate' ? (self.intervals_in_rollup || default_intervals_in_rollup) : default_intervals_in_rollup
-    else
-      1 # Special case daily because the value for that interval is and average for 1 hour
-    end
+    int, default_intervals_in_rollup = CHILD_ROLLUP_INTERVAL[capture_interval_name]
+    ints_in_rollup = if capture_interval_name == 'hourly'
+                       resource_type == 'VmOrTemplate' ? (intervals_in_rollup || default_intervals_in_rollup) : default_intervals_in_rollup
+                     else
+                       1 # Special case daily because the value for that interval is and average for 1 hour
+                     end
     elapsed_time = (ints_in_rollup * int * 1000.0)
     return 0 if elapsed_time == 0
 
-    raw_val = ((self.send(col) / elapsed_time))
+    raw_val = ((send(col) / elapsed_time))
 
     # A different calculation is necessary for Host, Cluster, EMS, etc.
     # We need to divide by the number of running VMs since the is an aggregation of the millisend values of all the child VMs
-    unless self.resource_type == 'VmOrTemplate'
-      return 0 if self.derived_vm_count_on.nil? || self.derived_vm_count_on == 0
-      raw_val = (raw_val / self.derived_vm_count_on)
+    unless resource_type == 'VmOrTemplate'
+      return 0 if derived_vm_count_on.nil? || derived_vm_count_on == 0
+      raw_val = (raw_val / derived_vm_count_on)
     end
 
     (raw_val * 1000.0).round / 10.0
   end
 
   def v_date
-    self.timestamp
+    timestamp
   end
 
   def v_time
-    self.timestamp
+    timestamp
   end
 
   def v_derived_vm_count
-    (self.derived_vm_count_on || 0) + (self.derived_vm_count_off || 0)
+    (derived_vm_count_on || 0) + (derived_vm_count_off || 0)
   end
 
   def v_derived_host_count
-    (self.derived_host_count_on || 0) + (self.derived_host_count_off || 0)
+    (derived_host_count_on || 0) + (derived_host_count_off || 0)
   end
 
   def v_derived_cpu_reserved_pct
-    return nil if self.derived_cpu_reserved.nil? || self.derived_cpu_available.nil? || derived_cpu_available == 0
-    (self.derived_cpu_reserved / self.derived_cpu_available * 100)
+    return nil if derived_cpu_reserved.nil? || derived_cpu_available.nil? || derived_cpu_available == 0
+    (derived_cpu_reserved / derived_cpu_available * 100)
   end
 
   def v_derived_memory_reserved_pct
-    return nil if self.derived_memory_reserved.nil? || self.derived_memory_available.nil? || derived_memory_available == 0
-    (self.derived_memory_reserved / self.derived_memory_available * 100)
+    return nil if derived_memory_reserved.nil? || derived_memory_available.nil? || derived_memory_available == 0
+    (derived_memory_reserved / derived_memory_available * 100)
   end
 
   def v_derived_logical_cpus_used
@@ -142,33 +142,33 @@ module Metric::Common
   end
 
   def apply_time_profile(profile)
-    method = "apply_time_profile_#{self.capture_interval_name}"
-    return self.send(method, profile) if self.respond_to?(method)
+    method = "apply_time_profile_#{capture_interval_name}"
+    return send(method, profile) if self.respond_to?(method)
   end
 
   def apply_time_profile_hourly(profile)
-    unless profile.ts_in_profile?(self.timestamp)
+    unless profile.ts_in_profile?(timestamp)
       self.inside_time_profile = false
-      self.nil_out_values_for_apply_time_profile
-      _log.debug("Hourly Timestamp: [#{self.timestamp}] is outside of time profile: [#{profile.description}]")
+      nil_out_values_for_apply_time_profile
+      _log.debug("Hourly Timestamp: [#{timestamp}] is outside of time profile: [#{profile.description}]")
     else
       self.inside_time_profile = true
     end
-    return self.inside_time_profile
+    inside_time_profile
   end
 
   def apply_time_profile_daily(profile)
-    unless profile.ts_day_in_profile?(self.timestamp)
+    unless profile.ts_day_in_profile?(timestamp)
       self.inside_time_profile = false
-      self.nil_out_values_for_apply_time_profile
-      _log.debug("Daily Timestamp: [#{self.timestamp}] is outside of time profile: [#{profile.description}]")
+      nil_out_values_for_apply_time_profile
+      _log.debug("Daily Timestamp: [#{timestamp}] is outside of time profile: [#{profile.description}]")
     else
       self.inside_time_profile = true
     end
-    return self.inside_time_profile
+    inside_time_profile
   end
 
   def nil_out_values_for_apply_time_profile
-    (Metric::Rollup::ROLLUP_COLS + ["assoc_ids", "min_max"]).each {|c| self.send("#{c}=", nil)}
+    (Metric::Rollup::ROLLUP_COLS + ["assoc_ids", "min_max"]).each { |c| send("#{c}=", nil) }
   end
 end

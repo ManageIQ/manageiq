@@ -39,8 +39,8 @@ class MiqCimVirtualMachine < MiqCimInstance
   VirtualMachineToBaseSeShortcut      = CimAssociations.MIQ_VirtualMachine_TO_CIM_StorageExtent_SC
 
   SHORTCUT_DEFS = {
-    :local_file_systems_long  => VirtualMachineToLfsShortcut,
-    :base_storage_extents_long  => VirtualMachineToBaseSeShortcut
+    :local_file_systems_long   => VirtualMachineToLfsShortcut,
+    :base_storage_extents_long => VirtualMachineToBaseSeShortcut
   }
 
   ############################
@@ -215,5 +215,4 @@ class MiqCimVirtualMachine < MiqCimInstance
   def hosts_size
     getAssociationSize(VirtualMachineToHost)
   end
-
 end

@@ -17,17 +17,6 @@ module ControllerSpecHelper
     User.any_instance.stub(:role_allows?).and_return(true)
   end
 
-  def seed_specific_product_features(*features)
-    @test_user = login_as FactoryGirl.create(:user,
-                                             :userid   => "test",
-                                             :name     => 'test_user',
-                                             :features => specific_product_features(*features))
-  end
-
-  def specific_product_features(*features)
-    EvmSpecHelper.specific_product_features(features)
-  end
-
   shared_context "valid session" do
     let(:privilege_checker_service) { auto_loaded_instance_double("PrivilegeCheckerService", :valid_session?  => true) }
     let(:request_referer_service)   { auto_loaded_instance_double("RequestRefererService",   :allowed_access? => true) }
@@ -42,7 +31,7 @@ module ControllerSpecHelper
   def seed_session_trees(a_controller, active_tree, node = nil)
     session[:sandboxes] = {
       a_controller => {
-        :trees => {
+        :trees       => {
           active_tree => {}
         },
         :active_tree => active_tree

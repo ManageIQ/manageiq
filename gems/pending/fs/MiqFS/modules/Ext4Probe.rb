@@ -1,8 +1,7 @@
 require 'fs/ext4/superblock'
 
 module Ext4Probe
-
-  def Ext4Probe.probe(dobj)
+  def self.probe(dobj)
     $log.debug("Ext4Probe >> dobj=#{dobj}") if $log
     unless dobj.kind_of?(MiqDisk)
       $log.debug "Ext4Probe << FALSE because Disk Object class is not MiqDisk, but is '#{dobj.class}'" if $log

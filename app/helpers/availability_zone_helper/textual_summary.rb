@@ -1,5 +1,4 @@
 module AvailabilityZoneHelper::TextualSummary
-
   #
   # Groups
   #
@@ -21,7 +20,7 @@ module AvailabilityZoneHelper::TextualSummary
   end
 
   def textual_instances
-    label = ui_lookup(:tables=>"vm_cloud")
+    label = ui_lookup(:tables => "vm_cloud")
     num   = @record.number_of(:vms)
     h     = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "vm_show_list")

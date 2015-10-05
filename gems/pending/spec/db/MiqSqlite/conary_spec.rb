@@ -2,7 +2,6 @@ require "spec_helper"
 require 'db/MiqSqlite/MiqSqlite3'
 
 describe MiqSqlite3DB::MiqSqlite3 do
-
   let(:fname) { "#{File.dirname(__FILE__)}/conary.db" }
   let(:db)    { MiqSqlite3DB::MiqSqlite3.new(fname) }
 
@@ -41,13 +40,13 @@ describe MiqSqlite3DB::MiqSqlite3 do
     t_versions  = db.getTable("Versions")
     t_instances = db.getTable("Instances")
 
-    versions = Hash.new
+    versions = {}
     t_versions.each_row do |row|
       id           = row['versionId']
       versions[id] = row['version']
     end
 
-    troves = Hash.new
+    troves = {}
     t_instances.each_row do |row|
       troveName = row['troveName']
       versionId = row['versionId']

@@ -1,5 +1,4 @@
 class MiqEnterprise < ActiveRecord::Base
-
   has_many :metrics,        :as => :resource  # Destroy will be handled by purger
   has_many :metric_rollups, :as => :resource  # Destroy will be handled by purger
   has_many :vim_performance_states, :as => :resource  # Destroy will be handled by purger
@@ -35,7 +34,7 @@ class MiqEnterprise < ActiveRecord::Base
   def self.my_enterprise
     # Cache the enterprise instance, but clear the association
     #   cache to support keeping the associations fresh
-    @my_enterprise ||= self.in_my_region.first
+    @my_enterprise ||= in_my_region.first
     @my_enterprise.clear_association_cache unless @my_enterprise.nil?
     @my_enterprise
   end
@@ -86,18 +85,18 @@ class MiqEnterprise < ActiveRecord::Base
     PolicyEvent.all
   end
 
-  alias all_vms_and_templates  vms_and_templates
-  alias all_vm_or_template_ids vm_or_template_ids
-  alias all_vms                vms
-  alias all_vm_ids             vm_ids
-  alias all_miq_templates      miq_templates
-  alias all_miq_template_ids   miq_template_ids
-  alias all_hosts              hosts
-  alias all_host_ids           host_ids
-  alias all_storages           storages
+  alias_method :all_vms_and_templates,  :vms_and_templates
+  alias_method :all_vm_or_template_ids, :vm_or_template_ids
+  alias_method :all_vms,                :vms
+  alias_method :all_vm_ids,             :vm_ids
+  alias_method :all_miq_templates,      :miq_templates
+  alias_method :all_miq_template_ids,   :miq_template_ids
+  alias_method :all_hosts,              :hosts
+  alias_method :all_host_ids,           :host_ids
+  alias_method :all_storages,           :storages
 
   def get_reserve(field)
-    self.ext_management_systems.inject(0) {|v,obj| v + (obj.send(field) || 0)}
+    ext_management_systems.inject(0) { |v, obj| v + (obj.send(field) || 0) }
   end
 
   def cpu_reserve
@@ -119,7 +118,7 @@ class MiqEnterprise < ActiveRecord::Base
   end
 
   def perf_capture_enabled
-    @perf_capture_enabled ||= self.ext_management_systems.any?(&:perf_capture_enabled?)
+    @perf_capture_enabled ||= ext_management_systems.any?(&:perf_capture_enabled?)
   end
-  alias perf_capture_enabled? perf_capture_enabled
-end #class MiqEnterprise
+  alias_method :perf_capture_enabled?, :perf_capture_enabled
+end # class MiqEnterprise

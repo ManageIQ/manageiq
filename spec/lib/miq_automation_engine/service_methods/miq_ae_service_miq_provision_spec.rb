@@ -8,7 +8,6 @@ module MiqAeServiceMiqProvisionSpec
       @ae_method     = ::MiqAeMethod.first
       @ae_result_key = 'foo'
 
-
       @ems           = FactoryGirl.create(:ems_vmware_with_authentication)
       @vm_template   = FactoryGirl.create(:template_vmware, :ext_management_system => @ems)
       @options       = {}
@@ -63,7 +62,6 @@ module MiqAeServiceMiqProvisionSpec
       ae_object = invoke_ae.root(@ae_result_key)
       ae_object.should be_kind_of(MiqAeMethodService::MiqAeServiceVm)
       [:id, :name, :location].each { |method| ae_object.send(method).should == vm.send(method) }
-
     end
 
     it "#vm_template" do
@@ -86,7 +84,7 @@ module MiqAeServiceMiqProvisionSpec
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision'].request_type"
       @ae_method.update_attributes(:data => method)
 
-      %w{ template clone_to_vm clone_to_template }.each do |provision_type|
+      %w( template clone_to_vm clone_to_template ).each do |provision_type|
         @miq_provision.update_attributes(:provision_type => provision_type)
         invoke_ae.root(@ae_result_key).should == @miq_provision.provision_type
       end
@@ -99,7 +97,7 @@ module MiqAeServiceMiqProvisionSpec
       @miq_provision[:options][:callbacks].should be_nil
       @miq_provision.reload
       callback_hash = @miq_provision[:options][:callbacks]
-      callback_hash.count.should  == 1
+      callback_hash.count.should == 1
       callback_hash[:first_time_out].should == 'do_something_great'
     end
 
@@ -113,7 +111,7 @@ module MiqAeServiceMiqProvisionSpec
       invoke_ae.root(@ae_result_key).should be_true
       @miq_provision.reload
       callback_hash = @miq_provision[:options][:callbacks]
-      callback_hash.count.should  == 2
+      callback_hash.count.should == 2
       callback_hash[:first_time_out].should == 'do_something_great'
       callback_hash[:next_time_around].should == 'do_something_better_yet'
     end
@@ -122,23 +120,22 @@ module MiqAeServiceMiqProvisionSpec
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision'].set_vm_notes"
       @ae_method.update_attributes(:data => method)
 
-      #%w{ template clone_to_vm clone_to_template }.each do |provision_type|
+      # %w{ template clone_to_vm clone_to_template }.each do |provision_type|
       #  @miq_provision.update_attributes(:provision_type => provision_type)
       #  invoke_ae.root(@ae_result_key).should == @miq_provision.provision_type
-      #end
+      # end
     end
-
 
     it "#target_type" do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision'].target_type"
       @ae_method.update_attributes(:data => method)
 
-      %w{ clone_to_template }.each do |provision_type|
+      %w( clone_to_template ).each do |provision_type|
         @miq_provision.update_attributes(:provision_type => provision_type)
         invoke_ae.root(@ae_result_key).should == 'template'
       end
 
-      %w{ template clone_to_vm }.each do |provision_type|
+      %w( template clone_to_vm ).each do |provision_type|
         @miq_provision.update_attributes(:provision_type => provision_type)
         invoke_ae.root(@ae_result_key).should == 'vm'
       end
@@ -211,7 +208,7 @@ module MiqAeServiceMiqProvisionSpec
         AUTOMATE_SCRIPT
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
-        @miq_provision.reload.options[:customization_template_id].should     == [@ct.id, @ct.name]
+        @miq_provision.reload.options[:customization_template_id].should == [@ct.id, @ct.name]
         @miq_provision.reload.options[:customization_template_script].should == @ct.script
       end
     end
@@ -219,8 +216,8 @@ module MiqAeServiceMiqProvisionSpec
     context "resource_pools" do
       before(:each) do
         @rsc = FactoryGirl.create(:resource_pool)
-        MiqProvisionWorkflow.any_instance.stub(:allowed_resource_pools).and_return({@rsc.id => @rsc.name})
-        MiqProvisionWorkflow.any_instance.stub(:allowed_respools).and_return({@rsc.id => @rsc.name})
+        MiqProvisionWorkflow.any_instance.stub(:allowed_resource_pools).and_return(@rsc.id => @rsc.name)
+        MiqProvisionWorkflow.any_instance.stub(:allowed_respools).and_return(@rsc.id => @rsc.name)
       end
 
       it "#eligible_resource_pools" do

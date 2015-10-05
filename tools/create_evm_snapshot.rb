@@ -30,7 +30,7 @@ when 'job'
   vms   = []
   descs = []
   jobs.each do |job|
-    vms   << Object.const_get(job.target_class).find(job.target_id)
+    vms << Object.const_get(job.target_class).find(job.target_id)
     descs << "Snapshot for scan job: #{job.guid}, EVM Server build: #{Vmdb::Appliance.BUILD}  Server Time: #{Time.now.utc.iso8601}"
   end
 else

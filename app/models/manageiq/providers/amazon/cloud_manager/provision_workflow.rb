@@ -24,7 +24,7 @@ class ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow < ManageIQ::P
                         load_ar_obj(src[:cloud_network]).security_groups
                       else
                         load_ar_obj(src[:ems]).security_groups.non_cloud_network
-    end
+                      end
 
     security_groups.each_with_object({}) { |sg, hash| hash[sg.id] = display_name_for_name_description(sg) }
   end

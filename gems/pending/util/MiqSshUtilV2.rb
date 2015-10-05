@@ -13,16 +13,15 @@ module Net
 end
 
 class MiqSshUtil
-
   attr_reader :status, :host
 
-  def initialize(host, user, password, options={})
+  def initialize(host, user, password, options = {})
     @host     = host
     @user     = user
     @password = password
     @status   = 0
     @shell    = nil
-    @options  = {:password => @password, :remember_host=>false, :verbose => :warn}.merge(options)
+    @options  = {:password => @password, :remember_host => false, :verbose => :warn}.merge(options)
 
     # Seems like in 2.9.2, there needs to be blank :keys, when we are passing private key as string
     @options[:keys] = [] if options[:key_data]
@@ -37,8 +36,8 @@ class MiqSshUtil
     @options.delete(:authentication_prompt_delay)
 
     # Set logging to use our default handle if it exists and one was not passed in
-    unless @options.has_key?(:logger)
-#        @options[:logger] = $log if $log
+    unless @options.key?(:logger)
+      #        @options[:logger] = $log if $log
     end
   end # def initialize
 
@@ -51,7 +50,7 @@ class MiqSshUtil
     end
   end
 
-  def exec(cmd, doneStr=nil)
+  def exec(cmd, doneStr = nil)
     errBuf = ""
     outBuf = ""
     status = nil
@@ -62,32 +61,32 @@ class MiqSshUtil
 
     run_session do |ssh|
       ssh.open_channel do |channel|
-        channel.on_data do |channel, data|
+        channel.on_data do |_channel, data|
           $log.debug "MiqSshUtil::exec - STDOUT: #{data}" if $log
           outBuf << data
           data.each_line { |l| return outBuf if doneStr == l.chomp } unless doneStr.nil?
         end
 
-        channel.on_extended_data do |channel, data|
+        channel.on_extended_data do |_channel, data|
           $log.debug "MiqSshUtil::exec - STDERR: #{data}" if $log
           errBuf << data
         end
 
-        channel.on_request('exit-status') do |channel, data|
+        channel.on_request('exit-status') do |_channel, data|
           status = data.read_long
           $log.debug "MiqSshUtil::exec - STATUS: #{status}" if $log
         end
 
-        channel.on_request('exit-signal') do |channel, data|
+        channel.on_request('exit-signal') do |_channel, data|
           signal = data.read_string
           $log.debug "MiqSshUtil::exec - SIGNAL: #{signal}" if $log
         end
 
-        channel.on_eof do |channel|
+        channel.on_eof do |_channel|
           $log.debug "MiqSshUtil::exec - EOF RECEIVED" if $log
         end
 
-        channel.on_close do |channel|
+        channel.on_close do |_channel|
           $log.debug "MiqSshUtil::exec - Command: #{cmd}, exit status: #{status}" if $log
           unless signal.nil? || status.zero?
             raise "MiqSshUtil::exec - Command #{cmd}, exited with signal #{signal}" unless signal.nil?
@@ -98,12 +97,12 @@ class MiqSshUtil
         end
 
         $log.debug "MiqSshUtil::exec - Command: #{cmd} started." if $log
-        channel.exec(cmd) { |channel, success| raise "MiqSshUtil::exec - Could not execute command #{cmd}" unless success }
+        channel.exec(cmd) { |_channel, success| raise "MiqSshUtil::exec - Could not execute command #{cmd}" unless success }
       end
     end
   end # def exec
 
-  def suexec(cmd_str, doneStr=nil)
+  def suexec(cmd_str, doneStr = nil)
     errBuf = ""
     outBuf = ""
     prompt = ""
@@ -115,10 +114,9 @@ class MiqSshUtil
     run_session do |ssh|
       temp_cmd_file(cmd_str) do |cmd|
         ssh.open_channel do |channel|
-
           # now we request a "pty" (i.e. interactive) session so we can send data back and forth if needed.
           # it WILL NOT WORK without this, and it has to be done before any call to exec.
-          channel.request_pty(:chars_wide => 256) do |channel, success|
+          channel.request_pty(:chars_wide => 256) do |_channel, success|
             raise "Could not obtain pty (i.e. an interactive ssh session)" unless success
           end
 
@@ -134,7 +132,7 @@ class MiqSshUtil
               end
 
               if outBuf[-prompt.length, prompt.length] == prompt
-                return outBuf[0..(outBuf.length-prompt.length)]
+                return outBuf[0..(outBuf.length - prompt.length)]
               end
             end
 
@@ -145,7 +143,7 @@ class MiqSshUtil
 
             if (state == :password_sent)
               prompt << data.lstrip
-              if (data.strip =~ /\#/)
+              if data.strip =~ /\#/
                 $log.debug "MiqSshUtil::suexec - Superuser Prompt detected: sending command #{cmd}" if $log
                 channel.send_data("#{cmd}\n")
                 state = :command_sent
@@ -154,36 +152,35 @@ class MiqSshUtil
 
             if (state == :initial)
               prompt << data.lstrip
-              if (data.strip =~ /[Pp]assword:/)
+              if data.strip =~ /[Pp]assword:/
                 prompt = ""
                 $log.debug "MiqSshUtil::suexec - Password Prompt detected: sending su password" if $log
                 channel.send_data("#{@su_password}\n")
                 state = :password_sent
               end
             end
-
           end
 
-          channel.on_extended_data do |channel, data|
+          channel.on_extended_data do |_channel, data|
             $log.debug "MiqSshUtil::suexec - STDERR: #{data}" if $log
             errBuf << data
           end
 
-          channel.on_request('exit-status') do |channel, data|
+          channel.on_request('exit-status') do |_channel, data|
             status = data.read_long
             $log.debug "MiqSshUtil::suexec - STATUS: #{status}" if $log
           end
 
-          channel.on_request('exit-signal') do |channel, data|
+          channel.on_request('exit-signal') do |_channel, data|
             signal = data.read_string
             $log.debug "MiqSshUtil::suexec - SIGNAL: #{signal}" if $log
           end
 
-          channel.on_eof do |channel|
+          channel.on_eof do |_channel|
             $log.debug "MiqSshUtil::suexec - EOF RECEIVED" if $log
           end
 
-          channel.on_close do |channel|
+          channel.on_close do |_channel|
             errBuf << prompt if [:initial, :password_sent].include?(state)
             $log.debug "MiqSshUtil::suexec - Command: #{cmd}, exit status: #{status}" if $log
             raise "MiqSshUtil::suexec - Command #{cmd}, exited with signal #{signal}" unless signal.nil?
@@ -196,7 +193,7 @@ class MiqSshUtil
 
           $log.debug "MiqSshUtil::suexec - Command: [#{cmd_str}] started." if $log
           su_command = @su_user == 'root' ? "su -l\n" : "su -l #{@su_user}\n"
-          channel.exec(su_command) { |channel, success| raise "MiqSshUtil::suexec - Could not execute command #{cmd}" unless success }
+          channel.exec(su_command) { |_channel, success| raise "MiqSshUtil::suexec - Could not execute command #{cmd}" unless success }
         end
       end
     end
@@ -215,39 +212,39 @@ class MiqSshUtil
     end
   end
 
-  def self.shell_with_su(host, remote_user, remote_password, su_user, su_password, options={})
+  def self.shell_with_su(host, remote_user, remote_password, su_user, su_password, options = {})
     options[:su_user], options[:su_password] = su_user, su_password
     ssu = MiqSshUtil.new(host, remote_user, remote_password, options)
     yield(ssu, nil)
   end
 
-  def shell_exec(cmd, doneStr=nil, shell=nil)
-    return self.exec(cmd, doneStr) if @su_user.nil?
-    ret = self.suexec(cmd, doneStr)
+  def shell_exec(cmd, doneStr = nil, _shell = nil)
+    return exec(cmd, doneStr) if @su_user.nil?
+    ret = suexec(cmd, doneStr)
     # Remove escape character from the end of the line
     ret.sub!(/\e$/, '')
     ret
   end
 
-  def fileOpen(file_path, perm='r')
+  def fileOpen(file_path, perm = 'r')
     require 'tempfile'
     if block_given?
       Tempfile.open('miqscvmm') do |tf|
         tf.close
-        self.get_file(file_path, tf.path)
-        File.open(tf.path, perm) {|f| yield(f)}
+        get_file(file_path, tf.path)
+        File.open(tf.path, perm) { |f| yield(f) }
       end
     else
       tf = Tempfile.open('miqscvmm')
       tf.close
-      self.get_file(file_path, tf.path)
+      get_file(file_path, tf.path)
       f = File.open(tf.path, perm)
       return f
     end
   end
 
   def fileExists?(filename)
-    self.shell_exec("test -f #{filename}") rescue return false
+    shell_exec("test -f #{filename}") rescue return false
     true
   end
 

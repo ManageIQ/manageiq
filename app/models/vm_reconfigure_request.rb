@@ -1,33 +1,22 @@
 class VmReconfigureRequest < MiqRequest
-
   TASK_DESCRIPTION  = 'VM Reconfigure'
-  SOURCE_CLASS_NAME = 'VmOrTemplate'
-  ACTIVE_STATES     = %w{ reconfigured } + self.base_class::ACTIVE_STATES
+  SOURCE_CLASS_NAME = 'Vm'
+  ACTIVE_STATES     = %w( reconfigured ) + base_class::ACTIVE_STATES
 
-  validates_inclusion_of :request_state,  :in => %w{ pending finished } + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"
+  validates_inclusion_of :request_state,  :in => %w( pending finished ) + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"
   validate               :must_have_user
-
-  def self.create_request(values, requester_id, auto_approve=false)
-    event_message = "#{TASK_DESCRIPTION} requested by <#{requester_id}>"
-    super(values, requester_id, auto_approve, request_types.first, SOURCE_CLASS_NAME, event_message)
-  end
-
-  def self.update_request(request, values, requester_id)
-    event_message = "#{TASK_DESCRIPTION} request was successfully updated by <#{requester_id}>"
-    super(request, values, requester_id, SOURCE_CLASS_NAME, event_message)
-  end
 
   def self.request_limits(options)
     # Memory values are in megabytes
     default_max_vm_memory = 255.gigabyte / 1.megabyte
     result = {
-      :min__number_of_cpus              => 1,
-      :max__number_of_cpus              => nil,
-      :min__vm_memory                   => 4,
-      :max__vm_memory                   => nil,
-      :min__cores_per_socket            => 1,
-      :max__cores_per_socket            => nil,
-      :max__total_vcpus                 => nil
+      :min__number_of_cpus   => 1,
+      :max__number_of_cpus   => nil,
+      :min__vm_memory        => 4,
+      :max__vm_memory        => nil,
+      :min__cores_per_socket => 1,
+      :max__cores_per_socket => nil,
+      :max__total_vcpus      => nil
     }
 
     all_memory, all_vcpus, all_cores_per_socket, all_total_vcpus = [], [], [], []
@@ -53,7 +42,7 @@ class VmReconfigureRequest < MiqRequest
 
   def self.validate_request(options)
     errors = []
-    limits = self.request_limits(options)
+    limits = request_limits(options)
 
     # Check if memory value is divisible by 4 and within the allowed limits
     mem = options[:vm_memory]
@@ -87,16 +76,15 @@ class VmReconfigureRequest < MiqRequest
     end
 
     return false if errors.blank?
-    return errors
+    errors
   end
 
   def my_zone
-    vm = Vm.where(:id => options[:src_ids]).first
+    vm = Vm.find_by(:id => options[:src_ids])
     vm.nil? ? super : vm.my_zone
   end
 
   def my_role
     'ems_operations'
   end
-
 end

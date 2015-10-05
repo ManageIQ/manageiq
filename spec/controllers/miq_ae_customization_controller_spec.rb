@@ -7,7 +7,7 @@ describe MiqAeCustomizationController do
 
   context "#get_node_info" do
     it "Don't need to validate active node when editing Dialogs" do
-      controller.instance_variable_set(:@sb, {:trees => {:dialog_edit_tree => {:active_node => "root"}}, :active_tree => :dialog_edit_tree})
+      controller.instance_variable_set(:@sb, :trees => {:dialog_edit_tree => {:active_node => "root"}}, :active_tree => :dialog_edit_tree)
       controller.should_not_receive(:valid_active_node)
       controller.should_receive(:dialog_edit_set_form_vars)
       controller.send(:get_node_info)
@@ -17,30 +17,30 @@ describe MiqAeCustomizationController do
   describe "group_reorder_field_changed" do
     before(:each) do
       controller.stub(:load_edit).and_return(true)
-      controller.instance_variable_set(:@edit, {:new => {:fields => [['test',100], ['test1',101], ['test2',102], ['test3', 103]]}})
+      controller.instance_variable_set(:@edit, :new => {:fields => [['test', 100], ['test1', 101], ['test2', 102], ['test3', 103]]})
     end
 
     context "#move_cols_up" do
       it "move one button up" do
-        post :group_reorder_field_changed, :id => 'seq', :button => 'up', 'selected_fields'=> ['101']
-        expect(controller.instance_variable_get(:@edit)).to eql({:new => {:fields => [['test1',101], ['test',100], ['test2',102], ['test3', 103]] }} )
+        post :group_reorder_field_changed, :id => 'seq', :button => 'up', 'selected_fields' => ['101']
+        expect(controller.instance_variable_get(:@edit)).to eql(:new => {:fields => [['test1', 101], ['test', 100], ['test2', 102], ['test3', 103]]})
       end
 
       it "move 2 button up" do
-        post :group_reorder_field_changed, :id => 'seq', :button => 'up', 'selected_fields'=> ['101', '102']
-        expect(controller.instance_variable_get(:@edit)).to eql({:new => {:fields => [['test1',101], ['test2',102], ['test',100], ['test3', 103]] }} )
+        post :group_reorder_field_changed, :id => 'seq', :button => 'up', 'selected_fields' => ['101', '102']
+        expect(controller.instance_variable_get(:@edit)).to eql(:new => {:fields => [['test1', 101], ['test2', 102], ['test', 100], ['test3', 103]]})
       end
     end
 
     context "#move_cols_down" do
       it "move one button down" do
-        post :group_reorder_field_changed, :id => 'seq', :button => 'down', 'selected_fields'=> ['101']
-        expect(controller.instance_variable_get(:@edit)).to eql({:new => {:fields => [['test',100], ['test2',102], ['test1',101], ['test3', 103]] }} )
+        post :group_reorder_field_changed, :id => 'seq', :button => 'down', 'selected_fields' => ['101']
+        expect(controller.instance_variable_get(:@edit)).to eql(:new => {:fields => [['test', 100], ['test2', 102], ['test1', 101], ['test3', 103]]})
       end
 
       it "move 2 buttons down" do
-        post :group_reorder_field_changed, :id => 'seq', :button => 'down', 'selected_fields'=> ['101','102']
-        expect(controller.instance_variable_get(:@edit)).to eql({:new => {:fields => [['test',100], ['test3',103], ['test1',101], ['test2', 102]] }} )
+        post :group_reorder_field_changed, :id => 'seq', :button => 'down', 'selected_fields' => ['101', '102']
+        expect(controller.instance_variable_get(:@edit)).to eql(:new => {:fields => [['test', 100], ['test3', 103], ['test1', 101], ['test2', 102]]})
       end
     end
 
@@ -60,33 +60,31 @@ describe MiqAeCustomizationController do
   describe "#group_form_field_changed" do
     before(:each) do
       controller.stub(:load_edit).and_return(true)
-      controller.instance_variable_set(:@edit, {:new => {:fields => [['value',100], ['value1',101], ['value2',102], ['value3', 103]]}})
+      controller.instance_variable_set(:@edit, :new => {:fields => [['value', 100], ['value1', 101], ['value2', 102], ['value3', 103]]})
     end
 
     context "assign buttons" do
-
       it "moves button up" do
-        post :group_form_field_changed, 'selected_fields'=>['101'], :button => 'up'
-        expect(controller.instance_variable_get(:@edit)).to eql({:new => {:fields => [['value1',101], ['value',100], ['value2',102], ['value3', 103]] }} )
+        post :group_form_field_changed, 'selected_fields' => ['101'], :button => 'up'
+        expect(controller.instance_variable_get(:@edit)).to eql(:new => {:fields => [['value1', 101], ['value', 100], ['value2', 102], ['value3', 103]]})
       end
 
       it "moves button down" do
-        post :group_form_field_changed, 'selected_fields'=>['101'], :button => 'down'
-        expect(controller.instance_variable_get(:@edit)).to eql({:new => {:fields => [['value',100], ['value2',102], ['value1',101], ['value3', 103]] }} )
+        post :group_form_field_changed, 'selected_fields' => ['101'], :button => 'down'
+        expect(controller.instance_variable_get(:@edit)).to eql(:new => {:fields => [['value', 100], ['value2', 102], ['value1', 101], ['value3', 103]]})
       end
 
       it "moves button to the top" do
-        post :group_form_field_changed, 'selected_fields'=>['101'], :button => 'top'
-        expect(controller.instance_variable_get(:@edit)).to eql({:new => {:fields => [['value1',101], ['value',100], ['value2',102], ['value3', 103]] }} )
+        post :group_form_field_changed, 'selected_fields' => ['101'], :button => 'top'
+        expect(controller.instance_variable_get(:@edit)).to eql(:new => {:fields => [['value1', 101], ['value', 100], ['value2', 102], ['value3', 103]]})
       end
 
       it "moves button to the bottom" do
-        post :group_form_field_changed, 'selected_fields'=>['101'], :button => 'bottom'
-        expect(controller.instance_variable_get(:@edit)).to eql({:new => {:fields => [['value',100], ['value2',102], ['value3',103], ['value1', 101]] }} )
+        post :group_form_field_changed, 'selected_fields' => ['101'], :button => 'bottom'
+        expect(controller.instance_variable_get(:@edit)).to eql(:new => {:fields => [['value', 100], ['value2', 102], ['value3', 103], ['value1', 101]]})
       end
 
       context "no selected button" do
-
         it "moves up and display error message" do
           post :group_form_field_changed, :button => 'up'
           expect(response.body).to include("flash")
@@ -106,21 +104,19 @@ describe MiqAeCustomizationController do
           post :group_form_field_changed, :button => 'bottom'
           expect(response.body).to include("flash")
         end
-
       end
 
       context "all buttons selected" do
         it "moves to the top and nothing happen" do
-          post :group_form_field_changed, :button => 'top', 'selected_fields'=> ['100','101','102','103']
-          expect(controller.instance_variable_get(:@edit)).to eql({:new => {:fields => [['value',100], ['value1',101], ['value2',102], ['value3', 103]] }} )
+          post :group_form_field_changed, :button => 'top', 'selected_fields' => ['100', '101', '102', '103']
+          expect(controller.instance_variable_get(:@edit)).to eql(:new => {:fields => [['value', 100], ['value1', 101], ['value2', 102], ['value3', 103]]})
         end
 
         it "moves to the bottom and nothing happen" do
-          post :group_form_field_changed, :button => 'bottom', 'selected_fields'=> ['100','101','102','103']
-          expect(controller.instance_variable_get(:@edit)).to eql({:new => {:fields => [['value',100], ['value1',101], ['value2',102], ['value3', 103]] }} )
+          post :group_form_field_changed, :button => 'bottom', 'selected_fields' => ['100', '101', '102', '103']
+          expect(controller.instance_variable_get(:@edit)).to eql(:new => {:fields => [['value', 100], ['value1', 101], ['value2', 102], ['value3', 103]]})
         end
       end
-
     end
   end
 
@@ -153,7 +149,7 @@ describe MiqAeCustomizationController do
     before do
       session[:settings] =  {:display => {:locale => 'default'}}
       controller.instance_variable_set(:@settings, :display => {:locale => 'default'})
-      controller.instance_variable_set(:@sb, {:flash_msg => sandbox_flash_messages})
+      controller.instance_variable_set(:@sb, :flash_msg => sandbox_flash_messages)
       bypass_rescue
     end
 

@@ -4,5 +4,4 @@ class CustomizationTemplateCloudInit < CustomizationTemplate
   def default_filename
     DEFAULT_FILENAME
   end
-
 end

@@ -9,13 +9,11 @@
 require 'spec_helper'
 
 describe "CfmeClient Versioning" do
-
   before do
     @cfme = init_api
   end
 
   context "Versioning Queries" do
-
     it "test versioning query" do
       success = @cfme[:client].entrypoint(:user => @cfme[:user], :password => @cfme[:password])
       if test_api?
@@ -50,7 +48,5 @@ describe "CfmeClient Versioning" do
         expect(@cfme[:client].code).to eq(400)
       end
     end
-
   end
-
 end

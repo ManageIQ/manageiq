@@ -31,23 +31,23 @@ class VmReconfigureTask < MiqRequestTask
     end
     new_settings << "Processor Sockets #{req_obj.options[:number_of_cpus].to_i}" unless req_obj.options[:number_of_cpus].blank?
     new_settings << "Processor Cores Per Socket: #{req_obj.options[:cores_per_socket].to_i}" unless req_obj.options[:cores_per_socket].blank?
-    return "#{self.request_class::TASK_DESCRIPTION} for: #{name} - #{new_settings.join(", ")}"
+    "#{request_class::TASK_DESCRIPTION} for: #{name} - #{new_settings.join(", ")}"
   end
 
   def after_request_task_create
-    self.update_attribute(:description, self.get_description)
+    update_attribute(:description, get_description)
   end
 
   def do_request
-    config = self.build_config_spec
-    self.dumpObj(config, "#{_log.prefix} Config spec: ", $log, :info)
-    self.vm.spec_reconfigure(config)
+    config = build_config_spec
+    dumpObj(config, "#{_log.prefix} Config spec: ", $log, :info)
+    vm.spec_reconfigure(config)
 
     if AUTOMATE_DRIVES
-      update_and_notify_parent(:state => 'reconfigured', :message => "Finished #{self.request_class::TASK_DESCRIPTION}")
+      update_and_notify_parent(:state => 'reconfigured', :message => "Finished #{request_class::TASK_DESCRIPTION}")
     else
-      update_and_notify_parent(:state => 'finished', :message => "#{self.request_class::TASK_DESCRIPTION} complete")
-#        call_automate_event('vm_provision_postprocessing')
+      update_and_notify_parent(:state => 'finished', :message => "#{request_class::TASK_DESCRIPTION} complete")
+      #        call_automate_event('vm_provision_postprocessing')
     end
   end
 
@@ -70,7 +70,7 @@ class VmReconfigureTask < MiqRequestTask
   end
 
   # Set the value if it is not nil
-  def set_spec_option(obj, property, key, default_value=nil, modifier=nil, override_value=nil)
+  def set_spec_option(obj, property, key, default_value = nil, modifier = nil, override_value = nil)
     if key.nil?
       value = get_option(nil, override_value)
     else
@@ -79,7 +79,7 @@ class VmReconfigureTask < MiqRequestTask
     value = default_value if value.nil?
     unless value.nil?
       # Modifier is a method like :to_s or :to_i
-      value = value.to_s if [true,false].include?(value)
+      value = value.to_s if [true, false].include?(value)
       value = value.send(modifier) unless modifier.nil?
       _log.info "#{property} was set to #{value} (#{value.class})"
       obj.send("#{property}=", value)

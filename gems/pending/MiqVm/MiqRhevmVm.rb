@@ -24,7 +24,7 @@ class MiqRhevmVm < MiqVm
     unmount_storage
   end
 
-  def getCfg(snap=nil)
+  def getCfg(_snap = nil)
     cfg_props = @rhevmVm.attributes
 
     raise MiqException::MiqVimError, "Failed to retrieve configuration information for VM" if cfg_props.nil?
@@ -115,7 +115,7 @@ class MiqRhevmVm < MiqVm
   end
 
   def nfs_mount_dir(storage_obj)
-    nfs_uri(storage_obj).gsub("_", "__").gsub("/", "_")
+    nfs_uri(storage_obj).gsub("_", "__").tr("/", "_")
   end
 
   def mount_storage

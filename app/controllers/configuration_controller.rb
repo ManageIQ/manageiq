@@ -4,24 +4,24 @@ class ConfigurationController < ApplicationController
   Dir.mkdir logo_dir unless File.exist?(logo_dir)
   @@logo_file = File.join(logo_dir, "custom_logo.png")
 
-  before_filter :check_privileges
-  before_filter :get_session_data
-  after_filter :cleanup_action
-  after_filter :set_session_data
+  before_action :check_privileges
+  before_action :get_session_data
+  after_action :cleanup_action
+  after_action :set_session_data
 
   def index
-    @breadcrumbs = Array.new
+    @breadcrumbs = []
     @config_tab = params[:config_tab] ? params[:config_tab] : "ui"
     active_tab = nil
-    if role_allows(:feature=>"my_settings_visuals")
+    if role_allows(:feature => "my_settings_visuals")
       active_tab = 1 if active_tab.nil?
-    elsif role_allows(:feature=>"my_settings_default_views")
+    elsif role_allows(:feature => "my_settings_default_views")
       active_tab = 2 if active_tab.nil?
-    elsif role_allows(:feature=>"my_settings_default_filters")
+    elsif role_allows(:feature => "my_settings_default_filters")
       active_tab = 3 if active_tab.nil?
-    elsif role_allows(:feature=>"my_settings_time_profiles")
+    elsif role_allows(:feature => "my_settings_time_profiles")
       active_tab = 4 if active_tab.nil?
-    elsif role_allows(:feature=>"my_settings_my_tags")
+    elsif role_allows(:feature => "my_settings_my_tags")
       if false
         active_tab = 5 if active_tab.nil?
       end
@@ -35,7 +35,7 @@ class ConfigurationController < ApplicationController
         @server_options[:remote] = false
       end
       if (@tabform == "filters_1")
-       @tabform = @config_tab + "_2"
+        @tabform = @config_tab + "_2"
       end
       if (@tabform == "filters_2")
         @tabform = @config_tab + "_3"
@@ -44,7 +44,7 @@ class ConfigurationController < ApplicationController
     when "admin"
       show_users
     end
-    render :action=>"show"
+    render :action => "show"
   end
 
   # handle buttons pressed on the button bar
@@ -54,7 +54,7 @@ class ConfigurationController < ApplicationController
     copy_record if params[:pressed] == "tp_copy"
     edit_record if params[:pressed] == "tp_edit"
 
-    if ! @refresh_partial && @flash_array == nil # if no button handler ran, show not implemented msg
+    if ! @refresh_partial && @flash_array.nil? # if no button handler ran, show not implemented msg
       add_flash(_("Button not yet implemented"), :error)
       @refresh_partial = "layouts/flash_msg"
       @refresh_div = "flash_msg_div"
@@ -62,7 +62,7 @@ class ConfigurationController < ApplicationController
 
     if params[:pressed].ends_with?("_edit") || params[:pressed].ends_with?("_copy")
       render :update do |page|
-        page.redirect_to :action=>@refresh_partial, :id=>@redirect_id
+        page.redirect_to :action => @refresh_partial, :id => @redirect_id
       end
     else
       c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
@@ -89,19 +89,18 @@ class ConfigurationController < ApplicationController
   def change_tab
     @tabform = @config_tab + "_" + params[:tab] if params[:tab] != "5"
     edit
-    render :action=>"show"
+    render :action => "show"
   end
-
 
   # AJAX driven routine to check for changes in ANY field on the form
   def form_field_changed
     # ui1 edit form
-    return unless load_edit("config_edit__ui1","configuration")
+    return unless load_edit("config_edit__ui1", "configuration")
     get_form_vars
-    @assigned_filters = Array.new
+    @assigned_filters = []
     @changed = (@edit[:new] != @edit[:current])
     render :update do |page|                    # Use JS to update the display
-      page.replace(@refresh_div, :partial=>@refresh_partial) if @refresh_div
+      page.replace(@refresh_div, :partial => @refresh_partial) if @refresh_div
       page << javascript_for_miq_button_visibility_changed(@changed)
     end
   end
@@ -109,24 +108,24 @@ class ConfigurationController < ApplicationController
   # AJAX driven routine to check for changes in ANY field on the user form
   def filters_field_changed
     # ui3 form
-    return unless load_edit("config_edit__ui3","configuration")
+    return unless load_edit("config_edit__ui3", "configuration")
     if params[:all_checked]                         # User checked/unchecked a tree node
       @edit[:show_ids] = params[:all_checked].split(',')
       if !@edit[:show_ids].blank?
-        @edit[:new].each_with_index do |arr,i|
+        @edit[:new].each_with_index do |arr, i|
           if @edit[:show_ids].include?(arr.id.to_s)
             @edit[:new][i].search_key = nil
           else
             @edit[:new][i].search_key = "_hidden_"
           end
         end
-      else      #if everything was unchecked
-        @edit[:new].each_with_index do |search,i|
+      else      # if everything was unchecked
+        @edit[:new].each_with_index do |_search, i|
           @edit[:new][i].search_key = nil
         end
       end
     end
-    @edit[:current].each_with_index do |arr,i|          #needed to compare each array element's attributes to find out if something has changed
+    @edit[:current].each_with_index do |arr, i|          # needed to compare each array element's attributes to find out if something has changed
       if @edit[:new][i].search_key != arr.search_key
         @changed = true
         break
@@ -134,7 +133,7 @@ class ConfigurationController < ApplicationController
     end
     render :update do |page|
       # needed to compare each array element's attributes to find out if something has changed
-      @edit[:current].each_with_index do |arr, i|
+      @edit[:current].each_with_index do |_arr, i|
         id = @edit[:new][i].id
         if @edit[:new][i].search_key != @edit[:current][i].search_key
           style_class = 'cfme-blue-bold-node'
@@ -150,12 +149,12 @@ class ConfigurationController < ApplicationController
   # AJAX driven routine for gtl view selection
   def view_selected
     # ui2 form
-    return unless load_edit("config_edit__ui2","configuration")
+    return unless load_edit("config_edit__ui2", "configuration")
     @edit[:new][:views][VIEW_RESOURCES[params[:resource]]] = params[:view] # Capture the new view setting
     session[:changed] = (@edit[:new] != @edit[:current])
     @changed = session[:changed]
     render :update do |page|                    # Use JS to update the display
-      page.replace 'tab_div', :partial=>"ui_2"
+      page.replace 'tab_div', :partial => "ui_2"
     end
   end
 
@@ -167,7 +166,7 @@ class ConfigurationController < ApplicationController
     session[:changed] = (@edit[:new] != @edit[:current])
     @changed = session[:changed]
     render :update do |page|                    # Use JS to update the display
-      page.replace 'tab_div', :partial=>"ui_1"
+      page.replace 'tab_div', :partial => "ui_1"
     end
   end
 
@@ -178,7 +177,7 @@ class ConfigurationController < ApplicationController
     session[:changed] = (@edit[:new] != @edit[:current])
     @changed = session[:changed]
     render :update do |page|                    # Use JS to update the display
-      page.replace 'tab_div', :partial=>"ui_1"
+      page.replace 'tab_div', :partial => "ui_1"
     end
   end
 
@@ -190,7 +189,7 @@ class ConfigurationController < ApplicationController
     session[:changed] = (@edit[:new] != @edit[:current])
     @changed = session[:changed]
     render :update do |page|                    # Use JS to update the display
-      page.replace 'tab_div', :partial=>"ui_1"
+      page.replace 'tab_div', :partial => "ui_1"
     end
   end
 
@@ -244,11 +243,11 @@ class ConfigurationController < ApplicationController
           current_user.update_attributes(:settings => user_settings)
 
           # Now copying ALL display settings into the :css hash so we can easily add new settings
-          @settings[:css] ||= Hash.new
+          @settings[:css] ||= {}
           @settings[:css].merge!(@settings[:display])
           @settings[:css].merge!(THEME_CSS_SETTINGS[@settings[:display][:theme]])
 
-          @css ||= Hash.new
+          @css ||= {}
           @css.merge!(@settings[:display])
           @css.merge!(THEME_CSS_SETTINGS[@settings[:display][:theme]])
           set_user_time_zone
@@ -318,7 +317,7 @@ class ConfigurationController < ApplicationController
         edit
         render :action => "show"
       else
-        @update.errors.each do |field,msg|
+        @update.errors.each do |field, msg|
           add_flash("#{field.titleize}: #{msg}", :error)
         end
         @changed = true
@@ -335,27 +334,27 @@ class ConfigurationController < ApplicationController
 
   # Show the users list
   def show_timeprofiles
-    build_tabs if params[:action] == "change_tab" || ["cancel","add","save"].include?(params[:button])
+    build_tabs if params[:action] == "change_tab" || ["cancel", "add", "save"].include?(params[:button])
     if admin_user?
       @timeprofiles = TimeProfile.in_my_region.all(:order => "lower(description) ASC")
     else
-      @timeprofiles = TimeProfile.in_my_region.all(:conditions=> ["(profile_type = ? or (profile_type = ? and  profile_key = ?))", "global", "user", session[:userid]], :order => "lower(description) ASC")
+      @timeprofiles = TimeProfile.in_my_region.all(:conditions => ["(profile_type = ? or (profile_type = ? and  profile_key = ?))", "global", "user", session[:userid]], :order => "lower(description) ASC")
     end
     timeprofile_set_days_hours
-    drop_breadcrumb( {:name=>"Time Profiles", :url=>"/configuration/change_tab/?tab=4"})
+    drop_breadcrumb(:name => "Time Profiles", :url => "/configuration/change_tab/?tab=4")
   end
 
-  def timeprofile_set_days_hours(timeprofile=@timeprofile)
-    @timeprofile_details = Hash.new
+  def timeprofile_set_days_hours(_timeprofile = @timeprofile)
+    @timeprofile_details = {}
     @timeprofiles.each do |timeprofile|
-      @timeprofile_details[timeprofile.description] = Hash.new
+      @timeprofile_details[timeprofile.description] = {}
       @timeprofile_details[timeprofile.description][:days] =
         timeprofile.profile[:days].collect { |day| DateTime::ABBR_DAYNAMES[day.to_i] }
-      @timeprofile_details[timeprofile.description][:hours] = Array.new
+      @timeprofile_details[timeprofile.description][:hours] = []
       temp_arr = timeprofile.profile[:hours].collect(&:to_i).sort
       st = ""
-      temp_arr.each_with_index do |hr,i|
-        if hr.to_i+1 == temp_arr[i+1]
+      temp_arr.each_with_index do |hr, i|
+        if hr.to_i + 1 == temp_arr[i + 1]
           st = "#{get_hr_str(hr).split('-').first}-" if st == ""
         else
           if st != ""
@@ -366,9 +365,9 @@ class ConfigurationController < ApplicationController
           st = ""
         end
       end
-      if @timeprofile_details[timeprofile.description][:hours].length > 1 && @timeprofile_details[timeprofile.description][:hours].first.split('-').first == "12AM" && @timeprofile_details[timeprofile.description][:hours].last.split('-').last == "12AM"      #manipulating midnight hours to be displayed on show screen
+      if @timeprofile_details[timeprofile.description][:hours].length > 1 && @timeprofile_details[timeprofile.description][:hours].first.split('-').first == "12AM" && @timeprofile_details[timeprofile.description][:hours].last.split('-').last == "12AM"      # manipulating midnight hours to be displayed on show screen
         @timeprofile_details[timeprofile.description][:hours][0] = @timeprofile_details[timeprofile.description][:hours].last.split('-').first + '-' + @timeprofile_details[timeprofile.description][:hours].first.split('-').last
-        @timeprofile_details[timeprofile.description][:hours].delete_at(@timeprofile_details[timeprofile.description][:hours].length-1)
+        @timeprofile_details[timeprofile.description][:hours].delete_at(@timeprofile_details[timeprofile.description][:hours].length - 1)
       end
       @timeprofile_details[timeprofile.description][:tz] = timeprofile.profile[:tz]
     end
@@ -392,9 +391,9 @@ class ConfigurationController < ApplicationController
     @timeprofile = TimeProfile.new
     set_form_vars
     @in_a_form = true
-    @breadcrumbs = Array.new
-    drop_breadcrumb( {:name=>"Add new Time Profile", :url=>"/configuration/timeprofile_edit"} )
-    render :action=>"timeprofile_edit"
+    @breadcrumbs = []
+    drop_breadcrumb(:name => "Add new Time Profile", :url => "/configuration/timeprofile_edit")
+    render :action => "timeprofile_edit"
   end
 
   def timeprofile_edit
@@ -406,17 +405,17 @@ class ConfigurationController < ApplicationController
     add_flash(_("Global Time Profile cannot be edited")) if @timeprofile.profile_type == "global" && !admin_user?
     session[:changed] = false
     @in_a_form = true
-    drop_breadcrumb( {:name=>"#{title} '#{@timeprofile.description}'", :url=>"/configuration/timeprofile_edit"} )
+    drop_breadcrumb(:name => "#{title} '#{@timeprofile.description}'", :url => "/configuration/timeprofile_edit")
   end
 
   # Delete all selected or single displayed VM(s)
   def timeprofile_delete
     assert_privileges("tp_delete")
-    timeprofiles = Array.new
-    if !params[:id] # showing a list, scan all selected timeprofiles
+    timeprofiles = []
+    unless params[:id] # showing a list, scan all selected timeprofiles
       timeprofiles = find_checked_items
       if timeprofiles.empty?
-        add_flash(_("No %s were selected for deletion") % ui_lookup(:models=>"TimeProfile"), :error)
+        add_flash(_("No %s were selected for deletion") % ui_lookup(:models => "TimeProfile"), :error)
       else
         selected_timeprofiles = TimeProfile.find_all_by_id(timeprofiles)
         selected_timeprofiles.each do |tp|
@@ -450,35 +449,35 @@ class ConfigurationController < ApplicationController
     @edit[:new][:rollup_daily] = params[:rollup_daily] == "1" || nil if params.key?(:rollup_daily)
     @edit[:new][:profile_key] = @edit[:new][:profile_type] == "user" ? session[:userid] : nil
     params.each do |var, val|
-      vars=var.split("_")
-      if vars[0]=="days"
-        val=="1" ?
+      vars = var.split("_")
+      if vars[0] == "days"
+        val == "1" ?
           @edit[:new][:profile][:days].push(vars[1].to_i) :
           @edit[:new][:profile][:days].delete(vars[1].to_i)
-          @edit[:new][:profile][:days] = @edit[:new][:profile][:days].uniq.sort
+        @edit[:new][:profile][:days] = @edit[:new][:profile][:days].uniq.sort
         break
-      elsif vars[0]=="hours"
-        val=="1" ?
+      elsif vars[0] == "hours"
+        val == "1" ?
           @edit[:new][:profile][:hours].push(vars[1].to_i) :
           @edit[:new][:profile][:hours].delete(vars[1].to_i)
-          @edit[:new][:profile][:hours] = @edit[:new][:profile][:hours].uniq.sort
+        @edit[:new][:profile][:hours] = @edit[:new][:profile][:hours].uniq.sort
         break
       end
     end
     if params[:all_days]
       @edit[:all_days] = params[:all_days] == "1"
-      @edit[:new][:profile][:days] = params[:all_days] == "1" ? Array.new(7) {|i| i} : []
+      @edit[:new][:profile][:days] = params[:all_days] == "1" ? Array.new(7) { |i| i } : []
       @redraw = true
     end
     if params[:all_hours]
       @edit[:all_hours] = params[:all_hours] == "1"
-      @edit[:new][:profile][:hours] = params[:all_hours] == "1" ? Array.new(24) {|i| i} : []
+      @edit[:new][:profile][:hours] = params[:all_hours] == "1" ? Array.new(24) { |i| i } : []
       @redraw = true
     end
   end
 
   def timeprofile_field_changed
-    return unless load_edit("config_edit__ui4","configuration")
+    return unless load_edit("config_edit__ui4", "configuration")
     timeprofile_get_form_vars
     changed = (@edit[:new] != @edit[:current])
     render :update do |page|                    # Use JS to update the display
@@ -508,16 +507,16 @@ class ConfigurationController < ApplicationController
     @timeprofile.description = "Copy of " + timeprofile.description
     @timeprofile.profile_type = "user"
     @timeprofile.profile_key = timeprofile.profile_key
-    if !timeprofile.profile.nil?
-      @timeprofile.profile ||= Hash.new
+    unless timeprofile.profile.nil?
+      @timeprofile.profile ||= {}
       @timeprofile.profile[:days] = timeprofile.profile[:days] if timeprofile.profile[:days]
       @timeprofile.profile[:hours] = timeprofile.profile[:hours] if timeprofile.profile[:hours]
       @timeprofile.profile[:tz] = timeprofile.profile[:tz] if timeprofile.profile[:tz]
     end
     set_form_vars
     session[:changed] = false
-    drop_breadcrumb( {:name=>"Adding copy of '#{@timeprofile.description}'", :url=>"/configuration/timeprofile_edit"} )
-    render :action=>"timeprofile_edit"
+    drop_breadcrumb(:name => "Adding copy of '#{@timeprofile.description}'", :url => "/configuration/timeprofile_edit")
+    render :action => "timeprofile_edit"
   end
 
   def show
@@ -529,10 +528,10 @@ class ConfigurationController < ApplicationController
     timeprofile_get_form_vars
     case params[:button]
     when "cancel"
-      add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"TimeProfile"))
+      add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "TimeProfile"))
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
-        page.redirect_to :action=>'change_tab', :typ=>"timeprofiles", :tab=>4
+        page.redirect_to :action => 'change_tab', :typ => "timeprofiles", :tab => 4
       end
     when "add"
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
@@ -544,10 +543,10 @@ class ConfigurationController < ApplicationController
       if @edit[:new][:profile][:hours].length <= 0
         add_flash(_("At least one %s must be selected") % "Hour", :error)
       end
-      if @flash_array != nil
-        drop_breadcrumb( {:name=>"Add New Time Profile", :url=>"/configuration/timeprofile_edit"} )
+      unless @flash_array.nil?
+        drop_breadcrumb(:name => "Add New Time Profile", :url => "/configuration/timeprofile_edit")
         render :update do |page|
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
       end
@@ -557,16 +556,16 @@ class ConfigurationController < ApplicationController
       rescue StandardError => bang
         add_flash(_("Error during '%s': ") % "add" << bang.message, :error)
         @in_a_form = true
-        drop_breadcrumb( {:name=>"Add New Time Profile", :url=>"/configuration/timeprofile_edit"} )
+        drop_breadcrumb(:name => "Add New Time Profile", :url => "/configuration/timeprofile_edit")
         render :update do |page|
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
         AuditEvent.success(build_created_audit(@timeprofile, @edit))
-        add_flash(_("%{model} \"%{name}\" was added") % {:model=>ui_lookup(:model=>"TimeProfile"), :name=>@timeprofile.description})
+        add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "TimeProfile"), :name => @timeprofile.description})
         session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
         render :update do |page|
-          page.redirect_to :action=>'change_tab', :typ=>"timeprofiles", :tab=>4
+          page.redirect_to :action => 'change_tab', :typ => "timeprofiles", :tab => 4
         end
       end
     end
@@ -576,21 +575,21 @@ class ConfigurationController < ApplicationController
     assert_privileges("tp_edit")
     timeprofile_get_form_vars
     if params[:button] == "cancel"
-      add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"TimeProfile"), :name=>@timeprofile.description})
+      add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "TimeProfile"), :name => @timeprofile.description})
       params[:id] = @timeprofile.id.to_s
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
-        page.redirect_to :action=>'change_tab', :typ=>"timeprofiles", :tab=>4, :id =>@timeprofile.id.to_s
+        page.redirect_to :action => 'change_tab', :typ => "timeprofiles", :tab => 4, :id => @timeprofile.id.to_s
       end
     elsif params[:button] == "reset"
       @edit[:new] = copy_hash(@edit[:current])
       params[:id] = @timeprofile.id
       add_flash(_("All changes have been reset"), :warning)
       @changed = session[:changed] = (@edit[:new] != @edit[:current])
-      drop_breadcrumb( {:name=>"Edit '#{@timeprofile.description}'", :url=>"/configuration/timeprofile_edit"} )
+      drop_breadcrumb(:name => "Edit '#{@timeprofile.description}'", :url => "/configuration/timeprofile_edit")
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
-        page.redirect_to :action=>'timeprofile_edit', :id =>@timeprofile.id.to_s
+        page.redirect_to :action => 'timeprofile_edit', :id => @timeprofile.id.to_s
       end
     elsif params[:button] == "save"
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
@@ -604,9 +603,9 @@ class ConfigurationController < ApplicationController
       end
       unless @flash_array.nil?
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
-        drop_breadcrumb( {:name=>"Edit '#{@timeprofile.description}'", :url=>"/configuration/timeprofile_edit"} )
+        drop_breadcrumb(:name => "Edit '#{@timeprofile.description}'", :url => "/configuration/timeprofile_edit")
         render :update do |page|
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
       end
@@ -615,19 +614,19 @@ class ConfigurationController < ApplicationController
       begin
         timeprofile.save!
       rescue StandardError => bang
-        add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model=>"TimeProfile", :name=>timeprofile.description, :task=>"save"} << bang.message,
+        add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => "TimeProfile", :name => timeprofile.description, :task => "save"} << bang.message,
                   :error)
         @in_a_form = true
-        drop_breadcrumb( {:name=>"Edit '#{timeprofile.description}'", :url=>"/configuration/timeprofile_edit"} )
+        drop_breadcrumb(:name => "Edit '#{timeprofile.description}'", :url => "/configuration/timeprofile_edit")
         render :update do |page|
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
         AuditEvent.success(build_created_audit(timeprofile, @edit))
-        add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"TimeProfile"), :name=>timeprofile.description})
+        add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "TimeProfile"), :name => timeprofile.description})
         session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
         render :update do |page|
-          page.redirect_to :action=>'change_tab', :typ=>"timeprofiles", :tab=>4, :id =>@timeprofile.id.to_s
+          page.redirect_to :action => 'change_tab', :typ => "timeprofiles", :tab => 4, :id => @timeprofile.id.to_s
         end
       end
     end
@@ -655,15 +654,15 @@ class ConfigurationController < ApplicationController
     profile.profile_key = @edit[:new][:profile_key]
     @edit[:new][:profile].delete(:tz) if @edit[:new][:profile][:tz].nil? || @edit[:new][:profile][:tz] == ""  # No need to pass timezone if it is set to use default
     profile.profile = @edit[:new][:profile]
-    profile.rollup_daily_metrics = @edit[:new][:profile][:tz] == nil ? false : @edit[:new][:rollup_daily]
+    profile.rollup_daily_metrics = @edit[:new][:profile][:tz].nil? ? false : @edit[:new][:rollup_daily]
   end
 
   def build_tabs
-    @breadcrumbs = Array.new
+    @breadcrumbs = []
     case @config_tab
     when "ui"
-      @tabs = Array.new
-      drop_breadcrumb( {:name=>"User Interface Configuration", :url=>"/configuration/edit" }, true ) if @tabform != "ui_4"
+      @tabs = []
+      drop_breadcrumb({:name => "User Interface Configuration", :url => "/configuration/edit"}, true) if @tabform != "ui_4"
       case @tabform
       when "ui_1"
         @tabs[0] = ["1", ""]  # Start with first tab array entry set to tab 1 as active
@@ -676,27 +675,27 @@ class ConfigurationController < ApplicationController
       when "ui_5"
         @tabs[0] = ["5", ""]  # Start with first tab array entry set to tab 1 as active
       end
-      @tabs.push( ["1", _("Visual")] )          if role_allows(:feature => "my_settings_visuals")
-      @tabs.push( ["2", _("Default Views")] )   if role_allows(:feature => "my_settings_default_views")
-      @tabs.push( ["3", _("Default Filters")] ) if role_allows(:feature => "my_settings_default_filters")
-      @tabs.push( ["4", _("Time Profiles")] )   if role_allows(:feature => "my_settings_time_profiles")
-      @tabs.push( ["5", _("MyTags")] )          if role_allows(:feature => "my_settings_my_tags") if false
+      @tabs.push(["1", _("Visual")])          if role_allows(:feature => "my_settings_visuals")
+      @tabs.push(["2", _("Default Views")])   if role_allows(:feature => "my_settings_default_views")
+      @tabs.push(["3", _("Default Filters")]) if role_allows(:feature => "my_settings_default_filters")
+      @tabs.push(["4", _("Time Profiles")])   if role_allows(:feature => "my_settings_time_profiles")
+      @tabs.push(["5", _("MyTags")])          if role_allows(:feature => "my_settings_my_tags") if false
     end
   end
 
   NAV_TAB_PATH =  {
-                    :container        => %w(Containers Containers),
-                    :containergroup   => %w(Containers Containers\ Groups),
-                    :containerservice => %w(Containers Services),
-                    :host             => %w(Infrastructure Hosts),
-                    :miqtemplate      => %w(Services Workloads Templates\ &\ Images),
-                    :storage          => %w(Infrastructure Datastores),
-                    :templatecloud    => %w(Cloud Instances Images),
-                    :templateinfra    => %w(Infrastructure Virtual\ Machines Templates),
-                    :vm               => %w(Services Workloads VMs\ &\ Instances),
-                    :vmcloud          => %w(Cloud Instances Instances),
-                    :vminfra          => %w(Infrastructure Virtual\ Machines VMs)
-                  }
+    :container        => %w(Containers Containers),
+    :containergroup   => %w(Containers Containers\ Groups),
+    :containerservice => %w(Containers Services),
+    :host             => %w(Infrastructure Hosts),
+    :miqtemplate      => %w(Services Workloads Templates\ &\ Images),
+    :storage          => %w(Infrastructure Datastores),
+    :templatecloud    => %w(Cloud Instances Images),
+    :templateinfra    => %w(Infrastructure Virtual\ Machines Templates),
+    :vm               => %w(Services Workloads VMs\ &\ Instances),
+    :vmcloud          => %w(Cloud Instances Instances),
+    :vminfra          => %w(Infrastructure Virtual\ Machines VMs)
+  }
 
   def merge_in_user_settings(settings)
     if user_settings = current_user.try(:settings)
@@ -742,7 +741,7 @@ class ConfigurationController < ApplicationController
       }
     when 'ui_3'
       current = MiqSearch.where(:search_type => "default")
-                         .sort_by { |s| [NAV_TAB_PATH[s.db.downcase.to_sym], s.description.downcase] }
+                .sort_by { |s| [NAV_TAB_PATH[s.db.downcase.to_sym], s.description.downcase] }
       @edit = {
         :key         => 'config_edit__ui3',
         :set_filters => true,
@@ -761,14 +760,14 @@ class ConfigurationController < ApplicationController
           :description  => @timeprofile.description,
           :profile_type => @timeprofile.profile_type || "user",
           :profile_key  => @timeprofile.profile_key,
-          :profile => {
+          :profile      => {
             :days  => Array(@timeprofile.days).uniq.sort,
             :hours => Array(@timeprofile.hours).uniq.sort,
             :tz    => @timeprofile.tz,
           },
           :rollup_daily => @timeprofile.rollup_daily_metrics,
         }
-        @edit[:all_days]  = @edit.fetch_path(:current, :profile, :days).length  == 7
+        @edit[:all_days]  = @edit.fetch_path(:current, :profile, :days).length == 7
         @edit[:all_hours] = @edit.fetch_path(:current, :profile, :hours).length == 24
       end
       show_timeprofiles
@@ -794,23 +793,23 @@ class ConfigurationController < ApplicationController
       @edit[:new][:perpage][:tile] = params[:perpage_tile].to_i if params[:perpage_tile]
       @edit[:new][:perpage][:list] = params[:perpage_list].to_i if params[:perpage_list]
       @edit[:new][:perpage][:reports] = params[:perpage_reports].to_i if params[:perpage_reports]
-      @edit[:new][:display][:theme] = params[:display_theme] if params[:display_theme] != nil
-      @edit[:new][:display][:bg_color] = params[:bg_color] if params[:bg_color] != nil
-      @edit[:new][:display][:reporttheme] = params[:display_reporttheme] if params[:display_reporttheme] != nil
-      @edit[:new][:display][:dashboards] = params[:display_dashboards] if params[:display_dashboards] != nil
-      @edit[:new][:display][:timezone] = params[:display_timezone] if params[:display_timezone] != nil
-      @edit[:new][:display][:startpage] = params[:start_page] if params[:start_page] != nil
-      @edit[:new][:display][:quad_truncate] = params[:quad_truncate] if params[:quad_truncate] != nil
+      @edit[:new][:display][:theme] = params[:display_theme] unless params[:display_theme].nil?
+      @edit[:new][:display][:bg_color] = params[:bg_color] unless params[:bg_color].nil?
+      @edit[:new][:display][:reporttheme] = params[:display_reporttheme] unless params[:display_reporttheme].nil?
+      @edit[:new][:display][:dashboards] = params[:display_dashboards] unless params[:display_dashboards].nil?
+      @edit[:new][:display][:timezone] = params[:display_timezone] unless params[:display_timezone].nil?
+      @edit[:new][:display][:startpage] = params[:start_page] unless params[:start_page].nil?
+      @edit[:new][:display][:quad_truncate] = params[:quad_truncate] unless params[:quad_truncate].nil?
       @edit[:new][:display][:locale] = params[:display_locale] if params[:display_locale]
     when "ui_2"                                               # Visual Settings tab
-      @edit[:new][:display][:compare] = params[:display][:compare] if params[:display] != nil && params[:display][:compare] != nil
-      @edit[:new][:display][:drift] = params[:display][:drift] if params[:display] != nil && params[:display][:drift] != nil
+      @edit[:new][:display][:compare] = params[:display][:compare] if !params[:display].nil? && !params[:display][:compare].nil?
+      @edit[:new][:display][:drift] = params[:display][:drift] if !params[:display].nil? && !params[:display][:drift].nil?
     when "ui_3"                                               # Visual Settings tab
-      @edit[:new][:display][:compare] = params[:display][:compare] if params[:display] != nil && params[:display][:compare] != nil
-      @edit[:new][:display][:drift] = params[:display][:drift] if params[:display] != nil && params[:display][:drift] != nil
+      @edit[:new][:display][:compare] = params[:display][:compare] if !params[:display].nil? && !params[:display][:compare].nil?
+      @edit[:new][:display][:drift] = params[:display][:drift] if !params[:display].nil? && !params[:display][:drift].nil?
     when "ui_4"                                               # Visual Settings tab
-      @edit[:new][:display][:compare] = params[:display][:compare] if params[:display] != nil && params[:display][:compare] != nil
-      @edit[:new][:display][:drift] = params[:display][:drift] if params[:display] != nil && params[:display][:drift] != nil
+      @edit[:new][:display][:compare] = params[:display][:compare] if !params[:display].nil? && !params[:display][:compare].nil?
+      @edit[:new][:display][:drift] = params[:display][:drift] if !params[:display].nil? && !params[:display][:drift].nil?
     end
   end
 
@@ -822,7 +821,7 @@ class ConfigurationController < ApplicationController
       add_main_tab_node(folder_nodes, search.id) if @main_tab.nil? || @main_tab != folder_nodes[0]
       add_sub_tab_node(folder_nodes, search.id)  if @sub_tab.blank? || @sub_tab != folder_nodes[1]
       add_ci_tab_node(folder_nodes, search.id)   if folder_nodes.length == 3 &&
-          (@ci_tab.blank? || @ci_tab != folder_nodes[2])
+                                                    (@ci_tab.blank? || @ci_tab != folder_nodes[2])
       # check if this is last folder node, add filters
       if folder_nodes.length == 2 && (!@sub_tab.blank? || @sub_tab == folder_nodes[1])
         node = build_filter_node(search)

@@ -40,22 +40,22 @@ describe Metric do
       context "executing capture_targets" do
         it "should find enabled targets" do
           targets = Metric::Targets.capture_targets
-          assert_infra_targets_enabled targets, %w{ManageIQ::Providers::Vmware::InfraManager::Vm Host Host ManageIQ::Providers::Vmware::InfraManager::Vm Host Storage}
+          assert_infra_targets_enabled targets, %w(ManageIQ::Providers::Vmware::InfraManager::Vm Host Host ManageIQ::Providers::Vmware::InfraManager::Vm Host Storage)
         end
 
         it "should find enabled targets excluding storages" do
           targets = Metric::Targets.capture_targets(nil, :exclude_storages => true)
-          assert_infra_targets_enabled targets, %w{ManageIQ::Providers::Vmware::InfraManager::Vm Host Host ManageIQ::Providers::Vmware::InfraManager::Vm Host}
+          assert_infra_targets_enabled targets, %w(ManageIQ::Providers::Vmware::InfraManager::Vm Host Host ManageIQ::Providers::Vmware::InfraManager::Vm Host)
         end
 
         it "should find enabled targets excluding vms" do
           targets = Metric::Targets.capture_targets(nil, :exclude_vms => true)
-          assert_infra_targets_enabled targets, %w{Host Host Host Storage}
+          assert_infra_targets_enabled targets, %w(Host Host Host Storage)
         end
 
         it "should find enabled targets excluding vms and storages" do
           targets = Metric::Targets.capture_targets(nil, :exclude_storages => true, :exclude_vms => true)
-          assert_infra_targets_enabled targets, %w{Host Host Host}
+          assert_infra_targets_enabled targets, %w(Host Host Host)
         end
       end
 
@@ -72,7 +72,7 @@ describe Metric do
           expected = expected_targets.collect do |t|
             # Storage is hourly only
             # Non-storage historical is expecting 7 days back, plus partial day = 8
-            t.is_a?(Storage) ? [t, "hourly"] : [[t, "realtime"], [t, "historical"] * 8]
+            t.kind_of?(Storage) ? [t, "hourly"] : [[t, "realtime"], [t, "historical"] * 8]
           end.flatten
 
           selected = MiqQueue.where(:method_name => "perf_capture").order(:id).collect do |q|
@@ -89,15 +89,15 @@ describe Metric do
 
           it "should create tasks and queue callbacks" do
             @vmware_clusters.each do |cluster|
-              expected_hosts = cluster.hosts.select {|h| @expected_targets.include?(h)}
+              expected_hosts = cluster.hosts.select { |h| @expected_targets.include?(h) }
               next if expected_hosts.empty?
 
               task = MiqTask.find_by_name("Performance rollup for EmsCluster:#{cluster.id}")
               task.should_not be_nil
-              task.context_data[:targets].sort.should == cluster.hosts.collect {|h| "Host:#{h.id}"}.sort
+              task.context_data[:targets].sort.should == cluster.hosts.collect { |h| "Host:#{h.id}" }.sort
 
               expected_hosts.each do |host|
-                messages = MiqQueue.where(:class_name => "Host", :instance_id => host.id).select {|m| m.args.first == "realtime"}
+                messages = MiqQueue.where(:class_name => "Host", :instance_id => host.id).select { |m| m.args.first == "realtime" }
                 messages.each do |m|
                   m.miq_callback.should_not be_nil
                   m.miq_callback[:method_name].should == :perf_capture_callback
@@ -119,19 +119,19 @@ describe Metric do
           it "calling perf_capture_timer when existing capture messages are on the queue should merge messages and append new task id to cb args" do
             Metric::Capture.perf_capture_timer
             @vmware_clusters.each do |cluster|
-              expected_hosts = cluster.hosts.select {|h| @expected_targets.include?(h)}
+              expected_hosts = cluster.hosts.select { |h| @expected_targets.include?(h) }
               next if expected_hosts.empty?
 
               tasks = MiqTask.where(:name => "Performance rollup for EmsCluster:#{cluster.id}").order("id DESC")
               tasks.length.should == 2
               tasks.each do |task|
-                task.context_data[:targets].sort.should == cluster.hosts.collect {|h| "Host:#{h.id}"}.sort
+                task.context_data[:targets].sort.should == cluster.hosts.collect { |h| "Host:#{h.id}" }.sort
               end
 
               task_ids = tasks.collect(&:id)
 
               expected_hosts.each do |host|
-                messages = MiqQueue.where(:class_name => "Host", :instance_id => host.id).select {|m| m.args.first == "realtime"}
+                messages = MiqQueue.where(:class_name => "Host", :instance_id => host.id).select { |m| m.args.first == "realtime" }
                 host.update_attribute(:last_perf_capture_on, 1.minute.from_now.utc)
                 messages.each do |m|
                   next if m.miq_callback[:args].blank?
@@ -153,20 +153,20 @@ describe Metric do
           end
 
           it "calling perf_capture_timer when existing capture messages are on the queue in dequeue state should NOT merge" do
-            messages = MiqQueue.where(:class_name => "Host").select {|m| m.args.first == "realtime"}
-            messages.each {|m| m.update_attribute(:state, "dequeue")}
+            messages = MiqQueue.where(:class_name => "Host").select { |m| m.args.first == "realtime" }
+            messages.each { |m| m.update_attribute(:state, "dequeue") }
 
             Metric::Capture.perf_capture_timer
 
-            messages = MiqQueue.where(:class_name => "Host").select {|m| m.args.first == "realtime"}
-            messages.each {|m| m.lock_version.should == 1}
+            messages = MiqQueue.where(:class_name => "Host").select { |m| m.args.first == "realtime" }
+            messages.each { |m| m.lock_version.should == 1 }
           end
 
           it "calling perf_capture_timer a second time should create another task with the correct time window" do
             Metric::Capture.perf_capture_timer
 
             @vmware_clusters.each do |cluster|
-              expected_hosts = cluster.hosts.select {|h| @expected_targets.include?(h)}
+              expected_hosts = cluster.hosts.select { |h| @expected_targets.include?(h) }
               next if expected_hosts.empty?
 
               tasks = MiqTask.where(:name => "Performance rollup for EmsCluster:#{cluster.id}").order("id")
@@ -209,9 +209,9 @@ describe Metric do
           MiqQueue.count.should == 1
 
           msg = MiqQueue.first
-          msg.priority.should    == MiqQueue::HIGH_PRIORITY
+          msg.priority.should == MiqQueue::HIGH_PRIORITY
           msg.instance_id.should == @vm.id
-          msg.class_name.should  == "ManageIQ::Providers::Vmware::InfraManager::Vm"
+          msg.class_name.should == "ManageIQ::Providers::Vmware::InfraManager::Vm"
         end
 
         context "with an existing queue item at a lower priority" do
@@ -224,9 +224,9 @@ describe Metric do
             MiqQueue.count.should == 1
 
             msg = MiqQueue.first
-            msg.priority.should    == MiqQueue::HIGH_PRIORITY
+            msg.priority.should == MiqQueue::HIGH_PRIORITY
             msg.instance_id.should == @vm.id
-            msg.class_name.should  == "ManageIQ::Providers::Vmware::InfraManager::Vm"
+            msg.class_name.should == "ManageIQ::Providers::Vmware::InfraManager::Vm"
           end
         end
 
@@ -240,9 +240,9 @@ describe Metric do
             MiqQueue.count.should == 1
 
             msg = MiqQueue.first
-            msg.priority.should    == MiqQueue::MAX_PRIORITY
+            msg.priority.should == MiqQueue::MAX_PRIORITY
             msg.instance_id.should == @vm.id
-            msg.class_name.should  == "ManageIQ::Providers::Vmware::InfraManager::Vm"
+            msg.class_name.should == "ManageIQ::Providers::Vmware::InfraManager::Vm"
           end
         end
       end
@@ -265,7 +265,7 @@ describe Metric do
           end
 
           it "should have collected counters and values" do
-            @counters_by_mor.length.should              == 1
+            @counters_by_mor.length.should == 1
             @counter_values_by_mor_and_ts.length.should == 1
 
             counters = @counters_by_mor[@vm.ems_ref_obj]
@@ -298,14 +298,14 @@ describe Metric do
             counter_values = @counter_values_by_mor_and_ts[@vm.ems_ref_obj]
             timestamps = counter_values.keys.sort
             timestamps.first.should == "2011-08-12T20:33:20Z"
-            timestamps.last.should  == "2011-08-12T21:33:00Z"
+            timestamps.last.should == "2011-08-12T21:33:00Z"
 
             # Check every timestamp is present
             counter_values.length.should == 180
 
             ts = timestamps.first
-            until ts > timestamps.last do
-              counter_values.has_key?(ts).should be_true
+            until ts > timestamps.last
+              counter_values.key?(ts).should be_true
               ts = (Time.parse(ts).utc + 20.seconds).iso8601
             end
 
@@ -455,11 +455,11 @@ describe Metric do
           ]
           cases.each_slice(2) do |t, v|
             @vm1.metrics << FactoryGirl.create(:metric_vm_rt,
-              :timestamp                  => t,
-              :cpu_usage_rate_average     => v,
-              :cpu_ready_delta_summation  => v * 1000, # Multiply by a factor of 1000 to maake it more realistic and enable testing virtual col v_pct_cpu_ready_delta_summation
-              :sys_uptime_absolute_latest => v
-            )
+                                               :timestamp                  => t,
+                                               :cpu_usage_rate_average     => v,
+                                               :cpu_ready_delta_summation  => v * 1000, # Multiply by a factor of 1000 to maake it more realistic and enable testing virtual col v_pct_cpu_ready_delta_summation
+                                               :sys_uptime_absolute_latest => v
+                                              )
           end
         end
 
@@ -477,15 +477,15 @@ describe Metric do
             MetricRollup.hourly.count.should == 1
             perf = MetricRollup.hourly.first
 
-            perf.resource_type.should         == 'VmOrTemplate'
-            perf.resource_id.should           == @vm1.id
+            perf.resource_type.should == 'VmOrTemplate'
+            perf.resource_id.should == @vm1.id
             perf.capture_interval_name.should == 'hourly'
-            perf.timestamp.iso8601.should     == "2010-04-14T21:00:00Z"
+            perf.timestamp.iso8601.should == "2010-04-14T21:00:00Z"
 
-            perf.cpu_usage_rate_average.should          == 6.0
-            perf.cpu_ready_delta_summation.should       == 30000.0
+            perf.cpu_usage_rate_average.should == 6.0
+            perf.cpu_ready_delta_summation.should == 30000.0
             perf.v_pct_cpu_ready_delta_summation.should == 30.0
-            perf.sys_uptime_absolute_latest.should      == 15.0
+            perf.sys_uptime_absolute_latest.should == 15.0
 
             perf.abs_max_cpu_usage_rate_average_value.should == 15.0
             perf.abs_max_cpu_usage_rate_average_timestamp.utc.iso8601.should == "2010-04-14T21:52:30Z"
@@ -509,17 +509,17 @@ describe Metric do
           ]
           cases.each_slice(2) do |t, v|
             @vm1.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
-              :timestamp                  => t,
-              :cpu_usage_rate_average     => v,
-              :cpu_ready_delta_summation  => v * 10000,
-              :sys_uptime_absolute_latest => v,
-              :min_max => {
-                :abs_max_cpu_usage_rate_average_value     => v,
-                :abs_max_cpu_usage_rate_average_timestamp => Time.parse(t) + 20.seconds,
-                :abs_min_cpu_usage_rate_average_value     => v,
-                :abs_min_cpu_usage_rate_average_timestamp => Time.parse(t) + 40.seconds,
-              }
-            )
+                                                      :timestamp                  => t,
+                                                      :cpu_usage_rate_average     => v,
+                                                      :cpu_ready_delta_summation  => v * 10000,
+                                                      :sys_uptime_absolute_latest => v,
+                                                      :min_max                    => {
+                                                        :abs_max_cpu_usage_rate_average_value     => v,
+                                                        :abs_max_cpu_usage_rate_average_timestamp => Time.parse(t) + 20.seconds,
+                                                        :abs_min_cpu_usage_rate_average_value     => v,
+                                                        :abs_min_cpu_usage_rate_average_timestamp => Time.parse(t) + 40.seconds,
+                                                      }
+                                                     )
           end
         end
 
@@ -545,23 +545,23 @@ describe Metric do
             MetricRollup.daily.count.should == 1
             perf = MetricRollup.daily.first
 
-            perf.resource_type.should         == 'VmOrTemplate'
-            perf.resource_id.should           == @vm1.id
+            perf.resource_type.should == 'VmOrTemplate'
+            perf.resource_id.should == @vm1.id
             perf.capture_interval_name.should == 'daily'
-            perf.timestamp.iso8601.should     == "2010-04-14T00:00:00Z"
-            perf.time_profile_id.should       == @time_profile.id
+            perf.timestamp.iso8601.should == "2010-04-14T00:00:00Z"
+            perf.time_profile_id.should == @time_profile.id
 
-            perf.cpu_usage_rate_average.should          == 6.0
-            perf.cpu_ready_delta_summation.should       == 60000.0 # actually uses average
+            perf.cpu_usage_rate_average.should == 6.0
+            perf.cpu_ready_delta_summation.should == 60000.0 # actually uses average
             perf.v_pct_cpu_ready_delta_summation.should == 1.7
-            perf.sys_uptime_absolute_latest.should      == 6.0     # actually uses average
+            perf.sys_uptime_absolute_latest.should == 6.0     # actually uses average
 
-            perf.max_cpu_usage_rate_average.should                           == 15.0
-            perf.abs_max_cpu_usage_rate_average_value.should                 == 15.0
+            perf.max_cpu_usage_rate_average.should == 15.0
+            perf.abs_max_cpu_usage_rate_average_value.should == 15.0
             perf.abs_max_cpu_usage_rate_average_timestamp.utc.iso8601.should == "2010-04-14T22:00:20Z"
 
-            perf.min_cpu_usage_rate_average.should                           == 1.0
-            perf.abs_min_cpu_usage_rate_average_value.should                 == 1.0
+            perf.min_cpu_usage_rate_average.should == 1.0
+            perf.abs_min_cpu_usage_rate_average_value.should == 1.0
             perf.abs_min_cpu_usage_rate_average_timestamp.utc.iso8601.should == "2010-04-14T18:00:40Z"
           end
         end
@@ -581,9 +581,9 @@ describe Metric do
         context "with Vm daily performances" do
           before(:each) do
             @perf = FactoryGirl.create(:metric_rollup_vm_daily,
-              :timestamp    => "2010-04-14T00:00:00Z",
-              :time_profile => @time_profile
-            )
+                                       :timestamp    => "2010-04-14T00:00:00Z",
+                                       :time_profile => @time_profile
+                                      )
           end
 
           it "VimPerformanceDaily.find should return existing daily performances when a time_profile is passed" do
@@ -622,15 +622,15 @@ describe Metric do
             cases.each_slice(3) do |t, cpu, mem|
               [@vm1, @vm2].each do |vm|
                 vm.metric_rollups << FactoryGirl.create(:metric_rollup_vm_daily,
-                  :timestamp                  => t,
-                  :cpu_usage_rate_average     => cpu,
-                  :mem_usage_absolute_average => mem,
-                  :min_max => {
-                    :max_cpu_usage_rate_average     => cpu,
-                    :max_mem_usage_absolute_average => mem,
-                  },
-                  :time_profile => @time_profile
-                )
+                                                        :timestamp                  => t,
+                                                        :cpu_usage_rate_average     => cpu,
+                                                        :mem_usage_absolute_average => mem,
+                                                        :min_max                    => {
+                                                          :max_cpu_usage_rate_average     => cpu,
+                                                          :max_mem_usage_absolute_average => mem,
+                                                        },
+                                                        :time_profile               => @time_profile
+                                                       )
               end
             end
           end
@@ -647,13 +647,13 @@ describe Metric do
           it "should calculate the correct right-size values" do
             ManageIQ::Providers::Vmware::InfraManager::Vm.stub(:mem_recommendation_minimum).and_return(0)
 
-            @vm1.recommended_vcpus.should       == 1
-            @vm1.recommended_mem.should         == 4
+            @vm1.recommended_vcpus.should == 1
+            @vm1.recommended_mem.should == 4
             @vm1.overallocated_vcpus_pct.should == 0
-            @vm1.overallocated_mem_pct.should   == 0
+            @vm1.overallocated_mem_pct.should == 0
 
-            @vm2.recommended_vcpus.should       == 1
-            @vm2.recommended_mem.should         == 1356
+            @vm2.recommended_vcpus.should == 1
+            @vm2.recommended_mem.should == 1356
             @vm2.overallocated_vcpus_pct.should be_within(0.01).of(50.0)
             @vm2.overallocated_mem_pct.should   be_within(0.01).of(66.9)
           end
@@ -672,11 +672,11 @@ describe Metric do
             ]
             cases.each_slice(2) do |t, v|
               @host1.metrics << FactoryGirl.create(:metric_host_rt,
-                :timestamp                  => t,
-                :cpu_usage_rate_average     => v,
-                :cpu_usagemhz_rate_average  => v,
-                :sys_uptime_absolute_latest => v
-              )
+                                                   :timestamp                  => t,
+                                                   :cpu_usage_rate_average     => v,
+                                                   :cpu_usagemhz_rate_average  => v,
+                                                   :sys_uptime_absolute_latest => v
+                                                  )
             end
 
             cases = [
@@ -690,11 +690,11 @@ describe Metric do
             ]
             cases.each_slice(2) do |t, v|
               @host2.metrics << FactoryGirl.create(:metric_host_rt,
-                :timestamp                  => t,
-                :cpu_usage_rate_average     => v,
-                :cpu_usagemhz_rate_average  => v,
-                :sys_uptime_absolute_latest => v
-              )
+                                                   :timestamp                  => t,
+                                                   :cpu_usage_rate_average     => v,
+                                                   :cpu_usagemhz_rate_average  => v,
+                                                   :sys_uptime_absolute_latest => v
+                                                  )
             end
           end
 
@@ -707,15 +707,15 @@ describe Metric do
               MetricRollup.hourly.where(:resource_type => 'Host', :resource_id => @host1.id).count.should == 1
               perf = MetricRollup.hourly.where(:resource_type => 'Host', :resource_id => @host1.id).first
 
-              perf.resource_type.should         == 'Host'
-              perf.resource_id.should           == @host1.id
+              perf.resource_type.should == 'Host'
+              perf.resource_id.should == @host1.id
               perf.capture_interval_name.should == 'hourly'
-              perf.timestamp.iso8601.should     == "2010-04-14T21:00:00Z"
+              perf.timestamp.iso8601.should == "2010-04-14T21:00:00Z"
 
-              perf.cpu_usage_rate_average.should          == 12.0    # pulled from Host realtime
-              perf.cpu_ready_delta_summation.should       == 80000.0 # pulled from Vm hourly
+              perf.cpu_usage_rate_average.should == 12.0    # pulled from Host realtime
+              perf.cpu_ready_delta_summation.should == 80000.0 # pulled from Vm hourly
               perf.v_pct_cpu_ready_delta_summation.should == 2.2
-              perf.sys_uptime_absolute_latest.should      == 30.0    # pulled from Host realtime
+              perf.sys_uptime_absolute_latest.should == 30.0    # pulled from Host realtime
 
               # NOTE: min / max / burst are only pulled in from Vm realtime.
             end
@@ -730,25 +730,25 @@ describe Metric do
               Metric.where(:resource_type => 'EmsCluster', :resource_id => @ems_cluster.id).count.should == 5
               perfs = Metric.where(:resource_type => 'EmsCluster', :resource_id => @ems_cluster.id).order("timestamp")
 
-              perfs[0].resource_type.should         == 'EmsCluster'
-              perfs[0].resource_id.should           == @ems_cluster.id
+              perfs[0].resource_type.should == 'EmsCluster'
+              perfs[0].resource_id.should == @ems_cluster.id
               perfs[0].capture_interval_name.should == 'realtime'
-              perfs[0].timestamp.iso8601.should     == "2010-04-14T21:51:20Z"
+              perfs[0].timestamp.iso8601.should == "2010-04-14T21:51:20Z"
 
-              perfs[0].cpu_usage_rate_average.should     == 2.5 # pulled from Host realtime
-              perfs[0].cpu_usagemhz_rate_average.should  == 5.0 # pulled from Host realtime
+              perfs[0].cpu_usage_rate_average.should == 2.5 # pulled from Host realtime
+              perfs[0].cpu_usagemhz_rate_average.should == 5.0 # pulled from Host realtime
               perfs[0].sys_uptime_absolute_latest.should == 3.0 # pulled from Host realtime
-              perfs[0].derived_cpu_available.should      == 19152
+              perfs[0].derived_cpu_available.should == 19152
 
-              perfs[2].cpu_usage_rate_average.should     == 12.0  # pulled from Host realtime
-              perfs[2].cpu_usagemhz_rate_average.should  == 24.0  # pulled from Host realtime
+              perfs[2].cpu_usage_rate_average.should == 12.0  # pulled from Host realtime
+              perfs[2].cpu_usagemhz_rate_average.should == 24.0  # pulled from Host realtime
               perfs[2].sys_uptime_absolute_latest.should == 16.0  # pulled from Host realtime
-              perfs[2].derived_cpu_available.should      == 19152
+              perfs[2].derived_cpu_available.should == 19152
 
-              perfs[3].cpu_usage_rate_average.should     == 24.0  # pulled from Host realtime
-              perfs[3].cpu_usagemhz_rate_average.should  == 48.0  # pulled from Host realtime
+              perfs[3].cpu_usage_rate_average.should == 24.0  # pulled from Host realtime
+              perfs[3].cpu_usagemhz_rate_average.should == 48.0  # pulled from Host realtime
               perfs[3].sys_uptime_absolute_latest.should == 32.0  # pulled from Host realtime
-              perfs[3].derived_cpu_available.should      == 19152
+              perfs[3].derived_cpu_available.should == 19152
             end
           end
 
@@ -919,165 +919,165 @@ describe Metric do
     context "Testing CPU % virtual cols with existing performance data" do
       it "should return the correct values for Vm realtime" do
         pdata = {
-          :resource_type            => "VmOrTemplate",
-          :capture_interval_name    => "realtime",
-          :cpu_ready_delta_summation=> 1060.0,
-          :cpu_used_delta_summation => 4012.0,
-          :cpu_wait_delta_summation => 27090.0,
+          :resource_type             => "VmOrTemplate",
+          :capture_interval_name     => "realtime",
+          :cpu_ready_delta_summation => 1060.0,
+          :cpu_used_delta_summation  => 4012.0,
+          :cpu_wait_delta_summation  => 27090.0,
         }
         perf = Metric.new(pdata)
 
         perf.v_pct_cpu_ready_delta_summation.should == 5.3
-        perf.v_pct_cpu_used_delta_summation.should  == 20.1
-        perf.v_pct_cpu_wait_delta_summation.should  == 135.5
+        perf.v_pct_cpu_used_delta_summation.should == 20.1
+        perf.v_pct_cpu_wait_delta_summation.should == 135.5
       end
 
       it "should return the correct values for Vm hourly" do
         pdata = {
-          :resource_type            => "VmOrTemplate",
-          :capture_interval_name    => "hourly",
-          :intervals_in_rollup      => 180,
-          :cpu_ready_delta_summation=> 10604.0,
-          :cpu_used_delta_summation => 401296.0,
-          :cpu_wait_delta_summation => 6709070.0,
+          :resource_type             => "VmOrTemplate",
+          :capture_interval_name     => "hourly",
+          :intervals_in_rollup       => 180,
+          :cpu_ready_delta_summation => 10604.0,
+          :cpu_used_delta_summation  => 401296.0,
+          :cpu_wait_delta_summation  => 6709070.0,
         }
         perf = MetricRollup.new(pdata)
 
         perf.v_pct_cpu_ready_delta_summation.should == 0.3
-        perf.v_pct_cpu_used_delta_summation.should  == 11.1
-        perf.v_pct_cpu_wait_delta_summation.should  == 186.4
+        perf.v_pct_cpu_used_delta_summation.should == 11.1
+        perf.v_pct_cpu_wait_delta_summation.should == 186.4
       end
 
       it "should return the correct values for Vm daily" do
         pdata = {
-          :resource_type            => "VmOrTemplate",
-          :capture_interval_name    => "daily",
-          :intervals_in_rollup      => 24,
-          :cpu_ready_delta_summation=> 10868.0833333333,
-          :cpu_used_delta_summation => 131611.583333333,
-          :cpu_wait_delta_summation => 6772579.45833333,
+          :resource_type             => "VmOrTemplate",
+          :capture_interval_name     => "daily",
+          :intervals_in_rollup       => 24,
+          :cpu_ready_delta_summation => 10868.0833333333,
+          :cpu_used_delta_summation  => 131611.583333333,
+          :cpu_wait_delta_summation  => 6772579.45833333,
         }
         perf = MetricRollup.new(pdata)
 
         perf.v_pct_cpu_ready_delta_summation.should == 0.3
-        perf.v_pct_cpu_used_delta_summation.should  == 3.7
-        perf.v_pct_cpu_wait_delta_summation.should  == 188.1
+        perf.v_pct_cpu_used_delta_summation.should == 3.7
+        perf.v_pct_cpu_wait_delta_summation.should == 188.1
       end
 
       it "should return the correct values for Host hourly" do
         pdata = {
-          :resource_type            => "Host",
-          :capture_interval_name    => "hourly",
-          :intervals_in_rollup      => 179,
-          :derived_vm_count_on      => 6,
-          :cpu_ready_delta_summation=> 54281.0,
-          :cpu_used_delta_summation => 2324833.0,
-          :cpu_wait_delta_summation => 36722174.0,
+          :resource_type             => "Host",
+          :capture_interval_name     => "hourly",
+          :intervals_in_rollup       => 179,
+          :derived_vm_count_on       => 6,
+          :cpu_ready_delta_summation => 54281.0,
+          :cpu_used_delta_summation  => 2324833.0,
+          :cpu_wait_delta_summation  => 36722174.0,
         }
         perf = MetricRollup.new(pdata)
 
         perf.v_pct_cpu_ready_delta_summation.should == 0.3
-        perf.v_pct_cpu_used_delta_summation.should  == 10.8
-        perf.v_pct_cpu_wait_delta_summation.should  == 170.0
+        perf.v_pct_cpu_used_delta_summation.should == 10.8
+        perf.v_pct_cpu_wait_delta_summation.should == 170.0
 
         pdata[:derived_vm_count_on] = nil
         perf = MetricRollup.new(pdata)
         perf.v_pct_cpu_ready_delta_summation.should == 0
-        perf.v_pct_cpu_used_delta_summation.should  == 0
-        perf.v_pct_cpu_wait_delta_summation.should  == 0
+        perf.v_pct_cpu_used_delta_summation.should == 0
+        perf.v_pct_cpu_wait_delta_summation.should == 0
 
         pdata[:derived_vm_count_on] = 0
         perf = MetricRollup.new(pdata)
         perf.v_pct_cpu_ready_delta_summation.should == 0
-        perf.v_pct_cpu_used_delta_summation.should  == 0
-        perf.v_pct_cpu_wait_delta_summation.should  == 0
+        perf.v_pct_cpu_used_delta_summation.should == 0
+        perf.v_pct_cpu_wait_delta_summation.should == 0
       end
 
       it "should return the correct values for Host daily" do
         pdata = {
-          :resource_type            => "Host",
-          :capture_interval_name    => "daily",
-          :intervals_in_rollup      => 24,
-          :derived_vm_count_on      => 6,
-          :cpu_ready_delta_summation=> 50579.1666666667,
-          :cpu_used_delta_summation => 2180869.375,
-          :cpu_wait_delta_summation => 36918805.4166667,
+          :resource_type             => "Host",
+          :capture_interval_name     => "daily",
+          :intervals_in_rollup       => 24,
+          :derived_vm_count_on       => 6,
+          :cpu_ready_delta_summation => 50579.1666666667,
+          :cpu_used_delta_summation  => 2180869.375,
+          :cpu_wait_delta_summation  => 36918805.4166667,
         }
         perf = MetricRollup.new(pdata)
 
         perf.v_pct_cpu_ready_delta_summation.should == 0.2
-        perf.v_pct_cpu_used_delta_summation.should  == 10.1
-        perf.v_pct_cpu_wait_delta_summation.should  == 170.9
+        perf.v_pct_cpu_used_delta_summation.should == 10.1
+        perf.v_pct_cpu_wait_delta_summation.should == 170.9
 
         pdata[:derived_vm_count_on] = nil
         perf = MetricRollup.new(pdata)
         perf.v_pct_cpu_ready_delta_summation.should == 0
-        perf.v_pct_cpu_used_delta_summation.should  == 0
-        perf.v_pct_cpu_wait_delta_summation.should  == 0
+        perf.v_pct_cpu_used_delta_summation.should == 0
+        perf.v_pct_cpu_wait_delta_summation.should == 0
 
         pdata[:derived_vm_count_on] = 0
         perf = MetricRollup.new(pdata)
         perf.v_pct_cpu_ready_delta_summation.should == 0
-        perf.v_pct_cpu_used_delta_summation.should  == 0
-        perf.v_pct_cpu_wait_delta_summation.should  == 0
+        perf.v_pct_cpu_used_delta_summation.should == 0
+        perf.v_pct_cpu_wait_delta_summation.should == 0
       end
 
       it "should return the correct values for Cluster hourly" do
         pdata = {
-          :resource_type            => "EmsCluster",
-          :capture_interval_name    => "hourly",
-          :intervals_in_rollup      => nil,
-          :derived_vm_count_on      => 10,
-          :cpu_ready_delta_summation=> 58783.0,
-          :cpu_used_delta_summation => 3668409.0,
-          :cpu_wait_delta_summation => 60426340.0,
+          :resource_type             => "EmsCluster",
+          :capture_interval_name     => "hourly",
+          :intervals_in_rollup       => nil,
+          :derived_vm_count_on       => 10,
+          :cpu_ready_delta_summation => 58783.0,
+          :cpu_used_delta_summation  => 3668409.0,
+          :cpu_wait_delta_summation  => 60426340.0,
         }
         perf = MetricRollup.new(pdata)
 
         perf.v_pct_cpu_ready_delta_summation.should == 0.2
-        perf.v_pct_cpu_used_delta_summation.should  == 10.2
-        perf.v_pct_cpu_wait_delta_summation.should  == 167.9
+        perf.v_pct_cpu_used_delta_summation.should == 10.2
+        perf.v_pct_cpu_wait_delta_summation.should == 167.9
 
         pdata[:derived_vm_count_on] = nil
         perf = MetricRollup.new(pdata)
         perf.v_pct_cpu_ready_delta_summation.should == 0
-        perf.v_pct_cpu_used_delta_summation.should  == 0
-        perf.v_pct_cpu_wait_delta_summation.should  == 0
+        perf.v_pct_cpu_used_delta_summation.should == 0
+        perf.v_pct_cpu_wait_delta_summation.should == 0
 
         pdata[:derived_vm_count_on] = 0
         perf = MetricRollup.new(pdata)
         perf.v_pct_cpu_ready_delta_summation.should == 0
-        perf.v_pct_cpu_used_delta_summation.should  == 0
-        perf.v_pct_cpu_wait_delta_summation.should  == 0
+        perf.v_pct_cpu_used_delta_summation.should == 0
+        perf.v_pct_cpu_wait_delta_summation.should == 0
       end
 
       it "should return the correct values for Cluster daily" do
         pdata = {
-          :resource_type            => "EmsCluster",
-          :capture_interval_name    => "daily",
-          :intervals_in_rollup      => 24,
-          :derived_vm_count_on      => 10,
-          :cpu_ready_delta_summation=> 54120.0833333333,
-          :cpu_used_delta_summation => 3209660.54166667,
-          :cpu_wait_delta_summation => 60868270.1666667,
+          :resource_type             => "EmsCluster",
+          :capture_interval_name     => "daily",
+          :intervals_in_rollup       => 24,
+          :derived_vm_count_on       => 10,
+          :cpu_ready_delta_summation => 54120.0833333333,
+          :cpu_used_delta_summation  => 3209660.54166667,
+          :cpu_wait_delta_summation  => 60868270.1666667,
         }
         perf = MetricRollup.new(pdata)
 
         perf.v_pct_cpu_ready_delta_summation.should == 0.2
-        perf.v_pct_cpu_used_delta_summation.should  == 8.9
-        perf.v_pct_cpu_wait_delta_summation.should  == 169.1
+        perf.v_pct_cpu_used_delta_summation.should == 8.9
+        perf.v_pct_cpu_wait_delta_summation.should == 169.1
 
         pdata[:derived_vm_count_on] = nil
         perf = MetricRollup.new(pdata)
         perf.v_pct_cpu_ready_delta_summation.should == 0
-        perf.v_pct_cpu_used_delta_summation.should  == 0
-        perf.v_pct_cpu_wait_delta_summation.should  == 0
+        perf.v_pct_cpu_used_delta_summation.should == 0
+        perf.v_pct_cpu_wait_delta_summation.should == 0
 
         pdata[:derived_vm_count_on] = 0
         perf = MetricRollup.new(pdata)
         perf.v_pct_cpu_ready_delta_summation.should == 0
-        perf.v_pct_cpu_used_delta_summation.should  == 0
-        perf.v_pct_cpu_wait_delta_summation.should  == 0
+        perf.v_pct_cpu_used_delta_summation.should == 0
+        perf.v_pct_cpu_wait_delta_summation.should == 0
       end
     end
 
@@ -1086,17 +1086,17 @@ describe Metric do
         it "should handle the only event right before the starting on time (FB15770)" do
           @ems_cluster = FactoryGirl.create(:ems_cluster, :ext_management_system => @ems_vmware)
           @ems_cluster.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
-                  :timestamp => Time.parse("2011-08-12T20:33:12Z")
-          )
+                                                            :timestamp => Time.parse("2011-08-12T20:33:12Z")
+                                                           )
 
-          options = {:debug_trace=>"false",
-                     :value=>"50",
-                     :operator=>">",
-                     :duration=>3600,
-                     :column=>"v_pct_cpu_ready_delta_summation",
-                     :interval_name=>"hourly",
-                     :starting_on => Time.parse("2011-08-12T20:33:20Z"),
-                     :trend_direction=>"none"
+          options = {:debug_trace     => "false",
+                     :value           => "50",
+                     :operator        => ">",
+                     :duration        => 3600,
+                     :column          => "v_pct_cpu_ready_delta_summation",
+                     :interval_name   => "hourly",
+                     :starting_on     => Time.parse("2011-08-12T20:33:20Z"),
+                     :trend_direction => "none"
           }
           @ems_cluster.performances_maintains_value_for_duration?(options).should == false
         end
@@ -1126,12 +1126,12 @@ describe Metric do
       context "executing capture_targets" do
         it "should find enabled targets" do
           targets = Metric::Targets.capture_targets
-          assert_cloud_targets_enabled targets, %w{ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm}
+          assert_cloud_targets_enabled targets, %w(ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm)
         end
 
         it "should find no enabled targets excluding vms" do
           targets = Metric::Targets.capture_targets(nil, :exclude_vms => true)
-          assert_cloud_targets_enabled targets, %w{}
+          assert_cloud_targets_enabled targets, %w()
         end
       end
 
@@ -1150,7 +1150,7 @@ describe Metric do
           expected = expected_targets.collect do |t|
             # Storage is hourly only
             # Non-storage historical is expecting 7 days back, plus partial day = 8
-            t.is_a?(Storage) ? [t, "hourly"] : [[t, "realtime"], [t, "historical"] * 8]
+            t.kind_of?(Storage) ? [t, "hourly"] : [[t, "realtime"], [t, "historical"] * 8]
           end.flatten
 
           selected = MiqQueue.where(:method_name => "perf_capture").order(:id).collect do |q|
@@ -1258,11 +1258,11 @@ describe Metric do
     deliver_on = Time.parse(deliver_on).utc if deliver_on.kind_of?(String)
     expected_deliver_on = q_item.deliver_on.utc.should unless deliver_on.nil?
 
-    q_item.method_name.should    == method
-    q_item.instance_id.should    == instance_id
-    q_item.class_name.should     == class_name
-    q_item.args.should           == args
-    expected_deliver_on          == deliver_on
+    q_item.method_name.should == method
+    q_item.instance_id.should == instance_id
+    q_item.class_name.should == class_name
+    q_item.args.should == args
+    expected_deliver_on == deliver_on
   end
 
   def assert_queue_items_are_hourly_rollups(q_items, first_time, instance_id, class_name)
@@ -1298,10 +1298,10 @@ describe Metric do
       selected_types << t.class.name
 
       expected_enabled = case t
-      when Vm;      t.host.perf_capture_enabled?
-      when Host;    t.perf_capture_enabled? || t.ems_cluster.perf_capture_enabled?
-      when Storage; t.perf_capture_enabled?
-      end
+                         when Vm then      t.host.perf_capture_enabled?
+                         when Host then    t.perf_capture_enabled? || t.ems_cluster.perf_capture_enabled?
+                         when Storage then t.perf_capture_enabled?
+                         end
       expected_enabled.should be_true
     end
 
@@ -1314,12 +1314,12 @@ describe Metric do
       selected_types << t.class.name
 
       expected_enabled = case t
-      # Vm's perf_capture_enabled is its availability_zone's perf_capture setting,
-      #   or true if it has no availability_zone
-      when Vm;                t.availability_zone ? t.availability_zone.perf_capture_enabled? : true
-      when AvailabilityZone;  t.perf_capture_enabled?
-      when Storage;           t.perf_capture_enabled?
-      end
+                         # Vm's perf_capture_enabled is its availability_zone's perf_capture setting,
+                         #   or true if it has no availability_zone
+                         when Vm then                t.availability_zone ? t.availability_zone.perf_capture_enabled? : true
+                         when AvailabilityZone then  t.perf_capture_enabled?
+                         when Storage then           t.perf_capture_enabled?
+                         end
       expected_enabled.should be_true
     end
 
@@ -1341,5 +1341,4 @@ describe Metric do
       target.perf_capture_now?.should_not be_true
     end
   end
-
 end

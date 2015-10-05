@@ -92,7 +92,7 @@ module HostHelper::TextualSummary
       configuration = {:title => _("Show list of configuration files of %s") % (x.name),
                        :image => 'filesystems',
                        :value => _("Configuration (%s)") % configuration_count,
-                       :link => configuration_count > 0 ? url_for(:controller => controller.controller_name,
+                       :link  => configuration_count > 0 ? url_for(:controller => controller.controller_name,
                                                                   :action => 'filesystems', :id => @record,
                                                                   :db => controller.controller_name,
                                                                   :host_service_group => x.id) : nil}
@@ -102,7 +102,6 @@ module HostHelper::TextualSummary
       {:value => x.name, :sub_items => sub_items}
     end
   end
-
 
   def textual_hostname
     @record.hostname
@@ -125,7 +124,7 @@ module HostHelper::TextualSummary
 
   def textual_vmm_vendor
     h = {:label => "VMM Information"}
-    if @vmminfo == nil || @vmminfo.empty?
+    if @vmminfo.nil? || @vmminfo.empty?
       h[:value] = "None"
       h[:image] = "unknown"
     else
@@ -140,7 +139,7 @@ module HostHelper::TextualSummary
   def textual_model
     h = {:label => "Manufacturer / Model"}
     if !@record.hardware.nil? && (!@record.hardware.manufacturer.blank? || !@record.hardware.model.blank?)
-     h[:value] = "#{@record.hardware.manufacturer} / #{@record.hardware.model}"
+      h[:value] = "#{@record.hardware.manufacturer} / #{@record.hardware.model}"
     else
       h[:value] = "N/A"
     end
@@ -157,16 +156,16 @@ module HostHelper::TextualSummary
 
   def textual_osinfo
     h = {:label => "Operating System"}
-    if @osinfo == nil || @osinfo.empty?
+    if @osinfo.nil? || @osinfo.empty?
       h[:value] = "Unknown"
       h[:image] = "os-unknown"
     else
       h[:image] = "os-#{@record.os_image_name.downcase}"
       h[:value] = @osinfo[0][:description]
-      if !@record.operating_system.version.blank?
+      unless @record.operating_system.version.blank?
         h[:value] << " #{@record.operating_system.version}"
       end
-      if !@record.operating_system.build_number.blank?
+      unless @record.operating_system.build_number.blank?
         h[:value] << " Build #{@record.operating_system.build_number}"
       end
 
@@ -209,7 +208,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_devices
-    h = {:label => "Devices", :image => "devices", :value => (@devices == nil || @devices.empty? ? "None" : @devices.length)}
+    h = {:label => "Devices", :image => "devices", :value => (@devices.nil? || @devices.empty? ? "None" : @devices.length)}
     if @devices.length > 0
       h[:title] = "Show #{host_title} devices"
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'devices')
@@ -230,7 +229,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_memory
-    {:label => "Memory", :value => (@record.hardware.nil? || !@record.hardware.memory_cpu.kind_of?(Numeric)) ? "N/A" : number_to_human_size(@record.hardware.memory_cpu.to_i * 1.megabyte,:precision=>0)}
+    {:label => "Memory", :value => (@record.hardware.nil? || !@record.hardware.memory_cpu.kind_of?(Numeric)) ? "N/A" : number_to_human_size(@record.hardware.memory_cpu.to_i * 1.megabyte, :precision => 0)}
   end
 
   def textual_guid
@@ -264,7 +263,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_drift_history
-    return nil unless role_allows(:feature=>"host_drift")
+    return nil unless role_allows(:feature => "host_drift")
     label = "Drift History"
     num   = @record.number_of(:drift_states)
     h     = {:label => label, :image => "drift", :value => num}
@@ -493,11 +492,11 @@ module HostHelper::TextualSummary
     authentications.collect do |auth|
       label =
         case auth.authtype
-        when "default"; "Default"
-        when "ipmi"; "IPMI"
-        when "remote";  "Remote Login"
-        when "ws"; "Web Services"
-        when "ssh_keypair"; "SSH keypair"
+        when "default" then "Default"
+        when "ipmi" then "IPMI"
+        when "remote" then  "Remote Login"
+        when "ws" then "Web Services"
+        when "ssh_keypair" then "SSH keypair"
         else;           "<Unknown>"
         end
 

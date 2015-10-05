@@ -8,7 +8,7 @@ describe VmInfraController do
       it "root node" do
         active_node = "root"
 
-        controller.instance_variable_set(:@sb, {:trees => {active_tree => {:active_node => active_node}}, :active_tree => active_tree})
+        controller.instance_variable_set(:@sb, :trees => {active_tree => {:active_node => active_node}}, :active_tree => active_tree)
         res = controller.send(:valid_active_node, active_node)
         controller.send(:flash_errors?).should_not be_true
         res.should == active_node
@@ -18,7 +18,7 @@ describe VmInfraController do
         rec = FactoryGirl.create(:service_template_catalog)
         active_node = "stc-#{rec.id}"
 
-        controller.instance_variable_set(:@sb, {:trees => {active_tree => {:active_node => active_node}}, :active_tree => active_tree})
+        controller.instance_variable_set(:@sb, :trees => {active_tree => {:active_node => active_node}}, :active_tree => active_tree)
         res = controller.send(:valid_active_node, active_node)
         controller.send(:flash_errors?).should_not be_true
         res.should == active_node
@@ -28,7 +28,7 @@ describe VmInfraController do
         rec = FactoryGirl.create(:service_template_catalog)
         active_node = "stc-#{rec.id + 1}"
 
-        controller.instance_variable_set(:@sb, {:trees => {active_tree => {:active_node => active_node}}, :active_tree => active_tree})
+        controller.instance_variable_set(:@sb, :trees => {active_tree => {:active_node => active_node}}, :active_tree => active_tree)
         res = controller.send(:valid_active_node, active_node)
         controller.send(:flash_errors?).should be_true
         res.should == "root"
@@ -45,7 +45,7 @@ describe VmInfraController do
         user.current_group.set_managed_filters([["/managed/service_level/gold"]])
         login_as user
 
-        Rbac.should_receive(:search).with(:targets => [ems_folder], :results_format=>:objects).and_call_original
+        Rbac.should_receive(:search).with(:targets => [ems_folder], :results_format => :objects).and_call_original
 
         controller.send(:rbac_filtered_objects, [ems_folder], :match_via_descendants => "VmOrTemplate")
       end
@@ -94,10 +94,10 @@ describe VmInfraController do
         ems_infra = FactoryGirl.create(:ems_redhat)
         controller.instance_variable_set(:@sb, {:trees => {:utilization_tree => {:active_node => "root"}}, :active_tree => :utilization_tree})
         options = {
-                    :tree => :utilization_tree,
-                    :type => :utilization,
-                    :parent => region
-                  }
+          :tree   => :utilization_tree,
+          :type   => :utilization,
+          :parent => region
+        }
 
         objects = controller.send(:x_get_tree_region_kids, region, options)
         objects.should have(1).items
@@ -113,12 +113,12 @@ describe VmInfraController do
         folder_node_id = {:id => "folder_e_xx-#{MiqRegion.compress_id(@region.id)}"}
         controller.instance_variable_set(:@sb, {:trees => {:utilization_tree => {:active_node => "root"}}, :active_tree => :utilization_tree})
         options = {
-                    :tree => :utilization_tree,
-                    :type => :utilization,
-                    :parent => @region
-                  }
+          :tree   => :utilization_tree,
+          :type   => :utilization,
+          :parent => @region
+        }
 
-        objects = controller.send(:x_get_tree_custom_kids, folder_node_id , options)
+        objects = controller.send(:x_get_tree_custom_kids, folder_node_id, options)
         objects.should have(1).items
         objects.first[:id].should_not == ems_cloud.id
         objects.first[:id].should == ems_infra.id
@@ -159,7 +159,7 @@ describe VmInfraController do
       before(:each) do
         sb = {
           :active_tree => 'foo_tree',
-          :history => {
+          :history     => {
             'foo_tree' => (1..11).collect { |i| make_item(i) }
           }
         }
@@ -171,19 +171,19 @@ describe VmInfraController do
 
         assigns(:sb)[:history]['foo_tree'].first[:id].should == '12_id'
 
-        assigns(:sb)[:history]['foo_tree'].find { |item|
+        assigns(:sb)[:history]['foo_tree'].find do |item|
           item[:id] == '11_id'
-        }.should be_nil
+        end.should be_nil
       end
 
       it 'it removes duplicate items from the history' do
-        item = make_item(1).update( :foo => 'bar' )
+        item = make_item(1).update(:foo => 'bar')
 
         controller.send(:x_history_add_item, item)
 
-        items = assigns(:sb)[:history]['foo_tree'].find_all { |item|
+        items = assigns(:sb)[:history]['foo_tree'].find_all do |item|
           item[:id] == '1_id'
-        }
+        end
 
         items.length.should == 1
         items[0][:foo].should == 'bar'

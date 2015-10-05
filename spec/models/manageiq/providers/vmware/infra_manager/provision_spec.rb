@@ -26,9 +26,11 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
       end
 
       it "#workflow" do
-        MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
+        workflow_class = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow
+        workflow_class.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
 
-        @vm_prov.workflow.class.should eq ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow
+        expect(@vm_prov.workflow.class).to eq workflow_class
+        expect(@vm_prov.workflow_class).to eq workflow_class
       end
 
       it "should return a config spec" do
@@ -40,7 +42,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
         spec.should be_kind_of(VimHash)
         spec.xsiType.should == 'VirtualMachineConfigSpec'
         spec["memoryMB"].should == 1024
-        spec["numCPUs"].should  == 2
+        spec["numCPUs"].should == 2
         spec["annotation"].should include(@vm_prov.phase_context[:new_vm_validation_guid])
       end
 
@@ -70,7 +72,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
         @vm_prov.should_receive(:build_config_spec_vlan).twice
 
         vmcs = VimHash.new("VirtualMachineConfigSpec")
-        lambda { @vm_prov.build_config_network_adapters(vmcs) }.should_not raise_error
+        -> { @vm_prov.build_config_network_adapters(vmcs) }.should_not raise_error
       end
 
       it "eligible_hosts" do

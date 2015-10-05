@@ -15,8 +15,8 @@ describe ApplianceConsole::InternalDatabaseConfiguration do
   context ".new" do
     it "set defaults automatically" do
       @config.host.should == "127.0.0.1"
-      @config.username.should ==  "root"
-      @config.database.should ==  "vmdb_production"
+      @config.username.should == "root"
+      @config.database.should == "vmdb_production"
     end
   end
 

@@ -4,8 +4,8 @@ describe EmsCloudController do
   context "::EmsCommon" do
     context "#get_form_vars" do
       it "check if the default port for openstack/openstack_infra/rhevm is set" do
-        controller.instance_variable_set(:@edit, {:new => {}})
-        controller.instance_variable_set(:@_params, {:server_emstype => "openstack"})
+        controller.instance_variable_set(:@edit, :new => {})
+        controller.instance_variable_set(:@_params, :server_emstype => "openstack")
         controller.send(:get_form_vars)
         assigns(:edit)[:new][:port].should == 5000
 
@@ -13,9 +13,9 @@ describe EmsCloudController do
         controller.send(:get_form_vars)
         assigns(:edit)[:new][:port].should == 5000
 
-        controller.instance_variable_set(:@_params, {:server_emstype => "ec2"})
+        controller.instance_variable_set(:@_params, :server_emstype => "ec2")
         controller.send(:get_form_vars)
-        assigns(:edit)[:new][:port].should == nil
+        assigns(:edit)[:new][:port].should.nil?
       end
     end
 
@@ -38,16 +38,16 @@ describe EmsCloudController do
       before :each do
         set_user_privileges
       end
-      
+
       it "form_div should be updated when server type is sent up" do
-        controller.instance_variable_set(:@edit, {:new => {}, :key => "ems_edit__new"})
+        controller.instance_variable_set(:@edit, :new => {}, :key => "ems_edit__new")
         session[:edit] = assigns(:edit)
         post :form_field_changed, :server_emstype => "rhevm", :id => "new"
         response.body.should include("form_div")
       end
 
       it "form_div should not be updated when other fields are sent up" do
-        controller.instance_variable_set(:@edit, {:new => {}, :key => "ems_edit__new"})
+        controller.instance_variable_set(:@edit, :new => {}, :key => "ems_edit__new")
         session[:edit] = assigns(:edit)
         post :form_field_changed, :name => "Test", :id => "new"
         response.body.should_not include("form_div")
@@ -128,6 +128,36 @@ describe EmsContainerController do
         post :update, :button => "save", :id => @ems.id, :type => @ems.type
         response.status.should == 200
         ManageIQ::Providers::Kubernetes::ContainerManager.last.authentication_token("bearer").should == "valid-token"
+      end
+    end
+
+    context "#button" do
+      before(:each) do
+        set_user_privileges
+        FactoryGirl.create(:vmdb_database)
+        EvmSpecHelper.create_guid_miq_server_zone
+      end
+
+      it "when VM Migrate is pressed for unsupported type" do
+        controller.stub(:role_allows).and_return(true)
+        vm = FactoryGirl.create(:vm_microsoft)
+        post :button, :pressed => "vm_migrate", :format => :js, "check_#{vm.id}" => "1"
+        controller.send(:flash_errors?).should be_true
+        assigns(:flash_array).first[:message].should include('does not apply')
+      end
+
+      it "when VM Migrate is pressed for supported type" do
+        controller.stub(:role_allows).and_return(true)
+        vm = FactoryGirl.create(:vm_vmware)
+        post :button, :pressed => "vm_migrate", :format => :js, "check_#{vm.id}" => "1"
+        controller.send(:flash_errors?).should_not be_true
+      end
+
+      it "when VM Migrate is pressed for supported type" do
+        controller.stub(:role_allows).and_return(true)
+        vm = FactoryGirl.create(:vm_vmware)
+        post :button, :pressed => "vm_edit", :format => :js, "check_#{vm.id}" => "1"
+        controller.send(:flash_errors?).should_not be_true
       end
     end
   end

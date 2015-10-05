@@ -2,7 +2,6 @@ require "spec_helper"
 include MiqAeYamlImportExportMixin
 
 describe MiqAeMethodCompare do
-
   before do
     @domain = 'SPEC_DOMAIN'
     @namespace   = 'NS1'

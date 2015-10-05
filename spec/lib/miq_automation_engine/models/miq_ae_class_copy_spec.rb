@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe MiqAeClassCopy do
-
   before do
     @src_domain  = 'SPEC_DOMAIN'
     @dest_domain = 'FRED'
@@ -119,5 +118,4 @@ describe MiqAeClassCopy do
     diff_obj.compare
     diff_obj.status.should equal(status)
   end
-
 end

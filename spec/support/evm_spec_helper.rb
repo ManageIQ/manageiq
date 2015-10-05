@@ -10,7 +10,6 @@ $log.level = env_level
 Rails.logger.level = env_level
 
 module EvmSpecHelper
-
   # Clear all EVM caches
   def self.clear_caches
     Module.clear_all_cache_with_timeout if Module.respond_to?(:clear_all_cache_with_timeout)
@@ -96,16 +95,16 @@ module EvmSpecHelper
     create_guid_miq_server_zone
 
     FactoryGirl.create(:user,
-      :name       => "Administrator",
-      :email      => "admin@example.com",
-      :password   => "smartvm",
-      :userid     => "admin",
-      :settings   => {"Setting1" => 1, "Setting2" => 2, "Setting3" => 3},
-      :filters    => {"Filter1" => 1, "Filter2" => 2, "Filter3" => 3},
-      :first_name => "Bob",
-      :last_name  => "Smith",
-      :role       => "super_administrator",
-    )
+                       :name       => "Administrator",
+                       :email      => "admin@example.com",
+                       :password   => "smartvm",
+                       :userid     => "admin",
+                       :settings   => {"Setting1" => 1, "Setting2" => 2, "Setting3" => 3},
+                       :filters    => {"Filter1" => 1, "Filter2" => 2, "Filter3" => 3},
+                       :first_name => "Bob",
+                       :last_name  => "Smith",
+                       :role       => "super_administrator",
+                      )
   end
 
   def self.ruby_object_usage
@@ -116,10 +115,10 @@ module EvmSpecHelper
     types
   end
 
-  def self.log_ruby_object_usage(top=20)
+  def self.log_ruby_object_usage(top = 20)
     if top > 0
       types = ruby_object_usage
-      puts("Ruby Object Usage: #{types.sort_by { |klass, h| h[:count] }.reverse[0,top].inspect}")
+      puts("Ruby Object Usage: #{types.sort_by { |_klass, h| h[:count] }.reverse[0, top].inspect}")
     end
   end
 

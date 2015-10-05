@@ -1,10 +1,9 @@
 module EmsRefresh::SaveInventory
-
   def save_ems_inventory(ems, hashes, target = nil)
     case ems
-    when EmsCloud;     save_ems_cloud_inventory(ems, hashes, target)
-    when EmsInfra;     save_ems_infra_inventory(ems, hashes, target)
-    when ManageIQ::Providers::ContainerManager; save_ems_container_inventory(ems, hashes, target)
+    when EmsCloud then     save_ems_cloud_inventory(ems, hashes, target)
+    when EmsInfra then     save_ems_infra_inventory(ems, hashes, target)
+    when ManageIQ::Providers::ContainerManager then save_ems_container_inventory(ems, hashes, target)
     end
   end
 
@@ -18,12 +17,12 @@ module EmsRefresh::SaveInventory
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
     disconnects = if target.kind_of?(ExtManagementSystem) || target.kind_of?(Host)
-      target.vms_and_templates(true).to_a.dup
-    elsif target.kind_of?(Vm)
-      [target.ruby_clone]
-    else
-      []
-    end
+                    target.vms_and_templates(true).to_a.dup
+                  elsif target.kind_of?(Vm)
+                    [target.ruby_clone]
+                  else
+                    []
+                  end
 
     child_keys = [:operating_system, :hardware, :custom_attributes, :snapshots]
     extra_infra_keys = [:host, :ems_cluster, :storage, :storages, :raw_power_state, :parent_vm]
@@ -142,9 +141,9 @@ module EmsRefresh::SaveInventory
 
     unless disconnects.empty?
       if invalids_found
-        _log.warn("#{log_header} Since failures occurred, not disconnecting for Vms #{self.log_format_deletes(disconnects)}")
+        _log.warn("#{log_header} Since failures occurred, not disconnecting for Vms #{log_format_deletes(disconnects)}")
       else
-        _log.info("#{log_header} Disconnecting Vms #{self.log_format_deletes(disconnects)}")
+        _log.info("#{log_header} Disconnecting Vms #{log_format_deletes(disconnects)}")
         disconnects.each(&:disconnect_inv)
       end
     end
@@ -184,7 +183,7 @@ module EmsRefresh::SaveInventory
 
     deletes = hardware.guest_devices.where(:device_type => ["ethernet", "storage"]).to_a.dup
     save_inventory_multi(:guest_devices, hardware, hashes, deletes, [:device_type, :uid_ems], [:network, :miq_scsi_targets], [:switch, :lan])
-    self.store_ids_for_new_records(hardware.guest_devices, hashes, [:device_type, :uid_ems])
+    store_ids_for_new_records(hardware.guest_devices, hashes, [:device_type, :uid_ems])
   end
 
   def save_disks_inventory(hardware, hashes)
@@ -230,9 +229,9 @@ module EmsRefresh::SaveInventory
     return if hashes.nil?
 
     deletes = case mode
-    when :refresh then nil
-    when :scan    then parent.system_services(true).dup
-    end
+              when :refresh then nil
+              when :scan    then parent.system_services(true).dup
+              end
 
     save_inventory_multi(:system_services, parent, hashes, deletes, [:typename, :name])
   end
@@ -278,7 +277,7 @@ module EmsRefresh::SaveInventory
     save_inventory_multi(:firewall_rules, parent, hashes, deletes, find_key, nil, [:source_security_group])
 
     parent.save!
-    self.store_ids_for_new_records(parent.firewall_rules, hashes, find_key)
+    store_ids_for_new_records(parent.firewall_rules, hashes, find_key)
   end
 
   def save_custom_attributes_inventory(parent, hashes, mode = :refresh)

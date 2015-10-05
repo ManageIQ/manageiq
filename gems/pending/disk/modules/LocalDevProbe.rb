@@ -1,6 +1,6 @@
 module LocalDevProbe
-	def LocalDevProbe.probe(ostruct)
-		return("LocalDevMod") if ostruct.localDev || File.blockdev?(ostruct.fileName)
-		return(nil)
-	end
+  def self.probe(ostruct)
+    return("LocalDevMod") if ostruct.localDev || File.blockdev?(ostruct.fileName)
+    (nil)
+  end
 end

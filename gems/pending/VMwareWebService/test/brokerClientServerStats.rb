@@ -7,7 +7,7 @@ module Enumerable
 
   def stddev
     mean = self.mean
-    Math.sqrt(inject(0) { |sum, i| sum + (i - mean) ** 2 } / length.to_f)
+    Math.sqrt(inject(0) { |sum, i| sum + (i - mean)**2 } / length.to_f)
   end
 end
 

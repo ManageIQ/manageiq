@@ -9,11 +9,11 @@ RSpec::Matchers.define :be_encrypted do |expected|
   end
 
   failure_message_for_should do |actual|
-    "expected: #{actual.inspect} to be encrypted#{ " and decrypt to #{expected}" if expected}"
+    "expected: #{actual.inspect} to be encrypted#{" and decrypt to #{expected}" if expected}"
   end
 
   failure_message_for_should_not do |actual|
-    "expected: #{actual.inspect} not to be encrypted#{ " and decrypt to #{expected}" if expected}"
+    "expected: #{actual.inspect} not to be encrypted#{" and decrypt to #{expected}" if expected}"
   end
 
   description do

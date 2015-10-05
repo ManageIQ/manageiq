@@ -56,12 +56,12 @@ module XFS
     'L>',  'stripe_unit',        # underlying stripe or raid unit in blocks
     'L>',  'stripe_width',       # underlying stripe or raid width in blocks
     'C',   'dir_block_log',      # log base 2 multiplier that determines the
-                                 # granularity of directory block allocations in fsblocks
+    # granularity of directory block allocations in fsblocks
     'C',   'log_sect_size_log',  # log base 2 of the log subvolume's sector size
     'S>',  'log_sector_size',    # the log's sector size in bytes if the filesystem uses an external log device
     'L>',  'log_stripe_unit_sz', # the log device's stripe or raid unit size.
     'L>',  'features_2',         # add'l version flags if XFS_SUPERBLOCK_VERSION_MOREBITSBIT is set in version_number
-                                # version 5 superblock fields start here
+    # version 5 superblock fields start here
     'L>',  'features_compat',
     'L>',  'features_ro_compat',
     'L>',  'features_incompat',
@@ -79,7 +79,7 @@ module XFS
 
   class Superblock
     #
-    # Block I/O parameterization.	A basic block (BB) is the lowest size of
+    # Block I/O parameterization. A basic block (BB) is the lowest size of
     # filesystem allocation, and must equal 512.  Length units given to bio
     # routines are in BB's.
     #
@@ -117,22 +117,11 @@ module XFS
     XFS_SUPERBLOCK_VERSION_BORGBIT         = 0x4000      # ASCII only case-insens. */
     XFS_SUPERBLOCK_VERSION_MOREBITSBIT     = 0x8000
 
-    XFS_SUPERBLOCK_VERSION_OKSASHFBITS     = XFS_SUPERBLOCK_VERSION_EXTFLGBIT  |
-                                             XFS_SUPERBLOCK_VERSION_DIRV2BIT   |
-                                             XFS_SUPERBLOCK_VERSION_BORGBIT
+    XFS_SUPERBLOCK_VERSION_OKSASHFBITS     = XFS_SUPERBLOCK_VERSION_EXTFLGBIT | XFS_SUPERBLOCK_VERSION_DIRV2BIT | XFS_SUPERBLOCK_VERSION_BORGBIT
 
-    XFS_SUPERBLOCK_VERSION_OKREALFBITS     = XFS_SUPERBLOCK_VERSION_ATTRBIT    |
-                                             XFS_SUPERBLOCK_VERSION_NLINKBIT   |
-                                             XFS_SUPERBLOCK_VERSION_QUOTABIT   |
-                                             XFS_SUPERBLOCK_VERSION_ALIGNBIT   |
-                                             XFS_SUPERBLOCK_VERSION_DALIGNBIT  |
-                                             XFS_SUPERBLOCK_VERSION_SHAREDBIT  |
-                                             XFS_SUPERBLOCK_VERSION_LOGV2BIT   |
-                                             XFS_SUPERBLOCK_VERSION_SECTORBIT  |
-                                             XFS_SUPERBLOCK_VERSION_MOREBITSBIT
+    XFS_SUPERBLOCK_VERSION_OKREALFBITS     = XFS_SUPERBLOCK_VERSION_ATTRBIT | XFS_SUPERBLOCK_VERSION_NLINKBIT | XFS_SUPERBLOCK_VERSION_QUOTABIT | XFS_SUPERBLOCK_VERSION_ALIGNBIT | XFS_SUPERBLOCK_VERSION_DALIGNBIT | XFS_SUPERBLOCK_VERSION_SHAREDBIT | XFS_SUPERBLOCK_VERSION_LOGV2BIT | XFS_SUPERBLOCK_VERSION_SECTORBIT | XFS_SUPERBLOCK_VERSION_MOREBITSBIT
 
-    XFS_SUPERBLOCK_VERSION_OKREALBITS      = XFS_SUPERBLOCK_VERSION_NUMBITS     |
-                                             XFS_SUPERBLOCK_VERSION_OKREALFBITS |
+    XFS_SUPERBLOCK_VERSION_OKREALBITS      = XFS_SUPERBLOCK_VERSION_NUMBITS | XFS_SUPERBLOCK_VERSION_OKREALFBITS |
                                              XFS_SUPERBLOCK_VERSION_OKSASHFBITS
 
     #
@@ -153,12 +142,9 @@ module XFS
     XFS_SUPERBLOCK_VERSION2_FTYPE          = 0x00000200  # inode type in dir */
 
     XFS_SUPERBLOCK_VERSION2_OKREALFBITS    = XFS_SUPERBLOCK_VERSION2_LAZYSBCOUNTBIT |
-                                             XFS_SUPERBLOCK_VERSION2_ATTR2BIT       |
-                                             XFS_SUPERBLOCK_VERSION2_PROJID32BIT    |
-                                             XFS_SUPERBLOCK_VERSION2_FTYPE
+                                             XFS_SUPERBLOCK_VERSION2_ATTR2BIT | XFS_SUPERBLOCK_VERSION2_PROJID32BIT | XFS_SUPERBLOCK_VERSION2_FTYPE
     XFS_SUPERBLOCK_VERSION2_OKSASHFBITS    =  0
-    XFS_SUPERBLOCK_VERSION2_OKREALBITS     = XFS_SUPERBLOCK_VERSION2_OKREALFBITS    |
-                                             XFS_SUPERBLOCK_VERSION2_OKSASHFBITS
+    XFS_SUPERBLOCK_VERSION2_OKREALBITS     = XFS_SUPERBLOCK_VERSION2_OKREALFBITS | XFS_SUPERBLOCK_VERSION2_OKSASHFBITS
 
     XFS_SB_FEAT_INCOMPAT_FTYPE             = 1
 
@@ -216,7 +202,7 @@ module XFS
       @allocation_group_count           = @sb['ag_count']
       @allocation_group_blocks          = @sb['ag_blocks']
       @groups_count, @last_group_blocks = @sb['data_blocks'].divmod(@allocation_group_blocks)
-      @groups_count                     += 1 if @last_group_blocks > 0
+      @groups_count += 1 if @last_group_blocks > 0
       @filesystem_id                    = MiqUUID.parse_raw(@sb['uuid'])
       @volume_name                      = @sb['fs_name']
       @ialloc_inos                      = (@sb['inodes_per_blk']..XFS_INODES_PER_CHUNK).max
@@ -252,7 +238,7 @@ module XFS
 
     def version_has_ftype?
       (version_has_crc? && incompatible_feature?(XFS_SB_FEAT_INCOMPAT_FTYPE)) ||
-      (version_has_more_bits? && ((@sb['features_2'] & XFS_SUPERBLOCK_VERSION2_FTYPE) != 0))
+        (version_has_more_bits? && ((@sb['features_2'] & XFS_SUPERBLOCK_VERSION2_FTYPE) != 0))
     end
 
     def version_has_crc?
@@ -385,8 +371,8 @@ module XFS
 
     def version_has_align?
       (sb_version_num == XFS_SUPERBLOCK_VERSION_5) ||
-      ((sb_version_num >= XFS_SUPERBLOCK_VERSION_4) &&
-      ((@sb['version_number'] & XFS_SUPERBLOCK_VERSION_ALIGNBIT) != 0))
+        ((sb_version_num >= XFS_SUPERBLOCK_VERSION_4) &&
+        ((@sb['version_number'] & XFS_SUPERBLOCK_VERSION_ALIGNBIT) != 0))
     end
 
     def inode_align_mask

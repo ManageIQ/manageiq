@@ -35,22 +35,22 @@ class MiqLdap
     @auth = options[:auth] || VMDB::Config.new("vmdb").config[:authentication]
     log_auth = VMDB::Config.clone_auth_for_log(@auth)
     _log.info("Server Settings: #{log_auth.inspect}")
-    mode              = options.delete(:mode)            || @auth[:mode]
-    @basedn           = options.delete(:basedn)          || @auth[:basedn]
-    @user_type        = options.delete(:user_type)       || @auth[:user_type]
-    @user_suffix      = options.delete(:user_suffix)     || @auth[:user_suffix]
-    @domain_prefix    = options.delete(:domain_prefix)   || @auth[:domain_prefix]
-    @bind_timeout     = options.delete(:bind_timeout)    || @auth[:bind_timeout]     || self.class.default_bind_timeout
-    @search_timeout   = options.delete(:search_timeout)  || @auth[:search_timeout]   || self.class.default_search_timeout
-    @follow_referrals = options.delete(:follow_referrals)|| @auth[:follow_referrals] || false
+    mode              = options.delete(:mode) || @auth[:mode]
+    @basedn           = options.delete(:basedn) || @auth[:basedn]
+    @user_type        = options.delete(:user_type) || @auth[:user_type]
+    @user_suffix      = options.delete(:user_suffix) || @auth[:user_suffix]
+    @domain_prefix    = options.delete(:domain_prefix) || @auth[:domain_prefix]
+    @bind_timeout     = options.delete(:bind_timeout) || @auth[:bind_timeout] || self.class.default_bind_timeout
+    @search_timeout   = options.delete(:search_timeout) || @auth[:search_timeout] || self.class.default_search_timeout
+    @follow_referrals = options.delete(:follow_referrals) || @auth[:follow_referrals] || false
     defaults = {
       :host => @auth[:ldaphost],
       :port => @auth[:ldapport],
     }
     options = defaults.merge(options)
-    options[:encryption] = { :method =>:simple_tls } if mode == "ldaps"
+    options[:encryption] = {:method => :simple_tls} if mode == "ldaps"
 
-    options[:host] = self.resolve_host(options[:host], options[:port])
+    options[:host] = resolve_host(options[:host], options[:port])
 
     # Make sure we do NOT log the clear-text password
     log_options = VMDB::Config.clone_auth_for_log(options)
@@ -81,25 +81,25 @@ class MiqLdap
       addresses.each do |address|
         begin
           $log.info("MiqLdap.connection: Connecting to IP Address [#{address}]") if $log
-          @conn = TCPSocket.new( address, port )
+          @conn = TCPSocket.new(address, port)
           selected_host = address
           break
         rescue => err
-           $log.debug "Warning: '#{err.message}', connecting to IP Address [#{address}]"
+          $log.debug "Warning: '#{err.message}', connecting to IP Address [#{address}]"
         end
       end
 
       return selected_host if selected_host
     end
 
-    raise Net::LDAP::LdapError.new( "unable to establish a connection to server" )
+    raise Net::LDAP::LdapError.new("unable to establish a connection to server")
   end
 
   def bind(username, password)
     @ldap.auth(username, password)
     begin
       _log.info("Binding to LDAP: Host: [#{@ldap.host}], User: [#{username}]...")
-      Timeout::timeout(@bind_timeout) do
+      Timeout.timeout(@bind_timeout) do
         if @ldap.bind
           _log.info("Binding to LDAP: Host: [#{@ldap.host}], User: [#{username}]... successful")
           return true
@@ -115,22 +115,20 @@ class MiqLdap
   end
 
   def bind_with_default
-    @auth[:mode].include?('ldap') ? self.bind(@auth[:bind_dn], @auth[:bind_pwd]) : false
+    @auth[:mode].include?('ldap') ? bind(@auth[:bind_dn], @auth[:bind_pwd]) : false
   end
 
-  def ldap
-    @ldap
-  end
+  attr_reader :ldap
 
-  def get(dn, attrs=nil)
-     # puts "getObj: #{dn}"
+  def get(dn, attrs = nil)
+    # puts "getObj: #{dn}"
     begin
-      result = self.search(:base => dn, :scope => :base, :attributes => attrs)
+      result = search(:base => dn, :scope => :base, :attributes => attrs)
     rescue Exception => err
       _log.error("'#{err.message}'")
     end
     return nil unless result
-     # puts "result: #{result.inspect}"
+    # puts "result: #{result.inspect}"
     result.first
   end
 
@@ -142,7 +140,7 @@ class MiqLdap
     # The BERParser#read_ber adds the method "ber_identifier" to strings and arrays (line 122 in ber.rb) via instance_eval
     # This singleton method causes TypeError: singleton can't be dumped during Marshal.dump
     # Strip out the singleton method by creating a new string
-    return val.is_a?(String) ? String.new(val) : val
+    val.kind_of?(String) ? String.new(val) : val
   end
 
   def get_attr(obj, attr)
@@ -150,22 +148,20 @@ class MiqLdap
   end
 
   def search(opts, &blk)
-    begin
-      Timeout::timeout(@search_timeout) { _search(opts, &blk) }
-    rescue TimeoutError
-      _log.error("LDAP search timed out after #{@search_timeout} seconds")
-      raise
-    end
+    Timeout.timeout(@search_timeout) { _search(opts, &blk) }
+  rescue TimeoutError
+    _log.error("LDAP search timed out after #{@search_timeout} seconds")
+    raise
   end
 
-  def _search(opts, seen=nil, &blk)
+  def _search(opts, seen = nil, &_blk)
     raw_opts = opts.dup
-    opts[:scope]            = self.scope(opts[:scope]) if opts[:scope]
+    opts[:scope]            = scope(opts[:scope]) if opts[:scope]
     if opts[:filter]
-      opts[:filter]         = self.filter_construct(opts[:filter]) unless opts[:filter].kind_of?(Net::LDAP::Filter)
+      opts[:filter]         = filter_construct(opts[:filter]) unless opts[:filter].kind_of?(Net::LDAP::Filter)
     end
     opts[:return_referrals] = @follow_referrals
-    seen                  ||= {:objects => [], :referrals => {}}
+    seen ||= {:objects => [], :referrals => {}}
     _log.debug("opts: #{opts.inspect}")
 
     if block_given?
@@ -184,7 +180,7 @@ class MiqLdap
   def ldap_result_ok?(follow_referrals = @follow_referrals)
     return true if @ldap.get_operation_result.code == 0
     return true if @ldap.get_operation_result.code == 10 && follow_referrals
-    return false
+    false
   end
 
   def chase_referrals(objs, opts, seen)
@@ -196,7 +192,7 @@ class MiqLdap
         o.search_referrals.each do |ref|
           scheme, userinfo, host, port, registry, dn, opaque, query, fragment = URI.split(ref)
           port ||= self.class.default_ldap_port(scheme)
-          dn = self.normalize(dn.split("/").last)
+          dn = normalize(dn.split("/").last)
           next if seen[:objects].include?(dn)
 
           begin
@@ -225,7 +221,7 @@ class MiqLdap
       end
     end
 
-    return res
+    res
   end
 
   def scope(s)
@@ -242,11 +238,9 @@ class MiqLdap
   end
 
   def filter_construct(filter_str)
-    begin
-      Net::LDAP::Filter.construct(filter_str)
-    rescue Exception => err
-      raise err.message
-    end
+    Net::LDAP::Filter.construct(filter_str)
+  rescue Exception => err
+    raise err.message
   end
 
   def filter(op, *args)
@@ -267,7 +261,7 @@ class MiqLdap
 
   def normalize(dn)
     return if dn.nil?
-    dn.split(",").collect {|i| i.downcase.strip}.join(",")
+    dn.split(",").collect { |i| i.downcase.strip }.join(",")
   end
 
   def is_dn?(str)
@@ -323,7 +317,7 @@ class MiqLdap
       end
 
       _log.info("Type: [#{user_type}], Base DN: [#{@basedn}], Filter: <#{search_opts[:filter]}>")
-      obj = self.search(search_opts)
+      obj = search(search_opts)
     rescue Exception => err
       _log.error("'#{err.message}'")
       obj = nil
@@ -331,7 +325,7 @@ class MiqLdap
     obj.first if obj
   end
 
-  def get_user_info(username, user_type='mail')
+  def get_user_info(username, user_type = 'mail')
     user = get_user_object(username, user_type)
     return nil if user.nil?
 
@@ -369,11 +363,10 @@ class MiqLdap
     udata[:assistant_phone] = assistants.empty? ? nil : MiqLdap.get_attr(assistants.first, :telephonenumber)
     udata[:assistant_mail]  = assistants.empty? ? nil : MiqLdap.get_attr(assistants.first, :mail)
 
-    return udata
+    udata
   end
 
-
-  def get_memberships(obj, max_depth = 0, attr=:memberof, followed = [], current_depth = 0)
+  def get_memberships(obj, max_depth = 0, attr = :memberof, followed = [], current_depth = 0)
     current_depth += 1
 
     _log.debug "Enter get_memberships: #{obj.inspect}"
@@ -384,17 +377,17 @@ class MiqLdap
     _log.debug "Groups: #{groups.inspect}"
     return result unless groups
 
-    groups.each {|group|
+    groups.each do|group|
       # puts "group #{group}"
-      gobj = self.get(group, [:cn, attr])
+      gobj = get(group, [:cn, attr])
       dn   = nil
       cn   = nil
       if gobj.nil?
         _log.debug "Group: DN: #{group} returned a nil object, CN will be extracted from DN, memberships will not be followed"
-        self.normalize(group) =~ /^cn[ ]*=[ ]*([^,]+),/
+        normalize(group) =~ /^cn[ ]*=[ ]*([^,]+),/
         cn = $1
       else
-        dn = self.normalize(MiqLdap.get_attr(gobj, :dn))
+        dn = normalize(MiqLdap.get_attr(gobj, :dn))
         cn = MiqLdap.get_attr(gobj, :cn)
       end
 
@@ -408,10 +401,9 @@ class MiqLdap
 
       unless dn.nil? || followed.include?(dn)
         followed.push(dn)
-        result.concat(self.get_memberships(gobj, max_depth, attr, followed, current_depth)) unless max_depth > 0 && current_depth >= max_depth
+        result.concat(get_memberships(gobj, max_depth, attr, followed, current_depth)) unless max_depth > 0 && current_depth >= max_depth
       end
-
-    }
+    end
     _log.debug "Exit get_memberships: #{obj.dn}, result: #{result.uniq.inspect}"
     result.uniq
   end
@@ -419,16 +411,16 @@ class MiqLdap
   def get_organizationalunits(basedn = nil, filter = nil)
     basedn ||= @basedn
     filter ||= "(ObjectCategory=organizationalUnit)"
-    result = self.search(:base => basedn, :scope => :sub, :filter => filter)
+    result = search(:base => basedn, :scope => :sub, :filter => filter)
     return nil unless result
-    result.collect {|o| [self.get_attr(o, :dn), self.get_attr(o, :name)]}
+    result.collect { |o| [get_attr(o, :dn), get_attr(o, :name)] }
   end
 
   def self.get_sid(entry)
     MiqLdap.sid_to_s(MiqLdap.get_attr(entry, :objectsid))
   end
 
-  def self.default_ldap_port(scheme="ldap")
+  def self.default_ldap_port(scheme = "ldap")
     case scheme
     when "ldap"
       DEFAULT_LDAP_PORT
@@ -472,7 +464,7 @@ class MiqLdap
 
     rid = ""
     (6).downto(1) do |i|
-      rid += byte2hex(data[i,1].ord)
+      rid += byte2hex(data[i, 1].ord)
     end
     sid << rid.to_i.to_s
 

@@ -7,11 +7,11 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
     uids = {}
     result = {:uid_lookup => uids}
 
-    result[:storages], uids[:storages] = self.storage_inv_to_hashes(inv[:storage])
-    result[:clusters], uids[:clusters], result[:resource_pools] = self.cluster_inv_to_hashes(inv[:cluster])
-    result[:hosts], uids[:hosts], uids[:lans], uids[:switches], uids[:guest_devices], uids[:scsi_luns] = self.host_inv_to_hashes(inv[:host], inv, uids[:clusters], uids[:storages])
-    result[:vms], uids[:vms] = self.vm_inv_to_hashes(inv[:vm] + inv[:template], inv[:storage], uids[:storages], uids[:clusters], uids[:hosts], uids[:lans])
-    result[:folders] = self.datacenter_inv_to_hashes(inv[:datacenter], uids[:clusters], uids[:vms], uids[:storages], uids[:hosts])
+    result[:storages], uids[:storages] = storage_inv_to_hashes(inv[:storage])
+    result[:clusters], uids[:clusters], result[:resource_pools] = cluster_inv_to_hashes(inv[:cluster])
+    result[:hosts], uids[:hosts], uids[:lans], uids[:switches], uids[:guest_devices], uids[:scsi_luns] = host_inv_to_hashes(inv[:host], inv, uids[:clusters], uids[:storages])
+    result[:vms], uids[:vms] = vm_inv_to_hashes(inv[:vm] + inv[:template], inv[:storage], uids[:storages], uids[:clusters], uids[:hosts], uids[:lans])
+    result[:folders] = datacenter_inv_to_hashes(inv[:datacenter], uids[:clusters], uids[:vms], uids[:storages], uids[:hosts])
 
     # Link up the root folder
     result[:ems_root] = result[:folders].first
@@ -19,7 +19,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
     # Clean up the temporary cluster-datacenter references
     result[:clusters].each { |c| c.delete(:datacenter_id) }
 
-    return result
+    result
   end
 
   def self.storage_inv_to_hashes(inv)
@@ -32,10 +32,10 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
 
       storage_type = storage_inv[:storage][:type].to_s.upcase
       location = if storage_type == 'NFS'
-        "#{storage_inv[:storage][:address]}:#{storage_inv[:storage][:path]}"
-      else
-        storage_inv.attributes.fetch_path(:storage, :volume_group, :logical_unit, :id)
-      end
+                   "#{storage_inv[:storage][:address]}:#{storage_inv[:storage][:path]}"
+                 else
+                   storage_inv.attributes.fetch_path(:storage, :volume_group, :logical_unit, :id)
+                 end
 
       free        = storage_inv[:available].to_i
       used        = storage_inv[:used].to_i
@@ -44,17 +44,17 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       uncommitted = total - committed
 
       new_result = {
-        :ems_ref            => storage_inv[:href],
-        :ems_ref_obj        => storage_inv[:href],
-        :name               => storage_inv[:name],
-        :store_type         => storage_type,
+        :ems_ref             => storage_inv[:href],
+        :ems_ref_obj         => storage_inv[:href],
+        :name                => storage_inv[:name],
+        :store_type          => storage_type,
         :storage_domain_type => storage_inv[:type].try(:downcase),
-        :total_space        => total,
-        :free_space         => free,
-        :uncommitted        => uncommitted,
-        :multiplehostaccess => true,
-        :location           => location,
-        :master             => storage_inv[:master]
+        :total_space         => total,
+        :free_space          => free,
+        :uncommitted         => uncommitted,
+        :multiplehostaccess  => true,
+        :location            => location,
+        :master              => storage_inv[:master]
       }
 
       result << new_result
@@ -64,7 +64,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
     return result, result_uids
   end
 
-  def self.host_inv_to_hashes(inv, ems_inv, cluster_uids, storage_uids)
+  def self.host_inv_to_hashes(inv, ems_inv, cluster_uids, _storage_uids)
     result = []
     result_uids = {}
     lan_uids = {}
@@ -85,24 +85,24 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       end
 
       power_state, connection_state = case power_state
-        when 'up'             then ['on',         'connected'   ]
-        when 'maintenance'    then [power_state,  'connected'   ]
-        when 'down'           then ['off',        'disconnected']
-        when 'non_responsive' then ['unknown',    'connected'   ]
-        else [power_state, 'disconnected']
-      end
+                                      when 'up'             then ['on',         'connected']
+                                      when 'maintenance'    then [power_state,  'connected']
+                                      when 'down'           then ['off',        'disconnected']
+                                      when 'non_responsive' then ['unknown',    'connected']
+                                      else [power_state, 'disconnected']
+                                      end
 
       # Remove the domain suffix if it is included in the hostname
       hostname = hostname.split(',').first
       # Get the IP address
-      ipaddress = self.host_inv_to_ip(host_inv, hostname) || host_inv[:address]
+      ipaddress = host_inv_to_ip(host_inv, hostname) || host_inv[:address]
 
       # Collect the hardware, networking, and scsi inventories
-      switches, switch_uids[mor], lan_uids[mor] = self.host_inv_to_switch_hashes(host_inv, ems_inv)
+      switches, switch_uids[mor], lan_uids[mor] = host_inv_to_switch_hashes(host_inv, ems_inv)
 
-      hardware = self.host_inv_to_hardware_hash(host_inv)
-      hardware[:guest_devices], guest_device_uids[mor] = self.host_inv_to_guest_device_hashes(host_inv, switch_uids[mor], ems_inv)
-      hardware[:networks] = self.host_inv_to_network_hashes(host_inv, guest_device_uids[mor])
+      hardware = host_inv_to_hardware_hash(host_inv)
+      hardware[:guest_devices], guest_device_uids[mor] = host_inv_to_guest_device_hashes(host_inv, switch_uids[mor], ems_inv)
+      hardware[:networks] = host_inv_to_network_hashes(host_inv, guest_device_uids[mor])
 
       ipmi_address = nil
       if host_inv.attributes.fetch_path(:power_management, :type).to_s.include?('ipmi')
@@ -110,23 +110,23 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       end
 
       new_result = {
-        :type => 'ManageIQ::Providers::Redhat::InfraManager::Host',
-        :ems_ref => host_inv[:href],
-        :ems_ref_obj => host_inv[:href],
-        :name => host_inv[:name] || hostname,
-        :hostname => hostname,
-        :ipaddress => ipaddress,
-        :uid_ems => host_inv[:id],
-        :vmm_vendor => 'redhat',
-        :vmm_product => host_inv[:type],
+        :type             => 'ManageIQ::Providers::Redhat::InfraManager::Host',
+        :ems_ref          => host_inv[:href],
+        :ems_ref_obj      => host_inv[:href],
+        :name             => host_inv[:name] || hostname,
+        :hostname         => hostname,
+        :ipaddress        => ipaddress,
+        :uid_ems          => host_inv[:id],
+        :vmm_vendor       => 'redhat',
+        :vmm_product      => host_inv[:type],
         :connection_state => connection_state,
-        :power_state => power_state,
+        :power_state      => power_state,
 
-        :operating_system => self.host_inv_to_os_hash(host_inv, hostname),
+        :operating_system => host_inv_to_os_hash(host_inv, hostname),
 
-        :ems_cluster => cluster_uids[host_inv.attributes.fetch_path(:cluster, :id)],
-        :hardware => hardware,
-        :switches => switches,
+        :ems_cluster      => cluster_uids[host_inv.attributes.fetch_path(:cluster, :id)],
+        :hardware         => hardware,
+        :switches         => switches,
 
       }
       new_result[:ipmi_address] = ipmi_address unless ipmi_address.blank?
@@ -149,7 +149,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       end
     end
 
-    if !ipaddress.nil?
+    unless ipaddress.nil?
       warn_msg = "IP lookup for host in VIM inventory data...Failed."
       if [nil, "localhost", "localhost.localdomain", "127.0.0.1"].include?(hostname)
         _log.warn warn_msg
@@ -161,7 +161,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
           #   internet address. Socket.getaddrinfo does the right thing.
           # TODO: Can this moved to MiqSockUtil?
 
-          #_log.debug "IP lookup by hostname [#{hostname}]..."
+          # _log.debug "IP lookup by hostname [#{hostname}]..."
           ipaddress = Socket.getaddrinfo(hostname, nil)[0][3]
           _log.debug "IP lookup by hostname [#{hostname}]...Complete: IP found: [#{ipaddress}]"
         rescue => err
@@ -170,7 +170,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       end
     end
 
-    return ipaddress
+    ipaddress
   end
 
   def self.host_inv_to_hardware_hash(inv)
@@ -184,7 +184,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       result[:cpu_type] = hdw[:name] unless hdw[:name].blank?
 
       # Value provided by VC is in bytes, need to convert to MB
-      memory_total = inv[:statistics].to_miq_a.detect {|stat| stat[:name] == 'memory.total'}
+      memory_total = inv[:statistics].to_miq_a.detect { |stat| stat[:name] == 'memory.total' }
       result[:memory_cpu] = memory_total.nil? ? 0 : memory_total[:values].first.to_i / 1048576  # in MB
 
       result[:cores_per_socket] = hdw.fetch_path(:topology, :cores) || 1        # Number of cores per socket
@@ -192,7 +192,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       result[:logical_cpus]     = result[:numvcpus] * result[:cores_per_socket] # Number of cores multiplied by sockets
     end
 
-    return result
+    result
   end
 
   def self.host_inv_to_switch_hashes(inv, ems_inv)
@@ -206,13 +206,13 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
     nics.to_miq_a.each do |data|
       network_id = data.attributes.fetch_path(:network, :id)
       unless network_id.nil?
-        network = ems_inv[:network].detect {|n| n[:id] == network_id}
+        network = ems_inv[:network].detect { |n| n[:id] == network_id }
       else
         network_name = data.attributes.fetch_path(:network, :name)
         cluster_id = inv.attributes.fetch_path(:cluster, :id)
-        cluster = ems_inv[:cluster].detect {|c| c[:id] == cluster_id}
+        cluster = ems_inv[:cluster].detect { |c| c[:id] == cluster_id }
         datacenter_id = cluster.attributes.fetch_path(:data_center, :id)
-        network = ems_inv[:network].detect {|n| n[:name] == network_name && n.attributes.fetch_path(:data_center, :id) == datacenter_id}
+        network = ems_inv[:network].detect { |n| n[:name] == network_name && n.attributes.fetch_path(:data_center, :id) == datacenter_id }
       end
 
       tag_value = nil
@@ -230,9 +230,9 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       lan_uids[uid] = lan
       new_result = {
         :uid_ems => uid,
-        :name => name,
+        :name    => name,
 
-        :lans => [{:name => name, :uid_ems => uid, :tag => tag_value}]
+        :lans    => [{:name => name, :uid_ems => uid, :tag => tag_value}]
       }
 
       result << new_result
@@ -253,13 +253,13 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       # Find the switch to which this pnic is connected
       network_id = data.attributes.fetch_path(:network, :id)
       unless network_id.nil?
-        network = ems_inv[:network].detect {|n| n[:id] == network_id}
+        network = ems_inv[:network].detect { |n| n[:id] == network_id }
       else
         network_name = data.attributes.fetch_path(:network, :name)
         cluster_id = inv.attributes.fetch_path(:cluster, :id)
-        cluster = ems_inv[:cluster].detect {|c| c[:id] == cluster_id}
+        cluster = ems_inv[:cluster].detect { |c| c[:id] == cluster_id }
         datacenter_id = cluster.attributes.fetch_path(:data_center, :id)
-        network = ems_inv[:network].detect {|n| n[:name] == network_name && n.attributes.fetch_path(:data_center, :id) == datacenter_id}
+        network = ems_inv[:network].detect { |n| n[:name] == network_name && n.attributes.fetch_path(:data_center, :id) == datacenter_id }
       end
 
       unless network.nil?
@@ -277,11 +277,11 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       uid = data[:id]
 
       new_result = {
-        :uid_ems => uid,
-        :device_name => data[:name],
-        :device_type => 'ethernet',
-        :location => location,
-        :present => true,
+        :uid_ems         => uid,
+        :device_name     => data[:name],
+        :device_type     => 'ethernet',
+        :location        => location,
+        :present         => true,
         :controller_type => 'ethernet',
       }
       new_result[:switch] = switch unless switch.nil?
@@ -299,7 +299,6 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
     return result if inv.nil?
 
     inv.to_miq_a.each do |vnic|
-
       uid = vnic[:id]
       guest_device = guest_device_uids.fetch_path(:pnic, uid)
 
@@ -308,14 +307,14 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
 
       new_result = {
         :description => vnic[:name],
-        :ipaddress => ip[:address],
+        :ipaddress   => ip[:address],
         :subnet_mask => ip[:netmask],
       }
 
       result << new_result
       guest_device[:network] = new_result unless guest_device.nil?
     end
-    return result
+    result
   end
 
   def self.host_inv_to_os_hash(inv, hostname)
@@ -323,10 +322,10 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
 
     result = {:name => hostname}
     result[:product_name] = 'linux'
-    return result
+    result
   end
 
-  def self.vm_inv_to_hashes(inv, storage_inv, storage_uids, cluster_uids, host_uids, lan_uids)
+  def self.vm_inv_to_hashes(inv, _storage_inv, storage_uids, cluster_uids, host_uids, lan_uids)
     result = []
     result_uids = {}
     guest_device_uids = {}
@@ -360,13 +359,13 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       # Otherwise if it is assigned to run on a specific host the host ID will be in the placement_policy
       host_id = vm_inv.attributes.fetch_path(:host, :id)
       host_id = vm_inv.attributes.fetch_path(:placement_policy, :host, :id) if host_id.blank?
-      host = host_uids.values.detect {|h| h[:uid_ems] == host_id} unless host_id.blank?
+      host = host_uids.values.detect { |h| h[:uid_ems] == host_id } unless host_id.blank?
 
       host_mor = host_id
-      hardware = self.vm_inv_to_hardware_hash(vm_inv)
-      hardware[:disks] = self.vm_inv_to_disk_hashes(vm_inv, storage_uids)
-      hardware[:guest_devices], guest_device_uids[mor] = self.vm_inv_to_guest_device_hashes(vm_inv, lan_uids[host_mor])
-      hardware[:networks] = self.vm_inv_to_network_hashes(vm_inv, guest_device_uids[mor])
+      hardware = vm_inv_to_hardware_hash(vm_inv)
+      hardware[:disks] = vm_inv_to_disk_hashes(vm_inv, storage_uids)
+      hardware[:guest_devices], guest_device_uids[mor] = vm_inv_to_guest_device_hashes(vm_inv, lan_uids[host_mor])
+      hardware[:networks] = vm_inv_to_network_hashes(vm_inv, guest_device_uids[mor])
 
       new_result = {
         :type              => template ? "ManageIQ::Providers::Redhat::InfraManager::Template" : "ManageIQ::Providers::Redhat::InfraManager::Vm",
@@ -384,10 +383,10 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
         :ems_cluster       => ems_cluster,
         :storages          => storages,
         :storage           => storage,
-        :operating_system  => self.vm_inv_to_os_hash(vm_inv),
+        :operating_system  => vm_inv_to_os_hash(vm_inv),
         :hardware          => hardware,
-        :custom_attributes => self.vm_inv_to_custom_attribute_hashes(vm_inv),
-        :snapshots         => self.vm_inv_to_snapshot_hashes(vm_inv),
+        :custom_attributes => vm_inv_to_custom_attribute_hashes(vm_inv),
+        :snapshots         => vm_inv_to_snapshot_hashes(vm_inv),
       }
 
       # Attach to the cluster's default resource pool
@@ -414,7 +413,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
 
     result[:memory_cpu] = inv[:memory] / 1048576  # in MB
 
-    return result
+    result
   end
 
   def self.vm_inv_to_guest_device_hashes(inv, lan_uids)
@@ -432,11 +431,11 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       lan = lan_uids[data.attributes.fetch_path(:network, :id)] unless lan_uids.nil?
 
       new_result = {
-        :uid_ems => uid,
-        :device_name => name,
-        :device_type => 'ethernet',
+        :uid_ems         => uid,
+        :device_name     => name,
+        :device_type     => 'ethernet',
         :controller_type => 'ethernet',
-        :address => address,
+        :address         => address,
       }
       new_result[:lan] = lan unless lan.nil?
 
@@ -466,7 +465,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       guest_device[:network] = result.first unless guest_device.nil?
     end
 
-    return result
+    result
   end
 
   def self.vm_inv_to_disk_hashes(inv, storage_uids)
@@ -507,7 +506,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       end
     end
 
-    return result
+    result
   end
 
   def self.vm_inv_to_os_hash(inv)
@@ -517,7 +516,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       :product_name => guest_os.blank? ? "Other" : guest_os
     }
     result[:system_type] = inv[:type] unless inv[:type].nil?
-    return result
+    result
   end
 
   def self.vm_inv_to_snapshot_hashes(inv)
@@ -527,19 +526,19 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
 
     parent_id = nil
     inv.each_with_index do |snapshot, idx|
-      result << self.snapshot_inv_to_snapshot_hashes(snapshot, idx == inv.length - 1, parent_id)
+      result << snapshot_inv_to_snapshot_hashes(snapshot, idx == inv.length - 1, parent_id)
       parent_id = snapshot[:id]
     end
-    return result
+    result
   end
 
-  def self.snapshot_inv_to_snapshot_hashes(inv, current, parent_uid=nil)
+  def self.snapshot_inv_to_snapshot_hashes(inv, current, parent_uid = nil)
     create_time = inv[:date].getutc
     create_time_ems = create_time.iso8601(6)
 
     # Fix case where blank description comes back as a Hash instead
     name = description = inv[:description]
-    name = "Active Image" if name[0,13] == '_ActiveImage_'
+    name = "Active Image" if name[0, 13] == '_ActiveImage_'
 
     result = {
       :uid_ems     => inv[:id],
@@ -551,7 +550,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       :current     => current,
     }
 
-    return result
+    result
   end
 
   def self.vm_inv_to_custom_attribute_hashes(inv)
@@ -569,9 +568,8 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       result << new_result
     end
 
-    return result
+    result
   end
-
 
   def self.cluster_inv_to_hashes(inv)
     result = []
@@ -592,15 +590,15 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       result_res_pools << default_res_pool
 
       new_result = {
-        :ems_ref => data[:href],
-        :ems_ref_obj => data[:href],
-        :uid_ems => data[:id],
-        :name => data[:name],
+        :ems_ref       => data[:href],
+        :ems_ref_obj   => data[:href],
+        :uid_ems       => data[:id],
+        :name          => data[:name],
 
         # Capture datacenter id so we can link up to it's sub-folders later
         :datacenter_id => data.attributes.fetch_path(:data_center, :id),
 
-        :ems_children => {:resource_pools => [default_res_pool]}
+        :ems_children  => {:resource_pools => [default_res_pool]}
       }
 
       result << new_result

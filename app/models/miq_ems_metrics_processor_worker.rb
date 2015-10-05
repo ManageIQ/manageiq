@@ -21,5 +21,4 @@ class MiqEmsMetricsProcessorWorker < MiqQueueWorkerBase
       configuration.config.store_path(new_path, processor_worker_settings)
     end
   end
-
 end

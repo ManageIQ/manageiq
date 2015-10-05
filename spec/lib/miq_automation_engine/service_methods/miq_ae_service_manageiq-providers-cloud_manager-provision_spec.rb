@@ -2,10 +2,8 @@ require 'spec_helper'
 
 module MiqAeServiceManageIQ_Providers_CloudManager_ProvisionSpec
   describe MiqAeMethodService::MiqAeServiceMiqProvision do
-
     %w(amazon openstack).each  do |t|
       context "for #{t}" do
-
         before do
           @provider      = FactoryGirl.create("ems_#{t}_with_authentication")
           @cloud_image   = FactoryGirl.create("template_#{t}", :ext_management_system => @provider)

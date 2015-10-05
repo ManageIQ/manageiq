@@ -64,7 +64,7 @@ module Vmdb
       errors = []
 
       [:level, :path].each do |section|
-        section_valid, section_errors = self.send("validate_#{section}", config)
+        section_valid, section_errors = send("validate_#{section}", config)
         valid &&= section_valid
         errors += section_errors
       end
@@ -125,7 +125,7 @@ module Vmdb
       old_level = logger.send(level_method)
       new_level, new_level_name = level_and_name_for(config, key)
       if old_level != new_level
-        $log.info("MIQ(#{self.name}.apply_config) Log level for #{File.basename(logger.filename)} has been changed to [#{new_level_name}]")
+        $log.info("MIQ(#{name}.apply_config) Log level for #{File.basename(logger.filename)} has been changed to [#{new_level_name}]")
         logger.send("#{level_method}=", new_level)
       end
     end
@@ -159,7 +159,7 @@ module Vmdb
 
       path = config[:path].to_s
       unless path.blank?
-        if !File.exist?(File.dirname(path))
+        unless File.exist?(File.dirname(path))
           valid = false
           errors << [:path, "path, \"#{path}\", is invalid, directory does not exist"]
         end

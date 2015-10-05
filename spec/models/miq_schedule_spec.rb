@@ -4,12 +4,12 @@ describe MiqSchedule do
   before { EvmSpecHelper.create_guid_miq_server_zone }
   context 'with schedule infrastructure and valid run_ats' do
     before(:each) do
-      @valid_run_ats =  [ {:start_time => "2010-07-08 04:10:00 Z", :interval => { :unit => "daily", :value => "1"  } },
-        {:start_time => "2010-07-08 04:10:00 Z", :interval => { :unit => "once" } } ]
+      @valid_run_ats =  [{:start_time => "2010-07-08 04:10:00 Z", :interval => {:unit => "daily", :value => "1"}},
+                         {:start_time => "2010-07-08 04:10:00 Z", :interval => {:unit => "once"}}]
     end
 
     it "hourly schedule" do
-      run_at = {:interval => {:value => "1", :unit => "hourly" }, :start_time => "2012-03-10 01:35:00 Z", :tz => "Central Time (US & Canada)" }
+      run_at = {:interval => {:value => "1", :unit => "hourly"}, :start_time => "2012-03-10 01:35:00 Z", :tz => "Central Time (US & Canada)"}
 
       hourly_schedule = FactoryGirl.create(:miq_schedule_validation, :run_at => run_at)
       current = Time.parse("Sat March 10 3:00:00 -0600 2012") # CST
@@ -25,7 +25,7 @@ describe MiqSchedule do
     end
 
     it "hourly schedule, going from CST -> CDT" do
-      run_at = {:interval => {:value => "1", :unit => "hourly" }, :start_time => "2012-03-11 01:35:00 Z", :tz => "Central Time (US & Canada)" }
+      run_at = {:interval => {:value => "1", :unit => "hourly"}, :start_time => "2012-03-11 01:35:00 Z", :tz => "Central Time (US & Canada)"}
 
       hourly_schedule = FactoryGirl.create(:miq_schedule_validation, :run_at => run_at)
       current = Time.parse("Sun March 11 3:00:00 -0500 2012") # CDT
@@ -42,7 +42,7 @@ describe MiqSchedule do
 
     it "next_interval_time for start of every month" do
       start_time = Time.parse("2012-01-01 08:30:00 Z")
-      start_of_every_month = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => start_time, :interval => { :unit => "monthly", :value => "1" }})
+      start_of_every_month = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => start_time, :interval => {:unit => "monthly", :value => "1"}})
       Timecop.travel(start_of_every_month.run_at[:start_time] - 5.minutes) do
         time = start_of_every_month.next_interval_time
         time.month.should == start_time.month
@@ -57,7 +57,7 @@ describe MiqSchedule do
     end
 
     it "next_interval_time for start of every month for a very old start time" do
-      start_of_every_month = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2005-01-01 08:30:00 Z", :interval => { :unit => "monthly", :value => "1" }})
+      start_of_every_month = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2005-01-01 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
       Timecop.travel(Time.parse("2013-01-01 08:31:00 UTC")) do
         time = start_of_every_month.next_interval_time
         time.month.should == 2
@@ -67,7 +67,7 @@ describe MiqSchedule do
     end
 
     it "next_interval_time for end of every month" do
-      end_of_every_month = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2012-01-31 08:30:00 Z", :interval => { :unit => "monthly", :value => "1" }})
+      end_of_every_month = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2012-01-31 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
       Timecop.travel(end_of_every_month.run_at[:start_time] - 5.minutes) do
         time = end_of_every_month.next_interval_time
         time.month.should == 1
@@ -82,7 +82,7 @@ describe MiqSchedule do
     end
 
     it "next_interval_time for end of every month for a very old start time" do
-      end_of_every_month = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2005-01-31 08:30:00 Z", :interval => { :unit => "monthly", :value => "1" }})
+      end_of_every_month = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2005-01-31 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
       Timecop.travel(Time.parse("2013-01-31 08:31:00 UTC")) do
         time = end_of_every_month.next_interval_time
         time.month.should == 2
@@ -92,7 +92,7 @@ describe MiqSchedule do
     end
 
     it "next_interval_time for the 30th of every month" do
-      end_of_every_month = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2012-01-30 08:30:00 Z", :interval => { :unit => "monthly", :value => "1" }})
+      end_of_every_month = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2012-01-30 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
       Timecop.travel(end_of_every_month.run_at[:start_time] - 5.minutes) do
         time = end_of_every_month.next_interval_time
         time.month.should == 1
@@ -107,7 +107,7 @@ describe MiqSchedule do
     end
 
     it "next_interval_time for start of every two months" do
-      start_of_every_two_months = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2012-01-01 08:30:00 Z", :interval => { :unit => "monthly", :value => "2" }})
+      start_of_every_two_months = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2012-01-01 08:30:00 Z", :interval => {:unit => "monthly", :value => "2"}})
       Timecop.travel(start_of_every_two_months.run_at[:start_time] + 5.minutes) do
         time = start_of_every_two_months.next_interval_time
         time.month.should == 3
@@ -116,7 +116,7 @@ describe MiqSchedule do
     end
 
     it "next_interval_time for end of every two months" do
-      end_of_every_two_months = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2012-01-31 08:30:00 Z", :interval => { :unit => "monthly", :value => "2" }})
+      end_of_every_two_months = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2012-01-31 08:30:00 Z", :interval => {:unit => "monthly", :value => "2"}})
       Timecop.travel(end_of_every_two_months.run_at[:start_time] + 5.minutes) do
         time = end_of_every_two_months.next_interval_time
         time.month.should == 3
@@ -140,7 +140,7 @@ describe MiqSchedule do
       end
 
       it "should be invalid with run_at :start_time missing" do
-        @first.run_at = {:interval => { :unit => "daily", :value => "1"  } }
+        @first.run_at = {:interval => {:unit => "daily", :value => "1"}}
         @first.valid?.should_not be_true
       end
 
@@ -150,22 +150,22 @@ describe MiqSchedule do
       end
 
       it "should be invalid with run_at :interval :unit missing" do
-        @first.run_at = {:start_time => "2010-07-08 04:10:00 Z", :interval => { :value => "1"  } }
+        @first.run_at = {:start_time => "2010-07-08 04:10:00 Z", :interval => {:value => "1"}}
         @first.valid?.should_not be_true
       end
 
       it "should be invalid with run_at :interval :value missing" do
-        @first.run_at = {:start_time => "2010-07-08 04:10:00 Z", :interval => { :unit => "daily" } }
+        @first.run_at = {:start_time => "2010-07-08 04:10:00 Z", :interval => {:unit => "daily"}}
         @first.valid?.should_not be_true
       end
 
       it "should be valid with a valid run_at daily" do
-        @first.run_at = {:start_time => "2010-07-08 04:10:00 Z", :interval => { :unit => "daily", :value => "1"  } }
+        @first.run_at = {:start_time => "2010-07-08 04:10:00 Z", :interval => {:unit => "daily", :value => "1"}}
         @first.valid?.should be_true
       end
 
       it "should be valid with a valid run_at once" do
-        @first.run_at = {:start_time => "2010-07-08 04:10:00 Z", :interval => { :unit => "once" } }
+        @first.run_at = {:start_time => "2010-07-08 04:10:00 Z", :interval => {:unit => "once"}}
         @first.valid?.should be_true
       end
 
@@ -174,7 +174,7 @@ describe MiqSchedule do
           @start = Time.parse("Sun March 10 01:00:00 -0500 2010")
           Timecop.travel(@start + 10.minutes)
           @east_tz = "Eastern Time (US & Canada)"
-          @first.update_attribute(:run_at, {:start_time => @start.dup.utc, :interval => { :unit => "daily", :value => "1" }, :tz => @east_tz } )
+          @first.update_attribute(:run_at, :start_time => @start.dup.utc, :interval => {:unit => "daily", :value => "1"}, :tz => @east_tz)
         end
 
         after(:each) do
@@ -214,7 +214,7 @@ describe MiqSchedule do
           @start = Time.parse("Sun October 6 01:00:00 -0400 2010")
           @east_tz = "Eastern Time (US & Canada)"
           Timecop.travel(@start + 10.minutes)
-          @first.update_attribute(:run_at, {:start_time => @start.dup.utc, :interval => { :unit => "daily", :value => "1" }, :tz => @east_tz } )
+          @first.update_attribute(:run_at, :start_time => @start.dup.utc, :interval => {:unit => "daily", :value => "1"}, :tz => @east_tz)
         end
 
         after(:each) do
@@ -255,7 +255,7 @@ describe MiqSchedule do
           @east_tz = "Eastern Time (US & Canada)"
           @utc_tz  = "UTC"
           Timecop.travel(@start + 10.minutes)
-          @first.update_attribute(:run_at, {:start_time => @start.dup.utc, :interval => { :unit => "daily", :value => "1" } } )
+          @first.update_attribute(:run_at, :start_time => @start.dup.utc, :interval => {:unit => "daily", :value => "1"})
         end
 
         after(:each) do
@@ -314,7 +314,7 @@ describe MiqSchedule do
           # Tue, 06 Oct 2010 01:00:00 AKDT -08:00
           @ak_time = Time.parse("Sun October 6 01:00:00 -0800 2010")
           Timecop.travel(@ak_time + 10.minutes)
-          @first.update_attribute(:run_at, {:start_time => @ak_time.dup.utc, :interval => { :unit => "daily", :value => "3" }, :tz => @ak_tz } )
+          @first.update_attribute(:run_at, :start_time => @ak_time.dup.utc, :interval => {:unit => "daily", :value => "3"}, :tz => @ak_tz)
         end
 
         after(:each) do
@@ -385,31 +385,31 @@ describe MiqSchedule do
           end
 
           it "should return next interval 'today at 8am UTC' in localtime if start_time is in the past at '8am UTC' with interval daily 1" do
-            @first.update_attribute(:run_at, {:start_time => '2010-12-02 08:00:00 Z', :interval => { :unit => "daily", :value => "1" } } )
+            @first.update_attribute(:run_at, :start_time => '2010-12-02 08:00:00 Z', :interval => {:unit => "daily", :value => "1"})
             expected = Time.parse('2011-01-01 08:00:00 Z').localtime
             @first.next_interval_time.should == expected
           end
 
           it "should return next interval 'tomorrow at 5am UTC' in localtime if start_time is in the past at '5am UTC' with interval daily 1" do
-            @first.update_attribute(:run_at, {:start_time => '2010-12-02 05:00:00 Z', :interval => { :unit => "daily", :value => "1" } } )
+            @first.update_attribute(:run_at, :start_time => '2010-12-02 05:00:00 Z', :interval => {:unit => "daily", :value => "1"})
             expected = Time.parse('2011-01-02 05:00:00 Z').localtime
             @first.next_interval_time.should == expected
           end
 
           it "should return next interval 'today at 7am UTC' in localtime if start_time is in the past at '8am UTC' with interval hourly 1" do
-            @first.update_attribute(:run_at, {:start_time => '2010-12-02 08:00:00 Z', :interval => { :unit => "hourly", :value => "1" } } )
+            @first.update_attribute(:run_at, :start_time => '2010-12-02 08:00:00 Z', :interval => {:unit => "hourly", :value => "1"})
             expected = Time.parse('2011-01-01 07:00:00 Z').localtime
             @first.next_interval_time.should == expected
           end
 
           it "should return next interval 'at the future date' in localtime if start_time is in the future with interval daily 1" do
-            @first.update_attribute(:run_at, {:start_time => '2011-01-25 05:00:00 Z', :interval => { :unit => "daily", :value => "1" } } )
+            @first.update_attribute(:run_at, :start_time => '2011-01-25 05:00:00 Z', :interval => {:unit => "daily", :value => "1"})
             expected = Time.parse('2011-01-25 05:00:00 Z').localtime
             @first.next_interval_time.should == expected
           end
 
           it "should return next interval 'at the future date' in localtime if start_time is in the future with interval hourly 1" do
-            @first.update_attribute(:run_at, {:start_time => '2011-01-25 05:00:00 Z', :interval => { :unit => "hourly", :value => "1" } } )
+            @first.update_attribute(:run_at, :start_time => '2011-01-25 05:00:00 Z', :interval => {:unit => "hourly", :value => "1"})
             expected = Time.parse('2011-01-25 05:00:00 Z').localtime
             @first.next_interval_time.should == expected
           end
@@ -422,55 +422,55 @@ describe MiqSchedule do
           end
 
           it "should return next interval 'today at 8am UTC' in localtime if start_time is in the past at '8am UTC' with interval daily 1" do
-            @first.update_attribute(:run_at, {:start_time => '2010-12-02 08:00:00 Z', :interval => { :unit => "daily", :value => "1" } } )
+            @first.update_attribute(:run_at, :start_time => '2010-12-02 08:00:00 Z', :interval => {:unit => "daily", :value => "1"})
             expected = Time.parse('2011-01-01 08:00:00 Z').localtime
             @first.next_interval_time.should == expected
           end
 
           it "should return next interval 'tomorrow at 5am UTC' in localtime if start_time is in the past at '5am UTC' with interval daily 1" do
-            @first.update_attribute(:run_at, {:start_time => '2010-12-02 05:00:00 Z', :interval => { :unit => "daily", :value => "1" } } )
+            @first.update_attribute(:run_at, :start_time => '2010-12-02 05:00:00 Z', :interval => {:unit => "daily", :value => "1"})
             expected = Time.parse('2011-01-02 05:00:00 Z').localtime
             @first.next_interval_time.should == expected
           end
 
           it "should return next interval 'today at 8am UTC' in localtime if start_time is in the past at '8am UTC' with interval daily 5" do
-            @first.update_attribute(:run_at, {:start_time => '2010-12-02 08:00:00 Z', :interval => { :unit => "daily", :value => "5" } } )
+            @first.update_attribute(:run_at, :start_time => '2010-12-02 08:00:00 Z', :interval => {:unit => "daily", :value => "5"})
             expected = Time.parse('2011-01-01 08:00:00 Z').localtime
             @first.next_interval_time.should == expected
           end
 
           it "should return next interval 'in 5 days at 5am UTC' in localtime if start_time is in the past at '5am UTC' with interval daily 5" do
-            @first.update_attribute(:run_at, {:start_time => '2010-12-02 05:00:00 Z', :interval => { :unit => "daily", :value => "5" } } )
+            @first.update_attribute(:run_at, :start_time => '2010-12-02 05:00:00 Z', :interval => {:unit => "daily", :value => "5"})
             expected = Time.parse('2011-01-06 05:00:00 Z').localtime
             @first.next_interval_time.should == expected
           end
 
           it "should return next interval 'today at 7am UTC' in localtime if start_time is in the past at '8am UTC' with interval hourly 1" do
-            @first.update_attribute(:run_at, {:start_time => '2010-12-02 08:00:00 Z', :interval => { :unit => "hourly", :value => "1" } } )
+            @first.update_attribute(:run_at, :start_time => '2010-12-02 08:00:00 Z', :interval => {:unit => "hourly", :value => "1"})
             expected = Time.parse('2011-01-01 07:00:00 Z').localtime
             @first.next_interval_time.should == expected
           end
 
           it "should return next interval 'today at 8am UTC' in localtime if start_time is in the past at '8am UTC' with interval hourly 5" do
-            @first.update_attribute(:run_at, {:start_time => '2010-12-02 08:00:00 Z', :interval => { :unit => "hourly", :value => "5" } } )
+            @first.update_attribute(:run_at, :start_time => '2010-12-02 08:00:00 Z', :interval => {:unit => "hourly", :value => "5"})
             expected = Time.parse('2011-01-01 08:00:00 Z').localtime
             @first.next_interval_time.should == expected
           end
 
           it "should return next interval 'today at 10am UTC' in localtime if start_time is in the past at '5am UTC' with interval hourly 5" do
-            @first.update_attribute(:run_at, {:start_time => '2010-12-02 05:00:00 Z', :interval => { :unit => "hourly", :value => "5" } } )
+            @first.update_attribute(:run_at, :start_time => '2010-12-02 05:00:00 Z', :interval => {:unit => "hourly", :value => "5"})
             expected = Time.parse('2011-01-01 10:00:00 Z').localtime
             @first.next_interval_time.should == expected
           end
 
           it "should return next interval 'at the future date' in localtime if start_time is in the future with interval daily 1" do
-            @first.update_attribute(:run_at, {:start_time => '2011-01-25 05:00:00 Z', :interval => { :unit => "daily", :value => "1" } } )
+            @first.update_attribute(:run_at, :start_time => '2011-01-25 05:00:00 Z', :interval => {:unit => "daily", :value => "1"})
             expected = Time.parse('2011-01-25 05:00:00 Z').localtime
             @first.next_interval_time.should == expected
           end
 
           it "should return next interval 'at the future date' in localtime if start_time is in the future with interval hourly 1" do
-            @first.update_attribute(:run_at, {:start_time => '2011-01-25 05:00:00 Z', :interval => { :unit => "hourly", :value => "1" } } )
+            @first.update_attribute(:run_at, :start_time => '2011-01-25 05:00:00 Z', :interval => {:unit => "hourly", :value => "1"})
             expected = Time.parse('2011-01-25 05:00:00 Z').localtime
             @first.next_interval_time.should == expected
           end
@@ -557,21 +557,20 @@ describe MiqSchedule do
         end
 
         it "should create 1 miq task" do
-          tasks = MiqTask.where({:name => "Database backup", :userid => @schedule.userid })
+          tasks = MiqTask.where(:name => "Database backup", :userid => @schedule.userid)
           tasks.length.should == 1
           tasks.first.id.should == @task_id
         end
 
         it "should create one backup queue message for our db backup instance for the database role" do
-          MiqQueue.where({:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations"} ).count.should == 1
+          MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations").count.should == 1
         end
       end
 
       context "calling queue scheduled work via a db_backup schedule firing" do
         before(:each) do
-
           MiqSchedule.queue_scheduled_work(@schedule.id, nil, Time.now.utc.to_i, nil)
-          @invoke_actions_message = MiqQueue.where({:class_name => "MiqSchedule", :instance_id => @schedule.id, :method_name => "invoke_actions" }).first
+          @invoke_actions_message = MiqQueue.where(:class_name => "MiqSchedule", :instance_id => @schedule.id, :method_name => "invoke_actions").first
         end
 
         it "should create an invoke_actions queue message" do
@@ -586,7 +585,7 @@ describe MiqSchedule do
           before(:each) do
             status, message, result = @invoke_actions_message.deliver
             @invoke_actions_message.delivered(status, message, result)
-            @backup_message = MiqQueue.where({:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations"} ).first
+            @backup_message = MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations").first
 
             @region = FactoryGirl.create(:miq_region)
             MiqRegion.stub(:my_region).and_return(@region)

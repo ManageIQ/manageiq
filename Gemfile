@@ -64,6 +64,9 @@ gem "jbuilder",                       "~>2.3.1"
 gem "paperclip",                      "~>4.3.0"
 gem "rails-i18n",                                                     :git => "git://github.com/svenfuchs/rails-i18n.git", :branch => "master"
 
+# Needed by External Auth
+gem "ruby-dbus"
+
 # Not vendored and not required
 gem "ancestry",                       "~>2.1.0",   :require => false
 gem "aws-sdk",                        "~>1.56.0",  :require => false
@@ -77,7 +80,6 @@ gem "net-ping",                       "~>1.7.4",   :require => false
 gem "net-ssh",                        "~>2.9.2",   :require => false
 gem "open4",                          "~>1.3.0",   :require => false
 gem "ovirt_metrics",                  "~>1.1.0",   :require => false
-gem "pg",                             "~>0.18.2",  :require => false
 gem "ruby_parser",                    "~>3.7",     :require => false
 gem "ruby-progressbar",               "~>1.7.0",   :require => false
 gem "rufus-scheduler",                "~>3.1.3",   :require => false
@@ -113,18 +115,19 @@ end
 
 # Assets from rails-assets.org
 source "https://rails-assets.org" do
-  gem "rails-assets-c3",                       "~>0.4.10"
-  gem "rails-assets-angular",                  "~>1.4.3"
-  gem "rails-assets-angular-mocks",            "~>1.4.3"
-  gem "rails-assets-bootstrap-datepicker",     "~>1.4.0"
-  gem "rails-assets-bootstrap-hover-dropdown", "~>2.0.11"
-  gem "rails-assets-bootstrap-select",         "~>1.7.3"
-  gem "rails-assets-kubernetes-topology-graph", "=0.0.17"
-  gem "rails-assets-moment",                   "~>2.10.3"
-  gem "rails-assets-moment-strftime",          "~>0.1.5"
-  gem "rails-assets-moment-timezone",          "~>0.4.0"
-  gem "rails-assets-sprintf",                  "~>1.0.3"
-  gem "rails-assets-numeral",                  "~>1.5.3"
+  gem "rails-assets-c3",                              "~>0.4.10"
+  gem "rails-assets-angular",                         "~>1.4.3"
+  gem "rails-assets-angular-mocks",                   "~>1.4.3"
+  gem "rails-assets-bootstrap-datepicker",            "~>1.4.0"
+  gem "rails-assets-markusslima--bootstrap-filestyle","~>1.2.1"
+  gem "rails-assets-bootstrap-hover-dropdown",        "~>2.0.11"
+  gem "rails-assets-bootstrap-select",                "~>1.7.3"
+  gem "rails-assets-kubernetes-topology-graph",       "=0.0.17"
+  gem "rails-assets-moment",                          "~>2.10.3"
+  gem "rails-assets-moment-strftime",                 "~>0.1.5"
+  gem "rails-assets-moment-timezone",                 "~>0.4.0"
+  gem "rails-assets-sprintf",                         "~>1.0.3"
+  gem "rails-assets-numeral",                         "~>1.5.3"
 end
 
 #

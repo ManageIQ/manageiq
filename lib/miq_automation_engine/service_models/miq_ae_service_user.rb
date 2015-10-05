@@ -58,6 +58,5 @@ module MiqAeMethodService
       raise "No information returned for email=<#{@object.email}> userid=<#{@object.userid}>" if ldap_user.nil?
       ldap_user
     end
-
   end
 end

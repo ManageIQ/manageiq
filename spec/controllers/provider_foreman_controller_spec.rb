@@ -3,7 +3,7 @@ require "spec_helper"
 describe ProviderForemanController do
   render_views
   before(:each) do
-    _, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+    @zone = EvmSpecHelper.local_miq_server.zone
 
     @provider = ManageIQ::Providers::Foreman::Provider.create(:name => "test", :url => "10.8.96.102", :zone => @zone)
     @config_mgr = ManageIQ::Providers::Foreman::ConfigurationManager.find_by_provider_id(@provider.id)
@@ -111,6 +111,29 @@ describe ProviderForemanController do
     set_view_10_per_page
     post :new, :format => :js
     expect(response.status).to eq(200)
+  end
+
+  context "#edit" do
+    before do
+      set_user_privileges
+    end
+
+    it "renders the edit page when the configuration manager id is supplied" do
+      post :edit, :id => @config_mgr.id
+      expect(response.status).to eq(200)
+      right_cell_text = controller.instance_variable_get(:@right_cell_text)
+      expect(right_cell_text).to eq(_("Edit Foreman Provider"))
+    end
+
+    it "renders the edit page when the configuration manager id is selected from a list view" do
+      post :edit, :miq_grid_checks => @config_mgr.id
+      expect(response.status).to eq(200)
+    end
+
+    it "renders the edit page when the configuration manager id is selected from a grid/tile" do
+      post :edit, "check_#{ActiveRecord::Base.compress_id(@config_mgr.id)}" => "1"
+      expect(response.status).to eq(200)
+    end
   end
 
   context "renders right cell text" do
@@ -320,13 +343,8 @@ describe ProviderForemanController do
   end
 
   def user_with_feature(features)
-    EvmSpecHelper.seed_specific_product_features(*features)
-    feature = MiqProductFeature.find_all_by_identifier(features)
-    test_user_role  = FactoryGirl.create(:miq_user_role,
-                                         :name                 => "test_user_role",
-                                         :miq_product_features => feature)
-    test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
-    FactoryGirl.create(:user, :userid => 'test_user', :name => 'test_user', :miq_groups => [test_user_group])
+    features = EvmSpecHelper.specific_product_features(*features)
+    FactoryGirl.create(:user, :features => features)
   end
 
   def set_view_10_per_page

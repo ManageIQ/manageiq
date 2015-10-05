@@ -3,7 +3,7 @@ module ToModelHash
 
   module ClassMethods
     def to_model_hash_options
-      fname = "#{self.table_name}.yaml"
+      fname = "#{table_name}.yaml"
       r = MiqReport.find_by_filename_and_template_type(fname, "compare").try(:attributes)
       if r.nil?
         fname = Rails.root.join("product", "compare", fname)
@@ -22,12 +22,12 @@ module ToModelHash
       ret = {}
 
       cols  = (options["cols"] || options["columns"] || [])
-      cols += (options["key"]  || []).compact
+      cols += (options["key"] || []).compact
       ret[:columns] = cols.uniq.sort.collect(&:to_sym) unless cols.blank?
 
       includes = options["include"]
       if includes
-        if includes.has_key?("categories")
+        if includes.key?("categories")
           includes.delete("categories")
           includes[:tags] = nil
         end
@@ -60,7 +60,7 @@ module ToModelHash
 
     columns.each_with_object({:class => self.class.name}) do |c, h|
       next unless self.respond_to?(c)
-      value = self.send(c)
+      value = send(c)
       h[c.to_sym] = value unless value.nil?
     end
   end
@@ -73,7 +73,7 @@ module ToModelHash
     case spec
     when Symbol, String
       if self.respond_to?(spec)
-        recs = self.send(spec)
+        recs = send(spec)
         if recs.kind_of?(ActiveRecord::Base) || (recs.kind_of?(Array) && recs.first.kind_of?(ActiveRecord::Base))
           single_rec = !recs.kind_of?(Array)
           recs = recs.to_miq_a.collect { |v| v.to_model_hash_attrs(spec) }
@@ -87,9 +87,9 @@ module ToModelHash
       spec.each do |k, v|
         next unless self.respond_to?(k)
         if k == :tags
-          recs = self.tags.collect { |t| Classification.tag_to_model_hash(t) }
+          recs = tags.collect { |t| Classification.tag_to_model_hash(t) }
         else
-          recs = self.send(k)
+          recs = send(k)
           single_rec = !iterable?(self.class, k)
           recs = recs.to_miq_a.collect { |c| c.to_model_hash_recursive(v) }
           recs = recs.first if single_rec
@@ -98,7 +98,7 @@ module ToModelHash
       end
     end
 
-    return result
+    result
   end
 
   def iterable?(klass, association)
@@ -113,7 +113,7 @@ module ToModelHash
     result  = columns.select { |c| self.class.virtual_column?(c) }
     result += includes.collect do |k, v|
       sub_result = to_model_hash_build_preload(v)
-      sub_result.blank? ? k : { k => sub_result }
+      sub_result.blank? ? k : {k => sub_result}
     end
   end
 end

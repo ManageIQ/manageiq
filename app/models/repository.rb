@@ -17,8 +17,8 @@ class Repository < ActiveRecord::Base
   def self.add(name, path)
     storage_name, relative_path, type = parse_path(path)
 
-    #Allow to fail and raise exception to caller if an entry already exists for name
-    repository = self.new(:name => name, :relative_path => relative_path)
+    # Allow to fail and raise exception to caller if an entry already exists for name
+    repository = new(:name => name, :relative_path => relative_path)
     repository.path = path
     repository.save!
     repository
@@ -31,7 +31,7 @@ class Repository < ActiveRecord::Base
   end
 
   def scan
-    #For now we'll use the first host (lowest id)
+    # For now we'll use the first host (lowest id)
     host = Host.order(:id).first
     host.scan_repository(self)
   end
@@ -39,7 +39,7 @@ class Repository < ActiveRecord::Base
   def path
     @path ||= begin
       if storage_id.blank?
-        self.relative_path
+        relative_path
       elsif storage.present?
         case storage.store_type
         when "VMFS"
@@ -53,9 +53,7 @@ class Repository < ActiveRecord::Base
     end
   end
 
-  def path=(newpath)
-    @path = newpath
-  end
+  attr_writer :path
 
   def vms
     if relative_path != "/"
@@ -89,28 +87,28 @@ class Repository < ActiveRecord::Base
       type = "NAS"
     else
       if path.starts_with? "["
-        raise "path, '#{path}', is malformed"  unless path =~ %r{^\[[^\]].+\].*$}
+        raise "path, '#{path}', is malformed"  unless path =~ /^\[[^\]].+\].*$/
         type = "VMFS"
       else
         raise "path, '#{path}', is malformed"
-        #type = "local"
+        # type = "local"
       end
     end
 
     case type
     when "NAS"
-      #path is a UNC
+      # path is a UNC
       storage_name = path.split("/")[0..3].join("/")
       relative_path = ""
       relative_path = path.split("/")[4..path.length].join("/") if path.length > 4
     when "VMFS"
-      #path is a VMWare storage name
+      # path is a VMWare storage name
       /^\[(.*)\](.*)$/ =~ path
       storage_name = $1
       relative_path = $2.strip
       relative_path.sub!(/^\//, '') # Some esx servers add a leading "/". This needs to be striped off to allow matching on location
     when "LOCAL"
-      #path is a regular file path
+      # path is a regular file path
       storage_name = ""
       relative_path = path
     end
@@ -128,7 +126,7 @@ class Repository < ActiveRecord::Base
   def save_storage
     storage_name, self.relative_path, type = Repository.parse_path(path)
     storage = Storage.find_by_name(storage_name)
-    storage = Storage.create(:name => storage_name, :store_type => type) if storage == nil
+    storage = Storage.create(:name => storage_name, :store_type => type) if storage.nil?
 
     self.storage_id = storage.id
   end

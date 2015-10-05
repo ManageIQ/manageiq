@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe ChargebackRateDetail do
-
   it "#cost" do
     cvalue   = 42.0
     rate     = 8.26
@@ -41,7 +40,7 @@ describe ChargebackRateDetail do
     end
 
     cbd = FactoryGirl.create(:chargeback_rate_detail, :rate => rate, :per_time => 'annually')
-    lambda { cbd.hourly_rate }.should raise_error(RuntimeError, "rate time unit of 'annually' not supported")
+    -> { cbd.hourly_rate }.should raise_error(RuntimeError, "rate time unit of 'annually' not supported")
   end
 
   it "#rate_adjustment" do
@@ -54,7 +53,6 @@ describe ChargebackRateDetail do
       cbd = FactoryGirl.create(:chargeback_rate_detail, :per_unit => per_unit)
       cbd.rate_adjustment(value).should == rate_adjustment
     end
-
   end
 
   it "#rate_name" do

@@ -8,7 +8,7 @@ module FixAuth
 
     def initialize(args = {})
       self.options = args.delete_if { |_k, v| v.blank? }
-      options[:adapter]  ||= 'postgresql'
+      options[:adapter] ||= 'postgresql'
       options[:encoding] ||= 'utf8'
     end
 

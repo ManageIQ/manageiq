@@ -30,52 +30,51 @@ class Disk < ActiveRecord::Base
   end
 
   def allocated_space
-    return nil if self.size.nil?
-    return self.partitions.inject(0) { |t, p| t + p.size }
+    return nil if size.nil?
+    partitions.inject(0) { |t, p| t + p.size }
   end
 
   def allocated_space_percent
-    return nil if self.size.nil? || self.size == 0
-    Float(self.allocated_space) / self.size * 100
+    return nil if size.nil? || size == 0
+    Float(allocated_space) / size * 100
   end
 
   def unallocated_space
-    return nil if self.size.nil?
-    return self.size - self.allocated_space
+    return nil if size.nil?
+    size - allocated_space
   end
 
   def unallocated_space_percent
-    return nil if self.size.nil? || self.size == 0
-    Float(self.unallocated_space) / self.size * 100
+    return nil if size.nil? || size == 0
+    Float(unallocated_space) / size * 100
   end
 
   def volumes
-    self.partitions.collect(&:volumes).flatten.uniq
+    partitions.collect(&:volumes).flatten.uniq
   end
 
   def used_percent_of_provisioned
-    return self.size.to_i == 0 ? 0.0 : (self.size_on_disk.to_f / self.size.to_f * 1000.0).round / 10.0
+    size.to_i == 0 ? 0.0 : (size_on_disk.to_f / size.to_f * 1000.0).round / 10.0
   end
 
   def rdm_disk?
-    self.disk_type && self.disk_type.starts_with?("rdm")
+    disk_type && disk_type.starts_with?("rdm")
   end
 
   def partitions_aligned
     return "Not Applicable" if self.rdm_disk?
-    plist = self.partitions
+    plist = partitions
     return "Unknown" if plist.empty?
     return "True"    if plist.all?(&:aligned?)
-    return "False"   if plist.any? {|p| p.aligned? == false}
-    return "Unknown"
+    return "False"   if plist.any? { |p| p.aligned? == false }
+    "Unknown"
   end
 
   def base_storage_extents
-    return self.miq_cim_instance.nil? ? [] : self.miq_cim_instance.base_storage_extents
+    miq_cim_instance.nil? ? [] : miq_cim_instance.base_storage_extents
   end
 
   def storage_systems
-    return self.miq_cim_instance.nil? ? [] : self.miq_cim_instance.storage_systems
+    miq_cim_instance.nil? ? [] : miq_cim_instance.storage_systems
   end
-
 end

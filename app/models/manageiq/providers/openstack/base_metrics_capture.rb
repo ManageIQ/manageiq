@@ -2,7 +2,7 @@ class ManageIQ::Providers::Openstack::BaseMetricsCapture < ManageIQ::Providers::
   def perf_collect_metrics(interval_name, start_time = nil, end_time = nil)
     log_header = "[#{interval_name}] for: [#{target.class.name}], [#{target.id}], [#{target.name}]"
 
-    end_time   ||= Time.now
+    end_time ||= Time.now
     end_time     = end_time.utc
     start_time ||= end_time - 4.hours # 4 hours for symmetry with VIM
     start_time   = start_time.utc
@@ -25,7 +25,7 @@ class ManageIQ::Providers::Openstack::BaseMetricsCapture < ManageIQ::Providers::
   def perf_init_openstack
     raise "No EMS defined" if target.ext_management_system.nil?
 
-    metering_service, _ = Benchmark.realtime_block(:connect) do
+    metering_service, = Benchmark.realtime_block(:connect) do
       target.ext_management_system.connect(:service => "Metering")
     end
     metering_service
@@ -68,7 +68,7 @@ class ManageIQ::Providers::Openstack::BaseMetricsCapture < ManageIQ::Providers::
   end
 
   def list_meters(filter)
-    counters, _ = Benchmark.realtime_block(:capture_counters) do
+    counters, = Benchmark.realtime_block(:capture_counters) do
       @perf_ems.list_meters([filter]).body
     end
     counters.each { |c| c[:instance_filter] = filter }
@@ -120,7 +120,7 @@ class ManageIQ::Providers::Openstack::BaseMetricsCapture < ManageIQ::Providers::
       filter = [{"field" => "timestamp", "op" => "lt", "value" => et.iso8601},
                 {"field" => "timestamp", "op" => "gt", "value" => st.iso8601},
                 counter[:instance_filter]]
-      statistics, _ = Benchmark.realtime_block(:capture_counter_values) do
+      statistics, = Benchmark.realtime_block(:capture_counter_values) do
         # try to capture for every 20s over the timeframe ... however, the
         # server can be configured for any arbitrary capture interval
         # we'll deal with that below
@@ -223,13 +223,13 @@ class ManageIQ::Providers::Openstack::BaseMetricsCapture < ManageIQ::Providers::
 
     timestamps.each_cons(2) do |last_period, period|
       beginning_of_the_collection_period ||= last_period
-      multi_counter_aligned_start        ||= last_period
-      multi_counter_aligned_end          ||= period
-      multi_counter_aligned_start_guard  ||= last_period
+      multi_counter_aligned_start ||= last_period
+      multi_counter_aligned_end ||= period
+      multi_counter_aligned_start_guard ||= last_period
       multi_counter_aligned_start_guard    = period if multi_counter_aligned_start_guard == Time.at(0)
 
-      multi_counter_metrics              ||= {}
-      last_multi_counter_metrics         ||= {}
+      multi_counter_metrics ||= {}
+      last_multi_counter_metrics ||= {}
 
       metrics = {}
       i[:openstack_counters].each { |c| metrics[c] = metrics_by_counter_name.fetch_path(c, period) }

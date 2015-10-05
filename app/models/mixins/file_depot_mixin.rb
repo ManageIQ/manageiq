@@ -17,13 +17,13 @@ module FileDepotMixin
     def verify_depot_settings(settings)
       return true unless MiqEnvironment::Command.is_appliance?
 
-      res = self.mnt_instance(settings).verify
+      res = mnt_instance(settings).verify
       raise "Connection Settings validation failed with error: #{res.last}" unless res.first
       res
     end
 
     def mnt_instance(settings)
-      settings[:uri_prefix] ||= self.get_uri_prefix(settings[:uri])
+      settings[:uri_prefix] ||= get_uri_prefix(settings[:uri])
       klass = "Miq#{settings[:uri_prefix].capitalize}Session".constantize
       klass.new(settings)
     end
@@ -32,18 +32,18 @@ module FileDepotMixin
       return nil if uri_str.nil?
 
       # Convert all backslashes in the URI to forward slashes
-      uri_str.gsub!('\\','/')
+      uri_str.tr!('\\', '/')
 
       # Strip any leading and trailing whitespace
       uri_str.strip!
 
       scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(URI.encode(uri_str))
-      return scheme
+      scheme
     end
   end
 
   def requires_credentials?
-    case self.uri_prefix
+    case uri_prefix
     when 'nfs'
       false
     else
@@ -56,17 +56,17 @@ module FileDepotMixin
     errors.add(:file_depot, "is missing credentials") if self.requires_credentials? && self.missing_credentials?
   end
 
-  def verify_depot_credentials(auth_type=nil)
-    self.class.verify_depot_settings(self.depot_settings(true))
+  def verify_depot_credentials(_auth_type = nil)
+    self.class.verify_depot_settings(depot_settings(true))
   end
 
   def depot_settings(reload = false)
     return @depot_settings if !reload && @depot_settings
-    return @depot_settings = {
-      :uri        => self.uri,
-      :uri_prefix => self.uri_prefix,
-      :username   => self.authentication_userid,
-      :password   => self.authentication_password
+    @depot_settings = {
+      :uri        => uri,
+      :uri_prefix => uri_prefix,
+      :username   => authentication_userid,
+      :password   => authentication_password
     }
   end
 
@@ -74,7 +74,7 @@ module FileDepotMixin
     raise "No credentials defined" if self.requires_credentials? && self.missing_credentials?
 
     return @mnt if @mnt
-    @mnt = self.class.mnt_instance(self.depot_settings)
+    @mnt = self.class.mnt_instance(depot_settings)
   end
 
   #
@@ -83,17 +83,17 @@ module FileDepotMixin
 
   def connect_depot
     @connected ||= 0
-    self.mnt.connect if @connected == 0
+    mnt.connect if @connected == 0
     @connected += 1
   end
 
   def disconnect_depot
     @connected ||= 0
     return if @connected == 0
-    self.mnt.disconnect if @connected == 1
+    mnt.disconnect if @connected == 1
     @connected -= 1
   end
-  alias :close :disconnect_depot  # TODO: Do we still need this alias?  Since this is a mixin, close is a bad override.
+  alias_method :close, :disconnect_depot  # TODO: Do we still need this alias?  Since this is a mixin, close is a bad override.
 
   def with_depot
     connect_depot
@@ -104,74 +104,74 @@ module FileDepotMixin
 
   def depot_root
     with_depot do
-      self.mnt.mnt_point
+      mnt.mnt_point
     end
   end
 
   def file_exists?(file)
     with_depot do
-      !self.mnt.glob(file).empty?
+      !mnt.glob(file).empty?
     end
   end
 
   def file_glob(pattern)
     with_depot do
-      self.mnt.glob(pattern)
+      mnt.glob(pattern)
     end
   end
 
   def file_stat(file)
     with_depot do
-      self.mnt.stat(file)
+      mnt.stat(file)
     end
   end
 
   def file_read(file)
     with_depot do
-      self.mnt.read(file)
+      mnt.read(file)
     end
   end
 
   def file_write(file, contents)
     with_depot do
-      self.mnt.write(file, contents)
+      mnt.write(file, contents)
     end
   end
 
   def file_delete(file)
     with_depot do
-      self.mnt.delete(file)
+      mnt.delete(file)
     end
   end
-  alias directory_delete file_delete
+  alias_method :directory_delete, :file_delete
 
   def file_open(*args, &block)
     with_depot do
-      self.mnt.open(*args, &block)
+      mnt.open(*args, &block)
     end
   end
 
   def file_add(source, dest_uri)
     with_depot do
-      self.mnt.add(source, dest_uri)
+      mnt.add(source, dest_uri)
     end
   end
 
   def file_remove(uri)
     with_depot do
-      self.mnt.remove(uri)
+      mnt.remove(uri)
     end
   end
 
   def file_download(local_file, remote_file)
     with_depot do
-      self.mnt.download(local_file, remote_file)
+      mnt.download(local_file, remote_file)
     end
   end
 
   def file_file?(file)
     with_depot do
-      self.mnt.file?(file)
+      mnt.file?(file)
     end
   end
 
@@ -180,6 +180,6 @@ module FileDepotMixin
   #
 
   def verify_uri_prefix_before_save
-    self.uri_prefix = self.class.get_uri_prefix(self.uri)
+    self.uri_prefix = self.class.get_uri_prefix(uri)
   end
 end

@@ -11,8 +11,8 @@ module MiqAeEngine
     DEFAULT_INSTANCE  = '.default'
     MISSING_INSTANCE  = '.missing'
     OPAQUE_PASSWORD   = '********'
-    FIELD_ATTRIBUTES  = %w{ collect on_entry on_exit on_error max_retries max_time }
-    FIELD_VALUES      = %w{ value default_value }
+    FIELD_ATTRIBUTES  = %w( collect on_entry on_exit on_error max_retries max_time )
+    FIELD_VALUES      = %w( value default_value )
     FIELD_ALLKEYS     = FIELD_VALUES + FIELD_ATTRIBUTES
 
     BASE_NAMESPACE    = '$'
@@ -42,18 +42,18 @@ module MiqAeEngine
     attr_accessor :node_parent
     attr_reader :node_children
 
-    def initialize(workspace, ns, klass, instance, object_name=nil)
+    def initialize(workspace, ns, klass, instance, object_name = nil)
       Benchmark.current_realtime[:object_count] += 1
 
       @workspace        = workspace
       @namespace        = ns
       @klass            = klass
       @instance         = instance
-      @attributes       = Hash.new
-      @fields           = Hash.new
-      @fields_ordered   = Array.new
-      @rels             = Hash.new
-      @instance_methods = Hash.new
+      @attributes       = {}
+      @fields           = {}
+      @fields_ordered   = []
+      @rels             = {}
+      @instance_methods = {}
       @object_name      = object_name || MiqAeObject.fqname(@namespace, @klass, @instance)
       @class_fqname     = MiqAeClass.fqname(@namespace, @klass)
       @aec              = fetch_class
@@ -66,15 +66,15 @@ module MiqAeEngine
       unless @aec.nil?
         @aec.instance_methods.each { |m| @instance_methods[m.name.downcase] = m }
 
-        @cm = @workspace.class_methods[@class_fqname.downcase] || Hash.new
-        @aec.class_methods.each { |m| @cm[m.name.downcase] = m unless @cm.has_key?(m.name.downcase) }
+        @cm = @workspace.class_methods[@class_fqname.downcase] || {}
+        @aec.class_methods.each { |m| @cm[m.name.downcase] = m unless @cm.key?(m.name.downcase) }
         @workspace.class_methods[@class_fqname.downcase] = @cm
       end
 
       @aei = nil
       if @instance.nil?
         @instance = DEFAULT_INSTANCE
-      elsif not @aec.nil?
+      elsif !@aec.nil?
         Benchmark.realtime_block(:instance_fetch_time) do
           @aei = fetch_instance(@instance)
           if @aei.nil?
@@ -123,24 +123,24 @@ module MiqAeEngine
         instance  = @aei.nil? ? nil : @aei.inherits
         inherited = MiqAeObject.new(workspace, ns, klass, instance)
         ordered   = []
-        inherited.fields.each { |f|
+        inherited.fields.each do |f|
           k = f['name']
-          if @fields.has_key?(k)
+          if @fields.key?(k)
             FIELD_ALLKEYS.each { |hk| @fields[k][hk] ||= f[hk] }
           else
             @fields[k] = f
             ordered << k
           end
-        }
+        end
         @fields_ordered = ordered + @fields_ordered
 
         # Set the inherited instance methods
-        inherited.instance_methods.each { |k,v| @instance_methods[k.downcase] = v unless @instance_methods.has_key?(k.downcase) }
+        inherited.instance_methods.each { |k, v| @instance_methods[k.downcase] = v unless @instance_methods.key?(k.downcase) }
 
         # Set the inherited class methods
         inherited_class_fqname = MiqAeClass.fqname(ns, klass)
         unless @workspace.class_methods[inherited_class_fqname.downcase].nil?
-          @workspace.class_methods[inherited_class_fqname.downcase].each { |k,v| @cm[k.downcase] = v unless @cm.has_key?(k.downcase) }
+          @workspace.class_methods[inherited_class_fqname.downcase].each { |k, v| @cm[k.downcase] = v unless @cm.key?(k.downcase) }
           @workspace.class_methods[@class_fqname.downcase] = @cm
         end
       end
@@ -171,16 +171,16 @@ module MiqAeEngine
     def fetch_instance(iname)
       Benchmark.current_realtime[:fetch_instance_count] += 1
       Benchmark.realtime_block(:fetch_instance_time) do
-        @workspace.datastore(@class_fqname.downcase.to_sym, iname.downcase) {
+        @workspace.datastore(@class_fqname.downcase.to_sym, iname.downcase) do
           @aec.ae_instances.detect { |i| iname.casecmp(i.name) == 0 }
-        }
+        end
       end.first
     end
 
     def fetch_field_value(f)
       Benchmark.current_realtime[:fetch_field_value_count] += 1
       Benchmark.realtime_block(:fetch_field_value_time) do
-          @aei.get_field_value(f, false) unless @aei.nil?
+        @aei.get_field_value(f, false) unless @aei.nil?
       end.first
     end
 
@@ -196,16 +196,16 @@ module MiqAeEngine
       when 'Symbol'                   then xml.Symbol   value.to_s
       when 'TrueClass', 'FalseClass'  then xml.Boolean  value.to_s
       when /MiqAeMethodService::(.*)/ then xml.tag!($1.gsub(/::/, '-'), :object_id => value.object_id, :id => value.id)
-      when 'Array'                    then xml.Array  {
-        value.each_index { |i|
-          xml.Element(:index => i+1) { attribute_value_to_xml(value[i], xml) }
-        }
-      }
-      when 'Hash'                     then xml.Hash {
-        value.each { |k, v|
+      when 'Array'                    then xml.Array  do
+        value.each_index do |i|
+          xml.Element(:index => i + 1) { attribute_value_to_xml(value[i], xml) }
+        end
+      end
+      when 'Hash'                     then xml.Hash do
+        value.each do |k, v|
           xml.Key(:name => k.to_s) { attribute_value_to_xml(v, xml) }
-        }
-      }
+        end
+      end
       when 'DRb::DRbUnknown'
         $miq_ae_logger.error "Found DRbUnknown for value: #{value.inspect} in XML: #{xml.inspect}"
         xml.String value
@@ -217,52 +217,52 @@ module MiqAeEngine
     def to_xml(options = {})
       require 'builder'
       xml = options[:builder] ||= Builder::XmlMarkup.new(:indent => options[:indent])
-      xml_attrs = { :namespace => @namespace, :class => @klass, :instance => @instance }
-      xml.MiqAeObject(xml_attrs) {
-        @attributes.keys.sort.each { |k|
+      xml_attrs = {:namespace => @namespace, :class => @klass, :instance => @instance}
+      xml.MiqAeObject(xml_attrs) do
+        @attributes.keys.sort.each do |k|
           xml.MiqAeAttribute(:name => k) { attribute_value_to_xml(@attributes[k], xml) }
-        }
+        end
 
         children.each { |c| c.to_xml(:builder => xml) }
-      }
+      end
     end
 
     def fields(message = nil)
-      @fields_ordered.collect { |fname|
+      @fields_ordered.collect do |fname|
         @fields[fname] if message.nil? || self.class.message_matches?(message_parse(@fields[fname]['message']), message)
-      }.compact
+      end.compact
     end
 
     def [](attr)
-      self.attributes[attr.downcase]
+      attributes[attr.downcase]
     end
 
     def []=(attr, value)
-      self.attributes[attr.downcase] = value
+      attributes[attr.downcase] = value
     end
 
     def process_assertions(message)
       process_filtered_fields(['assertion'], message)
     end
 
-    def process_args_as_attributes(args={})
-      args.keys.each {|k| MiqAeEngine.automation_attribute_is_array?(k) ? process_args_array(args, k) : process_args_attribute(args, k) }
+    def process_args_as_attributes(args = {})
+      args.keys.each { |k| MiqAeEngine.automation_attribute_is_array?(k) ? process_args_array(args, k) : process_args_attribute(args, k) }
       @attributes.merge!(args)
     end
 
     def process_args_array(args, args_key)
-      #process Array::servers => MiqServer::2,MiqServer::3,MiqServer::4
+      # process Array::servers => MiqServer::2,MiqServer::3,MiqServer::4
       key = args_key.split(CLASS_SEPARATOR).last
       value = args.delete(args_key)
       args[key] = load_array_objects_from_string(value)
     end
 
     def process_args_attribute(args, args_key)
-      #process MiqServer::svr => 2
+      # process MiqServer::svr => 2
       if args_key.include?(CLASS_SEPARATOR)
         key, klass = get_key_name_and_klass_from_key(args_key)
         value = args.delete(args_key)
-        args["#{key}_id"] = value unless @attributes.has_key?(key)
+        args["#{key}_id"] = value unless @attributes.key?(key)
         args[key] = MiqAeObject.convert_value_based_on_datatype(value, klass)
       else
         args[args_key.downcase] = args.delete(args_key) if args_key != args_key.downcase
@@ -285,28 +285,27 @@ module MiqAeEngine
       return key, klass
     end
 
-    def process_attributes(message, args={})
+    def process_attributes(message, args = {})
       process_filtered_fields(['attribute'], message, args)
     end
 
-    def process_fields(message, args={})
+    def process_fields(message, args = {})
       process_filtered_fields(['attribute', 'method', 'relationship', 'state'], message, args)
     end
 
-    def process_filtered_fields(aetypes, message, args={})
+    def process_filtered_fields(aetypes, message, args = {})
       fields(message).each do |f|
         next unless aetypes.include?(f['aetype'])
         begin
           @current_field   = f
           @current_message = message
-          self.send("process_#{f['aetype']}", f, message, args)
+          send("process_#{f['aetype']}", f, message, args)
         ensure
           @current_message = nil
           @current_field   = nil
         end
       end
     end
-
 
     def current_field_name
       current_field_element('name')
@@ -326,12 +325,12 @@ module MiqAeEngine
 
     def message_parse(message)
       return ['create'] if message.blank?
-      message.split(MESSAGE_SEPARATOR).collect {|m| m.strip.downcase}
+      message.split(MESSAGE_SEPARATOR).collect { |m| m.strip.downcase }
     end
 
-    def children(name=nil)
+    def children(name = nil)
       return node_children if name.nil?
-      return @rels[name]
+      @rels[name]
     end
 
     def self.fqname(ns, klass, instance)
@@ -343,7 +342,7 @@ module MiqAeEngine
     end
 
     def process_method_raw(method, collect = nil)
-      return if method.blank? || method.lstrip[0,1] == '#'
+      return if method.blank? || method.lstrip[0, 1] == '#'
 
       Benchmark.current_realtime[:method_count] += 1
       Benchmark.realtime_block(:method_time) do
@@ -358,7 +357,7 @@ module MiqAeEngine
       end
     end
 
-    def process_method(f, message, args)
+    def process_method(f, _message, _args)
       process_method_raw(get_value(f), f['collect'])
     end
 
@@ -407,7 +406,7 @@ module MiqAeEngine
         return value
       end
 
-      return uri  # if it was not processed, return the original uri
+      uri  # if it was not processed, return the original uri
     end
 
     private
@@ -421,7 +420,7 @@ module MiqAeEngine
 
       namespace_provided = namespace
       namespace ||= @namespace
-      klass     ||= @klass
+      klass ||= @klass
       fq = MiqAeClass.fqname(namespace, klass)
       if aem.nil?
         cm  = @workspace.class_methods[fq.downcase]
@@ -455,7 +454,7 @@ module MiqAeEngine
       aem
     end
 
-    def get_value(f, type=nil)
+    def get_value(f, type = nil)
       value = f['value']
       value = f['default_value'] if value.blank?
       value = substitute_value(value, type) if f['substitute'] == true
@@ -463,7 +462,7 @@ module MiqAeEngine
     end
 
     def self.convert_boolean_value(value)
-      return true   if value.to_s.downcase == 'true'  || value == '1'
+      return true   if value.to_s.downcase == 'true' || value == '1'
       return false  if value.to_s.downcase == 'false' || value == '0'
       value
     end
@@ -475,15 +474,15 @@ module MiqAeEngine
       return convert_boolean_value(value)                    if datatype == 'boolean'
       return true                                            if datatype == 'TrueClass'
       return false                                           if datatype == 'FalseClass'
-      return Time.parse(value)                               if datatype == 'time'      || datatype == 'Time'
-      return value.to_sym                                    if datatype == 'symbol'    || datatype == 'Symbol'
-      return value.to_i                                      if datatype == 'integer'   || datatype == 'Fixnum'
-      return value.to_f                                      if datatype == 'float'     || datatype == 'Float'
-      return value.gsub(/[\[\]]/,'').strip.split(/\s*,\s*/)  if datatype == 'array' && value.class == String
+      return Time.parse(value)                               if datatype == 'time' || datatype == 'Time'
+      return value.to_sym                                    if datatype == 'symbol' || datatype == 'Symbol'
+      return value.to_i                                      if datatype == 'integer' || datatype == 'Fixnum'
+      return value.to_f                                      if datatype == 'float' || datatype == 'Float'
+      return value.gsub(/[\[\]]/, '').strip.split(/\s*,\s*/)  if datatype == 'array' && value.class == String
       return MiqAePassword.new(MiqAePassword.decrypt(value)) if datatype == 'password'
 
       if datatype &&
-          (service_model = "MiqAeMethodService::MiqAeService#{SM_LOOKUP[datatype]}".safe_constantize)
+         (service_model = "MiqAeMethodService::MiqAeService#{SM_LOOKUP[datatype]}".safe_constantize)
         return service_model.find(value)
       end
 
@@ -491,10 +490,10 @@ module MiqAeEngine
       value
     end
 
-    def substitute_value(value, type = nil)
+    def substitute_value(value, _type = nil)
       Benchmark.current_realtime[:substitution_count] += 1
       Benchmark.realtime_block(:substitution_time) do
-        value = value.gsub(RE_SUBST) { |s|
+        value = value.gsub(RE_SUBST) do |_s|
           subst   = uri2value($1)
           subst &&= subst.to_s
           # This encoding of relationship is not needed, until we can get a valid use case
@@ -503,12 +502,12 @@ module MiqAeEngine
           # or building an automate request
           # subst &&= URI.escape(subst, RE_URI_ESCAPE)  if type == :aetype_relationship
           subst
-        } unless value.nil?
+        end unless value.nil?
         return value
       end
     end
 
-    def process_assertion(f, message, args)
+    def process_assertion(f, _message, _args)
       Benchmark.current_realtime[:assertion_count] += 1
       Benchmark.realtime_block(:assertion_time) do
         assertion = get_value(f)
@@ -530,7 +529,7 @@ module MiqAeEngine
       end
     end
 
-    def process_attribute(f, message, args, value = nil)
+    def process_attribute(f, _message, _args, value = nil)
       Benchmark.current_realtime[:attribute_count] += 1
       Benchmark.realtime_block(:attribute_time) do
         value = get_value(f) if value.nil?
@@ -541,7 +540,7 @@ module MiqAeEngine
     end
 
     def process_relationship_raw(relationship, message, args, name, collect)
-      return if relationship.blank? || relationship.lstrip[0,1] == '#'
+      return if relationship.blank? || relationship.lstrip[0, 1] == '#'
 
       Benchmark.current_realtime[:relationship_count] += 1
 
@@ -553,10 +552,10 @@ module MiqAeEngine
       $miq_ae_logger.info("Following Relationship [#{relationship}]")
       if relationship.include?('*')
         rels = []
-        wildcard_expand(relationship).each {|r|
+        wildcard_expand(relationship).each do|r|
           Benchmark.current_realtime[:relationship_followed_count] += 1
           rels << @workspace.instantiate(r, self)
-        }
+        end
         process_collects(collect, rels)
       else
         Benchmark.current_realtime[:relationship_followed_count] += 1
@@ -587,8 +586,8 @@ module MiqAeEngine
       end.first
     end
 
-    def process_collect_set_attribute(k,v)
-      k = @current_field['name'] if k.nil? && @current_field.is_a?(Hash)
+    def process_collect_set_attribute(k, v)
+      k = @current_field['name'] if k.nil? && @current_field.kind_of?(Hash)
       return v if k.nil?
 
       parts = k.split(PATH_SEPARATOR)
@@ -602,35 +601,35 @@ module MiqAeEngine
       obj.attributes[left.downcase] = v unless obj.nil?
     end
 
-    def process_collect_array(expr, rels, result)
+    def process_collect_array(_expr, rels, result)
       lh       = result[1].strip          unless result[1].nil?
       contents = result[2].strip
       method   = result[3].strip.downcase unless result[3].nil?
 
-      elems = Array.new
-      contents.split(ENUM_SEPARATOR).each { |e|
+      elems = []
+      contents.split(ENUM_SEPARATOR).each do |e|
         elem = e.strip
         elems << elem unless elem.empty?
-      }
+      end
 
-      array = Array.new
+      array = []
       if rels.kind_of?(Array)
         rels.collect { |r| elems.each { |e| array << r[e] } }
       elsif rels.nil?
         elems.each { |e| array << classify_value(e) }
       else
-        elems.each { |e| array <<  rels[e] }
+        elems.each { |e| array << rels[e] }
       end
 
       return if array.length == 0
 
-      process_collect_set_attribute(lh,array_value(array, method))
+      process_collect_set_attribute(lh, array_value(array, method))
     end
 
     def array_value(array, method)
       return array if array.nil? || array.compact.empty?
       value = array
-      value = array.sort {|x,y| y <=> x }   if method == 'rsort'
+      value = array.sort { |x, y| y <=> x }   if method == 'rsort'
       value = array.sort                    if method == 'sort'
       value = array.reverse                 if method == 'reverse'
       value = array.length                  if method == 'count'
@@ -648,17 +647,17 @@ module MiqAeEngine
       contents = result[2].strip
       method   = result[3].strip.downcase unless result[3].nil?
 
-      hash  = Hash.new
+      hash  = {}
       hashes = contents.split(ENUM_SEPARATOR)
-      hashes.each { |hashContents|
+      hashes.each do |hashContents|
         hashDetails = hashContents.split('=>')
         raise MiqAeException::InvalidCollection, "invalid hash in collect item <#{expr}>" if hashDetails.length != 2
         left  = hashDetails[0].strip
 
-        if left[0,1] == ':'
+        if left[0, 1] == ':'
           ltype = :symbol
           left  = left[1..-1].to_sym
-        elsif ["\"", "\'"].include?(left[0,1])
+        elsif ["\"", "\'"].include?(left[0, 1])
           ltype = :string
           left  = left[1..-2]
         else
@@ -686,11 +685,11 @@ module MiqAeEngine
             hash[left]       = rels[right]
           end
         end
-      }
-      process_collect_set_attribute(lh,hash) unless hash.length == 0
+      end
+      process_collect_set_attribute(lh, hash) unless hash.length == 0
     end
 
-    def process_collect_string(expr, rels, result)
+    def process_collect_string(_expr, rels, result)
       cattr   = result[1].strip          unless result[1].nil?
       name    = result[2].strip
       method  = result[3].strip.downcase unless result[3].nil?
@@ -703,7 +702,7 @@ module MiqAeEngine
       else
         value = rels[name]
       end
-      process_collect_set_attribute(cattr,value)
+      process_collect_set_attribute(cattr, value)
     end
 
     def wildcard_expand(rel)
@@ -718,25 +717,25 @@ module MiqAeEngine
 
       aec = fetch_class(MiqAeClass.fqname(ns, klass))
       return [] unless aec
-      aec.ae_instances.search(instance).collect {|i|
+      aec.ae_instances.search(instance).collect do|i|
         path = MiqAePath.new(:ae_namespace => ns, :ae_class => klass, :ae_instance => i).to_s
         MiqAeUri.join(scheme, userinfo, host, port, registry, path, opaque, query, fragment)
-      }.sort
+      end.sort
     end
 
     def mean(array)
-      sum(array)/array.size.to_f
+      sum(array) / array.size.to_f
     end
 
     def sum(array)
-      array.inject(nil) { |sum,x| sum ? (sum + x) : x }
+      array.inject(nil) { |sum, x| sum ? (sum + x) : x }
     end
 
     def variance(array)
       m = array.mean
       sum = 0.0
-      array.each {|v| sum += (v-m)**2 }
-      sum/array.size
+      array.each { |v| sum += (v - m)**2 }
+      sum / array.size
     end
 
     def stdev(array)
@@ -763,7 +762,7 @@ module MiqAeEngine
     end
 
     def method_parms_to_hash(str)
-      h = Hash.new
+      h = {}
 
       while result = RE_HASH.match(str)
         key    = result[1]
@@ -772,7 +771,7 @@ module MiqAeEngine
         str    = result.post_match
       end
 
-      return h
+      h
     end
 
     def classify_value(value)
@@ -790,6 +789,5 @@ module MiqAeEngine
         return self[value]
       end
     end
-
   end
 end

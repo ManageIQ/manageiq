@@ -66,7 +66,7 @@ class OpsController
         t_node[:children] = t_kids unless t_kids.empty?
         # only show storage node if product setting is set to show the nodes
         case feature_title.downcase
-        when "storage"; top_nodes.push(t_node) if VMDB::Config.new("vmdb").config[:product][:storage]
+        when "storage" then top_nodes.push(t_node) if VMDB::Config.new("vmdb").config[:product][:storage]
         else            top_nodes.push(t_node)
         end
       end
@@ -75,7 +75,7 @@ class OpsController
       root_node
     end
 
-    def rbac_features_tree_add_node(feature, pid, parent_checked = false)
+    def rbac_features_tree_add_node(feature, _pid, parent_checked = false)
       details = MiqProductFeature.feature_details(feature)
 
       unless details[:hidden]
@@ -104,8 +104,8 @@ class OpsController
         end
         f_node[:children] = f_kids unless f_kids.empty? # Add in the node's children, if any
 
-        if parent_checked ||                  # Parent is checked
-            @role_features.include?(feature)  # This feature is checked
+        if parent_checked || # Parent is checked
+           @role_features.include?(feature)  # This feature is checked
           f_node[:select] = true
         elsif !f_kids.empty?                  # If kids are present
           full_chk = (f_kids.collect { |k| k if k[:select] }.compact).length

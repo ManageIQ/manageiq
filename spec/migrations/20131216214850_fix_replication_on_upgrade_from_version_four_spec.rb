@@ -62,13 +62,13 @@ describe FixReplicationOnUpgradeFromVersionFour do
 
         migrate
 
-        changed.collect { |c| c.reload.change_table }.should == %w{
+        changed.collect { |c| c.reload.change_table }.should == %w(
           drift_states
           miq_cim_derived_metrics
           miq_request_tasks
           miq_storage_metrics
           storages_vms_and_templates
-        }
+        )
         ignored.reload.change_table.should == "accounts"
       end
 
@@ -86,13 +86,13 @@ describe FixReplicationOnUpgradeFromVersionFour do
 
         migrate
 
-        changed.collect { |c| c.reload.table_name }.should == %w{
+        changed.collect { |c| c.reload.table_name }.should == %w(
           drift_states
           miq_cim_derived_metrics
           miq_request_tasks
           miq_storage_metrics
           storages_vms_and_templates
-        }
+        )
         ignored.reload.table_name.should == "accounts"
       end
 
@@ -112,7 +112,6 @@ describe FixReplicationOnUpgradeFromVersionFour do
         deleted.each { |c| expect { c.reload }.to raise_error(ActiveRecord::RecordNotFound) }
         ignored.reload.table_name.should == "accounts"
       end
-
     end
   end
 end

@@ -19,7 +19,7 @@ class OrchestrationTemplate < ActiveRecord::Base
   end
 
   def self.find_with_content(template_content)
-    available.where(:md5 => calc_md5(with_universal_newline(template_content))).first
+    available.find_by(:md5 => calc_md5(with_universal_newline(template_content)))
   end
 
   # Find only by template content. Here we only compare md5 considering the table is expected
@@ -29,14 +29,14 @@ class OrchestrationTemplate < ActiveRecord::Base
     hashes = [hashes] unless hashes.kind_of?(Array)
     md5s = []
     hashes = hashes.reject do |hash|
-               if hash[:draft]
-                 create!(hash.except(:md5)) # always create a new template if it is a draft
-                 true
-               else
-                 md5s << calc_md5(with_universal_newline(hash[:content]))
-                 false
-               end
-             end
+      if hash[:draft]
+        create!(hash.except(:md5)) # always create a new template if it is a draft
+        true
+      else
+        md5s << calc_md5(with_universal_newline(hash[:content]))
+        false
+      end
+    end
 
     existing_templates = available.where(:md5 => md5s).index_by(&:md5)
 

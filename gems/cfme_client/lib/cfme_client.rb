@@ -77,19 +77,19 @@ class CfmeClient
   #   Need API Caller to have access to :code, :status, :message and :result
   #
   def code
-    @code     ||= ""
+    @code ||= ""
   end
 
   def status
-    @status   ||= ""
+    @status ||= ""
   end
 
   def message
-    @message  ||= ""
+    @message ||= ""
   end
 
   def result
-    @result   ||= {}
+    @result ||= {}
   end
 
   private
@@ -99,8 +99,8 @@ class CfmeClient
     if updates.key?(:url)
       uri = URI.parse(updates[:url])
       @config[:scheme] = uri.scheme || DEFAULT_CONFIG[:scheme]
-      @config[:host]   = uri.host   || DEFAULT_CONFIG[:host]
-      @config[:port]   = uri.port   || DEFAULT_CONFIG[:port]
+      @config[:host]   = uri.host || DEFAULT_CONFIG[:host]
+      @config[:port]   = uri.port || DEFAULT_CONFIG[:port]
       updates.delete(:url)
     end
   end

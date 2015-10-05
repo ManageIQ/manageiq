@@ -40,7 +40,7 @@ describe AddUpdateRepoNameToMiqDatabase do
       # Expect data
       expect(Reserve.first.resource_id).to    eq(db.id)
       expect(Reserve.first.resource_type).to  eq("MiqDatabase")
-      expect(Reserve.first.reserved).to       eq({:update_repo_name => "abc"})
+      expect(Reserve.first.reserved).to       eq(:update_repo_name => "abc")
     end
   end
 end

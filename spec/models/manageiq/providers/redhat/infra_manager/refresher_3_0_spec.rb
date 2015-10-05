@@ -26,30 +26,30 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
 
   def assert_table_counts
     ExtManagementSystem.count.should == 1
-    EmsFolder.count.should           == 10
-    EmsCluster.count.should          == 5
-    Host.count.should                == 1
-    ResourcePool.count.should        == 5
-    VmOrTemplate.count.should        == 35
-    Vm.count.should                  == 21
-    MiqTemplate.count.should         == 14
-    Storage.count.should             == 6
+    EmsFolder.count.should == 10
+    EmsCluster.count.should == 5
+    Host.count.should == 1
+    ResourcePool.count.should == 5
+    VmOrTemplate.count.should == 35
+    Vm.count.should == 21
+    MiqTemplate.count.should == 14
+    Storage.count.should == 6
 
-    CustomAttribute.count.should     == 3
-    CustomizationSpec.count.should   == 0
-    Disk.count.should                == 124
-    GuestDevice.count.should         == 26
-    Hardware.count.should            == 36
-    Lan.count.should                 == 2
-    MiqScsiLun.count.should          == 0
-    MiqScsiTarget.count.should       == 0
-    Network.count.should             == 2
-    OperatingSystem.count.should     == 36
-    Snapshot.count.should            == 41
-    Switch.count.should              == 2
-    SystemService.count.should       == 0
+    CustomAttribute.count.should == 3
+    CustomizationSpec.count.should == 0
+    Disk.count.should == 124
+    GuestDevice.count.should == 26
+    Hardware.count.should == 36
+    Lan.count.should == 2
+    MiqScsiLun.count.should == 0
+    MiqScsiTarget.count.should == 0
+    Network.count.should == 2
+    OperatingSystem.count.should == 36
+    Snapshot.count.should == 41
+    Switch.count.should == 2
+    SystemService.count.should == 0
 
-    Relationship.count.should        == 77
+    Relationship.count.should == 77
     # MiqQueue.count.should            == 35 #PENDING: Some timing issue keeps flipping this between 35 and 36
   end
 
@@ -59,14 +59,14 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :uid_ems     => nil
     )
 
-    @ems.ems_folders.size.should       == 10
-    @ems.ems_clusters.size.should      == 5
-    @ems.resource_pools.size.should    == 5
-    @ems.storages.size.should          == 2 # TODO: The table count is 6, but this is 4 ??
-    @ems.hosts.size.should             == 1
+    @ems.ems_folders.size.should == 10
+    @ems.ems_clusters.size.should == 5
+    @ems.resource_pools.size.should == 5
+    @ems.storages.size.should == 2 # TODO: The table count is 6, but this is 4 ??
+    @ems.hosts.size.should == 1
     @ems.vms_and_templates.size.should == 35
-    @ems.vms.size.should               == 21
-    @ems.miq_templates.size.should     == 14
+    @ems.vms.size.should == 21
+    @ems.miq_templates.size.should == 14
 
     @ems.customization_specs.size.should == 0
   end
@@ -143,7 +143,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :connection_state => "connected"
     )
 
-    @host.ems_cluster.should   == @cluster
+    @host.ems_cluster.should == @cluster
     @host.storages.size.should == 2
     @host.storages.should      include(@storage)
 
@@ -221,7 +221,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :present         => true,
       :controller_type => "ethernet"
     )
-    nic.switch.should  == switch
+    nic.switch.should == switch
     nic.network.should == network
 
     @host.hardware.storage_adapters.size.should == 0 # TODO: See @host.hardware.guest_devices TODO
@@ -256,10 +256,10 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     )
 
     v.ext_management_system.should == @ems
-    v.ems_cluster.should           == @cluster
-    v.parent_resource_pool.should  == @default_rp
-    v.host.should                  == nil
-    v.storages.should              == [@storage]
+    v.ems_cluster.should == @cluster
+    v.parent_resource_pool.should == @default_rp
+    v.host.should.nil?
+    v.storages.should == [@storage]
     # v.storage  # TODO: Fix bug where duplication location GUIDs could cause the wrong value to appear.
 
     v.operating_system.should have_attributes(
@@ -395,10 +395,10 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     )
 
     v.ext_management_system.should == @ems
-    v.ems_cluster.should           == @cluster
-    v.parent_resource_pool.should  == @default_rp
+    v.ems_cluster.should == @cluster
+    v.parent_resource_pool.should == @default_rp
     v.host.should                  be_nil
-    v.storages.should              == [@storage]
+    v.storages.should == [@storage]
     # v.storage  # TODO: Fix bug where duplication location GUIDs could cause the wrong value to appear.
 
     v.operating_system.should have_attributes(
@@ -549,10 +549,10 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     )
 
     v.ext_management_system.should == @ems
-    v.ems_cluster.should           == @cluster
+    v.ems_cluster.should == @cluster
     v.parent_resource_pool.should  be_nil
     v.host.should                  be_nil
-    v.storages.should              == [@storage]
+    v.storages.should == [@storage]
     # v.storage  # TODO: Fix bug where duplication location GUIDs could cause the wrong value to appear.
 
     v.operating_system.should have_attributes(
@@ -631,92 +631,92 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
           [EmsFolder, "host", {:is_datacenter => false}] => {
             [EmsCluster, "Cluster1-iSCSI"] => {
               [ResourcePool, "Default for Cluster Cluster1-iSCSI", {:is_default => true}] => {
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "Brandon-Clone1"] => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "CLI-Provision-1"] => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "Brandon-Clone1"]   => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "CLI-Provision-1"]  => {},
                 [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-RH-5005-test"] => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-v5005"] => {}
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-v5005"]        => {}
               }
             }
           },
-          [EmsFolder, "vm", {:is_datacenter => false}] => {
-            [ManageIQ::Providers::Redhat::InfraManager::Template, "Template1"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "Brandon-Clone1"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "CLI-Provision-1"] => {},
+          [EmsFolder, "vm", {:is_datacenter => false}]   => {
+            [ManageIQ::Providers::Redhat::InfraManager::Template, "Template1"]  => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "Brandon-Clone1"]   => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "CLI-Provision-1"]  => {},
             [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-RH-5005-test"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-v5005"] => {}
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-v5005"]        => {}
           }
         },
-        [EmsFolder, "DC2", {:is_datacenter => true}] => {
+        [EmsFolder, "DC2", {:is_datacenter => true}]      => {
           [EmsFolder, "host", {:is_datacenter => false}] => {
-            [EmsCluster, "DC2-iSCSI"] => {
+            [EmsCluster, "DC2-iSCSI"]   => {
               [ResourcePool, "Default for Cluster DC2-iSCSI", {:is_default => true}] => {}
             },
             [EmsCluster, "DC2Cluster1"] => {
               [ResourcePool, "Default for Cluster DC2Cluster1", {:is_default => true}] => {
                 [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-TrunkSVN"] => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-V5001"] => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "new-server"] => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "RHEL"] => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "ULin1"] => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "V5-test"] => {}
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-V5001"]    => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "new-server"]   => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "RHEL"]         => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "ULin1"]        => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "V5-test"]      => {}
               }
             }
           },
-          [EmsFolder, "vm", {:is_datacenter => false}] => {
-            [ManageIQ::Providers::Redhat::InfraManager::Template, "EVM"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Template, "EVM-V5"] => {},
+          [EmsFolder, "vm", {:is_datacenter => false}]   => {
+            [ManageIQ::Providers::Redhat::InfraManager::Template, "EVM"]         => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Template, "EVM-V5"]      => {},
             [ManageIQ::Providers::Redhat::InfraManager::Template, "EVM-v5-Base"] => {},
             [ManageIQ::Providers::Redhat::InfraManager::Template, "GM-Template"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-TrunkSVN"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-V5001"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "new-server"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "RHEL"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "ULin1"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "V5-test"] => {}
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-TrunkSVN"]      => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-V5001"]         => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "new-server"]        => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "RHEL"]              => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "ULin1"]             => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "V5-test"]           => {}
           }
         },
-        [EmsFolder, "Default", {:is_datacenter => true}] => {
+        [EmsFolder, "Default", {:is_datacenter => true}]  => {
           [EmsFolder, "host", {:is_datacenter => false}] => {
             [EmsCluster, "Cluster2"] => {
               [ResourcePool, "Default for Cluster Cluster2", {:is_default => true}] => {
                 [ManageIQ::Providers::Redhat::InfraManager::Vm, "EmsRefreshSpec-PoweredOff"] => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "EmsRefreshSpec-PoweredOn"] => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-RH-50013"] => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-RH-50015"] => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-V50025"] => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "GM-Ubuntu-1"] => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "kmwin2k8a"] => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "MIQ-PXE"] => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "obarenboim_test_01"] => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "rpo-evm"] => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "rpo-test"] => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "EmsRefreshSpec-PoweredOn"]  => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-RH-50013"]              => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-RH-50015"]              => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-V50025"]                => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "GM-Ubuntu-1"]               => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "kmwin2k8a"]                 => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "MIQ-PXE"]                   => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "obarenboim_test_01"]        => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "rpo-evm"]                   => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "rpo-test"]                  => {},
               }
             },
-            [EmsCluster, "Default"] => {
+            [EmsCluster, "Default"]  => {
               [ResourcePool, "Default for Cluster Default", {:is_default => true}] => {}
             }
           },
-          [EmsFolder, "vm", {:is_datacenter => false}] => {
-            [ManageIQ::Providers::Redhat::InfraManager::Template, "empty"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Template, "EmsRefreshSpec"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Template, "EVM-50011"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Template, "EVM-v50017"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Template, "EVM-v50025"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Template, "EVMv5"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Template, "EVMv50015"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Template, "pxe-template"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Template, "pxe-template-wi"] => {},
+          [EmsFolder, "vm", {:is_datacenter => false}]   => {
+            [ManageIQ::Providers::Redhat::InfraManager::Template, "empty"]               => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Template, "EmsRefreshSpec"]      => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Template, "EVM-50011"]           => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Template, "EVM-v50017"]          => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Template, "EVM-v50025"]          => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Template, "EVMv5"]               => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Template, "EVMv50015"]           => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Template, "pxe-template"]        => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Template, "pxe-template-wi"]     => {},
             [ManageIQ::Providers::Redhat::InfraManager::Vm, "EmsRefreshSpec-PoweredOff"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "EmsRefreshSpec-PoweredOn"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-RH-50013"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-RH-50015"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-V50025"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "GM-Ubuntu-1"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "kmwin2k8a"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "MIQ-PXE"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "obarenboim_test_01"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "rpo-evm"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "rpo-test"] => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "EmsRefreshSpec-PoweredOn"]  => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-RH-50013"]              => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-RH-50015"]              => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-V50025"]                => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "GM-Ubuntu-1"]               => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "kmwin2k8a"]                 => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "MIQ-PXE"]                   => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "obarenboim_test_01"]        => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "rpo-evm"]                   => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "rpo-test"]                  => {},
           }
         }
       }

@@ -33,7 +33,7 @@ class VirtualColumn < ActiveRecord::ConnectionAdapters::Column
 
     type = options[:type]
 
-    if type.nil? && options.has_key?(:typ)
+    if type.nil? && options.key?(:typ)
       unless Rails.env.production?
         msg = "[DEPRECATION] :typ option is deprecated.  Please use :type instead.  At #{caller[1]}"
         $log.warn msg
@@ -74,7 +74,7 @@ class VirtualColumn < ActiveRecord::ConnectionAdapters::Column
     type
   end
 
-  alias to_s inspect # Changes to_s to include all of the instance variables
+  alias_method :to_s, :inspect # Changes to_s to include all of the instance variables
 
   def uses
     options[:uses]
@@ -95,7 +95,7 @@ class VirtualColumn < ActiveRecord::ConnectionAdapters::Column
       warn msg
     end
 
-    self.send(key)
+    send(key)
   end
 
   def []=(key, val)
@@ -105,7 +105,7 @@ class VirtualColumn < ActiveRecord::ConnectionAdapters::Column
       warn msg
     end
 
-    self.send("#{key}=", val)
+    send("#{key}=", val)
   end
 end
 
@@ -121,8 +121,10 @@ end
 module VirtualFields
   module NonARModels
     def dangerous_attribute_method?(_); false; end
+
     def generated_association_methods; self; end
-    def add_autosave_association_callbacks(*args); self; end
+
+    def add_autosave_association_callbacks(*_args); self; end
   end
 
   def self.extended(other)
@@ -145,7 +147,7 @@ module VirtualFields
   end
 
   def virtual_column?(name)
-    virtual_columns_hash.has_key?(name.to_s)
+    virtual_columns_hash.key?(name.to_s)
   end
 
   #
@@ -171,7 +173,7 @@ module VirtualFields
   end
 
   def virtual_reflection?(name)
-    virtual_reflections.has_key?(name.to_sym)
+    virtual_reflections.key?(name.to_sym)
   end
 
   def virtual_reflection(name)
@@ -182,19 +184,19 @@ module VirtualFields
   # Accessors for fields, with inheritance
   #
 
-  %w{columns_hash columns column_names column_names_symbols reflections}.each do |m|
+  %w(columns_hash columns column_names column_names_symbols reflections).each do |m|
     define_method("virtual_#{m}") do
-      inherited = self.send("inherited_virtual_#{m}")
+      inherited = send("inherited_virtual_#{m}")
       op = inherited.kind_of?(Hash) ? :merge : :"|"
-      inherited.send(op, self.send("_virtual_#{m}"))
+      inherited.send(op, send("_virtual_#{m}"))
     end
   end
 
-  %w{columns_hash columns column_names column_names_symbols}.each do |m|
+  %w(columns_hash columns column_names column_names_symbols).each do |m|
     define_method("#{m}_with_virtual") do
-      inherited = self.send("inherited_#{m}_with_virtual")
+      inherited = send("inherited_#{m}_with_virtual")
       op = inherited.kind_of?(Hash) ? :merge : :"|"
-      inherited.send(op, self.send("_virtual_#{m}"))
+      inherited.send(op, send("_virtual_#{m}"))
     end
   end
 
@@ -205,7 +207,6 @@ module VirtualFields
   def reflection_with_virtual(association)
     virtual_reflection(association) || reflect_on_association(association)
   end
-
 
   #
   # Common methods for Virtual Fields
@@ -240,9 +241,9 @@ module VirtualFields
 
   def add_virtual_column(name, options)
     reset_virtual_column_information
-    options[:type] = VirtualColumn::TYPE_MAP.fetch(options[:type]) {
+    options[:type] = VirtualColumn::TYPE_MAP.fetch(options[:type]) do
       raise ArgumentError, "unknown type #{options[:type]}"
-    }
+    end
     _virtual_columns_hash[name.to_s] = VirtualColumn.new(name, options)
   end
 
@@ -250,7 +251,7 @@ module VirtualFields
     @virtual_columns = @virtual_column_names = @virtual_column_names_symbols = nil
   end
 
-  def add_virtual_reflection(reflection, name, uses, options)
+  def add_virtual_reflection(reflection, name, uses, _options)
     raise ArgumentError, "macro must be specified" unless reflection
     reset_virtual_reflection_information
     _virtual_reflections[name.to_sym] = VirtualReflection.new(reflection, uses)
@@ -287,21 +288,21 @@ module VirtualFields
   # Accessors for inherited fields
   #
 
-  %w{columns_hash reflections}.each do |m|
+  %w(columns_hash reflections).each do |m|
     define_method("inherited_virtual_#{m}") do
       superclass.virtual_fields_base? ? {} : superclass.send("virtual_#{m}")
     end
   end
 
-  %w{columns column_names column_names_symbols}.each do |m|
+  %w(columns column_names column_names_symbols).each do |m|
     define_method("inherited_virtual_#{m}") do
       superclass.virtual_fields_base? ? [] : superclass.send("virtual_#{m}")
     end
   end
 
-  %w{columns column_names column_names_symbols columns_hash reflections}.each do |m|
+  %w(columns column_names column_names_symbols columns_hash reflections).each do |m|
     define_method("inherited_#{m}_with_virtual") do
-      superclass.virtual_fields_base? ? self.send(m) : superclass.send("#{m}_with_virtual")
+      superclass.virtual_fields_base? ? send(m) : superclass.send("#{m}_with_virtual")
     end
   end
 end
@@ -324,8 +325,8 @@ module ActiveRecord
 
         case association
         when Hash
-          virtual_association, association = association.partition do |parent, child|
-            raise "parent must be an association name" unless parent.is_a?(String) || parent.is_a?(Symbol)
+          virtual_association, association = association.partition do |parent, _child|
+            raise "parent must be an association name" unless parent.kind_of?(String) || parent.kind_of?(Symbol)
             records_model.virtual_field?(parent)
           end
           association = Hash[association]
@@ -337,7 +338,7 @@ module ActiveRecord
             raise "child must be blank if parent is a virtual column" if field.kind_of?(VirtualColumn) && !child.blank?
             next unless field.kind_of?(VirtualReflection)
 
-            parents = records.map {|record| record.send(field.name)}.flatten.compact
+            parents = records.map { |record| record.send(field.name) }.flatten.compact
             MiqPreloader.preload(parents, child) unless parents.empty?
           end
         when String, Symbol
