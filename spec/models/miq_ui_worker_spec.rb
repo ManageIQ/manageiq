@@ -13,7 +13,7 @@ describe MiqUiWorker do
       require 'util/miq-process'
       MiqProcess.stub(:is_worker?).and_return(false)
 
-      guid, server1, @zone= EvmSpecHelper.create_guid_miq_server_zone
+      guid, server1, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
       @worker1 = FactoryGirl.create(:miq_ui_worker, :miq_server => server1, :uri => "http://0.0.0.0:3000", :status => 'started')
       @worker2 = FactoryGirl.create(:miq_ui_worker, :miq_server => server1, :uri => "http://0.0.0.0:3001", :status => 'started')
@@ -35,5 +35,4 @@ describe MiqUiWorker do
       MiqUiWorker.all_ports_in_use.should == [3000]
     end
   end
-
 end

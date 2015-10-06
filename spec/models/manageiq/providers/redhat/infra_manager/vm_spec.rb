@@ -70,4 +70,28 @@ describe ManageIQ::Providers::Redhat::InfraManager::Vm do
       expect(described_class.calculate_power_state('down')).to eq('off')
     end
   end
+
+  describe "Reconfigure Task" do
+    let(:vm) { FactoryGirl.create(:vm_redhat) }
+
+    it "#reconfigurable?" do
+      expect(vm.reconfigurable?).to be_true
+    end
+
+    it "#max_total_vcpus" do
+      expect(vm.max_total_vcpus).to eq(160)
+    end
+
+    it "#max_cores_per_socket" do
+      expect(vm.max_cores_per_socket).to eq(16)
+    end
+
+    it "#max_vcpus" do
+      expect(vm.max_vcpus).to eq(16)
+    end
+
+    it "#max_memory_cpu" do
+      expect(vm.max_memory_cpu).to eq(2.terabyte / 1.megabyte)
+    end
+  end
 end

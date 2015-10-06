@@ -19,23 +19,23 @@ class LdapDomain < ActiveRecord::Base
 
   def connect(server = nil)
     error_msgs = []
-    servers = server.nil? ? self.ldap_servers : [server]
+    servers = server.nil? ? ldap_servers : [server]
 
     servers.each do |s|
       options = {}
       options[:auth] = {:ldaphost => s.hostname, :ldapport => s.port}
       options[:mode]           = s.mode
-      options[:basedn]         = self.base_dn
-      options[:user_type]      = self.user_type
-      options[:user_suffix]    = self.user_suffix
+      options[:basedn]         = base_dn
+      options[:user_type]      = user_type
+      options[:user_suffix]    = user_suffix
       options[:domain_prefix]  = domain_prefix
-      options[:bind_timeout]   = self.bind_timeout
-      options[:search_timeout] = self.search_timeout
-      #options[:] = (self.follow_referrals)
+      options[:bind_timeout]   = bind_timeout
+      options[:search_timeout] = search_timeout
+      # options[:] = (self.follow_referrals)
 
       @ldap = MiqLdap.new(options)
       begin
-        @ldap.bind(*self.auth_user_pwd)
+        @ldap.bind(*auth_user_pwd)
       rescue => err
         @ldap = nil
         error_msgs << err.message
@@ -43,7 +43,7 @@ class LdapDomain < ActiveRecord::Base
       return @ldap unless @ldap.nil?
     end
 
-    message = "Failed to connect to Ldap servers for domain: <#{self.name}>.  Servers: <#{servers.collect(&:hostname)}>"
+    message = "Failed to connect to Ldap servers for domain: <#{name}>.  Servers: <#{servers.collect(&:hostname)}>"
     $log.error("#{message}, #{error_msgs.join("\n")}")
     raise MiqException::Error, message
   end
@@ -56,13 +56,13 @@ class LdapDomain < ActiveRecord::Base
     ""
   end
 
-  def domain_prefix=(arg)
+  def domain_prefix=(_arg)
     ""
   end
 
   def verify_credentials(server = nil)
     begin
-      result = self.connect(server)
+      result = connect(server)
     rescue Exception => err
       raise MiqException::Error, err.message
     else
@@ -77,14 +77,14 @@ class LdapDomain < ActiveRecord::Base
   end
 
   def sync_users_and_groups
-    self.sync_users
+    sync_users
     # self.sync_groups
   end
 
   def sync_users
     start_sync_time = Time.now.utc
     LdapUser.sync_users(self)
-    self.update_attribute(:last_user_sync, start_sync_time)
+    update_attribute(:last_user_sync, start_sync_time)
   end
 
   def find_by_dn(dn)
@@ -105,27 +105,27 @@ class LdapDomain < ActiveRecord::Base
   end
 
   def is_valid?
-    return false if self.ldap_servers.size.zero?
-    return false if self.auth_user_pwd.nil?
-    return false if self.base_dn.blank?
+    return false if ldap_servers.size.zero?
+    return false if auth_user_pwd.nil?
+    return false if base_dn.blank?
     true
   end
 
-  def user_search(options, search_filters=nil, search_attrs=nil, result_key=:objectsid)
+  def user_search(options, search_filters = nil, search_attrs = nil, result_key = :objectsid)
     results = {}
-    self.connect unless connected?
+    connect unless connected?
 
-    search_options = {:scope => :sub, :base => self.ldap.basedn}
+    search_options = {:scope => :sub, :base => ldap.basedn}
     search_options[:size] = options[:size] || 200
 
     # Default filter - Only return users
-    search_options[:filter] = search_filters.nil? ? self.build_user_search_filter(options) : search_filters
+    search_options[:filter] = search_filters.nil? ? build_user_search_filter(options) : search_filters
     return {} if search_options[:filter].nil?
 
     # Limit attributes to collect
-    search_options[:attributes] = search_attrs.nil? ? self.ldap_user_name_mapping.keys : search_attrs
+    search_options[:attributes] = search_attrs.nil? ? ldap_user_name_mapping.keys : search_attrs
 
-    self.search(search_options) do |entry|
+    search(search_options) do |entry|
       user = build_user_hash_from_entry(entry, search_options[:attributes])
       results[user[result_key]] = user
     end
@@ -134,7 +134,7 @@ class LdapDomain < ActiveRecord::Base
   end
 
   def build_user_hash_from_entry(entry, attributes)
-    user = {:objectsid => MiqLdap.get_sid(entry), :ldap_domain_id => self.id}
+    user = {:objectsid => MiqLdap.get_sid(entry), :ldap_domain_id => id}
 
     attributes.each do |attr|
       attr_sym = attr.to_sym
@@ -151,7 +151,7 @@ class LdapDomain < ActiveRecord::Base
 
   def collect_property_names(entry, attr_sym)
     values = MiqLdap.get_attr(entry, attr_sym)
-    values.to_miq_a.collect {|dn| dn.split(",").first.split("=").last}.join(", ")
+    values.to_miq_a.collect { |dn| dn.split(",").first.split("=").last }.join(", ")
   end
 
   def collect_property_dns(entry, attr_sym)
@@ -163,14 +163,14 @@ class LdapDomain < ActiveRecord::Base
     result = MiqLdap.filter_users_only
     options[:filters].to_miq_a.each do |fh|
       filter = if fh[:field] == 'memberof_name'
-        manager_display_name_search(options, :name, fh, MiqLdap.filter_groups_only, :memberof)
-      elsif fh[:field] == 'manager_name'
-        manager_display_name_search(options, :displayname, fh, MiqLdap.filter_users_only, :manager)
-      else
-        result & self.ldap.filter(:eq, fh[:field], fh[:value])
-      end
+                 manager_display_name_search(options, :name, fh, MiqLdap.filter_groups_only, :memberof)
+               elsif fh[:field] == 'manager_name'
+                 manager_display_name_search(options, :displayname, fh, MiqLdap.filter_users_only, :manager)
+               else
+                 result & ldap.filter(:eq, fh[:field], fh[:value])
+               end
       return nil if filter.nil?
-      result = result & filter
+      result &= filter
     end
 
     result
@@ -178,16 +178,15 @@ class LdapDomain < ActiveRecord::Base
 
   def manager_display_name_search(options, filter_key, filter_hash, base_search_filter, new_filter_key)
     # If filter value is '*' we only need to search with entries that have a value for the field.
-    return self.ldap.filter(:eq, new_filter_key, filter_hash[:value]) if filter_hash[:value] == '*'
+    return ldap.filter(:eq, new_filter_key, filter_hash[:value]) if filter_hash[:value] == '*'
 
     # First we need to lookup entries by displayname to build new filter
     result = nil
-    search_filters = base_search_filter & self.ldap.filter(:eq, filter_key, filter_hash[:value])
-    self.user_search(options, search_filters, [:dn, filter_key], :dn).each do |dn, props|
-      filter = self.ldap.filter(:eq, new_filter_key, dn)
+    search_filters = base_search_filter & ldap.filter(:eq, filter_key, filter_hash[:value])
+    user_search(options, search_filters, [:dn, filter_key], :dn).each do |dn, _props|
+      filter = ldap.filter(:eq, new_filter_key, dn)
       result = result.nil? ? filter : result | filter
     end
     result
   end
-
 end

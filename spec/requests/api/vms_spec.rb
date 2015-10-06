@@ -402,7 +402,7 @@ describe ApiController do
 
       expect_single_action_result(:success => false,
                                   :message => "The VM can't be shelved, current state has to be powered on, off, suspended or paused",
-                                  :href => :vm_openstack_url)
+                                  :href    => :vm_openstack_url)
     end
 
     it "shelves a vm" do
@@ -420,8 +420,8 @@ describe ApiController do
 
       expect_single_action_result(:success => false,
                                   :message => "Shelve Operation is not available for Vmware VM.",
-                                  :href => :vm_url,
-                                  :task => false)
+                                  :href    => :vm_url,
+                                  :task    => false)
     end
 
     it "shelves multiple vms" do
@@ -458,7 +458,7 @@ describe ApiController do
 
       expect_single_action_result(:success => false,
                                   :message => "The VM can't be shelved offload, current state has to be shelved",
-                                  :href => :vm_openstack_url)
+                                  :href    => :vm_openstack_url)
     end
 
     it "shelve_offloads a powered off vm" do
@@ -469,7 +469,7 @@ describe ApiController do
 
       expect_single_action_result(:success => false,
                                   :message => "The VM can't be shelved offload, current state has to be shelved",
-                                  :href => :vm_openstack_url)
+                                  :href    => :vm_openstack_url)
     end
 
     it "shelve_offloads a suspended vm" do
@@ -480,7 +480,7 @@ describe ApiController do
 
       expect_single_action_result(:success => false,
                                   :message => "The VM can't be shelved offload, current state has to be shelved",
-                                  :href => :vm_openstack_url)
+                                  :href    => :vm_openstack_url)
     end
 
     it "shelve_offloads a paused off vm" do
@@ -491,7 +491,7 @@ describe ApiController do
 
       expect_single_action_result(:success => false,
                                   :message => "The VM can't be shelved offload, current state has to be shelved",
-                                  :href => :vm_openstack_url)
+                                  :href    => :vm_openstack_url)
     end
 
     it "shelve_offloads a shelve_offloaded vm" do
@@ -502,7 +502,7 @@ describe ApiController do
 
       expect_single_action_result(:success => false,
                                   :message => "The VM can't be shelved offload, current state has to be shelved",
-                                  :href => :vm_openstack_url)
+                                  :href    => :vm_openstack_url)
     end
 
     it "shelve_offloads a shelved vm" do
@@ -513,7 +513,7 @@ describe ApiController do
 
       expect_single_action_result(:success => true,
                                   :message => "shelve-offloading",
-                                  :href => :vm_openstack_url)
+                                  :href    => :vm_openstack_url)
     end
 
     it "shelve_offload for a VMWare vm is not supported" do
@@ -523,8 +523,8 @@ describe ApiController do
 
       expect_single_action_result(:success => false,
                                   :message => "Shelve Offload Operation is not available for Vmware VM.",
-                                  :href => :vm_url,
-                                  :task => false)
+                                  :href    => :vm_url,
+                                  :task    => false)
     end
 
     it "shelve_offloads multiple vms" do

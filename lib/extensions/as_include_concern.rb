@@ -47,13 +47,13 @@ module ActiveSupport
       #   end
       def include_concern(mod)
         begin
-          to_include = "#{self.name}::#{mod}"
+          to_include = "#{name}::#{mod}"
           require_dependency to_include.underscore
         rescue LoadError
           to_include = mod
           require_dependency to_include.underscore
         end
-        self.send(:include, to_include.constantize)
+        send(:include, to_include.constantize)
       end
     end
   end

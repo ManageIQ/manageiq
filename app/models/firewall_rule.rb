@@ -2,9 +2,8 @@ class FirewallRule < ActiveRecord::Base
   belongs_to :resource, :polymorphic => true
   belongs_to :source_security_group, :class_name => "SecurityGroup"
 
-
   def operating_system
-    self.resource.kind_of?(OperatingSystem) ? self.resource : nil
+    resource.kind_of?(OperatingSystem) ? resource : nil
   end
 
   def operating_system=(os)
@@ -39,6 +38,6 @@ class FirewallRule < ActiveRecord::Base
 
       el.each_element { |e| result << e.attributes.to_h }
     end
-    return result
+    result
   end
 end

@@ -147,9 +147,9 @@ module EmsInfraHelper::TextualSummary
     authentications.collect do |auth|
       label =
         case auth.authtype
-        when "default"; "Default"
-        when "metrics"; "C & U Database"
-        when "amqp";    "AMQP"
+        when "default" then "Default"
+        when "metrics" then "C & U Database"
+        when "amqp" then    "AMQP"
         else;           "<Unknown>"
         end
 
@@ -167,7 +167,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_orchestration_stacks
-    return nil if !@ems.respond_to?(:orchestration_stacks)
+    return nil unless @ems.respond_to?(:orchestration_stacks)
 
     @ems.orchestration_stacks
   end
@@ -191,11 +191,10 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_host_default_vnc_port_range
-    return nil unless @ems.is_a?(ManageIQ::Providers::Vmware::InfraManager)
+    return nil unless @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
     value = @ems.host_default_vnc_port_start.blank? ?
         "" :
         "#{@ems.host_default_vnc_port_start} - #{@ems.host_default_vnc_port_end}"
     {:label => "#{title_for_host} Default VNC Port Range", :value => value}
   end
-
 end

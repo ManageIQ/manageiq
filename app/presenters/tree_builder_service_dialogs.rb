@@ -1,13 +1,13 @@
-class TreeBuilderServiceDialogs  < TreeBuilderAeCustomization
+class TreeBuilderServiceDialogs < TreeBuilderAeCustomization
   private
 
-  def tree_init_options(tree_name)
-    {:leaf => "Dialog", :open_all => true }
+  def tree_init_options(_tree_name)
+    {:leaf => "Dialog", :open_all => true}
   end
 
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(options)
-    objects = rbac_filtered_objects(Dialog.all).sort_by{|a| a.label.downcase}
+    objects = rbac_filtered_objects(Dialog.all).sort_by { |a| a.label.downcase }
     count_only_or_objects(options[:count_only], objects, nil)
   end
 
@@ -35,5 +35,4 @@ class TreeBuilderServiceDialogs  < TreeBuilderAeCustomization
   def x_get_tree_dialog_group_kids(object, options)
     x_get_tree_generic_dialog_kids(object, options)
   end
-
 end

@@ -1,7 +1,7 @@
 class MiqWidgetSet < ActiveRecord::Base
   acts_as_miq_set
 
-  default_scope { where self.conditions_for_my_region_default_scope }
+  default_scope { where conditions_for_my_region_default_scope }
 
   before_destroy :destroy_user_versions
 
@@ -32,18 +32,18 @@ class MiqWidgetSet < ActiveRecord::Base
   end
 
   def self.sync_from_dir
-    Dir.glob(File.join(WIDGET_DIR, "*.yaml")).sort.each {|f| self.sync_from_file(f)}
+    Dir.glob(File.join(WIDGET_DIR, "*.yaml")).sort.each { |f| sync_from_file(f) }
   end
 
   def self.sync_from_file(filename)
     attrs = YAML.load_file(filename)
 
-    ws = self.find_by_name(attrs["name"])
+    ws = find_by_name(attrs["name"])
 
     if ws.nil? || ws.updated_on.utc < File.mtime(filename).utc
       # Convert widget descriptions to ids in set_data
       members = []
-      attrs["set_data"] = attrs.delete("set_data_by_description").inject({}) do |h,k|
+      attrs["set_data"] = attrs.delete("set_data_by_description").inject({}) do |h, k|
         col, arr = k
         h[col] = arr.collect do |d|
           w = MiqWidget.find_by_description(d)
@@ -63,7 +63,7 @@ class MiqWidgetSet < ActiveRecord::Base
       end
     else
       $log.info("Widget Set: [#{attrs["description"]}] file has been added to disk, adding to model")
-      ws = self.create(attrs)
+      ws = create(attrs)
       ws.replace_children(members)
     end
   end

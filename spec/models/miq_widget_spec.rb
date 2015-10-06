@@ -55,12 +55,12 @@ describe MiqWidget do
       before(:each) do
         @widget = @widget_report_vendor_and_guest_os
         @queue_conditions = {
-          :method_name  => "generate_content",
-          :role         => "reporting",
-          :queue_name   => "reporting",
-          :class_name   => @widget.class.name,
-          :instance_id  => @widget.id,
-          :msg_timeout  => 3600
+          :method_name => "generate_content",
+          :role        => "reporting",
+          :queue_name  => "reporting",
+          :class_name  => @widget.class.name,
+          :instance_id => @widget.id,
+          :msg_timeout => 3600
         }.freeze
       end
 
@@ -112,7 +112,7 @@ describe MiqWidget do
 
         it "with multiple groups and users" do
           users = []
-          (1..3).each do |i|
+          (1..3).each do |_i|
             user_i = add_user(@group2)
             ws_i   = add_dashboard_for_user("Home", user_i.userid, @group2.id)
             @widget_report_vendor_and_guest_os.make_memberof(ws_i)
@@ -136,7 +136,6 @@ describe MiqWidget do
 
           result.size.should eq(1)
           result[@group1].should match_array([@user1])
-
         end
 
         it 'ignores the group that has no members' do
@@ -159,7 +158,7 @@ describe MiqWidget do
       it "user owned" do
         content = FactoryGirl.create(:miq_widget_content,
                                      :miq_widget   => @widget_report_vendor_and_guest_os,
-                                     :user_id       => @user1.id,
+                                     :user_id      => @user1.id,
                                      :miq_group_id => @user1.current_group_id,
                                      :timezone     => "UTC",
                                     )
@@ -212,7 +211,7 @@ describe MiqWidget do
       end
 
       it "by group" do
-        @widget_report_vendor_and_guest_os.update_attributes(:visibility => {:groups => @group2.description })
+        @widget_report_vendor_and_guest_os.update_attributes(:visibility => {:groups => @group2.description})
         expect(MiqWidget.available_for_user(@user1).count).to eq(1)
         expect(MiqWidget.available_for_user(@user2).count).to eq(2)
       end
@@ -262,11 +261,11 @@ describe MiqWidget do
       ws1.add_member(@widget)
       ws2.add_member(@widget)
 
-      @q_options = {:queue_name   => "reporting",
-        :role         => "reporting",
-        :class_name   => @widget.class.name,
-        :instance_id  => @widget.id,
-        :msg_timeout  => 3600
+      @q_options = {:queue_name  => "reporting",
+                    :role        => "reporting",
+                    :class_name  => @widget.class.name,
+                    :instance_id => @widget.id,
+                    :msg_timeout => 3600
       }
     end
 
@@ -381,7 +380,6 @@ describe MiqWidget do
       task.reload
       task.state.should eq(MiqTask::STATE_FINISHED)
       task.pct_complete.should be <= 100
-
     end
 
     it "with single group" do
@@ -538,7 +536,7 @@ describe MiqWidget do
     end
 
     it "with single user" do
-      lambda { @widget.create_initial_content_for_user(@user) }.should_not raise_error
+      -> { @widget.create_initial_content_for_user(@user) }.should_not raise_error
     end
   end
 

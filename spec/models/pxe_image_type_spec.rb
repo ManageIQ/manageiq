@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe PxeImageType do
-
   context "#esx?" do
     it "with a nil name" do
       subject.should_not be_esx

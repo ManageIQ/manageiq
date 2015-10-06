@@ -56,7 +56,6 @@ describe BinaryBlob do
       @data = "%PDF-1.4\n%\xE2"
       subject.bytes.to_a.should == @data.bytes.to_a
     end
-
   end
 
   it '#binary= with less data than the max parts size' do
@@ -67,7 +66,7 @@ describe BinaryBlob do
 
   it '#binary= with more data than the max parts size' do
     data = "test log data"
-    data = data * ((BinaryBlobPart.default_part_size) / data.length * 2)
+    data *= ((BinaryBlobPart.default_part_size) / data.length * 2)
     @blob.binary = data.dup # binary= destroys the source data, so dup it
     @blob.binary.length.should == data.length
   end

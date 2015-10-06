@@ -2,7 +2,7 @@
   - style = "width:auto"
 #accordion.panel-group{:style => style}
   - if @lastaction == "drift"
-    = patternfly_accordion_panel(h(@drift_obj.name), true, "icon") do
+    = miq_accordion_panel(h(@drift_obj.name), true, "icon") do
       - if @sb[:compare_db] != "EmsCluster"
         - if @drift_obj.product_name != "" && @drift_obj.service_pack != ""
           - height = "100px"
@@ -83,7 +83,7 @@
             %br
             = @drift_obj.service_pack
 
-  = patternfly_accordion_panel(@lastaction == "drift" ? _("Drift Sections") : _("Comparison Sections"), true, "sections") do
+  = miq_accordion_panel(@lastaction == "drift" ? _("Drift Sections") : _("Comparison Sections"), true, "sections") do
     %div{:style => "color:#000;"}
       - tree_id = "#{session[:tree_name]}box"
       %div{:id => "#{tree_id}", :style => "position:relative;width:100%;height:100%;color:#000; overflow: hidden"}

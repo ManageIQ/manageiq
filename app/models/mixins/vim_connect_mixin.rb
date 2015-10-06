@@ -3,10 +3,10 @@ module VimConnectMixin
     options[:auth_type] ||= :ws
     raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
 
-    options[:fault_tolerant] = true unless options.has_key?(:fault_tolerant)
+    options[:fault_tolerant] = true unless options.key?(:fault_tolerant)
 
-    options[:use_broker] = (self.class.respond_to?(:use_vim_broker?) ? self.class.use_vim_broker? : ManageIQ::Providers::Vmware::InfraManager.use_vim_broker?) if options[:fault_tolerant] && !options.has_key?(:use_broker)
-    options[:check_broker_worker] = !!options[:use_broker] unless options.has_key?(:check_broker_worker)
+    options[:use_broker] = (self.class.respond_to?(:use_vim_broker?) ? self.class.use_vim_broker? : ManageIQ::Providers::Vmware::InfraManager.use_vim_broker?) if options[:fault_tolerant] && !options.key?(:use_broker)
+    options[:check_broker_worker] = !!options[:use_broker] unless options.key?(:check_broker_worker)
     if options[:check_broker_worker] && !MiqVimBrokerWorker.available?
       msg = "Broker Worker is not available"
       _log.error(msg)
@@ -21,18 +21,18 @@ module VimConnectMixin
       options[:ems] = self
       MiqFaultTolerantVim.new(options)
     else
-      ip   = options[:ip]   || self.address
-      user = options[:user] || self.authentication_userid(options[:auth_type])
-      pass = options[:pass] || self.authentication_password(options[:auth_type])
+      ip   = options[:ip] || address
+      user = options[:user] || authentication_userid(options[:auth_type])
+      pass = options[:pass] || authentication_password(options[:auth_type])
       MiqVim.new(ip, user, pass)
     end
   end
 
   def with_provider_connection(options = {})
     raise "no block given" unless block_given?
-    _log.info("Connecting through #{self.class.name}: [#{self.name}]")
+    _log.info("Connecting through #{self.class.name}: [#{name}]")
     begin
-      vim = self.connect(options)
+      vim = connect(options)
       yield vim
     rescue MiqException::MiqVimBrokerUnavailable => err
       MiqVimBrokerWorker.broker_unavailable(err.class.name, err.to_s)

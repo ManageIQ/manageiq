@@ -5,11 +5,20 @@ module Openstack
     end
 
     def identity_data
-      @identity_data ||= Openstack::Services::Identity::Data.new
+      @identity_data ||= case identity_service
+                         when :v3
+                           Openstack::Services::Identity::Data::KeystoneV3.new
+                         when :v2
+                           Openstack::Services::Identity::Data::KeystoneV2.new
+                         end
     end
 
     def image_data
       @image_data ||= Openstack::Services::Image::Data.new
+    end
+
+    def orchestration_data
+      @orchestration_data ||= Openstack::Services::Orchestration::Data.new
     end
 
     def network_data
@@ -36,19 +45,20 @@ module Openstack
       #   query param to avoid HTTP caching - ignore_awful_caching##########
       #   https://github.com/fog/fog/blob/master/lib/fog/openstack/compute.rb#L308
       VCR.use_cassette("#{described_class.name.underscore}_rhos_#{version}",
-                       :match_requests_on => [:method, :host, :path]) do
+                       :match_requests_on => [:method, :host, :path, :query]) do
         yield
       end
       ems.reload
     end
 
-    def setup_ems(hostname, password, port = 5000, userid = "admin")
+    def setup_ems(hostname, password, port = 5000, userid = "admin", version = "v2")
       _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
       @ems = FactoryGirl.create(:ems_openstack,
-                                :zone      => zone,
-                                :hostname  => hostname,
-                                :ipaddress => hostname,
-                                :port      => port)
+                                :zone        => zone,
+                                :hostname    => hostname,
+                                :ipaddress   => hostname,
+                                :port        => port,
+                                :api_version => version)
       @ems.update_authentication(:default => {:userid => userid, :password => password})
     end
   end

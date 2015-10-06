@@ -27,7 +27,7 @@ describe Condition do
 
       it "invalid expression" do
         expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> >= 2; system('ls /etc')</check></find>"
-        lambda { Condition.subst(expr, @cluster, nil) }.should raise_error(SecurityError)
+        -> { Condition.subst(expr, @cluster, nil) }.should raise_error(SecurityError)
       end
     end
 

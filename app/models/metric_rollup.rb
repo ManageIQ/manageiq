@@ -5,10 +5,10 @@ class MetricRollup < ActiveRecord::Base
     my_cond = ["capture_interval_name = ? and timestamp > ? and timestamp <= ?", interval, start_time, end_time]
 
     passed_cond = options.delete(:conditions)
-    options[:conditions] = passed_cond.nil? ? my_cond : "( #{self.send(:sanitize_sql_for_conditions, my_cond)} ) AND ( #{self.send(:sanitize_sql, passed_cond)} )"
+    options[:conditions] = passed_cond.nil? ? my_cond : "( #{send(:sanitize_sql_for_conditions, my_cond)} ) AND ( #{send(:sanitize_sql, passed_cond)} )"
 
     _log.debug("Find options: #{options.inspect}")
-    self.find(count, options)
+    find(count, options)
   end
 
   #
@@ -42,7 +42,7 @@ class MetricRollup < ActiveRecord::Base
     # This should really be done by subclassing where each subclass can define reservations or
     # changing the reports to allow for optional reservations.
     if val.to_i == 0 && col.to_s =~ /(.+)_reserved$/
-      return self.send("#{$1}_available")
+      return send("#{$1}_available")
     else
       return val
     end

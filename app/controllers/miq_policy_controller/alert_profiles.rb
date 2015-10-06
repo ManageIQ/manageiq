@@ -8,9 +8,9 @@ module MiqPolicyController::AlertProfiles
       @alert_profile = session[:edit][:alert_profile_id] ? MiqAlertSet.find_by_id(session[:edit][:alert_profile_id]) : MiqAlertSet.new
 
       if @alert_profile && @alert_profile.id.blank?
-        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"MiqAlertSet"))
+        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "MiqAlertSet"))
       else
-        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"MiqAlertSet"), :name=>@alert_profile.description})
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "MiqAlertSet"), :name => @alert_profile.description})
       end
       get_node_info(x_node)
       replace_right_cell(@nodetype)
@@ -27,13 +27,13 @@ module MiqPolicyController::AlertProfiles
 
     # Load @edit/vars for other buttons
     id = params[:id] ? params[:id] : "new"
-    return unless load_edit("alert_profile_edit__#{id}","replace_cell__explorer")
+    return unless load_edit("alert_profile_edit__#{id}", "replace_cell__explorer")
     @alert_profile = @edit[:alert_profile_id] ? MiqAlertSet.find_by_id(@edit[:alert_profile_id]) : MiqAlertSet.new
 
     case params[:button]
     when "save", "add"
       assert_privileges("alert_profile_#{@alert_profile.id ? "edit" : "new"}")
-      add_flash(_("%{model} must contain at least one %{field}") % {:model=>ui_lookup(:model=>"MiqAlertSet"), :field=>ui_lookup(:model=>"MiqAlert")}, :error) if @edit[:new][:alerts].length == 0 # At least one member is required
+      add_flash(_("%{model} must contain at least one %{field}") % {:model => ui_lookup(:model => "MiqAlertSet"), :field => ui_lookup(:model => "MiqAlert")}, :error) if @edit[:new][:alerts].length == 0 # At least one member is required
       alert_profile = @alert_profile.id.blank? ? MiqAlertSet.new : MiqAlertSet.find(@alert_profile.id)  # Get new or existing record
       alert_profile.description = @edit[:new][:description]
       alert_profile.notes = @edit[:new][:notes]
@@ -43,8 +43,8 @@ module MiqPolicyController::AlertProfiles
         current = alerts.collect(&:id)                        # Build an array of the current alert ids
         mems = @edit[:new][:alerts].invert                    # Get the ids from the member list box
         begin
-          alerts.each {|a| alert_profile.remove_member(MiqAlert.find(a)) if !mems.include?(a.id) }  # Remove any alerts no longer in the members list box
-          mems.each_key {|m| alert_profile.add_member(MiqAlert.find(m)) if !current.include?(m) }   # Add any alerts not in the set
+          alerts.each { |a| alert_profile.remove_member(MiqAlert.find(a)) unless mems.include?(a.id) }  # Remove any alerts no longer in the members list box
+          mems.each_key { |m| alert_profile.add_member(MiqAlert.find(m)) unless current.include?(m) }   # Add any alerts not in the set
         rescue StandardError => bang
           add_flash(_("Error during '%s': ") % "Alert Profile #{params[:button]}" << bang.message, :error)
         end
@@ -58,7 +58,7 @@ module MiqPolicyController::AlertProfiles
         get_node_info(@new_alert_profile_node)
         replace_right_cell("ap", [:alert_profile])
       else
-        alert_profile.errors.each do |field,msg|
+        alert_profile.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
         replace_right_cell("ap")
@@ -77,7 +77,7 @@ module MiqPolicyController::AlertProfiles
     case params[:button]
     when "cancel"
       @assign = nil
-      add_flash(_("%s cancelled by user") % "Edit #{ui_lookup(:model=>"MiqAlertSet")} assignments")
+      add_flash(_("%s cancelled by user") % "Edit #{ui_lookup(:model => "MiqAlertSet")} assignments")
       get_node_info(x_node)
       replace_right_cell(@nodetype)
     when "save"
@@ -104,16 +104,16 @@ module MiqPolicyController::AlertProfiles
   end
 
   def alert_profile_delete
-    alert_profiles = Array.new
+    alert_profiles = []
     # showing 1 alert set, delete it
-    if params[:id] == nil || MiqAlertSet.find_by_id(params[:id]).nil?
-      add_flash(_("%s no longer exists") % ui_lookup(:model=>"MiqAlertSet"),
-                  :error)
+    if params[:id].nil? || MiqAlertSet.find_by_id(params[:id]).nil?
+      add_flash(_("%s no longer exists") % ui_lookup(:model => "MiqAlertSet"),
+                :error)
     else
       alert_profiles.push(params[:id])
     end
     process_alert_profiles(alert_profiles, "destroy") unless alert_profiles.empty?
-    add_flash(_("The selected %s was deleted") % ui_lookup(:models=>"MiqAlertSet")) if @flash_array == nil
+    add_flash(_("The selected %s was deleted") % ui_lookup(:models => "MiqAlertSet")) if @flash_array.nil?
     nodes = x_node.split("_")
     nodes.pop
     self.x_node = nodes.join("_")
@@ -122,7 +122,7 @@ module MiqPolicyController::AlertProfiles
   end
 
   def alert_profile_field_changed
-    return unless load_edit("alert_profile_edit__#{params[:id]}","replace_cell__explorer")
+    return unless load_edit("alert_profile_edit__#{params[:id]}", "replace_cell__explorer")
     @alert_profile = @edit[:alert_profile_id] ? MiqAlertSet.find_by_id(@edit[:alert_profile_id]) : MiqAlertSet.new
 
     @edit[:new][:description] = params[:description].blank? ? nil : params[:description] if params[:description]
@@ -135,17 +135,17 @@ module MiqPolicyController::AlertProfiles
     @assign = @sb[:assign]
     @alert_profile = @assign[:alert_profile]
 
-    if params.has_key?(:chosen_assign_to)
+    if params.key?(:chosen_assign_to)
       @assign[:new][:assign_to] = params[:chosen_assign_to].blank? ? nil : params[:chosen_assign_to]
       @assign[:new][:cat] = nil                                 # Clear chosen tag category
     end
-    @assign[:new][:cat] = params[:chosen_cat].blank? ? nil : params[:chosen_cat].to_i if params.has_key?(:chosen_cat)
-    if params.has_key?(:chosen_assign_to) || params.has_key?(:chosen_cat)
-      @assign[:new][:objects] = Array.new                       # Clear selected objects
+    @assign[:new][:cat] = params[:chosen_cat].blank? ? nil : params[:chosen_cat].to_i if params.key?(:chosen_cat)
+    if params.key?(:chosen_assign_to) || params.key?(:chosen_cat)
+      @assign[:new][:objects] = []                       # Clear selected objects
       @objects = alert_profile_get_assign_to_objects   # Get the assigned objects
       @assign[:obj_tree] = alert_profile_build_obj_tree         # Build the selection tree
     end
-    if params.has_key?(:id)
+    if params.key?(:id)
       if params[:check] == "1"
         @assign[:new][:objects].push(params[:id].split("_").last.to_i)
         @assign[:new][:objects].sort!
@@ -177,7 +177,7 @@ module MiqPolicyController::AlertProfiles
         end
       end
     end
-    return objs
+    objs
   end
 
   # Build the assign objects selection tree
@@ -185,9 +185,9 @@ module MiqPolicyController::AlertProfiles
     tree = nil
     unless @objects.empty?               # Build object tree
       if @assign[:new][:assign_to] == "ems_folder"
-        tree = build_belongsto_tree(@assign[:new][:objects].collect{|f| "EmsFolder_#{f}"}, true, false)
+        tree = build_belongsto_tree(@assign[:new][:objects].collect { |f| "EmsFolder_#{f}" }, true, false)
       elsif @assign[:new][:assign_to] == "resource_pool"
-        tree = build_belongsto_tree(@assign[:new][:objects].collect{|f| "ResourcePool_#{f}"}, false, false, true)
+        tree = build_belongsto_tree(@assign[:new][:objects].collect { |f| "ResourcePool_#{f}" }, false, false, true)
       else
         root_node = TreeNodeBuilder.generic_tree_node(
           "OBJROOT",
@@ -227,9 +227,9 @@ module MiqPolicyController::AlertProfiles
   end
 
   def alert_profile_build_edit_screen
-    @edit = Hash.new
-    @edit[:new] = Hash.new
-    @edit[:current] = Hash.new
+    @edit = {}
+    @edit[:new] = {}
+    @edit[:current] = {}
 
     @alert_profile = params[:id] ? MiqAlertSet.find(params[:id]) : MiqAlertSet.new  # Get existing or new record
     @edit[:key] = "alert_profile_edit__#{@alert_profile.id || "new"}"
@@ -240,12 +240,12 @@ module MiqPolicyController::AlertProfiles
     @edit[:new][:notes] = @alert_profile.notes
     @edit[:new][:mode] = @alert_profile.mode || @sb[:folder]  # Use existing model or model from selected folder
 
-    @edit[:new][:alerts] = Hash.new
+    @edit[:new][:alerts] = {}
     alerts = @alert_profile.members # Get the set's members
-    alerts.each{|a| @edit[:new][:alerts][a.description] = a.id} # Build a hash for the members list box
+    alerts.each { |a| @edit[:new][:alerts][a.description] = a.id } # Build a hash for the members list box
 
-    @edit[:choices] = Hash.new
-    MiqAlert.all(:conditions=>["db = ?", @edit[:new][:mode]]).each do |a|
+    @edit[:choices] = {}
+    MiqAlert.all(:conditions => ["db = ?", @edit[:new][:mode]]).each do |a|
       @edit[:choices][a.description] = a.id           # Build a hash for the alerts to choose from
     end
 
@@ -257,28 +257,28 @@ module MiqPolicyController::AlertProfiles
 
     @embedded = true
     @in_a_form = true
-    @edit[:current][:add] = true if !@edit[:alert_profile_id] # Force changed to be true if adding a record
+    @edit[:current][:add] = true unless @edit[:alert_profile_id] # Force changed to be true if adding a record
     session[:changed] = (@edit[:new] != @edit[:current])
   end
 
   def alert_profile_build_assign_screen
-    @assign = Hash.new
-    @assign[:new] = Hash.new
-    @assign[:current] = Hash.new
+    @assign = {}
+    @assign[:new] = {}
+    @assign[:current] = {}
     @sb[:action] = "alert_profile_assign"
     @assign[:rec_id] = params[:id]
 
     @alert_profile = MiqAlertSet.find(params[:id])            # Get existing record
     @assign[:alert_profile] = @alert_profile
 
-    @assign[:cats] = Hash.new
-    Classification.categories.collect { |c|
+    @assign[:cats] = {}
+    Classification.categories.collect do |c|
       c if !c.read_only? && c.show && c.entries.size > 0
-    }.compact.each{|c| @assign[:cats][c.id] = c.description}
+    end.compact.each { |c| @assign[:cats][c.id] = c.description }
 
     @assign[:new][:assign_to] = nil
     @assign[:new][:cat] = nil
-    @assign[:new][:objects] = Array.new
+    @assign[:new][:objects] = []
     aa = @alert_profile.get_assigned_tos
     if !aa[:objects].empty?                                   # Objects are assigned
       if aa[:objects].first.kind_of?(MiqEnterprise)           # Assigned to Enterprise object
@@ -290,7 +290,7 @@ module MiqPolicyController::AlertProfiles
     elsif !aa[:tags].empty?                                   # Tags are assigned
       @assign[:new][:assign_to] = aa[:tags].first.last + "-tags"
       @assign[:new][:cat] = aa[:tags].first.first.parent_id
-      @assign[:new][:objects] = aa[:tags].collect{|o| o.first.id}
+      @assign[:new][:objects] = aa[:tags].collect { |o| o.first.id }
     end
     @objects = alert_profile_get_assign_to_objects   # Get the assigned objects
     @assign[:obj_tree] = alert_profile_build_obj_tree         # Build the selection tree
@@ -318,18 +318,18 @@ module MiqPolicyController::AlertProfiles
 
   def alert_profile_get_all_folders
     @ap_folders = MiqAlert.base_tables.sort_by { |db| ui_lookup(:model => db) }.collect do |db|
-      [ui_lookup(:model=>db), db]
+      [ui_lookup(:model => db), db]
     end
-#   @folders = ["Compliance", "Control"]
-    @right_cell_text = _("All %s") % ui_lookup(:models=>"MiqAlertSet")
+    #   @folders = ["Compliance", "Control"]
+    @right_cell_text = _("All %s") % ui_lookup(:models => "MiqAlertSet")
     @right_cell_div = "alert_profile_folders"
   end
 
   def alert_profile_get_all
     @alert_profiles = MiqAlertSet.all.sort_by { |as| as.description.downcase }
     set_search_text
-    @alert_profiles = apply_search_filter(@search_text,@alert_profiles) if !@search_text.blank?
-    @right_cell_text = _("All %s") % ui_lookup(:models=>"MiqAlertSet")
+    @alert_profiles = apply_search_filter(@search_text, @alert_profiles) unless @search_text.blank?
+    @right_cell_text = _("All %s") % ui_lookup(:models => "MiqAlertSet")
     @right_cell_div = "alert_profile_list"
   end
 
@@ -337,9 +337,9 @@ module MiqPolicyController::AlertProfiles
   def alert_profile_get_info(alert_profile)
     @record = @alert_profile = alert_profile
     aa = @alert_profile.get_assigned_tos
-    @alert_profile_tag = Classification.find(aa[:tags].first.first.parent_id) if !aa[:tags].empty?
+    @alert_profile_tag = Classification.find(aa[:tags].first.first.parent_id) unless aa[:tags].empty?
     @alert_profile_alerts = @alert_profile.miq_alerts.sort_by { |a| a.description.downcase }
-    @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqAlertSet"), :name=>alert_profile.description}
+    @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "MiqAlertSet"), :name => alert_profile.description}
     @right_cell_div = "alert_profile_details"
   end
 end

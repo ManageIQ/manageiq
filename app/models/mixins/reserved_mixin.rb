@@ -11,7 +11,7 @@ module ReservedMixin
       write_attribute('updated_on', current_time) if respond_to?(:updated_on)
 
       ret = create_or_update_without_reserved
-      res = self.reserved_rec
+      res = reserved_rec
       res.save! if res
       ret
     end
@@ -30,19 +30,19 @@ module ReservedMixin
   end
 
   def reserved_hash_get(key)
-    res = self.reserved
-    return res && res[key]
+    res = reserved
+    res && res[key]
   end
 
   def reserved_hash_set(key, val)
-    res = (self.reserved || {})
+    res = (reserved || {})
     if val.nil?
       res.delete(key)
     else
       res[key] = val
     end
     self.reserved = res
-    return val
+    val
   end
 
   # Migrate values from the reserved hash to a column.  Accepts either
@@ -60,24 +60,24 @@ module ReservedMixin
     keys.each do |key, attribute|
       val = reserved_hash_get(key)
       reserved_hash_set(key, nil)
-      self.send("#{attribute}=", val)
+      send("#{attribute}=", val)
     end
     self.save!
   end
 
   def reserved
-    self.reserved_rec.try(:reserved)
+    reserved_rec.try(:reserved)
   end
 
   def reserved=(val)
-    res = self.reserved_rec
+    res = reserved_rec
     if val.blank?
       self.reserved_rec = nil
     elsif res.nil?
-      self.build_reserved_rec(:reserved => val)
+      build_reserved_rec(:reserved => val)
     else
       res.reserved = val
     end
-    return val
+    val
   end
 end

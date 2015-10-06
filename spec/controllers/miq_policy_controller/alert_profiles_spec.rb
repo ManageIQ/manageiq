@@ -10,7 +10,7 @@ describe MiqPolicyController do
     context "#alert_profile_assign" do
       before :each do
         @ap = FactoryGirl.create(:miq_alert_set)
-        controller.instance_variable_set(:@sb, {:trees => {:alert_profile_tree => {:active_node => "xx-Vm_ap-#{@ap.id}"}}, :active_tree => :alert_profile_tree})
+        controller.instance_variable_set(:@sb, :trees => {:alert_profile_tree => {:active_node => "xx-Vm_ap-#{@ap.id}"}}, :active_tree => :alert_profile_tree)
         controller.stub(:replace_right_cell)
       end
 
@@ -21,7 +21,7 @@ describe MiqPolicyController do
       end
 
       it "Test reset button" do
-        controller.instance_variable_set(:@_params, {:id => @ap.id, :button => "reset"})
+        controller.instance_variable_set(:@_params, :id => @ap.id, :button => "reset")
         controller.should_receive(:alert_profile_build_assign_screen)
         controller.alert_profile_assign
         assigns(:flash_array).first[:message].should include("reset")
@@ -29,7 +29,7 @@ describe MiqPolicyController do
       end
 
       it "Test cancel button" do
-        controller.instance_variable_set(:@_params, {:id => @ap.id, :button => "cancel"})
+        controller.instance_variable_set(:@_params, :id => @ap.id, :button => "cancel")
         controller.alert_profile_assign
         assigns(:flash_array).first[:message].should include("cancelled")
         controller.send(:flash_errors?).should_not be_true
@@ -37,8 +37,8 @@ describe MiqPolicyController do
 
       it "Test save button without selecting category" do
         controller.instance_variable_set(:@_params, {:id => @ap.id, :button => "save"})
-        controller.instance_variable_set(:@sb, {:trees => {:alert_profile_tree => {:active_node => "xx-Vm_ap-#{@ap.id}"}}, :active_tree => :alert_profile_tree,
-                                                :assign => {:alert_profile => @ap, :new => {:assign_to => "Vm-tags", :objects => ["10000000000001"]}}})
+        controller.instance_variable_set(:@sb, :trees => {:alert_profile_tree => {:active_node => "xx-Vm_ap-#{@ap.id}"}}, :active_tree => :alert_profile_tree,
+                                                :assign => {:alert_profile => @ap, :new => {:assign_to => "Vm-tags", :objects => ["10000000000001"]}})
         controller.alert_profile_assign
         assigns(:flash_array).first[:message].should_not include("saved")
         controller.send(:flash_errors?).should be_true
@@ -46,8 +46,8 @@ describe MiqPolicyController do
 
       it "Test save button with no errors" do
         controller.instance_variable_set(:@_params, {:id => @ap.id, :button => "save"})
-        controller.instance_variable_set(:@sb, {:trees => {:alert_profile_tree => {:active_node => "xx-Vm_ap-#{@ap.id}"}}, :active_tree => :alert_profile_tree,
-                                                :assign => {:alert_profile => @ap, :new => {:assign_to => "Vm-tags", :cat => "10000000000001", :objects => ["10000000000001"]}}})
+        controller.instance_variable_set(:@sb, :trees => {:alert_profile_tree => {:active_node => "xx-Vm_ap-#{@ap.id}"}}, :active_tree => :alert_profile_tree,
+                                                :assign => {:alert_profile => @ap, :new => {:assign_to => "Vm-tags", :cat => "10000000000001", :objects => ["10000000000001"]}})
         controller.alert_profile_assign
         assigns(:flash_array).first[:message].should include("saved")
         controller.send(:flash_errors?).should_not be_true

@@ -51,10 +51,10 @@ describe MiqWidgetSet do
     let(:group2) { FactoryGirl.create(:miq_group, :description => 'dev group2') }
     let(:ws_1)   { FactoryGirl.create(:miq_widget_set, :name => 'Home', :userid => user.userid, :group_id => group.id) }
 
-     before do
+    before do
       user.miq_groups << group2
       ws_1
-      FactoryGirl.create(:miq_widget_set, :name => 'Home', :userid => user.userid, :group_id => group2.id )
+      FactoryGirl.create(:miq_widget_set, :name => 'Home', :userid => user.userid, :group_id => group2.id)
     end
 
     it "initial state" do

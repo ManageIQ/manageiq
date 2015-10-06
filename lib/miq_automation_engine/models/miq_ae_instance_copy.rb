@@ -103,7 +103,7 @@ class MiqAeInstanceCopy
   end
 
   def check_duplicity(domain, ns, instance_name)
-    if domain.downcase == @src_domain.downcase  && instance_name.downcase == @instance_name.downcase
+    if domain.downcase == @src_domain.downcase && instance_name.downcase == @instance_name.downcase
       raise "Cannot copy instance onto itself" if ns.nil? || ns.downcase == @partial_ns.downcase
     end
   end

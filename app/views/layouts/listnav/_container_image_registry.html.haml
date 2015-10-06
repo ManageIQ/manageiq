@@ -1,18 +1,18 @@
 - if @record.try(:host)
   #accordion.panel-group
-    = patternfly_accordion_panel(truncate(@record.host, :length => truncate_length), true, "icon") do
+    = miq_accordion_panel(truncate(@record.host, :length => truncate_length), true, "icon") do
       = render(:partial => "layouts/quadicon",
                :locals  => {:mode => :icon,
                :item    => @record,
                :size    => 72,
                :typ     => :listnav})
 
-    = patternfly_accordion_panel(_("Properties"), false, "container_image_registry_prop") do
+    = miq_accordion_panel(_("Properties"), false, "container_image_registry_prop") do
       %ul.nav.nav-pills.nav-stacked
         %li
           = link_to(_('Summary'), {:action => 'show', :id => @record, :display => 'main'}, :title => _("Show Summary"))
 
-    = patternfly_accordion_panel(_("Relationships"), false, "container_image_registry_rel") do
+    = miq_accordion_panel(_("Relationships"), false, "container_image_registry_rel") do
       %ul.nav.nav-pills.nav-stacked
         - if role_allows(:feature => "container_images")
           - num_images = @record.numb_of(:container_images)

@@ -23,9 +23,7 @@ class VmdbDatabaseSetting < ActiveRecord::Base
     @vmdb_database ||= VmdbDatabase.my_database
   end
 
-  def vmdb_database_id
-    vmdb_database.id
-  end
+  delegate :id, :to => :vmdb_database, :prefix => true
 
   def minimum_value
     min_val || ''

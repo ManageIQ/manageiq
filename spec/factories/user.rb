@@ -25,7 +25,7 @@ FactoryGirl.define do
   end
 
   factory :user_with_group, :parent => :user do
-    miq_groups { FactoryGirl.create_list(:miq_group, 1) }
+    miq_groups { FactoryGirl.create_list(:miq_group, 1, :tenant => Tenant.seed) }
   end
 
   factory :user_admin, :parent => :user do

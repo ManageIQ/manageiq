@@ -3,11 +3,10 @@ require "spec_helper"
 describe EmsCloudController do
   describe "#create" do
     before do
-      Zone.first || FactoryGirl.create(:zone)
       controller.stub(:check_privileges).and_return(true)
       controller.stub(:assert_privileges).and_return(true)
       FactoryGirl.create(:vmdb_database)
-      EvmSpecHelper.local_miq_server
+      EvmSpecHelper.local_miq_server(:zone => Zone.seed)
       login_as FactoryGirl.create(:user, :features => "ems_cloud_new")
     end
 
@@ -22,55 +21,53 @@ describe EmsCloudController do
 
     it 'shows the edit page' do
       expect(MiqServer.my_server).to be
-      FactoryGirl.create(:ems_amazon, :zone => Zone.first)
+      FactoryGirl.create(:ems_amazon, :zone => Zone.seed)
       ems = ManageIQ::Providers::Amazon::CloudManager.first
       get :edit, :id => ems.id
       expect(response.status).to eq(200)
     end
 
     it 'creates on post' do
-      expect {
-        post :create, {
-          "button"               => "add",
-          "name"                 => "foo",
-          "emstype"              => "ec2",
-          "provider_region"      => "ap-southeast-1",
-          "port"                 => "",
-          "zone"                 => "default",
-          "default_userid"       => "foo",
-          "default_password"     => "[FILTERED]",
-          "default_verify"       => "[FILTERED]",
-          "metrics_userid"       => "",
-          "metrics_password"     => "[FILTERED]",
-          "metrics_verify"       => "[FILTERED]",
-          "amqp_userid"          => "",
-          "amqp_password"        => "[FILTERED]",
-          "amqp_verify"          => "[FILTERED]",
-          "ssh_keypair_userid"   => "",
-          "ssh_keypair_password" => "[FILTERED]"
-        }
-      }.to change { ManageIQ::Providers::Amazon::CloudManager.count }.by(1)
+      expect do
+        post :create,           "button"               => "add",
+                                "name"                 => "foo",
+                                "emstype"              => "ec2",
+                                "provider_region"      => "ap-southeast-1",
+                                "port"                 => "",
+                                "zone"                 => "default",
+                                "default_userid"       => "foo",
+                                "default_password"     => "[FILTERED]",
+                                "default_verify"       => "[FILTERED]",
+                                "metrics_userid"       => "",
+                                "metrics_password"     => "[FILTERED]",
+                                "metrics_verify"       => "[FILTERED]",
+                                "amqp_userid"          => "",
+                                "amqp_password"        => "[FILTERED]",
+                                "amqp_verify"          => "[FILTERED]",
+                                "ssh_keypair_userid"   => "",
+                                "ssh_keypair_password" => "[FILTERED]"
+      end.to change { ManageIQ::Providers::Amazon::CloudManager.count }.by(1)
     end
 
     it 'creates an authentication record on post' do
-      expect {
+      expect do
         post :create,
-          "button"           => "add",
-          "hostname"         => "host_openstack",
-          "name"             => "foo_openstack",
-          "emstype"          => "openstack",
-          "provider_region"  => "",
-          "port"             => "5000",
-          "zone"             => "default",
-          "default_userid"   => "foo",
-          "default_password" => "[FILTERED]",
-          "default_verify"   => "[FILTERED]"
+             "button"           => "add",
+             "hostname"         => "host_openstack",
+             "name"             => "foo_openstack",
+             "emstype"          => "openstack",
+             "provider_region"  => "",
+             "port"             => "5000",
+             "zone"             => "default",
+             "default_userid"   => "foo",
+             "default_password" => "[FILTERED]",
+             "default_verify"   => "[FILTERED]"
 
         expect(response.status).to eq(200)
         openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => "foo_openstack")
         authentication = Authentication.where(:resource_id => openstack.to_a[0].id).first
         expect(authentication).not_to be_nil
-      }.to change { Authentication.count }.by(1)
+      end.to change { Authentication.count }.by(1)
     end
 
     it 'updates an authentication record on post' do
@@ -159,7 +156,7 @@ describe EmsCloudController do
 
   describe "#ems_cloud_form_fields" do
     before do
-      Zone.first || FactoryGirl.create(:zone)
+      Zone.seed
       described_class.any_instance.stub(:set_user_time_zone)
       controller.stub(:check_privileges).and_return(true)
       controller.stub(:assert_privileges).and_return(true)
@@ -188,7 +185,7 @@ describe EmsCloudController do
 
   describe "#show_link" do
     before do
-      Zone.first || FactoryGirl.create(:zone)
+      Zone.seed
       described_class.any_instance.stub(:set_user_time_zone)
       controller.stub(:check_privileges).and_return(true)
       controller.stub(:assert_privileges).and_return(true)
@@ -206,7 +203,7 @@ describe EmsCloudController do
            "default_userid"   => "foo",
            "default_password" => "[FILTERED]",
            "default_verify"   => "[FILTERED]"
-      
+
       expect(response.status).to eq(200)
       openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => "foo_openstack")
       show_link_actual_path = controller.send(:show_link, openstack.to_a[0])

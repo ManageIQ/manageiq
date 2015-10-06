@@ -4,8 +4,8 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
   include_concern 'ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared'
 
   def provider_object(connection = nil)
-    connection ||= self.ext_management_system.connect
-    connection.get_resource_by_ems_ref(self.ems_ref)
+    connection ||= ext_management_system.connect
+    connection.get_resource_by_ems_ref(ems_ref)
   end
 
   def scan_via_ems?
@@ -13,11 +13,11 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
   end
 
   def parent_cluster
-    rp = self.parent_resource_pool
+    rp = parent_resource_pool
     rp && rp.detect_ancestor(:of_type => "EmsCluster").first
   end
-  alias owning_cluster parent_cluster
-  alias ems_cluster parent_cluster
+  alias_method :owning_cluster, :parent_cluster
+  alias_method :ems_cluster, :parent_cluster
 
   #
   # UI Button Validation Methods
@@ -46,5 +46,29 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
 
   def validate_smartstate_analysis
     validate_supported
+  end
+
+  # Show Reconfigure VM task
+  def reconfigurable?
+    true
+  end
+
+  def max_total_vcpus
+    # the default value of MaxNumOfVmCpusTotal for RHEV 3.1 - 3.4
+    160
+  end
+
+  def max_cores_per_socket
+    # the default value of MaxNumOfCpuPerSocket for RHEV 3.1 - 3.4
+    16
+  end
+
+  def max_vcpus
+    # the default value of MaxNumofVmSockets for RHEV 3.1 - 3.4
+    16
+  end
+
+  def max_memory_cpu
+    2.terabyte / 1.megabyte
   end
 end

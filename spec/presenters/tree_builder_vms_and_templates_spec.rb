@@ -18,7 +18,7 @@ describe TreeBuilderVmsAndTemplates do
 
   context "#sort_tree" do
     it "making sure sort_tree was successful for mixed ems_folder types" do
-      expect {@vandt_tree.send(:sort_tree, @tree)}.not_to raise_error
+      expect { @vandt_tree.send(:sort_tree, @tree) }.not_to raise_error
     end
   end
 end

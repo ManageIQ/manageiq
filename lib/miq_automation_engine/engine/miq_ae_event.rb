@@ -17,24 +17,24 @@ module MiqAeEvent
     MiqAeEngine.deliver(event.class.name, event.id, aevent, 'Event')
   end
 
-  def self.raise_synthetic_event(event, inputs, message=nil)
+  def self.raise_synthetic_event(event, inputs, message = nil)
     if event == 'vm_retired'
       vm          = inputs[:vm]
       obj_type    = vm.class.name
       obj_id      = vm.id
       instance    = 'Automation'
-      aevent      = { 'request' => event }
+      aevent      = {'request' => event}
     else
       obj_type    = nil
       obj_id      = nil
       instance    = 'Event'
-      aevent      = self.build_evm_event(event, inputs)
+      aevent      = build_evm_event(event, inputs)
     end
 
     MiqAeEngine.deliver(obj_type, obj_id, aevent, instance, nil, nil, message)
   end
 
-  def self.raise_evm_event(event_name, target, inputs={}, message=nil)
+  def self.raise_evm_event(event_name, target, inputs = {}, _message = nil)
     if target.kind_of?(Array)
       klass, id = target
       klass = Object.const_get(klass)
@@ -42,30 +42,30 @@ module MiqAeEvent
       raise "Unable to find object with class: [#{klass}], Id: [#{id}]" if target.nil?
     end
 
-    MiqAeEngine.deliver(target.class.name, target.id, self.build_evm_event(event_name, inputs), 'Event')
+    MiqAeEngine.deliver(target.class.name, target.id, build_evm_event(event_name, inputs), 'Event')
   end
 
-  def self.eval_alert_expression(inputs, message=nil)
-    aevent = self.build_evm_event('alert', inputs)
+  def self.eval_alert_expression(inputs, message = nil)
+    aevent = build_evm_event('alert', inputs)
     aevent[:request] = 'evaluate'
     aevent.merge!(inputs)
     ws = MiqAeEngine.deliver(nil, nil, aevent, 'Alert', nil, nil, message)
     return nil if ws.nil? || ws.root.nil?
-    return ws.root['ae_result']
+    ws.root['ae_result']
   end
 
-  def self.build_evm_event(event, passed_inputs={})
+  def self.build_evm_event(event, passed_inputs = {})
     inputs = passed_inputs.dup
 
     $miq_ae_logger.info("MiqAeEvent.build_evm_event >> event=<#{event.inspect}> inputs=<#{inputs.inspect}>")
     event_type = event.respond_to?(:name) ? event.name : event
-    aevent = { :event_type => event_type }
+    aevent = {:event_type => event_type}
 
     [
-      { :key => :vm,     :name => 'vm',         :class => VmOrTemplate },
-      { :key => :ems,    :name => 'ems',        :class => ExtManagementSystem },
-      { :key => :host,   :name => 'host',       :class => Host },
-      { :key => :policy, :name => 'miq_policy', :class => MiqPolicy}
+      {:key => :vm,     :name => 'vm',         :class => VmOrTemplate},
+      {:key => :ems,    :name => 'ems',        :class => ExtManagementSystem},
+      {:key => :host,   :name => 'host',       :class => Host},
+      {:key => :policy, :name => 'miq_policy', :class => MiqPolicy}
     ].each do |hash|
       next if inputs[hash[:key]].nil?
 
@@ -85,34 +85,32 @@ module MiqAeEvent
       aevent.merge!("#{hash[:class].name}::#{hash[:name]}" => vmdb_object.id, "#{hash[:key]}_id".to_sym  => vmdb_object.id)
     end
 
-    return aevent.merge(inputs)
+    aevent.merge(inputs)
   end
 
   def self.process_result(ae_result, aevent)
-    begin
-      scheme, userinfo, host, port, registry, path, opaque, query, fragment = MiqAeEngine::MiqAeUri.split(ae_result)
-      args = MiqAeEngine::MiqAeUri.query2hash(query)
+    scheme, userinfo, host, port, registry, path, opaque, query, fragment = MiqAeEngine::MiqAeUri.split(ae_result)
+    args = MiqAeEngine::MiqAeUri.query2hash(query)
 
-      if scheme.casecmp('miqpeca').zero?
-        # Pass to policy
-        #   Sample URI: 'miqpeca:///event?logical_event=vm_retire_warn'
-        # inputs were either passed through EVM eveny (aka policy event) of fabricated (below) from an EMS event
-        inputs = aevent.delete(:inputs)
+    if scheme.casecmp('miqpeca').zero?
+      # Pass to policy
+      #   Sample URI: 'miqpeca:///event?logical_event=vm_retire_warn'
+      # inputs were either passed through EVM eveny (aka policy event) of fabricated (below) from an EMS event
+      inputs = aevent.delete(:inputs)
 
-        # TODO: Need to setup inputs for policy.
-        unless inputs
-          inputs = {}
-          inputs[:vm]                    = Vm.find_by_id(aevent[:vm_id])                   unless aevent[:vm_id].nil?
-          inputs[:host]                  = Host.find_by_id(aevent[:host_id])               unless aevent[:host_id].nil?
-          inputs[:ext_management_system] = ExtManagementSystem.find_by_id(aevent[:ems_id]) unless aevent[:ems_id].nil?
-        end
-
-        target     = inputs.delete(:target) || inputs['vm']
-        event_name = args['logical_event']  || aevent[:event_type]
-        $miq_ae_logger.info("Enforcing Policy [#{ae_result}]")
-        MiqPolicy.enforce_policy(target, event_name, inputs) unless target.nil?
+      # TODO: Need to setup inputs for policy.
+      unless inputs
+        inputs = {}
+        inputs[:vm]                    = Vm.find_by_id(aevent[:vm_id])                   unless aevent[:vm_id].nil?
+        inputs[:host]                  = Host.find_by_id(aevent[:host_id])               unless aevent[:host_id].nil?
+        inputs[:ext_management_system] = ExtManagementSystem.find_by_id(aevent[:ems_id]) unless aevent[:ems_id].nil?
       end
-    rescue URI::InvalidURIError => err
+
+      target     = inputs.delete(:target) || inputs['vm']
+      event_name = args['logical_event'] || aevent[:event_type]
+      $miq_ae_logger.info("Enforcing Policy [#{ae_result}]")
+      MiqPolicy.enforce_policy(target, event_name, inputs) unless target.nil?
     end
+  rescue URI::InvalidURIError => err
   end
 end

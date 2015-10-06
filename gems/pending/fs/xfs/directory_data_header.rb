@@ -34,7 +34,7 @@ module XFS
       free_offset = header_size
       @data_free    = []
       @free_end     = 0
-      (1..XFS_DIR2_DATA_FD_COUNT).each do | i |
+      (1..XFS_DIR2_DATA_FD_COUNT).each do |i|
         @free_end     = header_size + SIZEOF_DIRECTORY_DATA_FREE * i
         @data_free[i] = DIRECTORY_DATA_FREE.decode(data[free_offset..@free_end])
         free_offset   = @free_end

@@ -1,12 +1,12 @@
 class Volume < ActiveRecord::Base
   belongs_to :hardware
   has_many :partitions, lambda { |_|
-      p = Partition.quoted_table_name
-      v = Volume.quoted_table_name
-      Partition.select("DISTINCT #{p}.*").
-        joins("JOIN #{v} ON #{v}.hardware_id = #{p}.hardware_id AND #{v}.volume_group = #{p}.volume_group").
-        where("#{v}.id" => id).to_sql
-    }, :foreign_key => :volume_group
+    p = Partition.quoted_table_name
+    v = Volume.quoted_table_name
+    Partition.select("DISTINCT #{p}.*")
+      .joins("JOIN #{v} ON #{v}.hardware_id = #{p}.hardware_id AND #{v}.volume_group = #{p}.volume_group")
+      .where("#{v}.id" => id).to_sql
+  }, :foreign_key => :volume_group
 
   include ReportableMixin
 
@@ -19,17 +19,17 @@ class Volume < ActiveRecord::Base
     # Override volume_group getter to prevent the special physical linkage from coming through
     vg = read_attribute(:volume_group)
     return nil if vg.respond_to?(:starts_with?) && vg.starts_with?(PHYSICAL_VOLUME_GROUP)
-    return vg
+    vg
   end
 
   def free_space_percent
-    return nil if self.size.nil? || self.size == 0 || self.free_space.nil?
-    Float(self.free_space) / self.size * 100
+    return nil if size.nil? || size == 0 || free_space.nil?
+    Float(free_space) / size * 100
   end
 
   def used_space_percent
-    return nil if self.size.nil? || self.size == 0 || self.used_space.nil?
-    Float(self.used_space) / self.size * 100
+    return nil if size.nil? || size == 0 || used_space.nil?
+    Float(used_space) / size * 100
   end
 
   def self.add_elements(parent, xmlNode)
@@ -61,7 +61,7 @@ class Volume < ActiveRecord::Base
         end
         found.nil? ? new_partitions << nhp : found.update_attributes(nhp)
 
-        deletes[:partitions].each_with_index {|ele, i| if ele[1] == name; deletes[:partitions].delete_at(i); break; end}
+        deletes[:partitions].each_with_index { |ele, i| if ele[1] == name; deletes[:partitions].delete_at(i); break; end }
       end
 
       nhv = nh[:volume]
@@ -79,7 +79,7 @@ class Volume < ActiveRecord::Base
         end
         found.nil? ? new_volumes << nhv : found.update_attributes(nhv)
 
-        deletes[:volumes].each_with_index {|ele, i| if ele[1] == name; deletes[:volumes].delete_at(i); break; end}
+        deletes[:volumes].each_with_index { |ele, i| if ele[1] == name; deletes[:volumes].delete_at(i); break; end }
       end
     end
 
@@ -148,6 +148,6 @@ class Volume < ActiveRecord::Base
 
   def self.find_disk_by_controller(parent, controller)
     return parent.hardware.disks.find_by_controller_type_and_location($1, $2) if controller =~ /^([^0-9]+)([0-9]:[0-9]):[0-9]$/
-    return nil
+    nil
   end
 end

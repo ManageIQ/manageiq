@@ -9,11 +9,11 @@ describe Vmdb::Loggers::MirroredLogger do
   end
 
   {
-    :debug => { :debug => true,  :info => true,  :warn => true,  :error => true,  :fatal => true },
-    :info  => { :debug => false, :info => true,  :warn => true,  :error => true,  :fatal => true },
-    :warn  => { :debug => false, :info => false, :warn => true,  :error => true,  :fatal => true },
-    :error => { :debug => false, :info => false, :warn => false, :error => true,  :fatal => true },
-    :fatal => { :debug => false, :info => false, :warn => false, :error => false, :fatal => true }
+    :debug => {:debug => true,  :info => true,  :warn => true,  :error => true,  :fatal => true},
+    :info  => {:debug => false, :info => true,  :warn => true,  :error => true,  :fatal => true},
+    :warn  => {:debug => false, :info => false, :warn => true,  :error => true,  :fatal => true},
+    :error => {:debug => false, :info => false, :warn => false, :error => true,  :fatal => true},
+    :fatal => {:debug => false, :info => false, :warn => false, :error => false, :fatal => true}
   }.each do |mirror_level, cases|
     context "with mirror level set to #{mirror_level.to_s.upcase}" do
       before(:each) do

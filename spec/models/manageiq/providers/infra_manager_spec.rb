@@ -15,5 +15,4 @@ describe EmsInfra do
     expected_types = [ManageIQ::Providers::Vmware::InfraManager, ManageIQ::Providers::Microsoft::InfraManager, ManageIQ::Providers::Redhat::InfraManager, ManageIQ::Providers::Openstack::InfraManager].collect(&:ems_type)
     described_class.supported_types.should match_array(expected_types)
   end
-
 end

@@ -8,19 +8,19 @@ module MiqServer::StatusManagement
       require 'miq-process'
       pinfo = MiqProcess.processInfo
       # Ensure the hash only contains the values we want to store in the table
-      pinfo.delete_if {|k,v| ![:priority, :memory_usage, :percent_memory, :percent_cpu, :memory_size, :cpu_time].include?(k)}
+      pinfo.delete_if { |k, _v| ![:priority, :memory_usage, :percent_memory, :percent_cpu, :memory_size, :cpu_time].include?(k) }
       pinfo[:os_priority] = pinfo.delete(:priority)
-      self.my_server.update_attributes(pinfo)
+      my_server.update_attributes(pinfo)
     end
 
     def log_status
-      self.log_system_status
-      svr = self.my_server(true)
+      log_system_status
+      svr = my_server(true)
       _log.info("[#{svr.friendly_name}] Process info: Memory Usage [#{svr.memory_usage}], Memory Size [#{svr.memory_size}], Memory % [#{svr.percent_memory}], CPU Time [#{svr.cpu_time}], CPU % [#{svr.percent_cpu}], Priority [#{svr.os_priority}]") unless svr.nil?
     end
 
     def log_system_status
-      svr        = self.my_server
+      svr        = my_server
       svr_name   = svr ? svr.friendly_name : "EVM Server (Unidentified)"
 
       status = MiqSystem.memory
@@ -34,34 +34,34 @@ module MiqServer::StatusManagement
         _log.info("[#{svr_name}] Disk Usage:")
         format_string = "%-12s %6s %12s %12s %12s %12s %12s %12s %12s %12s %12s"
         header = format(format_string,
-          "Filesystem",
-          "Type",
-          "Total",
-          "Used",
-          "Available",
-          "%Used",
-          "iTotal",
-          "iUsed",
-          "iFree",
-          "%iUsed",
-          "Mounted on"
-        )
+                        "Filesystem",
+                        "Type",
+                        "Total",
+                        "Used",
+                        "Available",
+                        "%Used",
+                        "iTotal",
+                        "iUsed",
+                        "iFree",
+                        "%iUsed",
+                        "Mounted on"
+                       )
         _log.info("[#{svr_name}] #{header}")
 
         disks.each do |disk|
           formatted = format(format_string,
-            disk[:filesystem],
-            disk[:type],
-            ActionView::Base.new.number_to_human_size(disk[:total_bytes]),
-            ActionView::Base.new.number_to_human_size(disk[:used_bytes]),
-            ActionView::Base.new.number_to_human_size(disk[:available_bytes]),
-            "#{disk[:used_bytes_percent]}%",
-            disk[:total_inodes],
-            disk[:used_inodes],
-            disk[:available_inodes],
-            "#{disk[:used_inodes_percent]}%",
-            disk[:mount_point]
-          )
+                             disk[:filesystem],
+                             disk[:type],
+                             ActionView::Base.new.number_to_human_size(disk[:total_bytes]),
+                             ActionView::Base.new.number_to_human_size(disk[:used_bytes]),
+                             ActionView::Base.new.number_to_human_size(disk[:available_bytes]),
+                             "#{disk[:used_bytes_percent]}%",
+                             disk[:total_inodes],
+                             disk[:used_inodes],
+                             disk[:available_inodes],
+                             "#{disk[:used_inodes_percent]}%",
+                             disk[:mount_point]
+                            )
           _log.info("[#{svr_name}] #{formatted}")
         end
 
@@ -78,5 +78,4 @@ module MiqServer::StatusManagement
       states.each { |state| _log.info("[#{svr_name}] Job count for state=[#{state.inspect}] by zone and process_type: #{job_count[state].inspect}") }
     end
   end
-
 end

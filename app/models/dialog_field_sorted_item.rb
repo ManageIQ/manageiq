@@ -1,24 +1,24 @@
 class DialogFieldSortedItem < DialogField
   def sort_by
-    self.options[:sort_by] || :description
+    options[:sort_by] || :description
   end
 
   def sort_by=(value)
     raise "Invalid sort_by type <#{value}> specified." unless [:value, :description, :none].include?(value.to_sym)
-    self.options[:sort_by] = value.to_sym
+    options[:sort_by] = value.to_sym
   end
 
   def sort_order
-    self.options[:sort_order] || :ascending
+    options[:sort_order] || :ascending
   end
 
   def sort_order=(value)
     raise "Invalid sort_order type <#{value}> specified." unless [:ascending, :descending].include?(value.to_sym)
-    self.options[:sort_order] = value.to_sym
+    options[:sort_order] = value.to_sym
   end
 
   def raw_values
-    self.read_attribute(:values).to_miq_a
+    read_attribute(:values).to_miq_a
   end
 
   # Sort values before sending back
@@ -54,8 +54,8 @@ class DialogFieldSortedItem < DialogField
   def sort_data(data_to_sort)
     return data_to_sort if sort_by == :none
 
-    value_position = sort_by   == :value    ? :first : :last
-    value_modifier = data_type == "integer" ? :to_i  : :to_s
+    value_position = sort_by == :value ? :first : :last
+    value_modifier = data_type == "integer" ? :to_i : :to_s
 
     data_to_sort = data_to_sort.sort_by { |d| d.send(value_position).send(value_modifier) }
     return data_to_sort.reverse! if sort_order == :descending

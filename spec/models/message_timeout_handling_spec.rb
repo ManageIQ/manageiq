@@ -38,10 +38,10 @@ describe "Message Timeout Handling" do
     before(:each) do
       @worker.update_attributes(:last_heartbeat => Time.now.utc, :status => 'started')
       @msg = MiqQueue.put(
-        :msg_timeout  => 3600,
-        :class_name   => "Vm",
-        :role         => "ems_inventory",
-        :zone         => @zone.name
+        :msg_timeout => 3600,
+        :class_name  => "Vm",
+        :role        => "ems_inventory",
+        :zone        => @zone.name
       )
 
       @msg.update_attributes(

@@ -1,7 +1,7 @@
 - if @tree_type == "timeline" && @rep_tree
   #accordion.panel-group
     - @report_groups.each_with_index do |rg, rg_idx|
-      = patternfly_accordion_panel(h(rg),
+      = miq_accordion_panel(h(rg),
         @panels["timelines_#{rg_idx}"].nil? || @panels["timelines_#{rg_idx}"] == false, "timelines_#{rg_idx}") do
         - tree_id = "timeline_treebox#{rg_idx}"
         %div{:id => tree_id}

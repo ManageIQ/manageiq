@@ -14,5 +14,4 @@ describe ChangeUtcTimeProfileTypeToGlobal do
       tp.profile_type.should == 'global'
     end
   end
-
 end

@@ -7,10 +7,15 @@ module Vmdb
       end
 
       def filename(*); end
+
       def log_backtrace(*); end
+
       def log_hashes(*); end
+
       def success(*); end
+
       def failure(*); end
+
       def instrument(*)
         yield if block_given?
       end
@@ -23,7 +28,7 @@ module Vmdb
     LEVELS = [:debug, :info, :warn, :error]
 
     delegate *LEVELS.map { |level| :"#{level}?" },
-      :log_backtrace, :level, :to => :logger
+             :log_backtrace, :level, :to => :logger
 
     LEVELS.each do |level|
       define_method(level) do |msg = nil, &blk|

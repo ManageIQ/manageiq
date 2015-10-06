@@ -7,13 +7,11 @@
 require 'spec_helper'
 
 describe "CfmeClient Authentication" do
-
   before do
     @cfme = init_api
   end
 
   context "Basic Authentication" do
-
     it "test basic authentication with bad credentials" do
       success = @cfme[:client].entrypoint(:user => "baduser", :password => "badpassword")
       if test_api?
@@ -29,11 +27,9 @@ describe "CfmeClient Authentication" do
         expect(@cfme[:client].code).to eq(200)
       end
     end
-
   end
 
   context "Token Based Authentication" do
-
     it "gets a token based identifier" do
       success = @cfme[:client].authenticate(:user => @cfme[:user], :password => @cfme[:password])
       if test_api?
@@ -62,7 +58,5 @@ describe "CfmeClient Authentication" do
         expect(@cfme[:client].code).to eq(200)
       end
     end
-
   end
-
 end

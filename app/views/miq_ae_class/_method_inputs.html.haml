@@ -52,20 +52,25 @@
     - else
       = @ae_method.data
     -# show inputs parameters grid if there are any inputs
-    #params_div{:style => @grid_methods_xml ? "" : "display: none;"}
+    #params_div{:style => @record.inputs.empty? ? "display: none;" : ""}
       %hr
       %h3= _('Input Parameters')
-      = render :partial => 'layouts/dhtmlxgrid',
-        :locals  => {:options => {:grid_id => "method_inputs_grid_div",
-        :grid_name                         => "method_inputs_grid",
-        :grid_url                          => "/miq_ae_class/tree_select/",
-        :grid_xml                          => @grid_methods_xml,
-        :no_resize                         => true,
-        :autosize                          => true,
-        :set_sizes                         => true,
-        :skin                              => "style3",
-        :alt_row                           => true,
-        :div_in_js                         => true}}
+      %table#params_grid.table.table-striped.table-bordered
+        %thead
+          %tr
+            %th= _('Input Name')
+            %th= _('Default Value')
+            %th= _('Data Type')
+        %tbody
+          - @record.inputs.flatten.each do |record|
+            %tr
+              %td= record_name(record)
+              %td
+                - if record.datatype == 'password'
+                  ********
+                - else
+                  = record.default_value
+              %td= record.datatype.blank? ? 'string' : record.datatype
   - else
     #method_form_div
       = render :partial => "layouts/flash_msg", :locals  => {:div_num => "_method_inputs"}

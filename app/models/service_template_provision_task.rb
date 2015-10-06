@@ -12,22 +12,22 @@ class ServiceTemplateProvisionTask < MiqRequestTask
   end
 
   def provision_priority
-    return 0 if self.service_resource.nil?
-    self.service_resource.provision_index
+    return 0 if service_resource.nil?
+    service_resource.provision_index
   end
 
   def sibling_sequence_run_now?
-    return true  if self.miq_request_task.nil?  || self.miq_request_task.miq_request_tasks.count == 1
-    return false if self.miq_request_task.miq_request_tasks.detect { |t| t.provision_priority < self.provision_priority && t.state != "finished" }
-    return true
+    return true  if miq_request_task.nil? || miq_request_task.miq_request_tasks.count == 1
+    return false if miq_request_task.miq_request_tasks.detect { |t| t.provision_priority < provision_priority && t.state != "finished" }
+    true
   end
 
   def group_sequence_run_now?
-    parent = self.miq_request_task
+    parent = miq_request_task
     return true   if parent.nil?
     return false  unless parent.group_sequence_run_now?
     return false  unless sibling_sequence_run_now?
-    return true
+    true
   end
 
   def self.get_description(req_obj)
@@ -62,74 +62,74 @@ class ServiceTemplateProvisionTask < MiqRequestTask
                end
     end
 
-    return result
+    result
   end
 
   def after_request_task_create
-    self.update_attribute(:description, self.get_description)
-    self.create_child_tasks
+    update_attribute(:description, get_description)
+    create_child_tasks
   end
 
   def create_child_tasks
-    parent_svc = Service.find_by_id(self.options[:parent_service_id])
+    parent_svc = Service.find_by_id(options[:parent_service_id])
     parent_name = parent_svc.nil? ? 'none' : "#{parent_svc.class.name}:#{parent_svc.id}"
-    _log.info "- creating service tasks for service <#{self.class.name}:#{self.id}> with parent service <#{parent_name}>"
+    _log.info "- creating service tasks for service <#{self.class.name}:#{id}> with parent service <#{parent_name}>"
 
-    tasks = self.source.create_tasks_for_service(self, parent_svc)
-    tasks.each {|t| self.miq_request_tasks << t}
-    _log.info "- created <#{tasks.length}> service tasks for service <#{self.class.name}:#{self.id}> with parent service <#{parent_name}>"
+    tasks = source.create_tasks_for_service(self, parent_svc)
+    tasks.each { |t| miq_request_tasks << t }
+    _log.info "- created <#{tasks.length}> service tasks for service <#{self.class.name}:#{id}> with parent service <#{parent_name}>"
   end
 
   def do_request
-    if self.miq_request_tasks.size.zero?
+    if miq_request_tasks.size.zero?
       message = "Service does not have children processes"
       _log.info("#{message}")
       update_and_notify_parent(:state => 'provisioned', :message => message)
     else
-      self.miq_request_tasks.each(&:deliver_to_automate)
+      miq_request_tasks.each(&:deliver_to_automate)
       message = "Service Provision started"
       _log.info("#{message}")
       update_and_notify_parent(:message => message)
-      self.queue_post_provision
+      queue_post_provision
     end
   end
 
   def queue_post_provision
     MiqQueue.put(
       :class_name   => self.class.name,
-      :instance_id  => self.id,
+      :instance_id  => id,
       :method_name  => "do_post_provision",
       :deliver_on   => 1.minutes.from_now.utc,
-      :task_id      => "#{self.class.name.underscore}_#{self.id}",
-      :miq_callback => { :class_name => self.class.name, :instance_id => self.id, :method_name => :execute_callback }
+      :task_id      => "#{self.class.name.underscore}_#{id}",
+      :miq_callback => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
     )
   end
 
   def do_post_provision
-    self.update_request_status
-    queue_post_provision unless self.state == "finished"
+    update_request_status
+    queue_post_provision unless state == "finished"
   end
 
-  def deliver_to_automate(req_type = self.request_type, zone = nil)
-    self.task_check_on_execute
+  def deliver_to_automate(req_type = request_type, _zone = nil)
+    task_check_on_execute
 
-    _log.info("Queuing #{self.request_class::TASK_DESCRIPTION}: [#{self.description}]...")
+    _log.info("Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
 
     if self.class::AUTOMATE_DRIVES
-      dialog_values = self.options[:dialog] || {}
+      dialog_values = options[:dialog] || {}
 
       args = {
         :object_type      => self.class.name,
-        :object_id        => self.id,
+        :object_id        => id,
         :namespace        => "Service/Provisioning/StateMachines",
         :class_name       => "ServiceProvision_Template",
         :instance_name    => req_type,
         :automate_message => "create",
-        :attrs            => dialog_values.merge!({"request" => req_type})
+        :attrs            => dialog_values.merge!("request" => req_type)
       }
 
       # Automate entry point overrides from the resource_action
-      ra = self.source.resource_actions.detect {|ra| ra.action == 'Provision'} if self.source.respond_to?(:resource_actions)
+      ra = source.resource_actions.detect { |ra| ra.action == 'Provision' } if source.respond_to?(:resource_actions)
 
       unless ra.nil?
         args[:namespace]        = ra.ae_namespace unless ra.ae_namespace.blank?
@@ -138,7 +138,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
         args[:automate_message] = ra.ae_message   unless ra.ae_message.blank?
         args[:attrs].merge!(ra.ae_attributes)
       end
-      args[:user_id] = self.get_user.id
+      args[:user_id] = get_user.id
 
       MiqQueue.put(
         :class_name  => 'MiqAeEngine',
@@ -146,7 +146,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
         :args        => [args],
         :role        => 'automate',
         :zone        => nil,
-        :task_id     => "#{self.class.name.underscore}_#{self.id}"
+        :task_id     => "#{self.class.name.underscore}_#{id}"
       )
       update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
     else
@@ -155,14 +155,14 @@ class ServiceTemplateProvisionTask < MiqRequestTask
   end
 
   def service_resource
-    return nil if self.options[:service_resource_id].blank?
-    ServiceResource.find_by_id(self.options[:service_resource_id])
+    return nil if options[:service_resource_id].blank?
+    ServiceResource.find_by_id(options[:service_resource_id])
   end
 
   def mark_pending_items_as_finished
-    self.miq_request.miq_request_tasks.each do |s|
+    miq_request.miq_request_tasks.each do |s|
       if s.state == 'pending'
-        s.update_and_notify_parent(:state => "finished", :status => "Warn", :message => "Error in Request: #{self.miq_request.id}. Setting pending Task: #{self.id} to finished.")   unless self.id ==  s.id
+        s.update_and_notify_parent(:state => "finished", :status => "Warn", :message => "Error in Request: #{miq_request.id}. Setting pending Task: #{id} to finished.")   unless id == s.id
       end
     end
   end
@@ -172,7 +172,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
     reload
 
     return if ae_result == 'retry'
-    return if self.miq_request.state == 'finished'
+    return if miq_request.state == 'finished'
 
     if ae_result == 'ok'
       update_and_notify_parent(:state => "finished", :status => "Ok", :message => display_message("#{request_class::TASK_DESCRIPTION} completed"))
@@ -183,13 +183,13 @@ class ServiceTemplateProvisionTask < MiqRequestTask
   end
 
   def update_and_notify_parent(*args)
-    prev_state = self.state
+    prev_state = state
     super
-    self.task_finished if self.state == "finished" && prev_state != "finished"
+    task_finished if state == "finished" && prev_state != "finished"
   end
 
   def task_finished
-    service = self.destination
+    service = destination
     service.raise_provisioned_event unless service.nil?
   end
 

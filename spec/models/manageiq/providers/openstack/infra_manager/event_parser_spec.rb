@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe ManageIQ::Providers::Openstack::InfraManager::EventParser do
-
   context ".event_to_hash" do
     it "with a compute.instance.create.end event" do
       event = YAML.load_file(File.join(data_dir, 'compute_instance_create_end.yml'))

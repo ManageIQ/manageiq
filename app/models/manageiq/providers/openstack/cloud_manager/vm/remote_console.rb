@@ -4,9 +4,9 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm
       %w(SPICE VNC).include?(type.upcase)
     end
 
-    def remote_console_acquire_ticket(console_type, _proxy_miq_server = nil)
+    def remote_console_acquire_ticket(_console_type, _proxy_miq_server = nil)
       url = ext_management_system.with_provider_connection(:service => "Compute") do |con|
-        response = con.get_vnc_console(self.ems_ref, 'novnc')
+        response = con.get_vnc_console(ems_ref, 'novnc')
         return nil if response.body.fetch_path('console', 'type') != 'novnc'
         response.body.fetch_path('console', 'url')
       end

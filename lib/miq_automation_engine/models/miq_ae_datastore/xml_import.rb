@@ -63,8 +63,8 @@ module MiqAeDatastore
       fields.each do |field|
         field["MiqAeField"].each do |f|
           priority += 1
-          f["message"]    ||= MiqAeField.default('message')
-          f["priority"]   ||= priority
+          f["message"] ||= MiqAeField.default('message')
+          f["priority"] ||= priority
           f['substitute'] = MiqAeField.default('substitute') unless %w(true false).include?(f['substitute'])
           f['substitute'] = true  if f['substitute'] == 'true'
           f['substitute'] = false if f['substitute'] == 'false'
@@ -134,7 +134,7 @@ module MiqAeDatastore
         end
 
         create_domain(domain_name) if domain_name
-        ae_namespaces = Hash.new
+        ae_namespaces = {}
         Benchmark.realtime_block(:datastore_import_time) do
           classes.each do |c|
             namespace = c.delete("namespace")

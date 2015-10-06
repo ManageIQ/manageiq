@@ -1,9 +1,8 @@
 class OrchestrationStackController < ApplicationController
-
-  before_filter :check_privileges
-  before_filter :get_session_data
-  after_filter :cleanup_action
-  after_filter :set_session_data
+  before_action :check_privileges
+  before_action :get_session_data
+  after_action :cleanup_action
+  after_action :set_session_data
 
   def index
     redirect_to :action => 'show_list'
@@ -51,10 +50,10 @@ class OrchestrationStackController < ApplicationController
         count_text = pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}")
         @bottom_msg = "* You are not authorized to view #{count_text} on this #{ui_lookup(:tables => 'orchestration_stack')}"
       end
-     end
+    end
 
     # Came in from outside show_list partial
-    if params[:ppsetting]  || params[:searchtag] || params[:entry] || params[:sort_choice]
+    if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
       replace_gtl_main_div
     end
   end
@@ -95,10 +94,10 @@ class OrchestrationStackController < ApplicationController
                  "#{pfx}_retire", "#{pfx}_protect", "#{pfx}_ownership",
                  "#{pfx}_refresh", "#{pfx}_right_size",
                  "#{pfx}_reconfigure"].include?(params[:pressed]) &&
-                 @flash_array.nil?
+                @flash_array.nil?
 
-      if !["#{pfx}_edit", "#{pfx}_miq_request_new", "#{pfx}_clone",
-           "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
+      unless ["#{pfx}_edit", "#{pfx}_miq_request_new", "#{pfx}_clone",
+              "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
         @refresh_div = "main_div"
         @refresh_partial = "layouts/gtl"
         show                                                        # Handle VMs buttons
@@ -135,7 +134,7 @@ class OrchestrationStackController < ApplicationController
         page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]
       end
     elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
-                                                "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
+                                                   "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
       render_or_redirect_partial(pfx)
     else
       if @refresh_div == "main_div" && @lastaction == "show_list"

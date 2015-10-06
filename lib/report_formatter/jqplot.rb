@@ -72,10 +72,10 @@ module ReportFormatter
       return if Array(mri.chart[:axis_category_text]).empty?
 
       mri.chart[:data] = mri.chart[:data]
-        .zip(mri.chart[:axis_category_text])
-          .collect do |series, labels|
-            (labels || mri.chart[:axis_category_text][0]).zip(series)
-          end
+                         .zip(mri.chart[:axis_category_text])
+                         .collect do |series, labels|
+        (labels || mri.chart[:axis_category_text][0]).zip(series)
+      end
 
       mri.chart.store_path(:options, :axes, :xaxis, :renderer, 'jQuery.jqplot.CategoryAxisRenderer')
     end
@@ -151,13 +151,13 @@ module ReportFormatter
 
       if mri.graph[:type] =~ /Column/
         mri.chart[:options].update(
-          :axes           => {
+          :axes        => {
             :xaxis => {
               :renderer => 'jQuery.jqplot.CategoryAxisRenderer',
               :ticks    => ticks,
             },
           },
-          :highlighter    => {
+          :highlighter => {
             :show                 => true,
             :tooltipAxes          => 'y',
             :tooltipContentEditor => 'jqplot_xaxis_tick_highlight',
@@ -166,13 +166,13 @@ module ReportFormatter
         )
       elsif mri.graph[:type] =~ /Bar/
         mri.chart[:options].update(
-          :axes           => {
+          :axes        => {
             :yaxis => {
               :renderer => 'jQuery.jqplot.CategoryAxisRenderer',
               :ticks    => ticks,
             },
           },
-          :highlighter    => {
+          :highlighter => {
             :show                 => true,
             :tooltipAxes          => 'x',
             :tooltipContentEditor => 'jqplot_yaxis_tick_highlight',

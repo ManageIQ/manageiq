@@ -15,5 +15,4 @@ describe EmsCloud do
     expected_types = [ManageIQ::Providers::Amazon::CloudManager, ManageIQ::Providers::Azure::CloudManager, ManageIQ::Providers::Openstack::CloudManager].collect(&:ems_type)
     described_class.supported_types.should match_array(expected_types)
   end
-
 end

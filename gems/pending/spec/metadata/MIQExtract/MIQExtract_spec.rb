@@ -2,10 +2,9 @@ require "spec_helper"
 require 'metadata/MIQExtract/MIQExtract'
 
 describe MIQExtract do
-
   before do
     @test_password = "v1:{acd1234567890ACEGIKzwusq/+==}"
-  
+
     @original_log = $log
     $log = double
   end
@@ -16,11 +15,10 @@ describe MIQExtract do
 
   context "#initialize" do
     it "when passwords are masked in the log file" do
-
       # Some moderately realistic test data.
       test_data_with_pw = {
-        "ems" => {
-          "ems" => {
+        "ems"            => {
+          "ems"           => {
             :address    => "10.16.16.16",
             :hostname   => "10.16.16.16",
             :ipaddress  => "10.16.16.16",
@@ -28,8 +26,8 @@ describe MIQExtract do
             :password   => @test_password,
             :class_name => "EmsVmware"
           },
-          "host" => {
-            :address   => "10.16.16.10",
+          "host"          => {
+            :address    => "10.16.16.10",
             :hostname   => "calvin.and.hobs.com",
             :ipaddress  => "10.16.16.10",
             :username   => "root",
@@ -39,7 +37,7 @@ describe MIQExtract do
           "connect_to"    => "host",
           :use_vim_broker => false
         },
-        "snapshot" => {
+        "snapshot"       => {
           "use_existing"        => false,
           "description"         => "Test Snapshot for test",
           "create_free_percent" => 100,
@@ -53,35 +51,33 @@ describe MIQExtract do
 
       $log.should_receive(:info).with(/ems/)
       $log.should_not_receive(:info).with(/#{@test_password}/)
-      expect{MIQExtract.new("/bad/file/path", ost)}.to raise_exception
-
+      expect { MIQExtract.new("/bad/file/path", ost) }.to raise_exception
     end
 
     it "when no password is found in the input data" do
-
       # Some moderately realistic test data with no passwords.
       test_data_no_pw = {
-        "ems" => {
-          "ems" => {
+        "ems"            => {
+          "ems"           => {
             :address    => "10.16.16.16",
             :hostname   => "10.16.16.16",
             :ipaddress  => "10.16.16.16",
             :username   => "Administrator",
             :class_name => "EmsVmware"
           },
-          "host" => {
+          "host"          => {
             :address    => "10.16.16.10",
             :hostname   => "calvin.and.hobs.com",
             :ipaddress  => "10.16.16.10",
             :username   => "root",
             :class_name => "HostVmwareEsx"
           },
-          "connect_to" => "host",
+          "connect_to"    => "host",
           :use_vim_broker => false
         },
-        "snapshot" => {
-          "use_existing" => false,
-          "description" => "Test Snapshot for test",
+        "snapshot"       => {
+          "use_existing"        => false,
+          "description"         => "Test Snapshot for test",
           "create_free_percent" => 100,
           "remove_free_percent" => 100
         },
@@ -93,23 +89,21 @@ describe MIQExtract do
 
       $log.should_receive(:info).with(/ems/)
       $log.should_not_receive(:info).with(/#{@test_password}/)
-      expect{MIQExtract.new("/bad/file/path", ost)}.to raise_exception
-
+      expect { MIQExtract.new("/bad/file/path", ost) }.to raise_exception
     end
 
     it "when one password is found in the input data and masked in the log file" do
-
       # Some moderately realistic test data a single password.
       test_data_connect_type_pw = {
-        "ems" => {
-          "ems" => {
+        "ems"            => {
+          "ems"           => {
             :address    => "10.16.16.16",
             :hostname   => "10.16.16.16",
             :ipaddress  => "10.16.16.16",
             :username   => "Administrator",
             :class_name => "EmsVmware"
           },
-          "host" => {
+          "host"          => {
             :address    => "10.16.16.10",
             :hostname   => "calvin.and.hobs.com",
             :ipaddress  => "10.16.16.10",
@@ -117,12 +111,12 @@ describe MIQExtract do
             :password   => @test_password,
             :class_name => "HostVmwareEsx"
           },
-          "connect_to" => "host",
+          "connect_to"    => "host",
           :use_vim_broker => false
         },
-        "snapshot" => {
-          "use_existing" => false,
-          "description" => "Test Snapshot for test",
+        "snapshot"       => {
+          "use_existing"        => false,
+          "description"         => "Test Snapshot for test",
           "create_free_percent" => 100,
           "remove_free_percent" => 100
         },
@@ -134,10 +128,7 @@ describe MIQExtract do
 
       $log.should_receive(:info).with(/ems/)
       $log.should_not_receive(:info).with(/#{@test_password}/)
-      expect{MIQExtract.new("/bad/file/path", ost)}.to raise_exception
-
+      expect { MIQExtract.new("/bad/file/path", ost) }.to raise_exception
     end
-
   end
-
 end

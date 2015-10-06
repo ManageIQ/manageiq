@@ -6,7 +6,7 @@ describe Metric::Common do
     @metric = FactoryGirl.create(:metric_rollup_host_hr,
                                  :resource  => host,
                                  :timestamp => Time.now.next_week(:sunday).utc
-    )
+                                )
   end
 
   context "#apply_time_profile_hourly" do
@@ -16,7 +16,7 @@ describe Metric::Common do
                                    :profile     => {:tz    => "New Delhi",
                                                     :days  => TimeProfile::ALL_DAYS,
                                                     :hours => TimeProfile::ALL_HOURS}
-      )
+                                  )
       res = @metric.apply_time_profile_hourly(profile)
       res.should be_true
     end
@@ -27,7 +27,7 @@ describe Metric::Common do
                                    :profile     => {:tz    => "New Delhi",
                                                     :days  => [1],
                                                     :hours => [1]}
-      )
+                                  )
       res = @metric.apply_time_profile_hourly(profile)
       res.should be_false
     end
@@ -40,7 +40,7 @@ describe Metric::Common do
                                    :profile     => {:tz    => "New Delhi",
                                                     :days  => TimeProfile::ALL_DAYS,
                                                     :hours => [1]}
-      )
+                                  )
       res = @metric.apply_time_profile_daily(profile)
       res.should be_true
     end
@@ -51,7 +51,7 @@ describe Metric::Common do
                                    :profile     => {:tz    => "New Delhi",
                                                     :days  => [1, 2],
                                                     :hours => [1]}
-      )
+                                  )
       res = @metric.apply_time_profile_daily(profile)
       res.should be_false
     end

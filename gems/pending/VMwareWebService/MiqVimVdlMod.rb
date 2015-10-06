@@ -5,9 +5,9 @@ module MiqVimVdlConnectionMod
   #
   def vdlConnection
     require 'VixDiskLib'
-        VixDiskLib.init(lambda { |s| $vim_log.info  "VMware(VixDiskLib): #{s}" },
-                        lambda { |s| $vim_log.warn  "VMware(VixDiskLib): #{s}" },
-                        lambda { |s| $vim_log.error "VMware(VixDiskLib): #{s}" })
+    VixDiskLib.init(->(s) { $vim_log.info  "VMware(VixDiskLib): #{s}" },
+                    ->(s) { $vim_log.warn  "VMware(VixDiskLib): #{s}" },
+                    ->(s) { $vim_log.error "VMware(VixDiskLib): #{s}" })
     $log.info "MiqVimVdlConnectionMod.vdlConnection: server - #{@server}"
     VixDiskLib.connect(:serverName => server,
                        :port       => 902,
@@ -31,9 +31,9 @@ module MiqVimVdlVcConnectionMod
   def vdlVcConnection(thumb_print)
     require 'VixDiskLib'
 
-        VixDiskLib.init(lambda { |s| $vim_log.info  "VMware(VixDiskLib): #{s}" },
-                        lambda { |s| $vim_log.warn  "VMware(VixDiskLib): #{s}" },
-                        lambda { |s| $vim_log.error "VMware(VixDiskLib): #{s}" })
+    VixDiskLib.init(->(s) { $vim_log.info  "VMware(VixDiskLib): #{s}" },
+                    ->(s) { $vim_log.warn  "VMware(VixDiskLib): #{s}" },
+                    ->(s) { $vim_log.error "VMware(VixDiskLib): #{s}" })
 
     $log.info "MiqVimVdlVcConnectionMod.vdlVcConnection: server - #{invObj.server}"
     sha1 = thumb_print.to_sha1

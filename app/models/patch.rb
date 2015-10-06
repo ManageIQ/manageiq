@@ -29,7 +29,7 @@ class Patch < ActiveRecord::Base
       level  = rec[:name].split("-")[-1].to_i
       ret_val = level if level > ret_val
     end
-    return ret_val.to_s
+    ret_val.to_s
   end
 
   def self.xml_to_hashes(xmlNode, findPath)
@@ -47,6 +47,6 @@ class Patch < ActiveRecord::Base
 
   def v_install_date
     # Windows install dates do not include times, so only display YYYY-MM-DD format
-    self.installed_on.strftime("%Y-%m-%d") unless self.installed_on.nil?
+    installed_on.strftime("%Y-%m-%d") unless installed_on.nil?
   end
 end

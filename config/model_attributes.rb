@@ -1,4 +1,4 @@
-#DO NOT MODIFY! AUTOMATICALLY GENERATED FILE!
+# DO NOT MODIFY! AUTOMATICALLY GENERATED FILE!
 _('Account')
 _('Account|Acctid')
 _('Account|Accttype')
@@ -2333,4 +2333,4 @@ _('Zone|Description')
 _('Zone|Name')
 _('Zone|Settings')
 _('Zone|Updated on')
-#DO NOT MODIFY! AUTOMATICALLY GENERATED FILE!
+# DO NOT MODIFY! AUTOMATICALLY GENERATED FILE!

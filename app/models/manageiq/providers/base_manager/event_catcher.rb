@@ -7,8 +7,8 @@ class ManageIQ::Providers::BaseManager::EventCatcher < MiqWorker
 
   def friendly_name
     @friendly_name ||= begin
-      ems = self.ext_management_system
-      ems.nil? ? self.queue_name.titleize : "Event Monitor for #{ui_lookup(:table => "ext_management_systems")}: #{ems.name}"
+      ems = ext_management_system
+      ems.nil? ? queue_name.titleize : "Event Monitor for #{ui_lookup(:table => "ext_management_systems")}: #{ems.name}"
     end
   end
 
@@ -23,12 +23,12 @@ class ManageIQ::Providers::BaseManager::EventCatcher < MiqWorker
     configuration.merge_from_template_if_missing(*path)
 
     ec_settings = configuration.config.fetch_path(*path)
-    unless ec_settings.has_key?(:defaults)
-      subclasses = %w{redhat vmware openstack}.collect { |k| "event_catcher_#{k}".to_sym }
+    unless ec_settings.key?(:defaults)
+      subclasses = %w(redhat vmware openstack).collect { |k| "event_catcher_#{k}".to_sym }
       _log.info("Migrating Settings")
       defaults = ec_settings
-      subclasses.each { |subclass_key| defaults.delete(subclass_key)}
-      ec_settings = { :defaults => defaults }
+      subclasses.each { |subclass_key| defaults.delete(subclass_key) }
+      ec_settings = {:defaults => defaults}
       configuration.config.store_path(path, ec_settings)
 
       subclasses.each { |subclass_key| configuration.merge_from_template_if_missing(*(path + [subclass_key])) }

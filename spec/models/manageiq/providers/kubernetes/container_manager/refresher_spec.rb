@@ -98,7 +98,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       :name          => "influxdb",
       :restart_count => 0,
 
-      # :backing_ref   => "docker://af741769b650a408f4a65d2d27043912b6d57e5e2a721faeb7a93a1989eef0c6"
+    # :backing_ref   => "docker://af741769b650a408f4a65d2d27043912b6d57e5e2a721faeb7a93a1989eef0c6"
     )
 
     # Check the relation to container group
@@ -215,7 +215,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     @containersrv.selector_parts.count.should == 0
 
     @confs = @containersrv.container_service_port_configs
-    @confs.count.should  == 1
+    @confs.count.should == 1
     @confs = @confs.first
     @confs.should have_attributes(
       :name        => nil,
@@ -227,7 +227,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
 
     # Check group relation
     @groups = ContainerService.find_by_name("monitoring-influxdb-ui").container_groups
-    @groups.count.should  == 1
+    @groups.count.should == 1
     @group = @groups.first
     @group.should have_attributes(
       # :ems_ref => "49b72714-e1b7-11e4-b7dc-001a4a5f4a02",

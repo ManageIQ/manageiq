@@ -5,7 +5,6 @@ require 'binary_struct'
 require 'zlib'
 
 module QcowDisk
-
   QCOW_HEADER_PARTIAL = BinaryStruct.new([
     'A4', 'magicNumber',
     'N', 'version',
@@ -103,40 +102,40 @@ module QcowDisk
     self.diskType = "QCOW"
     self.blockSize = SECTOR_SIZE
 
-    if self.dInfo.mountMode == nil || self.dInfo.mountMode == "r"
-      self.dInfo.mountMode = "r"
+    if dInfo.mountMode.nil? || dInfo.mountMode == "r"
+      dInfo.mountMode = "r"
       @fileMode = "r"
-    elsif self.dInfo.mountMode == "rw"
+    elsif dInfo.mountMode == "rw"
       @fileMode = "r+"
     else
-      raise "Unrecognized mountMode: #{self.dInfo.mountMode}"
+      raise "Unrecognized mountMode: #{dInfo.mountMode}"
     end
 
     @filename = dInfo.fileName
-    @dOffset = self.dInfo.offset
-    @downstreamDisk = self.dInfo.downstreamDisk
-    self.diskType = "#{self.diskType}-#{@downstreamDisk.diskType}" if @downstreamDisk
+    @dOffset = dInfo.offset
+    @downstreamDisk = dInfo.downstreamDisk
+    self.diskType = "#{diskType}-#{@downstreamDisk.diskType}" if @downstreamDisk
   end
 
   def getBase
-    return self
+    self
   end
 
-  def d_read(pos, len, offset = 0)
+  def d_read(pos, len, _offset = 0)
     pos += @dOffset if @dOffset
     return nil if pos >= @endByteAddr
     len = @endByteAddr - pos if (pos + len) > @endByteAddr
 
     sector_num, sector_offset = pos.divmod(SECTOR_SIZE)
-    sector_count = ((pos+len-1)/SECTOR_SIZE) - sector_num + 1
+    sector_count = ((pos + len - 1) / SECTOR_SIZE) - sector_num + 1
 
     read_buf  = read_sectors(sector_num, sector_count)
     buf       = read_buf[sector_offset, len]
 
-    return buf
+    buf
   end
 
-  def d_write(pos, buf, len, offset = 0)
+  def d_write(_pos, _buf, _len, _offset = 0)
     raise "QcowDisk#d_write not implemented"
   end
 
@@ -170,7 +169,7 @@ module QcowDisk
         bfn_test = File.expand_path File.join(File.dirname(@filename), File.basename(bfn))
         use_lv = false
         if (avm = @dInfo.applianceVolumeManager)
-          use_lv = avm.lvHash.has_key?(bfn_test)
+          use_lv = avm.lvHash.key?(bfn_test)
         end
         if (!File.symlink?(bfn) && !File.file?(bfn)) && use_lv
           bfn_test
@@ -242,7 +241,7 @@ module QcowDisk
     @l1_size_minimum ||= begin
       shift = cluster_bits + l2_bits
       (size + (1 << shift) - 1) >> shift
-#      (size / (cluster_size * l2_size)).round_up(cluster_size)
+      #      (size / (cluster_size * l2_size)).round_up(cluster_size)
     end
   end
 
@@ -250,8 +249,8 @@ module QcowDisk
     @l1_size ||= begin
       case version
       when 1
-       shift = cluster_bits + l2_bits
-       (size + (1 << shift) - 1) >> shift
+        shift = cluster_bits + l2_bits
+        (size + (1 << shift) - 1) >> shift
       when 2, 3
         header['l1_size']
       else
@@ -262,7 +261,7 @@ module QcowDisk
 
   def l1_table
     @l1_table ||= begin
-      raise "l1_size (#{l1_size}) < l1_size_minimum (#{l1_size_minimum})" if (l1_size < l1_size_minimum)
+      raise "l1_size (#{l1_size}) < l1_size_minimum (#{l1_size_minimum})" if l1_size < l1_size_minimum
       file_handle.seek(l1_table_offset, IO::SEEK_SET)
       read_entries(l1_size)
     end
@@ -278,7 +277,7 @@ module QcowDisk
   end
 
   def read_entries(n)
-    entries = Array.new
+    entries = []
     file_handle.read(n * SIZEOF_UINT64).unpack("N*").each_slice(2) { |hi, lo| entries << uint64_from_hi_lo(hi, lo) }
     entries
   end
@@ -327,12 +326,12 @@ module QcowDisk
 
   def decompress_buffer(buf)
     raise "decompression buffer cannot be nil" if buf.nil?
-    
+
     zi = Zlib::Inflate.new(ZLIB_WINDOW_BITS)
     rv = zi.inflate(buf)
     zi.finish
     zi.close
-    return rv
+    rv
   end
 
   def decompress_cluster(cluster_offset)
@@ -343,7 +342,7 @@ module QcowDisk
 
     file_handle.seek(coffset, IO::SEEK_SET)
     buf = file_handle.read(csize)
-    return decompress_buffer(buf)
+    decompress_buffer(buf)
   end
 
   #
@@ -389,7 +388,7 @@ module QcowDisk
     while nb_sectors > 0
       index_in_cluster = sector_num & (cluster_sectors - 1)
       n                = cluster_sectors - index_in_cluster
-      n                = nb_sectors if (n > nb_sectors)
+      n                = nb_sectors if n > nb_sectors
       nbytes           = SECTOR_SIZE * n
 
       cluster_offset = get_cluster_offset(sector_num * SECTOR_SIZE)
@@ -413,7 +412,7 @@ module QcowDisk
         rbuf = read_image_file(file_offset, nbytes)
       end
 
-      buf        << rbuf
+      buf << rbuf
       nb_sectors -= n
       sector_num += n
     end
@@ -425,7 +424,7 @@ module QcowDisk
     cluster_offset   = 0
     l1_index         = offset >> (l2_bits + cluster_bits)
 
-    if (l1_index < l1_size)
+    if l1_index < l1_size
       l2_offset  = l1_table[l1_index] & L1E_OFFSET_MASK
       if l2_offset > 0
         l2_index   = (offset >> cluster_bits) & (l2_size - 1)
@@ -522,7 +521,7 @@ module QcowDisk
   end
 
   def format_entry(e)
-    copied     = copied?(e)     ? 'COPIED'     : 'NOT COPIED'
+    copied     = copied?(e) ? 'COPIED' : 'NOT COPIED'
     compressed = compressed?(e) ? 'COMPRESSED' : 'NOT COMPRESSED'
     "#{e} => #{lo62(e)} (#{copied}, #{compressed})"
   end
@@ -590,19 +589,19 @@ module QcowDisk
 
     count = start
     while count < (start + nb_clusters)
-      break if (offset + (count * cluster_size)) != lo63(l2_table[l2_index+count])
+      break if (offset + (count * cluster_size)) != lo63(l2_table[l2_index + count])
       count += 1
     end
 
-    return (count - start)
+    (count - start)
   end
 
-  def count_contiguous_free_clusters(nb_clusters, l2_table, l2_index)
+  def count_contiguous_free_clusters(_nb_clusters, l2_table, l2_index)
     count = 0
 
     while nb_cluster > 0
-      break if l2_table[l2_index+count] != 0
-      count      += 1
+      break if l2_table[l2_index + count] != 0
+      count += 1
       nb_cluster -= 1
     end
 
@@ -647,7 +646,7 @@ module QcowDisk
   end
 
   def corrupt?
-    (incompatible_features & INCOMPATIBLE_FEATURES_MASK[:corrupt]) == INCOMPATIBLE_FEATURES_MASK[:corrupt] 
+    (incompatible_features & INCOMPATIBLE_FEATURES_MASK[:corrupt]) == INCOMPATIBLE_FEATURES_MASK[:corrupt]
   end
 
   def lazy_refcounts?
@@ -655,7 +654,7 @@ module QcowDisk
   end
 
   def dump
-    out = "\#<#{self.class}:0x#{'%08x' % self.object_id}>\n"
+    out = "\#<#{self.class}:0x#{'%08x' % object_id}>\n"
     out << "Version                  : #{version}\n"
     out << "Image Size               : #{size}\n"
     out << "Backing File Name        : #{backing_file_name}\n"
@@ -682,7 +681,6 @@ module QcowDisk
     out << "Autoclear Features       : #{autoclear_features}\n"
     out << "Dirty                    : #{dirty?}\n"
     out << "Corrupt                  : #{corrupt?}\n"
-    return out
+    out
   end
-
 end

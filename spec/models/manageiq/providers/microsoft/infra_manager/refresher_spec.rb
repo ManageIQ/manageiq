@@ -7,7 +7,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
     FactoryGirl.create(:miq_region)
     @ems = FactoryGirl.create(:ems_microsoft_with_authentication, :zone => zone,
         :hostname => "scvmm1111.manageiq.com", :ipaddress => "192.168.252.90", :security_protocol => "ssl")
-    data_file = File.join(File.dirname(__FILE__), %w{.. .. .. .. .. tools scvmm_data get_inventory_output.yml})
+    data_file = File.join(File.dirname(__FILE__), %w(.. .. .. .. .. tools scvmm_data get_inventory_output.yml))
 
     # See HACK comment in EmsMicrosoft.raw_connect for details around suppressing
     # the benign GSSAPI warnings printed when the winrm gem is required.
@@ -37,29 +37,29 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
 
   def assert_table_counts
     ExtManagementSystem.count.should == 1
-    EmsFolder.count.should           == 4 # HACK: Folder structure for UI a la VMware
-    EmsCluster.count.should          == 1
-    Host.count.should                == 3
-    ResourcePool.count.should        == 0
-    Vm.count.should                  == 23
-    VmOrTemplate.count.should        == 28
-    CustomAttribute.count.should     == 0
-    CustomizationSpec.count.should   == 0
-    Disk.count.should                == 23
-    GuestDevice.count.should         == 11
-    Hardware.count.should            == 31
-    Lan.count.should                 == 0
-    MiqScsiLun.count.should          == 0
-    MiqScsiTarget.count.should       == 0
-    Network.count.should             == 23
-    OperatingSystem.count.should     == 31
-    Snapshot.count.should            == 9
-    Switch.count.should              == 0
-    SystemService.count.should       == 0
-    Relationship.count.should        == 35
+    EmsFolder.count.should == 4 # HACK: Folder structure for UI a la VMware
+    EmsCluster.count.should == 1
+    Host.count.should == 3
+    ResourcePool.count.should == 0
+    Vm.count.should == 23
+    VmOrTemplate.count.should == 28
+    CustomAttribute.count.should == 0
+    CustomizationSpec.count.should == 0
+    Disk.count.should == 23
+    GuestDevice.count.should == 11
+    Hardware.count.should == 31
+    Lan.count.should == 0
+    MiqScsiLun.count.should == 0
+    MiqScsiTarget.count.should == 0
+    Network.count.should == 23
+    OperatingSystem.count.should == 31
+    Snapshot.count.should == 9
+    Switch.count.should == 0
+    SystemService.count.should == 0
+    Relationship.count.should == 35
 
-    MiqQueue.count.should            == 28
-    Storage.count.should             == 6
+    MiqQueue.count.should == 28
+    Storage.count.should == 6
   end
 
   def assert_ems
@@ -67,15 +67,15 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
       :api_version => "2.1.0",
       :uid_ems     => "aa767b2f-7ca4-4a2c-bdb3-d269cbef3f8f"
     )
-    @ems.ems_folders.size.should         == 4 # HACK: Folder structure for UI a la VMware
-    @ems.ems_clusters.size.should        == 1
-    @ems.resource_pools.size.should      == 0
+    @ems.ems_folders.size.should == 4 # HACK: Folder structure for UI a la VMware
+    @ems.ems_clusters.size.should == 1
+    @ems.resource_pools.size.should == 0
 
-    @ems.storages.size.should            == 6
-    @ems.hosts.size.should               == 3
-    @ems.vms_and_templates.size.should   == 28
-    @ems.vms.size.should                 == 23
-    @ems.miq_templates.size.should       == 5
+    @ems.storages.size.should == 6
+    @ems.hosts.size.should == 3
+    @ems.vms_and_templates.size.should == 28
+    @ems.vms.size.should == 23
+    @ems.miq_templates.size.should == 5
     @ems.customization_specs.size.should == 0
   end
 
@@ -90,8 +90,8 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
       :multiplehostaccess          => 1,
       :location                    => "afc847e1-9d85-4488-91bb-4284c9a29d07",
       :thin_provisioning_supported => true,
-      # :raw_disk_mappings_supported   => true
-      )
+    # :raw_disk_mappings_supported   => true
+    )
   end
 
   def assert_specific_cluster
@@ -170,14 +170,14 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
     )
 
     v.ext_management_system.should == @ems
-    v.host.should                  == @host
+    v.host.should == @host
 
     v.operating_system.should have_attributes(
       :product_name => "64-bit edition of Windows Server 2008 R2 Standard"
     )
 
     v.custom_attributes.size.should == 0
-    v.snapshots.size.should         == 1
+    v.snapshots.size.should == 1
 
     v.hardware.should have_attributes(
       :guest_os           => "64-bit edition of Windows Server 2008 R2 Standard",
@@ -246,7 +246,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
       [EmsFolder, "Datacenters", {:is_datacenter => false}] => {
         [EmsFolder, "SCVMM", {:is_datacenter => true}] => {
           [EmsFolder, "host", {:is_datacenter => false}] => {
-            [EmsCluster, "US_East"]                    => {},
+            [EmsCluster, "US_East"]                                                         => {},
             [ManageIQ::Providers::Microsoft::InfraManager::Host, "hyperv-h01.manageiq.com"] => {},
           },
           [EmsFolder, "vm", {:is_datacenter => false}]   => {

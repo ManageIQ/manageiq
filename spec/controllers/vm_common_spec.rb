@@ -9,7 +9,7 @@ describe VmOrTemplateController do
       @snapshot = FactoryGirl.create(:snapshot, :vm_or_template_id => vm.id,
                                                 :name              => 'EvmSnapshot',
                                                 :description       => "Some Description"
-      )
+                                    )
       vm.snapshots = [@snapshot]
       tree_hash = {
         :trees       => {
@@ -20,7 +20,7 @@ describe VmOrTemplateController do
         :active_tree => :vandt_tree
       }
 
-      session[:sandboxes] = { "vm_or_template" => tree_hash }
+      session[:sandboxes] = {"vm_or_template" => tree_hash}
     end
 
     it "snapshot node exists in tree" do

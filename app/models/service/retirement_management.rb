@@ -14,7 +14,7 @@ module Service::RetirementManagement
   end
 
   def retire_service_resources
-    self.service_resources.each do |sr|
+    service_resources.each do |sr|
       if sr.resource.respond_to?(:retire_now)
         $log.info("Retiring service resource for service: #{name} resource ID: #{sr.id}")
         sr.resource.retire_now(retirement_requester)

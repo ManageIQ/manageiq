@@ -1,46 +1,46 @@
 require 'fog'
-# TODO(lsmola) how do I load this?
-# require 'models/ems_refresh/refreshers/openstack/refresh_spec_environments'
 
 $LOAD_PATH.push(Rails.root.to_s)
 require_relative 'openstack/interaction_methods'
+require_relative 'openstack/helper_methods'
+include Openstack::InteractionMethods
+include Openstack::HelperMethods
+
+require "#{test_base_dir}/openstack/refresh_spec_environments"
+include Openstack::RefreshSpecEnvironments
 
 require_relative 'openstack/services/identity/builder'
 require_relative 'openstack/services/network/builder'
 require_relative 'openstack/services/compute/builder'
 require_relative 'openstack/services/volume/builder'
 require_relative 'openstack/services/image/builder'
-
-include Openstack::InteractionMethods
+require_relative 'openstack/services/orchestration/builder'
 
 def usage(s)
   $stderr.puts(s)
   $stderr.puts("Run on a VM with at least 8GB of RAM!!!")
-  $stderr.puts("Usage: bundle exec rails r spec/tools/environment_builders/openstack.rb <ems_id>")
+  $stderr.puts("Usage: bundle exec rails r spec/tools/environment_builders/openstack.rb")
+  $stderr.puts("Will run env. builder for environments specified in environments.yaml, unless you specify only one of")
+  $stderr.puts("them with  --only-environment")
   $stderr.puts("Options:")
-  $stderr.puts("         [--networking <netwoking>]  - allowed values [nova, neutron], default => neutron")
-  $stderr.puts("         [--identity   <identity>]   - allowed values [v2, v3],        default => v2")
+  $stderr.puts("         [--only-envinronment <name>]  - allowed values #{allowed_enviroments}")
   exit(2)
 end
 
-@ems_id = ARGV.shift
-raise ArgumentError, usage("expecting ExtManagementSystem id as a first argument") if @ems_id.blank?
-@networking = :neutron
-@identity   = :v2
+unless File.exist?("openstack_environments.yml")
+  raise ArgumentError, usage("expecting openstack_environments.yml in ManageIQ root dir")
+end
+
+@only_environment = nil
 
 loop do
   option = ARGV.shift
   case option
-  when '--networking'
+  when '--only-environment'
     argv      = ARGV.shift
-    supported = %w(neutron nova)
-    raise ArgumentError, usage("supported --networking options are #{supported}") unless supported.include?(argv)
-    @networking = argv.to_sym
-  when '--identity'
-    argv      = ARGV.shift
-    supported = %w(v2 v3)
-    raise ArgumentError, usage("supported --identity options are #{supported}") unless supported.include?(argv)
-    @identity = argv.to_sym
+    supported = allowed_enviroments
+    raise ArgumentError, usage("supported --identity options are #{supported}") unless supported.include?(argv.to_sym)
+    @only_environment = argv.to_sym
   when /^-/
     usage("Unknown option: #{option}")
   else
@@ -48,32 +48,49 @@ loop do
   end
 end
 
-$fog_log.level = 0
-puts "Building Refresh Environment for networking: '#{@networking}' and keystone: '#{@identity}'..."
+openstack_environments.each do |env|
+  env_name = env.keys.first
+  env      = env[env_name]
 
-@ems = ManageIQ::Providers::Openstack::CloudManager.where(:id => @ems_id).first
+  @environment = env_name.to_sym
+  # TODO(lsmola) make it possible to not to store the ems in db
+  create_or_update_ems(env_name, env["ip"], env["password"], 5000, env["user"], identity_service.to_s)
 
-# TODO: Create a domain to contain refresh-related objects (Havana and above)
-identity = Openstack::Services::Identity::Builder.build_all(@ems)
-# TODO(lsmola) cycle through many projects, so we test also multitenancy
-project = identity.projects.detect { |x| x.name == "EmsRefreshSpec-Project" }
+  unless @only_environment.blank?
+    next unless @environment == @only_environment
+  end
 
-network = Openstack::Services::Network::Builder.build_all(@ems, project, @networking)
-compute = Openstack::Services::Compute::Builder.build_all(@ems, project)
-volume = Openstack::Services::Volume::Builder.build_all(@ems, project)
-image = Openstack::Services::Image::Builder.build_all(@ems, project)
+  $fog_log.level = 0
+  puts "---------------------------------------------------------------------------------------------------------------"
+  puts "Building VCR  Environment for environment '#{@environment}'. Used services are, networking: "\
+       "'#{networking_service}' and identity: '#{identity_service}'..."
+  puts "---------------------------------------------------------------------------------------------------------------"
 
-#
-# Create all servers
-#
-compute.build_servers(volume, network, image)
+  # TODO: Create a domain to contain refresh-related objects (Havana and above)
+  identity = Openstack::Services::Identity::Builder.build_all(@ems, identity_service)
+  # TODO(lsmola) cycle through many projects, so we test also multitenancy
+  project = identity.projects.detect { |x| x.name == "EmsRefreshSpec-Project" }
 
-#
-# Set states of the servers
-#
-compute.do_action(compute.servers.detect { |x| x.name == "EmsRefreshSpec-Paused" }, :pause)
-compute.do_action(compute.servers.detect { |x| x.name == "EmsRefreshSpec-Suspended" }, :suspend)
-# TODO(lsmola) do shelve action once we use new fog
-# compute.do_action(compute.servers.detect{|x| x.name == "EmsRefreshSpec-Shelved"}, :shelve)
+  network = Openstack::Services::Network::Builder.build_all(@ems, project, networking_service)
+  compute = Openstack::Services::Compute::Builder.build_all(@ems, project)
+  volume = Openstack::Services::Volume::Builder.build_all(@ems, project)
+  image = Openstack::Services::Image::Builder.build_all(@ems, project)
 
-puts "Finished"
+  if orchestration_supported?
+    Openstack::Services::Orchestration::Builder.build_all(@ems, project, network)
+  end
+  #
+  # Create all servers
+  #
+  compute.build_servers(volume, network, image, networking_service)
+
+  #
+  # Set states of the servers
+  #
+  compute.do_action(compute.servers.detect { |x| x.name == "EmsRefreshSpec-Paused" }, :pause)
+  compute.do_action(compute.servers.detect { |x| x.name == "EmsRefreshSpec-Suspended" }, :suspend)
+  # TODO(lsmola) do shelve action once we use new fog
+  # compute.do_action(compute.servers.detect{|x| x.name == "EmsRefreshSpec-Shelved"}, :shelve)
+
+  puts "Finished"
+end

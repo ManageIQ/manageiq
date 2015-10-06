@@ -36,9 +36,9 @@ module ManageIQ::Providers
 
         new_result.merge!(
           # TODO: persist tls
-          :host_name    => route.spec.try(:host),
-          :labels       => parse_labels(route),
-          :path         => route.path
+          :host_name => route.spec.try(:host),
+          :labels    => parse_labels(route),
+          :path      => route.path
         )
 
         new_result[:project] = @data_index.fetch_path(:container_projects, :by_name,

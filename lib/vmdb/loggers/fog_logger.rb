@@ -12,13 +12,13 @@ module Vmdb::Loggers
     def instrument(name, params = {})
       method, message =
         case name
-        when "excon.request";  [:debug, message_for_excon_request(params)]
-        when "excon.response"; [:debug, message_for_excon_response(params)]
-        when "excon.error";    [:error, message_for_excon_error(params)]
+        when "excon.request" then  [:debug, message_for_excon_request(params)]
+        when "excon.response" then [:debug, message_for_excon_response(params)]
+        when "excon.error" then    [:error, message_for_excon_error(params)]
         else                   [:debug, message_for_other(params)]
         end
 
-      self.send(method, "#{name.ljust(14)}  #{message}")
+      send(method, "#{name.ljust(14)}  #{message}")
       yield if block_given?
     end
 
@@ -56,14 +56,14 @@ module Vmdb::Loggers
     end
 
     def sanitize_params(params)
-      if params.has_key?(:headers) && params[:headers].has_key?('Authorization')
+      if params.key?(:headers) && params[:headers].key?('Authorization')
         params[:headers] = params[:headers].dup
         params[:headers]['Authorization'] = "********"
       end
-      if params.has_key?(:password)
+      if params.key?(:password)
         params[:password] = "********"
       end
-      if params.has_key?(:body)
+      if params.key?(:body)
         params[:body] = params[:body].to_s.gsub(/"password":".+?"\}/, '"password":"********"}')
       end
       params

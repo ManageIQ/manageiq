@@ -32,10 +32,10 @@ module Metric::CiMixin::Capture
     start_time = start_time.utc unless start_time.nil?
     end_time = end_time.utc unless end_time.nil?
 
-    log_target = "#{self.class.name} name: [#{self.name}], id: [#{self.id}]"
+    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
 
     if interval_name != 'historical' && start_time.nil? && !force && !self.perf_capture_now?
-      _log.debug "Skipping capture of #{log_target} - Performance last captured on [#{self.last_perf_capture_on}] is within threshold"
+      _log.debug "Skipping capture of #{log_target} - Performance last captured on [#{last_perf_capture_on}] is within threshold"
       return
     end
 
@@ -57,17 +57,17 @@ module Metric::CiMixin::Capture
       items << [interval_name]
       items[0] << start_time << end_time unless start_time.nil?
 
-      cb = {:class_name => self.class.name, :instance_id => self.id, :method_name => :perf_capture_callback, :args => [[task_id]]} if task_id
+      cb = {:class_name => self.class.name, :instance_id => id, :method_name => :perf_capture_callback, :args => [[task_id]]} if task_id
     end
 
     # Queue up the actual items
     queue_item = {
       :class_name  => self.class.name,
-      :instance_id => self.id,
+      :instance_id => id,
       :method_name => 'perf_capture',
       :role        => 'ems_metrics_collector',
-      :queue_name  => self.queue_name_for_metrics_collection,
-      :zone        => self.my_zone,
+      :queue_name  => queue_name_for_metrics_collection,
+      :zone        => my_zone,
       :state       => ['ready', 'dequeue'],
     }
 
@@ -82,7 +82,7 @@ module Metric::CiMixin::Capture
           qi
         elsif msg.state == "ready" && (task_id || MiqQueue.higher_priority?(priority, msg.priority))
           qi[:priority] = priority
-          #rerun the job (either with new task or higher priority)
+          # rerun the job (either with new task or higher priority)
           qi.delete(:state)
           if task_id
             existing_tasks = (((msg.miq_callback || {})[:args] || []).first) || []
@@ -91,7 +91,7 @@ module Metric::CiMixin::Capture
           qi
         else
           _log.debug "Skipping capture of #{log_target} - Performance capture for interval #{qi[:args].inspect} is still running"
-          #NOTE: do not update the message queue
+          # NOTE: do not update the message queue
           nil
         end
       end
@@ -106,7 +106,7 @@ module Metric::CiMixin::Capture
     end_time = end_time.utc unless end_time.nil?
 
     log_header = "[#{interval_name}]"
-    log_target = "#{self.class.name} name: [#{self.name}], id: [#{self.id}]"
+    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
     log_target << ", start_time: [#{start_time}]" unless start_time.nil?
     log_target << ", end_time: [#{end_time}]" unless end_time.nil?
 
@@ -116,7 +116,7 @@ module Metric::CiMixin::Capture
 
       interval_name_for_capture = 'hourly'
     else
-      start_time = self.last_perf_capture_on if start_time.nil?
+      start_time = last_perf_capture_on if start_time.nil?
       if start_time.nil? && interval_name == 'hourly'
         # For hourly on the first capture, we don't want to get all of the
         #   historical data, so we shorten the query
@@ -130,14 +130,14 @@ module Metric::CiMixin::Capture
     expected_start_range = start_time
     # If we've changed power state within the last hour, the returned data
     #   may not include all the data we'd expect
-    expected_start_range = nil if self.respond_to?(:state_changed_on) && self.state_changed_on && self.state_changed_on > Time.now.utc - 1.hour
+    expected_start_range = nil if self.respond_to?(:state_changed_on) && state_changed_on && state_changed_on > Time.now.utc - 1.hour
 
     unless expected_start_range.nil?
       # Shift the expected time for first item, since you may not get back an
       #   item for the first timestamp.
       case interval_name
-      when 'realtime' then expected_start_range = expected_start_range + (1.minute / Metric::Capture::REALTIME_METRICS_PER_MINUTE)
-      when 'hourly'   then expected_start_range = expected_start_range + 1.hour
+      when 'realtime' then expected_start_range += (1.minute / Metric::Capture::REALTIME_METRICS_PER_MINUTE)
+      when 'hourly'   then expected_start_range += 1.hour
       end
       expected_start_range = expected_start_range.iso8601
     end
@@ -146,12 +146,12 @@ module Metric::CiMixin::Capture
 
     start_range = end_range = counters = counter_values = nil
     _, t = Benchmark.realtime_block(:total_time) do
-      Benchmark.realtime_block(:capture_state) { self.perf_capture_state }
+      Benchmark.realtime_block(:capture_state) { perf_capture_state }
 
-      counters_by_mor, counter_values_by_mor_and_ts = self.perf_collect_metrics(interval_name_for_capture, start_time, end_time)
+      counters_by_mor, counter_values_by_mor_and_ts = perf_collect_metrics(interval_name_for_capture, start_time, end_time)
 
-      counters       = counters_by_mor[self.ems_ref] || {}
-      counter_values = counter_values_by_mor_and_ts[self.ems_ref] || {}
+      counters       = counters_by_mor[ems_ref] || {}
+      counter_values = counter_values_by_mor_and_ts[ems_ref] || {}
 
       ts = counter_values.keys.sort
       start_range = ts.first
@@ -167,24 +167,22 @@ module Metric::CiMixin::Capture
         _log.warn "#{log_header} For #{log_target}, expected to get data as of [#{expected_start_range}], but got data as of [#{start_range}]."
 
         # Raise ems_performance_gap_detected alert event to enable notification.
-        MiqEvent.raise_evm_alert_event_queue(self.ext_management_system, "ems_performance_gap_detected",
-          {
-            :resource_class       => self.class.name,
-            :resource_id          => self.id,
-            :expected_start_range => expected_start_range,
-            :start_range          => start_range
-          }
-        )
+        MiqEvent.raise_evm_alert_event_queue(ext_management_system, "ems_performance_gap_detected",
+                                             :resource_class       => self.class.name,
+                                             :resource_id          => id,
+                                             :expected_start_range => expected_start_range,
+                                             :start_range          => start_range
+                                            )
       end
-      self.perf_process(interval_name, start_range, end_range, counters, counter_values)
+      perf_process(interval_name, start_range, end_range, counters, counter_values)
     end
   end
 
-  def perf_capture_callback(task_ids, status, message, result)
+  def perf_capture_callback(task_ids, _status, _message, _result)
     tasks = MiqTask.where(:id => task_ids)
     tasks.each do |t|
       t.lock do |task|
-        tkey = "#{self.class.name}:#{self.id}"
+        tkey = "#{self.class.name}:#{id}"
         task.context_data[:complete] << tkey
         task.pct_complete = (task.context_data[:complete].length.to_f / task.context_data[:targets].length.to_f) * 100
 
@@ -213,14 +211,14 @@ module Metric::CiMixin::Capture
 
   def perf_capture_realtime_now
     # For UI to enable refresh of realtime charts on demand
-    log_target = "#{self.class.name} name: [#{self.name}], id: [#{self.id}]"
+    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
 
     _log.info "Realtime capture requested for #{log_target}"
 
-    self.perf_capture_queue('realtime', :force => true, :priority => MiqQueue::HIGH_PRIORITY)
+    perf_capture_queue('realtime', :force => true, :priority => MiqQueue::HIGH_PRIORITY)
   end
 
   def perf_capture_now?
-    self.last_perf_capture_on.nil? || (self.last_perf_capture_on < Metric::Capture.capture_threshold(self))
+    last_perf_capture_on.nil? || (last_perf_capture_on < Metric::Capture.capture_threshold(self))
   end
 end

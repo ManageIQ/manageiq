@@ -8,5 +8,4 @@ class MiqVmdbStorageBridgeWorker < MiqQueueWorkerBase
   def friendly_name
     @friendly_name ||= "Storage/Virtual Associations Worker"
   end
-
 end

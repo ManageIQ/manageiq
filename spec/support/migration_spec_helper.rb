@@ -19,8 +19,8 @@ module MigrationSpecHelper
 
   def prepare_migrate
     case migration_direction
-    when :up;   migrate_to previous_migration_version
-    when :down; migrate_to this_migration_version
+    when :up then   migrate_to previous_migration_version
+    when :down then migrate_to this_migration_version
     end
   end
 

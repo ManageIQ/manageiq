@@ -43,9 +43,7 @@ describe VmdbDatabase do
         @db.seed
         @db.evm_tables.collect(&:name).should == table_names
       end
-
     end
-
 
     context ".seed_self" do
       it "should have empty table before seeding" do
@@ -60,7 +58,7 @@ describe VmdbDatabase do
       it "should have populated columns" do
         described_class.seed_self
         db = described_class.my_database
-        columns =  %w{ name vendor version  }
+        columns =  %w( name vendor version  )
         connection = ActiveRecord::Base.connection
         columns << 'ipaddress'       if connection.respond_to?(:server_ip_address)
         columns << 'data_directory'  if connection.respond_to?(:data_directory)
@@ -96,8 +94,6 @@ describe VmdbDatabase do
         db = described_class.my_database
         db.ipaddress.should == stubbed_ip_address
       end
-
     end
-
   end
 end

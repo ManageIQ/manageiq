@@ -6,24 +6,24 @@ module MiqServer::WorkerManagement::Monitor::Stop
       :class_name  => self.class.name,
       :method_name => "stop_worker",
       :queue_name  => 'miq_server',
-      :server_guid => self.guid
+      :server_guid => guid
     )
   end
 
   def stop_worker_queue(worker, monitor_status = :waiting_for_stop, monitor_reason = nil)
     MiqQueue.put(
       :class_name  => self.class.name,
-      :instance_id => self.id,
+      :instance_id => id,
       :method_name => 'stop_worker',
       :args        => [worker.id, monitor_status, monitor_reason],
       :queue_name  => 'miq_server',
-      :zone        => self.zone.name,
-      :server_guid => self.guid
+      :zone        => zone.name,
+      :server_guid => guid
     )
   end
 
   def stop_worker(worker, monitor_status = :waiting_for_stop, monitor_reason = nil)
-    w = worker.kind_of?(Integer) ? self.miq_workers.find_by_id(worker) : worker
+    w = worker.kind_of?(Integer) ? miq_workers.find_by_id(worker) : worker
 
     if w.nil?
       _log.warn("Cannot find Worker <#{w.inspect}>")
@@ -43,6 +43,5 @@ module MiqServer::WorkerManagement::Monitor::Stop
       w.update_attributes(:status => MiqWorker::STATUS_STOPPING)
       worker_set_message(w, 'exit')
     end
-
   end
 end

@@ -13,6 +13,6 @@ class VmdbIndex < ActiveRecord::Base
   serialize :prior_raw_metrics
 
   def my_metrics
-    self.vmdb_metrics
+    vmdb_metrics
   end
 end

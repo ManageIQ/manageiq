@@ -1,7 +1,7 @@
-class TreeBuilderAeCustomization  < TreeBuilder
+class TreeBuilderAeCustomization < TreeBuilder
   private
 
-  def tree_init_options(tree_name)
+  def tree_init_options(_tree_name)
     {:open_all => true}
   end
 
@@ -13,5 +13,4 @@ class TreeBuilderAeCustomization  < TreeBuilder
   def x_get_tree_roots(options)
     count_only_or_objects(options[:count_only], nil, nil)
   end
-
 end

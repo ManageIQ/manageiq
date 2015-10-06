@@ -6,12 +6,14 @@
   - if arr.include?(@display) && @showtype != "compare"
     = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@ems.id}"}
   - elsif @showtype == "compare"
-    = render :partial => "layouts/#{@showtype}"
+    = render :partial => "layouts/compare"
   - elsif @showtype == "timeline"
     = render :partial => "layouts/tl_show"
     :javascript
       var miq_after_onload = "miqAsyncAjax('#{url_for(:action => @ajax_action, :id => @record)}');"
   - elsif @showtype == "dialog_provision"
     = render :partial => "shared/dialogs/dialog_provision"
-  - else
-    = render :partial => @showtype
+  - elsif @showtype == "config"
+    = render :partial => "shared/views/ems_common/config"
+  - elsif @showtype == 'main'
+    = render :partial => 'main'

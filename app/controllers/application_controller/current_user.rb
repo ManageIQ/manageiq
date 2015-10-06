@@ -23,15 +23,16 @@ module ApplicationController::CurrentUser
   end
 
   def admin_user?
-    current_user.admin_user?
+    current_user.try(:admin_user?)
   end
 
   def super_admin_user?
-    current_user.super_admin_user?
+    current_user.try(:super_admin_user?)
   end
 
   def current_user
-    @current_user ||= User.find_by_userid(session[:userid])
+    @current_user ||= User.find_by_userid(session[:userid]) if current_userid
+    @current_user
   end
 
   # current_user.userid
@@ -39,9 +40,7 @@ module ApplicationController::CurrentUser
     session[:userid]
   end
 
-  def current_group
-    current_user.current_group
-  end
+  delegate :current_group, :to => :current_user
 
   def current_groupid
     current_user.current_group.id

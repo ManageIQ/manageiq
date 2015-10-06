@@ -74,7 +74,7 @@ module OntapLogicalDiskHelper::TextualSummary
   end
 
   def textual_number_of_blocks
-    {:label => "Number of Blocks", :value => number_with_delimiter(@record.number_of_blocks,:delimiter=>',')}
+    {:label => "Number of Blocks", :value => number_with_delimiter(@record.number_of_blocks, :delimiter => ',')}
   end
 
   def textual_block_size
@@ -82,7 +82,7 @@ module OntapLogicalDiskHelper::TextualSummary
   end
 
   def textual_consumable_blocks
-    {:label => "Consumable Blocks", :value => number_with_delimiter(@record.consumable_blocks,:delimiter=>',')}
+    {:label => "Consumable Blocks", :value => number_with_delimiter(@record.consumable_blocks, :delimiter => ',')}
   end
 
   def textual_device_id
@@ -90,7 +90,7 @@ module OntapLogicalDiskHelper::TextualSummary
   end
 
   def textual_extent_status
-    #TODO: extent_status is being returned as array, without .to_s it shows 0 0 in two lines with a link.
+    # TODO: extent_status is being returned as array, without .to_s it shows 0 0 in two lines with a link.
     {:label => "Extent Status", :value => @record.extent_status.to_s}
   end
 
@@ -119,19 +119,19 @@ module OntapLogicalDiskHelper::TextualSummary
   end
 
   def textual_size_available
-    {:label => "Size Available", :value => number_to_human_size(@record.size_available,:precision=>2)}
+    {:label => "Size Available", :value => number_to_human_size(@record.size_available, :precision => 2)}
   end
 
   def textual_size_used
-    {:label => "Size Used", :value => number_to_human_size(@record.size_used,:precision=>2)}
+    {:label => "Size Used", :value => number_to_human_size(@record.size_used, :precision => 2)}
   end
 
   def textual_size_total
-    {:label => "Size Total", :value => number_to_human_size(@record.size_total,:precision=>2)}
+    {:label => "Size Total", :value => number_to_human_size(@record.size_total, :precision => 2)}
   end
 
   def textual_snapshot_blocks_reserved
-    {:label => "Snapshot Blocks Reserved", :value => number_with_delimiter(@record.snapshot_blocks_reserved,:delimiter=>',')}
+    {:label => "Snapshot Blocks Reserved", :value => number_with_delimiter(@record.snapshot_blocks_reserved, :delimiter => ',')}
   end
 
   def textual_compressed_data
@@ -185,7 +185,7 @@ module OntapLogicalDiskHelper::TextualSummary
   def textual_storage_system
     label = ui_lookup(:table => "ontap_storage_system")
     ss   = @record.storage_system
-    h     = {:label => label , :image => "ontap_storage_system", :value =>(ss.blank? ? "None" : ss.evm_display_name)}
+    h     = {:label => label, :image => "ontap_storage_system", :value => (ss.blank? ? "None" : ss.evm_display_name)}
     if !ss.blank? && role_allows(:feature => "ontap_storage_system_show")
       h[:title] = "Show #{label} '#{ss.evm_display_name}'"
       h[:link]  = url_for(:controller => 'ontap_storage_system', :action => 'show', :id => ss.id)
@@ -205,22 +205,21 @@ module OntapLogicalDiskHelper::TextualSummary
   end
 
   def textual_file_system
-    label = ui_lookup(:table=>"snia_local_file_system")
+    label = ui_lookup(:table => "snia_local_file_system")
     lfs   = @record.file_system
-    h = {:label => label, :image => "snia_local_file_system", :value =>(lfs.blank? ? "None" : lfs.evm_display_name)}
-    if !lfs.blank? && role_allows(:feature=>"snia_local_file_system_show")
+    h = {:label => label, :image => "snia_local_file_system", :value => (lfs.blank? ? "None" : lfs.evm_display_name)}
+    if !lfs.blank? && role_allows(:feature => "snia_local_file_system_show")
       h[:title] = "Show #{label} '#{lfs.evm_display_name}'"
-      h[:link]  = url_for(:db => controller.controller_name, :action => 'snia_local_file_systems', :id => @record, :show=>lfs.id)
+      h[:link]  = url_for(:db => controller.controller_name, :action => 'snia_local_file_systems', :id => @record, :show => lfs.id)
     end
     h
   end
 
-
   def textual_base_storage_extents
-    label = ui_lookup(:tables=>"cim_base_storage_extent")
+    label = ui_lookup(:tables => "cim_base_storage_extent")
     num   = @record.base_storage_extents_size
     h     = {:label => label, :image => "cim_base_storage_extent", :value => num}
-    if num > 0 && role_allows(:feature=>"cim_base_storage_extent_show")
+    if num > 0 && role_allows(:feature => "cim_base_storage_extent_show")
       h[:title] = "Show all #{label}"
       h[:link]  = url_for(:controller => 'ontap_logical_disk', :action => 'show', :id => @record, :display => 'cim_base_storage_extents')
     end

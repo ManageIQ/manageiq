@@ -1,16 +1,15 @@
-class TreeBuilderChargebackReports  < TreeBuilder
-
+class TreeBuilderChargebackReports < TreeBuilder
   private
 
-  def tree_init_options(tree_name)
+  def tree_init_options(_tree_name)
     {:full_ids => true, :leaf => "MiqReportResult"}
   end
 
   def set_locals_for_render
     locals = super
     temp = {
-      :id_prefix      => "cbrpt_",
-      :autoload       => true
+      :id_prefix => "cbrpt_",
+      :autoload  => true
     }
     locals.merge!(temp)
   end
@@ -27,10 +26,10 @@ class TreeBuilderChargebackReports  < TreeBuilder
       objects = []
       items.sort_by { |item| item.name.downcase }.each_with_index do |item, idx|
         objects.push(
-                      :id     => "#{to_cid(item.miq_report_id)}-#{idx}",
-                      :text   => item.name,
-                      :image  => "report",
-                      :tip    => item.name
+          :id    => "#{to_cid(item.miq_report_id)}-#{idx}",
+          :text  => item.name,
+          :image => "report",
+          :tip   => item.name
         )
       end
       objects

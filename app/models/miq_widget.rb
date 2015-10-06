@@ -3,7 +3,7 @@
 require 'simple-rss'
 
 class MiqWidget < ActiveRecord::Base
-  default_scope { where self.conditions_for_my_region_default_scope }
+  default_scope { where conditions_for_my_region_default_scope }
 
   default_value_for :enabled, true
   default_value_for :read_only, false
@@ -19,7 +19,7 @@ class MiqWidget < ActiveRecord::Base
 
   validates_presence_of   :title, :description
   validates_uniqueness_of :description, :title
-  VALID_CONTENT_TYPES = %w{ report chart rss menu }
+  VALID_CONTENT_TYPES = %w( report chart rss menu )
   validates_inclusion_of :content_type, :in => VALID_CONTENT_TYPES, :message => "should be one of #{VALID_CONTENT_TYPES.join(", ")}"
 
   serialize :visibility
@@ -36,7 +36,7 @@ class MiqWidget < ActiveRecord::Base
   before_destroy :destroy_schedule
 
   def destroy_schedule
-    self.miq_schedule.destroy if self.miq_schedule
+    miq_schedule.destroy if miq_schedule
   end
 
   virtual_column :status,         :type => :string,    :uses => :miq_task
@@ -49,24 +49,24 @@ class MiqWidget < ActiveRecord::Base
   end
 
   def last_run_on
-    self.last_generated_content_on || (self.miq_schedule && self.miq_schedule.last_run_on)
+    last_generated_content_on || (miq_schedule && miq_schedule.last_run_on)
   end
 
   def next_run_on
-    self.miq_schedule && self.miq_schedule.next_run_on
+    miq_schedule && miq_schedule.next_run_on
   end
 
   def queued_at
-    self.miq_task && self.miq_task.created_on
+    miq_task && miq_task.created_on
   end
 
   def status
-    if self.miq_task.nil?
-      return "None" if self.last_run_on.nil?
+    if miq_task.nil?
+      return "None" if last_run_on.nil?
       return "Complete"
     end
 
-    case self.miq_task.state
+    case miq_task.state
     when MiqTask::STATE_INITIALIZED
       return "Initialized"
     when MiqTask::STATE_QUEUED
@@ -74,7 +74,7 @@ class MiqWidget < ActiveRecord::Base
     when MiqTask::STATE_ACTIVE
       return "Running"
     when MiqTask::STATE_FINISHED
-      case self.miq_task.status
+      case miq_task.status
       when MiqTask::STATUS_OK
         return "Complete"
       when MiqTask::STATUS_WARNING
@@ -84,15 +84,15 @@ class MiqWidget < ActiveRecord::Base
       when MiqTask::STATUS_TIMEOUT
         return "Timed Out"
       else
-        raise "Unknown status of: #{self.miq_task.status.inspect}"
+        raise "Unknown status of: #{miq_task.status.inspect}"
       end
     else
-      raise "Unknown state of: #{self.miq_task.state.inspect}"
+      raise "Unknown state of: #{miq_task.state.inspect}"
     end
   end
 
   def status_message
-    self.miq_task.nil? ? "Unknown" : self.miq_task.message
+    miq_task.nil? ? "Unknown" : miq_task.message
   end
 
   # Returns status, last_run_on, message
@@ -101,8 +101,8 @@ class MiqWidget < ActiveRecord::Base
     miq_task = self.miq_task
 
     if miq_task.nil?
-      return "None" if self.last_run_on.nil?
-      return "Complete", self.last_run_on
+      return "None" if last_run_on.nil?
+      return "Complete", last_run_on
     end
 
     status =  case miq_task.state
@@ -116,28 +116,28 @@ class MiqWidget < ActiveRecord::Base
                 raise "Unknown state=#{miq_task.state.inspect}"
               end
 
-    return status, self.last_run_on, miq_task.message
+    return status, last_run_on, miq_task.message
   end
 
   def create_task(num_targets, userid = User.current_userid)
-    userid     ||= "system"
-    context_data = { :targets  => num_targets, :complete => 0 }
+    userid ||= "system"
+    context_data = {:targets  => num_targets, :complete => 0}
     miq_task     = MiqTask.create(
-                      :name         => "Generate Widget: '#{self.title}'",
-                      :state        => MiqTask::STATE_QUEUED,
-                      :status       => MiqTask::STATUS_OK,
-                      :message      => "Task has been queued",
-                      :pct_complete => 0,
-                      :userid       => userid,
-                      :context_data => context_data
-                    )
+      :name         => "Generate Widget: '#{title}'",
+      :state        => MiqTask::STATE_QUEUED,
+      :status       => MiqTask::STATUS_OK,
+      :message      => "Task has been queued",
+      :pct_complete => 0,
+      :userid       => userid,
+      :context_data => context_data
+    )
 
     _log.info "Created MiqTask ID: [#{miq_task.id}], Name: [#{miq_task.name}] for: [#{num_targets}] groups"
 
     self.miq_task_id = miq_task.id
     self.save!
 
-    return miq_task
+    miq_task
   end
 
   def generate_content_options(group, users)
@@ -154,17 +154,17 @@ class MiqWidget < ActiveRecord::Base
 
   def queue_generate_content_for_users_or_group(*args)
     MiqQueue.put_or_update(
-      :queue_name   => "reporting",
-      :role         => "reporting",
-      :class_name   => self.class.to_s,
-      :instance_id  => self.id,
-      :msg_timeout  => 3600,
-      :method_name  => "generate_content",
-      :args         => [*args]
+      :queue_name  => "reporting",
+      :role        => "reporting",
+      :class_name  => self.class.to_s,
+      :instance_id => id,
+      :msg_timeout => 3600,
+      :method_name => "generate_content",
+      :args        => [*args]
     ) do |msg, q_hash|
       if msg.nil?
-        unless self.miq_task_id.nil?
-          cb = { :class_name => self.class.name, :instance_id => self.id, :method_name => :generate_content_complete_callback }
+        unless miq_task_id.nil?
+          cb = {:class_name => self.class.name, :instance_id => id, :method_name => :generate_content_complete_callback}
           q_hash[:miq_callback] = cb
         end
         q_hash
@@ -172,28 +172,28 @@ class MiqWidget < ActiveRecord::Base
     end
   end
 
-  def generate_content_complete_callback(status, message, result)
-    _log.info "Widget ID: [#{self.id}], MiqTask ID: [#{self.miq_task_id}], Status: [#{status}]"
+  def generate_content_complete_callback(status, _message, _result)
+    _log.info "Widget ID: [#{id}], MiqTask ID: [#{miq_task_id}], Status: [#{status}]"
 
     miq_task.lock(:exclusive) do |locked_miq_task|
       if MiqTask.status_error?(status)
         locked_miq_task.context_data[:error] ||= 0
-        locked_miq_task.context_data[:error]  += 1
+        locked_miq_task.context_data[:error] += 1
       end
 
       if MiqTask.status_timeout?(status)
         locked_miq_task.context_data[:timeout] ||= 0
-        locked_miq_task.context_data[:timeout]  += 1
+        locked_miq_task.context_data[:timeout] += 1
       end
 
       locked_miq_task.context_data[:complete] ||= 0
-      locked_miq_task.context_data[:complete]  += 1
+      locked_miq_task.context_data[:complete] += 1
       locked_miq_task.pct_complete = 100 * locked_miq_task.context_data[:complete] / locked_miq_task.context_data[:targets]
 
       if locked_miq_task.context_data[:complete] == locked_miq_task.context_data[:targets]
         task_status = MiqTask::STATUS_OK
-        task_status = MiqTask::STATUS_TIMEOUT if locked_miq_task.context_data.has_key?(:timeout)
-        task_status = MiqTask::STATUS_ERROR   if locked_miq_task.context_data.has_key?(:error)
+        task_status = MiqTask::STATUS_TIMEOUT if locked_miq_task.context_data.key?(:timeout)
+        task_status = MiqTask::STATUS_ERROR   if locked_miq_task.context_data.key?(:error)
 
         locked_miq_task.update_status(MiqTask::STATE_FINISHED, task_status, generate_content_complete_message)
         generate_content_complete!
@@ -212,15 +212,15 @@ class MiqWidget < ActiveRecord::Base
 
   def generate_content_complete_message
     message  = "Widget Generation for #{miq_task.context_data[:targets]} groups complete"
-    message << " (#{miq_task.context_data[:error]} in Error)"    if miq_task.context_data.has_key?(:error)
-    message << " (#{miq_task.context_data[:timeout]} Timed Out)" if miq_task.context_data.has_key?(:timeout)
+    message << " (#{miq_task.context_data[:error]} in Error)"    if miq_task.context_data.key?(:error)
+    message << " (#{miq_task.context_data[:timeout]} Timed Out)" if miq_task.context_data.key?(:timeout)
     message
   end
 
   def generate_content_update_message
     message  = "Widget Generation for #{miq_task.context_data[:complete]} of #{miq_task.context_data[:targets]} groups Complete"
-    message << " (#{miq_task.context_data[:error]} in Error)"    if miq_task.context_data.has_key?(:error)
-    message << " (#{miq_task.context_data[:timeout]} Timed Out)" if miq_task.context_data.has_key?(:timeout)
+    message << " (#{miq_task.context_data[:error]} in Error)"    if miq_task.context_data.key?(:error)
+    message << " (#{miq_task.context_data[:timeout]} Timed Out)" if miq_task.context_data.key?(:timeout)
     message
   end
 
@@ -243,7 +243,7 @@ class MiqWidget < ActiveRecord::Base
 
     MiqPreloader.preload(group_hash_visibility_agnostic.keys, [:miq_user_role])
 
-    group_hash = group_hash_visibility_agnostic.select { |k, v| available_for_group?(k) }      # Process users grouped by LDAP group membership of whether they have RBAC
+    group_hash = group_hash_visibility_agnostic.select { |k, _v| available_for_group?(k) }      # Process users grouped by LDAP group membership of whether they have RBAC
 
     if group_hash.length == 0
       _log.info("#{log_prefix} is not subscribed, content will NOT be generated")
@@ -251,7 +251,7 @@ class MiqWidget < ActiveRecord::Base
     end
 
     if VMDB::Config.new("vmdb").config[:product][:report_sync]
-      group_hash.each do |g,u|
+      group_hash.each do |g, u|
         options = generate_content_options(g, u)
         generate_content(*options)
       end
@@ -263,7 +263,7 @@ class MiqWidget < ActiveRecord::Base
         create_task(group_hash.length)
 
         _log.info("#{log_prefix} Queueing Content Generation")
-        group_hash.each do |g,u|
+        group_hash.each do |g, u|
           options = generate_content_options(g, u)
           queue_generate_content_for_users_or_group(*options)
         end
@@ -312,7 +312,7 @@ class MiqWidget < ActiveRecord::Base
     _log.info("#{log_prefix} for group: [#{group.name}] users: [#{userid}]...")
 
     user = userid
-    user = User.in_my_region.where(:userid => userid).first if userid.kind_of?(String)
+    user = User.in_my_region.find_by(:userid => userid) if userid.kind_of?(String)
     if user.nil?
       _log.error("#{log_prefix} User #{userid} was not found")
       return
@@ -355,7 +355,7 @@ class MiqWidget < ActiveRecord::Base
   end
 
   def generate_report(group, user = nil)
-    rpt = self.resource.dup
+    rpt = resource.dup
 
     opts = {:miq_group_id => group.id}
     opts[:userid] = user.userid if user
@@ -367,7 +367,7 @@ class MiqWidget < ActiveRecord::Base
   def generate_report_result(rpt, owner, timezone = nil)
     name = owner.respond_to?(:userid) ? owner.userid : owner.name
 
-    userid_for_result = "widget_id_#{self.id}|#{name}|schedule"
+    userid_for_result = "widget_id_#{id}|#{name}|schedule"
     MiqReportResult.purge_for_user(:userid => userid_for_result)
 
     rpt.build_create_results(:userid => userid_for_result, :report_source => "Generated for widget", :timezone => timezone)
@@ -383,9 +383,9 @@ class MiqWidget < ActiveRecord::Base
     contents
   end
 
-  #TODO: group/user support
+  # TODO: group/user support
   def create_initial_content_for_user(user, group = nil)
-    return unless self.contents_for_user(user).blank? && self.content_type != "menu"  # Menu widgets have no content
+    return unless contents_for_user(user).blank? && content_type != "menu"  # Menu widgets have no content
 
     user    = self.class.get_user(user)
     group   = self.class.get_group(group)
@@ -410,7 +410,7 @@ class MiqWidget < ActiveRecord::Base
     conditions = {:miq_group_id => group.id}
     conditions[:user_id]   = user.id if user
     conditions[:timezone] = timezone if timezone
-    miq_widget_contents.where(conditions).first
+    miq_widget_contents.find_by(conditions)
   end
 
   def contents_for_user(user)
@@ -448,35 +448,35 @@ class MiqWidget < ActiveRecord::Base
   end
 
   def available_for_group?(group)
-    return group ? has_visibility?(:roles, group.miq_user_role_name) : false
+    group ? has_visibility?(:roles, group.miq_user_role_name) : false
   end
 
   def self.available_for_user(user)
-    user = self.get_user(user)
+    user = get_user(user)
     role = user.miq_user_role_name
     group = user.miq_group_description
 
     # Return all widgets that either has this user's role or is allowed for all roles, or has this user's group
-    self.all.select do |w|
+    all.select do |w|
       w.has_visibility?(:roles, role) || w.has_visibility?(:groups, group)
     end
   end
 
   def self.available_for_group(group)
-    group = self.get_group(group)
+    group = get_group(group)
     role = group.miq_user_role_name
     # Return all widgets that either has this group's role or is allowed for all roles.
-    self.all.select do |w|
+    all.select do |w|
       w.has_visibility?(:roles, role) || w.has_visibility?(:groups, group.description)
     end
   end
 
   def self.available_for_all_roles
-    self.all.select { |w| w.visibility.has_key?(:roles) && w.visibility[:roles].include?("_ALL_") }
+    all.select { |w| w.visibility.key?(:roles) && w.visibility[:roles].include?("_ALL_") }
   end
 
   def has_visibility?(key, value)
-    self.visibility.kind_of?(Hash) && self.visibility.has_key?(key) && (self.visibility[key].include?(value) || self.visibility[key].include?("_ALL_"))
+    visibility.kind_of?(Hash) && visibility.key?(key) && (visibility[key].include?(value) || visibility[key].include?("_ALL_"))
   end
 
   def self.get_user(user)
@@ -506,12 +506,12 @@ class MiqWidget < ActiveRecord::Base
   end
 
   def self.sync_from_dir
-    Dir.glob(File.join(WIDGET_DIR, "*.yaml")).sort.each {|f| self.sync_from_file(f)}
+    Dir.glob(File.join(WIDGET_DIR, "*.yaml")).sort.each { |f| sync_from_file(f) }
   end
 
   def self.sync_from_file(filename)
     attrs = YAML.load_file(filename)
-    self.sync_from_hash(attrs.merge("filename" => filename))
+    sync_from_hash(attrs.merge("filename" => filename))
   end
 
   def self.sync_from_hash(attrs)
@@ -526,11 +526,11 @@ class MiqWidget < ActiveRecord::Base
 
     schedule_info = attrs.delete("miq_schedule_options")
 
-    widget = self.find_by_description(attrs["description"])
+    widget = find_by_description(attrs["description"])
     if widget
       if filename && widget.updated_at.utc < File.mtime(filename).utc
         $log.info("Widget: [#{widget.description}] file has been updated on disk, synchronizing with model")
-        ["enabled", "visibility"].each {|a| attrs.delete(a)} # Don't updates these because they may have been modofoed by the end user.
+        ["enabled", "visibility"].each { |a| attrs.delete(a) } # Don't updates these because they may have been modofoed by the end user.
         widget.updated_at = Time.now.utc
         widget.update_attributes(attrs)
         widget.save!
@@ -547,7 +547,7 @@ class MiqWidget < ActiveRecord::Base
   def sync_schedule(schedule_info)
     return if schedule_info.nil?
 
-    sched = self.miq_schedule
+    sched = miq_schedule
     return sched unless sched.nil?
 
     server_tz = MiqServer.my_server.server_timezone
@@ -564,24 +564,24 @@ class MiqWidget < ActiveRecord::Base
     end
 
     sched = MiqSchedule.create!(
-      :name           => self.title,
-      :description    => self.description,
-      :sched_action   => {:method => "generate_widget"},
-      :filter         => MiqExpression.new({"=" => {"field" => "MiqWidget.id", "value" => self.id}}),
-      :towhat         => self.class.name,
-      :run_at         => {
-        :interval     => {:value => value, :unit  => unit},
-        :tz           => server_tz,
-        :start_time   => sched_time
+      :name         => title,
+      :description  => description,
+      :sched_action => {:method => "generate_widget"},
+      :filter       => MiqExpression.new("=" => {"field" => "MiqWidget.id", "value" => id}),
+      :towhat       => self.class.name,
+      :run_at       => {
+        :interval   => {:value => value, :unit  => unit},
+        :tz         => server_tz,
+        :start_time => sched_time
       },
     )
     self.miq_schedule = sched
     self.save!
 
-    _log.info  "Created schedule for Widget: [#{self.title}]"
-    _log.debug "Widget: [#{self.title}] created schedule: [#{sched.inspect}]"
+    _log.info  "Created schedule for Widget: [#{title}]"
+    _log.debug "Widget: [#{title}] created schedule: [#{sched.inspect}]"
 
-    return sched
+    sched
   end
 
   def self.seed
@@ -592,24 +592,24 @@ class MiqWidget < ActiveRecord::Base
   def self.seed_widget(pattern)
     files = Dir.glob(File.join(WIDGET_DIR, "*#{pattern}*"))
     files.collect do |f|
-      self.sync_from_file(f)
+      sync_from_file(f)
     end
   end
 
   def save_with_shortcuts(shortcuts)  # [[<shortcut.id>, <widget_shortcut.description>], ...]
     transaction do
-      ws = Array.new  # Create an array of widget shortcuts
+      ws = []  # Create an array of widget shortcuts
       shortcuts.each_with_index do |s, s_idx|
         ws.push(MiqWidgetShortcut.new(:sequence => s_idx, :description => s.last, :miq_shortcut_id => s.first))
       end
       self.miq_widget_shortcuts = ws
-      self.save       # .save! raises exception if validate_uniqueness fails
+      save       # .save! raises exception if validate_uniqueness fails
     end
-    return self.errors.empty? # True if no errors
+    errors.empty? # True if no errors
   end
 
   def delete_legacy_contents_for_group(group)
-    MiqWidgetContent.destroy_all(:miq_widget_id => self.id, :miq_group_id => group.id, :user_id => nil)
+    MiqWidgetContent.destroy_all(:miq_widget_id => id, :miq_group_id => group.id, :user_id => nil)
   end
 
   private

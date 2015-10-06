@@ -1,29 +1,27 @@
 module Ext4
-
   class AllocBitmap
-
     def initialize(data)
       raise "Ext4::AllocBitmap.initialize: Nil data" if data.nil?
       @data = data
     end
 
     def isAllocated?(number)
-      return getStatus(number)
+      getStatus(number)
     end
 
     def [](number)
-      return getStatus(number)
+      getStatus(number)
     end
 
     def dump
-      return @data.hex_dump
+      @data.hex_dump
     end
 
     private
 
     def getStatus(number)
       byte, mask = index(number)
-      return @data[byte] & mask == mask
+      @data[byte] & mask == mask
     end
 
     def index(number)
@@ -36,6 +34,5 @@ module Ext4
       mask = 128 >> bit
       return byte, mask
     end
-
-  end #class
-end #module
+  end # class
+end # module

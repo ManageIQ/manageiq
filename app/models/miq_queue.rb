@@ -95,7 +95,7 @@ class MiqQueue < ActiveRecord::Base
     data_size = data ? data.length : 0
 
     if (args_size + data_size) > 512
-      culprit = caller.detect {|r| ! (r =~ /miq_queue.rb/) } || ""
+      culprit = caller.detect { |r| ! (r =~ /miq_queue.rb/) } || ""
       _log.warn("#{culprit.split(":in ").first} called with large payload (args: #{args_size} bytes, data: #{data_size} bytes) #{MiqQueue.format_full_log_msg(self)}")
     end
   end
@@ -132,7 +132,7 @@ class MiqQueue < ActiveRecord::Base
     AND (zone IS NULL OR zone = ?)
     AND (task_id IS NULL OR task_id NOT IN (
       SELECT DISTINCT task_id
-      FROM #{self.table_name}
+      FROM #{table_name}
       WHERE state = 'dequeue'
         AND (zone IS NULL OR zone = ?)
         AND task_id IS NOT NULL
@@ -144,7 +144,7 @@ class MiqQueue < ActiveRecord::Base
     AND (priority <= ?)
   EOL
 
-  def self.get(options={})
+  def self.get(options = {})
     cond = [
       MIQ_QUEUE_GET,
       options[:zone] || MiqServer.my_server.zone.name,
@@ -156,7 +156,7 @@ class MiqQueue < ActiveRecord::Base
       options[:priority] || MIN_PRIORITY,
     ]
 
-    prefetch_max_per_worker = self.vmdb_config.config[:server][:prefetch_max_per_worker] || 10
+    prefetch_max_per_worker = vmdb_config.config[:server][:prefetch_max_per_worker] || 10
     msgs = MiqQueue.where(cond).order("priority, id").limit(prefetch_max_per_worker)
     return nil if msgs.empty? # Nothing available in the queue
 
@@ -164,7 +164,7 @@ class MiqQueue < ActiveRecord::Base
     msgs.each do |msg|
       begin
         _log.info("#{MiqQueue.format_short_log_msg(msg)} previously timed out, retrying...") if msg.state == STATE_TIMEOUT
-        w = MiqWorker.server_scope.where(:pid => Process.pid).first
+        w = MiqWorker.server_scope.find_by(:pid => Process.pid)
         if w.nil?
           msg.update_attributes!(:state => STATE_DEQUEUE, :handler => MiqServer.my_server)
         else
@@ -246,10 +246,10 @@ class MiqQueue < ActiveRecord::Base
     msg = nil
     loop do
       msg = if args_selector
-        where_scope.order("priority, id").detect { |m| args_selector.call(m.args) }
-      else
-        where_scope.order("priority, id").first
-      end
+              where_scope.order("priority, id").detect { |m| args_selector.call(m.args) }
+            else
+              where_scope.order("priority, id").first
+            end
 
       save_options = block_given? ? yield(msg, find_options) : nil
       unless save_options.nil?
@@ -301,7 +301,7 @@ class MiqQueue < ActiveRecord::Base
   end
 
   def self.unqueue(options)
-    where(optional_values(default_get_options(options))).first.try(:destroy)
+    find_by(optional_values(default_get_options(options))).try(:destroy)
   end
 
   def deliver(requester = nil)
@@ -346,7 +346,7 @@ class MiqQueue < ActiveRecord::Base
           end
         end
       rescue MiqException::MiqQueueRetryLater => err
-        self.unget(err.options)
+        unget(err.options)
         message = "Message not processed.  Retrying #{err.options[:deliver_on] ? "at #{err.options[:deliver_on]}" : 'immediately'}"
         _log.error("#{MiqQueue.format_short_log_msg(self)}, #{message}")
         status = STATUS_RETRY
@@ -431,7 +431,7 @@ class MiqQueue < ActiveRecord::Base
   end
 
   def check_for_timeout(log_prefix = "MIQ(MiqQueue.check_for_timeout)", grace = 10.seconds, timeout = msg_timeout.seconds)
-    if self.state == 'dequeue' && Time.now.utc > (updated_on + timeout.seconds + grace.seconds).utc
+    if state == 'dequeue' && Time.now.utc > (updated_on + timeout.seconds + grace.seconds).utc
       msg = " processed by #{handler.format_full_log_msg}" unless handler.nil?
       $log.warn("#{log_prefix} Timed Out Active #{MiqQueue.format_short_log_msg(self)}#{msg} after #{Time.now.utc - updated_on} seconds")
       destroy rescue nil
@@ -502,7 +502,7 @@ class MiqQueue < ActiveRecord::Base
   end
 
   def self.get_worker(task_id)
-    where(:task_id => task_id).first.try(:get_worker)
+    find_by(:task_id => task_id).try(:get_worker)
   end
 
   private
@@ -530,4 +530,4 @@ class MiqQueue < ActiveRecord::Base
     end
     options
   end
-end #Class MiqQueue
+end # Class MiqQueue

@@ -29,13 +29,13 @@ describe MiqPolicy do
 
     it "should raise an error with empty description" do
       @description = nil
-      lambda { subject.description }.should raise_error(ActiveRecord::RecordInvalid, "Validation failed: Description can't be blank")
+      -> { subject.description }.should raise_error(ActiveRecord::RecordInvalid, "Validation failed: Description can't be blank")
     end
 
     it "should raise an error when description is reset to empty" do
       @description = "a" * 30
       subject.description = nil
-      lambda { subject.save! }.should raise_error(ActiveRecord::RecordInvalid, "Validation failed: Description can't be blank")
+      -> { subject.save! }.should raise_error(ActiveRecord::RecordInvalid, "Validation failed: Description can't be blank")
     end
   end
 end

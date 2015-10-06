@@ -19,10 +19,10 @@ describe VmdbTable do
       metrics.length.should_not == 0
 
       metric = metrics.first
-      columns = %w{ size rows pages percent_bloat wasted_bytes otta table_scans sequential_rows_read
-          index_scans index_rows_fetched rows_inserted rows_updated rows_deleted rows_hot_updated rows_live
-          rows_dead timestamp
-      }
+      columns = %w( size rows pages percent_bloat wasted_bytes otta table_scans sequential_rows_read
+                    index_scans index_rows_fetched rows_inserted rows_updated rows_deleted rows_hot_updated rows_live
+                    rows_dead timestamp
+                )
       columns.each do |column|
         metric.send(column).should_not be_nil
       end
@@ -74,7 +74,6 @@ describe VmdbTable do
     end
   end
 
-
   pending("New model-based-rewrite") do
     before(:each) do
       VmdbTable.registered.clear
@@ -82,7 +81,7 @@ describe VmdbTable do
       MiqDatabase.seed
       @db = MiqDatabase.first
       @test_tables = %w(miq_servers_product_updates ui_tasks miq_regions miq_databases)
-      @unpopulated_tables = %w{hosts vms}
+      @unpopulated_tables = %w(hosts vms)
       @populated_tables = %w(miq_regions miq_databases)
     end
 
@@ -92,12 +91,12 @@ describe VmdbTable do
 
     context "#new" do
       it "will raise error on invalid name" do
-        lambda { VmdbTable.new(:name => "miq_databases123") }.should raise_error(StandardError)
+        -> { VmdbTable.new(:name => "miq_databases123") }.should raise_error(StandardError)
       end
 
       it "will raise error for already registered table" do
         VmdbTable.new(:name => "miq_databases")
-        lambda { VmdbTable.new(:name => "miq_databases") }.should raise_error(StandardError)
+        -> { VmdbTable.new(:name => "miq_databases") }.should raise_error(StandardError)
       end
 
       it "will register table" do
@@ -118,7 +117,7 @@ describe VmdbTable do
 
     it "#miq_database" do
       t = VmdbTable.new(:name => "miq_databases")
-      t.miq_database.should    == @db
+      t.miq_database.should == @db
       t.miq_database_id.should == @db.id
     end
 
@@ -166,7 +165,7 @@ describe VmdbTable do
 
     context "#export" do
       it "will handle tables without models" do
-        lambda { VmdbTable.new(:name => "miq_servers_product_updates").export }.should_not raise_error
+        -> { VmdbTable.new(:name => "miq_servers_product_updates").export }.should_not raise_error
       end
 
       it "will return nil if no data in tables" do
@@ -190,7 +189,7 @@ describe VmdbTable do
         it "with :force => true will return yaml" do
           YAML.stub(:dump).once
           table = VmdbTable.new(:name => "states")
-          table.stub(:select_all_for_export).and_return([1,2,3])
+          table.stub(:select_all_for_export).and_return([1, 2, 3])
           dest_zip = table.export(:force => true)
           File.basename(dest_zip).should == "states.yml"
         end
@@ -275,7 +274,7 @@ EOF
         task_id = VmdbTable.export_queue(@ids.first, :userid => "admin", :action => "Export Tables")
         task_id.should be_kind_of(Integer)
 
-        q = MiqQueue.first(:conditions => { :class_name  => "VmdbTable", :method_name => "export_all_by_id" })
+        q = MiqQueue.first(:conditions => {:class_name  => "VmdbTable", :method_name => "export_all_by_id"})
         q.should_not be_nil
 
         q.delivered(*q.deliver)
@@ -290,7 +289,7 @@ EOF
         taskid = VmdbTable.export_queue(@ids, :userid => "admin", :action => "Export Tables")
         taskid.should be_kind_of(Integer)
 
-        q = MiqQueue.first(:conditions => { :class_name  => "VmdbTable", :method_name => "export_all_by_id" })
+        q = MiqQueue.first(:conditions => {:class_name  => "VmdbTable", :method_name => "export_all_by_id"})
         q.should_not be_nil
 
         q.delivered(*q.deliver)
@@ -321,13 +320,13 @@ EOF
         it "without conditions" do
           t = VmdbTable.vmdb_table_names.last
           VmdbTable.find(:last).name.should == t
-          VmdbTable.last.name.should        == t
+          VmdbTable.last.name.should == t
         end
 
         it "with conditions" do
           t = VmdbTable.vmdb_table_names.third
           VmdbTable.find(:last, :conditions => {:id => [2, 3]}).name.should == t
-          VmdbTable.last(:conditions => {:id => [2, 3]}).name.should        == t
+          VmdbTable.last(:conditions => {:id => [2, 3]}).name.should == t
         end
       end
 
@@ -335,20 +334,20 @@ EOF
         it "without conditions" do
           t = VmdbTable.vmdb_table_names
           VmdbTable.find(:all).collect(&:name).should == t
-          VmdbTable.all.collect(&:name).should        == t
+          VmdbTable.all.collect(&:name).should == t
         end
 
         context "with conditions" do
           it "of an array of ids" do
             t = VmdbTable.vmdb_table_names[0, 2]
-            VmdbTable.find(:all, :conditions => {:id => [1,2]}).collect(&:name).should == t
-            VmdbTable.all(:conditions => {:id => [1,2]}).collect(&:name).should        == t
+            VmdbTable.find(:all, :conditions => {:id => [1, 2]}).collect(&:name).should == t
+            VmdbTable.all(:conditions => {:id => [1, 2]}).collect(&:name).should == t
           end
 
           it "of a single id" do
             t = [VmdbTable.vmdb_table_names.second]
             VmdbTable.find(:all, :conditions => {:id => 2}).collect(&:name).should == t
-            VmdbTable.all(:conditions => {:id => 2}).collect(&:name).should        == t
+            VmdbTable.all(:conditions => {:id => 2}).collect(&:name).should == t
           end
 
           it "of an array of invalid ids" do
@@ -359,7 +358,7 @@ EOF
           it "of an array of both invalid and valid ids" do
             t = [VmdbTable.vmdb_table_names.first]
             VmdbTable.find(:all, :conditions => {:id => [650, 1]}).collect(&:name).should == t
-            VmdbTable.all(:conditions => {:id => [650, 1]}).collect(&:name).should        == t
+            VmdbTable.all(:conditions => {:id => [650, 1]}).collect(&:name).should == t
           end
 
           it "of a single invalid id" do
@@ -431,7 +430,5 @@ EOF
         VmdbTable.find_all_by_name(['miq_databases', 'miq_regions']).collect(&:name).should == ['miq_databases', 'miq_regions']
       end
     end
-
   end
-
 end

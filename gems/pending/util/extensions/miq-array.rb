@@ -8,13 +8,13 @@ end
 
 class String
   def to_miq_a
-    self.lines.to_a
+    lines.to_a
   end
 end
 
 class Array
   def to_miq_a
-    self.to_a
+    to_a
   end
 end
 
@@ -30,7 +30,7 @@ class NilClass
   end
 end
 
-# ActiveRecord's AssociationProxy (base class for HasOne, HasMany, etc.) 
+# ActiveRecord's AssociationProxy (base class for HasOne, HasMany, etc.)
 #   undefines nearly every method from Object, as part of it's delayed loading
 #   infrastructure.  However, since we may define to_miq_a after this happens,
 #   we end up adding the method at the wrong level.  This ends up causing the

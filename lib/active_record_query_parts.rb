@@ -52,8 +52,8 @@ module ActiveRecordQueryParts
   end
 
   def self.glob_to_sql_like(text)
-    text.gsub!('*', '%')
-    text.gsub!('?', '_')
+    text.tr!('*', '%')
+    text.tr!('?', '_')
     text
   end
 end

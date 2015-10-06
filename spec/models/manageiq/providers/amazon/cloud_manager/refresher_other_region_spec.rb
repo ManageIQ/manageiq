@@ -33,27 +33,27 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
   def assert_table_counts
     ExtManagementSystem.count.should == 1
-    Flavor.count.should              == 54
-    AvailabilityZone.count.should    == 3
-    FloatingIp.count.should          == 1
-    AuthPrivateKey.count.should      == 2
-    SecurityGroup.count.should       == 2
-    FirewallRule.count.should        == 4
-    VmOrTemplate.count.should        == 3
-    Vm.count.should                  == 2
-    MiqTemplate.count.should         == 1
+    Flavor.count.should == 54
+    AvailabilityZone.count.should == 3
+    FloatingIp.count.should == 1
+    AuthPrivateKey.count.should == 2
+    SecurityGroup.count.should == 2
+    FirewallRule.count.should == 4
+    VmOrTemplate.count.should == 3
+    Vm.count.should == 2
+    MiqTemplate.count.should == 1
 
-    CustomAttribute.count.should     == 0
-    Disk.count.should                == 1
-    GuestDevice.count.should         == 0
-    Hardware.count.should            == 3
-    Network.count.should             == 4
-    OperatingSystem.count.should     == 0 # TODO: Should this be 15 (set on all vms)?
-    Snapshot.count.should            == 0
-    SystemService.count.should       == 0
+    CustomAttribute.count.should == 0
+    Disk.count.should == 1
+    GuestDevice.count.should == 0
+    Hardware.count.should == 3
+    Network.count.should == 4
+    OperatingSystem.count.should == 0 # TODO: Should this be 15 (set on all vms)?
+    Snapshot.count.should == 0
+    SystemService.count.should == 0
 
-    Relationship.count.should        == 2
-    MiqQueue.count.should            == 5
+    Relationship.count.should == 2
+    MiqQueue.count.should == 5
   end
 
   def assert_ems
@@ -62,14 +62,14 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       :uid_ems     => nil
     )
 
-    @ems.flavors.size.should            == 54
+    @ems.flavors.size.should == 54
     @ems.availability_zones.size.should == 3
-    @ems.floating_ips.size.should       == 1
-    @ems.key_pairs.size.should          == 2
-    @ems.security_groups.size.should    == 2
-    @ems.vms_and_templates.size.should  == 3
-    @ems.vms.size.should                == 2
-    @ems.miq_templates.size.should      == 1
+    @ems.floating_ips.size.should == 1
+    @ems.key_pairs.size.should == 2
+    @ems.security_groups.size.should == 2
+    @ems.vms_and_templates.size.should == 3
+    @ems.vms.size.should == 2
+    @ems.miq_templates.size.should == 1
   end
 
   def assert_specific_flavor
@@ -160,10 +160,10 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       :cpu_shares_level      => nil
     )
 
-    @template.ext_management_system.should  == @ems
+    @template.ext_management_system.should == @ems
     @template.operating_system.should       be_nil # TODO: This should probably not be nil
     @template.custom_attributes.size.should == 0
-    @template.snapshots.size.should         == 0
+    @template.snapshots.size.should == 0
 
     @template.hardware.should have_attributes(
       :guest_os           => "linux",
@@ -176,10 +176,10 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       :bitness            => 64
     )
 
-    @template.hardware.disks.size.should         == 0
+    @template.hardware.disks.size.should == 0
     @template.hardware.guest_devices.size.should == 0
-    @template.hardware.nics.size.should          == 0
-    @template.hardware.networks.size.should      == 0
+    @template.hardware.nics.size.should == 0
+    @template.hardware.networks.size.should == 0
   end
 
   def assert_specific_vm_powered_on
@@ -209,17 +209,17 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       :cpu_shares_level      => nil
     )
 
-    v.ext_management_system.should  == @ems
-    v.availability_zone.should      == @az
+    v.ext_management_system.should == @ems
+    v.availability_zone.should == @az
     v.floating_ip.should            be_nil
-    v.flavor.should                 == @flavor
+    v.flavor.should == @flavor
     v.cloud_network.should          be_nil
     v.cloud_subnet.should           be_nil
-    v.security_groups.should        == [@sg]
-    v.key_pairs.should              == [@kp]
+    v.security_groups.should == [@sg]
+    v.key_pairs.should == [@kp]
     v.operating_system.should       be_nil # TODO: This should probably not be nil
     v.custom_attributes.size.should == 0
-    v.snapshots.size.should         == 0
+    v.snapshots.size.should == 0
 
     v.hardware.should have_attributes(
       :guest_os           => "linux",
@@ -232,11 +232,11 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       :bitness            => 64
     )
 
-    v.hardware.disks.size.should         == 0 # TODO: Change to a flavor that has disks
+    v.hardware.disks.size.should == 0 # TODO: Change to a flavor that has disks
     v.hardware.guest_devices.size.should == 0
-    v.hardware.nics.size.should          == 0
+    v.hardware.nics.size.should == 0
 
-    v.hardware.networks.size.should      == 2
+    v.hardware.networks.size.should == 2
     network = v.hardware.networks.where(:description => "public").first
     network.should have_attributes(
       :description => "public",

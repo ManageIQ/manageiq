@@ -1,7 +1,6 @@
 require 'miq_storage_defs'
 
 class StorageManager < ActiveRecord::Base
-
   include AuthenticationMixin
   include FilterableMixin
   include RelationshipMixin
@@ -31,21 +30,21 @@ class StorageManager < ActiveRecord::Base
     :MiqCimVirtualMachine
   ]
 
-  def self.new_of_type(typ, options={})
+  def self.new_of_type(typ, options = {})
     klass = typ.constantize
     options.symbolize_keys!
 
     options[:ipaddress] ||= options[:hostname]
-    options[:hostname]  ||= options[:ipaddress]
+    options[:hostname] ||= options[:ipaddress]
 
     klass.new(options)
   end
 
-  def self.add(ipaddress, username, password, agent_type, zone_id=nil, hostname=nil, name=nil)
+  def self.add(ipaddress, username, password, agent_type, zone_id = nil, hostname = nil, name = nil)
     # TODO: Use hostname, not ipaddress
-    agent = self.where(:ipaddress => ipaddress, :agent_type => agent_type).first
-    unless (agent)
-      agent = self.new
+    agent = find_by(:ipaddress => ipaddress, :agent_type => agent_type)
+    unless agent
+      agent = new
       agent.ipaddress   = ipaddress || hostname
       agent.hostname    = hostname || ipaddress
       agent.agent_type  = agent_type
@@ -65,21 +64,21 @@ class StorageManager < ActiveRecord::Base
       agent.save
     end
 
-    return agent
+    agent
   end
 
-  def self.agent_ids_by_class(agents=nil)
-    agents ||= self.all
+  def self.agent_ids_by_class(agents = nil)
+    agents ||= all
     agentIdsByClass = Hash.new { |h, k| h[k] = [] }
     agents.each { |a| agentIdsByClass[a.class] << a.id }
-    return agentIdsByClass
+    agentIdsByClass
   end
 
-  def self.refresh_inventory(smIds=nil, args={})
+  def self.refresh_inventory(smIds = nil, args = {})
     if smIds.nil?
-      agents = self.all
+      agents = all
     else
-      agents = self.find(smIds)
+      agents = find(smIds)
     end
 
     agent_ids_by_class(agents).each do |klass, ids|
@@ -88,8 +87,8 @@ class StorageManager < ActiveRecord::Base
     end
   end
 
-  def self.refresh_inventory_by_subclass(ids, args={})
-    _log.info "skipping instances of non-refreshable subclass #{self.name}"
+  def self.refresh_inventory_by_subclass(_ids, _args = {})
+    _log.info "skipping instances of non-refreshable subclass #{name}"
   end
 
   def self.cleanup_by_agent(agent)
@@ -105,17 +104,17 @@ class StorageManager < ActiveRecord::Base
   def self.queue_refresh_vmdb_cim(zone_name)
     _log.info "queueing requests to zone #{zone_name}"
     MiqQueue.put_unless_exists(
-      :zone     => zone_name,
-      :msg_timeout  => 36000,
-      :queue_name   => "vmdb_storage_bridge",
-      :class_name   => self.name,
-      :method_name  => 'refresh_vmdb_cim'
+      :zone        => zone_name,
+      :msg_timeout => 36000,
+      :queue_name  => "vmdb_storage_bridge",
+      :class_name  => name,
+      :method_name => 'refresh_vmdb_cim'
     )
   end
 
   def self.refresh_vmdb_cim
     zoneId = MiqServer.my_server.zone.id
-    agent = CimVmdbAgent.where(:agent_type => "VMDB", :zone_id => zoneId).first
+    agent = CimVmdbAgent.find_by(:agent_type => "VMDB", :zone_id => zoneId)
     agent = CimVmdbAgent.add(nil, nil, nil, 'VMDB', zoneId, "VMDB-#{zoneId}") unless agent
     _log.info "zone = #{zoneId} - STORAGE_UPDATE_IN_PROGRESS"
     agent.update_attribute(:last_update_status, STORAGE_UPDATE_IN_PROGRESS)
@@ -132,8 +131,8 @@ class StorageManager < ActiveRecord::Base
       _log.info "zone = #{zoneId} - STORAGE_UPDATE_FAILED"
       agent.update_attribute(:last_update_status, STORAGE_UPDATE_FAILED)
     end
-    self.cleanup_by_agent(agent)
-    self.queue_bridge_associations(MiqServer.my_server.zone.name)
+    cleanup_by_agent(agent)
+    queue_bridge_associations(MiqServer.my_server.zone.name)
   end
 
   def update_from_vmdb
@@ -144,17 +143,17 @@ class StorageManager < ActiveRecord::Base
   def self.queue_bridge_associations(zone_name)
     _log.info "queueing requests to zone #{zone_name}"
     MiqQueue.put_unless_exists(
-      :zone     => zone_name,
-      :msg_timeout  => 36000,
-      :queue_name   => "vmdb_storage_bridge",
-      :class_name   => self.name,
-      :method_name  => 'bridge_associations'
+      :zone        => zone_name,
+      :msg_timeout => 36000,
+      :queue_name  => "vmdb_storage_bridge",
+      :class_name  => name,
+      :method_name => 'bridge_associations'
     )
   end
 
   def self.bridge_associations
     zoneId = MiqServer.my_server.zone.id
-    agent = CimVmdbAgent.where(:agent_type => "VMDB", :zone_id => zoneId).first
+    agent = CimVmdbAgent.find_by(:agent_type => "VMDB", :zone_id => zoneId)
     agent = CimVmdbAgent.add(nil, nil, nil, 'VMDB', zoneId, "VMDB-#{zoneId}") unless agent
     _log.info "zone = #{zoneId} - STORAGE_UPDATE_BRIDGE_ASSOCIATIONS"
     agent.update_attribute(:last_update_status, STORAGE_UPDATE_BRIDGE_ASSOCIATIONS)
@@ -169,7 +168,7 @@ class StorageManager < ActiveRecord::Base
       _log.info "zone = #{zoneId} - STORAGE_UPDATE_FAILED"
       agent.update_attribute(:last_update_status, STORAGE_UPDATE_FAILED)
     end
-    self.queue_update_association_shortcuts(MiqServer.my_server.zone.name)
+    queue_update_association_shortcuts(MiqServer.my_server.zone.name)
   end
 
   def bridge_associations
@@ -180,17 +179,17 @@ class StorageManager < ActiveRecord::Base
   def self.queue_update_association_shortcuts(zone_name)
     _log.info "queueing requests to zone #{zone_name}"
     MiqQueue.put_unless_exists(
-      :zone     => zone_name,
-      :msg_timeout  => 36000,
-      :queue_name   => "vmdb_storage_bridge",
-      :class_name   => self.name,
-      :method_name  => 'update_association_shortcuts'
+      :zone        => zone_name,
+      :msg_timeout => 36000,
+      :queue_name  => "vmdb_storage_bridge",
+      :class_name  => name,
+      :method_name => 'update_association_shortcuts'
     )
   end
 
   def self.update_association_shortcuts
     zoneId = MiqServer.my_server.zone.id
-    agent = CimVmdbAgent.where(:agent_type => "VMDB", :zone_id => zoneId).first
+    agent = CimVmdbAgent.find_by(:agent_type => "VMDB", :zone_id => zoneId)
     agent = CimVmdbAgent.add(nil, nil, nil, 'VMDB', zoneId, "VMDB-#{zoneId}") unless agent
     _log.info "zone = #{zoneId} - STORAGE_UPDATE_ASSOCIATION_SHORTCUTS"
     agent.update_attribute(:last_update_status, STORAGE_UPDATE_ASSOCIATION_SHORTCUTS)
@@ -218,24 +217,24 @@ class StorageManager < ActiveRecord::Base
       _log.info "zone = #{zoneId} - STORAGE_UPDATE_FAILED"
       agent.update_attribute(:last_update_status, STORAGE_UPDATE_FAILED)
     end
-    self.queue_association_cleanup_by_zone(MiqServer.my_server.zone.name)
-    return nil
+    queue_association_cleanup_by_zone(MiqServer.my_server.zone.name)
+    nil
   end
 
   def self.queue_association_cleanup_by_zone(zone_name)
     _log.info "queueing requests to zone #{zone_name}"
     MiqQueue.put_unless_exists(
-      :zone     => zone_name,
-      :msg_timeout  => 36000,
-      :queue_name   => "vmdb_storage_bridge",
-      :class_name   => self.name,
-      :method_name  => 'association_cleanup_by_zone'
+      :zone        => zone_name,
+      :msg_timeout => 36000,
+      :queue_name  => "vmdb_storage_bridge",
+      :class_name  => name,
+      :method_name => 'association_cleanup_by_zone'
     )
   end
 
   def self.association_cleanup_by_zone
     zoneId = MiqServer.my_server.zone.id
-    agent = CimVmdbAgent.where(:agent_type => "VMDB", :zone_id => zoneId).first
+    agent = CimVmdbAgent.find_by(:agent_type => "VMDB", :zone_id => zoneId)
     agent = CimVmdbAgent.add(nil, nil, nil, 'VMDB', zoneId, "VMDB-#{zoneId}") unless agent
     _log.info "zone = #{zoneId} - STORAGE_UPDATE_ASSOCIATION_CLEANUP"
     agent.update_attribute(:last_update_status, STORAGE_UPDATE_ASSOCIATION_CLEANUP)
@@ -250,7 +249,7 @@ class StorageManager < ActiveRecord::Base
       _log.info "zone = #{zoneId} - STORAGE_UPDATE_FAILED"
       agent.update_attribute(:last_update_status, STORAGE_UPDATE_FAILED)
     end
-    return nil
+    nil
   end
 
   def self.refresh_metrics
@@ -261,8 +260,8 @@ class StorageManager < ActiveRecord::Base
     end
   end
 
-  def self.refresh_metrics_by_subclass(statistic_time, ids)
-    _log.info "skipping instances of non-refreshable subclass #{self.name}"
+  def self.refresh_metrics_by_subclass(_statistic_time, _ids)
+    _log.info "skipping instances of non-refreshable subclass #{name}"
   end
 
   def self.metrics_rollup_hourly
@@ -275,8 +274,8 @@ class StorageManager < ActiveRecord::Base
     end
   end
 
-  def self.metrics_rollup_hourly_by_subclass(rollup_time, ids)
-    _log.info "skipping instances of subclass #{self.name}"
+  def self.metrics_rollup_hourly_by_subclass(_rollup_time, _ids)
+    _log.info "skipping instances of subclass #{name}"
   end
 
   def self.metrics_rollup_daily(time_profile_id)
@@ -290,8 +289,8 @@ class StorageManager < ActiveRecord::Base
     end
   end
 
-  def self.metrics_rollup_daily_by_subclass(rollup_time, time_profile_id, ids)
-    _log.info "skipping instances of subclass #{self.name}"
+  def self.metrics_rollup_daily_by_subclass(_rollup_time, _time_profile_id, _ids)
+    _log.info "skipping instances of subclass #{name}"
   end
 
   def last_update_status_str
@@ -306,11 +305,11 @@ class StorageManager < ActiveRecord::Base
     zone = self.zone
     zone.nil? || zone.name.blank? ? MiqServer.my_zone : zone.name
   end
-  alias zone_name my_zone
+  alias_method :zone_name, :my_zone
 
   SUPPORTED_TYPES = ["MiqSmisAgent", "NetappRemoteService"]
   def self.supported_types
-    SUPPORTED_TYPES.inject({}) { |h,t| h[t] = ui_lookup(:model => t); h }
+    SUPPORTED_TYPES.inject({}) { |h, t| h[t] = ui_lookup(:model => t); h }
   end
 
   def type_description
@@ -319,7 +318,6 @@ class StorageManager < ActiveRecord::Base
 
   DEFAULT_STORAGE_MANAGERS = ["NetappRemoteService"]
   def self.storage_manager_types
-    self.supported_types.slice(*DEFAULT_STORAGE_MANAGERS)
+    supported_types.slice(*DEFAULT_STORAGE_MANAGERS)
   end
-
 end

@@ -10,17 +10,17 @@ class MiqReplicationWorker < MiqWorker
   end
 
   def self.replication_destination_connection_parameters
-    config = self.worker_settings.fetch_path(:replication, :destination)
+    config = worker_settings.fetch_path(:replication, :destination)
     MiqRegionRemote.connection_parameters_for(config)
   end
 
   def self.destination_host
-    repl = self.find_current_in_my_region.first
+    repl = find_current_in_my_region.first
     repl && repl.worker_settings.fetch_path(:replication, :destination, :host)
   end
 
   def self.replication_active?
-    self.find_current_in_my_region.first
+    find_current_in_my_region.first
   end
 
   def friendly_name
@@ -53,23 +53,23 @@ class MiqReplicationWorker < MiqWorker
   #
 
   def self.reset_replication
-    repl = self.find_current.first
+    repl = find_current.first
     repl.reset_replication unless repl.nil?
   end
 
   def reset_replication
-    self.send_message_to_worker_monitor('reset_replication')
+    send_message_to_worker_monitor('reset_replication')
   end
 
   def kill
-    MiqProcess.get_child_pids(self.pid).each do |child_pid|
+    MiqProcess.get_child_pids(pid).each do |child_pid|
       begin
-        _log.info("#{self.format_full_log_msg} -- killing child process: PID [#{child_pid}]")
+        _log.info("#{format_full_log_msg} -- killing child process: PID [#{child_pid}]")
         Process.kill(9, child_pid)
       rescue Errno::ESRCH
-        _log.info("#{self.format_full_log_msg} -- child process with PID [#{child_pid}] has been killed")
+        _log.info("#{format_full_log_msg} -- child process with PID [#{child_pid}] has been killed")
       rescue => err
-        _log.info("#{self.format_full_log_msg} -- child process with PID [#{child_pid}] has been killed, but with the following error: #{err}")
+        _log.info("#{format_full_log_msg} -- child process with PID [#{child_pid}] has been killed, but with the following error: #{err}")
       end
     end
 

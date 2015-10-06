@@ -1,13 +1,13 @@
 module Metric::Rollup
-  ROLLUP_COLS  = Metric.columns_hash.collect {|c, h| c.to_sym if h.type == :float || c[0,7] == "derived"}.compact
-  STORAGE_COLS = Metric.columns_hash.collect {|c, h| c.to_sym if c.starts_with?("derived_storage_")}.compact
+  ROLLUP_COLS  = Metric.columns_hash.collect { |c, h| c.to_sym if h.type == :float || c[0, 7] == "derived" }.compact
+  STORAGE_COLS = Metric.columns_hash.collect { |c, _h| c.to_sym if c.starts_with?("derived_storage_") }.compact
 
   AGGREGATE_COLS = {
     :MiqEnterprise_miq_regions        => (ROLLUP_COLS),
     :MiqRegion_ext_management_systems => (ROLLUP_COLS - STORAGE_COLS),
     :MiqRegion_storages               => STORAGE_COLS,
     :ExtManagementSystem_hosts        => (ROLLUP_COLS - STORAGE_COLS),
-    :EmsCluster_hosts => [
+    :EmsCluster_hosts                 => [
       :cpu_ready_delta_summation,
       :cpu_system_delta_summation,
       :cpu_usage_rate_average,
@@ -24,16 +24,16 @@ module Metric::Rollup
       :mem_usage_absolute_average,
       :net_usage_rate_average,
     ],
-    :Host_vms => [
+    :Host_vms                         => [
       :cpu_ready_delta_summation,
       :cpu_system_delta_summation,
-      :cpu_used_delta_summation ,
+      :cpu_used_delta_summation,
       :cpu_wait_delta_summation,
       :derived_vm_allocated_disk_storage,
       :derived_vm_numvcpus,
       :derived_vm_used_disk_storage,
     ],
-    :AvailabilityZone_vms => [
+    :AvailabilityZone_vms             => [
       :cpu_usage_rate_average,
       :net_usage_rate_average,
       :disk_usage_rate_average
@@ -110,34 +110,34 @@ module Metric::Rollup
   DERIVED_COLS_EXCLUDED_CLASSES = ['MiqRegion', 'MiqEnterprise']
   TAG_SEP = "|"
 
-  def self.rollup_realtime(obj, rt_ts, interval_name, time_profile, new_perf, orig_perf)
+  def self.rollup_realtime(obj, rt_ts, _interval_name, _time_profile, new_perf, orig_perf)
     # Roll up realtime metrics from child objects
     children = obj.class::PERF_ROLLUP_CHILDREN.to_miq_a
-    children.each {|c| new_perf.merge!(self.rollup_child_metrics(obj, rt_ts, 'realtime', c)) } unless children.empty?
+    children.each { |c| new_perf.merge!(rollup_child_metrics(obj, rt_ts, 'realtime', c)) } unless children.empty?
 
     new_perf.reverse_merge!(orig_perf)
     new_perf.merge!(Metric::Processing.process_derived_columns(obj, new_perf, rt_ts)) unless DERIVED_COLS_EXCLUDED_CLASSES.include?(obj.class.base_class.name)
 
-    return new_perf
+    new_perf
   end
 
-  def self.rollup_hourly(obj, hour, interval_name, time_profile, new_perf, orig_perf)
+  def self.rollup_hourly(obj, hour, _interval_name, _time_profile, new_perf, orig_perf)
     # Roll up realtime metrics
     rt_perfs = Metric::Finders.find_all_by_hour(obj, hour, 'realtime')
-    self.rollup_realtime_perfs(obj, rt_perfs, new_perf)
+    rollup_realtime_perfs(obj, rt_perfs, new_perf)
 
     # Roll up hourly metrics from child objects
     children = obj.class::PERF_ROLLUP_CHILDREN.to_miq_a
-    children.each {|c| new_perf.merge!(self.rollup_child_metrics(obj, hour, 'hourly', c)) } unless children.empty?
+    children.each { |c| new_perf.merge!(rollup_child_metrics(obj, hour, 'hourly', c)) } unless children.empty?
 
     new_perf.reverse_merge!(orig_perf)
     new_perf.merge!(Metric::Processing.process_derived_columns(obj, new_perf, hour)) unless DERIVED_COLS_EXCLUDED_CLASSES.include?(obj.class.base_class.name)
 
-    return new_perf
+    new_perf
   end
 
   class << self
-    alias rollup_historical rollup_hourly
+    alias_method :rollup_historical, :rollup_hourly
   end
 
   def self.rollup_daily(obj, day, interval_name, time_profile, new_perf, orig_perf)
@@ -153,7 +153,7 @@ module Metric::Rollup
     new_perf.merge!(daily_perfs.first) unless daily_perfs.first.nil?
     new_perf.reverse_merge!(orig_perf)
 
-    return new_perf
+    new_perf
   end
 
   def self.rollup_realtime_perfs(obj, rt_perfs, new_perf = {})
@@ -168,7 +168,7 @@ module Metric::Rollup
 
         if obj.kind_of?(VmOrTemplate) && BURST_COLS.include?(col)
           new_perf[:min_max] ||= {}
-          self.rollup_burst(col, new_perf[:min_max], rt.timestamp, value)
+          rollup_burst(col, new_perf[:min_max], rt.timestamp, value)
         end
 
         Metric::Aggregation.aggregate_for_column(col, nil, new_perf, new_perf_counts, value)
@@ -181,7 +181,7 @@ module Metric::Rollup
 
     new_perf[:intervals_in_rollup] = Metric::Helper.max_count(new_perf_counts)
 
-    return new_perf
+    new_perf
   end
 
   def self.rollup_child_metrics(obj, timestamp, interval_name, assoc)
@@ -191,7 +191,7 @@ module Metric::Rollup
     result = {}
     counts = {}
 
-    agg_cols = interval_name == "realtime" ? self.const_get("#{obj.class.base_class.name.underscore.upcase}_REALTIME_COLS") : AGGREGATE_COLS["#{obj.class.base_class}_#{assoc}".to_sym]
+    agg_cols = interval_name == "realtime" ? const_get("#{obj.class.base_class.name.underscore.upcase}_REALTIME_COLS") : AGGREGATE_COLS["#{obj.class.base_class}_#{assoc}".to_sym]
     agg_cols.each do |c|
       # Initialize aggregation col values and counts to zero before starting
       counts[c] = 0
@@ -219,11 +219,11 @@ module Metric::Rollup
     end
 
     agg_cols.each do |c|
-      aggregate_only = ! AVG_VALUE_COLUMNS.include?(c)
+      aggregate_only = !AVG_VALUE_COLUMNS.include?(c)
       Metric::Aggregation.process_for_column(c, obj.vim_performance_state_for_ts(timestamp), result, counts, aggregate_only, :average)
     end
 
-    return result
+    result
   end
 
   def self.burst_col_names(type, col)
@@ -286,7 +286,7 @@ module Metric::Rollup
   #
 
   def self.perf_rollup_gap(start_time, end_time, interval_name, time_profile_id = nil)
-    targets = self.find_distinct_resources
+    targets = find_distinct_resources
     return if targets.empty?
 
     _log.info "Queueing #{interval_name} rollups for range: [#{start_time} - #{end_time}]..."
@@ -296,7 +296,7 @@ module Metric::Rollup
 
   def self.perf_rollup_gap_queue(start_time, end_time, interval_name, time_profile_id = nil)
     MiqQueue.put_unless_exists(
-      :class_name  => self.name,
+      :class_name  => name,
       :method_name => "perf_rollup_gap",
       :priority    => MiqQueue::HIGH_PRIORITY,
       :args        => [start_time, end_time, interval_name, time_profile_id]

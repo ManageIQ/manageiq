@@ -77,7 +77,7 @@ describe DashboardController do
     it "returns url for the user and sets user's group/role id in session" do
       user = FactoryGirl.create(:user, :role => "test")
       User.stub(:authenticate).and_return(user)
-      controller.stub(:get_vmdb_config).and_return({:product => {}})
+      controller.stub(:get_vmdb_config).and_return(:product => {})
       skip_data_checks('some_url')
       validation = controller.send(:validate_user, user)
       expect(controller.current_groupid).to eq(user.current_group_id)
@@ -88,19 +88,19 @@ describe DashboardController do
 
   context "Create Dashboard" do
     it "dashboard show" do
-      #create dashboard for a group
-      ws = FactoryGirl.create(:miq_widget_set, :name => "default",
-                              :set_data => {:last_group_db_updated => Time.now.utc,
-                              :col1 => [1], :col2 => [], :col3 =>[]})
+      # create dashboard for a group
+      ws = FactoryGirl.create(:miq_widget_set, :name     => "default",
+                                               :set_data => {:last_group_db_updated => Time.now.utc,
+                              :col1 => [1], :col2 => [], :col3 => []})
 
       ur = FactoryGirl.create(:miq_user_role)
       group = FactoryGirl.create(:miq_group, :miq_user_role => ur, :settings => {:dashboard_order => [ws.id]})
       user = FactoryGirl.create(:user, :miq_groups => [group])
 
-      controller.instance_variable_set(:@sb, {:active_db => ws.name})
+      controller.instance_variable_set(:@sb, :active_db => ws.name)
       controller.instance_variable_set(:@tabs, [])
       login_as user
-      #create a user's dashboard using group dashboard name.
+      # create a user's dashboard using group dashboard name.
       FactoryGirl.create(:miq_widget_set,
                          :name     => "#{user.userid}|#{group.id}|#{ws.name}",
                          :set_data => {:last_group_db_updated => Time.now.utc, :col1 => [1], :col2 => [], :col3 => []})
@@ -165,6 +165,52 @@ describe DashboardController do
     it "defaults layout to login on Login screen" do
       layout = controller.send(:get_layout)
       layout.should eq("login")
+    end
+  end
+
+  describe '#resize_layout' do
+    before(:each) do
+      controller.params[:sidebar] = sidebar
+      controller.params[:context] = context
+      expect(controller).to receive(:render).with(:nothing => true)
+      controller.send(:resize_layout)
+    end
+
+    context 'controller is not nil' do
+      let(:context) { 'sample_controller' }
+
+      context 'invalid sidebar value' do
+        let(:sidebar) { 'not a number' }
+
+        it 'sets width to 0 units' do
+          expect(session[:sidebar][context]).to eq(0)
+        end
+      end
+
+      context 'valid sidebar value' do
+        let(:sidebar) { '3' }
+
+        it 'sets width to 3 units' do
+          expect(session[:sidebar][context]).to eq(3)
+        end
+      end
+
+      context 'no sidebar value' do
+        let(:sidebar) { nil }
+
+        it 'does not change the configuration' do
+          expect(session[:sidebar]).to be nil
+        end
+      end
+    end
+
+    context 'controller is nil' do
+      let(:sidebar) { nil }
+      let(:context) { nil }
+
+      it 'does not change the configuration' do
+        expect(session[:sidebar]).to be nil
+      end
     end
   end
 

@@ -18,7 +18,7 @@
                 .col-md-8
                   = text_field_tag("description", @edit[:new][:description],
                     :maxlength         => MAX_DESC_LEN,
-                    :class             => "form-group",
+                    :class             => "form-control",
                     "data-miq_observe" => observe_with_interval)
                   = javascript_tag(javascript_focus('description'))
               - else

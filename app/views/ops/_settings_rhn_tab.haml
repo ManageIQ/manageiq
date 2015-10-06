@@ -8,20 +8,13 @@
 - if @sb[:active_tab] == "settings_rhn"
   = render :partial => 'layouts/flash_msg'
 
-  %p{:class => 'legend'}
+  %h3
     Red Hat Software Updates
-    - if @customer.registered
-      = render :partial => 'ops/rhn/info_subscribed'
-    - else
-      = render :partial => 'ops/rhn/info_unsubscribed'
-    .form-group
-      .col-md-8
-        = button_tag(_('Edit Registration'),
-                    :id      => 'settings_rhn_edit',
-                    :class   => 'btn btn-default',
-                    :onclick => "miqAjaxButton('#{url_for(:action => 'edit_rhn')}');")
+  - if @customer.registered
+    = render :partial => 'ops/rhn/info_subscribed'
+  - else
+    = render :partial => 'ops/rhn/info_unsubscribed'
 
   - if @customer.registered
     = render :partial => 'ops/rhn/server_table'
 
-  %div{:style => 'padding-bottom:20px;'}

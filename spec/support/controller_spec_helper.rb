@@ -31,7 +31,7 @@ module ControllerSpecHelper
   def seed_session_trees(a_controller, active_tree, node = nil)
     session[:sandboxes] = {
       a_controller => {
-        :trees => {
+        :trees       => {
           active_tree => {}
         },
         :active_tree => active_tree

@@ -1,4 +1,4 @@
-raise "Ruby versions less than 2.0 are unsupported!" if RUBY_VERSION < "2.0.0"
+raise "Ruby versions less than 2.2 are unsupported!" if RUBY_VERSION < "2.2.0"
 
 source 'https://rubygems.org'
 
@@ -24,7 +24,7 @@ gem "fog",                     "~>2.0.0.pre.0",     :require => false
 gem "fog-core",                "!=1.31.1",          :require => false
 gem "httpclient",              "~>2.5.3",           :require => false
 gem "kubeclient",              "=0.5.1",            :require => false
-gem "linux_admin",             "~>0.11.0",          :require => false
+gem "linux_admin",             "~>0.11.1",          :require => false
 gem "log4r",                   "=1.1.8",            :require => false
 gem "memoist",                 "~>0.11.0",          :require => false
 gem "memory_buffer",           ">=0.1.0",           :require => false
@@ -34,6 +34,7 @@ gem "nokogiri",                "~>1.6.0",           :require => false
 gem "openshift_client",        "=0.1.0",            :require => false
 gem "ovirt",                   "~>0.6.0",           :require => false
 gem "parallel",                "~>0.5.21",          :require => false
+gem "pg",                      "~>0.18.2",          :require => false
 gem "psych",                   "~>2.0.12"
 gem "rest-client",             "=2.0.0.rc1",        :require => false
 gem "rubyzip",                 "=0.9.5",            :require => false  # TODO: Review 0.9.7 breaking log collection in FB14646

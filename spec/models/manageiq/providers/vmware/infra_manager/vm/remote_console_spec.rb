@@ -17,7 +17,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
     end
 
     context "with :vnc" do
-        it "without a proxy" do
+      it "without a proxy" do
         @vm.should_receive(:remote_console_vnc_acquire_ticket).with(nil)
         @vm.remote_console_acquire_ticket(:vnc)
       end
@@ -44,27 +44,27 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
       @vm.remote_console_acquire_ticket_queue(:mks, "admin")
 
       q_all = MiqQueue.all
-      q_all.length.should         == 1
+      q_all.length.should == 1
       q_all[0].method_name.should == "remote_console_acquire_ticket"
-      q_all[0].args.should        == [:mks, nil]
+      q_all[0].args.should == [:mks, nil]
     end
 
     it "with :vmrc" do
       @vm.remote_console_acquire_ticket_queue(:vmrc, "admin")
 
       q_all = MiqQueue.all
-      q_all.length.should         == 1
+      q_all.length.should == 1
       q_all[0].method_name.should == "remote_console_acquire_ticket"
-      q_all[0].args.should        == [:vmrc, nil]
+      q_all[0].args.should == [:vmrc, nil]
     end
 
     it "with :vnc" do
       @vm.remote_console_acquire_ticket_queue(:vnc, "admin", 1234)
 
       q_all = MiqQueue.all
-      q_all.length.should         == 1
+      q_all.length.should == 1
       q_all[0].method_name.should == "remote_console_acquire_ticket"
-      q_all[0].args.should        == [:vnc, 1234]
+      q_all[0].args.should == [:vnc, 1234]
     end
   end
 
@@ -86,13 +86,13 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
 
     it "with vm off" do
       @vm.update_attribute(:raw_power_state, "poweredOff")
-      lambda {@vm.remote_console_vmrc_acquire_ticket}.should raise_error MiqException::RemoteConsoleNotSupportedError
+      -> { @vm.remote_console_vmrc_acquire_ticket }.should raise_error MiqException::RemoteConsoleNotSupportedError
     end
 
     it "with vm with no ems" do
       @vm.ext_management_system = nil
       @vm.save!
-      lambda {@vm.remote_console_vmrc_acquire_ticket}.should raise_error MiqException::RemoteConsoleNotSupportedError
+      -> { @vm.remote_console_vmrc_acquire_ticket }.should raise_error MiqException::RemoteConsoleNotSupportedError
     end
   end
 
@@ -109,17 +109,17 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
     it "with vm with no ems" do
       @vm.ext_management_system = nil
       @vm.save!
-      lambda {@vm.validate_remote_console_vmrc_support}.should raise_error MiqException::RemoteConsoleNotSupportedError
+      -> { @vm.validate_remote_console_vmrc_support }.should raise_error MiqException::RemoteConsoleNotSupportedError
     end
 
     it "with vm off" do
       @vm.update_attribute(:raw_power_state, "poweredOff")
-      lambda {@vm.validate_remote_console_vmrc_support}.should raise_error MiqException::RemoteConsoleNotSupportedError
+      -> { @vm.validate_remote_console_vmrc_support }.should raise_error MiqException::RemoteConsoleNotSupportedError
     end
 
     it "on VC 4.0" do
       @ems.update_attribute(:api_version, "4.0")
-      lambda {@vm.validate_remote_console_vmrc_support}.should raise_error MiqException::RemoteConsoleNotSupportedError
+      -> { @vm.validate_remote_console_vmrc_support }.should raise_error MiqException::RemoteConsoleNotSupportedError
     end
   end
 
@@ -134,7 +134,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
       vim_vm = double("MiqVimVm")
       vim_vm.should_receive(:setRemoteDisplayVncAttributes) do |args|
         args[:enabled].should  be_true
-        args[:port].should     == 5901
+        args[:port].should == 5901
         args[:password].should =~ /^[A-Za-z0-9+\/]{8}$/
       end
       @vm.stub(:with_provider_object).and_yield(vim_vm)
@@ -147,9 +147,9 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
 
       password, host_address, host_port, proxy_address, proxy_port = @vm.remote_console_vnc_acquire_ticket
 
-      password.should      =~ /^[A-Za-z0-9+\/]{8}$/
-      host_address.should  == "192.168.252.4"
-      host_port.should     == 5901
+      password.should =~ /^[A-Za-z0-9+\/]{8}$/
+      host_address.should == "192.168.252.4"
+      host_port.should == 5901
       proxy_address.should be_nil
       proxy_port.should    be_nil
     end
@@ -162,9 +162,9 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
 
         password, host_address, host_port, proxy_address, proxy_port = @vm.remote_console_vnc_acquire_ticket(server)
 
-        password.should      =~ /^[A-Za-z0-9+\/]{8}$/
-        host_address.should  == "192.168.252.4"
-        host_port.should     == 5901
+        password.should =~ /^[A-Za-z0-9+\/]{8}$/
+        host_address.should == "192.168.252.4"
+        host_port.should == 5901
         proxy_address.should be_nil
         proxy_port.should    be_nil
       end
@@ -176,11 +176,11 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
 
         password, host_address, host_port, proxy_address, proxy_port = @vm.remote_console_vnc_acquire_ticket(server)
 
-        password.should      =~ /^[A-Za-z0-9+\/]{8}$/
-        host_address.should  == @host.guid
-        host_port.should     == 5901
+        password.should =~ /^[A-Za-z0-9+\/]{8}$/
+        host_address.should == @host.guid
+        host_port.should == 5901
         proxy_address.should == "1.2.3.4"
-        proxy_port.should    == 5800
+        proxy_port.should == 5800
       end
     end
 

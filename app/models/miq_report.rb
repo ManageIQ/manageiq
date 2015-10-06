@@ -11,7 +11,7 @@ class MiqReport < ActiveRecord::Base
   include_concern 'Search'
   include YAMLImportExportMixin
 
-  default_scope { where self.conditions_for_my_region_default_scope }
+  default_scope { where conditions_for_my_region_default_scope }
 
   serialize :cols
   serialize :conditions
@@ -34,7 +34,7 @@ class MiqReport < ActiveRecord::Base
 
   validates_presence_of     :name, :title, :db, :rpt_group
   validates_uniqueness_of   :name
-  validates_inclusion_of    :rpt_type, :in => %w{ Default Custom }
+  validates_inclusion_of    :rpt_type, :in => %w( Default Custom )
 
   has_many                  :miq_report_results, :dependent => :destroy
   belongs_to                :time_profile
@@ -42,8 +42,8 @@ class MiqReport < ActiveRecord::Base
   belongs_to                :user
 
   attr_accessor_that_yamls :table, :sub_table, :filter_summary, :extras, :ids, :scoped_association, :html_title, :file_name,
-                :extras, :record_id, :tl_times, :user_categories, :trend_data, :performance, :include_for_find,
-                :report_run_time, :chart
+                           :extras, :record_id, :tl_times, :user_categories, :trend_data, :performance, :include_for_find,
+                           :report_run_time, :chart
 
   attr_accessor_that_yamls :reserved # For legacy imports
 
@@ -57,7 +57,7 @@ class MiqReport < ActiveRecord::Base
   #   ::miq_group_id: An MiqGroup id on which to filter
   #   ::select:       An Array of MiqReport columns to fetch
   def self.having_report_results(options = {})
-    q = self.joins(:miq_report_results).order(arel_table[:id])
+    q = joins(:miq_report_results).order(arel_table[:id])
 
     miq_group = MiqGroup.extract_ids(options[:miq_group] || options[:miq_group_id])
     q = q.where(MiqReportResult.arel_table[:miq_group_id].eq(miq_group)) unless miq_group.nil?
@@ -72,7 +72,7 @@ class MiqReport < ActiveRecord::Base
   end
 
   def view_filter_columns
-    self.col_order.collect { |c| [self.headers[col_order.index(c)], c] }
+    col_order.collect { |c| [headers[col_order.index(c)], c] }
   end
 
   def self.reportable_models
@@ -97,11 +97,11 @@ class MiqReport < ActiveRecord::Base
   end
 
   def self.get_col_info(path)
-    data_type = self.get_col_type(path)
+    data_type = get_col_type(path)
     {
       :data_type         => data_type,
-      :available_formats => self.get_available_formats(path, data_type),
-      :default_format    => self.get_default_format(path, data_type),
+      :available_formats => get_available_formats(path, data_type),
+      :default_format    => get_default_format(path, data_type),
       :numeric           => [:integer, :decimal, :fixnum, :float].include?(data_type)
     }
   end
@@ -110,7 +110,7 @@ class MiqReport < ActiveRecord::Base
     # mode => :field || :tag
     # Only return cols from has_many sub-tables
     return [] if cols.nil?
-    cols.inject([]) do |r,c|
+    cols.inject([]) do |r, c|
       # eg. c = ["Host.Hardware.Disks : File Name", "Host.hardware.disks-filename"]
       parts = c.last.split(".")
       parts[-1] = parts.last.split("-").first # Strip off field name from last element
@@ -125,16 +125,15 @@ class MiqReport < ActiveRecord::Base
       model = parts.shift
       relats = MiqExpression.get_relats(model)
       # Build relats hash fetch path like: [:reflections, :hardware, :reflections, :disks, :parent, :multivalue]
-      path = parts.inject([]) {|a,p| a << :reflections; a << p.to_sym}
+      path = parts.inject([]) { |a, p| a << :reflections; a << p.to_sym }
       path += [:parent, :multivalue]
       multi = relats.fetch_path(*path)
       multi == true ? r << c : r
     end
-
   end
 
   def db_class
-    self.db.is_a?(Class) ? self.db : Object.const_get(self.db)
+    db.kind_of?(Class) ? db : Object.const_get(db)
   end
 
   def contains_records?

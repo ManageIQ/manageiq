@@ -3,7 +3,7 @@ class WebSvcOps
     if ost.verbose
       puts "Host: #{ost.host}, Port: #{ost.port}"
     end
-        
+
     proto = VMDB::Config.new("vmdb").config[:webservices][:consume_protocol] rescue "https"
     @driver = nil # Was soap/rpc/driver from soap4r
 
@@ -35,16 +35,16 @@ class WebSvcOps
     @driver.add_method('miqRebootGuest', 'vmName', 'guid')
     @driver.add_method('miqGetHostConfig', 'hostId')
     @driver.add_method('miqSendVMState', 'vmName')
-		@driver.add_method('miqScanRepository', 'scanPath', 'repositoryId', 'format')
-		@driver.add_method('miqGetEmsInventory', 'emsName')
-		@driver.add_method('miqWakeupHeartbeat')
-		@driver.add_method('miqGetAgent', 'uri', 'stats')
-		@driver.add_method('miqChangeAgentConfig', 'config')
-		@driver.add_method('miqActivateAgent', 'uri', 'stats')
-		@driver.add_method('miqGetAgentLogs', 'uri', 'options')
-		@driver.add_method('miqPolicyCheckVm', 'vmName')
-		@driver.add_method('miqReplicateHost', 'installSettings')
-		@driver.add_method('miqShutdown', 'data')
+    @driver.add_method('miqScanRepository', 'scanPath', 'repositoryId', 'format')
+    @driver.add_method('miqGetEmsInventory', 'emsName')
+    @driver.add_method('miqWakeupHeartbeat')
+    @driver.add_method('miqGetAgent', 'uri', 'stats')
+    @driver.add_method('miqChangeAgentConfig', 'config')
+    @driver.add_method('miqActivateAgent', 'uri', 'stats')
+    @driver.add_method('miqGetAgentLogs', 'uri', 'options')
+    @driver.add_method('miqPolicyCheckVm', 'vmName')
+    @driver.add_method('miqReplicateHost', 'installSettings')
+    @driver.add_method('miqShutdown', 'data')
     @driver.add_method('miqClearQueueItems', 'data')
     @driver.add_method('miqCreateSnapshot', 'vmName', 'name', 'desc', 'memory', 'quiesce', 'guid')
     @driver.add_method('miqRemoveSnapshot', 'vmName', 'uid_ems', 'guid')
@@ -55,59 +55,59 @@ class WebSvcOps
     @driver.add_method('miqPowershellCommandAsync', 'ps_script', 'return_type', 'options')
   end
 
-	def StartVM(ost)
+  def StartVM(ost)
     vmName = ost.args[0]
     ost.value = @driver.miqStartVM(vmName, ost.vm_guid)
-	end
+  end
 
-	def StopVM(ost)
+  def StopVM(ost)
     vmName = ost.args[0]
     ost.value = @driver.miqStopVM(vmName, ost.vm_guid, nil)
-	end
+  end
 
-	def GetHeartbeat(ost)
+  def GetHeartbeat(ost)
     vmName = ost.args[0]
     ost.value = @driver.miqGetHeartBeat(vmName)
-	end
+  end
 
-	def GetVMAttributes(ost)
-	end
+  def GetVMAttributes(_ost)
+  end
 
-	def GetVMProductInfo(ost)
-	end
+  def GetVMProductInfo(_ost)
+  end
 
-	def GetVMs(ost)
-		fmt = '-f' if ost.fmt
-		ost.value = @driver.miqGetVMs(fmt)
-	end
+  def GetVMs(ost)
+    fmt = '-f' if ost.fmt
+    ost.value = @driver.miqGetVMs(fmt)
+  end
 
-	def ScanRepository(ost)
-		scanPath = ost.path
-		id = ost.repository_id
-		fmt = '-f' if ost.fmt
-		ost.value = @driver.miqScanRepository(scanPath, id, fmt)
-	end
-	
-	def GetVMState(ost)
+  def ScanRepository(ost)
+    scanPath = ost.path
+    id = ost.repository_id
+    fmt = '-f' if ost.fmt
+    ost.value = @driver.miqScanRepository(scanPath, id, fmt)
+  end
+
+  def GetVMState(ost)
     vmName = ost.args[0]
-		ost.value = @driver.miqGetVMState(vmName)
-	end
+    ost.value = @driver.miqGetVMState(vmName)
+  end
 
-	def GetVersion(ost)
+  def GetVersion(ost)
     ost.value = @driver.miqGetVersion
-	end
+  end
 
-	def HasSnapshot(ost)
-	end
+  def HasSnapshot(_ost)
+  end
 
-	def SyncMetadata(ost)
+  def SyncMetadata(ost)
     vmName = ost.args[0]
     options = ost.args[1]
     category = ost.category
     from_time = ost.from_time
     taskid = ost.taskid
     ost.value = @driver.miqSyncMetadata(vmName, category, from_time, taskid, options)
-	end
+  end
 
   def ScanMetadata(ost)
     vmName = ost.args[0]
@@ -115,23 +115,23 @@ class WebSvcOps
     category = ost.category
     taskid = ost.taskid
     ost.value = @driver.miqScanMetadata(vmName, category, taskid, options)
-	end
+  end
 
-	def ResetVM(ost)
+  def ResetVM(ost)
     vmName = ost.args[0]
     ost.value = @driver.miqResetVM(vmName, ost.vm_guid)
-	end
-  alias reset ResetVM
+  end
+  alias_method :reset, :ResetVM
 
-	def SuspendVM(ost)
+  def SuspendVM(ost)
     vmName = ost.args[0]
     ost.value = @driver.miqSuspendVM(vmName, ost.vm_guid)
-	end
+  end
 
-	def PauseVM(ost)
+  def PauseVM(ost)
     vmName = ost.args[0]
     ost.value = @driver.miqPauseVM(vmName, ost.vm_guid)
-	end
+  end
 
   def shutdownGuest(ost)
     vmName = ost.args[0]
@@ -148,91 +148,91 @@ class WebSvcOps
     ost.value = @driver.miqRebootGuest(vmName, ost.vm_guid)
   end
 
-	def RegisterId(ost)
+  def RegisterId(ost)
     vmName = ost.args[0]
-    if (!ost.vmId)
+    unless ost.vmId
       ost.error = "ID value not supplied\n"
       ost.show_help = true
       return
     end
     ost.value = @driver.miqRegisterId(vmName, ost.vmId, ost.params)
-	end
+  end
 
-	def RegisterVM(ost)
+  def RegisterVM(ost)
     vmName = ost.args[0]
     ost.value = @driver.miqRegisterVM(vmName)
-	end
+  end
 
-	def SaveVmMetadata(ost)
+  def SaveVmMetadata(ost)
     vmName = ost.args[0]
     ost.value = @driver.miqSavevmMetadata(vmName)
-	end
-	
-	def MakeSmart(ost)
+  end
+
+  def MakeSmart(ost)
     vmName = ost.args[0]
     ost.value = @driver.miqMakeSmart(vmName)
-	end
-  
-	def GetHostConfig(ost)
-		hostId = nil
-		hostId = ost.args[0] if ost.args
-		hostId = ost.hostId if ost.hostId
-		ost.value = @driver.miqGetHostConfig(hostId)
-	end
+  end
 
-	def SendVMState(ost)
-		vmName = ost.args
-		ost.value = @driver.miqSendVMState(vmName)
-	end
-	
-	def GetEmsInventory(ost)
+  def GetHostConfig(ost)
+    hostId = nil
+    hostId = ost.args[0] if ost.args
+    hostId = ost.hostId if ost.hostId
+    ost.value = @driver.miqGetHostConfig(hostId)
+  end
+
+  def SendVMState(ost)
+    vmName = ost.args
+    ost.value = @driver.miqSendVMState(vmName)
+  end
+
+  def GetEmsInventory(ost)
     emsName = ost.args
     ost.value = @driver.miqGetEmsInventory(emsName)
     ost.xml = true
     ost.encode = true
-	end
-	
-	def WakeupHeartbeat(ost)
-		@driver.miqWakeupHeartbeat
-	end
-	
-	def GetAgent(ost)
-		uri = ost.url
-		stats = ost.metadata
-		ost.value = @driver.miqGetAgent(uri, stats)
-	end
-	
-	def ChangeAgentConfig(ost)
-		ost.value = @driver.miqChangeAgentConfig(ost.config)
-	end
-	
-	def ActivateAgent(ost)
-		uri = ost.url
-		stats = ost.metadata
-		ost.value = @driver.miqActivateAgent(uri, stats)
-	end
+  end
 
-	def GetAgentLogs(ost)
-		ost.value = @driver.miqGetAgentLogs(ost.url, ost.options)
-	end
-	
-	def PolicyCheckVm(ost)
-		vmName = ost.args[0]
-		ost.code = @driver.miqPolicyCheckVm(vmName)
-	end
-	
-	def ReplicateHost(ost)
-		installSettings = ost.args[0]
-		ost.value = @driver.miqReplicateHost(installSettings)
-	end
+  def WakeupHeartbeat(_ost)
+    @driver.miqWakeupHeartbeat
+  end
 
-	def Shutdown(ost)
-		ost.value = @driver.miqShutdown(ost.options)
-	end
+  def GetAgent(ost)
+    uri = ost.url
+    stats = ost.metadata
+    ost.value = @driver.miqGetAgent(uri, stats)
+  end
 
-	def ClearQueueItems(ost)
-		ost.value = @driver.miqClearQueueItems(ost.options)
-	end
+  def ChangeAgentConfig(ost)
+    ost.value = @driver.miqChangeAgentConfig(ost.config)
+  end
+
+  def ActivateAgent(ost)
+    uri = ost.url
+    stats = ost.metadata
+    ost.value = @driver.miqActivateAgent(uri, stats)
+  end
+
+  def GetAgentLogs(ost)
+    ost.value = @driver.miqGetAgentLogs(ost.url, ost.options)
+  end
+
+  def PolicyCheckVm(ost)
+    vmName = ost.args[0]
+    ost.code = @driver.miqPolicyCheckVm(vmName)
+  end
+
+  def ReplicateHost(ost)
+    installSettings = ost.args[0]
+    ost.value = @driver.miqReplicateHost(installSettings)
+  end
+
+  def Shutdown(ost)
+    ost.value = @driver.miqShutdown(ost.options)
+  end
+
+  def ClearQueueItems(ost)
+    ost.value = @driver.miqClearQueueItems(ost.options)
+  end
 
   def vm_create_snapshot(ost)
     vmName = ost.args[0]
@@ -264,7 +264,7 @@ class WebSvcOps
     return_type = ost.args[1]
     ost.value = @driver.miqPowershellCommand(ps_script, return_type)
   end
-  alias PowershellCommand powershell_command
+  alias_method :PowershellCommand, :powershell_command
 
   def powershell_command_async(ost)
     ps_script = ost.args[0]

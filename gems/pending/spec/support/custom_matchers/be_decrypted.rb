@@ -3,22 +3,18 @@
 # this matcher handles that case
 RSpec::Matchers.define :be_decrypted do |expected|
   match do |actual|
-    actual == utf8_to_ascii_bytestring(expected)
+    actual == expected
   end
 
   failure_message_for_should do |actual|
-    "expected: #{actual.inspect} to be decrypted to #{utf8_to_ascii_bytestring(expected)}"
+    "expected: #{actual.inspect} to be decrypted to #{expected}"
   end
 
   failure_message_for_should_not do |actual|
-    "expected: #{actual.inspect} to not equal #{utf8_to_ascii_bytestring(expected)}"
+    "expected: #{actual.inspect} to not equal #{expected}"
   end
 
   description do
     "expect to be decrypted from a string (fixing utf8 encoding issues)"
-  end
-
-  def utf8_to_ascii_bytestring(str)
-    str.bytes.map(&:chr).join
   end
 end

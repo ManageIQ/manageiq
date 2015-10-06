@@ -21,7 +21,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Ne
                                :state       => 'pending',
                                :status      => 'Ok',
                                :options     => {:src_vm_id => template.id}
-    )
+                              )
     @task.stub(
       :dest_cluster             => ems_cluster,
       :get_provider_destination => rhevm_vm

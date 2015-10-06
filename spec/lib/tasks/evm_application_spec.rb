@@ -45,7 +45,7 @@ describe EvmApplication do
     end
 
     it "was not running" do
-      _, server, _ = EvmSpecHelper.create_guid_miq_server_zone
+      _, server, = EvmSpecHelper.create_guid_miq_server_zone
       server.update_attribute(:status, "stopped")
 
       described_class.update_stop

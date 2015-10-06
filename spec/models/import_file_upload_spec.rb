@@ -28,15 +28,15 @@ describe ImportFileUpload do
 
       it "returns json with a checkmark status icon" do
         expected_json = [{
-            :id          => 0,
-            :name        => "dialog",
-            :status_icon => "checkmark",
-            :status      => "This object already exists in the database with the same name"
-          }, {
-            :id          => 1,
-            :name        => "Dialog2",
-            :status_icon => "checkmark",
-            :status      => "This object already exists in the database with the same name"
+          :id          => 0,
+          :name        => "dialog",
+          :status_icon => "checkmark",
+          :status      => "This object already exists in the database with the same name"
+        }, {
+          :id          => 1,
+          :name        => "Dialog2",
+          :status_icon => "checkmark",
+          :status      => "This object already exists in the database with the same name"
         }].to_json
 
         import_file_upload.service_dialog_json.should == expected_json
@@ -48,15 +48,15 @@ describe ImportFileUpload do
 
       it "returns json with an equal-green status icon" do
         expected_json = [{
-            :id          => 0,
-            :name        => "dialog",
-            :status_icon => "equal-green",
-            :status      => "New object"
-          }, {
-            :id          => 1,
-            :name        => "Dialog2",
-            :status_icon => "equal-green",
-            :status      => "New object"
+          :id          => 0,
+          :name        => "dialog",
+          :status_icon => "equal-green",
+          :status      => "New object"
+        }, {
+          :id          => 1,
+          :name        => "Dialog2",
+          :status_icon => "equal-green",
+          :status      => "New object"
         }].to_json
 
         import_file_upload.service_dialog_json.should == expected_json

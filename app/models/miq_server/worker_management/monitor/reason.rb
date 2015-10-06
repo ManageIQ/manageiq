@@ -3,7 +3,7 @@ module MiqServer::WorkerManagement::Monitor::Reason
 
   def worker_set_monitor_reason(pid, reason)
     @workers_lock.synchronize(:EX) do
-      @workers[pid][:monitor_reason] = reason if @workers.has_key?(pid)
+      @workers[pid][:monitor_reason] = reason if @workers.key?(pid)
     end unless @workers_lock.nil?
   end
 

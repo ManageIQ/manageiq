@@ -47,5 +47,4 @@ describe AddLoopbackToMemcacheServerOptsInConfiguration do
       config.reload.settings.fetch_path("session", "memcache_server_opts").should == ""
     end
   end
-
 end

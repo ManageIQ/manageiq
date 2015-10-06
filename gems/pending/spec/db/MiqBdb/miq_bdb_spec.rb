@@ -4,9 +4,8 @@ require 'db/MiqBdb/MiqBdb'
 require "#{__dir__}/test_files"
 
 describe MiqBerkeleyDB::MiqBdb do
-
   it "#new" do
-    lambda { described_class.new(MiqBdb::TestFiles::RPM_PROVIDE_VERSION).close }.should_not raise_error
+    -> { described_class.new(MiqBdb::TestFiles::RPM_PROVIDE_VERSION).close }.should_not raise_error
   end
 
   it "#pages" do
@@ -15,7 +14,7 @@ describe MiqBerkeleyDB::MiqBdb do
     nkeys = 0
 
     bdb.pages do |page|
-      page.keys do |key|
+      page.keys do |_key|
         nkeys += 1
       end
     end
@@ -36,5 +35,4 @@ describe MiqBerkeleyDB::MiqBdb do
       bdb.close
     end
   end
-
 end

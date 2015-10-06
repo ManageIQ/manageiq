@@ -33,9 +33,13 @@
         .col-md-8
           = select_tag("type",
                        options_for_select({"Amazon CloudFormation" => "OrchestrationTemplateCfn",
-                       "OpenStack Heat" => "OrchestrationTemplateHot"}, @edit[:new][:type]),
-                       "data-miq_sparkle_on" => true,
-                       "data-miq_observe"    => {:url => url}.to_json)
+                                           "OpenStack Heat" => "OrchestrationTemplateHot"},
+                                          @edit[:new][:type]),
+                       :class => "selectpicker")
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent('type', '#{url}', {beforeSend: true})
+
       .form-group
         %label.col-md-2.control-label
           = _('Draft')

@@ -10,4 +10,3 @@ class MiqObjName < String
     "#{@classname}.#{super}"
   end
 end
-

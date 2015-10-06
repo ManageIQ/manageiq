@@ -68,7 +68,7 @@ describe HostController do
       custom_button = FactoryGirl.create(:custom_button, :applies_to_class => "Host")
       d = FactoryGirl.create(:dialog, :label => "Some Label")
       dt = FactoryGirl.create(:dialog_tab, :label => "Some Tab")
-      d.add_resource(dt, {:order => 0})
+      d.add_resource(dt, :order => 0)
       ra = FactoryGirl.create(:resource_action, :dialog_id => d.id)
       custom_button.resource_action = ra
       custom_button.save
@@ -90,12 +90,12 @@ describe HostController do
       controller.instance_variable_set(:@breadcrumbs, [])
 
       controller.instance_variable_set(:@_params,
-        :button   => "add",
-        :id       => "new",
-        :name     => 'foobar',
-        :hostname => nil,
-        :custom_1 => 'bar'
-      )
+                                       :button   => "add",
+                                       :id       => "new",
+                                       :name     => 'foobar',
+                                       :hostname => nil,
+                                       :custom_1 => 'bar'
+                                      )
 
       expect_any_instance_of(Host).to receive(:save).and_call_original
       controller.should_receive(:render)
@@ -109,16 +109,16 @@ describe HostController do
       controller.new
 
       controller.instance_variable_set(:@_params,
-        :button           => "validate",
-        :type             => "default",
-        :id               => "new",
-        :name             => 'foobar',
-        :hostname         => '127.0.0.1',
-        :default_userid   => "abc",
-        :default_password => "def",
-        :default_verify   => "def",
-        :user_assigned_os => "linux_generic"
-      )
+                                       :button           => "validate",
+                                       :type             => "default",
+                                       :id               => "new",
+                                       :name             => 'foobar',
+                                       :hostname         => '127.0.0.1',
+                                       :default_userid   => "abc",
+                                       :default_password => "def",
+                                       :default_verify   => "def",
+                                       :user_assigned_os => "linux_generic"
+                                      )
       controller.should_receive(:render)
       controller.send(:create)
       expect(response.status).to eq(200)
@@ -129,10 +129,10 @@ describe HostController do
     it "strips leading/trailing whitespace from hostname/ipaddress when adding infra host" do
       set_user_privileges
       controller.instance_variable_set(:@_params,
-        :name     => 'EMS 2',
-        :emstype  => 'rhevm',
-        :hostname => '  10.10.10.10  '
-      )
+                                       :name     => 'EMS 2',
+                                       :emstype  => 'rhevm',
+                                       :hostname => '  10.10.10.10  '
+                                      )
       host = Host.new
       controller.send(:set_record_vars, host, false)
       expect(host.hostname).to eq('10.10.10.10')
@@ -161,12 +161,12 @@ describe HostController do
   it "#show" do
     set_user_privileges
     host = FactoryGirl.create(:host,
-      :hardware => FactoryGirl.create(:hardware,
-        :numvcpus         => 2,
-        :cores_per_socket => 4,
-        :logical_cpus     => 8
-      )
-    )
+                              :hardware => FactoryGirl.create(:hardware,
+                                                              :numvcpus         => 2,
+                                                              :cores_per_socket => 4,
+                                                              :logical_cpus     => 8
+                                                             )
+                             )
 
     get :show, :id => host.id
 

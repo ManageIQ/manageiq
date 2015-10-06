@@ -37,17 +37,17 @@ module MiqAeEngineSpec
           :class_name       => "PROCESS",
           :instance_name    => "Request",
           :automate_message => "create",
-          :attrs            => { "request"=>"InspectMe" },
+          :attrs            => {"request" => "InspectMe"},
           :object_type      => @vm.class.name,
           :object_id        => @vm.id
         }
 
         q = MiqQueue.put(
-              :role        => 'automate',
-              :class_name  => 'MiqAeEngine',
-              :method_name => 'deliver',
-              :args        => [args]
-          )
+          :role        => 'automate',
+          :class_name  => 'MiqAeEngine',
+          :method_name => 'deliver',
+          :args        => [args]
+        )
 
         status, message, result = q.deliver
         if status == MiqQueue::STATUS_ERROR
@@ -66,7 +66,7 @@ module MiqAeEngineSpec
           object_type = @cluster.class.name
           object_id   = @cluster.id
           automate_attrs = {"#{object_type}::#{object_type.underscore}" => object_id,
-                            "Tenant::tenant" => @root_tenant_id }
+                            "Tenant::tenant"                            => @root_tenant_id}
           MiqAeEngine.should_receive(:create_automation_object).with(@instance_name, automate_attrs, {:vmdb_object => @cluster}).and_return('uri')
           MiqAeEngine.deliver(object_type, object_id).should be_nil
         end
@@ -76,7 +76,7 @@ module MiqAeEngineSpec
           object_type = @ems.class.name
           object_id   = @ems.id
           automate_attrs = {"#{base_name}::#{base_name.underscore}" => object_id,
-                            "Tenant::tenant" => @root_tenant_id }
+                            "Tenant::tenant"                        => @root_tenant_id}
           MiqAeEngine.should_receive(:create_automation_object).with(@instance_name, automate_attrs, {:vmdb_object => @ems}).and_return('uri')
           MiqAeEngine.deliver(object_type, object_id).should be_nil
         end
@@ -85,7 +85,7 @@ module MiqAeEngineSpec
       context "when Automate instantiation succeeds" do
         context "with ae_result of 'error'" do
           before(:each) do
-            root = { 'ae_result' => 'error' }
+            root = {'ae_result' => 'error'}
             @ws = double('ws')
             @ws.stub(:root => root)
             MiqAeEngine.stub(:resolve_automation_object).and_return(@ws)
@@ -96,12 +96,11 @@ module MiqAeEngineSpec
             object_id   = @ems.id
             MiqAeEngine.deliver(object_type, object_id).should == @ws
           end
-
         end
 
         context "with ae_result of 'ok'" do
           before(:each) do
-            root = { 'ae_result' => 'ok' }
+            root = {'ae_result' => 'ok'}
             @ws = double('ws')
             @ws.stub(:root => root)
             MiqAeEngine.stub(:resolve_automation_object).and_return(@ws)
@@ -115,18 +114,17 @@ module MiqAeEngineSpec
 
           it "with a starting point instead of /SYSTEM/PROCESS" do
             args = {}
-            automate_attrs =  {"Tenant::tenant"=>@root_tenant_id}
+            automate_attrs =  {"Tenant::tenant" => @root_tenant_id}
             args[:instance_name]    = "DEFAULT"
             args[:fqclass_name] = "Factory/StateMachines/ServiceProvision_template"
             MiqAeEngine.should_receive(:create_automation_object).with("DEFAULT", automate_attrs, {:fqclass => "Factory/StateMachines/ServiceProvision_template"}).and_return('uri')
             MiqAeEngine.deliver(args).should == @ws
           end
-
         end
 
         context "with ae_result of 'retry'" do
           before(:each) do
-            root = { 'ae_result' => 'retry' }
+            root = {'ae_result' => 'retry'}
             @ws = double('ws')
             @ws.stub(:root => root)
             @ws.stub(:persist_state_hash => {})
@@ -142,10 +140,10 @@ module MiqAeEngineSpec
             MiqQueue.count.should == 1
 
             q = MiqQueue.first
-            q.class_name.should  == 'MiqAeEngine'
+            q.class_name.should == 'MiqAeEngine'
             q.method_name.should == 'deliver'
-            q.zone.should        == MiqServer.my_zone
-            q.role.should        == 'automate'
+            q.zone.should == MiqServer.my_zone
+            q.role.should == 'automate'
             q.msg_timeout.should == 60.minutes
 
             args = {
@@ -163,7 +161,6 @@ module MiqAeEngineSpec
             }
             q.args.first.should == args
           end
-
         end
       end
     end
@@ -173,14 +170,14 @@ module MiqAeEngineSpec
         extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}&Tenant%3A%3Atenant=#{@root_tenant_id}"
         env = 'dev'
         {
-          "/System/Process/REQUEST?#{extras}&environment=#{env}&message=get_container_info&object_name=REQUEST&request=UI_PROVISION_INFO"   => { 'request' => 'UI_PROVISION_INFO', 'message' => 'get_container_info',  'environment' => env },
-          "/System/Process/REQUEST?#{extras}&environment=#{env}&message=get_allowed_num_vms&object_name=REQUEST&request=UI_PROVISION_INFO"  => { 'request' => 'UI_PROVISION_INFO', 'message' => 'get_allowed_num_vms', 'environment' => env },
-          "/System/Process/REQUEST?#{extras}&message=get_lease_times&object_name=REQUEST&request=UI_PROVISION_INFO"                         => { 'request' => 'UI_PROVISION_INFO', 'message' => 'get_lease_times' },
-          "/System/Process/REQUEST?#{extras}&message=get_ttl_warnings&object_name=REQUEST&request=UI_PROVISION_INFO"                        => { 'request' => 'UI_PROVISION_INFO', 'message' => 'get_ttl_warnings' },
-          "/System/Process/REQUEST?#{extras}&message=get_networks&object_name=REQUEST&request=UI_PROVISION_INFO"                            => { 'request' => 'UI_PROVISION_INFO', 'message' => 'get_networks' },
-          "/System/Process/REQUEST?#{extras}&message=get_domains&object_name=REQUEST&request=UI_PROVISION_INFO"                             => { 'request' => 'UI_PROVISION_INFO', 'message' => 'get_domains' },
-          "/System/Process/REQUEST?#{extras}&message=get_vmname&object_name=REQUEST&request=UI_PROVISION_INFO"                              => { 'request' => 'UI_PROVISION_INFO', 'message' => 'get_vmname' },
-          "/System/Process/REQUEST?#{extras}&message=get_dialogs&object_name=REQUEST&request=UI_PROVISION_INFO"                             => { 'request' => 'UI_PROVISION_INFO', 'message' => 'get_dialogs' },
+          "/System/Process/REQUEST?#{extras}&environment=#{env}&message=get_container_info&object_name=REQUEST&request=UI_PROVISION_INFO"  => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_container_info',  'environment' => env},
+          "/System/Process/REQUEST?#{extras}&environment=#{env}&message=get_allowed_num_vms&object_name=REQUEST&request=UI_PROVISION_INFO" => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_allowed_num_vms', 'environment' => env},
+          "/System/Process/REQUEST?#{extras}&message=get_lease_times&object_name=REQUEST&request=UI_PROVISION_INFO"                        => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_lease_times'},
+          "/System/Process/REQUEST?#{extras}&message=get_ttl_warnings&object_name=REQUEST&request=UI_PROVISION_INFO"                       => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_ttl_warnings'},
+          "/System/Process/REQUEST?#{extras}&message=get_networks&object_name=REQUEST&request=UI_PROVISION_INFO"                           => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_networks'},
+          "/System/Process/REQUEST?#{extras}&message=get_domains&object_name=REQUEST&request=UI_PROVISION_INFO"                            => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_domains'},
+          "/System/Process/REQUEST?#{extras}&message=get_vmname&object_name=REQUEST&request=UI_PROVISION_INFO"                             => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_vmname'},
+          "/System/Process/REQUEST?#{extras}&message=get_dialogs&object_name=REQUEST&request=UI_PROVISION_INFO"                            => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_dialogs'},
         }.each { |uri, attrs|
           saved = attrs.dup
           MiqAeEngine.create_automation_object('REQUEST', attrs).should == uri
@@ -189,13 +186,13 @@ module MiqAeEngineSpec
 
         prov = MiqProvision.new
         prov.id = 42
-        MiqAeEngine.create_automation_object('REQUEST', { 'request' => 'UI_PROVISION_INFO', 'message' => 'get_host_and_storage' }, :vmdb_object => prov).should == "/System/Process/REQUEST?MiqProvision%3A%3Amiq_provision=#{prov.id}&#{extras}&message=get_host_and_storage&object_name=REQUEST&request=UI_PROVISION_INFO&vmdb_object_type=miq_provision"
+        MiqAeEngine.create_automation_object('REQUEST', {'request' => 'UI_PROVISION_INFO', 'message' => 'get_host_and_storage'}, :vmdb_object => prov).should == "/System/Process/REQUEST?MiqProvision%3A%3Amiq_provision=#{prov.id}&#{extras}&message=get_host_and_storage&object_name=REQUEST&request=UI_PROVISION_INFO&vmdb_object_type=miq_provision"
 
         user = User.new
         user.id = 42
         begin
           Thread.current[:user] = user
-          MiqAeEngine.create_automation_object('REQUEST', { 'request' => 'UI_PROVISION_INFO', 'message' => 'get_host_and_storage' }, :vmdb_object => prov).should == "/System/Process/REQUEST?MiqProvision%3A%3Amiq_provision=#{prov.id}&#{extras}&User%3A%3Auser=#{user.id}&message=get_host_and_storage&object_name=REQUEST&request=UI_PROVISION_INFO&vmdb_object_type=miq_provision"
+          MiqAeEngine.create_automation_object('REQUEST', {'request' => 'UI_PROVISION_INFO', 'message' => 'get_host_and_storage'}, :vmdb_object => prov).should == "/System/Process/REQUEST?MiqProvision%3A%3Amiq_provision=#{prov.id}&#{extras}&User%3A%3Auser=#{user.id}&message=get_host_and_storage&object_name=REQUEST&request=UI_PROVISION_INFO&vmdb_object_type=miq_provision"
         ensure
           Thread.current[:user] = nil
         end
@@ -251,7 +248,6 @@ module MiqAeEngineSpec
         uri = "/System/Process/AUTOMATION?#{extras}&#{result_str}&object_name=AUTOMATION"
         MiqAeEngine.create_automation_object("AUTOMATION", attrs).should == uri
       end
-
     end
 
     context ".create_automation_attribute_key" do
@@ -278,7 +274,6 @@ module MiqAeEngineSpec
       it "with an Array:: name" do
         MiqAeEngine.create_automation_attribute_key("Array::var1").should == "Array::var1"
       end
-
     end
 
     context ".create_automation_attribute_class_name" do
@@ -295,9 +290,7 @@ module MiqAeEngineSpec
         host = FactoryGirl.create(:host)
         MiqAeEngine.create_automation_attribute_class_name(host).should == "Host"
       end
-
     end
-
 
     context ".create_automation_attributes" do
       before(:each) do
@@ -344,7 +337,7 @@ module MiqAeEngineSpec
         result["Array::hosts"].should == result_arr
       end
 
-     it "with multiple arrays" do
+      it "with multiple arrays" do
         hash            = {"vms" => Vm.all}
         vm_result_str   = "Array::vms=" + hash["vms"].collect { |v| "ManageIQ::Providers::Vmware::InfraManager::Vm::#{v.id}" }.join(",")
         vm_result_arr   = hash["vms"].collect { |v| "ManageIQ::Providers::Vmware::InfraManager::Vm::#{v.id}" }.join(",")
@@ -359,14 +352,14 @@ module MiqAeEngineSpec
         result_str.should include(host_result_str)
       end
 
-     it "with invalid object references" do
+      it "with invalid object references" do
         hash          = {"vms" => ["bogus::12"]}
         result        = MiqAeEngine.create_automation_attributes(hash)
         result["Array::vms"].should == "bogus::12"
         MiqAeEngine.create_automation_attributes_string(hash).should == "Array::vms=bogus::12"
       end
 
-     it "with garbage values" do
+      it "with garbage values" do
         hash          = {"vms" => ["bogus::12,garbage::moreso,notevenclose"]}
         bogus_arr     = "bogus::12,garbage::moreso,notevenclose"
         result        = MiqAeEngine.create_automation_attributes(hash)
@@ -374,12 +367,12 @@ module MiqAeEngineSpec
         MiqAeEngine.create_automation_attributes_string(hash).should == "Array::vms=bogus::12,garbage::moreso,notevenclose"
       end
 
-     it "with a string value" do
+      it "with a string value" do
         MiqAeEngine.create_automation_attributes("somestring").should == "somestring"
         MiqAeEngine.create_automation_attributes("somestring").should == "somestring"
       end
 
-     it "with a string value" do
+      it "with a string value" do
         MiqAeEngine.create_automation_attributes("").should == ""
         MiqAeEngine.create_automation_attributes("").should == ""
       end
@@ -406,12 +399,11 @@ module MiqAeEngineSpec
         hash = {:a => 'A', "VmOrTemplate::vm" => Vm.first.id}
         expect { MiqAeEngine.set_automation_attributes_from_objects([Vm.first], hash) }.to raise_error
       end
-
     end
 
     context ".automation_attribute_is_array?" do
       it "is true" do
-       MiqAeEngine.automation_attribute_is_array?("Array::doesntmatter").should be_true
+        MiqAeEngine.automation_attribute_is_array?("Array::doesntmatter").should be_true
       end
 
       it "is true lower case" do
@@ -432,7 +424,7 @@ module MiqAeEngineSpec
       msg_attrs = "message=testmessage&object_name=REQUEST&request=NOT_THERE"
       extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}&Tenant%3A%3Atenant=#{@root_tenant_id}"
       uri =  "/namespace/more_namespace/my_favorite_class/REQUEST?#{extras}&#{msg_attrs}"
-      attrs  = { 'request' => 'NOT_THERE', 'message' => 'testmessage' }
+      attrs  = {'request' => 'NOT_THERE', 'message' => 'testmessage'}
       MiqAeEngine.create_automation_object('REQUEST', attrs, :fqclass => start).should == uri
     end
 
@@ -441,7 +433,7 @@ module MiqAeEngineSpec
       msg_attrs = "message=testmessage&object_name=REQUEST&request=NOT_THERE"
       extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}&Tenant%3A%3Atenant=#{@root_tenant_id}"
       uri =  "/namespace/my_favorite_class/REQUEST?#{extras}&#{msg_attrs}"
-      attrs  = { 'request' => 'NOT_THERE', 'message' => 'testmessage' }
+      attrs  = {'request' => 'NOT_THERE', 'message' => 'testmessage'}
       MiqAeEngine.create_automation_object('REQUEST', attrs, :fqclass => start).should == uri
     end
 
@@ -539,7 +531,7 @@ module MiqAeEngineSpec
 
     it "does not allow cyclical relationships" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "miq_ae_engine_spec2"), @domain)
-      lambda {MiqAeEngine.instantiate("/CYCLICAL/AUTOMATE/test4")}.should raise_error(MiqAeException::CyclicalRelationship)
+      lambda { MiqAeEngine.instantiate("/CYCLICAL/AUTOMATE/test4") }.should raise_error(MiqAeException::CyclicalRelationship)
     end
 
     it "properly processes assertions" do
@@ -584,9 +576,9 @@ module MiqAeEngineSpec
       roots.length.should == 1
 
       obj = roots.first
-      ["attr1", "foo"].each {|a| obj.attributes.should have_key(a) }
+      ["attr1", "foo"].each { |a| obj.attributes.should have_key(a) }
       obj.attributes["attr1"].should == "frank"
-      obj.attributes["foo"].should   == "bar"
+      obj.attributes["foo"].should == "bar"
 
       ws = MiqAeEngine.instantiate("/EVM/MY_AUTOMATE/test2")
       ws.should_not be_nil
@@ -596,9 +588,9 @@ module MiqAeEngineSpec
       roots.length.should == 1
 
       obj = roots.first
-      ["attr1", "foo"].each {|a| assert obj.attributes.has_key?(a)}
+      ["attr1", "foo"].each { |a| assert obj.attributes.key?(a) }
       obj.attributes["attr1"].should == "miqaedb:/EVM/AUTOMATE/test1"
-      obj.attributes["foo"].should   == "bar"
+      obj.attributes["foo"].should == "bar"
     end
 
     it "properly processes .missing_instance" do
@@ -716,16 +708,15 @@ module MiqAeEngineSpec
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "miq_ae_engine_spec5"), @domain)
       ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?Array::my_objects=Vm::#{vm1.id},ExtManagementSystem::#{ems.id},Vm::#{vm2.id}")
       my_objects_array = ws.root("my_objects")
-      my_objects_array.length.should  == 3
+      my_objects_array.length.should == 3
       my_objects_array.each { |o| o.kind_of?(MiqAeMethodService::MiqAeServiceModelBase) }
     end
 
     it "processes an empty array properly" do
-
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "miq_ae_engine_spec6"), @domain)
       ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?Array::my_objects=")
       my_objects_array = ws.root("my_objects")
-      my_objects_array.length.should  == 0
+      my_objects_array.length.should == 0
       my_objects_array.should == []
     end
   end

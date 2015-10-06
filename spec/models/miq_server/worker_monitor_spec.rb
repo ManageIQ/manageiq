@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe "MiqWorker Monitor" do
-
   context "After Setup," do
     before(:each) do
       MiqWorker.stub(:nice_increment).and_return("+10")
@@ -66,7 +65,7 @@ describe "MiqWorker Monitor" do
         end
 
         it "should have one in its relationship" do
-          @worker.messages.should        == [@message]
+          @worker.messages.should == [@message]
           @worker.active_messages.should == [@message]
         end
       end
@@ -78,15 +77,15 @@ describe "MiqWorker Monitor" do
 
           m = FactoryGirl.create(:miq_queue, :state => 'ready',   :handler => @worker, :msg_timeout => 4.minutes)
           @messages << m
-          @actives  << m if m.state == 'dequeue'
+          @actives << m if m.state == 'dequeue'
 
           m = FactoryGirl.create(:miq_queue, :state => 'dequeue', :handler => @worker, :msg_timeout => 4.minutes)
           @messages << m
-          @actives  << m if m.state == 'dequeue'
+          @actives << m if m.state == 'dequeue'
 
           m = FactoryGirl.create(:miq_queue, :state => 'dequeue', :handler => @worker, :msg_timeout => 5.minutes)
           @messages << m
-          @actives  << m if m.state == 'dequeue'
+          @actives << m if m.state == 'dequeue'
           @worker.reload
         end
 
@@ -98,13 +97,13 @@ describe "MiqWorker Monitor" do
         it "on worker destroy, will destroy its processed messages" do
           @worker.destroy
           @worker.messages.where("state != ?", "ready").count.should == 0
-          @worker.active_messages.size.should   == 0
+          @worker.active_messages.size.should == 0
         end
 
         it "on worker destroy, will no longer associate the 'ready' message with the worker" do
           @worker.destroy
           MiqQueue.where(:state => 'ready').count.should == 1
-          @worker.messages(true).size.should    ==  0
+          @worker.messages(true).size.should == 0
 
           m = @messages.first.reload
           m.handler_type.should be_nil
@@ -126,9 +125,9 @@ describe "MiqWorker Monitor" do
           end
 
           @worker.reload
-          (@messages - @worker.messages).length.should        == 1
-          (@actives  - @worker.active_messages).length.should == 1
-          @worker.active_messages.length.should            == @actives.length - 1
+          (@messages - @worker.messages).length.should == 1
+          (@actives - @worker.active_messages).length.should == 1
+          @worker.active_messages.length.should == @actives.length - 1
           @worker.active_messages.first.msg_timeout.should == 5.minutes
         end
       end
@@ -258,12 +257,12 @@ describe "MiqWorker Monitor" do
 
           it "should queue up work for the server" do
             q = MiqQueue.first
-            q.class_name.should  == "MiqServer"
+            q.class_name.should == "MiqServer"
             q.instance_id.should == @miq_server.id
             q.method_name.should == 'message_for_worker'
-            q.args.should        == [@worker1.id, 'reconnect_ems', "#{@ems_id}"]
-            q.queue_name.should  == 'miq_server'
-            q.zone.should        == @miq_server.zone.name
+            q.args.should == [@worker1.id, 'reconnect_ems', "#{@ems_id}"]
+            q.queue_name.should == 'miq_server'
+            q.zone.should == @miq_server.zone.name
             q.server_guid.should == @miq_server.guid
           end
         end
@@ -284,7 +283,7 @@ describe "MiqWorker Monitor" do
           end
 
           it "should return proper message on heartbeat via drb" do
-            @miq_server.worker_heartbeat(@worker1.pid).should == [['sync_config', {:config=>nil}]]
+            @miq_server.worker_heartbeat(@worker1.pid).should == [['sync_config', {:config => nil}]]
           end
         end
 
@@ -294,7 +293,7 @@ describe "MiqWorker Monitor" do
           end
 
           it "should return proper message on heartbeat via drb" do
-            @miq_server.worker_heartbeat(@worker1.pid).should == [['sync_active_roles', {:roles=>nil}]]
+            @miq_server.worker_heartbeat(@worker1.pid).should == [['sync_active_roles', {:roles => nil}]]
           end
         end
 
@@ -305,7 +304,7 @@ describe "MiqWorker Monitor" do
           end
 
           it "exit message followed by active_roles and config" do
-            @miq_server.worker_heartbeat(@worker1.pid).should == [['exit'], ['sync_active_roles', {:roles=>nil}], ['sync_config', {:config=>nil}]]
+            @miq_server.worker_heartbeat(@worker1.pid).should == [['exit'], ['sync_active_roles', {:roles => nil}], ['sync_config', {:config => nil}]]
           end
         end
 
@@ -315,7 +314,7 @@ describe "MiqWorker Monitor" do
           end
 
           it "should return proper message on heartbeat via drb" do
-            @miq_server.worker_heartbeat(@worker1.pid).should == [['sync_active_roles', {:roles=>nil}], ['sync_config', {:config=>nil}]]
+            @miq_server.worker_heartbeat(@worker1.pid).should == [['sync_active_roles', {:roles => nil}], ['sync_config', {:config => nil}]]
           end
         end
 
@@ -339,7 +338,6 @@ describe "MiqWorker Monitor" do
             end
           end
         end
-
       end
 
       context "with worker that is using a lot of memory" do
@@ -385,9 +383,7 @@ describe "MiqWorker Monitor" do
           @miq_server.validate_worker(@worker1) # Validation will populate message
           @miq_server.worker_heartbeat(@worker1.pid).should == [['exit']]
         end
-
       end
-
     end
   end
 end
