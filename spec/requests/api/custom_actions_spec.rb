@@ -73,7 +73,7 @@ describe ApiController do
   def expect_result_to_have_custom_actions_hash
     expect_result_to_have_keys(%w(custom_actions))
     custom_actions = @result["custom_actions"]
-    expect(custom_actions.keys).to match_array(%w(buttons button_groups))
+    expect_hash_to_have_only_keys(custom_actions, %w(buttons button_groups))
     expect(custom_actions["buttons"].size).to eq(1)
     expect(custom_actions["button_groups"].size).to eq(1)
     expect(custom_actions["button_groups"].first["buttons"].size).to eq(2)
