@@ -65,7 +65,7 @@ class Storage < ActiveRecord::Base
   virtual_column :total_unmanaged_vms,            :type => :integer  # uses is handled via class method that aggregates
   virtual_column :count_of_vmdk_disk_files,       :type => :integer
 
-  SUPPORTED_STORAGE_TYPES = ["VMFS", "NFS"]
+  SUPPORTED_STORAGE_TYPES = %w( VMFS NFS FCP ISCSI GLUSTERFS )
 
   def to_s
     name
@@ -345,7 +345,7 @@ class Storage < ActiveRecord::Base
   end
 
   def scan(userid = "system", _role = "ems_operations")
-    raise(MiqException::MiqUnsupportedStorage, "Action not supported for #{ui_lookup(:table => "storages")} type [#{store_type}], [#{name}] with id: [#{id}]") unless SUPPORTED_STORAGE_TYPES.include?(store_type)
+    raise(MiqException::MiqUnsupportedStorage, "Action not supported for #{ui_lookup(:table => "storages")} type [#{store_type}], [#{name}] with id: [#{id}]") unless SUPPORTED_STORAGE_TYPES.include?(store_type.upcase)
 
     hosts = active_hosts_with_authentication_status_ok
     raise(MiqException::MiqStorageError,       "Check that a Host is running and has valid credentials for #{ui_lookup(:table => "storages")} [#{name}] with id: [#{id}]") if hosts.empty?
