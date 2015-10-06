@@ -47,6 +47,24 @@ module AutomationSpecHelper
                        attrs.merge('ae_fields' => ae_fields, 'ae_instances' => ae_instances))
   end
 
+  def create_ae_model_with_method(attrs = {})
+    attrs = default_ae_model_attributes(attrs)
+    method_script = attrs.delete(:method_script)
+    method_params = attrs.delete(:method_params) || {}
+    instance_name = attrs.delete(:instance_name)
+    method_name = attrs.delete(:method_name)
+    ae_fields = {'execute' => {:aetype => 'method', :datatype => 'string'}}
+    ae_instances = {instance_name => {'execute' => {:value => method_name}}}
+    ae_methods = {method_name => {:scope => 'instance', :location => 'inline',
+                                  :data => method_script,
+                                  :language => 'ruby', 'params' => method_params}}
+
+    FactoryGirl.create(:miq_ae_domain, :with_small_model, :with_instances, :with_methods,
+                       attrs.merge('ae_fields'    => ae_fields,
+                                   'ae_instances' => ae_instances,
+                                   'ae_methods'   => ae_methods))
+  end
+
   def default_ae_model_attributes(attrs = {})
     attrs.reverse_merge!(
       :ae_class      => 'CLASS1',
