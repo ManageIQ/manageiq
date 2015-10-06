@@ -54,7 +54,7 @@ class ManageIQ::Providers::Vmware::InfraManager::Vm < ManageIQ::Providers::Infra
     end
   end
 
-  def max_cores_per_socket(_total_vcpus = nil)
+  def max_cpu_cores_per_socket(_total_vcpus = nil)
     case hardware.virtual_hw_version
     when "04"       then 1
     when "07"       then [1, 2, 4, 8].include?(max_total_vcpus) ? max_total_vcpus : 1

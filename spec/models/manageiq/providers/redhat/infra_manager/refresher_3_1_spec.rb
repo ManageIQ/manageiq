@@ -199,21 +199,21 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     )
 
     @host.hardware.should have_attributes(
-      :cpu_speed          => 1995,
-      :cpu_type           => "Intel(R) Xeon(R) CPU           E5504  @ 2.00GHz",
-      :manufacturer       => "",
-      :model              => "",
-      :number_of_nics     => nil,
-      :memory_mb          => 56333,
-      :memory_console     => nil,
-      :numvcpus           => 2,
-      :logical_cpus       => 8,
-      :cores_per_socket   => 4,
-      :guest_os           => nil,
-      :guest_os_full_name => nil,
-      :vmotion_enabled    => nil,
-      :cpu_usage          => nil,
-      :memory_usage       => nil
+      :cpu_speed            => 1995,
+      :cpu_type             => "Intel(R) Xeon(R) CPU           E5504  @ 2.00GHz",
+      :manufacturer         => "",
+      :model                => "",
+      :number_of_nics       => nil,
+      :memory_mb            => 56333,
+      :memory_console       => nil,
+      :numvcpus             => 2,
+      :logical_cpus         => 8,
+      :cpu_cores_per_socket => 4,
+      :guest_os             => nil,
+      :guest_os_full_name   => nil,
+      :vmotion_enabled      => nil,
+      :cpu_usage            => nil,
+      :memory_usage         => nil
     )
 
     @host.hardware.networks.size.should == 2
@@ -299,14 +299,14 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     snapshot.parent.should be_nil
 
     v.hardware.should have_attributes(
-      :guest_os           => "rhel_6x64",
-      :guest_os_full_name => nil,
-      :bios               => nil,
-      :cores_per_socket   => 1,
-      :logical_cpus       => 2,
-      :numvcpus           => 2,
-      :annotation         => "Powered On VM for EmsRefresh testing with DirectLUN Disk",
-      :memory_mb          => 1024
+      :guest_os             => "rhel_6x64",
+      :guest_os_full_name   => nil,
+      :bios                 => nil,
+      :cpu_cores_per_socket => 1,
+      :logical_cpus         => 2,
+      :numvcpus             => 2,
+      :annotation           => "Powered On VM for EmsRefresh testing with DirectLUN Disk",
+      :memory_mb            => 1024
     )
 
     v.hardware.disks.size.should == 3
@@ -583,14 +583,14 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     v.snapshots.size.should == 0
 
     v.hardware.should have_attributes(
-      :guest_os           => "rhel_6x64",
-      :guest_os_full_name => nil,
-      :bios               => nil,
-      :numvcpus           => 2,
-      :cores_per_socket   => 1,
-      :logical_cpus       => 2,
-      :annotation         => "Template for EmsRefresh testing",
-      :memory_mb          => 1024
+      :guest_os             => "rhel_6x64",
+      :guest_os_full_name   => nil,
+      :bios                 => nil,
+      :numvcpus             => 2,
+      :cpu_cores_per_socket => 1,
+      :logical_cpus         => 2,
+      :annotation           => "Template for EmsRefresh testing",
+      :memory_mb            => 1024
     )
 
     v.hardware.disks.size.should == 2

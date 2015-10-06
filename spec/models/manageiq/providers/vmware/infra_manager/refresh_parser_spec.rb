@@ -21,9 +21,9 @@ describe ManageIQ::Providers::Vmware::InfraManager::RefreshParser do
       def assert_cores_and_sockets_values(total, cores, sockets)
         result = described_class.vm_inv_to_hardware_hash(inv)
 
-        expect(result[:numvcpus]).to         eq(sockets)
-        expect(result[:cores_per_socket]).to eq(cores)
-        expect(result[:logical_cpus]).to     eq(total)
+        expect(result[:numvcpus]).to             eq(sockets)
+        expect(result[:cpu_cores_per_socket]).to eq(cores)
+        expect(result[:logical_cpus]).to         eq(total)
       end
     end
   end

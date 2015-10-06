@@ -12,7 +12,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration::Cont
 
       cpus    = get_option(:number_of_cpus).to_i     # Old-style
       sockets = get_option(:number_of_sockets).to_i  # New-style based on VMware KB: 1010184
-      cores   = get_option(:cores_per_socket).to_i   # New-style
+      cores   = get_option(:cpu_cores_per_socket).to_i   # New-style
 
       if sockets.zero?
         set_spec_option(vmcs, :numCPUs, :number_of_cpus, nil, :to_i)

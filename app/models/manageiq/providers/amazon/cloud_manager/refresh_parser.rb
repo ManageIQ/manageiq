@@ -357,16 +357,16 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :raw_power_state     => status.to_s,
 
       :hardware            => {
-        :bitness             => ARCHITECTURE_TO_BITNESS[instance.architecture],
-        :virtualization_type => virtualization_type,
-        :root_device_type    => root_device_type,
-        :numvcpus            => flavor[:cpus],
-        :cores_per_socket    => 1,
-        :logical_cpus        => flavor[:cpus],
-        :memory_mb           => flavor[:memory] / 1.megabyte,
-        :disk_capacity       => flavor[:ephemeral_disk_size],
-        :disks               => [], # Filled in later conditionally on flavor
-        :networks            => [], # Filled in later conditionally on what's available
+        :bitness              => ARCHITECTURE_TO_BITNESS[instance.architecture],
+        :virtualization_type  => virtualization_type,
+        :root_device_type     => root_device_type,
+        :numvcpus             => flavor[:cpus],
+        :cpu_cores_per_socket => 1,
+        :logical_cpus         => flavor[:cpus],
+        :memory_mb            => flavor[:memory] / 1.megabyte,
+        :disk_capacity        => flavor[:ephemeral_disk_size],
+        :disks                => [], # Filled in later conditionally on flavor
+        :networks             => [], # Filled in later conditionally on what's available
       },
 
       :availability_zone   => @data_index.fetch_path(:availability_zones, instance.availability_zone),

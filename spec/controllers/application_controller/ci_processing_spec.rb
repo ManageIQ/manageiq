@@ -153,7 +153,7 @@ describe ApplicationController do
       edit[:key] = "reconfigure__new"
       edit[:new] = Hash.new
       edit[:new][:new_socket_count] = "4"
-      edit[:new][:new_cores_per_socket_count] = "4"
+      edit[:new][:new_cpu_cores_per_socket_count] = "4"
       edit[:new][:cb_cpu] = true
       edit[:errors] = []
       controller.instance_variable_set(:@_params, :id => vm.id)
@@ -173,7 +173,7 @@ describe ApplicationController do
       edit[:key] = "reconfigure__new"
       edit[:new] = Hash.new
       edit[:new][:new_socket_count] = "15"
-      edit[:new][:new_cores_per_socket_count] = "15"
+      edit[:new][:new_cpu_cores_per_socket_count] = "15"
       edit[:new][:cb_cpu] = true
       edit[:errors] = []
       controller.instance_variable_set(:@_params, :id => vm.id)

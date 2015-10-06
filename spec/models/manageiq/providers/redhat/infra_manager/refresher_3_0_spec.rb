@@ -183,21 +183,21 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     )
 
     @host.hardware.should have_attributes(
-      :cpu_speed          => 2394,
-      :cpu_type           => "Intel(R) Core(TM)2 Quad CPU    Q6600  @ 2.40GHz",
-      :manufacturer       => "",
-      :model              => "",
-      :number_of_nics     => nil,
-      :memory_mb          => 7806,
-      :memory_console     => nil,
-      :numvcpus           => 1,
-      :logical_cpus       => 4,
-      :cores_per_socket   => 4,
-      :guest_os           => nil,
-      :guest_os_full_name => nil,
-      :vmotion_enabled    => nil,
-      :cpu_usage          => nil,
-      :memory_usage       => nil
+      :cpu_speed            => 2394,
+      :cpu_type             => "Intel(R) Core(TM)2 Quad CPU    Q6600  @ 2.40GHz",
+      :manufacturer         => "",
+      :model                => "",
+      :number_of_nics       => nil,
+      :memory_mb            => 7806,
+      :memory_console       => nil,
+      :numvcpus             => 1,
+      :logical_cpus         => 4,
+      :cpu_cores_per_socket => 4,
+      :guest_os             => nil,
+      :guest_os_full_name   => nil,
+      :vmotion_enabled      => nil,
+      :cpu_usage            => nil,
+      :memory_usage         => nil
     )
 
     @host.hardware.networks.size.should == 2
@@ -563,14 +563,14 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     v.snapshots.size.should == 0
 
     v.hardware.should have_attributes(
-      :guest_os           => "rhel_6x64",
-      :guest_os_full_name => nil,
-      :bios               => nil,
-      :numvcpus           => 2,
-      :cores_per_socket   => 1,
-      :logical_cpus       => 2,
-      :annotation         => "Template for EmsRefresh testing",
-      :memory_mb          => 1024
+      :guest_os             => "rhel_6x64",
+      :guest_os_full_name   => nil,
+      :bios                 => nil,
+      :numvcpus             => 2,
+      :cpu_cores_per_socket => 1,
+      :logical_cpus         => 2,
+      :annotation           => "Template for EmsRefresh testing",
+      :memory_mb            => 1024
     )
 
     v.hardware.disks.size.should == 2

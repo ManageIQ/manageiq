@@ -223,21 +223,21 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     )
 
     @host.hardware.should have_attributes(
-      :cpu_speed          => 2127,
-      :cpu_type           => "Intel(R) Xeon(R) CPU           E5506  @ 2.13GHz",
-      :manufacturer       => "Dell Inc.",
-      :model              => "PowerEdge R410",
-      :number_of_nics     => 4,
-      :memory_mb          => 57334,
-      :memory_console     => nil,
-      :numvcpus           => 2,
-      :logical_cpus       => 8,
-      :cores_per_socket   => 4,
-      :guest_os           => "ESXi",
-      :guest_os_full_name => "ESXi",
-      :vmotion_enabled    => true,
-      :cpu_usage          => 6789,
-      :memory_usage       => 36508
+      :cpu_speed            => 2127,
+      :cpu_type             => "Intel(R) Xeon(R) CPU           E5506  @ 2.13GHz",
+      :manufacturer         => "Dell Inc.",
+      :model                => "PowerEdge R410",
+      :number_of_nics       => 4,
+      :memory_mb            => 57334,
+      :memory_console       => nil,
+      :numvcpus             => 2,
+      :logical_cpus         => 8,
+      :cpu_cores_per_socket => 4,
+      :guest_os             => "ESXi",
+      :guest_os_full_name   => "ESXi",
+      :vmotion_enabled      => true,
+      :cpu_usage            => 6789,
+      :memory_usage         => 36508
     )
 
     @host.hardware.networks.size.should == 2

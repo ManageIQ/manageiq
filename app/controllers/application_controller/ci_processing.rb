@@ -373,7 +373,7 @@ module ApplicationController::CiProcessing
         page << javascript_hide("cpu_div")
       end
 
-      @vccores = @edit[:new][:cores_per_socket_count].nil? ? 1 : @edit[:new][:cores_per_socket_count]
+      @vccores = @edit[:new][:cpu_cores_per_socket_count].nil? ? 1 : @edit[:new][:cpu_cores_per_socket_count]
       @vsockets = @edit[:new][:socket_count].nil? ? 1 : @edit[:new][:socket_count]
 
       @total_cpus = @vccores.to_i * @vsockets.to_i
@@ -415,7 +415,7 @@ module ApplicationController::CiProcessing
         end
       end
 
-      if @edit[:new][:cb_cpu] && @edit[:new][:old_socket_count].to_s == @edit[:new][:socket_count].to_s && @edit[:new][:old_cores_per_socket_count].to_s == @edit[:new][:cores_per_socket_count].to_s
+      if @edit[:new][:cb_cpu] && @edit[:new][:old_socket_count].to_s == @edit[:new][:socket_count].to_s && @edit[:new][:old_cpu_cores_per_socket_count].to_s == @edit[:new][:cpu_cores_per_socket_count].to_s
         add_flash(_("Change %s value to submit reconfigure request") % "Processor Sockets or Cores Per Socket", :error)
       end
 
@@ -432,14 +432,14 @@ module ApplicationController::CiProcessing
       # Convert memory to MB before passing on to model, don't multiply by 1024, if value is not numeric
       options[:vm_memory] = @edit[:new][:mem_typ] == "MB" ? @edit[:new][:memory] : (@edit[:new][:memory].to_i.zero? ? @edit[:new][:memory] : @edit[:new][:memory].to_i * 1024) if @edit[:new][:cb_memory]
       if @edit[:new][:cb_cpu]
-        options[:cores_per_socket]  = @edit[:new][:cores_per_socket_count].nil? ? 1 : @edit[:new][:cores_per_socket_count].to_i
+        options[:cpu_cores_per_socket]  = @edit[:new][:cpu_cores_per_socket_count].nil? ? 1 : @edit[:new][:cpu_cores_per_socket_count].to_i
         options[:number_of_sockets] =@edit[:new][:socket_count].nil? ? 1 : @edit[:new][:socket_count].to_i
-        vccores = @edit[:new][:cores_per_socket_count].nil? ? 1 : @edit[:new][:cores_per_socket_count]
+        vccores = @edit[:new][:cpu_cores_per_socket_count].nil? ? 1 : @edit[:new][:cpu_cores_per_socket_count]
         vsockets = @edit[:new][:socket_count].nil? ? 1 : @edit[:new][:socket_count]
         options[:number_of_cpus]    = vccores.to_i * vsockets.to_i
       end
 
-        valid = VmReconfigureRequest.validate_request(options)
+      valid = VmReconfigureRequest.validate_request(options)
       if valid
         valid.each do |v|
           add_flash(v, :error)
@@ -1062,12 +1062,12 @@ module ApplicationController::CiProcessing
     socket_count = @reconfigureitems.first.num_cpu
     socket_count = nil unless @reconfigureitems.all? { |vm| vm.num_cpu == socket_count }
 
-    cores_per_socket = @reconfigureitems.first.cores_per_socket
-    cores_per_socket = nil unless @reconfigureitems.all? { |vm| vm.cores_per_socket == cores_per_socket }
+    cpu_cores_per_socket = @reconfigureitems.first.cpu_cores_per_socket
+    cpu_cores_per_socket = nil unless @reconfigureitems.all? { |vm| vm.cpu_cores_per_socket == cpu_cores_per_socket }
 
     @edit[:new][:old_memory], @edit[:new][:old_mem_typ] = reconfigure_calculations(memory)
     @edit[:new][:old_socket_count] = @edit[:new][:socket_count] = socket_count
-    @edit[:new][:old_cores_per_socket_count] = @edit[:new][:cores_per_socket_count] = cores_per_socket
+    @edit[:new][:old_cpu_cores_per_socket_count] = @edit[:new][:cpu_cores_per_socket_count] = cpu_cores_per_socket
   end
 
   # Build the ownership assignment screen
@@ -1080,12 +1080,12 @@ module ApplicationController::CiProcessing
     else
       @req = MiqRequest.find_by_id(@edit[:req_id])
       @edit[:new][:memory], @edit[:new][:mem_typ] = reconfigure_calculations(@req.options[:vm_memory]) if @req.options[:vm_memory]
-      @edit[:new][:cores_per_socket_count] = @req.options[:cores_per_socket] if @req.options[:cores_per_socket]
+      @edit[:new][:cpu_cores_per_socket_count] = @req.options[:cpu_cores_per_socket] if @req.options[:cpu_cores_per_socket]
       @edit[:new][:socket_count] = @req.options[:number_of_sockets] if @req.options[:number_of_sockets]
     end
 
     @edit[:new][:cb_memory] = @req && @req.options[:vm_memory] ? true : false       # default for checkbox is false for new request
-    @edit[:new][:cb_cpu] = @req && ( @req.options[:number_of_sockets] || @req.options[:cores_per_socket]) ? true : false     # default for checkbox is false for new request
+    @edit[:new][:cb_cpu] = @req && ( @req.options[:number_of_sockets] || @req.options[:cpu_cores_per_socket]) ? true : false     # default for checkbox is false for new request
 
     @edit[:options] = VmReconfigureRequest.request_limits(:src_ids => @edit[:reconfigure_items])
     mem1, fmt1 = reconfigure_calculations(@edit[:options][:min__vm_memory])
@@ -1099,9 +1099,9 @@ module ApplicationController::CiProcessing
     end
 
     @edit[:cores_options] = []
-    @edit[:options][:max__cores_per_socket].times do |tidx|
-      idx = tidx + @edit[:options][:min__cores_per_socket]
-      @edit[:cores_options].push(idx) if idx <= @edit[:options][:max__cores_per_socket]
+    @edit[:options][:max__cpu_cores_per_socket].times do |tidx|
+      idx = tidx + @edit[:options][:min__cpu_cores_per_socket]
+      @edit[:cores_options].push(idx) if idx <= @edit[:options][:max__cpu_cores_per_socket]
     end
 
     @force_no_grid_xml   = true
@@ -1125,7 +1125,7 @@ module ApplicationController::CiProcessing
     @edit[:new][:mem_typ] = params[:mem_typ] if params[:mem_typ]
     @edit[:new][:memory] = params[:memory] if params[:memory]
     @edit[:new][:socket_count] = params[:socket_count] if params[:socket_count]
-    @edit[:new][:cores_per_socket_count] = params[:cores_per_socket_count] if params[:cores_per_socket_count]
+    @edit[:new][:cpu_cores_per_socket_count] = params[:cpu_cores_per_socket_count] if params[:cpu_cores_per_socket_count]
   end
 
   # Common VM button handler routines

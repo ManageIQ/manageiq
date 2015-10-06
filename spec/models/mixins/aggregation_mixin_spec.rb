@@ -6,11 +6,11 @@ describe AggregationMixin do
       2.times.collect do
         FactoryGirl.create(:host,
                            :hardware => FactoryGirl.create(:hardware,
-                                                           :numvcpus         => 2,
-                                                           :cores_per_socket => 4,
-                                                           :logical_cpus     => 8,
-                                                           :cpu_speed        => 2_999,
-                                                           :disk_capacity    => 40
+                                                           :numvcpus             => 2,
+                                                           :cpu_cores_per_socket => 4,
+                                                           :logical_cpus         => 8,
+                                                           :cpu_speed            => 2_999,
+                                                           :disk_capacity        => 40
                                                           )
                           )
       end

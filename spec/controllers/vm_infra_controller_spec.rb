@@ -60,9 +60,9 @@ describe VmInfraController do
     expect(response.status).to eq(200)
   end
 
-  it 'the reconfigure tab for a vm with max_cores_per_socket <= 1 should not display the cores_per_socket dropdown' do
-    host_hardware = FactoryGirl.create(:hardware, :memory_mb => 1024, :logical_cpus => 1, :cores_per_socket => 1, :numvcpus => 1)
-    vm_hardware   = FactoryGirl.create(:hardware, :memory_mb => 1024, :logical_cpus => 1, :cores_per_socket => 1, :numvcpus => 1, :virtual_hw_version => '04')
+  it 'the reconfigure tab for a vm with max_cpu_cores_per_socket <= 1 should not display the cores_per_socket dropdown' do
+    host_hardware = FactoryGirl.create(:hardware, :memory_mb => 1024, :logical_cpus => 1, :cpu_cores_per_socket => 1, :numvcpus => 1)
+    vm_hardware   = FactoryGirl.create(:hardware, :memory_mb => 1024, :logical_cpus => 1, :cpu_cores_per_socket => 1, :numvcpus => 1, :virtual_hw_version => '04')
     host          = FactoryGirl.create(:host, :vmm_vendor => 'vmware', :vmm_product => "ESX", :hardware => host_hardware)
     vm            = FactoryGirl.create(:vm_vmware, :name => 'b_name', :host => host, :hardware => vm_hardware)
 
@@ -79,9 +79,9 @@ describe VmInfraController do
     expect(response.body).to_not include('Total Processors')
   end
 
-  it 'the reconfigure tab for a vm with max_cores_per_socket > 1 should display the cores_per_socket dropdown' do
-    host_hardware = FactoryGirl.create(:hardware, :memory_mb => 1024, :logical_cpus => 4, :cores_per_socket => 4, :numvcpus => 1)
-    vm_hardware   = FactoryGirl.create(:hardware, :memory_mb => 1024, :logical_cpus => 1, :cores_per_socket => 1, :numvcpus => 1, :virtual_hw_version => '07')
+  it 'the reconfigure tab for a vm with max_cpu_cores_per_socket > 1 should display the cores_per_socket dropdown' do
+    host_hardware = FactoryGirl.create(:hardware, :memory_mb => 1024, :logical_cpus => 4, :cpu_cores_per_socket => 4, :numvcpus => 1)
+    vm_hardware   = FactoryGirl.create(:hardware, :memory_mb => 1024, :logical_cpus => 1, :cpu_cores_per_socket => 1, :numvcpus => 1, :virtual_hw_version => '07')
     host          = FactoryGirl.create(:host, :vmm_vendor => 'vmware', :vmm_product => "ESX", :hardware => host_hardware)
     vm            = FactoryGirl.create(:vm_vmware, :name => 'b_name', :host => host, :hardware => vm_hardware)
 

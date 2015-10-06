@@ -450,7 +450,7 @@
           :display: :edit
           :default: 1
           :data_type: :integer
-        :cores_per_socket:
+        :cpu_cores_per_socket:
           :values:
             1: "1"
             2: "2"

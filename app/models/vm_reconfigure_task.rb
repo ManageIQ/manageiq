@@ -30,7 +30,7 @@ class VmReconfigureTask < MiqRequestTask
       new_settings << "Memory: #{req_obj.options[:vm_memory].to_i} MB"
     end
     new_settings << "Processor Sockets: #{req_obj.options[:number_of_sockets].to_i}" unless req_obj.options[:number_of_sockets].blank?
-    new_settings << "Processor Cores Per Socket: #{req_obj.options[:cores_per_socket].to_i}" unless req_obj.options[:cores_per_socket].blank?
+    new_settings << "Processor Cores Per Socket: #{req_obj.options[:cpu_cores_per_socket].to_i}" unless req_obj.options[:cpu_cores_per_socket].blank?
     new_settings << "Total Processors: #{req_obj.options[:number_of_cpus].to_i}" unless req_obj.options[:number_of_cpus].blank?
     "#{request_class::TASK_DESCRIPTION} for: #{name} - #{new_settings.join(", ")}"
   end
@@ -59,11 +59,11 @@ class VmReconfigureTask < MiqRequestTask
         ec =  VimArray.new('ArrayOfOptionValue')
         ec << VimHash.new('OptionValue') do |ov|
           ov.key   = "cpuid.coresPerSocket"
-          ov.value = VimString.new(get_option(:cores_per_socket).to_s, nil, "xsd:string")
+          ov.value = VimString.new(get_option(:cpu_cores_per_socket).to_s, nil, "xsd:string")
         end
         vmcs.extraConfig = ec
       else
-        set_spec_option(vmcs, :numCoresPerSocket, :cores_per_socket, nil, :to_i)
+        set_spec_option(vmcs, :numCoresPerSocket, :cpu_cores_per_socket, nil, :to_i)
       end
       set_spec_option(vmcs, :memoryMB, :vm_memory,      nil, :to_i)
       set_spec_option(vmcs, :numCPUs,  :number_of_cpus, nil, :to_i)

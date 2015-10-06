@@ -373,7 +373,7 @@
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
             -# Display notes if available
             = field_hash[:notes]
-      - elsif [:pxe_server_id, :number_of_vms, :number_of_cpus, :number_of_sockets, :cores_per_socket, :snapshot, :sysprep_enabled].include?(field)
+      - elsif [:pxe_server_id, :number_of_vms, :number_of_cpus, :number_of_sockets, :cpu_cores_per_socket, :snapshot, :sysprep_enabled].include?(field)
         -# ### Pull Down for fields that dont need <None> in the list
         .col-md-8
           - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]

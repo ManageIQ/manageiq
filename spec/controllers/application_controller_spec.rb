@@ -138,12 +138,8 @@ describe ApplicationController do
   context "#set_config" do
     before(:each) do
       set_user_privileges
-      @host = FactoryGirl.create(:host,
-                                 :hardware => FactoryGirl.create(:hardware,
-                                                                 :numvcpus         => 2,
-                                                                 :cores_per_socket => 4,
-                                                                 :logical_cpus     => 8),
-                                )
+      hardware      = FactoryGirl.create(:hardware, :numvcpus => 2, :cpu_cores_per_socket => 4, :logical_cpus => 8)
+      @host         = FactoryGirl.create(:host, :hardware => hardware)
       @host_service = FactoryGirl.create(:system_service, :name => "foo", :host_id => @host.id)
     end
 

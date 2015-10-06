@@ -23,7 +23,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Cont
 
   def configure_cpu(rhevm_vm)
     sockets  = get_option(:number_of_sockets) || 1
-    cores    = get_option(:cores_per_socket) || 1
+    cores    = get_option(:cpu_cores_per_socket) || 1
     cpu_hash = {:cores => cores, :sockets => sockets}
     _log.info "Setting cpu to:<#{cpu_hash.inspect}>"
     rhevm_vm.cpu_topology = cpu_hash

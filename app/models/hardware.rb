@@ -26,7 +26,6 @@ class Hardware < ActiveRecord::Base
   virtual_column :hostnames,     :type => :string_set, :uses => :networks
   virtual_column :mac_addresses, :type => :string_set, :uses => :nics
 
-  alias_attribute :cores_per_socket, :cpu_cores_per_socket
   alias_attribute :numvcpus, :cpu_sockets
   alias_attribute :logical_cpus, :cpu_total_cores
 

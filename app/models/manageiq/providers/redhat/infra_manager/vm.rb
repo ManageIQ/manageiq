@@ -58,7 +58,7 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
     160
   end
 
-  def max_cores_per_socket
+  def max_cpu_cores_per_socket
     # the default value of MaxNumOfCpuPerSocket for RHEV 3.1 - 3.4
     16
   end
