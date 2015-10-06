@@ -2,7 +2,6 @@ require "spec_helper"
 
 module MiqAeServiceServiceSpec
   describe MiqAeMethodService::MiqAeServiceService do
-
     let(:service)         { FactoryGirl.create(:service, :name => "test_service", :description => "test_description") }
     let(:service_service) { MiqAeMethodService::MiqAeServiceService.find(service.id) }
 
@@ -210,7 +209,6 @@ EOF
 
       expect(service_service.retirement_warn).to eq(60)
       expect(service.retirement_last_warn).to be_nil
-
     end
   end
 end

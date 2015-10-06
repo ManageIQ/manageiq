@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20150224164512_add_loopback_to_memcache_server_opts_in_configuration")
+require_migration
 
 describe AddLoopbackToMemcacheServerOptsInConfiguration do
   let(:configuration_stub) { migration_stub(:Configuration) }
@@ -47,5 +47,4 @@ describe AddLoopbackToMemcacheServerOptsInConfiguration do
       config.reload.settings.fetch_path("session", "memcache_server_opts").should == ""
     end
   end
-
 end

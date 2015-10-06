@@ -41,23 +41,23 @@ class ExplorerPresenter
   #   replace_partials          -- partials to replace (also wrapping tag)
   #   element_updates           -- do we need all 3 of the above?
   #   set_visible_elements      -- elements to cal 'set_visible' on
-  #   expand_collapse_cells     -- cells to expand/collapse
+  #   show_hide_layout          -- layout elements to show/hide
   #   reload_toolbars
   #
 
-  def initialize(options={})
+  def initialize(options = {})
     @options = HashWithIndifferentAccess.new(
-      :lock_unlock_trees     => {},
-      :set_visible_elements  => {},
-      :expand_collapse_cells => {},
-      :update_partials       => {},
-      :element_updates       => {},
-      :replace_partials      => {},
-      :reload_toolbars       => {},
-      :extra_js              => [],
-      :object_tree_json      => '',
-      :exp                   => {},
-      :osf_node              => ''
+      :lock_unlock_trees    => {},
+      :set_visible_elements => {},
+      :show_hide_layout     => {},
+      :update_partials      => {},
+      :element_updates      => {},
+      :replace_partials     => {},
+      :reload_toolbars      => {},
+      :extra_js             => [],
+      :object_tree_json     => '',
+      :exp                  => {},
+      :osf_node             => ''
     ).update(options)
   end
 
@@ -146,14 +146,14 @@ class ExplorerPresenter
       @out << set_element_visible(el, visible)
     end
 
-    @options[:expand_collapse_cells].each do |cell, e_c|
-      @out << "dhxLayoutB.cells('#{cell}').#{e_c}();"
+    @options[:show_hide_layout].each do |element, action|
+      @out << "ManageIQ.layout.#{element}.#{action}();"
     end
 
     # Scroll to top of main div
     @out << "$('#main_div').scrollTop(0);"
 
-    @out << "dhxLayoutB.cells('b').setText('#{escape_javascript(ERB::Util::h(@options[:right_cell_text]))}');" if @options[:right_cell_text]
+    @out << "ManageIQ.layout.content.title('#{escape_javascript(ERB::Util.h(@options[:right_cell_text]))}');" if @options[:right_cell_text]
 
     # Reload toolbars
     @options[:reload_toolbars].each do |tb, opts|
@@ -229,7 +229,8 @@ class ExplorerPresenter
   end
 
   private
+
   def format_cal_date(value)
-    value.nil? ?  'undefined' : "new Date(#{value})"
+    value.nil? ? 'undefined' : "new Date(#{value})"
   end
 end

@@ -1,0 +1,36 @@
++block(ss-card)
+  background: $app-color-white
+  border: 1px solid $app-color-light-gray-4
+  box-shadow: 0 1px 1px rgba($app-color-black, 0.175)
+  cursor: pointer
+  float: left
+  height: 290px
+  margin-right: 20px
+  margin-bottom: 20px
+  padding: 10px
+  text-align: center
+  width: 260px
+
+  &:hover .ss-card__more
+    opacity: 1
+
+  +element(logo)
+    display: block
+    margin: 22px auto
+    margin-bottom: 0
+    max-height: 120px
+
+  +element(logo_wrapper)
+    height: 155px
+
+  +element(more)
+    background: $app-color-white
+    border: none
+    opacity: 0
+    transition: opacity 0s .2s, opacity .2s linear
+
+    .fa
+      font-size: 16px
+      margin-right: 5px
+
+  

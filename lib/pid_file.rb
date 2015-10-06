@@ -6,11 +6,11 @@ class PidFile
   end
 
   def self.create(fname, remove_on_exit = true)
-    self.new(fname).create(remove_on_exit)
+    new(fname).create(remove_on_exit)
   end
 
   def self.remove(fname)
-    self.new(fname).remove
+    new(fname).remove
   end
 
   def pid
@@ -40,6 +40,6 @@ class PidFile
       return false if regexp.match(command_line).nil?
     end
 
-    return true
+    true
   end
 end

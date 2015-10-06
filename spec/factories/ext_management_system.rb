@@ -65,13 +65,14 @@ FactoryGirl.define do
   factory :ems_openstack_infra_with_authentication, :parent => :ems_openstack_infra do
     after :create do |x|
       x.authentications << FactoryGirl.create(:authentication, :userid => "admin", :password => "123456789")
-      x.authentications << FactoryGirl.create(:authentication, :userid => "qpid_user", :password => "qpid_password", :authtype => "amqp")
+      x.authentications << FactoryGirl.create(:authentication, :userid => "user", :password => "abcdefgh", :authtype => "amqp")
     end
   end
 
   # Leaf classes for ems_cloud
 
   factory :ems_amazon, :aliases => ["manageiq/providers/amazon/cloud_manager"], :class => "ManageIQ::Providers::Amazon::CloudManager", :parent => :ems_cloud do
+    zone {  Zone.first || FactoryGirl.create(:zone) }
     provider_region "us-east-1"
   end
 
@@ -88,12 +89,13 @@ FactoryGirl.define do
   end
 
   factory :ems_openstack, :aliases => ["manageiq/providers/openstack/cloud_manager"], :class => "ManageIQ::Providers::Openstack::CloudManager", :parent => :ems_cloud do
+    zone {  Zone.first || FactoryGirl.create(:zone) }
   end
 
   factory :ems_openstack_with_authentication, :parent => :ems_openstack do
     after :create do |x|
       x.authentications << FactoryGirl.create(:authentication, :userid => "admin", :password => "123456789")
-      x.authentications << FactoryGirl.create(:authentication, :userid => "qpid_user", :password => "qpid_password", :authtype => "amqp")
+      x.authentications << FactoryGirl.create(:authentication, :userid => "user", :password => "abcdefgh", :authtype => "amqp")
     end
   end
 
@@ -122,6 +124,16 @@ FactoryGirl.define do
   end
 
   factory :provisioning_manager_foreman_with_authentication, :parent => :provisioning_manager_foreman do
+    after :create do |x|
+      x.authentications << FactoryGirl.create(:authentication)
+    end
+  end
+
+  factory :ems_azure, :aliases => ["manageiq/providers/azure/cloud_manager"], :class => "ManageIQ::Providers::Azure::CloudManager", :parent => :ems_cloud do
+    zone { Zone.seed }
+  end
+
+  factory :ems_azure_with_authentication, :parent => :ems_azure do
     after :create do |x|
       x.authentications << FactoryGirl.create(:authentication)
     end

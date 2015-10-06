@@ -326,7 +326,7 @@ describe ApplianceConsole::Prompts do
                       "1) /dev/a: 10 MB", "",
                       "2) /dev/b: 20 MB", "",
                       "3) Don't partition the disk", "", "",
-                      "Choose the database disk: " +
+                      "Choose the database disk: " \
                       "You must choose one of [1, 2, 3, /dev/a: 10 MB, /dev/b: 20 MB, Don't partition the disk].",
                       prompt]
       end

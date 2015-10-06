@@ -9,6 +9,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - all_vm_rules
   - availability_zone
   - flavor
   - bottlenecks
@@ -66,6 +67,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - all_vm_rules
   - chargeback
   - chargeback_reports
   - cim_base_storage_extent_show
@@ -170,6 +172,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - all_vm_rules
   - bottlenecks
   - chargeback
   - chargeback_reports
@@ -275,6 +278,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - all_vm_rules
   - dashboard
   - miq_request_admin
   - miq_request_view
@@ -316,12 +320,15 @@
   - vm_stop
   - vm_suspend
   - vm_pause
+  - vm_shelve
+  - vm_shelve_offload
   - vm_timeline
 
 - :name: EvmRole-operator
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - all_vm_rules
   - chargeback
   - chargeback_reports
   - cim_base_storage_extent_show
@@ -454,6 +461,8 @@
   - vm_stop
   - vm_suspend
   - vm_pause
+  - vm_shelve
+  - vm_shelve_offload
   - vm_sync
   - vm_tag
   - vm_timeline
@@ -462,6 +471,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - all_vm_rules
   - chargeback
   - chargeback_reports
   - cim_base_storage_extent_show
@@ -561,6 +571,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - all_vm_rules
   - chargeback
   - chargeback_reports
   - cim_base_storage_extent_show
@@ -654,6 +665,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - all_vm_rules
   - chargeback
   - chargeback_reports
   - cim_base_storage_extent_show
@@ -747,6 +759,7 @@
       :vms: :user
   :miq_product_feature_identifiers:
   - about
+  - all_vm_rules
   - miq_request_admin
   - miq_request_view
   - my_settings_default_views
@@ -769,6 +782,8 @@
   - vm_stop
   - vm_suspend
   - vm_pause
+  - vm_shelve
+  - vm_shelve_offload
   - vm_tag
 
 - :name: EvmRole-user_self_service
@@ -778,6 +793,7 @@
       :vms: :user_or_group
   :miq_product_feature_identifiers:
   - about
+  - all_vm_rules
   - miq_template_clone
   - miq_template_drift
   - miq_template_edit
@@ -818,6 +834,8 @@
   - vm_stop
   - vm_suspend
   - vm_pause
+  - vm_shelve
+  - vm_shelve_offload
   - vm_sync
   - vm_tag
   - vm_timeline
@@ -828,6 +846,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - all_vm_rules
   - miq_request_admin
   - miq_request_view
   - miq_template_analyze
@@ -872,8 +891,132 @@
   - vm_stop
   - vm_suspend
   - vm_pause
+  - vm_shelve
+  - vm_shelve_offload
   - vm_sync
   - vm_tag
   - vm_timeline
   - vm_vmrc_console
   - vm_vnc_console
+
+- :name: EvmRole-tenant_administrator
+  :read_only: true
+  :miq_product_feature_identifiers:
+  - about
+  - availability_zone
+  - flavor
+  - bottlenecks
+  - chargeback
+  - ontap_storage_system
+  - ontap_logical_disk
+  - cim_base_storage_extent
+  - ontap_storage_volume
+  - catalog
+  - cloud_tenant
+  - control_explorer
+  - dashboard
+  - datacenter
+  - storage
+  - ems_cloud
+  - ems_cluster
+  - ems_infra
+  - host
+  - job_all_smartproxy
+  - job_my_smartproxy
+  - miq_ae_class_explorer
+  - miq_ae_customization_explorer
+  - miq_ae_class_import_export
+  - miq_ae_class_log
+  - miq_ae_class_simulation
+  - storage_manager
+  - miq_task_all_ui
+  - miq_task_my_ui
+  - my_settings
+  - policy_simulation
+  - policy_log
+  - miq_report
+  - miq_request
+  - miq_template
+  - orchestration_stack
+  - planning
+  - policy_import_export
+  - provider_foreman_explorer
+  - pxe
+  - rbac_group
+  - rbac_role_view
+  - rbac_tenant
+  - rbac_user
+  - repository
+  - resource_pool
+  - rss
+  - security_group
+  - service
+  - ontap_file_share
+  - snia_local_file_system
+  - timeline
+  - usage
+  - utilization
+  - vm_explorer
+  - vm
+  - vm_cloud_explorer
+  - vm_infra_explorer
+
+- :name: EvmRole-tenant_quota_administrator
+  :read_only: true
+  :miq_product_feature_identifiers:
+  - about
+  - availability_zone
+  - flavor
+  - bottlenecks
+  - chargeback
+  - ontap_storage_system
+  - ontap_logical_disk
+  - cim_base_storage_extent
+  - ontap_storage_volume
+  - catalog
+  - cloud_tenant
+  - control_explorer
+  - dashboard
+  - datacenter
+  - storage
+  - ems_cloud
+  - ems_cluster
+  - ems_infra
+  - host
+  - job_all_smartproxy
+  - job_my_smartproxy
+  - miq_ae_class_explorer
+  - miq_ae_customization_explorer
+  - miq_ae_class_import_export
+  - miq_ae_class_log
+  - miq_ae_class_simulation
+  - storage_manager
+  - miq_task_all_ui
+  - miq_task_my_ui
+  - my_settings
+  - policy_simulation
+  - policy_log
+  - miq_report
+  - miq_request
+  - miq_template
+  - orchestration_stack
+  - planning
+  - policy_import_export
+  - provider_foreman_explorer
+  - pxe
+  - rbac_tenant_view
+  - rbac_tenant_manage_quotas
+  - repository
+  - resource_pool
+  - rss
+  - security_group
+  - service
+  - ontap_file_share
+  - snia_local_file_system
+  - timeline
+  - usage
+  - utilization
+  - vm_explorer
+  - vm
+  - vm_cloud_explorer
+  - vm_infra_explorer

@@ -7,20 +7,17 @@ require "fix_auth/auth_config_model"
 require "fix_auth/models"
 
 describe FixAuth::AuthConfigModel do
+  let(:v1_key)  { MiqPassword.generate_symmetric }
   let(:pass)    { "password" }
-  let(:enc_v1)  { MiqPassword.new.send(:encrypt_version_1, pass) }
-  let(:enc_v2)  { MiqPassword.new.send(:encrypt_version_2, pass) }
+  let(:enc_v1)  { MiqPassword.new.encrypt(pass, "v1", v1_key) }
   let(:bad_v2)  { "v2:{5555555555555555555555==}" }
-  let(:enc_leg) { MiqPassword.v0_key.encrypt64(pass) }
 
   before do
-    MiqPassword.v0_key ||= CryptString.new(nil, "AES-128-CBC", "9999999999999999", "5555555555555555")
-    MiqPassword.v1_key ||= EzCrypto::Key.generate(:algorithm => "aes-256-cbc")
+    MiqPassword.add_legacy_key(v1_key)
   end
 
   after do
-    MiqPassword.v0_key = nil
-    MiqPassword.v1_key = nil
+    MiqPassword.clear_keys
   end
 
   context "#configurations" do
@@ -63,7 +60,7 @@ describe FixAuth::AuthConfigModel do
     end
 
     it "should fail on bad passwords" do
-      expect { subject.fix_passwords(config_with_bad_password) }.to raise_error
+      expect { subject.fix_passwords(config_with_bad_password) }.to raise_error(MiqPassword::MiqPasswordError)
     end
 
     it "should replace bad passwords" do

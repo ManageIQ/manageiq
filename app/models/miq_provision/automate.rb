@@ -185,8 +185,8 @@ module MiqProvision::Automate
         interval, unit = ae_message.split(".")
         interval = interval.to_i
         interval *= 60                     if unit == "minute" || unit == "minutes"
-        interval = interval * 60 * 60      if unit == "hour"   || unit == "hours"
-        interval = interval * 60 * 60 * 24 if unit == "day"    || unit == "days"
+        interval = interval * 60 * 60      if unit == "hour" || unit == "hours"
+        interval = interval * 60 * 60 * 24 if unit == "day" || unit == "days"
 
         MiqQueue.put(
           :class_name  => self.class.name,

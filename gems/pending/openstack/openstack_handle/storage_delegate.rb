@@ -1,14 +1,16 @@
 module OpenstackHandle
   class StorageDelegate < DelegateClass(Fog::Storage::OpenStack)
+    include OpenstackHandle::HandledList
+    include Vmdb::Logging
+
     SERVICE_NAME = "Storage"
 
-    def initialize(dobj, os_handle)
+    attr_reader :name
+
+    def initialize(dobj, os_handle, name)
       super(dobj)
       @os_handle = os_handle
-    end
-
-    def directories_for_accessible_tenants
-      @os_handle.accessor_for_accessible_tenants(SERVICE_NAME, :directories, nil)
+      @name      = name
     end
   end
 end

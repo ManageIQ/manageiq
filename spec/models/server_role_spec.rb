@@ -12,7 +12,7 @@ describe ServerRole do
     end
 
     it "validates uniqueness of name" do
-      -> { FactoryGirl.create(:server_role, :name => @server_roles.first.name, :max_concurrent => @server_roles.first.max_concurrent)}.should raise_error(ActiveRecord::RecordInvalid)
+      -> { FactoryGirl.create(:server_role, :name => @server_roles.first.name, :max_concurrent => @server_roles.first.max_concurrent) }.should raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "should return all names" do
@@ -26,7 +26,6 @@ describe ServerRole do
     it "should respond to unlimited? properly" do
       @server_roles.each { |s| (s.max_concurrent == 0).should == s.unlimited? }
     end
-
   end
 
   context "With Seeding" do
@@ -72,20 +71,19 @@ describe ServerRole do
         external_failover = true  if external_failover == 'true'
         external_failover = false if external_failover == 'false'
         sr = ServerRole.find_by_name(name)
-        sr.description.should       == description
-        sr.max_concurrent.should    == max_concurrent
+        sr.description.should == description
+        sr.max_concurrent.should == max_concurrent
         sr.external_failover.should == external_failover
-        sr.license_required.should  == license_required
-        sr.role_scope.should        == role_scope
+        sr.license_required.should == license_required
+        sr.role_scope.should == role_scope
 
         case max_concurrent
-          when 0
-            sr.unlimited?.should be_true
-          when 1
-            sr.master_supported?.should be_true
+        when 0
+          sr.unlimited?.should be_true
+        when 1
+          sr.master_supported?.should be_true
         end
       end
     end
-
   end
 end

@@ -18,18 +18,18 @@ module ActionView
       def human_size_to_rails_method(size)
         s = size.dup
         case
-          when size.ends_with?(" Byte")
-            s[-5..-1] = ""
-          when size.ends_with?(" Bytes")
-            s[-6..-1] = ""
-          when size.ends_with?(" KB")
-            s[-3..-1] = ".kilobytes"
-          when size.ends_with?(" MB")
-            s[-3..-1] = ".megabytes"
-          when size.ends_with?(" GB")
-            s[-3..-1] = ".gigabytes"
-          when size.ends_with?(" TB")
-            s[-3..-1] = ".terabytes"
+        when size.ends_with?(" Byte")
+          s[-5..-1] = ""
+        when size.ends_with?(" Bytes")
+          s[-6..-1] = ""
+        when size.ends_with?(" KB")
+          s[-3..-1] = ".kilobytes"
+        when size.ends_with?(" MB")
+          s[-3..-1] = ".megabytes"
+        when size.ends_with?(" GB")
+          s[-3..-1] = ".gigabytes"
+        when size.ends_with?(" TB")
+          s[-3..-1] = ".terabytes"
         end
         return s
       rescue
@@ -66,10 +66,10 @@ module ActionView
         handling_negatives(size) do |size|
           size = size.abs * 1000**2
           ret = case
-            when size < 1000**3 then "%.#{precision}f MHz"  % (size / (1000**2))
-            when size < 1000**4 then "%.#{precision}f GHz"  % (size / (1000**3))
-            else                     "%.#{precision}f THz"  % (size / (1000**4))
-          end.sub(".%0#{precision}d" % 0, '')
+                when size < 1000**3 then "%.#{precision}f MHz" % (size / (1000**2))
+                when size < 1000**4 then "%.#{precision}f GHz" % (size / (1000**3))
+                else                     "%.#{precision}f THz" % (size / (1000**4))
+                end.sub(".%0#{precision}d" % 0, '')
         end
       rescue
         nil

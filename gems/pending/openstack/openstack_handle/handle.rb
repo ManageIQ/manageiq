@@ -3,7 +3,8 @@ require 'util/miq-exception'
 
 module OpenstackHandle
   class Handle
-    attr_accessor :username, :password, :address, :port, :connection_options
+    attr_accessor :username, :password, :address, :port, :api_version, :connection_options
+    attr_reader :project_name
     attr_writer   :default_tenant_name
 
     SERVICE_FALL_BACK = {
@@ -31,18 +32,18 @@ module OpenstackHandle
       # attempt to connect with SSL
       yield "https", {:ssl_verify_peer => false}
     rescue Excon::Errors::SocketError => err
-      # TODO recognizing something in exception message is not very reliable. But somebody would need to go to excon gem
+      # TODO: recognizing something in exception message is not very reliable. But somebody would need to go to excon gem
       # and do proper exceptions like Excon::Errors::SocketError::UnknownProtocolSSL,
       # Excon::Errors::SocketError::BadCertificate, etc. all of them inheriting from Excon::Errors::SocketError
-      raise unless (err.message.include?("end of file reached (EOFError)") ||
-                    err.message.include?("unknown protocol (OpenSSL::SSL::SSLError)"))
+      raise unless err.message.include?("end of file reached (EOFError)") ||
+                   err.message.include?("unknown protocol (OpenSSL::SSL::SSLError)")
       # attempt the same connection without SSL
       yield "http", {}
     end
 
-    def self.raw_connect_try_ssl(username, password, address, port, service = "Compute", opts = nil)
+    def self.raw_connect_try_ssl(username, password, address, port, service = "Compute", opts = nil, api_version = nil)
       try_connection do |scheme, connection_options|
-        auth_url = auth_url(address, port, scheme)
+        auth_url = auth_url(address, port, scheme, api_version)
         opts[:connection_options] = (opts[:connection_options] || {}).merge(connection_options)
         raw_connect(username, password, auth_url, service, opts)
       end
@@ -75,32 +76,41 @@ module OpenstackHandle
       raise
     end
 
-    def self.auth_url(address, port = 5000, scheme = "http")
-      url(address, port, scheme)
+    def self.path_for_api_version(api_version)
+      case api_version
+      when 'v2'
+        '/v2.0/tokens'
+      when 'v3'
+        '/v3/auth/tokens'
+      end
     end
 
-    def self.url(address, port = 5000, scheme = "http", path = "/v2.0/tokens")
+    def self.auth_url(address, port = 5000, scheme = "http", api_version = 'v2')
+      url(address, port, scheme, path_for_api_version(api_version))
+    end
+
+    def self.url(address, port = 5000, scheme = "http", path = "")
       port = port.to_i
       uri = URI::Generic.build(:scheme => scheme, :port => port, :path => path)
       uri.hostname = address
       uri.to_s
     end
 
-    def self.connection_options=(hash)
-      @connection_options = hash
+    class << self
+      attr_writer :connection_options
     end
 
-    def self.connection_options
-      @connection_options
+    class << self
+      attr_reader :connection_options
     end
 
-    def initialize(username, password, address, port = nil)
-      @username = username
-      @password = password
-      @address  = address
-      @port     = port || 5000
+    def initialize(username, password, address, port = nil, api_version = nil)
+      @username    = username
+      @password    = password
+      @address     = address
+      @port        = port || 5000
+      @api_version = api_version || 'v2'
 
-      @service_names      = {}
       @connection_cache   = {}
       @connection_options = self.class.connection_options
     end
@@ -110,25 +120,34 @@ module OpenstackHandle
     end
 
     def connect(options = {})
-      opts = options.dup
+      opts     = options.dup
       service  = (opts.delete(:service) || "Compute").to_s.camelize
-      tenant = opts.delete(:tenant_name)
+      tenant   = opts.delete(:tenant_name)
+      # TODO(lsmola) figure out from where to take the project name and domain name
+      domain   = opts.delete(:domain_name) || 'admin_domain'
+
       unless tenant
         tenant = "any_tenant" if service == "Identity"
         tenant ||= default_tenant_name
       end
-      opts[:openstack_tenant] = tenant unless service == "Identity"
+
+      unless service == "Identity"
+        opts[:openstack_tenant] = tenant
+        # For identity ,there is only domain scope, with project_name nil
+        opts[:openstack_project_name] = @project_name = tenant
+      end
+      opts[:openstack_domain_name]  = domain
 
       svc_cache = (@connection_cache[service] ||= {})
       svc_cache[tenant] ||= begin
         opts[:connection_options] = connection_options if connection_options
 
-        raw_service = self.class.raw_connect_try_ssl(username, password, address, port, service, opts)
+        raw_service = self.class.raw_connect_try_ssl(username, password, address, port, service, opts, api_version)
         service_wrapper_name = "#{service}Delegate"
         # Allow openstack to define new services without explicitly requiring a
         # service wrapper.
         if OpenstackHandle.const_defined?(service_wrapper_name)
-          OpenstackHandle.const_get(service_wrapper_name).new(raw_service, self)
+          OpenstackHandle.const_get(service_wrapper_name).new(raw_service, self, SERVICE_NAME_MAP[service])
         else
           raw_service
         end
@@ -143,10 +162,6 @@ module OpenstackHandle
       detect_service("Baremetal", tenant_name)
     end
 
-    def baremetal_service_name
-      service_name("Baremetal")
-    end
-
     def orchestration_service(tenant_name = nil)
       connect(:service => "Orchestration", :tenant_name => tenant_name)
     end
@@ -155,20 +170,12 @@ module OpenstackHandle
       detect_service("Orchestration", tenant_name)
     end
 
-    def orchestration_service_name
-      service_name("Orchestration")
-    end
-
     def planning_service(tenant_name = nil)
       connect(:service => "Planning", :tenant_name => tenant_name)
     end
 
     def detect_planning_service(tenant_name = nil)
       detect_service("Planning", tenant_name)
-    end
-
-    def planning_service_name
-      service_name("Planning")
     end
 
     def compute_service(tenant_name = nil)
@@ -190,10 +197,6 @@ module OpenstackHandle
       detect_service("Network", tenant_name)
     end
 
-    def network_service_name
-      service_name("Network")
-    end
-
     def image_service(tenant_name = nil)
       connect(:service => "Image", :tenant_name => tenant_name)
     end
@@ -201,10 +204,6 @@ module OpenstackHandle
 
     def detect_image_service(tenant_name = nil)
       detect_service("Image", tenant_name)
-    end
-
-    def image_service_name
-      service_name("Image")
     end
 
     def volume_service(tenant_name = nil)
@@ -216,10 +215,6 @@ module OpenstackHandle
       detect_service("Volume", tenant_name)
     end
 
-    def volume_service_name
-      service_name("Volume")
-    end
-
     def storage_service(tenant_name = nil)
       connect(:service => "Storage", :tenant_name => tenant_name)
     end
@@ -229,45 +224,13 @@ module OpenstackHandle
       detect_service("Storage", tenant_name)
     end
 
-    def storage_service_name
-      service_name("Storage")
-    end
-
     def detect_service(service, tenant_name = nil)
-      svc = connect(:service => service, :tenant_name => tenant_name)
-      @service_names[service] = SERVICE_NAME_MAP[service]
-
-      #
-      # For non-admin users, if the Swift ACLs aren't set to permit
-      # read access for the user, we'll be able to connect to the
-      # service but it will fail on first access.
-      #
-      # We check for that situation here, and treat it as though the
-      # service isn't available when encountered.
-      #
-      if service == "Storage"
-        begin
-          svc.directories.length
-        rescue Excon::Errors::Forbidden
-          @service_names[service] = :none
-          return nil
-        end
-      end
-      svc
+      connect(:service => service, :tenant_name => tenant_name)
     rescue MiqException::ServiceNotAvailable
       unless (fbs = SERVICE_FALL_BACK[service])
-        @service_names[service] = :none
         return nil
       end
       svc = connect(:service => fbs, :tenant_name => tenant_name)
-      @service_names[service] = SERVICE_NAME_MAP[fbs]
-      svc
-    end
-
-    def service_name(service)
-      return @service_names[service] if @service_names[service]
-      detect_service(service)
-      @service_names[service]
     end
 
     def tenants
@@ -302,13 +265,19 @@ module OpenstackHandle
       @default_tenant_name ||= accessible_tenant_names.detect { |tn| tn != "services" }
     end
 
-    def service_for_each_accessible_tenant(service, &block)
-      if block.arity == 1
-        accessible_tenant_names.each { |t| block.call(detect_service(service, t)) }
-      elsif block.arity == 2
-        accessible_tenants.each { |t| block.call(detect_service(service, t.name), t) }
-      else
-        raise "OpenstackHandle#service_for_each_accessible_tenant: unexpected number of block args: #{block.arity}"
+    def service_for_each_accessible_tenant(service_name, &block)
+      accessible_tenants.each do |tenant|
+        service = detect_service(service_name, tenant.name)
+        if service
+          case block.arity
+          when 1 then block.call(service)
+          when 2 then block.call(service, tenant)
+          else        raise "Unexpected number of block args: #{block.arity}"
+          end
+        else
+          $fog_log.warn("MIQ(#{self.class.name}##{__method__}) "\
+                        "Could not access service #{service_name} for tenant #{tenant.name} on OpenStack #{@address}")
+        end
       end
     end
 
@@ -318,7 +287,12 @@ module OpenstackHandle
         not_found_error = Fog.const_get(service)::OpenStack::NotFound
 
         rv = begin
-          array_accessor ? svc.send(accessor).to_a : svc.send(accessor)
+          if accessor.kind_of?(Proc)
+            accessor.call(svc)
+          else
+            array_accessor ? svc.send(accessor).to_a : svc.send(accessor)
+          end
+
         rescue not_found_error => e
           $fog_log.warn("MIQ(#{self.class.name}.#{__method__}) HTTP 404 Error during OpenStack request. " \
                         "Skipping inventory item #{service} #{accessor}\n#{e}")
@@ -329,6 +303,14 @@ module OpenstackHandle
           array_accessor ? ra.concat(rv) : ra << rv
         end
       end
+
+      if uniq_id.blank? && array_accessor && !ra.blank?
+        # Take uniq ID from Fog::Model definition
+        last_object = ra.last
+        # TODO(lsmola) change to last_object.identity_name once the new fog-core is released
+        uniq_id = last_object.class.instance_variable_get("@identity") if last_object.kind_of?(Fog::Model)
+      end
+
       return ra unless uniq_id
       ra.uniq { |i| i.kind_of?(Hash) ? i[uniq_id] : i.send(uniq_id) }
     end

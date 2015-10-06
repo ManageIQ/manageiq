@@ -2,12 +2,7 @@ require "spec_helper"
 
 describe "Service Retirement Management" do
   before(:each) do
-    @guid = MiqUUID.new_guid
-    MiqServer.stub(:my_guid).and_return(@guid)
-
-    @zone       = FactoryGirl.create(:zone)
-    @miq_server = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
-    MiqServer.stub(:my_server).and_return(@miq_server)
+    @miq_server = EvmSpecHelper.local_miq_server
     @stack = FactoryGirl.create(:orchestration_stack)
   end
 

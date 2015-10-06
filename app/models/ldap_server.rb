@@ -12,11 +12,11 @@ class LdapServer < ActiveRecord::Base
   include AuthenticationMixin
 
   def name
-    self.hostname
+    hostname
   end
 
   def connect
-    self.ldap_domain.connect(self)
+    ldap_domain.connect(self)
   end
 
   def connected?
@@ -24,12 +24,11 @@ class LdapServer < ActiveRecord::Base
   end
 
   def verify_credentials
-    self.ldap_domain.verify_credentials(self)
+    ldap_domain.verify_credentials(self)
   end
 
   def self.sync_data_from_timer(timestamp = Time.now)
     # Stub for now
     _log.info "time: #{timestamp}"
   end
-
 end

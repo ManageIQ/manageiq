@@ -1,7 +1,7 @@
 /* jshint -W117, -W030 */
 describe('error', function() {
   beforeEach(function() {
-    bard.asyncModule('app.states');
+    module('app.states', 'app.config');
   });
 
   describe('route', function() {

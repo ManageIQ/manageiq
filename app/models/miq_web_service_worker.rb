@@ -1,4 +1,6 @@
 class MiqWebServiceWorker < MiqWorker
+  require_dependency 'miq_web_service_worker/runner'
+
   REQUIRED_ROLE = 'web_services'
   self.required_roles = [REQUIRED_ROLE]
 

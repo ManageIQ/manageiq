@@ -1,5 +1,4 @@
 module MiqHostProvision::Placement
-
   def placement_ems
     @placement_ems ||= ExtManagementSystem.find_by_id(get_option(:placement_ems_name))
   end
@@ -14,26 +13,25 @@ module MiqHostProvision::Placement
 
   # TODO: Subclass
   def place_in_ems_vmware
-    ems_cluster = self.placement_cluster
+    ems_cluster = placement_cluster
     unless ems_cluster.nil?
       _log.info("Registering Host on Cluster: [#{ems_cluster.name}]")
-      return ems_cluster.register_host(self.host)
+      return ems_cluster.register_host(host)
     end
 
-    ems_folder = self.placement_folder
+    ems_folder = placement_folder
     unless ems_folder.nil?
       _log.info("Registering Host on Folder: [#{ems_folder.name}]")
-      return ems_folder.register_host(self.host)
+      return ems_folder.register_host(host)
     end
   end
 
   def place_in_ems
     # TODO: Subclass
-    if self.host.is_vmware?
+    if host.is_vmware?
       place_in_ems_vmware
     else
-      _log.warn "VMM Vendor [#{self.host.vmm_vendor}] is not supported"
+      _log.warn "VMM Vendor [#{host.vmm_vendor}] is not supported"
     end
   end
-
 end

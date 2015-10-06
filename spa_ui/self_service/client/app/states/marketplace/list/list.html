@@ -1,0 +1,4 @@
+<div ng-repeat="template in vm.serviceTemplates">
+  <ss-card heading="{{ ::template.name }}" more="{{ ::template.long_description || template.description }}"
+           ng-click="vm.showDetails(template.id)" img=" {{ ::template.picture.image_href }}"></ss-card>
+</div>

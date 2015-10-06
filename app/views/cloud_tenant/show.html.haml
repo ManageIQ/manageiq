@@ -8,8 +8,14 @@
   - else
     - if %w(instances images security_groups).include?(@display) && @showtype != "compare"
       = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@cloud_tenant.id}"}
-    - elsif @showtype == "compare" || @showtype == "drift_history" || @showtype == "drift" || @showtype == "item"
-      = render :partial => "layouts/#{@showtype}"
+    - elsif @showtype == "compare"
+      = render :partial => "layouts/compare"
+    - elsif @showtype == "drift_history"
+      = render :partial => "layouts/drift_history"
+    - elsif @showtype == "drift"
+      = render :partial => "layouts/drift"
+    - elsif @showtype == "item"
+      = render :partial => "layouts/item"
     - elsif @showtype == "timeline"
       = render :partial => "layouts/tl_show"
       :javascript

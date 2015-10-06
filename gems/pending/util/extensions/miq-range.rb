@@ -18,7 +18,7 @@ class Range
   #    Wed Dec 15 00:00:00 -0500 2010
   #    Thu Dec 16 00:00:00 -0500 2010
   #    Fri Dec 17 00:00:00 -0500 2010
-  #     
+  #
   def step_value(value)
     if block_given?
       return if self.begin > self.end
@@ -30,7 +30,7 @@ class Range
         iter += value
         iter = self.end if iter > self.end
       end
-      
+
       return self
     else
       ret = []

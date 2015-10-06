@@ -82,51 +82,51 @@ module VmOrTemplate::RightSizing
   ]
 
   RIGHT_SIZING_MODES = {
-    :aggressive   => {:mem => :max_mem_usage_absolute_average_avg_over_time_period,  :cpu => :max_cpu_usage_rate_average_avg_over_time_period  },
-    :moderate     => {:mem => :max_mem_usage_absolute_average_high_over_time_period, :cpu => :max_cpu_usage_rate_average_high_over_time_period },
-    :conservative => {:mem => :max_mem_usage_absolute_average_max_over_time_period,  :cpu => :max_cpu_usage_rate_average_max_over_time_period  },
+    :aggressive   => {:mem => :max_mem_usage_absolute_average_avg_over_time_period,  :cpu => :max_cpu_usage_rate_average_avg_over_time_period},
+    :moderate     => {:mem => :max_mem_usage_absolute_average_high_over_time_period, :cpu => :max_cpu_usage_rate_average_high_over_time_period},
+    :conservative => {:mem => :max_mem_usage_absolute_average_max_over_time_period,  :cpu => :max_cpu_usage_rate_average_max_over_time_period},
   }
   MEMORY_RECOMMENDATION_ROUND_TO_NEAREST = 4
 
   RIGHT_SIZING_MODES.each do |mode, meth|
     define_method("#{mode}_recommended_vcpus") do
-      base_recommended(self.send(meth[:cpu]), num_cpu, self.class.cpu_recommendation_minimum)  unless num_cpu.nil?
+      base_recommended(send(meth[:cpu]), num_cpu, self.class.cpu_recommendation_minimum)  unless num_cpu.nil?
     end
 
     define_method("#{mode}_recommended_mem") do
-      base_recommended(self.send(meth[:mem]), ram_size, self.class.mem_recommendation_minimum, MEMORY_RECOMMENDATION_ROUND_TO_NEAREST) unless ram_size.nil?
+      base_recommended(send(meth[:mem]), ram_size, self.class.mem_recommendation_minimum, MEMORY_RECOMMENDATION_ROUND_TO_NEAREST) unless ram_size.nil?
     end
 
     define_method("#{mode}_vcpus_recommended_change_pct") do
-      base_change_percentage(self.send("#{mode}_recommended_vcpus"), num_cpu) unless num_cpu.nil?
+      base_change_percentage(send("#{mode}_recommended_vcpus"), num_cpu) unless num_cpu.nil?
     end
 
     define_method("#{mode}_mem_recommended_change_pct") do
-      base_change_percentage(self.send("#{mode}_recommended_mem"), ram_size) unless ram_size.nil?
+      base_change_percentage(send("#{mode}_recommended_mem"), ram_size) unless ram_size.nil?
     end
 
     define_method("#{mode}_vcpus_recommended_change") do
-      base_change(self.send("#{mode}_recommended_vcpus"), num_cpu) unless num_cpu.nil?
+      base_change(send("#{mode}_recommended_vcpus"), num_cpu) unless num_cpu.nil?
     end
 
     define_method("#{mode}_mem_recommended_change") do
-      base_change(self.send("#{mode}_recommended_mem"), ram_size) unless ram_size.nil?
+      base_change(send("#{mode}_recommended_mem"), ram_size) unless ram_size.nil?
     end
   end
 
   #####################################################
   # BACKWARD COMPATIBILITY for REPORTS THAT USE THESE
   #####################################################
-  alias :recommended_vcpus       :aggressive_recommended_vcpus
-  alias :recommended_mem         :aggressive_recommended_mem
-  alias :overallocated_vcpus_pct :aggressive_vcpus_recommended_change_pct
-  alias :overallocated_mem_pct   :aggressive_mem_recommended_change_pct
+  alias_method :recommended_vcpus,       :aggressive_recommended_vcpus
+  alias_method :recommended_mem,         :aggressive_recommended_mem
+  alias_method :overallocated_vcpus_pct, :aggressive_vcpus_recommended_change_pct
+  alias_method :overallocated_mem_pct,   :aggressive_mem_recommended_change_pct
 
   def max_cpu_usage_rate_average_max_over_time_period
     perfs = VimPerformanceAnalysis.find_perf_for_time_period(self, "daily", :end_date => Time.now.utc, :days => Metric::LongTermAverages::AVG_DAYS)
     perfs.collect do |p|
       # Ignore any CPU bursts to 100% 15 minutes after VM booted
-      next if (p.abs_max_cpu_usage_rate_average_value == 100.0) && self.boot_time && (p.abs_max_cpu_usage_rate_average_timestamp <= (self.boot_time + 15.minutes))
+      next if (p.abs_max_cpu_usage_rate_average_value == 100.0) && boot_time && (p.abs_max_cpu_usage_rate_average_timestamp <= (boot_time + 15.minutes))
       p.abs_max_cpu_usage_rate_average_value
     end.compact.max
   end
@@ -169,7 +169,6 @@ module VmOrTemplate::RightSizing
     div = (actual.to_f / recommended.to_f)
     return 0 if div == 0
 
-    result = ((1 - (1 / div)) * 1000).round  / 10.0
+    result = ((1 - (1 / div)) * 1000).round / 10.0
   end
-
 end

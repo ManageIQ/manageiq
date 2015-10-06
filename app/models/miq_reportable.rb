@@ -3,14 +3,14 @@ module MiqReportable
   def self.records2table(records, options)
     return Ruport::Data::Table.new if records.blank?
 
-    data = records.map {|r|
+    data = records.map do|r|
       options[:include]["categories"] = options[:include_categories] if options[:include] && options[:include_categories]
       r.reportable_data_with_columns(:include     => options[:include],
                                      :only        => options[:only],
                                      :except      => options[:except],
                                      :tag_filters => options[:tag_filters],
                                      :methods     => options[:methods])
-    }
+    end
 
     data = data[0..options[:limit] - 1] if options[:limit] # apply limit after includes are processed
     Ruport::Data::Table.new(:data         => data.collect(&:last).flatten,
@@ -23,15 +23,15 @@ module MiqReportable
   def self.hashes2table(hashes, options)
     return Ruport::Data::Table.new if hashes.blank?
 
-    data = hashes.inject([]) do |arr,h|
+    data = hashes.inject([]) do |arr, h|
       nh = {}
       options[:only].each { |col| nh[col] = h[col] }
       arr << nh
     end
 
     data = data[0..options[:limit] - 1] if options[:limit] # apply limit
-    Ruport::Data::Table.new(:data => data,
+    Ruport::Data::Table.new(:data         => data,
                             :column_names => options[:only],
-                            :filters => options[:filters])
+                            :filters      => options[:filters])
   end
 end

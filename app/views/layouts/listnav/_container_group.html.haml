@@ -60,3 +60,9 @@
             = link_to("#{ui_lookup(:table => "container_project")}: #{@record.container_project.name}",
                 {:controller => "container_project", :action => 'show', :id => @record.container_project.id.to_s},
                 :title => _("Show this pod's parent %s") % ui_lookup(:table => "container_project"))
+        - if role_allows(:feature => "container_replicator_show") && !@record.container_replicator.nil?
+          %li
+            = link_to("#{ui_lookup(:table => "container_replicator")}: #{@record.container_replicator.name}",
+                {:controller => 'container_replicator', :action => 'show', :id => @record.container_replicator},
+                :title => _("Show %s %s") % [ui_lookup(:table => "container_replicator"),
+                  @record.container_replicator.name])

@@ -1,12 +1,8 @@
 require "spec_helper"
 
 describe "Server Role Management" do
-
   context "After Setup," do
     before(:each) do
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-
       @csv = <<-CSV.gsub(/^\s+/, "")
         name,description,max_concurrent,external_failover,license_required,role_scope
         automate,Automation Engine,0,false,automate,region
@@ -32,9 +28,7 @@ describe "Server Role Management" do
       MiqRegion.seed
       ServerRole.seed
       @server_roles = ServerRole.all
-      @zone         = FactoryGirl.create(:zone)
-      @miq_server   = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone, :status => "started", :name => "Server 1")
-      MiqServer.my_server(true)
+      @miq_server   = EvmSpecHelper.local_miq_server
       @miq_server.deactivate_all_roles
     end
 
@@ -70,7 +64,7 @@ describe "Server Role Management" do
 
         desired = 'ems_operations,ems_operations,scheduler'
         @miq_server.role = desired
-        @miq_server.server_role_names.should == %w{ ems_operations scheduler }
+        @miq_server.server_role_names.should == %w( ems_operations scheduler )
       end
 
       it "with duplicate new roles" do
@@ -78,12 +72,12 @@ describe "Server Role Management" do
 
         desired = 'ems_operations,scheduler,scheduler'
         @miq_server.role = desired
-        @miq_server.server_role_names.should == %w{ ems_operations scheduler }
+        @miq_server.server_role_names.should == %w( ems_operations scheduler )
       end
     end
 
     it "should assign role properly when requested" do
-      @roles = [ ['ems_operations', 1], ['event', 2], ['ems_metrics_coordinator', 1], ['scheduler', 1], ['reporting', 1] ]
+      @roles = [['ems_operations', 1], ['event', 2], ['ems_metrics_coordinator', 1], ['scheduler', 1], ['reporting', 1]]
       @roles.each do |role, priority|
         asr = @miq_server.assign_role(role, priority)
         asr.priority.should == priority

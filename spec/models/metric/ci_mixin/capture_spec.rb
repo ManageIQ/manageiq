@@ -5,19 +5,20 @@ describe Metric::CiMixin::Capture do
                                      %w(.. .. .. tools openstack_data openstack_data_test_helper)))
 
   before :each do
-    MiqRegion.seed
     _guid, _server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
     @mock_meter_list = OpenstackMeterListData.new
     @mock_stats_data = OpenstackMetricStatsData.new
 
+    @metering = double(:metering)
+    @metering.stub(:list_meters).and_return(
+      OpenstackApiResult.new((@mock_meter_list.list_meters("resource_counters") +
+                              @mock_meter_list.list_meters("metadata_counters"))))
+
     @ems_openstack = FactoryGirl.create(:ems_openstack, :zone => @zone)
-    @ems_openstack.stub(:list_meters).and_return(
-        OpenstackApiResult.new((@mock_meter_list.list_meters("resource_counters") +
-                                @mock_meter_list.list_meters("metadata_counters"))))
+    @ems_openstack.stub(:connect).with(:service => "Metering").and_return(@metering)
 
     @vm = FactoryGirl.create(:vm_perf_openstack, :ext_management_system => @ems_openstack)
-    @vm.stub(:perf_init_openstack).and_return(@ems_openstack)
   end
 
   before do
@@ -129,7 +130,7 @@ describe Metric::CiMixin::Capture do
 
   def capture_data(second_collection_period_start, collection_overlap_period)
     # 1.collection period, save all metrics
-    @ems_openstack.stub(:get_statistics) do |name, _options|
+    @metering.stub(:get_statistics) do |name, _options|
       first_collection_period = filter_statistics(@mock_stats_data.get_statistics(name,
                                                                                   "multiple_collection_periods"),
                                                   '<=',
@@ -142,7 +143,7 @@ describe Metric::CiMixin::Capture do
     @vm.perf_capture('realtime', Time.parse('2013-08-28T11:01:40Z'), Time.parse(second_collection_period_start))
 
     # 2.collection period, save all metrics
-    @ems_openstack.stub(:get_statistics) do |name, _options|
+    @metering.stub(:get_statistics) do |name, _options|
       second_collection_period = filter_statistics(@mock_stats_data.get_statistics(name,
                                                                                    "multiple_collection_periods"),
                                                    '>',

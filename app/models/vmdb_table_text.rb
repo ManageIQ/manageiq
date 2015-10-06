@@ -4,7 +4,7 @@ class VmdbTableText < VmdbTable
   include_concern 'Seeding'
 
   def sql_indexes
-    self.class.connection.respond_to?(:text_table_indexes) ? self.class.connection.text_table_indexes(self.name) : []
+    self.class.connection.respond_to?(:text_table_indexes) ? self.class.connection.text_table_indexes(name) : []
   end
 
   def capture_metrics

@@ -64,7 +64,7 @@ module Vmdb
       errors = []
 
       [:level, :path].each do |section|
-        section_valid, section_errors = self.send("validate_#{section}", config)
+        section_valid, section_errors = send("validate_#{section}", config)
         valid &&= section_valid
         errors += section_errors
       end
@@ -86,19 +86,25 @@ module Vmdb
       path     = config[:path] || DEFAULT_LOG_PATH
       path_dir = File.dirname(path)
 
-      $log           = VMDBLogger.new(File.join(path_dir, "evm.log"))
-      $rails_log     = VMDBLogger.new(path)
-      $audit_log     = AuditLogger.new(File.join(path_dir, "audit.log"))
-      $fog_log       = FogLogger.new(File.join(path_dir, "fog.log"))
-      $policy_log    = MirroredLogger.new(File.join(path_dir, "policy.log"),     "<PolicyEngine> ")
-      $vim_log       = MirroredLogger.new(File.join(path_dir, "vim.log"),        "<VIM> ")
-      $rhevm_log     = MirroredLogger.new(File.join(path_dir, "rhevm.log"),      "<RHEVM> ")
-      $aws_log       = MirroredLogger.new(File.join(path_dir, "aws.log"),        "<AWS> ")
-      $kube_log      = MirroredLogger.new(File.join(path_dir, "kubernetes.log"), "<KUBERNETES> ")
-      $scvmm_log     = MirroredLogger.new(File.join(path_dir, "scvmm.log"),      "<SCVMM> ")
-      $api_log       = MirroredLogger.new(File.join(path_dir, "api.log"),        "<API> ")
-      $miq_ae_logger = MirroredLogger.new(File.join(path_dir, "automation.log"), "<AutomationEngine> ")
-      $miq_ae_logger.mirror_level = VMDBLogger::INFO
+      if ENV.key?("CI")
+        $log = $rails_log = $audit_log = $fog_log = $policy_log = $vim_log =
+          $rhevm_log = $aws_log = $kube_log = $scvmm_log = $api_log =
+          $miq_ae_logger = LogProxy.null_logger
+      else
+        $log           = VMDBLogger.new(File.join(path_dir, "evm.log"))
+        $rails_log     = VMDBLogger.new(path)
+        $audit_log     = AuditLogger.new(File.join(path_dir, "audit.log"))
+        $fog_log       = FogLogger.new(File.join(path_dir, "fog.log"))
+        $policy_log    = MirroredLogger.new(File.join(path_dir, "policy.log"),     "<PolicyEngine> ")
+        $vim_log       = MirroredLogger.new(File.join(path_dir, "vim.log"),        "<VIM> ")
+        $rhevm_log     = MirroredLogger.new(File.join(path_dir, "rhevm.log"),      "<RHEVM> ")
+        $aws_log       = MirroredLogger.new(File.join(path_dir, "aws.log"),        "<AWS> ")
+        $kube_log      = MirroredLogger.new(File.join(path_dir, "kubernetes.log"), "<KUBERNETES> ")
+        $scvmm_log     = MirroredLogger.new(File.join(path_dir, "scvmm.log"),      "<SCVMM> ")
+        $api_log       = MirroredLogger.new(File.join(path_dir, "api.log"),        "<API> ")
+        $miq_ae_logger = MirroredLogger.new(File.join(path_dir, "automation.log"), "<AutomationEngine> ")
+        $miq_ae_logger.mirror_level = VMDBLogger::INFO
+      end
 
       configure_external_loggers
     end
@@ -110,6 +116,7 @@ module Vmdb
     private_class_method :configure_external_loggers
 
     def self.apply_config_value(config, logger, key, mirror_key = nil)
+      return if logger == LogProxy.null_logger
       apply_config_value_logged(config, logger, :level, key)
       apply_config_value_logged(config, logger, :mirror_level, mirror_key) if mirror_key
     end
@@ -118,7 +125,7 @@ module Vmdb
       old_level = logger.send(level_method)
       new_level, new_level_name = level_and_name_for(config, key)
       if old_level != new_level
-        $log.info("MIQ(#{self.name}.apply_config) Log level for #{File.basename(logger.filename)} has been changed to [#{new_level_name}]")
+        $log.info("MIQ(#{name}.apply_config) Log level for #{File.basename(logger.filename)} has been changed to [#{new_level_name}]")
         logger.send("#{level_method}=", new_level)
       end
     end
@@ -152,7 +159,7 @@ module Vmdb
 
       path = config[:path].to_s
       unless path.blank?
-        if !File.exist?(File.dirname(path))
+        unless File.exist?(File.dirname(path))
           valid = false
           errors << [:path, "path, \"#{path}\", is invalid, directory does not exist"]
         end

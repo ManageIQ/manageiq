@@ -1,4 +1,4 @@
-class TreeBuilderUtilization  < TreeBuilderRegion
+class TreeBuilderUtilization < TreeBuilderRegion
   private
 
   def x_get_tree_ems_kids(object, options)
@@ -30,7 +30,7 @@ class TreeBuilderUtilization  < TreeBuilderRegion
     count_only_or_objects(options[:count_only], objects, nil)
   end
 
-  def x_get_tree_vandt_datacenter_kids(object, options)
+  def x_get_tree_vandt_datacenter_kids(object, _options)
     # Count clusters directly in this folder
     objects = rbac_filtered_sorted_objects(object.clusters, "name", :match_via_descendants => "VmOrTemplate")
     object.folders.each do |f|
@@ -44,7 +44,7 @@ class TreeBuilderUtilization  < TreeBuilderRegion
     end
   end
 
-  def x_get_tree_handc_datacenter_kids(object, options)
+  def x_get_tree_handc_datacenter_kids(object, _options)
     objects = rbac_filtered_sorted_objects(object.clusters, "name")
     object.folders.each do |f|
       if f.name == "vm"                 # Don't add vm folder children

@@ -300,7 +300,7 @@ end
 if quota_exceeded == true
   msg = ""
   # msg +=  "VMs cannot be provisioned at this time due to the following quota limits: "
-  msg +=  "Request denied due to the following quota limits:"
+  msg += "Request denied due to the following quota limits:"
   msg += "(#{g_quota_exceeded_reason1}) " unless g_quota_exceeded_reason1.nil?
   msg += "(#{g_quota_exceeded_reason2}) " unless g_quota_exceeded_reason2.nil?
   msg += "(#{g_quota_exceeded_reason3})" unless g_quota_exceeded_reason3.nil?

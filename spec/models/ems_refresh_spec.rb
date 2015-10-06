@@ -45,10 +45,10 @@ describe EmsRefresh do
 
       q_all = MiqQueue.all
       q_all.length.should == 1
-      q_all[0].args.should        == [expected_targets.collect {|t| [t.class.name, t.id]}]
-      q_all[0].class_name.should  == described_class.name
+      q_all[0].args.should == [expected_targets.collect { |t| [t.class.name, t.id] }]
+      q_all[0].class_name.should == described_class.name
       q_all[0].method_name.should == 'refresh'
-      q_all[0].role.should        == "ems_inventory"
+      q_all[0].role.should == "ems_inventory"
     end
   end
 

@@ -42,11 +42,11 @@ module Menu
           Menu::Item.new('ems_cluster',      clusters_name,          'ems_cluster',   {:feature => 'ems_cluster_show_list'},   '/ems_cluster'),
           Menu::Item.new('host',             hosts_name,             'host',          {:feature => 'host_show_list'},          '/host'),
           Menu::Item.new('vm_infra',         N_('Virtual Machines'), 'vm_infra_explorer',
-                                                                                      {:feature => 'vm_infra_explorer_accords', :any => true},
-                                                                                                                               '/vm_infra/explorer'),
+                         {:feature => 'vm_infra_explorer_accords', :any => true},
+                         '/vm_infra/explorer'),
           Menu::Item.new('resource_pool',    N_('Resource Pools'),   'resource_pool', {:feature => 'resource_pool_show_list'}, '/resource_pool'),
           Menu::Item.new('storage',          ui_lookup(:tables => 'storages'),
-                                                                     'storage',       {:feature => 'storage_show_list'},       '/storage'),
+                         'storage',       {:feature => 'storage_show_list'},       '/storage'),
           Menu::Item.new('repository',       N_('Repositories'),     'repository',    {:feature => 'repository_show_list'},    '/repository'),
           Menu::Item.new('pxe',              N_('PXE'),              'pxe',           {:feature => 'pxe', :any => true},       '/pxe/explorer'),
           Menu::Item.new('miq_request_host', N_('Requests'),         nil,             {:feature => 'miq_request_show_list'},   '/miq_request?typ=host'),
@@ -70,18 +70,18 @@ module Menu
         Menu::Section.new(:cnt, N_("Containers"), [
           Menu::Item.new('ems_container',     N_('Providers'),     'ems_container',     {:feature => 'ems_container_show_list'},     '/ems_container'),
           Menu::Item.new('container_project', ui_lookup(:tables => 'container_project'), 'container_project', {:feature => 'container_project_show_list'}, '/container_project'),
-          Menu::Item.new('container_node',    ui_lookup(:tables => 'container_node'),    'container_node',    {:feature => 'container_node_show_list'},    '/container_node'),
+          Menu::Item.new('container_node',    N_('Container Nodes'),    'container_node',    {:feature => 'container_node_show_list'},    '/container_node'),
           Menu::Item.new('container_group',   ui_lookup(:tables => 'container_group'),   'container_group',   {:feature => 'container_group_show_list'},   '/container_group'),
           Menu::Item.new('container_route',   ui_lookup(:tables => 'container_route'),   'container_route',   {:feature => 'container_route_show_list'},   '/container_route'),
           Menu::Item.new('container_replicator', ui_lookup(:tables => 'container_replicator'),   'container_replicator',   {:feature => 'container_replicator_show_list'},   '/container_replicator'),
-          Menu::Item.new('container_service', ui_lookup(:tables => 'container_service'), 'container_service', {:feature => 'container_service_show_list'}, '/container_service'),
+          Menu::Item.new('container_service', N_('Container Services'), 'container_service', {:feature => 'container_service_show_list'}, '/container_service'),
           Menu::Item.new('container',
                          ui_lookup(:tables => 'container'),
                          'containers',
                          {:feature => 'containers', :any => true},
                          '/container/explorer'),
           Menu::Item.new('container_image',
-                         ui_lookup(:tables => 'container_image'),
+                         N_('Container Images'),
                          'container_image',
                          {:feature => 'container_image_show_list'},
                          '/container_image'),
@@ -90,6 +90,8 @@ module Menu
                          'container_image_registry',
                          {:feature => 'container_image_registry_show_list'},
                          '/container_image_registry'),
+          Menu::Item.new('container_topology', N_('Topology'), 'container_topology',
+                         {:feature => 'container_topology', :any => true}, '/container_topology')
         ])
       end
 
@@ -142,11 +144,10 @@ module Menu
 
       def default_menu
         storage_enabled = VMDB::Config.new("vmdb").config[:product][:storage]
-        containers_enabled = VMDB::Config.new("vmdb").config[:product][:containers]
 
-        [cloud_inteligence_menu_section, services_menu_section, clouds_menu_section, infrastructure_menu_section, containers_enabled ? container_menu_section : nil,
-         storage_enabled ? storage_menu_section : nil, control_menu_section, automate_menu_section,
-         optimize_menu_section, configuration_menu_section].compact
+        [cloud_inteligence_menu_section, services_menu_section, clouds_menu_section, infrastructure_menu_section,
+         container_menu_section, storage_enabled ? storage_menu_section : nil, control_menu_section,
+         automate_menu_section, optimize_menu_section, configuration_menu_section].compact
       end
     end
   end

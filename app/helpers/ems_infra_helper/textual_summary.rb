@@ -4,23 +4,19 @@ module EmsInfraHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w{hostname ipaddress type port cpu_resources memory_resources cpus cpu_cores guid host_default_vnc_port_range}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(hostname ipaddress type port cpu_resources memory_resources cpus cpu_cores guid host_default_vnc_port_range)
   end
 
   def textual_group_relationships
-    items = %w(infrastructure_folders folders clusters hosts used_tenants used_availability_zones datastores vms templates orchestration_stacks)
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(infrastructure_folders folders clusters hosts used_tenants used_availability_zones datastores vms templates orchestration_stacks)
   end
 
   def textual_group_status
-    items = %w(authentications refresh_status orchestration_stacks_status)
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    textual_authentications + %i(refresh_status orchestration_stacks_status)
   end
 
   def textual_group_smart_management
-    items = %w{zone tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(zone tags)
   end
 
   #
@@ -28,7 +24,7 @@ module EmsInfraHelper::TextualSummary
   #
 
   def textual_hostname
-    {:label => "Hostname", :value => @ems.hostname}
+    @ems.hostname
   end
 
   def textual_ipaddress
@@ -36,7 +32,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_type
-    {:label => "Type", :value => @ems.emstype_description}
+    @ems.emstype_description
   end
 
   def textual_port
@@ -113,19 +109,25 @@ module EmsInfraHelper::TextualSummary
   def textual_used_tenants
     return nil if !@record.respond_to?(:cloud_tenants) || !@record.cloud_tenants
 
-    textual_link(@record.cloud_tenants)
+    textual_link(@record.cloud_tenants,
+                 :as   => CloudTenant,
+                 :link => url_for(:action => 'show', :id => @record, :display => 'cloud_tenants'))
   end
 
   def textual_used_availability_zones
     return nil if !@record.respond_to?(:availability_zones) || !@record.availability_zones
 
-    textual_link(@record.availability_zones)
+    textual_link(@record.availability_zones,
+                 :as   => AvailabilityZone,
+                 :link => url_for(:action => 'show', :id => @record, :display => 'availability_zones'))
   end
 
   def textual_datastores
     return nil if @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
 
-    textual_link(@record.storages)
+    textual_link(@record.storages,
+                 :as   => Storage,
+                 :link => url_for(:action => 'show', :id => @record, :display => 'storages'))
   end
 
   def textual_vms
@@ -135,9 +137,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_templates
-    label = "Templates"
-
-    textual_link(@ems.miq_templates)
+    @ems.miq_templates
   end
 
   def textual_authentications
@@ -147,8 +147,9 @@ module EmsInfraHelper::TextualSummary
     authentications.collect do |auth|
       label =
         case auth.authtype
-        when "default"; "Default"
-        when "metrics"; "C & U Database"
+        when "default" then "Default"
+        when "metrics" then "C & U Database"
+        when "amqp" then    "AMQP"
         else;           "<Unknown>"
         end
 
@@ -166,9 +167,9 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_orchestration_stacks
-    return nil if !@ems.respond_to?(:orchestration_stacks) || !@ems.orchestration_stacks
+    return nil unless @ems.respond_to?(:orchestration_stacks)
 
-    textual_link(@ems.orchestration_stacks)
+    @ems.orchestration_stacks
   end
 
   def textual_refresh_status
@@ -190,11 +191,10 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_host_default_vnc_port_range
-    return nil unless @ems.is_a?(ManageIQ::Providers::Vmware::InfraManager)
+    return nil unless @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
     value = @ems.host_default_vnc_port_start.blank? ?
         "" :
         "#{@ems.host_default_vnc_port_start} - #{@ems.host_default_vnc_port_end}"
     {:label => "#{title_for_host} Default VNC Port Range", :value => value}
   end
-
 end

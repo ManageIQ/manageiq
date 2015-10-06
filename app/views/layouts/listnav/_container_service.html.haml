@@ -45,3 +45,13 @@
               = link_to(_("Container Routes (%s)") % num_routes,
                  {:action  => 'show', :id => @record, :display => 'container_routes'},
                  :title => _("Show Container Routes"))
+        - if role_allows(:feature => "container_node_show_list")
+          - num_nodes = @record.number_of(:container_nodes)
+          - if num_nodes == 0
+            %li.disabled
+              = link_to(_("%s (0)") % ui_lookup(:tables => "container_node"), "#")
+          - else
+            %li
+              = link_to(_("%s (%s)") % [ui_lookup(:tables => "container_node"), num_nodes],
+                  {:action  => 'show', :id => @record, :display => 'container_nodes'},
+                  :title => _("Show Container Nodes"))

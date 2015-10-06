@@ -14,9 +14,9 @@
           %td
           %td
             - if @edit[:object_ids].length == 1
-              = _("No %s Tags are assigned") % session[:customer_name]
+              = _("No %s Tags are assigned") % current_tenant.name
             - else
-              = _("No %s Tags are common to all of the items below") % session[:customer_name]
+              = _("No %s Tags are common to all of the items below") % current_tenant.name
           %td
       - else
         - @assignments.sort_by { |a| [a.parent.description, a.description] }.each do |a|

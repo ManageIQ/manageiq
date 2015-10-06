@@ -8,7 +8,7 @@ describe MIQRexml do
     xml = REXML::Document.new("<test/>")
     copyright_char = "\xC2\xAE"
     attr_string = "string #{copyright_char}"
-    xml.root.add_element("element_1", {'attr1' => attr_string})
+    xml.root.add_element("element_1", 'attr1' => attr_string)
     xml.root.elements[1].attributes['attr1'].should == attr_string
   end
 

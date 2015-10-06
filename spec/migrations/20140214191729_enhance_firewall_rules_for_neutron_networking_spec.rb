@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20140214191729_enhance_firewall_rules_for_neutron_networking.rb")
+require_migration
 
 describe EnhanceFirewallRulesForNeutronNetworking do
   let(:firewall_rule_stub) { migration_stub(:FirewallRule) }
@@ -26,7 +26,6 @@ describe EnhanceFirewallRulesForNeutronNetworking do
       # Expect data
       expect(fr.reload.ems_ref).to eq("10075435-0ef2-4b46-aa10-0b78f70715d9")
       expect(fr.reload.network_protocol).to eq("IPV4")
-
     end
   end
 

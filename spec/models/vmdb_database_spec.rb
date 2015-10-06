@@ -124,5 +124,4 @@ describe VmdbDatabase do
       @db.top_tables_by('wasted_bytes', 3).should == [@table_7, @table_6, @table_5]
     end
   end
-
 end

@@ -1,14 +1,16 @@
 module OpenstackHandle
   class VolumeDelegate < DelegateClass(Fog::Volume::OpenStack)
+    include OpenstackHandle::HandledList
+    include Vmdb::Logging
+
     SERVICE_NAME = "Volume"
 
-    def initialize(dobj, os_handle)
+    attr_reader :name
+
+    def initialize(dobj, os_handle, name)
       super(dobj)
       @os_handle = os_handle
-    end
-
-    def volumes_for_accessible_tenants
-      @os_handle.accessor_for_accessible_tenants(SERVICE_NAME, :volumes, :id)
+      @name      = name
     end
 
     def snapshots_for_accessible_tenants
@@ -20,7 +22,12 @@ module OpenstackHandle
     end
 
     def quotas_for_current_tenant
-      @tenant_id ||= current_tenant['id']
+      if current_tenant.kind_of?(Hash)
+        @tenant_id ||= current_tenant['id']
+      else
+        # Seems like keystone v3 has string in current_tenant
+        @tenant_id ||= @os_handle.accessible_tenants.detect { |x| x.name == current_tenant }.id
+      end
       q = get_quota(@tenant_id).body['quota_set']
       # looks like the quota id and the tenant id are the same,
       # but set the tenant id anyway, just in case.

@@ -124,4 +124,40 @@ describe MiqRequestController do
       expect(response.body).to_not be_empty
     end
   end
+
+  render_views
+  context "#edit_button" do
+    before do
+      set_user_privileges
+      FactoryGirl.create(:vmdb_database)
+      EvmSpecHelper.create_guid_miq_server_zone
+      @miq_request = MiqProvisionConfiguredSystemRequest.create(:description    => "Foreman provision",
+                                                                :approval_state => "pending_approval",
+                                                                :userid         => User.current_user.userid)
+    end
+    it "when the edit button is pressed the request is displayed" do
+      session[:settings] = {:display   => {:quad_truncate => 'f'},
+                            :quadicons => {:host => 'foo'}}
+      get :show, :id => @miq_request.id
+      expect(response.status).to eq(200)
+      expect(response.body).to_not be_empty
+    end
+  end
+
+  context "#layout_from_tab_name" do
+    before do
+      set_user_privileges
+      FactoryGirl.create(:vmdb_database)
+      EvmSpecHelper.create_guid_miq_server_zone
+      session[:settings] = {:display   => {:quad_truncate => 'f'},
+                            :quadicons => {:host => 'foo'},
+                            :views     => {:miq_request => 'grid'}}
+    end
+
+    it "miq_request/show_list sets @layout='miq_request_vm' when redirected via foreman provisioning" do
+      post :show_list, :typ => "configured_systems"
+      layout = controller.instance_variable_get(:@layout)
+      expect(layout).to eq("miq_request_vm")
+    end
+  end
 end

@@ -117,9 +117,7 @@ describe Authenticator::Ldap do
   end
 
   def setup_vmdb_config
-    vmdb_config = double("vmdb_config")
-    vmdb_config.stub(:config => @auth_config)
-    VMDB::Config.stub(:new).with("vmdb").and_return(vmdb_config)
+    stub_server_configuration(@auth_config)
   end
 
   def setup_to_create_user(group)

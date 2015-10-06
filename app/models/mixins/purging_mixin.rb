@@ -26,7 +26,7 @@ module PurgingMixin
   module ClassMethods
     def purge(older_than = nil, window = nil, &block)
       older_than ||= purge_date
-      window     ||= purge_window_size
+      window ||= purge_window_size
       purge_by_date(older_than, window, &block)
     end
 

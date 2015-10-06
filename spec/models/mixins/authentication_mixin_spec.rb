@@ -20,8 +20,6 @@ describe AuthenticationMixin do
           false
         when :missing_credentials?
           true
-        else
-          nil
         end
       end
 
@@ -48,13 +46,13 @@ describe AuthenticationMixin do
         t.stub(:authentication_best_fit => double(required_field => "test"))
 
         expected = case method
-        when :has_credentials?
-          true
-        when :missing_credentials?
-          false
-        else
-          "test"
-        end
+                   when :has_credentials?
+                     true
+                   when :missing_credentials?
+                     false
+                   else
+                     "test"
+                   end
 
         t.send(method).should == expected
       end
@@ -71,7 +69,7 @@ describe AuthenticationMixin do
     context "requires one field" do
       it "saves when populated" do
         t = TestClass.new
-        data    = {:test => { :userid => "test_user"}}
+        data    = {:test => {:userid => "test_user"}}
         options = {:required => :userid}
         t.update_authentication(data, options)
         expect(t.has_authentication_type?(:test)).to be_true
@@ -79,7 +77,7 @@ describe AuthenticationMixin do
 
       it "raises when blank" do
         t = TestClass.new
-        data    = {:test => { :userid => "test_user"}}
+        data    = {:test => {:userid => "test_user"}}
         options = {:required => :password}
         expect { t.update_authentication(data, options) }.to raise_error(ArgumentError, "password is required")
       end
@@ -88,7 +86,7 @@ describe AuthenticationMixin do
     context "requires both fields" do
       it "saves when populated" do
         t = TestClass.new
-        data    = {:test => { :userid => "test_user", :password => "test_pass"}}
+        data    = {:test => {:userid => "test_user", :password => "test_pass"}}
         options = {:required => [:userid, :password]}
         t.update_authentication(data, options)
         expect(t.has_authentication_type?(:test)).to be_true
@@ -96,26 +94,46 @@ describe AuthenticationMixin do
 
       it "raises when blank" do
         t = TestClass.new
-        data    = {:test => { :userid => "test_user"}}
+        data    = {:test => {:userid => "test_user"}}
         options = {:required => [:userid, :password]}
         expect { t.update_authentication(data, options) }.to raise_error(ArgumentError, "password is required")
       end
     end
   end
 
+  context "authorization event and check for container providers" do
+    before(:each) do
+      MiqServer.stub(:my_zone).and_return("default")
+    end
+
+    it "should be triggered for kubernetes" do
+      auth = AuthToken.new(:name => "bearer", :auth_key => "valid-token")
+      FactoryGirl.create(:ems_kubernetes, :authentications => [auth])
+
+      MiqQueue.count.should be == 2
+      MiqQueue.find_by(:method_name => 'raise_evm_event').should_not be_nil
+      MiqQueue.find_by(:method_name => 'authentication_check_types').should_not be_nil
+    end
+
+    it "should be triggered for openshift" do
+      auth = AuthToken.new(:name => "bearer", :auth_key => "valid-token")
+      FactoryGirl.create(:ems_openshift, :authentications => [auth])
+
+      MiqQueue.count.should be == 2
+      MiqQueue.find_by(:method_name => 'raise_evm_event').should_not be_nil
+      MiqQueue.find_by(:method_name => 'authentication_check_types').should_not be_nil
+    end
+  end
+
   context "with server and zone" do
     before(:each) do
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-      @zone       = FactoryGirl.create(:zone)
-      @miq_server = FactoryGirl.create(:miq_server_not_master, :guid => @guid, :zone => @zone)
-      MiqServer.my_server(true)
+      @miq_server = EvmSpecHelper.local_miq_server
       @data = {:default => {:userid => "test", :password => "blah"}}
     end
 
     context "with multiple zones, emses, and hosts" do
       before(:each) do
-        @zone1 = @zone
+        @zone1 = @miq_server.zone
         @zone2 = FactoryGirl.create(:zone, :name => 'test1')
         @ems1  = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone1)
         @ems2  = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone2)
@@ -134,14 +152,14 @@ describe AuthenticationMixin do
 
       it "Ems.authentication_check_schedule will enqueue for current zone" do
         ExtManagementSystem.authentication_check_schedule
-        MiqQueue.exists?(:method_name => 'authentication_check_types', :class_name => 'ExtManagementSystem', :instance_id => @ems1.id, :zone => @ems1.my_zone ).should be_true
+        MiqQueue.exists?(:method_name => 'authentication_check_types', :class_name => 'ExtManagementSystem', :instance_id => @ems1.id, :zone => @ems1.my_zone).should be_true
         MiqQueue.where(:method_name => 'authentication_check_types', :class_name => 'ExtManagementSystem', :instance_id => @ems2.id).count.should == 0
       end
 
       it "Host.authentication_check_schedule will enqueue for role 'smartstate' for current zone" do
         Host.authentication_check_schedule
         MiqQueue.exists?(:method_name => 'authentication_check_types', :class_name => 'Host', :instance_id => @host1.id, :zone => @host1.my_zone, :role => @host1.authentication_check_role).should be_true
-        MiqQueue.where(:method_name => 'authentication_check_types', :class_name => 'Host', :instance_id => @host2.id).count.should ==0
+        MiqQueue.where(:method_name => 'authentication_check_types', :class_name => 'Host', :instance_id => @host2.id).count.should == 0
       end
 
       it "Ems.authentication_check_schedule will enqueue for role 'ems_operations' for current zone" do
@@ -306,7 +324,7 @@ describe AuthenticationMixin do
 
       it "should have authentications" do
         @host.authentications.length.should > 0
-        @ems.authentications.length.should  > 0
+        @ems.authentications.length.should > 0
       end
 
       it "Host#authentication_check_types_queue with [:ssh, :default], :remember_host => true is passed down to verify_credentials" do
@@ -435,8 +453,8 @@ describe AuthenticationMixin do
       it "should queue a raise authentication change event when calling update_authentication" do
         @ems.update_authentication(@data, :save => true)
         events = MiqQueue.where(:class_name => "MiqEvent", :method_name => "raise_evm_event")
-        args = [ [@ems.class.name, @ems.id], 'ems_auth_changed', {}]
-        events.any? {|e| e.args == args }.should be_true, "#{events.inspect} with args: #{args.inspect} expected"
+        args = [[@ems.class.name, @ems.id], 'ems_auth_changed', {}]
+        events.any? { |e| e.args == args }.should be_true, "#{events.inspect} with args: #{args.inspect} expected"
       end
 
       context "with credentials_changed_on set to now and jump 1 minute" do
@@ -540,7 +558,7 @@ describe AuthenticationMixin do
 
         it "deletes the record if userid is blank" do
           @host.update_authentication(@data, :save => true)
-          @host.auth_user_pwd(:default).should == nil
+          @host.auth_user_pwd(:default).should.nil?
           @host.has_authentication_type?(:default).should_not be_true
         end
       end

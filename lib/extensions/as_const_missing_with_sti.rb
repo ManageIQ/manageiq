@@ -12,7 +12,7 @@ module AsConstMissingWithSti
   end
 
   def self.cache
-    @cache ||= cache_path.exist? ? YAML.load_file(cache_path) : {}
+    @cache ||= (cache_path.exist? && YAML.load_file(cache_path)) || {}
   end
 
   def self.save_cache!
@@ -241,5 +241,5 @@ at_exit do
   AsConstMissingWithSti.save_cache!
 end
 
-#ActiveSupport::Dependencies.log_activity = true
-#ActiveSupport::Dependencies.logger = Logger.new($stdout)
+# ActiveSupport::Dependencies.log_activity = true
+# ActiveSupport::Dependencies.logger = Logger.new($stdout)

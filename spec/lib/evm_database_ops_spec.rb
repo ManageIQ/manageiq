@@ -6,9 +6,9 @@ describe EvmDatabaseOps do
       @connect_opts = {:username => 'blah', :password => 'blahblah', :uri => "smb://myserver.com/share"}
       @db_opts =      {:dbname => 'vmdb_production', :username => 'root'}
       MiqSmbSession.stub(:runcmd)
-      MiqSmbSession.stub(:base_mount_point).and_return(Rails.root.join("/tmp"))
+      allow_any_instance_of(MiqSmbSession).to receive(:settings_mount_point).and_return(Rails.root.join("tmp"))
       MiqUtil.stub(:runcmd)
-      MiqPostgresAdmin.stub(:runcmd_with_logging)
+      PostgresAdmin.stub(:runcmd_with_logging)
       EvmDatabaseOps.stub(:backup_destination_free_space).and_return(200.megabytes)
       EvmDatabaseOps.stub(:database_size).and_return(100.megabytes)
     end
@@ -29,10 +29,8 @@ describe EvmDatabaseOps do
       EvmSpecHelper.create_guid_miq_server_zone
       EvmDatabaseOps.stub(:backup_destination_free_space).and_return(100.megabytes)
       EvmDatabaseOps.stub(:database_size).and_return(200.megabytes)
-      lambda { EvmDatabaseOps.backup(@db_opts, @connect_opts)}.should raise_error(MiqException::MiqDatabaseBackupInsufficientSpace)
-      msg = MiqQueue.first
-      msg.class_name.should == "MiqEvent"
-      msg.method_name.should == "raise_evm_event"
+      -> { EvmDatabaseOps.backup(@db_opts, @connect_opts) }.should raise_error(MiqException::MiqDatabaseBackupInsufficientSpace)
+      expect(MiqQueue.where(:class_name => "MiqEvent", :method_name => "raise_evm_event").count).to eq(1)
     end
 
     it "remotely" do
@@ -54,8 +52,8 @@ describe EvmDatabaseOps do
       @db_opts =      {:dbname => 'vmdb_production', :username => 'root'}
       MiqSmbSession.stub(:runcmd)
       MiqSmbSession.stub(:raw_disconnect)
-      MiqSmbSession.stub(:base_mount_point).and_return(Rails.root.join("/tmp"))
-      MiqPostgresAdmin.stub(:runcmd_with_logging)
+      allow_any_instance_of(MiqSmbSession).to receive(:settings_mount_point).and_return(Rails.root.join("tmp"))
+      PostgresAdmin.stub(:runcmd_with_logging)
     end
 
     it "from local backup" do

@@ -113,8 +113,8 @@ module VimPerformanceAnalysis
 
     # This method answers C&U Planning question 2
     def vm_how_many_more_can_fit(options = {})
-      options  ||= @options
-      vm_needs   = self.get_vm_needs
+      options ||= @options
+      vm_needs   = get_vm_needs
       result     = []
 
       return result, vm_needs if @compute.blank?
@@ -125,7 +125,7 @@ module VimPerformanceAnalysis
 
         MiqPreloader.preload(@compute, :hosts => [:hardware, {:vms => :hardware}])
         compute_hosts = @compute.collect do |c|
-          c.hosts.each {|h| @hosts_to_cluster[h.id] = c}
+          c.hosts.each { |h| @hosts_to_cluster[h.id] = c }
           c.hosts
         end.flatten
       else
@@ -134,46 +134,46 @@ module VimPerformanceAnalysis
       end
 
       # Set :only_cols for target daily requested cols for better performance
-      options[:ext_options][:only_cols] = [:cpu, :memory, :storage].collect {|t| [options[:target_options].fetch_path(t, :metric), options[:target_options].fetch_path(t, :limit_col)]}.flatten.compact
+      options[:ext_options][:only_cols] = [:cpu, :memory, :storage].collect { |t| [options[:target_options].fetch_path(t, :metric), options[:target_options].fetch_path(t, :limit_col)] }.flatten.compact
       compute_hosts.each do |c|
-        hash = { :target => c }
-        count_hash = Hash.new
+        hash = {:target => c}
+        count_hash = {}
 
         need_compute_perf = VimPerformanceAnalysis.needs_perf_data?(options[:target_options])
-        start_time, end_time = self.get_time_range(options[:range])
+        start_time, end_time = get_time_range(options[:range])
         compute_perf = VimPerformanceAnalysis.get_daily_perf(c, start_time, end_time, options[:ext_options]) if need_compute_perf
         unless need_compute_perf && compute_perf.blank?
           ts = compute_perf.last.timestamp if compute_perf
 
-          [:cpu, :vcpus, :memory].each { |type|
+          [:cpu, :vcpus, :memory].each do |type|
             next if vm_needs[type].nil? || options[:target_options][type].nil?
             if type == :vcpus && vm_needs[type] > c.total_vcpus
-              count_hash[type] = { :total => 0 }
+              count_hash[type] = {:total => 0}
               next
             end
             avail, usage = compute_offers(compute_perf, ts, options[:target_options][type], type, c)
-            count_hash[type] = { :total => can_fit(avail, usage, vm_needs[type]) }
-          }
+            count_hash[type] = {:total => can_fit(avail, usage, vm_needs[type])}
+          end
 
           unless vm_needs[:storage].nil? || options[:target_options][:storage].nil?
-            details = Array.new
+            details = []
             total   = 0
-            storages_for_compute_target(c).each { |s|
+            storages_for_compute_target(c).each do |s|
               avail, usage = storage_offers(compute_perf, ts, options[:target_options][:storage], s)
               fits = can_fit(avail, usage, vm_needs[:storage])
-              details << { s.id => fits }
+              details << {s.id => fits}
               total += fits unless fits.nil?
-            }
-            count_hash[:storage] = { :total => total, :details => details }
+            end
+            count_hash[:storage] = {:total => total, :details => details}
           end
         end
 
         total = nil
-        count_hash.each_value { |v|
+        count_hash.each_value do |v|
           next if v[:total].nil?
           total = v[:total] if total.nil? || total > v[:total]
-        }
-        count_hash[:total] = { :total => total }
+        end
+        count_hash[:total] = {:total => total}
 
         hash[:count] = count_hash
         result << hash
@@ -219,23 +219,23 @@ module VimPerformanceAnalysis
       end
 
       result = []
-      nh.each do |cid,v|
+      nh.each do |_cid, v|
         chash = v[:count][:storage]
         # Calculate storage total based on merged counts.
-        chash[:total] = chash[:details].inject(0) {|t,h|
-          k,val = h.to_a.flatten
+        chash[:total] = chash[:details].inject(0) do|t, h|
+          k, val = h.to_a.flatten
           t += val
-        } if v[:count].has_key?(:storage)
+        end if v[:count].key?(:storage)
         #
         chash = v[:count]
         [:cpu, :vcpus, :memory, :storage].each do |type|
-          next unless chash.has_key?(type)
+          next unless chash.key?(type)
           chash[:total][:total] = chash[type][:total] if chash[type][:total] < chash[:total][:total]
         end
         result << v
       end
 
-      return result
+      result
     end
 
     VM_CONSUMES_METRIC_DEFAULT = {
@@ -245,7 +245,7 @@ module VimPerformanceAnalysis
         :allocated => nil,
         :manual    => {:value =>  nil, :mode => :manual}
       },
-      :vcpus  => {
+      :vcpus   => {
         :used      => {:metric => :num_cpu, :mode => :current},
         :reserved  => {:metric => :num_cpu, :mode => :current},
         :allocated => {:metric => :num_cpu, :mode => :current},
@@ -282,26 +282,26 @@ module VimPerformanceAnalysis
       vm_perf = nil
       if VimPerformanceAnalysis.needs_perf_data?(options[:vm_options])
         # Get VM performance data
-        start_time, end_time = self.get_time_range(options[:range])
+        start_time, end_time = get_time_range(options[:range])
         # Set :only_cols for VM daily requested cols for better performance
         options[:ext_options] ||= {}
-        options[:ext_options][:only_cols] = [:cpu, :vcpus, :memory, :storage].collect {|t| options[:vm_options][t][:metric] if options[:vm_options][t]}.compact
+        options[:ext_options][:only_cols] = [:cpu, :vcpus, :memory, :storage].collect { |t| options[:vm_options][t][:metric] if options[:vm_options][t] }.compact
         vm_perf    = VimPerformanceAnalysis.get_daily_perf(@vm, start_time, end_time, options[:ext_options])
       end
 
-      @vm_needs = Hash.new
+      @vm_needs = {}
       vm_ts = vm_perf.last.timestamp unless vm_perf.blank?
-      [:cpu, :vcpus, :memory, :storage].each { |type|
+      [:cpu, :vcpus, :memory, :storage].each do |type|
         @vm_needs[type] = vm_consumes(vm_perf, vm_ts, options[:vm_options][type], type)
-      }
-      return @vm_needs
+      end
+      @vm_needs
     end
 
     def vm_consumes(perf, ts, options, type, vm = @vm)
       return nil if options.nil?
 
       options[:metric] ||= VM_CONSUMES_METRIC_DEFAULT[type][:used][:metric]
-      options[:mode]   ||= VM_CONSUMES_METRIC_DEFAULT[type][:used][:metric]
+      options[:mode] ||= VM_CONSUMES_METRIC_DEFAULT[type][:used][:metric]
 
       return options[:value] if options[:mode] == :manual
 
@@ -321,8 +321,8 @@ module VimPerformanceAnalysis
     }
 
     COMPUTE_OFFERS_RESERVE_METRIC_DEFAULT = {
-      :cpu     => :total_vm_cpu_reserve,
-      :memory  => :total_vm_memory_reserve,
+      :cpu    => :total_vm_cpu_reserve,
+      :memory => :total_vm_memory_reserve,
     }
 
     COMPUTE_OFFERS_LIMIT_COL_DEFAULT = {
@@ -363,9 +363,9 @@ module VimPerformanceAnalysis
     def offers(perf, ts, options, type, target)
       return nil if options.nil?
 
-      options[:mode]      ||= COMPUTE_OFFERS_MODE_DEFAULT[type]
-      options[:metric]    ||= COMPUTE_OFFERS_METRIC_DEFAULT[type]
-      options[:reserve]   ||= COMPUTE_OFFERS_RESERVE_METRIC_DEFAULT[type]
+      options[:mode] ||= COMPUTE_OFFERS_MODE_DEFAULT[type]
+      options[:metric] ||= COMPUTE_OFFERS_METRIC_DEFAULT[type]
+      options[:reserve] ||= COMPUTE_OFFERS_RESERVE_METRIC_DEFAULT[type]
       options[:limit_col] ||= COMPUTE_OFFERS_LIMIT_COL_DEFAULT[type]
       options[:limit_pct] ||= COMPUTE_OFFERS_LIMIT_PCT_DEFAULT[type]
 
@@ -386,7 +386,7 @@ module VimPerformanceAnalysis
         avail   = (avail * (options[:limit_pct] / 100.0)) unless avail.nil? || options[:limit_pct].blank?
       end
       usage = (usage > reserve) ? usage : reserve # Take the greater of usage or total reserve of child VMs
-      return [avail, usage]
+      [avail, usage]
     end
 
     def compute_offers(perf, ts, options, type, target)
@@ -435,7 +435,7 @@ module VimPerformanceAnalysis
       else
         hash[:host] = Host.first
       end
-      return {:recomendations => [hash], :errors => nil}
+      {:recomendations => [hash], :errors => nil}
     end
 
     def get_time_range(range)
@@ -444,7 +444,7 @@ module VimPerformanceAnalysis
       #     :days         => Number of days back from daily_date
       #     :end_date     => Ending date
       ##########################################################
-      range[:days]     ||= 20
+      range[:days] ||= 20
       range[:end_date] ||= Time.now
 
       start_time = (range[:end_date].utc - range[:days].days)
@@ -457,8 +457,8 @@ module VimPerformanceAnalysis
   # Helper methods
 
   def self.needs_perf_data?(options)
-    options.each {|k,v| return true if v && v[:mode] == :perf_trend}
-    return false
+    options.each { |_k, v| return true if v && v[:mode] == :perf_trend }
+    false
   end
 
   def self.find_perf_for_time_period(obj, interval_name, options = {})
@@ -498,7 +498,7 @@ module VimPerformanceAnalysis
 
     start_time = (options[:start_date] || (options[:end_date].utc - options[:days].days)).utc
     end_time   = options[:end_date].utc
-    klass, _   = Metric::Helper.class_and_association_for_interval_name(interval_name)
+    klass, = Metric::Helper.class_and_association_for_interval_name(interval_name)
 
     user_cond = nil
     user_cond = klass.send(:sanitize_sql_for_conditions, options[:conditions]) if options[:conditions]
@@ -507,17 +507,17 @@ module VimPerformanceAnalysis
     cond =  "(#{user_cond}) AND (#{cond})" if user_cond
 
     if obj.kind_of?(MiqEnterprise) || obj.kind_of?(MiqRegion)
-      cond1 = klass.send(:sanitize_sql_for_conditions, {:resource_type => "Storage",             :resource_id => obj.storage_ids})
-      cond2 = klass.send(:sanitize_sql_for_conditions, {:resource_type => "ExtManagementSystem", :resource_id => obj.ext_management_system_ids})
+      cond1 = klass.send(:sanitize_sql_for_conditions, :resource_type => "Storage",             :resource_id => obj.storage_ids)
+      cond2 = klass.send(:sanitize_sql_for_conditions, :resource_type => "ExtManagementSystem", :resource_id => obj.ext_management_system_ids)
       cond += " AND ((#{cond1}) OR (#{cond2}))"
     else
       parent_col = case obj
-      when Host;                :parent_host_id
-      when EmsCluster;          :parent_ems_cluster_id
-      when Storage;             :parent_storage_id
-      when ExtManagementSystem; :parent_ems_id
-      else                      raise "unknown object type: #{obj.class}"
-      end
+                   when Host then                :parent_host_id
+                   when EmsCluster then          :parent_ems_cluster_id
+                   when Storage then             :parent_storage_id
+                   when ExtManagementSystem then :parent_ems_id
+                   else                      raise "unknown object type: #{obj.class}"
+                   end
 
       cond += " AND #{parent_col} = ?"
       cond += " AND resource_type in ('Host', 'EmsCluster')" if obj.kind_of?(ExtManagementSystem)
@@ -543,11 +543,11 @@ module VimPerformanceAnalysis
     #   "Host/environment/dev"  => "Host: Environment: Development"
     classifications = Classification.hash_all_by_type_and_name
 
-    self.find_child_perf_for_time_period(obj, interval_name, options.merge(:conditions => "resource_type != 'VmOrTemplate' AND tag_names IS NOT NULL", :select => "resource_type, tag_names")).inject({}) do |h,p|
+    find_child_perf_for_time_period(obj, interval_name, options.merge(:conditions => "resource_type != 'VmOrTemplate' AND tag_names IS NOT NULL", :select => "resource_type, tag_names")).inject({}) do |h, p|
       p.tag_names.split("|").each do |t|
         next if t.starts_with?("power_state")
         tag = "#{p.resource_type}/#{t}"
-        next if h.has_key?(tag)
+        next if h.key?(tag)
 
         c, e = t.split("/")
         cat = classifications.fetch_path(c, :category)
@@ -590,8 +590,8 @@ module VimPerformanceAnalysis
       end
     end
 
-    result.each do |k,h|
-      h[:min_max] = h.keys.find_all {|k| k.to_s.starts_with?("min") || k.to_s.starts_with?("max")}.inject({}) do |mm,k|
+    result.each do |_k, h|
+      h[:min_max] = h.keys.find_all { |k| k.to_s.starts_with?("min") || k.to_s.starts_with?("max") }.inject({}) do |mm, k|
         val = h.delete(k)
         mm[k] = val unless val.nil?
         mm
@@ -611,9 +611,9 @@ module VimPerformanceAnalysis
   end
 
   def self.calc_slope_from_data(recs, x_attr, y_attr)
-    recs.sort!{|a,b| a.send(x_attr) <=> b.send(x_attr)} if recs.first.respond_to?(x_attr)
+    recs.sort! { |a, b| a.send(x_attr) <=> b.send(x_attr) } if recs.first.respond_to?(x_attr)
 
-    y_array, x_array = recs.inject([]) do |arr,r|
+    y_array, x_array = recs.inject([]) do |arr, r|
       arr[0] ||= []; arr[1] ||= []
       next(arr) unless  r.respond_to?(x_attr) && r.respond_to?(y_attr)
       if r.respond_to?(:inside_time_profile) && r.inside_time_profile == false
@@ -640,7 +640,7 @@ module VimPerformanceAnalysis
       _log.warn("#{err.message}, calculating slope")
       slope_arr = []
     end
-    return slope_arr
+    slope_arr
   end
 
   def self.get_daily_perf(obj, start_time, end_time, options)
@@ -648,12 +648,12 @@ module VimPerformanceAnalysis
     results = VimPerformanceDaily.find(:all, :conditions => cond, :order => "timestamp", :ext_options => options)
 
     # apply time profile to returned records if one was specified
-    results.each {|rec| rec.apply_time_profile(options[:time_profile]) if rec.respond_to?(:apply_time_profile)} unless options[:time_profile].nil?
-    return results
+    results.each { |rec| rec.apply_time_profile(options[:time_profile]) if rec.respond_to?(:apply_time_profile) } unless options[:time_profile].nil?
+    results
   end
 
   def self.calc_trend_value_at_timestamp(recs, attr, timestamp)
-    slope, yint = self.calc_slope_from_data(recs, :timestamp, attr)
+    slope, yint = calc_slope_from_data(recs, :timestamp, attr)
     return nil if slope.nil?
 
     begin
@@ -667,7 +667,7 @@ module VimPerformanceAnalysis
   end
 
   def self.calc_timestamp_at_trend_value(recs, attr, value)
-    slope, yint = self.calc_slope_from_data(recs, :timestamp, attr)
+    slope, yint = calc_slope_from_data(recs, :timestamp, attr)
     return nil if slope.nil?
 
     begin

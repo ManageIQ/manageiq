@@ -13,13 +13,13 @@ describe Hardware do
   end
 
   it "#vm_or_template" do
-    @vm_hw.vm_or_template.should       == @vm
+    @vm_hw.vm_or_template.should == @vm
     @template_hw.vm_or_template.should == @template
     @host_hw.vm_or_template.should     be_nil
   end
 
   it "#vm" do
-    @vm_hw.vm.should       == @vm
+    @vm_hw.vm.should == @vm
     @template_hw.vm.should be_nil
     @host_hw.vm.should     be_nil
   end
@@ -33,6 +33,6 @@ describe Hardware do
   it "#host" do
     @vm_hw.host.should       be_nil
     @template_hw.host.should be_nil
-    @host_hw.host.should     == @host
+    @host_hw.host.should == @host
   end
 end

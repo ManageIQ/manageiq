@@ -20,6 +20,7 @@ db: Container
 # Columns to fetch from the main table
 cols:
 - name
+- state
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -40,11 +41,13 @@ col_order:
 - name
 - container_group.name
 - container_image.name
+- state
 
 # Column titles, in order
 headers:
 - Name
 - Pod Name
+- State
 - Image
 
 # Condition(s) string for the SQL query

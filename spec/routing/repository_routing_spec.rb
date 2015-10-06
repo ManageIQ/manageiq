@@ -22,21 +22,21 @@ describe "routes for AvailabilityZoneController" do
   describe "#form_field_changed" do
     it "routes with POST" do
       expect(post("/repository/form_field_changed"))
-      .to route_to("repository#form_field_changed")
+        .to route_to("repository#form_field_changed")
     end
   end
 
   describe "#listnav_search_selected" do
     it "routes with POST" do
       expect(post("/repository/listnav_search_selected"))
-      .to route_to("repository#listnav_search_selected")
+        .to route_to("repository#listnav_search_selected")
     end
   end
 
   describe "#save_default_search" do
     it "routes with POST" do
       expect(post("/repository/save_default_search"))
-      .to route_to("repository#save_default_search")
+        .to route_to("repository#save_default_search")
     end
   end
 
@@ -56,5 +56,4 @@ describe "routes for AvailabilityZoneController" do
       expect(post("/repository/show")).to route_to("repository#show")
     end
   end
-
 end

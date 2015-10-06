@@ -82,7 +82,11 @@ describe MiqProvision do
       end
 
       it "sets ownership" do
+        group_owner = FactoryGirl.create(:miq_group, :description => "desired")
+        group_current = FactoryGirl.create(:miq_group, :description => "current")
+        user.update_attributes!(:miq_groups => [group_owner, group_current], :current_group => group_current)
         options[:owner_email] = user.email
+        options[:owner_group] = group_owner.description
         task.update_attributes(:options => options)
 
         task.stub(:miq_request => double("MiqRequest").as_null_object)
@@ -92,7 +96,9 @@ describe MiqProvision do
         task.signal(:post_create_destination)
 
         expect(task.destination.evm_owner).to eq(user)
-        expect(vm.reload.evm_owner).to        eq(user)
+        vm.reload
+        expect(vm.evm_owner).to eq(user)
+        expect(vm.miq_group).to eq(group_owner)
       end
 
       context "sets retirement" do

@@ -57,7 +57,7 @@ describe MiqRequestWorkflow do
       let(:init_values) { {:root_password => "root"} }
 
       it "does not modify the initial values" do
-        workflow.init_from_dialog(init_values, 123)
+        workflow.init_from_dialog(init_values)
         expect(init_values).to eq(:root_password => "root")
       end
     end
@@ -72,7 +72,7 @@ describe MiqRequestWorkflow do
       end
 
       it "does not modify the initial values" do
-        workflow.init_from_dialog(init_values, 123)
+        workflow.init_from_dialog(init_values)
 
         expect(init_values).to eq({})
       end
@@ -88,7 +88,7 @@ describe MiqRequestWorkflow do
       end
 
       it "modifies the initial values with the default value" do
-        workflow.init_from_dialog(init_values, 123)
+        workflow.init_from_dialog(init_values)
 
         expect(init_values).to eq(:root_password => "not nil")
       end
@@ -113,7 +113,7 @@ describe MiqRequestWorkflow do
         end
 
         it "uses the first field value" do
-          workflow.init_from_dialog(init_values, 123)
+          workflow.init_from_dialog(init_values)
 
           expect(init_values).to eq(:root_password => [:something, "test"])
         end
@@ -129,7 +129,7 @@ describe MiqRequestWorkflow do
         end
 
         it "uses values as [value, description] for timezones aray" do
-          workflow.init_from_dialog(init_values, 123)
+          workflow.init_from_dialog(init_values)
 
           expect(init_values).to eq(:root_password => [nil, "test2"])
         end
@@ -237,6 +237,34 @@ describe MiqRequestWorkflow do
       expect(hs.id).to               be_kind_of(Integer)
       expect(hs.evm_object_class).to eq(:ConfiguredSystem)
       expect(hs.name).to             be_kind_of(String)
+    end
+  end
+
+  context "#create_request" do
+    it "sets requester_group" do
+      values = {}
+      request = workflow.create_request(values, workflow.requester.userid)
+      expect(request.options[:requester_group]).to eq(workflow.requester.miq_group_description)
+    end
+
+    it "doesnt set owner_group" do
+      values = {}
+      request = workflow.create_request(values, workflow.requester.userid)
+      expect(request.options[:owner_group]).not_to be
+    end
+
+    it "handles bad owner email" do
+      values = {:owner_email => "bogus"}
+      request = workflow.create_request(values, workflow.requester.userid)
+      expect(request.options[:owner_group]).not_to be
+    end
+
+    it "sets owner group" do
+      owner = FactoryGirl.create(:user_with_email, :miq_groups => [FactoryGirl.create(:miq_group)])
+      values = {:owner_email => owner.email}
+      request = workflow.create_request(values, workflow.requester.userid)
+      expect(request.options[:owner_email]).to eq(owner.email)
+      expect(request.options[:owner_group]).to eq(owner.current_group.description)
     end
   end
 end

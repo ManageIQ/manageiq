@@ -1,0 +1,189 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "bc7c2597ac891e83c66cb97cdbc860e550907de13b45dc33c64e121719df9486",
+      "message": "Possible command injection",
+      "file": "lib/vmdb/appliance.rb",
+      "line": 103,
+      "link": "http://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "`#{diag[:cmd]}`",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Vmdb::Appliance",
+        "method": "s(:self).log_diagnostics"
+      },
+      "user_input": "diag[:cmd]",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "9671d8f31067984959a7340e73928b3d7f3aafccdc16aa4c6cb08105e7093e98",
+      "message": "Possible command injection",
+      "file": "app/models/miq_action.rb",
+      "line": 485,
+      "link": "http://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "Open3.capture3(MiqEnvironment::Command.rails_command, \"runner\", Tempfile.new(\"miq_action\", File.expand_path(File.join(Rails.root, \"product/conditions/scripts\"))).path, \"'#{rec.name}'\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MiqAction",
+        "method": "run_script"
+      },
+      "user_input": "rec.name",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Remote Code Execution",
+      "warning_code": 24,
+      "fingerprint": "58fcf47340099025db0b33d410f05aa6594508dab67fe0ee04c47580e838d24e",
+      "message": "Unsafe reflection method constantize called with parameter value",
+      "file": "app/controllers/application_controller/performance.rb",
+      "line": 359,
+      "link": "http://brakemanscanner.org/docs/warning_types/remote_code_execution/",
+      "code": "(@sb[:chart_reports][params[:menu_click].split(\"_\").last.split(\"-\").last.to_i] or @sb[:chart_reports]).table.data[(params[:menu_click].split(\"_\").last.split(\"-\")[-2].to_i - 1)][\"resource_type\"].constantize",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ApplicationController::Performance",
+        "method": "perf_menu_click"
+      },
+      "user_input": "(params[:menu_click].split(\"_\").last.split(\"-\")[-2].to_i - 1)",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "f16f496f164004e758e1357b50b17298ab92d91a472b730b8141aab2da0e48fa",
+      "message": "Render path contains parameter value",
+      "file": "app/views/cloud_tenant/show.html.haml",
+      "line": 24,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => (session[:cloud_tenant_display] or (params[:display] or \"main\")), {})",
+      "render_path": [{"type":"controller","class":"CloudTenantController","method":"show","line":87,"file":"app/controllers/cloud_tenant_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "cloud_tenant/show"
+      },
+      "user_input": "params[:display]",
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "81643e92919b7fcf51345d899e362037a429d483e776eb1345d0bc3d1de3a0cc",
+      "message": "Render path contains parameter value",
+      "file": "app/views/configuration/show.html.haml",
+      "line": 1,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => (session[:config_tabform] or ((session[:config_tab] + \"_\") + params[:tab])), {})",
+      "render_path": [{"type":"controller","class":"ConfigurationController","method":"change_tab","line":92,"file":"app/controllers/configuration_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "configuration/show"
+      },
+      "user_input": "params[:tab]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "bf1571bc811c863308baca0a8c1b0ac00239058e1ae17fa00b7b8e8e583bb9de",
+      "message": "Render path contains parameter value",
+      "file": "app/views/flavor/show.html.haml",
+      "line": 16,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => (session[:flavor_display] or (params[:display] or \"main\")), {})",
+      "render_path": [{"type":"controller","class":"FlavorController","method":"show","line":49,"file":"app/controllers/flavor_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "flavor/show"
+      },
+      "user_input": "params[:display]",
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "fa6119b7191a4416e8689572b83199f3750ae5c68aedd42506ef2d84ac50adc0",
+      "message": "Render path contains parameter value",
+      "file": "app/views/orchestration_stack/show.html.haml",
+      "line": 11,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => (session[:orchestration_stack_display] or (params[:display] or \"main\")), {})",
+      "render_path": [{"type":"controller","class":"OrchestrationStackController","method":"show","line":58,"file":"app/controllers/orchestration_stack_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "orchestration_stack/show"
+      },
+      "user_input": "params[:display]",
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "cc17a33db3316149d769b1fbea5ffdb1a6633649f97599e9ce2274cdfb5a1698",
+      "message": "Render path contains parameter value",
+      "file": "app/views/security_group/show.html.haml",
+      "line": 5,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => (session[:security_group_display] or (params[:display] or \"main\")), {})",
+      "render_path": [{"type":"controller","class":"SecurityGroupController","method":"show","line":51,"file":"app/controllers/security_group_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "security_group/show"
+      },
+      "user_input": "params[:display]",
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "e95f7b494233d0543110961a8058f9fa42e06813db3579e54afa8adc9fbe62a7",
+      "message": "Render path contains parameter value",
+      "file": "app/views/shared/views/ems_common/_show.html.haml",
+      "line": 17,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => ((((\"config\" or (params[:display] or \"main\")) or \"timeline\") or \"config\") or \"main\"), {})",
+      "render_path": [{"type":"controller","class":"EmsCloudController","method":"show","line":null,"file":"app/controllers/ems_common.rb"},{"type":"template","name":"ems_cloud/show","line":1,"file":"app/views/ems_cloud/show.html.haml"}],
+      "location": {
+        "type": "template",
+        "template": "shared/views/ems_common/_show"
+      },
+      "user_input": "params[:display]",
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Request Forgery",
+      "warning_code": 86,
+      "fingerprint": "0068de871aa26aa4f84eb376161fbaf45c66ea116f510db814a74fc4b997cb28",
+      "message": "protect_from_forgery should be configured with 'with: :exception'",
+      "file": "app/controllers/application_controller.rb",
+      "line": 14,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross-site_request_forgery/",
+      "code": "protect_from_forgery(:secret => MiqDatabase.first.csrf_secret_token, :except => :csp_report)",
+      "render_path": null,
+      "location": {
+        "type": "controller",
+        "controller": "ApplicationController"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "note": ""
+    }
+  ],
+  "updated": "2015-09-21 17:22:25 -0400",
+  "brakeman_version": "3.1.0"
+}

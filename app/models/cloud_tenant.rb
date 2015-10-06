@@ -2,17 +2,17 @@ class CloudTenant < ActiveRecord::Base
   include ReportableMixin
   include NewWithTypeStiMixin
 
-  #attr_accessible :description, :ems_ref, :enabled, :name
-
   belongs_to :ext_management_system, :foreign_key => "ems_id", :class_name => "ManageIQ::Providers::CloudManager"
   has_many   :security_groups
   has_many   :cloud_networks
+  has_many   :cloud_subnets
+  has_many   :network_ports
+  has_many   :network_routers
   has_many   :shared_cloud_networks, -> { where :shared => true }, :through => :ext_management_system, :source => :cloud_networks
   has_many   :vms
   has_many   :vms_and_templates
   has_many   :miq_templates
   has_many   :floating_ips
-  has_many   :cloud_resource_quotas
   has_many   :cloud_volumes
   has_many   :cloud_volume_snapshots
   has_many   :cloud_object_store_containers

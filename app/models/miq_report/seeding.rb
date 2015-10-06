@@ -2,24 +2,21 @@ module MiqReport::Seeding
   extend ActiveSupport::Concern
 
   module ClassMethods
-
     REPORT_DIR  = File.expand_path(File.join(Rails.root, "product/reports"))
     COMPARE_DIR = File.expand_path(File.join(Rails.root, "product/compare"))
 
     def seed
-      MiqRegion.my_region.lock do
-        # Force creation of model instances for all report yaml files that exist in the product/reports directories
-        # that don't already have an instance in the model
-        MiqReport.sync_from_dir("report")
-        MiqReport.sync_from_dir("compare")
-      end
+      # Force creation of model instances for all report yaml files that exist in the product/reports directories
+      # that don't already have an instance in the model
+      MiqReport.sync_from_dir("report")
+      MiqReport.sync_from_dir("compare")
     end
 
     def seed_report(pattern, type = "report")
       dir = type == "report" ? REPORT_DIR : COMPARE_DIR
       files = Dir.glob(File.join(dir, "**/*#{pattern}*"))
       files.collect do |f|
-        self.sync_from_file(f, dir, type)
+        sync_from_file(f, dir, type)
       end
     end
 
@@ -34,7 +31,7 @@ module MiqReport::Seeding
         cond = ["rpt_type = 'Default' and template_type = ?", typ]
       end
 
-      self.find(:all, :conditions => cond).each do |f|
+      where(cond).each do |f|
         next unless f.filename
         unless File.exist?(File.join(dir, f.filename))
           $log.info("#{typ.titleize}: file [#{f.filename}] has been deleted from disk, deleting from model")
@@ -43,7 +40,7 @@ module MiqReport::Seeding
       end
 
       Dir.glob(File.join(dir, pattern)).sort.each do |f|
-        self.sync_from_file(f, dir, typ)
+        sync_from_file(f, dir, typ)
       end
     end
 
@@ -54,7 +51,7 @@ module MiqReport::Seeding
       fd.close
 
       rpt = {}
-      self.column_names.each {|c| rpt[c.to_sym] = yml[c]}
+      column_names.each { |c| rpt[c.to_sym] = yml[c] }
       rpt.delete :id
       # rpt[:name] = File.basename(filename, ".*")
       rpt[:name] = yml["menu_name"].strip
@@ -70,7 +67,7 @@ module MiqReport::Seeding
       # rec = self.find_by_name_and_rpt_group(rpt[:name], rpt[:rpt_group])
       # rec = self.find_by_name_and_filename(rpt[:name], rpt[:filename])
       rpt[:template_type] = typ
-      rec = self.find_by_filename(rpt[:filename])
+      rec = find_by_filename(rpt[:filename])
 
       if rec
         if rec.filename && (rec.file_mtime.nil? || rec.file_mtime.utc < rpt[:file_mtime])
@@ -80,9 +77,8 @@ module MiqReport::Seeding
         end
       else
         _log.info("#{typ.titleize}: [#{rpt[:name]}] file has been added to disk, adding to model")
-        self.create(rpt)
+        create(rpt)
       end
     end
-
   end
 end

@@ -1,0 +1,44 @@
+class ManageIQ::Providers::Azure::CloudManager::Vm < ManageIQ::Providers::CloudManager::Vm
+  include_concern 'Operations'
+
+  def provider_service(connection = nil)
+    connection ||= ext_management_system.connect
+    ::Azure::Armrest::VirtualMachineService.new(connection)
+  end
+
+  # The resource group is stored as part of the uid_ems. This splits it out.
+  def resource_group
+    uid_ems.split('\\').first
+  end
+
+  #
+  # Relationship methods
+  #
+
+  def disconnect_inv
+    super
+
+    # Mark all instances no longer found as terminated
+    power_state == "off"
+    save
+  end
+
+  def disconnected
+    false
+  end
+
+  def disconnected?
+    false
+  end
+
+  def self.calculate_power_state(raw_power_state)
+    case raw_power_state.downcase
+    when /running/, /starting/
+      "on"
+    when /stopped/, /stopping/, /dealloc/
+      "off"
+    else
+      "unknown"
+    end
+  end
+end

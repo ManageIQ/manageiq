@@ -11,7 +11,6 @@ module Sandbox
   end
 
   def x_tree_init(name, type, leaf, values = {})
-    Rails.logger.error("x_tree_init called for type #{type}")
     return if @sb.has_key_path?(:trees, name)
 
     values = values.reverse_merge(
@@ -29,7 +28,7 @@ module Sandbox
     @sb[:active_tree]
   end
 
-  TREE_WHITELIST = %w"
+  TREE_WHITELIST = %w(
     ab_tree
     action_tree
     ae_tree
@@ -82,9 +81,9 @@ module Sandbox
     vms_filter_tree
     vms_instances_filter_tree
     widgets_tree
-  ".each_with_object({}) { |value, acc| acc[value] = value.to_sym }.freeze
+  ).each_with_object({}) { |value, acc| acc[value] = value.to_sym }.freeze
 
-  ACCORD_WHITELIST = %w"
+  ACCORD_WHITELIST = %w(
     ab
     action
     alert
@@ -133,7 +132,7 @@ module Sandbox
     vms_filter
     vms_instances_filter
     widgets
-  ".each_with_object({}) { |value, acc| acc[value] = value.to_sym }.freeze
+  ).each_with_object({}) { |value, acc| acc[value] = value.to_sym }.freeze
 
   def x_active_tree=(tree)
     @sb[:active_tree] = nil

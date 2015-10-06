@@ -20,10 +20,10 @@ describe VmCloudController do
         prefixes.each do |prefix|
           actual_action = "#{prefix}_" + action_name
           actual_method = if method == :s1 || method == :s2
-              "#{prefix}_" + action_name
-            else
-              method.to_s
-            end
+                            "#{prefix}_" + action_name
+                          else
+                            method.to_s
+                          end
           it "calls the appropriate method: '#{actual_method}' for action '#{actual_action}'" do
             controller.stub(:x_button_response)
             controller.should_receive(actual_method)

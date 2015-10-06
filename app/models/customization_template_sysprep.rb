@@ -33,7 +33,7 @@ EOF
 
   def create_files_on_server(pxe_server, pxe_image, mac_address, windows_image, substitution_options)
     filepath = self.class.pxe_server_filepath(pxe_server, pxe_image, mac_address)
-    unattend_contents = self.script_with_substitution(substitution_options)
+    unattend_contents = script_with_substitution(substitution_options)
 
     image_bat_options = substitution_options.merge(
       :windows_images_directory => pxe_server.windows_images_directory.chomp("/").gsub("/", "\\\\"),
@@ -49,7 +49,7 @@ EOF
     end
   end
 
-  def delete_files_on_server(pxe_server, pxe_image, mac_address, windows_image)
+  def delete_files_on_server(pxe_server, pxe_image, mac_address, _windows_image)
     filepath = self.class.pxe_server_filepath(pxe_server, pxe_image, mac_address)
     pxe_server.delete_directory(filepath)
   end

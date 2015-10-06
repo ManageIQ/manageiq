@@ -22,5 +22,4 @@ class CimBaseStorageExtentController < CimInstanceController
   def show_list
     process_show_list
   end
-
 end

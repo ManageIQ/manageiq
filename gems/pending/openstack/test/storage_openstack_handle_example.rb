@@ -6,7 +6,6 @@ require_relative '../../bundler_setup'
 require 'excon'
 require 'openstack/openstack_handle'
 
-
 begin
   os_handle = OpenstackHandle::Handle.new(EMS_USERNAME, EMS_PASSWORD, EMS_IP)
   os_handle.connection_options = {:instrumentor => Excon::StandardInstrumentor}
@@ -16,7 +15,7 @@ begin
     puts "\t#{t.name}\t(#{t.id})"
   end
 
-  unless os_handle.storage_service_name == :swift
+  unless os_handle.storage_service.name == :swift
     puts "Storeage service swift is not available, exiting."
     exit
   end

@@ -26,7 +26,7 @@ module MiqReport::Notification
     _log.info("Emailing to: #{to.inspect} report results: [#{result.name}]")
 
     body = notify_email_body(url, result, to)
-    subject = run_on.strftime("Your report '#{self.title}' generated on %m/%d/%Y is ready")
+    subject = run_on.strftime("Your report '#{title}' generated on %m/%d/%Y is ready")
 
     curr_tz = Time.zone # Save current time zone setting
     Time.zone = user ? user.get_timezone : MiqServer.my_server.server_timezone
@@ -37,7 +37,7 @@ module MiqReport::Notification
         target = atype == :pdf ? result : self
         {
           :content_type => "application/#{atype}",
-          :filename     => "#{self.title} #{run_on.utc.iso8601}.#{atype}",
+          :filename     => "#{title} #{run_on.utc.iso8601}.#{atype}",
           :body         => target.send("to_#{atype}")
         }
       end
@@ -49,7 +49,7 @@ module MiqReport::Notification
     # Split recipient list into groups whose total length in bytes is around 100 bytes or the configured limit
     cut_off = VMDB::Config.new("vmdb").config.fetch_path(:smtp, :recipient_address_byte_limit) || 100
     sub_group = []
-    grouped_tos = to.uniq.inject([]) do |g,t|
+    grouped_tos = to.uniq.inject([]) do |g, t|
       sub_group << t
       if sub_group.join.length >= cut_off || to.index(t) == (to.length - 1)
         g << sub_group
@@ -63,11 +63,11 @@ module MiqReport::Notification
       grouped_tos.each do |group_of_tos|
         _log.info("Queuing email user: [#{user.name}] report results: [#{result.name}] to: #{group_of_tos.inspect}")
         options = {
-          :to          => group_of_tos,
-          :from        => from,
-          :subject     => subject,
-          :body        => body,
-          :attachment  => attachments,
+          :to         => group_of_tos,
+          :from       => from,
+          :subject    => subject,
+          :body       => body,
+          :attachment => attachments,
         }
         GenericMailer.deliver_queue(:generic_notification, options)
       end
@@ -77,8 +77,7 @@ module MiqReport::Notification
     Time.zone = curr_tz # Restore original time zone setting
   end
 
-
-  def notify_email_body(url, result, recipients)
+  def notify_email_body(_url, _result, recipients)
     if self.table_has_records?
       "Please find attached scheduled report \"#{name}\". This report was sent to: #{recipients.join(", ")}."
     else

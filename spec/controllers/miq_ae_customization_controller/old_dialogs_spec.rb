@@ -8,18 +8,18 @@ describe MiqAeCustomizationController do
         dialog1 = FactoryGirl.create(:miq_dialog, :name        => "Test_Dialog1",
                                                   :description => "Test Description 1",
                                                   :default     => true
-                                   )
+                                    )
         dialog2 = FactoryGirl.create(:miq_dialog, :name        => "Test_Dialog2",
                                                   :description => "Test Description 2",
                                                   :default     => false
-        )
+                                    )
         controller.instance_variable_set(:@sb,
                                          :active_tree => :old_dialogs_tree,
                                          :trees       => {
                                            :old_dialogs_tree => {
                                              :active_node => "xx-MiqDialog_MiqProvisionWorkflow"}
                                          }
-        )
+                                        )
         controller.stub(:get_node_info)
         controller.stub(:replace_right_cell)
 
@@ -38,7 +38,7 @@ describe MiqAeCustomizationController do
         dialog = FactoryGirl.create(:miq_dialog, :name        => "Test_Dialog",
                                                  :description => "Test Description",
                                                  :default     => true
-        )
+                                   )
         controller.instance_variable_set(:@sb,
                                          :trees       => {:old_dialogs_tree => {:active_node => "odg-#{dialog.id}"}},
                                          :active_tree => :old_dialogs_tree)

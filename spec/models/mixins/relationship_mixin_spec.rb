@@ -12,7 +12,7 @@ describe RelationshipMixin do
   context "tree with relationship type '#{TEST_REL_TYPE}'" do
     before(:each) do
       @vms = (0...10).collect { FactoryGirl.create(:vm_vmware) }
-      self.build_relationship_tree(VMS_REL_TREE, @vms)
+      build_relationship_tree(VMS_REL_TREE, @vms)
     end
 
     it "#with_relationship_type and #relationship_type" do
@@ -64,9 +64,9 @@ describe RelationshipMixin do
         @parent.with_relationship_type(TEST_REL_TYPE) { |v| v.set_child(child) }
 
         assert_parent_child_structure(TEST_REL_TYPE,
-          @parent, 1, [], [child],
-          child,   1, [@parent], []
-        )
+                                      @parent, 1, [], [child],
+                                      child,   1, [@parent], []
+                                     )
       end
 
       it "with a root object will link a new tree node for the parent to the existing tree node for the child" do
@@ -74,9 +74,9 @@ describe RelationshipMixin do
         @parent.with_relationship_type(TEST_REL_TYPE) { |v| v.set_child(child) }
 
         assert_parent_child_structure(TEST_REL_TYPE,
-          @parent, 1, [], [child],
-          child,   1, [@parent], [@vms[1], @vms[2]]
-        )
+                                      @parent, 1, [], [child],
+                                      child,   1, [@parent], [@vms[1], @vms[2]]
+                                     )
       end
 
       it "with an inner object will link a new tree node for the parent to a second new tree node for the child" do
@@ -84,9 +84,9 @@ describe RelationshipMixin do
         @parent.with_relationship_type(TEST_REL_TYPE) { |v| v.set_child(child) }
 
         assert_parent_child_structure(TEST_REL_TYPE,
-          @parent, 1, [], [child],
-          child,   2, [@vms[0], @parent], [@vms[3], @vms[4]]
-        )
+                                      @parent, 1, [], [child],
+                                      child,   2, [@vms[0], @parent], [@vms[3], @vms[4]]
+                                     )
       end
 
       it "with a leaf object will link a new tree node for the parent to a second new tree node for the child" do
@@ -94,9 +94,9 @@ describe RelationshipMixin do
         @parent.with_relationship_type(TEST_REL_TYPE) { |v| v.set_child(child) }
 
         assert_parent_child_structure(TEST_REL_TYPE,
-          @parent, 1, [], [child],
-          child,   2, [@vms[1], @parent], []
-        )
+                                      @parent, 1, [], [child],
+                                      child,   2, [@vms[1], @parent], []
+                                     )
       end
     end
 
@@ -108,9 +108,9 @@ describe RelationshipMixin do
         @child.with_relationship_type(TEST_REL_TYPE) { |v| v.set_parent(parent) }
 
         assert_parent_child_structure(TEST_REL_TYPE,
-          parent, 1, [], [@child],
-          @child, 1, [parent], []
-        )
+                                      parent, 1, [], [@child],
+                                      @child, 1, [parent], []
+                                     )
       end
 
       it "with a root object will link the existing tree node for the parent to a new tree node for the child" do
@@ -118,9 +118,9 @@ describe RelationshipMixin do
         @child.with_relationship_type(TEST_REL_TYPE) { |v| v.set_parent(parent) }
 
         assert_parent_child_structure(TEST_REL_TYPE,
-          parent, 1, [], [@vms[1], @vms[2], @child],
-          @child, 1, [parent], []
-        )
+                                      parent, 1, [], [@vms[1], @vms[2], @child],
+                                      @child, 1, [parent], []
+                                     )
       end
 
       it "with an inner object will link the existing tree node for the parent to a new tree node for the child" do
@@ -128,9 +128,9 @@ describe RelationshipMixin do
         @child.with_relationship_type(TEST_REL_TYPE) { |v| v.set_parent(parent) }
 
         assert_parent_child_structure(TEST_REL_TYPE,
-          parent, 1, [@vms[0]], [@vms[3], @vms[4], @child],
-          @child, 1, [parent], []
-        )
+                                      parent, 1, [@vms[0]], [@vms[3], @vms[4], @child],
+                                      @child, 1, [parent], []
+                                     )
       end
 
       it "with a leaf object will link the existing tree node for the parent to a new tree node for the child" do
@@ -138,9 +138,9 @@ describe RelationshipMixin do
         @child.with_relationship_type(TEST_REL_TYPE) { |v| v.set_parent(parent) }
 
         assert_parent_child_structure(TEST_REL_TYPE,
-          parent, 1, [@vms[1]], [@child],
-          @child, 1, [parent], []
-        )
+                                      parent, 1, [@vms[1]], [@child],
+                                      @child, 1, [parent], []
+                                     )
       end
     end
 
@@ -152,9 +152,9 @@ describe RelationshipMixin do
         child.with_relationship_type(TEST_REL_TYPE) { |v| v.replace_parent(@parent) }
 
         assert_parent_child_structure(TEST_REL_TYPE,
-          @parent, 1, [], [child],
-          child,   1, [@parent], []
-        )
+                                      @parent, 1, [], [child],
+                                      child,   1, [@parent], []
+                                     )
       end
 
       it "on a root object will link a new tree node for the parent to the existing tree node for the child and be the only parent for the child" do
@@ -162,9 +162,9 @@ describe RelationshipMixin do
         child.with_relationship_type(TEST_REL_TYPE) { |v| v.replace_parent(@parent) }
 
         assert_parent_child_structure(TEST_REL_TYPE,
-          @parent, 1, [], [child],
-          child,   1, [@parent], [@vms[1], @vms[2]]
-        )
+                                      @parent, 1, [], [child],
+                                      child,   1, [@parent], [@vms[1], @vms[2]]
+                                     )
       end
 
       it "on an inner object will link a new tree node for the parent to the existing tree node for the child and be the only parent for the child" do
@@ -172,9 +172,9 @@ describe RelationshipMixin do
         child.with_relationship_type(TEST_REL_TYPE) { |v| v.replace_parent(@parent) }
 
         assert_parent_child_structure(TEST_REL_TYPE,
-          @parent, 1, [], [child],
-          child,   1, [@parent], [@vms[3], @vms[4]]
-        )
+                                      @parent, 1, [], [child],
+                                      child,   1, [@parent], [@vms[3], @vms[4]]
+                                     )
       end
 
       it "on a leaf object will link a new tree node for the parent to the existing tree node for the child and be the only parent for the child" do
@@ -182,9 +182,9 @@ describe RelationshipMixin do
         child.with_relationship_type(TEST_REL_TYPE) { |v| v.replace_parent(@parent) }
 
         assert_parent_child_structure(TEST_REL_TYPE,
-          @parent, 1, [], [child],
-          child,   1, [@parent], []
-        )
+                                      @parent, 1, [], [child],
+                                      child,   1, [@parent], []
+                                     )
       end
     end
 
@@ -195,9 +195,9 @@ describe RelationshipMixin do
         child.with_relationship_type(TEST_REL_TYPE) { |v| v.replace_parent(parent) }
 
         assert_parent_child_structure(TEST_REL_TYPE,
-          parent, 1, [@vms[0]], [child, @vms[3], @vms[4]],
-          child,  1, [parent], [@vms[5], @vms[6], @vms[7]]
-        )
+                                      parent, 1, [@vms[0]], [child, @vms[3], @vms[4]],
+                                      child,  1, [parent], [@vms[5], @vms[6], @vms[7]]
+                                     )
       end
     end
 
@@ -249,12 +249,12 @@ describe RelationshipMixin do
 
     it "#ancestors" do
       @vms[0].with_relationship_type(TEST_REL_TYPE) { |v| v.ancestors.empty? }.should be_true
-      @vms[9].with_relationship_type(TEST_REL_TYPE) { |v| v.ancestors }.should match_array([@vms[7], @vms[2], @vms[0]])
+      @vms[9].with_relationship_type(TEST_REL_TYPE, &:ancestors).should match_array([@vms[7], @vms[2], @vms[0]])
     end
 
     it "#descendants" do
       @vms[9].with_relationship_type(TEST_REL_TYPE) { |v| v.descendants.empty? }.should be_true
-      @vms[0].with_relationship_type(TEST_REL_TYPE) { |v| v.descendants }.should match_array(@vms - [@vms[0]])
+      @vms[0].with_relationship_type(TEST_REL_TYPE, &:descendants).should match_array(@vms - [@vms[0]])
     end
   end
 
@@ -263,21 +263,21 @@ describe RelationshipMixin do
 
     it('#root') { @host.root.should == @host }
 
-    it('#ancestors')   { @host.ancestors.should   == [] }
-    it('#path')        { @host.path.should        == [@host] }
+    it('#ancestors')   { @host.ancestors.should == [] }
+    it('#path')        { @host.path.should == [@host] }
     it('#descendants') { @host.descendants.should == [] }
-    it('#subtree')     { @host.subtree.should     == [@host] }
-    it('#fulltree')    { @host.fulltree.should    == [@host] }
+    it('#subtree')     { @host.subtree.should == [@host] }
+    it('#fulltree')    { @host.fulltree.should == [@host] }
 
     it('#descendants_arranged') { @host.descendants_arranged.should == {} }
-    it('#subtree_arranged')     { @host.subtree_arranged.should     == {@host => {}} }
-    it('#fulltree_arranged')    { @host.fulltree_arranged.should    == {@host => {}} }
+    it('#subtree_arranged')     { @host.subtree_arranged.should == {@host => {}} }
+    it('#fulltree_arranged')    { @host.fulltree_arranged.should == {@host => {}} }
   end
 
   context "tree with relationship type 'ems_metadata'" do
     before(:each) do
       @vms = (0...10).collect { FactoryGirl.create(:vm_vmware) }
-      self.build_relationship_tree(VMS_REL_TREE, @vms, "ems_metadata")
+      build_relationship_tree(VMS_REL_TREE, @vms, "ems_metadata")
     end
 
     it "#detect_ancestor" do
@@ -319,25 +319,25 @@ describe RelationshipMixin do
   def recurse_relationship_tree(tree, &block)
     parent   = tree.keys.first
     children = tree[parent]
-    children = children.collect { |child| child.kind_of?(Hash) ? self.recurse_relationship_tree(child, &block) : child }
+    children = children.collect { |child| child.kind_of?(Hash) ? recurse_relationship_tree(child, &block) : child }
     children.each { |child| yield parent, child }
-    return parent
+    parent
   end
 
   def assert_parent_child_structure(rel_type, parent, p_rels_count, p_parents, p_children, child, c_rels_count, c_parents, c_children)
     parent.with_relationship_type(rel_type) do
       parent.relationships.length.should == p_rels_count
-      parent.parents.length.should       == p_parents.length
+      parent.parents.length.should == p_parents.length
       parent.parents.should              match_array(p_parents)
-      parent.children.length.should      == p_children.length
+      parent.children.length.should == p_children.length
       parent.children.should             match_array(p_children)
     end
 
     child.with_relationship_type(rel_type) do
       child.relationships.length.should == c_rels_count
-      child.parents.length.should       == c_parents.length
+      child.parents.length.should == c_parents.length
       child.parents.should              match_array(c_parents)
-      child.children.length.should      == c_children.length
+      child.children.length.should == c_children.length
       child.children.should             match_array(c_children)
     end
   end

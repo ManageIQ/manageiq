@@ -8,7 +8,7 @@ class PxeImageType < ActiveRecord::Base
   validates_uniqueness_of :name
 
   def self.seed_file_name
-    @seed_file_name ||= Rails.root.join("db", "fixtures", "#{self.table_name}.yml")
+    @seed_file_name ||= Rails.root.join("db", "fixtures", "#{table_name}.yml")
   end
 
   def self.seed_data
@@ -16,21 +16,19 @@ class PxeImageType < ActiveRecord::Base
   end
 
   def self.seed
-    return if PxeImageType.any?
+    return if any?
 
-    MiqRegion.my_region.lock do
-      seed_data.each do |s|
-        _log.info("Creating #{s.inspect}")
-        self.create(s)
-      end
+    seed_data.each do |s|
+      _log.info("Creating #{s.inspect}")
+      create!(s)
     end
   end
 
   def images
-    self.pxe_images + self.windows_images
+    pxe_images + windows_images
   end
 
   def esx?
-    self.name.to_s.downcase == 'esx'
+    name.to_s.downcase == 'esx'
   end
 end

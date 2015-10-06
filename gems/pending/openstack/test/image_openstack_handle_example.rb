@@ -5,7 +5,6 @@ EMS_PASSWORD = ""
 require_relative '../../bundler_setup'
 require 'openstack/openstack_handle'
 
-
 begin
   os_handle = OpenstackHandle::Handle.new(EMS_USERNAME, EMS_PASSWORD, EMS_IP)
 
@@ -14,7 +13,7 @@ begin
     puts "\t#{t.name}\t(#{t.id})"
   end
 
-  unless os_handle.image_service_name == :glance
+  unless os_handle.image_service.name == :glance
     puts "Image service glance is not available, exiting."
     exit
   end

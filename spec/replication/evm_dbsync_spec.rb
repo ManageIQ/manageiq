@@ -48,6 +48,15 @@ describe "evm:dbsync" do
     #   based on the configuration
   end
 
+  it ":replicate_backlog" do
+    run_initial_sync
+    MiqServer.my_server.update_attribute(:version, "xxx")
+
+    expect {
+      run_rake_via_shell("evm:dbsync:replicate_backlog")
+    }.to change(RrPendingChange, :count).to(0)
+  end
+
   def insert_initial_records
     @slave_connection.tables.sort.each do |t|
       # Skip metrics subtables, since inserts to the parent table will cascade.

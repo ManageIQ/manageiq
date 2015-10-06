@@ -23,7 +23,7 @@ def dump_csv(type, hashes)
     puts "#{hashes.length} #{type} data points found."
 
     keys = hashes[0].keys
-    keys.delete_if { |k, v| [:time, :total_time].include?(k) }
+    keys.delete_if { |k, _v| [:time, :total_time].include?(k) }
     keys = keys.sort_by(&:to_s)
     keys = keys.unshift(:time)
     keys += [:unaccounted, :total_time]
@@ -38,7 +38,7 @@ def dump_csv(type, hashes)
         # Calculate unaccounted time
         values[-2] = values[-1].to_f - values[1...-2].inject { |sum, v| sum.to_f + v.to_f }
 
-        graph_data << values[0...-1].collect { |v| v.is_a?(String) ? v : (v / values[-1] * 100) }
+        graph_data << values[0...-1].collect { |v| v.kind_of?(String) ? v : (v / values[-1] * 100) }
         csv << values
       end
     end
@@ -50,7 +50,7 @@ end
 t = Time.now
 puts "Processing file..."
 
-all_timings = Hash.new { |k, v| k[v] = Array.new }
+all_timings = Hash.new { |k, v| k[v] = [] }
 vim_collect_timings = {}
 
 MiqLoggerProcessor.new(logfile).each do |line|
@@ -74,7 +74,7 @@ MiqLoggerProcessor.new(logfile).each do |line|
       timings = prev_timings.merge(timings)
     end
 
-    timings.delete_if { |k, v| [:start_range, :end_range, :num_vim_queries, :num_vim_trips, :collect_metrics].include?(k) }
+    timings.delete_if { |k, _v| [:start_range, :end_range, :num_vim_queries, :num_vim_trips, :collect_metrics].include?(k) }
   end
 
   timings[:time] = line.time

@@ -11,18 +11,19 @@ module ActionDispatch
       GLOBAL_HASH_TABLE = {} #:nodoc:
 
       private
-      def get_session(env, session_id)
+
+      def get_session(_env, session_id)
         session_id ||= generate_sid
         session = GLOBAL_HASH_TABLE[session_id] || {}
         [session_id, session]
       end
 
-      def set_session(env, session_id, session_data, options = nil)
+      def set_session(_env, session_id, session_data, _options = nil)
         GLOBAL_HASH_TABLE[session_id] = session_data
         session_id
       end
 
-      def destroy_session(env, session_id, options)
+      def destroy_session(_env, session_id, _options)
         GLOBAL_HASH_TABLE.delete(session_id)
         generate_sid
       end

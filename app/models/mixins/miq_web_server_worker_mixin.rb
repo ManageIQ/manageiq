@@ -27,10 +27,10 @@ module MiqWebServerWorkerMixin
       params = params.first || {}
 
       defaults = {
-        :port         => 3000,
-        :binding      => binding_address,
-        :environment  => Rails.env.to_s,
-        :config       => Rails.root.join("config.ru")
+        :port        => 3000,
+        :binding     => binding_address,
+        :environment => Rails.env.to_s,
+        :config      => Rails.root.join("config.ru")
       }
 
       params = defaults.merge(params)
@@ -51,10 +51,10 @@ module MiqWebServerWorkerMixin
       #
       #      -h, --help                       Show this help message.
       #
-      cl = self.rails_server_command_line.dup
+      cl = rails_server_command_line.dup
 
       params.each { |k, v| cl << " --#{k} \"#{v}\"" unless v.blank? }
-      return cl
+      cl
     end
 
     def self.all_ports_in_use
@@ -66,14 +66,14 @@ module MiqWebServerWorkerMixin
     end
 
     def self.sync_workers
-      #TODO: add an at_exit to remove all registered ports and gracefully stop apache
+      # TODO: add an at_exit to remove all registered ports and gracefully stop apache
       self.registered_ports ||= []
 
-      workers = self.find_current_or_starting
+      workers = find_current_or_starting
       current = workers.length
       desired = self.has_required_role? ? self.workers : 0
-      result  = { :adds => [], :deletes => [] }
-      ports = self.all_ports_in_use
+      result  = {:adds => [], :deletes => []}
+      ports = all_ports_in_use
 
       # TODO: This tracking of adds/deletes of pids and ports is not DRY
       ports_hash = {:deletes => [], :adds => []}
@@ -83,11 +83,11 @@ module MiqWebServerWorkerMixin
 
         if desired > current && enough_resource_to_start_worker?
           (desired - current).times do
-            port = self.reserve_port(ports)
+            port = reserve_port(ports)
             _log.info("Reserved port=#{port}, Current ports in use: #{ports.inspect}")
             ports << port
             ports_hash[:adds] << port
-            w = self.start_worker(:uri => build_uri(port))
+            w = start_worker(:uri => build_uri(port))
             result[:adds] << w.pid
           end
         elsif desired < current
@@ -104,7 +104,7 @@ module MiqWebServerWorkerMixin
         end
       end
 
-      self.modify_apache_ports(ports_hash) if MiqEnvironment::Command.supports_apache?
+      modify_apache_ports(ports_hash) if MiqEnvironment::Command.supports_apache?
 
       result
     end
@@ -136,7 +136,7 @@ module MiqWebServerWorkerMixin
       deletes = Array(ports_hash[:deletes])
 
       # Remove any already registered
-      adds = adds - self.registered_ports
+      adds -= self.registered_ports
 
       return false if adds.empty? && deletes.empty?
 
@@ -162,7 +162,7 @@ module MiqWebServerWorkerMixin
         MiqServer.my_server.queue_restart_apache unless adds.empty?
         _log.info("Added/removed port(s) #{adds.inspect}/#{deletes.inspect}, registered ports after #{self.registered_ports.inspect}")
       end
-      return saved
+      saved
     end
 
     def self.reserve_port(ports)
@@ -170,19 +170,19 @@ module MiqWebServerWorkerMixin
       loop do
         port = self::STARTING_PORT + index
         return port unless ports.include?(port)
-        index = index + 1
+        index += 1
       end
     end
 
     def command_line_params
       params = {}
-      params[:port] = self.port if self.port.kind_of?(Numeric)
+      params[:port] = port if port.kind_of?(Numeric)
       params
     end
 
     def start
       delete_pid_file
-      ENV['PORT'] = self.port.to_s
+      ENV['PORT'] = port.to_s
       super
     end
 
@@ -191,23 +191,23 @@ module MiqWebServerWorkerMixin
       # Hence, this is an external mechanism for terminating this worker.
 
       begin
-        _log.info("Terminating #{self.format_full_log_msg}, status [#{self.status}]")
-        Process.kill("TERM", self.pid)
+        _log.info("Terminating #{format_full_log_msg}, status [#{status}]")
+        Process.kill("TERM", pid)
         # TODO: Variablize and clean up this 10-second-max loop of waiting on Worker to gracefully shut down
         10.times do
-          unless MiqProcess.alive?(self.pid)
-            self.update_attributes(:stopped_on => Time.now.utc, :status => MiqWorker::STATUS_STOPPED)
+          unless MiqProcess.alive?(pid)
+            update_attributes(:stopped_on => Time.now.utc, :status => MiqWorker::STATUS_STOPPED)
             break
           end
           sleep 1
         end
       rescue Errno::ESRCH
-        _log.warn("#{self.format_full_log_msg} has been killed")
+        _log.warn("#{format_full_log_msg} has been killed")
       rescue => err
-        _log.warn("#{self.format_full_log_msg} has been killed, but with the following error: #{err}")
+        _log.warn("#{format_full_log_msg} has been killed, but with the following error: #{err}")
       end
 
-      self.kill if MiqProcess.alive?(self.pid)
+      kill if MiqProcess.alive?(pid)
     end
 
     def kill
@@ -221,13 +221,12 @@ module MiqWebServerWorkerMixin
     end
 
     def port
-      @port ||= self.uri.blank? ? nil : URI.parse(self.uri).port
+      @port ||= uri.blank? ? nil : URI.parse(uri).port
     end
 
     def release_db_connection
       self.update_spid!(nil)
       self.class.release_db_connection
     end
-
   end
 end

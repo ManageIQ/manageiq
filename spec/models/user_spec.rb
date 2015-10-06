@@ -1,131 +1,97 @@
 require "spec_helper"
 
 describe User do
-
   context "id set as Administrator" do
-
     before(:each) do
-      MiqRegion.seed
-
       # create User Role record...
-      @miq_user_role = FactoryGirl.create(
-                      :miq_user_role,
-                      :name       => "EvmRole-super_administrator",
-                      :read_only  => true,
-                      :settings   => nil
-                      )
+      miq_user_role = FactoryGirl.create(
+        :miq_user_role,
+        :name      => "EvmRole-super_administrator",
+        :read_only => true,
+        :settings  => nil
+      )
 
       # create Miq Group record...
-      @guid = MiqUUID.new_guid
-      MiqGroup.stub(:my_guid).and_return(@guid)
       @miq_group = FactoryGirl.create(
-                  :miq_group,
-                  :guid             => @guid,
-                  :description      => "EvmGroup-super_administrator",
-                  :group_type       => "system",
-                  :miq_user_role    => @miq_user_role
-                  )
+        :miq_group,
+        :description   => "EvmGroup-super_administrator",
+        :group_type    => "system",
+        :miq_user_role => miq_user_role
+      )
 
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-
-      @zone         = FactoryGirl.create(:zone)
-      @miq_server   = FactoryGirl.create(
-                    :miq_server,
-                    :guid         => @guid,
-                    :status       => "started",
-                    :name         => "EVM",
-                    :os_priority  => nil,
-                    :is_master    => false,
-                    :zone         => @zone
-                    )
-      MiqServer.my_server(true)
+      @miq_server = EvmSpecHelper.local_miq_server
 
       # create User record...
       @user = FactoryGirl.create(
-            :user_admin,
-            :email          => "admin@email.com",
-            :password       => "smartvm",
-            :settings       => {"Setting1"  => 1, "Setting2"  => 2, "Setting3"  => 3 },
-            :filters        => {"Filter1"   => 1, "Filter2"   => 2, "Filter3"   => 3 },
-            :miq_groups     => [@miq_group],
-            :first_name     => "Bob",
-            :last_name      => "Smith"
-            )
+        :user_admin,
+        :email      => "admin@email.com",
+        :password   => "smartvm",
+        :settings   => {"Setting1"  => 1, "Setting2"  => 2, "Setting3"  => 3},
+        :filters    => {"Filter1"   => 1, "Filter2"   => 2, "Filter3"   => 3},
+        :miq_groups => [@miq_group],
+        :first_name => "Bob",
+        :last_name  => "Smith"
+      )
 
       @self_service_role = FactoryGirl.create(
         :miq_user_role,
-        :name               => "ss_role",
-        :settings           => {:restrictions => {:vms => :user_or_group}}
+        :name     => "ss_role",
+        :settings => {:restrictions => {:vms => :user_or_group}}
       )
 
       @self_service_group = FactoryGirl.create(
         :miq_group,
-        :description        => "EvmGroup-self_service",
-        :miq_user_role      => @self_service_role
+        :description   => "EvmGroup-self_service",
+        :miq_user_role => @self_service_role
       )
 
       @limited_self_service_role = FactoryGirl.create(
         :miq_user_role,
-        :name               => "lss_role",
-        :settings           => {:restrictions => {:vms => :user}}
+        :name     => "lss_role",
+        :settings => {:restrictions => {:vms => :user}}
       )
 
       @limited_self_service_group = FactoryGirl.create(
         :miq_group,
-        :description        => "EvmGroup-limited_self_service",
-        :miq_user_role      => @limited_self_service_role
+        :description   => "EvmGroup-limited_self_service",
+        :miq_user_role => @limited_self_service_role
       )
 
       @miq_admin_role = FactoryGirl.create(
-                      :miq_user_role,
-                      :name       => "EvmRole-administrator",
-                      :read_only  => true,
-                      :settings   => nil
-                      )
+        :miq_user_role,
+        :name      => "EvmRole-administrator",
+        :read_only => true,
+        :settings  => nil
+      )
 
       @admin_group = FactoryGirl.create(
         :miq_group,
-        :description        => "EvmGroup-administrator",
-        :miq_user_role      => @miq_admin_role
+        :description   => "EvmGroup-administrator",
+        :miq_user_role => @miq_admin_role
       )
     end
 
     it "should ensure presence of name" do
-      @user.save.should be_true
-      @user.name = nil
-      @user.save.should be_false
+      expect(FactoryGirl.build(:user, :name => nil)).not_to be_valid
     end
 
     it "should ensure presence of user id" do
-      @user.save.should be_true
-      @user.userid = nil
-      @user.save.should be_false
+      expect(FactoryGirl.build(:user, :userid => nil)).not_to be_valid
     end
 
-    # it "should ensure presence of region" do
-    #   @user.region = nil
-    #   @user.save.should be_false
-    # end
-
     it "should invalidate incorrect email address" do
-      @user.valid?.should be_true
-      @user.email = "thisguy@@manageiq.com"
-      @user.valid?.should be_false
+      expect(FactoryGirl.build(:user, :email => "thisguy@@manageiq.com")).not_to be_valid
     end
 
     it "should validate email address with a value of nil" do
-      @user.email = nil
-      @user.valid?.should be_true
+      expect(FactoryGirl.build(:user, :email => nil)).to be_valid
     end
 
     it "should save proper email address" do
-      @user.email = "that.guy@manageiq.com"
-      @user.valid?.should be_true
+      expect(FactoryGirl.build(:user, :email => "that.guy@manageiq.com")).to be_valid
     end
     it "should reject invalid characters in email address" do
-      @user.email = "{{that.guy}}@manageiq.com"
-      @user.valid?.should be_false
+      expect(FactoryGirl.build(:user, :email => "{{that.guy}}@manageiq.com")).not_to be_valid
     end
 
     it "should change user password" do
@@ -139,17 +105,17 @@ describe User do
       password    = "wrongpwd"
       newpassword = "newpassword"
 
-      lambda {
-              @user.change_password(password, newpassword)
-             }.should
-             raise_error( MiqException::MiqEVMLoginError,
-                            "old password does not match current password"
-                        )
+      lambda do
+        @user.change_password(password, newpassword)
+      end.should
+      raise_error(MiqException::MiqEVMLoginError,
+                  "old password does not match current password"
+                 )
     end
 
     it "should check for and get Managed and Belongs-to filters" do
-      mfilters = { "managed"   => "m" }
-      bfilters = { "belongsto" => "b" }
+      mfilters = {"managed"   => "m"}
+      bfilters = {"belongsto" => "b"}
       @miq_group.set_managed_filters(mfilters)
       @miq_group.set_belongsto_filters(bfilters)
       @miq_group.save
@@ -157,32 +123,32 @@ describe User do
       @user.reload
 
       @user.has_filters?.should be_true
-      @user.get_managed_filters.should    == mfilters
-      @user.get_belongsto_filters.should  == bfilters
+      @user.get_managed_filters.should == mfilters
+      @user.get_belongsto_filters.should == bfilters
     end
 
     it "should check Self Service Roles" do
       @user.current_group = @self_service_group
-      @user.self_service_user?.should be_true
+      @user.self_service?.should be_true
 
       @user.current_group = @limited_self_service_group
-      @user.self_service_user?.should be_true
+      @user.self_service?.should be_true
 
       @miq_group.miq_user_role = nil
       @user.current_group = @miq_group
-      @user.self_service_user?.should be_false
+      @user.self_service?.should be_false
 
       @user.current_group = nil
-      @user.self_service_user?.should be_false
+      @user.self_service?.should be_false
     end
 
     it "should check Limited Self Service Roles" do
       @user.current_group = @limited_self_service_group
-      @user.limited_self_service_user?.should be_true
+      @user.limited_self_service?.should be_true
 
       @user.current_group = nil
       @user.current_group = @miq_group
-      @user.limited_self_service_user?.should be_false
+      @user.limited_self_service?.should be_false
     end
 
     it "should check Super Admin Roles" do
@@ -231,23 +197,21 @@ describe User do
         @task = MiqTask.create(:name => "LDAP User Authorization of '#{@fq_user}'", :userid => @fq_user)
         @auth_config =
           {:authentication =>
-            {:ldapport=>"389",
-              :basedn=>"dc=manageiq,dc=com",
-              :follow_referrals=>false,
-              :get_direct_groups=>true,
-              :bind_dn=>"evm_demo@manageiq.com",
-              :mode=>"ldap", :user_proxies=>[{}],
-              :user_type=>"userprincipalname",
-              :bind_pwd=>"blah",
-              :ldap_role=>true,
-              :user_suffix=>"manageiq.com",
-              :group_memberships_max_depth=>2,
-              :ldaphost=>["192.168.254.15"]
+            {:ldapport => "389",
+              :basedn => "dc=manageiq,dc=com",
+              :follow_referrals => false,
+              :get_direct_groups => true,
+              :bind_dn => "evm_demo@manageiq.com",
+              :mode => "ldap", :user_proxies => [{}],
+              :user_type => "userprincipalname",
+              :bind_pwd => "blah",
+              :ldap_role => true,
+              :user_suffix => "manageiq.com",
+              :group_memberships_max_depth => 2,
+              :ldaphost => ["192.168.254.15"]
             }
           }
-        vmdb_config = double("vmdb_config")
-        vmdb_config.stub(:config => @auth_config)
-        VMDB::Config.stub(:new).with("vmdb").and_return(vmdb_config)
+        stub_server_configuration(@auth_config)
         @miq_ldap = double('miq_ldap')
         @miq_ldap.stub(:bind => false)
       end
@@ -366,35 +330,35 @@ describe User do
       @ems = FactoryGirl.create(:ems_vmware, :name => "test_vcenter")
       @storage  = FactoryGirl.create(:storage, :name => "test_storage_nfs", :store_type => "NFS")
 
-      @hw1 = FactoryGirl.create(:hardware, :numvcpus => @num_cpu, :memory_cpu => @ram_size)
-      @hw2 = FactoryGirl.create(:hardware, :numvcpus => @num_cpu, :memory_cpu => @ram_size)
-      @hw3 = FactoryGirl.create(:hardware, :numvcpus => @num_cpu, :memory_cpu => @ram_size)
-      @hw4 = FactoryGirl.create(:hardware, :numvcpus => @num_cpu, :memory_cpu => @ram_size)
+      @hw1 = FactoryGirl.create(:hardware, :logical_cpus => @num_cpu, :memory_cpu => @ram_size)
+      @hw2 = FactoryGirl.create(:hardware, :logical_cpus => @num_cpu, :memory_cpu => @ram_size)
+      @hw3 = FactoryGirl.create(:hardware, :logical_cpus => @num_cpu, :memory_cpu => @ram_size)
+      @hw4 = FactoryGirl.create(:hardware, :logical_cpus => @num_cpu, :memory_cpu => @ram_size)
       @disk1 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw1.id)
       @disk2 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw2.id)
       @disk3 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw3.id)
       @disk4 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw4.id)
 
       @active_vm = FactoryGirl.create(:vm_vmware,
-                                  :name => "Active VM",
-                                  :evm_owner_id => @user.id,
-                                  :ems_id => @ems.id,
-                                  :storage_id => @storage.id,
-                                  :hardware => @hw1)
+                                      :name         => "Active VM",
+                                      :evm_owner_id => @user.id,
+                                      :ems_id       => @ems.id,
+                                      :storage_id   => @storage.id,
+                                      :hardware     => @hw1)
       @archived_vm = FactoryGirl.create(:vm_vmware,
-                                    :name => "Archived VM",
-                                    :evm_owner_id => @user.id,
-                                    :hardware => @hw2)
+                                        :name         => "Archived VM",
+                                        :evm_owner_id => @user.id,
+                                        :hardware     => @hw2)
       @orphaned_vm = FactoryGirl.create(:vm_vmware,
-                                    :name => "Orphaned VM",
-                                    :evm_owner_id => @user.id,
-                                    :storage_id => @storage.id,
-                                    :hardware => @hw3)
+                                        :name         => "Orphaned VM",
+                                        :evm_owner_id => @user.id,
+                                        :storage_id   => @storage.id,
+                                        :hardware     => @hw3)
       @retired_vm = FactoryGirl.create(:vm_vmware,
-                                   :name => "Retired VM",
-                                   :evm_owner_id => @user.id,
-                                   :retired => true,
-                                   :hardware => @hw4)
+                                       :name         => "Retired VM",
+                                       :evm_owner_id => @user.id,
+                                       :retired      => true,
+                                       :hardware     => @hw4)
     end
 
     it "#active_vms" do
@@ -427,9 +391,9 @@ describe User do
   it 'should invalidate email address that contains "\n"' do
     group = FactoryGirl.create(:miq_group)
     user = FactoryGirl.create(:user,
-                              :email         => "admin@email.com",
-                              :miq_groups    => [group]
-    )
+                              :email      => "admin@email.com",
+                              :miq_groups => [group]
+                             )
     user.should be_valid
 
     user.email = "admin@email.com
@@ -490,8 +454,6 @@ describe User do
   end
 
   context ".seed" do
-    before { MiqRegion.seed }
-
     it "empty database" do
       User.seed
       expect(User.where(:userid => "admin").first.current_group).to be_nil
@@ -556,6 +518,53 @@ describe User do
       @vm[3].update_attributes(:miq_group => @limited_self_service_group)
 
       expect(accessible_vms.size).to eq(1)
+    end
+  end
+
+  describe ".all_users_of_group" do
+    it "finds users" do
+      g  = FactoryGirl.create(:miq_group)
+      g2 = FactoryGirl.create(:miq_group)
+
+      FactoryGirl.create(:user)
+      u_one  = FactoryGirl.create(:user, :miq_groups => [g])
+      u_two  = FactoryGirl.create(:user, :miq_groups => [g, g2], :current_group => g)
+
+      expect(described_class.all_users_of_group(g)).to match_array([u_one, u_two])
+      expect(described_class.all_users_of_group(g2)).to match_array([u_two])
+    end
+  end
+
+  describe "#miq_group_description=" do
+    let(:g1) { FactoryGirl.create(:miq_group) }
+    let(:g2) { FactoryGirl.create(:miq_group) }
+    let(:u)  { FactoryGirl.create(:user, :miq_groups => [g1, g2], :current_group => g1) }
+
+    it "ignores blank" do
+      u.miq_group_description = ""
+      expect(u.current_group).to eq(g1)
+    end
+
+    it "ignores not found" do
+      u.miq_group_description = "not_found"
+      expect(u.current_group).to eq(g1)
+    end
+
+    it "sets by description" do
+      u.miq_group_description = g2.description
+      expect(u.current_group).to eq(g2)
+    end
+  end
+
+  describe ".find_by_lower_email" do
+    it "uses cache" do
+      u = FactoryGirl.build(:user_with_email)
+      expect(User.find_by_lower_email(u.email.upcase, u)).to eq(u)
+    end
+
+    it "finds in the table" do
+      u = FactoryGirl.create(:user_with_email)
+      expect(User.find_by_lower_email(u.email.upcase)).to eq(u)
     end
   end
 end

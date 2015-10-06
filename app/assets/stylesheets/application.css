@@ -19,5 +19,5 @@
  *= require jqplot
  *= require product_slickgrid
  *= require consoles
- *= require bootstrap-datepicker3
+ *= require kubernetes-topology-graph/topology-graph
 */

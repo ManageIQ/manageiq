@@ -1,11 +1,37 @@
-<content-header short="true">
-  <div class="service-category__body">
-    <span class="content-header__title">Services</span>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12 ">
+	    <div pf-data-toolbar id="serviceToolbar" config="vm.toolbarConfig"></div>
+    </div>
   </div>
-  <div class="service-category__aside">
-  </div>
-</content-header>
+</div>
 
-<region ng-repeat="data in vm.projects track by data.project.id" heading="{{ ::data.project.name }}">
-  <services-table services="data.services"></services-table>
-</region>
+<div class="col-md-12 list-view-container">
+  <div pf-data-list id="serviceList" config="vm.listConfig" items="vm.servicesList">
+    <div class="row">
+      <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+        <span>
+          {{ $index + 1 }}
+        </span>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+        <span>
+          <span class="ss-list-view__title-img" ng-if=" ::item.picture.image_href">
+            <img class="ss-list-view__title-img__logo" src="{{ ::item.picture.image_href }}"/>
+          </span>
+          {{ item.name }}
+        </span>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+        <strong>Created: </strong> on {{ item.created_at | date }}</span>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+        <strong>Retires: </strong>
+        <span ng-if=(item.retires_on)>{{ item.retires_on | date }}</span>
+        <span ng-if=!(item.retires_on)>No Retire Date</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+

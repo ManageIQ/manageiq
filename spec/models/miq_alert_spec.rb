@@ -2,22 +2,13 @@ require "spec_helper"
 
 describe MiqAlert do
   context "With single server with a single generic worker with the notifier role," do
-
     before(:each) do
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-
-      @zone            = FactoryGirl.create(:zone)
-      @miq_server      = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
-      @miq_server.role = 'notifier'
-      MiqServer.stub(:my_server).and_return(@miq_server)
-
+      @miq_server = EvmSpecHelper.local_miq_server(:role => 'notifier')
       @worker = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id)
       @vm     = FactoryGirl.create(:vm_vmware)
 
-      MiqRegion.seed
       MiqAlert.seed
-      @events_to_alerts = MiqAlert.all.inject([]) do |arr,a|
+      @events_to_alerts = MiqAlert.all.inject([]) do |arr, a|
         next(arr) if a.responds_to_events.nil?
         next(arr) unless a.db == "Vm"
 
@@ -36,7 +27,7 @@ describe MiqAlert do
 
     context "where a vm_scan_complete event is raised for a VM" do
       before(:each) do
-        MiqAlert.all.each {|a| a.update_attribute(:enabled, true) } # enable out of the box alerts
+        MiqAlert.all.each { |a| a.update_attribute(:enabled, true) } # enable out of the box alerts
         MiqAlert.evaluate_alerts(@vm, "vm_scan_complete")
       end
 
@@ -52,7 +43,7 @@ describe MiqAlert do
 
     context "where a vm_scan_complete event is raised for a VM" do
       before(:each) do
-        MiqAlert.all.each {|a| a.update_attribute(:enabled, true) } # enable out of the box alerts
+        MiqAlert.all.each { |a| a.update_attribute(:enabled, true) } # enable out of the box alerts
 
         @events_to_alerts.each do |arr|
           MiqAlert.evaluate_alerts([@vm.class.base_class.name, @vm.id], arr.first)
@@ -174,7 +165,7 @@ describe MiqAlert do
 
     context "where all alerts are unassigned" do
       before(:each) do
-        MiqAlert.all.each {|a| a.update_attribute(:enabled, true) } # enable out of the box alerts
+        MiqAlert.all.each { |a| a.update_attribute(:enabled, true) } # enable out of the box alerts
         @original_assigned     = MiqAlert.assigned_to_target(@vm, "vm_perf_complete") # force cache load
         @original_assigned_all = MiqAlert.assigned_to_target(@vm)                     # force cache load
         MiqAlertSet.all.each(&:remove_all_assigned_tos)
@@ -189,12 +180,12 @@ describe MiqAlert do
       end
 
       it "should still have alerts assigned to vm now" do
-        @assigned_now.length.should     == @original_assigned.length
+        @assigned_now.length.should == @original_assigned.length
         @assigned_all_now.length.should == @original_assigned_all.length
       end
 
       it "should not have any alerts assigned to vm later" do
-        @assigned_later.length.should     == 0
+        @assigned_later.length.should == 0
         @assigned_all_later.length.should == 0
       end
     end
@@ -203,7 +194,7 @@ describe MiqAlert do
   context ".assigned_to_target" do
     before do
       cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment",  :single_value => true,  :parent_id => 0)
-      FactoryGirl.create(:classification, :name=>"prod", :description=>"Production", :parent_id => cat.id)
+      FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
 
       @vm   = FactoryGirl.create(:vm_vmware)
       @mode = @vm.class.base_model.name
@@ -312,15 +303,9 @@ describe MiqAlert do
   context ".evaluate_hourly_timer" do
     before do
       MiqAlert.any_instance.stub(:validate => true)
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-
-      @zone            = FactoryGirl.create(:zone)
-      @miq_server      = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
-      MiqServer.stub(:my_server).and_return(@miq_server)
-
-      @ems = FactoryGirl.create(:ems_vmware, :zone => @zone)
-      @ems_other = FactoryGirl.create(:ems_vmware, :zone => FactoryGirl.create(:zone, :name => 'other'))
+      @miq_server = EvmSpecHelper.local_miq_server
+      @ems        = FactoryGirl.create(:ems_vmware, :zone => @miq_server.zone)
+      @ems_other  = FactoryGirl.create(:ems_vmware, :zone => FactoryGirl.create(:zone, :name => 'other'))
       @alert      = FactoryGirl.create(:miq_alert, :enabled => true, :responds_to_events => "_hourly_timer_")
       @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Profile for Alert Id: #{@alert.id}")
       @alert_prof.add_member(@alert)

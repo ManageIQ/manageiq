@@ -4,21 +4,23 @@
   -# show form if Catalog bundle is being added or if it's an edit of existing catalog item, else force user to select type
   .row
     .col-md-12.col-lg-12
-      %table.style1
-        %tr
-          %td.key
+      .form-horizontal
+        .form-group
+          %label.control-label.col-md-2
             = _('Name')
-          %td.wider
+          .col-md-8
             #name_div
               = text_field_tag("name", @edit[:new][:name].to_s,
-                :maxlength         => 40,
-                "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+                                :maxlength         => 40,
+                                :class             => "form-control",
+                                "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
         = javascript_tag(javascript_focus('name'))
-        %tr
-          %td.key
+        .form-group
+          %label.control-label.col-md-2
             = _('Description')
-          %td.wider
+          .col-md-8
             #title_div
               = text_field_tag("description", @edit[:new][:description],
-                :maxlength         => 60,
-                "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+                                :maxlength         => 60,
+                                :class             => "form-control",
+                                "data-miq_observe" => {:interval => '.5', :url => url}.to_json)

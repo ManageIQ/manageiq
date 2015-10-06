@@ -1,8 +1,7 @@
 class TreeBuilderPxeCustomizationTemplates < TreeBuilder
-
   private
 
-  def tree_init_options(tree_name)
+  def tree_init_options(_tree_name)
     {:leaf => "CustomizationTemplate"}
   end
 
@@ -22,9 +21,9 @@ class TreeBuilderPxeCustomizationTemplates < TreeBuilder
       items.length + 1
     else
       objects = []
-      objects.push({:id => "xx-system", :text => "Examples (read only)", :image => "folder", :tip => "Examples (read only)"})
-      PxeImageType.all.sort.each do |item, idx|
-        objects.push({:id => "xx-#{to_cid(item.id)}", :text => item.name, :image => "folder", :tip => item.name})
+      objects.push(:id => "xx-system", :text => "Examples (read only)", :image => "folder", :tip => "Examples (read only)")
+      PxeImageType.all.sort.each do |item, _idx|
+        objects.push(:id => "xx-#{to_cid(item.id)}", :text => item.name, :image => "folder", :tip => item.name)
       end
       objects
     end
@@ -35,7 +34,7 @@ class TreeBuilderPxeCustomizationTemplates < TreeBuilder
     nodes = object[:full_id] ? object[:full_id].split('-') : object[:id].split('-')
     if nodes[1] == "system" || nodes[2] == "system"
       # root node was clicked or if folder node was clicked
-      #System templates
+      # System templates
       objects = CustomizationTemplate.find_all_by_pxe_image_type_id(nil)
     else
       # root node was clicked or if folder node was clicked

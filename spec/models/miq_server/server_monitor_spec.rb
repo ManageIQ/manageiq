@@ -1,12 +1,8 @@
 require "spec_helper"
 
 describe "Server Monitor" do
-
   context "After Setup," do
     before(:each) do
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-
       @csv = <<-CSV.gsub(/^\s+/, "")
         name,description,max_concurrent,external_failover,license_required,role_scope
         automate,Automation Engine,0,false,automate,region
@@ -42,16 +38,14 @@ describe "Server Monitor" do
       @server_roles.each do |server_role|
         server_role.unlimited?.should be_true        if server_role.max_concurrent == 0
         server_role.master_supported?.should be_true if server_role.max_concurrent == 1
-        ServerRole.to_role(server_role).should      == server_role
+        ServerRole.to_role(server_role).should == server_role
         ServerRole.to_role(server_role.name).should == server_role
       end
     end
 
     context "with 1 Server" do
       before(:each) do
-        @zone       = FactoryGirl.create(:zone)
-        @miq_server = FactoryGirl.create(:miq_server_not_master, :guid => @guid, :zone => @zone)
-        MiqServer.my_server(true)
+        @miq_server = EvmSpecHelper.local_miq_server
         @miq_server.monitor_servers
 
         @miq_server.deactivate_all_roles
@@ -59,19 +53,19 @@ describe "Server Monitor" do
       end
 
       it "should have no roles active after start" do
-        @miq_server.server_roles.length.should   == 4
+        @miq_server.server_roles.length.should == 4
         @miq_server.inactive_roles.length.should == 4
-        @miq_server.active_roles.length.should   == 0
+        @miq_server.active_roles.length.should == 0
       end
 
       it "should activate unlimited zone role via activate_in_zone method" do
         rolename = "ems_operations"
-        @miq_server.assigned_server_roles.each { |asr|
+        @miq_server.assigned_server_roles.each do |asr|
           next unless asr.server_role.name == rolename
           asr.activate_in_zone
-        }
+        end
         @miq_server.reload
-        @miq_server.inactive_roles.length.should    == 3
+        @miq_server.inactive_roles.length.should == 3
         @miq_server.active_role_names.length.should == 1
         @miq_server.active_role_names.include?(rolename).should be_true
         @miq_server.inactive_role_names.include?(rolename).should_not be_true
@@ -79,12 +73,12 @@ describe "Server Monitor" do
 
       it "should activate limited zone role via activate_in_zone method" do
         rolename = "event"
-        @miq_server.assigned_server_roles.each { |asr|
+        @miq_server.assigned_server_roles.each do |asr|
           next unless asr.server_role.name == rolename
           asr.activate_in_zone
-        }
+        end
         @miq_server.reload
-        @miq_server.inactive_roles.length.should    == 3
+        @miq_server.inactive_roles.length.should == 3
         @miq_server.active_role_names.length.should == 1
         @miq_server.active_role_names.include?(rolename).should be_true
         @miq_server.inactive_role_names.include?(rolename).should_not be_true
@@ -92,12 +86,12 @@ describe "Server Monitor" do
 
       it "should activate unlimited region role via activate_in_region method" do
         rolename = "reporting"
-        @miq_server.assigned_server_roles.each { |asr|
+        @miq_server.assigned_server_roles.each do |asr|
           next unless asr.server_role.name == rolename
           asr.activate_in_region
-        }
+        end
         @miq_server.reload
-        @miq_server.inactive_roles.length.should    == 3
+        @miq_server.inactive_roles.length.should == 3
         @miq_server.active_role_names.length.should == 1
         @miq_server.active_role_names.include?(rolename).should be_true
         @miq_server.inactive_role_names.include?(rolename).should_not be_true
@@ -105,12 +99,12 @@ describe "Server Monitor" do
 
       it "should activate limited region role via activate_in_region method" do
         rolename = "scheduler"
-        @miq_server.assigned_server_roles.each { |asr|
+        @miq_server.assigned_server_roles.each do |asr|
           next unless asr.server_role.name == rolename
           asr.activate_in_region
-        }
+        end
         @miq_server.reload
-        @miq_server.inactive_roles.length.should    == 3
+        @miq_server.inactive_roles.length.should == 3
         @miq_server.active_role_names.length.should == 1
         @miq_server.active_role_names.include?(rolename).should be_true
         @miq_server.inactive_role_names.include?(rolename).should_not be_true
@@ -131,12 +125,12 @@ describe "Server Monitor" do
 
         it "should deactivate unlimited role via deactivate_in_zone method" do
           rolename = "ems_operations"
-          @miq_server.assigned_server_roles.each { |asr|
+          @miq_server.assigned_server_roles.each do |asr|
             next unless asr.server_role.name == rolename
             asr.deactivate_in_zone
-          }
+          end
           @miq_server.reload
-          @miq_server.inactive_roles.length.should    == 1
+          @miq_server.inactive_roles.length.should == 1
           @miq_server.active_role_names.length.should == 3
           @miq_server.active_role_names.include?(rolename).should_not be_true
           @miq_server.inactive_role_names.include?(rolename).should be_true
@@ -144,12 +138,12 @@ describe "Server Monitor" do
 
         it "should deactivate limited role via deactivate_in_zone method" do
           rolename = "event"
-          @miq_server.assigned_server_roles.each { |asr|
+          @miq_server.assigned_server_roles.each do |asr|
             next unless asr.server_role.name == rolename
             asr.deactivate_in_zone
-          }
+          end
           @miq_server.reload
-          @miq_server.inactive_roles.length.should    == 1
+          @miq_server.inactive_roles.length.should == 1
           @miq_server.active_role_names.length.should == 3
           @miq_server.active_role_names.include?(rolename).should_not be_true
           @miq_server.inactive_role_names.include?(rolename).should be_true
@@ -239,25 +233,23 @@ describe "Server Monitor" do
 
     context "with 2 Servers in 2 Zones where I am the Master" do
       before(:each) do
-        @zone        = FactoryGirl.create(:zone)
-
-        @miq_server1 = FactoryGirl.create(:miq_server_not_master, :guid => @guid,            :zone => @zone, :is_master => true)
+        @miq_server1 = EvmSpecHelper.local_miq_server(:is_master => true)
         @miq_server1.deactivate_all_roles
         @miq_server1.role = 'event, ems_operations, scheduler, reporting'
 
-        @miq_server2 = FactoryGirl.create(:miq_server_not_master, :guid => MiqUUID.new_guid, :zone => @zone, :is_master => false)
+        @miq_server2 = FactoryGirl.create(:miq_server, :zone => @miq_server1.zone)
         @miq_server2.deactivate_all_roles
         @miq_server2.role = 'event, ems_operations, scheduler, reporting'
       end
 
       it "should have no roles active after start" do
-        @miq_server1.server_roles.length.should   == 4
+        @miq_server1.server_roles.length.should == 4
         @miq_server1.inactive_roles.length.should == 4
-        @miq_server1.active_roles.length.should   == 0
+        @miq_server1.active_roles.length.should == 0
 
-        @miq_server2.server_roles.length.should   == 4
+        @miq_server2.server_roles.length.should == 4
         @miq_server2.inactive_roles.length.should == 4
-        @miq_server2.active_roles.length.should   == 0
+        @miq_server2.active_roles.length.should == 0
       end
 
       it "should activate unlimited role via activate_in_zone method" do
@@ -270,11 +262,11 @@ describe "Server Monitor" do
         end
         @miq_server1.reload
         @miq_server2.reload
-        @miq_server1.inactive_roles.length.should    == 3
+        @miq_server1.inactive_roles.length.should == 3
         @miq_server1.active_role_names.length.should == 1
         @miq_server1.active_role_names.include?(rolename).should be_true
 
-        @miq_server2.inactive_roles.length.should    == 3
+        @miq_server2.inactive_roles.length.should == 3
         @miq_server2.active_role_names.length.should == 1
         @miq_server2.active_role_names.include?(rolename).should be_true
       end
@@ -286,10 +278,10 @@ describe "Server Monitor" do
         end
 
         it "should have all roles active after sync between them" do
-          (@miq_server1.active_role_names.include?("ems_operations")        && @miq_server2.active_role_names.include?("ems_operations")).should be_true
-          (@miq_server1.active_role_names.include?("event")                  ^ @miq_server2.active_role_names.include?("event")).should be_true
-          (@miq_server1.active_role_names.include?("reporting")             && @miq_server2.active_role_names.include?("reporting")).should be_true
-          (@miq_server1.active_role_names.include?("scheduler")              ^ @miq_server2.active_role_names.include?("scheduler")).should be_true
+          (@miq_server1.active_role_names.include?("ems_operations") && @miq_server2.active_role_names.include?("ems_operations")).should be_true
+          (@miq_server1.active_role_names.include?("event") ^ @miq_server2.active_role_names.include?("event")).should be_true
+          (@miq_server1.active_role_names.include?("reporting") && @miq_server2.active_role_names.include?("reporting")).should be_true
+          (@miq_server1.active_role_names.include?("scheduler") ^ @miq_server2.active_role_names.include?("scheduler")).should be_true
         end
       end
 
@@ -300,8 +292,8 @@ describe "Server Monitor" do
         end
 
         it "should have all roles on the desired servers" do
-          (@miq_server1.active_role_names.include?("ems_operations")           && @miq_server2.active_role_names.include?("ems_operations")).should be_true
-          (@miq_server1.inactive_role_names.include?("event")                  && @miq_server2.active_role_names.include?("event")).should be_true
+          (@miq_server1.active_role_names.include?("ems_operations") && @miq_server2.active_role_names.include?("ems_operations")).should be_true
+          (@miq_server1.inactive_role_names.include?("event") && @miq_server2.active_role_names.include?("event")).should be_true
         end
 
         context "where Non-Master shuts down cleanly" do
@@ -340,13 +332,13 @@ describe "Server Monitor" do
             @miq_server1.monitor_server_roles
             @miq_server2.reload
 
-            @miq_server2.server_roles.length.should   == 4
+            @miq_server2.server_roles.length.should == 4
             @miq_server2.inactive_roles.length.should == 4
-            @miq_server2.active_roles.length.should   == 0
+            @miq_server2.active_roles.length.should == 0
 
-            @miq_server1.server_roles.length.should   == 4
+            @miq_server1.server_roles.length.should == 4
             @miq_server1.inactive_roles.length.should == 0
-            @miq_server1.active_roles.length.should   == 4
+            @miq_server1.active_roles.length.should == 4
 
             @miq_server1.active_role_names.include?("ems_operations").should be_true
             @miq_server1.active_role_names.include?("event").should be_true
@@ -354,25 +346,22 @@ describe "Server Monitor" do
             @miq_server1.active_role_names.include?("scheduler").should be_true
           end
         end
-
       end
     end
 
     context "with 2 Servers where I am the non-Master" do
       before(:each) do
-        @zone        = FactoryGirl.create(:zone)
-        @miq_server1 = FactoryGirl.create(:miq_server_not_master, :guid => @guid,            :zone => @zone, :is_master => false)
-        MiqServer.my_server(true)
+        @miq_server1 = EvmSpecHelper.local_miq_server
         @miq_server1.deactivate_all_roles
         @miq_server1.role         = 'event, ems_operations, scheduler, reporting'
-        @roles1 = [ ['ems_operations', 1], ['event', 2], ['scheduler', 2], ['reporting', 1] ]
+        @roles1 = [['ems_operations', 1], ['event', 2], ['scheduler', 2], ['reporting', 1]]
         @roles1.each { |role, priority| @miq_server1.assign_role(role, priority) }
         @miq_server1.activate_roles("ems_operations", 'reporting')
 
-        @miq_server2 = FactoryGirl.create(:miq_server_not_master, :guid => MiqUUID.new_guid, :zone => @zone, :is_master => true)
+        @miq_server2 = FactoryGirl.create(:miq_server, :is_master => true, :zone => @miq_server1.zone)
         @miq_server2.deactivate_all_roles
         @miq_server2.role         = 'event, ems_operations, scheduler, reporting'
-        @roles2 = [ ['ems_operations', 1], ['event', 1], ['scheduler', 1], ['reporting', 1] ]
+        @roles2 = [['ems_operations', 1], ['event', 1], ['scheduler', 1], ['reporting', 1]]
         @roles2.each { |role, priority| @miq_server2.assign_role(role, priority) }
         @miq_server2.activate_roles("event", "ems_operations", 'scheduler', 'reporting')
 
@@ -380,10 +369,10 @@ describe "Server Monitor" do
       end
 
       it "should have all roles active after sync between them" do
-        (@miq_server1.active_role_names.include?("ems_operations")        && @miq_server2.active_role_names.include?("ems_operations")).should be_true
-        (@miq_server1.active_role_names.include?("event")                  ^ @miq_server2.active_role_names.include?("event")).should be_true
-        (@miq_server1.active_role_names.include?("reporting")             && @miq_server2.active_role_names.include?("reporting")).should be_true
-        (@miq_server1.active_role_names.include?("scheduler")              ^ @miq_server2.active_role_names.include?("scheduler")).should be_true
+        (@miq_server1.active_role_names.include?("ems_operations") && @miq_server2.active_role_names.include?("ems_operations")).should be_true
+        (@miq_server1.active_role_names.include?("event") ^ @miq_server2.active_role_names.include?("event")).should be_true
+        (@miq_server1.active_role_names.include?("reporting") && @miq_server2.active_role_names.include?("reporting")).should be_true
+        (@miq_server1.active_role_names.include?("scheduler") ^ @miq_server2.active_role_names.include?("scheduler")).should be_true
       end
 
       context "where Master shuts down cleanly" do
@@ -411,7 +400,6 @@ describe "Server Monitor" do
           @miq_server2.reload
           @miq_server2.active_role_names.should be_empty
         end
-
       end
 
       context "where Master is not responding" do
@@ -435,12 +423,12 @@ describe "Server Monitor" do
           @miq_server2.reload
 
           @miq_server2.status.should == "not responding"
-          @miq_server2.server_roles.length.should   == 4
+          @miq_server2.server_roles.length.should == 4
           @miq_server2.inactive_roles.length.should == 4
-          @miq_server2.active_roles.length.should   == 0
+          @miq_server2.active_roles.length.should == 0
 
           @miq_server1.inactive_roles.length.should == 0
-          @miq_server1.active_roles.length.should   == 4
+          @miq_server1.active_roles.length.should == 4
           @miq_server1.active_role_names.include?("database_owner").should be_false
 
           @miq_server1.active_role_names.include?("ems_operations").should be_true
@@ -453,21 +441,19 @@ describe "Server Monitor" do
 
     context "with 3 Servers where I am the Master" do
       before(:each) do
-        @zone        = FactoryGirl.create(:zone)
-        @miq_server1 = FactoryGirl.create(:miq_server_not_master, :guid => @guid,            :zone => @zone, :name => "Miq1", :is_master => true)
-        MiqServer.my_server(true)
+        @miq_server1 = EvmSpecHelper.local_miq_server(:is_master => true, :name => "Miq1")
         @miq_server1.deactivate_all_roles
-        @roles1 = [ ['ems_operations', 2], ['event', 2], ['ems_inventory', 3], ['ems_metrics_coordinator', 2], ]
+        @roles1 = [['ems_operations', 2], ['event', 2], ['ems_inventory', 3], ['ems_metrics_coordinator', 2],]
         @roles1.each { |role, priority| @miq_server1.assign_role(role, priority) }
 
-        @miq_server2 = FactoryGirl.create(:miq_server_not_master, :guid => MiqUUID.new_guid, :zone => @zone, :name => "Miq2", :is_master => false)
+        @miq_server2 = FactoryGirl.create(:miq_server, :zone => @miq_server1.zone, :name => "Miq2")
         @miq_server2.deactivate_all_roles
-        @roles2 = [ ['ems_operations', 1], ['event', 1], ['ems_metrics_coordinator', 3], ['ems_inventory', 2],  ]
+        @roles2 = [['ems_operations', 1], ['event', 1], ['ems_metrics_coordinator', 3], ['ems_inventory', 2],]
         @roles2.each { |role, priority| @miq_server2.assign_role(role, priority) }
 
-        @miq_server3 = FactoryGirl.create(:miq_server_not_master, :guid => MiqUUID.new_guid, :zone => @zone, :name => "Miq3", :is_master => false)
+        @miq_server3 = FactoryGirl.create(:miq_server, :zone => @miq_server1.zone, :name => "Miq3")
         @miq_server3.deactivate_all_roles
-        @roles3 = [ ['ems_operations', 2], ['event', 3], ['ems_inventory', 1], ['ems_metrics_coordinator', 1] ]
+        @roles3 = [['ems_operations', 2], ['event', 3], ['ems_inventory', 1], ['ems_metrics_coordinator', 1]]
         @roles3.each { |role, priority| @miq_server3.assign_role(role, priority) }
 
         @miq_server1.monitor_servers
@@ -633,24 +619,21 @@ describe "Server Monitor" do
           end
         end
       end
-
     end
 
     context "with 3 Servers where I am the non-Master" do
       before(:each) do
-        @zone        = FactoryGirl.create(:zone)
-        @miq_server1 = FactoryGirl.create(:miq_server_not_master, :guid => @guid,            :zone => @zone, :name => "Server 1", :is_master => false)
-        MiqServer.my_server(true)
+        @miq_server1 = EvmSpecHelper.local_miq_server(:name => "Server 1")
         @miq_server1.deactivate_all_roles
         @miq_server1.role         = 'event, ems_operations, ems_inventory'
         @miq_server1.activate_roles("ems_operations", "ems_inventory")
 
-        @miq_server2 = FactoryGirl.create(:miq_server_not_master, :guid => MiqUUID.new_guid, :zone => @zone, :name => "Server 2", :is_master => true)
+        @miq_server2 = FactoryGirl.create(:miq_server, :is_master => true, :zone => @miq_server1.zone, :name => "Server 2")
         @miq_server2.deactivate_all_roles
         @miq_server2.role         = 'event, ems_metrics_coordinator, ems_operations'
         @miq_server2.activate_roles("event", "ems_metrics_coordinator", 'ems_operations')
 
-        @miq_server3 = FactoryGirl.create(:miq_server_not_master, :guid => MiqUUID.new_guid, :zone => @zone, :name => "Server 3", :is_master => false)
+        @miq_server3 = FactoryGirl.create(:miq_server, :zone => @miq_server2.zone, :name => "Server 3")
         @miq_server3.deactivate_all_roles
         @miq_server3.role         = 'ems_metrics_coordinator, ems_inventory, ems_operations'
         @miq_server3.activate_roles("ems_operations")
@@ -669,9 +652,9 @@ describe "Server Monitor" do
         @miq_server2.active_role_names.include?("ems_operations").should be_true
         @miq_server3.active_role_names.include?("ems_operations").should be_true
 
-        (@miq_server1.active_role_names.include?("event")                  ^ @miq_server2.active_role_names.include?("event")).should be_true
+        (@miq_server1.active_role_names.include?("event") ^ @miq_server2.active_role_names.include?("event")).should be_true
         (@miq_server2.active_role_names.include?("ems_metrics_coordinator") ^ @miq_server3.active_role_names.include?("ems_metrics_coordinator")).should be_true
-        (@miq_server1.active_role_names.include?("ems_inventory")          ^ @miq_server3.active_role_names.include?("ems_inventory")).should be_true
+        (@miq_server1.active_role_names.include?("ems_inventory") ^ @miq_server3.active_role_names.include?("ems_inventory")).should be_true
       end
 
       context "where Master shuts down cleanly" do
@@ -699,15 +682,15 @@ describe "Server Monitor" do
           @miq_server3.reload
 
           @miq_server1.inactive_roles.length.should == 0
-          @miq_server1.active_roles.length.should   == 3
+          @miq_server1.active_roles.length.should == 3
 
-          @miq_server2.server_roles.length.should   == 3
+          @miq_server2.server_roles.length.should == 3
           @miq_server2.inactive_roles.length.should == 3
-          @miq_server2.active_roles.length.should   == 0
+          @miq_server2.active_roles.length.should == 0
 
-          @miq_server3.server_roles.length.should   == 3
+          @miq_server3.server_roles.length.should == 3
           @miq_server3.inactive_roles.length.should == 1
-          @miq_server3.active_roles.length.should   == 2
+          @miq_server3.active_roles.length.should == 2
 
           @miq_server1.active_role_names.include?("ems_operations").should be_true
           @miq_server1.active_role_names.include?("event").should be_true
@@ -741,21 +724,19 @@ describe "Server Monitor" do
           @miq_server3.reload
 
           @miq_server2.status.should == "not responding"
-          @miq_server2.server_roles.length.should   == 3
+          @miq_server2.server_roles.length.should == 3
           @miq_server2.inactive_roles.length.should == 3
-          @miq_server2.active_roles.length.should   == 0
+          @miq_server2.active_roles.length.should == 0
 
           @miq_server1.inactive_roles.length.should == 0
-          @miq_server1.active_roles.length.should   == 3
+          @miq_server1.active_roles.length.should == 3
 
           @miq_server1.active_role_names.include?("ems_operations").should be_true
           @miq_server1.active_role_names.include?("event").should be_true
           @miq_server1.active_role_names.include?("ems_inventory").should be_true
           @miq_server3.active_role_names.include?("ems_metrics_coordinator").should be_true
         end
-
       end
-
     end
 
     context "In 2 Zones," do
@@ -766,12 +747,10 @@ describe "Server Monitor" do
 
       context "with 2 Servers across Zones where there is no master" do
         before(:each) do
-
-          @miq_server1 = FactoryGirl.create(:miq_server_not_master, :guid => @guid,            :zone => @zone1, :status => "started", :name => "Server 1")
-          MiqServer.my_server(true)
+          @miq_server1 = EvmSpecHelper.local_miq_server(:zone => @zone1, :name => "Server 1")
           @miq_server1.deactivate_all_roles
 
-          @miq_server2 = FactoryGirl.create(:miq_server_not_master, :guid => MiqUUID.new_guid, :zone => @zone2, :status => "started", :name => "Server 2")
+          @miq_server2 = FactoryGirl.create(:miq_server, :guid => MiqUUID.new_guid, :zone => @zone2, :name => "Server 2")
           @miq_server2.deactivate_all_roles
         end
 
@@ -795,40 +774,39 @@ describe "Server Monitor" do
           @miq_server2.reload
 
           (@miq_server1.active_role_names.include?("scheduler") && @miq_server2.active_role_names.include?("scheduler")).should be_false
-          (@miq_server1.active_role_names.include?("scheduler") ^  @miq_server2.active_role_names.include?("scheduler")).should be_true
+          (@miq_server1.active_role_names.include?("scheduler") ^ @miq_server2.active_role_names.include?("scheduler")).should be_true
         end
       end
 
       context "with 2 Servers across Zones where I am the Master" do
         before(:each) do
-          @miq_server1 = FactoryGirl.create(:miq_server_not_master, :guid => @guid,            :zone => @zone1, :status => "started", :name => "Server 1", :is_master => true)
-          MiqServer.my_server(true)
+          @miq_server1 = EvmSpecHelper.local_miq_server(:is_master => true, :zone => @zone1, :name => "Server 1")
           @miq_server1.deactivate_all_roles
-          @roles1 = [ ['ems_operations', 1], ['event', 1], ['ems_metrics_coordinator', 2], ['scheduler', 1], ['reporting', 1] ]
+          @roles1 = [['ems_operations', 1], ['event', 1], ['ems_metrics_coordinator', 2], ['scheduler', 1], ['reporting', 1]]
           @roles1.each { |role, priority| @miq_server1.assign_role(role, priority) }
 
-          @miq_server2 = FactoryGirl.create(:miq_server_not_master, :guid => MiqUUID.new_guid, :zone => @zone2, :status => "started", :name => "Server 2", :is_master => false)
+          @miq_server2 = FactoryGirl.create(:miq_server, :guid => MiqUUID.new_guid, :zone => @zone2, :name => "Server 2")
           @miq_server2.deactivate_all_roles
-          @roles2 = [ ['ems_operations', 1], ['event', 2], ['ems_metrics_coordinator', 1], ['scheduler', 2], ['reporting', 1] ]
+          @roles2 = [['ems_operations', 1], ['event', 2], ['ems_metrics_coordinator', 1], ['scheduler', 2], ['reporting', 1]]
           @roles2.each { |role, priority| @miq_server2.assign_role(role, priority) }
 
           @miq_server1.monitor_server_roles
         end
 
         it "should have proper roles active after start" do
-          @miq_server1.server_roles.length.should   == 5
+          @miq_server1.server_roles.length.should == 5
           @miq_server1.inactive_roles.length.should == 0
-          @miq_server1.active_roles.length.should   == 5
+          @miq_server1.active_roles.length.should == 5
 
-          @miq_server2.server_roles.length.should   == 5
+          @miq_server2.server_roles.length.should == 5
           @miq_server2.inactive_roles.length.should == 1
-          @miq_server2.active_roles.length.should   == 4
+          @miq_server2.active_roles.length.should == 4
 
-          (@miq_server1.active_role_names.include?("ems_operations")         &&  @miq_server2.active_role_names.include?("ems_operations")).should be_true
-          (@miq_server1.active_role_names.include?("event")                  &&  @miq_server2.active_role_names.include?("event")).should be_true
-          (@miq_server1.active_role_names.include?("ems_metrics_coordinator") &&  @miq_server2.active_role_names.include?("ems_metrics_coordinator")).should be_true
-          (@miq_server1.active_role_names.include?("reporting")              &&  @miq_server2.active_role_names.include?("reporting")).should be_true
-          (@miq_server1.active_role_names.include?("scheduler")              && !@miq_server2.active_role_names.include?("scheduler")).should be_true
+          (@miq_server1.active_role_names.include?("ems_operations") && @miq_server2.active_role_names.include?("ems_operations")).should be_true
+          (@miq_server1.active_role_names.include?("event") && @miq_server2.active_role_names.include?("event")).should be_true
+          (@miq_server1.active_role_names.include?("ems_metrics_coordinator") && @miq_server2.active_role_names.include?("ems_metrics_coordinator")).should be_true
+          (@miq_server1.active_role_names.include?("reporting") && @miq_server2.active_role_names.include?("reporting")).should be_true
+          (@miq_server1.active_role_names.include?("scheduler") && !@miq_server2.active_role_names.include?("scheduler")).should be_true
         end
 
         context "Server2 moved into zone of Server 1" do
@@ -847,16 +825,14 @@ describe "Server Monitor" do
           it "should have proper roles after rezoning" do
             @miq_server1.monitor_server_roles
             @miq_server2.reload
-            ( @miq_server1.active_role_names.include?("ems_operations")         &&  @miq_server2.active_role_names.include?("ems_operations")).should be_true
-            ( @miq_server1.active_role_names.include?("event")                  && !@miq_server2.active_role_names.include?("event")).should be_true
-            (!@miq_server1.active_role_names.include?("ems_metrics_coordinator") &&  @miq_server2.active_role_names.include?("ems_metrics_coordinator")).should be_true
-            ( @miq_server1.active_role_names.include?("reporting")              &&  @miq_server2.active_role_names.include?("reporting")).should be_true
-            ( @miq_server1.active_role_names.include?("scheduler")              && !@miq_server2.active_role_names.include?("scheduler")).should be_true
+            (@miq_server1.active_role_names.include?("ems_operations") && @miq_server2.active_role_names.include?("ems_operations")).should be_true
+            (@miq_server1.active_role_names.include?("event") && !@miq_server2.active_role_names.include?("event")).should be_true
+            (!@miq_server1.active_role_names.include?("ems_metrics_coordinator") && @miq_server2.active_role_names.include?("ems_metrics_coordinator")).should be_true
+            (@miq_server1.active_role_names.include?("reporting") && @miq_server2.active_role_names.include?("reporting")).should be_true
+            (@miq_server1.active_role_names.include?("scheduler") && !@miq_server2.active_role_names.include?("scheduler")).should be_true
           end
-
         end
       end
     end
   end
-
 end

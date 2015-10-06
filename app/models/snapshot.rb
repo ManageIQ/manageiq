@@ -13,7 +13,7 @@ class Snapshot < ActiveRecord::Base
   after_create  :after_create_callback
 
   def after_create_callback
-    MiqEvent.raise_evm_event_queue(self.vm_or_template, "vm_snapshot_complete", self.attributes) unless self.is_a_type?(:system_snapshot) || self.not_recently_created?
+    MiqEvent.raise_evm_event_queue(vm_or_template, "vm_snapshot_complete", attributes) unless self.is_a_type?(:system_snapshot) || self.not_recently_created?
   end
 
   def self.add_elements(parentObj, xmlNode)
@@ -29,12 +29,12 @@ class Snapshot < ActiveRecord::Base
   end
 
   def current?
-    return self.current == 1
+    current == 1
   end
 
   def get_current_snapshot
     # Find the snapshot that is marked as current
-    Snapshot.find_by_vm_or_template_id_and_current(self.vm_or_template_id, 1)
+    Snapshot.find_by_vm_or_template_id_and_current(vm_or_template_id, 1)
   end
 
   #
@@ -50,20 +50,20 @@ class Snapshot < ActiveRecord::Base
   def is_a_type?(stype)
     require 'MiqVimVm'
     value = case stype.to_sym
-    when :evm_snapshot        then MiqVimVm.const_get("EVM_SNAPSHOT_NAME")
-    when :consolidate_helper  then MiqVimVm.const_get("CH_SNAPSHOT_NAME")
-    when :vcb_snapshot        then MiqVimVm.const_get("VCB_SNAPSHOT_NAME")
-    when :system_snapshot     then :system_snapshot
-    else
-      raise "Unknown snapshot type '#{stype}' for #{self.class.name}.is_a_type?"
-    end
+            when :evm_snapshot        then MiqVimVm.const_get("EVM_SNAPSHOT_NAME")
+            when :consolidate_helper  then MiqVimVm.const_get("CH_SNAPSHOT_NAME")
+            when :vcb_snapshot        then MiqVimVm.const_get("VCB_SNAPSHOT_NAME")
+            when :system_snapshot     then :system_snapshot
+            else
+              raise "Unknown snapshot type '#{stype}' for #{self.class.name}.is_a_type?"
+            end
 
     if value == :system_snapshot
       return self.is_a_type?(:evm_snapshot) || self.is_a_type?(:consolidate_helper) || self.is_a_type?(:vcb_snapshot)
     elsif value.kind_of?(Regexp)
-      return value =~ self.name ? true : false
+      return value =~ name ? true : false
     else
-      return self.name == value
+      return name == value
     end
   end
 
@@ -77,8 +77,8 @@ class Snapshot < ActiveRecord::Base
 
   def self.remove_unused_evm_snapshots(delay)
     _log.debug "Called"
-    self.find_all_evm_snapshots.each do |sn|
-      job_guid, timestamp = self.parse_evm_snapshot_description(sn.description)
+    find_all_evm_snapshots.each do |sn|
+      job_guid, timestamp = parse_evm_snapshot_description(sn.description)
       unless Job.guid_active?(job_guid, timestamp, delay)
         _log.info "Removing #{sn.description.inspect} under Vm [#{sn.vm_or_template.name}]"
         sn.vm_or_template.remove_evm_snapshot_queue(sn.id)
@@ -88,7 +88,7 @@ class Snapshot < ActiveRecord::Base
 
   def recently_created?
     @recent_threshold ||= (VMDB::Config.new("vmdb").config.fetch_path(:ems_refresh, :raise_vm_snapshot_complete_if_created_within).to_i_with_method || 15.minutes)
-    self.create_time >= @recent_threshold.seconds.ago.utc
+    create_time >= @recent_threshold.seconds.ago.utc
   end
 
   def not_recently_created?
@@ -162,14 +162,14 @@ class Snapshot < ActiveRecord::Base
 
   def self.add_snapshot_size_for_ems(parentObj, hashes)
     ss_props = {}
-    hashes.each {|h| ss_props[normalize_ss_uid(h[:uid])] = {:total_size => h[:total_size]}}
-    parentObj.snapshots.each {|s| s.update_attributes(ss_props[normalize_ss_uid(s[:uid])]) unless ss_props[normalize_ss_uid(s[:uid])].nil?}
+    hashes.each { |h| ss_props[normalize_ss_uid(h[:uid])] = {:total_size => h[:total_size]} }
+    parentObj.snapshots.each { |s| s.update_attributes(ss_props[normalize_ss_uid(s[:uid])]) unless ss_props[normalize_ss_uid(s[:uid])].nil? }
   end
 
   # If the snapshot uid looks like a iso8601 time (2009-09-25T20:11:14.299742Z) drop off the microseconds so
   # we don't skip linking up data because of a format change.  (IE 2009-09-25T20:11:14.000000Z to 2009-09-25T20:11:14.299742Z)
   def self.normalize_ss_uid(uid)
-    return uid[0,20] if !uid.nil? && uid.length == 27 && uid[-1,1] == 'Z'
-    return uid
+    return uid[0, 20] if !uid.nil? && uid.length == 27 && uid[-1, 1] == 'Z'
+    uid
   end
 end

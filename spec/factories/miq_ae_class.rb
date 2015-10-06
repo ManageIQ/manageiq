@@ -3,7 +3,6 @@ FactoryGirl.define do
     sequence(:name) { |n| "miq_ae_class_#{seq_padded_for_sorting(n)}" }
 
     trait :with_instances_and_methods do
-
       transient do
         ae_fields {}
         ae_instances {}
@@ -11,7 +10,6 @@ FactoryGirl.define do
       end
 
       after :create do |aeclass, evaluator|
-
         aeclass.ae_fields << evaluator.ae_fields.collect do |name, f|
           FactoryGirl.build(:miq_ae_field, {:name => name}.merge(f))
         end

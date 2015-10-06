@@ -53,7 +53,7 @@ describe WimParser do
   it "#xml_data" do
     @wim_parser.xml_data.should == {
       "total_bytes" => 2404,
-      "images" => [
+      "images"      => [
         {
           "index"                  => 1,
           "name"                   => "Nothing",

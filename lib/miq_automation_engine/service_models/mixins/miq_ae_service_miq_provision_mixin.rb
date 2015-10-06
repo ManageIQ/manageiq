@@ -32,23 +32,23 @@ module MiqAeServiceMiqProvisionMixin
     set_option(:addr_mode, ["static", "Static"]) if mode.downcase == "static"
   end
 
-  def check_quota(quota_type, options={})
+  def check_quota(quota_type, options = {})
     drb_return(object_send(:check_quota, quota_type, options))
   end
 
   def eligible_resources(rsc_type)
-    self.wrap_results(object_send(:eligible_resources, rsc_type))
+    wrap_results(object_send(:eligible_resources, rsc_type))
   end
 
   def set_resource(rsc)
     object_send(:set_resource, rsc)
   end
 
-  def set_nic_settings(idx, nic_hash, value=nil)
+  def set_nic_settings(idx, nic_hash, value = nil)
     object_send(:set_nic_settings, idx, nic_hash, value)
   end
 
-  def set_network_adapter(idx, nic_hash, value=nil)
+  def set_network_adapter(idx, nic_hash, value = nil)
     object_send(:set_network_adapter, idx, nic_hash, value)
   end
 
@@ -63,5 +63,4 @@ module MiqAeServiceMiqProvisionMixin
   def get_folder_paths
     object_send(:get_folder_paths)
   end
-
 end

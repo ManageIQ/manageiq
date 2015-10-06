@@ -6,6 +6,12 @@ describe ContainerImageController do
     set_user_privileges
   end
 
+  it "when Smart Analysis is pressed" do
+    controller.should_receive(:scan_images)
+    post :button, :pressed => 'container_image_scan', :format => :js
+    controller.send(:flash_errors?).should_not be_true
+  end
+
   it "renders index" do
     get :index
     expect(response.status).to eq(302)
@@ -13,7 +19,7 @@ describe ContainerImageController do
   end
 
   it "renders show screen" do
-    MiqServer.stub(:my_zone).and_return("default")
+    EvmSpecHelper.create_guid_miq_server_zone
     ems = FactoryGirl.create(:ems_kubernetes)
     container_image = ContainerImage.create(:ext_management_system => ems, :name => "Test Image")
     get :show, :id => container_image.id

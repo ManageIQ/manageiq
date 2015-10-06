@@ -62,7 +62,7 @@ module EmsRefresh::SaveInventoryContainer
               end
 
     save_inventory_multi(:container_nodes, ems, hashes, deletes, [:ems_ref],
-                         [:computer_system, :container_node_conditions], [:namespace])
+                         [:labels, :computer_system, :container_conditions], [:namespace])
     store_ids_for_new_records(ems.container_nodes, hashes, :ems_ref)
   end
 
@@ -131,8 +131,8 @@ module EmsRefresh::SaveInventoryContainer
     end
 
     save_inventory_multi(:container_groups, ems, hashes, deletes, [:ems_ref],
-                         [:container_definitions, :containers, :labels],
-                         [:container_node, :container_replicator, :project, :namespace])
+                         [:container_definitions, :containers, :labels, :node_selector_parts, :container_conditions,
+                          :container_volumes], [:container_node, :container_replicator, :project, :namespace])
     store_ids_for_new_records(ems.container_groups, hashes, :ems_ref)
   end
 
@@ -147,7 +147,7 @@ module EmsRefresh::SaveInventoryContainer
               end
 
     save_inventory_multi(:container_definitions, container_group, hashes, deletes,
-                         [:ems_ref], [:container_port_configs, :container_env_vars, :container])
+                         [:ems_ref], [:container_port_configs, :container_env_vars, :security_context, :container])
     store_ids_for_new_records(container_group.container_definitions, hashes, :ems_ref)
   end
 
@@ -230,22 +230,40 @@ module EmsRefresh::SaveInventoryContainer
     # The hash could be nil when the container is in transition (still downloading
     # the image, or stuck in Pending, or unable to fetch the image). Passing nil to
     # save_inventory_single is used to delete any pre-existing entity in containers,
-    hash[:container_image_id] = hash[:container_image][:id]
+    hash[:container_image_id] = hash[:container_image][:id] unless hash.nil?
     save_inventory_single(:container, container_definition, hash, [], :container_image)
   end
 
-  def save_container_node_conditions_inventory(container_node, hashes, target = nil)
+  def save_container_conditions_inventory(container_entity, hashes, target = nil)
     return if hashes.nil?
 
-    container_node.container_node_conditions(true)
+    container_entity.container_conditions(true)
     deletes = if target.kind_of?(ExtManagementSystem)
-                container_node.container_node_conditions.dup
+                container_entity.container_conditions.dup
               else
                 []
               end
 
-    save_inventory_multi(:container_node_conditions, container_node, hashes, deletes, [:name])
-    store_ids_for_new_records(container_node.container_node_conditions, hashes, :name)
+    save_inventory_multi(:container_conditions, container_entity, hashes, deletes, [:name])
+    store_ids_for_new_records(container_entity.container_conditions, hashes, :name)
+  end
+
+  def save_security_context_inventory(container_definition, hash, _target = nil)
+    save_inventory_single(:security_context, container_definition, hash)
+  end
+
+  def save_container_volumes_inventory(container_group, hashes, target = nil)
+    return if hashes.nil?
+
+    container_group.container_volumes(true)
+    deletes = if target.kind_of?(ExtManagementSystem)
+                container_group.container_volumes.dup
+              else
+                []
+              end
+
+    save_inventory_multi(:container_volumes, container_group, hashes, deletes, [:name])
+    store_ids_for_new_records(container_group.container_volumes, hashes, :name)
   end
 
   def save_labels_inventory(entity, hashes, target = nil)
@@ -274,5 +292,19 @@ module EmsRefresh::SaveInventoryContainer
 
     save_inventory_multi(:selector_parts, entity, hashes, deletes, [:section, :name])
     store_ids_for_new_records(entity.selector_parts, hashes, [:section, :name])
+  end
+
+  def save_node_selector_parts_inventory(entity, hashes, target = nil)
+    return if hashes.nil?
+
+    entity.node_selector_parts(true)
+    deletes = if target.kind_of?(ExtManagementSystem)
+                entity.node_selector_parts.dup
+              else
+                []
+              end
+
+    save_inventory_multi(:node_selector_parts, entity, hashes, deletes, [:section, :name])
+    store_ids_for_new_records(entity.node_selector_parts, hashes, [:section, :name])
   end
 end

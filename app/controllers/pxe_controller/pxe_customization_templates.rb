@@ -4,14 +4,14 @@ module PxeController::PxeCustomizationTemplates
 
   # AJAX driven routine to check for changes in ANY field on the form
   def template_form_field_changed
-    return unless load_edit("ct_edit__#{params[:id]}","replace_cell__explorer")
+    return unless load_edit("ct_edit__#{params[:id]}", "replace_cell__explorer")
     @prev_typ = @edit[:new][:typ]
     template_get_form_vars
     render :update do |page|                    # Use JS to update the display
       changed = (@edit[:new] != @edit[:current])
       if params[:typ] && @prev_typ != @edit[:new][:typ]
         @edit[:new][:script] = ""
-        page.replace_html("script_div", :partial=>"template_script_data")
+        page.replace_html("script_div", :partial => "template_script_data")
       end
       page << javascript_for_miq_button_visibility(changed)
     end
@@ -35,9 +35,9 @@ module PxeController::PxeCustomizationTemplates
     @sortdir = session[:ct_sortdir].nil? ? "ASC" : session[:ct_sortdir]
     pxe_img_id = x_node.split('-').last == "system" ? nil : x_node.split('-').last
     if pxe_img_id
-      @view, @pages = get_view(CustomizationTemplate,:conditions=>["pxe_image_type_id=?",from_cid(pxe_img_id)]) # Get the records (into a view) and the paginator
+      @view, @pages = get_view(CustomizationTemplate, :conditions => ["pxe_image_type_id=?", from_cid(pxe_img_id)]) # Get the records (into a view) and the paginator
     else
-      @view, @pages = get_view(CustomizationTemplate,:conditions=>["system=?",true])  # Get the records (into a view) and the paginator
+      @view, @pages = get_view(CustomizationTemplate, :conditions => ["system=?", true])  # Get the records (into a view) and the paginator
     end
 
     @current_page = @pages[:current] unless @pages.nil? # save the current page number
@@ -46,8 +46,8 @@ module PxeController::PxeCustomizationTemplates
 
     if params[:action] != "button" && (params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page])
       render :update do |page|                    # Use RJS to update the display
-        page.replace("gtl_div", :partial=>"layouts/x_gtl", :locals=>{:action_url=>"template_list"})
-        page.replace_html("paging_div", :partial=>"layouts/x_pagingcontrols")
+        page.replace("gtl_div", :partial => "layouts/x_gtl", :locals => {:action_url => "template_list"})
+        page.replace_html("paging_div", :partial => "layouts/x_pagingcontrols")
         page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
       end
     end
@@ -75,7 +75,7 @@ module PxeController::PxeCustomizationTemplates
     end
     @ct = @record = identify_record(params[:id], CustomizationTemplate) if params[:id]
     if params[:typ] && params[:typ] == "copy"
-      options = Hash.new
+      options = {}
       options[:name] = "Copy of #{@record.name}"
       options[:description] = @record.description
       options[:script] = @record.script
@@ -96,11 +96,11 @@ module PxeController::PxeCustomizationTemplates
     changed = (@edit[:new] != @edit[:current])
     if params[:button] == "cancel"
       @edit = session[:edit] = nil # clean out the saved info
-      @ct.id ? add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"PxeCustomizationTemplate"), :name=>@ct.name}) :
-              add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"PxeCustomizationTemplate"))
+      @ct.id ? add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "PxeCustomizationTemplate"), :name => @ct.name}) :
+              add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "PxeCustomizationTemplate"))
       get_node_info(x_node)
       replace_right_cell(x_node)
-    elsif ["add","save"].include?(params[:button])
+    elsif ["add", "save"].include?(params[:button])
       if params[:id]
         ct = find_by_id_filtered(CustomizationTemplate, params[:id])
       else
@@ -115,7 +115,7 @@ module PxeController::PxeCustomizationTemplates
       end
       if @flash_array
         render :update do |page|
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
       end
@@ -125,18 +125,18 @@ module PxeController::PxeCustomizationTemplates
       if !flash_errors? && ct.valid? && ct.save
         flash_key = ct.id ? _("%{model} \"%{name}\" was saved") : _("%{model} \"%{name}\" was added")
         add_flash(flash_key % {:model => ui_lookup(:model => "PxeCustomizationTemplate"), :name  => ct.name})
-          AuditEvent.success(build_created_audit(ct, @edit))
-          @edit = session[:edit] = nil # clean out the saved info
-          self.x_node = "xx-xx-#{to_cid(ct.pxe_image_type.id)}"
-          get_node_info(x_node)
-          replace_right_cell(x_node,[:customization_templates])
+        AuditEvent.success(build_created_audit(ct, @edit))
+        @edit = session[:edit] = nil # clean out the saved info
+        self.x_node = "xx-xx-#{to_cid(ct.pxe_image_type.id)}"
+        get_node_info(x_node)
+        replace_right_cell(x_node, [:customization_templates])
       else
         @in_a_form = true
-        ct.errors.each do |field,msg|
+        ct.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
         render :update do |page|
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
     elsif params[:button] == "reset"
@@ -166,22 +166,22 @@ module PxeController::PxeCustomizationTemplates
 
   # Set form variables for edit
   def template_set_form_vars
-    @edit = Hash.new
+    @edit = {}
     @edit[:ct_id] = @ct.id
 
-    @edit[:new] = Hash.new
-    @edit[:current] = Hash.new
+    @edit[:new] = {}
+    @edit[:current] = {}
     @edit[:key] = "ct_edit__#{@ct.id || "new"}"
     @edit[:rec_id] = @ct.id || nil
     @edit[:pxe_image_types] = PxeImageType.order(:name).collect { |img| [img.name, img.id] }
     @edit[:new][:name] = @ct.name
     @edit[:new][:description] = @ct.description
     @edit[:new][:typ] = @ct.type
-    #in case record is being copied
+    # in case record is being copied
     if @ct.id || @ct.pxe_image_type_id
       @edit[:new][:img_type] = @ct.pxe_image_type.id
     else
-      #if new customization template, check if add button was pressed form folder level, to auto select image type
+      # if new customization template, check if add button was pressed form folder level, to auto select image type
       @edit[:new][:img_type] = x_node == "T" ? @ct.pxe_image_type : x_node.split('_')[1]
     end
 
@@ -205,29 +205,29 @@ module PxeController::PxeCustomizationTemplates
 
   # Common template button handler routines
   def template_button_operation(method, display_name)
-    templates = Array.new
+    templates = []
 
     # Either a list or coming from a different controller (eg from host screen, go to its vms)
     if !params[:id]
       templates = find_checked_items
       if templates.empty?
-        add_flash(_("No %{model} were selected to %{button}") % {:model=>ui_lookup(:models=>"PxeCustomizationTemplate"), :button=>display_name},
+        add_flash(_("No %{model} were selected to %{button}") % {:model => ui_lookup(:models => "PxeCustomizationTemplate"), :button => display_name},
                   :error)
       else
         process_templates(templates, method)
       end
 
       get_node_info(x_node)
-      replace_right_cell(x_node,[:customization_templates])
+      replace_right_cell(x_node, [:customization_templates])
     else # showing 1 vm
       if params[:id].nil? || CustomizationTemplate.find_by_id(params[:id]).nil?
-        add_flash(_("%s no longer exists") % ui_lookup(:model=>"PxeCustomizationTemplate"),
+        add_flash(_("%s no longer exists") % ui_lookup(:model => "PxeCustomizationTemplate"),
                   :error)
         template_list
         @refresh_partial = "layouts/gtl"
       else
         templates.push(params[:id])
-        ct = CustomizationTemplate.find_by_id(from_cid(params[:id]))  if method == 'destroy'        #need to set this for destroy method so active node can be set to image_type folder node after record is deleted
+        ct = CustomizationTemplate.find_by_id(from_cid(params[:id]))  if method == 'destroy'        # need to set this for destroy method so active node can be set to image_type folder node after record is deleted
         process_templates(templates, method)  unless templates.empty?
         # TODO: tells callers to go back to show_list because this SMIS Agent may be gone
         # Should be refactored into calling show_list right here
@@ -235,25 +235,25 @@ module PxeController::PxeCustomizationTemplates
           self.x_node = "xx-xx-#{to_cid(ct.pxe_image_type_id)}"
         end
         get_node_info(x_node)
-        replace_right_cell(x_node,[:customization_templates])
+        replace_right_cell(x_node, [:customization_templates])
       end
     end
-    return templates.count
+    templates.count
   end
 
   def template_get_node_info(treenodeid)
     if treenodeid == "root"
       @folders = PxeImageType.all.sort
-      #to check if Add customization template button should be enabled
+      # to check if Add customization template button should be enabled
       @pxe_image_types_count = @folders.count
-      @right_cell_text = _("All %{model} - %{group}") % {:model=>ui_lookup(:models=>"PxeCustomizationTemplate"), :group=>ui_lookup(:models=>"PxeImageType")}
+      @right_cell_text = _("All %{model} - %{group}") % {:model => ui_lookup(:models => "PxeCustomizationTemplate"), :group => ui_lookup(:models => "PxeImageType")}
       @right_cell_div  = "template_list"
     else
       nodes = treenodeid.split("-")
       if nodes[0] == "ct"
         @right_cell_div = "template_details"
         @record = @ct = CustomizationTemplate.find_by_id(from_cid(nodes[1]))
-        @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@ct.name, :model=>ui_lookup(:model=>"PxeCustomizationTemplate")}
+        @right_cell_text = _("%{model} \"%{name}\"") % {:name => @ct.name, :model => ui_lookup(:model => "PxeCustomizationTemplate")}
       else
         template_list
         @pxe_image_types_count = PxeImageType.count
@@ -261,7 +261,7 @@ module PxeController::PxeCustomizationTemplates
 
         pxe_img_type = PxeImageType.find_by_id(from_cid(pxe_img_id)) if pxe_img_id != "system"
         @right_cell_text = pxe_img_id == "system" ? _("%s") % "Examples (read only)" :
-                                    _("%{model} for %{group} \"%{name}\"") % {:name=>pxe_img_type.name, :model=>ui_lookup(:models=>"PxeCustomizationTemplate"), :group=>ui_lookup(:model=>"PxeImageType")}
+                                    _("%{model} for %{group} \"%{name}\"") % {:name => pxe_img_type.name, :model => ui_lookup(:models => "PxeCustomizationTemplate"), :group => ui_lookup(:model => "PxeImageType")}
         @right_cell_div  = "template_list"
       end
     end

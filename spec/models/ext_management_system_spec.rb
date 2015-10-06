@@ -20,6 +20,7 @@ describe ExtManagementSystem do
       rhevm
       scvmm
       vmwarews
+      azure
     )
   end
 
@@ -147,17 +148,18 @@ describe ExtManagementSystem do
         @same_host_name      = "us-east-1"
         @different_host_name = "us-west-1"
         @ems = FactoryGirl.create(:ems_vmware, :hostname => @same_host_name)
+        @zone = Zone.seed
       end
 
       it "duplicate name" do
-        described_class.leaf_subclasses.collect{|ems| ems.name.underscore.to_sym}.each do |t|
-          expect { FactoryGirl.create(t, :name => @ems.name, :hostname => @different_host_name) }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Name has already been taken")
+        described_class.leaf_subclasses.collect { |ems| ems.name.underscore.to_sym }.each do |t|
+          expect { FactoryGirl.create(t, :name => @ems.name, :hostname => @different_host_name, :zone => @zone) }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Name has already been taken")
         end
       end
 
       it "duplicate hostname" do
-        described_class.leaf_subclasses.collect{|ems| ems.name.underscore.to_sym}.each do |t|
-          provider = FactoryGirl.build(t, :hostname => @same_host_name)
+        described_class.leaf_subclasses.collect { |ems| ems.name.underscore.to_sym }.each do |t|
+          provider = FactoryGirl.build(t, :hostname => @same_host_name, :zone => @zone)
 
           if provider.hostname_required?
             expect { provider.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Host Name has already been taken")
@@ -171,34 +173,25 @@ describe ExtManagementSystem do
         tenant = FactoryGirl.create(:tenant)
         expect do
           FactoryGirl.create(:ems_vmware,
-                             :name         => @ems.name,
-                             :hostname     => @different_host_name,
-                             :tenant_owner => tenant)
+                             :name     => @ems.name,
+                             :hostname => @different_host_name,
+                             :tenant   => tenant)
         end.not_to raise_error
       end
 
       it "allows duplicate hostname across tenants" do
         tenant = FactoryGirl.create(:tenant)
         expect do
-          FactoryGirl.create(:ems_vmware, :hostname => @same_host_name, :tenant_owner => tenant)
+          FactoryGirl.create(:ems_vmware, :hostname => @same_host_name, :tenant => tenant)
         end.not_to raise_error
       end
     end
   end
 
-  context "#tenant_owner" do
+  context "#tenant" do
     let(:tenant) { FactoryGirl.create(:tenant) }
-    it "has a tenant owner" do
-      ems = FactoryGirl.create(:ext_management_system, :tenant_owner => tenant)
-      expect(tenant.owned_ext_management_systems).to include(ems)
-    end
-  end
-
-  context "#tenants" do
-    let(:tenant) { FactoryGirl.create(:tenant) }
-    it "has a tenant owner" do
-      ems = FactoryGirl.create(:ext_management_system)
-      ems.tenants << tenant
+    it "has a tenant" do
+      ems = FactoryGirl.create(:ext_management_system, :tenant => tenant)
       expect(tenant.ext_management_systems).to include(ems)
     end
   end

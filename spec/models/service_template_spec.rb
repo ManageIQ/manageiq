@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe ServiceTemplate do
-
   context "#type_display" do
     before(:each) do
       @st1 = FactoryGirl.create(:service_template, :name => 'Service Template 1')
@@ -51,7 +50,6 @@ describe ServiceTemplate do
       @st1.composite?.should be_true
     end
   end
-
 
   context "with multiple services" do
     before(:each) do
@@ -121,15 +119,15 @@ describe ServiceTemplate do
     end
 
     it "should not allow service templates to be connected in a circular reference" do
-      lambda { add_and_save_service(@svc_a, @svc_b) }.should_not raise_error
-      lambda { add_and_save_service(@svc_b, @svc_c) }.should_not raise_error
-      lambda { add_and_save_service(@svc_a, @svc_c) }.should_not raise_error
-      lambda { add_and_save_service(@svc_c, @svc_d) }.should_not raise_error
-      lambda { add_and_save_service(@svc_a, @svc_e) }.should_not raise_error
+      -> { add_and_save_service(@svc_a, @svc_b) }.should_not raise_error
+      -> { add_and_save_service(@svc_b, @svc_c) }.should_not raise_error
+      -> { add_and_save_service(@svc_a, @svc_c) }.should_not raise_error
+      -> { add_and_save_service(@svc_c, @svc_d) }.should_not raise_error
+      -> { add_and_save_service(@svc_a, @svc_e) }.should_not raise_error
 
-      lambda { add_and_save_service(@svc_c, @svc_a) }.should raise_error
-      lambda { add_and_save_service(@svc_d, @svc_a) }.should raise_error
-      lambda { add_and_save_service(@svc_c, @svc_b) }.should raise_error
+      -> { add_and_save_service(@svc_c, @svc_a) }.should raise_error
+      -> { add_and_save_service(@svc_d, @svc_a) }.should raise_error
+      -> { add_and_save_service(@svc_c, @svc_b) }.should raise_error
 
       # Print tree-view of services
       # puts "\n#{svc_a.name}"
@@ -137,13 +135,13 @@ describe ServiceTemplate do
     end
 
     it "should not allow deeply nested service templates to be connected in a circular reference" do
-      lambda { add_and_save_service(@svc_a, @svc_b) }.should_not raise_error
-      lambda { add_and_save_service(@svc_b, @svc_c) }.should_not raise_error
+      -> { add_and_save_service(@svc_a, @svc_b) }.should_not raise_error
+      -> { add_and_save_service(@svc_b, @svc_c) }.should_not raise_error
 
-      lambda { add_and_save_service(@svc_d, @svc_e) }.should_not raise_error
-      lambda { add_and_save_service(@svc_e, @svc_a) }.should_not raise_error
+      -> { add_and_save_service(@svc_d, @svc_e) }.should_not raise_error
+      -> { add_and_save_service(@svc_e, @svc_a) }.should_not raise_error
 
-      lambda { add_and_save_service(@svc_c, @svc_d) }.should raise_error
+      -> { add_and_save_service(@svc_c, @svc_d) }.should raise_error
     end
 
     it "should not allow service template to connect to self" do
@@ -160,14 +158,13 @@ describe ServiceTemplate do
       add_and_save_service(@svc_a, @svc_b)
       add_and_save_service(@svc_b, @svc_c)
 
-      lambda { @svc_b.destroy }.should raise_error
-      lambda { @svc_c.destroy }.should raise_error
+      -> { @svc_b.destroy }.should raise_error
+      -> { @svc_c.destroy }.should raise_error
 
-      lambda { @svc_a.destroy }.should_not raise_error
-      lambda { @svc_b.destroy }.should_not raise_error
-      lambda { @svc_c.destroy }.should_not raise_error
+      -> { @svc_a.destroy }.should_not raise_error
+      -> { @svc_b.destroy }.should_not raise_error
+      -> { @svc_c.destroy }.should_not raise_error
     end
-
   end
 
   context "with a small env" do
@@ -333,12 +330,12 @@ describe ServiceTemplate do
   end
 end
 
-def add_and_save_service(p,c)
+def add_and_save_service(p, c)
   p.add_resource(c)
   p.service_resources.each(&:save)
 end
 
-def print_svc(svc, indent="")
+def print_svc(svc, indent = "")
   return if indent.length > 10
   svc.service_resources.each do |s|
     puts indent + s.resource.name

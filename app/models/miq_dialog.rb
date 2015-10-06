@@ -16,13 +16,11 @@ class MiqDialog < ActiveRecord::Base
   include ReportableMixin
 
   def self.seed
-    MiqRegion.my_region.lock do
-      self.sync_from_dir
-    end
+    sync_from_dir
   end
 
   def self.sync_from_dir
-    Dir.glob(File.join(DIALOG_DIR, "*.yaml")).each {|f| self.sync_from_file(f)}
+    Dir.glob(File.join(DIALOG_DIR, "*.yaml")).each { |f| sync_from_file(f) }
   end
 
   def self.sync_from_file(filename)
@@ -32,7 +30,7 @@ class MiqDialog < ActiveRecord::Base
     item[:file_mtime] = File.mtime(filename).utc
     item[:default] = true
 
-    rec = self.find_by_name_and_filename(item[:name], item[:filename])
+    rec = find_by_name_and_filename(item[:name], item[:filename])
 
     if rec
       if rec.filename && (rec.file_mtime.nil? || rec.file_mtime.utc < item[:file_mtime])
@@ -42,8 +40,7 @@ class MiqDialog < ActiveRecord::Base
       end
     else
       _log.info("[#{item[:name]}] file has been added to disk, adding to model")
-      self.create(item)
+      create(item)
     end
   end
-
 end

@@ -1,7 +1,7 @@
-class TreeBuilderRegion  < TreeBuilder
+class TreeBuilderRegion < TreeBuilder
   private
 
-  def tree_init_options(tree_name)
+  def tree_init_options(_tree_name)
     ent = MiqEnterprise.my_enterprise
     {:leaf => ent.is_enterprise? ? "MiqEnterprise" : "MiqRegion", :add_root => ent.is_enterprise?}
   end

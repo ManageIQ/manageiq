@@ -5,34 +5,33 @@ describe "Login process" do
     Vmdb::Application.config.secret_token = 'x' * 40
     EvmSpecHelper.seed_admin_user_and_friends
 
+    EvmSpecHelper.local_guid_miq_server_zone
     ApplicationController.any_instance.stub(:set_user_time_zone)
     MiqEnvironment::Process.stub(:is_web_server_worker?).and_return(true)
   end
 
   context "w/o a valid session" do
-    pending "these tests are failing on CC monitor" do
-      it "redirects to 'login'" do
-        get '/dashboard/show'
-        expect(response).to redirect_to(:controller => 'dashboard', :action => 'login')
-      end
+    it "redirects to 'login'" do
+      get '/dashboard/show'
+      expect(response).to redirect_to(:controller => 'dashboard', :action => 'login', :timeout => false)
+    end
 
-      it "redirects to 'login' and sets start_url for whitelisted entry point" do
-        get '/host/show/10'
-        expect(response).to redirect_to(:controller => 'dashboard', :action => 'login')
-        expect(session[:start_url]).to eq('http://www.example.com/host/show/10')
-      end
+    it "redirects to 'login' and sets start_url for whitelisted entry point" do
+      get '/host/show/10'
+      expect(response).to redirect_to(:controller => 'dashboard', :action => 'login', :timeout => false)
+      expect(session[:start_url]).to eq('http://www.example.com/host/show/10')
+    end
 
-      it "allows login with correct password" do
-        post '/dashboard/authenticate', :user_name => 'admin', :user_password => 'smartvm'
-        expect(response.status).to eq(200)
-        expect(response.body).not_to match(/password you entered is incorrect/)
-      end
+    it "allows login with correct password" do
+      post '/dashboard/authenticate', :user_name => 'admin', :user_password => 'smartvm'
+      expect(response.status).to eq(200)
+      expect(response.body).not_to match(/password you entered is incorrect/)
+    end
 
-      it "does now allow login with incorrect password" do
-        post '/dashboard/authenticate', :user_name => 'admin', :user_password => 'fantomas'
-        expect(response.status).to eq(200)
-        expect(response.body).to match(/password you entered is incorrect/)
-      end
+    it "does now allow login with incorrect password" do
+      post '/dashboard/authenticate', :user_name => 'admin', :user_password => 'fantomas'
+      expect(response.status).to eq(200)
+      expect(response.body).to match(/password you entered is incorrect/)
     end
   end
 

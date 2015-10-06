@@ -3,7 +3,7 @@ require "spec_helper"
 describe MiqServer do
   before do
     MiqDatabase.seed
-    guid, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+    _, @server, = EvmSpecHelper.create_guid_miq_server_zone
   end
 
   let(:database)    { MiqDatabase.first }
@@ -12,7 +12,7 @@ describe MiqServer do
 
   context "Queue multiple servers" do
     before do
-      FactoryGirl.create(:miq_server_not_master, :zone => @zone, :guid => MiqUUID.new_guid)
+      FactoryGirl.create(:miq_server, :zone => @server.zone)
     end
 
     it ".queue_update_registration_status" do
@@ -195,6 +195,7 @@ describe MiqServer do
   it "#check_updates" do
     yum.should_receive(:updates_available?).twice.and_return(true)
     yum.should_receive(:version_available).with("cfme-appliance").once.and_return({"cfme-appliance" => "3.1"})
+    MiqDatabase.stub(:postgres_package_name => "postgresql-server")
 
     @server.check_updates
 
@@ -202,6 +203,10 @@ describe MiqServer do
   end
 
   context "#apply_updates" do
+    before do
+      MiqDatabase.stub(:postgres_package_name => "postgresql-server")
+    end
+
     it "will apply cfme updates only with local database" do
       yum.should_receive(:updates_available?).twice.and_return(true)
       yum.should_receive(:version_available).once.and_return({})
@@ -228,6 +233,7 @@ describe MiqServer do
     it "does not have updates to apply" do
       yum.should_receive(:updates_available?).twice.and_return(false)
       yum.should_receive(:version_available).once.and_return({})
+      MiqDatabase.stub(:postgres_package_name => "postgresql-server")
 
       @server.apply_updates
     end

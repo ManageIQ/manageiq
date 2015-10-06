@@ -1,46 +1,55 @@
 - url = url_for(:action => 'widget_form_field_changed', :id => @widget.id || "new")
-- url_json = {:url => url}.to_json
 %h3
   = _("Report Options")
-%table.style1
-  %tr
-    %td.key
+.form-horizontal
+  .form-group
+    %label.control-label.col-md-2
       - if @edit[:read_only]
         *
       = _("Filter")
-    %td
+    .col-md-8
       = select_tag("filter_typ",
         options_for_select(["<#{_('Choose')}>"] + @folders, @edit[:new][:filter]),
         :multiple              => false,
-        :class                 => "widthed",
+        :class                 => "selectpicker",
         :disabled              => @edit[:read_only],
         "data-miq_sparkle_on"  => true,
-        "data-miq_sparkle_off" => true,
-        "data-miq_observe"     => url_json)
+        "data-miq_sparkle_off" => true)
+      :javascript
+        miqInitSelectPicker();
+        miqSelectPickerEvent("filter_typ", "#{url}");
       - if @sub_folders && !@sub_folders.empty?
         = select_tag("subfilter_typ",
           options_for_select(["<#{_('Choose')}>"] + @sub_folders, @edit[:new][:subfilter]),
           :multiple              => false,
-          :class                 => "widthed",
+          :class                 => "selectpicker",
           :disabled              => @edit[:read_only],
           "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true,
-          "data-miq_observe"     => url_json)
+          "data-miq_sparkle_off" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("subfilter_typ", "#{url}");
       - if @reps && !@reps.empty?
         = select_tag("repfilter_typ",
           options_for_select(["<#{_('Choose')}>"] + @reps, @edit[:new][:repfilter]),
           :multiple              => false,
-          :class                 => "widthed",
+          :class                 => "selectpicker",
           :disabled              => @edit[:read_only],
           "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true,
-          "data-miq_observe"     => url_json)
+          "data-miq_sparkle_off" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("repfilter_typ", "#{url}");
       - elsif @edit[:new][:subfilter].present?
         = _("No Widget compatible Reports found")
-      = render :partial => "widget_columns", :locals => {:read_only => @edit[:read_only]}
-    %tr
-      %td.key
-        = _("Row Count")
-      %td
-        = select_tag("row_count", options_for_select((5..20).to_a, @edit[:new][:row_count]), "data-miq_observe" => url_json)
+  = render :partial => "widget_columns", :locals => {:read_only => @edit[:read_only]}
+  .form-group
+    %label.control-label.col-md-2
+      = _("Row Count")
+    .col-md-8
+      = select_tag("row_count", options_for_select((5..20).to_a, @edit[:new][:row_count]),
+        :class => "selectpicker")
+      :javascript
+        miqInitSelectPicker();
+        miqSelectPickerEvent("row_count", "#{url}");
 %hr

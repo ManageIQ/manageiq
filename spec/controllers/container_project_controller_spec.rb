@@ -13,7 +13,7 @@ describe ContainerProjectController do
   end
 
   it "renders show screen" do
-    MiqServer.stub(:my_zone).and_return("default")
+    EvmSpecHelper.create_guid_miq_server_zone
     ems = FactoryGirl.create(:ems_kubernetes)
     container_project = ContainerProject.create(:ext_management_system => ems, :name => "Test Project")
     get :show, :id => container_project.id

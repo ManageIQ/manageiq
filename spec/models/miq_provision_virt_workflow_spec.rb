@@ -16,7 +16,7 @@ describe MiqProvisionVirtWorkflow do
       it "doesn't exit when not running" do
         workflow.should_not_receive(:exit_pre_dialog)
 
-        expect(workflow.continue_request({}, nil)).to be_true
+        expect(workflow.continue_request({})).to be_true
       end
 
       it "exits when running" do
@@ -25,7 +25,7 @@ describe MiqProvisionVirtWorkflow do
 
         workflow.should_receive(:exit_pre_dialog).once.and_call_original
 
-        expect(workflow.continue_request({}, nil)).to                   be_true
+        expect(workflow.continue_request({})).to                        be_true
         expect(workflow.instance_variable_get(:@last_vm_id)).to         eq(123)
         expect(workflow.instance_variable_get(:@running_pre_dialog)).to be_false
         expect(workflow.instance_variable_get(:@tags)).to               be_nil

@@ -1,12 +1,14 @@
 class ManageIQ::Providers::BaseManager::RefreshWorker < MiqQueueWorkerBase
+  require_dependency 'manageiq/providers/base_manager/refresh_worker/runner'
+
   include PerEmsWorkerMixin
 
   self.required_roles = "ems_inventory"
 
   def friendly_name
     @friendly_name ||= begin
-      ems = self.ext_management_system
-      ems.nil? ? self.queue_name.titleize : "Refresh Worker for #{ui_lookup(:table => "ext_management_systems")}: #{ems.name}"
+      ems = ext_management_system
+      ems.nil? ? queue_name.titleize : "Refresh Worker for #{ui_lookup(:table => "ext_management_systems")}: #{ems.name}"
     end
   end
 
@@ -25,16 +27,15 @@ class ManageIQ::Providers::BaseManager::RefreshWorker < MiqQueueWorkerBase
     configuration.merge_from_template_if_missing(*path)
 
     refresh_worker_settings = configuration.config.fetch_path(*path)
-    unless refresh_worker_settings.has_key?(:defaults)
+    unless refresh_worker_settings.key?(:defaults)
       subclasses = ExtManagementSystem.types.collect { |k| "ems_refresh_worker_#{k}".to_sym }
       _log.info("Migrating Settings")
       defaults = refresh_worker_settings
-      subclasses.each { |subclass_key| defaults.delete(subclass_key)}
-      refresh_worker_settings = { :defaults => defaults }
+      subclasses.each { |subclass_key| defaults.delete(subclass_key) }
+      refresh_worker_settings = {:defaults => defaults}
       configuration.config.store_path(path, refresh_worker_settings)
 
       subclasses.each { |subclass_key| configuration.merge_from_template_if_missing(*(path + [subclass_key])) }
     end
   end
-
 end

@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20150724030353_namespace_ems_foreman")
+require_migration
 
 describe NamespaceEmsForeman do
   class NamespaceEmsForeman::ExtManagementSystem < ActiveRecord::Base

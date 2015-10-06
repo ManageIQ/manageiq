@@ -1,0 +1,35 @@
+#
+# Toolbar config file
+#
+---
+:model: Tenant
+:button_groups:
+- :name: rbac_tenant_vmdb
+  :items:
+  - :buttonSelect: rbac_tenant_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: rbac_tenant_edit
+      :image: edit
+      :text: Edit the selected item
+      :title: Select a single item to edit
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: rbac_tenant_delete
+      :image: delete
+      :text: Delete selected items
+      :title: Select one or more items to delete
+      :url_parms: 'main_div'
+      :confirm: "Delete all selected items and all of their children?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: rbac_tenant_manage_quotas
+      :image: edit
+      :text: Manage Quotas for the Selected Item
+      :title: Select a single item to manage quotas
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'

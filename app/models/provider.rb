@@ -4,12 +4,11 @@ class Provider < ActiveRecord::Base
   include ReportableMixin
   include AsyncDeleteMixin
   include EmsRefresh::Manager
+  include TenancyMixin
 
-  belongs_to :tenant_owner, :class_name => 'Tenant'
+  belongs_to :tenant
   belongs_to :zone
   has_many :managers, :class_name => "ExtManagementSystem"
-  has_many :tenant_resources, :as => :resource
-  has_many :tenants, :through => :tenant_resources
 
   default_value_for :verify_ssl, OpenSSL::SSL::VERIFY_PEER
   validates :verify_ssl, :inclusion => {:in => [OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER]}
@@ -24,8 +23,12 @@ class Provider < ActiveRecord::Base
     end
   end
 
+  def self.short_token
+    parent.name.demodulize
+  end
+
   def image_name
-    self.class.name[/^Provider(.+)/, 1].to_s.underscore
+    self.class.short_token.underscore
   end
 
   def verify_ssl=(val)

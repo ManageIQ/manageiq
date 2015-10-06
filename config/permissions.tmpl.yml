@@ -1,0 +1,21 @@
+---
+- :vi
+- :svc
+- :clo
+- :inf
+- :con
+- :cnt
+- :aut
+- :opt
+- :set
+- ems-type:foreman_configuration
+- ems-type:scvmm
+- ems-type:openstack_infra
+- ems-type:rhevm
+- ems-type:vmwarews
+- ems-type:azure
+- ems-type:ec2
+- ems-type:openstack
+- ems-type:kubernetes
+- ems-type:openshift
+- ems-type:foreman_provisioning

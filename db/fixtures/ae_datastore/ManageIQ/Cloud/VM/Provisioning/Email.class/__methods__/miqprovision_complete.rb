@@ -92,4 +92,3 @@ body += "<br> #{signature}"
 #
 $evm.log("info", "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
 $evm.execute('send_email', to, from, subject, body)
-

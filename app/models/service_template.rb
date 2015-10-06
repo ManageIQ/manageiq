@@ -3,7 +3,10 @@ class ServiceTemplate < ActiveRecord::Base
   include ServiceMixin
   include OwnershipMixin
   include NewWithTypeStiMixin
+  include TenancyMixin
+  include_concern 'Filter'
 
+  belongs_to :tenant
   # # These relationships are used to specify children spawned from a parent service
   # has_many   :child_services, :class_name => "ServiceTemplate", :foreign_key => :service_template_id
   # belongs_to :parent_service, :class_name => "ServiceTemplate", :foreign_key => :service_template_id
@@ -18,12 +21,28 @@ class ServiceTemplate < ActiveRecord::Base
   has_many   :custom_button_sets, :as => :owner, :dependent => :destroy
   belongs_to :service_template_catalog
 
+  has_many   :dialogs, -> { uniq }, :through => :resource_actions
+
   virtual_has_many :custom_buttons
   virtual_column   :type_display,                 :type => :string
   virtual_column   :template_valid,               :type => :boolean
   virtual_column   :template_valid_error_message, :type => :string
 
   default_value_for :service_type,  'unknown'
+
+  virtual_has_one :custom_actions, :class_name => "Hash"
+  virtual_has_one :custom_action_buttons, :class_name => "Array"
+
+  def custom_actions
+    {
+      :buttons       => custom_buttons,
+      :button_groups => custom_button_sets.collect { |s| s.serializable_hash.merge(:buttons => s.children) }
+    }
+  end
+
+  def custom_action_buttons
+    custom_buttons + custom_button_sets.collect(&:children).flatten
+  end
 
   def custom_buttons
     CustomButton.buttons_for(self).select { |b| b.parent.nil? }
@@ -34,10 +53,10 @@ class ServiceTemplate < ActiveRecord::Base
   end
 
   def destroy
-    parent_svcs = self.parent_services
+    parent_svcs = parent_services
     raise MiqException::MiqServiceError, "Cannot delete a service that is the child of another service." unless parent_svcs.blank?
 
-    self.service_resources.each do |sr|
+    service_resources.each do |sr|
       rsc = sr.resource
       rsc.destroy if rsc.kind_of?(MiqProvisionRequestTemplate)
     end
@@ -53,9 +72,9 @@ class ServiceTemplate < ActiveRecord::Base
   end
 
   def create_service(service_task, parent_svc = nil)
-    nh = self.attributes.dup
+    nh = attributes.dup
     nh['options'][:dialog] = service_task.options[:dialog]
-    (nh.keys - Service.column_names + %w{created_at guid service_template_id updated_at id type prov_type}).each {|key| nh.delete(key)}
+    (nh.keys - Service.column_names + %w(created_at guid service_template_id updated_at id type prov_type)).each { |key| nh.delete(key) }
 
     # Hide child services by default
     nh[:display] = false if parent_svc
@@ -70,25 +89,25 @@ class ServiceTemplate < ActiveRecord::Base
     svc.service_template = self
 
     # self.options[:service_guid] = svc.guid
-    self.service_resources.each do |sr|
+    service_resources.each do |sr|
       nh = sr.attributes.dup
-      %W{id created_at updated_at service_template_id}.each {|key| nh.delete(key)}
+      %w(id created_at updated_at service_template_id).each { |key| nh.delete(key) }
       svc.add_resource(sr.resource, nh) unless sr.resource.nil?
     end
 
     parent_svc.add_resource!(svc) unless parent_svc.nil?
 
     svc.save
-    return svc
+    svc
   end
 
   def set_service_type
     svc_type = nil
 
-    if self.service_resources.size.zero?
+    if service_resources.size.zero?
       svc_type = 'unknown'
     else
-      self.service_resources.each do |sr|
+      service_resources.each do |sr|
         if sr.resource_type == 'Service' || sr.resource_type == 'ServiceTemplate'
           svc_type = 'composite'
           break
@@ -101,24 +120,27 @@ class ServiceTemplate < ActiveRecord::Base
   end
 
   def composite?
-    self.service_type.to_s.include?('composite')
+    service_type.to_s.include?('composite')
   end
 
   def atomic?
-    self.service_type.to_s.include?('atomic')
+    service_type.to_s.include?('atomic')
   end
 
   def type_display
-    case self.service_type
+    case service_type
     when "atomic"    then "Item"
     when "composite" then "Bundle"
     when nil         then "Unknown"
     else
-      self.service_type.to_s.capitalize
+      service_type.to_s.capitalize
     end
   end
 
   def create_tasks_for_service(service_task, parent_svc)
+    return [] unless self.class.include_service_template?(service_task,
+                                                          service_task.source_id,
+                                                          parent_svc) unless parent_svc
     svc = create_service(service_task, parent_svc)
 
     user = User.find_by_userid(service_task.userid)
@@ -136,11 +158,15 @@ class ServiceTemplate < ActiveRecord::Base
       scaling_min = child_svc_rsc.scaling_min
       1.upto(scaling_min).each do |scaling_idx|
         nh = parent_service_task.attributes.dup
-        %w{id created_on updated_on type state status message}.each {|key| nh.delete(key)}
+        %w(id created_on updated_on type state status message).each { |key| nh.delete(key) }
         nh['options'] = parent_service_task.options.dup
         nh['options'].delete(:child_tasks)
         # Initial Options[:dialog] to an empty hash so we do not pass down dialog values to child services tasks
         nh['options'][:dialog] = {}
+        next if child_svc_rsc.resource_type == "ServiceTemplate" &&
+                !self.class.include_service_template?(parent_service_task,
+                                                      child_svc_rsc.resource.id,
+                                                      parent_service)
         new_task = parent_service_task.class.new(nh)
         new_task.options.merge!(
           :src_id              => child_svc_rsc.resource.id,
@@ -186,7 +212,7 @@ class ServiceTemplate < ActiveRecord::Base
   def template_valid?
     validate_template[:valid]
   end
-  alias template_valid template_valid?
+  alias_method :template_valid, :template_valid?
 
   def template_valid_error_message
     validate_template[:message]

@@ -1,4 +1,4 @@
-require 'miq-iecunits'
+require 'shellwords'
 
 module ManageIQ::Providers::Kubernetes
   class ContainerManager::RefreshParser
@@ -110,15 +110,16 @@ module ManageIQ::Providers::Kubernetes
         :container_runtime_version  => node.status.nodeInfo.containerRuntimeVersion,
         :kubernetes_proxy_version   => node.status.nodeInfo.kubeProxyVersion,
         :kubernetes_kubelet_version => node.status.nodeInfo.kubeletVersion,
+        :labels                     => parse_labels(node),
         :lives_on_id                => nil,
         :lives_on_type              => nil
       )
 
       node_memory = node.status.capacity.memory
-      node_memory &&= MiqIECUnits.string_to_value(node_memory) / 1.megabyte
+      node_memory &&= parse_iec_number(node_memory) / 1.megabyte
 
       new_result[:computer_system] = {
-        :hardware => {
+        :hardware         => {
           :logical_cpus => node.status.capacity.cpu,
           :memory_cpu   => node_memory
         },
@@ -128,15 +129,16 @@ module ManageIQ::Providers::Kubernetes
         }
       }
 
-      conditions = node.status.conditions
-      new_result[:container_node_conditions] = conditions.collect do |condition|
-        parse_node_condition(condition)
-      end
+      max_container_groups = node.status.capacity.pods
+      new_result[:max_container_groups] = max_container_groups && parse_iec_number(max_container_groups)
+
+      new_result[:container_conditions] = parse_conditions(node)
 
       # Establish a relationship between this node and the vm it is on (if it is in the system)
-      # supported relationships: oVirt and Openstack
+      # supported relationships: oVirt, Openstack and VMware.
       types = [ManageIQ::Providers::Redhat::InfraManager::Vm.name,
-               ManageIQ::Providers::Openstack::CloudManager::Vm.name]
+               ManageIQ::Providers::Openstack::CloudManager::Vm.name,
+               ManageIQ::Providers::Vmware::InfraManager::Vm.name]
 
       # Searching for the underlying instance for Openstack or oVirt.
       vms = Vm.where(:uid_ems => new_result[:identity_system].downcase, :type => types)
@@ -172,6 +174,7 @@ module ManageIQ::Providers::Kubernetes
         # TODO: We might want to change portal_ip to clusterIP
         :portal_ip        => service.spec.clusterIP,
         :session_affinity => service.spec.sessionAffinity,
+        :service_type     => service.spec.type,
 
         :labels           => parse_labels(service),
         :selector_parts   => parse_selector_parts(service),
@@ -243,7 +246,11 @@ module ManageIQ::Providers::Kubernetes
         end
       end
 
+      new_result[:container_conditions] = parse_conditions(pod)
+
       new_result[:labels] = parse_labels(pod)
+      new_result[:node_selector_parts] = parse_node_selector_parts(pod)
+      new_result[:container_volumes] = parse_volumes(pod.spec.volumes)
       new_result
     end
 
@@ -255,10 +262,10 @@ module ManageIQ::Providers::Kubernetes
         (subset.addresses || []).each do |address|
           next if address.targetRef.try(:kind) != 'Pod'
           cg = @data_index.fetch_path(
-              :container_groups, :by_namespace_and_name,
-              # namespace is overriden in more_core_extensions and hence needs
-              # a non method access
-              address.targetRef["table"][:namespace], address.targetRef.name)
+            :container_groups, :by_namespace_and_name,
+            # namespace is overriden in more_core_extensions and hence needs
+            # a non method access
+            address.targetRef["table"][:namespace], address.targetRef.name)
           new_result[:container_groups] << cg unless cg.nil?
         end
       end
@@ -287,12 +294,23 @@ module ManageIQ::Providers::Kubernetes
     end
 
     def parse_labels(entity)
+      parse_identifying_attributes(entity.metadata.labels, 'labels')
+    end
+
+    def parse_selector_parts(entity)
+      parse_identifying_attributes(entity.spec.selector, 'selectors')
+    end
+
+    def parse_node_selector_parts(entity)
+      parse_identifying_attributes(entity.spec.nodeSelector, 'node_selectors')
+    end
+
+    def parse_identifying_attributes(attributes, section)
       result = []
-      labels = entity.metadata.labels
-      return result if labels.nil?
-      labels.to_h.each do |key, value|
+      return result if attributes.nil?
+      attributes.to_h.each do |key, value|
         custom_attr = {
-          :section => 'labels',
+          :section => section,
           :name    => key,
           :value   => value,
           :source  => "kubernetes"
@@ -302,20 +320,18 @@ module ManageIQ::Providers::Kubernetes
       result
     end
 
-    def parse_selector_parts(entity)
-      result = []
-      selector_parts = entity.spec.selector
-      return result if selector_parts.nil?
-      selector_parts.to_h.each do |key, value|
-        custom_attr = {
-          :section => 'selectors',
-          :name    => key,
-          :value   => value,
-          :source  => "kubernetes"
+    def parse_conditions(entity)
+      conditions = entity.status.conditions
+      conditions.to_a.collect do |condition|
+        {
+          :name                 => condition.type,
+          :status               => condition.status,
+          :last_heartbeat_time  => condition.lastHeartbeatTime,
+          :last_transition_time => condition.lastTransitionTime,
+          :reason               => condition.reason,
+          :message              => condition.message
         }
-        result << custom_attr
       end
-      result
     end
 
     def parse_container_definition(container_def, pod_id)
@@ -324,9 +340,16 @@ module ManageIQ::Providers::Kubernetes
         :name              => container_def.name,
         :image             => container_def.image,
         :image_pull_policy => container_def.imagePullPolicy,
+        :command           => container_def.command ? Shellwords.join(container_def.command) : nil,
         :memory            => container_def.memory,
-         # https://github.com/GoogleCloudPlatform/kubernetes/blob/0b801a91b15591e2e6e156cf714bfb866807bf30/pkg/api/v1beta3/types.go#L815
-        :cpu_cores         => container_def.cpu.to_f / 1000
+        # https://github.com/GoogleCloudPlatform/kubernetes/blob/0b801a91b15591e2e6e156cf714bfb866807bf30/pkg/api/v1beta3/types.go#L815
+        :cpu_cores         => container_def.cpu.to_f / 1000,
+        :capabilities_add  => container_def.securityContext.try(:capabilities).try(:add).to_a.join(','),
+        :capabilities_drop => container_def.securityContext.try(:capabilities).try(:drop).to_a.join(','),
+        :privileged        => container_def.securityContext.try(:privileged),
+        :run_as_user       => container_def.securityContext.try(:runAsUser),
+        :run_as_non_root   => container_def.securityContext.try(:runAsNonRoot),
+        :security_context  => parse_security_context(container_def.securityContext)
       }
       ports = container_def.ports
       new_result[:container_port_configs] = Array(ports).collect do |port_entry|
@@ -341,7 +364,7 @@ module ManageIQ::Providers::Kubernetes
     end
 
     def parse_container(container, pod_id)
-      {
+      h = {
         :type            => 'ManageIQ::Providers::Kubernetes::ContainerManager::Container',
         :ems_ref         => "#{pod_id}_#{container.name}_#{container.image}",
         :name            => container.name,
@@ -349,8 +372,28 @@ module ManageIQ::Providers::Kubernetes
         :backing_ref     => container.containerID,
         :container_image => parse_container_image(container.image, container.imageID)
       }
+      state_attributes = parse_container_state container.lastState
+      state_attributes.each { |key, val| h[key.to_s.prepend('last_').to_sym] = val } if state_attributes
+      h.merge! parse_container_state container.state
+    end
 
-      # TODO, state
+    def parse_container_state(state_hash)
+      return if state_hash.to_h.empty?
+      res = {}
+      # state_hash key is the state and value are attributes e.g 'running': {...}
+      (state, state_info), = state_hash.to_h.to_a
+      %w(finishedAt startedAt).each do |iso_date|
+        state_info[iso_date] = parse_date state_info[iso_date]
+      end
+      res[:state] = state
+      %w(reason started_at finished_at exit_code signal message).each do |attr|
+        res[attr.to_sym] = state_info[attr.camelize(:lower)]
+      end
+      res
+    end
+
+    def parse_date(date)
+      date.nil? ? nil : DateTime.iso8601(date)
     end
 
     def parse_container_image(image, imageID)
@@ -397,9 +440,10 @@ module ManageIQ::Providers::Kubernetes
       {
         :ems_ref     => "#{service_id}_#{port_config.port}_#{port_config.targetPort}",
         :name        => port_config.name,
+        :protocol    => port_config.protocol,
         :port        => port_config.port,
-        :target_port => port_config.targetPort,
-        :protocol    => port_config.protocol
+        :target_port => (port_config.targetPort unless port_config.targetPort == 0),
+        :node_port   => (port_config.nodePort unless port_config.nodePort == 0)
       }
     end
 
@@ -408,17 +452,6 @@ module ManageIQ::Providers::Kubernetes
         :name       => env_var.name,
         :value      => env_var.value,
         :field_path => env_var.valueFrom.try(:fieldRef).try(:fieldPath)
-      }
-    end
-
-    def parse_node_condition(condition)
-      {
-        :name                 => condition.type,
-        :status               => condition.status,
-        :last_heartbeat_time  => condition.lastHeartbeatTime,
-        :last_transition_time => condition.lastTransitionTime,
-        :reason               => condition.reason,
-        :message              => condition.message
       }
     end
 
@@ -439,13 +472,9 @@ module ManageIQ::Providers::Kubernetes
     def parse_image_name(image, image_ref)
       parts = %r{
         \A
-        (?:
-          (?<host>.*?)
-          (?::(?<port>.*?))?
-          /(?=.*/)
-        )?
-        (?<name>.*?)
-        (?::(?<tag>[^:]*?))?
+          (?:(?:(?<host>[^\.:\/]+\.[^\.:\/]+)|(?:(?<host2>[^:\/]+)(?::(?<port>\d+))))\/)?
+          (?<name>(?:[^:\/@]+\/)*[^\/:@]+)
+          (?:(?::(?<tag>.+))|(?:\@(?<digest>.+)))?
         \z
       }x.match(image)
 
@@ -453,14 +482,81 @@ module ManageIQ::Providers::Kubernetes
         {
           :name      => parts[:name],
           :tag       => parts[:tag],
+          :digest    => parts[:digest],
           :image_ref => image_ref,
         },
-        parts[:host] && {
-          :name => parts[:host],
-          :host => parts[:host],
+        (parts[:host] || parts[:host2]) && {
+          :name => parts[:host] || parts[:host2],
+          :host => parts[:host] || parts[:host2],
           :port => parts[:port],
         },
       ]
+    end
+
+    def parse_security_context(security_context)
+      return if security_context.nil?
+      {
+        :se_linux_level => security_context.seLinuxOptions.try(:level),
+        :se_linux_user  => security_context.seLinuxOptions.try(:user),
+        :se_linux_role  => security_context.seLinuxOptions.try(:role),
+        :se_linux_type  => security_context.seLinuxOptions.try(:type)
+      }
+    end
+
+    def parse_volumes(volumes)
+      volumes.collect do |volume|
+        {
+          :type                    => 'ContainerVolumeKubernetes',
+          :name                    => volume.name,
+          :empty_dir_medium_type   => volume.emptyDir.try(:medium),
+          :gce_pd_name             => volume.gcePersistentDisk.try(:pdName),
+          :git_repository          => volume.gitRepo.try(:repository),
+          :git_revision            => volume.gitRepo.try(:revision),
+          :nfs_server              => volume.nfs.try(:server),
+          :iscsi_target_portal     => volume.iscsi.try(:targetPortal),
+          :iscsi_iqn               => volume.iscsi.try(:iqn),
+          :iscsi_lun               => volume.iscsi.try(:lun),
+          :glusterfs_endpoint_name => volume.glusterfs.try(:endpointsName),
+          :claim_name              => volume.persistentVolumeClaim.try(:claimName),
+          :rbd_ceph_monitors       => volume.rbd.try(:cephMonitors).to_a.join(','),
+          :rbd_image               => volume.rbd.try(:rbdImage),
+          :rbd_pool                => volume.rbd.try(:rbdPool),
+          :rbd_rados_user          => volume.rbd.try(:radosUser),
+          :rbd_keyring             => volume.rbd.try(:keyring),
+          :common_path             => [volume.hostPath.try(:path),
+                                       volume.nfs.try(:path),
+                                       volume.glusterfs.try(:path)].compact.first,
+          :common_fs_type          => [volume.gcePersistentDisk.try(:fsType),
+                                       volume.awsElasticBlockStore.try(:fsType),
+                                       volume.iscsi.try(:fsType),
+                                       volume.rbd.try(:fsType),
+                                       volume.cinder.try(:fsType)].compact.first,
+          :common_read_only        => [volume.gcePersistentDisk.try(:readOnly),
+                                       volume.awsElasticBlockStore.try(:readOnly),
+                                       volume.nfs.try(:readOnly),
+                                       volume.iscsi.try(:readOnly),
+                                       volume.glusterfs.try(:readOnly),
+                                       volume.persistentVolumeClaim.try(:readOnly),
+                                       volume.rbd.try(:readOnly),
+                                       volume.cinder.try(:readOnly)].compact.first,
+          :common_secret           => [volume.secret.try(:secretName),
+                                       volume.rbd.try(:secretRef).try(:name)].compact.first,
+          :common_volume_id        => [volume.awsElasticBlockStore.try(:volumeId),
+                                       volume.cinder.try(:volumeId)].compact.first,
+          :common_partition        => [volume.gcePersistentDisk.try(:partition),
+                                       volume.awsElasticBlockStore.try(:partition)].compact.first
+        }
+      end
+    end
+
+    IEC_SIZE_SUFFIXES = %w(Ki Mi Gi Ti)
+    def parse_iec_number(value)
+      exp_index = IEC_SIZE_SUFFIXES.index(value[-2..-1])
+      if exp_index.nil?
+        return Integer(value)
+      else
+        return Integer(value[0..-3]) * 1024**(exp_index + 1)
+      end
     end
   end
 end

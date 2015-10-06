@@ -3,7 +3,7 @@
 #
 tenant_list = {nil => "default"}
 service_template = $evm.root.attributes["service_template"]
-if service_template.orchestration_manager
+if service_template.respond_to?(:orchestration_manager) && service_template.orchestration_manager
   service_template.orchestration_manager.cloud_tenants.each { |t| tenant_list[t.name] = t.name }
 end
 

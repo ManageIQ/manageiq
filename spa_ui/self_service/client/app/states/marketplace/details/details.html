@@ -1,0 +1,106 @@
+<div>
+  <a ui-sref="^" class="breadcrumb"> <span class="fa fa-angle-left"/> Back to Service Catalog</a>
+</div>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <section>
+      <div class="marketplace-title-img">
+        <img class="marketplace-title-img__logo"
+             ng-if="!vm.serviceTemplate.picture.image_href"
+             alt="{{ ::vm.serviceTemplate.name }}"
+             src="#"/>
+        <img class="marketplace-title-img__logo"
+             ng-if="vm.serviceTemplate.picture.image_href "
+             alt="{{ ::vm.serviceTemplate.name }}"
+             src="{{ ::vm.serviceTemplate.picture.image_href }}"/>
+      </div>
+      <div class="marketplace-title-description">
+        <h2>{{ ::vm.serviceTemplate.name }}</h2>
+        <p ng-bind-html="::vm.serviceTemplate.long_description || vm.serviceTemplate.description"></p>
+      </div>
+    </section>
+
+    <hr>
+
+    <section>
+      <div class="col-md-12">
+        <div class="row">
+          <div class="well well-sm">
+            <div ng-repeat="dialog in ::vm.dialogs">
+              <h1>{{ dialog.label }}</h1>
+
+              <tabset>
+                <tab ng-repeat="dialogTab in dialog.dialog_tabs" heading="{{ dialogTab.label }}">
+                  <div ng-repeat="dialogGroup in dialogTab.dialog_groups">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <strong>{{ dialogGroup.label }}</strong>
+                      </div>
+
+                      <div class="panel-body">
+                        <div
+                          ng-repeat="dialogField in dialogGroup.dialog_fields"
+                          ng-init="inputTitle = dialogField.description"
+                          class="form-horizontal">
+
+                          <div class="form-group">
+                            <div class="col-sm-3">
+                              {{ dialogField.label }}
+                            </div>
+
+                            <div ng-switch on="dialogField.type" class="col-sm-9">
+                              <input
+                                ng-switch-when="DialogFieldTextBox"
+                                ng-disabled="{{ dialogField.read_only }}"
+                                class="form-control"
+                                type="{{ dialogField.options.protected ? 'password' : 'text' }}"
+                                title="{{ inputTitle }}"
+                                value="{{ dialogField.default_value }}">
+                              </input>
+                          <textarea
+                            ng-switch-when="DialogFieldTextAreaBox"
+                            ng-disabled="{{ dialogField.read_only }}"
+                            class="form-control"
+                            title="{{ inputTitle }}"
+                            rows="4">{{ dialogField.default_value }}</textarea>
+                              <input
+                                ng-switch-when="DialogFieldCheckBox"
+                                ng-disabled="{{ dialogField.read_only }}"
+                                class="form-control"
+                                type="checkbox"
+                                title="{{ inputTitle }}"
+                                checked="{{ dialogField.default_value == 't' ? 'checked' : ''}}">
+                              </input>
+                              <select
+                                ng-switch-when="DialogFieldDropDownList"
+                                ng-disabled="{{ dialogField.read_only }}"
+                                class="form-control">
+                                <option ng-repeat="fieldValue in dialogField.values" value="{{ fieldValue[0] }}">
+                                  {{ fieldValue[1] }}
+                                </option>
+                              </select>
+                              <span ng-switch-default style="display: hidden"></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </tab>
+              </tabset>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="panel-footer">
+    <div class="form-group text-right">
+      <button ui-sref="^" type="button" class="btn btn-default">Cancel</button>
+      <button type="button" class="btn btn-primary">Request</button>
+    </div>
+  </div>
+</div>

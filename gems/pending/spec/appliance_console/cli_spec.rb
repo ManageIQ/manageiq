@@ -6,15 +6,18 @@ describe ApplianceConsole::Cli do
   subject { described_class.new }
 
   it "should set hostname if defined" do
-    ApplianceConsole::Env.should_receive(:[]=).with(:host, 'host1')
+    expect_any_instance_of(LinuxAdmin::Hosts).to receive(:hostname=).with('host1')
+    expect_any_instance_of(LinuxAdmin::Hosts).to receive(:save).and_return(true)
+    expect_any_instance_of(LinuxAdmin::Service.new("test").class).to receive(:restart).and_return(true)
 
     subject.parse(%w(--host host1)).run
   end
 
   it "should not set hostname if none specified" do
-    ApplianceConsole::Env.should_not_receive(:[]=).with(:host, anything)
+    expect_any_instance_of(LinuxAdmin::Hosts).to_not receive(:hostname=)
 
-    subject.parse([]).run
+    subject.stub(:create_key) # just give it something to do
+    subject.parse(%w(--key)).run
   end
 
   it "should set database host to localhost if running locally" do
@@ -97,29 +100,31 @@ describe ApplianceConsole::Cli do
     end
 
     it "should install ipa" do
-      ApplianceConsole::Env.should_receive(:[]).with("host").and_return('client.domain.com')
+      expect_any_instance_of(LinuxAdmin::Hosts).to receive(:hostname).and_return('client.domain.com')
       ApplianceConsole::ExternalHttpdAuthentication.should_receive(:ipa_client_configured?).and_return(false)
       ApplianceConsole::ExternalHttpdAuthentication.should_receive(:new)
-          .with('client.domain.com',
-                :ipaserver => 'ipa.domain.com',
-                :principal => 'admin',
-                :domain    => 'domain.com',
-                :realm     => 'DOMAIN.COM',
-                :password  => 'pass').and_return(double(:activate => true, :post_activation => nil))
+        .with('client.domain.com',
+              :ipaserver => 'ipa.domain.com',
+              :principal => 'admin',
+              :domain    => 'domain.com',
+              :realm     => 'DOMAIN.COM',
+              :password  => 'pass').and_return(double(:activate => true, :post_activation => nil))
       subject.parse(%w(--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass --iparealm DOMAIN.COM --ipadomain domain.com)).run
     end
 
     it "should not post_activate install ipa (aside: testing passing in host" do
-      ApplianceConsole::Env.should_receive(:[]=).with(:host, "client.domain.com")
-      ApplianceConsole::Env.should_not_receive(:[]).with(:host)
+      expect_any_instance_of(LinuxAdmin::Hosts).to receive(:hostname=).with("client.domain.com")
+      expect_any_instance_of(LinuxAdmin::Hosts).to receive(:save).and_return(true)
+      expect_any_instance_of(LinuxAdmin::Service.new("test").class).to receive(:restart).and_return(true)
+      expect_any_instance_of(LinuxAdmin::Hosts).to_not receive(:hostname)
       ApplianceConsole::ExternalHttpdAuthentication.should_receive(:ipa_client_configured?).and_return(false)
       ApplianceConsole::ExternalHttpdAuthentication.should_receive(:new)
-          .with('client.domain.com',
-                :ipaserver => 'ipa.domain.com',
-                :principal => 'admin',
-                :domain    => nil,
-                :realm     => nil,
-                :password  => 'pass').and_return(double(:activate => false))
+        .with('client.domain.com',
+              :ipaserver => 'ipa.domain.com',
+              :principal => 'admin',
+              :domain    => nil,
+              :realm     => nil,
+              :password  => 'pass').and_return(double(:activate => false))
       subject.parse(%w(--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass --host client.domain.com)).run
     end
 
@@ -134,7 +139,7 @@ describe ApplianceConsole::Cli do
   context "#install_certs" do
     it "should basic install completed (default ca_name, non verbose)" do
       subject.should_receive(:say).with(/creating/)
-      ApplianceConsole::Env.should_receive(:[]).with("host").and_return('client.domain.com')
+      expect_any_instance_of(LinuxAdmin::Hosts).to receive(:hostname).and_return('client.domain.com')
       subject.should_receive(:say).with(/certificate result/)
       subject.should_not_receive(:say).with(/rerun/)
       ApplianceConsole::CertificateAuthority.should_receive(:new)
@@ -153,7 +158,7 @@ describe ApplianceConsole::Cli do
 
     it "should basic install waiting (manual ca_name, verbose)" do
       subject.should_receive(:say).with(/creating/)
-      ApplianceConsole::Env.should_receive(:[]).with("host").and_return('client.domain.com')
+      expect_any_instance_of(LinuxAdmin::Hosts).to receive(:hostname).and_return('client.domain.com')
       subject.should_receive(:say).with(/certificate result/)
       subject.should_receive(:say).with(/rerun/)
       ApplianceConsole::CertificateAuthority.should_receive(:new)
@@ -177,7 +182,7 @@ describe ApplianceConsole::Cli do
       subject.should_receive(:say)
       ApplianceConsole::TempStorageConfiguration.should_receive(:new)
         .with(:disk      => '/dev/x')
-      .and_return(double(:activate => true))
+        .and_return(double(:activate => true))
 
       subject.parse(%w(--tmpdisk x)).run
     end
@@ -187,7 +192,7 @@ describe ApplianceConsole::Cli do
       subject.should_receive(:say)
       ApplianceConsole::TempStorageConfiguration.should_receive(:new)
         .with(:disk      => '/dev/x')
-      .and_return(double(:activate => true))
+        .and_return(double(:activate => true))
 
       subject.parse(%w(--tmpdisk auto)).run
     end

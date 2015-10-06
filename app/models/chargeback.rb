@@ -60,8 +60,8 @@ class Chargeback < ActsAsArModel
     # TODO: Support time profiles via options[:ext_options][:time_profile]
 
     interval = options[:interval] || "daily"
-    cb = self.new
-    report_user = User.where(:userid => options[:userid]).first
+    cb = new
+    report_user = User.find_by(:userid => options[:userid])
 
     # Find Vms by user or by tag
     if options[:owner]
@@ -73,13 +73,13 @@ class Chargeback < ActsAsArModel
       vms = user.vms
     elsif options[:tag]
       vms = Vm.find_tagged_with(:all => options[:tag], :ns => "*")
-      vms = vms & report_user.accessible_vms if report_user.self_service_user?
+      vms &= report_user.accessible_vms if report_user && report_user.self_service?
     else
       raise "must provide options :owner or :tag"
     end
     return [[]] if vms.empty?
 
-    vm_owners = vms.inject({}) { |h,v| h[v.id] = v.evm_owner_name; h }
+    vm_owners = vms.inject({}) { |h, v| h[v.id] = v.evm_owner_name; h }
     options[:ext_options] ||= {}
 
     perf_cols = MetricRollup.column_names
@@ -91,11 +91,11 @@ class Chargeback < ActsAsArModel
       end.compact
     end
 
-    start_time, end_time = self.get_report_time_range(options, interval, tz)
+    start_time, end_time = get_report_time_range(options, interval, tz)
     data = {}
 
     (start_time..end_time).step_value(1.day).each_cons(2) do |query_start_time, query_end_time|
-      if options[:tag] && !report_user.self_service_user?
+      if options[:tag] && (report_user.nil? || !report_user.self_service?)
         cond = ["resource_type = ? and resource_id IS NOT NULL and timestamp >= ? and timestamp < ? and capture_interval_name = ? and tag_names like ? ",
                 "VmOrTemplate",
                 query_start_time,
@@ -129,7 +129,7 @@ class Chargeback < ActsAsArModel
       _log.info("Found #{recs.length} records for time range #{[query_start_time, query_end_time].inspect}")
 
       unless recs.empty?
-        ts_key = self.get_group_key_ts(recs.first, interval, tz)
+        ts_key = get_group_key_ts(recs.first, interval, tz)
 
         recs.each do |perf|
           next if perf.resource.nil?
@@ -137,7 +137,7 @@ class Chargeback < ActsAsArModel
           vm_owners[perf.resource_id] ||= perf.resource.evm_owner_name
 
           if data[key].nil?
-            start_ts, end_ts, display_range = self.get_time_range(perf, interval, tz)
+            start_ts, end_ts, display_range = get_time_range(perf, interval, tz)
             data[key] = {
               "start_date"    => start_ts,
               "end_date"      => end_ts,
@@ -149,24 +149,24 @@ class Chargeback < ActsAsArModel
           end
 
           rates_to_apply = cb.get_rates(perf)
-          self.calculate_costs(perf, data[key], rates_to_apply)
+          calculate_costs(perf, data[key], rates_to_apply)
         end
       end
     end
     _log.info("Calculating chargeback costs...Complete")
 
-    return [data.map {|r| new(r.last)}]
+    [data.map { |r| new(r.last) }]
   end
 
   def get_rates(perf)
-    @rates      ||= {}
+    @rates ||= {}
     @enterprise ||= MiqEnterprise.my_enterprise
 
-    tags = perf.tag_names.split("|").reject {|n| n.starts_with?("folder_path_")}.sort.join("|")
+    tags = perf.tag_names.split("|").reject { |n| n.starts_with?("folder_path_") }.sort.join("|")
     key = "#{tags}_#{perf.parent_host_id}_#{perf.parent_ems_cluster_id}_#{perf.parent_storage_id}_#{perf.parent_ems_id}"
-    return @rates[key] if @rates.has_key?(key)
+    return @rates[key] if @rates.key?(key)
 
-    tag_list = perf.tag_names.split("|").inject([]) {|arr,t| arr << "vm/tag/managed/#{t}"; arr}
+    tag_list = perf.tag_names.split("|").inject([]) { |arr, t| arr << "vm/tag/managed/#{t}"; arr }
 
     parents = [perf.parent_host, perf.parent_ems_cluster, perf.parent_storage, perf.parent_ems, @enterprise].compact
 
@@ -174,7 +174,7 @@ class Chargeback < ActsAsArModel
   end
 
   def self.column_names
-    @column_names ||= self.columns.collect(&:name).sort
+    @column_names ||= columns.collect(&:name).sort
   end
 
   def self.calculate_costs(perf, h, rates)
@@ -192,14 +192,14 @@ class Chargeback < ActsAsArModel
         metric = r.metric.nil? ? 0 : rec.send(r.metric) || 0
         cost   = r.cost(metric)
 
-        col_hash = Hash.new
+        col_hash = {}
         [metric_key, metric_group_key].each             { |col| col_hash[col] = metric }
         [cost_key,   cost_group_key, 'total_cost'].each { |col| col_hash[col] = cost   }
 
         col_hash.each do |k, val|
-          next unless self.column_names.include?(k)
+          next unless column_names.include?(k)
           h[k] ||= 0
-          h[k]  += val
+          h[k] += val
         end
       end
     end
@@ -218,7 +218,7 @@ class Chargeback < ActsAsArModel
       raise "interval '#{interval}' is not supported"
     end
 
-    return ts
+    ts
   end
 
   def self.get_time_range(perf, interval, tz)
@@ -239,12 +239,12 @@ class Chargeback < ActsAsArModel
     end
   end
 
-  def self.default_rates()
+  def self.default_rates
     rates = []
     ChargebackRate.find(:all, :conditions => {:default => true}).each do |rate|
       rates += rate.chargeback_rate_details
     end
-    return rates
+    rates
   end
 
   def self.get_report_time_range(options, interval, tz)
@@ -270,7 +270,7 @@ class Chargeback < ActsAsArModel
       raise "interval '#{interval}' is not supported"
     end
 
-    return [start_time, end_time]
+    [start_time, end_time]
   end
 
   def self.report_col_options

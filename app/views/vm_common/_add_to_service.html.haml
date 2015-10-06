@@ -5,26 +5,31 @@
     %a.active
       = @title
 
-= form_tag(:action => 'add_vm_to_service', :id => @vm) do
+= form_tag(:action => 'add_vm_to_service', :id => @vm, :class => 'form-horizontal') do
 
-  %h3= _('Service Selection')
-  %table.style1
-    %tr
-      %td.key= _('Service')
-      %td
-        = select_tag('chosen_service', options_for_select(@svcs.sort), :multiple => false,
-          :class => "widthed",
-          "data-miq_focus" => true)
+  %h3
+    = _('Service Selection')
+  .form-group
+    %label.control-label.col-md-2
+      = _('Service')
+    .col-md-8
+      = select_tag('chosen_service', options_for_select(@svcs.sort),
+                  :multiple        => false,
+                  :class           => "selectpicker",
+                  "data-miq_focus" => true)
+      :javascript
+        miqInitSelectPicker();
+        miqSelectPickerEvent('chosen_service', '#{url}')
 
   #formbuttonplacement
     = button_tag(_("Add"),
-      :name  => "add",
-      :class => "btn btn-primary",
-      :alt   => (t = _("Add VM to the selected Service")),
-      :title => t,
-      :type  => "submit")
+                  :name  => "add",
+                  :class => "btn btn-primary",
+                  :alt   => (t = _("Add VM to the selected Service")),
+                  :title => t,
+                  :type  => "submit")
     = button_tag((t = _("Cancel")),
-      :name  => "cancel",
-      :class => "btn btn-default",
-      :alt   => t,
-      :type  => "submit")
+                  :name  => "cancel",
+                  :class => "btn btn-default",
+                  :alt   => t,
+                  :type  => "submit")

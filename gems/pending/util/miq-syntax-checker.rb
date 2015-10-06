@@ -1,9 +1,9 @@
-require 'platform'
+require 'sys-uname'
 require "open3"
 
 class MiqSyntaxChecker
   def self.check(ruby)
-    return MiqSyntaxCheckResult.new("Syntax OK\n") if Platform::OS == :win32
+    return MiqSyntaxCheckResult.new("Syntax OK\n") if Sys::Platform::OS == :windows
 
     Open3.popen3 "ruby -wc" do |stdin, stdout, stderr|
       stdin.write ruby
@@ -31,13 +31,9 @@ class MiqSyntaxCheckResult
     end
   end
 
-  def error_line
-    @error_line
-  end
+  attr_reader :error_line
 
-  def error_text
-    @error_text
-  end
+  attr_reader :error_text
 
   def valid?
     @valid

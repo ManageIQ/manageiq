@@ -5,7 +5,6 @@ EMS_PASSWORD = ""
 require_relative '../../bundler_setup'
 require 'openstack/openstack_handle'
 
-
 begin
   os_handle = OpenstackHandle::Handle.new(EMS_USERNAME, EMS_PASSWORD, EMS_IP)
 
@@ -14,7 +13,7 @@ begin
     puts "\t#{t.name}\t(#{t.id})"
   end
 
-  unless os_handle.volume_service_name == :cinder
+  unless os_handle.volume_service.name == :cinder
     puts "Volume service cinder is not available, exiting."
     exit
   end

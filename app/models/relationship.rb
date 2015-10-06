@@ -5,22 +5,22 @@ class Relationship < ActiveRecord::Base
 
   belongs_to :resource, :polymorphic => true
 
-  scope :in_relationship, lambda { |rel| where({:relationship => rel}) }
+  scope :in_relationship, ->(rel) { where({:relationship => rel}) }
 
   #
   # Filtering methods
   #
 
   def filtered?(of_type, except_type)
-    (!of_type.empty? && !of_type.include?(self.resource_type)) ||
-      (!except_type.empty? && except_type.include?(self.resource_type))
+    (!of_type.empty? && !of_type.include?(resource_type)) ||
+      (!except_type.empty? && except_type.include?(resource_type))
   end
 
   def self.filter_by_resource_type(relationships, options)
     of_type = options[:of_type].to_miq_a
     except_type = options[:except_type].to_miq_a
     return relationships if of_type.empty? && except_type.empty?
-    return relationships.reject { |r| r.filtered?(of_type, except_type) }
+    relationships.reject { |r| r.filtered?(of_type, except_type) }
   end
 
   #
@@ -57,7 +57,7 @@ class Relationship < ActiveRecord::Base
   end
 
   def resource_pair
-    return [self.resource_type, self.resource_id]
+    [resource_type, resource_id]
   end
 
   #
@@ -67,21 +67,21 @@ class Relationship < ActiveRecord::Base
   def self.flatten_arranged_rels(relationships)
     relationships.each_with_object([]) do |(rel, children), a|
       a << rel
-      a.concat(self.flatten_arranged_rels(children))
+      a.concat(flatten_arranged_rels(children))
     end
   end
 
   def self.arranged_rels_to_resources(relationships, initial = true)
-    MiqPreloader.preload(self.flatten_arranged_rels(relationships), :resource) if initial
+    MiqPreloader.preload(flatten_arranged_rels(relationships), :resource) if initial
 
     relationships.each_with_object({}) do |(rel, children), h|
-      h[rel.resource] = self.arranged_rels_to_resources(children, false)
+      h[rel.resource] = arranged_rels_to_resources(children, false)
     end
   end
 
   def self.arranged_rels_to_resource_pairs(relationships)
     relationships.each_with_object({}) do |(rel, children), h|
-      h[rel.resource_pair] = self.arranged_rels_to_resource_pairs(children)
+      h[rel.resource_pair] = arranged_rels_to_resource_pairs(children)
     end
   end
 
@@ -92,17 +92,17 @@ class Relationship < ActiveRecord::Base
 
     relationships.each_with_object({}) do |(rel, children), h|
       if !rel.filtered?(of_type, except_type)
-        h[rel] = self.filter_arranged_rels_by_resource_type(children, options)
+        h[rel] = filter_arranged_rels_by_resource_type(children, options)
       elsif h.empty?
         # Special case where we want something filtered, but some nodes
         #   from the root down must be skipped first.
-        h.merge!(self.filter_arranged_rels_by_resource_type(children, options))
+        h.merge!(filter_arranged_rels_by_resource_type(children, options))
       end
     end
   end
 
   def self.puts_arranged_resources(subtree, indent = '')
-    subtree = subtree.sort_by do |obj, children|
+    subtree = subtree.sort_by do |obj, _children|
       name = obj.send([:name, :description, :object_id].detect { |m| obj.respond_to?(m) })
       [obj.class.name.downcase, name.downcase]
     end
@@ -135,7 +135,7 @@ class Relationship < ActiveRecord::Base
       field = obj.send(options[:field_method])
       options[:exclude_class] ? field : [obj.class.base_class.name, field].join(options[:field_delimiter])
     end
-    return fields.join(options[:record_delimiter])
+    fields.join(options[:record_delimiter])
   end
 
   # Returns a String form of the class/id pairs passed
@@ -153,7 +153,7 @@ class Relationship < ActiveRecord::Base
     fields = resource_pairs.collect do |pair|
       options[:exclude_class] ? pair.last : pair.join(options[:field_delimiter])
     end
-    return fields.join(options[:record_delimiter])
+    fields.join(options[:record_delimiter])
   end
 
   #
@@ -180,8 +180,8 @@ class Relationship < ActiveRecord::Base
   # Recursive helper method for get_tree
   def self.build_tree(root, descendants)
     child_objs = descendants.collect { |obj, children| build_tree(obj, children) }
-    root.instance_variable_set(:@_memoized_children, {[] => child_objs})
-    return root
+    root.instance_variable_set(:@_memoized_children, [] => child_objs)
+    root
   end
   private_class_method :build_tree
 

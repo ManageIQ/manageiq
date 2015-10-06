@@ -1,4 +1,4 @@
-class ManageIQ::Providers::Openstack::InfraManager::EventCatcher < ManageIQ::Providers::BaseManager::EventCatcher::Runner
+class ManageIQ::Providers::Openstack::InfraManager::EventCatcher::Runner < ManageIQ::Providers::BaseManager::EventCatcher::Runner
   include ManageIQ::Providers::Openstack::EventCatcherMixin
 
   def add_openstack_queue(event_hash)

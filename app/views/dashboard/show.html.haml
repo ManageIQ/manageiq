@@ -1,24 +1,22 @@
-- if  @layout == "dashboard" && (controller.action_name == "show" || controller.action_name == "change_tab") 
+- if  @layout == "dashboard" && (controller.action_name == "show" || controller.action_name == "change_tab")
   - if @widgets_menu_xml
-    = render :partial => "dashboard/dropdownbar" 
-    #modules
-      .yui-b
-        .yui-gb
-          #col1.yui-u.first{:style => "position:relative;min-height:500px;"}
-            - @sb[:dashboards][@sb[:active_db]][:col1].each do |w|
-              - widget = MiqWidget.find_by_id(w)
-              - if widget && widget.enabled && @available_widgets.include?(widget.id)
-                = WidgetPresenter.new(self, controller, widget).render_partial
-          #col2.yui-u{:style => "position:relative;min-height:500px;"}
-            - @sb[:dashboards][@sb[:active_db]][:col2].each do |w|
-              - widget = MiqWidget.find_by_id(w)
-              - if widget && widget.enabled && @available_widgets.include?(widget.id)
-                = WidgetPresenter.new(self, controller, widget).render_partial
-          #col3.yui-u{:style => "position:relative;min-height:500px;"}
-            - @sb[:dashboards][@sb[:active_db]][:col3].each do |w|
-              - widget = MiqWidget.find_by_id(w)
-              - if widget && widget.enabled && @available_widgets.include?(widget.id)
-                = WidgetPresenter.new(self, controller, widget).render_partial
+    = render :partial => "dashboard/dropdownbar"
+    .row#modules
+      .col-md-4#col1{:style => "position: relative; min-height: 50px;"}
+        - @sb[:dashboards][@sb[:active_db]][:col1].each do |w|
+          - widget = MiqWidget.find_by_id(w)
+          - if widget && widget.enabled && @available_widgets.include?(widget.id)
+            = WidgetPresenter.new(self, controller, widget).render_partial
+      .col-md-4#col2{:style => "position: relative; min-height: 50px;"}
+        - @sb[:dashboards][@sb[:active_db]][:col2].each do |w|
+          - widget = MiqWidget.find_by_id(w)
+          - if widget && widget.enabled && @available_widgets.include?(widget.id)
+            = WidgetPresenter.new(self, controller, widget).render_partial
+      .col-md-4#col3{:style => "position: relative; min-height: 50px;"}
+        - @sb[:dashboards][@sb[:active_db]][:col3].each do |w|
+          - widget = MiqWidget.find_by_id(w)
+          - if widget && widget.enabled && @available_widgets.include?(widget.id)
+            = WidgetPresenter.new(self, controller, widget).render_partial
 - if WidgetPresenter.chart_data.present?
   :javascript
     ManageIQ.charts.chartData = #{{"widgetchart" => WidgetPresenter.chart_data}.to_json.html_safe};

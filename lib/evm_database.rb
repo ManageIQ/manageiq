@@ -1,13 +1,14 @@
 class EvmDatabase
   include Vmdb::Logging
 
-  PRIMORDIAL_CLASSES = %w{
+  PRIMORDIAL_CLASSES = %w(
     MiqDatabase
     MiqRegion
     MiqEnterprise
     Zone
     MiqServer
     ServerRole
+    Tenant
     MiqProductFeature
     MiqUserRole
     MiqGroup
@@ -16,7 +17,7 @@ class EvmDatabase
     RssFeed
     MiqWidget
     VmdbDatabase
-  }
+  )
 
   RAILS_ENGINE_MODEL_CLASS_NAMES = %w(MiqAeDatastore)
 
@@ -31,33 +32,40 @@ class EvmDatabase
   end
 
   def self.seed_primordial
-    self.seed(PRIMORDIAL_CLASSES)
+    seed(PRIMORDIAL_CLASSES)
   end
 
   def self.seed_last
-    self.seed(seedable_model_class_names - PRIMORDIAL_CLASSES)
+    seed(seedable_model_class_names - PRIMORDIAL_CLASSES)
   end
 
   def self.seed(classes = nil, exclude_list = [])
     _log.info("Seeding...")
 
     classes ||= PRIMORDIAL_CLASSES + (seedable_model_class_names - PRIMORDIAL_CLASSES)
-    classes  -= exclude_list
+    classes -= exclude_list
 
-    classes.each do |klass|
-      begin
-        klass = klass.constantize if klass.kind_of?(String)
-      rescue
-        _log.error("Class #{klass} does not exist")
-        next
-      end
-
-      if klass.respond_to?(:seed)
-        _log.info("Seeding #{klass}")
+    # Only 1 machine can go through this at a time
+    # Populating the DB takes 20 seconds
+    # Not populating the db takes 3 seconds
+    MiqDatabase.with_lock(10.minutes) do
+      classes.each do |klass|
         begin
-          klass.seed
-        rescue => err
-          _log.log_backtrace(err)
+          klass = klass.constantize if klass.kind_of?(String)
+        rescue
+          _log.error("Class #{klass} does not exist")
+          next
+        end
+
+        if klass.respond_to?(:seed)
+          _log.info("Seeding #{klass}")
+          begin
+            klass.seed
+          rescue => err
+            _log.log_backtrace(err)
+          end
+        else
+          _log.error("Class #{klass} does not have a seed")
         end
       end
     end

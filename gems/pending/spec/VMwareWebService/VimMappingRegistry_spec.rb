@@ -23,7 +23,7 @@ describe VimMappingRegistry do
 
   context ".registry" do
     it "handles all known methods" do
-      known_methods = Dir.glob(File.join(VimMappingRegistry::YML_DIR, "*.yml")).collect {|p| File.basename(p, ".yml")}
+      known_methods = Dir.glob(File.join(VimMappingRegistry::YML_DIR, "*.yml")).collect { |p| File.basename(p, ".yml") }
 
       known_methods.each do |m|
         expect(described_class.registry[m]).to be_kind_of Hash

@@ -1,9 +1,9 @@
 # Japanese translations for manageiq package.
 # Template file for strings which can be localized in the ManageIQ Application.
 # This file is distributed under the same license as the Manageiq package.
+# aeng <aeng@redhat.com>, 2015. #zanata
 # asasaki <asasaki@redhat.com>, 2015. #zanata
-# irooskov <irooskov@redhat.com>, 2015. #zanata
-# jito <jito@redhat.com>, 2015. #zanata
+# myamamot <myamamot@redhat.com>, 2015. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
@@ -12,8 +12,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2015-06-10 11:43+0000\n"
-"Last-Translator: asasaki <asasaki@redhat.com>\n"
+"PO-Revision-Date: 2015-09-22 05:49+0000\n"
+"Last-Translator: myamamot <myamamot@redhat.com>\n"
 "Language-Team: English\n"
 "Language: ja\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
@@ -23,10 +23,10 @@ msgid " # of Days"
 msgstr "日数"
 
 msgid " %s Assignments"
-msgstr " %s の割り当て"
+msgstr "%s の割り当て"
 
 msgid " %{name} from %{value} to %{parameters} "
-msgstr "%{value} から %{parameters} の  %{name}"
+msgstr "%{value} から %{parameters} の %{name}"
 
 msgid " (Names with \"%s\")"
 msgstr " (次を含む名前 \"%s\")"
@@ -206,7 +206,7 @@ msgid "%s is currently being used in the Display Filter"
 msgstr "%s は現在表示フィルターに使用されています"
 
 msgid "%s is not allowed for the selected item"
-msgstr "%s は選択した項目用に許可されていません"
+msgstr "%s は選択した項目では許可されていません"
 
 msgid "%s is not in the current region and will be skipped"
 msgstr "%s は現行のリージョンに含まれていないため省略されます"
@@ -218,7 +218,7 @@ msgid "%s must be alphanumeric characters and underscores without spaces"
 msgstr "%s は英数文字およびアンダースコアから構成されている必要があり、スペースは使用できません"
 
 msgid "%s must be an integer"
-msgstr "%s は整数であることが必要です"
+msgstr "%s には整数を指定する必要があります"
 
 msgid "%s must be configured"
 msgstr "%s の設定が必要です"
@@ -227,7 +227,7 @@ msgid "%s must be entered to perform LDAP Group Look Up"
 msgstr "LDAP グループ検索を実行するためには %s の入力が必要です"
 
 msgid "%s must be numeric"
-msgstr "%s は数字であることが必要です"
+msgstr "%s には数字を指定する必要があります"
 
 msgid "%s must be selected"
 msgstr "%s の選択が必要です"
@@ -396,12 +396,12 @@ msgstr "%{typ} %{model} \"%{name}\" (current)"
 msgid ""
 "%{typ} Request was Submitted, you will be notified when your %{title} are "
 "ready"
-msgstr "%{typ} リクエストが送信されました。あなたの %{title} の準備ができた時点で通知が送信されます"
+msgstr "%{typ} リクエストが送信されました。%{title} の準備ができた時点で通知が送信されます"
 
 msgid ""
 "%{typ} Request was re-submitted, you will be notified when your %{title} are "
 "ready"
-msgstr "%{typ} リクエストが再送信されました。あなたの %{title} の準備ができた時点で通知が送信されます"
+msgstr "%{typ} リクエストが再送信されました。%{title} の準備ができた時点で通知が送信されます"
 
 msgid "%{typ} in %{model} \"%{name}\""
 msgstr "%{model} \"%{name}\" 内の %{typ} "
@@ -1263,7 +1263,7 @@ msgid "Authentication|Credentials changed on"
 msgstr "認証情報の変更日"
 
 msgid "Authentication|Fingerprint"
-msgstr "指紋"
+msgstr "フィンガープリント"
 
 msgid "Authentication|Last invalid on"
 msgstr "最終無効日"
@@ -1404,10 +1404,10 @@ msgid "Basic Report Info"
 msgstr "基本レポート情報"
 
 msgid "Belongs to Alert Profiles"
-msgstr "アラートプロファイルへの所属"
+msgstr "アラートプロファイルに所属"
 
 msgid "Belongs to Profiles"
-msgstr "プロファイルへの所属"
+msgstr "プロファイルに所属"
 
 msgid "Best Fit %s"
 msgstr "Best Fit %s"
@@ -2612,11 +2612,11 @@ msgstr "記録を統合すると、レポート内に詳細の記録が表示さ
 msgid "Container"
 msgstr "コンテナー"
 
-msgid "Container Groups (%s)"
-msgstr "コンテナーグループ (%s)"
+msgid "Pods (%s)"
+msgstr "ポッド (%s)"
 
-msgid "Container Groups (0)"
-msgstr "コンテナーグループ (0)"
+msgid "Pods (0)"
+msgstr "ポッド (0)"
 
 msgid "Container Nodes (%s)"
 msgstr "コンテナーノード (%s)"
@@ -2633,8 +2633,8 @@ msgstr "コンテナーサービス (0)"
 msgid "Container definition"
 msgstr "コンテナー定義"
 
-msgid "Container group"
-msgstr "コンテナーグループ"
+msgid "Pod"
+msgstr "ポッド"
 
 msgid "Container node"
 msgstr "コンテナーノード"
@@ -2666,25 +2666,25 @@ msgstr "メモリー"
 msgid "ContainerDefinition|Name"
 msgstr "名前"
 
-msgid "ContainerGroup|Creation timestamp"
+msgid "Pod|Creation timestamp"
 msgstr "作成タイムスタンプ"
 
-msgid "ContainerGroup|Dns policy"
+msgid "Pod|Dns policy"
 msgstr "DNS ポリシー"
 
-msgid "ContainerGroup|Ems ref"
+msgid "Pod|Ems ref"
 msgstr "EMS 参照"
 
-msgid "ContainerGroup|Name"
+msgid "Pod|Name"
 msgstr "名前"
 
-msgid "ContainerGroup|Namespace"
+msgid "Pod|Namespace"
 msgstr "名前空間"
 
-msgid "ContainerGroup|Resource version"
+msgid "Pod|Resource version"
 msgstr "リソースバージョン"
 
-msgid "ContainerGroup|Restart policy"
+msgid "Pod|Restart policy"
 msgstr "再起動ポリシー"
 
 msgid "ContainerNode|Creation timestamp"
@@ -2694,13 +2694,13 @@ msgid "ContainerNode|Ems ref"
 msgstr "EMS 参照"
 
 msgid "ContainerNode|Identity infra"
-msgstr "ID インフラ"
+msgstr "Identity インフラ"
 
 msgid "ContainerNode|Identity machine"
-msgstr "CPU コア"
+msgstr "Identity マシン"
 
 msgid "ContainerNode|Identity system"
-msgstr "ID システム"
+msgstr "Identity システム"
 
 msgid "ContainerNode|Lives on type"
 msgstr "ライブのタイプ"
@@ -4306,7 +4306,7 @@ msgid "Filesystem|Owner"
 msgstr "所有者"
 
 msgid "Filesystem|Permissions"
-msgstr "許可"
+msgstr "権限"
 
 msgid "Filesystem|Product version"
 msgstr "製品バージョン"
@@ -4450,7 +4450,7 @@ msgid "Flavor|Supports paravirtual"
 msgstr "準仮想化のサポート"
 
 msgid "Floating ip"
-msgstr "フローティング IP"
+msgstr "Floating IP"
 
 msgid "FloatingIp|Address"
 msgstr "アドレス"
@@ -10429,7 +10429,7 @@ msgid "PxeMenu|File name"
 msgstr "ファイル名"
 
 msgid "PxeServer|Access url"
-msgstr "アクセスURI"
+msgstr "アクセス URI"
 
 msgid "PxeServer|Customization directory"
 msgstr "カスタマイズディレクトリー"
@@ -11835,8 +11835,8 @@ msgstr "%s ストレージアダプターの表示"
 msgid "Show Capacity & Utilization"
 msgstr "容量 & 使用率の表示"
 
-msgid "Show Container Groups"
-msgstr "コンテナーグループの表示"
+msgid "Show Pods"
+msgstr "ポッドの表示"
 
 msgid "Show Container Nodes"
 msgstr "コンテナーノードの表示"
@@ -12126,8 +12126,8 @@ msgstr "この VM の親サービスを表示"
 msgid "Show this Vm's parent %s"
 msgstr "この VM の親 %s を表示"
 
-msgid "Show this container group's parent %s"
-msgstr "このコンテナーグループの親  %s を表示"
+msgid "Show this Pod's parent %s"
+msgstr "このポッドの親 %s を表示"
 
 msgid "Show this container node's parent %s"
 msgstr "このコンテナーノードの親  %s を表示"
@@ -14260,4 +14260,3 @@ msgstr "コアあたりの vCPU"
 
 msgid "vcpus"
 msgstr "vCPU"
-

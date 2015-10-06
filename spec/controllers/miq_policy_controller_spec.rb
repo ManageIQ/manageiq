@@ -112,7 +112,7 @@ describe MiqPolicyController do
           context "when there is an error while importing" do
             before do
               miq_policy_import_service.stub(:store_for_import)
-              .with(file_contents).and_raise(StandardError.new("message"))
+                .with(file_contents).and_raise(StandardError.new("message"))
             end
 
             it "redirects to export with an error message" do
@@ -177,6 +177,40 @@ describe MiqPolicyController do
         flash_messages.should be_nil
         controller.x_node.should == "pp_#{profile.id}"
       end
+    end
+  end
+
+  describe '#tree_select' do
+    [
+      # [tree_sym, node, partial_name]
+      [:policy_profile_tree, 'root', 'miq_policy/_profile_list'],
+      [:policy_tree, 'root', 'miq_policy/_policy_folders'],
+      [:event_tree, 'root', 'miq_policy/_event_list'],
+      [:condition_tree, 'root', 'miq_policy/_condition_folders'],
+      [:action_tree, 'root', 'miq_policy/_action_list'],
+      [:alert_profile_tree, 'root', 'miq_policy/_alert_profile_folders'],
+      [:alert_tree, 'root', 'miq_policy/_alert_list'],
+    ].each do |tree_sym, node, partial_name|
+      it "renders #{partial_name} when #{tree_sym} tree #{node} node is selected" do
+        session[:sandboxes] = {"miq_policy" => {:active_tree => tree_sym}}
+        session[:settings] ||= {}
+
+        post :tree_select, :id => node, :format => :js
+        response.should render_template(partial_name)
+        expect(response.status).to eq(200)
+      end
+    end
+  end
+
+  describe '#replace_right_cell' do
+    it 'should replace policy_tree_div when replace_trees contains :policy' do
+      controller.stub(:params).and_return(:action => 'whatever')
+      controller.instance_eval { @sb = {:active_tree => :policy_tree} }
+      controller.stub(:render).and_return(nil)
+      presenter = ExplorerPresenter.new(:active_tree => :policy_tree)
+
+      controller.send(:replace_right_cell, 'root', [:policy], presenter)
+      expect(presenter[:replace_partials]).to have_key(:policy_tree_div)
     end
   end
 

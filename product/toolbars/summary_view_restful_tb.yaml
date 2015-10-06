@@ -1,0 +1,12 @@
+#
+# Toolbar config file
+#
+---
+:button_groups:
+- :name: summary_download
+  :items:
+  - :button: download_view
+    :image: pdf
+    :title: "Download summary in PDF format"
+    :url: '/'
+    :url_parms: '?display=download_pdf'

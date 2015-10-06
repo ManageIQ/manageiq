@@ -2,7 +2,7 @@
 #dialog_field_div
   %h3
     = _('Element Information')
-  %form.form-horizontal
+  .form-horizontal
     .form-group
       %label.col-md-2.control-label
         = _('Label')
@@ -59,7 +59,7 @@
   - unless @edit[:field_typ].nil?
     %h3
       = _('Options')
-    %form.form-horizontal
+    .form-horizontal
       - if @edit[:field_dynamic] == true
         .form-group
           %label.col-md-2.control-label
@@ -349,7 +349,7 @@
   - unless @edit[:field_typ].nil?
     %h3
       = _('Advanced')
-    %form.form-horizontal
+    .form-horizontal
       .form-group
         %label.col-md-2.control-label
           = _('Reconfigurable')

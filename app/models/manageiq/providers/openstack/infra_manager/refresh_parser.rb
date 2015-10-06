@@ -3,7 +3,9 @@ module ManageIQ
     class Openstack::InfraManager::RefreshParser < EmsRefresh::Parsers::Infra
       include Vmdb::Logging
 
+      include ManageIQ::Providers::Openstack::RefreshParserCommon::HelperMethods
       include ManageIQ::Providers::Openstack::RefreshParserCommon::Images
+      include ManageIQ::Providers::Openstack::RefreshParserCommon::Objects
       include ManageIQ::Providers::Openstack::RefreshParserCommon::OrchestrationStacks
 
       def self.ems_inv_to_hashes(ems, options = nil)
@@ -23,11 +25,9 @@ module ManageIQ
         @os_handle                  = ems.openstack_handle
         @compute_service            = @connection # for consistency
         @baremetal_service          = @os_handle.detect_baremetal_service
-        @baremetal_service_name     = @os_handle.baremetal_service_name
         @orchestration_service      = @os_handle.detect_orchestration_service
-        @orchestration_service_name = @os_handle.orchestration_service_name
         @image_service              = @os_handle.detect_image_service
-        @image_service_name         = @os_handle.image_service_name
+        @storage_service            = @os_handle.detect_storage_service
       end
 
       def ems_inv_to_hashes
@@ -35,11 +35,13 @@ module ManageIQ
                      " for EMS name: [#{@ems.name}] id: [#{@ems.id}]"
         $fog_log.info("#{log_header}...")
 
+        get_object_store
+        # get_object_store needs to run before load hosts
         load_hosts
-        get_images
         load_orchestration_stacks
         # Cluster processing needs to run after host and stacks processing
         get_clusters
+        get_images
 
         $fog_log.info("#{log_header}...Complete")
         @data
@@ -62,15 +64,15 @@ module ManageIQ
         # TODO(lsmola) loading this from already obtained nested stack hierarchy will be more effective. This is one
         # extra API call. But we will need to change order of loading, so we have all resources first.
         # Nested depth 50 just for sure, although nobody should nest templates that much
-        @orchestration_service.list_resources(stack, :nested_depth => 50).body['resources']
+        @orchestration_service.list_resources(:stack => stack, :nested_depth => 50).body['resources']
       end
 
       def servers
-        @servers ||= @connection.servers_for_accessible_tenants
+        @servers ||= @connection.handled_list(:servers)
       end
 
       def hosts
-        @hosts ||= @baremetal_service.nodes.details
+        @hosts ||= @baremetal_service.handled_list(:nodes)
       end
 
       def clouds
@@ -97,7 +99,7 @@ module ManageIQ
           compute_hosts.each do |compute_host|
             # We need to take correct zone id from correct provider, since the zone name can be the same
             # across providers
-            availability_zone_id = cloud_ems.availability_zones.where(:name => compute_host.zone).first.try(:id)
+            availability_zone_id = cloud_ems.availability_zones.find_by(:name => compute_host.zone).try(:id)
             hosts_attributes << {:host_name => compute_host.host_name, :availability_zone_id => availability_zone_id}
           end
         end
@@ -105,7 +107,7 @@ module ManageIQ
       end
 
       def hosts_ports
-        @hosts_ports ||= @baremetal_service.ports.details
+        @hosts_ports ||= @baremetal_service.handled_list(:ports)
       end
 
       def load_hosts
@@ -117,7 +119,7 @@ module ManageIQ
         # Hosts ports contains MAC addresses of host interfaces. There can
         # be multiple interfaces for each host
         indexed_hosts_ports = {}
-        hosts_ports.each { |p|  (indexed_hosts_ports[p.uuid] ||= []) <<  p }
+        hosts_ports.each { |p|  (indexed_hosts_ports[p.uuid] ||= []) << p }
 
         # Indexed Heat resources, we are interested only in OS::Nova::Server
         indexed_resources = {}
@@ -129,10 +131,11 @@ module ManageIQ
       end
 
       def get_extra_host_attributes(host)
-        return {} if host.extra.blank? || (extra_attrs = host.extra.fetch_path('edeploy_facts')).blank?
+        extra_attrs = @data_index.fetch_path(:cloud_object_store_objects, 'extra_hardware-' + host.uuid, :content)
+        return {} if extra_attrs.blank?
         # Convert list of tuples from Ironic extra to hash. E.g. [[a1, a2, a3, a4], [a1, a2, b3, b4], ..] converts to
         # {a1 => {a2 => {a3 => a4, b3 => b4}}}, so we get constant access to sub indexes.
-        extra_attrs.each_with_object({}) { |attr, obj| ((obj[attr[0]] ||= {})[attr[1]] ||= {})[attr[2]] = attr[3] if attr.count >= 4 }
+        JSON.parse(extra_attrs).each_with_object({}) { |attr, obj| ((obj[attr[0]] ||= {})[attr[1]] ||= {})[attr[2]] = attr[3] if attr.count >= 4 }
       end
 
       def parse_host(host, indexed_servers, _indexed_hosts_ports, indexed_resources, cloud_hosts_attributes)
@@ -316,10 +319,10 @@ module ManageIQ
         uid = cluster[:uid]
 
         new_result = {
-            :ems_ref => uid,
-            :uid_ems => uid,
-            :name    => name,
-            :type    => 'ManageIQ::Providers::Openstack::InfraManager::EmsCluster'
+          :ems_ref => uid,
+          :uid_ems => uid,
+          :name    => name,
+          :type    => 'ManageIQ::Providers::Openstack::InfraManager::EmsCluster'
         }
         return uid, new_result
       end
@@ -330,20 +333,8 @@ module ManageIQ
         end
       end
 
-      #
-      # Helper methods
-      #
-
-      def process_collection(collection, key)
-        @data[key] ||= []
-        return if collection.nil?
-
-        collection.each do |item|
-          uid, new_result = yield(item)
-
-          @data[key] << new_result
-          @data_index.store_path(key, uid, new_result)
-        end
+      def get_object_content(obj)
+        obj.body
       end
     end
   end

@@ -1,4 +1,6 @@
 class MiqUiWorker < MiqWorker
+  require_dependency 'miq_ui_worker/runner'
+
   REQUIRED_ROLE = 'user_interface'
   self.required_roles = [REQUIRED_ROLE]
   self.check_for_minimal_role = false
@@ -8,7 +10,7 @@ class MiqUiWorker < MiqWorker
       # done when the UI worker is debugged externally, such as in Netbeans.
       MiqServer.minimal_env_options.include?("noui") ? 0 : 1
     else
-      self.worker_settings[:count]
+      worker_settings[:count]
     end
   end
 

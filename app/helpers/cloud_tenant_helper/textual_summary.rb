@@ -3,29 +3,27 @@ module CloudTenantHelper::TextualSummary
   # Groups
   #
   def textual_group_relationships
-    items = %w{ems_cloud security_groups instances images}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(ems_cloud security_groups instances images)
   end
 
   def textual_group_tags
-    items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(tags)
   end
 
   def textual_group_quotas
     quotas = @record.cloud_resource_quotas.order(:service_name, :name)
-    quotas.collect { |quota| textual_quotas(quota) }.flatten.compact
+    quotas.collect { |quota| textual_quotas(quota) }
   end
 
   #
   # Items
   #
   def textual_ems_cloud
-    textual_link(@record.ext_management_system, :as => EmsCloud)
+    textual_link(@record.ext_management_system)
   end
 
   def textual_security_groups
-    textual_link(@record.security_groups)
+    @record.security_groups
   end
 
   def textual_instances

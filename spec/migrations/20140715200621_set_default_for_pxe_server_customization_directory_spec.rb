@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20140715200621_set_default_for_pxe_server_customization_directory")
+require_migration
 
 describe SetDefaultForPxeServerCustomizationDirectory do
   let(:pxe_server_stub) { migration_stub(:PxeServer) }

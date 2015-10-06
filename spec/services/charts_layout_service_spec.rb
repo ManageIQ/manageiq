@@ -5,13 +5,13 @@ describe ChartsLayoutService do
   let(:host_redhat) { FactoryGirl.create(:host_redhat) }
   let(:vm_openstack) { FactoryGirl.create(:vm_openstack) }
   let(:host_openstack_infra_chart) do
-    YAML::load(File.open(File.join(UiConstants::CHARTS_LAYOUTS_FOLDER, 'daily_perf_charts', 'ManageIQ_Providers_Openstack_InfraManager_Host') + '.yaml'))
+    YAML.load(File.open(File.join(UiConstants::CHARTS_LAYOUTS_FOLDER, 'daily_perf_charts', 'ManageIQ_Providers_Openstack_InfraManager_Host') + '.yaml'))
   end
   let(:host_chart) do
-    YAML::load(File.open(File.join(UiConstants::CHARTS_LAYOUTS_FOLDER, 'daily_perf_charts', 'Host') + '.yaml'))
+    YAML.load(File.open(File.join(UiConstants::CHARTS_LAYOUTS_FOLDER, 'daily_perf_charts', 'Host') + '.yaml'))
   end
   let(:layout_chart) do
-    YAML::load(File.open(File.join(UiConstants::CHARTS_LAYOUTS_FOLDER, 'daily_util_charts') + '.yaml'))
+    YAML.load(File.open(File.join(UiConstants::CHARTS_LAYOUTS_FOLDER, 'daily_util_charts') + '.yaml'))
   end
 
   describe "#layout" do
@@ -35,8 +35,8 @@ describe ChartsLayoutService do
     it "shows CPU (%) by default for VmOpenstack" do
       # By default percent is visible and mhz not
       chart = ChartsLayoutService.layout(vm_openstack,  UiConstants::CHARTS_LAYOUTS_FOLDER, 'daily_perf_charts', 'VmOrTemplate')
-      chart.select { |x| x[:title] == "CPU (%)" }.count.should equal 1
-      chart.select { |x| x[:title] == "CPU (Mhz)" }.count.should equal 0
+      chart.count { |x| x[:title] == "CPU (%)" }.should equal 1
+      chart.count { |x| x[:title] == "CPU (Mhz)" }.should equal 0
     end
 
     it "shows CPU (Mhz) instead of CPU (%), when applies_to_method methods are changed" do
@@ -44,8 +44,8 @@ describe ChartsLayoutService do
       vm_openstack.stub(:cpu_percent_available?).and_return(false)
       vm_openstack.stub(:cpu_mhz_available?).and_return(true)
       chart = ChartsLayoutService.layout(vm_openstack,  UiConstants::CHARTS_LAYOUTS_FOLDER, 'daily_perf_charts', 'VmOrTemplate')
-      chart.select { |x| x[:title] == "CPU (%)" }.count.should equal 0
-      chart.select { |x| x[:title] == "CPU (Mhz)" }.count.should equal 1
+      chart.count { |x| x[:title] == "CPU (%)" }.should equal 0
+      chart.count { |x| x[:title] == "CPU (Mhz)" }.should equal 1
     end
   end
 end

@@ -100,8 +100,6 @@ log:
       - log/apache/*.log
       - log/*.txt
       - config/*
-      - /opt/rh/postgresql92/root/var/lib/pgsql/data/*.conf
-      - /opt/rh/postgresql92/root/var/lib/pgsql/data/pg_log/*
       - /var/log/syslog*
       - /var/log/daemon.log*
       - /etc/default/ntp*
@@ -316,22 +314,8 @@ workers:
         :poll: 15.seconds
       :event_catcher_kubernetes:
         :poll: 1.seconds
-        :enabled_events:
-          Node:
-            - NodeReady
-            - NodeNotReady
-            - rebooted
-          Pod:
-            - scheduled
       :event_catcher_openshift:
         :poll: 1.seconds
-        :enabled_events:
-          Node:
-            - NodeReady
-            - NodeNotReady
-            - rebooted
-          Pod:
-            - scheduled
     :queue_worker_base:
       :defaults:
         :cpu_usage_threshold: 100.percent
@@ -354,6 +338,10 @@ workers:
           :poll_method: :escalate
         :ems_metrics_collector_worker_openstack_infra:
           :poll_method: :escalate
+        :ems_metrics_collector_worker_kubernetes:
+          :poll_method: :escalate
+        :ems_metrics_collector_worker_openshift:
+          :poll_method: :escalate
       :ems_metrics_processor_worker:
         :count: 2
         :memory_threshold: 400.megabytes
@@ -368,6 +356,7 @@ workers:
           :queue_timeout: 120.minutes
           :restart_interval: 2.hours
         :ems_refresh_worker_amazon: {}
+        :ems_refresh_worker_azure: {}
         :ems_refresh_worker_foreman_configuration: {}
         :ems_refresh_worker_foreman_provisioning: {}
         :ems_refresh_worker_kubernetes: {}

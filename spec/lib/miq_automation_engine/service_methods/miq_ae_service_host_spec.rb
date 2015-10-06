@@ -52,7 +52,6 @@ module MiqAeServiceHostSpec
         hosts[0].should be_kind_of(MiqAeMethodService::MiqAeServiceHost)
         hosts[0].id.should == @host.id
       end
-
     end
 
     it "#ems_custom_keys" do

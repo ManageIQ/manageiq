@@ -2,70 +2,67 @@
 
 %h3
   = _('Basic Information')
-%table.style1
-  %tbody
-    %tr
-      %td.key
-        = _('Button Text')
-      %td
-        = @custom_button.name
-        - display = @custom_button.options.key?(:display) ? @custom_button.options[:display] : true
-        = check_box_tag(display, true, display, :disabled => true)
-        &nbsp;
-        = _('Display on Button')
-    %tr
-      %td.key
-        = _('Button Hover Text')
-      %td.notwide
-        = @custom_button.description
-    %tr
-      %td.key
-        = _('Image')
-      %td.notwide
-        %img{:src => "/images/icons/new/custom-#{@custom_button.options[:button_image]}.png", :align => "left", :width => "20", :height => "20"}
-    %tr
-      %td.key
-        = _('Dialog')
-      %td
-        = h(@sb[:dialog_label])
+.form-horizontal.static
+  .form-group
+    %label.control-label.col-md-2
+      = _('Button Text')
+    .col-md-8
+      = @custom_button.name
+      - display = @custom_button.options.key?(:display) ? @custom_button.options[:display] : true
+      = check_box_tag(display, true, display, :disabled => true)
+      &nbsp;
+      = _('Display on Button')
+  .form-group
+    %label.control-label.col-md-2
+      = _('Button Hover Text')
+    .col-md-8
+      = @custom_button.description
+  .form-group
+    %label.control-label.col-md-2
+      = _('Image')
+    .col-md-8
+      %span{:class => "product product-custom-#{@custom_button.options[:button_image]}"}
+  .form-group
+    %label.control-label.col-md-2
+      = _('Dialog')
+    .col-md-8
+      = h(@sb[:dialog_label])
 %hr
 
 %h3
   = _('Object Details')
-%table.style1
-  %tbody
-    %tr
-      %td.key
-        = _('System/Process/')
-      %td
-        = h(@resolve[:new][:instance_name])
-    %tr
-      %td.key
-        = _('Message')
-      %td
-        = h(@resolve[:new][:object_message])
-    %tr
-      %td.key
-        = _('Request')
-      %td
-        = h(@resolve[:new][:object_request])
+.form-horizontal.static
+  .form-group
+    %label.control-label.col-md-2
+      = _('System/Process/')
+    .col-md-8
+      = h(@resolve[:new][:instance_name])
+  .form-group
+    %label.control-label.col-md-2
+      = _('Message')
+    .col-md-8
+      = h(@resolve[:new][:object_message])
+  .form-group
+    %label.control-label.col-md-2
+      = _('Request')
+    .col-md-8
+      = h(@resolve[:new][:object_request])
 %hr
 
 %h3
   = _('Object Attribute')
-%table.style1
-  %tbody
-    %tr
-      %td.key
-        = _('Type')
-      %td.notwide
-        = @resolve[:new][:target_class]
-    - if @resolve[:new][:target_class] && !@resolve[:new][:target_class].blank?
-      %tr
-        %td.key
-          = _('Selection')
-        %td
-          = h(@resolve[:new][:target_id])
+.form-horizontal.static
+  .form-group
+    %label.control-label.col-md-2
+      = _('Type')
+    .col-md-8
+      = @resolve[:new][:target_class]
+  - if @resolve[:new][:target_class] && !@resolve[:new][:target_class].blank?
+    .form-group
+      %label.control-label.col-md-2
+        = _('Selection')
+      .col-md-8
+        = h(@resolve[:new][:target_id])
 %hr
 
 %h3
@@ -73,30 +70,29 @@
 - if @resolve[:new][:attrs].empty?
   = render :partial => 'layouts/info_msg', :locals => {:message => _("No Attribute/Value Pairs found.")}
 - else
-  %table.style1
+  .form-horizontal.static
     - @resolve[:new][:attrs].each_with_index do |attr, i|
-      %tr
-        %td.key
+      .form-group
+        %label.control-label.col-md-2
           = (i + 1).to_s
-        %td.wide
+        .col-md-2
           = h(attr[0])
-        %td.wide
+        .col-md-2
           = h(attr[1])
 %hr
 
 %h3
   = _('Visibility')
-%table.style1
+.form-horizontal.static
   - show_to = @custom_button.visibility.nil? || (@custom_button.visibility && @custom_button.visibility[:roles] && @custom_button.visibility[:roles][0] == "_ALL_") ? _("To All") : _("By Role")
-  %tbody
-    %tr
-      %td.key
-        = _('Show')
-      %td
-        = h(show_to)
-    - if show_to == "By Role" && !@sb[:user_roles].blank?
-      %tr
-        %td.key
-          = _('User Roles')
-        %td
-          = h(@sb[:user_roles].join(", "))
+  .form-group
+    %label.control-label.col-md-2
+      = _('Show')
+    .col-md-8
+      = h(show_to)
+  - if show_to == "By Role" && !@sb[:user_roles].blank?
+    .form-group
+      %label.control-label.col-md-2
+        = _('User Roles')
+      .col-md-8
+        = h(@sb[:user_roles].join(", "))

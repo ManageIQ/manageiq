@@ -1,12 +1,11 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20131107000917_expand_dialog_field_default_value_size.rb")
+require_migration
 
 describe ExpandDialogFieldDefaultValueSize do
   let(:dialog_field_stub) { migration_stub(:DialogField) }
   let(:reserve_stub)      { MigrationSpecStubs.reserved_stub }
 
   migration_context :up do
-
     it "should convert default_value to text type" do
       dialog_field_stub.columns_hash['default_value'].type.should == :string
       migrate
@@ -28,7 +27,7 @@ describe ExpandDialogFieldDefaultValueSize do
       field3 = dialog_field_stub.create!(:default_value => val3)
 
       migrate
- 
+
       expect { reserved1.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { reserved2.reload }.to_not raise_error
       field1.reload.default_value.should == val1
@@ -51,11 +50,11 @@ describe ExpandDialogFieldDefaultValueSize do
 
       migrate
 
-      reserve1 = reserve_stub.where(resource_id: field1.id,
-                                    resource_type: 'DialogField').first!
+      reserve1 = reserve_stub.where(:resource_id   => field1.id,
+                                    :resource_type => 'DialogField').first!
       reserve1.reserved.should == {:default_value => val1}
-      reserve_stub.where(resource_id: field2.id, 
-                         resource_type: 'DialogField').should_not exist
+      reserve_stub.where(:resource_id   => field2.id,
+                         :resource_type => 'DialogField').should_not exist
     end
   end
 end

@@ -3,19 +3,19 @@ module ReportController::Usage
 
   # Show VM usage
   def usage
-    @breadcrumbs = Array.new
-    drop_breadcrumb( {:name=>"VM Usage", :url=>"/report/usage"} )
+    @breadcrumbs = []
+    drop_breadcrumb(:name => "VM Usage", :url => "/report/usage")
     @lastaction = "usage"
     sdate, edate = VimUsage.first_and_last_capture
-    @usage_options = session[:usage_options] ? session[:usage_options] : Hash.new
+    @usage_options = session[:usage_options] ? session[:usage_options] : {}
     if sdate.nil?
       @usage_options[:sdate] = @usage_options[:edate] = nil
       add_flash(_("No usage data found for specified options"), :error)
     else
-      @usage_options[:typ]   ||= "daily"
-      @usage_options[:cats]  ||= usage_build_cats
-      @usage_options[:hours] ||= Array.new(24) {|i| i < 10 ? "0#{i}" : "#{i}"}
-      @usage_options[:hour]  ||= "00"
+      @usage_options[:typ] ||= "daily"
+      @usage_options[:cats] ||= usage_build_cats
+      @usage_options[:hours] ||= Array.new(24) { |i| i < 10 ? "0#{i}" : "#{i}" }
+      @usage_options[:hour] ||= "00"
       @usage_options[:sdate] ||= [sdate.year.to_s, (sdate.month - 1).to_s, sdate.day.to_s].join(", ")
       @usage_options[:edate] ||= [edate.year.to_s, (edate.month - 1).to_s, edate.day.to_s].join(", ")
       @usage_options[:report]  = nil
@@ -56,28 +56,28 @@ module ReportController::Usage
     session[:usage_options] = @usage_options
 
     render :update do |page|
-#     if new_toolbars
-        if @usage_options[:report] && @usage_options[:report].table.data.length > 0
-          page << "ManageIQ.toolbars.center_tb.obj.showItem('usage_txt');"
-          page << "ManageIQ.toolbars.center_tb.obj.enableItem('usage_txt');"
-          page << "ManageIQ.toolbars.center_tb.obj.showItem('usage_csv');"
-          page << "ManageIQ.toolbars.center_tb.obj.enableItem('usage_csv');"
-          page << "ManageIQ.toolbars.center_tb.obj.showItem('usage_pdf');"
-          page << "ManageIQ.toolbars.center_tb.obj.enableItem('usage_pdf');"
-          page << "ManageIQ.toolbars.center_tb.obj.showItem('usage_reportonly');"
-          page << "ManageIQ.toolbars.center_tb.obj.enableItem('usage_reportonly');"
-        else
-          page << "ManageIQ.toolbars.center_tb.obj.hideItem('usage_txt');"
-          page << "ManageIQ.toolbars.center_tb.obj.hideItem('usage_csv');"
-          page << "ManageIQ.toolbars.center_tb.obj.hideItem('usage_pdf');"
-          page << "ManageIQ.toolbars.center_tb.obj.hideItem('usage_reportonly');"
-        end
-#     else
-#       page.replace_html("center_buttons_div", :partial=>"layouts/center_buttons")
-#     end
-      page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-      page.replace("usage_options_div", :partial=>"usage_options")
-      page.replace("usage_report_div", :partial=>"usage_report")
+      #     if new_toolbars
+      if @usage_options[:report] && @usage_options[:report].table.data.length > 0
+        page << "ManageIQ.toolbars.center_tb.obj.showItem('usage_txt');"
+        page << "ManageIQ.toolbars.center_tb.obj.enableItem('usage_txt');"
+        page << "ManageIQ.toolbars.center_tb.obj.showItem('usage_csv');"
+        page << "ManageIQ.toolbars.center_tb.obj.enableItem('usage_csv');"
+        page << "ManageIQ.toolbars.center_tb.obj.showItem('usage_pdf');"
+        page << "ManageIQ.toolbars.center_tb.obj.enableItem('usage_pdf');"
+        page << "ManageIQ.toolbars.center_tb.obj.showItem('usage_reportonly');"
+        page << "ManageIQ.toolbars.center_tb.obj.enableItem('usage_reportonly');"
+      else
+        page << "ManageIQ.toolbars.center_tb.obj.hideItem('usage_txt');"
+        page << "ManageIQ.toolbars.center_tb.obj.hideItem('usage_csv');"
+        page << "ManageIQ.toolbars.center_tb.obj.hideItem('usage_pdf');"
+        page << "ManageIQ.toolbars.center_tb.obj.hideItem('usage_reportonly');"
+      end
+      #     else
+      #       page.replace_html("center_buttons_div", :partial=>"layouts/center_buttons")
+      #     end
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+      page.replace("usage_options_div", :partial => "usage_options")
+      page.replace("usage_report_div", :partial => "usage_report")
       page << 'miqBuildCalendar();'
       page << 'miqSparkle(false);'
     end
@@ -86,16 +86,16 @@ module ReportController::Usage
   # Send the current report in text, CSV, or PDF
   def usage_download
     report = session[:usage_options][:report]
-#   filename = report.title + "_" + Time.now.strftime("%Y_%m_%d")
+    #   filename = report.title + "_" + Time.now.strftime("%Y_%m_%d")
     filename = report.title
     disable_client_cache
     case params[:typ]
     when "txt"
       send_data(report.to_text,
-        :filename => "#{filename}.txt" )
+                :filename => "#{filename}.txt")
     when "csv"
       send_data(report.to_csv,
-        :filename => "#{filename}.csv" )
+                :filename => "#{filename}.csv")
     when "pdf"
       download_pdf(report)
     end
@@ -107,32 +107,32 @@ module ReportController::Usage
     @report_only = true                             # Indicate stand alone report for views
     report = @usage_options[:report]
     @html = report.to_html
-    render :action=>"usage"
+    render :action => "usage"
   end
 
   private
 
   # Load a chart miq_report object from YML
   def usage_get_rpt(chart_rpt)
-    return MiqReport.new(YAML::load(File.open("#{USAGE_REPORTS_FOLDER}/#{chart_rpt}.yaml")))
+    MiqReport.new(YAML.load(File.open("#{USAGE_REPORTS_FOLDER}/#{chart_rpt}.yaml")))
   end
 
   # Build the category pulldown for usage report
   def usage_build_cats
-#   cats = Classification.categories.sort_by(&:description)  # Get the categories, sort by name
+    #   cats = Classification.categories.sort_by(&:description)  # Get the categories, sort by name
     cats = Classification.categories.select(&:show)                        # Get the categories
-    cats.delete_if{ |c| c.read_only? || c.entries.length == 0}              # Remove categories that are read only or have no entries
-    ret_cats = {"<Choose>"=>"<Choose>"}                                           # Classifications hash for chooser
-    cats.each {|c| ret_cats[c.name] = c.description}                              # Add categories to the hash
-    return ret_cats
+    cats.delete_if { |c| c.read_only? || c.entries.length == 0 }              # Remove categories that are read only or have no entries
+    ret_cats = {"<Choose>" => "<Choose>"}                                           # Classifications hash for chooser
+    cats.each { |c| ret_cats[c.name] = c.description }                              # Add categories to the hash
+    ret_cats
   end
 
   # Build the tag pulldown for usage report
   def usage_build_tags(cat)
     cat = Classification.find_by_name(params[:usage_cat])
-    ret_tags = {"<Choose>"=>"<Choose>"}                                           # Tags hash for chooser
-    cat.entries.each {|e| ret_tags[e.name] = e.description}                       # Add category tags to the hash
-    return ret_tags
+    ret_tags = {"<Choose>" => "<Choose>"}                                           # Tags hash for chooser
+    cat.entries.each { |e| ret_tags[e.name] = e.description }                       # Add category tags to the hash
+    ret_tags
   end
 
   # Generate the html report based on the usage options
@@ -140,10 +140,10 @@ module ReportController::Usage
     rpt = @usage_options[:typ] == "hourly" ? usage_get_rpt("vim_usage_hour") : usage_get_rpt("vim_usage_day")
     ts = @usage_options[:typ] == "hourly" ? "#{@usage_options[:date]} #{@usage_options[:hour]}:00:00" : @usage_options[:date]
     rpt.performance = {
-      :timestamp => ts,
-      :interval_name => @usage_options[:typ],
+      :timestamp         => ts,
+      :interval_name     => @usage_options[:typ],
       :group_by_category => @usage_options[:cat],
-      :group_by_tag => @usage_options[:tag]
+      :group_by_tag      => @usage_options[:tag]
     }
     rpt.generate_table(:userid => session[:userid])
     rpt.title = "VM Usage for #{@usage_options[:cats][@usage_options[:cat]]}: #{@usage_options[:tags][@usage_options[:tag]]} on #{@usage_options[:date]}" +
@@ -155,5 +155,4 @@ module ReportController::Usage
     @usage_options[:report] = rpt
     @html = rpt.to_html             # Create html from the usage report
   end
-
 end

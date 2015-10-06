@@ -16,4 +16,8 @@ class ServiceTemplateOrchestration < ServiceTemplate
   def self.default_provisioning_entry_point
     '/Cloud/Orchestration/Provisioning/StateMachines/Provision/default'
   end
+
+  def self.default_reconfiguration_entry_point
+    '/Cloud/Orchestration/Reconfiguration/StateMachines/Reconfigure/default'
+  end
 end

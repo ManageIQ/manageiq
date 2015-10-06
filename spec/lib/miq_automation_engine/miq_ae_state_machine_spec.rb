@@ -22,7 +22,7 @@ module MiqAeStateMachineSpec
 
       ws.should_not be_nil
       ws.root['ae_result'].should == 'ok'
-      ws.root['ae_state'].should  == 'final'
+      ws.root['ae_state'].should == 'final'
 
       # puts ws.to_xml
       #     puts "Old Provision Technique took #{t1 - t0} seconds"
@@ -38,7 +38,7 @@ module MiqAeStateMachineSpec
 
       ws.should_not be_nil
       ws.root['ae_result'].should == 'ok'
-      ws.root['ae_state'].should  == ''
+      ws.root['ae_state'].should == ''
       # puts ws.to_xml
       #     puts "New Provision Technique took #{t1 - t0} seconds"
     end
@@ -54,8 +54,8 @@ module MiqAeStateMachineSpec
 
       ws.should_not be_nil
       ws.root['ae_result'].should == 'error'
-      ws.root['ae_state'].should  == 'ProvisionCheck'
-      #puts ws.to_xml
+      ws.root['ae_state'].should == 'ProvisionCheck'
+      # puts ws.to_xml
     end
 
     it "raises exception properly during a provision request" do
@@ -70,8 +70,8 @@ module MiqAeStateMachineSpec
 
       ws.should_not be_nil
       ws.root['ae_result'].should == 'error'
-      ws.root['ae_state'].should  == 'ProvisionCheck'
-      #puts ws.to_xml
+      ws.root['ae_state'].should == 'ProvisionCheck'
+      # puts ws.to_xml
     end
 
     it "properly overrides class values with instance values, when they are present" do
@@ -87,7 +87,7 @@ module MiqAeStateMachineSpec
       t1 = Time.now
 
       ws.should_not be_nil
-      #puts ws.to_xml
+      # puts ws.to_xml
       # puts "New Provision (with instance override) Technique took #{t1 - t0} seconds"
     end
 
@@ -122,7 +122,5 @@ module MiqAeStateMachineSpec
       ws = MiqAeEngine.instantiate("#{@domain}/Factory/statemachine/Provisioning")
       ws.root("test_root_object_attribute").should == "test_class_method"
     end
-
   end
-
 end

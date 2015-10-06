@@ -1,3 +1,5 @@
+require 'linux_admin'
+
 module Vmdb
   module Appliance
     def self.VERSION
@@ -47,9 +49,9 @@ module Vmdb
 
     def self.log_server_identity
       return unless MiqEnvironment::Command.is_appliance?
-      #this is the request to overwrite a small file in the vmdb/log directory for each time the evm server is restarted.
-      #the file must not be named ".log" or it will be removed by logrotate, and it must contain the Server GUID (by which the appliance is known in the vmdb,
-      #the build identifier of the appliance as it is being started,  the appliance hostname and the name of the appliance as configured from our configuration screen.
+      # this is the request to overwrite a small file in the vmdb/log directory for each time the evm server is restarted.
+      # the file must not be named ".log" or it will be removed by logrotate, and it must contain the Server GUID (by which the appliance is known in the vmdb,
+      # the build identifier of the appliance as it is being started,  the appliance hostname and the name of the appliance as configured from our configuration screen.
 
       startup_fname = File.join(Rails.root, "log/last_startup.txt")
       FileUtils.rm_f(startup_fname) if File.exist?(startup_fname)
@@ -125,18 +127,20 @@ module Vmdb
 
     def self.get_network
       retVal = {}
+      retVal[:hostname] = LinuxAdmin::Hosts.new.hostname
+
       miqnet = "/bin/miqnet.sh"
 
       if File.exist?(miqnet)
         # Make a call to the virtual appliance to get the network information
         cmd     = "#{miqnet} -GET"
-        netinfo = `#{cmd}`
-        raise "Unable to execute command: #{cmd}" if netinfo.nil?
-        netinfo = netinfo.split
 
-        [:hostname, :macaddress, :ipaddress, :netmask, :gateway, :primary_dns, :secondary_dns].each do |type|
-          retVal[type] = netinfo.shift
-        end
+        retVal[:macaddress]    = `#{cmd} MAC`
+        retVal[:ipaddress]     = `#{cmd} IP`
+        retVal[:netmask]       = `#{cmd} MASK`
+        retVal[:gateway]       = `#{cmd} GW`
+        retVal[:primary_dns]   = `#{cmd} DNS1`
+        retVal[:secondary_dns] = `#{cmd} DNS2`
       end
 
       retVal
@@ -148,7 +152,7 @@ module Vmdb
       rpm_log = File.join(log_dir, "package_list_rpm.txt")
 
       @diags ||= [
-        {:cmd => "top -b -n 1", :msg =>"Uptime, top processes, and memory usage"}, # batch mode - once
+        {:cmd => "top -b -n 1", :msg => "Uptime, top processes, and memory usage"}, # batch mode - once
         {:cmd => "pstree -ap", :msg => "Process tree"},
         {:cmd => "df -alhT", :msg => "File system disk usage"},   # All including dummy fs, local, human readable, file system type
         {:cmd => "mount", :msg => "Mounted file systems"},

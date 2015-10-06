@@ -1,8 +1,7 @@
 require "spec_helper"
-require Rails.root.join('db/migrate/20131121211455_change_options_in_miq_alert.rb')
+require_migration
 
 describe ChangeOptionsInMiqAlert do
-
   migration_context :up do
     let(:miq_alert_stub) { migration_stub(:MiqAlert) }
 
@@ -26,6 +25,4 @@ describe ChangeOptionsInMiqAlert do
       alert.options.should == options
     end
   end
-
 end
-

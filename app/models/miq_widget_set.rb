@@ -1,14 +1,14 @@
 class MiqWidgetSet < ActiveRecord::Base
   acts_as_miq_set
 
-  default_scope { where self.conditions_for_my_region_default_scope }
+  default_scope { where conditions_for_my_region_default_scope }
 
   before_destroy :destroy_user_versions
 
   WIDGET_DIR =  File.expand_path(File.join(Rails.root, "product/dashboard/dashboards"))
 
   def self.with_users
-    where(arel_table[:userid].not_eq(nil))
+    where.not(:userid => nil)
   end
 
   def destroy_user_versions
@@ -20,7 +20,9 @@ class MiqWidgetSet < ActiveRecord::Base
     MiqWidgetSet.with_users.where(:name => name, :group_id => owner_id).destroy_all
   end
 
-  def self.where_unique_on(name, group_id, userid)
+  def self.where_unique_on(name, user = nil)
+    userid = user.try(:userid)
+    group_id = user.try(:current_group_id)
     # a unique record is defined by name, group_id and userid
     where(:name => name, :group_id => group_id, :userid => userid)
   end
@@ -30,18 +32,18 @@ class MiqWidgetSet < ActiveRecord::Base
   end
 
   def self.sync_from_dir
-    Dir.glob(File.join(WIDGET_DIR, "*.yaml")).sort.each {|f| self.sync_from_file(f)}
+    Dir.glob(File.join(WIDGET_DIR, "*.yaml")).sort.each { |f| sync_from_file(f) }
   end
 
   def self.sync_from_file(filename)
     attrs = YAML.load_file(filename)
 
-    ws = self.find_by_name(attrs["name"])
+    ws = find_by_name(attrs["name"])
 
     if ws.nil? || ws.updated_on.utc < File.mtime(filename).utc
       # Convert widget descriptions to ids in set_data
       members = []
-      attrs["set_data"] = attrs.delete("set_data_by_description").inject({}) do |h,k|
+      attrs["set_data"] = attrs.delete("set_data_by_description").inject({}) do |h, k|
         col, arr = k
         h[col] = arr.collect do |d|
           w = MiqWidget.find_by_description(d)
@@ -61,14 +63,17 @@ class MiqWidgetSet < ActiveRecord::Base
       end
     else
       $log.info("Widget Set: [#{attrs["description"]}] file has been added to disk, adding to model")
-      ws = self.create(attrs)
+      ws = create(attrs)
       ws.replace_children(members)
     end
   end
 
   def self.seed
-    MiqRegion.my_region.lock do
-      self.sync_from_dir
-    end
+    sync_from_dir
+  end
+
+  def self.find_with_same_order(ids)
+    recs = where(:id => ids).index_by(&:id)
+    ids.map { |id| recs[id.to_i] }
   end
 end

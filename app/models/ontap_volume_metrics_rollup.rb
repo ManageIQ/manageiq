@@ -12,7 +12,7 @@ class OntapVolumeMetricsRollup < ActiveRecord::Base
   virtual_column :resource_name,      :type => :string, :uses => :miq_cim_instance
 
   def resource_name
-    self.miq_cim_instance.name
+    miq_cim_instance.name
   end
 
   def self.additional_counters

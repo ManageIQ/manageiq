@@ -43,12 +43,7 @@ class ServiceOrchestration
 
     # factory method to instantiate a provider dependent converter
     def self.get_converter(dialog_options, manager_class)
-      if manager_class.parent == Object
-        klass = "ServiceOrchestration::OptionConverter#{manager_class.name.match(/Ems(.*)/)[1]}".constantize
-      else
-        klass = manager_class::OrchestrationServiceOptionConverter
-      end
-      klass.new(dialog_options)
+      manager_class::OrchestrationServiceOptionConverter.new(dialog_options)
     end
   end
 end

@@ -49,12 +49,12 @@ class CimLogicalDisk < CimStorageExtent
   LogicalDiskToHostShortcut     = CimAssociations.CIM_LogicalDisk_TO_MIQ_CimHostSystem_SC
 
   SHORTCUT_DEFS = {
-    :base_storage_extents_long  => LogicalDiskToBseShortcut,
-    :file_shares_long     => LogicalDiskToFileShareShortcut,
-    :cim_datastores_long    => LogicalDiskToDatastoreShortcut,
-    :cim_virtual_disks_long   => LogicalDiskToVirtualDiskShortcut,
-    :cim_vms_long       => LogicalDiskToVmShortcut,
-    :cim_hosts_long       => LogicalDiskToHostShortcut
+    :base_storage_extents_long => LogicalDiskToBseShortcut,
+    :file_shares_long          => LogicalDiskToFileShareShortcut,
+    :cim_datastores_long       => LogicalDiskToDatastoreShortcut,
+    :cim_virtual_disks_long    => LogicalDiskToVirtualDiskShortcut,
+    :cim_vms_long              => LogicalDiskToVmShortcut,
+    :cim_hosts_long            => LogicalDiskToHostShortcut
   }
 
   #####################################################

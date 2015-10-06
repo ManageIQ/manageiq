@@ -1,7 +1,7 @@
 class MiqGroup < ActiveRecord::Base
-  default_scope { where(self.conditions_for_my_region_default_scope) }
+  default_scope { where(conditions_for_my_region_default_scope) }
 
-  belongs_to :tenant_owner, :class_name => "Tenant"
+  belongs_to :tenant
   belongs_to :miq_user_role
   belongs_to :resource, :polymorphic => true
   has_and_belongs_to_many :users
@@ -15,6 +15,8 @@ class MiqGroup < ActiveRecord::Base
   virtual_column :miq_user_role_name, :type => :string,  :uses => :miq_user_role
   virtual_column :read_only,          :type => :boolean
   virtual_column :user_count,         :type => :integer
+
+  delegate :self_service?, :limited_self_service?, :to => :miq_user_role, :allow_nil => true
 
   validates_presence_of   :description, :guid
   validates_uniqueness_of :description, :guid
@@ -33,18 +35,21 @@ class MiqGroup < ActiveRecord::Base
   include CustomAttributeMixin
   include ActiveVmAggregationMixin
   include TimezoneMixin
+  include TenancyMixin
 
   FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
 
+  alias_method :current_tenant, :tenant
+
   def name
-    self.description
+    description
   end
 
   def all_users
     User.all_users_of_group(self)
   end
 
-  def self.allows?(group, options={})
+  def self.allows?(_group, _options = {})
     # group: Id || Instance
     # :identifier => Feature Identifier
     # :object => Vm, Host, etc.
@@ -57,66 +62,51 @@ class MiqGroup < ActiveRecord::Base
     #
     # self.filters = MiqUserScope.hash_to_scope(self.filters) unless self.filters.kind_of?(MiqUserScope)
 
-    return true # Remove once this is implemented
+    true # Remove once this is implemented
   end
 
   def self.add(attrs)
-    group = self.new(attrs)
+    group = new(attrs)
     if group.resource.nil?
-      groups = self.where(:resource_id => nil, :resource_type => nil).order("sequence DESC")
+      groups = where(:resource_id => nil, :resource_type => nil).order("sequence DESC")
     else
       groups = group.resource.miq_groups.order("sequence DESC")
     end
     group.sequence = groups.first.nil? ? 1 : groups.first.sequence + 1
     group.save!
 
-    return group
+    group
   end
 
   def self.seed
-    MiqRegion.my_region.lock do
-      role_map_file = File.expand_path(File.join(FIXTURE_DIR, "role_map.yaml"))
-      if self.count == 0 && File.exist?(role_map_file)
-        filter_map_file = File.expand_path(File.join(FIXTURE_DIR, "filter_map.yaml"))
-        ldap_to_filters = File.exist?(filter_map_file) ? YAML.load_file(filter_map_file) : {}
+    role_map_file = File.expand_path(File.join(FIXTURE_DIR, "role_map.yaml"))
+    root_tenant = Tenant.root_tenant
+    if File.exist?(role_map_file)
+      filter_map_file = File.expand_path(File.join(FIXTURE_DIR, "filter_map.yaml"))
+      ldap_to_filters = File.exist?(filter_map_file) ? YAML.load_file(filter_map_file) : {}
 
-        role_map = YAML.load_file(role_map_file)
-        order = role_map.collect(&:keys).flatten
-        groups_to_roles = role_map.inject({}) {|h, g| h[g.keys.first] = g[g.keys.first]; h}
-        seq = 1
-        order.each do |g|
-          group = self.find_by_description(g) || self.new(:description => g)
-          user_role = MiqUserRole.find_by_name("EvmRole-#{groups_to_roles[g]}")
-          if user_role.nil?
-            _log.warn("Unable to find user_role 'EvmRole-#{groups_to_roles[group]}' for group '#{g}'")
-            next
-          end
-          group.miq_user_role = user_role
-          group.sequence      = seq
-          group.filters       = ldap_to_filters[g]
-          group.group_type    = "system"
-
-          mode = group.new_record? ? "Created" : "Added"
-          group.save!
-          _log.info("#{mode} Group: #{group.description} with Role: #{user_role.name}")
-
-          seq += 1
+      role_map = YAML.load_file(role_map_file)
+      order = role_map.collect(&:keys).flatten
+      groups_to_roles = role_map.each_with_object({}) { |g, h| h[g.keys.first] = g[g.keys.first] }
+      seq = 1
+      order.each do |g|
+        group = find_by_description(g) || new(:description => g)
+        user_role = MiqUserRole.find_by_name("EvmRole-#{groups_to_roles[g]}")
+        if user_role.nil?
+          _log.warn("Unable to find user_role 'EvmRole-#{groups_to_roles[group]}' for group '#{g}'")
+          next
         end
-      else
-        # Migrate legacy groups to have miq_user_roles if necessary
-        self.all.each do |g|
-          next unless g.group_type == "ldap"
-          role_name = "EvmRole-#{g.description.split("-").last}"
-          role = MiqUserRole.find_by_name(role_name)
-          if role.nil? && g.role
-            role_name = "EvmRole-#{g.role.name}"
-            role = MiqUserRole.find_by_name(role_name)
-          end
-          g.update_attributes(
-            :group_type    => "system",
-            :miq_user_role => role
-          )
-        end
+        group.miq_user_role = user_role
+        group.sequence      = seq
+        group.filters       = ldap_to_filters[g]
+        group.group_type    = "system"
+        group.tenant        = root_tenant
+
+        mode = group.new_record? ? "Created" : "Added"
+        group.save!
+        _log.info("#{mode} Group: #{group.description} with Role: #{user_role.name}")
+
+        seq += 1
       end
     end
   end
@@ -135,18 +125,40 @@ class MiqGroup < ActiveRecord::Base
     ldap.get_memberships(user_obj, auth[:group_memberships_max_depth])
   end
 
-  def get_user_scope(options={})
-    scope = self.filters.kind_of?(MiqUserScope) ? self.filters : MiqUserScope.hash_to_scope(self.filters)
+  def self.get_httpd_groups_by_user(user)
+    require "dbus"
+
+    username = user.kind_of?(self) ? user.userid : user
+
+    sysbus = DBus.system_bus
+    ifp_service   = sysbus["org.freedesktop.sssd.infopipe"]
+    ifp_object    = ifp_service.object "/org/freedesktop/sssd/infopipe"
+    ifp_object.introspect
+    ifp_interface = ifp_object["org.freedesktop.sssd.infopipe"]
+    begin
+      user_groups = ifp_interface.GetUserGroups(user)
+    rescue => err
+      raise "Unable to get groups for user #{username} - #{err}"
+    end
+    user_groups.first
+  end
+
+  def get_user_scope(options = {})
+    scope = filters.kind_of?(MiqUserScope) ? filters : MiqUserScope.hash_to_scope(filters)
 
     scope.get_filters(options)
   end
 
   def get_filters(type = nil)
-    f = self.filters
-    return f if type.nil?
+    if type
+      (filters.respond_to?(:key?) && filters[type.to_s]) || []
+    else
+      filters || {"managed" => [], "belongsto" => []}
+    end
+  end
 
-    type = type.to_s
-    return (f.respond_to?(:key) && f.key?(type)) ? f[type] : []
+  def has_filters?
+    get_managed_filters.present? || get_belongsto_filters.present?
   end
 
   def get_managed_filters
@@ -171,30 +183,30 @@ class MiqGroup < ActiveRecord::Base
   end
 
   def miq_user_role_name
-    self.miq_user_role.nil? ? nil : self.miq_user_role.name
+    miq_user_role.nil? ? nil : miq_user_role.name
   end
-
-  def self_service_group?
-    return false if self.miq_user_role.nil?
-    self.miq_user_role.self_service_role?
-  end
-  alias self_service? self_service_group?
-
-  def limited_self_service_group?
-    return false if self.miq_user_role.nil?
-    self.miq_user_role.limited_self_service_role?
-  end
-  alias limited_self_service? limited_self_service_group?
 
   def read_only
-    self.group_type == "system"
+    group_type == "system"
   end
 
   def user_count
-    self.users.count
+    users.count
   end
 
   def description=(val)
     super(val.to_s.strip)
+  end
+
+  def ordered_widget_sets
+    if settings && settings[:dashboard_order]
+      MiqWidgetSet.find_with_same_order(settings[:dashboard_order]).to_a
+    else
+      miq_widget_sets.sort_by { |a| a.name.downcase }
+    end
+  end
+
+  def self.sort_by_desc
+    all.sort_by { |g| g.description.downcase }
   end
 end

@@ -17,9 +17,8 @@ describe('selectpicker-for-select-tag initialization', function() {
   describe('selectpicker-for-select-tag', function() {
     it('attaches selectpicker classes', function() {
       form.action_typ.$setViewValue('Mustard');
-      className = elem[0][1].className;
-      expect(className).toMatch(/selectpicker/);
-      expect(className).toMatch(/dropdown-toggle/);
+      expect(elem[0][0].className).toMatch(/bs-select-hidden/);
+      expect(elem[0][1].className).toMatch(/dropdown-toggle/);
     });
   });
 });
