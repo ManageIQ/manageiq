@@ -21,10 +21,6 @@ class ConfigurationController < ApplicationController
       active_tab = 3 if active_tab.nil?
     elsif role_allows(:feature => "my_settings_time_profiles")
       active_tab = 4 if active_tab.nil?
-    elsif role_allows(:feature => "my_settings_my_tags")
-      if false
-        active_tab = 5 if active_tab.nil?
-      end
     end
     @tabform = params[:load_edit_err] ? @tabform : @config_tab + "_#{active_tab}"
     case @config_tab
@@ -193,44 +189,6 @@ class ConfigurationController < ApplicationController
     end
   end
 
-  # Assign a tag to a set of objects
-  def mytag_create
-    if params[:newtags] && params[:newtags].present?     # If user entered tags
-      newtags = params[:newtags]
-      invalid_chars = newtags.gsub(/[\w\s]/, "")
-      if invalid_chars.present?
-        invalid_chars = invalid_chars.split(//).uniq.join # Get the unique invalid characters
-        msg = "Invalid character".pluralize(invalid_chars.length)
-        add_flash(msg + " #{invalid_chars} found in entered tags, only letters, numbers, and underscores are allowed.", :error)
-        render :update do |page|
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
-        return
-      end
-      newtags = params[:newtags].split                      # Put tags in array
-      newtags.each do |t|
-        Tag.add(t, :cat => session[:userid]) # Add each tag
-      end
-      session[:mytags] = Tag.all_tags(:cat => session[:userid]).sort      # Get all of the users tags
-      render :update do |page|
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        page.replace("tab_div", :partial => "configuration/ui_5")
-        newtags.each do |tag|
-          page << jquery_pulsate_element("mytag#{tag}")
-        end
-      end
-    end
-  end
-
-  # Remove a tag from a set of objects
-  def mytag_delete
-    Tag.remove(params[:tag], :cat => session[:userid])
-    session[:mytags] = Tag.all_tags(:cat => session[:userid]).sort      # Get all of the users tags
-    render :update do |page|
-      page.replace("tab_div", :partial => "ui_5")
-    end
-  end
-
   def update
     if params["save"]
       get_form_vars if @tabform != "ui_3"
@@ -305,7 +263,6 @@ class ConfigurationController < ApplicationController
         edit
         render :action => "show"
         return                                                      # No config file for Visuals yet, just return
-      when "ui_5"                                                   # My tags, mytag_create method
       end
       @update.config.each_key do |category|
         @update.config[category] = @edit[:new][category].dup
@@ -672,14 +629,11 @@ class ConfigurationController < ApplicationController
         @tabs[0] = ["3", ""]  # Start with first tab array entry set to tab 1 as active
       when "ui_4"
         @tabs[0] = ["4", ""]  # Start with first tab array entry set to tab 1 as active
-      when "ui_5"
-        @tabs[0] = ["5", ""]  # Start with first tab array entry set to tab 1 as active
       end
       @tabs.push(["1", _("Visual")])          if role_allows(:feature => "my_settings_visuals")
       @tabs.push(["2", _("Default Views")])   if role_allows(:feature => "my_settings_default_views")
       @tabs.push(["3", _("Default Filters")]) if role_allows(:feature => "my_settings_default_filters")
       @tabs.push(["4", _("Time Profiles")])   if role_allows(:feature => "my_settings_time_profiles")
-      @tabs.push(["5", _("MyTags")])          if role_allows(:feature => "my_settings_my_tags") if false
     end
   end
 
