@@ -75,9 +75,10 @@ class WidgetPresenter
                   :class  => "fa fa-caret-#{minimized ? "down" : "up"}")
   end
 
+
   def button_pdf
     if PdfGenerator.available? && %w(report chart).include?(@widget.content_type)
-      @view.link_to(content_tag(:span, " Download PDF", :class => 'fa fa-file-pdf-o'),
+      @view.link_to(@view.content_tag(:span, " Download PDF", :class => 'fa fa-file-pdf-o'),
                     {:action => "widget_to_pdf",
                      :rr_id  => @widget.contents_for_user(current_user).miq_report_result_id},
                     :id    => "w_#{@widget.id}_pdf",
