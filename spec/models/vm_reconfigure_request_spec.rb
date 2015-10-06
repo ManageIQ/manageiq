@@ -11,29 +11,25 @@ describe VmReconfigureRequest do
     @vm = FactoryGirl.create(:vm_vmware, :ext_management_system => FactoryGirl.create(:ems_vmware, :zone => zone2))
   end
 
-  describe '#my_role' do
-    it "should be 'ems_operations'" do
-      @request.my_role.should == 'ems_operations'
-    end
-  end
+  it("#my_role should be 'ems_operations'") { expect(@request.my_role).to eq('ems_operations') }
 
   describe '#my_zone' do
     context 'with valid sources' do
       before { @request.update_attributes(:options => {:src_ids => [@vm.id]}) }
 
       it "shoud be the same as VM's zone" do
-        @request.my_zone.should eq(@vm.my_zone)
+        expect(@request.my_zone).to eq(@vm.my_zone)
       end
 
       it "should not be the same as the request's zone" do
-        @request.my_zone.should_not eq(@zone1.name)
+        expect(@request.my_zone).not_to eq(@zone1.name)
       end
     end
 
     context "with no source" do
       it "should be the same as the request's zone" do
         @request.update_attributes(:options => {})
-        @request.my_zone.should eq(@zone1.name)
+        expect(@request.my_zone).to eq(@zone1.name)
       end
     end
   end
