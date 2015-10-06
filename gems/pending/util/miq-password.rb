@@ -4,6 +4,8 @@ require 'base64'
 require 'yaml'
 
 class MiqPassword
+  class MiqPasswordError < StandardError; end
+
   CURRENT_VERSION = "2"
   REGEXP = /v([0-9]+):\{([^}]*)\}/
   REGEXP_START_LINE = /^#{REGEXP}/
@@ -16,8 +18,9 @@ class MiqPassword
     @encStr = encrypt(str)
   end
 
-  def encrypt(str)
-    encrypt_version_2(str)
+  def encrypt(str, ver = "v2", key = self.class.v2_key)
+    value = key.encrypt64(str).delete("\n") unless str.nil? || str.empty?
+    "#{ver}:{#{value}}"
   end
 
   def decrypt(str)
@@ -29,11 +32,21 @@ class MiqPassword
 
       ver ||= "0" # if we don't know what it is, just assume legacy
 
-      decrypt_method = "decrypt_version_#{ver}"
-      raise "unknown encryption version, '#{ver}'" if ver.nil? || !self.respond_to?(decrypt_method, true)
-      raise "no encryption key v#{ver}_key" unless self.class.send("v#{ver}_key")
+      self.class.all_keys.each do |key|
+        begin
+          return key.decrypt64(enc)
+        rescue OpenSSL::Cipher::CipherError
+          # this key doesnt work, try the next one
+        end
+      end
 
-      send(decrypt_method, enc)
+      # will only come here if system is not configured with an encryption key
+      # so throw an exception with as much information as possible (including a cause)
+      begin
+        self.class.all_keys.first.decrypt64(enc)
+      rescue
+        raise MiqPasswordError, "can not decrypt v#{ver}_key encrypted string"
+      end
     end
   end
 
@@ -47,7 +60,7 @@ class MiqPassword
         if source_version == "0" # it probably wasn't encrypted
           return str
         else
-          raise "not decryptable string"
+          raise
         end
       end
     encrypt(decrypted_str)
@@ -109,80 +122,78 @@ class MiqPassword
     end
   end
 
+  def self.key_root
+    @@key_root ||= ENV["KEY_ROOT"]
+  end
+
   def self.key_root=(key_root)
-    @v2_key = @v1_key = @v0_key = nil
-    @key_root = key_root
+    clear_keys
+    @@key_root = key_root
+  end
+
+  def self.clear_keys
+    @@v2_key = @@all_keys = nil
+  end
+
+  def self.all_keys
+    @@all_keys ||= [v2_key].compact
+  end
+
+  def self.encryption_key
+    @@all_keys.first
   end
 
   def self.v2_key
-    @v2_key ||= ez_load("#{key_root}/v2_key")
-  end
+    @@v2_key ||= ez_load("v2_key") || begin
+      key_file = File.expand_path("v2_key", key_root)
+      msg = <<-EOS
+#{key_file} doesn't exist!
+On an appliance, it should be generated on boot by evmserverd.
 
-  def self.add_legacy_key(filename, type = :v1)
-    case type
-    when :v0
-      @v0_key = ez_load_v0(File.expand_path(filename, key_root))
-    when :v1
-      @v1_key = ez_load(File.expand_path(filename, key_root))
+If you're a developer, you can copy the #{key_file}.dev to #{key_file}.
+
+Caution, using the developer key will allow anyone with the public developer key to decrypt the two-way
+passwords in your database.
+EOS
+      Kernel.warn msg
     end
   end
 
-  class << self
-    attr_accessor :v0_key
-    attr_accessor :v1_key
-    attr_writer :v2_key
+  def self.add_legacy_key(filename, type = :v1)
+    key = ez_load(filename, type != :v0)
+    all_keys << key if key && !all_keys.include?(key)
+    key
   end
 
-  # generate a symmetric key
-  # preferred usage is without password/salt
-  def self.generate_symmetric(filename, password = nil, salt = nil)
-    key = if password
-            EzCrypto::Key.with_password(password, salt, :algorithm => "aes-256-cbc")
-          else
-            EzCrypto::Key.generate(:algorithm => "aes-256-cbc")
-          end
-    key.store(filename)
+  class << self
+    def v2_key=(key)
+      @@all_keys.delete(@@v2_key)
+      @@all_key.unshift(key)
+      @@v2_key = key
+    end
+  end
+
+  def self.generate_symmetric(filename = nil)
+    EzCrypto::Key.generate(:algorithm => "aes-256-cbc").tap do |key|
+      key.store(filename) if filename
+    end
   end
 
   protected
 
-  def self.ez_load(filename)
-    File.exist?(filename) && EzCrypto::Key.load(filename)
-  end
+  def self.ez_load(filename, recent = true)
+    return filename if filename.respond_to?(:decrypt64)
 
-  def self.ez_load_v0(filename)
-    if File.exist?(filename)
+    # if it is an absolute path, or relative to pwd, leave as is
+    # otherwise, look in key root for it
+    filename = File.expand_path(filename, key_root) unless File.exist?(filename)
+    if !File.exist?(filename)
+      nil
+    elsif recent
+      EzCrypto::Key.load(filename)
+    else
       params = YAML.load_file(filename)
       CryptString.new(nil, params[:algorithm], params[:key], params[:iv])
-    end
-  end
-
-  def encrypt_version_2(str)
-    return "v2:{}" if str.nil? || str.empty?
-    "v2:{#{self.class.v2_key.encrypt64(str).chomp.gsub("\n", "")}}"
-  end
-
-  def encrypt_version_1(str)
-    return "v1:{}" if str.nil? || str.empty?
-    "v1:{#{self.class.v1_key.encrypt64(str).chomp}}"
-  end
-
-  def decrypt_version_2(str)
-    self.class.v2_key.decrypt64(str)
-  end
-
-  def decrypt_version_1(str)
-    self.class.v1_key.decrypt64(str)
-  end
-
-  def decrypt_version_0(str)
-    self.class.v0_key.decrypt64(str)
-  end
-
-  class << self
-    attr_writer :key_root
-    def key_root
-      @key_root ||= ENV["KEY_ROOT"]
     end
   end
 

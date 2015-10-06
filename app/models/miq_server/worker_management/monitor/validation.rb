@@ -14,7 +14,7 @@ module MiqServer::WorkerManagement::Monitor::Validation
       msg = "#{w.format_full_log_msg} has not responded in #{Time.now.utc - w.last_heartbeat} seconds, restarting worker"
       _log.error(msg)
       MiqEvent.raise_evm_event_queue(w.miq_server, "evm_worker_not_responding", :event_details => msg, :type => w.class.name)
-      self.restart_worker(w, :not_responding)
+      restart_worker(w, :not_responding)
       return false
     end
 
@@ -24,7 +24,7 @@ module MiqServer::WorkerManagement::Monitor::Validation
       msg = "#{w.format_full_log_msg} process memory usage [#{w.memory_usage}] exceeded limit [#{memory_threshold}], requesting worker to exit"
       _log.warn(msg)
       MiqEvent.raise_evm_event_queue(w.miq_server, "evm_worker_memory_exceeded", :event_details => msg, :type => w.class.name)
-      self.restart_worker(w)
+      restart_worker(w)
       return false
     end
 
@@ -32,11 +32,11 @@ module MiqServer::WorkerManagement::Monitor::Validation
       msg = "#{w.format_full_log_msg} uptime has reached the interval of #{restart_interval} seconds, requesting worker to exit"
       _log.info(msg)
       MiqEvent.raise_evm_event_queue(w.miq_server, "evm_worker_uptime_exceeded", :event_details => msg, :type => w.class.name)
-      self.restart_worker(w)
+      restart_worker(w)
       return false
     end
 
-    return true
+    true
   end
 
   def validate_active_messages(processed_worker_ids = [])

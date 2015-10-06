@@ -9,10 +9,9 @@ describe LdapServer do
   end
 
   context "#verify_credentials" do
-
     it "when LdapDomain#connect returns nil" do
       LdapDomain.any_instance.stub(:connect).with(@ldap_server).and_return(nil)
-      lambda {@ldap_server.verify_credentials}.should raise_error(MiqException::Error, "Authentication failed")
+      -> { @ldap_server.verify_credentials }.should raise_error(MiqException::Error, "Authentication failed")
     end
 
     it "when LdapDomain#connect returns connection handle" do
@@ -25,9 +24,7 @@ describe LdapServer do
       msg = "Invalid socket"
       err = SocketError.new(msg)
       LdapDomain.any_instance.stub(:connect).with(@ldap_server).and_raise(err)
-      lambda {@ldap_server.verify_credentials}.should raise_error(MiqException::Error, msg)
+      -> { @ldap_server.verify_credentials }.should raise_error(MiqException::Error, msg)
     end
-
   end
-
 end

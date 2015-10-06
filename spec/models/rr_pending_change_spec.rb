@@ -1,10 +1,6 @@
 require "spec_helper"
 
 describe RrPendingChange do
-  before(:each) do
-    MiqRegion.seed
-  end
-
   it ".table_name" do
     described_class.table_name.should == "rr#{MiqRegion.my_region_number}_pending_changes"
   end
@@ -14,7 +10,7 @@ describe RrPendingChange do
   end
 
   it ".last_id" do
-    lambda { described_class.last_id }.should raise_error
+    -> { described_class.last_id }.should raise_error
   end
 
   context ".for_region_number" do
@@ -32,7 +28,7 @@ describe RrPendingChange do
 
     it ".last_id" do
       described_class.for_region_number(1000) do
-        lambda { described_class.last_id }.should raise_error
+        -> { described_class.last_id }.should raise_error
       end
     end
   end

@@ -13,7 +13,7 @@ class MiqAeInstance < ActiveRecord::Base
   include ReportableMixin
 
   def self.find_by_name(name)
-    self.where("lower(name) = ?", name.downcase).first
+    where("lower(name) = ?", name.downcase).first
   end
 
   def get_field_attribute(field, validate, attribute)
@@ -22,7 +22,7 @@ class MiqAeInstance < ActiveRecord::Base
       raise MiqAeException::FieldNotFound, "Field [#{fname}] not found in MiqAeDatastore" if field.nil?
     end
 
-    val = self.ae_values.detect { |v| v.field_id == field.id }
+    val = ae_values.detect { |v| v.field_id == field.id }
     val.respond_to?(attribute) ? val.send(attribute) : nil
   end
 
@@ -30,8 +30,8 @@ class MiqAeInstance < ActiveRecord::Base
     field, fname = validate_field(field)
     raise MiqAeException::FieldNotFound, "Field [#{fname}] not found in MiqAeDatastore" if field.nil?
 
-    val   = self.ae_values.detect { |v| v.field_id == field.id }
-    val ||= self.ae_values.build(:field_id => field.id)
+    val   = ae_values.detect { |v| v.field_id == field.id }
+    val ||= ae_values.build(:field_id => field.id)
     val.send("#{attribute}=", value)
     val.save!
   end
@@ -54,19 +54,17 @@ class MiqAeInstance < ActiveRecord::Base
 
   def field_attributes
     result = {}
-    self.ae_class.ae_fields.each do |f|
-      result[f.name] = self.get_field_value(f, false)
+    ae_class.ae_fields.each do |f|
+      result[f.name] = get_field_value(f, false)
     end
-    return result
+    result
   end
 
   def fqname
-    "#{self.ae_class.fqname}/#{self.name}"
+    "#{ae_class.fqname}/#{name}"
   end
 
-  def domain
-    ae_class.domain
-  end
+  delegate :domain, :to => :ae_class
 
   def export_ae_fields
     ae_values_sorted.collect(&:to_export_yaml).compact
@@ -74,16 +72,16 @@ class MiqAeInstance < ActiveRecord::Base
 
   # TODO: Limit search to within the context of a class id?
   def self.search(str)
-    str[-1,1] = "%" if str[-1,1] == "*"
+    str[-1, 1] = "%" if str[-1, 1] == "*"
     where("lower(name) LIKE ?", str.downcase).pluck(:name)
   end
 
   def to_export_xml(options = {})
     require 'builder'
     xml = options[:builder] ||= ::Builder::XmlMarkup.new(:indent => options[:indent])
-    xml_attrs = { :name => self.name }
+    xml_attrs = {:name => name}
 
-    self.class.column_names.each { |cname|
+    self.class.column_names.each do |cname|
       # Remove any columns that we do not want to export
       next if %w(id created_on updated_on updated_by).include?(cname) || cname.ends_with?("_id")
 
@@ -91,18 +89,18 @@ class MiqAeInstance < ActiveRecord::Base
       next if %w(name).include?(cname)
 
       # Process the column
-      xml_attrs[cname.to_sym]  = self.send(cname)   unless self.send(cname).blank?
-    }
+      xml_attrs[cname.to_sym]  = send(cname)   unless send(cname).blank?
+    end
 
-    xml.MiqAeInstance(xml_attrs) {
-      self.ae_values_sorted.each { |v| v.to_export_xml(:builder => xml) }
-    }
+    xml.MiqAeInstance(xml_attrs) do
+      ae_values_sorted.each { |v| v.to_export_xml(:builder => xml) }
+    end
   end
 
   def ae_values_sorted
-    ae_class.ae_fields.sort_by(&:priority).collect { |field|
+    ae_class.ae_fields.sort_by(&:priority).collect do |field|
       ae_values.detect { |value| value.field_id == field.id }
-    }.compact
+    end.compact
   end
 
   def editable?
@@ -127,13 +125,13 @@ class MiqAeInstance < ActiveRecord::Base
       MiqAeInstanceCopy.new(options[:fqname]).as(options[:new_name],
                                                  options[:namespace],
                                                  options[:overwrite_location]
-      )
+                                                )
     else
       MiqAeInstanceCopy.copy_multiple(options[:ids],
                                       options[:domain],
                                       options[:namespace],
                                       options[:overwrite_location]
-      )
+                                     )
     end
   end
 
@@ -146,10 +144,10 @@ class MiqAeInstance < ActiveRecord::Base
   def validate_field(field)
     if field.kind_of?(MiqAeField)
       fname = field.name
-      field = nil unless self.ae_class.ae_fields.include?(field)
+      field = nil unless ae_class.ae_fields.include?(field)
     else
       fname = field
-      field = self.ae_class.ae_fields.detect { |f| fname.casecmp(f.name) == 0 }
+      field = ae_class.ae_fields.detect { |f| fname.casecmp(f.name) == 0 }
     end
     return field, fname
   end

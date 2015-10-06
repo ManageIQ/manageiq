@@ -25,7 +25,7 @@ class EmsEventHelper
     _log.info "Processing EMS event [#{@event.event_type}] chain_id [#{@event.chain_id}] on EMS [#{@event.ems_id}]...Complete"
   end
 
-  def handle_event()
+  def handle_event
     begin
       routine = VMDB::Config.new('event_handling').config[:event_handling][@event.event_type.to_sym]
     rescue => err
@@ -75,7 +75,7 @@ class EmsEventHelper
 
       unless missing_targets.empty?
         _log.debug "Performing refresh on the following targets that were not found #{missing_targets.inspect}."
-        handle_step({:refresh => missing_targets})
+        handle_step(:refresh => missing_targets)
       end
 
     when 'call'
@@ -85,7 +85,7 @@ class EmsEventHelper
       if target.nil?
         # Kick off the appropriate refresh
         _log.debug "Unable to find target [#{targets[0]}].  Performing refresh."
-        handle_step({:refresh => [targets[0]]})
+        handle_step(:refresh => [targets[0]])
       else
         methods = targets[1]
         params = targets[2..-1]

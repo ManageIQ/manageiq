@@ -35,6 +35,5 @@ module MiqAeMethodService
     def provisioned(msg)
       object_send(:update_and_notify_parent, :state => 'provisioned', :message => msg)
     end
-
   end
 end

@@ -1,4 +1,4 @@
-class TreeBuilderForeman  < TreeBuilder
+class TreeBuilderForeman < TreeBuilder
   private
 
   def tree_init_options(_tree_name)

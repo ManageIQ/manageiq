@@ -34,9 +34,9 @@ module MiqAeMethodSpec
       vm = FactoryGirl.create(:vm_vmware, :name => vm_name)
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "miq_ae_method_spec1"), @domain)
       ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?Vm::vm=#{vm.id}")
-      ws.root("vm_id_via_hash").should     == vm.id
-      ws.root("vm_id_via_call").should     == vm.id
-      ws.root("vm_name").should            == vm.name
+      ws.root("vm_id_via_hash").should == vm.id
+      ws.root("vm_id_via_call").should == vm.id
+      ws.root("vm_name").should == vm.name
       ws.root("vm_normalized_name").should == vm.name.tr(' ', '_')
     end
 
@@ -127,8 +127,6 @@ module MiqAeMethodSpec
       # print "\nEVMGet =>", $service->EVMGet($miq_token, "#tester");
       #
       # exit 0;
-
     end
-
   end
 end

@@ -5,18 +5,14 @@ describe "JobProxyDispatcherVmStorage2Hosts" do
   include JobProxyDispatcherHelper
   context "with two servers on same zone, vix disk enabled for all, " do
     before(:each) do
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid => @guid)
-      @zone = FactoryGirl.create(:zone)
-      @server1 = FactoryGirl.create(:miq_server, :zone => @zone, :guid => @guid, :status => "started")
-      MiqServer.my_server(true)
-      @server2 = FactoryGirl.create(:miq_server, :zone => @zone, :guid => MiqUUID.new_guid, :status => "started")
+      @server1 = EvmSpecHelper.local_miq_server(:is_master => true)
+      @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone)
       MiqServer.any_instance.stub(:is_vix_disk? => true)
     end
 
     context "with hosts with a miq_proxy, vmware vms on storages" do
       before(:each) do
-        @hosts, @proxies, @storages, @vms = self.build_hosts_proxies_storages_vms
+        @hosts, @proxies, @storages, @vms = build_hosts_proxies_storages_vms
         @vm = @vms.first
       end
 

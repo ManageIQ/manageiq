@@ -2,11 +2,7 @@ require "spec_helper"
 
 describe MiqReport do
   before(:each) do
-    MiqRegion.seed
-    guid = MiqUUID.new_guid
-    MiqServer.stub(:my_guid => guid)
-    FactoryGirl.create(:miq_server, :zone => FactoryGirl.create(:zone), :guid => guid, :status => "started")
-    MiqServer.my_server(true)
+    EvmSpecHelper.local_miq_server
 
     @group = FactoryGirl.create(:miq_group)
     @user  = FactoryGirl.create(:user, :miq_groups => [@group])
@@ -36,7 +32,7 @@ describe MiqReport do
 
   context 'to_chart' do
     it "raises an exception for missing sortby or type" do
-      rpt = FactoryGirl.create(:miq_report_with_non_nil_condition)
+      rpt = FactoryGirl.create(:miq_report)
 
       # Can't create a graph without a sortby column
       expect { rpt.to_chart(@report_theme, @show_title, @options) }.to raise_exception
@@ -61,6 +57,7 @@ describe MiqReport do
       rpt = MiqReport.find_by_name(name)
 
       rpt.generate_table(:userid => 'test')
+      rpt[:graph][:type] = 'StackedColumn'
       rpt.to_chart(@report_theme, @show_title, @options)
       chart = rpt.chart
 

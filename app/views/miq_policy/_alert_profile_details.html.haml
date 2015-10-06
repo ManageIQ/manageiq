@@ -13,7 +13,7 @@
         %div{:class => "form-horizontal#{@edit ? "" : ".static"} "}
           .form-group
             %label.control-label.col-md-2= _("Description")
-            .col-md-10
+            .col-md-8
               - if @edit
                 = text_field_tag("description", @edit[:new][:description],
                   :maxlength         => MAX_DESC_LEN,
@@ -118,11 +118,11 @@
             = _('The Enterprise')
           - else
             -# Assigned to CIs
-            %form.form-horizontal
+            .form-horizontal
               .form-group
                 %label.control-label.col-md-2
                   = ui_lookup(:models => aa[:objects].first.class.to_s)
-                .col-md-10
+                .col-md-8
                   %table
                     %tbody
                       - objs = []
@@ -139,11 +139,11 @@
                             = h(obj)
         - elsif !aa[:tags].empty?
           -# Tags are assigned
-          %form.form-horizontal
+          .form-horizontal
             .form-group
               %label.control-label.col-md-2
                 = _("%s with %s Tags") % [ui_lookup(:tables => aa[:tags].first.last), @alert_profile_tag.description]
-              .col-md-10
+              .col-md-8
                 - aa[:tags].sort_by { |a| a.first.description.downcase }.each do |tag|
                   = h(tag.first.description)
                   %br

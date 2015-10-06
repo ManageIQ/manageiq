@@ -1,5 +1,4 @@
 class ManageIQ::Providers::Openstack::InfraManager::EmsCluster < ::EmsCluster
-
   def direct_vms
     vms
   end
@@ -14,14 +13,14 @@ class ManageIQ::Providers::Openstack::InfraManager::EmsCluster < ::EmsCluster
     direct_vms.collect(&:id)
   end
 
-  ############################################33
+  # ###########################################33
   # OpenStack status aggregate methods
   def service_groups
-    self.hosts.joins(:host_service_groups)
+    hosts.joins(:host_service_groups)
   end
 
   def service_group_services
-    self.hosts.joins(:host_service_groups => :system_services)
+    hosts.joins(:host_service_groups => :system_services)
   end
 
   def service_group_names

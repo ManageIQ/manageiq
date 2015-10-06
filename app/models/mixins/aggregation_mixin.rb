@@ -7,6 +7,7 @@ module AggregationMixin
     virtual_column :aggregate_memory,        :type => :integer, :uses => :all_relationships
     virtual_column :aggregate_vm_cpus,       :type => :integer, :uses => :all_relationships
     virtual_column :aggregate_vm_memory,     :type => :integer, :uses => :all_relationships
+    virtual_column :aggregate_disk_capacity, :type => :integer, :uses => :all_relationships
 
     # Helper method to override the virtual_column :uses definitions in the
     # event that the all_* methods are overridden
@@ -17,6 +18,7 @@ module AggregationMixin
         virtual_columns_hash["aggregate_logical_cpus"].uses  = new_uses
         virtual_columns_hash["aggregate_physical_cpus"].uses = new_uses
         virtual_columns_hash["aggregate_memory"].uses        = new_uses
+        virtual_columns_hash["aggregate_disk_capacity"].uses = new_uses
       when :all_vms_and_templates
         virtual_columns_hash["aggregate_vm_cpus"].uses       = new_uses
         virtual_columns_hash["aggregate_vm_memory"].uses     = new_uses
@@ -48,10 +50,14 @@ module AggregationMixin
     aggregate_hardware(:vms_and_templates, :memory_cpu, targets)
   end
 
+  def aggregate_disk_capacity(targets = nil)
+    aggregate_hardware(:hosts, :disk_capacity, targets)
+  end
+
   # Default implementations which can be overridden with something more optimized
 
   def all_vms_and_templates
-    self.descendants(:of_type => 'VmOrTemplate').sort_by { |v| v.name.downcase }
+    descendants(:of_type => 'VmOrTemplate').sort_by { |v| v.name.downcase }
   end
 
   def all_vms
@@ -63,7 +69,7 @@ module AggregationMixin
   end
 
   def all_vm_or_template_ids
-    Relationship.resource_pairs_to_ids(self.descendant_ids(:of_type => 'VmOrTemplate'))
+    Relationship.resource_pairs_to_ids(descendant_ids(:of_type => 'VmOrTemplate'))
   end
 
   def all_vm_ids
@@ -75,15 +81,15 @@ module AggregationMixin
   end
 
   def all_hosts
-    self.descendants(:of_type => 'Host').sort_by { |v| v.name.downcase }
+    descendants(:of_type => 'Host').sort_by { |v| v.name.downcase }
   end
 
   def all_host_ids
-    Relationship.resource_pairs_to_ids(self.descendant_ids(:of_type => 'Host'))
+    Relationship.resource_pairs_to_ids(descendant_ids(:of_type => 'Host'))
   end
 
   def all_storages
-    hosts = self.all_hosts
+    hosts = all_hosts
     MiqPreloader.preload(hosts, :storages)
     hosts.collect(&:storages).flatten.compact.uniq
   end
@@ -91,7 +97,7 @@ module AggregationMixin
   def aggregate_hardware(from, field, targets = nil)
     from      = from.to_s.singularize
     select    = field == :aggregate_cpu_speed ? "logical_cpus, cpu_speed" : field
-    targets ||= self.send("all_#{from}_ids")
+    targets ||= send("all_#{from}_ids")
     targets   = targets.collect(&:id) unless targets.first.kind_of?(Integer)
     hdws      = Hardware.where("#{from}_id" => targets).select(select)
 

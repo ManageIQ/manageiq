@@ -1,5 +1,5 @@
 require 'spec_helper'
-require Rails.root.join('db/migrate/20140424173120_migrate_automate_to_customer_domain.rb')
+require_migration
 
 describe MigrateAutomateToCustomerDomain do
   let(:miq_ae_namespace_stub) { migration_stub(:MiqAeNamespace) }

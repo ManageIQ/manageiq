@@ -4,7 +4,6 @@ module MiqAeObjectSpec
   include MiqAeEngine
   describe MiqAeObject do
     before(:each) do
-      MiqServer.my_server_clear_cache
       MiqAeDatastore.reset
       @domain = 'SPEC_DOMAIN'
       @model_data_dir = File.join(File.dirname(__FILE__), "data")
@@ -59,13 +58,13 @@ module MiqAeObjectSpec
     end
 
     it "#process_args_as_attributes with a hash with no object reference" do
-      result = @miq_obj.process_args_as_attributes("name"=> "fred")
+      result = @miq_obj.process_args_as_attributes("name" => "fred")
       result["name"].should be_kind_of(String)
       result["name"].should == "fred"
     end
 
     it "#process_args_as_attributes with a hash with an object reference" do
-      result = @miq_obj.process_args_as_attributes("VmOrTemplate::vm"=> "#{@vm.id}")
+      result = @miq_obj.process_args_as_attributes("VmOrTemplate::vm" => "#{@vm.id}")
       result["vm_id"].should == @vm.id.to_s
       result["vm"].should be_kind_of(MiqAeMethodService::MiqAeServiceVmOrTemplate)
     end
@@ -97,7 +96,7 @@ module MiqAeObjectSpec
       result["my_objects"].should be_kind_of(Array)
       result["my_objects"].length.should == 3
     end
-  
+
     context "#enforce_state_maxima" do
       it "should not raise an exception before exceeding max_time" do
         Timecop.freeze(Time.parse('2013-01-01 00:59:59 UTC')) do

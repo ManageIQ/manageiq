@@ -3,24 +3,24 @@ class VmSynchronize < Job
     self.state ||= 'initialize'
     {
       :initializing => {'initialize'       => 'waiting_to_start'},
-      :start        => {'waiting_to_start' => 'synchronize'     },
-      :sync_started => {'synchronize'      => 'synchronizing'   },
-      :data         => {'synchronizing'    => 'synchronizing'   },
-      :abort_job    => {'*'                => 'aborting'        },
-      :cancel       => {'*'                => 'canceling'       },
-      :finish       => {'*'                => 'finished'        },
-      :error        => {'*'                => '*'               }
+      :start        => {'waiting_to_start' => 'synchronize'},
+      :sync_started => {'synchronize'      => 'synchronizing'},
+      :data         => {'synchronizing'    => 'synchronizing'},
+      :abort_job    => {'*'                => 'aborting'},
+      :cancel       => {'*'                => 'canceling'},
+      :finish       => {'*'                => 'finished'},
+      :error        => {'*'                => '*'}
     }
   end
 
   def call_synchronize
     _log.info "Enter"
 
-    self.options[:categories] ||= Vm.default_scan_categories
+    options[:categories] ||= Vm.default_scan_categories
     begin
-      host = Host.find(self.agent_id)
-      vm   = VmOrTemplate.find(self.target_id)
-      vm.sync_metadata( self.options[:categories], "taskid" => jobid, "host" => host )
+      host = Host.find(agent_id)
+      vm   = VmOrTemplate.find(target_id)
+      vm.sync_metadata(options[:categories], "taskid" => jobid, "host" => host)
     rescue TimeoutError
       message = "timed out attempting to synchronize, aborting"
       _log.error("#{message}")
@@ -52,11 +52,11 @@ class VmSynchronize < Job
         when "syncmetadata"
           request_docs = []
           all_docs = []
-          s.each_element { |e|
+          s.each_element do |e|
             _log.info("Summary XML [#{e}]")
             request_docs << e.attributes['original_filename'] if e.attributes['items_total'] && e.attributes['items_total'].to_i.zero?
             all_docs << e.attributes['original_filename']
-          }
+          end
           unless request_docs.empty? || (request_docs.length != all_docs.length)
             message = "synchronize operation yielded no data. aborting"
             _log.error("#{message}")

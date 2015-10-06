@@ -59,7 +59,7 @@ describe ExplorerPresenter do
         obj = {
           :date_from => Time.at(0).utc,
           :date_to   => Time.at(946684800).utc,
-          :skip_days => [ 1, 2, 3 ],
+          :skip_days => [1, 2, 3],
         }.with_indifferent_access
         @presenter[:build_calendar] = obj
         expect(@presenter).to receive(:js_build_calendar).with(obj)

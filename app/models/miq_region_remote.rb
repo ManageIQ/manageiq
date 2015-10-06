@@ -1,7 +1,7 @@
 class MiqRegionRemote < ActiveRecord::Base
   def self.db_ping(host, port, username, password, database = nil, adapter = nil)
     database, adapter = prepare_default_fields(database, adapter)
-    self.with_remote_connection(host, port, username, password, database, adapter) do |conn|
+    with_remote_connection(host, port, username, password, database, adapter) do |conn|
       return EvmDatabase.ping(conn)
     end
   end
@@ -9,17 +9,17 @@ class MiqRegionRemote < ActiveRecord::Base
   def self.destroy_entire_region(region, host, port, username, password, database = nil, adapter = nil, tables = nil)
     database, adapter = prepare_default_fields(database, adapter)
 
-    self.with_remote_connection(host, port, username, password, database, adapter) do |conn|
+    with_remote_connection(host, port, username, password, database, adapter) do |conn|
       _log.info "Clearing region [#{region}] from remote host [#{host}]..."
 
-      tables ||= conn.tables.reject {|t| t =~ /^schema_migrations|^rr/}.sort
+      tables ||= conn.tables.reject { |t| t =~ /^schema_migrations|^rr/ }.sort
       tables.each do |t|
         pk = conn.primary_key(t)
         if pk
-          conditions = sanitize_conditions(self.region_to_conditions(region, pk))
+          conditions = sanitize_conditions(region_to_conditions(region, pk))
         else
           id_cols = connection.columns(t).select { |c| c.name.ends_with?("_id") }
-          conditions = id_cols.collect { |c| "(#{sanitize_conditions(self.region_to_conditions(region, c.name))})" }.join(" OR ")
+          conditions = id_cols.collect { |c| "(#{sanitize_conditions(region_to_conditions(region, c.name))})" }.join(" OR ")
         end
 
         rows = conn.delete("DELETE FROM #{t} WHERE #{conditions}")
@@ -36,7 +36,7 @@ class MiqRegionRemote < ActiveRecord::Base
     log_details = "Host: [#{host}]}, Database: [#{database}], Adapter: [#{adapter}], User: [#{username}]"
 
     begin
-      self.with_remote_connection(host, port, username, password, database, adapter) do |c|
+      with_remote_connection(host, port, username, password, database, adapter) do |c|
         _log.info("Attempting to connection to: #{log_details}...")
         tables = c.tables rescue nil
         if tables
@@ -62,7 +62,7 @@ class MiqRegionRemote < ActiveRecord::Base
 
     log_header = "Region: [#{region}] with guid: [#{guid}]:"
 
-    self.with_remote_connection(host, port, username, password, database, adapter) do |conn|
+    with_remote_connection(host, port, username, password, database, adapter) do |conn|
       cond = sanitize_conditions(["region = ?", region])
       reg = conn.select_one("SELECT * FROM miq_regions WHERE #{cond}")
 
@@ -85,7 +85,7 @@ class MiqRegionRemote < ActiveRecord::Base
     if database.nil? || adapter.nil?
       db_conf = VMDB::Config.new("database").config[Rails.env.to_sym]
       database ||= db_conf[:database]
-      adapter  ||= db_conf[:adapter]
+      adapter ||= db_conf[:adapter]
     end
     return database, adapter
   end
@@ -120,7 +120,7 @@ class MiqRegionRemote < ActiveRecord::Base
     ensure
       # Disconnect and remove this new connection from the connection pool, to completely clear it out
       conn.disconnect! if conn
-      ActiveRecord::Base.connection_handler.connection_pools.delete(self.name)
+      ActiveRecord::Base.connection_handler.connection_pools.delete(name)
     end
   end
 end

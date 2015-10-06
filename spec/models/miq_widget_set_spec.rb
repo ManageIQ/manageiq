@@ -1,8 +1,8 @@
 require "spec_helper"
 
 describe MiqWidgetSet do
-  let(:group) { FactoryGirl.create(:miq_group, :description => 'dev group') }
-  let(:user)  { FactoryGirl.create(:user, :name => 'cloud', :userid => 'cloud', :miq_groups => [group]) }
+  let(:group) { user.current_group }
+  let(:user)  { FactoryGirl.create(:user_with_group) }
   before do
     @ws_group = FactoryGirl.create(:miq_widget_set, :name => 'Home', :owner => group)
   end
@@ -51,10 +51,10 @@ describe MiqWidgetSet do
     let(:group2) { FactoryGirl.create(:miq_group, :description => 'dev group2') }
     let(:ws_1)   { FactoryGirl.create(:miq_widget_set, :name => 'Home', :userid => user.userid, :group_id => group.id) }
 
-     before do
+    before do
       user.miq_groups << group2
       ws_1
-      FactoryGirl.create(:miq_widget_set, :name => 'Home', :userid => user.userid, :group_id => group2.id )
+      FactoryGirl.create(:miq_widget_set, :name => 'Home', :userid => user.userid, :group_id => group2.id)
     end
 
     it "initial state" do
@@ -74,6 +74,20 @@ describe MiqWidgetSet do
     it "brings back records with users" do
       ws_1 = FactoryGirl.create(:miq_widget_set, :name => 'Home', :userid => user.userid, :group_id => group.id)
       expect(described_class.with_users).to eq([ws_1])
+    end
+  end
+
+  context ".find_with_same_order" do
+    it "returns in index order" do
+      g1 = FactoryGirl.create(:miq_widget_set)
+      g2 = FactoryGirl.create(:miq_widget_set)
+      expect(MiqWidgetSet.find_with_same_order([g1.id.to_s, g2.id.to_s])).to eq([g1, g2])
+    end
+
+    it "returns in non index order" do
+      g1 = FactoryGirl.create(:miq_widget_set)
+      g2 = FactoryGirl.create(:miq_widget_set)
+      expect(MiqWidgetSet.find_with_same_order([g2.id.to_s, g1.id.to_s])).to eq([g2, g1])
     end
   end
 end

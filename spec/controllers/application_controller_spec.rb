@@ -8,15 +8,15 @@ describe ApplicationController do
       ur = FactoryGirl.create(:miq_user_role)
       rptmenu = {:report_menus => [["Configuration Management", ["Hosts", ["Hosts Summary", "Hosts Summary"]]]]}
       group = FactoryGirl.create(:miq_group, :miq_user_role => ur, :settings => rptmenu)
-      login_as FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
+      login_as FactoryGirl.create(:user, :miq_groups => [group])
     end
 
     it "Verify Invalid input flash error message when invalid id is passed in" do
-      lambda { controller.send(:find_by_id_filtered, ExtManagementSystem, "invalid") }.should raise_error(RuntimeError, "Invalid input")
+      -> { controller.send(:find_by_id_filtered, ExtManagementSystem, "invalid") }.should raise_error(RuntimeError, "Invalid input")
     end
 
     it "Verify flash error message when passed in id no longer exists in database" do
-      lambda { controller.send(:find_by_id_filtered, ExtManagementSystem, "1") }.should raise_error(RuntimeError, "Selected Provider no longer exists")
+      -> { controller.send(:find_by_id_filtered, ExtManagementSystem, "1") }.should raise_error(RuntimeError, "Selected Provider no longer exists")
     end
 
     it "Verify record gets set when valid id is passed in" do
@@ -30,15 +30,10 @@ describe ApplicationController do
     before do
       EvmSpecHelper.seed_specific_product_features("host_new", "host_edit", "perf_reload")
       feature = MiqProductFeature.find_all_by_identifier(["host_new"])
-      test_user_role  = FactoryGirl.create(:miq_user_role,
-                                           :name                 => "test_user_role",
-                                           :miq_product_features => feature)
-      test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
-      login_as FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
+      login_as FactoryGirl.create(:user, :features => feature)
     end
 
     it "should not raise an error for feature that user has access to" do
-      msg = "The user is not authorized for this task or item."
       lambda do
         controller.send(:assert_privileges, "host_new")
       end.should_not raise_error
@@ -62,11 +57,8 @@ describe ApplicationController do
     before do
       EvmSpecHelper.seed_specific_product_features("vm_infra_explorer", "host_edit")
       feature = MiqProductFeature.find_all_by_identifier("vm_infra_explorer")
-      @test_user_role  = FactoryGirl.create(:miq_user_role,
-                                            :name                 => "test_user_role",
-                                            :miq_product_features => feature)
-      test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => @test_user_role)
-      login_as FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
+      user = login_as FactoryGirl.create(:user, :features => feature)
+      @test_user_role = user.current_group.miq_user_role
     end
 
     it "should return restricted view yaml for restricted user" do
@@ -79,6 +71,21 @@ describe ApplicationController do
       @test_user_role[:settings] = {}
       view_yaml = controller.send(:view_yaml_filename, VmCloud.name, {})
       view_yaml.should include("ManageIQ_Providers_CloudManager_Vm.yaml")
+    end
+  end
+
+  context "#previous_breadcrumb_url" do
+    it "should return url when 2 entries" do
+      controller.instance_variable_set(:@breadcrumbs, [{:url => "test_url"}, 'placeholder'])
+      expect(controller.send(:previous_breadcrumb_url)).to eq("test_url")
+    end
+
+    it "should raise for less than 2 entries" do
+      controller.instance_variable_set(:@breadcrumbs, [{}])
+      expect { controller.send(:previous_breadcrumb_url) }.to raise_error
+
+      controller.instance_variable_set(:@breadcrumbs, [])
+      expect { controller.send(:previous_breadcrumb_url) }.to raise_error
     end
   end
 
@@ -149,14 +156,7 @@ describe ApplicationController do
 
   context "#prov_redirect" do
     before do
-      EvmSpecHelper.seed_specific_product_features("vm_migrate")
-      feature = MiqProductFeature.find_all_by_identifier(["vm_migrate"])
-      test_user_role  = FactoryGirl.create(:miq_user_role,
-                                           :name                 => "test_user_role",
-                                           :miq_product_features => feature)
-      test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
-      user = FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
-      User.stub(:current_user => user)
+      login_as FactoryGirl.create(:user, :features => "vm_migrate")
       controller.request.parameters[:pressed] = "vm_migrate"
     end
 
@@ -165,9 +165,8 @@ describe ApplicationController do
       vm2 = FactoryGirl.create(:vm_microsoft)
       controller.instance_variable_set(:@_params, :pressed         => "vm_migrate",
                                                   :miq_grid_checks => "#{vm1.id},#{vm2.id}")
-      controller.should_receive(:render)
       controller.send(:prov_redirect, "migrate")
-      assigns(:flash_array).first[:message].should include("does not apply to selected")
+      assigns(:flash_array).first[:message].should include("does not apply to at least one of the selected")
     end
 
     it "sets variables when Migrate button is pressed with list of VMware VMs" do

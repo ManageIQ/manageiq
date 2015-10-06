@@ -3,7 +3,7 @@ require 'util/miq-hash_struct'
 
 describe MiqHashStruct do
   it ".new" do
-    m = MiqHashStruct.new()
+    m = MiqHashStruct.new
     m._key_type.should == Symbol
 
     m.test1.should be_nil
@@ -21,7 +21,7 @@ describe MiqHashStruct do
   end
 
   it ".new with Hash with String keys" do
-    m = MiqHashStruct.new({"test1" => "ok"})
+    m = MiqHashStruct.new("test1" => "ok")
     m._key_type.should == String
 
     m.test1.should == "ok"
@@ -40,7 +40,7 @@ describe MiqHashStruct do
   end
 
   it ".new with Hash with Symbol keys" do
-    m = MiqHashStruct.new({:test1 => "ok"})
+    m = MiqHashStruct.new(:test1 => "ok")
     m._key_type.should == Symbol
 
     m.test1.should == "ok"
@@ -59,36 +59,36 @@ describe MiqHashStruct do
   end
 
   it ".new with invalid argument (non-Hash)" do
-    lambda { MiqHashStruct.new(["test1"]) }.should raise_error(ArgumentError)
+    -> { MiqHashStruct.new(["test1"]) }.should raise_error(ArgumentError)
   end
 
   it ".new with invalid argument (non-String/Symbol keys)" do
-    lambda { MiqHashStruct.new({["test1"] => "ok"}) }.should raise_error(ArgumentError)
+    -> { MiqHashStruct.new(["test1"] => "ok") }.should raise_error(ArgumentError)
   end
 
   it '#send with String keys' do
-    m = MiqHashStruct.new({"test1" => "ok"})
+    m = MiqHashStruct.new("test1" => "ok")
     m.send('test1').should == "ok"
-    m.send(:test1).should  == "ok"
+    m.send(:test1).should == "ok"
     m.send('test2').should be_nil
     m.send(:test2).should  be_nil
   end
 
   it '#send with Symbol keys' do
-    m = MiqHashStruct.new({:test1 => "ok"})
+    m = MiqHashStruct.new(:test1 => "ok")
     m.send('test1').should == "ok"
-    m.send(:test1).should  == "ok"
+    m.send(:test1).should == "ok"
     m.send('test2').should be_nil
     m.send(:test2).should  be_nil
   end
 
   it '#id when Hash has a key of :id' do
-    m = MiqHashStruct.new({:id => "test_id"})
+    m = MiqHashStruct.new(:id => "test_id")
     m.id.should == "test_id"
   end
 
   it '#id when Hash does not have a key of :id' do
-    m = MiqHashStruct.new({:no_id => "test_id"})
+    m = MiqHashStruct.new(:no_id => "test_id")
     m.id.should be_nil
   end
 

@@ -8,32 +8,30 @@ class ServerRole < ActiveRecord::Base
   FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
 
   def self.seed_data
-    File.read(File.join(FIXTURE_DIR, "#{self.to_s.pluralize.underscore}.csv"))
+    File.read(File.join(FIXTURE_DIR, "#{to_s.pluralize.underscore}.csv"))
   end
 
   def self.seed
-    MiqRegion.my_region.lock do
-      data = self.seed_data.split("\n")
-      cols = data.shift.split(",")
+    data = seed_data.split("\n")
+    cols = data.shift.split(",")
 
-      data.each do |a|
-        next if a =~ /^#.*$/ # skip commented lines
+    data.each do |a|
+      next if a =~ /^#.*$/ # skip commented lines
 
-        arr = a.split(",")
+      arr = a.split(",")
 
-        action = {}
-        cols.each_index {|i| action[cols[i].to_sym] = arr[i]}
+      action = {}
+      cols.each_index { |i| action[cols[i].to_sym] = arr[i] }
 
-        rec = self.where(:name => action[:name]).first
-        if rec.nil?
-          _log.info("Creating Server Role [#{action[:name]}]")
-          rec = self.create(action)
-        else
-          rec.attributes = action
-          if rec.changed?
-            _log.info("Updating Server Role [#{action[:name]}]")
-            rec.save
-          end
+      rec = find_by(:name => action[:name])
+      if rec.nil?
+        _log.info("Creating Server Role [#{action[:name]}]")
+        rec = create(action)
+      else
+        rec.attributes = action
+        if rec.changed?
+          _log.info("Updating Server Role [#{action[:name]}]")
+          rec.save
         end
       end
     end
@@ -44,7 +42,7 @@ class ServerRole < ActiveRecord::Base
     # server_role can either be a Role Name (string or symbol) or an instance of a ServerRole
     unless server_role.kind_of?(ServerRole)
       role_name   = server_role.to_s.strip.downcase
-      server_role = ServerRole.where(:name => role_name).first
+      server_role = ServerRole.find_by(:name => role_name)
       raise "Role <#{role_name}> not defined in server_roles table" if server_role.nil?
     end
 
@@ -52,63 +50,62 @@ class ServerRole < ActiveRecord::Base
   end
 
   def self.all_names
-    self.order(:name).pluck(:name)
+    order(:name).pluck(:name)
   end
 
   def self.database_scoped_role_names
-    self.where(:role_scope => 'database').order(:name).pluck(:name)
+    where(:role_scope => 'database').order(:name).pluck(:name)
   end
 
   def self.database_scoped_roles
-    @database_scoped_roles ||= self.where(:role_scope => 'database').order(:name).to_a
+    @database_scoped_roles ||= where(:role_scope => 'database').order(:name).to_a
   end
 
   def self.region_scoped_roles
-    @region_scoped_roles ||= self.where(:role_scope => 'region').order(:name).to_a
+    @region_scoped_roles ||= where(:role_scope => 'region').order(:name).to_a
   end
 
   def self.zone_scoped_roles
-    @zone_scoped_roles ||= self.where(:role_scope => 'zone').order(:name).to_a
+    @zone_scoped_roles ||= where(:role_scope => 'zone').order(:name).to_a
   end
 
   def self.database_role?(role)
-    self.database_scoped_roles.any? {|r| r.name == role.to_s}
+    database_scoped_roles.any? { |r| r.name == role.to_s }
   end
 
   def self.regional_role?(role)
-    self.region_scoped_roles.any? {|r| r.name == role.to_s}
+    region_scoped_roles.any? { |r| r.name == role.to_s }
   end
 
   def self.zonal_role?(role)
-    self.zone_scoped_roles.any? {|r| r.name == role.to_s}
+    zone_scoped_roles.any? { |r| r.name == role.to_s }
   end
 
   def database_role?
-    self.current_role_scope == "database"
+    current_role_scope == "database"
   end
 
   def regional_role?
-    self.current_role_scope == "region"
+    current_role_scope == "region"
   end
 
   def zonal_role?
-    self.current_role_scope == "zone"
+    current_role_scope == "zone"
   end
 
   def current_role_scope
-    self.role_scope
+    role_scope
   end
 
   def master_supported?
-    self.max_concurrent == 1
+    max_concurrent == 1
   end
 
   def unlimited?
-    self.max_concurrent == 0
+    max_concurrent == 0
   end
 
   def self.database_owner
-    @database_owner ||= self.where(:name => 'database_owner').first
+    @database_owner ||= find_by(:name => 'database_owner')
   end
-
 end

@@ -1,7 +1,7 @@
 module MiqAutomateHelper
   def self.create_dummy_method(identifiers, field_array)
     MiqAeDatastore.reset
-    @aed = FactoryGirl.create(:miq_ae_namespace, :name => identifiers[:domain],
+    @aed = FactoryGirl.create(:miq_ae_domain, :name => identifiers[:domain],
                               :priority => 10, :enabled => true)
     @aen1 = FactoryGirl.create(:miq_ae_namespace, :name      => identifiers[:namespace],
                                                   :parent_id => @aed.id)

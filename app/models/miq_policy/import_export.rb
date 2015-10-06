@@ -2,67 +2,67 @@ module MiqPolicy::ImportExport
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def import_from_hash(policy, options={})
+    def import_from_hash(policy, options = {})
       raise "No Policy to Import" if policy.nil?
-      pe = policy.delete("MiqPolicyContent") { |k| raise "No contents for Policy == #{policy.inspect}" }
+      pe = policy.delete("MiqPolicyContent") { |_k| raise "No contents for Policy == #{policy.inspect}" }
       pc = policy.delete("Condition") || []
 
-      status = {:class => self.name, :description => policy["description"], :children => []}
+      status = {:class => name, :description => policy["description"], :children => []}
       events = []
 
       actionsHash = {}
       eventsHash  = {}
       e2a         = {}
 
-      pe.each { |e|
-        opts = Hash.new
-        ["qualifier", "success_sequence", "failure_sequence", "success_synchronous", "failure_synchronous"].each { |k|
+      pe.each do |e|
+        opts = {}
+        ["qualifier", "success_sequence", "failure_sequence", "success_synchronous", "failure_synchronous"].each do |k|
           v = e.delete(k)
           opts[k.to_sym] = v unless v.nil?
-        }
+        end
 
         akey = nil
         if e["MiqAction"]
           akey = e["MiqAction"]["description"]
-          actionsHash[akey] = MiqAction.import_from_hash(e["MiqAction"], options) unless actionsHash.has_key?(akey)
+          actionsHash[akey] = MiqAction.import_from_hash(e["MiqAction"], options) unless actionsHash.key?(akey)
         end
 
         event = e["MiqEventDefinition"] || e["MiqEvent"]
         ekey = event["name"]
-        eventsHash[ekey] = MiqEventDefinition.import_from_hash(event,  options) unless eventsHash.has_key?(ekey)
+        eventsHash[ekey] = MiqEventDefinition.import_from_hash(event,  options) unless eventsHash.key?(ekey)
 
-        e2a[ekey] = [] unless e2a.has_key?(ekey)
+        e2a[ekey] = [] unless e2a.key?(ekey)
         e2a[ekey].push([akey, opts])
-      }
+      end
 
-      e2a.keys.each { |ekey|
+      e2a.keys.each do |ekey|
         event, event_status = eventsHash[ekey]
         actions = []
         event_status[:children] ||= []
-        e2a[ekey].each { |arr|
+        e2a[ekey].each do |arr|
           akey, opts = arr
           unless akey.nil?
             action, s = actionsHash[akey]
             actions.push([action, opts])
             event_status[:children].push(s)
           end
-        }
+        end
 
         events.push([event, actions])
         status[:children].push(event_status)
-      }
+      end
 
       conditions = []
-      pc.each {|c|
+      pc.each do|c|
         c.delete("condition_id")
         condition, s = Condition.import_from_hash(c, options)
         status[:children].push(s)
         conditions.push(condition)
-      }
+      end
 
-      policy["towhat"]  ||= "Vm"      # Default "towhat" value to "Vm" to support older export decks that don't have a value set.
-      policy["active"]  ||= true      # Default "active" value to true to support older export decks that don't have a value set.
-      policy["mode"]    ||= "control" # Default "mode" value to true to support older export decks that don't have a value set.
+      policy["towhat"] ||= "Vm"      # Default "towhat" value to "Vm" to support older export decks that don't have a value set.
+      policy["active"] ||= true      # Default "active" value to true to support older export decks that don't have a value set.
+      policy["mode"] ||= "control" # Default "mode" value to true to support older export decks that don't have a value set.
 
       p = MiqPolicy.find_by_guid(policy["guid"])
       msg_pfx = "Importing Policy: guid=[#{policy["guid"]}] description=[#{policy["description"]}]"
@@ -84,14 +84,14 @@ module MiqPolicy::ImportExport
       msg += ", Messages: #{status[:messages].join(",")}" if status[:messages]
       if options[:save]
         MiqPolicy.logger.info(msg)
-        events.each { |event|
+        events.each do |event|
           e, a = event
           if a.empty?
             p.add_event(e) unless p.miq_event_definitions.include?(e)
           else
             p.replace_actions_for_event(e, a)
           end
-        }
+        end
         p.conditions = conditions
         p.save!
       else
@@ -105,21 +105,21 @@ module MiqPolicy::ImportExport
       stats = []
 
       input = YAML.load(fd)
-      input.each { |e|
+      input.each do |e|
         p, stat = import_from_hash(e["MiqPolicy"])
         stats.push(stat)
-      }
+      end
 
-      return stats
+      stats
     end
   end
 
   def export_to_array
-    h = self.attributes
+    h = attributes
     ["id", "created_on", "updated_on"].each { |k| h.delete(k) }
-    h["MiqPolicyContent"] = self.miq_policy_contents.collect { |pe| pe.export_to_array.first["MiqPolicyContent"] unless pe.nil? }
-    h["Condition"] = self.conditions.collect { |c| c.export_to_array.first["Condition"] unless c.nil? }
-    return [ self.class.to_s => h ]
+    h["MiqPolicyContent"] = miq_policy_contents.collect { |pe| pe.export_to_array.first["MiqPolicyContent"] unless pe.nil? }
+    h["Condition"] = conditions.collect { |c| c.export_to_array.first["Condition"] unless c.nil? }
+    [self.class.to_s => h]
   end
 
   def export_to_yaml

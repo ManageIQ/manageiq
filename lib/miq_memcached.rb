@@ -1,7 +1,7 @@
 require 'runcmd'
 
 module MiqMemcached
-  class Error        < RuntimeError; end
+  class Error < RuntimeError; end
   class ControlError < Error; end
 
   class Config
@@ -12,7 +12,7 @@ module MiqMemcached
     DEFAULT_OPTIONS = "-l 127.0.0.1"
 
     def initialize(opts = {})
-      self.update(opts)
+      update(opts)
     end
 
     def save(fname)
@@ -87,7 +87,7 @@ END_OF_CONFIG
     #                (default: 1mb, min: 1k, max: 128m)
     #  -S            Turn on Sasl authentication
 
-    #TODO: Expose all of the constants and get them from the config
+    # TODO: Expose all of the constants and get them from the config
     CONF_FILE = '/etc/sysconfig/memcached'
 
     def self.start(opts = {})
@@ -103,26 +103,24 @@ END_OF_CONFIG
     end
 
     def self.stop!
-      self.stop
-      self.killall
+      stop
+      killall
     end
 
     def self.restart(opts = {})
-      self.stop
-      self.start(opts)
+      stop
+      start(opts)
     end
 
     def self.restart!(opts = {})
       self.stop!
-      self.start(opts)
+      start(opts)
     end
 
     def self.killall
-      begin
-        MiqUtil.runcmd("killall -9 memcached")
-      rescue => err
-        raise unless err.to_s =~ /memcached: no process/
-      end
+      MiqUtil.runcmd("killall -9 memcached")
+    rescue => err
+      raise unless err.to_s =~ /memcached: no process/
     end
 
     def self.status

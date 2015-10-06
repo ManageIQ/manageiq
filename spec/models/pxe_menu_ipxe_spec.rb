@@ -76,7 +76,6 @@ kernel http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz ramdisk_size=10000 ks=
 initrd http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img
 boot
 PXEMENU
-
   end
 
   it ".parse_contents" do

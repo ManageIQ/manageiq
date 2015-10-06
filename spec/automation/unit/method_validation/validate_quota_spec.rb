@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe "Quota Validation" do
-
   before(:each) do
     @user          = FactoryGirl.create(:user_miq_request_approver)
     @vm_template   = FactoryGirl.create(:template_vmware, :name => "template1")
@@ -24,8 +23,8 @@ describe "Quota Validation" do
 
       root = ws.root
       root['ae_result'].should == 'error'
-      root['ae_state'].should  == 'ValidateQuotas'
-      root['reason'].should    == "Request denied due to the following quota limits:(Group Allocated vCPUs 0 + Requested 2 > Quota 1) "
+      root['ae_state'].should == 'ValidateQuotas'
+      root['reason'].should == "Request denied due to the following quota limits:(Group Allocated vCPUs 0 + Requested 2 > Quota 1) "
     end
 
     it "quota success" do
@@ -48,8 +47,8 @@ describe "Quota Validation" do
 
       root = ws.root
       root['ae_result'].should == 'error'
-      root['ae_state'].should  == 'ValidateQuotas'
-      root['reason'].should    == "Request denied due to the following quota limits:(Group Allocated vCPUs 0 + Requested 4 > Quota 1) "
+      root['ae_state'].should == 'ValidateQuotas'
+      root['reason'].should == "Request denied due to the following quota limits:(Group Allocated vCPUs 0 + Requested 4 > Quota 1) "
     end
 
     it "quota success" do
@@ -58,5 +57,4 @@ describe "Quota Validation" do
       ws.root['ae_result'].should == 'ok'
     end
   end
-
 end

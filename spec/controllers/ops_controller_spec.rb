@@ -3,6 +3,7 @@ require "spec_helper"
 describe OpsController do
   before(:each) do
     EvmSpecHelper.create_guid_miq_server_zone
+    MiqRegion.seed
     set_user_privileges
   end
 
@@ -48,9 +49,9 @@ describe OpsController do
     it 'can add a user w/ group' do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
       session[:edit] = {
-        :key => 'rbac_user_edit__new',
+        :key     => 'rbac_user_edit__new',
         :current => {},
-        :new => {
+        :new     => {
           :name      => 'test7',
           :userid    => 'test7',
           :email     => 'test7@foo.bar',
@@ -176,7 +177,6 @@ describe OpsController do
       controller.send(:edit_changed?)
       session[:changed].should eq(true)
     end
-
   end
 
   it "executes action schedule_edit" do
@@ -243,17 +243,8 @@ end
 describe OpsController do
   before do
     MiqRegion.seed
-    zone       = FactoryGirl.create(:zone)
-    MiqRegion.my_region.stub(:zones).and_return([zone])
-    server = FactoryGirl.create(:miq_server, :guid => 'guid', :zone => zone)
-    EvmSpecHelper.seed_specific_product_features("ops_rbac")
-    feature = MiqProductFeature.find_all_by_identifier("ops_rbac")
-    @test_user_role  = FactoryGirl.create(:miq_user_role,
-                                          :name                 => "test_user_role",
-                                          :miq_product_features => feature)
-    test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => @test_user_role)
-    login_as FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
-    MiqServer.stub(:my_server).and_return(server)
+    EvmSpecHelper.local_miq_server
+    login_as FactoryGirl.create(:user, :features => "ops_rbac")
     controller.stub(:get_vmdb_config).and_return(:product => {})
   end
 

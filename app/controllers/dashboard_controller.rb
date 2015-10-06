@@ -1,18 +1,18 @@
 class DashboardController < ApplicationController
   @@items_per_page = 8
 
-  before_filter :check_privileges, :except => [:csp_report, :window_sizes, :authenticate, :kerberos_authenticate,
+  before_action :check_privileges, :except => [:csp_report, :window_sizes, :authenticate, :kerberos_authenticate,
                                                :logout, :login, :login_retry, :wait_for_task]
-  before_filter :get_session_data, :except => [:csp_report, :window_sizes, :authenticate, :kerberos_authenticate]
-  after_filter :cleanup_action,    :except => [:csp_report]
-  after_filter :set_session_data,  :except => [:csp_report, :window_sizes]
+  before_action :get_session_data, :except => [:csp_report, :window_sizes, :authenticate, :kerberos_authenticate]
+  after_action :cleanup_action,    :except => [:csp_report]
+  after_action :set_session_data,  :except => [:csp_report, :window_sizes]
 
   def index
     redirect_to :action => 'show'
   end
 
-  skip_before_filter :set_csp_header, :only => :iframe # FIXME: only frame-src
-  skip_before_filter :set_x_frame_options_header, :only => :iframe
+  skip_before_action :set_csp_header, :only => :iframe # FIXME: only frame-src
+  skip_before_action :set_x_frame_options_header, :only => :iframe
 
   def iframe
     @layout = nil
@@ -44,7 +44,7 @@ class DashboardController < ApplicationController
     render :nothing => true # No response required
   end
 
-  VALID_TABS = lambda { |x| Hash[x.map(&:to_s).zip(x)] }[[
+  VALID_TABS = ->(x) { Hash[x.map(&:to_s).zip(x)] }[[
     :vi, :svc, :clo, :inf, :cnt, :con, :aut, :opt, :set,  # normal tabs
     :vs, :sto                                       # hidden tabs
   ]] # format is {"vi" => :vi, "svc" => :svc . . }
@@ -167,25 +167,20 @@ class DashboardController < ApplicationController
     @layout    = "dashboard"
     @dashboard = true
 
-    g = current_group
-    db_order = if g.settings && g.settings[:dashboard_order]
-                 g.settings[:dashboard_order]
-               else
-                 MiqWidgetSet.find_all_by_owner_id(session[:group]).sort_by { |a| a.name.downcase }.collect(&:id)
-               end
+    records = current_group.ordered_widget_sets
 
     @tabs = []
-    db_order.each_with_index do |d, i|
-      db = MiqWidgetSet.find_by_id(d)
-      # load first one on intial load, or load tab from params[:tab] changed,
-      # or when coming back from another screen load active tab from sandbox
-      if (!params[:tab] && !@sb[:active_db_id] && i == 0) || (params[:tab] && params[:tab] == db.id.to_s) ||
-         (!params[:tab] && @sb[:active_db_id] && @sb[:active_db_id].to_s == db.id.to_s) ||
-         (!db_order.include?(@sb[:active_db_id]) && !db_order.empty? && i == 0)
-        @tabs.unshift([db.id.to_s, ""])
-        @sb[:active_db]    = db.name
-        @sb[:active_db_id] = db.id
-      end
+    active_tab_id = (params[:tab] || @sb[:active_db_id]).try(:to_s)
+    active_tab = active_tab_id && records.detect { |r| r.id.to_s == active_tab_id } || records.first
+    # load first one on intial load, or load tab from params[:tab] changed,
+    # or when coming back from another screen load active tab from sandbox
+    if active_tab
+      @tabs.unshift([active_tab.id.to_s, ""])
+      @sb[:active_db]    = active_tab.name
+      @sb[:active_db_id] = active_tab.id
+    end
+
+    records.each do |db|
       @tabs.push([db.id.to_s, db.description])
       # check this only first time when user logs in comes to dashboard show
 
@@ -224,7 +219,7 @@ class DashboardController < ApplicationController
     ws = create_user_dashboard(@sb[:active_db_id]) if ws.nil?
 
     # Set tabs now if user's group didnt have any dashboards using default dashboard
-    if db_order.empty?
+    if records.empty?
       db = MiqWidgetSet.find_by_id(@sb[:active_db_id])
       @tabs.unshift([ws.id.to_s, ""])
       @tabs.push([ws.id.to_s, db.description])
@@ -256,12 +251,12 @@ class DashboardController < ApplicationController
                      when "report" then ["report",   "Add this Report Widget"]
                      end
         if prev_type && prev_type != w.content_type
-          widget_list << "<item id='#{w.content_type}' type='separator'>" +
+          widget_list << "<item id='#{w.content_type}' type='separator'>" \
                          "</item>"
         end
         prev_type = w.content_type
         w.title.gsub!(/'/, "&apos;")     # Need to escape single quote in title to load toolbar
-        widget_list << "<item id='#{w.id}' type='button' text='#{CGI.escapeHTML(w.title)}' img='button_#{image}.png' title='#{tip}'>" +
+        widget_list << "<item id='#{w.id}' type='button' text='#{CGI.escapeHTML(w.title)}' img='button_#{image}.png' title='#{tip}'>" \
                        "</item>"
       end
     end
@@ -281,12 +276,12 @@ class DashboardController < ApplicationController
             enabled = 'true'
           end
           @widgets_menu_xml << "<item id='add_widget' type='buttonSelect' maxOpen='15' img='add_widget.png' title='#{title}' imgdis='add_widget.png' enabled='#{enabled}' openAll='true'>" +
-                               widget_list +
-                               "</item>"
+            widget_list +
+            "</item>"
         end
       end
-      if role_allows(:feature=>"dashboard_reset")
-        @widgets_menu_xml << "<item id='reset' type='button' img='reset_widgets.png' title='Reset Dashboard Widgets to the defaults'>" +
+      if role_allows(:feature => "dashboard_reset")
+        @widgets_menu_xml << "<item id='reset' type='button' img='reset_widgets.png' title='Reset Dashboard Widgets to the defaults'>" \
                              "</item>"
       end
       @widgets_menu_xml << "</toolbar>"
@@ -354,21 +349,21 @@ class DashboardController < ApplicationController
   def widget_dd_done
     if params[:col1] || params[:col2] || params[:col3]
       if params[:col1] && params[:col1] != [""]
-        @sb[:dashboards][@sb[:active_db]][:col1] = params[:col1].collect{|w| w.split("_").last.to_i}
-        @sb[:dashboards][@sb[:active_db]][:col2].delete_if{|w| @sb[:dashboards][@sb[:active_db]][:col1].include?(w)}
-        @sb[:dashboards][@sb[:active_db]][:col3].delete_if{|w| @sb[:dashboards][@sb[:active_db]][:col1].include?(w)}
+        @sb[:dashboards][@sb[:active_db]][:col1] = params[:col1].collect { |w| w.split("_").last.to_i }
+        @sb[:dashboards][@sb[:active_db]][:col2].delete_if { |w| @sb[:dashboards][@sb[:active_db]][:col1].include?(w) }
+        @sb[:dashboards][@sb[:active_db]][:col3].delete_if { |w| @sb[:dashboards][@sb[:active_db]][:col1].include?(w) }
       elsif params[:col2] && params[:col2] != [""]
-        @sb[:dashboards][@sb[:active_db]][:col2] = params[:col2].collect{|w| w.split("_").last.to_i}
-        @sb[:dashboards][@sb[:active_db]][:col1].delete_if{|w| @sb[:dashboards][@sb[:active_db]][:col2].include?(w)}
-        @sb[:dashboards][@sb[:active_db]][:col3].delete_if{|w| @sb[:dashboards][@sb[:active_db]][:col2].include?(w)}
+        @sb[:dashboards][@sb[:active_db]][:col2] = params[:col2].collect { |w| w.split("_").last.to_i }
+        @sb[:dashboards][@sb[:active_db]][:col1].delete_if { |w| @sb[:dashboards][@sb[:active_db]][:col2].include?(w) }
+        @sb[:dashboards][@sb[:active_db]][:col3].delete_if { |w| @sb[:dashboards][@sb[:active_db]][:col2].include?(w) }
       elsif params[:col3] && params[:col3] != [""]
-        @sb[:dashboards][@sb[:active_db]][:col3] = params[:col3].collect{|w| w.split("_").last.to_i}
-        @sb[:dashboards][@sb[:active_db]][:col1].delete_if{|w| @sb[:dashboards][@sb[:active_db]][:col3].include?(w)}
-        @sb[:dashboards][@sb[:active_db]][:col2].delete_if{|w| @sb[:dashboards][@sb[:active_db]][:col3].include?(w)}
+        @sb[:dashboards][@sb[:active_db]][:col3] = params[:col3].collect { |w| w.split("_").last.to_i }
+        @sb[:dashboards][@sb[:active_db]][:col1].delete_if { |w| @sb[:dashboards][@sb[:active_db]][:col3].include?(w) }
+        @sb[:dashboards][@sb[:active_db]][:col2].delete_if { |w| @sb[:dashboards][@sb[:active_db]][:col3].include?(w) }
       end
       save_user_dashboards
     end
-    render :nothing=>true               # We have nothing to say  :)
+    render :nothing => true               # We have nothing to say  :)
   end
 
   # A widget has been closed
@@ -397,7 +392,7 @@ class DashboardController < ApplicationController
     if params[:widget]                # Make sure we got a widget in
       w = params[:widget].to_i
       if @sb[:dashboards][@sb[:active_db]][:col3].length < @sb[:dashboards][@sb[:active_db]][:col1].length &&
-          @sb[:dashboards][@sb[:active_db]][:col3].length < @sb[:dashboards][@sb[:active_db]][:col2].length
+         @sb[:dashboards][@sb[:active_db]][:col3].length < @sb[:dashboards][@sb[:active_db]][:col2].length
         @sb[:dashboards][@sb[:active_db]][:col3].insert(0, w)
       elsif @sb[:dashboards][@sb[:active_db]][:col2].length < @sb[:dashboards][@sb[:active_db]][:col1].length
         @sb[:dashboards][@sb[:active_db]][:col2].insert(0, w)
@@ -437,12 +432,12 @@ class DashboardController < ApplicationController
   # AJAX login retry method
   def login_retry
     render :update do |page|                    # Use RJS to update the display
-#     if MiqServer.my_server(true).logon_status == :starting
+      #     if MiqServer.my_server(true).logon_status == :starting
       logon_details = MiqServer.my_server(true).logon_status_details
       if logon_details[:status] == :starting
         @login_message = logon_details[:message] if logon_details[:message]
-        page.replace("login_message_div", :partial=>"login_message")
-        page << "setTimeout(\"#{remote_function(:url=>{:action=>'login_retry'})}\", 10000);"
+        page.replace("login_message_div", :partial => "login_message")
+        page << "setTimeout(\"#{remote_function(:url => {:action => 'login_retry'})}\", 10000);"
       else
         page.redirect_to :action => 'login'
       end
@@ -493,10 +488,10 @@ class DashboardController < ApplicationController
     }
 
     if params[:user_name].blank? && params[:user_password].blank? &&
-      request.env["HTTP_X_REMOTE_USER"].blank? &&
-      get_vmdb_config[:authentication][:mode] == "httpd" &&
-      get_vmdb_config[:authentication][:sso_enabled] &&
-      params[:action] == "authenticate"
+       request.env["HTTP_X_REMOTE_USER"].blank? &&
+       get_vmdb_config[:authentication][:mode] == "httpd" &&
+       get_vmdb_config[:authentication][:sso_enabled] &&
+       params[:action] == "authenticate"
 
       render :update do |page|
         page.redirect_to(root_path)
@@ -679,31 +674,37 @@ class DashboardController < ApplicationController
 
     # Load settings for this user, if they exist
     @settings = copy_hash(DEFAULT_SETTINGS)             # Start with defaults
-    unless db_user == nil || db_user.settings == nil    # If the user has saved settings
+    unless db_user.nil? || db_user.settings.nil?    # If the user has saved settings
 
       db_user.settings.delete(:dashboard)               # Remove pre-v4 dashboard settings
       db_user.settings.delete(:db_item_min)
 
-      @settings.each { |key, value| value.merge!(db_user.settings[key]) unless db_user.settings[key] == nil }
+      @settings.each { |key, value| value.merge!(db_user.settings[key]) unless db_user.settings[key].nil? }
       @settings[:col_widths] = db_user.settings[:col_widths]  # Get the user's column widths
       @settings[:default_search] = db_user.settings[:default_search]  # Get the user's default search setting
     end
 
     # Copy ALL display settings into the :css hash so we can easily add new settings
-    @settings[:css] ||= Hash.new
+    @settings[:css] ||= {}
     @settings[:css].merge!(@settings[:display])
     @settings[:display][:theme] = THEMES.first.last unless THEMES.collect(&:last).include?(@settings[:display][:theme])
     @settings[:css].merge!(THEME_CSS_SETTINGS[@settings[:display][:theme]])
 
-    @css ||= Hash.new
+    @css ||= {}
     @css.merge!(@settings[:display])
     @css.merge!(THEME_CSS_SETTINGS[@settings[:display][:theme]])
 
     session[:user_TZO] = params[:user_TZO] ? params[:user_TZO].to_i : nil     # Grab the timezone (future use)
     session[:browser] ||= Hash.new("Unknown")
-    session[:browser][:name] = params[:browser_name] if params[:browser_name]
+    if params[:browser_name]
+      session[:browser][:name] = params[:browser_name].to_s.downcase
+      session[:browser][:name_ui] = params[:browser_name]
+    end
     session[:browser][:version] = params[:browser_version] if params[:browser_version]
-    session[:browser][:os] = params[:browser_os] if params[:browser_os]
+    if params[:browser_os]
+      session[:browser][:os] = params[:browser_os].to_s.downcase
+      session[:browser][:os_ui] = params[:browser_os]
+    end
   end
 
   # Create a user's dashboard, pass in dashboard id if that is used to copy else use default dashboard
@@ -712,21 +713,21 @@ class DashboardController < ApplicationController
     ws = MiqWidgetSet.where_unique_on(db.name, current_user).first
     if ws.nil?
       # Create new db if it doesn't exist
-      ws = MiqWidgetSet.new(:name       => db.name,
-                            :group_id   => session[:group],
-                            :userid     => session[:userid],
-                            :description=>"#{db.name} dashboard for user #{session[:userid]} in group id #{session[:group]}")
+      ws = MiqWidgetSet.new(:name        => db.name,
+                            :group_id    => session[:group],
+                            :userid      => session[:userid],
+                            :description => "#{db.name} dashboard for user #{session[:userid]} in group id #{session[:group]}")
       ws.set_data = db.set_data
       ws.set_data[:last_group_db_updated] = db.updated_on
       ws.save!
       ws.replace_children(db.children)
-      ws.members.each{|w| w.create_initial_content_for_user(session[:userid])}  # Generate content if not there
+      ws.members.each { |w| w.create_initial_content_for_user(session[:userid]) }  # Generate content if not there
     end
-    if !db_id     #set active_db and id and tabs now if user's group didnt have any dashboards
+    unless db_id     # set active_db and id and tabs now if user's group didnt have any dashboards
       @sb[:active_db] = db.name
       @sb[:active_db_id] = db.id
     end
-    return ws
+    ws
   end
 
   # Save dashboards for user
@@ -772,7 +773,7 @@ class DashboardController < ApplicationController
       return
     end
 
-    @report.extras[:browser_name] = browser_info("name").downcase
+    @report.extras[:browser_name] = browser_info(:name)
     if is_browser_ie?
       blob = BinaryBlob.new(:name => "timeline_results")
       blob.binary = @report.to_timeline
@@ -799,5 +800,4 @@ class DashboardController < ApplicationController
     session[:layout]          = @layout
     session[:vm_current_page] = @current_page
   end
-
 end

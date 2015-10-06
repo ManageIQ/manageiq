@@ -15,7 +15,7 @@ class PolicyEvent < ActiveRecord::Base
     chain_id = nil
     result.each do |r|
       miq_policy_id = r[:miq_policy].kind_of?(MiqPolicy) ? r[:miq_policy].id : nil # handle built-in policies too
-      pe = self.new(
+      pe = new(
         :event_type                       => event.name,
         :miq_event_definition_id          => event.id,
         :miq_event_definition_description => event.description,
@@ -27,7 +27,7 @@ class PolicyEvent < ActiveRecord::Base
         :target_class                     => target.class.base_class.name,
         :target_name                      => target.name,
         :chain_id                         => chain_id
-# TODO  :username,
+      # TODO: username,
       )
 
       pe.host_id = target.respond_to?(:host) && !target.host.nil? ? target.host.id : nil
@@ -40,19 +40,18 @@ class PolicyEvent < ActiveRecord::Base
         pe.chain_id = chain_id
       end
 
-      (r[:miq_actions] + r[:miq_policy_sets]).each {|c|
+      (r[:miq_actions] + r[:miq_policy_sets]).each do|c|
         pe.contents << PolicyEventContent.new(:resource_id => c.id, :resource_type => c.class.name, :resource_description => c.description)
-      }
+      end
       pe.save
     end
   end
 
   def miq_actions
-    self.contents.collect {|c| c.resource if c.resource.kind_of?(MiqAction)}.compact
+    contents.collect { |c| c.resource if c.resource.kind_of?(MiqAction) }.compact
   end
 
   def miq_policy_sets
-    self.contents.collect {|c| c.resource if c.resource.kind_of?(MiqPolicySet)}.compact
+    contents.collect { |c| c.resource if c.resource.kind_of?(MiqPolicySet) }.compact
   end
-
 end

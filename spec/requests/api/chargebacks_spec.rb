@@ -113,7 +113,7 @@ RSpec.describe "chargebacks API" do
       expect do
         run_delete rates_url(chargeback_rate_detail.id)
       end.to change(ChargebackRateDetail, :count).by(-1)
-      expect(last_response.status).to eq(204)
+      expect_request_success_with_no_content
     end
 
     it "can delete a chargeback rate detail through POST" do

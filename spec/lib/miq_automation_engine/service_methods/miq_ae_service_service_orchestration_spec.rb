@@ -7,7 +7,9 @@ module MiqAeServiceServiceOrchestrationSpec
     let(:stack_opts)       { {'any_key' => 'any_value'} }
     let(:ae_orch_template) { MiqAeMethodService::MiqAeServiceOrchestrationTemplate.find(orch_template.id) }
     let(:ae_orch_manager)  { MiqAeMethodService::MiqAeServiceExtManagementSystem.find(orch_manager.id) }
-    let(:service)          { FactoryGirl.create(:service_orchestration) }
+    let(:service_template) { FactoryGirl.create(:service_template_orchestration) }
+    let(:ss_template)      { MiqAeMethodService::MiqAeServiceServiceTemplate.find(service_template.id) }
+    let(:service)          { FactoryGirl.create(:service_orchestration, :service_template => service_template) }
     let(:service_service)  { MiqAeMethodService::MiqAeServiceService.find(service.id) }
 
     it "sets and gets orchestration_template" do
@@ -30,6 +32,19 @@ module MiqAeServiceServiceOrchestrationSpec
     it "sets and gets stack_options" do
       service_service.stack_options = stack_opts
       service_service.stack_options.should == stack_opts
+    end
+
+    it "sets and gets update_options" do
+      service_service.update_options = stack_opts
+      service_service.update_options.should == stack_opts
+    end
+
+    it "allows to assign orchestration_template from service_template" do
+      service_template.orchestration_template = orch_template
+
+      service_service.orchestration_template = service_service.service_template.orchestration_template
+
+      service.orchestration_template.should == orch_template
     end
   end
 end

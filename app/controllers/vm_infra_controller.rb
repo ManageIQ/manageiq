@@ -3,13 +3,13 @@ class VmInfraController < ApplicationController
   include VmShowMixin
 
   # Exception due to open.window() in newer IE versions not sending request.referer
-  before_filter :check_privileges, :except => [:launch_vmware_console]
-  before_filter :get_session_data
+  before_action :check_privileges, :except => [:launch_vmware_console]
+  before_action :get_session_data
 
-  after_filter :cleanup_action
-  after_filter :set_session_data
+  after_action :cleanup_action
+  after_action :set_session_data
 
-  skip_before_filter :set_csp_header, :only => :launch_html5_console
+  skip_before_action :set_csp_header, :only => :launch_html5_console
 
   def self.table_name
     @table_name ||= "vm_infra"
@@ -63,7 +63,7 @@ class VmInfraController < ApplicationController
       set_active_elements_authorized_user("#{prefix}_filter_tree", "#{prefix}_filter", false, nil, id)
     else
       if (prefix == "vms" && role_allows(:feature => "vms_instances_filter_accord")) ||
-        (prefix == "templates" && role_allows(:feature => "templates_images_filter_accord"))
+         (prefix == "templates" && role_allows(:feature => "templates_images_filter_accord"))
         redirect_to(:controller => 'vm_or_template', :action => "explorer", :id => params[:id])
       else
         redirect_to(:controller => 'dashboard', :action => "auth_error")

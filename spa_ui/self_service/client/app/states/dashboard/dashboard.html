@@ -1,1 +1,92 @@
-Dashboard
+<div class="container-fluid container-cards-pf ss-dashboard">
+  <div class="row row-cards-pf">
+    <div class="col-xs-6 col-sm-6 col-md-6">
+      <div class="card-pf card-pf-accented ss-dashboard__card-primary" ui-sref="services.list">
+        <div class="card-pf-body">
+          <span class="fa fa-file-o"></span>
+          <div class="ss-dashboard__card-primary__count">
+            <h2>{{ ::vm.servicesCount }}</h2>
+            <h3>Total Services</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-6">
+      <div class="card-pf card-pf-accented ss-dashboard__card-primary" ui-sref="order-history.list">
+        <div class="card-pf-body">
+          <span class="fa fa-file-text-o"></span>
+          <div class="ss-dashboard__card-primary__count">
+            <h2>{{ ::vm.requestsCount}}</h2>
+            <h3>Total Requests</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row row-cards-pf">
+    <div class="col-xs-6 col-sm-6 col-md-6">
+      <div class="card-pf">
+        <div class="row row-cards-pf">
+            <div class="card-pf card-pf-aggregate-status card-divider">
+              <h2 class="card-pf-title">
+                <a ui-sref="services.list">Services Online</a>
+              </h2>
+              <div class="card-pf-body">
+                <p class="card-pf-aggregate-status-notifications">    
+                  <span class="card-pf-aggregate-status-notification">
+                    <span class="pficon pficon-ok"></span></span>
+                    <span class="card-pf-aggregate-status-notification"><a href="#">8</a>
+                  </span>
+                </p>
+              </div>
+            </div>
+            <div class="card-pf card-pf-aggregate-status">
+              <div class="card-pf-body">
+                <h2 class="card-pf-title">
+                  <a ui-sref="services.list">Expiring Soon</a>
+                </h2>
+                <p class="card-pf-aggregate-status-notifications">  
+                  <span class="card-pf-aggregate-status-notification">
+                    <span class="pficon  pficon-warning-triangle-o"></span>
+                  </span>
+                  <span class="card-pf-aggregate-status-notification"><a href="#">1</a></span>
+                </p>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-6">
+      <div class="card-pf">
+        <div class="row row-cards-pf">
+          <div class="card-pf card-pf-aggregate-status card-divider">
+            <h2 class="card-pf-title">
+              <a ui-sref="services.list">Denied Requests</a>
+            </h2>
+            <div class="card-pf-body">
+              <p class="card-pf-aggregate-status-notifications">
+                <span class="card-pf-aggregate-status-notification">
+                  <span class="pficon pficon-error-circle-o"></span>
+                </span>
+                <span class="card-pf-aggregate-status-notification"><a href="#">4</a></span>
+              </p>
+            </div>
+          </div>
+          <div class="card-pf card-pf-aggregate-status">
+            <div class="card-pf-body">
+              <h2 class="card-pf-title">
+                <a ui-sref="services.list">Pending Requests</a>
+              </h2>
+              <p class="card-pf-aggregate-status-notifications">  
+                <span class="card-pf-aggregate-status-notification">
+                  <span class="pficon pficon-warning-triangle-o"></span>
+                </span>
+                <span class="card-pf-aggregate-status-notification"><a href="#">2</a></span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

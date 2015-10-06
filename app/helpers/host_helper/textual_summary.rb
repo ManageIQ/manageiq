@@ -6,71 +6,56 @@ module HostHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w{hostname ipaddress ipmi_ipaddress custom_1 vmm_vendor model asset_tag service_tag osinfo
-               power_state lockdown_mode devices network storage_adapters num_cpu num_cpu_cores cores_per_socket memory
-               guid}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(hostname ipaddress ipmi_ipaddress custom_1 vmm_vendor model asset_tag service_tag osinfo
+       power_state lockdown_mode devices network storage_adapters num_cpu num_cpu_cores cores_per_socket memory
+       guid)
   end
 
   def textual_group_relationships
-    items = %w{ems cluster availability_zone used_tenants storages resource_pools vms miq_templates drift_history}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(ems cluster availability_zone used_tenants storages resource_pools vms miq_templates drift_history)
   end
 
   def textual_group_storage_relationships
-    items = %w{storage_systems storage_volumes logical_disks file_shares}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(storage_systems storage_volumes logical_disks file_shares)
   end
 
   def textual_group_compliance
-    items = %w{compliance_status compliance_history}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(compliance_status compliance_history)
   end
 
   def textual_group_security
     return nil if @record.is_vmware_esxi?
-    items = %w{users groups patches firewall_rules ssh_root}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(users groups patches firewall_rules ssh_root)
   end
 
   def textual_group_configuration
-    items = %w{guest_applications host_services filesystems advanced_settings}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(guest_applications host_services filesystems advanced_settings)
   end
 
   def textual_group_diagnostics
     return nil unless get_vmdb_config[:product][:proto]
-    items = %w{esx_logs}
-    items.collect { |m| self.send("graphical_#{m}") }.flatten.compact
+    %i(esx_logs)
   end
 
   def textual_group_smart_management
-    items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(tags)
   end
 
   def textual_group_miq_custom_attributes
-    items = %w{miq_custom_attributes}
-    ret = items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-    ret.blank? ? nil : ret
+    textual_miq_custom_attributes
   end
 
   def textual_group_ems_custom_attributes
-    items = %w{ems_custom_attributes}
-    ret = items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-    ret.blank? ? nil : ret
+    textual_ems_custom_attributes
   end
 
   def textual_group_authentications
-    items = %w{authentications}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    textual_authentications
   end
 
   def textual_group_openstack_status
     return nil unless @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager::Host)
-    ret = textual_generate_openstack_status
-
-    ret.blank? ? nil : ret
+    textual_generate_openstack_status
   end
 
   #
@@ -107,7 +92,7 @@ module HostHelper::TextualSummary
       configuration = {:title => _("Show list of configuration files of %s") % (x.name),
                        :image => 'filesystems',
                        :value => _("Configuration (%s)") % configuration_count,
-                       :link => configuration_count > 0 ? url_for(:controller => controller.controller_name,
+                       :link  => configuration_count > 0 ? url_for(:controller => controller.controller_name,
                                                                   :action => 'filesystems', :id => @record,
                                                                   :db => controller.controller_name,
                                                                   :host_service_group => x.id) : nil}
@@ -118,13 +103,12 @@ module HostHelper::TextualSummary
     end
   end
 
-
   def textual_hostname
-    {:label => "Hostname", :value => "#{@record.hostname}"}
+    @record.hostname
   end
 
   def textual_ipaddress
-    {:label => "IP Address", :value => "#{@record.ipaddress}"}
+    @record.ipaddress
   end
 
   def textual_ipmi_ipaddress
@@ -140,7 +124,7 @@ module HostHelper::TextualSummary
 
   def textual_vmm_vendor
     h = {:label => "VMM Information"}
-    if @vmminfo == nil || @vmminfo.empty?
+    if @vmminfo.nil? || @vmminfo.empty?
       h[:value] = "None"
       h[:image] = "unknown"
     else
@@ -155,7 +139,7 @@ module HostHelper::TextualSummary
   def textual_model
     h = {:label => "Manufacturer / Model"}
     if !@record.hardware.nil? && (!@record.hardware.manufacturer.blank? || !@record.hardware.model.blank?)
-     h[:value] = "#{@record.hardware.manufacturer} / #{@record.hardware.model}"
+      h[:value] = "#{@record.hardware.manufacturer} / #{@record.hardware.model}"
     else
       h[:value] = "N/A"
     end
@@ -163,27 +147,25 @@ module HostHelper::TextualSummary
   end
 
   def textual_asset_tag
-    return nil if @record.asset_tag.blank?
-    {:label => "Asset Tag", :value => @record.asset_tag}
+    @record.asset_tag
   end
 
   def textual_service_tag
-    return nil if @record.service_tag.blank?
-    {:label => "Service Tag", :value => @record.service_tag}
+    @record.service_tag
   end
 
   def textual_osinfo
     h = {:label => "Operating System"}
-    if @osinfo == nil || @osinfo.empty?
+    if @osinfo.nil? || @osinfo.empty?
       h[:value] = "Unknown"
       h[:image] = "os-unknown"
     else
       h[:image] = "os-#{@record.os_image_name.downcase}"
       h[:value] = @osinfo[0][:description]
-      if !@record.operating_system.version.blank?
+      unless @record.operating_system.version.blank?
         h[:value] << " #{@record.operating_system.version}"
       end
-      if !@record.operating_system.build_number.blank?
+      unless @record.operating_system.build_number.blank?
         h[:value] << " Build #{@record.operating_system.build_number}"
       end
 
@@ -226,7 +208,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_devices
-    h = {:label => "Devices", :image => "devices", :value => (@devices == nil || @devices.empty? ? "None" : @devices.length)}
+    h = {:label => "Devices", :image => "devices", :value => (@devices.nil? || @devices.empty? ? "None" : @devices.length)}
     if @devices.length > 0
       h[:title] = "Show #{host_title} devices"
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'devices')
@@ -247,7 +229,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_memory
-    {:label => "Memory", :value => (@record.hardware.nil? || !@record.hardware.memory_cpu.kind_of?(Numeric)) ? "N/A" : number_to_human_size(@record.hardware.memory_cpu.to_i * 1.megabyte,:precision=>0)}
+    {:label => "Memory", :value => (@record.hardware.nil? || !@record.hardware.memory_cpu.kind_of?(Numeric)) ? "N/A" : number_to_human_size(@record.hardware.memory_cpu.to_i * 1.megabyte, :precision => 0)}
   end
 
   def textual_guid
@@ -255,7 +237,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_ems
-    textual_link(@record.ext_management_system, :as => EmsInfra)
+    textual_link(@record.ext_management_system)
   end
 
   def textual_cluster
@@ -281,7 +263,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_drift_history
-    return nil unless role_allows(:feature=>"host_drift")
+    return nil unless role_allows(:feature => "host_drift")
     label = "Drift History"
     num   = @record.number_of(:drift_states)
     h     = {:label => label, :image => "drift", :value => num}
@@ -312,12 +294,12 @@ module HostHelper::TextualSummary
   end
 
   def textual_vms
-    textual_link(@record.vms)
+    @record.vms
   end
 
   def textual_miq_templates
     return nil if @record.openstack_host?
-    textual_link(@record.miq_templates)
+    @record.miq_templates
   end
 
   def textual_storage_systems
@@ -510,11 +492,11 @@ module HostHelper::TextualSummary
     authentications.collect do |auth|
       label =
         case auth.authtype
-        when "default"; "Default"
-        when "ipmi"; "IPMI"
-        when "remote";  "Remote Login"
-        when "ws"; "Web Services"
-        when "ssh_keypair"; "SSH keypair"
+        when "default" then "Default"
+        when "ipmi" then "IPMI"
+        when "remote" then  "Remote Login"
+        when "ws" then "Web Services"
+        when "ssh_keypair" then "SSH keypair"
         else;           "<Unknown>"
         end
 

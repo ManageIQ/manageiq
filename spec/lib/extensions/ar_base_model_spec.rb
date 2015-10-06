@@ -25,6 +25,5 @@ describe "ar_base_model extension" do
         TestClassFoo.model_suffix.should == "Foo"
       end
     end
-
   end
 end

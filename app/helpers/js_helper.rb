@@ -28,7 +28,7 @@ module JsHelper
     elsif options[:title]
       "$('##{element}').html('#{escape_javascript(options[:title]).html_safe}');"
     else
-       ''
+      ''
     end
   end
 

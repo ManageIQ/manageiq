@@ -18,6 +18,7 @@
         controllerAs: 'vm',
         title: 'Service Template Details',
         resolve: {
+          dialogs: resolveDialogs,
           serviceTemplate: resolveServiceTemplate
         }
       }
@@ -26,14 +27,24 @@
 
   /** @ngInject */
   function resolveServiceTemplate($stateParams, CollectionsApi) {
-    return CollectionsApi.get('service_templates', $stateParams.serviceTemplateId);
+    var options = {attributes: ['picture', 'picture.image_href']};
+
+    return CollectionsApi.get('service_templates', $stateParams.serviceTemplateId, options);
   }
 
   /** @ngInject */
-  function StateController(serviceTemplate) {
+  function resolveDialogs($stateParams, CollectionsApi) {
+    var options = {expand: 'resources', attributes: 'content'};
+
+    return CollectionsApi.query('service_templates/' + $stateParams.serviceTemplateId + '/service_dialogs', options);
+  }
+
+  /** @ngInject */
+  function StateController(dialogs, serviceTemplate) {
     var vm = this;
 
     vm.title = 'Service Template Details';
+    vm.dialogs = dialogs.resources[0].content;
     vm.serviceTemplate = serviceTemplate;
   }
 })();

@@ -5,7 +5,7 @@
 
   %h3
     = _('Time Profile Information')
-  %form.form-horizontal
+  .form-horizontal
     .form-group
       %label.col-md-2.control-label
         = _('Description')
@@ -35,7 +35,7 @@
           miqSelectPickerEvent("profile_type", "#{url}")
   = render(:partial => "timeprofile_days_hours",
            :locals  => {:disabled => disabled})
-  %form.form-horizontal
+  .form-horizontal
     .form-group
       %label.col-md-2.control-label
         = _('Timezone')

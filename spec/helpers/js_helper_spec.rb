@@ -19,19 +19,17 @@ describe JsHelper do
 
   context '#tree_lock' do
     it 'returns js to lock tree' do
-      tree_lock('bar',true).should eq(
-    "
-      $('#barbox').dynatree('disable');
-      miqDimDiv('\#bar_div', true);
-    ")
+      tree_lock('bar', true).gsub(/^\s+/, '').should eq(<<-JS.strip_heredoc)
+        $('#barbox').dynatree('disable');
+        miqDimDiv('\#bar_div', true);
+      JS
     end
 
     it 'returns js to unlock tree' do
-      tree_lock('bar',false).should eq(
-    "
-      $('#barbox').dynatree('enable');
-      miqDimDiv('\#bar_div', false);
-    ")
+      tree_lock('bar', false).gsub(/^\s+/, '').should eq(<<-JS.strip_heredoc)
+        $('#barbox').dynatree('enable');
+        miqDimDiv('\#bar_div', false);
+      JS
     end
   end
 
@@ -137,7 +135,7 @@ EOD
     it 'returns JS to build calendar with options' do
       opt = {:date_from => Time.at(0).utc,
              :date_to   => Time.at(946684800).utc,
-             :skip_days => [ 1, 2, 3 ]}
+             :skip_days => [1, 2, 3]}
 
       expected = <<EOD
 miqBuildCalendar({ dateFrom: new Date('1970-01-01T00:00:00Z'), dateTo: new Date('2000-01-01T00:00:00Z'), skipDays: [1,2,3] });

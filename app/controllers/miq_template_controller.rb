@@ -2,10 +2,10 @@ require "rexml/document"
 class MiqTemplateController < ApplicationController
   include VmCommon        # common methods for vm controllers
 
-  before_filter :check_privileges
-  before_filter :get_session_data
-  after_filter :cleanup_action
-  after_filter :set_session_data
+  before_action :check_privileges
+  before_action :get_session_data
+  after_action :cleanup_action
+  after_action :set_session_data
 
   def index
     session[:miq_template_type] = nil             # Reset VM type if coming in from All tab
@@ -45,5 +45,4 @@ class MiqTemplateController < ApplicationController
     session[:polArr]                    = @polArr unless @polArr.nil?
     session[:policy_options]            = @policy_options unless @policy_options.nil?
   end
-
 end

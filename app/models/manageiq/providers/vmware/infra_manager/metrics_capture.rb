@@ -7,11 +7,11 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
   #
 
   cache_with_timeout(:perf_history_results,
-    lambda { (VMDB::Config.new("vmdb").config.fetch_path(:performance, :vim_cache_ttl) || 1.hour).to_i_with_method }
-  ) { Hash.new }
+                     -> { (VMDB::Config.new("vmdb").config.fetch_path(:performance, :vim_cache_ttl) || 1.hour).to_i_with_method }
+                    ) { Hash.new }
 
   def self.intervals(ems, vim_hist)
-    phr = self.perf_history_results
+    phr = perf_history_results
     results = phr.fetch_path(:intervals, ems.id)
     return results unless results.nil?
 
@@ -24,11 +24,11 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
     end
 
     _log.debug("#{log_header} Available sampling intervals: [#{results.length}]")
-    return phr.store_path(:intervals, ems.id, results)
+    phr.store_path(:intervals, ems.id, results)
   end
 
   def self.realtime_interval(ems, vim_hist, mor)
-    phr = self.perf_history_results
+    phr = perf_history_results
     results = phr.fetch_path(:realtime_interval, ems.id, mor)
     return results unless results.nil?
 
@@ -49,11 +49,11 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
       _log.debug("#{log_header} Realtime is not supported for mor: [#{mor}], summary: [#{summary.inspect}]")
     end
 
-    return phr.store_path(:realtime_interval, ems.id, mor, interval)
+    phr.store_path(:realtime_interval, ems.id, mor, interval)
   end
 
   def self.hourly_interval(ems, vim_hist)
-    phr = self.perf_history_results
+    phr = perf_history_results
     results = phr.fetch_path(:hourly_interval, ems.id)
     return results unless results.nil?
 
@@ -73,11 +73,11 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
       _log.debug("#{log_header} Found hourly interval: [#{interval}] for vim interval: [#{vim_interval}]")
     end
 
-    return phr.store_path(:hourly_interval, ems.id, interval)
+    phr.store_path(:hourly_interval, ems.id, interval)
   end
 
   def self.counter_info_by_counter_id(ems, vim_hist)
-    phr = self.perf_history_results
+    phr = perf_history_results
     results = phr.fetch_path(:counter_info_by_id, ems.id)
     return results unless results.nil?
 
@@ -89,8 +89,8 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
       raise
     end
 
-    #TODO: Move this to some generic parsing class, such as
-    #ManageIQ::Providers::Vmware::InfraManager::RefreshParser
+    # TODO: Move this to some generic parsing class, such as
+    # ManageIQ::Providers::Vmware::InfraManager::RefreshParser
     results = counter_info.each_with_object({}) do |(id, c), h|
       group    = c.fetch_path('groupInfo', 'key').to_s.downcase
       name     = c.fetch_path('nameInfo', 'key').to_s.downcase
@@ -109,13 +109,13 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
       }
     end
 
-    return phr.store_path(:counter_info_by_id, ems.id, results)
+    phr.store_path(:counter_info_by_id, ems.id, results)
   end
 
   def self.avail_metrics_for_entity(ems, vim_hist, mor, interval, interval_name)
     return {} if interval.nil?
 
-    phr = self.perf_history_results
+    phr = perf_history_results
     results = phr.fetch_path(:avail_metrics_for_entity, ems.id, mor, interval)
     return results unless results.nil?
 
@@ -127,7 +127,7 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
       raise
     end
 
-    info = self.counter_info_by_counter_id(ems, vim_hist)
+    info = counter_info_by_counter_id(ems, vim_hist)
 
     results = avail_metrics.to_miq_a.each_with_object({}) do |metric, h|
       counter = info[metric["counterId"]]
@@ -152,7 +152,7 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
       }
     end
 
-    return phr.store_path(:avail_metrics_for_entity, ems.id, mor, interval, results)
+    phr.store_path(:avail_metrics_for_entity, ems.id, mor, interval, results)
   end
 
   #
@@ -161,7 +161,7 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
 
   def self.preprocess_data(data, counter_values_by_mor_and_ts = {})
     # First process the results into a format we can consume
-    processed_res = self.perf_raw_data_to_hashes(data)
+    processed_res = perf_raw_data_to_hashes(data)
     return unless processed_res.kind_of?(Array)
 
     # Next process each of the those results
@@ -169,7 +169,7 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
       full_vim_key = "#{res[:counter_id]}_#{res[:instance]}"
       _log.debug("Processing [#{res[:results].length / 2}] results for MOR: [#{res[:mor]}], instance: [#{res[:instance]}], capture interval [#{res[:interval]}], counter vim key: [#{res[:counter_id]}]")
 
-      hashes = self.perf_vim_data_to_hashes(res[:results])
+      hashes = perf_vim_data_to_hashes(res[:results])
       next if hashes.nil?
       hashes.each { |h| counter_values_by_mor_and_ts.store_path(res[:mor], h[:timestamp], full_vim_key, h[:counter_value]) }
     end
@@ -200,15 +200,15 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
     return process_entity(data) if composite_or_multi_instance_and_single_entity?(data)
 
     # Query perf multi (multiple entities, instance(s))
-    return data.collect {|base| process_entity(base)}.flatten if single_or_multi_instance_and_multi_entity?(data)
+    return data.collect { |base| process_entity(base) }.flatten if single_or_multi_instance_and_multi_entity?(data)
   end
 
   def self.single_instance_and_entity?(data)
-    data.respond_to?(:first) && data.first.is_a?(DateTime)
+    data.respond_to?(:first) && data.first.kind_of?(DateTime)
   end
 
   def self.composite_or_multi_instance_and_single_entity?(data)
-    data.respond_to?(:has_key?) && data.has_key?('entity')
+    data.respond_to?(:has_key?) && data.key?('entity')
   end
 
   def self.single_or_multi_instance_and_multi_entity?(data)
@@ -220,12 +220,12 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
 
     # Set up the common attributes for each value in the result array
     base = {
-      :mor => mor,
+      :mor      => mor,
       :children => []
     }
     base[:parent] = parent unless parent.nil?
 
-    if data.has_key?('childEntity')
+    if data.key?('childEntity')
       raise 'composite is not supported yet'
       #      child_ar  = Array.new
       #      data['childEntity'].to_miq_a.each do |c|
@@ -255,7 +255,7 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
 
       ret << nh
     end
-    return ret
+    ret
   end
 
   #
@@ -274,7 +274,7 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
       @perf_vim = target.ext_management_system.connect
       @perf_vim_hist = @perf_vim.getVimPerfHistory
     rescue => err
-      _log.error("#{@perf_resource} Failed to initialize performance history from #{@perf_ems}: [#{err}]" )
+      _log.error("#{@perf_resource} Failed to initialize performance history from #{@perf_ems}: [#{err}]")
       perf_release_vim
       raise
     end
@@ -342,16 +342,16 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
     interval_by_mor = {}
     mors.each do |mor|
       interval = case interval_name
-      when 'realtime' then self.class.realtime_interval(target.ext_management_system, @perf_vim_hist, mor)
-      when 'hourly'   then self.class.hourly_interval(target.ext_management_system, @perf_vim_hist)
-      end
+                 when 'realtime' then self.class.realtime_interval(target.ext_management_system, @perf_vim_hist, mor)
+                 when 'hourly'   then self.class.hourly_interval(target.ext_management_system, @perf_vim_hist)
+                 end
 
       @perf_intervals[interval] = interval_name
       interval_by_mor[mor] = interval
     end
 
     _log.debug("Mapping of MOR to Intervals: #{interval_by_mor.inspect}")
-    return interval_by_mor
+    interval_by_mor
   end
 
   def perf_capture_counters(interval_by_mor)
@@ -365,7 +365,7 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
     end
 
     _log.info("Capturing counters...Complete")
-    return counters_by_mor
+    counters_by_mor
   end
 
   def perf_build_query_params(interval_by_mor, counters_by_mor, start_time, end_time)
@@ -383,7 +383,7 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
         :intervalId => interval,
         :startTime  => st,
         :endTime    => et,
-        :metricId   => counters.values.collect { |counter| { :counterId => counter[:vim_key], :instance => counter[:instance] } }
+        :metricId   => counters.values.collect { |counter| {:counterId => counter[:vim_key], :instance => counter[:instance]} }
       }
       _log.debug("Adding query params: #{param.inspect}")
       params << param
@@ -391,7 +391,7 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
 
     _log.info("Building query parameters...Complete")
 
-    return params
+    params
   end
 
   def perf_query(params, interval_name)
@@ -414,6 +414,6 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
     end
     Benchmark.current_realtime[:num_vim_trips] = vim_trips
 
-    return counter_values_by_mor_and_ts
+    counter_values_by_mor_and_ts
   end
 end

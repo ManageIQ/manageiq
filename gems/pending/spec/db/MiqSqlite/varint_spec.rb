@@ -30,8 +30,7 @@ describe MiqSqlite3DB do
   end
 
   def get_varint(buf)
-    value, _ = MiqSqlite3DB.variableInteger(buf)
+    value, = MiqSqlite3DB.variableInteger(buf)
     value
   end
-
 end

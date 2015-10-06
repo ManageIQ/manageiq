@@ -8,12 +8,12 @@ describe ReportController do
         user = FactoryGirl.create(:user)
         login_as user
         rep = FactoryGirl.create(
-                                  :miq_report,
-                                  :db => "Chargeback",
-                                  :db_options => {:options => {:owner => user.userid}},
-                                  :col_order => ["name"],
-                                  :headers => ["Name"]
-                                )
+          :miq_report,
+          :db         => "Chargeback",
+          :db_options => {:options => {:owner => user.userid}},
+          :col_order  => ["name"],
+          :headers    => ["Name"]
+        )
         controller.instance_variable_set(:@rpt, rep)
         controller.send(:set_form_vars)
         new_hash = assigns(:edit)[:new]
@@ -25,26 +25,26 @@ describe ReportController do
         user = FactoryGirl.create(:user)
         login_as user
         rep = FactoryGirl.create(
-            :miq_report,
-            :db         => "Chargeback",
-            :name       => 'name',
-            :title      => 'title',
-            :db_options => {:options => {:owner => user.userid}},
-            :col_order  => ["name"],
-            :headers    => ["Name"],
-            :tz         => nil
+          :miq_report,
+          :db         => "Chargeback",
+          :name       => 'name',
+          :title      => 'title',
+          :db_options => {:options => {:owner => user.userid}},
+          :col_order  => ["name"],
+          :headers    => ["Name"],
+          :tz         => nil
         )
 
         edit = {
-            :rpt_id  => rep.id,
-            :new     => {
-                :model  => "Chargeback",
-                :name   => 'name',
-                :title  => 'title',
-                :tz     => "Eastern Time (US & Canada)",
-                :fields => []
-            },
-            :current => {}
+          :rpt_id  => rep.id,
+          :new     => {
+            :model  => "Chargeback",
+            :name   => 'name',
+            :title  => 'title',
+            :tz     => "Eastern Time (US & Canada)",
+            :fields => []
+          },
+          :current => {}
         }
         controller.instance_variable_set(:@edit, edit)
         session[:edit] = assigns(:edit)

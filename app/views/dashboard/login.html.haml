@@ -22,7 +22,8 @@
           %label.col-md-3.control-label= _('Username')
           .col-md-9
             = text_field_tag('user_name', @user_name, 
-                             :class      => "form-control",
+                             :class => "form-control",
+                             :placeholder => _('Username'),
                              :onkeypress => "if(miqEnterPressed(event)) miqAjaxAuth();")
             = javascript_tag(javascript_focus('user_name'))
         .form-group
@@ -30,9 +31,10 @@
           .col-md-9
             = password_field_tag('user_password',
               @user_password,
-              :onkeypress   => "if(miqEnterPressed(event)) miqAjaxAuth();",
+              :onkeypress => "if(miqEnterPressed(event)) miqAjaxAuth();",
               :autocomplete => "off",
-              :class        => "form-control")
+              :placeholder => (auth_mode == "httpd" ? _('Password or Password+One-Time-Password') : _('Password')),
+              :class => "form-control")
 
         - if auth_mode == 'database'
           = render :partial => 'login_more'

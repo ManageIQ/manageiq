@@ -20,6 +20,15 @@ describe EmsInfraController do
       controller.send(:flash_errors?).should_not be_true
     end
 
+    it "when VM Migrate is pressed" do
+      vm = FactoryGirl.create(:vm_vmware)
+      ems = FactoryGirl.create("ems_vmware")
+      post :button, :pressed => "vm_migrate", :format => :js, "check_#{vm.id}" => 1, :id => ems.id
+      controller.send(:flash_errors?).should_not be_true
+      response.body.should include("/miq_request/prov_edit?")
+      expect(response.status).to eq(200)
+    end
+
     it "when VM Retire is pressed" do
       controller.should_receive(:retirevms).once
       post :button, :pressed => "vm_retire", :format => :js
@@ -66,13 +75,7 @@ describe EmsInfraController do
 
   describe "#create" do
     before do
-      EvmSpecHelper.seed_specific_product_features("ems_infra_new")
-      feature = MiqProductFeature.find_all_by_identifier(["ems_infra_new"])
-      test_user_role  = FactoryGirl.create(:miq_user_role,
-                                           :name                 => "test_user_role",
-                                           :miq_product_features => feature)
-      test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
-      user = FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
+      user = FactoryGirl.create(:user, :features => "ems_infra_new")
 
       allow(user).to receive(:server_timezone).and_return("UTC")
       described_class.any_instance.stub(:set_user_time_zone)
@@ -89,7 +92,6 @@ describe EmsInfraController do
   end
 
   describe "#scaling" do
-
     before do
       set_user_privileges
       @ems = FactoryGirl.create(:ems_openstack_infra_with_stack)
@@ -111,7 +113,7 @@ describe EmsInfraController do
       controller.send(:flash_errors?).should be_true
       flash_messages = assigns(:flash_array)
       flash_messages.first[:message].should include(
-      _("Assigning #{@ems.hosts.count * 2} but only have #{@ems.hosts.count} hosts available."))
+        _("Assigning #{@ems.hosts.count * 2} but only have #{@ems.hosts.count} hosts available."))
     end
 
     it "when values are changed, and values do not exceed number of hosts available" do
@@ -149,6 +151,27 @@ describe EmsInfraController do
       flash_messages = assigns(:flash_array)
       flash_messages.first[:message].should include(
         _("Provider is not ready to be scaled, another operation is in progress."))
+    end
+  end
+
+  describe "#show" do
+    before(:each) do
+      session[:settings] = {:views => {}}
+      set_user_privileges
+      get :show, {:id => ems.id}.merge(url_params)
+    end
+    let(:url_params) { {} }
+    let(:ems) do
+      FactoryGirl.create(:ems_infra)
+    end
+    subject do
+      response.status
+    end
+    it { should eq 200 }
+
+    context "display=timeline" do
+      let(:url_params) { {:display => 'timeline'} }
+      it { should eq 200 }
     end
   end
 end

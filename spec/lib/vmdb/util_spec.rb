@@ -3,51 +3,51 @@ require "spec_helper"
 describe VMDB::Util do
   context ".http_proxy_uri" do
     it "without config settings" do
-      VMDB::Config.any_instance.stub(:config => {})
+      stub_server_configuration({})
       described_class.http_proxy_uri.should be_nil
     end
 
     it "without a host" do
-      VMDB::Config.any_instance.stub(:config => {:http_proxy => {}})
+      stub_server_configuration(:http_proxy => {})
       described_class.http_proxy_uri.should be_nil
     end
 
     it "with host" do
-      VMDB::Config.any_instance.stub(:config => {:http_proxy => {:host => "1.2.3.4", :port => nil, :user => nil, :password => nil}})
+      stub_server_configuration(:http_proxy => {:host => "1.2.3.4", :port => nil, :user => nil, :password => nil})
       described_class.http_proxy_uri.should == URI::Generic.build(:scheme => "http", :host => "1.2.3.4")
     end
 
     it "with host, port" do
-      VMDB::Config.any_instance.stub(:config => {:http_proxy => {:host => "1.2.3.4", :port => 4321, :user => nil, :password => nil}})
+      stub_server_configuration(:http_proxy => {:host => "1.2.3.4", :port => 4321, :user => nil, :password => nil})
       described_class.http_proxy_uri.should == URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321)
     end
 
     it "with host, port, user" do
-      VMDB::Config.any_instance.stub(:config => {:http_proxy => {:host => "1.2.3.4", :port => 4321, :user => "testuser", :password => nil}})
+      stub_server_configuration(:http_proxy => {:host => "1.2.3.4", :port => 4321, :user => "testuser", :password => nil})
       described_class.http_proxy_uri.should == URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321, :userinfo => "testuser")
     end
 
     it "with host, port, user, password" do
-      VMDB::Config.any_instance.stub(:config => {:http_proxy => {:host => "1.2.3.4", :port => 4321, :user => "testuser", :password => "secret"}})
+      stub_server_configuration(:http_proxy => {:host => "1.2.3.4", :port => 4321, :user => "testuser", :password => "secret"})
       described_class.http_proxy_uri.should == URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321, :userinfo => "testuser:secret")
     end
 
     it "with user missing" do
-      VMDB::Config.any_instance.stub(:config => {:http_proxy => {:host => "1.2.3.4", :port => 4321, :user => nil, :password => "secret"}})
+      stub_server_configuration(:http_proxy => {:host => "1.2.3.4", :port => 4321, :user => nil, :password => "secret"})
       described_class.http_proxy_uri.should == URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321)
     end
 
     it "with unescaped user value" do
       password = "secret#"
       config = {:http_proxy => {:host => "1.2.3.4", :port => 4321, :user => "testuser", :password => password}}
-      VMDB::Config.any_instance.stub(:config => config)
+      stub_server_configuration(config)
       userinfo = "testuser:secret%23"
       uri_parts = {:scheme => "http", :host => "1.2.3.4", :port => 4321, :userinfo => userinfo}
       described_class.http_proxy_uri.should == URI::Generic.build(uri_parts)
     end
 
     it "with scheme overridden" do
-      VMDB::Config.any_instance.stub(:config => {:http_proxy => {:scheme => "https", :host => "1.2.3.4", :port => 4321, :user => "testuser", :password => "secret"}})
+      stub_server_configuration(:http_proxy => {:scheme => "https", :host => "1.2.3.4", :port => 4321, :user => "testuser", :password => "secret"})
       described_class.http_proxy_uri.should == URI::Generic.build(:scheme => "https", :host => "1.2.3.4", :port => 4321, :userinfo => "testuser:secret")
     end
   end

@@ -54,20 +54,29 @@ class MiqRequestWorkflow
     @values       = values
     @filters      = {}
     @requester    = User.lookup_by_identity(requester)
+    @requester.miq_group_description = values[:requester_group]
     @values.merge!(options) unless options.blank?
   end
 
-  def create_request(values, requester_id, target_class, event_name, event_message, auto_approve = false)
+  # Helper method when not using workflow
+  # all sub classes override create_request and update_request with 3 parameters
+  def make_request(request, values, requester_id, auto_approve = false)
+    if request
+      update_request(request, values, requester_id)
+    else
+      create_request(values, requester_id, auto_approve)
+    end
+  end
+
+  def create_request(values, _requester_id, auto_approve = false)
     return false unless validate(values)
 
-    # Ensure that tags selected in the pre-dialog get applied to the request
-    values[:vm_tags] = (values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags]).uniq unless @values.nil? || @values[:pre_dialog_vm_tags].blank?
-
+    set_request_values(values)
     password_helper(values, true)
 
     yield if block_given?
 
-    request = request_class.create(:options => values, :userid => requester_id, :request_type => request_type.to_s)
+    request = request_class.create(:options => values, :userid => @requester.userid, :request_type => request_type.to_s)
     begin
       request.save!  # Force validation errors to raise now
     rescue => err
@@ -79,19 +88,15 @@ class MiqRequestWorkflow
     request.set_description
     request.create_request
 
-    AuditEvent.success(
-      :event        => event_name,
-      :target_class => target_class,
-      :userid       => requester_id,
-      :message      => event_message
-    )
+    request.log_request_success(@requester.userid, :created)
 
     request.call_automate_event_queue("request_created")
-    request.approve(requester_id, "Auto-Approved") if auto_approve == true
+    request.approve(@requester.userid, "Auto-Approved") if auto_approve == true
+    request.reload if auto_approve
     request
   end
 
-  def update_request(request, values, requester_id, target_class, event_name, event_message)
+  def update_request(request, values, _requester_id)
     request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
 
     return false unless validate(values)
@@ -106,19 +111,13 @@ class MiqRequestWorkflow
     request.update_attribute(:options, request.options.merge(values))
     request.set_description(true)
 
-    AuditEvent.success(
-      :event        => event_name,
-      :target_class => target_class,
-      :userid       => requester_id,
-      :message      => event_message
-    )
+    request.log_request_success(@requester.userid, :updated)
 
     request.call_automate_event_queue("request_updated")
-
     request
   end
 
-  def init_from_dialog(init_values, _userid)
+  def init_from_dialog(init_values)
     @dialogs[:dialogs].keys.each do |dialog_name|
       get_all_fields(dialog_name).each_pair do |field_name, field_values|
         next unless init_values[field_name].nil?
@@ -524,18 +523,6 @@ class MiqRequestWorkflow
     end
   end
 
-  def set_default_user_info
-    if get_value(@values[:owner_email]).blank?
-      unless @requester.email.blank?
-        @values[:owner_email] = @requester.email
-        retrieve_ldap if MiqLdap.using_ldap?
-      end
-    end
-
-    show_flag = MiqLdap.using_ldap? ? :show : :hide
-    show_fields(show_flag, [:owner_load_ldap])
-  end
-
   def retrieve_ldap(_options = {})
     email = get_value(@values[:owner_email])
     unless email.blank?
@@ -601,8 +588,8 @@ class MiqRequestWorkflow
     class_tags = Classification.where(:show => true).includes(:tag).to_a
     class_tags.reject!(&:read_only?) # Can't do in query because column is a string.
 
-    exclude_list  = options[:exclude].blank?       ? [] : options[:exclude].collect(&:to_s)
-    include_list  = options[:include].blank?       ? [] : options[:include].collect(&:to_s)
+    exclude_list  = options[:exclude].blank? ? [] : options[:exclude].collect(&:to_s)
+    include_list  = options[:include].blank? ? [] : options[:include].collect(&:to_s)
     single_select = options[:single_select].blank? ? [] : options[:single_select].collect(&:to_s)
 
     cats, ents = class_tags.partition { |t| t.parent_id == 0 }
@@ -640,7 +627,7 @@ class MiqRequestWorkflow
                          tag[:children].sort_by { |_k, v| v[:name].to_i }
                        else
                          tag[:children].sort_by { |_k, v| v[:description] }
-      end
+                       end
     end
 
     rails_logger('allowed_tags', 1)
@@ -682,7 +669,7 @@ class MiqRequestWorkflow
     @values[:miq_request_dialog_name] ||= @values[:provision_dialog_name] || dialog_name_from_automate || self.class.default_dialog_file
     dp = @values[:miq_request_dialog_name] = File.basename(@values[:miq_request_dialog_name], ".rb")
     _log.info "Loading dialogs <#{dp}> for user <#{@requester.userid}>"
-    d = MiqDialog.where("lower(name) = ? and dialog_type = ?", dp.downcase, self.class.base_model.name).first
+    d = MiqDialog.find_by("lower(name) = ? and dialog_type = ?", dp.downcase, self.class.base_model.name)
     raise MiqException::Error, "Dialog cannot be found.  Name:[#{@values[:miq_request_dialog_name]}]  Type:[#{self.class.base_model.name}]" if d.nil?
     prov_dialogs = d.content
 
@@ -771,15 +758,24 @@ class MiqRequestWorkflow
   def set_default_user_info
     return if get_dialog(:requester).blank?
 
-    if get_value(@values[:owner_email]).blank?
-      unless @requester.email.blank?
-        @values[:owner_email] = @requester.email
-        retrieve_ldap if MiqLdap.using_ldap?
-      end
+    if get_value(@values[:owner_email]).blank? && @requester.email.present?
+      @values[:owner_email] = @requester.email
+      retrieve_ldap if MiqLdap.using_ldap?
     end
 
     show_flag = MiqLdap.using_ldap? ? :show : :hide
     show_fields(show_flag, [:owner_load_ldap])
+  end
+
+  def set_request_values(values)
+    # Ensure that tags selected in the pre-dialog get applied to the request
+    values[:vm_tags] = (values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags]).uniq unless @values.nil? || @values[:pre_dialog_vm_tags].blank?
+
+    values[:requester_group] ||= @requester.current_group.description
+    email = values[:owner_email]
+    if email.present? && values[:owner_group].blank?
+      values[:owner_group] = User.find_by_lower_email(email, @requester).try(:miq_group_description)
+    end
   end
 
   def password_helper(values, encrypt = true)
@@ -797,27 +793,25 @@ class MiqRequestWorkflow
   end
 
   def refresh_field_values(values, _requester_id)
-    begin
-      st = Time.now
+    st = Time.now
 
-      @values = values
+    @values = values
 
-      get_source_and_targets(true)
+    get_source_and_targets(true)
 
-      # @values gets modified during this call
-      get_all_dialogs
+    # @values gets modified during this call
+    get_all_dialogs
 
-      values.merge!(@values)
+    values.merge!(@values)
 
-      # Update the display flag for fields based on current settings
-      update_field_visibility
+    # Update the display flag for fields based on current settings
+    update_field_visibility
 
-      _log.info "refresh completed in [#{Time.now - st}] seconds"
-    rescue => err
-      _log.error "[#{err}]"
-      $log.error err.backtrace.join("\n")
-      raise err
-    end
+    _log.info "refresh completed in [#{Time.now - st}] seconds"
+  rescue => err
+    _log.error "[#{err}]"
+    $log.error err.backtrace.join("\n")
+    raise err
   end
 
   # Run the relationship methods and perform set intersections on the returned values.
@@ -843,13 +837,16 @@ class MiqRequestWorkflow
   def process_filter(filter_prop, ci_klass, targets)
     rails_logger("process_filter - [#{ci_klass}]", 0)
     filter_id = get_value(@values[filter_prop]).to_i
-    result = if filter_id.zero?
-               Rbac.filtered(targets, :class => ci_klass, :userid => @requester.userid)
-             else
-               MiqSearch.find(filter_id).filtered(targets, :userid => @requester.userid)
-             end
-    rails_logger("process_filter - [#{ci_klass}]", 1)
-    result
+    if filter_id.zero?
+      Rbac.filtered(targets,
+                    :class        => ci_klass,
+                    :userid       => @requester.userid,
+                    :miq_group_id => @requester.current_group_id)
+    else
+      MiqSearch.find(filter_id).filtered(targets,
+                                         :userid       => @requester.userid,
+                                         :miq_group_id => @requester.current_group_id)
+    end.tap { rails_logger("process_filter - [#{ci_klass}]", 1) }
   end
 
   def find_all_ems_of_type(klass, src = nil)
@@ -1255,13 +1252,13 @@ class MiqRequestWorkflow
     dlg_field = dlg_fields[key]
     data_type = dlg_field[:data_type]
     set_value = case data_type
-    when :integer then value.to_i_with_method
-    when :float   then value.to_f
-    when :boolean then (value.to_s.downcase == 'true')
-    when :time    then Time.parse(value)
-    when :button  then value # Ignore
-    else value # Ignore
-    end
+                when :integer then value.to_i_with_method
+                when :float   then value.to_f
+                when :boolean then (value.to_s.downcase == 'true')
+                when :time    then Time.parse(value)
+                when :button  then value # Ignore
+                else value # Ignore
+                end
 
     result = nil
     if dlg_field.key?(:values)

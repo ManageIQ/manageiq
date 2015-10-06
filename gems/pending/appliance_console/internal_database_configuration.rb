@@ -2,6 +2,7 @@ require "appliance_console/database_configuration"
 require "appliance_console/service_group"
 require "pathname"
 require "util/postgres_admin"
+require "pg"
 
 RAILS_ROOT ||= Pathname.new(__dir__).join("../../../")
 
@@ -14,12 +15,8 @@ module ApplianceConsole
       PostgresAdmin.data_directory.relative_path_from(Pathname.new("/"))
     end
 
-    def self.postgresql_sample
-      RAILS_ROOT.join("../system/COPY").join(postgres_dir)
-    end
-
     def self.postgresql_template
-      RAILS_ROOT.join("../system/TEMPLATE").join(postgres_dir)
+      PostgresAdmin.template_directory.join(postgres_dir)
     end
 
     def initialize(hash = {})
@@ -79,9 +76,9 @@ module ApplianceConsole
     def configure_postgres
       self.ssl = File.exist?(PostgresAdmin.certificate_location.join("postgres.key"))
 
-      copy_template "postgresql.conf.erb", self.class.postgresql_template
-      copy_template "pg_hba.conf.erb",     self.class.postgresql_template
-      copy_template "pg_ident.conf",       self.class.postgresql_template
+      copy_template "postgresql.conf.erb"
+      copy_template "pg_hba.conf.erb"
+      copy_template "pg_ident.conf"
     end
 
     def post_activation
@@ -90,7 +87,7 @@ module ApplianceConsole
 
     private
 
-    def copy_template(src, src_dir = self.class.postgresql_sample, dest_dir = PostgresAdmin.data_directory)
+    def copy_template(src, src_dir = self.class.postgresql_template, dest_dir = PostgresAdmin.data_directory)
       full_src = src_dir.join(src)
       if src.include?(".erb")
         full_dest = dest_dir.join(src.gsub(".erb", ""))
@@ -101,12 +98,12 @@ module ApplianceConsole
     end
 
     def create_partition_to_fill_disk
-      #FIXME when LinuxAdmin has this feature
+      # FIXME: when LinuxAdmin has this feature
       @disk.create_partition_table # LinuxAdmin::Disk.create_partition has this already...
       LinuxAdmin.run!("parted -s #{@disk.path} mkpart primary 0% 100%")
 
-      #FIXME: Refetch the disk after creating the partition
-      @disk = LinuxAdmin::Disk.local.select {|d| d.path == @disk.path}.first
+      # FIXME: Refetch the disk after creating the partition
+      @disk = LinuxAdmin::Disk.local.find { |d| d.path == @disk.path }
       @disk.partitions.first
     end
 
@@ -129,7 +126,7 @@ module ApplianceConsole
     end
 
     def mount_database_disk
-      #TODO: should this be moved into LinuxAdmin?
+      # TODO: should this be moved into LinuxAdmin?
       FileUtils.rm_rf(PostgresAdmin.data_directory)
       FileUtils.mkdir_p(PostgresAdmin.data_directory)
       LinuxAdmin.run!("mount", :params => {"-t" => PostgresAdmin.database_disk_filesystem, nil => [@logical_volume.path, PostgresAdmin.data_directory]})
@@ -137,7 +134,7 @@ module ApplianceConsole
 
     def update_fstab
       fstab = LinuxAdmin::FSTab.instance
-      return if fstab.entries.find {|e| e.mount_point == PostgresAdmin.data_directory}
+      return if fstab.entries.find { |e| e.mount_point == PostgresAdmin.data_directory }
 
       entry = LinuxAdmin::FSTabEntry.new(
         :device        => @logical_volume.path,
@@ -160,7 +157,7 @@ module ApplianceConsole
     end
 
     def run_initdb
-      LinuxAdmin.run!("service", :params => { nil => [PostgresAdmin.service_name, "initdb"]})
+      LinuxAdmin.run!("service", :params => {nil => [PostgresAdmin.service_name, "initdb"]})
     end
 
     def start_postgres
@@ -175,7 +172,9 @@ module ApplianceConsole
     end
 
     def create_postgres_root_user
-      run_as_postgres("psql -c 'CREATE ROLE #{username} WITH LOGIN CREATEDB SUPERUSER PASSWORD '\\'#{password}\\';")
+      conn = PG.connect(:user => "postgres", :dbname => "postgres")
+      esc_pass = conn.escape_string(password)
+      conn.exec("CREATE ROLE #{username} WITH LOGIN CREATEDB SUPERUSER PASSWORD '#{esc_pass}'")
     end
 
     def create_postgres_database

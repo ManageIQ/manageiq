@@ -1,5 +1,5 @@
 = render :partial => "layouts/pdf_styles"
-- controller = %w(miq_template vm_infra vm_or_template vm).include?(params[:controller]) ? "vm_common" : params[:controller]
+- controller = %w(miq_template vm_infra vm_or_template vm).include?(controller_name) ? "vm_common" : controller_name
 #xyz_main
   = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72}
 - if @record.kind_of?(ConfigurationProfile)

@@ -9,15 +9,15 @@ describe MiqVimVm do
       @inv_obj.stub(:localVmPath).and_return('/test-vm/test-vm.vmx')
 
       vmh = {
-          'summary' => {
-              'config' => {
-                  'name' => VimString.new('test-vm'),
-                  'uuid' => VimString.new('502fee93-3744-2d43-6a02-ddd0af96868c'),
-                  'vmPathName' => VimString.new('[local-dev] test-vm/test-vm.vmx')
-              },
-          'vm' => VimString.new('vm-100'),
+        'summary' => {
+          'config'  => {
+            'name'       => VimString.new('test-vm'),
+            'uuid'       => VimString.new('502fee93-3744-2d43-6a02-ddd0af96868c'),
+            'vmPathName' => VimString.new('[local-dev] test-vm/test-vm.vmx')
+          },
+          'vm'      => VimString.new('vm-100'),
           'runtime' => {}
-          }
+        }
       }
       @vim_vm = MiqVimVm.new(@inv_obj, vmh)
     end
@@ -61,7 +61,6 @@ describe MiqVimVm do
           @redoNotWithParent['value'] = true
           @vim_vm.snapshot_directory_mor(@config).should == 'dsName2mo_local'
         end
-
       end
     end
 
@@ -86,19 +85,18 @@ describe MiqVimVm do
 
       it "check_disk_space - 100 percent, large disk" do
         max_disk_space_in_kb = 10000
-        lambda{ @vim_vm.check_disk_space('create', @ds_mor, max_disk_space_in_kb, 100)}.should raise_error(MiqException::MiqVmSnapshotError)
+        -> { @vim_vm.check_disk_space('create', @ds_mor, max_disk_space_in_kb, 100) }.should raise_error(MiqException::MiqVmSnapshotError)
       end
 
       it "check_disk_space - 0 percent" do
         max_disk_space_in_kb = 10000
-        lambda{ @vim_vm.check_disk_space('create', @ds_mor, max_disk_space_in_kb, 0)}.should_not raise_error
+        -> { @vim_vm.check_disk_space('create', @ds_mor, max_disk_space_in_kb, 0) }.should_not raise_error
       end
 
       it "check_disk_space - 10 percent" do
         max_disk_space_in_kb = 10000
-        lambda{ @vim_vm.check_disk_space('create', @ds_mor, max_disk_space_in_kb, 10)}.should_not raise_error
+        -> { @vim_vm.check_disk_space('create', @ds_mor, max_disk_space_in_kb, 10) }.should_not raise_error
       end
-
     end
 
     context "disk_space_per_datastore" do

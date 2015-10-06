@@ -23,8 +23,8 @@ class ChargebackRate < ActiveRecord::Base
 
   def self.get_assignments(type)
     # type = :compute || :storage
-    #Returns[{:cb_rate=>obj, :tag=>[Classification.entry_object, klass]} || :object=>object},...]
-    self.validate_rate_type(type)
+    # Returns[{:cb_rate=>obj, :tag=>[Classification.entry_object, klass]} || :object=>object},...]
+    validate_rate_type(type)
     result = []
     ChargebackRate.where(:rate_type => type.to_s.capitalize).each do |rate|
       assigned_tos = rate.get_assigned_tos
@@ -45,28 +45,26 @@ class ChargebackRate < ActiveRecord::Base
   end
 
   def self.seed
-    MiqRegion.my_region.lock do
-      fixture_file = File.join(FIXTURE_DIR, "chargeback_rates.yml")
-      if File.exist?(fixture_file)
-        fixture = YAML.load_file(fixture_file)
+    fixture_file = File.join(FIXTURE_DIR, "chargeback_rates.yml")
+    if File.exist?(fixture_file)
+      fixture = YAML.load_file(fixture_file)
 
-        fixture.each do |cbr|
-          rec = self.find_by_guid(cbr[:guid])
-          rates = cbr.delete(:rates)
-          if rec.nil?
-            _log.info("Creating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
-            rec = self.create(cbr)
+      fixture.each do |cbr|
+        rec = find_by_guid(cbr[:guid])
+        rates = cbr.delete(:rates)
+        if rec.nil?
+          _log.info("Creating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
+          rec = create!(cbr)
+          rec.chargeback_rate_details.create(rates)
+        else
+          fixture_mtime = File.mtime(fixture_file).utc
+          if fixture_mtime > rec.created_on
+            _log.info("Updating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
+            rec.update_attributes(cbr)
+            rec.chargeback_rate_details.clear
             rec.chargeback_rate_details.create(rates)
-          else
-            fixture_mtime = File.mtime(fixture_file).utc
-            if fixture_mtime > rec.created_on
-              _log.info("Updating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
-              rec.update_attributes(cbr)
-              rec.chargeback_rate_details.clear
-              rec.chargeback_rate_details.create(rates)
-              rec.created_on = fixture_mtime
-              rec.save
-            end
+            rec.created_on = fixture_mtime
+            rec.save!
           end
         end
       end

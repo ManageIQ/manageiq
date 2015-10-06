@@ -146,7 +146,6 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
     case get_option(:disk_format)
     when 'thin'  then VimString.new('sparse', "VirtualMachineRelocateTransformation")
     when 'thick' then VimString.new('flat', "VirtualMachineRelocateTransformation")
-    else nil
     end
   end
 end

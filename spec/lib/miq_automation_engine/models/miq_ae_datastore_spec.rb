@@ -111,7 +111,6 @@ describe MiqAeDatastore do
   end
 
   describe "restore" do
-
     let(:miq_ae_yaml_import_zipfs)  { auto_loaded_instance_double("MiqAeYamlImportZipfs") }
     let(:dummy_zipfile) { File.expand_path(File.join(File.dirname(__FILE__), "/miq_ae_datastore/data/dummy.zip")) }
 

@@ -20,8 +20,6 @@ CollectionMethods:
     reduce: inject
 CyclomaticComplexity:
   Severity: refactor
-DoubleNegation:
-  Severity: refactor
 GlobalVars:
   AllowedVariables:
   # Loggers
@@ -59,6 +57,8 @@ SingleLineMethods:
   AllowIfMethodIsEmpty: false
 SpaceInsideHashLiteralBraces:
   EnforcedStyle: no_space
+TrivialAccessors:
+  AllowPredicates: true
 #
 # Enabled/Disabled
 #
@@ -66,18 +66,38 @@ AllCops:
   RunRailsCops: true
 ClassAndModuleChildren:
   Enabled: false
+DefEndAlignment:
+  AutoCorrect: true
 Documentation:
   Enabled: false
 Encoding:
+  Enabled: false
+EndAlignment:
+  AutoCorrect: true
+ExtraSpacing:
+  AutoCorrect: false # https://github.com/bbatsov/rubocop/issues/2280
+FindEach:
   Enabled: false
 GuardClause:
   Enabled: false
 IfUnlessModifier:
   Enabled: false
+NumericLiterals:
+  AutoCorrect: false
+ParallelAssignment:
+  Enabled: false
+PerlBackrefs:
+  Enabled: false
+ReadWriteAttribute:
+  AutoCorrect: false
+RescueModifier:
+  AutoCorrect: false
 SingleLineBlockParams:
   Enabled: false
 SingleSpaceBeforeFirstArg:
   Enabled: false
+SpecialGlobalVars:
+  AutoCorrect: false
 StringLiterals:
   Enabled: false
 StringLiteralsInInterpolation:
@@ -86,6 +106,8 @@ TrailingComma:
   Enabled: false
 WhileUntilModifier:
   Enabled: false
+WordArray:
+  AutoCorrect: false
 
 ClassAndModuleCamelCase:
   Exclude:

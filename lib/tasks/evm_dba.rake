@@ -1,24 +1,8 @@
-# TODO: move into AwesomeSpawn
+require 'awesome_spawn'
+
 # TODO: move into DatabaseYml
 # TODO: can we use EvmDatabseOps directly?
 module EvmDba
-  #TODO: Move this to lib/util with a better name
-  def self.run_cmd_with_open4(cmd)
-    require 'open4'
-    out = err = nil
-    status =
-      Open4::popen4(cmd) do |pid, stdin, stdout, stderr|
-      stdin.close
-      out = stdout.read.strip
-      err = stderr.read.strip
-    end
-
-    puts out
-    if status && status.exitstatus != 0
-      raise err
-    end
-  end
-
   def self.database_configuration_file
     File.expand_path(File.join(Rails.root, 'config', 'database.yml'))
   end
@@ -195,9 +179,10 @@ namespace :evm do
 
         puts "Initializing region and database..."
         # Create the region from our REGION file, initialize a new miq_database row for this region
-        EvmDba.run_cmd_with_open4("bin/rails runner 'MiqDatabase.seed; MiqRegion.seed;'")
+        AwesomeSpawn.run!("bin/rails runner", :params => ["MiqDatabase.seed; MiqRegion.seed"])
       rescue => err
-        STDERR.puts "Encountered issue setting up Database using region #{region}: #{err}\n"
+        message = err.kind_of?(AwesomeSpawn::CommandResultError) ? err.error : err.message
+        STDERR.puts "Encountered issue setting up Database using region #{region}: #{message}\n"
         File.write(region_file, old_region) if old_region
         raise
       end

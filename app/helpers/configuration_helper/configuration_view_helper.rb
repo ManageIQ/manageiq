@@ -7,7 +7,7 @@ module ConfigurationHelper
        when :compare_mode, :drift_mode
          view == "details" ? compare_or_drift_mode_details(resource) : compare_or_drift_mode_exists(resource)
        when :treesize
-         view == "20" ?  treesize_small : treesize_large
+         view == "20" ? treesize_small : treesize_large
        else
          case view
          when "grid" then grid_view(resource)
@@ -43,32 +43,32 @@ module ConfigurationHelper
 
     def compare_or_drift_compressed(resource)
       inactive_icon("view_expanded.png", _('Expanded View'), resource, "expanded") +
-      active_icon("view_compressed.png", _('Compressed View'))
+        active_icon("view_compressed.png", _('Compressed View'))
     end
 
     def compare_or_drift_expanded(resource)
       active_icon("view_expanded.png", _('Expanded View')) +
-      inactive_icon("view_compressed.png", _('Compressed View'), resource, "compressed")
+        inactive_icon("view_compressed.png", _('Compressed View'), resource, "compressed")
     end
 
     def compare_or_drift_mode_exists(resource)
       inactive_icon("view_list.png", _('Details Mode'), resource, "details") +
-      active_icon("exists.png", _('Exists Mode'))
+        active_icon("exists.png", _('Exists Mode'))
     end
 
     def compare_or_drift_mode_details(resource)
       active_icon("view_list.png", _('Details Mode')) +
-      inactive_icon("exists.png", _('Exists Mode'), resource, "exists")
+        inactive_icon("exists.png", _('Exists Mode'), resource, "exists")
     end
 
     def treesize_small
       inactive_icon("tree-large.png", _('Large Trees'), :treesize, "32") +
-      active_icon("tree-small.png", _('Small Trees'))
+        active_icon("tree-small.png", _('Small Trees'))
     end
 
     def treesize_large
       active_icon("tree-large.png", _('Large Trees')) +
-      inactive_icon("tree-small.png", _('Small Trees'), :treesize, "20")
+        inactive_icon("tree-small.png", _('Small Trees'), :treesize, "20")
     end
 
     def grid_view(resource)

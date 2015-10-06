@@ -48,4 +48,41 @@ describe "Service Filter" do
       @request.miq_request_tasks.count.should eql(1)
     end
   end
+
+  context "#automate_result_include_service_template?" do
+    let(:test_class) do
+      Class.new do
+        include ServiceTemplate::Filter
+        def initialize(workspace)
+          @workspace = workspace
+        end
+      end
+    end
+
+    let(:workspace) { instance_double("MiqAeEngine::MiqAeWorkspace", :root => options) }
+
+    context "allow" do
+      let(:options) { {'include_service' => true} }
+      it "check true value" do
+        MiqAeEngine.stub(:resolve_automation_object).and_return(workspace)
+        expect(test_class.automate_result_include_service_template?('a', 'b')).to be_true
+      end
+    end
+
+    context "dont allow" do
+      let(:options) { {'include_service' => false} }
+      it "check false value" do
+        MiqAeEngine.stub(:resolve_automation_object).and_return(workspace)
+        expect(test_class.automate_result_include_service_template?('a', 'b')).to be_false
+      end
+    end
+
+    context "not present" do
+      let(:options) { {} }
+      it "check nil value" do
+        MiqAeEngine.stub(:resolve_automation_object).and_return(workspace)
+        expect(test_class.automate_result_include_service_template?('a', 'b')).to be_true
+      end
+    end
+  end
 end

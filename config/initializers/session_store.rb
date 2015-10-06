@@ -17,27 +17,27 @@ elsif MiqEnvironment::Process.is_web_server_worker?
   config = YAML.load(File.read(config_file))
   evm_store = config.fetch_path("server", "session_store")
   rails_store = case evm_store
-  when "sql";     :active_record_store
-  when "memory";  :memory_store
-  when "cache";   :dalli_store
-  else
-    raise "session_store, '#{evm_store}', invalid. Should be one of 'sql', 'memory', 'cache'"
-  end
+                when "sql" then     :active_record_store
+                when "memory" then  :memory_store
+                when "cache" then   :dalli_store
+                else
+                  raise "session_store, '#{evm_store}', invalid. Should be one of 'sql', 'memory', 'cache'"
+                end
 
   if rails_store == :dalli_store
     require "action_dispatch/middleware/session/dalli_store"
     memcached_server = config.fetch_path("session", "memcache_server") || "127.0.0.1:11211"
-    session_options = session_options.merge({
-      :cache          => Dalli::Client.new(memcached_server, :namespace => "MIQ:VMDB"),
-      :expires_after  => 24.hours,
+    session_options = session_options.merge(
+      :cache         => Dalli::Client.new(memcached_server, :namespace => "MIQ:VMDB"),
+      :expires_after => 24.hours,
       # :compress       => true,
-      :key            => "_vmdb_session",
-      # :readonly       => false,
-      # :urlencode      => false,
-      # :logger         => $log,
-      # :socket_timeout => 5,
-      # :failover       => false
-    })
+      :key           => "_vmdb_session",
+    # :readonly       => false,
+    # :urlencode      => false,
+    # :logger         => $log,
+    # :socket_timeout => 5,
+    # :failover       => false
+    )
   end
 
   Vmdb::Application.config.session_store rails_store, session_options

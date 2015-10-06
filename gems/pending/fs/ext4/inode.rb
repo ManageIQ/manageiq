@@ -7,7 +7,6 @@ require 'binary_struct'
 require 'memory_buffer'
 
 module Ext4
-
   # ////////////////////////////////////////////////////////////////////////////
   # // Data definitions.
 
@@ -24,7 +23,7 @@ module Ext4
     'L',  'blocks_lo',    # Lower 32-bits of Block count.
     'L',  'flags',        # Inode flags, see IF_ below.
     'L',  'version',      # Version.
-    'a60','data',         # 60 bytes deciphered into data (symlink, indirect pointer, or extents)
+    'a60', 'data',         # 60 bytes deciphered into data (symlink, indirect pointer, or extents)
     'L',  'gen_num',      # Generation number (NFS).
     'L',  'file_acl_lo',  # Lower 32-bits of File.
     'L',  'size_hi',      # Upper 32-bits of size in bytes or directory ACL.
@@ -44,7 +43,7 @@ module Ext4
     'L',  'version_hi',   # Upper 32-bits of version (for 64-bit version)
   ])
   SIZEOF_INODE = INODE.size
-  
+
   SYM_LNK_SIZE          = 60
   MAX_READ              = 4294967296
   DEFAULT_BLOCK_SIZE    = 1024
@@ -53,7 +52,6 @@ module Ext4
   # // Class.
 
   class Inode
-
     # Bits 0 to 8 of file mode.
     PF_O_EXECUTE  = 0x0001  # owner execute
     PF_O_WRITE    = 0x0002  # owner write
@@ -112,7 +110,7 @@ module Ext4
     IF_EA_INODE   = 0x00200000  # Inode used for large EA
     IF_EOFBLOCKS  = 0x00400000  # Blocks allocated beyond EOF
     IF_FLAGS = (IF_SECURE_DEL | IF_KEEP_COPY | IF_COMPRESS | IF_SYNCHRO | IF_IMMUTABLE | IF_APPEND | IF_NO_DUMP | IF_NO_ATIME | IF_DIRTY | IF_COMPR_CL | IF_NOCOMPR | IF_ECOMPR | IF_HASH_INDEX | IF_AFS_DIR | IF_JOURNAL | IF_NOTAIL | IF_DIRSYNC | IF_TOPDIR | IF_HUGE_FILE | IF_EXTENTS | IF_EA_INODE | IF_EOFBLOCKS)
-    
+
     FLAG_STR = {
       IF_SECURE_DEL => 'IF_SECURE_DEL',
       IF_KEEP_COPY  => 'IF_KEEP_COPY',
@@ -160,7 +158,7 @@ module Ext4
       @mode  = @in['file_mode']
       @flags = @in['flags']
 
-      if self.isSymLink? and self.length < SYM_LNK_SIZE
+      if self.isSymLink? && length < SYM_LNK_SIZE
         @data_method = nil
         @symlnk = @in['data']
       elsif hasExtents?
@@ -180,39 +178,37 @@ module Ext4
 
     def seek(offset, method = IO::SEEK_SET)
       @pos = case method
-        when IO::SEEK_SET then offset
-        when IO::SEEK_CUR then @pos + offset
-        when IO::SEEK_END then self.length - offset
-      end
+             when IO::SEEK_SET then offset
+             when IO::SEEK_CUR then @pos + offset
+             when IO::SEEK_END then length - offset
+             end
       @pos = 0           if @pos < 0
-      @pos = self.length if @pos > self.length
-      return @pos
+      @pos = length if @pos > length
+      @pos
     end
 
-    def read(nbytes = self.length)
+    def read(nbytes = length)
       raise "Ext4::Inode.read: Can't read 4G or more at a time (use a smaller read size)" if nbytes >= MAX_READ
-      return nil if @pos >= self.length
+      return nil if @pos >= length
 
       # Handle symbolic links.
-      if self.symlnk
-        out = self.symlnk[@pos...nbytes]
+      if symlnk
+        out = symlnk[@pos...nbytes]
         @pos += nbytes
         return out
       end
-      nbytes = self.length - @pos if @pos + nbytes > self.length
+      nbytes = length - @pos if @pos + nbytes > length
 
       # get data.
       start_block, start_byte, end_block, end_byte, nblocks = pos_to_block(@pos, nbytes)
       out = read_blocks(start_block, nblocks)
       @pos += nbytes
-      return out[start_byte, nbytes]
+      out[start_byte, nbytes]
     end
 
-    def write(buf, len = buf.length)
+    def write(buf, _len = buf.length)
       raise "Ext4::Inode.write: Write functionality is not yet supported on Ext4."
-      @dirty = true
     end
-
 
     # ////////////////////////////////////////////////////////////////////////////
     # // Class helpers & accessors.
@@ -242,7 +238,7 @@ module Ext4
     end
 
     def isDev?
-      return (@mode & MSK_IS_DEV) > 0
+      (@mode & MSK_IS_DEV) > 0
     end
 
     def isSymLink?
@@ -286,22 +282,22 @@ module Ext4
     end
 
     def userPermissions
-      @user_permissions  ||= @in['file_mode'] & MSK_PERM_USER
+      @user_permissions ||= @in['file_mode'] & MSK_PERM_USER
     end
 
     # ////////////////////////////////////////////////////////////////////////////
     # // Utility functions.
 
     def fileModeToFileType
-      return @@FM2FT[@mode & MSK_FILE_MODE]
+      @@FM2FT[@mode & MSK_FILE_MODE]
     end
 
     def modeSet?(bit)
-      return (@mode  & bit) == bit
+      (@mode & bit) == bit
     end
 
     def flagSet?(bit)
-      return (@flags & bit) == bit
+      (@flags & bit) == bit
     end
 
     def flags_to_s
@@ -313,18 +309,18 @@ module Ext4
     end
 
     def dump
-      out = "\#<#{self.class}:0x#{'%08x' % self.object_id}>\n"
+      out = "\#<#{self.class}:0x#{'%08x' % object_id}>\n"
       out += "Inode Number : #{@inum}\n"
       out += "File mode    : 0x#{'%04x' % @in['file_mode']}\n"
-      out += "UID          : #{self.uid}\n"
-      out += "Size         : #{self.length}\n"
-      out += "ATime        : #{self.aTime}\n"
-      out += "CTime        : #{self.cTime}\n"
-      out += "MTime        : #{self.mTime}\n"
-      out += "DTime        : #{self.dTime}\n"
-      out += "GID          : #{self.gid}\n"
+      out += "UID          : #{uid}\n"
+      out += "Size         : #{length}\n"
+      out += "ATime        : #{aTime}\n"
+      out += "CTime        : #{cTime}\n"
+      out += "MTime        : #{mTime}\n"
+      out += "DTime        : #{dTime}\n"
+      out += "GID          : #{gid}\n"
       out += "Link count   : #{@in['link_count']}\n"
-      out += "Block count  : #{self.nblocks}\n"
+      out += "Block count  : #{nblocks}\n"
       out += "Flags        : #{flags_to_s}\n"
       extra = @flags - (@flags & IF_FLAGS)
       out << "  Extra Flags: 0x#{'%08x' % extra}\n" if extra != 0
@@ -335,7 +331,7 @@ module Ext4
       out += "Frag blk adrs: 0x#{'%08x' % @in['frag_blk']}\n"
       out += "Frag index   : 0x#{'%02x' % @in['frag_idx']}\n"
       out += "Frag size    : 0x#{'%02x' % @in['frag_siz']}\n"
-      return out
+      out
     end
 
     private
@@ -358,7 +354,7 @@ module Ext4
         data  = @sb.getBlock(block)
         out[(i - 1) * @sb.blockSize, @sb.blockSize] = data
       end
-      return out
+      out
     end
 
     def extent_to_block_pointers(extent, bplen)
@@ -371,8 +367,8 @@ module Ext4
 
     def expected_blocks
       @expected_blocks ||= begin
-        quotient, remainder = self.length.divmod(@sb.blockSize)
-        quotient + ( (remainder > 0) ? 1 : 0)
+        quotient, remainder = length.divmod(@sb.blockSize)
+        quotient + ((remainder > 0) ? 1 : 0)
       end
     end
 
@@ -383,16 +379,16 @@ module Ext4
 
       if @extent_header.depth == 0
         1.upto(@extent_header.entries) do |i|
-          extent = Extent.new(@in['data'][SIZEOF_EXTENT_HEADER + SIZEOF_EXTENT*(i-1), SIZEOF_EXTENT])
+          extent = Extent.new(@in['data'][SIZEOF_EXTENT_HEADER + SIZEOF_EXTENT * (i - 1), SIZEOF_EXTENT])
           block_pointers.concat extent_to_block_pointers(extent, block_pointers.length)
         end
       else
         1.upto(@extent_header.entries) do |i|
-          extent_index    = ExtentIndex.new(@in['data'][SIZEOF_EXTENT_HEADER + SIZEOF_EXTENT_INDEX*(i-1), SIZEOF_EXTENT_INDEX])
+          extent_index    = ExtentIndex.new(@in['data'][SIZEOF_EXTENT_HEADER + SIZEOF_EXTENT_INDEX * (i - 1), SIZEOF_EXTENT_INDEX])
           leaf_block      = @sb.getBlock(extent_index.leaf)
           extent_header   = ExtentHeader.new(leaf_block)
           1.upto(extent_header.entries) do |j|
-            extent = Extent.new(leaf_block[SIZEOF_EXTENT_HEADER + SIZEOF_EXTENT*(j-1), SIZEOF_EXTENT])
+            extent = Extent.new(leaf_block[SIZEOF_EXTENT_HEADER + SIZEOF_EXTENT * (j - 1), SIZEOF_EXTENT])
             block_pointers.concat extent_to_block_pointers(extent, block_pointers.length)
           end
         end
@@ -420,7 +416,7 @@ module Ext4
     def block_pointers_via_double_indirect(double_indirect_block_num, bplen = 0)
       block_pointers = []
       if (bplen + block_pointers.length) < expected_blocks
-        read_block_pointers(double_indirect_block_num).each do |single_indirect_block_num| 
+        read_block_pointers(double_indirect_block_num).each do |single_indirect_block_num|
           if (bplen + block_pointers.length) < expected_blocks
             block_pointers.concat block_pointers_via_single_indirect(single_indirect_block_num, bplen + block_pointers.length)
           end
@@ -433,7 +429,7 @@ module Ext4
       block_pointers = []
       if (bplen + block_pointers.length) < expected_blocks
         read_block_pointers(single_indirect_block_num).each do |bp|
-          block_pointers << bp if (bplen + block_pointers.length < expected_blocks)
+          block_pointers << bp if bplen + block_pointers.length < expected_blocks
         end
       end
       block_pointers
@@ -443,15 +439,15 @@ module Ext4
       block_pointers = []
 
       # NOTE: Unpack the direct block pointers separately.
-      @in['data'][0,48].unpack('L12').each { |bp| block_pointers << bp if (block_pointers.length < expected_blocks) }
+      @in['data'][0, 48].unpack('L12').each { |bp| block_pointers << bp if block_pointers.length < expected_blocks }
 
-      single_indirect_block_num = @in['data'][48,4].unpack('L').first
+      single_indirect_block_num = @in['data'][48, 4].unpack('L').first
       block_pointers.concat block_pointers_via_single_indirect(single_indirect_block_num, block_pointers.length)
 
-      double_indirect_block_num = @in['data'][52,4].unpack('L').first
+      double_indirect_block_num = @in['data'][52, 4].unpack('L').first
       block_pointers.concat block_pointers_via_double_indirect(double_indirect_block_num, block_pointers.length)
 
-      triple_indirect_block_num = @in['data'][56,4].unpack('L').first
+      triple_indirect_block_num = @in['data'][56, 4].unpack('L').first
       block_pointers.concat block_pointers_via_triple_indirect(triple_indirect_block_num, block_pointers.length)
 
       block_pointers
@@ -465,6 +461,5 @@ module Ext4
       end
       @data_block_pointers
     end
-
   end
 end

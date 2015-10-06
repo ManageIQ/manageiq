@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20150818181427_update_tenant_divisible_on_existing_rows.rb")
+require_migration
 
 describe UpdateTenantDivisibleOnExistingRows do
   let(:tenant_stub)  { migration_stub(:Tenant) }

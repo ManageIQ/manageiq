@@ -65,6 +65,18 @@ describe FixAuth::Cli do
       expect(opts).to eq(:db => true, :databaseyml => true, :key => true)
     end
 
+    it "parses legacy_keys" do
+      opts = described_class.new.parse(%w(--legacy-key v2.bak -K v2.bakbak))
+             .options.slice(:legacy_key)
+      expect(opts).to eq(:legacy_key => %w(v2.bak v2.bakbak))
+    end
+
+    it "parses without legacy_keys specified" do
+      opts = described_class.new.parse(%w())
+             .options.slice(:legacy_key)
+      expect(opts[:legacy_key] || []).to eq([])
+    end
+
     describe "v2" do
       it "exists" do
         expect { described_class.new.parse(%w(--v2)) }.not_to raise_error

@@ -19,6 +19,6 @@ module ManageIQ::Providers::Openstack::CloudManager::Provision::Configuration
   private
 
   def convert_networks_to_openstack_nics(networks)
-    networks.delete_blanks.collect { |nic| {"net_id" => CloudNetwork.where(:id => nic[:network_id]).first.ems_ref} }
+    networks.delete_blanks.collect { |nic| {"net_id" => CloudNetwork.find_by(:id => nic[:network_id]).ems_ref} }
   end
 end

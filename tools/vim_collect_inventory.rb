@@ -1,6 +1,6 @@
 require 'trollop'
 ARGV.shift if ARGV.first == "--" # Handle when called through script/runner
-opts = Trollop::options do
+opts = Trollop.options do
   opt :ip,     "IP address", :type => :string, :required => true
   opt :user,   "User Name",  :type => :string, :required => true
   opt :pass,   "Password",   :type => :string, :required => true
@@ -8,14 +8,14 @@ opts = Trollop::options do
   opt :bypass, "Bypass broker usage", :type => :boolean
   opt :dir,    "Output directory",    :default => "."
 end
-Trollop::die :ip, "is an invalid format" unless opts[:ip] =~ /^\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}$/
+Trollop.die :ip, "is an invalid format" unless opts[:ip] =~ /^\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}$/
 
 def process(accessor, dir)
   puts "Reading #{accessor}..."
   data = yield
   puts "Writing #{accessor}..."
   File.open(File.join(dir, "#{accessor}.yml"), "w") { |f| f.write(data.to_yaml(:SortKeys => true)) }
-  return data
+  data
 end
 
 VC_ACCESSORS = [
@@ -40,10 +40,10 @@ begin
   selector_class.setSelector(MiqEmsRefreshWorker::VC_VIM_SELECTOR_SPEC)
 
   vim = MiqFaultTolerantVim.new(
-    :ip         => opts[:ip],
-    :user       => opts[:user],
-    :pass       => opts[:pass],
-    :use_broker => !opts[:bypass],
+    :ip                  => opts[:ip],
+    :user                => opts[:user],
+    :pass                => opts[:pass],
+    :use_broker          => !opts[:bypass],
     :vim_broker_drb_port => MiqVimBrokerWorker.drb_port
   )
 

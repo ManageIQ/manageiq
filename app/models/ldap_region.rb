@@ -13,7 +13,7 @@ class LdapRegion < ActiveRecord::Base
   # include ReportableMixin
 
   def is_valid?
-    self.ldap_domains.any?(&:is_valid?)
+    ldap_domains.any?(&:is_valid?)
   end
 
   def self.valid_regions
@@ -37,5 +37,4 @@ class LdapRegion < ActiveRecord::Base
     end
     results
   end
-
 end

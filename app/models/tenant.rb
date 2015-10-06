@@ -6,19 +6,26 @@ class Tenant < ActiveRecord::Base
   DEFAULT_URL = nil
 
   include ReportableMixin
+  acts_as_miq_taggable
 
   default_value_for :name,        "My Company"
   default_value_for :description, "Tenant for My Company"
   default_value_for :divisible,   true
   has_ancestry
 
-  has_many :owned_providers,              :foreign_key => :tenant_owner_id, :class_name => 'Provider'
-  has_many :owned_ext_management_systems, :foreign_key => :tenant_owner_id, :class_name => 'ExtManagementSystem'
-  has_many :owned_vm_or_templates,        :foreign_key => :tenant_owner_id, :class_name => 'VmOrTemplate'
+  has_many :providers
+  has_many :ext_management_systems
+  has_many :vm_or_templates
+  has_many :service_template_catalogs
+  has_many :service_templates
 
   has_many :tenant_quotas
-  has_many :miq_groups, :foreign_key => :tenant_owner_id
+  has_many :miq_groups
   has_many :users, :through => :miq_groups
+  has_many :ae_domains, :dependent => :destroy, :class_name => 'MiqAeDomain'
+  has_many :miq_requests, :dependent => :destroy
+  has_many :miq_request_tasks, :dependent => :destroy
+  has_many :services, :dependent => :destroy
 
   # FUTURE: /uploads/tenant/:id/logos/:basename.:extension # may want style
   has_attached_file :logo,
@@ -33,8 +40,9 @@ class Tenant < ActiveRecord::Base
   validates :subdomain, :uniqueness => true, :allow_nil => true
   validates :domain,    :uniqueness => true, :allow_nil => true
   validate  :validate_only_one_root
-  validates :name, :description, :presence => true, :unless => :root?
-  validates :name, :uniqueness => {:scope => :ancestry, :message => "should be unique per parent" }
+  validates :description, :presence => true
+  validates :name, :presence => true, :unless => :use_config_for_attributes?
+  validates :name, :uniqueness => {:scope => :ancestry, :message => "should be unique per parent"}
 
   # FUTURE: allow more content_types
   validates_attachment_content_type :logo, :content_type => ['image/png']
@@ -43,7 +51,8 @@ class Tenant < ActiveRecord::Base
   scope :all_tenants,  -> { where(:divisible => true) }
   scope :all_projects, -> { where(:divisible => false) }
 
-  virtual_column :parent_name, :type => :string
+  virtual_column :parent_name,  :type => :string
+  virtual_column :display_type, :type => :string
 
   before_save :nil_blanks
 
@@ -55,12 +64,20 @@ class Tenant < ActiveRecord::Base
     self.class.descendants_of(self).where(:divisible => false)
   end
 
+  def accessible_tenant_ids(strategy = nil)
+    (strategy ? send(strategy) : []).append(id)
+  end
+
   def name
     tenant_attribute(:name, :company)
   end
 
   def parent_name
     parent.try(:name)
+  end
+
+  def display_type
+    project? ? "Project" : "Tenant"
   end
 
   def login_text
@@ -93,6 +110,33 @@ class Tenant < ActiveRecord::Base
     end
   end
 
+  def get_quotas
+    tenant_quotas.each_with_object({}) do |q, h|
+      h[q.name.to_sym] = q.quota_hash
+    end.reverse_merge(TenantQuota.quota_definitions)
+  end
+
+  def set_quotas(quotas)
+    updated_keys = []
+
+    self.class.transaction do
+      quotas.each do |name, values|
+        next if values[:value].nil?
+
+        name = name.to_s
+        q = tenant_quotas.detect { |tq| tq.name == name } || tenant_quotas.build(:name => name)
+        q.update_attributes!(values)
+        updated_keys << name
+      end
+      # Delete any quotas that were not passed in
+      tenant_quotas.destroy_missing(updated_keys)
+      # unfortunatly, an extra scope is created in destroy_missing, so we need to reload the records
+      clear_association_cache
+    end
+
+    get_quotas
+  end
+
   # @return [Boolean] Is this a default tenant?
   def default?
     root?
@@ -119,6 +163,18 @@ class Tenant < ActiveRecord::Base
     !!login_logo_file_name
   end
 
+  def visible_domains
+    MiqAeDomain.where(:tenant_id => ancestor_ids.append(id)).joins(:tenant).order('tenants.ancestry DESC NULLS LAST, priority DESC')
+  end
+
+  def enabled_domains
+    visible_domains.where(:enabled => true)
+  end
+
+  def editable_domains
+    ae_domains.where(:system => false).order('priority DESC')
+  end
+
   # The default tenant is the tenant to be used when
   # the url does not map to a known domain or subdomain
   #
@@ -136,23 +192,25 @@ class Tenant < ActiveRecord::Base
     roots.first
   end
 
+  # NOTE: returns the root tenant
   def self.seed
-    Tenant.root_tenant || Tenant.create.update_attributes!(:name => nil)
+    root_tenant || create!(:use_config_for_attributes => true) do |_|
+      _log.info("Creating root tenant")
+    end
   end
 
   private
 
   # when a root tenant has an attribute with a nil value,
-  #   read the value from the settings table instead
+  #   read the value from the configurations table instead
   #
   # @return the attribute value
   def tenant_attribute(attr_name, setting_name)
-    ret = self[attr_name]
-    if ret.nil? && root?
-      ret = settings.fetch_path(:server, setting_name)
+    if use_config_for_attributes?
+      ret = get_vmdb_config.fetch_path(:server, setting_name)
       block_given? ? yield(ret) : ret
     else
-      ret
+      self[attr_name]
     end
   end
 
@@ -163,13 +221,13 @@ class Tenant < ActiveRecord::Base
     self.name = nil unless name.present?
   end
 
-  def settings
+  def get_vmdb_config
     @vmdb_config ||= VMDB::Config.new("vmdb").config
   end
 
   # validates that there is only one tree
   def validate_only_one_root
-    if !(parent_id || parent)
+    unless parent_id || parent
       root = self.class.root_tenant
       errors.add(:parent, "required") if root && root != self
     end

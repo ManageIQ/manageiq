@@ -26,31 +26,31 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
 
   def assert_table_counts
     ExtManagementSystem.count.should == 1
-    EmsFolder.count.should           == 30
-    EmsCluster.count.should          == 1
-    Host.count.should                == 4
-    ResourcePool.count.should        == 17
-    VmOrTemplate.count.should        == 101
-    Vm.count.should                  == 92
-    MiqTemplate.count.should         == 9
-    Storage.count.should             == 50
+    EmsFolder.count.should == 30
+    EmsCluster.count.should == 1
+    Host.count.should == 4
+    ResourcePool.count.should == 17
+    VmOrTemplate.count.should == 101
+    Vm.count.should == 92
+    MiqTemplate.count.should == 9
+    Storage.count.should == 50
 
-    CustomAttribute.count.should     == 3
-    CustomizationSpec.count.should   == 2
-    Disk.count.should                == 421
-    GuestDevice.count.should         == 135
-    Hardware.count.should            == 105
-    Lan.count.should                 == 14
-    MiqScsiLun.count.should          == 73
-    MiqScsiTarget.count.should       == 73
-    Network.count.should             == 75
-    OperatingSystem.count.should     == 105
-    Snapshot.count.should            == 29
-    Switch.count.should              == 8
-    SystemService.count.should       == 29
+    CustomAttribute.count.should == 3
+    CustomizationSpec.count.should == 2
+    Disk.count.should == 421
+    GuestDevice.count.should == 135
+    Hardware.count.should == 105
+    Lan.count.should == 14
+    MiqScsiLun.count.should == 73
+    MiqScsiTarget.count.should == 73
+    Network.count.should == 75
+    OperatingSystem.count.should == 105
+    Snapshot.count.should == 29
+    Switch.count.should == 8
+    SystemService.count.should == 29
 
-    Relationship.count.should        == 244
-    MiqQueue.count.should            == 101
+    Relationship.count.should == 244
+    MiqQueue.count.should == 101
   end
 
   def assert_ems
@@ -59,14 +59,14 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       :uid_ems     => "EF53782F-6F1A-4471-B338-72B27774AFDD"
     )
 
-    @ems.ems_folders.size.should       == 30
-    @ems.ems_clusters.size.should      == 1
-    @ems.resource_pools.size.should    == 17
-    @ems.storages.size.should          == 47
-    @ems.hosts.size.should             == 4
+    @ems.ems_folders.size.should == 30
+    @ems.ems_clusters.size.should == 1
+    @ems.resource_pools.size.should == 17
+    @ems.storages.size.should == 47
+    @ems.hosts.size.should == 4
     @ems.vms_and_templates.size.should == 101
-    @ems.vms.size.should               == 92
-    @ems.miq_templates.size.should     == 9
+    @ems.vms.size.should == 92
+    @ems.miq_templates.size.should == 9
 
     @ems.customization_specs.size.should == 2
     cspec = @ems.customization_specs.find_by_name("Win2k8Template")
@@ -177,7 +177,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       :connection_state => "connected"
     )
 
-    @host.ems_cluster.should   == @cluster
+    @host.ems_cluster.should == @cluster
     @host.storages.size.should == 25
     @host.storages.should      include(@storage)
 
@@ -261,7 +261,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       :present         => true,
       :controller_type => "ethernet"
     )
-    nic.switch.should  == switch
+    nic.switch.should == switch
     nic.network.should == network
 
     @host.hardware.storage_adapters.size.should == 5
@@ -344,10 +344,10 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     )
 
     v.ext_management_system.should == @ems
-    v.ems_cluster.should           == @cluster
-    v.parent_resource_pool.should  == @rp
-    v.host.should                  == @host
-    v.storages.should              == [@storage]
+    v.ems_cluster.should == @cluster
+    v.parent_resource_pool.should == @rp
+    v.host.should == @host
+    v.storages.should == [@storage]
     # v.storage  # TODO: Fix bug where duplication location GUIDs could cause the wrong value to appear.
 
     v.operating_system.should have_attributes(
@@ -355,7 +355,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     )
 
     v.custom_attributes.size.should == 0
-    v.snapshots.size.should         == 0
+    v.snapshots.size.should == 0
 
     v.hardware.should have_attributes(
       :guest_os           => "rhel5_64",
@@ -438,196 +438,196 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
   def assert_relationship_tree
     @ems.descendants_arranged.should match_relationship_tree(
       [EmsFolder, "Datacenters", {:is_datacenter => false}] => {
-        [EmsFolder, "Dev", {:is_datacenter => true}] => {
+        [EmsFolder, "Dev", {:is_datacenter => true}]            => {
           [EmsFolder, "host", {:is_datacenter => false}] => {
             [ManageIQ::Providers::Vmware::InfraManager::HostEsx, "vi4esxm3.manageiq.com"] => {
               [ResourcePool, "Default for Host / Node vi4esxm3.manageiq.com", {:is_default => true}] => {
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "Dev Cucumber Nightly Appl 2011-05-19"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-GreggT"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-GregM"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-HarpreetK"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-JoeR"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-Oleg"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-RichO"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "GM Nightly Appl 2011-05-19"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "GT Nightly Appl 2011-02-19"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "Hennessy ReiserFS ubuntu server"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "HK-Dev Cucumber Nightly Appl 2011-05-19"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "Jason Nightly Appl 2011-02-19"] => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "Dev Cucumber Nightly Appl 2011-05-19"]              => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-GreggT"]                                        => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-GregM"]                                         => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-HarpreetK"]                                     => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-JoeR"]                                          => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-Oleg"]                                          => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-RichO"]                                         => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "GM Nightly Appl 2011-05-19"]                        => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "GT Nightly Appl 2011-02-19"]                        => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "Hennessy ReiserFS ubuntu server"]                   => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "HK-Dev Cucumber Nightly Appl 2011-05-19"]           => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "Jason Nightly Appl 2011-02-19"]                     => {},
                 [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR- Dev Cucumber Nightly Appl 2011-05-19 - backup"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-cruisecontrol-sandback-testing-April14_backup"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-cruisecontrol-sandbox"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-cruisecontrol-sandbox-for-tina"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-cruisecontrol-sandbox-testing"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-cruisecontrol-sandbox-testing-Apr14"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-Cucumber-Capybara-Akephalos unit tester"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4.0.1.14-2"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4.0.1.14-28620-centos"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4.0.1.14-28620-redhat"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4.0.1.14-3"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4.0.1.14-redo"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4_0_1_9"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-9.9-27736-2011-04-01"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM3_3_2_32_svn_memprof"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM_3_3_2_32_svn_memprof_for_comparison"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM_4_0_1_8_svn_memprof"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-Region-5-26665-2011-02-22"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-Region-99-26665-2011-02-22"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-SQL2005"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-SQL2005-CLONE"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-svn-nightly-25707-2010-12-26"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "test3"] => {}
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-cruisecontrol-sandback-testing-April14_backup"]  => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-cruisecontrol-sandbox"]                          => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-cruisecontrol-sandbox-for-tina"]                 => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-cruisecontrol-sandbox-testing"]                  => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-cruisecontrol-sandbox-testing-Apr14"]            => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-Cucumber-Capybara-Akephalos unit tester"]        => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4.0.1.14-2"]                                 => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4.0.1.14-28620-centos"]                      => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4.0.1.14-28620-redhat"]                      => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4.0.1.14-3"]                                 => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4.0.1.14-redo"]                              => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4_0_1_9"]                                    => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-9.9-27736-2011-04-01"]                       => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM3_3_2_32_svn_memprof"]                        => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM_3_3_2_32_svn_memprof_for_comparison"]        => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM_4_0_1_8_svn_memprof"]                        => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-Region-5-26665-2011-02-22"]                      => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-Region-99-26665-2011-02-22"]                     => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-SQL2005"]                                        => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-SQL2005-CLONE"]                                  => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-svn-nightly-25707-2010-12-26"]                   => {},
+                [ManageIQ::Providers::Vmware::InfraManager::Vm, "test3"]                                             => {}
               }
             }
           },
-          [EmsFolder, "vm", {:is_datacenter => false}] => {
-            [EmsFolder, "Discovered virtual machine", {:is_datacenter => false}] => {},
-            [EmsFolder, "GreggT", {:is_datacenter => false}] => {
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-GreggT"] => {},
+          [EmsFolder, "vm", {:is_datacenter => false}]   => {
+            [EmsFolder, "Discovered virtual machine", {:is_datacenter => false}]                    => {},
+            [EmsFolder, "GreggT", {:is_datacenter => false}]                                        => {
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-GreggT"]                 => {},
               [ManageIQ::Providers::Vmware::InfraManager::Vm, "GT Nightly Appl 2011-02-19"] => {}
             },
-            [EmsFolder, "GregM", {:is_datacenter => false}] => {
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-GregM"] => {},
+            [EmsFolder, "GregM", {:is_datacenter => false}]                                         => {
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-GregM"]                  => {},
               [ManageIQ::Providers::Vmware::InfraManager::Vm, "GM Nightly Appl 2011-05-19"] => {}
             },
-            [EmsFolder, "Harpreet", {:is_datacenter => false}] => {
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-HarpreetK"] => {},
+            [EmsFolder, "Harpreet", {:is_datacenter => false}]                                      => {
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-HarpreetK"]                           => {},
               [ManageIQ::Providers::Vmware::InfraManager::Vm, "HK-Dev Cucumber Nightly Appl 2011-05-19"] => {}
             },
-            [EmsFolder, "Jason", {:is_datacenter => false}] => {
+            [EmsFolder, "Jason", {:is_datacenter => false}]                                         => {
               [ManageIQ::Providers::Vmware::InfraManager::Vm, "Jason Nightly Appl 2011-02-19"] => {}
             },
-            [EmsFolder, "JoeR", {:is_datacenter => false}] => {
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-JoeR"] => {},
+            [EmsFolder, "JoeR", {:is_datacenter => false}]                                          => {
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-JoeR"]                                          => {},
               [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR- Dev Cucumber Nightly Appl 2011-05-19 - backup"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-cruisecontrol-sandback-testing-April14_backup"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-cruisecontrol-sandbox"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-cruisecontrol-sandbox-for-tina"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-cruisecontrol-sandbox-testing"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-cruisecontrol-sandbox-testing-Apr14"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-Cucumber-Capybara-Akephalos unit tester"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4.0.1.14-2"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4.0.1.14-28620-centos"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4.0.1.14-28620-redhat"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4.0.1.14-3"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4.0.1.14-redo"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4_0_1_9"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-9.9-27736-2011-04-01"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM3_3_2_32_svn_memprof"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM_3_3_2_32_svn_memprof_for_comparison"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM_4_0_1_8_svn_memprof"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-Region-5-26665-2011-02-22"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-Region-99-26665-2011-02-22"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-SQL2005"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-SQL2005-CLONE"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-svn-nightly-25707-2010-12-26"] => {}
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-cruisecontrol-sandback-testing-April14_backup"]  => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-cruisecontrol-sandbox"]                          => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-cruisecontrol-sandbox-for-tina"]                 => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-cruisecontrol-sandbox-testing"]                  => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-cruisecontrol-sandbox-testing-Apr14"]            => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-Cucumber-Capybara-Akephalos unit tester"]        => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4.0.1.14-2"]                                 => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4.0.1.14-28620-centos"]                      => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4.0.1.14-28620-redhat"]                      => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4.0.1.14-3"]                                 => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4.0.1.14-redo"]                              => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-4_0_1_9"]                                    => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM-9.9-27736-2011-04-01"]                       => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM3_3_2_32_svn_memprof"]                        => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM_3_3_2_32_svn_memprof_for_comparison"]        => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-EVM_4_0_1_8_svn_memprof"]                        => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-Region-5-26665-2011-02-22"]                      => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-Region-99-26665-2011-02-22"]                     => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-SQL2005"]                                        => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-SQL2005-CLONE"]                                  => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "JR-svn-nightly-25707-2010-12-26"]                   => {}
             },
-            [ManageIQ::Providers::Vmware::InfraManager::Template, "RcuCloneTestTemplate"] => {},
-            [ManageIQ::Providers::Vmware::InfraManager::Template, "XavTmpl"] => {},
-            [ManageIQ::Providers::Vmware::InfraManager::Template, "xyz"] => {},
-            [ManageIQ::Providers::Vmware::InfraManager::Template, "xyz1"] => {},
+            [ManageIQ::Providers::Vmware::InfraManager::Template, "RcuCloneTestTemplate"]           => {},
+            [ManageIQ::Providers::Vmware::InfraManager::Template, "XavTmpl"]                        => {},
+            [ManageIQ::Providers::Vmware::InfraManager::Template, "xyz"]                            => {},
+            [ManageIQ::Providers::Vmware::InfraManager::Template, "xyz1"]                           => {},
             [ManageIQ::Providers::Vmware::InfraManager::Vm, "Dev Cucumber Nightly Appl 2011-05-19"] => {},
-            [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-Oleg"] => {},
-            [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-RichO"] => {},
-            [ManageIQ::Providers::Vmware::InfraManager::Vm, "Hennessy ReiserFS ubuntu server"] => {},
-            [ManageIQ::Providers::Vmware::InfraManager::Vm, "test3"] => {}
+            [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-Oleg"]                             => {},
+            [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-RichO"]                            => {},
+            [ManageIQ::Providers::Vmware::InfraManager::Vm, "Hennessy ReiserFS ubuntu server"]      => {},
+            [ManageIQ::Providers::Vmware::InfraManager::Vm, "test3"]                                => {}
           }
         },
         [EmsFolder, "New Datacenter", {:is_datacenter => true}] => {
           [EmsFolder, "host", {:is_datacenter => false}] => {},
-          [EmsFolder, "vm", {:is_datacenter => false}] => {}
+          [EmsFolder, "vm", {:is_datacenter => false}]   => {}
         },
-        [EmsFolder, "Prod", {:is_datacenter => true}] => {
+        [EmsFolder, "Prod", {:is_datacenter => true}]           => {
           [EmsFolder, "host", {:is_datacenter => false}] => {
-            [EmsCluster, "Testing-Production Cluster"] => {
+            [EmsCluster, "Testing-Production Cluster"]     => {
               [ResourcePool, "Default for Cluster / Deployment Role Testing-Production Cluster",
                {:is_default => true}] => {
-                [ResourcePool, "Citrix", {:is_default => false}] => {
-                  [ManageIQ::Providers::Vmware::InfraManager::Vm, "Citrix 5"] => {}
-                },
-                [ResourcePool, "Citrix VDI VM's", {:is_default => false}] => {
-                  [ManageIQ::Providers::Vmware::InfraManager::Vm, "Citrix-Mahwah1"] => {},
-                  [ManageIQ::Providers::Vmware::InfraManager::Vm, "Citrix-Mahwah2"] => {}
-                },
-                [ResourcePool, "Production Test environment", {:is_default => false}] => {
-                  [ManageIQ::Providers::Vmware::InfraManager::Vm, "M-TestDC1"] => {},
-                  [ManageIQ::Providers::Vmware::InfraManager::Vm, "VC41Test"] => {},
-                  [ManageIQ::Providers::Vmware::InfraManager::Vm, "VC41Test-Prod"] => {}
-                },
-                [ResourcePool, "Testing", {:is_default => false}] => {
-                  [ResourcePool, "Brandon", {:is_default => false}] => {
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "BD-EVM-4.0.1.15"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "BD-EVM-Nightly 28939-svn"] => {}
-                  },
-                  [ResourcePool, "Joe", {:is_default => false}] => {
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "JoeF 4.0.1"] => {}
-                  },
-                  [ResourcePool, "Marianne", {:is_default => false}] => {
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_3_3_2_34"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_40115_svn_formigrate"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "MGF_Branch_332_svn"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_branch_40115_svn"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_branch_4015_svn"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_build_332_31"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_build_40116"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_build_40116_formigrate"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_nightly_trunk_svn"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_trunk_nightly_v4"] => {}
-                  },
-                  [ResourcePool, "Rich", {:is_default => false}] => {
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "ESX-TESTVCINTEGRATION"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-sim-host1"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-sim-host2"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-sim-host3"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-sim-host4"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-sim-host5"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-smis-agent1"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-smis-agent2"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-smis-agent3"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "NetappDsTest2"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "NetAppDsTest4"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "NetAppDsTest5"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "NetAppDsTest6"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "NetAppDsTest7"] => {}
-                  },
-                  [ResourcePool, "Tina", {:is_default => false}] => {
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-TinaF"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "TF-Appliance 4.0.1.14"] => {}
-                  },
-                  [ResourcePool, "TomH", {:is_default => false}] => {
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "tch-cos64-nightly-26322"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "tch-cos64_19GB_restore_"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "tch-cos64-V4_import_tes"] => {}
-                  },
-                  [ResourcePool, "Xav", {:is_default => false}] => {
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "Xav 4014"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "Xav 4018"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "Xav Master"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "Xav RH 40114"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "Xav RH 4012"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "xavsmall"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "XL Trunk svn2"] => {},
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "XL V4 svn"] => {}
-                  },
-                  [ManageIQ::Providers::Vmware::InfraManager::Vm, "3.3.2.22"] => {}
-                },
-                [ResourcePool, "Training", {:is_default => false}] => {
-                  [ManageIQ::Providers::Vmware::InfraManager::Vm, "Training Master DB"] => {},
-                  [ManageIQ::Providers::Vmware::InfraManager::Vm, "Training Region 10 UI"] => {},
-                  [ManageIQ::Providers::Vmware::InfraManager::Vm, "Training Region 10 Worker"] => {}
-                },
-                [ResourcePool, "VMware View VM's", {:is_default => false}] => {
-                  [ResourcePool, "Linked Clones", {:is_default => false}] => {
-                    [ManageIQ::Providers::Vmware::InfraManager::Vm, "View Windows 7 Parent x64"] => {}
-                  },
-                  [ManageIQ::Providers::Vmware::InfraManager::Vm, "View Broker"] => {}
-                },
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "KPupgrade"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp_video"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp_video1"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "RM-4.0.1.12C"] => {},
-                [ManageIQ::Providers::Vmware::InfraManager::Vm, "Xav COS 40114"] => {}
-              }
+                 [ResourcePool, "Citrix", {:is_default => false}]                      => {
+                   [ManageIQ::Providers::Vmware::InfraManager::Vm, "Citrix 5"] => {}
+                 },
+                 [ResourcePool, "Citrix VDI VM's", {:is_default => false}]             => {
+                   [ManageIQ::Providers::Vmware::InfraManager::Vm, "Citrix-Mahwah1"] => {},
+                   [ManageIQ::Providers::Vmware::InfraManager::Vm, "Citrix-Mahwah2"] => {}
+                 },
+                 [ResourcePool, "Production Test environment", {:is_default => false}] => {
+                   [ManageIQ::Providers::Vmware::InfraManager::Vm, "M-TestDC1"]     => {},
+                   [ManageIQ::Providers::Vmware::InfraManager::Vm, "VC41Test"]      => {},
+                   [ManageIQ::Providers::Vmware::InfraManager::Vm, "VC41Test-Prod"] => {}
+                 },
+                 [ResourcePool, "Testing", {:is_default => false}]                     => {
+                   [ResourcePool, "Brandon", {:is_default => false}]           => {
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "BD-EVM-4.0.1.15"]          => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "BD-EVM-Nightly 28939-svn"] => {}
+                   },
+                   [ResourcePool, "Joe", {:is_default => false}]               => {
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "JoeF 4.0.1"] => {}
+                   },
+                   [ResourcePool, "Marianne", {:is_default => false}]          => {
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_3_3_2_34"]               => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_40115_svn_formigrate"]   => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "MGF_Branch_332_svn"]         => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_branch_40115_svn"]       => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_branch_4015_svn"]        => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_build_332_31"]           => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_build_40116"]            => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_build_40116_formigrate"] => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_nightly_trunk_svn"]      => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_trunk_nightly_v4"]       => {}
+                   },
+                   [ResourcePool, "Rich", {:is_default => false}]              => {
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "ESX-TESTVCINTEGRATION"] => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-sim-host1"]      => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-sim-host2"]      => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-sim-host3"]      => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-sim-host4"]      => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-sim-host5"]      => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-smis-agent1"]    => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-smis-agent2"]    => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-smis-agent3"]    => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "NetappDsTest2"]         => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "NetAppDsTest4"]         => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "NetAppDsTest5"]         => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "NetAppDsTest6"]         => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "NetAppDsTest7"]         => {}
+                   },
+                   [ResourcePool, "Tina", {:is_default => false}]              => {
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-TinaF"]             => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "TF-Appliance 4.0.1.14"] => {}
+                   },
+                   [ResourcePool, "TomH", {:is_default => false}]              => {
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "tch-cos64-nightly-26322"] => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "tch-cos64_19GB_restore_"] => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "tch-cos64-V4_import_tes"] => {}
+                   },
+                   [ResourcePool, "Xav", {:is_default => false}]               => {
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "Xav 4014"]      => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "Xav 4018"]      => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "Xav Master"]    => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "Xav RH 40114"]  => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "Xav RH 4012"]   => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "xavsmall"]      => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "XL Trunk svn2"] => {},
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "XL V4 svn"]     => {}
+                   },
+                   [ManageIQ::Providers::Vmware::InfraManager::Vm, "3.3.2.22"] => {}
+                 },
+                 [ResourcePool, "Training", {:is_default => false}]                    => {
+                   [ManageIQ::Providers::Vmware::InfraManager::Vm, "Training Master DB"]        => {},
+                   [ManageIQ::Providers::Vmware::InfraManager::Vm, "Training Region 10 UI"]     => {},
+                   [ManageIQ::Providers::Vmware::InfraManager::Vm, "Training Region 10 Worker"] => {}
+                 },
+                 [ResourcePool, "VMware View VM's", {:is_default => false}]            => {
+                   [ResourcePool, "Linked Clones", {:is_default => false}]        => {
+                     [ManageIQ::Providers::Vmware::InfraManager::Vm, "View Windows 7 Parent x64"] => {}
+                   },
+                   [ManageIQ::Providers::Vmware::InfraManager::Vm, "View Broker"] => {}
+                 },
+                 [ManageIQ::Providers::Vmware::InfraManager::Vm, "KPupgrade"]          => {},
+                 [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp_video"]       => {},
+                 [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp_video1"]      => {},
+                 [ManageIQ::Providers::Vmware::InfraManager::Vm, "RM-4.0.1.12C"]       => {},
+                 [ManageIQ::Providers::Vmware::InfraManager::Vm, "Xav COS 40114"]      => {}
+               }
             },
             [EmsFolder, "Test", {:is_datacenter => false}] => {
               [ManageIQ::Providers::Vmware::InfraManager::HostEsx, "localhost"] => {
@@ -635,94 +635,94 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
               }
             }
           },
-          [EmsFolder, "vm", {:is_datacenter => false}] => {
-            [EmsFolder, "BHelgeson", {:is_datacenter => false}] => {},
-            [EmsFolder, "Brandon", {:is_datacenter => false}] => {
+          [EmsFolder, "vm", {:is_datacenter => false}]   => {
+            [EmsFolder, "BHelgeson", {:is_datacenter => false}]                         => {},
+            [EmsFolder, "Brandon", {:is_datacenter => false}]                           => {
               [ManageIQ::Providers::Vmware::InfraManager::Vm, "BD-EVM-Nightly 28939-svn"] => {}
             },
-            [EmsFolder, "Discovered virtual machine", {:is_datacenter => false}] => {
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "3.3.2.22"] => {},
+            [EmsFolder, "Discovered virtual machine", {:is_datacenter => false}]        => {
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "3.3.2.22"]                => {},
               [ManageIQ::Providers::Vmware::InfraManager::Vm, "tch-cos64-nightly-26322"] => {}
             },
-            [EmsFolder, "Infra", {:is_datacenter => false}] => {
+            [EmsFolder, "Infra", {:is_datacenter => false}]                             => {
               [ManageIQ::Providers::Vmware::InfraManager::Vm, "M-TestDC1"] => {}
             },
-            [EmsFolder, "JFitzgerald", {:is_datacenter => false}] => {
+            [EmsFolder, "JFitzgerald", {:is_datacenter => false}]                       => {
               [ManageIQ::Providers::Vmware::InfraManager::Vm, "JoeF 4.0.1"] => {}
             },
-            [EmsFolder, "MFeifer", {:is_datacenter => false}] => {
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_3_3_2_34"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_40115_svn_formigrate"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "MGF_Branch_332_svn"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_branch_40115_svn"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_branch_4015_svn"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_build_332_31"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_build_40116"] => {},
+            [EmsFolder, "MFeifer", {:is_datacenter => false}]                           => {
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_3_3_2_34"]               => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_40115_svn_formigrate"]   => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "MGF_Branch_332_svn"]         => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_branch_40115_svn"]       => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_branch_4015_svn"]        => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_build_332_31"]           => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_build_40116"]            => {},
               [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_build_40116_formigrate"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_nightly_trunk_svn"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_trunk_nightly_v4"] => {}
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_nightly_trunk_svn"]      => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "mgf_trunk_nightly_v4"]       => {}
             },
-            [EmsFolder, "Rich", {:is_datacenter => false}] => {
-              [ManageIQ::Providers::Vmware::InfraManager::Template, "netapp-sim-host-template"] => {},
+            [EmsFolder, "Rich", {:is_datacenter => false}]                              => {
+              [ManageIQ::Providers::Vmware::InfraManager::Template, "netapp-sim-host-template"]   => {},
               [ManageIQ::Providers::Vmware::InfraManager::Template, "netapp-smis-agent-template"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "ESX-TESTVCINTEGRATION"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-sim-host1"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-sim-host2"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-sim-host3"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-sim-host4"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-sim-host5"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-smis-agent1"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-smis-agent2"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-smis-agent3"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "NetappDsTest2"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "NetAppDsTest4"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "NetAppDsTest5"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "NetAppDsTest6"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "NetAppDsTest7"] => {}
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "ESX-TESTVCINTEGRATION"]            => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-sim-host1"]                 => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-sim-host2"]                 => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-sim-host3"]                 => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-sim-host4"]                 => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-sim-host5"]                 => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-smis-agent1"]               => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-smis-agent2"]               => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp-smis-agent3"]               => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "NetappDsTest2"]                    => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "NetAppDsTest4"]                    => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "NetAppDsTest5"]                    => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "NetAppDsTest6"]                    => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "NetAppDsTest7"]                    => {}
             },
-            [EmsFolder, "RMoore", {:is_datacenter => false}] => {
+            [EmsFolder, "RMoore", {:is_datacenter => false}]                            => {
               [ManageIQ::Providers::Vmware::InfraManager::Vm, "RM-4.0.1.12C"] => {}
             },
-            [EmsFolder, "THennessy", {:is_datacenter => false}] => {
+            [EmsFolder, "THennessy", {:is_datacenter => false}]                         => {
               [ManageIQ::Providers::Vmware::InfraManager::Vm, "tch-cos64_19GB_restore_"] => {},
               [ManageIQ::Providers::Vmware::InfraManager::Vm, "tch-cos64-V4_import_tes"] => {}
             },
-            [EmsFolder, "Training", {:is_datacenter => false}] => {
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "Training Master DB"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "Training Region 10 UI"] => {},
+            [EmsFolder, "Training", {:is_datacenter => false}]                          => {
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "Training Master DB"]        => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "Training Region 10 UI"]     => {},
               [ManageIQ::Providers::Vmware::InfraManager::Vm, "Training Region 10 Worker"] => {}
             },
-            [EmsFolder, "VCs", {:is_datacenter => false}] => {
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "VC41Test"] => {},
+            [EmsFolder, "VCs", {:is_datacenter => false}]                               => {
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "VC41Test"]      => {},
               [ManageIQ::Providers::Vmware::InfraManager::Vm, "VC41Test-Prod"] => {}
             },
-            [EmsFolder, "View Environment", {:is_datacenter => false}] => {
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "View Broker"] => {},
+            [EmsFolder, "View Environment", {:is_datacenter => false}]                  => {
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "View Broker"]               => {},
               [ManageIQ::Providers::Vmware::InfraManager::Vm, "View Windows 7 Parent x64"] => {}
             },
-            [EmsFolder, "Xlecauchois", {:is_datacenter => false}] => {
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "Xav 4014"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "Xav 4018"] => {},
+            [EmsFolder, "Xlecauchois", {:is_datacenter => false}]                       => {
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "Xav 4014"]      => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "Xav 4018"]      => {},
               [ManageIQ::Providers::Vmware::InfraManager::Vm, "Xav COS 40114"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "Xav Master"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "Xav RH 40114"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "Xav RH 4012"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "xavsmall"] => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "Xav Master"]    => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "Xav RH 40114"]  => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "Xav RH 4012"]   => {},
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "xavsmall"]      => {},
               [ManageIQ::Providers::Vmware::InfraManager::Vm, "XL Trunk svn2"] => {},
-              [ManageIQ::Providers::Vmware::InfraManager::Vm, "XL V4 svn"] => {}
+              [ManageIQ::Providers::Vmware::InfraManager::Vm, "XL V4 svn"]     => {}
             },
-            [ManageIQ::Providers::Vmware::InfraManager::Template, "Citrix-Win7-Temp"] => {},
+            [ManageIQ::Providers::Vmware::InfraManager::Template, "Citrix-Win7-Temp"]   => {},
             [ManageIQ::Providers::Vmware::InfraManager::Template, "Win2008Templatex86"] => {},
-            [ManageIQ::Providers::Vmware::InfraManager::Template, "Win2k8Template"] => {},
-            [ManageIQ::Providers::Vmware::InfraManager::Vm, "BD-EVM-4.0.1.15"] => {},
-            [ManageIQ::Providers::Vmware::InfraManager::Vm, "Citrix 5"] => {},
-            [ManageIQ::Providers::Vmware::InfraManager::Vm, "Citrix-Mahwah1"] => {},
-            [ManageIQ::Providers::Vmware::InfraManager::Vm, "Citrix-Mahwah2"] => {},
-            [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-TinaF"] => {},
-            [ManageIQ::Providers::Vmware::InfraManager::Vm, "KPupgrade"] => {},
-            [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp_video"] => {},
-            [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp_video1"] => {},
-            [ManageIQ::Providers::Vmware::InfraManager::Vm, "TF-Appliance 4.0.1.14"] => {}
+            [ManageIQ::Providers::Vmware::InfraManager::Template, "Win2k8Template"]     => {},
+            [ManageIQ::Providers::Vmware::InfraManager::Vm, "BD-EVM-4.0.1.15"]          => {},
+            [ManageIQ::Providers::Vmware::InfraManager::Vm, "Citrix 5"]                 => {},
+            [ManageIQ::Providers::Vmware::InfraManager::Vm, "Citrix-Mahwah1"]           => {},
+            [ManageIQ::Providers::Vmware::InfraManager::Vm, "Citrix-Mahwah2"]           => {},
+            [ManageIQ::Providers::Vmware::InfraManager::Vm, "DEV-TinaF"]                => {},
+            [ManageIQ::Providers::Vmware::InfraManager::Vm, "KPupgrade"]                => {},
+            [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp_video"]             => {},
+            [ManageIQ::Providers::Vmware::InfraManager::Vm, "netapp_video1"]            => {},
+            [ManageIQ::Providers::Vmware::InfraManager::Vm, "TF-Appliance 4.0.1.14"]    => {}
           }
         }
       }

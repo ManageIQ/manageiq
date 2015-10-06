@@ -6,10 +6,7 @@ FactoryGirl.define do
 
     # Hackery: Due to ntp reload occurring on save, we need to add the servers after saving the zone.
     after(:create) do |z|
-      guid   = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(guid)
-      MiqServer.my_server_clear_cache
-      FactoryGirl.create(:miq_server_master, :guid => guid, :zone => z)
+      EvmSpecHelper.local_miq_server(:is_master => true, :zone => z)
     end
   end
 
@@ -25,22 +22,3 @@ FactoryGirl.define do
     vms          { [FactoryGirl.create(:vm_with_ref, :name => "vmtest1"), FactoryGirl.create(:vm_with_ref, :name => "vmtest2")] }
   end
 end
-
-# Factory.define :small_environment, :parent => :zone do |z|
-#   z.sequence(:name)         { |n| "small_environment_#{seq_padded_for_sorting(n)}" }
-#   z.sequence(:description)  { |n| "Small Environment #{seq_padded_for_sorting(n)}" }
-#   z.ext_management_systems  { [FactoryGirl.create(:ems_small_environment)] }
-
-#   # Hackery: Due to ntp reload occurring on save, we need to add the servers after saving the zone.
-#   z.after_create { |x| x.miq_servers << FactoryGirl.create(:miq_server_master) }
-# end
-
-# Factory.define :ems_small_environment, :parent => :ems_vmware do |e|
-#   e.hosts        { [FactoryGirl.create(:host_small_environment)] }
-#   e.after_create { |x| x.hosts.each { |h| h.vms.each { |v| v.update_attribute(:ems_id, x.id) } } }
-# end
-
-# Factory.define :host_small_environment, :parent => :host_with_ref do |h|
-#   h.vmm_product  "Workstation"
-#   h.vms          { [FactoryGirl.create(:vm_with_ref, :name => "vmtest1"), FactoryGirl.create(:vm_with_ref, :name => "vmtest2")] }
-# end

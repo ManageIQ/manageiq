@@ -66,13 +66,13 @@ module MiqAeServiceSpec
         result = invoke_ae.root(@ae_result_key)
         result.should == true
 
-        #Now the instance should exist
+        # Now the instance should exist
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_exists?('#{@domain}/EVM/AUTOMATE/testadd')"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
         result.should == true
 
-        #Make sure we can get instance values
+        # Make sure we can get instance values
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_get('#{@domain}/EVM/AUTOMATE/testadd')"
         @ae_method.update_attributes(:data => method)
         result_hash = invoke_ae.root(@ae_result_key)
@@ -179,7 +179,6 @@ module MiqAeServiceSpec
           end
         end
       end
-
     end
 
     context "$evm.instance_get" do
@@ -204,7 +203,7 @@ module MiqAeServiceSpec
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_get_display_name('#{@domain}/EVM/AUTOMATE/testadd')"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
-        result.should == nil
+        result.should.nil?
       end
 
       it "instance does exist" do
@@ -277,7 +276,7 @@ module MiqAeServiceSpec
       end
 
       it "make sure instance does not exist, create new instance, make sure it exists, delete it, then check if it exists" do
-        #Now the instance should not exist
+        # Now the instance should not exist
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_exists?('#{@domain}/EVM/AUTOMATE/testadd')"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
@@ -288,7 +287,7 @@ module MiqAeServiceSpec
         result = invoke_ae.root(@ae_result_key)
         result.should == true
 
-        #Now the instance should exist
+        # Now the instance should exist
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_exists?('#{@domain}/EVM/AUTOMATE/testadd')"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
@@ -299,13 +298,12 @@ module MiqAeServiceSpec
         result = invoke_ae.root(@ae_result_key)
         result.should == true
 
-        #Now the instance should not exist
+        # Now the instance should not exist
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_exists?('#{@domain}/EVM/AUTOMATE/testadd')"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
         result.should == false
       end
     end
-
   end
 end

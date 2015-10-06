@@ -16,7 +16,7 @@ class MiqEvent < EventStream
 
   SUPPORTED_POLICY_AND_ALERT_CLASSES = [Host, VmOrTemplate, Storage, EmsCluster, ResourcePool, MiqServer]
 
-  def self.raise_evm_event(target, raw_event, inputs={})
+  def self.raise_evm_event(target, raw_event, inputs = {})
     # Target may have been deleted if it's a worker
     # Target, in that case will be the worker's server.
     # The generic raw_event remains, but client can pass the :type of the worker spawning the event:
@@ -101,24 +101,24 @@ class MiqEvent < EventStream
     actions
   end
 
-  def self.raise_evm_event_queue_in_region(target, raw_event, inputs={})
+  def self.raise_evm_event_queue_in_region(target, raw_event, inputs = {})
     MiqQueue.put(
       :zone        => nil,
-      :class_name  => self.name,
+      :class_name  => name,
       :method_name => 'raise_evm_event',
       :args        => [[target.class.name, target.id], raw_event, inputs]
     )
   end
 
-  def self.raise_evm_event_queue(target, raw_event, inputs={})
+  def self.raise_evm_event_queue(target, raw_event, inputs = {})
     MiqQueue.put(
-      :class_name  => self.name,
+      :class_name  => name,
       :method_name => 'raise_evm_event',
       :args        => [[target.class.name, target.id], raw_event, inputs]
     )
   end
 
-  def self.raise_evm_alert_event_queue(target, raw_event, inputs={})
+  def self.raise_evm_alert_event_queue(target, raw_event, inputs = {})
     MiqQueue.put_unless_exists(
       :class_name  => "MiqAlert",
       :method_name => 'evaluate_alerts',
@@ -126,7 +126,7 @@ class MiqEvent < EventStream
     ) if MiqAlert.alarm_has_alerts?(raw_event)
   end
 
-  def self.raise_evm_job_event(target, options = {}, inputs={})
+  def self.raise_evm_job_event(target, options = {}, inputs = {})
     # Eg. options = {:type => "scan", ":prefix => "request, :suffix => "abort"}
     options.reverse_merge!(
       :type   => "scan",
@@ -135,10 +135,10 @@ class MiqEvent < EventStream
     )
     base_event = [target.class.base_model.name.downcase, options[:type]].join("_")
     evm_event  = [options[:prefix], base_event, options[:suffix]].compact.join("_")
-    self.raise_evm_event(target, evm_event, inputs)
+    raise_evm_event(target, evm_event, inputs)
   end
 
-  def self.raise_event_for_children(target, raw_event, inputs={})
+  def self.raise_event_for_children(target, raw_event, inputs = {})
     child_assocs = CHILD_EVENTS.fetch_path(raw_event.to_sym, target.class.base_class.name.to_sym)
     return if child_assocs.blank?
 
@@ -148,14 +148,14 @@ class MiqEvent < EventStream
       children = target.send(assoc)
       children.each do |child|
         _log.info("Raising Event [#{child_event}] for Child [(#{child.class}) #{child.name}] of Parent [(#{target.class}) #{target.name}]")
-        self.raise_evm_event_queue(child, child_event, inputs)
+        raise_evm_event_queue(child, child_event, inputs)
       end
     end
   end
 
   def self.normalize_event(event)
     return event if MiqEventDefinition.find_by_name(event)
-    return "unknown"
+    "unknown"
   end
 
   def self.event_name_for_target(target, event_suffix)

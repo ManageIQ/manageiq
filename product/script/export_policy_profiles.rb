@@ -7,15 +7,15 @@ begin
 rescue
 end
 
-#ext = "xml"
+# ext = "xml"
 ext = "yaml"
 
 dir = Dir.pwd
 
-MiqPolicySet.find(:all).each { |ps|
+MiqPolicySet.find(:all).each do |ps|
   begin
     contents = ps.export_to_yaml if ext == "yaml"
-    contents = ps.export_to_xml  if ext ==  "xml"
+    contents = ps.export_to_xml  if ext == "xml"
 
     fname = File.join(dir, "policy_profile#{ps.id}.#{ext}")
     puts "Creating #{fname}"
@@ -25,4 +25,4 @@ MiqPolicySet.find(:all).each { |ps|
   rescue ActiveRecord::RecordNotFound => err
     next
   end
-}
+end

@@ -3,5 +3,3 @@ class MiqScsiLun < ActiveRecord::Base
 
   include ReportableMixin
 end
-
-

@@ -20,29 +20,29 @@ ManageIQ.angularApplication.directive('checkchange', ['miqService', function(miq
         miqService.miqFlashClear();
 
         if (value == scope.modelCopy[ctrl.$name]) {
-          scope.angularForm[scope['formchange_' + ctrl.$name]].$setPristine(true);
+          scope.angularForm[scope['formchange_' + ctrl.$name]].$setPristine();
         }
         if(scope.angularForm[scope['formchange_' + ctrl.$name]].$pristine) {
           checkForOverallFormPristinity(scope, ctrl);
         }
-        scope.angularForm[scope['formchange_' + ctrl.$name]].$setTouched(true);
+        scope.angularForm[scope['formchange_' + ctrl.$name]].$setTouched();
         return value;
       });
 
       if(scope.angularForm.$pristine)
-        scope.angularForm.$setPristine(true);
+        scope.angularForm.$setPristine();
     }
   }
 }]);
 
 var viewModelComparison = function(scope, ctrl) {
   if (ctrl.$viewValue == scope.modelCopy[ctrl.$name]) {
-    scope.angularForm[scope['formchange_' + ctrl.$name]].$setPristine(true);
-    scope.angularForm[scope['formchange_' + ctrl.$name]].$setUntouched(true);
+    scope.angularForm[scope['formchange_' + ctrl.$name]].$setPristine();
+    scope.angularForm[scope['formchange_' + ctrl.$name]].$setUntouched();
     scope.angularForm.$pristine = true;
   }
   else {
-    scope.angularForm[scope['formchange_' + ctrl.$name]].$setPristine(false);
+    scope.angularForm[scope['formchange_' + ctrl.$name]].$setDirty();
     scope.angularForm.$pristine = false;
   }
 };
@@ -52,11 +52,11 @@ var viewModelDateComparison = function(scope, ctrl) {
   var copyDate = moment(scope.modelCopy[ctrl.$name]);
 
   if (modelDate.diff(copyDate, 'days') == 0) {
-    scope.angularForm[scope['formchange_' + ctrl.$name]].$setPristine(true);
-    scope.angularForm[scope['formchange_' + ctrl.$name]].$setUntouched(true);
+    scope.angularForm[scope['formchange_' + ctrl.$name]].$setPristine();
+    scope.angularForm[scope['formchange_' + ctrl.$name]].$setUntouched();
     scope.angularForm.$pristine = true;
   } else {
-    scope.angularForm[scope['formchange_' + ctrl.$name]].$setPristine(false);
+    scope.angularForm[scope['formchange_' + ctrl.$name]].$setDirty();
     scope.angularForm.$pristine = false;
   }
 };
@@ -75,5 +75,5 @@ var checkForOverallFormPristinity = function(scope, ctrl) {
   scope.angularForm.$pristine = _.isEqual(modelCopyObject, modelObject);
 
   if (scope.angularForm.$pristine)
-    scope.angularForm.$setPristine(true);
+    scope.angularForm.$setPristine();
 };

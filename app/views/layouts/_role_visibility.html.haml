@@ -1,18 +1,24 @@
 - url = url_for(:action => action, :id => rec_id)
 #form_role_visibility
   %hr
-  %h3= _("Visibility")
-  %table.style1
-    %tr
-      %td.key= _("Show")
-      %td
+  %h3
+    = _("Visibility")
+  .form-horizontal
+    .form-group
+      %label.control-label.col-md-2
+        = _("Show")
+      .col-md-10
         = select_tag("visibility_typ",
                      options_for_select(@edit[:visibility_types], @edit[:new][:visibility_typ]),
-                     "data-miq_observe" => {:url => url}.to_json)
+                     :class => "selectpicker")
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("visibility_typ", "#{url}");
     - if @edit[:new][:visibility_typ] == "role"
-      %tr
-        %td.key= _("User Roles")
-        %td
+      .form-group
+        %label.control-label.col-md-2
+          = _("User Roles")
+        .col-md-10
           %table
             - @edit[:sorted_user_roles].each_with_index do |user_role, index|
               - checkbox = capture do
@@ -28,9 +34,10 @@
               - else
                 = checkbox
     - elsif @edit[:new][:visibility_typ] == "group"
-      %tr
-        %td.key= _("Groups")
-        %td
+      .form-group
+        %label.control-label.col-md-2
+          = _("Groups")
+        .col-md-10
           %table
             - @edit[:sorted_groups].each_with_index do |group, index|
               - checkbox = capture do

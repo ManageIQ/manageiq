@@ -1,6 +1,6 @@
 module Vmdb
   class ConfigurationEncoder
-    PASSWORD_FIELDS = %w{bind_pwd password amazon_secret}
+    PASSWORD_FIELDS = %w(bind_pwd password amazon_secret)
 
     def self.validate!(hash)
       load(dump(hash))
@@ -53,8 +53,7 @@ module Vmdb
     end
 
     def self.walk_nested_hashes(hash, &block)
-      hash.keys.each do |k|
-        v = hash[k]
+      hash.each do |k, v|
         yield k, v, hash
         walk_nested_hashes(v, &block) if v.kind_of?(Hash)
       end
@@ -63,7 +62,7 @@ module Vmdb
 
     def self.encrypt_password_fields!(hash)
       walk_nested_hashes(hash) do |k, v, h|
-        h[k] = MiqPassword.try_encrypt(v) if k.to_s.in?(PASSWORD_FIELDS) && v.present?
+        h[k] = MiqPassword.try_encrypt(v) if PASSWORD_FIELDS.include?(k.to_s) && v.present?
       end
     end
 
@@ -73,7 +72,7 @@ module Vmdb
 
     def self.decrypt_password_fields!(hash)
       walk_nested_hashes(hash) do |k, v, h|
-        h[k] = MiqPassword.try_decrypt(v) if k.to_s.in?(PASSWORD_FIELDS) && v.present?
+        h[k] = MiqPassword.try_decrypt(v) if PASSWORD_FIELDS.include?(k.to_s) && v.present?
       end
     end
 

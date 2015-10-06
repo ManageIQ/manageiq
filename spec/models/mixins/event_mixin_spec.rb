@@ -7,7 +7,7 @@ describe EventMixin do
         include EventMixin
 
         def event_where_clause(assoc)
-          ["ems_id = ?", 1]
+          ["#{events_table_name(assoc)}.ems_id = ?", 1]
         end
       end
 
@@ -49,7 +49,7 @@ describe EventMixin do
         include EventMixin
 
         def event_where_clause(assoc)
-          ["ems_id = ?", nil]
+          ["#{events_table_name(assoc)}.ems_id = ?", nil]
         end
       end
     end
@@ -74,5 +74,4 @@ describe EventMixin do
       TestClass.new.should_not have_events
     end
   end
-
 end

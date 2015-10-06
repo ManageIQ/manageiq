@@ -3,30 +3,30 @@ module OpsController::Db
   extend ActiveSupport::Concern
 
   # Show list of VMDB tables or settings
-  def db_list(exp=nil)
+  def db_list(exp = nil)
     @lastaction = "db_list"
     @force_no_grid_xml = true
     model = case @sb[:active_tab] # Build view based on tab selected
-      when "db_connections"
-        VmdbDatabaseConnection
-      when "db_details"
-        VmdbTableEvm
-      when "db_indexes"
-        VmdbIndex
-      when "db_settings"
-        VmdbDatabaseSetting
-    end
-    #@explorer = true if model == VmdbIndex
+            when "db_connections"
+              VmdbDatabaseConnection
+            when "db_details"
+              VmdbTableEvm
+            when "db_indexes"
+              VmdbIndex
+            when "db_settings"
+              VmdbDatabaseSetting
+            end
+    # @explorer = true if model == VmdbIndex
 
     if model == VmdbIndex
-      #building a filter with expression to only show VmdbTableEvm tables only
-      cond = Array.new
-      cond_hash = Hash.new
-      cond_hash["="] = {"value"=> "VmdbTableEvm","field"=>"VmdbIndex.vmdb_table-type"}
+      # building a filter with expression to only show VmdbTableEvm tables only
+      cond = []
+      cond_hash = {}
+      cond_hash["="] = {"value" => "VmdbTableEvm", "field" => "VmdbIndex.vmdb_table-type"}
       cond.push(cond_hash)
 
-      condition = Hash.new
-      condition["and"] = Array.new
+      condition = {}
+      condition["and"] = []
       cond.each do |c|
         condition["and"].push(c)
       end
@@ -34,57 +34,57 @@ module OpsController::Db
     elsif model == VmdbDatabaseConnection
       @zones = Zone.all.sort_by(&:name).collect { |z| [z.name, z.name] }
       # for now we dont need this pulldown, need ot get a method that could give us a list of workers for filter pulldown
-      #@workers = MiqWorker.all(:order=>"type ASC").uniq.sort_by(&:type).collect { |w| [w.friendly_name, w.id] }
+      # @workers = MiqWorker.all(:order=>"type ASC").uniq.sort_by(&:type).collect { |w| [w.friendly_name, w.id] }
     end
 
-    @view, @pages = get_view(model, :filter=>exp ? exp : nil) # Get the records (into a view) and the paginator
+    @view, @pages = get_view(model, :filter => exp ? exp : nil) # Get the records (into a view) and the paginator
 
     @ajax_paging_buttons = true
     @no_checkboxes = true
     @showlinks = true # Need to set @showlinks if @no_checkboxes is set to true
-    @current_page = @pages[:current] if @pages != nil # save the current page number
+    @current_page = @pages[:current] unless @pages.nil? # save the current page number
 
     # Came in from outside show_list partial
-    if params[:action] == "list_view_filter" || params[:ppsetting]   || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
+    if params[:action] == "list_view_filter" || params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
       render :update do |page|                    # Use RJS to update the display
-        page.replace_html("gtl_div", :partial => 'layouts/x_gtl', :locals=>{:action_url=>"db_list"})
-        page.replace_html("paging_div", :partial=>"layouts/x_pagingcontrols")
+        page.replace_html("gtl_div", :partial => 'layouts/x_gtl', :locals => {:action_url => "db_list"})
+        page.replace_html("paging_div", :partial => "layouts/x_pagingcontrols")
         page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
       end
     end
   end
 
   def list_view_filter
-    @sb[:condition] = Array.new
+    @sb[:condition] = []
     @sb[:zone_name] = params[:zone_name] if params[:zone_name]
     @sb[:filter_text] = params[:filter][:text] if params[:filter] && params[:filter][:text]
 
     if params[:zone_name] && params[:zone_name] != "all"
       @sb[:zone_name] = params[:zone_name]
-      cond_hash = Hash.new
-      cond_hash["="] = {"value"=> params[:zone_name],"field"=>"VmdbDatabaseConnection-zone.name"}
+      cond_hash = {}
+      cond_hash["="] = {"value" => params[:zone_name], "field" => "VmdbDatabaseConnection-zone.name"}
       @sb[:condition].push(cond_hash)
     end
     if params[:filter] && params[:filter][:text] != ""
-      #@sb[:cond] =  ["vmdb_database_connection.address like ?", params[:filter][:text]]
-      cond_hash = Hash.new
-      cond_hash["like"] = {"value"=> params[:filter][:text],"field"=>"VmdbDatabaseConnection-address"}
+      # @sb[:cond] =  ["vmdb_database_connection.address like ?", params[:filter][:text]]
+      cond_hash = {}
+      cond_hash["like"] = {"value" => params[:filter][:text], "field" => "VmdbDatabaseConnection-address"}
       @sb[:condition].push(cond_hash)
     end
-    condition = Hash.new
-    condition["and"] = Array.new
+    condition = {}
+    condition["and"] = []
     @sb[:condition].each do |c|
       condition["and"].push(c)
     end
     exp = MiqExpression.new(condition)
-    #forcing to refresh the view when filtering results
+    # forcing to refresh the view when filtering results
     @_params[:refresh] = "y"
     db_list(exp)
   end
 
   # VM clicked on in the explorer right cell
   def x_show
-    #@explorer = true
+    # @explorer = true
     @record = VmdbIndex.find_by_id(from_cid(params[:id]))
     params[:id] = x_build_node_id(@record)  # Get the tree node id
     tree_select
@@ -102,16 +102,16 @@ module OpsController::Db
     end
     miq_task = MiqTask.find(params[:task_id])     # Not first time, read the task record
     if miq_task.task_results.blank? || miq_task.status != "Ok"  # Check to see if any results came back or status not Ok
-      add_flash(_("Export generation returned: Status [%{status}] Message [%{message}]") % {:status=>miq_task.status, :message=>miq_task.message}, :error)
+      add_flash(_("Export generation returned: Status [%{status}] Message [%{message}]") % {:status => miq_task.status, :message => miq_task.message}, :error)
       render :update do |page|                      # Use JS to update the display
-        page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page << "miqSparkle(false);"
       end
     else
       session[:export_data_id] = miq_task.id
       render :update do |page|                      # Use JS to update the display
         page << "miqSparkle(false);"
-        page << "DoNav('#{url_for(:action=>"send_download_data")}');"
+        page << "DoNav('#{url_for(:action => "send_download_data")}');"
       end
     end
   end
@@ -121,7 +121,7 @@ module OpsController::Db
     ids = [params[:id]] if ids.empty?
     VmdbTable.analyze_queue(ids.collect(&:to_i))
     render :update do |page|                      # Use JS to update the display
-      page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << "miqSparkle(false);"
     end
   end
@@ -131,7 +131,7 @@ module OpsController::Db
     ids = [params[:id]] if ids.empty?
     VmdbTable.reindex_queue(ids.collect(&:to_i))
     render :update do |page|                      # Use JS to update the display
-      page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << "miqSparkle(false);"
     end
   end
@@ -141,7 +141,7 @@ module OpsController::Db
     ids = [params[:id]] if ids.empty?
     VmdbTable.vacuum_queue(ids.collect(&:to_i))
     render :update do |page|                      # Use JS to update the display
-      page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << "miqSparkle(false);"
     end
   end
@@ -151,16 +151,15 @@ module OpsController::Db
     ids = [params[:id]] if ids.empty?
     VmdbTable.vacuum_full_queue(ids.collect(&:to_i))
     render :update do |page|                      # Use JS to update the display
-      page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << "miqSparkle(false);"
     end
   end
 
-
   def send_download_data
     export_data = MiqTask.find_by_id(session[:export_data_id]).task_results
     disable_client_cache
-    send_data(export_data, :filename => session[:export_fname], :type=>"application/zip" )
+    send_data(export_data, :filename => session[:export_fname], :type => "application/zip")
   end
 
   private #######################
@@ -171,7 +170,7 @@ module OpsController::Db
   end
 
   # Get information for a DB tree node
-  def db_get_info(nodetype)
+  def db_get_info(_nodetype)
     if x_node == "root"
       # If root node is selected
       if @sb[:active_tab] == "db_summary"
@@ -185,15 +184,15 @@ module OpsController::Db
         @right_cell_text = _("%s Utilization") % "VMDB"
       else
         @right_cell_text = case @sb[:active_tab]
-        when "db_connections"
-          @right_cell_text = _("%s Client Connections") % "VMDB"
-        when "db_details"
-          @right_cell_text = _("All %s") % ui_lookup(:models=>"VmdbTable")
-        when "db_indexes"
-          @right_cell_text = _("All %s Indexes") % "VMDB"
-        else
-          @right_cell_text = _("%s Settings") % "VMDB"
-        end
+                           when "db_connections"
+                             @right_cell_text = _("%s Client Connections") % "VMDB"
+                           when "db_details"
+                             @right_cell_text = _("All %s") % ui_lookup(:models => "VmdbTable")
+                           when "db_indexes"
+                             @right_cell_text = _("All %s Indexes") % "VMDB"
+                           else
+                             @right_cell_text = _("%s Settings") % "VMDB"
+                           end
         @force_no_grid_xml = true
         db_list
       end
@@ -205,11 +204,11 @@ module OpsController::Db
         if nodes.first == "xx"
           tb = VmdbTableEvm.find_by_id(from_cid(nodes.last))
           @indexes = get_indexes(tb)
-          @right_cell_text = _("Indexes for %{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"VmdbTable"), :name=>tb.name}
+          @right_cell_text = _("Indexes for %{model} \"%{name}\"") % {:model => ui_lookup(:model => "VmdbTable"), :name => tb.name}
           @tab_text = "#{tb.name}: Indexes"
         else
           @vmdb_index = VmdbIndex.find_by_id(from_cid(nodes.last))
-          @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"VmdbIndex"), :name=>@vmdb_index.name}
+          @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "VmdbIndex"), :name => @vmdb_index.name}
           @tab_text = @vmdb_index.name
         end
       elsif @sb[:active_tab] == "db_utilization"
@@ -223,7 +222,7 @@ module OpsController::Db
         @sb[:active_tab] = "db_details"
         @table = VmdbTable.find_by_id(from_cid(x_node.split('-').last))
         @indexes = get_indexes(@table)
-        @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"VmdbTable"), :name=>@table.name}
+        @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "VmdbTable"), :name => @table.name}
         @tab_text = @table.name
       end
     end
@@ -238,14 +237,13 @@ module OpsController::Db
     assert_privileges("db_refresh")
     db_get_info(x_node)
     render :update do |page|
-      page.replace_html(@sb[:active_tab], :partial=>"db_details_tab")
+      page.replace_html(@sb[:active_tab], :partial => "db_details_tab")
       page << "miqSparkle(false);"    # Need to turn off sparkle in case original ajax element gets replaced
     end
   end
 
   # Add the children of a node that is being expanded (autoloaded), called by generic tree_autoload method
   def tree_add_child_nodes(id)
-    return x_get_child_nodes_dynatree(x_active_tree, id)
+    x_get_child_nodes_dynatree(x_active_tree, id)
   end
-
 end

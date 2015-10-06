@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20150817213409_clear_tenant_seed")
+require_migration
 
 describe ClearTenantSeed do
   migration_context :up do

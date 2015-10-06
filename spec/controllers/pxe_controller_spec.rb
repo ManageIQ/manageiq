@@ -25,12 +25,11 @@ describe PxeController do
       MiqServer.stub(:my_zone).and_return("default")
       controller.instance_variable_set(:@_params, :id => pxe.id)
       controller.instance_variable_set(:@sb,
-                                       {:trees => {
-                                                    :pxe_tree => {:active_node => "ps-#{pxe.id}"}
-                                                   },
-                                        :active_tree => :pxe_tree
-                                       }
-      )
+                                       :trees       => {
+                                         :pxe_tree => {:active_node => "ps-#{pxe.id}"}
+                                       },
+                                       :active_tree => :pxe_tree
+                                      )
       controller.stub(:get_node_info)
       controller.stub(:replace_right_cell)
       controller.send(:pxe_server_refresh)

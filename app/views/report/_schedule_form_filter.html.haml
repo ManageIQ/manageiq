@@ -2,63 +2,79 @@
 #form_filter_div
   %h3
     = _('Report Selection')
-  %table.style1
+  .form-horizontal
     - if @sb[:tree_typ] == "reports"
-      %tr
-        %td.key{:rowspan => "3"}
+      .form-group
+        %label.col-md-2.control-label
           = _('Filter')
-        %td
+        .col-md-8
           = select_tag('filter_typ',
-            options_for_select(["<#{_('Choose')}>"] + @folders, @edit[:new][:filter]),
-            :multiple => false,
-            :class    => "widthed",
-            :disabled => true)
+                        options_for_select(["<#{_('Choose')}>"] + @folders, @edit[:new][:filter]),
+                        :multiple => false,
+                        :disabled => true,
+                        :class    => "selectpicker")
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent('filter_typ', '#{url}')
       - if @sub_folders && !@sub_folders.empty?
-        %tr
-          %td
+        .form-group
+          .col-md-2
+          .col-md-8
             = select_tag('subfilter_typ',
-              options_for_select(["<#{_('Choose')}>"] + @sub_folders, @edit[:new][:subfilter]),
-              :multiple => false,
-              :class    => "widthed",
-              :disabled => true)
+                          options_for_select(["<#{_('Choose')}>"] + @sub_folders, @edit[:new][:subfilter]),
+                          :multiple => false,
+                          :disabled => true,
+                          :class    => "selectpicker")
+            :javascript
+              miqSelectPickerEvent('subfilter_typ', '#{url}')
       - if @reps && !@reps.empty?
-        %tr
-          %td
+        .form-group
+          .col-md-2
+          .col-md-8
             = select_tag('repfilter_typ',
-              options_for_select(["<#{_('Choose')}>"] + @reps, @edit[:new][:repfilter]),
-              :multiple => false,
-              :class    => "widthed",
-              :disabled => true)
+                          options_for_select(["<#{_('Choose')}>"] + @reps, @edit[:new][:repfilter]),
+                          :multiple => false,
+                          :disabled => true,
+                          :class    => "selectpicker")
+            :javascript
+              miqSelectPickerEvent('repfilter_typ', '#{url}')
+
     - else
-      %tr
-        %td.key{:rowspan => "3"}
+      .form-group
+        %label.col-md-2.control-label
           = _('Filter')
-        %td
+        .col-md-8
           = select_tag("filter_typ",
-            options_for_select(["<#{_('Choose')}>"] + @folders, @edit[:new][:filter]),
-            :multiple              => false,
-            :class                 => "widthed",
-            "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true,
-            "data-miq_observe"     => {:url => url}.to_json)
+                        options_for_select(["<#{_('Choose')}>"] + @folders, @edit[:new][:filter]),
+                        :multiple              => false,
+                        "data-miq_sparkle_on"  => true,
+                        "data-miq_sparkle_off" => true,
+                        :class                 => "selectpicker")
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent("filter_typ", "#{url}")
       - if @sub_folders && !@sub_folders.empty?
-        %tr
-          %td
+        .form-group
+          .col-md-2
+          .col-md-8
             = select_tag("subfilter_typ",
-              options_for_select(["<#{_('Choose')}>"] + @sub_folders, @edit[:new][:subfilter]),
-              :multiple              => false,
-              :class                 => "widthed",
-              "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true,
-              "data-miq_observe"     => {:url => url}.to_json)
+                          options_for_select(["<#{_('Choose')}>"] + @sub_folders, @edit[:new][:subfilter]),
+                          :multiple              => false,
+                          "data-miq_sparkle_on"  => true,
+                          "data-miq_sparkle_off" => true,
+                          :class                 => "selectpicker")
+            :javascript
+              miqSelectPickerEvent("subfilter_typ", "#{url}")
       - if @reps && !@reps.empty?
-        %tr
-          %td
+        .form-group
+          .col-md-2
+          .col-md-8
             = select_tag("repfilter_typ",
-              options_for_select(["<#{_('Choose')}>"] + @reps, @edit[:new][:repfilter]),
-              :multiple              => false,
-              :class                 => "widthed",
-              "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true,
-              "data-miq_observe"     => {:url => url}.to_json)
+                          options_for_select(["<#{_('Choose')}>"] + @reps, @edit[:new][:repfilter]),
+                          :multiple              => false,
+                          "data-miq_sparkle_on"  => true,
+                          "data-miq_sparkle_off" => true,
+                          :class                 => "selectpicker")
+            :javascript
+              miqSelectPickerEvent("repfilter_typ", "#{url}")
   %hr

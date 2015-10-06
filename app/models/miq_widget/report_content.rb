@@ -9,14 +9,14 @@ class MiqWidget::ReportContent < MiqWidget::ContentGeneration
 
     row_count   = widget_options[:row_count] || 10
 
-    headers     = report.col_order.inject([]) {|a,c| a << report.headers[original_col_order.index(c)]}
-    col_formats = report.col_order.inject([]) {|a,c| a << report.col_formats[original_col_order.index(c)]}
+    headers     = report.col_order.inject([]) { |a, c| a << report.headers[original_col_order.index(c)] }
+    col_formats = report.col_order.inject([]) { |a, c| a << report.col_formats[original_col_order.index(c)] }
 
     report.col_formats = col_formats           # Use widget's column formats
 
     report.rpt_options[:in_a_widget] = true    # Let html builders know we're in a widget
 
-    tz = self.timezone
+    tz = timezone
     tz ||= user_or_group.get_timezone if user_or_group.respond_to?(:get_timezone)
 
     body = user_or_group.with_a_timezone(tz) do

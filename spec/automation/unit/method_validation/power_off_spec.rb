@@ -1,13 +1,12 @@
 require File.expand_path(File.join(File.dirname(__FILE__), '..', '..',
-'..', 'spec_helper'))
+                                   '..', 'spec_helper'))
 
 describe "power_off Method Validation" do
-
   before(:each) do
     @zone       = FactoryGirl.create(:zone)
     @ems        = FactoryGirl.create(:ems_vmware, :zone => @zone)
     @host       = FactoryGirl.create(:host)
-    @vm         = FactoryGirl.create(:vm_vmware, :host =>@host,
+    @vm         = FactoryGirl.create(:vm_vmware, :host => @host,
                  :ems_id => @ems.id, :name => "testVM2", :raw_power_state => "poweredOn")
   end
 
@@ -27,5 +26,4 @@ describe "power_off Method Validation" do
 
     MiqQueue.exists?(:method_name => 'stop', :instance_id => @vm.id, :role => 'ems_operations').should be_false
   end
-
 end

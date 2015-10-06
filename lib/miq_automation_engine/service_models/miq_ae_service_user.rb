@@ -1,8 +1,9 @@
 module MiqAeMethodService
   class MiqAeServiceUser < MiqAeServiceModelBase
-    expose :current_group, :association => true
-    expose :vms,           :association => true
-    expose :miq_requests,  :association => true
+    expose :current_group,  :association => true
+    expose :current_tenant, :association => true
+    expose :vms,            :association => true
+    expose :miq_requests,   :association => true
     expose :name
     expose :email
     expose :userid
@@ -57,6 +58,5 @@ module MiqAeMethodService
       raise "No information returned for email=<#{@object.email}> userid=<#{@object.userid}>" if ldap_user.nil?
       ldap_user
     end
-
   end
 end

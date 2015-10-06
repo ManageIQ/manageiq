@@ -81,22 +81,22 @@ describe VmdbDatabase do
   end
 
   def standard_capture_columns
-    %w{ timestamp capture_interval_name }
+    %w( timestamp capture_interval_name )
   end
 
   def sql_capture_columns
-    %w{ active_connections }
+    %w( active_connections )
   end
 
   def os_capture_columns
-    %w{
-        running_processes
-        disk_total_bytes
-        disk_used_bytes
-        disk_free_bytes
-        disk_total_inodes
-        disk_used_inodes
-        disk_free_inodes
-      }
+    %w(
+      running_processes
+      disk_total_bytes
+      disk_used_bytes
+      disk_free_bytes
+      disk_total_inodes
+      disk_used_inodes
+      disk_free_inodes
+    )
   end
 end

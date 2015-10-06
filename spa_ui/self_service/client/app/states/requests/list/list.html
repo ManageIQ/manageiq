@@ -1,0 +1,46 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div pf-data-toolbar id="requestToolbar" config="vm.toolbarConfig"></div>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-12 list-view-container">
+  <div pf-data-list id="requestList" class="row" config="vm.listConfig" items="vm.requestsList">
+    <div class="row">
+      <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+        <span>
+         {{ $index + 1}}
+        </span>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ">
+        <span>
+          <span class="ss-list-view__title-img" ng-if=" ::item.picture.image_href">
+            <img class="ss-list-view__title-img__logo" src="{{ ::item.picture.image_href }}"/>
+          </span>
+          {{ item.id }}
+        </span>
+      </div>
+      <div cla ss="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+        <span>
+          {{ item.description }}
+        </span>
+      </div>
+
+      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+        <strong>Requested: </strong>{{ item.created_on | date }}</span>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+        <span class="text-capitalize">
+          <strong>Status: </strong>
+          <span class="spinner spinner-xs spinner-inline" ng-if="item.request_state == 'pending'"></span>
+          <span class="pficon-error-circle-o" ng-if="item.request_state == 'denied'"></span>
+          <span class="pficon-ok" ng-if="item.request_state == 'approved'"></span>
+          {{ item.request_state }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+

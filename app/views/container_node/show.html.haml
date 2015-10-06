@@ -1,5 +1,11 @@
 - if 'container_groups'.eql?(@display) && @showtype != "compare"
   = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@record.id}"}
+- elsif 'container_services'.eql?(@display) && @showtype != "compare"
+  = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@record.id}"}
+- elsif 'container_replicators'.eql?(@display) && @showtype != "compare"
+  = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@record.id}"}
+- elsif 'containers'.eql?(@display) && @showtype != "compare"
+  = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@record.id}"}
 - elsif @showtype == "timeline"
   = render(:partial => "layouts/tl_show")
   :javascript

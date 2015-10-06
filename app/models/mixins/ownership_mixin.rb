@@ -16,28 +16,28 @@ module OwnershipMixin
   module ClassMethods
     def set_ownership(ids, options)
       errors = ActiveModel::Errors.new(self)
-      objects = self.find_all_by_id(ids)
+      objects = find_all_by_id(ids)
       missing = ids - objects.collect(&:id)
-      errors.add(:missing_ids, "Unable to find #{self.name.pluralize} with the following ids #{missing.inspect}") unless missing.empty?
+      errors.add(:missing_ids, "Unable to find #{name.pluralize} with the following ids #{missing.inspect}") unless missing.empty?
 
       objects.each do |obj|
         begin
           options.each_key do |k|
             col = case k
-            when :owner then :evm_owner
-            when :group then :miq_group
-            else
-              raise "Unknown option, '#{k}'"
-            end
+                  when :owner then :evm_owner
+                  when :group then :miq_group
+                  else
+                    raise "Unknown option, '#{k}'"
+                  end
             obj.send("#{col}=", options[k])
           end
           obj.save
         rescue => err
-          errors.add(:error_updating, "Error, '#{err.message}, updating #{self.name}: Name: [#{obj.name}], Id: [#{obj.id}]")
+          errors.add(:error_updating, "Error, '#{err.message}, updating #{name}: Name: [#{obj.name}], Id: [#{obj.id}]")
         end
       end
 
-      return errors.empty? ? true : errors
+      errors.empty? ? true : errors
     end
 
     def conditions_for_owned(user_or_group = nil)
@@ -66,10 +66,9 @@ module OwnershipMixin
       end
     end
 
-    def user_or_group_owned(user=nil)
-      self.where(self.conditions_for_owned_or_group_owned(user)).to_a
+    def user_or_group_owned(user = nil)
+      where(conditions_for_owned_or_group_owned(user)).to_a
     end
-
   end
 
   def evm_owner_email

@@ -14,12 +14,12 @@ class LogFile < ActiveRecord::Base
   before_destroy :remove
 
   def relative_path_for_upload(loc_file)
-    server      = self.resource
+    server      = resource
     zone        = server.zone
     path        = "#{zone.name}_#{zone.id}", "#{server.name}_#{server.id}"
-    date_string = "#{format_log_time(self.logging_started_on)}_#{format_log_time(self.logging_ended_on)}"
-    fname       = self.historical ? "Archive_" : "Current_"
-    fname      += "region_#{MiqRegion.my_region.region rescue "unknown"}_#{zone.name}_#{zone.id}_#{server.name}_#{server.id}_#{date_string}#{File.extname(loc_file)}"
+    date_string = "#{format_log_time(logging_started_on)}_#{format_log_time(logging_ended_on)}"
+    fname       = historical ? "Archive_" : "Current_"
+    fname += "region_#{MiqRegion.my_region.region rescue "unknown"}_#{zone.name}_#{zone.id}_#{server.name}_#{server.id}_#{date_string}#{File.extname(loc_file)}"
     dest        = File.join("/", path, fname)
     _log.info("Built relative path: [#{dest}] from source: [#{loc_file}]")
     dest
@@ -28,10 +28,10 @@ class LogFile < ActiveRecord::Base
   # Base is the URI defined by the user
   # loc_file is the name of the original file
   def build_log_uri(base_uri, loc_file)
-    scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(URI.encode(base_uri) )
+    scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(URI.encode(base_uri))
 
     # Convert encoded spaces back to spaces
-    path.gsub!('%20',' ')
+    path.gsub!('%20', ' ')
 
     relpath  = relative_path_for_upload(loc_file)
     new_path = File.join("/", path, relpath)
@@ -55,23 +55,23 @@ class LogFile < ActiveRecord::Base
   def remove
     method = get_post_method(log_uri)
     return if method.nil?
-    return self.send("remove_log_file_#{method}") if respond_to?("remove_log_file_#{method}")
+    return send("remove_log_file_#{method}") if respond_to?("remove_log_file_#{method}")
 
-    #At this point ftp should have returned
+    # At this point ftp should have returned
     klass = Object.const_get("Miq#{method.capitalize}Session")
     klass.new(legacy_depot_hash).remove(log_uri)
   rescue Exception => err
-    _log.warn("#{err.message}, deleting #{self.log_uri} from FTP")
+    _log.warn("#{err.message}, deleting #{log_uri} from FTP")
   end
 
   def file_exists?
-    return true if self.log_uri.nil?
+    return true if log_uri.nil?
 
     method = get_post_method(log_uri)
     return true if method.nil?
-    return self.send("file_exists_#{method}?") if respond_to?("file_exists_#{method}?")
+    return send("file_exists_#{method}?") if respond_to?("file_exists_#{method}?")
 
-    #At this point ftp should have returned
+    # At this point ftp should have returned
     klass = Object.const_get("Miq#{method.capitalize}Session")
     klass.new(legacy_depot_hash).exist?(log_uri)
   end
@@ -87,7 +87,7 @@ class LogFile < ActiveRecord::Base
     # All server types who provide logs must implement the following instance methods:
     #   - my_zone:     which returns the zone in which they reside
     #   - who_am_i:    which returns a log friendly string of the server's class and id
-    [:my_zone, :who_am_i].each {|meth| raise "#{meth} not implemented for #{server.class.name}" unless server.respond_to?(meth) }
+    [:my_zone, :who_am_i].each { |meth| raise "#{meth} not implemented for #{server.class.name}" unless server.respond_to?(meth) }
     zone     = server.my_zone
     resource = server.who_am_i
 
@@ -101,10 +101,10 @@ class LogFile < ActiveRecord::Base
       cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
 
       # Queue the async fetch of the logs from the server - specifying a timeout, the zone to process this request, and a callback
-      options = options.merge({:taskid => task.id, :klass => server.class.name, :id => server.id})
+      options = options.merge(:taskid => task.id, :klass => server.class.name, :id => server.id)
 
       MiqQueue.put(
-        :class_name   => self.name,
+        :class_name   => name,
         :method_name  => "_request_logs",
         :args         => [options],
         :zone         => zone,
@@ -133,11 +133,9 @@ class LogFile < ActiveRecord::Base
   end
 
   def self.empty_logfile(historical)
-    LogFile.create({
-        :state       => "collecting",
-        :historical  => historical,
-        :description => "Default logfile"
-      })
+    LogFile.create(:state       => "collecting",
+                   :historical  => historical,
+                   :description => "Default logfile")
   end
 
   # Added tcp ping stuff here until ftp is refactored into a separate class
@@ -145,13 +143,13 @@ class LogFile < ActiveRecord::Base
     @@ping_depot_options ||= VMDB::Config.new("vmdb").config[:log][:collection]
   end
 
- def self.ping_timeout
-    self.get_ping_depot_options
+  def self.ping_timeout
+    get_ping_depot_options
     @@ping_timeout ||= (@@ping_depot_options[:ping_depot_timeout] || 20)
   end
 
   def self.do_ping?
-    self.get_ping_depot_options
+    get_ping_depot_options
     @@do_ping ||= @@ping_depot_options[:ping_depot] == true
   end
 
@@ -190,7 +188,7 @@ class LogFile < ActiveRecord::Base
   def destination_file_name
     date_string = "#{format_log_time(logging_started_on)}_#{format_log_time(logging_ended_on)}"
     destname    = historical ? "Archive_" : "Current_"
-    destname   << "region_#{MiqRegion.my_region.try(:region) || "unknown"}_#{resource.zone.name}_#{resource.zone.id}_#{resource.name}_#{resource.id}_#{date_string}#{File.extname(local_file)}"
+    destname << "region_#{MiqRegion.my_region.try(:region) || "unknown"}_#{resource.zone.name}_#{resource.zone.id}_#{resource.name}_#{resource.id}_#{date_string}#{File.extname(local_file)}"
   end
 
   def post_upload_tasks
@@ -198,7 +196,7 @@ class LogFile < ActiveRecord::Base
   end
 
   def format_log_time(time)
-    return time.respond_to?(:strftime) ? time.strftime("%Y%m%d_%H%M%S") : "unknown"
+    time.respond_to?(:strftime) ? time.strftime("%Y%m%d_%H%M%S") : "unknown"
   end
 
   private
@@ -207,7 +205,7 @@ class LogFile < ActiveRecord::Base
     return nil if uri.nil?
 
     # Convert all backslashes in the URI to forward slashes
-    uri.gsub!('\\', '/')
+    uri.tr!('\\', '/')
 
     # Strip any leading and trailing whitespace
     uri.strip!
@@ -246,7 +244,7 @@ class LogFile < ActiveRecord::Base
 
     cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
     raise MiqException::Error, "_post_my_logs not implemented for #{server.class.name}" unless server.respond_to?(:_post_my_logs)
-    options = options.merge({:callback => cb, :timeout => LOG_REQUEST_TIMEOUT})
+    options = options.merge(:callback => cb, :timeout => LOG_REQUEST_TIMEOUT)
     server._post_my_logs(options)
 
     msg = "Requested logs from: [#{resource}]"

@@ -26,19 +26,17 @@ class EvmServer
   end
 
   def process_soft_signal(s)
-    begin
-      # SOFT_INTERRUPT_SIGNALS get processed via MiqServer.stop in at_exit
-    ensure
-      do_exit("Interrupt signal (#{s}) received.", 0)
-    end
+    MiqServer.stop
+  ensure
+    do_exit("Interrupt signal (#{s}) received.", 0)
   end
 
-  def do_exit(message=nil, exit_code=0)
+  def do_exit(message = nil, exit_code = 0)
     safe_log("#{message} Server exiting.", exit_code)
     exit exit_code
   end
 
-  def safe_log(message=nil, exit_code=0)
+  def safe_log(message = nil, exit_code = 0)
     meth = (exit_code == 0) ? :info : :error
 
     prefix = "MIQ(EvmServer) "
@@ -58,12 +56,6 @@ class EvmServer
       exit
     end
 
-    at_exit {
-      # TODO: should this be called on SOFT ints and SystemExit, not SIGINT?
-      # register a shutdown method to run when server exits
-      MiqServer.stop
-    }
-
     PidFile.create(MiqServer.pidfile)
     MiqServer.start
   rescue Interrupt => e
@@ -79,11 +71,11 @@ class EvmServer
 
     opts = OptionParser.new
     self::OPTIONS_PARSER_SETTINGS.each do |key, desc, type|
-      opts.on("--#{key} VAL", desc, type) {|v| cfg[key] = v}
+      opts.on("--#{key} VAL", desc, type) { |v| cfg[key] = v }
     end
     opts.parse(*args)
 
     # Start the Server object
-    self.new(cfg).start
+    new(cfg).start
   end
 end

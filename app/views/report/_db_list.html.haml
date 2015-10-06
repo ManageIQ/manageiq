@@ -52,9 +52,7 @@
             %tr{:onclick => remote_function(:loading => "miqSparkle(true);", :complete => "miqSparkle(false);", :url => {:action => 'tree_select',
                 :id => "xx-g_g-#{@sb[:nodes][2]}_-#{to_cid(ws.id)}"}), :title => _("Click to view '%s (%s)'") % [ws.description, ws.name], :class => "icon"}
               %td.narrow
-                %ul.icons.list-unstyled
-                  %li
-                    %span.fa.fa-dashboard{:title => ws.description}
+                %i.fa.fa-2x.fa-dashboard{:title => ws.description}
               %td
                 = "#{h(ws.description)} (#{h(ws.name)})"
   - elsif ((@sb[:nodes].length == 4 && @sb[:nodes][1] == "g_g") || (@sb[:nodes].length == 2 && @sb[:nodes].first == "xx")) && !@in_a_form

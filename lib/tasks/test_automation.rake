@@ -3,6 +3,7 @@ require_relative "./evm_test_helper"
 if defined?(RSpec) && defined?(RSpec::Core::RakeTask)
 namespace :test do
   namespace :automation do
+    desc "Setup environment for automation specs"
     task :setup => :setup_db
   end
 

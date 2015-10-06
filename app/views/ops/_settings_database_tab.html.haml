@@ -5,54 +5,66 @@
     %span.pficon-layered
       %span.pficon.pficon-error-octagon
       %span.pficon.pficon-error-exclamation
-    %strong= _("Caution: Changing the Database settings could make the Server unstartable!")
-  %h3= _("Database")
-  %table.style1
-    %tr
-      %td.key= _("Type")
-      %td
+    %strong
+      = _("Caution: Changing the Database settings could make the Server unstartable!")
+  %h3
+    = _("Database")
+  .form-horizontal
+    .form-group
+      %label.col-md-2.control-label
+        = _("Type")
+      .col-md-8
         = select_tag('production_dbtype',
-          options_for_select(MiqDbConfig.get_db_types.invert.sort, @edit[:new][:name]),
-          "data-miq_focus"   => true,
-          "data-miq_observe" => {:url => url}.to_json)
+                      options_for_select(MiqDbConfig.get_db_types.invert.sort, @edit[:new][:name]),
+                      "data-miq_focus"   => true,
+                      :class    => "selectpicker")
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent('production_dbtype', "#{url}")
     - @options.each do |option|
-      %tr
-        %td.key= option[:description]
-        %td
+      .form-group
+        %label.col-md-2.control-label
+          = option[:description]
+        .col-md-8
           - if option[:name].to_s == "password"
             = password_field_tag("production_#{option[:name]}", '',
-              :maxlength         => 50,
-              :placeholder       => placeholder_if_present(@edit[:new][option[:name]]),
-              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+                                :maxlength         => 50,
+                                :class => "form-control",
+                                :placeholder       => placeholder_if_present(@edit[:new][option[:name]]),
+                                :class => "form-control",
+                                "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
           - else
             = text_field_tag("production_#{option[:name]}",
-              h(@edit[:new][option[:name]]),
-              :maxlength         => 50,
-              "data-miq_observe" => {:interval => '.5',
-              :url      => url}.to_json)
+                              h(@edit[:new][option[:name]]),
+                              :maxlength         => 50,
+                              :class => "form-control",
+                              "data-miq_observe" => {:interval => '.5',
+                              :url      => url}.to_json)
       - if option[:name].to_s == "password"
-        %tr
-          %td.key= _("Verify Password")
-          %td
+        .form-group
+          %label.col-md-2.control-label
+            = _("Verify Password")
+          .col-md-8
             = password_field_tag("production_verify", '',
-              :maxlength         => 50,
-              :placeholder       => placeholder_if_present(@edit[:new][option[:verify]]),
-              "data-miq_observe" => {:interval => '.5',
-              :url      => url}.to_json)
-    %tr
-      %td
-      %td{:align => "left"}
+                                  :maxlength         => 50,
+                                  :placeholder       => placeholder_if_present(@edit[:new][option[:verify]]),
+                                  :class => "form-control",
+                                  "data-miq_observe" => {:interval => '.5',
+                                  :url      => url}.to_json)
+    .form-group
+      .col-md-2
+      .col-md-8{:align => "left"}
         #validate_button_on{:style => "display:#{@edit[:new][:password] == @edit[:new][:verify] ? "display" : "none"};"}
           = button_tag(_("Validate"),
-            :class   => "btn btn-primary",
-            :alt     => _("Validate Database Configuration"),
-            :title   => _("Validate Database Configuration"),
-            :onclick => "miqAjaxButton('#{url_for(:action => "settings_update",
-            :id     => @sb[:active_tab].split('_').last,
-            :button => "db_verify")}');")
+                      :class   => "btn btn-primary",
+                      :alt     => _("Validate Database Configuration"),
+                      :title   => _("Validate Database Configuration"),
+                      :onclick => "miqAjaxButton('#{url_for(:action => "settings_update",
+                      :id     => @sb[:active_tab].split('_').last,
+                      :button => "db_verify")}');")
         #validate_button_off{:style => "display:#{@edit[:new][:password] != @edit[:new][:verify] ? "display" : "none"};"}
           = button_tag(_("Validate"),
-            :class => "btn btn-primary btn-disabled",
-            :alt   => _("Password fields must match to Validate Database Configuration"),
-            :title => _("Password fields must match to Validate Database Configuration"))
+                      :class => "btn btn-primary btn-disabled",
+                      :alt   => _("Password fields must match to Validate Database Configuration"),
+                      :title => _("Password fields must match to Validate Database Configuration"))
   %div{:style => "padding-bottom:20px;"}

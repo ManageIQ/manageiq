@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20140201040548_add_update_repo_name_to_miq_database.rb")
+require_migration
 
 describe AddUpdateRepoNameToMiqDatabase do
   let(:db_stub)      { migration_stub(:MiqDatabase) }
@@ -40,7 +40,7 @@ describe AddUpdateRepoNameToMiqDatabase do
       # Expect data
       expect(Reserve.first.resource_id).to    eq(db.id)
       expect(Reserve.first.resource_type).to  eq("MiqDatabase")
-      expect(Reserve.first.reserved).to       eq({:update_repo_name => "abc"})
+      expect(Reserve.first.reserved).to       eq(:update_repo_name => "abc")
     end
   end
 end

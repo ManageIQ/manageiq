@@ -8,7 +8,7 @@ module FixAuth
 
     def initialize(args = {})
       self.options = args.delete_if { |_k, v| v.blank? }
-      options[:adapter]  ||= 'postgresql'
+      options[:adapter] ||= 'postgresql'
       options[:encoding] ||= 'utf8'
     end
 
@@ -42,7 +42,7 @@ module FixAuth
       MiqPassword.generate_symmetric("#{cert_dir}/v2_key")
     rescue Errno::EEXIST => e
       $stderr.puts
-      $stderr.puts "Only generate one v2_key per installation."
+      $stderr.puts "Only generate one encryption_key (v2_key) per installation."
       $stderr.puts "Chances are you did not want to overwrite this file."
       $stderr.puts "If you do this all encrypted secrets in the database will not be readable."
       $stderr.puts "Please backup your key and run again."
@@ -79,6 +79,11 @@ module FixAuth
       MiqPassword.key_root = cert_dir if cert_dir
       MiqPassword.add_legacy_key("v0_key", :v0)
       MiqPassword.add_legacy_key("v1_key", :v1)
+      (options[:legacy_key] || []).each do |k|
+        unless MiqPassword.add_legacy_key(k)
+          puts "WARNING: key #{k} not found"
+        end
+      end
     end
 
     def run

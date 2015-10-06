@@ -1,5 +1,5 @@
 require 'spec_helper'
-require Rails.root.join('db/migrate/20150806194147_migrate_filtered_events_to_blacklisted_events.rb')
+require_migration
 
 describe MigrateFilteredEventsToBlacklistedEvents do
   let(:configuration_stub)     { migration_stub(:Configuration) }
@@ -35,7 +35,7 @@ describe MigrateFilteredEventsToBlacklistedEvents do
     end
 
     it 'when filtered events section does not exist in configuration' do
-      configuration_stub.create!(:typ => 'event_handling', :settings => {:event_groups => {'a' => nil }})
+      configuration_stub.create!(:typ => 'event_handling', :settings => {:event_groups => {'a' => nil}})
 
       migrate
 
@@ -50,8 +50,8 @@ describe MigrateFilteredEventsToBlacklistedEvents do
     end
 
     it 'when multiple event handling configurations exist' do
-      configuration_stub.create!(:typ => 'event_handling', :settings => { 'filtered_events' => { :user_event_1 => nil } })
-      configuration_stub.create!(:typ => 'event_handling', :settings => { 'filtered_events' => { :user_event_2 => nil } })
+      configuration_stub.create!(:typ => 'event_handling', :settings => {'filtered_events' => {:user_event_1 => nil}})
+      configuration_stub.create!(:typ => 'event_handling', :settings => {'filtered_events' => {:user_event_2 => nil}})
 
       migrate
 

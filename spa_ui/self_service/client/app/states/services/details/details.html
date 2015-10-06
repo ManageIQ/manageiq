@@ -1,78 +1,138 @@
-<content-header short="true">
-  <div class="service-details-heading">
-    <img ng-if="vm.product.img" class="service-details-heading__icon" ng-src="/images/assets/{{ ::vm.product.img }}"/>
-    <span class="content-header__title">{{ ::vm.service.product.name }}</span>
+<div>
+  <a ui-sref="^" class="breadcrumb"> <span class="fa fa-angle-left"/> Back to My Services</a>
+</div>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <section>
+      <div class="col-md-12 ss-details-header">
+        <div class="row">
+          <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+            <div class="ss-details-header__title-img" ng-if=" ::vm.service.picture.image_href ">
+              <img class="ss-details-header__title-img__logo" src="{{ ::vm.service.picture.image_href }}"/>
+            </div>
+            <div class="ss-details-header__title">
+              <h2>{{ ::vm.service.name }}</h2>
+              <h4>{{ ::vm.service.long_description || vm.service.description }}</h4>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 ss-details-header__actions">
+            <button class="btn btn-danger" type="button" ng-click="vm.removeService()">Remove Service</button>
+            <div class="btn-group" dropdown>
+              <button id="single-button" type="button" class="btn btn-primary" dropdown-toggle>
+                Retire <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <li role="menuitem"><a href="#" confirmation
+                    confirmation-if="true"
+                    confirmation-title="Retire Service Now"
+                    confirmation-message="Confirm, would you like to retire this service?"
+                    confirmation-ok-text="Yes, Retire Service Now"
+                    confirmation-on-ok="vm.retireServiceNow()"
+                    confirmation-ok-style="primary"
+                    confirmation-show-cancel="true">Retire Now</a></li>
+                <li role="menuitem"><a href="#" ng-click="vm.retireServiceLater()">Schedule Retirement</a></li>
+              </ul>
+            </div>
+            <button class="btn btn-primary" type="button" ng-click="vm.editServiceModal()">Edit Service</button>
+          </div>
+         </div>
+      </div>
+    </section>
+    <section class="ss-form-readonly">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <div class="form-horizontal">
+              <div class="form-group">
+                <label class="control-label col-sm-4">Service Id</label>
+                <div class="col-sm-8">
+                  <input class="form-control" disabled value="{{ ::vm.service.id }}"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-4">Owner</label>
+                <div class="col-sm-8">
+                  <input class="form-control" disabled value="{{ ::vm.service.evm_owner.name }}"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-4">Group</label>
+                <div class="col-sm-8">
+                  <input class="form-control" disabled value="{{ ::vm.service.miq_group.description }}"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-4">Created On</label>
+                <div class="col-sm-8">
+                  <input class="form-control" disabled value="{{ ::vm.service.created_at | date:'medium' }}" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-4">Retirement Date</label>
+                <div class="col-sm-8">
+                  <input ng-if=(vm.service.retires_on) class="form-control" disabled value="{{ ::vm.service.retires_on | date }}" />
+                  <input ng-if=!(vm.service.retires_on) class="form-control" disabled value="No Retirement Date" />             
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-4">Tags</label>
+                <div class="col-sm-8">
+                  <input class="form-control" disabled value="{{ ::vm.service.tags }}" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <div class="form-horizontal">
+              <div class="form-group">
+                <label class="control-label col-sm-4">CPU</label>
+                <div class="col-sm-8">
+                  <input class="form-control" disabled value="{{ ::vm.service.aggregate_all_vm_cpus }}"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-4">Memory</label>
+                <div class="col-sm-8">
+                  <input class="form-control" disabled value="{{ ::vm.service.aggregate_all_vm_memory }}" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-4">Disk Count</label>
+                <div class="col-sm-8">
+                  <input class="form-control" disabled value="{{ ::vm.service.aggregate_all_vm_disk_count}}" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-4">Disk Space Allocated</label>
+                <div class="col-sm-8">
+                  <input class="form-control" disabled value="{{ ::vm.service.aggregate_all_vm_disk_space_allocated}}" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-4">Disk Space Used</label>
+                <div class="col-sm-8">
+                  <input class="form-control" disabled value="{{ ::vm.service.aggregate_all_vm_disk_space_used}}" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-4">Memory on Disk</label>
+                <div class="col-sm-8">
+                  <input class="form-control" disabled value="{{ ::vm.service.aggregate_all_vm_memory_on_disk}}" />
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+    </section>
   </div>
-  <div class="service-details-heading__aside">
-    <a ui-sref="services.edit({serviceId: vm.service.id})" class="btn-rounded">Edit Service</a>
+</div>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <section class="ss-details-section">
+      <h2>Service Details</h2>
+      <pre>{{ ::vm.service |json }}</pre>
+    </section>
   </div>
-</content-header>
-
-<details-table heading="Details">
-  <alert ng-repeat="latest_alert in vm.service.latest_alerts track by latest_alert.id"
-         type="{{ ::vm.toAlertType(latest_alert.status) }}">
-    <strong>{{ ::latest_alert.status }}</strong> &mdash; {{ ::latest_alert.message }}
-  </alert>
-
-  <div class="details-table__row">
-    <div class="details-table__label">Project</div>
-    <div class="details-table__detail">
-      <project-description
-        project="vm.service.project"
-        link-to="projects.details({projectId: {{vm.service.project.id}}})"></project-description>
-    </div>
-  </div>
-
-  <div class="details-table__row">
-    <div class="details-table__label">Product</div>
-    <div class="details-table__detail">
-      <product-description
-        product="vm.service.product"
-        link-to="products.details({productId: {{vm.service.product.id}}})"></product-description>
-    </div>
-  </div>
-
-  <div class="details-table__row">
-    <div class="details-table__label">Service Status</div>
-    <div class="details-table__detail">
-      <status type="{{ ::vm.service.provision_status }}">
-        <strong>{{ ::vm.service.provision_status.toUpperCase() }}</strong>
-        &mdash;
-        {{ ::vm.service.status_msg || 'No status message is available at this time.' }}
-      </status>
-    </div>
-  </div>
-
-  <div class="details-table__row">
-    <div class="details-table__label">Creation Date</div>
-    <div class="details-table__detail">{{ ::vm.service.created_at | date:'medium' }}</div>
-  </div>
-
-  <div class="details-table__row">
-    <div class="details-table__label">Last Updated</div>
-    <div class="details-table__detail">{{ ::vm.service.updated_at | date:'medium' }}</div>
-  </div>
-</details-table>
-
-<region heading="Pricing">
-  <table class="service-pricing">
-    <thead>
-    <tr>
-      <th class="service-pricing__heading"></th>
-      <th class="service-pricing__heading">Setup</th>
-      <th class="service-pricing__heading">Hourly</th>
-      <th class="service-pricing__heading">Monthly</th>
-      </th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr class="selectRow">
-      <td class="service-pricing__cell service-pricing__cell--padding"></td>
-      <td class="service-pricing__cell service-pricing__cell">{{ ::vm.service.setup_price | currency }}</td>
-      <td class="service-pricing__cell service-pricing__cell">{{ ::vm.service.monthly_price | currency }}</td>
-      <td class="service-pricing__cell service-pricing__cell">{{ ::vm.service.hourly_price | currency }}</td>
-    </tr>
-    </tbody>
-  </table>
-</region>
+</div>
 

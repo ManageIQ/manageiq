@@ -1,5 +1,5 @@
 module DiskProbe
-	MODDIR = File.expand_path(File.join(File.dirname(__FILE__), "modules"))
+  MODDIR = File.expand_path(File.join(File.dirname(__FILE__), "modules"))
 
   PROBE_FILES = Dir.glob(File.join(MODDIR, "*Probe.rb*"))
   PROBE_FILES.each do |p|
@@ -8,39 +8,39 @@ module DiskProbe
     p.chomp!(".rb")
   end
   # Reorder known probes for optimization
-  %w{VixDiskProbe VMWareDiskProbe RhevmDiskProbe}.reverse.each {|probe| PROBE_FILES.unshift(probe) if PROBE_FILES.delete(probe)}
+  %w(VixDiskProbe VMWareDiskProbe RhevmDiskProbe).reverse_each { |probe| PROBE_FILES.unshift(probe) if PROBE_FILES.delete(probe) }
   PROBE_FILES.push("LocalDevProbe") if PROBE_FILES.delete("LocalDevProbe")
 
-	def self.getDiskMod(dobj, probes = nil)
+  def self.getDiskMod(dobj, probes = nil)
     probes = PROBE_FILES if probes.nil?
     probes = [probes] unless probes.kind_of?(Array)
 
     fname = dobj.fileName rescue ""
-    
+
     mod = nil
-		probes.each do |pmod|
+    probes.each do |pmod|
       $log.debug "MIQ(DiskProbe-getDiskMod) Disk probe attempting [#{pmod}] for [#{fname}]"
-			require_relative "modules/#{pmod}"
-			begin
+      require_relative "modules/#{pmod}"
+      begin
         mod = Object.const_get(pmod).probe(dobj)
         if mod
           $log.info "MIQ(DiskProbe-getDiskMod) Disk probe detected [#{pmod.chomp("Probe")}-#{mod}] for [#{fname}]"
           require_relative "modules/#{mod}"
           return Object.const_get(mod)
         end
-			rescue => err
+      rescue => err
         $log.warn "MIQ(DiskProbe-getDiskMod) [#{pmod.chomp("Probe")}-#{mod}] for [#{fname}]: #{err}"
-			end
-		end
-		return nil
-	end
+      end
+    end
+    nil
+  end
 
   def self.getDiskModForDisk(disk, probes = nil)
     probes ||= PROBE_FILES
     probes = [probes] unless probes.kind_of?(Array)
 
     fname = disk.dInfo.fileName rescue ""
-    
+
     mod = nil
     probes.each do |pmodstr|
       $log.debug "MIQ(DiskProbe-getDiskModForDisk) Disk probe attempting [#{pmodstr}] for [#{fname}]"
@@ -62,6 +62,6 @@ module DiskProbe
       end
     end
     $log.info "MIQ(DiskProbe-getDiskModForDisk) No module detected for [#{fname}]"
-    return nil
+    nil
   end
 end

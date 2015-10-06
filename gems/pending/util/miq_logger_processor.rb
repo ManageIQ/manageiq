@@ -43,12 +43,12 @@ class MiqLoggerProcessor
     require 'gruff'
 
     graph = case options[:graph_type]
-    when :line    then Gruff::Line.new
-    when :stacked then Gruff::StackedBar.new
-    else               Gruff::Line.new
-    end
+            when :line    then Gruff::Line.new
+            when :stacked then Gruff::StackedBar.new
+            else               Gruff::Line.new
+            end
 
-    graph.title_font_size  = options[:title_font_size]  || 24
+    graph.title_font_size  = options[:title_font_size] || 24
     graph.legend_font_size = options[:legend_font_size] || 12
     graph.marker_font_size = options[:marker_font_size] || 10
 
@@ -120,10 +120,10 @@ class MiqLoggerLine < String
   def parts
     @parts ||= self.class.split_raw_line(self).freeze
   end
-  alias to_a  parts
-  alias split parts
+  alias_method :to_a,  :parts
+  alias_method :split, :parts
 
-  PARTS = %w{time pid tid level q_task_id message}
+  PARTS = %w(time pid tid level q_task_id message)
   PARTS.each_with_index do |m, i|
     define_method(m) { parts[i] }
   end

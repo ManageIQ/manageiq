@@ -6,12 +6,12 @@ describe Job::StateMachine do
       def load_transitions
         self.state ||= 'initialize'
         {
-          :initializing => {'initialize' => 'waiting'  },
-          :start        => {'waiting'    => 'doing'    ,
-                            'retrying'   => 'working'  },
+          :initializing => {'initialize' => 'waiting'},
+          :start        => {'waiting'  => 'doing',
+                            'retrying' => 'working'},
           :cancel       => {'*'          => 'canceling'},
-          :stop         => {'*'          => 'stopping' },
-          :error        => {'*'          => '*'        }
+          :stop         => {'*'          => 'stopping'},
+          :error        => {'*'          => '*'}
         }
       end
     end

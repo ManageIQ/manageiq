@@ -6,19 +6,18 @@ function miqOnPanelResize() {
   miqJqueryRequest(url);
 }
 
-// When right explorer cell is resized, make dhxLayoutB cell "a" taller or shorter if divs have moved up/down
+// When right explorer cell is resized, make toolbar taller or shorter if divs have moved up/down
 function miqResizeTaskbarCell() {
-  if (ManageIQ.toolbars === null || // Make sure everything's here that we need
-      $('#taskbar_buttons_div') == "undefined" ||
-      typeof dhxLayoutB == "undefined") {
+  // Make sure everything's here that we need
+  if (ManageIQ.toolbars === null || $('#taskbar_buttons_div') == "undefined" || ManageIQ.layout.toolbar === null) {
     return;
   }
   $('#taskbar_buttons_div').children('div').each(function () {
     if (this.offsetTop > 1) {
-      dhxLayoutB.cells("a").setHeight(64);
+      ManageIQ.layout.toolbar.height(64);
       return false;
     } else {
-      dhxLayoutB.cells("a").setHeight(32);
+      ManageIQ.layout.toolbar.height(32);
     }
   });
 }

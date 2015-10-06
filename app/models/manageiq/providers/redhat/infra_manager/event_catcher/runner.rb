@@ -19,34 +19,30 @@ class ManageIQ::Providers::Redhat::InfraManager::EventCatcher::Runner < ManageIQ
   end
 
   def stop_event_monitor
-    begin
-      @event_monitor_handle.stop unless @event_monitor_handle.nil?
-    rescue Exception => err
-      _log.warn("#{self.log_prefix} Event Monitor Stop errored because [#{err.message}]")
-      _log.warn("#{self.log_prefix} Error details: [#{err.details}]")
-      _log.log_backtrace(err)
-    ensure
-      reset_event_monitor_handle
-    end
+    @event_monitor_handle.stop unless @event_monitor_handle.nil?
+  rescue Exception => err
+    _log.warn("#{log_prefix} Event Monitor Stop errored because [#{err.message}]")
+    _log.warn("#{log_prefix} Error details: [#{err.details}]")
+    _log.log_backtrace(err)
+  ensure
+    reset_event_monitor_handle
   end
 
   def monitor_events
-    begin
-      event_monitor_handle.start
-      event_monitor_handle.each_batch do |events|
-        @queue.enq events
-        sleep_poll_normal
-      end
-    ensure
-      reset_event_monitor_handle
+    event_monitor_handle.start
+    event_monitor_handle.each_batch do |events|
+      @queue.enq events
+      sleep_poll_normal
     end
+  ensure
+    reset_event_monitor_handle
   end
 
   def process_event(event)
-    if self.filtered_events.include?(event[:name])
-      _log.info "#{self.log_prefix} Skipping caught event [#{event[:name]}]"
+    if filtered_events.include?(event[:name])
+      _log.info "#{log_prefix} Skipping caught event [#{event[:name]}]"
     else
-      _log.info "#{self.log_prefix} Caught event [#{event[:name]}]"
+      _log.info "#{log_prefix} Caught event [#{event[:name]}]"
       EmsEvent.add_queue('add_rhevm', @cfg[:ems_id], event.to_hash)
     end
   end

@@ -6,27 +6,27 @@ module ManageIQ
     module Regions
       # From http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
       REGIONS = {
-        "us-east-1" => {
+        "us-east-1"      => {
           :name        => "us-east-1",
           :hostname    => "ec2.us-east-1.amazonaws.com",
           :description => "US East (Northern Virginia)",
         },
-        "us-west-1" => {
+        "us-west-1"      => {
           :name        => "us-west-1",
           :hostname    => "ec2.us-west-1.amazonaws.com",
           :description => "US West (Northern California)",
         },
-        "us-west-2" => {
+        "us-west-2"      => {
           :name        => "us-west-2",
           :hostname    => "ec2.us-west-2.amazonaws.com",
           :description => "US West (Oregon)",
         },
-        "eu-west-1" => {
+        "eu-west-1"      => {
           :name        => "eu-west-1",
           :hostname    => "ec2.eu-west-1.amazonaws.com",
           :description => "EU (Ireland)",
         },
-        "eu-central-1" => {
+        "eu-central-1"   => {
           :name        => "eu-central-1",
           :hostname    => "ec2.eu-central-1.amazonaws.com",
           :description => "EU (Frankfurt)",
@@ -46,12 +46,12 @@ module ManageIQ
           :hostname    => "ec2.ap-northeast-1.amazonaws.com",
           :description => "Asia Pacific (Tokyo)",
         },
-        "sa-east-1" => {
+        "sa-east-1"      => {
           :name        => "sa-east-1",
           :hostname    => "ec2.sa-east-1.amazonaws.com",
           :description => "South America (Sao Paulo)",
         },
-        "us-gov-west-1" => {
+        "us-gov-west-1"  => {
           :name        => "us-gov-west-1",
           :hostname    => "ec2.us-gov-west-1.amazonaws.com",
           :description => "GovCloud (US)",

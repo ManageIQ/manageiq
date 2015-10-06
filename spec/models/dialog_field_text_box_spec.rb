@@ -75,7 +75,6 @@ describe DialogFieldTextBox do
     it "#automate_key_name" do
       @df.automate_key_name.should == "password::dialog_test field"
     end
-
   end
 
   context "validation" do

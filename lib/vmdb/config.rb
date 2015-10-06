@@ -2,7 +2,7 @@ module VMDB
   class Config
     include Vmdb::Logging
 
-    @@sync_cfile = Sync.new()
+    @@sync_cfile = Sync.new
     @@cached_configs = {}
 
     require_relative 'configuration_encoder'
@@ -10,10 +10,10 @@ module VMDB
     def self.clone_auth_for_log(auth)
       log_auth = auth.deep_clone
       [:bind_pwd, :amazon_secret].each do |key|
-        log_auth[key] = '********' if log_auth.has_key?(key)
-        if log_auth.has_key?(:user_proxies)
+        log_auth[key] = '********' if log_auth.key?(key)
+        if log_auth.key?(:user_proxies)
           log_auth[:user_proxies].each do |p|
-            p[key] = '********' if p.has_key?(key)
+            p[key] = '********' if p.key?(key)
           end
         end
       end
@@ -40,7 +40,7 @@ module VMDB
       # Once we determine the model is loaded, the tables exist, and the server is known, let's the use the DB
       return :database if @use_db_for_config
 
-      unless VMDB::model_loaded?(:Configuration)
+      unless VMDB.model_loaded?(:Configuration)
         _log.debug "Using filesystem configurations since Configuration model is not loaded"
         return :filesystem
       end
@@ -92,7 +92,7 @@ module VMDB
       if self.cached_config_valid?
         @config = @@cached_configs[name][:data].deep_clone
       else
-        _log.debug "#{@@cached_configs.has_key?(name) && !@@cached_configs[name][:mtime].nil? ? "Rel" : "L"}oading configuration file for \"#{name}\""
+        _log.debug "#{@@cached_configs.key?(name) && !@@cached_configs[name][:mtime].nil? ? "Rel" : "L"}oading configuration file for \"#{name}\""
 
         @@sync_cfile.synchronize(:EX) do
           if configuration_source == :filesystem && 'database' == name && !File.exist?(@cfile) && File.exist?(@ctmpl)
@@ -100,8 +100,8 @@ module VMDB
             FileUtils.copy(@ctmpl, @cfile)
           end
         end
-        defaults = self.retrieve_config(:tmpl)
-        current =  self.retrieve_config(:yml)
+        defaults = retrieve_config(:tmpl)
+        current =  retrieve_config(:yml)
         raise "MIQ(Config.initialize) unable to locate configuration file or template file for \"#{name}\"" if current.nil? && defaults.nil?
 
         # if the database is the source of the configuration, create or update db record and rename the config file if an override was used
@@ -134,13 +134,13 @@ module VMDB
         current = defaults if current.nil?
 
         @config = current
-        self.update_cache_metadata
+        update_cache_metadata
       end
 
       @config_mtime   = @@cached_configs[@name][:mtime]
       @template_mtime = @@cached_configs[@name][:mtime_tmpl]
 
-      return @config
+      @config
     end
 
     def self.load_config_file(fname)
@@ -159,7 +159,7 @@ module VMDB
     end
 
     def config_mtime_from_db
-      #log_header = "[#{@name}]"
+      # log_header = "[#{@name}]"
       server = MiqServer.my_server(true)
       return Time.at(0) if server.nil?
 
@@ -167,16 +167,16 @@ module VMDB
       return Time.at(0) if conf.nil?
 
       mtime = conf.updated_on
-      #_log.debug("#{log_header} Config mtime retrieved from db [#{mtime}]") unless $log.nil? || mtime.nil?
-      self.normalize_time(mtime) if mtime
+      # _log.debug("#{log_header} Config mtime retrieved from db [#{mtime}]") unless $log.nil? || mtime.nil?
+      normalize_time(mtime) if mtime
     end
 
     def config_mtime_from_file(typ)
-      #log_header = "[#{@name}] type: [#{typ}]"
+      # log_header = "[#{@name}] type: [#{typ}]"
       fname = typ == :yml ? @cfile : @ctmpl
       mtime = File.mtime(fname) if File.exist?(fname)
-      #_log.debug("#{log_header} Config mtime retrieved from file [#{mtime}]") unless $log.nil? || mtime.nil?
-      self.normalize_time(mtime)
+      # _log.debug("#{log_header} Config mtime retrieved from file [#{mtime}]") unless $log.nil? || mtime.nil?
+      normalize_time(mtime)
     end
 
     def template_configuration
@@ -185,28 +185,27 @@ module VMDB
 
     def merge_from_template(*args)
       args << template_configuration.fetch_path(*args)
-      self.config.store_path(*args)
-      self.save
+      config.store_path(*args)
+      save
     end
 
     def merge_from_template_if_missing(*args)
-      self.merge_from_template(*args) if self.config.fetch_path(*args).nil?
+      merge_from_template(*args) if config.fetch_path(*args).nil?
     end
 
-
-    def get(section, key=nil)
+    def get(section, key = nil)
       # get(section, key) -> value
       # get(section) -> hash of section values
-      return nil if !self.config.keys.include?(section)
+      return nil unless config.keys.include?(section)
 
       if key.nil?
-        self.config[section]
+        config[section]
       else
-        self.config[section][key]
+        config[section][key]
       end
     end
 
-    def set(section, key=nil, value=nil)
+    def set(section, key = nil, value = nil)
       # set(section, key, value)
       # set(section, hash)
       # set(hash)
@@ -216,28 +215,28 @@ module VMDB
       else
         if value.nil?
           # set(section, hash) -> key holds the hash for specified section
-          self.config[section] = key
+          config[section] = key
         else
           # set(section, key, value)
-          self.config[section][key] = value
+          config[section][key] = value
         end
       end
     end
 
     # Get the worker settings converted to bytes, seconds, etc.
     def get_worker_setting(klass, setting = nil)
-      self._get_worker_setting(klass, setting, false)
+      _get_worker_setting(klass, setting, false)
     end
 
     # Get the worker settings as they are in the yaml: 1.seconds, 1, etc.
     def get_raw_worker_setting(klass, setting = nil)
-      self._get_worker_setting(klass, setting, true)
+      _get_worker_setting(klass, setting, true)
     end
 
     def _get_worker_setting(klass, setting = nil, raw = false)
       # get a specific setting.... if provided
       klass = Object.const_get(klass) unless klass.class == Class
-      full_settings = klass.worker_settings(:config => self.config, :raw => raw)
+      full_settings = klass.worker_settings(:config => config, :raw => raw)
       return full_settings if setting.nil?
 
       return full_settings.fetch_path(*setting) if setting.kind_of?(Array)
@@ -251,11 +250,11 @@ module VMDB
       keys = klass.path_to_my_worker_settings.dup
       keys.unshift(:workers)
       keys += setting.to_miq_a
-      self.config.store_path(keys, value)
+      config.store_path(keys, value)
     end
 
     def save
-      raise "configuration invalid, see errors for details" if !self.validate
+      raise "configuration invalid, see errors for details" unless validate
 
       begin
         Vmdb::ConfigurationEncoder.validate!(@config)
@@ -267,15 +266,15 @@ module VMDB
       case configuration_source
       when :database
         @db_record = Configuration.create_or_update(svr, @config, @name)
-        self.save_file(@cfile_db)
+        save_file(@cfile_db)
         _log.info("Saved Config [#{@name}] from database in file: [#{@cfile_db}]")
       when :filesystem
-        self.save_file(@cfile_db)
+        save_file(@cfile_db)
         _log.info("Saved Config [#{@name}] in file: [#{@cfile_db}]")
       end
-      self.update_cache_metadata
+      update_cache_metadata
 
-      self.activate
+      activate
 
       svr.reset if svr
     end
@@ -285,7 +284,7 @@ module VMDB
         comments = Config.get_comments(filename) # Save comments from cfg file before deleting.
         comments = Config.get_comments(@ctmpl) if comments == "" # Try the template file if none in the cfg file.
         File.delete(filename) if File.exist?(filename)
-        #File.open(@cfile, "w") {|f| YAML.dump(Config.stringify(@config), f)}
+        # File.open(@cfile, "w") {|f| YAML.dump(Config.stringify(@config), f)}
         fd = File.open(filename, "w")
         fd.write(comments.join) if comments.kind_of?(Array)
         Vmdb::ConfigurationEncoder.dump(@config, fd)
@@ -295,16 +294,16 @@ module VMDB
 
     def stale?
       return true unless cached_config_valid?
-      return true if (@@cached_configs.fetch_path(@name, :mtime)      != @config_mtime)
+      return true if (@@cached_configs.fetch_path(@name, :mtime) != @config_mtime)
       return true if (@@cached_configs.fetch_path(@name, :mtime_tmpl) != @template_mtime)
-      return false
+      false
     end
 
     def cached_config_valid?
-      return false unless @@cached_configs.has_key?(@name)
+      return false unless @@cached_configs.key?(@name)
 
-      config_mtime = self.config_mtime_from_file(:yml)
-      db_config_mtime = self.config_mtime_from_db if configuration_source == :database
+      config_mtime = config_mtime_from_file(:yml)
+      db_config_mtime = config_mtime_from_db if configuration_source == :database
 
       # if the database is the configuration_source, check if the DB record needs to be created or if the config mtime is newer than the DB mtime
       if configuration_source == :database
@@ -319,7 +318,7 @@ module VMDB
 
       config_mtime = db_config_mtime unless db_config_mtime.nil?
 
-      template_mtime = self.config_mtime_from_file(:tmpl)
+      template_mtime = config_mtime_from_file(:tmpl)
       msg = "@name: [#{@name}], mtime/cached: [#{config_mtime}/#{@@cached_configs[@name][:mtime]}], mtime_tmpl/cached: [#{template_mtime}/#{@@cached_configs[@name][:mtime_tmpl]}]"
       if (@@cached_configs[@name][:mtime] == config_mtime) && (@@cached_configs[@name][:mtime_tmpl] == template_mtime)
         return true
@@ -333,8 +332,8 @@ module VMDB
     def update_cache_metadata
       @@cached_configs[@name] = {} if @@cached_configs[@name].blank?
       @@cached_configs[@name][:data] = @config.deep_clone
-      @@cached_configs[@name][:mtime] = configuration_source == :database ? self.config_mtime_from_db : self.config_mtime_from_file(:yml)
-      @@cached_configs[@name][:mtime_tmpl] =  self.config_mtime_from_file(:tmpl)
+      @@cached_configs[@name][:mtime] = configuration_source == :database ? config_mtime_from_db : config_mtime_from_file(:yml)
+      @@cached_configs[@name][:mtime_tmpl] =  config_mtime_from_file(:tmpl)
 
       @config_mtime   = @@cached_configs[@name][:mtime]
       @template_mtime = @@cached_configs[@name][:mtime_tmpl]
@@ -377,7 +376,7 @@ module VMDB
 
       fd = File.open(file, "r")
       comments = []
-      while !fd.eof?
+      until fd.eof?
         line = fd.gets
         break unless line.starts_with?("#")
         comments.push(line)
@@ -388,29 +387,29 @@ module VMDB
 
     def self.apply_defaults(current, defaults)
       current = defaults.merge(current)
-      current.each_key {|key|
+      current.each_key do|key|
         current[key] = defaults[key].merge(current[key])  if defaults.include?(key)
-      }
+      end
     end
 
     def self.get_file(name)
-      Vmdb::ConfigurationEncoder.dump(self.new(name.to_s).config)
+      Vmdb::ConfigurationEncoder.dump(new(name.to_s).config)
     end
 
     def self.validate_file(name, contents)
-      valid, new_cfg = self.load_and_validate_raw_contents(name, contents)
-      return valid ? true : new_cfg
+      valid, new_cfg = load_and_validate_raw_contents(name, contents)
+      valid ? true : new_cfg
     end
 
     def self.save_file(name, contents)
-      valid, new_cfg = self.load_and_validate_raw_contents(name, contents)
+      valid, new_cfg = load_and_validate_raw_contents(name, contents)
       return new_cfg unless valid
       new_cfg.save
-      return true
+      true
     end
 
     def self.load_and_validate_raw_contents(name, contents)
-      current = self.new(name.to_s)
+      current = new(name.to_s)
       current.config = Vmdb::ConfigurationEncoder.load(contents)
       valid = current.validate
       return valid ? [true, current] : [false, current.errors]

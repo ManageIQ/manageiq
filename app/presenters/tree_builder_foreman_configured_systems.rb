@@ -1,4 +1,4 @@
-class TreeBuilderForemanConfiguredSystems  < TreeBuilder
+class TreeBuilderForemanConfiguredSystems < TreeBuilder
   attr_reader :tree_nodes
 
   private

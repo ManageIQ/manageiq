@@ -76,7 +76,7 @@ class ApiController
 
         $api_log.info("")
         $api_log.info("Dynamic Configuration")
-        api_config = cfg.config[mod.to_sym]
+        api_config = cfg.config[mod.to_sym].merge(REQUESTER_TTL_CONFIG["ui"] => fetch_ui_token_ttl(cfg))
         api_config.each { |key, val| log_kv(key, val) }
 
         new_token_mgr(mod, name, api_config)
@@ -90,6 +90,7 @@ class ApiController
 
         options                          = {}
         options[:token_ttl]              = token_ttl.to_i_with_method if token_ttl
+        options[REQUESTER_TTL_CONFIG["ui"]] = fetch_ui_token_ttl
 
         $api_log.info("")
         $api_log.info("Creating new Token Manager for the #{name}")
@@ -101,6 +102,10 @@ class ApiController
         TokenManager.new(mod, options)
       end
 
+      def fetch_ui_token_ttl(cfg = VMDB::Config.new("vmdb"))
+        cfg.config.fetch_path(:session, :timeout).to_i_with_method
+      end
+
       #
       # Let's create our attribute type hashes.
       # Accessed as @attr_<type>[<name>], much faster than array include?
@@ -108,10 +113,12 @@ class ApiController
       def gen_attr_type_hash
         @attr_time = {}
         @attr_url  = {}
+        @attr_resource  = {}
         @attr_encrypted = {}
 
         ATTR_TYPES[:time].each { |attr| @attr_time[attr] = true }
         ATTR_TYPES[:url].each  { |attr| @attr_url[attr]  = true }
+        ATTR_TYPES[:resource].each  { |attr| @attr_resource[attr]  = true }
         ATTR_TYPES[:encrypted].each { |attr| @attr_encrypted[attr] = true }
 
         gen_time_attr_type_hash

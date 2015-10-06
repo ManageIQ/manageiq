@@ -6,18 +6,14 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
 
   context "two vix disk enabled servers," do
     before(:each) do
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid => @guid)
-      @zone = FactoryGirl.create(:zone)
-      @server1 = FactoryGirl.create(:miq_server, :zone => @zone, :guid => @guid, :status => "started")
-      MiqServer.my_server(true)
-      @server2 = FactoryGirl.create(:miq_server, :zone => @zone, :guid => MiqUUID.new_guid, :status => "started")
+      @server1 = EvmSpecHelper.local_miq_server(:is_master => true)
+      @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone)
       MiqServer.any_instance.stub(:is_vix_disk? => true)
     end
 
     context "hosts with proxy and vmware vms," do
       before(:each) do
-        @hosts, @proxies, @storages, @vms = self.build_hosts_proxies_storages_vms
+        @hosts, @proxies, @storages, @vms = build_hosts_proxies_storages_vms
         @vm = @vms.first
       end
 
@@ -66,7 +62,6 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
 
               server_roles = [FactoryGirl.create(:server_role, :name => "smartproxy", :max_concurrent => 0)]
 
-              MiqServer.my_server(true)
               @server1.deactivate_all_roles
               @server1.role    = 'smartproxy'
               Host.any_instance.stub(:missing_credentials? => false)
@@ -93,7 +88,7 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
           context "with server proxies active," do
             before(:each) do
               MiqServer.any_instance.stub(:is_proxy_active? => true)
-              @vm.stub(:my_zone).and_return(@zone.name)
+              @vm.stub(:my_zone).and_return(@server1.zone.name)
             end
 
             context "a vm template and invalid VC authentication" do
@@ -119,10 +114,8 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
               end
             end
           end
-
         end
       end
-
     end
   end
 end

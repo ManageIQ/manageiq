@@ -54,7 +54,6 @@ module Vmdb
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
-
     # Customize any additional options below...
 
     # HACK: By default, Rails.configuration.eager_load_paths contains all of the directories
@@ -84,9 +83,9 @@ module Vmdb
       end
     end
 
-    #logging requires configuration which requires encryption
+    # logging requires configuration which requires encryption
     require 'miq-password'
-    MiqPassword.key_root=Rails.root.join("certs")
+    MiqPassword.key_root = Rails.root.join("certs")
 
     require 'vmdb/logging'
     Vmdb::Loggers.init

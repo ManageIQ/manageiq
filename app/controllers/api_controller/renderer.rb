@@ -89,6 +89,7 @@ class ApiController
       end
 
       expand_actions(json, type, opts)
+      expand_resource_custom_actions(resource, json, type)
       json
     end
 
@@ -98,7 +99,7 @@ class ApiController
 
       rclass = resource.class
       if collection_class(type) != rclass
-        matched_type, _ = collection_config.detect do |_collection, spec|
+        matched_type, = collection_config.detect do |_collection, spec|
           spec[:klass] && spec[:klass].constantize == rclass
         end
       end
@@ -246,7 +247,7 @@ class ApiController
       value = object_hash[base].public_send(attr)
       result = {attr => normalize_virtual(nil, attr, value, :ignore_nil => true)}
       # set nil vtype above to "#{type}/#{resource.id}/#{base.tr('.', '/')}/#{attr}" to support id normalization
-      base.split(".").reverse.each { |level| result = {level => result} }
+      base.split(".").reverse_each { |level| result = {level => result} }
       [value, result]
     end
 
@@ -326,6 +327,22 @@ class ApiController
           aspecs.each { |action_spec| add_child js, normalize_hash(type, action_spec) }
         end
       end
+    end
+
+    def expand_resource_custom_actions(resource, json, type)
+      return unless render_attr("actions") && resource_can_have_custom_actions(type)
+
+      href = json.attributes!["href"]
+      json.actions do |js|
+        resource_custom_action_names(resource).each do |action|
+          add_child js, "name" => action, "method" => :post, "href" => href
+        end
+      end
+    end
+
+    def resource_custom_action_names(resource)
+      return [] unless resource.respond_to?(:custom_action_buttons)
+      Array(resource.custom_action_buttons).collect(&:name).collect(&:downcase)
     end
 
     def render_resource_attr(resource, attr)

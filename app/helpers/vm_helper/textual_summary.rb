@@ -6,95 +6,75 @@ module VmHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w{name region server description hostname ipaddress custom_1 container host_platform tools_status osinfo cpu_affinity snapshots advanced_settings resources guid}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(name region server description hostname ipaddress custom_1 container host_platform tools_status osinfo cpu_affinity snapshots advanced_settings resources guid)
   end
 
   def textual_group_lifecycle
-    items = %w(discovered analyzed retirement_date retirement_state provisioned owner group)
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(discovered analyzed retirement_date retirement_state provisioned owner group)
   end
 
   def textual_group_relationships
-    items = %w{ems cluster host resource_pool storage service parent_vm genealogy drift scan_history cloud_network cloud_subnet}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(ems cluster host resource_pool storage service parent_vm genealogy drift scan_history cloud_network cloud_subnet)
   end
 
   def textual_group_vm_cloud_relationships
-    items = %w{ems availability_zone flavor drift scan_history}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(ems availability_zone flavor drift scan_history)
   end
 
   def textual_group_template_cloud_relationships
-    items = %w{ems drift scan_history}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(ems drift scan_history)
   end
 
   def textual_group_security
-    items = %w{users groups patches}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(users groups patches)
   end
 
   def textual_group_configuration
-    items = %w{guest_applications init_processes win32_services kernel_drivers filesystem_drivers filesystems registry_items}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(guest_applications init_processes win32_services kernel_drivers filesystem_drivers filesystems registry_items)
   end
 
   def textual_group_datastore_allocation
-    items = %w{disks disks_aligned thin_provisioned allocated_disks allocated_total}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(disks disks_aligned thin_provisioned allocated_disks allocated_total)
   end
 
   def textual_group_datastore_usage
-    items = %w{usage_disks usage_snapshots usage_disk_storage usage_overcommitted}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(usage_disks usage_snapshots usage_disk_storage usage_overcommitted)
   end
 
   def textual_group_diagnostics
-    items = %w{processes event_logs}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(processes event_logs)
   end
 
   def textual_group_storage_relationships
-    items = %w{storage_systems storage_volumes logical_disks file_shares}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(storage_systems storage_volumes logical_disks file_shares)
   end
 
   def textual_group_vmsafe
-    items = %w{vmsafe_enable vmsafe_agent_address vmsafe_agent_port vmsafe_fail_open vmsafe_immutable_vm vmsafe_timeout}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(vmsafe_enable vmsafe_agent_address vmsafe_agent_port vmsafe_fail_open vmsafe_immutable_vm vmsafe_timeout)
   end
 
   def textual_group_miq_custom_attributes
-    items = %w{miq_custom_attributes}
-    ret = items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-    return ret.blank? ? nil : ret
+    textual_miq_custom_attributes
   end
 
   def textual_group_ems_custom_attributes
-    items = %w{ems_custom_attributes}
-    ret = items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-    return ret.blank? ? nil : ret
+    textual_ems_custom_attributes
   end
 
   def textual_group_compliance
-    items = %w{compliance_status compliance_history}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(compliance_status compliance_history)
   end
 
   def textual_group_power_management
-    items = %w{power_state boot_time state_changed_on}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(power_state boot_time state_changed_on)
   end
 
   def textual_group_normal_operating_ranges
-    items = %w{normal_operating_ranges_cpu normal_operating_ranges_cpu_usage normal_operating_ranges_memory normal_operating_ranges_memory_usage}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(normal_operating_ranges_cpu normal_operating_ranges_cpu_usage normal_operating_ranges_memory normal_operating_ranges_memory_usage)
   end
 
   def textual_group_tags
-    items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(tags)
   end
 
   #
@@ -107,26 +87,24 @@ module VmHelper::TextualSummary
     reg = @record.miq_region
     url = reg.remote_ui_url
     h[:value] = if url
-      # TODO: Why is this link different than the others?
-      link_to(reg.description, url_for(:host => url, :action => 'show', :id => @record), :title => "Connect to this VM in its Region", :onclick => "return miqClickAndPop(this);")
-    else
-      reg.description
-    end
+                  # TODO: Why is this link different than the others?
+                  link_to(reg.description, url_for(:host => url, :action => 'show', :id => @record), :title => "Connect to this VM in its Region", :onclick => "return miqClickAndPop(this);")
+                else
+                  reg.description
+                end
     h
   end
 
   def textual_name
-    {:label => "Name", :value => @record.name}
+    @record.name
   end
 
   def textual_server
-    return nil if @record.miq_server.nil?
-    {:label => "Server", :value => "#{@record.miq_server.name} [#{@record.miq_server.id}]"}
+    @record.miq_server && "#{@record.miq_server.name} [#{@record.miq_server.id}]"
   end
 
   def textual_description
-    return nil if @record.description.blank?
-    {:label => "Description", :value => @record.description}
+    @record.description
   end
 
   def textual_hostname
@@ -237,7 +215,7 @@ module VmHelper::TextualSummary
   end
 
   def textual_retirement_state
-    {:label => "Retirement State", :value => @record.retirement_state.to_s.capitalize}
+    @record.retirement_state.to_s.capitalize
   end
 
   def textual_provisioned
@@ -247,17 +225,15 @@ module VmHelper::TextualSummary
   end
 
   def textual_owner
-    return nil if @record.evm_owner.nil?
-    {:label => "Owner", :value => @record.evm_owner.name}
+    @record.evm_owner.try(:name)
   end
 
   def textual_group
-    return nil if @record.miq_group.nil?
-    {:label => "Group", :value => @record.miq_group.description}
+    @record.miq_group.try(:description)
   end
 
   def textual_ems
-    textual_link(@record.ext_management_system, :as => EmsInfra)
+    textual_link(@record.ext_management_system)
   end
 
   def textual_cluster
@@ -293,7 +269,7 @@ module VmHelper::TextualSummary
 
   def textual_storage
     storages = @record.storages
-    label = ui_lookup(:tables=>"storages")
+    label = ui_lookup(:tables => "storages")
     h = {:label => label, :image => "storage"}
     if storages.empty?
       h[:value] = "None"
@@ -349,7 +325,7 @@ module VmHelper::TextualSummary
 
   def textual_parent_vm
     h = {:label => "Parent VM", :image => "vm"}
-    parent_vm = @record.with_relationship_type("genealogy") { |r| r.parent }
+    parent_vm = @record.with_relationship_type("genealogy", &:parent)
     if parent_vm.nil?
       h[:value] = "None"
     else
@@ -357,7 +333,7 @@ module VmHelper::TextualSummary
       h[:title] = "Show this VM's parent"
       h[:explorer] = true
       url, action = set_controller_action
-      h[:link]  = url_for(:controller => url, :action => action , :id => parent_vm)
+      h[:link]  = url_for(:controller => url, :action => action, :id => parent_vm)
     end
     h
   end
@@ -371,11 +347,11 @@ module VmHelper::TextualSummary
       :explorer => true,
       :spinner  => true,
       :link     => url_for(
-                    :controller => controller.controller_name,
-                    :action     => 'show',
-                    :id         => @record,
-                    :display    => "vmtree_info"
-                    )
+        :controller => controller.controller_name,
+        :action     => 'show',
+        :id         => @record,
+        :display    => "vmtree_info"
+      )
     }
   end
 
@@ -607,12 +583,12 @@ module VmHelper::TextualSummary
     value = @record.uncommitted_storage
     h[:title] = value.nil? ? "N/A" : "#{number_with_delimiter(value)} bytes"
     h[:value] = if value.nil?
-      "N/A"
-    else
-      v = number_to_human_size(value.abs, :precision => 2)
-      v = "(#{v}) * Overallocated" if value < 0
-      v
-    end
+                  "N/A"
+                else
+                  v = number_to_human_size(value.abs, :precision => 2)
+                  v = "(#{v}) * Overallocated" if value < 0
+                  v
+                end
     h
   end
 

@@ -1,8 +1,9 @@
 class TreeBuilderOps < TreeBuilder
-  #common methods for OPS subclasses
+  # common methods for OPS subclasses
+
   private
 
-  def active_node_set(tree_nodes)
+  def active_node_set(_tree_nodes)
     # FIXME: check all below
     case @name
     when :vmdb_tree
@@ -19,7 +20,15 @@ class TreeBuilderOps < TreeBuilder
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(options)
     region = MiqRegion.my_region
-    objects = region.zones.sort_by{|z| z.name.downcase}
+    objects = region.zones.sort_by { |z| z.name.downcase }
     count_only_or_objects(options[:count_only], objects, nil)
+  end
+
+  def x_get_tree_lr_kids(object, options)
+    if options[:count_only]
+      return (object.ldap_domains.count)
+    else
+      return (object.ldap_domains.sort_by { |a| a.name.to_s })
+    end
   end
 end

@@ -2,29 +2,33 @@
 %fieldset
   %h3
     = _('Performance Timeframe')
-  %table.style1
-    %tr
-      %td.key
+  .form-horizontal
+    .form-group
+      %label.control-label.col-md-2
         - if @edit[:new][:perf_interval]
-          = _("Show hourly data from:")
+          = _("Show hourly data from")
         - else
-          = _("Show daily data from:")
-      %td
+          = _("Show daily data from")
+      .col-md-8
         = select_tag('chosen_end',
           options_for_select(@edit[:end_array], @edit[:new][:perf_end]),
           :multiple          => false,
-          :class             => "widthed",
-          "data-miq_observe" => {:url => url}.to_json)
+          :class             => "selectpicker")
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent('chosen_end', '#{url}')
         = _('going back')
         = select_tag('chosen_start',
           options_for_select(@edit[:start_array], @edit[:new][:perf_start]),
           :multiple          => false,
-          :class             => "widthed",
-          "data-miq_observe" => {:url => url}.to_json)
-    %tr
-      %td.key{:style => "width: 100px;"}
+          :class             => "selectpicker")
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent('chosen_start', '#{url}')
+    .form-group
+      %label.control-label.col-md-2
         = _('Time Profile')
-      %td.wide{:style => "padding-right: 5px;", :valign => "top"}
+      .col-md-8
         - if session[:time_profiles].blank?
           = _('No Time Profiles found')
         - elsif session[:time_profiles].length == 1
@@ -33,5 +37,8 @@
         - else
           = select_tag('chosen_time_profile',
             options_for_select(Array(session[:time_profiles].invert).sort_by(&:first), @edit[:new][:time_profile]),
-            "data-miq_observe" => {:url => url}.to_json)
+            :class => "selectpicker")
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent('chosen_time_profile', '#{url}')
   = _("Note: Only Time Profiles with 'Roll Up Performance' set are shown.")

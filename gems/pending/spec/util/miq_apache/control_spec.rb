@@ -27,7 +27,6 @@ describe MiqApache::Control do
     MiqApache::Control.stop(false)
   end
 
-
   it "should run_apache_cmd with /usr/bin/systemctl status httpd status when calling httpd_status" do
     MiqUtil.should_receive(:runcmd).with('/usr/bin/systemctl status httpd').and_return("Active: active")
     MiqApache::Control.httpd_status
@@ -54,34 +53,34 @@ describe MiqApache::Control do
   it "should raise an error when calling httpd_status raising unknown result RuntimeError" do
     result = "unknown result"
     MiqUtil.stub(:runcmd).and_raise(RuntimeError.new(result))
-    lambda { MiqApache::Control.httpd_status }.should raise_error(RuntimeError)
+    -> { MiqApache::Control.httpd_status }.should raise_error(RuntimeError)
   end
 
   it "should runcmd with killall -9 httpd when running kill_all and cleanup file descriptors" do
     MiqUtil.should_receive(:runcmd).with("killall -9 httpd")
-    MiqUtil.should_receive(:runcmd).with {|arg| arg =~ /^for i in/}
+    MiqUtil.should_receive(:runcmd).with { |arg| arg =~ /^for i in/ }
     MiqApache::Control.kill_all
   end
 
   it "should raise an error if killall failed with unknown result" do
     result = "unknown result"
     MiqUtil.stub(:runcmd).and_raise(RuntimeError.new(result))
-    lambda { MiqApache::Control.kill_all }.should raise_error(RuntimeError)
+    -> { MiqApache::Control.kill_all }.should raise_error(RuntimeError)
   end
 
   it "should not raise an error if the kill returned no process found" do
     result = "httpd: no process found"
     MiqUtil.stub(:runcmd).and_raise(RuntimeError.new(result))
-    lambda { MiqApache::Control.kill_all }.should_not raise_error
+    -> { MiqApache::Control.kill_all }.should_not raise_error
   end
 
-  #FIXME: need to implement the code and change the test
+  # FIXME: need to implement the code and change the test
   it "should not do anything when calling status with full true" do
     MiqApache::Control.should_receive(:run_apache_cmd).never
     MiqApache::Control.status(true).should be_nil
   end
 
-  #FIXME: need to implement the code and change the test
+  # FIXME: need to implement the code and change the test
   it "should not do anything when calling status with full false" do
     MiqApache::Control.should_receive(:run_apache_cmd).never
     MiqApache::Control.status(false).should be_nil
@@ -105,7 +104,7 @@ describe MiqApache::Control do
   end
 
   it "should runcmd with rpm -qa... when calling version" do
-    MiqUtil.should_receive(:runcmd).with {|arg| arg == "rpm -qa --queryformat '%{VERSION}' httpd" }
+    MiqUtil.should_receive(:runcmd).with { |arg| arg == "rpm -qa --queryformat '%{VERSION}' httpd" }
     MiqApache::Control.version
   end
 

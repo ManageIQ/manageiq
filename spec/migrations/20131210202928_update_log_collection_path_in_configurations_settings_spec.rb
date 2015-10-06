@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20131210202928_update_log_collection_path_in_configurations_settings")
+require_migration
 
 describe UpdateLogCollectionPathInConfigurationsSettings do
   let(:configuration_stub) { migration_stub(:Configuration) }

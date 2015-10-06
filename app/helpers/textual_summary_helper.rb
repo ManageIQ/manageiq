@@ -8,7 +8,38 @@ module TextualSummaryHelper
     end
   end
 
-def textual_tags
+  def expand_textual_summary(summary, context)
+    case summary
+    when Hash
+      summary
+    when Symbol
+      result = send("textual_#{summary}")
+      return result if result.kind_of?(Hash) && result[:label]
+
+      automatic_label = context.class.human_attribute_name(summary, :default => summary.to_s.titleize)
+
+      case result
+      when Hash
+        result.dup.tap do |h|
+          h[:label] = automatic_label
+        end
+      when ActiveRecord::Relation, ActiveRecord::Base
+        textual_link(result, :label => automatic_label)
+      when String, Fixnum, true, false, nil
+        {:label => automatic_label, :value => result.to_s} unless result.to_s.blank?
+      end
+    when nil
+      nil
+    else
+      raise "Unexpected summary type: #{summary.class}"
+    end
+  end
+
+  def expand_textual_group(summaries, context = @record)
+    Array.wrap(summaries).map { |summary| expand_textual_summary(summary, context) }.compact
+  end
+
+  def textual_tags
     label = "#{session[:customer_name]} Tags"
     h = {:label => label}
     tags = session[:assigned_filters]
@@ -28,15 +59,15 @@ def textual_tags
 
   private
 
-  def textual_object_link(object, as: nil, controller: nil, feature: nil)
+  def textual_object_link(object, as: nil, controller: nil, feature: nil, label: nil)
     return if object.nil?
 
-    klass = as || object.class.base_model
+    klass = as || ui_base_model(object.class)
 
-    controller ||= klass.name.underscore
+    controller ||= controller_for_model(klass)
     feature ||= "#{controller}_show"
 
-    label = ui_lookup(:model => klass.name)
+    label ||= ui_lookup(:model => klass.name)
     image = textual_object_icon(object, klass)
     value = if block_given?
               yield object
@@ -47,16 +78,20 @@ def textual_tags
     h = {:label => label, :image => image, :value => value}
 
     if role_allows(:feature => feature)
-      h[:link] = url_for(:controller => controller,
-                         :action     => 'show',
-                         :id         => object)
+      if restful_routed?(object)
+        h[:link] = polymorphic_path(object)
+      else
+        h[:link] = url_for(:controller => controller,
+                           :action     => 'show',
+                           :id         => object)
+      end
       h[:title] = "Show #{label} '#{value}'"
     end
 
     h
   end
 
-  def textual_collection_link(collection, as: nil, controller: nil, explorer: false, feature: nil, link: nil)
+  def textual_collection_link(collection, as: nil, controller_collection: nil, explorer: false, feature: nil, label: nil, link: nil)
     if collection.kind_of?(Array)
       unless as && link
         raise ArgumentError, ":as and :link are both required when linking to an array",
@@ -64,12 +99,12 @@ def textual_tags
       end
     end
 
-    klass = as || collection.klass.base_model
+    klass = as || ui_base_model(collection.klass)
 
-    controller ||= klass.name.underscore
-    feature ||= "#{controller}_show_list"
+    controller_collection ||= klass.name.underscore
+    feature ||= "#{controller_collection}_show_list"
 
-    label = ui_lookup(:models => klass.name)
+    label ||= ui_lookup(:models => klass.name)
     image = textual_collection_icon(collection, klass)
     count = collection.count
 
@@ -79,11 +114,19 @@ def textual_tags
       if link
         h[:link] = link
       elsif collection.respond_to?(:proxy_association)
-        h[:link] = url_for(:action  => 'show',
-                           :id      => collection.proxy_association.owner,
-                           :display => collection.proxy_association.reflection.name)
+        owner = collection.proxy_association.owner
+        display = collection.proxy_association.reflection.name
+
+        if restful_routed?(owner)
+          h[:link] = polymorphic_path(owner, :display => display)
+        else
+          h[:link] = url_for(:controller => controller_for_model(owner.class),
+                             :action     => 'show',
+                             :id         => owner,
+                             :display    => display)
+        end
       else
-        h[:link] = url_for(:controller => controller,
+        h[:link] = url_for(:controller => controller_collection,
                            :action     => 'list')
       end
       h[:title] = "Show all #{label}"

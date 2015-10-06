@@ -73,7 +73,7 @@ function miqPrepRightCellForm(tree) {
   if ($('#adv_searchbox_div').length) {
     $('#adv_searchbox_div').hide();
   }
-  dhxLayoutB.cells("a").collapse();
+  ManageIQ.layout.toolbar.hide();
   $('#' + tree).dynatree('disable');
   miqDimDiv(tree + '_div', true);
 }
@@ -734,6 +734,29 @@ function miqChartMenuClick(itemId) {
   }
 }
 
+function miqRESTAjaxButton(url, button, data) {
+  var form = $(button).parents('form:first')[0];
+  if (form) {
+    $(form).submit(function(e) {
+      e.preventDefault();
+      return false;
+    });
+    if(data != undefined) {
+      formData = data;
+    }
+    else {
+      formData = $(form).serialize();
+    }
+    miqJqueryRequest(form.action, {
+      beforeSend: true,
+      complete: true,
+      data: formData
+    });
+  } else {
+    miqAjaxButton(url, true);
+  }
+}
+
 // Handle an ajax form button press (i.e. Submit) by starting the spinning Q,
 // then waiting for .7 seconds for observers to finish
 function miqAjaxButton(url, serialize_fields) {
@@ -892,17 +915,17 @@ function miqEnableLoginFields(enabled) {
 // Initialize dashboard column jQuery sortables
 function miqInitDashboardCols() {
   if ($('#col1').length) {
-    $('#col1').sortable({connectWith: '#col2, #col3', handle: "h2"});
+    $('#col1').sortable({connectWith: '#col2, #col3', handle: "h3"});
     $('#col1').off('sortupdate');
     $('#col1').on('sortupdate', miqDropComplete);
   }
   if ($('#col2').length) {
-    $('#col2').sortable({connectWith: '#col1, #col3', handle: "h2"});
+    $('#col2').sortable({connectWith: '#col1, #col3', handle: "h3"});
     $('#col2').off('sortupdate');
     $('#col2').on('sortupdate', miqDropComplete);
   }
   if ($('#col3').length) {
-    $('#col3').sortable({connectWith: '#col1, #col2', handle: "h2"});
+    $('#col3').sortable({connectWith: '#col1, #col2', handle: "h3"});
     $('#col3').off('sortupdate');
     $('#col3').on('sortupdate', miqDropComplete);
   }
@@ -1027,6 +1050,9 @@ function miq_tabs_init(id, url) {
   // Hide the tab header when there is only one visible tab available
   if ($(id + ' > ul.nav-tabs > li:not(.hidden)').length == 1) {
     $(id + ' > ul.nav-tabs').hide();
+  }
+  else if ($(id + ' > ul.nav-tabs > li:not(.hidden)').length > 1) {
+    $(id + ' > ul.nav-tabs').show();
   }
 }
 
@@ -1207,7 +1233,7 @@ function miqDomElementExists(element) {
 }
 
 function miqSerializeForm(element) {
-  return $('#' + element).find('input,select,textarea').serialize();
+  return $('#' + element).find('input,select,textarea').serialize().replace(/%0D%0A/g, '%0A');
 }
 
 function miqSerializeField(element, field_name) {
@@ -1222,10 +1248,13 @@ function miqInitSelectPicker() {
   });
 }
 
-function miqSelectPickerEvent(element, url){
+function miqSelectPickerEvent(element, url, options){
   $('#' + element).on('change', function(){
     var selected = $('#' + element).val();
-    miqJqueryRequest(url + '?' + element + '=' + selected);
+    options =  typeof options !== 'undefined' ? options : {}
+    options['no_encoding'] = true;
+    miqJqueryRequest(url + '?' + element + '=' + escape(selected), options);
     return true;
   });
 }
+

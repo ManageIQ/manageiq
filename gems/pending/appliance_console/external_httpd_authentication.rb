@@ -112,7 +112,7 @@ module ApplianceConsole
 
     def configure_pam
       say("Configuring pam ...")
-      cp_template(PAM_CONFIG, TEMPLATE_BASE_DIR)
+      cp_template(PAM_CONFIG, template_directory)
     end
 
     def configure_sssd

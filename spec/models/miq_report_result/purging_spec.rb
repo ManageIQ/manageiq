@@ -11,7 +11,7 @@ describe MiqReportResult do
           }
         }
       }
-      VMDB::Config.any_instance.stub(:config).and_return(@vmdb_config)
+      stub_server_configuration(@vmdb_config)
 
       @rr1 = [
         FactoryGirl.create(:miq_report_result, :miq_report_id => 1, :created_on => (6.months + 1.days).to_i.seconds.ago.utc),
@@ -132,15 +132,15 @@ describe MiqReportResult do
     context "#purge" do
       it "by remaining" do
         described_class.purge(:remaining, 1)
-        described_class.where(:miq_report_id => 1).should   == [@rr1.last]
-        described_class.where(:miq_report_id => 2).should   == [@rr2.last]
+        described_class.where(:miq_report_id => 1).should == [@rr1.last]
+        described_class.where(:miq_report_id => 2).should == [@rr2.last]
         described_class.where(:miq_report_id => nil).should == @rr_orphaned
       end
 
       it "by date" do
         described_class.purge(:date, 6.months.to_i.seconds.ago.utc)
-        described_class.where(:miq_report_id => 1).should   == [@rr1.last]
-        described_class.where(:miq_report_id => 2).should   == [@rr2.last]
+        described_class.where(:miq_report_id => 1).should == [@rr1.last]
+        described_class.where(:miq_report_id => 2).should == [@rr2.last]
         described_class.where(:miq_report_id => nil).should == @rr_orphaned
       end
     end

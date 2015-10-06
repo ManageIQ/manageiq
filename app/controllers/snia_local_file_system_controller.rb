@@ -1,5 +1,4 @@
 class SniaLocalFileSystemController < CimInstanceController
-
   def index
     process_index
   end
@@ -17,5 +16,4 @@ class SniaLocalFileSystemController < CimInstanceController
       'storages'                 => :storages
     )
   end
-
 end

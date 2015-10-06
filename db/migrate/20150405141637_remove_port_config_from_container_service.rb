@@ -22,11 +22,11 @@ class RemovePortConfigFromContainerService < ActiveRecord::Migration
     say_with_time("Moving container_service port records to container_service_port_config table") do
       ContainerService.all.each do |service|
         ContainerServicePortConfig.create!(
-            :ems_ref              => "#{service.ems_ref}_#{service.port}_#{service.container_port}",
-            :port                 => service.port,
-            :protocol             => service.protocol,
-            :target_port          => service.container_port,
-            :container_service_id => service.id
+          :ems_ref              => "#{service.ems_ref}_#{service.port}_#{service.container_port}",
+          :port                 => service.port,
+          :protocol             => service.protocol,
+          :target_port          => service.container_port,
+          :container_service_id => service.id
         )
       end
     end

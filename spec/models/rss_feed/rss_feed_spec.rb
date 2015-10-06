@@ -3,7 +3,7 @@ require "spec_helper"
 describe RssFeed do
   Y_DIR = File.expand_path(File.join(File.dirname(__FILE__), "data"))
 
-  before(:each) { Kernel::silence_warnings {RssFeed.const_set(:YML_DIR, Y_DIR)} }
+  before(:each) { Kernel.silence_warnings { RssFeed.const_set(:YML_DIR, Y_DIR) } }
 
   context "with 2 hosts" do
     before(:each) do
@@ -12,7 +12,6 @@ describe RssFeed do
     end
 
     it "#generate 2 hosts in newest_hosts rss" do
-      MiqRegion.seed
       RssFeed.sync_from_yml_file("newest_hosts")
       feed_container = RssFeed.where(:name => "newest_hosts").first.generate
       feed_container[:text].should == <<-EOXML
@@ -47,7 +46,6 @@ EOXML
 
   context ".sync_from_yml_dir" do
     before(:each) do
-      MiqRegion.seed
       RssFeed.seed
     end
 
@@ -56,7 +54,7 @@ EOXML
     end
 
     it "when new yaml file is added" do
-      all_files = Dir.glob(File.join(Y_DIR, "*.yml")) + [ File.join(Y_DIR, "test.yml") ]
+      all_files = Dir.glob(File.join(Y_DIR, "*.yml")) + [File.join(Y_DIR, "test.yml")]
       Dir.stub(:glob).and_return(all_files)
 
       described_class.should_receive(:sync_from_yml_file).exactly(all_files.length).times
@@ -81,7 +79,6 @@ EOXML
     end
 
     it "when the yaml file is updated" do
-      MiqRegion.seed
       RssFeed.seed
       old_count = RssFeed.count
 
@@ -104,4 +101,3 @@ EOXML
     end
   end
 end
-

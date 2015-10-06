@@ -50,12 +50,12 @@ describe ActsAsTaggable do
         Vm.find_tagged_with(:any => "/test/tags/red", :ns => ns).should == [@vm1]
       end
 
-      @vm1.tag_with("123 456 789", :ns=>"*").should == ["123", "456", "789"]
+      @vm1.tag_with("123 456 789", :ns => "*").should == ["123", "456", "789"]
       ["", "*", "none", :none].each do |ns|
         Vm.find_tagged_with(:all => "123 456 789", :ns => ns).should == [@vm1]
       end
 
-      @vm1.tag_with("/managed/location/nyc", :ns=>"*").should == ["/managed/location/nyc"]
+      @vm1.tag_with("/managed/location/nyc", :ns => "*").should == ["/managed/location/nyc"]
       Vm.find_tagged_with(:all => "/managed/location/nyc", :ns => "").should == [@vm1]
       Vm.find_tagged_with(:all => "location/nyc",          :ns => "/managed").should == [@vm1]
       Vm.find_tagged_with(:all => "nyc",                   :ns => "/managed/location").should == [@vm1]
@@ -65,7 +65,7 @@ describe ActsAsTaggable do
 
   it "#tags" do
     Host.find_by_name("HOST1").tags.length.should == 3
-    Vm.find_by_name("VM2").tags.length.should     == 0
+    Vm.find_by_name("VM2").tags.length.should == 0
   end
 
   context "#tag_with" do
@@ -91,7 +91,7 @@ describe ActsAsTaggable do
         @vm2.tag_with("", :ns => "/test", :cat => "my_zone")
         Vm.find_tagged_with(:all => "red", :ns => "/test/my_zone").should be_empty
       end
-       
+
       it "should not remove tags from other category" do
         @vm2.tag_with("", :ns => "/test", :cat => "my_zone")
         Vm.find_tagged_with(:all => "low", :ns => "/test/my_zone_cost").should_not be_empty
@@ -128,8 +128,8 @@ describe ActsAsTaggable do
   end
 
   it "#tag_list" do
-    Host.find_by_name("HOST1").tag_list(:ns => "/test", :cat => "tags").split.should match_array %w{red blue yellow}
-    Vm.find_by_name("VM1").tag_list(:ns => "/test/tags").split.should match_array %w{red blue yellow}
+    Host.find_by_name("HOST1").tag_list(:ns => "/test", :cat => "tags").split.should match_array %w(red blue yellow)
+    Vm.find_by_name("VM1").tag_list(:ns => "/test/tags").split.should match_array %w(red blue yellow)
   end
 
   it "#to_tag" do

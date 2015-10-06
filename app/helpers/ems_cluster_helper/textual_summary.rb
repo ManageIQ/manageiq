@@ -1,39 +1,32 @@
 module EmsClusterHelper::TextualSummary
-
   #
   # Groups
   #
 
   def textual_group_host_totals
-    items = %w{aggregate_cpu_speed aggregate_memory aggregate_physical_cpus aggregate_logical_cpus}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(aggregate_cpu_speed aggregate_memory aggregate_physical_cpus aggregate_logical_cpus aggregate_disk_capacity)
   end
 
   def textual_group_vm_totals
-    items = %w{aggregate_vm_memory aggregate_vm_cpus}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(aggregate_vm_memory aggregate_vm_cpus)
   end
 
   def textual_group_relationships
-    items = %w{ems parent_datacenter total_hosts total_direct_vms allvms_size total_miq_templates total_vms rps_size states_size}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(ems parent_datacenter total_hosts total_direct_vms allvms_size total_miq_templates total_vms rps_size states_size)
   end
 
   def textual_group_storage_relationships
-    items = %w{ss_size sv_size fs_size se_size}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(ss_size sv_size fs_size se_size)
   end
 
   def textual_group_configuration
-    return nil if @record.ha_enabled.nil? && @record.ha_admit_control.nil? &&  @record.drs_enabled.nil? &&
-        @record.drs_automation_level.nil? && @record.drs_migration_threshold.nil?
-    items = %w{ha_enabled ha_admit_control drs_enabled drs_automation_level drs_migration_threshold}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    return nil if @record.ha_enabled.nil? && @record.ha_admit_control.nil? && @record.drs_enabled.nil? &&
+                  @record.drs_automation_level.nil? && @record.drs_migration_threshold.nil?
+    %i(ha_enabled ha_admit_control drs_enabled drs_automation_level drs_migration_threshold)
   end
 
   def textual_group_tags
-    items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(tags)
   end
 
   def textual_group_openstack_status
@@ -104,7 +97,7 @@ module EmsClusterHelper::TextualSummary
   end
 
   def textual_ems
-    textual_link(@record.ext_management_system, :as => EmsInfra)
+    textual_link(@record.ext_management_system)
   end
 
   def textual_parent_datacenter
@@ -166,7 +159,9 @@ module EmsClusterHelper::TextualSummary
   def textual_rps_size
     return nil if @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager::EmsCluster)
 
-    textual_link(@record.resource_pools)
+    textual_link(@record.resource_pools,
+                 :as   => EmsCluster,
+                 :link => url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'resource_pools'))
   end
 
   def textual_states_size
@@ -252,6 +247,10 @@ module EmsClusterHelper::TextualSummary
     value = @record.drs_migration_threshold
     return nil if value.nil?
     {:label => "DRS Migration Threshold", :value => value}
+  end
+
+  def textual_aggregate_disk_capacity
+    {:label => "Total Disk Capacity", :value => number_to_human_size(@record.aggregate_disk_capacity.gigabytes, :precision => 2)}
   end
 
   def cluster_title

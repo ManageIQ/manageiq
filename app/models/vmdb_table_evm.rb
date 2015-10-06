@@ -5,8 +5,8 @@ class VmdbTableEvm < VmdbTable
   include_concern 'Seeding'
 
   def sql_indexes
-    actual  = self.class.connection.indexes(self.name)
-    actual += self.class.connection.respond_to?(:primary_key_indexes) ? self.class.connection.primary_key_indexes(self.name) : []
+    actual  = self.class.connection.indexes(name)
+    actual += self.class.connection.respond_to?(:primary_key_indexes) ? self.class.connection.primary_key_indexes(name) : []
     actual
   end
 end

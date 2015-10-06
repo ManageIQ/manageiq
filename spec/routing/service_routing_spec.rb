@@ -27,7 +27,7 @@ describe 'routes for ServiceController' do
   describe "#ownership_field_changed" do
     it "routes with POST" do
       expect(post("/service/ownership_field_changed"))
-      .to route_to("service#ownership_field_changed")
+        .to route_to("service#ownership_field_changed")
     end
   end
 
@@ -64,7 +64,7 @@ describe 'routes for ServiceController' do
   describe "#service_form_field_changed" do
     it "routes with POST" do
       expect(post("/service/service_form_field_changed"))
-      .to route_to("service#service_form_field_changed")
+        .to route_to("service#service_form_field_changed")
     end
   end
 
@@ -83,7 +83,7 @@ describe 'routes for ServiceController' do
   describe "#tag_edit_form_field_changed" do
     it "routes with POST" do
       expect(post("/service/tag_edit_form_field_changed"))
-      .to route_to("service#tag_edit_form_field_changed")
+        .to route_to("service#tag_edit_form_field_changed")
     end
   end
 

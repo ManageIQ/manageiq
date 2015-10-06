@@ -1,29 +1,28 @@
 class TreeBuilderOpsSettings < TreeBuilderOps
-
   private
 
-  def tree_init_options(tree_name)
+  def tree_init_options(_tree_name)
     {
-      :open_all   => true,
-      :leaf       => "Settings"
+      :open_all => true,
+      :leaf     => "Settings"
     }
   end
 
   def set_locals_for_render
     locals = super
     locals.merge!(
-        :id_prefix      => "settings_",
-        :autoload       => true
+      :id_prefix => "settings_",
+      :autoload  => true
     )
   end
 
   # Get root nodes count/array for explorer tree
-  def x_get_tree_roots(options)
+  def x_get_tree_roots(_options)
     objects = [
-        {:id => "sis", :text => "Analysis Profiles", :image => "scan_item_set", :tip => "Analysis Profiles"},
-        {:id => "z", :text => "Zones", :image => "zone", :tip => "Zones"}
+      {:id => "sis", :text => "Analysis Profiles", :image => "scan_item_set", :tip => "Analysis Profiles"},
+      {:id => "z", :text => "Zones", :image => "zone", :tip => "Zones"}
     ]
-    objects.push({:id => "l", :text => "LDAP", :image => "ldap", :tip => "LDAP"}) if get_vmdb_config[:product][:new_ldap]
+    objects.push(:id => "l", :text => "LDAP", :image => "ldap", :tip => "LDAP") if get_vmdb_config[:product][:new_ldap]
     objects.push({:id => "msc", :text => "Schedules", :image => "miq_schedule", :tip => "Schedules"})
     objects
   end
@@ -35,8 +34,9 @@ class TreeBuilderOpsSettings < TreeBuilderOps
       count_only_or_objects(options[:count_only], LdapRegion.all, "name.to_s")
     when "msc"
       objects = []
-      MiqSchedule.where("prod_default != 'system' or prod_default is null").to_a.sort{
-          |a,b| a.name.downcase <=> b.name.downcase}.each do |z|
+      MiqSchedule.where("prod_default != 'system' or prod_default is null").to_a.sort do |a, b|
+        a.name.downcase <=> b.name.downcase
+      end.each do |z|
         objects.push(z) if z.adhoc.nil? && (z.towhat != "DatabaseBackup" || DatabaseBackup.backup_supported?)
       end
       count_only_or_objects(options[:count_only], objects, nil)

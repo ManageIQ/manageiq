@@ -47,14 +47,34 @@ module Metric::Targets
     targets
   end
 
+  def self.capture_container_targets(zone, _options)
+    includes = {
+      :container_nodes  => {:tags => {}},
+      :container_groups => {
+        :containers => {:tags => {}},
+        :tags       => {}
+      }}
+
+    MiqPreloader.preload(zone.ems_containers, includes)
+
+    targets = []
+    zone.ems_containers.each do |ems|
+      targets += ems.container_nodes
+      targets += ems.container_groups
+      targets += ems.container_groups.collect(&:containers).flatten
+    end
+
+    targets
+  end
+
   def self.capture_vm_targets(targets, parent_class, options = {})
     vms = []
     unless options[:exclude_vms]
       enabled_parents = targets.select do |t|
         t.kind_of?(parent_class) &&
-          t.kind_of?(Metric::CiMixin) &&
-          t.perf_capture_enabled? &&
-          t.respond_to?(:vms)
+        t.kind_of?(Metric::CiMixin) &&
+        t.perf_capture_enabled? &&
+        t.respond_to?(:vms)
       end
       MiqPreloader.preload(enabled_parents, :vms)
       vms = targets.collect { |t| enabled_parents.include?(t) ? t.vms.select { |v| v.state == 'on' } : [] }.flatten.compact
@@ -68,6 +88,8 @@ module Metric::Targets
   def self.capture_targets(zone = nil, options = {})
     zone = MiqServer.my_server.zone(true) if zone.nil?
     zone = Zone.find(zone) if zone.kind_of?(Integer)
-    return capture_infra_targets(zone, options) + capture_cloud_targets(zone, options)
+    capture_infra_targets(zone, options) + \
+      capture_cloud_targets(zone, options) + \
+      capture_container_targets(zone, options)
   end
 end

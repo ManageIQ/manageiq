@@ -2,16 +2,8 @@ require "spec_helper"
 
 describe VimPerformanceTag do
   before(:each) do
-    MiqRegion.seed
-
-    @guid   = MiqUUID.new_guid
-    MiqServer.stub(:my_guid).and_return(@guid)
-
-    @zone   = FactoryGirl.create(:zone)
-    @server = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
-    MiqServer.my_server_clear_cache
-
-    @ems    = FactoryGirl.create(:ems_vmware, :zone => @zone)
+    @server = EvmSpecHelper.local_miq_server
+    @ems    = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
 
     Classification.stub(:category_names_for_perf_by_tag).and_return(["environment"])
     @classification_entries = ["prod", "dev", "test"]
@@ -54,7 +46,7 @@ describe VimPerformanceTag do
             "2010-04-14T22:00:00Z" => 2152.0,
             "2010-04-15T21:00:00Z" => 2100.0,
           },
-          :dev => {
+          :dev  => {
             "2010-04-13T21:00:00Z" => 3100.0,
             "2010-04-14T18:00:00Z" => 3133.0,
             "2010-04-14T19:00:00Z" => 3233.0,
@@ -103,16 +95,16 @@ describe VimPerformanceTag do
           case_sets[vm.name.to_sym].each do |timestamp, value|
             if vm.name == "none"
               perf = FactoryGirl.create(:metric_rollup_vm_hr,
-                :timestamp                 => timestamp,
-                :cpu_usagemhz_rate_average => value
-              )
+                                        :timestamp                 => timestamp,
+                                        :cpu_usagemhz_rate_average => value
+                                       )
             else
               tag = "environment/#{vm.name}"
               perf = FactoryGirl.create(:metric_rollup_vm_hr,
-                :timestamp                 => timestamp,
-                :cpu_usagemhz_rate_average => value,
-                :tag_names                 => tag
-              )
+                                        :timestamp                 => timestamp,
+                                        :cpu_usagemhz_rate_average => value,
+                                        :tag_names                 => tag
+                                       )
             end
             vm.metric_rollups << perf
             VimPerformanceTagValue.build_from_performance_record(perf)
@@ -122,9 +114,9 @@ describe VimPerformanceTag do
 
         case_sets[:host].each do |timestamp, value|
           perf = FactoryGirl.create(:metric_rollup_host_hr,
-            :timestamp                 => timestamp,
-            :cpu_usagemhz_rate_average => value
-          )
+                                    :timestamp                 => timestamp,
+                                    :cpu_usagemhz_rate_average => value
+                                   )
           @host.metric_rollups << perf
           VimPerformanceTagValue.build_from_performance_record(perf)
         end
@@ -132,7 +124,7 @@ describe VimPerformanceTag do
       end
 
       it "#find_and_group_by_tags" do
-        where_clause = [ "resource_type = ? and resource_id = ?", @host.class.base_class.name, @host.id ]
+        where_clause = ["resource_type = ? and resource_id = ?", @host.class.base_class.name, @host.id]
         results, group_by_tag_cols, group_by_tags =
           VimPerformanceTag.find_and_group_by_tags(:cat_model    => "Vm",
                                                    :category     => "environment",

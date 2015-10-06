@@ -9,8 +9,8 @@ class DialogField < ActiveRecord::Base
   alias_attribute :order, :position
 
   validates_presence_of   :name
-  validates :name, exclusion: { in: %w(action controller),
-    message: "Field Name %{value} is reserved." }
+  validates :name, :exclusion => {:in      => %w(action controller),
+                                  :message => "Field Name %{value} is reserved."}
 
   default_value_for :required, false
 
@@ -48,8 +48,8 @@ class DialogField < ActiveRecord::Base
     "DialogFieldTextAreaBox"     => "Text Area Box",
     "DialogFieldCheckBox"        => "Check Box",
     "DialogFieldDropDownList"    => "Drop Down List",
-# Commented out next to field types until they can be implemented
-#    "DialogFieldButton" => "Button",
+    # Commented out next to field types until they can be implemented
+    #    "DialogFieldButton" => "Button",
     "DialogFieldTagControl"      => "Tag Control",
     "DialogFieldDateControl"     => "Date Control",
     "DialogFieldDateTimeControl" => "Date/Time Control",
@@ -78,7 +78,7 @@ class DialogField < ActiveRecord::Base
     @value = value_from_dialog_fields(dialog_values) || get_default_value
   end
 
-  def update_values(dialog_values)
+  def update_values(_dialog_values)
     # override in subclasses
     nil
   end
@@ -93,7 +93,7 @@ class DialogField < ActiveRecord::Base
   end
 
   def automate_key_name
-    "dialog_#{self.name}"
+    "dialog_#{name}"
   end
 
   def validate(dialog_tab, dialog_group)
@@ -123,6 +123,6 @@ class DialogField < ActiveRecord::Base
   end
 
   def get_default_value
-    self.default_value
+    default_value
   end
 end

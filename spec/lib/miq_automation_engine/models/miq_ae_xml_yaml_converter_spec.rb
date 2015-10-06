@@ -4,7 +4,6 @@ module MiqAeDatastoreConverter
   include MiqAeDatastore
   describe "XML2YAML Converter" do
     before(:each) do
-      MiqServer.my_server_clear_cache
       MiqAeDatastore.reset
     end
 
@@ -88,7 +87,6 @@ module MiqAeDatastoreConverter
         MiqAeClass.count.should eql(1)
         MiqAeInstance.count.should eql(2)
       end
-
     end
   end
 end

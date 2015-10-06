@@ -225,7 +225,7 @@ describe ApiController do
   describe "Role Feature Assignments" do
     it "supports assigning just a single product feature" do
       api_basic_authorize collection_action_identifier(:roles, :edit)
-      role = FactoryGirl.create(:miq_user_role_miq_request_approver)
+      role = FactoryGirl.create(:miq_user_role, :features => "miq_request_approval")
 
       new_feature = {:identifier => "miq_request_view"}
       url = "#{roles_url}/#{role.id}/features"
@@ -246,7 +246,7 @@ describe ApiController do
 
     it "supports assigning multiple product features" do
       api_basic_authorize collection_action_identifier(:roles, :edit)
-      role = FactoryGirl.create(:miq_user_role_miq_request_approver)
+      role = FactoryGirl.create(:miq_user_role, :features => "miq_request_approval")
 
       url = "#{roles_url}/#{role.id}/features"
       run_post(url, gen_request(:assign, features_list))
