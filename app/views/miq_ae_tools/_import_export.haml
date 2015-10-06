@@ -9,53 +9,68 @@
     %strong.message
 
 .import-or-export
-  %fieldset
-    %h3= _('Import Datastore classes (*.zip)')
-    = form_tag({:action => "upload_import_file"}, :target => "upload_target", :multipart => true) do
-      = file_field("upload", "file")
-      = submit_tag(_("Upload"), :id => "upload-datastore-import", :class => "upload")
+  %h3
+    = _('Import Datastore classes (*.zip)')
+  = form_tag({:action => "upload_import_file"}, :target => "upload_target", :multipart => true) do
+    = file_field("upload", "file")
+    = submit_tag(_("Upload"), :id => "upload-datastore-import", :class => "upload")
 
-  %fieldset
-    %h3= _('Export')
-    = form_tag({:action => "export_datastore"}, :method => :get) do
-      = image_submit_tag("/images/toolbars/export.png",
-                         :alt   => (t = _("Export all classes and instances")),
-                         :title => t)
+  %hr
 
-  %fieldset
-    %h3= (t = _('Reset all Datastore custom classes and instances to default'))
-    = link_to(image_tag("/images/toolbars/reset.png",
-                        :alt => t),
-                        {:action               => 'reset_datastore'},
-                         "data-miq_sparkle_on" => true,
-                         :confirm              => _("All Datastore customizations will be lost. Are you sure you want to reset all classes and instances to default?"),
-                         :remote               => true,
-                         :title                => t)
+  %h3
+    = _('Export')
+  = form_tag({:action => "export_datastore"}, :method => :get) do
+    = image_submit_tag("/images/toolbars/export.png",
+                       :alt   => t = _("Export all classes and instances"),
+                       :title => t)
+  %hr
+
+  %h3
+    = (t = _('Reset all Datastore custom classes and instances to default'))
+  = link_to(image_tag("/images/toolbars/reset.png",
+                      :alt => t),
+                      {:action               => 'reset_datastore'},
+                       "data-miq_sparkle_on" => true,
+                       :confirm              => _("All Datastore customizations will be lost. Are you sure you want to reset all classes and instances to default?"),
+                       :remote               => true,
+                       :title                => t)
 .import-data
   %form#import-form
-    %fieldset
-      %h3= _('Import Datastore classes')
+    %h3
+      = _('Import Datastore classes')
+    .form-horizontal
+      .form-group
+        %label.col-md-2.control-label
+          = _('Select existing domain to import into:')
+        .col-md-8
+          = select_tag("selected_domain_to_import_to",
+                       options_for_select(@importable_domain_options),
+                       :class => "existing-domains selectpicker")
+          :javascript
+            miqInitSelectPicker();
 
-      %p.import-label= _('Select existing domain to import into:')
-      %select.existing-domains{:name => "selected_domain_to_import_to"}
-        = options_for_select(@importable_domain_options)
+      .form-group
+        %label.col-md-2.control-label
+          = _('Select domain you wish to import from:')
+        .col-md-8
+          %select.selectpicker.importing-domains{:name => "selected_domain_to_import_from"}
+          :javascript
+            miqInitSelectPicker();
+      .form-group
+        %label.col-md-2.control-label
+          = _('Select namespaces you wish to import:')
+        .col-md-8
+          %input#toggle-all{:type => "checkbox"}
+          %label{:for => "toggle-all"}= _('Toggle All/None')
+          .domain-tree{:name => "selected_namespaces[]"}
 
-      %p.import-label= _('Select domain you wish to import from:')
-      %select.importing-domains{:name => "selected_domain_to_import_from"}
+    %table{:width => "100%"}
+      %tr
+        %td{:align => "right"}
+          = hidden_field_tag(:import_file_upload_id, '', :class => "hidden-import-file-upload-id")
+          = button_tag(_("Commit"), :class => "import-commit btn btn-primary")
 
-      %p.import-label= _('Select namespaces you wish to import:')
-      %input#toggle-all{:type => "checkbox"}
-      %label{:for => "toggle-all"}= _('Toggle All/None')
-
-      .domain-tree{:name => "selected_namespaces[]"}
-
-      %table{:width => "100%"}
-        %tr
-          %td{:align => "right"}
-            = hidden_field_tag(:import_file_upload_id, '', :class => "hidden-import-file-upload-id")
-            = button_tag(_("Commit"), :class => "import-commit btn btn-primary")
-
-            = button_tag(_("Back"), :class => "import-back btn btn-default")
+          = button_tag(_("Back"), :class => "import-back btn btn-default")
 
 :javascript
   $(function() {
