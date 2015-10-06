@@ -28,5 +28,19 @@ describe ManageIQ::Providers::Amazon::CloudManager::MetricsCapture do
       expect(@vm.perf_collect_metrics('realtime')).to eq([{"amazon-perf-vm" => described_class::VIM_STYLE_COUNTERS},
                                                           {"amazon-perf-vm" => {}}])
     end
+
+    it "handles when metrixs are collected for only one counter" do
+      @vm = FactoryGirl.build(:vm_perf_amazon, :ext_management_system => @ems_amazon)
+      mc = described_class.new(@vm)
+
+      filter_double = (double(:name => "NetworkIn", :statistics => [{:timestamp => Time.new(1999).utc, :average => 1}]))
+      ems_double = double(:metrics => double(:filter => [filter_double]))
+
+      expect(@vm.ext_management_system).to receive(:connect).and_return(ems_double)
+      expect(@vm).to receive(:perf_capture_object).and_return(mc)
+
+      expect(@vm.perf_collect_metrics('realtime')).to eq([{"amazon-perf-vm" => described_class::VIM_STYLE_COUNTERS},
+                                                          {"amazon-perf-vm" => {}}])
+    end
   end
 end
