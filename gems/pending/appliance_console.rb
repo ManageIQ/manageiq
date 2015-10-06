@@ -19,7 +19,6 @@ require 'fileutils'
 require 'highline/import'
 require 'highline/system_extensions'
 require 'rubygems'
-require 'timeout'
 require 'bcrypt'
 require 'linux_admin'
 require 'pathname'
@@ -38,9 +37,6 @@ $terminal.page_at = 21
 require 'appliance_console/errors'
 
 [:INT, :TERM, :ABRT, :TSTP].each { |s| trap(s) { raise MiqSignalError } }
-
-# Disabled in order to allow rescue of timeout error
-HighLine.track_eof = false
 
 RAILS_ROOT    = Pathname.new("#{ROOT}/vmdb")
 EVM_PID_FILE  = RAILS_ROOT.join("tmp/pids/evm.pid")
@@ -498,8 +494,6 @@ Date and Time Configuration
       when I18n.t("advanced_settings.quit")
         break
       end
-    rescue Timeout::Error
-      break
     rescue MiqSignalError
       # If a signal is caught anywhere in the inner (after login) loop, go back to the summary screen
       next
