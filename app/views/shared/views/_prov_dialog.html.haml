@@ -131,7 +131,7 @@
             :keys                       => keys,
             :extra_table_attributes     => "width=100%"})
       - if wf.kind_of?(ManageIQ::Providers::CloudManager::ProvisionWorkflow)
-        - keys = [:cloud_tenant, :availability_zone_filter, :placement_availability_zone, :cloud_network, :cloud_subnet, :security_groups, :floating_ip_address]
+        - keys = [:cloud_tenant, :availability_zone_filter, :placement_availability_zone, :cloud_network, :cloud_subnet, :security_groups, :floating_ip_address, :resource_group]
         = render(:partial => "/miq_request/prov_dialog_fieldset",
           :locals         => {:workflow => wf,
             :dialog                     => dialog,
@@ -322,7 +322,7 @@
               :prefix                     => "/miq_request/",
               :keys                       => keys})
     - else
-      - keys = [:root_password]
+      - keys = [:root_username, :root_password]
       = render(:partial => "/miq_request/prov_dialog_fieldset",
         :locals         => {:workflow => wf,
           :dialog                     => dialog,

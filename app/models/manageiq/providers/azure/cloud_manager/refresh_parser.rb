@@ -533,7 +533,8 @@ module ManageIQ::Providers
           :type               => ManageIQ::Providers::Azure::CloudManager::Template.name,
           :uid_ems            => uid,
           :ems_ref            => uid,
-          :name               => uid.split(%r{Microsoft.Compute\/}i)[1].split('.').first,
+          :name               => build_image_name(image),
+          :description        => build_image_description(image),
           :location           => @ems.provider_region,
           :vendor             => "azure",
           :raw_power_state    => "never",
@@ -550,6 +551,15 @@ module ManageIQ::Providers
       # Compose an id string combining some existing keys
       def resource_uid(*keys)
         keys.join('\\')
+      end
+
+      def build_image_name(image)
+        "#{image.uri.split(%r{Microsoft.Compute\/}i)[1].split('.').first}"
+      end
+
+      def build_image_description(image)
+        # Description is a concatenation of resource group and storage account
+        "#{image.storage_account.resource_group}\\#{image.storage_account.name}"
       end
 
       # Remap from children to parent
