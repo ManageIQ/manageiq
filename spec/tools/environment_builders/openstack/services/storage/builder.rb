@@ -55,7 +55,7 @@ module Openstack
 
         def create_file(collection, file_data)
           puts "Creating #{file_data} against #{collection.class.name}"
-          body  = file_data.delete(:__body)
+          body = file_data.delete(:__body)
 
           file = collection.new(file_data)
           file.body = body
