@@ -1611,7 +1611,7 @@ class CatalogController < ApplicationController
           @no_checkboxes = true if x_active_tree == :svcs_tree
           if x_active_tree == :svccat_tree
             condition = ["display=? and service_template_catalog_id IS NOT NULL", true]
-            service_template_list(condition, :no_checkboxes => true)
+            service_template_list(condition, {:no_checkboxes => true, :display_filter_hash => {:operator => '=', :field => 'template_valid', :value => true}})
           else
             process_show_list(:model => typ.constantize)
           end
@@ -1635,16 +1635,17 @@ class CatalogController < ApplicationController
               model = x_active_tree == :svccat_tree ? "ServiceCatalog" : "ServiceTemplate"
               if id == "Unassigned"
                 condition = ["service_template_catalog_id IS NULL"]
-                service_template_list(condition, :model => model, :no_order_button => true)
+                service_template_list(condition,{:model => model, :no_order_button => true, :display_filter_hash => {:operator => '=', :field => 'template_valid', :value => true}})
                 @right_cell_text = _("%{typ} in %{model} \"%{name}\"") % {:name => "Unassigned", :typ => ui_lookup(:models => "Service"), :model => ui_lookup(:model => "ServiceTemplateCatalog")}
               else
                 condition = ["display=? and service_template_catalog_id=? and service_template_catalog_id IS NOT NULL", true, from_cid(id)]
-                service_template_list(condition, :model => model, :no_order_button => true)
+                service_template_list(condition,{:model => model, :no_order_button => true, :display_filter_hash => {:operator => '=', :field => 'template_valid', :value => true}})
                 stc = ServiceTemplateCatalog.find_by_id(from_cid(id))
                 @right_cell_text = _("%{typ} in %{model} \"%{name}\"") % {:name => stc.name, :typ => ui_lookup(:models => "Service"), :model => ui_lookup(:model => "ServiceTemplateCatalog")}
               end
             else
               show_record(from_cid(id))
+              add_flash(@record.template_valid_error_message, :warning) unless @record.template_valid?
               if @record.atomic? && need_prov_dialogs?(@record.prov_type)
                 @miq_request = MiqRequest.find_by_id(@record.service_resources[0].resource_id)
                 prov_set_show_vars
