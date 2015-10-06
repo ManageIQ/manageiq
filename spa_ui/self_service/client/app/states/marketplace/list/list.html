@@ -1,5 +1,7 @@
+<div pf-data-toolbar id="templatesToolbar" config="vm.toolbarConfig"></div>
+
 <div class="ss-card-view">
-  <div ng-repeat="template in vm.serviceTemplates">
+  <div ng-repeat="template in vm.serviceTemplatesList">
     <ss-card heading="{{ ::template.name }}" more="{{ ::template.long_description || template.description }}"
            ng-click="vm.showDetails(template.id)" img=" {{ ::template.picture.image_href }}"></ss-card>
   </div>
