@@ -373,10 +373,6 @@ EOF
       it "without options" do
         VmdbTable.find_by_id(1).name.should == VmdbTable.vmdb_table_names.first
       end
-
-      it "with options" do
-        VmdbTable.find_by_id(1, :include => {}).name.should == VmdbTable.vmdb_table_names.first
-      end
     end
 
     context ".find_all_by_id" do
