@@ -4,10 +4,6 @@ require_relative "refresh_spec_common"
 describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
   include Openstack::RefreshSpecCommon
 
-  def root_disk_size_by_flavor(flavor_name)
-    flavor_name == "m1.tiny" ? 1.gigabytes : Openstack::RefreshSpecCommon::ROOT_DISK_SIZE_HASH[flavor_name]
-  end
-
   before(:each) do
     setup_ems('1.2.3.4', 'password_2WpEraURh')
     @environment = :havana
