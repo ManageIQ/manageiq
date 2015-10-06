@@ -3,7 +3,7 @@ require "spec_helper"
 describe Rbac do
   context "tenant scoping" do
     before do
-      @default_tenant = EvmSpecHelper.create_root_tenant
+      @default_tenant = Tenant.seed
       User.stub(:server_timezone => "UTC")
 
       @owner_tenant  = FactoryGirl.create(:tenant, :divisible => false, :parent => @default_tenant)
