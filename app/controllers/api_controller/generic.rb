@@ -43,10 +43,7 @@ class ApiController
     def add_resource(type, _id, data)
       cspec = collection_config[type]
       klass = collection_class(type)
-      if data.key?("id") || data.key?("href")
-        raise BadRequestError,
-              "Resource id or href should not be specified for creating a new #{type} resource"
-      end
+      raise_resource_id_or_href_specified_error(type) if data.key?("id") || data.key?("href")
       subcollections     = cspec[:subcollections]
       subcollection_data = Array(subcollections).each_with_object({}) do |sc, hash|
         if data.key?(sc.to_s)
@@ -56,7 +53,7 @@ class ApiController
       end
       rsc = klass.create(data)
       if rsc.id.nil?
-        raise BadRequestError, "Failed to add a new #{type} resource - #{rsc.errors.full_messages.join(', ')}"
+        raise_failed_to_add_resource_error(type, rsc)
       end
       rsc.save
       add_subcollection_data_to_resource(rsc, type, subcollection_data)
@@ -75,7 +72,7 @@ class ApiController
     def delete_resource(type, id = nil, _data = nil)
       klass = collection_class(type)
       id ||= @req[:c_id]
-      raise BadRequestError, "Must specify an id for deleting a #{type} resource" unless id
+      raise_must_specify_id_for_deletion_error(type) unless id
       api_log_info("Deleting #{type} id #{id}")
       resource_search(id, type, klass)
       delete_resource_action(klass, type, id)
@@ -100,7 +97,7 @@ class ApiController
         end
         resource
       else
-        raise BadRequestError, "Must specify an id for retiring a #{type} resource"
+        raise_must_specify_id_for_retiring_error(type)
       end
     end
 
@@ -108,20 +105,20 @@ class ApiController
       action = @req[:action].downcase
       id ||= @req[:c_id]
       if id.blank?
-        raise BadRequestError, "Must specify an id for invoking the custom action #{action} on a #{type} resource"
+        raise_must_specify_id_for_custom_action_error
       end
 
       api_log_info("Invoking #{action} on #{type} id #{id}")
       resource = resource_search(id, type, collection_class(type))
       unless resource_custom_action_names(resource).include?(action)
-        raise BadRequestError, "Unsupported Custom Action #{action} for the #{type} resource specified"
+        raise_unsupported_custom_action_error(action, type)
       end
       invoke_custom_action(type, resource, action, data)
     end
 
     def set_ownership_resource(type, id, data = nil)
-      raise BadRequestError, "Must specify an id for setting ownership of a #{type} resource" unless id
-      raise BadRequestError, "Must specify an owner or group for setting ownership data = #{data}" if data.blank?
+      raise_must_specify_id_for_setting_ownership_error unless id
+      raise_must_specify_owner_for_setting_ownership_error if data.blank?
 
       api_action(type, id) do |klass|
         resource_search(id, type, klass)
@@ -136,7 +133,7 @@ class ApiController
     def add_subcollection_data_to_resource(resource, type, subcollection_data)
       subcollection_data.each do |sc, sc_data|
         typed_target = "#{sc}_assign_resource"
-        raise BadRequestError, "Cannot assign #{sc} to a #{type} resource" unless respond_to?(typed_target)
+        raise_cannot_assign_subcollection_error unless respond_to?(typed_target)
         sc_data.each do |sr|
           unless sr.blank?
             collection, rid = parse_href(sr["href"])
