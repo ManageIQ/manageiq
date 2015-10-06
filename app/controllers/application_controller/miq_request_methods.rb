@@ -39,8 +39,8 @@ module ApplicationController::MiqRequestMethods
           end
         end
         if @edit.fetch_path(:new, :schedule_type, 0) == "schedule"
-          page << "ManageIQ.calendar.calDateFrom = new Date(#{@timezone_offset});"
-          page << "miqBuildCalendar();"
+          # TODO: verify; new Date(@timezone_offset) was definitely wrong, but is this the intent?
+          page << "miqBuildCalendar({ dateFrom: miqCalendarDateConversion(\"#{@timezone_offset}\") });"
         end
         if changed != session[:changed]
           session[:changed] = changed

@@ -109,9 +109,9 @@ module ApplicationController::Timelines
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page.replace("tl_options_div", :partial => "layouts/tl_options")
       page.replace("tl_div", :partial => "layouts/tl_detail")
-      page << "ManageIQ.calendar.calDateFrom = new Date(#{@tl_options[:sdate]});" unless @tl_options[:sdate].nil?
-      page << "ManageIQ.calendar.calDateTo = new Date(#{@tl_options[:edate]});" unless @tl_options[:edate].nil?
-      page << 'miqBuildCalendar();'
+      # TODO: probably need to fix :sdate, :edate format to fit
+      page << js_build_calendar(:date_from => @tl_options[:sdate], :date_to => @tl_options[:edate])
+
       if @tl_options[:tl_show] == "timeline"
         page << "$('#filter1').val('#{@tl_options[:fltr1]}');"
         page << "$('#filter2').val('#{@tl_options[:fltr2]}');"

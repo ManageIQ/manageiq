@@ -30,7 +30,7 @@ function miqOnLoad() {
     $('#compare_grid')[0].enableAutoWidth(true);
   }
 
-  miqBuildCalendar();
+  miqBuildCalendar();	// TODO remove from here
   miqLoadCharts();
 
   if (typeof miqLoadTL == "function") {
@@ -946,7 +946,7 @@ function miqDropComplete(event, ui) {
 }
 
 // Attach a calendar control to all text boxes that start with miq_date_
-function miqBuildCalendar() {
+function miqBuildCalendar(opts) {
   // Get all of the input boxes with ids starting with "miq_date_"
   var all = $('input[id^=miq_date_]');
 
@@ -960,16 +960,16 @@ function miqBuildCalendar() {
       element.datepicker();
     }
 
-    if (typeof ManageIQ.calendar.calDateFrom != "undefined") {
-      element.datepicker('setStartDate', ManageIQ.calendar.calDateFrom);
+    if (opts.dateFrom) {
+      element.datepicker('setStartDate', opts.dateFrom);
     }
 
-    if (typeof ManageIQ.calendar.calDateTo != "undefined") {
-      element.datepicker('setEndDate', ManageIQ.calendar.calDateTo);
+    if (opts.dateTo) {
+      element.datepicker('setEndDate', opts.dateTo);
     }
 
-    if (typeof miq_cal_skipDays != "undefined") {
-      element.datepicker('setDaysOfWeekDisabled', miq_cal_skipDays);
+    if (opts.skipDays) {
+      element.datepicker('setDaysOfWeekDisabled', opts.skipDays);
     }
 
     if (observeDateBackup != null) {
