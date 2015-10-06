@@ -7,6 +7,8 @@ class ChargebackRate < ActiveRecord::Base
 
   has_many :chargeback_rate_details, :dependent => :destroy
 
+  virtual_column :assigned?, :type => :boolean
+
   validates_presence_of     :description, :guid
   validates_uniqueness_of   :guid
   validates_uniqueness_of   :description, :scope => :rate_type
@@ -70,4 +72,10 @@ class ChargebackRate < ActiveRecord::Base
       end
     end
   end
+
+  def assigned?
+    assigned_tos = get_assigned_tos
+    assigned_tos == {:objects=>[], :tags=>[]} ? false : true
+  end
+
 end
