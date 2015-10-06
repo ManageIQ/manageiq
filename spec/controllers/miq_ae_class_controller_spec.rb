@@ -261,6 +261,7 @@ describe MiqAeClassController do
     end
 
     before do
+      login_as FactoryGirl.create(:user_with_group)
       MiqAeDomain.stub(:find_by_name).with("another_fqname").and_return(miq_ae_domain)
       MiqAeDomain.stub(:find_by_name).with("another_fqname2").and_return(miq_ae_domain2)
     end
