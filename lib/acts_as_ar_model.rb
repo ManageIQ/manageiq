@@ -169,9 +169,7 @@ class ActsAsArModel
   end
 
   def self.find_by_id(*id)
-    options = id.extract_options!
-    options.merge!(:conditions => {:id => id.first})
-    first(options)
+    find_by(:id => id.flatten.first)
   end
 
   def self.find_all_by_id(*ids)
