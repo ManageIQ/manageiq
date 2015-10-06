@@ -3,10 +3,8 @@ require "spec_helper"
 describe VmReconfigureRequest do
   let(:admin) { FactoryGirl.create(:user, :userid => "tester") }
   before do
-    server = FactoryGirl.create(:miq_server, :is_master => true)
+    _guid1, _server, @zone1 = EvmSpecHelper.create_guid_miq_server_zone
     @request = FactoryGirl.create(:vm_reconfigure_request, :userid => admin.userid)
-    @guid1 = server.guid
-    @zone1 = server.zone
 
     zone2  = FactoryGirl.create(:zone, :name => "zone_2")
     FactoryGirl.create(:miq_server, :zone => zone2)
@@ -35,7 +33,6 @@ describe VmReconfigureRequest do
     context "with no source" do
       it "should be the same as the request's zone" do
         @request.update_attributes(:options => {})
-        MiqServer.stub(:my_guid).and_return(@guid1)
         @request.my_zone.should eq(@zone1.name)
       end
     end
