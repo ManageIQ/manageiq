@@ -155,8 +155,8 @@ module MiqAeDatastore
     end
 
     def self.create_domain(domain)
-      ns = MiqAeNamespace.find_by_fqname(domain)
-      MiqAeNamespace.create!(:name => domain, :enabled => true, :priority => 100) unless ns
+      ns = MiqAeDomain.where(:name => domain).first
+      MiqAeDomain.create!(:name => domain, :enabled => true, :priority => 100, :tenant => Tenant.seed) unless ns
     end
 
     def self.load_xml_file(filename, domain)
