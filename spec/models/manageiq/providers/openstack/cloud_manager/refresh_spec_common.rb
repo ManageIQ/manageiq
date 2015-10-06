@@ -27,6 +27,10 @@ module Openstack
       end
     end
 
+    def root_disk_size_by_flavor(flavor_name)
+      flavor_name == "m1.tiny" ? 1.gigabytes : ROOT_DISK_SIZE_HASH[flavor_name]
+    end
+
     def assert_with_skips
       # skips configured modules
       expect(CloudVolume.count).to eq 0
