@@ -21,7 +21,9 @@ matrix:
 addons:
   postgresql: '9.4'
 before_install:
-- '[[ -z "$SPA_UI" ]] || nvm install 0.12'
+- 'node --version && nvm --version || true'
+- '[[ -z "$SPA_UI" ]] || nvm install v0.12.7'
+- '[[ -z "$SPA_UI" ]] || npm install -g npm@3.3.4'
 - 'echo "gem: --no-ri --no-rdoc --no-document" > ~/.gemrc'
 - travis_retry gem install bundler -v ">= 1.8.4"
 - "[[ -f certs/v2_key.dev ]] && cp certs/v2_key.dev certs/v2_key"
