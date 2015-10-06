@@ -31,8 +31,11 @@ class MiqOpenStackImage
       hardware  = "scsi0:0.present = \"TRUE\"\n"
       hardware += "scsi0:0.filename = \"#{@temp_image_file.path}\"\n"
 
+      diskFormat = @fog_image.get_image(@image_id).headers['X-Image-Meta-Disk_format']
+      $log.debug "diskFormat = #{diskFormat}"
+
       ost = OpenStruct.new
-      ost.diskFormat =@fog_image.get_image(@image_id).headers['X-Image-Meta-Disk_format']
+      ost.rawDisk = diskFormat == "raw"
       MiqVm.new(hardware, ost)
     end
   end
