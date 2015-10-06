@@ -120,7 +120,6 @@ describe VmReconfigureRequest do
                                                                    :logical_cpus     => 40,
                                                                    :numvcpus         => 10,
                                                                    :cores_per_socket => 4,
-                                                                   :virtual_hw_version => "07"
                                                                   )
                                   )
         @vm   = FactoryGirl.create(:vm_vmware, :host => @host, :hardware => FactoryGirl.create(:hardware, :virtual_hw_version => "07"))
@@ -142,7 +141,6 @@ describe VmReconfigureRequest do
                                                                    :logical_cpus     => 30,
                                                                    :numvcpus         => 15,
                                                                    :cores_per_socket => 2,
-                                                                   :virtual_hw_version => "07"
                                                                   )
                                   )
         vm2   = FactoryGirl.create(:vm_vmware, :host => host2, :hardware => FactoryGirl.create(:hardware, :virtual_hw_version => "07"))
@@ -164,7 +162,6 @@ describe VmReconfigureRequest do
                                                                 :logical_cpus     => 30,
                                                                 :numvcpus         => 15,
                                                                 :cores_per_socket => 2,
-                                                                :virtual_hw_version => "07"
                                                                )
                                )
       vm2  = FactoryGirl.create(:vm_vmware, :host => host, :hardware => FactoryGirl.create(:hardware, :virtual_hw_version => "07"))
