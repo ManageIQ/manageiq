@@ -32,26 +32,6 @@ I18n.load_path = Dir[LOCALES].sort
 I18n.enforce_available_locales = true
 I18n.backend.load_translations
 
-TIMEOUT = 300
-
-def ask_with_timeout(*args, &block)
-  Timeout.timeout(TIMEOUT) { ask_without_timeout(*args, &block) }
-end
-alias_method :ask_without_timeout, :ask
-alias_method :ask, :ask_with_timeout
-
-def choose_with_timeout(*args, &block)
-  Timeout.timeout(TIMEOUT) { choose_without_timeout(*args, &block) }
-end
-alias_method :choose_without_timeout, :choose
-alias_method :choose, :choose_with_timeout
-
-def agree_with_timeout(*args, &block)
-  Timeout.timeout(TIMEOUT) { agree_without_timeout(*args, &block) }
-end
-alias_method :agree_without_timeout, :agree
-alias_method :agree, :agree_with_timeout
-
 $terminal.wrap_at = 80
 $terminal.page_at = 21
 
