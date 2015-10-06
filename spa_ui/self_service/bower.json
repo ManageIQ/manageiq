@@ -24,19 +24,16 @@
     "toastr": "~2.1.1",
     "font-awesome": "~4.4.0",
     "angular": "~1.4.6",
-    "angular-resource": "~1.4.0",
-    "angular-animate": "~1.4.0",
-    "angular-sanitize": "~1.4.0",
-    "angular-messages": "~1.4.0",
+    "angular-resource": "~1.4.6",
+    "angular-animate": "~1.4.6",
+    "angular-sanitize": "~1.4.6",
+    "angular-messages": "~1.4.6",
     "angular-ui-router": "~0.2.15",
-    "angular-mocks": "~1.5.0",
+    "angular-mocks": "~1.4.6",
     "patternfly": "~2.3.0",
     "angular-patternfly": "~2.3.1",
     "angular-bootstrap": "~0.13.0",
     "angular-base64": "~2.0.5"
-  },
-  "resolutions": {
-    "angular": "~1.4.6"
   },
   "overrides": {
     "patternfly": {
