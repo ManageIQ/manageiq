@@ -35,22 +35,29 @@ describe ManageIQ::Providers::Azure::CloudManager do
       assert_specific_flavor
       assert_specific_vm_powered_on
       assert_specific_vm_powered_off
+      assert_specific_orchestration_template
+      assert_specific_orchestration_stack
     end
   end
 
   def assert_table_counts
     ExtManagementSystem.count.should eql(1)
     Flavor.count.should eql(41)
-    AvailabilityZone.count.should eql(2)
-    VmOrTemplate.count.should eql(5)
-    Vm.count.should eql(5)
-    Disk.count.should eql(7)
+    AvailabilityZone.count.should eql(3)
+    VmOrTemplate.count.should eql(8)
+    Vm.count.should eql(8)
+    Disk.count.should eql(10)
     GuestDevice.count.should eql(0)
-    Hardware.count.should eql(5)
-    Network.count.should eql(10)
-    OperatingSystem.count.should eql(5)
+    Hardware.count.should eql(8)
+    Network.count.should eql(16)
+    OperatingSystem.count.should eql(8)
     Relationship.count.should eql(0)
-    MiqQueue.count.should eql(5)
+    MiqQueue.count.should eql(8)
+    OrchestrationTemplate.count.should eql(3)
+    OrchestrationStack.count.should eql(7)
+    OrchestrationStackParameter.count.should eql(80)
+    OrchestrationStackOutput.count.should eql(7)
+    OrchestrationStackResource.count.should eql(36)
   end
 
   def assert_ems
@@ -59,9 +66,11 @@ describe ManageIQ::Providers::Azure::CloudManager do
       :uid_ems     => "a50f9983-d1a2-4a8d-be7d-123456789012"
     )
     @ems.flavors.size.should eql(41)
-    @ems.availability_zones.size.should eql(2)
-    @ems.vms_and_templates.size.should eql(5)
-    @ems.vms.size.should eql(5)
+    @ems.availability_zones.size.should eql(3)
+    @ems.vms_and_templates.size.should eql(8)
+    @ems.vms.size.should eql(8)
+    @ems.orchestration_stacks.size.should eql(7)
+    @ems.direct_orchestration_stacks.size.should eql(6)
   end
 
   def assert_specific_flavor
@@ -96,12 +105,12 @@ describe ManageIQ::Providers::Azure::CloudManager do
     v = ManageIQ::Providers::Azure::CloudManager::Vm.where(:name => "ERP", :raw_power_state => "VM running").first
     v.should have_attributes(
       :template              => false,
-      :ems_ref               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\ERP",
+      :ems_ref               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\microsoft.compute/virtualmachines\\ERP",
       :ems_ref_obj           => nil,
-      :uid_ems               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\ERP",
+      :uid_ems               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\microsoft.compute/virtualmachines\\ERP",
       :vendor                => "Microsoft",
       :power_state           => "on",
-      :location              => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\ERP",
+      :location              => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\microsoft.compute/virtualmachines\\ERP",
       :tools_status          => nil,
       :boot_time             => nil,
       :standby_action        => nil,
@@ -154,7 +163,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
     network = v.hardware.networks.where(:description => "public").first
     network.should have_attributes(
       :description => "public",
-      :ipaddress   => "137.135.124.168",
+      :ipaddress   => "40.76.27.54",
       :hostname    => "ipconfig1"
     )
     network = v.hardware.networks.where(:description => "private").first
@@ -185,12 +194,12 @@ describe ManageIQ::Providers::Azure::CloudManager do
   def assert_specific_vm_powered_off_attributes(v)
     v.should have_attributes(
       :template              => false,
-      :ems_ref               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\MIQ2",
+      :ems_ref               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\microsoft.compute/virtualmachines\\MIQ2",
       :ems_ref_obj           => nil,
-      :uid_ems               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\MIQ2",
+      :uid_ems               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\microsoft.compute/virtualmachines\\MIQ2",
       :vendor                => "Microsoft",
       :power_state           => "off",
-      :location              => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\MIQ2",
+      :location              => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\microsoft.compute/virtualmachines\\MIQ2",
       :tools_status          => nil,
       :boot_time             => nil,
       :standby_action        => nil,
@@ -225,5 +234,85 @@ describe ManageIQ::Providers::Azure::CloudManager do
     v.hardware.guest_devices.size.should eql(0)
     v.hardware.nics.size.should eql(0)
     v.hardware.networks.size.should eql(2)
+  end
+
+  def assert_specific_orchestration_template
+    @orch_template = OrchestrationTemplateAzure.where(:name => "spec-deployment1-dont-delete").first
+    @orch_template.should have_attributes(
+      :md5 => "3036f29db21966d557c9865e107d93b0",
+    )
+    @orch_template.description.should eql('contentVersion: 1.0.0.0')
+    @orch_template.content.should start_with("{\n  \"$schema\": \"http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json\"")
+  end
+
+  def assert_specific_orchestration_stack
+    @orch_stack = ManageIQ::Providers::Azure::CloudManager::OrchestrationStack.where(:name => "spec-deployment1-dont-delete").first
+    @orch_stack.should have_attributes(
+      :status         => "Succeeded",
+      :description    => 'spec-deployment1-dont-delete',
+      :resource_group => 'ComputeVMs',
+      :ems_ref        => '/subscriptions/462f2af8-e67e-40c6-9fbf-02824d1dd485/resourceGroups/ComputeVMs/deployments/spec-deployment1-dont-delete',
+    )
+
+    assert_specific_orchestration_stack_parameters
+    assert_specific_orchestration_stack_resources
+    assert_specific_orchestration_stack_outputs
+    assert_specific_orchestration_stack_associations
+  end
+
+  def assert_specific_orchestration_stack_parameters
+    parameters = @orch_stack.parameters.order("ems_ref")
+    parameters.should have(13).items
+
+    # assert one of the parameter models
+    parameters[1].should have_attributes(
+      :name    => "adminUsername",
+      :value   => "serveradmin",
+      :ems_ref => '/subscriptions/462f2af8-e67e-40c6-9fbf-02824d1dd485/resourceGroups/ComputeVMs/deployments/spec-deployment1-dont-delete\adminUsername'
+    )
+  end
+
+  def assert_specific_orchestration_stack_resources
+    resources = @orch_stack.resources.order("ems_ref")
+    resources.should have(9).items
+
+    # assert one of the resource models
+    resources.first.should have_attributes(
+      :name                   => "myAvSet",
+      :logical_resource       => "myAvSet",
+      :physical_resource      => "6543c69e-1c83-47d1-96a6-d08d612fea76",
+      :resource_category      => "Microsoft.Compute/availabilitySets",
+      :resource_status        => "Succeeded",
+      :resource_status_reason => "OK",
+      :ems_ref                => '/subscriptions/462f2af8-e67e-40c6-9fbf-02824d1dd485/resourceGroups/ComputeVMs/providers/Microsoft.Compute/availabilitySets/myAvSet'
+    )
+  end
+
+  def assert_specific_orchestration_stack_outputs
+    outputs = ManageIQ::Providers::Azure::CloudManager::OrchestrationStack.where(:name => "spec-deployment2-dont-delete").first.outputs
+    outputs.should have(1).items
+    outputs[0].should have_attributes(
+      :key         => "siteUri",
+      :value       => "hard-coded output for test",
+      :description => "siteUri",
+      :ems_ref     => '/subscriptions/462f2af8-e67e-40c6-9fbf-02824d1dd485/resourceGroups/ComputeVMs/deployments/spec-deployment2-dont-delete\siteUri'
+    )
+  end
+
+  def assert_specific_orchestration_stack_associations
+    # orchestration stack belongs to a provider
+    @orch_stack.ext_management_system.should eql(@ems)
+
+    # orchestration stack belongs to an orchestration template
+    @orch_stack.orchestration_template.should eql(@orch_template)
+
+    # orchestration stack can be nested
+    parent_stack = ManageIQ::Providers::Azure::CloudManager::OrchestrationStack.where(:name => "spec-deployment2-dont-delete").first
+    child_stack  = ManageIQ::Providers::Azure::CloudManager::OrchestrationStack.where(:name => "spec-nested-deployment-dont-delete").first
+    child_stack.parent.should eql(parent_stack)
+
+    # orchestration stack can have vms
+    vm = ManageIQ::Providers::Azure::CloudManager::Vm.where(:name => "spec-VM1").first
+    vm.orchestration_stack.should eql(@orch_stack)
   end
 end
