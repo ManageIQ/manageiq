@@ -49,6 +49,144 @@ describe ApiController do
       expect_query_result(:tags, :tag_count)
     end
 
+    context "with an appropriate role" do
+      it "can create a tag with category by href" do
+        api_basic_authorize collection_action_identifier(:tags, :create)
+        category = FactoryGirl.create(:category)
+        options = {:name => "test_tag", :description => "Test Tag", :category => {:href => categories_url(category.id)}}
+
+        expect { run_post tags_url, options }.to change(Tag, :count).by(1)
+
+        tag = Tag.find(@result["results"].first["id"])
+        tag_category = Category.find(tag.category.id)
+        expect(tag_category).to eq(category)
+
+        expect_request_success
+      end
+
+      it "can create a tag with a category by id" do
+        api_basic_authorize collection_action_identifier(:tags, :create)
+        category = FactoryGirl.create(:category)
+
+        expect do
+          run_post tags_url, :name => "test_tag", :description => "Test Tag", :category => {:id => category.id}
+        end.to change(Tag, :count).by(1)
+
+        tag = Tag.find(@result["results"].first["id"])
+        tag_category = Category.find(tag.category.id)
+        expect(tag_category).to eq(category)
+
+        expect_request_success
+      end
+
+      it "can create a tag as a subresource of a category" do
+        api_basic_authorize collection_action_identifier(:tags, :create)
+        category = FactoryGirl.create(:category)
+
+        expect do
+          run_post "#{categories_url(category.id)}/tags", :name => "test_tag", :description => "Test Tag"
+        end.to change(Tag, :count).by(1)
+        tag = Tag.find(@result["results"].first["id"])
+        tag_category = Category.find(tag.category.id)
+        expect(tag_category).to eq(category)
+
+        expect_request_success
+      end
+
+      it "returns bad request when the category doesn't exist" do
+        api_basic_authorize collection_action_identifier(:tags, :create)
+
+        run_post tags_url, :name => "test_tag", :description => "Test Tag"
+
+        expect_bad_request
+      end
+
+      it "can update a tag's name" do
+        api_basic_authorize action_identifier(:tags, :edit)
+        classification = FactoryGirl.create(:classification_tag)
+        category = FactoryGirl.create(:category, :children => [classification])
+        tag = classification.tag
+
+        expect do
+          run_post tags_url(tag.id), gen_request(:edit, :name => "new_name")
+        end.to change { classification.reload.tag.name }.to("#{category.tag.name}/new_name")
+
+        expect_request_success
+      end
+
+      it "can update a tag's description" do
+        api_basic_authorize action_identifier(:tags, :edit)
+        classification = FactoryGirl.create(:classification_tag)
+        FactoryGirl.create(:category, :children => [classification])
+        tag = classification.tag
+
+        expect do
+          run_post tags_url(tag.id), gen_request(:edit, :description => "New Description")
+        end.to change { tag.reload.classification.description }.to("New Description")
+
+        expect_request_success
+      end
+
+      it "can delete a tag through POST" do
+        api_basic_authorize action_identifier(:tags, :delete)
+        tag = Tag.create(:name => "Test tag")
+
+        expect { run_post tags_url(tag.id), :action => :delete }.to change(Tag, :count).by(-1)
+
+        expect_request_success
+      end
+
+      it "can delete a tag through DELETE" do
+        api_basic_authorize action_identifier(:tags, :delete)
+        tag = Tag.create(:name => "Test tag")
+
+        expect { run_delete tags_url(tag.id) }.to change(Tag, :count).by(-1)
+
+        expect_request_success_with_no_content
+      end
+    end
+
+    context "without an appropriate role" do
+      it "cannot create a new tag" do
+        api_basic_authorize
+
+        expect do
+          run_post tags_url, :name => "test_tag", :description => "Test Tag"
+        end.not_to change(Tag, :count)
+
+        expect_request_forbidden
+      end
+
+      it "cannot update a tag" do
+        api_basic_authorize
+        tag = Tag.create(:name => "Old name")
+
+        expect do
+          run_post tags_url(tag.id), gen_request(:edit, :name => "New name")
+        end.not_to change { tag.reload.name }
+
+        expect_request_forbidden
+      end
+
+      it "cannot delete a tag through POST" do
+        api_basic_authorize
+        tag = Tag.create(:name => "Test tag")
+
+        expect { run_post tags_url(tag.id), :action => :delete }.not_to change(Tag, :count)
+
+        expect_request_forbidden
+      end
+
+      it "cannot delete a tag through DELETE" do
+        api_basic_authorize
+        tag = Tag.create(:name => "Test tag")
+
+        expect { run_delete tags_url(tag.id) }.not_to change(Tag, :count)
+
+        expect_request_forbidden
+      end
+    end
+
     it "query a tag with an invalid Id" do
       api_basic_authorize
 

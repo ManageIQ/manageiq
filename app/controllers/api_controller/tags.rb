@@ -26,7 +26,59 @@ class ApiController
       end
     end
 
+    def tags_create_resource(parent, _type, _id, data)
+      entry = parent.add_entry(data)
+      raise BadRequestError, "#{entry.errors.full_messages.join(', ')}" unless entry.valid?
+      entry.tag
+    rescue => err
+      raise BadRequestError, "Could not create a new tag - #{err}"
+    end
+
+    def create_resource_tags(_type, _id, data)
+      if data.key?("id") || data.key?("href")
+        raise BadRequestError,
+              "Resource id or href should not be specified for creating a new tag resource"
+      end
+      category_data = data.delete("category") { {} }
+      category = fetch_category(category_data)
+      unless category
+        category_rep = category_data.map { |k, v| "#{k} = #{v}" }.join(', ')
+        raise BadRequestError, "Could not find category with data #{category_rep}"
+      end
+      begin
+        entry = category.add_entry(data)
+        raise BadRequestError, "#{entry.errors.full_messages.join(', ')}" unless entry.valid?
+        entry.tag
+      rescue => err
+        raise BadRequestError, "Could not create a new tag - #{err}"
+      end
+    end
+
+    def edit_resource_tags(type, id, data)
+      klass = collection_class(type)
+      tag = resource_search(id, type, klass)
+      entry = Classification.find_by_tag_id(tag.id)
+      raise BadRequestError, "Failed to find tag/#{id} resource" unless entry
+
+      if data["name"].present?
+        tag.update_attribute(:name, Classification.name2tag(data["name"], entry.parent_id, TAG_NAMESPACE))
+      end
+      entry.update_attributes(data.except(*ID_ATTRS))
+      entry.tag
+    end
+
     private
+
+    def fetch_category(data)
+      if data.key?("id")
+        category_id = data["id"]
+      elsif data.key?("href")
+        _, category_id = parse_href(data["href"])
+      else
+        raise BadRequestError, "Category id or href needs to be specified for creating a new tag resource"
+      end
+      Category.find_by_id(category_id)
+    end
 
     def tag_ident(tag_spec)
       "Tag: category:'#{tag_spec[:category]}' name:'#{tag_spec[:name]}'"

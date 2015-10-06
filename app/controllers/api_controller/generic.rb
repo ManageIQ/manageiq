@@ -48,18 +48,22 @@ class ApiController
               "Resource id or href should not be specified for creating a new #{type} resource"
       end
       subcollections     = cspec[:subcollections]
-      subcollection_data = subcollections.each_with_object({}) do |sc, hash|
+      subcollection_data = Array(subcollections).each_with_object({}) do |sc, hash|
         if data.key?(sc.to_s)
           hash[sc] = data[sc.to_s]
           data.delete(sc.to_s)
         end
       end
       rsc = klass.create(data)
-      raise BadRequestError, "Failed to add a new #{type} resource" if rsc.id.nil?
+      if rsc.id.nil?
+        raise BadRequestError, "Failed to add a new #{type} resource - #{rsc.errors.full_messages.join(', ')}"
+      end
       rsc.save
       add_subcollection_data_to_resource(rsc, type, subcollection_data)
       klass.find(rsc.id)
     end
+
+    alias_method :create_resource, :add_resource
 
     def edit_resource(type, id, data)
       klass = collection_class(type)

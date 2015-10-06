@@ -62,6 +62,36 @@
     - :collection
     :methods: *70174834086080
     :klass: AvailabilityZone
+  :categories:
+    :description: Categories
+    :options:
+    - :collection
+    :methods: *70174834085620
+    :klass: Category
+    :subcollections:
+    - :tags
+    :collection_actions:
+      :post:
+      - :name: edit
+        :identifier: ops_settings
+      - :name: create
+        :identifier: ops_settings
+      - :name: delete
+        :identifier: ops_settings
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: ops_settings
+      - :name: delete
+        :identifier: ops_settings
+      :delete:
+      - :name: delete
+        :identifier: ops_settings
+    :tags_subcollection_actions:
+      :post:
+      - :name: create
+        :identifier: ops_settings
+
   :chargebacks:
     :description: Chargebacks
     :options:
@@ -746,8 +776,27 @@
     - :subcollection
     :methods: *70174834085620
     :klass: Tag
+    :collection_actions:
+      :post:
+        - :name: create
+          :identifier: ops_settings
+        - :name: edit
+          :identifier: ops_settings
+        - :name: delete
+          :identifier: ops_settings
+    :resource_actions:
+      :post:
+        - :name: edit
+          :identifier: ops_settings
+        - :name: delete
+          :identifier: ops_settings
+      :delete:
+        - :name: delete
+          :identifier: ops_settings
     :subcollection_actions:
       :post:
+      - :name: create
+        :identifier: ops_settings
       - :name: assign
       - :name: unassign
     :subresource_actions:

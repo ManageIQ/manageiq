@@ -168,7 +168,7 @@ class ApiController
     private
 
     def resource_search(id, type, klass)
-      res = Rbac.filtered([klass.find(id)], :userid => @auth_user).first
+      res = Rbac.filtered([klass.find(id)], :userid => @auth_user, :class => klass).first
       raise Forbidden, "Access to the resource #{type}/#{id} is forbidden" unless res
       res
     end
