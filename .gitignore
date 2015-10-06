@@ -29,6 +29,7 @@ private_test
 REGION
 SyntaxCheck
 xfer_*.xml
+.ruby-version
 
 # app/controllers/
 app/controllers/new_module.rb
