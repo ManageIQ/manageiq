@@ -82,7 +82,7 @@ describe MiqAeDatastore do
   it ".upload" do
     fd = double(:original_filename => "dummy.zip", :read => "junk", :eof => true, :close => true)
     import_file = File.expand_path(File.join(Rails.root, "tmp/miq_automate_engine", "dummy.zip"))
-    MiqAeDatastore.should_receive(:import_yaml_zip).with(import_file, "*").once
+    MiqAeDatastore.should_receive(:import_yaml_zip).with(import_file, "*", nil).once
 
     MiqAeDatastore.upload(fd, "dummy.zip")
   end
@@ -105,7 +105,7 @@ describe MiqAeDatastore do
   it "temporary file cleanup for successful import" do
     fd = double(:original_filename => "dummy.zip", :read => "junk", :eof => true, :close => true)
     import_file = File.expand_path(File.join(Rails.root, "tmp/miq_automate_engine", "dummy.zip"))
-    MiqAeDatastore.should_receive(:import_yaml_zip).with(import_file, "*").once
+    MiqAeDatastore.should_receive(:import_yaml_zip).with(import_file, "*", nil).once
     MiqAeDatastore.upload(fd, "dummy.zip")
     File.exist?(import_file).should be_false
   end

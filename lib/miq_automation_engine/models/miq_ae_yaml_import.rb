@@ -8,6 +8,8 @@ class MiqAeYamlImport
     @domain_name = domain
     @options     = options
     @restore     = @options.fetch('restore', false)
+    tenant_id    = @options['tenant_id']
+    @tenant      = @options['tenant'] || (tenant_id ? Tenant.find_by!(:id => tenant_id) : Tenant.root_tenant)
   end
 
   def import
@@ -71,7 +73,7 @@ class MiqAeYamlImport
     domain_name = domain_yaml.fetch_path('object', 'attributes', 'name')
     domain_obj = MiqAeDomain.find_by_fqname(domain_name, false)
     track_stats('domain', domain_obj)
-    domain_obj ||= add_domain(domain_yaml) unless @preview
+    domain_obj ||= add_domain(domain_yaml, @tenant) unless @preview
     if @options['namespace']
       import_namespace(File.join(domain_folder, @options['namespace']), domain_obj, domain_name)
     else
@@ -100,6 +102,7 @@ class MiqAeYamlImport
 
   def reset_domain_attributes(domain_yaml)
     domain_yaml.delete_path('object', 'attributes', 'enabled') unless @restore
+    domain_yaml.delete_path('object', 'attributes', 'tenant_id') unless @restore
     domain_yaml.delete_path('object', 'attributes', 'priority')
   end
 

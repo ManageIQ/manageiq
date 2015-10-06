@@ -12,6 +12,7 @@ module AutomationExampleGroup
       RSpec.configure do |config|
         config.before(:suite) do
           puts "** Resetting ManageIQ domain"
+          Tenant.seed
           MiqAeDatastore.reset
           MiqAeDatastore.reset_manageiq_domain
         end
