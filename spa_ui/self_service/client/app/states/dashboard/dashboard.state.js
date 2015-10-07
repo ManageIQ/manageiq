@@ -31,7 +31,7 @@
 
   /** @ngInject */
   function resolveRequests(CollectionsApi) {
-    return CollectionsApi.query('provision_requests');
+    return CollectionsApi.query('service_requests');
   }
 
   /** @ngInject */
