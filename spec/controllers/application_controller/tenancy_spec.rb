@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe DashboardController do
   before do
-    EvmSpecHelper.create_guid_miq_server_zone
+    Tenant.seed
   end
 
   describe "#current_tenant" do
