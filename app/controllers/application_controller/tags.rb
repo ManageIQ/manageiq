@@ -1,68 +1,6 @@
 module ApplicationController::Tags
   extend ActiveSupport::Concern
 
-  # Assign/unassign classifications to a set of objects
-  def tagging
-    @in_a_form = true
-    drop_breadcrumb(:name => "Tag Assignment", :url => "/#{session[:controller]}/tagging")
-    session[:cat] = nil                 # Clear current category
-    tagging_build_screen
-    area = request.parameters["controller"]
-    if role_allows(:feature => "#{area}_tag")
-      @tabs = [["tagging", nil], ["classifying", "#{current_tenant.name} Tags"], %w(tagging MyTags)]
-    else
-      @tabs = [["tagging", nil], %w(tagging MyTags)]
-    end
-    render(:action => "show")
-  end
-
-  # Assign a tag to a set of objects
-  def mytag_assign
-    if !params[:mytag][:value].blank?        # Did user pulldown a tag
-      newtags = params[:mytag][:value]        # Yes, use it
-    else
-      newtags = params[:newtags]              # No, grab entered tags
-      invalid_chars = newtags.gsub(/[\w\s]/, "")
-      if invalid_chars != ""
-        invalid_chars = invalid_chars.split(//).uniq.join # Get the unique invalid characters
-        if invalid_chars.length > 1
-          msg = "Invalid characters"
-        else
-          msg = "Invalid character"
-        end
-        add_flash(msg + " #{invalid_chars} found in entered tags, only letters, numbers, and underscores are allowed.", :error)
-        render :update do |page|
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
-        return
-      end
-    end
-
-    session[:tag_items].each do |item|
-      session[:tag_db].find(item).tag_add(newtags, :cat => session[:userid])
-    end
-    tagging_build_screen
-
-    render :update do |page|
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page.replace("tab_div", :partial => "layouts/mytags")
-      newtags.split.each do |tag|
-        page << jquery_pulsate_element("mytag_#{j_str(tag.downcase)}")
-      end
-    end
-  end
-
-  # Remove a tag from a set of objects
-  def mytag_remove
-    session[:tag_items].each do |item|
-      session[:tag_db].find(item).tag_remove(params[:tag], :cat => session[:userid])
-    end
-    tagging_build_screen
-    render :update do |page|
-      page.replace("tab_div", :partial => "layouts/mytags")
-    end
-  end
-
   # Edit user or group tags
   def tagging_edit(db = nil, assert = true)
     assert_privileges("#{controller_for_common_methods}_tag") if assert
@@ -82,16 +20,6 @@ module ApplicationController::Tags
   alias_method :vm_tag, :tagging_edit
   alias_method :miq_template_tag, :tagging_edit
   alias_method :service_tag, :tagging_edit
-
-  # Assign/unassign classifications to a set of objects
-  def classifying
-    drop_breadcrumb(:name => "Tag Assignment", :url => "/#{request.parameters["controller"]}/tagging")
-    session[:cat] = nil                 # Clear current category
-    classify_build_screen
-    @tabs = [["classifying", nil], ["classifying", "#{current_tenant.name} Tags"], %w(tagging MyTags)]
-    @in_a_form = true
-    render :action => "show"
-  end
 
   # New classification category chosen on the classify screen
   def classify_new_cat
@@ -457,16 +385,10 @@ module ApplicationController::Tags
     get_tag_items
     drop_breadcrumb(:name => "Tag Assignment", :url => "/#{session[:controller]}/tagging_edit")
     render :update do |page|
-      area = request.parameters["controller"]
-      if role_allows(:feature => "#{area}_tag")
-        if false    # commenting older code that had old way of tagging along with MyTags tab
-          page.redirect_to :action => 'classifying'             # redirect to build the tagging screen
-        else
-          page.redirect_to :action => 'tagging_edit', :id => params[:id], :db => db, :escape => false             # redirect to build the tagging screen
-        end
-      else
-        page.redirect_to :action => 'tagging'             # redirect to build the tagging screen
-      end
+      page.redirect_to :action => 'tagging_edit',
+                       :id     => params[:id],
+                       :db     => db,
+                       :escape => false
     end
   end
 
