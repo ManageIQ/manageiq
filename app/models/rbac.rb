@@ -337,12 +337,7 @@ module Rbac
   end
 
   def self.find_descendants(descendant_klass, options = {})
-    search_options                  = options.dup
-    search_options[:class]          = descendant_klass
-    search_options[:results_format] = :objects
-
-    results     = search(search_options)
-    descendants = results.first
+    search(options.merge(:class => descendant_klass, :results_format => :objects)).first
   end
 
   def self.ids_via_descendants(klass, descendant_types, options = {})
