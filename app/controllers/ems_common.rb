@@ -309,7 +309,7 @@ module EmsCommon
       end
     when "validate"
       verify_ems = model.model_from_emstype(@edit[:new][:emstype]).new
-      validate_credentials verify_ems
+      queue_credential_validation_task verify_ems
     end
   end
 
@@ -435,27 +435,66 @@ module EmsCommon
 
   def update_button_validate
     verify_ems = find_by_id_filtered(model, params[:id])
-    validate_credentials verify_ems
+    queue_credential_validation_task verify_ems
   end
   private :update_button_validate
 
-  def validate_credentials(verify_ems)
+  def queue_credential_validation_task(verify_ems)
     set_record_vars(verify_ems, :validate)
+    creds = set_record_creds(verify_ems, @edit[:new])
+
     @in_a_form = true
     @changed = session[:changed]
 
     # validate button should say "revalidate" if the form is unchanged
     revalidating = !edit_changed?
-    result, details = verify_ems.authentication_check(params[:type], :save => revalidating)
-    if result
-      add_flash(_("Credential validation was successful"))
+
+    args = {
+      :ems        => verify_ems,
+      :creds      => creds,
+      :auth_type  => params[:type],
+      :revalidate => revalidating,
+    }
+
+    task_opts = {
+      :action => "Validate EMS Provider Credentials",
+      :userid => session[:userid],
+    }
+
+    queue_opts = {
+      :args        => [args],
+      :class_name  => self.class.model.name,
+      :method_name => "credential_validation_task",
+      :queue_name  => "generic",
+      :role        => "ems_operations",
+      :zone        => args[:ems].zone.name,
+    }
+
+    # Submit the credential validation task
+    task_id = MiqTask.generic_action_with_callback(task_opts, queue_opts)
+
+    # Wait for the task to finish
+    task = MiqTask.wait_for_taskid(task_id, :timeout => 30)
+
+    # Did credential validation succeed?
+    error = task.nil? || MiqTask.status_error?(task.status) || MiqTask.status_timeout?(task.status)
+
+    # Set the error message that will be seen by the user
+    if task.nil?
+      error_message = "Task Error"
+    elsif MiqTask.status_error?(task.status) || MiqTask.status_timeout?(task.status)
+      error_message = task.message
+    end
+
+    if error
+      add_flash(_("Credential validation was not successful: %s") % error_message, :error)
     else
-      add_flash(_("Credential validation was not successful: %s") % details, :error)
+      add_flash(_("Credential validation was successful"))
     end
 
     render_flash
   end
-  private :validate_credentials
+  private :queue_credential_validation_task
 
   # handle buttons pressed on the button bar
   def button
@@ -875,6 +914,46 @@ module EmsCommon
     set_verify_status
   end
 
+  def set_record_creds(ems, edit_new)
+    creds = {}
+    creds[:default] = {
+      :userid   => edit_new[:default_userid],
+      :password => edit_new[:default_password]
+    } unless edit_new[:default_userid].blank?
+
+    if edit_new[:metrics_userid].present? && ems.supports_authentication?(:metrics)
+      creds[:metrics] = {
+        :userid   => edit_new[:metrics_userid],
+        :password => edit_new[:metrics_password]
+      }
+    end
+    if edit_new.present? && ems.supports_authentication?(:amqp)
+      creds[:amqp] = {
+        :userid   => edit_new[:amqp_userid],
+        :password => edit_new[:amqp_password]
+      }
+    end
+    if edit_new[:ssh_keypair_userid].present? && ems.supports_authentication?(:ssh_keypair)
+      creds[:ssh_keypair] = {
+        :userid   => edit_new[:ssh_keypair_userid],
+        :auth_key => edit_new[:ssh_keypair_password]
+      }
+    end
+    if edit_new[:bearer_token].present? && ems.supports_authentication?(:bearer)
+      creds[:bearer] = {
+        :auth_key => edit_new[:bearer_token],
+        :userid   => "_" # Must have userid
+      }
+    end
+    if edit_new[:service_account].present? && ems.supports_authentication?(:auth_key)
+      creds[:default] = {
+        :auth_key => edit_new[:service_account],
+        :userid   => "_"
+      }
+    end
+    creds
+  end
+
   # Set record variables to new values
   def set_record_vars(ems, mode = nil)
     ems.name = @edit[:new][:name]
@@ -897,23 +976,7 @@ module EmsCommon
       ems.host_default_vnc_port_end = @edit[:new][:host_default_vnc_port_end].blank? ? nil : @edit[:new][:host_default_vnc_port_end].to_i
     end
 
-    creds = {}
-    creds[:default] = {:userid => @edit[:new][:default_userid], :password => @edit[:new][:default_password]} unless @edit[:new][:default_userid].blank?
-    if ems.supports_authentication?(:metrics) && !@edit[:new][:metrics_userid].blank?
-      creds[:metrics] = {:userid => @edit[:new][:metrics_userid], :password => @edit[:new][:metrics_password]}
-    end
-    if ems.supports_authentication?(:amqp) && !@edit[:new][:amqp_userid].blank?
-      creds[:amqp] = {:userid => @edit[:new][:amqp_userid], :password => @edit[:new][:amqp_password]}
-    end
-    if ems.supports_authentication?(:ssh_keypair) && !@edit[:new][:ssh_keypair_userid].blank?
-      creds[:ssh_keypair] = {:userid => @edit[:new][:ssh_keypair_userid], :auth_key => @edit[:new][:ssh_keypair_password]}
-    end
-    if ems.supports_authentication?(:bearer) && !@edit[:new][:bearer_token].blank?
-      creds[:bearer] = {:auth_key => @edit[:new][:bearer_token], :userid => "_"} # Must have userid
-    end
-    if ems.supports_authentication?(:auth_key) && !@edit[:new][:service_account].blank?
-      creds[:default] = {:auth_key => @edit[:new][:service_account], :userid => "_"}
-    end
+    creds = set_record_creds(ems, @edit[:new])
     ems.update_authentication(creds, :save => (mode != :validate))
   end
 

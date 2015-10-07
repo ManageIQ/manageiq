@@ -511,4 +511,23 @@ class ExtManagementSystem < ActiveRecord::Base
   def self.datastore?
     IsoDatastore.where(:ems_id => all).exists?
   end
+
+  def credential_validation(auth_type, creds, revalidate)
+    update_authentication(creds, :save => false)
+
+    ok, error_message = authentication_check(auth_type, :save => revalidate)
+
+    raise MiqException::Error, error_message unless ok
+  end
+
+  def self.credential_validation_task(options)
+    ems, creds, auth_type, revalidate, task_id =
+      options.values_at(:ems, :creds, :auth_type, :revalidate, :task_id)
+
+    task = MiqTask.find_by_id(task_id)
+    task.update_status("Active", "Ok",
+                       "Starting credential validation for #{ems[:name]}")
+
+    ems.credential_validation(auth_type, creds, revalidate)
+  end
 end
