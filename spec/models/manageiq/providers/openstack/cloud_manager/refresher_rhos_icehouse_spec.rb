@@ -6,11 +6,11 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
 
   before(:each) do
     setup_ems('1.2.3.4', 'password_2WpEraURh')
-    @environment = :havana
+    @environment = :icehouse
   end
 
   it "will perform a full refresh against RHOS #{@environment}" do
-    2.times do  # Run twice to verify that a second run with existing data does not change anything
+    2.times do # Run twice to verify that a second run with existing data does not change anything
       with_cassette(@environment, @ems) do
         EmsRefresh.refresh(@ems)
       end

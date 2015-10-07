@@ -38,10 +38,6 @@ module EvmSpecHelper
     instance.instance_variable_set(ivar, nil)
   end
 
-  def self.create_root_tenant
-    Tenant.seed
-  end
-
   def self.local_miq_server(attrs = {})
     remote_miq_server(attrs).tap do |server|
       MiqServer.stub(:my_guid).and_return(server.guid)
@@ -59,7 +55,7 @@ module EvmSpecHelper
   end
 
   def self.remote_miq_server(attrs = {})
-    create_root_tenant
+    Tenant.seed
 
     server = FactoryGirl.create(:miq_server, attrs)
     server

@@ -172,6 +172,9 @@ class MiqAeClassController < ApplicationController
       get_method_node_info(id)
     when "aen"
       @record = MiqAeNamespace.find_by_id(from_cid(id[1]))
+      # need to set record as Domain record if it's a domain, editable_domains, enabled_domains,
+      # visible domains methods returns list of Domains, need this for toolbars to hide/disable correct records.
+      @record = MiqAeDomain.find_by_id(from_cid(id[1])) if @record.domain?
       if @record.nil?
         set_root_node
       else
@@ -190,7 +193,7 @@ class MiqAeClassController < ApplicationController
         set_right_cell_text(x_node, @record)
       end
     else
-      rec = MiqAeNamespace.where(:parent_id => nil)
+      rec = User.current_tenant.visible_domains
       @record = nil
       @grid_data = rec.flatten.sort_by { |a| a.priority.to_s }.reverse
       @right_cell_text = "Datastore"
@@ -1822,11 +1825,14 @@ class MiqAeClassController < ApplicationController
 
   def get_rec_name(rec)
     column = rec.display_name.blank? ? :name : :display_name
-    if rec.kind_of?(MiqAeNamespace) && rec.domain? && (!rec.editable? || !rec.enabled)
-      add_read_only_suffix(rec, rec.send(column))
-    else
-      rec.send(column)
+    if rec.kind_of?(MiqAeNamespace) && rec.domain?
+      editable_domain = User.current_tenant.editable_domains.include?(rec)
+      enabled_domain  = rec.enabled
+      return add_read_only_suffix(rec.send(column),
+                                  editable_domain,
+                                  enabled_domain) unless editable_domain && enabled_domain
     end
+    rec.send(column)
   end
 
   # Delete all selected or single displayed aeclasses(s)
@@ -2453,9 +2459,7 @@ class MiqAeClassController < ApplicationController
   end
 
   def ordered_domains_for_priority_edit_screen
-    MiqAeDomain.order('priority DESC')
-      .reject  { |d| d.priority == 0 }
-      .collect { |d| d.editable? ? d.name : add_read_only_suffix(d, d.name) }
+    User.current_tenant.editable_domains.collect { |d| d.name }
   end
 
   def priority_edit_screen

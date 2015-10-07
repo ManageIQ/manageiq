@@ -7,28 +7,28 @@
 </div>
 
 <div class="col-md-12 list-view-container">
-  <div pf-data-list id="requestList" class="row" config="vm.listConfig" items="vm.requestsList">
+  <div pf-data-list id="requestList" config="vm.listConfig" items="vm.requestsList">
     <div class="row">
       <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
         <span>
          {{ $index + 1}}
         </span>
       </div>
-      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ">
+      <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
         <span>
           <span class="ss-list-view__title-img" ng-if=" ::item.picture.image_href">
             <img class="ss-list-view__title-img__logo" src="{{ ::item.picture.image_href }}"/>
           </span>
-          {{ item.id }}
-        </span>
-      </div>
-      <div cla ss="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-        <span>
           {{ item.description }}
         </span>
       </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ">
+        <span>
+          <strong>ID: </strong>{{ item.id }}
+        </span>
+      </div>
 
-      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
         <strong>Requested: </strong>{{ item.created_on | date }}</span>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">

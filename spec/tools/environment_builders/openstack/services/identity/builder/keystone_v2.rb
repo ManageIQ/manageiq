@@ -32,14 +32,21 @@ module Openstack
 
           def find_or_create_roles
             @data.roles.each do |role|
-              admin_user = @service.users.find_by_name(role)
+              admin_user = @service.users.find_by_name('admin')
               admin_role = @service.roles.detect { |x| x.name == role }
+              if admin_role.blank?
+                puts "Skipping role: '#{role}', as it doesn't exist in this environment."
+                next
+              end
               @projects.each do |p|
+                puts "Creating role {:name => '#{role}', :tenant_id => '#{p.name}'} role in "\
+                     "Fog::Identity::OpenStack:Roles"
                 begin
                   p.grant_user_role(admin_user.id, admin_role.id)
                 rescue Excon::Errors::Conflict
                   # Tenant already has the admin role
-                  puts "Finding role {:name => 'admin', :tenant_id => '#{p.name}'} role in Fog::Identity::OpenStack:Roles"
+                  puts "Finding role {:name => '#{role}', :tenant_id => '#{p.name}'} role in"\
+                       " Fog::Identity::OpenStack:Roles"
                 end
               end
             end

@@ -66,7 +66,6 @@ class ApiController < ApplicationController
   include_concern 'RequestTasks'
   include_concern 'ResourceActions'
   include_concern 'Roles'
-  include_concern 'ServiceCatalogs'
   include_concern 'ServiceDialogs'
   include_concern 'ServiceRequests'
   include_concern 'Software'

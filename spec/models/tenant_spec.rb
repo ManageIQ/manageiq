@@ -10,7 +10,7 @@ describe Tenant do
   end
 
   let(:root_tenant) do
-    EvmSpecHelper.create_root_tenant
+    Tenant.seed
   end
 
   before do

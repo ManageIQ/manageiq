@@ -6,7 +6,7 @@ describe OpsController do
 
   context "::Tenants" do
     before do
-      EvmSpecHelper.create_root_tenant
+      Tenant.seed
       MiqRegion.seed
       set_user_privileges
     end

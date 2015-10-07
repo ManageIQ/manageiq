@@ -1,7 +1,7 @@
 module Openstack
   module RefreshSpecEnvironments
     def allowed_enviroments
-      [:grizzly, :havana, :kilo_keystone_v3]
+      [:grizzly, :havana, :icehouse, :juno, :kilo, :kilo_keystone_v3]
     end
 
     def networking_service
