@@ -19,7 +19,6 @@ require 'fileutils'
 require 'highline/import'
 require 'highline/system_extensions'
 require 'rubygems'
-require 'timeout'
 require 'bcrypt'
 require 'linux_admin'
 require 'pathname'
@@ -32,35 +31,12 @@ I18n.load_path = Dir[LOCALES].sort
 I18n.enforce_available_locales = true
 I18n.backend.load_translations
 
-TIMEOUT = 300
-
-def ask_with_timeout(*args, &block)
-  Timeout.timeout(TIMEOUT) { ask_without_timeout(*args, &block) }
-end
-alias_method :ask_without_timeout, :ask
-alias_method :ask, :ask_with_timeout
-
-def choose_with_timeout(*args, &block)
-  Timeout.timeout(TIMEOUT) { choose_without_timeout(*args, &block) }
-end
-alias_method :choose_without_timeout, :choose
-alias_method :choose, :choose_with_timeout
-
-def agree_with_timeout(*args, &block)
-  Timeout.timeout(TIMEOUT) { agree_without_timeout(*args, &block) }
-end
-alias_method :agree_without_timeout, :agree
-alias_method :agree, :agree_with_timeout
-
 $terminal.wrap_at = 80
 $terminal.page_at = 21
 
 require 'appliance_console/errors'
 
 [:INT, :TERM, :ABRT, :TSTP].each { |s| trap(s) { raise MiqSignalError } }
-
-# Disabled in order to allow rescue of timeout error
-HighLine.track_eof = false
 
 RAILS_ROOT    = Pathname.new("#{ROOT}/vmdb")
 EVM_PID_FILE  = RAILS_ROOT.join("tmp/pids/evm.pid")
@@ -521,8 +497,6 @@ Date and Time Configuration
       when I18n.t("advanced_settings.quit")
         break
       end
-    rescue Timeout::Error
-      break
     rescue MiqSignalError
       # If a signal is caught anywhere in the inner (after login) loop, go back to the summary screen
       next
