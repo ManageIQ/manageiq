@@ -33,5 +33,13 @@ module MiqAeServiceEmsCloudSpec
     it "#cloud_resource_quotas" do
       described_class.instance_methods.should include(:cloud_resource_quotas)
     end
+
+    it "#cloud_networks_public" do
+      described_class.instance_methods.should include(:cloud_networks_public)
+    end
+
+    it "#cloud_networks_private" do
+      described_class.instance_methods.should include(:cloud_networks_private)
+    end
   end
 end
