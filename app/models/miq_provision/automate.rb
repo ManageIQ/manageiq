@@ -12,7 +12,7 @@ module MiqProvision::Automate
       attrs = {'request' => 'UI_PROVISION_INFO', 'message' => 'get_domains'}
       attrs[MiqAeEngine.create_automation_attribute_key(user)] = MiqAeEngine.create_automation_attribute_value(user) unless user.nil?
 
-      ws = MiqAeEngine.resolve_automation_object("REQUEST", attrs)
+      ws = MiqAeEngine.resolve_automation_object("REQUEST", user, attrs)
       if ws.root.nil?
         _log.warn "- Automate Failed (workspace empty)"
         return nil
@@ -38,7 +38,7 @@ module MiqProvision::Automate
       'message' => 'get_placement'
     }
     attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
-    ws = MiqAeEngine.resolve_automation_object("REQUEST", attrs, :vmdb_object => self)
+    ws = MiqAeEngine.resolve_automation_object("REQUEST", get_user, attrs, :vmdb_object => self)
     reload
 
     {
@@ -54,7 +54,7 @@ module MiqProvision::Automate
       'message' => 'get_availability_zone'
     }
     attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
-    ws = MiqAeEngine.resolve_automation_object("REQUEST", attrs, :vmdb_object => self)
+    ws = MiqAeEngine.resolve_automation_object("REQUEST", get_user, attrs, :vmdb_object => self)
     reload
     MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["availability_zone"])
   end
@@ -66,7 +66,7 @@ module MiqProvision::Automate
     }
     attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
 
-    ws = MiqAeEngine.resolve_automation_object("REQUEST", attrs, :vmdb_object => self)
+    ws = MiqAeEngine.resolve_automation_object("REQUEST", get_user, attrs, :vmdb_object => self)
     reload
     host      = MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["host"])
     datastore = MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["storage"])
@@ -79,7 +79,7 @@ module MiqProvision::Automate
       'message' => 'get_cluster'
     }
     attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
-    ws = MiqAeEngine.resolve_automation_object("REQUEST", attrs, :vmdb_object => self)
+    ws = MiqAeEngine.resolve_automation_object("REQUEST", get_user, attrs, :vmdb_object => self)
     reload
     MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["cluster"])
   end
@@ -90,7 +90,7 @@ module MiqProvision::Automate
       'message' => 'get_host'
     }
     attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
-    ws = MiqAeEngine.resolve_automation_object("REQUEST", attrs, :vmdb_object => self)
+    ws = MiqAeEngine.resolve_automation_object("REQUEST", get_user, attrs, :vmdb_object => self)
     reload
     MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["host"])
   end
@@ -133,7 +133,7 @@ module MiqProvision::Automate
       'message' => 'get_networks'
     }
     attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
-    ws = MiqAeEngine.resolve_automation_object("REQUEST", attrs)
+    ws = MiqAeEngine.resolve_automation_object("REQUEST", get_user, attrs)
 
     if ws.root.nil?
       _log.warn "- Automate Failed (workspace empty)"

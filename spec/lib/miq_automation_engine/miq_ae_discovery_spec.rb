@@ -8,6 +8,8 @@ module MiqAeDiscoverySpec
       @event  = FactoryGirl.create(:ems_event, :event_type => "CreateVM_Task_Complete",
                                   :source => "VC", :ems_id => 1, :vm_or_template_id => @vm.id)
       @domain = "SPEC_DOMAIN"
+      # admin user is needed to process Events
+      FactoryGirl.create(:user_with_group, :userid => "admin", :name => "Administrator")
       @model_data_dir = File.join(File.dirname(__FILE__), "data")
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "discovery"), @domain)
     end

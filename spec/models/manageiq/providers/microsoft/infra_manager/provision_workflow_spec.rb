@@ -13,7 +13,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::ProvisionWorkflow do
 
   it "pass platform attributes to automate" do
     stub_dialog
-    assert_automate_dialog_lookup('infra', 'microsoft')
+    assert_automate_dialog_lookup(admin, 'infra', 'microsoft')
 
     described_class.new({}, admin.userid)
   end

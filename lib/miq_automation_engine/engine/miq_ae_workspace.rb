@@ -37,6 +37,7 @@ module MiqAeEngine
   class MiqAeWorkspaceRuntime
     attr_accessor :graph, :num_drb_methods, :class_methods
     attr_accessor :datastore_cache, :persist_state_hash, :current_state_info
+    attr_accessor :ae_user
     include MiqAeStateInfo
 
     attr_reader :nodes
@@ -52,15 +53,16 @@ module MiqAeEngine
       @persist_state_hash = HashWithIndifferentAccess.new
       @current_state_info = {}
       @state_machine_objects = []
+      @ae_user            = nil
     end
 
     def readonly?
       @readonly
     end
 
-    def self.instantiate(uri, attrs = {})
+    def self.instantiate(uri, user, attrs = {})
       workspace = MiqAeWorkspaceRuntime.new(attrs)
-      workspace.instantiate(uri, nil)
+      workspace.instantiate(uri, user, nil)
       workspace
     rescue MiqAeException
     end
@@ -93,9 +95,10 @@ module MiqAeEngine
       false
     end
 
-    def instantiate(uri, root = nil)
+    def instantiate(uri, user, root = nil)
       $miq_ae_logger.info("Instantiating [#{uri}]") if root.nil?
-
+      @ae_user = user
+      @dom_search.ae_user = user
       scheme, userinfo, host, port, registry, path, opaque, query, fragment = MiqAeUri.split(uri, "miqaedb")
       raise "Unsupported Scheme [#{scheme}]" unless MiqAeUri.scheme_supported?(scheme)
       raise "Invalid URI <#{uri}>" if path.nil?

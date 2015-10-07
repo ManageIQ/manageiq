@@ -125,7 +125,7 @@ module MiqAeMethodService
     end
 
     def instantiate(uri)
-      obj = @workspace.instantiate(uri, @workspace.current_object)
+      obj = @workspace.instantiate(uri, @workspace.ae_user, @workspace.current_object)
       return nil if obj.nil?
       drb_return(MiqAeServiceObject.new(obj, self))
     rescue => e

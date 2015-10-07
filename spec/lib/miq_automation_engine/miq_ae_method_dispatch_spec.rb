@@ -10,9 +10,11 @@ describe "MiqAeMethodDispatch" do
     @namespace       = 'NS1'
     @root_class      = "TOP_OF_THE_WORLD"
     @root_instance   = "EVEREST"
+    @user            = FactoryGirl.create(:user_with_group)
     @automate_args   = {:namespace        => @namespace,
                         :class_name       => @root_class,
                         :instance_name    => @root_instance,
+                        :user_id          => @user.id,
                         :automate_message => 'create'}
     MiqServer.stub(:my_zone).and_return('default')
     @pidfile = File.join(Dir.mktmpdir, "rip_van_winkle.pid")

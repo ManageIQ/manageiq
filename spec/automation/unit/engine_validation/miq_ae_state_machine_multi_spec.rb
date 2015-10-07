@@ -19,6 +19,7 @@ describe "MultipleStateMachineSteps" do
     @state_class3        = 'SM3'
     @state_instance      = 'MY_STATE_INSTANCE'
     @fqname              = '/SPEC_DOMAIN/NS1/SM1/MY_STATE_INSTANCE'
+    @user                = FactoryGirl.create(:user_with_group)
     @method_params       = {'ae_result'     => {:datatype => 'string', 'default_value' => 'ok'},
                             'ae_next_state' => {:datatype => 'string'},
                             'raise'         => {:datatype => 'string'}
@@ -26,6 +27,7 @@ describe "MultipleStateMachineSteps" do
     @automate_args   = {:namespace        => "#{@domain}/#{@namespace}",
                         :class_name       => @state_class1,
                         :instance_name    => @state_instance,
+                        :user_id          => @user.id,
                         :automate_message => 'create'}
     MiqServer.stub(:my_zone).and_return('default')
     clear_domain
