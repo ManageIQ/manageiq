@@ -41,6 +41,9 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     expect(OrchestrationStackResource.count).to  be > 0
     expect(OrchestrationStackOutput.count).to    be > 0
     expect(OrchestrationTemplate.count).to       be > 0
+    expect(CloudNetwork.count).to                be > 0
+    expect(CloudSubnet.count).to                 be > 0
+    expect(NetworkPort.count).to                 be > 0
     expect(VmOrTemplate.count).to                be > 0
     expect(OperatingSystem.count).to             be > 0
     expect(Hardware.count).to                    be > 0
@@ -49,11 +52,11 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     expect(Vm.count).to                          eq 0
     expect(CustomAttribute.count).to             eq 0
     expect(CustomizationSpec.count).to           eq 0
-    expect(GuestDevice.count).to                 eq 0
+    # expect(GuestDevice.count).to                 eq > 0
     expect(Lan.count).to                         eq 0
     expect(MiqScsiLun.count).to                  eq 0
     expect(MiqScsiTarget.count).to               eq 0
-    expect(Network.count).to                     eq 0
+    # expect(Network.count).to                     eq 0
     expect(Snapshot.count).to                    eq 0
     expect(Switch.count).to                      eq 0
     expect(SystemService.count).to               eq 0
@@ -102,6 +105,11 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
       :connection_state => "connected",
       :service_tag      => nil,
     )
+
+    expect(@host.private_networks.count).to be > 0
+    expect(@host.private_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::InfraManager::CloudNetwork::Private)
+    expect(@host.network_ports.count).to    be > 0
+    expect(@host.network_ports.first).to    be_kind_of(ManageIQ::Providers::Openstack::InfraManager::NetworkPort)
 
     @host.operating_system.should have_attributes(
       :product_name     => "linux"

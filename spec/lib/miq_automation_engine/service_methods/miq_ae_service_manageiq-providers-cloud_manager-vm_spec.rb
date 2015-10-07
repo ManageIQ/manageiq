@@ -15,8 +15,20 @@ module MiqAeServiceVmOpenstackSpec
           vm.availability_zone =  FactoryGirl.create("availability_zone_#{t}".to_sym)
           vm.flavor            =  FactoryGirl.create("flavor_#{t}".to_sym)
           vm.key_pairs << FactoryGirl.create("auth_key_pair_#{t}".to_sym)
-          vm.cloud_network     =  FactoryGirl.create(:cloud_network)
-          vm.cloud_subnet      =  FactoryGirl.create(:cloud_subnet)
+          case t
+          when "openstack"
+            network = FactoryGirl.create(:cloud_network)
+            subnet  = FactoryGirl.create(:cloud_subnet, :cloud_network => network)
+            vm.network_ports << FactoryGirl.create(:network_port,
+                                                   :device        => vm,
+                                                   :cloud_network => network,
+                                                   :cloud_subnet  => subnet)
+          else
+            # TODO(lsmola) when ready, all providers should act as openstack
+            vm.cloud_network = FactoryGirl.create(:cloud_network)
+            vm.cloud_subnet  = FactoryGirl.create(:cloud_subnet)
+          end
+
           vm.floating_ip       =  FactoryGirl.create("floating_ip_#{t}".to_sym)
           vm.security_groups << FactoryGirl.create("security_group_#{t}".to_sym)
           vm.save!

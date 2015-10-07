@@ -41,7 +41,8 @@ module Openstack
       assert_specific_tenant
       assert_key_pairs
       assert_specific_security_groups
-      assert_specific_network
+      assert_specific_networks
+      assert_specific_routers
       assert_specific_volumes
       assert_specific_volume_snapshots
       assert_specific_directories
@@ -164,6 +165,7 @@ module Openstack
       expect(FirewallRule.count).to        eq firewall_rules_count
       expect(CloudNetwork.count).to        eq network_data.networks.count
       expect(CloudSubnet.count).to         eq network_data.subnets.count
+      expect(NetworkRouter.count).to       eq network_data.routers.count
       expect(CloudVolume.count).to         eq volumes_count
       expect(CloudVolumeSnapshot.count).to eq volume_snapshots_count
       expect(VmOrTemplate.count).to        eq vms_count + images_count
@@ -218,6 +220,10 @@ module Openstack
       expect(@ems.vms_and_templates.size).to  eq vms_count + images_count
       expect(@ems.vms.size).to                eq vms_count
       expect(@ems.miq_templates.size).to      eq images_count
+      expect(@ems.cloud_networks.size).to     eq network_data.networks.count
+
+      expect(@ems.public_cloud_networks.first).to  be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public)
+      expect(@ems.private_cloud_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private)
     end
 
     def assert_flavors
@@ -331,7 +337,7 @@ module Openstack
                                  [:group])
     end
 
-    def assert_specific_network
+    def assert_specific_networks
       networks = CloudNetwork.all
 
       # Compare security groups to expected
@@ -345,6 +351,57 @@ module Openstack
                                    network_data.subnet_translate_table,
                                    {:ip_version => -> (x) { "ipv#{x}" }},
                                    [:allocation_pools]) # TODO(lsmola) model blacklisted attrs
+      end
+
+      networks.each do |network|
+        expect(network.cloud_tenant).to          be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudTenant)
+        expect(network.ext_management_system).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager)
+
+        if neutron_networking?
+          expect(network.network_ports.count).to   be > 0
+          expect(network.network_ports.first).to   be_kind_of(ManageIQ::Providers::Openstack::CloudManager::NetworkPort)
+          expect(network.cloud_subnets.count).to   be > 0
+          expect(network.cloud_subnets.first).to   be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudSubnet)
+          expect(network.vms.count).to             be > 0
+          expect(network.vms.first).to             be_kind_of(ManageIQ::Providers::Openstack::CloudManager::Vm)
+          expect(network.network_routers.count).to be > 0
+          expect(network.network_routers.first).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::NetworkRouter)
+          if network.external_facing?
+            # It's a public network
+            expect(network).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public)
+            expect(network.private_networks.count).to be > 0
+            expect(network.floating_ips.count).to     be > 0
+            expect(network.private_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private)
+
+            assert_objects_with_hashes(network.network_routers, network_data.routers(network.name))
+          else
+            # It's a private network
+            expect(network).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private)
+            expect(network.public_networks.count).to be > 0
+            expect(network.public_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public)
+          end
+        end
+      end
+    end
+
+    def assert_specific_routers
+      return unless neutron_networking?
+
+      network_routers = NetworkRouter.all
+      assert_objects_with_hashes(network_routers, network_data.routers)
+
+      network_routers.each do |network_router|
+        expect(network_router.floating_ips.count).to   be > 0
+        expect(network_router.floating_ips.first).to   be_kind_of(ManageIQ::Providers::Openstack::CloudManager::FloatingIp)
+        expect(network_router.network_ports.count).to  be > 0
+        expect(network_router.network_ports.first).to  be_kind_of(ManageIQ::Providers::Openstack::CloudManager::NetworkPort)
+        expect(network_router.cloud_networks.count).to be > 0
+        expect(network_router.cloud_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private)
+        network_router.cloud_networks.should match_array network_router.private_networks
+        expect(network_router.cloud_network).to        be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public)
+        expect(network_router.cloud_network).to        be == network_router.public_network
+        expect(network_router.vms.first).to            be_kind_of(ManageIQ::Providers::Openstack::CloudManager::Vm)
+        expect(network_router.vms.count).to            be > 0
       end
     end
 
@@ -498,7 +555,6 @@ module Openstack
       expect(vm.ext_management_system).to  eq @ems
       # TODO(lsmola) expose to Builder's data
       expect(vm.availability_zone).to      be_kind_of(ManageIQ::Providers::Openstack::CloudManager::AvailabilityZone)
-      # We don't know which IP has been assigned
       expect(vm.floating_ip).to            be_kind_of(ManageIQ::Providers::Openstack::CloudManager::FloatingIp)
       expect(vm.flavor.name).to            eq vm_expected[:__flavor_name]
       expect(vm.key_pairs.map(&:name)).to  eq [vm_expected[:key_name]]
@@ -506,6 +562,24 @@ module Openstack
       expect(vm.operating_system).to       be_nil # TODO: This should probably not be nil
       expect(vm.custom_attributes.size).to eq 0
       expect(vm.snapshots.size).to         eq 0
+
+      if neutron_networking?
+        expect(vm.floating_ips.count).to    be > 0
+        expect(vm.floating_ips.first).to    be_kind_of(ManageIQ::Providers::Openstack::CloudManager::FloatingIp)
+        expect(vm.network_ports.count).to   be > 0
+        expect(vm.network_ports.first).to   be_kind_of(ManageIQ::Providers::Openstack::CloudManager::NetworkPort)
+        expect(vm.cloud_networks.count).to  be > 0
+        vm.cloud_networks.should match_array vm.private_networks
+        expect(vm.cloud_networks.first).to  be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private)
+        expect(vm.cloud_subnets.count).to   be > 0
+        expect(vm.cloud_subnets.first).to   be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudSubnet)
+        expect(vm.network_routers.count).to be > 0
+        expect(vm.network_routers.first).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::NetworkRouter)
+        expect(vm.public_networks.count).to be > 0
+        expect(vm.public_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public)
+
+        vm.private_networks.map(&:name).should match_array [vm_expected[:__network_name]]
+      end
 
       if vm_expected[:security_groups].kind_of?(Array)
         vm.security_groups.map(&:name).should match_array vm_expected[:security_groups]

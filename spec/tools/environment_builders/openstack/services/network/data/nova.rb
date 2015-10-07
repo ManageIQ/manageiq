@@ -21,6 +21,10 @@ module Openstack
             []
           end
 
+          def routers(_network_name = nil)
+            []
+          end
+
           def floating_ips(nova_pool_name = nil)
             floating_ips = {
               'nova' => 4}
