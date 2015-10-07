@@ -38,10 +38,14 @@
 
     vm.service = serviceDetails;
     vm.retireService = retireService;
-
+    var existingDate = new Date(vm.service.retires_on);
+    var existingUTCDate = new Date(existingDate.getTime() + existingDate.getTimezoneOffset() * 60000);
     vm.modalData = {
       action: 'retire',
-      resource: {date: vm.service.retires_on || new Date(), warn: vm.service.retirement_warn || 0}
+      resource: {
+        date: vm.service.retires_on ? existingUTCDate : new Date(),
+        warn: vm.service.retirement_warn || 0
+      }
     };
 
     vm.dateOptions = {

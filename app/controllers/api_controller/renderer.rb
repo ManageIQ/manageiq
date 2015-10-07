@@ -88,7 +88,7 @@ class ApiController
         expand_subcollections(json, type, resource)
       end
 
-      expand_actions(json, type, opts)
+      expand_actions(resource, json, type, opts)
       expand_resource_custom_actions(resource, json, type)
       json
     end
@@ -302,8 +302,10 @@ class ApiController
     def attr_physical?(object, attr)
       return true if ID_ATTRS.include?(attr)
       primary = attr_split(attr).first
-      return true unless object && object.respond_to?(:attributes) && object.respond_to?(primary)
-      object.class.columns_hash.key?(primary)
+      object &&
+        object.respond_to?(:attributes) &&
+        object.respond_to?(primary) &&
+        object.class.columns_hash.key?(primary)
     end
 
     def attr_split(attr)
@@ -313,8 +315,8 @@ class ApiController
     #
     # Let's expand actions
     #
-    def expand_actions(json, type, opts)
-      return unless render_attr("actions")
+    def expand_actions(resource, json, type, opts)
+      return unless render_actions(resource)
 
       href   = json.attributes!["href"]
       aspecs = get_aspecs(type, opts[:resource_actions], :resource, opts[:is_subcollection], href)
@@ -330,7 +332,7 @@ class ApiController
     end
 
     def expand_resource_custom_actions(resource, json, type)
-      return unless render_attr("actions") && resource_can_have_custom_actions(type)
+      return unless render_actions(resource) && resource_can_have_custom_actions(type)
 
       href = json.attributes!["href"]
       json.actions do |js|
@@ -439,6 +441,10 @@ class ApiController
     def api_user_role_allows?(action_identifier)
       return true unless action_identifier
       @auth_user_obj.role_allows?(:identifier => action_identifier)
+    end
+
+    def render_actions(resource)
+      render_attr("actions") || physical_attribute_selection(resource).blank?
     end
   end
 end
