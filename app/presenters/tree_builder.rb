@@ -65,7 +65,7 @@ class TreeBuilder
       ["CFME Region: #{region.description} [#{region.region}]", "CFME Region: #{region.description} [#{region.region}]", "miq_region"]
     when :dialogs_tree                  then [_("All Dialogs"),                  _("All Dialogs")]
     when :dialog_import_export_tree     then [_("Service Dialog Import/Export"), _("Service Dialog Import/Export")]
-    when :exports_tree                  then [_("Import / Export"),              _("Import / Export"), _("report")]
+    when :export_tree                  then [_("Import / Export"),              _("Import / Export"), _("report")]
     when :images_tree                   then [_("Images by Provider"),           _("All Images by Provider that I can see")]
     when :instances_tree                then [_("Instances by Provider"),        _("All Instances by Provider that I can see")]
     when :instances_filter_tree         then [_("All Instances"),                _("All of the Instances that I can see")]

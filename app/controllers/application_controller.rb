@@ -939,10 +939,10 @@ class ApplicationController < ActionController::Base
   def populate_reports_menu(tree_type = 'reports', mode = 'menu')
     # checking to see if group (used to be role) was selected in menu editor tree, or came in from reports/timeline tree calls
     group = !session[:role_choice].blank? ? MiqGroup.find_by_description(session[:role_choice]) : current_group
-    @sb[:rpt_menu] = get_reports_menu(group,tree_type,mode)
+    @sb[:rpt_menu] = get_reports_menu(group, tree_type, mode)
   end
 
-  #Gather information for the report accordians
+  # Gather information for the report accordions
   def build_report_listnav(tree_type = "reports", tree = "listnav", mode = "menu")
     populate_reports_menu(tree_type, mode)
     if tree == "listnav"
@@ -957,11 +957,10 @@ class ApplicationController < ActionController::Base
   end
 
   def reports_group_title
-    if @sb[:grp_title] = current_user.admin_user?
-      "#{current_tenant.name} (#{_("All %s") % ui_lookup(:models => "MiqGroup")})"
-    else
-      "#{current_tenant.name} (#{_("%s") % "#{ui_lookup(:model => "MiqGroup")}: #{user.current_group.description}"})"
-    end
+    tenant_name = current_tenant.name
+    @sb[:grp_title] = current_user.admin_user? ?
+      "#{tenant_name} (#{_("All %s") % ui_lookup(:models => "MiqGroup")})" :
+      "#{tenant_name} (#{_("%s") % ui_lookup(:model => "MiqGroup")}: #{current_user.current_group.description})"
   end
 
   def get_reports_menu(group = current_group, tree_type = "reports", mode = "menu")

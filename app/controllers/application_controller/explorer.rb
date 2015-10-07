@@ -542,25 +542,6 @@ module ApplicationController::Explorer
     end
   end
 
-  def x_get_tree_g_kids(object, options)
-    objects = []
-    # dashboard nodes under each group
-    widgetsets = MiqWidgetSet.find_all_by_owner_type_and_owner_id("MiqGroup", object.id)
-    # if dashboard sequence was saved, build tree using that, else sort by name and build the tree
-    if object.settings && object.settings[:dashboard_order]
-      object.settings[:dashboard_order].each do |ws_id|
-        widgetsets.each do |ws|
-          if ws_id == ws.id
-            objects.push(ws)
-          end
-        end
-      end
-    else
-      objects = copy_array(widgetsets)
-    end
-    options[:count_only] ? widgetsets.count : widgetsets.sort_by { |a| a.name.to_s }
-  end
-
   def x_get_tree_r_kids(object, options)
     view, pages = get_view(MiqReportResult, :where_clause => set_saved_reports_condition(object.id), :all_pages => true)
     saved_reps = view.table.data

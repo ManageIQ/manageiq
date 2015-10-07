@@ -25,4 +25,33 @@ class TreeBuilderReportDashboards < TreeBuilder
     objects.push(:id => 'g', :text => 'All Groups', :image => 'folder', :tip => 'All Groups')
     count_only_or_objects(options[:count_only], objects, nil)
   end
+
+  def x_get_tree_custom_kids(object, options)
+    assert_type(options[:type], :db)
+    objects = []
+    if object[:id].split('-').first == "g"
+      objects = MiqGroup.all
+      return options[:count_only] ? objects.count : objects.sort_by(&:name)
+    end
+    count_only_or_objects(options[:count_only], objects, :name)
+  end
+
+  def x_get_tree_g_kids(object, options)
+    objects = Array.new
+    #dashboard nodes under each group
+    widgetsets = MiqWidgetSet.find_all_by_owner_type_and_owner_id("MiqGroup",object.id)
+    #if dashboard sequence was saved, build tree using that, else sort by name and build the tree
+    if object.settings && object.settings[:dashboard_order]
+      object.settings[:dashboard_order].each do |ws_id|
+        widgetsets.each do |ws|
+          if ws_id == ws.id
+            objects.push(ws)
+          end
+        end
+      end
+    else
+      objects = copy_array(widgetsets)
+    end
+    return options[:count_only] ? objects.count : objects.sort_by { |a| a.name.to_s }
+  end
 end

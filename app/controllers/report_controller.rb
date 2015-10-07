@@ -131,6 +131,9 @@ class ReportController < ApplicationController
     @accords = Array.new
     @lists = Array.new
 
+    x_last_active_tree = x_active_tree if x_active_tree
+    x_last_active_accord = x_active_accord if x_active_accord
+
     # if AJAX request, replace right cell, and return
     if request.xml_http_request?
       switch_ght if params[:type]
@@ -140,60 +143,79 @@ class ReportController < ApplicationController
 
     if role_allows(:feature => "miq_report_saved_reports")
       @trees << build_savedreports_tree
-      @accords.push(:name => "savedreports", :title => "Saved Reports", :container => "savedreports_tree_div")
+      @accords.push(:name => "savedreports", :title => "Saved Reports", :container => "savedreports_accord")
       @lists.push("savedreports_list")
-      self.x_active_tree ||= 'savedreports_tree'
-      self.x_active_accord ||= 'savedreports'
+      self.x_active_tree = 'savedreports_tree'
+      self.x_active_accord = 'savedreports'
+      default_active_tree ||= x_active_tree
+      default_active_accord ||= x_active_accord
     end
 
     if role_allows(:feature => "miq_report_reports", :any => true)
       @trees << build_report_listnav
-      @accords.push(:name => "reports", :title => "Reports", :container => "reports_tree_div")
+      @accords.push(:name => "reports", :title => "Reports", :container => "reports_accord")
       @lists.push("report_list")
-      self.x_active_tree ||= 'reports_tree'
-      self.x_active_accord ||= 'reports'
+      self.x_active_tree = 'reports_tree'
+      self.x_active_accord = 'reports'
+      default_active_tree ||= x_active_tree
+      default_active_accord ||= x_active_accord
     end
 
     if role_allows(:feature => "miq_report_schedules", :any => true)
       @trees << build_schedules_tree
-      @accords.push(:name => "schedules", :title => "Schedules", :container => "schedules_tree_div")
+      @accords.push(:name => "schedules", :title => "Schedules", :container => "schedules_accord")
       @lists.push("schedule_list")
-      self.x_active_tree ||= 'schedules_tree'
-      self.x_active_accord ||= 'schedules'
+      self.x_active_tree = 'schedules_tree'
+      self.x_active_accord = 'schedules'
+      default_active_tree ||= x_active_tree
+      default_active_accord ||= x_active_accord
     end
 
     if role_allows(:feature => "miq_report_dashboard_editor")
       @trees << build_db_tree
-      @accords.push(:name => "db", :title => "Dashboards", :container => "db_tree_div")
+      @accords.push(:name => "db", :title => "Dashboards", :container => "db_accord")
       @lists.push("db_list")
-      self.x_active_tree ||= 'db_tree'
-      self.x_active_accord ||= 'db'
+      self.x_active_tree = 'db_tree'
+      self.x_active_accord = 'db'
+      default_active_tree ||= x_active_tree
+      default_active_accord ||= x_active_accord
     end
 
     if role_allows(:feature => "miq_report_widget_editor")
       @trees << build_widgets_tree
-      @accords.push(:name => "widgets", :title => "Dashboard Widgets", :container => "widgets_tree_div")
+      @accords.push(:name => "widgets", :title => "Dashboard Widgets", :container => "widgets_accord")
       @lists.push("widget_list")
-      self.x_active_tree ||= 'widgets_tree'
-      self.x_active_accord ||= 'widgets'
+      self.x_active_tree = 'widgets_tree'
+      self.x_active_accord = 'widgets'
+      default_active_tree ||= x_active_tree
+      default_active_accord ||= x_active_accord
     end
 
     if role_allows(:feature => "miq_report_menu_editor")
       @trees << build_roles_tree
-      @accords.push(:name => "roles", :title => "Edit Report Menus", :container => "roles_tree_div")
+      @accords.push(:name => "roles", :title => "Edit Report Menus", :container => "roles_accord")
       @lists.push("role_list")
-      self.x_active_tree ||= 'roles_tree'
-      self.x_active_accord ||= 'roles'
-      #      x_node_set("root", :roles_tree)
+      self.x_active_tree = 'roles_tree'
+      self.x_active_accord = 'roles'
+      default_active_tree ||= x_active_tree
+      default_active_accord ||= x_active_accord
     end
 
     if role_allows(:feature => "miq_report_export")
       @trees << build_export_tree
-      @accords.push(:name => "export", :title => "Import/Export", :container => "export_tree_div")
+      @accords.push(:name => "export", :title => "Import/Export", :container => "export_accord")
       @lists.push("export")
-      self.x_active_tree ||= "export_tree"
-      self.x_active_accord ||= "export"
+      self.x_active_tree = "export_tree"
+      self.x_active_accord = "export"
+      default_active_tree ||= x_active_tree
+      default_active_accord ||= x_active_accord
     end
+
+    self.x_active_tree = default_active_tree
+    self.x_active_accord = default_active_accord.to_s
+
+    self.x_active_tree = x_last_active_tree if x_last_active_tree
+    self.x_active_accord = x_last_active_accord.to_s if x_last_active_accord
 
     @widget_nodes ||= []
     @sb[:node_clicked] = false
@@ -403,7 +425,7 @@ class ReportController < ApplicationController
       db_get_node_info
     when :export_tree
       @export = true
-      get_export_reports
+      get_export_reports unless x_node == "root"
       @right_cell_text ||= "Import / Export"
       @help_topic        = request.parameters["controller"] + "-import_export"
     when :roles_tree
