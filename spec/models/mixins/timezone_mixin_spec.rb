@@ -32,9 +32,7 @@ describe TimezoneMixin do
 
     context "with a user" do
       let!(:user) do
-        user = FactoryGirl.create(:user)
-        User.stub(:current_user).and_return(user)
-        user
+        User.current_user = FactoryGirl.create(:user)
       end
 
       it "#with_current_user_timezone in GMT" do

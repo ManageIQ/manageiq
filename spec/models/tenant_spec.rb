@@ -598,8 +598,7 @@ describe Tenant do
     end
 
     it "assigns current user tenant" do
-      user = FactoryGirl.create(:user, :userid => 'user', :miq_groups => [tenant_group])
-      User.stub(:current_user => user)
+      User.current_user = FactoryGirl.create(:user, :userid => 'user', :miq_groups => [tenant_group])
       vm = FactoryGirl.create(:vm_vmware)
 
       expect(vm.tenant).to eql tenant

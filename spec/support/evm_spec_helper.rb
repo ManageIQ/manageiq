@@ -19,7 +19,7 @@ module EvmSpecHelper
     clear_instance_variable(BottleneckEvent, :@event_definitions) if defined?(BottleneckEvent)
 
     # Clear the thread local variable to prevent test contamination
-    User.current_userid = nil if defined?(User) && User.respond_to?(:current_userid=)
+    User.current_user = nil if defined?(User) && User.respond_to?(:current_user=)
 
     # Clear configuration caches
     VMDB::Config.invalidate_all

@@ -309,11 +309,18 @@ class User < ActiveRecord::Base
     Thread.current[:userid] = saved_userid
   end
 
+  # deprecated
   def self.current_userid=(userid)
     Thread.current[:user]   = nil
     Thread.current[:userid] = userid
   end
 
+  def self.current_user=(user)
+    Thread.current[:userid] = user.try(:userid)
+    Thread.current[:user] = user
+  end
+
+  # avoid using this. pass current_user where possible
   def self.current_userid
     Thread.current[:userid]
   end
