@@ -21,10 +21,6 @@ class ConfigurationController < ApplicationController
       active_tab = 3 if active_tab.nil?
     elsif role_allows(:feature => "my_settings_time_profiles")
       active_tab = 4 if active_tab.nil?
-    elsif role_allows(:feature => "my_settings_my_tags")
-      if false
-        active_tab = 5 if active_tab.nil?
-      end
     end
     @tabform = params[:load_edit_err] ? @tabform : @config_tab + "_#{active_tab}"
     case @config_tab
