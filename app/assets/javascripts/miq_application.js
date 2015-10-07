@@ -1247,6 +1247,7 @@ function miqInitSelectPicker() {
     style: 'btn-info',
     size: 4
   });
+  $('[title]').not('.selectpicker').tooltip({container: 'none'});
 }
 
 function miqSelectPickerEvent(element, url, options){
