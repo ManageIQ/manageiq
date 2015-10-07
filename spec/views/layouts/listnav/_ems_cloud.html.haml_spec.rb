@@ -10,7 +10,7 @@ describe "layouts/listnav/_ems_cloud.html.haml" do
     ActionView::Base.any_instance.stub(:role_allows).and_return(true)
   end
 
-  it "Favorites links use restful path" do
+  it "Flavors link for Openstack cloud manager uses restful path" do
     record =  ManageIQ::Providers::Openstack::CloudManager.new(:name => "Test Cloud")
     assign(:record, record)
     record.stub(:flavors).and_return(5)
@@ -18,11 +18,25 @@ describe "layouts/listnav/_ems_cloud.html.haml" do
     expect(response).to include "ems_cloud?display=flavors"
   end
 
-  it "Instance links to use restful paths" do
+  it "Flavors link for Amazon cloud manager uses restful paths" do
     record = ManageIQ::Providers::Amazon::CloudManager.new(:name => "Test Cloud")
     assign(:record, record)
     record.stub(:flavors).and_return(14)
     render
     expect(response).to include "ems_cloud?display=flavors"
+  end
+  it "Availability Zones link uses restful paths" do
+    record = ManageIQ::Providers::Openstack::CloudManager.new(:name => "Test Cloud")
+    assign(:record, record)
+    record.stub(:availability_zones).and_return(14)
+    render
+    expect(response).to include "ems_cloud?display=availability_zones"
+  end
+  it "Cloud Tenants link uses restful paths" do
+    record = ManageIQ::Providers::Amazon::CloudManager.new(:name => "Test Cloud")
+    assign(:record, record)
+    record.stub(:cloud_tenants).and_return(10)
+    render
+    expect(response).to include "ems_cloud?display=cloud_tenants"
   end
 end
