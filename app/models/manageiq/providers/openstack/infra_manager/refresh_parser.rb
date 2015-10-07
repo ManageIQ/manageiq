@@ -1,11 +1,12 @@
 module ManageIQ
   module Providers
-    class Openstack::InfraManager::RefreshParser < EmsRefresh::Parsers::Infra
+    class Openstack::InfraManager::RefreshParser < ManageIQ::Providers::InfraManager::RefreshParser
       include Vmdb::Logging
 
       include ManageIQ::Providers::Openstack::RefreshParserCommon::HelperMethods
       include ManageIQ::Providers::Openstack::RefreshParserCommon::Images
       include ManageIQ::Providers::Openstack::RefreshParserCommon::Objects
+      include ManageIQ::Providers::Openstack::RefreshParserCommon::Networks
       include ManageIQ::Providers::Openstack::RefreshParserCommon::OrchestrationStacks
 
       def self.ems_inv_to_hashes(ems, options = nil)
@@ -25,6 +26,8 @@ module ManageIQ
         @os_handle                  = ems.openstack_handle
         @compute_service            = @connection # for consistency
         @baremetal_service          = @os_handle.detect_baremetal_service
+        @identity_service           = @os_handle.identity_service
+        @network_service            = @os_handle.detect_network_service
         @orchestration_service      = @os_handle.detect_orchestration_service
         @image_service              = @os_handle.detect_image_service
         @storage_service            = @os_handle.detect_storage_service
@@ -34,14 +37,25 @@ module ManageIQ
         log_header = "MIQ(#{self.class.name}.#{__method__}) Collecting data" \
                      " for EMS name: [#{@ems.name}] id: [#{@ems.id}]"
         $fog_log.info("#{log_header}...")
+        # get_flavors # Not needed in infra
+        # get_availability_zones # Not needed in infra
+        # get_tenants # TODO(lsmola) should be needed, add it
+        # get_quotas # Not needed in infra
+        # get_key_pairs # Not needed in infra
+        get_images
+        get_security_groups
 
         get_object_store
         # get_object_store needs to run before load hosts
         load_hosts
+
         load_orchestration_stacks
         # Cluster processing needs to run after host and stacks processing
         get_clusters
-        get_images
+        get_all_networks
+        get_network_routers # We don't have any in Infra yet
+        get_floating_ips # We don't have any in Infra yet
+        get_network_ports
 
         $fog_log.info("#{log_header}...Complete")
         @data
@@ -107,7 +121,19 @@ module ManageIQ
       end
 
       def hosts_ports
-        @hosts_ports ||= @baremetal_service.handled_list(:ports)
+        @hosts_ports ||= @network_service.handled_list(:ports)
+      end
+
+      def subnets
+        @subnets ||= @network_service.handled_list(:subnets)
+      end
+
+      def get_all_networks
+        # Get networks from neutron
+        get_networks
+
+        # Get other networks from the heat parameters definition
+        # TODO(lsmola) all the other virtual netwroks should be hopefully exposed in neutron
       end
 
       def load_hosts
@@ -116,17 +142,21 @@ module ManageIQ
         indexed_servers = {}
         servers.each { |s| indexed_servers[s.id] = s }
 
-        # Hosts ports contains MAC addresses of host interfaces. There can
-        # be multiple interfaces for each host
+        # Hosts ports contains MAC addresses of host interfaces, ip address and a connection to the neutron subnet.
+        # There is one interface per mac address
         indexed_hosts_ports = {}
-        hosts_ports.each { |p|  (indexed_hosts_ports[p.uuid] ||= []) << p }
+        hosts_ports.each { |p| indexed_hosts_ports[p.mac_address] = p }
+
+        # Indexed subnets containing e.g. cidr and dns
+        indexed_subnets = {}
+        subnets.each { |p| indexed_subnets[p.id] = p }
 
         # Indexed Heat resources, we are interested only in OS::Nova::Server
         indexed_resources = {}
         all_server_resources.each { |p| indexed_resources[p['physical_resource_id']] = p }
 
         process_collection(hosts, :hosts) do  |host|
-          parse_host(host, indexed_servers, indexed_hosts_ports, indexed_resources, cloud_ems_hosts_attributes)
+          parse_host(host, indexed_servers, indexed_hosts_ports, indexed_subnets, indexed_resources, cloud_ems_hosts_attributes)
         end
       end
 
@@ -138,7 +168,7 @@ module ManageIQ
         JSON.parse(extra_attrs).each_with_object({}) { |attr, obj| ((obj[attr[0]] ||= {})[attr[1]] ||= {})[attr[2]] = attr[3] if attr.count >= 4 }
       end
 
-      def parse_host(host, indexed_servers, _indexed_hosts_ports, indexed_resources, cloud_hosts_attributes)
+      def parse_host(host, indexed_servers, indexed_hosts_ports, indexed_subnets, indexed_resources, cloud_hosts_attributes)
         uid                 = host.uuid
         host_name           = identify_host_name(indexed_resources, host.instance_uuid, uid)
         hypervisor_hostname = identify_hypervisor_hostname(host, indexed_servers)
@@ -170,9 +200,11 @@ module ManageIQ
           :ipmi_address         => identify_ipmi_address(host),
           :power_state          => lookup_power_state(host.power_state),
           :connection_state     => lookup_connection_state(host.power_state),
-          :hardware             => process_host_hardware(host, extra_attributes),
+          :hardware             => process_host_hardware(host, extra_attributes, indexed_hosts_ports, indexed_subnets),
           :hypervisor_hostname  => hypervisor_hostname,
           :service_tag          => extra_attributes.fetch_path('system', 'product', 'serial'),
+          # TODO(lsmola) need to add column for connection to SecurityGroup
+          # :security_group_id  => security_group_id
           # Attributes taken from the Cloud provider
           :availability_zone_id => cloud_host_attributes.try(:[], :availability_zone_id)
         }
@@ -180,12 +212,15 @@ module ManageIQ
         return uid, new_result
       end
 
-      def process_host_hardware(host, extra_attributes)
+      def process_host_hardware(host, extra_attributes, indexed_hosts_ports, indexed_subnets)
         numvcpus             = extra_attributes.fetch_path('cpu', 'physical', 'number').to_i
         logical_cpus         = extra_attributes.fetch_path('cpu', 'logical', 'number').to_i
         cpu_cores_per_socket = numvcpus > 0 ? logical_cpus / numvcpus : 0
         # Get Cpu speed in Mhz
         cpu_speed        = extra_attributes.fetch_path('cpu', 'physical_0', 'frequency').to_i / 10**6
+
+        guest_devices, guest_devices_uids = process_host_hardware_device_hashes(extra_attributes)
+
         {
           :memory_mb            => host.properties['memory_mb'],
           :disk_capacity        => host.properties['local_gb'],
@@ -202,6 +237,9 @@ module ManageIQ
           :guest_os_full_name   => nil,
           :guest_os             => nil,
           :disks                => process_host_hardware_disks(extra_attributes),
+          :guest_devices        => guest_devices,
+          :networks             => process_host_hardware_network_hashes(extra_attributes, guest_devices_uids,
+                                                                      indexed_hosts_ports, indexed_subnets)
         }
       end
 
@@ -226,6 +264,72 @@ module ManageIQ
             :mode            => 'persistent'
           }
         end
+      end
+
+      # TODO(lsmola) only thing usable here is device name (eth0,..) but it doesn't contain all interfaces
+      # so I think we can get rid of this
+      def process_host_hardware_device_hashes(extra_attributes)
+        result = []
+        result_uids = {}
+
+        return result, result_uids if extra_attributes.nil? || (interfaces = extra_attributes.fetch_path('network')).blank?
+
+        interfaces.keys.each do |interface_name|
+          uid = address = interfaces.fetch_path(interface_name, 'serial')
+          name = interface_name
+
+          new_result = {
+            :uid_ems         => uid,
+            :device_name     => name,
+            :device_type     => 'ethernet',
+            :controller_type => 'ethernet',
+            :present         => nil,
+            :start_connected => nil,
+            :address         => address,
+          }
+
+          result << new_result
+          result_uids[uid] = new_result
+        end
+        return result, result_uids
+      end
+
+      # TODO(lsmola) we can get rid of this, right? it's the old network architecture
+      def process_host_hardware_network_hashes(extra_attributes, guest_devices, indexed_hosts_ports, indexed_subnets)
+        result = []
+        return result if extra_attributes.nil? || (interfaces = extra_attributes.fetch_path('network')).blank?
+
+        interfaces.keys.each do |interface_name|
+          mac_address = interfaces.fetch_path(interface_name, 'serial')
+          neutron_port = indexed_hosts_ports.fetch_path(mac_address)
+          next if neutron_port.blank?
+
+          ip_address = neutron_port.fixed_ips.try(:first).try(:[], "ip_address")
+          subnet = indexed_subnets ? indexed_subnets[neutron_port.fixed_ips.try(:first).try(:[], "subnet_id")] : nil
+
+          new_result = {
+            # TODO(lsmola) fill the proper hostname when we have it from some reliable source for all hosts
+            :hostname        => ip_address,
+            :ipaddress       => ip_address,
+            :ipv6address     => ip_address,
+            :subnet_mask     => subnet.try(:cidr),
+            :dns_server      => subnet.try(:dns_nameservers).try(:first),
+            :default_gateway => subnet.try(:gateway_ip),
+            # TODO(lsmola) add dhcp_server, but I don't see API action dhcp-agent-list-hosting-net documented, nor it
+            # it is in Fog, or get it from port list where it is marked as device_owner="network:dhcp", investigate
+            # :dhcp_server      => dhcp_server
+            # TODO(lsmola) need to add column for connection to CloudNetwork and CloudSubnet, then most of the
+            # attributes can be delegated to cloud_subnet
+            # :cloud_network_id => subnet.try(:network_id),
+            # :cloud_subnet_id  => subnet.try(:subnet_id),
+          }
+          result << new_result
+
+          guest_device = guest_devices[mac_address]
+          guest_device[:network] = new_result unless guest_device.nil?
+        end
+
+        result
       end
 
       def server_address(server, key)
@@ -335,6 +439,50 @@ module ManageIQ
 
       def get_object_content(obj)
         obj.body
+      end
+
+      def self.security_group_type
+        'ManageIQ::Providers::Openstack::InfraManager::SecurityGroup'
+      end
+
+      def self.network_router_type
+        "ManageIQ::Providers::Openstack::InfraManager::NetworkRouter"
+      end
+
+      def self.cloud_network_type
+        "ManageIQ::Providers::Openstack::InfraManager::CloudNetwork"
+      end
+
+      def self.cloud_subnet_type
+        "ManageIQ::Providers::Openstack::InfraManager::CloudSubnet"
+      end
+
+      def self.floating_ip_type
+        "ManageIQ::Providers::Openstack::InfraManager::FloatingIp"
+      end
+
+      def self.network_port_type
+        "ManageIQ::Providers::Openstack::InfraManager::NetworkPort"
+      end
+
+      #
+      # Helper methods
+      #
+
+      def find_device_connected_to_network_port(device_id)
+        @data.fetch_path(:hosts).detect { |x| x[:ems_ref_obj] == device_id }
+      end
+
+      def process_collection(collection, key)
+        @data[key] ||= []
+        return if collection.nil?
+
+        collection.each do |item|
+          uid, new_result = yield(item)
+
+          @data[key] << new_result
+          @data_index.store_path(key, uid, new_result)
+        end
       end
     end
   end
