@@ -10,6 +10,12 @@ describe ManageIQ::Providers::Azure::CloudManager::Vm do
     let(:power_state_off) { "VM stopped" }
     let(:power_state_suspended) { "VM stopping" }
 
+    it "defines a resource_group method that returns the expected value based on uid_ems" do
+      vm.uid_ems = "aaa\\bbb\\ccc\\ddd"
+      expect(vm).to respond_to(:resource_group)
+      expect(vm.resource_group).to eq("bbb")
+    end
+
     context("with :start") do
       let(:state) { :start }
       include_examples "Vm operation is available when not powered on"
