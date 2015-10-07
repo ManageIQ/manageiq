@@ -8,7 +8,7 @@ class ManageIQ::Providers::Azure::CloudManager::Vm < ManageIQ::Providers::CloudM
 
   # The resource group is stored as part of the uid_ems. This splits it out.
   def resource_group
-    uid_ems.split('\\').first
+    uid_ems.split('\\')[1]
   end
 
   #
