@@ -81,15 +81,15 @@ class ServiceController < ApplicationController
     end
 
     # Build the Explorer screen from scratch
-    @built_trees   = []
+    @trees   = []
     @accords = []
     if role_allows(:feature => "service", :any => true)
       self.x_active_tree ||= 'svcs_tree'
       self.x_active_accord ||= 'svcs'
-      @built_trees << build_svcs_tree
+      @trees << build_svcs_tree
       @accords.push(:name      => "svcs",
                     :title     => "Services",
-                    :container => "svcs_tree_div")
+                    :container => "svcs_accord")
     end
 
     params.merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
@@ -135,8 +135,8 @@ class ServiceController < ApplicationController
   def accordion_select
     @layout     = "explorer"
     @lastaction = "explorer"
-    self.x_active_accord = params[:id]
-    self.x_active_tree   = "#{params[:id]}_tree"
+    self.x_active_accord = params[:id].sub(/_accord$/, '')
+    self.x_active_tree   = "#{self.x_active_accord}_tree"
     replace_right_cell
   end
 

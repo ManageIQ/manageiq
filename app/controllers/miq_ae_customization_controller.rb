@@ -126,14 +126,14 @@ class MiqAeCustomizationController < ApplicationController
   end
 
   def accordion_select
-    self.x_active_accord = params[:id]
-    self.x_active_tree   = "#{params[:id]}_tree"
+    self.x_active_accord = params[:id].sub(/_accord$/, '')
+    self.x_active_tree   = "#{x_active_accord}_tree"
     get_node_info
     replace_right_cell(x_node)
   end
 
   def explorer
-    @built_trees = []
+    @trees = []
     @flash_array = @sb[:flash_msg] unless @sb[:flash_msg].blank?
     @explorer = true
     build_resolve_screen
@@ -153,17 +153,33 @@ class MiqAeCustomizationController < ApplicationController
     @trees = []
     @accords = []
 
-    @built_trees << old_dialogs_build_tree
-    @accords << {:name => "old_dialogs", :title => "Provisioning Dialogs", :container => "old_dialogs_tree_div"}
+    @trees << old_dialogs_build_tree
+    @accords << {
+      :name      => "old_dialogs",
+      :title     => "Provisioning Dialogs",
+      :container => "old_dialogs_accord"
+    }
 
-    @built_trees << dialog_build_tree
-    @accords << {:name => "dialogs", :title => "Service Dialogs", :container => "dialogs_tree_div"}
+    @trees << dialog_build_tree
+    @accords << {
+      :name      => "dialogs",
+      :title     => "Service Dialogs",
+      :container => "dialogs_accord"
+    }
 
-    @built_trees << ab_build_tree
-    @accords << {:name => "ab", :title => "Buttons", :container => "ab_tree_div"}
+    @trees << ab_build_tree
+    @accords << {
+      :name      => "ab",
+      :title     => "Buttons",
+      :container => "ab_accord"
+    }
 
-    @built_trees << dialog_import_export_build_tree
-    @accords << {:name => "dialog_import_export", :title => "Import/Export", :container => "dialog_import_export_tree_div"}
+    @trees << dialog_import_export_build_tree
+    @accords << {
+      :name      => "dialog_import_export",
+      :title     => "Import/Export",
+      :container => "dialog_import_export_accord"
+    }
 
     get_node_info
     @collapse_c_cell = true if (x_active_tree == :old_dialogs_tree &&

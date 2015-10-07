@@ -25,7 +25,7 @@ class VmInfraController < ApplicationController
         :accord_name => "vandt",
         :tree_name   => :vandt_tree,
         :title       => "VMs & Templates",
-        :container   => "vandt_tree_div"),
+        :container   => "vandt_accord"),
 
       ApplicationController::Feature.new_with_hash(
         :role        => "vms_filter_accord",
@@ -33,7 +33,7 @@ class VmInfraController < ApplicationController
         :accord_name => "vms_filter",
         :tree_name   => :vms_filter_tree,
         :title       => "VMs",
-        :container   => "vms_filter_tree_div"),
+        :container   => "vms_filter_accord"),
 
       ApplicationController::Feature.new_with_hash(
         :role        => "templates_filter_accord",
@@ -41,7 +41,7 @@ class VmInfraController < ApplicationController
         :accord_name => "templates_filter",
         :tree_name   => :templates_filter_tree,
         :title       => "Templates",
-        :container   => "templates_filter_tree_div"),
+        :container   => "templates_filter_accord"),
     ]
   end
 

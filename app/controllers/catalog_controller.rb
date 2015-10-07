@@ -196,8 +196,8 @@ class CatalogController < ApplicationController
     end
 
     # Build the Explorer screen from scratch
-    @built_trees = []
-    @accords     = []
+    @trees = []
+    @accords = []
 
     x_last_active_tree = x_active_tree if x_active_tree
     x_last_active_accord = x_active_accord if x_active_accord
@@ -207,32 +207,32 @@ class CatalogController < ApplicationController
       self.x_active_accord = 'svccat'
       default_active_tree ||= x_active_tree
       default_active_accord ||= x_active_accord
-      @built_trees << build_svccat_tree
-      @accords.push(:name => "svccat", :title => "Service Catalogs", :container => "svccat_tree_div")
+      @trees << build_svccat_tree
+      @accords.push(:name => "svccat", :title => "Service Catalogs", :container => "svccat_accord")
     end
     if role_allows(:feature => "catalog_items_accord", :any => true)
       self.x_active_tree   = 'sandt_tree'
       self.x_active_accord = 'sandt'
       default_active_tree ||= x_active_tree
       default_active_accord ||= x_active_accord
-      @built_trees << build_st_tree
-      @accords.push(:name => "sandt", :title => "Catalog Items", :container => "sandt_tree_div")
+      @trees << build_st_tree
+      @accords.push(:name => "sandt", :title => "Catalog Items", :container => "sandt_accord")
     end
     if role_allows(:feature => "orchestration_templates_accord", :any => true)
       self.x_active_tree   = 'ot_tree'
       self.x_active_accord = 'ot'
       default_active_tree ||= x_active_tree
       default_active_accord ||= x_active_accord
-      @built_trees << build_orch_tmpl_tree
-      @accords.push(:name => "ot", :title => "Orchestration Templates", :container => "ot_tree_div")
+      @trees << build_orch_tmpl_tree
+      @accords.push(:name => "ot", :title => "Orchestration Templates", :container => "ot_accord")
     end
     if role_allows(:feature => "st_catalog_accord", :any => true)
       self.x_active_tree   = 'stcat_tree'
       self.x_active_accord = 'stcat'
       default_active_tree ||= x_active_tree
       default_active_accord ||= x_active_accord
-      @built_trees << build_stcat_tree
-      @accords.push(:name => "stcat", :title => "Catalogs", :container => "stcat_tree_div")
+      @trees << build_stcat_tree
+      @accords.push(:name => "stcat", :title => "Catalogs", :container => "stcat_accord")
     end
     self.x_active_tree = default_active_tree
     self.x_active_accord = default_active_accord.to_s
@@ -316,8 +316,8 @@ class CatalogController < ApplicationController
   def accordion_select
     @layout     = "explorer"
     @lastaction = "explorer"
-    self.x_active_accord = params[:id]
-    self.x_active_tree   = "#{params[:id]}_tree"
+    self.x_active_accord = params[:id].sub(/_accord$/, '')
+    self.x_active_tree   = "#{x_active_accord}_tree"
     replace_right_cell
   end
 

@@ -156,20 +156,6 @@ li.brand-white-label.whitelabeled {
     margin-top: 20px;
 }
 
-/* overrides dhtmlx layout conflicts with patternfly accordion */
-#custom_left_cell_div .panel-group .panel-default {
-  border-right: 0;
-}
-
-/* prevents Bootstrap row class horizontal scrolling within dhtmlx layout  */
-.dhtmlxLayoutSinglePoly .row {
-  margin-right: 0;
-}
-
-#custom_left_cell_div h4.panel-title {
-  font-size: 12px !important
-}
-
 /* Table customizations */
 
 table.table td {

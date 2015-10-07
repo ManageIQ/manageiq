@@ -1,17 +1,9 @@
-- content_for :trees do
+- content_for :search do
   = render(:partial => "layouts/x_adv_searchbox", :locals => {:nameonly => true})
-  - @trees.each do |_name, tree|
-    %div{:style => "display: none;"}
-      = render :partial => "shared/tree", :locals => {:tree => tree, :name => tree.name.to_s}
 
-- content_for :accords do
+- content_for :dhx_layout do
   -# Create the explorer dhtmlx layout/accordion JS objects
-  = render(:partial => "layouts/dhtmlxlayout_explorer",
-    :locals         => {:accords => @accords,
-      :active_accord             => @sb[:active_accord],
-      :accord_select_function    => "miqAccordPolicySelect",
-      :cell_b_text               => @right_cell_text,
-      :cell_b_object             => "#{@right_cell_div}_div"})
+  = render :partial => "layouts/dhtmlxlayout_explorer"
 
 #main_div.main_div
   - case @nodetype

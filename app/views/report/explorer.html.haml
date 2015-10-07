@@ -1,25 +1,10 @@
--# Create from/to date JS vars to limit calendar starting from
-:javascript
-  ManageIQ.calendar.calDateFrom = miqCalendarDateConversion("#{@timezone_offset}");
+- content_for :dhx_layout do
+  = render :partial => "layouts/dhtmlxlayout_explorer"
 
-#layout_div{:style => "position:relative; width:auto; height: #{center_div_height(true, 550)}px;"}
-  - content_for :trees do
-    - @trees.each do |tree|
-      %div{:style => "display:none"}
-        = render :partial => tree, :locals => {:name => tree}
-  #main_div.main_div
-    - @lists.each do |list|
-      = render :partial => list
-      -# Include the center cell divs
-
-- content_for :accords do
-  -# Create the explorer dhtmlx layout/accordion JS objects
-  = render(:partial => "layouts/dhtmlxlayout_explorer",
-    :locals         => {:accords => @accords,
-      :active_accord             => @sb[:active_accord],
-      :accord_select_function    => "miqAccordReportSelect",
-      :cell_b_text               => @right_cell_text,
-      :cell_b_object             => "#{@right_cell_div}_div"})
+#main_div.main_div
+  - @lists.each do |list|
+    = render :partial => list
+    -# Include the center cell divs
 
 %script{:type => "text/javascript"}
   function miqReportAfterOnload() {
@@ -33,3 +18,7 @@
     miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}')
   };
   var miq_after_onload = "miqReportAfterOnload();"
+
+-# Create from/to date JS vars to limit calendar starting from
+:javascript
+  ManageIQ.calendar.calDateFrom = miqCalendarDateConversion("#{@timezone_offset}");

@@ -21,7 +21,10 @@
                   %span.fa.fa-angle-left
                 .btn.btn-default.resize-right{:class => sidewidth == 5 ? 'btn-disabled' : ''}
                   %span.fa.fa-angle-right
-      #left_div.resizable.sidebar-pf.sidebar-pf-left.scrollable-lg{:style => "height: 100%", :class => sidebar}
+      #left_div.resizable.sidebar-pf.sidebar-pf-left.scrollable{:style => "height: 100%", :class => sidebar}
+        - if @accords && @trees
+          = render :partial => "layouts/listnav"
+        = yield :left
 - else
   -#.container-fluid.resizable-sidebar{:style => "overflow: hidden; height: 100%; background: #fff;"}ű
   .container-fluid{:style => "overflow: hidden; height: 100%; background: #fff;"}
@@ -58,7 +61,7 @@
                   .btn.btn-default.resize-right{:class => sidewidth == 5 ? 'btn-disabled' : ''}
                     %span.fa.fa-angle-right
         -#.sidebar-pf.sidebar-pf-left.scrollable-lg.resizable{:class => sidebar}
-        .col-md-2.col-md-pull-10.sidebar-pf.sidebar-pf-left.scrollable-lg
+        .col-md-2.col-md-pull-10.sidebar-pf.sidebar-pf-left.scrollable
           = render :partial => "layouts/listnav"
 
       - elsif  @layout == "dashboard" && (controller.action_name == "show" || controller.action_name == "change_tab")
@@ -84,7 +87,7 @@
 - if @explorer
   #context_div
   #layout_div
-    = yield :trees
+    = yield :search
     #center_cell_div{:style => "display:none;"}
       #taskbar_div
         = render :partial => "layouts/x_taskbar"
@@ -94,4 +97,4 @@
           = render(:partial => 'layouts/saved_report_paging_bar', :locals => {:pages => @sb[:pages]})
         - else
           = render(:partial => '/layouts/x_pagingcontrols')
-  = yield :accords
+  = yield :dhx_layout

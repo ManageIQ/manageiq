@@ -140,7 +140,7 @@ class ReportController < ApplicationController
     if role_allows(:feature => "miq_report_saved_reports")
       build_savedreports_tree
       @trees.push("savedreports_tree")
-      @accords.push(:name => "savedreports", :title => "Saved Reports", :container => "savedreports_tree_div")
+      @accords.push(:name => "savedreports", :title => "Saved Reports", :container => "savedreports_accord")
       @lists.push("savedreports_list")
       self.x_active_tree ||= 'savedreports_tree'
       self.x_active_accord ||= 'savedreports'
@@ -149,7 +149,7 @@ class ReportController < ApplicationController
     if role_allows(:feature => "miq_report_reports", :any => true)
       build_report_listnav
       @trees.push("reports_tree")
-      @accords.push(:name => "reports", :title => "Reports", :container => "reports_tree_div")
+      @accords.push(:name => "reports", :title => "Reports", :container => "reports_accord")
       @lists.push("report_list")
       self.x_active_tree ||= 'reports_tree'
       self.x_active_accord ||= 'reports'
@@ -158,7 +158,7 @@ class ReportController < ApplicationController
     if role_allows(:feature => "miq_report_schedules", :any => true)
       build_schedules_tree
       @trees.push("schedules_tree")
-      @accords.push(:name => "schedules", :title => "Schedules", :container => "schedules_tree_div")
+      @accords.push(:name => "schedules", :title => "Schedules", :container => "schedules_accord")
       @lists.push("schedule_list")
       self.x_active_tree ||= 'schedules_tree'
       self.x_active_accord ||= 'schedules'
@@ -167,7 +167,7 @@ class ReportController < ApplicationController
     if role_allows(:feature => "miq_report_dashboard_editor")
       build_db_tree
       @trees.push("db_tree")
-      @accords.push(:name => "db", :title => "Dashboards", :container => "db_tree_div")
+      @accords.push(:name => "db", :title => "Dashboards", :container => "db_accord")
       @lists.push("db_list")
       self.x_active_tree ||= 'db_tree'
       self.x_active_accord ||= 'db'
@@ -176,7 +176,7 @@ class ReportController < ApplicationController
     if role_allows(:feature => "miq_report_widget_editor")
       build_widgets_tree
       @trees.push("widgets_tree")
-      @accords.push(:name => "widgets", :title => "Dashboard Widgets", :container => "widgets_tree_div")
+      @accords.push(:name => "widgets", :title => "Dashboard Widgets", :container => "widgets_accord")
       @lists.push("widget_list")
       self.x_active_tree ||= 'widgets_tree'
       self.x_active_accord ||= 'widgets'
@@ -185,7 +185,7 @@ class ReportController < ApplicationController
     if role_allows(:feature => "miq_report_menu_editor")
       build_roles_tree(:roles, :roles_tree)
       @trees.push("roles_tree")
-      @accords.push(:name => "roles", :title => "Edit Report Menus", :container => "roles_tree_div")
+      @accords.push(:name => "roles", :title => "Edit Report Menus", :container => "roles_accord")
       @lists.push("role_list")
       self.x_active_tree ||= 'roles_tree'
       self.x_active_accord ||= 'roles'
@@ -195,7 +195,7 @@ class ReportController < ApplicationController
     if role_allows(:feature => "miq_report_export")
       build_export_tree
       @trees.push("export_tree")
-      @accords.push(:name => "export", :title => "Import/Export", :container => "export_tree_div")
+      @accords.push(:name => "export", :title => "Import/Export", :container => "export_accord")
       @lists.push("export")
       self.x_active_tree ||= "export_tree"
       self.x_active_accord ||= "export"
@@ -221,8 +221,8 @@ class ReportController < ApplicationController
     @schedules = nil
     @edit             = nil
     if params[:id]
-      self.x_active_accord = params[:id]
-      self.x_active_tree   = "#{params[:id]}_tree"
+      self.x_active_accord = params[:id].sub(/_accord$/, '')
+      self.x_active_tree   = "#{self.x_active_accord}_tree"
       x_node_set("root", :roles_tree) unless @changed   # reset menu editor to show All Roles if nothing has been changed
 
       trees_to_replace = []
