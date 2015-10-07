@@ -191,6 +191,12 @@ class ApplicationHelper::ToolbarChooser
       else
         return "chargeback_center_tb"
       end
+    elsif x_active_tree == :cb_tiers_tree
+      if x_node==x_node.split('_').last
+        return "chargebackst_center_tb"
+      elsif x_node != "root"
+        return "chargebackt_center_tb"
+      end
     end
     "blank_view_tb"
   end

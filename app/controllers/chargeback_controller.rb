@@ -16,6 +16,8 @@ class ChargebackController < ApplicationController
     @_params[:typ] = params[:pressed].split('_').last
     cb_rate_edit if ["chargeback_rates_copy", "chargeback_rates_edit", "chargeback_rates_new"].include?(params[:pressed])
     cb_rates_delete if params[:pressed] == "chargeback_rates_delete"
+    cb_tier_edit if ["chargeback_tiers_copy", "chargeback_tiers_edit", "chargeback_tiers_new"].include?(params[:pressed])
+    cb_tiers_delete if params[:pressed] == "chargeback_tiers_delete"
   end
 
   def x_show
@@ -364,6 +366,9 @@ class ChargebackController < ApplicationController
     end
   end
 
+  def cb_tier_edit
+    puts "Editing tier"
+  end
   def cb_tier_show
     @display = "main"
     @sb[:selected_tier_details] = ChargebackTierDetail.where(chargeback_tier_id: @record.id).to_a
@@ -506,7 +511,7 @@ class ChargebackController < ApplicationController
       else
         @record = ChargebackTier.find_by_id(node.split('_').last.split('-').last)
         @sb[:action] = nil
-        @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"ChargebackTier"), :name=>@record.description}
+        @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"ChargebackTier"), :name=>@record.name}
         cb_tier_show
       end
     elsif x_active_tree == :cb_reports_tree
@@ -856,7 +861,7 @@ class ChargebackController < ApplicationController
         presenter[:set_visible_elements][:center_buttons_div] = true
         presenter[:reload_toolbars][:center] = {:buttons => c_buttons, :xml => c_xml}
       end
-      presenter[:expand_collapse_cells][:a] = c_buttons ? 'show' : 'hide'
+      presenter[:show_hide_layout][:toolbar] = c_buttons ? 'show' : 'hide'
       presenter[:update_partials][:main_div] = r[:partial => 'tiers_tabs']
       presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols']
     when :cb_assignments_tree
@@ -912,7 +917,8 @@ class ChargebackController < ApplicationController
       presenter[:set_visible_elements][:pc_div_1] = true
       if (x_active_tree == :cb_assignments_tree && x_node == "root") ||
          (x_active_tree == :cb_reports_tree && !@report) ||
-         (x_active_tree == :cb_rates_tree && x_node == "root")
+         (x_active_tree == :cb_rates_tree && x_node == "root") ||
+         (x_active_tree == :cb_tiers_tree && x_node == "root")
         presenter[:set_visible_elements][:toolbar] = false
         presenter[:set_visible_elements][:pc_div_1] = false
       end
