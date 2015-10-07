@@ -323,9 +323,9 @@ module MiqAeEngine
 
   def self.ae_user_object(options = {})
     raise "user_id not specified in Automation request" if options[:user_id].blank?
-    # raise "group_id not specified in Automation request" if options[:group_id].blank?
+    # raise "group_id not specified in Automation request" if options[:miq_group_id].blank?
     User.find_by!(:id => options[:user_id]).tap do |obj|
-      # obj.current_group = MiqGroup.find_by!(:id => options[:group_id])
+      # obj.current_group = MiqGroup.find_by!(:id => options[:miq_group_id])
     end
   end
 end

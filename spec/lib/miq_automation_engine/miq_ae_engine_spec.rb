@@ -41,7 +41,9 @@ module MiqAeEngineSpec
           :attrs            => {"request" => "InspectMe"},
           :object_type      => @vm.class.name,
           :object_id        => @vm.id,
-          :user_id          => @user.id
+          :user_id          => @user.id,
+          :miq_group_id     => @user.current_group.id,
+          :tenant_id        => @user.current_tenant.id
         }
 
         q = MiqQueue.put(
@@ -68,7 +70,7 @@ module MiqAeEngineSpec
           object_type = @cluster.class.name
           object_id   = @cluster.id
           automate_attrs = {"#{object_type}::#{object_type.underscore}" => object_id,
-                            "User::user" => @user.id}
+                            "User::user"                                => @user.id}
           MiqAeEngine.should_receive(:create_automation_object).with(@instance_name, automate_attrs, {:vmdb_object => @cluster}).and_return('uri')
           MiqAeEngine.deliver(object_type, object_id, nil, nil, @user.id).should be_nil
         end
@@ -78,7 +80,7 @@ module MiqAeEngineSpec
           object_type = @ems.class.name
           object_id   = @ems.id
           automate_attrs = {"#{base_name}::#{base_name.underscore}" => object_id,
-                            "User::user" => @user.id}
+                            "User::user"                            => @user.id}
           MiqAeEngine.should_receive(:create_automation_object).with(@instance_name, automate_attrs, {:vmdb_object => @ems}).and_return('uri')
           MiqAeEngine.deliver(object_type, object_id, nil, nil, @user.id).should be_nil
         end
@@ -120,7 +122,7 @@ module MiqAeEngineSpec
             args[:instance_name]    = "DEFAULT"
             args[:fqclass_name] = "Factory/StateMachines/ServiceProvision_template"
             args[:user_id] = @user.id
-            MiqAeEngine.should_receive(:create_automation_object).with("DEFAULT", attrs, {:fqclass => "Factory/StateMachines/ServiceProvision_template"}).and_return('uri')
+            MiqAeEngine.should_receive(:create_automation_object).with("DEFAULT", attrs, :fqclass => "Factory/StateMachines/ServiceProvision_template").and_return('uri')
             MiqAeEngine.deliver(args).should == @ws
           end
         end

@@ -15,6 +15,8 @@ describe "MiqAeMethodDispatch" do
                         :class_name       => @root_class,
                         :instance_name    => @root_instance,
                         :user_id          => @user.id,
+                        :miq_group_id     => @user.current_group.id,
+                        :tenant_id        => @user.current_tenant.id,
                         :automate_message => 'create'}
     MiqServer.stub(:my_zone).and_return('default')
     @pidfile = File.join(Dir.mktmpdir, "rip_van_winkle.pid")

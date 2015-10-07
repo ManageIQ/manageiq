@@ -13,7 +13,7 @@ module ServiceTemplate::Filter
     end
 
     def automate_result_include_service_template?(uri, user, name)
-      ws  = MiqAeEngine.resolve_automation_object(uri, user)
+      ws = MiqAeEngine.resolve_automation_object(uri, user)
       result = ws.root['include_service'].nil? ? true : ws.root['include_service']
       _log.info("Include Service Template <#{name}> : <#{result}>")
       result

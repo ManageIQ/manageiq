@@ -121,7 +121,7 @@ module MiqAeEvent
   end
 
   def self.automate_user
-    #TODO: Get the real userid to pass into Automate
+    # TODO: Get the real userid to pass into Automate
     user = User.where(:userid => "admin").first
     raise "Admin user needed to raise events" unless user
     user

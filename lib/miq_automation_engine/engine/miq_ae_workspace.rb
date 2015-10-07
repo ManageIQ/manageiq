@@ -53,7 +53,7 @@ module MiqAeEngine
       @persist_state_hash = HashWithIndifferentAccess.new
       @current_state_info = {}
       @state_machine_objects = []
-      @ae_user            = nil
+      @ae_user = nil
     end
 
     def readonly?

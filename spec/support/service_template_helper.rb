@@ -87,6 +87,6 @@ module ServiceTemplateHelper
 
   def user_helper
     User.any_instance.stub(:role).and_return("admin")
-    @user        = FactoryGirl.create(:user_with_group, :name => 'Wilma',  :userid => 'wilma')
+    @user = FactoryGirl.create(:user_with_group, :name => 'Wilma', :userid => 'wilma')
   end
 end
