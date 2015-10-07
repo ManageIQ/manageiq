@@ -21,7 +21,6 @@ class ManageIQ::Providers::Azure::CloudManager::OrchestrationStack < ::Orchestra
   end
   private_class_method :correct_parameters
 
-
   def raw_update_stack(options)
     resource_group = options[:resource_group]
     create_options = options.except(:resource_group)
@@ -59,5 +58,4 @@ class ManageIQ::Providers::Azure::CloudManager::OrchestrationStack < ::Orchestra
     _log.error "stack=[#{name}], error: #{err}"
     raise MiqException::MiqOrchestrationStatusError, err.to_s, err.backtrace
   end
-
 end

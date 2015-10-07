@@ -61,7 +61,7 @@ describe ManageIQ::Providers::Azure::CloudManager::OrchestrationStack do
     context '#raw_status and #raw_exists' do
       it 'gets the stack status and reason' do
         allow(orchestration_service).to receive(:get).and_return(the_raw_stack)
-        the_raw_stack['properties'] = { 'provisioningState' => 'Succeeded'}
+        the_raw_stack['properties'] = {'provisioningState' => 'Succeeded'}
 
         rstatus = orchestration_stack.raw_status
         expect(rstatus).to have_attributes(:status => 'Succeeded', :reason => nil)
