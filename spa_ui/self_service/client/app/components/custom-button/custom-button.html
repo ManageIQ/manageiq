@@ -1,0 +1,22 @@
+<div>
+  <span ng-repeat="button in vm.customActions.buttons">
+     <button class="btn btn-default custom-button" title="{{button.description}}" type="button">
+       <!--<img ng-if="button.options.display" src="/images/toolbars/custom-{{button.options.button_image}}.png"/>-->
+       {{button.name }}
+     </button>
+  </span>
+  <span class="dropdown" ng-repeat="buttonGroup in vm.customActions.button_groups">
+    <button class="btn btn-default dropdown-toggle custom-button" title="{{buttonGroup.description}}"
+            type="button" id="{{buttonGroup.id}}" data-toggle="dropdown">
+      {{ buttonGroup.name}}
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="{{buttonGroup.id}}">
+      <li ng-repeat="button in buttonGroup.buttons" role="presentation">
+        <a role="menuitem" tabindex="-1" href="#">
+          {{ button.name }}
+        </a>
+      </li>
+    </ul>
+  </span>
+</div>

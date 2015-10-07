@@ -567,4 +567,55 @@ describe User do
       expect(User.find_by_lower_email(u.email.upcase)).to eq(u)
     end
   end
+
+  describe "#current_tenant" do
+    let(:user1) { FactoryGirl.create(:user_with_group) }
+
+    it "sets the tenant" do
+      User.with_user(user1) do
+        expect(User.current_tenant).to be
+        expect(User.current_tenant).to eq(user1.current_tenant)
+      end
+    end
+  end
+
+  describe "#current_user=" do
+    let(:user1) { FactoryGirl.create(:user) }
+
+    it "sets the user" do
+      User.current_user = user1
+      expect(User.current_userid).to eq(user1.userid)
+      expect(User.current_user).to eq(user1)
+    end
+  end
+
+  describe "#with_user" do
+    let(:user1) { FactoryGirl.create(:user) }
+    let(:user2) { FactoryGirl.create(:user) }
+
+    it "sets the user" do
+      User.with_user(user1) do
+        expect(User.current_userid).to eq(user1.userid)
+        expect(User.current_user).to eq(user1)
+        User.with_user(user2) do
+          expect(User.current_userid).to eq(user2.userid)
+          expect(User.current_user).to eq(user2)
+        end
+        expect(User.current_userid).to eq(user1.userid)
+        expect(User.current_user).to eq(user1)
+      end
+    end
+
+    # sorry. please help me delete this use case / parameter
+    it "supports a userid with a nil user" do
+      User.with_user(user1) do
+        User.with_user(nil, "oleg") do
+          expect(User.current_userid).to eq("oleg")
+          expect(User.current_user).not_to be
+        end
+        expect(User.current_userid).to eq(user1.userid)
+        expect(User.current_user).to eq(user1)
+      end
+    end
+  end
 end

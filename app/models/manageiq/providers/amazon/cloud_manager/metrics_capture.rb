@@ -133,7 +133,7 @@ class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Prov
     COUNTER_INFO.each do |i|
       timestamps = i[:amazon_counters].collect do |c|
         metrics_by_counter_name[c].keys unless metrics_by_counter_name[c].nil?
-      end.flatten.uniq.sort.compact
+      end.flatten.uniq.compact.sort
 
       # If we are unable to determine if a datapoint is a 1-minute (detailed)
       #   or 5-minute (basic) interval, we will throw it away.  This includes
@@ -146,8 +146,8 @@ class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Prov
         value   = i[:calculation].call(*metrics, interval)
 
         # For (temporary) symmetry with VIM API we create 20-second intervals.
-        (last_ts + 20.seconds..ts).step_value(20.seconds).each do |ts|
-          counter_values_by_ts.store_path(ts.iso8601, i[:vim_style_counter_key], value)
+        (last_ts + 20.seconds..ts).step_value(20.seconds).each do |inner_ts|
+          counter_values_by_ts.store_path(inner_ts.iso8601, i[:vim_style_counter_key], value)
         end
       end
     end

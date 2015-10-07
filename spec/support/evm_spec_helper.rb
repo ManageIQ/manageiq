@@ -19,7 +19,7 @@ module EvmSpecHelper
     clear_instance_variable(BottleneckEvent, :@event_definitions) if defined?(BottleneckEvent)
 
     # Clear the thread local variable to prevent test contamination
-    User.current_userid = nil if defined?(User) && User.respond_to?(:current_userid=)
+    User.current_user = nil if defined?(User) && User.respond_to?(:current_user=)
 
     # Clear configuration caches
     VMDB::Config.invalidate_all
@@ -36,10 +36,6 @@ module EvmSpecHelper
 
   def self.clear_instance_variable(instance, ivar)
     instance.instance_variable_set(ivar, nil)
-  end
-
-  def self.create_root_tenant
-    Tenant.seed
   end
 
   def self.local_miq_server(attrs = {})
@@ -59,7 +55,7 @@ module EvmSpecHelper
   end
 
   def self.remote_miq_server(attrs = {})
-    create_root_tenant
+    Tenant.seed
 
     server = FactoryGirl.create(:miq_server, attrs)
     server

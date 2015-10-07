@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe ServiceTemplateCatalog do
   let(:root_tenant) do
-    EvmSpecHelper.create_root_tenant
+    Tenant.seed
   end
 
   describe "#name" do

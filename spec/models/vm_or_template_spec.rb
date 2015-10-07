@@ -454,7 +454,7 @@ describe VmOrTemplate do
   end
 
   context ".set_tenant_from_group" do
-    before { EvmSpecHelper.create_root_tenant }
+    before { Tenant.seed }
     let(:tenant1) { FactoryGirl.create(:tenant, :parent => Tenant.root_tenant) }
     let(:tenant2) { FactoryGirl.create(:tenant, :parent => Tenant.root_tenant) }
     let(:group1) { FactoryGirl.create(:miq_group, :tenant => tenant1) }

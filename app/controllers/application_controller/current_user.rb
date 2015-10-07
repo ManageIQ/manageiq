@@ -11,15 +11,15 @@ module ApplicationController::CurrentUser
   end
 
   def clear_current_user
-    User.current_userid = nil
-    session[:userid]    = nil
-    session[:group]     = nil
+    User.current_user = nil
+    session[:userid]  = nil
+    session[:group]   = nil
   end
 
   def current_user=(db_user)
-    User.current_userid = db_user.userid
-    session[:userid]    = db_user.userid
-    session[:group]     = db_user.current_group.try(:id)
+    User.current_user = db_user
+    session[:userid]  = db_user.userid
+    session[:group]   = db_user.current_group.try(:id)
   end
 
   def admin_user?

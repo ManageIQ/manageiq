@@ -65,11 +65,52 @@
         resultsCount: vm.requestsList.length,
         appliedFilters: [],
         onFilterChange: filterChange
+      },
+      sortConfig: {
+        fields: [
+          {
+            id: 'description',
+            title: 'Name',
+            sortType: 'alpha'
+          },
+          {
+            id: 'id',
+            title: 'ID',
+            sortType: 'numeric'
+          },
+          {
+            id: 'requested',
+            title: 'Requested',
+            sortType: 'numeric'
+          }
+        ],
+        onSortChange: sortChange
       }
     };
 
     function handleClick(item, e) {
       $state.go('requests.details', {requestId: item.id});
+    }
+
+    function sortChange(sortId, isAscending) {
+      vm.requestsList.sort(compareFn);
+    }
+
+    function compareFn(item1, item2) {
+      var compValue = 0;
+      if (vm.toolbarConfig.sortConfig.currentField.id === 'description') {
+        compValue = item1.description.localeCompare(item2.description);
+      } else if (vm.toolbarConfig.sortConfig.currentField.id === 'id') {
+        compValue = item1.id - item2.id;
+      } else if (vm.toolbarConfig.sortConfig.currentField.id === 'requested') {
+        compValue = new Date(item1.created_on) - new Date(item2.created_on);
+      }
+
+      if (!vm.toolbarConfig.sortConfig.isAscending) {
+        compValue = compValue * -1;
+      }
+
+      return compValue;
     }
 
     function filterChange(filters) {
@@ -117,12 +158,12 @@
     function matchesFilter(item, filter) {
       var match = true;
       if (filter.id === 'request_state') {
-        match = String(item.request_state).toLowerCase() === String(filter.value).toLowerCase();
+        return item.request_state.toLowerCase() === filter.value.toLowerCase();
       } else if (filter.id === 'id') {
-        match = Number(item.id) === Number(filter.value);
+        return Number(item.id) === Number(filter.value);
       }
 
-      return match;
+      return false;
     }
   }
 })();
