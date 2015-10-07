@@ -442,7 +442,7 @@ describe CatalogController do
     end
 
     it "Renders list of orchestration templates using correct GTL type" do
-      %w(root xx-otcfn xx-othot).each do |id|
+      %w(root xx-otcfn xx-othot xx-otazu).each do |id|
         post :tree_select, :id => id, :format => :js
         response.should render_template('layouts/gtl/_grid')
       end

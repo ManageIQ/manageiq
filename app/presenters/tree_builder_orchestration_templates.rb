@@ -13,6 +13,11 @@ class TreeBuilderOrchestrationTemplates < TreeBuilder
        :text  => "Heat Templates",
        :image => "orchestration_template_hot",
        :tip   => "Heat Templates"}
+      {:id    => 'otazu',
+       :tree  => "otazu_tree",
+       :text  => "Azure Templates",
+       :image => "orchestration_template_azu",
+       :tip   => "Azure Templates"}
     ]
     options[:count_only] ? children.length : children
   end
@@ -33,7 +38,8 @@ class TreeBuilderOrchestrationTemplates < TreeBuilder
   def x_get_tree_custom_kids(object, options)
     classes = {
       "otcfn" => OrchestrationTemplateCfn,
-      "othot" => OrchestrationTemplateHot
+      "othot" => OrchestrationTemplateHot,
+      "otazu" => OrchestrationTemplateAzure,
     }
     objects = rbac_filtered_objects(classes[object[:id]].all).sort_by { |o| o.name.downcase }
     count_only_or_objects(options[:count_only], objects, nil)

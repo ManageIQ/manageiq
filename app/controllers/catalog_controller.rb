@@ -743,14 +743,27 @@ class CatalogController < ApplicationController
     if elements.length > 1
       self.x_node = 'root'
     else
-      self.x_node = elements[0].kind_of?(OrchestrationTemplateHot) ? "xx-othot" : "xx-otcfn"
+      if elements[0].kind_of?(OrchestrationTemplateHot)
+        self.x_node = "xx-othot"
+      elsif elements[0].kind_of?(OrchestrationTemplateCfn)
+        self.x_node = "xx-othot"
+      else
+        self.x_node = "xx-otazu"
+      end
     end
     replace_right_cell(nil, trees_to_replace([:ot]))
   end
 
   def ot_add
     assert_privileges("orchestration_template_add")
-    ot_type = x_node == "xx-othot" ? "OrchestrationTemplateHot" : "OrchestrationTemplateCfn"
+    ot_type = case x_node
+      when "xx-othot"
+        "OrchestrationTemplateHot"
+      when"xx-otcfn"
+        "OrchestrationTemplateCfn"
+      else
+        "OrchestrationTemplateAzure"
+    end
     @edit = {:new => {:name        => "",
                       :description => "",
                       :content     => "",
@@ -813,7 +826,15 @@ class CatalogController < ApplicationController
     self.x_active_tree = :ot_tree
     self.x_active_accord = 'ot'
     x_tree_init(:ot_tree, :ot, "OrchestrationTemplate") unless x_tree
-    ot_type = ot.type == "OrchestrationTemplateHot" ? "othot" : "otcfn"
+    ot_type =
+    case ot.type
+      when "OrchestrationTemplateHot"
+        "othot"
+      when "OrchestrationTemplateCfn"
+        "otcfn"
+      else
+        "otazu"
+    end
     x_tree[:open_nodes].push("xx-#{ot_type}") unless x_tree[:open_nodes].include?("xx-#{ot_type}")
     self.x_node = "ot-#{to_cid(ot.id)}"
     x_tree[:open_nodes].push(x_node)
@@ -1089,7 +1110,15 @@ class CatalogController < ApplicationController
                      :name  => @edit[:new][:name]})
         subtree = ot.type == "OrchestrationTemplateHot" ? "xx-othot" : "xx-otcfn"
         x_tree[:open_nodes].push(subtree) unless x_tree[:open_nodes].include?(subtree)
-        self.x_node = "xx-%{type}_ot-%{cid}" % {:type => ot.type == "OrchestrationTemplateHot" ? "othot" : "otcfn",
+        ot_type = case ot.type
+                    when  "OrchestrationTemplateHot"
+                      "othot"
+                    when "OrchestrationTemplateCfn"
+                      "otcfn"
+                    else
+                      "otazu"
+                  end
+         self.x_node = "xx-%{type}_ot-%{cid}" % {:type => ot_type,
                                                 :cid  => to_cid(ot.id)}
         x_tree[:open_nodes].push(x_node)
         ot_action_submit_flash
@@ -1616,8 +1645,15 @@ class CatalogController < ApplicationController
             process_show_list(:model => typ.constantize)
           end
           @right_cell_text = _("All %s") % ui_lookup(:models => typ)
-        elsif ["xx-otcfn", "xx-othot"].include?(x_node)
-          typ = x_node == "xx-otcfn" ? "OrchestrationTemplateCfn" : "OrchestrationTemplateHot"
+        elsif ["xx-otcfn", "xx-othot", "xx-otazu"].include?(x_node)
+          typ = case x_node
+                  when "xx-otcfn"
+                    "OrchestrationTemplateCfn"
+                  when "xx-othot"
+                    "OrchestrationTemplateHot"
+                  else
+                    "xx-otazu"
+                end
           @right_cell_text = _("All %s") % ui_lookup(:models => typ)
           process_show_list(:model => typ.constantize, :gtl_dbname => :orchestrationtemplate)
         else
@@ -1691,8 +1727,10 @@ class CatalogController < ApplicationController
     if record.kind_of?(OrchestrationTemplate)
       parents = if record.type == "OrchestrationTemplateCfn"
                   [:id => "otcfn"]
-                else
+                elsif record.type == "OrchestrationTemplateHot"
                   [:id => "othot"]
+                else
+                  [:id => "otazu"]
                 end
     else
       # Check for parent nodes missing from vandt tree and return them if any

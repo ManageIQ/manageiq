@@ -817,7 +817,7 @@ class ApplicationHelper::ToolbarBuilder
       when "miq_template_refresh", "miq_template_reload"
         return true unless @perf_options[:typ] == "realtime"
       end
-    when "OrchestrationTemplate", "OrchestrationTemplateCfn", "OrchestrationTemplateHot"
+    when "OrchestrationTemplate", "OrchestrationTemplateCfn", "OrchestrationTemplateHot", "OrchestrationTemplateAzure"
       return true unless role_allows(:feature => id)
     when "NilClass"
       case id
@@ -1074,7 +1074,7 @@ class ApplicationHelper::ToolbarBuilder
       when "orchestration_stack_retire_now"
         return "Orchestration Stack is already retired" if @record.retired == true
       end
-    when "OrchestrationTemplateCfn", "OrchestrationTemplateHot"
+    when "OrchestrationTemplateCfn", "OrchestrationTemplateHot", "OrchestrationTemplateAzure"
       case id
       when "orchestration_template_remove"
         return "Read-only Orchestration Template cannot be deleted" if @record.stacks.length > 0

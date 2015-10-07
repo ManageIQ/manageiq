@@ -441,6 +441,7 @@ class TreeBuilder
     "al"  => "MiqAlert",
     "ap"  => "MiqAlertSet",
     "az"  => "AvailabilityZone",
+    "azu" => "OrchestrationTemplateAzure",
     "cnt" => "Container",
     "co"  => "Condition",
     "cbg" => "CustomButtonSet",
