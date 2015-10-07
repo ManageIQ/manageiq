@@ -1,7 +1,12 @@
-<div>
-  <a ui-sref="^" class="breadcrumb"> <span class="fa fa-angle-left"/> Back to Service Catalog</a>
-</div>
-<div class="panel panel-default">
+<ol class="breadcrumb">
+  <li>
+    <a ui-sref="^"> <span class="fa fa-angle-double-left"/>&nbsp;Back to Service Catalog</a>
+  </li>
+  <li class="active"> <strong>Service:</strong> {{ ::vm.serviceTemplate.name }}
+  </li>
+</ol>
+
+<div class="panel panel-default ss-details-panel">
   <div class="panel-body">
     <section>
       <div class="marketplace-title-img">

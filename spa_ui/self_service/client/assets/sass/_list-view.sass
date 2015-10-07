@@ -1,8 +1,23 @@
 .list-view-container
-  margin-top: 20px
+  height: calc(100vh - 185px)
+  overflow-y: auto
+  overflow-x: hidden
+  background: $app-color-white
 
 .data-list-pf
   line-height: 40px
+
+  .no-wrap
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+    display: block
+
+  .list-group-item
+    padding: 10px 0
+    border-top: 0px
+    margin-bottom: 0px
+    cursor: pointer
 
 +block(ss-list-view)
   +element(title-img)

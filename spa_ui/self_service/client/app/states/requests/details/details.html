@@ -1,7 +1,12 @@
-<div>
-  <a ui-sref="^" class="breadcrumb"> <span class="fa fa-angle-left"/> Back to My Requests</a>
-</div>
-<div class="panel panel-default">
+<ol class="breadcrumb">
+  <li>
+    <a ui-sref="^"> <span class="fa fa-angle-double-left"/>&nbsp;Back to My Requests</a>
+  </li>
+  <li class="active"> <strong>Request:</strong> {{ ::vm.request.description }}
+  </li>
+</ol>
+
+<div class="panel panel-default ss-details-panel">
   <div class="panel-body">
     <section>
       <div class="col-md-12 ss-details-header">
@@ -98,7 +103,7 @@
     </section>
   </div>
 </div>
-<div class="panel panel-default">
+<div class="panel panel-default ss-details-panel">
   <div class="panel-body">
     <section class="ss-details-section">
       <h2>Request Details</h2>
