@@ -55,13 +55,19 @@ class ExtManagementSystem < ActiveRecord::Base
   has_many :miq_events,             :as => :target, :dependent => :destroy
 
   validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_id]}
-  validates :hostname,
-            :presence   => true,
-            :uniqueness => {:case_sensitive => false},
-            :if         => :hostname_required?
+  validates :hostname, :presence => true, :if => :hostname_required?
+  validate :hostname_uniqueness_valid?, :if => :hostname_required?
 
-  # TODO: Remove all callers of address
-  alias_attribute :address, :hostname
+  def hostname_uniqueness_valid?
+    return unless hostname_required?
+    return unless hostname.present? # Presence is checked elsewhere
+
+    query = ExtManagementSystem.where.not(:id => id).includes(:hostname)
+    query = query.where(:tenant_id => tenant_id) if tenant_id
+    existing_hostnames = query.collect { |e| e.hostname.downcase }
+
+    errors.add(:hostname, "has already been taken") if existing_hostnames.include?(hostname.downcase)
+  end
 
   include NewWithTypeStiMixin
   include UuidMixin
@@ -104,6 +110,8 @@ class ExtManagementSystem < ActiveRecord::Base
            :port=,
            :to => :default_endpoint
 
+  alias_method :address, :hostname   # TODO: Remove all callers of address
+
   virtual_column :ipaddress,               :type => :string,  :uses => :endpoints
   virtual_column :hostname,                :type => :string,  :uses => :endpoints
   virtual_column :port,                    :type => :integer, :uses => :endpoints
@@ -138,10 +146,17 @@ class ExtManagementSystem < ActiveRecord::Base
     'amazon' => 'ec2',
   }
 
+  def self.find_by_ipaddress(ipaddress)
+    Endpoint.where(
+      :ipaddress     => ipaddress,
+      :resource_type => base_class.name
+    ).take.try(:resource)
+  end
+
   def self.create_discovered_ems(ost)
-    # add an ems entry
-    if ExtManagementSystem.find_by_ipaddress(ost.ipaddr).nil?
-      hostname = Socket.getaddrinfo(ost.ipaddr, nil)[0][2]
+    ip = ost.ipaddr
+    if find_by_ipaddress(ip).nil?
+      hostname = Socket.getaddrinfo(ip, nil)[0][2]
 
       ems_klass, ems_name = if ost.hypervisor.include?(:scvmm)
                               [ManageIQ::Providers::Microsoft::InfraManager, 'SCVMM']
@@ -152,8 +167,8 @@ class ExtManagementSystem < ActiveRecord::Base
                             end
 
       ems = ems_klass.create(
-        :ipaddress => ost.ipaddr,
-        :name      => "#{ems_name} (#{ost.ipaddr})",
+        :ipaddress => ip,
+        :name      => "#{ems_name} (#{ip})",
         :hostname  => hostname,
         :zone_id   => MiqServer.my_server.zone.id
       )
@@ -502,14 +517,14 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def stop_event_monitor_queue_on_change
-    if !event_monitor_class.nil? && !self.new_record? && changed.include_any?("hostname", "ipaddress")
+    if event_monitor_class && !self.new_record? && default_endpoint.changed.include_any?("hostname", "ipaddress")
       _log.info("EMS: [#{name}], Hostname or IP address has changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
       stop_event_monitor_queue
     end
   end
 
   def stop_event_monitor_queue_on_credential_change
-    if !event_monitor_class.nil? && !self.new_record? && self.credentials_changed?
+    if event_monitor_class && !self.new_record? && self.credentials_changed?
       _log.info("EMS: [#{name}], Credentials have changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
       stop_event_monitor_queue
     end
