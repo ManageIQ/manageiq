@@ -1,28 +1,13 @@
 require "spec_helper"
-
+include AutomationSpecHelper
 module MiqAeServiceServiceReconfigureTaskSpec
   describe MiqAeMethodService::MiqAeServiceServiceReconfigureTask do
     before(:each) do
-      xml = <<-XML
-      <MiqAeDatastore version='1.0'>
-        <MiqAeClass name="AUTOMATE" namespace="EVM">
-          <MiqAeSchema>
-            <MiqAeField name="method1"  aetype="method"/>
-          </MiqAeSchema>
-          <MiqAeMethod name="test" language="ruby" location="inline" scope="instance">
-          <![CDATA[
-          ]]>
-          </MiqAeMethod>
-          <MiqAeInstance name="test1">
-            <MiqAeField name="method1">test</MiqAeField>
-          </MiqAeInstance>
-        </MiqAeClass>
-      </MiqAeDatastore>
-      XML
+      method_script   = "$evm.root['result'] = $evm.root['service_reconfigure_task'].status"
+      create_ae_model_with_method(:method_script => method_script, :ae_class => 'AUTOMATE',
+                                  :ae_namespace  => 'EVM', :instance_name => 'test1',
+                                  :method_name   => 'test', :name => 'TEST_DOMAIN')
 
-      # hide deprecation warning
-      expect(MiqAeDatastore).to receive(:xml_deprecated_warning)
-      MiqAeDatastore::Import.load_xml(xml)
     end
 
     let(:ae_method) { ::MiqAeMethod.first }
@@ -42,16 +27,12 @@ module MiqAeServiceServiceReconfigureTaskSpec
     context "#status" do
       it "returns 'ok' when state is finished" do
         task.update_attributes(:state => "finished")
-        method   = "$evm.root['result'] = $evm.root['service_reconfigure_task'].status"
-        ae_method.update_attributes!(:data => method)
 
         invoke_ae.root('result').should == 'ok'
       end
 
       it "returns 'retry' when state is pending" do
         task.update_attributes(:state => "pending")
-        method   = "$evm.root['result'] = $evm.root['service_reconfigure_task'].status"
-        ae_method.update_attributes!(:data => method)
 
         invoke_ae.root('result').should == 'retry'
       end
