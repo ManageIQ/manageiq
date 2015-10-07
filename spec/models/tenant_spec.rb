@@ -383,7 +383,7 @@ describe Tenant do
     let(:brand_feature) { FactoryGirl.create(:miq_product_feature, :identifier => "edit-brand") }
     let(:admin_with_brand) { FactoryGirl.create(:miq_user_role, :name => "tenant_admin-brand-master") }
 
-    let(:tenant1) { FactoryGirl.create(:tenant) }
+    let(:tenant1) { FactoryGirl.create(:tenant, :parent => Tenant.seed) }
     let(:tenant1_admins) do
       FactoryGirl.create(:miq_group,
                          :miq_user_role => admin_with_brand,
