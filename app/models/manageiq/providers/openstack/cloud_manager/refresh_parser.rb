@@ -4,6 +4,7 @@ module ManageIQ::Providers
   class Openstack::CloudManager::RefreshParser < ManageIQ::Providers::CloudManager::RefreshParser
     include ManageIQ::Providers::Openstack::RefreshParserCommon::HelperMethods
     include ManageIQ::Providers::Openstack::RefreshParserCommon::Images
+    include ManageIQ::Providers::Openstack::RefreshParserCommon::Networks
     include ManageIQ::Providers::Openstack::RefreshParserCommon::Objects
     include ManageIQ::Providers::Openstack::RefreshParserCommon::OrchestrationStacks
 
@@ -42,6 +43,7 @@ module ManageIQ::Providers
       load_orchestration_stacks
       get_security_groups
       get_networks
+      get_network_routers
       # get_hosts
       get_images
       get_servers
@@ -49,9 +51,11 @@ module ManageIQ::Providers
       get_snapshots
       get_object_store
       get_floating_ips
+      get_network_ports
 
       $fog_log.info("#{log_header}...Complete")
 
+      link_network_ports_association
       link_vm_genealogy
       link_storage_associations
       filter_unused_disabled_flavors
@@ -63,14 +67,6 @@ module ManageIQ::Providers
 
     def servers
       @servers ||= @connection.handled_list(:servers)
-    end
-
-    def security_groups
-      @security_groups ||= @network_service.handled_list(:security_groups)
-    end
-
-    def networks
-      @networks ||= @network_service.handled_list(:networks)
     end
 
     def volumes
@@ -115,34 +111,6 @@ module ManageIQ::Providers
       process_collection(kps, :key_pairs) { |kp| parse_key_pair(kp) }
     end
 
-    def get_security_groups
-      process_collection(security_groups, :security_groups) { |sg| parse_security_group(sg) }
-      get_firewall_rules
-    end
-
-    def get_firewall_rules
-      security_groups.each do |sg|
-        new_sg = @data_index.fetch_path(:security_groups, sg.id)
-        new_sg[:firewall_rules] = sg.security_group_rules.collect { |r| parse_firewall_rule(r) }
-      end
-    end
-
-    def get_networks
-      return unless @network_service.name == :neutron
-
-      process_collection(networks, :cloud_networks) { |n| parse_network(n) }
-      get_subnets
-    end
-
-    def get_subnets
-      return unless @network_service.name == :neutron
-
-      networks.each do |n|
-        new_net = @data_index.fetch_path(:cloud_networks, n.id)
-        new_net[:cloud_subnets] = n.subnets.collect { |s| parse_subnet(s) }
-      end
-    end
-
     def get_volumes
       process_collection(volumes, :cloud_volumes) { |volume| parse_volume(volume) }
     end
@@ -157,20 +125,6 @@ module ManageIQ::Providers
     def get_servers
       openstack_infra_hosts = @ems.provider.try(:infra_ems).try(:hosts)
       process_collection(servers, :vms) { |server| parse_server(server, openstack_infra_hosts) }
-    end
-
-    def get_floating_ips
-      ips = send("floating_ips_#{@network_service.name}")
-      process_collection(ips, :floating_ips) { |ip| parse_floating_ip(ip) }
-    end
-
-    def floating_ips_neutron
-      @network_service.handled_list(:floating_ips)
-    end
-
-    # maintained for legacy nova network support
-    def floating_ips_nova
-      @connection.handled_list(:addresses)
     end
 
     def link_vm_genealogy
@@ -297,72 +251,24 @@ module ManageIQ::Providers
       'ManageIQ::Providers::Openstack::CloudManager::SecurityGroup'
     end
 
-    def parse_security_group(sg)
-      uid, security_group = super
-      security_group[:cloud_tenant]        = @data_index.fetch_path(:cloud_tenants, sg.tenant_id)
-      security_group[:orchestration_stack] = @data_index.fetch_path(:orchestration_stacks, @resource_to_stack[uid])
-      return uid, security_group
+    def self.network_router_type
+      "ManageIQ::Providers::Openstack::CloudManager::NetworkRouter"
     end
 
-    # TODO: Should ICMP protocol values have their own 2 columns, or
-    #   should they override port and end_port like the Amazon API.
-    def parse_firewall_rule(rule)
-      send("parse_firewall_rule_#{@network_service.name}", rule)
+    def self.cloud_network_type
+      "ManageIQ::Providers::Openstack::CloudManager::CloudNetwork"
     end
 
-    def parse_firewall_rule_neutron(rule)
-      direction = (rule.direction == "egress") ? "outbound" : "inbound"
-
-      {
-        :direction             => direction,
-        :ems_ref               => rule.id.to_s,
-        :host_protocol         => rule.protocol.to_s.upcase,
-        :network_protocol      => rule.ethertype.to_s.upcase,
-        :port                  => rule.port_range_min,
-        :end_port              => rule.port_range_max,
-        :source_security_group => rule.remote_group_id,
-        :source_ip_range       => rule.remote_ip_prefix,
-      }
+    def self.cloud_subnet_type
+      "ManageIQ::Providers::Openstack::CloudManager::CloudSubnet"
     end
 
-    def parse_firewall_rule_nova(rule)
-      {
-        :direction             => "inbound",
-        :ems_ref               => rule.id.to_s,
-        :host_protocol         => rule.ip_protocol.to_s.upcase,
-        :port                  => rule.from_port,
-        :end_port              => rule.to_port,
-        :source_security_group => data_security_groups_by_name[rule.group["name"]],
-        :source_ip_range       => rule.ip_range["cidr"],
-      }
+    def self.floating_ip_type
+      "ManageIQ::Providers::Openstack::CloudManager::FloatingIp"
     end
 
-    def parse_network(network)
-      uid     = network.id
-      status  = (network.status.to_s.downcase == "active") ? "active" : "inactive"
-
-      new_result = {
-        :name                => network.name,
-        :ems_ref             => uid,
-        :shared              => network.shared,
-        :status              => status,
-        :enabled             => network.admin_state_up,
-        :external_facing     => network.router_external,
-        :cloud_tenant        => @data_index.fetch_path(:cloud_tenants, network.tenant_id),
-        :orchestration_stack => @data_index.fetch_path(:orchestration_stacks, @resource_to_stack[uid])
-      }
-      return uid, new_result
-    end
-
-    def parse_subnet(subnet)
-      {
-        :name             => subnet.name,
-        :ems_ref          => subnet.id,
-        :cidr             => subnet.cidr,
-        :network_protocol => "ipv#{subnet.ip_version}",
-        :gateway          => subnet.gateway_ip,
-        :dhcp_enabled     => subnet.enable_dhcp,
-      }
+    def self.network_port_type
+      "ManageIQ::Providers::Openstack::CloudManager::NetworkPort"
     end
 
     def parse_volume(volume)
@@ -436,6 +342,8 @@ module ManageIQ::Providers
         flavor = @data_index.fetch_path(:flavors, flavor_uid)
       end
 
+      # TODO(lsmola) keeping for backwards compatibility, replaced with new networking models using network_ports
+      # for connections, delete when not needed.
       private_network = {:ipaddress => server.private_ip_address}.delete_nils
       public_network  = {:ipaddress => server.public_ip_address}.delete_nils
 
@@ -469,6 +377,8 @@ module ManageIQ::Providers
           :memory_mb            => flavor[:memory] / 1.megabyte,
           :disk_capacity        => flavor[:root_disk_size] + flavor[:ephemeral_disk_size] + flavor[:swap_disk_size],
           :disks                => [], # Filled in later conditionally on flavor
+          # TODO(lsmola) keeping for backwards compatibility, replaced with new networking models using network_ports
+          # for connections, delete when not needed.
           :networks             => [], # Filled in later conditionally on what's available
         },
         :host                => parent_host,
@@ -480,6 +390,8 @@ module ManageIQ::Providers
         :cloud_tenant        => @data_index.fetch_path(:cloud_tenants, server.tenant_id),
         :orchestration_stack => @data_index.fetch_path(:orchestration_stacks, @resource_to_stack[uid])
       }
+      # TODO(lsmola) keeping for backwards compatibility, replaced with new networking models using network_ports
+      # for connections, delete when not needed.
       new_result[:hardware][:networks] << private_network.merge(:description => "private") unless private_network.blank?
       new_result[:hardware][:networks] << public_network.merge(:description => "public")   unless public_network.blank?
 
@@ -500,60 +412,22 @@ module ManageIQ::Providers
       return uid, new_result
     end
 
-    def parse_floating_ip(ip)
-      send("parse_floating_ip_#{@network_service.name}", ip)
-    end
-
-    def parse_floating_ip_neutron(ip)
-      uid     = ip.id
-      address = ip.floating_ip_address
-
-      associated_vm = find_vm_associated_with_floating_ip(address)
-
-      new_result = {
-        :type         => "ManageIQ::Providers::Openstack::CloudManager::FloatingIp",
-        :ems_ref      => uid,
-        :address      => address,
-
-        :vm           => associated_vm,
-        :cloud_tenant => @data_index.fetch_path(:cloud_tenants, ip.tenant_id)
-      }
-
-      return uid, new_result
-    end
-
-    # maintained for legacy nova network support
-    def parse_floating_ip_nova(ip)
-      uid     = ip.id
-      address = ip.ip
-
-      associated_vm = find_vm_associated_with_floating_ip(address)
-
-      new_result = {
-        :type    => "ManageIQ::Providers::Openstack::CloudManager::FloatingIp",
-        :ems_ref => uid,
-        :address => address,
-
-        :vm      => associated_vm
-      }
-
-      return uid, new_result
-    end
-
     #
     # Helper methods
     #
-
-    def find_vm_associated_with_floating_ip(ip_address)
-      @data[:vms].detect do |v|
-        v.fetch_path(:hardware, :networks).to_miq_a.detect do |n|
-          n[:description] == "public" && n[:ipaddress] == ip_address
-        end
-      end
+    def find_device_connected_to_network_port(device_id)
+      @data_index.fetch_path(:vms, device_id)
     end
 
     def data_security_groups_by_name
       @data_security_groups_by_name ||= @data[:security_groups].index_by { |sg| sg[:name] }
+    end
+
+    def clean_up_extra_flavor_keys
+      @data[:flavors].each do |f|
+        f.delete(:ephemeral_disk)
+        f.delete(:swap_disk)
+      end
     end
 
     def add_instance_disk(disks, size, location, name)
