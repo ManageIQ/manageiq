@@ -6,6 +6,14 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
   has_many :host_service_group_openstacks, :foreign_key => :host_id, :dependent => :destroy,
     :class_name => 'ManageIQ::Providers::Openstack::InfraManager::HostServiceGroup'
 
+  has_many :network_ports, :as => :device
+  has_many :cloud_networks, :through => :network_ports
+  alias_method :private_networks, :cloud_networks
+  has_many :cloud_subnets, :through => :network_ports
+  has_many :network_routers, :through => :cloud_networks
+  has_many :public_networks, :through => :cloud_networks
+  has_many :floating_ips
+
   # TODO(lsmola) for some reason UI can't handle joined table cause there is hardcoded somewhere that it selects
   # DISTINCT id, with joined tables, id needs to be prefixed with table name. When this is figured out, replace
   # cloud tenant with rails relations

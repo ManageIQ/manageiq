@@ -14,6 +14,7 @@ class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
 
   include ManageIQ::Providers::Openstack::ManagerMixin
   include HasManyOrchestrationStackMixin
+  include HasManyCloudNetworksMixin
 
   before_save :ensure_parent_provider
   before_destroy :destroy_parent_provider

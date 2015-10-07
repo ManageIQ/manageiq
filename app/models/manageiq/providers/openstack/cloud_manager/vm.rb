@@ -4,6 +4,16 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
 
   belongs_to :cloud_tenant
 
+  def cloud_network
+    # Backwards compatibility layer with simplified architecture where VM has only one network
+    cloud_networks.first
+  end
+
+  def cloud_subnet
+    # Backwards compatibility layer with simplified architecture where VM has only one network
+    cloud_subnets.first
+  end
+
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect
     connection.servers.get(ems_ref)
