@@ -168,8 +168,12 @@ module MiqReport::Generator
   end
 
   def generate_table(options = {})
-    if options[:userid]
-      User.with_userid(MiqReportResult.parse_userid(options[:userid])) { _generate_table(options) }
+    if options[:user]
+      User.with_user(options[:user]) { _generate_table(options) }
+    elsif options[:userid]
+      userid = MiqReportResult.parse_userid(options[:userid])
+      user = User.find_by_userid(userid)
+      User.with_user(user, userid) { _generate_table(options) }
     else
       _generate_table(options)
     end
