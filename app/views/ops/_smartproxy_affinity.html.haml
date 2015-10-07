@@ -1,19 +1,23 @@
 %h3
   Assign Hosts and Datastores to Embedded SmartProxies in Zone '#{ui_lookup(:model => "Zone")}: #{@selected_zone.description}'
-- if @smartproxy_affinity_tree.blank?
+- if @smartproxy_affinity_tree.nil?
   .alert.alert-info
     %span.pficon.pficon-info
     %strong
       No Servers with the SmartProxy role are in Zone '#{ui_lookup(:model => "Zone")}: #{@selected_zone.description}'
 - else
-  - tree_id = "smartproxy_affinity_treebox"
+  - tree_id = "smartproxy_affinity_treebox_old"
+  old:<br />
   %div{:id => tree_id}
   = render(:partial => "layouts/dynatree",
     :locals => {:tree_id         => tree_id,
     :tree_name                   => session[:tree_name],
-    :json_tree                   => @smartproxy_affinity_tree.to_json,
+    :json_tree                   => @smartproxy_affinity_tree_json,
     :checkboxes                  => true,
     :three_checks                => true,
     :open_close_all_on_dbl_click => true,
     :check_url                   => '/ops/smartproxy_affinity_field_changed/',
     :oncheck                     => 'miqOnClickSmartProxyAffinityCheck'})
+
+  new:<br />
+  = render(:partial => "shared/tree", :locals => {:tree => @smartproxy_affinity_tree, :name => @smartproxy_affinity_tree.name.to_s}) rescue "ERROR: #$!"
