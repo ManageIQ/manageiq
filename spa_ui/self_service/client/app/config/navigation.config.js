@@ -8,47 +8,45 @@
   function navigation(NavigationProvider) {
     NavigationProvider.configure({
       items: {
-        primary: [
-          {
+        primary: {
+          dashboard: {
             title: 'Dashboard',
             state: 'dashboard',
             icon: 'fa fa-dashboard'
           },
-          {
+          services: {
             title: 'My Services',
             state: 'services',
-            icon: 'fa fa-file-o',
-            count: 12
+            icon: 'fa fa-file-o'
           },
-          {
+          requests: {
             title: 'My Requests',
             state: 'requests',
-            icon: 'fa fa-file-text-o',
-            count: 2
+            icon: 'fa fa-file-text-o'
           },
-          {
+          marketplace: {
             title: 'Service Catalog',
             state: 'marketplace',
             icon: 'fa fa-copy'
           }
-        ],
-        secondary: [
-          {
+        },
+        secondary: {
+          help: {
             title: 'Help',
             icon: 'fa fa-question-circle',
             state: 'help'
           },
-          {
+          about: {
             title: 'About Me',
             icon: 'fa fa-user',
             state: 'about-me'
           },
-          {
+          search: {
             title: 'Search',
             icon: 'fa fa-search',
             state: 'search'
           }
-        ]
+        }
       }
     });
   }
