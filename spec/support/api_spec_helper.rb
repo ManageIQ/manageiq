@@ -259,6 +259,14 @@ module ApiSpecHelper
     fetch_value(keys).each { |key| expect(@result).to have_key(key) }
   end
 
+  def expect_result_to_have_only_keys(keys)
+    expect_hash_to_have_only_keys(@result, keys)
+  end
+
+  def expect_hash_to_have_only_keys(hash, keys)
+    expect(hash.keys).to match_array(fetch_value(keys))
+  end
+
   def expect_result_to_match_hash(result, attr_hash)
     fetch_value(attr_hash).each do |key, value|
       expect(result).to have_key(key)
