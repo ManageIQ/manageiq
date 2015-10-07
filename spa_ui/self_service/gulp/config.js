@@ -164,7 +164,7 @@ module.exports = (function() {
   // task images: Image build options
   config.images = {
     src: imageFiles,
-    build: build + 'images',
+    build: build + 'assets/images',
     minify: true,
     options: {
       optimizationLevel: 5,
@@ -175,7 +175,7 @@ module.exports = (function() {
 
   config.devImages = {
     src: imageFiles,
-    build: temp + 'images',
+    build: temp + 'assets/images',
     minify: false
   };
 
