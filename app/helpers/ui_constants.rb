@@ -392,7 +392,7 @@ module UiConstants
   VALID_PLANNING_VM_MODES = PLANNING_VM_MODES.keys.index_by(&:to_s)
 
   TASK_TIME_PERIODS = {
-    0 => "Last 24",
+    0 => "Today",
     1 => "1 Day Ago",
     2 => "2 Days Ago",
     3 => "3 Days Ago",
