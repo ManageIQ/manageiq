@@ -2327,7 +2327,7 @@
           :feature_type: admin
           :hidden: false
           :identifier: rbac_tenant_delete
-      - :name: Manage_Quotas
+      - :name: Manage Quotas
         :description: Manage Tenant Quotas
         :feature_type: admin
         :hidden: false
