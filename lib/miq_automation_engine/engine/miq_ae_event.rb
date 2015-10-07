@@ -5,6 +5,8 @@ module MiqAeEvent
       :event_type => event.event_type,
     }
 
+    user = automate_user
+
     if event.source == 'VC'
       aevent.merge!('ExtManagementSystem::ems' => event.ext_management_system.id, :ems_id => event.ext_management_system.id) unless event.ext_management_system.nil?
     end
@@ -14,7 +16,7 @@ module MiqAeEvent
     aevent.merge!('Host::host'            => event.src_host.id,            :host_id      => event.src_host.id)            unless event.src_host.nil?
     aevent.merge!('Host::dest_host'       => event.dest_host.id,           :dest_host_id => event.dest_host.id)           unless event.dest_host.nil?
 
-    MiqAeEngine.deliver(event.class.name, event.id, aevent, 'Event')
+    MiqAeEngine.deliver(event.class.name, event.id, aevent, 'Event', user.id)
   end
 
   def self.raise_synthetic_event(event, inputs, message = nil)
@@ -31,10 +33,13 @@ module MiqAeEvent
       aevent      = build_evm_event(event, inputs)
     end
 
-    MiqAeEngine.deliver(obj_type, obj_id, aevent, instance, nil, nil, message)
+    user = automate_user
+    MiqAeEngine.deliver(obj_type, obj_id, aevent, instance, nil, user.id, message)
   end
 
   def self.raise_evm_event(event_name, target, inputs = {}, _message = nil)
+    user = automate_user
+
     if target.kind_of?(Array)
       klass, id = target
       klass = Object.const_get(klass)
@@ -42,14 +47,15 @@ module MiqAeEvent
       raise "Unable to find object with class: [#{klass}], Id: [#{id}]" if target.nil?
     end
 
-    MiqAeEngine.deliver(target.class.name, target.id, build_evm_event(event_name, inputs), 'Event')
+    MiqAeEngine.deliver(target.class.name, target.id, build_evm_event(event_name, inputs), 'Event', user.id)
   end
 
   def self.eval_alert_expression(inputs, message = nil)
+    user = automate_user
     aevent = build_evm_event('alert', inputs)
     aevent[:request] = 'evaluate'
     aevent.merge!(inputs)
-    ws = MiqAeEngine.deliver(nil, nil, aevent, 'Alert', nil, nil, message)
+    ws = MiqAeEngine.deliver(nil, nil, aevent, 'Alert', nil, user.id, message)
     return nil if ws.nil? || ws.root.nil?
     ws.root['ae_result']
   end
@@ -113,4 +119,13 @@ module MiqAeEvent
     end
   rescue URI::InvalidURIError => err
   end
+
+  def self.automate_user
+    #TODO: Get the real userid to pass into Automate
+    user = User.where(:userid => "admin").first
+    raise "Admin user needed to raise events" unless user
+    user
+  end
+
+  private_class_method :automate_user
 end
