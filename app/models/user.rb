@@ -299,21 +299,23 @@ class User < ActiveRecord::Base
   end
 
   # Save the current user from the session object as a thread variable to allow lookup from other areas of the code
-  def self.with_userid(userid)
+  def self.with_user(user, userid = nil)
     saved_user   = Thread.current[:user]
     saved_userid = Thread.current[:userid]
-    self.current_userid = userid
+    self.current_user = user
+    Thread.current[:userid] = userid if userid
     yield
   ensure
     Thread.current[:user]   = saved_user
     Thread.current[:userid] = saved_userid
   end
 
-  def self.current_userid=(userid)
-    Thread.current[:user]   = nil
-    Thread.current[:userid] = userid
+  def self.current_user=(user)
+    Thread.current[:userid] = user.try(:userid)
+    Thread.current[:user] = user
   end
 
+  # avoid using this. pass current_user where possible
   def self.current_userid
     Thread.current[:userid]
   end

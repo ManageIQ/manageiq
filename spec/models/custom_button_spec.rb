@@ -53,7 +53,7 @@ describe CustomButton do
         end
 
         it "calls automate without saved User and MiqServer" do
-          User.with_userid(@user2.userid) { @button.invoke(@vm) }
+          User.with_user(@user2) { @button.invoke(@vm) }
 
           MiqQueue.count.should == 1
           q = MiqQueue.first

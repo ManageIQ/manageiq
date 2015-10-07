@@ -2134,7 +2134,7 @@ class ApplicationController < ActionController::Base
 
   def get_global_session_data
     # Set the current userid in the User class for this thread for models to use
-    User.current_userid = session[:userid]
+    User.current_user = current_user
 
     # Get/init sandbox (@sb) per controller in the session object
     session[:sandboxes] ||= HashWithIndifferentAccess.new

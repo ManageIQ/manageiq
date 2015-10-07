@@ -50,15 +50,15 @@ describe Rbac do
         @owned_vm = FactoryGirl.create(:vm_vmware, :tenant => @owner_tenant)
       end
 
-      it ".search with User.with_userid finds user's tenant object" do
-        User.with_userid(@owner_user.userid) do
+      it ".search with User.with_user finds user's tenant object" do
+        User.with_user(@owner_user) do
           results, = Rbac.search(:class => "Vm", :results_format => :objects)
           expect(results).to eq [@owned_vm]
         end
       end
 
-      it ".search with User.with_userid filters out other tenants" do
-        User.with_userid(@other_user.userid) do
+      it ".search with User.with_user filters out other tenants" do
+        User.with_user(@other_user) do
           results, = Rbac.search(:class => "Vm", :results_format => :objects)
           expect(results).to eq []
         end
@@ -74,8 +74,8 @@ describe Rbac do
         expect(results).to eq []
       end
 
-      it ".search with User.with_userid leaving tenant" do
-        User.with_userid(@owner_user.userid) do
+      it ".search with User.with_user leaving tenant" do
+        User.with_user(@owner_user) do
           @owner_user.miq_groups = [@other_group]
           @owner_user.save
           results, = Rbac.search(:class => "Vm", :results_format => :objects)
@@ -83,8 +83,8 @@ describe Rbac do
         end
       end
 
-      it ".search with User.with_userid joining tenant" do
-        User.with_userid(@other_user.userid) do
+      it ".search with User.with_user joining tenant" do
+        User.with_user(@other_user) do
           @other_user.miq_groups = [@owner_group]
           @other_user.save
           results, = Rbac.search(:class => "Vm", :results_format => :objects)
@@ -362,7 +362,7 @@ describe Rbac do
 
         it "search on VMs and Templates should return no objects if self-service user" do
           User.any_instance.stub(:self_service? => true)
-          User.with_userid(@user.userid) do
+          User.with_user(@user) do
             results = Rbac.search(:class => "VmOrTemplate", :results_format => :objects)
             objects = results.first
             objects.length.should == 0
@@ -553,7 +553,7 @@ describe Rbac do
           end
 
           it "works when targets are empty" do
-            User.with_userid(@user.userid) do
+            User.with_user(@user) do
               results, attrs = Rbac.search(:class => "Service", :results_format => :objects)
               results.to_a.should match_array([@service3, @service4, @service5])
             end
@@ -575,7 +575,7 @@ describe Rbac do
           end
 
           it "works when targets are empty" do
-            User.with_userid(@user.userid) do
+            User.with_user(@user) do
               results, attrs = Rbac.search(:class => "Service", :results_format => :objects)
               results.to_a.should match_array([@service3, @service5])
             end
@@ -639,14 +639,14 @@ describe Rbac do
           end
 
           it "works when targets are empty" do
-            User.with_userid(@user.userid) do
+            User.with_user(@user) do
               results, attrs = Rbac.search(:class => "Vm", :results_format => :objects)
               results.length.should == 4
             end
           end
 
           it "works when passing a named_scope" do
-            User.with_userid(@user.userid) do
+            User.with_user(@user) do
               results, attrs = Rbac.search(:class => "Vm", :results_format => :objects, :named_scope => [:group_scope, 1])
               results.length.should == 1
             end
@@ -668,14 +668,14 @@ describe Rbac do
           end
 
           it "works when targets are empty" do
-            User.with_userid(@user.userid) do
+            User.with_user(@user) do
               results, attrs = Rbac.search(:class => "Vm", :results_format => :objects)
               results.length.should == 2
             end
           end
 
           it "works when passing a named_scope" do
-            User.with_userid(@user.userid) do
+            User.with_user(@user) do
               results, attrs = Rbac.search(:class => "Vm", :results_format => :objects, :named_scope => [:group_scope, 1])
               results.length.should == 1
 

@@ -3,9 +3,7 @@ require "spec_helper"
 describe DialogFieldDateTimeControl do
   context "legacy tests" do
     let!(:user) do
-      user = FactoryGirl.create(:user)
-      User.stub(:current_user).and_return(user)
-      user
+      User.current_user = FactoryGirl.create(:user)
     end
 
     context "with UTC timezone" do
