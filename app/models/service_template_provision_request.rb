@@ -9,7 +9,7 @@ class ServiceTemplateProvisionRequest < MiqRequest
 
   virtual_has_one :picture
   virtual_has_one :service_template
-  virtual_has_one :provision_workflow
+  virtual_has_one :provision_dialog
 
   default_value_for(:source_id)    { |r| r.get_option(:src_id) }
   default_value_for :source_type,  SOURCE_CLASS_NAME
@@ -31,11 +31,12 @@ class ServiceTemplateProvisionRequest < MiqRequest
     ServiceTemplate.find_by_id(source_id)
   end
 
-  def provision_workflow
+  def provision_dialog
     st = service_template
     return {} if st.blank?
     ra = st.resource_actions.find_by_action("Provision")
-    ResourceActionWorkflow.new(options[:dialog], userid, ra, {})
+    dialog = ResourceActionWorkflow.new(options[:dialog], userid, ra, {}).dialog
+    DialogSerializer.new.serialize(Array[dialog]).first
   end
 
   def requested_task_idx
