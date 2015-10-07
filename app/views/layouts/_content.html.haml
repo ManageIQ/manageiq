@@ -3,7 +3,8 @@
 - elsif inner_layout_present?
   - rsop = controller.controller_name == 'miq_policy' && controller.action_name == 'rsop'
   - resolve = controller.controller_name == 'miq_ae_tools' && controller.action_name == 'resolve'
-  - simulate =  rsop || resolve
+  - planning = controller.controller_name == 'miq_capacity' && controller.action_name == 'planning'
+  - simulate =  rsop || resolve || planning 
   - session[:sidebar] ||= {}
   - sidewidth = simulate ? 5 : session[:sidebar][params[:controller]] ||= 2
   - maindiv = 12 - sidewidth
