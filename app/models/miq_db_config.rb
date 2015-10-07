@@ -7,7 +7,7 @@ class MiqDbConfig
     {:name => :username, :description => "Username",          :required => true},
     {:name => :password, :description => "Password",          :required => false},
   ]
-  @@common_fields = @@common_options.collect {|o| o[:name]}
+  @@common_fields = @@common_options.collect { |o| o[:name] }
 
   @@db_types = [
     {:name => "internal",     :description => "Internal Database on this CFME Appliance"},
@@ -36,22 +36,22 @@ class MiqDbConfig
   cattr_accessor :db_types
   attr_accessor  :options, :errors
 
-  def initialize(opts={})
+  def initialize(opts = {})
     raise "Name option must be provided" unless opts[:name]
-    raise "Unknown name [#{opts[:name]}]" unless @@db_types.detect {|t| t[:name] == opts[:name]}
+    raise "Unknown name [#{opts[:name]}]" unless @@db_types.detect { |t| t[:name] == opts[:name] }
 
     @options = opts
     @options[:adapter] ||= "postgresql"
   end
 
   def self.get_db_types
-    @@db_types.inject({}) do |h,e|
+    @@db_types.inject({}) do |h, e|
       h[e[:name]] = e[:description]
       h
     end
   end
 
-  def self.get_db_type_options(name)
+  def self.get_db_type_options(_name)
     @@common_options
   end
 
@@ -75,7 +75,7 @@ class MiqDbConfig
   end
 
   def self.raw_config
-    #TODO: We must stringify since ConfigurationEncoder will symbolize on load and stringify on save.
+    # TODO: We must stringify since ConfigurationEncoder will symbolize on load and stringify on save.
     Vmdb::ConfigurationEncoder.stringify(database_configuration)
   end
 
@@ -83,22 +83,22 @@ class MiqDbConfig
     valid = self.valid?(:from_save => true)
     return @errors unless valid == true
 
-    _log.info("Validation was successful, saving new settings: #{self.options.merge(@@pwd_mask).inspect}")
-    vmdb_config = self.save_without_verify
+    _log.info("Validation was successful, saving new settings: #{options.merge(@@pwd_mask).inspect}")
+    vmdb_config = save_without_verify
     MiqRegion.sync_with_db_region(Vmdb::ConfigurationEncoder.stringify(vmdb_config.config))
-    return true
+    true
   end
 
   def save_without_verify
     @bkup_ext = Time.now.strftime("%Y%m%d-%H%M%S")
     save_method = "save_#{@options[:name]}"
     save_method = "save_common" unless self.respond_to?(save_method)
-    self.send(save_method)
+    send(save_method)
   end
 
   def save_internal
     self.class.backup_file(@@db_yml, @bkup_ext)
-    self.save_common
+    save_common
   end
 
   def save_common
@@ -114,11 +114,11 @@ class MiqDbConfig
   end
 
   def valid?(options = {})
-    valid = self.validate_common
+    valid = validate_common
     return @errors unless valid == true
 
-    valid = self.verify_config(options[:from_save])
-    return valid  ? valid : @errors
+    valid = verify_config(options[:from_save])
+    valid ? valid : @errors
   end
 
   def validate; self.valid?; end
@@ -141,7 +141,7 @@ class MiqDbConfig
         valid = false
       end
     end
-    return valid
+    valid
   end
 
   def self.backup_file(file, ext)
@@ -151,7 +151,7 @@ class MiqDbConfig
     FileUtils.copy(file, bkup)
   end
 
-  def self.human_attribute_name(attribute_key_name, options = {}); attribute_key_name.to_s.humanize; end
+  def self.human_attribute_name(attribute_key_name, _options = {}); attribute_key_name.to_s.humanize; end
 
   def method_missing(m, *args)
     if m.to_s.ends_with?("=")
@@ -208,7 +208,7 @@ class MiqDbConfig
   end
 
   def self.log_statistics
-    self.log_activity_statistics
+    log_activity_statistics
   end
 
   def self.log_activity_statistics(output = $log)

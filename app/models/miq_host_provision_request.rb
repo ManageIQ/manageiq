@@ -4,16 +4,16 @@ class MiqHostProvisionRequest < MiqRequest
 
   TASK_DESCRIPTION  = 'Host Provisioning'
   SOURCE_CLASS_NAME = 'Host'
-  ACTIVE_STATES     = %w{ migrated } + self.base_class::ACTIVE_STATES
+  ACTIVE_STATES     = %w( migrated ) + base_class::ACTIVE_STATES
 
-  validates_inclusion_of :request_state,  :in => %w{ pending finished } + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"
+  validates_inclusion_of :request_state,  :in => %w( pending finished ) + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"
   validate               :must_have_user
 
   virtual_column :provision_type, :type => :string
 
   def host_name
-    if self.options[:src_host_ids].length == 1
-      host = Host.find_by_id(self.options[:src_host_ids].first)
+    if options[:src_host_ids].length == 1
+      host = Host.find_by_id(options[:src_host_ids].first)
       host.nil? ? "" : host.name
     else
       "Multiple Hosts"
@@ -21,7 +21,7 @@ class MiqHostProvisionRequest < MiqRequest
   end
 
   def requested_task_idx
-    self.options[:src_host_ids]
+    options[:src_host_ids]
   end
 
   def placement_ems
@@ -61,9 +61,13 @@ class MiqHostProvisionRequest < MiqRequest
     "host"
   end
 
+  def event_name(mode)
+    "host_provision_request_#{mode}"
+  end
+
   private
 
   def default_description
-    "PXE install on [#{self.host_name}] from image [#{get_option_last(:pxe_image_id)}]"
+    "PXE install on [#{host_name}] from image [#{get_option_last(:pxe_image_id)}]"
   end
 end

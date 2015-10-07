@@ -35,8 +35,8 @@ class ManageIQ::Providers::Redhat::InfraManager::MetricsCapture < ManageIQ::Prov
       Benchmark.realtime_block(:rhevm_connect) { perf_init_rhevm }
       counters, = Benchmark.realtime_block(:collect_data) do
         case target
-        when Host; OvirtMetrics.host_realtime(target.uid_ems, start_time, end_time)
-        when Vm;   OvirtMetrics.vm_realtime(target.uid_ems, start_time, end_time)
+        when Host then OvirtMetrics.host_realtime(target.uid_ems, start_time, end_time)
+        when Vm then   OvirtMetrics.vm_realtime(target.uid_ems, start_time, end_time)
         end
       end
       return counters

@@ -24,7 +24,7 @@ module EmsCloudHelper::TextualSummary
   #
   def textual_provider_region
     return nil if @ems.provider_region.nil?
-    {:label => "Region", :value => @ems.description }
+    {:label => "Region", :value => @ems.description}
   end
 
   def textual_hostname
@@ -49,7 +49,7 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_instances
-    label = ui_lookup(:tables=>"vm_cloud")
+    label = ui_lookup(:tables => "vm_cloud")
     num   = @ems.number_of(:vms)
     h     = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "vm_show_list")
@@ -60,7 +60,7 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_images
-    label = ui_lookup(:tables=>"template_cloud")
+    label = ui_lookup(:tables => "template_cloud")
     num = @ems.number_of(:miq_templates)
     h = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "miq_template_show_list")
@@ -101,8 +101,8 @@ module EmsCloudHelper::TextualSummary
     authentications.collect do |auth|
       label =
         case auth.authtype
-        when "default"; "Default"
-        when "metrics"; "C & U Database"
+        when "default" then "Default"
+        when "metrics" then "C & U Database"
         else;           "<Unknown>"
         end
 

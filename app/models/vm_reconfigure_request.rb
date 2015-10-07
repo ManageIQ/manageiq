@@ -1,48 +1,49 @@
 class VmReconfigureRequest < MiqRequest
   TASK_DESCRIPTION  = 'VM Reconfigure'
   SOURCE_CLASS_NAME = 'Vm'
-  ACTIVE_STATES     = %w{ reconfigured } + self.base_class::ACTIVE_STATES
+  ACTIVE_STATES     = %w( reconfigured ) + base_class::ACTIVE_STATES
 
-  validates_inclusion_of :request_state,  :in => %w{ pending finished } + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"
+  validates_inclusion_of :request_state,  :in => %w( pending finished ) + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"
   validate               :must_have_user
 
   def self.request_limits(options)
     # Memory values are in megabytes
     default_max_vm_memory = 255.gigabyte / 1.megabyte
     result = {
-      :min__number_of_cpus              => 1,
-      :max__number_of_cpus              => nil,
-      :min__vm_memory                   => 4,
-      :max__vm_memory                   => nil,
-      :min__cores_per_socket            => 1,
-      :max__cores_per_socket            => nil,
-      :max__total_vcpus                 => nil
+      :min__number_of_sockets => 1,
+      :max__number_of_sockets => nil,
+      :min__vm_memory         => 4,
+      :max__vm_memory         => nil,
+      :min__cores_per_socket  => 1,
+      :max__cores_per_socket  => nil,
+      :min__total_vcpus       => 1,
+      :max__total_vcpus       => nil
     }
 
     all_memory, all_vcpus, all_cores_per_socket, all_total_vcpus = [], [], [], []
     options[:src_ids].to_miq_a.each do |idx|
       vm = Vm.find_by_id(idx)
-      all_vcpus << (vm.host ? vm.host.hardware.logical_cpus : vm.max_vcpus)
+      all_vcpus            << (vm.host ? [vm.host.hardware.logical_cpus, vm.max_vcpus].min : vm.max_vcpus)
+      all_cores_per_socket << (vm.host ? [vm.host.hardware.logical_cpus, vm.max_cores_per_socket].min : vm.max_cores_per_socket)
+      all_total_vcpus      << (vm.host ? [vm.host.hardware.logical_cpus, vm.max_total_vcpus].min : vm.max_total_vcpus)
       all_memory << (vm.respond_to?(:max_memory_cpu) ? vm.max_memory_cpu : default_max_vm_memory)
-      all_cores_per_socket << vm.max_cores_per_socket
-      all_total_vcpus << vm.max_total_vcpus
     end
 
-    result[:max__number_of_cpus] = all_vcpus.min
+    result[:max__number_of_sockets] = all_vcpus.min
     result[:max__vm_memory]      = all_memory.min
     result[:max__cores_per_socket] = all_cores_per_socket.min
     result[:max__total_vcpus] = all_total_vcpus.min
 
-    result[:max__number_of_cpus] = 1 if result[:max__number_of_cpus].nil?
+    result[:max__number_of_sockets] = 1 if result[:max__number_of_sockets].nil?
     result[:max__cores_per_socket] = 1 if result[:max__cores_per_socket].nil?
     result[:max__vm_memory] ||= default_max_vm_memory
-    result[:max__total_vcpus] = 1 if result[:max__number_of_cpus].nil? && result[:max__cores_per_socket].nil?
+    result[:max__total_vcpus] = 1 if result[:max__number_of_sockets].nil? && result[:max__cores_per_socket].nil?
     result
   end
 
   def self.validate_request(options)
     errors = []
-    limits = self.request_limits(options)
+    limits = request_limits(options)
 
     # Check if memory value is divisible by 4 and within the allowed limits
     mem = options[:vm_memory]
@@ -54,11 +55,11 @@ class VmReconfigureRequest < MiqRequest
     end
 
     # Check if cpu value is within the allowed limits
-    cpus = options[:number_of_cpus]
+    cpus = options[:number_of_sockets]
     unless cpus.blank?
       cpus = cpus.to_i
-      errors << "Processor value must be less than #{limits[:max__number_of_cpus]}.  Current value: #{cpus}"    if cpus > limits[:max__number_of_cpus]
-      errors << "Processor value must be greater than #{limits[:min__number_of_cpus]}.  Current value: #{cpus}" if cpus < limits[:min__number_of_cpus]
+      errors << "Processor value must be less than #{limits[:max__number_of_sockets]}.  Current value: #{cpus}"    if cpus > limits[:max__number_of_sockets]
+      errors << "Processor value must be greater than #{limits[:min__number_of_sockets]}.  Current value: #{cpus}" if cpus < limits[:min__number_of_sockets]
     end
 
     # Check if cpu value is within the allowed limits
@@ -76,11 +77,11 @@ class VmReconfigureRequest < MiqRequest
     end
 
     return false if errors.blank?
-    return errors
+    errors
   end
 
   def my_zone
-    vm = Vm.where(:id => options[:src_ids]).first
+    vm = Vm.find_by(:id => options[:src_ids])
     vm.nil? ? super : vm.my_zone
   end
 

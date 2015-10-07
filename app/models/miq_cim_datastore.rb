@@ -40,11 +40,10 @@ class MiqCimDatastore < MiqCimInstance
   DatastoreToBseShortcut        = CimAssociations.MIQ_CimDatastore_TO_CIM_StorageExtent_SC
   DatastoreToVmShortcut       = CimAssociations.MIQ_CimDatastore_TO_MIQ_CimVirtualMachine_SC
 
-
   SHORTCUT_DEFS = {
-    :local_file_system_long   => DatastoreToLfsShortcut,
-    :base_storage_extents_long  => DatastoreToBseShortcut,
-    :cim_vms_long       => DatastoreToVmShortcut
+    :local_file_system_long    => DatastoreToLfsShortcut,
+    :base_storage_extents_long => DatastoreToBseShortcut,
+    :cim_vms_long              => DatastoreToVmShortcut
   }
 
   #############################################
@@ -220,7 +219,6 @@ class MiqCimDatastore < MiqCimInstance
   end
 
   def durableNames
-    self.type_spec_obj
+    type_spec_obj
   end
-
 end

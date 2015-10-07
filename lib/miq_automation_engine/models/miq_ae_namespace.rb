@@ -18,7 +18,8 @@ class MiqAeNamespace < ActiveRecord::Base
     fqname   = fqname.downcase
     last     = fqname.split('/').last
     low_name = arel_table[:name].lower
-    query = include_classes ? includes(:parent, :ae_classes) : all
+    query    = includes(:parent)
+    query    = query.includes(:ae_classes) if include_classes
     query.where(low_name.eq(last)).detect { |namespace| namespace.fqname.downcase == fqname }
   end
 
@@ -39,14 +40,14 @@ class MiqAeNamespace < ActiveRecord::Base
     end
 
     new_parts.each do |p|
-      found = self.create(:name => p, :parent_id => found.nil? ? nil : found.id)
+      found = create(:name => p, :parent_id => found.nil? ? nil : found.id)
     end
 
-    return found
+    found
   end
 
   def self.find_tree(find_options = {})
-    namespaces = self.where(find_options)
+    namespaces = where(find_options)
     ns_lookup = namespaces.inject({}) { |h, ns| h[ns.id] = ns; h }
 
     roots = []
@@ -65,7 +66,7 @@ class MiqAeNamespace < ActiveRecord::Base
       end
     end
 
-    return roots
+    roots
   end
 
   def fqname
@@ -102,5 +103,4 @@ class MiqAeNamespace < ActiveRecord::Base
   def domain?
     parent_id.nil? && name != '$'
   end
-
 end

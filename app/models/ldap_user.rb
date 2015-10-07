@@ -1,5 +1,4 @@
 class LdapUser < ActiveRecord::Base
-
   belongs_to :ldap_domain
 
   has_many   :ldap_managements, :dependent => :destroy
@@ -12,40 +11,39 @@ class LdapUser < ActiveRecord::Base
   include ReportableMixin
 
   DEFAULT_MAPPING = {
-    :givenname         => :first_name,
-    :sn                => :last_name,
-    :displayname       => :display_name,
-    :mail              => :mail,
-    :streetaddress     => :address,
-    :l                 => :city,
-    :st                => :state,
-    :postalcode        => :zip,
-    :co                => :country,
-    :title             => :title,
-    :company           => :company,
-    :department        => :department,
+    :givenname                  => :first_name,
+    :sn                         => :last_name,
+    :displayname                => :display_name,
+    :mail                       => :mail,
+    :streetaddress              => :address,
+    :l                          => :city,
+    :st                         => :state,
+    :postalcode                 => :zip,
+    :co                         => :country,
+    :title                      => :title,
+    :company                    => :company,
+    :department                 => :department,
     :physicaldeliveryofficename => :office,
-    :telephonenumber   => :phone,
-    :facsimiletelephonenumber => :fax,
-    :homephone         => :phone_home,
-    :mobile            => :phone_mobile,
-    :objectsid         => :sid,
-    :whenchanged       => :whenchanged,
-    :whencreated       => :whencreated,
-    :samaccountname    => :sam_account_name,
-    :userprincipalname => :upn,
-    :dn                => :dn,
-    :manager           => :manager,
-    :memberof          => :memberof,
-    :ldap_domain_id    => :ldap_domain_id
+    :telephonenumber            => :phone,
+    :facsimiletelephonenumber   => :fax,
+    :homephone                  => :phone_home,
+    :mobile                     => :phone_mobile,
+    :objectsid                  => :sid,
+    :whenchanged                => :whenchanged,
+    :whencreated                => :whencreated,
+    :samaccountname             => :sam_account_name,
+    :userprincipalname          => :upn,
+    :dn                         => :dn,
+    :manager                    => :manager,
+    :memberof                   => :memberof,
+    :ldap_domain_id             => :ldap_domain_id
   }
-
 
   def self.sync_users(ldap_server)
     log_header = "LDAP Server #{ldap_server.id} : <#{ldap_server.name}>"
 
     db_users = {}
-    ldap_server.ldap_users.select([:id, :dn]).find_each {|u| db_users[u[:dn]] = u[:id]}
+    ldap_server.ldap_users.select([:id, :dn]).find_each { |u| db_users[u[:dn]] = u[:id] }
     _log.info "#{log_header} Initial DB User count: #{db_users.length}"
 
     user_count = creates = updates = 0
@@ -82,7 +80,7 @@ class LdapUser < ActiveRecord::Base
     _log.info "#{log_header} Updates: #{updates}"
     _log.info "#{log_header} Deletes: #{deletes.length}"
 
-    delete_ids = deletes.collect {|dn,id| id}
+    delete_ids = deletes.collect { |_dn, id| id }
     LdapUser.destroy(delete_ids)
 
     # Determine if a successful LDAP user scan has completed and either process all instances
@@ -107,7 +105,7 @@ class LdapUser < ActiveRecord::Base
       rec_count += 1
       options = opts.dup
       options[:base] = rec.dn
-      ldap_server.search(options) {|entry| rec.update_record(entry)}
+      ldap_server.search(options) { |entry| rec.update_record(entry) }
     end
 
     _log.info "#{log_header} Completed LDAP User sync for <#{rec_count}> records"
@@ -119,7 +117,7 @@ class LdapUser < ActiveRecord::Base
     opts = {:base => ldap_server.base_dn, :return_result => false, :scope => :sub, :filter => Net::LDAP::Filter.eq("objectCategory", "Person")}
 
     # LDAP whenchanged format example: "20121214170416.0Z"
-    when_changed = updates_since.utc.iso8601(1).gsub(/[-:T]/,'')
+    when_changed = updates_since.utc.iso8601(1).gsub(/[-:T]/, '')
 
     _log.info "#{log_header} Checking for updated records since <#{when_changed}>"
     opts[:filter] = opts[:filter] & Net::LDAP::Filter.ge("whenchanged", when_changed)
@@ -128,7 +126,7 @@ class LdapUser < ActiveRecord::Base
     ldap_server.search(opts) do |entry|
       rec_count += 1
       dn = MiqLdap.get_attr(entry, :dn)
-      rec = self.find_by_dn(dn)
+      rec = find_by_dn(dn)
     end
 
     _log.info "#{log_header} Completed LDAP User sync for <#{rec_count}> records updated since <#{when_changed}>"
@@ -139,17 +137,17 @@ class LdapUser < ActiveRecord::Base
     # TODO: Attributes need to be exposed externally (yaml file) to allow for name changes
     attrs = {}
     [[:givenname, :first_name], [:sn, :last_name], [:displayname, :display_name], [:mail, :mail],
-    [:streetaddress, :address], [:l, :city], [:st, :state], [:postalcode, :zip], [:co, :country],
-    [:title, :title], [:company, :company], [:department, :department], [:physicaldeliveryofficename, :office],
-    [:telephonenumber, :phone],[:facsimiletelephonenumber, :fax], [:homephone, :phone_home], [:mobile, :phone_mobile],
-    [:objectsid, :sid], [:whenchanged, :whenchanged], [:whencreated, :whencreated]].each do |ldap_key, db_key|
+     [:streetaddress, :address], [:l, :city], [:st, :state], [:postalcode, :zip], [:co, :country],
+     [:title, :title], [:company, :company], [:department, :department], [:physicaldeliveryofficename, :office],
+     [:telephonenumber, :phone], [:facsimiletelephonenumber, :fax], [:homephone, :phone_home], [:mobile, :phone_mobile],
+     [:objectsid, :sid], [:whenchanged, :whenchanged], [:whencreated, :whencreated]].each do |ldap_key, db_key|
       attrs[db_key] = MiqLdap.get_attr(ldap_entry, ldap_key)
     end
 
-    attrs[:sid] = MiqLdap.sid_to_s(attrs[:sid]) if attrs.has_key?(:sid) && !attrs[:sid].blank?
-    self.update_attributes(attrs)
+    attrs[:sid] = MiqLdap.sid_to_s(attrs[:sid]) if attrs.key?(:sid) && !attrs[:sid].blank?
+    update_attributes(attrs)
 
-    mgrs = ldap_entry[:manager].collect {|mgr_dn| self.class.find_by_dn(mgr_dn)}.compact
-    self.managers.replace(mgrs)
+    mgrs = ldap_entry[:manager].collect { |mgr_dn| self.class.find_by_dn(mgr_dn) }.compact
+    managers.replace(mgrs)
   end
 end

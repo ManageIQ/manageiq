@@ -11,7 +11,7 @@ class Module
     method             = method.to_sym
     clear_cache_method = "#{method}_clear_cache".to_sym
     cached_method      = "#{method}_cached?".to_sym
-    key                = "#{self.name}.#{method}".to_sym
+    key                = "#{name}.#{method}".to_sym
 
     $miq_cache_with_timeout_lock.synchronize(:EX) do
       $miq_cache_with_timeout[key] = {}
@@ -38,13 +38,13 @@ class Module
       end
     end
 
-    singleton_class.send(:define_method, clear_cache_method) do |*args|
+    singleton_class.send(:define_method, clear_cache_method) do |*_args|
       $miq_cache_with_timeout_lock.synchronize(:EX) do
         $miq_cache_with_timeout[key].clear
       end
     end
 
-    singleton_class.send(:define_method, cached_method) do |*args|
+    singleton_class.send(:define_method, cached_method) do |*_args|
       $miq_cache_with_timeout_lock.synchronize(:EX) do
         !$miq_cache_with_timeout[key].empty?
       end

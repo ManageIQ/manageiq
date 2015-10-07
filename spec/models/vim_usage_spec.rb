@@ -6,7 +6,7 @@ describe VimUsage do
 
     context ".last_capture" do
       it "without data" do
-        described_class.last_capture #.should be_nil
+        described_class.last_capture # .should be_nil
       end
 
       it "with data" do

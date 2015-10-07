@@ -10,7 +10,7 @@ describe MiqReplicationWorker do
 
       db = MiqDatabase.first
       db.last_replication_count.should == rr_pending_count
-      db.last_replication_id.should    == rr_pending_last_id
+      db.last_replication_id.should == rr_pending_last_id
     end
 
     before(:each) do

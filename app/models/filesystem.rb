@@ -3,7 +3,7 @@ require 'LinuxUtils'
 
 class Filesystem < ActiveRecord::Base
   belongs_to :resource, :polymorphic => true
-  belongs_to :miq_set    #ScanItemSet
+  belongs_to :miq_set    # ScanItemSet
   belongs_to :scan_item
   belongs_to :host_service_group
 
@@ -84,17 +84,17 @@ class Filesystem < ActiveRecord::Base
   end
 
   def image_name
-    ext = self.base_name.nil? ? nil : File.extname(self.base_name)
+    ext = base_name.nil? ? nil : File.extname(base_name)
     unless ext.nil?
-      ext.sub!(".","")
+      ext.sub!(".", "")
       ext.downcase!
-      return ext if %w{dll exe log txt xml ini doc pdf zip}.include?(ext)
+      return ext if %w(dll exe log txt xml ini doc pdf zip).include?(ext)
     end
-    return "unknown"
+    "unknown"
   end
 
   def contents
-    self.binary_blob.nil? ? nil : self.binary_blob.binary
+    binary_blob.nil? ? nil : binary_blob.binary
   end
 
   def contents=(val)
@@ -107,9 +107,9 @@ class Filesystem < ActiveRecord::Base
   end
 
   def has_contents?
-    return !self.binary_blob.nil?
+    !self.binary_blob.nil?
   end
-  alias contents_available has_contents?
+  alias_method :contents_available, :has_contents?
 
   def contents_displayable?
     return false if name.nil?
@@ -135,11 +135,11 @@ class Filesystem < ActiveRecord::Base
     [:other_exec,  00001],
   ].each do |m, o|
     define_method("permission_#{m}?") do
-      return self.permissions.nil? ? nil : self.permissions.to_i(8) & o != 0
+      return permissions.nil? ? nil : permissions.to_i(8) & o != 0
     end
   end
 
   def permissions_str
-    MiqLinux::Utils.octal_to_permissions(self.permissions)
+    MiqLinux::Utils.octal_to_permissions(permissions)
   end
 end

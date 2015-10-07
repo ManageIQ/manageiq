@@ -10,5 +10,5 @@ if entry_point.blank?
   $evm.log("info", "retirement_entrypoint not specified using default: #{entry_point}")
 end
 
-$evm.root['retirement_entry_point']	= entry_point
+$evm.root['retirement_entry_point'] = entry_point
 $evm.log("info", "retirement_entrypoint: #{entry_point}")

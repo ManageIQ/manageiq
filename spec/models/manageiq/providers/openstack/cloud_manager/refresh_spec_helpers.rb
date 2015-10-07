@@ -17,6 +17,10 @@ module Openstack
       @image_data ||= Openstack::Services::Image::Data.new
     end
 
+    def orchestration_data
+      @orchestration_data ||= Openstack::Services::Orchestration::Data.new
+    end
+
     def network_data
       @network_data ||= case networking_service
                         when :nova

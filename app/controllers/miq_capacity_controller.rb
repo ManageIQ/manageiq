@@ -1,8 +1,8 @@
 class MiqCapacityController < ApplicationController
-  before_filter :check_privileges
-  before_filter :get_session_data
-  after_filter :cleanup_action
-  after_filter :set_session_data
+  before_action :check_privileges
+  before_action :get_session_data
+  after_action :cleanup_action
+  after_action :set_session_data
 
   def index
     redirect_to :action => 'utilization'
@@ -65,14 +65,14 @@ class MiqCapacityController < ApplicationController
   end
 
   def waste
-    @breadcrumbs = Array.new
+    @breadcrumbs = []
     @layout = "miq_capacity_waste"
   end
 
   def planning
-    @breadcrumbs = Array.new
+    @breadcrumbs = []
     @explorer = true
-    @accords = [{:name=>"planning", :title=>"Planning Options", :container=>"planning_options_div"}]
+    @accords = [{:name => "planning", :title => "Planning Options", :container => "planning_options_div"}]
 
     @collapse_c_cell = true
     self.x_active_tree = nil
@@ -82,13 +82,13 @@ class MiqCapacityController < ApplicationController
       format.js do
         if params[:button] == "submit"
           vm_opts = VimPerformancePlanning.vm_default_options(@sb[:planning][:options][:vm_mode])
-          unless (vm_opts[:cpu] && @sb[:planning][:options][:trend_cpu]) ||         # Check that at least one required metric is checked
-                  (vm_opts[:vcpus] && @sb[:planning][:options][:trend_vcpus]) ||
-                  (vm_opts[:memory] && @sb[:planning][:options][:trend_memory]) ||
-                  (vm_opts[:storage] && @sb[:planning][:options][:trend_storage])
+          unless (vm_opts[:cpu] && @sb[:planning][:options][:trend_cpu]) || # Check that at least one required metric is checked
+                 (vm_opts[:vcpus] && @sb[:planning][:options][:trend_vcpus]) ||
+                 (vm_opts[:memory] && @sb[:planning][:options][:trend_memory]) ||
+                 (vm_opts[:storage] && @sb[:planning][:options][:trend_storage])
             add_flash(_("At least one %s must be selected") % "VM Options", :error)
             render :update do |page|                    # Use JS to update the display
-              page.replace("planning_options_div", :partial=>"planning_options")
+              page.replace("planning_options_div", :partial => "planning_options")
               page << "miqSparkle(false);"
             end
           else
@@ -100,7 +100,7 @@ class MiqCapacityController < ApplicationController
               if @sb[:planning][:no_data] # to prevent double render error, making sure it's not wait_for_task transaction
                 add_flash(_("No Utilization data available to generate planning results"), :warning)
                 render :update do |page|
-                  page.replace("planning_options_div", :partial=>"planning_options")
+                  page.replace("planning_options_div", :partial => "planning_options")
                   page << "miqSparkle(false);"
                 end
               end
@@ -120,7 +120,7 @@ class MiqCapacityController < ApplicationController
   def change_tab
     @sb[:active_tab] = params[:tab_id]
     if x_active_tree == :bottlenecks_tree && @sb[:active_tab] == "summary"
-      #build timeline data when coming back to Summary tab for bottlenecks
+      # build timeline data when coming back to Summary tab for bottlenecks
       bottleneck_get_node_info(x_node)
     end
     if x_active_tree != :bottlenecks_tree
@@ -133,8 +133,8 @@ class MiqCapacityController < ApplicationController
         page << "ManageIQ.layout.toolbar.show();"
       end
       if x_active_tree == :bottlenecks_tree && @sb[:active_tab] == "summary"
-        #need to replace timeline div incase it wasn't there earlier
-        page.replace("tl_div", :partial=>"bottlenecks_tl_detail")
+        # need to replace timeline div incase it wasn't there earlier
+        page.replace("tl_div", :partial => "bottlenecks_tl_detail")
       end
       # FIXME: we don't need the reload here for the flash charts
       page << Charting.js_load_statement
@@ -149,7 +149,7 @@ class MiqCapacityController < ApplicationController
       @sb[:planning][:options][:filter_typ] = params[:filter_typ] == "<Choose>" ? nil : params[:filter_typ]
       @sb[:planning][:options][:filter_value] = nil
       if params[:filter_typ] == "all"
-        @sb[:planning][:vms] = Hash.new
+        @sb[:planning][:vms] = {}
         find_filtered(Vm, :all).sort_by { |v| v.name.downcase }.each { |e| @sb[:planning][:vms][e.id.to_s] = e.name }
       end
     end
@@ -160,25 +160,25 @@ class MiqCapacityController < ApplicationController
         @sb[:planning][:options][:filter_value] = nil
       else
         @sb[:planning][:options][:filter_value] = params[:filter_value]
-        @sb[:planning][:vms] = Hash.new
+        @sb[:planning][:vms] = {}
         if @sb[:planning][:options][:filter_value]
           case @sb[:planning][:options][:filter_typ]
           when "host"
             vms, count = Host.find(@sb[:planning][:options][:filter_value]).find_filtered_children("vms")
-            vms.each{|v|@sb[:planning][:vms][v.id.to_s] = v.name}
+            vms.each { |v| @sb[:planning][:vms][v.id.to_s] = v.name }
           when "ems"
             vms, count = ExtManagementSystem.find(@sb[:planning][:options][:filter_value]).find_filtered_children("vms")
-            vms.each{|v|@sb[:planning][:vms][v.id.to_s] = v.name}
+            vms.each { |v| @sb[:planning][:vms][v.id.to_s] = v.name }
           when "cluster"
             vms, count = EmsCluster.find(@sb[:planning][:options][:filter_value]).find_filtered_children("all_vms")
-            vms.each{|v|@sb[:planning][:vms][v.id.to_s] = v.name}
+            vms.each { |v| @sb[:planning][:vms][v.id.to_s] = v.name }
           when "filter"
             s = MiqSearch.find(@sb[:planning][:options][:filter_value])     # Get the chosen search filter
-            s.options ||=  Hash.new                                         # Create options as a Hash
+            s.options ||= {}                                         # Create options as a Hash
             s.options[:userid] = session[:userid]                           # Set the userid
             s.options[:results_format] = :objects                           # Return objects, not ids
             vms, attrs = s.search                                           # Get the VM objects and search attributes
-            vms.each{|v|@sb[:planning][:vms][v.id.to_s] = v.name}   # Add the VMs to the pulldown hash
+            vms.each { |v| @sb[:planning][:vms][v.id.to_s] = v.name }   # Add the VMs to the pulldown hash
           end
         end
       end
@@ -191,7 +191,7 @@ class MiqCapacityController < ApplicationController
     @sb[:planning][:options][:trend_memory] = (params[:trend_memory] == "1") if params[:trend_memory]
     @sb[:planning][:options][:trend_storage] = (params[:trend_storage] == "1") if params[:trend_storage]
     @sb[:planning][:options][:tz] = params[:planning_tz] if params[:planning_tz]
-    if params.has_key?(:time_profile)
+    if params.key?(:time_profile)
       tp = TimeProfile.find(params[:time_profile]) unless params[:time_profile].blank?
       @sb[:planning][:options][:time_profile] = params[:time_profile].blank? ? nil : params[:time_profile].to_i
       @sb[:planning][:options][:time_profile_tz] = params[:time_profile].blank? ? nil : tp.tz
@@ -199,49 +199,49 @@ class MiqCapacityController < ApplicationController
     end
     if params[:target_typ]
       @sb[:planning][:options][:target_typ] = params[:target_typ]
-      @sb[:planning][:options][:target_filters] = Hash.new
-      MiqSearch.find_all_by_db(@sb[:planning][:options][:target_typ]).each{|ms|@sb[:planning][:options][:target_filters][ms.id.to_s] = ms.description}
+      @sb[:planning][:options][:target_filters] = {}
+      MiqSearch.find_all_by_db(@sb[:planning][:options][:target_typ]).each { |ms| @sb[:planning][:options][:target_filters][ms.id.to_s] = ms.description }
       @sb[:planning][:options][:target_filter] = nil
     end
-    @sb[:planning][:options][:target_filter] = params[:target_filter].blank? ? nil : params[:target_filter] if params.has_key?(:target_filter)
+    @sb[:planning][:options][:target_filter] = params[:target_filter].blank? ? nil : params[:target_filter] if params.key?(:target_filter)
     @sb[:planning][:options][:limit_cpu] = params[:limit_cpu].to_i if params[:limit_cpu]
     @sb[:planning][:options][:limit_vcpus] = params[:limit_vcpus].to_i if params[:limit_vcpus]
     @sb[:planning][:options][:limit_memory] = params[:limit_memory].to_i if params[:limit_memory]
     @sb[:planning][:options][:limit_storage] = params[:limit_storage].to_i if params[:limit_storage]
-    @sb[:planning][:options][:display_vms] = params[:display_vms].blank? ? nil : params[:display_vms].to_i if params.has_key?(:display_vms)
+    @sb[:planning][:options][:display_vms] = params[:display_vms].blank? ? nil : params[:display_vms].to_i if params.key?(:display_vms)
 
     @sb[:planning][:options][:values][:cpu] = params[:trend_cpu_val].to_i if params[:trend_cpu_val]
     @sb[:planning][:options][:values][:vcpus] = params[:trend_vcpus_val].to_i if params[:trend_vcpus_val]
     @sb[:planning][:options][:values][:memory] = params[:trend_memory_val].to_i if params[:trend_memory_val]
     @sb[:planning][:options][:values][:storage] = params[:trend_storage_val].to_i if params[:trend_storage_val]
 
-    planning_get_vm_values if params[:chosen_vm] ||       # Refetch the VM values if any of these options change
+    planning_get_vm_values if params[:chosen_vm] || # Refetch the VM values if any of these options change
                               params[:vm_mode] ||
                               params[:trend_days] ||
                               params[:tz] ||
                               params[:time_profile]
 
     @sb[:planning][:vm_opts] = VimPerformancePlanning.vm_default_options(@sb[:planning][:options][:vm_mode])
-    unless (@sb[:planning][:vm_opts][:cpu] && @sb[:planning][:options][:trend_cpu]) ||          # Check that at least one required metric is checked
-            (@sb[:planning][:vm_opts][:vcpus] && @sb[:planning][:options][:trend_vcpus]) ||
-            (@sb[:planning][:vm_opts][:memory] && @sb[:planning][:options][:trend_memory]) ||
-            (@sb[:planning][:vm_opts][:storage] && @sb[:planning][:options][:trend_storage])
+    unless (@sb[:planning][:vm_opts][:cpu] && @sb[:planning][:options][:trend_cpu]) || # Check that at least one required metric is checked
+           (@sb[:planning][:vm_opts][:vcpus] && @sb[:planning][:options][:trend_vcpus]) ||
+           (@sb[:planning][:vm_opts][:memory] && @sb[:planning][:options][:trend_memory]) ||
+           (@sb[:planning][:vm_opts][:storage] && @sb[:planning][:options][:trend_storage])
       add_flash(_("At least one %s must be selected") % "VM Options", :error)
       @sb[:planning][:options][:trend_cpu] = true if params[:trend_cpu]
       @sb[:planning][:options][:trend_vcpus] = true if params[:trend_vcpus]
       @sb[:planning][:options][:trend_memory] = true if params[:trend_memory]
       @sb[:planning][:options][:trend_storage] = true if params[:trend_storage]
     end
-    if params.has_key?(:display_vms)
+    if params.key?(:display_vms)
       perf_planning_gen_data
       planning_replace_right_cell
     else
       render :update do |page|                    # Use JS to update the display
-        unless params[:trend_cpu_val] ||          # Don't replace the div when input fields change
-                params[:trend_vcpus_val] ||
-                params[:trend_memory_val] ||
-                params[:trend_storage_val]
-          page.replace("planning_options_div", :partial=>"planning_options")
+        unless params[:trend_cpu_val] || # Don't replace the div when input fields change
+               params[:trend_vcpus_val] ||
+               params[:trend_memory_val] ||
+               params[:trend_storage_val]
+          page.replace("planning_options_div", :partial => "planning_options")
         end
         session[:changed] = @sb[:planning][:options][:chosen_vm] || @sb[:planning][:options][:vm_mode] == :manual
         page << javascript_for_miq_button_visibility(session[:changed])
@@ -251,27 +251,27 @@ class MiqCapacityController < ApplicationController
 
   # Send the current planning report data in text, CSV, or PDF
   def planning_report_download
-    profile = Array.new
+    profile = []
     profile.push("CPU #{@sb[:planning][:rpt].extras[:vm_profile][:cpu]}") if @sb[:planning][:rpt].extras[:vm_profile][:cpu]
     profile.push("RAM #{@sb[:planning][:rpt].extras[:vm_profile][:memory]}") if @sb[:planning][:rpt].extras[:vm_profile][:memory]
     profile.push("Disk #{@sb[:planning][:rpt].extras[:vm_profile][:storage]}") if @sb[:planning][:rpt].extras[:vm_profile][:storage]
     @sb[:planning][:rpt].title = "Counts of VMs (#{profile.join(", ")})"
-    filename = "VM Counts per #{ui_lookup(:model=>@sb[:planning][:options][:target_typ])}"
+    filename = "VM Counts per #{ui_lookup(:model => @sb[:planning][:options][:target_typ])}"
     disable_client_cache
     case params[:typ]
     when "txt"
       send_data(@sb[:planning][:rpt].to_text,
-        :filename => "#{filename}.txt" )
+                :filename => "#{filename}.txt")
     when "csv"
       send_data(@sb[:planning][:rpt].to_csv,
-        :filename => "#{filename}.csv" )
+                :filename => "#{filename}.csv")
     when "pdf"
       render_pdf(@sb[:planning][:rpt])
     end
   end
 
   def accordion_select
-#   self.x_active_tree = params[:id]
+    #   self.x_active_tree = params[:id]
     util_get_node_info(x_node)
     util_replace_right_cell(@nodetype)
   end
@@ -291,10 +291,10 @@ class MiqCapacityController < ApplicationController
       @sb[:util][:options][:tag] = params[:report_tag] == "<None>" ? nil : params[:report_tag] if params[:report_tag]
       @sb[:util][:options][:tag] = params[:summ_tag] == "<None>" ? nil : params[:summ_tag] if params[:summ_tag]
       @sb[:util][:options][:index] = params[:chart_idx] == "clear" ? nil : params[:chart_idx] if params[:chart_idx]
-      if params.has_key?(:details_time_profile) || params.has_key?(:report_time_profile) || params.has_key?(:summ_time_profile)
-        @sb[:util][:options][:time_profile] = params[:details_time_profile].blank? ? nil : params[:details_time_profile].to_i if params.has_key?(:details_time_profile)
-        @sb[:util][:options][:time_profile] = params[:report_time_profile].blank? ? nil : params[:report_time_profile].to_i if params.has_key?(:report_time_profile)
-        @sb[:util][:options][:time_profile] = params[:summ_time_profile].blank? ? nil : params[:summ_time_profile].to_i if params.has_key?(:summ_time_profile)
+      if params.key?(:details_time_profile) || params.key?(:report_time_profile) || params.key?(:summ_time_profile)
+        @sb[:util][:options][:time_profile] = params[:details_time_profile].blank? ? nil : params[:details_time_profile].to_i if params.key?(:details_time_profile)
+        @sb[:util][:options][:time_profile] = params[:report_time_profile].blank? ? nil : params[:report_time_profile].to_i if params.key?(:report_time_profile)
+        @sb[:util][:options][:time_profile] = params[:summ_time_profile].blank? ? nil : params[:summ_time_profile].to_i if params.key?(:summ_time_profile)
         tp = TimeProfile.find(@sb[:util][:options][:time_profile]) unless @sb[:util][:options][:time_profile].blank?
         @sb[:util][:options][:time_profile_tz] = @sb[:util][:options][:time_profile].blank? ? nil : tp.tz
         @sb[:util][:options][:time_profile_days] = @sb[:util][:options][:time_profile].blank? ? nil : tp.days
@@ -310,25 +310,24 @@ class MiqCapacityController < ApplicationController
 
   # Send the current utilization report data in text, CSV, or PDF
   def util_report_download
-    report = MiqReport.new({:title=>@sb[:util][:title],
-                            :cols=>["section", "item", "value"],
-                            :col_order=>["section", "item", "value"],
-                            :headers=>["Section","Item", "Value"],
-                            :sortby=>["section"],
-                            :extras=>{},
-                            :group=>"y"
-                          })
+    report = MiqReport.new(:title     => @sb[:util][:title],
+                           :cols      => ["section", "item", "value"],
+                           :col_order => ["section", "item", "value"],
+                           :headers   => ["Section", "Item", "Value"],
+                           :sortby    => ["section"],
+                           :extras    => {},
+                           :group     => "y")
     report.db = "MetricRollup"
-    report.table = MiqReportable.hashes2table(util_summ_hashes, :only=>report.cols)
+    report.table = MiqReportable.hashes2table(util_summ_hashes, :only => report.cols)
     filename = report.title
     disable_client_cache
     case params[:typ]
     when "txt"
       send_data(report.to_text,
-        :filename => "#{filename}.txt" )
+                :filename => "#{filename}.txt")
     when "csv"
       send_data(report.to_csv,
-        :filename => "#{filename}.csv" )
+                :filename => "#{filename}.csv")
     when "pdf"
       render_pdf(report)
     end
@@ -345,10 +344,10 @@ class MiqCapacityController < ApplicationController
       perf_util_daily_gen_data
       util_replace_right_cell(@nodetype) unless @waiting      # Draw right side if task is done
     elsif x_active_tree == :bottlenecks_tree
-      if @refresh  #need to set tl_options if node was "" initially
+      if @refresh  # need to set tl_options if node was "" initially
         bottleneck_get_node_info(x_node)
       else
-        bottleneck_get_node_info(x_node,"n")
+        bottleneck_get_node_info(x_node, "n")
       end
       bottleneck_replace_right_cell
     end
@@ -358,8 +357,8 @@ class MiqCapacityController < ApplicationController
   def bottleneck_tl_chooser
     @sb[:bottlenecks][:tl_options][:filter1] = params["tl_summ_fl_grp1"] if params["tl_summ_fl_grp1"]
     @sb[:bottlenecks][:tl_options][:filter1] = params["tl_report_fl_grp1"] if params["tl_report_fl_grp1"]
-    @sb[:bottlenecks][:tl_options][:hosts] = params["tl_summ_hosts"] == "1" if params.has_key?("tl_summ_hosts")
-    @sb[:bottlenecks][:tl_options][:hosts] = params["tl_report_hosts"] == "1" if params.has_key?("tl_report_hosts")
+    @sb[:bottlenecks][:tl_options][:hosts] = params["tl_summ_hosts"] == "1" if params.key?("tl_summ_hosts")
+    @sb[:bottlenecks][:tl_options][:hosts] = params["tl_report_hosts"] == "1" if params.key?("tl_report_hosts")
     @sb[:bottlenecks][:tl_options][:tz] = params["tl_summ_tz"] if params["tl_summ_tz"]
     @sb[:bottlenecks][:tl_options][:tz] = params["tl_report_tz"] if params["tl_report_tz"]
     bottleneck_show_timeline("n")
@@ -370,13 +369,13 @@ class MiqCapacityController < ApplicationController
 
   # Parse a tree node and set the @nodetype and @record vars
   def get_nodetype_and_record(treenodeid)
-    #@nodetype, nodeid = treenodeid.split("-").last.split("_")
+    # @nodetype, nodeid = treenodeid.split("-").last.split("_")
     @nodetype, nodeid = treenodeid.split("-")
-    node_ids = Hash.new
+    node_ids = {}
     treenodeid.split("-").each do |p|
       node_ids[p.split("_").first] = p.split("_").last                    # Create a hash of all record ids represented by the selected tree node
     end
-    @sb[:node_ids] ||= Hash.new
+    @sb[:node_ids] ||= {}
     @sb[:node_ids][x_active_tree] = node_ids
     case @nodetype
     when "root"
@@ -395,11 +394,11 @@ class MiqCapacityController < ApplicationController
   end
 
   # Get all info for the node about to be displayed
-  def util_get_node_info(treenodeid, refresh=nil)
+  def util_get_node_info(treenodeid, refresh = nil)
     treenodeid = valid_active_node(treenodeid)
     get_nodetype_and_record(treenodeid)
     @right_cell_text = @record.kind_of?(MiqEnterprise) ?
-      _("%s") %  ui_lookup(:model => "MiqEnterprise") :
+      _("%s") % ui_lookup(:model => "MiqEnterprise") :
       _("%{model} \"%{name}\" %{typ}") % {:model => ui_lookup(:model => @record.class.base_class.to_s), :name => @record.name, :typ => "Utilization Trend Summary"}
     @sb[:util][:title] = @right_cell_text
     @right_cell_text += " - Filtered by #{@sb[:util][:tags][@sb[:util][:options][:tag]]}" unless @sb[:util][:options].nil? || @sb[:util][:options][:tag].blank?
@@ -418,7 +417,7 @@ class MiqCapacityController < ApplicationController
     edate = create_time_in_tz("#{e.year}-#{e.month}-#{e.day} 23", tz) # End at 11pm of start date
 
     unless (refresh == "n" || params[:refresh] == "n") && @sb[:util][:options] && @sb[:util][:options][:model] == @record.class.base_class.to_s
-      @sb[:util][:options] ||= Hash.new
+      @sb[:util][:options] ||= {}
       @sb[:util][:options][:typ] = "Daily"
       @sb[:util][:options][:days] ||= "7"
       @sb[:util][:options][:model] = @record.class.base_class.to_s
@@ -429,7 +428,7 @@ class MiqCapacityController < ApplicationController
     if @sb[:util][:options][:chart_date]                            # Clear chosen chart date if out of trend range
       cdate = create_time_in_tz(@sb[:util][:options][:chart_date], tz)  # Get chart date at midnight in time zone
       if (cdate < sdate || cdate > edate) || # Reset if chart date is before start date or after end date
-        (@sb[:util][:options][:time_profile] && !@sb[:util][:options][:time_profile_days].include?(cdate.wday) )
+         (@sb[:util][:options][:time_profile] && !@sb[:util][:options][:time_profile_days].include?(cdate.wday))
         @sb[:util][:options][:chart_date] = nil
       end
     end
@@ -440,7 +439,7 @@ class MiqCapacityController < ApplicationController
     @sb[:util][:options][:chart_date] ||= [edate.month, edate.day, edate.year].join("/")
 
     if @sb[:util][:options][:time_profile]                              # If profile in effect, set date to a valid day in the profile
-      @sb[:util][:options][:skip_days] = [0,1,2,3,4,5,6].delete_if{|d| @sb[:util][:options][:time_profile_days].include?(d)}.join(",")
+      @sb[:util][:options][:skip_days] = [0, 1, 2, 3, 4, 5, 6].delete_if { |d| @sb[:util][:options][:time_profile_days].include?(d) }.join(",")
       cdate = @sb[:util][:options][:chart_date].to_date                 # Start at the currently set date
       6.times do                                                        # Go back up to 6 days (try each weekday)
         break if @sb[:util][:options][:time_profile_days].include?(cdate.wday)  # If weekday is in the profile, use it
@@ -456,7 +455,7 @@ class MiqCapacityController < ApplicationController
     @sb[:util][:options][:chart_type] = :summary
   end
 
-  def util_replace_right_cell(nodetype, replace_trees = [])  # replace_trees can be an array of tree symbols to be replaced
+  def util_replace_right_cell(_nodetype, replace_trees = [])  # replace_trees can be an array of tree symbols to be replaced
     # Get the tags for this node for the Classification pulldown
     @sb[:util][:tags] = nil unless params[:miq_date_1] || params[:miq_date_2]   # Clear tags unless just changing date
     unless @nodetype == "h" || @nodetype == "s" || params[:miq_date_1] || params[:miq_date_2] # Get the tags for the pulldown, unless host, storage, or just changing the date
@@ -464,11 +463,10 @@ class MiqCapacityController < ApplicationController
         mm, dd, yy = @sb[:util][:options][:chart_date].split("/")
         end_date = Time.utc(yy, mm, dd, 23, 59, 59)
         @sb[:util][:tags] = VimPerformanceAnalysis.child_tags_over_time_period(
-            @record, 'daily',
-            {:end_date=>end_date, :days=>@sb[:util][:options][:days].to_i,
-             :ext_options=>{:tz=>@sb[:util][:trend_rpt].tz,                     # Add ext_options for tz from rpt object
-                            :time_profile=>@sb[:util][:trend_rpt].time_profile}
-            }
+          @record, 'daily',
+          :end_date => end_date, :days => @sb[:util][:options][:days].to_i,
+           :ext_options => {:tz           => @sb[:util][:trend_rpt].tz,                     # Add ext_options for tz from rpt object
+                            :time_profile => @sb[:util][:trend_rpt].time_profile}
         )
       end
     end
@@ -508,10 +506,10 @@ class MiqCapacityController < ApplicationController
   end
 
   def planning_build_options
-    @breadcrumbs = Array.new
-    @sb[:planning] ||= Hash.new             # Leave existing values
-    @sb[:planning] = Hash.new if params[:button] == "reset" # Clear everything on reset
-    @sb[:planning][:options] ||= Hash.new   # Leave existing values
+    @breadcrumbs = []
+    @sb[:planning] ||= {}             # Leave existing values
+    @sb[:planning] = {} if params[:button] == "reset" # Clear everything on reset
+    @sb[:planning][:options] ||= {}   # Leave existing values
     @sb[:planning][:options][:days] ||= 7
     @sb[:planning][:options][:vm_mode] ||= :allocated
     @sb[:planning][:options][:trend_cpu] = true if @sb[:planning][:options][:trend_cpu].nil?
@@ -519,7 +517,7 @@ class MiqCapacityController < ApplicationController
     @sb[:planning][:options][:trend_memory] = true if @sb[:planning][:options][:trend_memory].nil?
     @sb[:planning][:options][:trend_storage] = true if @sb[:planning][:options][:trend_storage].nil?
     @sb[:planning][:options][:tz] ||= session[:user_tz]
-    @sb[:planning][:options][:values] ||= Hash.new
+    @sb[:planning][:options][:values] ||= {}
     planning_get_vm_values
     get_time_profiles # Get time profiles list (global and user specific)
 
@@ -532,24 +530,24 @@ class MiqCapacityController < ApplicationController
     end
 
     @sb[:planning][:options][:target_typ] ||= "EmsCluster"
-    @sb[:planning][:options][:target_filters] = Hash.new
-    MiqSearch.find_all_by_db(@sb[:planning][:options][:target_typ]).each{|s|@sb[:planning][:options][:target_filters][s.id.to_s] = s.description}
+    @sb[:planning][:options][:target_filters] = {}
+    MiqSearch.find_all_by_db(@sb[:planning][:options][:target_typ]).each { |s| @sb[:planning][:options][:target_filters][s.id.to_s] = s.description }
     @sb[:planning][:options][:limit_cpu] ||= 90
     @sb[:planning][:options][:limit_vcpus] ||= 10
     @sb[:planning][:options][:limit_memory] ||= 90
     @sb[:planning][:options][:limit_storage] ||= 90
     @sb[:planning][:options][:display_vms] ||= 100
 
-    @sb[:planning][:emss] = Hash.new
-    find_filtered(ExtManagementSystem, :all).each{|e|@sb[:planning][:emss][e.id.to_s] = e.name}
-    @sb[:planning][:clusters] = Hash.new
-    find_filtered(EmsCluster, :all).each{|e|@sb[:planning][:clusters][e.id.to_s] = e.name}
-    @sb[:planning][:hosts] = Hash.new
-    find_filtered(Host, :all).each{|e|@sb[:planning][:hosts][e.id.to_s] = e.name}
-    @sb[:planning][:datastores] = Hash.new
-    find_filtered(Storage, :all).each{|e|@sb[:planning][:datastores][e.id.to_s] = e.name}
-    @sb[:planning][:vm_filters] = Hash.new
-    MiqSearch.find_all_by_db("Vm").each{|s|@sb[:planning][:vm_filters][s.id.to_s] = s.description}
+    @sb[:planning][:emss] = {}
+    find_filtered(ExtManagementSystem, :all).each { |e| @sb[:planning][:emss][e.id.to_s] = e.name }
+    @sb[:planning][:clusters] = {}
+    find_filtered(EmsCluster, :all).each { |e| @sb[:planning][:clusters][e.id.to_s] = e.name }
+    @sb[:planning][:hosts] = {}
+    find_filtered(Host, :all).each { |e| @sb[:planning][:hosts][e.id.to_s] = e.name }
+    @sb[:planning][:datastores] = {}
+    find_filtered(Storage, :all).each { |e| @sb[:planning][:datastores][e.id.to_s] = e.name }
+    @sb[:planning][:vm_filters] = {}
+    MiqSearch.find_all_by_db("Vm").each { |s| @sb[:planning][:vm_filters][s.id.to_s] = s.description }
     @right_cell_text = "Planning Summary"
     if params[:button] == "reset"
       session[:changed] = false
@@ -560,8 +558,8 @@ class MiqCapacityController < ApplicationController
         page << javascript_for_toolbar_reload('view_tb', v_buttons, v_xml) if v_buttons && v_xml
         page << "ManageIQ.layout.toolbar.show();"
         page << javascript_for_miq_button_visibility(session[:changed])
-        page.replace("planning_options_div", :partial=>"planning_options")
-        page.replace_html("main_div", :partial=>"planning_tabs")
+        page.replace("planning_options_div", :partial => "planning_options")
+        page.replace_html("main_div", :partial => "planning_tabs")
       end
     end
     if @sb[:planning] && @sb[:planning][:chart_data]  # If planning charts already exist
@@ -573,21 +571,20 @@ class MiqCapacityController < ApplicationController
   def planning_get_vm_values
     return if @sb[:planning][:options][:vm_mode] == :manual
     if @sb[:planning][:options][:chosen_vm]
-      @sb[:planning][:options][:values] = Hash.new
+      @sb[:planning][:options][:values] = {}
       vm_options = VimPerformancePlanning.vm_default_options(@sb[:planning][:options][:vm_mode])
       VimPerformancePlanning.vm_metric_values(Vm.find(@sb[:planning][:options][:chosen_vm]),
-                                              { :vm_options=>vm_options,
-                                                :range=>{
-                                                  :days=>@sb[:planning][:options][:days],
-                                                  :end_date=>perf_planning_end_date
-                                                },
-                                                :tz=>@sb[:planning][:options][:tz],
-                                                :time_profile_id=>@sb[:planning][:options][:time_profile]
-                                              })
-      vm_options.each do |k,v|
+                                              :vm_options      => vm_options,
+                                              :range           => {
+                                                :days     => @sb[:planning][:options][:days],
+                                                :end_date => perf_planning_end_date
+                                              },
+                                              :tz              => @sb[:planning][:options][:tz],
+                                              :time_profile_id => @sb[:planning][:options][:time_profile])
+      vm_options.each do |k, v|
         unless v.nil?
           if k == :storage
-            @sb[:planning][:options][:values][k] = (v[:value].to_i/1.gigabyte).round
+            @sb[:planning][:options][:values][k] = (v[:value].to_i / 1.gigabyte).round
           else
             @sb[:planning][:options][:values][k] = v[:value].to_i.round
           end
@@ -634,14 +631,14 @@ class MiqCapacityController < ApplicationController
     render :js => presenter.to_html
   end
 
-  def bottleneck_get_node_info(treenodeid, refresh=nil)
+  def bottleneck_get_node_info(treenodeid, refresh = nil)
     treenodeid = valid_active_node(treenodeid)
     @timeline = true
     @lastaction = "bottleneck_show_timeline"
 
     get_nodetype_and_record(treenodeid)
     @right_cell_text = @record.kind_of?(MiqEnterprise) ?
-        _("%s") %  ui_lookup(:model => "MiqEnterprise") :
+        _("%s") % ui_lookup(:model => "MiqEnterprise") :
         _("%{model} \"%{name}\" %{typ}") % {:model => ui_lookup(:model => @record.class.base_class.to_s), :name => @record.name, :typ => "Bottlenecks Summary"}
 
     # Get the where clause to limit records to the selected tree node (@record)
@@ -650,25 +647,25 @@ class MiqCapacityController < ApplicationController
       # Call method to get where clause to filter child objects
       @sb[:bottlenecks][:objects_where_clause] = BottleneckEvent.event_where_clause(@record)
     end
-    @sb[:active_tab] = "summary"      #reset tab back to first tab when node is changed in the tree
+    @sb[:active_tab] = "summary"      # reset tab back to first tab when node is changed in the tree
     bottleneck_show_timeline(refresh)                 # Create the timeline report
-    drop_breadcrumb( {:name=>"Activity", :url=>"/miq_capacity/bottlenecks/?refresh=n"} )
+    drop_breadcrumb(:name => "Activity", :url => "/miq_capacity/bottlenecks/?refresh=n")
   end
 
   def bottleneck_show_timeline(refresh = nil)
-    unless (refresh == "n" || params[:refresh] == "n") #||
+    unless refresh == "n" || params[:refresh] == "n" # ||
       objects_where_clause = @sb[:bottlenecks][:objects_where_clause]
-      @sb[:bottlenecks] = Hash.new
+      @sb[:bottlenecks] = {}
       @sb[:bottlenecks][:objects_where_clause] = objects_where_clause
-      @sb[:bottlenecks][:tl_options] = Hash.new
+      @sb[:bottlenecks][:tl_options] = {}
       @sb[:bottlenecks][:tl_options][:model] = "BottleNeck"
       @sb[:bottlenecks][:tl_options][:tz] = session[:user_tz]
     end
-    @sb[:bottlenecks][:groups] = Array.new
-    @tl_groups_hash = Hash.new
-    EmsEvent.bottleneck_event_groups.each do |gname,list|
+    @sb[:bottlenecks][:groups] = []
+    @tl_groups_hash = {}
+    EmsEvent.bottleneck_event_groups.each do |gname, list|
       @sb[:bottlenecks][:groups].push(list[:name].to_s)
-      @tl_groups_hash[gname] ||= Array.new
+      @tl_groups_hash[gname] ||= []
       @tl_groups_hash[gname].concat(list[:detail]).uniq!
     end
     if @sb[:bottlenecks][:tl_options][:filter1].blank?
@@ -680,13 +677,13 @@ class MiqCapacityController < ApplicationController
       @title = @sb[:bottlenecks][:report].title
       bottleneck_tl_to_xml
     else
-      @sb[:bottlenecks][:report] = MiqReport.new(YAML::load(File.open("#{TIMELINES_FOLDER}/miq_reports/tl_bottleneck_events.yaml")))
+      @sb[:bottlenecks][:report] = MiqReport.new(YAML.load(File.open("#{TIMELINES_FOLDER}/miq_reports/tl_bottleneck_events.yaml")))
       @sb[:bottlenecks][:report].tz = @sb[:bottlenecks][:tl_options][:tz] # Set the new timezone
       @title = @sb[:bottlenecks][:report].title
 
-      event_set = Array.new
+      event_set = []
       if @sb[:bottlenecks][:tl_options][:filter1] != "ALL"
-        @tl_groups_hash.each do |name,fltr|
+        @tl_groups_hash.each do |name, fltr|
           if name.to_s == @sb[:bottlenecks][:tl_options][:filter1].to_s
             fltr.each do |f|
               event_set.push(f) unless event_set.include?(f)
@@ -694,7 +691,7 @@ class MiqCapacityController < ApplicationController
           end
         end
       else
-        @tl_groups_hash.each do |name,fltr|
+        @tl_groups_hash.each do |_name, fltr|
           fltr.each do |f|
             event_set.push(f) unless event_set.include?(f)
           end
@@ -709,12 +706,12 @@ class MiqCapacityController < ApplicationController
 
       # Don't include Host resource types based on option - exclude host and storage nodes
       unless @sb[:bottlenecks][:tl_options][:hosts] ||
-          ["h","s"].include?(x_node.split("-").last.split("_").first)
+             ["h", "s"].include?(x_node.split("-").last.split("_").first)
         @sb[:bottlenecks][:report].where_clause = "(#{@sb[:bottlenecks][:report].where_clause}) AND resource_type != 'Host'"
       end
 
       begin
-          @sb[:bottlenecks][:report].generate_table(:userid => session[:userid])
+        @sb[:bottlenecks][:report].generate_table(:userid => session[:userid])
       rescue StandardError => bang
         add_flash(_("Error building timeline ") << bang.message, :error)
       else
@@ -733,15 +730,15 @@ class MiqCapacityController < ApplicationController
       @sb[:bottlenecks][:report].extras[:browser_name] = browser_info(:name)
       if is_browser_ie?
         blob = BinaryBlob.new(:name => "timeline_results")
-        blob.binary=(@sb[:bottlenecks][:report].to_timeline)
+        blob.binary = (@sb[:bottlenecks][:report].to_timeline)
         session[:tl_xml_blob_id] = blob.id
       else
         @tl_json = @sb[:bottlenecks][:report].to_timeline
       end
-#         START of TIMELINE TIMEZONE Code
-#     session[:tl_position] = @sb[:bottlenecks][:report].extras[:tl_position]
-      session[:tl_position] = format_timezone(@sb[:bottlenecks][:report].extras[:tl_position],tz,"tl")
-#         END of TIMELINE TIMEZONE Code
+      #         START of TIMELINE TIMEZONE Code
+      #     session[:tl_position] = @sb[:bottlenecks][:report].extras[:tl_position]
+      session[:tl_position] = format_timezone(@sb[:bottlenecks][:report].extras[:tl_position], tz, "tl")
+      #         END of TIMELINE TIMEZONE Code
     end
   end
 
@@ -749,9 +746,9 @@ class MiqCapacityController < ApplicationController
     changed = (@edit[:new] != @edit[:current])
     render :update do |page|                    # Use JS to update the display
       if @action_type_changed || @tag_selected || @snmp_trap_refresh
-        page.replace("action_options_div", :partial=>"action_options")
+        page.replace("action_options_div", :partial => "action_options")
       elsif @alert_refresh
-        page.replace("alert_details_div", :partial=>"alert_details")
+        page.replace("alert_details_div", :partial => "alert_details")
       end
       if changed != session[:changed]
         session[:changed] = changed
@@ -762,23 +759,23 @@ class MiqCapacityController < ApplicationController
 
   def util_build_tree(type, name)
     utilization = TreeBuilderUtilization.new(name, type, @sb)
-    @right_cell_text = "#{type == :bottlenecks ? "Bottlenecks": "Utilization"} Summary"
+    @right_cell_text = "#{type == :bottlenecks ? "Bottlenecks" : "Utilization"} Summary"
     instance_variable_set :"@#{name}", utilization.tree_nodes
   end
 
   # Create an array of hashes from the Utilization summary report tab information
   def util_summ_hashes
-    a = Array.new
-    @sb[:util][:summary][:info].each{|r| a.push({"section"=>"Basic Info", "item"=>r[0], "value"=>r[1]}) } if @sb[:util][:summary][:info]
-    @sb[:util][:summary][:cpu].each{|r| a.push({"section"=>"CPU", "item"=>r[0], "value"=>r[1]}) } if @sb[:util][:summary][:cpu]
-    @sb[:util][:summary][:memory].each{|r| a.push({"section"=>"Memory", "item"=>r[0], "value"=>r[1]}) } if @sb[:util][:summary][:memory]
-    @sb[:util][:summary][:storage].each{|r| a.push({"section"=>"Disk", "item"=>r[0], "value"=>r[1]}) } if @sb[:util][:summary][:storage]
-    return a
+    a = []
+    @sb[:util][:summary][:info].each { |r| a.push("section" => "Basic Info", "item" => r[0], "value" => r[1]) } if @sb[:util][:summary][:info]
+    @sb[:util][:summary][:cpu].each { |r| a.push("section" => "CPU", "item" => r[0], "value" => r[1]) } if @sb[:util][:summary][:cpu]
+    @sb[:util][:summary][:memory].each { |r| a.push("section" => "Memory", "item" => r[0], "value" => r[1]) } if @sb[:util][:summary][:memory]
+    @sb[:util][:summary][:storage].each { |r| a.push("section" => "Disk", "item" => r[0], "value" => r[1]) } if @sb[:util][:summary][:storage]
+    a
   end
 
   def get_session_data
     @title        = "Utilization"
-    @layout     ||= "miq_capacity_utilization"
+    @layout ||= "miq_capacity_utilization"
     @lastaction   = session[:miq_capacity_lastaction]
     @display      = session[:miq_capacity_display]
     @current_page = session[:miq_capacity_current_page]
@@ -789,5 +786,4 @@ class MiqCapacityController < ApplicationController
     session[:miq_capacity_current_page] = @current_page
     session[:miq_capacity_display]      = @display unless @display.nil?
   end
-
 end

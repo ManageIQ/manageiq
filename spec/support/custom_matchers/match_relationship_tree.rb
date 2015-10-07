@@ -34,10 +34,10 @@ RSpec::Matchers.define :match_relationship_tree do |expected_tree|
 
     if tree.first.first.kind_of?(Array)
       # sorting expected tree
-      tree.sort_by { |key, children| [key[0].name,    key[1]] }
+      tree.sort_by { |key, _children| [key[0].name,    key[1]] }
     else
       # sorting actual tree
-      tree.sort_by { |obj, children| [obj.class.name, obj.name] }
+      tree.sort_by { |obj, _children| [obj.class.name, obj.name] }
     end
   end
 

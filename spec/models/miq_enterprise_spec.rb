@@ -62,13 +62,12 @@ describe MiqEnterprise do
     end
 
     it "#hosts" do
-      hosts = [ FactoryGirl.create(:host_vmware, :ext_management_system => @ems),
-                FactoryGirl.create(:host_vmware, :ext_management_system => @ems)]
+      hosts = [FactoryGirl.create(:host_vmware, :ext_management_system => @ems),
+               FactoryGirl.create(:host_vmware, :ext_management_system => @ems)]
 
       FactoryGirl.create(:host_vmware)
 
       expect(@ent.hosts).to match_array(hosts)
     end
   end
-
 end

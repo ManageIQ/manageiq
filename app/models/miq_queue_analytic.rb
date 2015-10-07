@@ -39,7 +39,7 @@ class MiqQueueAnalytic < ActsAsArModel
     counts_hash = MiqQueue.where(scope_conditions).nested_count_by(%w(role state))
     wait_hash = MiqQueue.where(scope_conditions).wait_times_by_role
     table_rows = roles.collect do |role|
-      self.new(
+      new(
         :role                 => role || "No specified role",
         :age_of_next_in_queue => wait_hash.fetch_path(role, :next) || 0,
         :age_of_last_in_queue => wait_hash.fetch_path(role, :last) || 0,
@@ -48,6 +48,6 @@ class MiqQueueAnalytic < ActsAsArModel
       )
     end
 
-    return [table_rows]
+    [table_rows]
   end
 end

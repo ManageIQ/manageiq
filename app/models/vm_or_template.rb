@@ -44,7 +44,7 @@ class VmOrTemplate < ActiveRecord::Base
     "unknown"   => "Unknown"
   }
 
-  POWER_OPS = %w{start stop suspend reset shutdown_guest standby_guest reboot_guest}
+  POWER_OPS = %w(start stop suspend reset shutdown_guest standby_guest reboot_guest)
 
   validates_presence_of     :name, :location
   validates_inclusion_of    :vendor, :in => VENDOR_TYPES.values
@@ -180,10 +180,10 @@ class VmOrTemplate < ActiveRecord::Base
 
   before_validation :set_tenant_from_group
 
-  alias datastores storages    # Used by web-services to return datastores as the property name
+  alias_method :datastores, :storages    # Used by web-services to return datastores as the property name
 
-  alias parent_cluster ems_cluster
-  alias owning_cluster ems_cluster
+  alias_method :parent_cluster, :ems_cluster
+  alias_method :owning_cluster, :ems_cluster
 
   # Add virtual columns/methods for specific things derived from advanced_settings
   REQUIRED_ADVANCED_SETTINGS = {
@@ -197,14 +197,14 @@ class VmOrTemplate < ActiveRecord::Base
   }
   REQUIRED_ADVANCED_SETTINGS.each do |k, (m, t)|
     define_method(m) do
-      as = self.advanced_settings.detect { |as| as.name == k }
+      as = advanced_settings.detect { |as| as.name == k }
       return nil if as.nil? || as.value.nil?
 
       return case t
-      when :boolean then ActiveRecord::ConnectionAdapters::Column.value_to_boolean(as.value)
-      when :integer then as.value.to_i
-      else as.value.to_s
-      end
+             when :boolean then ActiveRecord::ConnectionAdapters::Column.value_to_boolean(as.value)
+             when :integer then as.value.to_i
+             else as.value.to_s
+             end
     end
 
     virtual_column m, :type => t, :uses => :advanced_settings
@@ -225,9 +225,9 @@ class VmOrTemplate < ActiveRecord::Base
       m  = "disk_#{i}_#{k}".to_sym
 
       define_method(m) do
-        return nil if self.hardware.nil?
-        return nil if self.hardware.hard_disks.length < i
-        self.hardware.hard_disks[i - 1].send(k)
+        return nil if hardware.nil?
+        return nil if hardware.hard_disks.length < i
+        hardware.hard_disks[i - 1].send(k)
       end
 
       virtual_column m, :type => t, :uses => {:hardware => :hard_disks}
@@ -239,7 +239,7 @@ class VmOrTemplate < ActiveRecord::Base
     m = "parent_blue_folder_#{i}_name".to_sym
 
     define_method(m) do
-      f = self.parent_blue_folders(:exclude_root_folder => true, :exclude_non_display_folders => true)[i - 1]
+      f = parent_blue_folders(:exclude_root_folder => true, :exclude_non_display_folders => true)[i - 1]
       f.nil? ? "" : f.name
     end
 
@@ -247,8 +247,8 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def v_annotation
-    return nil if self.hardware.nil?
-    self.hardware.annotation
+    return nil if hardware.nil?
+    hardware.annotation
   end
 
   include RelationshipMixin
@@ -276,29 +276,29 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def to_s
-    self.name
+    name
   end
 
   def is_evm_appliance?
-    !!self.miq_server
+    !!miq_server
   end
-  alias is_evm_appliance  is_evm_appliance?
+  alias_method :is_evm_appliance,  :is_evm_appliance?
 
   # Determines if the VM is on an EMS or Host
   def registered?
-    #TODO: Vmware specific
-    return false if self.template? && self.ext_management_system.nil?
-    return false if self.host.nil?
-    return true
+    # TODO: Vmware specific
+    return false if self.template? && ext_management_system.nil?
+    return false if host.nil?
+    true
   end
 
   # TODO: Vmware specific, and is this even being used anywhere?
   def connected_to_ems?
-    self.connection_state == 'connected'
+    connection_state == 'connected'
   end
 
   def raw_set_custom_field(attribute, value)
-    raise "VM has no EMS, unable to set custom attribute" unless self.ext_management_system
+    raise "VM has no EMS, unable to set custom attribute" unless ext_management_system
     run_command_via_parent(:vm_set_custom_field, :attribute => attribute, :value => value)
   end
 
@@ -306,54 +306,50 @@ class VmOrTemplate < ActiveRecord::Base
     raw_set_custom_field(attribute, value)
   end
 
-  def makesmart(options = {})
+  def makesmart(_options = {})
     self.smart = true
-    self.save
+    save
   end
 
   # Ask host to update all locally registered vm state data
   def refresh_state
-    begin
-      run_command_via_parent("SendVMState")
-    rescue => err
-      _log.log_backtrace(err)
-    end
+    run_command_via_parent("SendVMState")
+  rescue => err
+    _log.log_backtrace(err)
   end
 
   def run_command_via_parent(verb, options = {})
-    raise "VM/Template <#{name}> with Id: <#{id}> is not associated with a provider." unless self.ext_management_system
-    raise "VM/Template <#{name}> with Id: <#{id}>: Provider authentication failed." unless self.ext_management_system.authentication_status_ok?
+    raise "VM/Template <#{name}> with Id: <#{id}> is not associated with a provider." unless ext_management_system
+    raise "VM/Template <#{name}> with Id: <#{id}>: Provider authentication failed." unless ext_management_system.authentication_status_ok?
 
     # TODO: Need to break this logic out into a method that can look at the verb and the vm and decide the best way to invoke it - Virtual Center WS, ESX WS, Storage Proxy.
-    _log.info("Invoking [#{verb}] through EMS: [#{self.ext_management_system.name}]")
-    options = {:user_event => "Console Request Action [#{verb}], VM [#{self.name}]"}.merge(options)
-      self.ext_management_system.send(verb, self, options)
+    _log.info("Invoking [#{verb}] through EMS: [#{ext_management_system.name}]")
+    options = {:user_event => "Console Request Action [#{verb}], VM [#{name}]"}.merge(options)
+    ext_management_system.send(verb, self, options)
   end
 
   def policy_prevented?(policy_event)
-    begin
-      enforce_policy(policy_event) unless policy_event.nil?
-      return false
-    rescue MiqException::PolicyPreventAction => err
-      _log.info "#{err}"
-      return true
-    end
+    enforce_policy(policy_event) unless policy_event.nil?
+    return false
+  rescue MiqException::PolicyPreventAction => err
+    _log.info "#{err}"
+    return true
   end
 
   def enforce_policy(event, inputs = {})
-    return  {"result" => true, :details => []} if event.to_s == "rsop" && self.host.nil?
-    raise "vm does not belong to any host" if self.host.nil? && self.ext_management_system.nil?
+    return  {"result" => true, :details => []} if event.to_s == "rsop" && host.nil?
+    raise "vm does not belong to any host" if host.nil? && ext_management_system.nil?
 
     inputs[:vm]                    = self
-    inputs[:host]                  = self.host                  unless self.host.nil?
-    inputs[:ext_management_system] = self.ext_management_system unless self.ext_management_system.nil?
+    inputs[:host]                  = host                  unless host.nil?
+    inputs[:ext_management_system] = ext_management_system unless ext_management_system.nil?
     MiqEvent.raise_evm_event(self, event, inputs)
   end
 
   # override
   def self.validate_task(task, vm, options)
     return false unless super
-    return false if options[:task] == "destroy" ||  options[:task] == "check_compliance_queue"
+    return false if options[:task] == "destroy" || options[:task] == "check_compliance_queue"
     return false if vm.has_required_host?
 
     # VM has no host or storage affiliation
@@ -382,7 +378,7 @@ class VmOrTemplate < ActiveRecord::Base
       task.error("#{vm.name}: The Default Repository SmartProxy, '#{sp.name}', is not running. "\
                  "'#{options[:task]}' not attempted")
       return false
-  end
+    end
     true
   end
   private_class_method :validate_task
@@ -404,7 +400,7 @@ class VmOrTemplate < ActiveRecord::Base
       [options[:name], options[:description], options[:memory]]
     else
       super
-  end
+    end
   end
   private_class_method :task_arguments
 
@@ -423,38 +419,38 @@ class VmOrTemplate < ActiveRecord::Base
 
   # override
   def self.invoke_task_local(task, vm, options, args)
-      cb = nil
-      if task
-        cb =
-          if POWER_OPS.include?(options[:task])
+    cb = nil
+    if task
+      cb =
+        if POWER_OPS.include?(options[:task])
           {
             :class_name  => vm.class.base_class.name,
             :instance_id => vm.id,
             :method_name => :powerops_callback,
             :args        => [task.id]
           }
-          else
+        else
           {
             :class_name  => task.class.to_s,
             :instance_id => task.id,
             :method_name => :queue_callback,
             :args        => ["Finished"]
           }
-          end
-      end
+        end
+    end
 
-      role = options[:invoke_by] == :job ? "smartstate" : "ems_operations"
-      role = nil if options[:task] == "destroy"
-      MiqQueue.put(
+    role = options[:invoke_by] == :job ? "smartstate" : "ems_operations"
+    role = nil if options[:task] == "destroy"
+    MiqQueue.put(
       :class_name   => base_class.name,
-        :instance_id  => vm.id,
-        :method_name  => options[:task],
-        :args         => args,
-        :miq_callback => cb,
-        :zone         => vm.my_zone,
-        :role         => role,
-        :expires_on   => POWER_OPS.include?(options[:task]) ? powerops_expiration : nil
-      )
+      :instance_id  => vm.id,
+      :method_name  => options[:task],
+      :args         => args,
+      :miq_callback => cb,
+      :zone         => vm.my_zone,
+      :role         => role,
+      :expires_on   => POWER_OPS.include?(options[:task]) ? powerops_expiration : nil
+    )
   end
 
   def self.invoke_tasks_remote(options)
@@ -482,7 +478,7 @@ class VmOrTemplate < ActiveRecord::Base
         $log.error("An error occurred while invoking remote tasks...Requeueing for 1 minute from now.")
         $log.log_backtrace(err)
         MiqQueue.put(
-          :class_name  => self.base_class.name,
+          :class_name  => base_class.name,
           :method_name => 'invoke_tasks_remote',
           :args        => [remote_options],
           :deliver_on  => Time.now.utc + 1.minute
@@ -492,15 +488,15 @@ class VmOrTemplate < ActiveRecord::Base
 
       msg = "'#{options[:task]}' successfully initiated for remote VMs: #{ids.sort.inspect}"
       task_audit_event(:success, options, :message => msg)
-      end
+    end
   end
 
   def scan_data_current?
-    return !(self.last_scan_on.nil? || self.last_scan_on > self.last_sync_on)
+    !(last_scan_on.nil? || last_scan_on > last_sync_on)
   end
 
   def genealogy_parent
-    self.with_relationship_type("genealogy") { self.parent }
+    with_relationship_type("genealogy") { parent }
   end
 
   def os_image_name
@@ -522,26 +518,26 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def product_name
-    name   = self.try(:operating_system).try(:product_name)
+    name   = try(:operating_system).try(:product_name)
     name ||= genealogy_parent.try(:operating_system).try(:product_name)
     name ||= ""
     name
   end
 
   def service_pack
-    name   = self.try(:operating_system).try(:service_pack)
+    name   = try(:operating_system).try(:service_pack)
     name ||= genealogy_parent.try(:operating_system).try(:service_pack)
     name ||= ""
     name
   end
 
   # Generates the contents of the RSS feed that lists VMs that fail policy
-  def self.rss_fails_policy(name, options)
+  def self.rss_fails_policy(_name, options)
     result = []
-    vms = self.find(:all,
-      :order => options[:orderby],
-      :limit => options[:limit_to_count]
-    ).each {|vm|
+    vms = find(:all,
+               :order => options[:orderby],
+               :limit => options[:limit_to_count]
+              ).each do|vm|
       rec = OpenStruct.new(vm.attributes)
       if vm.host.nil?
         rec.host_name = "unknown"
@@ -552,27 +548,27 @@ class VmOrTemplate < ActiveRecord::Base
       rec.reason = []
       presult = vm.enforce_policy("rsop")
       if presult[:result] == false
-        presult[:details].each {|p|
+        presult[:details].each do|p|
           rec.reason.push(p["description"]) unless p["result"]
-        }
+        end
         if rec.reason != []
           rec.reason = rec.reason.join(", ")
           result.push(rec)
         end
       end
-    }
+    end
     result
   end
 
   def vendor
     v = read_attribute(:vendor)
-    return VENDOR_TYPES[v]
+    VENDOR_TYPES[v]
   end
 
   def vendor=(v)
-    unless VENDOR_TYPES.has_key?(v)
+    unless VENDOR_TYPES.key?(v)
       v = VENDOR_TYPES.key(v)
-      raise "vendor must be one of VENDOR_TYPES" unless VENDOR_TYPES.has_key?(v)
+      raise "vendor must be one of VENDOR_TYPES" unless VENDOR_TYPES.key?(v)
     end
     write_attribute(:vendor, v)
   end
@@ -582,37 +578,37 @@ class VmOrTemplate < ActiveRecord::Base
   #
 
   # TODO: Vmware specific URI methods?  Next 3 methods
-  def self.location2uri(location, scheme="file")
+  def self.location2uri(location, scheme = "file")
     pat = %r{^(file|http|miq)://([^/]*)/(.+)$}
-    if !(pat =~ location)
-      #location = scheme<<"://"<<self.myhost.ipaddress<<":1139/"<<location
+    unless pat =~ location
+      # location = scheme<<"://"<<self.myhost.ipaddress<<":1139/"<<location
       location = scheme << ":///" << location
     end
-    return location
+    location
   end
 
   def self.uri2location(location)
     uri = URI.parse(location)
     location = URI.decode(uri.path)
     location = location[1..-1] if location[2..2] == ':'
-    return location
+    location
   end
 
   def uri2location
-    self.class.uri2location(self.location)
+    self.class.uri2location(location)
   end
 
   def save_scan_history(datahash)
-    result = self.scan_histories.build(
-      :status => datahash['status'],
+    result = scan_histories.build(
+      :status      => datahash['status'],
       :status_code => datahash['status_code'].to_i,
-      :message => datahash['message'],
-      :started_on => Time.parse(datahash['start_time']),
+      :message     => datahash['message'],
+      :started_on  => Time.parse(datahash['start_time']),
       :finished_on => Time.parse(datahash['end_time']),
-      :task_id => datahash['taskid']
+      :task_id     => datahash['taskid']
     )
     self.last_scan_on = Time.parse(datahash['start_time'])
-    self.save
+    save
     result
   end
 
@@ -637,15 +633,15 @@ class VmOrTemplate < ActiveRecord::Base
   #
 
   def disconnect_inv
-    self.disconnect_ems
+    disconnect_ems
 
-    self.classify_with_parent_folder_path(false)
+    classify_with_parent_folder_path(false)
 
-    self.with_relationship_type('ems_metadata') do
-      self.remove_all_parents(:of_type => ['EmsFolder', 'ResourcePool'])
+    with_relationship_type('ems_metadata') do
+      remove_all_parents(:of_type => ['EmsFolder', 'ResourcePool'])
     end
 
-    self.disconnect_host
+    disconnect_host
 
     disconnect_stack if respond_to?(:orchestration_stack)
   end
@@ -662,51 +658,51 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def connect_ems(e)
-    unless self.ext_management_system == e
-      _log.debug "Connecting Vm [#{self.name}] id [#{self.id}] to EMS [#{e.name}] id [#{e.id}]"
+    unless ext_management_system == e
+      _log.debug "Connecting Vm [#{name}] id [#{id}] to EMS [#{e.name}] id [#{e.id}]"
       self.ext_management_system = e
-      self.save
+      save
     end
   end
 
-  def disconnect_ems(e=nil)
-    if e.nil? || self.ext_management_system == e
-      log_text = " from EMS [#{self.ext_management_system.name}] id [#{self.ext_management_system.id}]" unless self.ext_management_system.nil?
-      _log.info "Disconnecting Vm [#{self.name}] id [#{self.id}]#{log_text}"
+  def disconnect_ems(e = nil)
+    if e.nil? || ext_management_system == e
+      log_text = " from EMS [#{ext_management_system.name}] id [#{ext_management_system.id}]" unless ext_management_system.nil?
+      _log.info "Disconnecting Vm [#{name}] id [#{id}]#{log_text}"
 
       self.ext_management_system = nil
       self.raw_power_state = "unknown"
-      self.save
+      save
     end
   end
 
   def connect_host(h)
-    unless self.host == h
-      _log.debug "Connecting Vm [#{self.name}] id [#{self.id}] to Host [#{h.name}] id [#{h.id}]"
+    unless host == h
+      _log.debug "Connecting Vm [#{name}] id [#{id}] to Host [#{h.name}] id [#{h.id}]"
       self.host = h
-      self.save
+      save
 
       # Also connect any nics to their lans
-      self.connect_lans(h.lans)
+      connect_lans(h.lans)
     end
   end
 
-  def disconnect_host(h=nil)
-    if h.nil? || self.host == h
-      log_text = " from Host [#{self.host.name}] id [#{self.host.id}]" unless self.host.nil?
-      _log.info "Disconnecting Vm [#{self.name}] id [#{self.id}]#{log_text}"
+  def disconnect_host(h = nil)
+    if h.nil? || host == h
+      log_text = " from Host [#{host.name}] id [#{host.id}]" unless host.nil?
+      _log.info "Disconnecting Vm [#{name}] id [#{id}]#{log_text}"
 
       self.host = nil
-      self.save
+      save
 
       # Also disconnect any nics from their lans
-      self.disconnect_lans
+      disconnect_lans
     end
   end
 
   def connect_lans(lans)
-    unless lans.blank? || self.hardware.nil?
-      self.hardware.nics.each do |n|
+    unless lans.blank? || hardware.nil?
+      hardware.nics.each do |n|
         # TODO: Use a different field here
         #   model is temporarily being used here to transfer the name of the
         #   lan to which this nic is connected.  If model ends up being an
@@ -719,8 +715,8 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def disconnect_lans
-    unless self.hardware.nil?
-      self.hardware.nics.each do |n|
+    unless hardware.nil?
+      hardware.nics.each do |n|
         n.lan = nil
         n.save
       end
@@ -728,95 +724,95 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def connect_storage(s)
-    unless self.storage == s
-      _log.debug "Connecting Vm [#{self.name}] id [#{self.id}] to #{ui_lookup(:table => "storages")} [#{s.name}] id [#{s.id}]"
+    unless storage == s
+      _log.debug "Connecting Vm [#{name}] id [#{id}] to #{ui_lookup(:table => "storages")} [#{s.name}] id [#{s.id}]"
       self.storage = s
-      self.save
+      save
     end
   end
 
-  def disconnect_storage(s=nil)
-    if s.nil? || self.storage == s || self.storages.include?(s)
-      stores = s.nil? ? ([self.storage] + self.storages).compact.uniq : [s]
-      log_text = stores.collect {|x| "#{ui_lookup(:table => "storages")} [#{x.name}] id [#{x.id}]"}.join(", ")
-      _log.info "Disconnecting Vm [#{self.name}] id [#{self.id}] from #{log_text}"
+  def disconnect_storage(s = nil)
+    if s.nil? || storage == s || storages.include?(s)
+      stores = s.nil? ? ([storage] + storages).compact.uniq : [s]
+      log_text = stores.collect { |x| "#{ui_lookup(:table => "storages")} [#{x.name}] id [#{x.id}]" }.join(", ")
+      _log.info "Disconnecting Vm [#{name}] id [#{id}] from #{log_text}"
 
       if s.nil?
         self.storage = nil
         self.storages = []
       else
-        self.storage = nil if self.storage == s
-        self.storages.delete(s)
+        self.storage = nil if storage == s
+        storages.delete(s)
       end
 
-      self.save
+      save
     end
   end
 
   # Parent rp, folder and dc methods
   # TODO: Replace all with ancestors lookup once multiple parents is sorted out
   def parent_resource_pool
-    self.with_relationship_type('ems_metadata') do
-      self.parents(:of_type => "ResourcePool").first
+    with_relationship_type('ems_metadata') do
+      parents(:of_type => "ResourcePool").first
     end
   end
-  alias owning_resource_pool parent_resource_pool
+  alias_method :owning_resource_pool, :parent_resource_pool
 
   def parent_blue_folder
-    return self.with_relationship_type('ems_metadata') do
-      self.parents(:of_type => "EmsFolder").first
+    with_relationship_type('ems_metadata') do
+      parents(:of_type => "EmsFolder").first
     end
   end
-  alias owning_blue_folder parent_blue_folder
+  alias_method :owning_blue_folder, :parent_blue_folder
 
   def parent_blue_folders(*args)
-    f = self.parent_blue_folder
+    f = parent_blue_folder
     f.nil? ? [] : f.folder_path_objs(*args)
   end
 
   def under_blue_folder?(folder)
     return false unless folder.kind_of?(EmsFolder)
-    self.parent_blue_folders.any? { |f| f == folder }
+    parent_blue_folders.any? { |f| f == folder }
   end
 
   def parent_blue_folder_path
-    f = self.parent_blue_folder
+    f = parent_blue_folder
     f.nil? ? "" : f.folder_path
   end
-  alias owning_blue_folder_path parent_blue_folder_path
+  alias_method :owning_blue_folder_path, :parent_blue_folder_path
 
   def parent_folder
-    self.ems_cluster.try(:parent_folder)
+    ems_cluster.try(:parent_folder)
   end
-  alias owning_folder parent_folder
-  alias parent_yellow_folder parent_folder
+  alias_method :owning_folder, :parent_folder
+  alias_method :parent_yellow_folder, :parent_folder
 
   def parent_folders(*args)
-    f = self.parent_folder
+    f = parent_folder
     f.nil? ? [] : f.folder_path_objs(*args)
   end
-  alias parent_yellow_folders parent_folders
+  alias_method :parent_yellow_folders, :parent_folders
 
   def parent_folder_path
-    f = self.parent_folder
+    f = parent_folder
     f.nil? ? "" : f.folder_path
   end
-  alias owning_folder_path parent_folder_path
-  alias parent_yellow_folder_path parent_folder_path
+  alias_method :owning_folder_path, :parent_folder_path
+  alias_method :parent_yellow_folder_path, :parent_folder_path
 
   def parent_datacenter
-    self.ems_cluster.try(:parent_datacenter)
+    ems_cluster.try(:parent_datacenter)
   end
-  alias owning_datacenter parent_datacenter
+  alias_method :owning_datacenter, :parent_datacenter
 
   def lans
-    !self.hardware.nil? ? self.hardware.nics.collect(&:lan).compact : []
+    !hardware.nil? ? hardware.nics.collect(&:lan).compact : []
   end
 
   # Create a hash of this Vm's EMS and Host and their credentials
   def ems_host_list
     params = {}
-    [self.ext_management_system, "ems", self.host, "host"].each_slice(2) do |ems, type|
+    [ext_management_system, "ems", host, "host"].each_slice(2) do |ems, type|
       if ems
         params[type] = {
           :address    => ems.address,
@@ -829,23 +825,23 @@ class VmOrTemplate < ActiveRecord::Base
         params[type][:port] = ems.port if ems.respond_to?(:port) && !ems.port.blank?
       end
     end
-    return params
+    params
   end
 
   def reconnect_events
-    events = EmsEvent.where("(vm_location = ? AND vm_or_template_id IS NULL) OR (dest_vm_location = ? AND dest_vm_or_template_id IS NULL)", self.path, self.path)
+    events = EmsEvent.where("(vm_location = ? AND vm_or_template_id IS NULL) OR (dest_vm_location = ? AND dest_vm_or_template_id IS NULL)", path, path)
     events.each do |e|
       do_save = false
 
       src_vm = e.src_vm_or_template
-      if src_vm.nil? && e.vm_location == self.path
+      if src_vm.nil? && e.vm_location == path
         src_vm = self
         e.vm_or_template_id = src_vm.id
         do_save = true
       end
 
       dest_vm = e.dest_vm_or_template
-      if dest_vm.nil? && e.dest_vm_location == self.path
+      if dest_vm.nil? && e.dest_vm_location == path
         dest_vm = self
         e.dest_vm_or_template_id = dest_vm.id
         do_save = true
@@ -857,26 +853,26 @@ class VmOrTemplate < ActiveRecord::Base
       src_vm.add_genealogy_child(dest_vm) if src_vm && dest_vm && e.event_type == EmsEvent::CLONE_TASK_COMPLETE
     end
 
-    return true
+    true
   end
 
   def set_genealogy_parent(parent)
-    self.with_relationship_type('genealogy') do
+    with_relationship_type('genealogy') do
       self.parent = parent
     end
   end
 
   def add_genealogy_child(child)
-    self.with_relationship_type('genealogy') do
-      self.set_child(child)
+    with_relationship_type('genealogy') do
+      set_child(child)
     end
   end
 
   def myhost
     return @surrogate_host if @surrogate_host
-    return self.host unless self.host.nil?
+    return host unless host.nil?
 
-    return self.class.proxy_host_for_repository_scans
+    self.class.proxy_host_for_repository_scans
   end
 
   DEFAULT_SCAN_VIA_HOST = true
@@ -904,12 +900,12 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def my_zone
-    ems = self.ext_management_system
+    ems = ext_management_system
     ems ? ems.my_zone : MiqServer.my_zone
   end
 
   def my_zone_obj
-    Zone.find_by_name(self.my_zone)
+    Zone.find_by_name(my_zone)
   end
 
   #
@@ -917,7 +913,7 @@ class VmOrTemplate < ActiveRecord::Base
   #
 
   # TODO: Come back to this
-  def proxies4job(job=nil)
+  def proxies4job(job = nil)
     proxies = []
     msg = 'Perform SmartState Analysis on this VM'
     embedded_msg = nil
@@ -928,11 +924,11 @@ class VmOrTemplate < ActiveRecord::Base
       job = Job.find_by_guid(jobid)
     end
 
-    all_proxy_list = self.storage2proxies
-    proxies += self.storage2active_proxies(all_proxy_list)
+    all_proxy_list = storage2proxies
+    proxies += storage2active_proxies(all_proxy_list)
 
     # If we detect that a MiqServer was in the all_proxies list advise that then host need credentials to use it.
-    if all_proxy_list.any? {|p| (MiqServer === p && p.state == "on")}
+    if all_proxy_list.any? { |p| (MiqServer === p && p.state == "on") }
       embedded_msg = "Provide credentials for this VM's Host to perform SmartState Analysis"
     end
 
@@ -940,7 +936,7 @@ class VmOrTemplate < ActiveRecord::Base
       msg = embedded_msg.nil? ? 'No active SmartProxies found to analyze this VM' : embedded_msg
     else
       # Work around for the inability to scan running VMs from a host other than the registered host.
-      proxies.delete_if {|p| Host === p && p != self.host} if self.scan_on_registered_host_only?
+      proxies.delete_if { |p| Host === p && p != host } if self.scan_on_registered_host_only?
 
       # If the proxy list is now empty it is because we had to remove all but the registered host above
       if proxies.empty?
@@ -953,87 +949,85 @@ class VmOrTemplate < ActiveRecord::Base
       end
     end
 
-    self.log_proxies(proxies, all_proxy_list, msg, job) if proxies.empty? && job
+    log_proxies(proxies, all_proxy_list, msg, job) if proxies.empty? && job
 
-    return {:proxies => proxies.flatten, :message => msg}
+    {:proxies => proxies.flatten, :message => msg}
   end
 
-  def log_proxies(proxy_list=[], all_proxy_list = nil, message=nil, job=nil)
-    begin
-      log_method = proxy_list.empty? ? :warn : :debug
-      all_proxy_list ||= self.storage2proxies
-      proxies = all_proxy_list.collect {|a| "[#{log_proxies_format_instance(a.miq_proxy)}]"}
-      job_guid = job.nil? ? "" : job.guid
-      proxies_text = proxies.empty? ? "[none]" : proxies.join(" -- ")
-      method_name = caller[0][/`([^']*)'/, 1]
-      $log.send(log_method, "JOB([#{job_guid}] #{method_name}) Proxies for #{log_proxies_vm_config} : #{proxies_text}")
-      $log.send(log_method, "JOB([#{job_guid}] #{method_name}) Proxies message: #{message}") if message
-    rescue
-    end
+  def log_proxies(proxy_list = [], all_proxy_list = nil, message = nil, job = nil)
+    log_method = proxy_list.empty? ? :warn : :debug
+    all_proxy_list ||= storage2proxies
+    proxies = all_proxy_list.collect { |a| "[#{log_proxies_format_instance(a.miq_proxy)}]" }
+    job_guid = job.nil? ? "" : job.guid
+    proxies_text = proxies.empty? ? "[none]" : proxies.join(" -- ")
+    method_name = caller[0][/`([^']*)'/, 1]
+    $log.send(log_method, "JOB([#{job_guid}] #{method_name}) Proxies for #{log_proxies_vm_config} : #{proxies_text}")
+    $log.send(log_method, "JOB([#{job_guid}] #{method_name}) Proxies message: #{message}") if message
+  rescue
   end
 
   def log_proxies_vm_config
-    "[#{log_proxies_format_instance(self)}] on host [#{log_proxies_format_instance(self.host)}] #{ui_lookup(:table => "storages").downcase} [#{self.storage.name}-#{self.storage.store_type}]"
+    "[#{log_proxies_format_instance(self)}] on host [#{log_proxies_format_instance(host)}] #{ui_lookup(:table => "storages").downcase} [#{storage.name}-#{storage.store_type}]"
   end
 
   def log_proxies_format_instance(object)
     return 'Nil' if object.nil?
-    return "#{object.class.name}:#{object.id}-#{object.name}:#{object.state}"
+    "#{object.class.name}:#{object.id}-#{object.name}:#{object.state}"
   end
 
   def storage2hosts
     hosts = []
-    if self.host.nil?
-      store = self.storage
+    if host.nil?
+      store = storage
       hosts = store.hosts if hosts.empty? && store
-      hosts = [self.myhost] if hosts.empty?
+      hosts = [myhost] if hosts.empty?
     else
-      store = self.storage
+      store = storage
       hosts = store.hosts.to_a if hosts.empty? && store
-      hosts = [self.myhost] if hosts.empty?
+      hosts = [myhost] if hosts.empty?
 
       # VMware needs a VMware host to resolve datastore names
-      if self.vendor == 'VMware'
-        hosts.delete_if {|h| h.vmm_vendor != 'VMware'}
+      if vendor == 'VMware'
+        hosts.delete_if { |h| h.vmm_vendor != 'VMware' }
       end
     end
 
-    return hosts
+    hosts
   end
 
   def storage2proxies
     @storage_proxies ||= begin
-    # Support vixDisk scanning of VMware VMs from the vmdb server
-      self.miq_server_proxies
+      # Support vixDisk scanning of VMware VMs from the vmdb server
+      miq_server_proxies
     end
   end
 
   def storage2active_proxies(all_proxy_list = nil)
-    all_proxy_list ||= self.storage2proxies
+    all_proxy_list ||= storage2proxies
     proxies = all_proxy_list.select(&:is_proxy_active?)
 
     # MiqServer coresident proxy needs to contact the host and provide credentials.
     # Remove any MiqServer instances if we do not have credentials
-    rsc = self.scan_via_ems? ? self.ext_management_system : self.host
-    proxies.delete_if {|p| MiqServer === p} if rsc && !rsc.authentication_status_ok?
+    rsc = self.scan_via_ems? ? ext_management_system : host
+    proxies.delete_if { |p| MiqServer === p } if rsc && !rsc.authentication_status_ok?
 
-    return proxies
+    proxies
   end
 
   def has_active_proxy?
-    self.storage2active_proxies.empty? ? false : true
+    storage2active_proxies.empty? ? false : true
   end
 
   def has_proxy?
-    self.storage2proxies.empty? ? false : true
+    storage2proxies.empty? ? false : true
   end
 
   def miq_proxies
-    miqproxies = self.storage2proxies.collect(&:miq_proxy).compact
+    miqproxies = storage2proxies.collect(&:miq_proxy).compact
 
     # The UI does not handle getting back non-MiqProxy objects back from this call.
     # Remove MiqServer elements until we can support different class types.
-    miqproxies.delete_if {|p| p.class == MiqServer}
+    miqproxies.delete_if { |p| p.class == MiqServer }
   end
 
   # Cache the servers because the JobProxyDispatch calls this for each Vm scan job in a loop
@@ -1042,12 +1036,12 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def miq_server_proxies
-    case vm_vendor = self.vendor.to_s
+    case vm_vendor = vendor.to_s
     when 'VMware'
       # VM cannot be scanned by server if they are on a repository
-      return [] if self.storage_id.blank? || self.repository_vm?
+      return [] if storage_id.blank? || self.repository_vm?
     when 'RedHat'
-      return [] if self.storage_id.blank?
+      return [] if storage_id.blank?
     else
       return []
     end
@@ -1061,15 +1055,15 @@ class VmOrTemplate < ActiveRecord::Base
     end
 
     miq_servers.select do |svr|
-      result = svr.status == "started" && svr.has_zone?(self.my_zone)
-      result = result && svr.is_vix_disk? if vm_vendor == 'VMware'
+      result = svr.status == "started" && svr.has_zone?(my_zone)
+      result &&= svr.is_vix_disk? if vm_vendor == 'VMware'
       # RedHat VMs must be scanned from an EVM server who's host is attached to the same
       # storage as the VM unless overridden via SmartProxy affinity
       if vm_vendor == 'RedHat' && !svr.vm_scan_host_affinity? && !svr.vm_scan_storage_affinity?
         svr_vm = svr.vm
         if svr_vm && svr_vm.host
           missing_storage_ids = storages.collect(&:id) - svr_vm.host.storages.collect(&:id)
-          result = result && missing_storage_ids.empty?
+          result &&= missing_storage_ids.empty?
         else
           result = false
         end
@@ -1079,34 +1073,34 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def active_proxy_error_message
-    return self.proxies4job[:message]
+    proxies4job[:message]
   end
 
   # TODO: Vmware specific
   def repository_vm?
-    self.host.nil?
+    host.nil?
   end
 
   # TODO: Vmware specfic
   def template=(val)
-    return val unless val ^ self.template # Only continue if toggling setting
+    return val unless val ^ template # Only continue if toggling setting
     write_attribute(:template, val)
 
-    self.type = self.corresponding_model.name if (self.template? && self.kind_of?(Vm)) || (!self.template? && self.kind_of?(MiqTemplate))
-    d = self.template? ? [/\.vmx$/, ".vmtx", 'never'] : [/\.vmtx$/, ".vmx", self.state == 'never' ? 'unknown' : self.raw_power_state]
-    self.location = self.location.sub(d[0], d[1]) unless self.location.nil?
+    self.type = corresponding_model.name if (self.template? && self.kind_of?(Vm)) || (!self.template? && self.kind_of?(MiqTemplate))
+    d = self.template? ? [/\.vmx$/, ".vmtx", 'never'] : [/\.vmtx$/, ".vmx", state == 'never' ? 'unknown' : raw_power_state]
+    self.location = location.sub(d[0], d[1]) unless location.nil?
     self.raw_power_state = d[2]
   end
 
   # TODO: Vmware specfic
   def runnable?
-    return !self.host.nil? && self.current_state != "never"
+    !host.nil? && current_state != "never"
   end
 
   # TODO: Vmware specfic
   def is_controllable?
-    return false if !self.runnable? || self.template? || !self.host.control_supported?
-    return true
+    return false if !self.runnable? || self.template? || !host.control_supported?
+    true
   end
 
   def self.refresh_ems(vm_ids)
@@ -1116,9 +1110,9 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def refresh_ems
-    raise "No #{ui_lookup(:table => "ext_management_systems")} defined" unless self.ext_management_system
-    raise "No #{ui_lookup(:table => "ext_management_systems")} credentials defined" unless self.ext_management_system.has_credentials?
-    raise "#{ui_lookup(:table => "ext_management_systems")} failed last authentication check" unless self.ext_management_system.authentication_status_ok?
+    raise "No #{ui_lookup(:table => "ext_management_systems")} defined" unless ext_management_system
+    raise "No #{ui_lookup(:table => "ext_management_systems")} credentials defined" unless ext_management_system.has_credentials?
+    raise "#{ui_lookup(:table => "ext_management_systems")} failed last authentication check" unless ext_management_system.authentication_status_ok?
     EmsRefresh.queue_refresh(self)
   end
 
@@ -1129,16 +1123,16 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def refresh_ems_sync
-    raise "No #{ui_lookup(:table => "ext_management_systems")} defined" unless self.ext_management_system
-    raise "No #{ui_lookup(:table => "ext_management_systems")} credentials defined" unless self.ext_management_system.has_credentials?
-    raise "#{ui_lookup(:table => "ext_management_systems")} failed last authentication check" unless self.ext_management_system.authentication_status_ok?
+    raise "No #{ui_lookup(:table => "ext_management_systems")} defined" unless ext_management_system
+    raise "No #{ui_lookup(:table => "ext_management_systems")} credentials defined" unless ext_management_system.has_credentials?
+    raise "#{ui_lookup(:table => "ext_management_systems")} failed last authentication check" unless ext_management_system.authentication_status_ok?
     EmsRefresh.refresh(self)
   end
 
   def refresh_on_reconfig
-    raise "No #{ui_lookup(:table => "ext_management_systems")} defined" unless self.ext_management_system
-    raise "No #{ui_lookup(:table => "ext_management_systems")} credentials defined" unless self.ext_management_system.has_credentials?
-    raise "#{ui_lookup(:table => "ext_management_systems")} failed last authentication check" unless self.ext_management_system.authentication_status_ok?
+    raise "No #{ui_lookup(:table => "ext_management_systems")} defined" unless ext_management_system
+    raise "No #{ui_lookup(:table => "ext_management_systems")} credentials defined" unless ext_management_system.has_credentials?
+    raise "#{ui_lookup(:table => "ext_management_systems")} failed last authentication check" unless ext_management_system.authentication_status_ok?
     EmsRefresh.reconfig_refresh(self)
   end
 
@@ -1157,7 +1151,7 @@ class VmOrTemplate < ActiveRecord::Base
         added_vm_ids << v.id
       end
 
-      self.assign_ems_created_on_queue(added_vm_ids) if VMDB::Config.new("vmdb").config.fetch_path(:ems_refresh, :capture_vm_created_on_date)
+      assign_ems_created_on_queue(added_vm_ids) if VMDB::Config.new("vmdb").config.fetch_path(:ems_refresh, :capture_vm_created_on_date)
     end
 
     # Collect the updated folder relationships to determine which vms need updated path information
@@ -1165,13 +1159,13 @@ class VmOrTemplate < ActiveRecord::Base
     MiqPreloader.preload(ems_folders, :all_relationships)
 
     updated_folders = ems_folders.select do |f|
-      f.created_on >= update_start_time || f.updated_on >= update_start_time ||      # Has the folder itself changed (e.g. renamed)?
-        f.relationships.any? do |r|                                                  # Or has its relationship rows changed?
-          r.created_at >= update_start_time || r.updated_at >= update_start_time ||  #   Has the direct relationship changed (e.g. this folder moved under another folder)?
-            r.children.any? do |child_r|                                             #   Or have any of the child relationship rows changed (e.g. vm moved under this folder)?
-              child_r.created_at >= update_start_time || child_r.updated_at >= update_start_time
-            end
+      f.created_on >= update_start_time || f.updated_on >= update_start_time || # Has the folder itself changed (e.g. renamed)?
+      f.relationships.any? do |r|                                                  # Or has its relationship rows changed?
+        r.created_at >= update_start_time || r.updated_at >= update_start_time || #   Has the direct relationship changed (e.g. this folder moved under another folder)?
+        r.children.any? do |child_r|                                             #   Or have any of the child relationship rows changed (e.g. vm moved under this folder)?
+          child_r.created_at >= update_start_time || child_r.updated_at >= update_start_time
         end
+      end
     end
     unless updated_folders.empty?
       updated_vms = updated_folders.collect(&:all_vms_and_templates).flatten.uniq - added_vms
@@ -1181,7 +1175,7 @@ class VmOrTemplate < ActiveRecord::Base
 
   def self.assign_ems_created_on_queue(vm_ids)
     MiqQueue.put(
-      :class_name  => self.name,
+      :class_name  => name,
       :method_name => 'assign_ems_created_on',
       :args        => [vm_ids],
       :priority    => MiqQueue::MIN_PRIORITY
@@ -1195,8 +1189,8 @@ class VmOrTemplate < ActiveRecord::Base
     # Of the VMs without a VM create time, filter out the ones for which we
     #   already have a VM create event
     vms_to_update.reject! do |v|
-      #TODO: Vmware specific (fix with event rework?)
-      event = v.ems_events.detect {|e| e.event_type == 'VmCreatedEvent'}
+      # TODO: Vmware specific (fix with event rework?)
+      event = v.ems_events.detect { |e| e.event_type == 'VmCreatedEvent' }
       v.update_attribute(:ems_created_on, event.timestamp) if event && v.ems_created_on != event.timestamp
       event
     end
@@ -1205,7 +1199,7 @@ class VmOrTemplate < ActiveRecord::Base
     # Of the VMs still without an VM create time, use historical events, if
     #   available, to determine the VM create time
     ems = vms_to_update.first.ext_management_system
-    #TODO: Vmware specific
+    # TODO: Vmware specific
     return unless ems && ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
 
     vms_list = vms_to_update.collect { |v| {:id => v.id, :name => v.name, :uid_ems => v.uid_ems} }
@@ -1221,7 +1215,7 @@ class VmOrTemplate < ActiveRecord::Base
   def post_create_actions_queue
     MiqQueue.put(
       :class_name  => self.class.name,
-      :instance_id => self.id,
+      :instance_id => id,
       :method_name => 'post_create_actions'
     )
   end
@@ -1241,34 +1235,34 @@ class VmOrTemplate < ActiveRecord::Base
   def path
     # If Storage id is blank return the location stored for the vm after removing the uri data
     # Otherwise build the path from the storage data and vm location.
-    return self.location if storage_id.blank?
+    return location if storage_id.blank?
     # Return location if it contains a fully-qualified file URI
-    return self.location if self.location.starts_with?('file://')
+    return location if location.starts_with?('file://')
     # Return location for RHEV-M VMs
-    return rhevm_config_path if self.vendor.to_s == 'RedHat'
+    return rhevm_config_path if vendor.to_s == 'RedHat'
 
-    case self.storage.store_type
+    case storage.store_type
     when "VMFS" then "[#{storage.name}] #{location}"
     when "VSAN" then "[#{storage.name}] #{location}"
     when "NFS"  then "[#{storage.name}] #{location}"
     when "NAS"  then File.join(storage.name, location)
     else
-      _log.warn("VM [#{self.name}] storage type [#{self.storage.store_type}] not supported")
+      _log.warn("VM [#{name}] storage type [#{storage.store_type}] not supported")
       @path = location
     end
   end
 
   def rhevm_config_path
     # /rhev/data-center/<datacenter_id>/mastersd/master/vms/<vm_guid>/<vm_guid>.ovf/
-    datacenter = self.parent_datacenter
-    return self.location if datacenter.blank?
-    File.join('/rhev/data-center', datacenter.uid_ems, 'mastersd/master/vms', self.uid_ems, self.location)
+    datacenter = parent_datacenter
+    return location if datacenter.blank?
+    File.join('/rhev/data-center', datacenter.uid_ems, 'mastersd/master/vms', uid_ems, location)
   end
 
   # TODO: Vmware specific
   # Parses a full path into the Storage and location
   def self.parse_path(path)
-    #TODO: Review the name of this method such that the return types don't conflict with those of Repository.parse_path
+    # TODO: Review the name of this method such that the return types don't conflict with those of Repository.parse_path
     storage_name, relative_path, type = Repository.parse_path(path)
 
     storage = Storage.find_by_name(storage_name)
@@ -1319,43 +1313,43 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def archived?
-    self.ext_management_system.nil? && self.storage.nil?
+    ext_management_system.nil? && storage.nil?
   end
-  alias archived archived?
+  alias_method :archived, :archived?
 
   def orphaned?
-    self.ext_management_system.nil? && !self.storage.nil?
+    ext_management_system.nil? && !storage.nil?
   end
-  alias orphaned orphaned?
+  alias_method :orphaned, :orphaned?
 
   def active?
     !(archived? || orphaned? || self.retired? || self.template?)
   end
-  alias active active?
+  alias_method :active, :active?
 
   def disconnected?
-    self.connection_state != "connected"
+    connection_state != "connected"
   end
-  alias disconnected disconnected?
+  alias_method :disconnected, :disconnected?
 
   def normalized_state
-    %w{archived orphaned template retired disconnected}.each do |s|
-      return s if self.send("#{s}?")
+    %w(archived orphaned template retired disconnected).each do |s|
+      return s if send("#{s}?")
     end
-    return self.power_state.downcase unless self.power_state.nil?
-    return "unknown"
+    return power_state.downcase unless power_state.nil?
+    "unknown"
   end
 
   def ems_cluster_name
-    self.ems_cluster.nil? ? nil : self.ems_cluster.name
+    ems_cluster.nil? ? nil : ems_cluster.name
   end
 
   def host_name
-    self.host.nil? ? nil : self.host.name
+    host.nil? ? nil : host.name
   end
 
   def storage_name
-    self.storage.nil? ? nil : self.storage.name
+    storage.nil? ? nil : storage.name
   end
 
   def has_compliance_policies?
@@ -1366,7 +1360,7 @@ class VmOrTemplate < ActiveRecord::Base
   def classify_with_parent_folder_path_queue(add = true)
     MiqQueue.put(
       :class_name  => self.class.name,
-      :instance_id => self.id,
+      :instance_id => id,
       :method_name => 'classify_with_parent_folder_path',
       :args        => [add],
       :priority    => MiqQueue::MIN_PRIORITY
@@ -1375,13 +1369,13 @@ class VmOrTemplate < ActiveRecord::Base
 
   def classify_with_parent_folder_path(add = true)
     [:blue, :yellow].each do |folder_type|
-      path = self.send("parent_#{folder_type}_folder_path")
+      path = send("parent_#{folder_type}_folder_path")
       next if path.blank?
 
       cat = self.class.folder_category(folder_type)
       ent = self.class.folder_entry(path, cat)
 
-      _log.info("#{add ? "C" : "Unc"}lassifying VM: [#{self.name}] with Category: [#{cat.name} => #{cat.description}], Entry: [#{ent.name} => #{ent.description}]")
+      _log.info("#{add ? "C" : "Unc"}lassifying VM: [#{name}] with Category: [#{cat.name} => #{cat.description}], Entry: [#{ent.name} => #{ent.description}]")
       ent.send(add ? :assign_entry_to : :remove_entry_from, self, false)
     end
   end
@@ -1399,91 +1393,91 @@ class VmOrTemplate < ActiveRecord::Base
       )
       cat.save(:validate => false)
     end
-    return cat
+    cat
   end
 
   def self.folder_entry(ent_desc, cat)
-    ent_name = ent_desc.downcase.gsub(" ", "_").split("/").join(":")
+    ent_name = ent_desc.downcase.tr(" ", "_").split("/").join(":")
     ent = cat.find_entry_by_name(ent_name)
     unless ent
       ent = cat.children.new(:name => ent_name, :description => ent_desc)
       ent.save(:validate => false)
     end
-    return ent
+    ent
   end
 
-  def event_where_clause(assoc=:ems_events)
+  def event_where_clause(assoc = :ems_events)
     case assoc.to_sym
     when :ems_events
-      return ["vm_or_template_id = ? OR dest_vm_or_template_id = ? ", self.id, self.id]
+      return ["vm_or_template_id = ? OR dest_vm_or_template_id = ? ", id, id]
     when :policy_events
-      return ["target_id = ? and target_class = ? ", self.id, self.class.base_class.name]
+      return ["target_id = ? and target_class = ? ", id, self.class.base_class.name]
     end
   end
 
   # Virtual columns for owning resource pool, folder and datacenter
   def v_owning_cluster
     o = owning_cluster
-    return o ? o.name : ""
+    o ? o.name : ""
   end
 
   def v_owning_resource_pool
     o = owning_resource_pool
-    return o ? o.name : ""
+    o ? o.name : ""
   end
 
   def v_owning_folder
     o = owning_folder
-    return o ? o.name : ""
+    o ? o.name : ""
   end
 
-  alias v_owning_folder_path owning_folder_path
+  alias_method :v_owning_folder_path, :owning_folder_path
 
   def v_owning_blue_folder
     o = owning_blue_folder
-    return o ? o.name : ""
+    o ? o.name : ""
   end
 
-  alias v_owning_blue_folder_path owning_blue_folder_path
+  alias_method :v_owning_blue_folder_path, :owning_blue_folder_path
 
   def v_owning_datacenter
     o = owning_datacenter
-    return o ? o.name : ""
+    o ? o.name : ""
   end
 
   def v_is_a_template
-    return self.template?.to_s.capitalize
+    self.template?.to_s.capitalize
   end
 
   def v_pct_free_disk_space
     # Verify we have the required data to calculate
-    return nil unless self.hardware
-    return nil if self.hardware.disk_free_space.nil? || self.hardware.disk_capacity.nil? || self.hardware.disk_free_space.zero? || self.hardware.disk_capacity.zero?
+    return nil unless hardware
+    return nil if hardware.disk_free_space.nil? || hardware.disk_capacity.nil? || hardware.disk_free_space.zero? || hardware.disk_capacity.zero?
 
     # Calculate the percentage of free space
     # Call sprintf to ensure xxx.xx formating other decimal length can be too long
-    sprintf("%.2f", self.hardware.disk_free_space.to_f / self.hardware.disk_capacity.to_f * 100).to_f
+    sprintf("%.2f", hardware.disk_free_space.to_f / hardware.disk_capacity.to_f * 100).to_f
   end
 
   def v_pct_used_disk_space
-    percent_free = self.v_pct_free_disk_space
+    percent_free = v_pct_free_disk_space
     return nil unless percent_free
-    return 100 - percent_free
+    100 - percent_free
   end
 
   def v_datastore_path
-    s = self.storage
-    datastorepath = self.location || ""
+    s = storage
+    datastorepath = location || ""
     datastorepath = "#{s.name}/#{datastorepath}"  unless s.nil?
-    return datastorepath
+    datastorepath
   end
 
   def v_host_vmm_product
-    return self.host ? self.host.vmm_product : nil
+    host ? host.vmm_product : nil
   end
 
   def miq_provision_template
-    self.miq_provision ? self.miq_provision.vm_template : nil
+    miq_provision ? miq_provision.vm_template : nil
   end
 
   def event_threshold?(options = {:time_threshold => 30.minutes, :event_types => ["MigrateVM_Task_Complete"], :freq_threshold => 2})
@@ -1540,7 +1534,7 @@ class VmOrTemplate < ActiveRecord::Base
     end
     _log.info("Evaluate: !(#{v1} == #{v0}) = #{result}")
 
-    return result
+    result
   end
 
   #
@@ -1548,8 +1542,8 @@ class VmOrTemplate < ActiveRecord::Base
   #
 
   def disk_storage(col)
-    return nil if self.hardware.nil? || self.hardware.disks.blank?
-    return self.hardware.disks.inject(0) do |t, d|
+    return nil if hardware.nil? || hardware.disks.blank?
+    hardware.disks.inject(0) do |t, d|
       val = d.send(col)
       t + (val.nil? ? d.size.to_i : val.to_i)
     end
@@ -1557,166 +1551,166 @@ class VmOrTemplate < ActiveRecord::Base
   protected :disk_storage
 
   def allocated_disk_storage
-    return self.disk_storage(:size)
+    disk_storage(:size)
   end
 
   def used_disk_storage
-    return self.disk_storage(:size_on_disk)
+    disk_storage(:size_on_disk)
   end
 
   def provisioned_storage
-    return self.allocated_disk_storage.to_i + self.ram_size_in_bytes
+    allocated_disk_storage.to_i + ram_size_in_bytes
   end
 
   def used_storage(include_ram = true, check_state = false)
-    return self.used_disk_storage.to_i + (include_ram ? self.ram_size_in_bytes(check_state) : 0)
+    used_disk_storage.to_i + (include_ram ? ram_size_in_bytes(check_state) : 0)
   end
 
   def used_storage_by_state(include_ram = true)
-    return self.used_storage(include_ram, true)
+    used_storage(include_ram, true)
   end
 
   def uncommitted_storage
-    return self.provisioned_storage.to_i - self.used_storage_by_state.to_i
+    provisioned_storage.to_i - used_storage_by_state.to_i
   end
 
   def thin_provisioned
-    return self.hardware.nil? ? false : self.hardware.disks.any? {|d| d.disk_type == 'thin'}
+    hardware.nil? ? false : hardware.disks.any? { |d| d.disk_type == 'thin' }
   end
 
   def ram_size(check_state = false)
-    return self.hardware.nil? || (check_state && self.state != 'on') ? 0 : self.hardware.memory_cpu
+    hardware.nil? || (check_state && state != 'on') ? 0 : hardware.memory_cpu
   end
 
   def ram_size_by_state
-    self.ram_size(true)
+    ram_size(true)
   end
 
   def ram_size_in_bytes(check_state = false)
-    return self.ram_size(check_state).to_i * 1.megabyte
+    ram_size(check_state).to_i * 1.megabyte
   end
 
   def ram_size_in_bytes_by_state
-    return self.ram_size_in_bytes(true)
+    ram_size_in_bytes(true)
   end
 
-  alias mem_cpu ram_size
+  alias_method :mem_cpu, :ram_size
 
   def num_cpu
-    return self.hardware.nil? ? 0 : self.hardware.numvcpus
+    hardware.nil? ? 0 : hardware.numvcpus
   end
 
   def logical_cpus
-    return self.hardware.nil? ? 0 : self.hardware.logical_cpus
+    hardware.nil? ? 0 : hardware.logical_cpus
   end
 
   def cores_per_socket
-    return self.hardware.nil? ? 0 : self.hardware.cores_per_socket
+    hardware.nil? ? 0 : hardware.cores_per_socket
   end
 
   def num_disks
-    return self.hardware.nil? ? 0 : self.hardware.disks.size
+    hardware.nil? ? 0 : hardware.disks.size
   end
 
   def num_hard_disks
-    return self.hardware.nil? ? 0 : self.hardware.hard_disks.size
+    hardware.nil? ? 0 : hardware.hard_disks.size
   end
 
   def has_rdm_disk
-    return false if self.hardware.nil?
+    return false if hardware.nil?
 
-    !self.hardware.disks.detect(&:rdm_disk?).nil?
+    !hardware.disks.detect(&:rdm_disk?).nil?
   end
 
   def disks_aligned
-    dlist = self.hardware ? self.hardware.hard_disks : []
+    dlist = hardware ? hardware.hard_disks : []
     dlist = dlist.reject(&:rdm_disk?) # Skip RDM disks
     return "Unknown" if dlist.empty?
-    return "True"    if dlist.all? {|d| d.partitions_aligned == "True"}
-    return "False"   if dlist.any? {|d| d.partitions_aligned == "False"}
-    return "Unknown"
+    return "True"    if dlist.all? { |d| d.partitions_aligned == "True" }
+    return "False"   if dlist.any? { |d| d.partitions_aligned == "False" }
+    "Unknown"
   end
 
   def memory_exceeds_current_host_headroom
-    return false if self.host.nil?
-    (self.ram_size > self.host.current_memory_headroom)
+    return false if host.nil?
+    (ram_size > host.current_memory_headroom)
   end
 
-  def collect_running_processes(options={})
-    OsProcess.add_elements(self, self.running_processes)
-    self.operating_system.save unless self.operating_system.nil?
+  def collect_running_processes(_options = {})
+    OsProcess.add_elements(self, running_processes)
+    operating_system.save unless operating_system.nil?
   end
 
   def ipaddresses
-    return self.hardware.nil? ? [] : self.hardware.ipaddresses
+    hardware.nil? ? [] : hardware.ipaddresses
   end
 
   def hostnames
-    return self.hardware.nil? ? [] : self.hardware.hostnames
+    hardware.nil? ? [] : hardware.hostnames
   end
 
   def mac_addresses
-    return self.hardware.nil? ? [] : self.hardware.mac_addresses
+    hardware.nil? ? [] : hardware.mac_addresses
   end
 
   def hard_disk_storages
-    return self.hardware.nil? ? [] : self.hardware.hard_disk_storages
+    hardware.nil? ? [] : hardware.hard_disk_storages
   end
 
   def processes
-    return self.operating_system.nil? ? [] : self.operating_system.processes
+    operating_system.nil? ? [] : operating_system.processes
   end
 
   def event_logs
-    return self.operating_system.nil? ? [] : self.operating_system.event_logs
+    operating_system.nil? ? [] : operating_system.event_logs
   end
 
   def base_storage_extents
-    return self.miq_cim_instance.nil? ? [] : self.miq_cim_instance.base_storage_extents
+    miq_cim_instance.nil? ? [] : miq_cim_instance.base_storage_extents
   end
 
   def base_storage_extents_size
-    return self.miq_cim_instance.nil? ? 0 : self.miq_cim_instance.base_storage_extents_size
+    miq_cim_instance.nil? ? 0 : miq_cim_instance.base_storage_extents_size
   end
 
   def storage_systems
-    return self.miq_cim_instance.nil? ? [] : self.miq_cim_instance.storage_systems
+    miq_cim_instance.nil? ? [] : miq_cim_instance.storage_systems
   end
 
   def storage_systems_size
-    return self.miq_cim_instance.nil? ? 0 : self.miq_cim_instance.storage_systems_size
+    miq_cim_instance.nil? ? 0 : miq_cim_instance.storage_systems_size
   end
 
   def storage_volumes
-    return self.miq_cim_instance.nil? ? [] : self.miq_cim_instance.storage_volumes
+    miq_cim_instance.nil? ? [] : miq_cim_instance.storage_volumes
   end
 
   def storage_volumes_size
-    return self.miq_cim_instance.nil? ? 0 : self.miq_cim_instance.storage_volumes_size
+    miq_cim_instance.nil? ? 0 : miq_cim_instance.storage_volumes_size
   end
 
   def file_shares
-    return self.miq_cim_instance.nil? ? [] : self.miq_cim_instance.file_shares
+    miq_cim_instance.nil? ? [] : miq_cim_instance.file_shares
   end
 
   def file_shares_size
-    return self.miq_cim_instance.nil? ? 0 : self.miq_cim_instance.file_shares_size
+    miq_cim_instance.nil? ? 0 : miq_cim_instance.file_shares_size
   end
 
   def logical_disks
-    return self.miq_cim_instance.nil? ? [] : self.miq_cim_instance.logical_disks
+    miq_cim_instance.nil? ? [] : miq_cim_instance.logical_disks
   end
 
   def logical_disks_size
-    return self.miq_cim_instance.nil? ? 0 : self.miq_cim_instance.logical_disks_size
+    miq_cim_instance.nil? ? 0 : miq_cim_instance.logical_disks_size
   end
 
   def direct_service
-    self.direct_services.first
+    direct_services.first
   end
 
   def service
-    self.direct_service.try(:root_service)
+    direct_service.try(:root_service)
   end
 
   #
@@ -1735,29 +1729,29 @@ class VmOrTemplate < ActiveRecord::Base
   # or greyed-out.  However, if the VM is a type that we cannot scan or we cannot get
   # to the storage to scan it then this method would be expected to return false.
   def is_available?(request_type)
-    return self.send("validate_#{request_type}")[:available]
+    send("validate_#{request_type}")[:available]
   end
 
   # Returns an error message string if there is an error.  Otherwise nil to
   # indicate no errors.
   def is_available_now_error_message(request_type)
-    return self.send("validate_#{request_type}")[:message]
+    send("validate_#{request_type}")[:message]
   end
 
   def raise_is_available_now_error_message(request_type)
-    msg = self.send("validate_#{request_type}")[:message]
+    msg = send("validate_#{request_type}")[:message]
     raise MiqException::MiqVmError, msg unless msg.nil?
   end
 
   def has_required_host?
-    !self.host.nil?
+    !host.nil?
   end
 
   def has_active_ems?
     # If the VM does not have EMS connection see if it is using SmartProxy as the EMS
-    return true unless self.ext_management_system.nil?
-    return true if self.host && self.host.acts_as_ems? && self.host.is_proxy_active?
-    return false
+    return true unless ext_management_system.nil?
+    return true if host && host.acts_as_ems? && host.is_proxy_active?
+    false
   end
 
   #
@@ -1782,7 +1776,7 @@ class VmOrTemplate < ActiveRecord::Base
     end
   end
 
-  def self.scan_by_property(property, value, options={})
+  def self.scan_by_property(property, value, _options = {})
     _log.info "scan_vm_by_property called with property:[#{property}] value:[#{value}]"
     case property
     when "ipaddress"
@@ -1797,7 +1791,7 @@ class VmOrTemplate < ActiveRecord::Base
     end
   end
 
-  def self.event_by_property(property, value, event_type, event_message, event_time=nil, options={})
+  def self.event_by_property(property, value, event_type, event_message, event_time = nil, _options = {})
     _log.info "event_vm_by_property called with property:[#{property}] value:[#{value}] type:[#{event_type}] message:[#{event_message}] event_time:[#{event_time}]"
     event_timestamp = event_time.blank? ? Time.now.utc : event_time.to_time(:utc)
 
@@ -1817,25 +1811,24 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def add_ems_event(event_type, event_message, event_timestamp)
-
     event = {
       :event_type        => event_type,
       :is_task           => false,
       :source            => 'EVM',
       :message           => event_message,
       :timestamp         => event_timestamp,
-      :vm_or_template_id => self.id,
-      :vm_name           => self.name,
-      :vm_location       => self.path,
+      :vm_or_template_id => id,
+      :vm_name           => name,
+      :vm_location       => path,
     }
-    event[:ems_id] = self.ems_id unless self.ems_id.nil?
+    event[:ems_id] = ems_id unless ems_id.nil?
 
-    unless self.host_id.nil?
-      event[:host_id]   = self.host_id
-      event[:host_name] = self.host.name
+    unless host_id.nil?
+      event[:host_id]   = host_id
+      event[:host_name] = host.name
     end
 
-    EmsEvent.add(self.ems_id, event)
+    EmsEvent.add(ems_id, event)
   end
 
   def console_supported?(_type)
@@ -1845,23 +1838,23 @@ class VmOrTemplate < ActiveRecord::Base
   # Return all archived VMs
   ARCHIVED_CONDITIONS = "vms.ems_id IS NULL AND vms.storage_id IS NULL"
   def self.all_archived
-    self.where(ARCHIVED_CONDITIONS).to_a
+    where(ARCHIVED_CONDITIONS).to_a
   end
 
   # Return all orphaned VMs
   ORPHANED_CONDITIONS = "vms.ems_id IS NULL AND vms.storage_id IS NOT NULL"
   def self.all_orphaned
-    self.where(ORPHANED_CONDITIONS).to_a
+    where(ORPHANED_CONDITIONS).to_a
   end
 
   # Stop certain charts from showing unless the subclass allows
   def non_generic_charts_available?
     false
   end
-  alias cpu_ready_available?    non_generic_charts_available?
-  alias cpu_mhz_available?      non_generic_charts_available?
-  alias cpu_percent_available?  non_generic_charts_available?
-  alias memory_mb_available?    non_generic_charts_available?
+  alias_method :cpu_ready_available?,    :non_generic_charts_available?
+  alias_method :cpu_mhz_available?,      :non_generic_charts_available?
+  alias_method :cpu_percent_available?,  :non_generic_charts_available?
+  alias_method :memory_mb_available?,    :non_generic_charts_available?
 
   def self.includes_template?(ids)
     MiqTemplate.where(:id => ids).exists?

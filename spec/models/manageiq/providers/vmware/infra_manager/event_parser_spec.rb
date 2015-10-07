@@ -77,4 +77,3 @@ describe ManageIQ::Providers::Vmware::InfraManager::EventParser do
     end
   end
 end
-

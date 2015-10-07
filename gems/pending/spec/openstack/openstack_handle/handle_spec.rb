@@ -13,7 +13,6 @@ describe OpenstackHandle::Handle do
   end
 
   context "errors from services" do
-
     before do
       @openstack_svc = double('network_service')
 

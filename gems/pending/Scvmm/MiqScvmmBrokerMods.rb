@@ -6,17 +6,17 @@ require 'drb'
 class DMiqScvmm < MiqScvmm
   include DRb::DRbUndumped
 
-  def initialize(server, username, password, broker, preLoad=false, debugUpdates=false)
+  def initialize(server, username, password, broker, _preLoad = false, _debugUpdates = false)
     @broker = broker
     super(server, username, password)
-    self.connect
+    connect
   end
-  
+
   def disconnect
-    return true
+    true
   end
 end
 
 class MiqScvmmInventory
-    include DRb::DRbUndumped
+  include DRb::DRbUndumped
 end

@@ -9,19 +9,18 @@ if Sys::Platform::OS == :windows
 end
 
 class MiqProcess
-
   def self.get_active_process_by_name(process_name)
     pids = []
 
     case Sys::Platform::IMPL
     when :mswin, :mingw
-      WMIHelper.connectServer().run_query("select Handle,Name from Win32_Process where Name = '#{process_name}.exe'") {|p| pids << p.Handle.to_i}
+      WMIHelper.connectServer.run_query("select Handle,Name from Win32_Process where Name = '#{process_name}.exe'") { |p| pids << p.Handle.to_i }
     when :linux, :macosx
-      pids = %x(ps -e | grep #{process_name} | grep -v grep ).split("\n").collect(&:to_i)
+      pids = `ps -e | grep #{process_name} | grep -v grep `.split("\n").collect(&:to_i)
     else
       raise "Method MiqProcess.get_active_process_by_name not implemented on this platform [#{Sys::Platform::IMPL}]"
     end
-    return pids
+    pids
   end
 
   def self.linux_process_stat(pid = nil)
@@ -30,7 +29,7 @@ class MiqProcess
     filename = "/proc/#{pid}/stat"
     raise Errno::ESRCH.new(pid.to_s) unless File.exist?(filename)
 
-    result = { :pid => pid }
+    result = {:pid => pid}
     raw_stats = MiqSystem.readfile_async(filename)
     unless raw_stats.nil?
       stats = raw_stats.split(" ")
@@ -87,7 +86,7 @@ class MiqProcess
   def self.processInfo(pid = nil)
     pid ||= Process.pid
 
-    result = { :pid => pid }
+    result = {:pid => pid}
 
     case Sys::Platform::IMPL
     when :mswin, :mingw
@@ -95,8 +94,8 @@ class MiqProcess
       #                 page-based memory management. If an insufficient amount of memory is available (< working set size), thrashing will occur.
       # KernelModeTime: Time in kernel mode, in 100 nanoseconds
       # UserModeTime  : Time in user mode, in 100 nanoseconds.
-      wmi = WMIHelper.connectServer()
-      self.process_list_wmi(wmi, pid).each_pair {|k,v| result = v }
+      wmi = WMIHelper.connectServer
+      process_list_wmi(wmi, pid).each_pair { |_k, v| result = v }
       wmi.release
     when :linux
       x = MiqProcess.linux_process_stat(pid)
@@ -105,34 +104,34 @@ class MiqProcess
       result[:memory_usage]   = x[:rss] * 4096
       result[:memory_size]    = x[:vsize]
       percent_memory          = (1.0 * result[:memory_usage]) / MiqSystem.total_memory
-      result[:percent_memory] = self.round_to(percent_memory * 100.0, 2)
+      result[:percent_memory] = round_to(percent_memory * 100.0, 2)
       result[:cpu_time]       = x[:stime] + x[:utime]
       cpu_status              = MiqSystem.status[:cpu]
-      cpu_total               = (0..3).inject(0) { |sum,x| sum + cpu_status[x].to_i }
-      cpu_total               = cpu_total / MiqSystem.num_cpus
+      cpu_total               = (0..3).inject(0) { |sum, x| sum + cpu_status[x].to_i }
+      cpu_total /= MiqSystem.num_cpus
       percent_cpu             = (1.0 * result[:cpu_time]) / cpu_total
-      result[:percent_cpu]    = self.round_to(percent_cpu * 100.0, 2)
+      result[:percent_cpu]    = round_to(percent_cpu * 100.0, 2)
     when :macosx
       h = nil
       begin
-        h = self.process_list_linux("ps -p #{pid} -o pid,rss,vsize,%mem,%cpu,time,pri,ucomm", true)
+        h = process_list_linux("ps -p #{pid} -o pid,rss,vsize,%mem,%cpu,time,pri,ucomm", true)
       rescue
         raise Errno::ESRCH.new(pid.to_s)
       end
       result = h[pid]
     end
 
-    return result
+    result
   end
 
   def self.command_line(pid)
     case Sys::Platform::IMPL
     when :mswin, :mingw
-      WMIHelper.connectServer {|wmi| wmi.run_query("select CommandLine from Win32_Process where Handle = '#{pid}'") {|p| return p.CommandLine}}
+      WMIHelper.connectServer { |wmi| wmi.run_query("select CommandLine from Win32_Process where Handle = '#{pid}'") { |p| return p.CommandLine } }
     when :linux
       filename = "/proc/#{pid}/cmdline"
       cmdline = MiqSystem.readfile_async(filename)
-      return cmdline.gsub("\000", " ").strip unless cmdline.nil?
+      return cmdline.tr("\000", " ").strip unless cmdline.nil?
       rc = `ps --pid=#{pid} -o ucomm,command --no-headers`
       return rc unless rc.strip.empty?
     when :macosx
@@ -143,7 +142,7 @@ class MiqProcess
       return rows.last.strip if rows.length > 1
     end
 
-    return nil
+    nil
   end
 
   def self.alive?(pid)
@@ -159,7 +158,7 @@ class MiqProcess
 
   def self.is_worker?(pid)
     command_line = self.command_line(pid)
-    return command_line && command_line =~ /^ruby.+(runner|mongrel_rails)/
+    command_line && command_line =~ /^ruby.+(runner|mongrel_rails)/
   end
 
   LINUX_STATES = {
@@ -179,7 +178,7 @@ class MiqProcess
     when :mswin, :mingw
       # TODO
     when :linux
-      raw_state = self.linux_process_stat(pid)[:state]
+      raw_state = linux_process_stat(pid)[:state]
     when :macosx
       rc = `ps -p #{pid} -o stat`
       rows = rc.split("\n")
@@ -200,7 +199,7 @@ class MiqProcess
       Dir['/proc/[0-9]*/cmdline'].each do |filename|
         cmdline = MiqSystem.readfile_async(filename)
         next if cmdline.nil?
-        if cmd == cmdline.gsub("\000", " ").strip
+        if cmd == cmdline.tr("\000", " ").strip
           pid = filename.split('/')[2]
           pids << pid.to_i
         end
@@ -208,7 +207,7 @@ class MiqProcess
     when :macosx
       require 'sys/proctable'
       Sys::ProcTable.ps.select do |p|
-        if p.cmdline && cmd.match(p.cmdline.gsub("\000", " ").strip)
+        if p.cmdline && cmd.match(p.cmdline.tr("\000", " ").strip)
           pids << p.pid
         end
       end
@@ -216,7 +215,7 @@ class MiqProcess
       raise NotImplementedError, "Method MiqProcess.find_pids not implemented on this platform [#{Sys::Platform::IMPL}]"
     end
 
-    return pids
+    pids
   end
 
   def self.get_child_pids(pid = nil)
@@ -254,66 +253,66 @@ class MiqProcess
     when :mswin, :mingw
       # TODO
     end
-    return result
+    result
   end
 
   def self.process_list_all(wmi = nil)
     pl = {}
-    return self.process_list_wmi(wmi) unless wmi.nil?
+    return process_list_wmi(wmi) unless wmi.nil?
 
     case Sys::Platform::IMPL
     when :mswin, :mingw
-      pl = self.process_list_wmi(wmi)
+      pl = process_list_wmi(wmi)
     when :linux
-      pl = self.process_list_linux("ps -e -o pid,rss,vsize,%mem,%cpu,time,priority,ucomm --no-headers")
+      pl = process_list_linux("ps -e -o pid,rss,vsize,%mem,%cpu,time,priority,ucomm --no-headers")
     when :macosx
-      pl = self.process_list_linux("ps -e -o pid,rss,vsize,%mem,%cpu,time,pri,ucomm", true)
+      pl = process_list_linux("ps -e -o pid,rss,vsize,%mem,%cpu,time,pri,ucomm", true)
     end
-    return pl
+    pl
   end
 
-  def self.process_list_wmi(wmi=nil, pid=nil)
-      pl = {}
-      wmi = WMIHelper.connectServer() if wmi.nil?
-      os_data = wmi.get_instance('select TotalVisibleMemorySize from Win32_OperatingSystem')
-      proc_query = 'select PageFileUsage,Name,Handle,WorkingSetSize,Priority,UserModeTime,KernelModeTime from Win32_Process'
-      proc_query += " where Handle = '#{pid}'" unless pid.nil?
-      proc_data = wmi.run_query(proc_query)
+  def self.process_list_wmi(wmi = nil, pid = nil)
+    pl = {}
+    wmi = WMIHelper.connectServer if wmi.nil?
+    os_data = wmi.get_instance('select TotalVisibleMemorySize from Win32_OperatingSystem')
+    proc_query = 'select PageFileUsage,Name,Handle,WorkingSetSize,Priority,UserModeTime,KernelModeTime from Win32_Process'
+    proc_query += " where Handle = '#{pid}'" unless pid.nil?
+    proc_data = wmi.run_query(proc_query)
 
-      # Calculate the CPU % from a 2 second sampling of the raw perf counters.
-      perf_query = 'Select IDProcess,PercentProcessorTime,Timestamp_Sys100NS from Win32_PerfRawData_PerfProc_Process'
-      perf_query += " where IDProcess = '#{pid}'" unless pid.nil?
-      fh = {}; perf = {}
-      wmi.run_query(perf_query).each {|p| fh[p.IDProcess] = {:ppt=>p.PercentProcessorTime.to_i, :ts=>p.Timestamp_Sys100NS.to_i}}
-      sleep(2)
-      wmi.run_query(perf_query).each do |p|
-        m1 = fh[p.IDProcess]
-        if m1
-          n = p.PercentProcessorTime.to_i - m1[:ppt]
-          d = p.Timestamp_Sys100NS.to_i - m1[:ts]
-          perf[p.IDProcess.to_i] = 100*n/d
-        end
+    # Calculate the CPU % from a 2 second sampling of the raw perf counters.
+    perf_query = 'Select IDProcess,PercentProcessorTime,Timestamp_Sys100NS from Win32_PerfRawData_PerfProc_Process'
+    perf_query += " where IDProcess = '#{pid}'" unless pid.nil?
+    fh = {}; perf = {}
+    wmi.run_query(perf_query).each { |p| fh[p.IDProcess] = {:ppt => p.PercentProcessorTime.to_i, :ts => p.Timestamp_Sys100NS.to_i} }
+    sleep(2)
+    wmi.run_query(perf_query).each do |p|
+      m1 = fh[p.IDProcess]
+      if m1
+        n = p.PercentProcessorTime.to_i - m1[:ppt]
+        d = p.Timestamp_Sys100NS.to_i - m1[:ts]
+        perf[p.IDProcess.to_i] = 100 * n / d
       end
+    end
 
-      proc_data.each {|p| next if p.Handle.to_i <= 4; pl[p.Handle.to_i] = self.parse_process_data(:wmi, p, perf, os_data)}
-      return pl
+    proc_data.each { |p| next if p.Handle.to_i <= 4; pl[p.Handle.to_i] = parse_process_data(:wmi, p, perf, os_data) }
+    pl
   end
 
-  def self.process_list_linux(cmd_str, skip_header=false)
-      pl, i = {}, 0
-      rc = MiqUtil.runcmd(cmd_str)
-      rc.each_line do |ps_str|
-        i += 1
-        next if i == 1 && skip_header == true
-        pinfo = ps_str.strip.split(' ')
-        nh = self.parse_process_data(:linux, pinfo, perf=nil, os=nil)
-        pl[nh[:pid]] = nh
-        pl
-      end
-      return pl
+  def self.process_list_linux(cmd_str, skip_header = false)
+    pl, i = {}, 0
+    rc = MiqUtil.runcmd(cmd_str)
+    rc.each_line do |ps_str|
+      i += 1
+      next if i == 1 && skip_header == true
+      pinfo = ps_str.strip.split(' ')
+      nh = parse_process_data(:linux, pinfo, perf = nil, os = nil)
+      pl[nh[:pid]] = nh
+      pl
+    end
+    pl
   end
 
-  def self.parse_process_data(data_type, pinfo, perf=nil, os=nil)
+  def self.parse_process_data(data_type, pinfo, perf = nil, os = nil)
     nh = {}
     if data_type == :wmi
       nh[:pid]            = pinfo.Handle.to_i
@@ -331,22 +330,22 @@ class MiqProcess
       nh[:memory_size]    = pinfo[2].to_i * 1024   # Memory in RAM and swap
       nh[:percent_memory] = pinfo[3]
       nh[:percent_cpu]    = pinfo[4]
-      nh[:cpu_time]       = self.str_time_to_sec(pinfo[5])
+      nh[:cpu_time]       = str_time_to_sec(pinfo[5])
       nh[:priority]       = pinfo[6]
       nh[:name]           = pinfo[7..-1].join(' ')
     end
-    return nh
+    nh
   end
 
   def self.str_time_to_sec(time_str)
     # Convert format 00:00:00 to seconds
     t = time_str.split(':')
-    return (t[0].to_i*3600) + (t[1].to_i*60) + t[2].to_i
+    (t[0].to_i * 3600) + (t[1].to_i * 60) + t[2].to_i
   end
 
   def self.suspend_process(pid)
     case Sys::Platform::OS
-    when :windows then Process.process_thread_list[pid].each {|tid| Process.suspend_resume_thread(tid, false)}
+    when :windows then Process.process_thread_list[pid].each { |tid| Process.suspend_resume_thread(tid, false) }
     else
       raise "Method MiqProcess.suspend_process not implemented on this platform [#{Sys::Platform::IMPL}]"
     end
@@ -354,21 +353,21 @@ class MiqProcess
 
   def self.resume_process(pid)
     case Sys::Platform::OS
-    when :windows then Process.process_thread_list[pid].each {|tid| Process.suspend_resume_thread(tid, true)}
+    when :windows then Process.process_thread_list[pid].each { |tid| Process.suspend_resume_thread(tid, true) }
     else
       raise "Method MiqProcess.resume_process not implemented on this platform [#{Sys::Platform::IMPL}]"
     end
   end
 
   def self.round_to(number, precision)
-    mult = 10 ** precision
+    mult = 10**precision
     (number * mult).round.to_f / mult
   end
 end
 
 # Examples:
-#puts MiqProcess.processInfo().inspect
-#puts MiqProcess.process_list_all().inspect
-#MiqProcess.process_list_all().each_pair do |k,v|
+# puts MiqProcess.processInfo().inspect
+# puts MiqProcess.process_list_all().inspect
+# MiqProcess.process_list_all().each_pair do |k,v|
 #  puts v.inspect
-#end
+# end

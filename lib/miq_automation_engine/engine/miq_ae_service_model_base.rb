@@ -76,14 +76,14 @@ module MiqAeMethodService
 
     def self.model
       # Set a class-instance variable to get the appropriate model
-      @model ||= Object.const_get(/MiqAeService(.+)$/.match(self.name)[1].gsub(/_/, '::'))
+      @model ||= Object.const_get(/MiqAeService(.+)$/.match(name)[1].gsub(/_/, '::'))
     end
     private_class_method :model
 
     def self.expose(*args)
-      raise ArgumentError, "must pass at least one method name" if args.empty? || args.first.is_a?(Hash)
+      raise ArgumentError, "must pass at least one method name" if args.empty? || args.first.kind_of?(Hash)
       options = args.last.kind_of?(Hash) ? args.pop : {}
-      raise ArgumentError, "cannot have :method option if there is more than one method name specified" if options.has_key?(:method) && args.length != 1
+      raise ArgumentError, "cannot have :method option if there is more than one method name specified" if options.key?(:method) && args.length != 1
 
       args.each do |method_name|
         next if method_name.to_sym == :id
@@ -91,7 +91,7 @@ module MiqAeMethodService
         define_method(method_name) do |*params|
           method = options[:method] || method_name
           ret = object_send(method, *params)
-          return options[:override_return] if options.has_key?(:override_return)
+          return options[:override_return] if options.key?(:override_return)
           reflection = @object.class.reflection_with_virtual(method)
           if reflection && reflection.collection?
             wrap_results(ret.to_a)
@@ -109,12 +109,12 @@ module MiqAeMethodService
         if results.nil?
           ret = nil
         elsif results.kind_of?(Array)
-          ret = results.collect { |r| self.wrap_results(r) }
+          ret = results.collect { |r| wrap_results(r) }
         elsif results.kind_of?(ActiveRecord::Relation)
-          ret = results.collect { |r| self.wrap_results(r) }
+          ret = results.collect { |r| wrap_results(r) }
         elsif results.kind_of?(ActiveRecord::Base)
           klass = MiqAeMethodService.const_get("MiqAeService#{results.class.name.gsub(/::/, '_')}")
-          ret = self.drb_return(klass.new(results))
+          ret = drb_return(klass.new(results))
         else
           ret = results
         end
@@ -143,8 +143,8 @@ module MiqAeMethodService
     #   delims      = "<" | ">" | "#" | "%" | <">
     #   unwise      = "{" | "}" | "|" | "\" | "^" | "[" | "]" | "`"
     #
-    DELIMS = [ '<', '>', '#', '%', "\"" ]
-    UNWISE = [ '{', '}', '|', "\\", '^', '[', ']', "\`"]
+    DELIMS = ['<', '>', '#', '%', "\""]
+    UNWISE = ['{', '}', '|', "\\", '^', '[', ']', "\`"]
     def self.normalize(str)
       return str unless str.kind_of?(String)
 
@@ -201,20 +201,20 @@ module MiqAeMethodService
     end
 
     def inspect
-      ar_method { "\#<#{self.class.name.demodulize}:0x#{self.object_id.to_s(16)} @object=#{@object.inspect}, @virtual_columns=#{virtual_column_names.inspect}, @associations=#{associations.inspect}>" }
+      ar_method { "\#<#{self.class.name.demodulize}:0x#{object_id.to_s(16)} @object=#{@object.inspect}, @virtual_columns=#{virtual_column_names.inspect}, @associations=#{associations.inspect}>" }
     end
 
     def inspect_all
-      ar_method { "\#<#{self.class.name.demodulize}:0x#{self.object_id.to_s(16)} @object=#{@object.inspect}, @virtual_columns=#{virtual_columns_inspect}, @associations=#{associations.inspect}>" }
+      ar_method { "\#<#{self.class.name.demodulize}:0x#{object_id.to_s(16)} @object=#{@object.inspect}, @virtual_columns=#{virtual_columns_inspect}, @associations=#{associations.inspect}>" }
     end
 
     def tagged_with?(category, name)
-      object_send(:is_tagged_with?, name.to_s, :ns=>"/managed/#{category}")
+      object_send(:is_tagged_with?, name.to_s, :ns => "/managed/#{category}")
     end
 
     def tags(category = nil)
       ns = category.nil? ? "/managed" : "/managed/#{category}"
-      object_send(:tag_list, :ns=>ns).split
+      object_send(:tag_list, :ns => ns).split
     end
 
     def tag_assign(tag)
@@ -256,23 +256,20 @@ module MiqAeMethodService
     end
 
     def self.ar_method
-      begin
-        # In UI Worker, query caching is enabled.  This causes problems in Automate DRb Server (e.g. reload does not refetch from SQL)
-        ActiveRecord::Base.connection.clear_query_cache if ActiveRecord::Base.connection.query_cache_enabled
-        yield
-      rescue Exception => err
-        $miq_ae_logger.error("MiqAeServiceModelBase.ar_method raised: <#{err.class}>: <#{err.message}>")
-        $miq_ae_logger.error(err.backtrace.join("\n"))
-        raise
-      ensure
-        ActiveRecord::Base.connection_pool.release_connection rescue nil
-      end
+      # In UI Worker, query caching is enabled.  This causes problems in Automate DRb Server (e.g. reload does not refetch from SQL)
+      ActiveRecord::Base.connection.clear_query_cache if ActiveRecord::Base.connection.query_cache_enabled
+      yield
+    rescue Exception => err
+      $miq_ae_logger.error("MiqAeServiceModelBase.ar_method raised: <#{err.class}>: <#{err.message}>")
+      $miq_ae_logger.error(err.backtrace.join("\n"))
+      raise
+    ensure
+      ActiveRecord::Base.connection_pool.release_connection rescue nil
     end
 
     def ar_method(&block)
       self.class.ar_method(&block)
     end
-
   end
 end
 

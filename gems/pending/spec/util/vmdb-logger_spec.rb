@@ -7,7 +7,7 @@ describe VMDBLogger do
     VMDBLogger.contents("mylog.log").should == ""
   end
 
-  it ".contents with empty log returns empty string" do   
+  it ".contents with empty log returns empty string" do
     require 'util/miq-system'
     MiqSystem.stub(:tail => "")
 
@@ -17,7 +17,7 @@ describe VMDBLogger do
 
   context "with evm log snippet with invalid utf8 byte sequence data" do
     before(:each) do
-      @log = File.expand_path(File.join(File.dirname(__FILE__), "data/redundant_utf8_byte_sequence.log") )
+      @log = File.expand_path(File.join(File.dirname(__FILE__), "data/redundant_utf8_byte_sequence.log"))
     end
 
     context "accessing the invalid data directly" do
@@ -85,13 +85,13 @@ describe VMDBLogger do
 
     context "encoding" do
       it "with ascii file" do
-        log = File.expand_path(File.join(File.dirname(__FILE__), "data/miq_ascii.log") )
+        log = File.expand_path(File.join(File.dirname(__FILE__), "data/miq_ascii.log"))
         VMDBLogger.new(log).contents.encoding.name.should == "UTF-8"
         VMDBLogger.new(log).contents(100, nil).encoding.name.should == "UTF-8"
       end
 
       it "with utf-8 file" do
-        log = File.expand_path(File.join(File.dirname(__FILE__), "data/miq_utf8.log") )
+        log = File.expand_path(File.join(File.dirname(__FILE__), "data/miq_utf8.log"))
         VMDBLogger.new(log).contents.encoding.name.should == "UTF-8"
         VMDBLogger.new(log).contents(100, nil).encoding.name.should == "UTF-8"
       end

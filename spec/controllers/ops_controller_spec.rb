@@ -49,9 +49,9 @@ describe OpsController do
     it 'can add a user w/ group' do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
       session[:edit] = {
-        :key => 'rbac_user_edit__new',
+        :key     => 'rbac_user_edit__new',
         :current => {},
-        :new => {
+        :new     => {
           :name      => 'test7',
           :userid    => 'test7',
           :email     => 'test7@foo.bar',
@@ -177,7 +177,6 @@ describe OpsController do
       controller.send(:edit_changed?)
       session[:changed].should eq(true)
     end
-
   end
 
   it "executes action schedule_edit" do

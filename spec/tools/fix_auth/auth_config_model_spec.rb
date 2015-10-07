@@ -13,7 +13,7 @@ describe FixAuth::AuthConfigModel do
   let(:bad_v2)  { "v2:{5555555555555555555555==}" }
 
   before do
-    MiqPassword.add_legacy_key(v1_key)
+    MiqPassword.add_legacy_key(v1_key, :v1)
   end
 
   after do

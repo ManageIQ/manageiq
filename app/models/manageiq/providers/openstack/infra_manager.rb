@@ -32,11 +32,11 @@ class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
     # to possible many EmsOpenstacks deployed through EmsOpenstackInfra
 
     # Name of the provider needs to be unique, get provider if there is one like that
-    self.provider = ManageIQ::Providers::Openstack::Provider.find_by_name(name) unless self.provider
+    self.provider = ManageIQ::Providers::Openstack::Provider.find_by_name(name) unless provider
 
     attributes = {:name => name, :zone => zone}
-    if self.provider
-      self.provider.update_attributes!(attributes)
+    if provider
+      provider.update_attributes!(attributes)
     else
       self.provider = ManageIQ::Providers::Openstack::Provider.create!(attributes)
     end

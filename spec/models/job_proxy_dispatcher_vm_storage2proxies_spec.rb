@@ -13,7 +13,7 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
 
     context "hosts with proxy and vmware vms," do
       before(:each) do
-        @hosts, @proxies, @storages, @vms = self.build_hosts_proxies_storages_vms
+        @hosts, @proxies, @storages, @vms = build_hosts_proxies_storages_vms
         @vm = @vms.first
       end
 
@@ -114,10 +114,8 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
               end
             end
           end
-
         end
       end
-
     end
   end
 end

@@ -69,7 +69,6 @@ describe ContainerTopologyService do
                                                                           :status => "Running", :kind => "Pod", :miq_id => 15)
       topology[:items]["3572afee-3a41-11e5-a79a-001a4a231290_ruby-helloworld-database_openshift\n/mysql-55-centos7:latest"].should eql(:id => "3572afee-3a41-11e5-a79a-001a4a231290_ruby-helloworld-database_openshift\n/mysql-55-centos7:latest", :name => "ruby-example", :status => "running", :kind => "Container",  :miq_id => 10)
 
-
       topology[:relations].should include(:source => "96c35ccd-3e00-11e5-a0d2-18037327aaeb", :target => "8f8ca74c-3a41-11e5-a79a-001a4a231290")
     end
   end

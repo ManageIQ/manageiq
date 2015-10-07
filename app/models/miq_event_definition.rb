@@ -1,11 +1,11 @@
 class MiqEventDefinition < ActiveRecord::Base
-  default_scope { where self.conditions_for_my_region_default_scope }
+  default_scope { where conditions_for_my_region_default_scope }
 
   include UuidMixin
 
   validates_presence_of     :name
   validates_uniqueness_of   :name
-  validates_format_of       :name, :with => %r{\A[a-z0-9_\-]+\z}i,
+  validates_format_of       :name, :with => /\A[a-z0-9_\-]+\z/i,
     :allow_nil => true, :message => "must only contain alpha-numeric, underscore and hyphen characters without spaces"
   validates_presence_of     :description
 
@@ -27,18 +27,18 @@ class MiqEventDefinition < ActiveRecord::Base
   end
 
   def miq_policies
-    p_ids = MiqPolicyContent.where(:miq_event_definition_id => self.id).uniq.pluck(:miq_policy_id)
+    p_ids = MiqPolicyContent.where(:miq_event_definition_id => id).uniq.pluck(:miq_policy_id)
     MiqPolicy.where(:id => p_ids).to_a
   end
 
   def export_to_array
-    h = self.attributes
+    h = attributes
     ["id", "created_on", "updated_on"].each { |k| h.delete(k) }
-    return [ self.class.to_s => h ]
+    [self.class.to_s => h]
   end
 
-  def self.import_from_hash(event, options={})
-    status = {:class => self.name, :description => event["description"]}
+  def self.import_from_hash(event, options = {})
+    status = {:class => name, :description => event["description"]}
     e = MiqEventDefinition.find_by_name(event["name"])
     msg_pfx = "Importing Event: name=[#{event["name"]}]"
 
@@ -68,8 +68,8 @@ class MiqEventDefinition < ActiveRecord::Base
   end
 
   def etype
-    set = self.memberof.first
-    raise "unexpected error, no type found for event #{self.name}" if set.nil?
+    set = memberof.first
+    raise "unexpected error, no type found for event #{name}" if set.nil?
     set
   end
 
@@ -77,38 +77,36 @@ class MiqEventDefinition < ActiveRecord::Base
     MiqEventDefinition.sets
   end
 
-  def self.add_elements(vm, xmlNode)
-    begin
-      # Record vm operational and configuration events
-      if xmlNode.root.name == "vmevents"
-        xmlNode.find_each("//vmevents/view/rows/row") do |row|
-          # Get the record's parts
-          eventType = row.attributes["event_type"]
-          timestamp = Time.at(row.attributes["timestamp"].to_i)
-          eventData = YAML.load(row.attributes["event_data"])
-          eventData.delete("id")
+  def self.add_elements(_vm, xmlNode)
+    # Record vm operational and configuration events
+    if xmlNode.root.name == "vmevents"
+      xmlNode.find_each("//vmevents/view/rows/row") do |row|
+        # Get the record's parts
+        eventType = row.attributes["event_type"]
+        timestamp = Time.at(row.attributes["timestamp"].to_i)
+        eventData = YAML.load(row.attributes["event_data"])
+        eventData.delete("id")
 
-          # Remove elements that do not belong in the event table
-          %w{ src_vm_guid dest_vm_guid vm_guid }.each do |field|
-            eventData.delete(field)
-          end
+        # Remove elements that do not belong in the event table
+        %w( src_vm_guid dest_vm_guid vm_guid ).each do |field|
+          eventData.delete(field)
+        end
 
-          # Write the data to the table
-          unless EmsEvent.exists?(:event_type => eventType,
-            :timestamp => timestamp,
-            :ems_id => eventData['ems_id'],
-            :chain_id => eventData['chain_id'])
+        # Write the data to the table
+        unless EmsEvent.exists?(:event_type => eventType,
+                                :timestamp  => timestamp,
+                                :ems_id     => eventData['ems_id'],
+                                :chain_id   => eventData['chain_id'])
 
-            EmsEvent.create(eventData)
-          end
+          EmsEvent.create(eventData)
         end
       end
-
-      #_log.warn "[#{xmlNode}]"
-      #add_missing_elements(vm, xmlNode, "Applications/Products/Products", "win32_product", WIN32_APPLICATION_MAPPING)
-      File.open("./xfer_#{xmlNode.root.name}.xml", "w") {|f| xmlNode.write(f,0)}
-    rescue
     end
+
+    # _log.warn "[#{xmlNode}]"
+    # add_missing_elements(vm, xmlNode, "Applications/Products/Products", "win32_product", WIN32_APPLICATION_MAPPING)
+    File.open("./xfer_#{xmlNode.root.name}.xml", "w") { |f| xmlNode.write(f, 0) }
+  rescue
   end
 
   def self.seed
@@ -118,7 +116,7 @@ class MiqEventDefinition < ActiveRecord::Base
   end
 
   def self.seed_default_events
-    fname = File.join(FIXTURE_DIR, "#{self.to_s.pluralize.underscore}.csv")
+    fname = File.join(FIXTURE_DIR, "#{to_s.pluralize.underscore}.csv")
     data  = File.read(fname).split("\n")
     cols  = data.shift.split(",")
 
@@ -128,15 +126,15 @@ class MiqEventDefinition < ActiveRecord::Base
       arr = e.split(",")
 
       event = {}
-      cols.each_index {|i| event[cols[i].to_sym] = arr[i]}
+      cols.each_index { |i| event[cols[i].to_sym] = arr[i] }
       set_type = event.delete(:set_type)
 
       next if event[:name].blank?
 
-      rec = self.find_by_name(event[:name])
+      rec = find_by_name(event[:name])
       if rec.nil?
         _log.info("Creating [#{event[:name]}]")
-        rec = self.create(event)
+        rec = create(event)
       else
         rec.attributes = event
         if rec.changed?
@@ -146,7 +144,7 @@ class MiqEventDefinition < ActiveRecord::Base
       end
 
       es = MiqEventDefinitionSet.find_by_name(set_type)
-      rec.memberof.each {|old_set| rec.make_not_memberof(old_set) unless old_set == es} # handle changes in set membership
+      rec.memberof.each { |old_set| rec.make_not_memberof(old_set) unless old_set == es } # handle changes in set membership
       es.add_member(rec) if es && !es.members.include?(rec)
     end
   end
@@ -158,10 +156,10 @@ class MiqEventDefinition < ActiveRecord::Base
     defns = YAML.load_file(fname)
     defns.each do |event_type, events|
       events[:events].each do |e|
-        event = self.find_by_name_and_event_type(e[:name], event_type.to_s)
+        event = find_by_name_and_event_type(e[:name], event_type.to_s)
         if event.nil?
           _log.info("Creating [#{e[:name]}]")
-          event = self.create(e.merge(:event_type => event_type.to_s, :default => true, :enabled => true))
+          event = create(e.merge(:event_type => event_type.to_s, :default => true, :enabled => true))
           stats[:a] += 1
         else
           event.attributes = e

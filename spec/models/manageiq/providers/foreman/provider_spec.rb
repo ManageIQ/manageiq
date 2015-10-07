@@ -32,8 +32,8 @@ describe ManageIQ::Providers::Foreman::Provider do
           FactoryGirl.create(:computer_system,
                              :operating_system => FactoryGirl.create(:operating_system),
                              :hardware         => FactoryGirl.create(:hardware),
-          )
-        )
+                            )
+                          )
       ]
       provider.configuration_manager.configuration_profiles =
         [FactoryGirl.create(:configuration_profile)]

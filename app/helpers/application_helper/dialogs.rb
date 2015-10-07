@@ -11,11 +11,11 @@ module ApplicationHelper::Dialogs
     elsif field.type.include?("TagControl")
       values += category_tags
     end
-    return values
+    values
   end
 
   def disable_check_box?
-    category = DialogFieldTagControl.allowed_tag_categories.detect {|cat| cat[:id].to_s == @edit[:field_category]}
+    category = DialogFieldTagControl.allowed_tag_categories.detect { |cat| cat[:id].to_s == @edit[:field_category] }
     category && category[:single_value]
   end
 

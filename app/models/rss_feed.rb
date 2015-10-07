@@ -11,27 +11,27 @@ class RssFeed < ActiveRecord::Base
 
   YML_DIR = File.join(File.expand_path(Rails.root), "product", "alerts", "rss")
 
-  def url(host=nil)
+  def url(host = nil)
     proto = VMDB::Config.new("vmdb").config[:webservices][:consume_protocol]
     host_url = host.nil? ? "#{proto}://localhost:3000" : "#{proto}://" + host
-    "#{host_url}#{self.link}"
+    "#{host_url}#{link}"
   end
 
-  def generate(host=nil, local=false, proto=nil)
+  def generate(host = nil, local = false, proto = nil)
     proto ||= VMDB::Config.new("vmdb").config[:webservices][:consume_protocol]
     host_url = host.nil? ? "#{proto}://localhost:3000" : "#{proto}://" + host
 
     options = {
       :feed => {
-        :title => "#{self.title}",
-        :link => "#{host_url}#{self.link}",
-        :description => "#{self.description}"
+        :title       => "#{title}",
+        :link        => "#{host_url}#{link}",
+        :description => "#{description}"
       },
       :item => {
-        :title => Proc.new { |rec| RssFeed.eval_item_attr(self.options[:item_title], rec)},
-        :description => Proc.new { |rec| RssFeed.eval_item_attr(self.options[:item_description], rec)},
-        :link => Proc.new { |rec| host_url + RssFeed.eval_item_attr(self.options[:item_link], rec)},
-        :pub_date => [ :created_at, :created_on, :updated_at, :updated_on ]
+        :title       => proc { |rec| RssFeed.eval_item_attr(self.options[:item_title], rec) },
+        :description => proc { |rec| RssFeed.eval_item_attr(self.options[:item_description], rec) },
+        :link        => proc { |rec| host_url + RssFeed.eval_item_attr(self.options[:item_link], rec) },
+        :pub_date    => [:created_at, :created_on, :updated_at, :updated_on]
       }
     }
 
@@ -45,7 +45,7 @@ class RssFeed < ActiveRecord::Base
     output << '<table class="table table-striped table-bordered table-hover">'
     output << '<tbody>'
     items = options[:limit_to_count] ? feed.items[0..options[:limit_to_count] - 1] : feed.items
-    items.each_with_index do |i,idx|
+    items.each_with_index do |i, _idx|
       output << "<tr onclick='window.location=\"#{i.link}\";'>"
       output << '<td>'
       output << i.title
@@ -58,15 +58,15 @@ class RssFeed < ActiveRecord::Base
     output << '</tbody>'
     output << '</table>'
 
-    return output
+    output
   end
 
   def options
-    return {} if self.name.nil?
+    return {} if name.nil?
     return @options unless @options.nil?
 
-    file = RssFeed.yml_file_name(self.name)
-    raise "no yml file found for name \"#{self.name}\"" unless File.exist?(file)
+    file = RssFeed.yml_file_name(name)
+    raise "no yml file found for name \"#{name}\"" unless File.exist?(file)
     @options = YAML.load(File.read(file)).symbolize_keys
   end
 
@@ -75,38 +75,40 @@ class RssFeed < ActiveRecord::Base
   end
 
   private
+
   def self.eval_item_attr(script, rec)
+    _ = rec # used by eval
     if script.starts_with?("<script>") || script.starts_with?("<SCRIPT>")
       code = script.sub(/<script>|<SCRIPT>/, "").sub(/<\/script>|<\/SCRIPT>/, "").strip
       result = eval(code)
     else
       result = eval('"' + script + '"')
     end
-    return result
+    result
   end
 
   def find_items
-    item_class = self.options[:item_class].constantize
-    case self.options[:search_method]
+    item_class = options[:item_class].constantize
+    case options[:search_method]
     when "find", nil
-      if self.options[:tags] && self.options[:tags_include]
-        any_or_all = self.options[:tags_include].to_sym
+      if options[:tags] && options[:tags_include]
+        any_or_all = options[:tags_include].to_sym
         items = item_class.find_tagged_with(
-          any_or_all => self.options[:tags],
-          :ns        => self.options[:tag_ns])
-        items.order(self.options[:orderby])        if self.options[:orderby]
-        items.limit(self.options[:limit_to_count]) if self.options[:limit_to_count]
-        items.includes(self.options[:include])     if self.options[:include]
+          any_or_all => options[:tags],
+          :ns        => options[:tag_ns])
+        items.order(options[:orderby])        if options[:orderby]
+        items.limit(options[:limit_to_count]) if options[:limit_to_count]
+        items.includes(options[:include])     if options[:include]
       else
         items = item_class.all
-        items = items.where(self.options[:search_conditions]) if self.options[:search_conditions]
-        items = items.order(self.options[:orderby])           if self.options[:orderby]
-        items = items.limit(self.options[:limit_to_count])    if self.options[:limit_to_count]
-        items = items.includes(self.options[:include])        if self.options[:include]
+        items = items.where(options[:search_conditions]) if options[:search_conditions]
+        items = items.order(options[:orderby])           if options[:orderby]
+        items = items.limit(options[:limit_to_count])    if options[:limit_to_count]
+        items = items.includes(options[:include])        if options[:include]
       end
       items
     else  # Custom find method
-      items = item_class.send(self.options[:search_method].to_sym, self.name, self.options)
+      items = item_class.send(options[:search_method].to_sym, name, options)
     end
   end
 
@@ -122,7 +124,7 @@ class RssFeed < ActiveRecord::Base
       :yml_file_mtime => File.mtime(file).utc
     }
 
-    rec = self.find_by_name(rss[:name])
+    rec = find_by_name(rss[:name])
     if rec
       if rec.yml_file_mtime && rec.yml_file_mtime < rss[:yml_file_mtime]
         _log.info("[#{rec.name}] file has been updated on disk, synchronizing with model")
@@ -133,7 +135,7 @@ class RssFeed < ActiveRecord::Base
       rec = self.create!(rss)
     end
 
-    rec.tag_add(yml[:roles], {:ns => "/managed", :cat => "roles"}) unless yml[:roles].nil?
+    rec.tag_add(yml[:roles], :ns => "/managed", :cat => "roles") unless yml[:roles].nil?
   end
 
   def self.yml_file_name(name)

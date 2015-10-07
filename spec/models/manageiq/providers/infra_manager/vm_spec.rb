@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe VmInfra do
-
   context "#post_create_actions" do
     it "without a host relationship" do
       expect(subject).to receive(:reconnect_events)

@@ -19,23 +19,23 @@ module EventLogFilter
         last = filter[k][-1, 1]
 
         filter[k] = if first == '"' && last == '"'
-          # Double quotes surrounding provide exact match
-          Regexp.new("^\\s*#{Regexp.escape(filter[k][1..-2])}\\s*$", Regexp::IGNORECASE)
-        elsif first == '/' && last == '/'
-          # Forward slashes surrounding provide regex match
-          Regexp.new(filter[k][1..-2], Regexp::IGNORECASE)
-        else
-          # Neither surrouding provides substring match
-          Regexp.new(Regexp.escape(filter[k]), Regexp::IGNORECASE)
-        end
+                      # Double quotes surrounding provide exact match
+                      Regexp.new("^\\s*#{Regexp.escape(filter[k][1..-2])}\\s*$", Regexp::IGNORECASE)
+                    elsif first == '/' && last == '/'
+                      # Forward slashes surrounding provide regex match
+                      Regexp.new(filter[k][1..-2], Regexp::IGNORECASE)
+                    else
+                      # Neither surrouding provides substring match
+                      Regexp.new(Regexp.escape(filter[k]), Regexp::IGNORECASE)
+                    end
       end
     end
-    
-    return filter
+
+    filter
   end
 
   def self.filter_by_level?(level, filter)
-    return case filter[:level]
+    case filter[:level]
     when :info then false
     when :warn then !['warn', 'error'].include?(level.to_s)
     when :error then 'error' != level.to_s

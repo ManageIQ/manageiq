@@ -39,11 +39,11 @@ module MiqFilter
         result = [obj.send(reflection.name)]
       else
         result = obj.send(reflection.name).find(:all,
-          :order      => options[:order],
-          :offset     => options[:offset],
-          :limit      => options[:limit],
-          :conditions => options[:conditions]
-        )
+                                                :order      => options[:order],
+                                                :offset     => options[:offset],
+                                                :limit      => options[:limit],
+                                                :conditions => options[:conditions]
+                                               )
       end
       total_count = result.length
     end
@@ -63,7 +63,7 @@ module MiqFilter
       bfilters ||= []
       result = unfiltered.collect do |r|
         next unless r.is_tagged_with_grouping?(mfilters, :ns => "*")
-        next unless self.apply_belongsto_filters([r], bfilters) == [r]
+        next unless apply_belongsto_filters([r], bfilters) == [r]
         r
       end.compact
     else
@@ -76,7 +76,7 @@ module MiqFilter
     if options[:order]
       col, direction = options[:order].split
       direction ||= "ASC"
-      result.sort! { |x,y| x.send(col) <=> y.send(col) }
+      result.sort! { |x, y| x.send(col) <=> y.send(col) }
       result.reverse! if direction == "DESC"
     end
 
@@ -102,18 +102,18 @@ module MiqFilter
 
   def self.count_children_of(obj, assoc, options = {})
     result = find_children_of(obj, assoc, options).first
-    return result ? result.length : 0
+    result ? result.length : 0
   end
 
   def self.belongsto2object(tag)
-    self.belongsto2object_list(tag).last
+    belongsto2object_list(tag).last
   end
 
   def self.belongsto2object_list(tag)
-    #/belongsto/ExtManagementSystem|<name>/EmsCluster|<name>/EmsFolder|<name>
+    # /belongsto/ExtManagementSystem|<name>/EmsCluster|<name>/EmsFolder|<name>
     raise "invalid tag: #{tag}" unless tag.starts_with?("/belongsto/ExtManagementSystem")
     parts = tag.split("/")
-    2.times {parts.shift}
+    2.times { parts.shift }
 
     r = parts.shift
     klass, name = r.split("|")
@@ -142,11 +142,11 @@ module MiqFilter
       obj = match
       result.push(obj)
     end
-    return result
+    result
   end
 
   def self.object2belongsto(obj)
-    #/belongsto/ExtManagementSystem|<name>/EmsCluster|<name>/EmsFolder|<name>
+    # /belongsto/ExtManagementSystem|<name>/EmsCluster|<name>/EmsFolder|<name>
     raise "Folder Root is not a #{ui_lookup(:table => "ext_management_systems")}" unless obj.root_id[0] == "ExtManagementSystem"
 
     tag = obj.ancestry(
@@ -155,7 +155,7 @@ module MiqFilter
       :include_self     => true,
       :field_method     => :name
     )
-    return "/belongsto/#{tag}"
+    "/belongsto/#{tag}"
   end
 
   def self.apply_belongsto_filters(inputs, bfilters)
@@ -166,8 +166,8 @@ module MiqFilter
     inputs.each do |p|
       bfilters.each do |tag|
         if p.kind_of?(Storage)
-          vcmeta_list = self.belongsto2object_list(tag)
-          vcmeta_list.reverse.each do |vcmeta|
+          vcmeta_list = belongsto2object_list(tag)
+          vcmeta_list.reverse_each do |vcmeta|
             if vcmeta.respond_to?(:storages) && vcmeta.storages.include?(p)
               filtered.push(p)
               break
@@ -175,7 +175,7 @@ module MiqFilter
           end
           break if filtered.last == p
         else
-          vcmeta = self.belongsto2object(tag)
+          vcmeta = belongsto2object(tag)
           next if vcmeta.nil?
           if vcmeta == p || vcmeta.with_relationship_type("ems_metadata") { vcmeta.is_ancestor_of?(p) }
             filtered.push(p)

@@ -1,5 +1,5 @@
 module MenuSpecHelper
-  SECTION_DEF= <<EOF
+  SECTION_DEF = <<EOF
 type: section
 name: Red Hat
 id: redhat
@@ -8,7 +8,7 @@ section_type: big_iframe
 href: http://www.redhat.com
 EOF
 
-  ITEM_DEF= <<EOF
+  ITEM_DEF = <<EOF
 type: item
 name: courses
 id: rht2

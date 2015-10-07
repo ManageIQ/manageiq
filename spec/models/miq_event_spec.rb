@@ -5,13 +5,13 @@ describe MiqEvent do
     context ".raise_evm_job_event" do
       it "vm" do
         obj = FactoryGirl.create(:vm_redhat)
-        MiqEvent.should_receive(:raise_evm_event).with { |target, raw_event, inputs| target == obj && raw_event == "vm_scan_complete" }
+        MiqEvent.should_receive(:raise_evm_event).with { |target, raw_event, _inputs| target == obj && raw_event == "vm_scan_complete" }
         MiqEvent.raise_evm_job_event(obj, {:type => "scan", :suffix => "complete"}, {})
       end
 
       it "host" do
         obj = FactoryGirl.create(:host_vmware)
-        MiqEvent.should_receive(:raise_evm_event).with { |target, raw_event, inputs| target == obj && raw_event == "host_scan_complete" }
+        MiqEvent.should_receive(:raise_evm_event).with { |target, raw_event, _inputs| target == obj && raw_event == "host_scan_complete" }
         MiqEvent.raise_evm_job_event(obj, {:type => "scan", :suffix => "complete"}, {})
       end
     end
@@ -47,7 +47,7 @@ describe MiqEvent do
       end
 
       it "will raise an error for missing target" do
-        lambda { MiqEvent.raise_evm_event([:MiqServer, 30000], "some_event")}.should raise_error
+        -> { MiqEvent.raise_evm_event([:MiqServer, 30000], "some_event") }.should raise_error
       end
 
       it "will raise an error for nil target" do
@@ -59,9 +59,9 @@ describe MiqEvent do
         raw_event = 'vm_start'
         FactoryGirl.create(:miq_event_definition, :name => raw_event)
         event = MiqEvent.normalize_event(raw_event)
-        MiqPolicy.should_receive(:enforce_policy).with(@cluster, event, {:type => @cluster.class.name } )
-        MiqAlert.should_receive(:evaluate_alerts).with(@cluster, event, {:type => @cluster.class.name } )
-        MiqEvent.should_receive(:raise_event_for_children).with(@cluster, raw_event, {:type => @cluster.class.name } )
+        MiqPolicy.should_receive(:enforce_policy).with(@cluster, event, {:type => @cluster.class.name})
+        MiqAlert.should_receive(:evaluate_alerts).with(@cluster, event, {:type => @cluster.class.name})
+        MiqEvent.should_receive(:raise_event_for_children).with(@cluster, raw_event, {:type => @cluster.class.name})
         results = MiqEvent.raise_evm_event(@cluster, event)
 
         results.keys.should match_array([:policy, :alert, :children_events])
@@ -72,8 +72,8 @@ describe MiqEvent do
         MiqAeEvent.should_receive(:raise_evm_event).never
         MiqAlert.stub(:event_alertable?).and_return true
         MiqPolicy.should_receive(:enforce_policy).never
-        MiqAlert.should_receive(:evaluate_alerts).with(@cluster, "unknown", {:type => @cluster.class.name} )
-        MiqEvent.should_receive(:raise_event_for_children).with(@cluster, "unknown", {:type => @cluster.class.name} )
+        MiqAlert.should_receive(:evaluate_alerts).with(@cluster, "unknown", {:type => @cluster.class.name})
+        MiqEvent.should_receive(:raise_event_for_children).with(@cluster, "unknown", {:type => @cluster.class.name})
         MiqEvent.raise_evm_event(@cluster, "unknown")
       end
 
@@ -82,7 +82,7 @@ describe MiqEvent do
         MiqAlert.stub(:event_alertable?).and_return false
         MiqPolicy.should_receive(:enforce_policy).never
         MiqAlert.should_receive(:evaluate_alerts).never
-        MiqEvent.should_receive(:raise_event_for_children).with(@cluster, "unknown", {:type => @cluster.class.name} )
+        MiqEvent.should_receive(:raise_event_for_children).with(@cluster, "unknown", {:type => @cluster.class.name})
         MiqEvent.raise_evm_event(@cluster, "unknown")
       end
 
@@ -93,7 +93,7 @@ describe MiqEvent do
         MiqAlert.stub(:event_alertable?).with(raw_event).and_return true
         MiqAeEvent.should_receive(:raise_evm_event).never
         MiqPolicy.should_receive(:enforce_policy).once
-        MiqAlert.should_receive(:evaluate_alerts).with(@miq_server, event, {:type => @miq_server.class.name })
+        MiqAlert.should_receive(:evaluate_alerts).with(@miq_server, event, {:type => @miq_server.class.name})
         MiqEvent.should_receive(:raise_event_for_children).once
         MiqEvent.raise_evm_event(@miq_server, raw_event)
       end
@@ -119,9 +119,9 @@ describe MiqEvent do
         MiqEvent.should_receive(:raise_event_for_children).once
 
         msg = "Worker started: ID [1], PID [123], GUID [c67bd040-3500-11df-81df-000c295b1696]"
-        lambda {
+        lambda do
           MiqEvent.raise_evm_event(@miq_server, raw_event, :event_details => msg, :type => "MiqGenericWorker")
-        }.should_not raise_error
+        end.should_not raise_error
       end
 
       it "will alert and raise to automate for unknown but alertable event on unsupported policy target" do
@@ -141,12 +141,12 @@ describe MiqEvent do
         MiqEvent.raise_evm_event(@zone, "unknown")
       end
     end
-    
+
     context ".raise_event_for_children" do
       it "uses base_model to build event name" do
         host = FactoryGirl.create(:host_vmware_esx)
         vm = FactoryGirl.create(:vm_vmware, :host => host)
-        MiqEvent.should_receive(:raise_evm_event_queue).with { |target, child_event, inputs| target == vm && child_event == "assigned_company_tag_parent_host" }
+        MiqEvent.should_receive(:raise_evm_event_queue).with { |target, child_event, _inputs| target == vm && child_event == "assigned_company_tag_parent_host" }
         MiqEvent.raise_event_for_children(host, "assigned_company_tag")
       end
     end

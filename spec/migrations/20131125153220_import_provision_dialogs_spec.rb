@@ -16,8 +16,8 @@ describe ImportProvisionDialogs do
       miq_dialog_stub.count.should == 1
 
       dialog = miq_dialog_stub.first
-      dialog.name.should              == "miq_provision_dialogs"
-      dialog.dialog_type.should       == "MiqProvisionWorkflow"
+      dialog.name.should == "miq_provision_dialogs"
+      dialog.dialog_type.should == "MiqProvisionWorkflow"
       dialog.default.should           be_false
       dialog.content.should           be_kind_of(Hash)
       dialog.content.should           include(:dialog_order, :buttons, :dialogs)
@@ -31,5 +31,4 @@ describe ImportProvisionDialogs do
       migrate
     end
   end
-
 end

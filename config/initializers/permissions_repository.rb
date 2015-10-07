@@ -1,11 +1,12 @@
 require 'vmdb/permission_stores'
 
 Vmdb::PermissionStores.configure do |config|
-  if Rails.env.test?
-    config.backend = 'null'
-  else
+  yaml_filename = Rails.root.join 'config', 'permissions.yml'
+  if File.exist?(yaml_filename)
     config.backend = 'yaml'
-    config.options[:filename] = Rails.root.join 'config', 'permissions.yml'
+    config.options[:filename] = yaml_filename
+  else
+    config.backend = 'null'
   end
 end
 Vmdb::PermissionStores.initialize!

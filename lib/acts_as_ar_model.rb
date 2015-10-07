@@ -38,7 +38,7 @@ class ActsAsArModel
     superclass == ActsAsArModel ? self : superclass.base_class
   end
 
-  class << self; alias base_model base_class; end
+  class << self; alias_method :base_model, :base_class; end
 
   #
   # Column methods
@@ -49,22 +49,22 @@ class ActsAsArModel
   end
 
   def self.columns
-    @columns ||= self.columns_hash.values
+    @columns ||= columns_hash.values
   end
 
   def self.column_names
-    @column_names ||= self.columns_hash.keys
+    @column_names ||= columns_hash.keys
   end
 
   def self.column_names_symbols
-    @column_names_symbols ||= self.column_names.collect(&:to_sym)
+    @column_names_symbols ||= column_names.collect(&:to_sym)
   end
 
   def self.set_columns_hash(hash)
     hash[:id] ||= :integer
 
     hash.each do |col, options|
-      self.columns_hash[col.to_s] = ActsAsArModelColumn.new(col.to_s, options)
+      columns_hash[col.to_s] = ActsAsArModelColumn.new(col.to_s, options)
 
       define_method(col) do
         read_attribute(col)
@@ -88,20 +88,20 @@ class ActsAsArModel
   # Acts As Reportable methods
   #
 
-  def self.aar_options
-    @aar_options
+  class << self
+    attr_reader :aar_options
   end
 
-  def self.aar_options=(val)
-    @aar_options = val
+  class << self
+    attr_writer :aar_options
   end
 
   def self.aar_columns
     @aar_columns ||= []
   end
 
-  def self.aar_columns=(val)
-    @aar_columns = val
+  class << self
+    attr_writer :aar_columns
   end
 
   #
@@ -131,19 +131,19 @@ class ActsAsArModel
   def initialize(values = {})
     self.attributes = {}
     values.each do |attr, value|
-      self.send("#{attr}=", value)
+      send("#{attr}=", value)
     end
   end
 
   def [](attr)
-    self.attributes[attr.to_s]
+    attributes[attr.to_s]
   end
-  alias read_attribute []
+  alias_method :read_attribute, :[]
 
   def []=(attr, value)
-    self.attributes[attr.to_s] = value
+    attributes[attr.to_s] = value
   end
-  alias write_attribute []=
+  alias_method :write_attribute, :[]=
 
   #
   # Find routines
@@ -151,33 +151,33 @@ class ActsAsArModel
 
   def self.all(*args)
     raise NotImplementedError unless self.respond_to?(:find)
-    self.find(:all, *args)
+    find(:all, *args)
   end
 
   def self.first(*args)
     raise NotImplementedError unless self.respond_to?(:find)
-    self.find(:first, *args)
+    find(:first, *args)
   end
 
   def self.last(*args)
     raise NotImplementedError unless self.respond_to?(:find)
-    self.find(:last, *args)
+    find(:last, *args)
   end
 
   def self.count(*args)
-    self.all(*args).size
+    all(*args).size
   end
 
   def self.find_by_id(*id)
     options = id.extract_options!
-    options.merge!({:conditions => { :id => id.first }})
-    self.first(options)
+    options.merge!(:conditions => {:id => id.first})
+    first(options)
   end
 
   def self.find_all_by_id(*ids)
     options = ids.extract_options!
-    options.merge!({:conditions => { :id => ids.flatten }})
-    self.all(options)
+    options.merge!(:conditions => {:id => ids.flatten})
+    all(options)
   end
 
   #
@@ -186,9 +186,9 @@ class ActsAsArModel
 
   # Returns the contents of the record as a nicely formatted string.
   def inspect
-    attributes_as_nice_string = self.class.column_names.collect { |name|
+    attributes_as_nice_string = self.class.column_names.collect do |name|
       "#{name}: #{attribute_for_inspect(name)}"
-    }.compact.join(", ")
+    end.compact.join(", ")
     "#<#{self.class} #{attributes_as_nice_string}>"
   end
 
@@ -210,9 +210,9 @@ class ActsAsArModel
   def attribute_for_inspect(attr_name)
     value = self[attr_name]
 
-    if value.is_a?(String) && value.length > 50
+    if value.kind_of?(String) && value.length > 50
       "#{value[0..50]}...".inspect
-    elsif value.is_a?(Date) || value.is_a?(Time)
+    elsif value.kind_of?(Date) || value.kind_of?(Time)
       %("#{value.to_s(:db)}")
     else
       value.inspect

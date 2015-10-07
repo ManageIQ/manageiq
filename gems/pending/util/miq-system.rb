@@ -6,7 +6,6 @@ if Sys::Platform::OS == :windows
 end
 
 class MiqSystem
-
   @@cpu_usage_vmstat_output_mtime = nil
   @@cpu_usage_computed_value      = nil
 
@@ -43,7 +42,7 @@ class MiqSystem
       end
     end
 
-    return nil
+    nil
   end
 
   def self.num_cpus
@@ -108,14 +107,14 @@ class MiqSystem
   ##############################################################################################################################
 
   def self.memory
-    result = Hash.new
+    result = {}
     case Sys::Platform::IMPL
     when :mswin, :mingw
       # raise "MiqSystem.memory: Windows Not Supported"
     when :linux
       filename = "/proc/meminfo"
       data = nil
-      File.open(filename,'r') { |f| data = f.read_nonblock(10000) }
+      File.open(filename, 'r') { |f| data = f.read_nonblock(10000) }
 
       data.to_s.each_line do |line|
         key, value = line.split(":")
@@ -132,15 +131,15 @@ class MiqSystem
       # raise "MiqSystem.memory: Mac OSX Not Supported"
     end
 
-    return result
+    result
   end
 
   def self.total_memory
-    @total_memory ||= self.memory[:MemTotal]
+    @total_memory ||= memory[:MemTotal]
   end
 
   def self.status
-    result = Hash.new
+    result = {}
 
     case Sys::Platform::IMPL
     when :mswin, :mingw
@@ -156,7 +155,7 @@ class MiqSystem
       # raise "MiqSystem.status: Mac OSX Not Supported"
     end
 
-    return result
+    result
   end
 
   ##############################################################################################################################
@@ -281,7 +280,7 @@ class MiqSystem
   #
   #
   ##############################################################################################################################
-  def self.disk_usage(file=nil)
+  def self.disk_usage(file = nil)
     file = normalize_df_file_argument(file)
 
     case Sys::Platform::IMPL
@@ -489,7 +488,6 @@ class MiqSystem
     arch
   end
 
-
   def self.tail(filename, last)
     return nil unless File.file?(filename)
 
@@ -509,7 +507,7 @@ class MiqSystem
 
   def self.readfile_async(filename, maxlen = 10000)
     data = nil
-    File.open(filename,'r') do |f|
+    File.open(filename, 'r') do |f|
       begin
         data = f.read_nonblock(maxlen)
       rescue *retryable_io_errors
@@ -520,7 +518,7 @@ class MiqSystem
       end
     end if File.exist?(filename)
 
-    return data
+    data
   end
 
   def self.open_browser(url)
@@ -534,15 +532,15 @@ class MiqSystem
 end
 
 if __FILE__ == $0
-  def number_to_human_size(size, precision=1)
+  def number_to_human_size(size, precision = 1)
     size = Kernel.Float(size)
     case
-      when size == (1024 ** 0); "1 Byte"
-      when size <  (1024 ** 1); "%d Bytes" % size
-      when size <  (1024 ** 2); "%.#{precision}f KB"  % (size / (1024.0 ** 1) )
-      when size <  (1024 ** 3); "%.#{precision}f MB"  % (size / (1024.0 ** 2) )
-      when size <  (1024 ** 4); "%.#{precision}f GB"  % (size / (1024.0 ** 3) )
-      else                      "%.#{precision}f TB"  % (size / (1024.0 ** 4) )
+    when size == (1024**0) then "1 Byte"
+    when size < (1024**1) then "%d Bytes" % size
+    when size < (1024**2) then "%.#{precision}f KB" % (size / (1024.0**1))
+    when size < (1024**3) then "%.#{precision}f MB" % (size / (1024.0**2))
+    when size < (1024**4) then "%.#{precision}f GB" % (size / (1024.0**3))
+    else                      "%.#{precision}f TB" % (size / (1024.0**4))
     end.sub(".%0#{precision}d" % 0, '')    # .sub('.0', '')
   end
 
@@ -552,36 +550,34 @@ if __FILE__ == $0
   result = MiqSystem.disk_usage
   format_string = "%-12s %6s %12s %12s %12s %12s %12s %12s %12s %12s %12s"
   header = format(format_string,
-      "Filesystem",
-      "Type",
-      "Total",
-      "Used",
-      "Available",
-      "%Used",
-      "iTotal",
-      "iUsed",
-      "iFree",
-      "%iUsed",
-      "Mounted on")
+                  "Filesystem",
+                  "Type",
+                  "Total",
+                  "Used",
+                  "Available",
+                  "%Used",
+                  "iTotal",
+                  "iUsed",
+                  "iFree",
+                  "%iUsed",
+                  "Mounted on")
   puts header
 
   result.each { |disk|
     formatted = format(format_string,
-      disk[:filesystem],
-      disk[:type],
-      number_to_human_size(disk[:total_bytes]),
-      number_to_human_size(disk[:used_bytes]),
-      number_to_human_size(disk[:available_bytes]),
-      "#{disk[:used_bytes_percent]}%",
-      disk[:total_inodes],
-      disk[:used_inodes],
-      disk[:available_inodes],
-      "#{disk[:used_inodes_percent]}%",
-      disk[:mount_point]
-    )
+                       disk[:filesystem],
+                       disk[:type],
+                       number_to_human_size(disk[:total_bytes]),
+                       number_to_human_size(disk[:used_bytes]),
+                       number_to_human_size(disk[:available_bytes]),
+                       "#{disk[:used_bytes_percent]}%",
+                       disk[:total_inodes],
+                       disk[:used_inodes],
+                       disk[:available_inodes],
+                       "#{disk[:used_inodes_percent]}%",
+                       disk[:mount_point]
+                      )
     puts formatted
   }
-
-
 
 end

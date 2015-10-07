@@ -3,9 +3,9 @@ module MiqAeCustomizationController::CustomButtons
 
   def automate_button
     @in_a_form = true
-    @resolve = Hash.new if params[:button] == "reset"
+    @resolve = {} if params[:button] == "reset"
     if params[:button] == "cancel_simulate"
-      #resetting changed, when coming back from simulate screen.
+      # resetting changed, when coming back from simulate screen.
       @changed = session[:changed]
       session[:changed] =~ session[:changed]
       @edit = session[:edit] = nil
@@ -33,7 +33,7 @@ module MiqAeCustomizationController::CustomButtons
     @nodetype = node.split("_")
     nodeid = node.split("-")
 
-    #initializing variables to hold data for selected node
+    # initializing variables to hold data for selected node
     @sb[:obj_list] = nil
     @custom_button = nil
     @sb[:button_groups] = nil
@@ -41,7 +41,7 @@ module MiqAeCustomizationController::CustomButtons
 
     if @nodetype[0] == "root"
       @right_cell_text = _("All %s") % "Object Types"
-      @sb[:obj_list] = Hash.new
+      @sb[:obj_list] = {}
       if session[:resolve]
         @resolve = session[:resolve]
       else
@@ -51,29 +51,29 @@ module MiqAeCustomizationController::CustomButtons
         @sb[:obj_list][node[0]] = "ab_#{node[0]}"
       end
     elsif @nodetype[0] == "xx-ab" && nodeid.length == 2   # one of the CI's node selected
-      @right_cell_text = _("%{typ} %{model}") % {:typ=>@sb[:target_classes].invert[@nodetype[2]], :model=>"Button Groups"}
+      @right_cell_text = _("%{typ} %{model}") % {:typ => @sb[:target_classes].invert[@nodetype[2]], :model => "Button Groups"}
       @sb[:applies_to_class] = x_node.split('-').last.split('_').last
       asets = CustomButtonSet.find_all_by_class_name(@nodetype[1])
-      @sb[:button_groups] = Array.new
+      @sb[:button_groups] = []
       @sb[:button_groups].push("[Unassigned Buttons]")
-      if !asets.blank?
+      unless asets.blank?
         asets.each do |aset|
-          group = Hash.new
+          group = {}
           group[:id] = aset.id
           group[:name] = aset.name
           group[:description] = aset.description
           group[:button_image] = aset.set_data[:button_image]
-          @sb[:button_groups].push(group) if !@sb[:button_groups].include?(group)
+          @sb[:button_groups].push(group) unless @sb[:button_groups].include?(group)
         end
       end
-    elsif @nodetype.length == 1 && nodeid[1] == "ub"        #Unassigned buttons group selected
-      @sb[:buttons] = Array.new
-      @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>@sb[:target_classes].invert[nodeid[2]], :model=>"Button Group", :name=>"Unassigned Buttons"}
+    elsif @nodetype.length == 1 && nodeid[1] == "ub"        # Unassigned buttons group selected
+      @sb[:buttons] = []
+      @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ => @sb[:target_classes].invert[nodeid[2]], :model => "Button Group", :name => "Unassigned Buttons"}
       uri = CustomButton.buttons_for(nodeid[2]).sort_by(&:name)
-      if !uri.blank?
+      unless uri.blank?
         uri.each do |b|
           if b.parent.nil?
-            button = Hash.new
+            button = {}
             button[:name] = b.name
             button[:id] = b.id
             button[:description] = b.description
@@ -82,10 +82,10 @@ module MiqAeCustomizationController::CustomButtons
           end
         end
       end
-    elsif (@nodetype[0] == "xx-ab"  && nodeid.length == 4) || (nodeid.length == 4 && nodeid[1] == "ub")       # button selected
+    elsif (@nodetype[0] == "xx-ab" && nodeid.length == 4) || (nodeid.length == 4 && nodeid[1] == "ub")       # button selected
       @record = @custom_button = CustomButton.find(from_cid(nodeid.last))
       build_resolve_screen
-      @resolve[:new][:attrs] = Array.new
+      @resolve[:new][:attrs] = []
       if @custom_button.uri_attributes
         @custom_button.uri_attributes.each do |attr|
           if attr[0] != "object_name" && attr[0] != "request"
@@ -94,22 +94,22 @@ module MiqAeCustomizationController::CustomButtons
         end
         @resolve[:new][:object_request] = @custom_button.uri_attributes["request"]
       end
-      @sb[:user_roles] = Array.new
+      @sb[:user_roles] = []
       if @custom_button.visibility && @custom_button.visibility[:roles] && @custom_button.visibility[:roles][0] != "_ALL_"
-#         User.roles.sort_by(&:name).each do |r|
-#           @sb[:user_roles].push(r.description) if @custom_button.visibility[:roles].include?(r.name) && !@sb[:user_roles].include?(r.description)
+        #         User.roles.sort_by(&:name).each do |r|
+        #           @sb[:user_roles].push(r.description) if @custom_button.visibility[:roles].include?(r.name) && !@sb[:user_roles].include?(r.description)
         MiqUserRole.all.sort_by(&:name).each do |r|
           @sb[:user_roles].push(r.name) if @custom_button.visibility[:roles].include?(r.name)
         end
       end
       dialog_id = @custom_button.resource_action.dialog_id
       @sb[:dialog_label] = dialog_id ? Dialog.find_by_id(dialog_id).label : ""
-#       @sb[:user_roles].sort!
+      #       @sb[:user_roles].sort!
       if @nodetype[0].starts_with?("-ub-")
-        #selected button is under unassigned folder
+        # selected button is under unassigned folder
         @resolve[:new][:target_class] = @sb[:target_classes].invert[@nodetype[0].split('-').last]
       else
-        #selected button is under assigned folder
+        # selected button is under assigned folder
         kls = case @nodetype[1]
               when "Host"
                 ui_lookup(:host_types => "host")
@@ -124,23 +124,23 @@ module MiqAeCustomizationController::CustomButtons
     else                # assigned buttons node/folder
       @sb[:applies_to_class] = @nodetype[1]
       @record = CustomButtonSet.find(from_cid(nodeid.last))
-      @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>@sb[:target_classes].invert[@nodetype[2]], :model=>"Button Group", :name=>@record.name.split("|").first}
-      @sb[:button_group] = Hash.new
+      @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ => @sb[:target_classes].invert[@nodetype[2]], :model => "Button Group", :name => @record.name.split("|").first}
+      @sb[:button_group] = {}
       @sb[:button_group][:text] =
           @sb[:button_group][:hover_text] =
               @sb[:button_group][:display]
-      @sb[:buttons] = Array.new
+      @sb[:buttons] = []
       button_order = @record[:set_data] && @record[:set_data][:button_order] ? @record[:set_data][:button_order] : nil
       if button_order     # show assigned buttons in order they were saved
         button_order.each do |bidx|
           @record.members.each do |b|
             if bidx == b.id
-              button = Hash.new
+              button = {}
               button[:name] = b.name
               button[:id] = b.id
               button[:description] = b.description
               button[:button_image] = b.options[:button_image]
-              @sb[:buttons].push(button) if !@sb[:buttons].include?(button)
+              @sb[:buttons].push(button) unless @sb[:buttons].include?(button)
             end
           end
         end

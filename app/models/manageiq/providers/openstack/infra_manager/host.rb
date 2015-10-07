@@ -18,8 +18,8 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
   end
 
   def ssh_users_and_passwords
-    user_auth_key, auth_key = self.auth_user_keypair
-    user_password, password = self.auth_user_pwd
+    user_auth_key, auth_key = auth_user_keypair
+    user_password, password = auth_user_pwd
     su_user, su_password = nil, nil
 
     # TODO(lsmola) make sudo user work with password. We will not probably support su, as root will not have password
@@ -36,7 +36,7 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
 
   def get_parent_keypair(type = nil)
     # Get private key defined on Provider level, in the case all hosts has the same user
-    self.ext_management_system.try(:authentication_type, type)
+    ext_management_system.try(:authentication_type, type)
   end
 
   def authentication_best_fit(requested_type = nil)
@@ -79,7 +79,7 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
       # Creating just Auth status placeholder, the credentials are stored in parent or this auth, parent is
       # EmsOpenstackInfra in this case. We will create Auth per Host where we will store state, if it not exists
       auth = ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair.create(
-        :name          => "#{self.class.name} #{self.name}",
+        :name          => "#{self.class.name} #{name}",
         :authtype      => :ssh_keypair,
         :resource_id   => id,
         :resource_type => 'Host')

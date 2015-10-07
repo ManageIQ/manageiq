@@ -144,7 +144,7 @@ describe "routes for ReportController" do
   describe "#db_form_field_changed" do
     it "routes with POST" do
       expect(post("/report/db_form_field_changed"))
-      .to route_to("report#db_form_field_changed")
+        .to route_to("report#db_form_field_changed")
     end
   end
 
@@ -187,7 +187,7 @@ describe "routes for ReportController" do
   describe "#export_field_changed" do
     it "routes with POST" do
       expect(post("/report/export_field_changed"))
-      .to route_to("report#export_field_changed")
+        .to route_to("report#export_field_changed")
     end
   end
 
@@ -212,14 +212,14 @@ describe "routes for ReportController" do
   describe "#menu_field_changed" do
     it "routes with POST" do
       expect(post("/report/menu_field_changed"))
-      .to route_to("report#menu_field_changed")
+        .to route_to("report#menu_field_changed")
     end
   end
 
   describe "#menu_folder_message_display" do
     it "routes with POST" do
       expect(post("/report/menu_folder_message_display"))
-      .to route_to("report#menu_folder_message_display")
+        .to route_to("report#menu_folder_message_display")
     end
   end
 
@@ -250,7 +250,7 @@ describe "routes for ReportController" do
   describe "#saved_report_paging" do
     it "routes with POST" do
       expect(post("/report/saved_report_paging"))
-      .to route_to("report#saved_report_paging")
+        .to route_to("report#saved_report_paging")
     end
   end
 
@@ -263,7 +263,7 @@ describe "routes for ReportController" do
   describe "#schedule_form_field_changed" do
     it "routes with POST" do
       expect(post("/report/schedule_form_field_changed"))
-      .to route_to("report#schedule_form_field_changed")
+        .to route_to("report#schedule_form_field_changed")
     end
   end
 
@@ -282,7 +282,7 @@ describe "routes for ReportController" do
   describe "#tree_autoload_dynatree" do
     it "routes with POST" do
       expect(post("/report/tree_autoload_dynatree"))
-      .to route_to("report#tree_autoload_dynatree")
+        .to route_to("report#tree_autoload_dynatree")
     end
   end
 
@@ -319,28 +319,28 @@ describe "routes for ReportController" do
   describe "#widget_form_field_changed" do
     it "routes with POST" do
       expect(post("/report/widget_form_field_changed"))
-      .to route_to("report#widget_form_field_changed")
+        .to route_to("report#widget_form_field_changed")
     end
   end
 
   describe "#widget_shortcut_dd_done" do
     it "routes with POST" do
       expect(post("/report/widget_shortcut_dd_done"))
-      .to route_to("report#widget_shortcut_dd_done")
+        .to route_to("report#widget_shortcut_dd_done")
     end
   end
 
   describe "#widget_shortcut_remove" do
     it "routes with POST" do
       expect(post("/report/widget_shortcut_remove"))
-      .to route_to("report#widget_shortcut_remove")
+        .to route_to("report#widget_shortcut_remove")
     end
   end
 
   describe "#widget_shortcut_reset" do
     it "routes with POST" do
       expect(post("/report/widget_shortcut_reset"))
-      .to route_to("report#widget_shortcut_reset")
+        .to route_to("report#widget_shortcut_reset")
     end
   end
 

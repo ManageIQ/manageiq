@@ -99,7 +99,7 @@ module ApiSpecHelper
     Vmdb::Application.config.secret_token = MiqDatabase.first.session_secret_token
     @guid, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
-    collections = %w(automation_requests availability_zones chargebacks clusters conditions
+    collections = %w(automation_requests availability_zones categories chargebacks clusters conditions
                      data_stores events features flavors groups hosts pictures policies policy_actions
                      policy_profiles providers provision_dialogs provision_requests rates
                      reports request_tasks requests resource_pools results roles security_groups

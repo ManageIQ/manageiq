@@ -154,10 +154,9 @@ describe "VM Retirement Management" do
     event_name = 'foo'
     message = 'bar'
     vm = FactoryGirl.create(:vm_vmware)
-    event_hash = { :target_class => "Vm", :target_id => vm.id.to_s, :event => event_name, :message => message }
+    event_hash = {:target_class => "Vm", :target_id => vm.id.to_s, :event => event_name, :message => message}
     expect(AuditEvent).to receive(:success).with(event_hash)
 
     vm.raise_audit_event(event_name, message)
   end
-
 end

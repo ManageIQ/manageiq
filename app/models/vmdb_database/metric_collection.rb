@@ -3,11 +3,11 @@ module VmdbDatabase::MetricCollection
 
   module ClassMethods
     def collect_database_metrics_sql
-      { :active_connections => collect_number_connections }
+      {:active_connections => collect_number_connections}
     end
 
     def collect_database_metrics_os(data_directory = nil)
-      metrics = { :running_processes => collect_number_pg_processes }
+      metrics = {:running_processes => collect_number_pg_processes}
 
       unless data_directory.nil?
         du = MiqSystem.disk_usage(data_directory).first
@@ -32,6 +32,5 @@ module VmdbDatabase::MetricCollection
       active_connections = connection.number_of_db_connections if connection.respond_to?(:number_of_db_connections)
       active_connections
     end
-
   end
 end

@@ -40,37 +40,36 @@ module MiqAePathSpec
       ae_class     = "TEST_CLASS"
       ae_instance  = "TEST_INSTANCE"
       parts =  {
-          :ae_namespace => ae_namespace,
-          :ae_class     => ae_class,
-          :ae_instance  => ae_instance
-        }
+        :ae_namespace => ae_namespace,
+        :ae_class     => ae_class,
+        :ae_instance  => ae_instance
+      }
 
       path = MiqAePath.build(parts)
       path.should be_kind_of MiqAePath
       path.ae_namespace.should == ae_namespace
-      path.ae_class.should     == ae_class
-      path.ae_instance.should  == ae_instance
+      path.ae_class.should == ae_class
+      path.ae_instance.should == ae_instance
     end
-
 
     it ".parse" do
       ae_namespace = "TEST_NAMESPACE"
       ae_class     = "TEST_CLASS"
       ae_instance  = "TEST_INSTANCE"
       parts =  {
-          :ae_namespace => ae_namespace,
-          :ae_class     => ae_class,
-          :ae_instance  => ae_instance
-        }
+        :ae_namespace => ae_namespace,
+        :ae_class     => ae_class,
+        :ae_instance  => ae_instance
+      }
 
       path_string = MiqAePath.new(parts).to_s
       path = MiqAePath.parse(path_string)
 
       path.should be_kind_of MiqAePath
       path.ae_namespace.should == ae_namespace
-      path.ae_class.should     == ae_class
-      path.ae_instance.should  == ae_instance
-      path.to_s.should         == path_string
+      path.ae_class.should == ae_class
+      path.ae_instance.should == ae_instance
+      path.to_s.should == path_string
     end
 
     context ".split" do
@@ -79,10 +78,10 @@ module MiqAePathSpec
         @ae_class     = "TEST_CLASS"
         @ae_instance  = "TEST_INSTANCE"
         @parts =  {
-            :ae_namespace => @ae_namespace,
-            :ae_class     => @ae_class,
-            :ae_instance  => @ae_instance
-          }
+          :ae_namespace => @ae_namespace,
+          :ae_class     => @ae_class,
+          :ae_instance  => @ae_instance
+        }
       end
 
       def assert_split(parts, assertions = parts, method_options = {})
@@ -111,7 +110,7 @@ module MiqAePathSpec
       end
 
       it "with option :has_instance_name => false" do
-        assertions = { :ae_namespace => [@ae_namespace, @ae_class].join("/"), :ae_class => @ae_instance }
+        assertions = {:ae_namespace => [@ae_namespace, @ae_class].join("/"), :ae_class => @ae_instance}
         assert_split(@parts, assertions, :has_instance_name => false)
       end
 
@@ -120,6 +119,5 @@ module MiqAePathSpec
         assert_split(@parts, @parts, :has_attribute_name => true)
       end
     end
-
   end
 end

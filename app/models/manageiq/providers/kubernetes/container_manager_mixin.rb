@@ -55,7 +55,7 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
 
   def connect(options = {})
     options[:hostname] ||= address
-    options[:port] ||= self.port
+    options[:port] ||= port
     options[:user] ||= authentication_userid(options[:auth_type])
     options[:pass] ||= authentication_password(options[:auth_type])
     options[:bearer] ||= authentication_token(options[:auth_type] || 'bearer')
@@ -66,13 +66,13 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
     options = options.merge(:auth_type => auth_type)
 
     with_provider_connection(options, &:api_valid?)
-    rescue SocketError,
-           Errno::ECONNREFUSED,
-           RestClient::ResourceNotFound,
-           RestClient::InternalServerError => err
-      raise MiqException::MiqUnreachableError, err.message, err.backtrace
-    rescue RestClient::Unauthorized   => err
-      raise MiqException::MiqInvalidCredentialsError, err.message, err.backtrace
+  rescue SocketError,
+         Errno::ECONNREFUSED,
+         RestClient::ResourceNotFound,
+         RestClient::InternalServerError => err
+    raise MiqException::MiqUnreachableError, err.message, err.backtrace
+  rescue RestClient::Unauthorized   => err
+    raise MiqException::MiqInvalidCredentialsError, err.message, err.backtrace
   end
 
   def ensure_authentications_record

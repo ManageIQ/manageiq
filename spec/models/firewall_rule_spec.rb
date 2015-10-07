@@ -34,7 +34,7 @@ describe FirewallRule do
     it "with a non-OperatingSystem" do
       sg = FactoryGirl.create(:security_group)
 
-      lambda { firewall_rule.operating_system = sg }.should raise_error(ArgumentError)
+      -> { firewall_rule.operating_system = sg }.should raise_error(ArgumentError)
     end
   end
 end

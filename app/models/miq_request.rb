@@ -14,7 +14,7 @@ class MiqRequest < ActiveRecord::Base
 
   default_value_for(:message)       { |r| "#{r.class::TASK_DESCRIPTION} - Request Created" }
   default_value_for :options,       {}
-  default_value_for(:requester)     { |r| r.get_user }
+  default_value_for(:requester, &:get_user)
   default_value_for :request_state, 'pending'
   default_value_for(:request_type)  { |r| r.request_types.first }
   default_value_for :status,        'Ok'
@@ -96,7 +96,7 @@ class MiqRequest < ActiveRecord::Base
 
   def initialize_attributes
     self.requester_name ||= requester.name                         if requester.kind_of?(User)
-    self.requester      ||= User.find_by_name(self.requester_name) if self.requester_name.kind_of?(String)
+    self.requester ||= User.find_by_name(self.requester_name) if self.requester_name.kind_of?(String)
     self.approval_state ||= "pending_approval"
     miq_approvals << build_default_approval
   end
@@ -128,15 +128,13 @@ class MiqRequest < ActiveRecord::Base
   end
 
   def call_automate_event(event_name)
-    begin
-      _log.info("Raising event [#{event_name}] to Automate")
-      ws = MiqAeEvent.raise_evm_event(event_name, self)
-      _log.info("Raised  event [#{event_name}] to Automate")
-      return ws
-    rescue MiqAeException::Error => err
-      message = "Error returned from #{event_name} event processing in Automate: #{err.message}"
-      raise
-    end
+    _log.info("Raising event [#{event_name}] to Automate")
+    ws = MiqAeEvent.raise_evm_event(event_name, self)
+    _log.info("Raised  event [#{event_name}] to Automate")
+    return ws
+  rescue MiqAeException::Error => err
+    message = "Error returned from #{event_name} event processing in Automate: #{err.message}"
+    raise
   end
 
   def automate_event_failed?(event_name)
@@ -290,8 +288,8 @@ class MiqRequest < ActiveRecord::Base
 
     task_count = miq_request_tasks.count
     miq_request_tasks.each do |p|
-      states[p.state]  += 1
-      states[:total]   += 1
+      states[p.state] += 1
+      states[:total] += 1
       status[p.status] += 1
     end
     total = states.delete(:total).to_i
@@ -415,6 +413,7 @@ class MiqRequest < ActiveRecord::Base
   end
 
   def self.create_request(values, requester_id, auto_approve = false, request_type = request_types.first)
+    requester = requester_id.kind_of?(User) ? requester_id : User.find_by_userid(requester_id)
     values[:src_ids] = values[:src_ids].to_miq_a unless values[:src_ids].nil?
     request          = create(:options => values, :userid => requester_id, :request_type => request_type)
     request.save!  # Force validation errors to raise now
@@ -425,7 +424,7 @@ class MiqRequest < ActiveRecord::Base
     request.log_request_success(requester_id, :created)
 
     request.call_automate_event_queue("request_created")
-    request.approve(requester_id, "Auto-Approved") if auto_approve
+    request.approve(requester, "Auto-Approved") if auto_approve
     request.reload if auto_approve
     request
   end

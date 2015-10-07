@@ -23,8 +23,7 @@ module TenancyMixin
     # In priority order
     self.tenant_id ||= owning_group_tenant ||
                        current_user_tenant ||
-                       ems_tenant          ||
-                       root_tenant
+                       ems_tenant || root_tenant
   end
 
   private

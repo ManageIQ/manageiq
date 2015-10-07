@@ -8,20 +8,20 @@ class Classification < ActiveRecord::Base
   validate       :validate_format_of_name, :validate_uniqueness_on_tag_name
 
   validates_uniqueness_of :description, :scope => [:parent_id],
-    :if => Proc.new { |c|
-      cond = ["parent_id = ? AND description = ?", c.parent_id, c.description]
-      unless c.new_record?
-        cond.first << " AND id != ?"
-        cond       << c.id
-      end
-      c.class.in_my_region.exists?(cond)
-    }
+                                        :if    => proc { |c|
+                                          cond = ["parent_id = ? AND description = ?", c.parent_id, c.description]
+                                          unless c.new_record?
+                                            cond.first << " AND id != ?"
+                                            cond << c.id
+                                          end
+                                          c.class.in_my_region.exists?(cond)
+                                        }
   validates_presence_of :name, :description
   validates_length_of :name, :maximum => 30, :message => "must not exceed 30 characters"
   validates_length_of :description, :maximum => 255, :message => "must not exceed 255 characters"
   validates_inclusion_of :syntax,
-    :in => %w{ string integer boolean },
-    :message => "should be one of 'string', 'integer' or 'boolean'"
+                         :in      => %w( string integer boolean ),
+                         :message => "should be one of 'string', 'integer' or 'boolean'"
 
   virtual_column :name, :type => :string
 
@@ -48,26 +48,24 @@ class Classification < ActiveRecord::Base
     ret
   end
 
-  def ns=(namespace)
-    @ns = namespace
-  end
+  attr_writer :ns
 
   def ns
     @ns ||= DEFAULT_NAMESPACE if self.new_record?
 
     # @ns = tag2ns(self.tag.name) unless self.tag.nil?
-    return @ns if self.tag.nil?
+    return @ns if tag.nil?
 
     return @ns unless @ns.nil?
 
     if category?
-      @ns = tag2ns(self.tag.name)
+      @ns = tag2ns(tag.name)
     else
-      @ns = tag2ns(self.parent.tag.name) unless self.parent_id.nil?
+      @ns = tag2ns(parent.tag.name) unless parent_id.nil?
     end
   end
 
-  def self.classify(obj, category_name, entry_name, is_request=true)
+  def self.classify(obj, category_name, entry_name, is_request = true)
     cat = Classification.find_by_name(category_name, obj.region_id)
     unless cat.nil?
       ent = cat.find_entry_by_name(entry_name, obj.region_id)
@@ -75,7 +73,7 @@ class Classification < ActiveRecord::Base
     end
   end
 
-  def self.unclassify(obj, category_name, entry_name, is_request=true)
+  def self.unclassify(obj, category_name, entry_name, is_request = true)
     cat = Classification.find_by_name(category_name, obj.region_id)
     unless cat.nil?
       ent = cat.find_entry_by_name(entry_name, obj.region_id)
@@ -83,24 +81,24 @@ class Classification < ActiveRecord::Base
     end
   end
 
-  def self.classify_by_tag(obj, tag, is_request=true)
+  def self.classify_by_tag(obj, tag, is_request = true)
     parts = tag.split("/")
     raise "Tag #{tag} is not a category entry" unless parts[1] == "managed"
 
     entry_name = parts.pop
     category_name = parts.pop
 
-    self.classify(obj, category_name, entry_name, is_request)
+    classify(obj, category_name, entry_name, is_request)
   end
 
-  def self.unclassify_by_tag(obj, tag, is_request=true)
+  def self.unclassify_by_tag(obj, tag, is_request = true)
     parts = tag.split("/")
     raise "Tag #{tag} is not a category entry" unless parts[1] == "managed"
 
     entry_name = parts.pop
     category_name = parts.pop
 
-    self.unclassify(obj, category_name, entry_name, is_request)
+    unclassify(obj, category_name, entry_name, is_request)
   end
 
   def self.bulk_reassignment(options = {})
@@ -115,10 +113,10 @@ class Classification < ActiveRecord::Base
     targets = model.where(:id => options[:object_ids]).includes(:taggings, :tags)
 
     adds = where(:id => options[:add_ids]).includes(:tag)
-    adds.each {|a| raise "Classification add id: [#{a.id}] is not an entry" if a.category?}
+    adds.each { |a| raise "Classification add id: [#{a.id}] is not an entry" if a.category? }
 
     deletes = where(:id => options[:delete_ids]).includes(:tag)
-    deletes.each {|d| raise "Classification delete id: [#{d.id}] is not an entry" if d.category?}
+    deletes.each { |d| raise "Classification delete id: [#{d.id}] is not an entry" if d.category? }
 
     failed_deletes = Hash.new { |h, k| h[k] = [] }
     failed_adds    = Hash.new { |h, k| h[k] = [] }
@@ -167,28 +165,28 @@ class Classification < ActiveRecord::Base
 
   def self.get_tags_from_object(obj)
     tags = obj.tag_list(:ns => "/managed").split
-    tags.delete_if {|t| t =~ /^\/folder_path_/}
+    tags.delete_if { |t| t =~ /^\/folder_path_/ }
   end
 
   def self.create_category!(options)
     self.create!(options.merge(:parent_id => 0))
   end
 
-  def self.categories(region_id = self.my_region_number, ns = DEFAULT_NAMESPACE)
-    cats = self.where(:classifications => {:parent_id => 0}).includes(:tag, :children)
+  def self.categories(region_id = my_region_number, ns = DEFAULT_NAMESPACE)
+    cats = where(:classifications => {:parent_id => 0}).includes(:tag, :children)
     cats = cats.in_region(region_id) if region_id
     cats.select { |c| c.ns == ns }
   end
 
-  def self.category_names_for_perf_by_tag(region_id = self.my_region_number, ns = DEFAULT_NAMESPACE)
-    self.in_region(region_id)
+  def self.category_names_for_perf_by_tag(region_id = my_region_number, ns = DEFAULT_NAMESPACE)
+    in_region(region_id)
       .where(:parent_id => 0, :perf_by_tag => true)
       .includes(:tag)
       .collect { |c| c.name if c.tag2ns(c.tag.name) == ns }
       .compact
   end
 
-  def self.find_assigned_entries(obj, ns=DEFAULT_NAMESPACE)
+  def self.find_assigned_entries(obj, ns = DEFAULT_NAMESPACE)
     raise "Class '#{obj.class}' is not eligible for classification" unless obj.respond_to?("tag_with")
 
     tag_ids = obj.tagged_with(:ns => ns).collect(&:id)
@@ -196,56 +194,56 @@ class Classification < ActiveRecord::Base
   end
 
   def self.first_cat_entry(name, obj)
-    cat = self.find_by_name(name, obj.region_id)
+    cat = find_by_name(name, obj.region_id)
     return nil unless cat
 
-    self.find_assigned_entries(obj).each {|e|
+    find_assigned_entries(obj).each do|e|
       return e if e.parent_id == cat.id
-    }
+    end
     nil
   end
 
   def self.all_cat_entries(name, obj)
-    cat = self.find_by_name(name, obj.region_id)
+    cat = find_by_name(name, obj.region_id)
     return [] unless cat
 
-    self.find_assigned_entries(obj).collect {|e| e if e.parent_id == cat.id}.compact
+    find_assigned_entries(obj).collect { |e| e if e.parent_id == cat.id }.compact
   end
 
   # Splits a fully qualified tag into the namespace, category, and entry
   def self.tag_name_split(tag_name)
     parts = tag_name.split("/")
     parts.shift
-    return parts
+    parts
   end
 
   # Splits a fully qualified tag into the namespace, category object, and entry object
   def self.tag_name_to_objects(tag_name)
-    ns, cat, entry = self.tag_name_split(tag_name)
-    cat_obj = self.find_by_name(cat)
+    ns, cat, entry = tag_name_split(tag_name)
+    cat_obj = find_by_name(cat)
     entry_obj = cat_obj.nil? ? nil : cat_obj.find_entry_by_name(entry)
     return ns, cat_obj, entry_obj
   end
 
   # Builds the given tag into a format usable when calling to_model_hash.
   def self.tag_to_model_hash(tag)
-    ns, cat, entry = self.tag_name_to_objects(tag.name)
+    ns, cat, entry = tag_name_to_objects(tag.name)
 
     h = {:id => tag.id, :name => tag.name, :namespace => ns}
-    %w{id name description single_value}.each { |m| h[:"category_#{m}"] = cat.send(m) } unless cat.nil?
-    %w{id name description}.each { |m| h[:"entry_#{m}"] = entry.send(m) } unless entry.nil?
+    %w(id name description single_value).each { |m| h[:"category_#{m}"] = cat.send(m) } unless cat.nil?
+    %w(id name description).each { |m| h[:"entry_#{m}"] = entry.send(m) } unless entry.nil?
     h
   end
 
   def add_entry(options)
     raise "entries can only be added to classifications" unless self.category?
     # Inherit from parent classification
-    options.merge!(:read_only => self.read_only, :syntax => self.syntax, :single_value => self.single_value, :ns => self.ns)
-    self.children.create(options)
+    options.merge!(:read_only => read_only, :syntax => syntax, :single_value => single_value, :ns => ns)
+    children.create(options)
   end
 
   def entries
-    self.children
+    children
   end
 
   def find_by_entry(type)
@@ -253,60 +251,58 @@ class Classification < ActiveRecord::Base
     klass = type.constantize
     raise "Class '#{type}' is not eligible for classification" unless klass.respond_to?("find_tagged_with")
 
-    klass.find_tagged_with(:any => self.name, :ns => self.ns, :cat => self.parent.name)
+    klass.find_tagged_with(:any => name, :ns => ns, :cat => parent.name)
   end
 
-  def assign_entry_to(obj, is_request=true)
+  def assign_entry_to(obj, is_request = true)
     raise "method is only available for an entry" if self.category?
     raise "Class '#{obj.class}' is not eligible for classification" unless obj.respond_to?("tag_with")
 
-    self.enforce_policy(obj, :request_assign_company_tag) if is_request
-    if self.parent.single_value?
-      obj.tag_with(self.name, :ns => self.ns, :cat => self.parent.name)
+    enforce_policy(obj, :request_assign_company_tag) if is_request
+    if parent.single_value?
+      obj.tag_with(name, :ns => ns, :cat => parent.name)
     else
-      obj.tag_add(self.name, :ns => self.ns, :cat => self.parent.name)
+      obj.tag_add(name, :ns => ns, :cat => parent.name)
     end
     obj.reload
-    self.enforce_policy(obj, :assigned_company_tag)
+    enforce_policy(obj, :assigned_company_tag)
   end
 
-  def remove_entry_from(obj, is_request=true)
-    self.enforce_policy(obj, :request_unassign_company_tag) if is_request
-    tags = obj.tag_list(:ns => self.ns, :cat => self.parent.name).split
-    tags.delete(self.name)
-    obj.tag_with(tags.join(" "), :ns => self.ns, :cat => self.parent.name)
+  def remove_entry_from(obj, is_request = true)
+    enforce_policy(obj, :request_unassign_company_tag) if is_request
+    tags = obj.tag_list(:ns => ns, :cat => parent.name).split
+    tags.delete(name)
+    obj.tag_with(tags.join(" "), :ns => ns, :cat => parent.name)
     obj.reload
-    self.enforce_policy(obj, :unassigned_company_tag)
+    enforce_policy(obj, :unassigned_company_tag)
   end
 
   def to_tag
-    self.tag.name unless self.tag.nil?
+    tag.name unless tag.nil?
   end
 
   def category?
-    self.parent_id == 0
+    parent_id == 0
   end
 
   def category
-    self.parent.try(:name)
+    parent.try(:name)
   end
 
   def name
-    @name ||= tag2name(self.tag.name)
+    @name ||= tag2name(tag.name)
   end
 
-  def name=(name)
-    @name = name
-  end
+  attr_writer :name
 
-  def find_entry_by_name(name, region_id = self.my_region_number)
-    tag = Tag.in_region(region_id).find_by_name(Classification.name2tag(name, self.id, self.ns))
+  def find_entry_by_name(name, region_id = my_region_number)
+    tag = Tag.in_region(region_id).find_by_name(Classification.name2tag(name, id, ns))
     tag.nil? ? nil : self.class.find_by_tag_id(tag.id)
   end
 
-  def self.find_by_name(name, region_id = self.my_region_number, ns = DEFAULT_NAMESPACE)
+  def self.find_by_name(name, region_id = my_region_number, ns = DEFAULT_NAMESPACE)
     tag = Tag.find_by_classification_name(name, region_id, ns)
-    tag.nil? ? nil : self.find_by_tag_id(tag.id)
+    tag.nil? ? nil : find_by_tag_id(tag.id)
   end
 
   def tag2ns(tag)
@@ -326,7 +322,7 @@ class Classification < ActiveRecord::Base
 
   def enforce_policy(obj, event)
     return unless MiqEvent::SUPPORTED_POLICY_AND_ALERT_CLASSES.include?(obj.class.base_class)
-    return if self.parent.name == "power_state" # special case for old power state classifications - don't enforce policy since this is being changed by the system
+    return if parent.name == "power_state" # special case for old power state classifications - don't enforce policy since this is being changed by the system
 
     mode = event.to_s.split("_").first # request/after
     begin
@@ -344,26 +340,26 @@ class Classification < ActiveRecord::Base
   end
 
   def self.export_to_array
-    self.categories.inject([]) do |a,c|
+    categories.inject([]) do |a, c|
       a.concat c.export_to_array
     end
   end
 
   def self.export_to_yaml
-    a = self.export_to_array
+    a = export_to_array
     a.to_yaml
   end
 
   def export_to_array
-    h = self.attributes
-    h["name"] = self.name
+    h = attributes
+    h["name"] = name
     if category?
       ["id", "tag_id", "reserved"].each { |k| h.delete(k) }
-      h["entries"] = self.entries.collect(&:export_to_array).flatten
+      h["entries"] = entries.collect(&:export_to_array).flatten
     else
       ["id", "tag_id", "reserved", "parent_id"].each { |k| h.delete(k) }
     end
-    return [ h ]
+    [h]
   end
 
   def export_to_yaml
@@ -371,13 +367,13 @@ class Classification < ActiveRecord::Base
     a.to_yaml
   end
 
-  def self.import_from_hash(classification, parent=nil)
+  def self.import_from_hash(classification, parent = nil)
     raise "No Classification to Import" if classification.nil?
 
-    stats = { "categories" => 0, "entries" => 0 }
+    stats = {"categories" => 0, "entries" => 0}
 
     if classification["parent_id"] == 0 # category
-      cat = self.find_by_name(classification["name"])
+      cat = find_by_name(classification["name"])
       if cat
         _log.info("Skipping Classification (already in DB): Category: name=[#{classification["name"]}]")
         return stats
@@ -386,10 +382,10 @@ class Classification < ActiveRecord::Base
       _log.info("Importing Classification: Category: name=[#{classification["name"]}]")
 
       entries = classification.delete("entries")
-      cat = self.create(classification)
+      cat = create(classification)
       stats["categories"] += 1
       entries.each do |e|
-        stat, _e = self.import_from_hash(e, cat)
+        stat, _e = import_from_hash(e, cat)
         stats.each_key { |k| stats[k] += stat[k] }
       end
 
@@ -402,7 +398,7 @@ class Classification < ActiveRecord::Base
       end
 
       _log.info("Importing Classification: Category: name: [#{parent.name}], Entry: name=[#{classification["name"]}]")
-      entry = self.create(classification.merge("parent_id" => parent.id))
+      entry = create(classification.merge("parent_id" => parent.id))
       stats["entries"] += 1
 
       return stats, entry
@@ -410,7 +406,7 @@ class Classification < ActiveRecord::Base
   end
 
   def self.import_from_yaml(fd)
-    stats = { "categories" => 0, "entries" => 0 }
+    stats = {"categories" => 0, "entries" => 0}
 
     input = YAML.load(fd)
     input.each do |c|
@@ -418,7 +414,7 @@ class Classification < ActiveRecord::Base
       stats.each_key { |k| stats[k] += stat[k] }
     end
 
-    return stats
+    stats
   end
 
   def self.seed
@@ -449,13 +445,13 @@ class Classification < ActiveRecord::Base
     cond = ["tag_id = ?", tag.id]
     unless self.new_record?
       cond[0] << " and id <> ?"
-      cond << self.id
+      cond << id
     end
-    self.errors.add("name", "has already been taken") if Classification.exists?(cond)
+    errors.add("name", "has already been taken") if Classification.exists?(cond)
   end
 
   def validate_format_of_name
-    errors.add("name", "must be lowercase alphanumeric characters and underscores without spaces") unless (self.name =~ /[^a-z0-9_:]/).nil?
+    errors.add("name", "must be lowercase alphanumeric characters and underscores without spaces") unless (name =~ /[^a-z0-9_:]/).nil?
   end
 
   def self.name2tag(name, parent_id = 0, ns = DEFAULT_NAMESPACE)
@@ -475,7 +471,7 @@ class Classification < ActiveRecord::Base
   def self.tag2human(tag)
     c, e = tag.split("/")[2..-1]
 
-    cat = self.find_by_name(c)
+    cat = find_by_name(c)
     cname = cat.nil? ? c.titleize : cat.description
 
     ename = e.titleize
@@ -484,15 +480,15 @@ class Classification < ActiveRecord::Base
       ename = ent.description unless ent.nil?
     end
 
-    return "#{cname}: #{ename}"
+    "#{cname}: #{ename}"
   end
 
   def find_tag
-    Tag.in_my_region.find_by_name(Classification.name2tag(self.name, self.parent_id, self.ns))
+    Tag.in_my_region.find_by_name(Classification.name2tag(name, parent_id, ns))
   end
 
   def save_tag
-    name = Classification.name2tag(self.name, self.parent_id, self.ns)
+    name = Classification.name2tag(self.name, parent_id, ns)
     tag = Tag.in_my_region.find_by_name(name)
     tag ||= Tag.create(:name => name)
     self.tag_id = tag.id
@@ -503,7 +499,7 @@ class Classification < ActiveRecord::Base
   end
 
   def delete_tag_and_taggings
-    tag = Tag.in_my_region.find_by_name(Classification.name2tag(self.name, self.parent_id, self.ns))
+    tag = Tag.in_my_region.find_by_name(Classification.name2tag(name, parent_id, ns))
     return if tag.nil?
 
     tag.taggings.delete_all
@@ -514,5 +510,4 @@ class Classification < ActiveRecord::Base
     delete_all_entries    if category?
     delete_tag_and_taggings
   end
-
 end

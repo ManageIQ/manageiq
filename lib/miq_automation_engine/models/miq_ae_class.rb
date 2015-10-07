@@ -17,22 +17,22 @@ class MiqAeClass < ActiveRecord::Base
   include ReportableMixin
 
   def self.find_by_fqname(fqname, args = {})
-    ns, name = self.parse_fqname(fqname)
-    self.find_by_namespace_and_name(ns, name, args)
+    ns, name = parse_fqname(fqname)
+    find_by_namespace_and_name(ns, name, args)
   end
 
-  def self.find_by_namespace_and_name(ns, name, args = {})
+  def self.find_by_namespace_and_name(ns, name, _args = {})
     ns = MiqAeNamespace.find_by_fqname(ns)
     return nil if ns.nil?
     ns.ae_classes.detect { |c| name.casecmp(c.name) == 0 }
   end
 
   def self.find_by_namespace_id_and_name(ns_id, name)
-    self.where(:namespace_id => ns_id).where(["lower(name) = ?", name.downcase]).first
+    where(:namespace_id => ns_id).where(["lower(name) = ?", name.downcase]).first
   end
 
   def self.find_by_name(name)
-    self.where(["lower(name) = ?", name.downcase]).includes([:ae_methods, :ae_fields] ).first
+    where(["lower(name) = ?", name.downcase]).includes([:ae_methods, :ae_fields]).first
   end
 
   def self.fqname(ns, name)
@@ -53,9 +53,9 @@ class MiqAeClass < ActiveRecord::Base
   def to_export_xml(options = {})
     require 'builder'
     xml = options[:builder] ||= ::Builder::XmlMarkup.new(:indent => options[:indent])
-    xml_attrs = { :name => self.name, :namespace => self.namespace }
+    xml_attrs = {:name => name, :namespace => namespace}
 
-    self.class.column_names.each { |cname|
+    self.class.column_names.each do |cname|
       # Remove any columns that we do not want to export
       next if %w(id created_on updated_on updated_by).include?(cname) || cname.ends_with?("_id")
 
@@ -63,29 +63,27 @@ class MiqAeClass < ActiveRecord::Base
       next if %w(name namespace).include?(cname)
 
       # Process the column
-      xml_attrs[cname.to_sym]  = self.send(cname)   unless self.send(cname).blank?
-    }
+      xml_attrs[cname.to_sym]  = send(cname)   unless send(cname).blank?
+    end
 
-    xml.MiqAeClass(xml_attrs) {
+    xml.MiqAeClass(xml_attrs) do
       ae_methods.sort_by(&:fqname).each { |m| m.to_export_xml(:builder => xml) }
-      xml.MiqAeSchema {
+      xml.MiqAeSchema do
         ae_fields.sort_by(&:priority).each { |f| f.to_export_xml(:builder => xml) }
-      } unless ae_fields.empty?
+      end unless ae_fields.empty?
       ae_instances.sort_by(&:fqname).each { |i| i.to_export_xml(:builder => xml) }
-    }
+    end
   end
 
   def fqname
-    return self.class.fqname(self.namespace, self.name)
+    self.class.fqname(namespace, name)
   end
 
-  def domain
-    ae_namespace.domain
-  end
+  delegate :domain, :to => :ae_namespace
 
   def namespace
-    return nil if self.ae_namespace.nil?
-    return self.ae_namespace.fqname
+    return nil if ae_namespace.nil?
+    ae_namespace.fqname
   end
 
   def namespace=(ns)
@@ -124,9 +122,7 @@ class MiqAeClass < ActiveRecord::Base
     get_unique_instances_from_classes(get_sorted_homonym_class_across_domains(ns, klass))
   end
 
-  def editable?
-    ae_namespace.editable?
-  end
+  delegate :editable?, :to => :ae_namespace
 
   def field_names
     ae_fields.collect { |x| x.name.downcase }
@@ -143,13 +139,13 @@ class MiqAeClass < ActiveRecord::Base
       MiqAeClassCopy.new(options[:fqname]).as(options[:new_name],
                                               options[:namespace],
                                               options[:overwrite_location]
-      )
+                                             )
     else
       MiqAeClassCopy.copy_multiple(options[:ids],
                                    options[:domain],
                                    options[:namespace],
                                    options[:overwrite_location]
-      )
+                                  )
     end
   end
 
@@ -173,7 +169,7 @@ class MiqAeClass < ActiveRecord::Base
   private_class_method :sub_namespaces
 
   def scoped_methods(s)
-    self.ae_methods.select { |m| m.scope == s }
+    ae_methods.select { |m| m.scope == s }
   end
 
   def self.get_sorted_homonym_class_across_domains(ns = nil, klass)

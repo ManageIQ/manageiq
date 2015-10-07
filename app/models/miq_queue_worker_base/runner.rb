@@ -2,16 +2,16 @@ require 'miq-system'
 
 class MiqQueueWorkerBase::Runner < MiqWorker::Runner
   def after_sync_config
-    self.sync_cpu_usage_threshold
-    self.sync_dequeue_method
+    sync_cpu_usage_threshold
+    sync_dequeue_method
   end
 
   def sync_cpu_usage_threshold
-    @cpu_usage_threshold = self.worker_settings[:cpu_usage_threshold]
+    @cpu_usage_threshold = worker_settings[:cpu_usage_threshold]
   end
 
   def sync_dequeue_method
-    @dequeue_method = (self.worker_settings[:dequeue_method] || :sql).to_sym
+    @dequeue_method = (worker_settings[:dequeue_method] || :sql).to_sym
   end
 
   def dequeue_method_via_drb?
@@ -25,11 +25,11 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
     return false if usage.nil?
 
     if usage > @cpu_usage_threshold
-      _log.info("#{self.log_prefix} [#{Process.pid}] System CPU usage [#{usage}] exceeded threshold [#{@cpu_usage_threshold}], sleeping")
+      _log.info("#{log_prefix} [#{Process.pid}] System CPU usage [#{usage}] exceeded threshold [#{@cpu_usage_threshold}], sleeping")
       return true
     end
 
-    return false
+    false
   end
 
   def get_message_via_drb
@@ -95,11 +95,11 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
       return true unless MiqVimBrokerWorker.available?
     end
 
-    return false
+    false
   end
 
   def deliver_queue_message(msg)
-    self.reset_poll_escalate if self.poll_method == :sleep_poll_escalate
+    reset_poll_escalate if poll_method == :sleep_poll_escalate
 
     begin
       $_miq_worker_current_msg = msg
@@ -107,7 +107,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
 
       if status == MiqQueue::STATUS_TIMEOUT
         begin
-          _log.info("#{self.log_prefix} Reconnecting to DB after timeout error during queue deliver")
+          _log.info("#{log_prefix} Reconnecting to DB after timeout error during queue deliver")
           ActiveRecord::Base.connection.reconnect!
         rescue => err
           do_exit("Exiting worker due to timeout error that could not be recovered from...error: #{err.class.name}: #{err.message}", 1)
@@ -117,7 +117,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
       msg.delivered(status, message, result) unless status == MiqQueue::STATUS_RETRY
       do_exit("Exiting worker due to timeout error", 1) if status == MiqQueue::STATUS_TIMEOUT
     rescue MiqException::MiqVimBrokerUnavailable
-      _log.error("#{self.log_prefix} VimBrokerWorker is not available.  Requeueing message...")
+      _log.error("#{log_prefix} VimBrokerWorker is not available.  Requeueing message...")
       msg.unget
     ensure
       $_miq_worker_current_msg = nil # to avoid log messages inadvertantly prefixed by previous task_id
@@ -134,7 +134,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
     return deliver_queue_message(msg) if msg.kind_of?(MiqQueue)
     return process_message(msg)       if msg.kind_of?(String)
 
-    emsg = "#{self.log_prefix} Message <#{msg.inspect}> is of unknown type <#{msg.class}>"
+    emsg = "#{log_prefix} Message <#{msg.inspect}> is of unknown type <#{msg.class}>"
     _log.error(emsg)
     raise emsg
   end

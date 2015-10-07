@@ -14,8 +14,9 @@ class MiqNtp
         add_ntpdate_to_cron(interval)
       end
     end
-    
+
     private
+
     def use_ntpd?
       false
     end
@@ -31,9 +32,9 @@ class MiqNtp
     def add_ntpdate_to_cron(interval)
       `#{SCRIPT} #{interval}`
     end
-  
+
     def update_ntp_conf(server)
-      server = [server] unless server.is_a?(Array)
+      server = [server] unless server.kind_of?(Array)
 
       # Read the current config
       if File.exist?(NTP_CONF)
@@ -46,12 +47,10 @@ class MiqNtp
       end
 
       # Add lines for each server provided by the user
-      server.each {|s| data << "\nserver #{s}" }
+      server.each { |s| data << "\nserver #{s}" }
 
       # Write the changes back
-      File.open(NTP_CONF, "w") {|f| f.write(data)}
+      File.open(NTP_CONF, "w") { |f| f.write(data) }
     end
   end
 end
-
-

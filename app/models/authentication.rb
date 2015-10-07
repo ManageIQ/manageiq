@@ -20,7 +20,7 @@ class Authentication < ActiveRecord::Base
   # TODO: DELETE ME!!!!
   ERRORS = {
     :incomplete => "Incomplete credentials",
-    :invalid => "Invalid credentials",
+    :invalid    => "Invalid credentials",
   }
 
   STATUS_SEVERITY = Hash.new(-1).merge(
@@ -38,7 +38,7 @@ class Authentication < ActiveRecord::Base
   end
 
   def authentication_type
-    self.authtype.nil? ? :default : self.authtype.to_sym
+    authtype.nil? ? :default : authtype.to_sym
   end
 
   def available?
@@ -52,20 +52,20 @@ class Authentication < ActiveRecord::Base
   #   error (for unpredictable errors)
   def validation_successful
     new_status = :valid
-    _log.info("[#{self.resource_type}] [#{self.resource_id}], previously valid/invalid on: [#{self.last_valid_on}]/[#{self.last_invalid_on}], previous status: [#{self.status}]") if self.status != new_status.to_s
-    self.update_attributes(:status => new_status.to_s.capitalize, :status_details => 'Ok', :last_valid_on => Time.now.utc)
-    self.raise_event(new_status)
+    _log.info("[#{resource_type}] [#{resource_id}], previously valid/invalid on: [#{last_valid_on}]/[#{last_invalid_on}], previous status: [#{status}]") if status != new_status.to_s
+    update_attributes(:status => new_status.to_s.capitalize, :status_details => 'Ok', :last_valid_on => Time.now.utc)
+    raise_event(new_status)
   end
 
-  def validation_failed(status=:unreachable, message = nil )
+  def validation_failed(status = :unreachable, message = nil)
     message ||= ERRORS[status]
-    _log.warn("[#{self.resource_type}] [#{self.resource_id}], previously valid on: #{self.last_valid_on}, previous status: [#{self.status}]")
-    self.update_attributes(:status => status.to_s.capitalize, :status_details => message.to_s, :last_invalid_on => Time.now.utc)
-    self.raise_event(status, message)
+    _log.warn("[#{resource_type}] [#{resource_id}], previously valid on: #{last_valid_on}, previous status: [#{self.status}]")
+    update_attributes(:status => status.to_s.capitalize, :status_details => message.to_s, :last_invalid_on => Time.now.utc)
+    raise_event(status, message)
   end
 
-  def raise_event(status, message = nil)
-    ci = self.resource
+  def raise_event(status, _message = nil)
+    ci = resource
     return unless ci
 
     prefix = event_prefix
@@ -83,17 +83,17 @@ class Authentication < ActiveRecord::Base
 
   def after_authentication_changed
     return unless @auth_changed
-    _log.info("[#{self.resource_type}] [#{self.resource_id}], previously valid on: [#{self.last_valid_on}]")
+    _log.info("[#{resource_type}] [#{resource_id}], previously valid on: [#{last_valid_on}]")
 
-    self.raise_event(:changed)
+    raise_event(:changed)
 
     # Async validate the credentials
-    self.resource.authentication_check_types_queue(self.authentication_type) if self.resource
+    resource.authentication_check_types_queue(authentication_type) if resource
     @auth_changed = false
   end
 
   def event_prefix
-    return  case self.resource_type
+    case resource_type
     when "Host"                then "host"
     when "ExtManagementSystem" then "ems"
     end

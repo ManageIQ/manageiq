@@ -1,7 +1,7 @@
 class TreeBuilderServices < TreeBuilder
   private
 
-  def tree_init_options(tree_name)
+  def tree_init_options(_tree_name)
     {
       :leaf     => "Service",
       :full_ids => true

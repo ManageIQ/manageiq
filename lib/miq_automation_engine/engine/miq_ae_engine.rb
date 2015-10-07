@@ -12,7 +12,7 @@ require 'engine/miq_ae_path'
 require 'engine/miq_ae_domain_search'
 
 module MiqAeEngine
-  DEFAULT_ATTRIBUTES = %w{ User::user MiqServer::miq_server object_name }
+  DEFAULT_ATTRIBUTES = %w( User::user MiqServer::miq_server object_name )
   AE_ROOT_DIR            = File.expand_path(File.join(Rails.root,    'product/automate'))
   AE_IMPORT_DIR          = File.expand_path(File.join(AE_ROOT_DIR,   'import'))
   AE_DEFAULT_IMPORT_FILE = File.expand_path(File.join(AE_IMPORT_DIR, 'automate.xml'))
@@ -73,8 +73,8 @@ module MiqAeEngine
     end
 
     options[:instance_name] ||= 'AUTOMATION'
-    options[:attrs]         ||= {}
-    options[:tenant_id]     ||= Tenant.root_tenant.try(:id)
+    options[:attrs] ||= {}
+    options[:tenant_id] ||= Tenant.root_tenant.try(:id)
 
     object_type      = options[:object_type]
     object_id        = options[:object_id]
@@ -114,8 +114,8 @@ module MiqAeEngine
       create_automation_object_options[:namespace]   = options[:namespace]        unless options[:namespace].nil?
       create_automation_object_options[:fqclass]     = options[:fqclass_name]     unless options[:fqclass_name].nil?
       create_automation_object_options[:message]     = options[:automate_message] unless options[:automate_message].nil?
-      uri = self.create_automation_object(options[:instance_name], automate_attrs, create_automation_object_options)
-      ws  = self.resolve_automation_object(uri)
+      uri = create_automation_object(options[:instance_name], automate_attrs, create_automation_object_options)
+      ws  = resolve_automation_object(uri)
 
       if ws.nil? || ws.root.nil?
         message = "Error delivering #{options[:attrs].inspect} for object [#{object_name}] with state [#{state}] to Automate: Empty Workspace"
@@ -139,7 +139,7 @@ module MiqAeEngine
 
           message = "Requeuing #{options.inspect} for object [#{object_name}] with state [#{options[:state]}] to Automate for delivery in [#{ae_retry_interval}] seconds"
           _log.info("#{message}")
-          self.deliver_queue(options, :deliver_on => deliver_on)
+          deliver_queue(options, :deliver_on => deliver_on)
         else
           if ae_result.casecmp('error').zero?
             message = "Error delivering #{options[:attrs].inspect} for object [#{object_name}] with state [#{state}] to Automate: #{ws.root['ae_message']}"
@@ -242,9 +242,9 @@ module MiqAeEngine
   def self.create_automation_attribute(key, value)
     case value
     when Array, ActiveRecord::Relation
-      [self.create_automation_attribute_array_key(key), self.create_automation_attribute_array_value(value)]
+      [create_automation_attribute_array_key(key), create_automation_attribute_array_value(value)]
     when ActiveRecord::Base
-      [self.create_automation_attribute_key(value, key), self.create_automation_attribute_value(value)]
+      [create_automation_attribute_key(value, key), create_automation_attribute_value(value)]
     else
       [key, value.to_s]
     end
@@ -272,10 +272,10 @@ module MiqAeEngine
   def self.create_automation_object(name, attrs, options = {})
     # args
     if options[:fqclass]
-      options[:namespace], options[:class], _ = MiqAePath.split(options[:fqclass], :has_instance_name => false)
+      options[:namespace], options[:class], = MiqAePath.split(options[:fqclass], :has_instance_name => false)
     else
       options[:namespace] ||= "System"
-      options[:class]     ||= "Process"
+      options[:class] ||= "Process"
     end
     options[:instance_name] = name
 
@@ -297,16 +297,16 @@ module MiqAeEngine
     # Prepare for conversion to Automate MiqAeService objects (process vmdb_object first in case it is a User or MiqServer)
     ([vmdb_object] + objects).each do |object|
       next if object.nil?
-      key           = self.create_automation_attribute_key(object)
+      key           = create_automation_attribute_key(object)
       partial_key   = ae_attrs.keys.detect { |k| k.to_s.ends_with?(key.split("::").last.downcase) }
       next if partial_key # do NOT override any specified
-      ae_attrs[key] = self.create_automation_attribute_value(object)
+      ae_attrs[key] = create_automation_attribute_value(object)
     end
 
     ae_attrs["MiqRequest::miq_request"] = vmdb_object.id if vmdb_object.kind_of?(MiqRequest)
-    ae_attrs['vmdb_object_type']= create_automation_attribute_name(vmdb_object) unless vmdb_object.nil?
+    ae_attrs['vmdb_object_type'] = create_automation_attribute_name(vmdb_object) unless vmdb_object.nil?
 
-    array_objects = ae_attrs.keys.find_all {|key| automation_attribute_is_array?(key)}
+    array_objects = ae_attrs.keys.find_all { |key| automation_attribute_is_array?(key) }
     array_objects.each do |o|
       ae_attrs[o] = ae_attrs[o].first   if ae_attrs[o].kind_of?(Array)
     end

@@ -6,9 +6,6 @@ module ReportController::SavedReports
     fetch_saved_report(@sb[:last_saved_id])
     if @report.blank? # if report was nil. reset active tree back to report tree, and keep active node report to be same
       self.x_active_tree = :reports_tree
-    else              # else update active node
-      # if coming from email link, active_node doesnt exist or after saving a report and changing accordion saved node doesnt exist
-      #x_node_set(x_node(:savedreports_tree), :reports_tree) if x_tree(:savedreports_tree) && x_node(:savedreports_tree)
     end
   end
 
@@ -23,7 +20,7 @@ module ReportController::SavedReports
       @report = nil
       return
     end
-    @right_cell_text ||= _("%{model} \"%{name}\"") % {:name=>"#{rr.name} - #{format_timezone(rr.created_on,Time.zone,"gt")}", :model=>"Saved Report"}
+    @right_cell_text ||= _("%{model} \"%{name}\"") % {:name => "#{rr.name} - #{format_timezone(rr.created_on, Time.zone, "gt")}", :model => "Saved Report"}
     if admin_user? || rr.miq_group_id == session[:group]
       @report_result_id = session[:report_result_id] = rr.id
       session[:report_result_runtime] = rr.last_run_on
@@ -32,15 +29,15 @@ module ReportController::SavedReports
         @report = rr.report_results
         session[:rpt_task_id] = nil
         if @report.blank?
-          add_flash(_("Saved Report \"%s\" not found, Schedule may have failed") % format_timezone(rr.created_on,Time.zone,"gtl"),
+          add_flash(_("Saved Report \"%s\" not found, Schedule may have failed") % format_timezone(rr.created_on, Time.zone, "gtl"),
                     :error)
           get_all_reps(rr.miq_report_id.to_s)
           if x_active_tree == :savedreports_tree
             self.x_node = "xx-#{to_cid(rr.miq_report_id)}"
           else
-            @sb[:rpt_menu].each_with_index do |lvl1,i|
+            @sb[:rpt_menu].each_with_index do |lvl1, i|
               if lvl1[0] == @sb[:grp_title]
-                lvl1[1].each_with_index do |lvl2,k|
+                lvl1[1].each_with_index do |lvl2, k|
                   if lvl2[0].downcase == "custom"
                     x_node_set("xx-#{i}_xx-#{i}-#{k}_rep-#{to_cid(rr.miq_report_id)}", :reports_tree)
                   end
@@ -57,8 +54,8 @@ module ReportController::SavedReports
               @html   = nil
               if ["tabular", "hybrid"].include?(params[:type])
                 @html = report_build_html_table(@report,
-                                                rr.html_rows(:page=>@sb[:pages][:current],
-                                                             :per_page=>@sb[:pages][:perpage]).join)
+                                                rr.html_rows(:page     => @sb[:pages][:current],
+                                                             :per_page => @sb[:pages][:perpage]).join)
               end
               if ["graph", "hybrid"].include?(params[:type])
                 @zgraph = true      # Show the zgraph in the report
@@ -72,13 +69,13 @@ module ReportController::SavedReports
                 @ght_type = "tabular"
               end
             end
-            @report.extras           ||= Hash.new     # Create extras hash
+            @report.extras ||= {}     # Create extras hash
             @report.extras[:to_html] ||= @html        # Save the html report
           else
             add_flash(_("No records found for this report"), :warning)
           end
         end
-      else      #report is queued/running/error
+      else      # report is queued/running/error
         @report_result = rr
       end
     else
@@ -100,20 +97,20 @@ module ReportController::SavedReports
       @report = nil
       r = MiqReportResult.find(savedreports[0])
       @sb[:miq_report_id] = r.miq_report_id
-      process_saved_reports(savedreports, "destroy")  if ! savedreports.empty?
+      process_saved_reports(savedreports, "destroy")  unless savedreports.empty?
       add_flash(_("The selected %s was deleted") % "Saved Report") if @flash_array.nil?
     end
     self.x_node = "xx-#{to_cid(@sb[:miq_report_id])}" if x_active_tree == :savedreports_tree &&
-        x_node.split('-').first == "rr"
-    replace_right_cell(:replace_trees => [:reports,:savedreports])
+                                                         x_node.split('-').first == "rr"
+    replace_right_cell(:replace_trees => [:reports, :savedreports])
   end
 
-  #get all saved reports for list view
+  # get all saved reports for list view
   def get_all_saved_reports
     @force_no_grid_xml   = true
     @gtl_type            = "list"
     @ajax_paging_buttons = true
-#   @embedded = true
+    #   @embedded = true
     if params[:ppsetting]                                             # User selected new per page value
       @items_per_page = params[:ppsetting].to_i                       # Set the new per page value
       @settings[:perpage][@gtl_type.to_sym] = @items_per_page         # Set the per page setting for this gtl type
@@ -121,10 +118,10 @@ module ReportController::SavedReports
 
     @sortcol = session["#{x_active_tree}_sortcol".to_sym].nil? ? 0 : session["#{x_active_tree}_sortcol".to_sym].to_i
     @sortdir = session["#{x_active_tree}_sortdir".to_sym].nil? ? "DESC" : session["#{x_active_tree}_sortdir".to_sym]
-    #show all saved reports
-    @view, @pages = get_view(MiqReportResult, :association=>"all", :where_clause=>set_saved_reports_condition)
+    # show all saved reports
+    @view, @pages = get_view(MiqReportResult, :association => "all", :where_clause => set_saved_reports_condition)
 
-    #build_savedreports_tree
+    # build_savedreports_tree
     @sb[:saved_reports] = nil
     @right_cell_div     = "savedreports_list"
     @right_cell_text    = _("All %s") % "Saved Reports"
@@ -136,8 +133,8 @@ module ReportController::SavedReports
 
   private
 
-  #Build the main Saved Reports tree
-  def build_savedreports_tree(type=:savedreports, name=:savedreports_tree)
+  # Build the main Saved Reports tree
+  def build_savedreports_tree(type = :savedreports, name = :savedreports_tree)
     x_tree_init(name, type, 'All Saved Reports')
     tree_nodes = x_build_dynatree(x_tree(name))
 
@@ -155,14 +152,14 @@ module ReportController::SavedReports
     x_get_child_nodes_dynatree(x_active_tree, id)
   end
 
-  def set_saved_reports_condition(rep_id=nil)
-    cond = Array.new
+  def set_saved_reports_condition(rep_id = nil)
+    cond = []
 
     # Replaced this code as all saved, requested, scheduled reports have miq_report_id set, others don't
-    #cond[0] = "(report_source=? OR report_source=? OR report_source=?)"
-    #cond.push("Saved by user")
-    #cond.push("Requested by user")
-    #cond.push("Scheduled")
+    # cond[0] = "(report_source=? OR report_source=? OR report_source=?)"
+    # cond.push("Saved by user")
+    # cond.push("Requested by user")
+    # cond.push("Scheduled")
 
     if rep_id.nil?
       cond[0] = "miq_report_id IS NOT NULL"
@@ -177,7 +174,6 @@ module ReportController::SavedReports
       cond.push(session[:group])
     end
 
-    return cond.flatten
+    cond.flatten
   end
-
 end

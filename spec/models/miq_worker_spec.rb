@@ -2,7 +2,6 @@ require "spec_helper"
 
 describe MiqWorker do
   context "::Runner" do
-
     def all_workers
       MiqWorker.descendants.select { |c| c.subclasses.empty? }
     end
@@ -50,7 +49,7 @@ describe MiqWorker do
       end
 
       it "invokes a message callback" do
-        @message.update_attribute(:miq_callback, {:class_name => 'Kernel', :method_name => 'rand'})
+        @message.update_attribute(:miq_callback, :class_name => 'Kernel', :method_name => 'rand')
         Kernel.should_receive(:rand)
         @worker.clean_active_messages
       end
@@ -93,7 +92,7 @@ describe MiqWorker do
   context ".workers_configured_count" do
     before(:each) do
       @configured_count = 2
-      described_class.stub(:worker_settings).and_return({:count => @configured_count})
+      described_class.stub(:worker_settings).and_return(:count => @configured_count)
       @maximum_workers_count = described_class.maximum_workers_count
     end
 
@@ -154,9 +153,9 @@ describe MiqWorker do
         @config1 = {
           :workers => {
             :worker_base => {
-              :defaults => {:count => 1},
+              :defaults          => {:count => 1},
               :queue_worker_base => {
-                :defaults => {:count => 3},
+                :defaults           => {:count => 3},
                 :ems_refresh_worker => {:count => 5}
               }
             }
@@ -166,9 +165,9 @@ describe MiqWorker do
         @config2 = {
           :workers => {
             :worker_base => {
-              :defaults => {:count => 2},
+              :defaults          => {:count => 2},
               :queue_worker_base => {
-                :defaults => {:count => 4},
+                :defaults           => {:count => 4},
                 :ems_refresh_worker => {:count => 6}
               }
             }
@@ -180,18 +179,18 @@ describe MiqWorker do
 
       context "#worker_settings" do
         it "uses the worker's server" do
-          @worker.worker_settings[:count].should  == 5
+          @worker.worker_settings[:count].should == 5
           @worker2.worker_settings[:count].should == 6
         end
 
         it "uses passed in config" do
-          @worker.worker_settings(:config => @config2)[:count].should   == 6
-          @worker2.worker_settings(:config => @config1)[:count].should  == 5
+          @worker.worker_settings(:config => @config2)[:count].should == 6
+          @worker2.worker_settings(:config => @config1)[:count].should == 5
         end
 
         it "uses closest parent's defaults" do
           @config1[:workers][:worker_base][:queue_worker_base][:ems_refresh_worker].delete(:count)
-          @worker.worker_settings[:count].should  == 3
+          @worker.worker_settings[:count].should == 3
         end
       end
 

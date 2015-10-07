@@ -4,7 +4,7 @@ module VmShowMixin
   def explorer
     @explorer = true
     @lastaction = "explorer"
-    @timeline = @timeline_filter = true    #need to set these to load timelines on vm show screen
+    @timeline = @timeline_filter = true    # need to set these to load timelines on vm show screen
     if params[:menu_click]              # Came in from a chart context menu click
       @_params[:id] = x_node.split("_").last.split("-").last
       @explorer = true
@@ -60,19 +60,19 @@ module VmShowMixin
   # VM or Template show selected, redirect to proper controller, to get links on tasks screen working
   def vm_show
     record = VmOrTemplate.find_by_id(from_cid(params[:id]))
-    redirect_to :action => 'show', :controller=>record.class.base_model.to_s.underscore, :id=>record.id
+    redirect_to :action => 'show', :controller => record.class.base_model.to_s.underscore, :id => record.id
   end
 
   # find the vm that was chosen
   def identify_vm
-    return @record = identify_record(params[:id])
+    @record = identify_record(params[:id])
   end
 
   private
 
   def set_active_elements(feature)
     if feature
-      self.x_active_tree   ||= feature.tree_list_name
+      self.x_active_tree ||= feature.tree_list_name
       self.x_active_accord ||= feature.accord_name
     end
     get_node_info(x_node)
@@ -101,9 +101,9 @@ module VmShowMixin
     @showtype   = "config"
     @vm = @record = identify_record(id, VmOrTemplate) unless @record
 
-    if @record == nil
+    if @record.nil?
       add_flash(_("Error: Record no longer exists in the database"), :error)
-      if request.xml_http_request?  && params[:id]  # Is this an Ajax request clicking on a node that no longer exists?
+      if request.xml_http_request? && params[:id]  # Is this an Ajax request clicking on a node that no longer exists?
         @delete_node = params[:id]                  # Set node to be removed from the tree
       end
       return
@@ -115,7 +115,7 @@ module VmShowMixin
 
       get_tagdata(@record)
       @showtype = "main"
-      set_summary_pdf_data if ["download_pdf","summary_only"].include?(@display)
+      set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
 
     when "performance"
       @showtype = "performance"

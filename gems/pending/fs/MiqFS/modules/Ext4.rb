@@ -7,7 +7,6 @@ require 'fs/ext4/directory'
 
 # Ext4 file system interface to MiqFS.
 module Ext4
-
   # Default directory cache size.
   DEF_CACHE_SIZE = 50
 
@@ -16,7 +15,6 @@ module Ext4
 
   # Top level file object.
   class FileObject
-
     include Ext4
     attr_reader :path, :de, :inode, :miqfs
     # NOTE: miqfs will always be an MiqFS instance.
@@ -40,18 +38,17 @@ module Ext4
     end
   end
 
-
   # File system interface.
   def fs_init
-    #puts "Ext4::fs_init(#{@dobj.dInfo.fileName})"
+    # puts "Ext4::fs_init(#{@dobj.dInfo.fileName})"
     self.fsType = "Ext4"
 
     # Initialize bs & read root dir.
     @dobj.seek(0, IO::SEEK_SET)
     self.superblock  = Superblock.new(@dobj)
-    @fsId            = self.superblock.fsId.to_s
-    @volName         = self.superblock.volName
-    self.rootDir     = Directory.new(self.superblock)
+    @fsId            = superblock.fsId.to_s
+    @volName         = superblock.volName
+    self.rootDir     = Directory.new(superblock)
     self.entry_cache = LruHash.new(DEF_CACHE_SIZE)
     self.dir_cache   = LruHash.new(DEF_CACHE_SIZE)
     self.cache_hits  = 0
@@ -59,7 +56,7 @@ module Ext4
 
   # Returns free space on file system in bytes.
   def fs_freeBytes
-    return @superblock.freeBytes
+    @superblock.freeBytes
   end
 
   #
@@ -71,16 +68,16 @@ module Ext4
     # Get path directory.
     dir = ifs_getDir(p)
     return nil if dir.nil?
-    return dir.globNames
+    dir.globNames
   end
 
   # Make a directory. Parent must exist.
-  def fs_dirMkdir(p)
+  def fs_dirMkdir(_p)
     raise "Write functionality is not yet supported on Ext4."
   end
 
   # Remove a directory.
-  def fs_dirRmdir(p)
+  def fs_dirRmdir(_p)
     raise "Write functionality is not yet supported on Ext4."
   end
 
@@ -92,32 +89,32 @@ module Ext4
   def fs_fileExists?(p)
     de = ifs_getFile(p)
     return false if de.nil?
-    return true
+    true
   end
 
   # Returns true if name is a regular file.
   def fs_fileFile?(p)
     de = ifs_getFile(p)
     return false if de.nil?
-    return de.fileType == DirectoryEntry::FT_FILE
+    de.fileType == DirectoryEntry::FT_FILE
   end
 
   # Returns true if name is a directory.
   def fs_fileDirectory?(p)
     de = ifs_getFile(p)
     return false if de.nil?
-    return de.fileType == DirectoryEntry::FT_DIRECTORY
+    de.fileType == DirectoryEntry::FT_DIRECTORY
   end
 
   # Returns size in bytes.
   def fs_fileSize(p)
     de = ifs_getFile(p)
     return nil if de.nil?
-    return @superblock.getInode(de.inode).length
+    @superblock.getInode(de.inode).length
   end
 
   # Delete file.
-  def fs_fileDelete(p)
+  def fs_fileDelete(_p)
     raise "Write functionality is not yet supported on Ext4."
   end
 
@@ -125,28 +122,28 @@ module Ext4
   def fs_fileAtime(p)
     de = ifs_getFile(p)
     return nil if de.nil?
-    return @superblock.getInode(de.inode).aTime
+    @superblock.getInode(de.inode).aTime
   end
 
   # Returns Ruby Time object.
   def fs_fileCtime(p)
     de = ifs_getFile(p)
     return nil if de.nil?
-    return @superblock.getInode(de.inode).cTime
+    @superblock.getInode(de.inode).cTime
   end
 
   # Returns Ruby Time object.
   def fs_fileMtime(p)
     de = ifs_getFile(p)
     return nil if de.nil?
-    return @superblock.getInode(de.inode).mTime
+    @superblock.getInode(de.inode).mTime
   end
 
   # Return true if p is a path to a symbolic link.
   def fs_isSymLink?(p)
     de = ifs_getFile(p)
     return false if de.nil?
-    return de.isSymLink?
+    de.isSymLink?
   end
   # In these, fobj is a FileObject.
 
@@ -173,10 +170,10 @@ module Ext4
   # NOTE: FileObject must have access to Ext4 members.
   # This is kind of like a 'skip this' thing. Ext4 methods
   # use stuff owned by MiqFS, so this is necessary.
-  def fs_fileOpen(p, mode="r")
+  def fs_fileOpen(p, mode = "r")
     fobj = FileObject.new(p, self)
     fobj.open(mode)
-    return fobj
+    fobj
   end
 
   # Returns current file position.
@@ -189,15 +186,15 @@ module Ext4
     fobj.inode.read(len)
   end
 
-  def fs_fileWrite(fobj, buf, len)
+  def fs_fileWrite(_fobj, _buf, _len)
     raise "Write functionality is not yet supported on Ext4."
-    #fobj.inode.write(buf, len)
+    # fobj.inode.write(buf, len)
   end
 
   # Write changes & destroy.
   def fs_fileClose(fobj)
     # TODO: unrem when write is supported.
-    #fobj.inode.close
+    # fobj.inode.close
     fobj.inode.rewind
     fobj = nil
   end
@@ -214,11 +211,11 @@ module Ext4
     p = unnormalizePath(p)
     dir, fname = File.split(p)
     # Fix for FB#835: if fil == root then fil needs to be "."
-    fname = "." if fname == "/" or fname == "\\"
+    fname = "." if fname == "/" || fname == "\\"
 
     # Check for this file in the cache.
     cache_name = "#{dir == '/' ? '' : dir}/#{fname}"
-    if miqfs.entry_cache.has_key?(cache_name)
+    if miqfs.entry_cache.key?(cache_name)
       miqfs.cache_hits += 1
       return miqfs.entry_cache[cache_name]
     end
@@ -232,7 +229,7 @@ module Ext4
       dirEnt = nil
     end
 
-    return miqfs.entry_cache[cache_name] = dirEnt
+    miqfs.entry_cache[cache_name] = dirEnt
   end
 
   # Create a directory entry.
@@ -249,7 +246,7 @@ module Ext4
     # Parent directory must exist.
     dirObj = ifs_getDir(dir, miqfs)
     return nil if dir.nil?
-    return dirObj.createFile(fil)
+    dirObj.createFile(fil)
   end
 
   # Return a Directory object for a path.
@@ -268,7 +265,7 @@ module Ext4
 
     dir = ifs_getDirR(names, miqfs)
     raise "Directory '#{p}' not found" if dir.nil?
-    return dir
+    dir
   end
 
   # Return Directory recursively for given directory or nil if not exist.
@@ -277,7 +274,7 @@ module Ext4
 
     # Check for this path in the cache.
     fname = names.join('/')
-    if miqfs.dir_cache.has_key?(fname)
+    if miqfs.dir_cache.key?(fname)
       miqfs.cache_hits += 1
       return miqfs.dir_cache[fname]
     end
@@ -293,12 +290,11 @@ module Ext4
     dir = Directory.new(miqfs.superblock, de.inode)
     return nil if dir.nil?
 
-    return miqfs.dir_cache[fname] = dir
+    miqfs.dir_cache[fname] = dir
   end
 
   # Wack leading drive letter & colon.
   def unnormalizePath(p)
-    return p[1] == 58 ? p[2, p.size] : p
+    p[1] == 58 ? p[2, p.size] : p
   end
-
 end

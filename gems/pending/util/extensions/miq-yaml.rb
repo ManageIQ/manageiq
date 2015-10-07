@@ -8,8 +8,8 @@ module Psych
     class ToRuby
       SHOVEL      = '<<'
       IVAR_MARKER = '__iv__'
-      def revive_hash hash, o
-          o.children.each_slice(2) { |k,v|
+      def revive_hash(hash, o)
+        o.children.each_slice(2) do |k, v|
           key = accept(k)
 
           if key == SHOVEL
@@ -32,11 +32,9 @@ module Psych
           else
             hash[key] = accept(v)
           end
-
-        }
+        end
         hash
       end
     end
   end
 end
-

@@ -2,7 +2,6 @@ require "spec_helper"
 require_migration
 
 describe ChangeOptionsInMiqAlert do
-
   migration_context :up do
     let(:miq_alert_stub) { migration_stub(:MiqAlert) }
 
@@ -26,6 +25,4 @@ describe ChangeOptionsInMiqAlert do
       alert.options.should == options
     end
   end
-
 end
-

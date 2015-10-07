@@ -34,8 +34,8 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::Refresher do
   let(:environments)          { provisioning_manager.configuration_environments }
   let(:realms)                { provisioning_manager.configuration_realms }
 
-  let(:my_env)                { environments.select  { |a| a.name = 'production' }.last }
-  let(:my_arch)               { architectures.select { |a| a.name = 'x86_64' }.last }
+  let(:my_env)                { environments.reverse.find  { |a| a.name = 'production' } }
+  let(:my_arch)               { architectures.reverse.find { |a| a.name = 'x86_64' } }
 
   it "will perform a full refresh on api v2" do
     # Stub the queueing of the refresh so that when the manager

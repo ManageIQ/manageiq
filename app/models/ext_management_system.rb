@@ -110,7 +110,7 @@ class ExtManagementSystem < ActiveRecord::Base
   virtual_column :total_vms_never,         :type => :integer
   virtual_column :total_vms_suspended,     :type => :integer
 
-  alias clusters ems_clusters # Used by web-services to return clusters as the property name
+  alias_method :clusters, :ems_clusters # Used by web-services to return clusters as the property name
 
   EMS_DISCOVERY_TYPES = {
     'vmware'    => 'virtualcenter',
@@ -124,12 +124,12 @@ class ExtManagementSystem < ActiveRecord::Base
       hostname = Socket.getaddrinfo(ost.ipaddr, nil)[0][2]
 
       ems_klass, ems_name = if ost.hypervisor.include?(:scvmm)
-        [ManageIQ::Providers::Microsoft::InfraManager, 'SCVMM']
-      elsif ost.hypervisor.include?(:rhevm)
-        [ManageIQ::Providers::Redhat::InfraManager, 'RHEV-M']
-      else
-        [ManageIQ::Providers::Vmware::InfraManager, 'Virtual Center']
-      end
+                              [ManageIQ::Providers::Microsoft::InfraManager, 'SCVMM']
+                            elsif ost.hypervisor.include?(:rhevm)
+                              [ManageIQ::Providers::Redhat::InfraManager, 'RHEV-M']
+                            else
+                              [ManageIQ::Providers::Vmware::InfraManager, 'Virtual Center']
+                            end
 
       ems = ems_klass.create(
         :ipaddress => ost.ipaddr,
@@ -219,7 +219,7 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def to_s
-    self.name
+    name
   end
 
   def hostname_required?
@@ -234,21 +234,21 @@ class ExtManagementSystem < ActiveRecord::Base
     zone = self.zone
     zone.nil? || zone.name.blank? ? MiqServer.my_zone : zone.name
   end
-  alias zone_name my_zone
+  alias_method :zone_name, :my_zone
 
   def emstype_description
-    self.class.description || self.emstype.titleize
+    self.class.description || emstype.titleize
   end
 
   def with_provider_connection(options = {})
     raise "no block given" unless block_given?
-    _log.info("Connecting through #{self.class.name}: [#{self.name}]")
+    _log.info("Connecting through #{self.class.name}: [#{name}]")
     yield connect(options)
   end
 
   def self.refresh_all_ems_timer
-    ems_ids = self.where(:zone_id => MiqServer.my_server.zone.id).pluck(:id)
-    self.refresh_ems(ems_ids, true) unless ems_ids.empty?
+    ems_ids = where(:zone_id => MiqServer.my_server.zone.id).pluck(:id)
+    refresh_ems(ems_ids, true) unless ems_ids.empty?
   end
 
   def self.refresh_ems(ems_ids, reload = false)
@@ -279,46 +279,46 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def disconnect_inv
-    self.hosts.each { |h| h.disconnect_ems(self) }
-    self.vms.each   { |v| v.disconnect_ems(self) }
+    hosts.each { |h| h.disconnect_ems(self) }
+    vms.each   { |v| v.disconnect_ems(self) }
 
-    self.ems_folders.destroy_all
-    self.ems_clusters.destroy_all
-    self.resource_pools.destroy_all
+    ems_folders.destroy_all
+    ems_clusters.destroy_all
+    resource_pools.destroy_all
   end
 
   def enforce_policy(target, event)
-    inputs = { :ext_management_system => self }
+    inputs = {:ext_management_system => self}
     inputs[:vm]   = target if target.kind_of?(Vm)
     inputs[:host] = target if target.kind_of?(Host)
     MiqEvent.raise_evm_event(target, event, inputs)
   end
 
   def non_clustered_hosts
-    self.hosts.select { |h| h.ems_cluster.nil? }
+    hosts.select { |h| h.ems_cluster.nil? }
   end
 
   def clustered_hosts
-    self.hosts.select { |h| !h.ems_cluster.nil? }
+    hosts.select { |h| !h.ems_cluster.nil? }
   end
 
   def clear_association_cache_with_storages
     @storages = nil
-    self.clear_association_cache_without_storages
+    clear_association_cache_without_storages
   end
   alias_method_chain :clear_association_cache, :storages
 
-  alias storages               all_storages
-  alias datastores             all_storages  # Used by web-services to return datastores as the property name
+  alias_method :storages,               :all_storages
+  alias_method :datastores,             :all_storages  # Used by web-services to return datastores as the property name
 
-  alias all_hosts              hosts
-  alias all_host_ids           host_ids
-  alias all_vms_and_templates  vms_and_templates
-  alias all_vm_or_template_ids vm_or_template_ids
-  alias all_vms                vms
-  alias all_vm_ids             vm_ids
-  alias all_miq_templates      miq_templates
-  alias all_miq_template_ids   miq_template_ids
+  alias_method :all_hosts,              :hosts
+  alias_method :all_host_ids,           :host_ids
+  alias_method :all_vms_and_templates,  :vms_and_templates
+  alias_method :all_vm_or_template_ids, :vm_or_template_ids
+  alias_method :all_vms,                :vms
+  alias_method :all_vm_ids,             :vm_ids
+  alias_method :all_miq_templates,      :miq_templates
+  alias_method :all_miq_template_ids,   :miq_template_ids
 
   #
   # Relationship methods
@@ -326,36 +326,36 @@ class ExtManagementSystem < ActiveRecord::Base
 
   # Folder relationship methods
   def ems_folder_root
-    self.folders.first
+    folders.first
   end
 
   def folders
-    self.children(:of_type => 'EmsFolder').sort_by { |c| c.name.downcase }
+    children(:of_type => 'EmsFolder').sort_by { |c| c.name.downcase }
   end
 
-  alias add_folder    set_child
-  alias remove_folder remove_child
+  alias_method :add_folder,    :set_child
+  alias_method :remove_folder, :remove_child
 
   def remove_all_folders
-    self.remove_all_children(:of_type => 'EmsFolder')
+    remove_all_children(:of_type => 'EmsFolder')
   end
 
   def get_folder_paths(folder = nil)
     exclude_root_folder = folder.nil?
-    folder ||= self.ems_folder_root
+    folder ||= ems_folder_root
     return [] if folder.nil?
     folder.child_folder_paths(
-      :exclude_root_folder => exclude_root_folder,
-      :exclude_datacenters => true,
+      :exclude_root_folder         => exclude_root_folder,
+      :exclude_datacenters         => true,
       :exclude_non_display_folders => true
     )
   end
 
   def resource_pools_non_default
     if association_cache.include?(:resource_pools)
-      self.resource_pools.select { |r| !r.is_default }
+      resource_pools.select { |r| !r.is_default }
     else
-      self.resource_pools.where("is_default != ?", true).to_a
+      resource_pools.where("is_default != ?", true).to_a
     end
   end
 
@@ -364,40 +364,45 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def total_vms_and_templates
-    self.vms_and_templates.size
+    vms_and_templates.size
   end
 
   def total_vms
-    self.vms.size
+    vms.size
   end
 
   def total_miq_templates
-    self.miq_templates.size
+    miq_templates.size
   end
 
   def total_hosts
-    self.hosts.size
+    hosts.size
   end
 
   def total_clusters
-    self.ems_clusters.size
+    ems_clusters.size
   end
 
   def total_storages
-    HostsStorages.count(:conditions => {:host_id => self.host_ids}, :select => "DISTINCT storage_id")
+    HostsStorages.count(:conditions => {:host_id => host_ids}, :select => "DISTINCT storage_id")
   end
 
   def vm_count_by_state(state)
-    self.vms.inject(0) { |t, vm| vm.power_state == state ? t + 1 : t }
+    vms.inject(0) { |t, vm| vm.power_state == state ? t + 1 : t }
   end
+
   def total_vms_on;        vm_count_by_state("on");        end
+
   def total_vms_off;       vm_count_by_state("off");       end
+
   def total_vms_unknown;   vm_count_by_state("unknown");   end
+
   def total_vms_never;     vm_count_by_state("never");     end
+
   def total_vms_suspended; vm_count_by_state("suspended"); end
 
   def get_reserve(field)
-    (self.hosts + self.ems_clusters).inject(0) {|v,obj| v + (obj.send(field) || 0)}
+    (hosts + ems_clusters).inject(0) { |v, obj| v + (obj.send(field) || 0) }
   end
 
   def cpu_reserve
@@ -408,9 +413,9 @@ class ExtManagementSystem < ActiveRecord::Base
     get_reserve(:memory_reserve)
   end
 
-  def vm_log_user_event(vm, user_event)
+  def vm_log_user_event(_vm, user_event)
     $log.info(user_event)
-    $log.warn "User event logging is not available on [#{self.class.name}] Name:[#{self.name}]"
+    $log.warn "User event logging is not available on [#{self.class.name}] Name:[#{name}]"
   end
 
   #
@@ -425,11 +430,11 @@ class ExtManagementSystem < ActiveRecord::Base
 
   def perf_capture_enabled
     return @perf_capture_enabled unless @perf_capture_enabled.nil?
-    return @perf_capture_enabled = true if self.ems_clusters.any?(&:perf_capture_enabled?)
-    return @perf_capture_enabled = true if self.hosts.any?(&:perf_capture_enabled?)
-    return @perf_capture_enabled = false
+    return @perf_capture_enabled = true if ems_clusters.any?(&:perf_capture_enabled?)
+    return @perf_capture_enabled = true if hosts.any?(&:perf_capture_enabled?)
+    @perf_capture_enabled = false
   end
-  alias perf_capture_enabled? perf_capture_enabled
+  alias_method :perf_capture_enabled?, :perf_capture_enabled
 
   ###################################
   # Event Monitor
@@ -459,7 +464,7 @@ class ExtManagementSystem < ActiveRecord::Base
 
   def stop_event_monitor
     return if event_monitor_class.nil?
-    _log.info "EMS [#{self.name}] id [#{self.id}]: Stopping event monitor."
+    _log.info "EMS [#{name}] id [#{id}]: Stopping event monitor."
     event_monitor_class.stop_worker_for_ems(self)
   end
 
@@ -467,24 +472,24 @@ class ExtManagementSystem < ActiveRecord::Base
     MiqQueue.put_unless_exists(
       :class_name  => self.class.name,
       :method_name => "stop_event_monitor",
-      :instance_id => self.id,
+      :instance_id => id,
       :priority    => MiqQueue::HIGH_PRIORITY,
-      :zone        => self.my_zone,
+      :zone        => my_zone,
       :role        => "event"
     )
   end
 
   def stop_event_monitor_queue_on_change
-    if !self.event_monitor_class.nil? && !self.new_record? && self.changed.include_any?("hostname", "ipaddress")
-      _log.info("EMS: [#{self.name}], Hostname or IP address has changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
-      self.stop_event_monitor_queue
+    if !event_monitor_class.nil? && !self.new_record? && changed.include_any?("hostname", "ipaddress")
+      _log.info("EMS: [#{name}], Hostname or IP address has changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
+      stop_event_monitor_queue
     end
   end
 
   def stop_event_monitor_queue_on_credential_change
-    if !self.event_monitor_class.nil? && !self.new_record? && self.credentials_changed?
-      _log.info("EMS: [#{self.name}], Credentials have changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
-      self.stop_event_monitor_queue
+    if !event_monitor_class.nil? && !self.new_record? && self.credentials_changed?
+      _log.info("EMS: [#{name}], Credentials have changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
+      stop_event_monitor_queue
     end
   end
 

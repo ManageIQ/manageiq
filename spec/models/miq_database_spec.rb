@@ -28,10 +28,10 @@ describe MiqDatabase do
       context "existing record" do
         it "will seed nil values" do
           FactoryGirl.build(:miq_database,
-            :csrf_secret_token    => nil,
-            :session_secret_token => nil,
-            :update_repo_name     => nil
-          ).save(:validate => false)
+                            :csrf_secret_token    => nil,
+                            :session_secret_token => nil,
+                            :update_repo_name     => nil
+                           ).save(:validate => false)
 
           MiqDatabase.seed
 
@@ -43,10 +43,10 @@ describe MiqDatabase do
 
         it "will not change existing values" do
           FactoryGirl.create(:miq_database,
-            :csrf_secret_token    => "abc",
-            :session_secret_token => "def",
-            :update_repo_name     => "ghi"
-          )
+                             :csrf_secret_token    => "abc",
+                             :session_secret_token => "def",
+                             :update_repo_name     => "ghi"
+                            )
           csrf, session, update_repo = MiqDatabase.all.collect { |db| [db.csrf_secret_token, db.session_secret_token, db.update_repo_name] }.first
 
           MiqDatabase.seed

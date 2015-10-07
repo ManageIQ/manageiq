@@ -7,7 +7,7 @@ class FixReplicationOnUpgradeFromVersionFour < ActiveRecord::Migration
     self.inheritance_column = :_type_disabled # disable STI
   end
 
-  V5_DEFAULT_EXCLUDE_TABLES = %w{
+  V5_DEFAULT_EXCLUDE_TABLES = %w(
     assigned_server_roles
     audit_events
     binary_blobs
@@ -100,7 +100,7 @@ class FixReplicationOnUpgradeFromVersionFour < ActiveRecord::Migration
     vmdb_indexes
     vmdb_metrics
     vmdb_tables
-  }
+  )
 
   RENAMED_TABLES = {
     "states"                => "drift_states",
@@ -110,12 +110,12 @@ class FixReplicationOnUpgradeFromVersionFour < ActiveRecord::Migration
     "storages_vms"          => "storages_vms_and_templates",
   }
 
-  REMOVED_TABLES = %w{
+  REMOVED_TABLES = %w(
     automation_requests
     automation_tasks
     miq_provision_requests
     vim_performances
-  }
+  )
 
   def up
     say_with_time("Updating configurations for replication") do

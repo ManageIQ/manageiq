@@ -21,7 +21,7 @@ module MiqAeMethodService
     association :miq_request
 
     def approvers
-      ar_method { self.wrap_results @object.miq_approvals.collect { |a| a.approver.kind_of?(User) ? a.approver : nil }.compact }
+      ar_method { wrap_results @object.miq_approvals.collect { |a| a.approver.kind_of?(User) ? a.approver : nil }.compact }
     end
     association :approvers
 

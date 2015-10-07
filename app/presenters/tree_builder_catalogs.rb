@@ -1,7 +1,7 @@
 class TreeBuilderCatalogs < TreeBuilderCatalogsClass
   private
 
-  def tree_init_options(tree_name)
+  def tree_init_options(_tree_name)
     {:full_ids => true, :leaf => 'ServiceTemplateCatalog'}
   end
 
@@ -13,7 +13,7 @@ class TreeBuilderCatalogs < TreeBuilderCatalogsClass
     )
   end
 
-  def x_get_tree_stc_kids(object, options)
+  def x_get_tree_stc_kids(_object, options)
     count_only_or_objects(options[:count_only], [], nil)
   end
 end

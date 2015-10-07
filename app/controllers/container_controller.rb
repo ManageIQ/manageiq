@@ -1,10 +1,10 @@
 class ContainerController < ApplicationController
   include ContainersCommonMixin
 
-  before_filter :check_privileges
-  before_filter :get_session_data
-  after_filter :cleanup_action
-  after_filter :set_session_data
+  before_action :check_privileges
+  before_action :get_session_data
+  after_action :cleanup_action
+  after_action :set_session_data
 
   CONTAINER_X_BUTTON_ALLOWED_ACTIONS = {
     'container_delete' => :container_delete,
@@ -72,7 +72,7 @@ class ContainerController < ApplicationController
     @built_trees   = []
     @accords = []
     if role_allows(:feature => "container_accord", :any => true)
-      self.x_active_tree   ||= 'containers_tree'
+      self.x_active_tree ||= 'containers_tree'
       self.x_active_accord ||= 'containers'
       @built_trees.push(build_containers_tree)
       @accords.push(:name      => "containers",
@@ -81,7 +81,7 @@ class ContainerController < ApplicationController
     end
 
     if role_allows(:feature => "container_filter_accord", :any => true)
-      self.x_active_tree   ||= 'containers_filter_tree'
+      self.x_active_tree ||= 'containers_filter_tree'
       self.x_active_accord ||= 'containers_filter'
       @built_trees.push(build_containers_filter_tree)
       @accords.push(:name      => "containers_filter",
@@ -116,7 +116,7 @@ class ContainerController < ApplicationController
     respond_to do |format|
       format.js do                  # AJAX, select the node
         @explorer = true
-        params[:id] = x_build_node_id(@record,nil, x_tree(:containers_tree))  # Get the tree node id
+        params[:id] = x_build_node_id(@record, nil, x_tree(:containers_tree))  # Get the tree node id
         tree_select
       end
       format.html do                # HTML, redirect to explorer
@@ -141,8 +141,8 @@ class ContainerController < ApplicationController
       session[:edit] = @edit              # Set because next method will restore @edit from session
       listnav_search_selected(search_id) unless params.key?(:search_text) # Clear or set the adv search filter
       if @edit[:adv_search_applied] &&
-        MiqExpression.quick_search?(@edit[:adv_search_applied][:exp]) &&
-        %w(reload tree_select).include?(params[:action])
+         MiqExpression.quick_search?(@edit[:adv_search_applied][:exp]) &&
+         %w(reload tree_select).include?(params[:action])
         self.x_node = params[:id]
         quick_search_show
         return
@@ -198,7 +198,7 @@ class ContainerController < ApplicationController
     case action
     when "container_edit"
       partial = "container_form"
-      header = _("Editing %{model} \"%{name}\"") % {:name => @record.name,
+      header = _("Editing %{model} \"%{name}\"") % {:name  => @record.name,
                                                     :model => ui_lookup(:model => "Container")}
       action = "container_edit"
     else
@@ -214,7 +214,7 @@ class ContainerController < ApplicationController
     partial, action_url, @right_cell_text = set_right_cell_vars(action) if action
     get_node_info(x_node) if !@in_a_form && !params[:display]
     replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
-    type, _ = x_node.split("_").last.split("-")
+    type, = x_node.split("_").last.split("-")
     trees = {}
     if replace_trees
       trees[:containers] = build_containers_tree if replace_trees.include?(:containers)
@@ -270,13 +270,13 @@ class ContainerController < ApplicationController
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 
     # Rebuild the toolbars
-    presenter[:set_visible_elements][:history_buttons_div] = h_buttons  && h_xml
-    presenter[:set_visible_elements][:center_buttons_div]  = c_buttons  && c_xml
-    presenter[:set_visible_elements][:view_buttons_div]    = v_buttons  && v_xml
+    presenter[:set_visible_elements][:history_buttons_div] = h_buttons && h_xml
+    presenter[:set_visible_elements][:center_buttons_div]  = c_buttons && c_xml
+    presenter[:set_visible_elements][:view_buttons_div]    = v_buttons && v_xml
 
-    presenter[:reload_toolbars][:history] = {:buttons => h_buttons,  :xml => h_xml}  if h_buttons  && h_xml
-    presenter[:reload_toolbars][:center]  = {:buttons => c_buttons,  :xml => c_xml}  if c_buttons  && c_xml
-    presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons  && v_xml
+    presenter[:reload_toolbars][:history] = {:buttons => h_buttons,  :xml => h_xml}  if h_buttons && h_xml
+    presenter[:reload_toolbars][:center]  = {:buttons => c_buttons,  :xml => c_xml}  if c_buttons && c_xml
+    presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons && v_xml
 
     presenter[:show_hide_layout][:toolbar] = h_buttons || c_buttons || v_buttons ? 'show' : 'hide'
 

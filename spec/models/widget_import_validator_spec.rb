@@ -21,9 +21,9 @@ describe WidgetImportValidator do
         let(:uploaded_content) { [{:test123 => 123}, {"MiqWidget" => {}}].to_yaml }
 
         it "raises a WidgetImportValidator::InvalidWidgetYamlError" do
-          expect {
+          expect do
             widget_import_validator.determine_validity(import_file_upload)
-          }.to raise_error(WidgetImportValidator::InvalidWidgetYamlError)
+          end.to raise_error(WidgetImportValidator::InvalidWidgetYamlError)
         end
       end
 
@@ -39,9 +39,9 @@ describe WidgetImportValidator do
         let(:uploaded_content) { [{}].to_yaml }
 
         it "raises a WidgetImportValidator::InvalidWidgetYamlError" do
-          expect {
+          expect do
             widget_import_validator.determine_validity(import_file_upload)
-          }.to raise_error(WidgetImportValidator::InvalidWidgetYamlError)
+          end.to raise_error(WidgetImportValidator::InvalidWidgetYamlError)
         end
       end
 
@@ -49,9 +49,9 @@ describe WidgetImportValidator do
         let(:uploaded_content) { "lol".to_yaml }
 
         it "raises a WidgetImportValidator::InvalidWidgetYamlError" do
-          expect {
+          expect do
             widget_import_validator.determine_validity(import_file_upload)
-          }.to raise_error(WidgetImportValidator::InvalidWidgetYamlError)
+          end.to raise_error(WidgetImportValidator::InvalidWidgetYamlError)
         end
       end
     end
@@ -60,9 +60,9 @@ describe WidgetImportValidator do
       let(:uploaded_content) { "-\nbad yaml" }
 
       it "raises a WidgetImportValidator::NonYamlError" do
-        expect {
+        expect do
           widget_import_validator.determine_validity(import_file_upload)
-        }.to raise_error(WidgetImportValidator::NonYamlError)
+        end.to raise_error(WidgetImportValidator::NonYamlError)
       end
     end
   end

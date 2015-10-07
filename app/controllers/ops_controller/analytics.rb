@@ -12,7 +12,7 @@ module OpsController::Analytics
     when "asr"
       @record = AssignedServerRole.find(from_cid(id))
     end
-    #@_params[:treestate] = true                  # Force restore of saved tree open state
+    # @_params[:treestate] = true                  # Force restore of saved tree open state
     zone = Zone.find_by_id(from_cid(x_node.split('-').last))
     session[:server_tree] = build_server_tree(zone).to_json
     refresh_screen
@@ -32,27 +32,27 @@ module OpsController::Analytics
       @sb[:rpt_title] = "Analytics Report for '#{zone.description}'"
       msg = zone.name ? _("%{typ} %{model} \"%{name}\" (current)") : _("%{typ} %{model} \"%{name}\"")
       @right_cell_text = my_zone_name == msg %
-        {:typ => "Diagnostics", :model => ui_lookup(:model => zone.class.to_s), :name => zone.description}
+                                         {:typ => "Diagnostics", :model => ui_lookup(:model => zone.class.to_s), :name => zone.description}
     elsif x_node.split('-').first == "svr"
       svr = MiqServer.find(from_cid(nodetype.downcase.split("-").last))
       @sb[:rpt_title] = "Analytics Report for '#{svr.name} [#{svr.id}]'"
       msg = svr.id ? _("%{typ} %{model} \"%{name}\" (current)") : _("%{typ} %{model} \"%{name}\"")
       @right_cell_text = my_server_id == msg %
-        {:typ => "Diagnostics", :model => ui_lookup(:model => svr.class.to_s), :name => "#{svr.name} [#{svr.id}]"}
+                                         {:typ => "Diagnostics", :model => ui_lookup(:model => svr.class.to_s), :name => "#{svr.name} [#{svr.id}]"}
     else
-      @right_cell_text = _("%{model} \"%{name}\"") % {:name=>"Enterprise", :model=>"Analytics"}
+      @right_cell_text = _("%{model} \"%{name}\"") % {:name => "Enterprise", :model => "Analytics"}
       @sb[:rpt_title] = "Analytics Report for Enterprise"
     end
     analytics_gen_report
   end
 
   def analytics_gen_report
-    typ,id = get_rtype_rid
+    typ, id = get_rtype_rid
     fname = "analytics.yaml"
-    @sb[:analytics_rpt] = MiqReport.new(YAML::load(File.open("#{OPS_REPORTS_FOLDER}/#{fname}")))
+    @sb[:analytics_rpt] = MiqReport.new(YAML.load(File.open("#{OPS_REPORTS_FOLDER}/#{fname}")))
     @sb[:analytics_rpt].title = @sb[:analytics_rpt].name = @sb[:rpt_title]
-    @sb[:analytics_rpt].db_options = {:options=>{:resource_type =>typ, :resource_id => id}, :rpt_type=>"analytics"}
-    #@sb[:analytics_rpt].generate_table
+    @sb[:analytics_rpt].db_options = {:options => {:resource_type => typ, :resource_id => id}, :rpt_type => "analytics"}
+    # @sb[:analytics_rpt].generate_table
   end
 
   def get_rtype_rid
@@ -66,6 +66,6 @@ module OpsController::Analytics
       rtype = "MiqEnterprise"
     end
     id = rtype == "MiqEnterprise" ? 1 : node[1]
-    return rtype,id
+    return rtype, id
   end
 end

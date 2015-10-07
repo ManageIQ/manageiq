@@ -4,10 +4,10 @@ module OpsController::Settings::Schedules
   # Show the main Schedules list view
   def schedules_list
     schedule_build_list
-    if params[:ppsetting]  || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
+    if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
       render :update do |page|
-        page.replace("gtl_div", :partial=>"layouts/x_gtl", :locals=>{:action_url=>"schedules_list"})
-        page.replace_html("paging_div", :partial=>"layouts/x_pagingcontrols")
+        page.replace("gtl_div", :partial => "layouts/x_gtl", :locals => {:action_url => "schedules_list"})
+        page.replace_html("paging_div", :partial => "layouts/x_pagingcontrols")
         page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
       end
     end
@@ -21,7 +21,7 @@ module OpsController::Settings::Schedules
     @timezone = @selected_schedule.run_at && @selected_schedule.run_at[:tz] ?
                   @selected_schedule.run_at[:tz] : session[:user_tz]
 
-    if @selected_schedule.filter.is_a?(MiqExpression)
+    if @selected_schedule.filter.kind_of?(MiqExpression)
       @exp_table = exp_build_table(@selected_schedule.filter.exp)
     end
   end
@@ -38,9 +38,9 @@ module OpsController::Settings::Schedules
     when "cancel"
       @schedule = MiqSchedule.find_by_id(params[:id])
       if !@schedule || @schedule.id.blank?
-        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"MiqSchedule"))
+        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "MiqSchedule"))
       else
-        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"MiqSchedule"), :name=>@schedule.name})
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "MiqSchedule"), :name => @schedule.name})
       end
       get_node_info(x_node)
       @schedule = nil
@@ -87,7 +87,7 @@ module OpsController::Settings::Schedules
     when "reset", nil # Reset or first time in
       obj = find_checked_items
       obj[0] = params[:id] if obj.blank? && params[:id]
-      @schedule = params[:typ] == "new" ? MiqSchedule.new(:userid=>session[:userid])  : MiqSchedule.find(obj[0])          # Get existing or new record
+      @schedule = params[:typ] == "new" ? MiqSchedule.new(:userid => session[:userid]) : MiqSchedule.find(obj[0])          # Get existing or new record
 
       # This is only because ops_controller tries to set form locals, otherwise we should not use the @edit variable
       @edit = {:sched_id => @schedule.id}
@@ -168,32 +168,32 @@ module OpsController::Settings::Schedules
 
   def schedule_delete
     assert_privileges("schedule_delete")
-    schedules = Array.new
+    schedules = []
     if !params[:id] # showing a list
       schedules = find_checked_items
       if schedules.empty?
-        add_flash(_("No %{model} were selected for %{task}") % {:model=>ui_lookup(:tables=>"miq_schedule"), :task=>"deletion"}, :error)
+        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "miq_schedule"), :task => "deletion"}, :error)
         render :update do |page|
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
       process_schedules(schedules, "destroy") unless schedules.empty?
       schedule_build_list
       settings_get_info("st")
-      replace_right_cell("root",[:settings])
+      replace_right_cell("root", [:settings])
     else # showing 1 schedule, delete it
-      if params[:id] == nil || MiqSchedule.find_by_id(params[:id]).nil?
-        add_flash(_("%s no longer exists") % ui_lookup(:table=>"miq_schedule"), :error)
+      if params[:id].nil? || MiqSchedule.find_by_id(params[:id]).nil?
+        add_flash(_("%s no longer exists") % ui_lookup(:table => "miq_schedule"), :error)
         render :update do |page|
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
         schedules.push(params[:id])
       end
-      process_schedules(schedules, "destroy") if ! schedules.empty?
+      process_schedules(schedules, "destroy") unless schedules.empty?
       self.x_node = "xx-msc"
       get_node_info(x_node)
-      replace_right_cell(x_node,[:settings])
+      replace_right_cell(x_node, [:settings])
     end
   end
 
@@ -208,7 +208,7 @@ module OpsController::Settings::Schedules
     if schedules.empty?
       add_flash(msg % ui_lookup(:models => "MiqSchedule"), :error)
       render :update do |page|
-        page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
     schedule_enable_disable(schedules, enable)  unless schedules.empty?
@@ -284,18 +284,18 @@ module OpsController::Settings::Schedules
   def build_filtered_item_list(filter_type)
     case filter_type
     when "vm"
-      filtered_item_list = find_filtered(Vm, :all).sort_by { |vm| vm.name.downcase }.collect { |vm| vm.name }.uniq
+      filtered_item_list = find_filtered(Vm, :all).sort_by { |vm| vm.name.downcase }.collect(&:name).uniq
     when "miq_template"
       filtered_item_list =
         find_filtered(MiqTemplate, :all).sort_by { |miq_template| miq_template.name.downcase }.collect(&:name).uniq
     when "host"
-      filtered_item_list = find_filtered(Host, :all).sort_by { |vm| vm.name.downcase }.collect { |vm| vm.name }.uniq
+      filtered_item_list = find_filtered(Host, :all).sort_by { |vm| vm.name.downcase }.collect(&:name).uniq
     when "ems"
-      filtered_item_list = find_filtered(ExtManagementSystem, :all).sort_by { |vm| vm.name.downcase }.collect { |vm| vm.name }.uniq
+      filtered_item_list = find_filtered(ExtManagementSystem, :all).sort_by { |vm| vm.name.downcase }.collect(&:name).uniq
     when "cluster"
-      filtered_item_list = find_filtered(EmsCluster, :all).collect { |cluster|
+      filtered_item_list = find_filtered(EmsCluster, :all).collect do |cluster|
         [cluster.name + "__" + cluster.v_parent_datacenter, cluster.v_qualified_desc]
-      }.sort_by { |cluster| cluster.first.downcase }.uniq
+      end.sort_by { |cluster| cluster.first.downcase }.uniq
     when "global"
       build_listnav_search_list("Vm")
       filtered_item_list = @def_searches.delete_if { |search| search.id == 0 }.collect { |search| [search.id, search.description] }
@@ -362,17 +362,17 @@ module OpsController::Settings::Schedules
       @items_per_page = params[:ppsetting].to_i                       # Set the new per page value
       @settings[:perpage][@gtl_type.to_sym] = @items_per_page         # Set the per page setting for this gtl type
     end
-    @sortcol = session[:schedule_sortcol] == nil ? 0 : session[:schedule_sortcol].to_i
-    @sortdir = session[:schedule_sortdir] == nil ? "ASC" : session[:schedule_sortdir]
+    @sortcol = session[:schedule_sortcol].nil? ? 0 : session[:schedule_sortcol].to_i
+    @sortdir = session[:schedule_sortdir].nil? ? "ASC" : session[:schedule_sortdir]
 
-    #don't include db_backup records if backup not supported
+    # don't include db_backup records if backup not supported
     if !DatabaseBackup.backup_supported?
-      @view, @pages = get_view(MiqSchedule, :conditions=>["towhat!=? And (prod_default!=? or prod_default IS NULL) And adhoc IS NULL", "DatabaseBackup","system"]) # Get the records (into a view) and the paginator
+      @view, @pages = get_view(MiqSchedule, :conditions => ["towhat!=? And (prod_default!=? or prod_default IS NULL) And adhoc IS NULL", "DatabaseBackup", "system"]) # Get the records (into a view) and the paginator
     else
-      @view, @pages = get_view(MiqSchedule, :conditions=>["prod_default!=? or prod_default IS NULL And adhoc IS NULL", "system"]) # Get the records (into a view) and the paginator
+      @view, @pages = get_view(MiqSchedule, :conditions => ["prod_default!=? or prod_default IS NULL And adhoc IS NULL", "system"]) # Get the records (into a view) and the paginator
     end
 
-    @current_page = @pages[:current] if @pages != nil # save the current page number
+    @current_page = @pages[:current] unless @pages.nil? # save the current page number
     session[:schedule_sortcol] = @sortcol
     session[:schedule_sortdir] = @sortdir
   end
@@ -392,12 +392,12 @@ module OpsController::Settings::Schedules
     end
     unless flash_errors?
       if sched.run_at[:interval][:unit] == "once" &&
-          sched.run_at[:start_time].to_time.utc < Time.now.utc &&
-          sched.enabled == true
+         sched.run_at[:start_time].to_time.utc < Time.now.utc &&
+         sched.enabled == true
         add_flash(_("Warning: This 'Run Once' timer is in the past and will never run as currently configured"), :warning)
       end
     end
-    return valid
+    valid
   end
 
   def schedule_build_edit_screen
@@ -539,8 +539,8 @@ module OpsController::Settings::Schedules
       ["All VMs for Host", "host"],
       ["A single VM", "vm"]
     ] +
-      (@vm_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
-      (@vm_my_filters.empty? ? [] : [["My Filters", "my"]])
+                             (@vm_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
+                             (@vm_my_filters.empty? ? [] : [["My Filters", "my"]])
 
     @template_options_for_select = [
       ["All Templates", "all"],
@@ -549,8 +549,8 @@ module OpsController::Settings::Schedules
       ["All Templates for Host", "host"],
       ["A single Template", "miq_template"]
     ] +
-      (@miq_template_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
-      (@miq_template_my_filters.empty? ? [] : [["My Filters", "my"]])
+                                   (@miq_template_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
+                                   (@miq_template_my_filters.empty? ? [] : [["My Filters", "my"]])
 
     @host_options_for_select = [
       ["All Hosts", "all"],
@@ -558,16 +558,16 @@ module OpsController::Settings::Schedules
       ["All Hosts for #{ui_lookup(:table => "ems_clusters")}", "cluster"],
       ["A single Host", "host"]
     ] +
-      (@host_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
-      (@host_my_filters.empty? ? [] : [["My Filters", "my"]])
+                               (@host_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
+                               (@host_my_filters.empty? ? [] : [["My Filters", "my"]])
 
     @cluster_options_for_select = [
       ["All Clusters", "all"],
       ["All Clusters for #{ui_lookup(:table => "ext_management_systems")}", "ems"],
       ["A single Cluster", "cluster"]
     ] +
-      (@cluster_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
-      (@cluster_my_filters.empty? ? [] : [["My Filters", "my"]])
+                                  (@cluster_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
+                                  (@cluster_my_filters.empty? ? [] : [["My Filters", "my"]])
 
     @storage_options_for_select = [
       ["All Datastores", "all"],
@@ -575,8 +575,8 @@ module OpsController::Settings::Schedules
       ["All Datastores for #{ui_lookup(:table => "ext_management_systems")}", "ems"],
       ["A single Datastore", "storage"]
     ] +
-      (@storage_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
-      (@storage_my_filters.empty? ? [] : [["My Filters", "my"]])
+                                  (@storage_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
+                                  (@storage_my_filters.empty? ? [] : [["My Filters", "my"]])
 
     build_db_options_for_select
   end

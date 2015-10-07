@@ -8,7 +8,7 @@ module MiqServer::NtpManagement
     # Get the ntp servers from the vmdb.yml first, zone second, else use some defaults
     ntp = ntp_config
     if server_ntp_settings_blank?(ntp)
-      self.zone.ntp_settings
+      zone.ntp_settings
     else
       ntp.merge!(:source => :server)
       ntp
@@ -50,5 +50,4 @@ module MiqServer::NtpManagement
     MiqNtp.sync_settings(ntp_settings)
     @ntp_settings = ntp_settings
   end
-
 end

@@ -22,7 +22,7 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
     return {} if src[:cloud_network_id].nil?
 
     az_id = src[:availability_zone_id].to_i
-    if (cn = CloudNetwork.where(:id => src[:cloud_network_id]).first)
+    if (cn = CloudNetwork.find_by(:id => src[:cloud_network_id]))
       cn.cloud_subnets.each_with_object({}) do |cs, hash|
         next if !az_id.zero? && az_id != cs.availability_zone_id
         hash[cs.id] = "#{cs.name} (#{cs.cidr}) | #{cs.availability_zone.try(:name)}"

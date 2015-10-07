@@ -1,6 +1,6 @@
 LOG_DIR = "./"
 logfile = File.join(LOG_DIR, "ldap_ping.log")
-#File.delete(logfile) if File.exist?(logfile)
+# File.delete(logfile) if File.exist?(logfile)
 $log = VMDBLogger.new(logfile)
 $log.level = VMDBLogger.const_get("INFO")
 
@@ -21,7 +21,7 @@ end
 
 class MiqLdap
   def self.resolve_ldap_host?
-    return false
+    false
   end
 end
 
@@ -55,7 +55,7 @@ ldap_addresses.each do |address|
     ldap     = MiqLdap.new(:host => address)
     raw_ldap = ldap.ldap
     raw_ldap.authenticate(username, password)
-    Timeout::timeout(bind_timeout) do
+    Timeout.timeout(bind_timeout) do
       if raw_ldap.bind
         log(:info, "Binding to LDAP: Host: <#{address}>, User: <#{username}>... successful")
       else

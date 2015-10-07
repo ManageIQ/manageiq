@@ -60,5 +60,4 @@ describe "Widget Chart Content" do
     content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }.should eq(3)
     widget.contents_for_user(@user).should eq(content)
   end
-
 end

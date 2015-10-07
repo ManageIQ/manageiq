@@ -1,13 +1,13 @@
 module MiqAeClassHelper
-  def add_read_only_suffix(rec, node_string)
-    if rec.enabled && !rec.editable?
+  def add_read_only_suffix(node_string, editable, enabled)
+    if enabled && !editable
       suffix = "Locked"
-    elsif rec.editable? && !rec.enabled
+    elsif editable && !enabled
       suffix = "Disabled"
     else # !rec.enabled && !rec.editable?
       suffix = "Locked & Disabled"
     end
-    "#{node_string} (#{suffix})"
+    "#{node_string} (#{suffix})".html_safe
   end
 
   def domain_display_name(domain)
@@ -24,15 +24,18 @@ module MiqAeClassHelper
   end
 
   def record_name(rec)
-    column = rec.display_name.blank? ? :name : :display_name
-    rec_name = if rec.kind_of?(MiqAeNamespace) && rec.domain? && (!rec.editable? || !rec.enabled)
-                 add_read_only_suffix(rec, rec.send(column))
+    column   = rec.display_name.blank? ? :name : :display_name
+    rec_name = if rec.kind_of?(MiqAeNamespace) && rec.domain?
+                 editable_domain = User.current_tenant.editable_domains.include?(rec)
+                 editable_domain && rec.enabled ? rec.send(column) : add_read_only_suffix(rec.send(column),
+                                                                                          editable_domain,
+                                                                                          rec.enabled)
                else
                  rec.send(column)
                end
     rec_name = rec_name.gsub(/\n/, "\\n")
     rec_name = rec_name.gsub(/\t/, "\\t")
-    rec_name = rec_name.gsub(/"/, "'")
+    rec_name = rec_name.tr('"', "'")
     rec_name = CGI.escapeHTML(rec_name)
     rec_name.gsub(/\\/, "&#92;")
   end
@@ -41,7 +44,7 @@ module MiqAeClassHelper
     case cls.to_s.split("::").last
     when "MiqAeClass"
       "aec"
-    when "MiqAeNamespace"
+    when "MiqAeDomain", "MiqAeNamespace"
       "aen"
     when "MiqAeInstance"
       "aei"
@@ -54,5 +57,9 @@ module MiqAeClassHelper
 
   def icon_class(cls)
     cls.to_s.split("::").last.underscore.sub('miq_', 'product product-')
+  end
+
+  def nonblank(*items)
+    items.detect { |item| !item.blank? }
   end
 end

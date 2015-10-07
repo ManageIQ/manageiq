@@ -4,25 +4,25 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
     _log.info "#{log_header} Getting VMDB relationships for #{target.class} [#{target.name}] id: [#{target.id}]..."
 
     vr = {
-      :ems_id => @ems.id,
-      :ems_to_hosts => [],
-      :ems_to_vms => [],
-      :hosts_to_storages => Hash.new { |h, k| h[k] = Array.new },
-      :hosts_to_vms => Hash.new { |h, k| h[k] = Array.new },
-      :vm_to_storage => Hash.new { |h, k| h[k] = Array.new },
+      :ems_id              => @ems.id,
+      :ems_to_hosts        => [],
+      :ems_to_vms          => [],
+      :hosts_to_storages   => Hash.new { |h, k| h[k] = [] },
+      :hosts_to_vms        => Hash.new { |h, k| h[k] = [] },
+      :vm_to_storage       => Hash.new { |h, k| h[k] = [] },
 
-      :ems_to_folders => [],
-      :ems_to_clusters => [],
-      :ems_to_rps => [],
-      :folders_to_folders => Hash.new { |h, k| h[k] = Array.new },
-      :folders_to_clusters => Hash.new { |h, k| h[k] = Array.new },
-      :folders_to_hosts => Hash.new { |h, k| h[k] = Array.new },
-      :folders_to_vms => Hash.new { |h, k| h[k] = Array.new },
-      :clusters_to_hosts => Hash.new { |h, k| h[k] = Array.new },
-      :clusters_to_rps => Hash.new { |h, k| h[k] = Array.new },
-      :hosts_to_rps => Hash.new { |h, k| h[k] = Array.new },
-      :rps_to_rps => Hash.new { |h, k| h[k] = Array.new },
-      :rps_to_vms => Hash.new { |h, k| h[k] = Array.new },
+      :ems_to_folders      => [],
+      :ems_to_clusters     => [],
+      :ems_to_rps          => [],
+      :folders_to_folders  => Hash.new { |h, k| h[k] = [] },
+      :folders_to_clusters => Hash.new { |h, k| h[k] = [] },
+      :folders_to_hosts    => Hash.new { |h, k| h[k] = [] },
+      :folders_to_vms      => Hash.new { |h, k| h[k] = [] },
+      :clusters_to_hosts   => Hash.new { |h, k| h[k] = [] },
+      :clusters_to_rps     => Hash.new { |h, k| h[k] = [] },
+      :hosts_to_rps        => Hash.new { |h, k| h[k] = [] },
+      :rps_to_rps          => Hash.new { |h, k| h[k] = [] },
+      :rps_to_vms          => Hash.new { |h, k| h[k] = [] },
     }
 
     # Find the target in the database
@@ -126,7 +126,7 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
     end
     _log.info "#{log_header} Getting VMDB relationships for #{target.class} [#{target.name}] id: [#{target.id}]...Complete"
 
-    return vr
+    vr
   end
 
   def find_relats_vmdb_host_ems_metadata(target, relats)
@@ -139,19 +139,18 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
       break if parent.nil?
 
       relat_type = case parent
-      when EmsCluster then
-        relats[:ems_to_clusters] << parent.id unless relats[:ems_to_clusters].include?(parent.id)
-        :clusters_to_hosts
+                   when EmsCluster then
+                     relats[:ems_to_clusters] << parent.id unless relats[:ems_to_clusters].include?(parent.id)
+                     :clusters_to_hosts
 
-      when EmsFolder then
-        relats[:ems_to_folders] << parent.id unless relats[:ems_to_folders].include?(parent.id)
-        case child
-        when EmsFolder then :folders_to_folders
-        when EmsCluster then :folders_to_clusters
-        when Host then :folders_to_hosts
-        else nil
-        end
-      end
+                   when EmsFolder then
+                     relats[:ems_to_folders] << parent.id unless relats[:ems_to_folders].include?(parent.id)
+                     case child
+                     when EmsFolder then :folders_to_folders
+                     when EmsCluster then :folders_to_clusters
+                     when Host then :folders_to_hosts
+                     end
+                   end
 
       relat = relats.fetch_path(relat_type, parent.id)
       relat << child.id unless relat.nil? || relat.include?(child.id)
@@ -167,16 +166,15 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
 
     target.children.each do |r|
       relat_type = case r
-      when ResourcePool
-        relats[:ems_to_rps] << r.id
-        case target
-        when Host then :hosts_to_rps
-        when ResourcePool then :rps_to_rps
-        else nil
-        end
-      when Vm then :rps_to_vms
-      else next
-      end
+                   when ResourcePool
+                     relats[:ems_to_rps] << r.id
+                     case target
+                     when Host then :hosts_to_rps
+                     when ResourcePool then :rps_to_rps
+                     end
+                   when Vm then :rps_to_vms
+                   else next
+                   end
 
       relat = relats.fetch_path(relat_type, target.id)
       relat << r.id unless relat.nil? || relat.include?(r.id)
@@ -199,10 +197,9 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
       break if parent.nil?
 
       relat_type = case child
-      when Vm then :folders_to_vms
-      when EmsFolder then :folders_to_folders
-      else nil
-      end
+                   when Vm then :folders_to_vms
+                   when EmsFolder then :folders_to_folders
+                   end
 
       relat = relats.fetch_path(relat_type, parent.id)
       relat << child.id unless relat.nil? || relat.include?(child.id)
@@ -227,16 +224,14 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
       break if parent.nil?
 
       relat_type = case parent
-      when ResourcePool
-        case child
-        when Vm then :rps_to_vms
-        when ResourcePool then :rps_to_rps
-        else nil
-        end
-      when Host then :hosts_to_rps
-      when EmsCluster then :clusters_to_rps
-      else nil
-      end
+                   when ResourcePool
+                     case child
+                     when Vm then :rps_to_vms
+                     when ResourcePool then :rps_to_rps
+                     end
+                   when Host then :hosts_to_rps
+                   when EmsCluster then :clusters_to_rps
+                   end
 
       relat = relats.fetch_path(relat_type, parent.id)
       relat << child.id unless relat.nil? || relat.include?(child.id)
@@ -311,7 +306,7 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
 
     # Check if the data coming in reflects a complete removal from VC
     if new_relats[:ems_to_hosts].empty? && new_relats[:ems_to_hosts].empty? && new_relats[:ems_to_vms].empty? &&
-        new_relats[:hosts_to_storages].empty? && new_relats[:hosts_to_vms].empty? && new_relats[:vm_to_storage].empty?
+       new_relats[:hosts_to_storages].empty? && new_relats[:hosts_to_vms].empty? && new_relats[:vm_to_storage].empty?
 
       case target
       when ExtManagementSystem
@@ -344,59 +339,59 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
 
       # Do the EMS to Hosts relationships
       do_relat_compare(:ems_to_hosts, prev_relats, new_relats) do
-        [ do_disconnect ? Proc.new { |h| Host.find(h).disconnect_ems(@ems) } : nil, # Disconnect proc
-          Proc.new { |h| Host.find(h).connect_ems(@ems) } ]                         # Connect proc
+        [do_disconnect ? proc { |h| Host.find(h).disconnect_ems(@ems) } : nil, # Disconnect proc
+         proc { |h| Host.find(h).connect_ems(@ems) }]                         # Connect proc
       end
 
       # Do the EMS to VMs relationships
       do_relat_compare(:ems_to_vms, prev_relats, new_relats) do
-        [ do_disconnect ? Proc.new { |v| VmOrTemplate.find(v).disconnect_ems(@ems) } : nil, # Disconnect proc
-          Proc.new { |v| VmOrTemplate.find(v).connect_ems(@ems) } ]                         # Connect proc
+        [do_disconnect ? proc { |v| VmOrTemplate.find(v).disconnect_ems(@ems) } : nil, # Disconnect proc
+         proc { |v| VmOrTemplate.find(v).connect_ems(@ems) }]                         # Connect proc
       end
 
       # Do the Folders to Folders relationships
       do_relat_compare(:folders_to_folders, prev_relats, new_relats) do |f|
         folder = EmsFolder.find(f)
-        [ do_disconnect ? Proc.new { |f2| folder.remove_folder(EmsFolder.find(f2)) } : nil, # Disconnect proc
-          Proc.new { |f2| folder.add_folder(EmsFolder.find(f2)) },                    # Connect proc
-          Proc.new { |f2s| folder.add_folder(EmsFolder.where(id: f2s).to_a) } ]             # Bulk connect proc
+        [do_disconnect ? proc { |f2| folder.remove_folder(EmsFolder.find(f2)) } : nil, # Disconnect proc
+         proc { |f2| folder.add_folder(EmsFolder.find(f2)) },                    # Connect proc
+         proc { |f2s| folder.add_folder(EmsFolder.where(:id => f2s).to_a) }]             # Bulk connect proc
       end
 
       # Do the Folders to Clusters relationships
       do_relat_compare(:folders_to_clusters, prev_relats, new_relats) do |f|
         folder = EmsFolder.find(f)
-        [ do_disconnect ? Proc.new { |c| folder.remove_cluster(EmsCluster.find(c)) } : nil, # Disconnect proc
-          Proc.new { |c| folder.add_cluster(EmsCluster.find(c)) },                    # Connect proc
-          Proc.new { |cs| folder.add_cluster(EmsCluster.where(id: cs).to_a) } ]             # Bulk connect proc
+        [do_disconnect ? proc { |c| folder.remove_cluster(EmsCluster.find(c)) } : nil, # Disconnect proc
+         proc { |c| folder.add_cluster(EmsCluster.find(c)) },                    # Connect proc
+         proc { |cs| folder.add_cluster(EmsCluster.where(:id => cs).to_a) }]             # Bulk connect proc
       end
 
       # Do the Folders to Hosts relationships
       do_relat_compare(:folders_to_hosts, prev_relats, new_relats) do |f|
         folder = EmsFolder.find(f)
-        [ do_disconnect ? Proc.new { |h| folder.remove_host(Host.find(h)) } : nil, # Disconnect proc
-          Proc.new { |h| folder.add_host(Host.find(h)) } ]                         # Connect proc
+        [do_disconnect ? proc { |h| folder.remove_host(Host.find(h)) } : nil, # Disconnect proc
+         proc { |h| folder.add_host(Host.find(h)) }]                         # Connect proc
       end
 
       # Do the Folders to Vms relationships
       do_relat_compare(:folders_to_vms, prev_relats, new_relats) do |f|
         folder = EmsFolder.find(f)
-        [ do_disconnect ? Proc.new { |v| folder.remove_vm(VmOrTemplate.find(v)) } : nil, # Disconnect proc
-          Proc.new { |v| folder.add_vm(VmOrTemplate.find(v)) },                          # Connect proc
-          Proc.new { |vs| folder.add_vm(VmOrTemplate.where(id: vs).to_a) } ]            # Bulk connect proc
+        [do_disconnect ? proc { |v| folder.remove_vm(VmOrTemplate.find(v)) } : nil, # Disconnect proc
+         proc { |v| folder.add_vm(VmOrTemplate.find(v)) },                          # Connect proc
+         proc { |vs| folder.add_vm(VmOrTemplate.where(:id => vs).to_a) }]            # Bulk connect proc
       end
 
       # Do the Clusters to ResourcePools relationships
       do_relat_compare(:clusters_to_rps, prev_relats, new_relats) do |c|
         cluster = EmsCluster.find(c)
-        [ do_disconnect ? Proc.new { |r| cluster.remove_resource_pool(ResourcePool.find(r)) } : nil, # Disconnect proc
-          Proc.new { |r| cluster.add_resource_pool(ResourcePool.find(r)) } ]                         # Connect proc
+        [do_disconnect ? proc { |r| cluster.remove_resource_pool(ResourcePool.find(r)) } : nil, # Disconnect proc
+         proc { |r| cluster.add_resource_pool(ResourcePool.find(r)) }]                         # Connect proc
       end
 
       # Do the Clusters to Hosts relationships
       do_relat_compare(:clusters_to_hosts, prev_relats, new_relats) do |c|
         cluster = EmsCluster.find(c)
-        [ do_disconnect ? Proc.new { |h| cluster.hosts.delete(Host.find(h)) } : nil, # Disconnect proc
-          Proc.new { |h| cluster.hosts << Host.find(h) } ]                           # Connect proc
+        [do_disconnect ? proc { |h| cluster.hosts.delete(Host.find(h)) } : nil, # Disconnect proc
+         proc { |h| cluster.hosts << Host.find(h) }]                           # Connect proc
       end
 
       # Do the Hosts to * relationships, ResourcePool to * relationships
@@ -407,29 +402,29 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
       # Do the Hosts to Storages relationships
       do_relat_compare(:hosts_to_storages, prev_relats, new_relats) do |h|
         host = Host.find(h)
-        [ do_disconnect ? Proc.new { |s| host.disconnect_storage(Storage.find(s)) } : nil, # Disconnect proc
-          Proc.new { |s| host.connect_storage(Storage.find(s)) } ]                         # Connect proc
+        [do_disconnect ? proc { |s| host.disconnect_storage(Storage.find(s)) } : nil, # Disconnect proc
+         proc { |s| host.connect_storage(Storage.find(s)) }]                         # Connect proc
       end
 
       # Do the Hosts to VMs relationships
       do_relat_compare(:hosts_to_vms, prev_relats, new_relats) do |h|
         host = Host.find(h)
-        [ do_disconnect ? Proc.new { |v| VmOrTemplate.find(v).disconnect_host(host) } : nil, # Disconnect proc
-          Proc.new { |v| VmOrTemplate.find(v).connect_host(host) } ]                         # Connect proc
+        [do_disconnect ? proc { |v| VmOrTemplate.find(v).disconnect_host(host) } : nil, # Disconnect proc
+         proc { |v| VmOrTemplate.find(v).connect_host(host) }]                         # Connect proc
       end
 
       # Do the Hosts to ResourcePools relationships
       do_relat_compare(:hosts_to_rps, prev_relats, new_relats) do |h|
         host = Host.find(h)
-        [ do_disconnect ? Proc.new { |r| ResourcePool.find(r).remove_parent(host) } : nil, # Disconnect proc
-          Proc.new { |r| ResourcePool.find(r).set_parent(host) } ]                         # Connect proc
+        [do_disconnect ? proc { |r| ResourcePool.find(r).remove_parent(host) } : nil, # Disconnect proc
+         proc { |r| ResourcePool.find(r).set_parent(host) }]                         # Connect proc
       end
 
       # Do the ResourcePools to ResourcePools relationships
       do_relat_compare(:rps_to_rps, prev_relats, new_relats) do |r|
         rp = ResourcePool.find(r)
-        [ do_disconnect ? Proc.new { |r2| rp.remove_resource_pool(ResourcePool.find(r2)) } : nil, # Disconnect proc
-          Proc.new { |r2| rp.add_resource_pool(ResourcePool.find(r2)) } ]                         # Connect proc
+        [do_disconnect ? proc { |r2| rp.remove_resource_pool(ResourcePool.find(r2)) } : nil, # Disconnect proc
+         proc { |r2| rp.add_resource_pool(ResourcePool.find(r2)) }]                         # Connect proc
       end
 
       # Do the VMs to * relationships
@@ -439,15 +434,15 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
       # Do the ResourcePools to VMs relationships
       do_relat_compare(:rps_to_vms, prev_relats, new_relats) do |r|
         rp = ResourcePool.find(r)
-        [ Proc.new { |v| rp.remove_vm(VmOrTemplate.find(v)) }, # Disconnect proc
-          Proc.new { |v| rp.add_vm(VmOrTemplate.find(v)) } ]   # Connect proc
+        [proc { |v| rp.remove_vm(VmOrTemplate.find(v)) }, # Disconnect proc
+         proc { |v| rp.add_vm(VmOrTemplate.find(v)) }]   # Connect proc
       end
 
       # Do the VMs to Storage relationships
       do_relat_compare(:vm_to_storage, prev_relats, new_relats) do |v|
         vm = VmOrTemplate.find(v)
-        [ Proc.new { |s| vm.disconnect_storage(Storage.find(s)) }, # Disconnect proc
-          Proc.new { |s| vm.connect_storage(Storage.find(s)) } ]   # Connect proc
+        [proc { |s| vm.disconnect_storage(Storage.find(s)) }, # Disconnect proc
+         proc { |s| vm.connect_storage(Storage.find(s)) }]   # Connect proc
       end
 
       # Do these EMS to * relationships last as they actually destroy elements
@@ -455,20 +450,20 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
 
       # Do the EMS to Folders relationships
       do_relat_compare(:ems_to_folders, prev_relats, new_relats) do
-        [ target.kind_of?(ExtManagementSystem) ? Proc.new { |f| EmsFolder.destroy(f) } : nil, # Disconnect proc
-          Proc.new { |f| @ems.ems_folders << EmsFolder.find(f) } ]                            # Connect proc
+        [target.kind_of?(ExtManagementSystem) ? proc { |f| EmsFolder.destroy(f) } : nil, # Disconnect proc
+         proc { |f| @ems.ems_folders << EmsFolder.find(f) }]                            # Connect proc
       end
 
       # Do the EMS to Clusters relationships
       do_relat_compare(:ems_to_clusters, prev_relats, new_relats) do
-        [ target.kind_of?(ExtManagementSystem) ? Proc.new { |c| EmsCluster.destroy(c) } : nil, # Disconnect proc
-          Proc.new { |c| @ems.ems_clusters << EmsCluster.find(c) } ]                           # Connect proc
+        [target.kind_of?(ExtManagementSystem) ? proc { |c| EmsCluster.destroy(c) } : nil, # Disconnect proc
+         proc { |c| @ems.ems_clusters << EmsCluster.find(c) }]                           # Connect proc
       end
 
       # Do the EMS to ResourcePools relationships
       do_relat_compare(:ems_to_rps, prev_relats, new_relats) do
-        [ target.kind_of?(ExtManagementSystem) ? Proc.new { |r| ResourcePool.destroy(r) } : nil, # Disconnect proc
-          Proc.new { |r| @ems.resource_pools << ResourcePool.find(r) } ]                         # Connect proc
+        [target.kind_of?(ExtManagementSystem) ? proc { |r| ResourcePool.destroy(r) } : nil, # Disconnect proc
+         proc { |r| @ems.resource_pools << ResourcePool.find(r) }]                         # Connect proc
       end
 
       # Update the default RPs and their names to reflect their parent relationships,

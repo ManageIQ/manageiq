@@ -1,7 +1,7 @@
 class MiqPolicySet < ActiveRecord::Base
   acts_as_miq_set
 
-  default_scope { where self.conditions_for_my_region_default_scope }
+  default_scope { where conditions_for_my_region_default_scope }
 
   before_validation :default_name_to_guid, :on => :create
   before_destroy    :destroy_policy_tags
@@ -9,7 +9,7 @@ class MiqPolicySet < ActiveRecord::Base
   attr_accessor :reserved
 
   def notes
-    return self.set_data.kind_of?(Hash) && self.set_data.has_key?(:notes) ? self.set_data[:notes] : nil
+    set_data.kind_of?(Hash) && set_data.key?(:notes) ? set_data[:notes] : nil
   end
 
   def notes=(data)
@@ -19,40 +19,40 @@ class MiqPolicySet < ActiveRecord::Base
   end
 
   def active?
-    !self.members.all? {|p| !p.active}
+    !members.all? { |p| !p.active }
   end
 
   def destroy_policy_tags
     # handle policy assignment removal for deleted policy profile
-    tag = "/miq_policy/assignment/#{self.class.to_s.underscore}/#{self.id}"
+    tag = "/miq_policy/assignment/#{self.class.to_s.underscore}/#{id}"
     Tag.remove(tag, :ns => "*")
   end
 
   def add_to(ids, db)
     model = db.respond_to?(:constantize) ? db.constantize : db
-    ids.each {|id|
+    ids.each do|id|
       rec = model.find_by_id(id)
       next unless rec
 
       rec.add_policy(self)
-    }
+    end
   end
 
   def remove_from(ids, db)
     model = db.respond_to?(:constantize) ? db.constantize : db
-    ids.each {|id|
+    ids.each do|id|
       rec = model.find_by_id(id)
       next unless rec
 
       rec.remove_policy(self)
-    }
+    end
   end
 
   def export_to_array
-    h = self.attributes
+    h = attributes
     ["id", "created_on", "updated_on"].each { |k| h.delete(k) }
-    h["MiqPolicy"] = self.members.collect { |p| p.export_to_array.first["MiqPolicy"] unless p.nil? }
-    return [ self.class.to_s => h ]
+    h["MiqPolicy"] = members.collect { |p| p.export_to_array.first["MiqPolicy"] unless p.nil? }
+    [self.class.to_s => h]
   end
 
   def export_to_yaml
@@ -60,16 +60,16 @@ class MiqPolicySet < ActiveRecord::Base
     a.to_yaml
   end
 
-  def self.import_from_hash(policy_profile, options={})
-    status = {:class => self.name, :description => policy_profile["description"], :children => []}
-    pp = policy_profile.delete("MiqPolicy") { |k| raise "No Policies for Policy Profile == #{policy_profile.inspect}" }
+  def self.import_from_hash(policy_profile, options = {})
+    status = {:class => name, :description => policy_profile["description"], :children => []}
+    pp = policy_profile.delete("MiqPolicy") { |_k| raise "No Policies for Policy Profile == #{policy_profile.inspect}" }
 
     policies = []
-    pp.each { |p|
+    pp.each do |p|
       policy, s = MiqPolicy.import_from_hash(p, options)
       status[:children].push(s)
       policies.push(policy)
-    }
+    end
 
     pset = MiqPolicySet.find_by_guid(policy_profile["guid"])
     msg_pfx = "Importing Policy Profile: guid=[#{policy_profile["guid"]}] description=[#{policy_profile["description"]}]"
@@ -107,12 +107,12 @@ class MiqPolicySet < ActiveRecord::Base
 
     input = YAML.load(fd)
 
-    input.each { |e|
+    input.each do |e|
       p, stat = import_from_hash(e["MiqPolicySet"])
       stats.push(stat)
-    }
+    end
 
-    return stats
+    stats
   end
 
   def self.seed

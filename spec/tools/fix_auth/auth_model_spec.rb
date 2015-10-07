@@ -17,7 +17,7 @@ describe FixAuth::AuthModel do
 
   before do
     MiqPassword.add_legacy_key(v0_key, :v0)
-    MiqPassword.add_legacy_key(v1_key)
+    MiqPassword.add_legacy_key(v1_key, :v1)
   end
 
   after do

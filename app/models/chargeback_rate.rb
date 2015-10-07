@@ -23,8 +23,8 @@ class ChargebackRate < ActiveRecord::Base
 
   def self.get_assignments(type)
     # type = :compute || :storage
-    #Returns[{:cb_rate=>obj, :tag=>[Classification.entry_object, klass]} || :object=>object},...]
-    self.validate_rate_type(type)
+    # Returns[{:cb_rate=>obj, :tag=>[Classification.entry_object, klass]} || :object=>object},...]
+    validate_rate_type(type)
     result = []
     ChargebackRate.where(:rate_type => type.to_s.capitalize).each do |rate|
       assigned_tos = rate.get_assigned_tos

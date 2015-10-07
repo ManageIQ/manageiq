@@ -29,8 +29,8 @@ module MiqAeServiceModelSpec
 
     it "ae_vm should have a special inspect method" do
       inspect = @ae_vm.inspect
-      inspect[0,2].should == '#<'
-      inspect[-1,1].should == '>'
+      inspect[0, 2].should == '#<'
+      inspect[-1, 1].should == '>'
     end
 
     it "ae_vm should have an associations method" do

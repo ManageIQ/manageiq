@@ -5,6 +5,7 @@ describe ServiceTemplate do
   let(:template_by_setter) { FactoryGirl.create(:orchestration_template) }
   let(:manager_by_dialog)  { FactoryGirl.create(:ems_amazon) }
   let(:template_by_dialog) { FactoryGirl.create(:orchestration_template) }
+  let(:deployed_stack)     { FactoryGirl.create(:orchestration_stack_amazon) }
 
   let(:dialog_options) do
     {
@@ -30,6 +31,11 @@ describe ServiceTemplate do
     service.orchestration_manager = manager_by_setter
     service.options = {:dialog => dialog_options}
     service
+  end
+
+  let(:service_with_deployed_stack) do
+    service_mix_dialog_setter.add_resource(deployed_stack)
+    service_mix_dialog_setter
   end
 
   context "#stack_name" do
@@ -80,7 +86,8 @@ describe ServiceTemplate do
 
   context '#deploy_orchestration_stack' do
     it 'creates a stack through cloud manager' do
-      ManageIQ::Providers::Amazon::CloudManager.any_instance.stub(:stack_create) do |name, template, opts|
+      ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack.stub(:raw_create_stack) do |manager, name, template, opts|
+        manager.should == manager_by_setter
         name.should == 'test123'
         template.should be_kind_of OrchestrationTemplate
         opts.should be_kind_of Hash
@@ -130,26 +137,23 @@ describe ServiceTemplate do
   context '#orchestration_stack_status' do
     it 'returns an error if stack has never been deployed' do
       status, _message = service_mix_dialog_setter.orchestration_stack_status
-      status.should  == 'check_status_failed'
+      status.should == 'check_status_failed'
     end
 
     it 'returns current stack status through provider' do
-      ManageIQ::Providers::Amazon::CloudManager.any_instance.stub(:stack_status).and_return(['create_complete', 'no error'])
+      status_obj = ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack::Status.new('CREATE_COMPLETE', 'no error')
+      deployed_stack.stub(:raw_status).and_return(status_obj)
 
-      service_mix_dialog_setter.options[:stack_ems_ref] = 'abc'  # simulate stack deployed
-      status, message = service_mix_dialog_setter.orchestration_stack_status
-
-      status.should  == 'create_complete'
+      status, message = service_with_deployed_stack.orchestration_stack_status
+      status.should == 'create_complete'
       message.should == 'no error'
     end
 
     it 'returns an error message when the provider fails to retrieve the status' do
-      ManageIQ::Providers::Amazon::CloudManager.any_instance.stub(:stack_status)
-        .and_raise(MiqException::MiqOrchestrationStatusError, 'test failure')
+      deployed_stack.stub(:raw_status).and_raise(MiqException::MiqOrchestrationStatusError, 'test failure')
 
-      service_mix_dialog_setter.options[:stack_ems_ref] = 'abc'  # simulate stack deployed
-      status, message = service_mix_dialog_setter.orchestration_stack_status
-      status.should  == 'check_status_failed'
+      status, message = service_with_deployed_stack.orchestration_stack_status
+      status.should == 'check_status_failed'
       message.should == 'test failure'
     end
   end

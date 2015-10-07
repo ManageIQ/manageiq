@@ -4,7 +4,7 @@ describe "MiqServer" do
   context "RhnMirror" do
     before do
       ServerRole.seed
-      _, @server1, _ = EvmSpecHelper.create_guid_miq_server_zone
+      _, @server1, = EvmSpecHelper.create_guid_miq_server_zone
       @server1.update_attribute(:ipaddress, "1.2.3.4")
       @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone, :ipaddress => "9.8.7.6")
     end
@@ -32,11 +32,11 @@ describe "MiqServer" do
 
     it "#resync_rhn_mirror" do
       rpm_file_list       = ["/repo/mirror/abc-1.2.3-1.el6_0.2.i686.rpm", "/repo/mirror/abc-4.5.6-7.el6_4.x86_64.rpm", "/repo/mirror/def-B.02abc.1r6-4.el6cf.x86_64.rpm", "/repo/mirror/ghi-2013c-2.el6.noarch.rpm"]
-      parsed_package_list = {"abc"=>{"1.2.3.1"=>"/repo/mirror/abc-1.2.3-1.el6_0.2.i686.rpm","4.5.6.7"=>"/repo/mirror/abc-4.5.6-7.el6_4.x86_64.rpm"}, "def-B"=>{"02.1.6.4"=>"/repo/mirror/def-B.02abc.1r6-4.el6cf.x86_64.rpm"}, "ghi"=>{"2013.2"=>"/repo/mirror/ghi-2013c-2.el6.noarch.rpm"}}
+      parsed_package_list = {"abc" => {"1.2.3.1" => "/repo/mirror/abc-1.2.3-1.el6_0.2.i686.rpm", "4.5.6.7" => "/repo/mirror/abc-4.5.6-7.el6_4.x86_64.rpm"}, "def-B" => {"02.1.6.4" => "/repo/mirror/def-B.02abc.1r6-4.el6cf.x86_64.rpm"}, "ghi" => {"2013.2" => "/repo/mirror/ghi-2013c-2.el6.noarch.rpm"}}
 
       FileUtils.should_receive(:mkdir_p).with("/repo/mirror")
       MiqApache::Conf.should_receive(:create_conf_file).once.and_return(true)
-      FileUtils.should_receive(:rm).with("/etc/httpd/conf.d/cfme-https-mirror.conf", {:force=>true})
+      FileUtils.should_receive(:rm).with("/etc/httpd/conf.d/cfme-https-mirror.conf", :force => true)
       MiqApache::Control.should_receive(:restart).once
       LinuxAdmin::Yum.should_receive(:download_packages).once.with("/repo/mirror", "cfme-appliance")
       Dir.should_receive(:glob).with("/repo/mirror/**/*.rpm").and_return(rpm_file_list)

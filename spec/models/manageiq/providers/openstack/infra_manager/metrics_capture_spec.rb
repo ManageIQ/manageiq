@@ -45,9 +45,9 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
       # 1. grab the 3rd-to-last, 2nd-to-last and last API results for disk read/writes
       # need 3rd-to-last to get the interval for the 2nd-to-last values
       *_, read_bytes_prev, read_bytes1, read_bytes2 = @mock_stats_data.get_statistics(
-          "hardware.system_stats.io.incoming.blocks")
+        "hardware.system_stats.io.incoming.blocks")
       *_, write_bytes_prev, write_bytes1, write_bytes2 = @mock_stats_data.get_statistics(
-          "hardware.system_stats.io.outgoing.blocks")
+        "hardware.system_stats.io.outgoing.blocks")
 
       read_ts_prev = api_time_as_utc(read_bytes_prev)
       write_ts_prev = api_time_as_utc(write_bytes_prev)
@@ -66,7 +66,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
         },
         "hardware.system_stats.io.incoming.blocks" => read_ts1 - read_ts_prev,
         "hardware.system_stats.io.outgoing.blocks" => write_ts1 - write_ts_prev
-        )
+      )
 
       # 3. calculate the disk_usage_rate_average for the last API result
       read_ts2 = api_time_as_utc(read_bytes2)
@@ -80,7 +80,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
         },
         "hardware.system_stats.io.incoming.blocks" => read_ts2 - read_ts1,
         "hardware.system_stats.io.outgoing.blocks" => write_ts2 - write_ts1
-        )
+      )
 
       # get the actual values from the method
       _, values_by_id_and_ts = @host.perf_collect_metrics("realtime")
@@ -251,11 +251,11 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
     it "computes diffs of the first 4 values of disk_usage_rate_average values correctly" do
       # Make the computations os stats
       avg_stat1_manual = (
-      (35  - 20)  / (parse_datetime('2013-08-28T11:03:12') - parse_datetime('2013-08-28T11:01:09')).to_f +
+      (35 - 20) / (parse_datetime('2013-08-28T11:03:12') - parse_datetime('2013-08-28T11:01:09')).to_f +
           (691 - 500) / (parse_datetime('2013-08-28T11:02:12') - parse_datetime('2013-08-28T11:00:09')).to_f
       )
       avg_stat4_manual = (
-      (69  - 53)  / (parse_datetime('2013-08-28T11:09:21') - parse_datetime('2013-08-28T11:07:18')).to_f +
+      (69 - 53) / (parse_datetime('2013-08-28T11:09:21') - parse_datetime('2013-08-28T11:07:18')).to_f +
           (935 - 836) / (parse_datetime('2013-08-28T11:08:21') - parse_datetime('2013-08-28T11:06:18')).to_f
       )
 
@@ -980,7 +980,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
           api_duration_time_as_utc(write_stats[first_index])),
       counter_two => (api_duration_time_as_utc(read_stats[second_index]) -
           api_duration_time_as_utc(read_stats[first_index]))
-      )
+    )
   end
 
   def api_time_as_utc(api_result)

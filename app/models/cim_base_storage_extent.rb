@@ -1,5 +1,4 @@
 class CimBaseStorageExtent < ActsAsArModel
-
   set_columns_hash(CimStorageExtent.columns_hash.keys.each_with_object({}) { |c, h| h[c.to_sym] = CimStorageExtent.columns_hash[c].type })
 
   def self._virtual_colums_hash
@@ -12,7 +11,7 @@ class CimBaseStorageExtent < ActsAsArModel
 
   def self.find(*args)
     options = args.extract_options!
-    options[:conditions] = CimStorageExtent.merge_conditions(options[:conditions], {:id => base_storage_extent_ids})
+    options[:conditions] = CimStorageExtent.merge_conditions(options[:conditions], :id => base_storage_extent_ids)
     args << options
     CimStorageExtent.find(*args)
   end
@@ -32,5 +31,4 @@ class CimBaseStorageExtent < ActsAsArModel
   def self.sortable?
     true
   end
-
 end

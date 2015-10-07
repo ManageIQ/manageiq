@@ -9,7 +9,7 @@ module Metric::CiMixin
   include_concern 'LongTermAverages'
 
   included do
-    #TODO: Move in creation of has_many relations here from various classes?
+    # TODO: Move in creation of has_many relations here from various classes?
     has_many :vim_performance_operating_ranges, :dependent => :destroy, :as => :resource
 
     Metric::LongTermAverages::AVG_METHODS.each do |vcol|
@@ -44,13 +44,13 @@ module Metric::CiMixin
 
   def first_and_last_capture(interval_name = "hourly")
     perf = associated_metrics(interval_name)
-      .select("MIN(timestamp) AS first_ts, MAX(timestamp) AS last_ts")
-      .group(:resource_id)
-      .limit(1).to_a
-      .first
+           .select("MIN(timestamp) AS first_ts, MAX(timestamp) AS last_ts")
+           .group(:resource_id)
+           .limit(1).to_a
+           .first
     perf.nil? ? [] : [
       perf.first_ts.kind_of?(String) ? Time.parse("#{perf.first_ts} UTC") : perf.first_ts,
-      perf.last_ts.kind_of?(String)  ? Time.parse("#{perf.last_ts} UTC")  : perf.last_ts
+      perf.last_ts.kind_of?(String) ? Time.parse("#{perf.last_ts} UTC") : perf.last_ts
     ]
   end
 
@@ -60,7 +60,7 @@ module Metric::CiMixin
 
   def performances_maintains_value_for_duration?(options)
     _log.info("options: #{options.inspect}")
-    raise "Argument must be an options hash" unless options.is_a?(Hash)
+    raise "Argument must be an options hash" unless options.kind_of?(Hash)
     column = options[:column]
     value = options[:value].to_f
     duration = options[:duration]
@@ -74,34 +74,34 @@ module Metric::CiMixin
     klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
     now = options[:now] || Time.now.utc # for testing only
 
-    #Turn on for the listing of timestamps and values in the debug log
+    # Turn on for the listing of timestamps and values in the debug log
     debug_trace = (options[:debug_trace] == true || options[:debug_trace] == "true")
 
     raise ":column required" if column.nil?
     raise ":value required" if value.nil?
     raise ":duration required" if duration.nil?
-    #TODO: Check for valid operators
+    # TODO: Check for valid operators
     raise ":percentage expected integer from 0-100, received: #{percentage}" unless percentage.nil? || percentage.kind_of?(Integer) && percentage >= 0 && percentage <= 100
 
     # Make sure any rails durations (1.day, 1.hour) is truly an int
     duration = duration.to_i
 
-    #TODO: starting_on should retrieved from the yaml: performance, capture, every... which is 50... pad it with ~20% more to make sure we don't miss any
+    # TODO: starting_on should retrieved from the yaml: performance, capture, every... which is 50... pad it with ~20% more to make sure we don't miss any
     #
     # This really should be the older of the last time this alert was evaluated or the duration provided seconds ago
     #
 
-    pkey = "#{self.class}:#{self.id}"
+    pkey = "#{self.class}:#{id}"
     last_task = MiqTask.where(:identifier => pkey).order("id DESC").first
 
     default_how_long = (interval_name == "realtime" ? 70.minutes : 28.hours)
     starting_on ||= if last_task
-      # task start time + duration + 1 second
-      start_time = last_task.context_data[:start].to_time
-      (start_time - duration + 1)
-    else
-      (now - default_how_long)
-    end
+                      # task start time + duration + 1 second
+                      start_time = last_task.context_data[:start].to_time
+                      (start_time - duration + 1)
+                    else
+                      (now - default_how_long)
+                    end
     # Extend the window one duration back to enable handling overlap - consecutive matches that span the boundary
     # between the current and previous evaluations.
     window_starting_on = starting_on - duration
@@ -120,20 +120,20 @@ module Metric::CiMixin
     return false if total_records.empty?
 
     # Find the record at or near the starting_on timestamp to determine if we need to handle overlap
-    rec_at_start_on = total_records.reverse.detect {|r| r.timestamp >= starting_on}
+    rec_at_start_on = total_records.reverse.detect { |r| r.timestamp >= starting_on }
     return false if rec_at_start_on.nil?
-    start_on_idx = total_records.index {|r| r.timestamp == rec_at_start_on.timestamp}
+    start_on_idx = total_records.index { |r| r.timestamp == rec_at_start_on.timestamp }
     #
     colvalue = rec_at_start_on.send(column)
     if colvalue && colvalue.send(operator, value)
       # If there is a match at the start_on timestamp then we need to check the records going backwards to find the first one that doesnt match.
       # This will become the new starting point for evaluation.
       _log.info("First record at Index: #{start_on_idx}, ts: #{rec_at_start_on.timestamp} is a match, reading backwards to find first non-matching record")
-      first_miss = total_records[start_on_idx..-1].detect(lambda{total_records.last}) do |rec|
+      first_miss = total_records[start_on_idx..-1].detect(-> { total_records.last }) do |rec|
         colvalue = rec.send(column)
         !(colvalue.nil? ? false : colvalue.send(operator, value))
       end
-      first_miss_idx = total_records.index {|r| r.timestamp == first_miss.timestamp}
+      first_miss_idx = total_records.index { |r| r.timestamp == first_miss.timestamp }
       _log.info("Found non-matching record: Index: #{first_miss_idx}, ts: #{first_miss.timestamp}, #{column}: #{colvalue}")
       # Adjust the range to the latest ts back to the ts of the first non-matching ts
       total_records = total_records[0..first_miss_idx]
@@ -150,23 +150,23 @@ module Metric::CiMixin
       case trend.to_sym
       when :up
         unless slope > 0
-           _log.info("Returning false result because slope #{slope} is not trending up")
-           return false
+          _log.info("Returning false result because slope #{slope} is not trending up")
+          return false
         end
       when :down
         unless slope < 0
-           _log.info("Returning false result because slope #{slope} is not trending down")
-           return false
+          _log.info("Returning false result because slope #{slope} is not trending down")
+          return false
         end
       when :not_up
         unless slope <= 0
-           _log.info("Returning false result because slope #{slope} is trending up")
-           return false
+          _log.info("Returning false result because slope #{slope} is trending up")
+          return false
         end
       when :not_down
         unless slope >= 0
-           _log.info("Returning false result because slope #{slope} is trending down")
-           return false
+          _log.info("Returning false result because slope #{slope} is trending down")
+          return false
         end
       when :up_more_than
         if slope <= (slope_steepness / Metric::Capture::REALTIME_METRICS_PER_MINUTE)
@@ -179,7 +179,6 @@ module Metric::CiMixin
           return false
         end
       when :none
-      else
       end
     end
 
@@ -195,7 +194,7 @@ module Metric::CiMixin
     matches_in_window = 0
     total_records.each_with_index do |rec, i|
       # Slide the window and subtract the oldest match_history value from the matches_in_window once we have looked at recs_in_window records.
-      matches_in_window = matches_in_window - match_history[i - recs_in_window] if i > (recs_in_window - 1) && match_history[i - recs_in_window]
+      matches_in_window -= match_history[i - recs_in_window] if i > (recs_in_window - 1) && match_history[i - recs_in_window]
       colvalue = rec.send(column)
       res = colvalue.nil? ? nil : colvalue.send(operator, value)
       match_history[i] = res ? 1 : 0
@@ -212,6 +211,6 @@ module Metric::CiMixin
 
   def get_daily_time_profile_in_my_region_from_tz(tz)
     return if tz.nil?
-    TimeProfile.in_region(self.region_id).rollup_daily_metrics.find_all_with_entire_tz.detect { |p| p.tz_or_default == tz }
+    TimeProfile.in_region(region_id).rollup_daily_metrics.find_all_with_entire_tz.detect { |p| p.tz_or_default == tz }
   end
 end

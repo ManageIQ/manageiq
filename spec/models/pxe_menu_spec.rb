@@ -163,7 +163,5 @@ PXEMENU
       new_pxe_menu.should be_kind_of(PxeMenuIpxe)
       new_pxe_menu.pxe_images.length.should == 3
     end
-
   end
-
 end

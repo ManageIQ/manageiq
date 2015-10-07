@@ -92,7 +92,6 @@ describe EmsInfraController do
   end
 
   describe "#scaling" do
-
     before do
       set_user_privileges
       @ems = FactoryGirl.create(:ems_openstack_infra_with_stack)
@@ -114,7 +113,7 @@ describe EmsInfraController do
       controller.send(:flash_errors?).should be_true
       flash_messages = assigns(:flash_array)
       flash_messages.first[:message].should include(
-      _("Assigning #{@ems.hosts.count * 2} but only have #{@ems.hosts.count} hosts available."))
+        _("Assigning #{@ems.hosts.count * 2} but only have #{@ems.hosts.count} hosts available."))
     end
 
     it "when values are changed, and values do not exceed number of hosts available" do

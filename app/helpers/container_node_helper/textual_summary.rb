@@ -80,7 +80,7 @@ module ContainerNodeHelper::TextualSummary
 
   def textual_identity_infra
     {:label => "Infrastructure Machine ID", :value =>
-      @record.identity_infra.nil?  ? "N/A" : @record.identity_infra}
+      @record.identity_infra.nil? ? "N/A" : @record.identity_infra}
   end
 
   def textual_lives_on
