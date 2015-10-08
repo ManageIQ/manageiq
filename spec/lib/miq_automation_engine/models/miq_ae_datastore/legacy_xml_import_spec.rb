@@ -1,8 +1,8 @@
 require "spec_helper"
 
 describe "LegacyXMLImport" do
-  before(:each) do
-    xml = <<-XML
+  let(:xml) do
+    %(
     <MiqAeDatastore version='1.0'>
       <MiqAeClass name="AUTOMATE" namespace="EVM">
         <MiqAeSchema>
@@ -17,7 +17,9 @@ describe "LegacyXMLImport" do
          </MiqAeInstance>
        </MiqAeClass>
     </MiqAeDatastore>
-    XML
+    )
+  end
+  before(:each) do
     Tenant.seed
     # hide deprecation warning
     expect(MiqAeDatastore).to receive(:xml_deprecated_warning)
