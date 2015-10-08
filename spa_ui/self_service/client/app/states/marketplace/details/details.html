@@ -17,7 +17,7 @@
         <img class="marketplace-title-img__logo"
              ng-if="vm.serviceTemplate.picture.image_href "
              alt="{{ ::vm.serviceTemplate.name }}"
-             src="{{ ::vm.serviceTemplate.picture.image_href }}"/>
+             ng-src="{{ ::vm.serviceTemplate.picture.image_href }}"/>
       </div>
       <div class="marketplace-title-description">
         <h2>{{ ::vm.serviceTemplate.name }}</h2>
