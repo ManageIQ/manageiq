@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe ServiceReconfigureTask do
-  let(:user)     { FactoryGirl.create(:user) }
+  let(:user)     { FactoryGirl.create(:user_with_group) }
   let(:template) { FactoryGirl.create(:service_template, :name => 'Test Template') }
   let(:service)  { FactoryGirl.create(:service, :name => 'Test Service', :service_template => template) }
 
@@ -79,8 +79,11 @@ describe ServiceReconfigureTask do
           :instance_name    => 'instance',
           :automate_message => 'create',
           :attrs            => task.options[:dialog].merge("request" => task.request_type),
-          :user_id          => user.id
+          :user_id          => user.id,
+          :tenant_id        => user.current_tenant.id,
+          :group_id         => user.current_group_id
         }
+        expect(user.current_tenant).to be
         MiqQueue.should_receive(:put).with(
           :class_name  => 'MiqAeEngine',
           :method_name => 'deliver',
