@@ -83,6 +83,34 @@ describe ReportFormatter::JqplotFormatter do
         expect(report.chart[:data][0][-1]).to eq(1) if other
       end
     end
+
+    it "handles null data in chart column" do
+      report = MiqReport.new(
+        :db          => "Vm",
+        :cols        => %w(name),
+        :include     => {"hardware" => {"columns" => %w(cpu_speed numvcpus memory_cpu)}},
+        :col_order   => %w(name hardware.cpu_speed hardware.numvcpus hardware.memory_cpu),
+        :headers     => ["Name", "Hardware CPU Speed", "Hardware Number of CPUs", "Hardware RAM"],
+        :order       => "Ascending",
+        :sortby      => %w(name),
+        :graph       => {:type => "Bar", :mode => "values", :column => "Vm.hardware-numvcpus", :count => 10, :other => true},
+        :dims        => 1,
+        :col_options => {},
+        :rpt_options => {},
+        :extras      => {},
+      )
+
+      report.table = Ruport::Data::Table.new(
+        :column_names => %w(name hardware.cpu_speed hardware.numvcpus hardware.memory_cpu id),
+        :data         => [
+          ["Чук", nil, 4,   6_144, 42],
+          ["Гек", nil, nil, 1_024, 49],
+        ],
+      )
+
+      expect_any_instance_of(described_class).to receive(:build_numeric_chart_simple).once.and_call_original
+      render_report(report)
+    end
   end
 
   context '#build_numeric_chart_grouped_2dim' do
