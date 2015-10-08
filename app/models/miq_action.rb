@@ -879,12 +879,14 @@ class MiqAction < ActiveRecord::Base
     automate_attrs[:request] = action.options[:ae_request]
     MiqAeEngine.set_automation_attributes_from_objects([inputs[:policy], inputs[:ems_event]], automate_attrs)
 
-    args = {}
-    args[:object_type]      = rec.class.base_class.name
-    args[:object_id]        = rec.id
-    args[:attrs]            = automate_attrs
-    args[:instance_name]    = "REQUEST"
-    args[:automate_message] = action.options[:ae_message] || "create"
+    args = {
+      :object_type      => rec.class.base_class.name,
+      :object_id        => rec.id,
+      :attrs            => automate_attrs,
+      :instance_name    => "REQUEST",
+      :automate_message => action.options[:ae_message] || "create",
+    }
+
 
     if inputs[:synchronous]
       MiqPolicy.logger.info("MIQ(action_custom_automation): Now executing MiqAeEngine.deliver for #{automate_attrs[:request]} with args=#{args.inspect}")

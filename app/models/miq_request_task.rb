@@ -118,12 +118,13 @@ class MiqRequestTask < ActiveRecord::Base
     _log.info("Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
 
     if self.class::AUTOMATE_DRIVES
-      args = {}
-      args[:object_type]   = self.class.name
-      args[:object_id]     = id
-      args[:attrs]         = {"request" => req_type}
-      args[:instance_name] = "AUTOMATION"
-      args[:user_id]       = get_user.id
+      args = {
+        :object_type   => self.class.name,
+        :object_id     => id,
+        :attrs         => {"request" => req_type},
+        :instance_name => "AUTOMATION",
+        :user_id       => get_user.id,
+      }
 
       zone ||= source.respond_to?(:my_zone) ? source.my_zone : MiqServer.my_zone
       MiqQueue.put(
