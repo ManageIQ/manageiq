@@ -12,8 +12,10 @@
       <div class="col-md-12 ss-details-header">
         <div class="row">
           <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-            <div class="ss-details-header__title-img" ng-if=" ::vm.service.picture.image_href ">
-              <img class="ss-details-header__title-img__logo" ng-src="{{ ::vm.service.picture.image_href }}"/>
+            <div class="ss-details-header__title-img">
+              <span class="ss-details-header__title-img__center"></span>
+              <img class="ss-details-header__title-img__logo" ng-src="{{ ::vm.service.picture.image_href }}" ng-if=" ::vm.service.picture.image_href "/>
+              <img class="ss-details-header__title-img__logo" ng-src="assets/images/service.png" ng-if=" ::!vm.service.picture.image_href "/>
             </div>
             <div class="ss-details-header__title">
               <h2>{{ ::vm.service.name }}</h2>
@@ -21,7 +23,7 @@
             </div>
           </div>
           <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 ss-details-header__actions">
-            <button class="btn btn-danger" type="button"
+            <button class="btn btn-default" type="button"
                     confirmation
                     confirmation-if="true"
                     confirmation-title="Remove Service"
@@ -32,7 +34,7 @@
                     confirmation-show-cancel="true">Remove Service
             </button>
             <div class="btn-group" dropdown>
-              <button id="single-button" type="button" class="btn btn-primary" dropdown-toggle>
+              <button id="single-button" type="button" class="btn btn-default" dropdown-toggle>
                 Retire <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu">

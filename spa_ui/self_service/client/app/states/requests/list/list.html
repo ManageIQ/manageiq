@@ -9,8 +9,10 @@
     <div class="row">
       <div class="col-lg-5 col-md-5 col-sm-8 col-xs-8">
         <span class="no-wrap">
-          <span class="ss-list-view__title-img" ng-if=" ::item.picture.image_href">
-            <img class="ss-list-view__title-img__logo" ng-src="{{ ::item.picture.image_href }}"/>
+          <span class="ss-list-view__title-img">
+            <span class="ss-list-view__title-img__center"></span>
+            <img class="ss-list-view__title-img__logo" ng-src="{{ ::item.picture.image_href }}" ng-if=" ::item.picture.image_href"/>
+            <img class="ss-list-view__title-img__logo" src="assets/images/service.png" ng-if=" ::!item.picture.image_href"/>
           </span>
           {{ item.description }}
         </span>

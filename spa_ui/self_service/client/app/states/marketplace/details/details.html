@@ -10,10 +10,11 @@
   <div class="panel-body">
     <section>
       <div class="marketplace-title-img">
+        <span class="marketplace-title-img__center"></span>
         <img class="marketplace-title-img__logo"
              ng-if="!vm.serviceTemplate.picture.image_href"
              alt="{{ ::vm.serviceTemplate.name }}"
-             src="#"/>
+             src="assets/images/service.png"/>
         <img class="marketplace-title-img__logo"
              ng-if="vm.serviceTemplate.picture.image_href "
              alt="{{ ::vm.serviceTemplate.name }}"
