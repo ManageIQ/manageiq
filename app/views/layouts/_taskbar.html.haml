@@ -1,7 +1,7 @@
 - if display_back_button?
   -# Only create this div if we get back a file name
   %div{:style => "float: left;"}
-    = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "summary_center_tb", :tb_yaml => "summary_center_tb"}
+    = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "summary_center_tb", :tb_yaml => controller.send(:restful?) ? "summary_center_restful_tb" : "summary_center_tb"}
 
 %div{:style => "float: left; padding-left: 0px;"}
   = render :partial => "layouts/center_buttons"
