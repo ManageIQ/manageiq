@@ -250,12 +250,6 @@ table.table.table-selectable tbody tr.selected td {
   min-height: ($line-height-computed + $font-size-small - 20);
 }
 
-/* image styling for inside form */
-.form-control-static img {
-  width: 20px;
-  height: 20px;
-}
-
 /* prevents empty dd from collapsing */
 
 .dl-horizontal > dd:after {

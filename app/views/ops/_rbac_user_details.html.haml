@@ -83,18 +83,12 @@
       .col-md-8
         - if !@edit
           - if @user.current_group
-            %table{:cellpadding => "0", :cellspacing => "0"}
-              - if role_allows(:feature => "rbac_group_show")
-                - params = {:class => "pointer", :onclick => "miqDynatreeActivateNode('rbac_tree', 'g-#{to_cid(@user.current_group.id)}');", :title => _("View this Group")}
-              - else
-                - params = {}
-              %tr{params}
-                %td.image
-                  %ul.icons.list-unstyled
-                    %li
-                      %span.product.product-group
-                %td
-                  = h(@user.miq_group_description)
+            - if role_allows(:feature => "rbac_group_show")
+              - params = {:class => "pointer", :onclick => "miqDynatreeActivateNode('rbac_tree', 'g-#{to_cid(@user.current_group.id)}');", :title => _("View this Group")}
+            - else
+              - params = {}
+            %span.product.product-group{params}
+              = h(@user.miq_group_description)
           - else
             = h(@user.miq_group_description)
         - else
@@ -113,20 +107,14 @@
       .form-group
         %label.col-md-2.control-label
           = _("Role")
-        .col-md-8{:style => "padding: 0px"}
+        .col-md-8
           - if @user.current_group && @user.current_group.miq_user_role
-            %table{:cellpadding => "0", :cellspacing => "0"}
-              - if role_allows(:feature => "rbac_user_show")
-                - params = {:class => "pointer", :onclick => "miqDynatreeActivateNode('rbac_tree', 'ur-#{to_cid(@user.current_group.miq_user_role.id)}');", :title => _("View this Role")}
-              - else
-                - params = {}
-              %tr{params}
-                %td.image
-                  %ul.icons.list-unstyled
-                    %li
-                      %span.product.product-role
-                %td
-                  = h(@user.miq_user_role_name)
+            - if role_allows(:feature => "rbac_user_show")
+              - params = {:class => "pointer", :onclick => "miqDynatreeActivateNode('rbac_tree', 'ur-#{to_cid(@user.current_group.miq_user_role.id)}');", :title => _("View this Role")}
+            - else
+              - params = {}
+            %span.product.product-role{params}
+              = h(@user.miq_user_role_name)
           - else
             %p.form-control-static
               = h(@user.miq_user_role_name)
