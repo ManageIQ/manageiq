@@ -2,7 +2,7 @@ module MiqProvision::Automate
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def get_domain_details(domain, with_password = false, user = nil)
+    def get_domain_details(domain, with_password, user)
       _log.info "<< domain=<#{domain}> with_password=#{with_password} user=<#{user}>"
       if domain.nil?
         _log.error "Domain Not specified"
