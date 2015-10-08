@@ -1,7 +1,7 @@
 #tiers_tabs_div{:style => "width: 100%; height: 100%;"}
   -# Toplevel Tabbar
   - if x_active_tree == :cb_tiers_tree
-    - if x_node == "root" || x_node=="xx-tiers"
+    - if x_node == "root" || x_node == "xx-tiers"
       = render :partial => "tiers_list"
     - else
       = render :partial => "cb_tier_show"

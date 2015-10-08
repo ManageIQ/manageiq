@@ -67,7 +67,6 @@ describe 'routes for ChargebackController' do
     end
   end
 
-
   describe '#explorer' do
     it 'routes with GET' do
       expect(get("/#{controller_name}/explorer")).to route_to("#{controller_name}#explorer")

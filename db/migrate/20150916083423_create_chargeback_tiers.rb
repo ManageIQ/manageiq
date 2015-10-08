@@ -1,7 +1,7 @@
 class CreateChargebackTiers < ActiveRecord::Migration
   def change
     create_table :chargeback_tiers do |t|
-      t.string :guid,          :limit => 36
+      t.string :guid, :limit => 36
       t.string :name
       t.string :description
       t.float :rate_below

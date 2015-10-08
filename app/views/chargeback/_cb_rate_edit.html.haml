@@ -38,7 +38,7 @@
             = r[:description]
           %td
             = select_tag("chargeback_tier_#{i}",
-              options_for_select(ChargebackTier.allIds, @edit[:new][:details][i][:chargeback_tier]),"data-miq_observe" => {:url => url}.to_json)
+              options_for_select(ChargebackTier.all_ids, @edit[:new][:details][i][:chargeback_tier]), "data-miq_observe" => {:url => url}.to_json)
           %td{:align => 'right'}
             = text_field_tag("rate_#{i}", @edit[:new][:details][i][:rate],
               :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)

@@ -10,6 +10,7 @@ class CreateChargebackTierDetails < ActiveRecord::Migration
       t.string :updated_on
       t.string :datetime
     end
-    add_index :chargeback_tier_details, ["chargeback_tier_id"], :name => "index_chargeback_tier_details_on_chargeback_tier"
+    add_index :chargeback_tier_details, ["chargeback_tier_id"],
+              :name => "index_chargeback_tier_details_on_chargeback_tier"
   end
 end
