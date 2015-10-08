@@ -156,8 +156,7 @@ module MiqAeDatastore
 
     def self.create_domain(domain)
       MiqAeDomain.find_by_fqname(domain) ||
-      MiqAeDomain.create!(:enabled => true, :priority => 100, :tenant => Tenant.root_tenant,
-                          :name => domain)
+      MiqAeDomain.create!(:enabled => true, :priority => 100, :tenant => Tenant.root_tenant, :name => domain)
     end
 
     def self.load_xml_file(filename, domain)
