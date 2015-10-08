@@ -1,6 +1,6 @@
 ManageIQ.angularApplication.service('miqService', function() {
 
-  this.savedPasswordPlaceholder = "●●●●●●●●";
+  this.storedPasswordPlaceholder = "●●●●●●●●";
 
   this.showButtons = function() {
     miqButtons('show');

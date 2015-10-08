@@ -73,16 +73,16 @@ ManageIQ.angularApplication.controller('hostFormController', ['$http', '$scope',
           $scope.hostModel.validate_id = data.validate_id;
 
           if($scope.hostModel.default_userid != '') {
-            $scope.hostModel.default_password = $scope.hostModel.default_verify = miqService.savedPasswordPlaceholder;
+            $scope.hostModel.default_password = $scope.hostModel.default_verify = miqService.storedPasswordPlaceholder;
           }
           if($scope.hostModel.remote_userid != '') {
-            $scope.hostModel.remote_password = $scope.hostModel.remote_verify = miqService.savedPasswordPlaceholder;
+            $scope.hostModel.remote_password = $scope.hostModel.remote_verify = miqService.storedPasswordPlaceholder;
           }
           if($scope.hostModel.ws_userid != '') {
-            $scope.hostModel.ws_password = $scope.hostModel.ws_verify = miqService.savedPasswordPlaceholder;
+            $scope.hostModel.ws_password = $scope.hostModel.ws_verify = miqService.storedPasswordPlaceholder;
           }
           if($scope.hostModel.ipmi_userid != '') {
-            $scope.hostModel.ipmi_password = $scope.hostModel.ipmi_verify = miqService.savedPasswordPlaceholder;
+            $scope.hostModel.ipmi_password = $scope.hostModel.ipmi_verify = miqService.storedPasswordPlaceholder;
           }
 
           $scope.afterGet = true;

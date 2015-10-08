@@ -827,18 +827,22 @@ class HostController < ApplicationController
 
   def set_credentials(host, mode)
     creds = {}
-    default_password = params[:default_password] ? params[:default_password] : host.authentication_password
-    remote_password = params[:remote_password] ? params[:remote_password] : host.authentication_password(:remote)
-    ws_password = params[:ws_password] ? params[:ws_password] : host.authentication_password(:ws)
-    ipmi_password = params[:ipmi_password] ? params[:ipmi_password] : host.authentication_password(:ipmi)
-    creds[:default] = {:userid   => params[:default_userid],
-                       :password => default_password} unless params[:default_userid].blank?
-    creds[:remote]  = {:userid   => params[:remote_userid],
-                       :password => remote_password}  unless params[:remote_userid].blank?
-    creds[:ws]      = {:userid   => params[:ws_userid],
-                       :password => ws_password}      unless params[:ws_userid].blank?
-    creds[:ipmi]    = {:userid   => params[:ipmi_userid],
-                       :password => ipmi_password}    unless params[:ipmi_userid].blank?
+    if params[:default_userid]
+      default_password = params[:default_password] ? params[:default_password] : host.authentication_password
+      creds[:default] = {:userid => params[:default_userid], :password => default_password}
+    end
+    if params[:remote_userid]
+      remote_password = params[:remote_password] ? params[:remote_password] : host.authentication_password(:remote)
+      creds[:remote] = {:userid => params[:remote_userid], :password => remote_password}
+    end
+    if params[:ws_userid]
+      ws_password = params[:ws_password] ? params[:ws_password] : host.authentication_password(:ws)
+      creds[:ws] = {:userid => params[:ws_userid], :password => ws_password}
+    end
+    if params[:ipmi_userid]
+      ipmi_password = params[:ipmi_password] ? params[:ipmi_password] : host.authentication_password(:ipmi)
+      creds[:ipmi] = {:userid => params[:ipmi_userid], :password => ipmi_password}
+    end
     host.update_authentication(creds, :save => (mode != :validate))
     creds
   end

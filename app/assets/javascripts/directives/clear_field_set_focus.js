@@ -19,7 +19,7 @@ ManageIQ.angularApplication.directive('clearFieldSetFocus', ['$timeout', 'miqSer
       scope.$watch('bCancelPasswordChange', function(value) {
         if (value) {
           $timeout(function () {
-            scope[scope.model][ctrl.$name] = miqService.savedPasswordPlaceholder;
+            scope[scope.model][ctrl.$name] = miqService.storedPasswordPlaceholder;
           }, 0);
         }
       });

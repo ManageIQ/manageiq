@@ -31,7 +31,11 @@ src_files:
   - javascripts/controllers/repository/repository_form_controller.js
   - javascripts/controllers/retirement/retirement_form_controller.js
   - javascripts/controllers/buttons/button_group_controller.js
+  - javascripts/controllers/credentials/credentials_controller.js
+  - javascripts/SlickGrid-2.1/**/*.js
   - javascripts/directives/autofocus.js
+  - javascripts/directives/clear_field_set_focus.js
+  - javascripts/directives/required_if_existed.js
   - javascripts/directives/repository/valid_unc_path.js
   - javascripts/directives/checkchange.js
   - javascripts/directives/miq_calendar.js
