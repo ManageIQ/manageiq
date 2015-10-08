@@ -2,5 +2,5 @@
   - filename = render_listnav_filename
   - locals = {:truncate_length => 23}
   - locals.merge!(:size => 72) if @compare
-  = render :partial => "layouts/listnav/#{filename}", :locals => locals
+  = render :partial => "layouts/listnav/#{filename}", :locals => locals if filename
 

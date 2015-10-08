@@ -1,7 +1,7 @@
 :javascript
   var postMessageData = {
     import_file_upload_id: '#{@import_file_upload_id}',
-    message: '#{@message}'
+    message: '#{@message.html_safe}'
   };
 
   $(function() {

@@ -28,9 +28,6 @@
   %form#import-form
     %h3= _('Import Service Dialogs')
 
-    %label{:for => 'toggle-all'}= _('All')
-    %input#toggle-all{:type => 'checkbox'}
-
     #import-grid{:style => "width: #{@winW - 50}px; height: #{center_div_height + 5}px; cursor: hand; overflow-x: auto; overflow-y: auto;"}
 
     %table{:width => "100%"}
@@ -50,12 +47,4 @@
     });
 
     listenForDialogPostMessages();
-
-    var importCallback = function() {
-      $.get('dialog_accordion_json', function(data) {
-        ManageIQ.dynatreeReplacement.replace(data.locals_for_render);
-      });
-    };
-
-    setUpImportClickHandlers('import_service_dialogs', importCallback);
   });
