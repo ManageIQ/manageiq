@@ -71,8 +71,7 @@ class CustomButton < ActiveRecord::Base
   end
 
   def invoke(target)
-    args = resource_action.automate_queue_hash({:object_type => target.class.base_class.name, :object_id => target.id})
-    args[:user_id] ||= User.current_user.try(:id)
+    args = resource_action.automate_queue_hash(target, {})
     MiqQueue.put(
       :class_name  => 'MiqAeEngine',
       :method_name => 'deliver',
