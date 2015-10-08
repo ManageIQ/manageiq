@@ -826,8 +826,7 @@ class CatalogController < ApplicationController
     self.x_active_tree = :ot_tree
     self.x_active_accord = 'ot'
     x_tree_init(:ot_tree, :ot, "OrchestrationTemplate") unless x_tree
-    ot_type =
-    case ot.type
+    ot_type = case ot.type
       when "OrchestrationTemplateHot"
         "othot"
       when "OrchestrationTemplateCfn"
@@ -1009,7 +1008,6 @@ class CatalogController < ApplicationController
         add_flash(_("%{model} \"%{name}\" was saved") %
                   {:model => ui_lookup(:model => 'OrchestrationTemplate'),
                    :name  => @edit[:new][:name]})
-        ot_action_submit_flash
         @changed = session[:changed] = false
         @in_a_form = false
         @edit = session[:edit] = nil
@@ -1067,7 +1065,6 @@ class CatalogController < ApplicationController
         x_node_elems = x_node.split('-')
         x_node_elems[2] = to_cid(ot.id)
         self.x_node = x_node_elems.join('-')
-        ot_action_submit_flash
         @changed = session[:changed] = false
         @in_a_form = false
         @edit = session[:edit] = nil
@@ -1086,7 +1083,7 @@ class CatalogController < ApplicationController
   def ot_add_submit_save
     assert_privileges("orchestration_template_add")
     load_edit("ot_add__new", "replace_cell__explorer")
-    if !%w(OrchestrationTemplateHot OrchestrationTemplateCfn).include?(@edit[:new][:type])
+    if !%w(OrchestrationTemplateHot OrchestrationTemplateCfn OrchestrationTemplateAzure).include?(@edit[:new][:type])
       add_flash(_("\"%s\" is not a valid Orchestration Template type") % @edit[:new][:type], :error)
       ot_action_submit_flash
     elsif params[:content].nil? || params[:content].strip == ""
@@ -1108,7 +1105,14 @@ class CatalogController < ApplicationController
         add_flash(_("%{model} \"%{name}\" was saved") %
                     {:model => ui_lookup(:model => 'OrchestrationTemplate'),
                      :name  => @edit[:new][:name]})
-        subtree = ot.type == "OrchestrationTemplateHot" ? "xx-othot" : "xx-otcfn"
+        subtree = case ot.type
+                    when "OrchestrationTemplateHot"
+                      "xx-othot"
+                    when "OrchestrationTemplateCfn"
+                      "xx-otcfn"
+                    else
+                      "xx-otazu"
+                  end
         x_tree[:open_nodes].push(subtree) unless x_tree[:open_nodes].include?(subtree)
         ot_type = case ot.type
                     when  "OrchestrationTemplateHot"
@@ -1121,7 +1125,6 @@ class CatalogController < ApplicationController
          self.x_node = "xx-%{type}_ot-%{cid}" % {:type => ot_type,
                                                 :cid  => to_cid(ot.id)}
         x_tree[:open_nodes].push(x_node)
-        ot_action_submit_flash
         @changed = session[:changed] = false
         @in_a_form = false
         @edit = session[:edit] = nil
@@ -1652,7 +1655,7 @@ class CatalogController < ApplicationController
                   when "xx-othot"
                     "OrchestrationTemplateHot"
                   else
-                    "xx-otazu"
+                    "OrchestrationTemplateAzure"
                 end
           @right_cell_text = _("All %s") % ui_lookup(:models => typ)
           process_show_list(:model => typ.constantize, :gtl_dbname => :orchestrationtemplate)

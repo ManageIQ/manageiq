@@ -12,7 +12,7 @@ class TreeBuilderOrchestrationTemplates < TreeBuilder
        :tree  => "othot_tree",
        :text  => "Heat Templates",
        :image => "orchestration_template_hot",
-       :tip   => "Heat Templates"}
+       :tip   => "Heat Templates"},
       {:id    => 'otazu',
        :tree  => "otazu_tree",
        :text  => "Azure Templates",
@@ -39,7 +39,7 @@ class TreeBuilderOrchestrationTemplates < TreeBuilder
     classes = {
       "otcfn" => OrchestrationTemplateCfn,
       "othot" => OrchestrationTemplateHot,
-      "otazu" => OrchestrationTemplateAzure,
+      "otazu" => OrchestrationTemplateAzure
     }
     objects = rbac_filtered_objects(classes[object[:id]].all).sort_by { |o| o.name.downcase }
     count_only_or_objects(options[:count_only], objects, nil)
