@@ -16,7 +16,7 @@ class TreeBuilderOrchestrationTemplates < TreeBuilder
       {:id    => 'otazu',
        :tree  => "otazu_tree",
        :text  => "Azure Templates",
-       :image => "orchestration_template_azu",
+       :image => "orchestration_template_azure",
        :tip   => "Azure Templates"}
     ]
     options[:count_only] ? children.length : children

@@ -9,10 +9,10 @@
 #
 
 # Report title
-title: CloudFormations Orchestration Templates
+title: Azure Orchestration Templates
 
 # Menu name
-name: CloudFormations Orchestration Template
+name: Azure Orchestration Template
 
 # Main DB table report is based on
 db: OrchestrationTemplateAzure
