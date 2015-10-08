@@ -562,6 +562,7 @@ module ReportFormatter
     end
 
     def build_reporting_chart_numeric(_maxcols, _divider)
+      return no_records_found_chart(_('Invalid chart definition')) unless mri.graph[:column].present?
       if mri.group.nil?
         build_numeric_chart_simple
       else
