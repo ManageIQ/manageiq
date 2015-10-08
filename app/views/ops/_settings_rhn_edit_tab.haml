@@ -22,7 +22,7 @@
                       :class    => "selectpicker")
         :javascript
           miqInitSelectPicker();
-          miqSelectPickerEvent('upload_type', "#{url}")
+          miqSelectPickerEvent('register_to', "#{url}")
 
     .form-group
       %label.col-md-2.control-label
@@ -89,7 +89,7 @@
     - if 'rhn_satellite' == @edit[:new][:register_to]
       .form-group
         %label.col-md-2.control-label
-        = _("Organization ID")
+          = _("Organization ID")
         .col-md-8
           = text_field_tag('customer_org', @edit[:new][:customer_org], :maxlength => 200,
                            :class             => "form-control",
