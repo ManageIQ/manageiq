@@ -2,7 +2,8 @@
 
 All notable changes to this project will be documented in this file.
 
-# Capablanca Alpha 1 Release
+
+# Capablanca Beta Release
 
 ## Added Features
 
@@ -13,6 +14,7 @@ All notable changes to this project will be documented in this file.
   - Topology Widget
   - VMware integration
   - Inventory: Replicators, Routes, Projects
+  - SmartState Analysis
 -  Namespacing
   - Preparation for pluggable providers
   - OpenStack, Containers
@@ -23,7 +25,11 @@ All notable changes to this project will be documented in this file.
 - Foreman: Exposed additional properties to reporting
 - Azure
   - Initial work for Inventory Collection, OAuth2, [azure-armrest gem](https://github.com/ManageIQ/azure-armrest)
-  - Azure Provider models  
+  - Azure Provider models
+  - Power Operations
+- RHEVM: Reconfigure of Memory and CPU
+- Orchestration: Reconfiguration
+  
 
 ### Provisioning
 - Filter Service Catalog Items during deployment
@@ -44,7 +50,11 @@ All notable changes to this project will be documented in this file.
 - Retirement screens converted to Angular
 - DHTMLX menus replaced with Bootstrap/Patternfly menus
 - Host editor converted to Angular
-- Added donut charts   
+- Added donut charts
+- Tenancy Roles for RBAC
+- Self Service UI is enabled and included in build
+
+ 
 
 ### Tenancy
 - Model - new Tenant model associations
@@ -57,7 +67,11 @@ All notable changes to this project will be documented in this file.
  - TenantQuota
 - UI
  - RBAC and Roles - Access Roles features exposed
+ - New roles created for RBAC
  - Quota Management
+- Associate Tenant to Requests and Services
+- Update of VM tenant when owning group changes
+- Tagging support 
 
 ### REST API
 - Querying Service Template images
@@ -70,6 +84,10 @@ All notable changes to this project will be documented in this file.
 - Chargeback Rates CRUD
 - Reports run action
 - Report results collection
+- Access to image_hrefs for Services and Service Templates
+- Support for custom action buttons and dialogs
+- Categories and tags CRUD 
+- Support password updates
 
 ### Automate
 
@@ -80,9 +98,14 @@ All notable changes to this project will be documented in this file.
   - Allow for a state to be skipped (on_entry)
   - Allow for continuation of a state machine in case of errors (on_error)
   - Allow methods to set the next state to execute
+- Identify Visible/Editable/Enabled Automate domains for tenants
+- Set automate domain priority (scoped per tenant)
+- Service model updates
+- Import changes to include tenant  
 
 ### SmartState
 - Support for VMware VDDK version 6
+- Storage: Added FCP, iSCSI, GlusterFS
 
 ### Security
 - Authentication
@@ -96,6 +119,7 @@ All notable changes to this project will be documented in this file.
 - CentOS 7.1
 - Apache 2.4
 - jQuery 1.9.1
+- STIG compliant file systems
 - Changed file system from ext4 to xfs  
 - Added support for systemctl
 - Support for running on Puma, but default is Thin
@@ -118,7 +142,8 @@ All notable changes to this project will be documented in this file.
   - Upgraded to latest net-sftp
   - Upgraded to latest net-ssh  
   - Upgraded to latest ruby-progressbar
-  - Upgraded to latest snmp    
+  - Upgraded to latest snmp
+  - LinuxAdmin updated to 0.11.1    
 
 ### Removed
 
@@ -129,6 +154,7 @@ All notable changes to this project will be documented in this file.
   - Fix for RHEV 3.5 - ovf file no longer on NFS share.
   - Fix for NFS permission problem - uid changed when opening files on share.
   - Fix for environments with both, NFS and LUN based storage.
+  - Timeout honored.
 - SmartState Refactoring
    - Refactored the middle layer of the SmartState Analysis stack.
    - Common code no longer based on VmOrTemplate models.
@@ -142,6 +168,10 @@ All notable changes to this project will be documented in this file.
  - Moved provider event filters into the database (blacklisted events)
  - SCVMM Inventory Performance Improvement
  - Fixed caching for OpenStack Event Monitors
+ - OpenStack
+    - Generic Pagination
+    - Better Neutron support
+    - Deleting unused RabbitMIQ queues
 - Provisioning: Fixed unique names for provisioned VMs when ordered through a service  
 - UI
   - Technical Debt Progress
@@ -154,6 +184,7 @@ All notable changes to this project will be documented in this file.
   - Increased chart responsiveness
   - Fixes for Japanese I18n support
   - Fixed alignment of Foreman explorer RBAC features with the UI
+  - Updated file upload screens 
 
 # Botvinnik Release
 
