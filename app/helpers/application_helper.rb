@@ -922,7 +922,11 @@ module ApplicationHelper
       check_changes = args[:check_changes] || args[:check_changes].nil?
       tag_attrs[:onclick] = 'return miqCheckForChanges()' if check_changes
       content_tag(:li) do
-        link_to(link_text, link_params, tag_attrs)
+        if args[:record] && restful_routed?(args[:record])
+          link_to(link_text, polymorphic_path(args[:record], :display => args[:display]))
+        else
+          link_to(link_text, link_params, tag_attrs)
+        end
       end
     else
       content_tag(:li, :class => "disabled") do
