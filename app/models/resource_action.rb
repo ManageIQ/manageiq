@@ -4,16 +4,17 @@ class ResourceAction < ActiveRecord::Base
 
   serialize  :ae_attributes, Hash
 
-  def automate_queue_hash(override_values = nil, override_attrs = nil)
-    override_values ||= {}
-    override_attrs ||= {}
+  def automate_queue_hash(target, override_attrs)
+    override_values = target.nil? ? {} : {:object_type => target.class.name, :object_id => target.id}
     {
       :namespace        => ae_namespace,
       :class_name       => ae_class,
       :instance_name    => ae_instance,
       :automate_message => ae_message,
-      :attrs            => (ae_attributes || {}).merge(override_attrs),
-    }.merge(override_values)
+      :attrs            => (ae_attributes || {}).merge(override_attrs || {}),
+    }.merge(override_values).tap do |args|
+      args[:user_id]   ||= User.current_user.id
+    end
   end
 
   def fqname=(value)
@@ -56,11 +57,7 @@ class ResourceAction < ActiveRecord::Base
   end
 
   def prepare_automate_args(dialog_hash_values, target)
-    automate_values = target.nil? ? {} : {:object_type => target.class.name, :object_id => target.id}
     automate_attrs  = dialog_hash_values[:dialog]
-
-    args = automate_queue_hash(automate_values, automate_attrs)
-    args[:user_id] ||= User.current_user.try(:id)
-    args
+    automate_queue_hash(target, automate_attrs)
   end
 end
