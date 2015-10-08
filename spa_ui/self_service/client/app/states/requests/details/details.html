@@ -13,7 +13,7 @@
         <div class="row">
           <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
             <div class="ss-details-header__title-img" ng-if=" ::vm.request.picture.image_href ">
-              <img class="ss-details-header__title-img__logo" src="{{ ::vm.request.picture.image_href }}"/>
+              <img class="ss-details-header__title-img__logo" ng-src="{{ ::vm.request.picture.image_href }}"/>
             </div>
             <div class="ss-details-header__title">
               <h2>{{ ::vm.request.description }}</h2>
