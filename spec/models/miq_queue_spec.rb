@@ -261,6 +261,7 @@ describe MiqQueue do
     end
 
     it "should requeue a message with new message id" do
+      # TODO: is this format still supported?
       options = {
         :class_name  => 'MiqAeEngine',
         :method_name => 'deliver',
@@ -279,6 +280,7 @@ describe MiqQueue do
     end
 
     it "should requeue a message with message id higher last" do
+      # TODO: is this form supported?
       options = {
         :class_name  => 'MiqAeEngine',
         :method_name => 'deliver',
