@@ -6,6 +6,9 @@
 *.sublime-workspace
 *.suo
 *.swp
+#gitlab
+.gitlab-ci.yml
+testenv.sh
 .bundle/
 .idea/
 .loadpath
