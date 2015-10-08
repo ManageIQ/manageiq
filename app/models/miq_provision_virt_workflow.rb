@@ -724,7 +724,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       _log.info("sysprep_domain_name=<#{ou_domain}> does not match previous=<#{@last_ou_domain}> - recomputing")
       @last_ou_domain = ou_domain
       @ldap_ous = {}
-      details   = MiqProvision.get_domain_details(ou_domain, true, @requester)
+      details   = MiqProvision.get_domain_details(ou_domain, @requester.current_tenant, true, @requester)
       return @ldap_ous if details.nil?
 
       options[:host]      = details[:ldap_host]  if details.key?(:ldap_host)
