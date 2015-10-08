@@ -74,7 +74,7 @@ module MiqAeEngine
 
     options[:instance_name] ||= 'AUTOMATION'
     options[:attrs] ||= {}
-    options[:tenant_id] ||= Tenant.root_tenant.try(:id)
+    user_obj = ae_user_object(options)
 
     object_type      = options[:object_type]
     object_id        = options[:object_id]
@@ -87,7 +87,6 @@ module MiqAeEngine
     ae_state_previous = options[:ae_state_previous]
     vmdb_object      = nil
     ae_result        = 'error'
-    tenant_id        = options[:tenant_id]
 
     begin
       object_name = "#{object_type}.#{object_id}"
@@ -106,7 +105,6 @@ module MiqAeEngine
       automate_attrs[:ae_state_retries] = ae_state_retries   unless ae_state_retries.nil?
       automate_attrs['ae_state_data']   = ae_state_data      unless ae_state_data.nil?
       automate_attrs['ae_state_previous'] = ae_state_previous  unless ae_state_previous.nil?
-      automate_attrs['Tenant::tenant']    = tenant_id          unless tenant_id.nil?
 
       create_automation_object_options = {}
       create_automation_object_options[:vmdb_object] = vmdb_object                unless vmdb_object.nil?
@@ -115,7 +113,7 @@ module MiqAeEngine
       create_automation_object_options[:fqclass]     = options[:fqclass_name]     unless options[:fqclass_name].nil?
       create_automation_object_options[:message]     = options[:automate_message] unless options[:automate_message].nil?
       uri = create_automation_object(options[:instance_name], automate_attrs, create_automation_object_options)
-      ws  = resolve_automation_object(uri)
+      ws  = resolve_automation_object(uri, user_obj)
 
       if ws.nil? || ws.root.nil?
         message = "Error delivering #{options[:attrs].inspect} for object [#{object_name}] with state [#{state}] to Automate: Empty Workspace"
@@ -292,7 +290,6 @@ module MiqAeEngine
   def self.create_ae_attrs(attrs, name, vmdb_object, objects = [MiqServer.my_server, User.current_user])
     ae_attrs  = attrs.dup
     ae_attrs['object_name'] = name
-    ae_attrs['tenant_id'] ||= Tenant.root_tenant.try(:id)
 
     # Prepare for conversion to Automate MiqAeService objects (process vmdb_object first in case it is a User or MiqServer)
     ([vmdb_object] + objects).each do |object|
@@ -310,18 +307,25 @@ module MiqAeEngine
     array_objects.each do |o|
       ae_attrs[o] = ae_attrs[o].first   if ae_attrs[o].kind_of?(Array)
     end
-    tenant_id = ae_attrs.delete('tenant_id')
-    ae_attrs['Tenant::tenant'] = tenant_id if tenant_id
     ae_attrs
   end
 
   # side effect in options, :uri is set
   # returns workspace
-  def self.resolve_automation_object(uri, attr = nil, options = {}, readonly = false)
+  def self.resolve_automation_object(uri, user_obj, attr = nil, options = {}, readonly = false)
+    raise "User object not passed in" unless user_obj.kind_of?(User)
     uri = create_automation_object(uri, attr, options) if attr
     options[:uri] = uri
-    MiqAeWorkspaceRuntime.instantiate(uri, :readonly => readonly).tap do
+    MiqAeWorkspaceRuntime.instantiate(uri, user_obj, :readonly => readonly).tap do
       $miq_ae_logger.debug { ws.to_expanded_xml }
+    end
+  end
+
+  def self.ae_user_object(options = {})
+    raise "user_id not specified in Automation request" if options[:user_id].blank?
+    # raise "group_id not specified in Automation request" if options[:miq_group_id].blank?
+    User.find_by!(:id => options[:user_id]).tap do |obj|
+      # obj.current_group = MiqGroup.find_by!(:id => options[:miq_group_id])
     end
   end
 end

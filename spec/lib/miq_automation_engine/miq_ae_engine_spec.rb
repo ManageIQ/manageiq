@@ -6,6 +6,7 @@ module MiqAeEngineSpec
     before(:each) do
       MiqAeDatastore.reset
       EvmSpecHelper.local_guid_miq_server_zone
+      @user   = FactoryGirl.create(:user_with_group)
       @domain = 'SPEC_DOMAIN'
       @model_data_dir = File.join(File.dirname(__FILE__), "data")
       @root_tenant_id = Tenant.root_tenant.id
@@ -39,7 +40,10 @@ module MiqAeEngineSpec
           :automate_message => "create",
           :attrs            => {"request" => "InspectMe"},
           :object_type      => @vm.class.name,
-          :object_id        => @vm.id
+          :object_id        => @vm.id,
+          :user_id          => @user.id,
+          :miq_group_id     => @user.current_group.id,
+          :tenant_id        => @user.current_tenant.id
         }
 
         q = MiqQueue.put(
@@ -66,9 +70,9 @@ module MiqAeEngineSpec
           object_type = @cluster.class.name
           object_id   = @cluster.id
           automate_attrs = {"#{object_type}::#{object_type.underscore}" => object_id,
-                            "Tenant::tenant"                            => @root_tenant_id}
+                            "User::user"                                => @user.id}
           MiqAeEngine.should_receive(:create_automation_object).with(@instance_name, automate_attrs, {:vmdb_object => @cluster}).and_return('uri')
-          MiqAeEngine.deliver(object_type, object_id).should be_nil
+          MiqAeEngine.deliver(object_type, object_id, nil, nil, @user.id).should be_nil
         end
 
         it "with defaults and STI object" do
@@ -76,9 +80,9 @@ module MiqAeEngineSpec
           object_type = @ems.class.name
           object_id   = @ems.id
           automate_attrs = {"#{base_name}::#{base_name.underscore}" => object_id,
-                            "Tenant::tenant"                        => @root_tenant_id}
+                            "User::user"                            => @user.id}
           MiqAeEngine.should_receive(:create_automation_object).with(@instance_name, automate_attrs, {:vmdb_object => @ems}).and_return('uri')
-          MiqAeEngine.deliver(object_type, object_id).should be_nil
+          MiqAeEngine.deliver(object_type, object_id, nil, nil, @user.id).should be_nil
         end
       end
 
@@ -94,7 +98,7 @@ module MiqAeEngineSpec
           it "with defaults" do
             object_type = @ems.class.name
             object_id   = @ems.id
-            MiqAeEngine.deliver(object_type, object_id).should == @ws
+            MiqAeEngine.deliver(object_type, object_id, nil, nil, @user.id).should == @ws
           end
         end
 
@@ -109,15 +113,16 @@ module MiqAeEngineSpec
           it "with defaults" do
             object_type = @ems.class.name
             object_id   = @ems.id
-            MiqAeEngine.deliver(object_type, object_id).should == @ws
+            MiqAeEngine.deliver(object_type, object_id, nil, nil, @user.id).should == @ws
           end
 
           it "with a starting point instead of /SYSTEM/PROCESS" do
             args = {}
-            automate_attrs =  {"Tenant::tenant" => @root_tenant_id}
+            attrs = {'User::user' => @user.id}
             args[:instance_name]    = "DEFAULT"
             args[:fqclass_name] = "Factory/StateMachines/ServiceProvision_template"
-            MiqAeEngine.should_receive(:create_automation_object).with("DEFAULT", automate_attrs, {:fqclass => "Factory/StateMachines/ServiceProvision_template"}).and_return('uri')
+            args[:user_id] = @user.id
+            MiqAeEngine.should_receive(:create_automation_object).with("DEFAULT", attrs, :fqclass => "Factory/StateMachines/ServiceProvision_template").and_return('uri')
             MiqAeEngine.deliver(args).should == @ws
           end
         end
@@ -135,7 +140,7 @@ module MiqAeEngineSpec
           it "with defaults" do
             object_type = @ems.class.name
             object_id   = @ems.id
-            MiqAeEngine.deliver(object_type, object_id).should == @ws
+            MiqAeEngine.deliver(object_type, object_id, nil, nil, @user.id).should == @ws
 
             MiqQueue.count.should == 1
 
@@ -151,13 +156,12 @@ module MiqAeEngineSpec
               :object_id        => object_id,
               :attrs            => @attrs,
               :instance_name    => @instance_name,
-              :user_id          => @user_id,
+              :user_id          => @user.id,
               :state            => @state,
               :automate_message => @automate_message,
               :ae_fsm_started   => @ae_fsm_started,
               :ae_state_started => @ae_state_started,
               :ae_state_retries => @ae_state_retries,
-              :tenant_id        => @root_tenant_id
             }
             q.args.first.should == args
           end
@@ -167,7 +171,7 @@ module MiqAeEngineSpec
 
     context ".create_automation_object" do
       it "with various URIs" do
-        extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}&Tenant%3A%3Atenant=#{@root_tenant_id}"
+        extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}"
         env = 'dev'
         {
           "/System/Process/REQUEST?#{extras}&environment=#{env}&message=get_container_info&object_name=REQUEST&request=UI_PROVISION_INFO"  => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_container_info',  'environment' => env},
@@ -200,7 +204,7 @@ module MiqAeEngineSpec
 
       it "with a Vm (special case)" do
         vm = FactoryGirl.create(:vm_vmware)
-        extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}&Tenant%3A%3Atenant=#{@root_tenant_id}"
+        extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}"
         uri = "/System/Process/AUTOMATION?#{extras}&VmOrTemplate%3A%3Avm=#{vm.id}&object_name=AUTOMATION&vmdb_object_type=vm"
         MiqAeEngine.create_automation_object("AUTOMATION", {}, :vmdb_object => vm).should == uri
       end
@@ -209,7 +213,7 @@ module MiqAeEngineSpec
         vm = FactoryGirl.create(:vm_vmware)
         fqclass = "Factory/StateMachines/ServiceProvision_template"
         uri = MiqAeEngine.create_automation_object("DEFAULT", {}, :vmdb_object => vm, :fqclass => fqclass)
-        extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}&Tenant%3A%3Atenant=#{@root_tenant_id}"
+        extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}"
         expected_uri = "/#{fqclass}/DEFAULT?#{extras}&VmOrTemplate%3A%3Avm=#{vm.id}&object_name=DEFAULT&vmdb_object_type=vm"
         uri.should == expected_uri
       end
@@ -217,7 +221,7 @@ module MiqAeEngineSpec
       it "will not override values in attrs" do
         host  = FactoryGirl.create(:host)
         attrs = {"Host::host" => host.id, "MiqServer::miq_server" => "12"}
-        extras = "MiqServer%3A%3Amiq_server=12&Tenant%3A%3Atenant=#{@root_tenant_id}"
+        extras = "MiqServer%3A%3Amiq_server=12"
         uri = "/System/Process/AUTOMATION?Host%3A%3Ahost=#{host.id}&#{extras}&object_name=AUTOMATION&vmdb_object_type=host"
         MiqAeEngine.create_automation_object("AUTOMATION", attrs, :vmdb_object => host).should == uri
       end
@@ -227,7 +231,7 @@ module MiqAeEngineSpec
         hash       = {"hosts" => Host.all}
         attrs      = {"Array::my_hosts" => hash["hosts"].collect { |h| "Host::#{h.id}" }}
         result_str = "Array%3A%3Amy_hosts=" + hash["hosts"].collect { |h| "Host%3A%3A#{h.id}" }.join(",")
-        extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}&Tenant%3A%3Atenant=#{@root_tenant_id}"
+        extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}"
         uri = "/System/Process/AUTOMATION?#{result_str}&#{extras}&object_name=AUTOMATION"
         MiqAeEngine.create_automation_object("AUTOMATION", attrs).should == uri
       end
@@ -235,13 +239,13 @@ module MiqAeEngineSpec
       it "will process an empty array" do
         attrs      = {"Array::my_hosts" => ""}
         result_str = "Array%3A%3Amy_hosts="""
-        extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}&Tenant%3A%3Atenant=#{@root_tenant_id}"
+        extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}"
         uri = "/System/Process/AUTOMATION?#{result_str}&#{extras}&object_name=AUTOMATION"
         MiqAeEngine.create_automation_object("AUTOMATION", attrs).should == uri
       end
 
       it "will process an array of objects with a server and user" do
-        extras = "MiqServer%3A%3Amiq_server=12&Tenant%3A%3Atenant=#{@root_tenant_id}"
+        extras = "MiqServer%3A%3Amiq_server=12"
         FactoryGirl.create(:small_environment)
         attrs = {"MiqServer::miq_server" => "12", "array::tag" => "Classification::1,Classification::2"}
         result_str = "array%3A%3Atag=Classification%3A%3A1%2CClassification%3A%3A2"
@@ -422,7 +426,7 @@ module MiqAeEngineSpec
     it "a namespace containing a slash is parsed correctly " do
       start   = "namespace/more_namespace/my_favorite_class"
       msg_attrs = "message=testmessage&object_name=REQUEST&request=NOT_THERE"
-      extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}&Tenant%3A%3Atenant=#{@root_tenant_id}"
+      extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}"
       uri =  "/namespace/more_namespace/my_favorite_class/REQUEST?#{extras}&#{msg_attrs}"
       attrs  = {'request' => 'NOT_THERE', 'message' => 'testmessage'}
       MiqAeEngine.create_automation_object('REQUEST', attrs, :fqclass => start).should == uri
@@ -431,7 +435,7 @@ module MiqAeEngineSpec
     it "a namespace not containing a slash is parsed correctly " do
       start   = "namespace/my_favorite_class"
       msg_attrs = "message=testmessage&object_name=REQUEST&request=NOT_THERE"
-      extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}&Tenant%3A%3Atenant=#{@root_tenant_id}"
+      extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}"
       uri =  "/namespace/my_favorite_class/REQUEST?#{extras}&#{msg_attrs}"
       attrs  = {'request' => 'NOT_THERE', 'message' => 'testmessage'}
       MiqAeEngine.create_automation_object('REQUEST', attrs, :fqclass => start).should == uri
@@ -448,15 +452,15 @@ module MiqAeEngineSpec
       roots.length.should == 1
       roots.first.attributes["attr1"].should == "Gregg TEST2 Oleg"
 
-      ws.instantiate("/EVM/AUTOMATE/test2")
+      ws.instantiate("/EVM/AUTOMATE/test2", @user)
       ws.roots.length.should == 2
       ws.roots[1].attributes["attr1"].should == "TEST2"
 
-      ws.instantiate("/EVM/AUTOMATE/test1")
+      ws.instantiate("/EVM/AUTOMATE/test1", @user)
       ws.roots.length.should == 3
       ws.roots[2].attributes["attr1"].should == "frank"
 
-      ws.instantiate("/EVM/AUTOMATE/test4")
+      ws.instantiate("/EVM/AUTOMATE/test4", @user)
       ws.roots.length.should == 4
       ws.roots[3].attributes["attr1"].should == "frank"
 

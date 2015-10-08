@@ -555,12 +555,12 @@ module MiqAeEngine
         rels = []
         wildcard_expand(relationship).each do|r|
           Benchmark.current_realtime[:relationship_followed_count] += 1
-          rels << @workspace.instantiate(r, self)
+          rels << @workspace.instantiate(r, @workspace.ae_user, self)
         end
         process_collects(collect, rels)
       else
         Benchmark.current_realtime[:relationship_followed_count] += 1
-        rels = @workspace.instantiate(relationship, self)
+        rels = @workspace.instantiate(relationship, @workspace.ae_user, self)
         process_collects(collect, rels)
       end
       @rels[name] = rels
