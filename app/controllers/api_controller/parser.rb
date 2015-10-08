@@ -201,7 +201,7 @@ class ApiController
       cspec = collection_config[cname.to_sym]
       target = request_type_target.last
       aspec = cspec["#{target}_actions".to_sym]
-      return unless aspec
+      return if method_name == :get && aspec.nil?
       action_hash = fetch_action_hash(aspec, method_name, action_name)
       raise BadRequestError, "Disabled action #{action_name}" if action_hash[:disabled]
       unless api_user_role_allows?(action_hash[:identifier])
