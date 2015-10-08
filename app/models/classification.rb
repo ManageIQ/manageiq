@@ -17,7 +17,7 @@ class Classification < ActiveRecord::Base
       c.class.in_my_region.exists?(cond)
     }
   validates_presence_of :name, :description
-  validates_length_of :name, :maximum => 30, :message => "must not exceed 30 characters"
+  validates_length_of :name, :maximum => 50, :message => "must not exceed 50 characters"
   validates_length_of :description, :maximum => 255, :message => "must not exceed 255 characters"
   validates_inclusion_of :syntax,
     :in => %w{ string integer boolean },
