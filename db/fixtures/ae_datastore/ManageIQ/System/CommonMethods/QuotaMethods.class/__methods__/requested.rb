@@ -2,16 +2,16 @@
 # Description: <Method description here>
 #
 def request_info
-  @service = ($evm.object['quota_type'] == 'service') ? true : false
+  @service = ($evm.parent['quota_type'] == 'service') ? true : false
   @miq_request = $evm.root['miq_request']
   $evm.log(:info, "Request: #{@miq_request.description} id: #{@miq_request.id} ")
 end
 
 def calculate_requested(options_hash = {})
-  {:memory            => get_total_requested(options_hash, :vm_memory),
-   :cpu               => get_total_requested(options_hash, :cores_per_socket),
-   :allocated_storage => get_total_requested(options_hash, :allocated_storage),
-   :vms               => get_total_requested(options_hash, :number_of_vms)}
+  {:memory  => get_total_requested(options_hash, :vm_memory),
+   :cpu     => get_total_requested(options_hash, :cores_per_socket),
+   :storage => get_total_requested(options_hash, :storage),
+   :vms     => get_total_requested(options_hash, :number_of_vms)}
 end
 
 def get_total_requested(options_hash, prov_option)
@@ -51,34 +51,35 @@ def vm_prov_option_value(prov_option, options_array = [])
   number_of_vms = get_option_value(@miq_request, :number_of_vms)
   case prov_option
   when :vm_memory
-    set_requested_value(prov_option, memory_in_request(number_of_vms),
+    memory_in_request = number_of_vms * get_option_value(@miq_request, :vm_memory)
+    set_requested_value(prov_option, memory_in_request,
                         @miq_request.get_option(:instance_type), options_array)
   when :number_of_cpus
-    set_requested_value(prov_option, cpu_in_request,
-                        @miq_request.get_option(:instance_type), options_array)
-  when :allocated_storage
-    set_requested_value(prov_option, storage_in_request(number_of_vms),
-                        @miq_request.get_option(:instance_type), options_array)
+    requested_number_of_cpus(number_of_vms, options_array)
+  when :storage
+    requested_storage(prov_option, number_of_vms, options_array)
   else
     options_value(prov_option, @miq_request, options_array)
   end
   options_array
 end
 
-def storage_in_request(number_of_vms)
-  vm_size = @miq_request.vm_template.provisioned_storage
-  vm_size = get_option_value(@miq_request, :allocated_storage) if vm_size.zero?
-  number_of_vms * vm_size
-end
-
-def cpu_in_request
+def requested_number_of_cpus(number_of_vms, options_array)
   cpu_in_request = get_option_value(@miq_request, :number_of_cpus)
-  return cpu_in_request unless cpu_in_request.zero?
-  get_option_value(@miq_request, :number_of_sockets) * get_option_value(@miq_request, :cores_per_socket)
+  if cpu_in_request.zero?
+    cpu_in_request = get_option_value(@miq_request, :number_of_sockets) *
+                     get_option_value(@miq_request, :cores_per_socket)
+  end
+  total_cpu = number_of_vms * cpu_in_request
+  set_requested_value(prov_option, total_cpu,
+                      @miq_request.get_option(:instance_type), options_array)
 end
 
-def memory_in_request(number_of_vms)
-  memory_in_request = number_of_vms * get_option_value(@miq_request, :vm_memory)
+def requested_storage(prov_option, number_of_vms, options_array)
+  vm_size = @miq_request.vm_template.provisioned_storage  / 1024**2
+  total_storage = number_of_vms * vm_size
+  set_requested_value(prov_option, total_storage,
+                      @miq_request.get_option(:instance_type), options_array)
 end
 
 def options_value(prov_option, resource, options_array)
@@ -107,10 +108,10 @@ def dialog_values(prov_option, options_hash, dialog_array)
 end
 
 def set_requested_value(prov_option, option_value, find_id, dialog_array)
-  $evm.log(:info, "set requested value: prov_option: #{prov_option} value:  #{option_value}")
+  $evm.log(:info, "set requested value: prov_option: #{prov_option} value: #{option_value}")
   return if cloud_value(prov_option, option_value, find_id, dialog_array)
 
-  $evm.log(:info, "set requested value default_option: prov_option: #{prov_option} value:  #{option_value}")
+  $evm.log(:info, "set requested value default_option: prov_option: #{prov_option} value: #{option_value}")
   default_option(option_value, dialog_array)
 end
 
@@ -119,14 +120,14 @@ def cloud_value(prov_option, option_value, find_id, dialog_array)
 
   case prov_option
   when :cores_per_socket
-    $evm.log(:info, "set requested value cores_per_socket: prov_option: #{prov_option} value:  #{option_value}")
+    $evm.log(:info, "set requested value cores_per_socket: prov_option: #{prov_option} value: #{option_value}")
     option_set = requested_cores_per_socket(find_id, dialog_array)
   when :vm_memory
-    $evm.log(:info, "set requested value vm_memory: prov_option: #{prov_option} value:  #{option_value}")
+    $evm.log(:info, "set requested value vm_memory: prov_option: #{prov_option} value: #{option_value}")
     option_set = requested_vm_memory(find_id, dialog_array)
-  when :allocated_storage
-    $evm.log(:info, "set requested value allocated_storage: prov_option: #{prov_option} value:  #{option_value}")
-    option_set = requested_allocated_storage(@miq_request.get_option(:src_vm_id), dialog_array)
+  when :storage
+    $evm.log(:info, "set requested value storage: prov_option: #{prov_option} value: #{option_value}")
+    option_set = requested_storage(@miq_request.get_option(:src_vm_id), dialog_array)
   end
   option_set
 end

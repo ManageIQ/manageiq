@@ -22,13 +22,14 @@ object:
       value: '10240'
   - max_memory:
       value: '20480'
-  - entity:
-      value: get_entity
+  - source:
+      value: "/System/CommonMethods/QuotaMethods/source"
+  - limits:
+      value: "/System/CommonMethods/QuotaMethods/limits"
   - used:
-      value: calculate_used
+      value: "/System/CommonMethods/QuotaMethods/used"
   - requested:
-      value: calculate_requested
-  - quota:
-      value: get_quota
-  - validate_quota:
-      value: validate_quota
+      value: "/System/CommonMethods/QuotaMethods/requested"
+  - validate:
+      value: "/System/CommonMethods/QuotaMethods/validate"
+      on_error: service_rejected

@@ -1,0 +1,158 @@
+
+def request_info
+  @service = ($evm.object['quota_type'] == 'service') ? true : false
+  @miq_request = $evm.root['miq_request']
+  $evm.log(:info, "Request: #{@miq_request.description} id: #{@miq_request.id} ")
+end
+
+def source_info
+  @source = $evm.root['quota_source']
+end
+
+def quota_check(item, used, requested, quota_max, quota_warn)
+  $evm.log(:info, "Item: #{item} Used: (#{used}) Requested: (#{requested}) Max: (#{quota_max}) Warn: (#{quota_warn})")
+  return unless quota_max + quota_warn > 0
+  if quota_exceeded?(item, used, requested, quota_max)
+    quota_exceeded(item, reason(item, used, requested, quota_max), false)
+  elsif quota_exceeded?(item, used, requested, quota_warn)
+    quota_exceeded(item, reason(item, used, requested, quota_warn), true)
+  end
+end
+
+def quota_exceeded?(item, used, requested, quota)
+  return false if quota.zero?
+  if used + requested > quota
+    $evm.log(:info, "#{item} Quota exceeded: Used(#{used}) + Requested(#{requested}) > Quota(#{quota})")
+    return true
+  end
+  false
+end
+
+def quota_exceeded(item, reason, warn)
+  warn ? quota_warn_exceeded(item, reason) : quota_limit_exceeded(item, reason)
+  true
+end
+
+def reason_key(item, warn)
+  "#{item}_quota_#{warn}exceeded".to_sym
+end
+
+def quota_limit_exceeded(item, reason)
+  key = reason_key(item, nil)
+  $evm.log(:info, "Quota Limit exceeded for key: #{key} reason: #{reason}")
+  @max_exceeded[key] = reason
+end
+
+def quota_warn_exceeded(item, reason)
+  key = reason_key(item, "warn_")
+  $evm.log(:info, "Quota Warning exceeded for key: #{key} reason: #{reason}")
+  @warn_exceeded[key] = reason
+end
+
+def reason(item, used, requested, limits)
+  "#{item} - Used: #{used} plus requested: #{requested} exceeds quota limit: #{limits}"
+end
+
+def check_quotas
+  %w(storage vms cpu memory).each do |i|
+    key = i.to_sym
+    quota_check(i, @used[key].to_i, @requested[key].to_i, @max_limit[key].to_i, @warn_limit[key].to_i)
+  end
+end
+
+def check_quota_results
+  message = ""
+  unless @max_exceeded.empty?
+    max_message = message_text(nil, "Request denied due to the following quota limits: ", @max_exceeded)
+    message = set_exceeded_results(message, max_message, :quota_max_exceeded, "error")
+
+    @miq_request.set_option("quota_max_exceeded".to_sym, max_message)
+    $evm.root['ae_result'] = 'error'
+  end
+  unless @warn_exceeded.empty?
+    warn_message = message_text('warn_', "Request warning due to the following quota thresholds: ", @warn_exceeded)
+    message = set_exceeded_results(message, warn_message, :quota_warn_exceeded, "ok")
+    @miq_request.set_option("quota_warn_exceeded".to_sym, warn_message)
+  end
+  @miq_request.set_message(message[0..250])
+end
+
+def set_exceeded_results(request_message, new_message, request_option, ae_result_text)
+  request_message += new_message
+  @miq_request.set_option(request_option, request_message)
+  $evm.root['ae_result'] = ae_result_text
+end
+
+def message_text(type, msg, exceeded_hash)
+  message = msg
+  ["cpu_quota_#{type}exceeded".to_sym,
+   "memory_quota_#{type}exceeded".to_sym,
+   "storage_quota_#{type}exceeded".to_sym,
+   "vms_quota_#{type}exceeded".to_sym].each do |q|
+    message += "(#{exceeded_hash[q]}) " if exceeded_hash[q]
+  end
+  message
+end
+
+def get_hash(root_obj_value, yaml_load_name)
+  root_obj_value.nil? ? YAML.load($evm.root[yaml_load_name]) : root_obj_value
+end
+
+def setup
+  @requested = get_hash($evm.root['quota_requested'], 'quota_requested_yaml')
+  @used = get_hash($evm.root['quota_used'], 'quota_used_yaml')
+  @max_limit = get_hash($evm.root['quota_limit_max'], 'quota_limit_max_yaml')
+  @warn_limit = get_hash($evm.root['quota_limit_warn'], 'quota_limit_warn_yaml')
+  @max_exceeded = {}
+  @warn_exceeded = {}
+end
+
+def quotas_configured?
+  res = @max_limit.values.sum + @max_limit.values.sum
+  $evm.log(:info, "Quota limits: #{res}.")
+  res
+end
+
+def limits_set(limit_hash)
+  limit_hash.values.sum.zero? ? false : true
+end
+
+def error(type)
+  msg = "Unable to calculate quota due to an error getting the #{type}"
+  $evm.log(:warn, " #{msg}")
+  $evm.root['ae_result'] = 'error'
+  raise msg
+end
+
+setup
+
+$evm.log("info", "Listing Root Object Attributes:")
+$evm.root.attributes.sort.each { |k, v| $evm.log("info", "\t#{k}: #{v}") }
+$evm.log("info", "===========================================")
+
+request_info
+error("request") if @miq_request.nil?
+
+source_info
+error("source") if @source.nil?
+
+$evm.log(:info, "used: #{@used.inspect}")
+$evm.log(:info, "requested: #{@requested.inspect}")
+$evm.log(:info, "quota_warning: #{@warn_limit.inspect}")
+$evm.log(:info, "quota_limits: #{@max_limit.inspect}")
+
+unless limits_set(@max_limit) || limits_set(@warn_limit)
+  $evm.log(:info, "No Quota limits set. No quota check being done.")
+  $evm.root['ae_result'] = 'ok'
+  exit MIQ_OK
+end
+
+check_quotas
+
+check_quota_results
+
+$evm.log(:info, "miq_request object: #{@miq_request.inspect}")
+
+$evm.log("info", "Listing Root Object Attributes:")
+$evm.root.attributes.sort.each { |k, v| $evm.log("info", "\t#{k}: #{v}") }
+$evm.log("info", "===========================================")

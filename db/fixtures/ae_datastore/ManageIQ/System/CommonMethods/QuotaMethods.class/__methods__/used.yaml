@@ -3,7 +3,7 @@ object_type: method
 version: 1.0
 object:
   attributes:
-    name: calculate_used
+    name: used
     display_name: 
     description: 
     scope: instance

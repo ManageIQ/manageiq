@@ -3,9 +3,9 @@ object_type: class
 version: 1.0
 object:
   attributes:
-    description: Quota
-    display_name: Quota
-    name: Quota
+    description: QuotaStateMachine
+    display_name: 
+    name: QuotaStateMachine
     type: 
     inherits: 
     visibility: 
@@ -192,8 +192,8 @@ object:
       max_retries: 
       max_time: 
   - field:
-      aetype: method
-      name: entity
+      aetype: state
+      name: source
       display_name: 
       datatype: string
       priority: 10
@@ -212,8 +212,8 @@ object:
       max_retries: 
       max_time: 
   - field:
-      aetype: method
-      name: used
+      aetype: state
+      name: limits
       display_name: 
       datatype: string
       priority: 11
@@ -232,8 +232,8 @@ object:
       max_retries: 
       max_time: 
   - field:
-      aetype: method
-      name: requested
+      aetype: state
+      name: used
       display_name: 
       datatype: string
       priority: 12
@@ -252,8 +252,8 @@ object:
       max_retries: 
       max_time: 
   - field:
-      aetype: method
-      name: quota
+      aetype: state
+      name: requested
       display_name: 
       datatype: string
       priority: 13
@@ -272,8 +272,8 @@ object:
       max_retries: 
       max_time: 
   - field:
-      aetype: method
-      name: validate_quota
+      aetype: state
+      name: validate
       display_name: 
       datatype: string
       priority: 14
