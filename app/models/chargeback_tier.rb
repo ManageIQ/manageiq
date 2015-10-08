@@ -4,7 +4,7 @@ class ChargebackTier < ActiveRecord::Base
 
   ASSIGNMENT_PARENT_ASSOCIATIONS = [:host, :ems_cluster, :storage, :ext_management_system, :my_enterprise]
   include AssignmentMixin
-  has_many :chargeback_tier_detail, :dependent => :destroy
+  has_many :chargeback_tier_details, :dependent => :destroy
 
   def rate(value)
     ratet = 0

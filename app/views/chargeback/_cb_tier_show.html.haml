@@ -21,8 +21,8 @@
         %th= _('Tier rate')
     %tbody
       - @sb[:selected_tier_details].each do |r|
-        %tr
-          %td.active{:colspan => "4"} &nbsp;
+        /%tr
+        /  %td.active{:colspan => "4"} &nbsp;
         %tr
           %td
             = r.description

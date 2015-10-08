@@ -50,11 +50,12 @@
         %th= _('Tier rate')
     %tbody
       - @sb[:tier_details].each_with_index do |r, i|
-          %tr
-            %td.active{:colspan => "6"} &nbsp;
+        /%tr
+        /  %td.active{:colspan => "6"} &nbsp;
         %tr
           %td
-            = r[:description]
+            = text_field_tag("start_#{i}", @edit[:new][:details][i][:description],
+              :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
           %td
             = text_field_tag("start_#{i}", @edit[:new][:details][i][:start],
               :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)

@@ -367,8 +367,131 @@ class ChargebackController < ApplicationController
   end
 
   def cb_tier_edit
-    puts "Editing tier"
+    case params[:button]
+    when "cancel"
+      add_flash("#{!@sb[:tier] || @sb[:tier].id.blank? ? _("Add of new %s was cancelled by the user") % ui_lookup(:model => "ChargebackTier") :
+        _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "ChargebackTier"), :name => @sb[:tier].description}}")
+      get_node_info(x_node)
+      @sb[:tier] = @sb[:tier_details] = nil
+      @edit = session[:edit] = nil  # clean out the saved info
+      session[:changed] =  false
+      replace_right_cell
+    when "save", "add"
+      id = params[:id] && params[:button] == "save" ? params[:id] : "new"
+      return unless load_edit("cbtier_edit__#{id}", "replace_cell__chargeback")
+      @sb[:tier] = @edit[:tier] if @edit && @edit[:tier]
+      if @edit[:new][:description].nil? || @edit[:new][:description] == ""
+        add_flash(_("%s is required") % "Description", :error)
+        render :update do |page|
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        end
+        return
+      end
+      @sb[:tier].description = @edit[:new][:description]
+      @sb[:tier].name = @edit[:new][:name] if @edit[:new][:name]
+      if params[:button] == "add"
+        cb_tier_set_record_vars
+        @sb[:tier].chargeback_tier_details.replace(@sb[:tier_details])
+
+        if @sb[:tier].save
+          AuditEvent.success(build_saved_audit(@sb[:tier], @edit))
+          add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "ChargebackTier"), :name => @sb[:tier].description})
+          @edit = session[:edit] = nil  # clean out the saved info
+          session[:changed] =  @changed = false
+          get_node_info(x_node)
+          replace_right_cell([:cb_tiers])
+        else
+          @sb[:tier].errors.each do |field, msg|
+            add_flash("#{field.to_s.capitalize} #{msg}", :error)
+          end
+          @sb[:tier_details].each do |detail|
+            detail.errors.each { |field, msg| add_flash("'#{detail.description}' #{field.to_s.capitalize} #{msg}", :error) }
+          end
+          @changed = session[:changed] = (@edit[:new] != @edit[:current])
+          render :update do |page|
+            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          end
+        end
+      else      # for save button
+        cb_tier_set_record_vars
+        # Detect errors saving tier details
+        tier_detail_error = false
+        @sb[:tier_details].each { |detail| tier_detail_error = true if detail.save == false }
+        if tier_detail_error == false && @sb[:tier].save
+          AuditEvent.success(build_saved_audit(@sb[:tier], @edit))
+          add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "ChargebackTier"), :name => @sb[:tier].description})
+          @edit = session[:edit] = nil  # clean out the saved info
+          @changed = false
+          get_node_info(x_node)
+          replace_right_cell([:cb_tiers])
+        else
+          @sb[:tier].errors.each do |field, msg|
+            add_flash("#{field.to_s.capitalize} #{msg}", :error)
+          end
+          @sb[:tier_details].each do |detail|
+            detail.errors.each { |field, msg| add_flash("'#{detail.description}' #{field.to_s.capitalize} #{msg}", :error) }
+          end
+          @changed = session[:changed] = (@edit[:new] != @edit[:current])
+          render :update do |page|
+            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          end
+        end
+      end
+    when "reset", nil  # Reset or first time in
+      obj = find_checked_items                              # editing from list view
+      obj[0] = params[:id] if obj.blank? && params[:id]      # editing from show screen
+      if params[:typ] == "copy" # if tab was not changed
+        session[:changed] = true
+        @sb[:tier_details] = []
+        tier = ChargebackTier.find(obj[0])
+        @sb[:tier] = ChargebackTier.new
+        @sb[:tier].description = "Copy of " + tier.description
+        @sb[:tier].name = tier.name
+        tier_details = tier.chargeback_tier_details
+        # Create new tier detail records for copied tier record
+        tier_details.each do |r|
+          detail = ChargebackTierDetail.new
+          detail.description = r[:description]
+          detail.start = r[:source]
+          detail.end = r[:end]
+          detail.chargeback_tier_id = r[:chargeback_tier_id]
+          @sb[:tier_details].push(detail) unless @sb[:tier_details].include?(detail)
+        end
+      else
+        session[:changed] = false
+        @sb[:tier] = params[:typ] == "new" ? ChargebackTier.new : ChargebackTier.find(obj[0])
+        @sb[:tier_details] = @sb[:tier].chargeback_tier_details.to_a
+        if @sb[:tier_details].blank?
+          fixture_file = File.join(@@fixture_dir, "chargeback_tiers.yml")
+          if File.exist?(fixture_file)
+            fixture = YAML.load_file(fixture_file)
+            fixture.each do |cbr|
+              #if cbr[:tier_type] == x_node.split('-').last
+                tiers = cbr.delete(:tiers)
+                tiers.each do |r|
+                  detail = ChargebackTierDetail.new
+                  detail.description = r[:description]
+                  detail.start = r[:start]
+                  detail.chargeback_tier_id = r[:chargeback_tier_id]
+                  detail.end = r[:end]
+                  detail.tier_rate = r[:tier_rate]
+                  @sb[:tier_details].push(detail) unless @sb[:tier_details].include?(detail)
+                #end
+              end
+            end
+          end
+        end
+      end
+      #@sb[:tier_details].sort_by! { |rd| [rd[:name].downcase, rd[:description].downcase] }
+      cb_tier_set_form_vars
+      @in_a_form = true
+      if params[:button] == "reset"
+        add_flash(_("All changes have been reset"), :warning)
+      end
+      replace_right_cell
+    end
   end
+
   def cb_tier_show
     @display = "main"
     @sb[:selected_tier_details] = ChargebackTierDetail.where(chargeback_tier_id: @record.id).to_a
@@ -654,6 +777,32 @@ class ChargebackController < ApplicationController
     end
   end
 
+  def cb_tier_set_form_vars
+    @edit = {}
+    @edit[:tier] = @sb[:tier]
+    @edit[:key] = "cbtier_edit__#{@sb[:tier].id || "new"}"
+    @edit[:tier_details] = @sb[:tier_details]
+    @edit[:new]     = HashWithIndifferentAccess.new
+    @edit[:current] = HashWithIndifferentAccess.new
+    @edit[:rec_id] = @sb[:tier].id || nil
+    @in_a_form = true
+
+    @edit[:new][:description] = @sb[:tier].description
+    @edit[:new][:name] = @sb[:tier].name ? @sb[:tier].name : x_node.split('-').last
+    @edit[:new][:details] = []
+
+    @sb[:tier_details].each do |r|
+      temp = {}
+      temp[:tier_rate] = (!r.tier_rate.nil? && r.tier_rate != "") ? r.tier_rate : 0
+      temp[:start] = r.start ? r.start : "0"
+      temp[:end] = r.end ? r.end : nil
+      temp[:chargeback_tier_id]= r.chargeback_tier_id ? r.chargeback_tier_id : "Not tiered"
+      @edit[:new][:details].push(temp)
+    end
+
+    @edit[:current] = copy_hash(@edit[:new])
+    session[:edit] = @edit
+  end
   # Set record vars for save
   def cb_assign_set_record_vars
     if @edit[:new][:cbshow_typ].ends_with?("-tags")
