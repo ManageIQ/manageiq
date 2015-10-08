@@ -11317,10 +11317,6 @@ msgstr ""
 msgid "Non-VM Files"
 msgstr ""
 
-#: ../../app/services/user_validation_service.rb:69
-msgid "Non-admin users can not access the system until at least 1 VM/Instance has been discovered"
-msgstr ""
-
 #: ../../app/views/ops/_rbac_role_details.html.haml:61 ../../app/views/ops/_rbac_role_details.html.haml:64 ../../app/views/miq_request/_prov_vm_grid.html.haml:30 ../../app/views/miq_request/_prov_host_grid.html.haml:32 ../../app/views/miq_request/_prov_vc_grid.html.haml:26 ../../app/views/miq_request/_prov_pxe_img_grid.html.haml:25 ../../app/views/miq_request/_prov_ds_grid.html.haml:28 ../../app/views/miq_request/_prov_field.html.haml:258 ../../app/views/miq_request/_prov_field.html.haml:308 ../../app/views/miq_request/_prov_field.html.haml:431 ../../app/views/miq_request/_prov_field.html.haml:524 ../../app/views/miq_request/_prov_iso_img_grid.html.haml:25 ../../app/views/miq_request/_prov_template_grid.html.haml:25 ../../app/views/miq_request/_prov_windows_image_grid.html.haml:25 ../../app/views/miq_ae_customization/_dialog_sample.html.haml:127 ../../app/views/miq_ae_customization/_dialog_sample.html.haml:161 ../../app/views/miq_ae_customization/_dialog_field_form.html.haml:295 ../../app/views/miq_ae_customization/_dialog_field_form.html.haml:439 ../../app/views/miq_ae_customization/_dialog_field_form.html.haml:482 ../../app/views/miq_ae_customization/_dialog_field_form.html.haml:580 ../../app/views/layouts/_edit_to_email.html.haml:22 ../../app/views/report/_form_columns_trend.html.haml:42 ../../app/views/report/_form_columns_trend.html.haml:86 ../../app/views/report/_form_columns_trend.html.haml:86 ../../app/views/report/_form_formatting.html.haml:88 ../../app/views/report/_form_sort.html.haml:119 ../../app/views/shared/dialogs/_dialog_field_radio_button.html.haml:6 ../../app/views/shared/views/_retire.html.haml:51 ../../app/views/catalog/_form_resources_info.html.haml:110 ../../app/views/miq_policy/_alert_snmp.html.haml:129 ../../app/views/miq_policy/_action_options.html.haml:475 ../../app/views/miq_policy/_action_options.html.haml:487 ../../app/views/miq_capacity/_utilization_options.html.haml:46
 msgid "None"
 msgstr ""

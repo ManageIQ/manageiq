@@ -74,10 +74,7 @@ class UserValidationService
   def validate_user_handle_no_records
     ValidateResult.new(:pass, nil, url_for(
                                      :controller    => "ems_infra",
-                                     :action        => 'show_list',
-                                     :flash_warning => true,
-                                     :flash_msg     => _("Non-admin users can not access the system until at least 1 VM/Instance has been discovered"))
-                      )
+                                     :action        => 'show_list'))
   end
 
   def validate_user_handle_not_ready(db_user)
