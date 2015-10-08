@@ -19,7 +19,7 @@ gem "jquery-hotkeys-rails"
 gem "jquery-rails",                   "~>4.0.4"
 gem "jquery-rjs",                     "=0.1.1",                       :git => "https://github.com/amatsuda/jquery-rjs.git"
 gem "lodash-rails",                   "~>3.10.0"
-gem "patternfly-sass",                "~>2.2.0"
+gem "patternfly-sass",                "~>2.3.0"
 gem "css_splitter"
 gem "sass-rails"
 
