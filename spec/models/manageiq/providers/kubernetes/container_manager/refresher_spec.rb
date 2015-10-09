@@ -62,8 +62,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
   end
 
   def assert_ems
-    expect(@ems).to have_attributes(
-      :port => "6443",
+    @ems.should have_attributes(
+      :port => 6443,
       :type => "ManageIQ::Providers::Kubernetes::ContainerManager"
     )
   end
