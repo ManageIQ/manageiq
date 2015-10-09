@@ -28,7 +28,7 @@ module Menu
           Menu::Item.new('cloud_tenant',        N_('Tenants'),             'cloud_tenant',              {:feature => 'cloud_tenant_show_list'},                  '/cloud_tenant'),
           Menu::Item.new('flavor',              N_('Flavors'),             'flavor',                    {:feature => 'flavor_show_list'},                        '/flavor'),
           Menu::Item.new('security_group',      N_('Security Groups'),     'security_group',            {:feature => 'security_group_show_list'},                '/security_group'),
-          Menu::Item.new('vm_cloud',            N_('Instances'),           'vm_cloud_explorer', {:feature => 'vm_cloud_explorer_accords', :any => true}, '/vm_cloud/explorer'),
+          Menu::Item.new('vm_cloud',            N_('Instances'),           'vm_cloud_explorer',         {:feature => 'vm_cloud_explorer_accords', :any => true}, '/vm_cloud/explorer'),
           Menu::Item.new('orchestration_stack', N_('Stacks'),              'orchestration_stack',       {:feature => 'orchestration_stack_show_list'},           '/orchestration_stack')
         ])
       end
@@ -45,7 +45,7 @@ module Menu
                          {:feature => 'vm_infra_explorer_accords', :any => true},
                          '/vm_infra/explorer'),
           Menu::Item.new('resource_pool',    N_('Resource Pools'),   'resource_pool', {:feature => 'resource_pool_show_list'}, '/resource_pool'),
-          Menu::Item.new('storage',          ui_lookup(:tables => 'storages'),
+          Menu::Item.new('storage',          deferred_ui_lookup(:tables => 'storages'),
                          'storage',       {:feature => 'storage_show_list'},       '/storage'),
           Menu::Item.new('repository',       N_('Repositories'),     'repository',    {:feature => 'repository_show_list'},    '/repository'),
           Menu::Item.new('pxe',              N_('PXE'),              'pxe',           {:feature => 'pxe', :any => true},       '/pxe/explorer'),
@@ -66,17 +66,26 @@ module Menu
       end
       private :hybrid_name
 
+      def deferred_ui_lookup(args)
+        -> () { ui_lookup(args) }
+      end
+      private :deferred_ui_lookup
+
       def container_menu_section
         Menu::Section.new(:cnt, N_("Containers"), [
           Menu::Item.new('ems_container',     N_('Providers'),     'ems_container',     {:feature => 'ems_container_show_list'},     '/ems_container'),
-          Menu::Item.new('container_project', ui_lookup(:tables => 'container_project'), 'container_project', {:feature => 'container_project_show_list'}, '/container_project'),
+          Menu::Item.new('container_project', deferred_ui_lookup(:tables => 'container_project'), 'container_project', {:feature => 'container_project_show_list'}, '/container_project'),
           Menu::Item.new('container_node',    N_('Container Nodes'),    'container_node',    {:feature => 'container_node_show_list'},    '/container_node'),
-          Menu::Item.new('container_group',   ui_lookup(:tables => 'container_group'),   'container_group',   {:feature => 'container_group_show_list'},   '/container_group'),
-          Menu::Item.new('container_route',   ui_lookup(:tables => 'container_route'),   'container_route',   {:feature => 'container_route_show_list'},   '/container_route'),
-          Menu::Item.new('container_replicator', ui_lookup(:tables => 'container_replicator'),   'container_replicator',   {:feature => 'container_replicator_show_list'},   '/container_replicator'),
+          Menu::Item.new('container_group',   deferred_ui_lookup(:tables => 'container_group'),   'container_group',   {:feature => 'container_group_show_list'},   '/container_group'),
+          Menu::Item.new('container_route',   deferred_ui_lookup(:tables => 'container_route'),   'container_route',   {:feature => 'container_route_show_list'},   '/container_route'),
+          Menu::Item.new('container_replicator',
+                         deferred_ui_lookup(:tables => 'container_replicator'),
+                         'container_replicator',
+                         {:feature => 'container_replicator_show_list'},
+                         '/container_replicator'),
           Menu::Item.new('container_service', N_('Container Services'), 'container_service', {:feature => 'container_service_show_list'}, '/container_service'),
           Menu::Item.new('container',
-                         ui_lookup(:tables => 'container'),
+                         deferred_ui_lookup(:tables => 'container'),
                          'containers',
                          {:feature => 'containers', :any => true},
                          '/container/explorer'),
@@ -86,7 +95,7 @@ module Menu
                          {:feature => 'container_image_show_list'},
                          '/container_image'),
           Menu::Item.new('container_image_registry',
-                         ui_lookup(:tables => 'container_image_registry'),
+                         deferred_ui_lookup(:tables => 'container_image_registry'),
                          'container_image_registry',
                          {:feature => 'container_image_registry_show_list'},
                          '/container_image_registry'),
@@ -97,10 +106,10 @@ module Menu
 
       def storage_menu_section
         Menu::Section.new(:sto, N_("Storage"), [
-          Menu::Item.new('ontap_storage_system', ui_lookup(:tables => 'ontap_storage_system'), 'ontap_storage_system', {:feature => 'ontap_storage_system_show_list'}, '/ontap_storage_system'),
-          Menu::Item.new('ontap_logical_disk',   ui_lookup(:tables => 'ontap_logical_disk'),   'ontap_logical_disk',   {:feature => 'ontap_logical_disk_show_list'},   '/ontap_logical_disk'),
-          Menu::Item.new('ontap_storage_volume', ui_lookup(:tables => 'ontap_storage_volume'), 'ontap_storage_volume', {:feature => 'ontap_storage_volume_show_list'}, '/ontap_storage_volume'),
-          Menu::Item.new('ontap_file_share',     ui_lookup(:tables => 'ontap_file_share'),     'ontap_file_share',     {:feature => 'ontap_file_share_show_list'},     '/ontap_file_share'),
+          Menu::Item.new('ontap_storage_system', deferred_ui_lookup(:tables => 'ontap_storage_system'), 'ontap_storage_system', {:feature => 'ontap_storage_system_show_list'}, '/ontap_storage_system'),
+          Menu::Item.new('ontap_logical_disk',   deferred_ui_lookup(:tables => 'ontap_logical_disk'),   'ontap_logical_disk',   {:feature => 'ontap_logical_disk_show_list'},   '/ontap_logical_disk'),
+          Menu::Item.new('ontap_storage_volume', deferred_ui_lookup(:tables => 'ontap_storage_volume'), 'ontap_storage_volume', {:feature => 'ontap_storage_volume_show_list'}, '/ontap_storage_volume'),
+          Menu::Item.new('ontap_file_share',     deferred_ui_lookup(:tables => 'ontap_file_share'),     'ontap_file_share',     {:feature => 'ontap_file_share_show_list'},     '/ontap_file_share'),
           Menu::Item.new('storage_manager',      N_('Storage Managers'),                       'storage_manager',      {:feature => 'storage_manager_show_list'}, '/storage_manager')
         ])
       end
@@ -135,10 +144,10 @@ module Menu
 
       def configuration_menu_section
         Menu::Section.new(:set, N_("Configure"), [
-          Menu::Item.new('configuration', _('My Settings'),   'my_settings',  {:feature => 'my_settings', :any => true},  '/configuration/index?config_tab=ui'),
-          Menu::Item.new('my_tasks',      _('Tasks'),         'tasks',        {:feature => 'tasks', :any => true},        '/miq_task/index?jobs_tab=tasks'),
-          Menu::Item.new('ops',           _('Configuration'), 'ops_explorer', {:feature => 'ops_explorer', :any => true}, '/ops/explorer'),
-          Menu::Item.new('about',         _('About'),         'about',        {:feature => 'about'},                      '/support/index?support_tab=about')
+          Menu::Item.new('configuration', N_('My Settings'),   'my_settings',  {:feature => 'my_settings', :any => true},  '/configuration/index?config_tab=ui'),
+          Menu::Item.new('my_tasks',      N_('Tasks'),         'tasks',        {:feature => 'tasks', :any => true},        '/miq_task/index?jobs_tab=tasks'),
+          Menu::Item.new('ops',           N_('Configuration'), 'ops_explorer', {:feature => 'ops_explorer', :any => true}, '/ops/explorer'),
+          Menu::Item.new('about',         N_('About'),         'about',        {:feature => 'about'},                      '/support/index?support_tab=about')
         ])
       end
 
