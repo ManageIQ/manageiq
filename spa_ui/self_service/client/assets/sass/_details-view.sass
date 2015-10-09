@@ -13,12 +13,20 @@
     padding: 10px
     text-align: center
     width: 130px
+    overflow: hidden
+    white-space: nowrap
 
     +element(logo)
-      display: block
-      margin: 22px auto
+      display: inline-block
       max-height: 80px
-      max-width: 110px
+      max-width: 100px
+      position: relative
+      left: -2px
+
+    +element(center)
+      display: inline-block
+      height: 100%
+      vertical-align: middle
     
   +element(title)
     margin-left: 40px

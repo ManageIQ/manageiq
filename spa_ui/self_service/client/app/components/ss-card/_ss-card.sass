@@ -1,7 +1,8 @@
 +block(ss-card)
   background: $app-color-white
-  border: 1px solid $app-color-light-gray-4
-  box-shadow: 0 1px 1px rgba($app-color-black, 0.175)
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .175)
+  border-top: 2px solid transparent
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.175)
   cursor: pointer
   float: left
   height: 290px
@@ -10,24 +11,42 @@
   padding: 10px
   text-align: center
   width: 260px
+  position: relative
 
-  &:hover .ss-card__more
-    opacity: 1
+  &:hover
+    -webkit-box-shadow: 0px 3px 10px -2px rgba(0,0,0,0.24)
+    -moz-box-shadow: 0px 3px 10px -2px rgba(0,0,0,0.24)
+    box-shadow: 0px 3px 10px -2px rgba(0,0,0,0.24)
+    border: 1px solid $app-color-light-gray-5
 
-  +element(logo)
-    display: block
-    margin: 22px auto
-    margin-bottom: 0
-    max-height: 120px
+    .ss-card__more
+      opacity: 1
 
   +element(logo_wrapper)
     height: 155px
+    text-align: center  
+
+  +element(logo)
+    display: inline-block
+    max-height: 120px
+    max-width: 240px
+    position: relative
+    left: -2px
+
+  +element(logo-center)
+    display: inline-block
+    height: 100%
+    vertical-align: middle
 
   +element(more)
     background: $app-color-white
     border: none
     opacity: 0
     transition: opacity 0s .2s, opacity .2s linear
+    position: absolute
+    bottom: 20px
+    left: 50%
+    margin-left: -5px
 
     .fa
       font-size: 16px
