@@ -13,6 +13,20 @@ module MiqAeEngineSpec
       @miq_server_id = MiqServer.first.id
     end
 
+    def call_automate(obj_type, obj_id)
+      args = {
+        :object_type      => obj_type,
+        :object_id        => obj_id,
+        :attrs            => nil,
+        :instance_name    => nil,
+        :user_id          => @user.id,
+        :miq_group_id     => @user.current_group.id,
+        :tenant_id        => @user.current_tenant.id,
+        :automate_message => nil
+      }
+      MiqAeEngine.deliver(args)
+    end
+
     after(:each) do
       MiqAeDatastore.reset
     end
@@ -72,7 +86,7 @@ module MiqAeEngineSpec
           automate_attrs = {"#{object_type}::#{object_type.underscore}" => object_id,
                             "User::user"                                => @user.id}
           MiqAeEngine.should_receive(:create_automation_object).with(@instance_name, automate_attrs, {:vmdb_object => @cluster}).and_return('uri')
-          MiqAeEngine.deliver(object_type, object_id, nil, nil, @user.id).should be_nil
+          call_automate(object_type, object_id).should be_nil
         end
 
         it "with defaults and STI object" do
@@ -82,7 +96,7 @@ module MiqAeEngineSpec
           automate_attrs = {"#{base_name}::#{base_name.underscore}" => object_id,
                             "User::user"                            => @user.id}
           MiqAeEngine.should_receive(:create_automation_object).with(@instance_name, automate_attrs, {:vmdb_object => @ems}).and_return('uri')
-          MiqAeEngine.deliver(object_type, object_id, nil, nil, @user.id).should be_nil
+          call_automate(object_type, object_id).should be_nil
         end
       end
 
@@ -98,7 +112,7 @@ module MiqAeEngineSpec
           it "with defaults" do
             object_type = @ems.class.name
             object_id   = @ems.id
-            MiqAeEngine.deliver(object_type, object_id, nil, nil, @user.id).should == @ws
+            call_automate(object_type, object_id).should == @ws
           end
         end
 
@@ -113,7 +127,7 @@ module MiqAeEngineSpec
           it "with defaults" do
             object_type = @ems.class.name
             object_id   = @ems.id
-            MiqAeEngine.deliver(object_type, object_id, nil, nil, @user.id).should == @ws
+            call_automate(object_type, object_id).should == @ws
           end
 
           it "with a starting point instead of /SYSTEM/PROCESS" do
@@ -140,7 +154,7 @@ module MiqAeEngineSpec
           it "with defaults" do
             object_type = @ems.class.name
             object_id   = @ems.id
-            MiqAeEngine.deliver(object_type, object_id, nil, nil, @user.id).should == @ws
+            call_automate(object_type, object_id).should == @ws
 
             MiqQueue.count.should == 1
 
@@ -157,6 +171,8 @@ module MiqAeEngineSpec
               :attrs            => @attrs,
               :instance_name    => @instance_name,
               :user_id          => @user.id,
+              :miq_group_id     => @user.current_group.id,
+              :tenant_id        => @user.current_tenant.id,
               :state            => @state,
               :automate_message => @automate_message,
               :ae_fsm_started   => @ae_fsm_started,
