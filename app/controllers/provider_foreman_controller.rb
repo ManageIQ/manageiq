@@ -241,8 +241,8 @@ class ProviderForemanController < ApplicationController
     @sb[:foreman_search_text] ||= {}
     @sb[:foreman_search_text]["#{x_active_accord}_search_text"] = @search_text
 
-    self.x_active_accord = params[:id]
-    self.x_active_tree   = "#{params[:id]}_tree"
+    self.x_active_accord = params[:id].sub(/_accord$/, '')
+    self.x_active_tree   = "#{x_active_accord}_tree"
 
     @search_text = @sb[:foreman_search_text]["#{x_active_accord}_search_text"]
 
@@ -425,7 +425,7 @@ class ProviderForemanController < ApplicationController
       default_active_accord ||= x_active_accord
       build_foreman_tree(:providers, :foreman_providers_tree)
       @trees.push("foreman_providers_tree")
-      @accords.push(:name => "foreman_providers", :title => "Providers", :container => "foreman_providers_tree_div")
+      @accords.push(:name => "foreman_providers", :title => "Providers", :container => "foreman_providers_accord")
     end
     if role_allows(:feature => "configured_systems_filter_accord", :any => true)
       self.x_active_tree   = 'cs_filter_tree'
@@ -434,7 +434,7 @@ class ProviderForemanController < ApplicationController
       default_active_accord ||= x_active_accord
       build_foreman_tree(:filter, :cs_filter_tree)
       @trees.push("cs_filter_tree")
-      @accords.push(:name => "cs_filter", :title => "Configured Systems", :container => "cs_filter_tree_div")
+      @accords.push(:name => "cs_filter", :title => "Configured Systems", :container => "cs_filter_accord")
     end
     self.x_active_tree = default_active_tree
     self.x_active_accord = default_active_accord.to_s

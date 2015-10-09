@@ -1072,6 +1072,8 @@ module ApplicationHelper
       "show_list"
     elsif @compare
       "compare_sections"
+    elsif @explorer
+      "explorer"
     elsif %w(offline retired templates vm vm_cloud vm_or_template).include?(@layout)
       "vm"
     elsif %w(action availability_zone cim_base_storage_extent cloud_tenant condition container_group

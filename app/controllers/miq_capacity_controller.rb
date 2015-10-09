@@ -9,6 +9,8 @@ class MiqCapacityController < ApplicationController
   end
 
   def utilization
+    @explorer = true
+    @trees = [] # TODO: TreeBuilder
     @breadcrumbs = []
     @sb[:open_tree_nodes] ||= []
     self.x_active_tree = 'utilization_tree'
@@ -16,7 +18,7 @@ class MiqCapacityController < ApplicationController
     @accords = [{
       :name      => "enterprise",
       :title     => "Utilization",
-      :container => "utilization_tree_div",
+      :container => "utilization_accord",
       :image     => "enterprise"
     }]
 
@@ -42,6 +44,8 @@ class MiqCapacityController < ApplicationController
   end
 
   def bottlenecks
+    @explorer = true
+    @trees = [] # TODO: TreeBuilder
     @breadcrumbs = []
     @sb[:open_tree_nodes] ||= []
     @explorer = true
@@ -49,7 +53,12 @@ class MiqCapacityController < ApplicationController
     @layout = "miq_capacity_bottlenecks"
     self.x_active_tree = 'bottlenecks_tree'
     util_build_tree(:bottlenecks, :bottlenecks_tree)
-    @accords = [{:name => "bottlenecks", :title => "Bottlenecks", :container => "bottlenecks_tree_div", :image => "enterprise"}]
+    @accords = [{
+      :name      => "bottlenecks",
+      :title     => "Bottlenecks",
+      :container => "bottlenecks_accord",
+      :image     => "enterprise"
+    }]
 
     @sb[:active_tab] = "summary"
     self.x_node ||= ""
@@ -72,7 +81,7 @@ class MiqCapacityController < ApplicationController
   def planning
     @breadcrumbs = []
     @explorer = true
-    @accords = [{:name => "planning", :title => "Planning Options", :container => "planning_options_div"}]
+    @accords = [{:name => "planning", :title => "Planning Options", :container => "planning_options_accord"}]
 
     @collapse_c_cell = true
     self.x_active_tree = nil
