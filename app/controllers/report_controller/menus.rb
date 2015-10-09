@@ -745,7 +745,7 @@ module ReportController::Menus
       @sb[:menu][r.id] = r.name
     end
     @right_cell_text = title == "My #{ui_lookup(:model => "MiqGroup")}" ?
-      _("%s") % title :
+      title :
       _("All %s") % ui_lookup(:models => "MiqGroup")
     @right_cell_div = "role_list"
     @menu_roles_tree = nil
