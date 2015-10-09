@@ -128,7 +128,7 @@ module MiqAeEvent
     user
   end
 
-  def self.call_automate(obj_type, obj_id, attrs, instance_name, 
+  def self.call_automate(obj_type, obj_id, attrs, instance_name,
                          user, state = nil, message = nil)
     args = {
       :object_type      => obj_type,
