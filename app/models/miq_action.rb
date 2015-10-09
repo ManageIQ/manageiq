@@ -874,9 +874,8 @@ class MiqAction < ActiveRecord::Base
   def action_custom_automation(action, rec, inputs)
     ae_hash = action.options[:ae_hash] || {}
     automate_attrs = ae_hash.reject { |key, _value| MiqAeEngine::DEFAULT_ATTRIBUTES.include?(key) }
-    automate_attrs[MiqAeEngine.create_automation_attribute_key(inputs[:policy])]    = MiqAeEngine.create_automation_attribute_value(inputs[:policy]) unless inputs[:policy].nil?
-    automate_attrs[MiqAeEngine.create_automation_attribute_key(inputs[:ems_event])] = MiqAeEngine.create_automation_attribute_value(inputs[:ems_event]) unless inputs[:ems_event].nil?
     automate_attrs[:request] = action.options[:ae_request]
+    MiqAeEngine.set_automation_attributes_from_objects([inputs[:policy], inputs[:ems_event]], automate_attrs)
 
     args = {}
     args[:object_type]      = rec.class.base_class.name

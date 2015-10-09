@@ -37,7 +37,7 @@ module MiqAeMethodService
     end
 
     def get_domain_details
-      ar_method { MiqProvision.get_domain_details(@object.get_domain) }
+      ar_method { MiqProvision.get_domain_details(@object.get_domain, false, @object.get_user) }
     end
 
     def set_folder(folder_path)
