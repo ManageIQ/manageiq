@@ -16,7 +16,7 @@ module MiqAeEvent
     aevent.merge!('Host::host'            => event.src_host.id,            :host_id      => event.src_host.id)            unless event.src_host.nil?
     aevent.merge!('Host::dest_host'       => event.dest_host.id,           :dest_host_id => event.dest_host.id)           unless event.dest_host.nil?
 
-    MiqAeEngine.deliver(event.class.name, event.id, aevent, 'Event', user.id)
+    call_automate(event.class.name, event.id, aevent, 'Event', user)
   end
 
   def self.raise_synthetic_event(event, inputs, message = nil)
@@ -34,7 +34,7 @@ module MiqAeEvent
     end
 
     user = automate_user
-    MiqAeEngine.deliver(obj_type, obj_id, aevent, instance, nil, user.id, message)
+    call_automate(obj_type, obj_id, aevent, instance, user, nil, message)
   end
 
   def self.raise_evm_event(event_name, target, inputs = {}, _message = nil)
@@ -47,7 +47,8 @@ module MiqAeEvent
       raise "Unable to find object with class: [#{klass}], Id: [#{id}]" if target.nil?
     end
 
-    MiqAeEngine.deliver(target.class.name, target.id, build_evm_event(event_name, inputs), 'Event', user.id)
+    call_automate(target.class.name, target.id, build_evm_event(event_name, inputs),
+                  'Event', user)
   end
 
   def self.eval_alert_expression(inputs, message = nil)
@@ -55,7 +56,7 @@ module MiqAeEvent
     aevent = build_evm_event('alert', inputs)
     aevent[:request] = 'evaluate'
     aevent.merge!(inputs)
-    ws = MiqAeEngine.deliver(nil, nil, aevent, 'Alert', nil, user.id, message)
+    ws = call_automate(nil, nil, aevent, 'Alert', user, nil, message)
     return nil if ws.nil? || ws.root.nil?
     ws.root['ae_result']
   end
@@ -127,5 +128,21 @@ module MiqAeEvent
     user
   end
 
-  private_class_method :automate_user
+  def self.call_automate(obj_type, obj_id, attrs, instance_name, 
+                         user, state = nil, message = nil)
+    args = {
+      :object_type      => obj_type,
+      :object_id        => obj_id,
+      :attrs            => attrs,
+      :instance_name    => instance_name,
+      :user_id          => user.id,
+      :miq_group_id     => user.current_group.id,
+      :tenant_id        => user.current_tenant.id,
+      :automate_message => message,
+      :state            => state
+    }
+    MiqAeEngine.deliver(args)
+  end
+
+  private_class_method :automate_user, :call_automate
 end
