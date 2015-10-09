@@ -354,7 +354,7 @@ class ServiceController < ApplicationController
     r = proc { |opts| render_to_string(opts) }
 
     # Build hash of trees to replace and optional new node to be selected
-    trees.each do |t|
+    replace_trees.each do |t|
       tree = trees[t]
       presenter[:replace_partials]["#{t}_tree_div".to_sym] = r[
           :partial => 'shared/tree',
