@@ -61,8 +61,7 @@ ManageIQ.angularApplication.controller('providerForemanFormController', ['$http'
     }
 
     $scope.isBasicInfoValid = function() {
-      if($scope.angularForm.name.$valid &&
-         $scope.angularForm.url.$valid &&
+      if($scope.angularForm.url.$valid &&
          $scope.angularForm.log_userid.$valid &&
          $scope.angularForm.log_password.$valid &&
          $scope.angularForm.log_verify.$valid)
