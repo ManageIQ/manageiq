@@ -202,13 +202,7 @@ module MiqLinux
       last = nil
 
       begin
-        records.each { |rec|
-          next unless rec["user"] == username
-          next unless rec["type"] == WTMP_TYPE_USER_PROCESS
-          current = rec["seconds"]
-          last = current if last.nil? || current > last
-        }
-
+        last = records[username]
         last = Time.at(last).getutc unless last.nil?
       rescue => err
         $log.error("Error processing WTMP file because <#{err.message}>") if $log
@@ -229,9 +223,11 @@ module MiqLinux
 
     def records
       return @records unless @records.nil?
-      recs  = []
+      @records = {}
       recnum = 0
       nrecs  = @contents.length / WTMP_RECORD_LEN
+      # TODO(lsmola) limiting log file size and logging warning when it's over it?
+      # Cause this can potentily go through milions of records
       while recnum < nrecs
         offset  = recnum * WTMP_RECORD_LEN
         recnum += 1
@@ -239,9 +235,14 @@ module MiqLinux
         break unless buf.length == WTMP_RECORD_LEN
         rec = WTMP_RECORD.decode(buf)
         ['host', 'user', 'line'].each { |k| rec[k].strip! if rec[k] }
-        recs << rec
+        next if rec["user"].blank?
+        next unless rec["type"] == WTMP_TYPE_USER_PROCESS
+
+        current = rec["seconds"]
+        user    = rec["user"]
+        # Get the latest logon timestamp for each user
+        @records[user] = current if @records[user].blank? || current > @records[user]
       end
-      @records = recs
       @records
     end
   end # class FileWTMP
