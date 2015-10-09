@@ -1052,7 +1052,7 @@ class CatalogController < ApplicationController
         :description => @edit[:new][:description],
         :type        => old_ot.type,
         :content     => params[:template_content],
-        :draft       => @edit[:new][:draft] == "true" ? true : false)
+        :draft       => @edit[:new][:draft] == true || @edit[:new][:draft] == "true" ? true : false)
       begin
         ot.save_with_format_validation!
       rescue StandardError => bang
@@ -1063,8 +1063,11 @@ class CatalogController < ApplicationController
                     {:model => ui_lookup(:model => 'OrchestrationTemplate'),
                      :name  => @edit[:new][:name]})
         x_node_elems = x_node.split('-')
-        x_node_elems[2] = to_cid(ot.id)
-        self.x_node = x_node_elems.join('-')
+        if( !x_node_elems[2].nil? && x_node_elems[2] != to_cid(ot.id))
+          x_node_elems[2] = to_cid(ot.id)
+          self.x_node = x_node_elems.join('-')
+        end
+
         @changed = session[:changed] = false
         @in_a_form = false
         @edit = session[:edit] = nil
