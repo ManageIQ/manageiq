@@ -111,9 +111,8 @@ class VimPerformanceState < ActiveRecord::Base
     ids.empty? ? [] : Host.where(:id => ids).order(:id).to_a
   end
 
-  def sockets
-    ids = get_assoc(:hosts)
-    Host.where(:id => ids).reduce(0) { |sum, host| sum + host.hardware.sockets }
+  def host_sockets(host)
+    host.hardware.sockets
   end
 
   def vms
