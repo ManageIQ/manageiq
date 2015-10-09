@@ -180,4 +180,30 @@ describe ApiController do
       expect_single_action_result(:success => true, :message => /.*/, :href => services_url(svc1.id))
     end
   end
+
+  describe "Services with custom button dialogs" do
+    it "queries for custom_actions returns expanded details for dialog buttons" do
+      api_basic_authorize
+
+      template2 = FactoryGirl.create(:service_template, :name => "template2")
+      dialog2   = FactoryGirl.create(:dialog, :label => "dialog2")
+      ra2       = FactoryGirl.create(:resource_action, :dialog_id => dialog2.id)
+      button2   = FactoryGirl.create(:custom_button, :applies_to => template2, :userid => api_config(:user))
+      svc2      = FactoryGirl.create(:service, :name => "svc2", :service_template_id => template2.id)
+      button2.resource_action = ra2
+
+      run_get services_url(svc2.id), :attributes => "custom_actions"
+
+      expect_result_to_have_keys(%w(custom_actions))
+      custom_actions = @result["custom_actions"]
+      expect_hash_to_have_only_keys(custom_actions, %w(buttons button_groups))
+      expect(custom_actions["buttons"].size).to eq(1)
+      button = @result["custom_actions"]["buttons"].first
+      expect_hash_to_have_keys(button, %w(id resource_action))
+      ra = button["resource_action"]
+      expect_hash_to_have_keys(ra, %w(id dialog_id dialog))
+      expect_result_to_match_hash(ra, "id" => ra2.id, "dialog_id" => ra2.dialog_id)
+      expect(ra["dialog"]["label"]).to eq(dialog2.label)
+    end
+  end
 end

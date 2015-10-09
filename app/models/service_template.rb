@@ -35,8 +35,10 @@ class ServiceTemplate < ActiveRecord::Base
 
   def custom_actions
     {
-      :buttons       => custom_buttons,
-      :button_groups => custom_button_sets.collect { |s| s.serializable_hash.merge(:buttons => s.children) }
+      :buttons       => custom_buttons.collect(&:expanded_serializable_hash),
+      :button_groups => custom_button_sets.collect do |button_set|
+        button_set.serializable_hash.merge(:buttons => button_set.children.collect(&:expanded_serializable_hash))
+      end
     }
   end
 
