@@ -316,10 +316,11 @@ module Rbac
   end
 
   def self.filtered(objects, options = {})
-    unless objects.empty?
-      objects, _attrs = Rbac.search(options.merge(:targets => objects, :results_format => :objects))
+    if objects.present?
+      Rbac.search(options.merge(:targets => objects, :results_format => :objects)).first
+    else
+      objects
     end
-    objects
   end
 
   def self.find_via_descendants(descendants, method_name, klass)
