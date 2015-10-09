@@ -106,7 +106,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
       stub_dialog(:get_dialogs)
 
       # if running_pre_dialog is set, it will run 'continue_request'
-      workflow = described_class.new(values = {:running_pre_dialog => false}, admin.userid)
+      workflow = described_class.new(values = {:running_pre_dialog => false}, admin)
 
       expect(AuditEvent).to receive(:success).with(
         :event        => "vm_provision_request_created",
@@ -135,7 +135,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
 
       stub_get_next_vm_name
 
-      workflow = described_class.new(values, alt_user.userid)
+      workflow = described_class.new(values, alt_user)
 
       expect(AuditEvent).to receive(:success).with(
         :event        => "vm_provision_request_updated",

@@ -29,7 +29,7 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow d
       stub_dialog(:get_pre_dialogs)
       stub_dialog(:get_dialogs)
 
-      workflow = described_class.new(values = {:running_pre_dialog => false}, admin.userid)
+      workflow = described_class.new(values = {:running_pre_dialog => false}, admin)
 
       expect(AuditEvent).to receive(:success).with(
         :event        => "configured_system_provision_request_created",
@@ -54,7 +54,7 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow d
       expect(request.requester_name).to eq(admin.name)
 
       # updates a request
-      workflow = described_class.new(values, alt_user.userid)
+      workflow = described_class.new(values, alt_user)
 
       expect(AuditEvent).to receive(:success).with(
         :event        => "configured_system_provision_request_updated",
