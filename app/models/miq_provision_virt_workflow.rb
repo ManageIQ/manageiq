@@ -65,7 +65,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     super
   end
 
-  def refresh_field_values(values, _requester_id)
+  def refresh_field_values(values)
     st = Time.now
     new_src = get_value(values[:src_vm_id])
     vm_changed = @last_vm_id != new_src
@@ -1029,7 +1029,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     # Populate required fields
     p.init_from_dialog(values)
     values[:src_vm_id] = [src.id, src.name]
-    p.refresh_field_values(values, userid)
+    p.refresh_field_values(values)
     values[:vm_name]          = target_name
     values[:placement_auto]   = [true, 1]
     values[:owner_first_name] = userid
@@ -1241,7 +1241,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     # Populate required fields
     p.init_from_dialog(values)
     values[:src_vm_id] = [src.id, src.name]
-    p.refresh_field_values(values, userid)
+    p.refresh_field_values(values)
     values[:placement_auto] = [true, 1]
 
     p.ws_vm_fields(values, vm_fields)

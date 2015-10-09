@@ -791,7 +791,7 @@ class MiqRequestWorkflow
   def update_field_visibility
   end
 
-  def refresh_field_values(values, _requester_id)
+  def refresh_field_values(values)
     st = Time.now
 
     @values = values
