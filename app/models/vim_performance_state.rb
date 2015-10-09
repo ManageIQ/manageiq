@@ -37,6 +37,7 @@ class VimPerformanceState < ActiveRecord::Base
   # => host_count_on    (derive from assoc_ids)
   # => host_count_off   (derive from assoc_ids)
   # => host_count_total (derive from assoc_ids)
+  # => sockets          (derive from assoc_ids)
 
   def self.capture(obj)
     ts = Time.now.utc
@@ -108,6 +109,11 @@ class VimPerformanceState < ActiveRecord::Base
   def hosts
     ids = get_assoc(:hosts)
     ids.empty? ? [] : Host.where(:id => ids).order(:id).to_a
+  end
+
+  def sockets
+    ids = get_assoc(:hosts)
+    Host.where(:id => ids).reduce(0) { |sum, host| sum + host.hardware.sockets }
   end
 
   def vms

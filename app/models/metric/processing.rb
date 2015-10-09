@@ -8,6 +8,7 @@ module Metric::Processing
     :derived_memory_available,
     :derived_memory_reserved,
     :derived_memory_used,
+    :derived_sockets,
     :derived_vm_allocated_disk_storage,
     :derived_vm_count_off,
     :derived_vm_count_on,
