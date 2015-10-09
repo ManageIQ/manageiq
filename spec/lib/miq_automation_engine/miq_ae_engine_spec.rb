@@ -14,17 +14,14 @@ module MiqAeEngineSpec
     end
 
     def call_automate(obj_type, obj_id)
-      args = {
-        :object_type      => obj_type,
-        :object_id        => obj_id,
-        :attrs            => nil,
-        :instance_name    => nil,
-        :user_id          => @user.id,
-        :miq_group_id     => @user.current_group.id,
-        :tenant_id        => @user.current_tenant.id,
-        :automate_message => nil
-      }
-      MiqAeEngine.deliver(args)
+      MiqAeEngine.deliver(:object_type      => obj_type,
+                          :object_id        => obj_id,
+                          :attrs            => nil,
+                          :instance_name    => nil,
+                          :user_id          => @user.id,
+                          :miq_group_id     => @user.current_group.id,
+                          :tenant_id        => @user.current_tenant.id,
+                          :automate_message => nil)
     end
 
     after(:each) do
