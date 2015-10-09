@@ -259,6 +259,19 @@ describe OpsController do
     end
   end
 
+  context "#explorer" do
+    it "sets analytics active accordion value" do
+      controller.instance_variable_set(:@sb, {})
+      controller.stub(:role_allows).and_return(false)
+      controller.stub(:get_vmdb_config).and_return(:product => {:analytics => true})
+      controller.stub(:get_node_info)
+      controller.should_receive(:render)
+      controller.send(:explorer)
+      expect(response.status).to eq(200)
+      assigns(:sb)[:active_accord].should eq(:analytics)
+    end
+  end
+
   context "#replace_explorer_trees" do
     it "build trees that are passed in and met other conditions" do
       controller.instance_variable_set(:@sb, {})
