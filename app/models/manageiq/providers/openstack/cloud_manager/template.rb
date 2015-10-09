@@ -20,15 +20,10 @@ class ManageIQ::Providers::Openstack::CloudManager::Template < ManageIQ::Provide
     ost.scanTime = Time.now.utc unless ost.scanTime
 
     ems = ext_management_system
-
-    #
-    # TODO: Convert to use OpenstackHandle.
-    #
-    fog_compute = ems.connect(:service => "Compute")
-    fog_image   = ems.connect(:service => "Image")
+    os_handle = ems.openstack_handle
 
     begin
-      miqVm = MiqOpenStackImage.new(image_id, :fog_compute => fog_compute, :fog_image => fog_image)
+      miqVm = MiqOpenStackImage.new(image_id, :os_handle => os_handle)
       scan_via_miq_vm(miqVm, ost)
     ensure
       miqVm.unmount if miqVm

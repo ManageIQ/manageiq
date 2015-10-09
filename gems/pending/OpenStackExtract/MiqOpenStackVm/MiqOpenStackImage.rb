@@ -8,12 +8,12 @@ class MiqOpenStackImage
 
   def initialize(image_id, args)
     @image_id     = image_id
-    @fog_compute  = args[:fog_compute]
-    @fog_image    = args[:fog_image]
+    @os_handle    = args[:os_handle]
     @args         = args
     @vmConfigFile = image_id
 
-    raise ArgumentError, "#{self.class.name}: required arg fog_compute missing"  unless @fog_compute
+    raise ArgumentError, "#{self.class.name}: required arg os_handle missing"    unless @os_handle
+    @fog_image    = @os_handle.detect_image_service
     raise ArgumentError, "#{self.class.name}: required arg fog_image missing"    unless @fog_image
   end
 
@@ -30,19 +30,24 @@ class MiqOpenStackImage
       @temp_image_file = get_image_file
       hardware  = "scsi0:0.present = \"TRUE\"\n"
       hardware += "scsi0:0.filename = \"#{@temp_image_file.path}\"\n"
-      MiqVm.new(hardware)
+
+      diskFormat = @fog_image.get_image(@image_id).headers['X-Image-Meta-Disk_format']
+      $log.debug "diskFormat = #{diskFormat}"
+
+      ost = OpenStruct.new
+      ost.rawDisk = diskFormat == "raw"
+      MiqVm.new(hardware, ost)
     end
   end
 
   def get_image_file
     log_pref = "#{self.class.name}##{__method__}"
 
-    cimage = @fog_compute.images.get(@image_id)
-    raise "Image #{@image_id} not found" unless cimage
-    $log.debug "#{log_pref}: cimage = #{cimage.class.name}"
+    image = @fog_image.get_image(@image_id)
+    raise "Image #{@image_id} not found" unless image
 
-    iname = cimage.attributes[:name]
-    isize = cimage.attributes['OS-EXT-IMG-SIZE:size'].to_i
+    iname = image.headers['X-Image-Meta-Name']
+    isize = image.headers['X-Image-Meta-Size'].to_i
     $log.debug "#{log_pref}: iname = #{iname}"
     $log.debug "#{log_pref}: isize = #{isize}"
 
