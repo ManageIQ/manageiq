@@ -35,4 +35,33 @@ describe Hardware do
     @template_hw.host.should be_nil
     @host_hw.host.should == @host
   end
+
+  # TODO: we probably want these to run without the above before block
+  describe "#sockets" do
+    it "returns 0 when logical cpus is nil" do
+      hardware = FactoryGirl.build(:hardware, :logical_cpus => nil, :cores_per_socket => 1)
+      expect(hardware.sockets).to eq(0)
+    end
+
+    it "returns 0 when cores_per_socket is nil" do
+      hardware = FactoryGirl.build(:hardware, :logical_cpus => 1, :cores_per_socket => nil)
+      expect(hardware.sockets).to eq(0)
+    end
+
+    it "returns 0 when cores_per_socket is 0" do
+      hardware = FactoryGirl.build(:hardware, :logical_cpus => 0, :cores_per_socket => 0)
+      expect(hardware.sockets).to eq(0)
+    end
+
+    it "returns logical_cpus / cores_per_socket" do
+      hardware = FactoryGirl.build(:hardware, :logical_cpus => 8, :cores_per_socket => 4)
+      expect(hardware.sockets).to eq(2)
+    end
+
+    it "floors the value when not a whole number" do
+      # TODO: not sure about this
+      hardware = FactoryGirl.build(:hardware, :logical_cpus => 5, :cores_per_socket => 4)
+      expect(hardware.sockets).to eq(1)
+    end
+  end
 end

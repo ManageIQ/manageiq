@@ -154,4 +154,11 @@ class Hardware < ActiveRecord::Base
   def m_volumes(parent, xmlNode, _deletes)
     Volume.add_elements(parent, xmlNode)
   end
+
+  def sockets
+    return 0 unless logical_cpus && cores_per_socket
+    logical_cpus / cores_per_socket
+  rescue ZeroDivisionError
+    0
+  end
 end
