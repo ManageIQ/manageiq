@@ -35,7 +35,7 @@ ManageIQ.angularApplication.controller('providerForemanFormController', ['$http'
         $http.get('/provider_foreman/provider_foreman_form_fields/' + providerForemanFormId).success(function(data) {
           $scope.providerForemanModel.name        = data.name;
           $scope.providerForemanModel.url         = data.url;
-          $scope.providerForemanModel.verify_ssl  = data.verify_ssl == "1" ? true : false;
+          $scope.providerForemanModel.verify_ssl  = data.verify_ssl == "1";
 
           $scope.providerForemanModel.log_userid   = data.log_userid;
           $scope.providerForemanModel.log_password = data.log_password;
