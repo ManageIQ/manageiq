@@ -1,6 +1,3 @@
-- unless @grid_xml.blank?
-  :javascript
-    grid_xml = "#{@grid_xml}"
 #menu_div1
   = form_tag(:action => 'menu_update', :id => "report_menu_form1") do
     %fieldset{:style => "width: 320px; height: 450px;"}
@@ -11,17 +8,9 @@
         %table{:class => "form", :cellspacing => "3"}
           %tr
             %td{:valign => "top"}
-              - @grid_xml = params[:grid] if params[:grid]
-              = render(:partial => 'layouts/dhtmlxgrid',
-                :locals         => {:options => {:grid_id => "folder_grid",
-                  :grid_name                              => "folder_list_grid",
-                  :menu_grid_edit                         => true,
-                  :row_edit                               => true,
-                  :autosize                               => true,
-                  :grid_xml                               => @grid_xml,
-                  :no_resize                              => true,
-                  :skin                                   => "menueditor",
-                  :div_in_js                              => true}})
+              #folder_grid
+                = params[:grid].to_json
+
             %td{:width => "20", :valign => "middle"}
               - t = _("Move selected folder top")
               = image_tag('/images/toolbars/top.png', :border => "0", :class => "rollover small", :alt => t, :title => t,
