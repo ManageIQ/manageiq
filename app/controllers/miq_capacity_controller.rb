@@ -407,7 +407,7 @@ class MiqCapacityController < ApplicationController
     treenodeid = valid_active_node(treenodeid)
     get_nodetype_and_record(treenodeid)
     @right_cell_text = @record.kind_of?(MiqEnterprise) ?
-      _("%s") % ui_lookup(:model => "MiqEnterprise") :
+      ui_lookup(:model => "MiqEnterprise") :
       _("%{model} \"%{name}\" %{typ}") % {:model => ui_lookup(:model => @record.class.base_class.to_s), :name => @record.name, :typ => "Utilization Trend Summary"}
     @sb[:util][:title] = @right_cell_text
     @right_cell_text += " - Filtered by #{@sb[:util][:tags][@sb[:util][:options][:tag]]}" unless @sb[:util][:options].nil? || @sb[:util][:options][:tag].blank?
@@ -647,7 +647,7 @@ class MiqCapacityController < ApplicationController
 
     get_nodetype_and_record(treenodeid)
     @right_cell_text = @record.kind_of?(MiqEnterprise) ?
-        _("%s") % ui_lookup(:model => "MiqEnterprise") :
+        ui_lookup(:model => "MiqEnterprise") :
         _("%{model} \"%{name}\" %{typ}") % {:model => ui_lookup(:model => @record.class.base_class.to_s), :name => @record.name, :typ => "Bottlenecks Summary"}
 
     # Get the where clause to limit records to the selected tree node (@record)
