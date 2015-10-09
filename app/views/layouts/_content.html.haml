@@ -4,7 +4,7 @@
   - rsop = controller.controller_name == 'miq_policy' && controller.action_name == 'rsop'
   - resolve = controller.controller_name == 'miq_ae_tools' && controller.action_name == 'resolve'
   - planning = controller.controller_name == 'miq_capacity' && controller.action_name == 'planning'
-  - simulate =  rsop || resolve || planning 
+  - simulate =  rsop || resolve || planning
   - session[:sidebar] ||= {}
   - sidewidth = simulate ? 5 : session[:sidebar][params[:controller]] ||= 2
   - maindiv = 12 - sidewidth
@@ -22,9 +22,11 @@
                 .btn.btn-default.resize-right{:class => sidewidth == 5 ? 'btn-disabled' : ''}
                   %span.fa.fa-angle-right
       #left_div.resizable.sidebar-pf.sidebar-pf-left.scrollable{:style => "height: 100%", :class => sidebar}
-        - if @accords && @trees
-          = render :partial => "layouts/listnav"
-        = yield :left
+        #default_left_cell
+          - if @accords && @trees
+            = render :partial => "layouts/listnav"
+          = yield :left
+        #custom_left_cell
 - else
   -#.container-fluid.resizable-sidebar{:style => "overflow: hidden; height: 100%; background: #fff;"}ű
   .container-fluid{:style => "overflow: hidden; height: 100%; background: #fff;"}
