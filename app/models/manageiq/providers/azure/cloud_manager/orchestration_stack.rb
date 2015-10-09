@@ -2,11 +2,7 @@ class ManageIQ::Providers::Azure::CloudManager::OrchestrationStack < ::Orchestra
   require_dependency 'manageiq/providers/azure/cloud_manager/orchestration_stack/status'
 
   def self.raw_create_stack(orchestration_manager, stack_name, template, options = {})
-    resource_group = options[:resource_group]
-    create_options = {:template => JSON.parse(template.content)}
-    create_options.merge!(options).except!(:resource_group)
-
-    correct_parameters(create_options) if create_options[:parameters]
+    resource_group, create_options = make_create_options(template, options)
 
     orchestration_manager.with_provider_connection do |configure|
       Azure::Armrest::TemplateDeploymentService.new(configure).create(stack_name, create_options, resource_group)['id']
@@ -16,16 +12,20 @@ class ManageIQ::Providers::Azure::CloudManager::OrchestrationStack < ::Orchestra
     raise MiqException::MiqOrchestrationProvisionError, err.to_s, err.backtrace
   end
 
-  def self.correct_parameters(options)
-    options[:parameters] = options[:parameters].map { |k, v| [k, {'value' => v}] }.to_h
-  end
-  private_class_method :correct_parameters
-
-  def raw_update_stack(options)
+  def self.make_create_options(template, options)
     resource_group = options[:resource_group]
-    create_options = options.except(:resource_group)
+    create_options = {:template => JSON.parse(template.content)}
+    create_options.merge!(options).except!(:resource_group)
 
-    correct_parameters(create_options) if create_options[:parameters]
+    if create_options[:parameters]
+      create_options[:parameters] = create_options[:parameters].map { |k, v| [k, {'value' => v}] }.to_h
+    end
+
+    return resource_group, create_options
+  end
+
+  def raw_update_stack(template, options)
+    resource_group, create_options = self.class.make_create_options(template, options)
 
     # use the same API for stack update and creation
     ext_management_system.with_provider_connection do |configure|
