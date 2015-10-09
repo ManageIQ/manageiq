@@ -178,8 +178,12 @@ class ApiController
     end
 
     #
-    # For Delete, Patch and Put, we need to make sure we're entitled for them.
+    # For Get, Delete, Patch and Put, we need to make sure we're entitled for them.
     #
+    def validate_get_method
+      validate_method_action(:get, "show")
+    end
+
     def validate_patch_method
       validate_method_action(:post, "edit")
     end
@@ -197,6 +201,7 @@ class ApiController
       cspec = collection_config[cname.to_sym]
       target = request_type_target.last
       aspec = cspec["#{target}_actions".to_sym]
+      return if method_name == :get && aspec.nil?
       action_hash = fetch_action_hash(aspec, method_name, action_name)
       raise BadRequestError, "Disabled action #{action_name}" if action_hash[:disabled]
       unless api_user_role_allows?(action_hash[:identifier])
@@ -285,7 +290,7 @@ class ApiController
     end
 
     def fetch_action_hash(aspec, method_name, action_name)
-      Array(aspec[method_name]).detect { |h| h[:name] == action_name }
+      Array(aspec[method_name]).detect { |h| h[:name] == action_name } || {}
     end
   end
 end
