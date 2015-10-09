@@ -169,3 +169,7 @@ public/self_service
 
 ### .gitignore overrides ###
 !spa_ui/self_service/**/region
+
+# Test local
+.gitlab-ci.yml
+testenv.sh
