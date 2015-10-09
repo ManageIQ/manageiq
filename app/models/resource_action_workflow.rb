@@ -22,7 +22,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
     dialog
   end
 
-  def submit_request(_requester_id = nil)
+  def submit_request
     result = {}
 
     result[:errors] = @dialog.validate

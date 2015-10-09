@@ -24,7 +24,7 @@ module ApplicationController::DialogRunner
     when "submit"
       return unless load_edit("dialog_edit__#{params[:id]}", "replace_cell__explorer")
       begin
-        result = @edit[:wf].submit_request(session[:userid])
+        result = @edit[:wf].submit_request
       rescue StandardError => bang
         add_flash(_("Error during '%s': ") % "Provisioning" << bang.message, :error)
         render :update do |page|                    # Use RJS to update the display
