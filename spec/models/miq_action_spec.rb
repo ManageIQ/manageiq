@@ -2,6 +2,7 @@ require "spec_helper"
 
 describe MiqAction do
   context "#action_custom_automation" do
+    let(:user) { FactoryGirl.create(:user_with_group) }
     before(:each) do
       @vm   = FactoryGirl.create(:vm_vmware)
       FactoryGirl.create(:miq_action, :name => "custom_automation")
@@ -13,7 +14,10 @@ describe MiqAction do
         :object_id        => @vm.id,
         :attrs            => {:request => "test_custom_automation"},
         :instance_name    => "REQUEST",
-        :automate_message => "create"
+        :automate_message => "create",
+        :user_id          => user.id,
+        :group_id         => user.current_group.id,
+        :tenant_id        => user.current_tenant.id,
       }
     end
 

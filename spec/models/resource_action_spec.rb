@@ -2,6 +2,7 @@ require "spec_helper"
 
 describe ResourceAction do
   context "#deliver_to_automate_from_dialog" do
+    let(:user) { FactoryGirl.create(:user_with_group) }
     let(:zone_name) { "default" }
     let(:ra) { FactoryGirl.create(:resource_action) }
     let(:q_args) do
@@ -10,7 +11,9 @@ describe ResourceAction do
         :class_name       => nil,
         :instance_name    => nil,
         :automate_message => nil,
-        :user_id          => nil,
+        :user_id          => user.id,
+        :group_id         => user.current_group.id,
+        :tenant_id        => user.current_tenant.id,
         :attrs            => {},
       }
     end
