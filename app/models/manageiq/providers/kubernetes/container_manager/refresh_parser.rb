@@ -382,18 +382,11 @@ module ManageIQ::Providers::Kubernetes
       res = {}
       # state_hash key is the state and value are attributes e.g 'running': {...}
       (state, state_info), = state_hash.to_h.to_a
-      %w(finishedAt startedAt).each do |iso_date|
-        state_info[iso_date] = parse_date state_info[iso_date]
-      end
       res[:state] = state
       %w(reason started_at finished_at exit_code signal message).each do |attr|
         res[attr.to_sym] = state_info[attr.camelize(:lower)]
       end
       res
-    end
-
-    def parse_date(date)
-      date.nil? ? nil : DateTime.iso8601(date)
     end
 
     def parse_container_image(image, imageID)
