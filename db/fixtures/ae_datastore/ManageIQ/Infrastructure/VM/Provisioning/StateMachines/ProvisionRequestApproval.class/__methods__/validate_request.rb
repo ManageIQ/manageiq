@@ -53,7 +53,7 @@ end
 unless max_cpus.blank?
   desired_cpus = prov_resource.get_option(:number_of_cpus).to_i
   if desired_cpus.zero?
-    desired_cpus = prov_resource.get_option(:number_of_sockets).to_i * prov_resource.get_option(:cores_per_socket).to_i
+    desired_cpus = prov_resource.get_option(:number_of_sockets).to_i * prov_resource.get_option(:cpu_cores_per_socket).to_i
   end
 
   if desired_cpus > max_cpus.to_i

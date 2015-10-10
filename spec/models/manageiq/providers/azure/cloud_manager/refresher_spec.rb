@@ -145,7 +145,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
       :bios                => nil,
       :annotation          => nil,
       :numvcpus            => 1,
-      :memory_cpu          => 1792, # MB
+      :memory_mb           => 1792,
       :disk_capacity       => 1093.megabytes,
       :bitness             => nil,
       :virtualization_type => nil
@@ -225,7 +225,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
       :bios               => nil,
       :annotation         => nil,
       :numvcpus           => 1,
-      :memory_cpu         => 768, # MB
+      :memory_mb          => 768,
       :disk_capacity      => 1043.megabytes,
       :bitness            => nil
     )

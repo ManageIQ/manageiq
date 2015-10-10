@@ -39,7 +39,7 @@ module AggregationMixin
   end
 
   def aggregate_memory(targets = nil)
-    aggregate_hardware(:hosts, :memory_cpu, targets)
+    aggregate_hardware(:hosts, :memory_mb, targets)
   end
 
   def aggregate_vm_cpus(targets = nil)
@@ -47,7 +47,7 @@ module AggregationMixin
   end
 
   def aggregate_vm_memory(targets = nil)
-    aggregate_hardware(:vms_and_templates, :memory_cpu, targets)
+    aggregate_hardware(:vms_and_templates, :memory_mb, targets)
   end
 
   def aggregate_disk_capacity(targets = nil)

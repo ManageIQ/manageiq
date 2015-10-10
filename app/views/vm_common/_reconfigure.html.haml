@@ -72,13 +72,13 @@
           .col-md-4
             - if @edit[:cores_options].length > 1
               = select_tag("cores_per_socket_count",
-                           options_for_select((@edit[:new][:cores_per_socket_count].nil? ? [["<#{_('Choose')}>",nil]] : []) + @edit[:cores_options], @edit[:new][:cores_per_socket_count].to_i),
+                           options_for_select((@edit[:new][:cpu_cores_per_socket_count].nil? ? [["<#{_('Choose')}>",nil]] : []) + @edit[:cores_options], @edit[:new][:cpu_cores_per_socket_count].to_i),
                            "data-miq_sparkle_on"  => true,
                            "data-miq_sparkle_off" => true,
                            :class                 => "selectpicker")
               :javascript
                 miqInitSelectPicker();
-                miqSelectPickerEvent("cores_per_socket_count", "#{url}")
+                miqSelectPickerEvent("cpu_cores_per_socket_count", "#{url}")
             - else
               = @edit[:cores_options][0]
       .form-group
@@ -87,7 +87,7 @@
             = _('Total Processors')
           .col-md-4
             = text_field_tag("total_cpus",
-                              @edit[:new][:socket_count].to_i * (@edit[:new][:cores_per_socket_count].to_i > 0 ? @edit[:new][:cores_per_socket_count].to_i : 1),
+                              @edit[:new][:socket_count].to_i * (@edit[:new][:cpu_cores_per_socket_count].to_i > 0 ? @edit[:new][:cpu_cores_per_socket_count].to_i : 1),
                               :class            => "form-control",
                               :readonly => '',
                               "data-miq_observe" => {:interval => '.5', :url => url}.to_json)

@@ -23,7 +23,7 @@ manage_quotas_by_group = true
 vms_in_request = miq_provision_request.get_option(:number_of_vms).to_i
 cpu_in_request = miq_provision_request.get_option(:number_of_cpus).to_i
 if cpu_in_request.zero?
-  cpu_in_request = miq_provision_request.get_option(:number_of_sockets).to_i * miq_provision_request.get_option(:cores_per_socket).to_i
+  cpu_in_request = miq_provision_request.get_option(:number_of_sockets).to_i * miq_provision_request.get_option(:cpu_cores_per_socket).to_i
 end
 memory_in_request = miq_provision_request.get_option(:vm_memory).to_i
 

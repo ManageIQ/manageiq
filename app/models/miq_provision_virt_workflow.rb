@@ -115,7 +115,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     clear_field_values([:placement_host_name, :placement_ds_name, :placement_folder_name, :placement_cluster_name, :placement_rp_name, :linked_clone, :snapshot])
 
     if vm.nil?
-      clear_field_values([:number_of_cpus, :number_of_sockets, :cores_per_socket, :vm_memory, :cpu_limit, :memory_limit, :cpu_reserve, :memory_reserve])
+      clear_field_values([:number_of_cpus, :number_of_sockets, :cpu_cores_per_socket, :vm_memory, :cpu_limit, :memory_limit, :cpu_reserve, :memory_reserve])
       vm_description = nil
       vlan = nil
       show_dialog(:customize, :show, "disabled")

@@ -36,12 +36,12 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration do
 
   context "#configure_container" do
     it "with options set" do
-      task.options[:cores_per_socket]  = 4
-      task.options[:dest_host]         = host.id
-      task.options[:memory_reserve]    = 1024
-      task.options[:number_of_sockets] = 2
-      task.options[:vm_description]    = "abc"
-      task.options[:vm_memory]         = 2048
+      task.options[:cpu_cores_per_socket] = 4
+      task.options[:dest_host]            = host.id
+      task.options[:memory_reserve]       = 1024
+      task.options[:number_of_sockets]    = 2
+      task.options[:vm_description]       = "abc"
+      task.options[:vm_memory]            = 2048
 
       expect(rhevm_vm).to receive(:description=).with("abc")
       expect(rhevm_vm).to receive(:memory=).with(2147483648)

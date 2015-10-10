@@ -17,12 +17,12 @@
             = _("Processor Sockets")
           .col-md-8
             = h(@options[:number_of_sockets])
-      - if @options[:cores_per_socket]
+      - if @options[:cpu_cores_per_socket]
         .form-group
           %label.control-label.col-md-2
             = _("Processor Cores_Per_Socket")
           .col-md-8
-            = h(@options[:cores_per_socket])
+            = h(@options[:cpu_cores_per_socket])
       - if @options[:number_of_cpus]
         %tr
           %td.key

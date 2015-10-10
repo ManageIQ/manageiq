@@ -117,7 +117,7 @@ class ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow < ManageIQ::P
     vm = load_ar_obj(get_source_vm)
     unless vm.nil?
       vm_hardware_version = vm.hardware.virtual_hw_version rescue nil
-      options[:read_only_fields] = [:cores_per_socket] if vm_hardware_version.to_i < 7
+      options[:read_only_fields] = [:cpu_cores_per_socket] if vm_hardware_version.to_i < 7
     end
 
     super(options)

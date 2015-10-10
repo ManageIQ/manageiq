@@ -3,7 +3,7 @@ require "spec_helper"
 describe VmReconfigureTask do
   context "#build_config_spec" do
     before do
-      @options = {:vm_memory => '1024', :number_of_cpus => '8', :cores_per_socket => '2'}
+      @options = {:vm_memory => '1024', :number_of_cpus => '8', :cpu_cores_per_socket => '2'}
       @vm      = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :virtual_hw_version => "07"))
       @task    = FactoryGirl.create(:vm_reconfigure_task, :options => @options, :source => @vm)
     end

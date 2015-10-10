@@ -26,6 +26,9 @@ class Hardware < ActiveRecord::Base
   virtual_column :hostnames,     :type => :string_set, :uses => :networks
   virtual_column :mac_addresses, :type => :string_set, :uses => :nics
 
+  alias_attribute :numvcpus, :cpu_sockets
+  alias_attribute :logical_cpus, :cpu_total_cores
+
   include ReportableMixin
 
   def ipaddresses
@@ -116,7 +119,7 @@ class Hardware < ActiveRecord::Base
   end
 
   def m_memory(_parent, xmlNode, _deletes)
-    self.memory_cpu = xmlNode.attributes["memsize"]
+    self.memory_mb = xmlNode.attributes["memsize"]
   end
 
   def m_bios(_parent, xmlNode, _deletes)

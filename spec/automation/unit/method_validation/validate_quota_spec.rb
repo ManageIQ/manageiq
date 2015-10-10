@@ -12,7 +12,7 @@ describe "Quota Validation" do
 
   context "validate vcpus quota limit, using number of cpus" do
     before do
-      prov_options = {:number_of_vms => 1, :owner_email => 'tester@miq.com', :vm_memory => ['1024', '1024'], :number_of_sockets => [2, '2'], :cores_per_socket => [2, '2'], :number_of_cpus => [2, '2']}
+      prov_options = {:number_of_vms => 1, :owner_email => 'tester@miq.com', :vm_memory => ['1024', '1024'], :number_of_sockets => [2, '2'], :cpu_cores_per_socket => [2, '2'], :number_of_cpus => [2, '2']}
       @miq_provision_request    = FactoryGirl.create(:miq_provision_request, :userid => @user.userid, :src_vm_id => @vm_template.id, :options => prov_options)
       @miq_request = @miq_provision_request.create_request
       @miq_request.save!
@@ -34,9 +34,9 @@ describe "Quota Validation" do
     end
   end
 
-  context "validate vcpus quota limit, using cores_per_socket and number_of_sockets" do
+  context "validate vcpus quota limit, using cpu_cores_per_socket and number_of_sockets" do
     before do
-      prov_options = {:number_of_vms => 1, :owner_email => 'tester@miq.com', :vm_memory => ['1024', '1024'], :number_of_sockets => [2, '2'], :cores_per_socket => [2, '2']}
+      prov_options = {:number_of_vms => 1, :owner_email => 'tester@miq.com', :vm_memory => ['1024', '1024'], :number_of_sockets => [2, '2'], :cpu_cores_per_socket => [2, '2']}
       @miq_provision_request    = FactoryGirl.create(:miq_provision_request, :userid => @user.userid, :src_vm_id => @vm_template.id, :options => prov_options)
       @miq_request = @miq_provision_request.create_request
       @miq_request.save!

@@ -28,7 +28,7 @@ include:
     group: Properties
     columns:
     - numvcpus
-    - memory_cpu
+    - memory_mb
     - memory_console
     - bios
     include:
@@ -142,7 +142,7 @@ col_order:
 - last_compliance_status
 - last_compliance_timestamp
 - hardware.numvcpus
-- hardware.memory_cpu
+- hardware.memory_mb
 - hardware.memory_console
 - hardware.bios
 - hardware.nics.location

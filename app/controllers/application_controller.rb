@@ -1391,8 +1391,8 @@ class ApplicationController < ActionController::Base
 
       if db_record.hardware.logical_cpus
         cpu_details =
-          if db_record.num_cpu && db_record.cores_per_socket
-            " (#{pluralize(db_record.num_cpu, 'socket')} x #{pluralize(db_record.cores_per_socket, 'core')})"
+          if db_record.num_cpu && db_record.cpu_cores_per_socket
+            " (#{pluralize(db_record.num_cpu, 'socket')} x #{pluralize(db_record.cpu_cores_per_socket, 'core')})"
           else
             ""
           end
@@ -1409,8 +1409,8 @@ class ApplicationController < ActionController::Base
                     :description => "#{db_record.hardware.cpu_speed} MHz",
                     :icon        => "processor") if db_record.hardware.cpu_speed
       @devices.push(:device      => "Memory",
-                    :description => "#{db_record.hardware.memory_cpu} MB",
-                    :icon        => "memory") if db_record.hardware.memory_cpu
+                    :description => "#{db_record.hardware.memory_mb} MB",
+                    :icon        => "memory") if db_record.hardware.memory_mb
 
       # Add disks to the device array
       unless db_record.hardware.disks.nil?

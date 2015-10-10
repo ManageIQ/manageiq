@@ -116,7 +116,7 @@ class VimPerformanceState < ActiveRecord::Base
   def self.capture_total(obj, field)
     return obj.send("aggregate_#{field}") if obj.respond_to?("aggregate_#{field}")
     return nil unless obj.respond_to?(:hardware) && obj.hardware
-    field == :memory ? obj.hardware.memory_cpu : obj.hardware.aggregate_cpu_speed
+    field == :memory ? obj.hardware.memory_mb : obj.hardware.aggregate_cpu_speed
   end
 
   def self.capture_assoc_ids(obj)
