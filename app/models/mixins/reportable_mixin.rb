@@ -142,7 +142,6 @@ module ReportableMixin
       end
 
       if association == "categories"
-        association_objects = []
         assochash = {}
         includes["categories"][:only].each do|c|
           entries = Classification.all_cat_entries(c, self)
@@ -152,6 +151,7 @@ module ReportableMixin
         end
         # join the the category data together
         max_length = assochash.map { |_, v| v.length }.max
+        association_objects = []
         max_length.times do |idx|
           nh = {}
           assochash.each { |k, v| nh[k] = v[idx].nil? ? v.last : v[idx] }
