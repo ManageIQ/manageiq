@@ -142,18 +142,18 @@ module ReportableMixin
       end
 
       if association == "categories"
-        assochash = {}
+        association_hash = {}
         includes["categories"][:only].each do|c|
           entries = Classification.all_cat_entries(c, self)
           entarr = []
           entries.each { |e| entarr.push(e.description) }
-          assochash["categories." + c] = entarr unless entarr.empty?
+          association_hash["categories." + c] = entarr unless entarr.empty?
         end
         # join the the category data together
-        max_length = assochash.map { |_, v| v.length }.max
+        max_length = association_hash.map { |_, v| v.length }.max
         association_objects = Array.new(max_length) do |idx|
           nh = {}
-          assochash.each { |k, v| nh[k] = v[idx].nil? ? v.last : v[idx] }
+          association_hash.each { |k, v| nh[k] = v[idx].nil? ? v.last : v[idx] }
           OpenStruct.new("reportable_data" => [nh])
         end
       else
