@@ -4,12 +4,15 @@ module MiqAeDiscoverySpec
   include MiqAeEngine
   describe "MiqAeDiscovery" do
     before(:each) do
-      @vm     = FactoryGirl.create(:vm_vmware)
-      @event  = FactoryGirl.create(:ems_event, :event_type => "CreateVM_Task_Complete",
-                                  :source => "VC", :ems_id => 1, :vm_or_template_id => @vm.id)
-      @domain = "SPEC_DOMAIN"
       # admin user is needed to process Events
       @admin = FactoryGirl.create(:user_with_group, :userid => "admin", :name => "Administrator")
+      @tenant = Tenant.root_tenant
+      @group  = FactoryGirl.create(:miq_group, :tenant => @tenant)
+      @ems    = FactoryGirl.create(:ext_management_system, :tenant => @tenant)
+      @vm     = FactoryGirl.create(:vm_vmware, :miq_group => @group)
+      @event  = FactoryGirl.create(:ems_event, :event_type => "CreateVM_Task_Complete",
+                                  :source => "VC", :ems_id => @ems.id, :vm_or_template_id => @vm.id)
+      @domain = "SPEC_DOMAIN"
       @model_data_dir = File.join(File.dirname(__FILE__), "data")
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "discovery"), @domain)
     end
@@ -24,21 +27,22 @@ module MiqAeDiscoverySpec
       let(:options) { {'test' => true} }
 
       it "check automate parameters" do
-        attrs = {:event_id          => @event.id,
-                 :event_type        => @event.event_type,
-                 "VmOrTemplate::vm" => @vm.id,
-                 :vm_id             => @vm.id}
-
-        identifiers = {:user_id      => @admin.id,
-                       :miq_group_id => @admin.current_group.id,
-                       :tenant_id    => @admin.current_tenant.id}
+        attrs = {:event_id                  => @event.id,
+                 :event_type                => @event.event_type,
+                 "ExtManagementSystem::ems" => @ems.id,
+                 :ems_id                    => @ems.id,
+                 "VmOrTemplate::vm"         => @vm.id,
+                 :vm_id                     => @vm.id,
+        }
 
         args = {:object_type      => "EmsEvent",
                 :object_id        => @event.id,
                 :attrs            => attrs,
                 :instance_name    => "Event",
-                :automate_message => nil,
-                :state            => nil}.merge(identifiers)
+                :user_id          => @admin.id,
+                :miq_group_id     => @group.id,
+                :tenant_id        => @tenant.id,
+                :automate_message => nil}
 
         MiqAeEngine.should_receive(:deliver).with(args).and_return(workspace)
         ws = MiqAeEvent.raise_ems_event(@event)
