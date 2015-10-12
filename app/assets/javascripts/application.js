@@ -19,7 +19,6 @@
 //= require directives/checkchange
 //= require directives/clear_field_set_focus
 //= require directives/datepicker
-//= require directives/required_if_existed
 //= require directives/verifypasswd
 //= require directives/selectpickerForSelectTag
 //= require directives/repository/valid_unc_path

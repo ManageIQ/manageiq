@@ -36,7 +36,7 @@ ManageIQ.angularApplication.controller('credentialsController', ['$http', '$scop
   };
 
   $scope.showChangePasswordLinks = function(userid) {
-    return !$scope.newRecord && $scope[$scope.model][userid] != '' && $scope.modelCopy[userid] != '';
+    return !$scope.newRecord && $scope.modelCopy[userid] != '';
   };
 
   $scope.resetClicked = function() {
