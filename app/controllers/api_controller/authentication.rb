@@ -30,6 +30,7 @@ class ApiController
           @auth_user     = @api_token_mgr.token_get_info(@module, @auth_token, :userid)
           @auth_user_obj = userid_to_userobj(@auth_user)
           @api_token_mgr.reset_token(@module, @auth_token)
+          User.current_user = @auth_user_obj
         end
       else
         authenticate_options = {
@@ -40,6 +41,7 @@ class ApiController
         if (user = authenticate_with_http_basic { |u, p| User.authenticate(u, p, request, authenticate_options) })
           @auth_user     = user.userid
           @auth_user_obj = userid_to_userobj(@auth_user)
+          User.current_user = @auth_user_obj
         else
           request_http_basic_authentication
         end
