@@ -1,4 +1,5 @@
 class ApplicationHelper::ToolbarBuilder
+  include MiqAeClassHelper
   def call(toolbar_name)
     build_toolbar_buttons_and_xml(toolbar_name)
   end
@@ -670,14 +671,13 @@ class ApplicationHelper::ToolbarBuilder
       end
     when "MiqAeClass", "MiqAeDomain", "MiqAeField", "MiqAeInstance", "MiqAeMethod", "MiqAeNamespace"
       return false if MIQ_AE_COPY_ACTIONS.include?(id) && MiqAeDomain.any_unlocked?
-      editable_domain = User.current_tenant.editable_domains.include?(@record)
       case id
       when "miq_ae_domain_lock"
-        return true unless editable_domain
+        return true unless editable_domain?(@record)
       when "miq_ae_domain_unlock"
-        return true if editable_domain || @record.priority.to_i == 0
+        return true if editable_domain?(@record) || @record.priority.to_i == 0
       else
-        return true unless editable_domain
+        return true unless editable_domain?(@record)
       end
     when "MiqAlert"
       case id
@@ -1010,16 +1010,16 @@ class ApplicationHelper::ToolbarBuilder
         return "Actions assigned to Policies can not be deleted" if @record.miq_policies.length > 0
       end
     when "MiqAeDomain", "MiqAeNamespace"
-      enabled_domain = User.current_tenant.editable_domains.include?(@record)
+      editable_domain = editable_domain?(@record)
       case id
       when "miq_ae_domain_delete"
-        return "Read Only Domain cannot be deleted." unless enabled_domain
+        return "Read Only Domain cannot be deleted." unless editable_domain
       when "miq_ae_domain_edit"
-        return "Read Only Domain cannot be edited" unless enabled_domain
+        return "Read Only Domain cannot be edited" unless editable_domain
       when "miq_ae_domain_lock"
-        return "Domain is Locked." unless enabled_domain
+        return "Domain is Locked." unless editable_domain
       when "miq_ae_domain_unlock"
-        return "Domain is Unlocked." if enabled_domain
+        return "Domain is Unlocked." if editable_domain
       end
     when "MiqAlert"
       case id
