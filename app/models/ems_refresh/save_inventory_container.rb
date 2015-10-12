@@ -4,7 +4,7 @@ module EmsRefresh::SaveInventoryContainer
 
     child_keys = [:container_projects, :container_quotas, :container_limits, :container_nodes,
                   :container_image_registries, :container_images, :container_replicators, :container_groups,
-                  :container_services, :container_routes, :persistent_volumes]
+                  :container_services, :container_routes, :persistent_volumes, :container_component_statuses]
 
     # Save and link other subsections
     child_keys.each do |k|
@@ -301,6 +301,20 @@ module EmsRefresh::SaveInventoryContainer
 
     save_inventory_multi(:container_image_registries, ems, hashes, deletes, [:host, :port])
     store_ids_for_new_records(ems.container_image_registries, hashes, [:host, :port])
+  end
+
+  def save_container_component_statuses_inventory(ems, hashes, target = nil)
+    return if hashes.nil?
+
+    ems.container_component_statuses(true)
+    deletes = if target.kind_of?(ExtManagementSystem)
+                ems.container_component_statuses.dup
+              else
+                []
+              end
+
+    save_inventory_multi(:container_component_statuses, ems, hashes, deletes, [:name])
+    store_ids_for_new_records(ems.container_component_statuses, hashes, :name)
   end
 
   def save_container_inventory(container_definition, hash, _target = nil)

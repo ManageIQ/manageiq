@@ -427,4 +427,37 @@ http_interactions:
       string: '{"kind":"PersistentVolumeClaimList","apiVersion":"v1","metadata":{"selfLink":"/api/v1/persistentvolumeclaims","resourceVersion":"1770475"}}'
     http_version: 
   recorded_at: Mon, 07 Sep 2015 12:20:04 GMT
+- request:
+    method: get
+    uri: https://10.35.0.174:8443/api/v1/componentstatuses
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.1p85
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 13 Oct 2015 13:03:20 GMT
+      Content-Length:
+      - '925'
+    body:
+      encoding: UTF-8
+      string: '{"kind":"ComponentStatusList","apiVersion":"v1","metadata":{"selfLink":"/api/v1/componentstatuses"},"items":[{"metadata":{"name":"controller-manager","selfLink":"/api/v1/namespaces/componentstatuses/controller-manager","creationTimestamp":null},"conditions":[{"type":"Healthy","status":"Unknown","error":"Get
+              http://127.0.0.1:10252/healthz: dial tcp 127.0.0.1:10252: connection refused"}]},{"metadata":{"name":"scheduler","selfLink":"/api/v1/namespaces/componentstatuses/scheduler","creationTimestamp":null},"conditions":[{"type":"Healthy","status":"Unknown","error":"Get
+              http://127.0.0.1:10251/healthz: dial tcp 127.0.0.1:10251: connection refused"}]},{"metadata":{"name":"etcd-0","selfLink":"/api/v1/namespaces/componentstatuses/etcd-0","creationTimestamp":null},"conditions":[{"type":"Healthy","status":"True","message":{"health":"true"},"error":"nil"}]}]}'
+    http_version:
+  recorded_at: Tue, 13 Oct 2015 13:03:20 GMT
 recorded_with: VCR 2.9.3
