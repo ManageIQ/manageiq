@@ -1,13 +1,15 @@
 class ApiController
+  INVALID_TENANT_ATTRS = %w(id href ancestry)
+
   module Tenants
     def create_resource_tenants(_type, _id, data)
-      if data.key?("id") || data.key?("href")
+      bad_attrs = data_includes_invalid_attrs(data)
+      if bad_attrs.present?
         raise BadRequestError,
-              "Resource id or href should not be specified for creating a new tenant resource"
+              "Attribute(s) #{bad_attrs} should not be specified for creating a new tenant resource"
       end
-      parent_data = data.delete("parent")
-      parent = fetch_parent(parent_data)
-      data.merge!("parent" => parent)
+      parent = fetch_parent(data.delete("parent"))
+      data.merge!("parent" => parent) if parent
       tenant = Tenant.create(data)
       if tenant.invalid?
         raise BadRequestError, "Failed to add a new tenant resource - #{tenant.errors.full_messages.join(', ')}"
@@ -15,15 +17,24 @@ class ApiController
       tenant
     end
 
+    def edit_resource_tenants(type, id, data)
+      bad_attrs = data_includes_invalid_attrs(data)
+      if bad_attrs.present?
+        raise BadRequestError, "Attributes #{bad_attrs} should not be specified for updating a tenant resource"
+      end
+      parent = fetch_parent(data.delete("parent"))
+      data.merge!("parent" => parent) if parent
+      edit_resource(type, id, data)
+    end
+
     private
 
     def fetch_parent(data)
-      if data.key?("id")
-        parent_id = data["id"]
-      else
-        _, parent_id = parse_href(data["href"])
-      end
-      Tenant.find_by_id(parent_id)
+      Tenant.find_by_id(parse_id(data, :tenants)) if data
+    end
+
+    def data_includes_invalid_attrs(data)
+      data.keys.select { |k| INVALID_TENANT_ATTRS.include?(k) }.compact.join(", ") if data
     end
   end
 end

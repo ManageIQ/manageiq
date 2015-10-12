@@ -158,21 +158,21 @@ module ApiSpecHelper
     api_server_config[:collections]
   end
 
-  def action_identifier(type, action, selection = :resource_actions)
-    collection_config.fetch_path(type, selection, :post)
+  def action_identifier(type, action, selection = :resource_actions, method = :post)
+    collection_config.fetch_path(type, selection, method)
       .detect { |spec| spec[:name] == action.to_s }[:identifier]
   end
 
-  def collection_action_identifier(type, action)
-    action_identifier(type, action, :collection_actions)
+  def collection_action_identifier(type, action, method = :post)
+    action_identifier(type, action, :collection_actions, method)
   end
 
-  def subcollection_action_identifier(type, subtype, action)
+  def subcollection_action_identifier(type, subtype, action, method = :post)
     subtype_actions = "#{subtype}_subcollection_actions".to_sym
     if collection_config.fetch_path(type, subtype_actions).present?
-      action_identifier(type, action, subtype_actions)
+      action_identifier(type, action, subtype_actions, method)
     else
-      action_identifier(subtype, action, :subcollection_actions)
+      action_identifier(subtype, action, :subcollection_actions, method)
     end
   end
 

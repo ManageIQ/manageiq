@@ -11,7 +11,7 @@ RSpec.describe "tenants API" do
   let!(:root_tenant) { Tenant.seed }
 
   it "can list all the tenants" do
-    api_basic_authorize "rbac_tenant_show_list"
+    api_basic_authorize action_identifier(:tenants, :read, :collection_actions, :get)
     tenant_1 = FactoryGirl.create(:tenant, :parent => root_tenant)
     tenant_2 = FactoryGirl.create(:tenant, :parent => root_tenant)
 
@@ -30,7 +30,7 @@ RSpec.describe "tenants API" do
   end
 
   it "can show a single tenant" do
-    api_basic_authorize "rbac_tenant_show"
+    api_basic_authorize action_identifier(:tenants, :read, :resource_actions, :get)
     tenant = FactoryGirl.create(
       :tenant,
       :parent      => root_tenant,

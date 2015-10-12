@@ -867,7 +867,7 @@
     :klass: Tenant
     :collection_actions:
       :get:
-      - :name: show
+      - :name: read
         :identifier: rbac_tenant_show_list
       :post:
       - :name: create
@@ -878,7 +878,7 @@
         :identifier: rbac_tenant_delete
     :resource_actions:
       :get:
-      - :name: show
+      - :name: read
         :identifier: rbac_tenant_show
       :post:
       - :name: edit
