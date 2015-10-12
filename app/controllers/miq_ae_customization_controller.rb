@@ -464,7 +464,9 @@ class MiqAeCustomizationController < ApplicationController
     # url to be used in url in miqDropComplete method
     presenter[:miq_widget_dd_url] = 'miq_ae_customization/dialog_res_reorder'
     presenter[:init_dashboard] = true
-    presenter[:update_partials][:custom_left_cell_div] = render_proc[:partial => "dialog_edit_tree"]
+    presenter[:update_partials][:custom_left_cell] = render_proc[:partial => "dialog_edit_tree"]
+    presenter[:set_visible_elements][:custom_left_cell] = true
+    presenter[:set_visible_elements][:default_left_cell] = false
   end
 
   def setup_presenter_for_dialogs_tree(nodetype, presenter)
@@ -482,6 +484,8 @@ class MiqAeCustomizationController < ApplicationController
     if %w(save reset).include?(params[:button]) && is_browser_ie?
       presenter[:extra_js] << "ManageIQ.oneTransition.IEButtonPressed = true"
     end
+    presenter[:set_visible_elements][:custom_left_cell] = false
+    presenter[:set_visible_elements][:default_left_cell] = true
   end
 
   def setup_presenter_for_old_dialogs_tree(nodetype, presenter)

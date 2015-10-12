@@ -19,7 +19,6 @@ class ExplorerPresenter
   #                                       compulsory key :skip_days
   #   init_dashboard
   #   ajax_action                      -- Hash of options for AJAX action to fire
-  #   cell_a_view
   #   clear_gtl_list_grid
   #   right_cell_text
   #   ManageIQ.record.parentId
