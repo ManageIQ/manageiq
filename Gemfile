@@ -47,7 +47,7 @@ gem "acts_as_tree",                   "~>2.1.0"  # acts_as_tree needs to be requ
 # See miq_expression_spec Date/Time Support examples.
 # https://github.com/jeremyevans/ruby-american_date
 gem "american_date"
-gem "azure-armrest",                  :git => "git://github.com/ManageIQ/azure-armrest.git"
+gem "azure-armrest",                  "=0.0.3"
 gem "default_value_for",              "~>3.0.1"
 gem "hamlit-rails",                   "~>0.1.0"
 gem "high_voltage",                   "~>2.4.0"
