@@ -678,6 +678,39 @@ class CatalogController < ApplicationController
   end
   hide_action :process_sts
 
+  def template_to_node_name(object)
+    case object
+    when OrchestrationTemplateHot
+      "xx-othot"
+    when OrchestrationTemplateCfn
+      "xx-otcfn"
+    when OrchestrationTemplateAzure
+      "xx-otazu"
+    end
+  end
+
+  def node_name_to_template_name(node_name)
+    case node_name
+    when "xx-othot"
+      "OrchestrationTemplateHot"
+    when "xx-otcfn"
+      "OrchestrationTemplateCfn"
+    when "xx-otazu"
+      "OrchestrationTemplateAzure"
+    end
+  end
+
+  def template_to_tree_name(object)
+    case object
+    when OrchestrationTemplateHot
+      "othot"
+    when OrchestrationTemplateCfn
+      "otcfn"
+    when OrchestrationTemplateAzure
+      "otazu"
+    end
+  end
+
   def ot_edit
     assert_privileges("orchestration_template_edit")
     ot_edit_set_form_vars(_("Editing %s"))
@@ -743,27 +776,14 @@ class CatalogController < ApplicationController
     if elements.length > 1
       self.x_node = 'root'
     else
-      if elements[0].kind_of?(OrchestrationTemplateHot)
-        self.x_node = "xx-othot"
-      elsif elements[0].kind_of?(OrchestrationTemplateCfn)
-        self.x_node = "xx-othot"
-      else
-        self.x_node = "xx-otazu"
-      end
+      self.x_node = template_to_node_name(elements[0])
     end
     replace_right_cell(nil, trees_to_replace([:ot]))
   end
 
   def ot_add
     assert_privileges("orchestration_template_add")
-    ot_type = case x_node
-      when "xx-othot"
-        "OrchestrationTemplateHot"
-      when"xx-otcfn"
-        "OrchestrationTemplateCfn"
-      else
-        "OrchestrationTemplateAzure"
-    end
+    ot_type = x_node == "root" ? "OrchestrationTemplateCfn" : node_name_to_template_name(x_node)
     @edit = {:new => {:name        => "",
                       :description => "",
                       :content     => "",
@@ -826,14 +846,7 @@ class CatalogController < ApplicationController
     self.x_active_tree = :ot_tree
     self.x_active_accord = 'ot'
     x_tree_init(:ot_tree, :ot, "OrchestrationTemplate") unless x_tree
-    ot_type = case ot.type
-      when "OrchestrationTemplateHot"
-        "othot"
-      when "OrchestrationTemplateCfn"
-        "otcfn"
-      else
-        "otazu"
-    end
+    ot_type = template_to_tree_name(ot)
     x_tree[:open_nodes].push("xx-#{ot_type}") unless x_tree[:open_nodes].include?("xx-#{ot_type}")
     self.x_node = "ot-#{to_cid(ot.id)}"
     x_tree[:open_nodes].push(x_node)
@@ -1052,7 +1065,7 @@ class CatalogController < ApplicationController
         :description => @edit[:new][:description],
         :type        => old_ot.type,
         :content     => params[:template_content],
-        :draft       => @edit[:new][:draft] == true || @edit[:new][:draft] == "true" ? true : false)
+        :draft       => @edit[:new][:draft] == true || @edit[:new][:draft] == "true")
       begin
         ot.save_with_format_validation!
       rescue StandardError => bang
@@ -1063,7 +1076,7 @@ class CatalogController < ApplicationController
                     {:model => ui_lookup(:model => 'OrchestrationTemplate'),
                      :name  => @edit[:new][:name]})
         x_node_elems = x_node.split('-')
-        if( !x_node_elems[2].nil? && x_node_elems[2] != to_cid(ot.id))
+        if !x_node_elems[2].nil? && x_node_elems[2] != to_cid(ot.id)
           x_node_elems[2] = to_cid(ot.id)
           self.x_node = x_node_elems.join('-')
         end
@@ -1108,24 +1121,10 @@ class CatalogController < ApplicationController
         add_flash(_("%{model} \"%{name}\" was saved") %
                     {:model => ui_lookup(:model => 'OrchestrationTemplate'),
                      :name  => @edit[:new][:name]})
-        subtree = case ot.type
-                    when "OrchestrationTemplateHot"
-                      "xx-othot"
-                    when "OrchestrationTemplateCfn"
-                      "xx-otcfn"
-                    else
-                      "xx-otazu"
-                  end
+        subtree = template_to_tree_name(ot)
         x_tree[:open_nodes].push(subtree) unless x_tree[:open_nodes].include?(subtree)
-        ot_type = case ot.type
-                    when  "OrchestrationTemplateHot"
-                      "othot"
-                    when "OrchestrationTemplateCfn"
-                      "otcfn"
-                    else
-                      "otazu"
-                  end
-         self.x_node = "xx-%{type}_ot-%{cid}" % {:type => ot_type,
+        ot_type = template_to_tree_name(ot)
+        self.x_node = "xx-%{type}_ot-%{cid}" % {:type => ot_type,
                                                 :cid  => to_cid(ot.id)}
         x_tree[:open_nodes].push(x_node)
         @changed = session[:changed] = false
@@ -1652,14 +1651,7 @@ class CatalogController < ApplicationController
           end
           @right_cell_text = _("All %s") % ui_lookup(:models => typ)
         elsif ["xx-otcfn", "xx-othot", "xx-otazu"].include?(x_node)
-          typ = case x_node
-                  when "xx-otcfn"
-                    "OrchestrationTemplateCfn"
-                  when "xx-othot"
-                    "OrchestrationTemplateHot"
-                  else
-                    "OrchestrationTemplateAzure"
-                end
+          typ = node_name_to_template_name(x_node)
           @right_cell_text = _("All %s") % ui_lookup(:models => typ)
           process_show_list(:model => typ.constantize, :gtl_dbname => :orchestrationtemplate)
         else
@@ -1731,13 +1723,7 @@ class CatalogController < ApplicationController
     existing_node = nil                      # Init var
 
     if record.kind_of?(OrchestrationTemplate)
-      parents = if record.type == "OrchestrationTemplateCfn"
-                  [:id => "otcfn"]
-                elsif record.type == "OrchestrationTemplateHot"
-                  [:id => "othot"]
-                else
-                  [:id => "otazu"]
-                end
+      parents = [:id => template_to_tree_name(record)]
     else
       # Check for parent nodes missing from vandt tree and return them if any
       parent_rec = ServiceTemplateCatalog.find_by_id(record.service_template_catalog_id)
