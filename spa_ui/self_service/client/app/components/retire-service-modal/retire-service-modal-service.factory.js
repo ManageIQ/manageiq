@@ -66,7 +66,6 @@
         $modalInstance.close();
         Notifications.success('Scheduling retirement for' + vm.service.name  + '.');
         $state.go($state.current, {}, {reload: true});
-        $state.go('services.list');
       }
 
       function retireFailure() {
