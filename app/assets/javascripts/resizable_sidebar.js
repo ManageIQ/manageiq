@@ -25,7 +25,7 @@ $.fn.resizableSidebar = function() {
       var ajax = 2; // the width of the sidebar which will be sent with an ajax request
       var left_class = [];
       var right_class = [];
-      $.each(sidebar.get(0).classList, function (k, v) {
+      $.each(sidebar.attr('class').split(/\s+/), function (k, v) {
         if (left) {
           switch(v) {
             case 'col-md-5':
@@ -78,7 +78,7 @@ $.fn.resizableSidebar = function() {
           }
         }
       });
-      $.each(maindiv.get(0).classList, function (k, v) {
+      $.each(maindiv.attr('class').split(/\s+/), function (k, v) {
         if (left) {
           switch(v) {
             case 'col-md-10':
