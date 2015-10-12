@@ -151,11 +151,10 @@ module ReportableMixin
         end
         # join the the category data together
         max_length = assochash.map { |_, v| v.length }.max
-        association_objects = []
-        max_length.times do |idx|
+        association_objects = Array.new(max_length) do |idx|
           nh = {}
           assochash.each { |k, v| nh[k] = v[idx].nil? ? v.last : v[idx] }
-          association_objects.push(OpenStruct.new("reportable_data" => [nh]))
+          OpenStruct.new("reportable_data" => [nh])
         end
       else
         # if respond_to?(:find_filtered_children)
