@@ -96,8 +96,7 @@ module ReportableMixin
     def get_include_for_find(report_option)
       includes = report_option
       if includes.kind_of?(Hash)
-        result = {}
-        includes.each do |k, v|
+        includes.each_with_object({}) do |(k, v), result|
           v[:include] = v["include"] if v["include"]
           if v.empty? || !v[:include]
             result[k] = {}
@@ -105,11 +104,10 @@ module ReportableMixin
             result[k] = get_include_for_find(v[:include])
           end
         end
-        result
       elsif includes.kind_of?(Array)
-        result = {}
-        includes.each { |i| result[i] = {} }
-        result
+        includes.each_with_object({}) do |i, result|
+          result[i] = {}
+        end
       else
         includes
       end
