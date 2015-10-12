@@ -23,23 +23,21 @@ class WidgetPresenter
 
   def button_fullscreen
     if @widget.content_type == "chart"
-      @view.link_to(" Full Screen",
+      @view.link_to(@view.content_tag(:span, " Full Screen", :class => 'fa fa-arrows-alt'),
                     {:action => "report_only",
                      :type   => "hybrid",
                      :rr_id  => @widget.contents_for_user(current_user).miq_report_result_id},
                     :id                => "w_#{@widget.id}_fullscreen",
-                    :class             => "fa fa-arrows-alt",
                     :title             => _("Open the chart and full report in a new window"),
                     "data-miq_confirm" => _("This will show the chart and the entire report " \
                                             "(all rows) in your browser. Do you want to proceed?"),
                     :onclick           => "return miqClickAndPop(this);")
     else
-      @view.link_to(" Full Screen",
+      @view.link_to(@view.content_tag(:span, " Full Screen", :class => 'fa fa-arrows-alt'),
                     {:action => "report_only",
                      :type   => "tabular",
                      :rr_id  => @widget.contents_for_user(current_user).miq_report_result_id},
                     :id                => "w_#{@widget.id}_fullscreen",
-                    :class             => "fa fa-arrows-alt",
                     :title             => _("Open the full report in a new window"),
                     "data-miq_confirm" => _("This will show the entire report (all rows) in your browser. " \
                                             "Do you want to proceed?"),
@@ -49,7 +47,7 @@ class WidgetPresenter
 
   def button_close
     unless @sb[:dashboards][@sb[:active_db]][:locked]
-      @view.link_to(" Remove Widget",
+      @view.link_to(@view.content_tag(:span, " Remove Widget", :class => 'pficon pficon-close'),
                     {:controller => "dashboard",
                      :action     => "widget_close",
                      :widget     => @widget.id},
@@ -58,21 +56,20 @@ class WidgetPresenter
                     :remote               => true,
                     :confirm              => _("Are you sure you want to remove '%s'" \
                                                "from the Dashboard?") % @widget.title,
-                    'data-miq_sparkle_on' => true,
-                    :class                => "pficon pficon-close")
+                    'data-miq_sparkle_on' => true)
     end
   end
 
   def button_minmax
     minimized = @sb[:dashboards][@sb[:active_db]][:minimized].include?(@widget.id)
-    @view.link_to(minimized ? " Maximize" : " Minimize",
+    @view.link_to(@view.content_tag(:span, minimized ? " Maximize" : " Minimize",
+                                    :class  => "fa fa-caret-#{minimized ? 'down' : 'up'}"),
                   {:controller => "dashboard",
                    :action     => "widget_toggle_minmax",
                    :widget     => @widget.id},
                   :id     => "w_#{@widget.id}_minmax",
                   :title  => minimized ? _(" Maximize") : _(" Minimize"),
-                  :remote => true,
-                  :class  => "fa fa-caret-#{minimized ? "down" : "up"}")
+                  :remote => true)
   end
 
 
@@ -87,15 +84,14 @@ class WidgetPresenter
   end
 
   def button_zoom
-    @view.link_to(" Zoom in",
+    @view.link_to(@view.content_tag(:span, " Zoom in", :class => "fa fa-plus"),
                   {:controller => "dashboard",
                    :action     => "widget_zoom",
                    :widget     => @widget.id},
                   :id                   => "w_#{@widget.id}_zoom",
                   :title                => _("Zoom in on this chart"),
                   "data-miq_sparkle_on" => true,
-                  :remote               => true,
-                  :class                => "fa fa-plus")
+                  :remote               => true)
   end
 
   def self.chart_data
