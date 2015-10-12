@@ -76,7 +76,7 @@ class VimPerformanceState < ActiveRecord::Base
   end
 
   def vm_count_total
-    return get_assoc(:vms).length
+    get_assoc(:vms).length
   end
 
   def host_count_on
@@ -88,7 +88,7 @@ class VimPerformanceState < ActiveRecord::Base
   end
 
   def host_count_total
-    return get_assoc(:hosts).length
+    get_assoc(:hosts).length
   end
 
   def storages
