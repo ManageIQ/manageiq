@@ -50,6 +50,7 @@ class OrchestrationStack < ActiveRecord::Base
     klass.create(:name                   => stack_name,
                  :ems_ref                => ems_ref,
                  :status                 => 'CREATE_IN_PROGRESS',
+                 :resource_group         => options[:resource_group],
                  :ext_management_system  => orchestration_manager,
                  :orchestration_template => template)
   end
