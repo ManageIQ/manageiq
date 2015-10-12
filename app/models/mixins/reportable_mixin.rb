@@ -145,9 +145,8 @@ module ReportableMixin
         association_hash = {}
         includes["categories"][:only].each do|c|
           entries = Classification.all_cat_entries(c, self)
-          entarr = []
-          entries.each { |e| entarr.push(e.description) }
-          association_hash["categories." + c] = entarr unless entarr.empty?
+          descriptions = entries.map(&:description)
+          association_hash["categories." + c] = descriptions unless descriptions.empty?
         end
         # join the the category data together
         max_length = association_hash.map { |_, v| v.length }.max
