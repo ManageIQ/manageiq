@@ -151,9 +151,8 @@ module ReportableMixin
           assochash["categories." + c] = entarr unless entarr.empty?
         end
         # join the the category data together
-        longest = 0
         idx = 0
-        assochash.each_key { |k| longest = assochash[k].length if assochash[k].length > longest }
+        longest = assochash.map { |_, v| v.length }.max
         longest.times do
           nh = {}
           assochash.each_key { |k| nh[k] = assochash[k][idx].nil? ? assochash[k].last : assochash[k][idx] }
