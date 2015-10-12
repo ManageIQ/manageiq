@@ -1,4 +1,9 @@
-//= require_directory ../SlickGrid-2.1/
+//= require slickgrid/lib/jquery.event.drag-2.2
+//= require slickgrid/slick.core
+//= require slickgrid/slick.dataview
+//= require slickgrid/slick.grid
+//= require slickgrid/plugins/slick.rowselectionmodel
+//= require slickgrid/plugins/slick.checkboxselectcolumn
 
 $.getJSON("get_json?import_file_upload_id=" + import_file_upload_id, function (rows_json) {
   ManageIQ.slick.slickRows = rows_json;
