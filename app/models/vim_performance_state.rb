@@ -37,7 +37,7 @@ class VimPerformanceState < ActiveRecord::Base
   # => host_count_on    (derive from assoc_ids)
   # => host_count_off   (derive from assoc_ids)
   # => host_count_total (derive from assoc_ids)
-  # => sockets          (derive from assoc_ids)
+  # => host_sockets     (derive from assoc_ids)
 
   def self.capture(obj)
     ts = Time.now.utc
