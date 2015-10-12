@@ -100,15 +100,15 @@ module ReportableMixin
         includes.each do |k, v|
           v[:include] = v["include"] if v["include"]
           if v.empty? || !v[:include]
-            result.merge!(k => {})
+            result[k] = {}
           else
-            result.merge!(k => get_include_for_find(v[:include]))
+            result[k] = get_include_for_find(v[:include])
           end
         end
         result
       elsif includes.kind_of?(Array)
         result = {}
-        includes.each { |i| result.merge!(i => {}) }
+        includes.each { |i| result[i] = {} }
         result
       else
         includes
