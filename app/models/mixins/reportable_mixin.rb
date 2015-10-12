@@ -98,11 +98,7 @@ module ReportableMixin
       if includes.kind_of?(Hash)
         includes.each_with_object({}) do |(k, v), result|
           v[:include] = v["include"] if v["include"]
-          if !v[:include]
-            result[k] = {}
-          else
-            result[k] = get_include_for_find(v[:include])
-          end
+          result[k] = get_include_for_find(v[:include] || {})
         end
       elsif includes.kind_of?(Array)
         includes.each_with_object({}) do |i, result|
