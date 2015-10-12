@@ -25,7 +25,8 @@ describe Tenant do
 
   describe "#root_tenant" do
     it "has a root tenant" do
-      expect(root_tenant).to be
+      Tenant.seed
+      expect(Tenant.root_tenant).to be
     end
 
     it "can update the root_tenant" do
@@ -46,7 +47,8 @@ describe Tenant do
 
   describe "#root?" do
     it "detects root" do
-      expect(root_tenant).to be_root
+      Tenant.seed
+      expect(Tenant.root_tenant).to be_root
     end
 
     it "detects non root" do
@@ -79,8 +81,8 @@ describe Tenant do
   end
 
   describe "#display_type" do
-    let(:tenant)  { FactoryGirl.build(:tenant, :parent => default_tenant) }
-    let(:project) { FactoryGirl.build(:tenant, :parent => default_tenant, :divisible => false) }
+    let(:tenant)  { FactoryGirl.build(:tenant) }
+    let(:project) { FactoryGirl.build(:tenant, :divisible => false) }
 
     it "detects Tenant" do
       expect(tenant.display_type).to eql  'Tenant'

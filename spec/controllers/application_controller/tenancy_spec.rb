@@ -21,7 +21,7 @@ describe DashboardController do
 
     # context "#with unknown subdomain or domain" do
     #   before do
-    #     EvmSpecHelper.create_root_tenant
+    #     Tenant.seed
     #     @request.host = "www.example.com"
     #   end
 
