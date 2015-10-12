@@ -6,17 +6,21 @@
 %h3
   = _('Import')
 #import_div
-  .form-horizontal
+  = form_tag({:action => "upload", :typ => "import", :dbtype => @sb[:dbtype]}, :class => "form-horizontal", :multipart => true) do
+    - overwrite = @sb[:overwrite] ? true : false
     .form-group
       .col-md-8
-        = form_tag({:action => "upload", :typ => "import", :dbtype => @sb[:dbtype]}, :multipart => true) do
-          - overwrite = @sb[:overwrite] ? true : false
-          = check_box_tag("overwrite", "1", overwrite)
-          = _('Overwrite existing reports?')
-          &nbsp;&nbsp;&nbsp;
-          = file_field("upload", "file")
-          &nbsp;&nbsp;&nbsp;
-          = submit_tag(_("Upload"), :id => "upload_atags")
+        = check_box_tag("overwrite", "1", overwrite)
+        = _('Overwrite existing reports?')
+    .form-group
+      .col-md-4
+        = file_field("upload", "file",
+                     :class             => "lifestyle",
+                     "data-buttonName"  => "btn-default")
+        :javascript
+          $(":file").filestyle({icon: false, placeholder: "No file chosen"});
+      .col-md-6
+        = submit_tag(_("Upload"), :class => "btn btn-default", :id => "upload_atags")
 %hr
 %h3
   = _('Export')
