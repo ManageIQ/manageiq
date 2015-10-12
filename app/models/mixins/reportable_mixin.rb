@@ -154,7 +154,7 @@ module ReportableMixin
         max_length = assochash.map { |_, v| v.length }.max
         max_length.times do |idx|
           nh = {}
-          assochash.each_key { |k| nh[k] = assochash[k][idx].nil? ? assochash[k].last : assochash[k][idx] }
+          assochash.each { |k, v| nh[k] = v[idx].nil? ? v.last : v[idx] }
           association_objects.push(OpenStruct.new("reportable_data" => [nh]))
         end
       else
