@@ -505,7 +505,7 @@ module ReportController::Widgets
     @edit[:new][:fields] = fields
   end
 
-  #Build the main widgets tree
+  # Build the main widgets tree
   def build_widgets_tree
     TreeBuilderReportWidgets.new('widgets_tree', 'widgets', @sb)
   end

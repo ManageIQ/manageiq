@@ -126,10 +126,10 @@ class ReportController < ApplicationController
     @trees = []
     @accords = []
     @lists = []
-    @sb[:open_tree_nodes] ||= Array.new
+    @sb[:open_tree_nodes] ||= []
     @trees = []
-    @accords = Array.new
-    @lists = Array.new
+    @accords = []
+    @lists = []
 
     x_last_active_tree = x_active_tree if x_active_tree
     x_last_active_accord = x_active_accord if x_active_accord
@@ -414,7 +414,7 @@ class ReportController < ApplicationController
     build_trees
   end
 
-  #Build the main import/export tree
+  # Build the main import/export tree
   def build_export_tree
     TreeBuilderReportExport.new('export_tree', 'export', @sb)
   end

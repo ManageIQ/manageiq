@@ -65,7 +65,7 @@ class TreeBuilder
       ["CFME Region: #{region.description} [#{region.region}]", "CFME Region: #{region.description} [#{region.region}]", "miq_region"]
     when :dialogs_tree                  then [_("All Dialogs"),                  _("All Dialogs")]
     when :dialog_import_export_tree     then [_("Service Dialog Import/Export"), _("Service Dialog Import/Export")]
-    when :export_tree                  then [_("Import / Export"),              _("Import / Export"), _("report")]
+    when :export_tree                   then [_("Import / Export"),              _("Import / Export"), _("report")]
     when :images_tree                   then [_("Images by Provider"),           _("All Images by Provider that I can see")]
     when :instances_tree                then [_("Instances by Provider"),        _("All Instances by Provider that I can see")]
     when :instances_filter_tree         then [_("All Instances"),                _("All of the Instances that I can see")]
@@ -304,7 +304,7 @@ class TreeBuilder
                         when MiqGroup            then options[:tree] == :db_tree ?
                                                     x_get_tree_g_kids(parent, options) : nil
                         when MiqRegion           then x_get_tree_region_kids(parent, options)
-                        when MiqReport		       then x_get_tree_r_kids(parent, options)
+                        when MiqReport           then x_get_tree_r_kids(parent, options)
                         when PxeServer           then x_get_tree_pxe_server_kids(parent, options)
                         when Service             then x_get_tree_service_kids(parent, options)
                         when ServiceTemplateCatalog

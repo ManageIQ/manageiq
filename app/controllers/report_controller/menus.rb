@@ -364,7 +364,7 @@ module ReportController::Menus
     @branch = []
     @parent_node = {}
     menus.each do |r|
-      r.each_slice(2) do |menu,section|
+      r.each_slice(2) do |menu, section|
         @parent_node = TreeNodeBuilder.generic_tree_node(
           "p__#{menu}",
           menu,
@@ -760,7 +760,7 @@ module ReportController::Menus
     @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name => session[:role_choice], :model => ui_lookup(:model => "MiqGroup")}
   end
 
-  #Build the main roles/menu editor tree
+  # Build the main roles/menu editor tree
   def build_roles_tree
     TreeBuilderReportRoles.new('roles_tree', 'roles', @sb)
   end

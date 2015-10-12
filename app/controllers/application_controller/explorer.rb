@@ -392,7 +392,10 @@ module ApplicationController::Explorer
       objects = rbac_filtered_objects(Dialog.all).sort_by { |a| a.label.downcase }
       return count_only ? objects.length : objects
     when :old_dialogs
-      MiqDialog::DIALOG_TYPES.sort.collect{|typ| {:id=>"MiqDialog_#{typ[1]}", :text=>typ[0], :image=>"folder", :tip=>typ[0]}}
+      MiqDialog::DIALOG_TYPES.sort.collect{|typ| {:id    => "MiqDialog_#{typ[1]}",
+                                                  :text  => typ[0],
+                                                  :image => "folder",
+                                                  :tip   => typ[0]}}
     when :roles
       if super_admin_user?
         roles = MiqGroup.all

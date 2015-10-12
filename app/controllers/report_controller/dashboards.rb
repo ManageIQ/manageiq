@@ -500,7 +500,7 @@ module ReportController::Dashboards
     end
   end
 
-  #Build the main dashboards tree
+  # Build the main dashboards tree
   def build_db_tree
     TreeBuilderReportDashboards.new('db_tree', 'db', @sb)
   end

@@ -33,10 +33,16 @@ describe ReportController do
         task = FactoryGirl.create(:miq_task)
         task.update_attributes(:state => "Finished")
         task.reload
-        report_result = FactoryGirl.create(:miq_report_result, :miq_group_id => user.current_group.id, :miq_task_id => task.id)
+        report_result = FactoryGirl.create(:miq_report_result,
+                                           :miq_group_id => user.current_group.id,
+                                           :miq_task_id  => task.id)
         allow_any_instance_of(MiqReportResult).to receive(:report_results).and_return(report)
-        binary_blob = FactoryGirl.create(:binary_blob, :resource_type => "MiqReportResult", :resource_id => report_result.id)
-        FactoryGirl.create(:binary_blob_part, :data => "--- Quota \xE2\x80\x93 Max CPUs\n...\n", :binary_blob_id => binary_blob.id)
+        binary_blob = FactoryGirl.create(:binary_blob,
+                                         :resource_type => "MiqReportResult",
+                                         :resource_id   => report_result.id)
+        FactoryGirl.create(:binary_blob_part,
+                           :data           => "--- Quota \xE2\x80\x93 Max CPUs\n...\n",
+                           :binary_blob_id => binary_blob.id)
 
         post :tree_select, :id => "rr-#{report_result.id}", :format => :js, :accord => 'savedreports'
         response.should render_template('shared/_report_chart_and_html')

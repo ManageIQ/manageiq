@@ -468,7 +468,7 @@ module ReportController::Reports
     rpt_rec                                  # Create a report object from the record
   end
 
-  #Build the main reports tree
+  # Build the main reports tree
   def build_reports_tree
     @sb[:rpt_menu]  = populate_reports_menu
     @sb[:grp_title] = reports_group_title
