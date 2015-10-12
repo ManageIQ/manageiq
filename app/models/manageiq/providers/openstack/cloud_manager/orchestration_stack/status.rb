@@ -14,4 +14,8 @@ class ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack::Status <
   def deleted?
     status.downcase == "delete_complete"
   end
+
+  def updated?
+    status.downcase == "update_complete"
+  end
 end

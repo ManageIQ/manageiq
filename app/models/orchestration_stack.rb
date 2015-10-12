@@ -59,12 +59,12 @@ class OrchestrationStack < ActiveRecord::Base
     raise NotImplementedError, "raw_create_stack must be implemented in a subclass"
   end
 
-  def raw_update_stack(_options = {})
+  def raw_update_stack(_template, _options = {})
     raise NotImplementedError, "raw_update_stack must be implemented in a subclass"
   end
 
-  def update_stack(options = {})
-    raw_update_stack(options)
+  def update_stack(template, options = {})
+    raw_update_stack(template, options)
   end
 
   def raw_delete_stack

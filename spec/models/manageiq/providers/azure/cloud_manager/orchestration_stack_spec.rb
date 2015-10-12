@@ -35,12 +35,12 @@ describe ManageIQ::Providers::Azure::CloudManager::OrchestrationStack do
     context "#update_stack" do
       it 'updates the stack' do
         expect(orchestration_service).to receive(:create)
-        orchestration_stack.update_stack({})
+        orchestration_stack.update_stack(template, {})
       end
 
       it 'catches errors from provider' do
         expect(orchestration_service).to receive(:create).and_throw('bad request')
-        expect { orchestration_stack.update_stack }.to raise_error(MiqException::MiqOrchestrationUpdateError)
+        expect { orchestration_stack.update_stack(template, {}) }.to raise_error(MiqException::MiqOrchestrationUpdateError)
       end
     end
 
