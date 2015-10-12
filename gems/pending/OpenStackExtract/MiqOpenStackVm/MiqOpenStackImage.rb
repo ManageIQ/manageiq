@@ -97,4 +97,12 @@ class MiqOpenStackImage
     return miq_vm.send(sym) if args.empty?
     miq_vm.send(sym, args)
   end
+
+  def respond_to_missing?(sym, *args)
+    if SUPPORTED_METHODS.include?(sym)
+      true
+    else
+      super
+    end
+  end
 end
