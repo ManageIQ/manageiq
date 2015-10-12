@@ -31,6 +31,8 @@
       'picture.image_href',
       'evm_owner.name',
       'miq_group.description',
+      'vms',
+      'v_total_vms',
       'aggregate_all_vm_cpus',
       'aggregate_all_vm_memory',
       'aggregate_all_vm_disk_count',

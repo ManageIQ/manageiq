@@ -5,7 +5,7 @@
   background: $app-color-white
 
 .data-list-pf
-  line-height: 40px
+  line-height: 45px
 
   .no-wrap
     white-space: nowrap
@@ -14,7 +14,7 @@
     display: block
 
   .list-group-item
-    padding: 10px 0
+    padding: 7px 0
     border-top: 0px
     margin-bottom: 0px
     cursor: pointer
@@ -23,13 +23,19 @@
       background-color: #def3ff
       border-color: #def3ff
 
+    .pficon
+      font-size: 16px
+      color: #333
+      position: relative
+      top: 2px
+
 +block(ss-list-view)
   +element(title-img)
     background: $app-color-white
-    border: 1px solid $app-color-light-gray-4
-    box-shadow: 0 1px 1px darken($app-color-light-gray-4, 15%)
+    border: 2px solid $app-color-light-blue-2
+    border-radius: 100px
     cursor: pointer
-    height: 40px
+    height: 45px
     width: 45px
     margin-right: 10px
     display: inline-block
@@ -40,7 +46,7 @@
 
     +element(logo)
       max-height: 30px
-      max-width: 35px
+      max-width: 30px
       vertical-align: middle
       position: relative
       left: -2px

@@ -9,7 +9,7 @@
 <div class="col-md-12 list-view-container">
   <div pf-data-list id="serviceList" config="vm.listConfig" items="vm.servicesList">
     <div class="row">
-      <div class="col-lg-4 col-md-5 col-sm-8 col-xs-8">
+      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
         <span class="no-wrap">
           <span class="ss-list-view__title-img">
             <span class="ss-list-view__title-img__center"></span>
@@ -19,21 +19,27 @@
           {{ item.name }}
         </span>
       </div>
-      <div class="col-lg-3 col-md-3 col-sm-4 col-xs-4">
+      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
         <span class="no-wrap">
-          <strong>ID: </strong> {{ item.id }}
-        </span>
-      </div>
-      <div class="col-lg-3 hidden-md hidden-sm hidden-xs">
-        <span class="no-wrap">
-          <strong>Created: </strong> on {{ item.created_at | date }}
-        </span>
-      </div>
-      <div class="col-lg-2 col-md-4 hidden-sm hidden-xs">
-        <span class="no-wrap">
-          <strong>Retires: </strong>
+          <strong>Retirement Date</strong>&nbsp;
           <span ng-if=(item.retires_on)>{{ item.retires_on | date }}</span>
-          <span ng-if=!(item.retires_on)>No Retire Date</span>
+          <span ng-if=!(item.retires_on)>Never</span>
+        </span>
+      </div>
+       <div class="col-lg-2 col-md-2 hidden-sm hidden-xs">
+        <span class="no-wrap">
+           <i class="pficon pficon-screen"></i>
+          <span><strong>{{ item.v_total_vms}}</strong> VMs</span>
+        </span>
+      </div>
+      <div class="col-lg-2 col-md-2 hidden-sm hidden-xs">
+        <span class="no-wrap">
+          <i class="pficon pficon-user" title="Owner"></i>{{ item.evm_owner.name }}
+        </span>
+      </div>
+      <div class="col-lg-2 hidden-md hidden-sm hidden-xs">
+        <span class="no-wrap">
+          <strong>Created On</strong>&nbsp;{{ item.created_at | date }}
         </span>
       </div>
     </div>
