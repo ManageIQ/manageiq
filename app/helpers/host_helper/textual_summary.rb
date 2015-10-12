@@ -294,7 +294,14 @@ module HostHelper::TextualSummary
   end
 
   def textual_vms
-    @record.vms
+    label = "VMs"
+    num   = @record.number_of(:vms)
+    h     = {:label => label, :image => "vm", :value => num}
+    if num > 0 && role_allows(:feature => "vm_show_list")
+      h[:title] = "Show all #{label}"
+      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'vms')
+    end
+    h
   end
 
   def textual_templates
