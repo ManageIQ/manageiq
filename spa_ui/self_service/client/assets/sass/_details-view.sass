@@ -1,11 +1,18 @@
++block(ss-details-wrapper)
+  background: $app-color-white
+  height: calc(100vh - 135px)
+  overflow-y: auto
+  overflow-x: hidden
+  border-top: 1px solid #ddd
+
 +block(ss-details-header)
-  border-bottom: 1px solid #f2f2f2
+  border-bottom: 1px solid $app-color-light-gray-6
   margin-bottom: 20px
 
   +element(title-img)
     background: $app-color-white
-    border: 1px solid $app-color-light-gray-4
-    box-shadow: 0 1px 1px darken($app-color-light-gray-4, 15%)
+    border: 2px solid $app-color-medium-blue
+    border-radius: 100px
     cursor: pointer
     float: left
     height: 130px
@@ -29,7 +36,7 @@
       vertical-align: middle
     
   +element(title)
-    margin-left: 40px
+    margin-left: 150px
     padding-bottom: 20px
 
     h2
@@ -37,6 +44,7 @@
 
     h4
       color: #666
+      line-height: 20px
 
   +element(actions)
     text-align: right
@@ -63,5 +71,7 @@
 
 .ss-details-panel
   margin-bottom: 0
-  border-bottom: 0 
+  border-top: 0
+  border-right: 0
+  border-left: 0  
 
