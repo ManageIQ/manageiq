@@ -151,8 +151,8 @@ module ReportableMixin
           assochash["categories." + c] = entarr unless entarr.empty?
         end
         # join the the category data together
-        longest = assochash.map { |_, v| v.length }.max
-        longest.times do |idx|
+        max_length = assochash.map { |_, v| v.length }.max
+        max_length.times do |idx|
           nh = {}
           assochash.each_key { |k| nh[k] = assochash[k][idx].nil? ? assochash[k].last : assochash[k][idx] }
           association_objects.push(OpenStruct.new("reportable_data" => [nh]))
