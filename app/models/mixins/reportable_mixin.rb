@@ -93,8 +93,7 @@ module ReportableMixin
 
     # private
 
-    def get_include_for_find(report_option)
-      includes = report_option
+    def get_include_for_find(includes)
       if includes.kind_of?(Hash)
         includes.each_with_object({}) do |(k, v), result|
           v[:include] = v["include"] if v["include"]
