@@ -457,7 +457,7 @@ module MiqAeEngineSpec
     it "instantiates attributes properly" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "miq_ae_engine_spec1"), @domain)
 
-      ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test3")
+      ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test3", @user)
       ws.should_not be_nil
       roots = ws.roots
       roots.should_not be_nil
@@ -479,7 +479,7 @@ module MiqAeEngineSpec
 
       # puts ws.to_expanded_xml()
 
-      ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test_password")
+      ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test_password", @user)
       ws.should_not be_nil
       roots = ws.roots
       roots.should_not be_nil
@@ -491,7 +491,7 @@ module MiqAeEngineSpec
 
     it "follows relationships properly" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "relation"), @domain)
-      ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test3")
+      ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test3", @user)
       ws.should_not be_nil
       roots = ws.roots
       roots.should_not be_nil
@@ -512,7 +512,7 @@ module MiqAeEngineSpec
       child.klass.should eql("AUTOMATE")
       child.instance.should eql("test2")
 
-      ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test_wildcard")
+      ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test_wildcard", @user)
       ws.should_not be_nil
       roots = ws.roots
       roots.should_not be_nil
@@ -523,7 +523,7 @@ module MiqAeEngineSpec
       children.should_not be_nil
       children.length.should == 2
 
-      ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test_message1")
+      ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test_message1", @user)
       ws.should_not be_nil
       roots = ws.roots
       roots.should_not be_nil
@@ -534,7 +534,7 @@ module MiqAeEngineSpec
       children.should_not be_nil
       children.length.should == 1
 
-      ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test_message1#discover")
+      ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test_message1#discover", @user)
       ws.should_not be_nil
       roots = ws.roots
       roots.should_not be_nil
@@ -548,33 +548,33 @@ module MiqAeEngineSpec
 
     it "does not allow cyclical relationships" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "miq_ae_engine_spec2"), @domain)
-      lambda { MiqAeEngine.instantiate("/CYCLICAL/AUTOMATE/test4") }.should raise_error(MiqAeException::CyclicalRelationship)
+      lambda { MiqAeEngine.instantiate("/CYCLICAL/AUTOMATE/test4", @user) }.should raise_error(MiqAeException::CyclicalRelationship)
     end
 
     it "properly processes assertions" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "miq_ae_engine_spec3"), @domain)
-      ws = MiqAeEngine.instantiate("/SYSTEM/EVM/AUTOMATE/test1")
+      ws = MiqAeEngine.instantiate("/SYSTEM/EVM/AUTOMATE/test1", @user)
       ws.should_not be_nil
       roots = ws.roots
       roots.should_not be_nil
       roots.should be_a_kind_of(Array)
       roots.length.should == 1
 
-      ws = MiqAeEngine.instantiate("/SYSTEM/EVM/AUTOMATE/test2")
+      ws = MiqAeEngine.instantiate("/SYSTEM/EVM/AUTOMATE/test2", @user)
       ws.should_not be_nil
       roots = ws.roots
       roots.should_not be_nil
       roots.should be_a_kind_of(Array)
       roots.length.should == 0
 
-      ws = MiqAeEngine.instantiate("/SYSTEM/EVM/AUTOMATE/test3")
+      ws = MiqAeEngine.instantiate("/SYSTEM/EVM/AUTOMATE/test3", @user)
       ws.should_not be_nil
       roots = ws.roots
       roots.should_not be_nil
       roots.should be_a_kind_of(Array)
       roots.length.should == 1
 
-      ws = MiqAeEngine.instantiate("/SYSTEM/EVM/AUTOMATE/test4")
+      ws = MiqAeEngine.instantiate("/SYSTEM/EVM/AUTOMATE/test4", @user)
       ws.should_not be_nil
       roots = ws.roots
       roots.should_not be_nil
@@ -585,7 +585,7 @@ module MiqAeEngineSpec
     it "properly processes inheritance" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "relation"), @domain)
 
-      ws = MiqAeEngine.instantiate("/EVM/MY_AUTOMATE/test1")
+      ws = MiqAeEngine.instantiate("/EVM/MY_AUTOMATE/test1", @user)
       ws.should_not be_nil
       roots = ws.roots
       roots.should_not be_nil
@@ -597,7 +597,7 @@ module MiqAeEngineSpec
       obj.attributes["attr1"].should == "frank"
       obj.attributes["foo"].should == "bar"
 
-      ws = MiqAeEngine.instantiate("/EVM/MY_AUTOMATE/test2")
+      ws = MiqAeEngine.instantiate("/EVM/MY_AUTOMATE/test2", @user)
       ws.should_not be_nil
       roots = ws.roots
       roots.should_not be_nil
@@ -613,7 +613,7 @@ module MiqAeEngineSpec
     it "properly processes .missing_instance" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "relation"), @domain)
 
-      ws = MiqAeEngine.instantiate("/EVM/MY_AUTOMATE/test_boo")
+      ws = MiqAeEngine.instantiate("/EVM/MY_AUTOMATE/test_boo", @user)
       ws.should_not be_nil
       roots = ws.roots
       roots.should_not be_nil
@@ -623,7 +623,7 @@ module MiqAeEngineSpec
 
     it "properly processes substitution" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "substitution"), @domain)
-      ws = MiqAeEngine.instantiate("/EVM/A/a1")
+      ws = MiqAeEngine.instantiate("/EVM/A/a1", @user)
       ws.should_not be_nil
       roots = ws.roots
       roots.should_not be_nil
@@ -633,7 +633,7 @@ module MiqAeEngineSpec
       b1 = a1.children[0]
       b1.attributes["attr1"].should == "defaultA"
 
-      ws = MiqAeEngine.instantiate("/EVM/A/a2")
+      ws = MiqAeEngine.instantiate("/EVM/A/a2", @user)
       ws.should_not be_nil
       roots = ws.roots
       roots.should_not be_nil
@@ -643,7 +643,7 @@ module MiqAeEngineSpec
       b2 = a2.children[0]
       b2.attributes["attr1"].should == "a2"
 
-      ws = MiqAeEngine.instantiate("/EVM/B/b3")
+      ws = MiqAeEngine.instantiate("/EVM/B/b3", @user)
       ws.should_not be_nil
       roots = ws.roots
       roots.should_not be_nil
@@ -652,7 +652,7 @@ module MiqAeEngineSpec
       b3 = roots[0]
       b3.attributes["attr2"].should == "b3"
 
-      ws = MiqAeEngine.instantiate("/EVM/A/a4")
+      ws = MiqAeEngine.instantiate("/EVM/A/a4", @user)
       ws.should_not be_nil
       roots = ws.roots
       roots.should_not be_nil
@@ -662,11 +662,11 @@ module MiqAeEngineSpec
       b4 = a4.children[0]
       b4.attributes["attr1"].should == "a4"
 
-      -> { MiqAeEngine.instantiate("/EVM/A/a5") }.should raise_error(MiqAeException::InvalidPathFormat)
-      -> { MiqAeEngine.instantiate("/EVM/A/a6") }.should raise_error(MiqAeException::ObjectNotFound)
-      -> { MiqAeEngine.instantiate("/EVM/A/a7") }.should raise_error(MiqAeException::ObjectNotFound)
+      -> { MiqAeEngine.instantiate("/EVM/A/a5", @user) }.should raise_error(MiqAeException::InvalidPathFormat)
+      -> { MiqAeEngine.instantiate("/EVM/A/a6", @user) }.should raise_error(MiqAeException::ObjectNotFound)
+      -> { MiqAeEngine.instantiate("/EVM/A/a7", @user) }.should raise_error(MiqAeException::ObjectNotFound)
 
-      ws = MiqAeEngine.instantiate("/EVM/A/a8")
+      ws = MiqAeEngine.instantiate("/EVM/A/a8", @user)
       ws.should_not be_nil
       roots = ws.roots
       roots.should_not be_nil
@@ -676,7 +676,7 @@ module MiqAeEngineSpec
       b8 = a8.children[0]
       b8.attributes["attr1"].should == "${}"
 
-      ws = MiqAeEngine.instantiate("/EVM/A/a9")
+      ws = MiqAeEngine.instantiate("/EVM/A/a9", @user)
       ws.should_not be_nil
       roots = ws.roots
       roots.should_not be_nil
@@ -686,7 +686,7 @@ module MiqAeEngineSpec
       b9 = a9.children[0]
       b9.attributes["attr1"].should == "foo"
 
-      ws = MiqAeEngine.instantiate("/EVM/A/a10")
+      ws = MiqAeEngine.instantiate("/EVM/A/a10", @user)
       ws.should_not be_nil
       roots = ws.roots
       roots.should_not be_nil
@@ -703,7 +703,7 @@ module MiqAeEngineSpec
       MiqProvision.any_instance.stub(:validate).and_return(:true)
       MiqProvision.any_instance.stub(:set_template_and_networking)
       prov = MiqProvision.create!(:provision_type => 'clone_to_template', :state => 'pending', :status => 'Ok')
-      ws   = MiqAeEngine.instantiate "/System/Process/REQUEST?MiqProvision::miq_provision=#{prov.id}&request=test_subst"
+      ws   = MiqAeEngine.instantiate("/System/Process/REQUEST?MiqProvision::miq_provision=#{prov.id}&request=test_subst", @user)
       ws.should_not be_nil
 
       roots = ws.roots
@@ -723,7 +723,7 @@ module MiqAeEngineSpec
       ems = FactoryGirl.create(:ems_vmware)
 
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "miq_ae_engine_spec5"), @domain)
-      ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?Array::my_objects=Vm::#{vm1.id},ExtManagementSystem::#{ems.id},Vm::#{vm2.id}")
+      ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?Array::my_objects=Vm::#{vm1.id},ExtManagementSystem::#{ems.id},Vm::#{vm2.id}", @user)
       my_objects_array = ws.root("my_objects")
       my_objects_array.length.should == 3
       my_objects_array.each { |o| o.kind_of?(MiqAeMethodService::MiqAeServiceModelBase) }
@@ -731,7 +731,7 @@ module MiqAeEngineSpec
 
     it "processes an empty array properly" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "miq_ae_engine_spec6"), @domain)
-      ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?Array::my_objects=")
+      ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?Array::my_objects=", @user)
       my_objects_array = ws.root("my_objects")
       my_objects_array.length.should == 0
       my_objects_array.should == []

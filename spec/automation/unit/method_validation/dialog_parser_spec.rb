@@ -4,6 +4,7 @@ include ServiceTemplateHelper
 describe "DialogParser Automate Method" do
   before(:each) do
     @root_stp = FactoryGirl.create(:miq_request_task, :type => 'ServiceTemplateProvisionTask')
+    @user = FactoryGirl.create(:user_with_group)
   end
 
   def run_automate_method
@@ -13,7 +14,7 @@ describe "DialogParser Automate Method" do
     MiqAeEngine.instantiate("/System/Request/Call_Instance_With_Message?" \
                             "namespace=Service/Provisioning/StateMachines&class=Methods" \
                             "&instance=DialogParser&" \
-                            "#{attrs.join('&')}")
+                            "#{attrs.join('&')}", @user)
   end
 
   def create_tags

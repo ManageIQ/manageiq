@@ -4,6 +4,7 @@ require File.expand_path(File.join(File.dirname(__FILE__), '..', '..',
 describe "unregister_from_provider Method Validation" do
   before(:each) do
     @zone       = FactoryGirl.create(:zone)
+    @user       = FactoryGirl.create(:user_with_group)
     @ems        = FactoryGirl.create(:ems_vmware, :zone => @zone)
     @host       = FactoryGirl.create(:host)
     @vm         = FactoryGirl.create(:vm_vmware, :host => @host,
@@ -11,7 +12,7 @@ describe "unregister_from_provider Method Validation" do
                  :registered => true)
   end
 
-  let(:ws) { MiqAeEngine.instantiate("/Infrastructure/VM/Retirement/StateMachines/Methods/UnregisterFromProvider?Vm::vm=#{@vm_id}") }
+  let(:ws) { MiqAeEngine.instantiate("/Infrastructure/VM/Retirement/StateMachines/Methods/UnregisterFromProvider?Vm::vm=#{@vm_id}", @user) }
 
   it "unregisters a vm" do
     @vm_id = @vm.id

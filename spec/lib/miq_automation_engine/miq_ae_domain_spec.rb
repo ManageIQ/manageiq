@@ -4,6 +4,7 @@ include AutomationSpecHelper
 describe MiqAeDomain do
   let(:root_tenant) { Tenant.seed }
   before do
+    @user = FactoryGirl.create(:user_with_group)
     EvmSpecHelper.local_miq_server
     root_tenant
     setup_model
@@ -44,29 +45,29 @@ describe MiqAeDomain do
     it "partial namespace should use the higher priority user instance" do
       ns = MiqAeNamespace.find_by_fqname('evm')
       ns.should be_nil
-      assert_method_executed('evm/AUTOMATE/test1', 'user')
+      assert_method_executed('evm/AUTOMATE/test1', 'user', @user)
     end
 
     it "fully qualified namespace should execute the root method" do
       ns = MiqAeNamespace.find_by_fqname('root/evm')
       ns.should_not be_nil
-      assert_method_executed('root/evm/AUTOMATE/test2', 'root')
+      assert_method_executed('root/evm/AUTOMATE/test2', 'root', @user)
     end
 
     it "partial namespace with wild card in relationship" do
       ns = MiqAeNamespace.find_by_fqname('evm')
       ns.should be_nil
-      assert_method_executed('evm/AUTOMATE/test_wildcard', 'user')
+      assert_method_executed('evm/AUTOMATE/test_wildcard', 'user', @user)
     end
 
     it "a non existent partial namespace instance should fail" do
-      ws = MiqAeEngine.instantiate('evm/AUTOMATE/non_existent')
+      ws = MiqAeEngine.instantiate('evm/AUTOMATE/non_existent', @user)
       roots = ws.roots
       roots.should have(0).item
     end
 
     it "a disabled namespace should not get picked up even if the instance exists" do
-      ws = MiqAeEngine.instantiate('evm/AUTOMATE/should_not_get_used')
+      ws = MiqAeEngine.instantiate('evm/AUTOMATE/should_not_get_used', @user)
       roots = ws.roots
       roots.should have(0).item
     end
@@ -75,19 +76,19 @@ describe MiqAeDomain do
       n3 = MiqAeNamespace.find_by_fqname('inert')
       n3.enabled?.should be_false
       n3.update_attributes!(:enabled => true)
-      assert_method_executed('evm/AUTOMATE/should_get_used', 'inert')
+      assert_method_executed('evm/AUTOMATE/should_get_used', 'inert', @user)
     end
 
     it "partial namespace should use the higher priority users case insensitive instance" do
       ns = MiqAeNamespace.find_by_fqname('evm')
       ns.should be_nil
-      assert_method_executed('evm/AUTOMATE/TeSt1', 'user')
+      assert_method_executed('evm/AUTOMATE/TeSt1', 'user', @user)
     end
 
     it "an enabled namespace should pick up .missing if the instance is missing" do
       update_domain_attributes('evm2', :priority => 10)
       update_domain_attributes('evm1', :priority => 40)
-      assert_method_executed('test/AUTOMATE/does_not_exist', 'evm1_missing_method')
+      assert_method_executed('test/AUTOMATE/does_not_exist', 'evm1_missing_method', @user)
     end
 
     it "check list of enabled domains" do

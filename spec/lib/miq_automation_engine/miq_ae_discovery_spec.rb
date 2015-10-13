@@ -47,7 +47,7 @@ module MiqAeDiscoverySpec
     end
 
     it "properly processes Vm Scan Request" do
-      ws = MiqAeEngine.instantiate("/EVM/VMSCAN/foo?target_vm_id=#{@vm.id}")
+      ws = MiqAeEngine.instantiate("/EVM/VMSCAN/foo?target_vm_id=#{@vm.id}", @admin)
       ws.should_not be_nil
     end
   end

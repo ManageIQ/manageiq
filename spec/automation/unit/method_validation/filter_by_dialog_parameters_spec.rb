@@ -36,7 +36,7 @@ describe "FilterByDialogParameters Automate Method" do
     MiqAeEngine.instantiate("/System/Request/Call_Instance_With_Message?" \
                             "namespace=Service/Provisioning&class=ServiceFilter" \
                             "&instance=FilterByDialogParameters&message=include_service&" \
-                            "#{attrs.join('&')}")
+                            "#{attrs.join('&')}", @user)
   end
 
   def root_service_template_task
