@@ -16,6 +16,14 @@ describe MiqAeExport do
     expect { MiqAeExport.new('dom2', hash) }.to raise_exception(MiqAeException::DomainNotAccessible)
   end
 
+  it "export all domains for a tenant" do
+    hash = @options.merge('tenant' => @tenant1)
+    MiqAeExport.stub(:write_domain).and_return("")
+    obj = MiqAeExport.new('*', hash)
+    obj.should_receive(:write_domain).once
+    obj.export
+  end
+
   it "export a domain as root tenant" do
     hash = @options.merge('tenant' => @root_tenant)
     MiqAeExport.stub(:write_domain).and_return("")
