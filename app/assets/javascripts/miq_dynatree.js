@@ -91,6 +91,7 @@ function miqOnClickSelectDlgEditTreeNode(id) {
 
 // Activate and focus on a node within a tree given the node's key
 function miqDynatreeActivateNode(tree, key) {
+  miqSparkle(true);
   var node = $("#" + tree + "box").dynatree('getTree').getNodeByKey(key);
   if (node) {
     // Only try to activate node if it is in the tree
@@ -101,7 +102,6 @@ function miqDynatreeActivateNode(tree, key) {
     }
     node.focus();
   }
-  miqSparkle(false);
 }
 
 // Activate silently (no onActivate event) and focus on a node within a tree given the node's key
