@@ -397,4 +397,54 @@ describe ApiController do
       expect_resource_has_tags(service_template, tag2[:path])
     end
   end
+
+  context "Tenant Tag subcollection" do
+    let(:tenant)          { FactoryGirl.create(:tenant, :name => "Tenant A", :description => "Tenant A Description") }
+    let(:tenant_url)      { tenants_url(tenant.id) }
+    let(:tenant_tags_url) { "#{tenant_url}/tags" }
+
+    it "query all tags of a Tenant and verify tag category and names" do
+      api_basic_authorize
+      classify_resource(tenant)
+
+      run_get tenant_tags_url, :expand => "resources"
+
+      expect_query_result(:tags, 2, :tag_count)
+      expect_result_resources_to_include_data("resources", "name" => :tag_paths)
+    end
+
+    it "assigns a tag to a Tenant without appropriate role" do
+      api_basic_authorize
+
+      run_post(tenant_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
+
+      expect_request_forbidden
+    end
+
+    it "assigns a tag to a Tenant" do
+      api_basic_authorize subcollection_action_identifier(:tenants, :tags, :assign)
+
+      run_post(tenant_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
+
+      expect_tagging_result(tag1_results(tenant_url))
+    end
+
+    it "unassigns a tag from a Tenant without appropriate role" do
+      api_basic_authorize
+
+      run_post(tenant_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
+
+      expect_request_forbidden
+    end
+
+    it "unassigns a tag from a Tenant" do
+      api_basic_authorize subcollection_action_identifier(:tenants, :tags, :unassign)
+      classify_resource(tenant)
+
+      run_post(tenant_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
+
+      expect_tagging_result(tag1_results(tenant_url))
+      expect_resource_has_tags(tenant, tag2[:path])
+    end
+  end
 end
