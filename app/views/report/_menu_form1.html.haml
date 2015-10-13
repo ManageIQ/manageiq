@@ -11,25 +11,34 @@
               #folder_grid
                 = params[:grid].to_json
 
-            %td{:width => "20", :valign => "middle"}
-              - t = _("Move selected folder top")
-              = image_tag('/images/toolbars/top.png', :border => "0", :class => "rollover small", :alt => t, :title => t,
-                :onclick => "return miqMenuChangeRow('folder_list_grid', 'top')", :id => 'folder_top')
-              - t = _("Move selected folder up")
-              = image_tag('/images/toolbars/up.png', :border => "0", :class => "rollover small", :alt => t, :title => t,
-                :onclick => "return miqMenuChangeRow('folder_list_grid', 'up')", :id => 'folder_up')
-              - t = _("Move selected folder down")
-              = image_tag('/images/toolbars/down.png', :border => "0", :class => "rollover small", :alt => t, :title => t,
-                :onclick => "return miqMenuChangeRow('folder_list_grid', 'down')", :id => 'folder_down')
-              - t = _("Move selected folder to bottom")
-              = image_tag('/images/toolbars/bottom.png', :border => "0", :class => "rollover small", :alt => t, :title => t,
-                :onclick => "return miqMenuChangeRow('folder_list_grid', 'bottom')", :id => 'folder_bottom')
-              - t = _("Delete selected folder and its contents")
-              = image_tag('/images/toolbars/delete.png', :border => "0", :class => "rollover small", :alt => t, :title => t,
-                :onclick => "return miqMenuChangeRow('folder_list_grid', 'delete')", :id => 'folder_delete')
-              - t = _("Add subfolder to selected folder")
-              = image_tag('/images/toolbars/new.png', :border => "0", :class => "rollover small", :alt => t, :title => t,
-                :onclick => "return miqMenuChangeRow('folder_list_grid', 'add')", :id => 'folder_add')
+            %td{:width => "24", :valign => "middle"}
+              - buttons = [{:label => _("Move selected folder top"),
+                            :icon => 'fa fa-angle-double-up',
+                            :action => 'top',
+                            :id => 'folder_top'},
+                           {:label => _("Move selected folder up"),
+                            :icon => 'fa fa-angle-up',
+                            :action => 'up',
+                            :id => 'folder_up'},
+                           {:label => _("Move selected folder down"),
+                            :icon => 'fa fa-angle-down',
+                            :action => 'down',
+                            :id => 'folder_down'},
+                           {:label => _("Move selected folder to bottom"),
+                            :icon => 'fa fa-angle-double-down',
+                            :action => 'bottom',
+                            :id => 'folder_bottom'},
+                           {:label => _("Delete selected folder and its contents"),
+                            :icon => 'fa fa-times',
+                            :action => 'delete',
+                            :id => 'folder_delete'},
+                           {:label => _("Add subfolder to selected folder"),
+                            :icon => 'fa fa-plus',
+                            :action => 'add',
+                            :id => 'folder_add'}]
+              - buttons.each do |btn|
+                %i{:class => "rollover fa-2x #{h btn[:icon]}",
+                   :onclick => "return miqMenuChangeRow('folder_list_grid', '#{j btn[:action]}')"}
           %tr
             %td{:colspan => "2", :style => "float: right;"}
               - t = _('Commit expression element changes')
