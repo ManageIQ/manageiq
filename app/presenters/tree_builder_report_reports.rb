@@ -9,7 +9,7 @@ class TreeBuilderReportReports < TreeBuilderReportReportsClass
 
   def tree_init_options(tree_name)
     {
-      :leaf     => 'Reports',
+      :leaf     => 'full_ids',
       :full_ids => true
     }
   end

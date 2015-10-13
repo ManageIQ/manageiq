@@ -139,9 +139,9 @@
                   - if x_node.split('-').length == 1
                     - click = remote_function(:loading => "miqSparkle(true);",
                       :complete => "miqSparkle(false);",
-                      :url      => {:action => 'get_report', :id => "rr-#{to_cid(row['id'])}"})
+                      :url      => {:action => 'get_report', :id => "xx-#{to_cid(row['miq_report_id'])}_rr-#{to_cid(row['id'])}"})
                   - else
-                    - click = "miqDynatreeActivateNode('savedreports_tree', 'rr-#{to_cid(row['id'])}');"
+                    - click = "miqDynatreeActivateNode('savedreports_tree', 'xx-#{to_cid(row['miq_report_id'])}_rr-#{to_cid(row['id'])}');"
                 - elsif x_active_tree == :reports_tree
                   - click = "miqDynatreeActivateNode('reports_tree', '#{x_node}_rr-#{to_cid(row['id'])}');"
               - when "MiqWidget"
@@ -243,14 +243,17 @@
                       - if x_node.split('-').length == 1
                         - click = remote_function(:loading => "miqSparkle(true);",
                           :complete => "miqSparkle(false);",
-                          :url      => {:action => 'get_report', :id => "rr-#{to_cid(row['id'])}"})
+                          :url      => {:action => 'get_report', :id => "xx-#{to_cid(row['miq_report_id'])}_rr-#{to_cid(row['id'])}"})
                       - else
                         - click = "miqDynatreeActivateNode('savedreports_tree', 'xx-#{to_cid(row['miq_report_id'])}_rr-#{to_cid(row['id'])}');"
                     - elsif x_active_tree == :reports_tree
                       - click = "miqDynatreeActivateNode('reports_tree', '#{x_node}_rr-#{to_cid(row['id'])}');"
                   - when "MiqWidget"
                     - typ = WIDGET_CONTENT_TYPE.invert[row['content_type']]
-                    - click = "miqDynatreeActivateNode('widgets_tree', 'xx-#{typ}_-#{to_cid(row['id'])}');"
+                    - click = remote_function(:loading  => "miqSparkle(true);",
+                                              :complete => "miqSparkle(false);",
+                                              :url      => {:action => 'x_show', :id => "xx-#{typ}_-#{to_cid(row['id'])}"})
+                    -#- click = "miqDynatreeActivateNode('widgets_tree', 'xx-#{typ}_-#{to_cid(row['id'])}');"
                   - when "IsoDatastore"
                     - click = "miqDynatreeActivateNode('iso_datastores_tree', 'isd-#{to_cid(row['id'])}');"
                   - when "PxeServer"

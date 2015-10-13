@@ -707,7 +707,11 @@ class ReportController < ApplicationController
     )
     # Clicked on right cell record, open the tree enough to show the node, if not already showing
     # Open the parent nodes of selected record, if not open
-    presenter[:add_nodes] = open_parent_nodes if params[:action] == 'x_show'
+    # Showing a report
+    if (params[:action] == "get_report" && x_active_tree == :savedreports_tree && @record) ||
+       params[:action] == 'x_show'
+      presenter[:add_nodes] = open_parent_nodes      # Open the parent nodes of selected record, if not open
+    end
     r = proc { |opts| render_to_string(opts) }
     presenter[:open_accord] = params[:accord] if params[:accord] # Open new accordion
 
@@ -957,6 +961,8 @@ class ReportController < ApplicationController
 
     if @record && !@in_a_form
       presenter[:record_id] = @record.id
+    elsif locals && locals[:record_id]
+      presenter[:record_id] = locals[:record_id]
     else
       presenter[:record_id] = @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
     end

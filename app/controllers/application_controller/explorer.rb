@@ -392,10 +392,9 @@ module ApplicationController::Explorer
       objects = rbac_filtered_objects(Dialog.all).sort_by { |a| a.label.downcase }
       return count_only ? objects.length : objects
     when :old_dialogs
-      MiqDialog::DIALOG_TYPES.sort.collect{|typ| {:id    => "MiqDialog_#{typ[1]}",
-                                                  :text  => typ[0],
-                                                  :image => "folder",
-                                                  :tip   => typ[0]}}
+      MiqDialog::DIALOG_TYPES.sort.collect do |description, class_name|
+        { :id => "MiqDialog_#{class_name}", :text => description, :image => "folder", :tip => description }
+      end
     when :roles
       if super_admin_user?
         roles = MiqGroup.all
@@ -747,6 +746,9 @@ module ApplicationController::Explorer
       else
         return emses.sort_by { |a| a.name.downcase } + storages.sort_by { |a| a.name.downcase }
       end
+    when :savedreports
+      objects = MiqReportResult.where(set_saved_reports_condition(from_cid(object[:id].split('-').last))).all
+      return options[:count_only] ? objects.count : objects.sort_by(&:last_run_on)
     when :widgets
       objects = MiqWidget.find_all_by_content_type(WIDGET_CONTENT_TYPE[object[:id].split('-').last])
       return options[:count_only] ? objects.count : objects.sort_by(&:title)
