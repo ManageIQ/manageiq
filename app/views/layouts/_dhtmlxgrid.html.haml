@@ -9,19 +9,36 @@
   %div{:id    => options[:grid_id],
        :style => "width:#{options[:div_width]}; height:#{options[:div_height]}; cursor:#{options[:div_cursor]}; overflow:#{options[:div_overflow]}"}
 
-- grid_name = raw options[:grid_name]
-- grid_id = raw options[:grid_id]
-- grid_xml =  raw options[:grid_xml]
-%script{:type => "text/javascript"}
-  - unless @parent.nil?
-    - layout = raw @layout
-    ManageIQ.record.parentId = "#{@parent.id}";
-    ManageIQ.record.parentClass = "#{raw j(@parent.class.base_class.to_s.underscore)}";
-    if (ManageIQ.record.parentClass == "policy_set") { ManageIQ.record.parentClass = "policy"; }
-    else if (ManageIQ.record.parentClass == "ext_management_system") { ManageIQ.record.parentClass = "#{j(layout)}"; }
-  - if options[:action_url]
-    - action_url = raw options[:action_url]
-    ManageIQ.actionUrl = "#{j(action_url)}";
-  ManageIQ.grids.grids["#{j(grid_name)}"] = {g_id:"#{j(grid_id)}",opts:"#{options.to_json}",xml:"#{j(grid_xml)}",obj:null};
-  - if request.xml_http_request?
-    miqInitGrid("#{raw j(options[:grid_name])}");
+- grid_name = options[:grid_name]
+- grid_id   = options[:grid_id]
+- grid_xml  = options[:grid_xml]
+- options.delete(:grid_xml)
+
+- unless @parent.nil?
+  - layout = @layout
+  :javascript
+    ManageIQ.record.parentId    = "#{@parent.id}";
+    ManageIQ.record.parentClass = "#{j @parent.class.base_class.to_s.underscore}";
+
+    if (ManageIQ.record.parentClass == "policy_set") {
+      ManageIQ.record.parentClass = "policy";
+    } else if (ManageIQ.record.parentClass == "ext_management_system") {
+      ManageIQ.record.parentClass = "#{j layout}";
+    }
+
+- if options[:action_url]
+  - action_url = options[:action_url]
+  :javascript
+    ManageIQ.actionUrl = "#{j action_url}";
+
+:javascript
+  ManageIQ.grids.grids["#{j grid_name}"] = {
+    g_id: "#{j grid_id}",
+    opts: #{raw options.to_json},
+    xml:  "#{raw j(grid_xml)}",
+    obj:  null
+  };
+
+- if request.xml_http_request?
+  :javascript
+    miqInitGrid("#{j options[:grid_name]}");
