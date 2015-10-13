@@ -675,6 +675,97 @@ describe Tenant do
     end
   end
 
+  context "quota allocation" do
+    let(:parent_tenant) { FactoryGirl.create(:tenant, :parent => default_tenant) }
+    let(:child_tenant1) { FactoryGirl.create(:tenant, :parent => parent_tenant) }
+    let(:child_tenant2) { FactoryGirl.create(:tenant, :parent => parent_tenant) }
+
+    before do
+      parent_tenant.set_quotas(
+        :vms_allocated       => {:value => 20},
+        :mem_allocated       => {:value => 4096},
+        :cpu_allocated       => {:value => 10},
+        :storage_allocated   => {:value => 200_000_000},
+        :templates_allocated => {:value => 10}
+      )
+
+      child_tenant1.set_quotas(
+        :vms_allocated       => {:value => 5},
+        :mem_allocated       => {:value => 1024},
+        :cpu_allocated       => {:value => 4},
+        :storage_allocated   => {:value => 100_000_000},
+        :templates_allocated => {:value => 1}
+      )
+
+      child_tenant2.set_quotas(
+        :vms_allocated       => {:value => 1},
+        :mem_allocated       => {:value => 512},
+        :cpu_allocated       => {:value => 2},
+        :storage_allocated   => {:value => 50_000_000},
+        :templates_allocated => {:value => 4}
+      )
+
+      TenantQuota.any_instance.stub(:used => 2)
+    end
+
+    it "calculates quotas allocated to child tenants" do
+      parent_tenant
+      child_tenant1
+      child_tenant2
+
+      allocated = parent_tenant.allocated_quotas
+      expect(allocated[:vms_allocated][:value]).to       eql 6.0
+      expect(allocated[:mem_allocated][:value]).to       eql 1536.0
+      expect(allocated[:cpu_allocated][:value]).to       eql 6.0
+      expect(allocated[:storage_allocated][:value]).to   eql 150_000_000.0
+      expect(allocated[:templates_allocated][:value]).to eql 5.0
+    end
+
+    it "calculates quotas available to be allocated to child tenants" do
+      parent_tenant
+      child_tenant1
+      child_tenant2
+      available = parent_tenant.available_quotas
+      expect(available[:vms_allocated][:value]).to       eql 12.0
+      expect(available[:mem_allocated][:value]).to       eql 2558.0
+      expect(available[:cpu_allocated][:value]).to       eql 2.0
+      expect(available[:storage_allocated][:value]).to   eql 49_999_998.0
+      expect(available[:templates_allocated][:value]).to eql 3.0
+    end
+
+    it "gets combined quotas (set, used, allocated and available)" do
+      parent_tenant
+      child_tenant1
+      child_tenant2
+
+      combined = parent_tenant.combined_quotas
+
+      expect(combined[:vms_allocated][:value]).to             eql 20.0
+      expect(combined[:mem_allocated][:value]).to             eql 4096.0
+      expect(combined[:cpu_allocated][:value]).to             eql 10.0
+      expect(combined[:storage_allocated][:value]).to         eql 200_000_000.0
+      expect(combined[:templates_allocated][:value]).to       eql 10.0
+
+      expect(combined[:vms_allocated][:allocated]).to         eql 6.0
+      expect(combined[:mem_allocated][:allocated]).to         eql 1536.0
+      expect(combined[:cpu_allocated][:allocated]).to         eql 6.0
+      expect(combined[:storage_allocated][:allocated]).to     eql 150_000_000.0
+      expect(combined[:templates_allocated][:allocated]).to   eql 5.0
+
+      expect(combined[:vms_allocated][:available]).to         eql 12.0
+      expect(combined[:mem_allocated][:available]).to         eql 2558.0
+      expect(combined[:cpu_allocated][:available]).to         eql 2.0
+      expect(combined[:storage_allocated][:available]).to     eql 49_999_998.0
+      expect(combined[:templates_allocated][:available]).to   eql 3.0
+
+      expect(combined[:vms_allocated][:used]).to              eql 2
+      expect(combined[:mem_allocated][:used]).to              eql 2
+      expect(combined[:cpu_allocated][:used]).to              eql 2
+      expect(combined[:storage_allocated][:used]).to          eql 2
+      expect(combined[:templates_allocated][:used]).to        eql 2
+    end
+  end
+
   describe "assigning tenants" do
     let(:tenant)       { FactoryGirl.build(:tenant, :parent => default_tenant) }
     let(:tenant_users) { FactoryGirl.create(:miq_user_role, :name => "tenant-users") }
