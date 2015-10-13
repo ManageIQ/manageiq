@@ -43,6 +43,12 @@ class CatalogController < ApplicationController
     'st_catalog_new'                => :st_catalog_edit,
   }.freeze
 
+  ORCHESTRATION_TEMPLATES_NODES = {
+    'OrchestrationTemplateCfn'   => "otcfn",
+    'OrchestrationTemplateHot'   => "othot",
+    'OrchestrationTemplateAzure' => "otazu"
+  }.freeze
+
   def x_button
     # setting this here so it can be used in the common code
     @sb[:action] = action = params[:pressed]
@@ -679,35 +685,13 @@ class CatalogController < ApplicationController
   hide_action :process_sts
 
   def template_to_node_name(object)
-    case object
-    when OrchestrationTemplateHot
-      "xx-othot"
-    when OrchestrationTemplateCfn
-      "xx-otcfn"
-    when OrchestrationTemplateAzure
-      "xx-otazu"
-    end
+    ORCHESTRATION_TEMPLATES_NODES[object.class.name]
   end
 
   def node_name_to_template_name(node_name)
-    case node_name
-    when "xx-othot"
-      "OrchestrationTemplateHot"
-    when "xx-otcfn"
-      "OrchestrationTemplateCfn"
-    when "xx-otazu"
-      "OrchestrationTemplateAzure"
-    end
-  end
-
-  def template_to_tree_name(object)
-    case object
-    when OrchestrationTemplateHot
-      "othot"
-    when OrchestrationTemplateCfn
-      "otcfn"
-    when OrchestrationTemplateAzure
-      "otazu"
+    node_elems = node_name.split('-')
+    if node_elems[1]
+      ORCHESTRATION_TEMPLATES_NODES.invert[node_elems[1]]
     end
   end
 
@@ -776,7 +760,7 @@ class CatalogController < ApplicationController
     if elements.length > 1
       self.x_node = 'root'
     else
-      self.x_node = template_to_node_name(elements[0])
+      self.x_node = "xx-#{template_to_node_name(elements[0])}"
     end
     replace_right_cell(nil, trees_to_replace([:ot]))
   end
@@ -846,7 +830,7 @@ class CatalogController < ApplicationController
     self.x_active_tree = :ot_tree
     self.x_active_accord = 'ot'
     x_tree_init(:ot_tree, :ot, "OrchestrationTemplate") unless x_tree
-    ot_type = template_to_tree_name(ot)
+    ot_type = template_to_node_name(ot)
     x_tree[:open_nodes].push("xx-#{ot_type}") unless x_tree[:open_nodes].include?("xx-#{ot_type}")
     self.x_node = "ot-#{to_cid(ot.id)}"
     x_tree[:open_nodes].push(x_node)
@@ -1121,9 +1105,9 @@ class CatalogController < ApplicationController
         add_flash(_("%{model} \"%{name}\" was saved") %
                     {:model => ui_lookup(:model => 'OrchestrationTemplate'),
                      :name  => @edit[:new][:name]})
-        subtree = template_to_tree_name(ot)
+        subtree = template_to_node_name(ot)
         x_tree[:open_nodes].push(subtree) unless x_tree[:open_nodes].include?(subtree)
-        ot_type = template_to_tree_name(ot)
+        ot_type = template_to_node_name(ot)
         self.x_node = "xx-%{type}_ot-%{cid}" % {:type => ot_type,
                                                 :cid  => to_cid(ot.id)}
         x_tree[:open_nodes].push(x_node)
@@ -1723,7 +1707,7 @@ class CatalogController < ApplicationController
     existing_node = nil                      # Init var
 
     if record.kind_of?(OrchestrationTemplate)
-      parents = [:id => template_to_tree_name(record)]
+      parents = [:id => template_to_node_name(record)]
     else
       # Check for parent nodes missing from vandt tree and return them if any
       parent_rec = ServiceTemplateCatalog.find_by_id(record.service_template_catalog_id)
