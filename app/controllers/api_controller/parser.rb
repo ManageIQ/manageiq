@@ -181,7 +181,7 @@ class ApiController
     # For Get, Delete, Patch and Put, we need to make sure we're entitled for them.
     #
     def validate_get_method
-      validate_method_action(:get, "show")
+      validate_method_action(:get, "read")
     end
 
     def validate_patch_method
