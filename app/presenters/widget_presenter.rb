@@ -47,7 +47,7 @@ class WidgetPresenter
 
   def button_close
     unless @sb[:dashboards][@sb[:active_db]][:locked]
-      @view.link_to(@view.content_tag(:span, " Remove Widget", :class => 'pficon pficon-close fa-fw'),
+      @view.link_to(@view.content_tag(:span, " Remove Widget", :class => 'fa fa-times fa-fw'),
                     {:controller => "dashboard",
                      :action     => "widget_close",
                      :widget     => @widget.id},
