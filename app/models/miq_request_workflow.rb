@@ -59,8 +59,7 @@ class MiqRequestWorkflow
   end
 
   # Helper method when not using workflow
-  # all sub classes override create_request and update_request with 3 parameters
-  def make_request(request, values, requester_id, auto_approve = false)
+  def make_request(request, values, requester_id = nil, auto_approve = false)
     if request
       update_request(request, values, requester_id)
     else
@@ -68,7 +67,7 @@ class MiqRequestWorkflow
     end
   end
 
-  def create_request(values, _requester_id, auto_approve = false)
+  def create_request(values, _requester_id = nil, auto_approve = false)
     return false unless validate(values)
 
     set_request_values(values)
@@ -96,7 +95,7 @@ class MiqRequestWorkflow
     request
   end
 
-  def update_request(request, values, _requester_id)
+  def update_request(request, values, _requester_id = nil)
     request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
 
     return false unless validate(values)
@@ -792,7 +791,7 @@ class MiqRequestWorkflow
   def update_field_visibility
   end
 
-  def refresh_field_values(values, _requester_id)
+  def refresh_field_values(values)
     st = Time.now
 
     @values = values

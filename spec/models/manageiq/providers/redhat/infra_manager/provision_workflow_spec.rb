@@ -121,7 +121,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
       # the dialogs populate this
       values.merge!(:src_vm_id => template.id, :vm_tags => [])
 
-      request = workflow.make_request(nil, values, admin.userid) # TODO: nil
+      request = workflow.make_request(nil, values)
 
       expect(request).to be_valid
       expect(request).to be_a_kind_of(MiqProvisionRequest)
@@ -143,7 +143,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
         :userid       => alt_user.userid,
         :message      => "VM Provisioning request updated by <#{alt_user.userid}> for Vm:#{template.id}"
       )
-      workflow.make_request(request, values, alt_user.userid)
+      workflow.make_request(request, values)
     end
   end
 end

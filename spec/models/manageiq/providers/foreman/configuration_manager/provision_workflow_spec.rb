@@ -43,7 +43,7 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow d
       # the dialogs populate this
       values.merge!(:src_configured_system_ids => [system.id], :vm_tags => [])
 
-      request = workflow.make_request(nil, values, admin.userid) # TODO: nil
+      request = workflow.make_request(nil, values)
 
       expect(request).to be_valid
       expect(request).to be_a_kind_of(MiqProvisionConfiguredSystemRequest)
@@ -62,7 +62,7 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow d
         :userid       => alt_user.userid,
         :message      => "Configured System Provisioning request updated by <#{alt_user.userid}> for ConfiguredSystem:#{[system.id].inspect}"
       )
-      workflow.make_request(request, values, alt_user.userid)
+      workflow.make_request(request, values)
     end
   end
 end

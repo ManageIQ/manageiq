@@ -131,13 +131,13 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     src
   end
 
-  def ws_host_fields(values, fields, userid)
+  def ws_host_fields(values, fields)
     data = parse_ws_string(fields)
 
     _log.info "data:<#{data.inspect}>"
     ws_service_fields(values, fields, data)
     ws_environment_fields(values, fields, data)
-    refresh_field_values(values, userid)
+    refresh_field_values(values)
     ws_customize_fields(values, fields, data)
     ws_schedule_fields(values, fields, data)
 
@@ -236,10 +236,10 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     # Populate required fields
     p.init_from_dialog(values)
     values[:src_host_ids] = [src.id]
-    p.refresh_field_values(values, userid)
+    p.refresh_field_values(values)
     values[:placement_auto] = [true, 1]
 
-    p.ws_host_fields(values, vm_fields, userid)
+    p.ws_host_fields(values, vm_fields)
     p.ws_requester_fields(values, requester)
     p.set_ws_tags(values, tags)    # Tags are passed as category=value|cat2=value2...  Example: cc=001|environment=test
     p.set_ws_values(values, :ws_values, options.values)

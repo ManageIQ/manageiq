@@ -14,13 +14,13 @@ module ApplicationController::MiqRequestMethods
     if @edit.nil? || @edit.try(:[], :stamp_typ)  # load tab for show screen
       if params[:tab_id]
         @options[:current_tab_key] = params[:tab_id].split('_')[0].to_sym
-        @options[:wf].refresh_field_values(@options, session[:userid])
+        @options[:wf].refresh_field_values(@options)
       end
       prov_load_tab
     else
       if params[:tab_id]
         @edit[:new][:current_tab_key] = params[:tab_id].split('_')[0].to_sym
-        @edit[:wf].refresh_field_values(@edit[:new], session[:userid])
+        @edit[:wf].refresh_field_values(@edit[:new])
       end
       refresh_divs = prov_get_form_vars  # Get changed option, returns true if divs need refreshing
       build_grid if refresh_divs
@@ -571,7 +571,7 @@ module ApplicationController::MiqRequestMethods
     id = session[:edit][:req_id] || "new"
     return unless load_edit("prov_edit__#{id}", "show_list")
     @edit[:new][:schedule_time] = @edit[:new][:schedule_time].in_time_zone("Etc/UTC") if @edit[:new][:schedule_time]
-    request = @edit[:wf].make_request(@edit[:req_id], @edit[:new], session[:userid])
+    @edit[:wf].make_request(@edit[:req_id], @edit[:new])
     validate_fields
     if !@flash_array
       @breadcrumbs.pop if @breadcrumbs
@@ -600,7 +600,7 @@ module ApplicationController::MiqRequestMethods
       end
     else
       @edit[:new][:current_tab_key] = @error_div.split('_')[0].to_sym if @error_div
-      @edit[:wf].refresh_field_values(@edit[:new], session[:userid])
+      @edit[:wf].refresh_field_values(@edit[:new])
       build_grid
       render :update do |page|                    # Use JS to update the display
         page.replace("prov_wf_div", :partial => "/miq_request/prov_wf") if @error_div
@@ -715,7 +715,7 @@ module ApplicationController::MiqRequestMethods
           end
         end
         begin
-          @edit[:wf].refresh_field_values(@edit[:new], session[:userid])           # Refresh the workflow with new field values based on options, need to pass userid there
+          @edit[:wf].refresh_field_values(@edit[:new])
         rescue StandardError => bang
           add_flash(bang.message, :error)
           @edit[:new][f.to_sym] = val                                             # Save value
@@ -813,7 +813,7 @@ module ApplicationController::MiqRequestMethods
       @edit[:current] = copy_hash(@edit[:new])
       # Give the model a change to modify the dialog based on the default settings
       # common grids
-      @edit[:wf].refresh_field_values(@edit[:new], session[:userid])
+      @edit[:wf].refresh_field_values(@edit[:new])
       if pre_prov_values
         @edit[:new] = @edit[:new].delete_nils
         @edit[:new] = @edit[:new].merge pre_prov_values.select { |k| !@edit[:new].keys.include?(k) }
