@@ -1,4 +1,4 @@
---- 
+---
 - :description: Default
   :guid: b47a0ef0-4335-11df-aba8-001d09066d98
   :rate_type: Compute
@@ -11,6 +11,7 @@
       :rate: 0.02
       :per_time: daily
       :per_unit: megahertz
+      :measure: Hz Units
     - :description: Allocated CPU Count
       :group: cpu
       :source: allocated
@@ -25,6 +26,7 @@
       :rate: 0.02
       :per_time: daily
       :per_unit: megabytes
+      :measure: Bytes Units
     - :description: Allocated Memory in MB
       :group: memory
       :source: allocated
@@ -32,6 +34,7 @@
       :rate: 0
       :per_time: daily
       :per_unit: megabytes
+      :measure: Bytes Units
     - :description: Used Network I/O in KBps
       :group: net_io
       :source: used
@@ -39,6 +42,7 @@
       :rate: 0.005
       :per_time: hourly
       :per_unit: kbps
+      :measure: Bytes per Second Units
     - :description: Used Disk I/O in KBps
       :group: disk_io
       :source: used
@@ -46,6 +50,7 @@
       :rate: 0.005
       :per_time: hourly
       :per_unit: kbps
+      :measure: Bytes per Second Units
     - :description: Fixed Compute Cost 1
       :group: fixed
       :source: compute_1
@@ -68,6 +73,7 @@
       :rate: 0
       :per_time: monthly
       :per_unit: gigabytes
+      :measure: Bytes Units
     - :description: Used Disk Storage in Bytes
       :group: storage
       :source: used
@@ -75,6 +81,7 @@
       :rate: 2.0
       :per_time: monthly
       :per_unit: gigabytes
+      :measure: Bytes Units
     - :description: Fixed Storage Cost 1
       :group: fixed
       :source: storage_1

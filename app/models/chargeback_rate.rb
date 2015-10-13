@@ -45,26 +45,59 @@ class ChargebackRate < ActiveRecord::Base
   end
 
   def self.seed
-    fixture_file = File.join(FIXTURE_DIR, "chargeback_rates.yml")
-    if File.exist?(fixture_file)
-      fixture = YAML.load_file(fixture_file)
+    MiqRegion.my_region.lock do
+      # seeding the measure fixture before seed the rates fixtures
+      fixture_file_measure = File.join(FIXTURE_DIR, "chargeback_rates_measures.yml")
+      if File.exist?(fixture_file_measure)
+        fixture = YAML.load_file(fixture_file_measure)
+        fixture.each do |cbr|
+          rec = ChargebackRateDetailMeasure.find_by_name(cbr[:name])
+          if rec.nil?
+            _log.info("Creating [#{cbr[:name]}] with units=[#{cbr[:units]}]")
+            rec = ChargebackRateDetailMeasure.create(cbr)
+          else
+            fixture_mtime = File.mtime(fixture_file_measure).utc
+            if fixture_mtime > rec.created_at
+              _log.info("Updating [#{cbr[:name]}] with units=[#{cbr[:units]}]")
+              rec.update_attributes(cbr)
+              rec.created_at = fixture_mtime
+              rec.save
+            end
+          end
+        end
+      end
+      # seeding the rates fixtures
+      fixture_file = File.join(FIXTURE_DIR, "chargeback_rates.yml")
 
-      fixture.each do |cbr|
-        rec = find_by_guid(cbr[:guid])
-        rates = cbr.delete(:rates)
-        if rec.nil?
-          _log.info("Creating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
-          rec = create!(cbr)
-          rec.chargeback_rate_details.create(rates)
-        else
-          fixture_mtime = File.mtime(fixture_file).utc
-          if fixture_mtime > rec.created_on
-            _log.info("Updating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
-            rec.update_attributes(cbr)
-            rec.chargeback_rate_details.clear
+      if File.exist?(fixture_file)
+
+        fixture = YAML.load_file(fixture_file)
+
+        fixture.each do |cbr|
+          rec = self.find_by_guid(cbr[:guid])
+          rates = cbr.delete(:rates)
+          # The yml measure field is the name of the measure. It's changed to the id
+          rates.each do |rate_detail|
+            measure = ChargebackRateDetailMeasure.find_by(name: rate_detail.delete(:measure))
+            if not measure.nil?
+              rate_detail[:chargeback_rate_detail_measure_id] = measure.id
+            end
+          end
+          if rec.nil?
+            _log.info("Creating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
+            rec = self.create(cbr)
             rec.chargeback_rate_details.create(rates)
-            rec.created_on = fixture_mtime
-            rec.save!
+          else
+            fixture_mtime = File.mtime(fixture_file).utc
+            fixture_mtime_measure = File.mtime(fixture_file_measure).utc
+            if fixture_mtime > rec.created_on || fixture_mtime_measure > rec.created_on
+              _log.info("Updating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
+              rec.update_attributes(cbr)
+              rec.chargeback_rate_details.clear
+              rec.chargeback_rate_details.create(rates)
+              rec.created_on = fixture_mtime
+              rec.save
+            end
           end
         end
       end
