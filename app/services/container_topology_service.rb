@@ -70,6 +70,12 @@ class ContainerTopologyService
       end
     when 'Pod' then entity.phase
     when 'Container' then entity.state
+    when 'Replicator'
+      if entity.current_replicas == entity.replicas
+        'OK'
+      else
+        'warning'
+      end
     else 'unknown'
     end
   end
