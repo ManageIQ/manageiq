@@ -1,21 +1,14 @@
-- content_for :dhx_layout do
-  = render :partial => "layouts/dhtmlxlayout_explorer"
-
 -# These are the initial divs that will go inside center_cell_div
 #main_div.main_div
   - case x_active_tree
   - when :pxe_servers_tree
     = render :partial => "pxe_server_list"
-    </div>
   - when :pxe_image_types_tree
     = render :partial => "pxe_image_type_list"
-    </div>
   - when :customization_templates_tree
     = render :partial => "template_list"
-    </div>
   - when :iso_datastores_tree
     = render :partial => "iso_datastore_list"
-    </div>
 
 -# To include MyCodeMirror JS and CSS files
 = render(:partial => "/layouts/my_code_mirror",

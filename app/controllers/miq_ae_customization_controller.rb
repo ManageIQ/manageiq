@@ -338,9 +338,9 @@ class MiqAeCustomizationController < ApplicationController
         presenter[:set_visible_elements][:pc_div_1] = false
         presenter[:set_visible_elements][:form_buttons_div] = true
       end
-      presenter[:show_hide_layout][:paginator] = 'show'
+      presenter[:set_visible_elements][:paginator] = true
     else
-      presenter[:show_hide_layout][:paginator] = 'hide'
+      presenter[:set_visible_elements][:paginator] = false
     end
   end
 
@@ -372,7 +372,7 @@ class MiqAeCustomizationController < ApplicationController
       end
     end
 
-    presenter[:show_hide_layout][:toolbar] = h_buttons || c_buttons ? 'show' : 'hide'
+    presenter[:set_visible_elements][:toolbar] = h_buttons || c_buttons
 
     presenter[:set_visible_elements][:history_buttons_div] = !!(h_buttons && h_xml)
     presenter[:set_visible_elements][:center_buttons_div]  = !!(c_buttons && c_xml)
@@ -415,7 +415,7 @@ class MiqAeCustomizationController < ApplicationController
       presenter[:update_partials][:form_buttons_div] = render_proc[:partial => "dialog_sample_buttons"]
       presenter[:set_visible_elements][:pc_div_1]         = false
       presenter[:set_visible_elements][:form_buttons_div] = false
-      presenter[:show_hide_layout][:paginator] = 'show'
+      presenter[:set_visible_elements][:paginator] = true
     end
   end
 

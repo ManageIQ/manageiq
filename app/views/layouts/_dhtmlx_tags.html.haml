@@ -19,14 +19,6 @@
     = javascript_include_tag 'dhtmlx_gpl_36/excells/dhtmlxgrid_excell_link.js'
     = javascript_include_tag 'miq_dhtmlxgrid.js'
     = stylesheet_link_tag 'dhtmlx_gpl_36/skins/dhtmlxgrid_miq_skyblue.css'
-- when "layout"
-  - unless @dhtmlx_layout
-    - @dhtmlx_layout = true
-    = javascript_include_tag 'dhtmlx_gpl_36/dhtmlxlayout.js'
-    = javascript_include_tag 'dhtmlx_gpl_36/patterns/dhtmlxlayout_pattern4e.js'
-    = javascript_include_tag 'miq_dhtmlxlayout.js'
-    = stylesheet_link_tag 'dhtmlx_gpl_36/dhtmlxlayout.css'
-    = stylesheet_link_tag 'dhtmlx_gpl_36/skins/dhtmlxlayout_dhx_miq.css'
 - when "toolbar"
   - unless @dhtmlx_toolbar
     - @dhtmlx_toolbar = true
