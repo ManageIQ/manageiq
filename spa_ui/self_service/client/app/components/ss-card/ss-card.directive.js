@@ -11,6 +11,7 @@
       replace: true,
       scope: {
         title: '@heading',
+        description: '@',
         more: '@',
         img: '@?'
       },
