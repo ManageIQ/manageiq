@@ -2,41 +2,49 @@ require "spec_helper"
 include AutomationSpecHelper
 
 describe MiqAeExport do
-  before do
-    @root_tenant = Tenant.seed
-    @tenant1 = FactoryGirl.create(:tenant)
-    @tenant2 = FactoryGirl.create(:tenant)
-    create_ae_model(:name => "dom1", :tenant => @tenant1)
-    create_ae_model(:name => "dom2", :tenant => @tenant2)
-    @options = {'export_dir' => Dir.tmpdir, 'overwrite' => true}
-  end
+  describe "#instantiate" do
+    let(:tenant)  { Tenant.seed }
+    let(:tenant1) { FactoryGirl.create(:tenant) }
+    let(:tenant2) { FactoryGirl.create(:tenant) }
 
-  it "export inaccessible domain" do
-    hash = @options.merge('tenant' => @tenant1)
-    expect { MiqAeExport.new('dom2', hash) }.to raise_exception(MiqAeException::DomainNotAccessible)
-  end
+    before do
+      MiqAeExport.stub(:write_domain).and_return("")
+      create_ae_model(:name => "dom1", :tenant => tenant1)
+      create_ae_model(:name => "dom2", :tenant => tenant2)
+    end
 
-  it "export all domains for a tenant" do
-    hash = @options.merge('tenant' => @tenant1)
-    MiqAeExport.stub(:write_domain).and_return("")
-    obj = MiqAeExport.new('*', hash)
-    obj.should_receive(:write_domain).once
-    obj.export
-  end
+    context "when the tenant is a root tenant" do
+      let(:options) { {'export_dir' => Dir.tmpdir, 'overwrite' => true, 'tenant' => tenant} }
+      it "exports a single domain" do
+        obj = MiqAeExport.new('dom2', options)
+        expect(obj).to receive(:write_domain).once
+        obj.export
+      end
 
-  it "export a domain as root tenant" do
-    hash = @options.merge('tenant' => @root_tenant)
-    MiqAeExport.stub(:write_domain).and_return("")
-    obj = MiqAeExport.new('dom2', hash)
-    obj.should_receive(:write_domain).once
-    obj.export
-  end
+      it "exports multiple domains" do
+        obj = MiqAeExport.new('*', options)
+        expect(obj).to receive(:write_domain).twice
+        obj.export
+      end
+    end
 
-  it "export multiple domain as root tenant" do
-    hash = @options.merge('tenant' => @root_tenant)
-    MiqAeExport.stub(:write_domain).and_return("")
-    obj = MiqAeExport.new('*', hash)
-    obj.should_receive(:write_domain).twice
-    obj.export
+    context "when the tenant is a non root tenant" do
+      let(:options) { {'export_dir' => Dir.tmpdir, 'overwrite' => true, 'tenant' => tenant1} }
+      it "exports a single domain" do
+        obj = MiqAeExport.new('dom1', options)
+        expect(obj).to receive(:write_domain).once
+        obj.export
+      end
+
+      it "exports multiple domains" do
+        obj = MiqAeExport.new('*', options)
+        expect(obj).to receive(:write_domain).once
+        obj.export
+      end
+
+      it "tries to access other tenants domain" do
+        expect { MiqAeExport.new('dom2', options) }.to raise_exception(MiqAeException::DomainNotAccessible)
+      end
+    end
   end
 end
