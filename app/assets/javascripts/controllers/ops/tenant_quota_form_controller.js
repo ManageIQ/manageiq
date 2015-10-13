@@ -14,7 +14,7 @@ ManageIQ.angularApplication.controller('tenantQuotaFormController',['$http', '$s
     $http.get('/ops/tenant_quotas_form_fields/' + tenantQuotaFormId).success(function(data) {
       $scope.tenantQuotaModel.name = data.name;
       $scope.tenantQuotaModel.quotas = angular.copy(data.quotas);
-      GIGABYTE = 1024 * 1024 * 1024;
+      var GIGABYTE = 1024 * 1024 * 1024;
       for (var key in $scope.tenantQuotaModel.quotas ){
         if($scope.tenantQuotaModel.quotas.hasOwnProperty(key)) {
           var quota =  $scope.tenantQuotaModel.quotas[key];
@@ -66,7 +66,7 @@ ManageIQ.angularApplication.controller('tenantQuotaFormController',['$http', '$s
 
   $scope.saveClicked = function() {
     var data = {};
-    GIGABYTE = 1024 * 1024 * 1024;
+    var GIGABYTE = 1024 * 1024 * 1024;
     for(var key in $scope.tenantQuotaModel.quotas){
       if($scope.tenantQuotaModel.quotas.hasOwnProperty(key)) {
         var quota =  $scope.tenantQuotaModel.quotas[key];
