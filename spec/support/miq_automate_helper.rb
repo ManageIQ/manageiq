@@ -64,7 +64,8 @@ module MiqAutomateHelper
   end
 
   def self.create_service_model_method(domain, namespace, klass, instance, method)
-    identifiers = {:domain => domain, :namespace => namespace,
+    Tenant.seed
+    identifiers = {:domain => domain, :namespace => namespace, :tenant => Tenant.root_tenant,
                   :class  => klass, :instance => instance, :method => method}
     fields      = [{:name => 'method1', :type => 'method',
                    :priority => 1, :value => method}]
