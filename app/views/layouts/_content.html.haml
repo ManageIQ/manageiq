@@ -12,18 +12,25 @@
   .container-fluid.resizable-sidebar{:style => "overflow: hidden; height: 100%; background: #fff;"}
     .row#center_div{:style => "height: 100%"}
       #right_div.resizable{:style => "height: 100%", :class => "col-md-#{maindiv} col-md-push-#{sidewidth}"}
-        #toolbar
-          = render :partial => "layouts/x_taskbar"
-        #explorer.scrollable
-          %h1#explorer_title
-            = @right_cell_text
-          = yield
-        #paginator
-          - if saved_report_paging?
-            = render(:partial => 'layouts/saved_report_paging_bar', :locals => {:pages => @sb[:pages]})
-          - else
-            = render(:partial => '/layouts/x_pagingcontrols')
-        = yield :search
+        .row
+          #toolbar
+            = render :partial => "layouts/x_taskbar"
+        .row
+          .col-md-7#explorer
+            %h1#explorer_title
+              = @right_cell_text
+          .col-md-5
+            %br
+            = yield :search
+        .row{:style => "overflow: auto;height: calc(100% - 130px);"}
+          .col-md-12
+            = yield
+        .row#paginator
+          .col-md-12
+            - if saved_report_paging?
+              = render(:partial => 'layouts/saved_report_paging_bar', :locals => {:pages => @sb[:pages]})
+            - else
+              = render(:partial => '/layouts/x_pagingcontrols')
 
         - unless simulate
           .resizer.hidden-xs
