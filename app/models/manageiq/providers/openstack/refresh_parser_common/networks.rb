@@ -142,7 +142,6 @@ module ManageIQ::Providers
 
           new_result = {
             :type                              => self.class.network_port_type,
-            :name                              => network_port.name,
             :ems_ref                           => uid,
             :status                            => network_port.status,
             :admin_state_up                    => network_port.admin_state_up,
@@ -164,6 +163,8 @@ module ManageIQ::Providers
             :fixed_ips                         => network_port.fixed_ips,
             :security_groups                   => security_groups,
           }
+
+          new_result[:name] = network_port.name unless network_port.name.blank?
           return uid, new_result
         end
 

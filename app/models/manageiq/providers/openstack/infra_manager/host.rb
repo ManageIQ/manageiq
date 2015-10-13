@@ -25,6 +25,10 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
     ::CloudTenant.where(:id => vms.collect(&:cloud_tenant_id).uniq)
   end
 
+  def self.network_port_type
+    "ManageIQ::Providers::Openstack::InfraManager::NetworkPort"
+  end
+
   def ssh_users_and_passwords
     user_auth_key, auth_key = auth_user_keypair
     user_password, password = auth_user_pwd
