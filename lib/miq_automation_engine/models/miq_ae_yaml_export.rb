@@ -266,7 +266,6 @@ class MiqAeYamlExport
   end
 
   def domain_accessible?
-    @tenant.editable_domains.collect(&:name).map(&:upcase).include?(@domain.upcase) ||
-      @is_root_tenant
+    @is_root_tenant || @tenant.editable_domains.collect(&:name).map(&:upcase).include?(@domain.upcase)
   end
 end
