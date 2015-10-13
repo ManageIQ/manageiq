@@ -13,7 +13,6 @@ class MiqAeYamlExport
     @options       = options
     tenant_id      = @options['tenant_id']
     @tenant        = @options['tenant'] || (tenant_id ? Tenant.find_by!(:id => tenant_id) : Tenant.root_tenant)
-    @is_root_tenant = @tenant == Tenant.root_tenant
     reset_manifest
     @domain_object = domain_object unless @domain == ALL_DOMAINS
   end
@@ -105,7 +104,7 @@ class MiqAeYamlExport
   end
 
   def write_all_domains
-    domains = @is_root_tenant ? MiqAeDomain.all : @tenant.editable_domains
+    domains = @tenant.root? ? MiqAeDomain.all : @tenant.editable_domains
     domains.each do |dom_obj|
       @domain = dom_obj.name
       @domain_object = domain_object
@@ -266,6 +265,6 @@ class MiqAeYamlExport
   end
 
   def domain_accessible?
-    @is_root_tenant || @tenant.editable_domains.collect(&:name).map(&:upcase).include?(@domain.upcase)
+    @tenant.root? || @tenant.editable_domains.collect(&:name).map(&:upcase).include?(@domain.upcase)
   end
 end

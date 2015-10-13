@@ -210,8 +210,7 @@ Methods updated/added: %{method_stats}") % stat_options)
   def export_datastore
     filename = "datastore_" + format_timezone(Time.now, Time.zone, "fname") + ".zip"
     disable_client_cache
-    send_data(MiqAeDatastore.export(current_tenant),
-              :filename => filename)
+    send_data(MiqAeDatastore.export(current_tenant), :filename => filename)
   end
 
   # Reset all custom classes and instances to default
