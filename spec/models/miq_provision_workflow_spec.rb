@@ -33,9 +33,21 @@ describe MiqProvisionWorkflow do
         end
 
         it "should create an MiqRequest when calling from_ws" do
+          FactoryGirl.create(:classification_cost_center_with_tags)
           request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
             "1.0", admin, "template", "target", false, "cc|001|environment|test","")
           request.should be_a_kind_of(MiqRequest)
+
+          expect(request.options[:vm_tags]).to eq([Classification.find_by_name("cc/001").id])
+        end
+
+        it "should set tags" do
+          FactoryGirl.create(:classification_cost_center_with_tags)
+          request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
+            "1.1", admin, "name=template", "vm_name=spec_test", nil, "cc=001|environment=test", nil, nil, nil)
+          request.should be_a_kind_of(MiqRequest)
+
+          expect(request.options[:vm_tags]).to eq([Classification.find_by_name("cc/001").id])
         end
 
         it "should encrypt fields" do

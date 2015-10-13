@@ -367,19 +367,15 @@ class MiqRequestWorkflow
     end
   end
 
-  def set_ws_tags(values, tag_string, parser = :parse_ws_string)
+  def ws_tags(tag_string, parser = :parse_ws_string)
     # Tags are passed as category|value.  Example: cc|001|environment|test
-    ta = []
     ws_tags = send(parser, tag_string)
 
-    tags = {}
-    allowed_tags.each do |v|
-      tc = tags[v[:name]] = {}
-      v[:children].each { |k, v| tc[v[:name]] = k }
+    tags = allowed_tags.each_with_object({}) do |v, tags|
+      tags[v[:name]] = v[:children].each_with_object({}) { |(k, v), tc| tc[v[:name]] = k }
     end
 
-    ws_tags.each { |cat, tag| ta << tags.fetch_path(cat.to_s.downcase, tag.downcase) }
-    values[:vm_tags] = ta.compact
+    ws_tags.collect { |cat, tag| tags.fetch_path(cat.to_s.downcase, tag.downcase) }.compact
   end
 
   # @param parser [:parse_ws_string|:parse_ws_string_v1]
