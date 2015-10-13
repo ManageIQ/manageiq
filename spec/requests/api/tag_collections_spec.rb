@@ -57,7 +57,7 @@ describe ApiController do
       expect_result_resources_to_include_data("resources", "name" => :tag_paths)
     end
 
-    it "assigns a tag to a Provider without appropriate role" do
+    it "does not assign a tag to a Provider without appropriate role" do
       api_basic_authorize
 
       run_post(provider_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
@@ -73,7 +73,7 @@ describe ApiController do
       expect_tagging_result(tag1_results(provider_url))
     end
 
-    it "unassigns a tag from a Provider without appropriate role" do
+    it "does not unassign a tag from a Provider without appropriate role" do
       api_basic_authorize
 
       run_post(provider_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
@@ -106,7 +106,7 @@ describe ApiController do
       expect_result_resources_to_include_data("resources", "name" => :tag_paths)
     end
 
-    it "assigns a tag to a Host without appropriate role" do
+    it "does not assign a tag to a Host without appropriate role" do
       api_basic_authorize
 
       run_post(host_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
@@ -122,7 +122,7 @@ describe ApiController do
       expect_tagging_result(tag1_results(host_url))
     end
 
-    it "unassigns a tag from a Host without appropriate role" do
+    it "does not unassign a tag from a Host without appropriate role" do
       api_basic_authorize
 
       run_post(host_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
@@ -156,7 +156,7 @@ describe ApiController do
       expect_result_resources_to_include_data("resources", "name" => :tag_paths)
     end
 
-    it "assigns a tag to a Data Store without appropriate role" do
+    it "does not assign a tag to a Data Store without appropriate role" do
       api_basic_authorize
 
       run_post(ds_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
@@ -172,7 +172,7 @@ describe ApiController do
       expect_tagging_result(tag1_results(ds_url))
     end
 
-    it "unassigns a tag from a Data Store without appropriate role" do
+    it "does not unassign a tag from a Data Store without appropriate role" do
       api_basic_authorize
 
       run_post(ds_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
@@ -206,7 +206,7 @@ describe ApiController do
       expect_result_resources_to_include_data("resources", "name" => :tag_paths)
     end
 
-    it "assigns a tag to a Resource Pool without appropriate role" do
+    it "does not assign a tag to a Resource Pool without appropriate role" do
       api_basic_authorize
 
       run_post(rp_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
@@ -222,7 +222,7 @@ describe ApiController do
       expect_tagging_result(tag1_results(rp_url))
     end
 
-    it "unassigns a tag from a Resource Pool without appropriate role" do
+    it "does not unassign a tag from a Resource Pool without appropriate role" do
       api_basic_authorize
 
       run_post(rp_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
@@ -263,7 +263,7 @@ describe ApiController do
       expect_result_resources_to_include_data("resources", "name" => :tag_paths)
     end
 
-    it "assigns a tag to a Cluster without appropriate role" do
+    it "does not assign a tag to a Cluster without appropriate role" do
       api_basic_authorize
 
       run_post(cluster_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
@@ -279,7 +279,7 @@ describe ApiController do
       expect_tagging_result(tag1_results(cluster_url))
     end
 
-    it "unassigns a tag from a Cluster without appropriate role" do
+    it "does not unassign a tag from a Cluster without appropriate role" do
       api_basic_authorize
 
       run_post(cluster_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
@@ -313,7 +313,7 @@ describe ApiController do
       expect_result_resources_to_include_data("resources", "name" => :tag_paths)
     end
 
-    it "assigns a tag to a Service without appropriate role" do
+    it "does not assign a tag to a Service without appropriate role" do
       api_basic_authorize
 
       run_post(service_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
@@ -329,7 +329,7 @@ describe ApiController do
       expect_tagging_result(tag1_results(service_url))
     end
 
-    it "unassigns a tag from a Service without appropriate role" do
+    it "does not unassign a tag from a Service without appropriate role" do
       api_basic_authorize
 
       run_post(service_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
@@ -363,7 +363,7 @@ describe ApiController do
       expect_result_resources_to_include_data("resources", "name" => :tag_paths)
     end
 
-    it "assigns a tag to a Service Template without appropriate role" do
+    it "does not assign a tag to a Service Template without appropriate role" do
       api_basic_authorize
 
       run_post(service_template_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
@@ -379,7 +379,7 @@ describe ApiController do
       expect_tagging_result(tag1_results(service_template_url))
     end
 
-    it "unassigns a tag from a Service Template without appropriate role" do
+    it "does not unassign a tag from a Service Template without appropriate role" do
       api_basic_authorize
 
       run_post(service_template_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
@@ -413,7 +413,7 @@ describe ApiController do
       expect_result_resources_to_include_data("resources", "name" => :tag_paths)
     end
 
-    it "assigns a tag to a Tenant without appropriate role" do
+    it "does not assign a tag to a Tenant without appropriate role" do
       api_basic_authorize
 
       run_post(tenant_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
@@ -429,7 +429,7 @@ describe ApiController do
       expect_tagging_result(tag1_results(tenant_url))
     end
 
-    it "unassigns a tag from a Tenant without appropriate role" do
+    it "does not unassign a tag from a Tenant without appropriate role" do
       api_basic_authorize
 
       run_post(tenant_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
