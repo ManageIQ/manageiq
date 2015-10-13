@@ -49,7 +49,7 @@ describe CustomButton do
       context "when invoking for a particular VM" do
         before(:each) do
           @vm    = FactoryGirl.create(:vm_vmware)
-          @user2 = FactoryGirl.create(:user, :name => 'Wilma Flintstone',  :userid => 'wilma')
+          @user2 = FactoryGirl.create(:user_with_group)
         end
 
         it "calls automate without saved User and MiqServer" do

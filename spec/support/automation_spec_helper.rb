@@ -75,6 +75,7 @@ module AutomationSpecHelper
   end
 
   def send_ae_request_via_queue(args, timeout = nil)
+    ## TODO: args should have user information in there
     queue_args = {:role        => 'automate',
                   :class_name  => 'MiqAeEngine',
                   :method_name => 'deliver',
