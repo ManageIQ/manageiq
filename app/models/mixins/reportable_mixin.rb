@@ -93,23 +93,17 @@ module ReportableMixin
 
     # private
 
-    def get_include_for_find(report_option)
-      includes = report_option
-      if includes.kind_of?(Hash)
-        result = {}
-        includes.each do |k, v|
+    def get_include_for_find(includes)
+      case includes
+      when Hash
+        includes.each_with_object({}) do |(k, v), result|
           v[:include] = v["include"] if v["include"]
-          if v.empty? || !v[:include]
-            result.merge!(k => {})
-          else
-            result.merge!(k => get_include_for_find(v[:include]))
-          end
+          result[k] = get_include_for_find(v[:include] || {})
         end
-        result
-      elsif includes.kind_of?(Array)
-        result = {}
-        includes.each { |i| result.merge!(i => {}) }
-        result
+      when Array
+        includes.each_with_object({}) do |i, result|
+          result[i] = {}
+        end
       else
         includes
       end
