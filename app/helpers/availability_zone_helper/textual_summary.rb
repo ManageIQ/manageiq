@@ -11,6 +11,10 @@ module AvailabilityZoneHelper::TextualSummary
     %i(tags)
   end
 
+  def textual_group_availability_zone_totals
+    %i(block_storage_disk_capacity block_storage_disk_usage)
+  end
+
   #
   # Items
   #
@@ -28,5 +32,15 @@ module AvailabilityZoneHelper::TextualSummary
       h[:title] = "Show all #{label}"
     end
     h
+  end
+
+  def textual_block_storage_disk_capacity
+    return nil unless @record.respond_to?(:block_storage_disk_capacity)
+    {:value => number_to_human_size(@record.block_storage_disk_capacity.gigabytes, :precision => 2)}
+  end
+
+  def textual_block_storage_disk_usage
+    return nil unless @record.respond_to?(:block_storage_disk_usage)
+    {:value => number_to_human_size(@record.block_storage_disk_usage.bytes, :precision => 2)}
   end
 end

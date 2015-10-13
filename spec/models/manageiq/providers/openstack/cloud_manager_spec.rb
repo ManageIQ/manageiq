@@ -73,4 +73,35 @@ describe ManageIQ::Providers::Openstack::CloudManager do
       expect { ems.verify_credentials }.to raise_error(MiqException::MiqEVMLoginError, /Unexpected.*unlikely/)
     end
   end
+
+  context "availability zone disk usage" do
+    before do
+      @provider = FactoryGirl.create(:provider_openstack, :name => "undercloud")
+      @cloud = FactoryGirl.create(:ems_openstack, :name => "overcloud", :provider => @provider)
+      @infra = FactoryGirl.create(:ems_openstack_infra_with_stack, :name => "undercloud", :provider => @provider)
+      @az = FactoryGirl.create(:availability_zone_openstack, :ext_management_system => @cloud, :name => "nova")
+      @cluster = FactoryGirl.create(:ems_cluster_openstack, :ext_management_system => @infra, :name => "BlockStorage")
+      @host = FactoryGirl.create(:host_openstack_infra)
+      @cluster.hosts << @host
+      expect(@az.block_storage_disk_usage).to eq(0)
+    end
+
+    it "block storage disk capacity" do
+      expect(@az.block_storage_disk_capacity).to eq(0)
+      FactoryGirl.create(:hardware, :disk_capacity => "7", :host => @host)
+      expect(@az.block_storage_disk_capacity).to eq(7)
+    end
+
+    it "block storage disk usage" do
+      @cloud.cloud_volumes << FactoryGirl.create(:cloud_volume_openstack, :size => 2, :status => "noterror", :availability_zone => @az)
+      @cloud.cloud_volumes << FactoryGirl.create(:cloud_volume_openstack, :size => 3, :status => "error", :availability_zone => @az)
+
+      expect(@az.block_storage_disk_usage).to eq(2)
+
+      # add valid volume, but not in az
+      @cloud.cloud_volumes << FactoryGirl.create(:cloud_volume_openstack, :size => 5, :status => "noterror")
+
+      expect(@az.block_storage_disk_usage).to eq(2)
+    end
+  end
 end

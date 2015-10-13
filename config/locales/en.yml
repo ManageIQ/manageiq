@@ -787,6 +787,10 @@ en:
       write_hit_ios_per_sec:       Write Hit (IOPS)
       write_ios_per_sec:           Write (IOPS)
 
+    availability_zone_types:
+      availability_zone:     Availability Zone
+      availability_zones:    Availability Zones
+
     compare:
       Host:         Host Properties
       Vm:           VM Properties
