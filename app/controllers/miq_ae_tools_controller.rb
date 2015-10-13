@@ -89,10 +89,17 @@ class MiqAeToolsController < ApplicationController
     drop_breadcrumb(:name => "Import / Export", :url => "/miq_ae_tools/import_export")
     @lastaction = "import_export"
     @layout = "miq_ae_export"
-    @importable_domain_options = [["<Same as import from>", nil]]
+    @importable_domain_options = []
     MiqAeDomain.all_unlocked.collect do |domain|
       @importable_domain_options << [domain.name, domain.name]
     end
+
+    editable_domains = current_tenant.editable_domains.collect(&:name)
+    @importable_domain_options = @importable_domain_options.select do |importable_domain|
+      editable_domains.include?(importable_domain[0])
+    end
+
+    @importable_domain_options.unshift(["<Same as import from>", nil])
     render :action => "show"
   end
 
