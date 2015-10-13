@@ -1,4 +1,5 @@
 class ChargebackController < ApplicationController
+  helper ChargebackRateDetailCurrencyHelper
   @@fixture_dir = File.join(Rails.root, "db/fixtures")
 
   before_action :check_privileges
