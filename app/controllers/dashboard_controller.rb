@@ -321,15 +321,15 @@ class DashboardController < ApplicationController
     w = params[:widget].to_i
     render :update do |page|
       if @sb[:dashboards][@sb[:active_db]][:minimized].include?(w)
-        page << javascript_del_class("w_#{w}_minmax", "fa fa-caret-down")
-        page << javascript_add_class("w_#{w}_minmax", "fa fa-caret-up")
+        page << javascript_del_class("w_#{w}_minmax", "fa fa-caret-square-o-down fa-fw")
+        page << javascript_add_class("w_#{w}_minmax", "fa fa-caret-square-o-up fa-fw")
         page << javascript_show("dd_w#{w}_box")
         page << "$('#w_#{w}_minmax').prop('title', ' Minimize');"
         page << "$('#w_#{w}_minmax').text(' Minimize');"
         @sb[:dashboards][@sb[:active_db]][:minimized].delete(w)
       else
-        page << javascript_del_class("w_#{w}_minmax", "fa fa-caret-up")
-        page << javascript_add_class("w_#{w}_minmax", "fa fa-caret-down")
+        page << javascript_del_class("w_#{w}_minmax", "fa-caret-square-o-up fa-fw")
+        page << javascript_add_class("w_#{w}_minmax", "fa fa-caret-square-o-down fa-fw")
         page << javascript_hide("dd_w#{w}_box")
         page << "$('#w_#{w}_minmax').prop('title', ' Maximize');"
         page << "$('#w_#{w}_minmax').text(' Maximize');"
