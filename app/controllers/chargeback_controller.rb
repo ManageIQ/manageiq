@@ -386,6 +386,8 @@ class ChargebackController < ApplicationController
       end
       @sb[:tier].description = @edit[:new][:description]
       @sb[:tier].name = @edit[:new][:name] if @edit[:new][:name]
+      @sb[:tier].rate_below = @edit[:new][:rate_below] #if @edit[:new][:rate_below]
+      @sb[:tier].rate_above = @edit[:new][:rate_above] #if @edit[:new][:rate_above]
       if params[:button] == "add"
         cb_tier_set_record_vars
         @sb[:tier].chargeback_tier_details.replace(@sb[:tier_details])
@@ -773,7 +775,7 @@ class ChargebackController < ApplicationController
     @edit[:new][:details].each_with_index do |_detail, i|
       @edit[:new][:details][i][:rate] = params["rate_#{i}".to_sym] if params["rate_#{i}".to_sym]
       @edit[:new][:details][i][:per_time] = params["per_time_#{i}".to_sym] if params["per_time_#{i}".to_sym]
-      @edit[:new][:details][i][:chargeback_tier] = params["chargeback_tier_#{i}".to_sym] if params["chargeback_tier_#{i}".to_sym]
+      @edit[:new][:details][i][:chargeback_tier_id] = params["chargeback_tier_#{i}".to_sym] if params["chargeback_tier_#{i}".to_sym]
     end
   end
 
@@ -798,10 +800,13 @@ class ChargebackController < ApplicationController
 
     @edit[:new][:description] = @sb[:tier].description
     @edit[:new][:name] = @sb[:tier].name ? @sb[:tier].name : x_node.split('-').last
+    @edit[:new][:rate_below] = @sb[:tier].rate_below
+    @edit[:new][:rate_above] = @sb[:tier].rate_above
     @edit[:new][:details] = []
 
     @sb[:tier_details].each do |r|
       temp = {}
+      temp[:description] = r.description ? r.description : ""
       temp[:tier_rate] = (!r.tier_rate.nil? && r.tier_rate != "") ? r.tier_rate : 0
       temp[:start] = r.start ? r.start : "0"
       temp[:end] = r.end ? r.end : nil
@@ -1071,7 +1076,7 @@ class ChargebackController < ApplicationController
 
     if @record || @in_a_form ||
        (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0))
-      if ["chargeback_rates_copy", "chargeback_rates_edit", "chargeback_rates_new", "chargeback_tiers_edit", "chargeback_tiers_new"].include?(@sb[:action]) ||
+      if %w(chargeback_rates_copy chargeback_rates_edit chargeback_rates_new chargeback_tiers_edit chargeback_tiers_new).include?(@sb[:action]) ||
          (x_active_tree == :cb_assignments_tree && ["Compute", "Storage"].include?(x_node.split('-').last))
         presenter[:set_visible_elements][:toolbar] = false
         # incase it was hidden for summary screen, and incase there were no records on show_list

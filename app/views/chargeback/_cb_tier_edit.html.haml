@@ -54,7 +54,7 @@
         /  %td.active{:colspan => "6"} &nbsp;
         %tr
           %td
-            = text_field_tag("start_#{i}", @edit[:new][:details][i][:description],
+            = text_field_tag("description_#{i}", @edit[:new][:details][i][:description],
               :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
           %td
             = text_field_tag("start_#{i}", @edit[:new][:details][i][:start],

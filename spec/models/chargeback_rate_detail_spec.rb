@@ -6,8 +6,7 @@ describe ChargebackRateDetail do
     rate     = 8.26
     per_time = 'monthly'
     per_unit = 'megabytes'
-    cbd = FactoryGirl.create(:chargeback_rate_detail, :rate => rate, :per_time => per_time, :per_unit => per_unit,
-                             :enabled => true)
+    cbd = FactoryGirl.create(:chargeback_rate_detail, :rate => rate, :per_time => per_time, :per_unit => per_unit, :enabled => true)
     cbd.cost(cvalue).should == cvalue * cbd.hourly_rate
 
     cbd.group   = 'fixed'
@@ -15,43 +14,6 @@ describe ChargebackRateDetail do
 
     cbd.enabled = false
     cbd.cost(cvalue).should == 0.0
-  end
-
-  it "#tiered" do
-    cvalue0 = 0.0
-    cvalue1 = 1.0
-    cvalue2 = 2.0
-    cvalue3 = 4.0
-    cvalue4 = 8.0
-    per_time = 'daily'
-    per_unit = 'megabytes'
-
-    tier = FactoryGirl.create(:chargeback_tier, :rate_below => 0.0, :rate_above => 0.5)
-    tier_id = tier.id
-    tier_detail1 = FactoryGirl.create(:chargeback_tier_detail, :chargeback_tier_id => tier_id, :start => 1.0,
-                                      :end => 2.0, :tier_rate => 0.1)
-    tier_detail2 = FactoryGirl.create(:chargeback_tier_detail, :chargeback_tier_id => tier_id, :start => 2.0,
-                                      :end => 4.0, :tier_rate => 0.15)
-    tier_detail3 = FactoryGirl.create(:chargeback_tier_detail, :chargeback_tier_id => tier_id, :start => 4.0,
-                                      :end => 8.0, :tier_rate => 0.2)
-
-    cbd = FactoryGirl.create(:chargeback_rate_detail, :chargeback_tier_id => tier_id, :per_time => per_time,
-                             :per_unit => per_unit, :enabled => true)
-    ChargebackTierDetail.where(:chargeback_tier_id => tier.id).to_a.size.should == 3
-
-    cbd.cost(cvalue0).should == cvalue0 * tier.rate_below.to_f / 24
-    cbd.cost(cvalue1).should == cvalue1 * tier_detail1.tier_rate.to_f / 24
-    cbd.cost(cvalue2).should == cvalue2 * tier_detail2.tier_rate.to_f / 24
-    cbd.cost(cvalue3).should == cvalue3 * tier_detail3.tier_rate.to_f / 24
-    cbd.cost(cvalue4).should == cvalue4 * tier.rate_above.to_f / 24
-
-    cbd.group = 'fixed'
-    cbd.cost(cvalue2).should == cbd.tiered_hourly_rate(cvalue2)
-    cbd.cost(cvalue3).should == tier_detail3.tier_rate.to_f / 24
-    cbd.cost(cvalue4).should == cbd.tiered_hourly_rate(cvalue4)
-
-    cbd.enabled = false
-    cbd.cost(cvalue2).should == 0.0
   end
 
   it "#hourly_rate" do

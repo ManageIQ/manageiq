@@ -1,3 +1,5 @@
+- if @edit && @edit[:current]
+  = render :partial => "cb_tier_edit"
 #tiers_list_div{:style => "width: 100%; height: 100%; overflow: auto;"}
   = render :partial => "layouts/flash_msg"
   - saved_tiers = ChargebackTier.all

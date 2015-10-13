@@ -10,6 +10,20 @@
       .col-md-8
         %p.form-control-static
           = h(@record.description)
+  .form-horizontal.static
+    .form-group
+      %label.col-md-2.control-label
+        = _('Rate below first tier')
+      .col-md-8
+        %p.form-control-static
+          = h(@record.rate_below)
+  .form-horizontal.static
+    .form-group
+      %label.col-md-2.control-label
+        = _('Rate above last tier')
+      .col-md-8
+        %p.form-control-static
+          = h(@record.rate_above)
   %hr
   %h3= _('Tier Details')
   %table.table.table-bordered
