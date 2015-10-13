@@ -39,6 +39,9 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
   end
 
   def security_groups
+
+  def self.network_port_type
+    "ManageIQ::Providers::Openstack::InfraManager::NetworkPort"
   end
 
   def ssh_users_and_passwords

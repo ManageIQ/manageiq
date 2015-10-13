@@ -141,6 +141,41 @@ module MiqLinux
       end.compact
     end
 
+    def self.collect_interface(interfaces, interface)
+      mac_addr = interface[:mac_address]
+      return if mac_addr.blank?
+
+      existing_interface = interfaces[mac_addr]
+      if existing_interface.blank?
+        interfaces[mac_addr] = interface
+      else
+        interface[:name] += "," + existing_interface[:name]
+        existing_interface.merge!(interface)
+      end
+    end
+
+    def self.parse_network_interface_list(lines)
+      return [] if lines.blank?
+
+      interfaces = {}
+      interface = {}
+      lines.each_line do |line|
+        if /^\d+\:\s([\w-]+)\:.*?mtu\s(\d+).*?$/ =~ line
+          collect_interface(interfaces, interface) unless interface.blank?
+          interface = {:name => $1}
+        elsif /^.*?link.*?((\w\w\:)+\w\w).*?$/ =~ line
+          interface[:mac_address] = $1
+        elsif /^.*?inet\s((\d+\.)+\d+).*?$/ =~ line
+          interface[:fixed_ip] = $1
+        elsif /^.*?inet6\s((\w*\:+)+\w+).*?$/ =~ line
+          interface[:fixed_ipv6] = $1
+        end
+      end
+      collect_interface(interfaces, interface)
+
+      interfaces.values
+    end
+
     def self.parse_openstack_status(lines)
       lines.to_s.split("\n")
         .slice_before do |line|

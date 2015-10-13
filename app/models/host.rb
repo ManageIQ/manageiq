@@ -1208,6 +1208,53 @@ class Host < ApplicationRecord
   def refresh_advanced_settings
   end
 
+  def self.network_port_type
+    "NetworkPort"
+  end
+
+  def refresh_network_interfaces(ssu)
+    smartstate_network_ports = MiqLinux::Utils.parse_network_interface_list(ssu.shell_exec("ip a"))
+
+    neutron_network_ports = network_ports.where(:source => :neutron).each_with_object({}) do |network_port, obj|
+      obj[network_port.mac_address] = network_port
+    end
+    neutron_cloud_subnets = ext_management_system.cloud_subnets
+    hashes = []
+
+    smartstate_network_ports.each do |network_port|
+      existing_network_port = neutron_network_ports[network_port[:mac_address]]
+      if existing_network_port.blank?
+        cloud_subnet = neutron_cloud_subnets.detect do |neutron_cloud_subnet|
+          if neutron_cloud_subnet.ip_version == 4
+            IPAddr.new(neutron_cloud_subnet.cidr).include?(network_port[:fixed_ip])
+          else
+            IPAddr.new(neutron_cloud_subnet.cidr).include?(network_port[:fixed_ipv6])
+          end
+        end
+
+        hashes << {:name          => network_port[:name],
+                   :type          => self.class.network_port_type,
+                   :mac_address   => network_port[:mac_address],
+                   :cloud_subnet  => cloud_subnet,
+                   :cloud_network => cloud_subnet.try(:cloud_network),
+                   :device        => self,
+                   :fixed_ips     => {:subnet_id     => nil,
+                                      :ip_address    => network_port[:fixed_ip],
+                                      :ip_address_v6 => network_port[:fixed_ipv6]}}
+      else
+        # Just updating a names of network_ports refreshed from Neutron, rest of attributes
+        # is handled in refresh section.
+        existing_network_port.update_attributes(:name => network_port[:name]) if existing_network_port.name.blank?
+      end
+    end
+    unless hashes.blank?
+      EmsRefresh.save_network_ports_inventory(ext_management_system, hashes, ext_management_system, :smartstate)
+    end
+  rescue => e
+    _log.warn("Error in refreshing network interfaces of host #{self.id}. Error: #{e.message}")
+    _log.warn("#{e.backtrace.join("\n")}")
+  end
+
   def refresh_ipmi_power_state
     if ipmi_config_valid?
       require 'miq-ipmi'
@@ -1437,6 +1484,10 @@ class Host < ApplicationRecord
             _log.info("Refreshing FS Files for #{log_target}")
             task.update_status("Active", "Ok", "Refreshing FS Files") if task
             Benchmark.realtime_block(:refresh_fs_files) { refresh_fs_files(ssu) }
+
+            _log.info("Refreshing network interfaces for #{log_target}")
+            task.update_status("Active", "Ok", "Refreshing network interfaces") if task
+            Benchmark.realtime_block(:refresh_network_interfaces) { refresh_network_interfaces(ssu) }
 
             # refresh_openstack_services should run after refresh_services and refresh_fs_files
             if respond_to?(:refresh_openstack_services)
