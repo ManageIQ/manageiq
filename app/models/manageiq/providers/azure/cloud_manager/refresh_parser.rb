@@ -17,6 +17,7 @@ module ManageIQ::Providers
         @vmm               = ::Azure::Armrest::VirtualMachineService.new(config)
         @asm               = ::Azure::Armrest::AvailabilitySetService.new(config)
         @tds               = ::Azure::Armrest::TemplateDeploymentService.new(config)
+        @vns               = ::Azure::Armrest::Network::VirtualNetworkService.new(config)
         @options           = options || {}
         @data              = {}
         @data_index        = {}
@@ -30,6 +31,7 @@ module ManageIQ::Providers
         get_series
         get_availability_sets
         get_stacks
+        get_cloud_networks
         get_instances
         _log.info("#{log_header}...Complete")
 
@@ -90,6 +92,16 @@ module ManageIQ::Providers
         process_collection([stack], :orchestration_templates) { |the_stack| parse_stack_template(the_stack, content) }
       end
 
+      def get_cloud_networks
+        cloud_networks = @vns.list_all_for_subscription
+        process_collection(cloud_networks, :cloud_networks) { |cloud_network| parse_cloud_network(cloud_network) }
+      end
+
+      def get_cloud_subnets(cloud_network)
+        subnets = cloud_network.fetch_path('properties', 'subnets')
+        process_collection(subnets, :cloud_subnets) { |subnet| parse_cloud_subnet(subnet) }
+      end
+
       def get_instances
         instances = @vmm.get_vms
         process_collection(instances, :vms) { |instance| parse_instance(instance) }
@@ -131,6 +143,32 @@ module ManageIQ::Providers
           :name    => az["name"],
         }
         return id, new_result
+      end
+
+      def parse_cloud_network(cloud_network)
+        cloud_subnets = get_cloud_subnets(cloud_network).collect do |raw_subnet|
+          @data_index.fetch_path(:cloud_subnets, raw_subnet.fetch_path('id'))
+        end
+
+        uid = cloud_network.fetch_path('id')
+        new_result = {
+          :ems_ref       => uid,
+          :name          => cloud_network.fetch_path('name'),
+          :cidr          => cloud_network.fetch_path('properties', 'addressSpace', 'addressPrefixes').join(", "),
+          :enabled       => true,
+          :cloud_subnets => cloud_subnets,
+        }
+        return uid, new_result
+      end
+
+      def parse_cloud_subnet(subnet)
+        uid = subnet.fetch_path('id')
+        new_result = {
+          :ems_ref => uid,
+          :name    => subnet.fetch_path('name'),
+          :cidr    => subnet.fetch_path('properties', 'addressPrefix'),
+        }
+        return uid, new_result
       end
 
       def parse_instance(instance)

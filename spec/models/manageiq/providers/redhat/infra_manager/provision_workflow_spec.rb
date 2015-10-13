@@ -13,7 +13,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
   end
 
   it "pass platform attributes to automate" do
-    assert_automate_dialog_lookup("infra", "redhat", "get_pre_dialog_name", nil)
+    assert_automate_dialog_lookup(admin, "infra", "redhat", "get_pre_dialog_name", nil)
 
     described_class.new({}, admin.userid)
   end

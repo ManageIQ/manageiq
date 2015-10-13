@@ -80,13 +80,13 @@ module ServiceTemplateHelper
   end
 
   def service_template_stubs
-    ServiceTemplate.stub(:automate_result_include_service_template?) do |_uri, name|
+    ServiceTemplate.stub(:automate_result_include_service_template?) do |_uri, _user, name|
       @allowed_service_templates.include?(name)
     end
   end
 
   def user_helper
     User.any_instance.stub(:role).and_return("admin")
-    @user        = FactoryGirl.create(:user, :name => 'Wilma',  :userid => 'wilma')
+    @user = FactoryGirl.create(:user_with_group, :name => 'Wilma', :userid => 'wilma')
   end
 end

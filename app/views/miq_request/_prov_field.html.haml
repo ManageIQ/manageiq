@@ -529,9 +529,19 @@
           - path = Rails.application.routes.recognize_path request.referrer
           - if path[:controller] == "miq_request"
             = form_tag({:action => "prov_edit", :req_id => "#{@edit[:req_id]}"}, :multipart => true) do
-              = file_field("upload", "file")
-              = submit_tag("Upload", :class => "upload")
+              .form-group
+                .col-md-4
+                  = file_field("upload", "file", :class => "filestyle", "data-buttonName" => "btn-default")
+                  :javascript
+                    $(":file").filestyle({icon: false, placeholder: "No file chosen"});
+                .col-md-6
+                  = submit_tag(_("Upload"), :class => "upload btn btn-default")
           - else
             = form_tag({:controller => path[:controller], :action => "explorer"}, :multipart => true) do
-              = file_field("upload", "file")
-              = submit_tag("Upload", :class => "upload")
+              .form-group
+                .col-md-4
+                  = file_field("upload", "file", :class => "filestyle", "data-buttonName" => "btn-default")
+                  :javascript
+                    $(":file").filestyle({icon: false, placeholder: "No file chosen"});
+                .col-md-6
+                  = submit_tag(_("Upload"), :class => "upload btn btn-default")

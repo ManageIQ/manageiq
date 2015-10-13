@@ -323,7 +323,6 @@ module ApplicationHelper
       :settings              => @settings,
       :showtype              => @showtype,
       :tabform               => @tabform,
-      :usage_options         => @usage_options,
       :widget_running        => @widget_running,
       :widgetsets            => @widgetsets,
       :zgraph                => @zgraph,
@@ -922,7 +921,11 @@ module ApplicationHelper
       check_changes = args[:check_changes] || args[:check_changes].nil?
       tag_attrs[:onclick] = 'return miqCheckForChanges()' if check_changes
       content_tag(:li) do
-        link_to(link_text, link_params, tag_attrs)
+        if args[:record] && restful_routed?(args[:record])
+          link_to(link_text, polymorphic_path(args[:record], :display => args[:display]))
+        else
+          link_to(link_text, link_params, tag_attrs)
+        end
       end
     else
       content_tag(:li, :class => "disabled") do
@@ -1068,6 +1071,8 @@ module ApplicationHelper
       "show_list"
     elsif @compare
       "compare_sections"
+    elsif @explorer
+      "explorer"
     elsif %w(offline retired templates vm vm_cloud vm_or_template).include?(@layout)
       "vm"
     elsif %w(action availability_zone cim_base_storage_extent cloud_tenant condition container_group

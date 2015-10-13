@@ -10,9 +10,10 @@ class ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack < ::Orchestr
     raise MiqException::MiqOrchestrationProvisionError, err.to_s, err.backtrace
   end
 
-  def raw_update_stack(options)
+  def raw_update_stack(template, options)
+    update_options = {:template => template.content}.merge(options.except(:disable_rollback, :timeout))
     ext_management_system.with_provider_connection(:service => "CloudFormation") do |service|
-      service.stacks[name].update(options)
+      service.stacks[name].update(update_options)
     end
   rescue => err
     _log.error "stack=[#{name}], error: #{err}"

@@ -150,7 +150,7 @@ describe Classification do
       ['<My_Name>',
        'My Name',
        'My_Name_is...',
-       '123456789_123456789_123456789_1'
+       '123456789_123456789_123456789_123456789_123456789_1'
       ].each do |name|
         cat = Classification.new(:name => name, :parent_id => 0)
 

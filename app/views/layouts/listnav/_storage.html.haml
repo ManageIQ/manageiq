@@ -24,10 +24,10 @@
         - if role_allows(:feature => "host_show_list")
           - if @record.number_of(:hosts) == 0
             %li.disabled
-              = link_to(_("%s (%s)") % [hosts_title, @record.number_of(:hosts)], "#")
+              = link_to("#{hosts_title} (#{@record.number_of(:hosts)})", "#")
           - else
             %li
-              = link_to(_("%s (%s)") % [hosts_title, @record.number_of(:hosts)],
+              = link_to("#{hosts_title} (#{@record.number_of(:hosts)})",
                 {:action => 'show', :id => @record, :display => 'hosts'},
                 :title => _("Show all registered %s") % hosts_title)
 

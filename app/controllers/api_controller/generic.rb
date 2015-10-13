@@ -5,6 +5,7 @@ class ApiController
     #
 
     def show_generic(type)
+      validate_api_action
       if @req[:subcollection]
         render_collection_type @req[:subcollection].to_sym, @req[:s_id], true
       else

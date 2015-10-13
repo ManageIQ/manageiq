@@ -859,6 +859,35 @@
         :identifier: miq_template_protect
       - :name: resolve
         :identifier: miq_template_policy_sim
+  :tenants:
+    :description: Tenants
+    :options:
+    - :collection
+    :methods: *70174834084700
+    :klass: Tenant
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: rbac_tenant_show_list
+      :post:
+      - :name: create
+        :identifier: rbac_tenant_add
+      - :name: edit
+        :identifier: rbac_tenant_edit
+      - :name: delete
+        :identifier: rbac_tenant_delete
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: rbac_tenant_show
+      :post:
+      - :name: edit
+        :identifier: rbac_tenant_edit
+      - :name: delete
+        :identifier: rbac_tenant_delete
+      :delete:
+      - :name: delete
+        :identifier: rbac_tenant_delete
   :users:
     :description: Users
     :options:

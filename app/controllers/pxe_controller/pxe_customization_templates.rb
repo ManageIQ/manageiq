@@ -260,7 +260,7 @@ module PxeController::PxeCustomizationTemplates
         pxe_img_id = x_node.split('-').last
 
         pxe_img_type = PxeImageType.find_by_id(from_cid(pxe_img_id)) if pxe_img_id != "system"
-        @right_cell_text = pxe_img_id == "system" ? _("%s") % "Examples (read only)" :
+        @right_cell_text = pxe_img_id == "system" ? _("Examples (read only)") :
                                     _("%{model} for %{group} \"%{name}\"") % {:name => pxe_img_type.name, :model => ui_lookup(:models => "PxeCustomizationTemplate"), :group => ui_lookup(:model => "PxeImageType")}
         @right_cell_div  = "template_list"
       end

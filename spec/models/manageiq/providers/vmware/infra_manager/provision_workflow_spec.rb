@@ -15,7 +15,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
   describe "#new" do
     it "pass platform attributes to automate" do
       stub_dialog(:get_dialogs)
-      assert_automate_dialog_lookup("infra", "vmware", "get_pre_dialog_name", nil)
+      assert_automate_dialog_lookup(admin, "infra", "vmware", "get_pre_dialog_name", nil)
 
       described_class.new({}, admin.userid)
     end

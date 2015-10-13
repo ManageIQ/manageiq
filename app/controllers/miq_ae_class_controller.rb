@@ -80,7 +80,7 @@ class MiqAeClassController < ApplicationController
   end
 
   def explorer
-    @built_trees = []
+    @trees = []
     @sb[:action] = nil
     @sb[:open_tree_nodes] ||= [] # Create array to keep open tree nodes (only for autoload trees)
     @explorer = true
@@ -94,8 +94,8 @@ class MiqAeClassController < ApplicationController
     @accords = []
     self.x_active_tree = :ae_tree
     tree = build_ae_tree
-    @built_trees << tree
-    @accords << {:name => "datastores", :title => "Datastore", :container => "ae_tree_div", :image => "folder"}
+    @trees << tree
+    @accords << {:name => "datastores", :title => "Datastore", :container => "ae_accord", :image => "folder"}
     @sb[:active_accord] = :ae
     @sb[:active_tab] ||= "namespaces"
     self.x_node ||= "root"

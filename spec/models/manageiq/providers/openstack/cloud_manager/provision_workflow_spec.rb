@@ -10,7 +10,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
   context "With a user" do
     it "pass platform attributes to automate" do
       stub_dialog
-      assert_automate_dialog_lookup('cloud', 'openstack')
+      assert_automate_dialog_lookup(admin, 'cloud', 'openstack')
 
       described_class.new({}, admin.userid)
     end

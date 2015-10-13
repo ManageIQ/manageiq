@@ -21,7 +21,7 @@ class VmCloudController < ApplicationController
         :accord_name => "instances",
         :tree_name   => :instances_tree,
         :title       => "Instances by Provider",
-        :container   => "instances_tree_div"),
+        :container   => "instances_accord"),
 
       ApplicationController::Feature.new_with_hash(
         :role        => "images_accord",
@@ -29,7 +29,7 @@ class VmCloudController < ApplicationController
         :accord_name => "images",
         :tree_name   => :images_tree,
         :title       => "Images by Provider",
-        :container   => "images_tree_div"),
+        :container   => "images_accord"),
 
       ApplicationController::Feature.new_with_hash(
         :role        => "instances_filter_accord",
@@ -37,7 +37,7 @@ class VmCloudController < ApplicationController
         :accord_name => "instances_filter",
         :tree_name   => :instances_filter_tree,
         :title       => "Instances",
-        :container   => "instances_filter_tree_div"),
+        :container   => "instances_filter_accord"),
 
       ApplicationController::Feature.new_with_hash(
         :role        => "images_filter_accord",
@@ -45,7 +45,7 @@ class VmCloudController < ApplicationController
         :accord_name => "images_filter",
         :tree_name   => :images_filter_tree,
         :title       => "Images",
-        :container   => "images_filter_tree_div")
+        :container   => "images_filter_accord")
     ]
   end
 

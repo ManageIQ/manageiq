@@ -126,7 +126,5 @@
             = render :partial => "report_saved_reports"
       :javascript
         miq_tabs_init('#rep_tabs', '/report/rep_change_tab');
-    - elsif !@report && @report_result
-      = render :partial => "report_status"
     - else
       = render :partial => 'layouts/info_msg', :locals => {:message => _("Choose a Report to view from the menus on the left.")}

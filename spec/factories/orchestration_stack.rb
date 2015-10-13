@@ -2,10 +2,13 @@ FactoryGirl.define do
   factory :orchestration_stack do
   end
 
-  factory :orchestration_stack_amazon, :parent => :orchestration_stack, :class => "ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack"do
+  factory :orchestration_stack_amazon, :parent => :orchestration_stack, :class => "ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack" do
   end
 
-  factory :orchestration_stack_openstack, :parent => :orchestration_stack, :class => "ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack"do
+  factory :orchestration_stack_azure, :parent => :orchestration_stack, :class => "ManageIQ::Providers::Azure::CloudManager::OrchestrationStack" do
+  end
+
+  factory :orchestration_stack_openstack, :parent => :orchestration_stack, :class => "ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack" do
   end
 
   factory :orchestration_stack_openstack_infra, :class => "ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack" do

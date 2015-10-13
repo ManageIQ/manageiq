@@ -1,6 +1,5 @@
-- content_for :trees do
-  %div{:style => "display: none;"}
-    = render :partial => "planning_options"
+- content_for :left do
+  = render :partial => "planning_options"
 
   #left_cell_bottom{:align => "center"}
     #buttons_on{:style => session[:changed] ? "" : "display: none;"}
@@ -33,12 +32,9 @@
         :remote                => true,
         :title                 => t)
 
-- content_for :accords do
+- content_for :dhx_layout do
   -# Create the explorer dhtmlx layout/accordion JS objects
-  = render(:partial => "layouts/dhtmlxlayout_explorer",
-    :locals => {:accords => @accords,
-      :left_cell_bottom  => "left_cell_bottom",
-      :layout_pattern    => "2E"})
+  = render :partial => "layouts/dhtmlxlayout_explorer"
 
 #main_div.main_div
   = render :partial => "planning_tabs"

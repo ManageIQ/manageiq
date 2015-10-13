@@ -133,9 +133,7 @@ module ReportFormatter
 
     def numeric_axis_formatter
       if mri.graph[:type] =~ /(Bar|Column)/
-        raw_column_name = data_column_name.sub(/__.*$/, '')
         custom_format   = Array(mri[:col_formats])[Array(mri[:col_order]).index(raw_column_name)]
-
         format, options = javascript_format(mri.graph[:column].split(':')[0], custom_format)
         return unless format
 

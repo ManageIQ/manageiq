@@ -50,6 +50,7 @@ class OrchestrationStack < ActiveRecord::Base
     klass.create(:name                   => stack_name,
                  :ems_ref                => ems_ref,
                  :status                 => 'CREATE_IN_PROGRESS',
+                 :resource_group         => options[:resource_group],
                  :ext_management_system  => orchestration_manager,
                  :orchestration_template => template)
   end
@@ -58,12 +59,12 @@ class OrchestrationStack < ActiveRecord::Base
     raise NotImplementedError, "raw_create_stack must be implemented in a subclass"
   end
 
-  def raw_update_stack(_options = {})
+  def raw_update_stack(_template, _options = {})
     raise NotImplementedError, "raw_update_stack must be implemented in a subclass"
   end
 
-  def update_stack(options = {})
-    raw_update_stack(options)
+  def update_stack(template, options = {})
+    raw_update_stack(template, options)
   end
 
   def raw_delete_stack

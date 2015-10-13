@@ -959,7 +959,7 @@ class ApplicationController < ActionController::Base
     user = current_user
     @sb[:grp_title] = user.admin_user? ?
       "#{current_tenant.name} (#{_("All %s") % ui_lookup(:models => "MiqGroup")})" :
-      "#{current_tenant.name} (#{_("%s") % "#{ui_lookup(:model => "MiqGroup")}: #{user.current_group.description}"})"
+      "#{current_tenant.name} (#{ui_lookup(:model => "MiqGroup")}: #{user.current_group.description})"
     @data = []
     if (!group.settings || !group.settings[:report_menus] || group.settings[:report_menus].blank?) || mode == "default"
       # array of all reports if menu not configured

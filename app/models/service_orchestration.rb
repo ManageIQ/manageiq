@@ -62,10 +62,7 @@ class ServiceOrchestration < Service
 
   def update_orchestration_stack
     # use orchestration_template from service_template, which may be different from existing orchestration_template
-    orchestration_stack.raw_update_stack(
-      :template   => service_template.orchestration_template.content,
-      :parameters => update_options[:parameters]
-    )
+    orchestration_stack.raw_update_stack(service_template.orchestration_template, update_options)
   end
 
   def orchestration_stack

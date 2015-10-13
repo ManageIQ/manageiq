@@ -16,7 +16,7 @@ module OwnershipMixin
   module ClassMethods
     def set_ownership(ids, options)
       errors = ActiveModel::Errors.new(self)
-      objects = find_all_by_id(ids)
+      objects = where(:id => ids)
       missing = ids - objects.collect(&:id)
       errors.add(:missing_ids, "Unable to find #{name.pluralize} with the following ids #{missing.inspect}") unless missing.empty?
 

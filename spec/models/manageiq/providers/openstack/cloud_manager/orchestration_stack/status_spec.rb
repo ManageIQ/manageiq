@@ -8,6 +8,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack::Statu
     status.failed?.should      be_false
     status.deleted?.should     be_false
     status.rolled_back?.should be_false
+    status.updated?.should     be_false
     status.normalized_status.should == ['create_complete', '']
   end
 
@@ -18,6 +19,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack::Statu
     status.failed?.should      be_false
     status.deleted?.should     be_false
     status.rolled_back?.should be_true
+    status.updated?.should     be_false
     status.normalized_status.should == ['rollback_complete', 'Stack was rolled back']
   end
 
@@ -28,6 +30,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack::Statu
     status.failed?.should      be_false
     status.deleted?.should     be_true
     status.rolled_back?.should be_false
+    status.updated?.should     be_false
     status.normalized_status.should == ['delete_complete', 'Stack was deleted']
   end
 
@@ -38,7 +41,19 @@ describe ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack::Statu
     status.failed?.should      be_true
     status.deleted?.should     be_false
     status.rolled_back?.should be_false
+    status.updated?.should     be_false
     status.normalized_status.should == ['failed', 'Stack creation failed']
+  end
+
+  it 'parses UPDATE_COMPLETE' do
+    status = described_class.new('UPDATE_COMPLETE', nil)
+    status.completed?.should   be_true
+    status.succeeded?.should   be_false
+    status.failed?.should      be_false
+    status.deleted?.should     be_false
+    status.rolled_back?.should be_false
+    status.updated?.should     be_true
+    status.normalized_status.should == ['update_complete', 'OK']
   end
 
   it 'parses transient status' do
@@ -48,6 +63,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack::Statu
     status.failed?.should      be_false
     status.deleted?.should     be_false
     status.rolled_back?.should be_false
+    status.updated?.should     be_false
     status.normalized_status.should == %w(transient CREATING)
   end
 end

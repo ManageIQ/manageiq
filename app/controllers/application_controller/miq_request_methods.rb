@@ -483,7 +483,8 @@ module ApplicationController::MiqRequestMethods
   end
 
   def dialog_partial_for_workflow
-    case (@edit || @options).try(:[], :wf)
+    workflow = @edit.try(:[], :wf) && !@edit[:stamp_typ] ? @edit[:wf] : @options[:wf]
+    case workflow
     when MiqProvisionVirtWorkflow                    then "shared/views/prov_dialog"
     when ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow then "prov_configured_system_foreman_dialog"
     when MiqHostProvisionWorkflow                    then "prov_host_dialog"

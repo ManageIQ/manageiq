@@ -302,24 +302,25 @@ module Rbac
     columns.join(', ')
   end
 
-  def self.get_user_info(userid, miq_group_id = nil)
-    user                      = User.find_by_userid(userid)
-    miq_group                 = MiqGroup.find_by_id(miq_group_id)
+  def self.get_user_info(user, userid, miq_group, miq_group_id)
+    user      ||= User.find_by_userid(userid) || User.current_user
+    miq_group ||= MiqGroup.find_by_id(miq_group_id)
     if user && miq_group
       user.current_group = miq_group if user.miq_groups.include?(miq_group)
     end
-    tz                        = user.get_timezone if user
+    # for reports, user is currently nil, so use the group filter
     user_filters = user.try(:get_filters) || miq_group.try(:get_filters) || {}
     user_filters["managed"] ||= []
 
-    return user, miq_group, user_filters, tz
+    [user, miq_group, user_filters]
   end
 
   def self.filtered(objects, options = {})
-    unless objects.empty?
-      objects, _attrs = Rbac.search(options.merge(:targets => objects, :results_format => :objects))
+    if objects.present?
+      Rbac.search(options.merge(:targets => objects, :results_format => :objects)).first
+    else
+      objects
     end
-    objects
   end
 
   def self.find_via_descendants(descendants, method_name, klass)
@@ -337,12 +338,7 @@ module Rbac
   end
 
   def self.find_descendants(descendant_klass, options = {})
-    search_options                  = options.dup
-    search_options[:class]          = descendant_klass
-    search_options[:results_format] = :objects
-
-    results     = search(search_options)
-    descendants = results.first
+    search(options.merge(:class => descendant_klass, :results_format => :objects)).first
   end
 
   def self.ids_via_descendants(klass, descendant_types, options = {})
@@ -410,10 +406,12 @@ module Rbac
     include_for_find  = options.delete(:include_for_find)
     search_filter     = options.delete(:filter)
     results_format    = options.delete(:results_format)
-    userid            = options.delete(:userid) || User.current_userid
-    miq_group_id      = options.delete(:miq_group_id)
 
-    user, miq_group, user_filters, tz = get_user_info(userid, miq_group_id)
+    user, miq_group, user_filters = get_user_info(options.delete(:user),
+                                                  options.delete(:userid),
+                                                  options.delete(:miq_group),
+                                                  options.delete(:miq_group_id))
+    tz                     = user.try(:get_timezone)
     attrs                  = {:user_filters => copy_hash(user_filters)}
     klass                  = class_or_name.kind_of?(Class) ? class_or_name : class_or_name.to_s.constantize
     ids_clause             = nil
@@ -431,7 +429,7 @@ module Rbac
       ids_clause = ["#{klass.table_name}.id IN (?)", target_ids] if klass.respond_to?(:table_name)
     end
 
-    user_filters['ids_via_descendants'] = ids_via_descendants(rbac_class(klass), options.delete(:match_via_descendants), :userid => userid, :current_group_id => miq_group_id)
+    user_filters['ids_via_descendants'] = ids_via_descendants(rbac_class(klass), options.delete(:match_via_descendants), :user => user, :miq_group => miq_group)
 
     exp_sql, exp_includes, exp_attrs = search_filter.to_sql(tz) unless search_filter.nil? || klass.respond_to?(:instances_are_derived?)
     conditions, include_for_find = MiqExpression.merge_where_clauses_and_includes([conditions, sub_filter, where_clause, exp_sql, ids_clause], [include_for_find, exp_includes])

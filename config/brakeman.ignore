@@ -1,44 +1,6 @@
 {
   "ignored_warnings": [
     {
-      "warning_type": "Command Injection",
-      "warning_code": 14,
-      "fingerprint": "bc7c2597ac891e83c66cb97cdbc860e550907de13b45dc33c64e121719df9486",
-      "message": "Possible command injection",
-      "file": "lib/vmdb/appliance.rb",
-      "line": 103,
-      "link": "http://brakemanscanner.org/docs/warning_types/command_injection/",
-      "code": "`#{diag[:cmd]}`",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Vmdb::Appliance",
-        "method": "s(:self).log_diagnostics"
-      },
-      "user_input": "diag[:cmd]",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
-      "warning_type": "Command Injection",
-      "warning_code": 14,
-      "fingerprint": "9671d8f31067984959a7340e73928b3d7f3aafccdc16aa4c6cb08105e7093e98",
-      "message": "Possible command injection",
-      "file": "app/models/miq_action.rb",
-      "line": 485,
-      "link": "http://brakemanscanner.org/docs/warning_types/command_injection/",
-      "code": "Open3.capture3(MiqEnvironment::Command.rails_command, \"runner\", Tempfile.new(\"miq_action\", File.expand_path(File.join(Rails.root, \"product/conditions/scripts\"))).path, \"'#{rec.name}'\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "MiqAction",
-        "method": "run_script"
-      },
-      "user_input": "rec.name",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
       "warning_type": "Remote Code Execution",
       "warning_code": 24,
       "fingerprint": "58fcf47340099025db0b33d410f05aa6594508dab67fe0ee04c47580e838d24e",

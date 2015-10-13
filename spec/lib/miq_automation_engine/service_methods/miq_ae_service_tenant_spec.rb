@@ -3,7 +3,7 @@ require "spec_helper"
 module MiqAeServiceTenantSpec
   describe MiqAeMethodService::MiqAeServiceTenant do
     let(:settings) { {} }
-    let(:tenant) { FactoryGirl.create(:tenant, :name => 'fred', :domain => 'a.b', :parent => Tenant.seed, :description => "Krueger") }
+    let(:tenant) { FactoryGirl.create(:tenant, :name => 'fred', :domain => 'a.b', :description => "Krueger") }
 
     let(:service_tenant) { MiqAeMethodService::MiqAeServiceTenant.find(tenant.id) }
 

@@ -1,8 +1,8 @@
 require "spec_helper"
 
 describe MiqRequest do
-  let(:fred)   { FactoryGirl.create(:user, :name => 'Fred Flintstone', :userid => 'fred',   :email => "fred@example.com") }
-  let(:barney) { FactoryGirl.create(:user, :name => 'Barney Rubble',   :userid => 'barney', :email => "barney@example.com") }
+  let(:fred)   { FactoryGirl.create(:user_with_group, :name => 'Fred Flintstone', :userid => 'fred',   :email => "fred@example.com") }
+  let(:barney) { FactoryGirl.create(:user_with_group, :name => 'Barney Rubble',   :userid => 'barney', :email => "barney@example.com") }
 
   context "CONSTANTS" do
     it "REQUEST_TYPES" do

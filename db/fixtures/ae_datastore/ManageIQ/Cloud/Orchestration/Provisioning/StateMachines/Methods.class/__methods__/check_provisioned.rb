@@ -23,7 +23,7 @@ def check_deployed(service)
   case status.downcase
   when 'create_complete'
     $evm.root['ae_result'] = 'ok'
-  when 'rollback_complete', 'delete_complete', /failed$/
+  when 'rollback_complete', 'delete_complete', /failed$/, /canceled$/
     $evm.root['ae_result'] = 'error'
     $evm.root['ae_reason'] = reason
   else

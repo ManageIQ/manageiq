@@ -18,7 +18,7 @@ class VmOrTemplateController < ApplicationController
         :accord_name => "vms_instances_filter",
         :tree_name   => :vms_instances_filter_tree,
         :title       => "VMs & Instances",
-        :container   => "vms_instances_filter_tree_div"),
+        :container   => "vms_instances_filter_accord"),
 
       ApplicationController::Feature.new_with_hash(
         :role        => "templates_images_filter_accord",
@@ -26,7 +26,7 @@ class VmOrTemplateController < ApplicationController
         :accord_name => "templates_images_filter",
         :tree_name   => :templates_images_filter_tree,
         :title       => "Templates & Images",
-        :container   => "templates_images_filter_tree_div"),
+        :container   => "templates_images_filter_accord"),
     ]
   end
 

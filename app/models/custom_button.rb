@@ -39,6 +39,18 @@ class CustomButton < ActiveRecord::Base
     where(:applies_to_class => applies_to_class, :applies_to_id => applies_to_id)
   end
 
+  def expanded_serializable_hash
+    button_hash = serializable_hash
+    if resource_action
+      resource_action_hash = resource_action.serializable_hash
+      if resource_action.dialog
+        resource_action_hash.merge!(:dialog => DialogSerializer.new.serialize([resource_action.dialog]).first)
+      end
+      button_hash.merge!(:resource_action => resource_action_hash)
+    end
+    button_hash
+  end
+
   def applies_to
     klass = applies_to_class.constantize
     applies_to_id.nil? ? klass : klass.find_by_id(applies_to_id)

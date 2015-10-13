@@ -346,12 +346,33 @@ module ReportFormatter
       counts
     end
 
+    def extract_column_names
+      # examples: 'Vm.hardware-numvcpus' gives 'hardware-numvcpus'
+      #           'Host-v_total_vms'     gives 'v_total_vms'
+      #           'Vm-num_cpu:total'     gives 'num_cpu' and 'num_cpu__total'
+
+      stage1, aggreg = mri.graph[:column].split(':', 2)
+      model1, column = stage1.split('-', 2)
+      _model, sub_model = model1.split('.', 2)
+
+      @raw_column_name  = sub_model.present? ? "#{sub_model}.#{column}" : column
+      @data_column_name = aggreg.blank? ? @raw_column_name : "#{@raw_column_name}__#{aggreg}"
+      @aggreg = aggreg.blank? ? nil : aggreg.to_sym
+    end
+
+    def aggreg
+      extract_column_names unless @raw_column_name
+      @aggreg
+    end
+
+    def raw_column_name
+      extract_column_names unless @raw_column_name
+      @raw_column_name
+    end
+
     def data_column_name
-      @data_column_name ||= (
-        _model, col = mri.graph[:column].split('-', 2)
-        col, aggreg = col.split(':', 2)
-        aggreg.blank? ? col : "#{col}__#{aggreg}"
-      )
+      extract_column_names unless @data_column_name
+      @data_column_name
     end
 
     # Options:
@@ -375,7 +396,7 @@ module ReportFormatter
 
       if show_other
         other_sum = Array(sorted_data[0, sorted_data.length - keep])
-                    .inject(0) { |sum, row| sum + row[data_column_name] }
+                    .inject(0) { |sum, row| sum + (row[data_column_name] || 0) }
         series.push(:value => other_sum, :tooltip => _('Other'))
         categories.push([_('Other'), other_sum])
       end
@@ -389,30 +410,25 @@ module ReportFormatter
     end
 
     def build_numeric_chart_grouped
-      groups = mri.build_subtotals.reject { |k, _| k == :_total_ }
-
-      match = mri.graph[:column].match(/^(\w*)-(\w*):(\w*)$/)
-      (_model, column_name, aggreg) = match[1..3]
-      aggreg = aggreg.to_sym
-
       (keep, show_other) = keep_and_show_other
       show_other &&= (aggreg == :total) # FIXME: we only support :total
 
-      sorted_data = groups.sort_by { |_, data| data[aggreg][column_name] || 0 }
+      groups = mri.build_subtotals.reject { |k, _| k == :_total_ }
+      sorted_data = groups.sort_by { |_, data| data[aggreg][raw_column_name] || 0 }
 
       categories = []
       series = sorted_data.reverse.take(keep)
                .each_with_object(series_class.new(pie_type? ? :pie : :flat)) do |(key, data), a|
         tooltip = key
         tooltip = _('no value') if key.blank?
-        a.push(:value   => data[aggreg][column_name],
+        a.push(:value   => data[aggreg][raw_column_name],
                :tooltip => key)
-        categories.push([tooltip, data[aggreg][column_name]])
+        categories.push([tooltip, data[aggreg][raw_column_name]])
       end
 
       if show_other
         other_sum = Array(sorted_data[0, sorted_data.length - keep])
-                    .inject(0) { |sum, (_key, row)| sum + row[aggreg][column_name] }
+                    .inject(0) { |sum, (_key, row)| sum + row[aggreg][raw_column_name] }
 
         series.push(:value => other_sum, :tooltip => _('Other'))
         categories.push([_('Other'), other_sum])
@@ -429,9 +445,6 @@ module ReportFormatter
     def build_numeric_chart_grouped_2dim
       (sort1, sort2) = mri.sortby
       (keep, show_other) = keep_and_show_other
-      match = mri.graph[:column].match(/^([\w:]*)-([\w_]*):(\w*)$/)
-      (_model, column_name, aggreg) = match[1..3]
-      aggreg = aggreg.to_sym
       show_other &&= (aggreg == :total) # FIXME: we only support :total
 
       subtotals = mri.build_subtotals(true).reject { |k, _| k == :_total_ }
@@ -445,7 +458,7 @@ module ReportFormatter
       group_sums = groups.keys.each_with_object({}) do |key1, h|
         h[key1] = def_range_key2.inject(0) do |sum, key2|
           sub_key = "#{key1}__#{key2}"
-          subtotals.key?(sub_key) ? sum + subtotals[sub_key][aggreg][column_name] : sum
+          subtotals.key?(sub_key) ? sum + subtotals[sub_key][aggreg][raw_column_name] : sum
         end
       end
 
@@ -465,7 +478,7 @@ module ReportFormatter
       if show_other
         other_groups = Array(sorted_sums[0, sorted_sums.length - keep])
         other = other_groups.each_with_object(Hash.new(0)) do |(key, _), o|
-          groups[key].each { |row| o[row[sort2]] += row[column_name] }
+          groups[key].each { |row| o[row[sort2]] += row[raw_column_name] }
         end
       end
 
@@ -474,7 +487,7 @@ module ReportFormatter
       sort2_values.each do |val2|
         series = selected_groups.each_with_object(series_class.new) do |(key1, _), a|
           sub_key = "#{key1}__#{val2}"
-          value = subtotals.key?(sub_key) ? subtotals[sub_key][aggreg][column_name] : 0
+          value = subtotals.key?(sub_key) ? subtotals[sub_key][aggreg][raw_column_name] : 0
 
           a.push(:value   => value,
                  :tooltip => "#{key1} / #{val2}: #{value}")
@@ -549,6 +562,7 @@ module ReportFormatter
     end
 
     def build_reporting_chart_numeric(_maxcols, _divider)
+      return no_records_found_chart(_('Invalid chart definition')) unless mri.graph[:column].present?
       if mri.group.nil?
         build_numeric_chart_simple
       else

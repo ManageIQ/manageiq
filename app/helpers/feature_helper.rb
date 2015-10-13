@@ -2,13 +2,12 @@ module FeatureHelper
   def get_product_features(features_ids)
     feature_klass = collection_class(:features)
 
-    new_features = []
-    features_ids.each do |feature|
+    new_features = features_ids.map do |feature|
       # Look for the feature identifier field first as this will remain constant
       if feature.key?('identifier') && !feature['identifier'].nil?
-        new_features.push(resource_search_by_criteria('identifier', feature['identifier'], feature_klass))
+        resource_search_by_criteria('identifier', feature['identifier'], feature_klass)
       else # Fallback to a feature id or href field.
-        new_features.push(resource_search(parse_id(feature, 'features'), 'features', feature_klass))
+        resource_search(parse_id(feature, 'features'), 'features', feature_klass)
       end
     end
     new_features.compact

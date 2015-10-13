@@ -32,7 +32,7 @@ I18n.enforce_available_locales = true
 I18n.backend.load_translations
 
 $terminal.wrap_at = 80
-$terminal.page_at = 21
+$terminal.page_at = 25
 
 require 'appliance_console/errors'
 

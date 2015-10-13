@@ -16,7 +16,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
 
   it "pass platform attributes to automate" do
     stub_dialog
-    assert_automate_dialog_lookup('cloud', 'amazon')
+    assert_automate_dialog_lookup(admin, 'cloud', 'amazon')
 
     described_class.new({}, admin.userid)
   end

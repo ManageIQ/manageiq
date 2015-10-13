@@ -3,9 +3,9 @@ require "spec_helper"
 module MiqAeServiceTenantQuotaSpec
   describe MiqAeMethodService::MiqAeServiceTenantQuota do
     let(:settings) { {} }
-    let(:tenant) { Tenant.create(:name => 'fred', :domain => 'a.b', :parent => Tenant.seed) }
-    let(:cpu_quota) { TenantQuota.create(:name => "cpu_allocated", :unit => "int", :value => 2, :tenant_id => tenant.id) }
-    let(:storage_quota) { TenantQuota.create(:name => "storage_allocated", :unit => "GB", :value => 160, :tenant_id => tenant.id) }
+    let(:tenant) { Tenant.create(:name => 'fred', :domain => 'a.b') }
+    let(:cpu_quota) { TenantQuota.create(:name => "cpu_allocated", :unit => "int", :value => 2, :tenant => tenant) }
+    let(:storage_quota) { TenantQuota.create(:name => "storage_allocated", :unit => "GB", :value => 160, :tenant => tenant) }
 
     let(:st_cpu_quota) { MiqAeMethodService::MiqAeServiceTenantQuota.find(cpu_quota.id) }
     let(:st_storage_quota) { MiqAeMethodService::MiqAeServiceTenantQuota.find(storage_quota.id) }

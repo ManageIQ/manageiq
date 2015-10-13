@@ -307,7 +307,7 @@ describe MiqGroup do
 
   context ".sort_by_desc" do
     it "sorts by description" do
-      tenant = FactoryGirl.create(:tenant, :parent => Tenant.root_tenant)
+      tenant = FactoryGirl.create(:tenant)
       gc = FactoryGirl.create(:miq_group, :description => 'C', :tenant => tenant)
       ga = FactoryGirl.create(:miq_group, :description => 'a', :tenant => tenant)
       gb = FactoryGirl.create(:miq_group, :description => 'B', :tenant => tenant)

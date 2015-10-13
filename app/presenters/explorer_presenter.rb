@@ -19,7 +19,6 @@ class ExplorerPresenter
   #                                       compulsory key :skip_days
   #   init_dashboard
   #   ajax_action                      -- Hash of options for AJAX action to fire
-  #   cell_a_view
   #   clear_gtl_list_grid
   #   right_cell_text
   #   ManageIQ.record.parentId
@@ -89,8 +88,6 @@ class ExplorerPresenter
 
     @out << "miqDeleteDynatreeCookies('#{@options[:clear_tree_cookies]}')" if @options[:clear_tree_cookies]
 
-    @out << "dhxAccord.openItem('#{@options[:open_accord]}');" unless @options[:open_accord].to_s.empty?
-
     if @options[:remove_nodes]
       @out << "miqRemoveNodeChildren('#{@options[:active_tree]}',
                                      '#{@options[:add_nodes][:key]}'
@@ -117,7 +114,6 @@ class ExplorerPresenter
     @out << "ManageIQ.widget.dashboardUrl = '#{@options[:miq_widget_dd_url]}';" if @options[:miq_widget_dd_url]
 
     # Always set 'def' view in left cell as active in case it was changed to show compare/drift sections
-    @out << "if (miqDomElementExists('custom_left_cell_div')) dhxLayout.cells('a').view('def').setActive();"
     @out << "var show_clear_search = undefined"
     @out << "
       if ($('#advsearchModal').hasClass('modal fade in')){
@@ -137,8 +133,6 @@ class ExplorerPresenter
     @out << 'miqInitDashboardCols();' if @options[:init_dashboard]
 
     @out << ajax_action(@options[:ajax_action]) if @options[:ajax_action]
-
-    @out << "dhxLayout.cells('a').view('#{@options[:cell_a_view]}').setActive();" if @options[:cell_a_view]
 
     @out << "ManageIQ.grids.grids['gtl_list_grid'] = undefined;" if @options[:clear_gtl_list_grid]
 
