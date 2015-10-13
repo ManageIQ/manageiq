@@ -6,6 +6,7 @@ class Tenant < ActiveRecord::Base
   DEFAULT_URL = nil
 
   include ReportableMixin
+  include ActiveVmAggregationMixin
   acts_as_miq_taggable
 
   default_value_for :name,        "My Company"
@@ -16,6 +17,8 @@ class Tenant < ActiveRecord::Base
   has_many :providers
   has_many :ext_management_systems
   has_many :vm_or_templates
+  has_many :vms
+  has_many :miq_templates
   has_many :service_template_catalogs
   has_many :service_templates
 
@@ -135,6 +138,12 @@ class Tenant < ActiveRecord::Base
     end
 
     get_quotas
+  end
+
+  def used_quotas
+    tenant_quotas.each_with_object({}) do |q, h|
+      h[q.name.to_sym] = q.quota_hash.merge(:value => q.used)
+    end.reverse_merge(TenantQuota.quota_definitions)
   end
 
   # @return [Boolean] Is this a default tenant?

@@ -588,6 +588,93 @@ describe Tenant do
     end
   end
 
+  describe ".used_quotas" do
+    let(:tenant) { FactoryGirl.create(:tenant, :parent => default_tenant) }
+    let(:ems) { FactoryGirl.create(:ems_vmware, :name => 'ems', :tenant => tenant) }
+
+    let(:vm1) do
+      FactoryGirl.create(
+        :vm_vmware,
+        :tenant_id             => tenant.id,
+        :host_id               => 1,
+        :ext_management_system => ems,
+        :hardware              => FactoryGirl.create(
+          :hardware,
+          :memory_cpu   => 1024,
+          :logical_cpus => 1,
+          :disks        => [FactoryGirl.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
+        )
+      )
+    end
+
+    let(:vm2) do
+      FactoryGirl.create(
+        :vm_vmware,
+        :tenant_id             => tenant.id,
+        :host_id               => 1,
+        :ext_management_system => ems,
+        :hardware              => FactoryGirl.create(
+          :hardware,
+          :memory_cpu   => 1024,
+          :logical_cpus => 1,
+          :disks        => [FactoryGirl.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
+        )
+      )
+    end
+
+    let(:template) do
+      FactoryGirl.create(
+        :miq_template,
+        :name                  => "test",
+        :location              => "test.vmx",
+        :vendor                => "vmware",
+        :tenant_id             => tenant.id,
+        :host_id               => 1,
+        :ext_management_system => ems,
+        :hardware              => FactoryGirl.create(
+          :hardware,
+          :memory_cpu   => 1024,
+          :logical_cpus => 1,
+          :disks        => [FactoryGirl.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
+        )
+      )
+    end
+
+    before do
+      tenant.set_quotas(
+        :vms_allocated       => {:value => 20},
+        :mem_allocated       => {:value => 4096},
+        :cpu_allocated       => {:value => 4},
+        :storage_allocated   => {:value => 123_456_789},
+        :templates_allocated => {:value => 10}
+      )
+    end
+
+    it "can get the used quota values" do
+      vm1
+      template
+
+      used = tenant.used_quotas
+      expect(used[:vms_allocated][:value]).to       eql 1
+      expect(used[:mem_allocated][:value]).to       eql 1_073_741_824
+      expect(used[:cpu_allocated][:value]).to       eql 1
+      expect(used[:storage_allocated][:value]).to   eql 12_345_678
+      expect(used[:templates_allocated][:value]).to eql 1
+    end
+
+    it "ignores retired vms" do
+      vm1
+      vm2.update_attribute(:retired, true)
+
+      used = tenant.used_quotas
+      expect(used[:vms_allocated][:value]).to       eql 1
+      expect(used[:mem_allocated][:value]).to       eql 1_073_741_824
+      expect(used[:cpu_allocated][:value]).to       eql 1
+      expect(used[:storage_allocated][:value]).to   eql 12_345_678
+      expect(used[:templates_allocated][:value]).to eql 0
+    end
+  end
+
   describe "assigning tenants" do
     let(:tenant)       { FactoryGirl.build(:tenant, :parent => default_tenant) }
     let(:tenant_users) { FactoryGirl.create(:miq_user_role, :name => "tenant-users") }

@@ -10,7 +10,7 @@ module ActiveVmAggregationMixin
   end
 
   def active_vms
-    vms.select(&:active?)
+    vms.includes(:ext_management_system => {}, :hardware => :disks).select(&:active?)
   end
 
   def active_vm_aggregation(field_name)
