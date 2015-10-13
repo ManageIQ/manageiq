@@ -11,6 +11,9 @@ class MiqAeYamlExport
     @klass         = options['class']
     @namespace     = options['namespace']
     @options       = options
+    tenant_id      = @options['tenant_id']
+    @tenant        = @options['tenant'] || (tenant_id ? Tenant.find_by!(:id => tenant_id) : Tenant.root_tenant)
+    @is_root_tenant = @tenant == Tenant.root_tenant
     reset_manifest
     @domain_object = domain_object unless @domain == ALL_DOMAINS
   end
@@ -102,7 +105,8 @@ class MiqAeYamlExport
   end
 
   def write_all_domains
-    MiqAeDomain.all.each do |dom_obj|
+    domains = @is_root_tenant ? MiqAeDomain.all : @tenant.editable_domains
+    domains.each do |dom_obj|
       @domain = dom_obj.name
       @domain_object = domain_object
       write_domain
@@ -231,6 +235,7 @@ class MiqAeYamlExport
   end
 
   def domain_object
+    raise MiqAeException::DomainNotAccessible, "Domain [#{@domain}] not accessible" unless domain_accessible?
     MiqAeNamespace.find_by_fqname(@domain).tap do |dom|
       if dom.nil?
         _log.error("Domain: <#{@domain}> not found.")
@@ -258,5 +263,10 @@ class MiqAeYamlExport
   def swap_domain_path(fqname)
     return fqname if @options['export_as'].blank?
     fqname.gsub(/^\/#{@domain}/, @options['export_as'])
+  end
+
+  def domain_accessible?
+    @tenant.editable_domains.collect(&:name).map(&:upcase).include?(@domain.upcase) ||
+      @is_root_tenant
   end
 end
