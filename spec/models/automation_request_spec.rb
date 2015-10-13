@@ -126,7 +126,7 @@ describe AutomationRequest do
       expect(AuditEvent).not_to receive(:success)
       values = {}
 
-      request = described_class.make_request(nil, values, admin.userid) # TODO: nil
+      request = described_class.make_request(nil, values, admin)
 
       expect(request).to be_valid
       expect(request).to be_a_kind_of(AutomationRequest)

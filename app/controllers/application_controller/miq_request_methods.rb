@@ -744,7 +744,7 @@ module ApplicationController::MiqRequestMethods
     if @miq_request.workflow_class
       options = {}
       begin
-        options[:wf] = @miq_request.workflow_class.new(@options, session[:userid])                # Create a new provision workflow for this edit session
+        options[:wf] = @miq_request.workflow_class.new(@options, current_user)
       rescue MiqException::MiqVmError => bang
         @no_wf_msg = _("Cannot create Request Info, error: ") << bang.message
       end

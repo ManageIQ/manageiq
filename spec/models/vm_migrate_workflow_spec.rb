@@ -8,7 +8,7 @@ describe VmMigrateWorkflow do
 
   context "With a Valid Template," do
     context "#allowed_hosts" do
-      let(:workflow) { VmMigrateWorkflow.new({:src_ids => [vm.id]}, admin.userid) }
+      let(:workflow) { VmMigrateWorkflow.new({:src_ids => [vm.id]}, admin) }
 
       context "#allowed_hosts" do
         it "with no hosts" do
@@ -36,7 +36,7 @@ describe VmMigrateWorkflow do
       stub_dialog
 
       # if running_pre_dialog is set, it will run 'continue_request'
-      workflow = described_class.new(values = {:running_pre_dialog => false}, admin.userid)
+      workflow = described_class.new(values = {:running_pre_dialog => false}, admin)
 
       expect(AuditEvent).to receive(:success).with(
         :event        => "vm_migrate_request_created",
@@ -62,7 +62,7 @@ describe VmMigrateWorkflow do
 
       # updates a request
 
-      workflow = described_class.new(values, alt_user.userid)
+      workflow = described_class.new(values, alt_user)
 
       expect(AuditEvent).to receive(:success).with(
         :event        => "vm_migrate_request_updated",

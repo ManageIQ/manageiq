@@ -53,7 +53,7 @@ class MiqRequestWorkflow
   def instance_var_init(values, requester, options)
     @values       = values
     @filters      = {}
-    @requester    = User.lookup_by_identity(requester)
+    @requester    = requester.kind_of?(User) ? requester : User.lookup_by_identity(requester)
     @requester.miq_group_description = values[:requester_group]
     @values.merge!(options) unless options.blank?
   end

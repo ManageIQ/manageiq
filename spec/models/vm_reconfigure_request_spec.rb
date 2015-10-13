@@ -46,7 +46,7 @@ describe VmReconfigureRequest do
       # the dialogs populate this
       values = {:src_ids => [vm_vmware.id]}
 
-      request = described_class.make_request(nil, values, admin.userid) # TODO: nil
+      request = described_class.make_request(nil, values, admin)
 
       expect(request).to                be_valid
       expect(request).to                be_a_kind_of(described_class)
@@ -64,7 +64,7 @@ describe VmReconfigureRequest do
         :userid       => alt_user.userid,
         :message      => "VM Reconfigure request updated by <#{alt_user.userid}> for Vm:#{[vm_vmware.id].inspect}"
       )
-      described_class.make_request(request, values, alt_user.userid)
+      described_class.make_request(request, values, alt_user)
     end
   end
 
