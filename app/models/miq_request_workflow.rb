@@ -382,11 +382,12 @@ class MiqRequestWorkflow
     values[:vm_tags] = ta.compact
   end
 
-  def set_ws_values(values, key_name, additional_values, parser = :parse_ws_string, parser_options = {})
-    # Tags are passed as category=value.  Example: cc=001|environment=test
-    ws_values = values[key_name] = {}
+  # @param parser [:parse_ws_string|:parse_ws_string_v1]
+  # @param additional_values [String] values of the form cc=001|environment=test
+  def ws_values(additional_values, parser = :parse_ws_string, parser_options = {})
     parsed_values = send(parser, additional_values, parser_options)
-    parsed_values.each { |k, v| ws_values[k.to_sym] = v }
+
+    parsed_values.each_with_object({}) { |(k, v), ws_values| ws_values[k.to_sym] = v }
   end
 
   def parse_ws_string_v1(values, _options = {})

@@ -235,9 +235,9 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     p.ws_host_fields(values, vm_fields)
     p.ws_requester_fields(values, requester)
     p.set_ws_tags(values, tags)    # Tags are passed as category=value|cat2=value2...  Example: cc=001|environment=test
-    p.set_ws_values(values, :ws_values, options.values)
-    p.set_ws_values(values, :ws_ems_custom_attributes, options.ems_custom_attributes, :parse_ws_string, :modify_key_name => false)
-    p.set_ws_values(values, :ws_miq_custom_attributes, options.miq_custom_attributes, :parse_ws_string, :modify_key_name => false)
+    values[:ws_values] = p.ws_values(options.values)
+    values[:ws_ems_custom_attributes] = p.ws_values(options.ems_custom_attributes, :parse_ws_string, :modify_key_name => false)
+    values[:ws_miq_custom_attributes] = p.ws_values(options.miq_custom_attributes, :parse_ws_string, :modify_key_name => false)
 
     p.validate_values(values)
 

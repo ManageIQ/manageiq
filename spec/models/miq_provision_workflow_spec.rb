@@ -47,6 +47,14 @@ describe MiqProvisionWorkflow do
           MiqPassword.encrypted?(request.options[:root_password]).should be_true
           MiqPassword.decrypt(request.options[:root_password]).should == password_input
         end
+
+        it "should set values" do
+          request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
+            "1.1", admin, "name=template", "vm_name=spec_test",
+            nil, nil, "abc=true", nil, nil)
+
+          expect(request.options[:ws_values]).to include(:abc => "true")
+        end
       end
 
       context "#show_customize_fields" do
