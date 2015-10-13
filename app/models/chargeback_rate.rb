@@ -45,6 +45,27 @@ class ChargebackRate < ActiveRecord::Base
   end
 
   def self.seed
+    #seeding the chargeback_rate_detail_currencies
+    fixture_file = File.join(FIXTURE_DIR, "chargeback_rate_detail_currencies.yml")
+    if File.exist?(fixture_file)
+      fixture = YAML.load_file(fixture_file)
+      fixture.each do |cbr|
+        rec = ChargebackRateDetailCurrency.find_by_name(cbr[:name])
+        if rec.nil?
+          _log.info("Creating [#{cbr[:name]}] with symbols=[#{cbr[:symbol]}]!!!!")
+          rec = ChargebackRateDetailCurrency.create(cbr)
+        else
+          fixture_mtime = File.mtime(fixture_file).utc
+          if fixture_mtime > rec.created_at
+            _log.info("Updating [#{cbr[:name]}] with symbols=[#{cbr[:symbol]}]")
+            rec.update_attributes(cbr)
+            rec.created_at = fixture_mtime
+            rec.save
+          end
+        end
+      end
+    end
+    #seeding the rates fixtures
     fixture_file = File.join(FIXTURE_DIR, "chargeback_rates.yml")
     if File.exist?(fixture_file)
       fixture = YAML.load_file(fixture_file)
@@ -52,6 +73,14 @@ class ChargebackRate < ActiveRecord::Base
       fixture.each do |cbr|
         rec = find_by_guid(cbr[:guid])
         rates = cbr.delete(:rates)
+        #seeding the chargeback_rate_detail_currencies
+        rates.each do |rate|
+            currency = ChargebackRateDetailCurrency.find_by(name: rate.delete(:type_currency))
+            _log.info("Creating"+ currency.inspect)
+            if not currency.nil?
+              rate[:chargeback_rate_detail_currency_id]=currency.id
+            end
+          end
         if rec.nil?
           _log.info("Creating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
           rec = create!(cbr)
