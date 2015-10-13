@@ -25,6 +25,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "vcr", "~> 2.6"
   spec.add_development_dependency "webmock"
   spec.add_development_dependency "rspec"
-
-  spec.add_development_dependency "pry"
+  # dependency for webmock, remove once merged: https://github.com/bblimke/webmock/pull/530
+  spec.add_development_dependency "rack"
 end
