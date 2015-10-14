@@ -651,61 +651,48 @@ module ReportController::Menus
   end
 
   # Render the view data to xml for the grid view
-  def menu_to_xml(view, header)
-    xml = MiqXml.createDoc(nil)
-    # Create root element
-    root = xml.add_element("rows")
-    # Added header properties
-    head = root.add_element("head")
-    new_column = head.add_element("column", "width" => "200", "align" => "left", "sort" => "na")
-    new_column.add_attribute("type", 'edtxt')
-    new_column.text = header.gsub(/&/n, '&amp;') unless header.blank?
-    view.each_with_index do |row, _i|
-      if row      # don't add if row came in a nil
-        if @edit[:user_typ]
-          # if user is admin/super admin, no need to add special characters in id
-          new_row = root.add_element("row", "id" => "i_#{row.gsub(/&/n, '&amp;')}")
-          new_row.add_element("cell", "align" => "left").text = row  # Checkbox column unchecked
-        else
-          if @edit[:group_reports].empty?
-            # if group does not own any reports then add special characters in id, they cannot delete any folders.
-            new_row = root.add_element("row", {"id" => "__|i_#{row.gsub(/&/n, '&amp;')}"})
-            new_row.add_element("cell", "align" => "left").text = row  # Checkbox column unchecked
-          else
-            prefix = "|-|"
-            @edit[:group_reports].each do |rep|
-              # need to check if report is not owned by user add special character to the row id so it can be tracked in JS and folder cannnot be deleted in menu editor
-              nodes = rep.split('/')
-              val = session[:node_selected].split('__')[0]
-              if val == "b"
-                # if top node
-                if nodes[0] == row
-                  # if report belongs to group
-                  @row_id = "i_#{row.gsub(/&/n, '&amp;')}"
-                  # break
-                else
-                  # if report is owned by other group
-                  @row_id = "#{prefix}i_#{row.gsub(/&/n, '&amp;')}"
-                end
-              else
-                # if second level folder node
-                if nodes[1] == row
-                  # if report belongs to group
-                  @row_id = "i_#{row.gsub(/&/n, '&amp;')}"
-                  # break
-                else
-                  # if report is owned by other group
-                  @row_id = "#{prefix}i_#{row.gsub(/&/n, '&amp;')}"
-                end
-              end
+  def menu_folders(view, header)
+    view.compact.map do |row|
+      row_id = nil
+
+      if @edit[:user_typ]
+        # if user is admin/super admin, no need to add special characters in id
+        row_id = "i_#{row.gsub(/&/n, '&amp;')}"
+      elsif @edit[:group_reports].empty?
+        # if group does not own any reports then add special characters in id, they cannot delete any folders.
+        row_id = "__|i_#{row.gsub(/&/n, '&amp;')}"
+      else
+        prefix = "|-|"
+        @edit[:group_reports].each do |rep|
+          # need to check if report is not owned by user add special character to the row id so it can be tracked in JS and folder cannnot be deleted in menu editor
+          nodes = rep.split('/')
+          val = session[:node_selected].split('__')[0]
+          if val == "b"
+            # if top node
+            if nodes[0] == row
+              # if report belongs to group
+              row_id = "i_#{row.gsub(/&/n, '&amp;')}"
+            else
+              # if report is owned by other group
+              row_id = "#{prefix}i_#{row.gsub(/&/n, '&amp;')}"
             end
-            new_row = root.add_element("row", "id" => @row_id)
-            new_row.add_element("cell", "align" => "left").text = row  # Checkbox column unchecked
+          else
+            # if second level folder node
+            if nodes[1] == row
+              # if report belongs to group
+              row_id = "i_#{row.gsub(/&/n, '&amp;')}"
+              # break
+            else
+              # if report is owned by other group
+              row_id = "#{prefix}i_#{row.gsub(/&/n, '&amp;')}"
+            end
           end
         end
       end
+
+      {:id   => row_id,
+       :text => row}
     end
-    xml.to_s
   end
 
   def edit_folder
@@ -737,7 +724,7 @@ module ReportController::Menus
       end
     end
     @edit[:folders] = @folders.dup
-    @grid_xml = menu_to_xml(@edit[:folders], @selected[1])
+    @grid_folders = menu_folders(@edit[:folders], @selected[1])
   end
 
   def menu_get_all

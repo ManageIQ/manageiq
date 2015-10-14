@@ -9,7 +9,7 @@
           %tr
             %td{:valign => "top"}
               #folder_grid
-                = raw @grid_xml
+                = raw folders.to_json
 
             %td{:width => "24", :valign => "middle"}
               - buttons = [{:label => _("Move selected folder top"),
