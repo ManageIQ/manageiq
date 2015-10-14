@@ -1082,10 +1082,10 @@ class MiqAction < ActiveRecord::Base
     data  = fname.read.split("\n")
     cols  = data.shift.split(",").map(&:to_sym)
 
-    data.each do |a|
-      next if a.starts_with?('#') # skip commented lines
+    data.each do |line|
+      next if line.starts_with?('#') # skip commented lines
 
-      arr = a.split(",")
+      arr = line.split(",")
 
       action = Hash[cols.zip(arr)]
       action[:action_type] = 'default'
