@@ -44,7 +44,7 @@ describe ResourceAction do
     context 'with target' do
       it "validates queue entry" do
         target               = FactoryGirl.create(:vm_vmware)
-        q_args[:object_type] = target.class.name
+        q_args[:object_type] = target.class.base_class.name
         q_args[:object_id]   = target.id
         MiqQueue.should_receive(:put).with(q_options).once
         ra.deliver_to_automate_from_dialog({}, target)
