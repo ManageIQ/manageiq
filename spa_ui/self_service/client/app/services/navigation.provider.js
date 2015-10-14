@@ -36,7 +36,7 @@
     }
 
     /** @ngInject */
-    function Navigation($rootScope, $window, lodash, NavCounts) {
+    function Navigation($rootScope, $window, lodash) {
       var service = {
         items: model.items,
         state: model.state
@@ -50,8 +50,6 @@
       // Private
       function init() {
         win = angular.element($window);
-        // Set item counts
-        service.items.primary = NavCounts.getCounts(service.items.primary);
         // Throttle firing of resize checks to reduce application digests
         win.bind('resize', lodash.throttle(onResize, model.resizeThrottle));
         $rootScope.$watch(windowWidth, processWindowWidth, true);
