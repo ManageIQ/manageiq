@@ -10,7 +10,7 @@ module ContainerNodeHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(ems container_services container_replicators container_groups containers lives_on)
+    %i(ems container_routes container_services container_replicators container_groups containers lives_on)
   end
 
   def textual_group_conditions
