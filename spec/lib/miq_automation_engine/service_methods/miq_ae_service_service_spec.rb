@@ -4,6 +4,7 @@ module MiqAeServiceServiceSpec
   describe MiqAeMethodService::MiqAeServiceService do
     let(:service)         { FactoryGirl.create(:service, :name => "test_service", :description => "test_description") }
     let(:service_service) { MiqAeMethodService::MiqAeServiceService.find(service.id) }
+    let(:user)            { FactoryGirl.create(:user_with_group) }
 
     before(:each) do
       MiqAutomateHelper.create_service_model_method('SPEC_DOMAIN', 'EVM',
@@ -15,7 +16,7 @@ module MiqAeServiceServiceSpec
     end
 
     def invoke_ae
-      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?Service::service=#{@service.id}")
+      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?Service::service=#{@service.id}", user)
     end
 
     it "#remove_from_vmdb" do

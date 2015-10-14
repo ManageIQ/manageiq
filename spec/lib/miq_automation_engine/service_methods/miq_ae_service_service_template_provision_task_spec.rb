@@ -10,13 +10,14 @@ module MiqAeServiceServiceTemplateProvisionTaskSpec
       MiqAutomateHelper.create_service_model_method('SPEC_DOMAIN', 'EVM',
                                                     'AUTOMATE', 'test1', 'test')
       @ae_method     = ::MiqAeMethod.first
+      @user          = FactoryGirl.create(:user_with_group)
       @ae_result_key = 'foo'
       @options       = {}
       @service_template_provision_task = FactoryGirl.create(:service_template_provision_task,  :state => 'pending', :status => 'Ok', :request_type => "clone_to_service", :options => @options)
     end
 
     def invoke_ae
-      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?ServiceTemplateProvisionTask::service_template_provision_task=#{@service_template_provision_task.id}")
+      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?ServiceTemplateProvisionTask::service_template_provision_task=#{@service_template_provision_task.id}", @user)
     end
 
     it "#execute" do

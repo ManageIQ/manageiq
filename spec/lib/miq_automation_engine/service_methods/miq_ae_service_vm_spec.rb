@@ -6,6 +6,7 @@ module MiqAeServiceVmSpec
     let(:service_vm) { MiqAeMethodService::MiqAeServiceManageIQ_Providers_Vmware_InfraManager_Vm.find(vm.id) }
 
     before(:each) do
+      @user = FactoryGirl.create(:user_with_group)
       MiqAutomateHelper.create_service_model_method('SPEC_DOMAIN', 'EVM',
                                                     'AUTOMATE', 'test1', 'test')
       @ae_method     = ::MiqAeMethod.first
@@ -15,7 +16,7 @@ module MiqAeServiceVmSpec
     end
 
     def invoke_ae
-      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?Vm::vm=#{@vm.id}")
+      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?Vm::vm=#{@vm.id}", @user)
     end
 
     it "#ems_custom_keys" do

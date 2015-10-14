@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe "check_removed_from_provider Method Validation" do
   before(:each) do
+    @user = FactoryGirl.create(:user_with_group)
     @zone = FactoryGirl.create(:zone)
     @ems  = FactoryGirl.create(:ems_vmware, :zone => @zone)
     @host = FactoryGirl.create(:host)
@@ -12,7 +13,7 @@ describe "check_removed_from_provider Method Validation" do
     @ins  = "/Infrastructure/VM/Retirement/StateMachines/Methods/CheckRemovedFromProvider"
   end
 
-  let(:ws) { MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}&ae_state_data=#{URI.escape(YAML.dump(@ae_state))}") }
+  let(:ws) { MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}&ae_state_data=#{URI.escape(YAML.dump(@ae_state))}", @user) }
 
   it "returns 'ok' if the vm is not connected to a ems" do
     ws.root['vm']['registered'].should  eql(false)

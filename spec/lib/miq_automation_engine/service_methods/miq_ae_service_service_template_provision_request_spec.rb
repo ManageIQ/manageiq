@@ -11,12 +11,12 @@ module MiqAeServiceServiceTemplateProvisionRequestSpec
                                                     'AUTOMATE', 'test1', 'test')
       @ae_method     = ::MiqAeMethod.first
       @ae_result_key = 'foo'
-      user           = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
-      @service_template_provision_request = FactoryGirl.create(:service_template_provision_request, :requester => user, :userid => user.userid)
+      @user          = FactoryGirl.create(:user_with_group, :name => 'Fred Flintstone',  :userid => 'fred')
+      @service_template_provision_request = FactoryGirl.create(:service_template_provision_request, :requester => @user, :userid => @user.userid)
     end
 
     def invoke_ae
-      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?ServiceTemplateProvisionRequest::service_template_provision_request=#{@service_template_provision_request.id}")
+      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?ServiceTemplateProvisionRequest::service_template_provision_request=#{@service_template_provision_request.id}", @user)
     end
 
     it "#approve" do

@@ -17,9 +17,9 @@ module MiqAeEngine
   AE_IMPORT_DIR          = File.expand_path(File.join(AE_ROOT_DIR,   'import'))
   AE_DEFAULT_IMPORT_FILE = File.expand_path(File.join(AE_IMPORT_DIR, 'automate.xml'))
 
-  def self.instantiate(uri)
+  def self.instantiate(uri, user)
     $miq_ae_logger.info("MiqAeEngine: Instantiating Workspace for URI=#{uri}")
-    workspace, t = Benchmark.realtime_block(:total_time) { MiqAeWorkspaceRuntime.instantiate(uri) }
+    workspace, t = Benchmark.realtime_block(:total_time) { MiqAeWorkspaceRuntime.instantiate(uri, user) }
     $miq_ae_logger.info("MiqAeEngine: Instantiating Workspace for URI=#{uri}...Complete - Counts: #{format_benchmark_counts(t)}, Timings: #{format_benchmark_times(t)}")
     workspace
   end

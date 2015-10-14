@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe "amazon_pre_retirement Method Validation" do
   before(:each) do
+    @user = FactoryGirl.create(:user_with_group)
     @zone = FactoryGirl.create(:zone)
     @ems  = FactoryGirl.create(:ems_vmware, :zone => @zone)
     @ebs_hardware = FactoryGirl.create(:hardware, :bitness             => 64,
@@ -18,13 +19,13 @@ describe "amazon_pre_retirement Method Validation" do
 
   it "calls stop for ebs instances" do
     @vm.hardware = @ebs_hardware
-    MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}#amazon")
+    MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}#amazon", @user)
     MiqQueue.exists?(:method_name => 'stop', :instance_id => @vm.id, :role => 'ems_operations').should be_true
   end
 
   it "should not call stop for instance store instances" do
     @vm.hardware = @is_hardware
-    MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}#amazon")
+    MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}#amazon", @user)
     MiqQueue.exists?(:method_name => 'stop', :instance_id => @vm.id, :role => 'ems_operations').should be_false
   end
 end

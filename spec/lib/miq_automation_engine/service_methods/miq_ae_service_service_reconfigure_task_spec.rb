@@ -12,6 +12,7 @@ module MiqAeServiceServiceReconfigureTaskSpec
 
     let(:ae_method) { ::MiqAeMethod.first }
     let(:options)   { {} }
+    let(:user)      { FactoryGirl.create(:user_with_group) }
     let(:task)      do
       FactoryGirl.create(:service_reconfigure_task,
                          :state        => 'pending',
@@ -21,7 +22,7 @@ module MiqAeServiceServiceReconfigureTaskSpec
     end
 
     def invoke_ae
-      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?ServiceReconfigureTask::service_reconfigure_task=#{task.id}")
+      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?ServiceReconfigureTask::service_reconfigure_task=#{task.id}", user)
     end
 
     context "#status" do

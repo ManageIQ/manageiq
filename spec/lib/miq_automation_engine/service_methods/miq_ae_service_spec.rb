@@ -4,6 +4,7 @@ module MiqAeServiceSpec
   describe MiqAeMethodService::MiqAeService do
     before(:each) do
       @domain = 'TEST_DOMAIN'
+      @user   = FactoryGirl.create(:user_with_group)
       identifiers = {:domain => @domain, :namespace => 'EVM',
                           :class  => 'AUTOMATE', :instance => 'test1', :method => 'test'}
       fields      = [{:name => 'method1', :type => 'method',
@@ -19,7 +20,7 @@ module MiqAeServiceSpec
     end
 
     def invoke_ae
-      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1")
+      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1", @user)
     end
 
     def assert_readonly_instance(automate_method_script)
