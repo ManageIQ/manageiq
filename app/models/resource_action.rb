@@ -19,7 +19,9 @@ class ResourceAction < ActiveRecord::Base
       :automate_message => ae_message,
       :attrs            => (ae_attributes || {}).merge(override_attrs || {}),
     }.merge(override_values).tap do |args|
-      args[:user_id]   ||= user.try(:id)
+      args[:user_id] ||= user.id
+      args[:miq_group_id] ||= user.current_group.id
+      args[:tenant_id] ||= user.current_tenant.id
     end
   end
 

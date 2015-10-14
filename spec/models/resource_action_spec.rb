@@ -12,6 +12,8 @@ describe ResourceAction do
         :instance_name    => nil,
         :automate_message => nil,
         :user_id          => user.id,
+        :miq_group_id     => user.current_group.id,
+        :tenant_id        => user.current_tenant.id,
         :attrs            => {},
       }
     end
