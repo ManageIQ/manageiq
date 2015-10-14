@@ -30,12 +30,21 @@ describe MiqAeExport do
         expect { MiqAeExport.new('DoM2', options) }.to raise_exception(MiqAeException::DomainNotAccessible)
       end
     end
-  end
 
-  context "root tenant" do
-    let(:options) { {'export_dir' => Dir.tmpdir, 'overwrite' => true, 'tenant' => Tenant.root_tenant} }
-    it "cannot access other tenants domain" do
-      expect { MiqAeExport.new('DoM2', options) }.to raise_exception(MiqAeException::DomainNotAccessible)
+    context "root tenant" do
+      let(:options) { {'export_dir' => Dir.tmpdir, 'overwrite' => true, 'tenant' => Tenant.root_tenant} }
+      before do
+        create_ae_model(:name => "root_domain", :tenant => Tenant.root_tenant)
+      end
+      it "cannot access other tenants domain" do
+        expect { MiqAeExport.new('DoM2', options) }.to raise_exception(MiqAeException::DomainNotAccessible)
+      end
+    
+      it "with all domains shouldn't fetch other tenants domains" do
+        obj = MiqAeExport.new('*', options)
+        expect(obj).to receive(:write_domain).once
+        obj.export
+      end
     end
   end
 end

@@ -104,8 +104,7 @@ class MiqAeYamlExport
   end
 
   def write_all_domains
-    domains = @tenant.root? ? MiqAeDomain.all : @tenant.editable_domains
-    domains.each do |dom_obj|
+    @tenant.ae_domains.each do |dom_obj|
       @domain = dom_obj.name
       @domain_object = domain_object
       write_domain
