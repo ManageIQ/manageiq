@@ -5,7 +5,7 @@
 
 #gtl_div
   - view ||= @view
-  - table      = view.sub_table ? view.sub_table : view.table unless view.nil?
+  - table = view.sub_table ? view.sub_table : view.table unless view.nil?
   - action_url ||= "explorer"
   - @gtl_type = "grid" if @gtl_type.nil?
   - if view.nil? || table.data.length == 0

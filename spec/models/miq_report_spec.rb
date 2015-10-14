@@ -191,7 +191,9 @@ describe MiqReport do
 
       host2 = FactoryGirl.create(:host)
       vmb   = FactoryGirl.create(:vm_vmware, :host => host2, :name => "b")
+      vmb.stub(:archived?) { false }
       vmc   = FactoryGirl.create(:vm_vmware, :host => host2, :name => "c")
+      vmc.stub(:archived?) { false }
 
       report = MiqReport.new(:db => "Vm", :sortby => "name", :order => "Descending")
       results, = report.paged_view_search(
