@@ -187,7 +187,7 @@ class TreeNodeBuilder
   def node_with_display_name(image)
     text = object.display_name.blank? ? object.name : "#{object.display_name} (#{object.name})"
     if object.kind_of?(MiqAeNamespace) && object.domain?
-      editable_domain = User.current_tenant.editable_domains.include?(object)
+      editable_domain = editable_domain?(object)
       enabled_domain  = object.enabled
       unless editable_domain && enabled_domain
         text = add_read_only_suffix(text, editable_domain, enabled_domain)

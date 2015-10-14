@@ -2817,4 +2817,31 @@ describe ApplicationHelper do
       end
     end
   end
+
+  context "#build_toolbar_hide_button" do
+    before do
+      Tenant.seed
+      user = FactoryGirl.create(:user_with_group)
+      login_as user
+      @domain = FactoryGirl.create(:miq_ae_domain)
+      namespace = FactoryGirl.create(:miq_ae_namespace, :name => "test1", :parent => @domain)
+      @record = FactoryGirl.create(:miq_ae_class, :name => "test_class", :namespace_id => namespace.id)
+    end
+
+    it "Enables buttons for Unlocked domain" do
+      enabled = build_toolbar_hide_button('miq_ae_class_edit')
+      enabled.should eq(false)
+    end
+
+    it "Disables buttons for Locked domain" do
+      @domain.update_attributes(:system => true)
+      @domain.reload
+      enabled = build_toolbar_hide_button('miq_ae_class_edit')
+      enabled.should eq(true)
+    end
+
+    def role_allows(_)
+      true
+    end
+  end
 end
