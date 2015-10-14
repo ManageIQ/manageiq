@@ -44,6 +44,7 @@ class ApplicationHelper::ToolbarBuilder
     tb_buttons = {}                                           # Hash to hold button info
     tb_xml = MiqXml.createDoc(nil)                                  # XML to configure the toolbar
     root = tb_xml.add_element('toolbar')
+    toolbar = []
     groups_added = []
     sep_needed = false
     # if custom_hash
@@ -117,6 +118,7 @@ class ApplicationHelper::ToolbarBuilder
             end
           end
 
+          toolbar << props; current_item = props
           bs_node = root.add_element("item", props)                 # Add buttonSelect node
           bgi[:items].each_with_index do |bsi, bsi_idx|             # Go thru all of the buttonSelect items
             if bsi.key?(:separator)                             # If separator found, add it
@@ -145,6 +147,8 @@ class ApplicationHelper::ToolbarBuilder
               props["title"] = dis_title.kind_of?(String) ? CGI.escapeHTML(dis_title) : CGI.escapeHTML("#{title}")
             end
             bs_node.add_element("item", props)                      # Add buttonSelect child button node
+            current_item[:items] ||= []
+            current_item[:items] << props
             build_toolbar_save_button(tb_buttons, bsi, bgi[:buttonSelect]) if bsi[:button]  # Save if a button (not sep)
           end
           build_toolbar_save_button(tb_buttons, bgi) if bs_children || bgi[:buttonSelect] == "history_choice"
@@ -220,7 +224,7 @@ class ApplicationHelper::ToolbarBuilder
       end
     end
 
-    return tb_buttons.to_json.html_safe, tb_xml.to_s.html_safe
+    return tb_buttons.to_json.html_safe, tb_xml.to_s.html_safe, toolbar
   end
 
   def create_custom_button_hash(input, record, options = {})

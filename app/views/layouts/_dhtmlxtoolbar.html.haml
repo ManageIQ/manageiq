@@ -3,16 +3,20 @@
 
 %div{:id => tb}
 
-%script{:type => "text/javascript"}
+- if !request.xml_http_request? && !tb_yaml.nil?
+  - tb_buttons, tb_xml, buttons = build_toolbar_buttons_and_xml(tb_yaml)
 
-  - if !request.xml_http_request? && !tb_yaml.nil?
-    - tb_buttons, tb_xml = build_toolbar_buttons_and_xml(tb_yaml)
-
-
+  %script{:type => "text/javascript"}
     if (ManageIQ.toolbars === null)  ManageIQ.toolbars = {};
-    ManageIQ.toolbars['#{tb}'] = {obj: new dhtmlXToolbarObject("#{tb}", "miq_blue"), buttons: #{tb_buttons}, xml: "#{tb_xml}"};
+    //ManageIQ.toolbars['#{tb}'] = {obj: new dhtmlXToolbarObject("#{tb}", "miq_blue"), buttons: #{tb_buttons}, xml: "#{tb_xml}"};
 
-  - if @record
-    ManageIQ.record.recordId = '#{@record.id}';
-  - else
-    ManageIQ.record.recordId = null;
+    - if @record
+      ManageIQ.record.recordId = '#{@record.id}';
+    - else
+      ManageIQ.record.recordId = null;
+
+- content_for :new_toolbar do
+  - if !request.xml_http_request? && !tb_yaml.nil?
+    .toolbar-pf
+      - buttons.each do |button|
+        = raw toolbar_top_button(button)

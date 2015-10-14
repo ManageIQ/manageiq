@@ -22,6 +22,7 @@ class ApplicationController < ActionController::Base
   include ActionView::Helpers::DateHelper
   include ApplicationHelper
   include JsHelper
+  helper ToolbarHelper
   helper JsHelper
 
   helper CloudResourceQuotaHelper
@@ -44,11 +45,16 @@ class ApplicationController < ActionController::Base
   include_concern 'TreeSupport'
   include_concern 'SysprepAnswerFile'
 
+  before_action :reset_toolbar
   before_action :set_session_tenant, :except => [:window_sizes]
   before_action :get_global_session_data, :except => [:window_sizes, :authenticate]
   before_action :set_user_time_zone, :except => [:window_sizes]
   before_action :set_gettext_locale, :except => [:window_sizes]
   after_action :set_global_session_data, :except => [:window_sizes]
+
+  def reset_toolbar
+    @toolbars = {}
+  end
 
   ensure_security_headers
 
