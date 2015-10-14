@@ -851,6 +851,7 @@ en:
       EmsFolder:                Folder
       #EmsInfra:                 Infrastructure Provider
       ExtManagementSystem:      Provider
+      ExtManagementSystemPerformance: Performance - Provider
       FileDepotFtp:             FTP
       FileDepotFtpAnonymous:    Anonymous FTP
       FileDepotNfs:             NFS

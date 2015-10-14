@@ -22,6 +22,7 @@ class MiqExpression
     EmsEvent
     ManageIQ::Providers::InfraManager
     ExtManagementSystem
+    ExtManagementSystemPerformance
     Flavor
     Host
     HostPerformance
