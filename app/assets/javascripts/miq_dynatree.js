@@ -446,7 +446,8 @@ function miqMenuChangeRow(action, elem) {
       // quick and dirty edit - FIXME use a $modal when converted to angular
       var text = $(elem).text().trim();
       text = prompt("New name?", text);
-      $(elem).text(text);
+      if (text) // ! cancel
+        $(elem).text(text);
       break;
 
     case "up":
@@ -465,9 +466,19 @@ function miqMenuChangeRow(action, elem) {
 
     case "add":
       var count = grid.find('.list-group-item').length;
-      elem = $('<ul>').addClass('list-group');
-      elem.id("folder" + count);
-      elem.append(grid);
+
+      elem = $('<li>').addClass('list-group-item');
+      elem.attr('id', "folder" + count);
+      elem.text("New Folder");
+      elem.on('click', function() {
+        return miqMenuChangeRow('activate', this);
+      });
+      elem.on('dblclick', function() {
+        return miqMenuChangeRow('edit', this);
+      });
+
+      grid.append(elem);
+
       miqMenuChangeRow('activate', elem);
 
       // just shows a flash message
