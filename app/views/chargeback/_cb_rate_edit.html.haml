@@ -24,7 +24,7 @@
         = _('Select the currency: ')
       .col-md-8
         = select_tag("currency",
-          options_for_select(currency),
+          options_for_select(currency, @edit[:new][:currency]),
           "data-miq_observe" => {:url => url}.to_json)
 
   %h3= _('Rate Details')
