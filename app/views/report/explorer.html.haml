@@ -21,4 +21,4 @@
 
 -# Create from/to date JS vars to limit calendar starting from
 :javascript
-  ManageIQ.calendar.calDateFrom = miqCalendarDateConversion("#{@timezone_offset}");
+  ManageIQ.calendar.calDateFrom = miqCalendarDateConversion("#{@timezone_offset}").toDate();
