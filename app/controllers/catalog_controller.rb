@@ -697,6 +697,15 @@ class CatalogController < ApplicationController
 
   def ot_edit
     assert_privileges("orchestration_template_edit")
+    checked = find_checked_items
+    checked[0] = params[:id] if checked.blank? && params[:id]
+    @record = find_by_id_filtered(OrchestrationTemplate, checked[0])
+    if @record.in_use?
+      add_flash(_("Orchestration template \"%s\" is read-only and cannot be edited.") % @record.name, :error)
+      get_node_info(x_node)
+      replace_right_cell(x_node)
+      return
+    end
     ot_edit_set_form_vars(_("Editing %s"))
     replace_right_cell("ot_edit")
   end

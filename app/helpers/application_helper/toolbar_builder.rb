@@ -96,6 +96,18 @@ class ApplicationHelper::ToolbarBuilder
               end
             end
           end
+          if bgi[:buttonSelect] == "orchestration_template_vmdb_choice" && x_active_tree == :ot_tree && @record && @record.in_use?
+            bgi[:items].each do |bgsi|
+              if bgsi[:button] == "orchestration_template_edit"
+                bgsi[:enabled] = 'false'
+                bgsi[:title] = _('Orchestration Templates that are in use cannot be edited')
+              elsif bgsi[:button] == "orchestration_template_remove"
+                bgsi[:enabled] = 'false'
+                bgsi[:title] = _('Orchestration Templates that are in use cannot be removed')
+              end
+            end
+          end
+
           # Add a separator, if needed, before this buttonSelect
           if !sep_added && sep_needed
             if groups_added.include?(bg_idx) && groups_added.length > 1
