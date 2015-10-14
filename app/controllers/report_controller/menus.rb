@@ -64,7 +64,9 @@ module ReportController::Menus
 
     if params[:tree]
       @menu_lastaction = "commit"
-      rows = JSON.parse(params[:tree])
+      @sb[:tree_err] = false
+
+      rows = JSON.parse(params[:tree], :symbolize_names => true)
       rows.each do |row|
         if row[:text].nil?
           @sb[:tree_err] = true
@@ -73,7 +75,6 @@ module ReportController::Menus
           @sb[:tree_err] = true
           add_flash(_("%{field} '%{value}' is already in use") % {:field => "Folder name", :value => row[:text]}, :error)
         else
-          @sb[:tree_err] = false
           @edit[:tree_arr].push(row[:text])
           @edit[:tree_hash][row[:id].split('_')[1]] = row[:text]
         end
