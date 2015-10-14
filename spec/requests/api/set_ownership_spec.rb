@@ -4,7 +4,7 @@
 # set_ownership action availability to:
 # - Services                /api/services/:id
 # - Vms                     /api/vms/:id
-# - Templates               /api/templates:id
+# - Templates               /api/templates/:id
 #
 require 'spec_helper'
 
