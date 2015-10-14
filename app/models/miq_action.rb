@@ -1088,13 +1088,14 @@ class MiqAction < ActiveRecord::Base
       arr = a.split(",")
 
       action = Hash[cols.zip(arr)]
+      action[:action_type] = 'default'
 
       rec = find_by_name(action[:name])
       if rec.nil?
         _log.info("Creating [#{action[:name]}]")
-        rec = create(action.merge(:action_type => "default"))
+        rec = create(action)
       else
-        rec.attributes = action.merge(:action_type => "default")
+        rec.attributes = action
         if rec.changed? || (rec.options_was != rec.options)
           _log.info("Updating [#{action[:name]}]")
           rec.save
