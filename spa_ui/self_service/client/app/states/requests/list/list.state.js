@@ -46,20 +46,34 @@
       onClick: handleClick
     };
 
+    var listState = {
+      sort: {
+        isAscending: false,
+        currentField: { id: 'requested', title: 'Requested Date', sortType: 'numeric' }
+      }
+    };
+
     vm.toolbarConfig = {
       filterConfig: {
         fields: [
+           {
+            id: 'description',
+            title:  'Description',
+            placeholder: 'Filter by Description',
+            sortType: 'alpha'
+          },
           {
-            id: 'request_state',
-            title: 'Request State',
-            placeholder: 'Filter by Request State',
+            id: 'request_id',
+            title: 'Request Id',
+            placeholder: 'Filter by ID',
             filterType: 'text'
           },
           {
-            id: 'id',
-            title: 'Request Id',
-            placeholder: 'Filter by Request ID',
-            filterType: 'text'
+            id: 'request_state',
+            title: 'Request Status',
+            placeholder: 'Filter by Status',
+            filterType: 'select',
+            filterValues: ['Pending', 'Denied', 'Finished']
           }
         ],
         resultsCount: vm.requestsList.length,
@@ -70,7 +84,7 @@
         fields: [
           {
             id: 'description',
-            title: 'Name',
+            title: 'Description',
             sortType: 'alpha'
           },
           {
@@ -80,13 +94,23 @@
           },
           {
             id: 'requested',
-            title: 'Requested',
+            title: 'Requested Date',
             sortType: 'numeric'
+          },
+          {
+            id: 'status',
+            title: 'Status',
+            sortType: 'alpha'
           }
         ],
-        onSortChange: sortChange
+        onSortChange: sortChange,
+        isAscending: listState.sort.isAscending,
+        currentField: listState.sort.currentField
       }
     };
+
+    /* Set the list sort state */
+    sortChange(listState.sort.currentField, listState.sort.isAscending);
 
     function handleClick(item, e) {
       $state.go('requests.details', {requestId: item.id});
@@ -94,6 +118,10 @@
 
     function sortChange(sortId, isAscending) {
       vm.requestsList.sort(compareFn);
+
+      /* Keep track of the current sorting state */
+      listState.sort.isAscending = isAscending;
+      listState.sort.currentField = sortId;
     }
 
     function compareFn(item1, item2) {
@@ -104,6 +132,8 @@
         compValue = item1.id - item2.id;
       } else if (vm.toolbarConfig.sortConfig.currentField.id === 'requested') {
         compValue = new Date(item1.created_on) - new Date(item2.created_on);
+      } else if (vm.toolbarConfig.sortConfig.currentField.id === 'status') {
+        compValue = item1.request_state.localeCompare(item2.request_state);
       }
 
       if (!vm.toolbarConfig.sortConfig.isAscending) {
@@ -123,6 +153,9 @@
 
       applyFilters(filters);
       vm.toolbarConfig.filterConfig.resultsCount = vm.requestsList.length;
+
+      /* Make sure sorting direction is maintained */
+      sortChange(listState.sort.currentField, listState.sort.isAscending);
     }
 
     function applyFilters(filters) {
@@ -156,12 +189,13 @@
     }
 
     function matchesFilter(item, filter) {
-      var match = true;
-      if (filter.id === 'request_state') {
+      if ('description' === filter.id) {
+        return item.description.toLowerCase().indexOf(filter.value.toLowerCase()) !== -1;
+      } else if (filter.id === 'request_state') {
         return item.request_state.toLowerCase() === filter.value.toLowerCase();
-      } else if (filter.id === 'id') {
-        return Number(item.id) === Number(filter.value);
-      }
+      } else if (filter.id === 'request_id') {
+        return String(item.id).toLowerCase().indexOf(filter.value.toLowerCase()) !== -1;
+      } 
 
       return false;
     }
