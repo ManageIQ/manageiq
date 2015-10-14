@@ -723,8 +723,7 @@ module ReportController::Menus
       end
     end
     @edit[:folders] = @folders.dup
-    @grid_folders = {:folders => menu_folders(@edit[:folders]),
-                     :header  => @selected[1]}
+    @grid_folders = menu_folders(@edit[:folders])
   end
 
   def menu_get_all

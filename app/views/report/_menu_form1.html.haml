@@ -9,11 +9,8 @@
           %tr
             %td{:valign => "top"}
               #folder_grid
-                %h5
-                  = h folders[:header]
-
                 %ul.list-group
-                  - folders[:folders].each do |folder|
+                  - folders.each do |folder|
                     %li.list-group-item{:id => folder[:id], :onclick => "return miqMenuChangeRow('activate', this)", :ondblclick => "return miqMenuChangeRow('edit', this)"}
                       = h folder[:text]
 
