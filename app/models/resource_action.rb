@@ -4,7 +4,7 @@ class ResourceAction < ActiveRecord::Base
 
   serialize  :ae_attributes, Hash
 
-  def automate_queue_hash(target, override_attrs)
+  def automate_queue_hash(target, override_attrs, user)
     if target.nil?
       override_values = {}
     elsif target.kind_of?(Hash)
@@ -19,7 +19,7 @@ class ResourceAction < ActiveRecord::Base
       :automate_message => ae_message,
       :attrs            => (ae_attributes || {}).merge(override_attrs || {}),
     }.merge(override_values).tap do |args|
-      args[:user_id]   ||= User.current_user.try(:id)
+      args[:user_id]   ||= user.try(:id)
     end
   end
 
@@ -48,17 +48,17 @@ class ResourceAction < ActiveRecord::Base
     uri
   end
 
-  def deliver_to_automate_from_dialog(dialog_hash_values, target)
+  def deliver_to_automate_from_dialog(dialog_hash_values, target, user)
     _log.info("Queuing <#{self.class.name}:#{id}> for <#{resource_type}:#{resource_id}>")
-    MiqAeEngine.deliver_queue(automate_queue_hash(target, dialog_hash_values[:dialog]),
+    MiqAeEngine.deliver_queue(automate_queue_hash(target, dialog_hash_values[:dialog], user),
                               :zone     => target.try(:my_zone),
                               :priority => MiqQueue::HIGH_PRIORITY,
                               :task_id  => "#{self.class.name.underscore}_#{id}")
   end
 
-  def deliver_to_automate_from_dialog_field(dialog_hash_values, target)
+  def deliver_to_automate_from_dialog_field(dialog_hash_values, target, user)
     _log.info("Running <#{self.class.name}:#{id}> for <#{resource_type}:#{resource_id}>")
 
-    MiqAeEngine.deliver(automate_queue_hash(target, dialog_hash_values[:dialog]))
+    MiqAeEngine.deliver(automate_queue_hash(target, dialog_hash_values[:dialog], user))
   end
 end
