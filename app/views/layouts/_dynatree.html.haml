@@ -25,7 +25,7 @@
   - if check_url
     check_url = "#{check_url}"
   - if click_url
-    click_url = "#{click_url}";
+    ManageIQ.clickUrl = "#{click_url}";
   cfme_changes_check = #{cfme_changes_check}
   - if session[:group_changed]
     miqDeleteDynatreeCookies();
