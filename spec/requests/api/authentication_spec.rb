@@ -33,6 +33,40 @@ describe ApiController do
     end
   end
 
+  context "Basic Authentication with Group Authorization" do
+    let(:group1) { FactoryGirl.create(:miq_group, :description => "Group1") }
+    let(:group2) { FactoryGirl.create(:miq_group, :description => "Group2") }
+
+    before(:each) do
+      @user.miq_groups = [group1, group2, @user.current_group]
+      @user.current_group = group1
+    end
+
+    it "test basic authentication with incorrect group" do
+      api_basic_authorize
+
+      run_get entrypoint_url, :headers => {"miq_group" => "bogus_group"}
+
+      expect_user_unauthorized
+    end
+
+    it "test basic authentication with a primary group" do
+      api_basic_authorize
+
+      run_get entrypoint_url, :headers => {"miq_group" => group1.description}
+
+      expect_single_resource_query
+    end
+
+    it "test basic authentication with a secondary group" do
+      api_basic_authorize
+
+      run_get entrypoint_url, :headers => {"miq_group" => group2.description}
+
+      expect_single_resource_query
+    end
+  end
+
   context "Token Based Authentication" do
     it "gets a token based identifier" do
       api_basic_authorize
