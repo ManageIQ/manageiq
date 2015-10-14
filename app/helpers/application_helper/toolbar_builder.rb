@@ -191,12 +191,14 @@ class ApplicationHelper::ToolbarBuilder
           # Add a separator, if needed, before this button
           if !sep_added && sep_needed
             if groups_added.include?(bg_idx) && groups_added.length > 1
-              root.add_element("item", "id" => "sep_#{bg_idx}", "type" => "separator")  # Put separators between buttons
+              root.add_element("item", sep = {"id" => "sep_#{bg_idx}", "type" => "separator"})  # Put separators between buttons
+              toolbar << sep
               sep_added = true
             end
           end
           sep_needed = true                                         # Button was added, need separators from now on
 
+          toolbar << props
           root.add_element("item", props)                           # Add button node
           build_toolbar_save_button(tb_buttons, bgi)                # Save button in buttons hash
         elsif bgi.key?(:buttonTwoState)                         # two state button node found
@@ -212,13 +214,15 @@ class ApplicationHelper::ToolbarBuilder
           props["selected"] = "true" if build_toolbar_select_button(bgi[:buttonTwoState])
           if !sep_added && sep_needed
             if groups_added.include?(bg_idx) && groups_added.length > 1
-              root.add_element("item", "id" => "sep_#{bg_idx}", "type" => "separator")  # Put separators between buttons
+              root.add_element("item", sep = {"id" => "sep_#{bg_idx}", "type" => "separator"})  # Put separators between buttons
+              toolbar << sep
               sep_added = true
             end
           end
           sep_needed = true                                         # Button was added, need separators from now on
 
           root.add_element("item", props)                           # Add button node
+          toolbar << props
           build_toolbar_save_button(tb_buttons, bgi)                # Save button in buttons hash
         end
       end

@@ -3,6 +3,10 @@ module ToolbarHelper
     case props['type']
     when 'buttonSelect'
       toolbar_top_button_select(props)
+    when 'button'
+      toolbar_top_button_normal(props)
+    when 'buttonTwoState'
+      toolbar_top_button_normal(props)  # FIXME
     else
       binding.pry
     end
@@ -19,20 +23,39 @@ module ToolbarHelper
 
   def toolbar_top_button_select(props)
     content_tag(:div, :class => 'btn-group dropdown') do
+      binding.pry if props.key?(:onwhen)
       out = []
-      out << content_tag(:button, :type => "button", :class => "btn btn-default dropdown-toggle",
-                                  'data-toggle' => "dropdown", :title => props['title'],
-                                  'data-click' => props['id'], 'data-when' => props['onwhen']) do
+      out << content_tag(:button,
+                         data_hash_keys(props).update(
+                           :type => "button",
+                           :class        => "btn btn-default dropdown-toggle",
+                           'data-toggle' => "dropdown",
+                           :title        => props['title'],
+                           'data-click'  => props['id']
+                         )) do
                (toolbar_image(props) +
                  props['text'].to_s + "&nbsp;".html_safe +
                  tag(:span, :class => "caret")).html_safe
-             end 
+             end
       out << content_tag(:ul, :class => 'dropdown-menu') do
                props[:items].collect do |button|
                  toolbar_button(button)
                end.join('').html_safe
              end
       out.join('').html_safe
+    end
+  end
+
+  def toolbar_top_button_normal(props)
+    content_tag(:button,
+                data_hash_keys(props).update(
+                  :type        => "button",
+                  :class       => "btn btn-default",
+                  :title       => props['title'],
+                  'data-click' => props['id']
+               )) do
+      (toolbar_image(props) +
+        props['text'].to_s + "&nbsp;".html_safe).html_safe
     end
   end
 
@@ -51,18 +74,22 @@ module ToolbarHelper
     tag(:div, :class => :divider, :role => "presentation")
   end
 
-  def toolbar_button_normal(button)
-    #  {"id"=>"history_choice__history_2",
-    #  "type"=>"button",
-    #  "img"=>"history.png",
-    #  "imgdis"=>"history.png",
-    #  "text"=>"VM or Templates under Provider &quot;vsphere 5.5&quot;",
-    #  "title"=>"Go to this item"},
-    content_tag(:li, :title => button['title']) do
-      content_tag(:a, :href => '#', 'data-click' => button['id'], 'data-when' => button['onwhen'] ) do
-        (toolbar_image(button) +
-          button['text']).html_safe
+  def toolbar_button_normal(props)
+    binding.pry if props.key?(:onwhen)
+    content_tag(:li, :title => props['title']) do
+      content_tag(:a,
+                  data_hash_keys(props).update(
+                    :href        => '#',
+                    'data-click' => props['id']
+                  )) do
+        (toolbar_image(props) + props['text']).html_safe
       end
+    end
+  end
+
+  def data_hash_keys(props)
+    %i(popup console_url name prompt explorer confirm onwhen url_parms).each_with_object({}) do |key, h|
+      h["data-#{key.to_s}"] = props[:key] if props.key?(key)
     end
   end
 
