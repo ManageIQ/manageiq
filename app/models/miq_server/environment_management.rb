@@ -52,7 +52,7 @@ module MiqServer::EnvironmentManagement
         if MiqEnvironment::Command.is_linux? && File.exist?('/bin/miqnet.sh')
           ipaddr      = `/bin/miqnet.sh -GET IP`.chomp
           hostname    = LinuxAdmin::Hosts.new.hostname
-          mac_address = `/bin/miqnet.sh -GET MAC`.chomp
+          mac_address = LinuxAdmin::IpAddress.new.mac_address("eth0")
         else
           require 'MiqSockUtil'
           ipaddr      = MiqSockUtil.getIpAddr

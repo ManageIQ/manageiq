@@ -127,7 +127,10 @@ module Vmdb
 
     def self.get_network
       retVal = {}
-      retVal[:hostname] = LinuxAdmin::Hosts.new.hostname
+      retVal[:hostname]   = LinuxAdmin::Hosts.new.hostname
+      retVal[:macaddress] = LinuxAdmin::IpAddress.new.mac_address("eth0")
+      retVal[:netmask]    = LinuxAdmin::IpAddress.new.netmask("eth0")
+      retVal[:gateway]    = LinuxAdmin::IpAddress.new.gateway
 
       miqnet = "/bin/miqnet.sh"
 
@@ -135,10 +138,7 @@ module Vmdb
         # Make a call to the virtual appliance to get the network information
         cmd     = "#{miqnet} -GET"
 
-        retVal[:macaddress]    = `#{cmd} MAC`
         retVal[:ipaddress]     = `#{cmd} IP`
-        retVal[:netmask]       = `#{cmd} MASK`
-        retVal[:gateway]       = `#{cmd} GW`
         retVal[:primary_dns]   = `#{cmd} DNS1`
         retVal[:secondary_dns] = `#{cmd} DNS2`
       end
