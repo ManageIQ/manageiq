@@ -403,7 +403,6 @@ class MiqRequest < ActiveRecord::Base
   end
 
   # Helper method when not using workflow
-  # all sub classes override create_request and update_request with only 3 parameters
   def self.make_request(request, values, requester_id, auto_approve = false)
     if request
       update_request(request, values, requester_id)
@@ -412,7 +411,7 @@ class MiqRequest < ActiveRecord::Base
     end
   end
 
-  def self.create_request(values, requester_id, auto_approve = false, request_type = request_types.first)
+  def self.create_request(values, requester_id, auto_approve = false)
     if requester_id.kind_of?(User)
       requester = requester_id
       requester_id = requester.userid
@@ -420,8 +419,10 @@ class MiqRequest < ActiveRecord::Base
       requester = User.find_by_userid(requester_id)
     end
     values[:src_ids] = values[:src_ids].to_miq_a unless values[:src_ids].nil?
-    request          = create(:options => values, :userid => requester_id, :request_type => request_type)
-    request.save!  # Force validation errors to raise now
+    request = new(:options      => values,
+                  :userid       => requester_id,
+                  :request_type => request_types.first)
+    request.save!
 
     request.set_description
     request.create_request
