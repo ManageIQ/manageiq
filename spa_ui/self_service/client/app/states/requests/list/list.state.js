@@ -33,6 +33,7 @@
 
   /** @ngInject */
   function StateController($state, requests, RequestsState) {
+  function StateController($state, requests) {
     var vm = this;
 
     vm.title = 'Request List';

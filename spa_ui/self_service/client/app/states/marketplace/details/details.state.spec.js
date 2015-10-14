@@ -5,6 +5,8 @@ describe('Marketplace.details', function() {
   });
 
   describe('#resolveDialogs', function() {
+    var collectionsApiSpy;
+
     beforeEach(function() {
       bard.inject('$state', '$stateParams', 'CollectionsApi');
 
