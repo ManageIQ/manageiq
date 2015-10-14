@@ -1093,7 +1093,7 @@ class MiqAction < ActiveRecord::Base
       rec = find_by_name(action[:name])
       if rec.nil?
         _log.info("Creating [#{action[:name]}]")
-        rec = create(action)
+        create(action)
       else
         rec.attributes = action
         if rec.changed? || (rec.options_was != rec.options)
