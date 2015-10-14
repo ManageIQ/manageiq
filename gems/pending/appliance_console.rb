@@ -119,7 +119,7 @@ module ApplianceConsole
       dns1     = Env["DNS1"]
       dns2     = Env["DNS2"]
       order    = Env["SEARCHORDER"]
-      timezone = Env["TIMEZONE"]
+      timezone = LinuxAdmin::TimeDate.system_timezone
       region   = File.read(REGION_FILE).chomp  if File.exist?(REGION_FILE)
       version  = File.read(VERSION_FILE).chomp if File.exist?(VERSION_FILE)
       configured = ApplianceConsole::DatabaseConfiguration.configured?
@@ -270,8 +270,13 @@ Date and Time Configuration
 
         if agree("Apply time and timezone configuration? (Y/N): ")
           say("Applying time and timezone configuration...")
-          Env['TIMEZONE'] = new_loc, new_city
-          Env['TIME'] = new_date, new_time unless Env.error?
+          begin
+            LinuxAdmin::TimeDate.system_timezone = "#{new_loc}/#{new_city}"
+            LinuxAdmin::TimeDate.system_time = Time.parse("#{new_date} #{new_time}")
+          rescue LinuxAdmin::TimeDate::TimeCommandError => e
+            say("Failed to apply time and timezone configuration")
+            Logging.logger.error("Failed to apply time and timezone configuration: #{e.message}")
+          end
         end
 
       when I18n.t("advanced_settings.httpdauth")
