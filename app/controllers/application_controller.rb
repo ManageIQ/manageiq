@@ -1188,7 +1188,7 @@ class ApplicationController < ActionController::Base
             when ExtManagementSystem   then "#{pn}/vendor-#{item.image_name}.png"
             when Filesystem            then "#{p}ico/win/#{item.image_name.downcase}.ico"
             when Host                  then "#{pn}vendor-#{item.vmm_vendor.downcase}.png"
-            when MiqEvent              then "#{pn}event-#{item.name.downcase}.png"
+            when MiqEventDefinition    then "#{pn}event-#{item.name.downcase}.png"
             when MiqRequest
               pn + case item.request_status.to_s.downcase
                    when "ok"    then "checkmark.png"
