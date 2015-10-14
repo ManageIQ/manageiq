@@ -3,18 +3,26 @@
 %div{:id => "w_#{presenter.widget.id}"}
   .panel.panel-default#test
     .panel-heading
-      %h3.panel-title{:style => "cursor:move"}
-        %a{:class => "#{presenter.widget.content_type}box"}
-        - if role_allows(:feature => "dashboard_add")
-          = presenter.button_close
-        = presenter.button_minmax
-        - if presenter.widget.contents_for_user(current_user).present?
-          - if %(report chart).include?(presenter.widget.content_type)
-            = presenter.button_fullscreen
-            = presenter.button_pdf
-          - if %(chart).include?(presenter.widget.content_type)
-            = presenter.button_zoom
+      %h3.dropdown.panel-title{:style => "cursor:move"}
         = h(presenter.widget.title)
+        %a{:class => "dropdown-toggle", "data-toggle" => "dropdown", :style => "cursor: pointer; cursor: hand;"}
+          %i.fa.fa-ellipsis-v.pull-right
+        %ul.dropdown-menu.pull-right
+          - if role_allows(:feature => "dashboard_add")
+            %li
+              = presenter.button_close
+          %li
+            = presenter.button_minmax
+          - if presenter.widget.contents_for_user(current_user).present?
+            - if %(report chart).include?(presenter.widget.content_type)
+              %li
+                = presenter.button_fullscreen
+              %li
+                = presenter.button_pdf
+            - if %(chart).include?(presenter.widget.content_type)
+              %li
+                = presenter.button_zoom
+
     - if presenter.widget.content_type == "menu"
       = render :partial => 'widget_menu', :locals => {:widget => presenter.widget}
     - elsif presenter.widget.contents_for_user(current_user).blank?
