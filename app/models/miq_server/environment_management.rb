@@ -50,7 +50,7 @@ module MiqServer::EnvironmentManagement
       ipaddr = hostname = mac_address = ''
       begin
         if MiqEnvironment::Command.is_linux? && File.exist?('/bin/miqnet.sh')
-          ipaddr      = `/bin/miqnet.sh -GET IP`.chomp
+          ipaddr      = LinuxAdmin::IpAddress.new.address
           hostname    = LinuxAdmin::Hosts.new.hostname
           mac_address = `/bin/miqnet.sh -GET MAC`.chomp
         else
