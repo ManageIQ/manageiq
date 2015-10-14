@@ -354,8 +354,8 @@ class MiqAeCustomizationController < ApplicationController
     if !@in_a_form
       type, id = x_node.split("_").last.split("-")
 
-      c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
-      h_buttons, h_xml = build_toolbar_buttons_and_xml("x_history_tb") if x_active_tree != :dialogs_tree
+      c_buttons, c_xml, c_tb = build_toolbar_buttons_and_xml(center_toolbar_filename)
+      h_buttons, h_xml, h_tb = build_toolbar_buttons_and_xml("x_history_tb") if x_active_tree != :dialogs_tree
     else
       if x_active_tree == :dialog_edit_tree && @in_a_form
         nodes = x_node.split('_')
@@ -368,7 +368,7 @@ class MiqAeCustomizationController < ApplicationController
         elsif nodes.length == 4 || (nodes.length == 3 && @sb[:node_typ] == "element")
           @sb[:txt] = "Element"
         end
-        c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
+        c_buttons, c_xml, c_tb = build_toolbar_buttons_and_xml(center_toolbar_filename)
       end
     end
 
@@ -378,8 +378,8 @@ class MiqAeCustomizationController < ApplicationController
     presenter[:set_visible_elements][:center_buttons_div]  = !!(c_buttons && c_xml)
     presenter[:set_visible_elements][:view_buttons_div]    = false
 
-    presenter[:reload_toolbars][:history] = {:buttons => h_buttons, :xml => h_xml} if h_buttons && h_xml
-    presenter[:reload_toolbars][:center]  = {:buttons => c_buttons, :xml => c_xml} if c_buttons && c_xml
+    presenter[:reload_toolbars][:history] = {:toolbar => h_tb, :buttons => h_buttons, :xml => h_xml} if h_buttons && h_xml
+    presenter[:reload_toolbars][:center]  = {:toolbar => c_tb, :buttons => c_buttons, :xml => c_xml} if c_buttons && c_xml
   end
 
   def render_proc

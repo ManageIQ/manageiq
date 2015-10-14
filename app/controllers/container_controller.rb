@@ -221,10 +221,10 @@ class ContainerController < ApplicationController
     end
     record_showing = type && ["Container"].include?(TreeBuilder.get_model_for_prefix(type))
     if !@in_a_form && !@sb[:action]
-      v_buttons, v_xml = build_toolbar_buttons_and_xml("x_gtl_view_tb") unless record_showing
-      c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
+      v_buttons, v_xml, v_tb = build_toolbar_buttons_and_xml("x_gtl_view_tb") unless record_showing
+      c_buttons, c_xml, c_tb = build_toolbar_buttons_and_xml(center_toolbar_filename)
     end
-    h_buttons, h_xml = build_toolbar_buttons_and_xml("x_history_tb") unless @in_a_form
+    h_buttons, h_xml, h_tb = build_toolbar_buttons_and_xml("x_history_tb") unless @in_a_form
 
     # Build presenter to render the JS command for the tree update
     presenter = ExplorerPresenter.new(
@@ -274,9 +274,9 @@ class ContainerController < ApplicationController
     presenter[:set_visible_elements][:center_buttons_div]  = c_buttons && c_xml
     presenter[:set_visible_elements][:view_buttons_div]    = v_buttons && v_xml
 
-    presenter[:reload_toolbars][:history] = {:buttons => h_buttons,  :xml => h_xml}  if h_buttons && h_xml
-    presenter[:reload_toolbars][:center]  = {:buttons => c_buttons,  :xml => c_xml}  if c_buttons && c_xml
-    presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons && v_xml
+    presenter[:reload_toolbars][:history] = {:toolbar => h_tb, :buttons => h_buttons,  :xml => h_xml}  if h_buttons && h_xml
+    presenter[:reload_toolbars][:center]  = {:toolbar => c_tb, :buttons => c_buttons,  :xml => c_xml}  if c_buttons && c_xml
+    presenter[:reload_toolbars][:view]    = {:toolbar => v_tb, :buttons => v_buttons,  :xml => v_xml}  if v_buttons && v_xml
 
     presenter[:set_visible_elements][:toolbar] = h_buttons || c_buttons || v_buttons
 

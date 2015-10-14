@@ -7,4 +7,6 @@
     = render :partial => "layouts/x_custom_buttons"
   %div{:style => "float: right;"}
     = render :partial => "layouts/x_view_buttons"
-  = render_toolbars
+  - if !request.xml_http_request?
+    -# FIXME: do we need this condition?
+    = render_toolbars

@@ -4,6 +4,10 @@ class ExplorerPresenter
   include JsHelper
   include ActionView::Helpers::JavaScriptHelper
 
+  include ToolbarHelper
+  include ActionView::Helpers::TagHelper
+  include ActionView::Context
+
   attr_reader :options
 
   # Renders JS to replace the contents of an explorer view as directed by the controller
@@ -145,7 +149,8 @@ class ExplorerPresenter
 
     # Reload toolbars
     @options[:reload_toolbars].each do |tb, opts|
-      @out << javascript_for_toolbar_reload("#{tb}_tb", opts[:buttons], opts[:xml]).html_safe
+      binding.pry unless opts[:toolbar] # FIXME: remove safeguard
+      @out << javascript_pf_toolbar_reload("#{tb}_tb", opts[:toolbar]).html_safe
     end
 
     # reset miq_record_id, else it remembers prev id and sends it when add is pressed from list view
@@ -212,6 +217,7 @@ class ExplorerPresenter
   end
 
   def update_partial(element, content)
+    # FIXME: replace with javascript_update_element
     "$('##{element}').html('#{escape_javascript(content)}');"
   end
 

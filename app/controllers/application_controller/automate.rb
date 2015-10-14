@@ -21,7 +21,7 @@ module ApplicationController::Automate
         add_flash(_("Automation Error: ") << bang.message, :error)
       end
     end
-    c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
+    c_buttons, c_xml, c_tb = build_toolbar_buttons_and_xml(center_toolbar_filename)
     render :update do |page|
       # IE7 doesn't redraw the tree until the screen is clicked, so redirect back to this method for a refresh
       if is_browser_ie? && browser_info(:version) == "7"
@@ -30,7 +30,7 @@ module ApplicationController::Automate
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page.replace_html("main_div", :partial => "results_tabs")
         if c_buttons && c_xml
-          page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
+          page << javascript_pf_toolbar_reload('center_tb', c_tb)
           page << javascript_show("center_buttons_div")
         else
           page << javascript_hide("center_buttons_div")
@@ -185,12 +185,12 @@ module ApplicationController::Automate
   end
 
   def resolve_reset
-    c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
+    c_buttons, c_xml, c_tb = build_toolbar_buttons_and_xml(center_toolbar_filename)
     render :update do |page|
       page.replace("resolve_form_div", :partial => "resolve_form") unless params[:tab_id]
       page.replace("results_tabs",     :partial => "results_tabs")
       if c_buttons && c_xml
-        page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
+        page << javascript_pf_toolbar_reload('center_tb', c_tb)
         page << javascript_show("center_buttons_div")
       else
         page << javascript_hide("center_buttons_div")

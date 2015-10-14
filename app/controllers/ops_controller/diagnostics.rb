@@ -460,13 +460,13 @@ module OpsController::Diagnostics
     @sb[:selected_worker_id] = params[:id]
     get_workers
     @sb[:center_tb_filename] = center_toolbar_filename
-    c_buttons, c_xml = build_toolbar_buttons_and_xml(@sb[:center_tb_filename])
+    c_buttons, c_xml, c_tb = build_toolbar_buttons_and_xml(@sb[:center_tb_filename])
     render :update do |page|
       # page.replace_html("main_div", :partial=>"layouts/gtl")
       page.replace_html(@sb[:active_tab], :partial => "#{@sb[:active_tab]}_tab")
       if c_buttons && c_xml
         page << "$('#toolbar').show();"
-        page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
+        page << javascript_pf_toolbar_reload('center_tb', c_tb)
         page << javascript_show_if_exists("center_buttons_div")
       else
         page << "$('#toolbar').hide();"
@@ -779,7 +779,7 @@ module OpsController::Diagnostics
     end
     @server_tree = build_server_tree(parent).to_json
     @sb[:center_tb_filename] = center_toolbar_filename
-    c_buttons, c_xml = build_toolbar_buttons_and_xml(@sb[:center_tb_filename])
+    c_buttons, c_xml, c_tb = build_toolbar_buttons_and_xml(@sb[:center_tb_filename])
     render :update do |page|
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page.replace("selected_#{@sb[:active_tab].split('_').last}_div", :partial => "selected")
@@ -801,7 +801,7 @@ module OpsController::Diagnostics
       end
       if c_buttons && c_xml
         page << "$('#toolbar').show();"
-        page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
+        page << javascript_pf_toolbar_reload('center_tb', c_tb)
         page << javascript_show_if_exists("center_buttons_div")
       else
         page << "$('#toolbar').hide();"

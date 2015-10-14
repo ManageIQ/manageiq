@@ -710,11 +710,11 @@ class OpsController < ApplicationController
   def rebuild_toolbars(presenter)
     unless @in_a_form
       @sb[:center_tb_filename] = center_toolbar_filename
-      c_buttons, c_xml = build_toolbar_buttons_and_xml(@sb[:center_tb_filename])
+      c_buttons, c_xml, c_tb = build_toolbar_buttons_and_xml(@sb[:center_tb_filename])
     end
     # Rebuild the toolbars
     presenter[:set_visible_elements][:center_buttons_div] = c_buttons && c_xml
-    presenter[:reload_toolbars][:center] = {:buttons => c_buttons, :xml => c_xml} if c_buttons && c_xml
+    presenter[:reload_toolbars][:center] = {:toolbar => c_tb, :buttons => c_buttons, :xml => c_xml} if c_buttons && c_xml
     presenter[:set_visible_elements][:toolbar] = c_buttons
     presenter[:set_visible_elements][:toolbar] = false if @sb[:center_tb_filename] == "blank_view_tb"
 

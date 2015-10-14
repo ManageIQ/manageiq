@@ -62,16 +62,18 @@ module ToolbarHelper
     @toolbars[div_id] = toolbar_name
   end
 
+  def buttons_to_html(buttons)
+    buttons.collect do |button|
+      toolbar_top_button(button)
+    end.join('').html_safe
+  end
+
   def render_toolbars
-    if !request.xml_http_request?
-      @toolbars.collect do |div_id, toolbar_name|
-        content_tag(:div, :class => 'btn-group') do  # btn-group aroung each toolbar
-          tb_buttons, tb_xml, buttons = build_toolbar_buttons_and_xml(toolbar_name)
-          buttons.collect do |button|
-            toolbar_top_button(button)
-          end.join('').html_safe
-        end
-      end.join('').html_safe
-    end
+    @toolbars.collect do |div_id, toolbar_name|
+      content_tag(:div, :id => div_id, :class => 'btn-group') do  # btn-group aroung each toolbar
+        _tb_buttons, _tb_xml, buttons = build_toolbar_buttons_and_xml(toolbar_name)
+        buttons_to_html(buttons)
+      end
+    end.join('').html_safe
   end
 end

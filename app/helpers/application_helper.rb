@@ -542,6 +542,12 @@ module ApplicationHelper
     }
   end
 
+  def javascript_pf_toolbar_reload(div_id, toolbar)
+    # FIXME: simplyfy when debugged
+    markup = buttons_to_html(toolbar)
+    javascript_update_element(div_id, markup)
+  end
+
   def javascript_for_ae_node_selection(id, prev_id, select)
     "miqSetAETreeNodeSelectionClass('#{id}', '#{prev_id}', '#{select ? true : false}');".html_safe
   end
