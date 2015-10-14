@@ -335,9 +335,10 @@ module MiqAeMethodService
     end
 
     def __find_instance_from_path(path)
-      ns, klass, instance = MiqAeEngine::MiqAePath.split(path)
+      dom, ns, klass, instance = MiqAeEngine::MiqAePath.get_domain_ns_klass_inst(path)
+      return false unless visible_domain?(dom)
 
-      aec = MiqAeClass.find_by_namespace_and_name(ns, klass)
+      aec = MiqAeClass.find_by_namespace_and_name("#{dom}/#{ns}", klass)
       return nil if aec.nil?
 
       aec.ae_instances.detect { |i| instance.casecmp(i.name) == 0 }
@@ -347,10 +348,25 @@ module MiqAeMethodService
 
     def editable_instance?(path)
       dom, = MiqAeEngine::MiqAePath.get_domain_ns_klass_inst(path)
+      return false unless owned_domain?(dom)
       domain = MiqAeDomain.find_by_fqname(dom, false)
       return false unless domain
       $log.warn "path=#{path.inspect} : is not editable" unless domain.editable?
       domain.editable?
+    end
+
+    def owned_domain?(dom)
+      domains = @workspace.ae_user.current_tenant.ae_domains.collect(&:name).map(&:upcase)
+      return true if domains.include?(dom.upcase)
+      $log.warn "domain=#{dom} : is not editable"
+      false
+    end
+
+    def visible_domain?(dom)
+      domains = @workspace.ae_user.current_tenant.visible_domains.collect(&:name).map(&:upcase)
+      return true if domains.include?(dom.upcase)
+      $log.warn "domain=#{dom} : is not viewable"
+      false
     end
   end
 
