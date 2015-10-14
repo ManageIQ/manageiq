@@ -51,17 +51,16 @@ class ChargebackRateDetail < ActiveRecord::Base
   end
 
   def per_unit_display
-    case per_unit
-    when 'megahertz' then 'MHz'
-    when 'megabytes' then 'MB'
-    when 'gigabytes' then 'GB'
-    when 'kbps' then 'KBps'
-    else per_unit.to_s.capitalize
-    end
+    self.detail_measure.nil? ? self.per_unit.to_s.capitalize : detail_measure.measures_for_select.key(self.per_unit)
   end
 
   def rate_type
     # Return parent's rate type
     chargeback_rate.rate_type unless chargeback_rate.nil?
+  end
+
+  def detail_measure
+    # Return the measure asociated
+    ChargebackRateDetailMeasure.find_by(id: self.chargeback_rate_detail_measure_id)
   end
 end

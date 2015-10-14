@@ -223,6 +223,7 @@ class ChargebackController < ApplicationController
           detail.group = r[:group]
           detail.per_unit = r[:per_unit]
           detail.metric = r[:metric]
+          detail.chargeback_rate_detail_measure_id = r[:chargeback_rate_detail_measure_id]
           @sb[:rate_details].push(detail) unless @sb[:rate_details].include?(detail)
         end
       else
@@ -247,6 +248,8 @@ class ChargebackController < ApplicationController
                   detail.group = r[:group]
                   detail.per_unit = r[:per_unit]
                   detail.metric = r[:metric]
+                  #Copy the measure id of the rate_detail linkig with the rate_detail_measure
+                  detail.chargeback_rate_detail_measure_id = r[:measure] ? ChargebackRateDetailMeasure.find_by(name: r[:measure]).id : nil
                   @sb[:rate_details].push(detail) unless @sb[:rate_details].include?(detail)
                 end
               end
@@ -545,6 +548,8 @@ class ChargebackController < ApplicationController
       temp = {}
       temp[:rate] = (!r.rate.nil? && r.rate != "") ? r.rate : 0
       temp[:per_time] = r.per_time ? r.per_time : "hourly"
+      temp[:per_unit] = r.per_unit
+      temp[:detail_measure] = r.detail_measure
       @edit[:new][:details].push(temp)
     end
 
@@ -565,6 +570,7 @@ class ChargebackController < ApplicationController
     @edit[:new][:details].each_with_index do |_detail, i|
       @edit[:new][:details][i][:rate] = params["rate_#{i}".to_sym] if params["rate_#{i}".to_sym]
       @edit[:new][:details][i][:per_time] = params["per_time_#{i}".to_sym] if params["per_time_#{i}".to_sym]
+      @edit[:new][:details][i][:per_unit] = params["per_unit_#{i}".to_sym] if params["per_unit_#{i}".to_sym]
     end
   end
 
@@ -572,6 +578,7 @@ class ChargebackController < ApplicationController
     @edit[:new][:details].each_with_index do |_rate, i|
       @sb[:rate_details][i].rate               = @edit[:new][:details][i][:rate]
       @sb[:rate_details][i].per_time           = @edit[:new][:details][i][:per_time]
+      @sb[:rate_details][i].per_unit           = @edit[:new][:details][i][:per_unit]
       @sb[:rate_details][i].chargeback_rate_id = @sb[:rate].id
     end
   end
