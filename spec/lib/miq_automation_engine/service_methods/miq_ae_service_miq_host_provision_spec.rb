@@ -3,6 +3,7 @@ require "spec_helper"
 module MiqAeServiceMiqHostProvisionSpec
   describe MiqAeMethodService::MiqAeServiceMiqHostProvision do
     before(:each) do
+      @user = FactoryGirl.create(:user_with_group)
       MiqAutomateHelper.create_service_model_method('SPEC_DOMAIN', 'EVM',
                                                     'AUTOMATE', 'test1', 'test')
       @ae_method     = ::MiqAeMethod.first
@@ -12,12 +13,11 @@ module MiqAeServiceMiqHostProvisionSpec
     end
 
     def invoke_ae
-      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?MiqHostProvision::miq_host_provision=#{@miq_host_provision.id}")
+      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?MiqHostProvision::miq_host_provision=#{@miq_host_provision.id}", @user)
     end
 
     it "#miq_host_provision_request" do
-      user = FactoryGirl.create(:user)
-      miq_host_provision_request = FactoryGirl.create(:miq_host_provision_request, :provision_type => 'host_pxe_install', :state => 'pending', :status => 'Ok', :userid => user.userid)
+      miq_host_provision_request = FactoryGirl.create(:miq_host_provision_request, :provision_type => 'host_pxe_install', :state => 'pending', :status => 'Ok', :userid => @user.userid)
       @miq_host_provision.miq_host_provision_request = miq_host_provision_request
       @miq_host_provision.save!
 

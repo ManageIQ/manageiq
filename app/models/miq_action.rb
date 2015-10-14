@@ -1,3 +1,5 @@
+require 'awesome_spawn'
+
 class MiqAction < ActiveRecord::Base
   default_scope { where conditions_for_my_region_default_scope }
 
@@ -474,14 +476,14 @@ class MiqAction < ActiveRecord::Base
 
     MiqPolicy.logger.info("MIQ(action_script): Executing: [#{filename}]")
     if File.extname(filename) == ".rb"
-      rails_cmd = MiqEnvironment::Command.rails_command
-      MiqPolicy.logger.info("MIQ(action_script): Eval:      [#{rails_cmd} runner #{fname} '#{rec.name}'}]")
-      result, _, status = Open3.capture3(rails_cmd, "runner", fname, "'#{rec.name}'")
+      runner_cmd = MiqEnvironment::Command.runner_command
+      MiqPolicy.logger.info("MIQ(action_script): Running: [#{runner_cmd} #{fname} '#{rec.name}'}]")
+      command_result = AwesomeSpawn.run(runner_cmd, :params => [fname, rec.name])
     else
-      MiqPolicy.logger.info("MIQ(action_script): Eval:      [#{fname}]")
-      result, _, status = Open3.capture3(fname)
+      MiqPolicy.logger.info("MIQ(action_script): Running: [#{fname}]")
+      command_result = AwesomeSpawn.run(fname)
     end
-    rc = status.exitstatus
+    rc = command_result.exit_status
     rc_verbose = RC_HASH[rc] || "Unknown RC: [#{rc}]"
 
     fd.delete
@@ -490,15 +492,15 @@ class MiqAction < ActiveRecord::Base
 
     case rc
     when 0
-      MiqPolicy.logger.info("MIQ(action_script): Result: #{result}, rc: #{rc_verbose}")
+      MiqPolicy.logger.info("MIQ(action_script): Result: #{command_result.output}, rc: #{rc_verbose}")
     when 4
-      MiqPolicy.logger.warn("MIQ(action_script): Result: #{result}, rc: #{rc_verbose}")
+      MiqPolicy.logger.warn("MIQ(action_script): Result: #{command_result.output}, rc: #{rc_verbose}")
     when 8
-      raise MiqException::StopAction, "Action script exited with rc=#{rc_verbose}"
+      raise MiqException::StopAction, "Action script exited with rc=#{rc_verbose}, error=#{command_result.error}"
     when 16
-      raise MiqException::AbortAction, "Action script exited with rc=#{rc_verbose}"
+      raise MiqException::AbortAction, "Action script exited with rc=#{rc_verbose}, error=#{command_result.error}"
     else
-      raise MiqException::UnknownActionRc, "Action script exited with rc=#{rc_verbose}"
+      raise MiqException::UnknownActionRc, "Action script exited with rc=#{rc_verbose}, error=#{command_result.error}"
     end
   end
 
@@ -874,16 +876,17 @@ class MiqAction < ActiveRecord::Base
   def action_custom_automation(action, rec, inputs)
     ae_hash = action.options[:ae_hash] || {}
     automate_attrs = ae_hash.reject { |key, _value| MiqAeEngine::DEFAULT_ATTRIBUTES.include?(key) }
-    automate_attrs[MiqAeEngine.create_automation_attribute_key(inputs[:policy])]    = MiqAeEngine.create_automation_attribute_value(inputs[:policy]) unless inputs[:policy].nil?
-    automate_attrs[MiqAeEngine.create_automation_attribute_key(inputs[:ems_event])] = MiqAeEngine.create_automation_attribute_value(inputs[:ems_event]) unless inputs[:ems_event].nil?
     automate_attrs[:request] = action.options[:ae_request]
+    MiqAeEngine.set_automation_attributes_from_objects([inputs[:policy], inputs[:ems_event]], automate_attrs)
 
-    args = {}
-    args[:object_type]      = rec.class.base_class.name
-    args[:object_id]        = rec.id
-    args[:attrs]            = automate_attrs
-    args[:instance_name]    = "REQUEST"
-    args[:automate_message] = action.options[:ae_message] || "create"
+    args = {
+      :object_type      => rec.class.base_class.name,
+      :object_id        => rec.id,
+      :attrs            => automate_attrs,
+      :instance_name    => "REQUEST",
+      :automate_message => action.options[:ae_message] || "create",
+    }
+
 
     if inputs[:synchronous]
       MiqPolicy.logger.info("MIQ(action_custom_automation): Now executing MiqAeEngine.deliver for #{automate_attrs[:request]} with args=#{args.inspect}")

@@ -3,6 +3,7 @@ require "spec_helper"
 describe "InspectMe Automate Method" do
   before do
     @miq_server = EvmSpecHelper.local_miq_server
+    @user = FactoryGirl.create(:user_with_group)
   end
 
   def run_automate_method
@@ -12,7 +13,7 @@ describe "InspectMe Automate Method" do
     MiqAeEngine.instantiate("/System/Request/Call_Instance_With_Message?" \
                             "namespace=System&class=Request" \
                             "&instance=InspectMe&" \
-                            "#{attrs.join('&')}")
+                            "#{attrs.join('&')}", @user)
   end
 
   context "InspectMe" do

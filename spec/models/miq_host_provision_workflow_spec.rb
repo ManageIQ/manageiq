@@ -56,7 +56,7 @@ describe MiqHostProvisionWorkflow do
       stub_dialog(:get_dialogs)
 
       # if running_pre_dialog is set, it will run 'continue_request'
-      workflow = described_class.new(values = {:running_pre_dialog => false}, admin.userid)
+      workflow = described_class.new(values = {:running_pre_dialog => false}, admin)
 
       expect(AuditEvent).to receive(:success).with(
         :event        => "host_provision_request_created",
@@ -70,7 +70,7 @@ describe MiqHostProvisionWorkflow do
       # the dialogs populate this
       values.merge!(:src_host_ids => [host.id], :vm_tags => [])
 
-      request = workflow.make_request(nil, values, admin.userid) # TODO: nil
+      request = workflow.make_request(nil, values)
 
       expect(request).to be_valid
       expect(request).to be_a_kind_of(MiqHostProvisionRequest)
@@ -82,7 +82,7 @@ describe MiqHostProvisionWorkflow do
 
       # updates a request
 
-      workflow = described_class.new(values, alt_user.userid)
+      workflow = described_class.new(values, alt_user)
 
       expect(AuditEvent).to receive(:success).with(
         :event        => "host_provision_request_updated",
@@ -90,7 +90,7 @@ describe MiqHostProvisionWorkflow do
         :userid       => alt_user.userid,
         :message      => "Host Provisioning request updated by <#{alt_user.userid}> for Host:#{[host.id].inspect}"
       )
-      workflow.make_request(request, values, alt_user.userid)
+      workflow.make_request(request, values)
     end
   end
 end

@@ -1,21 +1,61 @@
 .list-view-container
-  margin-top: 20px
+  height: calc(100vh - 185px)
+  overflow-y: auto
+  overflow-x: hidden
+  background: $app-color-white
+
+  .alert
+    margin: 20px 0
 
 .data-list-pf
-  line-height: 40px
+  line-height: 45px
+
+  .no-wrap
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+    display: block
+
+  .list-group-item
+    padding: 7px 0
+    border-top: 0px
+    margin-bottom: 0px
+    cursor: pointer
+
+    &:active
+      background-color: #def3ff
+      border-color: #def3ff
+
+    .pficon
+      font-size: 16px
+      color: #333
+      position: relative
+      top: 2px
 
 +block(ss-list-view)
   +element(title-img)
     background: $app-color-white
-    border: 1px solid $app-color-light-gray-4
-    box-shadow: 0 1px 1px darken($app-color-light-gray-4, 15%)
+    border: 2px solid $app-color-medium-blue
+    border-radius: 100px
     cursor: pointer
-    height: 40px
+    height: 45px
     width: 45px
     margin-right: 10px
     display: inline-block
+    text-align: center
+    overflow: hidden
+    white-space: nowrap
+    vertical-align: middle
 
     +element(logo)
-      max-height: 40px
-      max-width: 45px
-      padding: 2px
+      max-height: 30px
+      max-width: 30px
+      vertical-align: middle
+      position: relative
+      left: -2px
+      top: -3px
+
+    +element(center)
+      display: inline-block
+      height: 100%
+      vertical-align: middle

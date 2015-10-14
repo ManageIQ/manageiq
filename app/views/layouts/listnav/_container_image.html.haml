@@ -18,10 +18,10 @@
           - num_containers = @record.number_of(:containers)
           - if num_containers == 0
             %li.disabled
-              = link_to(_("%s (0)") % ui_lookup(:table => "containers"), "#")
+              = link_to("#{ui_lookup(:table => "containers")} (0)", "#")
           - else
             %li
-              = link_to(_("#{ui_lookup(:table => "containers")} (#{num_containers})"),
+              = link_to("#{ui_lookup(:table => "containers")} (#{num_containers})",
                   {:action => 'show', :id => @record, :display => 'containers'},
                    :title  => _("View %s") % ui_lookup(:table => "containers"))
           - if role_allows(:feature => "container_image_registry_show") && !@record.container_image_registry.nil?

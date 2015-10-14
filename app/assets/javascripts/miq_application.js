@@ -80,8 +80,7 @@ function miqPrepRightCellForm(tree) {
 
 // Things to be done on page resize
 function miqOnResize() {
-  if (typeof dhxLayout != "undefined") {
-    dhxLayout.setSizes();
+  if (typeof dhxLayoutB != "undefined") {
     dhxLayoutB.setSizes();
   }
   miqBrowserSizeTimeout();
@@ -1247,6 +1246,7 @@ function miqInitSelectPicker() {
     style: 'btn-info',
     size: 4
   });
+  $('[title]').not('.selectpicker').tooltip({container: 'none'});
 }
 
 function miqSelectPickerEvent(element, url, options){
@@ -1259,3 +1259,12 @@ function miqSelectPickerEvent(element, url, options){
   });
 }
 
+function miqAccordSelect(e) {
+  if (!miqCheckForChanges()) {
+    return false;
+  } else {
+    var url = '/' + $('body').data('controller') + '/accordion_select?id=' + $(e.target).attr('id');
+    miqJqueryRequest(url, {beforeSend: true, complete: true});
+    return true;
+  }
+}

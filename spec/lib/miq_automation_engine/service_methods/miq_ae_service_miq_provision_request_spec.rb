@@ -16,12 +16,12 @@ module MiqAeServiceMiqProvisionRequestSpec
 
       @ems                   = FactoryGirl.create(:ems_vmware_with_authentication)
       @vm_template           = FactoryGirl.create(:template_vmware, :ext_management_system => @ems)
-      @user                  = FactoryGirl.create(:user)
+      @user                  = FactoryGirl.create(:user_with_group)
       @miq_provision_request = FactoryGirl.create(:miq_provision_request, :provision_type => 'template', :state => 'pending', :status => 'Ok', :src_vm_id => @vm_template.id, :userid => @user.userid)
     end
 
     def invoke_ae
-      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?MiqProvisionRequest::miq_provision_request=#{@miq_provision_request.id}")
+      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?MiqProvisionRequest::miq_provision_request=#{@miq_provision_request.id}", @user)
     end
 
     it "#miq_request" do

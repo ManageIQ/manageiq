@@ -407,7 +407,7 @@ module MiqAeCustomizationController::Dialogs
     render :update do |page|                    # Use JS to update the display
       session[:changed] = changed = (@edit[:new] != @edit[:current])
       page << javascript_for_miq_button_visibility(changed)
-      page.replace_html("custom_left_cell_div", :partial => "dialog_edit_tree")
+      page.replace_html("custom_left_cell", :partial => "dialog_edit_tree")
       # url to be used in miqDropComplete method
       page << "ManageIQ.widget.dashboardUrl = 'miq_ae_customization/dialog_res_reorder';"
       page << "miqInitDashboardCols();"

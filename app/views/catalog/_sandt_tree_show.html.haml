@@ -64,8 +64,8 @@
       %hr
       %h3
         = _('Custom Image')
-      - if @record.picture
-        %table
+      .form-horizontal
+        - if @record.picture
           .form-group
             .col-md-8
               = image_tag("#{@record.picture.url_path}?#{rand(99_999_999)}",
@@ -82,26 +82,21 @@
                         :remote                => true,
                         :confirm               => _("Are you sure you want to remove this Custom Image?"),
                         :title                 => t)
-      - else
-        = _('No custom image has been uploaded')
-        %br
-        %br
-      - if is_browser_ie?
-        = form_tag({:action    => "st_upload_image",
-                    :id        => @record.id},
-                    :multipart => true) do
-          = file_field("upload", "image")
-          = submit_tag(_("Upload"), :id => "upload", :class => "upload")
-          = _('* Requirements: File-type - PNG; Dimensions - 350x70.')
-      - else
-        = form_tag({:action  => "st_upload_image",
-                    :id      => @record.id},
-                   :id        => "uploadForm",
-                   :multipart => true) do
-          = file_field("upload", "image")
-          = _('* Requirements - Type: jpg/png  Size: 100x100')
-        %script{:type => "text/javascript"} miqInitJqueryForm();
-
+        - else
+          = _('No custom image has been uploaded')
+          %br
+          %br
+        .form-group
+          = form_tag({:action    => "st_upload_image",
+                      :id        => @record.id},
+                      :multipart => true) do
+            .col-md-4
+              = file_field("upload", "image", :class => "filestyle", "data-buttonName" => "btn-default")
+              :javascript
+                $(":file").filestyle({icon: false, placeholder: "No file chosen"});
+            .col-md-6
+              = submit_tag(_("Upload"), :id => "upload", :class => "upload btn btn-default")
+              = _('* Requirements: File-type - PNG; Dimensions - 350x70.')
     - if @record.display && @record.prov_type != "generic_orchestration"
       = miq_tab_content('details') do
         %h3

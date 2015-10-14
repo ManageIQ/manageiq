@@ -210,6 +210,12 @@ describe ApiController do
       test_collection_query(:templates, templates_url, MiqTemplate, :guid)
     end
 
+    it "query Tenants" do
+      api_basic_authorize "rbac_tenant_show_list"
+      Tenant.seed
+      test_collection_query(:tenants, tenants_url, Tenant)
+    end
+
     it "query Users" do
       FactoryGirl.create(:user)
       test_collection_query(:users, users_url, User)

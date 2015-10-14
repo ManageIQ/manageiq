@@ -1482,6 +1482,8 @@ Vmdb::Application.routes.draw do
         sample_chart
         sample_timeline
         send_report_data
+        tree_autoload_dynatree
+        tree_select
         widget_json
       ),
       :post => %w(
@@ -2054,6 +2056,9 @@ Vmdb::Application.routes.draw do
       end
     end
   end
+
+  # pure-angular templates
+  get '/static/*id' => 'static#show', :format => false
 
   resources :ems_cloud, :as => :ems_clouds
 end

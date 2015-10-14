@@ -174,4 +174,32 @@ describe EmsInfraController do
       it { should eq 200 }
     end
   end
+
+  describe "UI interactions in the form" do
+    render_views
+    context "#form_field_changed" do
+      before do
+        set_user_privileges
+        FactoryGirl.create(:vmdb_database)
+        EvmSpecHelper.create_guid_miq_server_zone
+      end
+
+      it "retains the name field when server emstype is selected from the dropdown" do
+        ems = ManageIQ::Providers::InfraManager.new
+        controller.instance_variable_set(:@ems, ems)
+        controller.send(:set_form_vars)
+        edit = controller.instance_variable_get(:@edit)
+        edit[:new][:name] = "abc"
+        edit[:ems_types] = {"scvmm"           => "Microsoft System Center VMM",
+                            "openstack_infra" => "OpenStack Platform Director",
+                            "rhevm"           => "Red Hat Enterprise Virtualization Manager",
+                            "vmwarews"        => "VMware vCenter"}
+        controller.instance_variable_set(:@edit, edit)
+        post :form_field_changed, :id => "new", :server_emstype => "scvmm"
+        edit = controller.instance_variable_get(:@edit)
+        expect(edit[:new][:name]).to eq('abc')
+        expect(response.body).to include('input type=\"text\" name=\"name\" id=\"name\" value=\"abc\"')
+      end
+    end
+  end
 end

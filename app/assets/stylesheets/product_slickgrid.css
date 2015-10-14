@@ -1,3 +1,46 @@
+/*Override Bootstrap box-sizing*/
+.slick-header-column.ui-state-default
+ {
+  -webkit-box-sizing: content-box;
+     -moz-box-sizing: content-box;
+          box-sizing: content-box;
+}
+
+.slick-header-column.ui-state-default {
+  height: 19px;
+  line-height: 19px;
+  padding-left:10px;
+  border: 1px solid #d1d1d1;
+  border-left: 1px solid #f5f5f5;
+  background-image: -webkit-linear-gradient(top, #fafafa, #ededed); /* For Chrome and Safari */
+  background-image:    -moz-linear-gradient(top, #fafafa, #ededed); /* For old Fx (3.6 to 15) */
+  background-image:     -ms-linear-gradient(top, #fafafa, #ededed); /* For pre-releases of IE 10*/
+  background-image:      -o-linear-gradient(top, #fafafa, #ededed); /* For old Opera (11.1 to 12.0) */ 
+  background-image:         linear-gradient(top, #fafafa, #ededed); /* Standard syntax; must be last */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */  
+  font: normal 11px OpenSansSemibold,Arial,Helvetica,sans-serif;
+  color: #4d5258;
+}
+
+.slick-header-column.ui-state-default:first-child {
+  border-left: 1px solid #d1d1d1;
+}
+
+.slick-cell, .slick-headerrow-column {
+  border-right: 1px solid #d1d1d1;
+  border-bottom-color: #e7e7e7;
+  padding: 2px 2px 2px 10px;
+  color: #4d5258;
+  height: 34px !important;
+}
+
+.slick-cell:first-child {
+  border-left: 1px solid #d1d1d1;
+}
+
+.slick-group {
+}
+
 .cell-title {
     font-weight: bold;
 }

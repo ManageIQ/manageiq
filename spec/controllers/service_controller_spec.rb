@@ -47,4 +47,21 @@ describe ServiceController do
       expect { response }.to render_template('layouts/exception')
     end
   end
+
+  context "#service_delete" do
+    it "replaces right cell after service is deleted" do
+      service = FactoryGirl.create(:service)
+      controller.stub(:x_build_dynatree)
+      controller.instance_variable_set(:@settings, {})
+      controller.instance_variable_set(:@sb, {})
+      controller.instance_variable_set(:@_params, :id => service.id)
+      controller.should_receive(:render)
+      expect(response.status).to eq(200)
+      controller.send(:service_delete)
+
+      flash_message = assigns(:flash_array).first
+      flash_message[:message].should include("Delete successful")
+      flash_message[:level].should be(:success)
+    end
+  end
 end

@@ -89,11 +89,7 @@ module ReportController::Reports
       end
     else
       begin
-        if rpt.rpt_type == "Default"
-          add_flash(_("Default %{model} \"%{name}\" cannot be deleted") % {:model => ui_lookup(:model => "MiqReport"), :name => rpt.name}, :error)
-          redirect_to :action => "editreport", :id => rpt.id, :flash_msg => flash, :flash_error => true
-          return
-        end
+        raise StandardError, "Default %{model} \"%{name}\" cannot be deleted" % {:model => ui_lookup(:model => "MiqReport"), :name => rpt.name} if rpt.rpt_type == "Default"
         rpt_name = rpt.name
         audit = {:event => "report_record_delete", :message => "[#{rpt_name}] Record deleted", :target_id => rpt.id, :target_class => "MiqReport", :userid => session[:userid]}
         rpt.destroy
@@ -473,17 +469,10 @@ module ReportController::Reports
   end
 
   # Build the main reports tree
-  def build_reports_tree(type, name)
-    x_tree_init(name, type, "MiqReport", :full_ids => true)
-    tree_nodes = x_build_dynatree(x_tree(name))
-
-    # Fill in root node details
-    root           = tree_nodes.first
-    root[:title]   = "All Reports"
-    root[:tooltip] = "All Reports"
-    root[:icon]    = "folder.png"
-    instance_variable_set :"@#{name}", tree_nodes.to_json          # JSON object for tree loading
-    x_node_set(tree_nodes.first[:key], name) unless x_node(name)  # Set active node to root if not set
+  def build_reports_tree
+    @sb[:rpt_menu]  = populate_reports_menu
+    @sb[:grp_title] = reports_group_title
+    TreeBuilderReportReports.new('reports_tree', 'reports', @sb)
   end
 
   # Add the children of a node that is being expanded (autoloaded), called by generic tree_autoload method

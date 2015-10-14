@@ -13,22 +13,12 @@ require_relative 'refresh_spec_matchers'
 
 module Openstack
   module RefreshSpecCommon
-    ROOT_DISK_SIZE_HASH = {"m1.small"            => 20.gigabytes,
-                           "m1.medium"           => 40.gigabytes,
-                           "m1.large"            => 80.gigabytes,
-                           "m1.xlarge"           => 160.gigabytes,
-                           "m1.ems_refresh_spec" => 1.gigabytes}
-
     def self.included(klass)
       klass.class_eval do
         include RefreshSpecEnvironments
         include RefreshSpecHelpers
         include RefreshSpecMatchers
       end
-    end
-
-    def root_disk_size_by_flavor(flavor_name)
-      flavor_name == "m1.tiny" ? 1.gigabytes : ROOT_DISK_SIZE_HASH[flavor_name]
     end
 
     def assert_with_skips
@@ -221,11 +211,19 @@ module Openstack
     end
 
     def assert_flavors
+      gigabyte_transformation = -> (x) { x.gigabyte }
+      blacklisted_attributes = [:is_public] # TODO(lsmola) model blacklisted attrs
+      # Disks are supported from havana and above apparently
+      blacklisted_attributes += [:disk, :ephemeral, :swap] if environment_release_number < 4
+
       assert_objects_with_hashes(ManageIQ::Providers::Openstack::CloudManager::Flavor.all,
                                  compute_data.flavors,
                                  compute_data.flavor_translate_table,
-                                 {:ram => -> (x) { x * 1_024 * 1_024 }},
-                                 [:is_public, :disk, :ephemeral, :swap]) # TODO(lsmola) model blacklisted attrs
+                                 {:ram       => -> (x) { x * 1_024 * 1_024 },
+                                  :disk      => gigabyte_transformation,
+                                  :ephemeral => gigabyte_transformation,
+                                  :swap      => -> (x) { x.megabyte }},
+                                 blacklisted_attributes)
 
       ManageIQ::Providers::Openstack::CloudManager::Flavor.all.each do |flavor|
         # TODO(lsmola) expose below to Builder's data
@@ -239,13 +237,10 @@ module Openstack
           end
 
         expect(flavor.ext_management_system).to eq @ems
-        expect(flavor.enabled).to                 eq true
-        expect(flavor.cpu_cores).to               eq nil
-        expect(flavor.description).to             eq nil
-        expect(flavor.root_disk_size).to          eq root_disk_size_by_flavor(flavor.name)
-        expect(flavor.swap_disk_size).to          eq flavor.name == "m1.ems_refresh_spec" ? 512.megabytes : 0
-        expect(flavor.ephemeral_disk_size).to     eq flavor.name == "m1.ems_refresh_spec" ? 1.gigabytes : 0
-        expect(flavor.ephemeral_disk_count).to    eq expected_ephemeral_disk_count
+        expect(flavor.enabled).to               eq true
+        expect(flavor.cpu_cores).to             eq nil
+        expect(flavor.description).to           eq nil
+        expect(flavor.ephemeral_disk_count).to  eq expected_ephemeral_disk_count
       end
     end
 

@@ -39,6 +39,18 @@ class CustomButton < ActiveRecord::Base
     where(:applies_to_class => applies_to_class, :applies_to_id => applies_to_id)
   end
 
+  def expanded_serializable_hash
+    button_hash = serializable_hash
+    if resource_action
+      resource_action_hash = resource_action.serializable_hash
+      if resource_action.dialog
+        resource_action_hash.merge!(:dialog => DialogSerializer.new.serialize([resource_action.dialog]).first)
+      end
+      button_hash.merge!(:resource_action => resource_action_hash)
+    end
+    button_hash
+  end
+
   def applies_to
     klass = applies_to_class.constantize
     applies_to_id.nil? ? klass : klass.find_by_id(applies_to_id)
@@ -59,15 +71,13 @@ class CustomButton < ActiveRecord::Base
   end
 
   def invoke(target)
-    args = resource_action.automate_queue_hash({:object_type => target.class.base_class.name, :object_id => target.id})
-    args[:user_id] ||= User.current_user.try(:id)
-    zone = target.respond_to?(:my_zone) ? target.my_zone : nil
+    args = resource_action.automate_queue_hash(target, {})
     MiqQueue.put(
       :class_name  => 'MiqAeEngine',
       :method_name => 'deliver',
       :args        => [args],
       :role        => 'automate',
-      :zone        => zone,
+      :zone        => target.try(:my_zone),
       :priority    => MiqQueue::HIGH_PRIORITY,
     )
   end

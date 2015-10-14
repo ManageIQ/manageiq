@@ -5,6 +5,7 @@ module MiqAeStateMachineSpec
   describe "MiqAeStateMachine" do
     before(:each) do
       @domain = 'SPEC_DOMAIN'
+      @user = FactoryGirl.create(:user_with_group)
       @model_data_dir = File.join(File.dirname(__FILE__), "data")
       MiqAeDatastore.reset
     end
@@ -17,7 +18,7 @@ module MiqAeStateMachineSpec
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "state_machine"), @domain)
 
       t0 = Time.now
-      ws = MiqAeEngine.instantiate("/SYSTEM/EVENT/VM_PROVISION_REQUESTED")
+      ws = MiqAeEngine.instantiate("/SYSTEM/EVENT/VM_PROVISION_REQUESTED", @user)
       t1 = Time.now
 
       ws.should_not be_nil
@@ -33,7 +34,7 @@ module MiqAeStateMachineSpec
       MiqAeDatastore.reset_default_namespace
 
       t0 = Time.now
-      ws = MiqAeEngine.instantiate("/SYSTEM/EVENT/VM_PROVISION_REQUESTED_NEW")
+      ws = MiqAeEngine.instantiate("/SYSTEM/EVENT/VM_PROVISION_REQUESTED_NEW", @user)
       t1 = Time.now
 
       ws.should_not be_nil
@@ -50,7 +51,7 @@ module MiqAeStateMachineSpec
       f1 = c1.ae_fields.detect    { |f| f.name == "execute"   }
       i1.set_field_attribute(f1, "provision_check(result => 'error')", :value)
 
-      ws = MiqAeEngine.instantiate("/SYSTEM/EVENT/VM_PROVISION_REQUESTED_NEW")
+      ws = MiqAeEngine.instantiate("/SYSTEM/EVENT/VM_PROVISION_REQUESTED_NEW", @user)
 
       ws.should_not be_nil
       ws.root['ae_result'].should == 'error'
@@ -66,7 +67,7 @@ module MiqAeStateMachineSpec
       f1 = c1.ae_fields.detect    { |f| f.name == "execute"   }
       i1.set_field_attribute(f1, "provision_check(result => 'exception')", :value)
 
-      ws = MiqAeEngine.instantiate("/SYSTEM/EVENT/VM_PROVISION_REQUESTED_NEW")
+      ws = MiqAeEngine.instantiate("/SYSTEM/EVENT/VM_PROVISION_REQUESTED_NEW", @user)
 
       ws.should_not be_nil
       ws.root['ae_result'].should == 'error'
@@ -83,7 +84,7 @@ module MiqAeStateMachineSpec
       f1 = c1.ae_fields.detect    { |f| f.name == "EmailOwner"   }
       i1.set_field_attribute(f1, "log_object", :on_exit)
 
-      ws = MiqAeEngine.instantiate("/SYSTEM/EVENT/VM_PROVISION_REQUESTED_NEW")
+      ws = MiqAeEngine.instantiate("/SYSTEM/EVENT/VM_PROVISION_REQUESTED_NEW", @user)
       t1 = Time.now
 
       ws.should_not be_nil
@@ -100,14 +101,14 @@ module MiqAeStateMachineSpec
       method_string = "update_provision_status(status => 'Testing on entry method',status_state => 'on_entry')"
       i1.set_field_attribute(f1, method_string, :on_entry)
 
-      ws = MiqAeEngine.instantiate("#{@domain}/Factory/statemachine/Provisioning")
+      ws = MiqAeEngine.instantiate("#{@domain}/Factory/statemachine/Provisioning", @user)
       ws.root("test_root_object_attribute").should == "update_provision_status"
     end
 
     it "sets ae_status_state properly" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "state_machine"), @domain)
 
-      ws = MiqAeEngine.instantiate("#{@domain}/Factory/statemachine/Provisioning")
+      ws = MiqAeEngine.instantiate("#{@domain}/Factory/statemachine/Provisioning", @user)
       ws.root['ae_status_state'].should == 'on_exit'
     end
 
@@ -119,7 +120,7 @@ module MiqAeStateMachineSpec
       f1 = c1.ae_fields.detect    { |f| f.name == "AcquireIPAddress"   }
       method_string = "SPEC_DOMAIN/factory/method.test_class_method(status => 'Testing class on entry method',status_state => 'on_entry')"
       i1.set_field_attribute(f1, method_string, :on_entry)
-      ws = MiqAeEngine.instantiate("#{@domain}/Factory/statemachine/Provisioning")
+      ws = MiqAeEngine.instantiate("#{@domain}/Factory/statemachine/Provisioning", @user)
       ws.root("test_root_object_attribute").should == "test_class_method"
     end
   end

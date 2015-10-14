@@ -10,7 +10,10 @@ module EvmAutomate
   end
 
   def self.simulate(domain, namespace, class_name, instance_name)
+    user = User.where(:userid => 'admin').first
+    raise "Need a admin user to run simulation" unless user
     MiqAeEngine.resolve_automation_object(instance_name,
+                                          user,
                                           {},
                                           :fqclass => "#{domain}/#{namespace}/#{class_name}")
   end

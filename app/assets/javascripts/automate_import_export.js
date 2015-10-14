@@ -30,7 +30,7 @@ var Automate = {
       Automate.addDomainOptions(rows_json.children);
       Automate.setupInitialDynatree(rows_json.children);
 
-      $('.importing-domains').change(function() {
+      $('select.importing-domains').change(function() {
         Automate.importingDomainsChangeHandler(rows_json.children);
       });
 
@@ -52,16 +52,18 @@ var Automate = {
   },
 
   addDomainOptions: function(domains) {
-    $('.importing-domains').empty();
+    $('select.importing-domains').empty();
 
     $.each(domains, function(index, child) {
-      $('.importing-domains').append(
+      $('select.importing-domains').append(
         $('<option>', {
           value: child.title,
           text: child.title
         })
       );
     });
+
+    $('select.importing-domains').selectpicker('refresh');
   },
 
   setupInitialDynatree: function(domains) {
@@ -74,7 +76,7 @@ var Automate = {
 
   importingDomainsChangeHandler: function(domains) {
     $.each(domains, function(index, child) {
-      if ($('.importing-domains').val() === child.title) {
+      if ($('select.importing-domains').val() === child.title) {
         $('.domain-tree').dynatree({
           checkbox: true,
           children: child.children,

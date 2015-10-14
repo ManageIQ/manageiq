@@ -1,11 +1,7 @@
 require 'spec_helper'
 
 describe TenantQuota do
-  let(:tenant) { FactoryGirl.create(:tenant, :parent => root_tenant) }
-
-  let(:root_tenant) do
-    Tenant.seed
-  end
+  let(:tenant) { FactoryGirl.create(:tenant) }
 
   describe "#valid?" do
     it "rejects invalid name" do
@@ -92,7 +88,7 @@ describe TenantQuota do
   end
 
   describe ".destroy_missing" do
-    let(:tenant2) { FactoryGirl.create(:tenant, :parent => root_tenant) }
+    let(:tenant2) { FactoryGirl.create(:tenant) }
 
     it "removes extra quotas only from object in question" do
       tenant.tenant_quotas.create(:name => :vms_allocated, :value => 20)

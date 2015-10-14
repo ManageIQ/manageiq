@@ -1,0 +1,17 @@
+-# Common partial for all available explorer trees
+-# Locals:
+-#   name - name of the accordion which renders the given tree
+-# Used instance variables:
+-#   @trees - all the available trees generated with TreeBuilder
+
+- case controller.controller_name
+- when 'provider_foreman'
+  = render(:partial => "provider_foreman/#{name}_tree")
+- when 'miq_capacity'
+  = render :partial => "#{controller.action_name}_tree"
+- when 'miq_policy'
+  - tree = @trees["#{name}_tree".to_sym]
+  = render :partial => "shared/tree", :locals => {:tree => tree, :name => tree.name.to_s}
+- else
+  - tree = @trees.length == 1 ? @trees.first : @trees.detect { |t| t.type == name.to_sym }
+  = render :partial => 'shared/tree', :locals  => {:tree => tree, :name => tree.name.to_s}

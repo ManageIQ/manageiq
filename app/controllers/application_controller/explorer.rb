@@ -277,7 +277,6 @@ module ApplicationController::Explorer
                         when MiqGroup            then options[:tree] == :db_tree ?
                                                       x_get_tree_g_kids(object, options) : nil
                         when MiqRegion           then x_get_tree_region_kids(object, options)
-                        when MiqReport           then x_get_tree_r_kids(object, options)
                         when ResourcePool        then x_get_tree_rp_kids(object, options)
                         when ServiceTemplate     then x_get_tree_st_kids(object, options)
                         when ServiceResource     then x_get_tree_sr_kids(object, options)
@@ -368,12 +367,6 @@ module ApplicationController::Explorer
   def x_get_tree_roots(options)
     count_only = options[:count_only]
     case options[:type]
-    when :export
-      export_children = [
-        {:id => "exportcustomreports", :tree => "export_tree", :text => "Custom Reports", :image => "report"},
-        {:id => "exportwidgets", :tree => "export_tree", :text => "Widgets", :image => "report"}
-      ]
-      return count_only ? export_children.length : export_children
     when :ab
       @resolve[:target_classes] = {}
       CustomButton.button_classes.each { |db| @resolve[:target_classes][db] = ui_lookup(:model => db) }
@@ -399,15 +392,9 @@ module ApplicationController::Explorer
       objects = rbac_filtered_objects(Dialog.all).sort_by { |a| a.label.downcase }
       return count_only ? objects.length : objects
     when :old_dialogs
-      MiqDialog::DIALOG_TYPES.sort.collect { |typ| {:id => "MiqDialog_#{typ[1]}", :text => typ[0], :image => "folder", :tip => typ[0]} }
-    when :reports
-      objects = []
-      @sb[:rpt_menu].each_with_index do |r, i|
-        objects.push(:id => "#{i}", :text => r[0], :image => "#{@sb[:grp_title] == r[0] ? "blue_folder" : "folder"}", :tip => r[0])
-        # load next level of folders when building the tree
-        x_tree(options[:tree])[:open_nodes].push("xx-#{i}")
+      MiqDialog::DIALOG_TYPES.sort.collect do |description, class_name|
+        { :id => "MiqDialog_#{class_name}", :text => description, :image => "folder", :tip => description }
       end
-      return objects
     when :roles
       if super_admin_user?
         roles = MiqGroup.all
@@ -435,18 +422,6 @@ module ApplicationController::Explorer
             {:id => "orph", :text => "<Orphaned>", :image => "currentstate-orphaned", :tip => "Orphaned VMs and Templates"}
           ]
       end
-    when :savedreports
-      # Saving the unique folder id's that hold reports under them, to use them in view to generate link
-      @sb[:folder_ids] = {}
-      g = admin_user? ? nil : session[:group]
-      MiqReport.having_report_results(:miq_group => g, :select => [:id, :name]).each do |r|
-        @sb[:folder_ids][r.name] = to_cid(r.id.to_i)
-      end
-      objects = []
-      @sb[:folder_ids].sort.each_with_index do |p, _i|
-        objects.push(:id => p[1], :text => p[0], :image => "report", :tip => p[0])
-      end
-      return objects
     when :stcat
       objects = rbac_filtered_objects(ServiceTemplateCatalog.all).sort_by { |a| a.name.downcase }
       return count_only ? objects.length : objects
@@ -567,25 +542,6 @@ module ApplicationController::Explorer
       end
       return objects
     end
-  end
-
-  def x_get_tree_g_kids(object, options)
-    objects = []
-    # dashboard nodes under each group
-    widgetsets = MiqWidgetSet.find_all_by_owner_type_and_owner_id("MiqGroup", object.id)
-    # if dashboard sequence was saved, build tree using that, else sort by name and build the tree
-    if object.settings && object.settings[:dashboard_order]
-      object.settings[:dashboard_order].each do |ws_id|
-        widgetsets.each do |ws|
-          if ws_id == ws.id
-            objects.push(ws)
-          end
-        end
-      end
-    else
-      objects = copy_array(widgetsets)
-    end
-    options[:count_only] ? widgetsets.count : widgetsets.sort_by { |a| a.name.to_s }
   end
 
   def x_get_tree_r_kids(object, options)
@@ -727,32 +683,6 @@ module ApplicationController::Explorer
     when :old_dialogs # VMs & Templates tree has orphaned and archived nodes
       objects = MiqDialog.find_all_by_dialog_type(object[:id].split('_').last).sort_by { |a| a.description.downcase }
       return count_only ? objects.length : objects
-    when :reports
-      objects = []
-      nodes = object[:full_id] ? object[:full_id].split('-') : object[:id].to_s.split('-')
-      if nodes.length == 1 # && nodes.last.split('-').length <= 2 #|| nodes.length == 2
-        @sb[:rpt_menu][nodes.last.to_i][1].each_with_index do |r, i|
-          objects.push(:id => "#{nodes.last.split('-').last}-#{i}", :text => r[0], :image => "#{@sb[:grp_title] == @sb[:rpt_menu][nodes.last.to_i][0] ? "blue_folder" : "folder"}", :tip => r[0])
-        end
-      elsif nodes.length >= 2 # || (object[:full_id] && object[:full_id].split('_').length == 2)
-        el1 = nodes.length == 2 ?
-              nodes[0].split('_').first.to_i : nodes[1].split('_').first.to_i
-        @sb[:rpt_menu][el1][1][nodes.last.to_i][1].each_with_index do |r, _i|
-          report = MiqReport.find_by_name(r)
-          objects.push(report) if report
-          # break after adding 1 report for a count_only,
-          # don't need to go thru them all to determine if node has children
-          break if options[:count_only]
-        end
-      end
-      return options[:count_only] ? objects.count : objects
-    when :savedreports
-      view, pages = get_view(MiqReportResult, :where_clause => set_saved_reports_condition(from_cid(object[:id].split('-').last)), :all_pages => true)
-      objects = []
-      view.table.data.each do |s|
-        objects.push(MiqReportResult.find_by_id(s["id"]))
-      end
-      return options[:count_only] ? objects.count : objects.sort_by(&:name)
     when :vandt # VMs & Templates tree has orphaned and archived nodes
       case object[:id]
       when "orph" # Orphaned
@@ -816,6 +746,9 @@ module ApplicationController::Explorer
       else
         return emses.sort_by { |a| a.name.downcase } + storages.sort_by { |a| a.name.downcase }
       end
+    when :savedreports
+      objects = MiqReportResult.where(set_saved_reports_condition(from_cid(object[:id].split('-').last))).all
+      return options[:count_only] ? objects.count : objects.sort_by(&:last_run_on)
     when :widgets
       objects = MiqWidget.find_all_by_content_type(WIDGET_CONTENT_TYPE[object[:id].split('-').last])
       return options[:count_only] ? objects.count : objects.sort_by(&:title)

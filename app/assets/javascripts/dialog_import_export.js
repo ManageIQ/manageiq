@@ -21,36 +21,22 @@ var listenForDialogPostMessages = function() {
   });
 };
 
-var getAndRenderServiceDialogJson = function(importFileUploadId, message) {
-  $('.hidden-import-file-upload-id').val(importFileUploadId);
+var renderServiceDialogJson = function(rows_json, importFileUploadId) {
+  var statusFormatter = function(row, cell, value, columnDef, dataContext) {
+    var status_img = "<img src=/images/icons/16/" + dataContext.status_icon + ".png >";
 
-  $.getJSON("service_dialog_json?import_file_upload_id=" + importFileUploadId, function(rows_json) {
-    var statusFormatter = function(row, cell, value, columnDef, dataContext) {
-      var status_img = "<img src=/images/icons/16/" + dataContext.status_icon + ".png >";
+    return status_img + dataContext.status;
+  };
 
-      return status_img + dataContext.status;
-    };
+  var dataview = new Slick.Data.DataView({inlineFilters: true});
 
-    var inputCheckboxFormatter = function(row, cell, value, columnDef, dataContext) {
-      var checked = '';
-      var value = dataContext.name;
-      var attributes = "class='import-checkbox' type='checkbox' name='dialogs_to_import[]' value = '" + value + "'";
-      if (dataContext.status_icon == 'equal-green') {
-        checked = "checked='checked'";
-      }
-      return "<input " + attributes + checked + "></input>";
-    };
+  var checkboxSelector = new Slick.CheckboxSelectColumn({
+    cssClass: "import-checkbox",
+  });
 
-    var dataview = new Slick.Data.DataView({inlineFilters: true});
-
-    var columns = [
-      {
-      id: "import",
-      name: "Import",
-      field: "import_checkbox",
-      width: 65,
-      formatter: inputCheckboxFormatter
-    }, {
+  var columns = [
+    checkboxSelector.getColumnDefinition(),
+    {
       id: "name",
       name: "Service Dialog Name",
       field: "name",
@@ -62,17 +48,44 @@ var getAndRenderServiceDialogJson = function(importFileUploadId, message) {
       width: 300,
       formatter: statusFormatter
     }
-    ];
+  ];
 
-    dataview.beginUpdate();
-    dataview.setItems(rows_json);
-    dataview.endUpdate();
+  dataview.beginUpdate();
+  dataview.setItems(rows_json);
+  dataview.endUpdate();
 
-    var grid = new Slick.Grid("#import-grid", dataview, columns, {enableColumnReorder: false});
+  var grid = new Slick.Grid("#import-grid", dataview, columns, {enableColumnReorder: false});
 
-    $('#import_file_upload_id').val(importFileUploadId);
-    $('.import-data').show();
-    $('.import-or-export').hide();
+  grid.setSelectionModel(new Slick.RowSelectionModel({selectActiveRow: false}));
+  grid.registerPlugin(checkboxSelector);
+
+  $('#import_file_upload_id').val(importFileUploadId);
+  $('.import-data').show();
+  $('.import-or-export').hide();
+
+  var rowsToSelect = [];
+  $.each(grid.getData().getItems(), function(index, item) {
+    if (item.status_icon === 'equal-green') {
+      rowsToSelect.push(item.id);
+    }
+  });
+
+  grid.setSelectedRows(rowsToSelect);
+  grid.invalidate();
+  grid.render();
+
+  setUpImportClickHandlers('import_service_dialogs', grid, function() {
+    $.get('dialog_accordion_json', function(data) {
+      ManageIQ.dynatreeReplacement.replace(data.locals_for_render);
+    });
+  });
+};
+
+var getAndRenderServiceDialogJson = function(importFileUploadId, message) {
+  $('.hidden-import-file-upload-id').val(importFileUploadId);
+
+  $.getJSON("service_dialog_json?import_file_upload_id=" + importFileUploadId).done(function(rows_json) {
+    renderServiceDialogJson(rows_json, importFileUploadId);
   });
 
   showSuccessMessage(JSON.parse(message).message);

@@ -80,7 +80,7 @@ class MiqAeClassController < ApplicationController
   end
 
   def explorer
-    @built_trees = []
+    @trees = []
     @sb[:action] = nil
     @sb[:open_tree_nodes] ||= [] # Create array to keep open tree nodes (only for autoload trees)
     @explorer = true
@@ -94,8 +94,8 @@ class MiqAeClassController < ApplicationController
     @accords = []
     self.x_active_tree = :ae_tree
     tree = build_ae_tree
-    @built_trees << tree
-    @accords << {:name => "datastores", :title => "Datastore", :container => "ae_tree_div", :image => "folder"}
+    @trees << tree
+    @accords << {:name => "datastores", :title => "Datastore", :container => "ae_accord", :image => "folder"}
     @sb[:active_accord] = :ae
     @sb[:active_tab] ||= "namespaces"
     self.x_node ||= "root"
@@ -1826,10 +1826,10 @@ class MiqAeClassController < ApplicationController
   def get_rec_name(rec)
     column = rec.display_name.blank? ? :name : :display_name
     if rec.kind_of?(MiqAeNamespace) && rec.domain?
-      editable_domain = User.current_tenant.editable_domains.include?(rec)
+      editable_domain = editable_domain?(rec)
       enabled_domain  = rec.enabled
       return add_read_only_suffix(rec.send(column),
-                                  editable_domain,
+                                  editable_domain?(rec),
                                   enabled_domain) unless editable_domain && enabled_domain
     end
     rec.send(column)

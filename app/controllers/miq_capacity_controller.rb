@@ -9,6 +9,8 @@ class MiqCapacityController < ApplicationController
   end
 
   def utilization
+    @explorer = true
+    @trees = [] # TODO: TreeBuilder
     @breadcrumbs = []
     @sb[:open_tree_nodes] ||= []
     self.x_active_tree = 'utilization_tree'
@@ -16,7 +18,7 @@ class MiqCapacityController < ApplicationController
     @accords = [{
       :name      => "enterprise",
       :title     => "Utilization",
-      :container => "utilization_tree_div",
+      :container => "utilization_accord",
       :image     => "enterprise"
     }]
 
@@ -42,6 +44,8 @@ class MiqCapacityController < ApplicationController
   end
 
   def bottlenecks
+    @explorer = true
+    @trees = [] # TODO: TreeBuilder
     @breadcrumbs = []
     @sb[:open_tree_nodes] ||= []
     @explorer = true
@@ -49,7 +53,12 @@ class MiqCapacityController < ApplicationController
     @layout = "miq_capacity_bottlenecks"
     self.x_active_tree = 'bottlenecks_tree'
     util_build_tree(:bottlenecks, :bottlenecks_tree)
-    @accords = [{:name => "bottlenecks", :title => "Bottlenecks", :container => "bottlenecks_tree_div", :image => "enterprise"}]
+    @accords = [{
+      :name      => "bottlenecks",
+      :title     => "Bottlenecks",
+      :container => "bottlenecks_accord",
+      :image     => "enterprise"
+    }]
 
     @sb[:active_tab] = "summary"
     self.x_node ||= ""
@@ -72,7 +81,7 @@ class MiqCapacityController < ApplicationController
   def planning
     @breadcrumbs = []
     @explorer = true
-    @accords = [{:name => "planning", :title => "Planning Options", :container => "planning_options_div"}]
+    @accords = [{:name => "planning", :title => "Planning Options", :container => "planning_options_accord"}]
 
     @collapse_c_cell = true
     self.x_active_tree = nil
@@ -398,7 +407,7 @@ class MiqCapacityController < ApplicationController
     treenodeid = valid_active_node(treenodeid)
     get_nodetype_and_record(treenodeid)
     @right_cell_text = @record.kind_of?(MiqEnterprise) ?
-      _("%s") % ui_lookup(:model => "MiqEnterprise") :
+      ui_lookup(:model => "MiqEnterprise") :
       _("%{model} \"%{name}\" %{typ}") % {:model => ui_lookup(:model => @record.class.base_class.to_s), :name => @record.name, :typ => "Utilization Trend Summary"}
     @sb[:util][:title] = @right_cell_text
     @right_cell_text += " - Filtered by #{@sb[:util][:tags][@sb[:util][:options][:tag]]}" unless @sb[:util][:options].nil? || @sb[:util][:options][:tag].blank?
@@ -638,7 +647,7 @@ class MiqCapacityController < ApplicationController
 
     get_nodetype_and_record(treenodeid)
     @right_cell_text = @record.kind_of?(MiqEnterprise) ?
-        _("%s") % ui_lookup(:model => "MiqEnterprise") :
+        ui_lookup(:model => "MiqEnterprise") :
         _("%{model} \"%{name}\" %{typ}") % {:model => ui_lookup(:model => @record.class.base_class.to_s), :name => @record.name, :typ => "Bottlenecks Summary"}
 
     # Get the where clause to limit records to the selected tree node (@record)

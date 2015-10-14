@@ -12,8 +12,9 @@ module MiqProvision::Naming
       if NAME_VIA_AUTOMATE == true
         prov_obj.save
         attrs = {'request' => 'UI_PROVISION_INFO', 'message' => 'get_vmname'}
-        attrs[MiqAeEngine.create_automation_attribute_key(prov_obj.get_user)] = MiqAeEngine.create_automation_attribute_value(prov_obj.get_user) unless prov_obj.get_user.nil?
-        ws  = MiqAeEngine.resolve_automation_object("REQUEST", attrs, :vmdb_object => prov_obj)
+        MiqAeEngine.set_automation_attributes_from_objects([prov_obj.get_user], attrs)
+        ws = MiqAeEngine.resolve_automation_object("REQUEST", prov_obj.get_user, attrs, :vmdb_object => prov_obj)
+
         unresolved_vm_name = ws.root("vmname")
         prov_obj.reload
       end

@@ -1,16 +1,6 @@
 = stylesheet_link_tag "service_dialogs"
-- content_for :trees do
-  - @built_trees.each do |tree|
-    %div{:style => "display: none;"}
-      = render(:partial => "shared/tree",
-        :locals         => {:tree => tree, :name => tree.name.to_s})
-  -# Custom left cell div for service dialog editor to use
-  = render :partial => "layouts/custom_left_cell"
-- content_for :accords do
-  = render(:partial => "layouts/dhtmlxlayout_explorer",
-    :locals         => {:accords => @accords,
-      :active_accord             => @sb[:active_accord],
-      :accord_select_function    => "miqAccordCustomizationSelect"})
+- content_for :dhx_layout do
+  = render :partial => "layouts/dhtmlxlayout_explorer"
 
 #main_div.main_div
   - case x_active_tree

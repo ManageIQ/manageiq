@@ -405,12 +405,11 @@ class ApiController
       target = is_subcollection ? :subcollection_actions : :collection_actions
       return [] unless cspec.key?(target)
       cspec[target].each.collect do |method, action_definitions|
-        if cspec[:methods].include?(method)
-          typed_action_definitions = fetch_typed_subcollection_actions(method, is_subcollection) || action_definitions
-          typed_action_definitions.each.collect do |action|
-            if !action[:disabled] && api_user_role_allows?(action[:identifier])
-              {"name" => action[:name], "method" => method, "href" => (href ? href : collection)}
-            end
+        next unless render_actions_for_method(cspec[:methods], method)
+        typed_action_definitions = fetch_typed_subcollection_actions(method, is_subcollection) || action_definitions
+        typed_action_definitions.each.collect do |action|
+          if !action[:disabled] && api_user_role_allows?(action[:identifier])
+            {"name" => action[:name], "method" => method, "href" => (href ? href : collection)}
           end
         end
       end.flatten.compact
@@ -420,15 +419,18 @@ class ApiController
       target = is_subcollection ? :subresource_actions : :resource_actions
       return [] unless cspec.key?(target)
       cspec[target].each.collect do |method, action_definitions|
-        if cspec[:methods].include?(method)
-          typed_action_definitions = fetch_typed_subcollection_actions(method, is_subcollection) || action_definitions
-          typed_action_definitions.each.collect do |action|
-            if !action[:disabled] && api_user_role_allows?(action[:identifier])
-              {"name" => action[:name], "method" => method, "href" => href}
-            end
+        next unless render_actions_for_method(cspec[:methods], method)
+        typed_action_definitions = fetch_typed_subcollection_actions(method, is_subcollection) || action_definitions
+        typed_action_definitions.each.collect do |action|
+          if !action[:disabled] && api_user_role_allows?(action[:identifier])
+            {"name" => action[:name], "method" => method, "href" => href}
           end
         end
       end.flatten.compact
+    end
+
+    def render_actions_for_method(methods, method)
+      method != :get && methods.include?(method)
     end
 
     def fetch_typed_subcollection_actions(method, is_subcollection)

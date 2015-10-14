@@ -3,23 +3,22 @@
 = hidden_field_tag('id', @infra.id)
 - unless @stack.nil?
   .form-horizontal
-    %tbody
+    .form-group
+      %label.col-md-2.control-label
+        = _('Orchestration Stack')
+      .col-md-8
+        = @stack.name
+    .form-group
+      %label.col-md-2.control-label
+        = _('Number of Hosts')
+      .col-md-8
+        = @infra.hosts.count
+    - @count_parameters.each do |parameter|
       .form-group
         %label.col-md-2.control-label
-          = _('Orchestration Stack')
+          = parameter.name
         .col-md-8
-          = @stack.name
-      .form-group
-        %label.col-md-2.control-label
-          = _('Number of Hosts')
-        .col-md-8
-          = @infra.hosts.count
-      - @count_parameters.each do |parameter|
-        .form-group
-          %label.col-md-2.control-label
-            = parameter.name
-          .col-md-8
-            = text_field_tag(parameter.name, parameter.value, :maxlength => 5)
+          = text_field_tag(parameter.name, parameter.value, :maxlength => 5)
   %table{:width => "100%"}
     %tr
       %td{:align => "right"}

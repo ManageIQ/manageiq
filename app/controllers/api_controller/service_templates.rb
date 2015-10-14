@@ -31,12 +31,7 @@ class ApiController
 
     def service_templates_order_resource(_object, _type, id = nil, data = nil)
       klass = collection_class(:service_templates)
-      st    = klass.find(id)
-
-      requester_id     = @auth_user
-      options          = {}
-      options[:dialog] = {}
-
+      options = {:dialog => {}, :src_id => id}
       unless data.nil?
         data.each do |key, value|
           dkey = "dialog_#{key}"
@@ -44,21 +39,7 @@ class ApiController
         end
       end
 
-      request_type  = st.request_type.to_s
-      request       = st.request_class.create!(:options      => options,
-                                               :userid       => requester_id,
-                                               :request_type => request_type,
-                                               :source_id    => st.id)
-      request.set_description
-      request.create_request
-
-      event_name    = "#{st.name.underscore}_created"
-      event_message = "Request by [#{requester_id}] for #{st.class.name}:#{st.id}"
-      AuditEvent.success(:event  => event_name,   :target_class => klass,
-                         :userid => requester_id, :message      => event_message)
-
-      request.call_automate_event_queue("request_created")
-      request
+      klass.new.request_class.make_request(nil, options, @auth_user_obj)
     end
 
     private

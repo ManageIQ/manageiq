@@ -103,8 +103,9 @@ class MiqVm
 
       dInfo.hardwareId = dtag
       dInfo.baseOnly = @ost.openParent unless mode && mode["independent"]
-      dInfo.rawDisk = @ost.rawDisk # force raw disk for testing
+      dInfo.rawDisk = @ost.rawDisk
       $log.debug "MiqVm::openDisks: dInfo.baseOnly = #{dInfo.baseOnly}"
+      $log.debug "MiqVolumeManager::openDisks: dInfo.rawDisk = #{dInfo.rawDisk}"
 
       begin
         d = applianceVolumeManager && applianceVolumeManager.lvHash[dInfo.fileName] if @rhevm

@@ -32,6 +32,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
       assert_table_counts
       assert_ems
       assert_specific_az
+      assert_specific_cloud_network
       assert_specific_flavor
       assert_specific_vm_powered_on
       assert_specific_vm_powered_off
@@ -42,22 +43,22 @@ describe ManageIQ::Providers::Azure::CloudManager do
 
   def assert_table_counts
     ExtManagementSystem.count.should eql(1)
-    Flavor.count.should eql(41)
+    Flavor.count.should eql(52)
     AvailabilityZone.count.should eql(3)
-    VmOrTemplate.count.should eql(8)
-    Vm.count.should eql(8)
-    Disk.count.should eql(10)
+    VmOrTemplate.count.should eql(9)
+    Vm.count.should eql(9)
+    Disk.count.should eql(11)
     GuestDevice.count.should eql(0)
-    Hardware.count.should eql(8)
-    Network.count.should eql(16)
-    OperatingSystem.count.should eql(8)
+    Hardware.count.should eql(9)
+    Network.count.should eql(18)
+    OperatingSystem.count.should eql(9)
     Relationship.count.should eql(0)
-    MiqQueue.count.should eql(8)
+    MiqQueue.count.should eql(9)
     OrchestrationTemplate.count.should eql(3)
     OrchestrationStack.count.should eql(7)
-    OrchestrationStackParameter.count.should eql(80)
-    OrchestrationStackOutput.count.should eql(7)
-    OrchestrationStackResource.count.should eql(36)
+    OrchestrationStackParameter.count.should eql(72)
+    OrchestrationStackOutput.count.should eql(5)
+    OrchestrationStackResource.count.should eql(32)
   end
 
   def assert_ems
@@ -65,52 +66,72 @@ describe ManageIQ::Providers::Azure::CloudManager do
       :api_version => nil,
       :uid_ems     => "a50f9983-d1a2-4a8d-be7d-123456789012"
     )
-    @ems.flavors.size.should eql(41)
+    @ems.flavors.size.should eql(52)
     @ems.availability_zones.size.should eql(3)
-    @ems.vms_and_templates.size.should eql(8)
-    @ems.vms.size.should eql(8)
+    @ems.vms_and_templates.size.should eql(9)
+    @ems.vms.size.should eql(9)
     @ems.orchestration_stacks.size.should eql(7)
     @ems.direct_orchestration_stacks.size.should eql(6)
   end
 
   def assert_specific_flavor
-    @flavor = ManageIQ::Providers::Azure::CloudManager::Flavor.where(:name => "Standard_A1").first
+    @flavor = ManageIQ::Providers::Azure::CloudManager::Flavor.where(:name => "Standard_A0").first
     @flavor.should have_attributes(
-      :name                     => "Standard_A1",
+      :name                     => "Standard_A0",
       :description              => nil,
       :enabled                  => true,
       :cpus                     => 1,
       :cpu_cores                => 1,
-      :memory                   => 1792,
+      :memory                   => 768,
       :supports_32_bit          => nil,
       :supports_64_bit          => nil,
       :supports_hvm             => nil,
       :supports_paravirtual     => nil,
       :block_storage_based_only => nil,
       :root_disk_size           => 1023.megabytes,
-      :swap_disk_size           => 70.megabytes
+      :swap_disk_size           => 20.megabytes
     )
 
     @flavor.ext_management_system.should == @ems
   end
 
   def assert_specific_az
-    @az = ManageIQ::Providers::Azure::CloudManager::AvailabilityZone.where(:name => "AvailabilitySet1").first
+    @az = ManageIQ::Providers::Azure::CloudManager::AvailabilityZone.where(:name => "AvailabilitySet2").first
     @az.should have_attributes(
-      :name => "AvailabilitySet1",
+      :name => "AvailabilitySet2",
     )
   end
 
+  def assert_specific_cloud_network
+    @cn = CloudNetwork.where(:name => "Chef-Prod").first
+    @cn.should have_attributes(
+      :name    => "Chef-Prod",
+      :ems_ref => "/subscriptions/462f2af8-e67e-40c6-9fbf-02824d1dd485/resourceGroups/Chef-Prod/providers/Microsoft.Network/virtualNetworks/Chef-Prod",
+      :cidr    => "10.2.0.0/16",
+      :status  => nil,
+      :enabled => true
+    )
+
+    @cn.cloud_subnets.size.should == 1
+    @subnet = @cn.cloud_subnets.where(:name => "default").first
+    @subnet.should have_attributes(
+      :name    => "default",
+      :ems_ref => "/subscriptions/462f2af8-e67e-40c6-9fbf-02824d1dd485/resourceGroups/Chef-Prod/providers/Microsoft.Network/virtualNetworks/Chef-Prod/subnets/default",
+      :cidr    => "10.2.0.0/24"
+    )
+  end
+
+
   def assert_specific_vm_powered_on
-    v = ManageIQ::Providers::Azure::CloudManager::Vm.where(:name => "ERP", :raw_power_state => "VM running").first
+    v = ManageIQ::Providers::Azure::CloudManager::Vm.where(:name => "Chef-Prod", :raw_power_state => "VM running").first
     v.should have_attributes(
       :template              => false,
-      :ems_ref               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\microsoft.compute/virtualmachines\\ERP",
+      :ems_ref               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\Chef-Prod\\microsoft.compute/virtualmachines\\Chef-Prod",
       :ems_ref_obj           => nil,
-      :uid_ems               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\microsoft.compute/virtualmachines\\ERP",
+      :uid_ems               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\Chef-Prod\\microsoft.compute/virtualmachines\\Chef-Prod",
       :vendor                => "Microsoft",
       :power_state           => "on",
-      :location              => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\microsoft.compute/virtualmachines\\ERP",
+      :location              => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\Chef-Prod\\microsoft.compute/virtualmachines\\Chef-Prod",
       :tools_status          => nil,
       :boot_time             => nil,
       :standby_action        => nil,
@@ -131,7 +152,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
     v.ext_management_system.should eql(@ems)
     v.availability_zone.should eql(@az)
     v.flavor.should eql(@flavor)
-    v.operating_system.product_name.should eql("UbuntuServer 14.04.3 LTS")
+    v.operating_system.product_name.should eql("chef-server chefbyol")
     v.custom_attributes.size.should eql(0)
     v.snapshots.size.should eql(0)
 
@@ -145,8 +166,8 @@ describe ManageIQ::Providers::Azure::CloudManager do
       :bios                => nil,
       :annotation          => nil,
       :numvcpus            => 1,
-      :memory_cpu          => 1792, # MB
-      :disk_capacity       => 1093.megabytes,
+      :memory_cpu          => 768, # MB
+      :disk_capacity       => 1043.megabyte,
       :bitness             => nil,
       :virtualization_type => nil
     )
@@ -163,24 +184,25 @@ describe ManageIQ::Providers::Azure::CloudManager do
     network = v.hardware.networks.where(:description => "public").first
     network.should have_attributes(
       :description => "public",
-      :ipaddress   => "40.76.27.54",
+      :ipaddress   => "137.135.125.21",
       :hostname    => "ipconfig1"
     )
     network = v.hardware.networks.where(:description => "private").first
     network.should have_attributes(
       :description => "private",
-      :ipaddress   => "10.0.0.8",
+      :ipaddress   => "10.2.0.4",
       :hostname    => "ipconfig1"
     )
   end
 
   def assert_specific_vm_powered_off
-    v = ManageIQ::Providers::Azure::CloudManager::Vm.where(:name => "MIQ2", :raw_power_state => "VM deallocated").first
+    v   = ManageIQ::Providers::Azure::CloudManager::Vm.where(:name => "MIQ2", :raw_power_state => "VM deallocated").first
+    az1 = ManageIQ::Providers::Azure::CloudManager::AvailabilityZone.where(:name => "AvailabilitySet1").first
 
     assert_specific_vm_powered_off_attributes(v)
 
     v.ext_management_system.should eql(@ems)
-    v.availability_zone.should eql(@az)
+    v.availability_zone.should eql(az1)
     v.floating_ip.should be_nil
     v.cloud_network.should be_nil
     v.cloud_subnet.should be_nil

@@ -3,6 +3,7 @@ require "spec_helper"
 module MiqAeServiceMiqRequestTaskSpec
   describe MiqAeMethodService::MiqAeServiceMiqRequestTask do
     before(:each) do
+      @user = FactoryGirl.create(:user_with_group)
       MiqAutomateHelper.create_service_model_method('SPEC_DOMAIN', 'EVM',
                                                     'AUTOMATE', 'test1', 'test')
       @ae_method     = ::MiqAeMethod.first
@@ -12,7 +13,7 @@ module MiqAeServiceMiqRequestTaskSpec
     end
 
     def invoke_ae
-      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?MiqRequestTask::miq_request_task=#{@miq_request_task.id}")
+      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?MiqRequestTask::miq_request_task=#{@miq_request_task.id}", @user)
     end
 
     it "#execute" do

@@ -4,7 +4,7 @@ describe MiqProvision do
   context "A new provision request," do
     before(:each) do
       @os = OperatingSystem.new(:product_name => 'Microsoft Windows')
-      @admin = FactoryGirl.create(:user_admin)
+      @admin = FactoryGirl.create(:user_with_group, :role => "admin")
       @target_vm_name = 'clone test'
       @options = {
         :pass          => 1,

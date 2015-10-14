@@ -455,8 +455,8 @@ describe VmOrTemplate do
 
   context ".set_tenant_from_group" do
     before { Tenant.seed }
-    let(:tenant1) { FactoryGirl.create(:tenant, :parent => Tenant.root_tenant) }
-    let(:tenant2) { FactoryGirl.create(:tenant, :parent => Tenant.root_tenant) }
+    let(:tenant1) { FactoryGirl.create(:tenant) }
+    let(:tenant2) { FactoryGirl.create(:tenant) }
     let(:group1) { FactoryGirl.create(:miq_group, :tenant => tenant1) }
     let(:group2) { FactoryGirl.create(:miq_group, :tenant => tenant2) }
 

@@ -170,7 +170,7 @@ describe MiqAeCustomizationController do
 
     it "builds the old dialogs tree" do
       get :explorer
-      assigns(:built_trees)[0].name == :old_dialogs_tree
+      assigns(:trees)[0].name == :old_dialogs_tree
     end
 
     it "assigns the sandbox active node on dialogs tree to root" do
@@ -180,7 +180,7 @@ describe MiqAeCustomizationController do
 
     it "builds the dialog tree" do
       get :explorer
-      assigns(:built_trees)[1].name.should == :dialogs_tree
+      assigns(:trees)[1].name.should == :dialogs_tree
     end
 
     it "assigns the sandbox active node on ab tree to root" do
@@ -190,7 +190,7 @@ describe MiqAeCustomizationController do
 
     it "builds the ab tree" do
       get :explorer
-      assigns(:built_trees)[2].name.should == :ab_tree
+      assigns(:trees)[2].name.should == :ab_tree
     end
 
     it "assigns the sandbox active node on import/export tree to root" do
@@ -200,7 +200,7 @@ describe MiqAeCustomizationController do
 
     it "builds the import/export tree" do
       get :explorer
-      assigns(:built_trees)[3].name.should == :dialog_import_export_tree
+      assigns(:trees)[3].name.should == :dialog_import_export_tree
     end
 
     context "when the sandbox has flash messages" do

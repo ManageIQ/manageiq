@@ -96,10 +96,10 @@ module Vmdb
       init_diagnostics
       @diags.each do |diag|
         begin
-          if diag[:evaluate?]
-            res = eval(diag[:cmd])
+          if diag[:cmd].kind_of?(Proc)
+            res = diag[:cmd].call
           else
-            res = `#{diag[:cmd]}`
+            res = AwesomeSpawn.run(diag[:cmd], :params => diag[:params]).output
           end
         rescue => e
           $log.warn("Diagnostics: [#{diag[:msg]}] command [#{diag[:cmd]}] failed with error [#{e}]")
@@ -146,24 +146,40 @@ module Vmdb
       retVal
     end
 
-    def self.init_diagnostics
-      log_dir = "/var/www/miq/vmdb/log"
-      gem_log = File.join(log_dir, "gem_list.txt")
-      rpm_log = File.join(log_dir, "package_list_rpm.txt")
+    def self.installed_rpms
+      File.open(log_dir.join("package_list_rpm.txt"), "a") do |file|
+        file.puts "start: date time is: #{Time.now.utc}"
+        LinuxAdmin.Rpm.list_installed.sort.each do |name, version|
+          file.puts "#{name} #{version}"
+        end
+      end
+    end
 
+    def self.installed_gems
+      File.open(log_dir.join("gem_list.txt"), "a") do |file|
+        file.puts "start: date time is: #{Time.now.utc}"
+        file.puts `gem list`
+      end
+    end
+
+    def self.log_dir
+      Pathname.new("/var/www/miq/vmdb/log")
+    end
+
+    def self.init_diagnostics
       @diags ||= [
-        {:cmd => "top -b -n 1", :msg => "Uptime, top processes, and memory usage"}, # batch mode - once
-        {:cmd => "pstree -ap", :msg => "Process tree"},
-        {:cmd => "df -alhT", :msg => "File system disk usage"},   # All including dummy fs, local, human readable, file system type
-        {:cmd => "mount", :msg => "Mounted file systems"},
-        {:cmd => "ifconfig -a", :msg => "Currently active interfaces"},
-        {:cmd => "route", :msg => "IP Routing table"},
-        {:cmd => "netstat -i -a", :msg => "Network interface table"},
-        {:cmd => "netstat -s", :msg => "Network statistics"},
-        {:cmd => "File.open('/etc/hosts','r'){|f| f.read} if File.exist?('/etc/hosts')", :evaluate? => true, :msg => "Hosts file contents"},
-        {:cmd => "File.open('/etc/fstab','r'){|f| f.read} if File.exist?('/etc/fstab')", :evaluate? => true, :msg => "Fstab file contents"},
-        {:cmd => "echo start: date time is: #{Time.now.utc} >> #{gem_log}; gem list > #{gem_log}"},
-        {:cmd => "echo start: date time is: #{Time.now.utc} >> #{rpm_log}; rpm -qa --queryformat '%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n' |sort -k 1  > #{rpm_log} 2> /dev/null"},
+        {:cmd => "top",      :params => [:b, {:n => 1}],                              :msg => "Uptime, top processes, and memory usage"}, # batch mode - 1 iteration
+        {:cmd => "pstree",   :params => [:a, :p],                                     :msg => "Process tree"},
+        {:cmd => "df",       :params => [:all, :local, :human_readable, :print_type], :msg => "File system disk usage"},   # All including dummy fs, local, human readable, file system type
+        {:cmd => "mount",                                                             :msg => "Mounted file systems"},
+        {:cmd => "ifconfig", :params => [:a],                                         :msg => "Currently active interfaces"},  # -a display all interfaces which are currently available, even if down
+        {:cmd => "route",                                                             :msg => "IP Routing table"},
+        {:cmd => "netstat",  :params => [:interfaces, :all],                          :msg => "Network interface table"},
+        {:cmd => "netstat",  :params => [:statistics],                                :msg => "Network statistics"},
+        {:cmd => -> { File.read('/etc/hosts') if File.exist?('/etc/hosts') },         :msg => "Hosts file contents"},
+        {:cmd => -> { File.read('/etc/fstab') if File.exist?('/etc/fstab') },         :msg => "FStab file contents"},
+        {:cmd => -> { installed_gems },                                               :msg => "Installed Ruby Gems" },
+        {:cmd => -> { installed_rpms },                                               :msg => "Installed RPMs" },
       ]
     end
   end

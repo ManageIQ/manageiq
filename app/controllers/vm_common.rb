@@ -1238,8 +1238,8 @@ module VmCommon
   # Accordion selected in explorer
   def accordion_select
     @lastaction = "explorer"
-    self.x_active_accord = params[:id]
-    self.x_active_tree   = "#{params[:id]}_tree"
+    self.x_active_accord = params[:id].sub(/_accord$/, '')
+    self.x_active_tree   = "#{x_active_accord}_tree"
     @sb[:action] = nil
     replace_right_cell
   end
@@ -1488,6 +1488,9 @@ module VmCommon
       :delete_node => @delete_node,      # Remove a new node from the tree
     )
 
+    presenter[:set_visible_elements][:default_left_cell] = true
+    presenter[:set_visible_elements][:custom_left_cell] = false
+
     r = proc { |opts| render_to_string(opts) }
 
     add_ajax = false
@@ -1538,9 +1541,10 @@ module VmCommon
       add_ajax = true
 
       if ['compare', 'drift'].include?(@sb[:action])
-        presenter[:update_partials][:custom_left_cell_div] = r[
+        presenter[:update_partials][:custom_left_cell] = r[
           :partial => 'layouts/listnav/x_compare_sections', :locals => {:truncate_length => 23}]
-        presenter[:cell_a_view] = 'custom'
+        presenter[:set_visible_elements][:custom_left_cell] = true
+        presenter[:set_visible_elements][:default_left_cell] = false
       end
     elsif @sb[:action] || params[:display]
       partial_locals = {

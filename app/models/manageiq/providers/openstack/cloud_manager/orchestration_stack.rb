@@ -12,11 +12,12 @@ class ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack < ::Orche
     raise MiqException::MiqOrchestrationProvisionError, err.to_s, err.backtrace
   end
 
-  def raw_update_stack(options)
+  def raw_update_stack(template, options)
+    update_options = {:template => template.content}.merge(options.except(:disable_rollback, :timeout_mins))
     connection_options = {:service => "Orchestration"}
     connection_options.merge!(:tenant_name => cloud_tenant.name) if cloud_tenant
     ext_management_system.with_provider_connection(connection_options) do |service|
-      service.stacks.get(name, ems_ref).save(options)
+      service.stacks.get(name, ems_ref).save(update_options)
     end
   rescue => err
     _log.error "stack=[#{name}], error: #{err}"

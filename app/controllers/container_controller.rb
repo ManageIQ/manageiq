@@ -69,24 +69,24 @@ class ContainerController < ApplicationController
     end
 
     # Build the Explorer screen from scratch
-    @built_trees   = []
+    @trees   = []
     @accords = []
     if role_allows(:feature => "container_accord", :any => true)
       self.x_active_tree ||= 'containers_tree'
       self.x_active_accord ||= 'containers'
-      @built_trees.push(build_containers_tree)
+      @trees.push(build_containers_tree)
       @accords.push(:name      => "containers",
                     :title     => "Relationships",
-                    :container => "containers_tree_div")
+                    :container => "containers_accord")
     end
 
     if role_allows(:feature => "container_filter_accord", :any => true)
       self.x_active_tree ||= 'containers_filter_tree'
       self.x_active_accord ||= 'containers_filter'
-      @built_trees.push(build_containers_filter_tree)
+      @trees.push(build_containers_filter_tree)
       @accords.push(:name      => "containers_filter",
                     :title     => "All Containers",
-                    :container => "containers_filter_tree_div")
+                    :container => "containers_filter_accord")
     end
 
     if params[:id]  # If a tree node id came in, show in one of the trees
@@ -156,8 +156,8 @@ class ContainerController < ApplicationController
   def accordion_select
     @layout     = "explorer"
     @lastaction = "explorer"
-    self.x_active_accord = params[:id]
-    self.x_active_tree   = "#{params[:id]}_tree"
+    self.x_active_accord = params[:id].sub(/_accord$/, '')
+    self.x_active_tree   = "#{self.x_active_accord}_tree"
     replace_right_cell
   end
 

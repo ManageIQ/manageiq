@@ -40,7 +40,7 @@ describe "CatalogItemInitialization Automate Method" do
     MiqAeEngine.instantiate("/System/Request/Call_Instance_With_Message?" \
                             "namespace=Service/Provisioning/StateMachines&class=Methods" \
                             "&instance=CatalogItemInitialization&" \
-                            "#{attrs.join('&')}")
+                            "#{attrs.join('&')}", @user)
   end
 
   def root_service_template_task

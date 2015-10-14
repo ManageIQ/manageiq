@@ -23,23 +23,21 @@ class WidgetPresenter
 
   def button_fullscreen
     if @widget.content_type == "chart"
-      @view.link_to("",
+      @view.link_to(@view.content_tag(:span, " Full Screen", :class => 'fa fa-arrows-alt fa-fw'),
                     {:action => "report_only",
                      :type   => "hybrid",
                      :rr_id  => @widget.contents_for_user(current_user).miq_report_result_id},
                     :id                => "w_#{@widget.id}_fullscreen",
-                    :class             => "fullscreenbox",
                     :title             => _("Open the chart and full report in a new window"),
                     "data-miq_confirm" => _("This will show the chart and the entire report " \
                                             "(all rows) in your browser. Do you want to proceed?"),
                     :onclick           => "return miqClickAndPop(this);")
     else
-      @view.link_to("",
+      @view.link_to(@view.content_tag(:span, " Full Screen", :class => 'fa fa-arrows-alt fa-fw'),
                     {:action => "report_only",
                      :type   => "tabular",
                      :rr_id  => @widget.contents_for_user(current_user).miq_report_result_id},
                     :id                => "w_#{@widget.id}_fullscreen",
-                    :class             => "fullscreenbox",
                     :title             => _("Open the full report in a new window"),
                     "data-miq_confirm" => _("This will show the entire report (all rows) in your browser. " \
                                             "Do you want to proceed?"),
@@ -49,7 +47,7 @@ class WidgetPresenter
 
   def button_close
     unless @sb[:dashboards][@sb[:active_db]][:locked]
-      @view.link_to("",
+      @view.link_to(@view.content_tag(:span, " Remove Widget", :class => 'fa fa-times fa-fw'),
                     {:controller => "dashboard",
                      :action     => "widget_close",
                      :widget     => @widget.id},
@@ -58,44 +56,42 @@ class WidgetPresenter
                     :remote               => true,
                     :confirm              => _("Are you sure you want to remove '%s'" \
                                                "from the Dashboard?") % @widget.title,
-                    'data-miq_sparkle_on' => true,
-                    :class                => "delbox")
+                    'data-miq_sparkle_on' => true)
     end
   end
 
   def button_minmax
-    @view.link_to("",
+    minimized = @sb[:dashboards][@sb[:active_db]][:minimized].include?(@widget.id)
+    @view.link_to(@view.content_tag(:span, minimized ? " Maximize" : " Minimize",
+                                    :class  => "fa fa-caret-square-o-#{minimized ? 'down' : 'up'} fa-fw"),
                   {:controller => "dashboard",
                    :action     => "widget_toggle_minmax",
                    :widget     => @widget.id},
                   :id     => "w_#{@widget.id}_minmax",
-                  :title  => @sb[:dashboards][@sb[:active_db]][:minimized].include?(@widget.id) ?
-                             _("Restore") : _("Minimize"),
-                  :remote => true,
-                  :class  => "maxbox")
+                  :title  => minimized ? _(" Maximize") : _(" Minimize"),
+                  :remote => true)
   end
+
 
   def button_pdf
     if PdfGenerator.available? && %w(report chart).include?(@widget.content_type)
-      @view.link_to("",
+      @view.link_to(@view.content_tag(:span, " Download PDF", :class => 'fa fa-file-pdf-o fa-fw'),
                     {:action => "widget_to_pdf",
                      :rr_id  => @widget.contents_for_user(current_user).miq_report_result_id},
                     :id    => "w_#{@widget.id}_pdf",
-                    :class => "pdfbox",
                     :title => _("Download the full report (all rows) as a PDF file"))
     end
   end
 
   def button_zoom
-    @view.link_to("",
+    @view.link_to(@view.content_tag(:span, " Zoom in", :class => "fa fa-plus fa-fw"),
                   {:controller => "dashboard",
                    :action     => "widget_zoom",
                    :widget     => @widget.id},
                   :id                   => "w_#{@widget.id}_zoom",
                   :title                => _("Zoom in on this chart"),
                   "data-miq_sparkle_on" => true,
-                  :remote               => true,
-                  :class                => "zoombox")
+                  :remote               => true)
   end
 
   def self.chart_data

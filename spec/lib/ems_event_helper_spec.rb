@@ -120,9 +120,11 @@ describe EmsEventHelper do
     end
 
     it "should handle event properly" do
-      routine = [{"policy" => ["src_vm", "vm_start"]}]
-      h = EmsEventHelper.new(@ems_events.last)
-      -> { h.handle_routine(routine) }.should_not raise_error
+      routine = [ { "policy" => ["src_vm", "vm_start"] } ]
+      policy  = routine.first["policy"]
+      event   = @ems_events.last
+
+      expect { event.policy(policy[0], policy[1]) }.to_not raise_error
     end
 
     it "should build evm event properly calling MiqAeEvent.build_evm_event" do
