@@ -110,7 +110,7 @@ describe ApiController do
         expect do
           run_post tags_url(tag.id), gen_request(:edit, :name => "new_name")
         end.to change { classification.reload.tag.name }.to("#{category.tag.name}/new_name")
-
+        expect(@result["name"]).to eq("#{category.tag.name}/new_name")
         expect_request_success
       end
 
