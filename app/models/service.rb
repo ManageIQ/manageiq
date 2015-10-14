@@ -24,6 +24,7 @@ class Service < ActiveRecord::Base
   virtual_has_one    :provision_dialog
 
   delegate :custom_actions, :custom_action_buttons, :to => :service_template, :allow_nil => true
+  delegate :provision_dialog, :to => :miq_request, :allow_nil => true
 
   include ServiceMixin
   include OwnershipMixin
@@ -44,10 +45,6 @@ class Service < ActiveRecord::Base
     super
   end
   alias_method :<<, :add_resource
-
-  def provision_dialog
-    miq_request.try(:provision_dialog)
-  end
 
   def parent_service
     service
