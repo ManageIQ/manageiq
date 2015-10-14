@@ -11,8 +11,8 @@ class MiqAeYamlExport
     @klass         = options['class']
     @namespace     = options['namespace']
     @options       = options
-    tenant_id      = @options['tenant_id']
-    @tenant        = @options['tenant'] || (tenant_id ? Tenant.find_by!(:id => tenant_id) : Tenant.root_tenant)
+    @export_all    = @options['tenant'].nil?
+    @tenant        = @options['tenant']
     reset_manifest
     @domain_object = domain_object unless @domain == ALL_DOMAINS
   end
@@ -104,7 +104,8 @@ class MiqAeYamlExport
   end
 
   def write_all_domains
-    @tenant.ae_domains.each do |dom_obj|
+    domains = @tenant ? @tenant.ae_domains : MiqAeDomain.all
+    domains.each do |dom_obj|
       @domain = dom_obj.name
       @domain_object = domain_object
       write_domain
@@ -264,6 +265,7 @@ class MiqAeYamlExport
   end
 
   def domain_accessible?
+    return true unless @tenant
     @tenant.ae_domains.collect(&:name).map(&:upcase).include?(@domain.upcase)
   end
 end

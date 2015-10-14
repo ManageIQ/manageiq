@@ -33,16 +33,32 @@ describe MiqAeExport do
 
     context "root tenant" do
       let(:options) { {'export_dir' => Dir.tmpdir, 'overwrite' => true, 'tenant' => Tenant.root_tenant} }
+
       before do
         create_ae_model(:name => "root_domain", :tenant => Tenant.root_tenant)
       end
+
       it "cannot access other tenants domain" do
         expect { MiqAeExport.new('DoM2', options) }.to raise_exception(MiqAeException::DomainNotAccessible)
       end
-    
+
       it "with all domains shouldn't fetch other tenants domains" do
         obj = MiqAeExport.new('*', options)
         expect(obj).to receive(:write_domain).once
+        obj.export
+      end
+    end
+
+    context "backup" do
+      let(:options) { {'export_dir' => Dir.tmpdir, 'overwrite' => true} }
+
+      before do
+        create_ae_model(:name => "root_domain", :tenant => Tenant.root_tenant)
+      end
+
+      it "with no tenant specified exports all" do
+        obj = MiqAeExport.new('*', options)
+        expect(obj).to receive(:write_domain).exactly(3).times
         obj.export
       end
     end
