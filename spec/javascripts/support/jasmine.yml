@@ -36,6 +36,7 @@ src_files:
   - javascripts/directives/autofocus.js
   - javascripts/directives/clear_field_set_focus.js
   - javascripts/directives/repository/valid_unc_path.js
+  - javascripts/directives/required_depends_on.js
   - javascripts/directives/checkchange.js
   - javascripts/directives/miq_calendar.js
   - javascripts/directives/miqrequired.js

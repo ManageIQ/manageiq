@@ -20,6 +20,7 @@
 //= require directives/clear_field_set_focus
 //= require directives/datepicker
 //= require directives/verifypasswd
+//= require directives/required_depends_on
 //= require directives/selectpickerForSelectTag
 //= require directives/repository/valid_unc_path
 //= require services/miq_service
