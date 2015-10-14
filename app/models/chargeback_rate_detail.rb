@@ -64,4 +64,8 @@ class ChargebackRateDetail < ActiveRecord::Base
     # Return parent's rate type
     chargeback_rate.rate_type unless chargeback_rate.nil?
   end
+
+  def detail_currency
+    ChargebackRateDetailCurrency.find_by(id: self.chargeback_rate_detail_currency_id)
+  end
 end
