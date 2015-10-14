@@ -8,7 +8,7 @@ describe VmMigrateWorkflow do
 
   context "With a Valid Template," do
     context "#allowed_hosts" do
-      let(:workflow) { VmMigrateWorkflow.new({:src_ids => [vm.id]}, admin.userid) }
+      let(:workflow) { VmMigrateWorkflow.new({:src_ids => [vm.id]}, admin) }
 
       context "#allowed_hosts" do
         it "with no hosts" do
@@ -36,7 +36,7 @@ describe VmMigrateWorkflow do
       stub_dialog
 
       # if running_pre_dialog is set, it will run 'continue_request'
-      workflow = described_class.new(values = {:running_pre_dialog => false}, admin.userid)
+      workflow = described_class.new(values = {:running_pre_dialog => false}, admin)
 
       expect(AuditEvent).to receive(:success).with(
         :event        => "vm_migrate_request_created",
@@ -50,7 +50,7 @@ describe VmMigrateWorkflow do
       # the dialogs populate this
       values.merge!(:src_ids => [vm.id], :vm_tags => [])
 
-      request = workflow.make_request(nil, values, admin.userid) # TODO: nil
+      request = workflow.make_request(nil, values)
 
       expect(request).to be_valid
       expect(request).to be_a_kind_of(VmMigrateRequest)
@@ -62,7 +62,7 @@ describe VmMigrateWorkflow do
 
       # updates a request
 
-      workflow = described_class.new(values, alt_user.userid)
+      workflow = described_class.new(values, alt_user)
 
       expect(AuditEvent).to receive(:success).with(
         :event        => "vm_migrate_request_updated",
@@ -70,7 +70,7 @@ describe VmMigrateWorkflow do
         :userid       => alt_user.userid,
         :message      => "VM Migrate request updated by <#{alt_user.userid}> for Vm:#{[vm.id].inspect}"
       )
-      workflow.make_request(request, values, alt_user.userid)
+      workflow.make_request(request, values)
     end
   end
 end

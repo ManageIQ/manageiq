@@ -10,12 +10,10 @@
         = select_tag('chosen_graph',
           options_for_select([_("<No chart>")] + Charting.chart_names_for_select, @edit[:new][:graph_type]),
           :multiple              => false,
-          :class                 => "selectpicker",
-          "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true)
+          :class                 => "selectpicker")
         :javascript
           miqInitSelectPicker();
-          miqSelectPickerEvent("chosen_graph", "#{url}");
+          miqSelectPickerEvent('chosen_graph', '#{url}', {beforeSend: true, complete: true});
     - unless @edit[:new][:graph_type].blank?
       .form-group
         %label.col-md-2.control-label
@@ -25,12 +23,10 @@
             = select_tag('chart_mode',
               options_for_select([[_('Counts'), 'counts'], [_('Values'), 'values']], @edit[:new][:chart_mode]),
               :multiple              => false,
-              :class                 => "selectpicker",
-              "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true)
+              :class                 => "selectpicker")
             :javascript
               miqInitSelectPicker();
-              miqSelectPickerEvent("chart_mode", "#{url}");
+              miqSelectPickerEvent('chart_mode', '#{url}', {beforeSend: true, complete: true});
           - else
             = _('Counts')
             = hidden_field_tag('chart_mode', 'counts')
@@ -42,12 +38,10 @@
             = select_tag('chart_column',
               options_for_select(chart_fields_options, @edit[:new][:chart_column]),
               :multiple              => false,
-              :class                 => "selectpicker",
-              "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true)
+              :class                 => "selectpicker")
             :javascript
               miqInitSelectPicker();
-              miqSelectPickerEvent("chart_column", "#{url}");
+              miqSelectPickerEvent('chart_column', '#{url}', {beforeSend: true, complete: true});
       .form-group
         %label.col-md-2.control-label
           = _('Top values to show')
@@ -55,12 +49,10 @@
           = select_tag('chosen_count',
             options_for_select(3..GRAPH_MAX_COUNT, @edit[:new][:graph_count].to_i),
             :multiple              => false,
-            :class                 => "selectpicker",
-            "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true)
+            :class                 => "selectpicker")
           :javascript
             miqInitSelectPicker();
-            miqSelectPickerEvent("chosen_count", "#{url}");
+            miqSelectPickerEvent('chosen_count', '#{url}', {beforeSend: true, complete: true});
       .form-group
         %label.col-md-2.control-label
           = _("Sum 'Other' values")

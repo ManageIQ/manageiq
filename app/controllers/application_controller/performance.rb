@@ -316,7 +316,7 @@ module ApplicationController::Performance
       new_opts[:tl_show] = "timeline"
       session[(request.parameters["controller"] + "_tl").to_sym] ||= {}
       session[(request.parameters["controller"] + "_tl").to_sym].merge!(new_opts)
-      f, l = @perf_record.first_and_last_event
+      f = @perf_record.first_event
       if f.nil?
         msg = "No events available for this #{new_opts[:model] == "EmsCluster" ? "Cluster" : new_opts[:model]}"
       elsif @record.kind_of?(MiqServer) # For server charts in OPS
@@ -355,7 +355,7 @@ module ApplicationController::Performance
       controller = new_opts[:model].underscore
       session[(controller + "_tl").to_sym] ||= {}
       session[(controller + "_tl").to_sym].merge!(new_opts)
-      f, l = data_row["resource_type"].constantize.find(data_row["resource_id"]).first_and_last_event
+      f = @record.first_event
       if f.nil?
         msg = "No events available for this #{model == "EmsCluster" ? "Cluster" : model}"
       elsif @record.kind_of?(MiqServer) # For server charts in OPS

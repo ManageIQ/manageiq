@@ -46,6 +46,31 @@ class TenantQuota < ActiveRecord::Base
     end
   end
 
+  def used
+    method = "#{name.split("_").first}_used"
+    send(method)
+  end
+
+  def cpu_used
+    tenant.allocated_vcpu
+  end
+
+  def mem_used
+    tenant.allocated_memory
+  end
+
+  def storage_used
+    tenant.allocated_storage
+  end
+
+  def vms_used
+    tenant.active_vms.count
+  end
+
+  def templates_used
+    tenant.miq_templates.count
+  end
+
   # remove all quotas that are not listed in the keys to keep
   # e.g.: tenant.tenant_quotas.destroy_missing_quotas(include_keys)
   # NOTE: these are already local, no need to hit db to find them

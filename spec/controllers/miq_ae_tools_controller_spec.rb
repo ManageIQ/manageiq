@@ -24,10 +24,18 @@ describe MiqAeToolsController do
     include_context "valid session"
 
     let(:fake_domain) { active_record_instance_double("MiqAeDomain", :name => "test_domain") }
+    let(:fake_domain2) { active_record_instance_double("MiqAeDomain", :name => "uneditable") }
+    let(:tenant) do
+      active_record_instance_double(
+        "Tenant",
+        :editable_domains => [double(:name => "test_domain")]
+      )
+    end
 
     before do
       bypass_rescue
-      MiqAeDomain.stub(:all_unlocked).and_return([fake_domain])
+      controller.stub(:current_tenant).and_return(tenant)
+      MiqAeDomain.stub(:all_unlocked).and_return([fake_domain, fake_domain2])
     end
 
     it "includes a list of importable domain options" do

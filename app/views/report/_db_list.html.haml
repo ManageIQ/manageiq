@@ -48,7 +48,7 @@
             %th
               = _('Description')
         %tbody
-          - @widgetsets.each do |ws|
+          - @widgetsets.sort_by { |widgetset| widgetset.name.downcase }.each do |ws|
             %tr{:onclick => remote_function(:loading => "miqSparkle(true);", :complete => "miqSparkle(false);", :url => {:action => 'tree_select',
                 :id => "xx-g_g-#{@sb[:nodes][2]}_-#{to_cid(ws.id)}"}), :title => _("Click to view '%s (%s)'") % [ws.description, ws.name], :class => "icon"}
               %td.narrow

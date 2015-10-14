@@ -9,9 +9,6 @@
   = render(:partial => "provider_foreman/#{name}_tree")
 - when 'miq_capacity'
   = render :partial => "#{controller.action_name}_tree"
-- when 'report'
-  - tree = @trees.detect { |t| t == "#{name}_tree" }
-  = render :partial => tree, :locals => {:name => tree}
 - when 'miq_policy'
   - tree = @trees["#{name}_tree".to_sym]
   = render :partial => "shared/tree", :locals => {:tree => tree, :name => tree.name.to_s}

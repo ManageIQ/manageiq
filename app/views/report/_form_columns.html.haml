@@ -10,12 +10,10 @@
         = select_tag('chosen_model',
           options_for_select(@edit[:models].sort, @edit[:new][:model]),
           :multiple              => false,
-          :class                 => "selectpicker",
-          "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true)
+          :class                 => "selectpicker")
         :javascript
           miqInitSelectPicker();
-          miqSelectPickerEvent("chosen_model", "#{url}")
+          miqSelectPickerEvent('chosen_model', '#{url}', {beforeSend: true, complete: true});
     - if model_report_type(@edit[:new][:model]) == :performance
       = render :partial => "form_columns_performance"
     - elsif model_report_type(@edit[:new][:model]) == :trend

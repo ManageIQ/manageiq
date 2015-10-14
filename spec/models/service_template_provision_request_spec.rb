@@ -127,7 +127,7 @@ describe ServiceTemplateProvisionRequest do
       # the dialogs populate this
       values = {:src_id => service_template.id}
 
-      request = described_class.make_request(nil, values, admin.userid) # TODO: nil
+      request = described_class.make_request(nil, values, admin)
 
       expect(request).to be_valid
       expect(request).to be_a_kind_of(described_class)
@@ -145,7 +145,7 @@ describe ServiceTemplateProvisionRequest do
         :userid       => alt_user.userid,
         :message      => "Service_Template_Provisioning request updated by <#{alt_user.userid}> for ServiceTemplate:#{service_template.id}"
       )
-      described_class.make_request(request, values, alt_user.userid)
+      described_class.make_request(request, values, alt_user)
     end
   end
 end
