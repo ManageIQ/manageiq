@@ -64,20 +64,18 @@ module ReportController::Menus
 
     if params[:tree]
       @menu_lastaction = "commit"
-      doc = MiqXml.load(params[:tree].gsub(/&/n, '&amp;'))
-      doc.root.each_element("row") do |r|
-        r.each_element("cell") do |c|
-          if c.text.nil?
-            @sb[:tree_err] = true
-            add_flash(_("%s is required") % "Folder name", :error)
-          elsif @edit[:tree_arr].include?(c.text)
-            @sb[:tree_err] = true
-            add_flash(_("%{field} '%{value}' is already in use") % {:field => "Folder name", :value => c.text}, :error)
-          else
-            @sb[:tree_err] = false
-            @edit[:tree_arr].push(c.text)
-            @edit[:tree_hash][r.attributes['id'].split('_')[1]] = c.text
-          end
+      rows = JSON.parse(params[:tree])
+      rows.each do |row|
+        if row[:text].nil?
+          @sb[:tree_err] = true
+          add_flash(_("%s is required") % "Folder name", :error)
+        elsif @edit[:tree_arr].include?(row[:text])
+          @sb[:tree_err] = true
+          add_flash(_("%{field} '%{value}' is already in use") % {:field => "Folder name", :value => row[:text]}, :error)
+        else
+          @sb[:tree_err] = false
+          @edit[:tree_arr].push(row[:text])
+          @edit[:tree_hash][row[:id].split('_')[1]] = row[:text]
         end
       end
 
@@ -650,8 +648,8 @@ module ReportController::Menus
     end
   end
 
-  # Render the view data to xml for the grid view
-  def menu_folders(view, header)
+  # Render the view data for the grid view
+  def menu_folders(view)
     view.compact.map do |row|
       row_id = nil
 
@@ -724,7 +722,8 @@ module ReportController::Menus
       end
     end
     @edit[:folders] = @folders.dup
-    @grid_folders = menu_folders(@edit[:folders], @selected[1])
+    @grid_folders = {:folders => menu_folders(@edit[:folders]),
+                     :header  => @selected[1]}
   end
 
   def menu_get_all

@@ -5,11 +5,17 @@
         %span#menu1_legend
           = _('Manage Accordions')
       #folder_lists
-        %table{:class => "form", :cellspacing => "3"}
+        %table{:style => "width: 100%", :cellspacing => "3"}
           %tr
             %td{:valign => "top"}
               #folder_grid
-                = raw folders.to_json
+                %h5
+                  = h folders[:header]
+
+                %ul.list-group
+                  - folders[:folders].each do |folder|
+                    %li.list-group-item{:id => folder[:id], :onclick => "return miqMenuChangeRow('activate', this)", :ondblclick => "return miqMenuChangeRow('edit', this)"}
+                      = h folder[:text]
 
             %td{:width => "24", :valign => "middle"}
               - buttons = [{:label => _("Move selected folder top"),
@@ -38,7 +44,7 @@
                             :id => 'folder_add'}]
               - buttons.each do |btn|
                 %i{:class => "rollover fa-2x #{h btn[:icon]}",
-                   :onclick => "return miqMenuChangeRow('folder_list_grid', '#{j btn[:action]}')"}
+                   :onclick => "return miqMenuChangeRow('#{j btn[:action]}')"}
           %tr
             %td{:colspan => "2", :style => "float: right;"}
               - t = _('Commit expression element changes')
@@ -50,7 +56,7 @@
                 :id                    => "folder_commit",
                 "data-miq_sparkle_on"  => true,
                 "data-miq_sparkle_off" => true,
-                :onclick               => "return miqMenuChangeRow('folder_list_grid', 'serialize', '/report/menu_field_changed/')")
+                :onclick               => "return miqMenuChangeRow('serialize')")
               - t = _('Discard expression element changes')
               = link_to(image_tag('/images/toolbars/discard.png', :id => "folder_discard", :class => "rollover small", :alt => t),
                 {:action => 'discard_changes', :pressed => 'discard_folders', :title => t},

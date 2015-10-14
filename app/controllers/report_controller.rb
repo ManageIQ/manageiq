@@ -829,8 +829,6 @@ class ReportController < ApplicationController
         presenter[:set_visible_elements][:menu_div2]  = false
         presenter[:set_visible_elements][:treeStatus] = true
         presenter[:set_visible_elements][:flash_msg_div_menu_list] = "hide"
-        # js_options[:set_folder_grid_contents] = true #?!?! FIXME: remove
-        presenter[:grid_name] = 'folder_list_grid' #
         presenter[:element_updates][:folder_top]      = {:title => img_title_top}
         presenter[:element_updates][:folder_up]       = {:title => img_title_up}
         presenter[:element_updates][:folder_down]     = {:title => img_title_down}
