@@ -11,8 +11,10 @@
         <span class="no-wrap">
           <span class="ss-list-view__title-img">
             <span class="ss-list-view__title-img__center"></span>
-            <img class="ss-list-view__title-img__logo" ng-src="{{ ::item.picture.image_href }}" ng-if=" ::item.picture.image_href"/>
-            <img class="ss-list-view__title-img__logo" src="assets/images/service.png" ng-if=" ::!item.picture.image_href"/>
+            <img class="ss-list-view__title-img__logo" ng-src="{{ ::item.picture.image_href }}" ng-if=(item.picture.image_href) />
+            <img class="ss-list-view__title-img__logo" src="assets/images/service.png" ng-if=!(item.picture.image_href) />
+
+
           </span>
           {{ item.description }}
         </span>
@@ -32,7 +34,7 @@
           <strong>Status: </strong>
           <span class="spinner spinner-xs spinner-inline" ng-if="item.request_state == 'pending'"></span>
           <span class="pficon-error-circle-o" ng-if="item.request_state == 'denied'"></span>
-          <span class="pficon-ok" ng-if="item.request_state == 'approved'"></span>
+          <span class="pficon-ok" ng-if="item.request_state == 'finished'"></span>
           {{ item.request_state }}
         </span>
       </div>
