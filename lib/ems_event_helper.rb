@@ -127,16 +127,12 @@ class EmsEventHelper
   end
 
   def handle_automation_event
-    return unless MiqServer.my_server.has_role?(:automate)
-
-    begin
-      MiqAeEvent.raise_ems_event(@event)
-    rescue => err
-      _log.log_backtrace(err)
-    end
+    MiqAeEvent.raise_ems_event(@event)
+  rescue => err
+    _log.log_backtrace(err)
   end
 
   def handle_alert_event
-    handle_step("policy" => ["src_vm", @event.event_type]) if MiqAlert.event_alertable?(@event.event_type)
+    @event.policy("src_vm", @event.event_type) if MiqAlert.event_alertable?(@event.event_type)
   end
 end
