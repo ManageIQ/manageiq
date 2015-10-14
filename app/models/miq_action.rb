@@ -1080,15 +1080,14 @@ class MiqAction < ActiveRecord::Base
   def self.create_default_actions
     fname = FIXTURE_DIR.join("#{to_s.pluralize.underscore}.csv")
     data  = fname.read.split("\n")
-    cols  = data.shift.split(",")
+    cols  = data.shift.split(",").map(&:to_sym)
 
     data.each do |a|
       next if a.starts_with?('#') # skip commented lines
 
       arr = a.split(",")
 
-      action = {}
-      cols.each_index { |i| action[cols[i].to_sym] = arr[i] }
+      action = Hash[cols.zip(arr)]
 
       rec = find_by_name(action[:name])
       if rec.nil?
