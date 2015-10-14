@@ -1083,7 +1083,7 @@ class MiqAction < ActiveRecord::Base
     cols  = data.shift.split(",")
 
     data.each do |a|
-      next if a =~ /^#.*$/ # skip commented lines
+      next if a.starts_with?('#') # skip commented lines
 
       arr = a.split(",")
 
