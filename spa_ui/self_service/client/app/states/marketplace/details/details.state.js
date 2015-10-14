@@ -52,9 +52,7 @@
 
     vm.submitDialog = submitDialog;
 
-    function submitDialog(vm) {
-      var serviceTemplate = vm.serviceTemplate;
-
+    function submitDialog() {
       var dialogFieldData = {
         href: 'http://localhost:3000/api/service_templates/' + serviceTemplate.id
       };
@@ -77,7 +75,8 @@
       ).then(submitSuccess, submitFailure);
 
       function submitSuccess(result) {
-        $state.go('requests.list', {apiResponse: result});
+        Notifications.success(result.message);
+        $state.go('requests.list');
       }
 
       function submitFailure(result) {

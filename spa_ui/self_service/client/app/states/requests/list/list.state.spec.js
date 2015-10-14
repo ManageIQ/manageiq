@@ -22,7 +22,7 @@ describe('Dashboard', function() {
   });
 
   describe('controller', function() {
-    var controller, notificationSpy;
+    var controller;
     var requests = {
       name: 'service_requests',
       count: 1,
@@ -33,61 +33,16 @@ describe('Dashboard', function() {
     beforeEach(function() {
       bard.inject('$controller', '$log', '$state', '$rootScope', 'Notifications');
 
-      notificationSpy = sinon.spy(Notifications, 'success');
+      controller = $controller($state.get('requests.list').controller, {requests: requests});
+      $rootScope.$apply();
     });
 
-    describe('when the api response exists', function() {
-      beforeEach(function() {
-        var controllerResolves = {requests: requests, apiResponse: {message: 'api message'}};
-
-        controller = $controller($state.get('requests.list').controller, controllerResolves);
-        $rootScope.$apply();
-      });
-
-      it('should be created successfully', function() {
-        expect(controller).to.be.defined;
-      });
-
-      it('should have title of Request List', function() {
-        expect(controller.title).to.equal('Request List');
-      });
-
-      it('shows a success notification', function() {
-        expect(notificationSpy).to.have.been.calledWith('api message');
-      });
+    it('should be created successfully', function() {
+      expect(controller).to.be.defined;
     });
 
-    describe('when the api response does not exist', function() {
-      beforeEach(function() {
-        var controllerResolves = {requests: requests, apiResponse: null};
-
-        controller = $controller($state.get('requests.list').controller, controllerResolves);
-        $rootScope.$apply();
-      });
-
-      it('should be created successfully', function() {
-        expect(controller).to.be.defined;
-      });
-
-      it('should have title of Request List', function() {
-        expect(controller.title).to.equal('Request List');
-      });
-
-      it('does not show a success notification', function() {
-        expect(notificationSpy).not.to.have.been.called;
-      });
-    });
-  });
-
-  describe('#resolveApiResponse', function() {
-    beforeEach(function() {
-      bard.inject('$state', '$stateParams');
-
-      $stateParams.apiResponse = 'the api response';
-    });
-
-    it('resolves the apiResponse', function() {
-      expect($state.get('requests.list').resolve.apiResponse($stateParams)).to.equal('the api response');
+    it('should have title of Request List', function() {
+      expect(controller.title).to.equal('Request List');
     });
   });
 });
