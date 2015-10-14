@@ -8,6 +8,8 @@ class ContainerImage < ActiveRecord::Base
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   has_many :containers
   has_many :container_nodes, -> { distinct }, :through => :containers
+  has_many :container_groups, -> { distinct }, :through => :containers
+  has_many :container_projects, -> { distinct }, :through => :container_groups
   has_many :guest_applications, :dependent => :destroy
   has_one :computer_system, :as => :managed_entity, :dependent => :destroy
   has_one :operating_system, :through => :computer_system
