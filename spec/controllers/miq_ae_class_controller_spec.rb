@@ -456,4 +456,15 @@ describe MiqAeClassController do
       controller.send(:create_method)
     end
   end
+
+  context "#copy_objects_edit_screen" do
+    it "sets only current tenant's domains to be displayed in To Domain pull down" do
+      FactoryGirl.create(:miq_ae_domain, :tenant => Tenant.seed)
+      FactoryGirl.create(:miq_ae_domain, :tenant_id => 2)
+      controller.instance_variable_set(:@sb, {})
+      ns = FactoryGirl.create(:miq_ae_namespace)
+      controller.send(:copy_objects_edit_screen, MiqAeNamespace, [ns.id], "miq_ae_namespace_copy")
+      assigns(:edit)[:domains].count.should eq(1)
+    end
+  end
 end
