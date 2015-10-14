@@ -52,10 +52,10 @@
         && categoryNames.indexOf(item.service_template_catalog.name) === -1) {
         categoryNames.push(item.service_template_catalog.name); 
       }
-    };
+    }
 
     var categoryNames = [];
-    angular.forEach(vm.serviceTemplates, addCategoryFilter(item));
+    angular.forEach(vm.serviceTemplates, addCategoryFilter);
 
     vm.toolbarConfig = {
       filterConfig: {
