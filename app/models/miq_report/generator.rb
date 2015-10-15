@@ -235,11 +235,10 @@ module MiqReport::Generator
       end
 
       start_time, end_time = Metric::Helper.get_time_range_from_offset(db_options[:start_offset], db_options[:end_offset], :tz => tz)
-      time_range_cond = ["timestamp BETWEEN ? AND ?", start_time, end_time]
       results = VimPerformanceDaily
                 .find_entries(ext_options.merge(:reflections => associations, :class => klass))
                 .where(where_clause)
-                .where(time_range_cond)
+                .where(:timestamp => start_time..end_time)
                 .includes(includes)
                 .references(includes)
                 .limit(options[:limit])
@@ -260,11 +259,7 @@ module MiqReport::Generator
 
       results = klass.find_all_by_interval_and_time_range(
         db_options[:interval], start_time, end_time
-      ).find(
-        :all, :conditions => where_clause,
-              :include    => includes,
-              :limit      => options[:limit]
-      )
+      ).where(where_clause).includes(includes).limit(options[:limit])
 
       results = Rbac.filtered(results, :class        => db,
                                        :filter       => conditions,
