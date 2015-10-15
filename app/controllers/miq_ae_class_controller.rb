@@ -1761,7 +1761,7 @@ class MiqAeClassController < ApplicationController
       selected_items[record.id] = record.display_name.blank? ? record.name : "#{record.display_name} (#{record.name})"
       @record = record if i == 0
     end
-    MiqAeDomain.all_unlocked.collect { |domain| domains[domain.id] = domain_display_name(domain) }
+    current_tenant.editable_domains.collect { |domain| domains[domain.id] = domain_display_name(domain) }
     initialize_copy_edit_vars(typ, button_pressed, domains, selected_items)
     @sb[:domain_id] = domains.first.first
     @edit[:current] = copy_hash(@edit[:new])
