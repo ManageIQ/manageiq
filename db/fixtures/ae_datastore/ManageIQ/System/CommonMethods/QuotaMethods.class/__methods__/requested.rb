@@ -2,7 +2,7 @@
 # Description: <Method description here>
 #
 def request_info
-  @service = ($evm.parent['quota_type'] == 'service') ? true : false
+  @service = ($evm.root['vmdb_object_type'] == 'service_template_provision_task') ? true : false
   @miq_request = $evm.root['miq_request']
   $evm.log(:info, "Request: #{@miq_request.description} id: #{@miq_request.id} ")
 end
