@@ -1,3 +1,7 @@
+= raw @grid_xml
+- @grid_xml = nil
+= table.to_json
+
 -# New code to use DHTMLXGRID below
 - if @grid_xml
   - url = @showlinks == false ? nil : view_to_url(view, @parent)
@@ -26,7 +30,7 @@
                                    :sortdir         => @sortdir ? @sortdir[0..2] : nil,
                                    :row_url         => url}})
 - else
-  %table.table.datatable.table-striped.table-bordered.table-hover.table-selectable
+  %table.table.table-striped.table-bordered.table-hover.table-selectable
     %thead
       %tr
         - unless @embedded || @no_checkboxes
