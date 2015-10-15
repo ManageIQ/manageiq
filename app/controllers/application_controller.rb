@@ -44,6 +44,7 @@ class ApplicationController < ActionController::Base
   include_concern 'TreeSupport'
   include_concern 'SysprepAnswerFile'
 
+  before_action :reset_toolbars
   before_action :set_session_tenant, :except => [:window_sizes]
   before_action :get_global_session_data, :except => [:window_sizes, :authenticate]
   before_action :set_user_time_zone, :except => [:window_sizes]
@@ -2139,6 +2140,44 @@ class ApplicationController < ActionController::Base
 
   def vm_publish
     prov_redirect("publish")
+  end
+
+  def reset_toolbars
+    @toolbars = ToolbarPresenter::ToolbarBuilder.new(
+      self,
+      binding,
+      :active                => @active,
+      :button_group          => @button_group,
+      :changed               => @changed,
+      :condition             => @condition,
+      :db                    => @db,
+      :display               => @display,
+      :edit                  => @edit,
+      :explorer              => @explorer,
+      :ght_type              => @ght_type,
+      :gtl_buttons           => @gtl_buttons,
+      :gtl_type              => @gtl_type,
+      :html                  => @html,
+      :is_redhat             => @is_redhat,
+      :lastaction            => @lastaction,
+      :layout                => @layout,
+      :miq_request           => @miq_request,
+      :perf_options          => @perf_options,
+      :policy                => @policy,
+      :pxe_image_types_count => @pxe_image_types_count,
+      :record                => @record,
+      :report                => @report,
+      :report_result_id      => @report_result_id,
+      :resolve               => @resolve,
+      :sb                    => @sb,
+      :selected_zone         => @selected_zone,
+      :settings              => @settings,
+      :showtype              => @showtype,
+      :tabform               => @tabform,
+      :widget_running        => @widget_running,
+      :widgetsets            => @widgetsets,
+      :zgraph                => @zgraph,
+    )
   end
 
   def get_global_session_data

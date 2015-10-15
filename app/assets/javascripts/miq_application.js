@@ -13,10 +13,6 @@ function miqOnLoad() {
   if ($('#widget_select_div').length) {
     miqInitWidgetPulldown();
   }
-  // Need this since IE will not run JS correctly until after page is loaded
-  if (typeof miqInitDhtmlxLayout == "function") {
-    miqInitDhtmlxLayout();
-  }
 
   // Track the mouse coordinates for popup menus
   $(document).mousemove(function (e) {
@@ -73,7 +69,7 @@ function miqPrepRightCellForm(tree) {
   if ($('#adv_searchbox_div').length) {
     $('#adv_searchbox_div').hide();
   }
-  ManageIQ.layout.toolbar.hide();
+  $('#toolbar').hide();
   $('#' + tree).dynatree('disable');
   miqDimDiv(tree + '_div', true);
 }

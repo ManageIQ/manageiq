@@ -286,13 +286,14 @@ module ApplicationHelper
     return controller, action
   end
 
-  # Method to create the center toolbar XML
-  def build_toolbar_buttons_and_xml(tb_name)
-    _toolbar_builder.call(tb_name)
+  def render_toolbars
+    @toolbars.build_and_render_toolbars
   end
 
-  def _toolbar_builder
-    ToolbarBuilder.new(
+  # Method to create the center toolbar XML
+  def create_toolbars(filename)
+    builder = ToolbarPresenter::ToolbarBuilder.new(
+      filename,
       self,
       binding,
       :active                => @active,
@@ -327,6 +328,7 @@ module ApplicationHelper
       :widgetsets            => @widgetsets,
       :zgraph                => @zgraph,
     )
+    builder.build_toolbars
   end
 
   def get_console_url

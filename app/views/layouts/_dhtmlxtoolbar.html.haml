@@ -1,18 +1,53 @@
 - tb ||= "center_tb"
 = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "toolbar"}
-
-%div{:id => tb}
-
-%script{:type => "text/javascript"}
-
-  - if !request.xml_http_request? && !tb_yaml.nil?
-    - tb_buttons, tb_xml = build_toolbar_buttons_and_xml(tb_yaml)
-
-
-    if (ManageIQ.toolbars === null)  ManageIQ.toolbars = {};
-    ManageIQ.toolbars['#{tb}'] = {obj: new dhtmlXToolbarObject("#{tb}", "miq_blue"), buttons: #{tb_buttons}, xml: "#{tb_xml}"};
-
-  - if @record
-    ManageIQ.record.recordId = '#{@record.id}';
-  - else
-    ManageIQ.record.recordId = null;
+- logger.info("TB FILENAME " + tb_yaml.to_s)
+- @toolbars.add_toolbar(tb_yaml)
+-#
+  %form.toolbar-pf-actions
+    - toolbars.each do |toolbar|
+      - puts "Processed -- #{toolbar.inspect}"
+      - if toolbar[:name] == "gtl_main"
+        .form-group.toolbar-pf-view-selector
+          %ul.list-inline
+          - toolbar[:items].each do |item|
+            %li{:class => "#{'active' if item[:selected]}"}
+              = link_to image_tag("/images/toolbars/#{item[:img]}"), nil
+      - else
+        .form-group
+          .dropdown.btn-group
+            %button.btn.btn-default.dropdown-toggle{:id => toolbar[:name],
+                                                    :class => "#{'disabled' if toolbar[:enabled] == 'false'}",
+                                                    :type => "button", "data-toggle" => "dropdown",
+                                                    "aria-expanded" => false}
+              = image_tag("/images/toolbars/#{toolbar[:img]}") if toolbar.key? :img
+              = toolbar[:text] if toolbar.key? :text
+              %span.caret
+            %ul.dropdown-menu
+              - toolbar[:items].each do |item|
+                - if item[:hidden]
+                  - next
+                - else
+                  - disabled = item[:enabled] == "false"
+                  %li{:class => "#{'disabled' if disabled}"}
+                    - if item.key?(:text) && item.key?(:img)
+                      - url = item[:url] ? item[:url].delete("/") : controller.action_name
+                      = link_to image_tag("/images/toolbars/#{item[:img]}") + eval("\"#{item[:text]}\""), :controller => controller.controller_name, :action => url
+                    - elsif item.key?(:img)
+                      = link_to image_tag("/images/toolbars/#{item[:img]}"), nil
+                    - else
+                      .divider{:role => "separator"}
+  
+  
+  %script{:type => "text/javascript"}
+  
+    - if !request.xml_http_request? && !tb_yaml.nil?
+      -# tb_buttons, tb_xml = build_toolbar_buttons_and_xml(tb_yaml)
+  
+  
+      if (ManageIQ.toolbars === null)  ManageIQ.toolbars = {};
+      -#ManageIQ.toolbars['#{tb}'] = {obj: new dhtmlXToolbarObject("#{tb}", "miq_blue"), buttons: #{tb_buttons}, xml: "#{tb_xml}"};
+  
+    - if @record
+      ManageIQ.record.recordId = '#{@record.id}';
+    - else
+      ManageIQ.record.recordId = null;

@@ -11,8 +11,20 @@
   - sidebar = sidewidth == 0 ? 'hidden-md hidden-lg col-md-0' : "col-md-#{sidewidth} col-md-pull-#{maindiv}"
   .container-fluid.resizable-sidebar{:style => "overflow: hidden; height: 100%; background: #fff;"}
     .row#center_div{:style => "height: 100%"}
-      #right_div.resizable.scrollable-sm{:style => "height: 100%", :class => "col-md-#{maindiv} col-md-push-#{sidewidth}"}
-        -# Remove the 'ops' part when the PatternFly accordions are in
+      #right_div.resizable{:style => "height: 100%", :class => "col-md-#{maindiv} col-md-push-#{sidewidth}"}
+        #toolbar
+          = render :partial => "layouts/x_taskbar"
+        #explorer.scrollable
+          %h1#explorer_title
+            = @right_cell_text
+          = yield
+        #paginator
+          - if saved_report_paging?
+            = render(:partial => 'layouts/saved_report_paging_bar', :locals => {:pages => @sb[:pages]})
+          - else
+            = render(:partial => '/layouts/x_pagingcontrols')
+        = yield :search
+
         - unless simulate
           .resizer.hidden-xs
             .resizer-box
@@ -21,6 +33,7 @@
                   %span.fa.fa-angle-left
                 .btn.btn-default.resize-right{:class => sidewidth == 5 ? 'btn-disabled' : ''}
                   %span.fa.fa-angle-right
+
       #left_div.resizable.sidebar-pf.sidebar-pf-left.scrollable{:style => "height: 100%", :class => sidebar}
         #default_left_cell
           - if @accords && @trees
@@ -86,17 +99,3 @@
           .row{:style => "overflow: auto;height: calc(100% - 90px);"}
             .col-md-12
               = yield
-- if @explorer
-  #context_div
-  #layout_div
-    = yield :search
-    #center_cell_div{:style => "display:none;"}
-      #taskbar_div
-        = render :partial => "layouts/x_taskbar"
-      = yield
-      #paging_div
-        - if saved_report_paging?
-          = render(:partial => 'layouts/saved_report_paging_bar', :locals => {:pages => @sb[:pages]})
-        - else
-          = render(:partial => '/layouts/x_pagingcontrols')
-  = yield :dhx_layout

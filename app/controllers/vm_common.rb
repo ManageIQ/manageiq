@@ -485,7 +485,7 @@ module VmCommon
     c_buttons, c_xml = build_toolbar_buttons_and_xml("x_vm_center_tb")
     render :update do |page|                    # Use RJS to update the display
       if c_buttons && c_xml
-        page << "ManageIQ.layout.toolbar.show();"
+        page << "$('#toolbar').show();"
         page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
         page << javascript_show_if_exists("center_buttons_div")
       else
@@ -1613,9 +1613,9 @@ module VmCommon
         presenter[:set_visible_elements][:pc_div_1] = false
         presenter[:set_visible_elements][:form_buttons_div] = true
       end
-      presenter[:show_hide_layout][:paginator] = 'show'
+      presenter[:set_visible_elements][:paginator] = true
     else
-      presenter[:show_hide_layout][:paginator] = 'hide'
+      presenter[:set_visible_elements][:paginator] = false
     end
 
     presenter[:right_cell_text] = @right_cell_text
@@ -1630,7 +1630,7 @@ module VmCommon
     presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons && v_xml
     presenter[:reload_toolbars][:custom]  = {:buttons => cb_buttons, :xml => cb_xml} if cb_buttons && cb_xml
 
-    presenter[:show_hide_layout][:toolbar] = h_buttons || c_buttons || v_buttons ? 'show' : 'hide'
+    presenter[:set_visible_elements][:toolbar] = h_buttons || c_buttons || v_buttons
 
     presenter[:record_id] = @record ? @record.id : nil
 

@@ -164,7 +164,7 @@ class PxeController < ApplicationController
       presenter[:reload_toolbars][:center] = {:buttons => c_buttons, :xml => c_xml}
     end
 
-    presenter[:show_hide_layout][:toolbar] = c_buttons ? 'show' : 'hide'
+    presenter[:set_visible_elements][:toolbar] = c_buttons
 
     # Rebuild the toolbars
     presenter[:reload_toolbars][:history] = {:buttons => h_buttons, :xml => h_xml}
@@ -236,8 +236,9 @@ class PxeController < ApplicationController
     if !@view || @in_a_form ||
        (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0))
       if @in_a_form
-        presenter[:show_hide_layout][:toolbar] = 'hide'
-        presenter[:show_hide_layout][:paginator] = 'show'   # in case it was hidden for summary screen, and incase there were no records on show_list
+        presenter[:set_visible_elements][:toolbar] = false
+        # in case it was hidden for summary screen, and incase there were no records on show_list
+        presenter[:set_visible_elements][:paginator] = true
         presenter[:set_visible_elements][:form_buttons_div] = true
 
         action_url, multi_record = case x_active_tree
