@@ -79,4 +79,36 @@ describe ManageIQ::Providers::Openstack::InfraManager do
       @ems_cloud.reload.provider.should be_nil
     end
   end
+
+  context "cloud disk usage" do
+    before do
+      @provider = FactoryGirl.create(:provider_openstack, :name => "undercloud")
+      @cloud = FactoryGirl.create(:ems_openstack, :name => "overcloud", :provider => @provider)
+      @infra = FactoryGirl.create(:ems_openstack_infra_with_stack, :name => "undercloud", :provider => @provider)
+      @cluster = FactoryGirl.create(:ems_cluster_openstack, :ext_management_system => @infra)
+    end
+
+    it "Block Storage / Cinder" do
+      expect(@cluster.cloud_block_storage_disk_usage).to eq(0)
+
+      @cloud.cloud_volumes << FactoryGirl.create(:cloud_volume_openstack, :size => 11, :status => "noterror")
+      @cloud.cloud_volumes << FactoryGirl.create(:cloud_volume_openstack, :size => 50, :status => "error")
+
+      expect(@cluster.cloud_block_storage_disk_usage).to eq(11)
+    end
+
+    it "Object Storage / Swift" do
+      stack = FactoryGirl.create(:orchestration_stack_openstack_infra, :name => "overcloud")
+      stack.parameters << FactoryGirl.create(:orchestration_stack_parameter_openstack_infra, :name => "SwiftReplicas", :value => 3)
+      stack.parameters << FactoryGirl.create(:orchestration_stack_parameter_openstack_infra, :name => "ObjectStorageCount", :value => 2)
+      @infra.orchestration_stacks << stack
+
+      expect(@cluster.cloud_object_storage_disk_usage).to eq(0)
+
+      container = FactoryGirl.create(:cloud_object_store_container, :bytes => 12)
+      @cloud.cloud_object_store_containers << container
+
+      expect(@cluster.cloud_object_storage_disk_usage).to eq(12 * 2)
+    end
+  end
 end
