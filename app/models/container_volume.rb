@@ -1,3 +1,3 @@
 class ContainerVolume < ActiveRecord::Base
-  belongs_to :container_group
+  belongs_to :parent, :polymorphic => true
 end
