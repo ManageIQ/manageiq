@@ -53,6 +53,7 @@ describe MiqAeClass do
     end
 
     before(:each) do
+      @user = FactoryGirl.create(:user_with_group, 'name' => 'Fred')
       model_data_dir = File.join(File.dirname(__FILE__), 'miq_ae_classes')
       EvmSpecHelper.import_yaml_model(File.join(model_data_dir, 'domain1'), "DOMAIN1")
       EvmSpecHelper.import_yaml_model(File.join(model_data_dir, 'domain2'), "DOMAIN2")
@@ -68,78 +69,78 @@ describe MiqAeClass do
     end
 
     it 'invalid path should return an empty array' do
-      MiqAeClass.find_distinct_instances_across_domains('UNKNOWN').should be_empty
-      MiqAeClass.find_distinct_instances_across_domains(nil).should be_empty
-      MiqAeClass.find_distinct_instances_across_domains('UNKNOWN/').should be_empty
+      MiqAeClass.find_distinct_instances_across_domains(@user, 'UNKNOWN').should be_empty
+      MiqAeClass.find_distinct_instances_across_domains(@user, nil).should be_empty
+      MiqAeClass.find_distinct_instances_across_domains(@user, 'UNKNOWN/').should be_empty
     end
 
     it 'if the namespace does not exist we should get an empty array' do
-      MiqAeClass.find_distinct_instances_across_domains('UNKNOWN/PROCESS').should be_empty
+      MiqAeClass.find_distinct_instances_across_domains(@user, 'UNKNOWN/PROCESS').should be_empty
     end
 
     it 'if the namespace exists but the class does not exist we should get an empty array' do
-      MiqAeClass.find_distinct_instances_across_domains('SYSTEM/UNKNOWN').should be_empty
+      MiqAeClass.find_distinct_instances_across_domains(@user, 'SYSTEM/UNKNOWN').should be_empty
     end
 
     it 'if the namespace does not exist and the class does not exist we should get an empty array' do
-      MiqAeClass.find_distinct_instances_across_domains('UNKNOWN/UNKNOWN').should be_empty
+      MiqAeClass.find_distinct_instances_across_domains(@user, 'UNKNOWN/UNKNOWN').should be_empty
     end
 
     it 'get sorted list of instances across domains with partial namespace' do
       non_fq_klass = 'SYSTEM/PROCESS'
-      x = MiqAeClass.find_distinct_instances_across_domains(non_fq_klass).collect(&:fqname)
+      x = MiqAeClass.find_distinct_instances_across_domains(@user, non_fq_klass).collect(&:fqname)
       @sorted_inst_list.should match_string_array_ignorecase(x)
     end
 
     it 'get sorted list of instances across domains with FQ namespace' do
       fq_klass = 'DOMAIN1/SYSTEM/PROCESS'
-      x = MiqAeClass.find_distinct_instances_across_domains(fq_klass).collect(&:fqname)
+      x = MiqAeClass.find_distinct_instances_across_domains(@user, fq_klass).collect(&:fqname)
       @sorted_inst_list.should match_string_array_ignorecase(x)
     end
 
     it 'get sorted list of instances across domains with /FQ namespace' do
       fq_klass = '/DOMAIN1/SYSTEM/PROCESS'
-      x = MiqAeClass.find_distinct_instances_across_domains(fq_klass).collect(&:fqname)
+      x = MiqAeClass.find_distinct_instances_across_domains(@user, fq_klass).collect(&:fqname)
       @sorted_inst_list.should match_string_array_ignorecase(x)
     end
 
     it 'invalid path for similar named instance should return an empty array' do
-      MiqAeClass.find_homonymic_instances_across_domains('UNKNOWN').should be_empty
-      MiqAeClass.find_homonymic_instances_across_domains(nil).should be_empty
-      MiqAeClass.find_homonymic_instances_across_domains('UNKNOWN/').should be_empty
+      MiqAeClass.find_homonymic_instances_across_domains(@user, 'UNKNOWN').should be_empty
+      MiqAeClass.find_homonymic_instances_across_domains(@user, nil).should be_empty
+      MiqAeClass.find_homonymic_instances_across_domains(@user, 'UNKNOWN/').should be_empty
     end
 
     it 'invalid path no instance specified we should get an empty array' do
-      MiqAeClass.find_homonymic_instances_across_domains('UNKNOWN/PROCESS').should be_empty
+      MiqAeClass.find_homonymic_instances_across_domains(@user, 'UNKNOWN/PROCESS').should be_empty
     end
 
     it 'if the namespace does not exist but class and instance exist we should get an empty array' do
-      MiqAeClass.find_homonymic_instances_across_domains('UNKNOWN/PROCESS/FRED').should be_empty
+      MiqAeClass.find_homonymic_instances_across_domains(@user, 'UNKNOWN/PROCESS/FRED').should be_empty
     end
 
     it 'if the namespace, instance exists but the class does not exist we should get an empty array' do
-      MiqAeClass.find_homonymic_instances_across_domains('SYSTEM/UNKNOWN/FRED').should be_empty
+      MiqAeClass.find_homonymic_instances_across_domains(@user, 'SYSTEM/UNKNOWN/FRED').should be_empty
     end
 
     it 'if the namespace,class, instance does not exist we should get an empty array' do
-      MiqAeClass.find_homonymic_instances_across_domains('UNKOWN/UNKNOWN/UNKNOWN').should be_empty
+      MiqAeClass.find_homonymic_instances_across_domains(@user, 'UNKOWN/UNKNOWN/UNKNOWN').should be_empty
     end
 
     it 'get sorted list of same named instances across domains with partial namespace' do
       non_fq_inst = 'SYSTEM/PROCESS/Inst4'
-      x = MiqAeClass.find_homonymic_instances_across_domains(non_fq_inst).collect(&:fqname)
+      x = MiqAeClass.find_homonymic_instances_across_domains(@user, non_fq_inst).collect(&:fqname)
       @inst4_list.should match_string_array_ignorecase(x)
     end
 
     it 'get sorted list of same named instances across domains with FQ namespace' do
       fq_inst = 'DOMAIN1/SYSTEM/PROCESS/Inst4'
-      x = MiqAeClass.find_homonymic_instances_across_domains(fq_inst).collect(&:fqname)
+      x = MiqAeClass.find_homonymic_instances_across_domains(@user, fq_inst).collect(&:fqname)
       @inst4_list.should match_string_array_ignorecase(x)
     end
 
     it 'get sorted list of same named instances across domains with /FQ namespace' do
       fq_inst = '/DOMAIN1/SYSTEM/PROCESS/Inst4'
-      x = MiqAeClass.find_homonymic_instances_across_domains(fq_inst).collect(&:fqname)
+      x = MiqAeClass.find_homonymic_instances_across_domains(@user, fq_inst).collect(&:fqname)
       @inst4_list.should match_string_array_ignorecase(x)
     end
   end

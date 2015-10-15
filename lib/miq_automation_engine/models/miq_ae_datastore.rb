@@ -196,33 +196,34 @@ module MiqAeDatastore
     end
   end
 
-  def self.get_homonymic_across_domains(arclass, fqname, enabled = nil)
+  def self.get_homonymic_across_domains(user, arclass, fqname, enabled = nil)
     return [] if fqname.blank?
     options = arclass == ::MiqAeClass ? {:has_instance_name => false} : {}
     _, ns, klass, name = ::MiqAeEngine::MiqAePath.get_domain_ns_klass_inst(fqname, options)
     name = klass if arclass == ::MiqAeClass
-    MiqAeDatastore.get_sorted_matching_objects(arclass, ns, klass, name, enabled)
+    MiqAeDatastore.get_sorted_matching_objects(user, arclass, ns, klass, name, enabled)
   end
 
-  def self.get_sorted_matching_objects(arclass, ns, klass, name, enabled)
+  def self.get_sorted_matching_objects(user, arclass, ns, klass, name, enabled)
     options = arclass == ::MiqAeClass ? {:has_instance_name => false} : {}
+    domains = user.current_tenant.visible_domains
     matches = arclass.where("lower(name) = ?", name.downcase).collect do |obj|
-      get_domain_priority_object(obj, klass, ns, enabled, options)
+      get_domain_index_object(domains, obj, klass, ns, enabled, options)
     end.compact
-    matches.sort { |a, b| b[:priority] <=> a[:priority] }.collect { |v| v[:obj] }
+    matches.sort { |a, b| a[:index] <=> b[:index] }.collect { |v| v[:obj] }
   end
 
-  def self.get_domain_priority_object(obj, klass, ns, enabled, options)
+  def self.get_domain_index_object(domains, obj, klass, ns, enabled, options)
     domain, nsd, klass_name, = ::MiqAeEngine::MiqAePath.get_domain_ns_klass_inst(obj.fqname, options)
     return if !klass_name.casecmp(klass).zero? || !nsd.casecmp(ns).zero?
-    domain_obj = get_domain_object(domain, enabled)
-    {:obj => obj, :priority => domain_obj.priority} if domain_obj
+    domain_index = get_domain_index(domains, domain, enabled)
+    {:obj => obj, :index => domain_index} if domain_index
   end
 
-  def self.get_domain_object(name, enabled)
-    arel = MiqAeDomain.where("lower(name) = ?", name.downcase)
-    arel = arel.where(:enabled => enabled) unless enabled.nil?
-    arel.first
+  def self.get_domain_index(domains, name, enabled)
+    domains.index do |dom|
+      dom.name.casecmp(name) == 0 && (enabled ? dom.enabled == enabled : true)
+    end
   end
 
   def self.preserved_attrs_for_domains

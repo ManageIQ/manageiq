@@ -870,7 +870,7 @@ class CatalogController < ApplicationController
     # Check the validity of the entry points
     %w(fqname reconfigure_fqname retire_fqname).each do |fqname|
       if @edit[:new][fqname.to_sym].present? &&
-         MiqAeClass.find_homonymic_instances_across_domains(@edit[:new][fqname.to_sym]).empty?
+         MiqAeClass.find_homonymic_instances_across_domains(current_user, @edit[:new][fqname.to_sym]).empty?
         level = :error
         msg = _('Please correct invalid %s Entry Point prior to saving')
         case fqname
