@@ -656,10 +656,10 @@ module ReportController::Menus
 
       if @edit[:user_typ]
         # if user is admin/super admin, no need to add special characters in id
-        row_id = "i_#{row.gsub(/&/n, '&amp;')}"
+        row_id = "i_#{row}"
       elsif @edit[:group_reports].empty?
         # if group does not own any reports then add special characters in id, they cannot delete any folders.
-        row_id = "__|i_#{row.gsub(/&/n, '&amp;')}"
+        row_id = "__|i_#{row}"
       else
         prefix = "|-|"
 
@@ -672,20 +672,20 @@ module ReportController::Menus
             # if top node
             if nodes[0] == row
               # if report belongs to group
-              row_id = "i_#{row.gsub(/&/n, '&amp;')}"
+              row_id = "i_#{row}"
             else
               # if report is owned by other group
-              row_id = "#{prefix}i_#{row.gsub(/&/n, '&amp;')}"
+              row_id = "#{prefix}i_#{row}"
             end
           else
             # if second level folder node
             if nodes[1] == row
               # if report belongs to group
-              row_id = "i_#{row.gsub(/&/n, '&amp;')}"
+              row_id = "i_#{row}"
               # break
             else
               # if report is owned by other group
-              row_id = "#{prefix}i_#{row.gsub(/&/n, '&amp;')}"
+              row_id = "#{prefix}i_#{row}"
             end
           end
         end
