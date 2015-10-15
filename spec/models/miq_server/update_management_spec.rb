@@ -94,16 +94,6 @@ describe MiqServer do
 
       @server.attempt_registration
     end
-
-    it "rhn should not call #attach_products" do
-      database.update_attributes!(:registration_type => "rhn_satellite", :registration_server => "https://server.example.com/XMLRPC")
-
-      expect(@server).to receive(:register).and_return(true)
-      expect(@server).not_to receive(:attach_products)
-      expect(@server).to receive(:repos_enabled?).and_return(true)
-
-      @server.attempt_registration
-    end
   end
 
   context "#register" do
@@ -143,20 +133,6 @@ describe MiqServer do
       @server.register
 
       expect(@server.reload).to be_rh_registered
-      expect(@server.upgrade_message).to eq("registration successful")
-    end
-
-    it "unregistered should use rhn" do
-      database.update_attribute(:registration_type, "rhn_satellite")
-
-      allow(reg_system).to receive(:registered?).once.and_return(false, true)
-      expect(LinuxAdmin::Rhn).to receive(:register).once.with(default_params).and_return(true)
-      expect(File).to receive(:exist?).twice.and_return(false, true)
-      expect(reg_system).to receive(:registration_type).once
-
-      @server.register
-
-      expect(@server.reload.rh_registered).to be_truthy
       expect(@server.upgrade_message).to eq("registration successful")
     end
   end
