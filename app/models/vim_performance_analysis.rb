@@ -501,6 +501,7 @@ module VimPerformanceAnalysis
     klass, = Metric::Helper.class_and_association_for_interval_name(interval_name)
 
     query = (interval_name == "daily" ? VimPerformanceDaily : klass).where(options[:conditions] || {})
+    query = query.select(options[:select])
     cond =  klass.send(:sanitize_sql_for_conditions, ["(timestamp > ? AND timestamp <= ?)", start_time.utc, end_time.utc])
     cond += klass.send(:sanitize_sql_for_conditions, [" AND capture_interval_name = ?", interval_name]) unless interval_name == "daily"
 
@@ -525,9 +526,9 @@ module VimPerformanceAnalysis
     # puts "find_child_perf_for_time_period: cond: #{cond.inspect}"
 
     if interval_name == "daily"
-      query.find(:all, :conditions => cond, :ext_options => options[:ext_options], :select => options[:select])
+      query.find(:all, :conditions => cond, :ext_options => options[:ext_options])
     else
-      query.where(cond).select(options[:select]).to_a
+      query.where(cond).to_a
     end
   end
 
