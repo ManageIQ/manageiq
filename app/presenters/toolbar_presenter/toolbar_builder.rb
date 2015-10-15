@@ -1,14 +1,14 @@
 module ToolbarPresenter
   class ToolbarBuilder
     include ApplicationHelper
+    include ActionView::Helpers::TagHelper
 
     attr_reader :definition, :view_context, :view_bindinga, :toolbars
     delegate :request, :current_user, :to => :@view_context
 
-    def initialize(filename, view_context, view_binding, instance_data)
-      Rails.logger.info("Toolbar file - #{filename}")
+    def initialize(view_context, view_binding, instance_data)
+      Rails.logger.info("INIT -- ")
       @toolbars = []
-      @definition = filename == "custom_buttons_tb" ? build_custom_buttons_toolbar(@record) : YAML.load(File.open("#{TOOLBARS_FOLDER}/#{filename}.yaml"))
 
       @view_context = view_context
       @view_binding = view_binding
@@ -19,11 +19,48 @@ module ToolbarPresenter
 
     end
 
-    #old way
-    def build_toolbars
-      toolbars = []
+    def add_toolbar(toolbar_name, div='center_tb')
+      @toolbars << {:div => div, :filename => toolbar_name, :toolbars => []}
+    end
 
-      #binding.pry
+    def build_and_render_toolbars
+      puts "TBs Render called."
+      @toolbars.each do |toolbars_in_div|
+        build_toolbars(toolbars_in_div[:filename])
+      end
+      binding.pry
+      render_toolbars
+      puts "TBs Render done."
+    end
+
+    def render_toolbars
+      out = []
+      @toolbars.each do |div|
+        div[:toolbars].each do |toolbar|
+          out << render(toolbar)
+        end
+      end
+      out.join('').html_safe
+    end
+
+    def render(toolbar)
+      out = []
+      out << content_tag(:div, :class=> "dropdown btn-group") do
+               toolbar.each do |top_button|
+                 content_tag(:button, :id => top_button[:id], :class => "btn btn-default dropdown-toggle", 'data-toggle' => "dropdown", :type => "button")
+                   # image_tag("/images/toolbars/#{toolbar[:img]}") if top_button.key?(:img)
+                   # top_button[:text] if top_button[:text]
+                 #end
+               end
+             end
+      out
+    end
+
+    #old way
+    def build_toolbars(filename)
+      
+      @definition = filename == "custom_buttons_tb" ? build_custom_buttons_toolbar(@record) : YAML.load(File.open("#{TOOLBARS_FOLDER}/#{filename}.yaml")) 
+      toolbars_in_file = @toolbars.find {|div| div[:filename] == filename }
 
       @definition[:button_groups].each do |bg|
         current_toolbar = {:name => bg[:name], :items => []}
@@ -66,11 +103,9 @@ module ToolbarPresenter
             result = build_button_two_state_toolbar(toolbar)
             result ? current_toolbar[:items] << result : next
           end
+          toolbars_in_file[:toolbars] << current_toolbar
         end
-        toolbars << current_toolbar
       end
-
-      toolbars
     end
 
     def build_button_select_toolbar(toolbar)
@@ -1131,7 +1166,7 @@ module ToolbarPresenter
       false
     end
 
-      def build_toolbar_hide_button_report(id)
+    def build_toolbar_hide_button_report(id)
       if %w(miq_report_copy miq_report_delete miq_report_edit
             miq_report_new miq_report_run miq_report_schedule_add).include?(id) ||
          x_active_tree == :schedules_tree
@@ -1198,55 +1233,6 @@ module ToolbarPresenter
       url_parm = parse_ampersand.post_match if parse_ampersand.present?
       encoded_url = URI.encode(url_parm)
       Rack::Utils.parse_query URI("?#{encoded_url}").query
-    end
-
-    #new way
-    def build_toolbar(filename)
-      @toolbar_manager ||= Manager.new
-      # hash like [:toolbar1 => {text => , image =>, items => [item1, separator1], position => left/right}
-      @definition = YAML::load(File.open("#{TOOLBARS_FOLDER}/#{filename}.yaml"))
-      if @definition
-          @definition[:button_groups].each do |button_group|
-            toolbar_name = button_group[:name]
-            current_toolbar = {:name => toolbar_name, :items => []}
-            current_toolbar.merge! %w(gtl download).include?(toolbar_name) ? {:position => "right"} : {:position => "left"} 
-
-            # this is toolbar
-            button_group[:items].each do |toolbar|
-              #toolbar_name = toolbar[:buttonSelect]
-              #center/download/history toolbar
-              if toolbar.key?(:buttonSelect) 
-                current_toolbar.merge!(toolbar)
-              # toolbar - for gtl views
-              elsif toolbar.key? :buttonTwoState
-                #TODO: Change :buttonTwoState to :image
-                new_hash = Hash[toolbar.map {|k,v| [k == :buttonTwoState ? :image : k, v]}]
-                current_toolbar[:items] << new_hash
-              else
-                # custom 
-                puts "ELSE!!!! - #{filename}"
-                binding.pry
-                puts "ELSE!!!! - #{filename}"
-              end
-
-
-              # build items/separators for toolbar
-
-              #if toolbar.key? :items
-              #  toolbar[:items].each do |button|
-              #    if button.key? :button
-              #      current_toolbar[:items] << button
-              #    # it's separator
-              #    else
-              #      current_toolbar[:items] << button
-              #    end
-              #  end
-              #end
-            end
-            @toolbar_manager.add_toolbar(current_toolbar)
-          end
-      end
-      return @toolbar_manager
     end
   end
 end

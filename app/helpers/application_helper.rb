@@ -286,6 +286,10 @@ module ApplicationHelper
     return controller, action
   end
 
+  def render_toolbars
+    @toolbars.build_and_render_toolbars
+  end
+
   # Method to create the center toolbar XML
   def create_toolbars(filename)
     builder = ToolbarPresenter::ToolbarBuilder.new(
