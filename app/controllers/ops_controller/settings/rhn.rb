@@ -11,7 +11,6 @@ module OpsController::Settings::RHN
 
   SUBSCRIPTION_TYPES =
     [['Red Hat Subscription Management', 'sm_hosted'],
-     ['Red Hat Satellite 5',             'rhn_satellite'],
      ['Red Hat Satellite 6',             'rhn_satellite6']]
 
   def rhn_subscription_types
