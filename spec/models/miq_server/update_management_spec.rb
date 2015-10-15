@@ -189,7 +189,7 @@ describe MiqServer do
     reg_system.should_receive(:enable_repo).twice
 
     @server.enable_repos
-    expect(@server.upgrade_message).to eq("enabling rhel-server-rhscl-6-rpms")
+    expect(@server.upgrade_message).to eq("enabling rhel-server-rhscl-7-rpms")
   end
 
   it "#check_updates" do

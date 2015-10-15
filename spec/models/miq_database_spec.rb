@@ -20,7 +20,7 @@ describe MiqDatabase do
         db = MiqDatabase.first
         expect(db.csrf_secret_token_encrypted).to be_encrypted
         expect(db.session_secret_token_encrypted).to be_encrypted
-        expect(db.update_repo_name).to eq("cf-me-5.4-for-rhel-6-rpms rhel-server-rhscl-6-rpms")
+        expect(db.update_repo_name).to eq("cf-me-5.5-for-rhel-7-rpms rhel-server-rhscl-7-rpms")
         expect(db.registration_type).to eq("sm_hosted")
         expect(db.registration_server).to eq("subscription.rhn.redhat.com")
       end
@@ -38,7 +38,7 @@ describe MiqDatabase do
           db = MiqDatabase.first
           expect(db.csrf_secret_token_encrypted).to be_encrypted
           expect(db.session_secret_token_encrypted).to be_encrypted
-          expect(db.update_repo_name).to eq("cf-me-5.4-for-rhel-6-rpms rhel-server-rhscl-6-rpms")
+          expect(db.update_repo_name).to eq("cf-me-5.5-for-rhel-7-rpms rhel-server-rhscl-7-rpms")
         end
 
         it "will not change existing values" do
