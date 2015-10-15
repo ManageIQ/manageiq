@@ -52,6 +52,12 @@
         "dist/angular-patternfly.js",
         "dist/styles/angular-patternfly.css"
       ]
+    },
+    "ngprogress": {
+      "main": [
+        "build/ngprogress.js",
+        "ngProgress.css"
+      ]
     }
   }
 }
