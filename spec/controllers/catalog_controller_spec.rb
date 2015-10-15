@@ -120,7 +120,6 @@ describe CatalogController do
     before(:each) do
       controller.instance_variable_set(:@sb, {})
       controller.instance_variable_set(:@_params, :button => "save")
-      controller.should_receive(:render)
       @new_name = "New Name"
       @new_description = "New Description"
       @new_content = "{\"AWSTemplateFormatVersion\" : \"new-version\"}\n"
@@ -137,6 +136,24 @@ describe CatalogController do
 
     it "Orchestration Template name and description are edited" do
       ot = FactoryGirl.create(:orchestration_template_cfn)
+      controller.instance_variable_set(:@record, ot)
+      controller.params.merge!(:id => ot.id, :template_content => @new_content)
+      session[:edit][:key] = "ot_edit__#{ot.id}"
+      session[:edit][:rec_id] = ot.id
+      controller.stub(:replace_right_cell)
+      controller.send(:ot_edit_submit)
+      controller.send(:flash_errors?).should_not be_true
+      assigns(:flash_array).first[:message].should include("was saved")
+      ot.reload
+      ot.name.should == @new_name
+      ot.description.should == @new_description
+      ot.content.should == @new_content
+      expect(response.status).to eq(200)
+      assigns(:edit).should be_nil
+    end
+
+    it "Azure Orchestration Template name and description are edited" do
+      ot = FactoryGirl.create(:orchestration_template_azure_with_content)
       controller.instance_variable_set(:@record, ot)
       controller.params.merge!(:id => ot.id, :template_content => @new_content)
       session[:edit][:key] = "ot_edit__#{ot.id}"
@@ -202,7 +219,6 @@ describe CatalogController do
     before(:each) do
       controller.instance_variable_set(:@sb, {})
       controller.instance_variable_set(:@_params, :button => "add")
-      controller.should_receive(:render)
       controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
       ot = FactoryGirl.create(:orchestration_template_cfn)
       controller.x_node = "xx-otcfn_ot-#{ot.id}"
@@ -292,7 +308,6 @@ describe CatalogController do
 
     it "Orchestration Template is created" do
       controller.instance_variable_set(:@_params, :content => @new_content, :button => "add")
-      controller.should_receive(:render)
       controller.stub(:replace_right_cell)
       controller.send(:ot_add_submit)
       controller.send(:flash_errors?).should_not be_true
@@ -305,7 +320,6 @@ describe CatalogController do
     it "Orchestration Template draft is created" do
       controller.instance_variable_set(:@_params, :content => @new_content, :button => "add")
       session[:edit][:new][:draft] = true
-      controller.should_receive(:render)
       controller.stub(:replace_right_cell)
       controller.send(:ot_add_submit)
       controller.send(:flash_errors?).should_not be_true
@@ -434,6 +448,7 @@ describe CatalogController do
 
       FactoryGirl.create(:orchestration_template_cfn_with_content)
       FactoryGirl.create(:orchestration_template_hot_with_content)
+      FactoryGirl.create(:orchestration_template_azure_with_content)
     end
 
     after(:each) do
@@ -442,7 +457,7 @@ describe CatalogController do
     end
 
     it "Renders list of orchestration templates using correct GTL type" do
-      %w(root xx-otcfn xx-othot).each do |id|
+      %w(root xx-otcfn xx-othot xx-otazu).each do |id|
         post :tree_select, :id => id, :format => :js
         response.should render_template('layouts/gtl/_grid')
       end
