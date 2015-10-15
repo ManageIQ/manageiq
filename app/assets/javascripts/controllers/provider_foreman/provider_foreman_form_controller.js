@@ -10,6 +10,7 @@ ManageIQ.angularApplication.controller('providerForemanFormController', ['$http'
       };
       $scope.formId = providerForemanFormId;
       $scope.afterGet = false;
+      $scope.validateClicked = miqService.validateWithAjax;
       $scope.modelCopy = angular.copy( $scope.providerForemanModel );
       $scope.model = 'providerForemanModel';
 
@@ -19,7 +20,7 @@ ManageIQ.angularApplication.controller('providerForemanFormController', ['$http'
         $scope.newRecord                         = true;
         $scope.providerForemanModel.name         = '';
         $scope.providerForemanModel.url          = '';
-        $scope.providerForemanModel.verify_ssl   = '';
+        $scope.providerForemanModel.verify_ssl   = false;
 
         $scope.providerForemanModel.log_userid   = '';
         $scope.providerForemanModel.log_password = '';
@@ -34,16 +35,11 @@ ManageIQ.angularApplication.controller('providerForemanFormController', ['$http'
         $http.get('/provider_foreman/provider_foreman_form_fields/' + providerForemanFormId).success(function(data) {
           $scope.providerForemanModel.name        = data.name;
           $scope.providerForemanModel.url         = data.url;
-          $scope.providerForemanModel.verify_ssl  = data.verify_ssl;
+          $scope.providerForemanModel.verify_ssl  = data.verify_ssl == "1";
 
           $scope.providerForemanModel.log_userid   = data.log_userid;
           $scope.providerForemanModel.log_password = data.log_password;
           $scope.providerForemanModel.log_verify   = data.log_verify;
-
-          if($scope.providerForemanModel.verify_ssl == null)
-            $scope.providerForemanModel.verify_ssl = "0";
-          else
-            $scope.providerForemanModel.verify_ssl = $scope.providerForemanModel.verify_ssl.toString();
 
           $scope.afterGet = true;
           $scope.modelCopy = angular.copy( $scope.providerForemanModel );
@@ -57,9 +53,15 @@ ManageIQ.angularApplication.controller('providerForemanFormController', ['$http'
       });
     };
 
+    $scope.canValidateBasicInfo = function () {
+      if ($scope.isBasicInfoValid())
+        return true;
+      else
+        return false;
+    }
+
     $scope.isBasicInfoValid = function() {
-      if($scope.angularForm.name.$valid &&
-         $scope.angularForm.url.$valid &&
+      if($scope.angularForm.url.$valid &&
          $scope.angularForm.log_userid.$valid &&
          $scope.angularForm.log_password.$valid &&
          $scope.angularForm.log_verify.$valid)

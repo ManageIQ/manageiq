@@ -8,7 +8,7 @@ describe "Quota Validation" do
     @vm1.miq_group = @user.current_group
   end
 
-  let(:ws) { MiqAeEngine.instantiate("/Infrastructure/VM/Provisioning/StateMachines/ProvisionRequestQuotaVerification/Default?MiqProvisionRequest::miq_provision_request=#{@miq_provision_request.id}&MiqRequest::miq_request=#{@miq_provision_request.id}&max_group_cpu=#{@max_group_cpu}") }
+  let(:ws) { MiqAeEngine.instantiate("/Infrastructure/VM/Provisioning/StateMachines/ProvisionRequestQuotaVerification/Default?MiqProvisionRequest::miq_provision_request=#{@miq_provision_request.id}&MiqRequest::miq_request=#{@miq_provision_request.id}&max_group_cpu=#{@max_group_cpu}", @user) }
 
   context "validate vcpus quota limit, using number of cpus" do
     before do

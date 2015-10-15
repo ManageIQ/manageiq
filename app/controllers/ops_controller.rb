@@ -100,7 +100,7 @@ class OpsController < ApplicationController
 
   def explorer
     @explorer = true
-    @built_trees = []
+    @trees = []
     return if perfmenu_click?
 
     # if AJAX request, replace right cell, and return
@@ -116,39 +116,39 @@ class OpsController < ApplicationController
     @trees   = []
     @accords = []
     if role_allows(:feature => "ops_settings")
-      @accords.push(:name => "settings", :title => "Settings", :container => "settings_tree_div")
+      @accords.push(:name => "settings", :title => "Settings", :container => "settings_accord")
       self.x_active_accord ||= 'settings'
       self.x_active_tree ||= 'settings_tree'
       @sb[:active_tab] ||= "settings_server"
-      @built_trees << settings_build_tree
+      @trees << settings_build_tree
     end
     if role_allows(:feature => "ops_rbac", :any => true)
-      @accords.push(:name => "rbac", :title => "Access Control", :container => "rbac_tree_div")
+      @accords.push(:name => "rbac", :title => "Access Control", :container => "rbac_accord")
       self.x_active_accord ||= 'rbac'
       self.x_active_tree ||= 'rbac_tree'
-      @built_trees << rbac_build_tree
+      @trees << rbac_build_tree
       x_node_set("root", :rbac_tree) unless x_node(:rbac_tree)
       @sb[:active_tab] ||= "rbac_details"
     end
     if role_allows(:feature => "ops_diagnostics")
-      @accords.push(:name => "diagnostics", :title => "Diagnostics", :container => "diagnostics_tree_div")
+      @accords.push(:name => "diagnostics", :title => "Diagnostics", :container => "diagnostics_accord")
       self.x_active_accord ||= 'diagnostics'
       self.x_active_tree ||= 'diagnostics_tree'
-      @built_trees << diagnostics_build_tree
+      @trees << diagnostics_build_tree
       x_node_set("svr-#{to_cid(my_server_id)}", :diagnostics_tree) unless x_node(:diagnostics_tree)
       @sb[:active_tab] ||= "diagnostics_summary"
     end
     if get_vmdb_config[:product][:analytics]
-      @accords.push(:name => "analytics", :title => "Analytics", :container => "analytics_tree_div")
+      @accords.push(:name => "analytics", :title => "Analytics", :container => "analytics_accord")
       self.x_active_accord ||= 'analytics'
-      @built_trees << analytics_build_tree
+      @trees << analytics_build_tree
       x_node_set("svr-#{to_cid(my_server_id)}", :analytics_tree) unless x_node(:analytics_tree)
     end
     if role_allows(:feature => "ops_db")
-      @accords.push(:name => "vmdb", :title => "Database", :container => "vmdb_tree_div")
+      @accords.push(:name => "vmdb", :title => "Database", :container => "vmdb_accord")
       self.x_active_accord ||= 'vmdb'
       self.x_active_tree ||= 'vmdb_tree'
-      @built_trees << db_build_tree
+      @trees << db_build_tree
       x_node_set("root", :vmdb_tree) unless x_node(:vmdb_tree)
       @sb[:active_tab] ||= "db_summary"
     end
@@ -186,8 +186,8 @@ class OpsController < ApplicationController
 
   def accordion_select
     session[:flash_msgs] = @flash_array = nil           # clear out any messages from previous screen i.e import tab
-    self.x_active_accord = params[:id]
-    self.x_active_tree   = "#{params[:id]}_tree"
+    self.x_active_accord = params[:id].sub(/_accord$/, '')
+    self.x_active_tree   = "#{self.x_active_accord}_tree"
     session[:changed] = false
     set_active_tab(x_node)
     get_node_info(x_node)

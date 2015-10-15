@@ -172,6 +172,7 @@ module ApplicationController::Automate
       :message     => @resolve[:new][:object_message]
     }
     @results = MiqAeEngine.resolve_automation_object(@sb[:name],
+                                                     User.current_user,
                                                      @sb[:attrs],
                                                      options,
                                                      @resolve[:new][:readonly]).to_expanded_xml

@@ -401,6 +401,11 @@ describe AuthenticationMixin do
           @host.authentication_check.should == [false, "MiqException::MiqInvalidCredentialsError"]
         end
 
+        it "verify_credentials raising login error" do
+          @host.stub(:verify_credentials).and_raise(MiqException::MiqEVMLoginError)
+          @host.authentication_check.should == [false, "Login failed due to a bad username or password."]
+        end
+
         it "verify_credentials raising an unexpected error" do
           @host.stub(:verify_credentials).and_raise(RuntimeError)
           @host.authentication_check.should == [false, "RuntimeError"]

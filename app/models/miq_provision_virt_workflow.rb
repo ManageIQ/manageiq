@@ -49,7 +49,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     super(message, [:request_type, :source_type, :target_type], extra_attrs)
   end
 
-  def create_request(values, requester_id, auto_approve = false)
+  def create_request(values, _requester_id = nil, auto_approve = false)
     if @running_pre_dialog == true
       continue_request(values)
       password_helper(values, true)
@@ -59,13 +59,13 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
   end
 
-  def update_request(request, values, requester_id)
+  def update_request(request, values, _requester_id = nil)
     request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
     request.src_vm_id = request.get_option(:src_vm_id)
     super
   end
 
-  def refresh_field_values(values, _requester_id)
+  def refresh_field_values(values)
     st = Time.now
     new_src = get_value(values[:src_vm_id])
     vm_changed = @last_vm_id != new_src
@@ -1029,7 +1029,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     # Populate required fields
     p.init_from_dialog(values)
     values[:src_vm_id] = [src.id, src.name]
-    p.refresh_field_values(values, userid)
+    p.refresh_field_values(values)
     values[:vm_name]          = target_name
     values[:placement_auto]   = [true, 1]
     values[:owner_first_name] = userid
@@ -1241,7 +1241,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     # Populate required fields
     p.init_from_dialog(values)
     values[:src_vm_id] = [src.id, src.name]
-    p.refresh_field_values(values, userid)
+    p.refresh_field_values(values)
     values[:placement_auto] = [true, 1]
 
     p.ws_vm_fields(values, vm_fields)
@@ -1253,7 +1253,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     p.validate_values(values)
 
-    p.create_request(values, userid, values[:auto_approve])
+    p.create_request(values, nil, values[:auto_approve])
   rescue => err
     _log.error "<#{err}>"
     raise err

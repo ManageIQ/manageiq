@@ -13,7 +13,7 @@ module MiqAeServiceManageIQ_Providers_Vmware_InfraManager_ProvisionSpec
       @options       = {}
       @options[:src_vm_id] = [@vm_template.id, @vm_template.name]
       @options[:pass]      = 1
-      @user        = FactoryGirl.create(:user, :name => 'Fred Flintstone', :userid => 'fred')
+      @user        = FactoryGirl.create(:user_with_group, :name => 'Fred Flintstone', :userid => 'fred')
       @miq_provision = FactoryGirl.create(:miq_provision_vmware,
                                           :provision_type => 'template',
                                           :state => 'pending', :status => 'Ok',
@@ -26,7 +26,7 @@ module MiqAeServiceManageIQ_Providers_Vmware_InfraManager_ProvisionSpec
     def invoke_ae
       target_key   = MiqAeEngine.create_automation_attribute_key(@miq_provision)
       target_value = MiqAeEngine.create_automation_attribute_value(@miq_provision)
-      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?#{target_key}=#{target_value}")
+      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?#{target_key}=#{target_value}", @user)
     end
 
     context "check requests" do

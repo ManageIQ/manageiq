@@ -55,7 +55,7 @@ function miqOnLazyReadGetNodeChildren(node, tree, controller) {
 function miqMenuEditor(id) {
   var nid = id.split('__');
   if (nid[0] != 'r') {
-    var url = click_url + '?node_id=' + encodeURIComponent(id) + '&node_clicked=1';
+    var url = ManageIQ.clickUrl + '?node_id=' + encodeURIComponent(id) + '&node_clicked=1';
     miqJqueryRequest(url, {beforeSend: true,
       complete: true,
       no_encoding: true
@@ -91,6 +91,7 @@ function miqOnClickSelectDlgEditTreeNode(id) {
 
 // Activate and focus on a node within a tree given the node's key
 function miqDynatreeActivateNode(tree, key) {
+  miqSparkle(true);
   var node = $("#" + tree + "box").dynatree('getTree').getNodeByKey(key);
   if (node) {
     // Only try to activate node if it is in the tree
@@ -101,7 +102,6 @@ function miqDynatreeActivateNode(tree, key) {
     }
     node.focus();
   }
-  miqSparkle(false);
 }
 
 // Activate silently (no onActivate event) and focus on a node within a tree given the node's key
@@ -120,7 +120,7 @@ function miqOnClickProvLdapOus(id) {
   node.expand();
   node._activate(false, true);
   if (id.split('_-_').length > 1) {
-    miqJqueryRequest(click_url + '?ou_id=' + id);
+    miqJqueryRequest(ManageIQ.clickUrl + '?ou_id=' + id);
     return true;
   }
 }
@@ -230,7 +230,7 @@ function miqOnCheckProtect(node, treename) {
 
 // OnClick handler for the VM Snapshot Tree
 function miqOnClickSnapshotTree(id) {
-  miqJqueryRequest(click_url + id, {beforeSend: true, complete: true});
+  miqJqueryRequest(ManageIQ.clickUrl + id, {beforeSend: true, complete: true});
   return true;
 }
 
@@ -292,7 +292,7 @@ function miqOnClickHostNet(id) {
 function miqOnClickTimelineSelection(id) {
   if (id.split('__')[0] != 'p') {
     rep_id = id.split('__');
-    miqJqueryRequest(click_url + '?id=' + rep_id[0], {beforeSend: true, complete: true});
+    miqJqueryRequest(ManageIQ.clickUrl + '?id=' + rep_id[0], {beforeSend: true, complete: true});
   }
 }
 
@@ -306,14 +306,14 @@ function miqOnCheckSections(tree_name, key, checked, all_checked) {
 // OnClick handler for catgories Tree
 function miqOnClickTagCat(id) {
   if (id.split('__')[0] == 't') {
-    miqJqueryRequest(click_url + '?id=' + id, {beforeSend: true, complete: true});
+    miqJqueryRequest(ManageIQ.clickUrl + '?id=' + id, {beforeSend: true, complete: true});
   }
 }
 
 // OnClick handler for Genealogy Tree
 function miqOnClickGenealogyTree(id) {
   if (hoverNodeId(id)[0] === 'v') {
-    miqJqueryRequest(click_url + id, {beforeSend: true, complete: true});
+    miqJqueryRequest(ManageIQ.clickUrl + id, {beforeSend: true, complete: true});
   }
 }
 
@@ -400,7 +400,7 @@ function miqOnClickServerRoles(id) {
     case 'server':
     case 'role':
     case 'asr':
-      miqJqueryRequest(click_url + '?id=' + id, {beforeSend: true, complete: true});
+      miqJqueryRequest(ManageIQ.clickUrl + '?id=' + id, {beforeSend: true, complete: true});
       break;
   }
 }

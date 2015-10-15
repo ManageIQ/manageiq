@@ -119,12 +119,12 @@ describe ServiceTemplate do
     end
 
     it 'updates a stack through cloud manager' do
-      OrchestrationStack.any_instance.stub(:raw_update_stack) do |opts|
+      OrchestrationStack.any_instance.stub(:raw_update_stack) do |new_template, opts|
         opts[:parameters].should include(
           'InstanceType'   => 'cg1.4xlarge',
           'DBRootPassword' => 'admin'
         )
-        opts[:template].should == template_by_setter.content
+        new_template.should == template_by_setter
       end
       reconfigurable_service.update_orchestration_stack
     end

@@ -6,10 +6,11 @@ module MiqAeObjectSpec
     before(:each) do
       MiqAeDatastore.reset
       @domain = 'SPEC_DOMAIN'
+      @user = FactoryGirl.create(:user_with_group)
       @model_data_dir = File.join(File.dirname(__FILE__), "data")
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "miq_ae_object_spec1"), @domain)
       @vm      = FactoryGirl.create(:vm_vmware)
-      @ws      = MiqAeEngine.instantiate("/SYSTEM/EVM/AUTOMATE/test1")
+      @ws      = MiqAeEngine.instantiate("/SYSTEM/EVM/AUTOMATE/test1", @user)
       @miq_obj = MiqAeObject.new(@ws, "#{@domain}/SYSTEM/EVM", "AUTOMATE", "test1")
     end
 

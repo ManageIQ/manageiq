@@ -1,4 +1,9 @@
 module MiqAeClassHelper
+  def editable_domain?(record)
+    name = record.class == MiqAeDomain ? record.name : record.domain.name
+    User.current_tenant.editable_domains.collect(&:name).include?(name)
+  end
+
   def add_read_only_suffix(node_string, editable, enabled)
     if enabled && !editable
       suffix = "Locked"
@@ -26,10 +31,9 @@ module MiqAeClassHelper
   def record_name(rec)
     column   = rec.display_name.blank? ? :name : :display_name
     rec_name = if rec.kind_of?(MiqAeNamespace) && rec.domain?
-                 editable_domain = User.current_tenant.editable_domains.include?(rec)
-                 editable_domain && rec.enabled ? rec.send(column) : add_read_only_suffix(rec.send(column),
-                                                                                          editable_domain,
-                                                                                          rec.enabled)
+                 editable_domain?(rec) && rec.enabled ? rec.send(column) : add_read_only_suffix(rec.send(column),
+                                                                                                editable_domain?(rec),
+                                                                                                rec.enabled)
                else
                  rec.send(column)
                end

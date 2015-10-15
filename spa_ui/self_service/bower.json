@@ -31,7 +31,7 @@
     "angular-ui-router": "~0.2.15",
     "angular-mocks": "~1.4.6",
     "patternfly": "~2.3.0",
-    "angular-patternfly": "~2.3.1",
+    "angular-patternfly": "~2.3.2",
     "angular-bootstrap": "~0.13.0",
     "angular-base64": "~2.0.5"
   },

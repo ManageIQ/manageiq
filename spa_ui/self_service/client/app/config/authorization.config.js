@@ -2,7 +2,51 @@
   'use strict';
 
   angular.module('app.services')
+    .config(configure)
     .run(init);
+
+  /** @ngInject */
+  function configure($httpProvider) {
+    $httpProvider.interceptors.push(interceptor);
+
+    /** @ngInject */
+    function interceptor($injector, $q) {
+      return {
+        response: response,
+        responseError: responseError
+      };
+
+      function response(res) {
+        if (401 === res.status) {
+          endSession();
+
+          return $q.reject(res);
+        }
+
+        return $q.resolve(res);
+      }
+
+      function responseError(rej) {
+        if (401 === rej.status) {
+          endSession();
+
+          return $q.reject(rej);
+        }
+
+        return $q.reject(rej);
+      }
+
+      function endSession() {
+        var $state = $injector.get('$state');
+
+        if ('login' !== $state.current.name) {
+          $injector.get('Notifications').message('danger', '', 'Your session has timed out.', true);
+          $injector.get('Session').destroy();
+          $state.go('login');
+        }
+      }
+    }
+  }
 
   /** @ngInject */
   function init($rootScope, $state, Session, jQuery) {

@@ -65,7 +65,7 @@ describe "Service Filter" do
       let(:options) { {'include_service' => true} }
       it "check true value" do
         MiqAeEngine.stub(:resolve_automation_object).and_return(workspace)
-        expect(test_class.automate_result_include_service_template?('a', 'b')).to be_true
+        expect(test_class.automate_result_include_service_template?('a', @user, 'b')).to be_true
       end
     end
 
@@ -73,7 +73,7 @@ describe "Service Filter" do
       let(:options) { {'include_service' => false} }
       it "check false value" do
         MiqAeEngine.stub(:resolve_automation_object).and_return(workspace)
-        expect(test_class.automate_result_include_service_template?('a', 'b')).to be_false
+        expect(test_class.automate_result_include_service_template?('a', @user, 'b')).to be_false
       end
     end
 
@@ -81,7 +81,7 @@ describe "Service Filter" do
       let(:options) { {} }
       it "check nil value" do
         MiqAeEngine.stub(:resolve_automation_object).and_return(workspace)
-        expect(test_class.automate_result_include_service_template?('a', 'b')).to be_true
+        expect(test_class.automate_result_include_service_template?('a', @user, 'b')).to be_true
       end
     end
   end

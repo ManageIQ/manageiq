@@ -5,6 +5,7 @@ class ApiController
     #
 
     def show_generic(type)
+      validate_api_action
       if @req[:subcollection]
         render_collection_type @req[:subcollection].to_sym, @req[:s_id], true
       else
@@ -196,7 +197,7 @@ class ApiController
     def submit_custom_action_dialog(resource, custom_button, data)
       wf = ResourceActionWorkflow.new({}, @auth_user, custom_button.resource_action, :target => resource)
       data.each { |key, value| wf.set_value(key, value) } if data.present?
-      wf_result = wf.submit_request(@auth_user)
+      wf_result = wf.submit_request
       raise StandardError, Array(wf_result[:errors]).join(", ") if wf_result[:errors].present?
       wf_result
     end

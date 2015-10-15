@@ -1,14 +1,5 @@
-- content_for :trees do
-  - @built_trees.each do |tree|
-    %div{:style => 'display: none;'}
-      = render(:partial  => "shared/tree",
-        :locals => {:tree => tree, :name => tree.name.to_s})
-
-- content_for :accords do
-  = render(:partial => "layouts/dhtmlxlayout_explorer",
-      :locals => {:accords => @accords,
-        :active_accord => @sb[:active_accord],
-        :accord_select_function => "miqAccordPxeSelect"})
+- content_for :dhx_layout do
+  = render :partial => "layouts/dhtmlxlayout_explorer"
 
 -# These are the initial divs that will go inside center_cell_div
 #main_div.main_div

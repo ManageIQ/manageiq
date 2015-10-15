@@ -4,7 +4,7 @@
  * the top of the compiled file, but it's generally better to create a new file per style scope.
  *
  *= require main
- *= require slick.grid
+ *= require slickgrid/slick.grid
  *= require jquery.jqplot
  *= require automate_import_export
  *= require dialog_import_export

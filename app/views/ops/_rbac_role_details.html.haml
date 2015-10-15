@@ -44,20 +44,18 @@
             .form-group
               %label.col-md-2.control-label
                 = _("Groups Using this Role")
-              .col-md-8{:style => "padding: 0px"}
-                %table{:cellpadding => "0", :cellspacing => "0"}
-                  - @role.miq_groups.sort_by { |a| a.description.downcase }.each do |g|
-                    - if role_allows(:feature => "rbac_group_show")
-                      - params = {:class   => "pointer",
-                                  :onclick => "miqDynatreeActivateNode('rbac_tree', 'g-#{to_cid(g.id)}');",
-                                  :title   => _("View this Group")}
-                    - else
-                      - params = {}
-                    %tr{params}
-                      %td.image
-                        %img{:src => "/images/icons/new/miq_group.png"}/
-                      %td
-                        = h(g.description)
+              .col-md-8
+                - @role.miq_groups.sort_by { |a| a.description.downcase }.each do |g|
+                  - if role_allows(:feature => "rbac_group_show")
+                    - params = {:class   => "pointer",
+                                :onclick => "miqDynatreeActivateNode('rbac_tree', 'g-#{to_cid(g.id)}');",
+                                :title   => _("View this Group")}
+                  - else
+                    - params = {}
+                  %span.product.product-group{params}
+                    = h(g.description)
+
+
     .col-md-12.col-lg-6
       %fieldset
         - temp = @edit ? _("Editing") : _("Read Only")

@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   include Vmdb::Logging
 
   if Vmdb::Application.config.action_controller.allow_forgery_protection
-    protect_from_forgery :secret => MiqDatabase.first.csrf_secret_token, :except => :csp_report
+    protect_from_forgery :secret => MiqDatabase.first.csrf_secret_token, :except => :csp_report, :with => :exception
   end
 
   helper ChartingHelper
@@ -936,20 +936,31 @@ class ApplicationController < ActionController::Base
     @server_options[:ipaddress] = ""
   end
 
-  # Gather information for the report accordians
-  def build_report_listnav(tree_type = "reports", tree = "listnav", mode = "menu")
+  def populate_reports_menu(tree_type = 'reports', mode = 'menu')
     # checking to see if group (used to be role) was selected in menu editor tree, or came in from reports/timeline tree calls
     group = !session[:role_choice].blank? ? MiqGroup.find_by_description(session[:role_choice]) : current_group
     @sb[:rpt_menu] = get_reports_menu(group, tree_type, mode)
+  end
+
+  # Gather information for the report accordions
+  def build_report_listnav(tree_type = "reports", tree = "listnav", mode = "menu")
+    populate_reports_menu(tree_type, mode)
     if tree == "listnav"
       if tree_type == "timeline"
         build_timeline_tree(@sb[:rpt_menu], tree_type)
       else
-        build_reports_tree(:reports, :reports_tree)
+        build_reports_tree
       end
     else
       build_menu_tree(@sb[:rpt_menu], tree_type)
     end
+  end
+
+  def reports_group_title
+    tenant_name = current_tenant.name
+    @sb[:grp_title] = current_user.admin_user? ?
+      "#{tenant_name} (#{_("All %s") % ui_lookup(:models => "MiqGroup")})" :
+      "#{tenant_name} (#{_("%s") % ui_lookup(:model => "MiqGroup")}: #{current_user.current_group.description})"
   end
 
   def get_reports_menu(group = current_group, tree_type = "reports", mode = "menu")
@@ -957,9 +968,7 @@ class ApplicationController < ActionController::Base
     reports = []
     folders = []
     user = current_user
-    @sb[:grp_title] = user.admin_user? ?
-      "#{current_tenant.name} (#{_("All %s") % ui_lookup(:models => "MiqGroup")})" :
-      "#{current_tenant.name} (#{_("%s") % "#{ui_lookup(:model => "MiqGroup")}: #{user.current_group.description}"})"
+    reports_group_title
     @data = []
     if (!group.settings || !group.settings[:report_menus] || group.settings[:report_menus].blank?) || mode == "default"
       # array of all reports if menu not configured
@@ -1179,7 +1188,7 @@ class ApplicationController < ActionController::Base
             when ExtManagementSystem   then "#{pn}/vendor-#{item.image_name}.png"
             when Filesystem            then "#{p}ico/win/#{item.image_name.downcase}.ico"
             when Host                  then "#{pn}vendor-#{item.vmm_vendor.downcase}.png"
-            when MiqEvent              then "#{pn}event-#{item.name.downcase}.png"
+            when MiqEventDefinition    then "#{pn}event-#{item.name.downcase}.png"
             when MiqRequest
               pn + case item.request_status.to_s.downcase
                    when "ok"    then "checkmark.png"

@@ -13,12 +13,12 @@ module MiqAeServiceMiqProvisionSpec
       @options       = {}
       @options[:src_vm_id] = [@vm_template.id, @vm_template.name]
       @options[:pass]      = 1
-      @user        = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
+      @user        = FactoryGirl.create(:user_with_group, :name => 'Fred Flintstone',  :userid => 'fred')
       @miq_provision = FactoryGirl.create(:miq_provision, :provision_type => 'template', :state => 'pending', :status => 'Ok', :options => @options, :userid => @user.userid)
     end
 
     def invoke_ae
-      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?MiqProvision::miq_provision=#{@miq_provision.id}")
+      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?MiqProvision::miq_provision=#{@miq_provision.id}", @user)
     end
 
     it "#miq_request" do

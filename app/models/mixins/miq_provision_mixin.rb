@@ -198,7 +198,7 @@ module MiqProvisionMixin
       prov_wf.get_all_dialogs
       prov_wf.allowed_customization_specs
       prov_wf.get_timezones
-      prov_wf.refresh_field_values(options, userid)
+      prov_wf.refresh_field_values(options)
       custom_spec = prov_wf.allowed_customization_specs.detect { |cs| cs.name == custom_spec_name }
       raise MiqException::MiqProvisionError, "Customization Specification [#{custom_spec_name}] does not exist." if custom_spec.nil?
 
@@ -207,7 +207,7 @@ module MiqProvisionMixin
       options[:sysprep_spec_override] = override_value
       # Call refresh_field_values a second time so it recognizes the config change
       # and loads the defaults the customization spec settings
-      prov_wf.refresh_field_values(options, userid)
+      prov_wf.refresh_field_values(options)
 
       self.options.keys.each do |key|
         v_old = self.options[key]

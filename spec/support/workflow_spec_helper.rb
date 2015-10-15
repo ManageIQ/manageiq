@@ -7,9 +7,9 @@ module WorkflowSpecHelper
     allow(MiqProvision).to receive(:get_next_vm_name).and_return(vm_name)
   end
 
-  def assert_automate_dialog_lookup(category, platform, method = 'get_pre_dialog_name', dialog_name = nil)
+  def assert_automate_dialog_lookup(user, category, platform, method = 'get_pre_dialog_name', dialog_name = nil)
     no_attrs = double(:attributes => [])
-    stub_automate_workspace(dialog_name, no_attrs, no_attrs, dialog_name)
+    stub_automate_workspace(dialog_name, user, no_attrs, no_attrs, dialog_name)
 
     expect(MiqAeEngine).to receive(:create_automation_object).with(
       "REQUEST",
@@ -25,7 +25,7 @@ module WorkflowSpecHelper
   end
 
   def assert_automate_vm_name_lookup(user, vm_name = 'vm_name')
-    stub_automate_workspace("get_vmname_url", vm_name)
+    stub_automate_workspace("get_vmname_url", user, vm_name)
 
     MiqAeEngine.should_receive(:create_automation_object).with(
       "REQUEST",
@@ -37,9 +37,9 @@ module WorkflowSpecHelper
       anything).and_return("get_vmname_url")
   end
 
-  def stub_automate_workspace(url, *result)
+  def stub_automate_workspace(url, user, *result)
     workspace_stub = double
-    expect(workspace_stub).to receive(:instantiate).with(url, nil)
+    expect(workspace_stub).to receive(:instantiate).with(url, user, nil)
     expect(workspace_stub).to receive(:root).and_return(*result)
     expect(MiqAeEngine::MiqAeWorkspaceRuntime).to receive(:new).and_return(workspace_stub)
   end

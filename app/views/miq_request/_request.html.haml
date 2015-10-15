@@ -127,7 +127,7 @@
             = button_tag(t, :class => "btn btn-primary btn-disabled")
   %br
   - if @miq_request.workflow_class
-    = render :partial => "prov_wf", :locals => {:wf => @miq_request.workflow_class.new({:src_vm_id => @miq_request.source_id}, session[:userid]), :show => true}
+    = render :partial => "prov_wf", :locals => {:wf => @miq_request.workflow_class.new({:src_vm_id => @miq_request.source_id}, current_user), :show => true}
   - elsif @miq_request.type == 'ServiceTemplateProvisionRequest'
     = render :partial => "st_prov_show"
   - elsif @miq_request.type == 'ServiceReconfigureRequest'

@@ -34,21 +34,17 @@
       .col-md-8
         - if !@edit
           - if @group.miq_user_role
-            %table{:cellpadding => "0", :cellspacing => "0"}
-              - if role_allows(:feature => "rbac_role_show")
-                - params = {:class   => "pointer",
-                            :onclick => "miqDynatreeActivateNode('rbac_tree', 'ur-#{to_cid(@group.miq_user_role.id)}');",
-                            :title   => _("View this Role")}
-              - else
-                - params = {}
-              %tr{params}
-                %td
-                  %span.product.product-role
-                  = h(@group.miq_user_role.name)
+            - if role_allows(:feature => "rbac_role_show")
+              - params = {:class   => "pointer",
+                          :onclick => "miqDynatreeActivateNode('rbac_tree', 'ur-#{to_cid(@group.miq_user_role.id)}');",
+                          :title   => _("View this Role")}
+            - else
+              - params = {}
+            %span.product.product-role{params}
+              = h(@group.miq_user_role.name)
         - else
           = select_tag('group_role',
               options_for_select(@edit[:roles].sort, @edit[:new][:role]),
-              "title" => "Choose",
               :class  => "selectpicker")
           :javascript
             miqInitSelectPicker();
@@ -60,41 +56,35 @@
         - if !@edit
           - if @group.tenant
             - tenant = @group.tenant
-            %table{:cellpadding => "0", :cellspacing => "0"}
-              - if role_allows(:feature => "rbac_tenant_show")
-                - params = {:class   => "pointer",
-                            :onclick => "miqDynatreeActivateNode('rbac_tree', 'tn-#{to_cid(tenant.id)}');",
-                            :title   => _("View this #{tenant.divisible ? "Tenant" : "Project"}")}
-              - else
-                - params = {}
-              %tr{params}
-                %td
-                  %span.product{:class => "product-#{tenant.divisible ? "tenant" : "project"}"}
-                  = h(tenant.name)
+            - params = {:class => "product product-#{tenant.divisible ? "tenant" : "project"}"}
+            - if role_allows(:feature => "rbac_tenant_show")
+              - params[:class] = "#{params[:class]} pointer"
+              - params.merge!({:onclick => "miqDynatreeActivateNode('rbac_tree', 'tn-#{to_cid(tenant.id)}');",
+                               :title   => _("View this #{tenant.divisible ? "Tenant" : "Project"}")})
+            %span{params}
+              = h(tenant.name)
         - else
           = select_tag('group_tenant',
               grouped_options_for_select(@edit[:projects_tenants], @edit[:new][:group_tenant]),
-              "title" => "Choose",
-              :class  => "selectpicker")
+               :class  => "selectpicker")
           :javascript
             miqSelectPickerEvent("group_tenant", "#{combo_url}")
+
     - unless @edit
       .form-group
         %label.col-md-2.control-label
           = _("Users in this Group")
         .col-md-8
-          %table{:cellpadding => "0", :cellspacing => "0"}
-            - @group.users.sort_by { |a| a.name.downcase }.each do |u|
-              - if role_allows(:feature => "rbac_user_show")
-                - params = {:class   => "pointer",
-                            :onclick => "miqDynatreeActivateNode('rbac_tree', 'u-#{to_cid(u.id)}');",
-                            :title   => _("View this User")}
-              - else
-                - params = {}
-              %tr{params}
-                %td
-                  %span.pficon.pficon-user
-                  = h(u.name)
+          - @group.users.sort_by { |a| a.name.downcase }.each do |u|
+            - if role_allows(:feature => "rbac_user_show")
+              - params = {:class   => "pointer",
+                          :onclick => "miqDynatreeActivateNode('rbac_tree', 'u-#{to_cid(u.id)}');",
+                          :title   => _("View this User")}
+            - else
+              - params = {}
+            %span.pficon.pficon-user{params}
+              = h(u.name)
+            %br
       - unless @edit
         = render :partial => "rbac_tag_box"
       - if @edit

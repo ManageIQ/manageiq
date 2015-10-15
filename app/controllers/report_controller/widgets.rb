@@ -506,18 +506,8 @@ module ReportController::Widgets
   end
 
   # Build the main widgets tree
-  def build_widgets_tree(type = :widgets, name = :widgets_tree)
-    x_tree_init(name, type, 'MiqWidget', :full_ids => true)
-    tree_nodes = x_build_dynatree(x_tree(name))
-
-    region = MiqRegion.my_region
-    # Fill in root node details
-    root           = tree_nodes.first
-    root[:title]   = "All Widgets"
-    root[:tooltip] = "All Widgets"
-    root[:icon]    = "folder.png"
-    instance_variable_set :"@#{name}", tree_nodes.to_json          # JSON object for tree loading
-    x_node_set(tree_nodes.first[:key], name) unless x_node(name)  # Set active node to root if not set
+  def build_widgets_tree
+    TreeBuilderReportWidgets.new('widgets_tree', 'widgets', @sb)
   end
 
   # Add the children of a node that is being expanded (autoloaded), called by generic tree_autoload method

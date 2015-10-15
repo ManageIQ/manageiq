@@ -71,6 +71,7 @@ class ApiController < ApplicationController
   include_concern 'Software'
   include_concern 'ServiceTemplates'
   include_concern 'Tags'
+  include_concern 'Tenants'
   include_concern 'Vms'
 
   #

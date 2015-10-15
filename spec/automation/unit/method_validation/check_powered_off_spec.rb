@@ -4,7 +4,8 @@ describe "check_powered_off Method Validation" do
   before(:each) { @vm = FactoryGirl.create(:vm_vmware) }
   after(:each) { @vm.destroy }
 
-  let(:ws) { MiqAeEngine.instantiate("/Infrastructure/VM/Retirement/StateMachines/Methods/CheckPoweredOff?Vm::vm=#{@vm.id}") }
+  let(:user) { FactoryGirl.create(:user_with_group) }
+  let(:ws) { MiqAeEngine.instantiate("/Infrastructure/VM/Retirement/StateMachines/Methods/CheckPoweredOff?Vm::vm=#{@vm.id}", user) }
 
   it "returns 'ok' for a vm in powered_off state" do
     @vm.update_attribute(:raw_power_state, "poweredOff")

@@ -1,0 +1,85 @@
+%iframe.import-hidden-iframe{:name => "upload_target"}
+
+.import-flash-message
+  .alert
+    %span.icon-placeholder
+      %span.pficon
+      %span.pficon
+    %strong.message
+
+.import-or-export
+  %h2
+    = _('Widgets')
+
+  %h3
+    = _('Import')
+  = form_tag({:action => "upload_widget_import_file"}, :class => "form-horizontal", :target => "upload_target", :multipart => true) do
+    .form-group
+      .col-md-4
+        = file_field("upload", "file",
+                     :class             => "lifestyle",
+                     "data-buttonName"  => "btn-default")
+        :javascript
+          $(":file").filestyle({icon: false,placeholder: "No file chosen"});
+      .col-md-6
+        = submit_tag(_("Upload"), :id => "upload_widget_import", :class => "btn btn-default")
+
+  %hr
+
+  %h3
+    = _('Export')
+  .form-horizontal
+    .form-group
+      %label.control-label.col-md-2
+        = _('Available Widgets:')
+      .col-md-8
+        .export-choices
+          = form_tag({:action => "export_widgets"}, :id => "export-widgets-form", :method => :get) do
+            = select_tag("widgets[]",
+              options_for_select(@widget_exports),
+              :class    => "widget-export",
+              :size     => 15,
+              :style    => "min-width: 375px",
+              :multiple => true)
+
+%table{:width => "100%"}
+  %tr
+    %td{:align => "right"}
+      .widget-export-buttons
+        = button_tag("Export", :id => "export-widgets", :class => "btn btn-primary btn-disabled")
+
+.import-data
+  %form#import-form
+    %h3
+      = _('Import Widgets')
+
+    %label{:for => 'toggle-all'}
+      = _('All')
+    %input#toggle-all{:type => 'checkbox'}
+
+    #import-grid{:style => "width: #{@winW - 50}px; height: #{center_div_height + 5}px; cursor: hand; overflow-x: auto; overflow-y: auto;"}
+
+    = hidden_field_tag(:import_file_upload_id, '', :class => "hidden-import-file-upload-id")
+
+%table{:width => "100%"}
+  %tr
+    %td{:align => "right"}
+      .widget-import-buttons
+        = button_tag(_('Commit'), :alt => _("Commit Changes"), :class => "btn btn-primary import-commit")
+        = button_tag(_('Cancel'), :alt => _("Cancel Changes"), :class => "btn btn-default import-cancel")
+
+:javascript
+  $(function() {
+    $('#upload_widget_import').click(function() {
+      miqSparkleOn();
+    });
+
+    setUpExportWidgetClickHandlers();
+    listenForWidgetPostMessages();
+    setUpImportWidgetClickHandlers();
+
+    if (typeof(ManageIQ.layout.toolbar.hide) !== 'undefined') {
+      ManageIQ.layout.toolbar.hide();
+      $('.widget-export-buttons').show();
+    }
+  });

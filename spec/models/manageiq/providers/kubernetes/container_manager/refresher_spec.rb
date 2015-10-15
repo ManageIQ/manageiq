@@ -35,6 +35,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       assert_specific_container_service
       assert_specific_container_replicator
       assert_specific_container_project
+      assert_specific_container_quota
+      assert_specific_container_limit
       assert_specific_container_image_and_registry
     end
   end
@@ -49,6 +51,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     ContainerDefinition.count.should == 3
     ContainerReplicator.count.should == 2
     ContainerProject.count.should == 1
+    ContainerQuota.count.should == 2
+    ContainerLimit.count.should == 3
     ContainerImage.count.should == 3
     ContainerImageRegistry.count.should == 1
   end
@@ -201,6 +205,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     )
     @containernode.lives_on.should == @ovirt_vm
     @containernode.containers.count.should == 0
+    @containernode.container_routes.count.should == 0
   end
 
   def assert_specific_container_service
@@ -270,8 +275,41 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
 
     @container_pr.container_groups.count.should == 2
     @container_pr.container_replicators.count.should == 2
+    @container_pr.container_nodes.count.should == 1
     @container_pr.container_services.count.should == 5
     @container_pr.ext_management_system.should == @ems
+  end
+
+  def assert_specific_container_quota
+    container_quota = ContainerQuota.find_by_name("quota")
+    container_quota.creation_timestamp.kind_of?(ActiveSupport::TimeWithZone)
+    container_quota.container_quota_items.count.should == 8
+    cpu_quota = container_quota.container_quota_items.select { |x| x[:resource] == 'cpu' }[0]
+    cpu_quota.should have_attributes(
+      :quota_desired  => '20',
+      :quota_enforced => '20',
+      :quota_observed => '100m',
+    )
+    container_quota.container_project.name.should == "default"
+  end
+
+  def assert_specific_container_limit
+    container_limit = ContainerLimit.find_by_name("limits")
+    container_limit.creation_timestamp.kind_of?(ActiveSupport::TimeWithZone)
+    container_limit.container_limit_items.count.should == 2
+    container_limit.container_project.name.should == "default"
+    item = container_limit.container_limit_items.each { |x| x[:item_type] == 'Container' && x[:resource] == 'cpu' }[0]
+    assert_specific_limit_item item
+  end
+
+  def assert_specific_limit_item(item)
+    item.should have_attributes(
+      :max                     => nil,
+      :min                     => nil,
+      :default                 => "100m",
+      :default_request         => nil,
+      :max_limit_request_ratio => nil,
+    )
   end
 
   def assert_specific_container_image_and_registry
@@ -287,5 +325,6 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       :host => "example.com",
       :port => "1234",
     )
+    @image.container_nodes.count.should == 1
   end
 end

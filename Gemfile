@@ -19,7 +19,8 @@ gem "jquery-hotkeys-rails"
 gem "jquery-rails",                   "~>4.0.4"
 gem "jquery-rjs",                     "=0.1.1",                       :git => "https://github.com/amatsuda/jquery-rjs.git"
 gem "lodash-rails",                   "~>3.10.0"
-gem "patternfly-sass",                "~>2.2.0"
+gem "patternfly-sass",                "~>2.4.0"
+gem "css_splitter"
 gem "sass-rails"
 
 # Vendored and required
@@ -46,9 +47,10 @@ gem "acts_as_tree",                   "~>2.1.0"  # acts_as_tree needs to be requ
 # See miq_expression_spec Date/Time Support examples.
 # https://github.com/jeremyevans/ruby-american_date
 gem "american_date"
-gem "azure-armrest",                  :git => "git://github.com/ManageIQ/azure-armrest.git"
+gem "azure-armrest",                  "=0.0.3"
 gem "default_value_for",              "~>3.0.1"
 gem "hamlit-rails",                   "~>0.1.0"
+gem "high_voltage",                   "~>2.4.0"
 gem "mime-types"
 gem "novnc-rails",                    "~>0.2"
 gem "outfielding-jqplot-rails",       "= 1.0.8"
@@ -59,7 +61,7 @@ gem "spice-html5-rails"
 gem "thin",                           "~>1.6.0"  # Used by rails server through rack
 
 # Needed by the REST API
-gem "gettext_i18n_rails"
+gem "gettext_i18n_rails",             "~>1.3.0"
 gem "jbuilder",                       "~>2.3.1"
 gem "paperclip",                      "~>4.3.0"
 gem "rails-i18n",                                                     :git => "git://github.com/svenfuchs/rails-i18n.git", :branch => "master"
@@ -128,6 +130,7 @@ source "https://rails-assets.org" do
   gem "rails-assets-moment-timezone",                 "~>0.4.0"
   gem "rails-assets-sprintf",                         "~>1.0.3"
   gem "rails-assets-numeral",                         "~>1.5.3"
+  gem "rails-assets-slickgrid",                       "~>2.1.0"
 end
 
 #

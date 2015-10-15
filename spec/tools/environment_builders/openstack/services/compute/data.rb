@@ -6,8 +6,11 @@ module Openstack
       class Data < ::Openstack::Services::BaseData
         def flavor_translate_table
           {
-            :ram   => :memory,
-            :vcpus => :cpus
+            :ram       => :memory,
+            :vcpus     => :cpus,
+            :disk      => :root_disk_size,
+            :ephemeral => :ephemeral_disk_size,
+            :swap      => :swap_disk_size,
           }
         end
 

@@ -12,7 +12,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(ems cluster availability_zone used_tenants storages resource_pools vms miq_templates drift_history)
+    %i(ems cluster availability_zone used_tenants storages resource_pools vms templates drift_history)
   end
 
   def textual_group_storage_relationships
@@ -294,10 +294,17 @@ module HostHelper::TextualSummary
   end
 
   def textual_vms
-    @record.vms
+    label = "VMs"
+    num   = @record.number_of(:vms)
+    h     = {:label => label, :image => "vm", :value => num}
+    if num > 0 && role_allows(:feature => "vm_show_list")
+      h[:title] = "Show all #{label}"
+      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'vms')
+    end
+    h
   end
 
-  def textual_miq_templates
+  def textual_templates
     return nil if @record.openstack_host?
     @record.miq_templates
   end

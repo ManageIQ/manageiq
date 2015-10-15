@@ -45,13 +45,14 @@ module MiqAeProvisionSpec
     context "Using provision yaml model" do
       before(:each) do
         @domain = 'SPEC_DOMAIN'
+        @user = FactoryGirl.create(:user_with_group)
         @model_data_dir = File.join(File.dirname(__FILE__), "data")
         MiqAeDatastore.reset
         EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "provision"), @domain)
       end
 
       it "should instantiate lease_times" do
-        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default#get_lease_times")
+        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default#get_lease_times", @user)
         ws.should_not be_nil
         ttls  = ws.root("ttls")
         ttls.class.name.should == "Hash"
@@ -59,7 +60,7 @@ module MiqAeProvisionSpec
       end
 
       it "should properly instantiate /EVMApplications/Provisioning/Information/Default#debug" do
-        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default#debug")
+        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default#debug", @user)
         ws.should_not be_nil
         roots = ws.roots
         roots.should_not be_nil
@@ -69,7 +70,7 @@ module MiqAeProvisionSpec
       end
 
       it "should instantiate ttl_warnings" do
-        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default#get_ttl_warnings")
+        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default#get_ttl_warnings", @user)
         ws.should_not be_nil
         warnings = ws.root("warnings")
         warnings.class.name.should == "Hash"
@@ -77,47 +78,47 @@ module MiqAeProvisionSpec
       end
 
       it "should instantiate allowed_num_vms" do
-        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=dev#get_allowed_num_vms")
+        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=dev#get_allowed_num_vms", @user)
         ws.should_not be_nil
         ws.root("allowed").should == 3
 
-        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=test#get_allowed_num_vms")
+        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=test#get_allowed_num_vms", @user)
         ws.should_not be_nil
         ws.root("allowed").should == 5
 
-        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=foo#get_allowed_num_vms")
+        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=foo#get_allowed_num_vms", @user)
         ws.should_not be_nil
         ws.root("allowed").should == 1
 
-        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=#get_allowed_num_vms")
+        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=#get_allowed_num_vms", @user)
         ws.should_not be_nil
         ws.root("allowed").should == 0
 
-        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default#get_allowed_num_vms")
+        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default#get_allowed_num_vms", @user)
         ws.should_not be_nil
         ws.root("allowed").should == 0
       end
 
       it "should instantiate container_info" do
-        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=dev#get_container_info")
+        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=dev#get_container_info", @user)
         ws.should_not be_nil
         ws.root("ncpus").should == 1
         ws.root("memory").should == 1
         ws.root("vlan").should == "dev"
 
-        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=test#get_container_info")
+        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=test#get_container_info", @user)
         ws.should_not be_nil
         ws.root("ncpus").should == 2
         ws.root("memory").should be_nil
         ws.root("vlan").should be_nil
 
-        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=prod#get_container_info")
+        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=prod#get_container_info", @user)
         ws.should_not be_nil
         ws.root("ncpus").should be_nil
         ws.root("memory").should == 4
         ws.root("vlan").should == "production"
 
-        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=foo#get_container_info")
+        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=foo#get_container_info", @user)
         ws.should_not be_nil
         ws.root("ncpus").should be_nil
         ws.root("memory").should be_nil
@@ -125,7 +126,7 @@ module MiqAeProvisionSpec
       end
 
       it "should instantiate customization" do
-        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default#get_customization")
+        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default#get_customization", @user)
         ws.should_not be_nil
         ws.root("customization").should == EXPECTED_CUSTOMIZATION
       end
@@ -135,7 +136,7 @@ module MiqAeProvisionSpec
         klass = MiqAeClass.find_by_fqname(fqname)
         klass.should_not be_nil
         klass.ae_instances.length.should_not == 0
-        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default#get_domains")
+        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default#get_domains", @user)
         ws.should_not be_nil
 
         domains = ws.root['domains']
@@ -153,7 +154,7 @@ module MiqAeProvisionSpec
         klass.should_not be_nil
         klass.ae_instances.length.should_not == 0
 
-        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default#get_networks")
+        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default#get_networks", @user)
         ws.should_not be_nil
 
         networks = ws.root['networks']

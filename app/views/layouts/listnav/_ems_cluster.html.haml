@@ -42,10 +42,10 @@
           - hosts_title = title_for_hosts
           - if @record.total_hosts == 0
             %li.disabled
-              = link_to(_("%s (%s)") % [hosts_title, @record.total_hosts], "#")
+              = link_to("#{hosts_title} (#{@record.total_hosts})")
           - else
             %li
-              = link_to(_("%s (%s)") % [hosts_title, @record.total_hosts],
+              = link_to("#{hosts_title} (#{@record.total_hosts})",
                 {:action => 'show', :id => @record, :display => 'hosts'},
                 :title => _("Show %s") % hosts_title)
 

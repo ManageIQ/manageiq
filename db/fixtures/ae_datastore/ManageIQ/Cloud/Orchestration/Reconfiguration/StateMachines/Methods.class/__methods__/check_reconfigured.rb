@@ -21,14 +21,11 @@ def check_updated(service)
   # check whether the stack update has completed
   status, reason = service.orchestration_stack_status
   case status.downcase
-  when 'update_complete'
+  when 'update_complete', 'create_complete'
     $evm.root['ae_result'] = 'ok'
     # update the orchestration_template only upon completion
     service.orchestration_template = service.service_template.orchestration_template
-  when /rollback_complete$/
-    $evm.root['ae_result'] = 'error'
-    $evm.root['ae_reason'] = 'Stack update was rolled back'
-  when /failed$/
+  when 'rollback_complete', 'delete_complete', /failed$/, /canceled$/
     $evm.root['ae_result'] = 'error'
     $evm.root['ae_reason'] = reason
   else

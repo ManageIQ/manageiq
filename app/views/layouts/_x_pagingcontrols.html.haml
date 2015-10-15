@@ -17,7 +17,7 @@
       %tr
         - if @pc_occ == 1
           - if ! @no_checkall && ! @no_checkboxes
-            %td{:nowrap => "", :style => "padding: 4px 2px 4px 2px;", :width => "4%"}
+            %td{:nowrap => "", :style => "padding: 4px 2px 4px 30px;", :width => "4%"}
               %input#masterToggle{:name    => "masterToggle",
                                   :onclick => "miqUpdateAllCheckboxes('#{button_div}', null);",
                                   :type    => "checkbox"}

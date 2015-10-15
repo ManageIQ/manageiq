@@ -1194,6 +1194,7 @@ describe ReportController do
     it "should rebuild trees reports tree when replace_trees is passed in" do
       # even tho rebuild_trees is false, it should still rebuild reports tree because
       # {:replace_trees => [:reports]} is passed in
+      Tenant.seed
       FactoryGirl.create(:miq_report_with_results)
       controller.instance_variable_set(:@sb,
                                        :trees       => {:reports_tree => {:active_node => "root"}},
@@ -1203,7 +1204,6 @@ describe ReportController do
       controller.stub(:x_build_dyna_tree)
       last_build_time = Time.now.utc
       controller.instance_variable_set(:@sb, :rep_tree_build_time => last_build_time)
-      controller.should_receive(:build_report_listnav)
       controller.should_not_receive(:build_savedreports_tree)
       controller.should_not_receive(:build_db_tree)
       controller.should_not_receive(:build_widgets_tree)

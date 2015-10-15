@@ -1,134 +1,66 @@
-- layout_id              ||= "layout_div"
-- layout_name            ||= "dhxLayout"
-- layout_pattern         ||= "1C"
-- layoutb_name           ||= "dhxLayoutB"
-- accord_name            ||= "dhxAccord"
-- width_factor           ||= nil
-- lock_slider            ||= false
-- accords                ||= nil
-- accord_select_function ||= nil
-- right_cell_top         ||= "taskbar_div"
-- right_cell_middle      ||= "main_div"
-- right_cell_bottom      ||= "paging_div"
-- left_cell_bottom       ||= nil
-- cell_a_text            ||= nil
-- cell_b_text            ||= nil
-- cell_a_object          ||= nil
-- cell_b_object          ||= nil
-- show_searchbar         ||= nil
-
-- if accords
-  = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "accordion"}
+- show_searchbar ||= nil
 
 %script{:type => "text/javascript"}
 
   // Following function will be called by miqOnLoad if init_dhtmlx_layout is true
   function miqInitDhtmlxLayout() {
-  #{layout_name} = new dhtmlXLayoutObject("left_div", "#{layout_pattern}");
-  #{layout_name}._mBottom = 30;
-  // Build the accordions in the left cell, if present
-  - if accords
-    #{accord_name} = #{layout_name}.cells("a").attachAccordion();
-    dhxAccord.setIconsPath("/images/icons/new/");
-
-    - accords.each do |a|
-      #{accord_name}.addItem("#{a[:name]}", "#{a[:title].html_safe}");
-      #{accord_name}.cells("#{a[:name]}").attachObject("#{a[:container]}");
-
-    - active_accord ||= accords.first[:name]
-    #{accord_name}.openItem("#{active_accord}");
-    - if accord_select_function
-      #{accord_name}.attachEvent("onBeforeActive", #{accord_select_function});
-
-    if (miqDomElementExists('custom_left_cell_div'))
-    #{accord_name} = #{layout_name}.cells("a").view("custom").attachObject('custom_left_cell_div');
-
   - if @explorer
-    #{layout_name}.cells("a").hideHeader();
-
-    #{layoutb_name} = new dhtmlXLayoutObject("right_div", "3E");
-    #{layoutb_name}._mBottom = 30;
-    #{layoutb_name}._minHeight = 20;
-    #{layoutb_name}.cells("a").setHeight(32);
-    #{layoutb_name}.cells("c").setHeight(32);
-    #{layoutb_name}.cells("a").hideHeader();
-    #{layoutb_name}.cells("c").hideHeader();
-    var cell = #{layoutb_name}.cells("b");
+    dhxLayoutB = new dhtmlXLayoutObject("right_div", "3E");
+    dhxLayoutB._mBottom = 30;
+    dhxLayoutB._minHeight = 20;
+    dhxLayoutB.cells("a").setHeight(32);
+    dhxLayoutB.cells("c").setHeight(32);
+    dhxLayoutB.cells("a").hideHeader();
+    dhxLayoutB.cells("c").hideHeader();
+    var cell = dhxLayoutB.cells("b");
     cell.childNodes[0].childNodes[0].childNodes[4].style.display = "none";
-    #{layoutb_name}.cells("b").setText("#{@right_cell_text}");
-    #{layoutb_name}.cells("a").fixSize(false, true);
-    #{layoutb_name}.cells("c").fixSize(false, true);
-    #{layoutb_name}.setAutoSize("a;b;c", "b");
-    #{layoutb_name}.cells("a").attachObject('#{right_cell_top}');
-    #{layoutb_name}.cells("b").attachObject('#{right_cell_middle}');
-    #{layoutb_name}.cells("c").attachObject('#{right_cell_bottom}');
+    dhxLayoutB.cells("b").setText("#{@right_cell_text}");
+    dhxLayoutB.cells("a").fixSize(false, true);
+    dhxLayoutB.cells("c").fixSize(false, true);
+    dhxLayoutB.setAutoSize("a;b;c", "b");
+    dhxLayoutB.cells("a").attachObject('taskbar_div');
+    dhxLayoutB.cells("b").attachObject('main_div');
+    dhxLayoutB.cells("c").attachObject('paging_div');
 
-    #{layoutb_name}.attachEvent('onPanelResizeFinish', miqResizeTaskbarCell);
-    #{layoutb_name}.attachEvent('onResizeFinish', miqResizeTaskbarCell);
-
-    - if left_cell_bottom
-      #{layout_name}.cells("b").setHeight(32);
-      #{layout_name}.cells("b").hideHeader();
-      #{layout_name}.cells("b").attachObject('#{left_cell_bottom}');
+    dhxLayoutB.attachEvent('onPanelResizeFinish', miqResizeTaskbarCell);
+    dhxLayoutB.attachEvent('onResizeFinish', miqResizeTaskbarCell);
 
     // Set collapsed cell height to zero for MIQ
-    #{layoutb_name}._collapsedH = 0;
+    dhxLayoutB._collapsedH = 0;
 
     - if (!@in_a_form && @record && ![:diagnostics_tree, :savedreports_tree,:svccat_tree].include?(x_active_tree)) || @collapse_c_cell
-      #{layoutb_name}.cells("c").collapse();
+      dhxLayoutB.cells("c").collapse();
 
     - if (@layout == "chargeback" && (x_node == "root" || x_active_tree == :cb_assignments_tree || (x_active_tree == :cb_reports_tree && !@report))) || ["miq_capacity_bottlenecks"].include?(@layout)
-      #{layoutb_name}.cells("a").collapse();
+      dhxLayoutB.cells("a").collapse();
 
     - if show_advanced_search?
       #{javascript_show_if_exists("adv_searchbox_div")}
 
-  - else
-
-    - if cell_a_text
-      #{layout_name}.cells("a").setText("#{cell_a_text}");
-      var cell = #{layout_name}.cells("a");
-      cell.childNodes[0].childNodes[0].childNodes[4].style.display = "none";
-    - else
-      #{layout_name}.cells("a").hideHeader();
-
-    - if cell_a_object
-      #{layout_name}.cells("a").attachObject('#{cell_a_object}');
-
-    - if cell_b_text
-      #{layout_name}.setText("#{cell_b_text}");
-      var cell = #{layout_name};
-      cell.childNodes[0].childNodes[0].childNodes[4].style.display = "none";
-    - else
-      #{layout_name}.hideHeader();
-
-    - if cell_b_object
-      #{layout_name}.attachObject('#{cell_b_object}');
-
-
   - if show_searchbar
     = javascript_show("control_searchbar")
     = javascript_focus("search_text")
-  - unless controller.controller_name == 'report'
-    miqOnResize();
+
+  // Fix styling issues
+  miqOnResize();
   };
 
 :javascript
   ManageIQ.layout.toolbar = {
-    hide: function() { #{layoutb_name}.cells('a').collapse(); },
-    show: function() { #{layoutb_name}.cells('a').expand(); },
-    height: function(v) { #{layoutb_name}.cells('a').setHeight(v); }
+    hide: function() { dhxLayoutB.cells('a').collapse(); },
+    show: function() { dhxLayoutB.cells('a').expand(); },
+    height: function(v) { dhxLayoutB.cells('a').setHeight(v); }
   };
 
   ManageIQ.layout.content = {
-    hide: function() { #{layoutb_name}.cells('b').collapse(); },
-    show: function() { #{layoutb_name}.cells('b').expand(); },
-    height: function(v) { #{layoutb_name}.cells('b').setHeight(v); },
-    title: function(v) { #{layoutb_name}.cells('b').setText(v); }
+    hide: function() { dhxLayoutB.cells('b').collapse(); },
+    show: function() { dhxLayoutB.cells('b').expand(); },
+    height: function(v) { dhxLayoutB.cells('b').setHeight(v); },
+    title: function(v) { dhxLayoutB.cells('b').setText(v); }
   };
 
   ManageIQ.layout.paginator = {
-    hide: function() { #{layoutb_name}.cells('c').collapse(); },
-    show: function() { #{layoutb_name}.cells('c').expand(); },
-    height: function(v) { #{layoutb_name}.cells('c').setHeight(v); }
+    hide: function() { dhxLayoutB.cells('c').collapse(); },
+    show: function() { dhxLayoutB.cells('c').expand(); },
+    height: function(v) { dhxLayoutB.cells('c').setHeight(v); }
   }

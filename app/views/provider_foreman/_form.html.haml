@@ -2,52 +2,50 @@
 
 %form#form_div.form-horizontal{:name => "angularForm", 'ng-controller' => "providerForemanFormController", 'ng-show' => "afterGet", :novalidate => true}
   = render :partial => "layouts/flash_msg"
-
-  %h3
-    = _("Basic Information")
-  .form-group
+  %br
+  .form-group{"ng-class" => "{'has-error': angularForm.name.$invalid}"}
     %label.col-md-2.control-label
       = _("Name")
     .col-md-8
-      %input{:type => "text",
-             :name => "name",
-             'ng-model' => "providerForemanModel.name",
-             :maxlength => MAX_NAME_LEN,
-             :class => "form-control",
-             :miqrequired => true,
-             :checkchange => true}
-  .form-group
+      %input.form-control{:type        => "text",
+                          :name        => "name",
+                          'ng-model'   => "providerForemanModel.name",
+                          :maxlength   => MAX_NAME_LEN,
+                          :required    => "",
+                          :checkchange => true}
+      %span.help-block{"ng-show" => "angularForm.name.$error.required"}
+        = _("Required")
+  .form-group{"ng-class" => "{'has-error': angularForm.url.$invalid}"}
     %label.col-md-2.control-label
       = _("Url")
     .col-md-8
-      %input{:type => "text",
-             :name => "url",
-             'ng-model' => "providerForemanModel.url",
-             :maxlength => MAX_DESC_LEN,
-             :class => "form-control",
-             :miqrequired => true,
-             :checkchange => true}
+      %input.form-control{:type        => "text",
+                          :name        => "url",
+                          'ng-model'   => "providerForemanModel.url",
+                          :maxlength   => MAX_DESC_LEN,
+                          :required    => "",
+                          :checkchange => true}
+      %span.help-block{"ng-show" => "angularForm.url.$error.required"}
+        = _("Required")
   .form-group
     %label.col-md-2.control-label
       = _("Verify Peer Certificate")
     .col-md-8
-      %input{:type => "checkbox",
-             :name => "verify_ssl",
-             'ng-model' => "providerForemanModel.verify_ssl",
-             'ng-true-value' => "1",
-             'ng-false-value' => "0",
-             :checkchange => true}
+      %input{:type            => "checkbox",
+             :name            => "verify_ssl",
+             'ng-model'       => "providerForemanModel.verify_ssl",
+             :checkchange     => true}
 
 
   %hr
   %h3
     = _("Credentials")
-  = render :partial => "layouts/angular/auth_credentials_angular",
+  = render :partial => "layouts/angular-bootstrap/auth_credentials_angular_bootstrap",
            :locals  => {:ng_show           => true,
                         :ng_model          => "providerForemanModel",
-                        :ng_reqd_userid    => "providerForemanModel.log_userid == ''",
-                        :ng_reqd_password  => "providerForemanModel.log_password == ''",
-                        :ng_reqd_verify    => "providerForemanModel.log_verify == ''",
+                        :ng_reqd_userid    => true,
+                        :ng_reqd_password  => true,
+                        :ng_reqd_verify    => true,
                         :validate_url      => "authentication_validate",
                         :id                => @provider_foreman.id || "new",
                         :valtype           => nil,
