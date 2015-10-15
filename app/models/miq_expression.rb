@@ -683,7 +683,7 @@ class MiqExpression
         tag = exp[operator]["value"]
         klass = klass.constantize
         ids = klass.find_tagged_with(:any => tag, :ns => ns).pluck(:id)
-        clause = "(#{klass.send(:sanitize_sql_for_conditions, :id => ids)})"
+        clause = ActiveSupport::Deprecation.silence { "(#{klass.send(:sanitize_sql_for_conditions, :id => ids)})" }
       else
         db, field = exp[operator]["field"].split(".")
         model = db.constantize
@@ -911,7 +911,7 @@ class MiqExpression
 
   def self.merge_where_clauses(*list)
     l = list.compact.collect do |s|
-      s = MiqReport.send(:sanitize_sql_for_conditions, s)
+      s = ActiveSupport::Deprecation.silence { MiqReport.send(:sanitize_sql_for_conditions, s) }
       "(#{s})"
     end
     l.empty? ? nil : l.join(" AND ")
