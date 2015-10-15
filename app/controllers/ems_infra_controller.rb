@@ -76,23 +76,29 @@ class EmsInfraController < ApplicationController
     !form_parameters[name].nil? && form_parameters[name] != value
   end
 
-  def select_changed_parameters(form_parameters)
-    changed_parameters = {}
+  def changed_parameters(form_parameters)
+    return enum_for(:changed_parameters, form_parameters) unless block_given?
+
     @orig_parameters.each do |orig|
       next unless value_changed?(form_parameters, orig.name, orig.value)
-      changed_parameters[orig.name] = form_parameters[orig.name]
+      yield orig.name, orig.value, form_parameters[orig.name]
     end
-    changed_parameters
+  end
+
+  def select_changed_parameters(form_parameters)
+    selected = {}
+    changed_parameters(form_parameters).map do |name, _before, after|
+      selected[name] = after
+    end
+    selected
   end
 
   def select_return_message(form_parameters)
-    return_message = _("Scaling")
-    @orig_parameters.each do |orig|
-      next unless value_changed?(form_parameters, orig.name, orig.value)
-      return_message << _(" %{name} from %{value} to %{parameters} ") %
-        {:name => orig.name, :value => orig.value, :parameters => form_parameters[orig.name]}
+    changes = changed_parameters(form_parameters).map do |name, before, after|
+      _(" %{name} from %{value} to %{parameters} ") %
+      {:name => name, :value => before, :parameters => after}
     end
-    return_message
+    _("Scaling") << changes.join
   end
 
   def validate_a_change_was_made(changed_parameters)
