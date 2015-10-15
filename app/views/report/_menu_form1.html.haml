@@ -11,7 +11,9 @@
               #folder_grid
                 %ul.list-group
                   - folders.each do |folder|
-                    %li.list-group-item{:id => folder[:id], :onclick => "return miqMenuChangeRow('activate', this)", :ondblclick => "return miqMenuChangeRow('edit', this)"}
+                    %li.list-group-item{:id         => folder[:id],
+                                        :onclick    => "return miqMenuChangeRow('activate', this)",
+                                        :ondblclick => "return miqMenuChangeRow('edit', this)"}
                       = h folder[:text]
 
             %td{:width => "24", :valign => "middle"}
