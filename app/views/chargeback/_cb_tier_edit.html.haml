@@ -1,4 +1,5 @@
 - url = url_for(:action => 'cb_tier_form_field_changed', :id => "#{@sb[:tier].id || "new"}")
+- range = (1..20).to_a
 #form_div
   %h3
     = _('Basic Info')
@@ -38,8 +39,24 @@
                         :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json,
                         :class => "form-control")
         = javascript_tag(javascript_focus('rate_above'))
-  %hr
+    .form-group
+      %label.control-label.col-md-2
+        = _('* Number of tiers')
+      .col-md-8
+        = select_tag('num_tiers',
+          options_for_select(range, 5),
+          :multiple              => false,
+          :class                 => "selectpicker",
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("num_tiers", "#{url}")
 
+    %strong
+      = _('* Caution: Changing this field will clear all values below!')
+  %hr
+#tier_details_div
   %h3= _('Tier Details')
   %table.table.table-bordered
     %thead

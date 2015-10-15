@@ -417,6 +417,7 @@ class ChargebackController < ApplicationController
         # Detect errors saving tier details
         tier_detail_error = false
         @sb[:tier_details].each { |detail| tier_detail_error = true if detail.save == false }
+        @sb[:tier].chargeback_tier_details.replace(@sb[:tier_details]) if tier_detail_error == false
         if tier_detail_error == false && @sb[:tier].save
           AuditEvent.success(build_saved_audit(@sb[:tier], @edit))
           add_flash(_("%{model} \"%{name}\" was saved") % { :model => ui_lookup(:model => "ChargebackTier"),
@@ -516,12 +517,18 @@ class ChargebackController < ApplicationController
   end
 
   def cb_tier_form_field_changed
+    puts "I'm getting here"
     return unless load_edit("cbtier_edit__#{params[:id]}", "replace_cell__chargeback")
     cb_tier_get_form_vars
     render :update do |page|                    # Use JS to update the display
       changed = (@edit[:new] != @edit[:current])
+      if @edit[:new][:num_tiers] != @edit[:current][:num_tiers]
+        @edit[:current][:num_tiers] = @edit[:new][:num_tiers]
+        page.replace("tier_details_div", :partial => "tier_details")
+      end
       page << javascript_for_miq_button_visibility(changed)
     end
+    cb_tier_get_form_vars
   end
 
   def cb_assign_update
@@ -775,7 +782,7 @@ class ChargebackController < ApplicationController
     @edit[:new][:details].each_with_index do |_detail, i|
       @edit[:new][:details][i][:rate] = params["rate_#{i}".to_sym] if params["rate_#{i}".to_sym]
       @edit[:new][:details][i][:per_time] = params["per_time_#{i}".to_sym] if params["per_time_#{i}".to_sym]
-      @edit[:new][:details][i][:chargeback_tier_id] = params["chargeback_tier_#{i}".to_sym] if params["chargeback_tier_#{i}".to_sym]
+      @edit[:new][:details][i][:chargeback_tier_id] = params["chargeback_tier_id#{i}".to_sym] if params["chargeback_tier_id#{i}".to_sym]
     end
   end
 
@@ -824,6 +831,7 @@ class ChargebackController < ApplicationController
     @edit[:new][:name] = params[:name] if params[:name]
     @edit[:new][:rate_above] = params[:rate_above] if params[:rate_above]
     @edit[:new][:rate_below] = params[:rate_below] if params[:rate_below]
+    @edit[:new][:num_tiers] = params[:num_tiers] if params[:num_tiers]
     @edit[:new][:details].each_with_index do |_detail, i|
       @edit[:new][:details][i][:description] = params["description_#{i}".to_sym] if params["description_#{i}".to_sym]
       @edit[:new][:details][i][:start] = params["start_#{i}".to_sym] if params["start_#{i}".to_sym]
@@ -1022,7 +1030,8 @@ class ChargebackController < ApplicationController
         presenter[:replace_partials][:cb_tiers_tree_div] = r[
           :partial => 'shared/tree',
           :locals => {:tree => chargeback_tree,
-                      :name => chargeback_tree.name.to_s}
+                      :name => chargeback_tree.name.to_s
+          }
         ]
       end
     end
