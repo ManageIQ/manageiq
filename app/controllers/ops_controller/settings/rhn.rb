@@ -40,9 +40,6 @@ module OpsController::Settings::RHN
     helper_method(:rhn_account_info_string)
     hide_action(:rhn_account_info_string)
 
-    helper_method(:rhn_validate_enabled)
-    hide_action(:rhn_validate_enabled)
-
     helper_method(:rhn_default_enabled)
     hide_action(:rhn_default_enabled)
   end
@@ -55,10 +52,6 @@ module OpsController::Settings::RHN
 
   def rhn_account_info_string
     "Enter your Red Hat#{@edit[:new][:register_to] == "sm_hosted" ? "" : " Network Satellite"} account information"
-  end
-
-  def rhn_validate_enabled
-    @edit[:new][:register_to] != 'rhn_satellite'
   end
 
   def rhn_default_enabled
