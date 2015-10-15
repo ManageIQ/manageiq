@@ -57,7 +57,7 @@ module MiqServer::UpdateManagement
 
   def attempt_registration
     return unless register
-    attach_products unless MiqDatabase.first.registration_type == "rhn_satellite"  # There is no concept of attaching products in Satellite 5
+    attach_products
     # HACK: #enable_repos is not always successful immediately after #attach_products, retry to ensure they are enabled.
     5.times { repos_enabled? ? break : enable_repos }
   end
@@ -71,11 +71,7 @@ module MiqServer::UpdateManagement
       _log.info("Registering appliance...")
       registration_type = MiqDatabase.first.registration_type
 
-      registration_class =
-        case registration_type
-        when "rhn_satellite" then LinuxAdmin::Rhn
-        else                      LinuxAdmin::SubscriptionManager
-        end
+      registration_class = LinuxAdmin::SubscriptionManager
 
       # TODO: Prompt user for environment in UI for Satellite 6 registration, use default environment for now.
       registration_options = assemble_registration_options
