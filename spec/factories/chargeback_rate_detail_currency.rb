@@ -7,6 +7,6 @@ FactoryGirl.define do
     name "Euro"
     full_name "Euro"
     symbol "€"
-    unicode_hex [8364]
+    unicode_hex "8364"
   end
 end

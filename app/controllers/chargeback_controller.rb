@@ -576,7 +576,7 @@ class ChargebackController < ApplicationController
     @edit[:new][:details].each_with_index do |_rate, i|
       @sb[:rate_details][i].rate               = @edit[:new][:details][i][:rate]
       @sb[:rate_details][i].per_time           = @edit[:new][:details][i][:per_time]
-      #C: Record the currency selected in the edit view, in my chargeback_rate_details table
+      # C: Record the currency selected in the edit view, in my chargeback_rate_details table
       @sb[:rate_details][i].chargeback_rate_detail_currency_id = @edit[:new][:details][i][:currency]
       @sb[:rate_details][i].chargeback_rate_id = @sb[:rate].id
     end
