@@ -1,11 +1,12 @@
 require "spec_helper"
 
 describe "SCVMM microsoft_best_fit_least_utilized" do
+  let(:user) { FactoryGirl.create(:user_with_group) }
   let(:ws) do
     MiqAeEngine.instantiate("/System/Request/Call_Instance_With_Message?" \
                             "namespace=Infrastructure/VM/Provisioning&class=Placement" \
                             "&instance=default&message=microsoft&" \
-                            "MiqProvision::miq_provision=#{miq_provision.id}")
+                            "MiqProvision::miq_provision=#{miq_provision.id}", user)
   end
   let(:vm_template) do
     FactoryGirl.create(:template_microsoft,
@@ -16,7 +17,7 @@ describe "SCVMM microsoft_best_fit_least_utilized" do
     FactoryGirl.create(:miq_provision_microsoft,
                        :options => {:src_vm_id      => vm_template.id,
                                     :placement_auto => [true, 1]},
-                       :userid  => FactoryGirl.create(:user).userid,
+                       :userid  => user.userid,
                        :state   => 'active',
                        :status  => 'Ok')
   end

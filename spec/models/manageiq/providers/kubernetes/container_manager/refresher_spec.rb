@@ -201,6 +201,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     )
     @containernode.lives_on.should == @ovirt_vm
     @containernode.containers.count.should == 0
+    @containernode.container_routes.count.should == 0
   end
 
   def assert_specific_container_service
@@ -270,6 +271,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
 
     @container_pr.container_groups.count.should == 2
     @container_pr.container_replicators.count.should == 2
+    @container_pr.container_nodes.count.should == 1
     @container_pr.container_services.count.should == 5
     @container_pr.ext_management_system.should == @ems
   end
@@ -287,5 +289,6 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       :host => "example.com",
       :port => "1234",
     )
+    @image.container_nodes.count.should == 1
   end
 end

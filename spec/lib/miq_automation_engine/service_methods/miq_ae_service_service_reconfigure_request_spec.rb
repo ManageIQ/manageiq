@@ -12,11 +12,11 @@ module MiqAeServiceServiceReconfigureRequestSpec
     end
 
     let(:ae_method)     { ::MiqAeMethod.first }
-    let(:user)          { FactoryGirl.create(:user) }
+    let(:user)          { FactoryGirl.create(:user_with_group) }
     let(:request)       { FactoryGirl.create(:service_reconfigure_request, :requester => user, :userid => user.userid) }
 
     def invoke_ae
-      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?ServiceReconfigureRequest::request=#{request.id}")
+      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?ServiceReconfigureRequest::request=#{request.id}", user)
     end
 
     it "returns 'service' for ci_type" do

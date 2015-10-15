@@ -9,10 +9,11 @@ module MiqAeServiceServiceTemplateSpec
         @ae_method     = ::MiqAeMethod.first
         @ae_result_key = 'foo'
         @service_template   = FactoryGirl.create(:service_template)
+        @user = FactoryGirl.create(:user_with_group)
       end
 
       def invoke_ae
-        MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?ServiceTemplate::service_template=#{@service_template.id}")
+        MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?ServiceTemplate::service_template=#{@service_template.id}", @user)
       end
 
       context "#type_display" do

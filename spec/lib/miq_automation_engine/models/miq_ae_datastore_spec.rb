@@ -31,7 +31,7 @@ describe MiqAeDatastore do
         </MiqAeClass>
       </MiqAeDatastore>
     XML
-
+    Tenant.seed
     @defaults_miq_ae_field = {}
     @defaults_miq_ae_field[:message]    = MiqAeField.default(:message)
     @defaults_miq_ae_field[:substitute] = MiqAeField.default(:substitute).to_s

@@ -14,12 +14,12 @@ module MiqAeServiceMiqHostProvisionRequestSpec
       @ae_method     = ::MiqAeMethod.first
       @ae_result_key = 'foo'
 
-      @user                       = FactoryGirl.create(:user)
+      @user                       = FactoryGirl.create(:user_with_group)
       @miq_host_provision_request = FactoryGirl.create(:miq_host_provision_request, :provision_type => 'host_pxe_install', :state => 'pending', :status => 'Ok', :userid => @user.userid)
     end
 
     def invoke_ae
-      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?MiqHostProvisionRequest::miq_host_provision_request=#{@miq_host_provision_request.id}")
+      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?MiqHostProvisionRequest::miq_host_provision_request=#{@miq_host_provision_request.id}", @user)
     end
 
     it "#miq_request" do

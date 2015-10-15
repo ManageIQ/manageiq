@@ -1826,10 +1826,10 @@ class MiqAeClassController < ApplicationController
   def get_rec_name(rec)
     column = rec.display_name.blank? ? :name : :display_name
     if rec.kind_of?(MiqAeNamespace) && rec.domain?
-      editable_domain = User.current_tenant.editable_domains.include?(rec)
+      editable_domain = editable_domain?(rec)
       enabled_domain  = rec.enabled
       return add_read_only_suffix(rec.send(column),
-                                  editable_domain,
+                                  editable_domain?(rec),
                                   enabled_domain) unless editable_domain && enabled_domain
     end
     rec.send(column)

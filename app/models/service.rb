@@ -8,6 +8,9 @@ class Service < ActiveRecord::Base
 
   has_many :dialogs, -> { uniq }, :through => :service_template
 
+  has_one :miq_request_task, :dependent => :nullify, :as => :destination
+  has_one :miq_request, :through => :miq_request_task
+
   virtual_belongs_to :parent_service
   virtual_has_many   :direct_service_children
   virtual_has_many   :all_service_children
@@ -18,8 +21,10 @@ class Service < ActiveRecord::Base
 
   virtual_has_one    :custom_actions
   virtual_has_one    :custom_action_buttons
+  virtual_has_one    :provision_dialog
 
   delegate :custom_actions, :custom_action_buttons, :to => :service_template, :allow_nil => true
+  delegate :provision_dialog, :to => :miq_request, :allow_nil => true
 
   include ServiceMixin
   include OwnershipMixin

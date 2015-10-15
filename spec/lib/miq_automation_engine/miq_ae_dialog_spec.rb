@@ -251,13 +251,14 @@ module MiqAeDialogSpec
 
     before(:each) do
       MiqAeDatastore.reset
+      @user = FactoryGirl.create(:user_with_group)
       @domain = "SPEC_DOMAIN"
       @model_data_dir = File.join(File.dirname(__FILE__), "data")
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "dialog"), @domain)
     end
 
     it "properly instantiates dialogs" do
-      ws = MiqAeEngine.instantiate("/SYSTEM/PROCESS/REQUEST?request=UI_PROVISION_INFO&message=get_dialogs")
+      ws = MiqAeEngine.instantiate("/SYSTEM/PROCESS/REQUEST?request=UI_PROVISION_INFO&message=get_dialogs", @user)
       ws.should_not be_nil
 
       dialogs = ws.root("dialog")

@@ -1,8 +1,8 @@
 module MiqAutomateHelper
   def self.create_dummy_method(identifiers, field_array)
-    MiqAeDatastore.reset
     @aed = FactoryGirl.create(:miq_ae_domain, :name => identifiers[:domain],
-                              :priority => 10, :enabled => true)
+                              :priority => 10, :enabled => true,
+                              :tenant   => identifiers[:tenant])
     @aen1 = FactoryGirl.create(:miq_ae_namespace, :name      => identifiers[:namespace],
                                                   :parent_id => @aed.id)
     @aec1 = FactoryGirl.create(:miq_ae_class, :name         => identifiers[:class],
@@ -64,7 +64,8 @@ module MiqAutomateHelper
   end
 
   def self.create_service_model_method(domain, namespace, klass, instance, method)
-    identifiers = {:domain => domain, :namespace => namespace,
+    Tenant.seed
+    identifiers = {:domain => domain, :namespace => namespace, :tenant => Tenant.root_tenant,
                   :class  => klass, :instance => instance, :method => method}
     fields      = [{:name => 'method1', :type => 'method',
                    :priority => 1, :value => method}]

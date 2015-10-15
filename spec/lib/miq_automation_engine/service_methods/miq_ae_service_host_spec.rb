@@ -3,6 +3,7 @@ require "spec_helper"
 module MiqAeServiceHostSpec
   describe MiqAeMethodService::MiqAeServiceHost do
     before(:each) do
+      @user = FactoryGirl.create(:user_with_group)
       MiqAutomateHelper.create_service_model_method('SPEC_DOMAIN', 'EVM',
                                                     'AUTOMATE', 'test1', 'test')
       @ae_method     = ::MiqAeMethod.first
@@ -11,7 +12,7 @@ module MiqAeServiceHostSpec
     end
 
     def invoke_ae
-      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?Host::host=#{@host.id}")
+      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?Host::host=#{@host.id}", @user)
     end
 
     context "$evm.vmdb" do

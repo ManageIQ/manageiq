@@ -13,12 +13,12 @@ module MiqAeServiceMiqRequestSpec
       @ae_method     = ::MiqAeMethod.first
       @ae_result_key = 'foo'
 
-      @fred          = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
+      @fred          = FactoryGirl.create(:user_with_group, :name => 'Fred Flintstone',  :userid => 'fred')
       @miq_request   = FactoryGirl.create(:automation_request, :requester => @fred)
     end
 
     def invoke_ae
-      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?MiqRequest::miq_request=#{@miq_request.id}")
+      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?MiqRequest::miq_request=#{@miq_request.id}", @fred)
     end
 
     it "#approve" do

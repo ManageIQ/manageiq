@@ -1,13 +1,14 @@
 require 'spec_helper'
 
 describe "Available_Tenants Method Validation" do
+  let(:user) { FactoryGirl.create(:user_with_group) }
   before do
     @ins = "/Cloud/Orchestration/Operations/Methods/Available_Tenants"
   end
 
   context "workspace has no service template" do
     it "provides only default value to the tenant list" do
-      ws = MiqAeEngine.instantiate("#{@ins}")
+      ws = MiqAeEngine.instantiate("#{@ins}", user)
       ws.root["values"].should == {nil => "default"}
     end
   end
@@ -16,7 +17,7 @@ describe "Available_Tenants Method Validation" do
     let(:service_template) { FactoryGirl.create(:service_template) }
 
     it "provides only default value to the tenant list" do
-      ws = MiqAeEngine.instantiate("#{@ins}?ServiceTemplate::service_template=#{service_template.id}")
+      ws = MiqAeEngine.instantiate("#{@ins}?ServiceTemplate::service_template=#{service_template.id}", user)
       ws.root["values"].should == {nil => "default"}
     end
   end
@@ -37,7 +38,7 @@ describe "Available_Tenants Method Validation" do
     end
 
     it "finds all the tenants and populates the list" do
-      ws = MiqAeEngine.instantiate("#{@ins}?ServiceTemplate::service_template=#{service_template.id}")
+      ws = MiqAeEngine.instantiate("#{@ins}?ServiceTemplate::service_template=#{service_template.id}", user)
       ws.root["values"].should include(
         nil           => "default",
         @tenant1.name => @tenant1.name,
@@ -46,7 +47,7 @@ describe "Available_Tenants Method Validation" do
     end
 
     it "provides only default value to the tenant list if orchestration manager does not exist" do
-      ws = MiqAeEngine.instantiate("#{@ins}?ServiceTemplate::service_template=#{service_template_no_ems.id}")
+      ws = MiqAeEngine.instantiate("#{@ins}?ServiceTemplate::service_template=#{service_template_no_ems.id}", user)
       ws.root["values"].should == {nil => "default"}
     end
   end

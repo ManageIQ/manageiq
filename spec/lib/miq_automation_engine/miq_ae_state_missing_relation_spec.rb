@@ -3,6 +3,7 @@ require "spec_helper"
 describe "MiqAeStateMachine" do
   before do
     MiqAeDatastore.reset_default_namespace
+    @user             = FactoryGirl.create(:user_with_group)
     @domain           = 'FLINTSTONE'
     @namespace        = 'WILMA'
     @state_class      = 'FRED'
@@ -63,20 +64,20 @@ describe "MiqAeStateMachine" do
 
   it "missing instance in first slot" do
     fqname = "#{@domain}/#{@namespace}/#{@state_class}/#{@state_instance1}"
-    ws = MiqAeEngine.instantiate(fqname)
+    ws = MiqAeEngine.instantiate(fqname, @user)
     ws.root['ae_result'].should eql('error')
   end
 
   it "missing instance in middle slot" do
     fqname = "#{@domain}/#{@namespace}/#{@state_class}/#{@state_instance2}"
-    ws = MiqAeEngine.instantiate(fqname)
+    ws = MiqAeEngine.instantiate(fqname, @user)
     ws.root['ae_result'].should eql('error')
     ws.root['var1'].should == '1'
   end
 
   it "missing instance in last slot" do
     fqname = "#{@domain}/#{@namespace}/#{@state_class}/#{@state_instance3}"
-    ws = MiqAeEngine.instantiate(fqname)
+    ws = MiqAeEngine.instantiate(fqname, @user)
     ws.root['ae_result'].should eql('error')
     ws.root['var1'].should == '3'
   end

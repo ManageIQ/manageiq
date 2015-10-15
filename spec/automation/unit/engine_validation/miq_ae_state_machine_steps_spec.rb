@@ -2,6 +2,7 @@ require "spec_helper"
 
 describe "MiqAeStateMachineSteps" do
   before do
+    @user                = FactoryGirl.create(:user_with_group)
     @instance1           = 'instance1'
     @instance2           = 'instance2'
     @instance3           = 'instance3'
@@ -133,7 +134,7 @@ describe "MiqAeStateMachineSteps" do
     all_instance_names = [@instance1, @instance2, @instance3]
     all_state_names    = %w(state1 state2 state3)
 
-    ws = MiqAeEngine.instantiate(@fqname)
+    ws = MiqAeEngine.instantiate(@fqname, @user)
     expect(ws.root.attributes['states_executed']).to match_array(all_instance_names)
     expect(ws.root.attributes['step_on_entry']).to match_array(all_state_names)
     expect(ws.root.attributes['step_on_exit']).to match_array(all_state_names)
@@ -144,7 +145,7 @@ describe "MiqAeStateMachineSteps" do
     tweak_instance("/#{@domain}/#{@namespace}/#{@method_class}", @instance2,
                    'raise', 'value', "Intentionally raise an error")
 
-    ws = MiqAeEngine.instantiate(@fqname)
+    ws = MiqAeEngine.instantiate(@fqname, @user)
     expect(ws.root.attributes['states_executed']).to match_array([@instance1, @instance2])
     expect(ws.root.attributes['step_on_exit']).to match_array(%w(state1))
     expect(ws.root.attributes['step_on_error']).to match_array(%w(state2))
@@ -155,7 +156,7 @@ describe "MiqAeStateMachineSteps" do
     tweak_instance("/#{@domain}/#{@namespace}/#{@method_class}", @instance2,
                    'ae_result', 'value', "error")
 
-    ws = MiqAeEngine.instantiate(@fqname)
+    ws = MiqAeEngine.instantiate(@fqname, @user)
     expect(ws.root.attributes['states_executed']).to match_array([@instance1, @instance2])
     expect(ws.root.attributes['step_on_exit']).to match_array(%w(state1))
     expect(ws.root.attributes['step_on_error']).to match_array(%w(state2))
@@ -168,7 +169,7 @@ describe "MiqAeStateMachineSteps" do
     tweak_instance("/#{@domain}/#{@namespace}/#{@state_class}", @state_instance,
                    'state1', 'on_entry', "common_state_method(ae_next_state => 'state3')")
 
-    ws = MiqAeEngine.instantiate(@fqname)
+    ws = MiqAeEngine.instantiate(@fqname, @user)
     expect(ws.root.attributes['states_executed']).to match_array([@instance3])
     expect(ws.root.attributes['step_on_exit']).to match_array(%w(state3))
     expect(ws.root.attributes['step_on_entry']).to match_array(%w(state1 state3))
@@ -179,7 +180,7 @@ describe "MiqAeStateMachineSteps" do
     tweak_instance("/#{@domain}/#{@namespace}/#{@state_class}", @state_instance,
                    'state1', 'on_exit', "common_state_method(ae_next_state => 'state3')")
 
-    ws = MiqAeEngine.instantiate(@fqname)
+    ws = MiqAeEngine.instantiate(@fqname, @user)
     expect(ws.root.attributes['states_executed']).to match_array([@instance1, @instance3])
     expect(ws.root.attributes['step_on_exit']).to match_array(%w(state1 state3))
     expect(ws.root.attributes['step_on_entry']).to match_array(%w(state1 state3))
@@ -193,7 +194,7 @@ describe "MiqAeStateMachineSteps" do
                    'state1', 'on_error',
                    "common_state_method(ae_next_state => 'state3', ae_result => 'continue')")
 
-    ws = MiqAeEngine.instantiate(@fqname)
+    ws = MiqAeEngine.instantiate(@fqname, @user)
     expect(ws.root.attributes['states_executed']).to match_array([@instance1, @instance3])
     expect(ws.root.attributes['step_on_exit']).to match_array(%w(state3))
     expect(ws.root.attributes['step_on_entry']).to match_array(%w(state1 state3))
@@ -203,7 +204,7 @@ describe "MiqAeStateMachineSteps" do
   it "goto a specific state from main state" do
     tweak_instance("/#{@domain}/#{@namespace}/#{@method_class}", @instance1,
                    'ae_next_state', 'value', "state3")
-    ws = MiqAeEngine.instantiate(@fqname)
+    ws = MiqAeEngine.instantiate(@fqname, @user)
 
     expect(ws.root.attributes['states_executed']).to match_array([@instance1, @instance3])
     expect(ws.root.attributes['step_on_exit']).to match_array(%w(state1 state3))
@@ -217,7 +218,7 @@ describe "MiqAeStateMachineSteps" do
     tweak_instance("/#{@domain}/#{@namespace}/#{@state_class}", @state_instance,
                    'state2', 'on_entry', "common_state_method(ae_result => 'error')")
 
-    ws = MiqAeEngine.instantiate(@fqname)
+    ws = MiqAeEngine.instantiate(@fqname, @user)
     expect(ws.root.attributes['step_on_entry']).to match_array(%w(state1 state2))
     expect(ws.root.attributes['states_executed']).to match_array([@instance1])
     expect(ws.root.attributes['step_on_exit']).to match_array(%w(state1))
@@ -230,7 +231,7 @@ describe "MiqAeStateMachineSteps" do
     tweak_instance("/#{@domain}/#{@namespace}/#{@state_class}", @state_instance,
                    'state2', 'on_exit', "common_state_method(ae_result => 'error')")
 
-    ws = MiqAeEngine.instantiate(@fqname)
+    ws = MiqAeEngine.instantiate(@fqname, @user)
     expect(ws.root.attributes['step_on_entry']).to match_array(%w(state1 state2))
     expect(ws.root.attributes['states_executed']).to match_array([@instance1, @instance2])
     expect(ws.root.attributes['step_on_exit']).to match_array(%w(state1 state2))
@@ -243,7 +244,7 @@ describe "MiqAeStateMachineSteps" do
     tweak_instance("/#{@domain}/#{@namespace}/#{@method_class}", @instance2,
                    'ae_result', 'value', "error")
 
-    ws = MiqAeEngine.instantiate(@fqname)
+    ws = MiqAeEngine.instantiate(@fqname, @user)
     expect(ws.root.attributes['step_on_entry']).to match_array(%w(state1 state2 state3))
     expect(ws.root.attributes['states_executed']).to match_array([@instance1, @instance2, @instance3])
     expect(ws.root.attributes['step_on_exit']).to match_array(%w(state1 state3))
@@ -254,7 +255,7 @@ describe "MiqAeStateMachineSteps" do
     tweak_instance("/#{@domain}/#{@namespace}/#{@state_class}", @state_instance,
                    'state1', 'on_entry', "common_state_method(ae_result => 'skip')")
 
-    ws = MiqAeEngine.instantiate(@fqname)
+    ws = MiqAeEngine.instantiate(@fqname, @user)
     expect(ws.root.attributes['step_on_entry']).to match_array(%w(state1 state2 state3))
     expect(ws.root.attributes['states_executed']).to match_array([@instance2, @instance3])
     expect(ws.root.attributes['step_on_exit']).to match_array(%w(state2 state3))
@@ -266,7 +267,7 @@ describe "MiqAeStateMachineSteps" do
     tweak_instance("/#{@domain}/#{@namespace}/#{@state_class}", @state_instance,
                    'state2', 'on_entry', "does_not_exist(ae_result => 'skip')")
 
-    ws = MiqAeEngine.instantiate(@fqname)
+    ws = MiqAeEngine.instantiate(@fqname, @user)
     expect(ws.root.attributes['step_on_entry']).to match_array(%w(state1))
     expect(ws.root.attributes['states_executed']).to match_array([@instance1])
     expect(ws.root.attributes['step_on_exit']).to match_array(%w(state1))
@@ -280,7 +281,7 @@ describe "MiqAeStateMachineSteps" do
     tweak_instance("/#{@domain}/#{@namespace}/#{@state_class}", @state_instance,
                    'state2', 'on_exit', "does_not_exist(ae_result => 'skip')")
 
-    ws = MiqAeEngine.instantiate(@fqname)
+    ws = MiqAeEngine.instantiate(@fqname, @user)
     expect(ws.root.attributes['step_on_entry']).to match_array(%w(state1 state2))
     expect(ws.root.attributes['states_executed']).to match_array([@instance1, @instance2])
     expect(ws.root.attributes['step_on_exit']).to match_array(%w(state1))
@@ -294,7 +295,7 @@ describe "MiqAeStateMachineSteps" do
     tweak_instance("/#{@domain}/#{@namespace}/#{@state_class}", @state_instance,
                    'state2', 'on_error', "does_not_exist(ae_result => 'skip')")
 
-    ws = MiqAeEngine.instantiate(@fqname)
+    ws = MiqAeEngine.instantiate(@fqname, @user)
     expect(ws.root.attributes['step_on_entry']).to match_array(%w(state1 state2))
     expect(ws.root.attributes['states_executed']).to match_array([@instance1, @instance2])
     expect(ws.root.attributes['step_on_exit']).to match_array(%w(state1))
@@ -305,6 +306,6 @@ describe "MiqAeStateMachineSteps" do
     tweak_instance("/#{@domain}/#{@namespace}/#{@state_class}", @state_instance,
                    'state1', 'on_entry', "common_state_method(ae_next_state => 'state_missing')")
 
-    expect { MiqAeEngine.instantiate(@fqname) }.to raise_error(MiqAeException::AbortInstantiation)
+    expect { MiqAeEngine.instantiate(@fqname, @user) }.to raise_error(MiqAeException::AbortInstantiation)
   end
 end
