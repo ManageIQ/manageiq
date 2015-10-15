@@ -35,7 +35,7 @@ module ToolbarHelper
                          )) do
                (toolbar_image(props) +
                  props['text'].to_s + "&nbsp;".html_safe +
-                 tag(:span, :class => "caret")).html_safe
+                 content_tag(:span, '', :class => "caret")).html_safe
              end
       out << content_tag(:ul, :class => 'dropdown-menu') do
                props[:items].collect do |button|
@@ -72,7 +72,7 @@ module ToolbarHelper
   end
 
   def toolbar_button_separator(props)
-    tag(:div, :class => :divider, :role => "presentation")
+    content_tag(:div, '', {:class => :divider, :role => "presentation"})
   end
 
   def toolbar_button_normal(props)
