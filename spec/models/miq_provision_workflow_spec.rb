@@ -3,13 +3,13 @@ require "spec_helper"
 silence_warnings { MiqProvisionWorkflow.const_set("DIALOGS_VIA_AUTOMATE", false) }
 
 describe MiqProvisionWorkflow do
+  let(:admin) { FactoryGirl.create(:user_admin) }
   context "seeded" do
     context "After setup," do
       before(:each) do
         @server = EvmSpecHelper.local_miq_server
         @zone = @server.zone
         @guid = @server.guid
-        @admin = FactoryGirl.create(:user_admin)
         expect(MiqServer.my_server).to eq(@server)
 
         FactoryGirl.create(:miq_dialog_provision)
@@ -17,7 +17,7 @@ describe MiqProvisionWorkflow do
 
       context "Without a Valid Template," do
         it "should not create an MiqRequest when calling from_ws" do
-          -> { ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws("1.0", "admin", "template", "target", false, "cc|001|environment|test", "") }.should raise_error(RuntimeError)
+          -> { ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws("1.0", admin, "template", "target", false, "cc|001|environment|test", "") }.should raise_error(RuntimeError)
         end
       end
 
@@ -33,14 +33,14 @@ describe MiqProvisionWorkflow do
         end
 
         it "should create an MiqRequest when calling from_ws" do
-          request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws("1.0", "admin", "template", "target", false, "cc|001|environment|test", "")
+          request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws("1.0", admin, "template", "target", false, "cc|001|environment|test", "")
           request.should be_a_kind_of(MiqRequest)
         end
 
         it "should encrypt fields" do
           password_input = "secret"
           request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
-            "1.1", "admin", "name=template", "vm_name=spec_test|root_password=#{password_input}",
+            "1.1", admin, "name=template", "vm_name=spec_test|root_password=#{password_input}",
             "owner_email=admin|owner_first_name=test|owner_last_name=test", nil, nil, nil, nil)
 
           MiqPassword.encrypted?(request.options[:root_password]).should be_true
@@ -51,7 +51,7 @@ describe MiqProvisionWorkflow do
       context "#show_customize_fields" do
         it "should show PXE fields when customization supported" do
           fields = {'key' => 'value'}
-          wf = MiqProvisionVirtWorkflow.new({}, @admin)
+          wf = MiqProvisionVirtWorkflow.new({}, admin)
           wf.should_receive(:supports_customization_template?).and_return(true)
           wf.should_receive(:show_customize_fields_pxe).with(fields)
           wf.show_customize_fields(fields, 'linux')

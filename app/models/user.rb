@@ -63,6 +63,10 @@ class User < ActiveRecord::Base
     in_region.find_by(:userid => userid)
   end
 
+  def self.find_by_userid!(userid)
+    in_region.find_by!(:userid => userid)
+  end
+
   def self.find_by_email(email)
     in_region.find_by(:email => email)
   end
