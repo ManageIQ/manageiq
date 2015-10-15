@@ -15,14 +15,6 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
       amqp_userid: '',
       amqp_password: '',
       amqp_verify: '',
-      metrics_userid: '',
-      metrics_password: '',
-      metrics_verify: '',
-      ssh_keypair_userid: '',
-      ssh_keypair_password: '',
-      ssh_keypair_verify: '',
-      host_default_vnc_port_start: '',
-      host_default_vnc_port_end: '',
       emstype_vm: false,
       ems_common: true,
       azure_tenant_id: ''
@@ -69,14 +61,22 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
         $scope.emsCommonModel.provider_region                 = data.provider_region;
 
         $scope.emsCommonModel.default_userid                  = data.default_userid;
-        $scope.emsCommonModel.default_password                = data.default_password;
-        $scope.emsCommonModel.default_verify                  = data.default_verify;
-
         $scope.emsCommonModel.amqp_userid                     = data.amqp_userid;
-        $scope.emsCommonModel.amqp_password                   = data.amqp_password;
-        $scope.emsCommonModel.amqp_verify                     = data.amqp_verify;
 
         $scope.emsCommonModel.azure_tenant_id                 = data.azure_tenant_id;
+
+        if($scope.emsCommonModel.default_userid != '') {
+          $scope.emsCommonModel.default_password = $scope.emsCommonModel.default_verify = miqService.storedPasswordPlaceholder;
+        }
+        if($scope.emsCommonModel.amqp_userid != '') {
+          $scope.emsCommonModel.amqp_password = $scope.emsCommonModel.amqp_verify = miqService.storedPasswordPlaceholder;
+        }
+        if($scope.emsCommonModel.metrics_userid != '') {
+          $scope.emsCommonModel.metrics_password = $scope.emsCommonModel.metrics_password = miqService.storedPasswordPlaceholder;
+        }
+        if($scope.emsCommonModel.ssh_keypair_userid != '') {
+          $scope.emsCommonModel.ssh_keypair_password = $scope.emsCommonModel.ssh_keypair_password = miqService.storedPasswordPlaceholder;
+        }
 
         $scope.afterGet  = true;
         $scope.modelCopy = angular.copy( $scope.emsCommonModel );
@@ -84,7 +84,7 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
         miqService.sparkleOff();
       });
     }
-    $scope.currentTab = "default"
+    $scope.currentTab = "default";
 
     $scope.$watch("emsCommonModel.name", function() {
       $scope.form = $scope.angularForm;
@@ -150,6 +150,7 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
   };
 
   $scope.resetClicked = function() {
+    $scope.$broadcast ('resetClicked');
     $scope.emsCommonModel = angular.copy( $scope.modelCopy );
     $scope.angularForm.$setPristine(true);
     miqService.miqFlash("warn", "All changes have been reset");
