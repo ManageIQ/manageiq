@@ -30,8 +30,8 @@ class ApiController
           @auth_user     = @api_token_mgr.token_get_info(@module, @auth_token, :userid)
           @auth_user_obj = userid_to_userobj(@auth_user)
           @api_token_mgr.reset_token(@module, @auth_token)
-          User.current_user = @auth_user_obj
           authorize_user_group(@auth_user_obj)
+          User.current_user = @auth_user_obj
         end
       else
         authenticate_options = {
@@ -42,8 +42,8 @@ class ApiController
         if (user = authenticate_with_http_basic { |u, p| User.authenticate(u, p, request, authenticate_options) })
           @auth_user     = user.userid
           @auth_user_obj = userid_to_userobj(@auth_user)
-          User.current_user = @auth_user_obj
           authorize_user_group(@auth_user_obj)
+          User.current_user = @auth_user_obj
         else
           request_http_basic_authentication
         end
@@ -59,7 +59,7 @@ class ApiController
       if group_name.present?
         group_obj = user_obj.miq_groups.find_by_description(group_name)
         raise AuthenticationError, "Invalid Authorization Group #{group_name} specified" if group_obj.nil?
-        user_obj.current_group = group_obj
+        user_obj.miq_group_description = group_name
       end
     end
 
