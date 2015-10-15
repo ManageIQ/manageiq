@@ -1,8 +1,9 @@
 #
-# Description: <Method description here>
+# Description: Calculate requested quota items.
 #
+
 def request_info
-  @service = ($evm.parent['quota_type'] == 'service') ? true : false
+  @service = ($evm.root['vmdb_object_type'] == 'service_template_provision_request') ? true : false
   @miq_request = $evm.root['miq_request']
   $evm.log(:info, "Request: #{@miq_request.description} id: #{@miq_request.id} ")
 end
@@ -22,13 +23,11 @@ def get_total_requested(options_hash, prov_option)
 end
 
 def request_totals(template_totals, dialog_totals)
-  template_totals < dialog_totals ? dialog_totals : template_totals
+  [template_totals, dialog_totals].max
 end
 
 def collect_template_totals(prov_option)
-  total = collect_totals(service_prov_option_value(prov_option)) if @service
-  total = collect_totals(vm_prov_option_value(prov_option)) unless @service
-  total
+  @service ? collect_totals(service_prov_option_value(prov_option)) : collect_totals(vm_prov_option_value(prov_option))
 end
 
 def get_option_value(request, option)
@@ -75,8 +74,12 @@ def requested_number_of_cpus(number_of_vms, options_array)
                       @miq_request.get_option(:instance_type), options_array)
 end
 
+def bytes_to_megabytes(bytes)
+  bytes / 1024**2
+end
+
 def requested_storage(prov_option, number_of_vms, options_array)
-  vm_size = @miq_request.vm_template.provisioned_storage  / 1024**2
+  vm_size = bytes_to_megabytes(@miq_request.vm_template.provisioned_storage)
   total_storage = number_of_vms * vm_size
   set_requested_value(prov_option, total_storage,
                       @miq_request.get_option(:instance_type), options_array)
@@ -95,10 +98,6 @@ end
 def collect_dialog_totals(prov_option, options_hash)
   dialog_values(prov_option, options_hash, dialog_array = [])
   collect_totals(dialog_array)
-end
-
-def request_totals(template_totals, dialog_totals)
-  template_totals < dialog_totals ? dialog_totals : template_totals
 end
 
 def dialog_values(prov_option, options_hash, dialog_array)
@@ -121,15 +120,14 @@ def cloud_value(prov_option, option_value, find_id, dialog_array)
   case prov_option
   when :cores_per_socket
     $evm.log(:info, "set requested value cores_per_socket: prov_option: #{prov_option} value: #{option_value}")
-    option_set = requested_cores_per_socket(find_id, dialog_array)
+    requested_cores_per_socket(find_id, dialog_array)
   when :vm_memory
     $evm.log(:info, "set requested value vm_memory: prov_option: #{prov_option} value: #{option_value}")
-    option_set = requested_vm_memory(find_id, dialog_array)
+    requested_vm_memory(find_id, dialog_array)
   when :storage
     $evm.log(:info, "set requested value storage: prov_option: #{prov_option} value: #{option_value}")
-    option_set = requested_storage(@miq_request.get_option(:src_vm_id), dialog_array)
+    requested_storage(@miq_request.get_option(:src_vm_id), dialog_array)
   end
-  option_set
 end
 
 def default_option(option_value, options_array)
@@ -174,8 +172,8 @@ def set_hash_value(sequence_id, option_key, value, options_hash)
 end
 
 def error(type)
-  msg = "Unable to calculate requested due to an error getting the #{type}"
-  $evm.log(:warn, " #{msg}")
+  msg = "Unable to calculate requested #{type}, due to an error getting the #{type}"
+  $evm.log(:error, " #{msg}")
   $evm.root['ae_result'] = 'error'
   raise msg
 end

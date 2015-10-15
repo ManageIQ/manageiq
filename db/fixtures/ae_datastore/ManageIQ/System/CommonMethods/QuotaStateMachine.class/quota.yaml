@@ -4,12 +4,10 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: vm_quota
+    name: quota
     inherits: 
     description: 
   fields:
-  - quota_type:
-      value: vm
   - warn_vms:
       value: '10'
   - max_vms:
@@ -35,5 +33,5 @@ object:
   - requested:
       value: "/System/CommonMethods/QuotaMethods/requested"
   - validate:
-      value: "/System/CommonMethods/QuotaMethods/validate"
-      on_error: vm_rejected
+      value: "/System/CommonMethods/QuotaMethods/validate_quota"
+      on_error: rejected

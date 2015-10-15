@@ -3,14 +3,14 @@ module QuotaHelper
     cat = Classification.find_by_name(category)
     cat = Classification.create_category!(:name         => category,
                                           :single_value => false,
-                                          :description  => category) if cat.nil?
+                                          :description  => category) unless cat
     cat.add_entry(:description  => tag,
                   :read_only    => "0",
                   :syntax       => "string",
                   :name         => tag,
                   :example_text => nil,
                   :default      => true,
-                  :single_value => "0") unless cat.nil?
+                  :single_value => "0") if cat
   end
 
   def setup_tags
@@ -74,7 +74,7 @@ module QuotaHelper
 
   def create_request
     prov_options = {:number_of_vms => 1, :owner_email       => 'tester@miq.com',
-                                         :vm_memory         => ['1024', '1024'],
+                                         :vm_memory         => [1024, '1024'],
                                          :number_of_sockets => [2, '2'],
                                          :cores_per_socket  => [2, '2']}
     @miq_provision_request = FactoryGirl.create(:miq_provision_request,
@@ -86,7 +86,7 @@ module QuotaHelper
   end
 
   def setup_model
-    @user = FactoryGirl.create(:user_miq_request_approver)
+    @user = FactoryGirl.create(:user_with_group)
     @vm_template = FactoryGirl.create(:template_vmware,
                                       :name     => "template1",
                                       :hardware => FactoryGirl.create(:hardware, :numvcpus => 1, :memory_cpu => 512))

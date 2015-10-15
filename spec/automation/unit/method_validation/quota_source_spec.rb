@@ -5,9 +5,8 @@ def run_automate_method(provision_request)
   attrs = []
   attrs << "MiqProvisionRequest::miq_provision_request=#{@miq_provision_request.id}&" \
          "MiqRequest::miq_request=#{@miq_provision_request.id}" if provision_request
-  ws = MiqAeEngine.instantiate("/ManageIQ/system/request/Call_Instance?namespace=System/CommonMethods&" \
-                               "class=QuotaMethods&instance=source&#{attrs.join('&')}")
-  ws
+  MiqAeEngine.instantiate("/ManageIQ/system/request/Call_Instance?namespace=System/CommonMethods&" \
+                          "class=QuotaMethods&instance=source&#{attrs.join('&')}", @user)
 end
 
 describe "Quota Validation" do
