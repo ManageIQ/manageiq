@@ -6,7 +6,7 @@ module ToolbarHelper
     when 'button'
       toolbar_top_button_normal(props)
     when 'buttonTwoState'
-      toolbar_top_button_normal(props)  # FIXME
+      toolbar_top_button_normal(props)
     else
       binding.pry
     end
@@ -27,7 +27,7 @@ module ToolbarHelper
       out = []
       out << content_tag(:button,
                          data_hash_keys(props).update(
-                           :type => "button",
+                           :type         => "button",
                            :class        => "#{css}btn btn-default dropdown-toggle",
                            'data-toggle' => "dropdown",
                            :title        => props['title'],
@@ -38,7 +38,7 @@ module ToolbarHelper
                  content_tag(:span, '', :class => "caret")).html_safe
              end
       out << content_tag(:ul, :class => 'dropdown-menu') do
-               props[:items].collect do |button|
+               Array(props[:items]).collect do |button|
                  toolbar_button(button)
                end.join('').html_safe
              end
@@ -47,6 +47,21 @@ module ToolbarHelper
   end
 
   def toolbar_top_button_normal(props)
+    css = props[:hidden] ? 'hidden ' : ''
+    css += 'active ' if props[:selected] # for buttonTwoState only
+    content_tag(:button,
+                data_hash_keys(props).update(
+                  :type        => "button",
+                  :class       => "#{css}btn btn-default",
+                  :title       => props['title'],
+                  'data-click' => props['id']
+               )) do
+      (toolbar_image(props) +
+        props['text'].to_s + "&nbsp;".html_safe).html_safe
+    end
+  end
+
+  def toolbar_top_button_2state(props)
     css = props[:hidden] ? 'hidden ' : ''
     content_tag(:button,
                 data_hash_keys(props).update(
@@ -76,7 +91,6 @@ module ToolbarHelper
   end
 
   def toolbar_button_normal(props)
-    binding.pry if props.key?(:onwhen)
     hidden = props[:hidden]
     content_tag(:li, :title => props['title'], :class => hidden ? 'hidden' : '') do
       content_tag(:a,

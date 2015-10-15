@@ -320,7 +320,11 @@ iframe, .iframe {
 }
 
 /* eliminates horizontal scrollbar in some browsers */
-
 .bootstrap-select .dropdown-menu {
   overflow-y: visible !important
+}
+
+/* toolbar right allignment */
+div#view_tb {
+  float: right
 }
