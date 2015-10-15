@@ -32,7 +32,7 @@
   }
 
   /** @ngInject */
-  function StateController($state, requests) {
+  function StateController($state, requests, RequestsState) {
     var vm = this;
 
     vm.title = 'Request List';
@@ -49,28 +49,35 @@
     vm.toolbarConfig = {
       filterConfig: {
         fields: [
+           {
+            id: 'description',
+            title:  'Description',
+            placeholder: 'Filter by Description',
+            sortType: 'alpha'
+          },
           {
-            id: 'request_state',
-            title: 'Request State',
-            placeholder: 'Filter by Request State',
+            id: 'request_id',
+            title: 'Request Id',
+            placeholder: 'Filter by ID',
             filterType: 'text'
           },
           {
-            id: 'id',
-            title: 'Request Id',
-            placeholder: 'Filter by Request ID',
-            filterType: 'text'
+            id: 'request_state',
+            title: 'Request Status',
+            placeholder: 'Filter by Status',
+            filterType: 'select',
+            filterValues: ['Pending', 'Denied', 'Finished']
           }
         ],
         resultsCount: vm.requestsList.length,
-        appliedFilters: [],
+        appliedFilters: RequestsState.getFilters(),
         onFilterChange: filterChange
       },
       sortConfig: {
         fields: [
           {
             id: 'description',
-            title: 'Name',
+            title: 'Description',
             sortType: 'alpha'
           },
           {
@@ -80,20 +87,33 @@
           },
           {
             id: 'requested',
-            title: 'Requested',
+            title: 'Requested Date',
             sortType: 'numeric'
+          },
+          {
+            id: 'status',
+            title: 'Status',
+            sortType: 'alpha'
           }
         ],
-        onSortChange: sortChange
+        onSortChange: sortChange,
+        isAscending: RequestsState.getSort().isAscending,
+        currentField: RequestsState.getSort().currentField
       }
     };
+
+    /* Apply the filtering to the data list */
+    filterChange(RequestsState.getFilters());
 
     function handleClick(item, e) {
       $state.go('requests.details', {requestId: item.id});
     }
 
-    function sortChange(sortId, isAscending) {
+    function sortChange(sortId, direction) {
       vm.requestsList.sort(compareFn);
+
+      /* Keep track of the current sorting state */
+      RequestsState.setSort(sortId, vm.toolbarConfig.sortConfig.isAscending);
     }
 
     function compareFn(item1, item2) {
@@ -104,6 +124,8 @@
         compValue = item1.id - item2.id;
       } else if (vm.toolbarConfig.sortConfig.currentField.id === 'requested') {
         compValue = new Date(item1.created_on) - new Date(item2.created_on);
+      } else if (vm.toolbarConfig.sortConfig.currentField.id === 'status') {
+        compValue = item1.request_state.localeCompare(item2.request_state);
       }
 
       if (!vm.toolbarConfig.sortConfig.isAscending) {
@@ -133,6 +155,12 @@
         vm.requestsList = vm.requests;
       }
 
+      /* Keep track of the current filtering state */
+      RequestsState.setFilters(filters);
+
+      /* Make sure sorting direction is maintained */
+      sortChange(RequestsState.getSort().currentField, RequestsState.getSort().isAscending);
+
       function filterChecker(item) {
         if (matchesFilters(item, filters)) {
           vm.requestsList.push(item);
@@ -156,12 +184,13 @@
     }
 
     function matchesFilter(item, filter) {
-      var match = true;
-      if (filter.id === 'request_state') {
+      if ('description' === filter.id) {
+        return item.description.toLowerCase().indexOf(filter.value.toLowerCase()) !== -1;
+      } else if (filter.id === 'request_state') {
         return item.request_state.toLowerCase() === filter.value.toLowerCase();
-      } else if (filter.id === 'id') {
-        return Number(item.id) === Number(filter.value);
-      }
+      } else if (filter.id === 'request_id') {
+        return String(item.id).toLowerCase().indexOf(filter.value.toLowerCase()) !== -1;
+      } 
 
       return false;
     }

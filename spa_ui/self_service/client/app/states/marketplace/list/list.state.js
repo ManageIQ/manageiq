@@ -33,7 +33,7 @@
   }
 
   /** @ngInject */
-  function StateController($state, serviceTemplates) {
+  function StateController($state, serviceTemplates, MarketplaceState) {
     var vm = this;
 
     vm.title = 'Service Catalog';
@@ -81,10 +81,13 @@
           }
         ],
         resultsCount: vm.serviceTemplatesList.length,
-        appliedFilters: [],
+        appliedFilters: MarketplaceState.getFilters(),
         onFilterChange: filterChange
       }
     };
+
+    /* Apply the filtering to the data list */
+    filterChange(MarketplaceState.getFilters());
 
     function filterChange(filters) {
       vm.filtersText = '';
@@ -105,6 +108,9 @@
       } else {
         vm.serviceTemplatesList = vm.serviceTemplates;
       }
+
+      /* Keep track of the current filtering state */
+      MarketplaceState.setFilters(filters);
 
       function filterChecker(item) {
         if (matchesFilters(item, filters)) {
