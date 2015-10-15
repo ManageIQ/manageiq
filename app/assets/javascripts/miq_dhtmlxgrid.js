@@ -26,7 +26,7 @@ function miqRowClick(row_id, cell_idx) {
     if (typeof row_url_ajax != "undefined" && row_url_ajax) {
       miqJqueryRequest(row_url + row_id, {beforeSend: true, complete: true});
     } else {
-      if (!row_url.endsWith("/")) {
+      if (!row_url.endsWith("/") && !row_url.endsWith("=")) {
         row_url = row_url + "/";
       }
       DoNav(row_url + row_id);
