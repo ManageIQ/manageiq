@@ -84,7 +84,7 @@
                           :record_id    => 'new',
                           :change_url   => url,
                           :validate_url => 'rhn_validate',
-                          :validate     => rhn_validate_enabled}
+                          :validate     => true}
 
     - if 'rhn_satellite' == @edit[:new][:register_to]
       .form-group
