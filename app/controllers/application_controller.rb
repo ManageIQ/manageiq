@@ -1071,26 +1071,22 @@ class ApplicationController < ActionController::Base
     rptmenu
   end
 
-  # Render the view data to xml for the grid view
-  def view_to_xml(view, from_idx = 0, to_idx = -1, _options = {})
+  # Render the view data to PORO for the list view
+  def view_to_xml(view)
     # Get the time zone in effect for this view
     tz = (view.db.downcase == 'miqschedule') ? server_timezone : Time.zone
 
-    xml = MiqXml.createDoc(nil, nil, 1.0, :nokogiri)
-
-    root = xml.add_element('rows')
-
-    head = root.add_element('head')
+    root = {:head => [], :rows => []}
 
     # Show checkbox or placeholder column
-    unless @embedded || @no_checkboxes
-      head.add_element('column', 'type' => 'ch', 'width' => 25, 'align' => 'center')
+    if @embedded || @no_checkboxes  # TODO params
+      root[:head] << {:type => 'ro', :width => 1, :align => 'center', :text => ''}
     else
-      head.add_element('column', 'type' => 'ro', 'width' => 1, 'align' => 'center')
+      root[:head] << {:type => 'ch', :width => 25, :align => 'center', :text => ''}
     end
 
     unless %w(miqaeclass miqaeinstance).include?(view.db.downcase)  # do not add listicon for AE class show_list
-      head.add_element('column', 'type' => 'ro', 'width' => 36, 'align' => 'center')  # Icon column
+      root[:head] << {:type => 'ro', :width => 36, :align => 'center', :text => ''}  # Icon column
     end
 
     cols_key = create_cols_key(view)
@@ -1102,36 +1098,34 @@ class ApplicationController < ActionController::Base
       col_width = @settings.fetch_path(:col_widths, cols_key, view.col_order[i]) || col_width
 
       align = [:fixnum, :integer, :Fixnum, :float].include?(column_type(view.db, view.col_order[i])) ? 'right' : 'left'
-      new_column = head.add_element('column',
-                                    'width' => col_width.to_s,
-                                    'sort'  => 'str',
-                                    'type'  => 'ro',
-                                    'align' => align)
-      new_column.text = h
+
+      root[:head] << {:type  => 'ro',
+               :width => col_width.to_i,
+               :sort  => 'str',
+               :align => align,
+               :text  => h}
     end
 
     if @row_button  # Show a button as last col
-      head.add_element('column', 'type' => 'ro', 'width' => 100, 'align' => 'center')
+      root[:head] << {:type => 'ro', :width => 100, :align => 'center', :text => ''}
     end
 
     # Add table elements
     table = view.sub_table ? view.sub_table : view.table
-    table.data[from_idx..to_idx].each do |row|
-      @id = row['id']
-
-      new_row = root.add_element('row', "id" => list_row_id(row))
-      new_row.add_element('cell').text = '0'  # Checkbox column unchecked
+    table.data.each do |row|
+      new_row = {:id => list_row_id(row), :cells => [{:text => '', :checked => false}]}
+      root[:rows] << new_row
 
       # Generate html for the list icon
       # do not add listicon for AE class show_list
       unless %w(miqaeclass miqaeinstance).include?(view.db.downcase)
-        cell = new_row.add_element('cell', 'title' => 'View this item')
-        cell.add_cdata("<img src='#{listicon_image(view)}' width='20' height='20' border='0' align='middle' alt='Image missing'>")
+        new_row[:cells] << {:title => 'View this item',
+                            :image => listicon_image(view, row['id'])}
       end
 
       view.col_order.each_with_index do |col, col_idx|
-        cell = new_row.add_element('cell')
         celltext = nil
+
         case view.col_order[col_idx]
         when 'db'
           celltext = Dictionary.gettext(row[col], :type => :model, :notfound => :titleize)
@@ -1148,22 +1142,20 @@ class ApplicationController < ActionController::Base
           end
           celltext = escape_once(format_col_for_display(view, row, col, celltz || tz))
         end
-        cell.text = celltext # Put value into the cell
+
+        new_row[:cells] << {:text => celltext}
       end
 
       if @row_button # Show a button in the last col
-        cell = new_row.add_element('cell', 'title' => @row_button[:title], 'is_button' => 1)
-        cell.add_cdata("<button class   = 'btn btn-primary btn-xs'
-                                title   = '#{@row_button[:title]}'
-                                onclick = '#{@row_button[:function]}(\"#{@id}\");'
-                                alt     = '#{@row_button[:title]}'>#{@row_button[:image]}
-                        </button>")
+        new_row[:cells] << {:title     => @row_button[:title],
+                            :is_button => true,
+                            :text      => celltext,
+                            :onclick   => "#{@row_button[:function]}(\"#{row['id']}\");",
+                            :image     => @row_button[:image]}
       end
     end
 
-    # Use write method with -1 so the xml string is not indented
-    xml.write(xml_str = '', -1)
-    xml_str
+    root
   end
 
   # Create a hash key to store a views column widths
@@ -1179,12 +1171,13 @@ class ApplicationController < ActionController::Base
   end
 
   # Return the image name for the list view icon of a db,id pair
-  def listicon_image(view)
+  def listicon_image(view, id = nil)
+    id = @id if id.nil?
     item = if @targets_hash
-             @targets_hash[@id] # Get the record from the view
+             @targets_hash[id] # Get the record from the view
            else
              klass = view.db.constantize
-             klass.find(@id)    # Read the record from the db
+             klass.find(id)    # Read the record from the db
            end
 
     p  = "/images/icons/"
@@ -1809,7 +1802,7 @@ class ApplicationController < ActionController::Base
     # Set up the grid variables for list view, with exception models below
     if !%w(Job MiqProvision MiqReportResult MiqTask).include?(view.db) &&
        !view.db.ends_with?("Build") && !@force_no_grid_xml && (@gtl_type == "list" || @force_grid_xml)
-      @grid_xml = view_to_xml(view, 0, -1, :association => association)
+      @grid_xml = view_to_xml(view)
     end
 
     [view, get_view_pages(dbname, view)]
