@@ -149,9 +149,9 @@ class ApplicationHelper::ToolbarBuilder
             bs_node.add_element("item", props)                      # Add buttonSelect child button node
             current_item[:items] ||= []
             current_item[:items] << props
-            build_toolbar_save_button(tb_buttons, bsi, bgi[:buttonSelect]) if bsi[:button]  # Save if a button (not sep)
+            build_toolbar_save_button(tb_buttons, bsi, props, bgi[:buttonSelect]) if bsi[:button]  # Save if a button (not sep)
           end
-          build_toolbar_save_button(tb_buttons, bgi) if bs_children || bgi[:buttonSelect] == "history_choice"
+          build_toolbar_save_button(tb_buttons, bgi, props) if bs_children || bgi[:buttonSelect] == "history_choice"
           unless bs_children                                        # No children?
             bs_node.remove! if bs_node
           # Commented following line to get some extra space in our toolbars - FB 15882
@@ -200,7 +200,7 @@ class ApplicationHelper::ToolbarBuilder
 
           toolbar << props
           root.add_element("item", props)                           # Add button node
-          build_toolbar_save_button(tb_buttons, bgi)                # Save button in buttons hash
+          build_toolbar_save_button(tb_buttons, bgi, props)                # Save button in buttons hash
         elsif bgi.key?(:buttonTwoState)                         # two state button node found
           next if build_toolbar_hide_button(bgi[:buttonTwoState])
           props = {"id"     => bgi[:buttonTwoState],
@@ -223,7 +223,7 @@ class ApplicationHelper::ToolbarBuilder
 
           root.add_element("item", props)                           # Add button node
           toolbar << props
-          build_toolbar_save_button(tb_buttons, bgi)                # Save button in buttons hash
+          build_toolbar_save_button(tb_buttons, bgi, props)                # Save button in buttons hash
         end
       end
     end
@@ -1320,7 +1320,7 @@ class ApplicationHelper::ToolbarBuilder
   end
 
   # Save a button tb_buttons hash
-  def build_toolbar_save_button(tb_buttons, item, parent = nil)
+  def build_toolbar_save_button(tb_buttons, item, props, parent = nil)
     confirm_title = nil
     parms = nil
     url = nil
@@ -1328,7 +1328,7 @@ class ApplicationHelper::ToolbarBuilder
     button = item.key?(:buttonTwoState) ? item[:buttonTwoState] : (item.key?(:buttonSelect) ? item[:buttonSelect] : item[:button])
     button = parent + "__" + button if parent # Prefix with "parent__" if parent is passed in
     tb_buttons[button] = {}
-    tb_buttons[button][:name] = button
+    props[:name] = tb_buttons[button][:name] = button
     tb_buttons[button][:pressed] = item[:pressed] if item[:pressed]
     tb_buttons[button][:hidden] = item[:hidden] ? true : false
     title = eval("\"#{item[:title]}\"") if parent && item[:title]
@@ -1343,18 +1343,19 @@ class ApplicationHelper::ToolbarBuilder
     if item[:full_path]
       tb_buttons[button][:full_path] = ERB.new(item[:full_path]).result(@view_binding)
     end
-    tb_buttons[button][:url] = url if item[:url]
-    tb_buttons[button][:explorer] = true if @explorer && !item[:url]  # Add explorer = true if ajax button
+    props[:url]      = tb_buttons[button][:url] = url if item[:url]
+    props[:explorer] = tb_buttons[button][:explorer] = true if @explorer && !item[:url]  # Add explorer = true if ajax button
     if item[:popup]
-      tb_buttons[button][:popup] = item[:popup]
+      props[:popup] = tb_buttons[button][:popup] = item[:popup]
       if item[:url_parms] == "popup_only" # For readonly reports, they don't have confirm message
-        tb_buttons[button][:console_url] = "/#{request.parameters["controller"]}#{item[:url]}"
+        props[:console_url] = tb_buttons[button][:console_url] = "/#{request.parameters["controller"]}#{item[:url]}"
       else    # Assuming at this point this is a console button
-        if item[:url] == "vnc_console"  # This is a VNC console button
-          tb_buttons[button][:console_url] = "http://#{@record.ipaddresses[0]}:#{get_vmdb_config[:server][:vnc_port]}"
-        else  # This is an MKS or VMRC VMware console button
-          tb_buttons[button][:console_url] = "/#{request.parameters["controller"]}#{item[:url]}/#{@record.id}"
-        end
+        props[:console_url] = tb_buttons[button][:console_url] =
+          if item[:url] == "vnc_console"  # This is a VNC console button
+            "http://#{@record.ipaddresses[0]}:#{get_vmdb_config[:server][:vnc_port]}"
+          else  # This is an MKS or VMRC VMware console button
+            "/#{request.parameters["controller"]}#{item[:url]}/#{@record.id}"
+          end
       end
     end
 
@@ -1365,14 +1366,14 @@ class ApplicationHelper::ToolbarBuilder
                           )
 
     if tb_buttons[button][:name].in?(collect_log_buttons) && @record.try(:log_depot).try(:requires_support_case?)
-      tb_buttons[button][:prompt] = true
+      props[:prompt] = tb_buttons[button][:prompt] = true
     end
     parms = eval("\"#{item[:url_parms]}\"") if item[:url_parms]
     tb_buttons[button][:url_parms] = update_url_parms(parms) if item[:url_parms]
     # doing eval for ui_lookup in confirm message
     confirm_title = eval("\"#{item[:confirm]}\"") if item[:confirm]
-    tb_buttons[button][:confirm] = confirm_title if item[:confirm]
-    tb_buttons[button][:onwhen] = item[:onwhen] if item[:onwhen]
+    props[:confirm] = tb_buttons[button][:confirm] = confirm_title if item[:confirm]
+    props[:onwhen]  = tb_buttons[button][:onwhen]  = item[:onwhen] if item[:onwhen]
   end
 
   def update_url_parms(url_parm)
