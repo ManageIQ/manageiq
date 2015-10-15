@@ -23,12 +23,13 @@ module ToolbarHelper
 
   def toolbar_top_button_select(props)
     content_tag(:div, :class => 'btn-group dropdown') do
-      css = props[:hidden] ? 'hidden ' : ''
+      cls = props[:hidden] ? 'hidden ' : ''
+      cls += 'disabled ' if props['enabled'].to_s == 'false'
       out = []
       out << content_tag(:button,
                          data_hash_keys(props).update(
                            :type         => "button",
-                           :class        => "#{css}btn btn-default dropdown-toggle",
+                           :class        => "#{cls}btn btn-default dropdown-toggle",
                            'data-toggle' => "dropdown",
                            :title        => props['title'],
                            'data-click'  => props['id']
@@ -61,20 +62,6 @@ module ToolbarHelper
     end
   end
 
-  def toolbar_top_button_2state(props)
-    css = props[:hidden] ? 'hidden ' : ''
-    content_tag(:button,
-                data_hash_keys(props).update(
-                  :type        => "#{css}button",
-                  :class       => "btn btn-default",
-                  :title       => props['title'],
-                  'data-click' => props['id']
-               )) do
-      (toolbar_image(props) +
-        props['text'].to_s + "&nbsp;".html_safe).html_safe
-    end
-  end
-
   def toolbar_button(props)
     case props['type']
     when 'button'
@@ -92,7 +79,8 @@ module ToolbarHelper
 
   def toolbar_button_normal(props)
     hidden = props[:hidden]
-    content_tag(:li, :title => props['title'], :class => hidden ? 'hidden' : '') do
+    cls = props['enabled'].to_s == 'false' ? 'disabled ' : ''
+    content_tag(:li, :title => props['title'], :class => cls + (hidden ? 'hidden' : '')) do
       content_tag(:a,
                   data_hash_keys(props).update(
                     :href        => '#',

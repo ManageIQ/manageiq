@@ -151,7 +151,7 @@ class ApplicationHelper::ToolbarBuilder
             current_item[:items] << props
             build_toolbar_save_button(tb_buttons, bsi, props, bgi[:buttonSelect]) if bsi[:button]  # Save if a button (not sep)
           end
-          build_toolbar_save_button(tb_buttons, bgi, props) if bs_children || bgi[:buttonSelect] == "history_choice"
+          build_toolbar_save_button(tb_buttons, bgi, current_item) if bs_children || bgi[:buttonSelect] == "history_choice"
           unless bs_children                                        # No children?
             bs_node.remove! if bs_node
           # Commented following line to get some extra space in our toolbars - FB 15882
