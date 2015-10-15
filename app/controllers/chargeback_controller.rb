@@ -505,6 +505,40 @@ class ChargebackController < ApplicationController
     end
   end
 
+  def cb_tiers_delete
+    assert_privileges("chargeback_rates_delete")
+    tiers = []
+    if !params[:id] # showing a list
+      tiers = find_checked_items
+      if tiers.empty?
+        add_flash(_("No %s were selected for deletion") % ui_lookup(:models => "ChargebackTier"), :error)
+        render :update do |page|
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        end
+      end
+      process_cb_tiers(tiers, "destroy")  unless tiers.empty?
+      add_flash(_("The selected %s were deleted") % ui_lookup(:models => "ChargebackTier"), :info, true) unless flash_errors?
+      cb_tiers_list
+      @right_cell_text = _("All %{model}") % {:model => ui_lookup(:models => "ChargebackTier")}
+      replace_right_cell([:cb_tiers])
+    else # showing 1 tier, delete it
+      if params[:id].nil? || ChargebackTier.find_by_id(params[:id]).nil?
+        add_flash(_("%s no longer exists") % ui_lookup(:model => "ChargebackTier"), :error)
+        render :update do |page|
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        end
+      else
+        tiers.push(params[:id])
+      end
+      cb_tier = ChargebackTier.find_by_id(params[:id])
+      process_cb_tiers(tiers, "destroy")  unless tiers.empty?
+      add_flash(_("The selected %s was deleted") % ui_lookup(:model => "ChargebackTier"), :info, true) unless flash_errors?
+      self.x_node = "xx-tiers"
+      cb_tiers_list
+      @right_cell_text = _("All %{model}") % {:model => ui_lookup(:models => "ChargebackRate")}
+      replace_right_cell([:cb_tiers])
+    end
+  end
   # AJAX driven routine to check for changes in ANY field on the form
   def cb_assign_field_changed
     return unless load_edit("cbassign_edit__#{x_node}", "replace_cell__chargeback")
@@ -793,6 +827,10 @@ class ChargebackController < ApplicationController
       @sb[:rate_details][i].chargeback_rate_id = @sb[:rate].id
       @sb[:rate_details][i].chargeback_tier_id = ChargebackTier.find_by_id(@edit[:new][:details][i][:chargeback_tier_id]).id
     end
+  end
+
+  def process_cb_tiers(tiers, task)
+    process_elements(tiers, ChargebackTier, task)
   end
 
   def cb_tier_set_form_vars
