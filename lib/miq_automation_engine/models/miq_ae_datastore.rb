@@ -210,7 +210,7 @@ module MiqAeDatastore
     matches = arclass.where("lower(name) = ?", name.downcase).collect do |obj|
       get_domain_index_object(domains, obj, klass, ns, enabled, options)
     end.compact
-    matches.sort { |a, b| a[:index] <=> b[:index] }.collect { |v| v[:obj] }
+    matches.sort_by { |a| a[:index] }.collect { |v| v[:obj] }
   end
 
   def self.get_domain_index_object(domains, obj, klass, ns, enabled, options)

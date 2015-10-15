@@ -2557,7 +2557,7 @@ class MiqAeClassController < ApplicationController
   def domain_overrides
     @domain_overrides = {}
     typ, = x_node.split('-')
-    overrides = TreeBuilder.get_model_for_prefix(typ).constantize.get_homonymic_across_domains(User.current_user, @record.fqname)
+    overrides = TreeBuilder.get_model_for_prefix(typ).constantize.get_homonymic_across_domains(current_user, @record.fqname)
     overrides.each do |obj|
       display_name, id = domain_display_name_using_name(obj, @record.domain.name)
       @domain_overrides[display_name] = id
