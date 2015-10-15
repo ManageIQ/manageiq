@@ -12,11 +12,11 @@
       - if @edit[:new][:num_tiers]
         - tier_details = []
         - j = @edit[:new][:num_tiers].to_i
-        -  for i in 0..j-1
-          -  tier_details.push(ChargebackTierDetail.create(:description => "Tier #{i}", :start => i, :end => i+1, :tier_rate => (i+1)/10.0))
+        -  (0..j - 1).each do |i1|
+          -  tier_details.push(ChargebackTierDetail.create(:description => "Tier #{i1}", :start => i1, :end => i1 + 1, :tier_rate => (i1 + 1) / 10.0))
       - @edit[:new][:details] = tier_details
       - @sb[:tier_details] = tier_details
-      - @sb[:tier_details].each_with_index do |r, i|
+      - @sb[:tier_details].each_with_index do |_r, i|
         /%tr
         /  %td.active{:colspan => "6"} &nbsp;
         %tr

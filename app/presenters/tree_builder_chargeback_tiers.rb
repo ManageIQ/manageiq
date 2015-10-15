@@ -28,22 +28,13 @@ class TreeBuilderChargebackTiers < TreeBuilder
         objects = []
         rate_types.sort.each do |rtype|
           img = rtype.downcase == "compute" ? "hardware-processor" : "hardware-disk"
-          objects.push(
-                         :id     => rtype,
-                         :text   => rtype,
-                         :image  => img,
-                         :tip    => rtype
-          )
+          objects.push(:id => rtype, :text => rtype, :image => img, :tip => rtype)
         end
         objects
       end
     when :cb_tiers
       objects = []
-      objects.push(
-                     :id => "tiers",
-                     :text => "All saved tiers",
-                     :image => "folder"
-      )
+      objects.push(:id => "tiers", :text => "All saved tiers", :image => "folder")
       objects
     end
   end

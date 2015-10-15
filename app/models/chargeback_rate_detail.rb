@@ -4,7 +4,7 @@ class ChargebackRateDetail < ActiveRecord::Base
 
   def cost(value)
     return 0.0 unless self.enabled?
-    unless self.chargeback_tier_id.nil?
+    unless chargeback_tier_id.nil?
       tier = ChargebackTier.find_by_id(chargeback_tier_id)
       unless tier.nil?
         self.rate = tier.rate(value)

@@ -19,7 +19,7 @@ class ChargebackTier < ActiveRecord::Base
         ratet = rate_below
       end
     end
-    return ratet
+    ratet
   end
 
   def self.all_names
