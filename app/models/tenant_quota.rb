@@ -36,6 +36,12 @@ class TenantQuota < ActiveRecord::Base
   validates :value, :numericality => {:greater_than => 0}
   validates :warn_value, :numericality => {:greater_than => 0}, :if => "warn_value.present?"
 
+  scope :cpu_allocated,       -> { where(:name => :cpu_allocated) }
+  scope :mem_allocated,       -> { where(:name => :mem_allocated) }
+  scope :storage_allocated,   -> { where(:name => :storage_allocated) }
+  scope :vms_allocated,       -> { where(:name => :vms_allocated) }
+  scope :templates_allocated, -> { where(:name => :templates_allocated) }
+
   before_validation(:on => :create) do
     self.unit = default_unit unless unit.present?
   end
@@ -44,6 +50,20 @@ class TenantQuota < ActiveRecord::Base
     @quota_definitions ||= QUOTA_BASE.each_with_object({}) do |(name, value), h|
       h[name] = value.merge(:description => I18n.t("dictionary.tenants.#{name}"), :value => nil, :warn_value => nil)
     end
+  end
+
+  def allocated
+    tenant.children.includes(:tenant_quotas).map do |c|
+      cq = c.tenant_quotas.send(name).take
+      cq.value if cq
+    end.compact.sum
+  end
+
+  def available
+    value - tenant.children.includes(:tenant_quotas).map do |c|
+      cq = c.tenant_quotas.send(name).take
+      cq.value if cq
+    end.compact.sum - used
   end
 
   def used
