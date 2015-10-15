@@ -36,54 +36,86 @@ class EmsInfraController < ApplicationController
       return
     end
 
-    @count_parameters = @stack.parameters.select { |x| x.name.include?('::count') || x.name.include?('Count') }
+    @orig_parameters = @stack.parameters.select { |x| x.name.include?('::count') || x.name.include?('Count') }
 
     return unless params[:scale]
 
-    scale_parameters = params.select { |k, _v| k.include?('::count') || k.include?('Count') }
-    assigned_hosts = scale_parameters.values.sum(&:to_i)
-    infra = ManageIQ::Providers::Openstack::InfraManager.find(params[:id])
-    if assigned_hosts > infra.hosts.count
-      # Validate number of selected hosts is not more than available
-      log_and_flash_message(_("Assigning %{hosts} but only have %{hosts_count} hosts available.") % {:hosts => assigned_hosts, :hosts_count => infra.hosts.count.to_s})
-    else
-      scale_parameters_formatted = {}
-      return_message = _("Scaling")
-      @count_parameters.each do |p|
-        if !scale_parameters[p.name].nil? && scale_parameters[p.name] != p.value
-          return_message += _(" %{name} from %{value} to %{parameters} ") % {:name => p.name, :value => p.value, :parameters => scale_parameters[p.name]}
-          scale_parameters_formatted[p.name] = scale_parameters[p.name]
-        end
-      end
+    form_parameters = params.select { |k, _v| k.include?('::count') || k.include?('Count') }
 
-      begin
-        # Check if stack is ready to be updated
-        update_ready = @stack.update_ready?
-      rescue => ex
-        log_and_flash_message(_("Unable to initiate scaling, obtaining of status failed: #{ex}"))
-        return
-      end
+    return unless validate_selected_hosts_not_exceed_available_hosts(form_parameters)
 
-      if !update_ready
-        add_flash(_("Provider is not ready to be scaled, another operation is in progress."), :error)
-      elsif scale_parameters_formatted.length > 0
-        # A value was changed
-        begin
-          @stack.raw_update_stack(nil, scale_parameters_formatted)
-          redirect_to :action => 'show', :id => params[:id], :flash_msg => return_message
-        rescue => ex
-          log_and_flash_message(_("Unable to initiate scaling: %s") % ex)
-        end
-      else
-        # No values were changed
-        add_flash(_("A value must be changed or provider will not be scaled."), :error)
-      end
+    changed_parameters = select_changed_parameters(form_parameters)
+    return unless validate_a_change_was_made(changed_parameters)
+
+    begin
+      # Check if stack is ready to be updated
+      update_ready = @stack.update_ready?
+    rescue => ex
+      log_and_flash_message(_("Unable to initiate scaling, obtaining of status failed: #{ex}"))
+      return
+    end
+
+    unless update_ready
+      add_flash(_("Provider is not ready to be scaled, another operation is in progress."), :error)
+    end
+
+    begin
+      return_message = select_return_message(form_parameters)
+      @stack.raw_update_stack(nil, changed_parameters)
+      redirect_to :action => 'show', :id => params[:id], :flash_msg => return_message
+    rescue => ex
+      log_and_flash_message(_("Unable to initiate scaling: %s") % ex)
     end
   end
 
   private
 
   ############################
+
+  def value_changed?(form_parameters, name, value)
+    !form_parameters[name].nil? && form_parameters[name] != value
+  end
+
+  def select_changed_parameters(form_parameters)
+    changed_parameters = {}
+    @orig_parameters.each do |orig|
+      next unless value_changed?(form_parameters, orig.name, orig.value)
+      changed_parameters[orig.name] = form_parameters[orig.name]
+    end
+    changed_parameters
+  end
+
+  def select_return_message(form_parameters)
+    return_message = _("Scaling")
+    @orig_parameters.each do |orig|
+      next unless value_changed?(form_parameters, orig.name, orig.value)
+      return_message << _(" %{name} from %{value} to %{parameters} ") %
+        {:name => orig.name, :value => orig.value, :parameters => form_parameters[orig.name]}
+    end
+    return_message
+  end
+
+  def validate_a_change_was_made(changed_parameters)
+    if changed_parameters.length == 0
+      log_and_flash_message(_("A value must be changed or provider will not be scaled."))
+      return false
+    else
+      return true
+    end
+  end
+
+  def validate_selected_hosts_not_exceed_available_hosts(form_parameters)
+    assigned_hosts = form_parameters.values.sum(&:to_i)
+    infra = ManageIQ::Providers::Openstack::InfraManager.find(params[:id])
+    if assigned_hosts > infra.hosts.count
+      # Validate number of selected hosts is not more than available
+      log_and_flash_message(_("Assigning %{hosts} but only have %{hosts_count} hosts available.") % {:hosts => assigned_hosts, :hosts_count => infra.hosts.count.to_s})
+      return false
+    else
+      return true
+    end
+  end
+
   def log_and_flash_message(message)
     add_flash(message, :error)
     $log.error(message)
