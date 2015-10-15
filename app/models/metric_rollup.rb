@@ -3,12 +3,7 @@ class MetricRollup < ActiveRecord::Base
 
   def self.find_all_by_interval_and_time_range(interval, start_time, end_time = nil, count = :all, options = {})
     my_cond = ["capture_interval_name = ? and timestamp > ? and timestamp <= ?", interval, start_time, end_time]
-
-    passed_cond = options.delete(:conditions)
-    options[:conditions] = passed_cond.nil? ? my_cond : "( #{send(:sanitize_sql_for_conditions, my_cond)} ) AND ( #{send(:sanitize_sql, passed_cond)} )"
-
-    _log.debug("Find options: #{options.inspect}")
-    find(count, options)
+    where(my_cond).find(count, options)
   end
 
   #
