@@ -44,7 +44,7 @@
                       class="form-control"
                       type="checkbox"
                       title="{{ ::inputTitle }}"
-                      checked="{{ dialogField.default_value == 't' ? 'checked' : ''}}">
+                      ng-checked="vm.parsedOptions[dialogField.name] == 't' || dialogField.default_value == 't'">
                     </input>
                     <select
                       ng-switch-when="DialogFieldDropDownList"
