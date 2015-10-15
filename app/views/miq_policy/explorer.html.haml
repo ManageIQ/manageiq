@@ -1,10 +1,6 @@
 - content_for :search do
   = render(:partial => "layouts/x_adv_searchbox", :locals => {:nameonly => true})
 
-- content_for :dhx_layout do
-  -# Create the explorer dhtmlx layout/accordion JS objects
-  = render :partial => "layouts/dhtmlxlayout_explorer"
-
 #main_div.main_div
   - case @nodetype
   - when "root"

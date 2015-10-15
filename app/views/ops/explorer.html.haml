@@ -1,5 +1,3 @@
-- content_for :dhx_layout do
-  = render :partial => "layouts/dhtmlxlayout_explorer"
 #main_div.main_div
   - if role_allows(:feature => "ops_settings") || role_allows(:feature => "ops_rbac", :any => true) || role_allows(:feature => "ops_diagnostics") || role_allows(:feature => "ops_db")
     #tab_all_tabs_div= render :partial => "all_tabs"
@@ -32,7 +30,7 @@
   - if @sb[:active_tab] == "db_utilization"
     miqAsyncAjax('#{url_for(:action => @ajax_action, :id => @record)}');
   - if @sb[:center_tb_filename].nil? || @sb[:center_tb_filename] == "blank_view_tb"
-    ManageIQ.layout.toolbar.hide();
+    $('#toolbar').hide();
   };
   var miq_after_onload = "miqOpsAfterOnload();"
 
