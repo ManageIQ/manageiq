@@ -662,6 +662,8 @@ module ReportController::Menus
         row_id = "__|i_#{row.gsub(/&/n, '&amp;')}"
       else
         prefix = "|-|"
+
+        # FIXME: this is jast .last really, on purpose?
         @edit[:group_reports].each do |rep|
           # need to check if report is not owned by user add special character to the row id so it can be tracked in JS and folder cannnot be deleted in menu editor
           nodes = rep.split('/')
