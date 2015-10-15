@@ -33,7 +33,8 @@
     "patternfly": "~2.3.0",
     "angular-patternfly": "~2.3.2",
     "angular-bootstrap": "~0.13.0",
-    "angular-base64": "~2.0.5"
+    "angular-base64": "~2.0.5",
+    "ngprogress": "~1.1.2"
   },
   "overrides": {
     "patternfly": {
