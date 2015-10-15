@@ -104,7 +104,7 @@ module ToolbarHelper
   end
 
   def data_hash_keys(props)
-    %i(pressed popup console_url name prompt explorer confirm onwhen url_parms).each_with_object({}) do |key, h|
+    %i(pressed popup console_url name prompt explorer confirm onwhen url_parms url).each_with_object({}) do |key, h|
       h["data-#{key.to_s}"] = props[key] if props.key?(key)
     end
   end
