@@ -507,9 +507,12 @@ module VimPerformanceAnalysis
     query = query.where(:capture_interval_name => interval_name) unless interval_name == "daily"
 
     if obj.kind_of?(MiqEnterprise) || obj.kind_of?(MiqRegion)
-      cond1 = klass.send(:sanitize_sql_for_conditions, :resource_type => "Storage",             :resource_id => obj.storage_ids)
-      cond2 = klass.send(:sanitize_sql_for_conditions, :resource_type => "ExtManagementSystem", :resource_id => obj.ext_management_system_ids)
-      cond += " AND ((#{cond1}) OR (#{cond2}))"
+      # in rails 5.0 use Relation#or
+      ActiveSupport::Deprecation.silence do
+        cond1 = klass.send(:sanitize_sql_for_conditions, :resource_type => "Storage",             :resource_id => obj.storage_ids)
+        cond2 = klass.send(:sanitize_sql_for_conditions, :resource_type => "ExtManagementSystem", :resource_id => obj.ext_management_system_ids)
+        query = query.where("#{cond1}) OR (#{cond2}")
+      end
     else
       parent_col = case obj
                    when Host then                :parent_host_id
@@ -524,9 +527,9 @@ module VimPerformanceAnalysis
     end
 
     if interval_name == "daily"
-      query.find(:all, :conditions => cond, :ext_options => options[:ext_options])
+      query.find(:all, :ext_options => options[:ext_options])
     else
-      query.where(cond).to_a
+      query.to_a
     end
   end
 
