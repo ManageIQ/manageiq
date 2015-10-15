@@ -63,7 +63,7 @@ module ContainerServiceHelper::TextualSummary
   end
 
   def textual_portal_ip
-    @record.portal_ip
+    {:label => "Portal IP", :value => @record.portal_ip}
   end
 
   def textual_port_config(port_conf)
