@@ -44,7 +44,10 @@
     var vm = this;
 
     vm.title = 'Service Template Details';
-    vm.dialogs = dialogs.resources[0].content;
     vm.serviceTemplate = serviceTemplate;
+
+    if (dialogs.subcount > 0) {
+      vm.dialogs = dialogs.resources[0].content;
+    }
   }
 })();
