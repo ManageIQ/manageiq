@@ -27,7 +27,7 @@ describe MiqAeExport do
       end
 
       it "fails to access other tenants domain" do
-        expect { MiqAeExport.new('DoM2', options) }.to raise_exception(MiqAeException::DomainNotAccessible)
+        expect { MiqAeExport.new('DoM2', options).export }.to raise_exception(MiqAeException::DomainNotAccessible)
       end
     end
 
@@ -39,7 +39,7 @@ describe MiqAeExport do
       end
 
       it "cannot access other tenants domain" do
-        expect { MiqAeExport.new('DoM2', options) }.to raise_exception(MiqAeException::DomainNotAccessible)
+        expect { MiqAeExport.new('DoM2', options).export }.to raise_exception(MiqAeException::DomainNotAccessible)
       end
 
       it "with all domains shouldn't fetch other tenants domains" do
