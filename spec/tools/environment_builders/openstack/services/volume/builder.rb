@@ -6,15 +6,16 @@ module Openstack
       class Builder
         attr_reader :service, :volumes
 
-        def self.build_all(ems, project)
-          new(ems, project).build_all
+        def self.build_all(ems, project, environment)
+          new(ems, project, environment).build_all
         end
 
-        def initialize(ems, project)
+        def initialize(ems, project, environment)
           @service         = ems.connect(:tenant_name => project.name, :service => "Volume")
           @compute_service = ems.connect(:tenant_name => project.name)
           @data            = Data.new
           @project         = project
+          @environment     = environment
 
           # Collected data
           @volume_types           = []
@@ -93,9 +94,16 @@ module Openstack
 
           print "Waiting for volume #{name} to get in a desired state..."
 
+          valid_states = ["available", "in-use"]
+          # Seems like icehouse has not fixed bug, volume goes to error state after attaching
+          # https://bugs.launchpad.net/cinder/+bug/1365234
+          # TODO(lsmola) I don't think icehouse will be getting fixed, figure out we can ignore that
+          # version
+          valid_states << "error" if @environment == :icehouse
+
           loop do
             case volume.reload.status
-            when "available", "in-use"
+            when *valid_states
               break
             when "error"
               puts "Error creating volume"
