@@ -159,4 +159,44 @@ describe MiqAction do
       end
     end
   end
+
+  context '.create_default_actions' do
+    context 'miq_actions table is initially empty' do
+      before { MiqAction.destroy_all }
+
+      context 'seeding default actions from csv' do
+        before { MiqAction.create_default_actions }
+
+        it 'should create 34 new actions' do
+          expect(MiqAction.count).to eq 34
+        end
+
+        it 'should set action_type to "default"' do
+          expect(MiqAction.pluck(:action_type)).to eq Array.new(34, 'default')
+        end
+
+        context 'seeding again' do
+          before { MiqAction.create_default_actions }
+
+          it 'should not create additional actions' do
+            expect(MiqAction.count).to eq 34
+          end
+        end
+
+        context 'when one of existing actions was changed' do
+          let(:action) { MiqAction.last }
+          let!(:original_description) { action.description }
+          before { action.update_column(:description, "UPATED DESCRIPTION") }
+
+          context 'seeding actions from csv again' do
+            before { MiqAction.create_default_actions }
+
+            it 'should revert that change' do
+              expect(action.reload.description).to eq original_description
+            end
+          end
+        end
+      end
+    end
+  end
 end
