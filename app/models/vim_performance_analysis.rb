@@ -502,8 +502,9 @@ module VimPerformanceAnalysis
 
     query = (interval_name == "daily" ? VimPerformanceDaily : klass).where(options[:conditions] || {})
     query = query.select(options[:select])
-    cond =  klass.send(:sanitize_sql_for_conditions, ["(timestamp > ? AND timestamp <= ?)", start_time.utc, end_time.utc])
-    cond += klass.send(:sanitize_sql_for_conditions, [" AND capture_interval_name = ?", interval_name]) unless interval_name == "daily"
+
+    query = query.where("(timestamp > ? AND timestamp <= ?)", start_time.utc, end_time.utc)
+    query = query.where(:capture_interval_name => interval_name) unless interval_name == "daily"
 
     if obj.kind_of?(MiqEnterprise) || obj.kind_of?(MiqRegion)
       cond1 = klass.send(:sanitize_sql_for_conditions, :resource_type => "Storage",             :resource_id => obj.storage_ids)
@@ -518,12 +519,9 @@ module VimPerformanceAnalysis
                    else                      raise "unknown object type: #{obj.class}"
                    end
 
-      cond += " AND #{parent_col} = ?"
-      cond += " AND resource_type in ('Host', 'EmsCluster')" if obj.kind_of?(ExtManagementSystem)
-      cond = [cond, obj.id]
+      query = query.where(parent_col => obj.id)
+      query = query.where("resource_type" => %w(Host EmsCluster)) if obj.kind_of?(ExtManagementSystem)
     end
-
-    # puts "find_child_perf_for_time_period: cond: #{cond.inspect}"
 
     if interval_name == "daily"
       query.find(:all, :conditions => cond, :ext_options => options[:ext_options])
