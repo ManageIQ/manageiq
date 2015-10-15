@@ -72,10 +72,10 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
           $scope.emsCommonModel.amqp_password = $scope.emsCommonModel.amqp_verify = miqService.storedPasswordPlaceholder;
         }
         if($scope.emsCommonModel.metrics_userid != '') {
-          $scope.emsCommonModel.metrics_password = $scope.emsCommonModel.metrics_password = miqService.storedPasswordPlaceholder;
+          $scope.emsCommonModel.metrics_password = $scope.emsCommonModel.metrics_verify = miqService.storedPasswordPlaceholder;
         }
         if($scope.emsCommonModel.ssh_keypair_userid != '') {
-          $scope.emsCommonModel.ssh_keypair_password = $scope.emsCommonModel.ssh_keypair_password = miqService.storedPasswordPlaceholder;
+          $scope.emsCommonModel.ssh_keypair_password = $scope.emsCommonModel.ssh_keypair_verify = miqService.storedPasswordPlaceholder;
         }
 
         $scope.afterGet  = true;

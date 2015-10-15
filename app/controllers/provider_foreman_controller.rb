@@ -188,8 +188,7 @@ class ProviderForemanController < ApplicationController
                                                                      :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
                                                                      :verify_ssl => params[:verify_ssl].eql?("on"))
     else
-      config_mgr = find_by_id_filtered(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id])
-      @provider_foreman = ManageIQ::Providers::Foreman::Provider.where(:id => config_mgr.provider_id).first
+      @provider_foreman = find_by_id_filtered(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id]).provider
     end
     update_authentication_provider_foreman
 
