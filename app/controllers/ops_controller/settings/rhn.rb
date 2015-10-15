@@ -350,6 +350,6 @@ module OpsController::Settings::RHN
   private
 
   def reset_repo_name_from_default
-    MiqDatabase.registration_default_value_for_update_repo_name(@edit[:new][:register_to])
+    MiqDatabase.registration_default_value_for_update_repo_name
   end
 end
