@@ -266,6 +266,6 @@ class MiqAeYamlExport
 
   def domain_accessible?
     return true unless @tenant
-    @tenant.ae_domains.any? { |dom| dom.name.casecmp(@domain)==0 }
+    @tenant.ae_domains.any? { |dom| dom.name.casecmp(@domain) == 0 }
   end
 end
