@@ -23,12 +23,12 @@ module ToolbarHelper
 
   def toolbar_top_button_select(props)
     content_tag(:div, :class => 'btn-group dropdown') do
-      binding.pry if props.key?(:onwhen)
+      css = props[:hidden] ? 'hidden ' : ''
       out = []
       out << content_tag(:button,
                          data_hash_keys(props).update(
                            :type => "button",
-                           :class        => "btn btn-default dropdown-toggle",
+                           :class        => "#{css}btn btn-default dropdown-toggle",
                            'data-toggle' => "dropdown",
                            :title        => props['title'],
                            'data-click'  => props['id']
@@ -47,9 +47,10 @@ module ToolbarHelper
   end
 
   def toolbar_top_button_normal(props)
+    css = props[:hidden] ? 'hidden ' : ''
     content_tag(:button,
                 data_hash_keys(props).update(
-                  :type        => "button",
+                  :type        => "#{css}button",
                   :class       => "btn btn-default",
                   :title       => props['title'],
                   'data-click' => props['id']
@@ -76,7 +77,8 @@ module ToolbarHelper
 
   def toolbar_button_normal(props)
     binding.pry if props.key?(:onwhen)
-    content_tag(:li, :title => props['title']) do
+    hidden = props[:hidden]
+    content_tag(:li, :title => props['title'], :class => hidden ? 'hidden' : '') do
       content_tag(:a,
                   data_hash_keys(props).update(
                     :href        => '#',
@@ -88,7 +90,7 @@ module ToolbarHelper
   end
 
   def data_hash_keys(props)
-    %i(popup console_url name prompt explorer confirm onwhen url_parms).each_with_object({}) do |key, h|
+    %i(pressed popup console_url name prompt explorer confirm onwhen url_parms).each_with_object({}) do |key, h|
       h["data-#{key.to_s}"] = props[key] if props.key?(key)
     end
   end

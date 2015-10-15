@@ -1328,9 +1328,9 @@ class ApplicationHelper::ToolbarBuilder
     button = item.key?(:buttonTwoState) ? item[:buttonTwoState] : (item.key?(:buttonSelect) ? item[:buttonSelect] : item[:button])
     button = parent + "__" + button if parent # Prefix with "parent__" if parent is passed in
     tb_buttons[button] = {}
-    props[:name] = tb_buttons[button][:name] = button
-    tb_buttons[button][:pressed] = item[:pressed] if item[:pressed]
-    tb_buttons[button][:hidden] = item[:hidden] ? true : false
+    props[:name]    = tb_buttons[button][:name] = button
+    props[:pressed] = tb_buttons[button][:pressed] = item[:pressed] if item[:pressed]
+    props[:hidden]  = tb_buttons[button][:hidden] = item[:hidden] ? true : false
     title = eval("\"#{item[:title]}\"") if parent && item[:title]
     tb_buttons[button][:title] = title if parent && item[:title]
     url = eval("\"#{item[:url]}\"") if item[:url]
