@@ -26,10 +26,35 @@ class ChargebackRateDetail < ActiveRecord::Base
     rate_adjustment(hr)
   end
 
+  # We modify this method for measurements conversions
+  # cpu_usagemhz_rate_average --> megahertz
+  # derived_memory_used --> megabytes
+  # derived_memory_available -->megabytes
+  # net_usage_rate_average --> kbps
+  # disk_usage_rate_average --> kbps
+  # derived_vm_allocated_disk_storage --> bytes
+  # derived_vm_used_disk_storage --> bytes
+
   def rate_adjustment(hr)
-    case per_unit
-    when "gigabytes" then hr / 1.gigabyte   # adjust to bytes / per hour
+    case metric
+    when "cpu_usagemhz_rate_average" then per_unit == 'megahertz' ? hr : hr = rate_adjustment_measure(hr, 'megahertz')
+    when "derived_memory_used", "derived_memory_available" then per_unit == 'megabytes' ? hr : hr = rate_adjustment_measure(hr, 'megabytes')
+    when "net_usage_rate_average", "disk_usage_rate_average" then per_unit == 'kbps' ? hr : hr = rate_adjustment_measure(hr, 'kbps')
+    when "derived_vm_allocated_disk_storage", "derived_vm_used_disk_storage" then per_unit == 'bytes' ? hr : hr = rate_adjustment_measure(hr, 'bytes')
     else hr
+    end
+  end
+
+  # Adjuts the hourly rate to the per unit by default
+  def rate_adjustment_measure(hr, pu_destiny)
+    measure = detail_measure
+    pos_pu_destiny = measure.units.index(pu_destiny)
+    pos_per_unit = measure.units.index(per_unit)
+    jumps = (pos_per_unit - pos_pu_destiny).abs
+    if pos_per_unit > pos_pu_destiny
+      hr.to_f / (jumps * measure.step)
+    else
+      hr * (jumps * measure.step)
     end
   end
 
@@ -51,7 +76,7 @@ class ChargebackRateDetail < ActiveRecord::Base
   end
 
   def per_unit_display
-    self.detail_measure.nil? ? self.per_unit.to_s.capitalize : detail_measure.measures_for_select.key(self.per_unit)
+    detail_measure.nil? ? per_unit.to_s.capitalize : detail_measure.measures_for_select.key(per_unit)
   end
 
   def rate_type
@@ -61,6 +86,6 @@ class ChargebackRateDetail < ActiveRecord::Base
 
   def detail_measure
     # Return the measure asociated
-    ChargebackRateDetailMeasure.find_by(id: self.chargeback_rate_detail_measure_id)
+    ChargebackRateDetailMeasure.find_by(:id => chargeback_rate_detail_measure_id)
   end
 end
