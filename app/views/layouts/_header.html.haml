@@ -11,11 +11,6 @@
   %div{:class => "collapse navbar-collapse navbar-collapse-1"}
     %ul{:class => "nav navbar-nav navbar-utility"}
       %li{:class => "brand-white-label #{session[:custom_logo] ? "whitelabeled" : ""}"}
-      %li
-        %a{:href => '#'}
-          %span#tP
-          :javascript
-            dateTime('#{Time.zone.now.utc_offset}', '#{Time.zone.now.strftime("%Z")}');
       - Menu::Manager.menu(:top_right) do |menu_section|
         - if menu_section.visible?
           %li.dropdown
