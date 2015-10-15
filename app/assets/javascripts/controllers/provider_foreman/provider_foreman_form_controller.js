@@ -38,8 +38,10 @@ ManageIQ.angularApplication.controller('providerForemanFormController', ['$http'
           $scope.providerForemanModel.verify_ssl  = data.verify_ssl == "1";
 
           $scope.providerForemanModel.log_userid   = data.log_userid;
-          $scope.providerForemanModel.log_password = data.log_password;
-          $scope.providerForemanModel.log_verify   = data.log_verify;
+
+          if($scope.providerForemanModel.log_userid != '') {
+            $scope.providerForemanModel.log_password = $scope.providerForemanModel.log_verify = miqService.storedPasswordPlaceholder;
+          }
 
           $scope.afterGet = true;
           $scope.modelCopy = angular.copy( $scope.providerForemanModel );
@@ -86,6 +88,7 @@ ManageIQ.angularApplication.controller('providerForemanFormController', ['$http'
     };
 
     $scope.resetClicked = function() {
+      $scope.$broadcast ('resetClicked');
       $scope.providerForemanModel = angular.copy( $scope.modelCopy );
       $scope.angularForm.$setPristine(true);
       miqService.miqFlash("warn", "All changes have been reset");
