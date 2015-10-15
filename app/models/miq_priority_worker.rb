@@ -1,5 +1,5 @@
 class MiqPriorityWorker < MiqQueueWorkerBase
-  require_dependency 'miq_priority_worker/runner'
+  require_nested :Runner
 
   self.default_queue_name   = "generic"
 

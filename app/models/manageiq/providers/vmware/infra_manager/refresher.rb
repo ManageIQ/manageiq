@@ -1,12 +1,10 @@
-require_dependency 'manageiq/providers/base_manager/refresher'
-require_dependency 'manageiq/providers/vmware/infra_manager'
 require 'MiqVim'
 require 'http-access2' # Required in case it is not already loaded
 
-module ::ManageIQ::Providers
-  class Vmware::InfraManager
-    class Refresher < BaseManager::Refresher
-      include RefreshParser::Filter
+module ManageIQ::Providers
+  module Vmware
+    class InfraManager::Refresher < ManageIQ::Providers::BaseManager::Refresher
+      include InfraManager::RefreshParser::Filter
 
       # Development helper method for setting up the selector specs for VC
       def self.init_console(use_vim_broker = false)
@@ -126,7 +124,7 @@ module ::ManageIQ::Providers
         log_header = "EMS: [#{@ems.name}], id: [#{@ems.id}]"
         _log.debug "#{log_header} Parsing VC inventory..."
         hashes, = Benchmark.realtime_block(:parse_vc_data) do
-          RefreshParser.ems_inv_to_hashes(data)
+          InfraManager::RefreshParser.ems_inv_to_hashes(data)
         end
         _log.debug "#{log_header} Parsing VC inventory...Complete"
 
@@ -372,7 +370,7 @@ module ::ManageIQ::Providers
 
           _log.debug "Parsing VC inventory..."
           hashes, = Benchmark.realtime_block(:parse_vc_data) do
-            RefreshParser.reconfig_inv_to_hashes(@vc_data)
+            InfraManager::RefreshParser.reconfig_inv_to_hashes(@vc_data)
           end
           _log.debug "Parsing VC inventory...Complete"
 

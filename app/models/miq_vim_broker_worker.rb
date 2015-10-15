@@ -1,5 +1,5 @@
 class MiqVimBrokerWorker < MiqWorker
-  require_dependency 'miq_vim_broker_worker/runner'
+  require_nested :Runner
 
   self.required_roles         = %w(
     ems_inventory

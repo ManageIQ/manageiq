@@ -1,12 +1,12 @@
 class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManager
-  require_dependency 'manageiq/providers/azure/cloud_manager/availability_zone'
-  require_dependency 'manageiq/providers/azure/cloud_manager/flavor'
-  require_dependency 'manageiq/providers/azure/cloud_manager/refresh_parser'
-  require_dependency 'manageiq/providers/azure/cloud_manager/refresh_worker'
-  require_dependency 'manageiq/providers/azure/cloud_manager/refresher'
-  require_dependency 'manageiq/providers/azure/cloud_manager/vm'
-  require_dependency 'manageiq/providers/azure/cloud_manager/orchestration_stack'
-  require_dependency 'manageiq/providers/azure/cloud_manager/orchestration_service_option_converter'
+  require_nested :AvailabilityZone
+  require_nested :Flavor
+  require_nested :RefreshParser
+  require_nested :RefreshWorker
+  require_nested :Refresher
+  require_nested :Vm
+  require_nested :OrchestrationStack
+  require_nested :OrchestrationStackOptionConverter
 
   alias_attribute :azure_tenant_id, :uid_ems
 

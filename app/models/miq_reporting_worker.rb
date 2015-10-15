@@ -1,5 +1,5 @@
 class MiqReportingWorker < MiqQueueWorkerBase
-  require_dependency 'miq_reporting_worker/runner'
+  require_nested :Runner
 
   self.required_roles       = ["reporting"]
   self.default_queue_name   = "reporting"

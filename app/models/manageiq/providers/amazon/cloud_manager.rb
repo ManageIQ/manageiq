@@ -1,24 +1,24 @@
 class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudManager
-  require_dependency 'manageiq/providers/amazon/cloud_manager/auth_key_pair'
-  require_dependency 'manageiq/providers/amazon/cloud_manager/availability_zone'
-  require_dependency 'manageiq/providers/amazon/cloud_manager/cloud_volume'
-  require_dependency 'manageiq/providers/amazon/cloud_manager/cloud_volume_snapshot'
-  require_dependency 'manageiq/providers/amazon/cloud_manager/event_catcher'
-  require_dependency 'manageiq/providers/amazon/cloud_manager/event_parser'
-  require_dependency 'manageiq/providers/amazon/cloud_manager/flavor'
-  require_dependency 'manageiq/providers/amazon/cloud_manager/floating_ip'
-  require_dependency 'manageiq/providers/amazon/cloud_manager/metrics_capture'
-  require_dependency 'manageiq/providers/amazon/cloud_manager/metrics_collector_worker'
-  require_dependency 'manageiq/providers/amazon/cloud_manager/orchestration_service_option_converter'
-  require_dependency 'manageiq/providers/amazon/cloud_manager/orchestration_stack'
-  require_dependency 'manageiq/providers/amazon/cloud_manager/provision'
-  require_dependency 'manageiq/providers/amazon/cloud_manager/provision_workflow'
-  require_dependency 'manageiq/providers/amazon/cloud_manager/refresh_parser'
-  require_dependency 'manageiq/providers/amazon/cloud_manager/refresh_worker'
-  require_dependency 'manageiq/providers/amazon/cloud_manager/refresher'
-  require_dependency 'manageiq/providers/amazon/cloud_manager/security_group'
-  require_dependency 'manageiq/providers/amazon/cloud_manager/template'
-  require_dependency 'manageiq/providers/amazon/cloud_manager/vm'
+  require_nested :AuthKeyPair
+  require_nested :AvailabilityZone
+  require_nested :CloudVolume
+  require_nested :CloudVolumeSnapshot
+  require_nested :EventCatcher
+  require_nested :EventParser
+  require_nested :Flavor
+  require_nested :FloatingIp
+  require_nested :MetricsCapture
+  require_nested :MetricsCollectorWorker
+  require_nested :OrchestrationServiceOptionConverter
+  require_nested :OrchestrationStack
+  require_nested :Provision
+  require_nested :ProvisionWorkflow
+  require_nested :RefreshParser
+  require_nested :RefreshWorker
+  require_nested :Refresher
+  require_nested :SecurityGroup
+  require_nested :Template
+  require_nested :Vm
 
   def self.ems_type
     @ems_type ||= "ec2".freeze
