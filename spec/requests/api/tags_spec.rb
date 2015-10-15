@@ -79,6 +79,21 @@ describe ApiController do
         expect_request_success
       end
 
+      it "can create a tag with a category by name" do
+        api_basic_authorize collection_action_identifier(:tags, :create)
+        category = FactoryGirl.create(:category)
+
+        expect do
+          run_post tags_url, :name => "test_tag", :description => "Test Tag", :category => {:name => category.name}
+        end.to change(Tag, :count).by(1)
+
+        tag = Tag.find(@result["results"].first["id"])
+        tag_category = Category.find(tag.category.id)
+        expect(tag_category).to eq(category)
+
+        expect_request_success
+      end
+
       it "can create a tag as a subresource of a category" do
         api_basic_authorize collection_action_identifier(:tags, :create)
         category = FactoryGirl.create(:category)
