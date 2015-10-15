@@ -166,6 +166,14 @@ describe MiqAeDatastore do
       data = YAML.load_file(domain_file)
       expect(data.fetch_path('object', 'attributes', 'tenant_id')).to eq(@tenant.id)
     end
+
+    it "namespace should not contain tenant id" do
+      export_model(@manageiq_domain.name)
+      namespace_file=File.join(@export_dir, @manageiq_domain.name, @aen1.name, '__namespace__.yaml')
+      data = YAML.load_file(namespace_file)
+      hash = data.fetch_path('object', 'attributes')
+      expect(hash.key?('tenant_id')).to be_false
+    end
   end
 
   context "export import roundtrip" do
