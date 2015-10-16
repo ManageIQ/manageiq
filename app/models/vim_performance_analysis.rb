@@ -500,16 +500,19 @@ module VimPerformanceAnalysis
     end_time   = options[:end_date].utc
     klass, = Metric::Helper.class_and_association_for_interval_name(interval_name)
 
-    user_cond = nil
-    user_cond = klass.send(:sanitize_sql_for_conditions, options[:conditions]) if options[:conditions]
-    cond =  klass.send(:sanitize_sql_for_conditions, ["(timestamp > ? AND timestamp <= ?)", start_time.utc, end_time.utc])
-    cond += klass.send(:sanitize_sql_for_conditions, [" AND capture_interval_name = ?", interval_name]) unless interval_name == "daily"
-    cond =  "(#{user_cond}) AND (#{cond})" if user_cond
+    query = (interval_name == "daily" ? VimPerformanceDaily : klass).where(options[:conditions] || {})
+    query = query.select(options[:select])
+
+    query = query.where("(timestamp > ? AND timestamp <= ?)", start_time.utc, end_time.utc)
+    query = query.where(:capture_interval_name => interval_name) unless interval_name == "daily"
 
     if obj.kind_of?(MiqEnterprise) || obj.kind_of?(MiqRegion)
-      cond1 = klass.send(:sanitize_sql_for_conditions, :resource_type => "Storage",             :resource_id => obj.storage_ids)
-      cond2 = klass.send(:sanitize_sql_for_conditions, :resource_type => "ExtManagementSystem", :resource_id => obj.ext_management_system_ids)
-      cond += " AND ((#{cond1}) OR (#{cond2}))"
+      # in rails 5.0 use Relation#or
+      ActiveSupport::Deprecation.silence do
+        cond1 = klass.send(:sanitize_sql_for_conditions, :resource_type => "Storage",             :resource_id => obj.storage_ids)
+        cond2 = klass.send(:sanitize_sql_for_conditions, :resource_type => "ExtManagementSystem", :resource_id => obj.ext_management_system_ids)
+        query = query.where("#{cond1}) OR (#{cond2}")
+      end
     else
       parent_col = case obj
                    when Host then                :parent_host_id
@@ -519,17 +522,14 @@ module VimPerformanceAnalysis
                    else                      raise "unknown object type: #{obj.class}"
                    end
 
-      cond += " AND #{parent_col} = ?"
-      cond += " AND resource_type in ('Host', 'EmsCluster')" if obj.kind_of?(ExtManagementSystem)
-      cond = [cond, obj.id]
+      query = query.where(parent_col => obj.id)
+      query = query.where("resource_type" => %w(Host EmsCluster)) if obj.kind_of?(ExtManagementSystem)
     end
 
-    # puts "find_child_perf_for_time_period: cond: #{cond.inspect}"
-
     if interval_name == "daily"
-      VimPerformanceDaily.find(:all, :conditions => cond, :ext_options => options[:ext_options], :select => options[:select])
+      query.find(:all, :ext_options => options[:ext_options])
     else
-      klass.where(cond).select(options[:select]).to_a
+      query.to_a
     end
   end
 
