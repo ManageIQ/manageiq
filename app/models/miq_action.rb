@@ -1079,17 +1079,9 @@ class MiqAction < ActiveRecord::Base
     create_script_actions_from_directory
   end
 
-  def self.create_default_actions
-    fname = FIXTURE_DIR.join("#{to_s.pluralize.underscore}.csv")
-    data  = fname.read.split("\n")
-    cols  = data.shift.split(",").map(&:to_sym)
-
-    data.each do |line|
-      next if line.starts_with?('#') # skip commented lines
-
-      arr = line.split(",")
-
-      action = Hash[cols.zip(arr)]
+  def self.create_default_actions(fname = FIXTURE_DIR.join("#{to_s.pluralize.underscore}.csv"))
+    CSV.foreach(fname, :headers => true, :skip_lines => /^#/).each do |csv_row|
+      action = csv_row.to_hash.symbolize_keys
       action[:action_type] = 'default'
 
       rec = find_by_name(action[:name])
