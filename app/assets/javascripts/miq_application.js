@@ -444,56 +444,51 @@ function miqUpdateButtons(obj, button_div) {
   miqSetButtons(count, button_div);
 }
 
-// Set the buttons in a div based on the count of checked items passed in
-function miqSetButtons(count, button_div) {
-  var tb;
-  var buttons;
-
-  if (button_div.match("_tb$")) {
-    if (typeof ManageIQ.toolbars[button_div] != "undefined") {
-      tb = ManageIQ.toolbars[button_div].obj;
-      buttons = ManageIQ.toolbars[button_div].buttons;
-      for (var button in buttons) {
-        var onwhen = buttons[button].onwhen;
-        if (typeof onwhen != "undefined") {
-          if (count === 0) {
-            if (button.indexOf("__") >= 0) {
-              tb.disableListOption(button.split("__")[0], button);
-            } else {
-              tb.disableItem(button);
-            }
-          } else if (count == 1) {
-            if (onwhen == "1" || onwhen == "1+") {
-              if (button.indexOf("__") >= 0) {
-                tb.enableListOption(button.split("__")[0], button);
-              } else {
-                tb.enableItem(button);
-              }
-            } else if (onwhen == "2+") {
-              if (button.indexOf("__") >= 0) {
-                tb.disableListOption(button.split("__")[0], button);
-              } else {
-                tb.disableItem(button);
-              }
-            }
-          } else {
-            if (onwhen == "1+" || onwhen == "2+") {
-              if (button.indexOf("__") >= 0) {
-                tb.enableListOption(button.split("__")[0], button);
-              } else {
-                tb.enableItem(button);
-              }
-            } else if (onwhen == "1") {
-              if (button.indexOf("__") >= 0) {
-                tb.disableListOption(button.split("__")[0], button);
-              } else {
-                tb.disableItem(button);
-              }
-            }
-          }
-        }
+// Set button enabled or disabled according to the number of selected items
+function miqButtonOnWhen(button, onwhen, count) {
+  if (typeof onwhen != "undefined") {
+    if (count === 0) {
+      button.addClass('disabled');
+    } else if (count == 1) {
+      if (onwhen == "1" || onwhen == "1+") {
+        button.removeClass('disabled');
+      } else if (onwhen == "2+") {
+        button.addClass('disabled');
+      }
+    } else {
+      if (onwhen == "1+" || onwhen == "2+") {
+        button.removeClass('disabled')
+      } else if (onwhen == "1") {
+        button.addClass('disabled');
       }
     }
+  }
+}
+
+// Set the buttons in a div based on the count of checked items passed in
+function miqSetButtons(count, button_div) {
+
+  if (button_div.match("_tb$")) {
+    var toolbar = $('#' + button_div);
+
+    // Non-dropdown master buttons
+    toolbar.find('button:not(.dropdown-toggle)').each(function (k, v) {
+      var button = $(v);
+      miqButtonOnWhen(button, button.data('onwhen'), count);
+    });
+
+    // Dropdown master buttons
+    toolbar.find('button.dropdown-toggle').each(function (k, v) {
+      var button = $(v);
+      miqButtonOnWhen(button, button.data('onwhen'), count);
+    });
+
+    // Dropdown button items
+    toolbar.find('ul.dropdown-menu > li > a').each(function (k, v) {
+      var button = $(v);
+      miqButtonOnWhen(button.parent(), button.data('onwhen'), count);
+    });
+
   } else if (button_div.match("_buttons$")) {
     // Handle newer divs with button elements
     if (count === 0) {
@@ -1240,5 +1235,156 @@ function miqAccordSelect(e) {
     var url = '/' + $('body').data('controller') + '/accordion_select?id=' + $(e.target).attr('id');
     miqJqueryRequest(url, {beforeSend: true, complete: true});
     return true;
+  }
+}
+
+// This function is called in miqOnLoad
+function miqInitToolbars() {
+  $("#toolbar button:not(.dropdown-toggle), #toolbar ul.dropdown-menu > li > a").click(miqToolbarOnClick);
+}
+
+// Function to run transactions when toolbar button is clicked
+function miqToolbarOnClick(e) {
+  var tb_url;
+  var button;
+
+  button = $(this);
+
+  if (button.data("confirm") && !button.data("popup")) {
+    if (!confirm(button.data('confirm'))) {
+      return;
+    }
+  } else if (button.data("confirm") && button.data("popup")) {
+    // to open console in a new window
+    if (confirm(button.data('confirm'))) {
+      if (button.data('popup') != "undefined" && button.data('popup')) {
+        if (button.data("console_url")) {
+          window.open(button.data('console_url'));
+        }
+      }
+    }
+    return;
+  } else if (!button.data("confirm") && button.data("popup")) {
+    // to open readonly report in a new window, doesnt have confirm message
+    if (button.data('popup')) {
+      if (button.data("console_url")) {
+        window.open(button.data('console_url'));
+      }
+    }
+    return;
+  }
+
+  if (button.data("url")) {
+    // See if a url is defined
+    if (button.data('url').indexOf("/") === 0) {
+      // If url starts with / it is non-ajax
+      tb_url = "/" + ManageIQ.controller + button.data('url');
+      if (ManageIQ.record.recordId !== null) {
+        tb_url += "/" + ManageIQ.record.recordId;
+      }
+      if (button.data("url_parms")) {
+        tb_url += button.data('url_parms');
+      }
+      DoNav(encodeURI(tb_url));
+      return;
+    } else {
+      // An ajax url was defined
+      tb_url = "/" + ManageIQ.controller + "/" + button.data('url');
+      if (button.data('url').indexOf("x_history") !== 0) {
+        // If not an explorer history button
+        if (ManageIQ.record.recordId !== null) {
+          tb_url += "/" + ManageIQ.record.recordId;
+        }
+      }
+    }
+  } else {
+    // No url specified, run standard button ajax transaction
+    if (typeof button.data('explorer') != "undefined" && button.data('explorer')) {
+      // Use x_button method for explorer ajax
+      tb_url = "/" + ManageIQ.controller + "/x_button";
+    } else {
+      tb_url = "/" + ManageIQ.controller + "/button";
+    }
+    if (ManageIQ.record.recordId !== null) {
+      tb_url += "/" + ManageIQ.record.recordId;
+    }
+    tb_url += "?pressed=";
+    if (typeof button.data('pressed') == "undefined") {
+      tb_url += button.data('click').split("__").pop();
+    } else {
+      tb_url += button.data('pressed');
+    }
+  }
+
+  collect_log_buttons = [ 'support_vmdb_choice__collect_logs',
+                          'support_vmdb_choice__collect_current_logs',
+                          'support_vmdb_choice__zone_collect_logs',
+                          'support_vmdb_choice__zone_collect_current_logs'
+  ];
+  if (jQuery.inArray(button.attr('name'), collect_log_buttons) >= 0 && button.data('prompt')) {
+    tb_url = miqSupportCasePrompt(tb_url);
+    if (!tb_url) {
+      return false;
+    }
+  }
+
+  // put url_parms into params var, if defined
+  var params;
+  if (button.data("url_parms")) {
+    if (button.data('url_parms').match("_div$")) {
+      if (miqDomElementExists('miq_grid_checks')) {
+        params = "miq_grid_checks=" + $('#miq_grid_checks').val();
+      } else {
+        params = miqSerializeForm(button.data('url_parms'));
+      }
+    } else {
+      params = button.data('url_parms').split("?")[1];
+    }
+  }
+
+  // TODO:
+  // Checking for perf_reload button to not turn off spinning Q (will be done after charts are drawn).
+  // Need to design this feature into the toolbar button support at a later time.
+  if ((button.attr('name') == "perf_reload") ||
+      (button.attr('name') == "vm_perf_reload") ||
+      (button.attr('name').match("_console$"))) {
+    if (typeof params == "undefined") {
+      miqJqueryRequest(tb_url, {beforeSend: true});
+    } else {
+      miqJqueryRequest(tb_url, {beforeSend: true, data: params});
+    }
+  } else {
+    if (typeof params == "undefined") {
+      miqJqueryRequest(tb_url, {beforeSend: true, complete: true});
+    } else {
+      miqJqueryRequest(tb_url, {beforeSend: true, complete: true, data: params});
+    }
+  }
+  return false;
+}
+
+function miqSupportCasePrompt(tb_url) {
+  var support_case = prompt('Enter Support Case:', '');
+  if (support_case === null) {
+    return false;
+  } else if (support_case.trim() == '') {
+    alert('Support Case must be provided to collect logs');
+    return false;
+  } else {
+    tb_url = tb_url + '&support_case=' + encodeURIComponent(support_case);
+    return tb_url;
+  }
+}
+
+// Handle chart context menu clicks
+function miqWidgetToolbarClick(itemId, itemValue) {
+  if (itemId == "reset") {
+    if (confirm("Are you sure you want to reset this Dashboard's Widgets to the defaults?")) {
+      miqAjax("/dashboard/reset_widgets");
+    }
+  } else if (itemId == "add_widget") {
+    return;
+  } else {
+    miqAjax("/dashboard/widget_add?widget=" + itemId);
   }
 }
