@@ -139,6 +139,7 @@ module MiqAeEngine
 
           obj.process_assertions(message)
           obj.process_args_as_attributes(args)
+          obj.set_user_info(@ae_user) unless root
         elsif scheme == "miqaews"
           obj = get_obj_from_path(path)
           raise MiqAeException::ObjectNotFound, "Object [#{path}] not found" if obj.nil?

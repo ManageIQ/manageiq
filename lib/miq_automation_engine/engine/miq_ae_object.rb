@@ -245,6 +245,16 @@ module MiqAeEngine
       process_filtered_fields(['assertion'], message)
     end
 
+    def set_user_info(user)
+      objects_hash = {'user'      => user,
+                      'tenant'    => user.current_tenant,
+                      'miq_group' => user.current_group }
+      objects_hash.each do |k, v|
+        value = MiqAeObject.convert_value_based_on_datatype(v.id, "#{v.class}")
+        @attributes[k] = value unless value.nil?
+      end
+    end
+
     def process_args_as_attributes(args = {})
       args.keys.each { |k| MiqAeEngine.automation_attribute_is_array?(k) ? process_args_array(args, k) : process_args_attribute(args, k) }
       @attributes.merge!(args)
