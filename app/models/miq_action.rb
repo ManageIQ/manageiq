@@ -1081,17 +1081,17 @@ class MiqAction < ActiveRecord::Base
 
   def self.create_default_actions(fname = FIXTURE_DIR.join("#{to_s.pluralize.underscore}.csv"))
     CSV.foreach(fname, :headers => true, :skip_lines => /^#/).each do |csv_row|
-      action = csv_row.to_hash.symbolize_keys
-      action[:action_type] = 'default'
+      action = csv_row.to_hash
+      action['action_type'] = 'default'
 
-      rec = find_by_name(action[:name])
+      rec = find_by_name(action['name'])
       if rec.nil?
-        _log.info("Creating [#{action[:name]}]")
+        _log.info("Creating [#{action['name']}]")
         create(action)
       else
         rec.attributes = action
         if rec.changed? || (rec.options_was != rec.options)
-          _log.info("Updating [#{action[:name]}]")
+          _log.info("Updating [#{action['name']}]")
           rec.save
         end
       end
