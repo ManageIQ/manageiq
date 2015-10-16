@@ -235,7 +235,7 @@ class MiqAeYamlExport
 
   def domain_object
     raise MiqAeException::DomainNotAccessible, "Domain [#{@domain}] not accessible" unless domain_accessible?
-    MiqAeNamespace.find_by_fqname(@domain).tap do |dom|
+    MiqAeDomain.find_by_fqname(@domain).tap do |dom|
       if dom.nil?
         _log.error("Domain: <#{@domain}> not found.")
         raise MiqAeException::DomainNotFound, "Domain [#{@domain}] not found in MiqAeDatastore"

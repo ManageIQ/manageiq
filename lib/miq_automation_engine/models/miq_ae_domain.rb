@@ -9,7 +9,7 @@ class MiqAeDomain < MiqAeNamespace
   before_save :default_priority
   belongs_to :tenant
 
-  EXPORT_EXCLUDE_KEYS = [/^id$/, /^(?!tenant).*_id$/, /^created_on/, /^updated_on/, /^updated_by/, /^reserved$/] 
+  EXPORT_EXCLUDE_KEYS = [/^id$/, /^(?!tenant).*_id$/, /^created_on/, /^updated_on/, /^updated_by/, /^reserved$/]
 
   include TenancyMixin
 
