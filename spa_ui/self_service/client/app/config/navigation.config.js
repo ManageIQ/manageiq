@@ -2,7 +2,8 @@
   'use strict';
 
   angular.module('app.config')
-    .config(navigation);
+    .config(navigation)
+    .run(init);
 
   /** @ngInject */
   function navigation(NavigationProvider) {
@@ -49,5 +50,23 @@
         }
       }
     });
+  }
+
+  /** @ngInject */
+  function init(lodash, CollectionsApi, Navigation, NavCounts) {
+    NavCounts.add('services', fetchServices, 60 * 1000);
+    NavCounts.add('requests', fetchRequests, 60 * 1000);
+
+    function fetchRequests() {
+      CollectionsApi.query('service_requests').then(lodash.partial(updateCount, 'requests'));
+    }
+
+    function fetchServices() {
+      CollectionsApi.query('services').then(lodash.partial(updateCount, 'services'));
+    }
+
+    function updateCount(item, data) {
+      Navigation.items.primary[item].count = data.count;
+    }
   }
 })();
