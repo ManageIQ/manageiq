@@ -11,18 +11,18 @@ class MiqAeYamlExport
     @klass         = options['class']
     @namespace     = options['namespace']
     @options       = options
+    @tenant        = @options['tenant']
     reset_manifest
-    @domain_object = domain_object unless @domain == ALL_DOMAINS
   end
 
   private
 
   def write_model
     case export_level
-    when "class"     then write_class(@namespace, @klass.downcase)
-    when "namespace" then write_namespace(@namespace)
+    when "class"     then write_class(domain_object, @namespace, @klass.downcase)
+    when "namespace" then write_namespace(domain_object, @namespace)
     else
-      @domain == ALL_DOMAINS ? write_all_domains : write_domain
+      @domain == ALL_DOMAINS ? write_all_domains : write_domain(domain_object)
     end
     write_manifest(@options['export_as'].presence || @domain)
   end
@@ -37,17 +37,17 @@ class MiqAeYamlExport
     end
   end
 
-  def write_domain
+  def write_domain(dom_obj)
     _log.info("Exporting domain:    <#{@domain}>")
-    write_domain_file(@domain_object)
-    write_all_namespaces(@domain_object)
+    write_domain_file(dom_obj)
+    write_all_namespaces(dom_obj)
   end
 
-  def write_namespace(namespace)
+  def write_namespace(dom_obj, namespace)
     write_multipart_namespace_files(namespace) if namespace.split('/').count > 0
     ns_obj = get_namespace_object(namespace)
     _log.info("Exporting domain:    <#{@domain}> namespace: <#{namespace}>")
-    write_domain_file(@domain_object)
+    write_domain_file(dom_obj)
     write_namespace_file(ns_obj)
     write_all_classes(ns_obj)
     write_all_namespaces(ns_obj)
@@ -62,11 +62,11 @@ class MiqAeYamlExport
     end
   end
 
-  def write_class(namespace, class_name)
+  def write_class(dom_obj, namespace, class_name)
     ns_obj = get_namespace_object(namespace)
     class_obj = get_class_object(ns_obj, class_name)
     _log.info("Exporting domain:    <#{@domain}> ns: <#{namespace}> class: <#{class_name}>")
-    write_domain_file(@domain_object)
+    write_domain_file(dom_obj)
     write_namespace_file(ns_obj)
     write_class_components(ns_obj.fqname, class_obj)
   end
@@ -101,11 +101,14 @@ class MiqAeYamlExport
                       'updated_on'      => ns_obj.updated_on)
   end
 
+  def domains
+    @tenant ? @tenant.ae_domains : MiqAeDomain.all
+  end
+
   def write_all_domains
-    MiqAeDomain.all.each do |dom_obj|
+    domains.each do |dom_obj|
       @domain = dom_obj.name
-      @domain_object = domain_object
-      write_domain
+      write_domain(domain_object)
     end
   end
 
@@ -231,6 +234,7 @@ class MiqAeYamlExport
   end
 
   def domain_object
+    raise MiqAeException::DomainNotAccessible, "Domain [#{@domain}] not accessible" unless domain_accessible?
     MiqAeNamespace.find_by_fqname(@domain).tap do |dom|
       if dom.nil?
         _log.error("Domain: <#{@domain}> not found.")
@@ -258,5 +262,10 @@ class MiqAeYamlExport
   def swap_domain_path(fqname)
     return fqname if @options['export_as'].blank?
     fqname.gsub(/^\/#{@domain}/, @options['export_as'])
+  end
+
+  def domain_accessible?
+    return true unless @tenant
+    @tenant.ae_domains.any? { |dom| dom.name.casecmp(@domain) == 0 }
   end
 end

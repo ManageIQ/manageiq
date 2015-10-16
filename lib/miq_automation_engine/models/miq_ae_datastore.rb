@@ -35,7 +35,7 @@ module MiqAeDatastore
 
   def self.backup(options)
     options['zip_file'] ||= default_backup_filename
-    export_options = options.slice('zip_file', 'overwrite')
+    export_options = options.slice('zip_file', 'overwrite', 'tenant')
     MiqAeExport.new(ALL_DOMAINS, export_options).export
   end
 
@@ -110,10 +110,10 @@ module MiqAeDatastore
     _log.info("Import from #{dirname}...Complete - Benchmark: #{t.inspect}")
   end
 
-  def self.export
+  def self.export(tenant)
     require 'tempfile'
     temp_export = Tempfile.new('ae_export')
-    MiqAeDatastore.backup('zip_file' => temp_export.path, 'overwrite' => true)
+    MiqAeDatastore.backup('zip_file' => temp_export.path, 'overwrite' => true, 'tenant' => tenant)
     File.read(temp_export.path)
   ensure
     temp_export.close

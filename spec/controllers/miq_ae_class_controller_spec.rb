@@ -87,12 +87,11 @@ describe MiqAeClassController do
   context "#copy_objects" do
     it "copies class under specified namespace" do
       set_user_privileges
-      d1 = FactoryGirl.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
+      d1 = FactoryGirl.create(:miq_ae_domain, :name => "domain1")
       ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
       cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
 
-      d2 = FactoryGirl.create(:miq_ae_namespace,
-                              :name => "domain2", :parent_id => nil, :priority => 2, :system => false)
+      d2 = FactoryGirl.create(:miq_ae_domain, :name => "domain2", :system => false)
       ns2 = FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => d2.id)
 
       new = {:domain => d2.id, :namespace => ns2.fqname, :overwrite_location => false}
@@ -118,7 +117,7 @@ describe MiqAeClassController do
 
     it "copy class under same namespace returns error when class exists" do
       set_user_privileges
-      d1 = FactoryGirl.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
+      d1 = FactoryGirl.create(:miq_ae_domain, :name => "domain1")
       ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
       cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
 
@@ -145,12 +144,11 @@ describe MiqAeClassController do
 
     it "overwrite class under same namespace when class exists" do
       set_user_privileges
-      d1 = FactoryGirl.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
+      d1 = FactoryGirl.create(:miq_ae_domain, :name => "domain1")
       ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
       cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
 
-      d2 = FactoryGirl.create(:miq_ae_namespace,
-                              :name => "domain2", :parent_id => nil, :priority => 2, :system => false)
+      d2 = FactoryGirl.create(:miq_ae_domain, :system => false)
       ns2 = FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => d2.id)
 
       new = {:domain => d2.id, :namespace => ns2.fqname, :override_existing => true}
@@ -175,7 +173,7 @@ describe MiqAeClassController do
 
     it "copies a class with new name under same domain" do
       set_user_privileges
-      d1 = FactoryGirl.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
+      d1 = FactoryGirl.create(:miq_ae_domain, :name => "domain1")
       ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
       cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
 
