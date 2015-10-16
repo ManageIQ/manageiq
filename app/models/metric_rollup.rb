@@ -1,9 +1,8 @@
 class MetricRollup < ActiveRecord::Base
   include Metric::Common
 
-  def self.find_all_by_interval_and_time_range(interval, start_time, end_time = nil, count = :all, options = {})
-    my_cond = ["capture_interval_name = ? and timestamp > ? and timestamp <= ?", interval, start_time, end_time]
-    where(my_cond).find(count, options)
+  def self.find_all_by_interval_and_time_range(interval, start_time, end_time)
+    where("capture_interval_name = ? and timestamp > ? and timestamp <= ?", interval, start_time, end_time)
   end
 
   #

@@ -259,9 +259,8 @@ module MiqReport::Generator
       where_clause, includes = MiqExpression.merge_where_clauses_and_includes([where_clause, exp_sql], [includes, exp_includes])
 
       results = klass.find_all_by_interval_and_time_range(
-        db_options[:interval],
-        start_time,
-        end_time,
+        db_options[:interval], start_time, end_time
+      ).find(
         :all, :conditions => where_clause,
               :include    => includes,
               :limit      => options[:limit]

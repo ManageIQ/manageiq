@@ -68,9 +68,8 @@ module OntapMetricsRollupMixin
       @baseCounterNames = counterNames & bca
     end
 
-    def find_all_by_interval_and_time_range(interval, start_time, end_time = nil, count = :all, options = {})
-      my_cond = ["rollup_type = ? and statistic_time > ? and statistic_time <= ?", interval, start_time, end_time]
-      where(my_cond).find(count, options)
+    def find_all_by_interval_and_time_range(interval, start_time, end_time)
+      where("rollup_type = ? and statistic_time > ? and statistic_time <= ?", interval, start_time, end_time)
     end
   end # module ClassMethods
 

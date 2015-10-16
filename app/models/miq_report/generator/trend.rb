@@ -48,9 +48,8 @@ module MiqReport::Generator::Trend
       # Search and filter performance data
       trend_klass = db_options[:trend_db].kind_of?(Class) ? db_options[:trend_db] : Object.const_get(db_options[:trend_db])
       recs = trend_klass.find_all_by_interval_and_time_range(
-        'hourly',
-        start_time,
-        end_time,
+        'hourly', start_time, end_time
+      ).find(
         :all,
         :conditions => where_clause
       )
