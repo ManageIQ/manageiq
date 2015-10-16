@@ -4,9 +4,9 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: source
+    name: quota_source
     inherits: 
     description: 
   fields:
   - common_meth:
-      value: source
+      value: quota_source

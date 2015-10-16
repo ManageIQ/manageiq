@@ -24,8 +24,8 @@ object:
       value: '1024'
   - max_memory:
       value: '2048'
-  - source:
-      value: "/System/CommonMethods/QuotaMethods/source"
+  - quota_source:
+      value: "/System/CommonMethods/QuotaMethods/quota_source"
   - limits:
       value: "/System/CommonMethods/QuotaMethods/limits"
   - used:

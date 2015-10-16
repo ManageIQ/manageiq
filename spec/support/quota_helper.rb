@@ -44,13 +44,21 @@ module QuotaHelper
     @disk3 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw4.id)
   end
 
+  def create_tenant_quota
+    @tenant.tenant_quotas.create(:name => :mem_allocated, :value => 2048)
+    @tenant.tenant_quotas.create(:name => :vms_allocated, :value => 4)
+    @tenant.tenant_quotas.create(:name => :storage_allocated, :value => 4096)
+    @tenant.tenant_quotas.create(:name => :cpu_allocated, :value => 2)
+  end
+
   def create_vms
     @active_vm = FactoryGirl.create(:vm_vmware,
                                     :name         => "Active VM",
                                     :miq_group_id => @miq_group.id,
                                     :ems_id       => @ems.id,
                                     :storage_id   => @storage.id,
-                                    :hardware     => @hw1)
+                                    :hardware     => @hw1,
+                                    :tenant       => @tenant)
     @archived_vm = FactoryGirl.create(:vm_vmware,
                                       :name         => "Archived VM",
                                       :miq_group_id => @miq_group.id,
@@ -82,16 +90,20 @@ module QuotaHelper
                                                 :src_vm_id => @vm_template.id,
                                                 :options   => prov_options)
     @miq_request = @miq_provision_request.create_request
+    @miq_request.tenant = @tenant
     @miq_request.save!
   end
 
   def setup_model
     @user = FactoryGirl.create(:user_with_group)
+    @miq_group = @user.current_group
+    @tenant = @miq_group.tenant
+
     @vm_template = FactoryGirl.create(:template_vmware,
                                       :name     => "template1",
                                       :hardware => FactoryGirl.create(:hardware, :numvcpus => 1, :memory_cpu => 512))
-    @miq_group = @user.current_group
 
+    create_tenant_quota
     create_request
     create_storage
     create_hardware

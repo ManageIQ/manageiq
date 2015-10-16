@@ -10,7 +10,7 @@ def run_automate_method(provision_request)
            "quota_limit_max_yaml=#{@quota_limit_max}&" \
            "quota_limit_warn_yaml=#{@quota_limit_warn}&" \
            "quota_used_yaml=#{@quota_used}&" \
-           "MiqGroup::quota_source=#{@miq_group.id}&" \
+           "Tenant::quota_source=#{@tenant.id}&" \
            "quota_requested_yaml=#{@quota_requested}" if provision_request
   MiqAeEngine.instantiate("/ManageIQ/system/request/Call_Instance?namespace=System/CommonMethods&" \
                           "class=QuotaMethods&instance=validate_quota&#{attrs.join('&')}", @user)
