@@ -1996,11 +1996,6 @@ class CatalogController < ApplicationController
     TreeBuilderOrchestrationTemplates.new('ot_tree', 'ot', @sb)
   end
 
-  # Add the children of a node that is being expanded (autoloaded), called by generic tree_autoload method
-  def tree_add_child_nodes(id)
-    x_get_child_nodes_dynatree(x_active_tree, id)
-  end
-
   def show_record(id = nil)
     @display = params[:display] || "main" unless control_selected?
 

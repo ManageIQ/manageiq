@@ -474,9 +474,4 @@ module ReportController::Reports
     @sb[:grp_title] = reports_group_title
     TreeBuilderReportReports.new('reports_tree', 'reports', @sb)
   end
-
-  # Add the children of a node that is being expanded (autoloaded), called by generic tree_autoload method
-  def tree_add_child_nodes(id)
-    x_get_child_nodes_dynatree(x_active_tree, id)
-  end
 end
