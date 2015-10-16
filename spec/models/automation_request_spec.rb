@@ -40,23 +40,13 @@ describe AutomationRequest do
       ar.options[:attrs][:userid].should == admin.userid
     end
 
-    it "with requester string overriding userid who is NOT in the database" do
+    it "doesnt allow overriding userid who is NOT in the database" do
       user_name = 'oleg'
-      ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, "user_name=#{user_name}")
-      ar.should be_kind_of(AutomationRequest)
 
-      ar.should == AutomationRequest.first
-      ar.request_state.should == "pending"
-      ar.status.should == "Ok"
-      ar.approval_state.should == "pending_approval"
-      ar.userid.should == user_name
-      ar.options[:message].should == @ae_message
-      ar.options[:instance_name].should == @ae_instance
-      ar.options[:user_id].should         be_nil
-      ar.options[:attrs][:var1].should == @ae_var1
-      ar.options[:attrs][:var2].should == @ae_var2
-      ar.options[:attrs][:var3].should == @ae_var3
-      ar.options[:attrs][:userid].should == user_name
+      expect do
+        AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, "user_name=#{user_name}")
+      end.to raise_error(ActiveRecord::RecordNotFound)
+
     end
 
     it "with requester string overriding userid who is in the database" do
