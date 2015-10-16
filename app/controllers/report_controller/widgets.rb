@@ -510,11 +510,6 @@ module ReportController::Widgets
     TreeBuilderReportWidgets.new('widgets_tree', 'widgets', @sb)
   end
 
-  # Add the children of a node that is being expanded (autoloaded), called by generic tree_autoload method
-  def tree_add_child_nodes(id)
-    x_get_child_nodes_dynatree(x_active_tree, id)
-  end
-
   # Get variables from edit form
   def widget_get_form_vars
     @widget = @edit[:widget_id] ? MiqWidget.find_by_id(@edit[:widget_id]) : MiqWidget.new
