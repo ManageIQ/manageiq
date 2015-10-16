@@ -455,4 +455,38 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       }
     end
   end
+  
+  describe "parse_container_image" do
+    shared_image_without_host = "shared/image"
+    shared_image_with_host = "host:1234/shared/image"
+    shared_ref = "shared:ref"
+    unique_ref = "unique:ref"
+
+    it "returns unique object *identity* for same image but different ref/id" do
+      [shared_image_with_host, shared_image_without_host].each do |shared_image|
+        first_obj  = parser.parse_container_image(shared_image, shared_ref)
+        second_obj = parser.parse_container_image(shared_image, unique_ref)
+
+        first_obj.should_not be(second_obj)
+      end
+    end
+
+    it "returns unique object *content* for same image but different ref/id" do
+      [shared_image_with_host, shared_image_without_host].each do |shared_image|
+        first_obj  = parser.parse_container_image(shared_image, shared_ref)
+        second_obj = parser.parse_container_image(shared_image, unique_ref)
+
+        first_obj.should_not == second_obj
+      end
+    end
+
+    it "returns same object *identity* for same image and ref/id" do
+      [shared_image_with_host, shared_image_without_host].each do |shared_image|
+        first_obj  = parser.parse_container_image(shared_image, shared_ref)
+        second_obj = parser.parse_container_image(shared_image, shared_ref)
+
+        first_obj.should be(second_obj)
+      end
+    end
+  end
 end
