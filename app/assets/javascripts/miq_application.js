@@ -815,16 +815,6 @@ function miqSendOneTrans(url) {
   miqJqueryRequest(url);
 }
 
-// Function to write date and time to page footer each second
-function dateTime(offset, abbr) {
-  var date = miqCalendarDateConversion(offset);
-
-  $('#tP').html(date.format("MM/DD/YYYY HH:mm ") + abbr);
-  setTimeout(function () {
-    dateTime(offset, abbr);
-  }, 1000);
-}
-
 // this deletes the remembered treestate when called
 function miqClearTreeState(prefix) {
   var to_remove = [];
