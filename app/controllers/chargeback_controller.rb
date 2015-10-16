@@ -394,8 +394,8 @@ class ChargebackController < ApplicationController
 
         if @sb[:tier].save
           AuditEvent.success(build_saved_audit(@sb[:tier], @edit))
-          add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "ChargebackTier"),
-                                                           :name => @sb[:tier].description})
+          add_flash(_("%{model} \"%{name}\" was added") %
+            {:model => ui_lookup(:model => "ChargebackTier"), :name => @sb[:tier].description})
           @edit = session[:edit] = nil # clean out the saved info
           session[:changed] = @changed = false
           get_node_info(x_node)
@@ -405,8 +405,9 @@ class ChargebackController < ApplicationController
             add_flash("#{field.to_s.capitalize} #{msg}", :error)
           end
           @sb[:tier_details].each do |detail|
-            detail.errors.each {|field, msg| add_flash("'#{detail.description}' #{field.to_s.capitalize} #{msg}",
-                                :error) }
+            detail.errors.each do |field, msg|
+              add_flash("'#{detail.description}' #{field.to_s.capitalize} #{msg}", :error)
+            end
           end
           @changed = session[:changed] = (@edit[:new] != @edit[:current])
           render :update do |page|
@@ -421,8 +422,8 @@ class ChargebackController < ApplicationController
         @sb[:tier].chargeback_tier_details.replace(@sb[:tier_details]) if tier_detail_error == false
         if tier_detail_error == false && @sb[:tier].save
           AuditEvent.success(build_saved_audit(@sb[:tier], @edit))
-          add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "ChargebackTier"),
-                                                           :name => @sb[:tier].description})
+          add_flash(_("%{model} \"%{name}\" was saved") %
+            {:model => ui_lookup(:model => "ChargebackTier"), :name => @sb[:tier].description})
           @edit = session[:edit] = nil # clean out the saved info
           @changed = false
           get_node_info(x_node)
@@ -432,8 +433,9 @@ class ChargebackController < ApplicationController
             add_flash("#{field.to_s.capitalize} #{msg}", :error)
           end
           @sb[:tier_details].each do |detail|
-            detail.errors.each {|field, msg| add_flash("'#{detail.description}' #{field.to_s.capitalize} #{msg}",
-                                :error) }
+            detail.errors.each do |field, msg|
+              add_flash("'#{detail.description}' #{field.to_s.capitalize} #{msg}", :error)
+            end
           end
           @changed = session[:changed] = (@edit[:new] != @edit[:current])
           render :update do |page|
@@ -517,8 +519,8 @@ class ChargebackController < ApplicationController
         end
       end
       process_cb_tiers(tiers, "destroy") unless tiers.empty?
-      add_flash(_("The selected %s were deleted") % ui_lookup(:models => "ChargebackTier"),
-                                                              :info, true) unless flash_errors?
+      add_flash(_("The selected %s were deleted") %
+        ui_lookup(:models => "ChargebackTier"), :info, true) unless flash_errors?
       cb_tiers_list
       @right_cell_text = _("All %{model}") % {:model => ui_lookup(:models => "ChargebackTier")}
       replace_right_cell([:cb_tiers])
@@ -532,8 +534,8 @@ class ChargebackController < ApplicationController
         tiers.push(params[:id])
       end
       process_cb_tiers(tiers, "destroy") unless tiers.empty?
-      add_flash(_("The selected %s was deleted") % ui_lookup(:model => "ChargebackTier"),
-                                                             :info, true) unless flash_errors?
+      add_flash(_("The selected %s was deleted") %
+        ui_lookup(:model => "ChargebackTier"), :info, true) unless flash_errors?
       self.x_node = "xx-tiers"
       cb_tiers_list
       @right_cell_text = _("All %{model}") % {:model => ui_lookup(:models => "ChargebackRate")}
@@ -686,8 +688,8 @@ class ChargebackController < ApplicationController
       else
         @record = ChargebackTier.find_by_id(node.split('_').last.split('-').last)
         @sb[:action] = nil
-        @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model=>"ChargebackTier"),
-                                                        :name => @record.name}
+        @right_cell_text =
+          _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "ChargebackTier"), :name => @record.name}
         cb_tier_show
       end
     elsif x_active_tree == :cb_reports_tree
@@ -826,8 +828,8 @@ class ChargebackController < ApplicationController
       @sb[:rate_details][i].rate               = @edit[:new][:details][i][:rate]
       @sb[:rate_details][i].per_time           = @edit[:new][:details][i][:per_time]
       @sb[:rate_details][i].chargeback_rate_id = @sb[:rate].id
-      @sb[:rate_details][i].chargeback_tier_id =
-        ChargebackTier.find_by_id(@edit[:new][:details][i][:chargeback_tier_id]).id
+      @sb[:rate_details][i].chargeback_tier_id = @edit[:new][:details][i][:chargeback_tier_id]
+      # ChargebackTier.find_by_id(@edit[:new][:details][i][:chargeback_tier_id]).id
     end
   end
 
@@ -1066,11 +1068,8 @@ class ChargebackController < ApplicationController
             }
         ]
       when :cb_tiers
-        presenter[:replace_partials][:cb_tiers_tree_div] = r[:partial => 'shared/tree',
-                                                             :locals => {:tree => chargeback_tree,
-                                                                         :name => chargeback_tree.name.to_s
-          }
-        ]
+        presenter[:replace_partials][:cb_tiers_tree_div] =
+        r[:partial => 'shared/tree', :locals => {:tree => chargeback_tree, :name => chargeback_tree.name.to_s}]
       end
     end
 
