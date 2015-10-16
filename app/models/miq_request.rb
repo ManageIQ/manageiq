@@ -21,6 +21,7 @@ class MiqRequest < ActiveRecord::Base
 
   validates_inclusion_of :approval_state, :in => %w(pending_approval approved denied), :message => "should be 'pending_approval', 'approved' or 'denied'"
   validates_inclusion_of :status,         :in => %w(Ok Warn Error Timeout Denied)
+  validates :tenant_id, :presence => true
 
   validate :validate_class, :validate_request_type
 

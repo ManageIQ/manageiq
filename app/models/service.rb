@@ -39,6 +39,7 @@ class Service < ActiveRecord::Base
   virtual_column :has_parent,                               :type => :boolean
 
   validates_presence_of :name
+  validates :tenant_id, :presence => true
 
   def add_resource(rsc, options = {})
     raise MiqException::Error, "Vm <#{rsc.name}> is already connected to a service." if rsc.kind_of?(Vm) && !rsc.service.nil?

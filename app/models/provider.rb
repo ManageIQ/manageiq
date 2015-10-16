@@ -9,6 +9,7 @@ class Provider < ActiveRecord::Base
   belongs_to :tenant
   belongs_to :zone
   has_many :managers, :class_name => "ExtManagementSystem"
+  validates :tenant_id, :presence => true
 
   default_value_for :verify_ssl, OpenSSL::SSL::VERIFY_PEER
   validates :verify_ssl, :inclusion => {:in => [OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER]}

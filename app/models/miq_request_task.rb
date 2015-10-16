@@ -19,6 +19,7 @@ class MiqRequestTask < ActiveRecord::Base
   delegate :request_class, :task_description, :to => :class
 
   validates_inclusion_of :status, :in => %w( Ok Warn Error Timeout )
+  validates :tenant_id, :presence => true
 
   include MiqRequestMixin
   include TenancyMixin

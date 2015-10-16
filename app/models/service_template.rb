@@ -23,6 +23,8 @@ class ServiceTemplate < ActiveRecord::Base
 
   has_many   :dialogs, -> { uniq }, :through => :resource_actions
 
+  validates :tenant_id, :presence => true
+
   virtual_has_many :custom_buttons
   virtual_column   :type_display,                 :type => :string
   virtual_column   :template_valid,               :type => :boolean

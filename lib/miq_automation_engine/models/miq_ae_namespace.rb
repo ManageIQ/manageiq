@@ -7,7 +7,7 @@ class MiqAeNamespace < ActiveRecord::Base
   has_many   :ae_namespaces, :class_name => "MiqAeNamespace",  :foreign_key => :parent_id,    :dependent => :destroy
   has_many   :ae_classes, -> { includes([:ae_methods, :ae_fields, :ae_instances]) },    :class_name => "MiqAeClass",      :foreign_key => :namespace_id, :dependent => :destroy
 
-  validates_presence_of   :name
+  validates_presence_of   :name, :tenant_id
   validates_format_of     :name, :with => /\A[A-Za-z0-9_\.\-\$]+\z/i
   validates_uniqueness_of :name, :scope => :parent_id
 

@@ -57,6 +57,7 @@ class ExtManagementSystem < ActiveRecord::Base
             :presence   => true,
             :uniqueness => {:scope => [:tenant_id], :case_sensitive => false},
             :if         => :hostname_required?
+  validates :tenant_id, :presence => true
 
   # TODO: Remove all callers of address
   alias_attribute :address, :hostname
