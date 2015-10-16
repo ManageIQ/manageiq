@@ -2,6 +2,9 @@ require 'miq-process'
 require 'thread'
 
 class MiqWorker::Runner
+  class TemporaryFailure < RuntimeError
+  end
+
   include Vmdb::Logging
   attr_accessor :last_hb, :worker, :worker_settings
   attr_reader   :vmdb_config, :active_roles, :server
@@ -11,6 +14,8 @@ class MiqWorker::Runner
   OPTIONS_PARSER_SETTINGS = [
     [:guid,       'EVM Worker GUID',       String],
   ]
+
+  SAFE_SLEEP_SECONDS = 60
 
   def self.start_worker(*args)
     cfg = {}
@@ -128,6 +133,12 @@ class MiqWorker::Runner
     else
       raise
     end
+  end
+
+  def recover_from_temporary_failure
+    @backoff ||= 30
+    @backoff *= 2 if @backoff < 4.hours
+    safe_sleep(@backoff)
   end
 
   def prepare
@@ -321,10 +332,14 @@ class MiqWorker::Runner
       begin
         heartbeat
         do_work
+      rescue TemporaryFailure
+        recover_from_temporary_failure
       rescue SystemExit
         do_exit("SystemExit signal received.  ")
       rescue => err
         do_exit("An error has occurred during work processing: #{err}\n#{err.backtrace.join("\n")}", 1)
+      else
+        @backoff = nil
       end
 
       do_gc
@@ -402,6 +417,14 @@ class MiqWorker::Runner
 
   def reset_poll_escalate
     @poll_escalate = nil
+  end
+
+  def safe_sleep(seconds)
+    (seconds / SAFE_SLEEP_SECONDS).times do
+      sleep SAFE_SLEEP_SECONDS
+      heartbeat
+    end
+    sleep(seconds % SAFE_SLEEP_SECONDS)
   end
 
   protected

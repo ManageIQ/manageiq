@@ -1,4 +1,5 @@
 require 'thread'
+require 'active_support/concurrency/latch'
 
 class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runner
   class EventCatcherHandledException < StandardError
@@ -91,9 +92,14 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
     raise NotImplementedError, "must be implemented in subclass"
   end
 
+  def event_monitor_running
+    @thread_start_latch.release
+  end
+
   def start_event_monitor
     @log_prefix = nil
     @exit_requested = false
+    @thread_start_latch = ActiveSupport::Concurrency::Latch.new
 
     begin
       _log.info("#{log_prefix} Validating Connection/Credentials")
@@ -110,13 +116,18 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
         monitor_events
       rescue EventCatcherHandledException
         Thread.exit
+      rescue TemporaryFailure
+        raise
       rescue => err
         _log.error("#{log_prefix} Event Monitor Thread aborted because [#{err.message}]")
         _log.log_backtrace(err) unless err.kind_of?(Errno::ECONNREFUSED)
         Thread.exit
+      ensure
+        @thread_start_latch.release
       end
     end
 
+    @thread_start_latch.await
     _log.info("#{log_prefix} Started Event Monitor Thread")
 
     tid
@@ -139,7 +150,12 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
   def do_work
     if @tid.nil? || !@tid.alive?
       _log.info("#{log_prefix} Event Monitor Thread gone. Restarting...")
-      @tid = start_event_monitor
+      @tid ||= start_event_monitor
+
+      if @tid.status.nil?
+        dead_tid, @tid = @tid, nil
+        dead_tid.join # raise the exception the dead thread failed with
+      end
     end
 
     process_events(@queue.deq) while @queue.length > 0
