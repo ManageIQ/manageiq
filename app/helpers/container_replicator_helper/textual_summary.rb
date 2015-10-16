@@ -34,10 +34,10 @@ module ContainerReplicatorHelper::TextualSummary
   end
 
   def textual_replicas
-    {:label => "Number of replicas", :value => @record.replicas}
+    {:label => "Requested pods", :value => @record.replicas}
   end
 
   def textual_current_replicas
-    {:label => "Number of current replicas", :value => @record.current_replicas}
+    {:label => "Current pods", :value => @record.current_replicas}
   end
 end
