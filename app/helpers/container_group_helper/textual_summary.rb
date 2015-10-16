@@ -99,7 +99,7 @@ module ContainerGroupHelper::TextualSummary
   end
 
   def textual_dns_policy
-    @record.dns_policy
+    {:label => "DNS Policy", :value => @record.dns_policy}
   end
 
   def textual_ip
