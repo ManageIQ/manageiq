@@ -814,7 +814,7 @@
     :description: Templates
     :options:
     - :collection
-    :methods: *70174834086080
+    :methods: *70174834085620
     :klass: MiqTemplate
     :subcollections:
     - :tags
@@ -824,16 +824,24 @@
       :post:
       - :name: refresh
         :identifier: miq_template_refresh
+        :disabled: true
       - :name: edit
         :identifier: miq_template_edit
+        :disabled: true
+      - :name: set_ownership
+        :identifier: miq_template_ownership
       - :name: delete
         :identifier: miq_template_delete
     :resource_actions:
       :post:
       - :name: refresh
         :identifier: miq_template_refresh
+        :disabled: true
       - :name: edit
         :identifier: miq_template_edit
+        :disabled: true
+      - :name: set_ownership
+        :identifier: miq_template_ownership
       :delete:
       - :name: delete
         :identifier: miq_template_delete
@@ -982,6 +990,8 @@
         :disabled: true
       - :name: set_owner
         :identifier: vm_edit
+      - :name: set_ownership
+        :identifier: vm_ownership
       - :name: scan
         :identifier: vm_scan
       - :name: delete
@@ -1026,6 +1036,8 @@
         :identifier: vm_delete
       - :name: set_owner
         :identifier: vm_edit
+      - :name: set_ownership
+        :identifier: vm_ownership
       - :name: scan
         :identifier: vm_scan
       :delete:
