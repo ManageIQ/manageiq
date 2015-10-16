@@ -49,6 +49,8 @@ module ToolbarHelper
       toolbar_top_button_normal(props)
     when 'buttonTwoState'
       toolbar_top_button_normal(props)
+    when 'separator'
+      toolbar_button_separator(props)
     else
       raise 'Invalid top button type.'
     end
