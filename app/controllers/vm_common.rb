@@ -1515,8 +1515,8 @@ module VmCommon
       if @record.kind_of?(Dialog)
         @record.dialog_fields.each do |field|
           if %w(DialogFieldDateControl DialogFieldDateTimeControl).include?(field.type)
-            presenter[:build_calendar]  = {
-              :date_from => field.show_past_dates ? nil : Time.zone.now.to_i * 1000
+            presenter[:build_calendar] = {
+              :date_from => field.show_past_dates ? nil : Time.zone.now,
             }
           end
         end
@@ -1527,7 +1527,7 @@ module VmCommon
         locals[:record_id]    = @sb[:rec_id] || @edit[:object_ids][0] if @sb[:action] == "tag"
         unless %w(ownership retire).include?(@sb[:action])
           presenter[:build_calendar] = {
-            :date_from => Time.zone.now.to_i * 1000,
+            :date_from => Time.zone.now,
             :date_to   => nil,
           }
         end

@@ -1914,8 +1914,8 @@ class CatalogController < ApplicationController
         presenter[:set_visible_elements][:pc_div_1] = false
         @record.dialog_fields.each do |field|
           if ["DialogFieldDateControl", "DialogFieldDateTimeControl"].include?(field.type)
-            presenter[:build_calendar]  = {
-              :date_from => field.show_past_dates ? nil : Time.zone.now.to_i * 1000
+            presenter[:build_calendar] = {
+              :date_from => field.show_past_dates ? nil : Time.zone.now,
             }
           end
         end

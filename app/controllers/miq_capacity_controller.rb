@@ -441,8 +441,8 @@ class MiqCapacityController < ApplicationController
     end
     @sb[:util][:options][:trend_start] = sdate
     @sb[:util][:options][:trend_end] = edate
-    @sb[:util][:options][:sdate] = [sdate.year.to_s, (sdate.month - 1).to_s, sdate.day.to_s].join(", ") # Start and end dates for calendar control
-    @sb[:util][:options][:edate] = [edate.year.to_s, (edate.month - 1).to_s, edate.day.to_s].join(", ")
+    @sb[:util][:options][:sdate] = sdate  # Start and end dates for calendar control
+    @sb[:util][:options][:edate] = edate
     @sb[:util][:options][:chart_date] ||= [edate.month, edate.day, edate.year].join("/")
 
     if @sb[:util][:options][:time_profile]                              # If profile in effect, set date to a valid day in the profile
