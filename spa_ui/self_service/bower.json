@@ -45,6 +45,12 @@
         "dist/css/patternfly.css",
         "dist/css/patternfly-additions.css"
       ]
+    },
+    "angular-patternfly": {
+      "main": [
+        "dist/angular-patternfly.js",
+        "dist/styles/angular-patternfly.css"
+      ]
     }
   }
 }

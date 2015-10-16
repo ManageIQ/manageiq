@@ -4,7 +4,7 @@ module EmsClusterHelper::TextualSummary
   #
 
   def textual_group_host_totals
-    %i(aggregate_cpu_speed aggregate_memory aggregate_physical_cpus aggregate_logical_cpus aggregate_disk_capacity)
+    %i(aggregate_cpu_speed aggregate_memory aggregate_physical_cpus aggregate_logical_cpus aggregate_disk_capacity block_storage_disk_usage object_storage_disk_usage)
   end
 
   def textual_group_vm_totals
@@ -250,7 +250,17 @@ module EmsClusterHelper::TextualSummary
   end
 
   def textual_aggregate_disk_capacity
-    {:label => "Total Disk Capacity", :value => number_to_human_size(@record.aggregate_disk_capacity.gigabytes, :precision => 2)}
+    {:value => number_to_human_size(@record.aggregate_disk_capacity.gigabytes, :precision => 2)}
+  end
+
+  def textual_block_storage_disk_usage
+    return nil unless @record.respond_to?(:block_storage?) && @record.block_storage?
+    {:value => number_to_human_size(@record.cloud_block_storage_disk_usage.bytes, :precision => 2)}
+  end
+
+  def textual_object_storage_disk_usage
+    return nil unless @record.respond_to?(:object_storage?) && @record.object_storage?
+    {:value => number_to_human_size(@record.cloud_object_storage_disk_usage.bytes, :precision => 2)}
   end
 
   def cluster_title

@@ -8,7 +8,7 @@ http_interactions:
       string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password_2WpEraURh"},"tenantName":"admin"}}'
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
   response:
@@ -23,11 +23,11 @@ http_interactions:
       Content-Length:
       - '2153'
       Date:
-      - Mon, 21 Sep 2015 14:38:27 GMT
+      - Thu, 24 Sep 2015 12:08:14 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-21T14:38:27.161870", "expires":
-        "2015-09-22T14:38:27Z", "id": "738873654977487da327a0f372de8c8e", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-24T12:08:14.347699", "expires":
+        "2015-09-25T12:08:14Z", "id": "7a9745eaf7034a249f653eab7a8f53c7", "tenant":
         {"description": "admin tenant", "enabled": true, "id": "4500e127ec3a4a4a9b2cdf47c1f1abb8",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8",
@@ -51,7 +51,7 @@ http_interactions:
         [{"name": "_member_"}, {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin":
         0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab", "2551a0e5398844c8b2b8b488692c7cee"]}}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:27 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:14 GMT
 - request:
     method: get
     uri: http://1.2.3.4:5000/v2.0/tenants
@@ -60,13 +60,13 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 738873654977487da327a0f372de8c8e
+      - 7a9745eaf7034a249f653eab7a8f53c7
   response:
     status:
       code: 200
@@ -79,7 +79,7 @@ http_interactions:
       Content-Length:
       - '500'
       Date:
-      - Mon, 21 Sep 2015 14:38:27 GMT
+      - Thu, 24 Sep 2015 12:08:14 GMT
     body:
       encoding: UTF-8
       string: '{"tenants_links": [], "tenants": [{"description": "", "enabled": true,
@@ -89,7 +89,7 @@ http_interactions:
         "name": "EmsRefreshSpec-Project-No-Admin-Role"}, {"description": "", "enabled":
         true, "id": "e9640afc4b7a460395c18ea04abd9cfe", "name": "EmsRefreshSpec-Project2"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:27 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:15 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -98,7 +98,7 @@ http_interactions:
       string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password_2WpEraURh"},"tenantName":"EmsRefreshSpec-Project"}}'
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
   response:
@@ -113,11 +113,11 @@ http_interactions:
       Content-Length:
       - '2100'
       Date:
-      - Mon, 21 Sep 2015 14:38:29 GMT
+      - Thu, 24 Sep 2015 12:08:15 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-21T14:38:29.521951", "expires":
-        "2015-09-22T14:38:29Z", "id": "255bb9231fd54836bdfde725de8caf0f", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-24T12:08:15.890586", "expires":
+        "2015-09-25T12:08:15Z", "id": "34ea5ce9d0194db2b6c28db7eba944c9", "tenant":
         {"description": "", "enabled": true, "id": "18692e1f0c19452584d49acc3c1d5dd9",
         "name": "EmsRefreshSpec-Project"}}, "serviceCatalog": [{"endpoints": [{"adminURL":
         "http://1.2.3.4:8776/v1/18692e1f0c19452584d49acc3c1d5dd9", "region": "RegionOne",
@@ -142,7 +142,7 @@ http_interactions:
         [{"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["2551a0e5398844c8b2b8b488692c7cee"]}}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:29 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:15 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -151,7 +151,7 @@ http_interactions:
       string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password_2WpEraURh"},"tenantName":"admin"}}'
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
   response:
@@ -166,11 +166,11 @@ http_interactions:
       Content-Length:
       - '2153'
       Date:
-      - Mon, 21 Sep 2015 14:38:30 GMT
+      - Thu, 24 Sep 2015 12:08:16 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-21T14:38:30.517775", "expires":
-        "2015-09-22T14:38:30Z", "id": "3a98e24221954f30a0baf6dc442f45ba", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-24T12:08:16.766647", "expires":
+        "2015-09-25T12:08:16Z", "id": "86ec18d58e474bc683eeb68157958486", "tenant":
         {"description": "admin tenant", "enabled": true, "id": "4500e127ec3a4a4a9b2cdf47c1f1abb8",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8",
@@ -194,7 +194,7 @@ http_interactions:
         [{"name": "_member_"}, {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin":
         0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab", "2551a0e5398844c8b2b8b488692c7cee"]}}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:30 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:16 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -203,7 +203,7 @@ http_interactions:
       string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password_2WpEraURh"},"tenantName":"EmsRefreshSpec-Project-No-Admin-Role"}}'
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
   response:
@@ -218,11 +218,11 @@ http_interactions:
       Content-Length:
       - '2114'
       Date:
-      - Mon, 21 Sep 2015 14:38:31 GMT
+      - Thu, 24 Sep 2015 12:08:17 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-21T14:38:31.597801", "expires":
-        "2015-09-22T14:38:31Z", "id": "3eab6d6c606a40499a534e2dcd2a24b6", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-24T12:08:17.895387", "expires":
+        "2015-09-25T12:08:17Z", "id": "b7393ddad10f41ef87b4bc2563131de1", "tenant":
         {"description": "", "enabled": true, "id": "ad25a941444e4ce6b41cba1d0e747a23",
         "name": "EmsRefreshSpec-Project-No-Admin-Role"}}, "serviceCatalog": [{"endpoints":
         [{"adminURL": "http://1.2.3.4:8776/v1/ad25a941444e4ce6b41cba1d0e747a23",
@@ -247,7 +247,7 @@ http_interactions:
         [{"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["2551a0e5398844c8b2b8b488692c7cee"]}}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:31 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:17 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -256,7 +256,7 @@ http_interactions:
       string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password_2WpEraURh"},"tenantName":"EmsRefreshSpec-Project2"}}'
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
   response:
@@ -271,11 +271,11 @@ http_interactions:
       Content-Length:
       - '2101'
       Date:
-      - Mon, 21 Sep 2015 14:38:32 GMT
+      - Thu, 24 Sep 2015 12:08:19 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-21T14:38:32.573981", "expires":
-        "2015-09-22T14:38:32Z", "id": "f97b7fbb87c742249e1ffd41bc92e3d8", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-24T12:08:19.009307", "expires":
+        "2015-09-25T12:08:18Z", "id": "691e567f507140c0bd99f22d43961bf5", "tenant":
         {"description": "", "enabled": true, "id": "e9640afc4b7a460395c18ea04abd9cfe",
         "name": "EmsRefreshSpec-Project2"}}, "serviceCatalog": [{"endpoints": [{"adminURL":
         "http://1.2.3.4:8776/v1/e9640afc4b7a460395c18ea04abd9cfe", "region": "RegionOne",
@@ -300,7 +300,7 @@ http_interactions:
         [{"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["2551a0e5398844c8b2b8b488692c7cee"]}}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:32 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:19 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -309,7 +309,7 @@ http_interactions:
       string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password_2WpEraURh"},"tenantName":"admin"}}'
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
   response:
@@ -324,11 +324,11 @@ http_interactions:
       Content-Length:
       - '2153'
       Date:
-      - Mon, 21 Sep 2015 14:38:33 GMT
+      - Thu, 24 Sep 2015 12:08:20 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-21T14:38:33.987947", "expires":
-        "2015-09-22T14:38:33Z", "id": "aad847e02e1b40c896962ccc07e413f1", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-24T12:08:20.082161", "expires":
+        "2015-09-25T12:08:20Z", "id": "3c4ed93bfcf0454e909124398acef442", "tenant":
         {"description": "admin tenant", "enabled": true, "id": "4500e127ec3a4a4a9b2cdf47c1f1abb8",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8",
@@ -352,16 +352,16 @@ http_interactions:
         [{"name": "_member_"}, {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin":
         0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab", "2551a0e5398844c8b2b8b488692c7cee"]}}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:34 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:20 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
       encoding: UTF-8
-      string: '{"auth":{"token":{"id":"aad847e02e1b40c896962ccc07e413f1"},"tenantName":"admin"}}'
+      string: '{"auth":{"token":{"id":"3c4ed93bfcf0454e909124398acef442"},"tenantName":"admin"}}'
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
   response:
@@ -376,11 +376,11 @@ http_interactions:
       Content-Length:
       - '2153'
       Date:
-      - Mon, 21 Sep 2015 14:38:34 GMT
+      - Thu, 24 Sep 2015 12:08:20 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-21T14:38:34.540742", "expires":
-        "2015-09-22T14:38:33Z", "id": "653dfb2cc411413fbde73fb2e9c302af", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-24T12:08:20.640157", "expires":
+        "2015-09-25T12:08:20Z", "id": "69f925804e2648b88315f311a414972b", "tenant":
         {"description": "admin tenant", "enabled": true, "id": "4500e127ec3a4a4a9b2cdf47c1f1abb8",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8",
@@ -404,7 +404,7 @@ http_interactions:
         [{"name": "_member_"}, {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin":
         0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab", "2551a0e5398844c8b2b8b488692c7cee"]}}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:34 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:20 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -413,7 +413,7 @@ http_interactions:
       string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password_2WpEraURh"},"tenantName":"admin"}}'
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
   response:
@@ -428,11 +428,11 @@ http_interactions:
       Content-Length:
       - '2153'
       Date:
-      - Mon, 21 Sep 2015 14:38:35 GMT
+      - Thu, 24 Sep 2015 12:08:21 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-21T14:38:35.543591", "expires":
-        "2015-09-22T14:38:35Z", "id": "885a18b3477441bd8789dd91887c0f56", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-24T12:08:21.715440", "expires":
+        "2015-09-25T12:08:21Z", "id": "0ef98efd733f4ffba018adca3ace39a1", "tenant":
         {"description": "admin tenant", "enabled": true, "id": "4500e127ec3a4a4a9b2cdf47c1f1abb8",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8",
@@ -456,7 +456,7 @@ http_interactions:
         [{"name": "_member_"}, {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin":
         0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab", "2551a0e5398844c8b2b8b488692c7cee"]}}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:35 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:21 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/
@@ -465,13 +465,13 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 885a18b3477441bd8789dd91887c0f56
+      - 0ef98efd733f4ffba018adca3ace39a1
   response:
     status:
       code: 300
@@ -482,7 +482,7 @@ http_interactions:
       Content-Length:
       - '434'
       Date:
-      - Mon, 21 Sep 2015 14:38:35 GMT
+      - Thu, 24 Sep 2015 12:08:22 GMT
     body:
       encoding: UTF-8
       string: '{"versions": [{"status": "CURRENT", "id": "v2.1", "links": [{"href":
@@ -492,7 +492,7 @@ http_interactions:
         "rel": "self"}]}, {"status": "SUPPORTED", "id": "v1.0", "links": [{"href":
         "http://1.2.3.4:9292/v1/", "rel": "self"}]}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:35 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:22 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -501,7 +501,7 @@ http_interactions:
       string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password_2WpEraURh"},"tenantName":"admin"}}'
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
   response:
@@ -516,11 +516,11 @@ http_interactions:
       Content-Length:
       - '2153'
       Date:
-      - Mon, 21 Sep 2015 14:38:36 GMT
+      - Thu, 24 Sep 2015 12:08:23 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-21T14:38:36.923084", "expires":
-        "2015-09-22T14:38:36Z", "id": "9e717facb02e4921950076a24ae081dd", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-24T12:08:23.262186", "expires":
+        "2015-09-25T12:08:23Z", "id": "2d1e4075fc784ffa8617aaadbec85c07", "tenant":
         {"description": "admin tenant", "enabled": true, "id": "4500e127ec3a4a4a9b2cdf47c1f1abb8",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8",
@@ -544,7 +544,7 @@ http_interactions:
         [{"name": "_member_"}, {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin":
         0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab", "2551a0e5398844c8b2b8b488692c7cee"]}}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:37 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:23 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -553,7 +553,7 @@ http_interactions:
       string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password_2WpEraURh"},"tenantName":"admin"}}'
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
   response:
@@ -568,11 +568,11 @@ http_interactions:
       Content-Length:
       - '2153'
       Date:
-      - Mon, 21 Sep 2015 14:38:38 GMT
+      - Thu, 24 Sep 2015 12:08:24 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-21T14:38:38.110786", "expires":
-        "2015-09-22T14:38:38Z", "id": "4f7e4e1582a145e7a1d9040ee63ef8b2", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-24T12:08:24.381365", "expires":
+        "2015-09-25T12:08:24Z", "id": "b7578a2b98134b269ff623fb9517eccb", "tenant":
         {"description": "admin tenant", "enabled": true, "id": "4500e127ec3a4a4a9b2cdf47c1f1abb8",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8",
@@ -596,16 +596,16 @@ http_interactions:
         [{"name": "_member_"}, {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin":
         0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab", "2551a0e5398844c8b2b8b488692c7cee"]}}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:38 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:24 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
       encoding: UTF-8
-      string: '{"auth":{"token":{"id":"4f7e4e1582a145e7a1d9040ee63ef8b2"},"tenantName":"admin"}}'
+      string: '{"auth":{"token":{"id":"b7578a2b98134b269ff623fb9517eccb"},"tenantName":"admin"}}'
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
   response:
@@ -620,11 +620,11 @@ http_interactions:
       Content-Length:
       - '2153'
       Date:
-      - Mon, 21 Sep 2015 14:38:38 GMT
+      - Thu, 24 Sep 2015 12:08:25 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-21T14:38:38.701152", "expires":
-        "2015-09-22T14:38:38Z", "id": "8b9deba17fb2492c9bf734d6166482f1", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-24T12:08:25.032316", "expires":
+        "2015-09-25T12:08:24Z", "id": "e0d2828f77ad4455b01424c7106fa9e9", "tenant":
         {"description": "admin tenant", "enabled": true, "id": "4500e127ec3a4a4a9b2cdf47c1f1abb8",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8",
@@ -648,7 +648,7 @@ http_interactions:
         [{"name": "_member_"}, {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin":
         0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab", "2551a0e5398844c8b2b8b488692c7cee"]}}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:38 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:25 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -657,7 +657,7 @@ http_interactions:
       string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password_2WpEraURh"},"tenantName":"admin"}}'
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
   response:
@@ -672,11 +672,11 @@ http_interactions:
       Content-Length:
       - '2153'
       Date:
-      - Mon, 21 Sep 2015 14:38:39 GMT
+      - Thu, 24 Sep 2015 12:08:26 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-21T14:38:39.844277", "expires":
-        "2015-09-22T14:38:39Z", "id": "2c1fce6c21d24e7ea9dd58101610c617", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-24T12:08:26.087391", "expires":
+        "2015-09-25T12:08:26Z", "id": "82a352ba038149fea891fdb09e2fde0f", "tenant":
         {"description": "admin tenant", "enabled": true, "id": "4500e127ec3a4a4a9b2cdf47c1f1abb8",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8",
@@ -700,16 +700,16 @@ http_interactions:
         [{"name": "_member_"}, {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin":
         0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab", "2551a0e5398844c8b2b8b488692c7cee"]}}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:39 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:26 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
       encoding: UTF-8
-      string: '{"auth":{"token":{"id":"2c1fce6c21d24e7ea9dd58101610c617"},"tenantName":"admin"}}'
+      string: '{"auth":{"token":{"id":"82a352ba038149fea891fdb09e2fde0f"},"tenantName":"admin"}}'
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
   response:
@@ -724,11 +724,11 @@ http_interactions:
       Content-Length:
       - '2153'
       Date:
-      - Mon, 21 Sep 2015 14:38:40 GMT
+      - Thu, 24 Sep 2015 12:08:26 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-21T14:38:40.356175", "expires":
-        "2015-09-22T14:38:39Z", "id": "649216295a3f44eabbf39e62b106da7b", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-24T12:08:26.621171", "expires":
+        "2015-09-25T12:08:26Z", "id": "c4fed1841bf44b31a0f83464a1a500c1", "tenant":
         {"description": "admin tenant", "enabled": true, "id": "4500e127ec3a4a4a9b2cdf47c1f1abb8",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8",
@@ -752,7 +752,7 @@ http_interactions:
         [{"name": "_member_"}, {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin":
         0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab", "2551a0e5398844c8b2b8b488692c7cee"]}}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:40 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:26 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/18692e1f0c19452584d49acc3c1d5dd9/flavors/detail.json?limit=1000
@@ -761,26 +761,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 255bb9231fd54836bdfde725de8caf0f
+      - 34ea5ce9d0194db2b6c28db7eba944c9
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-0b64e075-a985-46a9-b4b5-72644f1579e7
+      - req-1df310e3-4e67-4724-a402-1cdb47b74956
       Content-Type:
       - application/json
       Content-Length:
       - '2502'
       Date:
-      - Mon, 21 Sep 2015 14:38:40 GMT
+      - Thu, 24 Sep 2015 12:08:27 GMT
     body:
       encoding: UTF-8
       string: '{"flavors": [{"name": "m1.tiny", "links": [{"href": "http://1.2.3.4:8774/v2/18692e1f0c19452584d49acc3c1d5dd9/flavors/1",
@@ -810,7 +810,7 @@ http_interactions:
         1, "swap": 512, "os-flavor-access:is_public": true, "rxtx_factor": 1.0, "OS-FLV-EXT-DATA:ephemeral":
         1, "disk": 1, "id": "6"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:40 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:27 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/18692e1f0c19452584d49acc3c1d5dd9/flavors/detail.json?limit=1000&marker=6
@@ -819,31 +819,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 255bb9231fd54836bdfde725de8caf0f
+      - 34ea5ce9d0194db2b6c28db7eba944c9
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-41e22d73-42e2-4b6d-a38a-e605e0ac6c52
+      - req-1c1193ba-b905-4e19-bb49-ac75e311bec6
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Mon, 21 Sep 2015 14:38:41 GMT
+      - Thu, 24 Sep 2015 12:08:27 GMT
     body:
       encoding: UTF-8
       string: '{"flavors": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:41 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:27 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/4500e127ec3a4a4a9b2cdf47c1f1abb8/flavors/detail.json?limit=1000
@@ -852,26 +852,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 3a98e24221954f30a0baf6dc442f45ba
+      - 86ec18d58e474bc683eeb68157958486
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-7d316cfc-48da-4ac2-b728-96ceeee1566f
+      - req-fd5ea24d-8381-4854-947e-ab738dfda618
       Content-Type:
       - application/json
       Content-Length:
       - '2502'
       Date:
-      - Mon, 21 Sep 2015 14:38:41 GMT
+      - Thu, 24 Sep 2015 12:08:27 GMT
     body:
       encoding: UTF-8
       string: '{"flavors": [{"name": "m1.tiny", "links": [{"href": "http://1.2.3.4:8774/v2/4500e127ec3a4a4a9b2cdf47c1f1abb8/flavors/1",
@@ -901,7 +901,7 @@ http_interactions:
         1, "swap": 512, "os-flavor-access:is_public": true, "rxtx_factor": 1.0, "OS-FLV-EXT-DATA:ephemeral":
         1, "disk": 1, "id": "6"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:41 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:27 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/4500e127ec3a4a4a9b2cdf47c1f1abb8/flavors/detail.json?limit=1000&marker=6
@@ -910,31 +910,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 3a98e24221954f30a0baf6dc442f45ba
+      - 86ec18d58e474bc683eeb68157958486
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-8b03675f-9202-4818-bb4c-8d5a80022f51
+      - req-7fd0bf47-08b3-4199-b3f6-47f484c4a4c1
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Mon, 21 Sep 2015 14:38:42 GMT
+      - Thu, 24 Sep 2015 12:08:28 GMT
     body:
       encoding: UTF-8
       string: '{"flavors": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:42 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:28 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/ad25a941444e4ce6b41cba1d0e747a23/flavors/detail.json?limit=1000
@@ -943,26 +943,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 3eab6d6c606a40499a534e2dcd2a24b6
+      - b7393ddad10f41ef87b4bc2563131de1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-61771df2-a0f0-445c-bf96-c6a5241f8349
+      - req-0887be07-14b6-4938-a162-04a8b2591cf4
       Content-Type:
       - application/json
       Content-Length:
       - '2502'
       Date:
-      - Mon, 21 Sep 2015 14:38:42 GMT
+      - Thu, 24 Sep 2015 12:08:28 GMT
     body:
       encoding: UTF-8
       string: '{"flavors": [{"name": "m1.tiny", "links": [{"href": "http://1.2.3.4:8774/v2/ad25a941444e4ce6b41cba1d0e747a23/flavors/1",
@@ -992,7 +992,7 @@ http_interactions:
         1, "swap": 512, "os-flavor-access:is_public": true, "rxtx_factor": 1.0, "OS-FLV-EXT-DATA:ephemeral":
         1, "disk": 1, "id": "6"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:42 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:28 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/ad25a941444e4ce6b41cba1d0e747a23/flavors/detail.json?limit=1000&marker=6
@@ -1001,31 +1001,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 3eab6d6c606a40499a534e2dcd2a24b6
+      - b7393ddad10f41ef87b4bc2563131de1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-dfcd9539-d34a-4247-a8cf-2a8af3fc6573
+      - req-75edf5f5-7f7a-487c-a249-38c9925da0ad
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Mon, 21 Sep 2015 14:38:42 GMT
+      - Thu, 24 Sep 2015 12:08:29 GMT
     body:
       encoding: UTF-8
       string: '{"flavors": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:42 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:29 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/e9640afc4b7a460395c18ea04abd9cfe/flavors/detail.json?limit=1000
@@ -1034,26 +1034,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - f97b7fbb87c742249e1ffd41bc92e3d8
+      - 691e567f507140c0bd99f22d43961bf5
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-033a567f-7b3a-4504-b1db-cfff970c7294
+      - req-2f3821d0-54ca-440d-9d4e-186023ee7e13
       Content-Type:
       - application/json
       Content-Length:
       - '2502'
       Date:
-      - Mon, 21 Sep 2015 14:38:43 GMT
+      - Thu, 24 Sep 2015 12:08:29 GMT
     body:
       encoding: UTF-8
       string: '{"flavors": [{"name": "m1.tiny", "links": [{"href": "http://1.2.3.4:8774/v2/e9640afc4b7a460395c18ea04abd9cfe/flavors/1",
@@ -1083,7 +1083,7 @@ http_interactions:
         1, "swap": 512, "os-flavor-access:is_public": true, "rxtx_factor": 1.0, "OS-FLV-EXT-DATA:ephemeral":
         1, "disk": 1, "id": "6"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:43 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:29 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/e9640afc4b7a460395c18ea04abd9cfe/flavors/detail.json?limit=1000&marker=6
@@ -1092,31 +1092,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - f97b7fbb87c742249e1ffd41bc92e3d8
+      - 691e567f507140c0bd99f22d43961bf5
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-2a45395a-2e4c-4243-a96c-b10891e0513a
+      - req-52517954-ec5e-48be-8887-952773b72079
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Mon, 21 Sep 2015 14:38:43 GMT
+      - Thu, 24 Sep 2015 12:08:29 GMT
     body:
       encoding: UTF-8
       string: '{"flavors": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:43 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:29 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/18692e1f0c19452584d49acc3c1d5dd9/servers/detail.json?limit=1000
@@ -1125,26 +1125,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 255bb9231fd54836bdfde725de8caf0f
+      - 34ea5ce9d0194db2b6c28db7eba944c9
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-5688a717-752c-4fe9-bd86-7a32c871b7d2
+      - req-cb5f47b9-0032-428d-adbb-d4eca97478ba
       Content-Type:
       - application/json
       Content-Length:
       - '8471'
       Date:
-      - Mon, 21 Sep 2015 14:38:44 GMT
+      - Thu, 24 Sep 2015 12:08:30 GMT
     body:
       encoding: UTF-8
       string: '{"servers": [{"status": "ACTIVE", "updated": "2015-09-18T09:09:51Z",
@@ -1240,7 +1240,7 @@ http_interactions:
         "", "accessIPv6": "", "progress": 0, "OS-EXT-STS:power_state": 1, "config_drive":
         "", "metadata": {}}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:44 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:30 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/18692e1f0c19452584d49acc3c1d5dd9/servers/detail.json?limit=1000&marker=b35e3f4d-2c7e-4727-8da9-32827de4b6f7
@@ -1249,31 +1249,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 255bb9231fd54836bdfde725de8caf0f
+      - 34ea5ce9d0194db2b6c28db7eba944c9
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-9f7f80a1-88be-4275-aa80-b576aeae42a5
+      - req-c0bb8517-4eb3-485e-8027-1eeb72224574
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Mon, 21 Sep 2015 14:38:44 GMT
+      - Thu, 24 Sep 2015 12:08:31 GMT
     body:
       encoding: UTF-8
       string: '{"servers": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:45 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:31 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/4500e127ec3a4a4a9b2cdf47c1f1abb8/servers/detail.json?limit=1000
@@ -1282,31 +1282,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 3a98e24221954f30a0baf6dc442f45ba
+      - 86ec18d58e474bc683eeb68157958486
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-2ed7d487-82b2-4b2d-9c5a-542ed432a7a8
+      - req-a352831e-120a-47f9-aaa2-a7a1806d6261
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Mon, 21 Sep 2015 14:38:45 GMT
+      - Thu, 24 Sep 2015 12:08:31 GMT
     body:
       encoding: UTF-8
       string: '{"servers": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:45 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:31 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/ad25a941444e4ce6b41cba1d0e747a23/servers/detail.json?limit=1000
@@ -1315,31 +1315,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 3eab6d6c606a40499a534e2dcd2a24b6
+      - b7393ddad10f41ef87b4bc2563131de1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-64bed2b5-25c1-4231-a784-8ee3801b9236
+      - req-fc86116a-b923-494b-8f91-c2c5734a11cb
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Mon, 21 Sep 2015 14:38:45 GMT
+      - Thu, 24 Sep 2015 12:08:32 GMT
     body:
       encoding: UTF-8
       string: '{"servers": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:45 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:32 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/e9640afc4b7a460395c18ea04abd9cfe/servers/detail.json?limit=1000
@@ -1348,31 +1348,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - f97b7fbb87c742249e1ffd41bc92e3d8
+      - 691e567f507140c0bd99f22d43961bf5
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-4c3fefde-9c93-4bfe-9423-285bbca3f346
+      - req-5497a557-4a1b-4792-a7fc-9a626b8219ef
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Mon, 21 Sep 2015 14:38:46 GMT
+      - Thu, 24 Sep 2015 12:08:32 GMT
     body:
       encoding: UTF-8
       string: '{"servers": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:46 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:32 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -1381,7 +1381,7 @@ http_interactions:
       string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password_2WpEraURh"},"tenantName":"EmsRefreshSpec-Project"}}'
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
   response:
@@ -1396,11 +1396,11 @@ http_interactions:
       Content-Length:
       - '2100'
       Date:
-      - Mon, 21 Sep 2015 14:38:47 GMT
+      - Thu, 24 Sep 2015 12:08:33 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-21T14:38:47.111693", "expires":
-        "2015-09-22T14:38:47Z", "id": "37bb8338a8bd434c925038fdbdc34367", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-24T12:08:33.792471", "expires":
+        "2015-09-25T12:08:33Z", "id": "f18fa3c3355243729f83552eafdbe931", "tenant":
         {"description": "", "enabled": true, "id": "18692e1f0c19452584d49acc3c1d5dd9",
         "name": "EmsRefreshSpec-Project"}}, "serviceCatalog": [{"endpoints": [{"adminURL":
         "http://1.2.3.4:8776/v1/18692e1f0c19452584d49acc3c1d5dd9", "region": "RegionOne",
@@ -1425,7 +1425,7 @@ http_interactions:
         [{"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["2551a0e5398844c8b2b8b488692c7cee"]}}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:47 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:33 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/18692e1f0c19452584d49acc3c1d5dd9/volumes/detail?limit=1000
@@ -1434,26 +1434,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 37bb8338a8bd434c925038fdbdc34367
+      - f18fa3c3355243729f83552eafdbe931
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-df6d246f-8fcc-4b5c-8868-4435917ec208
+      - req-8c643ca0-2cd5-4672-85e7-6ccba754bff6
       Content-Type:
       - application/json
       Content-Length:
       - '1975'
       Date:
-      - Mon, 21 Sep 2015 14:38:48 GMT
+      - Thu, 24 Sep 2015 12:08:34 GMT
     body:
       encoding: UTF-8
       string: '{"volumes": [{"status": "in-use", "display_name": "", "attachments":
@@ -1481,7 +1481,7 @@ http_interactions:
         null, "metadata": {}, "id": "5a217c04-2ad7-4304-9cac-07e6e1b5acec", "size":
         1}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:48 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:34 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/18692e1f0c19452584d49acc3c1d5dd9/volumes/detail?limit=1000&marker=5a217c04-2ad7-4304-9cac-07e6e1b5acec
@@ -1490,31 +1490,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 37bb8338a8bd434c925038fdbdc34367
+      - f18fa3c3355243729f83552eafdbe931
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-a6ceeeaa-5fdd-4640-b53c-e763283524c4
+      - req-84b8c8d3-f4d1-47b0-8c04-6481baf5d1d9
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Mon, 21 Sep 2015 14:38:48 GMT
+      - Thu, 24 Sep 2015 12:08:35 GMT
     body:
       encoding: UTF-8
       string: '{"volumes": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:48 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:35 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8/volumes/detail?limit=1000
@@ -1523,31 +1523,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 9e717facb02e4921950076a24ae081dd
+      - 2d1e4075fc784ffa8617aaadbec85c07
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-1d73cd21-8d2f-41f4-81ff-c52f9949e786
+      - req-d8e3dbf3-4ce7-4d51-a7e0-552a500d0153
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Mon, 21 Sep 2015 14:38:48 GMT
+      - Thu, 24 Sep 2015 12:08:35 GMT
     body:
       encoding: UTF-8
       string: '{"volumes": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:49 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:35 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -1556,7 +1556,7 @@ http_interactions:
       string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password_2WpEraURh"},"tenantName":"EmsRefreshSpec-Project-No-Admin-Role"}}'
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
   response:
@@ -1571,11 +1571,11 @@ http_interactions:
       Content-Length:
       - '2114'
       Date:
-      - Mon, 21 Sep 2015 14:38:50 GMT
+      - Thu, 24 Sep 2015 12:08:36 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-21T14:38:50.020051", "expires":
-        "2015-09-22T14:38:49Z", "id": "21dec49b0da5462b8efaf1fd4ec83b37", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-24T12:08:36.575788", "expires":
+        "2015-09-25T12:08:36Z", "id": "cde4a82c3e3f448fb9b779bbe394cbb0", "tenant":
         {"description": "", "enabled": true, "id": "ad25a941444e4ce6b41cba1d0e747a23",
         "name": "EmsRefreshSpec-Project-No-Admin-Role"}}, "serviceCatalog": [{"endpoints":
         [{"adminURL": "http://1.2.3.4:8776/v1/ad25a941444e4ce6b41cba1d0e747a23",
@@ -1600,7 +1600,7 @@ http_interactions:
         [{"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["2551a0e5398844c8b2b8b488692c7cee"]}}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:50 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:36 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/ad25a941444e4ce6b41cba1d0e747a23/volumes/detail?limit=1000
@@ -1609,31 +1609,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 21dec49b0da5462b8efaf1fd4ec83b37
+      - cde4a82c3e3f448fb9b779bbe394cbb0
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-ac7c74a3-0c16-4984-ba56-d35deccc743e
+      - req-743f0adc-080e-4b3c-bbcc-08af68eac7f9
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Mon, 21 Sep 2015 14:38:50 GMT
+      - Thu, 24 Sep 2015 12:08:37 GMT
     body:
       encoding: UTF-8
       string: '{"volumes": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:50 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:37 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -1642,7 +1642,7 @@ http_interactions:
       string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password_2WpEraURh"},"tenantName":"EmsRefreshSpec-Project2"}}'
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
   response:
@@ -1657,11 +1657,11 @@ http_interactions:
       Content-Length:
       - '2101'
       Date:
-      - Mon, 21 Sep 2015 14:38:51 GMT
+      - Thu, 24 Sep 2015 12:08:38 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-21T14:38:51.538135", "expires":
-        "2015-09-22T14:38:51Z", "id": "ae464b598eb7439b85a16680647e4584", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-24T12:08:38.188049", "expires":
+        "2015-09-25T12:08:38Z", "id": "91d099f70a9a45ec8e330e9e77721e17", "tenant":
         {"description": "", "enabled": true, "id": "e9640afc4b7a460395c18ea04abd9cfe",
         "name": "EmsRefreshSpec-Project2"}}, "serviceCatalog": [{"endpoints": [{"adminURL":
         "http://1.2.3.4:8776/v1/e9640afc4b7a460395c18ea04abd9cfe", "region": "RegionOne",
@@ -1686,7 +1686,7 @@ http_interactions:
         [{"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["2551a0e5398844c8b2b8b488692c7cee"]}}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:51 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:38 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/e9640afc4b7a460395c18ea04abd9cfe/volumes/detail?limit=1000
@@ -1695,31 +1695,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - ae464b598eb7439b85a16680647e4584
+      - 91d099f70a9a45ec8e330e9e77721e17
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-39c5648a-d900-4025-b934-cf5ef5fcf707
+      - req-d26e4a23-3041-49b9-96d6-65d2f91b2004
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Mon, 21 Sep 2015 14:38:51 GMT
+      - Thu, 24 Sep 2015 12:08:38 GMT
     body:
       encoding: UTF-8
       string: '{"volumes": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:52 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:38 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/18692e1f0c19452584d49acc3c1d5dd9//os-quota-sets/18692e1f0c19452584d49acc3c1d5dd9
@@ -1728,26 +1728,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 255bb9231fd54836bdfde725de8caf0f
+      - 34ea5ce9d0194db2b6c28db7eba944c9
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-cb5e27dd-b808-4dc0-bb1e-951694dbf748
+      - req-e357c2c4-8930-4e49-adf2-6b1fd9e41c73
       Content-Type:
       - application/json
       Content-Length:
       - '322'
       Date:
-      - Mon, 21 Sep 2015 14:38:52 GMT
+      - Thu, 24 Sep 2015 12:08:38 GMT
     body:
       encoding: UTF-8
       string: '{"quota_set": {"injected_file_content_bytes": 10240, "metadata_items":
@@ -1755,7 +1755,7 @@ http_interactions:
         "instances": 10, "security_group_rules": 20, "injected_files": 5, "cores":
         20, "fixed_ips": -1, "injected_file_path_bytes": 255, "security_groups": 10}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:52 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:39 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/4500e127ec3a4a4a9b2cdf47c1f1abb8//os-quota-sets/4500e127ec3a4a4a9b2cdf47c1f1abb8
@@ -1764,26 +1764,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 3a98e24221954f30a0baf6dc442f45ba
+      - 86ec18d58e474bc683eeb68157958486
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-55164e8b-a8a1-4952-9df7-c24dc8923e5f
+      - req-75d1fc2a-4f59-48e1-995b-72bcf5c9202f
       Content-Type:
       - application/json
       Content-Length:
       - '322'
       Date:
-      - Mon, 21 Sep 2015 14:38:52 GMT
+      - Thu, 24 Sep 2015 12:08:39 GMT
     body:
       encoding: UTF-8
       string: '{"quota_set": {"injected_file_content_bytes": 10240, "metadata_items":
@@ -1791,7 +1791,7 @@ http_interactions:
         "instances": 10, "security_group_rules": 20, "injected_files": 5, "cores":
         20, "fixed_ips": -1, "injected_file_path_bytes": 255, "security_groups": 10}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:52 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:39 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/ad25a941444e4ce6b41cba1d0e747a23//os-quota-sets/ad25a941444e4ce6b41cba1d0e747a23
@@ -1800,26 +1800,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 3eab6d6c606a40499a534e2dcd2a24b6
+      - b7393ddad10f41ef87b4bc2563131de1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-b4032e89-a0d5-477d-9138-a787b014ee43
+      - req-ab1c6f9e-3467-4ba9-ab37-5c5ed31028f2
       Content-Type:
       - application/json
       Content-Length:
       - '322'
       Date:
-      - Mon, 21 Sep 2015 14:38:53 GMT
+      - Thu, 24 Sep 2015 12:08:39 GMT
     body:
       encoding: UTF-8
       string: '{"quota_set": {"injected_file_content_bytes": 10240, "metadata_items":
@@ -1827,7 +1827,7 @@ http_interactions:
         "instances": 10, "security_group_rules": 20, "injected_files": 5, "cores":
         20, "fixed_ips": -1, "injected_file_path_bytes": 255, "security_groups": 10}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:53 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:40 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/e9640afc4b7a460395c18ea04abd9cfe//os-quota-sets/e9640afc4b7a460395c18ea04abd9cfe
@@ -1836,26 +1836,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - f97b7fbb87c742249e1ffd41bc92e3d8
+      - 691e567f507140c0bd99f22d43961bf5
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-d850de67-8bc8-45c3-a45d-009620192889
+      - req-8e1b0695-cac9-4778-a39f-8124ffdf5153
       Content-Type:
       - application/json
       Content-Length:
       - '322'
       Date:
-      - Mon, 21 Sep 2015 14:38:53 GMT
+      - Thu, 24 Sep 2015 12:08:40 GMT
     body:
       encoding: UTF-8
       string: '{"quota_set": {"injected_file_content_bytes": 10240, "metadata_items":
@@ -1863,7 +1863,7 @@ http_interactions:
         "instances": 10, "security_group_rules": 20, "injected_files": 5, "cores":
         20, "fixed_ips": -1, "injected_file_path_bytes": 255, "security_groups": 10}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:53 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:40 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/18692e1f0c19452584d49acc3c1d5dd9//os-quota-sets/18692e1f0c19452584d49acc3c1d5dd9
@@ -1872,32 +1872,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 37bb8338a8bd434c925038fdbdc34367
+      - f18fa3c3355243729f83552eafdbe931
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-707132fc-3f92-4943-9924-eaa2526ae176
+      - req-a76ca29f-91fd-4c95-8a00-fcdfac31fdd1
       Content-Type:
       - application/json
       Content-Length:
       - '108'
       Date:
-      - Mon, 21 Sep 2015 14:38:54 GMT
+      - Thu, 24 Sep 2015 12:08:40 GMT
     body:
       encoding: UTF-8
       string: '{"quota_set": {"gigabytes": 1000, "volumes": 10, "id": "18692e1f0c19452584d49acc3c1d5dd9",
         "snapshots": 10}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:54 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:40 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8//os-quota-sets/4500e127ec3a4a4a9b2cdf47c1f1abb8
@@ -1906,32 +1906,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 9e717facb02e4921950076a24ae081dd
+      - 2d1e4075fc784ffa8617aaadbec85c07
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-34fe310f-1540-405a-9ec6-d102e36e2671
+      - req-cf6b66bb-c471-4c8a-b050-43355d42e391
       Content-Type:
       - application/json
       Content-Length:
       - '108'
       Date:
-      - Mon, 21 Sep 2015 14:38:54 GMT
+      - Thu, 24 Sep 2015 12:08:40 GMT
     body:
       encoding: UTF-8
       string: '{"quota_set": {"gigabytes": 1000, "volumes": 10, "id": "4500e127ec3a4a4a9b2cdf47c1f1abb8",
         "snapshots": 10}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:54 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:41 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/ad25a941444e4ce6b41cba1d0e747a23//os-quota-sets/ad25a941444e4ce6b41cba1d0e747a23
@@ -1940,32 +1940,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 21dec49b0da5462b8efaf1fd4ec83b37
+      - cde4a82c3e3f448fb9b779bbe394cbb0
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-c9f051e8-8b54-45c7-8cb4-074b069b41bd
+      - req-5c5cbbdf-4496-4e10-b14f-3e83e37fc69b
       Content-Type:
       - application/json
       Content-Length:
       - '108'
       Date:
-      - Mon, 21 Sep 2015 14:38:54 GMT
+      - Thu, 24 Sep 2015 12:08:41 GMT
     body:
       encoding: UTF-8
       string: '{"quota_set": {"gigabytes": 1000, "volumes": 10, "id": "ad25a941444e4ce6b41cba1d0e747a23",
         "snapshots": 10}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:54 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:41 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/e9640afc4b7a460395c18ea04abd9cfe//os-quota-sets/e9640afc4b7a460395c18ea04abd9cfe
@@ -1974,32 +1974,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - ae464b598eb7439b85a16680647e4584
+      - 91d099f70a9a45ec8e330e9e77721e17
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-9bd03366-4e67-430d-b2c2-4f1e095aa6c9
+      - req-a23281e9-772e-4019-85c6-c2e90a8e60f3
       Content-Type:
       - application/json
       Content-Length:
       - '108'
       Date:
-      - Mon, 21 Sep 2015 14:38:55 GMT
+      - Thu, 24 Sep 2015 12:08:41 GMT
     body:
       encoding: UTF-8
       string: '{"quota_set": {"gigabytes": 1000, "volumes": 10, "id": "e9640afc4b7a460395c18ea04abd9cfe",
         "snapshots": 10}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:55 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:41 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/18692e1f0c19452584d49acc3c1d5dd9/os-keypairs.json?limit=1000
@@ -2008,32 +2008,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 255bb9231fd54836bdfde725de8caf0f
+      - 34ea5ce9d0194db2b6c28db7eba944c9
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-cabfa2e8-cacb-4223-af76-de9b59c9c4ae
+      - req-6259916e-fd63-4d96-a827-ba75fb5df0dc
       Content-Type:
       - application/json
       Content-Length:
       - '547'
       Date:
-      - Mon, 21 Sep 2015 14:38:55 GMT
+      - Thu, 24 Sep 2015 12:08:42 GMT
     body:
       encoding: UTF-8
       string: '{"keypairs": [{"keypair": {"public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA0H3G+n7a0gWu3862Vq85uiLG+qVLgjatydbI9Szt8h0iXXW/RoIlknjAqQJPH4xPFNIgBkmJN4UU6uL+RXglxBBUruPEVEeezsTp9LkeMK4iTAJn9EJx/PQbPVcTKHoHdLwwgg47P6OUtHry+j/F3rSP3T/Jvyg4z5UOtqJIXOgx7Rh/4mwF6RwEDUZiCJeCGmrRXqAo3tHcdyX+z2pyG0AlXIjk37OHYihpN8sbq7gExihlmQtWwEaJ4NPWGfEJGOACxG9JioBvXfCOegBtbTmBHOuz5aIbvu+03ar1a2Tlvbf188Jt1VWREUtgtqeRLkR4Z0RSd/84jvx6xyoizQ==
         Generated by Nova\n", "name": "EmsRefreshSpec-KeyPair", "fingerprint": "a8:3d:73:83:1c:d2:3f:d0:50:61:e5:ed:2e:c2:da:9f"}}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:55 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:42 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/18692e1f0c19452584d49acc3c1d5dd9/os-keypairs.json?limit=1000&marker=EmsRefreshSpec-KeyPair
@@ -2042,32 +2042,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 255bb9231fd54836bdfde725de8caf0f
+      - 34ea5ce9d0194db2b6c28db7eba944c9
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-deef896b-8ec0-4227-aea3-73de7b092348
+      - req-83f51a62-d2bd-4c55-9bf3-d5cc6abb5b6e
       Content-Type:
       - application/json
       Content-Length:
       - '547'
       Date:
-      - Mon, 21 Sep 2015 14:38:55 GMT
+      - Thu, 24 Sep 2015 12:08:42 GMT
     body:
       encoding: UTF-8
       string: '{"keypairs": [{"keypair": {"public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA0H3G+n7a0gWu3862Vq85uiLG+qVLgjatydbI9Szt8h0iXXW/RoIlknjAqQJPH4xPFNIgBkmJN4UU6uL+RXglxBBUruPEVEeezsTp9LkeMK4iTAJn9EJx/PQbPVcTKHoHdLwwgg47P6OUtHry+j/F3rSP3T/Jvyg4z5UOtqJIXOgx7Rh/4mwF6RwEDUZiCJeCGmrRXqAo3tHcdyX+z2pyG0AlXIjk37OHYihpN8sbq7gExihlmQtWwEaJ4NPWGfEJGOACxG9JioBvXfCOegBtbTmBHOuz5aIbvu+03ar1a2Tlvbf188Jt1VWREUtgtqeRLkR4Z0RSd/84jvx6xyoizQ==
         Generated by Nova\n", "name": "EmsRefreshSpec-KeyPair", "fingerprint": "a8:3d:73:83:1c:d2:3f:d0:50:61:e5:ed:2e:c2:da:9f"}}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:55 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:42 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/4500e127ec3a4a4a9b2cdf47c1f1abb8/os-keypairs.json?limit=1000
@@ -2076,32 +2076,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 3a98e24221954f30a0baf6dc442f45ba
+      - 86ec18d58e474bc683eeb68157958486
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-969b228e-4b53-4d1f-891f-9c8a7dbe5add
+      - req-e9819c45-f0d5-43d4-81c0-3c0e393d1326
       Content-Type:
       - application/json
       Content-Length:
       - '547'
       Date:
-      - Mon, 21 Sep 2015 14:38:55 GMT
+      - Thu, 24 Sep 2015 12:08:42 GMT
     body:
       encoding: UTF-8
       string: '{"keypairs": [{"keypair": {"public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA0H3G+n7a0gWu3862Vq85uiLG+qVLgjatydbI9Szt8h0iXXW/RoIlknjAqQJPH4xPFNIgBkmJN4UU6uL+RXglxBBUruPEVEeezsTp9LkeMK4iTAJn9EJx/PQbPVcTKHoHdLwwgg47P6OUtHry+j/F3rSP3T/Jvyg4z5UOtqJIXOgx7Rh/4mwF6RwEDUZiCJeCGmrRXqAo3tHcdyX+z2pyG0AlXIjk37OHYihpN8sbq7gExihlmQtWwEaJ4NPWGfEJGOACxG9JioBvXfCOegBtbTmBHOuz5aIbvu+03ar1a2Tlvbf188Jt1VWREUtgtqeRLkR4Z0RSd/84jvx6xyoizQ==
         Generated by Nova\n", "name": "EmsRefreshSpec-KeyPair", "fingerprint": "a8:3d:73:83:1c:d2:3f:d0:50:61:e5:ed:2e:c2:da:9f"}}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:56 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:42 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/4500e127ec3a4a4a9b2cdf47c1f1abb8/os-keypairs.json?limit=1000&marker=EmsRefreshSpec-KeyPair
@@ -2110,32 +2110,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 3a98e24221954f30a0baf6dc442f45ba
+      - 86ec18d58e474bc683eeb68157958486
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-6ce62c78-93cf-40ed-a0b2-c5ece95832a9
+      - req-4c119bba-8a84-45ea-b81c-3487f463c83e
       Content-Type:
       - application/json
       Content-Length:
       - '547'
       Date:
-      - Mon, 21 Sep 2015 14:38:56 GMT
+      - Thu, 24 Sep 2015 12:08:43 GMT
     body:
       encoding: UTF-8
       string: '{"keypairs": [{"keypair": {"public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA0H3G+n7a0gWu3862Vq85uiLG+qVLgjatydbI9Szt8h0iXXW/RoIlknjAqQJPH4xPFNIgBkmJN4UU6uL+RXglxBBUruPEVEeezsTp9LkeMK4iTAJn9EJx/PQbPVcTKHoHdLwwgg47P6OUtHry+j/F3rSP3T/Jvyg4z5UOtqJIXOgx7Rh/4mwF6RwEDUZiCJeCGmrRXqAo3tHcdyX+z2pyG0AlXIjk37OHYihpN8sbq7gExihlmQtWwEaJ4NPWGfEJGOACxG9JioBvXfCOegBtbTmBHOuz5aIbvu+03ar1a2Tlvbf188Jt1VWREUtgtqeRLkR4Z0RSd/84jvx6xyoizQ==
         Generated by Nova\n", "name": "EmsRefreshSpec-KeyPair", "fingerprint": "a8:3d:73:83:1c:d2:3f:d0:50:61:e5:ed:2e:c2:da:9f"}}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:56 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:43 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/ad25a941444e4ce6b41cba1d0e747a23/os-keypairs.json?limit=1000
@@ -2144,32 +2144,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 3eab6d6c606a40499a534e2dcd2a24b6
+      - b7393ddad10f41ef87b4bc2563131de1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-d10afbb6-ff5c-43b6-a26e-953ae63da6f2
+      - req-1e71201f-8d71-4468-aab3-ed4ec24c89eb
       Content-Type:
       - application/json
       Content-Length:
       - '547'
       Date:
-      - Mon, 21 Sep 2015 14:38:56 GMT
+      - Thu, 24 Sep 2015 12:08:43 GMT
     body:
       encoding: UTF-8
       string: '{"keypairs": [{"keypair": {"public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA0H3G+n7a0gWu3862Vq85uiLG+qVLgjatydbI9Szt8h0iXXW/RoIlknjAqQJPH4xPFNIgBkmJN4UU6uL+RXglxBBUruPEVEeezsTp9LkeMK4iTAJn9EJx/PQbPVcTKHoHdLwwgg47P6OUtHry+j/F3rSP3T/Jvyg4z5UOtqJIXOgx7Rh/4mwF6RwEDUZiCJeCGmrRXqAo3tHcdyX+z2pyG0AlXIjk37OHYihpN8sbq7gExihlmQtWwEaJ4NPWGfEJGOACxG9JioBvXfCOegBtbTmBHOuz5aIbvu+03ar1a2Tlvbf188Jt1VWREUtgtqeRLkR4Z0RSd/84jvx6xyoizQ==
         Generated by Nova\n", "name": "EmsRefreshSpec-KeyPair", "fingerprint": "a8:3d:73:83:1c:d2:3f:d0:50:61:e5:ed:2e:c2:da:9f"}}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:56 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:43 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/ad25a941444e4ce6b41cba1d0e747a23/os-keypairs.json?limit=1000&marker=EmsRefreshSpec-KeyPair
@@ -2178,32 +2178,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 3eab6d6c606a40499a534e2dcd2a24b6
+      - b7393ddad10f41ef87b4bc2563131de1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-4553a880-c350-4ded-8cd2-ee4fa290d06f
+      - req-4505c8a3-ef73-4a9a-b3bd-96a90eab5cf2
       Content-Type:
       - application/json
       Content-Length:
       - '547'
       Date:
-      - Mon, 21 Sep 2015 14:38:56 GMT
+      - Thu, 24 Sep 2015 12:08:43 GMT
     body:
       encoding: UTF-8
       string: '{"keypairs": [{"keypair": {"public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA0H3G+n7a0gWu3862Vq85uiLG+qVLgjatydbI9Szt8h0iXXW/RoIlknjAqQJPH4xPFNIgBkmJN4UU6uL+RXglxBBUruPEVEeezsTp9LkeMK4iTAJn9EJx/PQbPVcTKHoHdLwwgg47P6OUtHry+j/F3rSP3T/Jvyg4z5UOtqJIXOgx7Rh/4mwF6RwEDUZiCJeCGmrRXqAo3tHcdyX+z2pyG0AlXIjk37OHYihpN8sbq7gExihlmQtWwEaJ4NPWGfEJGOACxG9JioBvXfCOegBtbTmBHOuz5aIbvu+03ar1a2Tlvbf188Jt1VWREUtgtqeRLkR4Z0RSd/84jvx6xyoizQ==
         Generated by Nova\n", "name": "EmsRefreshSpec-KeyPair", "fingerprint": "a8:3d:73:83:1c:d2:3f:d0:50:61:e5:ed:2e:c2:da:9f"}}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:56 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:43 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/e9640afc4b7a460395c18ea04abd9cfe/os-keypairs.json?limit=1000
@@ -2212,32 +2212,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - f97b7fbb87c742249e1ffd41bc92e3d8
+      - 691e567f507140c0bd99f22d43961bf5
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-1ccd05fb-6055-4f29-9279-909b7358f725
+      - req-a1d30a7c-39b4-492d-aaac-09e09636c3ef
       Content-Type:
       - application/json
       Content-Length:
       - '547'
       Date:
-      - Mon, 21 Sep 2015 14:38:57 GMT
+      - Thu, 24 Sep 2015 12:08:44 GMT
     body:
       encoding: UTF-8
       string: '{"keypairs": [{"keypair": {"public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA0H3G+n7a0gWu3862Vq85uiLG+qVLgjatydbI9Szt8h0iXXW/RoIlknjAqQJPH4xPFNIgBkmJN4UU6uL+RXglxBBUruPEVEeezsTp9LkeMK4iTAJn9EJx/PQbPVcTKHoHdLwwgg47P6OUtHry+j/F3rSP3T/Jvyg4z5UOtqJIXOgx7Rh/4mwF6RwEDUZiCJeCGmrRXqAo3tHcdyX+z2pyG0AlXIjk37OHYihpN8sbq7gExihlmQtWwEaJ4NPWGfEJGOACxG9JioBvXfCOegBtbTmBHOuz5aIbvu+03ar1a2Tlvbf188Jt1VWREUtgtqeRLkR4Z0RSd/84jvx6xyoizQ==
         Generated by Nova\n", "name": "EmsRefreshSpec-KeyPair", "fingerprint": "a8:3d:73:83:1c:d2:3f:d0:50:61:e5:ed:2e:c2:da:9f"}}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:57 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:44 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/e9640afc4b7a460395c18ea04abd9cfe/os-keypairs.json?limit=1000&marker=EmsRefreshSpec-KeyPair
@@ -2246,32 +2246,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - f97b7fbb87c742249e1ffd41bc92e3d8
+      - 691e567f507140c0bd99f22d43961bf5
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-526bf3e4-426f-4e13-b1e0-5f6c07ff5976
+      - req-14d96a9a-88df-4757-a170-c7686c84d680
       Content-Type:
       - application/json
       Content-Length:
       - '547'
       Date:
-      - Mon, 21 Sep 2015 14:38:58 GMT
+      - Thu, 24 Sep 2015 12:08:44 GMT
     body:
       encoding: UTF-8
       string: '{"keypairs": [{"keypair": {"public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA0H3G+n7a0gWu3862Vq85uiLG+qVLgjatydbI9Szt8h0iXXW/RoIlknjAqQJPH4xPFNIgBkmJN4UU6uL+RXglxBBUruPEVEeezsTp9LkeMK4iTAJn9EJx/PQbPVcTKHoHdLwwgg47P6OUtHry+j/F3rSP3T/Jvyg4z5UOtqJIXOgx7Rh/4mwF6RwEDUZiCJeCGmrRXqAo3tHcdyX+z2pyG0AlXIjk37OHYihpN8sbq7gExihlmQtWwEaJ4NPWGfEJGOACxG9JioBvXfCOegBtbTmBHOuz5aIbvu+03ar1a2Tlvbf188Jt1VWREUtgtqeRLkR4Z0RSd/84jvx6xyoizQ==
         Generated by Nova\n", "name": "EmsRefreshSpec-KeyPair", "fingerprint": "a8:3d:73:83:1c:d2:3f:d0:50:61:e5:ed:2e:c2:da:9f"}}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:58 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:44 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/18692e1f0c19452584d49acc3c1d5dd9/os-security-groups.json?limit=1000
@@ -2280,26 +2280,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 255bb9231fd54836bdfde725de8caf0f
+      - 34ea5ce9d0194db2b6c28db7eba944c9
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-941a99e9-109d-414e-974f-016934bed370
+      - req-b2921af0-cac6-4f98-941e-8b44589830e0
       Content-Type:
       - application/json
       Content-Length:
       - '2100'
       Date:
-      - Mon, 21 Sep 2015 14:38:59 GMT
+      - Thu, 24 Sep 2015 12:08:45 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
@@ -2329,7 +2329,7 @@ http_interactions:
         description"}, {"rules": [], "tenant_id": "18692e1f0c19452584d49acc3c1d5dd9",
         "id": 1, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:38:59 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:45 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/18692e1f0c19452584d49acc3c1d5dd9/os-security-groups.json?limit=1000&marker=1
@@ -2338,26 +2338,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 255bb9231fd54836bdfde725de8caf0f
+      - 34ea5ce9d0194db2b6c28db7eba944c9
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-f35dda4c-300c-42e3-9a56-d9acbd2580b3
+      - req-35eb76d4-e897-4577-a8ca-b7d95e63a818
       Content-Type:
       - application/json
       Content-Length:
       - '2100'
       Date:
-      - Mon, 21 Sep 2015 14:39:00 GMT
+      - Thu, 24 Sep 2015 12:08:46 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
@@ -2387,7 +2387,7 @@ http_interactions:
         description"}, {"rules": [], "tenant_id": "18692e1f0c19452584d49acc3c1d5dd9",
         "id": 1, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:00 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:47 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/4500e127ec3a4a4a9b2cdf47c1f1abb8/os-security-groups.json?limit=1000
@@ -2396,32 +2396,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 3a98e24221954f30a0baf6dc442f45ba
+      - 86ec18d58e474bc683eeb68157958486
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-76af6d03-cded-42d8-b1b2-cfd4bcb44885
+      - req-25d094a9-fb3c-4026-a14a-83f08c9be226
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Mon, 21 Sep 2015 14:39:00 GMT
+      - Thu, 24 Sep 2015 12:08:47 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [], "tenant_id": "4500e127ec3a4a4a9b2cdf47c1f1abb8",
         "id": 4, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:00 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:47 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/4500e127ec3a4a4a9b2cdf47c1f1abb8/os-security-groups.json?limit=1000&marker=4
@@ -2430,32 +2430,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 3a98e24221954f30a0baf6dc442f45ba
+      - 86ec18d58e474bc683eeb68157958486
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-dd4f573e-591b-4959-b5b0-f8a65a661a56
+      - req-7da58023-806f-4962-812a-d99a1909a7b9
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Mon, 21 Sep 2015 14:39:00 GMT
+      - Thu, 24 Sep 2015 12:08:49 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [], "tenant_id": "4500e127ec3a4a4a9b2cdf47c1f1abb8",
         "id": 4, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:00 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:49 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/ad25a941444e4ce6b41cba1d0e747a23/os-security-groups.json?limit=1000
@@ -2464,32 +2464,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 3eab6d6c606a40499a534e2dcd2a24b6
+      - b7393ddad10f41ef87b4bc2563131de1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-4a0780c4-04a2-4412-9ef2-5eeb6a95316a
+      - req-204cc8f0-e882-47f5-9f77-0d57a94cc6aa
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Mon, 21 Sep 2015 14:39:01 GMT
+      - Thu, 24 Sep 2015 12:08:49 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [], "tenant_id": "ad25a941444e4ce6b41cba1d0e747a23",
         "id": 5, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:01 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:49 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/ad25a941444e4ce6b41cba1d0e747a23/os-security-groups.json?limit=1000&marker=5
@@ -2498,32 +2498,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 3eab6d6c606a40499a534e2dcd2a24b6
+      - b7393ddad10f41ef87b4bc2563131de1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-7b7ceed2-d9f3-4b51-8864-b014a97d0816
+      - req-29c25f3f-7b00-4444-aeee-b05d330c1eb4
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Mon, 21 Sep 2015 14:39:01 GMT
+      - Thu, 24 Sep 2015 12:08:49 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [], "tenant_id": "ad25a941444e4ce6b41cba1d0e747a23",
         "id": 5, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:01 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:49 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/e9640afc4b7a460395c18ea04abd9cfe/os-security-groups.json?limit=1000
@@ -2532,32 +2532,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - f97b7fbb87c742249e1ffd41bc92e3d8
+      - 691e567f507140c0bd99f22d43961bf5
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-ff1a98e7-5a73-4687-a9bc-aafb2a7c996a
+      - req-8e1836c4-4c29-412f-8c56-4a2db14c3615
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Mon, 21 Sep 2015 14:39:02 GMT
+      - Thu, 24 Sep 2015 12:08:50 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [], "tenant_id": "e9640afc4b7a460395c18ea04abd9cfe",
         "id": 6, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:02 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:50 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/e9640afc4b7a460395c18ea04abd9cfe/os-security-groups.json?limit=1000&marker=6
@@ -2566,32 +2566,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - f97b7fbb87c742249e1ffd41bc92e3d8
+      - 691e567f507140c0bd99f22d43961bf5
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-e5455d98-3edf-404a-8129-49fed4666197
+      - req-1c373972-1214-4b1a-8d1e-a3230704f8f5
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Mon, 21 Sep 2015 14:39:02 GMT
+      - Thu, 24 Sep 2015 12:08:50 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [], "tenant_id": "e9640afc4b7a460395c18ea04abd9cfe",
         "id": 6, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:02 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:50 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -2600,7 +2600,7 @@ http_interactions:
       string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password_2WpEraURh"},"tenantName":"EmsRefreshSpec-Project"}}'
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
   response:
@@ -2615,11 +2615,11 @@ http_interactions:
       Content-Length:
       - '2100'
       Date:
-      - Mon, 21 Sep 2015 14:39:03 GMT
+      - Thu, 24 Sep 2015 12:08:51 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-21T14:39:03.524491", "expires":
-        "2015-09-22T14:39:03Z", "id": "1586dce0e73b4462bba5ea27f662d2e5", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-24T12:08:51.539814", "expires":
+        "2015-09-25T12:08:51Z", "id": "3bcbff18f7e84fa387afea37c9ff7fca", "tenant":
         {"description": "", "enabled": true, "id": "18692e1f0c19452584d49acc3c1d5dd9",
         "name": "EmsRefreshSpec-Project"}}, "serviceCatalog": [{"endpoints": [{"adminURL":
         "http://1.2.3.4:8776/v1/18692e1f0c19452584d49acc3c1d5dd9", "region": "RegionOne",
@@ -2644,7 +2644,7 @@ http_interactions:
         [{"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["2551a0e5398844c8b2b8b488692c7cee"]}}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:03 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:51 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/
@@ -2653,13 +2653,13 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 1586dce0e73b4462bba5ea27f662d2e5
+      - 3bcbff18f7e84fa387afea37c9ff7fca
   response:
     status:
       code: 300
@@ -2670,7 +2670,7 @@ http_interactions:
       Content-Length:
       - '434'
       Date:
-      - Mon, 21 Sep 2015 14:39:03 GMT
+      - Thu, 24 Sep 2015 12:08:51 GMT
     body:
       encoding: UTF-8
       string: '{"versions": [{"status": "CURRENT", "id": "v2.1", "links": [{"href":
@@ -2680,7 +2680,7 @@ http_interactions:
         "rel": "self"}]}, {"status": "SUPPORTED", "id": "v1.0", "links": [{"href":
         "http://1.2.3.4:9292/v1/", "rel": "self"}]}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:03 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:51 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/v1.1/images/detail?limit=1000
@@ -2689,11 +2689,11 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 1586dce0e73b4462bba5ea27f662d2e5
+      - 3bcbff18f7e84fa387afea37c9ff7fca
   response:
     status:
       code: 200
@@ -2704,9 +2704,9 @@ http_interactions:
       Content-Length:
       - '3105'
       X-Openstack-Request-Id:
-      - req-f054dac7-0b2f-42a3-acc3-a816b2899d7d
+      - req-9b996154-6a79-4a38-bd0c-1fb982fe1b94
       Date:
-      - Mon, 21 Sep 2015 14:39:04 GMT
+      - Thu, 24 Sep 2015 12:08:52 GMT
     body:
       encoding: UTF-8
       string: '{"images": [{"status": "active", "name": "EmsRefreshSpec-PoweredOn-SnapShot",
@@ -2746,7 +2746,7 @@ http_interactions:
         "owner": "18692e1f0c19452584d49acc3c1d5dd9", "is_public": false, "deleted_at":
         null, "properties": {}, "size": 4731440}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:04 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:52 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/v1.1/images/detail?limit=1000&marker=c1b8ec1d-6cfc-4064-9e79-d37761691f0a
@@ -2755,11 +2755,11 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 1586dce0e73b4462bba5ea27f662d2e5
+      - 3bcbff18f7e84fa387afea37c9ff7fca
   response:
     status:
       code: 200
@@ -2770,14 +2770,14 @@ http_interactions:
       Content-Length:
       - '14'
       X-Openstack-Request-Id:
-      - req-4057b078-e583-48a6-81ea-7886b491b22e
+      - req-384147ce-cc96-43ab-b286-4b56bb7b1476
       Date:
-      - Mon, 21 Sep 2015 14:39:04 GMT
+      - Thu, 24 Sep 2015 12:08:52 GMT
     body:
       encoding: UTF-8
       string: '{"images": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:04 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:52 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/v1.1/images/detail?limit=1000
@@ -2786,11 +2786,11 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 885a18b3477441bd8789dd91887c0f56
+      - 0ef98efd733f4ffba018adca3ace39a1
   response:
     status:
       code: 200
@@ -2801,14 +2801,14 @@ http_interactions:
       Content-Length:
       - '14'
       X-Openstack-Request-Id:
-      - req-28f48aa8-3ed4-4136-90da-273eb0e4c975
+      - req-a6019e94-e1f5-4c6f-bc24-922bf9fa6d41
       Date:
-      - Mon, 21 Sep 2015 14:39:05 GMT
+      - Thu, 24 Sep 2015 12:08:53 GMT
     body:
       encoding: UTF-8
       string: '{"images": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:05 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:53 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -2817,7 +2817,7 @@ http_interactions:
       string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password_2WpEraURh"},"tenantName":"EmsRefreshSpec-Project-No-Admin-Role"}}'
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
   response:
@@ -2832,11 +2832,11 @@ http_interactions:
       Content-Length:
       - '2114'
       Date:
-      - Mon, 21 Sep 2015 14:39:06 GMT
+      - Thu, 24 Sep 2015 12:08:54 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-21T14:39:06.387613", "expires":
-        "2015-09-22T14:39:06Z", "id": "8bce968db70f425b81b0b92cf753e49c", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-24T12:08:54.379114", "expires":
+        "2015-09-25T12:08:54Z", "id": "9dfa4a5d24ac4617ac8d0b1f0dd8a0fd", "tenant":
         {"description": "", "enabled": true, "id": "ad25a941444e4ce6b41cba1d0e747a23",
         "name": "EmsRefreshSpec-Project-No-Admin-Role"}}, "serviceCatalog": [{"endpoints":
         [{"adminURL": "http://1.2.3.4:8776/v1/ad25a941444e4ce6b41cba1d0e747a23",
@@ -2861,7 +2861,7 @@ http_interactions:
         [{"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["2551a0e5398844c8b2b8b488692c7cee"]}}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:06 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:54 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/
@@ -2870,13 +2870,13 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 8bce968db70f425b81b0b92cf753e49c
+      - 9dfa4a5d24ac4617ac8d0b1f0dd8a0fd
   response:
     status:
       code: 300
@@ -2887,7 +2887,7 @@ http_interactions:
       Content-Length:
       - '434'
       Date:
-      - Mon, 21 Sep 2015 14:39:06 GMT
+      - Thu, 24 Sep 2015 12:08:54 GMT
     body:
       encoding: UTF-8
       string: '{"versions": [{"status": "CURRENT", "id": "v2.1", "links": [{"href":
@@ -2897,7 +2897,7 @@ http_interactions:
         "rel": "self"}]}, {"status": "SUPPORTED", "id": "v1.0", "links": [{"href":
         "http://1.2.3.4:9292/v1/", "rel": "self"}]}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:06 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:54 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/v1.1/images/detail?limit=1000
@@ -2906,11 +2906,11 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 8bce968db70f425b81b0b92cf753e49c
+      - 9dfa4a5d24ac4617ac8d0b1f0dd8a0fd
   response:
     status:
       code: 200
@@ -2921,14 +2921,14 @@ http_interactions:
       Content-Length:
       - '14'
       X-Openstack-Request-Id:
-      - req-a2e6f815-b747-4287-9d38-76f244115bcd
+      - req-7cdaacdb-4a97-42dd-b8e9-dc7cf6667fb4
       Date:
-      - Mon, 21 Sep 2015 14:39:07 GMT
+      - Thu, 24 Sep 2015 12:08:55 GMT
     body:
       encoding: UTF-8
       string: '{"images": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:07 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:55 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -2937,7 +2937,7 @@ http_interactions:
       string: '{"auth":{"passwordCredentials":{"username":"admin","password":"password_2WpEraURh"},"tenantName":"EmsRefreshSpec-Project2"}}'
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
   response:
@@ -2952,11 +2952,11 @@ http_interactions:
       Content-Length:
       - '2101'
       Date:
-      - Mon, 21 Sep 2015 14:39:08 GMT
+      - Thu, 24 Sep 2015 12:08:56 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-21T14:39:08.099681", "expires":
-        "2015-09-22T14:39:08Z", "id": "6dd06b7196a84bbf869e9a4e13bc23bb", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-24T12:08:56.294504", "expires":
+        "2015-09-25T12:08:56Z", "id": "89d52a733dfe4c77be64bfcab37a93ee", "tenant":
         {"description": "", "enabled": true, "id": "e9640afc4b7a460395c18ea04abd9cfe",
         "name": "EmsRefreshSpec-Project2"}}, "serviceCatalog": [{"endpoints": [{"adminURL":
         "http://1.2.3.4:8776/v1/e9640afc4b7a460395c18ea04abd9cfe", "region": "RegionOne",
@@ -2981,7 +2981,7 @@ http_interactions:
         [{"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["2551a0e5398844c8b2b8b488692c7cee"]}}}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:08 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:56 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/
@@ -2990,13 +2990,13 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 6dd06b7196a84bbf869e9a4e13bc23bb
+      - 89d52a733dfe4c77be64bfcab37a93ee
   response:
     status:
       code: 300
@@ -3007,7 +3007,7 @@ http_interactions:
       Content-Length:
       - '434'
       Date:
-      - Mon, 21 Sep 2015 14:39:08 GMT
+      - Thu, 24 Sep 2015 12:08:56 GMT
     body:
       encoding: UTF-8
       string: '{"versions": [{"status": "CURRENT", "id": "v2.1", "links": [{"href":
@@ -3017,7 +3017,7 @@ http_interactions:
         "rel": "self"}]}, {"status": "SUPPORTED", "id": "v1.0", "links": [{"href":
         "http://1.2.3.4:9292/v1/", "rel": "self"}]}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:08 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:56 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/v1.1/images/detail?limit=1000
@@ -3026,11 +3026,11 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 6dd06b7196a84bbf869e9a4e13bc23bb
+      - 89d52a733dfe4c77be64bfcab37a93ee
   response:
     status:
       code: 200
@@ -3041,14 +3041,14 @@ http_interactions:
       Content-Length:
       - '14'
       X-Openstack-Request-Id:
-      - req-dc9ddd91-abf8-4adc-b04d-b063909803dc
+      - req-1a2c4517-20e4-4c13-8581-c72b97e30853
       Date:
-      - Mon, 21 Sep 2015 14:39:08 GMT
+      - Thu, 24 Sep 2015 12:08:57 GMT
     body:
       encoding: UTF-8
       string: '{"images": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:08 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:57 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/18692e1f0c19452584d49acc3c1d5dd9/os-floating-ips.json
@@ -3057,26 +3057,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 255bb9231fd54836bdfde725de8caf0f
+      - 34ea5ce9d0194db2b6c28db7eba944c9
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-23f4cb1e-1f4e-4e00-b145-0de02b2ab2a1
+      - req-6c81be02-daed-40ba-a5aa-64f336df3867
       Content-Type:
       - application/json
       Content-Length:
       - '530'
       Date:
-      - Mon, 21 Sep 2015 14:39:09 GMT
+      - Thu, 24 Sep 2015 12:08:57 GMT
     body:
       encoding: UTF-8
       string: '{"floating_ips": [{"instance_id": "b35e3f4d-2c7e-4727-8da9-32827de4b6f7",
@@ -3087,7 +3087,7 @@ http_interactions:
         "799dd88e-b0f2-4f00-9717-31f4fe3ec598", "ip": "10.3.4.4", "fixed_ip": "192.168.32.5",
         "id": 4, "pool": "nova"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:09 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:57 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/18692e1f0c19452584d49acc3c1d5dd9/servers/093810f2-1a6f-47fa-bfc4-52c7ee3048d7/os-security-groups.json
@@ -3096,26 +3096,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 255bb9231fd54836bdfde725de8caf0f
+      - 34ea5ce9d0194db2b6c28db7eba944c9
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-78f23d92-7ca9-46d0-86f5-4694102dcf57
+      - req-935d75b0-087f-4670-b97b-8235a589bf1d
       Content-Type:
       - application/json
       Content-Length:
       - '1982'
       Date:
-      - Mon, 21 Sep 2015 14:39:10 GMT
+      - Thu, 24 Sep 2015 12:08:58 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
@@ -3144,7 +3144,7 @@ http_interactions:
         "id": 3, "name": "EmsRefreshSpec-SecurityGroup2", "description": "EmsRefreshSpec-SecurityGroup2
         description"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:10 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:58 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/18692e1f0c19452584d49acc3c1d5dd9/os-floating-ips.json
@@ -3153,26 +3153,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 255bb9231fd54836bdfde725de8caf0f
+      - 34ea5ce9d0194db2b6c28db7eba944c9
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-c49e6ba0-c179-4103-baf7-1c30736c898f
+      - req-94190eb8-3ec2-4f65-beea-78e81b1f87b4
       Content-Type:
       - application/json
       Content-Length:
       - '530'
       Date:
-      - Mon, 21 Sep 2015 14:39:10 GMT
+      - Thu, 24 Sep 2015 12:08:58 GMT
     body:
       encoding: UTF-8
       string: '{"floating_ips": [{"instance_id": "b35e3f4d-2c7e-4727-8da9-32827de4b6f7",
@@ -3183,7 +3183,7 @@ http_interactions:
         "799dd88e-b0f2-4f00-9717-31f4fe3ec598", "ip": "10.3.4.4", "fixed_ip": "192.168.32.5",
         "id": 4, "pool": "nova"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:10 GMT
+  recorded_at: Thu, 24 Sep 2015 12:08:58 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/18692e1f0c19452584d49acc3c1d5dd9/servers/799dd88e-b0f2-4f00-9717-31f4fe3ec598/os-security-groups.json
@@ -3192,26 +3192,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 255bb9231fd54836bdfde725de8caf0f
+      - 34ea5ce9d0194db2b6c28db7eba944c9
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-b398d0e6-7d67-4eed-8362-7747d798f853
+      - req-29864b70-5232-4bcd-b39a-906a005cb817
       Content-Type:
       - application/json
       Content-Length:
       - '1808'
       Date:
-      - Mon, 21 Sep 2015 14:39:11 GMT
+      - Thu, 24 Sep 2015 12:08:59 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
@@ -3238,7 +3238,7 @@ http_interactions:
         "EmsRefreshSpec-SecurityGroup", "description": "EmsRefreshSpec-SecurityGroup
         description"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:11 GMT
+  recorded_at: Thu, 24 Sep 2015 12:09:00 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/18692e1f0c19452584d49acc3c1d5dd9/os-floating-ips.json
@@ -3247,26 +3247,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 255bb9231fd54836bdfde725de8caf0f
+      - 34ea5ce9d0194db2b6c28db7eba944c9
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-84c4ae8f-5b81-41fb-8ac8-211dcec7e461
+      - req-cdf0b00a-e4ec-43aa-b06c-3ecb7e496f70
       Content-Type:
       - application/json
       Content-Length:
       - '530'
       Date:
-      - Mon, 21 Sep 2015 14:39:11 GMT
+      - Thu, 24 Sep 2015 12:09:00 GMT
     body:
       encoding: UTF-8
       string: '{"floating_ips": [{"instance_id": "b35e3f4d-2c7e-4727-8da9-32827de4b6f7",
@@ -3277,7 +3277,7 @@ http_interactions:
         "799dd88e-b0f2-4f00-9717-31f4fe3ec598", "ip": "10.3.4.4", "fixed_ip": "192.168.32.5",
         "id": 4, "pool": "nova"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:11 GMT
+  recorded_at: Thu, 24 Sep 2015 12:09:00 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/18692e1f0c19452584d49acc3c1d5dd9/servers/eca3a512-a739-4283-bbbe-9ed258118441/os-security-groups.json
@@ -3286,26 +3286,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 255bb9231fd54836bdfde725de8caf0f
+      - 34ea5ce9d0194db2b6c28db7eba944c9
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-c9f27e15-98ac-4adb-8aa6-1892b9ffd435
+      - req-5a443d2a-a63a-45ce-9df1-08b2e11112cb
       Content-Type:
       - application/json
       Content-Length:
       - '1808'
       Date:
-      - Mon, 21 Sep 2015 14:39:12 GMT
+      - Thu, 24 Sep 2015 12:09:01 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
@@ -3332,7 +3332,7 @@ http_interactions:
         "EmsRefreshSpec-SecurityGroup", "description": "EmsRefreshSpec-SecurityGroup
         description"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:12 GMT
+  recorded_at: Thu, 24 Sep 2015 12:09:01 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/18692e1f0c19452584d49acc3c1d5dd9/os-floating-ips.json
@@ -3341,26 +3341,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 255bb9231fd54836bdfde725de8caf0f
+      - 34ea5ce9d0194db2b6c28db7eba944c9
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-c54dab7a-40aa-4039-ac75-50748adffd4d
+      - req-9d35f69b-8cfa-4d09-86b3-901e9aa6041d
       Content-Type:
       - application/json
       Content-Length:
       - '530'
       Date:
-      - Mon, 21 Sep 2015 14:39:12 GMT
+      - Thu, 24 Sep 2015 12:09:01 GMT
     body:
       encoding: UTF-8
       string: '{"floating_ips": [{"instance_id": "b35e3f4d-2c7e-4727-8da9-32827de4b6f7",
@@ -3371,7 +3371,7 @@ http_interactions:
         "799dd88e-b0f2-4f00-9717-31f4fe3ec598", "ip": "10.3.4.4", "fixed_ip": "192.168.32.5",
         "id": 4, "pool": "nova"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:12 GMT
+  recorded_at: Thu, 24 Sep 2015 12:09:01 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/18692e1f0c19452584d49acc3c1d5dd9/servers/07f223b6-3e7a-4866-ac06-a9382ec1ed5a/os-security-groups.json
@@ -3380,26 +3380,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 255bb9231fd54836bdfde725de8caf0f
+      - 34ea5ce9d0194db2b6c28db7eba944c9
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-6fd6a6ff-cd03-4a8c-ba76-89eb2808b217
+      - req-936f9e62-ffcf-438e-ac6f-651e60325aa6
       Content-Type:
       - application/json
       Content-Length:
       - '1808'
       Date:
-      - Mon, 21 Sep 2015 14:39:13 GMT
+      - Thu, 24 Sep 2015 12:09:02 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
@@ -3426,7 +3426,7 @@ http_interactions:
         "EmsRefreshSpec-SecurityGroup", "description": "EmsRefreshSpec-SecurityGroup
         description"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:13 GMT
+  recorded_at: Thu, 24 Sep 2015 12:09:02 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/18692e1f0c19452584d49acc3c1d5dd9/os-floating-ips.json
@@ -3435,26 +3435,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 255bb9231fd54836bdfde725de8caf0f
+      - 34ea5ce9d0194db2b6c28db7eba944c9
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-ea7573de-f3a1-43b1-9520-1e0edaa22d89
+      - req-d680a05d-8ee2-4466-9bdf-7c0dcb3b9ca4
       Content-Type:
       - application/json
       Content-Length:
       - '530'
       Date:
-      - Mon, 21 Sep 2015 14:39:13 GMT
+      - Thu, 24 Sep 2015 12:09:02 GMT
     body:
       encoding: UTF-8
       string: '{"floating_ips": [{"instance_id": "b35e3f4d-2c7e-4727-8da9-32827de4b6f7",
@@ -3465,7 +3465,7 @@ http_interactions:
         "799dd88e-b0f2-4f00-9717-31f4fe3ec598", "ip": "10.3.4.4", "fixed_ip": "192.168.32.5",
         "id": 4, "pool": "nova"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:14 GMT
+  recorded_at: Thu, 24 Sep 2015 12:09:03 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/18692e1f0c19452584d49acc3c1d5dd9/servers/b35e3f4d-2c7e-4727-8da9-32827de4b6f7/os-security-groups.json
@@ -3474,26 +3474,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 255bb9231fd54836bdfde725de8caf0f
+      - 34ea5ce9d0194db2b6c28db7eba944c9
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-77914d7c-b500-4ff7-bc15-e841db2e2b8b
+      - req-d9b2f2dc-16c0-4103-ae79-7b633f754745
       Content-Type:
       - application/json
       Content-Length:
       - '1982'
       Date:
-      - Mon, 21 Sep 2015 14:39:15 GMT
+      - Thu, 24 Sep 2015 12:09:03 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
@@ -3522,7 +3522,7 @@ http_interactions:
         "id": 3, "name": "EmsRefreshSpec-SecurityGroup2", "description": "EmsRefreshSpec-SecurityGroup2
         description"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:15 GMT
+  recorded_at: Thu, 24 Sep 2015 12:09:03 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/18692e1f0c19452584d49acc3c1d5dd9/snapshots/detail
@@ -3531,26 +3531,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 37bb8338a8bd434c925038fdbdc34367
+      - f18fa3c3355243729f83552eafdbe931
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-73b36e19-440d-47f5-803d-87e14b01add9
+      - req-da9f56be-3877-46e2-9a64-5e671b683347
       Content-Type:
       - application/json
       Content-Length:
       - '916'
       Date:
-      - Mon, 21 Sep 2015 14:39:15 GMT
+      - Thu, 24 Sep 2015 12:09:03 GMT
     body:
       encoding: UTF-8
       string: '{"snapshots": [{"status": "available", "display_name": "EmsRefreshSpec-VolumeSnapshot",
@@ -3565,7 +3565,7 @@ http_interactions:
         "18692e1f0c19452584d49acc3c1d5dd9", "metadata": {}, "id": "9ca956f3-1965-42e2-abe0-5fc49dbdd1e7",
         "size": 1}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:16 GMT
+  recorded_at: Thu, 24 Sep 2015 12:09:04 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/18692e1f0c19452584d49acc3c1d5dd9/snapshots/detail?limit=1000
@@ -3574,26 +3574,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 37bb8338a8bd434c925038fdbdc34367
+      - f18fa3c3355243729f83552eafdbe931
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-daaa9e0a-34d0-4642-860a-034aeff53bf3
+      - req-c5c0a198-7c81-4128-966b-c1bb2d81ebdf
       Content-Type:
       - application/json
       Content-Length:
       - '916'
       Date:
-      - Mon, 21 Sep 2015 14:39:16 GMT
+      - Thu, 24 Sep 2015 12:09:04 GMT
     body:
       encoding: UTF-8
       string: '{"snapshots": [{"status": "available", "display_name": "EmsRefreshSpec-VolumeSnapshot",
@@ -3608,7 +3608,7 @@ http_interactions:
         "18692e1f0c19452584d49acc3c1d5dd9", "metadata": {}, "id": "9ca956f3-1965-42e2-abe0-5fc49dbdd1e7",
         "size": 1}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:16 GMT
+  recorded_at: Thu, 24 Sep 2015 12:09:04 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8/snapshots/detail
@@ -3617,31 +3617,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 9e717facb02e4921950076a24ae081dd
+      - 2d1e4075fc784ffa8617aaadbec85c07
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-0fa4e751-5413-4590-8088-3111b55e44a5
+      - req-4fb1c5bc-a711-4688-abab-e74dea64e4a4
       Content-Type:
       - application/json
       Content-Length:
       - '17'
       Date:
-      - Mon, 21 Sep 2015 14:39:16 GMT
+      - Thu, 24 Sep 2015 12:09:04 GMT
     body:
       encoding: UTF-8
       string: '{"snapshots": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:16 GMT
+  recorded_at: Thu, 24 Sep 2015 12:09:04 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/4500e127ec3a4a4a9b2cdf47c1f1abb8/snapshots/detail?limit=1000
@@ -3650,31 +3650,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 9e717facb02e4921950076a24ae081dd
+      - 2d1e4075fc784ffa8617aaadbec85c07
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-7f61a59f-480b-45bb-b678-911c19718206
+      - req-052424b5-eb4e-4a3d-bf99-8b2df9dd06cf
       Content-Type:
       - application/json
       Content-Length:
       - '17'
       Date:
-      - Mon, 21 Sep 2015 14:39:17 GMT
+      - Thu, 24 Sep 2015 12:09:05 GMT
     body:
       encoding: UTF-8
       string: '{"snapshots": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:17 GMT
+  recorded_at: Thu, 24 Sep 2015 12:09:05 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/ad25a941444e4ce6b41cba1d0e747a23/snapshots/detail
@@ -3683,31 +3683,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 21dec49b0da5462b8efaf1fd4ec83b37
+      - cde4a82c3e3f448fb9b779bbe394cbb0
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-de7cc58d-0776-409d-aefc-cc235108335e
+      - req-1347236a-4e0c-408e-8506-e78fc487da81
       Content-Type:
       - application/json
       Content-Length:
       - '17'
       Date:
-      - Mon, 21 Sep 2015 14:39:17 GMT
+      - Thu, 24 Sep 2015 12:09:05 GMT
     body:
       encoding: UTF-8
       string: '{"snapshots": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:17 GMT
+  recorded_at: Thu, 24 Sep 2015 12:09:05 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/ad25a941444e4ce6b41cba1d0e747a23/snapshots/detail?limit=1000
@@ -3716,31 +3716,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 21dec49b0da5462b8efaf1fd4ec83b37
+      - cde4a82c3e3f448fb9b779bbe394cbb0
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-aa718a7e-984f-424f-b7b4-b58638357b99
+      - req-e7bdd012-ca92-47b3-8a7b-bbdf01d080bc
       Content-Type:
       - application/json
       Content-Length:
       - '17'
       Date:
-      - Mon, 21 Sep 2015 14:39:17 GMT
+      - Thu, 24 Sep 2015 12:09:05 GMT
     body:
       encoding: UTF-8
       string: '{"snapshots": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:17 GMT
+  recorded_at: Thu, 24 Sep 2015 12:09:05 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/e9640afc4b7a460395c18ea04abd9cfe/snapshots/detail
@@ -3749,31 +3749,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - ae464b598eb7439b85a16680647e4584
+      - 91d099f70a9a45ec8e330e9e77721e17
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-4fac4668-d69f-4524-b113-c4386e9f0ec7
+      - req-d23cfe3e-0c4b-46e6-a85b-a147bc60e5b4
       Content-Type:
       - application/json
       Content-Length:
       - '17'
       Date:
-      - Mon, 21 Sep 2015 14:39:18 GMT
+      - Thu, 24 Sep 2015 12:09:06 GMT
     body:
       encoding: UTF-8
       string: '{"snapshots": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:18 GMT
+  recorded_at: Thu, 24 Sep 2015 12:09:06 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/e9640afc4b7a460395c18ea04abd9cfe/snapshots/detail?limit=1000
@@ -3782,31 +3782,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - ae464b598eb7439b85a16680647e4584
+      - 91d099f70a9a45ec8e330e9e77721e17
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-8932cb4d-1bd5-4624-8a28-cb6bdaacb36d
+      - req-17280928-9f03-4a0d-931d-27598a8067f6
       Content-Type:
       - application/json
       Content-Length:
       - '17'
       Date:
-      - Mon, 21 Sep 2015 14:39:18 GMT
+      - Thu, 24 Sep 2015 12:09:06 GMT
     body:
       encoding: UTF-8
       string: '{"snapshots": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:18 GMT
+  recorded_at: Thu, 24 Sep 2015 12:09:06 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/18692e1f0c19452584d49acc3c1d5dd9/os-floating-ips.json?limit=1000
@@ -3815,26 +3815,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 255bb9231fd54836bdfde725de8caf0f
+      - 34ea5ce9d0194db2b6c28db7eba944c9
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-79909128-d231-4065-88e0-f9605ba20a80
+      - req-fa13b6a3-f0b8-4789-ad7a-f88abb8749af
       Content-Type:
       - application/json
       Content-Length:
       - '530'
       Date:
-      - Mon, 21 Sep 2015 14:39:18 GMT
+      - Thu, 24 Sep 2015 12:09:06 GMT
     body:
       encoding: UTF-8
       string: '{"floating_ips": [{"instance_id": "b35e3f4d-2c7e-4727-8da9-32827de4b6f7",
@@ -3845,7 +3845,7 @@ http_interactions:
         "799dd88e-b0f2-4f00-9717-31f4fe3ec598", "ip": "10.3.4.4", "fixed_ip": "192.168.32.5",
         "id": 4, "pool": "nova"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:18 GMT
+  recorded_at: Thu, 24 Sep 2015 12:09:06 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/18692e1f0c19452584d49acc3c1d5dd9/os-floating-ips.json?limit=1000&marker=4
@@ -3854,26 +3854,26 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 255bb9231fd54836bdfde725de8caf0f
+      - 34ea5ce9d0194db2b6c28db7eba944c9
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-35caa299-69c3-4d3c-8ea5-fb6118f93e88
+      - req-bd7c2165-4885-4836-8a7f-ba5f6e5661ad
       Content-Type:
       - application/json
       Content-Length:
       - '530'
       Date:
-      - Mon, 21 Sep 2015 14:39:19 GMT
+      - Thu, 24 Sep 2015 12:09:07 GMT
     body:
       encoding: UTF-8
       string: '{"floating_ips": [{"instance_id": "b35e3f4d-2c7e-4727-8da9-32827de4b6f7",
@@ -3884,7 +3884,7 @@ http_interactions:
         "799dd88e-b0f2-4f00-9717-31f4fe3ec598", "ip": "10.3.4.4", "fixed_ip": "192.168.32.5",
         "id": 4, "pool": "nova"}]}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:19 GMT
+  recorded_at: Thu, 24 Sep 2015 12:09:07 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/4500e127ec3a4a4a9b2cdf47c1f1abb8/os-floating-ips.json?limit=1000
@@ -3893,31 +3893,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 3a98e24221954f30a0baf6dc442f45ba
+      - 86ec18d58e474bc683eeb68157958486
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-9e616609-3d4e-4683-b1d0-2360fd9cb195
+      - req-de918739-75e2-413f-9eff-9f1e6482a82d
       Content-Type:
       - application/json
       Content-Length:
       - '20'
       Date:
-      - Mon, 21 Sep 2015 14:39:19 GMT
+      - Thu, 24 Sep 2015 12:09:07 GMT
     body:
       encoding: UTF-8
       string: '{"floating_ips": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:19 GMT
+  recorded_at: Thu, 24 Sep 2015 12:09:07 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/ad25a941444e4ce6b41cba1d0e747a23/os-floating-ips.json?limit=1000
@@ -3926,31 +3926,31 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - 3eab6d6c606a40499a534e2dcd2a24b6
+      - b7393ddad10f41ef87b4bc2563131de1
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-3f220f29-a095-4a3b-810b-88c491125e67
+      - req-7a897ed0-b1b3-4386-aa0a-51fcf18a5c3a
       Content-Type:
       - application/json
       Content-Length:
       - '20'
       Date:
-      - Mon, 21 Sep 2015 14:39:20 GMT
+      - Thu, 24 Sep 2015 12:09:08 GMT
     body:
       encoding: UTF-8
       string: '{"floating_ips": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:20 GMT
+  recorded_at: Thu, 24 Sep 2015 12:09:08 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/e9640afc4b7a460395c18ea04abd9cfe/os-floating-ips.json?limit=1000
@@ -3959,29 +3959,29 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.34.0 fog-core/1.32.1
+      - fog/2.0.0.pre.0 fog-core/1.32.1
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - f97b7fbb87c742249e1ffd41bc92e3d8
+      - 691e567f507140c0bd99f22d43961bf5
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-260fcc7c-dc57-4efe-923a-c255bc0e7262
+      - req-9a4e170e-9b49-45f6-8217-87beb53687fc
       Content-Type:
       - application/json
       Content-Length:
       - '20'
       Date:
-      - Mon, 21 Sep 2015 14:39:20 GMT
+      - Thu, 24 Sep 2015 12:09:08 GMT
     body:
       encoding: UTF-8
       string: '{"floating_ips": []}'
     http_version: 
-  recorded_at: Mon, 21 Sep 2015 14:39:20 GMT
+  recorded_at: Thu, 24 Sep 2015 12:09:08 GMT
 recorded_with: VCR 2.9.3
