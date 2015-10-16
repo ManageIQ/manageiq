@@ -912,6 +912,7 @@ en:
       OrchestrationTemplate:    Orchestration Template
       OrchestrationTemplateCfn: CloudFormation Template
       OrchestrationTemplateHot: Heat Template
+      OrchestrationTemplateAzure: Azure Template
       ProductUpdate:            Product Update
       PxeCustomizationTemplate: Customization Template
       PxeImage:                 PXE Image

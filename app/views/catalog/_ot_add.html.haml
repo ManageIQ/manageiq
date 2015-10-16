@@ -33,7 +33,8 @@
         .col-md-8
           = select_tag("type",
                        options_for_select({"Amazon CloudFormation" => "OrchestrationTemplateCfn",
-                                           "OpenStack Heat" => "OrchestrationTemplateHot"},
+                                           "OpenStack Heat" => "OrchestrationTemplateHot",
+                                           "Microsoft Azure" => "OrchestrationTemplateAzure",},
                                           @edit[:new][:type]),
                        :class => "selectpicker")
           :javascript

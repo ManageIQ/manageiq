@@ -15,7 +15,6 @@ body, html {
 @media (max-width: $screen-sm) {
   body {
     padding-top: 40px !important; //Body 'padding-top' is added because navbar-fixed-top class is applied
-    padding-bottom: 30px !important;
   }
   .scrollable-sm {
     height: 100%;
@@ -37,7 +36,6 @@ body, html {
 @media (min-width: $screen-sm) {
   body {
     padding-top: 100px !important; //Body 'padding-top' is added because navbar-fixed-top class is applied
-    padding-bottom: 30px !important;
   }
 
   .login-pf body {

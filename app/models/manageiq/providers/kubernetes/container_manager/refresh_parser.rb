@@ -14,13 +14,14 @@ module ManageIQ::Providers::Kubernetes
     def ems_inv_to_hashes(inventory)
       get_nodes(inventory)
       get_namespaces(inventory)
+      get_resource_quotas(inventory)
+      get_limit_ranges(inventory)
       get_replication_controllers(inventory)
       get_pods(inventory)
       get_endpoints(inventory)
       get_services(inventory)
       get_registries
       get_images
-
       EmsRefresh.log_inv_debug_trace(@data, "data:")
       @data
     end
@@ -83,6 +84,14 @@ module ManageIQ::Providers::Kubernetes
       @data[:container_projects].each do |ns|
         @data_index.store_path(:container_projects, :by_name, ns[:name], ns)
       end
+    end
+
+    def get_resource_quotas(inventory)
+      process_collection(inventory["resource_quota"], :container_quotas) { |n| parse_quota(n) }
+    end
+
+    def get_limit_ranges(inventory)
+      process_collection(inventory["limit_range"], :container_limits) { |n| parse_range(n) }
     end
 
     def process_collection(collection, key, &block)
@@ -275,6 +284,95 @@ module ManageIQ::Providers::Kubernetes
 
     def parse_namespaces(container_projects)
       parse_base_item(container_projects).except(:namespace)
+    end
+
+    def parse_quota(resource_quota)
+      new_result = parse_base_item(resource_quota).except(:namespace)
+      new_result[:project] = @data_index.fetch_path(
+        :container_projects,
+        :by_name,
+        resource_quota.metadata["table"][:namespace])
+      new_result[:container_quota_items] = parse_quota_items resource_quota
+      new_result
+    end
+
+    def parse_quota_items(resource_quota)
+      new_result_h = Hash.new do |h, k|
+        h[k] = {
+          :resource       => k.to_s,
+          :quota_desired  => nil,
+          :quota_enforced => nil,
+          :quota_observed => nil
+        }
+      end
+
+      resource_quota.spec.hard.to_h.each do |resource_name, quota|
+        new_result_h[resource_name][:quota_desired] = quota
+      end
+
+      resource_quota.status.hard.to_h.each do |resource_name, quota|
+        new_result_h[resource_name][:quota_enforced] = quota
+      end
+
+      resource_quota.status.used.to_h.each do |resource_name, quota|
+        new_result_h[resource_name][:quota_observed] = quota
+      end
+
+      new_result_h.values
+    end
+
+    def parse_range(limit_range)
+      new_result = parse_base_item(limit_range).except(:namespace)
+      new_result[:project] = @data_index.fetch_path(
+        :container_projects,
+        :by_name,
+        limit_range.metadata["table"][:namespace])
+      new_result[:container_limit_items] = parse_range_items limit_range
+      new_result
+    end
+
+    def parse_range_items(limit_range)
+      new_result_h = create_limits_matrix
+
+      limit_range.spec.limits.each do |item|
+        item[:max].to_h.each do |resource_name, limit|
+          new_result_h[item[:type].to_sym][resource_name.to_sym][:max] = limit
+        end
+
+        item[:min].to_h.each do |resource_name, limit|
+          new_result_h[item[:type].to_sym][resource_name.to_sym][:min] = limit
+        end
+
+        item[:default].to_h.each do |resource_name, limit|
+          new_result_h[item[:type].to_sym][resource_name.to_sym][:default] = limit
+        end
+
+        item[:defaultRequest].to_h.each do |resource_name, limit|
+          new_result_h[item[:type].to_sym][resource_name.to_sym][:default_request] = limit
+        end
+
+        item[:maxLimitRequestRatio].to_h.each do |resource_name, limit|
+          new_result_h[item[:type].to_sym][resource_name.to_sym][:max_limit_request_ratio] = limit
+        end
+      end
+      new_result_h.values.collect(&:values).flatten
+    end
+
+    def create_limits_matrix
+      # example: h[:pod][:cpu][:max] = 8
+      Hash.new do |h, item_type|
+        h[item_type] = Hash.new do |j, resource|
+          j[resource] = {
+            :item_type               => item_type.to_s,
+            :resource                => resource.to_s,
+            :max                     => nil,
+            :min                     => nil,
+            :default                 => nil,
+            :default_request         => nil,
+            :max_limit_request_ratio => nil
+          }
+        end
+      end
     end
 
     def parse_replication_controllers(container_replicator)

@@ -2,7 +2,7 @@
   %table.table.table-bordered.table-striped
     %thead
       %tr
-        %th{:colspan => 6, :align => "left"}
+        %th{:colspan => items[:labels].count, :align => "left"}
           = title
     - items[:labels].each do |label|
       %td
