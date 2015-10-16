@@ -1,5 +1,5 @@
 .row
-  - table.data[@first_item..@last_item].each do |row|
+  - table.data.each do |row|
     .col-md-6.col-lg-5
       - @id = row['id']
       - if @targets_hash

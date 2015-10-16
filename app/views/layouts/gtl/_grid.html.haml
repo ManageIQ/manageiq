@@ -1,7 +1,7 @@
 %table{:style => @embedded ? "height: 100px;" : ""}
   %tr
     %td{:width => "55%", :valign => "top"}
-      - table.data[@first_item..@last_item].each do |row|
+      - table.data.each do |row|
         - @id = row['id']
         - if @targets_hash
           -# Get the record
