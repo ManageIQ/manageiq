@@ -74,18 +74,18 @@ class ChargebackRate < ActiveRecord::Base
         fixture = YAML.load_file(fixture_file)
 
         fixture.each do |cbr|
-          rec = self.find_by_guid(cbr[:guid])
+          rec = find_by_guid(cbr[:guid])
           rates = cbr.delete(:rates)
           # The yml measure field is the name of the measure. It's changed to the id
           rates.each do |rate_detail|
-            measure = ChargebackRateDetailMeasure.find_by(name: rate_detail.delete(:measure))
-            if not measure.nil?
+            measure = ChargebackRateDetailMeasure.find_by(:name => rate_detail.delete(:measure))
+            unless measure.nil?
               rate_detail[:chargeback_rate_detail_measure_id] = measure.id
             end
           end
           if rec.nil?
             _log.info("Creating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
-            rec = self.create(cbr)
+            rec = create(cbr)
             rec.chargeback_rate_details.create(rates)
           else
             fixture_mtime = File.mtime(fixture_file).utc

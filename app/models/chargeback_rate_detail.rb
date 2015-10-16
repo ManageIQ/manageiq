@@ -37,10 +37,14 @@ class ChargebackRateDetail < ActiveRecord::Base
 
   def rate_adjustment(hr)
     case metric
-    when "cpu_usagemhz_rate_average" then per_unit == 'megahertz' ? hr : hr = rate_adjustment_measure(hr, 'megahertz')
-    when "derived_memory_used", "derived_memory_available" then per_unit == 'megabytes' ? hr : hr = rate_adjustment_measure(hr, 'megabytes')
-    when "net_usage_rate_average", "disk_usage_rate_average" then per_unit == 'kbps' ? hr : hr = rate_adjustment_measure(hr, 'kbps')
-    when "derived_vm_allocated_disk_storage", "derived_vm_used_disk_storage" then per_unit == 'bytes' ? hr : hr = rate_adjustment_measure(hr, 'bytes')
+    when "cpu_usagemhz_rate_average" then
+      per_unit == 'megahertz' ? hr : hr = rate_adjustment_measure(hr, 'megahertz')
+    when "derived_memory_used", "derived_memory_available" then
+      per_unit == 'megabytes' ? hr : hr = rate_adjustment_measure(hr, 'megabytes')
+    when "net_usage_rate_average", "disk_usage_rate_average" then
+      per_unit == 'kbps' ? hr : hr = rate_adjustment_measure(hr, 'kbps')
+    when "derived_vm_allocated_disk_storage", "derived_vm_used_disk_storage" then
+      per_unit == 'bytes' ? hr : hr = rate_adjustment_measure(hr, 'bytes')
     else hr
     end
   end

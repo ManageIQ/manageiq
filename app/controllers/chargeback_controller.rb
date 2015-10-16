@@ -248,8 +248,9 @@ class ChargebackController < ApplicationController
                   detail.group = r[:group]
                   detail.per_unit = r[:per_unit]
                   detail.metric = r[:metric]
-                  #Copy the measure id of the rate_detail linkig with the rate_detail_measure
-                  detail.chargeback_rate_detail_measure_id = r[:measure] ? ChargebackRateDetailMeasure.find_by(name: r[:measure]).id : nil
+                  # Copy the measure id of the rate_detail linkig with the rate_detail_measure
+                  id_measure = ChargebackRateDetailMeasure.find_by(:name => r[:measure]).id
+                  detail.chargeback_rate_detail_measure_id = r[:measure] ? id_measure : nil
                   @sb[:rate_details].push(detail) unless @sb[:rate_details].include?(detail)
                 end
               end

@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe ChargebackRateDetail do
-
   it "#cost" do
     cvalue   = 42.0
     rate     = 8.26
@@ -36,7 +35,8 @@ describe ChargebackRateDetail do
       'yearly',   'megabytes',  rate / 24 / 365,
       'yearly',   'gigabytes',  rate / 24 / 365 / 1024,
     ].each_slice(3) do |per_time, per_unit, hourly_rate|
-      cbd = FactoryGirl.create(:chargeback_rate_detail, :rate => rate, :per_time => per_time, :per_unit => per_unit,:metric => 'derived_memory_available', :chargeback_rate_detail_measure_id => cbdm.id)
+      cbd = FactoryGirl.create(:chargeback_rate_detail, :rate => rate, :per_time => per_time,
+       :per_unit => per_unit, :metric => 'derived_memory_available', :chargeback_rate_detail_measure_id => cbdm.id)
       cbd.hourly_rate.should == hourly_rate
     end
 
@@ -51,10 +51,10 @@ describe ChargebackRateDetail do
       'megabytes', value,
       'gigabytes', value / 1024,
     ].each_slice(2) do |per_unit, rate_adjustment|
-      cbd = FactoryGirl.create(:chargeback_rate_detail, :per_unit => per_unit, :metric => 'derived_memory_available', :chargeback_rate_detail_measure_id => cbdm.id)
+      cbd = FactoryGirl.create(:chargeback_rate_detail, :per_unit => per_unit, :metric => 'derived_memory_available',
+       :chargeback_rate_detail_measure_id => cbdm.id)
       cbd.rate_adjustment(value).should == rate_adjustment
     end
-
   end
 
   it "#rate_name" do
