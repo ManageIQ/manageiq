@@ -2,24 +2,27 @@ require "spec_helper"
 
 describe MiqProvisionMixin do
   describe "#get_owner" do
-    let(:miq_request) { double("MiqRequest", :requester => requester) }
     let(:owner) { FactoryGirl.create(:user_with_email) }
     let(:options) { {:owner_email => owner.email} }
     let(:requester) { FactoryGirl.create(:user_with_email) }
     subject do
       Class.new do
         include MiqProvisionMixin
-        attr_accessor :options, :miq_request
+        attr_accessor :options
 
-        def initialize(miq_request, options)
-          @miq_request = miq_request
+        def initialize(user, options)
           @options     = options
+          @requester   = user
+        end
+
+        def get_user
+          @requester
         end
 
         def get_option(name)
           options[name]
         end
-      end.new(miq_request, options)
+      end.new(requester, options)
     end
 
     context "with no owner_email" do

@@ -61,7 +61,7 @@ module MiqProvisionMixin
     @owner ||= begin
       email = get_option(:owner_email).try(:downcase)
       return if email.blank?
-      User.find_by_lower_email(email, miq_request.requester).tap do |owner|
+      User.find_by_lower_email(email, get_user).tap do |owner|
         owner.miq_group_description = get_option(:owner_group) if owner
       end
     end
