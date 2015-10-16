@@ -24,6 +24,10 @@ FactoryGirl.define do
     sequence(:email) { |s| "user#{s}@example.com" }
   end
 
+  factory :user_with_email_and_group, :parent => :user_with_group do
+    sequence(:email) { |s| "user#{s}@example.com" }
+  end
+
   factory :user_with_group, :parent => :user do
     transient do
       tenant { Tenant.seed }
