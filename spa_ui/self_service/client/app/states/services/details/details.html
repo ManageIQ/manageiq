@@ -152,6 +152,48 @@
   <div class="panel panel-default ss-details-panel">
     <div class="panel-body">
       <section class="ss-details-section">
+        <h2>Virtual Machines ({{ ::vm.service.vms.length }})</h2>
+        <p ng-if="vm.service.vms.length === 0">
+          This service has no associated VMs
+        </p>
+        <div pf-data-list id="serviceList" config="vm.listConfig" items="vm.service.vms" ng-if="vm.service.vms.length > 0">
+          <div class="row">
+            <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6">
+              <span class="no-wrap">
+                <i class="pficon pficon-screen"></i>&nbsp;{{ item.name }}
+              </span>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6">
+              <span class="no-wrap">
+                <strong>Vendor</strong>&nbsp;{{ item.vendor }}
+              </span>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-4 hidden-xs">
+              <span class="no-wrap">
+                <strong>Size</strong>&nbsp;{{ item.memory_shares | formatBytes }}
+              </span>
+            </div>
+            <div class="col-lg-3 hidden-md hidden-sm hidden-xs">
+              <span class="no-wrap">
+                <strong>Last Scan</strong>&nbsp;{{ item.last_scan_on | date:'medium' }}
+              </span>
+            </div>
+            <div class="col-lg-2 col-md-3 hidden-sm hidden-xs">
+              <span class="no-wrap">
+                <i class="fa pficon fa-power-off" ng-if="item.power_state == 'off'"></i>
+                <i class="pficon pficon-ok" ng-if="item.request_state == 'on'"></i>
+                <i class="fa pficon fa-pause" ng-if="item.request_state == 'suspended'"></i>
+                {{ item.power_state }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <div class="panel panel-default ss-details-panel">
+    <div class="panel-body">
+      <section class="ss-details-section">
         <h2>Service Details</h2>
         <pre>{{ ::vm.service |json }}</pre>
       </section>
