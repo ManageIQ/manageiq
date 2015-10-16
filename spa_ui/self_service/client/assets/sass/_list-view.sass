@@ -1,6 +1,7 @@
 .list-view-container
   overflow-y: auto
   overflow-x: hidden
+  height: calc(100vh - 148px)
   background: $app-color-white
 
   .alert
@@ -30,6 +31,7 @@
       color: #333
       position: relative
       top: 2px
+      margin-right: 5px
 
 +block(ss-list-view)
   +element(title-img)
