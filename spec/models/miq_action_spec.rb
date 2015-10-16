@@ -161,37 +161,54 @@ describe MiqAction do
   end
 
   context '.create_default_actions' do
-    context 'seeding default actions from csv' do
-      before { MiqAction.create_default_actions }
+    context 'seeding default actions from a file with 3 csv rows and some comments' do
+      before do
+        stub_csv \
+          "name,description\n"               \
+          "audit,Generate Audit Event\n"     \
+          "log,Generate log message\n"       \
+          "# snmp,Generate an SNMP trap\n"   \
+          "# sms,Send an SMS text message\n" \
+          "evm_event,Show EVM Event on Timeline\n"
 
-      it 'should create 34 new actions' do
-        expect(MiqAction.count).to eq 34
+        MiqAction.create_default_actions
+      end
+
+      it 'should create 3 new actions' do
+        expect(MiqAction.count).to eq 3
       end
 
       it 'should set action_type to "default"' do
-        expect(MiqAction.pluck(:action_type)).to eq Array.new(34, 'default')
+        expect(MiqAction.distinct.pluck(:action_type)).to eq ['default']
       end
 
-      context 'seeding again' do
-        before { MiqAction.create_default_actions }
+      context 'when csv was changed and imported again' do
+        before do
+          stub_csv \
+            "name,description\n"           \
+            "audit,UPD: Audit Event\n"     \
+            "# log,Generate log message\n" \
+            "snmp,Generate an SNMP trap\n" \
+            "evm_event,Show EVM Event on Timeline\n"
 
-        it 'should not create additional actions' do
-          expect(MiqAction.count).to eq 34
+          MiqAction.create_default_actions
+        end
+
+        it "should not delete the actions that present in the DB but don't present in the file" do
+          expect(MiqAction.where(:name => 'log')).to exist
+        end
+
+        it 'should update existing actions' do
+          expect(MiqAction.where(:name => 'audit').pluck(:description)).to eq ['UPD: Audit Event']
+        end
+
+        it 'should create new actions' do
+          expect(MiqAction.where(:name => 'snmp')).to exist
         end
       end
 
-      context 'when one of existing actions was changed' do
-        let(:action) { MiqAction.last }
-        let!(:original_description) { action.description }
-        before { action.update_column(:description, "UPATED DESCRIPTION") }
-
-        context 'seeding actions from csv again' do
-          before { MiqAction.create_default_actions }
-
-          it 'should revert that change' do
-            expect(action.reload.description).to eq original_description
-          end
-        end
+      def stub_csv(data)
+        allow_any_instance_of(Pathname).to receive(:read).and_return(data)
       end
     end
   end
