@@ -163,13 +163,14 @@ describe MiqAction do
   context '.create_default_actions' do
     context 'seeding default actions from a file with 3 csv rows and some comments' do
       before do
-        stub_csv \
-          "name,description\n"               \
-          "audit,Generate Audit Event\n"     \
-          "log,Generate log message\n"       \
-          "# snmp,Generate an SNMP trap\n"   \
-          "# sms,Send an SMS text message\n" \
-          "evm_event,Show EVM Event on Timeline\n"
+        stub_csv <<-CSV.strip_heredoc
+          name,description
+          audit,Generate Audit Event
+          log,Generate log message
+          # snmp,Generate an SNMP trap
+          # sms,Send an SMS text message
+          evm_event,Show EVM Event on Timeline
+        CSV
 
         MiqAction.create_default_actions
       end
@@ -184,12 +185,13 @@ describe MiqAction do
 
       context 'when csv was changed and imported again' do
         before do
-          stub_csv \
-            "name,description\n"           \
-            "audit,UPD: Audit Event\n"     \
-            "# log,Generate log message\n" \
-            "snmp,Generate an SNMP trap\n" \
-            "evm_event,Show EVM Event on Timeline\n"
+          stub_csv <<-CSV.strip_heredoc
+            name,description
+            audit,UPD: Audit Event
+            # log,Generate log message
+            snmp,Generate an SNMP trap
+            evm_event,Show EVM Event on Timeline
+          CSV
 
           MiqAction.create_default_actions
         end
