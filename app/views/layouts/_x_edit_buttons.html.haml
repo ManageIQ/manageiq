@@ -38,152 +38,150 @@
 -# need to pass this as true if need to send up serialized form data when save is pressed
 - serialize ||= false
 
-%table{:width => "100%"}
-  %tr
-    %td{:align => align}
-      - if action_url && !export_button
-        #buttons_on{:style => session[:changed] ? "" : "display: none;"}
-          - if record_id.blank? && multi_record.nil? && submit_button.nil? && continue_button.nil?
-            = button_tag(t = _('Add'),
-              :class   => "btn btn-primary",
-              :alt     => t,
-              :title   => t,
-              :onclick => "miqAjaxButton('#{url_for(:action => action_url, :button => "add")}', #{serialize});")
-          - else
-            - if apply_button
-              = link_to(_("Apply"),
-                {:action => action_url, :button => "apply", :id => record_id},
-                :method => apply_method,
-                :class => "btn btn-primary",
-                :alt   => apply_text,
-                :title => apply_text)
-            - elsif export_button
-              - t = _("Download Report to YAML")
-              = link_to(_("Export"),
-                {:action => action_url},
-                :class  => "btn btn-primary",
-                :type   => "application/txt",
-                :alt    => t,
-                :title  => t)
-            - elsif submit_button
-              = button_tag(t = _('Submit'),
-                :class   => "btn btn-primary",
-                :alt     => t,
-                :title   => t,
-                :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "submit")}');")
-            - elsif continue_button
-              = button_tag(t = _('Continue'),
-                :class   => "btn btn-primary",
-                :alt     => t,
-                :title   => t,
-                :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "continue")}');")
-            - elsif create_button
-              = button_tag(t = _('Create'),
-                :class   => "btn btn-primary",
-                :alt     => t,
-                :title   => t,
-                :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "create")}',true);")
-            - elsif copy_button
-              = button_tag(t = _('Copy'),
-                :class   => "btn btn-primary",
-                :alt     => t,
-                :title   => t,
-                :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "copy")}',true);")
-            - else
-              - if save_confirm_text
-                -# Ask for confirmation before saving
-                = button_tag(_('Save'),
-                  :class   => "btn btn-primary",
-                  :alt     => save_text,
-                  :title   => save_text,
-                  :onclick => "if (confirm('#{save_confirm_text}')) miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "save")}', #{serialize});")
-              - else
-                = button_tag(_('Save'),
-                  :class   => "btn btn-primary",
-                  :alt     => t = _("Save Changes"),
-                  :title   => t,
-                  :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "save")}', #{serialize});")
 
-            - unless no_reset
-              = button_tag('Reset',
-                :class   => "btn btn-default",
-                :alt     => t = _("Reset Changes"),
-                :title   => t,
-                :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "reset")}');")
-          - if default_button
-            = button_tag(_('Default'),
-              :class   => "btn btn-default",
-              :alt     => t = _("Reset All menus to CFME defaults"),
-              :title   => t,
-              :onclick => "miqAjaxButton('#{url_for(:action => "menu_update", :button => "default")}');")
-          - unless no_cancel
-            = button_tag(t = _('Cancel'),
-              :class   => "btn btn-default",
-              :alt     => t,
-              :title   => t,
-              :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "cancel")}');")
-
-        #buttons_off{:style => session[:changed] ? "display: none;" : ""}
-          - if record_id.blank? && multi_record.nil? && submit_button.nil? && continue_button.nil?
-            = button_tag(_("Add"), :class => "btn btn-primary btn-disabled")
-          - else
-            - if apply_button
-              = button_tag(_("Apply"), :class => "btn btn-primary btn-disabled")
-            - elsif submit_button
-              = button_tag(_("Submit"), :class => "btn btn-primary btn-disabled")
-            - elsif continue_button
-              = button_tag(_("Continue"), :class => "btn btn-primary btn-disabled")
-            - elsif copy_button
-              = button_tag(_("Copy"), :class => "btn btn-primary btn-disabled")
-            - else
-              = button_tag(_("Save"), :class => "btn btn-primary btn-disabled")
-
-            - unless no_reset
-              = button_tag(_("Reset"), :class => "btn btn-default btn-disabled")
-
-          - if default_button
-            = button_tag(_('Default'),
-              :class   => "btn btn-default",
-              :alt     => t = _("Reset All menus to CFME defaults"),
-              :title   => t,
-              :onclick => "miqAjaxButton('#{url_for(:action => "menu_update", :button => "default")}');")
-
-          - unless no_cancel
-            = button_tag(t = _('Cancel'),
-              :class   => "btn btn-default",
-              :alt     => t,
-              :title   => t,
-              :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "cancel")}');")
-      - elsif record_id || export_button
-        -# show button to go back
-        #buttons
-          - if params[:action] == "policies" || %w(right_size).include?(@sb[:action])
-            - action = (params[:action] == "policies" ? "policy_sim" : "x_history")
-            -# Button to go back to policy simulation screen from 1 VMs policies
-            = button_tag(t = _('Back'),
-              :class   => "btn btn-default",
-              :alt     => t,
-              :title   => t,
-              :onclick => "miqAjaxButton('#{url_for(:action => action, :continue => true)}');")
-          - elsif %w(drift policy_sim).include?(@sb[:action])
-            -# Button to cancel policy simulation/drift and return to latest tree node
-            = button_tag(t = _('Cancel'),
-              :class   => "btn btn-default",
-              :alt     => t,
-              :title   => t,
-              :onclick => "miqAjaxButton('#{url_for(:action => "x_history", :item   => 0)}');")
-          - else
-            -# export_button
-            = button_tag(_("Export"),
-              :class  => "btn btn-primary #{@export_reports.empty? ? "btn-disabled" : ""}",
-              :type   => "application/txt",
-              :id     => "export_button",
-              :alt    => _("Download Report to YAML"))
-      - elsif ["compare"].include?(@sb[:action])
-        #buttons
-          -# Button to cancel policy simulation and return to latest tree node
-          = button_tag(t = _('Cancel'),
-            :class   => "btn btn-default",
-            :alt     => t,
+- if action_url && !export_button
+  #buttons_on{:style => session[:changed] ? "" : "display: none;"}
+    - if record_id.blank? && multi_record.nil? && submit_button.nil? && continue_button.nil?
+      = button_tag(t = _('Add'),
+        :class   => "btn btn-primary",
+        :alt     => t,
+        :title   => t,
+        :onclick => "miqAjaxButton('#{url_for(:action => action_url, :button => "add")}', #{serialize});")
+    - else
+      - if apply_button
+        = link_to(_("Apply"),
+          {:action => action_url, :button => "apply", :id => record_id},
+          :method => apply_method,
+          :class => "btn btn-primary",
+          :alt   => apply_text,
+          :title => apply_text)
+      - elsif export_button
+        - t = _("Download Report to YAML")
+        = link_to(_("Export"),
+          {:action => action_url},
+          :class  => "btn btn-primary",
+          :type   => "application/txt",
+          :alt    => t,
+          :title  => t)
+      - elsif submit_button
+        = button_tag(t = _('Submit'),
+          :class   => "btn btn-primary",
+          :alt     => t,
+          :title   => t,
+          :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "submit")}');")
+      - elsif continue_button
+        = button_tag(t = _('Continue'),
+          :class   => "btn btn-primary",
+          :alt     => t,
+          :title   => t,
+          :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "continue")}');")
+      - elsif create_button
+        = button_tag(t = _('Create'),
+          :class   => "btn btn-primary",
+          :alt     => t,
+          :title   => t,
+          :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "create")}',true);")
+      - elsif copy_button
+        = button_tag(t = _('Copy'),
+          :class   => "btn btn-primary",
+          :alt     => t,
+          :title   => t,
+          :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "copy")}',true);")
+      - else
+        - if save_confirm_text
+          -# Ask for confirmation before saving
+          = button_tag(_('Save'),
+            :class   => "btn btn-primary",
+            :alt     => save_text,
+            :title   => save_text,
+            :onclick => "if (confirm('#{save_confirm_text}')) miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "save")}', #{serialize});")
+        - else
+          = button_tag(_('Save'),
+            :class   => "btn btn-primary",
+            :alt     => t = _("Save Changes"),
             :title   => t,
-            :onclick => "miqAjaxButton('#{url_for(:action => "x_history", :item => 0)}');")
+            :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "save")}', #{serialize});")
+
+      - unless no_reset
+        = button_tag('Reset',
+          :class   => "btn btn-default",
+          :alt     => t = _("Reset Changes"),
+          :title   => t,
+          :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "reset")}');")
+    - if default_button
+      = button_tag(_('Default'),
+        :class   => "btn btn-default",
+        :alt     => t = _("Reset All menus to CFME defaults"),
+        :title   => t,
+        :onclick => "miqAjaxButton('#{url_for(:action => "menu_update", :button => "default")}');")
+    - unless no_cancel
+      = button_tag(t = _('Cancel'),
+        :class   => "btn btn-default",
+        :alt     => t,
+        :title   => t,
+        :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "cancel")}');")
+
+  #buttons_off{:style => session[:changed] ? "display: none;" : ""}
+    - if record_id.blank? && multi_record.nil? && submit_button.nil? && continue_button.nil?
+      = button_tag(_("Add"), :class => "btn btn-primary btn-disabled")
+    - else
+      - if apply_button
+        = button_tag(_("Apply"), :class => "btn btn-primary btn-disabled")
+      - elsif submit_button
+        = button_tag(_("Submit"), :class => "btn btn-primary btn-disabled")
+      - elsif continue_button
+        = button_tag(_("Continue"), :class => "btn btn-primary btn-disabled")
+      - elsif copy_button
+        = button_tag(_("Copy"), :class => "btn btn-primary btn-disabled")
+      - else
+        = button_tag(_("Save"), :class => "btn btn-primary btn-disabled")
+
+      - unless no_reset
+        = button_tag(_("Reset"), :class => "btn btn-default btn-disabled")
+
+    - if default_button
+      = button_tag(_('Default'),
+        :class   => "btn btn-default",
+        :alt     => t = _("Reset All menus to CFME defaults"),
+        :title   => t,
+        :onclick => "miqAjaxButton('#{url_for(:action => "menu_update", :button => "default")}');")
+
+    - unless no_cancel
+      = button_tag(t = _('Cancel'),
+        :class   => "btn btn-default",
+        :alt     => t,
+        :title   => t,
+        :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "cancel")}');")
+- elsif record_id || export_button
+  -# show button to go back
+  #buttons
+    - if params[:action] == "policies" || %w(right_size).include?(@sb[:action])
+      - action = (params[:action] == "policies" ? "policy_sim" : "x_history")
+      -# Button to go back to policy simulation screen from 1 VMs policies
+      = button_tag(t = _('Back'),
+        :class   => "btn btn-default",
+        :alt     => t,
+        :title   => t,
+        :onclick => "miqAjaxButton('#{url_for(:action => action, :continue => true)}');")
+    - elsif %w(drift policy_sim).include?(@sb[:action])
+      -# Button to cancel policy simulation/drift and return to latest tree node
+      = button_tag(t = _('Cancel'),
+        :class   => "btn btn-default",
+        :alt     => t,
+        :title   => t,
+        :onclick => "miqAjaxButton('#{url_for(:action => "x_history", :item   => 0)}');")
+    - else
+      -# export_button
+      = button_tag(_("Export"),
+        :class  => "btn btn-primary #{@export_reports.empty? ? "btn-disabled" : ""}",
+        :type   => "application/txt",
+        :id     => "export_button",
+        :alt    => _("Download Report to YAML"))
+- elsif ["compare"].include?(@sb[:action])
+  #buttons
+    -# Button to cancel policy simulation and return to latest tree node
+    = button_tag(t = _('Cancel'),
+      :class   => "btn btn-default",
+      :alt     => t,
+      :title   => t,
+      :onclick => "miqAjaxButton('#{url_for(:action => "x_history", :item => 0)}');")

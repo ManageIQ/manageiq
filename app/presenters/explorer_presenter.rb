@@ -40,7 +40,6 @@ class ExplorerPresenter
   #   replace_partials          -- partials to replace (also wrapping tag)
   #   element_updates           -- do we need all 3 of the above?
   #   set_visible_elements      -- elements to cal 'set_visible' on
-  #   show_hide_layout          -- layout elements to show/hide
   #   reload_toolbars
   #
 
@@ -48,7 +47,6 @@ class ExplorerPresenter
     @options = HashWithIndifferentAccess.new(
       :lock_unlock_trees    => {},
       :set_visible_elements => {},
-      :show_hide_layout     => {},
       :update_partials      => {},
       :element_updates      => {},
       :replace_partials     => {},
@@ -140,14 +138,10 @@ class ExplorerPresenter
       @out << set_element_visible(el, visible)
     end
 
-    @options[:show_hide_layout].each do |element, action|
-      @out << "ManageIQ.layout.#{element}.#{action}();"
-    end
-
     # Scroll to top of main div
     @out << "$('#main_div').scrollTop(0);"
 
-    @out << "ManageIQ.layout.content.title('#{escape_javascript(ERB::Util.h(@options[:right_cell_text]))}');" if @options[:right_cell_text]
+    @out << "$('h1#explorer_title').html('#{j ERB::Util.h(@options[:right_cell_text])}');" if @options[:right_cell_text]
 
     # Reload toolbars
     @options[:reload_toolbars].each do |tb, opts|
@@ -166,8 +160,7 @@ class ExplorerPresenter
     @out << @options[:extra_js].join("\n")
 
     # Position the clear_search link
-    @out << "$('.dhtmlxInfoBarLabel').filter(':visible').append($('#clear_search')[0]);
-    miqResizeTaskbarCell();"
+    @out << "$('.dhtmlxInfoBarLabel').filter(':visible').append($('#clear_search')[0]);"
 
     @out << "$('#clear_search').#{@options[:clear_search_show_or_hide]}();" if @options[:clear_search_show_or_hide]
 

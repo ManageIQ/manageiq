@@ -8,10 +8,6 @@ function miqInitToolbars() {
   $.each(ManageIQ.toolbars, function (key) {
     miqInitToolbar(ManageIQ.toolbars[key]);
   });
-  if (typeof miqResizeTaskbarCell == "undefined") {
-     return;
-  }
-  miqResizeTaskbarCell();
 }
 
 // Initialize a single toolbar
