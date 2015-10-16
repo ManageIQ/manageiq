@@ -865,6 +865,8 @@
     - :collection
     :methods: *70174834084700
     :klass: Tenant
+    :subcollections:
+    - :tags
     :collection_actions:
       :get:
       - :name: read
@@ -888,6 +890,12 @@
       :delete:
       - :name: delete
         :identifier: rbac_tenant_delete
+    :tags_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: rbac_tenant_tags_edit
+      - :name: unassign
+        :identifier: rbac_tenant_tags_edit
   :users:
     :description: Users
     :options:
