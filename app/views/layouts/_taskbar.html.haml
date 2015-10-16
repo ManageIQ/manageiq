@@ -3,12 +3,9 @@
   %div{:style => "float: left;"}
     - defered_toolbar_render('summary_center_tb', controller.send(:restful?) ? "summary_center_restful_tb" : "summary_center_tb")
 
-%div{:style => "float: left; padding-left: 0px;"}
-  = render :partial => "layouts/center_buttons"
-%div{:style => "float: left;"}
-  = render :partial => "layouts/x_custom_buttons"
-%div{:style => "float: right;"}
-  = render :partial => "layouts/view_buttons"
-  - if  @layout == "dashboard"
-    = render :partial => "/layouts/tabs"
+= render :partial => "layouts/center_buttons"
+= render :partial => "layouts/x_custom_buttons"
+= render :partial => "layouts/view_buttons"
+- if  @layout == "dashboard"
+  = render :partial => "/layouts/tabs"
 = render_toolbars

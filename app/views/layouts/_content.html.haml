@@ -12,9 +12,10 @@
   .container-fluid.resizable-sidebar{:style => "overflow: hidden; height: 100%; background: #fff;"}
     .row#center_div{:style => "height: 100%"}
       #right_div.resizable{:style => "height: 100%", :class => "col-md-#{maindiv} col-md-push-#{sidewidth}"}
-        .row
-          #toolbar
+        .row.toolbar-pf#toolbar
+          .toolbar-pf-actions{:style => "padding-bottom: 10px"}
             = render :partial => "layouts/x_taskbar"
+          / .row.toolbar-pf-results
         .row
           .col-md-7#explorer
             %h1#explorer_title
@@ -22,7 +23,7 @@
           .col-md-5
             %br
             = yield :search
-        .row{:style => "overflow: auto;height: calc(100% - 130px);"}
+        .row{:style => "overflow: auto;height: calc(100% - 135px);"}
           .col-md-12
             = yield
         .row.toolbar-pf#paging_div
@@ -61,9 +62,10 @@
         -# .max-height.resizable{:class => "col-md-#{maindiv} col-md-push-#{sidewidth}"}
         .col-md-10.col-md-push-2.max-height
           - if taskbar_in_header?
-            .row#main_taskbar
-              .col-md-12#toolbar
+            .row.toolbar-pf#toolbar
+              .toolbar-pf-actions{:style => "padding-bottom: 10px"}
                 = render :partial => "layouts/taskbar"
+          / .row.toolbar-pf-results
           .row
             .col-md-7
               = render :partial => "layouts/breadcrumbs"
@@ -96,7 +98,7 @@
       - else
         .col-md-12.max-height
           - if taskbar_in_header?
-            .row#main_taskbar
+            .row
               .col-md-12
                 = render :partial => "layouts/taskbar"
           .row

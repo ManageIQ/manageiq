@@ -30,7 +30,7 @@ module ToolbarHelper
   #
   def render_toolbars
     @toolbars.collect do |div_id, toolbar_name|
-      content_tag(:div, :id => div_id, :class => 'btn-group') do # btn-group aroung each toolbar
+      content_tag(:div, :id => div_id, :class => 'form-group') do # form-group aroung each toolbar
         _tb_buttons, _tb_xml, buttons = build_toolbar_buttons_and_xml(toolbar_name)
         buttons_to_html(buttons)
       end
@@ -61,7 +61,6 @@ module ToolbarHelper
   def toolbar_image(props)
     tag(:img,
         :src            => t = "/images/toolbars/#{props['img']}",
-        :style          => 'margin-right: 5px; width: 15px',
         'data-enabled'  => t,
         'data-disabled' => "/images/toolbars/#{props['imgdis']}")
   end

@@ -1,12 +1,8 @@
 #taskbar_buttons_div-x
-  %div{:style => "float: left;"}
-    = render :partial => "layouts/x_history_buttons"
-  %div{:style => "float: left;"}
-    = render :partial => "layouts/center_buttons"
-  %div{:style => "float: left;"}
-    = render :partial => "layouts/x_custom_buttons"
-  %div{:style => "float: right;"}
-    = render :partial => "layouts/x_view_buttons"
+  = render :partial => "layouts/x_history_buttons"
+  = render :partial => "layouts/center_buttons"
+  = render :partial => "layouts/x_custom_buttons"
+  = render :partial => "layouts/x_view_buttons"
   - if !request.xml_http_request?
     -# FIXME: do we need this condition?
     = render_toolbars

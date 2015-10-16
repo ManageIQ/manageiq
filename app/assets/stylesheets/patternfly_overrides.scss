@@ -3,12 +3,6 @@ body, html {
   height: 100%;
   overflow: hidden;
 }
-#main_taskbar {
-  height: 34px;
-  padding-top: 2px;
-  border-bottom: 1px solid #c7c7c7;
-  background-image: linear-gradient(to bottom, #FAFAFA 0%, #EDEDED 100%);
-}
 
 #paging_div {
   width: 100%;
@@ -324,7 +318,11 @@ iframe, .iframe {
   overflow-y: visible !important
 }
 
-/* toolbar right allignment */
+/* toolbar styling */
 div#view_tb {
-  float: right
+  float: right;
+}
+
+.toolbar-pf-actions .btn-group.dropdown > button > img {
+  padding-right: 3px;
 }
