@@ -838,13 +838,13 @@ class MiqRequestWorkflow
     filter_id = get_value(@values[filter_prop]).to_i
     if filter_id.zero?
       Rbac.filtered(targets,
-                    :class        => ci_klass,
-                    :userid       => @requester.userid,
-                    :miq_group_id => @requester.current_group_id)
+                    :class     => ci_klass,
+                    :user      => @requester,
+                    :miq_group => @requester.current_group)
     else
       MiqSearch.find(filter_id).filtered(targets,
-                                         :userid       => @requester.userid,
-                                         :miq_group_id => @requester.current_group_id)
+                                         :user      => @requester,
+                                         :miq_group => @requester.current_group)
     end.tap { rails_logger("process_filter - [#{ci_klass}]", 1) }
   end
 
