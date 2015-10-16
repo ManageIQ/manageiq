@@ -39,6 +39,7 @@
       'aggregate_all_vm_disk_space_allocated',
       'aggregate_all_vm_disk_space_used',
       'aggregate_all_vm_memory_on_disk',
+      'actions',
       'custom_actions'
     ];
     var options = {attributes: requestAttributes};
