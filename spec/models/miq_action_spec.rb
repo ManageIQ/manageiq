@@ -213,5 +213,14 @@ describe MiqAction do
         allow_any_instance_of(Pathname).to receive(:read).and_return(data)
       end
     end
+
+    # 'integration' test to make sure that the real fixture file is well-formed
+    context 'seeding default actions' do
+      before { MiqAction.create_default_actions }
+
+      it 'should create new actions' do
+        expect(MiqAction.count).to be > 0
+      end
+    end
   end
 end
