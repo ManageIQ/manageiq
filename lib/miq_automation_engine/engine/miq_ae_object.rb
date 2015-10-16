@@ -245,10 +245,10 @@ module MiqAeEngine
       process_filtered_fields(['assertion'], message)
     end
 
-    def set_user_info(user)
+    def user_info_attributes(user)
       objects_hash = {'user'      => user,
                       'tenant'    => user.current_tenant,
-                      'miq_group' => user.current_group }
+                      'miq_group' => user.current_group}
       objects_hash.each do |k, v|
         value = MiqAeObject.convert_value_based_on_datatype(v.id, "#{v.class}")
         @attributes[k] = value unless value.nil?
