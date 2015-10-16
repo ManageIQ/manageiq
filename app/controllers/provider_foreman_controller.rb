@@ -789,13 +789,13 @@ class ProviderForemanController < ApplicationController
       center_tb ||= center_toolbar_filename
       custom_btn_tb = center_tb
       custom_btn_tb ||= "custom_buttons_tb"
-      c_buttons,  c_xml  = build_toolbar_buttons_and_xml(center_tb)
+      c_buttons,  c_xml, c_tb = build_toolbar_buttons_and_xml(center_tb)
 
       if record_showing
         cb_buttons, cb_xml, cb_tb = build_toolbar_buttons_and_xml(custom_btn_tb)
-        v_buttons,  v_xml  = build_toolbar_buttons_and_xml("x_summary_view_tb")
+        v_buttons,  v_xml, v_tb  = build_toolbar_buttons_and_xml("x_summary_view_tb")
       else
-        v_buttons,  v_xml  = build_toolbar_buttons_and_xml("x_gtl_view_tb")
+        v_buttons,  v_xml, v_tb  = build_toolbar_buttons_and_xml("x_gtl_view_tb")
       end
     end
 

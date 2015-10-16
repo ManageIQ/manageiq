@@ -2687,13 +2687,14 @@ describe ApplicationHelper do
       }
       @tb_buttons = {}
       @parent = nil
+      @item_out = {}
       Object.any_instance.stub(:query_string).and_return("")
       allow_message_expectations_on_nil
     end
 
     context "names the button" do
       subject do
-        build_toolbar_save_button(@tb_buttons, @item, @parent)
+        build_toolbar_save_button(@tb_buttons, @item, @item_out, @parent)
         @tb_buttons
       end
 
@@ -2714,7 +2715,7 @@ describe ApplicationHelper do
 
     context "saves the item info by the same key" do
       subject do
-        build_toolbar_save_button(@tb_buttons, @item)
+        build_toolbar_save_button(@tb_buttons, @item, @item_out)
         @tb_buttons[@item[:button]]
       end
 
@@ -2726,7 +2727,7 @@ describe ApplicationHelper do
       it "when both parent and item[:title] exists" do
         parent = "Vm"
         @item[:title] = "Power On this VM"
-        build_toolbar_save_button(@tb_buttons, @item, parent)
+        build_toolbar_save_button(@tb_buttons, @item, @item_out, parent)
         @tb_buttons["#{parent}__#{@item[:button]}"].should have_key(:title)
       end
 
@@ -2747,7 +2748,7 @@ describe ApplicationHelper do
 
     context "when item[:url] exists" do
       subject do
-        build_toolbar_save_button(@tb_buttons, @item)
+        build_toolbar_save_button(@tb_buttons, @item, @item_out)
         @tb_buttons[@item[:button]]
       end
 
