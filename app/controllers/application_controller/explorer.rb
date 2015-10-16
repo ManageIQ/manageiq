@@ -221,7 +221,7 @@ module ApplicationController::Explorer
     # :full_ids               # stack parent id on top of each node id
 
     roots = x_get_tree_objects(options.merge(
-                                 :userid => session[:userid], # Userid for RBAC filtering
+                                 :user   => current_user,     # Userid for RBAC filtering
                                  :parent => nil               # Asking for roots, no parent
     ))
 
@@ -253,7 +253,7 @@ module ApplicationController::Explorer
   def x_get_tree_objects(options)
     # Options used:
     # :parent                 # Parent object for which we need child tree nodes returned
-    # :userid                 # Signed in user's id
+    # :user                   # Signed in user
     # :count_only             # Return only the count if true
     # :type                   # Type of tree, i.e. :handc, :vandt, :filtered, etc
     # :leaf                   # Model name of leaf nodes, i.e. "Vm"
