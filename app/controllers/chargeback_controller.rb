@@ -1095,7 +1095,7 @@ class ChargebackController < ApplicationController
         presenter[:set_visible_elements][:center_buttons_div] = true
         presenter[:reload_toolbars][:center] = {:buttons => c_buttons, :xml => c_xml}
       end
-      presenter[:show_hide_layout][:toolbar] = c_buttons ? 'show' : 'hide'
+      presenter[:set_visible_elements][:toolbar] = c_buttons
       presenter[:update_partials][:main_div] = r[:partial => 'tiers_tabs']
       presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols']
     when :cb_assignments_tree
