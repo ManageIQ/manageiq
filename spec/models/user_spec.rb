@@ -563,6 +563,13 @@ describe User do
       expect(u.current_group).to eq(g2)
       expect(u.miq_group_description).to eq(g2.description)
     end
+
+    it "sets any group to super admin" do
+      a = FactoryGirl.create(:user, :role => "super_administrator")
+      expect(a).to be_super_admin_user
+
+      a.miq_group_description = g2.description
+      expect(a.current_group).to eq(g2)
     end
   end
 
