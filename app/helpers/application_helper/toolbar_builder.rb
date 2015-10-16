@@ -1369,7 +1369,7 @@ class ApplicationHelper::ToolbarBuilder
       props[:prompt] = tb_buttons[button][:prompt] = true
     end
     parms = eval("\"#{item[:url_parms]}\"") if item[:url_parms]
-    tb_buttons[button][:url_parms] = update_url_parms(parms) if item[:url_parms]
+    props[:url_parms] = tb_buttons[button][:url_parms] = update_url_parms(parms) if item[:url_parms]
     # doing eval for ui_lookup in confirm message
     confirm_title = eval("\"#{item[:confirm]}\"") if item[:confirm]
     props[:confirm] = tb_buttons[button][:confirm] = confirm_title if item[:confirm]

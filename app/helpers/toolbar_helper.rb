@@ -30,7 +30,7 @@ module ToolbarHelper
   #
   def render_toolbars
     @toolbars.collect do |div_id, toolbar_name|
-      content_tag(:div, :id => div_id, :class => 'btn-group') do  # btn-group aroung each toolbar
+      content_tag(:div, :id => div_id, :class => 'btn-group') do # btn-group aroung each toolbar
         _tb_buttons, _tb_xml, buttons = build_toolbar_buttons_and_xml(toolbar_name)
         buttons_to_html(buttons)
       end
@@ -60,11 +60,10 @@ module ToolbarHelper
   #
   def toolbar_image(props)
     tag(:img,
-      :src => "/images/toolbars/#{props['img']}",
-      :style => 'margin-right: 5px; width: 15px',
-      'data-enabled'  => "/images/toolbars/#{props['img']}",
-      'data-disabled' => "/images/toolbars/#{props['imgdis']}",
-    )
+        :src            => t = "/images/toolbars/#{props['img']}",
+        :style          => 'margin-right: 5px; width: 15px',
+        'data-enabled'  => t,
+        'data-disabled' => "/images/toolbars/#{props['imgdis']}")
   end
 
   # Render drop-down top button
@@ -82,15 +81,15 @@ module ToolbarHelper
                            :title        => props['title'],
                            'data-click'  => props['id']
                          )) do
-               (toolbar_image(props) +
-                 props['text'].to_s + "&nbsp;".html_safe +
-                 content_tag(:span, '', :class => "caret")).html_safe
-             end
+        (toolbar_image(props) +
+          props['text'].to_s + "&nbsp;".html_safe +
+          content_tag(:span, '', :class => "caret")).html_safe
+      end
       out << content_tag(:ul, :class => 'dropdown-menu') do
-               Array(props[:items]).collect do |button|
-                 toolbar_button(button)
-               end.join('').html_safe
-             end
+        Array(props[:items]).collect do |button|
+          toolbar_button(button)
+        end.join('').html_safe
+      end
       out.join('').html_safe
     end
   end
@@ -98,15 +97,11 @@ module ToolbarHelper
   # Render normal push top button
   #
   def toolbar_top_button_normal(props)
-    css = props[:hidden] ? 'hidden ' : ''
-    css += 'active ' if props[:selected] # for buttonTwoState only
-    content_tag(:button,
-                data_hash_keys(props).update(
-                  :type        => "button",
-                  :class       => "#{css}btn btn-default",
-                  :title       => props['title'],
-                  'data-click' => props['id']
-               )) do
+    cls = props[:hidden] ? 'hidden ' : ''
+    cls += 'active ' if props['selected'] # for buttonTwoState only
+    content_tag(:button, prepare_tag_keys(props).update(
+                           :type  => "button",
+                           :class => "#{cls}btn btn-default")) do
       (toolbar_image(props) +
         props['text'].to_s + "&nbsp;".html_safe).html_safe
     end
@@ -127,8 +122,8 @@ module ToolbarHelper
 
   # Render separator in the drop down
   #
-  def toolbar_button_separator(props)
-    content_tag(:div, '', {:class => :divider, :role => "presentation"})
+  def toolbar_button_separator(_props)
+    content_tag(:div, '', :class => :divider, :role => "presentation")
   end
 
   # Render normal push child button
@@ -136,24 +131,29 @@ module ToolbarHelper
   def toolbar_button_normal(props)
     hidden = props[:hidden]
     cls = props['enabled'].to_s == 'false' ? 'disabled ' : ''
-    content_tag(:li, :title => props['title'], :class => cls + (hidden ? 'hidden' : '')) do
-      content_tag(:a,
-                  data_hash_keys(props).update(
-                    :href        => '#',
-                    'data-click' => props['id']
-                  )) do
+    content_tag(:li, :class => cls + (hidden ? 'hidden' : '')) do
+      content_tag(:a, prepare_tag_keys(props).update(:href => '#')) do
         (toolbar_image(props) + props['text']).html_safe
       end
     end
   end
 
-  # Collect common keys from tb button definition that shall be passed into
-  # html markup as data-* attributes.
+  # Get keys and values from tb button definition that map 1:1 to data-*
+  # attributes in html
   #
   def data_hash_keys(props)
-    %i(pressed popup console_url name prompt explorer confirm onwhen url_parms url).each_with_object({}) do |key, h|
-      h["data-#{key.to_s}"] = props[key] if props.key?(key)
+    %i(pressed popup console_url prompt explorer confirm onwhen url_parms url).each_with_object({}) do |key, h|
+      h["data-#{key}"] = props[key] if props.key?(key)
     end
   end
 
+  # Calculate common html tag keys and values from toolbar button definition
+  #
+  def prepare_tag_keys(props)
+    h = data_hash_keys(props)
+    h['name']       = props[:name] if props.key?(:name)
+    h['title']      = props['title']
+    h['data-click'] = props['id']
+    h
+  end
 end
