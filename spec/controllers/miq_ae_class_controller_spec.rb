@@ -261,7 +261,8 @@ describe MiqAeClassController do
     end
 
     before do
-      login_as FactoryGirl.create(:user_with_group)
+      @user =  FactoryGirl.create(:user_with_group)
+      login_as @user
       MiqAeDomain.stub(:find_by_name).with("another_fqname").and_return(miq_ae_domain)
       MiqAeDomain.stub(:find_by_name).with("another_fqname2").and_return(miq_ae_domain2)
     end
@@ -282,7 +283,7 @@ describe MiqAeClassController do
         before do
           MiqAeInstance.stub(:find_by_id).with(123).and_return(miq_ae_instance)
           miq_ae_instance.stub(:ae_class).and_return(miq_ae_class)
-          MiqAeInstance.stub(:get_homonymic_across_domains).with("fqname").and_return([override, override2])
+          MiqAeInstance.stub(:get_homonymic_across_domains).with(@user, "fqname").and_return([override, override2])
         end
 
         it "return instance record and check count of override instances being returned" do
@@ -313,7 +314,7 @@ describe MiqAeClassController do
       context "when the record exists" do
         before do
           MiqAeClass.stub(:find_by_id).with(1).and_return(miq_ae_class)
-          MiqAeClass.stub(:get_homonymic_across_domains).with("cls_fqname").and_return([override, override2])
+          MiqAeClass.stub(:get_homonymic_across_domains).with(@user, "cls_fqname").and_return([override, override2])
         end
 
         it "returns class record and check count of override classes being returned" do
@@ -345,7 +346,7 @@ describe MiqAeClassController do
         before do
           MiqAeMethod.stub(:find_by_id).with(123).and_return(miq_ae_method)
           miq_ae_method.stub(:ae_class).and_return(miq_ae_class)
-          MiqAeMethod.stub(:get_homonymic_across_domains).with("fqname").and_return([override, override2])
+          MiqAeMethod.stub(:get_homonymic_across_domains).with(@user, "fqname").and_return([override, override2])
         end
 
         it "returns method record and check count of override methods being returned" do
