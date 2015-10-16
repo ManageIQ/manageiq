@@ -543,16 +543,33 @@ describe User do
     it "ignores blank" do
       u.miq_group_description = ""
       expect(u.current_group).to eq(g1)
+      expect(u.miq_group_description).to eq(g1.description)
     end
 
     it "ignores not found" do
       u.miq_group_description = "not_found"
       expect(u.current_group).to eq(g1)
+      expect(u.miq_group_description).to eq(g1.description)
+    end
+
+    it "ignores a group that you do not belong" do
+      u.miq_group_description = FactoryGirl.create(:miq_group).description
+      expect(u.current_group).to eq(g1)
+      expect(u.miq_group_description).to eq(g1.description)
     end
 
     it "sets by description" do
       u.miq_group_description = g2.description
       expect(u.current_group).to eq(g2)
+      expect(u.miq_group_description).to eq(g2.description)
+    end
+
+    it "sets any group to super admin" do
+      a = FactoryGirl.create(:user, :role => "super_administrator")
+      expect(a).to be_super_admin_user
+
+      a.miq_group_description = g2.description
+      expect(a.current_group).to eq(g2)
     end
   end
 
