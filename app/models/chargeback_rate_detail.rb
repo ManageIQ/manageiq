@@ -66,6 +66,6 @@ class ChargebackRateDetail < ActiveRecord::Base
   end
 
   def detail_currency
-    ChargebackRateDetailCurrency.find_by(id: self.chargeback_rate_detail_currency_id)
+    ChargebackRateDetailCurrency.find_by(:id => chargeback_rate_detail_currency_id)
   end
 end

@@ -7,7 +7,7 @@ class CreateChargebackRateDetailCurrencies < ActiveRecord::Migration
       t.string :symbol
       t.string :unicode_hex
 
-      t.timestamps null: false
+      t.timestamps :null => false
     end
   end
 end
