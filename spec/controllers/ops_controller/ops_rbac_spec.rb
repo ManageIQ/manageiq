@@ -223,8 +223,7 @@ describe OpsController do
                                      :parent    => Tenant.root_tenant,
                                      :domain    => "test",
                                      :subdomain => "test")
-        sb_hash = {
-                    :trees       => {:rbac_tree => {:active_node => "tn-#{controller.to_cid(@tenant.id)}"}},
+        sb_hash = { :trees       => {:rbac_tree => {:active_node => "tn-#{controller.to_cid(@tenant.id)}"}},
                     :active_tree => :rbac_tree,
                     :active_tab  => "rbac_details"
                   }
@@ -247,12 +246,11 @@ describe OpsController do
         controller.stub(:get_node_info)
         controller.stub(:replace_right_cell)
         session[:tag_db] = "Tenant"
-        edit = {
-                :key        => "Tenant_edit_tags__#{@tenant.id}",
-                :tagging    => "Tenant",
-                :object_ids => [@tenant.id],
-                :current    => {:assignments => []},
-                :new        => {:assignments => [@tag1.id, @tag2.id]}
+        edit = { :key        => "Tenant_edit_tags__#{@tenant.id}",
+                 :tagging    => "Tenant",
+                 :object_ids => [@tenant.id],
+                 :current    => {:assignments => []},
+                 :new        => {:assignments => [@tag1.id, @tag2.id]}
                }
         session[:edit] = edit
       end
@@ -285,6 +283,5 @@ describe OpsController do
         assigns(:edit).should be_nil
       end
     end
-
   end
 end

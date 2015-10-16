@@ -2,12 +2,11 @@
 module OpsController::OpsRbac
   extend ActiveSupport::Concern
 
-  TAG_DB_TO_NAME = {
-    'MiqGroup'  => 'group',
-    'User'      => 'user',
-    'Tenant'    => 'tenant'
-  }.freeze
-
+  TAG_DB_TO_NAME =  {
+                      'MiqGroup'  => 'group',
+                      'User'      => 'user',
+                      'Tenant'    => 'tenant'
+                    }.freeze
   # Edit user or group tags
   def rbac_tags_edit
     case params[:button]
