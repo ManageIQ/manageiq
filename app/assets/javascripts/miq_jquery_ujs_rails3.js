@@ -65,7 +65,7 @@
 
   $.rails = rails = {
     // Link elements bound by jquery-ujs
-    linkClickSelector: 'a[data-confirm], a[data-method], a[data-remote], a[data-disable-with]',
+    linkClickSelector: 'a[data-confirm-ujs], a[data-method], a[data-remote], a[data-disable-with]',
 
     // Select elements bound by jquery-ujs
     inputChangeSelector: 'select[data-remote], input[data-remote], textarea[data-remote]',
@@ -197,7 +197,7 @@
     },
 
     // Handles "data-method" on links such as:
-    // <a href="/users/5" data-method="delete" rel="nofollow" data-confirm="Are you sure?">Delete</a>
+    // <a href="/users/5" data-method="delete" rel="nofollow" data-confirm-ujs="Are you sure?">Delete</a>
     handleMethod: function(link) {
       var href = rails.href(link),
         method = link.data('method'),
@@ -243,7 +243,7 @@
       });
     },
 
-    /* For 'data-confirm' attribute:
+    /* For 'data-confirm-ujs' attribute:
      - Fires `confirm` event
      - Shows the confirmation dialog
      - Fires the `confirm:complete` event
@@ -254,7 +254,7 @@
      return false. The `confirm:complete` event is fired whether or not the user answered true or false to the dialog.
      */
     allowAction: function(element) {
-      var message = element.data('confirm'),
+      var message = element.data('confirm-ujs'),
         answer = false, callback;
       if (!message) { return true; }
 
