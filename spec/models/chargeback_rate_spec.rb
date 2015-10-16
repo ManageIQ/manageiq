@@ -12,4 +12,11 @@ describe ChargebackRate do
       expect { ChargebackRate.validate_rate_type(:bogus) }.to raise_error(RuntimeError, "Chargeback rate type 'bogus' is not supported")
     end
   end
+
+  context ".seed" do
+    it "verifies Sample rates" do
+      ChargebackRate.seed
+      ChargebackRate.where(:description => "Sample").length.should == 2
+    end
+  end
 end

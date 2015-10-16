@@ -239,14 +239,6 @@ class Chargeback < ActsAsArModel
     end
   end
 
-  def self.default_rates
-    rates = []
-    ChargebackRate.find(:all, :conditions => {:default => true}).each do |rate|
-      rates += rate.chargeback_rate_details
-    end
-    rates
-  end
-
   def self.get_report_time_range(options, interval, tz)
     return [options[:start_time], options[:end_time]] if options[:start_time]
 

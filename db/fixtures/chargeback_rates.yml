@@ -1,5 +1,5 @@
 ---
-- :description: Default
+- :description: Sample
   :guid: b47a0ef0-4335-11df-aba8-001d09066d98
   :rate_type: Compute
   :default: true
@@ -61,7 +61,7 @@
       :source: compute_2
       :rate: 0
       :per_time: monthly
-- :description: Default
+- :description: Sample
   :guid: 7d7aaf20-5214-11df-a888-001d09066d98
   :rate_type: Storage
   :default: true
