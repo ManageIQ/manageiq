@@ -582,7 +582,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def source_vm_rbac_filter(vms, condition = nil)
     filter_id = get_value(@values[:vm_filter]).to_i
-    search_options = {:userid => @requester.userid}
+    search_options = {:user => @requester}
     search_options[:conditions] = condition unless condition.blank?
     template_msg =  "User: <#{@requester.userid}>"
     template_msg += " Role: <#{@requester.current_group.nil? ? "none" : @requester.current_group.miq_user_role.name}>  Group: <#{@requester.current_group.nil? ? "none" : @requester.current_group.description}>"
@@ -1302,7 +1302,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
             else
               load_ar_obj(allowed_hosts)
             end
-    Rbac.filtered(hosts, :class => Host, :userid => @requester.userid)
+    Rbac.filtered(hosts, :class => Host, :user => @requester)
   end
 
   def all_provider_hosts(src)
