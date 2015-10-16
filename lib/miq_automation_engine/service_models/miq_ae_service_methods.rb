@@ -130,12 +130,13 @@ module MiqAeMethodService
       # Need to add the username into the array of params
       # TODO: This code should pass a real username, similar to how the web-service
       #      passes the name of the user that logged into the web-service.
-      args.insert(1, "admin") if args.kind_of?(Array)
+      args.insert(1, User.find_by_userid("admin")) if args.kind_of?(Array)
       MiqAeServiceModelBase.wrap_results(MiqProvisionVirtWorkflow.from_ws(*args))
     end
 
-    def self.create_automation_request(options, userid, auto_approve = false)
-      MiqAeServiceModelBase.wrap_results(AutomationRequest.create_request(options, userid, auto_approve))
+    def self.create_automation_request(options, userid = "admin", auto_approve = false)
+      user = User.find_by_userid!(userid)
+      MiqAeServiceModelBase.wrap_results(AutomationRequest.create_request(options, user, auto_approve))
     end
 
     private
