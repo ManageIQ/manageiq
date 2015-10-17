@@ -208,15 +208,15 @@ describe MiqRequest do
 
         context "#v_approved_by methods" do
           it "with one approval" do
-            fred_approval.approve(fred.userid, reason)
+            fred_approval.approve(fred, reason)
 
             expect(request.v_approved_by).to       eq(fred.name)
             expect(request.v_approved_by_email).to eq(fred.email)
           end
 
           it "with two approvals" do
-            fred_approval.approve(fred.userid, reason)
-            barney_approval.approve(barney.userid, reason)
+            fred_approval.approve(fred, reason)
+            barney_approval.approve(barney, reason)
 
             expect(request.v_approved_by).to       eq("#{fred.name}, #{barney.name}")
             expect(request.v_approved_by_email).to eq("#{fred.email}, #{barney.email}")
@@ -228,13 +228,13 @@ describe MiqRequest do
 
           fred_approval.should_receive(:approve).once
 
-          2.times { request.approve(fred.userid, reason) }
+          2.times { request.approve(fred, reason) }
         end
 
         it "#deny" do
           fred_approval.should_receive(:deny).once
 
-          request.deny(fred.userid, reason)
+          request.deny(fred, reason)
         end
       end
     end
@@ -245,7 +245,7 @@ describe MiqRequest do
 
       provision_request = FactoryGirl.create(:miq_provision_request, :userid => fred.userid, :src_vm_id => template.id)
 
-      provision_request.deny(fred.userid, "Why Not?")
+      provision_request.deny(fred, "Why Not?")
 
       provision_request.miq_approvals.each { |approval| expect(approval.state).to eq('denied') }
 
