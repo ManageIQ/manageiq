@@ -1,5 +1,3 @@
-require 'active_support/deprecation'
-
 class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   def auto_placement_enabled?
     get_value(@values[:placement_auto])
@@ -619,12 +617,12 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   def allowed_datastore_storage_controller(_options = {})
     {}
   end
-  deprecate :allowed_datastore_storage_controller
+  Vmdb::Deprecation.deprecate_methods(self, :allowed_datastore_storage_controller)
 
   def allowed_datastore_aggregate(_options = {})
     {}
   end
-  deprecate :allowed_datastore_aggregate
+  Vmdb::Deprecation.deprecate_methods(self, :allowed_datastore_aggregate)
 
   def get_source_vm
     get_source_and_targets[:vm]
