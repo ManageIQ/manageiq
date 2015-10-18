@@ -17,10 +17,11 @@ module ManageIQ::Providers::Kubernetes
       get_resource_quotas(inventory)
       get_limit_ranges(inventory)
       get_replication_controllers(inventory)
+      get_persistent_volumes(inventory)
+      get_persistent_volume_claims(inventory)
       get_pods(inventory)
       get_endpoints(inventory)
       get_services(inventory)
-      get_persistent_volumes(inventory)
       get_component_statuses(inventory)
       get_registries
       get_images
@@ -92,6 +93,14 @@ module ManageIQ::Providers::Kubernetes
       process_collection(inventory["persistent_volume"], :persistent_volumes) { |n| parse_persistent_volume(n) }
       @data[:persistent_volumes].each do |pv|
         @data_index.store_path(:persistent_volumes, :by_name, pv[:name], pv)
+      end
+    end
+
+    def get_persistent_volume_claims(inventory)
+      process_collection(inventory["persistent_volume_claim"],
+                         :persistent_volume_claims) { |n| parse_persistent_volume_claim(n) }
+      @data[:persistent_volume_claims].each do |pvc|
+        @data_index.store_path(:persistent_volume_claims, :by_name, pvc[:name], pvc)
       end
     end
 
@@ -333,6 +342,26 @@ module ManageIQ::Providers::Kubernetes
         :status_message => persistent_volume.status.message,
         :status_reason  => persistent_volume.status.reason
       )
+      new_result
+    end
+
+    def parse_persistent_volume_claim(claim)
+      new_result = parse_base_item(claim)
+      new_result.merge!(
+        :desired_access_modes => claim.spec.accessModes,
+        :phase                => claim.status.phase,
+        :actual_access_modes  => claim.status.accessModes,
+        :capacity             => claim.status.capacity.to_h.transform_values do |iec_number|
+          PersistentVolume.parse_iec_number(iec_number)
+        end,
+        :persistent_volume    => nil
+      )
+
+      unless claim.spec.volumeName.nil?
+        new_result[:persistent_volume] = @data_index.fetch_path(
+          :persistent_volumes, :by_name, claim.spec.volumeName)
+      end
+
       new_result
     end
 
@@ -668,9 +697,12 @@ module ManageIQ::Providers::Kubernetes
     def parse_volumes(volumes)
       volumes.to_a.collect do |volume|
         {
-          :type        => 'ContainerVolumeKubernetes',
-          :name        => volume.name,
-          :parent_type => 'ContainerGroup'
+          :type                    => 'ContainerVolume',
+          :name                    => volume.name,
+          :parent_type             => 'ContainerGroup',
+          :persistent_volume_claim => @data_index.fetch_path(:persistent_volume_claims,
+                                                             :by_name,
+                                                             volume.persistentVolumeClaim.try(:claimName))
         }.merge!(parse_volume_source(volume))
       end
     end
