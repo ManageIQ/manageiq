@@ -274,8 +274,21 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       }
     ]
 
+    pod = RecursiveOpenStruct.new(
+      :metadata => {
+        :name              => 'test-pod',
+        :namespace         => 'test-namespace',
+        :uid               => 'af3d1a10-23d3-11e5-44c0-0af3d1a10370e',
+        :resourceVersion   => '3691041',
+        :creationTimestamp => '2015-08-17T09:16:46Z',
+      },
+      :spec     => {
+        :volumes => example_volumes.collect { |ex| ex[:volume] }
+      }
+    )
+
     it "tests example volumes" do
-      parsed_volumes = parser.send(:parse_volumes, example_volumes.collect { |ex| ex[:volume] })
+      parsed_volumes = parser.send(:parse_volumes, pod)
 
       example_volumes.zip(parsed_volumes).each do |example, parsed|
         expect(parsed).to have_attributes(
@@ -863,6 +876,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
           :iscsi_target_portal     => nil,
           :nfs_server              => nil,
           :parent_type             => 'ManageIQ::Providers::ContainerManager',
+          :persistent_volume_claim => nil,
           :rbd_ceph_monitors       => '',
           :rbd_image               => nil,
           :rbd_keyring             => nil,
@@ -871,6 +885,84 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
           :reclaim_policy          => nil,
           :status_message          => nil,
           :status_reason           => nil
+        })
+    end
+  end
+
+  describe "parse_persistent_volume_claim" do
+    it "tests pending persistent volume claim" do
+      expect(parser.send(
+        :parse_persistent_volume_claim,
+        RecursiveOpenStruct.new(
+          :metadata => {
+            :name              => 'test-claim',
+            :uid               => '1577c5ba-a3f6-11e5-9845-28d2447dcefe',
+            :resourceVersion   => '448015',
+            :creationTimestamp => '2015-12-06T11:10:21Z'
+          },
+          :spec     => {
+            :accessModes => ['ReadWriteOnce'],
+            :resources   => {
+              :requests => {
+                :storage => '3Gi'
+              }
+            },
+          },
+          :status   => {
+            :phase => 'Pending',
+          }
+        )
+      )).to eq(
+        {
+          :name                 => 'test-claim',
+          :ems_ref              => '1577c5ba-a3f6-11e5-9845-28d2447dcefe',
+          :ems_created_on       => '2015-12-06T11:10:21Z',
+          :namespace            => nil,
+          :resource_version     => '448015',
+          :desired_access_modes => ['ReadWriteOnce'],
+          :phase                => 'Pending',
+          :actual_access_modes  => nil,
+          :capacity             => {}
+        })
+    end
+
+    it "tests bounded persistent volume claim" do
+      expect(parser.send(
+        :parse_persistent_volume_claim,
+        RecursiveOpenStruct.new(
+          :metadata => {
+            :name              => 'test-claim',
+            :uid               => '1577c5ba-a3f6-11e5-9845-28d2447dcefe',
+            :resourceVersion   => '448015',
+            :creationTimestamp => '2015-12-06T11:11:21Z'
+          },
+          :spec     => {
+            :accessModes => %w('ReadWriteOnce', 'ReadWriteMany'),
+            :resources   => {
+              :requests => {
+                :storage => '3Gi'
+              }
+            }
+          },
+          :status   => {
+            :phase       => 'Bound',
+            :accessModes => %w('ReadWriteOnce', 'ReadWriteMany'),
+            :capacity    => {
+              :storage => '10Gi'
+            }
+          }
+        )
+      )).to eq(
+        {
+          :name                 => 'test-claim',
+          :ems_ref              => '1577c5ba-a3f6-11e5-9845-28d2447dcefe',
+          :ems_created_on       => '2015-12-06T11:11:21Z',
+          :namespace            => nil,
+          :resource_version     => '448015',
+          :desired_access_modes => %w('ReadWriteOnce', 'ReadWriteMany'),
+          :phase                => 'Bound',
+          :actual_access_modes  => %w('ReadWriteOnce', 'ReadWriteMany'),
+          :capacity             => {:storage => 10.gigabytes}
         })
     end
   end

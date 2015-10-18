@@ -3,9 +3,9 @@ module EmsRefresh::SaveInventoryContainer
     target = ems if target.nil?
 
     child_keys = [:container_projects, :container_quotas, :container_limits, :container_nodes,
-                  :container_builds, :container_build_pods,
+                  :container_builds, :container_build_pods, :persistent_volume_claims, :persistent_volumes,
                   :container_image_registries, :container_images, :container_replicators, :container_groups,
-                  :container_services, :container_routes, :persistent_volumes, :container_component_statuses,
+                  :container_services, :container_routes, :container_component_statuses,
                  ]
 
     # Save and link other subsections
@@ -43,8 +43,29 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(ems.persistent_volumes, hashes, deletes, [:ems_ref], [], [:namespace])
+    hashes.each do |h|
+      h[:persistent_volume_claim_id] = h.fetch_path(:persistent_volume_claim, :id)
+    end
+
+    save_inventory_multi(ems.persistent_volumes, hashes, deletes,
+                         [:ems_ref], [], [:persistent_volume_claim, :namespace])
     store_ids_for_new_records(ems.persistent_volumes, hashes, :ems_ref)
+  end
+
+  def save_persistent_volume_claims_inventory(ems, hashes, target = nil)
+    return if hashes.nil?
+    target = ems if target.nil?
+
+    ems.persistent_volume_claims.reset
+    deletes = if target.kind_of?(ExtManagementSystem)
+                :use_association
+              else
+                []
+              end
+
+    save_inventory_multi(ems.persistent_volume_claims, hashes, deletes,
+                         [:ems_ref], [], [:namespace])
+    store_ids_for_new_records(ems.persistent_volume_claims, hashes, :ems_ref)
   end
 
   def save_container_quotas_inventory(ems, hashes, target = nil)
@@ -364,7 +385,11 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(container_group.container_volumes, hashes, deletes, [:name])
+    hashes.each do |h|
+      h[:persistent_volume_claim_id] = h.fetch_path(:persistent_volume_claim, :id)
+    end
+
+    save_inventory_multi(container_group.container_volumes, hashes, deletes, [:name], [], [:persistent_volume_claim])
     store_ids_for_new_records(container_group.container_volumes, hashes, :name)
   end
 

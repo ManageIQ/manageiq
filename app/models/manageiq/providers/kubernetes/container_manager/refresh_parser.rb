@@ -18,10 +18,11 @@ module ManageIQ::Providers::Kubernetes
       get_resource_quotas(inventory)
       get_limit_ranges(inventory)
       get_replication_controllers(inventory)
+      get_persistent_volume_claims(inventory)
+      get_persistent_volumes(inventory)
       get_pods(inventory)
       get_endpoints(inventory)
       get_services(inventory)
-      get_persistent_volumes(inventory)
       get_component_statuses(inventory)
       get_registries
       get_images
@@ -93,6 +94,14 @@ module ManageIQ::Providers::Kubernetes
       process_collection(inventory["persistent_volume"], :persistent_volumes) { |n| parse_persistent_volume(n) }
       @data[:persistent_volumes].each do |pv|
         @data_index.store_path(:persistent_volumes, :by_name, pv[:name], pv)
+      end
+    end
+
+    def get_persistent_volume_claims(inventory)
+      process_collection(inventory["persistent_volume_claim"],
+                         :persistent_volume_claims) { |n| parse_persistent_volume_claim(n) }
+      @data[:persistent_volume_claims].each do |pvc|
+        @data_index.store_path(:persistent_volume_claims, :by_namespace_and_name, pvc[:namespace], pvc[:name], pvc)
       end
     end
 
@@ -314,7 +323,7 @@ module ManageIQ::Providers::Kubernetes
 
       new_result[:labels] = parse_labels(pod)
       new_result[:node_selector_parts] = parse_node_selector_parts(pod)
-      new_result[:container_volumes] = parse_volumes(pod.spec.volumes)
+      new_result[:container_volumes] = parse_volumes(pod)
       new_result
     end
 
@@ -347,15 +356,24 @@ module ManageIQ::Providers::Kubernetes
       new_result = parse_base_item(persistent_volume)
       new_result.merge!(parse_volume_source(persistent_volume.spec))
       new_result.merge!(
-        :type           => 'PersistentVolume',
-        :parent_type    => 'ManageIQ::Providers::ContainerManager',
-        :capacity       => parse_resource_list(persistent_volume.spec.capacity.to_h),
-        :access_modes   => persistent_volume.spec.accessModes.join(','),
-        :reclaim_policy => persistent_volume.spec.persistentVolumeReclaimPolicy,
-        :status_phase   => persistent_volume.status.phase,
-        :status_message => persistent_volume.status.message,
-        :status_reason  => persistent_volume.status.reason
+        :type                    => 'PersistentVolume',
+        :parent_type             => 'ManageIQ::Providers::ContainerManager',
+        :capacity                => parse_resource_list(persistent_volume.spec.capacity.to_h),
+        :access_modes            => persistent_volume.spec.accessModes.join(','),
+        :reclaim_policy          => persistent_volume.spec.persistentVolumeReclaimPolicy,
+        :status_phase            => persistent_volume.status.phase,
+        :status_message          => persistent_volume.status.message,
+        :status_reason           => persistent_volume.status.reason,
+        :persistent_volume_claim => nil
       )
+
+      unless persistent_volume.spec.claimRef.nil?
+        new_result[:persistent_volume_claim] = @data_index.fetch_path(:persistent_volume_claims,
+                                                                      :by_namespace_and_name,
+                                                                      persistent_volume.spec.claimRef.namespace,
+                                                                      persistent_volume.spec.claimRef.name)
+      end
+
       new_result
     end
 
@@ -374,6 +392,18 @@ module ManageIQ::Providers::Kubernetes
         _log.warn("Capacity attribute - #{key} was in bad format - #{val}")
         nil
       end
+    end
+
+    def parse_persistent_volume_claim(claim)
+      new_result = parse_base_item(claim)
+      new_result.merge!(
+        :desired_access_modes => claim.spec.accessModes,
+        :phase                => claim.status.phase,
+        :actual_access_modes  => claim.status.accessModes,
+        :capacity             => parse_resource_list(claim.status.capacity.to_h),
+      )
+
+      new_result
     end
 
     def parse_quota(resource_quota)
@@ -706,12 +736,16 @@ module ManageIQ::Providers::Kubernetes
       }
     end
 
-    def parse_volumes(volumes)
-      volumes.to_a.collect do |volume|
+    def parse_volumes(pod)
+      pod.spec.volumes.to_a.collect do |volume|
         {
-          :type        => 'ContainerVolumeKubernetes',
-          :name        => volume.name,
-          :parent_type => 'ContainerGroup'
+          :type                    => 'ContainerVolume',
+          :name                    => volume.name,
+          :parent_type             => 'ContainerGroup',
+          :persistent_volume_claim => @data_index.fetch_path(:persistent_volume_claims,
+                                                             :by_namespace_and_name,
+                                                             pod.metadata.namespace,
+                                                             volume.persistentVolumeClaim.try(:claimName))
         }.merge!(parse_volume_source(volume))
       end
     end
