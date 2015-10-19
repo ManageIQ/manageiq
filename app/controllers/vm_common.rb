@@ -1369,7 +1369,7 @@ module VmCommon
         get_node_info("root")
         return
       else
-        unless controller_referrer?
+        if action_name == "explorer"
           @breadcrumbs.clear
           drop_breadcrumb({:name => breadcrumb_name(model), :url => "/#{controller_name}/explorer"}, false)
         end

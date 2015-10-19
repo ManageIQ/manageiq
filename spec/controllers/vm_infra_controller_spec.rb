@@ -198,7 +198,6 @@ describe VmInfraController do
       breadcrumbs[0] = {:name => "Instances", :url => "/vm_cloud/explorer"}
       session[:breadcrumbs] = breadcrumbs
       controller.stub(:x_node).and_return("v-#{@vm.compressed_id}")
-      controller.stub(:controller_referrer?).and_return(false)
       get :explorer
       breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
       expect(breadcrumbs.size).to eq(1)
@@ -207,7 +206,6 @@ describe VmInfraController do
 
     it 'retains the breadcrumb path when cancel is pressed from a VM action' do
       get :explorer
-      controller.stub(:controller_referrer?).and_return(true)
       controller.stub(:x_node).and_return("v-#{@vm.compressed_id}")
       post :x_button, :id => @vm.id, :pressed => 'vm_ownership'
 

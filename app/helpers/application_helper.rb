@@ -1252,12 +1252,8 @@ module ApplicationHelper
     end
   end
 
-  def controller_referrer?
-    controller_name == Rails.application.routes.recognize_path(request.referrer)[:controller]
-  end
-
   def breadcrumb_prohibited_for_action?
-    !%w(accordion_select tree_select).include?(action_name)
+    !%w(accordion_select explorer tree_select).include?(action_name)
   end
 
   delegate :id, :to => :my_server, :prefix => true
