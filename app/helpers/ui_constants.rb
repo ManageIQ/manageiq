@@ -40,6 +40,7 @@ module UiConstants
   TOP_TABLES_BY_ROWS_COUNT = 5
   TOP_TABLES_BY_SIZE_COUNT = 5
   TOP_TABLES_BY_WASTED_SPACE_COUNT = 5
+  GIGABYTE = 1024 * 1024 * 1024
 
   # VMware MKS version choices
   MKS_VERSIONS = ["2.0.1.0", "2.0.2.0", "2.1.0.0"]

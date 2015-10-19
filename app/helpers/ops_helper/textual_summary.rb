@@ -25,6 +25,10 @@ module OpsHelper::TextualSummary
        vmdb_connection_total_index_nodes vmdb_connection_used_index_nodes vmdb_connection_free_index_nodes)
   end
 
+  def textual_group_tenant_quota_allocations
+    %i(tenant_quota_allocations)
+  end
+
   #
   # Items
   #
@@ -120,6 +124,39 @@ module OpsHelper::TextualSummary
                                  number_to_human_size(row.latest_hourly_metric.send(typ.to_s), :precision => 1),
         :explorer => true,
         :link     => "miqDynatreeActivateNode('vmdb_tree', 'tb-#{to_cid(@sb[:vmdb_tables][row.name])}');"
+      }
+    end
+  end
+
+  def textual_tenant_quota_allocations
+    h = {:label => "Tenant Quota Allocations", :headers => ["Name", "In Use", "Allocated", "Available", "Total Allocated Value"], :col_order => ["name", "in_use", "allocated", "available", "total"]}
+    h[:value] = get_tenant_quota_allocations
+    h
+  end
+
+  def convert_to_format(format, text_modifier, value)
+    fmt_value = case format.to_s
+                  when "general_number_precision_0"
+                    value.to_i
+                  when "gigabytes_human"
+                    value.to_f / GIGABYTE
+                  else
+                    value.to_f
+                end
+    return "#{fmt_value} #{text_modifier}"
+  end
+
+  def get_tenant_quota_allocations
+    rows = @record.combined_quotas.values.to_a
+    rows.collect do |row|
+      {
+          :title  => row[:description],
+          :name   => row[:description],
+          :in_use =>  convert_to_format(row[:format], row[:text_modifier], row[:used]),
+          :allocated  => convert_to_format(row[:format], row[:text_modifier], row[:allocated]),
+          :available => convert_to_format(row[:format], row[:text_modifier], row[:available]),
+          :total => convert_to_format(row[:format], row[:text_modifier], row[:value]),
+          :explorer => true
       }
     end
   end
