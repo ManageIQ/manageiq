@@ -1,15 +1,15 @@
 // Functions used by MIQ for the dhtmlxtree control
 
 // Handle row click (ajax or normal html trans)
-function miqRowClick(row_id, cell_idx) {
-  var cell = this.cells(row_id, cell_idx);
+function miqRowClick(self, row_id, cell_idx, row_url, row_url_ajax) {
+  var cell = self.cells(row_id, cell_idx);
   if (cell_idx && !cell.getAttribute('is_button')) {
-    if (typeof row_url_ajax != "undefined" && row_url_ajax) {
+    if (! _.endsWith(row_url, "/") && ! _.endsWith(row_url, "=")) {
+      row_url = row_url + "/";
+    }
+    if (row_url_ajax) {
       miqJqueryRequest(row_url + row_id, {beforeSend: true, complete: true});
     } else {
-      if (! _.endsWith(row_url, "/") && ! _.endsWith(row_url, "=")) {
-        row_url = row_url + "/";
-      }
       DoNav(row_url + row_id);
     }
   }
@@ -130,9 +130,9 @@ function miqInitGrid(grid_name) {
 
   // checking existence on "_none_" at the end of string
   if (options.row_url && options.row_url.lastIndexOf("_none_") != (options.row_url.length - 6) ) {
-    row_url = options.row_url;
-    row_url_ajax = options.row_url_ajax;
-    grid.attachEvent("onRowSelect", miqRowClick);
+    grid.attachEvent("onRowSelect", function(row_id, cell_idx) {
+      return miqRowClick(this, row_id, cell_idx, options.row_url, options.row_url_ajax);
+    });
   }
 
   grid.attachEvent("onResize", miqResizeCol); // Method called when resize starts

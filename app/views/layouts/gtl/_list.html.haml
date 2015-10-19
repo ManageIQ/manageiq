@@ -1,4 +1,4 @@
-= raw @grid_xml
+= raw @grid_xml.to_json
 - @grid_xml = nil
 = table.to_json
 
@@ -30,6 +30,7 @@
                                    :sortdir         => @sortdir ? @sortdir[0..2] : nil,
                                    :row_url         => url}})
 - else
+  -# used for Saved Reports, ...
   %table.table.table-striped.table-bordered.table-hover.table-selectable
     %thead
       %tr
