@@ -6,3 +6,6 @@
   - if !request.xml_http_request?
     -# FIXME: do we need this condition?
     = render_toolbars
+
+    :javascript
+      ManageIQ.record.recordId = '#{@record ? @record.id : 'null'}';

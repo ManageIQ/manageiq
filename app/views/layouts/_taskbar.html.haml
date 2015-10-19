@@ -9,3 +9,6 @@
 - if  @layout == "dashboard"
   = render :partial => "/layouts/tabs"
 = render_toolbars
+
+:javascript
+  ManageIQ.record.recordId = '#{@record ? @record.id : 'null'}';
