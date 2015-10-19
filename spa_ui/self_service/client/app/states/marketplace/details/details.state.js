@@ -40,7 +40,7 @@
   }
 
   /** @ngInject */
-  function StateController($state, CollectionsApi, dialogs, serviceTemplate, Notifications, API_BASE) {
+  function StateController($state, CollectionsApi, dialogs, serviceTemplate, Notifications) {
     var vm = this;
 
     vm.title = 'Service Template Details';
@@ -54,7 +54,7 @@
 
     function submitDialog() {
       var dialogFieldData = {
-        href: API_BASE + '/api/service_templates/' + serviceTemplate.id
+        href: '/api/service_templates/' + serviceTemplate.id
       };
 
       angular.forEach(vm.dialogs, function(dialog) {

@@ -22,8 +22,12 @@ describe('Marketplace.details', function() {
   });
 
   describe('controller', function() {
-    var collectionsApiSpy, controller, notificationsErrorSpy, notificationsSuccessSpy;
+    var collectionsApiSpy;
+    var controller;
+    var notificationsErrorSpy;
+    var notificationsSuccessSpy;
     var dialogs = {
+      subcount: 1,
       resources: [{
         content: [{
           dialog_tabs: [{
@@ -49,7 +53,7 @@ describe('Marketplace.details', function() {
     };
 
     beforeEach(function() {
-      bard.inject('$controller', '$log', '$state', '$rootScope', 'CollectionsApi', 'Notifications', 'API_BASE');
+      bard.inject('$controller', '$log', '$state', '$rootScope', 'CollectionsApi', 'Notifications');
 
       controller = $controller($state.get('marketplace.details').controller, controllerResolves);
       $rootScope.$apply();
@@ -78,7 +82,7 @@ describe('Marketplace.details', function() {
             'service_catalogs/321/service_templates',
             123,
             {},
-            '{"action":"order","resource":{"href":"http://localhost:3000/api/service_templates/123","dialogField1":"1","dialogField2":"2"}}'
+            '{"action":"order","resource":{"href":"/api/service_templates/123","dialogField1":"1","dialogField2":"2"}}'
           );
         });
 
