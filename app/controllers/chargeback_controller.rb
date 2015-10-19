@@ -109,6 +109,8 @@ class ChargebackController < ApplicationController
   def set_form_locals
     if x_active_tree == :cb_rates_tree
       @x_edit_buttons_locals = {:action_url => 'cb_rate_edit'}
+    elsif x_active_tree == :cb_tiers_tree
+      @x_edit_buttons_locas = {:action_url => 'cb_tier_edit'}
     elsif x_active_tree == :cb_assignments_tree
       @x_edit_buttons_locals = {
         :action_url   => 'cb_assign_update',

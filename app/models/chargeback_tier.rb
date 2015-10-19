@@ -44,6 +44,6 @@ class ChargebackTier < ActiveRecord::Base
 
   def self.tier_name(id)
     tier = ChargebackTier.find_by_id(id)
-    name = tier ? tier.name : "Not tiered"
+    tier ? tier.name : "Not tiered"
   end
 end
