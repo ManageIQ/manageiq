@@ -4,7 +4,7 @@
   :rate_type: Compute
   :default: true
   :rates:
-    - :description: Used CPU in MHz
+    - :description: Used CPU
       :group: cpu
       :source: used
       :metric: cpu_usagemhz_rate_average
@@ -19,7 +19,7 @@
       :rate: 0
       :per_time: daily
       :per_unit: cpu
-    - :description: Used Memory in MB
+    - :description: Used Memory
       :group: memory
       :source: used
       :metric: derived_memory_used
@@ -27,7 +27,7 @@
       :per_time: daily
       :per_unit: megabytes
       :measure: Bytes Units
-    - :description: Allocated Memory in MB
+    - :description: Allocated Memory
       :group: memory
       :source: allocated
       :metric: derived_memory_available
@@ -35,7 +35,7 @@
       :per_time: daily
       :per_unit: megabytes
       :measure: Bytes Units
-    - :description: Used Network I/O in KBps
+    - :description: Used Network I/O
       :group: net_io
       :source: used
       :metric: net_usage_rate_average
@@ -43,7 +43,7 @@
       :per_time: hourly
       :per_unit: kbps
       :measure: Bytes per Second Units
-    - :description: Used Disk I/O in KBps
+    - :description: Used Disk I/O
       :group: disk_io
       :source: used
       :metric: disk_usage_rate_average
@@ -66,7 +66,7 @@
   :rate_type: Storage
   :default: true
   :rates:
-    - :description: Allocated Disk Storage in Bytes
+    - :description: Allocated Disk Storage
       :group: storage
       :source: allocated
       :metric: derived_vm_allocated_disk_storage
@@ -74,7 +74,7 @@
       :per_time: monthly
       :per_unit: gigabytes
       :measure: Bytes Units
-    - :description: Used Disk Storage in Bytes
+    - :description: Used Disk Storage
       :group: storage
       :source: used
       :metric: derived_vm_used_disk_storage

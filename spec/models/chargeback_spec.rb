@@ -155,15 +155,22 @@ describe Chargeback do
     end
 
     it "storage" do
+      cbdm = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
       FactoryGirl.create(:chargeback_rate_detail_storage_used,
-                         :chargeback_rate_id => @cbr.id,
-                         :per_time           => "hourly",
-                         :rate               => @count_hourly_rate.to_s,
+                         :chargeback_rate_id                => @cbr.id,
+                         :per_time                          => "hourly",
+                         :metric                            => "derived_vm_used_disk_storage",
+                         :per_unit                          => "gigabytes",
+                         :rate                              => @count_hourly_rate.to_s,
+                         :chargeback_rate_detail_measure_id => cbdm.id
                         )
       FactoryGirl.create(:chargeback_rate_detail_storage_allocated,
-                         :chargeback_rate_id => @cbr.id,
-                         :per_time           => "hourly",
-                         :rate               => @count_hourly_rate.to_s,
+                         :chargeback_rate_id                => @cbr.id,
+                         :per_time                          => "hourly",
+                         :per_unit                          => "gigabytes",
+                         :rate                              => @count_hourly_rate.to_s,
+                         :metric                            => "derived_vm_allocated_disk_storage",
+                         :chargeback_rate_detail_measure_id => cbdm.id
                         )
 
       subject.storage_allocated_metric.should == @vm_allocated_disk_storage.gigabytes * @metric_size
@@ -281,15 +288,18 @@ describe Chargeback do
     end
 
     it "storage" do
+      cbdm = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
       FactoryGirl.create(:chargeback_rate_detail_storage_used,
                          :chargeback_rate_id => @cbr.id,
                          :per_time           => "hourly",
                          :rate               => @count_hourly_rate.to_s,
+                         :chargeback_rate_detail_measure_id => cbdm.id
                         )
       FactoryGirl.create(:chargeback_rate_detail_storage_allocated,
-                         :chargeback_rate_id => @cbr.id,
-                         :per_time           => "hourly",
-                         :rate               => @count_hourly_rate.to_s,
+                         :chargeback_rate_id                => @cbr.id,
+                         :per_time                          => "hourly",
+                         :rate                              => @count_hourly_rate.to_s,
+                         :chargeback_rate_detail_measure_id => cbdm.id
                         )
 
       subject.storage_allocated_metric.should == @vm_allocated_disk_storage.gigabytes * @metric_size

@@ -6,7 +6,12 @@ describe ChargebackRateDetail do
     rate     = 8.26
     per_time = 'monthly'
     per_unit = 'megabytes'
-    cbd = FactoryGirl.create(:chargeback_rate_detail, :rate => rate, :per_time => per_time, :per_unit => per_unit, :enabled => true)
+    cbd = FactoryGirl.create(:chargeback_rate_detail,
+                             :rate     => rate,
+                             :per_time => per_time,
+                             :per_unit => per_unit,
+                             :enabled  => true
+                            )
     cbd.cost(cvalue).should == cvalue * cbd.hourly_rate
 
     cbd.group = 'fixed'
@@ -35,8 +40,13 @@ describe ChargebackRateDetail do
       'yearly',   'megabytes',  rate / 24 / 365,
       'yearly',   'gigabytes',  rate / 24 / 365 / 1024,
     ].each_slice(3) do |per_time, per_unit, hourly_rate|
-      cbd = FactoryGirl.create(:chargeback_rate_detail, :rate => rate, :per_time => per_time,
-       :per_unit => per_unit, :metric => 'derived_memory_available', :chargeback_rate_detail_measure_id => cbdm.id)
+      cbd = FactoryGirl.create(:chargeback_rate_detail,
+                               :rate                              => rate,
+                               :per_time                          => per_time,
+                               :per_unit                          => per_unit,
+                               :metric                            => 'derived_memory_available',
+                               :chargeback_rate_detail_measure_id => cbdm.id
+                              )
       cbd.hourly_rate.should == hourly_rate
     end
 
@@ -88,7 +98,10 @@ describe ChargebackRateDetail do
 
   it "#per_unit_display_with_measurements" do
     cbdm = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
-    cbd  = FactoryGirl.create(:chargeback_rate_detail, :per_unit => 'megabytes', :chargeback_rate_detail_measure_id => cbdm.id)
+    cbd  = FactoryGirl.create(:chargeback_rate_detail,
+                              :per_unit                          => 'megabytes',
+                              :chargeback_rate_detail_measure_id => cbdm.id
+                             )
     cbd.per_unit_display.should == 'MB'
   end
 
@@ -105,12 +118,18 @@ describe ChargebackRateDetail do
   it "diferents_per_units_rates_should_have_the_same_cost" do
     cbdm = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
     # should be the same cost. bytes to megabytes and gigabytes to megabytes
-    cbd_bytes = FactoryGirl.create(:chargeback_rate_detail, :per_unit => 'bytes',
-     :metric => 'derived_memory_available', :per_time => 'monthly',
-      :chargeback_rate_detail_measure_id => cbdm.id)
-    cbd_gigabytes = FactoryGirl.create(:chargeback_rate_detail, :per_unit => 'gigabytes',
-     :metric => 'derived_memory_available', :per_time => 'monthly',
-      :chargeback_rate_detail_measure_id => cbdm.id)
+    cbd_bytes = FactoryGirl.create(:chargeback_rate_detail,
+                                   :per_unit                          => 'bytes',
+                                   :metric                            => 'derived_memory_available',
+                                   :per_time                          => 'monthly',
+                                   :chargeback_rate_detail_measure_id => cbdm.id
+                                  )
+    cbd_gigabytes = FactoryGirl.create(:chargeback_rate_detail,
+                                       :per_unit                          => 'gigabytes',
+                                       :metric                            => 'derived_memory_available',
+                                       :per_time                          => 'monthly',
+                                       :chargeback_rate_detail_measure_id => cbdm.id
+                                      )
     cbd_bytes.cost(100).should == cbd_gigabytes.cost(100)
   end
 end
