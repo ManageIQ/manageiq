@@ -194,8 +194,7 @@
   <div class="panel panel-default ss-details-panel">
     <div class="panel-body">
       <section class="ss-details-section">
-        <h2>Service Details</h2>
-        <pre>{{ ::vm.service |json }}</pre>
+        <dialog-content dialog="vm.service.provision_dialog" input-disabled="true" options="vm.service.options.dialog"></dialog-content>
       </section>
     </div>
   </div>
