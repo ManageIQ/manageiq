@@ -67,7 +67,6 @@
 //= require miq_jquery_ujs_rails3
 //= require miq_ujs_bindings
 //= require jquery.form
-//= require jquery.cookie
 //= require dhtmlx_gpl_36/dhtmlxcommon
 //= require dhtmlx_gpl_36/dhtmlxcontainer
 //= require dynatree/jquery.dynatree
