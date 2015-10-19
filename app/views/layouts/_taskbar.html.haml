@@ -10,5 +10,9 @@
   = render :partial => "/layouts/tabs"
 = render_toolbars
 
-:javascript
-  ManageIQ.record.recordId = '#{@record ? @record.id : 'null'}';
+- if @record
+  :javascript
+    ManageIQ.record.recordId = '#{@record.id}';
+- else
+  :javascript
+    ManageIQ.record.recordId = null;
