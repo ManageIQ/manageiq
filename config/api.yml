@@ -91,7 +91,8 @@
       :post:
       - :name: create
         :identifier: ops_settings
-
+      - :name: delete
+        :identifier: ops_settings
   :chargebacks:
     :description: Chargebacks
     :options:
@@ -796,6 +797,8 @@
     :subcollection_actions:
       :post:
       - :name: create
+        :identifier: ops_settings
+      - :name: delete
         :identifier: ops_settings
       - :name: assign
       - :name: unassign

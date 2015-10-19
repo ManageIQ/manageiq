@@ -159,6 +159,35 @@ describe ApiController do
 
         expect_request_success_with_no_content
       end
+
+      it "can delete multiple tags within a category by id" do
+        api_basic_authorize action_identifier(:tags, :delete)
+        classification1 = FactoryGirl.create(:classification_tag)
+        classification2 = FactoryGirl.create(:classification_tag)
+        category = FactoryGirl.create(:category, :children => [classification1, classification2])
+        tag1 = classification1.tag
+        tag2 = classification2.tag
+
+        expect do
+          run_post "#{categories_url(category.id)}/tags", gen_request(:delete, [{:id => tag1.id}, {:id => tag2.id}])
+        end.to change(Tag, :count).by(-2)
+        expect_request_success
+      end
+
+      it "can delete multiple tags within a category by name" do
+        api_basic_authorize action_identifier(:tags, :delete)
+        classification1 = FactoryGirl.create(:classification_tag)
+        classification2 = FactoryGirl.create(:classification_tag)
+        category = FactoryGirl.create(:category, :children => [classification1, classification2])
+        tag1 = classification1.tag
+        tag2 = classification2.tag
+        body = gen_request(:delete, [{:name => tag1.name}, {:name => tag2.name}])
+
+        expect do
+          run_post "#{categories_url(category.id)}/tags", body
+        end.to change(Tag, :count).by(-2)
+        expect_request_success
+      end
     end
 
     context "without an appropriate role" do
