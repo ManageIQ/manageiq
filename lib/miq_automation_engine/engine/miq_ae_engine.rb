@@ -31,6 +31,7 @@ module MiqAeEngine
       :args        => [args],
       :zone        => MiqServer.my_zone,
       :role        => 'automate',
+      :queue_name  => 'automate',
       :msg_timeout => 60.minutes
     }.merge(options)
 
