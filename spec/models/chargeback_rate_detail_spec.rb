@@ -51,7 +51,7 @@ describe ChargebackRateDetail do
     end
 
     cbd = FactoryGirl.create(:chargeback_rate_detail, :rate => rate, :per_time => 'annually')
-    lambda { cbd.hourly_rate }.should raise_error(RuntimeError, "rate time unit of 'annually' not supported")
+    ->  { cbd.hourly_rate }.should raise_error(RuntimeError, "rate time unit of 'annually' not supported")
   end
 
   it "#rate_adjustment" do

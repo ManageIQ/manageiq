@@ -56,9 +56,9 @@ class ChargebackRateDetail < ActiveRecord::Base
     pos_per_unit = measure.units.index(per_unit)
     jumps = (pos_per_unit - pos_pu_destiny).abs
     if pos_per_unit > pos_pu_destiny
-      hr.to_f / (measure.step ** jumps )
+      hr.to_f / (measure.step**jumps )
     else
-      hr * (measure.step ** jumps)
+      hr * (measure.step**jumps)
     end
   end
 
