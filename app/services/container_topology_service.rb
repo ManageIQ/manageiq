@@ -39,6 +39,12 @@ class ContainerTopologyService
     services.each do |s|
       topo_items[s.ems_ref] = build_entity_data(s, "Service")
       s.container_groups.each { |cg| links << build_link(s.ems_ref, cg.ems_ref) } if s.container_groups.size > 0
+      if s.container_routes.size > 0
+        s.container_routes.each { |r|
+          topo_items[r.ems_ref] = build_entity_data(r, "Route")
+          links << build_link(s.ems_ref, r.ems_ref)
+        }
+      end
     end
 
     topology[:items] = topo_items
@@ -109,7 +115,8 @@ class ContainerTopologyService
      :Node       => true,
      :Service    => true,
      :Host       => true,
-     :VM         => true
+     :VM         => true,
+     :Route      => true
     }
   end
 end

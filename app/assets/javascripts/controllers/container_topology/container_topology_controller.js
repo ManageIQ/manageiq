@@ -101,6 +101,7 @@ angular.module('topologyApp', ['kubernetesUI'])
         var class_name = "";
         switch (d.item.kind) {
             case "Service":
+            case "Route":
             case "Node":
             case "Replicator":
                 class_name = "container_" + d.item.kind.toLowerCase();
