@@ -163,7 +163,7 @@ describe MiqAction do
   context '.create_default_actions' do
     context 'seeding default actions from a file with 3 csv rows and some comments' do
       before do
-        csv = write_to_tempfile <<-CSV.strip_heredoc
+        stub_csv <<-CSV.strip_heredoc
           name,description
           audit,Generate Audit Event
           log,Generate log message
@@ -172,7 +172,7 @@ describe MiqAction do
           evm_event,Show EVM Event on Timeline
         CSV
 
-        MiqAction.create_default_actions(csv.path)
+        MiqAction.create_default_actions
       end
 
       it 'should create 3 new actions' do
@@ -185,7 +185,7 @@ describe MiqAction do
 
       context 'when csv was changed and imported again' do
         before do
-          csv = write_to_tempfile <<-CSV.strip_heredoc
+          stub_csv <<-CSV.strip_heredoc
             name,description
             audit,UPD: Audit Event
             # log,Generate log message
@@ -193,7 +193,7 @@ describe MiqAction do
             evm_event,Show EVM Event on Timeline
           CSV
 
-          MiqAction.create_default_actions(csv.path)
+          MiqAction.create_default_actions
         end
 
         it "should not delete the actions that present in the DB but don't present in the file" do
@@ -209,11 +209,13 @@ describe MiqAction do
         end
       end
 
-      def write_to_tempfile(data)
+      def stub_csv(data)
         Tempfile.open(['actions', '.csv']) do |f|
           f.write(data)
           @tempfile = f # keep the reference in order to delete the file later
         end
+
+        expect(MiqAction).to receive(:fixture_path).and_return(@tempfile.path)
       end
 
       after do

@@ -1079,8 +1079,8 @@ class MiqAction < ActiveRecord::Base
     create_script_actions_from_directory
   end
 
-  def self.create_default_actions(fname = fixture_path)
-    CSV.foreach(fname, :headers => true, :skip_lines => /^#/).each do |csv_row|
+  def self.create_default_actions
+    CSV.foreach(fixture_path, :headers => true, :skip_lines => /^#/).each do |csv_row|
       action = csv_row.to_hash
       action['action_type'] = 'default'
 
