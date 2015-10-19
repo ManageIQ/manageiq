@@ -56,7 +56,7 @@
 //= require jqplot-plugins/jqplot.canvasAxisTickRenderer
 //= require jqplot-plugins/jqplot.canvasTextRenderer
 //= require miq_jqplot
-//= require jquery/jquery-ui-1.9.2.custom.min
+//= require jqueryui
 //= require bootstrap
 //= require bootstrap-datepicker
 //= require bootstrap-filestyle
