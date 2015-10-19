@@ -519,7 +519,7 @@ class MiqAlert < ActiveRecord::Base
     expression[:options].each { |k, v| aevent[k] = v } if expression[:options]
 
     begin
-      result = MiqAeEvent.eval_alert_expression(aevent)
+      result = MiqAeEvent.eval_alert_expression(target, aevent)
     rescue => err
       _log.error("#{err.message}")
       result = false
