@@ -36,6 +36,8 @@ class TenantQuota < ActiveRecord::Base
   validates :value, :numericality => {:greater_than => 0}
   validates :warn_value, :numericality => {:greater_than => 0}, :if => "warn_value.present?"
 
+  validate :check_for_over_allocation
+
   scope :cpu_allocated,       -> { where(:name => :cpu_allocated) }
   scope :mem_allocated,       -> { where(:name => :mem_allocated) }
   scope :storage_allocated,   -> { where(:name => :storage_allocated) }
@@ -68,7 +70,7 @@ class TenantQuota < ActiveRecord::Base
 
   def used
     method = "#{name.split("_").first}_used"
-    send(method)
+    @used ||= send(method)
   end
 
   def cpu_used
@@ -110,5 +112,35 @@ class TenantQuota < ActiveRecord::Base
 
   def default_unit
     self.class.quota_definitions.fetch_path(name.to_sym, :unit).to_s
+  end
+
+  def check_for_over_allocation
+    return unless value_changed?
+
+    # Root tenant has no (unlimited) quota
+    # First level tenant can also have unlimited quota
+    return if tenant.root? || tenant.parent.root?
+
+    oval, nval = changes["value"]
+
+    # Check that the new value is >= the amount that was already allocated to child tenants
+    if nval < allocated
+      errors.add(name, "quota is over allocated, #{nval} was requested but only #{nval - allocated} is available")
+      return
+    end
+
+    # Check that new quota is a least as much as was already used
+    if nval < used
+      errors.add(name, "quota is under allocated, #{nval} was requested but #{used} has already been used")
+      return
+    end
+
+    diff = (nval || 0) - (oval || 0)
+
+    # Check if the parent has enough quota available to give to the child
+    parent_quota = tenant.parent.tenant_quotas.send(name).take
+    if parent_quota.nil? || parent_quota.available < diff
+      errors.add(name, "quota is over allocated, parent tenant does not have enough quota")
+    end
   end
 end
