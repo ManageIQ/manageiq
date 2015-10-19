@@ -21,25 +21,6 @@
     <ul class="nav navbar-nav navbar-right navbar-iconic">
       <li dropdown>
         <a dropdown-toggle class="nav-item-iconic">
-          <i title="Notifications" class="fa pficon-flag"></i>
-          <span class="notification-icon-count" ng-if="vm.messages.length > 0">{{ vm.messages.length }}</span>
-        </a>
-
-        <div class="dropdown-menu infotip bottom-right">
-          <div class="arrow"></div>
-          <ul class="list-group">
-            <li ng-repeat="message in vm.messages" class="list-group-item">
-              <span class="i pficon pficon-info"></span> {{ message.text }}
-            </li>
-          </ul>
-          <div class="footer">
-            <a ng-if="vm.messages.length > 0" ng-click="vm.clearMessages()">Clear Messages</a>
-            <span ng-if="vm.messages.length === 0">No Messages</span>
-          </div>
-        </div>
-      </li>
-      <li dropdown>
-        <a dropdown-toggle class="nav-item-iconic">
           <i title="Help" class="fa pficon-help"></i>
           <span class="caret"></span>
         </a>
