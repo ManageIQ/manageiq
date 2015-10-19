@@ -15,6 +15,12 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
       amqp_userid: '',
       amqp_password: '',
       amqp_verify: '',
+      metrics_userid: '',
+      metrics_password: '',
+      metrics_verify: '',
+      ssh_keypair_userid: '',
+      ssh_keypair_password: '',
+      ssh_keypair_verify: '',
       emstype_vm: false,
       ems_common: true,
       azure_tenant_id: ''
