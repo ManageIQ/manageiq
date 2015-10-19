@@ -9,9 +9,14 @@ class ServiceTemplateProvisionRequest < MiqRequest
   virtual_has_one :picture
   virtual_has_one :service_template
   virtual_has_one :provision_dialog
+  virtual_has_one :user
 
   default_value_for(:source_id)    { |r| r.get_option(:src_id) }
   default_value_for :source_type,  SOURCE_CLASS_NAME
+
+  def user
+    get_user
+  end
 
   def my_role
     'ems_operations'

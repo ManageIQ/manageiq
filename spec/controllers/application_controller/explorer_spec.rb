@@ -51,44 +51,6 @@ describe VmInfraController do
       end
     end
 
-    context "#x_get_tree_region_kids" do
-      it "does not return Cloud Providers nodes for Utilization tree" do
-        region = MiqRegion.seed
-        ems_cloud = FactoryGirl.create(:ems_amazon)
-        ems_infra = FactoryGirl.create(:ems_redhat)
-        controller.instance_variable_set(:@sb, {:trees => {:utilization_tree => {:active_node => "root"}}, :active_tree => :utilization_tree})
-        options = {
-          :tree   => :utilization_tree,
-          :type   => :utilization,
-          :parent => region
-        }
-
-        objects = controller.send(:x_get_tree_region_kids, region, options)
-        objects.should have(1).items
-      end
-    end
-
-    context "#x_get_tree_custom_kids" do
-      it "Return only Infra Providers nodes for Utilization tree" do
-        @region = MiqRegion.seed
-
-        ems_cloud = FactoryGirl.create(:ems_amazon)
-        ems_infra = FactoryGirl.create(:ems_redhat)
-        folder_node_id = {:id => "folder_e_xx-#{MiqRegion.compress_id(@region.id)}"}
-        controller.instance_variable_set(:@sb, {:trees => {:utilization_tree => {:active_node => "root"}}, :active_tree => :utilization_tree})
-        options = {
-          :tree   => :utilization_tree,
-          :type   => :utilization,
-          :parent => @region
-        }
-
-        objects = controller.send(:x_get_tree_custom_kids, folder_node_id, options)
-        objects.should have(1).items
-        objects.first[:id].should_not == ems_cloud.id
-        objects.first[:id].should == ems_infra.id
-      end
-    end
-
     context "#x_settings_changed" do
       let(:user) { FactoryGirl.create(:user, :userid => 'wilma', :settings => {}) }
       before(:each) do

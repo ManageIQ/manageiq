@@ -255,13 +255,13 @@ class ContainerController < ApplicationController
     elsif record_showing
       presenter[:update_partials][:main_div] = r[:partial => "container/container_show", :locals => {:controller => "container"}]
       presenter[:set_visible_elements][:pc_div_1] = false
-      presenter[:show_hide_layout][:paginator] = 'hide'
+      presenter[:set_visible_elements][:paginator] = false
     else
       presenter[:update_partials][:main_div] = r[:partial => "layouts/x_gtl"]
       presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
       presenter[:set_visible_elements][:form_buttons_div] = false
       presenter[:set_visible_elements][:pc_div_1] = true
-      presenter[:show_hide_layout][:paginator] = 'show'
+      presenter[:set_visible_elements][:paginator] = true
     end
 
     presenter[:replace_partials][:adv_searchbox_div] = r[:partial => 'layouts/x_adv_searchbox']
@@ -278,7 +278,7 @@ class ContainerController < ApplicationController
     presenter[:reload_toolbars][:center]  = {:buttons => c_buttons,  :xml => c_xml}  if c_buttons && c_xml
     presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons && v_xml
 
-    presenter[:show_hide_layout][:toolbar] = h_buttons || c_buttons || v_buttons ? 'show' : 'hide'
+    presenter[:set_visible_elements][:toolbar] = h_buttons || c_buttons || v_buttons
 
     presenter[:record_id] = @record ? @record.id : nil
 
@@ -302,11 +302,6 @@ class ContainerController < ApplicationController
 
   def build_containers_filter_tree
     TreeBuilderContainersFilter.new("containers_filter_tree", "containers_filter", @sb)
-  end
-
-  # Add the children of a node that is being expanded (autoloaded), called by generic tree_autoload method
-  def tree_add_child_nodes(id)
-    x_get_child_nodes_dynatree(x_active_tree, id)
   end
 
   def show_record(id = nil)

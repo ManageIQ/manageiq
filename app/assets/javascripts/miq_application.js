@@ -13,10 +13,6 @@ function miqOnLoad() {
   if ($('#widget_select_div').length) {
     miqInitWidgetPulldown();
   }
-  // Need this since IE will not run JS correctly until after page is loaded
-  if (typeof miqInitDhtmlxLayout == "function") {
-    miqInitDhtmlxLayout();
-  }
 
   // Track the mouse coordinates for popup menus
   $(document).mousemove(function (e) {
@@ -73,7 +69,7 @@ function miqPrepRightCellForm(tree) {
   if ($('#adv_searchbox_div').length) {
     $('#adv_searchbox_div').hide();
   }
-  ManageIQ.layout.toolbar.hide();
+  $('#toolbar').hide();
   $('#' + tree).dynatree('disable');
   miqDimDiv(tree + '_div', true);
 }
@@ -817,16 +813,6 @@ function miqSendOneTrans(url) {
 
   ManageIQ.oneTransition.oneTrans = 1;
   miqJqueryRequest(url);
-}
-
-// Function to write date and time to page footer each second
-function dateTime(offset, abbr) {
-  var date = miqCalendarDateConversion(offset);
-
-  $('#tP').html(date.format("MM/DD/YYYY HH:mm ") + abbr);
-  setTimeout(function () {
-    dateTime(offset, abbr);
-  }, 1000);
 }
 
 // this deletes the remembered treestate when called

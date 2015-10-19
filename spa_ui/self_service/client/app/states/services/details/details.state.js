@@ -32,13 +32,13 @@
       'evm_owner.name',
       'miq_group.description',
       'vms',
-      'v_total_vms',
       'aggregate_all_vm_cpus',
       'aggregate_all_vm_memory',
       'aggregate_all_vm_disk_count',
       'aggregate_all_vm_disk_space_allocated',
       'aggregate_all_vm_disk_space_used',
       'aggregate_all_vm_memory_on_disk',
+      'actions',
       'custom_actions'
     ];
     var options = {attributes: requestAttributes};
@@ -58,6 +58,11 @@
     vm.editServiceModal = editServieModal;
     vm.retireServiceNow = retireServiceNow;
     vm.retireServiceLater = retireServiceLater;
+
+    vm.listConfig = {
+      selectItems: false,
+      showSelectBox: false
+    };
 
     activate();
 

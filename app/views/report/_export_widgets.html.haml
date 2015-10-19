@@ -78,8 +78,8 @@
     listenForWidgetPostMessages();
     setUpImportWidgetClickHandlers();
 
-    if (typeof(ManageIQ.layout.toolbar.hide) !== 'undefined') {
-      ManageIQ.layout.toolbar.hide();
+    if ($('#toolbar').length > 0) {
+      $('#toolbar').hide();
       $('.widget-export-buttons').show();
     }
   });

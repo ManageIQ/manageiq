@@ -15,9 +15,7 @@ class ApiController
       ems_custom_attrs  = hash_fetch(data, "ems_custom_attributes")
       miq_custom_attrs  = hash_fetch(data, "miq_custom_attributes")
 
-      user_name = requester["user_name"] || @auth_user
-
-      MiqProvisionVirtWorkflow.from_ws(version_str, user_name, template_fields, vm_fields, requester, tags,
+      MiqProvisionVirtWorkflow.from_ws(version_str, @auth_user_obj, template_fields, vm_fields, requester, tags,
                                        additional_values, ems_custom_attrs, miq_custom_attrs)
     end
   end

@@ -63,6 +63,10 @@ class User < ActiveRecord::Base
     in_region.find_by(:userid => userid)
   end
 
+  def self.find_by_userid!(userid)
+    in_region.find_by!(:userid => userid)
+  end
+
   def self.find_by_email(email)
     in_region.find_by(:email => email)
   end
@@ -110,6 +114,7 @@ class User < ActiveRecord::Base
   def miq_group_description=(group_description)
     if group_description
       desired_group = miq_groups.detect { |g| g.description == group_description }
+      desired_group ||= MiqGroup.find_by_description(group_description) if super_admin_user?
       self.current_group = desired_group if desired_group
     end
   end

@@ -168,7 +168,7 @@ class ApiController
     private
 
     def resource_search(id, type, klass)
-      res = Rbac.filtered([klass.find(id)], :userid => @auth_user, :class => klass).first
+      res = Rbac.filtered([klass.find(id)], :user => @auth_user_obj, :class => klass).first
       raise Forbidden, "Access to the resource #{type}/#{id} is forbidden" unless res
       res
     end
@@ -189,7 +189,7 @@ class ApiController
       res = res.reorder(sort_options)             if sort_options.present?
 
       options = {
-        :userid         => @auth_user,
+        :user => @auth_user_obj,
       }
       options[:order] = sort_options              if sort_options.present?
       options[:offset], options[:limit] = expand_paginate_params if paginate_params?

@@ -1,6 +1,7 @@
 require "spec_helper"
 
 describe DynamicDialogFieldValueProcessor do
+  let(:user) { FactoryGirl.create(:user_with_group) }
   let(:dynamic_dialog_field_value_processor) { described_class.new }
 
   describe "#values_from_automate" do
@@ -42,9 +43,11 @@ describe DynamicDialogFieldValueProcessor do
       end
 
       before do
+        User.current_user = user
         resource_action.stub(:deliver_to_automate_from_dialog_field).with(
           {:dialog => "automate_values_hash"},
-          "target_resource"
+          "target_resource",
+          user
         ).and_return(workspace)
         workspace.stub(:root).and_return(workspace_attributes)
         dialog_field.stub(:normalize_automate_values).with(workspace_attributes.attributes).and_return(

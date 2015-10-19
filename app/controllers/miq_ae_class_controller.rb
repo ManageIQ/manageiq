@@ -343,7 +343,8 @@ class MiqAeClassController < ApplicationController
     presenter[:update_partials][update_partial_div] = r[:partial => update_partial] if update_partial
     if @in_a_form
       action_url =  create_action_url(nodes.first)
-      presenter[:show_hide_layout][:paginator] = 'show' # incase it was hidden for summary screen, and incase there were no records on show_list
+      # incase it was hidden for summary screen, and incase there were no records on show_list
+      presenter[:set_visible_elements][:paginator] = true
       presenter[:set_visible_elements][:form_buttons_div] = true
       presenter[:update_partials][:form_buttons_div] = r[
         :partial => "layouts/x_edit_buttons",
@@ -357,7 +358,7 @@ class MiqAeClassController < ApplicationController
       ]
     else
       # incase it was hidden for summary screen, and incase there were no records on show_list
-      presenter[:show_hide_layout][:paginator] = 'hide'
+      presenter[:set_visible_elements][:paginator] = false
       presenter[:set_visible_elements][:form_buttons_div] = false
     end
 
@@ -374,11 +375,11 @@ class MiqAeClassController < ApplicationController
     # Rebuild the toolbars
     presenter[:reload_toolbars][:history] = {:buttons => h_buttons, :xml => h_xml}
     if c_buttons && c_xml
-      presenter[:show_hide_layout][:toolbar] = 'show'
+      presenter[:set_visible_elements][:toolbar] = true
       presenter[:reload_toolbars][:center] = {:buttons => c_buttons, :xml => c_xml}
       presenter[:set_visible_elements][:center_buttons_div] = true
     else
-      presenter[:show_hide_layout][:toolbar] = 'hide'
+      presenter[:set_visible_elements][:toolbar] = false
       presenter[:set_visible_elements][:center_buttons_div] = false
     end
 
@@ -2556,7 +2557,7 @@ class MiqAeClassController < ApplicationController
   def domain_overrides
     @domain_overrides = {}
     typ, = x_node.split('-')
-    overrides = TreeBuilder.get_model_for_prefix(typ).constantize.get_homonymic_across_domains(@record.fqname)
+    overrides = TreeBuilder.get_model_for_prefix(typ).constantize.get_homonymic_across_domains(current_user, @record.fqname)
     overrides.each do |obj|
       display_name, id = domain_display_name_using_name(obj, @record.domain.name)
       @domain_overrides[display_name] = id

@@ -381,8 +381,8 @@ class ServiceController < ApplicationController
     if %w(dialog_provision ownership service_edit tag).include?(action)
       presenter[:set_visible_elements][:form_buttons_div] = true
       presenter[:set_visible_elements][:pc_div_1] = false
-      presenter[:show_hide_layout][:toolbar] = 'hide'
-      presenter[:show_hide_layout][:paginator] = 'show'
+      presenter[:set_visible_elements][:toolbar] = false
+      presenter[:set_visible_elements][:paginator] = true
       if action == "dialog_provision"
         presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_dialog_buttons",
                                                            :locals  => {:action_url => action_url,
@@ -403,14 +403,14 @@ class ServiceController < ApplicationController
         (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0)))
       # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box
       # when trying to change a node on tree after saving a record
-      presenter[:set_visible_elements][:buttons_on] = false
-      presenter[:show_hide_layout][:toolbar]        = 'show'
-      presenter[:show_hide_layout][:paginator]      = 'hide'
+      presenter[:set_visible_elements][:buttons_on]  = false
+      presenter[:set_visible_elements][:toolbar]   = true
+      presenter[:set_visible_elements][:paginator] = false
     else
       presenter[:set_visible_elements][:form_buttons_div] = false
       presenter[:set_visible_elements][:pc_div_1]         = true
-      presenter[:show_hide_layout][:toolbar]              = 'show'
-      presenter[:show_hide_layout][:paginator]            = 'show'
+      presenter[:set_visible_elements][:toolbar]        = true
+      presenter[:set_visible_elements][:paginator]      = true
     end
 
     # Clear the JS gtl_list_grid var if changing to a type other than list
@@ -436,7 +436,7 @@ class ServiceController < ApplicationController
     presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons && v_xml
     presenter[:reload_toolbars][:custom]  = {:buttons => cb_buttons, :xml => cb_xml} if cb_buttons && cb_xml
 
-    presenter[:show_hide_layout][:toolbar] = h_buttons || c_buttons || v_buttons ? 'show' : 'hide'
+    presenter[:set_visible_elements][:toolbar] = h_buttons || c_buttons || v_buttons
 
     if @record && !@in_a_form
       presenter[:record_id] = @record.id
@@ -456,11 +456,6 @@ class ServiceController < ApplicationController
   # Build a Services explorer tree
   def build_svcs_tree
     TreeBuilderServices.new("svcs_tree", "svcs", @sb)
-  end
-
-  # Add the children of a node that is being expanded (autoloaded), called by generic tree_autoload method
-  def tree_add_child_nodes(id)
-    x_get_child_nodes_dynatree(x_active_tree, id)
   end
 
   def show_record(id = nil)

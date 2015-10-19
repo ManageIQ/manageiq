@@ -22,9 +22,11 @@ class Service < ActiveRecord::Base
   virtual_has_one    :custom_actions
   virtual_has_one    :custom_action_buttons
   virtual_has_one    :provision_dialog
+  virtual_has_one    :user
 
   delegate :custom_actions, :custom_action_buttons, :to => :service_template, :allow_nil => true
   delegate :provision_dialog, :to => :miq_request, :allow_nil => true
+  delegate :user, :to => :miq_request, :allow_nil => true
 
   include ServiceMixin
   include OwnershipMixin

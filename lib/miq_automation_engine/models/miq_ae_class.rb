@@ -103,23 +103,23 @@ class MiqAeClass < ActiveRecord::Base
     ae_fields.any? { |f| f.aetype == 'state' }
   end
 
-  def self.get_homonymic_across_domains(fqname, enabled = nil)
-    MiqAeDatastore.get_homonymic_across_domains(::MiqAeClass, fqname, enabled)
+  def self.get_homonymic_across_domains(user, fqname, enabled = nil)
+    MiqAeDatastore.get_homonymic_across_domains(user, ::MiqAeClass, fqname, enabled)
   end
 
-  def self.find_homonymic_instances_across_domains(fqname)
+  def self.find_homonymic_instances_across_domains(user, fqname)
     return [] if fqname.blank?
     path = MiqAeEngine::MiqAeUri.path(fqname, "miqaedb")
     ns, klass, inst = MiqAeEngine::MiqAePath.split(path)
     return [] if ns.blank? || klass.blank? || inst.blank?
-    get_same_instance_from_classes(get_sorted_homonym_class_across_domains(ns, klass), inst)
+    get_same_instance_from_classes(get_sorted_homonym_class_across_domains(user, ns, klass), inst)
   end
 
-  def self.find_distinct_instances_across_domains(fqname)
+  def self.find_distinct_instances_across_domains(user, fqname)
     return [] if fqname.blank?
     ns, klass = fqname.starts_with?('/') ? parse_fqname(fqname[1..-1]) : parse_fqname(fqname)
     return [] if ns.blank? || klass.blank?
-    get_unique_instances_from_classes(get_sorted_homonym_class_across_domains(ns, klass))
+    get_unique_instances_from_classes(get_sorted_homonym_class_across_domains(user, ns, klass))
   end
 
   delegate :editable?, :to => :ae_namespace
@@ -172,10 +172,10 @@ class MiqAeClass < ActiveRecord::Base
     ae_methods.select { |m| m.scope == s }
   end
 
-  def self.get_sorted_homonym_class_across_domains(ns = nil, klass)
+  def self.get_sorted_homonym_class_across_domains(user, ns = nil, klass)
     ns_obj = MiqAeNamespace.find_by_fqname(ns) unless ns.nil?
     partial_ns = ns_obj.nil? ? ns : remove_domain_from_fqns(ns)
-    class_array = MiqAeDomain.order("priority DESC").pluck(:name).collect do |domain|
+    class_array = user.current_tenant.visible_domains.pluck(:name).collect do |domain|
       fq_ns = domain + "/" + partial_ns
       ae_ns = MiqAeNamespace.find_by_fqname(fq_ns)
       next if ae_ns.nil?

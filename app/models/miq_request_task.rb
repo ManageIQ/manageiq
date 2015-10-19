@@ -124,6 +124,8 @@ class MiqRequestTask < ActiveRecord::Base
         :attrs         => {"request" => req_type},
         :instance_name => "AUTOMATION",
         :user_id       => get_user.id,
+        :miq_group_id  => get_user.current_group.id,
+        :tenant_id     => get_user.current_tenant.id,
       }
 
       zone ||= source.respond_to?(:my_zone) ? source.my_zone : MiqServer.my_zone

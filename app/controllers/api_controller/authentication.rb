@@ -31,6 +31,7 @@ class ApiController
           @auth_user_obj = userid_to_userobj(@auth_user)
           @api_token_mgr.reset_token(@module, @auth_token)
           authorize_user_group(@auth_user_obj)
+          validate_user_identity(@auth_user_obj)
           User.current_user = @auth_user_obj
         end
       else
@@ -43,6 +44,7 @@ class ApiController
           @auth_user     = user.userid
           @auth_user_obj = userid_to_userobj(@auth_user)
           authorize_user_group(@auth_user_obj)
+          validate_user_identity(@auth_user_obj)
           User.current_user = @auth_user_obj
         else
           request_http_basic_authentication
@@ -60,6 +62,14 @@ class ApiController
         group_obj = user_obj.miq_groups.find_by_description(group_name)
         raise AuthenticationError, "Invalid Authorization Group #{group_name} specified" if group_obj.nil?
         user_obj.miq_group_description = group_name
+      end
+    end
+
+    def validate_user_identity(user_obj)
+      @user_validation_service ||= UserValidationService.new(self)
+      missing_feature = @user_validation_service.missing_user_features(user_obj)
+      if missing_feature
+        raise AuthenticationError, "Invalid User #{user_obj.userid} specified, User's #{missing_feature} is missing"
       end
     end
 

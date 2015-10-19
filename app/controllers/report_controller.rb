@@ -943,12 +943,14 @@ class ReportController < ApplicationController
         presenter[:set_visible_elements][:rpb_div_1]        = true
         presenter[:set_visible_elements][:pc_div_1]         = false
       end
-      presenter[:show_hide_layout][:paginator] = 'show'
+      presenter[:set_visible_elements][:paginator] = true
     else
-      presenter[:show_hide_layout][:paginator] = 'hide'
+      presenter[:set_visible_elements][:paginator] = false
     end
-    presenter[:show_hide_layout][:paginator] = 'hide' if @sb[:active_tab] == 'report_info' && x_node.split('-').length == 5 && !@in_a_form
-    presenter[:show_hide_layout][:toolbar] = @in_a_form ? 'hide' : 'show'
+    if @sb[:active_tab] == 'report_info' && x_node.split('-').length == 5 && !@in_a_form
+      presenter[:set_visible_elements][:paginator] = false
+    end
+    presenter[:set_visible_elements][:toolbar] = !@in_a_form
 
     # Rebuild the toolbars
     presenter[:set_visible_elements][:history_buttons_div] = h_buttons && h_xml

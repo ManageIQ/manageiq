@@ -870,7 +870,7 @@ class CatalogController < ApplicationController
     # Check the validity of the entry points
     %w(fqname reconfigure_fqname retire_fqname).each do |fqname|
       if @edit[:new][fqname.to_sym].present? &&
-         MiqAeClass.find_homonymic_instances_across_domains(@edit[:new][fqname.to_sym]).empty?
+         MiqAeClass.find_homonymic_instances_across_domains(current_user, @edit[:new][fqname.to_sym]).empty?
         level = :error
         msg = _('Please correct invalid %s Entry Point prior to saving')
         case fqname
@@ -1869,8 +1869,8 @@ class CatalogController < ApplicationController
 
     # Decide whether to show paging controls
     if @tagging
-      presenter[:show_hide_layout][:toolbar] = 'hide'
-      presenter[:show_hide_layout][:paginator] = 'show'
+      presenter[:set_visible_elements][:toolbar] = false
+      presenter[:set_visible_elements][:paginator] = true
       action_url = x_active_tree == :ot_tree ? "ot_tags_edit" : "st_tags_edit"
       locals = {
         :record_id           => @edit[:object_ids][0],
@@ -1885,8 +1885,9 @@ class CatalogController < ApplicationController
           (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0))
       if ['button_edit', 'group_edit', 'group_reorder', 'at_st_new',
           'st_new', 'st_catalog_new', 'st_catalog_edit'].include?(action)
-        presenter[:show_hide_layout][:toolbar] = 'hide'
-        presenter[:show_hide_layout][:paginator] = 'show' # incase it was hidden for summary screen, and incase there were no records on show_list
+        presenter[:set_visible_elements][:toolbar] = false
+        presenter[:set_visible_elements][:paginator] = true
+        # incase it was hidden for summary screen, and incase there were no records on show_list
         presenter[:set_visible_elements][:form_buttons_div] = true
         presenter[:set_visible_elements][:pc_div_1] = false
         locals = {:record_id => @edit[:rec_id]}
@@ -1906,8 +1907,9 @@ class CatalogController < ApplicationController
         end
         presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
       elsif action == "dialog_provision"
-        presenter[:show_hide_layout][:toolbar] = 'hide'
-        presenter[:show_hide_layout][:paginator] = 'show'  # incase it was hidden for summary screen, and incase there were no records on show_list
+        presenter[:set_visible_elements][:toolbar] = false
+        # incase it was hidden for summary screen, and incase there were no records on show_list
+        presenter[:set_visible_elements][:paginator] = true
         presenter[:set_visible_elements][:form_buttons_div] = true
         presenter[:set_visible_elements][:pc_div_1] = false
         @record.dialog_fields.each do |field|
@@ -1919,8 +1921,8 @@ class CatalogController < ApplicationController
         end
         presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_dialog_buttons", :locals => {:action_url => "dialog_form_button_pressed", :record_id => @edit[:rec_id]}]
       elsif %w(ot_edit ot_copy ot_add service_dialog_from_ot).include?(action)
-        presenter[:show_hide_layout][:toolbar] = 'hide'
-        presenter[:show_hide_layout][:paginator] = 'show'
+        presenter[:set_visible_elements][:toolbar] = false
+        presenter[:set_visible_elements][:paginator] = true
         presenter[:set_visible_elements][:form_buttons_div] = true
         presenter[:set_visible_elements][:pc_div_1] = false
         locals = {:record_id  => @edit[:rec_id],
@@ -1936,14 +1938,14 @@ class CatalogController < ApplicationController
       else
         # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box when trying to change a node on tree after saving a record
         presenter[:set_visible_elements][:buttons_on] = false
-        presenter[:show_hide_layout][:toolbar] = 'show'
-        presenter[:show_hide_layout][:paginator] = 'hide'
+        presenter[:set_visible_elements][:toolbar] = true
+        presenter[:set_visible_elements][:paginator] = false
       end
     else
       presenter[:set_visible_elements][:form_buttons_div] = true
       presenter[:set_visible_elements][:pc_div_1] = true
-      presenter[:show_hide_layout][:toolbar] = 'show'
-      presenter[:show_hide_layout][:paginator] = 'show'
+      presenter[:set_visible_elements][:toolbar] = true
+      presenter[:set_visible_elements][:paginator] = true
     end
 
     # Rebuild the toolbars
@@ -1953,7 +1955,7 @@ class CatalogController < ApplicationController
     presenter[:reload_toolbars][:history] = {:buttons => h_buttons,  :xml => h_xml}  if h_buttons && h_xml
     presenter[:reload_toolbars][:center]  = {:buttons => c_buttons,  :xml => c_xml}  if c_buttons && c_xml
     presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons && v_xml
-    presenter[:show_hide_layout][:toolbar] = h_buttons || c_buttons || v_buttons ? 'show' : 'hide'
+    presenter[:set_visible_elements][:toolbar] = h_buttons || c_buttons || v_buttons
 
     if @record && !@in_a_form
       presenter[:record_id] = @record.id
@@ -1992,11 +1994,6 @@ class CatalogController < ApplicationController
   # Build a Orchestration Templates explorer tree
   def build_orch_tmpl_tree
     TreeBuilderOrchestrationTemplates.new('ot_tree', 'ot', @sb)
-  end
-
-  # Add the children of a node that is being expanded (autoloaded), called by generic tree_autoload method
-  def tree_add_child_nodes(id)
-    x_get_child_nodes_dynatree(x_active_tree, id)
   end
 
   def show_record(id = nil)

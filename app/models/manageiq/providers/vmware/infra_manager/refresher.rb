@@ -75,8 +75,28 @@ module ::ManageIQ::Providers
 
       def refresh_targets_for_ems(targets)
         targets_with_data, = Benchmark.realtime_block(:get_vc_data_total) { get_and_filter_vc_data(targets) }
+
+        # We no longer need the unfiltered VC data, so remove it to help the GC
+        @vc_data = nil
+
+        log_header = "EMS: [#{@ems.name}], id: [#{@ems.id}]"
         start_time = Time.now
-        targets_with_data.each { |t, d| refresh_target(t, d) }
+
+        until targets_with_data.empty?
+          target, data = targets_with_data.shift
+
+          _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]..."
+
+          hashes = parse_data(data)
+
+          # We no longer need the filtered VC data, so remove it to help the GC
+          data = nil
+
+          save_target(target, hashes)
+
+          _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]...Complete"
+        end
+
         Benchmark.realtime_block(:post_refresh_ems) { post_refresh_ems(start_time) }
       end
 
@@ -102,22 +122,22 @@ module ::ManageIQ::Providers
         disconnect_from_ems
       end
 
-      def refresh_target(target, filtered_data)
+      def parse_data(data)
         log_header = "EMS: [#{@ems.name}], id: [#{@ems.id}]"
-        _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]..."
-
         _log.debug "#{log_header} Parsing VC inventory..."
         hashes, = Benchmark.realtime_block(:parse_vc_data) do
-          RefreshParser.ems_inv_to_hashes(filtered_data)
+          RefreshParser.ems_inv_to_hashes(data)
         end
         _log.debug "#{log_header} Parsing VC inventory...Complete"
 
+        hashes
+      end
+
+      def save_target(target, hashes)
         Benchmark.realtime_block(:db_save_inventory) do
           @ems.update_attributes(@ems_data) unless @ems_data.nil?
           EmsRefresh.save_ems_inventory(@ems, hashes, target)
         end
-
-        _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]...Complete"
       end
 
       def post_refresh_ems(start_time)

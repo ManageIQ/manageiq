@@ -14,12 +14,10 @@ module FeatureHelper
   end
 
   def resource_search_by_criteria(criteria, search_val, klass)
-    search_method = "find_by_#{criteria}"
-    options = {
-      :targets        => Array(klass.send(search_method, search_val)),
-      :userid         => @auth_user,
+    Rbac.search(
+      :targets        => Array(klass.send("find_by_#{criteria}", search_val)),
+      :user           => @auth_user_obj,
       :results_format => :objects
-    }
-    Rbac.search(options).first.first
+    ).first.first
   end
 end

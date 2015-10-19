@@ -135,8 +135,8 @@ class MiqAeInstance < ActiveRecord::Base
     end
   end
 
-  def self.get_homonymic_across_domains(fqname, enabled = nil)
-    MiqAeDatastore.get_homonymic_across_domains(::MiqAeInstance, fqname, enabled)
+  def self.get_homonymic_across_domains(user, fqname, enabled = nil)
+    MiqAeDatastore.get_homonymic_across_domains(user, ::MiqAeInstance, fqname, enabled)
   end
 
   private

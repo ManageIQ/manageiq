@@ -159,4 +159,68 @@ describe MiqAction do
       end
     end
   end
+
+  context '.create_default_actions' do
+    context 'seeding default actions from a file with 3 csv rows and some comments' do
+      before do
+        stub_csv <<-CSV.strip_heredoc
+          name,description
+          audit,Generate Audit Event
+          log,Generate log message
+          # snmp,Generate an SNMP trap
+          # sms,Send an SMS text message
+          evm_event,Show EVM Event on Timeline
+        CSV
+
+        MiqAction.create_default_actions
+      end
+
+      it 'should create 3 new actions' do
+        expect(MiqAction.count).to eq 3
+      end
+
+      it 'should set action_type to "default"' do
+        expect(MiqAction.distinct.pluck(:action_type)).to eq ['default']
+      end
+
+      context 'when csv was changed and imported again' do
+        before do
+          stub_csv <<-CSV.strip_heredoc
+            name,description
+            audit,UPD: Audit Event
+            # log,Generate log message
+            snmp,Generate an SNMP trap
+            evm_event,Show EVM Event on Timeline
+          CSV
+
+          MiqAction.create_default_actions
+        end
+
+        it "should not delete the actions that present in the DB but don't present in the file" do
+          expect(MiqAction.where(:name => 'log')).to exist
+        end
+
+        it 'should update existing actions' do
+          expect(MiqAction.where(:name => 'audit').pluck(:description)).to eq ['UPD: Audit Event']
+        end
+
+        it 'should create new actions' do
+          expect(MiqAction.where(:name => 'snmp')).to exist
+        end
+      end
+
+      def stub_csv(data)
+        allow_any_instance_of(Pathname).to receive(:read).and_return(data)
+      end
+    end
+
+    # 'integration' test to make sure that the real fixture file is well-formed
+    context 'seeding default actions' do
+      before { MiqAction.create_default_actions }
+
+      it 'should create new actions' do
+        expect(MiqAction.count).to be > 0
+      end
+    end
+  end
 end

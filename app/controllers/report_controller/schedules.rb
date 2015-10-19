@@ -220,8 +220,6 @@ module ReportController::Schedules
       end
       @schedule = nil
       @edit = session[:edit] = nil  # clean out the saved info
-      self.x_active_tree = :schedules_tree
-      self.x_node = "root"
       @in_a_form = false
       @sb[:active_accord] = :schedules
       replace_right_cell
@@ -249,7 +247,7 @@ module ReportController::Schedules
         @sb[:active_accord] = :schedules
         # FIXME: change to x_active_node after 5.2
         @sb[:trees][@sb[:active_tree]][:active_node] = 'root'
-
+        self.x_node = "msc-#{to_cid(schedule.id)}"
         replace_right_cell(:replace_trees => [:schedules])
       else
         schedule.errors.each do |field, msg|

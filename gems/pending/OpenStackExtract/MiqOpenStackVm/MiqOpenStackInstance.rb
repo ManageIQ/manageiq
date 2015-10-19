@@ -126,19 +126,25 @@ class MiqOpenStackInstance
       @temp_image_file = get_image_file(snapshot_image_id)
       hardware  = "scsi0:0.present = \"TRUE\"\n"
       hardware += "scsi0:0.filename = \"#{@temp_image_file.path}\"\n"
-      MiqVm.new(hardware)
+
+      diskFormat = image_service.get_image(snapshot_image_id).headers['X-Image-Meta-Disk_format']
+      $log.debug "diskFormat = #{diskFormat}"
+
+      ost = OpenStruct.new
+      ost.rawDisk = diskFormat == "raw"
+      MiqVm.new(hardware, ost)
     end
   end
 
   def get_image_file(image_id)
     log_prefix = "#{self.class.name}##{__method__}"
 
-    cimage = compute_service.images.get(image_id)
-    raise "Image #{image_id} not found" unless cimage
-    $log.debug "#{log_prefix}: cimage = #{cimage.class.name}"
+    image = image_service.get_image(image_id)
+    raise "Image #{image_id} not found" unless image
+    $log.debug "#{log_prefix}: image = #{image.class.name}"
 
-    iname = cimage.attributes[:name]
-    isize = cimage.attributes['OS-EXT-IMG-SIZE:size'].to_i
+    iname = image.headers['X-Image-Meta-Name']
+    isize = image.headers['X-Image-Meta-Size'].to_i
     $log.debug "#{log_prefix}: iname = #{iname}"
     $log.debug "#{log_prefix}: isize = #{isize}"
 

@@ -1,8 +1,5 @@
 - content_for :left do
   = render :partial => "rsop_options"
-- content_for :dhx_layout do
-  -# Create the explorer dhtmlx layout/accordion JS objects
-  = render :partial => "layouts/dhtmlxlayout_explorer"
 #main_div{:style => "width: 100%; height: 100%; overflow: auto; position: relative;"}
   -# Added position:relative so quads scroll properly in IE7
   = render :partial => "rsop_results"
