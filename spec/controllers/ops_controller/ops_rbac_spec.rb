@@ -125,6 +125,35 @@ describe OpsController do
     end
 
     context "#tenant_set_record_vars" do
+      before do
+        @tenant = Tenant.seed
+        server = EvmSpecHelper.local_miq_server
+        MiqServer.stub(:my_server).and_return(server)
+      end
+
+      it "saves name in record when use_config_attributes is false" do
+        controller.instance_variable_set(:@_params,
+                                         :divisible                 => true,
+                                         :use_config_for_attributes => "on"
+                                        )
+        controller.send(:tenant_set_record_vars, @tenant)
+        stub_server_configuration(:server => { :company => "Settings Company Name"})
+        expect(@tenant.name).to eq "Settings Company Name"
+      end
+
+      it "does not save name in record when use_config_for_attributes is true" do
+        controller.instance_variable_set(:@_params,
+                                         :name      => "Foo_Bar",
+                                         :divisible => true
+                                        )
+        @tenant.update_attributes(:use_config_for_attributes => false)
+        @tenant.reload
+        controller.send(:tenant_set_record_vars, @tenant)
+        @tenant.name.should eq("Foo_Bar")
+      end
+    end
+
+    context "#tenant_set_record_vars" do
       before :each do
         @tenant = FactoryGirl.create(:tenant,
                                      :name        => "Foo",
