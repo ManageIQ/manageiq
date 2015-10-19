@@ -223,4 +223,16 @@ describe MiqAction do
       end
     end
   end
+
+  context '#round_to_nearest_4mb' do
+    it 'should round numbers to nearest 4 mb' do
+      a = MiqAction.new
+
+      expect(a.round_to_nearest_4mb(0)).to eq 0
+      expect(a.round_to_nearest_4mb("2")).to eq 4
+      expect(a.round_to_nearest_4mb(15)).to eq 16
+      expect(a.round_to_nearest_4mb(16)).to eq 16
+      expect(a.round_to_nearest_4mb(17)).to eq 20
+    end
+  end
 end

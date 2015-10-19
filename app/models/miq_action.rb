@@ -1066,12 +1066,8 @@ class MiqAction < ActiveRecord::Base
 
   def round_to_nearest_4mb(num)
     num = num.to_i
-    mod = num.modulo(4)
-    unless mod == 0
-      pad = 4 - mod
-      num += pad
-    end
-    num
+    pad = (-num) % 4
+    num + pad
   end
 
   def self.seed
