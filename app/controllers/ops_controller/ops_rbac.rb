@@ -153,19 +153,22 @@ module OpsController::OpsRbac
   end
 
   def tenant_form_fields
-    tenant = Tenant.find_by_id(params[:id])
+    tenant      = Tenant.find_by_id(params[:id])
 
     render :json => {
-      :name        => tenant.name,
-      :description => tenant.description,
-      :default     => tenant.default?,
-      :divisible   => tenant.divisible
+      :name                      => tenant.name,
+      :description               => tenant.description,
+      :default                   => tenant.root?,
+      :divisible                 => tenant.divisible,
+      :use_config_for_attributes => tenant.use_config_for_attributes
     }
   end
 
   def tenant_set_record_vars(tenant)
-    tenant.name        = params[:name]
+    # there is no params[:name] when use_config_attributes is checked
+    tenant.name        = params[:name] if params[:name]
     tenant.description = params[:description]
+    tenant.use_config_for_attributes = tenant.root? && (params[:use_config_for_attributes] == "on")
     unless tenant.id # only set for new records
       tenant.parent    = Tenant.find_by_id(from_cid(x_node.split('-').last))
       tenant.divisible = params[:divisible] == "true"
