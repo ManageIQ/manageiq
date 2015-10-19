@@ -18,7 +18,7 @@ describe MiqReport::ImportExport do
       @new_report   = YAML.load(report_string).first
       @options      = {
         :overwrite => true,
-        :userid    => @user.userid
+        :user      => @user
       }
     end
 
