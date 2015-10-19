@@ -222,8 +222,10 @@ module Openstack
       expect(@ems.miq_templates.size).to      eq images_count
       expect(@ems.cloud_networks.size).to     eq network_data.networks.count
 
-      expect(@ems.public_cloud_networks.first).to  be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public)
-      expect(@ems.private_cloud_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private)
+      if neutron_networking?
+        expect(@ems.public_cloud_networks.first).to  be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public)
+        expect(@ems.private_cloud_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private)
+      end
     end
 
     def assert_flavors
