@@ -441,7 +441,7 @@ module EmsCommon
 
   def queue_credential_validation_task(verify_ems)
     set_record_vars(verify_ems, :validate)
-    creds = set_record_creds(verify_ems, @edit[:new])
+    creds = set_record_creds(verify_ems, @edit[:new], :encrypt_password => true)
 
     @in_a_form = true
     @changed = session[:changed]
@@ -914,34 +914,41 @@ module EmsCommon
     set_verify_status
   end
 
-  def set_record_creds(ems, edit_new)
+  # if options[:encrypt_password] was given then return the
+  # encrypted password otherwise just return the plaintext
+  def prepare_password(password, encrypt_password)
+    password = MiqPassword.encrypt(password) if encrypt_password
+    password
+  end
+
+  def set_record_creds(ems, edit_new, opts = {})
     creds = {}
     creds[:default] = {
       :userid   => edit_new[:default_userid],
-      :password => edit_new[:default_password]
+      :password => prepare_password(edit_new[:default_password], opts[:encrypt_password]),
     } unless edit_new[:default_userid].blank?
 
     if edit_new[:metrics_userid].present? && ems.supports_authentication?(:metrics)
       creds[:metrics] = {
         :userid   => edit_new[:metrics_userid],
-        :password => edit_new[:metrics_password]
+        :password => prepare_password(edit_new[:metrics_password], opts[:encrypt_password]),
       }
     end
-    if edit_new.present? && ems.supports_authentication?(:amqp)
+    if edit_new[:amqp_userid].present? && ems.supports_authentication?(:amqp)
       creds[:amqp] = {
         :userid   => edit_new[:amqp_userid],
-        :password => edit_new[:amqp_password]
+        :password => prepare_password(edit_new[:amqp_password], opts[:encrypt_password]),
       }
     end
     if edit_new[:ssh_keypair_userid].present? && ems.supports_authentication?(:ssh_keypair)
       creds[:ssh_keypair] = {
         :userid   => edit_new[:ssh_keypair_userid],
-        :auth_key => edit_new[:ssh_keypair_password]
+        :auth_key => prepare_password(edit_new[:ssh_keypair_password], opts[:encrypt_password]),
       }
     end
     if edit_new[:bearer_token].present? && ems.supports_authentication?(:bearer)
       creds[:bearer] = {
-        :auth_key => edit_new[:bearer_token],
+        :auth_key => prepare_password(edit_new[:bearer_token], opts[:encrypt_password]),
         :userid   => "_" # Must have userid
       }
     end

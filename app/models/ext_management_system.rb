@@ -513,8 +513,10 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def credential_validation(auth_type, creds, revalidate)
+    # update local authentication in memory
     update_authentication(creds, :save => false)
 
+    # check the credentials
     ok, error_message = authentication_check(auth_type, :save => revalidate)
 
     raise MiqException::Error, error_message unless ok
@@ -524,10 +526,25 @@ class ExtManagementSystem < ActiveRecord::Base
     ems, creds, auth_type, revalidate, task_id =
       options.values_at(:ems, :creds, :auth_type, :revalidate, :task_id)
 
+    # decrypt passwords from the queue
+    ems.decrypt_credentials(creds)
+
     task = MiqTask.find_by_id(task_id)
     task.update_status("Active", "Ok",
                        "Starting credential validation for #{ems[:name]}")
 
     ems.credential_validation(auth_type, creds, revalidate)
+  end
+
+  private
+
+  def decrypt_credentials(creds)
+    creds.each_pair do |_type, value|
+      if value[:password].present?
+        value[:password] = MiqPassword.try_decrypt(value[:password])
+      elsif value[:auth_key].present?
+        value[:auth_key] = MiqPassword.try_decrypt(value[:auth_key])
+      end
+    end
   end
 end
