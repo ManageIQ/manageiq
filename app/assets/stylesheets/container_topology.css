@@ -13,6 +13,8 @@ kubernetes-topology-graph {
 }
 .legend label {
     font-weight: 400;
+    cursor: pointer;
+    vertical-align: 10px;
 }
 
 .checkbox-inline {
@@ -53,9 +55,9 @@ kubernetes-topology-icon.active {
 }
 
 kubernetes-topology-icon svg {
-    width: 39px !important;;
-    height: 39px !important;;
-    display: block;
+    width: 39px !important;
+    height: 39px !important;
+    display: inline-block;
 }
 
 .kube-topology g.selected {
