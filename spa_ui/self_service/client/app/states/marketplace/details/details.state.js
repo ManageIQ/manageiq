@@ -80,7 +80,7 @@
       }
 
       function submitFailure(result) {
-        Notifications.error('There was an error submitting this request' + result);
+        Notifications.error('There was an error submitting this request: ' + result);
       }
     }
   }
