@@ -12,6 +12,7 @@ describe('hostFormController', function() {
     spyOn(miqService, 'sparkleOn');
     spyOn(miqService, 'sparkleOff');
     $scope = $rootScope.$new();
+    spyOn($scope, '$broadcast');
     $scope.hostModel = { name: 'name', ipaddress: 'ipaddress' };
     $scope.hostForm = { name: {},
       ipaddress: {
@@ -72,7 +73,11 @@ describe('hostFormController', function() {
           hostname: '1.1.1.1',
           custom_1: 'custom',
           mac_address: '2.2.2.2',
-          ipmi_address: '3.3.3.3'
+          ipmi_address: '3.3.3.3',
+          default_userid: 'abc',
+          remote_userid: 'xyz',
+          ws_userid: 'aaa',
+          ipmi_userid: 'zzz'
         };
         describe('when the filter type is all', function() {
           beforeEach(inject(function(_$controller_) {
@@ -106,6 +111,22 @@ describe('hostFormController', function() {
           it('sets the IPMI Address to the value returned from the http request', function() {
             expect($scope.hostModel.ipmi_address).toEqual('3.3.3.3');
           });
+
+          it('sets the default password to the placeholder value if a default user exists', function() {
+            expect($scope.hostModel.default_password).toEqual(miqService.storedPasswordPlaceholder);
+          });
+
+          it('sets the remote password to the placeholder value if a remote user exists', function() {
+            expect($scope.hostModel.remote_password).toEqual(miqService.storedPasswordPlaceholder);
+          });
+
+          it('sets the ws password to the placeholder value if a ws user exists', function() {
+            expect($scope.hostModel.ws_password).toEqual(miqService.storedPasswordPlaceholder);
+          });
+
+          it('sets the ipmi password to the placeholder value if a ipmi user exists', function() {
+            expect($scope.hostModel.ipmi_password).toEqual(miqService.storedPasswordPlaceholder);
+          });
         });
       });
     });
@@ -121,6 +142,10 @@ describe('hostFormController', function() {
 
     it('does not turn the spinner on', function() {
       expect(miqService.sparkleOn.calls.count()).toBe(0);
+    });
+
+    it("issues a broadcast for resetClicked event", function() {
+      expect($scope.$broadcast).toHaveBeenCalledWith('resetClicked');
     });
   });
 
@@ -169,8 +194,8 @@ describe('hostFormController', function() {
         '<form name="angularForm">' +
         '<input ng-model="hostModel.hostname" name="hostname" required text />' +
         '<input ng-model="hostModel.default_userid" name="default_userid" required text />' +
-        '<input ng-model="hostModel.default_password" name="default_password" required text />' +
-        '<input ng-model="hostModel.default_verify" name="default_verify" required text />' +
+        '<input ng-model="hostModel.default_password" name="default_password" text />' +
+        '<input ng-model="hostModel.default_verify" name="default_verify" text />' +
         '</form>'
       );
 
@@ -180,15 +205,25 @@ describe('hostFormController', function() {
 
       $scope.angularForm.hostname.$setViewValue('abchost');
       $scope.angularForm.default_userid.$setViewValue('abcuser');
-      $scope.angularForm.default_password.$setViewValue('abcpassword');
-      $scope.angularForm.default_verify.$setViewValue('abcpassword');
+      $scope.angularForm.default_password.$setViewValue(miqService.storedPasswordPlaceholder);
+      $scope.angularForm.default_verify.$setViewValue(miqService.storedPasswordPlaceholder);
     }));
 
     it('returns true if all the Validation fields are filled in', function() {
+      $scope.angularForm.default_password.$setViewValue('abcpassword');
+      $scope.angularForm.default_verify.$setViewValue('abcpassword');
+      expect($scope.canValidateBasicInfo()).toBe(true);
+    });
+
+    it('returns true if password fields are left blank', function() {
+      $scope.angularForm.default_password.$setViewValue('');
+      $scope.angularForm.default_verify.$setViewValue('');
       expect($scope.canValidateBasicInfo()).toBe(true);
     });
 
     it('returns true if all the Validation fields are filled in and dirty', function() {
+      $scope.angularForm.default_password.$setViewValue('');
+      $scope.angularForm.default_verify.$setViewValue('');
       expect($scope.canValidate()).toBe(true);
     });
   });

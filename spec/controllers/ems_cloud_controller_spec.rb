@@ -240,4 +240,62 @@ describe EmsCloudController do
       expect(show_link_actual_path).to eq("/ems_cloud/#{openstack.to_a[0].id}?display=timeline")
     end
   end
+  context "#build_credentials" do
+    let(:mocked_ems) { mock_model(ManageIQ::Providers::Openstack::CloudManager) }
+    it "uses params[:default_password] for validation if one exists" do
+      controller.instance_variable_set(:@_params,
+                                       :default_userid   => "default_userid",
+                                       :default_password => "default_password2")
+      creds = {:userid => "default_userid", :password => "default_password2"}
+      mocked_ems.should_receive(:supports_authentication?).with(:amqp)
+      expect(controller.send(:build_credentials, mocked_ems)).to include(:default => creds)
+    end
+
+    it "uses the stored password for validation if params[:default_password] does not exist" do
+      controller.instance_variable_set(:@_params, :default_userid => "default_userid")
+      mocked_ems.should_receive(:authentication_password).and_return('default_password')
+      creds = {:userid => "default_userid", :password => "default_password"}
+      mocked_ems.should_receive(:supports_authentication?).with(:amqp)
+      expect(controller.send(:build_credentials, mocked_ems)).to include(:default => creds)
+    end
+
+    it "uses the passwords from params for validation if they exist" do
+      controller.instance_variable_set(:@_params,
+                                       :default_userid   => "default_userid",
+                                       :default_password => "default_password2",
+                                       :amqp_userid      => "amqp_userid",
+                                       :amqp_password    => "amqp_password2")
+      default_creds = {:userid => "default_userid", :password => "default_password2"}
+      amqp_creds = {:userid => "amqp_userid", :password => "amqp_password2"}
+      mocked_ems.should_receive(:supports_authentication?).with(:amqp).and_return(true)
+      expect(controller.send(:build_credentials, mocked_ems)).to include(:default => default_creds,
+                                                                         :amqp    => amqp_creds)
+    end
+
+    it "uses the stored passwords for validation if passwords dont exist in params" do
+      controller.instance_variable_set(:@_params,
+                                       :default_userid => "default_userid",
+                                       :amqp_userid    => "amqp_userid",)
+      mocked_ems.should_receive(:authentication_password).and_return('default_password')
+      mocked_ems.should_receive(:authentication_password).with(:amqp).and_return('amqp_password')
+      default_creds = {:userid => "default_userid", :password => "default_password"}
+      amqp_creds = {:userid => "amqp_userid", :password => "amqp_password"}
+      mocked_ems.should_receive(:supports_authentication?).with(:amqp).and_return(true)
+      expect(controller.send(:build_credentials, mocked_ems)).to include(:default => default_creds,
+                                                                         :amqp    => amqp_creds)
+    end
+
+    it "uses the stored passwords/passwords from params to do validation" do
+      controller.instance_variable_set(:@_params,
+                                       :default_userid   => "default_userid",
+                                       :default_password => "default_password2",
+                                       :amqp_userid      => "amqp_userid")
+      mocked_ems.should_receive(:authentication_password).with(:amqp).and_return('amqp_password')
+      default_creds = {:userid => "default_userid", :password => "default_password2"}
+      amqp_creds = {:userid => "amqp_userid", :password => "amqp_password"}
+      mocked_ems.should_receive(:supports_authentication?).with(:amqp).and_return(true)
+      expect(controller.send(:build_credentials, mocked_ems)).to include(:default => default_creds,
+                                                                         :amqp    => amqp_creds)
+    end
+  end
 end

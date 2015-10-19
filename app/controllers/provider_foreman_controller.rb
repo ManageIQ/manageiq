@@ -119,16 +119,20 @@ class ProviderForemanController < ApplicationController
                                           :verify_ssl => params[:verify_ssl].eql?("on"))
 
     end
-    update_authentication_provider_foreman
+    update_authentication_provider_foreman(:save)
   end
 
-  def update_authentication_provider_foreman
+  def update_authentication_provider_foreman(mode = :validate)
+    @provider_foreman.update_authentication(build_credentials, :save => mode == :save)
+  end
+
+  def build_credentials
     creds = {}
-    creds[:default] = {:userid   => params[:log_userid],
-                       :password => params[:log_password]
-    }
-    save = params[:id] == "new" ? false : true
-    @provider_foreman.update_authentication(creds, :save => save)
+    if params[:log_userid]
+      default_password = params[:log_password] ? params[:log_password] : @provider_foreman.authentication_password
+      creds[:default] = {:userid => params[:log_userid], :password => default_password}
+    end
+    creds
   end
 
   def save_provider_foreman
@@ -173,17 +177,19 @@ class ProviderForemanController < ApplicationController
       :name         => provider_foreman.name,
       :url          => provider_foreman.url,
       :verify_ssl   => provider_foreman.verify_ssl,
-      :log_userid   => authentications_foreman[0].userid,
-      :log_password => authentications_foreman[0].password,
-      :log_verify   => authentications_foreman[0].password
+      :log_userid   => authentications_foreman[0].userid
     }
   end
 
   def authentication_validate
-    @provider_foreman = ManageIQ::Providers::Foreman::Provider.new(:name       => params[:name],
-                                                                   :url        => params[:url],
-                                                                   :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
-                                                                   :verify_ssl => params[:verify_ssl].eql?("on"))
+    if params[:log_password]
+      @provider_foreman = ManageIQ::Providers::Foreman::Provider.new(:name       => params[:name],
+                                                                     :url        => params[:url],
+                                                                     :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
+                                                                     :verify_ssl => params[:verify_ssl].eql?("on"))
+    else
+      @provider_foreman = find_by_id_filtered(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id]).provider
+    end
     update_authentication_provider_foreman
 
     begin

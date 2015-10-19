@@ -6,8 +6,6 @@ ManageIQ.angularApplication.controller('scheduleFormController', ['$http', '$sco
       depot_name: '',
       filter_typ: '',
       log_userid: '',
-      log_password: '',
-      log_verify: '',
       log_protocol: '',
       description: '',
       enabled: '',
@@ -55,8 +53,6 @@ ManageIQ.angularApplication.controller('scheduleFormController', ['$http', '$sco
         $scope.scheduleModel.depot_name   = data.depot_name;
         $scope.scheduleModel.filter_typ   = data.filter_type;
         $scope.scheduleModel.log_userid   = data.log_userid;
-        $scope.scheduleModel.log_password = data.log_password;
-        $scope.scheduleModel.log_verify   = data.log_verify;
         $scope.scheduleModel.log_protocol = data.protocol;
         $scope.scheduleModel.description  = data.schedule_description;
         $scope.scheduleModel.enabled      = data.schedule_enabled == "1" ? true : false;
@@ -87,6 +83,11 @@ ManageIQ.angularApplication.controller('scheduleFormController', ['$http', '$sco
         if(data.filter_type == null &&
           (data.protocol !== undefined && data.protocol !== null && data.protocol != 'Samba'))
           $scope.scheduleModel.filter_typ = 'all';
+
+        $scope.scheduleModel.log_password = $scope.scheduleModel.log_verify = "";
+        if($scope.scheduleModel.log_userid != '') {
+          $scope.scheduleModel.log_password = $scope.scheduleModel.log_verify = miqService.storedPasswordPlaceholder;
+        }
 
         $scope.afterGet = true;
         $scope.modelCopy = angular.copy( $scope.scheduleModel );
@@ -214,6 +215,9 @@ ManageIQ.angularApplication.controller('scheduleFormController', ['$http', '$sco
 
     if ($scope.scheduleModel.log_protocol === "Network File System") {
       $scope.scheduleModel.uri_prefix = "nfs";
+      $scope.$broadcast('resetClicked');
+      $scope.scheduleModel.log_userid = $scope.modelCopy.log_userid;
+      $scope.scheduleModel.log_password = $scope.scheduleModel.log_verify = $scope.modelCopy.log_password;
     }
   };
 
@@ -242,18 +246,18 @@ ManageIQ.angularApplication.controller('scheduleFormController', ['$http', '$sco
   };
 
   $scope.resetClicked = function() {
+    $scope.$broadcast('resetClicked');
     $scope.scheduleModel = angular.copy( $scope.modelCopy );
     if($scope.dbBackup())
         $scope.filterValuesEmpty = true;
 
-      if($scope.scheduleModel.filter_typ &&
+      if(!$scope.dbBackup() && $scope.scheduleModel.filter_typ &&
           ($scope.form.action_typ.$untouched && $scope.form.filter_typ.$untouched)) {
-
         //AJAX-less Reset
         $scope.toggleValueForWatch('filterValuesEmpty', false);
       }
 
-    if($scope.scheduleModel.filter_typ &&
+    if(!$scope.dbBackup() && $scope.scheduleModel.filter_typ &&
       ($scope.form.action_typ.$touched || $scope.form.filter_typ.$touched)) {
       $scope.filterTypeChanged();
     }
