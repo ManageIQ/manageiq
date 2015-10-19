@@ -209,7 +209,9 @@ class VimPerformanceState < ActiveRecord::Base
     if obj.kind_of?(Host)
       obj.hardware.sockets
     else
-      obj.hosts.includes(:hardware).each_with_object([]) {|h, arr| arr << h.hardware.sockets}.sum if obj.respond_to?(:hosts)
+      if obj.respond_to?(:hosts)
+        obj.hosts.includes(:hardware).each_with_object([]) { |h, arr| arr << h.hardware.sockets }.sum
+      end
     end
   end
 end
