@@ -1,14 +1,14 @@
 $LOAD_PATH << File.join(GEMS_PENDING_ROOT, "Scvmm")
 
 class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraManager
-  require_dependency 'manageiq/providers/microsoft/infra_manager/host'
-  require_dependency 'manageiq/providers/microsoft/infra_manager/provision'
-  require_dependency 'manageiq/providers/microsoft/infra_manager/provision_workflow'
-  require_dependency 'manageiq/providers/microsoft/infra_manager/refresher'
-  require_dependency 'manageiq/providers/microsoft/infra_manager/refresh_parser'
-  require_dependency 'manageiq/providers/microsoft/infra_manager/refresh_worker'
-  require_dependency 'manageiq/providers/microsoft/infra_manager/template'
-  require_dependency 'manageiq/providers/microsoft/infra_manager/vm'
+  require_nested :Host
+  require_nested :Provision
+  require_nested :ProvisionWorkflow
+  require_nested :Refresher
+  require_nested :RefreshParser
+  require_nested :RefreshWorker
+  require_nested :Template
+  require_nested :Vm
 
   include_concern "Powershell"
 

@@ -1,5 +1,5 @@
 class MiqEmsRefreshCoreWorker < MiqWorker
-  require_dependency 'miq_ems_refresh_core_worker/runner'
+  require_nested :Runner
 
   include PerEmsWorkerMixin
 

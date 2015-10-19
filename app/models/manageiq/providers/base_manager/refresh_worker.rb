@@ -1,5 +1,5 @@
 class ManageIQ::Providers::BaseManager::RefreshWorker < MiqQueueWorkerBase
-  require_dependency 'manageiq/providers/base_manager/refresh_worker/runner'
+  require_nested :Runner
 
   include PerEmsWorkerMixin
 

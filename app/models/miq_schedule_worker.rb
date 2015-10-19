@@ -1,6 +1,6 @@
 class MiqScheduleWorker < MiqWorker
-  require_dependency 'miq_schedule_worker/jobs'
-  require_dependency 'miq_schedule_worker/runner'
+  require_nested :Jobs
+  require_nested :Runner
 
   self.check_for_minimal_role = false
   self.workers                = lambda {

@@ -1,18 +1,18 @@
 class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraManager
-  require_dependency 'manageiq/providers/redhat/infra_manager/event_catcher'
-  require_dependency 'manageiq/providers/redhat/infra_manager/event_parser'
-  require_dependency 'manageiq/providers/redhat/infra_manager/refresh_worker'
-  require_dependency 'manageiq/providers/redhat/infra_manager/refresh_parser'
-  require_dependency 'manageiq/providers/redhat/infra_manager/metrics_capture'
-  require_dependency 'manageiq/providers/redhat/infra_manager/metrics_collector_worker'
-  require_dependency 'manageiq/providers/redhat/infra_manager/host'
-  require_dependency 'manageiq/providers/redhat/infra_manager/provision'
-  require_dependency 'manageiq/providers/redhat/infra_manager/provision_via_iso'
-  require_dependency 'manageiq/providers/redhat/infra_manager/provision_via_pxe'
-  require_dependency 'manageiq/providers/redhat/infra_manager/provision_workflow'
-  require_dependency 'manageiq/providers/redhat/infra_manager/refresher'
-  require_dependency 'manageiq/providers/redhat/infra_manager/template'
-  require_dependency 'manageiq/providers/redhat/infra_manager/vm'
+  require_nested :EventCatcher
+  require_nested :EventParser
+  require_nested :RefreshWorker
+  require_nested :RefreshParser
+  require_nested :MetricsCapture
+  require_nested :MetricsCollectorWorker
+  require_nested :Host
+  require_nested :Provision
+  require_nested :ProvisionViaIso
+  require_nested :ProvisionViaPxe
+  require_nested :ProvisionWorkflow
+  require_nested :Refresher
+  require_nested :Template
+  require_nested :Vm
 
   def self.ems_type
     @ems_type ||= "rhevm".freeze

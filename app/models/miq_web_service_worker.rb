@@ -1,5 +1,5 @@
 class MiqWebServiceWorker < MiqWorker
-  require_dependency 'miq_web_service_worker/runner'
+  require_nested :Runner
 
   REQUIRED_ROLE = 'web_services'
   self.required_roles = [REQUIRED_ROLE]

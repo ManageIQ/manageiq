@@ -1,11 +1,11 @@
 module ManageIQ::Providers
   class CloudManager < BaseManager
-    require_dependency 'manageiq/providers/cloud_manager/auth_key_pair'
-    require_dependency 'manageiq/providers/cloud_manager/refresh_parser'
-    require_dependency 'manageiq/providers/cloud_manager/template'
-    require_dependency 'manageiq/providers/cloud_manager/provision'
-    require_dependency 'manageiq/providers/cloud_manager/provision_workflow'
-    require_dependency 'manageiq/providers/cloud_manager/vm'
+    require_nested :AuthKeyPair
+    require_nested :RefreshParser
+    require_nested :Template
+    require_nested :Provision
+    require_nested :ProvisionWorkflow
+    require_nested :Vm
 
     class << model_name
       define_method(:route_key) { "ems_clouds" }

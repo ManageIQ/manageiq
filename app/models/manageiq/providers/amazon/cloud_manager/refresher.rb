@@ -1,6 +1,3 @@
-require_dependency 'manageiq/providers/base_manager/refresher'
-require_dependency 'manageiq/providers/amazon/cloud_manager'
-
 class ManageIQ::Providers::Amazon::CloudManager::Refresher < ManageIQ::Providers::BaseManager::Refresher
   include ::EmsRefresh::Refreshers::EmsRefresherMixin
 
