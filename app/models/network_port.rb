@@ -12,6 +12,12 @@ class NetworkPort < ActiveRecord::Base
 
   has_many :floating_ips
 
+  # To get the actual connection to router, we need to go thorugh subnet, cause each
+  # private network subnet can be connected to different router. Although the relation
+  # is modelled as has_many, there should be max one router and public network per subnet
+  has_many :network_routers, :through => :cloud_subnet
+  has_many :public_networks, :through => :cloud_subnet
+
   # Use for virtual columns, mainly for modeling array and hash types, we get from the API
   serialize :extra_attributes
 

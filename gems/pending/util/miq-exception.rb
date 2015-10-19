@@ -117,4 +117,6 @@ module MiqException
   class MiqOpenstackIronicServiceMissing < MiqOpenstackRequiredServiceMissing; end
 
   class MiqOpenstackApiRequestError < Error; end
+
+  class MiqNetworkPortNotDefinedError < Error; end
 end
