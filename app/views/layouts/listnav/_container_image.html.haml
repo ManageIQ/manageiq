@@ -14,46 +14,61 @@
 
     = miq_accordion_panel(_("Relationships"), false, "container_image_rel") do
       %ul.nav.nav-pills.nav-stacked
+        - if role_allows(:feature => "ems_container_show") && !@record.container_image_registry.nil?
+          - entity = ui_lookup(:table => "ems_container")
+          %li
+            = link_to("#{entity}: #{@record.ext_management_system.name}",
+              {:controller => "ems_container", :action => 'show', :id => @record.ext_management_system.id.to_s},
+              :title => _("Show this container group's parent #{entity}"))
+        - if role_allows(:feature => "container_image_registry_show") && !@record.container_image_registry.nil?
+          - entity = ui_lookup(:table => "container_image_registry")
+          %li
+            = link_to("#{entity}: #{@record.container_image_registry.host}",
+              {:controller => "container_image_registry",
+               :action => 'show',
+               :id => @record.container_image_registry.id.to_s},
+               :title => _("Show this images's #{entity}"))
+        - if role_allows(:feature => "container_project_show")
+          - plural = ui_lookup(:tables => "container_project")
+          - num_projects = @record.number_of(:container_projects)
+          - if num_projects == 0
+            %li.disabled
+              = link_to("#{plural} (0)", "#")
+          - else
+            %li
+              = link_to("#{plural} (#{num_projects})",
+                {:action => 'show', :id => @record, :display => 'container_projects'},
+                 :title  => _("Show #{plural}"))
+        - if role_allows(:feature => "container_group_show")
+          - plural = ui_lookup(:tables => "container_group")
+          - num_groups = @record.number_of(:container_groups)
+          - if num_groups == 0
+            %li.disabled
+              = link_to("#{plural} (0)", "#")
+          - else
+            %li
+              = link_to("#{plural} (#{num_groups})",
+                  {:action => 'show', :id => @record, :display => 'container_groups'},
+                   :title  => _("Show %s") % ui_lookup(:table => "containers"))
         - if role_allows(:feature => "containers")
+          - plural = ui_lookup(:tables => "container")
           - num_containers = @record.number_of(:containers)
           - if num_containers == 0
             %li.disabled
-              = link_to("#{ui_lookup(:table => "containers")} (0)", "#")
+              = link_to("#{plural} (0)", "#")
           - else
             %li
-              = link_to("#{ui_lookup(:table => "containers")} (#{num_containers})",
+              = link_to("#{plural} (#{num_containers})",
                   {:action => 'show', :id => @record, :display => 'containers'},
-                   :title  => _("View %s") % ui_lookup(:table => "containers"))
-          - if role_allows(:feature => "container_project_show")
-            - num_projects = @record.number_of(:container_projects)
-            - if num_projects == 0
-              %li.disabled
-                = link_to("#{ui_lookup(:table => "container_projects")} (0)", "#")
-            - else
-              %li
-                = link_to("#{ui_lookup(:table => "container_projects")} (#{num_projects})",
-                  {:action => 'show', :id => @record, :display => 'container_projects'},
-                   :title  => _("View %s") % ui_lookup(:table => "container_projects"))
-          - if role_allows(:feature => "container_group_show")
-            - num_groups = @record.number_of(:container_groups)
-            - if num_groups == 0
-              %li.disabled
-                = link_to("#{ui_lookup(:table => "container_groups")} (0)", "#")
-            - else
-              %li
-                = link_to("#{ui_lookup(:table => "container_groups")} (#{num_groups})",
-                    {:action => 'show', :id => @record, :display => 'container_groups'},
-                     :title  => _("View %s") % ui_lookup(:table => "containers"))
-          - if role_allows(:feature => "container_image_registry_show") && !@record.container_image_registry.nil?
+                   :title  => _("Show #{plural}"))
+        - if role_allows(:feature => "container_node_show")
+          - plural = ui_lookup(:tables => "container_node")
+          - num_nodes = @record.number_of(:container_nodes)
+          - if num_nodes == 0
+            %li.disabled
+              = link_to("#{plural} (0)", "#")
+          - else
             %li
-              = link_to("#{ui_lookup(:table => "container_image_registry")}: #{@record.container_image_registry.host}",
-                {:controller => "container_image_registry",
-                 :action => 'show',
-                 :id => @record.container_image_registry.id.to_s},
-                 :title => _("Show this images registry %s") % ui_lookup(:table => "container_image_registry"))
-          - if role_allows(:feature => "ems_container_show") && !@record.container_image_registry.nil?
-            %li
-              = link_to("#{ui_lookup(:table => "ems_container")}: #{@record.ext_management_system.name}",
-                {:controller => "ems_container", :action => 'show', :id => @record.ext_management_system.id.to_s},
-                :title => _("Show this container group's parent %s") % ui_lookup(:table => "ems_container"))
-
+              = link_to("#{plural} (#{num_nodes})",
+                  {:action => 'show', :id => @record, :display => 'container_nodes'},
+                   :title  => _("Show #{plural}"))
