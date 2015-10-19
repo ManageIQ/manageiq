@@ -1079,7 +1079,7 @@ class MiqAction < ActiveRecord::Base
     create_script_actions_from_directory
   end
 
-  def self.create_default_actions(fname = FIXTURE_DIR.join("#{to_s.pluralize.underscore}.csv"))
+  def self.create_default_actions(fname = fixture_path)
     CSV.foreach(fname, :headers => true, :skip_lines => /^#/).each do |csv_row|
       action = csv_row.to_hash
       action['action_type'] = 'default'
@@ -1096,5 +1096,9 @@ class MiqAction < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def self.fixture_path
+    FIXTURE_DIR.join("#{to_s.pluralize.underscore}.csv")
   end
 end
