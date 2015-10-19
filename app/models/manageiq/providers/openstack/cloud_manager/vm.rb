@@ -19,6 +19,40 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
     connection.servers.get(ems_ref)
   end
 
+  def associate_floating_ip(public_network, port = nil)
+    ext_management_system.with_provider_connection(:service => "Network",
+                                                   :tenant_name => cloud_tenant.name) do |connection|
+      unless port
+        network_ports.each do |network_port|
+          # Cycle through all ports and find one that is actually connected to the public network with router,
+          if network_port.public_networks.detect { |x| x.try(:ems_ref) == public_network.ems_ref }
+            port = network_port
+            break
+          end
+        end
+      end
+      raise MiqException::MiqNetworkPortNotDefinedError, "Neutron port for floating IP association is not defined." unless port
+
+      connection.create_floating_ip(public_network.ems_ref, :port_id => port.ems_ref)
+    end
+  end
+
+  def delete_floating_ips(floating_ips)
+    # TODO(lsmola) we have the method here because we need to take actual cloud_tenant from the VM.
+    # This should be refactored to FloatingIP, when we can take tenant from elsewhere, Like user
+    # session? They have it in session in Horizon, ehich correlates the teannt in keytsone token.
+    ext_management_system.with_provider_connection(:service => "Network",
+                                                   :tenant_name => cloud_tenant.name) do |connection|
+
+      floating_ips.each do |floating_ip|
+        connection.delete_floating_ip(floating_ip.ems_ref)
+        # Destroy it also in CFME db, so we don't have to wait for refresh.
+        floating_ip.destroy
+      end
+    end
+  end
+
+
   def self.calculate_power_state(raw_power_state)
     case raw_power_state
     when "ACTIVE"                then "on"

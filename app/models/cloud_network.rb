@@ -36,6 +36,41 @@ class CloudNetwork < ActiveRecord::Base
     end
   end
 
+  def ip_address_total_count
+    # TODO(lsmola) Rather storing this in DB? It should be changing only in refresh
+    @ip_address_total_count ||= cloud_subnets.all.sum do |subnet|
+      # We substract 1 because the first address of the pool is always reserved. For private network it is for DHCP, for
+      # public network it's a port for Router.
+      subnet.allocation_pools.sum { |x| (IPAddr.new(x["start"])..IPAddr.new(x["end"])).map(&:to_s).count - 1}
+    end
+  end
+
+  def ip_address_left_count(reload = false)
+    @ip_address_left_count = nil if reload
+    @ip_address_left_count ||= ip_address_total_count - ip_address_used_count(reload)
+  end
+
+  def ip_address_utilization(reload = false)
+    @ip_address_utilization = nil if reload
+    # If total count is 0, utilization should be 100
+    @ip_address_utilization ||= ip_address_total_count > 0 ? (100.0 / ip_address_total_count) * ip_address_used_count(reload) : 100
+  end
+
+  def ip_address_left_count_live(reload = false)
+    @ip_address_left_count_live = nil if reload
+    # Live method is asking API drectly for current count of consumed addresses
+    @ip_address_left_count_live ||= ip_address_total_count - ip_address_used_count_live(reload)
+  end
+
+  def ip_address_utilization_live(reload = false)
+    @ip_address_utilization_live = nil if reload
+    # Live method is asking API drectly for current count of consumed addresses
+    # If total count is 0, utilization should be 100
+    @ip_address_utilization_live ||= ip_address_total_count > 0 ? (100.0 / ip_address_total_count) * ip_address_used_count_live(reload) : 100
+  end
+
+
+
   private
 
   def extra_attributes_save(key, value)
