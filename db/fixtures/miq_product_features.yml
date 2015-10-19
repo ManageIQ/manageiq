@@ -2327,11 +2327,11 @@
           :feature_type: admin
           :hidden: false
           :identifier: rbac_tenant_delete
-      - :name: Manage Quotas
-        :description: Manage Tenant Quotas
-        :feature_type: admin
-        :hidden: false
-        :identifier: rbac_tenant_manage_quotas
+        - :name: Manage Quotas
+          :description: Manage Tenant Quotas
+          :feature_type: admin
+          :hidden: false
+          :identifier: rbac_tenant_manage_quotas
       - :name: Operate
         :description: Operate Tenants
         :feature_type: control
