@@ -1246,9 +1246,11 @@ function miqInitToolbars() {
 // Function to run transactions when toolbar button is clicked
 function miqToolbarOnClick(e) {
   var tb_url;
-  var button;
+  var button = $(this);
 
-  button = $(this);
+  if (button.hasClass('disabled') || button.parent().hasClass('disabled')) {
+    return;
+  }
 
   if (button.data("confirm") && !button.data("popup")) {
     if (!confirm(button.data('confirm'))) {
