@@ -532,6 +532,8 @@ class MiqVimBroker
       return
     end
 
+    return unless $vim_log.info?
+
     # server
     $vim_log.info "MiqVimBroker status start"
     $vim_log.info "\tMiqVimBroker: Threads = #{Thread.list.length}"
