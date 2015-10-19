@@ -14,46 +14,7 @@
 
     = miq_accordion_panel(_("Relationships"), false, "container_image_rel") do
       %ul.nav.nav-pills.nav-stacked
-        - if role_allows(:feature => "containers")
-          - num_containers = @record.number_of(:containers)
-          - if num_containers == 0
-            %li.disabled
-              = link_to("#{ui_lookup(:table => "containers")} (0)", "#")
-          - else
-            %li
-              = link_to("#{ui_lookup(:table => "containers")} (#{num_containers})",
-                  {:action => 'show', :id => @record, :display => 'containers'},
-                   :title  => _("View %s") % ui_lookup(:table => "containers"))
-          - if role_allows(:feature => "container_project_show")
-            - num_projects = @record.number_of(:container_projects)
-            - if num_projects == 0
-              %li.disabled
-                = link_to("#{ui_lookup(:table => "container_projects")} (0)", "#")
-            - else
-              %li
-                = link_to("#{ui_lookup(:table => "container_projects")} (#{num_projects})",
-                  {:action => 'show', :id => @record, :display => 'container_projects'},
-                   :title  => _("View %s") % ui_lookup(:table => "container_projects"))
-          - if role_allows(:feature => "container_group_show")
-            - num_groups = @record.number_of(:container_groups)
-            - if num_groups == 0
-              %li.disabled
-                = link_to("#{ui_lookup(:table => "container_groups")} (0)", "#")
-            - else
-              %li
-                = link_to("#{ui_lookup(:table => "container_groups")} (#{num_groups})",
-                    {:action => 'show', :id => @record, :display => 'container_groups'},
-                     :title  => _("View %s") % ui_lookup(:table => "containers"))
-          - if role_allows(:feature => "container_image_registry_show") && !@record.container_image_registry.nil?
-            %li
-              = link_to("#{ui_lookup(:table => "container_image_registry")}: #{@record.container_image_registry.host}",
-                {:controller => "container_image_registry",
-                 :action => 'show',
-                 :id => @record.container_image_registry.id.to_s},
-                 :title => _("Show this images registry %s") % ui_lookup(:table => "container_image_registry"))
-          - if role_allows(:feature => "ems_container_show") && !@record.container_image_registry.nil?
-            %li
-              = link_to("#{ui_lookup(:table => "ems_container")}: #{@record.ext_management_system.name}",
-                {:controller => "ems_container", :action => 'show', :id => @record.ext_management_system.id.to_s},
-                :title => _("Show this container group's parent %s") % ui_lookup(:table => "ems_container"))
-
+        = single_relationship_link(@record, :ems_container, "ext_management_system")
+        = single_relationship_link(@record, :container_image_registry)
+        - %i(container_project container_group container container_node).each do |ent|
+          = multiple_relationship_link(@record, ent)
