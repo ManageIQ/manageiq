@@ -9,6 +9,13 @@ describe Metric::Common do
                                 )
   end
 
+  describe "#v_month" do
+    it "returns the timestamp in YYYY/MM format" do
+      m = Metric.new(:timestamp => Time.zone.parse("2015-01-01"))
+      expect(m.v_month).to eq("2015/01")
+    end
+  end
+
   context "#apply_time_profile_hourly" do
     it "with all days and hours selected it should return true" do
       profile = FactoryGirl.create(:time_profile,
