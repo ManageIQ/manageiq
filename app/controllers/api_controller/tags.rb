@@ -70,11 +70,8 @@ class ApiController
     private
 
     def fetch_category(data)
-      if data.key?("id") || data.key?("name")
-        category_id = parse_by_attr(data, :categories, %w(id name))
-      elsif data.key?("href")
-        _, category_id = parse_href(data["href"])
-      else
+      category_id = parse_id(data, :categories) || parse_by_attr(data, :categories, %w(name))
+      unless category_id
         raise BadRequestError, "Category id, href or name needs to be specified for creating a new tag resource"
       end
       Category.find_by_id(category_id)
