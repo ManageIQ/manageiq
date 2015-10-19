@@ -15,6 +15,11 @@ kubernetes-topology-graph {
     font-weight: 400;
 }
 
+.checkbox-inline {
+    font-size: 16px;
+    padding-left: 32px;
+}
+
 .refresh {
     display: inline-block;
     width:35px;

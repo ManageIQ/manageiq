@@ -1,6 +1,9 @@
 %div{'data-ng-app' => "topologyApp", 'ng-controller' => "containerTopologyController"}
   = stylesheet_link_tag 'container_topology'
   %image{:src => "/images/toolbars/refresh.png", 'ng-click' => "refresh()", :class => "btn btn-default refresh"}
+  %label.checkbox-inline
+    %input#box{'ng-change' => "show_hide_names(checkboxModel.value)",  'ng-model' => "checkboxModel.value", :type => "checkbox", 'ng-true-value' => 'true', 'ng-false-value' => 'false'}
+    Display Names
   %kubernetes-topology-graph{:items => "items", :relations => "relations", :kinds => "kinds"}
 
   .legend
