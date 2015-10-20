@@ -317,3 +317,8 @@ iframe, .iframe {
   border-color: #d0d0d0
 }
 
+/* eliminates horizontal scrollbar in some browsers */
+
+.bootstrap-select .dropdown-menu {
+  overflow-y: visible !important
+}
