@@ -3,7 +3,7 @@
   = render :partial => "layouts/center_buttons"
   = render :partial => "layouts/x_custom_buttons"
   = render :partial => "layouts/x_view_buttons"
-  - if !request.xml_http_request?
+  - unless request.xml_http_request?
     -# FIXME: do we need this condition?
     = render_toolbars
 

@@ -118,7 +118,8 @@ class ApplicationHelper::ToolbarBuilder
             end
           end
 
-          toolbar << props; current_item = props
+          toolbar << props
+          current_item = props
           bs_node = root.add_element("item", props)                 # Add buttonSelect node
           bgi[:items].each_with_index do |bsi, bsi_idx|             # Go thru all of the buttonSelect items
             if bsi.key?(:separator)                             # If separator found, add it
@@ -149,7 +150,7 @@ class ApplicationHelper::ToolbarBuilder
             bs_node.add_element("item", props)                      # Add buttonSelect child button node
             current_item[:items] ||= []
             current_item[:items] << props
-            build_toolbar_save_button(tb_buttons, bsi, props, bgi[:buttonSelect]) if bsi[:button]  # Save if a button (not sep)
+            build_toolbar_save_button(tb_buttons, bsi, props, bgi[:buttonSelect]) if bsi[:button] # Save if a button (not sep)
           end
           build_toolbar_save_button(tb_buttons, bgi, current_item) if bs_children || bgi[:buttonSelect] == "history_choice"
           unless bs_children                                        # No children?
@@ -191,7 +192,7 @@ class ApplicationHelper::ToolbarBuilder
           # Add a separator, if needed, before this button
           if !sep_added && sep_needed
             if groups_added.include?(bg_idx) && groups_added.length > 1
-              root.add_element("item", sep = {"id" => "sep_#{bg_idx}", "type" => "separator"})  # Put separators between buttons
+              root.add_element("item", sep = {"id" => "sep_#{bg_idx}", "type" => "separator"}) # Put separators between buttons
               toolbar << sep
               sep_added = true
             end
@@ -199,8 +200,8 @@ class ApplicationHelper::ToolbarBuilder
           sep_needed = true                                         # Button was added, need separators from now on
 
           toolbar << props
-          root.add_element("item", props)                           # Add button node
-          build_toolbar_save_button(tb_buttons, bgi, props)                # Save button in buttons hash
+          root.add_element("item", props)
+          build_toolbar_save_button(tb_buttons, bgi, props)
         elsif bgi.key?(:buttonTwoState)                         # two state button node found
           next if build_toolbar_hide_button(bgi[:buttonTwoState])
           props = {"id"     => bgi[:buttonTwoState],
@@ -214,16 +215,16 @@ class ApplicationHelper::ToolbarBuilder
           props["selected"] = "true" if build_toolbar_select_button(bgi[:buttonTwoState])
           if !sep_added && sep_needed
             if groups_added.include?(bg_idx) && groups_added.length > 1
-              root.add_element("item", sep = {"id" => "sep_#{bg_idx}", "type" => "separator"})  # Put separators between buttons
+              root.add_element("item", sep = {"id" => "sep_#{bg_idx}", "type" => "separator"}) # Put separators between buttons
               toolbar << sep
               sep_added = true
             end
           end
           sep_needed = true                                         # Button was added, need separators from now on
 
-          root.add_element("item", props)                           # Add button node
+          root.add_element("item", props)
           toolbar << props
-          build_toolbar_save_button(tb_buttons, bgi, props)                # Save button in buttons hash
+          build_toolbar_save_button(tb_buttons, bgi, props)
         end
       end
     end
@@ -1345,16 +1346,16 @@ class ApplicationHelper::ToolbarBuilder
       tb_buttons[button][:full_path] = ERB.new(item[:full_path]).result(@view_binding)
     end
     props[:url]      = tb_buttons[button][:url] = url if item[:url]
-    props[:explorer] = tb_buttons[button][:explorer] = true if @explorer && !item[:url]  # Add explorer = true if ajax button
+    props[:explorer] = tb_buttons[button][:explorer] = true if @explorer && !item[:url] # Add explorer = true if ajax button
     if item[:popup]
       props[:popup] = tb_buttons[button][:popup] = item[:popup]
       if item[:url_parms] == "popup_only" # For readonly reports, they don't have confirm message
         props[:console_url] = tb_buttons[button][:console_url] = "/#{request.parameters["controller"]}#{item[:url]}"
-      else    # Assuming at this point this is a console button
+      else # Assuming at this point this is a console button
         props[:console_url] = tb_buttons[button][:console_url] =
-          if item[:url] == "vnc_console"  # This is a VNC console button
+          if item[:url] == "vnc_console" # This is a VNC console button
             "http://#{@record.ipaddresses[0]}:#{get_vmdb_config[:server][:vnc_port]}"
-          else  # This is an MKS or VMRC VMware console button
+          else # This is an MKS or VMRC VMware console button
             "/#{request.parameters["controller"]}#{item[:url]}/#{@record.id}"
           end
       end

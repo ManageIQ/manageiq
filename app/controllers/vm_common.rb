@@ -1465,9 +1465,9 @@ module VmCommon
     elsif @sb[:action] == "performance"
       c_tb = build_toolbar("x_vm_performance_tb")
     elsif @sb[:action] == "drift_history"
-      c_tb = build_toolbar("drifts_center_tb")  # Use vm or template tb
+      c_tb = build_toolbar("drifts_center_tb") # Use vm or template tb
     elsif ["snapshot_info", "vmtree_info"].include?(@sb[:action])
-      c_tb = build_toolbar("x_vm_center_tb")  # Use vm or template tb
+      c_tb = build_toolbar("x_vm_center_tb") # Use vm or template tb
     end
     h_tb = build_toolbar("x_history_tb") unless @in_a_form
 
