@@ -667,6 +667,7 @@ en:
       v_is_a_template: Is a Template
       v_memory_percent_of_used: VM Memory Files Percent of Used
       v_message: Message
+      v_month: Activity Sample - Month (YYYY/MM)
       v_owning_blue_folder: Parent Folder (VMs & Templates)
       v_owning_blue_folder_path: Parent Folder Path (VMs & Templates)
       v_owning_cluster: Parent Cluster

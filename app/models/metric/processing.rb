@@ -92,7 +92,7 @@ module Metric::Processing
         # values collected
         result[col] = state.numvcpus if obj.kind_of?(VmOrTemplate) && have_cpu_metrics && state.numvcpus.to_i > 0
       when "sockets"
-        result[col] = state.host_sockets if obj.kind_of?(Host)
+        result[col] = state.host_sockets
       end
     end
 
