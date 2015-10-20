@@ -1,34 +1,30 @@
-= raw @grid_xml.to_json
-- @grid_xml = nil
-= table.to_json
-
 -# New code to use DHTMLXGRID below
-- if @grid_xml
+- if @grid_hash
   - url = @showlinks == false ? nil : view_to_url(view, @parent)
   - grid_options = {:grid_id         => "list_grid",
                     :grid_name       => "gtl_list_grid",
-                    :grid_xml        => @grid_xml,
-                    :action_url      => action_url,
-                    :init_grid       => request.xml_http_request?}
+                    :grid_hash       => @grid_hash,
+                    :action_url      => action_url}
+
   - if @explorer
     #list_grid{:style => "cursor: hand;"}
-    - ajax_url = !(%w(OntapStorageSystem OntapLogicalDisk OntapStorageVolume OntapFileShare SecurityGroup).include?(view.db) || (request.parameters[:controller] == "service" && view.db == "Vm"))
-    -# don't need a row url to be AJAX when displaying a list of other CI's inside explorer
-    = render(:partial => 'layouts/dhtmlxgrid',
-      :locals => {:options    => grid_options,
-                  :js_options => {:autosize        => true,
-                                  :sortcol         => @sortcol ? @sortcol + 2 : nil,
-                                  :sortdir         => @sortdir ? @sortdir[0..2] : nil,
-                                  :row_url         => url,
-                                  :row_url_ajax    => ajax_url}})
+      - ajax_url = !(%w(OntapStorageSystem OntapLogicalDisk OntapStorageVolume OntapFileShare SecurityGroup).include?(view.db) || (request.parameters[:controller] == "service" && view.db == "Vm"))
+      -# don't need a row url to be AJAX when displaying a list of other CI's inside explorer
+      = render(:partial => 'layouts/dhtmlxgrid',
+        :locals => {:options    => grid_options,
+                    :js_options => {:autosize        => true,
+                                    :sortcol         => @sortcol ? @sortcol + 2 : nil,
+                                    :sortdir         => @sortdir ? @sortdir[0..2] : nil,
+                                    :row_url         => url,
+                                    :row_url_ajax    => ajax_url}})
   - else
     -# substracting leftcol 219 from @winW to calculate width of div
     #list_grid{:style => "width: #{@winW - 219}; height: #{center_div_height}px; cursor: hand; overflow-x: auto; overflow-y: auto;"}
-    = render(:partial => 'layouts/dhtmlxgrid',
-      :locals  => {:options    => grid_options,
-                   :js_options => {:sortcol         => @sortcol ? @sortcol + 2 : nil,
-                                   :sortdir         => @sortdir ? @sortdir[0..2] : nil,
-                                   :row_url         => url}})
+      = render(:partial => 'layouts/dhtmlxgrid',
+        :locals  => {:options    => grid_options,
+                     :js_options => {:sortcol         => @sortcol ? @sortcol + 2 : nil,
+                                     :sortdir         => @sortdir ? @sortdir[0..2] : nil,
+                                     :row_url         => url}})
 - else
   -# used for Saved Reports, ...
   %table.table.table-striped.table-bordered.table-hover.table-selectable

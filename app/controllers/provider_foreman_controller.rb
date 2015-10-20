@@ -938,7 +938,7 @@ class ProviderForemanController < ApplicationController
   def add_unassigned_configuration_profile_record_to_view(unassigned_profile_row, unassigned_configuration_profile)
     @view.table.data.push(unassigned_profile_row)
     @targets_hash[unassigned_profile_row['id']] = unassigned_configuration_profile
-    @grid_xml = view_to_xml(@view)
+    @grid_hash = view_to_xml(@view)
   end
 
   def process_show_list(options = {})

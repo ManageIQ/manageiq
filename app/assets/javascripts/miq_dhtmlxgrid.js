@@ -84,9 +84,9 @@ function miqInitGrids() {
 function miqInitGrid(grid_name) {
   var grid_hash = ManageIQ.grids.grids[grid_name]; // Get the hash for the passed in grid
   var miq_grid_checks = ""; // Keep track of the grid checkboxes
-
+  return;  // TODO
   // Build the grid object, then point a local var at it
-  var grid = new dhtmlXGridObject(grid_hash.g_id);
+  //var grid = new dhtmlXGridObject(grid_hash.g_id);
   ManageIQ.grids.grids[grid_name].obj = grid;
 
   var options = grid_hash.opts;
@@ -95,8 +95,8 @@ function miqInitGrid(grid_name) {
   grid.clearAll(true);
 
   // Set paths and skin
-  grid.setImagePath("/images/dhtmlxgrid/");
-  grid.imgURL = "/images/dhtmlxgrid/";
+  //grid.setImagePath("/images/dhtmlxgrid/");
+  //grid.imgURL = "/images/dhtmlxgrid/";
   grid.setSkin("style3");
 
   grid.enableAlterCss("miq_row0", "miq_row1");

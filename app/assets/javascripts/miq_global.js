@@ -37,7 +37,7 @@ if (typeof(ManageIQ) === 'undefined') {
       formatters: {}, // functions corresponding to MiqReport::Formatting
     },
     grids: {
-      grids: null, // stored grids on the screen
+      grids: {}, // stored grids on the screen
       gridColumnWidths: null, // store grid column widths
       xml: null,
     },

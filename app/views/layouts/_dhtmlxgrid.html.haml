@@ -1,5 +1,3 @@
-= render :partial => "layouts/dhtmlx_tags", :locals => {:control => "grid"}
-
 %input{:type  => 'hidden',
        :name  => "miq_grid_checks",
        :id    => "miq_grid_checks",
@@ -7,7 +5,7 @@
 
 - grid_name = options[:grid_name]
 - grid_id   = options[:grid_id]
-- grid_xml  = options[:grid_xml]
+- grid_hash = options[:grid_hash]
 
 - unless @parent.nil?
   - layout = @layout
@@ -30,10 +28,14 @@
   ManageIQ.grids.grids["#{j grid_name}"] = {
     g_id: "#{j grid_id}",
     opts: #{raw js_options.to_json},
-    xml:  "#{raw j(grid_xml)}",
-    obj:  null
-  };
+    hash: #{raw grid_hash.to_json},
+    obj:  null,
+  };  // TODO who touches grids[*].xml?
 
-- if options[:init_grid]
-  :javascript
-    miqInitGrid("#{j options[:grid_name]}");
+
+%table.table.table-striped.table-bordered.table-hover.table-selectable
+  %thead
+    %tr
+      %th.narrow
+        TODO
+        = grid_hash.to_json

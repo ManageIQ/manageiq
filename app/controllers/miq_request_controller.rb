@@ -386,7 +386,8 @@ class MiqRequestController < ApplicationController
         page << javascript_show("no_records_div")
         page << javascript_hide("records_div")
       end
-      page << "ManageIQ.grids.xml = \"#{j_str(@grid_xml)}\";"  # Set the XML data
+      # TODO check this
+      page << "ManageIQ.grids.xml = \"#{j_str(@grid_hash)}\";"  # Set the XML data
       page << "ManageIQ.grids.grids['gtl_list_grid'].obj.clearAll(true);"               # Clear grid data, including headers
       page << "ManageIQ.grids.grids['gtl_list_grid'].obj.parse(ManageIQ.grids.xml);"    # Reload grid from XML
       if @sortcol

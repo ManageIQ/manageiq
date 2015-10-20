@@ -1802,7 +1802,7 @@ class ApplicationController < ActionController::Base
     # Set up the grid variables for list view, with exception models below
     if !%w(Job MiqProvision MiqReportResult MiqTask).include?(view.db) &&
        !view.db.ends_with?("Build") && !@force_no_grid_xml && (@gtl_type == "list" || @force_grid_xml)
-      @grid_xml = view_to_xml(view)
+      @grid_hash = view_to_xml(view)
     end
 
     [view, get_view_pages(dbname, view)]
@@ -1969,8 +1969,9 @@ class ApplicationController < ActionController::Base
                 miq_request_vm my_tasks my_ui_tasks report rss server_build).include?(@layout)
         page.replace(:listnav_div, :partial => "layouts/listnav")               # Replace accordion, if list_nav_div is there
       end
-      if @grid_xml                                  # Replacing a grid
-        page << "xml = \"#{j_str(@grid_xml)}\";"            # Set the XML data
+      if @grid_hash
+        # TODO
+        page << "xml = \"#{j_str(@grid_hash)}\";"            # Set the XML data
         page << "ManageIQ.grids.grids['gtl_list_grid'].obj.clearAll(true);" # Clear grid data, including headers
         page << "ManageIQ.grids.grids['gtl_list_grid'].obj.parse(xml);" # Reload grid from XML
         if @sortcol
