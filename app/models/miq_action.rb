@@ -1076,29 +1076,25 @@ class MiqAction < ActiveRecord::Base
   end
 
   def self.create_default_actions
-    fname = FIXTURE_DIR.join("#{to_s.pluralize.underscore}.csv")
-    data  = fname.read.split("\n")
-    cols  = data.shift.split(",").map(&:to_sym)
+    CSV.foreach(fixture_path, :headers => true, :skip_lines => /^#/) do |csv_row|
+      action = csv_row.to_hash
+      action['action_type'] = 'default'
 
-    data.each do |line|
-      next if line.starts_with?('#') # skip commented lines
-
-      arr = line.split(",")
-
-      action = Hash[cols.zip(arr)]
-      action[:action_type] = 'default'
-
-      rec = find_by_name(action[:name])
+      rec = find_by_name(action['name'])
       if rec.nil?
-        _log.info("Creating [#{action[:name]}]")
+        _log.info("Creating [#{action['name']}]")
         create(action)
       else
         rec.attributes = action
         if rec.changed? || (rec.options_was != rec.options)
-          _log.info("Updating [#{action[:name]}]")
+          _log.info("Updating [#{action['name']}]")
           rec.save
         end
       end
     end
+  end
+
+  def self.fixture_path
+    FIXTURE_DIR.join("#{to_s.pluralize.underscore}.csv")
   end
 end

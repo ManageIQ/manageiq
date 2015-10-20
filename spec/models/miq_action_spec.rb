@@ -210,7 +210,16 @@ describe MiqAction do
       end
 
       def stub_csv(data)
-        allow_any_instance_of(Pathname).to receive(:read).and_return(data)
+        Tempfile.open(['actions', '.csv']) do |f|
+          f.write(data)
+          @tempfile = f # keep the reference in order to delete the file later
+        end
+
+        expect(MiqAction).to receive(:fixture_path).and_return(@tempfile.path)
+      end
+
+      after do
+        @tempfile.unlink
       end
     end
 
