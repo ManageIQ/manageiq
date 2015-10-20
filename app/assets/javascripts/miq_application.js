@@ -1246,6 +1246,11 @@ function miqToolbarOnClick(e) {
   var tb_url;
   var button = $(this);
 
+  // If it's a dropdown, collapse the parent container
+  var parent = button.parents('div.btn-group.dropdown.open');
+  parent.removeClass('open');
+  parent.children('button.dropdown-toggle').attr('aria-expanded', 'false');
+
   if (button.hasClass('disabled') || button.parent().hasClass('disabled')) {
     return;
   }
