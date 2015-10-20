@@ -249,12 +249,12 @@ class TreeBuilder
   def x_build_dynatree(options)
     children = x_get_tree_objects(nil, options, nil, [])
 
-    child_nodes = children.each_with_object([]) do |child, acc|
+    child_nodes = children.map do |child|
       # already a node? FIXME: make a class for node
       if child.kind_of?(Hash) && child.key?(:title) && child.key?(:key) && child.key?(:icon)
-        acc << child
+        child
       else
-        acc << x_build_node_dynatree(child, nil, options)
+        x_build_node_dynatree(child, nil, options)
       end
     end
 
