@@ -246,11 +246,8 @@ module MiqAeEngine
     end
 
     def user_info_attributes(user)
-      objects_hash = {'user'      => user,
-                      'tenant'    => user.current_tenant,
-                      'miq_group' => user.current_group}
-      objects_hash.each do |k, v|
-        value = MiqAeObject.convert_value_based_on_datatype(v.id, "#{v.class}")
+      {'user' => user, 'tenant' => user.current_tenant, 'miq_group' => user.current_group}.each do |k, v|
+        value = MiqAeObject.convert_value_based_on_datatype(v.id, v.class.name)
         @attributes[k] = value unless value.nil?
       end
     end

@@ -18,33 +18,21 @@ describe "MiqAeMethodWithTenat" do
     MiqAeEngine.instantiate(url, user)
   end
 
-  def check_ids(result)
-    check_tenant_id(result)
-    check_user_id(result)
-    check_group_id(result)
-  end
-
-  def check_tenant_id(result)
-    expect(result[:tenant_id]).to eql(Tenant.root_tenant.id)
-  end
-
-  def check_user_id(result)
-    expect(result[:user_id]).to eql(user.id)
-  end
-
-  def check_group_id(result)
-    expect(result[:group_id]).to eql(user.current_group.id)
-  end
-
   context "automate method" do
     it "ignore user in url" do
       result = invoke_ae("/EVM/AUTOMATE/test1?User::user=#{user2.id}", user).root['result']
-      check_ids(result)
+
+      expect(result[:tenant_id]).to eql(Tenant.root_tenant.id)
+      expect(result[:user_id]).to eql(user.id)
+      expect(result[:group_id]).to eql(user.current_group.id)
     end
 
     it "use the passed in user object" do
       result = invoke_ae("/EVM/AUTOMATE/test1", user).root['result']
-      check_ids(result)
+
+      expect(result[:tenant_id]).to eql(Tenant.root_tenant.id)
+      expect(result[:user_id]).to eql(user.id)
+      expect(result[:group_id]).to eql(user.current_group.id)
     end
   end
 end
