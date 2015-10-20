@@ -143,7 +143,7 @@ class TreeBuilder
     # Save node as open
     open_node(id)
 
-    x_get_tree_objects(object, @tree_state.x_tree(@name), nil, parents).flat_map do |o|
+    x_get_tree_objects(object, @tree_state.x_tree(@name), nil, parents).map do |o|
       x_build_node_dynatree(o, id, @tree_state.x_tree(@name))
     end
   end
@@ -254,7 +254,7 @@ class TreeBuilder
       if child.kind_of?(Hash) && child.key?(:title) && child.key?(:key) && child.key?(:icon)
         acc << child
       else
-        acc.concat(x_build_node_dynatree(child, nil, options))
+        acc << x_build_node_dynatree(child, nil, options)
       end
     end
 
@@ -369,7 +369,7 @@ class TreeBuilder
 
   # Called with object, tree node parent id, tree options
   def x_build_node_dynatree(object, pid, options)
-    [x_build_node(object, pid, options)]
+    x_build_node(object, pid, options)
   end
 
   # Handle custom tree nodes (object is a Hash)
