@@ -382,7 +382,7 @@ class ServiceController < ApplicationController
       presenter[:set_visible_elements][:form_buttons_div] = true
       presenter[:set_visible_elements][:pc_div_1] = false
       presenter[:set_visible_elements][:toolbar] = false
-      presenter[:set_visible_elements][:paginator] = true
+      presenter[:set_visible_elements][:paging_div] = true
       if action == "dialog_provision"
         presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_dialog_buttons",
                                                            :locals  => {:action_url => action_url,
@@ -405,12 +405,12 @@ class ServiceController < ApplicationController
       # when trying to change a node on tree after saving a record
       presenter[:set_visible_elements][:buttons_on]  = false
       presenter[:set_visible_elements][:toolbar]   = true
-      presenter[:set_visible_elements][:paginator] = false
+      presenter[:set_visible_elements][:paging_div] = false
     else
       presenter[:set_visible_elements][:form_buttons_div] = false
       presenter[:set_visible_elements][:pc_div_1]         = true
       presenter[:set_visible_elements][:toolbar]        = true
-      presenter[:set_visible_elements][:paginator]      = true
+      presenter[:set_visible_elements][:paging_div] = true
     end
 
     # Clear the JS gtl_list_grid var if changing to a type other than list

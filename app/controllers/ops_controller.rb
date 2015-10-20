@@ -739,9 +739,9 @@ class OpsController < ApplicationController
         presenter[:set_visible_elements][:form_buttons_div] = true
         presenter[:set_visible_elements][:pc_div_1] = false
       end
-      presenter[:set_visible_elements][:paginator] = true
+      presenter[:set_visible_elements][:paging_div] = true
     else
-      presenter[:set_visible_elements][:paginator] = false
+      presenter[:set_visible_elements][:paging_div] = false
     end
   end
 

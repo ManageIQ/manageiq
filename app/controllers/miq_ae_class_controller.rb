@@ -344,7 +344,7 @@ class MiqAeClassController < ApplicationController
     if @in_a_form
       action_url =  create_action_url(nodes.first)
       # incase it was hidden for summary screen, and incase there were no records on show_list
-      presenter[:set_visible_elements][:paginator] = true
+      presenter[:set_visible_elements][:paging_div] = true
       presenter[:set_visible_elements][:form_buttons_div] = true
       presenter[:update_partials][:form_buttons_div] = r[
         :partial => "layouts/x_edit_buttons",
@@ -358,7 +358,7 @@ class MiqAeClassController < ApplicationController
       ]
     else
       # incase it was hidden for summary screen, and incase there were no records on show_list
-      presenter[:set_visible_elements][:paginator] = false
+      presenter[:set_visible_elements][:paging_div] = false
       presenter[:set_visible_elements][:form_buttons_div] = false
     end
 

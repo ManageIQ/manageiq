@@ -338,9 +338,9 @@ class MiqAeCustomizationController < ApplicationController
         presenter[:set_visible_elements][:pc_div_1] = false
         presenter[:set_visible_elements][:form_buttons_div] = true
       end
-      presenter[:set_visible_elements][:paginator] = true
+      presenter[:set_visible_elements][:paging_div] = true
     else
-      presenter[:set_visible_elements][:paginator] = false
+      presenter[:set_visible_elements][:paging_div] = false
     end
   end
 
@@ -415,7 +415,7 @@ class MiqAeCustomizationController < ApplicationController
       presenter[:update_partials][:form_buttons_div] = render_proc[:partial => "dialog_sample_buttons"]
       presenter[:set_visible_elements][:pc_div_1]         = false
       presenter[:set_visible_elements][:form_buttons_div] = false
-      presenter[:set_visible_elements][:paginator] = true
+      presenter[:set_visible_elements][:paging_div] = true
     end
   end
 

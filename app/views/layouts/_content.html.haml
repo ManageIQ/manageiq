@@ -25,7 +25,7 @@
         .row{:style => "overflow: auto;height: calc(100% - 130px);"}
           .col-md-12
             = yield
-        .row#paginator
+        .row#paging_div
           .col-md-12
             - if saved_report_paging?
               = render(:partial => 'layouts/saved_report_paging_bar', :locals => {:pages => @sb[:pages]})
