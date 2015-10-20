@@ -129,7 +129,7 @@ module OpsHelper::TextualSummary
   end
 
   def textual_tenant_quota_allocations
-    h = {:label => "Tenant Quota Allocations", :headers => ["Name", "In Use", "Allocated", "Available", "Total Allocated Value"], :col_order => ["name", "in_use", "allocated", "available", "total"]}
+    h = {:label => "Tenant Quota", :headers => ["Name", "Total Quota", "In Use", "Allocated", "Available"], :col_order => ["name", "total", "in_use", "allocated", "available"]}
     h[:value] = get_tenant_quota_allocations
     h
   end
