@@ -1,7 +1,7 @@
 - if @edit
   - url = url_for(:action => 'alert_field_changed', :id => "#{@alert.id || 'new'}")
   - observe = {:url => url}.to_json
-#alert_details_div{:style => "width: 100%; height: 100%; overflow: auto;"}
+#alert_details_div
   - if @assign
     = render :partial => 'alert_assign'
   - elsif @alert
