@@ -143,8 +143,8 @@ class TreeBuilder
     # Save node as open
     open_node(id)
 
-    x_get_tree_objects(object, @tree_state.x_tree(@name), nil, parents).each_with_object([]) do |o, acc|
-      acc.concat(x_build_node_dynatree(o, id, @tree_state.x_tree(@name)))
+    x_get_tree_objects(object, @tree_state.x_tree(@name), nil, parents).flat_map do |o|
+      x_build_node_dynatree(o, id, @tree_state.x_tree(@name))
     end
   end
 
@@ -351,8 +351,8 @@ class TreeBuilder
        options[:open_all] ||
        object[:load_children] ||
        node[:expand]
-      kids = x_get_tree_objects(object, options, nil, parents).each_with_object([]) do |o, acc|
-        acc.concat(x_build_node(o, node[:key], options))
+      kids = x_get_tree_objects(object, options, nil, parents).flat_map do |o|
+        x_build_node(o, node[:key], options)
       end
       node[:children] = kids unless kids.empty?
     else
