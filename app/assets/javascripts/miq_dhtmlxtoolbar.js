@@ -87,18 +87,6 @@ function miqHideToolbarButtons() {
   }
 }
 
-// Re-Initialize a single toolbar
-function miqReinitToolbar(tb_name) {
-  var tb = ManageIQ.toolbars[tb_name].obj;
-  // Workaround to replace clearAll method call, it's is not available in 2.0 version of dhtmlx
-  tb.forEachItem(function (id) {
-    tb.removeItem(id);
-  });
-  var tb_hash = ManageIQ.toolbars[tb_name];
-  tb.loadXMLString(tb_hash.xml);
-  miqHideToolbarButtons();
-}
-
 // Function to run transactions when toolbar two state button is clicked
 function miqToolbarOnStateChange(id, state) {
   miqToolbarOnClick(id);

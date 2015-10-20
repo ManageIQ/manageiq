@@ -166,20 +166,7 @@ class ResourcePoolController < ApplicationController
       if @refresh_div == "main_div" && @lastaction == "show_list"
         replace_gtl_main_div
       else
-        render :update do |page|                    # Use RJS to update the display
-          unless @refresh_partial.nil?
-            if @refresh_div == "flash_msg_div"
-              page.replace(@refresh_div, :partial => @refresh_partial)
-            else
-              if ["vms", "hosts", "resource_pools"].include?(@display)  # If displaying sub-items, action_url s/b show
-                page << "miqReinitToolbar('center_tb');"
-                page.replace_html("main_div", :partial => "layouts/gtl", :locals => {:action_url => "show/#{@record.id}"})
-              else
-                page.replace_html("main_div", :partial => @refresh_partial)
-              end
-            end
-          end
-        end
+        render_flash
       end
     end
   end
