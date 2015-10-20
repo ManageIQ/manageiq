@@ -10,6 +10,8 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
 
   alias_attribute :azure_tenant_id, :uid_ems
 
+  has_many :resource_groups, :foreign_key => :ems_id, :dependent => :destroy
+
   def self.ems_type
     @ems_type ||= "azure".freeze
   end
