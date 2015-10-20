@@ -635,4 +635,12 @@ describe User do
       end
     end
   end
+
+  context ".super_admin" do
+    it "has super_admin" do
+      FactoryGirl.create(:miq_group, :role => "super_administrator")
+      User.seed
+      expect(User.super_admin).to be_super_admin_user
+    end
+  end
 end
