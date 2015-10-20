@@ -5,7 +5,7 @@
 -# These are the initial divs that will go inside center_cell_div
 - if @record
   -# Showing a specific VM or Template record
-  #main_div.main_div
+  #main_div
     - if @showtype == "performance"
       = render(:partial => "layouts/performance")
       :javascript
@@ -18,5 +18,5 @@
       = render(:partial => 'vm_cloud/main', :locals => {:controller => "vm"})
 - else
   -# Showing a list of VMs
-  #main_div.main_div
+  #main_div
     = render(:partial => 'layouts/x_gtl')
