@@ -15,7 +15,7 @@
               <strong>{{ ::dialogGroup.label }}</strong>
             </div>
             <div class="panel-body">
-              <div
+              <form
                 ng-repeat="dialogField in ::dialogGroup.dialog_fields "
                 ng-init="inputTitle = dialogField.description"
                 class="form-horizontal">
@@ -56,10 +56,21 @@
                         {{ ::fieldValue[1] }}
                       </option>
                     </select>
+                    <div ng-switch-when="DialogFieldDateControl">
+                      <input
+                        ng-if=" vm.inputDisabled || dialogField.read_only "
+                        ng-disabled="true"
+                        class="form-control"
+                        value="{{ vm.options? vm.parsedOptions[dialogField.name] : dialogField.default_value }}">
+                      <input
+                        ng-if="!vm.inputDisabled && !dialogField.read_only"
+                        pf-datepicker options="vm.dateOptions"
+                        date="dialogField.default_value">
+                    </div>
                     <span ng-switch-default ng-hide="true"></span>
                   </div>
                 </div>
-              </div>
+              </form>
             </div>
           </div>
         </div>
