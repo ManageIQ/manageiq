@@ -198,7 +198,6 @@ describe VmInfraController do
       breadcrumbs[0] = {:name => "Instances", :url => "/vm_cloud/explorer"}
       session[:breadcrumbs] = breadcrumbs
       controller.stub(:x_node).and_return("v-#{@vm.compressed_id}")
-      controller.stub(:controller_referrer?).and_return(false)
       get :explorer
       breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
       expect(breadcrumbs.size).to eq(1)
@@ -207,7 +206,6 @@ describe VmInfraController do
 
     it 'retains the breadcrumb path when cancel is pressed from a VM action' do
       get :explorer
-      controller.stub(:controller_referrer?).and_return(true)
       controller.stub(:x_node).and_return("v-#{@vm.compressed_id}")
       post :x_button, :id => @vm.id, :pressed => 'vm_ownership'
 
@@ -218,5 +216,12 @@ describe VmInfraController do
       expect(breadcrumbs.size).to eq(1)
       expect(breadcrumbs).to include(:name => "VM or Templates", :url => "/vm_infra/explorer")
     end
+  end
+
+  it "gets explorer when the request.referrer action is of type 'post'" do
+    session[:settings] = {:views => {}, :perpage => {:list => 10}}
+    request.stub(:referrer).and_return("http://localhost:3000/configuration/update")
+    get :explorer
+    expect(response.status).to eq(200)
   end
 end
