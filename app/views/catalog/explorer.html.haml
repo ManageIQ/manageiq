@@ -1,7 +1,7 @@
 -# Include the center cell divs
 - nodetypes = %w(MiqTemplate OrchestrationTemplate ServiceResource ServiceTemplate ServiceTemplateCatalog)
 - if nodetypes.include?(TreeBuilder.get_model_for_prefix(@nodetype)) && !@view
-  #main_div.main_div
+  #main_div
     - if TreeBuilder.get_model_for_prefix(@nodetype) == "MiqTemplate"
       = render(:partial => "vm_common/main",
                :locals  => {:controller => "vm"})
@@ -9,7 +9,7 @@
       = render(:partial => "#{x_active_tree}_show",
                :locals  => {:controller => "catalog"})
 - else
-  #main_div.main_div
+  #main_div
     - if @sb[:buttons_node]
       = render :partial => "shared/buttons/ab_list"
     - elsif @upload_sysprep_file
