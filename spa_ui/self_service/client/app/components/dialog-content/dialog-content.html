@@ -26,25 +26,45 @@
 
                   <div ng-switch on="dialogField.type" class="col-sm-9">
                     <input
+                      ng-if="!vm.options"
                       ng-switch-when="DialogFieldTextBox"
                       ng-model="dialogField.default_value"
                       ng-disabled="{{ ::dialogField.read_only || vm.inputDisabled }}"
                       class="form-control"
                       type="{{ dialogField.options.protected ? 'password' : 'text' }}"
                       title="{{ ::inputTitle }}"
-                      value="{{ vm.options? vm.parsedOptions[dialogField.name] : dialogField.default_value }}">
-                    </input>
+                      value="{{ dialogField.default_value }}">
+
+                    <input
+                      ng-if="vm.options"
+                      ng-switch-when="DialogFieldTextBox"
+                      ng-disabled="{{ ::dialogField.read_only || vm.inputDisabled }}"
+                      class="form-control"
+                      type="{{ dialogField.options.protected ? 'password' : 'text' }}"
+                      title="{{ ::inputTitle }}"
+                      value="{{ vm.parsedOptions[dialogField.name] }}">
 
                     <textarea
+                      ng-if="!vm.options"
                       ng-switch-when="DialogFieldTextAreaBox"
                       ng-model="dialogField.default_value"
                       ng-disabled="{{ ::dialogField.read_only || vm.inputDisabled }}"
                       class="form-control"
                       title="{{ ::inputTitle }}"
-                      rows="4">{{ vm.options? vm.parsedOptions[dialogField.name] : dialogField.default_value }}
+                      rows="4">{{ dialogField.default_value }}
+                    </textarea>
+
+                    <textarea
+                      ng-if="vm.options"
+                      ng-switch-when="DialogFieldTextAreaBox"
+                      ng-disabled="{{ ::dialogField.read_only || vm.inputDisabled }}"
+                      class="form-control"
+                      title="{{ ::inputTitle }}"
+                      rows="4">{{ vm.parsedOptions[dialogField.name] }}
                     </textarea>
 
                     <input
+                      ng-if="!vm.options"
                       ng-switch-when="DialogFieldCheckBox"
                       ng-model="dialogField.default_value"
                       ng-true-value="'t'"
@@ -52,19 +72,36 @@
                       class="form-control"
                       type="checkbox"
                       title="{{ ::inputTitle }}"
-                      ng-checked="vm.parsedOptions[dialogField.name] == 't' || dialogField.default_value == 't'">
-                    </input>
+                      ng-checked="dialogField.default_value == 't'">
+
+                    <input
+                      ng-if="vm.options"
+                      ng-switch-when="DialogFieldCheckBox"
+                      ng-true-value="'t'"
+                      ng-disabled="{{ ::dialogField.read_only || vm.inputDisabled }}"
+                      class="form-control"
+                      type="checkbox"
+                      title="{{ ::inputTitle }}"
+                      ng-checked="vm.parsedOptions[dialogField.name] == 't' ">
 
                     <select
+                      ng-if="!vm.options"
                       ng-switch-when="DialogFieldDropDownList"
-                                ng-model="dialogField.default_value"
+                      ng-model="dialogField.default_value"
                       ng-disabled="{{ ::dialogField.read_only || vm.inputDisabled}}"
                       class="form-control">
-                      <option ng-if="vm.options">{{vm.parsedOptions[dialogField.name]}}</option>
-                      <option ng-if="!vm.options" ng-repeat="fieldValue in ::dialogField.values"
-                      value="{{ ::fieldValue[0] }}">
-                      {{ ::fieldValue[1] }}
+                      <option ng-repeat="fieldValue in ::dialogField.values"
+                              value="{{ ::fieldValue[0] }}">
+                        {{ ::fieldValue[1] }}
                       </option>
+                    </select>
+
+                    <select
+                      ng-if="vm.options"
+                      ng-switch-when="DialogFieldDropDownList"
+                      ng-disabled="{{ ::dialogField.read_only || vm.inputDisabled}}"
+                      class="form-control">
+                      <option>{{vm.parsedOptions[dialogField.name]}}</option>
                     </select>
 
                     <span
@@ -85,17 +122,22 @@
                       </label>
                     </span>
 
-                    <div ng-switch-when="DialogFieldDateControl">
-                      <input
-                        ng-if=" vm.inputDisabled || dialogField.read_only "
-                        ng-disabled="true"
-                        class="form-control"
-                        value="{{ vm.options? vm.parsedOptions[dialogField.name] : dialogField.default_value }}">
-                      <input
-                        ng-if="!vm.inputDisabled && !dialogField.read_only"
-                        pf-datepicker options="vm.dateOptions"
-                        date="dialogField.default_value">
-                    </div>
+                    <input
+                      ng-if="!vm.options"
+                      ng-switch-when="DialogFieldDateControl"
+                      ng-model="dialogField.default_value"
+                      pf-datepicker options="vm.dateOptions"
+                      date="dialogField.default_value">
+
+
+                    <input
+                      ng-if="vm.options"
+                      ng-switch-when="DialogFieldDateControl"
+                      ng-if=" vm.inputDisabled || dialogField.read_only "
+                      ng-disabled="true"
+                      class="form-control"
+                      value="{{ vm.parsedOptions[dialogField.name] | date:'medium' }}">
+
                     <span ng-switch-default ng-hide="true"></span>
                   </div>
                 </div>
