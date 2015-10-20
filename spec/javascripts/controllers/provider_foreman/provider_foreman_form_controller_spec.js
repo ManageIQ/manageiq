@@ -32,9 +32,7 @@ describe('providerForemanFormController', function() {
       name: '',
       url: '',
       verify_ssl: false,
-      log_userid: '',
-      log_password: '',
-      log_verify: ''
+      log_userid: ''
     };
 
     beforeEach(inject(function(_$controller_) {
@@ -71,9 +69,7 @@ describe('providerForemanFormController', function() {
         name: 'Foreman',
         url: '10.10.10.10',
         verify_ssl: true,
-        log_userid: 'admin',
-        log_password: 'password',
-        log_verify: 'password'
+        log_userid: 'admin'
       };
 
       beforeEach(inject(function(_$controller_) {
@@ -100,10 +96,10 @@ describe('providerForemanFormController', function() {
         expect($scope.providerForemanModel.log_userid).toEqual('admin');
       });
       it('sets the log_password to the value returned from http request', function () {
-        expect($scope.providerForemanModel.log_password).toEqual('password');
+        expect($scope.providerForemanModel.log_password).toEqual(miqService.storedPasswordPlaceholder);
       });
       it('sets the log_verify to the value returned from http request', function () {
-        expect($scope.providerForemanModel.log_verify).toEqual('password');
+        expect($scope.providerForemanModel.log_verify).toEqual(miqService.storedPasswordPlaceholder);
       });
     });
   });

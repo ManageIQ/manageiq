@@ -14,7 +14,6 @@
 
 	@depends: jquery.js
 	@depends: jquery.ui.core.js
-	@depends: jquery.cookie.js
 *************************************************************************/
 
 /* jsHint options*/
@@ -2198,9 +2197,6 @@ DynaTree.prototype = {
 
 		this.persistence = new DynaTreeStatus(opts.cookieId, opts.cookie);
 		if( opts.persist ) {
-			if( !$.cookie ){
-				_log("warn", "Please include jquery.cookie.js to use persistence.");
-			}
 			this.persistence.read();
 		}
 		this.logDebug("DynaTree.persistence: %o", this.persistence.toDict());

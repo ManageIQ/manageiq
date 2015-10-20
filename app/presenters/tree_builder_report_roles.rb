@@ -22,7 +22,7 @@ class TreeBuilderReportRoles < TreeBuilder
     if user.super_admin_user?
       roles = MiqGroup.all
     else
-      roles = [MiqGroup.find_by_id(user.miq_group_id)]
+      roles = [MiqGroup.find_by_id(user.miq_group.id)]
     end
     count_only_or_objects(options[:count_only], roles.sort_by { |o| o.name.downcase }, 'name')
   end

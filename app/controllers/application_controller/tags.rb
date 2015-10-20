@@ -1,7 +1,7 @@
 module ApplicationController::Tags
   extend ActiveSupport::Concern
 
-  # Edit user or group tags
+  # Edit user, group or tenant tags
   def tagging_edit(db = nil, assert = true)
     assert_privileges("#{controller_for_common_methods}_tag") if assert
     @explorer = true if request.xml_http_request? # Ajax request means in explorer
@@ -326,8 +326,8 @@ module ApplicationController::Tags
       end
     end
 
-    if ["User", "MiqGroup"].include?(@tagging)
-      session[:assigned_filters] = []  # No view filters used for user/groups, set as empty for later methods
+    if ["User", "MiqGroup", "Tenant"].include?(@tagging)
+      session[:assigned_filters] = []  # No view filters used for user/groups/tenants, set as empty for later methods
     else
       cats.each do |cat_key|  # not needed for user/group tags since they are not filtered for viewing
         if session[:assigned_filters].include?(cat_key.name.downcase)

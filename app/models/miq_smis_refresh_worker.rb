@@ -1,5 +1,5 @@
 class MiqSmisRefreshWorker < MiqWorker
-  require_dependency 'miq_smis_refresh_worker/runner'
+  require_nested :Runner
 
   include PerStorageManagerTypeWorkerMixin
 

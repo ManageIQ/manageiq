@@ -256,12 +256,12 @@ class MiqReportResult < ActiveRecord::Base
     task = MiqTask.find_by_id(taskid)
     task.update_status("Active", "Ok", "Generating report result [#{result_type}]") if task
 
-    user = User.find_by_userid(options[:userid])
+    user = options[:user] || User.find_by_userid(options[:userid])
     raise "Unable to find user with userid 'options[:userid]'" if user.nil?
 
     rpt = report_results
     begin
-      userid = "#{options[:userid]}|#{options[:session_id]}|download"
+      userid = "#{user.userid}|#{options[:session_id]}|download"
       options[:report_source] = "Generated #{result_type} by user"
       self.class.purge_for_user(options)
 
@@ -341,15 +341,6 @@ class MiqReportResult < ActiveRecord::Base
       :args        => [["userid IN (?)", userids]],
       :zone        => MiqServer.my_zone
     )
-  end
-
-  def self.find_all_by_users_group(userid)
-    user = User.find_by_userid(userid)
-    return [] if user.nil? || user.miq_group.nil?
-    miq_report_ids = MiqReport.where(:miq_group_id => user.miq_group.id).pluck("id")
-
-    MiqReportResult.auto_generated.where(:miq_report_id => miq_report_ids)
-      .select("miq_report_id, name").group("miq_report_id, name")
   end
 
   def self.auto_generated

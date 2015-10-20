@@ -1,16 +1,16 @@
 class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
-  require_dependency 'manageiq/providers/openstack/infra_manager/auth_key_pair'
-  require_dependency 'manageiq/providers/openstack/infra_manager/ems_cluster'
-  require_dependency 'manageiq/providers/openstack/infra_manager/event_catcher'
-  require_dependency 'manageiq/providers/openstack/infra_manager/event_parser'
-  require_dependency 'manageiq/providers/openstack/infra_manager/host'
-  require_dependency 'manageiq/providers/openstack/infra_manager/host_service_group'
-  require_dependency 'manageiq/providers/openstack/infra_manager/metrics_capture'
-  require_dependency 'manageiq/providers/openstack/infra_manager/metrics_collector_worker'
-  require_dependency 'manageiq/providers/openstack/infra_manager/orchestration_stack'
-  require_dependency 'manageiq/providers/openstack/infra_manager/refresher'
-  require_dependency 'manageiq/providers/openstack/infra_manager/refresh_parser'
-  require_dependency 'manageiq/providers/openstack/infra_manager/refresh_worker'
+  require_nested :AuthKeyPair
+  require_nested :EmsCluster
+  require_nested :EventCatcher
+  require_nested :EventParser
+  require_nested :Host
+  require_nested :HostServiceGroup
+  require_nested :MetricsCapture
+  require_nested :MetricsCollectorWorker
+  require_nested :OrchestrationStack
+  require_nested :Refresher
+  require_nested :RefreshParser
+  require_nested :RefreshWorker
 
   include ManageIQ::Providers::Openstack::ManagerMixin
   include HasManyOrchestrationStackMixin

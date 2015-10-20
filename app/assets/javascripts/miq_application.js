@@ -1064,18 +1064,6 @@ function miqShowAE_Tree(typ) {
   return true;
 }
 
-// Use the jQuery.form plugin for ajax file upload
-function miqInitJqueryForm() {
-  $('#uploadForm input').change(function () {
-    $(this).parent().ajaxSubmit({
-      beforeSubmit: function (a, f, o) {
-        o.dataType = 'script';
-        miqSparkleOn();
-      }
-    });
-  });
-}
-
 // Toggle the user options div in the page header
 function miqToggleUserOptions(id) {
   miqJqueryRequest(miqPassFields("/dashboard/change_group", {to_group: id}));

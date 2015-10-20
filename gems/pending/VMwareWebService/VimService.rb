@@ -1215,19 +1215,20 @@ class VimService < Handsoap::Service
 
     node.children.each do |c|
       next if c.blank?
+      name = c.name.freeze
 
-      ai = aih[c.name] if aih
+      ai = aih[name] if aih
 
-      unless (v = obj[c.name])
-        v = obj[c.name] = VimArray.new("ArrayOf#{ai[:type]}") if ai && ai[:isArray]
+      unless (v = obj[name])
+        v = obj[name] = VimArray.new("ArrayOf#{ai[:type]}") if ai && ai[:isArray]
       end
 
       nextType = (ai ? ai[:type] : nil)
 
       if v.kind_of?(Array)
-        obj[c.name] << unmarshal_response(c, nextType)
+        obj[name] << unmarshal_response(c, nextType)
       else
-        obj[c.name] = unmarshal_response(c, nextType)
+        obj[name] = unmarshal_response(c, nextType)
       end
     end
     (obj)

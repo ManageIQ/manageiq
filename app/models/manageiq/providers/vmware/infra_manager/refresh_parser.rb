@@ -1,9 +1,8 @@
-require_dependency 'manageiq/providers/vmware/infra_manager'
 require 'miq-uuid'
 
 module ManageIQ::Providers
-  class Vmware::InfraManager
-    module RefreshParser
+  module Vmware
+    module InfraManager::RefreshParser
       #
       # EMS Inventory Parsing
       #

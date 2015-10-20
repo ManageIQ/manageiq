@@ -45,6 +45,7 @@ class OpsController < ApplicationController
     'rbac_tenant_delete'        => :rbac_tenant_delete,
     'rbac_tenant_edit'          => :rbac_tenant_edit,
     'rbac_tenant_manage_quotas' => :rbac_tenant_manage_quotas,
+    'rbac_tenant_tags_edit'     => :rbac_tenant_tags_edit,
     'refresh_audit_log'         => :refresh_audit_log,
     'refresh_log'               => :refresh_log,
     'refresh_production_log'    => :refresh_production_log,
@@ -399,7 +400,7 @@ class OpsController < ApplicationController
       elsif %w(rbac_group_add rbac_group_edit).include?(@sb[:action])
         action_url = "rbac_group_edit"
         record_id = @edit[:group_id] ? @edit[:group_id] : nil
-      elsif %(rbac_group_tags_edit rbac_user_tags_edit).include?(@sb[:action])
+      elsif %(rbac_group_tags_edit rbac_user_tags_edit rbac_tenant_tags_edit).include?(@sb[:action])
         action_url = "rbac_tags_edit"
         locals[:multi_record] = true    # need save/cancel buttons on edit screen even tho @record.id is not there
         record_id = @edit[:object_ids][0]

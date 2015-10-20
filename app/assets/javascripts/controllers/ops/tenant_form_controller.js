@@ -4,7 +4,8 @@ ManageIQ.angularApplication.controller('tenantFormController', ['$http', '$scope
       $scope.tenantModel = {
         name: '',
         description: '',
-        divisible: true
+        divisible: true,
+        use_config_for_attributes: false
       };
       $scope.formId = tenantFormId;
       $scope.afterGet = false;
@@ -13,21 +14,24 @@ ManageIQ.angularApplication.controller('tenantFormController', ['$http', '$scope
       ManageIQ.angularApplication.$scope = $scope;
 
       if (tenantFormId == 'new') {
-        $scope.newRecord               = true;
-        $scope.tenantModel.name        = '';
-        $scope.tenantModel.description = '';
-        $scope.tenantModel.default     = false;
-        $scope.tenantModel.divisible   = tenantType;
-        $scope.afterGet                = true;
-        $scope.modelCopy               = angular.copy( $scope.tenantModel );
+        $scope.newRecord                             = true;
+        $scope.tenantModel.name                      = '';
+        $scope.tenantModel.description               = '';
+        $scope.tenantModel.default                   = false;
+        $scope.tenantModel.divisible                 = tenantType;
+        $scope.tenantModel.use_config_for_attributes = false;
+
+        $scope.afterGet  = true;
+        $scope.modelCopy = angular.copy( $scope.tenantModel );
       } else {
         $scope.newRecord = false;
         miqService.sparkleOn();
         $http.get('/ops/tenant_form_fields/' + tenantFormId).success(function(data) {
-          $scope.tenantModel.name        = data.name;
-          $scope.tenantModel.description = data.description;
-          $scope.tenantModel.default     = data.default;
-          $scope.tenantModel.divisible   = data.divisible;
+          $scope.tenantModel.name                      = data.name;
+          $scope.tenantModel.description               = data.description;
+          $scope.tenantModel.default                   = data.default;
+          $scope.tenantModel.divisible                 = data.divisible;
+          $scope.tenantModel.use_config_for_attributes = data.use_config_for_attributes;
 
           $scope.afterGet = true;
           $scope.modelCopy = angular.copy( $scope.tenantModel );

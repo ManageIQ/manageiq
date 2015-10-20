@@ -1,6 +1,6 @@
 module ManageIQ::Providers
   class Openshift::ContainerManager::MetricsCollectorWorker < BaseManager::MetricsCollectorWorker
-    require_dependency 'manageiq/providers/openshift/container_manager/metrics_collector_worker/runner'
+    require_nested :Runner
 
     self.default_queue_name = "openshift"
 

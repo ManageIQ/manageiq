@@ -1,5 +1,5 @@
 class MiqUiWorker < MiqWorker
-  require_dependency 'miq_ui_worker/runner'
+  require_nested :Runner
 
   REQUIRED_ROLE = 'user_interface'
   self.required_roles = [REQUIRED_ROLE]

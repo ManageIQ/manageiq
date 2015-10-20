@@ -75,8 +75,7 @@ class EmsCloudController < ApplicationController
     set_ems_record_vars(verify_ems, :validate)
     @in_a_form = true
 
-    save = params[:id] == "new" ? false : true
-    result, details = verify_ems.authentication_check(params[:cred_type], :save => save)
+    result, details = verify_ems.authentication_check(params[:cred_type], :save => false)
     if result
       add_flash(_("Credential validation was successful"))
     else
@@ -147,24 +146,7 @@ class EmsCloudController < ApplicationController
       zone = @ems.my_zone
     end
 
-    metrics_userid = @ems.has_authentication_type?(:metrics) ? @ems.authentication_userid(:metrics).to_s : ""
-    metrics_password = @ems.has_authentication_type?(:metrics) ? @ems.authentication_password(:metrics).to_s : ""
-    metrics_verify = @ems.has_authentication_type?(:metrics) ? @ems.authentication_password(:metrics).to_s : ""
-
     amqp_userid = @ems.has_authentication_type?(:amqp) ? @ems.authentication_userid(:amqp).to_s : ""
-    amqp_password = @ems.has_authentication_type?(:amqp) ? @ems.authentication_password(:amqp).to_s : ""
-    amqp_verify = @ems.has_authentication_type?(:amqp) ? @ems.authentication_password(:amqp).to_s : ""
-
-    ssh_keypair_userid = @ems.has_authentication_type?(:ssh_keypair) ? @ems.authentication_userid(:ssh_keypair).to_s : ""
-    ssh_keypair_password = @ems.has_authentication_type?(:ssh_keypair) ? @ems.authentication_key(:ssh_keypair).to_s : ""
-
-    bearer_token = @ems.has_authentication_type?(:bearer) ? @ems.authentication_token(:bearer).to_s : ""
-    bearer_verify = @ems.has_authentication_type?(:bearer) ? @ems.authentication_token(:bearer).to_s : ""
-
-    if @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
-      host_default_vnc_port_start = @ems.host_default_vnc_port_start.to_s
-      host_default_vnc_port_end = @ems.host_default_vnc_port_end.to_s
-    end
 
     if @ems.kind_of?(ManageIQ::Providers::Azure::CloudManager)
       azure_tenant_id = @ems.azure_tenant_id
@@ -181,23 +163,10 @@ class EmsCloudController < ApplicationController
                      :provider_region                 => @ems.provider_region,
                      :openstack_infra_providers_exist => retrieve_openstack_infra_providers.length > 0 ? true : false,
                      :default_userid                  => @ems.authentication_userid ? @ems.authentication_userid : "",
-                     :default_password                => @ems.authentication_password ? @ems.authentication_password : "",
-                     :default_verify                  => @ems.authentication_password ? @ems.authentication_password : "",
-                     :metrics_userid                  => metrics_userid,
-                     :metrics_password                => metrics_password,
-                     :metrics_verify                  => metrics_verify,
                      :amqp_userid                     => amqp_userid,
-                     :amqp_password                   => amqp_password,
-                     :amqp_verify                     => amqp_verify,
-                     :ssh_keypair_userid              => ssh_keypair_userid,
-                     :ssh_keypair_password            => ssh_keypair_password,
-                     :bearer_token                    => bearer_token,
-                     :bearer_verify                   => bearer_verify,
                      :azure_tenant_id                 => azure_tenant_id ? azure_tenant_id : "",
                      :client_id                       => client_id ? client_id : "",
                      :client_key                      => client_key ? client_key : "",
-                     :host_default_vnc_port_start     => host_default_vnc_port_start,
-                     :host_default_vnc_port_end       => host_default_vnc_port_end,
                      :emstype_vm                      => @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
                     }
   end
@@ -253,23 +222,20 @@ class EmsCloudController < ApplicationController
 
     ems.azure_tenant_id = params[:azure_tenant_id] if ems.kind_of?(ManageIQ::Providers::Azure::CloudManager)
 
-    creds = {}
-    creds[:default] = {:userid   => params[:default_userid],
-                       :password => params[:default_password]} unless params[:default_userid].blank?
-    if ems.supports_authentication?(:metrics) && !params[:metrics_userid].blank?
-      creds[:metrics] = {:userid => params[:metrics_userid], :password => params[:metrics_password]}
-    end
-    if ems.supports_authentication?(:amqp) && !params[:amqp_userid].blank?
-      creds[:amqp] = {:userid => params[:amqp_userid], :password => params[:amqp_password]}
-    end
-    if ems.supports_authentication?(:ssh_keypair) && !params[:ssh_keypair_userid].blank?
-      creds[:ssh_keypair] = {:userid => params[:ssh_keypair_userid], :auth_key => params[:ssh_keypair_password]}
-    end
-    if ems.supports_authentication?(:bearer) && !params[:bearer_token].blank?
-      creds[:bearer] = {:auth_key => params[:bearer_token], :userid => "_"} # Must have userid
-    end
+    ems.update_authentication(build_credentials(ems), :save => (mode != :validate))
+  end
 
-    ems.update_authentication(creds, :save => (mode != :validate))
+  def build_credentials(ems)
+    creds = {}
+    if params[:default_userid]
+      default_password = params[:default_password] ? params[:default_password] : ems.authentication_password
+      creds[:default] = {:userid => params[:default_userid], :password => default_password}
+    end
+    if ems.supports_authentication?(:amqp) && params[:amqp_userid]
+      amqp_password = params[:amqp_password] ? params[:amqp_password] : ems.authentication_password(:amqp)
+      creds[:amqp] = {:userid => params[:amqp_userid], :password => amqp_password}
+    end
+    creds
   end
 
   def construct_edit_for_audit(ems)

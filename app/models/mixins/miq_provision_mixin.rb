@@ -72,7 +72,7 @@ module MiqProvisionMixin
   end
 
   def workflow(prov_options = options, flags = {})
-    workflow_class.new(prov_options, userid, flags)
+    workflow_class.new(prov_options, get_user, flags)
   end
 
   def eligible_resources(rsc_type)

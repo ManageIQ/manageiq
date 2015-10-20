@@ -1,5 +1,5 @@
 class MiqReplicationWorker < MiqWorker
-  require_dependency 'miq_replication_worker/runner'
+  require_nested :Runner
 
   self.required_roles = ["database_synchronization"]
   self.include_stopping_workers_on_synchronize = true

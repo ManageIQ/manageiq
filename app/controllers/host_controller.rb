@@ -614,17 +614,9 @@ class HostController < ApplicationController
       :operating_system => !(host.operating_system.nil? || host.operating_system.product_name.nil?),
       :mac_address      => host.mac_address ? host.mac_address : "",
       :default_userid   => host.authentication_userid.to_s,
-      :default_password => host.authentication_password.to_s,
-      :default_verify   => host.authentication_password.to_s,
       :remote_userid    => host.has_authentication_type?(:remote) ? host.authentication_userid(:remote).to_s : "",
-      :remote_password  => host.has_authentication_type?(:remote) ? host.authentication_password(:remote).to_s : "",
-      :remote_verify    => host.has_authentication_type?(:remote) ? host.authentication_password(:remote).to_s : "",
       :ws_userid        => host.has_authentication_type?(:ws) ? host.authentication_userid(:ws).to_s : "",
-      :ws_password      => host.has_authentication_type?(:ws) ? host.authentication_password(:ws).to_s : "",
-      :ws_verify        => host.has_authentication_type?(:ws) ? host.authentication_password(:ws).to_s : "",
       :ipmi_userid      => host.has_authentication_type?(:ipmi) ? host.authentication_userid(:ipmi).to_s : "",
-      :ipmi_password    => host.has_authentication_type?(:ipmi) ? host.authentication_password(:ipmi).to_s : "",
-      :ipmi_verify      => host.has_authentication_type?(:ipmi) ? host.authentication_password(:ipmi).to_s : "",
       :validate_id      => validate_against,
     }
 
@@ -835,14 +827,22 @@ class HostController < ApplicationController
 
   def set_credentials(host, mode)
     creds = {}
-    creds[:default] = {:userid   => params[:default_userid],
-                       :password => params[:default_password]} unless params[:default_userid].blank?
-    creds[:remote]  = {:userid   => params[:remote_userid],
-                       :password => params[:remote_password]}  unless params[:remote_userid].blank?
-    creds[:ws]      = {:userid   => params[:ws_userid],
-                       :password => params[:ws_password]}      unless params[:ws_userid].blank?
-    creds[:ipmi]    = {:userid   => params[:ipmi_userid],
-                       :password => params[:ipmi_password]}    unless params[:ipmi_userid].blank?
+    if params[:default_userid]
+      default_password = params[:default_password] ? params[:default_password] : host.authentication_password
+      creds[:default] = {:userid => params[:default_userid], :password => default_password}
+    end
+    if params[:remote_userid]
+      remote_password = params[:remote_password] ? params[:remote_password] : host.authentication_password(:remote)
+      creds[:remote] = {:userid => params[:remote_userid], :password => remote_password}
+    end
+    if params[:ws_userid]
+      ws_password = params[:ws_password] ? params[:ws_password] : host.authentication_password(:ws)
+      creds[:ws] = {:userid => params[:ws_userid], :password => ws_password}
+    end
+    if params[:ipmi_userid]
+      ipmi_password = params[:ipmi_password] ? params[:ipmi_password] : host.authentication_password(:ipmi)
+      creds[:ipmi] = {:userid => params[:ipmi_userid], :password => ipmi_password}
+    end
     host.update_authentication(creds, :save => (mode != :validate))
     creds
   end

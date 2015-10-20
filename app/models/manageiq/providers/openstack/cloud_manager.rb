@@ -1,27 +1,27 @@
 class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
-  require_dependency 'manageiq/providers/openstack/cloud_manager/auth_key_pair'
-  require_dependency 'manageiq/providers/openstack/cloud_manager/availability_zone'
-  require_dependency 'manageiq/providers/openstack/cloud_manager/availability_zone_null'
-  require_dependency 'manageiq/providers/openstack/cloud_manager/cloud_resource_quota'
-  require_dependency 'manageiq/providers/openstack/cloud_manager/cloud_tenant'
-  require_dependency 'manageiq/providers/openstack/cloud_manager/cloud_volume'
-  require_dependency 'manageiq/providers/openstack/cloud_manager/cloud_volume_snapshot'
-  require_dependency 'manageiq/providers/openstack/cloud_manager/event_catcher'
-  require_dependency 'manageiq/providers/openstack/cloud_manager/event_parser'
-  require_dependency 'manageiq/providers/openstack/cloud_manager/flavor'
-  require_dependency 'manageiq/providers/openstack/cloud_manager/floating_ip'
-  require_dependency 'manageiq/providers/openstack/cloud_manager/metrics_capture'
-  require_dependency 'manageiq/providers/openstack/cloud_manager/metrics_collector_worker'
-  require_dependency 'manageiq/providers/openstack/cloud_manager/orchestration_service_option_converter'
-  require_dependency 'manageiq/providers/openstack/cloud_manager/orchestration_stack'
-  require_dependency 'manageiq/providers/openstack/cloud_manager/provision'
-  require_dependency 'manageiq/providers/openstack/cloud_manager/provision_workflow'
-  require_dependency 'manageiq/providers/openstack/cloud_manager/refresher'
-  require_dependency 'manageiq/providers/openstack/cloud_manager/refresh_parser'
-  require_dependency 'manageiq/providers/openstack/cloud_manager/refresh_worker'
-  require_dependency 'manageiq/providers/openstack/cloud_manager/security_group'
-  require_dependency 'manageiq/providers/openstack/cloud_manager/template'
-  require_dependency 'manageiq/providers/openstack/cloud_manager/vm'
+  require_nested :AuthKeyPair
+  require_nested :AvailabilityZone
+  require_nested :AvailabilityZoneNull
+  require_nested :CloudResourceQuota
+  require_nested :CloudTenant
+  require_nested :CloudVolume
+  require_nested :CloudVolumeSnapshot
+  require_nested :EventCatcher
+  require_nested :EventParser
+  require_nested :Flavor
+  require_nested :FloatingIp
+  require_nested :MetricsCapture
+  require_nested :MetricsCollectorWorker
+  require_nested :OrchestrationServiceOptionConverter
+  require_nested :OrchestrationStack
+  require_nested :Provision
+  require_nested :ProvisionWorkflow
+  require_nested :Refresher
+  require_nested :RefreshParser
+  require_nested :RefreshWorker
+  require_nested :SecurityGroup
+  require_nested :Template
+  require_nested :Vm
 
   include ManageIQ::Providers::Openstack::ManagerMixin
 

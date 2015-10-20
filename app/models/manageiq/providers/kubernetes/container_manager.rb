@@ -1,16 +1,16 @@
 class ManageIQ::Providers::Kubernetes::ContainerManager < ManageIQ::Providers::ContainerManager
-  require_dependency 'manageiq/providers/kubernetes/container_manager/container'
-  require_dependency 'manageiq/providers/kubernetes/container_manager/container_group'
-  require_dependency 'manageiq/providers/kubernetes/container_manager/container_node'
-  require_dependency 'manageiq/providers/kubernetes/container_manager/event_catcher'
-  require_dependency 'manageiq/providers/kubernetes/container_manager/event_catcher_mixin'
-  require_dependency 'manageiq/providers/kubernetes/container_manager/event_parser'
-  require_dependency 'manageiq/providers/kubernetes/container_manager/event_parser_mixin'
-  require_dependency 'manageiq/providers/kubernetes/container_manager/metrics_capture'
-  require_dependency 'manageiq/providers/kubernetes/container_manager/metrics_collector_worker'
-  require_dependency 'manageiq/providers/kubernetes/container_manager/refresh_parser'
-  require_dependency 'manageiq/providers/kubernetes/container_manager/refresh_worker'
-  require_dependency 'manageiq/providers/kubernetes/container_manager/refresher'
+  require_nested :Container
+  require_nested :ContainerGroup
+  require_nested :ContainerNode
+  require_nested :EventCatcher
+  require_nested :EventCatcherMixin
+  require_nested :EventParser
+  require_nested :EventParserMixin
+  require_nested :MetricsCapture
+  require_nested :MetricsCollectorWorker
+  require_nested :RefreshParser
+  require_nested :RefreshWorker
+  require_nested :Refresher
 
   include ManageIQ::Providers::Kubernetes::ContainerManagerMixin
 
