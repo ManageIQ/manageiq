@@ -91,16 +91,10 @@ class ContainerTopologyService
   end
 
   def entities
-    # provider id is empty when the topology is generated for all the providers together
-    if @provider_id
-      provider = ExtManagementSystem.find(@provider_id.to_i)
-      if provider.kind_of?(ManageIQ::Providers::Openshift::ContainerManager) || provider.kind_of?(ManageIQ::Providers::Kubernetes::ContainerManager)
-        nodes = provider.container_nodes
-        services = provider.container_services
-      else
-        nodes = ContainerNode.all
-        services = ContainerService.all
-      end
+    provider = @provider_id ? ExtManagementSystem.find(@provider_id.to_i) : nil
+    if provider.respond_to?(:container_nodes) && provider.respond_to?(:container_services)
+      nodes = provider.container_nodes
+      services = provider.container_services
     else
       nodes = ContainerNode.all
       services = ContainerService.all

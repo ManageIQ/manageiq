@@ -18,4 +18,5 @@
 - ems-type:openstack
 - ems-type:kubernetes
 - ems-type:openshift
+- ems-type:atomic
 - ems-type:foreman_provisioning

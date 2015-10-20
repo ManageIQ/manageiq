@@ -1,4 +1,4 @@
-class ManageIQ::Providers::Openshift::ContainerManager < ManageIQ::Providers::ContainerManager
+class ManageIQ::Providers::Atomic::ContainerManager < ManageIQ::Providers::ContainerManager
   include ManageIQ::Providers::Openshift::ContainerManagerMixin
 
   require_nested :EventCatcher
@@ -9,14 +9,14 @@ class ManageIQ::Providers::Openshift::ContainerManager < ManageIQ::Providers::Co
   require_nested :Refresher
 
   def self.ems_type
-    @ems_type ||= "openshift".freeze
+    @ems_type ||= "atomic".freeze
   end
 
   def self.description
-    @description ||= "OpenShift".freeze
+    @description ||= "Atomic".freeze
   end
 
   def self.event_monitor_class
-    ManageIQ::Providers::Openshift::ContainerManager::EventCatcher
+    ManageIQ::Providers::Atomic::ContainerManager::EventCatcher
   end
 end
