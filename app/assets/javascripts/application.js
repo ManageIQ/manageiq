@@ -59,7 +59,7 @@
 //= require jqplot-plugins/jqplot.canvasAxisTickRenderer
 //= require jqplot-plugins/jqplot.canvasTextRenderer
 //= require miq_jqplot
-//= require jquery/jquery-ui-1.9.2.custom.min
+//= require jqueryui
 //= require bootstrap
 //= require bootstrap-datepicker
 //= require bootstrap-filestyle
@@ -69,8 +69,6 @@
 //= require jquery.observe_field
 //= require miq_jquery_ujs_rails3
 //= require miq_ujs_bindings
-//= require jquery.form
-//= require jquery.cookie
 //= require dhtmlx_gpl_36/dhtmlxcommon
 //= require dhtmlx_gpl_36/dhtmlxcontainer
 //= require dynatree/jquery.dynatree
