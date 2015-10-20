@@ -117,7 +117,8 @@ module ManageIQ::Providers
 
         def find_device_object(network_port)
           case network_port.device_owner
-          when "compute:None"
+          when /^compute\:.*?$/
+            # Owner is in format compute:<availability_zone> or compute:None
             find_device_connected_to_network_port(network_port.device_id)
           when "network:router_gateway"
             # TODO(lsmola) we need to represent gateway as object
