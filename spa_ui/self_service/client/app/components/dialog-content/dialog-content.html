@@ -88,6 +88,18 @@
                       pf-datepicker options="vm.dateOptions"
                       date="dialogField.default_value">
 
+                    <div ng-switch-when="DialogFieldDateTimeControl">
+                      <div class="col-sm-6 dateTimePadding">
+                        <input
+                          ng-model="dialogField.default_value"
+                          pf-datepicker options="vm.dateOptions"
+                          date="dialogField.default_value">
+                      </div>
+                      <div class="col-sm-6">
+                        <timepicker ng-model="dialogField.default_value"></timepicker>
+                      </div>
+                    </div>
+
                     <span ng-switch-default ng-hide="true"></span>
                   </div>
                 </div>
@@ -140,7 +152,7 @@
                     <span
                       ng-switch-when="DialogFieldRadioButton"
                       class="btn-group">
-                      <label >{{ vm.parsedOptions[dialogField.name] }}</label>
+                      <label>{{ vm.parsedOptions[dialogField.name] }}</label>
                     </span>
 
                     <input
@@ -149,6 +161,13 @@
                       ng-disabled="true"
                       class="form-control"
                       value="{{ vm.parsedOptions[dialogField.name] | date:'shortDate' }}">
+
+                    <input
+                      ng-switch-when="DialogFieldDateTimeControl"
+                      ng-if=" vm.inputDisabled || dialogField.read_only "
+                      ng-disabled="true"
+                      class="form-control"
+                      value="{{ vm.parsedOptions[dialogField.name] | date:'medium' }}  ">
 
                     <span ng-switch-default ng-hide="true"></span>
                   </div>
