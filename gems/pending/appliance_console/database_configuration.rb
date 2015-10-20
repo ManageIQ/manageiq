@@ -64,6 +64,7 @@ module ApplianceConsole
 
     def post_activation
       ServiceGroup.new.restart_services
+      LinuxAdmin::Service.new("evmserverd").enable.start
     end
 
     def create_or_join_region
