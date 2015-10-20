@@ -1,6 +1,6 @@
 - url = url_for(:action => 'rsop_show_options')
 - observe = {:url => url}.to_json
-#rsop_results_div{:style => "width: 100%; height: 100%; overflow: auto;"}
+#rsop_results_div
   = render :partial => "layouts/flash_msg"
   - if session[:rsop_tree]
     %fieldset{:style => "margin: 8px;"}

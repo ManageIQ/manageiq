@@ -1,7 +1,7 @@
 - nothing = "<#{_('Nothing')}>"
 - url = url_for(:action => 'cb_assign_field_changed', :id => "#{x_node}")
-#cb_assignment_div{:style => "width: 100%; height: 100%; overflow: auto;"}
-  = render :partial => "layouts/flash_msg", :locals => {:top_pad => 10}
+#cb_assignment_div
+  = render :partial => "layouts/flash_msg"
   %h3
     = _('Basic Info')
   .form-horizontal

@@ -1,7 +1,7 @@
 - if @edit
   - url = url_for(:action => 'policy_field_changed', :id => "#{@policy.id || 'new'}")
   - observe_with_interval = {:interval => '.5', :url => url}.to_json
-#policy_details_div{:style => "width: 100%; height: 100%; overflow: auto;"}
+#policy_details_div
   - if @policy
     #policy_info_div
       = render :partial => "layouts/flash_msg"
