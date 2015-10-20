@@ -337,7 +337,7 @@
       .col-md-8
         = text_field_tag("custom_support_url",
                           @edit[:new][:server][:custom_support_url],
-                          :maxlength => 50,
+                          :maxlength => MAX_NAME_LEN,
                           :class => "form-control",
                           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     .form-group
@@ -346,7 +346,7 @@
       .col-md-8
         = text_field_tag("custom_support_url_description",
                           @edit[:new][:server][:custom_support_url_description],
-                          :maxlength => 50,
+                          :maxlength => MAX_DESC_LEN,
                           :class => "form-control",
                           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
   %div{:style => "padding-bottom:20px;"}
