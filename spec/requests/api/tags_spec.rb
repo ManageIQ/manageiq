@@ -144,19 +144,21 @@ describe ApiController do
 
       it "can delete a tag through POST" do
         api_basic_authorize action_identifier(:tags, :delete)
-        tag = Tag.create(:name => "Test tag")
+        classification = FactoryGirl.create(:classification_tag)
+        tag = classification.tag
 
         expect { run_post tags_url(tag.id), :action => :delete }.to change(Tag, :count).by(-1)
-
+        expect { classification.reload }.to raise_error(ActiveRecord::RecordNotFound)
         expect_request_success
       end
 
       it "can delete a tag through DELETE" do
         api_basic_authorize action_identifier(:tags, :delete)
-        tag = Tag.create(:name => "Test tag")
+        classification = FactoryGirl.create(:classification_tag)
+        tag = classification.tag
 
         expect { run_delete tags_url(tag.id) }.to change(Tag, :count).by(-1)
-
+        expect { classification.reload }.to raise_error(ActiveRecord::RecordNotFound)
         expect_request_success_with_no_content
       end
 
@@ -171,6 +173,8 @@ describe ApiController do
         expect do
           run_post "#{categories_url(category.id)}/tags", gen_request(:delete, [{:id => tag1.id}, {:id => tag2.id}])
         end.to change(Tag, :count).by(-2)
+        expect { classification1.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { classification2.reload }.to raise_error(ActiveRecord::RecordNotFound)
         expect_request_success
       end
 
@@ -186,6 +190,8 @@ describe ApiController do
         expect do
           run_post "#{categories_url(category.id)}/tags", body
         end.to change(Tag, :count).by(-2)
+        expect { classification1.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { classification2.reload }.to raise_error(ActiveRecord::RecordNotFound)
         expect_request_success
       end
     end

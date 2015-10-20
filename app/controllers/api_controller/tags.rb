@@ -37,9 +37,9 @@ class ApiController
     def tags_delete_resource(_parent, _type, _id, data)
       tag_id = parse_id(data, :tags) || parse_by_attr(data, :tags, %w(name))
       raise BadRequestError, "Tag id, href or name needs to be specified for deleting a tag resource" unless tag_id
-      tag = Tag.find_by_id(tag_id)
-      raise BadRequestError, "Failed to find tag resource" unless tag
-      tag.destroy
+      entry = Classification.find_by_tag_id(tag_id)
+      raise BadRequestError, "Failed to find tag resource" unless entry
+      entry.destroy
     end
 
     def create_resource_tags(_type, _id, data)
@@ -73,6 +73,13 @@ class ApiController
       end
       entry.update_attributes(data.except(*ID_ATTRS))
       entry.tag
+    end
+
+    def delete_resource_tags(_type, id, _data = {})
+      destroy_tag_and_classification(id)
+      action_result(true, "tags id: #{id} deleting")
+    rescue => err
+      action_result(false, err.to_s)
     end
 
     private
