@@ -120,7 +120,7 @@ WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWIS
 USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-The XMLDisplay component - app/assets/javascripts/XMLDisplay.js - is covered by
+The XMLDisplay component - vendor/assets/javascripts/XMLDisplay.js - is covered by
 the following copyright and licence notice:
 
 Copyright (c) 2007 Lev Muchnik <LevMuchnik@gmail.com>. All rights reserved.
