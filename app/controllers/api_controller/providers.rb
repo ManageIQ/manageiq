@@ -5,6 +5,7 @@ class ApiController
     CREDENTIALS_ATTR  = "credentials"
     AUTH_TYPE_ATTR    = "auth_type"
     DEFAULT_AUTH_TYPE = "default"
+    ENDPOINT_ATTRS    = %w(hostname ipaddress port)
     RESTRICTED_ATTRS  = [TYPE_ATTR, CREDENTIALS_ATTR, ZONE_ATTR, "zone_id"]
 
     def create_resource_providers(type, _id, data = {})
@@ -133,7 +134,7 @@ class ApiController
 
     def fetch_provider_data(provider_klass, data, options = {})
       provider_data = data.except(*RESTRICTED_ATTRS)
-      invalid_keys  = provider_data.keys - provider_klass.columns_hash.keys
+      invalid_keys  = provider_data.keys - provider_klass.columns_hash.keys - ENDPOINT_ATTRS
       raise BadRequestError, "Invalid Provider attributes #{invalid_keys.join(', ')} specified" if invalid_keys.present?
 
       specify_zone(provider_data, data, options)
