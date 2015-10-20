@@ -1870,7 +1870,7 @@ class CatalogController < ApplicationController
     # Decide whether to show paging controls
     if @tagging
       presenter[:set_visible_elements][:toolbar] = false
-      presenter[:set_visible_elements][:paginator] = true
+      presenter[:set_visible_elements][:paging_div] = true
       action_url = x_active_tree == :ot_tree ? "ot_tags_edit" : "st_tags_edit"
       locals = {
         :record_id           => @edit[:object_ids][0],
@@ -1886,7 +1886,7 @@ class CatalogController < ApplicationController
       if ['button_edit', 'group_edit', 'group_reorder', 'at_st_new',
           'st_new', 'st_catalog_new', 'st_catalog_edit'].include?(action)
         presenter[:set_visible_elements][:toolbar] = false
-        presenter[:set_visible_elements][:paginator] = true
+        presenter[:set_visible_elements][:paging_div] = true
         # incase it was hidden for summary screen, and incase there were no records on show_list
         presenter[:set_visible_elements][:form_buttons_div] = true
         presenter[:set_visible_elements][:pc_div_1] = false
@@ -1909,7 +1909,7 @@ class CatalogController < ApplicationController
       elsif action == "dialog_provision"
         presenter[:set_visible_elements][:toolbar] = false
         # incase it was hidden for summary screen, and incase there were no records on show_list
-        presenter[:set_visible_elements][:paginator] = true
+        presenter[:set_visible_elements][:paging_div] = true
         presenter[:set_visible_elements][:form_buttons_div] = true
         presenter[:set_visible_elements][:pc_div_1] = false
         @record.dialog_fields.each do |field|
@@ -1922,7 +1922,7 @@ class CatalogController < ApplicationController
         presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_dialog_buttons", :locals => {:action_url => "dialog_form_button_pressed", :record_id => @edit[:rec_id]}]
       elsif %w(ot_edit ot_copy ot_add service_dialog_from_ot).include?(action)
         presenter[:set_visible_elements][:toolbar] = false
-        presenter[:set_visible_elements][:paginator] = true
+        presenter[:set_visible_elements][:paging_div] = true
         presenter[:set_visible_elements][:form_buttons_div] = true
         presenter[:set_visible_elements][:pc_div_1] = false
         locals = {:record_id  => @edit[:rec_id],
@@ -1939,13 +1939,13 @@ class CatalogController < ApplicationController
         # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box when trying to change a node on tree after saving a record
         presenter[:set_visible_elements][:buttons_on] = false
         presenter[:set_visible_elements][:toolbar] = true
-        presenter[:set_visible_elements][:paginator] = false
+        presenter[:set_visible_elements][:paging_div] = false
       end
     else
       presenter[:set_visible_elements][:form_buttons_div] = true
       presenter[:set_visible_elements][:pc_div_1] = true
       presenter[:set_visible_elements][:toolbar] = true
-      presenter[:set_visible_elements][:paginator] = true
+      presenter[:set_visible_elements][:paging_div] = true
     end
 
     # Rebuild the toolbars

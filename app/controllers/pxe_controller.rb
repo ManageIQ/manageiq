@@ -238,7 +238,7 @@ class PxeController < ApplicationController
       if @in_a_form
         presenter[:set_visible_elements][:toolbar] = false
         # in case it was hidden for summary screen, and incase there were no records on show_list
-        presenter[:set_visible_elements][:paginator] = true
+        presenter[:set_visible_elements][:paging_div] = true
         presenter[:set_visible_elements][:form_buttons_div] = true
 
         action_url, multi_record = case x_active_tree

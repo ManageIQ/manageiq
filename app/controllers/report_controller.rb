@@ -941,12 +941,12 @@ class ReportController < ApplicationController
         presenter[:set_visible_elements][:rpb_div_1]        = true
         presenter[:set_visible_elements][:pc_div_1]         = false
       end
-      presenter[:set_visible_elements][:paginator] = true
+      presenter[:set_visible_elements][:paging_div] = true
     else
-      presenter[:set_visible_elements][:paginator] = false
+      presenter[:set_visible_elements][:paging_div] = false
     end
     if @sb[:active_tab] == 'report_info' && x_node.split('-').length == 5 && !@in_a_form
-      presenter[:set_visible_elements][:paginator] = false
+      presenter[:set_visible_elements][:paging_div] = false
     end
     presenter[:set_visible_elements][:toolbar] = !@in_a_form
 

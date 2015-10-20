@@ -799,7 +799,7 @@ class ChargebackController < ApplicationController
          (x_active_tree == :cb_assignments_tree && ["Compute", "Storage"].include?(x_node.split('-').last))
         presenter[:set_visible_elements][:toolbar] = false
         # incase it was hidden for summary screen, and incase there were no records on show_list
-        presenter[:set_visible_elements][:paginator] = true
+        presenter[:set_visible_elements][:paging_div] = true
         presenter[:set_visible_elements][:form_buttons_div] = true
         presenter[:set_visible_elements][:pc_div_1] = false
         locals = {:record_id => @edit[:rec_id]}
@@ -817,7 +817,7 @@ class ChargebackController < ApplicationController
         # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box when trying to change a node on tree after saving a record
         presenter[:set_visible_elements][:buttons_on] = false
         presenter[:set_visible_elements][:toolbar] = true
-        presenter[:set_visible_elements][:paginator] = false
+        presenter[:set_visible_elements][:paging_div] = false
       end
     else
       presenter[:set_visible_elements][:form_buttons_div] = false
@@ -828,7 +828,7 @@ class ChargebackController < ApplicationController
         presenter[:set_visible_elements][:toolbar] = false
         presenter[:set_visible_elements][:pc_div_1] = false
       end
-      presenter[:set_visible_elements][:paginator] = true
+      presenter[:set_visible_elements][:paging_div] = true
     end
 
     if @record && !@in_a_form

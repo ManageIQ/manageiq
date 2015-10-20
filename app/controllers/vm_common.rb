@@ -1613,9 +1613,9 @@ module VmCommon
         presenter[:set_visible_elements][:pc_div_1] = false
         presenter[:set_visible_elements][:form_buttons_div] = true
       end
-      presenter[:set_visible_elements][:paginator] = true
+      presenter[:set_visible_elements][:paging_div] = true
     else
-      presenter[:set_visible_elements][:paginator] = false
+      presenter[:set_visible_elements][:paging_div] = false
     end
 
     presenter[:right_cell_text] = @right_cell_text
