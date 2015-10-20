@@ -67,6 +67,7 @@ module Openstack
 
             # Add private subnets as interface to network
             @subnets.each do |subnet|
+              puts "Adding subnet interface: #{subnet.name} to router: #{router.name}"
               @service.add_router_interface(router.id,
                                             subnet.id) if subnet_interfaces.detect { |x| x[:name] == subnet.name }
             end
