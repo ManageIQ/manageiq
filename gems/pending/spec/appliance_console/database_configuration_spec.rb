@@ -377,6 +377,10 @@ describe ApplianceConsole::DatabaseConfiguration do
       expect(ApplianceConsole::ServiceGroup).to(
         receive(:new).with(no_args).and_return(double(:restart_services => true))
       )
+      service = double(:service)
+      expect(LinuxAdmin::Service).to receive(:new).and_return(service)
+      expect(service).to receive(:enable).and_return(service)
+      expect(service).to receive(:start).and_return(service)
       @config.post_activation
     end
   end
