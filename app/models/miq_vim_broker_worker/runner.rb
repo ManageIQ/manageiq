@@ -186,7 +186,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
 
     _log.info("#{log_prefix} Attempting to reconnect broker for EMS with address: [#{event[:server]}] due to error: #{event[:error]}")
 
-    ems = ManageIQ::Providers::Vmware::InfraManager.find_by(:hostname => event[:server])
+    ems = ManageIQ::Providers::Vmware::InfraManager.with_hostname(event[:server]).first
     if ems.nil?
       _log.error "#{log_prefix} Unable to find EMS with address: [#{event[:server]}]"
       return

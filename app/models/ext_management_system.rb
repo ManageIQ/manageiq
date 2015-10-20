@@ -145,16 +145,17 @@ class ExtManagementSystem < ActiveRecord::Base
     'amazon' => 'ec2',
   }
 
-  def self.find_by_ipaddress(ipaddress)
-    Endpoint.where(
-      :ipaddress     => ipaddress,
-      :resource_type => base_class.name
-    ).take.try(:resource)
+  def self.with_ipaddress(ipaddress)
+    joins(:endpoints).where(:endpoints => {:ipaddress => ipaddress})
+  end
+
+  def self.with_hostname(hostname)
+    joins(:endpoints).where(:endpoints => {:hostname => hostname})
   end
 
   def self.create_discovered_ems(ost)
     ip = ost.ipaddr
-    if find_by_ipaddress(ip).nil?
+    unless with_ipaddress(ip).exist?
       hostname = Socket.getaddrinfo(ip, nil)[0][2]
 
       ems_klass, ems_name = if ost.hypervisor.include?(:scvmm)
