@@ -351,7 +351,7 @@ class TreeBuilder
        options[:open_all] ||
        object[:load_children] ||
        node[:expand]
-      kids = x_get_tree_objects(object, options, nil, parents).flat_map do |o|
+      kids = x_get_tree_objects(object, options, nil, parents).map do |o|
         x_build_node(o, node[:key], options)
       end
       node[:children] = kids unless kids.empty?
@@ -360,7 +360,7 @@ class TreeBuilder
         node[:isLazy] = true  # set child flag if children exist
       end
     end
-    [node]
+    node
   end
 
   def x_build_single_node(object, pid, options)
@@ -369,7 +369,7 @@ class TreeBuilder
 
   # Called with object, tree node parent id, tree options
   def x_build_node_dynatree(object, pid, options)
-    x_build_node(object, pid, options)
+    [x_build_node(object, pid, options)]
   end
 
   # Handle custom tree nodes (object is a Hash)
