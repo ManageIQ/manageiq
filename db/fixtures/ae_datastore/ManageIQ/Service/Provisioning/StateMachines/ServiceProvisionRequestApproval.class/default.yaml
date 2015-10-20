@@ -9,5 +9,5 @@ object:
     description: 
   fields:
   - ValidateRequest:
-      value: "/System/CommonMethods/quota/service_quota"
+      value: "/System/CommonMethods/QuotaStateMachine/quota"
       on_entry: "#"
