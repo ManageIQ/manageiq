@@ -447,21 +447,19 @@ function miqUpdateButtons(obj, button_div) {
 // Set button enabled or disabled according to the number of selected items
 function miqButtonOnWhen(button, onwhen, count) {
   if (typeof onwhen != "undefined") {
-    if (count === 0) {
-      button.addClass('disabled');
-    } else if (count == 1) {
-      if (onwhen == "1" || onwhen == "1+") {
-        button.removeClass('disabled');
-      } else if (onwhen == "2+") {
-        button.addClass('disabled');
-      }
-    } else {
-      if (onwhen == "1+" || onwhen == "2+") {
-        button.removeClass('disabled')
-      } else if (onwhen == "1") {
-        button.addClass('disabled');
-      }
+    var toggle = true;
+    switch(onwhen) {
+      case '1':
+        toggle = count == 1;
+        break;
+      case '1+':
+        toggle = count >= 1;
+        break;
+      case '2+':
+        toggle = count >= 2;
+        break;
     }
+    button.toggleClass('disabled', !toggle);
   }
 }
 

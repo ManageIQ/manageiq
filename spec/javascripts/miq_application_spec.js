@@ -37,4 +37,70 @@ describe('miq_application.js', function() {
       expect(miqToolbarOnClick).toHaveBeenCalled();
     });
   });
+
+  describe('miqButtonOnWhen', function () {
+    beforeEach(function () {
+      var html = '<button id="button">Click me!</button>';
+      setFixtures(html);
+    });
+
+    describe('nothing selected', function () {
+      $.each(['1', '1+', '2+'], function (k, v) {
+        it('disables the button when onwhen is ' + v, function () {
+          var button = $('#button');
+          miqButtonOnWhen(button, v, 0);
+          expect(button.hasClass('disabled')).toBe(true);
+        });
+      });
+    });
+
+    describe('one selected', function () {
+      $.each(['1', '1+'], function (k, v) {
+        it('enables the button when onwhen is ' + v, function () {
+          var button = $('#button');
+          miqButtonOnWhen(button, v, 1);
+          expect(button.hasClass('disabled')).toBe(false);
+        });
+      });
+
+      it('disables the button when onwhen is 2+', function () {
+          var button = $('#button');
+          miqButtonOnWhen(button, '2+', 1);
+          expect(button.hasClass('disabled')).toBe(true);
+      });
+    });
+
+    describe('two selected', function () {
+      $.each(['1+', '2+'], function (k, v) {
+        it('enables the button when onwhen is ' + v, function () {
+          var button = $('#button');
+          miqButtonOnWhen(button, v, 2);
+          expect(button.hasClass('disabled')).toBe(false);
+        });
+      });
+
+      it('disables the button when onwhen is 1', function () {
+          var button = $('#button');
+          miqButtonOnWhen(button, '1', 2);
+          expect(button.hasClass('disabled')).toBe(true);
+      });
+    });
+
+    describe('three selected', function () {
+      $.each(['1+', '2+'], function (k, v) {
+        it('enables the button when onwhen is ' + v, function () {
+          var button = $('#button');
+          miqButtonOnWhen(button, v, 3);
+          expect(button.hasClass('disabled')).toBe(false);
+        });
+      });
+
+      it('disables the button when onwhen is 1', function () {
+          var button = $('#button');
+          miqButtonOnWhen(button, '1', 3);
+          expect(button.hasClass('disabled')).toBe(true);
+      });
+    })
+  });
+
 });
