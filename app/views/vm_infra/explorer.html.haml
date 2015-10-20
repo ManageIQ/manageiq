@@ -5,7 +5,7 @@
 -# These are the initial divs that will go inside center_cell_div
 - if @record
   -# Showing a specific VM or Template record
-  #main_div.main_div
+  #main_div
     - if @showtype == "performance"
       = render(:partial => "layouts/performance")
       :javascript
@@ -17,12 +17,12 @@
     - else
       = render(:partial => 'vm_common/main', :locals => {:controller => "vm"})
 - elsif @upload_sysprep_file
-  #main_div.main_div
+  #main_div
     = render(:partial => 'miq_request/prov_edit')
     - @upload_sysprep_file = false
     :javascript
       var miq_after_onload = "miqPrepRightCellForm('#{x_active_tree}');"
 - else
   -# Showing a list of VMs
-  #main_div.main_div
+  #main_div
     = render(:partial => 'layouts/x_gtl')

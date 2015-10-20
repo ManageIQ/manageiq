@@ -55,54 +55,54 @@
               = link_to(_('Direct VMs: 0'), "#")
           - else
             %li
-              = link_to(_("Direct VMs: %s") % @record.total_direct_vms,
+              = link_to(_("Direct VMs: %{total_direct_vms}") % {:total_direct_vms => @record.total_direct_vms},
                 {:action => 'show', :display => "vms", :id => @record.id.to_s},
-                :title => _("Show VMs in this #{cluster_title}, but not in Resource Pools below"))
+                :title => _("Show VMs in this %{cluster_title}, but not in Resource Pools below") % {:cluster_title => cluster_title})
         - if role_allows(:feature => "vm_show_list")
           - if @record.total_vms == 0
             %li.disabled
               = link_to(_('All VMs: 0'), "#")
           - else
             %li
-              = link_to(_("All VMs: %s") % @record.total_vms,
+              = link_to(_("All VMs: %{total_vms}") % {:total_vms => @record.total_vms},
                 {:action => 'show', :display => "all_vms", :id => @record.id.to_s},
-                :title => _("Show all VMs in this #{cluster_title}"))
+                :title => _("Show all VMs in this %{cluster_title}") % {:cluster_title => cluster_title})
         - if role_allows(:feature => "miq_template_show_list")
           - if @record.total_miq_templates == 0
             %li.disabled
               = link_to(_('All Templates: 0'), "#")
           - else
             %li
-              = link_to(_("All Templates: %s") % @record.total_miq_templates,
+              = link_to(_("All Templates: %{total_miq_templates}") % {:total_miq_templates => @record.total_miq_templates},
                 {:action => 'show', :display => "miq_templates", :id => @record.id.to_s},
-                :title => _("Show all Templates in this #{cluster_title}"))
+                :title => _("Show all Templates in this %{cluster_title}") % {:cluster_title => cluster_title})
         - if role_allows(:feature => "vm_show_list")
           - if @record.total_vms == 0
             %li.disabled
               = link_to(_('All VMs (Tree View): 0'), "#")
           - else
             %li
-              = link_to(_("All VMs (Tree View): %s") % @record.total_vms,
+              = link_to(_("All VMs (Tree View): %{total_vms}") % {:total_vms => @record.total_vms},
                 {:action => 'show', :display => "descendant_vms", :id => @record.id.to_s},
-                :title => _("Show tree of all VMs by Resource Pool in this #{cluster_title}"))
+                :title => _("Show tree of all VMs by Resource Pool in this %{cluster_title}") % {:cluster_title => cluster_title})
         - if role_allows(:feature => "resource_pool_show_list")
           - if @record.number_of(:resource_pools) == 0
             %li.disabled
-              = link_to(_("Resource Pools (%s)") % @record.number_of(:resource_pools), "#")
+              = link_to(_("Resource Pools (%{resource_pools})") % {:resource_pools => @record.number_of(:resource_pools)}, "#")
           - else
             %li
-              = link_to(_("Resource Pools (%s)") % @record.number_of(:resource_pools),
+              = link_to(_("Resource Pools (%{resource_pools})") % {:resource_pools => @record.number_of(:resource_pools)},
                 {:action => 'show', :id => @record, :display => 'resource_pools'},
                 :title => _("Show Resource Pools"))
         - if role_allows(:feature => "ems_cluster_drift")
           - if @record.number_of(:drift_states) == 0
             %li.disabled
-              = link_to(_('Drift History (%s)') % @record.number_of(:drift_states), "#")
+              = link_to(_('Drift History (%{drift_states})') % {:drift_states => @record.number_of(:drift_states)}, "#")
           - else
             %li
-              = link_to(_("Drift History (%s)") % @record.number_of(:drift_states),
+              = link_to(_("Drift History (%{drift_states})") % {:drift_states => @record.number_of(:drift_states)},
                 {:action => 'drift_history', :id => @record},
-                :title => _("Show #{cluster_title} drift history"))
+                :title => _("Show %{cluster_title} drift history") % {:cluster_title => cluster_title})
 
     - if get_vmdb_config[:product][:storage]
       = miq_accordion_panel(_("Storage Relationships"), false, "host_inf_rel") do
@@ -113,7 +113,7 @@
               :tables                => 'ontap_storage_system',
               :display               => 'storage_systems',
               :action                => 'show',
-              :title                 => _("Show all %s") % ui_lookup(:tables => "ontap_storage_system"))
+              :title                 => _("Show all %{ontap_storage_system}") % {:ontap_storage_system => ui_lookup(:tables => "ontap_storage_system")})
           - if role_allows(:feature => "ontap_storage_volume_show_list")
             = li_link_if_nonzero(:count => @record.storage_volumes.count,
               :record_id             => @record.id,
@@ -127,11 +127,11 @@
               :tables                => 'ontap_file_share',
               :display               => 'ontap_file_shares',
               :action                => 'show',
-              :title                 => _("Show all %s") % ui_lookup(:tables => "ontap_file_share"))
+              :title                 => _("Show all %{ontap_file_share}") % {:ontap_file_share => ui_lookup(:tables => "ontap_file_share")})
           - if role_allows(:feature => "cim_base_storage_extent_show_list")
             = li_link_if_nonzero(:count => @record.base_storage_extents.count,
               :record_id             => @record.id,
               :tables                => 'cim_base_storage_extent',
               :display               => 'storage_extents',
               :action                => 'show',
-              :title                 => _("Show all %s") % ui_lookup(:tables => "cim_base_storage_extent"))
+              :title                 => _("Show all %{base_storage_extent}") % {:base_storage_extent => ui_lookup(:tables => "cim_base_storage_extent")})

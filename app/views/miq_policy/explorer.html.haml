@@ -1,7 +1,7 @@
 - content_for :search do
   = render(:partial => "layouts/x_adv_searchbox", :locals => {:nameonly => true})
 
-#main_div.main_div
+#main_div
   - case @nodetype
   - when "root"
     - case x_active_tree
