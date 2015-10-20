@@ -148,9 +148,10 @@ class ExplorerPresenter
     @out << "$('h1#explorer_title').html('#{j ERB::Util.h(@options[:right_cell_text])}');" if @options[:right_cell_text]
 
     # Reload toolbars
-    @options[:reload_toolbars].each do |tb, opts|
-      binding.pry unless opts[:toolbar] # FIXME: remove safeguard
-      @out << javascript_pf_toolbar_reload("#{tb}_tb", opts[:toolbar]).html_safe
+    @options[:reload_toolbars].each_pair do |div_name, toolbar|
+      if toolbar.present?
+        @out << javascript_pf_toolbar_reload("#{div_name}_tb", toolbar).html_safe
+      end
     end
 
     # reset miq_record_id, else it remembers prev id and sends it when add is pressed from list view

@@ -482,9 +482,9 @@ module VmCommon
     @active = @snap_selected.current.to_i == 1 if @snap_selected
     @button_group = "snapshot"
     @explorer = true
-    c_buttons, c_xml, c_tb = build_toolbar_buttons_and_xml("x_vm_center_tb")
+    c_tb = build_toolbar("x_vm_center_tb")
     render :update do |page|                    # Use RJS to update the display
-      if c_buttons && c_xml
+      if c_tb.present?
         page << "$('#toolbar').show();"
         page << javascript_pf_toolbar_reload('center_tb', c_tb)
         page << javascript_show_if_exists("center_buttons_div")
@@ -1451,25 +1451,25 @@ module VmCommon
       type, id = x_node.split("_").last.split("-")
 
       record_showing = type && ["Vm", "MiqTemplate"].include?(TreeBuilder.get_model_for_prefix(type))
-      c_buttons,  c_xml, c_tb  = build_toolbar_buttons_and_xml(center_toolbar_filename) # Use vm or template tb
+      c_tb = build_toolbar(center_toolbar_filename) # Use vm or template tb
       if record_showing
-        cb_buttons, cb_xml, cb_tb = build_toolbar_buttons_and_xml("custom_buttons_tb")
-        v_buttons,  v_xml,   v_tb = build_toolbar_buttons_and_xml("x_summary_view_tb")
+        cb_tb = build_toolbar("custom_buttons_tb")
+        v_tb = build_toolbar("x_summary_view_tb")
       else
-        v_buttons,  v_xml,   v_tb = build_toolbar_buttons_and_xml("x_gtl_view_tb")
+        v_tb = build_toolbar("x_gtl_view_tb")
       end
     elsif ["compare", "drift"].include?(@sb[:action])
       @in_a_form = true # Turn on Cancel button
-      c_buttons, c_xml, c_tb = build_toolbar_buttons_and_xml("#{@sb[:action]}_center_tb")
-      v_buttons, v_xml, v_tb = build_toolbar_buttons_and_xml("#{@sb[:action]}_view_tb")
+      c_tb = build_toolbar("#{@sb[:action]}_center_tb")
+      v_tb = build_toolbar("#{@sb[:action]}_view_tb")
     elsif @sb[:action] == "performance"
-      c_buttons, c_xml, c_tb = build_toolbar_buttons_and_xml("x_vm_performance_tb")
+      c_tb = build_toolbar("x_vm_performance_tb")
     elsif @sb[:action] == "drift_history"
-      c_buttons, c_xml, c_tb = build_toolbar_buttons_and_xml("drifts_center_tb")  # Use vm or template tb
+      c_tb = build_toolbar("drifts_center_tb")  # Use vm or template tb
     elsif ["snapshot_info", "vmtree_info"].include?(@sb[:action])
-      c_buttons, c_xml, c_tb = build_toolbar_buttons_and_xml("x_vm_center_tb")  # Use vm or template tb
+      c_tb = build_toolbar("x_vm_center_tb")  # Use vm or template tb
     end
-    h_buttons, h_xml, h_tb = build_toolbar_buttons_and_xml("x_history_tb") unless @in_a_form
+    h_tb = build_toolbar("x_history_tb") unless @in_a_form
 
     unless x_active_tree == :vandt_tree
       # Clicked on right cell record, open the tree enough to show the node, if not already showing
@@ -1620,18 +1620,17 @@ module VmCommon
 
     presenter[:right_cell_text] = @right_cell_text
     # Rebuild the toolbars
-    presenter[:set_visible_elements][:history_buttons_div] = h_buttons && h_xml
-    presenter[:set_visible_elements][:center_buttons_div]  = c_buttons && c_xml
-    presenter[:set_visible_elements][:view_buttons_div]    = v_buttons && v_xml
-    presenter[:set_visible_elements][:custom_buttons_div]  = cb_buttons && cb_xml
+    presenter[:set_visible_elements][:history_buttons_div] = h_tb.present?
+    presenter[:set_visible_elements][:center_buttons_div]  = c_tb.present?
+    presenter[:set_visible_elements][:view_buttons_div]    = v_tb.present?
+    presenter[:set_visible_elements][:custom_buttons_div]  = cb_tb.present?
 
-    presenter[:reload_toolbars][:history] = {:toolbar => h_tb,  :buttons => h_buttons,  :xml => h_xml}  if h_buttons && h_xml
-    presenter[:reload_toolbars][:center]  = {:toolbar => c_tb,  :buttons => c_buttons,  :xml => c_xml}  if c_buttons && c_xml
-    binding.pry if v_buttons.present? && v_tb.nil? # FIXME: remove safeguard
-    presenter[:reload_toolbars][:view]    = {:toolbar => v_tb,  :buttons => v_buttons,  :xml => v_xml}  if v_buttons && v_xml
-    presenter[:reload_toolbars][:custom]  = {:toolbar => cb_tb, :buttons => cb_buttons, :xml => cb_xml} if cb_buttons && cb_xml
+    presenter[:reload_toolbars][:history] = h_tb
+    presenter[:reload_toolbars][:center]  = c_tb
+    presenter[:reload_toolbars][:view]    = v_tb
+    presenter[:reload_toolbars][:custom]  = cb_tb
 
-    presenter[:set_visible_elements][:toolbar] = h_buttons || c_buttons || v_buttons
+    presenter[:set_visible_elements][:toolbar] = h_tb.present? || c_tb.present? || v_tb.present?
 
     presenter[:record_id] = @record ? @record.id : nil
 

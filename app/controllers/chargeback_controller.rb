@@ -734,7 +734,7 @@ class ChargebackController < ApplicationController
     replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
     @explorer = true
     chargeback_tree = cb_rates_build_tree if replace_trees.include?(:cb_rates)
-    c_buttons, c_xml, c_tb = build_toolbar_buttons_and_xml(center_toolbar_filename)
+    c_tb = build_toolbar(center_toolbar_filename)
 
     # Build a presenter to render the JS
     presenter = ExplorerPresenter.new(
@@ -764,20 +764,20 @@ class ChargebackController < ApplicationController
     case x_active_tree
     when :cb_rates_tree
       # Rates accordion
-      if c_buttons && c_xml
+      if c_tb.present?
         presenter[:set_visible_elements][:center_buttons_div] = true
-        presenter[:reload_toolbars][:center] = {:buttons => c_buttons, :xml => c_xml}
+        presenter[:reload_toolbars][:center] = c_tb
       end
-      presenter[:set_visible_elements][:toolbar] = c_buttons
+      presenter[:set_visible_elements][:toolbar] = c_tb.present?
       presenter[:update_partials][:main_div]   = r[:partial => 'rates_tabs']
       presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols']
     when :cb_assignments_tree
       # Assignments accordion
       presenter[:update_partials][:main_div] = r[:partial => "assignments_tabs"]
     when :cb_reports_tree
-      if c_buttons && c_xml
+      if c_tb.present?
         presenter[:set_visible_elements][:center_buttons_div] = true
-        presenter[:reload_toolbars][:center] = {:toolbar => c_tb, :buttons => c_buttons, :xml => c_xml}
+        presenter[:reload_toolbars][:center] = c_tb
         presenter[:set_visible_elements][:toolbar] = true
       else
         presenter[:set_visible_elements][:center_buttons_div] = false

@@ -340,13 +340,13 @@ class ServiceController < ApplicationController
     record_showing = type && ["Service"].include?(TreeBuilder.get_model_for_prefix(type))
     if x_active_tree == :svcs_tree && !@in_a_form && !@sb[:action]
       if record_showing && @sb[:action].nil?
-        cb_buttons, cb_xml, cb_tb = build_toolbar_buttons_and_xml("custom_buttons_tb")
+        cb_tb = build_toolbar("custom_buttons_tb")
       else
-        v_buttons, v_xml, v_tb = build_toolbar_buttons_and_xml("x_gtl_view_tb")
+        v_tb = build_toolbar("x_gtl_view_tb")
       end
-      c_buttons, c_xml, c_tb = build_toolbar_buttons_and_xml(center_toolbar_filename)
+      c_tb = build_toolbar(center_toolbar_filename)
     end
-    h_buttons, h_xml, h_tb = build_toolbar_buttons_and_xml("x_history_tb") unless @in_a_form
+    h_tb = build_toolbar("x_history_tb") unless @in_a_form
 
     presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
@@ -427,16 +427,16 @@ class ServiceController < ApplicationController
     end
 
     # Rebuild the toolbars
-    presenter[:set_visible_elements][:history_buttons_div] = h_buttons && h_xml
-    presenter[:set_visible_elements][:center_buttons_div]  = c_buttons && c_xml
-    presenter[:set_visible_elements][:view_buttons_div]    = v_buttons && v_xml
-    presenter[:set_visible_elements][:custom_buttons_div]  = cb_buttons && cb_xml
-    presenter[:reload_toolbars][:history] = {:toolbar =>  h_tb,  :buttons => h_buttons,  :xml => h_xml}  if h_buttons && h_xml
-    presenter[:reload_toolbars][:center]  = {:toolbar =>  c_tb,  :buttons => c_buttons,  :xml => c_xml}  if c_buttons && c_xml
-    presenter[:reload_toolbars][:view]    = {:toolbar =>  v_tb,  :buttons => v_buttons,  :xml => v_xml}  if v_buttons && v_xml
-    presenter[:reload_toolbars][:custom]  = {:toolbar =>  cb_tb, :buttons => cb_buttons, :xml => cb_xml} if cb_buttons && cb_xml
+    presenter[:set_visible_elements][:history_buttons_div] = h_tb.present?
+    presenter[:set_visible_elements][:center_buttons_div]  = c_tb.present?
+    presenter[:set_visible_elements][:view_buttons_div]    = v_tb.present?
+    presenter[:set_visible_elements][:custom_buttons_div]  = cb_tb.present?
+    presenter[:reload_toolbars][:history] = h_tb
+    presenter[:reload_toolbars][:center]  = c_tb
+    presenter[:reload_toolbars][:view]    = v_tb
+    presenter[:reload_toolbars][:custom]  = cb_tb
 
-    presenter[:set_visible_elements][:toolbar] = h_buttons || c_buttons || v_buttons
+    presenter[:set_visible_elements][:toolbar] = h_tb.present? || c_tb.present? || !v_tb.present?
 
     if @record && !@in_a_form
       presenter[:record_id] = @record.id

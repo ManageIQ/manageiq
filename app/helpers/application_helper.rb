@@ -287,8 +287,9 @@ module ApplicationHelper
   end
 
   # Method to create the center toolbar XML
-  def build_toolbar_buttons_and_xml(tb_name)
-    _toolbar_builder.call(tb_name)
+  def build_toolbar(tb_name)
+    _, _, toolbar = _toolbar_builder.call(tb_name)
+    toolbar
   end
 
   def _toolbar_builder

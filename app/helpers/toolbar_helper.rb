@@ -6,7 +6,7 @@ module ToolbarHelper
   # Called directly when updating toolbars in an existing page.
   #
   def buttons_to_html(buttons)
-    buttons.collect do |button|
+    Array(buttons).collect do |button|
       toolbar_top_button(button)
     end.join('').html_safe
   end
@@ -31,7 +31,7 @@ module ToolbarHelper
   def render_toolbars
     @toolbars.collect do |div_id, toolbar_name|
       content_tag(:div, :id => div_id, :class => 'form-group') do # form-group aroung each toolbar
-        _tb_buttons, _tb_xml, buttons = build_toolbar_buttons_and_xml(toolbar_name)
+        buttons = build_toolbar(toolbar_name)
         buttons_to_html(buttons)
       end
     end.join('').html_safe

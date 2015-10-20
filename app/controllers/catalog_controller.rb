@@ -1781,23 +1781,23 @@ class CatalogController < ApplicationController
       add_nodes = open_parent_nodes(@record)      # Open the parent nodes of selected record, if not open
     end
 
-    v_buttons, v_xml =
+    v_tb =
       case x_active_tree
       when :sandt_tree
         if record_showing && !@in_a_form
           if TreeBuilder.get_model_for_prefix(@nodetype) == "MiqTemplate"
-            build_toolbar_buttons_and_xml("summary_view_tb")
+            build_toolbar("summary_view_tb")
           end
         else
-          build_toolbar_buttons_and_xml("x_gtl_view_tb") if !%w(xx csb cbg cb).include?(@nodetype) && !@in_a_form
+          build_toolbar("x_gtl_view_tb") if !%w(xx csb cbg cb).include?(@nodetype) && !@in_a_form
         end
       when :svccat_tree, :stcat_tree, :ot_tree
-        build_toolbar_buttons_and_xml("x_gtl_view_tb") unless record_showing || @in_a_form
+        build_toolbar("x_gtl_view_tb") unless record_showing || @in_a_form
       end
 
     unless @in_a_form
-      c_buttons, c_xml, c_tb = build_toolbar_buttons_and_xml(center_toolbar_filename) unless x_active_tree == :svccat_tree
-      h_buttons, h_xml, h_tb = build_toolbar_buttons_and_xml("x_history_tb")
+      c_tb = build_toolbar(center_toolbar_filename) unless x_active_tree == :svccat_tree
+      h_tb = build_toolbar("x_history_tb")
     end
 
     presenter = ExplorerPresenter.new(
@@ -1949,12 +1949,12 @@ class CatalogController < ApplicationController
     end
 
     # Rebuild the toolbars
-    presenter[:set_visible_elements][:history_buttons_div] = h_buttons && h_xml
-    presenter[:set_visible_elements][:center_buttons_div]  = c_buttons && c_xml
-    presenter[:set_visible_elements][:view_buttons_div]    = v_buttons && v_xml
-    presenter[:reload_toolbars][:history] = {:toolbar => h_tb, :buttons => h_buttons,  :xml => h_xml}  if h_buttons && h_xml
-    presenter[:reload_toolbars][:center]  = {:toolbar => c_tb, :buttons => c_buttons,  :xml => c_xml}  if c_buttons && c_xml
-    presenter[:reload_toolbars][:view]    = {:toolbar => v_tb, :buttons => v_buttons,  :xml => v_xml}  if v_buttons && v_xml
+    presenter[:set_visible_elements][:history_buttons_div] = h_tb.present?
+    presenter[:set_visible_elements][:center_buttons_div]  = c_tb.present?
+    presenter[:set_visible_elements][:view_buttons_div]    = v_tb.present?
+    presenter[:reload_toolbars][:history] = h_tb
+    presenter[:reload_toolbars][:center]  = c_tb
+    presenter[:reload_toolbars][:view]    = v_tb
     presenter[:set_visible_elements][:toolbar] = h_buttons || c_buttons || v_buttons
 
     if @record && !@in_a_form

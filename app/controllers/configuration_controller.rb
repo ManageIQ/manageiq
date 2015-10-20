@@ -61,11 +61,11 @@ class ConfigurationController < ApplicationController
         page.redirect_to :action => @refresh_partial, :id => @redirect_id
       end
     else
-      c_buttons, c_xml, c_tb = build_toolbar_buttons_and_xml(center_toolbar_filename)
+      c_tb = build_toolbar(center_toolbar_filename)
       render :update do |page|                    # Use RJS to update the display
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page.replace_html("main_div", :partial => "ui_4") # Replace the main div area contents
-        if c_buttons && c_xml
+        if c_tb.present?
           page << javascript_pf_toolbar_reload('center_tb', c_tb)
           page << "$('#center_buttons_div').show();"
         else

@@ -12,17 +12,16 @@ describe ApplicationHelper do
     self.class.send(:include, ApplicationHelper)
   end
 
-  context "build_toolbar_buttons_and_xml" do
+  context "build_toolbar" do
     it 'should substitute dynamic function values' do
       req        = ActionDispatch::Request.new Rack::MockRequest.env_for '/?controller=foo'
       allow(controller).to receive(:role_allows).and_return(true)
       allow(controller).to receive(:request).and_return(req)
-      json,      = controller.build_toolbar_buttons_and_xml 'storages_center_tb'
+      menu_info  = controller.build_toolbar 'storages_center_tb'
       title_text = ui_lookup(:tables => "storages")
-      menu_info  = JSON.parse json
 
-      menu_info.each_value do |value|
-        %w( title confirm ).each do |field|
+      menu_info[0][:items].collect do |value|
+        ['title', :confirm].each do |field|
           if value[field]
             expect(value[field]).to match(title_text)
           end
@@ -39,11 +38,10 @@ describe ApplicationHelper do
                                        :nodeid      => 'storages',
                                        :mode        => 'foo')
 
-      json, = controller.build_toolbar_buttons_and_xml 'miq_policies_center_tb'
+      menu_info  = controller.build_toolbar 'miq_policies_center_tb'
       title_text = ui_lookup(:model => "storages")
 
-      menu_info = JSON.parse json
-      menu_info.each_value do |value|
+      menu_info[0][:items].collect do |value|
         next unless value['title']
         expect(value['title']).to match(title_text)
         expect(value['title']).to match("Foo") # from :mode

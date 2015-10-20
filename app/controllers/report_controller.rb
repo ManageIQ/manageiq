@@ -718,9 +718,9 @@ class ReportController < ApplicationController
     locals = set_form_locals if @in_a_form
     partial = set_partial_name
     unless @in_a_form
-      c_buttons, c_xml, c_tb = build_toolbar_buttons_and_xml(center_toolbar_filename)
-      h_buttons, h_xml, h_tb = build_toolbar_buttons_and_xml("x_history_tb")
-      v_buttons, v_xml, v_tb = build_toolbar_buttons_and_xml("report_view_tb") if @report && [:reports_tree, :savedreports_tree].include?(x_active_tree)
+      c_tb = build_toolbar(center_toolbar_filename)
+      h_tb = build_toolbar("x_history_tb")
+      v_tb = build_toolbar("report_view_tb") if @report && [:reports_tree, :savedreports_tree].include?(x_active_tree)
     end
 
     # With dynatree, simply replace the tree partials to reload the trees
@@ -951,13 +951,13 @@ class ReportController < ApplicationController
     presenter[:set_visible_elements][:toolbar] = !@in_a_form
 
     # Rebuild the toolbars
-    presenter[:set_visible_elements][:history_buttons_div] = h_buttons && h_xml
-    presenter[:set_visible_elements][:center_buttons_div]  = c_buttons && c_xml
-    presenter[:set_visible_elements][:view_buttons_div]    = v_buttons && v_xml
+    presenter[:set_visible_elements][:history_buttons_div] = h_tb.present?
+    presenter[:set_visible_elements][:center_buttons_div]  = c_tb.present?
+    presenter[:set_visible_elements][:view_buttons_div]    = v_tb.present?
 
-    presenter[:reload_toolbars][:history] = {:toolbar => h_tb, :buttons => h_buttons, :xml => h_xml} if h_buttons && h_xml
-    presenter[:reload_toolbars][:center]  = {:toolbar => c_tb, :buttons => c_buttons, :xml => c_xml} if c_buttons && c_xml
-    presenter[:reload_toolbars][:view]    = {:toolbar => v_tb, :buttons => v_buttons, :xml => v_xml} if v_buttons && v_xml
+    presenter[:reload_toolbars][:history] = h_tb
+    presenter[:reload_toolbars][:center]  = c_tb
+    presenter[:reload_toolbars][:view]    = v_tb
 
     if @record && !@in_a_form
       presenter[:record_id] = @record.id

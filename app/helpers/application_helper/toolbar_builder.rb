@@ -228,6 +228,7 @@ class ApplicationHelper::ToolbarBuilder
       end
     end
 
+    toolbar = nil if toolbar.empty?
     return tb_buttons.to_json.html_safe, tb_xml.to_s.html_safe, toolbar
   end
 
