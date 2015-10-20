@@ -35,11 +35,11 @@ module MiqAeServiceEmsCloudSpec
     end
 
     it "#cloud_networks_public" do
-      described_class.instance_methods.should include(:public_cloud_networks)
+      described_class.instance_methods.should include(:public_networks)
     end
 
     it "#cloud_networks_private" do
-      described_class.instance_methods.should include(:private_cloud_networks)
+      described_class.instance_methods.should include(:private_networks)
     end
   end
 end

@@ -223,8 +223,8 @@ module Openstack
       expect(@ems.cloud_networks.size).to     eq network_data.networks.count
 
       if neutron_networking?
-        expect(@ems.public_cloud_networks.first).to  be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public)
-        expect(@ems.private_cloud_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private)
+        expect(@ems.public_networks.first).to  be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public)
+        expect(@ems.private_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private)
       end
     end
 
