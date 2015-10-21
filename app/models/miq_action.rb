@@ -1074,20 +1074,21 @@ class MiqAction < ActiveRecord::Base
 
   def self.create_script_actions_from_directory
     Dir.glob(SCRIPT_DIR.join("*")).sort.each do |f|
-      rec = {}
-      rec[:name]        = File.basename(f).tr(".", "_")
-      rec[:description] = "Execute script: #{File.basename(f)}"
-      rec[:action_type] = "script"
-      rec[:options]     = {:filename => f}
+      rec = {
+        'name'        => File.basename(f).tr(".", "_"),
+        'description' => "Execute script: #{File.basename(f)}",
+        'action_type' => "script",
+        'options'     => {:filename => f}
+      }
 
-      action = find_by_name(rec[:name])
+      action = find_by_name(rec['name'])
       if action.nil?
-        _log.info("Creating [#{rec[:name]}]")
+        _log.info("Creating [#{rec['name']}]")
         action = create(rec)
       else
         action.attributes = rec
         if action.changed? || action.options_was != action.options
-          _log.info("Updating [#{rec[:name]}]")
+          _log.info("Updating [#{rec['name']}]")
           action.save
         end
       end
