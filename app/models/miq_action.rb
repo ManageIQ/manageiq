@@ -1058,15 +1058,15 @@ class MiqAction < ActiveRecord::Base
       action_attributes = csv_row.to_hash
       action_attributes['action_type'] = 'default'
 
-      rec = find_by_name(action_attributes['name'])
-      if rec.nil?
+      action = find_by_name(action_attributes['name'])
+      if action.nil?
         _log.info("Creating [#{action_attributes['name']}]")
         create(action_attributes)
       else
-        rec.attributes = action_attributes
-        if rec.changed? || (rec.options_was != rec.options)
+        action.attributes = action_attributes
+        if action.changed? || (action.options_was != action.options)
           _log.info("Updating [#{action_attributes['name']}]")
-          rec.save
+          action.save
         end
       end
     end
