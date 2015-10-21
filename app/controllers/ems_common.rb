@@ -841,6 +841,7 @@ module EmsCommon
     @edit[:new][:security_protocol] = params[:security_protocol] if params[:security_protocol]
     @edit[:new][:realm] = nil if params[:security_protocol]
     @edit[:new][:realm] = params[:realm] if params[:realm]
+    restore_password if params[:restore_password]
     set_verify_status
   end
 
@@ -1060,5 +1061,11 @@ module EmsCommon
                           :action     => "show",
                           :id         => ems.id,
                           :only_path  => true))
+  end
+
+  def restore_password
+    if params[:default_password]
+      @edit[:new][:default_password] = @edit[:new][:default_verify] = @ems.authentication_password
+    end
   end
 end

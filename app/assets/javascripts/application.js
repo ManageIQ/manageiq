@@ -43,6 +43,7 @@
 //= require c3/c3
 //= require kubernetes-topology-graph/topology-graph
 //= require miq_application
+//= require miq_change_stored_password
 //= require miq_dynatree_replacement
 //= require dialog_import_export
 //= require widget_import_export
