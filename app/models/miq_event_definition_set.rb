@@ -3,32 +3,25 @@ class MiqEventDefinitionSet < ActiveRecord::Base
 
   default_scope { where conditions_for_my_region_default_scope }
 
-  FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
-
   def self.seed
-    fname = File.join(FIXTURE_DIR, "#{to_s.pluralize.underscore}.csv")
-    data  = File.read(fname).split("\n")
-    cols  = data.shift.split(",")
+    CSV.foreach(fixture_path, :headers => true, :skip_lines => /^#/) do |csv_row|
+      set = csv_row.to_hash
 
-    data.each do |s|
-      next if s =~ /^#.*$/ # skip commented lines
-
-      arr = s.split(",")
-
-      set = {}
-      cols.each_index { |i| set[cols[i].to_sym] = arr[i] }
-
-      rec = find_by_name(set[:name])
+      rec = find_by_name(set['name'])
       if rec.nil?
-        _log.info("Creating [#{set[:name]}]")
-        rec = create!(set)
+        _log.info("Creating [#{set['name']}]")
+        create!(set)
       else
         rec.attributes = set
         if rec.changed?
-          _log.info("Updating [#{set[:name]}]")
+          _log.info("Updating [#{set['name']}]")
           rec.save!
         end
       end
     end
+  end
+
+  def self.fixture_path
+    Rails.root.join("db/fixtures/#{to_s.pluralize.underscore}.csv")
   end
 end
