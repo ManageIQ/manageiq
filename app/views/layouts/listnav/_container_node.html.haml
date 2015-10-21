@@ -26,47 +26,62 @@
       %ul.nav.nav-pills.nav-stacked
 
         - if role_allows(:feature => "ems_container_show") && !@record.ext_management_system.nil?
+          - entity = ui_lookup(:table => "ems_container")
           %li
-            = link_to("#{ui_lookup(:table => "ems_container")}: #{@record.ext_management_system.name}",
+            = link_to("#{entity}: #{@record.ext_management_system.name}",
                 {:controller => "ems_container", :action => 'show', :id => @record.ext_management_system.id.to_s},
-                :title => _("Show this container node's parent %s") % ui_lookup(:table => "ems_container"))
-        - if role_allows(:feature => "container_group_show_list")
-          - num_groups = @record.number_of(:container_groups)
-          - if num_groups == 0
+                :title => _("Show this container node's parent #{entity}"))
+        - if role_allows(:feature => "container_route_show_list")
+          - num_routes = @record.number_of(:container_routes)
+          - if num_routes == 0
             %li.disabled
-              = link_to(_('Pods (0)'), "#")
+              = link_to(_('Container Routes (0)'), "#")
           - else
             %li
-              = link_to(_("Pods (%s)") % num_groups,
-                  {:action  => 'show', :id => @record, :display => 'container_groups'},
-                  :title => _("Show Pods"))
+              = link_to(_("Container Routes (%s)") % num_routes,
+                  {:action  => 'show', :id => @record, :display => 'container_routes'},
+                  :title => _("Show Container Routes"))
         - if role_allows(:feature => "container_service_show_list")
+          - plural = ui_lookup(:tables => "container_service")
           - num_services = @record.number_of(:container_services)
           - if num_services == 0
             %li.disabled
-              = link_to("#{ui_lookup(:tables => "container_service")} (0)", "#")
+              = link_to("#{plural} (0)", "#")
           - else
             %li
-              = link_to("#{ui_lookup(:tables => "container_service")} (#{num_services})",
+              = link_to("#{plural} (#{num_services})",
                   {:action  => 'show', :id => @record, :display => 'container_services'},
-                  :title => _("Show Container Services"))
+                  :title => _("Show #{plural}"))
         - if role_allows(:feature => "container_replicator_show_list")
+          - plural = ui_lookup(:tables => "container_replicator")
           - num_replicators = @record.number_of(:container_replicators)
           - if num_replicators == 0
             %li.disabled
-              = link_to("#{ui_lookup(:tables => "container_replicator")} (0)", "#")
+              = link_to("#{plural} (0)", "#")
           - else
             %li
-              = link_to("#{ui_lookup(:tables => "container_replicator")} (#{num_replicators})",
+              = link_to("#{plural} (#{num_replicators})",
                   {:action  => 'show', :id => @record, :display => 'container_replicators'},
-                  :title => _("Show Container Replicators"))
+                  :title => _("Show #{plural}"))
+        - if role_allows(:feature => "container_group_show_list")
+          - plural = ui_lookup(:tables => "container_group")
+          - num_groups = @record.number_of(:container_groups)
+          - if num_groups == 0
+            %li.disabled
+              = link_to("#{plural} (0)", "#")
+          - else
+            %li
+              = link_to("#{plural} (#{num_groups})",
+                  {:action  => 'show', :id => @record, :display => 'container_groups'},
+                  :title => _("Show #{plural}"))
         - if role_allows(:feature => "containers")
+          - plural = ui_lookup(:tables => "container")
           - num_containers = @record.number_of(:containers)
           - if num_containers == 0
             %li.disabled
-              = link_to("#{ui_lookup(:tables => "container")} (0)", "#")
+              = link_to("#{plural} (0)", "#")
           - else
             %li
-              = link_to("#{ui_lookup(:tables => "container")} (#{num_containers})",
+              = link_to("#{plural} (#{num_containers})",
                   {:action  => 'show', :id => @record, :display => 'containers'},
-                  :title => _("Show Containers"))
+                  :title => _("Show #{plural}"))
