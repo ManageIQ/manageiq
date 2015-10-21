@@ -117,28 +117,18 @@ class MiqEventDefinition < ActiveRecord::Base
 
   def self.seed_default_events
     fname = File.join(FIXTURE_DIR, "#{to_s.pluralize.underscore}.csv")
-    data  = File.read(fname).split("\n")
-    cols  = data.shift.split(",")
+    CSV.foreach(fname, :headers => true, :skip_lines => /^#/, :skip_blanks => true) do |csv_row|
+      event = csv_row.to_hash
+      set_type = event.delete('set_type')
 
-    data.each do |e|
-      next if e =~ /^#.*$/ # skip commented lines
-
-      arr = e.split(",")
-
-      event = {}
-      cols.each_index { |i| event[cols[i].to_sym] = arr[i] }
-      set_type = event.delete(:set_type)
-
-      next if event[:name].blank?
-
-      rec = find_by_name(event[:name])
+      rec = find_by_name(event['name'])
       if rec.nil?
-        _log.info("Creating [#{event[:name]}]")
+        _log.info("Creating [#{event['name']}]")
         rec = create(event)
       else
         rec.attributes = event
         if rec.changed?
-          _log.info("Updating [#{event[:name]}]")
+          _log.info("Updating [#{event['name']}]")
           rec.save
         end
       end
