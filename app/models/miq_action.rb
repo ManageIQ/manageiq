@@ -1064,14 +1064,12 @@ class MiqAction < ActiveRecord::Base
 
   def self.create_script_actions_from_directory
     Dir.glob(SCRIPT_DIR.join("*")).sort.each do |f|
-      action_attributes = {
+      create_or_update(
         'name'        => File.basename(f).tr(".", "_"),
         'description' => "Execute script: #{File.basename(f)}",
         'action_type' => "script",
         'options'     => {:filename => f}
-      }
-
-      create_or_update(action_attributes)
+      )
     end
   end
 
