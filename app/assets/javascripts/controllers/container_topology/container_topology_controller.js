@@ -1,4 +1,4 @@
-angular.module('topologyApp', ['kubernetesUI'])
+angular.module('topologyApp', ['kubernetesUI','ui.bootstrap'])
 .config(['$httpProvider', function($httpProvider) {
     $httpProvider.defaults.headers.common['X-CSRF-Token'] = jQuery('meta[name=csrf-token]').attr('content');
 }])
@@ -28,6 +28,7 @@ angular.module('topologyApp', ['kubernetesUI'])
     $scope.checkboxModel = {
         value : false
     };
+    $scope.legendTooltip = "Click here to show/hide entities of this type";
 
     $scope.show_hide_names = function() {
        var vertices = $scope.vs;
