@@ -1058,17 +1058,7 @@ class MiqAction < ActiveRecord::Base
       action_attributes = csv_row.to_hash
       action_attributes['action_type'] = 'default'
 
-      action = find_by_name(action_attributes['name'])
-      if action.nil?
-        _log.info("Creating [#{action_attributes['name']}]")
-        create(action_attributes)
-      else
-        action.attributes = action_attributes
-        if action.changed? || (action.options_was != action.options)
-          _log.info("Updating [#{action_attributes['name']}]")
-          action.save
-        end
-      end
+      create_or_update(action_attributes)
     end
   end
 
@@ -1081,16 +1071,20 @@ class MiqAction < ActiveRecord::Base
         'options'     => {:filename => f}
       }
 
-      action = find_by_name(action_attributes['name'])
-      if action.nil?
-        _log.info("Creating [#{action_attributes['name']}]")
-        create(action_attributes)
-      else
-        action.attributes = action_attributes
-        if action.changed? || action.options_was != action.options
-          _log.info("Updating [#{action_attributes['name']}]")
-          action.save
-        end
+      create_or_update(action_attributes)
+    end
+  end
+
+  def self.create_or_update(action_attributes)
+    action = find_by_name(action_attributes['name'])
+    if action.nil?
+      _log.info("Creating [#{action_attributes['name']}]")
+      create(action_attributes)
+    else
+      action.attributes = action_attributes
+      if action.changed? || action.options_was != action.options
+        _log.info("Updating [#{action_attributes['name']}]")
+        action.save
       end
     end
   end
