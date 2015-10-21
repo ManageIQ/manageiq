@@ -449,6 +449,7 @@ function miqButtonOnWhen(button, onwhen, count) {
   if (typeof onwhen != "undefined") {
     var toggle = true;
     switch(onwhen) {
+      case 1:
       case '1':
         toggle = count == 1;
         break;
