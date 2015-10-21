@@ -445,37 +445,45 @@ module ApplicationHelper
 
   ############# Following methods generate JS lines for render page blocks
   def javascript_for_timer_type(timer_type)
-    js_array = []
-    unless timer_type.nil?
-      case timer_type
-      when "Monthly"
-        js_array << javascript_hide("weekly_span")
-        js_array << javascript_hide("daily_span")
-        js_array << javascript_hide("hourly_span")
-        js_array << javascript_show("monthly_span")
-      when "Weekly"
-        js_array << javascript_hide("daily_span")
-        js_array << javascript_hide("hourly_span")
-        js_array << javascript_hide("monthly_span")
-        js_array << javascript_show("weekly_span")
-      when "Daily"
-        js_array << javascript_hide("hourly_span")
-        js_array << javascript_hide("monthly_span")
-        js_array << javascript_hide("weekly_span")
-        js_array << javascript_show("daily_span")
-      when "Hourly"
-        js_array << javascript_hide("daily_span")
-        js_array << javascript_hide("monthly_span")
-        js_array << javascript_hide("weekly_span")
-        js_array << javascript_show("hourly_span")
-      else
-        js_array << javascript_hide("daily_span")
-        js_array << javascript_hide("hourly_span")
-        js_array << javascript_hide("monthly_span")
-        js_array << javascript_hide("weekly_span")
-      end
+    case timer_type
+    when "Monthly"
+      [
+        javascript_hide("weekly_span"),
+        javascript_hide("daily_span"),
+        javascript_hide("hourly_span"),
+        javascript_show("monthly_span")
+      ]
+    when "Weekly"
+      [
+        javascript_hide("daily_span"),
+        javascript_hide("hourly_span"),
+        javascript_hide("monthly_span"),
+        javascript_show("weekly_span")
+      ]
+    when "Daily"
+      [
+        javascript_hide("hourly_span"),
+        javascript_hide("monthly_span"),
+        javascript_hide("weekly_span"),
+        javascript_show("daily_span")
+      ]
+    when "Hourly"
+      [
+        javascript_hide("daily_span"),
+        javascript_hide("monthly_span"),
+        javascript_hide("weekly_span"),
+        javascript_show("hourly_span")
+      ]
+    when nil
+      []
+    else
+      [
+        javascript_hide("daily_span"),
+        javascript_hide("hourly_span"),
+        javascript_hide("monthly_span"),
+        javascript_hide("weekly_span")
+      ]
     end
-    js_array
   end
 
   # Show/hide the Save and Reset buttons based on whether changes have been made
