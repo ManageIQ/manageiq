@@ -12,7 +12,7 @@ class MiqEventDefinitionSet < ActiveRecord::Base
       rec = find_by_name(set['name'])
       if rec.nil?
         _log.info("Creating [#{set['name']}]")
-        rec = create!(set)
+        create!(set)
       else
         rec.attributes = set
         if rec.changed?
