@@ -4,7 +4,6 @@
     'app.core',
     'app.config',
     'app.states',
-    'app.skin',
     'ngProgress'
   ]);
   angular.module('app').controller('AppController', ['$rootScope', '$scope', 'ngProgressFactory',

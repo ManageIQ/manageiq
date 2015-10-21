@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-12">
-        <h1 id="brand"></h1><!--/#brand-->
+        <h1 id="brand" ng-bind-html="vm.text.brand"></h1><!--/#brand-->
       </div>
       <!--/.col-*-->
       <div class="col-sm-8 col-md-6 col-lg-5 login">
@@ -42,10 +42,7 @@
       </div>
       <!--/.col-*-->
       <div class="col-sm-5 col-md-6 col-lg-7 details">
-        <p><strong>Welcome!</strong>
-          This is placeholder text, only. Use this area to place any information or introductory message about your
-          application that may be relevant for users. For example, you might include news or information about the
-          latest release of your product here&mdash;such as a version number.</p>
+        <p ng-bind-html="vm.text.message"></p>
       </div>
       <!--/.col-*-->
     </div>

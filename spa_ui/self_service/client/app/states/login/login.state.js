@@ -26,10 +26,11 @@
   }
 
   /** @ngInject */
-  function StateController($state, API_LOGIN, API_PASSWORD, AuthenticationApi) {
+  function StateController($state, Text, API_LOGIN, API_PASSWORD, AuthenticationApi) {
     var vm = this;
 
     vm.title = 'Login';
+    vm.text = Text.login;
 
     vm.credentials = {
       login: API_LOGIN,
