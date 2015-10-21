@@ -238,11 +238,11 @@ describe MiqAction do
       before do
         @script_dir = Dir.mktmpdir
         stub_const('::MiqAction::SCRIPT_DIR', Pathname(@script_dir))
-        FileUtils.touch %W[
-          #@script_dir/script2.rb
-          #@script_dir/script.1.sh
-          #@script_dir/script3
-        ]
+        FileUtils.touch %W(
+          #{@script_dir}/script2.rb
+          #{@script_dir}/script.1.sh
+          #{@script_dir}/script3
+        )
       end
 
       after do
@@ -270,11 +270,11 @@ describe MiqAction do
         end
 
         it 'should put full file path into options hash' do
-          expect(first_created_action.options).to eq(:filename => "#@script_dir/script.1.sh")
+          expect(first_created_action.options).to eq(:filename => "#{@script_dir}/script.1.sh")
         end
 
         context 'after one of the scripts is renamed' do
-          before { FileUtils.mv("#@script_dir/script2.rb", "#@script_dir/run.bat") }
+          before { FileUtils.mv("#{@script_dir}/script2.rb", "#{@script_dir}/run.bat") }
 
           context 'seeding script actions again' do
             before { MiqAction.create_script_actions_from_directory }
