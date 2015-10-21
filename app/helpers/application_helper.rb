@@ -447,25 +447,29 @@ module ApplicationHelper
   def javascript_for_timer_type(timer_type)
     case timer_type
     when "Monthly"
-      [ javascript_hide("weekly_span"),
+      [
+        javascript_hide("weekly_span"),
         javascript_hide("daily_span"),
         javascript_hide("hourly_span"),
         javascript_show("monthly_span")
       ]
     when "Weekly"
-      [ javascript_hide("daily_span"),
+      [
+        javascript_hide("daily_span"),
         javascript_hide("hourly_span"),
         javascript_hide("monthly_span"),
         javascript_show("weekly_span")
       ]
     when "Daily"
-      [ javascript_hide("hourly_span"),
+      [
+        javascript_hide("hourly_span"),
         javascript_hide("monthly_span"),
         javascript_hide("weekly_span"),
         javascript_show("daily_span")
       ]
     when "Hourly"
-      [ javascript_hide("daily_span"),
+      [
+        javascript_hide("daily_span"),
         javascript_hide("monthly_span"),
         javascript_hide("weekly_span"),
         javascript_show("hourly_span")
@@ -473,7 +477,8 @@ module ApplicationHelper
     when nil
       []
     else
-      [ javascript_hide("daily_span"),
+      [
+        javascript_hide("daily_span"),
         javascript_hide("hourly_span"),
         javascript_hide("monthly_span"),
         javascript_hide("weekly_span")
