@@ -1055,17 +1055,17 @@ class MiqAction < ActiveRecord::Base
 
   def self.create_default_actions
     CSV.foreach(fixture_path, :headers => true, :skip_lines => /^#/) do |csv_row|
-      action = csv_row.to_hash
-      action['action_type'] = 'default'
+      action_attributes = csv_row.to_hash
+      action_attributes['action_type'] = 'default'
 
-      rec = find_by_name(action['name'])
+      rec = find_by_name(action_attributes['name'])
       if rec.nil?
-        _log.info("Creating [#{action['name']}]")
-        create(action)
+        _log.info("Creating [#{action_attributes['name']}]")
+        create(action_attributes)
       else
-        rec.attributes = action
+        rec.attributes = action_attributes
         if rec.changed? || (rec.options_was != rec.options)
-          _log.info("Updating [#{action['name']}]")
+          _log.info("Updating [#{action_attributes['name']}]")
           rec.save
         end
       end
