@@ -193,9 +193,8 @@ class MiqAeClassController < ApplicationController
         set_right_cell_text(x_node, @record)
       end
     else
-      rec = User.current_tenant.visible_domains
+      @grid_data = User.current_tenant.visible_domains
       @record = nil
-      @grid_data = rec.flatten.sort_by { |a| a.priority.to_s }.reverse
       @right_cell_text = "Datastore"
       @sb[:active_tab] = "namespaces"
       set_right_cell_text(x_node)
