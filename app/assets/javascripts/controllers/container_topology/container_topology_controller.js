@@ -59,20 +59,19 @@ angular.module('topologyApp', ['kubernetesUI'])
         added.append("circle").attr("r", function(d) { return getDimensions(d).r}).style("stroke", function(d) {
             switch (d.item.status) {
                 case "OK":
-                case "on":
+                case "On":
                 case "Ready":
                 case "Running":
-                case "running":
                 case "Succeeded":
                     return "#3F9C35";
                 case "NotReady":
                 case "Failed":
                     return "#CC0000";
-                case 'warning':
+                case 'Warning':
                 case 'Pending':
                     return "#EC7A08";
-                case 'unknown':
-                case 'terminated':
+                case 'Unknown':
+                case 'Terminated':
                     return "#bbb";
             }});
         added.append("title");
