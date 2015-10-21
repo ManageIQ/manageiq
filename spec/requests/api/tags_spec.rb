@@ -175,6 +175,13 @@ describe ApiController do
         end.to change(Tag, :count).by(-2)
         expect { classification1.reload }.to raise_error(ActiveRecord::RecordNotFound)
         expect { classification2.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect_result_to_match_hash(
+          @result,
+          "results" => [
+            {"success" => true, "message" => "tags id: #{tag1.id} deleting"},
+            {"success" => true, "message" => "tags id: #{tag2.id} deleting"}
+          ]
+        )
         expect_request_success
       end
 
@@ -192,6 +199,13 @@ describe ApiController do
         end.to change(Tag, :count).by(-2)
         expect { classification1.reload }.to raise_error(ActiveRecord::RecordNotFound)
         expect { classification2.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect_result_to_match_hash(
+          @result,
+          "results" => [
+            {"success" => true, "message" => "tags id: #{tag1.id} deleting"},
+            {"success" => true, "message" => "tags id: #{tag2.id} deleting"}
+          ]
+        )
         expect_request_success
       end
     end
