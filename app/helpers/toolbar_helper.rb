@@ -31,7 +31,7 @@ module ToolbarHelper
   def render_toolbars
     @toolbars.collect do |div_id, toolbar_name|
       content_tag(:div, :id => div_id, :class => 'form-group') do # form-group aroung each toolbar
-        buttons = build_toolbar(toolbar_name)
+        buttons = toolbar_name ? build_toolbar(toolbar_name) : nil
         buttons_to_html(buttons)
       end
     end.join('').html_safe

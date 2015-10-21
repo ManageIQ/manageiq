@@ -1955,7 +1955,7 @@ class CatalogController < ApplicationController
     presenter[:reload_toolbars][:history] = h_tb
     presenter[:reload_toolbars][:center]  = c_tb
     presenter[:reload_toolbars][:view]    = v_tb
-    presenter[:set_visible_elements][:toolbar] = h_buttons || c_buttons || v_buttons
+    presenter[:set_visible_elements][:toolbar] = h_tb.present? || c_tb.present? || v_tb.present?
 
     if @record && !@in_a_form
       presenter[:record_id] = @record.id
