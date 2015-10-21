@@ -1,23 +1,23 @@
-function changeStoredPassword(password_field, verify_field, url) {
-  $('#change_stored_password').css('display', 'none');
-  $('#cancel_password_change').css('display', 'block');
-  $('#verify_group').css('display', 'block');
-  $('#' + password_field).removeAttr('disabled');
-  $('#' + verify_field).removeAttr('disabled');
-  $('#' + password_field).val('');
-  $('#' + verify_field).val('');
-  miqJqueryRequest(url + '?' + password_field + '=' + '&' + verify_field + '=');
-  $('#' + password_field).focus();
+function changeStoredPassword(pfx, url) {
+  $('#' + pfx + '_change_stored_password').css('display', 'none');
+  $('#' + pfx + '_cancel_password_change').css('display', 'block');
+  $('#' + pfx + '_verify_group').css('display', 'block');
+  $('#' + pfx + '_password').removeAttr('disabled');
+  $('#' + pfx + '_verify').removeAttr('disabled');
+  $('#' + pfx + '_password').val('');
+  $('#' + pfx + '_verify').val('');
+  miqJqueryRequest(url + '?' + pfx + '_password' + '=' + '&' + pfx + '_verify' + '=');
+  $('#' + pfx + '_password').focus();
 };
 
-function cancelPasswordChange(password_field, verify_field, url) {
+function cancelPasswordChange(pfx, url) {
   var storedPasswordPlaceholder = '●●●●●●●●'
-  $('#cancel_password_change').css('display', 'none');
-  $('#change_stored_password').css('display', 'block');
-  $('#verify_group').css('display', 'none');
-  $('#' + password_field).attr('disabled', 'disabled');
-  $('#' + verify_field).attr('disabled', 'disabled');
-  $('#' + password_field).val(storedPasswordPlaceholder);
-  $('#' + verify_field).val(storedPasswordPlaceholder);
-  miqJqueryRequest(url + '?' + password_field + '=' + '&' + verify_field + '=' + '&restore_password=true');
+  $('#' + pfx + '_cancel_password_change').css('display', 'none');
+  $('#' + pfx + '_change_stored_password').css('display', 'block');
+  $('#' + pfx + '_verify_group').css('display', 'none');
+  $('#' + pfx + '_password').attr('disabled', 'disabled');
+  $('#' + pfx + '_verify').attr('disabled', 'disabled');
+  $('#' + pfx + '_password').val(storedPasswordPlaceholder);
+  $('#' + pfx + '_verify').val(storedPasswordPlaceholder);
+  miqJqueryRequest(url + '?' + pfx + '_password' + '=' + '&' + pfx + '_verify' + '=' + '&restore_password=true');
 };

@@ -1067,5 +1067,14 @@ module EmsCommon
     if params[:default_password]
       @edit[:new][:default_password] = @edit[:new][:default_verify] = @ems.authentication_password
     end
+    if params[:amqp_password]
+      @edit[:new][:amqp_password] = @edit[:new][:amqp_verify] = @ems.authentication_password(:amqp)
+    end
+    if params[:metrics_password]
+      @edit[:new][:metrics_password] = @edit[:new][:metrics_verify] = @ems.authentication_password(:metrics)
+    end
+    if params[:bearer_token]
+      @edit[:new][:bearer_token] = @edit[:new][:bearer_verify] = @ems.authentication_token(:bearer)
+    end
   end
 end
