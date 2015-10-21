@@ -52,7 +52,7 @@ describe ServerRole do
         web_services,Web Services,0,false,,region
       CSV
 
-      ServerRole.stub(:seed_data).and_return(@csv)
+      File.stub(:open).and_return(StringIO.new(@csv))
       MiqRegion.seed
       ServerRole.seed
     end

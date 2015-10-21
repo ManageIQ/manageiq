@@ -7,35 +7,28 @@ class ServerRole < ActiveRecord::Base
 
   FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
 
-  def self.seed_data
-    File.read(File.join(FIXTURE_DIR, "#{to_s.pluralize.underscore}.csv"))
-  end
-
   def self.seed
-    data = seed_data.split("\n")
-    cols = data.shift.split(",")
+    CSV.foreach(fixture_path, :headers => true, :skip_lines => /^#/).each do |csv_row|
+      action = csv_row.to_hash
+      action['license_required'] ||= ''
 
-    data.each do |a|
-      next if a =~ /^#.*$/ # skip commented lines
-
-      arr = a.split(",")
-
-      action = {}
-      cols.each_index { |i| action[cols[i].to_sym] = arr[i] }
-
-      rec = find_by(:name => action[:name])
+      rec = find_by(:name => action['name'])
       if rec.nil?
-        _log.info("Creating Server Role [#{action[:name]}]")
-        rec = create(action)
+        _log.info("Creating Server Role [#{action['name']}]")
+        create(action)
       else
         rec.attributes = action
         if rec.changed?
-          _log.info("Updating Server Role [#{action[:name]}]")
+          _log.info("Updating Server Role [#{action['name']}]")
           rec.save
         end
       end
     end
     @zone_scoped_roles = @region_scoped_roles = nil
+  end
+
+  def self.fixture_path
+    File.join(FIXTURE_DIR, "#{to_s.pluralize.underscore}.csv")
   end
 
   def self.to_role(server_role)
