@@ -1074,16 +1074,17 @@ class MiqAction < ActiveRecord::Base
   end
 
   def self.create_or_update(action_attributes)
-    action = find_by_name(action_attributes['name'])
-    if action.nil?
-      _log.info("Creating [#{action_attributes['name']}]")
-      create(action_attributes)
-    else
+    name = action_attributes['name']
+    action = find_by_name(name)
+    if action
       action.attributes = action_attributes
       if action.changed? || action.options_was != action.options
-        _log.info("Updating [#{action_attributes['name']}]")
+        _log.info("Updating [#{name}]")
         action.save
       end
+    else
+      _log.info("Creating [#{name}]")
+      create(action_attributes)
     end
   end
 
