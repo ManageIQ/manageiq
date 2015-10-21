@@ -8,6 +8,7 @@ class VimPerformanceState < ActiveRecord::Base
   # Define accessors for state_data information
   [
     :assoc_ids,
+    :host_sockets,
     :parent_host_id,
     :parent_storage_id,
     :parent_ems_id,
@@ -33,8 +34,11 @@ class VimPerformanceState < ActiveRecord::Base
   # => reserve_cpu
   # => vm_count_on      (derive from assoc_ids)
   # => vm_count_off     (derive from assoc_ids)
+  # => vm_count_total   (derive from assoc_ids)
   # => host_count_on    (derive from assoc_ids)
   # => host_count_off   (derive from assoc_ids)
+  # => host_count_total (derive from assoc_ids)
+  # => host_sockets     (derive from assoc_ids)
 
   def self.capture(obj)
     ts = Time.now.utc
@@ -59,6 +63,7 @@ class VimPerformanceState < ActiveRecord::Base
     state.vm_used_disk_storage = capture_vm_disk_storage(obj, :used_disk)
     state.vm_allocated_disk_storage = capture_vm_disk_storage(obj, :allocated_disk)
     state.tag_names = capture_tag_names(obj)
+    state.host_sockets = capture_host_sockets(obj)
     state.save
 
     state
@@ -72,12 +77,20 @@ class VimPerformanceState < ActiveRecord::Base
     get_assoc(:vms, :off).length
   end
 
+  def vm_count_total
+    get_assoc(:vms).length
+  end
+
   def host_count_on
     get_assoc(:hosts, :on).length
   end
 
   def host_count_off
     get_assoc(:hosts, :off).length
+  end
+
+  def host_count_total
+    get_assoc(:hosts).length
   end
 
   def storages
@@ -190,5 +203,15 @@ class VimPerformanceState < ActiveRecord::Base
     # depending on the name :numvcpus
     # A larger patch should be done outside of a z-stream release
     obj.hardware.logical_cpus
+  end
+
+  def self.capture_host_sockets(obj)
+    if obj.kind_of?(Host)
+      obj.hardware.sockets
+    else
+      if obj.respond_to?(:hosts)
+        obj.hosts.includes(:hardware).each_with_object([]) { |h, arr| arr << h.hardware.sockets }.sum
+      end
+    end
   end
 end
