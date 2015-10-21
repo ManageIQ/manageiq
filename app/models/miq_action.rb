@@ -1034,7 +1034,7 @@ class MiqAction < ActiveRecord::Base
   end
 
   def self.create_script_actions_from_directory
-    Dir.glob(SCRIPT_DIR + "/*").sort.each do |f|
+    Dir.glob(SCRIPT_DIR.join("*")).sort.each do |f|
       rec = {}
       rec[:name]        = File.basename(f).tr(".", "_")
       rec[:description] = "Execute script: #{File.basename(f)}"
