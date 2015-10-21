@@ -22,39 +22,39 @@
           requireUser: true
         },
         resolve: {
-          retiredServices: retiredServices,
-          expiringServices: expiringServices,
-          pendingRequests: pendingRequests,
-          approvedRequests: approvedRequests,
-          deniedRequests: deniedRequests
+          retiredServices: resolveRetiredServices,
+          expiringServices: resolveExpiringServices,
+          pendingRequests: resolvePendingRequests,
+          approvedRequests: resolveApprovedRequests,
+          deniedRequests: resolveDeniedRequests
         }
       }
     };
   }
 
   /** @ngInject */
-  function pendingRequests(CollectionsApi) {
+  function resolvePendingRequests(CollectionsApi) {
     var options = {expand: false, filter: ['approval_state=pending'] };
 
     return CollectionsApi.query('service_requests', options);
   }
 
   /** @ngInject */
-  function approvedRequests(CollectionsApi) {
+  function resolveApprovedRequests(CollectionsApi) {
     var options = {expand: false, filter: ['approval_state=approved'] };
 
     return CollectionsApi.query('service_requests', options);
   }
 
   /** @ngInject */
-  function deniedRequests(CollectionsApi) {
+  function resolveDeniedRequests(CollectionsApi) {
     var options = {expand: false, filter: ['approval_state=denied'] };
 
     return CollectionsApi.query('service_requests', options);
   }
 
   /** @ngInject */
-  function expiringServices(CollectionsApi, $filter) {
+  function resolveExpiringServices(CollectionsApi, $filter) {
     var currentDate = new Date();
     var date1 = 'retires_on>=' + $filter('date')(currentDate, 'yyyy-MM-dd');
 
@@ -66,15 +66,15 @@
   }
 
   /** @ngInject */
-  function retiredServices(CollectionsApi) {
+  function resolveRetiredServices(CollectionsApi) {
     var options = {expand: false, filter: ['retired=true'] };
 
     return CollectionsApi.query('services', options);
   }
 
   /** @ngInject */
-  function StateController(retiredServices, expiringServices, pendingRequests, approvedRequests, 
-    deniedRequests, $state, RequestsState, ServicesState) {
+  function StateController($state, RequestsState, ServicesState, retiredServices, 
+    expiringServices, pendingRequests, approvedRequests, deniedRequests) {
     var vm = this;
     vm.servicesCount = {};
     vm.servicesCount.total = retiredServices.count;
@@ -95,7 +95,8 @@
       $state.go('requests.list');
     };
 
-    vm.navigateToServicesList = function(filter) {
+    vm.navigateToServicesList = function(filterValue) {
+      ServicesState.setFilters([{'id': 'retirement', 'title': 'Retirement Date', 'value': filterValue}]);
       $state.go('services.list');
     };
   }
