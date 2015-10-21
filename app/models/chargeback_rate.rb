@@ -74,8 +74,7 @@ class ChargebackRate < ActiveRecord::Base
   end
 
   def assigned?
-    assigned_tos = get_assigned_tos
-    assigned_tos == {:objects=>[], :tags=>[]} ? false : true
+    get_assigned_tos != {:objects=>[], :tags=>[]}
   end
 
 end

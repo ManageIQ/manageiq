@@ -299,22 +299,17 @@ class ChargebackController < ApplicationController
 
       # Do not delete assigned rates
       rates_to_delete = []
-      rates.each do |cb_rate_id|
-        cb_rate = ChargebackRate.find_by_id(cb_rate_id)
-        if cb_rate.assigned?
-          rate_descr = cb_rate.description
-          add_flash(_("Selected %{model} %{rate} is assigned and cannot be deleted") % {:model => "ChargebackRate", :rate  => rate_descr}, :error)
+      selected_rates = ChargebackRate.find(rates)
+      selected_rates.each do |rate|
+        if rate.assigned?
+          add_flash(_("Selected %{model} %{rate} is assigned and cannot be deleted") % {:model => "ChargebackRate", :rate  => rate.description}, :error)
         else
-          rates_to_delete << cb_rate_id
+          rates_to_delete << rate.id
         end
       end
 
       process_cb_rates(rates_to_delete, "destroy")  unless rates_to_delete.empty?
-      if rates_to_delete.size > 1
-        add_flash(_("The selected %s were deleted") % ui_lookup(:models => "ChargebackRate"), :info, true) unless flash_errors?
-      else
-        add_flash(_("The selected %s was deleted") % ui_lookup(:model => "ChargebackRate"), :info, true) unless flash_errors?
-      end
+      add_flash(_("Selected %{typ} successfully deleted") % {:typ => "Chargeback Rate".pluralize(rates.length)}, :info, true) unless flash_errors?
 
       cb_rates_list
       @right_cell_text = _("%{typ} %{model}") % {:typ => x_node.split('-').last, :model => ui_lookup(:models => "ChargebackRate")}
@@ -340,7 +335,7 @@ class ChargebackController < ApplicationController
         tree_select
       else
         process_cb_rates(rates, "destroy")  unless rates.empty?
-        add_flash(_("The selected %s was deleted") % ui_lookup(:model => "ChargebackRate"), :info, true) unless flash_errors?
+        add_flash(_("Selected %{typ} successfully deleted") % {:typ => "Chargeback Rate"}, :info, true) unless flash_errors?
 
         self.x_node = "xx-#{@record.rate_type}"
         cb_rates_list
