@@ -7,16 +7,16 @@ class MiqEventDefinitionSet < ActiveRecord::Base
 
   def self.seed
     CSV.foreach(FIXTURE_DIR.join("#{to_s.pluralize.underscore}.csv"), :headers => true, :skip_lines => /^#/) do |csv_row|
-      set = csv_row.to_hash.symbolize_keys
+      set = csv_row.to_hash
 
-      rec = find_by_name(set[:name])
+      rec = find_by_name(set['name'])
       if rec.nil?
-        _log.info("Creating [#{set[:name]}]")
+        _log.info("Creating [#{set['name']}]")
         rec = create!(set)
       else
         rec.attributes = set
         if rec.changed?
-          _log.info("Updating [#{set[:name]}]")
+          _log.info("Updating [#{set['name']}]")
           rec.save!
         end
       end
