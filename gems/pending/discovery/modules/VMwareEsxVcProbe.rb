@@ -9,8 +9,10 @@ class VMwareEsxVcProbe
       7444  # VC >= 5.1
     ], # and
     [
-      139, # VC < 5.1 or
-      2014  # VC >= 5.1
+      139,  # VC < 5.1 or
+      2012, # VC >= 5.1
+      2013,
+      2014
     ]
   ]
 
