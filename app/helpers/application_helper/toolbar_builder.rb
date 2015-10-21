@@ -1012,6 +1012,11 @@ class ApplicationHelper::ToolbarBuilder
       when "container_group_timeline"
         return "No Timeline data has been collected for this Pod" unless @record.has_events? || @record.has_events?(:policy_events)
       end
+    when "ContainerReplicator"
+      case id
+      when "container_replicator_timeline"
+        return "No Timeline data has been collected for this Replicator" unless @record.has_events? || @record.has_events?(:policy_events)
+      end
     when "ContainerProject"
       case id
       when "container_project_timeline"

@@ -2063,6 +2063,19 @@ describe ApplicationHelper do
       end
     end
 
+    context "when record class = ContainerReplicator" do
+      before do
+        @record = ContainerReplicator.new
+        @record.stub(:has_perf_data? => true, :has_events? => true)
+      end
+
+      context "and id = container_replicator_timeline" do
+        before { @id = "container_replicator_timeline" }
+        it_behaves_like 'record without ems events and policy events', "No Timeline data has been collected for this Replicator"
+        it_behaves_like 'default case'
+      end
+    end
+
     context "when record class = Host" do
       before do
         @record = Host.new
