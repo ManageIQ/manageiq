@@ -1149,7 +1149,7 @@ class ApplicationController < ActionController::Base
       if @row_button # Show a button in the last col
         new_row[:cells] << {:title     => @row_button[:title],
                             :is_button => true,
-                            :text      => celltext,
+                            :text      => "",
                             :onclick   => "#{@row_button[:function]}(\"#{row['id']}\");",
                             :image     => @row_button[:image]}
       end
