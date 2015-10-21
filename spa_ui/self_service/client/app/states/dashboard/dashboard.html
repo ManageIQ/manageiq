@@ -5,7 +5,7 @@
         <div class="card-pf-body">
           <span class="fa fa-file-o"></span>
           <div class="ss-dashboard__card-primary__count">
-            <h2>{{ ::vm.servicesCount }}</h2>
+            <h2>{{ ::vm.servicesCount.total }}</h2>
             <h3>Total Services</h3>
           </div>
         </div>
@@ -16,7 +16,7 @@
         <div class="card-pf-body">
           <span class="fa fa-file-text-o"></span>
           <div class="ss-dashboard__card-primary__count">
-            <h2>{{ ::vm.requestsCount}}</h2>
+            <h2>{{ ::vm.requestsCount.total }}</h2>
             <h3>Total Requests</h3>
           </div>
         </div>
@@ -28,31 +28,45 @@
       <div class="card-pf">
         <div class="row row-cards-pf">
             <div class="card-pf card-pf-aggregate-status card-divider">
-              <h2 class="card-pf-title">
-                Services Online
-              </h2>
-              <div class="card-pf-body">
-                <p class="card-pf-aggregate-status-notifications">    
-                  <span class="card-pf-aggregate-status-notification">
-                    <span class="pficon fa fa-check"></span></span>
-                    <span class="card-pf-aggregate-status-notification"><a href="#">8</a>
-                  </span>
-                </p>
-              </div>
-            </div>
-            <div class="card-pf card-pf-aggregate-status">
               <div class="card-pf-body">
                 <h2 class="card-pf-title">
-                  Expiring Soon
+                  Retiring Soon
                 </h2>
                 <p class="card-pf-aggregate-status-notifications">  
                   <span class="card-pf-aggregate-status-notification">
                     <span class="pficon pficon-warning-triangle-o"></span>
                   </span>
-                  <span class="card-pf-aggregate-status-notification"><a href="#">1</a></span>
+                  <span class="card-pf-aggregate-status-notification"><a ng-click="vm.navigateToServicesList('soon')">{{ ::vm.servicesCount.soon }}</a></span>
                 </p>
               </div>
             </div>
+            <div class="card-pf card-pf-aggregate-status card-divider">
+              <h2 class="card-pf-title">
+                Current Services
+              </h2>
+              <div class="card-pf-body">
+                <p class="card-pf-aggregate-status-notifications">    
+                  <span class="card-pf-aggregate-status-notification">
+                    <span class="pficon fa fa-check"></span></span>
+                    <span class="card-pf-aggregate-status-notification"><a ng-click="vm.navigateToServicesList('current')">{{ ::vm.servicesCount.current }}</a>
+                  </span>
+                </p>
+              </div>
+            </div>
+            <div class="card-pf card-pf-aggregate-status">
+              <h2 class="card-pf-title">
+                Retired Services
+              </h2>
+              <div class="card-pf-body">
+                <p class="card-pf-aggregate-status-notifications">    
+                  <span class="card-pf-aggregate-status-notification">
+                    <span class="pficon pficon-close"></span></span>
+                    <span class="card-pf-aggregate-status-notification"><a ng-click="vm.navigateToServicesList('retired')">{{ ::vm.servicesCount.retired }}</a>
+                  </span>
+                </p>
+              </div>
+            </div>
+            
         </div>
       </div>
     </div>
@@ -61,27 +75,40 @@
         <div class="row row-cards-pf">
           <div class="card-pf card-pf-aggregate-status card-divider">
             <h2 class="card-pf-title">
-              Denied Requests
+              Pending Requests
             </h2>
             <div class="card-pf-body">
               <p class="card-pf-aggregate-status-notifications">
                 <span class="card-pf-aggregate-status-notification">
-                  <span class="pficon pficon-close"></span>
+                  <span class="pficon pficon-warning-triangle-o"></span>
                 </span>
-                <span class="card-pf-aggregate-status-notification"><a href="#">4</a></span>
+                <span class="card-pf-aggregate-status-notification"><a ng-click="vm.navigateToRequestsList('Pending')">{{ ::vm.requestsCount.pending }}</a></span>
+              </p>
+            </div>
+          </div>
+          <div class="card-pf card-pf-aggregate-status card-divider">
+            <div class="card-pf-body">
+              <h2 class="card-pf-title">
+                Approved Requests
+              </h2>
+              <p class="card-pf-aggregate-status-notifications">  
+                <span class="card-pf-aggregate-status-notification">
+                  <span class="pficon fa fa-check"></span>
+                </span>
+                <span class="card-pf-aggregate-status-notification"><a ng-click="vm.navigateToRequestsList('Approved')">{{ ::vm.requestsCount.approved }}</a></span>
               </p>
             </div>
           </div>
           <div class="card-pf card-pf-aggregate-status">
             <div class="card-pf-body">
               <h2 class="card-pf-title">
-                Pending Requests
+                Denied Requests
               </h2>
               <p class="card-pf-aggregate-status-notifications">  
                 <span class="card-pf-aggregate-status-notification">
-                  <span class="pficon pficon-warning-triangle-o"></span>
+                  <span class="pficon pficon pficon-close"></span>
                 </span>
-                <span class="card-pf-aggregate-status-notification"><a href="#">2</a></span>
+                <span class="card-pf-aggregate-status-notification"><a ng-click="vm.navigateToRequestsList('Denied')">{{ ::vm.requestsCount.denied }}</a></span>
               </p>
             </div>
           </div>
