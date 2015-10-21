@@ -55,7 +55,7 @@ function miqOnLazyReadGetNodeChildren(node, tree, controller) {
 function miqMenuEditor(id) {
   var nid = id.split('__');
   if (nid[0] != 'r') {
-    var url = click_url + '?node_id=' + encodeURIComponent(id) + '&node_clicked=1';
+    var url = ManageIQ.clickUrl + '?node_id=' + encodeURIComponent(id) + '&node_clicked=1';
     miqJqueryRequest(url, {beforeSend: true,
       complete: true,
       no_encoding: true
@@ -120,7 +120,7 @@ function miqOnClickProvLdapOus(id) {
   node.expand();
   node._activate(false, true);
   if (id.split('_-_').length > 1) {
-    miqJqueryRequest(click_url + '?ou_id=' + id);
+    miqJqueryRequest(ManageIQ.clickUrl + '?ou_id=' + id);
     return true;
   }
 }
@@ -230,7 +230,7 @@ function miqOnCheckProtect(node, treename) {
 
 // OnClick handler for the VM Snapshot Tree
 function miqOnClickSnapshotTree(id) {
-  miqJqueryRequest(click_url + id, {beforeSend: true, complete: true});
+  miqJqueryRequest(ManageIQ.clickUrl + id, {beforeSend: true, complete: true});
   return true;
 }
 
@@ -292,7 +292,7 @@ function miqOnClickHostNet(id) {
 function miqOnClickTimelineSelection(id) {
   if (id.split('__')[0] != 'p') {
     rep_id = id.split('__');
-    miqJqueryRequest(click_url + '?id=' + rep_id[0], {beforeSend: true, complete: true});
+    miqJqueryRequest(ManageIQ.clickUrl + '?id=' + rep_id[0], {beforeSend: true, complete: true});
   }
 }
 
@@ -306,14 +306,14 @@ function miqOnCheckSections(tree_name, key, checked, all_checked) {
 // OnClick handler for catgories Tree
 function miqOnClickTagCat(id) {
   if (id.split('__')[0] == 't') {
-    miqJqueryRequest(click_url + '?id=' + id, {beforeSend: true, complete: true});
+    miqJqueryRequest(ManageIQ.clickUrl + '?id=' + id, {beforeSend: true, complete: true});
   }
 }
 
 // OnClick handler for Genealogy Tree
 function miqOnClickGenealogyTree(id) {
   if (hoverNodeId(id)[0] === 'v') {
-    miqJqueryRequest(click_url + id, {beforeSend: true, complete: true});
+    miqJqueryRequest(ManageIQ.clickUrl + id, {beforeSend: true, complete: true});
   }
 }
 
@@ -400,7 +400,7 @@ function miqOnClickServerRoles(id) {
     case 'server':
     case 'role':
     case 'asr':
-      miqJqueryRequest(click_url + '?id=' + id, {beforeSend: true, complete: true});
+      miqJqueryRequest(ManageIQ.clickUrl + '?id=' + id, {beforeSend: true, complete: true});
       break;
   }
 }
@@ -432,63 +432,87 @@ function miqOnCheckCUFilters(tree_name, key, checked) {
   return true;
 }
 
-function miqMenuChangeRow(grid, action, click_url) {
-  var id = folder_list_grid.getSelectedId();
-  var ids = folder_list_grid.getAllRowIds().split(',');
-  var count = ids.length;
-  var ret = false;
-  var temp_id;
-  var temp_text;
+function miqMenuChangeRow(action, elem) {
+  var grid = $('#folder_grid .list-group');
+  var selected = grid.find('.list-group-item.active');
 
   switch (action) {
+    case "activate":
+      grid.find('.list-group-item.active').removeClass('active');
+      $(elem).addClass('active');
+      break;
+
+    case "edit":
+      // quick and dirty edit - FIXME use a $modal when converted to angular
+      var text = $(elem).text().trim();
+      text = prompt("New name?", text);
+      if (text) // ! cancel
+        $(elem).text(text);
+      break;
+
     case "up":
-      folder_list_grid.moveRowUp(id);
-      break;
-    case "top":
-      temp_id = id;
-      temp_text = folder_list_grid.cellById(
-        folder_list_grid.getSelectedRowId(),
-        folder_list_grid.getSelectedCellIndex()
-      ).getValue();
-      folder_list_grid.deleteRow(id);
-      folder_list_grid.addRow(temp_id, temp_text, 0);
-      folder_list_grid.selectRowById(temp_id);
-      break;
-    case "bottom":
-      temp_id = id;
-      temp_text = folder_list_grid.cellById(
-        folder_list_grid.getSelectedRowId(),
-        folder_list_grid.getSelectedCellIndex()
-      ).getValue();
-      folder_list_grid.deleteRow(id);
-      folder_list_grid.addRow(temp_id, temp_text, count + 1);
-      folder_list_grid.selectRowById(temp_id);
+      selected.prev().before(selected);
       break;
     case "down":
-      folder_list_grid.moveRowDown(id);
+      selected.next().after(selected);
       break;
+
+    case "top":
+      selected.siblings().first().before(selected);
+      break;
+    case "bottom":
+      selected.siblings().last().after(selected);
+      break;
+
     case "add":
-      folder_list_grid.addRow("folder" + count, "New Folder", count + 1);
-      folder_list_grid.selectRowById("folder" + count, true, true, true);
+      var count = grid.find('.list-group-item').length;
+
+      elem = $('<li>').addClass('list-group-item');
+      elem.attr('id', "folder" + count);
+      elem.text("New Folder");
+      elem.on('click', function() {
+        return miqMenuChangeRow('activate', this);
+      });
+      elem.on('dblclick', function() {
+        return miqMenuChangeRow('edit', this);
+      });
+
+      grid.append(elem);
+
+      miqMenuChangeRow('activate', elem);
+
+      // just shows a flash message
       miqJqueryRequest('/report/menu_folder_message_display?typ=add', {no_encoding: true});
       break;
+
     case "delete":
-      var selected_id = id.split('|-|');
+      if (! selected.length)
+        break;
+
+      var selected_id = selected.attr('id').split('|-|');
       if (selected_id.length == 1) {
-        folder_list_grid.deleteRow(id);
+        selected.remove();
       } else {
+        // just show a flash message
         miqJqueryRequest('/report/menu_folder_message_display?typ=delete');
       }
       break;
+
     case "serialize":
-      var url = click_url + '?tree=' + encodeURIComponent(miqDhtmlxgridSerialize(folder_list_grid));
+      var items = grid.find('.list-group-item').toArray().map(function(elem) {
+        return {
+          id: $(elem).attr('id'),
+          text: $(elem).text().trim(),
+        };
+      });
+      var serialized = JSON.stringify(items);
+
+      var url = '/report/menu_field_changed/?tree=' + encodeURIComponent(serialized);
       miqJqueryRequest(url, {beforeSend: true, complete: true, no_encoding: true});
-      ret = true;
-      break;
-    default:
       break;
   }
-  return ret;
+
+  return false;
 }
 
 function miqSetAETreeNodeSelectionClass(id, prevId, bValidNode) {

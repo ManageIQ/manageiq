@@ -1,9 +1,23 @@
 +block(ss-details-wrapper)
   background: $app-color-white
-  height: calc(100vh - 135px)
+  height: calc(100vh - 98px)
   overflow-y: auto
   overflow-x: hidden
   border-top: 1px solid #ddd
+
+  .data-list-pf
+    border-top: 1px solid #f2f2f2
+    margin-top: 20px
+
+    .list-group-item
+      cursor: default
+
+      .fa-power-off
+        color: $app-color-red
+
+      .fa-pause
+        color: $app-color-orange
+
 
 +block(ss-details-header)
   border-bottom: 1px solid $app-color-light-gray-6
@@ -60,8 +74,12 @@
     border: none
     background: transparent
     color: #333
+
   .form-group
     margin-bottom: 10px  
+
+    .control-label
+      padding-right: 0
 
 .ss-details-section
   padding: 10px

@@ -1,4 +1,4 @@
-#alert_list_div{:style => "width: 100%; height: 100%; overflow: auto;"}
+#alert_list_div
   - if x_active_tree == :alert_tree && @view
     - if @view.table.data.empty?
       - msg = _("No Alerts are defined %s.") % @search_text.blank? ? "" : _("that match the entered search string")

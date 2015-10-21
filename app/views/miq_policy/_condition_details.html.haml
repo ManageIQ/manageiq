@@ -1,7 +1,7 @@
 - if @edit
   - url = url_for(:action => 'condition_field_changed', :id => "#{@condition.id || 'new'}")
   - observe_with_interval = {:interval => '.5', :url => url}.to_json
-#condition_details_div{:style => "width: 100%; height: 100%; overflow: auto;"}
+#condition_details_div
   - if @condition
     #condition_info_div
       = render :partial => "layouts/flash_msg"

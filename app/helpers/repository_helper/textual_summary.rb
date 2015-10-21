@@ -6,7 +6,7 @@ module RepositoryHelper::TextualSummary
   #
 
   def textual_group_properties
-    %i(vms miq_templates)
+    %i(vms templates)
   end
 
   def textual_group_smart_management
@@ -28,7 +28,10 @@ module RepositoryHelper::TextualSummary
     h
   end
 
-  def textual_miq_templates
-    textual_link(@record.miq_templates)
+  def textual_templates
+    textual_link(@record.miq_templates,
+                 :feature => "miq_template_show_list",
+                 :as      => TemplateInfra,
+                 :link    => url_for(:action => 'show', :id => @record, :display => 'miq_templates'))
   end
 end

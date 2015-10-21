@@ -10,12 +10,19 @@ body, html {
   background-image: linear-gradient(to bottom, #FAFAFA 0%, #EDEDED 100%);
 }
 
+#paging_div {
+  width: 100%;
+  height: 34px;
+  padding-top: 2px;
+  border-top: 1px solid #c7c7c7;
+  background-image: linear-gradient(to bottom, #FAFAFA 0%, #EDEDED 100%);
+}
+
 /* This media query makes the entire main row scrollable once the columns have collapsed */
 
 @media (max-width: $screen-sm) {
   body {
     padding-top: 40px !important; //Body 'padding-top' is added because navbar-fixed-top class is applied
-    padding-bottom: 30px !important;
   }
   .scrollable-sm {
     height: 100%;
@@ -37,7 +44,6 @@ body, html {
 @media (min-width: $screen-sm) {
   body {
     padding-top: 100px !important; //Body 'padding-top' is added because navbar-fixed-top class is applied
-    padding-bottom: 30px !important;
   }
 
   .login-pf body {
@@ -47,6 +53,10 @@ body, html {
   .scrollable {
     height: 100%;
     overflow: auto;
+  }
+  #paging_div {
+    position: absolute;
+    bottom: 0;
   }
   #main_footer {
     position: absolute;
@@ -305,4 +315,10 @@ iframe, .iframe {
 
 .resizer .btn {
   border-color: #d0d0d0
+}
+
+/* eliminates horizontal scrollbar in some browsers */
+
+.bootstrap-select .dropdown-menu {
+  overflow-y: visible !important
 }

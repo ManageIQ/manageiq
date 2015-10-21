@@ -35,6 +35,7 @@ describe AssignTenantToMiqRequest do
 
         expect(tenant_stub.count).to eq(1)
         expect(tenant_stub.first).to be_use_config_for_attributes
+        expect(tenant_stub.first).to be_divisible
       end
 
       it "doesnt creates additional root_tenant" do
@@ -46,6 +47,7 @@ describe AssignTenantToMiqRequest do
         expect(tenant_stub.count).to eq(1)
         # make sure tenant was not modified
         expect(tenant_stub.first).not_to be_use_config_for_attributes
+        expect(tenant_stub.first).not_to be_divisible
       end
     end
 

@@ -26,13 +26,14 @@
 
   /** @ngInject */
   function resolveServiceTemplates(CollectionsApi) {
-    var options = {expand: 'resources', filter: ['display=true'], attributes: ['picture', 'picture.image_href']};
+    var attributes = ['picture', 'picture.image_href', 'service_template_catalog.name'];
+    var options = {expand: 'resources', filter: ['display=true'], attributes: attributes};
 
     return CollectionsApi.query('service_templates', options);
   }
 
   /** @ngInject */
-  function StateController($state, serviceTemplates) {
+  function StateController($state, serviceTemplates, MarketplaceState) {
     var vm = this;
 
     vm.title = 'Service Catalog';
@@ -45,27 +46,48 @@
       $state.go('marketplace.details', {serviceTemplateId: template});
     }
 
+    function addCategoryFilter(item) {
+      if (angular.isDefined(item.service_template_catalog) 
+        && angular.isDefined(item.service_template_catalog.name)
+        && categoryNames.indexOf(item.service_template_catalog.name) === -1) {
+        categoryNames.push(item.service_template_catalog.name); 
+      }
+    }
+
+    var categoryNames = [];
+    angular.forEach(vm.serviceTemplates, addCategoryFilter);
+
     vm.toolbarConfig = {
       filterConfig: {
         fields: [
           {
             id: 'template_name',
-            title: 'Service Template Name',
+            title: 'Service Name',
             placeholder: 'Filter by Name',
             filterType: 'text'
           },
           {
             id: 'template_description',
-            title: 'Service Template Description',
-            placeholder: 'Filter by Template Description',
+            title: 'Service Description',
+            placeholder: 'Filter by Description',
             filterType: 'text'
+          },
+          {
+            id: 'catalog_name',
+            title: 'Catalog Name',
+            placeholder: 'Filter by Catalog Name',
+            filterType: 'select',
+            filterValues: categoryNames
           }
         ],
         resultsCount: vm.serviceTemplatesList.length,
-        appliedFilters: [],
+        appliedFilters: MarketplaceState.getFilters(),
         onFilterChange: filterChange
       }
     };
+
+    /* Apply the filtering to the data list */
+    filterChange(MarketplaceState.getFilters());
 
     function filterChange(filters) {
       vm.filtersText = '';
@@ -86,6 +108,9 @@
       } else {
         vm.serviceTemplatesList = vm.serviceTemplates;
       }
+
+      /* Keep track of the current filtering state */
+      MarketplaceState.setFilters(filters);
 
       function filterChecker(item) {
         if (matchesFilters(item, filters)) {
@@ -110,11 +135,13 @@
     }
 
     function matchesFilter(item, filter) {
-      var match = true;
+      var match = false;
       if (filter.id === 'template_name') {
         match = (String(item.name).toLowerCase().indexOf(String(filter.value).toLowerCase()) > -1 );
       } else if (filter.id === 'template_description') {
         match = (String(item.long_description).toLowerCase().indexOf(String(filter.value).toLowerCase()) > -1 );
+      } else if (filter.id === 'catalog_name' && angular.isDefined(item.service_template_catalog) ) {
+        match = item.service_template_catalog.name === filter.value;
       }
 
       return match;

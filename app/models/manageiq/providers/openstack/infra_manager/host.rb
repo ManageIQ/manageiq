@@ -152,8 +152,19 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
     end
   end
 
+  def add_unique_names(file, hashes)
+    hashes.each do |x|
+      # Adding unique ID for all custom attributes of a host, otherwise drift filters out the non unique ones
+      section = x[:section] || ""
+      name    = x[:name]    || ""
+      x[:unique_name] = "#{file.name}:#{section}:#{name}"
+    end
+    hashes
+  end
+
   def save_custom_attributes(file)
     hashes = OpenstackConfigurationParser.parse(file.contents)
+    hashes = add_unique_names(file, hashes)
     EmsRefresh.save_custom_attributes_inventory(file, hashes, :scan) if hashes
   end
 end

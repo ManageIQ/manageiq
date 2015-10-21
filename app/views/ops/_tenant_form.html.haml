@@ -14,6 +14,7 @@
                               "id"          => "textInput-markup",
                               "name"        => "name",
                               "ng-model"    => "tenantModel.name",
+                              "ng-disabled" => "tenantModel.default && tenantModel.use_config_for_attributes",
                               "maxlength"   => "#{MAX_NAME_LEN}",
                               "miqrequired" => "",
                               "checkchange" => ""}
@@ -32,6 +33,14 @@
                               "checkchange" => ""}
             %span.help-block{"ng-show" => "angularForm.description.$error.miqrequired"}
               = _("Required")
+      .form-group{"ng-show" => "tenantModel.default"}
+        %label.col-md-2.control-label
+          = _("Use Configuration Settings")
+        .col-md-10
+          %input#use_config{"type"        => "checkbox",
+                            "name"        => "use_config_for_attributes",
+                            "ng-model"    => "tenantModel.use_config_for_attributes",
+                            "checkchange" => ""}
       %input{"type" => "hidden", "name" => "divisible", "value" => "{{tenantModel.divisible}}"}
   = render :partial => "layouts/angular/x_edit_buttons_angular"
 

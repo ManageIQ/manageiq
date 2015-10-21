@@ -32,7 +32,7 @@
   }
 
   /** @ngInject */
-  function StateController($state, services) {
+  function StateController($state, services, ServicesState) {
     /* jshint validthis: true */
     var vm = this;
 
@@ -57,20 +57,20 @@
             filterType: 'text'
           },
           {
-            id: 'id',
-            title: 'Service Id',
-            placeholder: 'Filter by Service ID',
+            id: 'vms',
+            title: 'Number of VMs',
+            placeholder: 'Filter by VMs',
             filterType: 'text'
           },
           {
-            id: 'request_state',
-            title: 'Request State',
-            placeholder: 'Filter by Request State',
+            id: 'owner',
+            title: 'Owner',
+            placeholder: 'Filter by Owner',
             filterType: 'text'
           }
         ],
         resultsCount: vm.servicesList.length,
-        appliedFilters: [],
+        appliedFilters: ServicesState.getFilters(),
         onFilterChange: filterChange
       },
       sortConfig: {
@@ -81,9 +81,14 @@
             sortType: 'alpha'
           },
           {
-            id: 'id',
-            title:  'ID',
+            id: 'retires',
+            title:  'Retirement Date',
             sortType: 'numeric'
+          },
+          {
+            id: 'owner',
+            title:  'Owner',
+            sortType: 'alpha'
           },
           {
             id: 'created',
@@ -91,9 +96,14 @@
             sortType: 'numeric'
           }
         ],
-        onSortChange: sortChange
+        onSortChange: sortChange,
+        isAscending: ServicesState.getSort().isAscending,
+        currentField: ServicesState.getSort().currentField
       }
     };
+
+    /* Apply the filtering to the data list */
+    filterChange(ServicesState.getFilters());
 
     function handleClick(item, e) {
       $state.go('services.details', {serviceId: item.id});
@@ -101,23 +111,40 @@
 
     function sortChange(sortId, isAscending) {
       vm.servicesList.sort(compareFn);
-    }
 
+      /* Keep track of the current sorting state */
+      ServicesState.setSort(sortId, vm.toolbarConfig.sortConfig.isAscending);
+    }
+    
     function compareFn(item1, item2) {
       var compValue = 0;
       if (vm.toolbarConfig.sortConfig.currentField.id === 'name') {
         compValue = item1.name.localeCompare(item2.name);
-      } else if (vm.toolbarConfig.sortConfig.currentField.id === 'id') {
-        compValue = item1.id - item2.id;
+      } else if (vm.toolbarConfig.sortConfig.currentField.id === 'owner') {
+        compValue = item1.evm_owner.name.localeCompare(item2.evm_owner.name);
       } else if (vm.toolbarConfig.sortConfig.currentField.id === 'created') {
         compValue = new Date(item1.created_at) - new Date(item2.created_at);
-      }
+      } else if (vm.toolbarConfig.sortConfig.currentField.id === 'retires') {
+        compValue = getRetirementDate(item1.retires_on) - getRetirementDate(item2.retires_on);
+      } 
 
       if (!vm.toolbarConfig.sortConfig.isAscending) {
         compValue = compValue * -1;
       }
 
       return compValue;
+    }
+
+    /* Date 10 years into the future */
+    var neverRetires = new Date();
+    neverRetires.setDate(neverRetires.getYear() + 10);
+
+    function getRetirementDate(value) {
+      if (angular.isDefined(value)) {
+        return new Date(value);
+      } else {
+        return neverRetires;
+      }
     }
 
     function filterChange(filters) {
@@ -139,6 +166,12 @@
       } else {
         vm.servicesList = vm.services;
       }
+
+      /* Keep track of the current filtering state */
+      ServicesState.setFilters(filters);
+
+      /* Make sure sorting direction is maintained */
+      sortChange(ServicesState.getSort().currentField, ServicesState.getSort().isAscending);
 
       function filterChecker(item) {
         if (matchesFilters(item, filters)) {
@@ -165,10 +198,10 @@
     function matchesFilter(item, filter) {
       if ('name' === filter.id) {
         return item.name.toLowerCase().indexOf(filter.value.toLowerCase()) !== -1;
-      } else if ('id' === filter.id) {
-        return Number(item.id) === Number(filter.value);
-      } else if ('request_state' === filter.id) {
-        return item.request_state.toLowerCase() === filter.value.toLowerCase();
+      } else if ('vms' === filter.id) {
+        return String(item.v_total_vms).toLowerCase().indexOf(filter.value.toLowerCase()) !== -1;
+      } else if ('owner' === filter.id && angular.isDefined(item.evm_owner)) {
+        return item.evm_owner.name.toLowerCase().indexOf(filter.value.toLowerCase()) !== -1;
       }
 
       return false;

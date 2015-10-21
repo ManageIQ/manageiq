@@ -241,9 +241,4 @@ module OpsController::Db
       page << "miqSparkle(false);"    # Need to turn off sparkle in case original ajax element gets replaced
     end
   end
-
-  # Add the children of a node that is being expanded (autoloaded), called by generic tree_autoload method
-  def tree_add_child_nodes(id)
-    x_get_child_nodes_dynatree(x_active_tree, id)
-  end
 end

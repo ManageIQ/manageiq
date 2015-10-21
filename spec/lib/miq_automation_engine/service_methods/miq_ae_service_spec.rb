@@ -3,10 +3,21 @@ require "spec_helper"
 module MiqAeServiceSpec
   describe MiqAeMethodService::MiqAeService do
     before(:each) do
-      @domain = 'TEST_DOMAIN'
-      @user   = FactoryGirl.create(:user_with_group)
-      identifiers = {:domain => @domain, :namespace => 'EVM',
-                          :class  => 'AUTOMATE', :instance => 'test1', :method => 'test'}
+      MiqAeDatastore.reset
+      @domain = 'Bedrock'
+      Tenant.seed
+      @root_tenant = Tenant.root_tenant
+      @tenant = FactoryGirl.build(:tenant, :parent => @root_tenant)
+      @owner = FactoryGirl.create(:user_with_group, :name => "fred", :tenant => @tenant)
+      create_method(@domain, @tenant)
+      @ae_method     = ::MiqAeMethod.first
+      @ae_result_key = 'foo'
+    end
+
+    def create_method(domain, tenant)
+      identifiers = {:tenant => tenant,     :domain => domain, :namespace => 'EVM',
+                     :class  => 'AUTOMATE', :instance => 'test1',
+                     :method => 'test'}
       fields      = [{:name => 'method1', :type => 'method',
                                :priority => 1, :value => 'test'},
                      {:name => 'var1', :type => 'attribute',
@@ -15,12 +26,17 @@ module MiqAeServiceSpec
                                :priority => 3}
                     ]
       MiqAutomateHelper.create_dummy_method(identifiers, fields)
-      @ae_method     = ::MiqAeMethod.first
-      @ae_result_key = 'foo'
+    end
+
+    def create_inaccessible_domain
+      @other_tenant = FactoryGirl.build(:tenant, :parent => @root_tenant)
+      @other_owner = FactoryGirl.create(:user_with_group, :name => "barney", :tenant => @other_tenant)
+      @other_domain = 'Mexirock'
+      create_method(@other_domain, @other_tenant)
     end
 
     def invoke_ae
-      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1", @user)
+      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1", @owner)
     end
 
     def assert_readonly_instance(automate_method_script)
@@ -269,6 +285,30 @@ module MiqAeServiceSpec
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
         result.should == false
+      end
+
+      it "cannot delete instances from other tenants" do
+        create_inaccessible_domain
+        method = "$evm.root['#{@ae_result_key}'] = $evm.instance_delete('#{@other_domain}/EVM/AUTOMATE/test1')"
+        @ae_method.update_attributes(:data => method)
+        result = invoke_ae.root(@ae_result_key)
+        expect(result).to be_false
+      end
+
+      it "check if an instance exists in the other tenant" do
+        create_inaccessible_domain
+        method = "$evm.root['#{@ae_result_key}'] = $evm.instance_exists?('#{@other_domain}/EVM/AUTOMATE/test1')"
+        @ae_method.update_attributes(:data => method)
+        result = invoke_ae.root(@ae_result_key)
+        expect(result).to be_false
+      end
+
+      it "cannot add instances into other tenants" do
+        create_inaccessible_domain
+        method = "$evm.root['#{@ae_result_key}'] = $evm.instance_update('#{@other_domain}/EVM/AUTOMATE/testadd', { 'method1' => 'testattributevaluechanged', 'var1' => 'variablevalue1changed'})"
+        @ae_method.update_attributes(:data => method)
+        result = invoke_ae.root(@ae_result_key)
+        expect(result).to be_false
       end
 
       it "readonly domain " do

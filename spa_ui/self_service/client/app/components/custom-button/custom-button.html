@@ -1,7 +1,9 @@
 <div>
   <span ng-repeat="button in vm.customActions.buttons">
-     <button class="btn btn-default custom-button" title="{{button.description}}" type="button">
-       <!--<img ng-if="button.options.display" src="/images/toolbars/custom-{{button.options.button_image}}.png"/>-->
+     <button class="btn btn-default custom-button"
+             title="{{button.description}}"
+             type="button"
+             ng-click="vm.customButtonAction(button)">
        {{button.name }}
      </button>
   </span>
@@ -13,7 +15,7 @@
     </button>
     <ul class="dropdown-menu" role="menu" aria-labelledby="{{buttonGroup.id}}">
       <li ng-repeat="button in buttonGroup.buttons" role="presentation">
-        <a role="menuitem" tabindex="-1" href="#">
+        <a role="menuitem" tabindex="-1" ng-click="vm.customButtonAction(button)">
           {{ button.name }}
         </a>
       </li>

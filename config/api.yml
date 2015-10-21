@@ -3,12 +3,12 @@
   :module: api
   :name: API
   :description: REST API
-  :version: '2.1.0-pre'
+  :version: '2.1.0'
 :version:
   :regex: !ruby/regexp /^v[0-9]+(?>\\.[0-9a-zA-Z]+)*(-[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?/
   :definitions:
-  - :name: '2.1.0-pre'
-    :ident: 'v2.1.0-pre'
+  - :name: '2.1.0'
+    :ident: 'v2.1.0'
 :method:
   :names:
   - :get
@@ -814,7 +814,7 @@
     :description: Templates
     :options:
     - :collection
-    :methods: *70174834086080
+    :methods: *70174834085620
     :klass: MiqTemplate
     :subcollections:
     - :tags
@@ -824,16 +824,24 @@
       :post:
       - :name: refresh
         :identifier: miq_template_refresh
+        :disabled: true
       - :name: edit
         :identifier: miq_template_edit
+        :disabled: true
+      - :name: set_ownership
+        :identifier: miq_template_ownership
       - :name: delete
         :identifier: miq_template_delete
     :resource_actions:
       :post:
       - :name: refresh
         :identifier: miq_template_refresh
+        :disabled: true
       - :name: edit
         :identifier: miq_template_edit
+        :disabled: true
+      - :name: set_ownership
+        :identifier: miq_template_ownership
       :delete:
       - :name: delete
         :identifier: miq_template_delete
@@ -865,6 +873,8 @@
     - :collection
     :methods: *70174834084700
     :klass: Tenant
+    :subcollections:
+    - :tags
     :collection_actions:
       :get:
       - :name: read
@@ -888,6 +898,12 @@
       :delete:
       - :name: delete
         :identifier: rbac_tenant_delete
+    :tags_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: rbac_tenant_tags_edit
+      - :name: unassign
+        :identifier: rbac_tenant_tags_edit
   :users:
     :description: Users
     :options:
@@ -974,6 +990,8 @@
         :disabled: true
       - :name: set_owner
         :identifier: vm_edit
+      - :name: set_ownership
+        :identifier: vm_ownership
       - :name: scan
         :identifier: vm_scan
       - :name: delete
@@ -1018,6 +1036,8 @@
         :identifier: vm_delete
       - :name: set_owner
         :identifier: vm_edit
+      - :name: set_ownership
+        :identifier: vm_ownership
       - :name: scan
         :identifier: vm_scan
       :delete:

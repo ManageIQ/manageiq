@@ -343,7 +343,8 @@ class MiqAeClassController < ApplicationController
     presenter[:update_partials][update_partial_div] = r[:partial => update_partial] if update_partial
     if @in_a_form
       action_url =  create_action_url(nodes.first)
-      presenter[:show_hide_layout][:paginator] = 'show' # incase it was hidden for summary screen, and incase there were no records on show_list
+      # incase it was hidden for summary screen, and incase there were no records on show_list
+      presenter[:set_visible_elements][:paging_div] = true
       presenter[:set_visible_elements][:form_buttons_div] = true
       presenter[:update_partials][:form_buttons_div] = r[
         :partial => "layouts/x_edit_buttons",
@@ -357,28 +358,27 @@ class MiqAeClassController < ApplicationController
       ]
     else
       # incase it was hidden for summary screen, and incase there were no records on show_list
-      presenter[:show_hide_layout][:paginator] = 'hide'
+      presenter[:set_visible_elements][:paging_div] = false
       presenter[:set_visible_elements][:form_buttons_div] = false
     end
 
     presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit
 
-    if !@in_a_form || (params[:pressed] && params[:pressed].ends_with?("_delete"))
-      presenter[:set_visible_elements][:params_div] =
-        @sb[:active_tab] == "methods" && !@record.inputs.blank?
+    if @record.kind_of?(MiqAeMethod) && !@in_a_form
+      presenter[:set_visible_elements][:params_div] = !@record.inputs.blank?
     end
-
+    
     # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 
     # Rebuild the toolbars
     presenter[:reload_toolbars][:history] = {:buttons => h_buttons, :xml => h_xml}
     if c_buttons && c_xml
-      presenter[:show_hide_layout][:toolbar] = 'show'
+      presenter[:set_visible_elements][:toolbar] = true
       presenter[:reload_toolbars][:center] = {:buttons => c_buttons, :xml => c_xml}
       presenter[:set_visible_elements][:center_buttons_div] = true
     else
-      presenter[:show_hide_layout][:toolbar] = 'hide'
+      presenter[:set_visible_elements][:toolbar] = false
       presenter[:set_visible_elements][:center_buttons_div] = false
     end
 
@@ -1761,7 +1761,7 @@ class MiqAeClassController < ApplicationController
       selected_items[record.id] = record.display_name.blank? ? record.name : "#{record.display_name} (#{record.name})"
       @record = record if i == 0
     end
-    MiqAeDomain.all_unlocked.collect { |domain| domains[domain.id] = domain_display_name(domain) }
+    current_tenant.editable_domains.collect { |domain| domains[domain.id] = domain_display_name(domain) }
     initialize_copy_edit_vars(typ, button_pressed, domains, selected_items)
     @sb[:domain_id] = domains.first.first
     @edit[:current] = copy_hash(@edit[:new])
@@ -2556,7 +2556,7 @@ class MiqAeClassController < ApplicationController
   def domain_overrides
     @domain_overrides = {}
     typ, = x_node.split('-')
-    overrides = TreeBuilder.get_model_for_prefix(typ).constantize.get_homonymic_across_domains(@record.fqname)
+    overrides = TreeBuilder.get_model_for_prefix(typ).constantize.get_homonymic_across_domains(current_user, @record.fqname)
     overrides.each do |obj|
       display_name, id = domain_display_name_using_name(obj, @record.domain.name)
       @domain_overrides[display_name] = id

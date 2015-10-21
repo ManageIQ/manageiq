@@ -321,7 +321,7 @@
           .form-group
             .col-md-8
               %span#pwd_note{:style => "color:red"}
-            .col-md-10{:align => "right"}
+            .col-md-10
               = render  :partial => "/layouts/form_buttons_verify",
                 :locals => {:validate_url => "validate_replcation_worker", :valtype => "default",
                 :verify_title_off => _("Matching password fields are needed to perform verification of credentials"),

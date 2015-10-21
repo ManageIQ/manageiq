@@ -1,6 +1,5 @@
 class ApiController
   module Roles
-    include FeatureHelper
     def create_resource_roles(type, _id = nil, data = {})
       if data.key?("id") || data.key?("href")
         raise BadRequestError, "Resource id or href should not be specified for creating a new #{type}"

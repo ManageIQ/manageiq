@@ -42,10 +42,10 @@ class MiqAction < ActiveRecord::Base
   # Add a instance method to store the sequence and synchronous values from the policy contents
   attr_accessor :sequence, :synchronous, :reserved
 
-  FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
+  FIXTURE_DIR = Rails.root.join("db/fixtures")
 
-  SCRIPT_DIR = File.expand_path(File.join(Rails.root, "product/conditions/scripts"))
-  FileUtils.mkdir_p(SCRIPT_DIR) unless File.exist?(SCRIPT_DIR)
+  SCRIPT_DIR = Rails.root.join("product/conditions/scripts").expand_path
+  SCRIPT_DIR.mkpath
 
   RE_SUBST = /\$\{([^}]+)\}/
 
@@ -1066,12 +1066,8 @@ class MiqAction < ActiveRecord::Base
 
   def round_to_nearest_4mb(num)
     num = num.to_i
-    mod = num.modulo(4)
-    unless mod == 0
-      pad = 4 - mod
-      num += pad
-    end
-    num
+    pad = (-num) % 4
+    num + pad
   end
 
   def self.seed
@@ -1080,29 +1076,25 @@ class MiqAction < ActiveRecord::Base
   end
 
   def self.create_default_actions
-    fname = File.join(FIXTURE_DIR, "#{to_s.pluralize.underscore}.csv")
-    data  = File.read(fname).split("\n")
-    cols  = data.shift.split(",")
+    CSV.foreach(fixture_path, :headers => true, :skip_lines => /^#/) do |csv_row|
+      action = csv_row.to_hash
+      action['action_type'] = 'default'
 
-    data.each do |a|
-      next if a =~ /^#.*$/ # skip commented lines
-
-      arr = a.split(",")
-
-      action = {}
-      cols.each_index { |i| action[cols[i].to_sym] = arr[i] }
-
-      rec = find_by_name(action[:name])
+      rec = find_by_name(action['name'])
       if rec.nil?
-        _log.info("Creating [#{action[:name]}]")
-        rec = create(action.merge(:action_type => "default"))
+        _log.info("Creating [#{action['name']}]")
+        create(action)
       else
-        rec.attributes = action.merge(:action_type => "default")
+        rec.attributes = action
         if rec.changed? || (rec.options_was != rec.options)
-          _log.info("Updating [#{action[:name]}]")
+          _log.info("Updating [#{action['name']}]")
           rec.save
         end
       end
     end
+  end
+
+  def self.fixture_path
+    FIXTURE_DIR.join("#{to_s.pluralize.underscore}.csv")
   end
 end

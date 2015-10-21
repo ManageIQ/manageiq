@@ -19,7 +19,7 @@ gem "jquery-hotkeys-rails"
 gem "jquery-rails",                   "~>4.0.4"
 gem "jquery-rjs",                     "=0.1.1",                       :git => "https://github.com/amatsuda/jquery-rjs.git"
 gem "lodash-rails",                   "~>3.10.0"
-gem "patternfly-sass",                "~>2.3.0"
+gem "patternfly-sass",                "~>2.4.0"
 gem "css_splitter"
 gem "sass-rails"
 
@@ -40,6 +40,7 @@ gem "winrm",                          "=1.1.3",    :require => false, :git => "g
 gem "ziya",                           "=2.3.0",    :require => false, :git => "git://github.com/ManageIQ/ziya.git", :tag => "v2.3.0-2"
 
 # Not vendored, but required
+gem "mime-types",                     "~>2.6.1",   :require => "mime/types/columnar"
 gem "acts_as_list",                   "~>0.1.4"
 gem "acts_as_tree",                   "~>2.1.0"  # acts_as_tree needs to be required so that it loads before ancestry
 # In 1.9.3: Time.parse uses british version dd/mm/yyyy instead of american version mm/dd/yyyy
@@ -51,7 +52,6 @@ gem "azure-armrest",                  "=0.0.3"
 gem "default_value_for",              "~>3.0.1"
 gem "hamlit-rails",                   "~>0.1.0"
 gem "high_voltage",                   "~>2.4.0"
-gem "mime-types"
 gem "novnc-rails",                    "~>0.2"
 gem "outfielding-jqplot-rails",       "= 1.0.8"
 gem "puma",                           "~>2.13"
@@ -131,6 +131,7 @@ source "https://rails-assets.org" do
   gem "rails-assets-sprintf",                         "~>1.0.3"
   gem "rails-assets-numeral",                         "~>1.5.3"
   gem "rails-assets-slickgrid",                       "~>2.1.0"
+  gem "rails-assets-jqueryui",                        "~>1.9.2"
 end
 
 #

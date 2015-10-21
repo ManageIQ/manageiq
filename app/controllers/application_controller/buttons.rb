@@ -1008,7 +1008,7 @@ module ApplicationController::Buttons
     # Following commented out since all resolutions start at SYSTEM/PROCESS
     #   @resolve[:starting_objects] = MiqAeClass.find_all_by_namespace("SYSTEM").collect{|c| c.fqname}
 
-    matching_instances = MiqAeClass.find_distinct_instances_across_domains(@resolve[:new][:starting_object])
+    matching_instances = MiqAeClass.find_distinct_instances_across_domains(current_user, @resolve[:new][:starting_object])
     if matching_instances.any?
       @resolve[:instance_names] = matching_instances.collect(&:name)
       instance_name = @custom_button && @custom_button.uri_object_name

@@ -2,13 +2,18 @@
 module OpsController::OpsRbac
   extend ActiveSupport::Concern
 
+  TAG_DB_TO_NAME =  {
+                      'MiqGroup'  => 'group',
+                      'User'      => 'user',
+                      'Tenant'    => 'tenant'
+                    }.freeze
   # Edit user or group tags
   def rbac_tags_edit
     case params[:button]
     when "cancel"
       rbac_edit_tags_cancel
     when "save", "add"
-      assert_privileges("rbac_#{session[:tag_db] == "MiqGroup" ? "group" : "user"}_tags_edit")
+      assert_privileges("rbac_#{TAG_DB_TO_NAME[session[:tag_db]]}_tags_edit")
       rbac_edit_tags_save
     when "reset", nil # Reset or first time in
       nodes = x_node.split('-')
@@ -153,19 +158,22 @@ module OpsController::OpsRbac
   end
 
   def tenant_form_fields
-    tenant = Tenant.find_by_id(params[:id])
+    tenant      = Tenant.find_by_id(params[:id])
 
     render :json => {
-      :name        => tenant.name,
-      :description => tenant.description,
-      :default     => tenant.default?,
-      :divisible   => tenant.divisible
+      :name                      => tenant.name,
+      :description               => tenant.description,
+      :default                   => tenant.root?,
+      :divisible                 => tenant.divisible,
+      :use_config_for_attributes => tenant.use_config_for_attributes
     }
   end
 
   def tenant_set_record_vars(tenant)
-    tenant.name        = params[:name]
+    # there is no params[:name] when use_config_attributes is checked
+    tenant.name        = params[:name] if params[:name]
     tenant.description = params[:description]
+    tenant.use_config_for_attributes = tenant.root? && (params[:use_config_for_attributes] == "on")
     unless tenant.id # only set for new records
       tenant.parent    = Tenant.find_by_id(from_cid(x_node.split('-').last))
       tenant.divisible = params[:divisible] == "true"
@@ -223,6 +231,20 @@ module OpsController::OpsRbac
       :name   => tenant.name,
       :quotas => tenant_quotas
     }
+  end
+
+  # Edit user or group tags
+  def rbac_tenant_tags_edit
+    case params[:button]
+    when "cancel"
+      rbac_edit_tags_cancel
+    when "save", "add"
+      assert_privileges("rbac_tenant_tags_edit")
+      rbac_edit_tags_save
+    when "reset", nil # Reset or first time in
+      @_params[:tagging] = "Tenant"
+      rbac_edit_tags_reset
+    end
   end
 
   # AJAX driven routines to check for changes in ANY field on the form
@@ -778,6 +800,11 @@ module OpsController::OpsRbac
     end
 
     changed = (@edit[:new] != @edit[:current])
+    bad = false
+    if rec_type == "group"
+      bad ||= @edit[:new][:role].blank?
+      bad ||= @edit[:new][:group_tenant].blank?
+    end
 
     render :update do |page|              # Use JS to update the display
       if %w(up down).include?(params[:button])
@@ -798,7 +825,7 @@ module OpsController::OpsRbac
           page << set_element_visible('group_lookup', @edit[:new][:lookup]) unless params[:check]
         end
       end
-      page << javascript_for_miq_button_visibility(changed)
+      page << javascript_for_miq_button_visibility(changed && !bad)
     end
   end
 
@@ -876,6 +903,7 @@ module OpsController::OpsRbac
 
   def rbac_tenant_get_details(id)
     @record = @tenant = Tenant.find_by_id(from_cid(id))
+    get_tagdata(@tenant)
   end
 
   def rbac_group_get_details(id)
@@ -1037,10 +1065,11 @@ module OpsController::OpsRbac
 
     all_roles = MiqUserRole.all
     @edit[:roles] = {}
-    @edit[:roles]["<Choose a role>"] = nil
+    @edit[:roles]["<Choose a Role>"] = nil if @record.id.nil?
     all_roles.each do |r|
       @edit[:roles][r.name] = r.id
     end
+
     if @group.miq_user_role.nil?              # If adding, set to first role
       @edit[:new][:role] = @edit[:roles][@edit[:roles].keys.sort[0]]
     else
@@ -1050,6 +1079,7 @@ module OpsController::OpsRbac
     @edit[:projects_tenants] = []
     all_tenants = Tenant.all_tenants
     all_projects = Tenant.all_projects
+    @edit[:projects_tenants].push(["", [["<Choose a Project/Tentant>", :selected => "<Choose a Project/Tentant>", :disabled => "<Choose a Project/Tentant>", :style => 'display:none']]])
     @edit[:projects_tenants].push(["Projects", all_projects.sort_by(&:name).collect { |tenant| [tenant.name, tenant.id] }]) unless all_projects.blank?
     @edit[:projects_tenants].push(["Tenants", all_tenants.sort_by(&:name).collect { |tenant| [tenant.name, tenant.id] }]) unless all_tenants.blank?
     @edit[:new][:group_tenant] = @group.tenant_id

@@ -2,13 +2,22 @@ require "spec_helper"
 
 describe MiqProvision do
   context "::StateMachine" do
+    let(:req_user) { FactoryGirl.create(:user_with_group) }
     let(:ems)      { FactoryGirl.create(:ems_openstack_with_authentication) }
     let(:flavor)   { FactoryGirl.create(:flavor_openstack, :ems_ref => 24) }
     let(:options)  { {:src_vm_id => template.id, :vm_target_name => "test_vm_1"} }
     let(:template) { FactoryGirl.create(:template_openstack, :ext_management_system => ems, :ems_ref => MiqUUID.new_guid) }
-    let(:vm)       { FactoryGirl.create(:vm_openstack) }
+    let(:vm)       { FactoryGirl.create(:vm_openstack, :ext_management_system => ems) }
 
-    let(:task)     { FactoryGirl.create(:miq_provision_openstack, :source => template, :destination => vm, :state => 'pending', :status => 'Ok', :options => options) }
+    let(:task) do
+      FactoryGirl.create(:miq_provision_openstack,
+                         :source      => template,
+                         :destination => vm,
+                         :state       => 'pending',
+                         :status      => 'Ok',
+                         :userid      => req_user.userid,
+                         :options     => options)
+    end
 
     context "#prepare_provision" do
       before do
@@ -67,7 +76,7 @@ describe MiqProvision do
     end
 
     context "#post_create_destination" do
-      let(:user) { FactoryGirl.create(:user, :email => "foo@example.com") }
+      let(:user) { FactoryGirl.create(:user_with_email_and_group) }
 
       it "sets description" do
         options[:vm_description] = description = "foo bar"
@@ -88,8 +97,6 @@ describe MiqProvision do
         options[:owner_email] = user.email
         options[:owner_group] = group_owner.description
         task.update_attributes(:options => options)
-
-        task.stub(:miq_request => double("MiqRequest").as_null_object)
 
         task.should_receive(:mark_as_completed)
 

@@ -8,7 +8,9 @@ describe ManageIQ::Providers::Openstack::InfraManager::Host do
 [DEFAULT]
 # Location of VNC console proxy, in the form
 # "http://127.0.0.1:6080/vnc_auto.html" (string value)
-# novncproxy_base_url=http://127.0.0.1:6080/vnc_auto.html
+# Verbosity of SQL debugging information: 0=None,
+# 100=Everything. (integer value) (the verbosity tests = inside comment)
+#novncproxy_base_url=http://127.0.0.1:6080/vnc_auto.html
 novncproxy_base_url=http://0.0.0.0:6089/vnc_auto.html
 test=test_value
     EOT
@@ -21,7 +23,7 @@ test=test_value
 # =========Start Global Config Option for Distributed L3 Router===============
 # Location of VNC console proxy, in the form
 # "http://127.0.0.1:6080/vnc_auto.html" (string value)
-# novncproxy_base_url=http://127.0.0.1:6080/vnc_auto.html
+#novncproxy_base_url=http://127.0.0.1:6080/vnc_auto.html
 novncproxy_base_url=http://0.0.0.0:6089/vnc_auto.html
 test=test_value
     EOT
@@ -33,7 +35,7 @@ test=test_value
 
       # Location of VNC console proxy, in the form
 # "http://127.0.0.1:6080/vnc_auto.html" (string value)
-#         novncproxy_base_url  =http://127.0.0.1:6080/vnc_auto.html
+#novncproxy_base_url  =http://127.0.0.1:6080/vnc_auto.html
  novncproxy_base_url   =  http://0.0.0.0:6089/vnc_auto.html
 
    test=test_value
@@ -55,10 +57,10 @@ test=test_value
 [DEFAULT]
 # Location of VNC console proxy, in the form
 # "http://127.0.0.1:6080/vnc_auto.html" (string value)
-# novncproxy_base_url=http://127.0.0.1:6080/vnc_auto.html
+#novncproxy_base_url=http://127.0.0.1:6080/vnc_auto.html
 novncproxy_base_url=http://0.0.0.0:6089/vnc_auto.html
 novncproxy_base_url=http://0.0.0.0:6090/vnc_auto.html
-# novncproxy_base_url=http://127.0.0.1:6081/vnc_auto.html
+#novncproxy_base_url=http://127.0.0.1:6081/vnc_auto.html
 test=test_value
     EOT
   end
@@ -68,7 +70,7 @@ test=test_value
 [DEFAULT]
 # Location of VNC console proxy, in the form
 # "http://127.0.0.1:6080/vnc_auto.html" (string value)
-# novncproxy_base_url=http://127.0.0.1:6080/vnc_auto.html
+#novncproxy_base_url=http://127.0.0.1:6080/vnc_auto.html
 novncproxy_base_url:http://0.0.0.0:6089/vnc_auto.html
 test=test_value
     EOT
@@ -79,7 +81,7 @@ test=test_value
 [DEFAULT]
 # Location of VNC console proxy, in the form
 # "http://127.0.0.1:6080/vnc_auto.html" (string value)
-# novncproxy_base_url=http://127.0.0.1:6080/vnc_auto.html
+#novncproxy_base_url=http://127.0.0.1:6080/vnc_auto.html
 novncproxy_base_url=http://0.0.0.0:6089/
   vnc_auto.html
 test=test_value
@@ -103,7 +105,7 @@ test=test_value
 [DEFAULT]
 # Location of VNC console proxy, in the form
 # "http://127.0.0.1:6080/vnc_auto.html" (string value)
-# novncproxy_base_url=http://127.0.0.1:6080/vnc_auto.html
+#novncproxy_base_url=http://127.0.0.1:6080/vnc_auto.html
 novncproxy_base_url=http://0.0.0.0:6089/
    #vnc_auto.html
    vnc_auto.html
@@ -117,7 +119,7 @@ test=test_value
     <<-EOT
 [DEFAULT]
 
-# instances_path=$instances_base_path/${instances_sub_path}
+#instances_path=$instances_base_path/${instances_sub_path}
 
 #
 # Options defined in nova.virt.libvirt.imagecache
@@ -131,7 +133,7 @@ image_cache_subdirectory_name = glance
 # locations (string value)
 #image_info_filename_pattern=$instances_path/${image_cache_subdirectory_name}/%(image)s.info
 #image=fedora.qcow
-# image_cache_subdirectory_name = nova
+#image_cache_subdirectory_name = nova
     EOT
   end
 
@@ -198,7 +200,10 @@ image_cache_subdirectory_name = glance
         files = [FactoryGirl.create(:filesystem_openstack_conf, :contents => filesystem_openstack_conf_nice)]
         host.refresh_custom_attributes_from_conf_files(files)
 
-        assert_custom_attribute('novncproxy_base_url', standard_nice_format)
+        assert_custom_attribute('novncproxy_base_url', standard_nice_format(
+          :description => "Location of VNC console proxy, in the form\n\"http://127.0.0.1:6080/vnc_auto.html\" (string"\
+                          " value)\nVerbosity of SQL debugging information: 0=None,\n100=Everything. (integer value)"\
+                          " (the verbosity tests = inside comment)"))
         assert_custom_attribute('test', standard_nice_test_format)
         assert_custom_attributes_count(2)
         expect(files.first.custom_attributes.count).to eq 2

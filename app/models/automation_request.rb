@@ -11,15 +11,15 @@ class AutomationRequest < MiqRequest
   # uri_parts:  instance=IIII|message=MMMM or any subset thereof
   # parameters: var1=vvvvv|var2=wwww|var3=xxxxx
   ##############################################
-  def self.create_from_ws(version, userid, uri_parts, parameters, requester)
-    _log.info "Starting with interface version=<#{version}> for user=<#{userid}> with uri_parts=<#{uri_parts.inspect}>, parameters=<#{parameters.inspect}> and requester=<#{requester.inspect}>"
+  def self.create_from_ws(version, user, uri_parts, parameters, requester)
+    _log.info "Starting with interface version=<#{version}> for user=<#{user.userid}> with uri_parts=<#{uri_parts.inspect}>, parameters=<#{parameters.inspect}> and requester=<#{requester.inspect}>"
 
     options = {}
     requester_options = MiqRequestWorkflow.parse_ws_string(requester)
     auto_approve = (requester_options[:auto_approve] == 'true' || requester_options[:auto_approve] == true)
     unless requester_options[:user_name].blank?
-      userid = requester_options[:user_name]
-      _log.warn "Web-service requester changed to <#{userid}>"
+      user = User.find_by_userid!(requester_options[:user_name])
+      _log.warn "Web-service requester changed to <#{user.userid}>"
     end
 
     uri_options = MiqRequestWorkflow.parse_ws_string(uri_parts)
@@ -30,14 +30,13 @@ class AutomationRequest < MiqRequest
     options[:instance_name] = (options.delete(:instance) || DEFAULT_INSTANCE).strip
 
     attrs = MiqRequestWorkflow.parse_ws_string(parameters)
-    attrs[:userid] = userid
 
-    user               = User.find_by_userid(userid)
-    options[:user_id]  = user.id unless user.nil?
+    attrs[:userid]     = user.userid
+    options[:user_id]  = user.id
     options[:attrs]    = attrs
     options[:miq_zone] = zone(options) if options[:attrs].key?(:miq_zone)
 
-    create_request(options, userid, auto_approve)
+    create_request(options, user, auto_approve)
   end
 
   def self.zone(options)

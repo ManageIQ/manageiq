@@ -1,7 +1,7 @@
 - if @edit
   - url = url_for(:action => 'alert_profile_field_changed', :id => "#{@alert_profile.id || 'new'}")
   - observe_with_interval = {:interval => '.5', :url => url}.to_json
-#alert_profile_details_div{:style => "width: 100%; height: 100%; overflow: auto;"}
+#alert_profile_details_div
   - if @assign
     = render :partial => 'alert_profile_assign'
   - elsif @alert_profile

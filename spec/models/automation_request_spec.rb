@@ -23,7 +23,7 @@ describe AutomationRequest do
 
   context ".create_from_ws" do
     it "with empty requester string" do
-      ar = AutomationRequest.create_from_ws(@version, admin.userid, @uri_parts, @parameters, "")
+      ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, "")
       ar.should be_kind_of(AutomationRequest)
 
       ar.should == AutomationRequest.first
@@ -40,27 +40,17 @@ describe AutomationRequest do
       ar.options[:attrs][:userid].should == admin.userid
     end
 
-    it "with requester string overriding userid who is NOT in the database" do
+    it "doesnt allow overriding userid who is NOT in the database" do
       user_name = 'oleg'
-      ar = AutomationRequest.create_from_ws(@version, admin.userid, @uri_parts, @parameters, "user_name=#{user_name}")
-      ar.should be_kind_of(AutomationRequest)
 
-      ar.should == AutomationRequest.first
-      ar.request_state.should == "pending"
-      ar.status.should == "Ok"
-      ar.approval_state.should == "pending_approval"
-      ar.userid.should == user_name
-      ar.options[:message].should == @ae_message
-      ar.options[:instance_name].should == @ae_instance
-      ar.options[:user_id].should         be_nil
-      ar.options[:attrs][:var1].should == @ae_var1
-      ar.options[:attrs][:var2].should == @ae_var2
-      ar.options[:attrs][:var3].should == @ae_var3
-      ar.options[:attrs][:userid].should == user_name
+      expect do
+        AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, "user_name=#{user_name}")
+      end.to raise_error(ActiveRecord::RecordNotFound)
+
     end
 
     it "with requester string overriding userid who is in the database" do
-      ar = AutomationRequest.create_from_ws(@version, admin.userid, @uri_parts, @parameters, "user_name=#{@approver.userid}")
+      ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, "user_name=#{@approver.userid}")
       ar.should be_kind_of(AutomationRequest)
 
       ar.should == AutomationRequest.first
@@ -78,7 +68,7 @@ describe AutomationRequest do
     end
 
     it "with requester string overriding userid AND auto_approval" do
-      ar = AutomationRequest.create_from_ws(@version, admin.userid, @uri_parts, @parameters, "user_name=#{@approver.userid}|auto_approve=true")
+      ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, "user_name=#{@approver.userid}|auto_approve=true")
       ar.should be_kind_of(AutomationRequest)
 
       ar.should == AutomationRequest.first
@@ -99,7 +89,7 @@ describe AutomationRequest do
   context "#approve" do
     context "an unapproved request with a single approver" do
       before(:each) do
-        @ar = AutomationRequest.create_from_ws(@version, admin.userid, @uri_parts, @parameters, "")
+        @ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, "")
         @reason = "Why Not?"
       end
 
@@ -140,7 +130,7 @@ describe AutomationRequest do
 
   context "#create_request_tasks" do
     before(:each) do
-      @ar = AutomationRequest.create_from_ws(@version, admin.userid, @uri_parts, @parameters, "")
+      @ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, "")
       root = {'ae_result' => 'ok'}
       ws = double('ws')
       ws.stub(:root => root)
@@ -164,9 +154,8 @@ describe AutomationRequest do
 
     def deliver(zone_name)
       parameters  = "miq_zone=#{zone_name}|var1=#{@ae_var1}|var2=#{@ae_var2}|var3=#{@ae_var3}"
-      AutomationRequest.create_from_ws(@version, @approver.userid, @uri_parts, parameters,
-                                       "auto_approve=true")
-      MiqQueue.where(:method_name => "create_request_tasks").first.deliver
+      AutomationRequest.create_from_ws(@version, @approver, @uri_parts, parameters, "auto_approve=true")
+      MiqQueue.find_by(:method_name => "create_request_tasks").deliver
     end
 
     def check_zone(zone_name)
@@ -180,9 +169,8 @@ describe AutomationRequest do
     end
 
     it "zone not specified" do
-      AutomationRequest.create_from_ws(@version, @approver.userid, @uri_parts, @parameters,
-                                       "auto_approve=true")
-      MiqQueue.where(:method_name => "create_request_tasks").first.deliver
+      AutomationRequest.create_from_ws(@version, @approver, @uri_parts, @parameters, "auto_approve=true")
+      MiqQueue.find_by(:method_name => "create_request_tasks").deliver
       check_zone("default")
     end
 

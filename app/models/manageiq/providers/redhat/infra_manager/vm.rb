@@ -45,7 +45,7 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
   end
 
   def validate_smartstate_analysis
-    validate_supported
+    validate_supported_check("Smartstate Analysis")
   end
 
   # Show Reconfigure VM task

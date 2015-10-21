@@ -58,16 +58,19 @@
                            "maxlength"   => 50,
                            "checkchange" => "",
                            :class        => "form-control"}
-        .form-group
-          %label.col-md-2.control-label
+        .form-group{"ng-class" => "{'has-error': angularForm.ipmi_address.$error.requiredDependsOn}"}
+          %label.col-md-2.control-label{"for" => "textInput-markup"}
             = _("IPMI IP Address")
           .col-md-8
-            %input#ipmi_address{"type"        => "text",
-                           "name"        => "ipmi_address",
-                           "ng-model"    => "hostModel.ipmi_address",
-                           "maxlength"   => 15,
-                           "checkchange" => "",
-                           :class        => "form-control"}
+            %input.form-control#ipmi_address{"type"                => "text",
+                                             "name"                => "ipmi_address",
+                                             "ng-model"            => "hostModel.ipmi_address",
+                                             "required-depends-on" => "hostModel.ipmi_userid",
+                                             "required-if-exists"  => "ipmi_userid",
+                                             "maxlength"           => 15,
+                                             "checkchange"         => ""}
+            %span.help-block{"ng-show" => "angularForm.ipmi_address.$error.requiredDependsOn"}
+              = _("Required")
         .form-group
           %label.col-md-2.control-label
             = _("MAC Address")

@@ -66,7 +66,6 @@ module MiqAeProvisionSpec
         roots.should_not be_nil
         roots.should be_a_kind_of(Array)
         roots.length.should == 1
-        roots.first.attributes.length.should == 0
       end
 
       it "should instantiate ttl_warnings" do

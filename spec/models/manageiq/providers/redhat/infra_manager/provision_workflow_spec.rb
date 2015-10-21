@@ -15,11 +15,11 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
   it "pass platform attributes to automate" do
     assert_automate_dialog_lookup(admin, "infra", "redhat", "get_pre_dialog_name", nil)
 
-    described_class.new({}, admin.userid)
+    described_class.new({}, admin)
   end
 
   context "#allowed_storages" do
-    let(:workflow) { described_class.new({:src_vm_id => template.id}, admin.userid) }
+    let(:workflow) { described_class.new({:src_vm_id => template.id}, admin) }
     let(:host)     { FactoryGirl.create(:host, :ext_management_system => ems) }
 
     before do
@@ -51,7 +51,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
   end
 
   context "supports_linked_clone?" do
-    let(:workflow) { described_class.new({:src_vm_id => template.id, :linked_clone => true}, admin.userid) }
+    let(:workflow) { described_class.new({:src_vm_id => template.id, :linked_clone => true}, admin) }
 
     it "when supports_native_clone? is true" do
       workflow.stub(:supports_native_clone?).and_return(true)
@@ -65,7 +65,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
   end
 
   context "#supports_cloud_init?" do
-    let(:workflow) { described_class.new({:src_vm_id => template.id}, admin.userid) }
+    let(:workflow) { described_class.new({:src_vm_id => template.id}, admin) }
 
     it "should support cloud-init" do
       workflow.supports_cloud_init?.should == true
@@ -73,7 +73,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
   end
 
   context "#allowed_customization_templates" do
-    let(:workflow) { described_class.new({:src_vm_id => template.id}, admin.userid) }
+    let(:workflow) { described_class.new({:src_vm_id => template.id}, admin) }
 
     it "should retrieve cloud-init templates when cloning" do
       options = {'key' => 'value'}

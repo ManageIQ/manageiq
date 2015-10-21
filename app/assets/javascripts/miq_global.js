@@ -6,6 +6,7 @@ if (typeof(ManageIQ) === 'undefined') {
     browser: null, // browser name
     controller: null, // stored controller, used to build URL
     changes: null, // indicate if there are unsaved changes
+    clickUrl: null,
     dynatreeReplacement: null, //
     editor: null, // instance of CodeMirror editor
     sizeTimer: null, // timer for routines to get size of the window

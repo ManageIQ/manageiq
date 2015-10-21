@@ -159,4 +159,89 @@ describe MiqAction do
       end
     end
   end
+
+  context '.create_default_actions' do
+    context 'seeding default actions from a file with 3 csv rows and some comments' do
+      before do
+        stub_csv <<-CSV.strip_heredoc
+          name,description
+          audit,Generate Audit Event
+          log,Generate log message
+          # snmp,Generate an SNMP trap
+          # sms,Send an SMS text message
+          evm_event,Show EVM Event on Timeline
+        CSV
+
+        MiqAction.create_default_actions
+      end
+
+      it 'should create 3 new actions' do
+        expect(MiqAction.count).to eq 3
+      end
+
+      it 'should set action_type to "default"' do
+        expect(MiqAction.distinct.pluck(:action_type)).to eq ['default']
+      end
+
+      context 'when csv was changed and imported again' do
+        before do
+          stub_csv <<-CSV.strip_heredoc
+            name,description
+            audit,UPD: Audit Event
+            # log,Generate log message
+            snmp,Generate an SNMP trap
+            evm_event,Show EVM Event on Timeline
+          CSV
+
+          MiqAction.create_default_actions
+        end
+
+        it "should not delete the actions that present in the DB but don't present in the file" do
+          expect(MiqAction.where(:name => 'log')).to exist
+        end
+
+        it 'should update existing actions' do
+          expect(MiqAction.where(:name => 'audit').pluck(:description)).to eq ['UPD: Audit Event']
+        end
+
+        it 'should create new actions' do
+          expect(MiqAction.where(:name => 'snmp')).to exist
+        end
+      end
+
+      def stub_csv(data)
+        Tempfile.open(['actions', '.csv']) do |f|
+          f.write(data)
+          @tempfile = f # keep the reference in order to delete the file later
+        end
+
+        expect(MiqAction).to receive(:fixture_path).and_return(@tempfile.path)
+      end
+
+      after do
+        @tempfile.unlink
+      end
+    end
+
+    # 'integration' test to make sure that the real fixture file is well-formed
+    context 'seeding default actions' do
+      before { MiqAction.create_default_actions }
+
+      it 'should create new actions' do
+        expect(MiqAction.count).to be > 0
+      end
+    end
+  end
+
+  context '#round_to_nearest_4mb' do
+    it 'should round numbers to nearest 4 mb' do
+      a = MiqAction.new
+
+      expect(a.round_to_nearest_4mb(0)).to eq 0
+      expect(a.round_to_nearest_4mb("2")).to eq 4
+      expect(a.round_to_nearest_4mb(15)).to eq 16
+      expect(a.round_to_nearest_4mb(16)).to eq 16
+      expect(a.round_to_nearest_4mb(17)).to eq 20
+    end
+  end
 end

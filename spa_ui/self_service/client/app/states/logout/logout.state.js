@@ -21,17 +21,16 @@
   }
 
   /** @ngInject */
-  function StateController($state, logger, lodash, AuthenticationApi) {
+  function StateController($state, Session) {
     var vm = this;
 
-    vm.AuthService = AuthenticationApi;
-    vm.title = '';
+    vm.title = 'Logout';
 
-    vm.AuthService.logout().success(lodash.bind(function() {
-      logger.info('You have been logged out.');
-      $state.transitionTo('login');
-    }, vm)).error(lodash.bind(function() {
-      logger.info('An error has occurred at logout.');
-    }, vm));
+    activate();
+
+    function activate() {
+      Session.destroy();
+      $state.go('login');
+    }
   }
 })();

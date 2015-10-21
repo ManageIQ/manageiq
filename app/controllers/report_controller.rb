@@ -829,8 +829,6 @@ class ReportController < ApplicationController
         presenter[:set_visible_elements][:menu_div2]  = false
         presenter[:set_visible_elements][:treeStatus] = true
         presenter[:set_visible_elements][:flash_msg_div_menu_list] = "hide"
-        # js_options[:set_folder_grid_contents] = true #?!?! FIXME: remove
-        presenter[:grid_name] = 'folder_list_grid' #
         presenter[:element_updates][:folder_top]      = {:title => img_title_top}
         presenter[:element_updates][:folder_up]       = {:title => img_title_up}
         presenter[:element_updates][:folder_down]     = {:title => img_title_down}
@@ -853,7 +851,7 @@ class ReportController < ApplicationController
       end
     elsif nodetype == "menu_default" || nodetype == "menu_reset"
       presenter[:update_partials][:main_div]   = r[:partial => partial]
-      presenter[:replace_partials][:menu_div1] = r[:partial => "menu_form1"]
+      presenter[:replace_partials][:menu_div1] = r[:partial => "menu_form1", :locals => {:folders => @grid_folders}]
       presenter[:set_visible_elements][:menu_div1]  = false
       presenter[:set_visible_elements][:menu_div2]  = false
       presenter[:set_visible_elements][:menu_div3]  = true
@@ -912,7 +910,7 @@ class ReportController < ApplicationController
       @sb[:tree_err] = false
     elsif nodetype == 'menu_discard_folders' || nodetype == 'menu_discard_reports'
       presenter[:replace_partials][:flash_msg_div_menu_list] = r[:partial => 'layouts/flash_msg', :locals => {:div_num => '_menu_list'}]
-      presenter[:replace_partials][:menu_div1]               = r[:partial => 'menu_form1', :locals => {:action_url => 'menu_update'}]
+      presenter[:replace_partials][:menu_div1]               = r[:partial => 'menu_form1', :locals => {:folders => @grid_folders}]
       presenter[:set_visible_elements][:menu_div1]  = false
       presenter[:set_visible_elements][:menu_div2]  = false
       presenter[:set_visible_elements][:menu_div3]  = true
@@ -943,12 +941,14 @@ class ReportController < ApplicationController
         presenter[:set_visible_elements][:rpb_div_1]        = true
         presenter[:set_visible_elements][:pc_div_1]         = false
       end
-      presenter[:show_hide_layout][:paginator] = 'show'
+      presenter[:set_visible_elements][:paging_div] = true
     else
-      presenter[:show_hide_layout][:paginator] = 'hide'
+      presenter[:set_visible_elements][:paging_div] = false
     end
-    presenter[:show_hide_layout][:paginator] = 'hide' if @sb[:active_tab] == 'report_info' && x_node.split('-').length == 5 && !@in_a_form
-    presenter[:show_hide_layout][:toolbar] = @in_a_form ? 'hide' : 'show'
+    if @sb[:active_tab] == 'report_info' && x_node.split('-').length == 5 && !@in_a_form
+      presenter[:set_visible_elements][:paging_div] = false
+    end
+    presenter[:set_visible_elements][:toolbar] = !@in_a_form
 
     # Rebuild the toolbars
     presenter[:set_visible_elements][:history_buttons_div] = h_buttons && h_xml

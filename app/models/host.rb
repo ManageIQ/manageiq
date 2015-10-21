@@ -100,6 +100,7 @@ class Host < ActiveRecord::Base
 
   include CustomAttributeMixin
   has_many :ems_custom_attributes, -> { where("source = 'VC'") }, :as => :resource, :dependent => :destroy, :class_name => "CustomAttribute"
+  has_many :filesystems_custom_attributes, :through => :filesystems, :source => 'custom_attributes'
 
   acts_as_miq_taggable
   include ReportableMixin
@@ -1058,7 +1059,7 @@ class Host < ActiveRecord::Base
         )
 
         find_method        = host.detect_discovered_hypervisor(ost, ost.ipaddr)
-        os_name, _ost_type = host.detect_discovered_os(ost)
+        os_name, os_type = host.detect_discovered_os(ost)
 
         if Host.send(find_method, ost.ipaddr).nil?
           # It may have been added by someone else while we were discovering

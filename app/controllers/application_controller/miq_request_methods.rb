@@ -930,7 +930,7 @@ module ApplicationController::MiqRequestMethods
       wf_type = MiqHostProvisionWorkflow
     end
 
-    [wf_type.new(@edit[:new], session[:userid], options), pre_prov_values]  # Return the new workflow and any pre_prov_values
+    [wf_type.new(@edit[:new], current_user, options), pre_prov_values]  # Return the new workflow and any pre_prov_values
   rescue => bang
     # only add this message if showing a list of Catalog items, show screen already handles this
     @no_wf_msg = _("Cannot create Request Info, error: ") << bang.message

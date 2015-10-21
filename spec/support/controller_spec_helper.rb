@@ -7,7 +7,7 @@ module ControllerSpecHelper
     end
   end
 
-  def set_user_privileges(user = FactoryGirl.create(:user))
+  def set_user_privileges(user = FactoryGirl.create(:user_with_group))
     allow(User).to receive(:server_timezone).and_return("UTC")
     described_class.any_instance.stub(:set_user_time_zone)
 

@@ -45,6 +45,11 @@ module Openstack
       networking_service == :neutron
     end
 
+    def storage_supported?
+      # We support storage from Havana
+      environment_release_number >= 4
+    end
+
     def orchestration_supported?
       # We support orchestration from Havana
       environment_release_number >= 4

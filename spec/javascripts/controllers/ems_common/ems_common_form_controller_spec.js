@@ -77,9 +77,7 @@ describe('emsCommonFormController', function() {
       provider_id: 111,
       openstack_infra_providers_exist: false,
       provider_region: "ap-southeast-2",
-      default_userid: "default_user",
-      default_password: "default_password",
-      default_verify: "default_verify"
+      default_userid: "default_user"
     };
 
     beforeEach(inject(function(_$controller_) {
@@ -125,11 +123,11 @@ describe('emsCommonFormController', function() {
     });
 
     it('sets the default_password', function() {
-      expect($scope.emsCommonModel.default_password).toEqual("default_password");
+      expect($scope.emsCommonModel.default_password).toEqual(miqService.storedPasswordPlaceholder);
     });
 
     it('sets the default_verify', function() {
-      expect($scope.emsCommonModel.default_verify).toEqual("default_verify");
+      expect($scope.emsCommonModel.default_verify).toEqual(miqService.storedPasswordPlaceholder);
     });
   });
 
@@ -143,9 +141,7 @@ describe('emsCommonFormController', function() {
       emstype_vm: false,
       provider_id: 111,
       openstack_infra_providers_exist: false,
-      default_userid: "default_user",
-      default_password: "default_password",
-      default_verify: "default_verify"
+      default_userid: "default_user"
     };
 
     beforeEach(inject(function(_$controller_) {
@@ -191,11 +187,11 @@ describe('emsCommonFormController', function() {
     });
 
     it('sets the default_password', function() {
-      expect($scope.emsCommonModel.default_password).toEqual("default_password");
+      expect($scope.emsCommonModel.default_password).toEqual(miqService.storedPasswordPlaceholder);
     });
 
     it('sets the default_verify', function() {
-      expect($scope.emsCommonModel.default_verify).toEqual("default_verify");
+      expect($scope.emsCommonModel.default_verify).toEqual(miqService.storedPasswordPlaceholder);
     });
   });
 
@@ -209,9 +205,7 @@ describe('emsCommonFormController', function() {
       emstype_vm: false,
       provider_id: 111,
       openstack_infra_providers_exist: false,
-      default_userid: "default_user",
-      default_password: "default_password",
-      default_verify: "default_verify"
+      default_userid: "default_user"
     };
 
     beforeEach(inject(function(_$controller_) {
@@ -257,11 +251,11 @@ describe('emsCommonFormController', function() {
     });
 
     it('sets the default_password', function() {
-      expect($scope.emsCommonModel.default_password).toEqual("default_password");
+      expect($scope.emsCommonModel.default_password).toEqual(miqService.storedPasswordPlaceholder);
     });
 
     it('sets the default_verify', function() {
-      expect($scope.emsCommonModel.default_verify).toEqual("default_verify");
+      expect($scope.emsCommonModel.default_verify).toEqual(miqService.storedPasswordPlaceholder);
     });
   });
 
@@ -270,7 +264,7 @@ describe('emsCommonFormController', function() {
       $httpBackend.flush();
       $scope.angularForm = {
         $setPristine: function (value){},
-        $setUntouched: function (value){},
+        $setUntouched: function (value){}
       };
       $scope.resetClicked();
     });

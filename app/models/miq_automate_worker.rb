@@ -1,5 +1,5 @@
 class MiqAutomateWorker < MiqQueueWorkerBase
-  require_dependency 'miq_automate_worker/runner'
+  require_nested :Runner
 
   self.default_queue_name     = 'automate'
   self.check_for_minimal_role = false

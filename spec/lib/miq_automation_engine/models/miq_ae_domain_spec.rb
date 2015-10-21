@@ -3,6 +3,7 @@ require "spec_helper"
 describe MiqAeDomain do
   before do
     EvmSpecHelper.local_guid_miq_server_zone
+    @user = FactoryGirl.create(:user_with_group)
   end
 
   it "should use the highest priority when not specified" do
@@ -86,14 +87,14 @@ describe MiqAeDomain do
     end
 
     it "missing class should get empty array" do
-      result = MiqAeClass.get_homonymic_across_domains('DOM1/CLASS1')
+      result = MiqAeClass.get_homonymic_across_domains(@user, 'DOM1/CLASS1')
       result.should be_empty
     end
 
     it "get same named classes" do
       create_multiple_domains
       expected = %w(/DOM2/A/b/C/cLaSS1 /DOM1/A/B/C/CLASS1 /DOM3/a/B/c/CLASs1)
-      result = MiqAeClass.get_homonymic_across_domains('/DOM1/A/B/C/CLASS1', true)
+      result = MiqAeClass.get_homonymic_across_domains(@user, '/DOM1/A/B/C/CLASS1', true)
       expected.should match_string_array_ignorecase(result.collect(&:fqname))
     end
   end
@@ -104,7 +105,7 @@ describe MiqAeDomain do
     end
 
     it "missing instance should get empty array" do
-      result = MiqAeInstance.get_homonymic_across_domains('DOM1/CLASS1/nothing')
+      result = MiqAeInstance.get_homonymic_across_domains(@user, 'DOM1/CLASS1/nothing')
       result.should be_empty
     end
 
@@ -116,7 +117,7 @@ describe MiqAeDomain do
         /DOM1/A/B/C/CLASS1/instance1
         /DOM3/a/B/c/CLASs1/instance1
       )
-      result = MiqAeInstance.get_homonymic_across_domains('/DOM1/A/B/C/CLASS1/instance1')
+      result = MiqAeInstance.get_homonymic_across_domains(@user, '/DOM1/A/B/C/CLASS1/instance1')
       expected.should match_string_array_ignorecase(result.collect(&:fqname))
     end
   end
@@ -127,14 +128,14 @@ describe MiqAeDomain do
     end
 
     it "missing method should get empty array" do
-      result = MiqAeMethod.get_homonymic_across_domains('DOM1/CLASS1/nothing')
+      result = MiqAeMethod.get_homonymic_across_domains(@user, 'DOM1/CLASS1/nothing')
       result.should be_empty
     end
 
     it "get same named methods" do
       create_multiple_domains_with_methods
       expected = %w(/DOM2/A/b/C/cLaSS1/method1 /DOM1/A/B/C/CLASS1/method1 /DOM3/a/B/c/CLASs1/method1)
-      result = MiqAeMethod.get_homonymic_across_domains('/DOM1/A/B/C/CLASS1/method1', true)
+      result = MiqAeMethod.get_homonymic_across_domains(@user, '/DOM1/A/B/C/CLASS1/method1', true)
       expected.should match_string_array_ignorecase(result.collect(&:fqname))
     end
   end

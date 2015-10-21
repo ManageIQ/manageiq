@@ -110,8 +110,7 @@
   <div class="panel panel-default ss-details-panel">
     <div class="panel-body">
       <section class="ss-details-section">
-        <h2>Request Details</h2>
-        <pre>{{ ::vm.request.options |json }}</pre>
+        <dialog-content dialog="vm.request.provision_dialog" input-disabled="true" options="vm.request.options.dialog"></dialog-content>
       </section>
     </div>
   </div>

@@ -12,6 +12,8 @@ class Tenant < ActiveRecord::Base
   default_value_for :name,        "My Company"
   default_value_for :description, "Tenant for My Company"
   default_value_for :divisible,   true
+  default_value_for :use_config_for_attributes, false
+
   has_ancestry
 
   has_many :providers
@@ -143,6 +145,29 @@ class Tenant < ActiveRecord::Base
   def used_quotas
     tenant_quotas.each_with_object({}) do |q, h|
       h[q.name.to_sym] = q.quota_hash.merge(:value => q.used)
+    end.reverse_merge(TenantQuota.quota_definitions)
+  end
+
+  # Amount of quotas allocated to the immediate child tenants
+  def allocated_quotas
+    tenant_quotas.each_with_object({}) do |q, h|
+      h[q.name.to_sym] = q.quota_hash.merge(:value => q.allocated)
+    end.reverse_merge(TenantQuota.quota_definitions)
+  end
+
+  # Amount of quotas available to be allocated to child tenants
+  def available_quotas
+    tenant_quotas.each_with_object({}) do |q, h|
+      h[q.name.to_sym] = q.quota_hash.merge(:value => q.available)
+    end.reverse_merge(TenantQuota.quota_definitions)
+  end
+
+  def combined_quotas
+    tenant_quotas.each_with_object({}) do |q, h|
+      h[q.name.to_sym] = q.quota_hash
+      h[q.name.to_sym][:allocated]   = q.allocated
+      h[q.name.to_sym][:available]   = q.available
+      h[q.name.to_sym][:used]        = q.used
     end.reverse_merge(TenantQuota.quota_definitions)
   end
 

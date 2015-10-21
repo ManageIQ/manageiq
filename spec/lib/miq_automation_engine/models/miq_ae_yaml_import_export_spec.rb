@@ -25,7 +25,7 @@ describe MiqAeDatastore do
     end
 
     it "child namespace as domain" do
-      expect { export_model(@aen1.fqname) }.to raise_error(MiqAeException::InvalidDomain)
+      expect { export_model(@aen1.fqname) }.to raise_error(MiqAeException::DomainNotFound)
     end
 
     it "non existing namespace" do
@@ -165,6 +165,14 @@ describe MiqAeDatastore do
       domain_file = File.join(@export_dir, @manageiq_domain.name, '__domain__.yaml')
       data = YAML.load_file(domain_file)
       expect(data.fetch_path('object', 'attributes', 'tenant_id')).to eq(@tenant.id)
+    end
+
+    it "namespace should not contain tenant id" do
+      export_model(@manageiq_domain.name)
+      namespace_file = File.join(@export_dir, @manageiq_domain.name, @aen1.name, '__namespace__.yaml')
+      data = YAML.load_file(namespace_file)
+      hash = data.fetch_path('object', 'attributes')
+      expect(hash.key?('tenant_id')).to be_false
     end
   end
 

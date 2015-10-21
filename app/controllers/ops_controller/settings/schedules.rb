@@ -123,8 +123,6 @@ module OpsController::Settings::Schedules
       protocol        = DatabaseBackup.supported_depots[uri_prefix]
       depot_name      = depot.try(:name)
       log_userid      = depot.try(:authentication_userid)
-      log_password    = depot.try(:authentication_password)
-      log_verify      = depot.try(:authentication_password)
     else
       if schedule.towhat.nil?
         action_type = "vm"
@@ -142,9 +140,7 @@ module OpsController::Settings::Schedules
       :filter_type          => filter_type,
       :filter_value         => filter_value,
       :filtered_item_list   => filtered_item_list,
-      :log_password         => log_password,
-      :log_userid           => log_userid,
-      :log_verify           => log_verify,
+      :log_userid           => log_userid ? log_userid : "",
       :protocol             => protocol,
       :schedule_description => schedule.description,
       :schedule_enabled     => schedule.enabled ? "1" : "0",
@@ -226,6 +222,25 @@ module OpsController::Settings::Schedules
   def schedule_disable
     assert_privileges("schedule_disable")
     schedule_toggle(false)
+  end
+
+  def log_depot_validate
+    if params[:log_password]
+      file_depot = FileDepot.new
+    else
+      file_depot = MiqSchedule.find_by_id(params[:id]).file_depot
+    end
+    uri_settings = build_uri_settings(file_depot)
+    begin
+      MiqSchedule.new.verify_file_depot(uri_settings)
+    rescue StandardError => bang
+      add_flash(_("Error during '%s': ") % "Validate" << bang.message, :error)
+    else
+      add_flash(_('Depot Settings successfuly validated'))
+    end
+    render :update do |page|
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+    end
   end
 
   private
@@ -431,14 +446,11 @@ module OpsController::Settings::Schedules
 
     if params[:action_typ] == "db_backup"
       schedule.filter = nil
-      schedule.verify_file_depot(
-        :name       => params[:depot_name],
-        :password   => params[:log_password],
-        :username   => params[:log_userid],
-        :uri        => "#{params[:uri_prefix]}://#{params[:uri]}",
-        :uri_prefix => params[:uri_prefix],
-        :save       => true,
-      )
+      depot = schedule.file_depot
+      uri_settings = build_uri_settings(depot)
+      uri_settings[:name] = params[:depot_name]
+      uri_settings[:save] = true
+      schedule.verify_file_depot(uri_settings)
     elsif %w(global my).include?(params[:filter_typ])  # Search filter chosen, set up relationship
       schedule.filter     = nil  # Clear out existing filter expression
       schedule.miq_search = params[:filter_value] ? MiqSearch.find(params[:filter_value]) : nil # Set up the search relationship
@@ -610,5 +622,17 @@ module OpsController::Settings::Schedules
     schedule.run_at[:interval] ||= {}
     schedule.run_at[:interval][:unit] = params[:timer_typ].downcase
     schedule.run_at[:interval][:value] = params[:timer_value]
+  end
+
+  def build_uri_settings(file_depot)
+    uri_settings = {}
+    type = FileDepot.depot_description_to_class(params[:log_protocol])
+    if type.try(:requires_credentials?)
+      log_password = params[:log_password] ? params[:log_password] : file_depot.try(:authentication_password)
+      uri_settings = {:username => params[:log_userid], :password => log_password}
+    end
+    uri_settings[:uri] = "#{params[:uri_prefix]}://#{params[:uri]}"
+    uri_settings[:uri_prefix] = params[:uri_prefix]
+    uri_settings
   end
 end

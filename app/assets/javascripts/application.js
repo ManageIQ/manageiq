@@ -17,13 +17,16 @@
 //= require directives/autofocus
 //= require directives/miqrequired
 //= require directives/checkchange
+//= require directives/clear_field_set_focus
 //= require directives/datepicker
 //= require directives/verifypasswd
+//= require directives/required_depends_on
 //= require directives/selectpickerForSelectTag
 //= require directives/repository/valid_unc_path
 //= require services/miq_service
 //= require services/timer_option_service
 //= require controllers/buttons/button_group_controller
+//= require controllers/credentials/credentials_controller
 //= require controllers/ems_common/ems_common_form_controller
 //= require controllers/host/host_form_controller
 //= require controllers/provider_foreman/provider_foreman_form_controller
@@ -56,7 +59,7 @@
 //= require jqplot-plugins/jqplot.canvasAxisTickRenderer
 //= require jqplot-plugins/jqplot.canvasTextRenderer
 //= require miq_jqplot
-//= require jquery/jquery-ui-1.9.2.custom.min
+//= require jqueryui
 //= require bootstrap
 //= require bootstrap-datepicker
 //= require bootstrap-filestyle
@@ -66,8 +69,6 @@
 //= require jquery.observe_field
 //= require miq_jquery_ujs_rails3
 //= require miq_ujs_bindings
-//= require jquery.form
-//= require jquery.cookie
 //= require dhtmlx_gpl_36/dhtmlxcommon
 //= require dhtmlx_gpl_36/dhtmlxcontainer
 //= require dynatree/jquery.dynatree

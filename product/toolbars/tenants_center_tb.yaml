@@ -33,3 +33,18 @@
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
+- :name: rbac_tenant_policy
+  :items:
+  - :buttonSelect: rbac_group_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: rbac_tenant_tags_edit
+      :image: tag
+      :text: "Edit '#{session[:customer_name]}' Tags for the selected Tenant"
+      :title: "Edit '#{session[:customer_name]}' Tags for the selected Tenant"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'
+

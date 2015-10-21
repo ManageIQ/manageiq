@@ -1,3 +1,3 @@
 class ManageIQ::Providers::Redhat::InfraManager::RefreshWorker < ManageIQ::Providers::BaseManager::RefreshWorker
-  require_dependency 'manageiq/providers/redhat/infra_manager/refresh_worker/runner'
+  require_nested :Runner
 end

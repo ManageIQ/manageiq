@@ -34,6 +34,6 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   end
 
   def validate_smartstate_analysis
-    validate_supported
+    validate_supported_check("Smartstate Analysis")
   end
 end

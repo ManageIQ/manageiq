@@ -75,6 +75,14 @@ module EmsRefresh
           _log.info "#{log_ems_target} Performing post-refresh operations for #{klass} instances...Complete"
         end
       end
+
+      def fetch_entities(client, entities)
+        h = {}
+        entities.each do |entity|
+          h[entity.singularize] = client.send("get_" << entity)
+        end
+        h
+      end
     end
   end
 end

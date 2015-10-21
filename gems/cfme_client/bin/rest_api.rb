@@ -110,8 +110,10 @@ EOS
       :default => "",                       :short => '-V'
   opt :url,        "Base URL of Appliance to access",
       :default => "http://localhost:3000",  :short => '-l'
-  opt :user,       "User to authentication as",
+  opt :user,       "User to authenticate as",
       :default => "admin",                  :short => '-u'
+  opt :group,      "User group to authorize as",
+      :default => "",                       :short => '-g'
   opt :password,   "Password for user specified to authenticate as",
       :default => "smartvm",                :short => '-p'
   opt :token,      "Token to use for authentication instead of user/password",
@@ -244,6 +246,7 @@ begin
     req.url path
     req.headers[:content_type]  = ctype
     req.headers[:accept]        = ctype
+    req.headers['X-MIQ-Group']  = opts[:group] unless opts[:group].empty?
     req.headers['X-Auth-Token'] = opts[:token] unless opts[:token].empty?
     req.params.merge!(params)
     req.body = data if methods_needing_data.include?(method)

@@ -1,12 +1,10 @@
-require_dependency 'manageiq/providers/base_manager/refresher'
-require_dependency 'manageiq/providers/vmware/infra_manager'
 require 'MiqVim'
 require 'http-access2' # Required in case it is not already loaded
 
-module ::ManageIQ::Providers
-  class Vmware::InfraManager
-    class Refresher < BaseManager::Refresher
-      include RefreshParser::Filter
+module ManageIQ::Providers
+  module Vmware
+    class InfraManager::Refresher < ManageIQ::Providers::BaseManager::Refresher
+      include InfraManager::RefreshParser::Filter
 
       # Development helper method for setting up the selector specs for VC
       def self.init_console(use_vim_broker = false)
@@ -75,8 +73,28 @@ module ::ManageIQ::Providers
 
       def refresh_targets_for_ems(targets)
         targets_with_data, = Benchmark.realtime_block(:get_vc_data_total) { get_and_filter_vc_data(targets) }
+
+        # We no longer need the unfiltered VC data, so remove it to help the GC
+        @vc_data = nil
+
+        log_header = "EMS: [#{@ems.name}], id: [#{@ems.id}]"
         start_time = Time.now
-        targets_with_data.each { |t, d| refresh_target(t, d) }
+
+        until targets_with_data.empty?
+          target, data = targets_with_data.shift
+
+          _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]..."
+
+          hashes = parse_data(data)
+
+          # We no longer need the filtered VC data, so remove it to help the GC
+          data = nil
+
+          save_target(target, hashes)
+
+          _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]...Complete"
+        end
+
         Benchmark.realtime_block(:post_refresh_ems) { post_refresh_ems(start_time) }
       end
 
@@ -102,22 +120,22 @@ module ::ManageIQ::Providers
         disconnect_from_ems
       end
 
-      def refresh_target(target, filtered_data)
+      def parse_data(data)
         log_header = "EMS: [#{@ems.name}], id: [#{@ems.id}]"
-        _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]..."
-
         _log.debug "#{log_header} Parsing VC inventory..."
         hashes, = Benchmark.realtime_block(:parse_vc_data) do
-          RefreshParser.ems_inv_to_hashes(filtered_data)
+          InfraManager::RefreshParser.ems_inv_to_hashes(data)
         end
         _log.debug "#{log_header} Parsing VC inventory...Complete"
 
+        hashes
+      end
+
+      def save_target(target, hashes)
         Benchmark.realtime_block(:db_save_inventory) do
           @ems.update_attributes(@ems_data) unless @ems_data.nil?
           EmsRefresh.save_ems_inventory(@ems, hashes, target)
         end
-
-        _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]...Complete"
       end
 
       def post_refresh_ems(start_time)
@@ -352,7 +370,7 @@ module ::ManageIQ::Providers
 
           _log.debug "Parsing VC inventory..."
           hashes, = Benchmark.realtime_block(:parse_vc_data) do
-            RefreshParser.reconfig_inv_to_hashes(@vc_data)
+            InfraManager::RefreshParser.reconfig_inv_to_hashes(@vc_data)
           end
           _log.debug "Parsing VC inventory...Complete"
 

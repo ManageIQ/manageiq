@@ -1,5 +1,5 @@
 class ManageIQ::Providers::BaseManager::MetricsCollectorWorker < MiqQueueWorkerBase
-  require_dependency 'manageiq/providers/base_manager/metrics_collector_worker/runner'
+  require_nested :Runner
 
   include PerEmsTypeWorkerMixin
 

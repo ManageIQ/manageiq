@@ -59,6 +59,16 @@ class UserValidationService
     ValidateResult.new(:pass, nil, startpage)
   end
 
+  def missing_user_features(db_user)
+    if !db_user || !db_user.userid
+      "User"
+    elsif !db_user.current_group
+      "Group"
+    elsif !db_user.current_group.miq_user_role
+      "Role"
+    end
+  end
+
   private
 
   def validate_user_handle_no_records
@@ -68,16 +78,6 @@ class UserValidationService
                                      :flash_warning => true,
                                      :flash_msg     => _("Non-admin users can not access the system until at least 1 VM/Instance has been discovered"))
                       )
-  end
-
-  def missing_user_features(db_user)
-    if !db_user || !db_user.userid
-      "User"
-    elsif !db_user.current_group
-      "Group"
-    elsif !db_user.current_group.miq_user_role
-      "Role"
-    end
   end
 
   def validate_user_handle_not_ready(db_user)

@@ -1,18 +1,13 @@
 = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "grid"}
 
 %input{:type  => 'hidden',
-       :name  => "miq_grid_checks#{options[:grid_num]}",
-       :id    => "miq_grid_checks#{options[:grid_num]}",
+       :name  => "miq_grid_checks",
+       :id    => "miq_grid_checks",
        :value => ''}
-
-- if options[:div_in_js]
-  %div{:id    => options[:grid_id],
-       :style => "width:#{options[:div_width]}; height:#{options[:div_height]}; cursor:#{options[:div_cursor]}; overflow:#{options[:div_overflow]}"}
 
 - grid_name = options[:grid_name]
 - grid_id   = options[:grid_id]
 - grid_xml  = options[:grid_xml]
-- options.delete(:grid_xml)
 
 - unless @parent.nil?
   - layout = @layout
@@ -34,11 +29,11 @@
 :javascript
   ManageIQ.grids.grids["#{j grid_name}"] = {
     g_id: "#{j grid_id}",
-    opts: #{raw options.to_json},
+    opts: #{raw js_options.to_json},
     xml:  "#{raw j(grid_xml)}",
     obj:  null
   };
 
-- if request.xml_http_request?
+- if options[:init_grid]
   :javascript
     miqInitGrid("#{j options[:grid_name]}");
