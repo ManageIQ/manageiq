@@ -68,6 +68,7 @@ angular.module('topologyApp', ['kubernetesUI'])
                 case "Failed":
                     return "#CC0000";
                 case 'Warning':
+                case 'Waiting':
                 case 'Pending':
                     return "#EC7A08";
                 case 'Unknown':
