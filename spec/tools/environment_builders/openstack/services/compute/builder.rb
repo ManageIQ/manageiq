@@ -64,9 +64,13 @@ module Openstack
                             }) if volume
             end
 
-            if (network_name = server.delete(:__network_name))
-              network = networks.detect { |x| x.name == network_name }
-              server.merge!(:nics => [{"net_id" => network.id}]) if network
+            if (network_names = server.delete(:__network_names))
+              nics = []
+              network_names.each do |network_name|
+                network = networks.detect { |x| x.name == network_name }
+                nics << {"net_id" => network.id} if network
+              end
+              server.merge!(:nics => nics) if nics
             end
 
             if (image_name = server.delete(:__image_name))

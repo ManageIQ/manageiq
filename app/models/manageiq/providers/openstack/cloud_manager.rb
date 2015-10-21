@@ -23,6 +23,11 @@ class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
   require_nested :Template
   require_nested :Vm
 
+  has_many :public_cloud_networks,  :foreign_key => :ems_id, :dependent => :destroy,
+           :class_name => "ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public"
+  has_many :private_cloud_networks, :foreign_key => :ems_id, :dependent => :destroy,
+           :class_name => "ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private"
+
   include ManageIQ::Providers::Openstack::ManagerMixin
 
   def self.ems_type

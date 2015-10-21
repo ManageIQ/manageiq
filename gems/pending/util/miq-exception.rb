@@ -109,4 +109,6 @@ module MiqException
   class MiqOrchestrationUpdateError < Error; end
   class MiqOrchestrationDeleteError < Error; end
   class MiqOrchestrationStackNotExistError < Error; end
+
+  class MiqNetworkPortNotDefinedError < Error; end
 end

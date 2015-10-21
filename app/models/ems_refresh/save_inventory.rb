@@ -105,6 +105,7 @@ module EmsRefresh::SaveInventory
 
         found.save!
         h[:id] = found.id
+        h[:_object] = found
       rescue => err
         # If a vm failed to process, mark it as invalid and log an error
         h[:invalid] = invalids_found = true
@@ -254,30 +255,6 @@ module EmsRefresh::SaveInventory
   def save_os_processes_inventory(os, hashes)
     deletes = os.processes(true).dup
     save_inventory_multi(:processes, os, hashes, deletes, [:pid])
-  end
-
-  def save_firewall_rules_inventory(parent, hashes, mode = :refresh)
-    return if hashes.nil?
-
-    find_key =
-      case mode
-      when :refresh
-        # Leaves out the source_security_group_id, as we will set that later
-        #   after all security_groups have been saved and ids obtained.
-        if parent.kind_of?(ManageIQ::Providers::Openstack::CloudManager::SecurityGroup)
-          [:ems_ref]
-        else
-          [:direction, :host_protocol, :port, :end_port, :source_ip_range]
-        end
-      when :scan
-        [:name]
-      end
-
-    deletes = parent.firewall_rules(true).dup
-    save_inventory_multi(:firewall_rules, parent, hashes, deletes, find_key, nil, [:source_security_group])
-
-    parent.save!
-    store_ids_for_new_records(parent.firewall_rules, hashes, find_key)
   end
 
   def save_custom_attributes_inventory(parent, hashes, mode = :refresh)

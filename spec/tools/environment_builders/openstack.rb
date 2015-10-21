@@ -6,7 +6,7 @@ require_relative 'openstack/helper_methods'
 include Openstack::InteractionMethods
 include Openstack::HelperMethods
 
-require "#{test_base_dir}/openstack/refresh_spec_environments"
+require "#{test_base_dir}/refresh_spec_environments"
 include Openstack::RefreshSpecEnvironments
 
 require_relative 'openstack/services/identity/builder'
