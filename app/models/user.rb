@@ -284,6 +284,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def self.super_admin
+    in_my_region.find_by_userid("admin")
+  end
+
   private
 
   def self.seed
