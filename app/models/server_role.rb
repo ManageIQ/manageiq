@@ -5,8 +5,6 @@ class ServerRole < ActiveRecord::Base
   validates_presence_of     :name
   validates_uniqueness_of   :name
 
-  FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
-
   def self.seed
     CSV.foreach(fixture_path, :headers => true, :skip_lines => /^#/).each do |csv_row|
       action = csv_row.to_hash
@@ -28,7 +26,7 @@ class ServerRole < ActiveRecord::Base
   end
 
   def self.fixture_path
-    File.join(FIXTURE_DIR, "#{to_s.pluralize.underscore}.csv")
+    Rails.root.join("db/fixtures/#{to_s.pluralize.underscore}.csv")
   end
 
   def self.to_role(server_role)
