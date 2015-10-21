@@ -149,9 +149,9 @@ class ExplorerPresenter
 
     # Reload toolbars
     @options[:reload_toolbars].each_pair do |div_name, toolbar|
-      if toolbar.present?
-        @out << javascript_pf_toolbar_reload("#{div_name}_tb", toolbar).html_safe
-      end
+      # we need to render even empty toolbar to actually remove the buttons
+      # that might be there
+      @out << javascript_pf_toolbar_reload("#{div_name}_tb", Array(toolbar)).html_safe
     end
 
     # reset miq_record_id, else it remembers prev id and sends it when add is pressed from list view
