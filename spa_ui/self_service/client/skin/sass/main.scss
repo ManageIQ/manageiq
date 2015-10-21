@@ -1,0 +1,36 @@
+
+.splash__message:before {
+  content: 'ManageIQ Self Service';
+}
+
+#brand {
+  // Hide the original content
+  line-height: 0;
+  font-size: 0;
+  color: transparent;
+
+  &:before, &:after {
+    text-transform: uppercase;
+    font-size: 24px;
+    color: #ffffff;
+  }
+
+  // Using both :before and :after so that we can bold part of the text
+  &:before {
+    content: "ManageIQ ";
+    font-weight: bold;
+  }
+
+  &:after {
+    content: "Self Service";
+  }
+}
+
+.login-pf {
+  background-color: #1C3753;
+  background-image: url(../images/bg-login-2.png);
+
+  &:before {
+    content: url(../images/bg-login.png);
+  }
+}

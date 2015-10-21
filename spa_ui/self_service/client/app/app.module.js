@@ -1,13 +1,14 @@
 (function() {
   'use strict';
   angular.module('app', [
-   'app.core',
+    'app.core',
     'app.config',
     'app.states',
+    'app.skin',
     'ngProgress'
   ]);
   angular.module('app').controller('AppController', ['$rootScope', '$scope', 'ngProgressFactory',
-   function($rootScope, $scope, ngProgressFactory) {
+    function($rootScope, $scope, ngProgressFactory) {
       $scope.progressbar = ngProgressFactory.createInstance();
       $scope.progressbar.setColor('#0088ce');
       $scope.progressbar.setHeight('3px');
