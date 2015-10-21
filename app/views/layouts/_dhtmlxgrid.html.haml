@@ -3,9 +3,10 @@
        :id    => "miq_grid_checks",
        :value => ''}
 
-- grid_name = options[:grid_name]
-- grid_id   = options[:grid_id]
-- grid_hash = options[:grid_hash]
+- grid_name  = options[:grid_name]
+- grid_id    = options[:grid_id]
+- grid_hash  = options[:grid_hash]
+- button_div = options[:button_div]
 
 - unless @parent.nil?
   - layout = @layout
@@ -36,6 +37,26 @@
 %table.table.table-striped.table-bordered.table-hover.table-selectable
   %thead
     %tr
-      %th.narrow
-        TODO
-        = grid_hash.to_json
+      - grid_hash[:head].each do |h|
+        %th{:class => (h[:type] == 'ch') ? 'narrow' : ''}
+          = h[:text]
+  %tbody
+    - grid_hash[:rows].each do |row|
+      %tr
+      - row[:cells].each do |cell|
+        %td
+          - unless cell[:checked].nil?
+            = check_box_tag("check_#{row[:id]}", 1, cell[:checked],
+              :onclick => "miqUpdateButtons(this, '#{button_div}');")
+          - if cell[:is_button]
+            %button.btn.btn-default{:onclick => cell[:onclick],
+                                    :title => cell[:title]}
+              - if cell[:image]
+                - p cell[:image]
+                = image_tag("/images/dhtmlxgrid/" + cell[:image], :alt => cell[:title], :title => cell[:title])
+              = cell[:text]
+          - elsif cell[:image]
+            = image_tag(cell[:image], :alt => cell[:title], :title => cell[:title])
+            = cell[:text]
+          - else
+            = cell[:text]
