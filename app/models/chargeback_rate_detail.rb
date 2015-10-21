@@ -26,7 +26,8 @@ class ChargebackRateDetail < ActiveRecord::Base
     rate_adjustment(hr)
   end
 
-  # We modify this method for measurements conversions
+  # Scale the rate in the unit difine by user to the default unit of the metric
+  # It showing the default units of the metrics:
   # cpu_usagemhz_rate_average --> megahertz
   # derived_memory_used --> megabytes
   # derived_memory_available -->megabytes

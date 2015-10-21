@@ -11,10 +11,9 @@ class ChargebackRateDetailMeasure < ActiveRecord::Base
     Hash[units_display.zip(units)]
   end
 
-  private
-    def units_same_length
-      unless (units.count == units_display.count)
-        errors.add("Units Problem", "Units_display lenght diferent that the units lenght")
-      end
+  private def units_same_length
+    unless (units.count == units_display.count)
+      errors.add("Units Problem", "Units_display lenght diferent that the units lenght")
     end
+  end
 end
