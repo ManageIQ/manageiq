@@ -42,3 +42,13 @@
               = link_to("#{ui_lookup(:tables => "container_group")} (#{num_groups})",
                   {:action  => 'show', :id => @record, :display => 'container_groups'},
                   :title => _("Show Pods"))
+        - if role_allows(:feature => "container_node_show")
+          - num_nodes = @record.number_of(:container_nodes)
+          - if num_nodes == 0
+            %li.disabled
+              = link_to("#{ui_lookup(:table => "container_nodes")} (0)", "#")
+          - else
+            %li
+              = link_to("#{ui_lookup(:table => "container_nodes")} (#{num_nodes})",
+                {:action => 'show', :id => @record, :display => 'container_nodes'},
+                 :title  => _("View %s") % ui_lookup(:table => "container_nodes"))
