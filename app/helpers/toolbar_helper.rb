@@ -73,12 +73,10 @@ module ToolbarHelper
       cls += 'disabled ' if props['enabled'].to_s == 'false'
       out = []
       out << content_tag(:button,
-                         data_hash_keys(props).update(
+                         prepare_tag_keys(props).update(
                            :type         => "button",
                            :class        => "#{cls}btn btn-default dropdown-toggle",
                            'data-toggle' => "dropdown",
-                           :title        => props['title'],
-                           'data-click'  => props['id']
                          )) do
         (toolbar_image(props) +
           props['text'].to_s + "&nbsp;".html_safe +
@@ -132,7 +130,7 @@ module ToolbarHelper
     cls = props['enabled'].to_s == 'false' ? 'disabled ' : ''
     content_tag(:li, :class => cls + (hidden ? 'hidden' : '')) do
       content_tag(:a, prepare_tag_keys(props).update(:href => '#')) do
-        (toolbar_image(props) + props['text']).html_safe
+        (toolbar_image(props) + props['text'].to_s.html_safe)
       end
     end
   end
