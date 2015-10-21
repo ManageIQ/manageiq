@@ -1033,28 +1033,6 @@ class MiqAction < ActiveRecord::Base
     return a, status
   end
 
-  def self.create_script_actions_from_directory
-    Dir.glob(SCRIPT_DIR.join("*")).sort.each do |f|
-      rec = {}
-      rec[:name]        = File.basename(f).tr(".", "_")
-      rec[:description] = "Execute script: #{File.basename(f)}"
-      rec[:action_type] = "script"
-      rec[:options]     = {:filename => f}
-
-      action = find_by_name(rec[:name])
-      if action.nil?
-        _log.info("Creating [#{rec[:name]}]")
-        action = create(rec)
-      else
-        action.attributes = rec
-        if action.changed? || action.options_was != action.options
-          _log.info("Updating [#{rec[:name]}]")
-          action.save
-        end
-      end
-    end
-  end
-
   def check_policy_contents_empty_on_destroy
     raise "Action is referenced in at least one policy and connot be deleted" unless miq_policy_contents.empty?
   end
@@ -1089,6 +1067,28 @@ class MiqAction < ActiveRecord::Base
         if rec.changed? || (rec.options_was != rec.options)
           _log.info("Updating [#{action['name']}]")
           rec.save
+        end
+      end
+    end
+  end
+
+  def self.create_script_actions_from_directory
+    Dir.glob(SCRIPT_DIR.join("*")).sort.each do |f|
+      rec = {}
+      rec[:name]        = File.basename(f).tr(".", "_")
+      rec[:description] = "Execute script: #{File.basename(f)}"
+      rec[:action_type] = "script"
+      rec[:options]     = {:filename => f}
+
+      action = find_by_name(rec[:name])
+      if action.nil?
+        _log.info("Creating [#{rec[:name]}]")
+        action = create(rec)
+      else
+        action.attributes = rec
+        if action.changed? || action.options_was != action.options
+          _log.info("Updating [#{rec[:name]}]")
+          action.save
         end
       end
     end
