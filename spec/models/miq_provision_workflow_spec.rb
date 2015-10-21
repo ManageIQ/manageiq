@@ -4,26 +4,26 @@ silence_warnings { MiqProvisionWorkflow.const_set("DIALOGS_VIA_AUTOMATE", false)
 
 describe MiqProvisionWorkflow do
   let(:admin) { FactoryGirl.create(:user_admin) }
+  let(:server) { EvmSpecHelper.local_miq_server }
+  let(:dialog) { FactoryGirl.create(:miq_dialog_provision) }
   context "seeded" do
     context "After setup," do
-      before(:each) do
-        @server = EvmSpecHelper.local_miq_server
-        @zone = @server.zone
-        @guid = @server.guid
-        expect(MiqServer.my_server).to eq(@server)
-
-        FactoryGirl.create(:miq_dialog_provision)
+      before do
+        server
+        dialog
       end
-
       context "Without a Valid Template," do
         it "should not create an MiqRequest when calling from_ws" do
-          -> { ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws("1.0", admin, "template", "target", false, "cc|001|environment|test", "") }.should raise_error(RuntimeError)
+          expect do
+            ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
+              "1.0", admin, "template", "target", false, "cc|001|environment|test", "")
+          end.to raise_error(RuntimeError)
         end
       end
 
       context "With a Valid Template," do
         before(:each) do
-          @ems         = FactoryGirl.create(:ems_vmware,  :name => "Test EMS",  :zone => @zone)
+          @ems         = FactoryGirl.create(:ems_vmware,  :name => "Test EMS",  :zone => server.zone)
           @host        = FactoryGirl.create(:host, :name => "test_host", :hostname => "test_host", :state => 'on', :ext_management_system => @ems)
           @vm_template = FactoryGirl.create(:template_vmware, :name => "template", :ext_management_system => @ems, :host => @host)
           @hardware    = FactoryGirl.create(:hardware, :vm_or_template => @vm_template, :guest_os => "winxppro", :memory_cpu => 512, :numvcpus => 2)
@@ -33,7 +33,8 @@ describe MiqProvisionWorkflow do
         end
 
         it "should create an MiqRequest when calling from_ws" do
-          request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws("1.0", admin, "template", "target", false, "cc|001|environment|test", "")
+          request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
+            "1.0", admin, "template", "target", false, "cc|001|environment|test","")
           request.should be_a_kind_of(MiqRequest)
         end
 
