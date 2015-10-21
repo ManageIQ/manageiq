@@ -50,4 +50,4 @@
             - else
               /if the rate detail have a metric associated, display an options field with per_unit selected
               %td
-                = select_tag("per_unit_#{i}", options_for_select(measure.measures_for_select, r.per_unit), "data-miq_observe" => {:url => url}.to_json)
+                = select_tag("per_unit_#{i}", options_for_select(measure.measures, r.per_unit), "data-miq_observe" => {:url => url}.to_json)

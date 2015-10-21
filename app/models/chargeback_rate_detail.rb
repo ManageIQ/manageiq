@@ -49,14 +49,14 @@ class ChargebackRateDetail < ActiveRecord::Base
     end
   end
 
-  # Adjuts the hourly rate to the per unit by default
+  # Adjusts the hourly rate to the per unit by default
   def adjustment_measure(hr, pu_destiny)
     measure = detail_measure
     pos_pu_destiny = measure.units.index(pu_destiny)
     pos_per_unit = measure.units.index(per_unit)
     jumps = (pos_per_unit - pos_pu_destiny).abs
     if pos_per_unit > pos_pu_destiny
-      hr.to_f / (measure.step**jumps )
+      hr.to_f / (measure.step**jumps)
     else
       hr * (measure.step**jumps)
     end
@@ -80,7 +80,7 @@ class ChargebackRateDetail < ActiveRecord::Base
   end
 
   def per_unit_display
-    detail_measure.nil? ? per_unit.to_s.capitalize : detail_measure.measures_for_select.key(per_unit)
+    detail_measure.nil? ? per_unit.to_s.capitalize : detail_measure.measures.key(per_unit)
   end
 
   def rate_type

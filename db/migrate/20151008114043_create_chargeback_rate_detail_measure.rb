@@ -4,7 +4,7 @@ class CreateChargebackRateDetailMeasure < ActiveRecord::Migration
       t.string :name
       t.string :units, :array => true
       t.string :units_display, :array => true
-      t.float :step
+      t.integer :step
 
       t.timestamps :null => false
     end
