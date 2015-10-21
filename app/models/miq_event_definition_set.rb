@@ -6,7 +6,7 @@ class MiqEventDefinitionSet < ActiveRecord::Base
   FIXTURE_DIR = Rails.root.join("db/fixtures")
 
   def self.seed
-    CSV.foreach(FIXTURE_DIR.join("#{to_s.pluralize.underscore}.csv"), :headers => true, :skip_lines => /^#/) do |csv_row|
+    CSV.foreach(fixture_path, :headers => true, :skip_lines => /^#/) do |csv_row|
       set = csv_row.to_hash
 
       rec = find_by_name(set['name'])
@@ -21,5 +21,9 @@ class MiqEventDefinitionSet < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def self.fixture_path
+    FIXTURE_DIR.join("#{to_s.pluralize.underscore}.csv")
   end
 end
