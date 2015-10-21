@@ -532,7 +532,7 @@ event_groups:
     - POD_SCHEDULED
     - POD_FAILEDSCHEDULING
     - CONTAINER_CREATED
-    - CONTAINER_KILLING
+    - CONTAINER_KILLED
     - CONTAINER_STARTED
     :detail:
     - PowerOffVM_Task

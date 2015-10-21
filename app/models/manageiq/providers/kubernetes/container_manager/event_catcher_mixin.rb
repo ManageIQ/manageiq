@@ -1,8 +1,9 @@
 module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
   extend ActiveSupport::Concern
+  # 'Created', 'Failed', 'Started' and 'Killed' are in fact container related events, returned as part of a pod event.
   ENABLED_EVENTS = {
-    'Node' => %w(NodeReady NodeNotReady rebooted),
-    'Pod'  => %w(scheduled failedScheduling failedValidation HostPortConflict created failed started killing)
+    'Node' => %w(NodeReady NodeNotReady Rebooted),
+    'Pod'  => %w(Scheduled FailedScheduling FailedValidation HostPortConflict Created Failed Started Killed)
   }
 
   def event_monitor_handle
