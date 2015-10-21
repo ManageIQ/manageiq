@@ -60,7 +60,7 @@ class ContainerTopologyService
 
   def entity_status(entity, kind)
     case kind
-    when 'VM', 'Host' then entity.power_state
+    when 'VM', 'Host' then entity.power_state.capitalize
     when 'Node'
       condition = entity.container_conditions.first
       if condition.name == 'Ready' && condition.status == 'True'
@@ -69,14 +69,14 @@ class ContainerTopologyService
         'NotReady'
       end
     when 'Pod' then entity.phase
-    when 'Container' then entity.state
+    when 'Container' then entity.state.capitalize
     when 'Replicator'
       if entity.current_replicas == entity.replicas
         'OK'
       else
-        'warning'
+        'Warning'
       end
-    else 'unknown'
+    else 'Unknown'
     end
   end
 

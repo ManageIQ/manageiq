@@ -64,10 +64,10 @@ describe ContainerTopologyService do
       topology[:items]["8f8ca74c-3a41-11e5-a79a-001a4a231290"].should eql(:id => "8f8ca74c-3a41-11e5-a79a-001a4a231290", :name => "replicator1",
                                                                           :status => "OK", :kind => "Replicator", :miq_id => 7)
       topology[:items]["95e49048-3e00-11e5-a0d2-18037327aaeb"].should eql(:id => "95e49048-3e00-11e5-a0d2-18037327aaeb", :name => "service1",
-                                                                          :status => "unknown", :kind => "Service", :miq_id => 3)
+                                                                          :status => "Unknown", :kind => "Service", :miq_id => 3)
       topology[:items]["96c35ccd-3e00-11e5-a0d2-18037327aaeb"].should eql(:id => "96c35ccd-3e00-11e5-a0d2-18037327aaeb", :name => "myPod",
                                                                           :status => "Running", :kind => "Pod", :miq_id => 15)
-      topology[:items]["3572afee-3a41-11e5-a79a-001a4a231290_ruby-helloworld-database_openshift\n/mysql-55-centos7:latest"].should eql(:id => "3572afee-3a41-11e5-a79a-001a4a231290_ruby-helloworld-database_openshift\n/mysql-55-centos7:latest", :name => "ruby-example", :status => "running", :kind => "Container",  :miq_id => 10)
+      topology[:items]["3572afee-3a41-11e5-a79a-001a4a231290_ruby-helloworld-database_openshift\n/mysql-55-centos7:latest"].should eql(:id => "3572afee-3a41-11e5-a79a-001a4a231290_ruby-helloworld-database_openshift\n/mysql-55-centos7:latest", :name => "ruby-example", :status => "Running", :kind => "Container",  :miq_id => 10)
 
       topology[:relations].should include(:source => "96c35ccd-3e00-11e5-a0d2-18037327aaeb", :target => "8f8ca74c-3a41-11e5-a79a-001a4a231290")
     end
