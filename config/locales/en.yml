@@ -429,7 +429,7 @@ en:
       mem_usage_absolute_average: Memory - Usage of Total Allocated (%)
       mem_vmmemctl_absolute_average: Memory - Balloon Average
       mem_vmmemctltarget_absolute_average: Memory - Balloon Target Average
-      memory_cpu: RAM
+      memory_mb: RAM
       memory_size: Memory Usage
       min_cpu_usage_rate_average: CPU - Min Usage Rate for Collected Intervals (%)
       min_cpu_usagemhz_rate_average: CPU - Min Usage for Collected Intervals (MHz)

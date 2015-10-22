@@ -22,7 +22,7 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudResourceQuota < ::Cloud
     Hardware.joins(:vm)
       .where(:vms => {:cloud_tenant_id => cloud_tenant_id})
       .where("vms.#{VMS_POWER_FILTER}")
-      .sum(:memory_cpu)
+      .sum(:memory_mb)
   end
 
   # nova

@@ -1,7 +1,7 @@
 class ManageIQ::Providers::InfraManager::ProvisionWorkflow < ::MiqProvisionVirtWorkflow
   def set_or_default_hardware_field_values(vm)
     update_values = {
-      :vm_memory      => vm.hardware.memory_cpu.to_s,
+      :vm_memory      => vm.hardware.memory_mb.to_s,
       :cpu_limit      => vm.cpu_limit,
       :memory_limit   => vm.memory_limit,
       :cpu_reserve    => vm.cpu_reserve,

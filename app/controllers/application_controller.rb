@@ -1418,8 +1418,8 @@ class ApplicationController < ActionController::Base
                     :description => "#{db_record.hardware.cpu_speed} MHz",
                     :icon        => "processor") if db_record.hardware.cpu_speed
       @devices.push(:device      => "Memory",
-                    :description => "#{db_record.hardware.memory_cpu} MB",
-                    :icon        => "memory") if db_record.hardware.memory_cpu
+                    :description => "#{db_record.hardware.memory_mb} MB",
+                    :icon        => "memory") if db_record.hardware.memory_mb
 
       # Add disks to the device array
       unless db_record.hardware.disks.nil?

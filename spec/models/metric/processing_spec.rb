@@ -140,7 +140,7 @@ describe Metric::Processing do
       let(:vm) do
         FactoryGirl.create(:vm_vmware, :hardware =>
           FactoryGirl.create(:hardware,
-                             :memory_cpu => 4_096
+                             :memory_mb => 4_096
                             )
                           )
       end

@@ -24,7 +24,7 @@ module ManageIQ::Providers
     end
 
     def aggregate_memory(targets = nil)
-      aggregate_hardware(:computer_systems, :memory_cpu, targets)
+      aggregate_hardware(:computer_systems, :memory_mb, targets)
     end
   end
 end

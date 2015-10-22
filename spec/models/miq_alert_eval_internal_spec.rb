@@ -92,7 +92,7 @@ describe "MiqAlert Evaluation Internal" do
           :mode        => "internal",
           :options     => {
             :operator => "Decreased",
-            :hdw_attr => "memory_cpu"}}
+            :hdw_attr => "memory_mb"}}
         @alert      = FactoryGirl.create(:miq_alert_vm, :description => "Alert Internal Reconfigured Hardware Value", :expression => expression)
         @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Internal Reconfigured Hardware Value Profile", :mode => @vm.class.name)
         @alert_prof.add_member(@alert)
