@@ -1,8 +1,12 @@
 <div>
-  <div ng-if=" !vm.dialog.label ">
+  <div ng-if="!vm.supportedDialog">
+    <h2>Service Template Contains Unsupported Provision Dialog Types.</h2>
+    <p>To request this service, continue <a ng-href="{{ vm.API_BASE }}/miq_ae_customization/explorer">to the classic UI</a>.</p>
+  </div>
+  <div ng-if=" !vm.dialog.label && vm.supportedDialog ">
     <h2>No Provisioning Dialog Available.</h2>
   </div>
-  <div ng-if=" vm.dialog.label ">
+  <div ng-if=" vm.dialog.label && vm.supportedDialog ">
     <div>
       <h2 class="text-capitalize no-wrap">{{ ::vm.dialog.label }} </h2>
       <h4>{{ ::vm.dialog.description }}</h4>
