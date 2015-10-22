@@ -9,129 +9,99 @@
   - @pc_occ ||= 0
   - @pc_occ += 1
   %div{:id => "pc_div_#{@pc_occ}"}
-    %table{:border      => "0",
-           :cellpadding => "0",
-           :cellspacing => "0",
-           :style       => "\n\t\t\t\t\theight: 33px;\n\t\t\t\t\tbackground: url('/assets/dhtmlx_gpl_36/imgs/dhxlayout_dhx_miq/dhxlayout_bg.png') top left repeat-x;\n\t\t\t\t\tpadding-bottom: 3px;\n\t\t\t\t\t",
-           :width       => "100%"}
-      %tr
-        - if @pc_occ == 1
-          - if ! @no_checkall && ! @no_checkboxes
-            %td{:nowrap => "", :style => "padding: 4px 2px 4px 30px;", :width => "4%"}
-              %input#masterToggle{:name    => "masterToggle",
-                                  :onclick => "miqUpdateAllCheckboxes('#{button_div}', null);",
-                                  :type    => "checkbox"}
-              (Check All)
-          %td{:nowrap => "", :style => "padding: 4px 2px 4px 20px;", :width => "4%"}
-            Sorted by
-            - sort_text = "#{@view.headers[@sortcol]} (#{@sortdir == "ASC" ? "Asc." : "Desc."})"
-            - if @gtl_type != "list" && @view
-              = select_tag("sort_choice",
-                           options_for_select([sort_text] + @view.headers),
-                           "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true,
-                           "data-miq_observe"    => {:url => url}.to_json)
-            - elsif @gtl_type == "list" && @view
-              = h(sort_text)
-        - else
-          - if @bottom_msg
-            = h(@bottom_msg)
-        %td{:align => "right", :valign => "middle"}
-          %table{:align => "right", :border => "0", :cellpadding => "0", :cellspacing => "0"}
-            %tr
-              %td{:nowrap => "", :style => "padding: 4px 2px 4px 2px;"} Per page:
-              %td{:style  => "padding: 4px 2px 4px 2px;"}
-                = select_tag("ppsetting",
-                             options_for_select(@pp_choices, pages[:perpage]),
-                             "data-miq_sparkle_on"  => true,
-                             "data-miq_sparkle_off" => true,
-                             "data-miq_observe"     => {:url => url}.to_json)
-              %td{:nowrap => ""}
-                / first button
-                - if pages[:current] > 1
-                  - if @ajax_paging_buttons
-                    = link_to(image_tag('/images/toolbars/first.png',
-                                        :border => "0",
-                                        :class => "rollover small"),
-                              {:action => action_url,
-                               :id     => action_id,
-                               :page   => 1},
-                              "data-miq_sparkle_on"  => true,
-                              "data-miq_sparkle_off" => true,
-                              :remote                => true,
-                              :title                 => "")
-                    = link_to(image_tag('/images/toolbars/previous.png',
-                              :border => "0",
-                              :class  => "rollover small"),
-                              {:action => action_url,
-                               :id     => action_id,
-                               :page   => pages[:current] - 1},
-                              "data-miq_sparkle_on"  => true,
-                              "data-miq_sparkle_off" => true,
-                              :remote                => true,
-                              :title                 => "")
-                  - elsif action_id
-                    = link_to(image_tag('/images/toolbars/first.png',
-                                        :border => "0",
-                                        :class => "rollover small"),
-                              :action => action_method,
-                              :id => action_id,
-                              :page => 1)
-                    = link_to(image_tag('/images/toolbars/previous.png',
-                                        :border => "0",
-                                        :class  => "rollover small"),
-                             :action => action_method,
-                             :id     => action_id,
-                             :page   => pages[:current] - 1)
-                  - else
-                    = link_to(image_tag('/images/toolbars/first.png',
-                                        :border => "0",
-                                        :class  => "rollover small"),
-                              :action => action_url,
-                              :page   => 1)
-                    = link_to(image_tag('/images/toolbars/previous.png',
-                                        :border => "0",
-                                        :class  => "rollover small"),
-                              :action => action_url,
-                              :page   => pages[:current] - 1)
+    - if @pc_occ == 1
+      .form-group
+        - if ! @no_checkall && ! @no_checkboxes
+          %input#masterToggle{:name    => "masterToggle",
+                              :onclick => "miqUpdateAllCheckboxes('#{button_div}', null);",
+                              :type    => "checkbox"}
+          (Check All)
+      .form-group{:style => "border-right: 0"}
+        = _('Sorted by: ')
+        - sort_text = "#{@view.headers[@sortcol]} (#{@sortdir == "ASC" ? "Asc." : "Desc."})"
+        - if @gtl_type != "list" && @view
+          = select_tag("sort_choice",
+                       options_for_select([sort_text] + @view.headers),
+                       :class => "selectpicker")
+          :javascript
+            miqSelectPickerEvent("sort_choice", "#{url}", {beforeSend: true, complete: true})
+        - elsif @gtl_type == "list" && @view
+          = h(sort_text)
+    - else
+      - if @bottom_msg
+        = h(@bottom_msg)
+
+    .form-group.pull-right{:style => "border-right: 0"}
+      %ul.pagination
+        %li.first
+          / first button
+          - if pages[:current] > 1
+            %span{:type    => "button",
+                  :onclick => remote_function(:loading  => "miqSparkle(true);",
+                                                :complete => "miqSparkle(false);",
+                                                :url      => "#{action_url}?page=1&id=#{action_id}"),
+                    :class   => "fa fa-angle-double-left",
+                    :alt     => "First",
+                    :title   => "First"}
+            %li.prev
+              %span{:type    => "button",
+                    :onclick => remote_function(:loading  => "miqSparkle(true);",
+                                                  :complete => "miqSparkle(false);",
+                                                  :url      => "#{action_url}?page=#{pages[:current] - 1}&id=#{action_id}"),
+                      :class   => "fa fa-angle-left",
+                      :alt     => "Previous",
+                      :title   => "Previous"}
+          - else
+            %li.first.disabled
+              %span{:class => "i fa fa-angle-double-left"}
+            %li.prev.disabled
+              %span{:class => "i fa fa-angle-left"}
+
+          %li
+            %span
+              - start_number = (pages[:perpage] * pages[:current]) - pages[:perpage] + 1
+              - end_number = pages[:perpage] * pages[:current]
+              - if start_number == pages[:items]
+                = "Showing #{start_number} of #{pages[:items]} items"
+              - else
+                - if end_number > pages[:items]
+                  = "Showing #{start_number}-#{pages[:items]} of #{pages[:items]} items"
                 - else
-                  = image_tag('/images/toolbars/first.png', :class => "dimmed small")
-                  = image_tag('/images/toolbars/previous.png', :class => "dimmed small")
-                - if pages[:current] < pages[:total]
-                  - if @ajax_paging_buttons
-                    = link_to(image_tag('/images/toolbars/next.png', :class => "rollover small"),
-                      {:action => action_url, :id => action_id, :page => pages[:current] + 1},
-                      "data-miq_sparkle_on" => true,
-                      "data-miq_sparkle_off" => true,
-                      :remote => true,
-                      :title => "")
-                    = link_to(image_tag('/images/toolbars/last.png', :class => "rollover small"),
-                      {:action => action_url, :id => action_id, :page => pages[:total]},
-                      "data-miq_sparkle_on" => true,
-                      "data-miq_sparkle_off" => true,
-                      :remote => true,
-                      :title => "")
-                  - elsif action_id
-                    = link_to(image_tag('/images/toolbars/next.png', :class => "rollover small"),
-                      :action => action_method, :id => action_id, :page => pages[:current] + 1)
-                    = link_to(image_tag('/images/toolbars/last.png', :class => "rollover small"),
-                      :action => action_method, :id => action_id, :page => pages[:total])
-                  - else
-                    = link_to(image_tag('/images/toolbars/next.png', :class => "rollover small"),
-                      :action => action_url, :page => pages[:current] + 1)
-                    = link_to(image_tag('/images/toolbars/last.png', :class => "rollover small"),
-                      :action => action_url, :page => pages[:total])
-                - else
-                  = image_tag('/images/toolbars/next.png', :class => "dimmed small")
-                  = image_tag('/images/toolbars/last.png', :class => "dimmed small")
-              %td{:style => "padding: 4px; padding-right: 20px", :valign => "middle"}
-                - start_number = (pages[:perpage] * pages[:current]) - pages[:perpage] + 1
-                - end_number = pages[:perpage] * pages[:current]
-                - if start_number == pages[:items]
-                  = "(#{start_number} of #{pages[:items]})"
-                - else
-                  - if end_number > pages[:items]
-                    = "(#{start_number}-#{pages[:items]} of #{pages[:items]})"
-                  - else
-                    = "(#{start_number}-#{end_number} of #{pages[:items]})"
-                %input{:name => "limitstart", :type => "hidden", :value => "0"}/
+                  = "Showing #{start_number}-#{end_number} of #{pages[:items]} items"
+              %input{:name => "limitstart", :type => "hidden", :value => "0"}/
+
+          - if pages[:current] < pages[:total]
+            %li.next
+              %span{:type    => "button",
+                      :onclick => remote_function(:loading  => "miqSparkle(true);",
+                                                  :complete => "miqSparkle(false);",
+                                                  :url      => "#{action_url}?page=#{pages[:current] +1}&id=#{action_id}"),
+                      :class   => "i fa fa-angle-right",
+                      :alt     => "Next",
+                      :title   => "Next"}
+            %li.last
+              %span{:type    => "button",
+                      :onclick => remote_function(:loading  => "miqSparkle(true);",
+                                                  :complete => "miqSparkle(false);",
+                                                  :url      => "#{action_url}?page=#{pages[:total]}&id=#{action_id}"),
+                      :class   => "i fa fa-angle-double-right",
+                      :alt     => "Last",
+                      :title   => "Last"}
+          - else
+            %li.next.disabled
+              %span{:class => "i fa fa-angle-right"}
+            %li.last.disabled
+              %span{:class => "i fa fa-angle-double-right"}
+
+    .form-group.pull-right
+      = _('Items per page:')
+      = select_tag("ppsetting",
+                   options_for_select(@pp_choices, pages[:perpage]),
+                   "data-width" => "auto",
+                   :class       => "selectpicker")
+      :javascript
+        miqSelectPickerEvent("ppsetting", "#{url}", {beforeSend: true, complete: true})
+
 = render(:partial => '/layouts/x_form_buttons')
+:javascript
+  miqInitSelectPicker();
