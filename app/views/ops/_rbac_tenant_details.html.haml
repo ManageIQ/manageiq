@@ -70,6 +70,8 @@
                   %li
                     %span.product.product-project
               %td= tenant.name
-
-  %hr/
+  .row
+    .col-md-12.col-lg-10
+      = render :partial => "shared/summary/textual_listview", :locals => {:title => _("Tenant Quota"), :items => textual_group_tenant_quota_allocations}
+      %hr/
   = render :partial => "rbac_tag_box"
