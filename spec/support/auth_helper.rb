@@ -6,7 +6,6 @@ module AuthHelper
   def login_as(user)
     User.current_user = user
     session[:userid]  = user.userid
-    session[:group]   = user.current_group.try(:id)
     user
   end
 end
