@@ -21,13 +21,13 @@ class TreeBuilderUtilization < TreeBuilderRegion
     ]
   end
 
-  def x_get_tree_datacenter_kids(object, options)
+  def x_get_tree_datacenter_kids(object, count_only, type)
     objects =
-      case options[:type]
+      case type
       when :vandt then x_get_tree_vandt_datacenter_kids(object)
       when :handc then x_get_tree_handc_datacenter_kids(object)
       end
-    count_only_or_objects(options[:count_only], objects, nil)
+    count_only_or_objects(count_only, objects, nil)
   end
 
   def x_get_tree_vandt_datacenter_kids(object)
