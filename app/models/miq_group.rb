@@ -93,7 +93,7 @@ class MiqGroup < ActiveRecord::Base
         group = find_by_description(g) || new(:description => g)
         user_role = MiqUserRole.find_by_name("EvmRole-#{groups_to_roles[g]}")
         if user_role.nil?
-          _log.warn("Unable to find user_role 'EvmRole-#{groups_to_roles[group]}' for group '#{g}'")
+          _log.warn("Unable to find user_role 'EvmRole-#{groups_to_roles[g]}' for group '#{g}'")
           next
         end
         group.miq_user_role = user_role
