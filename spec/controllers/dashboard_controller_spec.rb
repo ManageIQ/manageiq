@@ -80,7 +80,7 @@ describe DashboardController do
       controller.stub(:get_vmdb_config).and_return(:product => {})
       skip_data_checks('some_url')
       validation = controller.send(:validate_user, user)
-      expect(controller.current_groupid).to eq(user.current_group_id)
+      expect(controller.current_group_id).to eq(user.current_group_id)
       expect(validation.flash_msg).to be_nil
       expect(validation.url).to eq('some_url')
     end
