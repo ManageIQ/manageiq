@@ -31,13 +31,13 @@ class TreeBuilderAeClass < TreeBuilder
     end
   end
 
-  def x_get_tree_ns_kids(object, options)
+  def x_get_tree_ns_kids(object, count_only)
     objects = filter_ae_objects(object.ae_namespaces)
     unless MIQ_AE_COPY_ACTIONS.include?(@sb[:action])
       ns_classes = filter_ae_objects(object.ae_classes)
       objects += ns_classes.flatten unless ns_classes.blank?
     end
-    count_only_or_objects(options[:count_only], objects, [:display_name, :name])
+    count_only_or_objects(count_only, objects, [:display_name, :name])
   end
 
   def filter_ae_objects(objects)

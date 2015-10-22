@@ -315,7 +315,7 @@ class TreeBuilder
                         when IsoDatastore        then x_get_tree_iso_datastore_kids(parent, count_only)
                         when LdapRegion          then x_get_tree_lr_kids(parent, count_only)
                         when MiqAeClass          then x_get_tree_class_kids(parent, count_only, options[:type])
-                        when MiqAeNamespace      then x_get_tree_ns_kids(parent, options)
+                        when MiqAeNamespace      then x_get_tree_ns_kids(parent, count_only)
                         when MiqGroup            then options[:tree] == :db_tree ?
                                                     x_get_tree_g_kids(parent, options) : nil
                         when MiqRegion           then x_get_tree_region_kids(parent, options)
