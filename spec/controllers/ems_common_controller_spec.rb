@@ -182,7 +182,7 @@ describe EmsInfraController do
         controller.instance_variable_set(:@_params,
                                          :restore_password => true,
                                          :default_password => "[FILTERED]",
-                                         :default_verify => "[FILTERED]")
+                                         :default_verify   => "[FILTERED]")
         controller.send(:restore_password)
         assigns(:edit)[:new][:default_password].should == infra_ems.authentication_password
       end
