@@ -38,8 +38,7 @@ class TreeBuilderOpsRbac < TreeBuilder
     count_only_or_objects(count_only, objects, "name")
   end
 
-  def x_get_tree_tenant_kids(object, options)
-    options.merge!(:expand => false)
-    count_only_or_objects(options[:count_only], object.children, "name")
+  def x_get_tree_tenant_kids(object, count_only)
+    count_only_or_objects(count_only, object.children, "name")
   end
 end

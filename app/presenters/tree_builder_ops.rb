@@ -13,8 +13,8 @@ class TreeBuilderOps < TreeBuilder
     end
   end
 
-  def x_get_tree_zone_kids(object, options)
-    count_only_or_objects(options[:count_only], object.miq_servers, "name")
+  def x_get_tree_zone_kids(object, count_only)
+    count_only_or_objects(count_only, object.miq_servers, "name")
   end
 
   # Get root nodes count/array for explorer tree

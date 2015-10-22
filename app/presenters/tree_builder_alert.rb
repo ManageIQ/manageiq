@@ -23,7 +23,7 @@ class TreeBuilderAlert < TreeBuilder
   end
 
   # level 2 - nothing
-  def x_get_tree_al_kids(_parent, options)
-    count_only_or_objects(options[:count_only], [])
+  def x_get_tree_al_kids(_parent, count_only)
+    count_only_or_objects(count_only, [])
   end
 end

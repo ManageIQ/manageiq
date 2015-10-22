@@ -23,7 +23,7 @@ class TreeBuilderEvent < TreeBuilder
   end
 
   # level 2 - nothing
-  def x_get_tree_ev_kids(_parent, options)
-    count_only_or_objects(options[:count_only], [])
+  def x_get_tree_ev_kids(_parent, count_only, _parents)
+    count_only_or_objects(count_only, [])
   end
 end

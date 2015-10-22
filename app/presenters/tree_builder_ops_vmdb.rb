@@ -37,8 +37,8 @@ class TreeBuilderOpsVmdb < TreeBuilderOps
     count_only_or_objects(count_only, indexes, "name")
   end
 
-  def x_get_tree_vmdb_table_kids(object, options)
-    if options[:count_only]
+  def x_get_tree_vmdb_table_kids(object, count_only)
+    if count_only
       object.vmdb_indexes.count
     else
       # load this node expanded on autoload

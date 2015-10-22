@@ -13,8 +13,8 @@ class TreeBuilderCatalogItems < TreeBuilderCatalogsClass
     )
   end
 
-  def x_get_tree_stc_kids(object, options)
-    return count_only_or_objects(options[:count_only],
+  def x_get_tree_stc_kids(object, count_only)
+    return count_only_or_objects(count_only,
                                  rbac_filtered_objects(object.service_templates),
                                  'name') unless object.id.nil?
     objects = []
@@ -22,7 +22,7 @@ class TreeBuilderCatalogItems < TreeBuilderCatalogsClass
     items.sort_by { |o| o.name.downcase }.each do |item|
       objects.push(item) if item.service_template_catalog_id.nil?
     end
-    count_only_or_objects(options[:count_only], objects, 'name')
+    count_only_or_objects(count_only, objects, 'name')
   end
 
   # Handle custom tree nodes (object is a Hash)
@@ -47,9 +47,9 @@ class TreeBuilderCatalogItems < TreeBuilderCatalogsClass
     count_only_or_objects(count_only, objects, nil)
   end
 
-  def x_get_tree_st_kids(object, options)
-    count = options[:type] == :svvcat ? 0 : object.custom_button_sets.count + object.custom_buttons.count
+  def x_get_tree_st_kids(object, count_only, type)
+    count = type == :svvcat ? 0 : object.custom_button_sets.count + object.custom_buttons.count
     objects = count > 0 ? [{:id => object.id.to_s, :text => 'Actions', :image => 'folder', :tip => 'Actions'}] : []
-    count_only_or_objects(options[:count_only], objects, nil)
+    count_only_or_objects(count_only, objects, nil)
   end
 end
