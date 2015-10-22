@@ -8,7 +8,6 @@ class ServerRole < ActiveRecord::Base
   def self.seed
     CSV.foreach(fixture_path, :headers => true, :skip_lines => /^#/).each do |csv_row|
       action = csv_row.to_hash
-      action['license_required'] ||= ''
 
       rec = find_by(:name => action['name'])
       if rec.nil?

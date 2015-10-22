@@ -31,25 +31,25 @@ describe ServerRole do
   context "With Seeding" do
     before(:each) do
       @csv = <<-CSV.gsub(/^\s+/, "")
-        name,description,max_concurrent,external_failover,license_required,role_scope
-        automate,Automation Engine,0,false,automate,region
-        database_operations,Database Operations,0,false,,region
-        database_owner,Database Owner,1,false,,database
-        database_synchronization,Database Synchronization,1,false,,region
-        ems_inventory,Management System Inventory,1,false,,zone
-        ems_metrics_collector,Capacity & Utilization Data Collector,0,false,,zone
-        ems_metrics_coordinator,Capacity & Utilization Coordinator,1,false,,zone
-        ems_metrics_processor,Capacity & Utilization Data Processor,0,false,,zone
-        ems_operations,Management System Operations,0,false,,zone
-        event,Event Monitor,1,false,,zone
-        notifier,Alert Processor,1,false,,region
-        reporting,Reporting,0,false,,region
-        scheduler,Scheduler,1,false,,region
-        smartproxy,SmartProxy,0,false,,zone
-        smartstate,SmartState Analysis,0,false,,zone
-        storage_inventory,Storage Inventory,1,false,,zone
-        user_interface,User Interface,0,false,,region
-        web_services,Web Services,0,false,,region
+        name,description,max_concurrent,external_failover,role_scope
+        automate,Automation Engine,0,false,region
+        database_operations,Database Operations,0,false,region
+        database_owner,Database Owner,1,false,database
+        database_synchronization,Database Synchronization,1,false,region
+        ems_inventory,Management System Inventory,1,false,zone
+        ems_metrics_collector,Capacity & Utilization Data Collector,0,false,zone
+        ems_metrics_coordinator,Capacity & Utilization Coordinator,1,false,zone
+        ems_metrics_processor,Capacity & Utilization Data Processor,0,false,zone
+        ems_operations,Management System Operations,0,false,zone
+        event,Event Monitor,1,false,zone
+        notifier,Alert Processor,1,false,region
+        reporting,Reporting,0,false,region
+        scheduler,Scheduler,1,false,region
+        smartproxy,SmartProxy,0,false,zone
+        smartstate,SmartState Analysis,0,false,zone
+        storage_inventory,Storage Inventory,1,false,zone
+        user_interface,User Interface,0,false,region
+        web_services,Web Services,0,false,region
       CSV
 
       File.stub(:open).and_return(StringIO.new(@csv))
@@ -66,7 +66,7 @@ describe ServerRole do
       cols  = roles.shift
       roles.each do |role|
         next if role =~ /^#.*$/ # skip commented lines
-        name, description, max_concurrent, external_failover, license_required, role_scope = role.split(',')
+        name, description, max_concurrent, external_failover, role_scope = role.split(',')
         max_concurrent = max_concurrent.to_i
         external_failover = true  if external_failover == 'true'
         external_failover = false if external_failover == 'false'
@@ -74,7 +74,6 @@ describe ServerRole do
         sr.description.should == description
         sr.max_concurrent.should == max_concurrent
         sr.external_failover.should == external_failover
-        sr.license_required.should == license_required
         sr.role_scope.should == role_scope
 
         case max_concurrent
