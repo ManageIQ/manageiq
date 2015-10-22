@@ -14,7 +14,7 @@
           <span class="ss-list-view__title-img">
             <span class="ss-list-view__title-img__center"></span>
             <img class="ss-list-view__title-img__logo" ng-src="{{ ::item.picture.image_href }}" ng-if=" ::item.picture.image_href"/>
-            <img class="ss-list-view__title-img__logo" src="assets/images/service.png" ng-if=" ::!item.picture.image_href"/>
+            <img class="ss-list-view__title-img__logo" src="images/service.png" ng-if=" ::!item.picture.image_href"/>
           </span>
           {{ item.description }}
         </span>
@@ -32,10 +32,10 @@
       <div class="col-lg-2 col-md-4 hidden-sm hidden-xs">
         <span class="text-capitalize no-wrap">
           <strong>Status: </strong>
-          <span class="spinner spinner-xs spinner-inline" ng-if="item.request_state == 'pending'"></span>
-          <span class="pficon-error-circle-o" ng-if="item.request_state == 'denied'"></span>
-          <span class="pficon-ok" ng-if="item.request_state == 'approved'"></span>
-          {{ item.request_state }}
+          <span class="spinner spinner-xs spinner-inline" ng-if="item.approval_state == 'pending'"></span>
+          <span class="pficon-error-circle-o" ng-if="item.approval_state == 'denied'"></span>
+          <span class="pficon-ok" ng-if="item.approval_state == 'approved'"></span>
+          {{ item.approval_state }}
         </span>
       </div>
     </div>

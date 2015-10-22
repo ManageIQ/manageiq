@@ -42,6 +42,7 @@ module.exports = (function() {
   var clientJsOrder = [
     '**/app.module.js',
     '**/*.module.js',
+    '**/skin.module.js',
     '**/*.js'
   ];
 
@@ -62,7 +63,7 @@ module.exports = (function() {
     var files = [client + 'app/**/*.js'];
 
     if (ordered) {
-      files = [].concat(client + 'app/app.module.js', client + 'app/**/*module*.js', files)
+      files = [].concat(client + 'app/app.module.js', client + 'app/**/*module*.js', client + 'skin/skin.module.js', files)
     }
 
     if (excludeSpecs) {
@@ -164,7 +165,7 @@ module.exports = (function() {
   // task images: Image build options
   config.images = {
     src: imageFiles,
-    build: build + 'assets/images',
+    build: build + 'images',
     minify: true,
     options: {
       optimizationLevel: 5,
@@ -173,9 +174,23 @@ module.exports = (function() {
     }
   };
 
+  config.skinImages = {
+    src: [
+      client + 'skin/images/**/*.*'
+    ],
+    build: build + 'images',
+    minify: true,
+    options: {
+      optimizationLevel: 5,
+      progressive: true,
+      interlaced: true
+    }
+  };
+
+
   config.devImages = {
     src: imageFiles,
-    build: temp + 'assets/images',
+    build: temp + 'images',
     minify: false
   };
 

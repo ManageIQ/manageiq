@@ -18,7 +18,7 @@
               <div class="ss-details-header__title-img">
                 <span class="ss-details-header__title-img__center"></span>
                 <img class="ss-details-header__title-img__logo" ng-if="!vm.serviceTemplate.picture.image_href"
-                  alt="{{ ::vm.serviceTemplate.name }}" src="assets/images/service.png"/>
+                  alt="{{ ::vm.serviceTemplate.name }}" src="images/service.png"/>
                 <img class="ss-details-header__title-img__logo" ng-if="vm.serviceTemplate.picture.image_href "
                   alt="{{ ::vm.serviceTemplate.name }}" ng-src="{{ ::vm.serviceTemplate.picture.image_href }}"/>
               </div>
@@ -28,8 +28,7 @@
               </div>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 ss-details-header__actions">
-              <button ui-sref="^" type="button" class="btn btn-default">Cancel</button>
-              <button type="button" class="btn btn-primary" ng-click="vm.submitDialog()">Request</button>
+              <button type="button" class="btn btn-primary" ng-click="vm.submitDialog()">Submit Request</button>
             </div>
           </div>
         </div>

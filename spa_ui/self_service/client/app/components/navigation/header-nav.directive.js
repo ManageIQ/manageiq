@@ -24,8 +24,10 @@
     }
 
     /** @ngInject */
-    function HeaderNavController(Navigation, Messages, API_BASE) {
+    function HeaderNavController(Text, Navigation, Messages, API_BASE) {
       var vm = this;
+
+      vm.text = Text.app;
 
       vm.activate = activate;
       vm.toggleNavigation = toggleNavigation;
