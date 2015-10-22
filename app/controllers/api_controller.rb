@@ -38,6 +38,7 @@ class ApiController < ApplicationController
   include_concern 'Manager'
   include_concern 'Action'
   include_concern 'Logger'
+  include_concern 'ErrorGenerator'
   include_concern 'ErrorHandler'
   include_concern 'Normalizer'
   include_concern 'Renderer'

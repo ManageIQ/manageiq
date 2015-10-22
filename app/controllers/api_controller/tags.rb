@@ -28,37 +28,25 @@ class ApiController
 
     def tags_create_resource(parent, _type, _id, data)
       entry = parent.add_entry(data)
-      raise BadRequestError, "#{entry.errors.full_messages.join(', ')}" unless entry.valid?
+      raise_failed_to_add_resource_error(:tag, entry) unless entry.valid?
       entry.tag
-    rescue => err
-      raise BadRequestError, "Could not create a new tag - #{err}"
     end
 
     def create_resource_tags(_type, _id, data)
-      if data.key?("id") || data.key?("href")
-        raise BadRequestError,
-              "Resource id or href should not be specified for creating a new tag resource"
-      end
+      raise_resource_id_or_href_specified_error(:tag) if data.key?("id") || data.key?("href")
       category_data = data.delete("category") { {} }
       category = fetch_category(category_data)
-      unless category
-        category_rep = category_data.map { |k, v| "#{k} = #{v}" }.join(', ')
-        raise BadRequestError, "Could not find category with data #{category_rep}"
-      end
-      begin
-        entry = category.add_entry(data)
-        raise BadRequestError, "#{entry.errors.full_messages.join(', ')}" unless entry.valid?
-        entry.tag
-      rescue => err
-        raise BadRequestError, "Could not create a new tag - #{err}"
-      end
+      raise_could_not_find_resource_error(:category, category_data) unless category
+      entry = category.add_entry(data)
+      raise_failed_to_add_resource_error(:tag, entry) unless entry.valid?
+      entry.tag
     end
 
     def edit_resource_tags(type, id, data)
       klass = collection_class(type)
       tag = resource_search(id, type, klass)
       entry = Classification.find_by_tag_id(tag.id)
-      raise BadRequestError, "Failed to find tag/#{id} resource" unless entry
+      raise_could_not_find_resource_by_id_error(:tag, id) unless entry
 
       if data["name"].present?
         tag.update_attribute(:name, Classification.name2tag(data["name"], entry.parent_id, TAG_NAMESPACE))
@@ -75,7 +63,7 @@ class ApiController
       elsif data.key?("href")
         _, category_id = parse_href(data["href"])
       else
-        raise BadRequestError, "Category id or href needs to be specified for creating a new tag resource"
+        raise_parent_id_or_href_not_specified_error(:category, :tag)
       end
       Category.find_by_id(category_id)
     end
