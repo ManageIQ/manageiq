@@ -84,12 +84,7 @@ function miqOnResize() {
 
 // Initialize the widget pulldown on the dashboard
 function miqInitWidgetPulldown() {
-  var miqMenu = new dhtmlXToolbarObject("widget_select_div", "miq_blue");
-  miqMenu.setIconsPath("/images/icons/24/");
-  miqMenu.attachEvent("onClick", miqWidgetToolbarClick);
-  // ManageIQ.widget.menuXml var is loaded in dashboard/_dropdownbar.rhtml
-  miqMenu.loadXMLString(ManageIQ.widget.menuXml);
-  miqSetToolbarButtonIds(miqMenu);
+  $("#toolbar button:not(.dropdown-toggle), #toolbar ul.dropdown-menu > li > a").click(miqWidgetToolbarClick);
 }
 
 function miqCalendarDateConversion(server_offset) {
@@ -1383,7 +1378,8 @@ function miqSupportCasePrompt(tb_url) {
 }
 
 // Handle chart context menu clicks
-function miqWidgetToolbarClick(itemId, itemValue) {
+function miqWidgetToolbarClick(e) {
+  var itemId = $(this).data('click');
   if (itemId == "reset") {
     if (confirm("Are you sure you want to reset this Dashboard's Widgets to the defaults?")) {
       miqAjax("/dashboard/reset_widgets");
