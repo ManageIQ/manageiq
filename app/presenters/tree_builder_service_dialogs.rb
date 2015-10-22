@@ -12,15 +12,14 @@ class TreeBuilderServiceDialogs < TreeBuilderAeCustomization
   end
 
   def x_get_tree_generic_dialog_kids(object, count_only, type, chk_dialog_type = false)
-    if chk_dialog_type == true && type == :dialogs
-      objects = []
-    else
-      if count_only
-        objects = object.dialog_resources
+    objects =
+      if chk_dialog_type == true && type == :dialogs
+        []
+      elsif count_only
+        object.dialog_resources
       else
-        objects = object.ordered_dialog_resources.collect(&:resource).compact
+        object.ordered_dialog_resources.collect(&:resource).compact
       end
-    end
     count_only_or_objects(count_only, objects, nil)
   end
 
