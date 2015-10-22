@@ -14,3 +14,8 @@
   :full_name: "Pound Sterling"
   :symbol: "£"
   :unicode_hex: "163"
+- :code: "JPY"
+  :name: "Yen"
+  :full_name: "Japanese Yen"
+  :symbol: "¥"
+  :unicode_hex: "165"
