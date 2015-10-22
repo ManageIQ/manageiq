@@ -613,7 +613,7 @@ module QcowDisk
       case version
       when 1
         63 - cluster_bits
-      when 2
+      when 2, 3
         62 - (cluster_bits - 8)
       else
         raise "Unknown QCOW Version: #{version}"
