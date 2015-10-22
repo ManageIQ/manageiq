@@ -23,8 +23,8 @@ class TreeBuilderCatalogsClass < TreeBuilder
     end
   end
 
-  def x_get_tree_aset_kids(object, options)
-    if options[:count_only]
+  def x_get_tree_aset_kids(object, count_only)
+    if count_only
       object.id.nil? ? get_custom_buttons(object).count : object.members.count
     else
       if object.id.nil?
