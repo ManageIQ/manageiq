@@ -131,6 +131,23 @@ describe DashboardController do
     end
   end
 
+  context "#main_tab redirects to correct url when maintab is pressed by user with only Tenant features" do
+    before do
+      described_class.any_instance.stub(:set_user_time_zone)
+      controller.stub(:check_privileges).and_return(true)
+      EvmSpecHelper.seed_specific_product_features("rbac_tenant")
+      feature_id = MiqProductFeature.find_all_by_identifier(["rbac_tenant"])
+      login_as FactoryGirl.create(:user, :features => feature_id)
+    end
+
+    it "for Configure maintab" do
+      session[:tab_url] = {}
+      post :maintab, :tab => "set"
+      url_controller = Menu::Manager.tab_features_by_id(:set).find { |f| f.ends_with?("_explorer") }
+      response.body.should include("#{DashboardController::EXPLORER_FEATURE_LINKS[url_controller]}/explorer")
+    end
+  end
+
   context "#start_url_for_user" do
     before do
       MiqShortcut.seed

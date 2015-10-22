@@ -140,7 +140,7 @@ class DashboardController < ApplicationController
         tab_features.detect do |f|
           if f == "my_settings" && role_allows(:feature => f, :any => true)
             redirect_to :controller => "configuration", :action => "index", :config_tab => "ui"
-          elsif role_allows(:feature => f)
+          elsif role_allows(:feature => f, :any => true)
             case f
             when "tasks"        then redirect_to(:controller => "configuration", :action => "index")
             when "ops_explorer" then redirect_to(:controller => "ops",       :action => "explorer")
