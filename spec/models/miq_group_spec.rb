@@ -238,33 +238,34 @@ describe MiqGroup do
     end
   end
 
-  context "should not be deleted while a user is still assigned" do
-    before do
-      @group = FactoryGirl.create(:miq_group)
+  describe "#destroy" "should not be deleted while a user is still assigned" do
+    let(:group) { FactoryGirl.create(:miq_group) }
+
+    it "can succeed" do
+      expect { group.destroy }.not_to raise_error
     end
 
-    it "referenced by current_group" do
-      FactoryGirl.create(:user, :miq_groups => [@group])
+    it "fails if referenced by current_group" do
+      FactoryGirl.create(:user, :miq_groups => [group])
 
-      expect { @group.destroy }.to raise_error
+      expect { group.destroy }.to raise_error
       MiqGroup.count.should eq 1
     end
 
-    it "referenced by miq_groups" do
+    it "fails if referenced by miq_groups" do
       group2 = FactoryGirl.create(:miq_group)
-      FactoryGirl.create(:user, :miq_groups => [@group, group2], :current_group => group2)
+      FactoryGirl.create(:user, :miq_groups => [group, group2], :current_group => group2)
 
-      expect { @group.destroy }.to raise_error
+      expect { group.destroy }.to raise_error
       MiqGroup.count.should eq 2
+    end
+
+    it "fails if referenced by a default tenant" do
+      expect { FactoryGirl.create(:tenant).default_miq_group.destroy }.to raise_error
     end
   end
 
   context "#seed" do
-    it "has tenant for new records" do
-      [Tenant, MiqUserRole, MiqGroup].each(&:seed)
-      expect(MiqGroup.where(:tenant => Tenant.root_tenant).count).to eq(MiqGroup.count)
-    end
-
     it "adds new groups after initial seed" do
       [Tenant, MiqUserRole, MiqGroup].each(&:seed)
 
@@ -283,6 +284,14 @@ describe MiqGroup do
       expect(MiqGroup.count).to eql(current_count + 1)
       expect(MiqGroup.last.name).to eql('EvmRole-test_role')
       expect(MiqGroup.last.sequence).to eql(1)
+    end
+
+    it "assigns roles to tenant_groups" do
+      tenant = Tenant.seed
+      expect(tenant.reload.default_miq_group.miq_user_role).not_to be
+      MiqUserRole.seed
+      MiqGroup.seed
+      expect(tenant.reload.default_miq_group.miq_user_role).to be
     end
   end
 
@@ -312,7 +321,7 @@ describe MiqGroup do
       ga = FactoryGirl.create(:miq_group, :description => 'a', :tenant => tenant)
       gb = FactoryGirl.create(:miq_group, :description => 'B', :tenant => tenant)
 
-      expect(tenant.miq_groups.sort_by_desc).to eq([ga, gb, gc])
+      expect(tenant.miq_groups.sort_by_desc).to eq([ga, gb, gc, tenant.default_miq_group])
     end
   end
 
@@ -327,6 +336,20 @@ describe MiqGroup do
 
       expect(g.all_users).to match_array([u_one, u_two])
       expect(g2.all_users).to match_array([u_two])
+    end
+  end
+
+  describe "#read_only" do
+    it "is not read_only for regular groups" do
+      expect(FactoryGirl.create(:miq_group)).not_to be_read_only
+    end
+
+    it "is read_only for system groups" do
+      expect(FactoryGirl.create(:system_group)).to be_read_only
+    end
+
+    it "is read_only for tenant groups" do
+      expect(FactoryGirl.create(:tenant).default_miq_group).to be_read_only
     end
   end
 
@@ -347,6 +370,43 @@ describe MiqGroup do
     it "detects non-role" do
       group = FactoryGirl.create(:miq_group, :role => "abc")
       expect(group).not_to be_self_service
+    end
+  end
+
+  describe "#system_group?" do
+    it "is not system_group for regular groups" do
+      expect(FactoryGirl.create(:miq_group)).not_to be_system_group
+    end
+
+    it "is system_group for system groups" do
+      expect(FactoryGirl.create(:system_group)).to be_system_group
+    end
+  end
+
+  describe "#tenant_group" do
+    it "is not tenant_group for regular groups" do
+      expect(FactoryGirl.create(:miq_group)).not_to be_tenant_group
+    end
+
+    it "is tenant_group for tenant groups" do
+      expect(FactoryGirl.create(:tenant).default_miq_group).to be_tenant_group
+    end
+  end
+
+  describe "#tenant=" do
+    it "changes for non default groups" do
+      tenant = FactoryGirl.create(:tenant)
+      g = FactoryGirl.create(:miq_group)
+      g.update_attributes(:tenant => tenant)
+      expect(g.tenant).to eq(tenant)
+    end
+
+    it "fails for default groups" do
+      tenant = FactoryGirl.create(:tenant)
+      g = FactoryGirl.create(:tenant).default_miq_group
+      expect do
+        g.update_attributes!(:tenant => tenant)
+      end.to raise_error
     end
   end
 end

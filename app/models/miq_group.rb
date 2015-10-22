@@ -1,4 +1,7 @@
 class MiqGroup < ActiveRecord::Base
+  SYSTEM_GROUP = "system"
+  TENANT_GROUP = "tenant"
+
   default_scope { where(conditions_for_my_region_default_scope) }
 
   belongs_to :tenant
@@ -18,12 +21,13 @@ class MiqGroup < ActiveRecord::Base
 
   delegate :self_service?, :limited_self_service?, :to => :miq_user_role, :allow_nil => true
 
-  validates_presence_of   :description, :guid
-  validates_uniqueness_of :description, :guid
+  validates :description, :guid, :presence => true, :uniqueness => true
+  validate :validate_default_tenant, :on => :update, :if => :tenant_id_changed?
 
   before_destroy do |g|
     raise "Still has users assigned." unless g.users.empty?
-    raise "A read only group cannot be deleted." if g.read_only
+    raise "A tenant default group can not be deleted" if g.tenant_group?
+    raise "A read only group cannot be deleted." if g.read_only?
   end
 
   serialize :filters
@@ -99,7 +103,7 @@ class MiqGroup < ActiveRecord::Base
         group.miq_user_role = user_role
         group.sequence      = seq
         group.filters       = ldap_to_filters[g]
-        group.group_type    = "system"
+        group.group_type    = SYSTEM_GROUP
         group.tenant        = root_tenant
 
         mode = group.new_record? ? "Created" : "Added"
@@ -108,6 +112,16 @@ class MiqGroup < ActiveRecord::Base
 
         seq += 1
       end
+    end
+
+    # find any default tenant groups that do not have a role
+    tenant_role = MiqUserRole.default_tenant_role
+    if tenant_role
+      Tenant.includes(:default_miq_group).where(:miq_groups => {:miq_user_role_id => nil}).each do |tenant|
+        tenant.default_miq_group.update_attributes(:miq_user_role => tenant_role)
+      end
+    else
+      _log.warn("Unable to find default tenant role for tenant access")
     end
   end
 
@@ -186,9 +200,19 @@ class MiqGroup < ActiveRecord::Base
     miq_user_role.nil? ? nil : miq_user_role.name
   end
 
-  def read_only
-    group_type == "system"
+  def system_group?
+    group_type == SYSTEM_GROUP
   end
+
+  # @return true if this is a default tenant group
+  def tenant_group?
+    tenant.try(:default_miq_group_id) == id
+  end
+
+  def read_only
+    system_group? || tenant_group?
+  end
+  alias_method :read_only?, :read_only
 
   def user_count
     users.count
@@ -206,7 +230,23 @@ class MiqGroup < ActiveRecord::Base
     end
   end
 
+  def self.create_tenant_group(tenant)
+    tenant_full_name = (tenant.ancestors.map(&:name) + [tenant.name]).join("/")
+
+    create_with(
+      :description         => "Tenant #{tenant_full_name} access",
+      :group_type          => TENANT_GROUP,
+      :default_tenant_role => MiqUserRole.default_tenant_role
+    ).find_or_create_by!(:tenant_id => tenant.id)
+  end
+
   def self.sort_by_desc
     all.sort_by { |g| g.description.downcase }
+  end
+
+  def validate_default_tenant
+    if tenant_id_was && Tenant.find(tenant_id_was).default_miq_group_id == id
+      errors.add(:tenant_id, "cant change the tenant of a default group")
+    end
   end
 end

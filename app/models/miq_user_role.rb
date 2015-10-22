@@ -1,6 +1,7 @@
 class MiqUserRole < ActiveRecord::Base
   SUPER_ADMIN_ROLE_NAME = "EvmRole-super_administrator"
   ADMIN_ROLE_NAME       = "EvmRole-administrator"
+  DEFAULT_TENANT_ROLE_NAME = "EvmRole-tenant_administrator"
 
   has_many                :miq_groups, :dependent => :restrict_with_exception
   has_and_belongs_to_many :miq_product_features, :join_table => :miq_roles_features
@@ -193,5 +194,9 @@ class MiqUserRole < ActiveRecord::Base
 
   def admin_user?
     name == SUPER_ADMIN_ROLE_NAME || name == ADMIN_ROLE_NAME
+  end
+
+  def self.default_tenant_role
+    find_by(:name => DEFAULT_TENANT_ROLE_NAME)
   end
 end
