@@ -1,13 +1,13 @@
 class TreeBuilderUtilization < TreeBuilderRegion
   private
 
-  def x_get_tree_ems_kids(object, options)
+  def x_get_tree_ems_kids(object, count_only)
     ems_clusters        = rbac_filtered_objects(object.ems_clusters)
     non_clustered_hosts = rbac_filtered_objects(object.non_clustered_hosts)
 
     total = ems_clusters.count + non_clustered_hosts.count
 
-    return total if options[:count_only]
+    return total if count_only
     return [] if total == 0
 
     click_to_open = _('Click to open')

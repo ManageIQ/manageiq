@@ -24,10 +24,10 @@ class TreeBuilderInstances < TreeBuilder
     count_only_or_objects(count_only, objects, nil)
   end
 
-  def x_get_tree_ems_kids(object, options)
+  def x_get_tree_ems_kids(object, count_only)
     objects = rbac_filtered_objects(object.availability_zones.order("name")) +
               rbac_filtered_objects(object.vms.where(:availability_zone_id => nil).order("name"))
-    options[:count_only] ? objects.length : objects
+    count_only ? objects.length : objects
   end
 
   # Get AvailabilityZone children count/array

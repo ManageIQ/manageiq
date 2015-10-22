@@ -296,7 +296,7 @@ class TreeBuilder
                         when Dialog              then x_get_tree_dialog_kids(parent, count_only, options[:type])
                         when DialogGroup         then x_get_tree_dialog_group_kids(parent, count_only, options[:type])
                         when DialogTab           then x_get_tree_dialog_tab_kids(parent, count_only, options[:type])
-                        when ExtManagementSystem then x_get_tree_ems_kids(parent, options)
+                        when ExtManagementSystem then x_get_tree_ems_kids(parent, count_only)
                         when EmsFolder           then if parent.is_datacenter
                                                         x_get_tree_datacenter_kids(parent, options)
                                                       else
