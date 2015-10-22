@@ -18,15 +18,16 @@ describe ChargebackRateDetailMeasure do
   end
 
   it "is invalid with a empty array units" do
-    FactoryGirl.build(:chargeback_rate_detail_measure_bytes, :units => "{}").should_not be_valid
+    FactoryGirl.build(:chargeback_rate_detail_measure_bytes, :units => []).should_not be_valid
   end
 
   it "is invalid with a only one array units" do
-    FactoryGirl.build(:chargeback_rate_detail_measure_bytes, :units => "{KB}").should_not be_valid
+    FactoryGirl.build(:chargeback_rate_detail_measure_bytes, :units => ["KB"]).should_not be_valid
   end
 
   it "is invalid with a units_display lenght diferent that the units lenght" do
-    FactoryGirl.build(:chargeback_rate_detail_measure_bytes, :units => "{Bs,KBs,GBs}", :units_display => "{kbps,mbps}")
-      .should_not be_valid
+    FactoryGirl.build(:chargeback_rate_detail_measure_bytes,
+                      :units         => ["Bs", "KBs", "GBs"],
+                      :units_display => ["kbps", "mbps"]).should_not be_valid
   end
 end
