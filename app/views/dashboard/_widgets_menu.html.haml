@@ -1,7 +1,7 @@
 .form-group
   .btn-group.dropdown
     - if @widgets_menu[:blank]
-      %button{'data-toggle' => 'dropdown', :class => 'disabled btn btn-default dropdown-toggle', :title => _('No Widgets available to add'), 'data-click' => 'add_widget'}
+      %button.disabled.btn.btn-default.dropdown-toggle{'data-toggle' => 'dropdown', :title => _('No Widgets available to add'), 'data-click' => 'add_widget'}
         %img{:src => '/images/dashboard/add_widget.png'}
         %span.caret
     - else
@@ -28,5 +28,5 @@
                   = item[:text]
 
   - if @widgets_menu[:allow_reset]
-    %button{'data-toggle' => 'dropdown', :class => 'disabled btn btn-default dropdown-toggle', :title => _('Reset Dashboard Widgets to the defaults'), 'data-click' => 'reset'}
+    %button.disabled.btn.btn-default.dropdown-toggle{'data-toggle' => 'dropdown', :title => _('Reset Dashboard Widgets to the defaults'), 'data-click' => 'reset'}
       %img{:src => '/images/dashboard/reset_widgets.png'}
