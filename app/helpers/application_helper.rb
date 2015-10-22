@@ -24,6 +24,44 @@ module ApplicationHelper
     end
   end
 
+  def single_relationship_link(record, table_name, property_name = nil)
+    out = ''
+    property_name ||= table_name
+    ent = record.send(property_name)
+    name = ui_lookup(:table => table_name.to_s)
+    if role_allows(:feature => "#{table_name}_show") && !ent.nil?
+      out = content_tag(:li) do
+        link_to("#{name}: #{ent.name}",
+                {:controller => table_name, :action => 'show', :id => ent.id.to_s},
+                :title       => _("Show this %{entity_name}'s parent %{linked_entity_name}") %
+                                {:entity_name        => record.class.name.demodulize.titleize,
+                                 :linked_entity_name => name})
+      end
+    end
+    out
+  end
+
+  def multiple_relationship_link(record, table_name)
+    out = ''
+    if role_allows(:feature => "#{table_name}_show_list") &&
+       (table_name != 'container_route' || record.respond_to?(:container_routes))
+      plural = ui_lookup(:tables => table_name.to_s)
+      count = record.number_of(table_name.to_s.pluralize)
+      if count == 0
+        out = content_tag(:li, :class => "disabled") do
+          link_to("#{plural} (0)", "#")
+        end
+      else
+        out = content_tag(:li) do
+          link_to("#{plural} (#{count})",
+                  {:action => 'show', :id => @record, :display => table_name.to_s.pluralize},
+                  :title => _("Show %{plural_linked_name}") % {:plural_linked_name => plural})
+        end
+      end
+    end
+    out
+  end
+
   # Create a hidden div area based on a condition (using for hiding nav panes)
   def hidden_div_if(condition, options = {}, &block)
     hidden_tag_if(:div, condition, options, &block)
