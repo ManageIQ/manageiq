@@ -21,7 +21,7 @@ module ReportController::SavedReports
       return
     end
     @right_cell_text ||= _("%{model} \"%{name}\"") % {:name => "#{rr.name} - #{format_timezone(rr.created_on, Time.zone, "gt")}", :model => "Saved Report"}
-    if admin_user? || rr.miq_group_id == session[:group]
+    if admin_user? || rr.miq_group_id == current_group_id
       @report_result_id = session[:report_result_id] = rr.id
       session[:report_result_runtime] = rr.last_run_on
       task = MiqTask.find_by_id(rr.miq_task_id)
@@ -157,7 +157,7 @@ module ReportController::SavedReports
     # Admin users can see all saved reports
     unless admin_user?
       cond[0] << " AND miq_group_id=?"
-      cond.push(session[:group])
+      cond.push(current_group_id)
     end
 
     cond.flatten
