@@ -52,20 +52,20 @@ module MiqAeDatastore
   def self.upload(fd, name = nil, domain_name = ALL_DOMAINS)
     name ||= fd.original_filename
     name      = Pathname(name).basename.sub_ext('.zip')
-    filename = TMP_DIR.join(name)
+    upload_to = TMP_DIR.join(name)
     TMP_DIR.mkpath
 
-    _log.info("Uploading Datastore Import to file <#{filename}>")
+    _log.info("Uploading Datastore Import to file <#{upload_to}>")
 
-    IO.copy_stream(fd, filename)
+    IO.copy_stream(fd, upload_to)
     fd.close
 
-    _log.info("Upload complete (size=#{filename.size})")
+    _log.info("Upload complete (size=#{upload_to.size})")
 
     begin
-      import_yaml_zip(filename.to_s, domain_name, User.current_tenant)
+      import_yaml_zip(upload_to.to_s, domain_name, User.current_tenant)
     ensure
-      filename.delete
+      upload_to.delete
     end
   end
 
