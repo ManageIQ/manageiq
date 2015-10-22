@@ -24,8 +24,8 @@ class TreeBuilderOps < TreeBuilder
     count_only_or_objects(count_only, objects, nil)
   end
 
-  def x_get_tree_lr_kids(object, options)
-    if options[:count_only]
+  def x_get_tree_lr_kids(object, count_only)
+    if count_only
       return (object.ldap_domains.count)
     else
       return (object.ldap_domains.sort_by { |a| a.name.to_s })

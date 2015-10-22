@@ -312,8 +312,8 @@ class TreeBuilder
                           # TreeBuilderReportDashboards - :type
                           # TreeBuilderVmsFilter - :leaf
                           x_get_tree_custom_kids(parent, count_only, options)
-                        when IsoDatastore        then x_get_tree_iso_datastore_kids(parent, options)
-                        when LdapRegion          then x_get_tree_lr_kids(parent, options)
+                        when IsoDatastore        then x_get_tree_iso_datastore_kids(parent, count_only)
+                        when LdapRegion          then x_get_tree_lr_kids(parent, count_only)
                         when MiqAeClass          then x_get_tree_class_kids(parent, options)
                         when MiqAeNamespace      then x_get_tree_ns_kids(parent, options)
                         when MiqGroup            then options[:tree] == :db_tree ?
