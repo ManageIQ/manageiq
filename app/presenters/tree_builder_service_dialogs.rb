@@ -28,11 +28,11 @@ class TreeBuilderServiceDialogs < TreeBuilderAeCustomization
     x_get_tree_generic_dialog_kids(object, { :count_only => count_only, :type => type }, true)
   end
 
-  def x_get_tree_dialog_tab_kids(object, options)
-    x_get_tree_generic_dialog_kids(object, options)
+  def x_get_tree_dialog_tab_kids(object, count_only, type)
+    x_get_tree_generic_dialog_kids(object, { :count_only => count_only, :type => type })
   end
 
-  def x_get_tree_dialog_group_kids(object, options)
-    x_get_tree_generic_dialog_kids(object, options)
+  def x_get_tree_dialog_group_kids(object, count_only, type)
+    x_get_tree_generic_dialog_kids(object, { :count_only => count_only, :type => type })
   end
 end
