@@ -31,9 +31,9 @@ class TreeBuilderInstances < TreeBuilder
   end
 
   # Get AvailabilityZone children count/array
-  def x_get_tree_az_kids(object, options)
+  def x_get_tree_az_kids(object, count_only)
     objects = rbac_filtered_objects(object.vms.order("name"))
-    options[:count_only] ? objects.length : objects
+    count_only ? objects.length : objects
   end
 
   include TreeBuilderArchived

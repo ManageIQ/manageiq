@@ -289,7 +289,7 @@ class TreeBuilder
                           # * TreeBuilderReportReports         - options[:tree]
                           # * TreeBuilderVandt - the whole options hash is passed to TreeBuilderVmsAndTemplates constructor
                           x_get_tree_roots(count_only, options)
-                        when AvailabilityZone    then x_get_tree_az_kids(parent, options)
+                        when AvailabilityZone    then x_get_tree_az_kids(parent, count_only)
                         when ManageIQ::Providers::Foreman::ConfigurationManager then x_get_tree_cmf_kids(parent, options)
                         when ConfigurationProfile then x_get_tree_cpf_kids(parent, options)
                         when CustomButtonSet     then x_get_tree_aset_kids(parent, options)
