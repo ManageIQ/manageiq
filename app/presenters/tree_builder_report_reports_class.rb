@@ -20,7 +20,7 @@ class TreeBuilderReportReportsClass < TreeBuilder
     # Admin users can see all saved reports
     unless u.admin_user?
       cond[0] << ' AND miq_group_id=?'
-      cond.push(session[:group])
+      cond.push(u.current_group_id)
     end
 
     cond.flatten
