@@ -1,5 +1,3 @@
-require 'active_support/deprecation'
-
 module ReportableMixin
   extend ActiveSupport::Concern
   included do
@@ -120,11 +118,11 @@ module ReportableMixin
   end
 
   def reportable_data(options = {})
-    ActiveSupport::Deprecation.warn "`reportable_data` is deprecated, use `reportable_data_with_columns` instead"
     columns, data_records = reportable_data_with_columns(options)
     self.class.aar_columns |= columns
     data_records
   end
+  Vmdb::Deprecation.deprecate_methods(self, :reportable_data => :reportable_data_with_columns)
 
   private
 
