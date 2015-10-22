@@ -36,7 +36,7 @@ class TreeBuilderReportDashboards < TreeBuilder
     count_only_or_objects(count_only, objects, :name)
   end
 
-  def x_get_tree_g_kids(object, options)
+  def x_get_tree_g_kids(object, count_only)
     objects = []
     # dashboard nodes under each group
     widgetsets = MiqWidgetSet.find_all_by_owner_type_and_owner_id("MiqGroup", object.id)
@@ -52,6 +52,6 @@ class TreeBuilderReportDashboards < TreeBuilder
     else
       objects = copy_array(widgetsets)
     end
-    options[:count_only] ? objects.count : objects.sort_by { |a| a.name.to_s.downcase }
+    count_only ? objects.count : objects.sort_by { |a| a.name.to_s.downcase }
   end
 end

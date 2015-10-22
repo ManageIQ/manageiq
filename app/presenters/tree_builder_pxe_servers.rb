@@ -18,11 +18,11 @@ class TreeBuilderPxeServers < TreeBuilder
     count_only_or_objects(count_only, PxeServer.all, "name")
   end
 
-  def x_get_tree_pxe_server_kids(object, options)
+  def x_get_tree_pxe_server_kids(object, count_only)
     pxe_images = object.pxe_images
     win_images = object.windows_images
     open_nodes = @tree_state.x_tree(@name)[:open_nodes]
-    if options[:count_only]
+    if count_only
       open_nodes.push("xx-pxe_xx-#{to_cid(object.id)}") unless open_nodes.include?("xx-pxe_xx-#{to_cid(object.id)}")
       open_nodes.push("xx-win_xx-#{to_cid(object.id)}") unless open_nodes.include?("xx-win_xx-#{to_cid(object.id)}")
       pxe_images.size + win_images.size

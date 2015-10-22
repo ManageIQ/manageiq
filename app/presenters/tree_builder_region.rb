@@ -18,7 +18,7 @@ class TreeBuilderRegion < TreeBuilder
     count_only_or_objects(count_only, objects, nil)
   end
 
-  def x_get_tree_region_kids(object, options)
+  def x_get_tree_region_kids(object, count_only)
     emstype = if [:bottlenecks, :utilization].include?(@type)
                 object.ems_infras
               else
@@ -26,7 +26,7 @@ class TreeBuilderRegion < TreeBuilder
               end
     emses = rbac_filtered_objects(emstype)
     storages  = rbac_filtered_objects(object.storages)
-    if options[:count_only]
+    if count_only
       emses.count + storages.count
     else
       objects = []

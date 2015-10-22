@@ -317,10 +317,10 @@ class TreeBuilder
                         when MiqAeClass          then x_get_tree_class_kids(parent, count_only, options[:type])
                         when MiqAeNamespace      then x_get_tree_ns_kids(parent, count_only)
                         when MiqGroup            then options[:tree] == :db_tree ?
-                                                    x_get_tree_g_kids(parent, options) : nil
-                        when MiqRegion           then x_get_tree_region_kids(parent, options)
-                        when MiqReport           then x_get_tree_r_kids(parent, options)
-                        when PxeServer           then x_get_tree_pxe_server_kids(parent, options)
+                                                    x_get_tree_g_kids(parent, count_only) : nil
+                        when MiqRegion           then x_get_tree_region_kids(parent, count_only)
+                        when MiqReport           then x_get_tree_r_kids(parent, count_only)
+                        when PxeServer           then x_get_tree_pxe_server_kids(parent, count_only)
                         when Service             then x_get_tree_service_kids(parent, options)
                         when ServiceTemplateCatalog
                                                  then x_get_tree_stc_kids(parent, options)
