@@ -54,23 +54,15 @@ module MiqAeDatastore
     ext        = File.extname(name)
     basename   = File.basename(name, ext)
     name       = "#{basename}.zip"
-    block_size = 65_536
     FileUtils.mkdir_p(TMP_DIR) unless File.directory?(TMP_DIR)
     filename = File.join(TMP_DIR, name)
 
     _log.info("Uploading Datastore Import to file <#{filename}>")
 
-    outfd = File.open(filename, "wb")
-    data  = fd.read(block_size)
-    until fd.eof
-      outfd.write(data)
-      data = fd.read(block_size)
-    end
-    outfd.write(data) if data
+    IO.copy_stream(fd, filename)
     fd.close
-    outfd.close
 
-    _log.info("Upload complete (size=#{File.size(filename)})")
+    _log.info("Upload complete (size=#{filename.size})")
 
     begin
       import_yaml_zip(filename, domain_name, User.current_tenant)
