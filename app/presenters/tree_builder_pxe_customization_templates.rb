@@ -14,9 +14,9 @@ class TreeBuilderPxeCustomizationTemplates < TreeBuilder
   end
 
   # Get root nodes count/array for explorer tree
-  def x_get_tree_roots(options)
+  def x_get_tree_roots(count_only, _options)
     items = PxeImageType.all
-    if options[:count_only]
+    if count_only
       # add +1 for customization spec folder thats used to show system templates
       items.length + 1
     else

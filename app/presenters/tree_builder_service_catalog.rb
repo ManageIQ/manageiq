@@ -13,7 +13,7 @@ class TreeBuilderServiceCatalog < TreeBuilderCatalogsClass
     )
   end
 
-  def x_get_tree_roots(options)
+  def x_get_tree_roots(count_only, _options)
     objects = rbac_filtered_objects(ServiceTemplateCatalog.all).sort_by { |o| o.name.downcase }
     filtered_objects = []
     # only show catalogs nodes that have any servicetemplate records under them
@@ -21,7 +21,7 @@ class TreeBuilderServiceCatalog < TreeBuilderCatalogsClass
       items = rbac_filtered_objects(object.service_templates)
       filtered_objects.push(object) unless items.empty?
     end
-    count_only_or_objects(options[:count_only], filtered_objects, 'name')
+    count_only_or_objects(count_only, filtered_objects, 'name')
   end
 
   def x_get_tree_stc_kids(object, options)

@@ -14,8 +14,8 @@ class TreeBuilderIsoDatastores < TreeBuilder
   end
 
   # Get root nodes count/array for explorer tree
-  def x_get_tree_roots(options)
-    count_only_or_objects(options[:count_only], IsoDatastore.all, "name")
+  def x_get_tree_roots(count_only, _options)
+    count_only_or_objects(count_only, IsoDatastore.all, "name")
   end
 
   def x_get_tree_iso_datastore_kids(object, options)

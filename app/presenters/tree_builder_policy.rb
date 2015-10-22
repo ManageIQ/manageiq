@@ -35,7 +35,7 @@ class TreeBuilderPolicy < TreeBuilder
   end
 
   # level 1 - compliance & control
-  def x_get_tree_roots(options)
+  def x_get_tree_roots(count_only, _options)
     # Push folder node ids onto open_nodes array
     %w(xx-compliance xx-control).each { |n| open_node(n) }
 
@@ -43,7 +43,7 @@ class TreeBuilderPolicy < TreeBuilder
     objects << {:id => "compliance", :text => N_("Compliance Policies"), :image => "compliance", :tip => N_("Compliance Policies")}
     objects << {:id => "control", :text => N_("Control Policies"), :image => "control", :tip => N_("Control Policies")}
 
-    count_only_or_objects(options[:count_only], objects)
+    count_only_or_objects(count_only, objects)
   end
 
   # level 2 & 3...

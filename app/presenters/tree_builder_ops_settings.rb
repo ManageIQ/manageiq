@@ -17,7 +17,7 @@ class TreeBuilderOpsSettings < TreeBuilderOps
   end
 
   # Get root nodes count/array for explorer tree
-  def x_get_tree_roots(_options)
+  def x_get_tree_roots(_count_only, _options)
     objects = [
       {:id => "sis", :text => "Analysis Profiles", :image => "scan_item_set", :tip => "Analysis Profiles"},
       {:id => "z", :text => "Zones", :image => "zone", :tip => "Zones"}

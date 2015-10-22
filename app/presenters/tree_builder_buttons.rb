@@ -6,7 +6,7 @@ class TreeBuilderButtons < TreeBuilderAeCustomization
   end
 
   # Get root nodes count/array for explorer tree
-  def x_get_tree_roots(_options)
+  def x_get_tree_roots(_count_only, _options)
     resolve = {}
     CustomButton.button_classes.each { |db| resolve[db] = ui_lookup(:model => db) }
     @sb[:target_classes] = resolve.invert

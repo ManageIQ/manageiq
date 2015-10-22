@@ -17,16 +17,14 @@ class TreeBuilderContainersFilter < TreeBuilder
   end
 
   # Get root nodes count/array for explorer tree
-  def x_get_tree_roots(_options)
-    objects =
-      [
-        {:id          => "global",
-         :text        => "Global Filters",
-         :image       => "folder",
-         :tip         => "Global Shared Filters",
-         :cfmeNoClick => true}
-      ]
-    objects
+  def x_get_tree_roots(_count_only, _options)
+    [
+      {:id          => "global",
+       :text        => "Global Filters",
+       :image       => "folder",
+       :tip         => "Global Shared Filters",
+       :cfmeNoClick => true}
+    ]
   end
 
   def x_get_tree_custom_kids(object, options)

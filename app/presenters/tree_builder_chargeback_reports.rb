@@ -15,12 +15,12 @@ class TreeBuilderChargebackReports < TreeBuilder
   end
 
   # Get root nodes count/array for explorer tree
-  def x_get_tree_roots(options)
+  def x_get_tree_roots(count_only, _options)
     items = MiqReportResult.auto_generated.select("miq_report_id, name").group("miq_report_id, name").where(
       :db     => "Chargeback",
       :userid => User.current_user.userid)
 
-    if options[:count_only]
+    if count_only
       items.length
     else
       objects = []

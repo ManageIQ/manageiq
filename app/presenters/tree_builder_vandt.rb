@@ -3,10 +3,10 @@ class TreeBuilderVandt < TreeBuilder
     {:leaf => 'VmOrTemplate'}
   end
 
-  def x_get_tree_roots(options)
+  def x_get_tree_roots(count_only, options)
     objects = rbac_filtered_objects(EmsInfra.order("lower(name)"), :match_via_descendants => "VmOrTemplate")
 
-    if options[:count_only]
+    if count_only
       objects.length + 2
     else
       objects.collect! { |o| TreeBuilderVmsAndTemplates.new(o, options).tree }
@@ -41,7 +41,7 @@ class TreeBuilderVandt < TreeBuilder
 
   def x_get_child_nodes(id)
     model, rec_id, prefix = self.class.extract_node_model_and_id(id)
-    model == "Hash" ? super : find_child_recursive(x_get_tree_roots({}), id)
+    model == "Hash" ? super : find_child_recursive(x_get_tree_roots(false, {}), id)
   end
 
   private

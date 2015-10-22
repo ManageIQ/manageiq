@@ -23,7 +23,7 @@ class TreeBuilderReportReports < TreeBuilderReportReportsClass
   end
 
   # Get root nodes count/array for explorer tree
-  def x_get_tree_roots(options)
+  def x_get_tree_roots(count_only, options)
     objects = []
     @rpt_menu.each_with_index do |r, i|
       objects.push(
@@ -35,7 +35,7 @@ class TreeBuilderReportReports < TreeBuilderReportReportsClass
       # load next level of folders when building the tree
       @tree_state.x_tree(options[:tree])[:open_nodes].push("xx-#{i}")
     end
-    count_only_or_objects(options[:count_only], objects, nil)
+    count_only_or_objects(count_only, objects, nil)
   end
 
   def x_get_tree_custom_kids(object, options)

@@ -1,13 +1,13 @@
 class TreeBuilderCatalogsClass < TreeBuilder
   private
 
-  def x_get_tree_roots(options)
+  def x_get_tree_roots(count_only, options)
     objects = rbac_filtered_objects(ServiceTemplateCatalog.all).sort_by { |o| o.name.downcase }
     case options[:type]
     when :stcat
-      return count_only_or_objects(options[:count_only], objects, nil)
+      return count_only_or_objects(count_only, objects, nil)
     when :sandt
-      return count_only_or_objects(options[:count_only],
+      return count_only_or_objects(count_only,
                                    objects.unshift(ServiceTemplateCatalog.new(:name        => 'Unassigned',
                                                                               :description => 'Unassigned Catalogs')),
                                    nil)

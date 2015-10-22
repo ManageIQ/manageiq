@@ -14,25 +14,23 @@ class TreeBuilderForemanConfiguredSystems < TreeBuilder
     locals.merge!(:id_prefix => 'csft_')
   end
 
-  def x_get_tree_roots(_options)
-    objects =
-        [
-          {:id          => "global",
-           :text        => "Global Filters",
-           :image       => "folder",
-           :tip         => "Global Shared Filters",
-           :cfmeNoClick => true,
-           :expand      => true
-          },
-          {:id          => "my",
-           :text        => "My Filters",
-           :image       => "folder",
-           :tip         => "My Personal Filters",
-           :cfmeNoClick => true,
-           :expand      => true
-          }
-        ]
-    objects
+  def x_get_tree_roots(_count_only, _options)
+    [
+      {:id          => "global",
+       :text        => "Global Filters",
+       :image       => "folder",
+       :tip         => "Global Shared Filters",
+       :cfmeNoClick => true,
+       :expand      => true
+      },
+      {:id          => "my",
+       :text        => "My Filters",
+       :image       => "folder",
+       :tip         => "My Personal Filters",
+       :cfmeNoClick => true,
+       :expand      => true
+      }
+    ]
   end
 
   def x_get_tree_custom_kids(object, options)

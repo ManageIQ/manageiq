@@ -12,10 +12,10 @@ class TreeBuilderRegion < TreeBuilder
   end
 
   # Get root nodes count/array for explorer tree
-  def x_get_tree_roots(options)
+  def x_get_tree_roots(count_only, _options)
     ent = MiqEnterprise.my_enterprise
     objects = ent.miq_regions.sort_by { |a| a.description.downcase }
-    count_only_or_objects(options[:count_only], objects, nil)
+    count_only_or_objects(count_only, objects, nil)
   end
 
   def x_get_tree_region_kids(object, options)

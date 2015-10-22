@@ -1,7 +1,7 @@
 class TreeBuilderOrchestrationTemplates < TreeBuilder
   private
 
-  def x_get_tree_roots(options)
+  def x_get_tree_roots(count_only, _options)
     children = [
       {:id    => 'otcfn',
        :tree  => "otcfn_tree",
@@ -19,7 +19,7 @@ class TreeBuilderOrchestrationTemplates < TreeBuilder
        :image => "orchestration_template_azure",
        :tip   => "Azure Templates"}
     ]
-    options[:count_only] ? children.length : children
+    count_only ? children.length : children
   end
 
   def tree_init_options(_tree_name)

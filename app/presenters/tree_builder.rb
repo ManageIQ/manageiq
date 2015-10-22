@@ -281,7 +281,14 @@ class TreeBuilder
     options[:parents] = parents
 
     children_or_count = case parent
-                        when nil                 then x_get_tree_roots(options)
+                        when nil                 then
+                          # options are only required for the following TreeBuilder ancestors:
+                          # * TreeBuilderCatalogsClass         - options[:type]
+                          # * TreeBuilderChargebackAssignments - options[:type]
+                          # * TreeBuilderChargebackRates       - options[:type]
+                          # * TreeBuilderReportReports         - options[:tree]
+                          # * TreeBuilderVandt - the whole options hash is passed to TreeBuilderVmsAndTemplates constructor
+                          x_get_tree_roots(count_only, options)
                         when AvailabilityZone    then x_get_tree_az_kids(parent, options)
                         when ManageIQ::Providers::Foreman::ConfigurationManager then x_get_tree_cmf_kids(parent, options)
                         when ConfigurationProfile then x_get_tree_cpf_kids(parent, options)

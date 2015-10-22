@@ -15,13 +15,13 @@ class TreeBuilderVmsFilter < TreeBuilder
     )
   end
 
-  def x_get_tree_roots(options)
+  def x_get_tree_roots(count_only, _options)
     objects =
       [
         {:id => "global", :text => _("Global Filters"), :image => "folder", :tip => _("Global Shared Filters"), :cfmeNoClick => true},
         {:id => "my",     :text => _("My Filters"),     :image => "folder", :tip => _("My Personal Filters"),   :cfmeNoClick => true}
       ]
-    count_only_or_objects(options[:count_only], objects, nil)
+    count_only_or_objects(count_only, objects, nil)
   end
 
   def x_get_tree_custom_kids(object, options)
