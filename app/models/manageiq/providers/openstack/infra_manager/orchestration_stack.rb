@@ -8,6 +8,9 @@ class ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack < ::Orche
 
       connection.patch_stack(stack, 'template' => template, 'parameters' => parameters)
     end
+  rescue => err
+    _log.error "stack=[#{name}], error: #{err}"
+    raise MiqException::MiqOrchestrationUpdateError, err.to_s, err.backtrace
   end
 
   def update_ready?
