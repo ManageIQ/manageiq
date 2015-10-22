@@ -4,7 +4,7 @@ module ManageIQ::Providers::Kubernetes
 
     def self.entities
       %w(pods services replication_controllers nodes events endpoints namespaces resource_quotas limit_ranges
-         persistent_volumes persistent_volume_claims)
+         persistent_volumes persistent_volume_claims component_statuses)
     end
 
     def parse_inventory(ems, _targets = nil)

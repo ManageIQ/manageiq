@@ -21,6 +21,7 @@ module ManageIQ::Providers::Kubernetes
       get_endpoints(inventory)
       get_services(inventory)
       get_persistent_volumes(inventory)
+      get_component_statuses(inventory)
       get_registries
       get_images
       EmsRefresh.log_inv_debug_trace(@data, "data:")
@@ -100,6 +101,17 @@ module ManageIQ::Providers::Kubernetes
 
     def get_limit_ranges(inventory)
       process_collection(inventory["limit_range"], :container_limits) { |n| parse_range(n) }
+    end
+
+    def get_component_statuses(inventory)
+      process_collection(inventory["component_status"],
+                         :container_component_statuses) do |cs|
+        parse_component_status(cs)
+      end
+      @data[:container_component_statuses].each do |cs|
+        @data_index.store_path(:container_component_statuses,
+                               :by_name, cs[:name], cs)
+      end
     end
 
     def process_collection(collection, key, &block)
@@ -412,6 +424,24 @@ module ManageIQ::Providers::Kubernetes
 
       new_result[:project] = @data_index.fetch_path(:container_projects, :by_name,
                                                     container_replicator.metadata["table"][:namespace])
+      new_result
+    end
+
+    def parse_component_status(container_component_status)
+      new_result = {}
+
+      # At this point components statuses use only one condition.
+      # In the case of a future change, this will need to be modified accordingly.
+      component_condition = container_component_status.conditions.first
+
+      new_result.merge!(
+        :name      => container_component_status.metadata.name,
+        :condition => component_condition.type,
+        :status    => component_condition.status,
+        :message   => component_condition.message,
+        :error     => component_condition.error
+      )
+
       new_result
     end
 
