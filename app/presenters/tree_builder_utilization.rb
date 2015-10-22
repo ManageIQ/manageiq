@@ -58,9 +58,9 @@ class TreeBuilderUtilization < TreeBuilderRegion
     end
   end
 
-  def x_get_tree_folder_kids(object, options)
+  def x_get_tree_folder_kids(object, count_only, type)
     objects = []
-    case options[:type]
+    case type
     when :vandt, :handc
       objects =  rbac_filtered_sorted_objects(object.folders_only, "name", :match_via_descendants => "VmOrTemplate")
       objects += rbac_filtered_sorted_objects(object.datacenters_only, "name", :match_via_descendants => "VmOrTemplate")
@@ -68,7 +68,7 @@ class TreeBuilderUtilization < TreeBuilderRegion
       objects += rbac_filtered_sorted_objects(object.hosts, "name", :match_via_descendants => "VmOrTemplate")
       objects += rbac_filtered_sorted_objects(object.vms_and_templates, "name")
     end
-    count_only_or_objects(options[:count_only], objects, nil)
+    count_only_or_objects(count_only, objects, nil)
   end
 
   def x_get_tree_cluster_kids(object, options)

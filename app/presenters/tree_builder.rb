@@ -300,7 +300,7 @@ class TreeBuilder
                         when EmsFolder           then if parent.is_datacenter
                                                         x_get_tree_datacenter_kids(parent, count_only, options[:type])
                                                       else
-                                                        x_get_tree_folder_kids(parent, options)
+                                                        x_get_tree_folder_kids(parent, count_only, options[:type])
                                                       end
                         when EmsCluster          then x_get_tree_cluster_kids(parent, options)
                         when Hash                then x_get_tree_custom_kids(parent, options)
