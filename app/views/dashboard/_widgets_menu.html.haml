@@ -1,0 +1,32 @@
+.form-group
+  .btn-group.dropdown
+    - if @widgets_menu[:blank]
+      %button{'data-toggle' => 'dropdown', :class => 'disabled btn btn-default dropdown-toggle', :title => _('No Widgets available to add'), 'data-click' => 'add_widget'}
+        %img{:src => '/images/dashboard/add_widget.png'}
+        %span.caret
+    - else
+      - if @widgets_menu[:allow_add]
+        - if @widgets_menu[:locked]
+          - title   = _("Cannot add a Widget, this Dashboard has been locked by the Administrator")
+          - enabled = false
+        - else
+          - title   = _("Add a widget")
+          - enabled = true
+        - cls = enabled ? '' : 'disabled '
+        %button{'data-toggle' => 'dropdown', :class => "#{cls}btn btn-default dropdown-toggle", :title => title}
+          %img{:src => '/images/dashboard/add_widget.png'}
+          %span.caret
+
+        %ul.dropdown-menu
+          - @widgets_menu[:items].each do |item|
+            %li
+              - if item[:type] == :separator
+                .divider{:role => 'presentation'}
+              - else
+                %a{:href => '#', :title => item[:title], 'data-click' => item[:id]}
+                  %img{:src => '/images/icons/24/' + item[:image].to_s}
+                  = item[:text]
+
+    - if @widgets_menu[:allow_reset]
+      %button{'data-toggle' => 'dropdown', :class => 'disabled btn btn-default dropdown-toggle', :title => _('Reset Dashboard Widgets to the defaults'), 'data-click' => 'reset'}
+        %img{:src => '/images/dashboard/reset_widgets.png'}

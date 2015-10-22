@@ -1,7 +1,3 @@
 #dashboard_dropdown
-  = render(:partial => "layouts/dhtmlx_tags", :locals => {:control => "toolbar"})
   #widget_select_div
-
-  -# Set the JS var to hold the dhtmlxtoolbar widget dropdown XML
-  :javascript
-    ManageIQ.widget.menuXml = "#{@widgets_menu_xml}";
+    = render :partial => 'widgets_menu'

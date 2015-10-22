@@ -93,7 +93,8 @@
         .row.toolbar-pf#toolbar
           .col-md-12
             .toolbar-pf-actions{:style => "padding-bottom: 10px"}
-              = render :partial => "layouts/x_taskbar"
+              - if @widgets_menu
+                = render :partial => "dashboard/dropdownbar"
         .col-md-12{:style => "overflow: auto;height: calc(100% - 40px);"}
           .cpage-header.page-header-bleed-right
             %br
