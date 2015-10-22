@@ -51,11 +51,9 @@ module MiqAeDatastore
 
   def self.upload(fd, name = nil, domain_name = ALL_DOMAINS)
     name ||= fd.original_filename
-    ext        = File.extname(name)
-    basename   = File.basename(name, ext)
-    name       = "#{basename}.zip"
-    TMP_DIR.mkpath
+    name      = Pathname(name).basename.sub_ext('.zip')
     filename = TMP_DIR.join(name)
+    TMP_DIR.mkpath
 
     _log.info("Uploading Datastore Import to file <#{filename}>")
 
