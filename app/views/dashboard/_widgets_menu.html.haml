@@ -27,6 +27,6 @@
                   %img{:src => '/images/icons/24/' + item[:image].to_s}
                   = item[:text]
 
-    - if @widgets_menu[:allow_reset]
-      %button{'data-toggle' => 'dropdown', :class => 'disabled btn btn-default dropdown-toggle', :title => _('Reset Dashboard Widgets to the defaults'), 'data-click' => 'reset'}
-        %img{:src => '/images/dashboard/reset_widgets.png'}
+  - if @widgets_menu[:allow_reset]
+    %button{'data-toggle' => 'dropdown', :class => 'disabled btn btn-default dropdown-toggle', :title => _('Reset Dashboard Widgets to the defaults'), 'data-click' => 'reset'}
+      %img{:src => '/images/dashboard/reset_widgets.png'}
