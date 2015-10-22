@@ -162,7 +162,7 @@ describe ExtManagementSystem do
           provider = FactoryGirl.build(t, :hostname => @same_host_name, :zone => @zone)
 
           if provider.hostname_required?
-            expect { provider.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Host Name has already been taken")
+            expect { provider.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Host Name is required")
           else
             expect { provider.save! }.to_not raise_error
           end
