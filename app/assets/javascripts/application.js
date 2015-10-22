@@ -2,6 +2,7 @@
 //= require jquery
 //= require jquery_overrides
 //= require angular
+//= require angular-patternfly
 //= require angular-ui-bootstrap
 //= require angular-ui-bootstrap-tpls
 //= require moment
