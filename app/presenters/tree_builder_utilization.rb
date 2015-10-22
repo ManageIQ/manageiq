@@ -71,13 +71,13 @@ class TreeBuilderUtilization < TreeBuilderRegion
     count_only_or_objects(count_only, objects, nil)
   end
 
-  def x_get_tree_cluster_kids(object, options)
+  def x_get_tree_cluster_kids(object, count_only)
     objects =  rbac_filtered_sorted_objects(object.hosts, "name")
     # FIXME: is the condition below ever false?
     unless [:bottlenecks, :utilization].include?(@type)
       objects += rbac_filtered_sorted_objects(object.resource_pools, "name")
       objects += rbac_filtered_sorted_objects(object.vms, "name")
     end
-    count_only_or_objects(options[:count_only], objects, nil)
+    count_only_or_objects(count_only, objects, nil)
   end
 end

@@ -302,7 +302,7 @@ class TreeBuilder
                                                       else
                                                         x_get_tree_folder_kids(parent, count_only, options[:type])
                                                       end
-                        when EmsCluster          then x_get_tree_cluster_kids(parent, options)
+                        when EmsCluster          then x_get_tree_cluster_kids(parent, count_only)
                         when Hash                then x_get_tree_custom_kids(parent, options)
                         when IsoDatastore        then x_get_tree_iso_datastore_kids(parent, options)
                         when LdapRegion          then x_get_tree_lr_kids(parent, options)
