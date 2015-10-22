@@ -28,6 +28,12 @@ class Hardware < ActiveRecord::Base
 
   include ReportableMixin
 
+  include DeprecationMixin
+  deprecate_attribute :cores_per_socket, :cpu_cores_per_socket
+  deprecate_attribute :logical_cpus, :cpu_total_cores
+  deprecate_attribute :numvcpus, :cpu_sockets
+  deprecate_attribute :memory_cpu, :memory_mb
+
   def ipaddresses
     @ipaddresses ||= networks.collect(&:ipaddress).compact.uniq
   end
