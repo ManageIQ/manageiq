@@ -20,6 +20,8 @@ module ManageIQ::Providers::Kubernetes
       get_pods(inventory)
       get_endpoints(inventory)
       get_services(inventory)
+      get_persistent_volumes(inventory)
+      get_component_statuses(inventory)
       get_registries
       get_images
       EmsRefresh.log_inv_debug_trace(@data, "data:")
@@ -86,12 +88,30 @@ module ManageIQ::Providers::Kubernetes
       end
     end
 
+    def get_persistent_volumes(inventory)
+      process_collection(inventory["persistent_volume"], :persistent_volumes) { |n| parse_persistent_volume(n) }
+      @data[:persistent_volumes].each do |pv|
+        @data_index.store_path(:persistent_volumes, :by_name, pv[:name], pv)
+      end
+    end
+
     def get_resource_quotas(inventory)
       process_collection(inventory["resource_quota"], :container_quotas) { |n| parse_quota(n) }
     end
 
     def get_limit_ranges(inventory)
       process_collection(inventory["limit_range"], :container_limits) { |n| parse_range(n) }
+    end
+
+    def get_component_statuses(inventory)
+      process_collection(inventory["component_status"],
+                         :container_component_statuses) do |cs|
+        parse_component_status(cs)
+      end
+      @data[:container_component_statuses].each do |cs|
+        @data_index.store_path(:container_component_statuses,
+                               :by_name, cs[:name], cs)
+      end
     end
 
     def process_collection(collection, key, &block)
@@ -286,6 +306,22 @@ module ManageIQ::Providers::Kubernetes
       parse_base_item(container_projects).except(:namespace)
     end
 
+    def parse_persistent_volume(persistent_volume)
+      new_result = parse_base_item(persistent_volume)
+      new_result.merge!(parse_volume_source(persistent_volume.spec))
+      new_result.merge!(
+        :type           => 'PersistentVolume',
+        :parent_type    => 'ManageIQ::Providers::Kubernetes::ContainerManager',
+        :capacity       => persistent_volume.spec.capacity.to_h.map { |k, v| "#{k}=#{v}" }.join(','),
+        :access_modes   => persistent_volume.spec.accessModes.join(','),
+        :reclaim_policy => persistent_volume.spec.persistentVolumeReclaimPolicy,
+        :status_phase   => persistent_volume.status.phase,
+        :status_message => persistent_volume.status.message,
+        :status_reason  => persistent_volume.status.reason
+      )
+      new_result
+    end
+
     def parse_quota(resource_quota)
       new_result = parse_base_item(resource_quota).except(:namespace)
       new_result[:project] = @data_index.fetch_path(
@@ -388,6 +424,24 @@ module ManageIQ::Providers::Kubernetes
 
       new_result[:project] = @data_index.fetch_path(:container_projects, :by_name,
                                                     container_replicator.metadata["table"][:namespace])
+      new_result
+    end
+
+    def parse_component_status(container_component_status)
+      new_result = {}
+
+      # At this point components statuses use only one condition.
+      # In the case of a future change, this will need to be modified accordingly.
+      component_condition = container_component_status.conditions.first
+
+      new_result.merge!(
+        :name      => container_component_status.metadata.name,
+        :condition => component_condition.type,
+        :status    => component_condition.status,
+        :message   => component_condition.message,
+        :error     => component_condition.error
+      )
+
       new_result
     end
 
@@ -597,47 +651,53 @@ module ManageIQ::Providers::Kubernetes
     def parse_volumes(volumes)
       volumes.to_a.collect do |volume|
         {
-          :type                    => 'ContainerVolumeKubernetes',
-          :name                    => volume.name,
-          :empty_dir_medium_type   => volume.emptyDir.try(:medium),
-          :gce_pd_name             => volume.gcePersistentDisk.try(:pdName),
-          :git_repository          => volume.gitRepo.try(:repository),
-          :git_revision            => volume.gitRepo.try(:revision),
-          :nfs_server              => volume.nfs.try(:server),
-          :iscsi_target_portal     => volume.iscsi.try(:targetPortal),
-          :iscsi_iqn               => volume.iscsi.try(:iqn),
-          :iscsi_lun               => volume.iscsi.try(:lun),
-          :glusterfs_endpoint_name => volume.glusterfs.try(:endpointsName),
-          :claim_name              => volume.persistentVolumeClaim.try(:claimName),
-          :rbd_ceph_monitors       => volume.rbd.try(:cephMonitors).to_a.join(','),
-          :rbd_image               => volume.rbd.try(:rbdImage),
-          :rbd_pool                => volume.rbd.try(:rbdPool),
-          :rbd_rados_user          => volume.rbd.try(:radosUser),
-          :rbd_keyring             => volume.rbd.try(:keyring),
-          :common_path             => [volume.hostPath.try(:path),
-                                       volume.nfs.try(:path),
-                                       volume.glusterfs.try(:path)].compact.first,
-          :common_fs_type          => [volume.gcePersistentDisk.try(:fsType),
-                                       volume.awsElasticBlockStore.try(:fsType),
-                                       volume.iscsi.try(:fsType),
-                                       volume.rbd.try(:fsType),
-                                       volume.cinder.try(:fsType)].compact.first,
-          :common_read_only        => [volume.gcePersistentDisk.try(:readOnly),
-                                       volume.awsElasticBlockStore.try(:readOnly),
-                                       volume.nfs.try(:readOnly),
-                                       volume.iscsi.try(:readOnly),
-                                       volume.glusterfs.try(:readOnly),
-                                       volume.persistentVolumeClaim.try(:readOnly),
-                                       volume.rbd.try(:readOnly),
-                                       volume.cinder.try(:readOnly)].compact.first,
-          :common_secret           => [volume.secret.try(:secretName),
-                                       volume.rbd.try(:secretRef).try(:name)].compact.first,
-          :common_volume_id        => [volume.awsElasticBlockStore.try(:volumeId),
-                                       volume.cinder.try(:volumeId)].compact.first,
-          :common_partition        => [volume.gcePersistentDisk.try(:partition),
-                                       volume.awsElasticBlockStore.try(:partition)].compact.first
-        }
+          :type        => 'ContainerVolumeKubernetes',
+          :name        => volume.name,
+          :parent_type => 'ContainerGroup'
+        }.merge!(parse_volume_source(volume))
       end
+    end
+
+    def parse_volume_source(volume)
+      {
+        :empty_dir_medium_type   => volume.emptyDir.try(:medium),
+        :gce_pd_name             => volume.gcePersistentDisk.try(:pdName),
+        :git_repository          => volume.gitRepo.try(:repository),
+        :git_revision            => volume.gitRepo.try(:revision),
+        :nfs_server              => volume.nfs.try(:server),
+        :iscsi_target_portal     => volume.iscsi.try(:targetPortal),
+        :iscsi_iqn               => volume.iscsi.try(:iqn),
+        :iscsi_lun               => volume.iscsi.try(:lun),
+        :glusterfs_endpoint_name => volume.glusterfs.try(:endpointsName),
+        :claim_name              => volume.persistentVolumeClaim.try(:claimName),
+        :rbd_ceph_monitors       => volume.rbd.try(:cephMonitors).to_a.join(','),
+        :rbd_image               => volume.rbd.try(:rbdImage),
+        :rbd_pool                => volume.rbd.try(:rbdPool),
+        :rbd_rados_user          => volume.rbd.try(:radosUser),
+        :rbd_keyring             => volume.rbd.try(:keyring),
+        :common_path             => [volume.hostPath.try(:path),
+                                     volume.nfs.try(:path),
+                                     volume.glusterfs.try(:path)].compact.first,
+        :common_fs_type          => [volume.gcePersistentDisk.try(:fsType),
+                                     volume.awsElasticBlockStore.try(:fsType),
+                                     volume.iscsi.try(:fsType),
+                                     volume.rbd.try(:fsType),
+                                     volume.cinder.try(:fsType)].compact.first,
+        :common_read_only        => [volume.gcePersistentDisk.try(:readOnly),
+                                     volume.awsElasticBlockStore.try(:readOnly),
+                                     volume.nfs.try(:readOnly),
+                                     volume.iscsi.try(:readOnly),
+                                     volume.glusterfs.try(:readOnly),
+                                     volume.persistentVolumeClaim.try(:readOnly),
+                                     volume.rbd.try(:readOnly),
+                                     volume.cinder.try(:readOnly)].compact.first,
+        :common_secret           => [volume.secret.try(:secretName),
+                                     volume.rbd.try(:secretRef).try(:name)].compact.first,
+        :common_volume_id        => [volume.awsElasticBlockStore.try(:volumeId),
+                                     volume.cinder.try(:volumeId)].compact.first,
+        :common_partition        => [volume.gcePersistentDisk.try(:partition),
+                                     volume.awsElasticBlockStore.try(:partition)].compact.first
+      }
     end
 
     IEC_SIZE_SUFFIXES = %w(Ki Mi Gi Ti)

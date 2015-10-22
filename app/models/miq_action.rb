@@ -1033,28 +1033,6 @@ class MiqAction < ActiveRecord::Base
     return a, status
   end
 
-  def self.create_script_actions_from_directory
-    Dir.glob(SCRIPT_DIR + "/*").sort.each do |f|
-      rec = {}
-      rec[:name]        = File.basename(f).tr(".", "_")
-      rec[:description] = "Execute script: #{File.basename(f)}"
-      rec[:action_type] = "script"
-      rec[:options]     = {:filename => f}
-
-      action = find_by_name(rec[:name])
-      if action.nil?
-        _log.info("Creating [#{rec[:name]}]")
-        action = create(rec)
-      else
-        action.attributes = rec
-        if action.changed? || action.options_was != actions.options
-          _log.info("Updating [#{rec[:name]}]")
-          action.save
-        end
-      end
-    end
-  end
-
   def check_policy_contents_empty_on_destroy
     raise "Action is referenced in at least one policy and connot be deleted" unless miq_policy_contents.empty?
   end
@@ -1077,20 +1055,36 @@ class MiqAction < ActiveRecord::Base
 
   def self.create_default_actions
     CSV.foreach(fixture_path, :headers => true, :skip_lines => /^#/) do |csv_row|
-      action = csv_row.to_hash
-      action['action_type'] = 'default'
+      action_attributes = csv_row.to_hash
+      action_attributes['action_type'] = 'default'
 
-      rec = find_by_name(action['name'])
-      if rec.nil?
-        _log.info("Creating [#{action['name']}]")
-        create(action)
-      else
-        rec.attributes = action
-        if rec.changed? || (rec.options_was != rec.options)
-          _log.info("Updating [#{action['name']}]")
-          rec.save
-        end
+      create_or_update(action_attributes)
+    end
+  end
+
+  def self.create_script_actions_from_directory
+    Dir.glob(SCRIPT_DIR.join("*")).sort.each do |f|
+      create_or_update(
+        'name'        => File.basename(f).tr(".", "_"),
+        'description' => "Execute script: #{File.basename(f)}",
+        'action_type' => "script",
+        'options'     => {:filename => f}
+      )
+    end
+  end
+
+  def self.create_or_update(action_attributes)
+    name = action_attributes['name']
+    action = find_by_name(name)
+    if action
+      action.attributes = action_attributes
+      if action.changed? || action.options_was != action.options
+        _log.info("Updating [#{name}]")
+        action.save
       end
+    else
+      _log.info("Creating [#{name}]")
+      create(action_attributes)
     end
   end
 

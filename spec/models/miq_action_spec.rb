@@ -233,6 +233,73 @@ describe MiqAction do
     end
   end
 
+  context '.create_script_actions_from_directory' do
+    context 'when there are 3 files in the script directory' do
+      before do
+        @script_dir = Dir.mktmpdir
+        stub_const('::MiqAction::SCRIPT_DIR', Pathname(@script_dir))
+        FileUtils.touch %W(
+          #{@script_dir}/script2.rb
+          #{@script_dir}/script.1.sh
+          #{@script_dir}/script3
+        )
+      end
+
+      after do
+        FileUtils.remove_entry_secure @script_dir
+      end
+
+      context 'seeding script actions from that directory' do
+        before { MiqAction.create_script_actions_from_directory }
+        let(:first_created_action) { MiqAction.order(:id).first! }
+
+        it 'should create 3 new actions' do
+          expect(MiqAction.count).to eq 3
+        end
+
+        it 'should assign script filename as action name' do
+          expect(first_created_action.name).to eq 'script_1_sh'
+        end
+
+        it 'should set action_type to "script"' do
+          expect(MiqAction.distinct.pluck(:action_type)).to eq ['script']
+        end
+
+        it 'should add description' do
+          expect(first_created_action.description).to eq "Execute script: script.1.sh"
+        end
+
+        it 'should put full file path into options hash' do
+          expect(first_created_action.options).to eq(:filename => "#{@script_dir}/script.1.sh")
+        end
+
+        context 'after one of the scripts is renamed' do
+          before { FileUtils.mv("#{@script_dir}/script2.rb", "#{@script_dir}/run.bat") }
+
+          context 'seeding script actions again' do
+            before { MiqAction.create_script_actions_from_directory }
+
+            it 'should not delete the old action' do
+              expect(MiqAction.where(:name => 'script2_rb')).to exist
+            end
+
+            it 'should create a new action' do
+              expect(MiqAction.where(:name => 'run_bat')).to exist
+            end
+          end
+        end
+
+        context 'seeding script actions again' do
+          before { MiqAction.create_script_actions_from_directory }
+
+          it 'should not add any new actions' do
+            expect(MiqAction.count).to eq 3
+          end
+        end
+      end
+    end
+  end
+
   context '#round_to_nearest_4mb' do
     it 'should round numbers to nearest 4 mb' do
       a = MiqAction.new

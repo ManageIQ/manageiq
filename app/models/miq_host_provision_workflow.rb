@@ -205,8 +205,6 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
   end
 
   def self.from_ws(*args)
-    version = args.first.to_f
-
     # Move optional arguments into the MiqHashStruct object
     prov_args = args[0, 6]
     prov_options = MiqHashStruct.new(:values => args[6], :ems_custom_attributes => args[7], :miq_custom_attributes => args[8])
@@ -214,23 +212,18 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     MiqHostProvisionWorkflow.from_ws_ver_1_x(*prov_args)
   end
 
-  def self.from_ws_2(*args)
-    MiqHostProvisionWorkflow.from_ws_ver_1_x(*args)
-  end
-
-  def self.from_ws_ver_1_x(version, userid, template_fields, vm_fields, requester, tags, options)
+  def self.from_ws_ver_1_x(version, user, template_fields, vm_fields, requester, tags, options)
     options = MiqHashStruct.new if options.nil?
-    _log.warn "Web-service host provisioning starting with interface version <#{version}> by requester <#{userid}>"
+    _log.warn "Web-service host provisioning starting with interface version <#{version}> by requester <#{user.userid}>"
 
     init_options = {:use_pre_dialog => false, :request_type => request_type(parse_ws_string(template_fields)[:request_type])}
     data = parse_ws_string(requester)
     unless data[:user_name].blank?
-      userid = data[:user_name]
-      _log.warn "Web-service requester changed to <#{userid}>"
+      user = User.find_by_userid!(data[:user_name])
+      _log.warn "Web-service requester changed to <#{user.userid}>"
     end
 
-    p = new(values = {}, userid, init_options)
-    userid = p.requester.userid
+    p = new(values = {}, user, init_options)
     src = p.ws_template_fields(values, template_fields)
 
     # Populate required fields
@@ -241,14 +234,14 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
 
     p.ws_host_fields(values, vm_fields)
     p.ws_requester_fields(values, requester)
-    p.set_ws_tags(values, tags)    # Tags are passed as category=value|cat2=value2...  Example: cc=001|environment=test
-    p.set_ws_values(values, :ws_values, options.values)
-    p.set_ws_values(values, :ws_ems_custom_attributes, options.ems_custom_attributes, :parse_ws_string, :modify_key_name => false)
-    p.set_ws_values(values, :ws_miq_custom_attributes, options.miq_custom_attributes, :parse_ws_string, :modify_key_name => false)
+    values[:vm_tags] = p.ws_tags(tags)    # Tags are passed as category=value|cat2=value2...  Example: cc=001|environment=test
+    values[:ws_values] = p.ws_values(options.values)
+    values[:ws_ems_custom_attributes] = p.ws_values(options.ems_custom_attributes, :parse_ws_string, :modify_key_name => false)
+    values[:ws_miq_custom_attributes] = p.ws_values(options.miq_custom_attributes, :parse_ws_string, :modify_key_name => false)
 
     p.validate_values(values)
 
-    p.create_request(values, userid, values[:auto_approve])
+    p.create_request(values, nil, values[:auto_approve])
   rescue => err
     _log.error "<#{err}>"
     raise err

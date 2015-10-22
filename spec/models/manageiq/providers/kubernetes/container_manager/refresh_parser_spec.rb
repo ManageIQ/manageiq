@@ -263,6 +263,57 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
     end
   end
 
+  describe "parse_component_statuses" do
+    example_component_statuses = [
+      {
+        :component_status => RecursiveOpenStruct.new(
+          :metadata   => {:name => "example-component-status1"},
+          :conditions => [
+            RecursiveOpenStruct.new(
+              :type    => "Healthy",
+              :status  => "True",
+              :message => "{'health': 'true'}"
+            )
+          ]),
+        :name             => "example-component-status1",
+        :condition        => "Healthy",
+        :status           => "True",
+        :message          => "{'health': 'true'}",
+        :error            => nil
+      },
+      {
+        :component_status => RecursiveOpenStruct.new(
+          :metadata   => {:name => "example-component-status2"},
+          :conditions => [
+            RecursiveOpenStruct.new(
+              :type   => "Healthy",
+              :status => "Unknown",
+              :error  => "Get http://127.0.0.1:10251/healthz: dial tcp 127.0.0.1:10251: connection refused"
+            )
+          ]),
+        :name             => "example-component-status2",
+        :condition        => "Healthy",
+        :status           => "Unknown",
+        :message          => nil,
+        :error            => "Get http://127.0.0.1:10251/healthz: dial tcp 127.0.0.1:10251: connection refused"
+      }
+    ]
+
+    example_component_statuses.each do |ex|
+      it "tests '#{ex[:name]}'" do
+        parsed_component_status = parser.send(:parse_component_status, ex[:component_status])
+
+        parsed_component_status.should have_attributes(
+          :name      => ex[:name],
+          :condition => ex[:condition],
+          :status    => ex[:status],
+          :message   => ex[:message],
+          :error     => ex[:error]
+        )
+      end
+    end
+  end
+
   describe "parse_iec_number" do
     it "converts IEC bytes size to integer value" do
       [
