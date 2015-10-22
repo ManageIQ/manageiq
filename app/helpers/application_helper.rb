@@ -546,15 +546,6 @@ module ApplicationHelper
     "miqSetAETreeNodeSelectionClass('#{id}', '#{prev_id}', '#{select ? true : false}');".html_safe
   end
 
-  # Generate lines of JS <text> for render page, replacing "~" with the <sub_array> elements
-  def js_multi_lines(sub_array, text)
-    js_array = []
-    sub_array.each do |i|
-      js_array << text.gsub("~", i.to_s)
-    end
-    js_array
-  end
-
   def javascript_set_value(element_id, value)
     "$('##{element_id}').val('#{value}');"
   end
