@@ -28,13 +28,13 @@ class TreeBuilderCondition < TreeBuilder
   end
 
   # level 2 - conditions
-  def x_get_tree_custom_kids(parent, options)
+  def x_get_tree_custom_kids(parent, count_only, options)
     assert_type(options[:type], :condition)
     return super unless %w(host vm).include?(parent[:id])
 
     objects = Condition.where(:towhat => parent[:id].titleize)
 
-    count_only_or_objects(options[:count_only], objects, :description)
+    count_only_or_objects(count_only, objects, :description)
   end
 
   # level 3 - nothing

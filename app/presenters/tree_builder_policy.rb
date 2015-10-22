@@ -47,7 +47,7 @@ class TreeBuilderPolicy < TreeBuilder
   end
 
   # level 2 & 3...
-  def x_get_tree_custom_kids(parent, options)
+  def x_get_tree_custom_kids(parent, count_only, _options)
     assert_type(options[:type], :policy)
 
     # level 2 - host and vm under compliance/control
@@ -58,7 +58,7 @@ class TreeBuilderPolicy < TreeBuilder
       %W(xx-#{pid}_xx-#{pid}-host xx-#{pid}_xx-#{pid}-vm).each { |n| open_node(n) }
 
       objects = compliance_control_kids(pid)
-      count_only_or_objects(options[:count_only], objects)
+      count_only_or_objects(count_only, objects)
     # level 3 - actual policies
     elsif %w(host vm).include?(parent[:id].split('-').last)
       mode, towhat = parent[:id].split('-')
@@ -66,7 +66,7 @@ class TreeBuilderPolicy < TreeBuilder
       objects = MiqPolicy.where(:mode   => mode.downcase,
                                 :towhat => towhat.titleize)
 
-      count_only_or_objects(options[:count_only], objects, :description)
+      count_only_or_objects(count_only, objects, :description)
     else
       # error checking
       super

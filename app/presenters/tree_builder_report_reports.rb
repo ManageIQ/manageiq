@@ -38,7 +38,7 @@ class TreeBuilderReportReports < TreeBuilderReportReportsClass
     count_only_or_objects(count_only, objects, nil)
   end
 
-  def x_get_tree_custom_kids(object, options)
+  def x_get_tree_custom_kids(object, count_only, _options)
     objects = []
     nodes = object[:full_id] ? object[:full_id].split('-') : object[:id].to_s.split('-')
     if nodes.length == 1 # && nodes.last.split('-').length <= 2 #|| nodes.length == 2
@@ -56,9 +56,9 @@ class TreeBuilderReportReports < TreeBuilderReportReportsClass
         objects.push(MiqReport.find_by_name(r))
         # break after adding 1 report for a count_only,
         # don't need to go thru them all to determine if node has children
-        break if options[:count_only]
+        break if count_only
       end
     end
-    count_only_or_objects(options[:count_only], objects, nil)
+    count_only_or_objects(count_only, objects, nil)
   end
 end

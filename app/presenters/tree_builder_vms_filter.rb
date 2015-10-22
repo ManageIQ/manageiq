@@ -24,7 +24,7 @@ class TreeBuilderVmsFilter < TreeBuilder
     count_only_or_objects(count_only, objects, nil)
   end
 
-  def x_get_tree_custom_kids(object, options)
+  def x_get_tree_custom_kids(object, count_only, options)
     objects = MiqSearch.where(:db => options[:leaf])
     objects = case object[:id]
               when "global" # Global filters
@@ -32,6 +32,6 @@ class TreeBuilderVmsFilter < TreeBuilder
               when "my"     # My filters
                 objects.where(:search_type => "user", :search_key => User.current_user.userid)
               end
-    count_only_or_objects(options[:count_only], objects, 'description')
+    count_only_or_objects(count_only, objects, 'description')
   end
 end

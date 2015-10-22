@@ -27,7 +27,7 @@ class TreeBuilderOpsRbac < TreeBuilder
     objects
   end
 
-  def x_get_tree_custom_kids(object_hash, options)
+  def x_get_tree_custom_kids(object_hash, count_only, _options)
     objects =
       case object_hash[:id]
       when "u"  then User.in_my_region
@@ -35,7 +35,7 @@ class TreeBuilderOpsRbac < TreeBuilder
       when "ur" then MiqUserRole.all
       when "tn" then Tenant.roots
       end
-    count_only_or_objects(options[:count_only], objects, "name")
+    count_only_or_objects(count_only, objects, "name")
   end
 
   def x_get_tree_tenant_kids(object, options)

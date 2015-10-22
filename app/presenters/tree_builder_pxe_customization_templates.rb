@@ -30,7 +30,7 @@ class TreeBuilderPxeCustomizationTemplates < TreeBuilder
   end
 
   # Handle custom tree nodes (object is a Hash)
-  def x_get_tree_custom_kids(object, options)
+  def x_get_tree_custom_kids(object, count_only, _options)
     nodes = object[:full_id] ? object[:full_id].split('-') : object[:id].split('-')
     if nodes[1] == "system" || nodes[2] == "system"
       # root node was clicked or if folder node was clicked
@@ -42,6 +42,6 @@ class TreeBuilderPxeCustomizationTemplates < TreeBuilder
       pxe_img = PxeImageType.find_by_id(from_cid(id))
       objects = CustomizationTemplate.find_all_by_pxe_image_type_id(pxe_img.id)
     end
-    count_only_or_objects(options[:count_only], objects, "name")
+    count_only_or_objects(count_only, objects, "name")
   end
 end

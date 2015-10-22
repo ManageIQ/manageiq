@@ -26,14 +26,14 @@ class TreeBuilderReportDashboards < TreeBuilder
     count_only_or_objects(count_only, objects, nil)
   end
 
-  def x_get_tree_custom_kids(object, options)
+  def x_get_tree_custom_kids(object, count_only, options)
     assert_type(options[:type], :db)
     objects = []
     if object[:id].split('-').first == "g"
       objects = MiqGroup.all
-      return options[:count_only] ? objects.count : objects.sort_by(&:name)
+      return count_only ? objects.count : objects.sort_by(&:name)
     end
-    count_only_or_objects(options[:count_only], objects, :name)
+    count_only_or_objects(count_only, objects, :name)
   end
 
   def x_get_tree_g_kids(object, options)

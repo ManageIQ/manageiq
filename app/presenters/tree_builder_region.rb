@@ -42,22 +42,22 @@ class TreeBuilderRegion < TreeBuilder
     end
   end
 
-  def x_get_tree_custom_kids(object, options)
+  def x_get_tree_custom_kids(object, count_only, _options)
     nodes = object[:id].split('_')
     id = from_cid(nodes.last.split('-').last)
     if object_ems?(nodes, object)
       rec = MiqRegion.find_by_id(id)
       objects = rbac_filtered_sorted_objects(rec.ems_infras, "name")
-      count_only_or_objects(options[:count_only], objects, nil)
+      count_only_or_objects(count_only, objects, nil)
     elsif object_ds?(nodes, object)
       rec = MiqRegion.find_by_id(id)
       objects = rbac_filtered_sorted_objects(rec.storages, "name")
-      count_only_or_objects(options[:count_only], objects, nil)
+      count_only_or_objects(count_only, objects, nil)
     elsif object_cluster?(nodes, object)
       rec = ExtManagementSystem.find_by_id(id)
       objects = rbac_filtered_sorted_objects(rec.ems_clusters, "name") +
                 rbac_filtered_sorted_objects(rec.non_clustered_hosts, "name")
-      count_only_or_objects(options[:count_only], objects, nil)
+      count_only_or_objects(count_only, objects, nil)
     end
   end
 

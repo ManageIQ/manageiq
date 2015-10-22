@@ -26,7 +26,7 @@ class TreeBuilderCatalogItems < TreeBuilderCatalogsClass
   end
 
   # Handle custom tree nodes (object is a Hash)
-  def x_get_tree_custom_kids(object, options)
+  def x_get_tree_custom_kids(object, count_only, _options)
     # build node showing any button groups or buttons under selected CatalogItem
     @resolve ||= {}
     @resolve[:target_classes] = {}
@@ -44,7 +44,7 @@ class TreeBuilderCatalogItems < TreeBuilderCatalogsClass
         end
       end
     end
-    count_only_or_objects(options[:count_only], objects, nil)
+    count_only_or_objects(count_only, objects, nil)
   end
 
   def x_get_tree_st_kids(object, options)

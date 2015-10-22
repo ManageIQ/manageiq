@@ -303,7 +303,15 @@ class TreeBuilder
                                                         x_get_tree_folder_kids(parent, count_only, options[:type])
                                                       end
                         when EmsCluster          then x_get_tree_cluster_kids(parent, count_only)
-                        when Hash                then x_get_tree_custom_kids(parent, options)
+                        when Hash                then
+                          # TreeBuilderAlertProfile - :type
+                          # TreeBuilderArchived - :leaf
+                          # TreeBuilderCondition - :type
+                          # TreeBuilderContainersFilter - :leaf
+                          # TreeBuilderForemanConfiguredSystems - :leaf
+                          # TreeBuilderReportDashboards - :type
+                          # TreeBuilderVmsFilter - :leaf
+                          x_get_tree_custom_kids(parent, count_only, options)
                         when IsoDatastore        then x_get_tree_iso_datastore_kids(parent, options)
                         when LdapRegion          then x_get_tree_lr_kids(parent, options)
                         when MiqAeClass          then x_get_tree_class_kids(parent, options)
@@ -380,8 +388,8 @@ class TreeBuilder
   end
 
   # Handle custom tree nodes (object is a Hash)
-  def x_get_tree_custom_kids(_object, options)
-    options[:count_only] ? 0 : []
+  def x_get_tree_custom_kids(_object, count_only)
+    count_only ? 0 : []
   end
 
   def count_only_or_objects(count_only, objects, sort_by = nil)

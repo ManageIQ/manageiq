@@ -27,13 +27,13 @@ class TreeBuilderContainersFilter < TreeBuilder
     ]
   end
 
-  def x_get_tree_custom_kids(object, options)
+  def x_get_tree_custom_kids(object, count_only, options)
     case object[:id]
     when "global" # Global filters
       objects = MiqSearch.all(:conditions => ["(search_type=? or (search_type=? and (search_key is null
                                                 or search_key<>?))) and db=?", "global", "default", "_hidden_",
                                               options[:leaf]]).sort_by { |a| a.description.downcase }
     end
-    options[:count_only] ? objects.length : objects
+    count_only ? objects.length : objects
   end
 end

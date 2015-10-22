@@ -38,11 +38,11 @@ class TreeBuilderIsoDatastores < TreeBuilder
     end
   end
 
-  def x_get_tree_custom_kids(object, options)
+  def x_get_tree_custom_kids(object, count_only, _options)
     nodes = (object[:full_id] || object[:id]).split('_')
     isd = IsoDatastore.find_by_id(from_cid(nodes.last.split('-').last))
     # Iso Datastore node was clicked OR folder nodes was clicked
     objects = isd.iso_images if nodes[0].end_with?("isd")
-    count_only_or_objects(options[:count_only], objects, "name")
+    count_only_or_objects(count_only, objects, "name")
   end
 end

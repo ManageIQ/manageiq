@@ -27,7 +27,7 @@ class TreeBuilderVandt < TreeBuilder
   end
 
   # Handle custom tree nodes (object is a Hash)
-  def x_get_tree_custom_kids(object, options)
+  def x_get_tree_custom_kids(object, count_only, _options)
     objects = case object[:id]
               when "orph" # Orphaned
                 rbac_filtered_objects(VmInfra.all_orphaned) +
@@ -36,7 +36,7 @@ class TreeBuilderVandt < TreeBuilder
                 rbac_filtered_objects(VmInfra.all_archived) +
                 rbac_filtered_objects(TemplateInfra.all_archived)
               end
-    count_only_or_objects(options[:count_only], objects, "name")
+    count_only_or_objects(count_only, objects, "name")
   end
 
   def x_get_child_nodes(id)

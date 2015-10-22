@@ -33,31 +33,30 @@ class TreeBuilderForemanConfiguredSystems < TreeBuilder
     ]
   end
 
-  def x_get_tree_custom_kids(object, options)
-    objects = x_get_search_results(object, options)
-    options[:count_only] ? objects.length : objects
+  def x_get_tree_custom_kids(object, count_only, options)
+    objects = x_get_search_results(object, options[:leaf])
+    count_only ? objects.length : objects
   end
 
-  def x_get_search_results(object, options)
+  def x_get_search_results(object, leaf)
     case object[:id]
     when "global" # Global filters
-      objects = x_get_global_filter_search_results(options)
+      x_get_global_filter_search_results(leaf)
     when "my"     # My filters
-      objects = x_get_my_filter_search_results(options)
+      x_get_my_filter_search_results(leaf)
     end
-    objects
   end
 
-  def x_get_global_filter_search_results(options)
+  def x_get_global_filter_search_results(leaf)
     MiqSearch
-      .where(:db => options[:leaf])
+      .where(:db => leaf)
       .where("search_type=? or (search_type=? and (search_key is null or search_key<>?))", "global", "default", "_hidden_")
       .sort_by { |a| a.description.downcase }
   end
 
-  def x_get_my_filter_search_results(options)
+  def x_get_my_filter_search_results(leaf)
     MiqSearch
-      .where(:db => options[:leaf])
+      .where(:db => leaf)
       .where(:search_type => "user", :search_key => User.current_user.userid)
       .sort_by { |a| a.description.downcase }
   end

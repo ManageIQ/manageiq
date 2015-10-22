@@ -18,8 +18,8 @@ class TreeBuilderProvisioningDialogs < TreeBuilderAeCustomization
     count_only_or_objects(count_only, objects, nil)
   end
 
-  def x_get_tree_custom_kids(object, options)
+  def x_get_tree_custom_kids(object, count_only, _options)
     objects = MiqDialog.where(:dialog_type => object[:id].split('_').last).sort_by { |a| a.description.downcase }
-    count_only_or_objects(options[:count_only], objects, nil)
+    count_only_or_objects(count_only, objects, nil)
   end
 end

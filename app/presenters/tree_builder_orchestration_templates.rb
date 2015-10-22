@@ -35,13 +35,13 @@ class TreeBuilderOrchestrationTemplates < TreeBuilder
     )
   end
 
-  def x_get_tree_custom_kids(object, options)
+  def x_get_tree_custom_kids(object, count_only, _options)
     classes = {
       "otcfn" => OrchestrationTemplateCfn,
       "othot" => OrchestrationTemplateHot,
       "otazu" => OrchestrationTemplateAzure
     }
     objects = rbac_filtered_objects(classes[object[:id]].all).sort_by { |o| o.name.downcase }
-    count_only_or_objects(options[:count_only], objects, nil)
+    count_only_or_objects(count_only, objects, nil)
   end
 end

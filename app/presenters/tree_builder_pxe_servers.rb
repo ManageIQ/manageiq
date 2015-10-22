@@ -40,7 +40,7 @@ class TreeBuilderPxeServers < TreeBuilder
     end
   end
 
-  def x_get_tree_custom_kids(object, options)
+  def x_get_tree_custom_kids(object, count_only, _options)
     nodes = (object[:full_id] || object[:id]).split('_')
     ps = PxeServer.find_by_id(from_cid(nodes.last.split('-').last))
     objects = if nodes[0].end_with?("pxe")
@@ -48,6 +48,6 @@ class TreeBuilderPxeServers < TreeBuilder
               elsif nodes[0].end_with?("win")
                 ps.windows_images
               end
-    count_only_or_objects(options[:count_only], objects, "name")
+    count_only_or_objects(count_only, objects, "name")
   end
 end

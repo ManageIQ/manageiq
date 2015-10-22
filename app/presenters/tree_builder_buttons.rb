@@ -14,12 +14,12 @@ class TreeBuilderButtons < TreeBuilderAeCustomization
     resolve.collect { |typ| {:id => "ab_#{typ[1]}", :text => typ[0], :image => buttons_node_image(typ[1]), :tip => typ[0]} }
   end
 
-  def x_get_tree_custom_kids(object, options)
+  def x_get_tree_custom_kids(object, count_only, _options)
     nodes = object[:id].split('_')
     objects = CustomButtonSet.find_all_by_class_name(nodes[1])
     # add as first element of array
     objects.unshift(CustomButtonSet.new(:name => "[Unassigned Buttons]|ub-#{nodes[1]}", :description => "[Unassigned Buttons]"))
-    count_only_or_objects(options[:count_only], objects, nil)
+    count_only_or_objects(count_only, objects, nil)
   end
 
   def get_custom_buttons(object)
