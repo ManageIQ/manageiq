@@ -54,7 +54,7 @@ module MiqAeDatastore
     ext        = File.extname(name)
     basename   = File.basename(name, ext)
     name       = "#{basename}.zip"
-    TMP_DIR.mkpath unless TMP_DIR.directory?
+    TMP_DIR.mkpath
     filename = TMP_DIR.join(name)
 
     _log.info("Uploading Datastore Import to file <#{filename}>")
