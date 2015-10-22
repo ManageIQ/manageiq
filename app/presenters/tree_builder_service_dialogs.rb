@@ -24,8 +24,8 @@ class TreeBuilderServiceDialogs < TreeBuilderAeCustomization
     count_only_or_objects(options[:count_only], objects, nil)
   end
 
-  def x_get_tree_dialog_kids(object, options)
-    x_get_tree_generic_dialog_kids(object, options, true)
+  def x_get_tree_dialog_kids(object, count_only, type)
+    x_get_tree_generic_dialog_kids(object, { :count_only => count_only, :type => type }, true)
   end
 
   def x_get_tree_dialog_tab_kids(object, options)

@@ -293,7 +293,7 @@ class TreeBuilder
                         when ManageIQ::Providers::Foreman::ConfigurationManager then x_get_tree_cmf_kids(parent, count_only)
                         when ConfigurationProfile then x_get_tree_cpf_kids(parent, count_only)
                         when CustomButtonSet     then x_get_tree_aset_kids(parent, count_only)
-                        when Dialog              then x_get_tree_dialog_kids(parent, options)
+                        when Dialog              then x_get_tree_dialog_kids(parent, count_only, options[:type])
                         when DialogGroup         then x_get_tree_dialog_group_kids(parent, options)
                         when DialogTab           then x_get_tree_dialog_tab_kids(parent, options)
                         when ExtManagementSystem then x_get_tree_ems_kids(parent, options)
