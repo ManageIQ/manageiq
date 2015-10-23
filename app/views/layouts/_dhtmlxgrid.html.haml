@@ -53,7 +53,8 @@
     - grid_hash[:rows].each do |row|
       %tr{:onclick => "miqRowClick('#{j row[:id]}', #{raw row_url}, #{j row_url_ajax.to_s}); return false;"}
         - row[:cells].each do |cell|
-          %td{:onclick => (cell[:is_checkbox] || cell[:is_button]) ? "event.stopPropagation()" : nil}
+          -# double {{}} to work around hamlit issue #28
+          %td{{:onclick => (cell[:is_checkbox] || cell[:is_button]) ? "event.stopPropagation()" : false}}
             - if cell[:is_checkbox]
               = check_box_tag("check_#{row[:id]}", 1, cell[:checked],
                 :onclick => "miqUpdateButtons(this, '#{button_div}')")
