@@ -7,26 +7,6 @@ module ApplicationHelper
   include StiRoutingHelper
   include TextualSummaryHelper
 
-  def css_background_color
-    (@css || {}).fetch_path(:background_color) || 'black'
-  end
-
-  # From http://www.juixe.com/techknow/index.php/2006/07/15/acts-as-taggable-tag-cloud
-  #   which refers to http://blog.craz8.com/articles/2005/10/28/acts_as_taggable-is-a-cool-piece-of-code
-  def tag_cloud(tags, classes)
-    max, min = 0, 0
-    tags.each do |t|
-      max = t.count.to_i if t.count.to_i > max
-      min = t.count.to_i if t.count.to_i < min
-    end
-
-    divisor = ((max - min) / classes.size) + 1
-
-    tags.each do |t|
-      yield t.name, classes[(t.count.to_i - min) / divisor]
-    end
-  end
-
   # Create a collapsed panel based on a condition
   def miq_accordion_panel(title, condition, id, &block)
     content_tag(:div, :class => "panel panel-default") do
@@ -113,13 +93,15 @@ module ApplicationHelper
 
   def url_for_record(record, action = "show") # Default action is show
     @id = to_cid(record.id)
-    if record.kind_of?(VmOrTemplate)
-      return url_for_db(controller_for_vm(model_for_vm(record)), action, record)
-    elsif record.class.respond_to?(:db_name)
-      return url_for_db(record.class.db_name, action, record)
-    else
-      return url_for_db(record.class.base_class.to_s, action, record)
-    end
+    db =
+      if record.kind_of?(VmOrTemplate)
+        controller_for_vm(model_for_vm(record))
+      elsif record.class.respond_to?(:db_name)
+        record.class.db_name
+      else
+        record.class.base_class.to_s
+      end
+    url_for_db(db, action, record)
   end
 
   # Create a url for a record that links to the proper controller
@@ -320,10 +302,6 @@ module ApplicationHelper
       :widgetsets            => @widgetsets,
       :zgraph                => @zgraph,
     )
-  end
-
-  def get_console_url
-    url = @record.hostname ? @record.hostname : @record.ipaddress
   end
 
   # Convert a field (Vm.hardware.disks-size) to a col (disks.size)
@@ -538,10 +516,6 @@ module ApplicationHelper
   def javascript_for_ae_node_selection(id, prev_id, select)
     "miqSetAETreeNodeSelectionClass('#{id}', '#{prev_id}', '#{select ? true : false}');".html_safe
   end
-
-  def javascript_set_value(element_id, value)
-    "$('##{element_id}').val('#{value}');"
-  end
   ############# End of methods that generate JS lines for render page blocks
 
   def set_edit_timer_from_schedule(schedule)
@@ -627,11 +601,7 @@ module ApplicationHelper
   # Format a column in a report view for display on the screen
   def format_col_for_display(view, row, col, tz = nil)
     tz ||= ["miqschedule"].include?(view.db.downcase) ? MiqServer.my_server.server_timezone : Time.zone
-    celltext = view.format(col,
-                           row[col],
-                           :tz => tz
-                          ).gsub(/\\/, '\&')    # Call format, then escape any backslashes
-    celltext
+    view.format(col, row[col], :tz => tz).gsub(/\\/, '\&') # Call format, then escape any backslashes
   end
 
   def check_if_button_is_implemented
@@ -653,12 +623,12 @@ module ApplicationHelper
     return value if value.to_s.length < TRUNC_AT
     case @settings.fetch_path(:display, :quad_truncate)
     when "b"  # Old version, used first x chars followed by ...
-      return value[0...TRUNC_TO] + "..."
+      value.first(TRUNC_TO) + "..."
     when "f"  # Chop off front
-      return "..." + value[(value.length - TRUNC_TO)..-1]
+      "..." + value.last(TRUNCT_TO)
     else      # Chop out the middle
       numchars = TRUNC_TO / 2
-      return value[0...numchars] + "..." + value[(value.length - numchars)..-1]
+      value.first(numchars) + "..." + value.last(numchars)
     end
   end
 
@@ -752,16 +722,6 @@ module ApplicationHelper
   # Do we show or hide the clear_search link in the list view title
   def clear_search_show_or_hide
     @edit && @edit.fetch_path(:adv_search_applied, :text) ? "show" : "hide"
-  end
-
-  # Create time zone list for perf chart options screen
-  def perf_options_timezones
-    if @perf_record && @perf_record.kind_of?(MiqCimInstance) && @perf_options[:typ] == "Daily"
-      tp_tzs = TimeProfile.rollup_daily_metrics.all_timezones
-      ALL_TIMEZONES.dup.delete_if { |tz| !tp_tzs.include?(tz.last) }
-    else
-      ALL_TIMEZONES
-    end
   end
 
   # Should we allow the user input checkbox be shown for an atom in the expression editor
@@ -1148,24 +1108,26 @@ module ApplicationHelper
 
   def vm_infra_explorer_accords_attributes(record)
     if role_allows(:feature => "vandt_accord") || role_allows(:feature => "vms_filter_accord")
-      attributes = {}
-      attributes[:link] = true
-      attributes[:controller] = "vm_infra"
-      attributes[:action] = "show"
-      attributes[:id] = record.id
+      {
+        :link       => true,
+        :controller => "vm_infra",
+        :action     => "show",
+        :id         => record.id
+      }
     end
-    attributes
   end
 
   def service_workload_attributes(record)
-    attributes = {}
     if role_allows(:feature => "vms_instances_filter_accord")
-      attributes[:link] = true
-      attributes[:controller] = "vm_or_template"
-      attributes[:action] = "explorer"
-      attributes[:id] = "v-#{record.id}"
+      {
+        :link       => true,
+        :controller => "vm_or_template",
+        :action     => "explorer",
+        :id         => "v-#{record.id}"
+      }
+    else
+      {}
     end
-    attributes
   end
 
   def title_for_hosts

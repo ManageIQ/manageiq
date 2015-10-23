@@ -783,14 +783,6 @@ describe ApplicationHelper do
     it { should include("miqInitToolbar(ManageIQ.toolbars['some_center_tb']);") }
   end
 
-  context "#javascript_set_value" do
-    let(:element_id)    { "text_field" }
-    let(:element_value) { "something" }
-    subject { javascript_set_value(element_id, element_value) }
-
-    it { should eq("$('#text_field').val('something');") }
-  end
-
   context "#set_edit_timer_from_schedule" do
     before(:each) do
       @edit = {:tz => 'Eastern Time (US & Canada)', :new => {}}
