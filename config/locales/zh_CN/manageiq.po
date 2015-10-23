@@ -8526,11 +8526,6 @@ msgstr "节点"
 msgid "Non-VM Files"
 msgstr "非虚拟机文件"
 
-msgid ""
-"Non-admin users can not access the system until at least 1 VM/Instance has "
-"been discovered"
-msgstr "非管理用户不能访问系统，直到发现至少一个虚拟机实例。"
-
 msgid "None"
 msgstr "无"
 
