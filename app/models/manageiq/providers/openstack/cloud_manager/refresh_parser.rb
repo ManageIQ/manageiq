@@ -463,13 +463,13 @@ module ManageIQ::Providers
         :connection_state    => "connected",
 
         :hardware            => {
-          :numvcpus         => flavor[:cpus],
-          :cores_per_socket => 1,
-          :logical_cpus     => flavor[:cpus],
-          :memory_mb        => flavor[:memory] / 1.megabyte,
-          :disk_capacity    => flavor[:root_disk_size] + flavor[:ephemeral_disk_size] + flavor[:swap_disk_size],
-          :disks            => [], # Filled in later conditionally on flavor
-          :networks         => [], # Filled in later conditionally on what's available
+          :numvcpus             => flavor[:cpus],
+          :cpu_cores_per_socket => 1,
+          :logical_cpus         => flavor[:cpus],
+          :memory_mb            => flavor[:memory] / 1.megabyte,
+          :disk_capacity        => flavor[:root_disk_size] + flavor[:ephemeral_disk_size] + flavor[:swap_disk_size],
+          :disks                => [], # Filled in later conditionally on flavor
+          :networks             => [], # Filled in later conditionally on what's available
         },
         :host                => parent_host,
         :ems_cluster         => parent_cluster,

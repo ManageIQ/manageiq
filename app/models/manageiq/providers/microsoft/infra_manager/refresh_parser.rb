@@ -234,15 +234,15 @@ module ManageIQ::Providers::Microsoft
       cpu_model        = normalize_blank_property(p[:ProcessorModel])
 
       {
-        :cpu_type         => "#{cpu_manufacturer} #{cpu_model} #{cpu_family}",
-        :manufacturer     => cpu_manufacturer,
-        :model            => cpu_model,
-        :cpu_speed        => normalize_blank_property_num(p[:ProcessorSpeed]),
-        :memory_mb        => normalize_blank_property(p[:TotalMemory]) / 1.megabyte,
-        :numvcpus         => normalize_blank_property_num(p[:PhysicalCPUCount]),
-        :logical_cpus     => normalize_blank_property_num(p[:LogicalProcessorCount]),
-        :cores_per_socket => normalize_blank_property_num(p[:CoresPerCPU]),
-        :guest_devices    => process_host_guest_devices(host),
+        :cpu_type             => "#{cpu_manufacturer} #{cpu_model} #{cpu_family}",
+        :manufacturer         => cpu_manufacturer,
+        :model                => cpu_model,
+        :cpu_speed            => normalize_blank_property_num(p[:ProcessorSpeed]),
+        :memory_mb            => normalize_blank_property(p[:TotalMemory]) / 1.megabyte,
+        :numvcpus             => normalize_blank_property_num(p[:PhysicalCPUCount]),
+        :logical_cpus         => normalize_blank_property_num(p[:LogicalProcessorCount]),
+        :cpu_cores_per_socket => normalize_blank_property_num(p[:CoresPerCPU]),
+        :guest_devices        => process_host_guest_devices(host),
       }
     end
 

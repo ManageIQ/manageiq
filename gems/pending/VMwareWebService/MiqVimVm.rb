@@ -518,14 +518,14 @@ class MiqVimVm
     cfgProps = cfgProps["config"]
 
     cfgHash = {
-      'displayname'      => cfgProps['name'],
-      'guestos'          => cfgProps['guestId'].downcase.chomp("guest"),
-      'uuid.bios'        => cfgProps['uuid'],
-      'uuid.location'    => cfgProps['locationId'],
-      'memsize'          => cfgProps['hardware']['memoryMB'],
-      'cores_per_socket' => cfgProps['hardware']['numCoresPerSocket'],
-      'numvcpu'          => cfgProps['hardware']['numCPU'],
-      'config.version'   => cfgProps['version'],
+      'displayname'          => cfgProps['name'],
+      'guestos'              => cfgProps['guestId'].downcase.chomp("guest"),
+      'uuid.bios'            => cfgProps['uuid'],
+      'uuid.location'        => cfgProps['locationId'],
+      'memsize'              => cfgProps['hardware']['memoryMB'],
+      'cpu_cores_per_socket' => cfgProps['hardware']['numCoresPerSocket'],
+      'numvcpu'              => cfgProps['hardware']['numCPU'],
+      'config.version'       => cfgProps['version'],
     }
 
     controllerKeyHash = {}

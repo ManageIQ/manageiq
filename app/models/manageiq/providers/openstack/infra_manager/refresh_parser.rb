@@ -181,27 +181,27 @@ module ManageIQ
       end
 
       def process_host_hardware(host, extra_attributes)
-        numvcpus         = extra_attributes.fetch_path('cpu', 'physical', 'number').to_i
-        logical_cpus     = extra_attributes.fetch_path('cpu', 'logical', 'number').to_i
-        cores_per_socket = numvcpus > 0 ? logical_cpus / numvcpus : 0
+        numvcpus             = extra_attributes.fetch_path('cpu', 'physical', 'number').to_i
+        logical_cpus         = extra_attributes.fetch_path('cpu', 'logical', 'number').to_i
+        cpu_cores_per_socket = numvcpus > 0 ? logical_cpus / numvcpus : 0
         # Get Cpu speed in Mhz
         cpu_speed        = extra_attributes.fetch_path('cpu', 'physical_0', 'frequency').to_i / 10**6
         {
-          :memory_mb          => host.properties['memory_mb'],
-          :disk_capacity      => host.properties['local_gb'],
-          :logical_cpus       => logical_cpus,
-          :numvcpus           => numvcpus,
-          :cores_per_socket   => cores_per_socket,
-          :cpu_speed          => cpu_speed,
-          :cpu_type           => extra_attributes.fetch_path('cpu', 'physical_0', 'version'),
-          :manufacturer       => extra_attributes.fetch_path('system', 'product', 'vendor'),
-          :model              => extra_attributes.fetch_path('system', 'product', 'name'),
-          :number_of_nics     => extra_attributes.fetch_path('network').try(:keys).try(:count).to_i,
-          :bios               => extra_attributes.fetch_path('firmware', 'bios', 'version'),
+          :memory_mb            => host.properties['memory_mb'],
+          :disk_capacity        => host.properties['local_gb'],
+          :logical_cpus         => logical_cpus,
+          :numvcpus             => numvcpus,
+          :cpu_cores_per_socket => cpu_cores_per_socket,
+          :cpu_speed            => cpu_speed,
+          :cpu_type             => extra_attributes.fetch_path('cpu', 'physical_0', 'version'),
+          :manufacturer         => extra_attributes.fetch_path('system', 'product', 'vendor'),
+          :model                => extra_attributes.fetch_path('system', 'product', 'name'),
+          :number_of_nics       => extra_attributes.fetch_path('network').try(:keys).try(:count).to_i,
+          :bios                 => extra_attributes.fetch_path('firmware', 'bios', 'version'),
           # Can't get these 2 from ironic, maybe from Glance metadata, when it will be there, or image fleecing?
-          :guest_os_full_name => nil,
-          :guest_os           => nil,
-          :disks              => process_host_hardware_disks(extra_attributes),
+          :guest_os_full_name   => nil,
+          :guest_os             => nil,
+          :disks                => process_host_hardware_disks(extra_attributes),
         }
       end
 

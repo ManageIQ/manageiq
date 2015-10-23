@@ -199,7 +199,7 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
 
       cpu_options = {}
       cpu_options[:cores]   = spec["numCoresPerSocket"] if spec["numCoresPerSocket"]
-      cpu_options[:sockets] = spec["numCPUs"] / (cpu_options[:cores] || vm.cores_per_socket) if spec["numCPUs"]
+      cpu_options[:sockets] = spec["numCPUs"] / (cpu_options[:cores] || vm.cpu_cores_per_socket) if spec["numCPUs"]
 
       rhevm_vm.cpu_topology = cpu_options if cpu_options.present?
     end

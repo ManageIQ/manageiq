@@ -116,7 +116,7 @@ class Host < ActiveRecord::Base
   virtual_column :total_vcpus,                  :type => :integer,     :uses => :logical_cpus
   virtual_column :num_cpu,                      :type => :integer,     :uses => :hardware
   virtual_column :logical_cpus,                 :type => :integer,     :uses => :hardware
-  virtual_column :cores_per_socket,             :type => :integer,     :uses => :hardware
+  virtual_column :cpu_cores_per_socket,         :type => :integer,     :uses => :hardware
   virtual_column :ram_size,                     :type => :integer
   virtual_column :enabled_inbound_ports,        :type => :numeric_set  # The following are not set to use anything
   virtual_column :enabled_outbound_ports,       :type => :numeric_set  # because get_ports ends up re-querying the
@@ -1789,8 +1789,8 @@ class Host < ActiveRecord::Base
     hardware.nil? ? 0 : hardware.logical_cpus
   end
 
-  def cores_per_socket
-    hardware.nil? ? 0 : hardware.cores_per_socket
+  def cpu_cores_per_socket
+    hardware.nil? ? 0 : hardware.cpu_cores_per_socket
   end
 
   def domain

@@ -108,22 +108,22 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     )
 
     @host.hardware.should have_attributes(
-      :cpu_speed          => 2000,
-      :cpu_type           => "RHEL 7.1.0 PC (i440FX + PIIX, 1996)",
-      :manufacturer       => "Red Hat",
-      :model              => "KVM",
-      :memory_mb          => 8192,
-      :memory_console     => nil,
-      :disk_capacity      => 40,
-      :numvcpus           => 4,
-      :logical_cpus       => 4,
-      :cores_per_socket   => 1,
-      :guest_os           => nil,
-      :guest_os_full_name => nil,
-      :cpu_usage          => nil,
-      :memory_usage       => nil,
-      :number_of_nics     => 1,
-      :bios               => "seabios-1.7.5-8.el7"
+      :cpu_speed            => 2000,
+      :cpu_type             => "RHEL 7.1.0 PC (i440FX + PIIX, 1996)",
+      :manufacturer         => "Red Hat",
+      :model                => "KVM",
+      :memory_mb            => 8192,
+      :memory_console       => nil,
+      :disk_capacity        => 40,
+      :numvcpus             => 4,
+      :logical_cpus         => 4,
+      :cpu_cores_per_socket => 1,
+      :guest_os             => nil,
+      :guest_os_full_name   => nil,
+      :cpu_usage            => nil,
+      :memory_usage         => nil,
+      :number_of_nics       => 1,
+      :bios                 => "seabios-1.7.5-8.el7"
     )
 
     assert_specific_disk(@host.hardware.disks.first)

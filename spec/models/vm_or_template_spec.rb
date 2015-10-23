@@ -134,7 +134,7 @@ describe VmOrTemplate do
     before do
       @vm       =  FactoryGirl.create(:vm_vmware)
       FactoryGirl.create(:hardware, :vm_or_template_id => @vm.id, :memory_mb => 1024)
-      @options  = {:hdw_attr => :memory_mb}
+      @options = {:hdw_attr => :memory_mb}
     end
 
     it "with no drift states" do

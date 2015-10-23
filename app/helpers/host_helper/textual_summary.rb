@@ -7,7 +7,7 @@ module HostHelper::TextualSummary
 
   def textual_group_properties
     %i(hostname ipaddress ipmi_ipaddress custom_1 vmm_vendor model asset_tag service_tag osinfo
-       power_state lockdown_mode devices network storage_adapters num_cpu num_cpu_cores cores_per_socket memory
+       power_state lockdown_mode devices network storage_adapters num_cpu num_cpu_cores cpu_cores_per_socket memory
        guid)
   end
 
@@ -224,8 +224,8 @@ module HostHelper::TextualSummary
     {:label => "Number of CPU Cores", :value => @record.hardware.nil? ? "N/A" : @record.hardware.logical_cpus}
   end
 
-  def textual_cores_per_socket
-    {:label => "CPU Cores Per Socket", :value => @record.hardware.nil? ? "N/A" : @record.hardware.cores_per_socket}
+  def textual_cpu_cores_per_socket
+    {:label => "CPU Cores Per Socket", :value => @record.hardware.nil? ? "N/A" : @record.hardware.cpu_cores_per_socket}
   end
 
   def textual_memory
