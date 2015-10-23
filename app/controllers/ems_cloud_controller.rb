@@ -150,6 +150,7 @@ class EmsCloudController < ApplicationController
 
     if @ems.kind_of?(ManageIQ::Providers::Azure::CloudManager)
       azure_tenant_id = @ems.azure_tenant_id
+      provicer_region = @ems.provider_region
       client_id       = @ems.authentication_userid ? @ems.authentication_userid : ""
       client_key      = @ems.authentication_password ? @ems.authentication_password : ""
     end

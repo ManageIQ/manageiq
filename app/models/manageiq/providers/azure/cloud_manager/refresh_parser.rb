@@ -19,6 +19,7 @@ module ManageIQ::Providers
         @tds               = ::Azure::Armrest::TemplateDeploymentService.new(@config)
         @vns               = ::Azure::Armrest::Network::VirtualNetworkService.new(@config)
         @ips               = ::Azure::Armrest::Network::IpAddressService.new(@config)
+        @rgs               = ::Azure::Armrest::ResourceGroupService.new(@config)
         @options           = options || {}
         @data              = {}
         @data_index        = {}
@@ -29,6 +30,7 @@ module ManageIQ::Providers
         log_header = "Collecting data for EMS : [#{@ems.name}] id: [#{@ems.id}]"
 
         _log.info("#{log_header}...")
+        get_resource_groups
         get_series
         get_availability_zones
         get_stacks
@@ -41,19 +43,23 @@ module ManageIQ::Providers
 
       private
 
+      def get_resource_groups
+        resource_groups = @rgs.list.select do |resource_group|
+          resource_group.location == @ems.provider_region
+        end
+        process_collection(resource_groups, :resource_groups) do |resource_group|
+          parse_resource_group(resource_group)
+        end
+      end
+
       def get_series
         series = []
-        get_locations.each do |location|
-          begin
-            series << @vmm.series(location)
-          rescue ::Azure::Armrest::BadGatewayException,
-                 ::Azure::Armrest::GatewayTimeoutException,
-                 ::Azure::Armrest::BadRequestException
-            next
-          end
+        begin
+          series = @vmm.series(@ems.provider_region)
+        rescue ::Azure::Armrest::BadGatewayException,
+               ::Azure::Armrest::GatewayTimeoutException,
+               ::Azure::Armrest::BadRequestException
         end
-        series = series.flatten
-        series = series.uniq
         process_collection(series, :flavors) { |s| parse_series(s) }
       end
 
@@ -66,7 +72,7 @@ module ManageIQ::Providers
       def get_stacks
         # deployments are realizations of a template in the Azure provider
         # they are parsed and converted to stacks in vmdb
-        deployments = @tds.list_all
+        deployments = gather_data_for_this_region(@tds)
         process_collection(deployments, :orchestration_stacks) { |dp| parse_stack(dp) }
         update_nested_stack_relations
       end
@@ -97,7 +103,7 @@ module ManageIQ::Providers
       end
 
       def get_cloud_networks
-        cloud_networks = @vns.list_all
+        cloud_networks = gather_data_for_this_region(@vns)
         process_collection(cloud_networks, :cloud_networks) { |cloud_network| parse_cloud_network(cloud_network) }
       end
 
@@ -107,7 +113,7 @@ module ManageIQ::Providers
       end
 
       def get_instances
-        instances = @vmm.list_all
+        instances = gather_data_for_this_region(@vmm)
         process_collection(instances, :vms) { |instance| parse_instance(instance) }
       end
 
@@ -121,6 +127,24 @@ module ManageIQ::Providers
           @data[key] << new_result
           @data_index.store_path(key, uid, new_result)
         end
+      end
+
+      def gather_data_for_this_region(arm_service)
+        results = []
+        @data[:resource_groups].each do |resource_group|
+          results << arm_service.list(resource_group[:name])
+        end
+        results.flatten
+      end
+
+      def parse_resource_group(resource_group)
+        uid = resource_group.id
+        new_result = {
+          :type    => "ResourceGroup",
+          :name    => resource_group.name,
+          :ems_ref => uid,
+        }
+        return uid, new_result
       end
 
       def parse_series(s)
@@ -282,13 +306,6 @@ module ManageIQ::Providers
         add_instance_disk(hardware_hash[:disks], sz, os_disk.name, os_disk.vhd) unless sz.zero?
 
         # No data availbale on swap disk? Called temp or resource disk.
-      end
-
-      def get_locations
-        @vmm.locations.collect do |location|
-          location = location.delete(' ')
-          location.match(VALID_LOCATION).to_s
-        end
       end
 
       def parse_stack(deployment)
