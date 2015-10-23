@@ -37,7 +37,6 @@ class VmReconfigureRequest < MiqRequest
     result[:max__number_of_sockets] ||= 1
     result[:max__cores_per_socket] ||= 1
     result[:max__vm_memory] ||= default_max_vm_memory
-    result[:max__total_vcpus] = 1 if result[:max__number_of_sockets].nil? && result[:max__cores_per_socket].nil?
     result
   end
 
