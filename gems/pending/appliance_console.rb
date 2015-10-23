@@ -114,20 +114,20 @@ module ApplianceConsole
 
   loop do
     begin
+      dns = LinuxAdmin::Dns.new
       eth0.reload
       eth0.parse_conf
 
-      host     = LinuxAdmin::Hosts.new.hostname
-      ip       = eth0.address
-      mac      = eth0.mac_address
-      mask     = eth0.netmask
-      gw       = eth0.gateway
-      dns1     = Env["DNS1"]
-      dns2     = Env["DNS2"]
-      order    = Env["SEARCHORDER"]
-      timezone = LinuxAdmin::TimeDate.system_timezone
-      region   = File.read(REGION_FILE).chomp  if File.exist?(REGION_FILE)
-      version  = File.read(VERSION_FILE).chomp if File.exist?(VERSION_FILE)
+      host       = LinuxAdmin::Hosts.new.hostname
+      ip         = eth0.address
+      mac        = eth0.mac_address
+      mask       = eth0.netmask
+      gw         = eth0.gateway
+      dns1, dns2 = dns.nameservers
+      order      = dns.search_order.join(' ')
+      timezone   = LinuxAdmin::TimeDate.system_timezone
+      region     = File.read(REGION_FILE).chomp  if File.exist?(REGION_FILE)
+      version    = File.read(VERSION_FILE).chomp if File.exist?(VERSION_FILE)
       configured = ApplianceConsole::DatabaseConfiguration.configured?
 
       summary_attributes = [

@@ -133,16 +133,7 @@ module Vmdb
       retVal[:ipaddress]  = eth0.address
       retVal[:netmask]    = eth0.netmask
       retVal[:gateway]    = eth0.gateway
-
-      miqnet = "/bin/miqnet.sh"
-
-      if File.exist?(miqnet)
-        # Make a call to the virtual appliance to get the network information
-        cmd     = "#{miqnet} -GET"
-
-        retVal[:primary_dns]   = `#{cmd} DNS1`
-        retVal[:secondary_dns] = `#{cmd} DNS2`
-      end
+      retVal[:primary_dns], retVal[:secondary_dns] = LinuxAdmin::Dns.new.nameservers
 
       retVal
     end
