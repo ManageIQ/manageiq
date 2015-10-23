@@ -7,7 +7,7 @@ begin
   Vmdb::FastGettextHelper.register_locales
   gettext_options = %w(--sort-by-msgid --location --no-wrap)
   Rails.application.config.gettext_i18n_rails.msgmerge = gettext_options
-  Rails.application.config.gettext_i18n_rails.xgettext = gettext_options << "--add-comments=TRANSLATORS"
+  Rails.application.config.gettext_i18n_rails.xgettext = gettext_options + ["--add-comments=TRANSLATORS"]
 ensure
   $DEBUG = old_debug
 end
