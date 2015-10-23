@@ -1873,27 +1873,6 @@ class ApplicationController < ActionController::Base
   end
   private :get_view_pages
 
-  # Generate an include string to append to "include_hash =" and eval'd
-  # This routine is called recursively (passes in the include hash)
-  def make_include_string(include)
-    rt_string = "{"                                                 # Add the :include prefix
-    include.keys.each_with_index do |table, idx|                               # Go thru all of the tables in the include
-      rt_string << "," if idx > 0                                             # Need a comma for second and higher tables
-      rt_string << "'" + table << "'" << "=>{"                                # Add the :only prefix
-      unless include[table]["columns"].nil?                                     # If there are columns
-        rt_string << ":only=>["                                               # Add the :only prefix
-        rt_string << include[table]["columns"].dup.collect! { |col| "'" << col << "'" }.join(",")  # Get all the column name strings
-        rt_string << "]"                                                      # Add final bracket for the cols array
-      end
-      unless include[table]["include"].nil?
-        rt_string << "," unless include[table]["columns"].nil?
-        rt_string << make_include_string(include[table]["include"])           # Check for an embedded include
-      end
-      rt_string << "}"                                                        # Add final bracket for the table hash
-    end
-    rt_string << "}"                                                          # Add final bracket for the include hash
-  end
-
   def get_db_view(db, options = {})
     view_yaml = view_yaml_filename(db, options)
     view      = MiqReport.new(get_db_view_yaml(view_yaml))
