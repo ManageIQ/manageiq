@@ -1118,14 +1118,16 @@ module ApplicationHelper
   end
 
   def service_workload_attributes(record)
-    attributes = {}
     if role_allows(:feature => "vms_instances_filter_accord")
-      attributes[:link] = true
-      attributes[:controller] = "vm_or_template"
-      attributes[:action] = "explorer"
-      attributes[:id] = "v-#{record.id}"
+      {
+        :link => true,
+        :controller => "vm_or_template",
+        :action => "explorer",
+        :id => "v-#{record.id}"
+      }
+    else
+      {}
     end
-    attributes
   end
 
   def title_for_hosts
