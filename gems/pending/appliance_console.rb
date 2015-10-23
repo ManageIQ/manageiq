@@ -76,6 +76,8 @@ TZ_AREAS_MAP     = Hash.new { |_h, k| k }.merge!(
 )
 TZ_AREAS_MAP_REV = Hash.new { |_h, k| k }.merge!(TZ_AREAS_MAP.invert)
 
+NETWORK_INTERFACE = "eth0"
+
 require 'util/miq-password'
 MiqPassword.key_root = "#{RAILS_ROOT}/certs"
 
@@ -95,7 +97,8 @@ require 'appliance_console/prompts'
 include ApplianceConsole::Prompts
 
 module ApplianceConsole
-  ip = Env["IP"]
+  eth0 = LinuxAdmin::NetworkInterface.new(NETWORK_INTERFACE)
+  ip = eth0.address
   # Because it takes a few seconds, get the database information once in the outside loop
   configured = ApplianceConsole::DatabaseConfiguration.configured?
   dbhost, dbtype, database = ApplianceConsole::Utilities.db_host_type_database if configured
@@ -111,11 +114,14 @@ module ApplianceConsole
 
   loop do
     begin
+      eth0.reload
+      eth0.parse_conf
+
       host     = LinuxAdmin::Hosts.new.hostname
-      ip       = Env["IP"]
-      mac      = Env["MAC"]
-      mask     = Env["MASK"]
-      gw       = Env["GW"]
+      ip       = eth0.address
+      mac      = eth0.mac_address
+      mask     = eth0.netmask
+      gw       = eth0.gateway
       dns1     = Env["DNS1"]
       dns2     = Env["DNS2"]
       order    = Env["SEARCHORDER"]
@@ -161,7 +167,15 @@ To modify the configuration, use a web browser to access the management page.
         say("DHCP Network Configuration\n\n")
         if agree("Apply DHCP network configuration? (Y/N): ")
           say("\nApplying DHCP network configuration...")
-          Env['DHCP'] = true
+
+          resolv = LinuxAdmin::Dns.new
+          resolv.search_order = []
+          resolv.nameservers = []
+          resolv.save
+
+          eth0.enable_dhcp
+          eth0.save
+
           say("\nAfter completing the appliance configuration, please restart #{I18n.t("product.name")} server processes.")
         end
 
@@ -193,11 +207,24 @@ Static Network Configuration
         if agree("Apply static network configuration? (Y/N)")
           say("\nApplying static network configuration...")
 
-          Env['STATIC'] = new_ip, new_mask, new_gw, new_dns1, new_dns2
+          resolv = LinuxAdmin::Dns.new
+          resolv.search_order = []
+          resolv.nameservers = []
+          resolv.save
 
-          # Convert space delimiter to semicolon: manageiq.com galaxy.local to manageiq.com;galaxy.local
-          # so we can pass it on the command line to miqnet.sh without quoting it
-          Env['SEARCHORDER'] = new_search_order.join("\\;") unless Env.error?
+          begin
+            network_configured = eth0.apply_static(new_ip, new_mask, new_gw, [new_dns1, new_dns2], new_search_order)
+          rescue ArgumentError => e
+            say("\nNetwork configuration failed: #{e.massage}")
+            press_any_key
+            next
+          end
+
+          unless network_configured
+            say("\nNetwork interface failed to start using the values supplied.")
+            press_any_key
+            next
+          end
 
           say("\nAfter completing the appliance configuration, please restart #{I18n.t("product.name")} server processes.")
         end
@@ -212,8 +239,11 @@ Static Network Configuration
         if new_host != host
           say("Applying new hostname...")
           system_hosts = LinuxAdmin::Hosts.new
+
+          system_hosts.parsed_file.each { |line| line[:hosts].to_a.delete(host) } unless host =~ /^localhost.*/
+
           system_hosts.hostname = new_host
-          system_hosts.update_entry(ip, new_host)
+          system_hosts.update_entry("127.0.0.1", new_host)
           system_hosts.save
           LinuxAdmin::Service.new("network").restart
         end
