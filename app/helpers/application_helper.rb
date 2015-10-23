@@ -601,7 +601,7 @@ module ApplicationHelper
   # Format a column in a report view for display on the screen
   def format_col_for_display(view, row, col, tz = nil)
     tz ||= ["miqschedule"].include?(view.db.downcase) ? MiqServer.my_server.server_timezone : Time.zone
-    view.format(col, row[col], :tz => tz).gsub(/\\/, '\&')    # Call format, then escape any backslashes
+    view.format(col, row[col], :tz => tz).gsub(/\\/, '\&') # Call format, then escape any backslashes
   end
 
   def check_if_button_is_implemented
@@ -1109,10 +1109,10 @@ module ApplicationHelper
   def vm_infra_explorer_accords_attributes(record)
     if role_allows(:feature => "vandt_accord") || role_allows(:feature => "vms_filter_accord")
       {
-        :link => true,
+        :link       => true,
         :controller => "vm_infra",
-        :action => "show",
-        :id => record.id
+        :action     => "show",
+        :id         => record.id
       }
     end
   end
@@ -1120,10 +1120,10 @@ module ApplicationHelper
   def service_workload_attributes(record)
     if role_allows(:feature => "vms_instances_filter_accord")
       {
-        :link => true,
+        :link       => true,
         :controller => "vm_or_template",
-        :action => "explorer",
-        :id => "v-#{record.id}"
+        :action     => "explorer",
+        :id         => "v-#{record.id}"
       }
     else
       {}
