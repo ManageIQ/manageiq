@@ -232,5 +232,20 @@ describe OpsController do
         end
       end
     end
+
+    context "#restore_password" do
+      it "populates the password from the record if params[:restore_password] exists" do
+        db_opts = {:username => "username", :password => "password"}
+        MiqDbConfig.any_instance.stub(:options).and_return(db_opts)
+        edit = {:new => {}}
+        controller.instance_variable_set(:@edit, edit)
+        controller.instance_variable_set(:@_params,
+                                         :restore_password => true,
+                                         :production_password => "[FILTERED]",
+                                         :production_verify   => "[FILTERED]")
+        controller.send(:restore_password)
+        assigns(:edit)[:new][:password].should == MiqDbConfig.current.options[:password]
+      end
+    end
   end
 end
