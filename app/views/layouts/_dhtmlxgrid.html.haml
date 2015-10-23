@@ -38,25 +38,21 @@
   %thead
     %tr
       - grid_hash[:head].each do |h|
-        %th{:class => (h[:type] == 'ch') ? 'narrow' : ''}
+        %th{:class => h[:is_narrow] ? 'narrow' : ''}
           = h[:text]
   %tbody
     - grid_hash[:rows].each do |row|
       %tr
       - row[:cells].each do |cell|
         %td
-          - unless cell[:checked].nil?
+          - if cell[:is_checkbox]
             = check_box_tag("check_#{row[:id]}", 1, cell[:checked],
               :onclick => "miqUpdateButtons(this, '#{button_div}');")
-          - if cell[:is_button]
-            %button.btn.btn-default{:onclick => cell[:onclick],
-                                    :title => cell[:title]}
-              - if cell[:image]
-                - p cell[:image]
-                = image_tag("/images/dhtmlxgrid/" + cell[:image], :alt => cell[:title], :title => cell[:title])
+          - elsif cell[:is_button]
+            %button.btn.btn-primary{:onclick => cell[:onclick],
+                                    :title   => cell[:title],
+                                    :alt     => cell[:title]}
               = cell[:text]
-          - elsif cell[:image]
-            = image_tag(cell[:image], :alt => cell[:title], :title => cell[:title])
-            = cell[:text]
           - else
+            = image_tag(cell[:image], :alt => cell[:title], :title => cell[:title]) if cell[:image]
             = cell[:text]

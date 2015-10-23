@@ -1079,14 +1079,13 @@ class ApplicationController < ActionController::Base
     root = {:head => [], :rows => []}
 
     # Show checkbox or placeholder column
-    if @embedded || @no_checkboxes  # TODO params
-      root[:head] << {:type => 'ro', :width => 1, :align => 'center', :text => ''}
-    else
-      root[:head] << {:type => 'ch', :width => 25, :align => 'center', :text => ''}
+    unless @embedded || @no_checkboxes  # TODO params
+      root[:head] << {:is_narrow => true}
     end
 
     unless %w(miqaeclass miqaeinstance).include?(view.db.downcase)  # do not add listicon for AE class show_list
-      root[:head] << {:type => 'ro', :width => 36, :align => 'center', :text => ''}  # Icon column
+      # Icon column
+      root[:head] << {:is_narrow => true}
     end
 
     cols_key = create_cols_key(view)
@@ -1099,22 +1098,25 @@ class ApplicationController < ActionController::Base
 
       align = [:fixnum, :integer, :Fixnum, :float].include?(column_type(view.db, view.col_order[i])) ? 'right' : 'left'
 
-      root[:head] << {:type  => 'ro',
-               :width => col_width.to_i,
-               :sort  => 'str',
-               :align => align,
-               :text  => h}
+      root[:head] << {:text  => h,
+                      :width => col_width.to_i,
+                      :sort  => 'str',
+                      :align => align}
     end
 
     if @row_button  # Show a button as last col
-      root[:head] << {:type => 'ro', :width => 100, :align => 'center', :text => ''}
+      root[:head] << {:is_narrow => true}
     end
 
     # Add table elements
     table = view.sub_table ? view.sub_table : view.table
     table.data.each do |row|
-      new_row = {:id => list_row_id(row), :cells => [{:text => '', :checked => false}]}
+      new_row = {:id => list_row_id(row), :cells => []}
       root[:rows] << new_row
+
+      unless @embedded || @no_checkboxes
+        new_row[:cells] << {:is_checkbox => true}
+      end
 
       # Generate html for the list icon
       # do not add listicon for AE class show_list
@@ -1147,11 +1149,10 @@ class ApplicationController < ActionController::Base
       end
 
       if @row_button # Show a button in the last col
-        new_row[:cells] << {:title     => @row_button[:title],
-                            :is_button => true,
-                            :text      => "",
-                            :onclick   => "#{@row_button[:function]}(\"#{row['id']}\");",
-                            :image     => @row_button[:image]}
+        new_row[:cells] << {:is_button => true,
+                            :text      => @row_button[:label],
+                            :title     => @row_button[:title],
+                            :onclick   => "#{@row_button[:function]}(\"#{row['id']}\");"}
       end
     end
 
@@ -1202,7 +1203,7 @@ class ApplicationController < ActionController::Base
             when OsProcess, EventLog   then "#{pn}#{@listicon.downcase}.png"
             when Service, ServiceTemplate
               if item.try(:picture)
-                "../../../pictures/#{item.picture.basename}"
+                "/pictures/#{item.picture.basename}"
               end
             end
     list_row_image(pn, image, (@listicon || view.db).underscore, item)

@@ -40,7 +40,7 @@
                       = h(format_col_for_display(view, row, col))
             - if @row_button && @gtl_small_tiles
               %div{:align => "right", :style => "width: inherit;"}
-                = button_tag("#{@row_button[:image]}",
+                = button_tag("#{@row_button[:label]}",
                   :class   => "btn btn-primary",
                   :alt     => @row_button[:title],
                   :title   => @row_button[:title],

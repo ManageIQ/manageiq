@@ -950,7 +950,7 @@ class CatalogController < ApplicationController
       @gtl_buttons = ["view_list", "view_tile"]
       @gtl_small_tiles = true
       if role_allows(:feature => 'svc_catalog_provision')
-        @row_button = {:image    => "Order",
+        @row_button = {:label    => "Order",
                        :function => "miqOrderService",
                        :title    => "Order this Service"} # Show a button instead of the checkbox
       end
