@@ -4,6 +4,7 @@ FactoryGirl.define do
 
   factory :kubernetes_container,
           :aliases => ['app/models/manageiq/providers/kubernetes/container_manager/container'],
-          :class   => 'ManageIQ::Providers::Kubernetes::ContainerManager::Container' do
+          :class   => 'ManageIQ::Providers::Kubernetes::ContainerManager::Container',
+          :parent  => :container do
   end
 end
