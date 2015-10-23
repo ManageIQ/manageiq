@@ -601,11 +601,7 @@ module ApplicationHelper
   # Format a column in a report view for display on the screen
   def format_col_for_display(view, row, col, tz = nil)
     tz ||= ["miqschedule"].include?(view.db.downcase) ? MiqServer.my_server.server_timezone : Time.zone
-    celltext = view.format(col,
-                           row[col],
-                           :tz => tz
-                          ).gsub(/\\/, '\&')    # Call format, then escape any backslashes
-    celltext
+    view.format(col, row[col], :tz => tz).gsub(/\\/, '\&')    # Call format, then escape any backslashes
   end
 
   def check_if_button_is_implemented
