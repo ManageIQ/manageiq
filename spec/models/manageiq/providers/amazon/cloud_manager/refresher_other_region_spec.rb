@@ -171,7 +171,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       :bios               => nil,
       :annotation         => nil,
       :numvcpus           => 1, # wtf
-      :memory_cpu         => nil,
+      :memory_mb          => nil,
       :disk_capacity      => nil,
       :bitness            => 64
     )
@@ -227,7 +227,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       :bios               => nil,
       :annotation         => nil,
       :numvcpus           => 1,
-      :memory_cpu         => 613, # MB
+      :memory_mb          => 613,
       :disk_capacity      => 0, # TODO: Change to a flavor that has disks
       :bitness            => 64
     )

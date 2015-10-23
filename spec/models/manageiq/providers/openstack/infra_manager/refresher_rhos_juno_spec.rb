@@ -1,4 +1,3 @@
-
 require "spec_helper"
 
 describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
@@ -113,7 +112,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
       :cpu_type           => "RHEL 7.1.0 PC (i440FX + PIIX, 1996)",
       :manufacturer       => "Red Hat",
       :model              => "KVM",
-      :memory_cpu         => 8192,  # MB
+      :memory_mb          => 8192,
       :memory_console     => nil,
       :disk_capacity      => 40,
       :numvcpus           => 4,

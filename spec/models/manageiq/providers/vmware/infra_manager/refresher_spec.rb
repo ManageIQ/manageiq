@@ -228,7 +228,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       :manufacturer       => "Dell Inc.",
       :model              => "PowerEdge R410",
       :number_of_nics     => 4,
-      :memory_cpu         => 57334,
+      :memory_mb          => 57334,
       :memory_console     => nil,
       :numvcpus           => 2,
       :logical_cpus       => 8,
@@ -363,7 +363,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       :bios               => "422f5d16-c048-19e6-3212-e588fbebf7e0",
       :numvcpus           => 2,
       :annotation         => nil,
-      :memory_cpu         => 4096
+      :memory_mb          => 4096
     )
 
     v.hardware.disks.size.should == 5

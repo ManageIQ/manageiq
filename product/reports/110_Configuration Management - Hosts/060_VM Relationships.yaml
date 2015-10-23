@@ -15,7 +15,7 @@ priority:
 col_order: 
 - host.hostname
 - name
-- hardware.memory_cpu
+- hardware.memory_mb
 - hardware.size_on_disk
 - managed.power_state
 timeline: 
@@ -23,11 +23,11 @@ id: 93
 file_mtime: 
 categories: 
 rpt_type: Custom
-filename: 
-include: 
-  hardware: 
-    columns: 
-    - memory_cpu
+filename:
+include:
+  hardware:
+    columns:
+    - memory_mb
     - size_on_disk
   managed: 
     columns: 

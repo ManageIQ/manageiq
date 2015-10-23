@@ -190,7 +190,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
 
     @containernode.hardware.should have_attributes(
       :logical_cpus => 2,
-      :memory_cpu   => 2000
+      :memory_mb    => 2000
     )
 
     @containernode.ready_condition_status.should_not be_nil

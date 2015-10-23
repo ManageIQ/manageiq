@@ -11,7 +11,7 @@ rpt_group: Custom
 priority: 10
 col_order:
 - name
-- hardware.memory_cpu
+- hardware.memory_mb
 - hardware.logical_cpus
 - disks.controller_type
 - disks.device_type
@@ -27,7 +27,7 @@ filename:
 include:
   hardware:
     columns:
-    - memory_cpu
+    - memory_mb
     - logical_cpus
     include:
       disks:

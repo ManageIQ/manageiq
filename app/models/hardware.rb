@@ -122,7 +122,7 @@ class Hardware < ActiveRecord::Base
   end
 
   def m_memory(_parent, xmlNode, _deletes)
-    self.memory_cpu = xmlNode.attributes["memsize"]
+    self.memory_mb = xmlNode.attributes["memsize"]
   end
 
   def m_bios(_parent, xmlNode, _deletes)

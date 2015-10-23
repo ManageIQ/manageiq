@@ -14,7 +14,7 @@ describe Chargeback do
     @vm1 = FactoryGirl.create(:vm_vmware, :name => "test_vm")
     @vm1.tag_with(@tag.name, :ns => '*')
 
-    @host1   = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :memory_cpu => 8124, :logical_cpus => 1, :cpu_speed => 9576), :vms => [@vm1])
+    @host1   = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :memory_mb => 8124, :logical_cpus => 1, :cpu_speed => 9576), :vms => [@vm1])
     @storage = FactoryGirl.create(:storage_target_vmware)
     @host1.storages << @storage
 

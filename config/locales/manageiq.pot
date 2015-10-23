@@ -19659,7 +19659,7 @@ msgid "m"
 msgstr ""
 
 #: ../../app/models/miq_alert.rb:415
-msgid "memory_cpu"
+msgid "memory_mb"
 msgstr ""
 
 #: ../../lib/report_formatter/chart_common.rb:391 ../../lib/report_formatter/chart_common.rb:423 ../../lib/report_formatter/chart_common.rb:471 ../../lib/report_formatter/chart_common.rb:501 ../../lib/report_formatter/chart_common.rb:504

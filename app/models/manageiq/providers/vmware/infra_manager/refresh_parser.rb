@@ -300,7 +300,7 @@ module ManageIQ::Providers
           result[:number_of_nics] = hdw["numNics"] unless hdw["numNics"].blank?
 
           # Value provided by VC is in bytes, need to convert to MB
-          result[:memory_cpu] = is_numeric?(hdw["memorySize"]) ? (hdw["memorySize"].to_f / 1048576).round : nil
+          result[:memory_mb] = is_numeric?(hdw["memorySize"]) ? (hdw["memorySize"].to_f / 1.megabyte).round : nil
           unless console.nil?
             result[:memory_console] = is_numeric?(console["serviceConsoleReserved"]) ? (console["serviceConsoleReserved"].to_f / 1048576).round : nil
           end
@@ -816,7 +816,7 @@ module ManageIQ::Providers
         end
 
         result[:annotation] = inv["annotation"] unless inv["annotation"].blank?
-        result[:memory_cpu] = inv["memorySizeMB"] unless inv["memorySizeMB"].blank?
+        result[:memory_mb] = inv["memorySizeMB"] unless inv["memorySizeMB"].blank?
         result[:virtual_hw_version] = config['version'].to_s.split('-').last if config && config['version']
 
         result

@@ -54,9 +54,9 @@ module ContainerNodeHelper::TextualSummary
   end
 
   def textual_memory
-    if @record.try(:hardware).try(:memory_cpu)
+    if @record.try(:hardware).try(:memory_mb)
       memory = number_to_human_size(
-        @record.hardware.memory_cpu * 1.megabyte, :precision => 0)
+        @record.hardware.memory_mb * 1.megabyte, :precision => 0)
     else
       memory = "N/A"
     end

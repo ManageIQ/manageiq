@@ -108,7 +108,7 @@ class MiqScvmmVm
     hardware = {}
     hardware[:numvcpus] = props[:CPUCount]
     hardware[:annotation] = props[:Description]
-    hardware[:memory_cpu] = props[:Memory]
+    hardware[:memory_mb] = props[:Memory]
     hardware[:guest_os_full_name] = hardware[:guest_os] = "Other"
     hardware[:guest_devices] = guest_devices_inv_to_h
 
