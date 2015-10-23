@@ -124,7 +124,7 @@ source "https://rails-assets.org" do
   gem "rails-assets-markusslima--bootstrap-filestyle","~>1.2.1"
   gem "rails-assets-bootstrap-hover-dropdown",        "~>2.0.11"
   gem "rails-assets-bootstrap-select",                "~>1.7.3"
-  gem "rails-assets-kubernetes-topology-graph",       "=0.0.17"
+  gem "rails-assets-kubernetes-topology-graph",       "=0.0.18"
   gem "rails-assets-moment",                          "~>2.10.3"
   gem "rails-assets-moment-strftime",                 "~>0.1.5"
   gem "rails-assets-moment-timezone",                 "~>0.4.0"
