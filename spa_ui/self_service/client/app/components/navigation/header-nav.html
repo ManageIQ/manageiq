@@ -15,28 +15,18 @@
   <nav class="collapse navbar-collapse">
     <ul class="nav navbar-nav">
       <li>
-        <a ng-href="{{vm.API_BASE}}" target="_blank" class="nav-item-iconic nav-item-iconic-new-window">          <i title="Open" class="fa fa-external-link"></i>
+        <a ng-href="{{vm.API_BASE}}" target="_blank" class="nav-item-iconic nav-item-iconic-new-window">          
+          <i title="Open" class="fa fa-external-link"></i>
         </a>
       </li>
     </ul>
     <ul class="nav navbar-nav navbar-right navbar-iconic">
       <li dropdown>
         <a dropdown-toggle class="nav-item-iconic">
-          <i title="Help" class="fa pficon-help"></i>
-          <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-          <li><a href="#">Help</a></li>
-          <li><a href="#">About</a></li>
-        </ul>
-      </li>
-      <li dropdown>
-        <a dropdown-toggle class="nav-item-iconic">
           <i title="Username" class="fa pficon-user"></i>
           <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
-          <li class="action"><a href="#">Preferences</a></li>
           <li class="action"><a ui-sref="logout">Logout</a></li>
         </ul>
       </li>
