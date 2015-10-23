@@ -50,7 +50,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
     Disk.count.should eql(11)
     GuestDevice.count.should eql(0)
     Hardware.count.should eql(9)
-    Network.count.should eql(18)
+    Network.count.should eql(15)
     OperatingSystem.count.should eql(9)
     Relationship.count.should eql(0)
     MiqQueue.count.should eql(9)
@@ -126,12 +126,12 @@ describe ManageIQ::Providers::Azure::CloudManager do
     v = ManageIQ::Providers::Azure::CloudManager::Vm.where(:name => "Chef-Prod", :raw_power_state => "VM running").first
     v.should have_attributes(
       :template              => false,
-      :ems_ref               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\Chef-Prod\\microsoft.compute/virtualmachines\\Chef-Prod",
+      :ems_ref               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\chef-prod\\microsoft.compute/virtualmachines\\Chef-Prod",
       :ems_ref_obj           => nil,
-      :uid_ems               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\Chef-Prod\\microsoft.compute/virtualmachines\\Chef-Prod",
+      :uid_ems               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\chef-prod\\microsoft.compute/virtualmachines\\Chef-Prod",
       :vendor                => "Microsoft",
       :power_state           => "on",
-      :location              => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\Chef-Prod\\microsoft.compute/virtualmachines\\Chef-Prod",
+      :location              => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\chef-prod\\microsoft.compute/virtualmachines\\Chef-Prod",
       :tools_status          => nil,
       :boot_time             => nil,
       :standby_action        => nil,
@@ -216,12 +216,12 @@ describe ManageIQ::Providers::Azure::CloudManager do
   def assert_specific_vm_powered_off_attributes(v)
     v.should have_attributes(
       :template              => false,
-      :ems_ref               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\microsoft.compute/virtualmachines\\MIQ2",
+      :ems_ref               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\computevms\\microsoft.compute/virtualmachines\\MIQ2",
       :ems_ref_obj           => nil,
-      :uid_ems               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\microsoft.compute/virtualmachines\\MIQ2",
+      :uid_ems               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\computevms\\microsoft.compute/virtualmachines\\MIQ2",
       :vendor                => "Microsoft",
       :power_state           => "off",
-      :location              => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\microsoft.compute/virtualmachines\\MIQ2",
+      :location              => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\computevms\\microsoft.compute/virtualmachines\\MIQ2",
       :tools_status          => nil,
       :boot_time             => nil,
       :standby_action        => nil,
@@ -261,7 +261,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
   def assert_specific_orchestration_template
     @orch_template = OrchestrationTemplateAzure.where(:name => "spec-deployment1-dont-delete").first
     @orch_template.should have_attributes(
-      :md5 => "3036f29db21966d557c9865e107d93b0",
+      :md5 => "83c7f9914808a5ca7c000477a6daa7df"
     )
     @orch_template.description.should eql('contentVersion: 1.0.0.0')
     @orch_template.content.should start_with("{\n  \"$schema\": \"http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json\"")
@@ -336,5 +336,9 @@ describe ManageIQ::Providers::Azure::CloudManager do
     # orchestration stack can have vms
     vm = ManageIQ::Providers::Azure::CloudManager::Vm.where(:name => "spec-VM1").first
     vm.orchestration_stack.should eql(@orch_stack)
+
+    # orchestration stack can have cloud networks
+    cloud_network = CloudNetwork.where(:name => 'spec-VNET').first
+    cloud_network.orchestration_stack.should eql(@orch_stack)
   end
 end
