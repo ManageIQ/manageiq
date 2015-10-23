@@ -89,7 +89,6 @@ require 'appliance_console/internal_database_configuration'
 require 'appliance_console/external_database_configuration'
 require 'appliance_console/external_httpd_authentication'
 require 'appliance_console/temp_storage_configuration'
-require 'appliance_console/env'
 require 'appliance_console/key_configuration'
 require 'appliance_console/scap'
 
@@ -177,6 +176,7 @@ To modify the configuration, use a web browser to access the management page.
           eth0.save
 
           say("\nAfter completing the appliance configuration, please restart #{I18n.t("product.name")} server processes.")
+          press_any_key
         end
 
       when I18n.t("advanced_settings.static")
@@ -227,6 +227,7 @@ Static Network Configuration
           end
 
           say("\nAfter completing the appliance configuration, please restart #{I18n.t("product.name")} server processes.")
+          press_any_key
         end
 
       when I18n.t("advanced_settings.testnet")
@@ -246,6 +247,7 @@ Static Network Configuration
           system_hosts.update_entry("127.0.0.1", new_host)
           system_hosts.save
           LinuxAdmin::Service.new("network").restart
+          press_any_key
         end
 
       when I18n.t("advanced_settings.datetime")
@@ -307,6 +309,7 @@ Date and Time Configuration
             say("Failed to apply time and timezone configuration")
             Logging.logger.error("Failed to apply time and timezone configuration: #{e.message}")
           end
+          press_any_key
         end
 
       when I18n.t("advanced_settings.httpdauth")
@@ -335,6 +338,7 @@ Date and Time Configuration
         else
           say("\n#{I18n.t("product.name")} Server is not running...")
         end
+        press_any_key
 
       when I18n.t("advanced_settings.evmstart")
         say("#{selection}\n\n")
@@ -342,13 +346,14 @@ Date and Time Configuration
           say("\nStarting #{I18n.t("product.name")} Server...")
           Logging.logger.info("EVM server start initiated by appliance console.")
           LinuxAdmin::Service.new("evmserverd").start
+          press_any_key
         end
 
       when I18n.t("advanced_settings.dbrestore")
         say("#{selection}\n\n")
         ApplianceConsole::Utilities.bail_if_db_connections "preventing a database restore"
 
-        task_with_opts = ""
+        task_params = []
         uri = nil
 
         # TODO: merge into 1 prompt
@@ -356,18 +361,21 @@ Date and Time Configuration
         when RESTORE_LOCAL
           validate = ->(a) { File.exist?(a) }
           uri = just_ask("location of the local restore file", DB_RESTORE_FILE, validate, "file that exists")
-          task_with_opts = "evm:db:restore:local -- --local-file '#{uri}'"
+          task = "evm:db:restore:local"
+          task_params = ["--", {:local_file => uri}]
 
         when RESTORE_NFS
           uri = ask_for_uri("location of the remote backup file\nExample: #{sample_url('nfs')})", "nfs")
-          task_with_opts = "evm:db:restore:remote -- --uri '#{uri}'"
+          task = "evm:db:restore:remote"
+          task_params = ["--", {:uri => uri}]
 
         when RESTORE_SMB
           uri = ask_for_uri("location of the remote backup file\nExample: #{sample_url('smb')}", "smb")
           user = just_ask("username with access to this file.\nExample: 'mydomain.com/user'")
           pass = ask_for_password("password for #{user}")
 
-          task_with_opts = "evm:db:restore:remote -- --uri '#{uri}' --uri-username '#{user}' --uri-password '#{pass}'"
+          task = "evm:db:restore:remote"
+          task_params = ["--", {:uri => uri, :uri_username => user, :uri_password => pass}]
 
         when CANCEL
           raise MiqSignalError
@@ -385,11 +393,15 @@ Date and Time Configuration
         say "\nNote: A database restore cannot be undone.  The restore will use the file: #{uri}.\n"
         if agree("Are you sure you would like to restore the database? (Y/N): ")
           say("\nRestoring the database...")
-          if Env.rake(task_with_opts) && delete_agreed
+          rake_success = ApplianceConsole::Utilities.rake(task, task_params)
+          if rake_success && delete_agreed
             say("\nRemoving the database restore file #{DB_RESTORE_FILE}...")
             File.delete(DB_RESTORE_FILE)
+          elsif !rake_success
+            say("\nDatabase restore failed")
           end
         end
+        press_any_key
 
       when I18n.t("advanced_settings.dbregion_setup")
         say("#{selection}\n\n")
@@ -409,8 +421,11 @@ Date and Time Configuration
         if agree("Setting Database Region to: #{region_number}\nAre you sure you want to continue? (Y/N): ")
           say("Setting Database Region...  This process may take a few minutes.\n\n")
 
-          if Env.rake("evm:db:region -- --region #{region_number} 1>> #{LOGFILE}")
-            say("Database region setup complete...\nStart the #{I18n.t("product.name")} server processes via '#{I18n.t("advanced_settings.evmstart")}'.")
+          if ApplianceConsole::Utilities.rake("evm:db:region", ["--", {:region => region_number}])
+            say("Database region setup complete...")
+            say("Start the #{I18n.t("product.name")} server processes via '#{I18n.t("advanced_settings.evmstart")}'.")
+          else
+            say("Database region setup failed.")
           end
           press_any_key
         else
@@ -535,17 +550,6 @@ Date and Time Configuration
     rescue MiqSignalError
       # If a signal is caught anywhere in the inner (after login) loop, go back to the summary screen
       next
-    ensure
-      if Env.changed?
-        if (errtext = Env.error)
-          say("\nAn error occurred:\n\n#{errtext}")
-        else
-          say("\nCompleted successfully.")
-        end
-        press_any_key
-
-      end
-      Env.clear_errors
     end
   end
 end
