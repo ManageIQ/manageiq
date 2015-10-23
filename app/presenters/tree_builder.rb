@@ -302,6 +302,7 @@ class TreeBuilder
                           # TreeBuilderCondition - :type
                           # TreeBuilderContainersFilter - :leaf
                           # TreeBuilderForemanConfiguredSystems - :leaf
+                          # TreeBuilderPolicy - :type
                           # TreeBuilderReportDashboards - :type
                           # TreeBuilderVmsFilter - :leaf
                           x_get_tree_custom_kids(parent, count_only, options)

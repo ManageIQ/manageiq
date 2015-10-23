@@ -47,7 +47,7 @@ class TreeBuilderPolicy < TreeBuilder
   end
 
   # level 2 & 3...
-  def x_get_tree_custom_kids(parent, count_only, _options)
+  def x_get_tree_custom_kids(parent, count_only, options)
     assert_type(options[:type], :policy)
 
     # level 2 - host and vm under compliance/control
