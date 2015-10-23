@@ -522,10 +522,6 @@ module ApplicationHelper
   def javascript_for_ae_node_selection(id, prev_id, select)
     "miqSetAETreeNodeSelectionClass('#{id}', '#{prev_id}', '#{select ? true : false}');".html_safe
   end
-
-  def javascript_set_value(element_id, value)
-    "$('##{element_id}').val('#{value}');"
-  end
   ############# End of methods that generate JS lines for render page blocks
 
   def set_edit_timer_from_schedule(schedule)
