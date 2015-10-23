@@ -7,7 +7,12 @@ describe ManageIQ::Providers::Azure::CloudManager::OrchestrationStack do
     FactoryGirl.create(:orchestration_stack_azure, :ext_management_system => ems, :name => 'test')
   end
   let(:orchestration_service) { double }
-  let(:the_raw_stack) { {'id' => 'one_id'} }
+  let(:the_raw_stack) do
+    Azure::Armrest::TemplateDeployment.new(
+      'id'         => 'one_id',
+      'properties' => {'provisioningState' => 'Succeeded'}
+    )
+  end
 
   before do
     allow(ManageIQ::Providers::Azure::CloudManager).to receive(:raw_connect).and_return(double)
@@ -20,9 +25,9 @@ describe ManageIQ::Providers::Azure::CloudManager::OrchestrationStack do
         expect(orchestration_service).to receive(:create).and_return(the_raw_stack)
 
         stack = OrchestrationStack.create_stack(ems, 'mystack', template, {})
-        stack.class.should == described_class
-        stack.name.should == 'mystack'
-        stack.ems_ref.should == the_raw_stack['id']
+        stack.class.should   == described_class
+        stack.name.should    == 'mystack'
+        stack.ems_ref.should == the_raw_stack.id
       end
 
       it 'catches errors from provider' do
@@ -61,7 +66,6 @@ describe ManageIQ::Providers::Azure::CloudManager::OrchestrationStack do
     context '#raw_status and #raw_exists' do
       it 'gets the stack status and reason' do
         allow(orchestration_service).to receive(:get).and_return(the_raw_stack)
-        the_raw_stack['properties'] = {'provisioningState' => 'Succeeded'}
 
         rstatus = orchestration_stack.raw_status
         expect(rstatus).to have_attributes(:status => 'Succeeded', :reason => nil)

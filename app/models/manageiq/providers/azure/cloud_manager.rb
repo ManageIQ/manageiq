@@ -40,7 +40,7 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
 
   def verify_credentials(_auth_type = nil, options = {})
     connect(options)
-  rescue RestClient::Unauthorized
+  rescue Azure::Armrest::UnauthorizedException
     raise MiqException::MiqHostError, "Incorrect credentials - check your Azure Client ID and Client Key"
   rescue StandardError => err
     _log.error("Error Class=#{err.class.name}, Message=#{err.message}")
