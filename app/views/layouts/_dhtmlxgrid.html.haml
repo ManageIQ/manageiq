@@ -31,8 +31,17 @@
     opts: #{raw js_options.to_json},
     hash: #{raw grid_hash.to_json},
     obj:  null,
-  };  // TODO who touches grids[*].xml?
+  };  // TODO who touches grids[*].xml? and obj?
 
+
+- row_url = js_options[:row_url]
+- if row_url.ends_with? '_none_'
+  - row_url = nil
+- if row_url && (! row_url.ends_with? '/') && (! row_url.ends_with? '=')
+  - row_url += '/'
+- row_url = row_url.nil? ? 'null' : "'#{j row_url}'"
+
+- row_url_ajax = !! js_options[:row_url_ajax]
 
 %table.table.table-striped.table-bordered.table-hover.table-selectable
   %thead
@@ -42,14 +51,14 @@
           = h[:text]
   %tbody
     - grid_hash[:rows].each do |row|
-      %tr
+      %tr{:onclick => "miqRowClick('#{j row[:id]}', #{raw row_url}, #{j row_url_ajax.to_s}); return false;"}
         - row[:cells].each do |cell|
-          %td
+          %td{:onclick => (cell[:is_checkbox] || cell[:is_button]) ? "event.stopPropagation()" : nil}
             - if cell[:is_checkbox]
               = check_box_tag("check_#{row[:id]}", 1, cell[:checked],
-                :onclick => "miqUpdateButtons(this, '#{button_div}');")
+                :onclick => "miqUpdateButtons(this, '#{button_div}')")
             - elsif cell[:is_button]
-              %button.btn.btn-primary{:onclick => cell[:onclick],
+              %button.btn.btn-primary{:onclick => cell[:onclick] + "; return false;",
                                       :title   => cell[:title],
                                       :alt     => cell[:title]}
                 = cell[:text]

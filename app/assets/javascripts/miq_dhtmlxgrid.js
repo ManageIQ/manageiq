@@ -1,19 +1,16 @@
-// Functions used by MIQ for the dhtmlxtree control
-
 // Handle row click (ajax or normal html trans)
-function miqRowClick(self, row_id, cell_idx, row_url, row_url_ajax) {
-  var cell = self.cells(row_id, cell_idx);
-  if (cell_idx && !cell.getAttribute('is_button')) {
-    if (! _.endsWith(row_url, "/") && ! _.endsWith(row_url, "=")) {
-      row_url = row_url + "/";
-    }
-    if (row_url_ajax) {
-      miqJqueryRequest(row_url + row_id, {beforeSend: true, complete: true});
-    } else {
-      DoNav(row_url + row_id);
-    }
+function miqRowClick(row_id, row_url, row_url_ajax) {
+  if (! row_url)
+    return;
+
+  if (row_url_ajax) {
+    miqJqueryRequest(row_url + row_id, {beforeSend: true, complete: true});
+  } else {
+    DoNav(row_url + row_id);
   }
 }
+
+// Functions used by MIQ for the dhtmlxtree control
 
 // Handle row click
 function miqRequestRowSelected(row_id) {
@@ -82,9 +79,11 @@ function miqInitGrids() {
 
 // Initialize a single grid (is called directly after an AJAX trans)
 function miqInitGrid(grid_name) {
+  return;  // TODO
+
   var grid_hash = ManageIQ.grids.grids[grid_name]; // Get the hash for the passed in grid
   var miq_grid_checks = ""; // Keep track of the grid checkboxes
-  return;  // TODO
+
   // Build the grid object, then point a local var at it
   //var grid = new dhtmlXGridObject(grid_hash.g_id);
   ManageIQ.grids.grids[grid_name].obj = grid;
@@ -98,14 +97,6 @@ function miqInitGrid(grid_name) {
   //grid.setImagePath("/images/dhtmlxgrid/");
   //grid.imgURL = "/images/dhtmlxgrid/";
   grid.setSkin("style3");
-
-  grid.enableAlterCss("miq_row0", "miq_row1");
-  grid.enableMultiselect(false);
-
-  // Load the grid with XML data, if present
-  if (grid_hash.xml) {
-    grid.parse(grid_hash.xml);
-  }
 
   if (options.autosize) {
     grid.enableAutoHeight(true);
@@ -127,13 +118,6 @@ function miqInitGrid(grid_name) {
 
   grid.attachEvent("onCheck", miqGridOnCheck);
   grid.attachEvent("onBeforeSorting", miqGridSort);
-
-  // checking existence on "_none_" at the end of string
-  if (options.row_url && options.row_url.lastIndexOf("_none_") != (options.row_url.length - 6) ) {
-    grid.attachEvent("onRowSelect", function(row_id, cell_idx) {
-      return miqRowClick(this, row_id, cell_idx, options.row_url, options.row_url_ajax);
-    });
-  }
 
   grid.attachEvent("onResize", miqResizeCol); // Method called when resize starts
   grid.attachEvent("onResizeEnd", miqResizeColEnd); // Medhod called when resize ends
