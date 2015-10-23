@@ -11,22 +11,6 @@ module ApplicationHelper
     (@css || {}).fetch_path(:background_color) || 'black'
   end
 
-  # From http://www.juixe.com/techknow/index.php/2006/07/15/acts-as-taggable-tag-cloud
-  #   which refers to http://blog.craz8.com/articles/2005/10/28/acts_as_taggable-is-a-cool-piece-of-code
-  def tag_cloud(tags, classes)
-    max, min = 0, 0
-    tags.each do |t|
-      max = t.count.to_i if t.count.to_i > max
-      min = t.count.to_i if t.count.to_i < min
-    end
-
-    divisor = ((max - min) / classes.size) + 1
-
-    tags.each do |t|
-      yield t.name, classes[(t.count.to_i - min) / divisor]
-    end
-  end
-
   # Create a collapsed panel based on a condition
   def miq_accordion_panel(title, condition, id, &block)
     content_tag(:div, :class => "panel panel-default") do
