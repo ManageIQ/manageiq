@@ -143,7 +143,7 @@ class TreeBuilder
     # Save node as open
     open_node(id)
 
-    x_get_tree_objects(object, @tree_state.x_tree(@name), nil, parents).map do |o|
+    x_get_tree_objects(object, @tree_state.x_tree(@name), false, parents).map do |o|
       x_build_node_dynatree(o, id, @tree_state.x_tree(@name))
     end
   end
@@ -247,7 +247,7 @@ class TreeBuilder
   # :add_root               # If true, put a root node at the top
   # :full_ids               # stack parent id on top of each node id
   def x_build_dynatree(options)
-    children = x_get_tree_objects(nil, options, nil, [])
+    children = x_get_tree_objects(nil, options, false, [])
 
     child_nodes = children.map do |child|
       # already a node? FIXME: make a class for node
@@ -271,15 +271,7 @@ class TreeBuilder
   #   :open_all             # if true open all node (no autoload)
   #   :load_children
   # parents --- an Array of parent object ids, starting from tree root + 1, ending with parent's parent; only available when full_ids and not lazy
-  def x_get_tree_objects(parent, options, count_only = false, parents = [])
-    # FIXME: To limit the use of options and make mandatory arguments explitic,
-    # we need to fix all the callers and functions to pass count_only as an
-    # argument and not part of options.; same for parents
-    count_only = options[:count_only] if options[:count_only]
-    options = options.dup
-    options[:count_only] = count_only
-    options[:parents] = parents
-
+  def x_get_tree_objects(parent, options, count_only, parents)
     children_or_count = case parent
                         when nil                 then
                           # options are only required for the following TreeBuilder ancestors:
@@ -288,7 +280,8 @@ class TreeBuilder
                           # * TreeBuilderChargebackRates       - options[:type]
                           # * TreeBuilderReportReports         - options[:tree]
                           # * TreeBuilderVandt - the whole options hash is passed to TreeBuilderVmsAndTemplates constructor
-                          x_get_tree_roots(count_only, options)
+                          # * All the rest 30+ ancestors ignore options hash.
+                          x_get_tree_roots(count_only, options.dup)
                         when AvailabilityZone    then x_get_tree_az_kids(parent, count_only)
                         when ManageIQ::Providers::Foreman::ConfigurationManager then x_get_tree_cmf_kids(parent, count_only)
                         when ConfigurationProfile then x_get_tree_cpf_kids(parent, count_only)
@@ -334,7 +327,7 @@ class TreeBuilder
                         when MiqAlert            then x_get_tree_al_kids(parent, count_only)
                         when MiqAlertSet         then x_get_tree_ap_kids(parent, count_only)
                         when Condition           then x_get_tree_co_kids(parent, count_only)
-                        when MiqEventDefinition  then x_get_tree_ev_kids(parent, count_only, options[:parents])
+                        when MiqEventDefinition  then x_get_tree_ev_kids(parent, count_only, parents)
                         when MiqPolicy           then x_get_tree_po_kids(parent, count_only)
 
                         when MiqSearch           then nil
@@ -366,12 +359,12 @@ class TreeBuilder
        options[:open_all] ||
        object[:load_children] ||
        node[:expand]
-      kids = x_get_tree_objects(object, options, nil, parents).map do |o|
+      kids = x_get_tree_objects(object, options, false, parents).map do |o|
         x_build_node(o, node[:key], options)
       end
       node[:children] = kids unless kids.empty?
     else
-      if x_get_tree_objects(object, options.merge(:count_only => true), nil, parents) > 0
+      if x_get_tree_objects(object, options, true, parents) > 0
         node[:isLazy] = true  # set child flag if children exist
       end
     end
@@ -388,7 +381,7 @@ class TreeBuilder
   end
 
   # Handle custom tree nodes (object is a Hash)
-  def x_get_tree_custom_kids(_object, count_only)
+  def x_get_tree_custom_kids(_object, count_only, _options)
     count_only ? 0 : []
   end
 
