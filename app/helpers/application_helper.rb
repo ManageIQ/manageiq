@@ -1050,7 +1050,7 @@ module ApplicationHelper
   end
 
   def update_query_string_params(update_this_param)
-    exclude_params = %w(button flash_msg page pressed sortby sort_choice type)
+    exclude_params = %w(button flash_msg page ppsetting pressed sortby sort_choice type)
     query_string = Rack::Utils.parse_query URI("?#{request.query_string}").query
     updated_query_string = query_string.symbolize_keys
     updated_query_string.delete_if { |k, _v| exclude_params.include? k.to_s }
@@ -1406,6 +1406,16 @@ module ApplicationHelper
     case pressed
     when "rbac_project_add", "rbac_tenant_add"
       "rbac_tenant_add"
+    end
+  end
+
+  def action_url_for_views
+    if @lastaction == "scan_history"
+      "scan_history"
+    elsif %w(all_jobs jobs ui_jobs all_ui_jobs).include?(@lastaction)
+      "jobs"
+    else
+      @lastaction && @lastaction != "get_node_info" ? @lastaction : "show_list"
     end
   end
 end

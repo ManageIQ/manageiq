@@ -2005,12 +2005,11 @@ class ApplicationController < ActionController::Base
           page << "ManageIQ.grids.grids['gtl_list_grid'].obj.setSortImgState(true, #{@sortcol + 2}, '#{dir}');"
         end
         page << "miqGridOnCheck(null, null, null);" # Reset the center buttons
-        page.replace("pc_div_1", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => action_url, :db => @view.db, :headers => @view.headers})
-        page.replace("pc_div_2", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => action_url})
       else                                          # No grid, replace the gtl div
         page.replace_html("main_div", :partial => "layouts/gtl")                                                  # Replace the main div area contents
         page << "$('#adv_div').slideUp(0.3);" if params[:entry]
       end
+      page.replace("pc_div_1", :partial => 'layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => action_url, :db => @view.db, :headers => @view.headers})
     end
   end
 

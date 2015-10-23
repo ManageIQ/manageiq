@@ -9,14 +9,7 @@
 #gtl_div
   - view ||= @view
   - table = view.sub_table ? view.sub_table : view.table
-  - if @lastaction == "scan_history"
-    - action_url = "scan_history"
-  - elsif %w(all_jobs jobs ui_jobs all_ui_jobs).include?(@lastaction)
-    - action_url = "jobs"
-  - elsif @lastaction != nil
-    - action_url = @lastaction unless @lastaction == "get_node_info"
-  - else
-    - action_url ||= "show_list"
+  - action_url ||= action_url_for_views
   - @gtl_type = "grid" if @gtl_type.nil?
   - if view.nil? || table.data.length == 0
     - rec_display = "display:none"
@@ -32,13 +25,6 @@
     - unless @embedded
       - if render_flash_msg? && table.data.length > 0
         = render(:partial => "layouts/flash_msg")
-      - if @pages && @items_per_page != ONE_MILLION
-        = render(:partial => '/layouts/pagingcontrols',
-                 :locals  => {:pages      => @pages,
-                              :action_url => action_url,
-                              :db         => view.db,
-                              :headers    => view.headers,
-                              :button_div => button_div})
     - if @gtl_type.nil? || @gtl_type == "grid"
       = render(:partial => "layouts/gtl/grid",
                :locals  => {:table      => table,
@@ -58,10 +44,3 @@
                             :view           => view,
                             :action_url     => action_url,
                             :listicon_image => listicon_image})
-    - unless @embedded
-      - if @pages && @items_per_page != ONE_MILLION
-        = render(:partial => '/layouts/pagingcontrols',
-                 :locals  => {:pages      => @pages,
-                              :action_url => action_url,
-                              :db         => nil,
-                              :button_div => button_div})
