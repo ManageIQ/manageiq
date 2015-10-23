@@ -17,7 +17,7 @@ module MiqAeDatastore
     end
   end
 
-  TMP_DIR = File.expand_path(File.join(Rails.root, "tmp/miq_automate_engine"))
+  TMP_DIR = Rails.root.join("tmp/miq_automate_engine").expand_path
 
   def self.temp_domain
     "#{TEMP_DOMAIN_PREFIX}-#{MiqUUID.new_guid}"
@@ -41,7 +41,7 @@ module MiqAeDatastore
 
   def self.convert(filename, domain_name = temp_domain, export_options = {})
     if export_options['zip_file'].blank? && export_options['export_dir'].blank? && export_options['yaml_file'].blank?
-      export_options['export_dir'] = TMP_DIR
+      export_options['export_dir'] = TMP_DIR.to_s
     end
 
     File.open(filename, 'r') do |handle|
@@ -51,31 +51,21 @@ module MiqAeDatastore
 
   def self.upload(fd, name = nil, domain_name = ALL_DOMAINS)
     name ||= fd.original_filename
-    ext        = File.extname(name)
-    basename   = File.basename(name, ext)
-    name       = "#{basename}.zip"
-    block_size = 65_536
-    FileUtils.mkdir_p(TMP_DIR) unless File.directory?(TMP_DIR)
-    filename = File.join(TMP_DIR, name)
+    name      = Pathname(name).basename.sub_ext('.zip')
+    upload_to = TMP_DIR.join(name)
+    TMP_DIR.mkpath
 
-    _log.info("Uploading Datastore Import to file <#{filename}>")
+    _log.info("Uploading Datastore Import to file <#{upload_to}>")
 
-    outfd = File.open(filename, "wb")
-    data  = fd.read(block_size)
-    until fd.eof
-      outfd.write(data)
-      data = fd.read(block_size)
-    end
-    outfd.write(data) if data
+    IO.copy_stream(fd, upload_to)
     fd.close
-    outfd.close
 
-    _log.info("Upload complete (size=#{File.size(filename)})")
+    _log.info("Upload complete (size=#{upload_to.size})")
 
     begin
-      import_yaml_zip(filename, domain_name, User.current_tenant)
+      import_yaml_zip(upload_to.to_s, domain_name, User.current_tenant)
     ensure
-      File.delete(filename)
+      upload_to.delete
     end
   end
 
