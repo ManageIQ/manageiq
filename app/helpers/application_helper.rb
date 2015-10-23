@@ -86,13 +86,6 @@ module ApplicationHelper
   end
   module_function :role_allows_intern
 
-  # Check group based filtered authorization for a UI task
-  def group_allows(options = {})
-    auth = MiqGroup.allows?(session[:group], :identifier => options[:identifier])
-    $log.debug("Group Authorization #{auth ? "successful" : "failed"} for: userid [#{session[:userid]}], group id [#{session[:group]}], feature identifier [#{options[:identifier]}]")
-    auth
-  end
-
   # NB: This differs from controller_for_model; until they're unified,
   # make sure you have the right one.
   def model_to_controller(record)
