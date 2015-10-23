@@ -308,10 +308,6 @@ module ApplicationHelper
     )
   end
 
-  def get_console_url
-    url = @record.hostname ? @record.hostname : @record.ipaddress
-  end
-
   # Convert a field (Vm.hardware.disks-size) to a col (disks.size)
   def field_to_col(field)
     dbs, fld = field.split("-")
