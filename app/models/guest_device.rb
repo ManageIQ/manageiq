@@ -8,7 +8,7 @@ class GuestDevice < ActiveRecord::Base
   belongs_to :switch    # pNICs link to one switch
   belongs_to :lan       # vNICs link to one lan
 
-  has_one :network, :foreign_key => "device_id", :dependent => :destroy
+  has_one :network, :foreign_key => "device_id", :dependent => :destroy, :inverse_of => :guest_device
   has_many :miq_scsi_targets, :dependent => :destroy
 
   include ReportableMixin

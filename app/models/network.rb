@@ -1,6 +1,6 @@
 class Network < ActiveRecord::Base
   belongs_to :hardware
-  belongs_to :guest_device, :foreign_key => "device_id"
+  belongs_to :guest_device, :foreign_key => "device_id", :inverse_of => :network
 
   include ReportableMixin
 
