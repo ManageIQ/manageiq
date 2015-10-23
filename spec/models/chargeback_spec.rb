@@ -290,9 +290,9 @@ describe Chargeback do
     it "storage" do
       cbdm = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
       FactoryGirl.create(:chargeback_rate_detail_storage_used,
-                         :chargeback_rate_id => @cbr.id,
-                         :per_time           => "hourly",
-                         :rate               => @count_hourly_rate.to_s,
+                         :chargeback_rate_id                => @cbr.id,
+                         :per_time                          => "hourly",
+                         :rate                              => @count_hourly_rate.to_s,
                          :chargeback_rate_detail_measure_id => cbdm.id
                         )
       FactoryGirl.create(:chargeback_rate_detail_storage_allocated,
@@ -313,7 +313,7 @@ describe Chargeback do
 
     context "by owner" do
       before do
-        @user = FactoryGirl.create(:user, :name => 'Test VM Owner',  :userid => 'test_user')
+        @user = FactoryGirl.create(:user, :name => 'Test VM Owner', :userid => 'test_user')
         @vm1.update_attribute(:evm_owner, @user)
 
         @options = {:interval_size => 4,

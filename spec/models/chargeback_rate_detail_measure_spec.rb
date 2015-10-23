@@ -27,7 +27,7 @@ describe ChargebackRateDetailMeasure do
 
   it "is invalid with a units_display lenght diferent that the units lenght" do
     FactoryGirl.build(:chargeback_rate_detail_measure_bytes,
-                      :units         => ["Bs", "KBs", "GBs"],
-                      :units_display => ["kbps", "mbps"]).should_not be_valid
+                      :units         => %w(Bs KBs GBs),
+                      :units_display => %w(kbps mbps)).should_not be_valid
   end
 end
