@@ -155,13 +155,19 @@ describe Vm do
     before do
       EvmSpecHelper.create_guid_miq_server_zone
       @host = FactoryGirl.create(:host_vmware)
-      @vm = FactoryGirl.create(:vm_vmware, :host => @host)
+      @vm = FactoryGirl.create(:vm_vmware,
+                               :host      => @host,
+                               :miq_group => FactoryGirl.create(:miq_group)
+                              )
       FactoryGirl.create(:miq_event_definition, :name => :request_vm_start)
+      # admin user is needed to process Events
+      FactoryGirl.create(:user_with_group, :userid => "admin", :name => "Administrator")
     end
 
     it "policy passes" do
       expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:raw_start)
 
+      MiqAeEngine.stub(:deliver => ['ok', 'sucess', MiqAeEngine::MiqAeWorkspaceRuntime.new])
       @vm.start
       status, message, result = MiqQueue.first.deliver
       MiqQueue.first.delivered(status, message, result)
@@ -170,8 +176,9 @@ describe Vm do
     it "policy prevented" do
       expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm).to_not receive(:raw_start)
 
-      event = {:attributes => {"full_data" => {:policy => {:pprevented => true}}}}
+      event = {:attributes => {"full_data" => {:policy => {:prevented => true}}}}
       MiqAeEngine::MiqAeWorkspaceRuntime.any_instance.stub(:get_obj_from_path).with("/").and_return(:event_stream => event)
+      MiqAeEngine.stub(:deliver => ['ok', 'sucess', MiqAeEngine::MiqAeWorkspaceRuntime.new])
       @vm.start
       status, message, _result = MiqQueue.first.deliver
       MiqQueue.first.delivered(status, message, MiqAeEngine::MiqAeWorkspaceRuntime.new)

@@ -115,7 +115,8 @@ describe Host do
   context "power operations" do
     before(:each) do
       EvmSpecHelper.create_guid_miq_server_zone
-      @host = FactoryGirl.create(:host)
+      @ems = FactoryGirl.create(:ext_management_system, :tenant => FactoryGirl.create(:tenant))
+      @host = FactoryGirl.create(:host, :ems_id => @ems.id)
     end
 
     context "#start" do
@@ -124,6 +125,10 @@ describe Host do
         described_class.any_instance.stub(:validate_ipmi    => {:available => true, :message => nil})
         described_class.any_instance.stub(:run_ipmi_command => "off")
         FactoryGirl.create(:miq_event_definition, :name => :request_host_start)
+        # admin user is needed to process Events
+        FactoryGirl.create(:user_with_group, :userid => "admin", :name => "Administrator")
+        # TODO: fix me when tenant default group is merged
+        ExtManagementSystem.any_instance.stub(:miq_group => FactoryGirl.create(:miq_group))
       end
 
       it "policy passes" do

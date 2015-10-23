@@ -23,9 +23,6 @@ module MiqAeDiscoverySpec
     end
 
     context "automate deliver" do
-      let(:workspace) { instance_double("MiqAeEngine::MiqAeWorkspace", :root => options) }
-      let(:options) { {'test' => true} }
-
       it "check automate parameters" do
         attrs = {:event_id                  => @event.id,
                  :event_type                => @event.event_type,
