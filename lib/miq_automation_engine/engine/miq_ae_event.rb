@@ -38,12 +38,7 @@ module MiqAeEvent
       raise "Unable to find object with class: [#{klass}], Id: [#{id}]" if target.nil?
     end
 
-    sync = options.delete(:synchronous)
-    if sync
-      call_automate_sync(target.class.name, target.id, build_evm_event(event_name, inputs), 'Event')
-    else
-      call_automate(target, build_evm_event(event_name, inputs), 'Event', options)
-    end
+    call_automate(target, build_evm_event(event_name, inputs), 'Event', options)
   end
 
   def self.eval_alert_expression(target, inputs, options = {})

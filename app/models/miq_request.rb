@@ -128,15 +128,15 @@ class MiqRequest < ActiveRecord::Base
   end
 
   def build_request_event(event_name)
-      event_obj = RequestEvent.create(
-        :event_type => event_name,
-        :target     => self,
-        :source     => 'Request'
-      )
+    event_obj = RequestEvent.create(
+      :event_type => event_name,
+      :target     => self,
+      :source     => 'Request'
+    )
 
-      { 'EventStream::event_stream' => event_obj.id,
-        :event_stream_id            => event_obj.id
-      }
+    {'EventStream::event_stream' => event_obj.id,
+     :event_stream_id            => event_obj.id
+    }
   end
 
   def call_automate_event(event_name)
@@ -149,15 +149,13 @@ class MiqRequest < ActiveRecord::Base
   end
 
   def call_automate_event_sync(event_name)
-    begin
-      _log.info("Raising event [#{event_name}] to Automate synchronously")
-      ws = MiqAeEvent.raise_evm_event(event_name, self, build_request_event(event_name), :synchronous => true)
-      _log.info("Raised event [#{event_name}] to Automate")
-      return ws
-    rescue MiqAeException::Error => err
-      message = "Error returned from #{event_name} event processing in Automate: #{err.message}"
-      raise
-    end
+    _log.info("Raising event [#{event_name}] to Automate synchronously")
+    ws = MiqAeEvent.raise_evm_event(event_name, self, build_request_event(event_name), :synchronous => true)
+    _log.info("Raised event [#{event_name}] to Automate")
+    return ws
+  rescue MiqAeException::Error => err
+    message = "Error returned from #{event_name} event processing in Automate: #{err.message}"
+    raise
   end
 
   def automate_event_failed?(event_name)

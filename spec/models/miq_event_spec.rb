@@ -75,9 +75,9 @@ describe MiqEvent do
         FactoryGirl.create(:miq_event, :event_type => event, :target => @cluster)
         target_class = @cluster.class.name
 
-        MiqPolicy.should_receive(:enforce_policy).with(@cluster, event, {:type => target_class } )
-        MiqAlert.should_receive(:evaluate_alerts).with(@cluster, event, {:type => target_class } )
-        MiqEvent.should_receive(:raise_event_for_children).with(@cluster, event, {:type => target_class } )
+        MiqPolicy.should_receive(:enforce_policy).with(@cluster, event, :type => target_class)
+        MiqAlert.should_receive(:evaluate_alerts).with(@cluster, event, :type => target_class)
+        MiqEvent.should_receive(:raise_event_for_children).with(@cluster, event, :type => target_class)
 
         results = MiqEvent.first.process_evm_event
         results.keys.should match_array([:policy, :alert, :children_events])

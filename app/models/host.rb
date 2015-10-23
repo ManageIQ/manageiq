@@ -355,11 +355,16 @@ class Host < ActiveRecord::Base
   end
 
   # request:   the event sent to automate for policy resolution
-  # cb_method: the MiqQueue callback method along with the parameters that is called 
+  # cb_method: the MiqQueue callback method along with the parameters that is called
   #            when automate process is done and the request is not prevented to proceed by policy
   def check_policy_prevent(request, *cb_method)
-    cb = {:class_name => self.class.to_s, :instance_id => self.id, :method_name => :check_policy_prevent_callback, :args => [*cb_method], :server_guid => MiqServer.my_guid}
-    MiqEvent.raise_evm_event(self, request, {:host => self}, {:miq_callback => cb})
+    cb = {:class_name  => self.class.to_s,
+          :instance_id => id,
+          :method_name => :check_policy_prevent_callback,
+          :args        => [*cb_method],
+          :server_guid => MiqServer.my_guid
+    }
+    MiqEvent.raise_evm_event(self, request, {:host => self}, :miq_callback => cb)
   end
 
   def check_policy_prevent_callback(*action, _status, _message, result)
@@ -369,7 +374,7 @@ class Host < ActiveRecord::Base
       data  = event.attributes["full_data"]
       prevented = data.fetch_path(:policy, :prevented) if data
     end
-    prevented ?  _log.info("#{event.attributes["message"]}") : self.send(*action)
+    prevented ? _log.info("#{event.attributes["message"]}") : send(*action)
   end
 
   def ipmi_power_on

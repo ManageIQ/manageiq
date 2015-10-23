@@ -16,7 +16,7 @@ class MiqEvent < EventStream
 
   SUPPORTED_POLICY_AND_ALERT_CLASSES = [Host, VmOrTemplate, Storage, EmsCluster, ResourcePool, MiqServer]
 
-  def self.raise_evm_event(target, raw_event, inputs={}, options={})
+  def self.raise_evm_event(target, raw_event, inputs = {}, options = {})
     # Target may have been deleted if it's a worker
     # Target, in that case will be the worker's server.
     # The generic raw_event remains, but client can pass the :type of the worker spawning the event:
@@ -42,7 +42,7 @@ class MiqEvent < EventStream
   end
 
   def process_evm_event(inputs = {})
-    _log.info("target = [#{self.target.inspect}]")
+    _log.info("target = [#{target.inspect}]")
     return if target.nil?
 
     return unless target.class.base_class.in?(SUPPORTED_POLICY_AND_ALERT_CLASSES)
@@ -57,7 +57,7 @@ class MiqEvent < EventStream
       update_with_policy_result(results)
       update_attributes(:message => 'Policy resolved successfully!')
     rescue MiqException::PolicyPreventAction => err
-      update_attributes(:full_data => { :policy => { :prevented => true } }, :message => err.message)
+      update_attributes(:full_data => {:policy => {:prevented => true}}, :message => err.message)
     end
 
     _log.info("Alert for Event [#{event_type}]")
@@ -72,14 +72,16 @@ class MiqEvent < EventStream
     MiqEvent.create(:event_type => event, :target => target, :source => 'POLICY')
   end
 
-  def update_with_policy_result(result={})
-    update_attributes(:full_data => {
-      :policy => {
-        :actions => {
-          :assign_scan_profile => result.fetch_path(:policy, :actions, :assign_scan_profile)
+  def update_with_policy_result(result = {})
+    update_attributes(
+      :full_data => {
+        :policy => {
+          :actions => {
+            :assign_scan_profile => result.fetch_path(:policy, :actions, :assign_scan_profile)
+          }
         }
       }
-    }) if result.fetch_path(:policy, :actions, :assign_scan_profile)
+    ) if result.fetch_path(:policy, :actions, :assign_scan_profile)
   end
 
   def self.normalize_event(event)

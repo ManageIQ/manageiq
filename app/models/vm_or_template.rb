@@ -329,10 +329,16 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   # policy_event: the event sent to automate for policy resolution
-  # cb_method:    the MiqQueue callback method along with the parameters that is called 
+  # cb_method:    the MiqQueue callback method along with the parameters that is called
   #               when automate process is done and the event is not prevented to proceed by policy
   def check_policy_prevent(policy_event, *cb_method)
-    cb = {:class_name => self.class.to_s, :instance_id => self.id, :method_name => :check_policy_prevent_callback, :args => [*cb_method], :server_guid => MiqServer.my_guid}
+    cb = {
+      :class_name  => self.class.to_s,
+      :instance_id => id,
+      :method_name => :check_policy_prevent_callback,
+      :args        => [*cb_method],
+      :server_guid => MiqServer.my_guid
+    }
     enforce_policy(policy_event, {}, :miq_callback => cb) unless policy_event.nil?
   end
 
@@ -343,16 +349,16 @@ class VmOrTemplate < ActiveRecord::Base
       data  = event.attributes["full_data"]
       prevented = data.fetch_path(:policy, :prevented) if data
     end
-    prevented ?  _log.info("#{event.attributes["message"]}") : self.send(*action)
+    prevented ? _log.info("#{event.attributes["message"]}") : send(*action)
   end
 
   def enforce_policy(event, inputs = {}, options = {})
-    return  {"result" => true, :details => []} if event.to_s == "rsop" && self.host.nil?
-    raise "vm does not belong to any host" if self.host.nil? && self.ext_management_system.nil?
+    return {"result" => true, :details => []} if event.to_s == "rsop" && host.nil?
+    raise "vm does not belong to any host" if host.nil? && ext_management_system.nil?
 
     inputs[:vm]                    = self
-    inputs[:host]                  = self.host                  unless self.host.nil?
-    inputs[:ext_management_system] = self.ext_management_system unless self.ext_management_system.nil?
+    inputs[:host]                  = host                  unless host.nil?
+    inputs[:ext_management_system] = ext_management_system unless ext_management_system.nil?
     MiqEvent.raise_evm_event(self, event, inputs, options)
   end
 

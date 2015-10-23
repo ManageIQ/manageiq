@@ -41,9 +41,14 @@ class VmScan < Job
     begin
       vm = VmOrTemplate.find(target_id)
 
-      cb = {:class_name => self.class.to_s, :instance_id => self.id, :method_name => :check_policy_complete, :server_guid => MiqServer.my_guid}
+      cb = {
+        :class_name  => self.class.to_s,
+        :instance_id => id,
+        :method_name => :check_policy_complete,
+        :server_guid => MiqServer.my_guid
+      }
       inputs = {:vm => vm, :host => vm.host}
-      MiqEvent.raise_evm_job_event(vm, {:type => "scan", :suffix => "start"}, inputs, {:miq_callback => cb})
+      MiqEvent.raise_evm_job_event(vm, {:type => "scan", :suffix => "start"}, inputs, :miq_callback => cb)
     rescue => err
       $log.log_backtrace(err)
       signal(:abort, err.message, "error")
@@ -67,8 +72,8 @@ class VmScan < Job
       prof_policies = data.fetch_path(:policy, :actions, :assign_scan_profile) if data
       if prof_policies
         scan_profiles = []
-        prof_policies.each {|p| scan_profiles += p[:result] unless p[:result].nil?}
-        self.options[:scan_profiles] = scan_profiles unless scan_profiles.blank?
+        prof_policies.each { |p| scan_profiles += p[:result] unless p[:result].nil? }
+        options[:scan_profiles] = scan_profiles unless scan_profiles.blank?
       end
     end
     signal(:start_snapshot)
@@ -78,8 +83,8 @@ class VmScan < Job
     $log.info "action-call_snapshot: Enter"
 
     begin
-      vm = VmOrTemplate.find(self.target_id)
-      self.context[:snapshot_mor] = nil
+      vm = VmOrTemplate.find(target_id)
+      context[:snapshot_mor] = nil
 
       options[:snapshot] = :skipped
       options[:use_existing_snapshot] = false
