@@ -307,7 +307,7 @@ headers:
 - CPU - Usage Rate (MHz) (Avg)
 - " Memory - Peak Usage of Allocated for Collected Intervals (%) (Max)"
 - Memory - Usage (%) (Avg)
-- Memory - Avg Used (MB) (Avg)
+- Memory - Used (MB) (Avg)
 - Total Provisioned Space (Includes RAM)
 - Total Used Disk Space
 - Total Snapshots
