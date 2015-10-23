@@ -4,9 +4,9 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: MiqProvisionRequest_starting
+    name: limits
     inherits: 
     description: 
   fields:
-  - rel5:
-      value: "/System/CommonMethods/QuotaStateMachine/quota"
+  - common_meth:
+      value: limits

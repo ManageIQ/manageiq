@@ -9,5 +9,5 @@ object:
     description: 
   fields:
   - execute:
-      value: task_finished(object => 'miq_provision_task', message =>
-        'Configured System Provisioned Successfully')
+      value: task_finished(object => 'miq_provision_task', message => 'Configured
+        System Provisioned Successfully')
