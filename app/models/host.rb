@@ -1967,4 +1967,6 @@ class Host < ActiveRecord::Base
   def openstack_host?
     ext_management_system.class == ManageIQ::Providers::Openstack::InfraManager
   end
+
+  include DeprecatedCpuMethodsMixin
 end

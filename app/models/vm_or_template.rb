@@ -1933,4 +1933,6 @@ class VmOrTemplate < ActiveRecord::Base
               end
     {:available => true,   :message => message}
   end
+
+  include DeprecatedCpuMethodsMixin
 end
