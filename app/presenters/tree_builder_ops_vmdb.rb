@@ -42,7 +42,7 @@ class TreeBuilderOpsVmdb < TreeBuilderOps
       object.vmdb_indexes.count
     else
       # load this node expanded on autoload
-      x_tree[:open_nodes].push("xx-#{to_cid(object.id.to_s)}") unless x_tree[:open_nodes].include?("xx-#{to_cid(object.id.to_s)}")
+      @tree_state.x_tree(@name)[:open_nodes].push("xx-#{to_cid(object.id.to_s)}") unless @tree_state.x_tree(@name)[:open_nodes].include?("xx-#{to_cid(object.id.to_s)}")
       [
         {
           :id            => "#{to_cid(object.id.to_s)}",
