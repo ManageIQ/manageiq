@@ -46,11 +46,9 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqVimBrokerWorker
     MiqVmdbStorageBridgeWorker
     MiqWebServiceWorker
-    MiqAutomateWorker
   ).freeze
 
   MONITOR_CLASS_NAMES_IN_KILL_ORDER = %w(
-    MiqAutomateWorker
     MiqEmsMetricsProcessorWorker
     ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker
     ManageIQ::Providers::Redhat::InfraManager::MetricsCollectorWorker
