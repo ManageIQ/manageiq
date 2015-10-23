@@ -82,8 +82,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::Vm do
       expect(vm.max_total_vcpus).to eq(160)
     end
 
-    it "#max_cores_per_socket" do
-      expect(vm.max_cores_per_socket).to eq(16)
+    it "#max_cpu_cores_per_socket" do
+      expect(vm.max_cpu_cores_per_socket).to eq(16)
     end
 
     it "#max_vcpus" do

@@ -1062,8 +1062,8 @@ module ApplicationController::CiProcessing
     socket_count = @reconfigureitems.first.num_cpu
     socket_count = nil unless @reconfigureitems.all? { |vm| vm.num_cpu == socket_count }
 
-    cores_per_socket = @reconfigureitems.first.cores_per_socket
-    cores_per_socket = nil unless @reconfigureitems.all? { |vm| vm.cores_per_socket == cores_per_socket }
+    cores_per_socket = @reconfigureitems.first.cpu_cores_per_socket
+    cores_per_socket = nil unless @reconfigureitems.all? { |vm| vm.cpu_cores_per_socket == cores_per_socket }
 
     @edit[:new][:old_memory], @edit[:new][:old_mem_typ] = reconfigure_calculations(memory)
     @edit[:new][:old_socket_count] = @edit[:new][:socket_count] = socket_count
