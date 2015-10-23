@@ -3,23 +3,21 @@ module ApplicationController::CurrentUser
 
   included do
     helper_method :current_user,  :current_userid
-    helper_method :current_group, :current_groupid
+    helper_method :current_group, :current_group_id
     helper_method :admin_user?, :super_admin_user?
     hide_action :clear_current_user, :current_user=
     hide_action :admin_user?, :super_admin_user?
-    hide_action :current_user, :current_userid, :current_groupid
+    hide_action :current_user, :current_userid, :current_group_id
   end
 
   def clear_current_user
     User.current_user = nil
     session[:userid]  = nil
-    session[:group]   = nil
   end
 
   def current_user=(db_user)
     User.current_user = db_user
     session[:userid]  = db_user.userid
-    session[:group]   = db_user.current_group.try(:id)
   end
 
   def admin_user?
@@ -42,7 +40,7 @@ module ApplicationController::CurrentUser
 
   delegate :current_group, :to => :current_user
 
-  def current_groupid
+  def current_group_id
     current_user.current_group.id
   end
 end

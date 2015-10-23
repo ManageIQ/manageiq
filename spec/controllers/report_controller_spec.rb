@@ -1145,14 +1145,7 @@ describe ReportController do
 
   context "#replace_right_cell" do
     before do
-      miq_group = FactoryGirl.create(:miq_group,
-                                     :description   => "EvmGroup-super_administrator",
-                                     :miq_user_role => FactoryGirl.create(:miq_user_role,
-                                                                          :name => 'EvmRole-super_administrator'))
-      controller.instance_variable_set(:@current_user, FactoryGirl.create(:user,
-                                                                          :name       => "foo",
-                                                                          :miq_groups => [miq_group]))
-      session[:group] = miq_group
+      login_as FactoryGirl.create(:user_admin) # not sure why this needs to be an admin...
     end
 
     it "should rebuild trees when last report result is newer than last tree build time" do
@@ -1214,14 +1207,7 @@ describe ReportController do
 
   context "#rebuild_trees" do
     before do
-      miq_group = FactoryGirl.create(:miq_group,
-                                     :description   => "EvmGroup-super_administrator",
-                                     :miq_user_role => FactoryGirl.create(:miq_user_role,
-                                                                          :name => 'EvmRole-super_administrator'))
-      controller.instance_variable_set(:@current_user, FactoryGirl.create(:user,
-                                                                          :name       => "foo",
-                                                                          :miq_groups => [miq_group]))
-      session[:group] = miq_group
+      login_as FactoryGirl.create(:user_admin) # not sure why this needs to be an admin...
     end
 
     it "rebuild trees, latest report result was created after last time tree was built" do
