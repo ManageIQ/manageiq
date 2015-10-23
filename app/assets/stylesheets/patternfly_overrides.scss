@@ -30,18 +30,13 @@ body, html {
     height: 100%;
     overflow: auto;
   }
-
   #main_content {
     overflow: auto;
     height: 100%;
   }
-  #main_footer {
-    background: #f9f9f9;
-    height: 50px;
-  }
 }
 
-/* This media query makes the left column and the main area independently scrollable and sets the footer at the bottom of the column */
+/* This media query makes the left column and the main area independently scrollable and sets the paging_div at the bottom of the column */
 
 @media (min-width: $screen-sm) {
   body {
@@ -60,25 +55,9 @@ body, html {
     position: absolute;
     bottom: 0;
   }
-  #main_footer {
-    position: absolute;
-    bottom: 0;
-    height: 50px;
-    width: 100%;
-    margin-bottom: 10px;
-    border-top: 1px solid #c7c7c7;
-    background: #f9f9f9;
-  }
   .max-height {
     height: 100%;
   }
-}
-
-.navbar.navbar-default.navbar-fixed-bottom {
-  min-height: 30px;
-  background: #333;
-  color: #FFF;
-  text-align: center;
 }
 
 /* Overrides patternfly style for disabled accordion items */
@@ -320,7 +299,6 @@ iframe, .iframe {
 }
 
 /* eliminates horizontal scrollbar in some browsers */
-
 .bootstrap-select .dropdown-menu {
   overflow-y: visible !important
 }
