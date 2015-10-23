@@ -94,18 +94,18 @@ describe AutomationRequest do
       end
 
       it "updates approval_state" do
-        @ar.approve(@approver.userid, @reason)
+        @ar.approve(@approver, @reason)
         @ar.reload.approval_state.should == "approved"
       end
 
       it "calls #call_automate_event_queue('request_approved')" do
         AutomationRequest.any_instance.should_receive(:call_automate_event_queue).with('request_approved').once
-        @ar.approve(@approver.userid, @reason)
+        @ar.approve(@approver, @reason)
       end
 
       it "calls #execute" do
         AutomationRequest.any_instance.should_receive(:execute).once
-        @ar.approve(@approver.userid, @reason)
+        @ar.approve(@approver, @reason)
       end
     end
   end

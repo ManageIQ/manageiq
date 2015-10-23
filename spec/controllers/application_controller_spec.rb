@@ -54,21 +54,22 @@ describe ApplicationController do
   end
 
   context "#view_yaml_filename" do
+    let(:feature) { MiqProductFeature.find_all_by_identifier("vm_infra_explorer") }
+    let(:user)    { FactoryGirl.create(:user, :features => feature) }
+
     before do
       EvmSpecHelper.seed_specific_product_features("vm_infra_explorer", "host_edit")
-      feature = MiqProductFeature.find_all_by_identifier("vm_infra_explorer")
-      user = login_as FactoryGirl.create(:user, :features => feature)
-      @test_user_role = user.current_group.miq_user_role
+      login_as user
     end
 
     it "should return restricted view yaml for restricted user" do
-      @test_user_role[:settings] = {:restrictions => {:vms => :user_or_group}}
+      user.current_group.miq_user_role.update_attributes(:settings => {:restrictions => {:vms => :user_or_group}})
       view_yaml = controller.send(:view_yaml_filename, VmCloud.name, {})
       view_yaml.should include("Vm__restricted.yaml")
     end
 
     it "should return VmCloud view yaml for non-restricted user" do
-      @test_user_role[:settings] = {}
+      user.current_group.miq_user_role.update_attributes(:settings => {})
       view_yaml = controller.send(:view_yaml_filename, VmCloud.name, {})
       view_yaml.should include("ManageIQ_Providers_CloudManager_Vm.yaml")
     end

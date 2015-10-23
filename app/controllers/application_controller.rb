@@ -1908,7 +1908,7 @@ class ApplicationController < ActionController::Base
 
     # Special code to build the view file name for users of VM restricted roles
     if %w(ManageIQ::Providers::CloudManager::Template ManageIQ::Providers::InfraManager::Template ManageIQ::Providers::CloudManager::Vm ManageIQ::Providers::InfraManager::Vm VmOrTemplate).include?(db)
-      role = User.current_user.miq_user_role
+      role = current_user.miq_user_role
       if role && role.settings && role.settings.fetch_path(:restrictions, :vms)
         viewfilerestricted = "#{VIEWS_FOLDER}/Vm__restricted.yaml"
       end

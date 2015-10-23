@@ -23,14 +23,14 @@ describe MiqApproval do
       reason   = "Why Not?"
 
       approval.stub(:authorized?).and_return(false)
-      -> { approval.approve(approver.userid, reason) }.should raise_error("not authorized")
+      expect { approval.approve(approver, reason) }.to raise_error("not authorized")
 
       miq_request = FactoryGirl.create(:vm_migrate_request, :userid => user.userid)
       approval.miq_request = miq_request
       approval.stub(:authorized?).and_return(true)
       Timecop.freeze do
         miq_request.should_receive(:approval_approved).once
-        approval.approve(approver.userid, reason)
+        approval.approve(approver, reason)
         approval.state.should == 'approved'
         approval.reason.should == reason
         approval.stamper.should == approver
@@ -45,7 +45,7 @@ describe MiqApproval do
       request     = FactoryGirl.create(:miq_provision_request, :provision_type => 'template', :state => 'pending', :status => 'Ok', :src_vm_id => vm_template.id, :userid => user.userid)
       approval    = FactoryGirl.create(:miq_approval, :miq_request => request)
 
-      expect { approval.approve(user.userid, 'Why Not') }.to_not raise_error
+      expect { approval.approve(user, 'Why Not') }.to_not raise_error
     end
 
     it "with an approver's object'" do
@@ -66,14 +66,14 @@ describe MiqApproval do
     reason   = "Why Not?"
 
     approval.stub(:authorized?).and_return(false)
-    -> { approval.deny(approver.userid, reason) }.should raise_error("not authorized")
+    expect { approval.deny(approver, reason) }.to raise_error("not authorized")
 
     miq_request = FactoryGirl.create(:vm_migrate_request, :userid => user.userid)
     approval.miq_request = miq_request
     approval.stub(:authorized?).and_return(true)
     Timecop.freeze do
       miq_request.should_receive(:approval_denied).once
-      approval.deny(approver.userid, reason)
+      approval.deny(approver, reason)
       approval.state.should == 'denied'
       approval.reason.should == reason
       approval.stamper.should == approver
