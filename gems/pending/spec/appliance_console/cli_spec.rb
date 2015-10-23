@@ -6,6 +6,9 @@ describe ApplianceConsole::Cli do
   subject { described_class.new }
 
   it "should set hostname if defined" do
+    interface = double
+    expect(LinuxAdmin::NetworkInterface).to receive(:new).and_return(interface)
+    expect(interface).to receive(:address).and_return("192.168.1.10")
     expect_any_instance_of(LinuxAdmin::Hosts).to receive(:hostname=).with('host1')
     expect_any_instance_of(LinuxAdmin::Hosts).to receive(:save).and_return(true)
     expect_any_instance_of(LinuxAdmin::Service.new("test").class).to receive(:restart).and_return(true)
@@ -113,6 +116,9 @@ describe ApplianceConsole::Cli do
     end
 
     it "should not post_activate install ipa (aside: testing passing in host" do
+      interface = double
+      expect(LinuxAdmin::NetworkInterface).to receive(:new).and_return(interface)
+      expect(interface).to receive(:address).and_return("192.168.1.10")
       expect_any_instance_of(LinuxAdmin::Hosts).to receive(:hostname=).with("client.domain.com")
       expect_any_instance_of(LinuxAdmin::Hosts).to receive(:save).and_return(true)
       expect_any_instance_of(LinuxAdmin::Service.new("test").class).to receive(:restart).and_return(true)
