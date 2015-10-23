@@ -1071,8 +1071,8 @@ class ApplicationController < ActionController::Base
     rptmenu
   end
 
-  # Render the view data to PORO for the list view
-  def view_to_xml(view)
+  # Render the view data to a Hash structure for the list view
+  def view_to_hash(view)
     # Get the time zone in effect for this view
     tz = (view.db.downcase == 'miqschedule') ? server_timezone : Time.zone
 
@@ -1803,7 +1803,7 @@ class ApplicationController < ActionController::Base
     # Set up the grid variables for list view, with exception models below
     if !%w(Job MiqProvision MiqReportResult MiqTask).include?(view.db) &&
        !view.db.ends_with?("Build") && !@force_no_grid_xml && (@gtl_type == "list" || @force_grid_xml)
-      @grid_hash = view_to_xml(view)
+      @grid_hash = view_to_hash(view)
     end
 
     [view, get_view_pages(dbname, view)]
