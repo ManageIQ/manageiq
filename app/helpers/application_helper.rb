@@ -754,16 +754,6 @@ module ApplicationHelper
     @edit && @edit.fetch_path(:adv_search_applied, :text) ? "show" : "hide"
   end
 
-  # Create time zone list for perf chart options screen
-  def perf_options_timezones
-    if @perf_record && @perf_record.kind_of?(MiqCimInstance) && @perf_options[:typ] == "Daily"
-      tp_tzs = TimeProfile.rollup_daily_metrics.all_timezones
-      ALL_TIMEZONES.dup.delete_if { |tz| !tp_tzs.include?(tz.last) }
-    else
-      ALL_TIMEZONES
-    end
-  end
-
   # Should we allow the user input checkbox be shown for an atom in the expression editor
   QS_VALID_USER_INPUT_OPERATORS = ["=", "!=", ">", ">=", "<", "<=", "INCLUDES", "STARTS WITH", "ENDS WITH", "CONTAINS"]
   QS_VALID_FIELD_TYPES = [:string, :boolean, :integer, :float, :percent, :bytes, :megabytes]
