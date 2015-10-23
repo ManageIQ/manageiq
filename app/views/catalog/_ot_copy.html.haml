@@ -2,41 +2,40 @@
   #basic_info_div
     = render :partial => "layouts/flash_msg"
     - url = url_for(:action => "ot_form_field_changed", :id => @edit[:rec_id])
-    %p.legend= _("New Orchestration Template Information")
+    %h3
+      = _("New Orchestration Template Information")
     %input{:type => "hidden", :name => "original_ot_id", :value => @edit[:rec_id]}
-    %table
-      %td{:valign => "top"}
-        .form-horizontal
-          .form-group
-            %label.col-md-2.control-label
-              = _('Name')
-              .col-md-8
-                = text_field_tag("name",
-                                 @edit[:current][:name],
-                                 :autocomplete => 'off',
-                                 :diabled => false,
-                                 :size => 80,
-                                 :maxlength => 255,
-                                 "data-miq_observe" => {:interval => '.5',
-                                                        :url      => url}.to_json)
-          .form-group
-            %label.col-md-2.control-label
-              = _('Description')
-            .col-md-8
-              = text_area_tag("description",
-                              @edit[:current][:description],
-                              :autocomplete => 'off',
-                              :disabled => false,
-                              :rows => 15,
-                              :cols => 80,
-                              "data-miq_observe" => {:interval => '.5',
-                                                     :url      => url}.to_json)
-          .form-group
-            %label.col-md-2.control-label
-              = _('Draft')
-            .col-md-8
-              = check_box_tag("draft", true, @edit[:new][:draft],
-                              "data-miq_observe_checkbox" => {:url => url}.to_json)
+    .form-horizontal
+      .form-group
+        %label.col-md-2.control-label
+          = _('Name')
+        .col-md-8
+          = text_field_tag("name",
+                           @edit[:current][:name],
+                           :autocomplete => 'off',
+                           :diabled => false,
+                           :maxlength => 255,
+                           :class => "form-control",
+                           "data-miq_observe" => {:interval => '.5',
+                                                  :url      => url}.to_json)
+      .form-group
+        %label.col-md-2.control-label
+          = _('Description')
+        .col-md-8
+          = text_area_tag("description",
+                          @edit[:current][:description],
+                          :autocomplete => 'off',
+                          :disabled => false,
+                          :rows => 15,
+                          :class => "form-control",
+                          "data-miq_observe" => {:interval => '.5',
+                                                 :url      => url}.to_json)
+      .form-group
+        %label.col-md-2.control-label
+          = _('Draft')
+        .col-md-8
+          = check_box_tag("draft", true, @edit[:new][:draft],
+                          "data-miq_observe_checkbox" => {:url => url}.to_json)
 
     %hr
 

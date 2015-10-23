@@ -2327,11 +2327,22 @@
           :feature_type: admin
           :hidden: false
           :identifier: rbac_tenant_delete
-      - :name: Manage Quotas
-        :description: Manage Tenant Quotas
-        :feature_type: admin
+        - :name: Manage Quotas
+          :description: Manage Tenant Quotas
+          :feature_type: admin
+          :hidden: false
+          :identifier: rbac_tenant_manage_quotas
+      - :name: Operate
+        :description: Operate Tenants
+        :feature_type: control
+        :identifier: rbac_tenant_operate
         :hidden: false
-        :identifier: rbac_tenant_manage_quotas
+        :children:
+        - :name: Edit Tags
+          :description: Edit Tags
+          :feature_type: admin
+          :hidden: false
+          :identifier: rbac_tenant_tags_edit
   - :name: Diagnostics
     :description: Diagnostics Accordion
     :feature_type: node

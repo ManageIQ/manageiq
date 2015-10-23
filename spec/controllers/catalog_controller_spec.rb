@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe CatalogController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryGirl.create(:user_with_group) }
   before(:each) do
     set_user_privileges user
   end

@@ -1,8 +1,6 @@
-require_dependency 'manageiq/providers/base_manager'
-
-module ManageIQ::Providers
-  class BaseManager
-    class Refresher
+module ManageIQ
+  module Providers
+    class BaseManager::Refresher
       include Vmdb::Logging
       DEBUG_TRACE = false
 

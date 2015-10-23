@@ -28,8 +28,8 @@ class ExtManagementSystem < ActiveRecord::Base
   belongs_to :provider
   belongs_to :tenant
 
-  has_many :hosts,  :foreign_key => "ems_id", :dependent => :nullify
-  has_many :vms_and_templates, :foreign_key => "ems_id", :dependent => :nullify, :class_name => "VmOrTemplate"
+  has_many :hosts,  :foreign_key => "ems_id", :dependent => :nullify, :inverse_of => :ext_management_system
+  has_many :vms_and_templates, :foreign_key => "ems_id", :dependent => :nullify, :class_name => "VmOrTemplate", :inverse_of => :ext_management_system
   has_many :miq_templates,     :foreign_key => :ems_id
   has_many :vms,               :foreign_key => :ems_id
 

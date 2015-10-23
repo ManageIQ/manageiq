@@ -1367,7 +1367,7 @@ class ApplicationController < ActionController::Base
     end
 
     pass = %w(button x_button).include?(action_name) ? handle_button_rbac : handle_generic_rbac
-    $audit_log.failure("Username [#{session[:userid]}], Role ID [#{User.current_user.miq_user_role.try(:id)}] attempted to access area [#{controller_name}], type [Action], task [#{action_name}]") unless pass
+    $audit_log.failure("Username [#{current_userid}], Role ID [#{current_user.miq_user_role.try(:id)}] attempted to access area [#{controller_name}], type [Action], task [#{action_name}]") unless pass
   end
 
   def cleanup_action
@@ -1596,7 +1596,7 @@ class ApplicationController < ActionController::Base
       id = rep.id
       rep_name = rep.name
       if task == "destroy"
-        audit = {:event => "rep_record_delete", :message => "[#{rep_name}] Record deleted", :target_id => id, :target_class => "MiqReportResult", :userid => session[:userid]}
+        audit = {:event => "rep_record_delete", :message => "[#{rep_name}] Record deleted", :target_id => id, :target_class => "MiqReportResult", :userid => current_userid}
       end
       begin
         rep.public_send(task.to_sym) if rep.respond_to?(task)    # Run the task
@@ -2481,19 +2481,16 @@ class ApplicationController < ActionController::Base
   def find_by_id_filtered(db, id)
     raise "Invalid input" unless is_integer?(id)
 
-    userid     = session[:userid]
-
     unless db.where(:id => from_cid(id)).exists?
       msg = _("Selected %s no longer exists") % ui_lookup(:model => db.to_s)
       raise msg
     end
 
-    msg = "User '#{userid}' is not authorized to access '#{ui_lookup(:model => db.to_s)}' record id '#{id}'"
-    conditions = ["#{db.table_name}.id = ?", id]
-    result = Rbac.search(:class => db, :conditions => conditions, :userid => userid, :results_format => :objects).first.first
-    raise msg if result.nil?
-
-    result
+    Rbac.search(:class          => db,
+                :conditions     => ["#{db.table_name}.id = ?", id],
+                :user           => current_user,
+                :results_format => :objects).first.first ||
+      raise("User '#{current_userid}' is not authorized to access '#{ui_lookup(:model => db.to_s)}' record id '#{id}'")
   end
 
   def find_filtered(db, count, options = {})

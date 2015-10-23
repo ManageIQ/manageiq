@@ -31,7 +31,7 @@ describe('Dashboard', function() {
     };
 
     beforeEach(function() {
-      bard.inject('$controller', '$log', '$state', '$rootScope');
+      bard.inject('$controller', '$log', '$state', '$rootScope', 'Notifications');
 
       controller = $controller($state.get('requests.list').controller, {requests: requests});
       $rootScope.$apply();
@@ -41,10 +41,8 @@ describe('Dashboard', function() {
       expect(controller).to.be.defined;
     });
 
-    describe('after activate', function() {
-      it('should have title of Request List', function() {
-        expect(controller.title).to.equal('Request List');
-      });
+    it('should have title of Request List', function() {
+      expect(controller.title).to.equal('Request List');
     });
   });
 });

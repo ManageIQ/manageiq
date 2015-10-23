@@ -367,26 +367,23 @@ class MiqRequestWorkflow
     end
   end
 
-  def set_ws_tags(values, tag_string, parser = :parse_ws_string)
+  def ws_tags(tag_string, parser = :parse_ws_string)
     # Tags are passed as category|value.  Example: cc|001|environment|test
-    ta = []
     ws_tags = send(parser, tag_string)
 
-    tags = {}
-    allowed_tags.each do |v|
-      tc = tags[v[:name]] = {}
-      v[:children].each { |k, v| tc[v[:name]] = k }
+    tags = allowed_tags.each_with_object({}) do |v, tags|
+      tags[v[:name]] = v[:children].each_with_object({}) { |(k, v), tc| tc[v[:name]] = k }
     end
 
-    ws_tags.each { |cat, tag| ta << tags.fetch_path(cat.to_s.downcase, tag.downcase) }
-    values[:vm_tags] = ta.compact
+    ws_tags.collect { |cat, tag| tags.fetch_path(cat.to_s.downcase, tag.downcase) }.compact
   end
 
-  def set_ws_values(values, key_name, additional_values, parser = :parse_ws_string, parser_options = {})
-    # Tags are passed as category=value.  Example: cc=001|environment=test
-    ws_values = values[key_name] = {}
+  # @param parser [:parse_ws_string|:parse_ws_string_v1]
+  # @param additional_values [String] values of the form cc=001|environment=test
+  def ws_values(additional_values, parser = :parse_ws_string, parser_options = {})
     parsed_values = send(parser, additional_values, parser_options)
-    parsed_values.each { |k, v| ws_values[k.to_sym] = v }
+
+    parsed_values.each_with_object({}) { |(k, v), ws_values| ws_values[k.to_sym] = v }
   end
 
   def parse_ws_string_v1(values, _options = {})
@@ -838,13 +835,13 @@ class MiqRequestWorkflow
     filter_id = get_value(@values[filter_prop]).to_i
     if filter_id.zero?
       Rbac.filtered(targets,
-                    :class        => ci_klass,
-                    :userid       => @requester.userid,
-                    :miq_group_id => @requester.current_group_id)
+                    :class     => ci_klass,
+                    :user      => @requester,
+                    :miq_group => @requester.current_group)
     else
       MiqSearch.find(filter_id).filtered(targets,
-                                         :userid       => @requester.userid,
-                                         :miq_group_id => @requester.current_group_id)
+                                         :user      => @requester,
+                                         :miq_group => @requester.current_group)
     end.tap { rails_logger("process_filter - [#{ci_klass}]", 1) }
   end
 

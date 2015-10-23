@@ -46,6 +46,12 @@ describe ApiController do
     expect(provision_dialog["label"]).to eq(provision_dialog1.label)
   end
 
+  def expect_result_to_have_user_email(email)
+    expect_request_success
+    expect_result_to_have_keys(%w(id href user))
+    expect(@result["user"]["email"]).to eq(email)
+  end
+
   describe "Service Requests query" do
     before do
       template.resource_actions = [provision_ra, retire_ra]
@@ -56,6 +62,13 @@ describe ApiController do
       run_get service_requests_url(service_request.id), :attributes => "provision_dialog"
 
       expect_result_to_have_provision_dialog
+    end
+
+    it "can return the request's user.email" do
+      @user.update_attributes!(:email => "admin@api.net")
+      run_get service_requests_url(service_request.id), :attributes => "user.email"
+
+      expect_result_to_have_user_email(@user.email)
     end
   end
 
@@ -69,6 +82,13 @@ describe ApiController do
       run_get services_url(service.id), :attributes => "provision_dialog"
 
       expect_result_to_have_provision_dialog
+    end
+
+    it "can return the request's user.email" do
+      @user.update_attributes!(:email => "admin@api.net")
+      run_get services_url(service.id), :attributes => "user.email"
+
+      expect_result_to_have_user_email(@user.email)
     end
   end
 end

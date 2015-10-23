@@ -32,6 +32,11 @@
       var vm = this;
       vm.parsedOptions = {};
       vm.activate = activate;
+      vm.dateOptions = {
+        autoclose: true,
+        todayBtn: 'linked',
+        todayHighlight: true
+      };
 
       function activate() {
         if (vm.options) {

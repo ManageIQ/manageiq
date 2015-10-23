@@ -5,7 +5,7 @@ describe ContainerTopologyService do
 
   describe "#build_kinds" do
     it "creates the expected number of entity types" do
-      container_topology_service.build_kinds.size.should eql 7
+      container_topology_service.build_kinds.size.should eql 8
     end
 
     it "kinds contains an expected key" do
@@ -49,13 +49,15 @@ describe ContainerTopologyService do
       container_node = ContainerNode.create(:ext_management_system => ems, :id => 1, :name => "127.0.0.1", :ems_ref => "905c90ba-3e00-11e5-a0d2-18037327aaeb", :container_conditions => [container_condition])
       container_replicator = ContainerReplicator.create(:ext_management_system => ems, :id => 7, :ems_ref => "8f8ca74c-3a41-11e5-a79a-001a4a231290",
                                                         :name => "replicator1")
+      container_route = ContainerRoute.create(:ext_management_system => ems, :id => 11, :ems_ref => "ab5za74c-3a41-11e5-a79a-001a4a231290",
+                                                        :name => "route-edge")
       container_group = ContainerGroup.create(:ext_management_system => ems, :id => 15, :container_node => container_node, :container_replicator => container_replicator, :name => "myPod", :ems_ref => "96c35ccd-3e00-11e5-a0d2-18037327aaeb", :phase => "Running", :container_definitions => [container_def])
       container_service = ContainerService.create(:ext_management_system => ems, :id => 3, :container_groups => [container_group], :ems_ref => "95e49048-3e00-11e5-a0d2-18037327aaeb",
-                                                  :name => "service1")
+                                                  :name => "service1", :container_routes => [container_route])
       container_topology_service.stub(:entities).and_return([[container_node], [container_service]])
       topology = container_topology_service.build_topology
-      topology[:items].size.should eql 5
-      topology[:relations].size.should eql 4
+      topology[:items].size.should eql 6
+      topology[:relations].size.should eql 5
 
       topology[:items].key? "905c90ba-3e00-11e5-a0d2-18037327aaeb"
 
@@ -64,12 +66,16 @@ describe ContainerTopologyService do
       topology[:items]["8f8ca74c-3a41-11e5-a79a-001a4a231290"].should eql(:id => "8f8ca74c-3a41-11e5-a79a-001a4a231290", :name => "replicator1",
                                                                           :status => "OK", :kind => "Replicator", :miq_id => 7)
       topology[:items]["95e49048-3e00-11e5-a0d2-18037327aaeb"].should eql(:id => "95e49048-3e00-11e5-a0d2-18037327aaeb", :name => "service1",
-                                                                          :status => "unknown", :kind => "Service", :miq_id => 3)
+                                                                          :status => "Unknown", :kind => "Service", :miq_id => 3)
       topology[:items]["96c35ccd-3e00-11e5-a0d2-18037327aaeb"].should eql(:id => "96c35ccd-3e00-11e5-a0d2-18037327aaeb", :name => "myPod",
                                                                           :status => "Running", :kind => "Pod", :miq_id => 15)
-      topology[:items]["3572afee-3a41-11e5-a79a-001a4a231290_ruby-helloworld-database_openshift\n/mysql-55-centos7:latest"].should eql(:id => "3572afee-3a41-11e5-a79a-001a4a231290_ruby-helloworld-database_openshift\n/mysql-55-centos7:latest", :name => "ruby-example", :status => "running", :kind => "Container",  :miq_id => 10)
+      topology[:items]["ab5za74c-3a41-11e5-a79a-001a4a231290"].should eql(:id => "ab5za74c-3a41-11e5-a79a-001a4a231290", :name => "route-edge",
+                                                                          :status => "Unknown", :kind => "Route", :miq_id => 11)
+      topology[:items]["3572afee-3a41-11e5-a79a-001a4a231290_ruby-helloworld-database_openshift\n/mysql-55-centos7:latest"].should eql(:id => "3572afee-3a41-11e5-a79a-001a4a231290_ruby-helloworld-database_openshift\n/mysql-55-centos7:latest", :name => "ruby-example", :status => "Running", :kind => "Container",  :miq_id => 10)
+
 
       topology[:relations].should include(:source => "96c35ccd-3e00-11e5-a0d2-18037327aaeb", :target => "8f8ca74c-3a41-11e5-a79a-001a4a231290")
+      topology[:relations].should include(:source => "95e49048-3e00-11e5-a0d2-18037327aaeb", :target => "ab5za74c-3a41-11e5-a79a-001a4a231290")
     end
   end
 

@@ -2,7 +2,7 @@
 #main_div
   - type = @tenant.tenant? ? "Tenant" : "Project"
   %h3
-    = _("#{type} Information")
+    = _("%{type} Information") % {:type => type}
   .form-horizontal
     .form-group
       %label.control-label.col-md-2
@@ -24,7 +24,7 @@
           = h(parent.name)
     .form-group
       %label.control-label.col-md-2
-        = _("Groups in this #{type}")
+        = _("Groups in this %{type}") % {:type => type}
       .col-md-8
         %table{:cellpadding => "0", :cellspacing => "0"}
           - @tenant.miq_groups.sort_by { |group| group.name.downcase }.each do |g|
@@ -70,3 +70,8 @@
                   %li
                     %span.product.product-project
               %td= tenant.name
+  .row
+    .col-md-12.col-lg-10
+      = render :partial => "shared/summary/textual_listview", :locals => {:title => _("Tenant Quota"), :items => textual_group_tenant_quota_allocations}
+      %hr/
+  = render :partial => "rbac_tag_box"

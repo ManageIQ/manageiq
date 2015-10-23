@@ -159,4 +159,156 @@ describe MiqAction do
       end
     end
   end
+
+  context '.create_default_actions' do
+    context 'seeding default actions from a file with 3 csv rows and some comments' do
+      before do
+        stub_csv <<-CSV.strip_heredoc
+          name,description
+          audit,Generate Audit Event
+          log,Generate log message
+          # snmp,Generate an SNMP trap
+          # sms,Send an SMS text message
+          evm_event,Show EVM Event on Timeline
+        CSV
+
+        MiqAction.create_default_actions
+      end
+
+      it 'should create 3 new actions' do
+        expect(MiqAction.count).to eq 3
+      end
+
+      it 'should set action_type to "default"' do
+        expect(MiqAction.distinct.pluck(:action_type)).to eq ['default']
+      end
+
+      context 'when csv was changed and imported again' do
+        before do
+          stub_csv <<-CSV.strip_heredoc
+            name,description
+            audit,UPD: Audit Event
+            # log,Generate log message
+            snmp,Generate an SNMP trap
+            evm_event,Show EVM Event on Timeline
+          CSV
+
+          MiqAction.create_default_actions
+        end
+
+        it "should not delete the actions that present in the DB but don't present in the file" do
+          expect(MiqAction.where(:name => 'log')).to exist
+        end
+
+        it 'should update existing actions' do
+          expect(MiqAction.where(:name => 'audit').pluck(:description)).to eq ['UPD: Audit Event']
+        end
+
+        it 'should create new actions' do
+          expect(MiqAction.where(:name => 'snmp')).to exist
+        end
+      end
+
+      def stub_csv(data)
+        Tempfile.open(['actions', '.csv']) do |f|
+          f.write(data)
+          @tempfile = f # keep the reference in order to delete the file later
+        end
+
+        expect(MiqAction).to receive(:fixture_path).and_return(@tempfile.path)
+      end
+
+      after do
+        @tempfile.unlink
+      end
+    end
+
+    # 'integration' test to make sure that the real fixture file is well-formed
+    context 'seeding default actions' do
+      before { MiqAction.create_default_actions }
+
+      it 'should create new actions' do
+        expect(MiqAction.count).to be > 0
+      end
+    end
+  end
+
+  context '.create_script_actions_from_directory' do
+    context 'when there are 3 files in the script directory' do
+      before do
+        @script_dir = Dir.mktmpdir
+        stub_const('::MiqAction::SCRIPT_DIR', Pathname(@script_dir))
+        FileUtils.touch %W(
+          #{@script_dir}/script2.rb
+          #{@script_dir}/script.1.sh
+          #{@script_dir}/script3
+        )
+      end
+
+      after do
+        FileUtils.remove_entry_secure @script_dir
+      end
+
+      context 'seeding script actions from that directory' do
+        before { MiqAction.create_script_actions_from_directory }
+        let(:first_created_action) { MiqAction.order(:id).first! }
+
+        it 'should create 3 new actions' do
+          expect(MiqAction.count).to eq 3
+        end
+
+        it 'should assign script filename as action name' do
+          expect(first_created_action.name).to eq 'script_1_sh'
+        end
+
+        it 'should set action_type to "script"' do
+          expect(MiqAction.distinct.pluck(:action_type)).to eq ['script']
+        end
+
+        it 'should add description' do
+          expect(first_created_action.description).to eq "Execute script: script.1.sh"
+        end
+
+        it 'should put full file path into options hash' do
+          expect(first_created_action.options).to eq(:filename => "#{@script_dir}/script.1.sh")
+        end
+
+        context 'after one of the scripts is renamed' do
+          before { FileUtils.mv("#{@script_dir}/script2.rb", "#{@script_dir}/run.bat") }
+
+          context 'seeding script actions again' do
+            before { MiqAction.create_script_actions_from_directory }
+
+            it 'should not delete the old action' do
+              expect(MiqAction.where(:name => 'script2_rb')).to exist
+            end
+
+            it 'should create a new action' do
+              expect(MiqAction.where(:name => 'run_bat')).to exist
+            end
+          end
+        end
+
+        context 'seeding script actions again' do
+          before { MiqAction.create_script_actions_from_directory }
+
+          it 'should not add any new actions' do
+            expect(MiqAction.count).to eq 3
+          end
+        end
+      end
+    end
+  end
+
+  context '#round_to_nearest_4mb' do
+    it 'should round numbers to nearest 4 mb' do
+      a = MiqAction.new
+
+      expect(a.round_to_nearest_4mb(0)).to eq 0
+      expect(a.round_to_nearest_4mb("2")).to eq 4
+      expect(a.round_to_nearest_4mb(15)).to eq 16
+      expect(a.round_to_nearest_4mb(16)).to eq 16
+      expect(a.round_to_nearest_4mb(17)).to eq 20
+    end
+  end
 end

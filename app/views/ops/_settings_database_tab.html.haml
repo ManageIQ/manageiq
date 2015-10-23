@@ -52,11 +52,10 @@
                                   "data-miq_observe" => {:interval => '.5',
                                   :url      => url}.to_json)
     .form-group
-      .col-md-2
-      .col-md-8{:align => "left"}
+      .col-md-10
         #validate_button_on{:style => "display:#{@edit[:new][:password] == @edit[:new][:verify] ? "display" : "none"};"}
           = button_tag(_("Validate"),
-                      :class   => "btn btn-primary",
+                      :class   => "btn btn-primary pull-right",
                       :alt     => _("Validate Database Configuration"),
                       :title   => _("Validate Database Configuration"),
                       :onclick => "miqAjaxButton('#{url_for(:action => "settings_update",

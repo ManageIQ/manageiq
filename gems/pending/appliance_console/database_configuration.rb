@@ -64,6 +64,7 @@ module ApplianceConsole
 
     def post_activation
       ServiceGroup.new.restart_services
+      LinuxAdmin::Service.new("evmserverd").enable.start
     end
 
     def create_or_join_region
@@ -207,7 +208,7 @@ FRIENDLY
       ensure
         # Disconnect and remove this new connection from the connection pool, to completely clear it out
         conn.disconnect! if conn
-        ActiveRecord::Base.connection_handler.connection_pools.delete(ModelWithNoBackingTable.name)
+        ActiveRecord::Base.connection_handler.remove_connection(ModelWithNoBackingTable)
       end
     end
 

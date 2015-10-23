@@ -11,12 +11,12 @@
           = @edit[:new][:name]
       .form-group
         %label.col-md-2.control-label
-          _("Display Name")
+          _("Description")
         .col-md-8
           = @edit[:new][:description]
       .form-group
         %label.col-md-2.control-label
-          = _("Description")
+          = _("Long Description")
         .col-md-8
           = @edit[:new][:example_text]
       .form-group
@@ -59,7 +59,7 @@
                                                   :url      => url}.to_json)
       .form-group
         %label.col-md-2.control-label
-          = _("Display Name")
+          = _("Description")
         .col-md-8
           = text_field_tag("description", @edit[:new][:description],
                            :maxlength         => 50,
@@ -72,7 +72,7 @@
         = javascript_tag(javascript_focus('description'))
       .form-group
         %label.col-md-2.control-label
-          = _("Description")
+          = _("Long Description")
         .col-md-8
           = text_field_tag("example_text", @edit[:new][:example_text],
                            :maxlength         => 255,

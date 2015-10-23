@@ -27,8 +27,10 @@
         %label.col-md-2.control-label
           = _('URI')
         .col-md-8
-          #{@edit[:new][:uri_prefix]}://
-          = text_field_tag("uri", @edit[:new][:uri], :maxlength => 100,
+          .input-group
+            .input-group-addon
+              #{@edit[:new][:uri_prefix]}://
+            = text_field_tag("uri", @edit[:new][:uri], :maxlength => 100,
                             :class => "form-control",
                             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
       - if @edit[:new][:uri_prefix] != "nfs"

@@ -87,12 +87,11 @@ describe MiqAeClassController do
   context "#copy_objects" do
     it "copies class under specified namespace" do
       set_user_privileges
-      d1 = FactoryGirl.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
+      d1 = FactoryGirl.create(:miq_ae_domain, :name => "domain1")
       ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
       cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
 
-      d2 = FactoryGirl.create(:miq_ae_namespace,
-                              :name => "domain2", :parent_id => nil, :priority => 2, :system => false)
+      d2 = FactoryGirl.create(:miq_ae_domain, :name => "domain2", :system => false)
       ns2 = FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => d2.id)
 
       new = {:domain => d2.id, :namespace => ns2.fqname, :overwrite_location => false}
@@ -118,7 +117,7 @@ describe MiqAeClassController do
 
     it "copy class under same namespace returns error when class exists" do
       set_user_privileges
-      d1 = FactoryGirl.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
+      d1 = FactoryGirl.create(:miq_ae_domain, :name => "domain1")
       ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
       cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
 
@@ -145,12 +144,11 @@ describe MiqAeClassController do
 
     it "overwrite class under same namespace when class exists" do
       set_user_privileges
-      d1 = FactoryGirl.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
+      d1 = FactoryGirl.create(:miq_ae_domain, :name => "domain1")
       ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
       cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
 
-      d2 = FactoryGirl.create(:miq_ae_namespace,
-                              :name => "domain2", :parent_id => nil, :priority => 2, :system => false)
+      d2 = FactoryGirl.create(:miq_ae_domain, :system => false)
       ns2 = FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => d2.id)
 
       new = {:domain => d2.id, :namespace => ns2.fqname, :override_existing => true}
@@ -175,7 +173,7 @@ describe MiqAeClassController do
 
     it "copies a class with new name under same domain" do
       set_user_privileges
-      d1 = FactoryGirl.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
+      d1 = FactoryGirl.create(:miq_ae_domain, :name => "domain1")
       ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
       cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
 
@@ -261,7 +259,8 @@ describe MiqAeClassController do
     end
 
     before do
-      login_as FactoryGirl.create(:user_with_group)
+      @user =  FactoryGirl.create(:user_with_group)
+      login_as @user
       MiqAeDomain.stub(:find_by_name).with("another_fqname").and_return(miq_ae_domain)
       MiqAeDomain.stub(:find_by_name).with("another_fqname2").and_return(miq_ae_domain2)
     end
@@ -282,7 +281,7 @@ describe MiqAeClassController do
         before do
           MiqAeInstance.stub(:find_by_id).with(123).and_return(miq_ae_instance)
           miq_ae_instance.stub(:ae_class).and_return(miq_ae_class)
-          MiqAeInstance.stub(:get_homonymic_across_domains).with("fqname").and_return([override, override2])
+          MiqAeInstance.stub(:get_homonymic_across_domains).with(@user, "fqname").and_return([override, override2])
         end
 
         it "return instance record and check count of override instances being returned" do
@@ -313,7 +312,7 @@ describe MiqAeClassController do
       context "when the record exists" do
         before do
           MiqAeClass.stub(:find_by_id).with(1).and_return(miq_ae_class)
-          MiqAeClass.stub(:get_homonymic_across_domains).with("cls_fqname").and_return([override, override2])
+          MiqAeClass.stub(:get_homonymic_across_domains).with(@user, "cls_fqname").and_return([override, override2])
         end
 
         it "returns class record and check count of override classes being returned" do
@@ -345,7 +344,7 @@ describe MiqAeClassController do
         before do
           MiqAeMethod.stub(:find_by_id).with(123).and_return(miq_ae_method)
           miq_ae_method.stub(:ae_class).and_return(miq_ae_class)
-          MiqAeMethod.stub(:get_homonymic_across_domains).with("fqname").and_return([override, override2])
+          MiqAeMethod.stub(:get_homonymic_across_domains).with(@user, "fqname").and_return([override, override2])
         end
 
         it "returns method record and check count of override methods being returned" do

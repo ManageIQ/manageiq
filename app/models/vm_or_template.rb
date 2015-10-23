@@ -1906,4 +1906,15 @@ class VmOrTemplate < ActiveRecord::Base
   def validate_supported
     {:available => true,   :message => nil}
   end
+
+  def validate_supported_check(message_prefix)
+    message = if self.archived?
+                "#{message_prefix} cannot be performed on archived #{self.class.model_suffix} VM."
+              elsif self.orphaned?
+                "#{message_prefix} cannot be performed on orphaned #{self.class.model_suffix} VM."
+              else
+                nil
+              end
+    {:available => true,   :message => message}
+  end
 end

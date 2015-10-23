@@ -9,18 +9,43 @@ kubernetes-topology-graph {
     font-family: sans-serif;
     font-size: 15px;
     display: inline-block;
-    padding: 0 10px;
+    vertical-align: middle;
 }
+
 .legend label {
     font-weight: 400;
+    cursor: pointer;
+    vertical-align: 10px;
+}
+
+.checkbox-inline {
+    font-size: 16px;
+    padding-right: 10px;
+}
+
+.refresh-topology {
+    display: inline-block;
+    width: 32px;
+    height: 35px;
+    padding: 0;
+    font-size: 24px;
+    line-height: 35px;
+    text-align: center;
+    vertical-align: middle;
+    color: #3F9C35;
+    cursor: pointer;
+    border-radius: 5px;
 }
 
 .refresh {
-    display: inline-block;
-    width:35px;
-    height:35px;
-    padding:0;
+    float: right;
+    font-size: 16px;
 }
+
+.topology_header {
+    position: relative;
+}
+
 
 #selected {
     float: right;
@@ -29,7 +54,7 @@ kubernetes-topology-graph {
 }
 
 kubernetes-topology-icon {
-    padding: 7px 6px 12px 21px !important;
+    padding: 2px 6px 6px 18px !important;
     opacity: 0.4;
 }
 
@@ -47,10 +72,15 @@ kubernetes-topology-icon.active {
     stroke-dasharray: 5.5;
 }
 
+.kube-topology line.ServiceRoute {
+    stroke-linecap: round;
+    stroke-dasharray: 5.5;
+}
+
 kubernetes-topology-icon svg {
-    width: 39px !important;;
-    height: 39px !important;;
-    display: block;
+    width: 39px !important;
+    height: 39px !important;
+    display: inline-block;
 }
 
 .kube-topology g.selected {

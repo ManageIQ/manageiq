@@ -10,7 +10,7 @@ module MiqReport::ImportExport
         raise "Incorrect format, only policy records can be imported."
       end
 
-      user = User.find_by_userid(options[:userid])
+      user = options[:user] || User.find_by_userid(options[:userid])
       report.merge!("miq_group_id" => user.current_group_id, "user_id" => user.id)
 
       report["name"] = report.delete("menu_name")

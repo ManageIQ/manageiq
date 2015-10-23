@@ -4,11 +4,11 @@ module ContainerRouteHelper::TextualSummary
   #
 
   def textual_group_properties
-    %i(name creation_timestamp resource_version)
+    %i(name creation_timestamp resource_version host_name path)
   end
 
   def textual_group_relationships
-    %i(ems container_project container_service container_nodes)
+    %i(ems container_project container_service container_groups container_nodes)
   end
 
   def textual_group_smart_management
@@ -30,5 +30,13 @@ module ContainerRouteHelper::TextualSummary
 
   def textual_resource_version
     @record.resource_version
+  end
+
+  def textual_host_name
+    @record.host_name
+  end
+
+  def textual_path
+    @record.path
   end
 end

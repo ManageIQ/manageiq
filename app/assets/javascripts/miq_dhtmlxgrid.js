@@ -1,23 +1,4 @@
-// ES6 endsWith polyfill
-if (!String.prototype.endsWith) {
-  String.prototype.endsWith = function(searchString, position) {
-      var subjectString = this.toString();
-      if (position === undefined || position > subjectString.length) {
-        position = subjectString.length;
-      }
-      position -= searchString.length;
-      var lastIndex = subjectString.indexOf(searchString, position);
-      return lastIndex !== -1 && lastIndex === position;
-  };
-}
-
 // Functions used by MIQ for the dhtmlxtree control
-
-// Function to pass ajax request to server, to remember tree states
-function miqTreeState(rowId, state) {
-  miqJqueryRequest('/vm/compare_set_state?rowId=' + rowId + '&state=' + state);
-  return true;
-}
 
 // Handle row click (ajax or normal html trans)
 function miqRowClick(row_id, cell_idx) {
@@ -26,32 +7,12 @@ function miqRowClick(row_id, cell_idx) {
     if (typeof row_url_ajax != "undefined" && row_url_ajax) {
       miqJqueryRequest(row_url + row_id, {beforeSend: true, complete: true});
     } else {
-      if (!row_url.endsWith("/") && !row_url.endsWith("=")) {
+      if (! _.endsWith(row_url, "/") && ! _.endsWith(row_url, "=")) {
         row_url = row_url + "/";
       }
       DoNav(row_url + row_id);
     }
   }
-}
-
-// Handle row click - used by AE
-function miqAeRowSelected(row_id, cell_idx) {
-  if (cell_idx) {
-    var selected_id = this.getSelectedRowId();
-    if (selected_id != null) {
-      if (selected_id.split("_")[0] == "Field") {
-        this.clearSelection();
-      } else {
-        miqDynatreeActivateNode('ae_tree', row_id);
-      }
-    }
-  }
-}
-
-// Method to hide flash_msg when folde ris being edited in menu editor
-function miqMenuRowSelected(row_id, cell_idx) {
-  $('#flash_msg_div_menu_list').hide();
-  folder_list_grid.editCell();
 }
 
 // Handle row click
@@ -127,33 +88,19 @@ function miqInitGrid(grid_name) {
   // Build the grid object, then point a local var at it
   var grid = new dhtmlXGridObject(grid_hash.g_id);
   ManageIQ.grids.grids[grid_name].obj = grid;
+
   var options = grid_hash.opts;
+
   // Start with a clear grid
   grid.clearAll(true);
 
   // Set paths and skin
   grid.setImagePath("/images/dhtmlxgrid/");
   grid.imgURL = "/images/dhtmlxgrid/";
-  grid.setSkin(options.skin);
+  grid.setSkin("style3");
 
-  if (options.alt_row) {
-    grid.enableAlterCss("miq_row0", "miq_row1");
-  } else if (options.alt_row_no_hover) {
-    grid.enableAlterCss("miq_row0 no-hover", "miq_row1 no-hover");
-  } else {
-    grid.enableAlterCss("", "");
-  }
-
-  // Set other grid options
-  if (options.row_edit) {
-    grid.setEditable(true);
-  }
-
-  if (options.multi_select) {
-    grid.enableMultiselect(true);
-  } else {
-    grid.enableMultiselect(false);
-  }
+  grid.enableAlterCss("miq_row0", "miq_row1");
+  grid.enableMultiselect(false);
 
   // Load the grid with XML data, if present
   if (grid_hash.xml) {
@@ -168,10 +115,6 @@ function miqInitGrid(grid_name) {
 
   grid.setSizes();
 
-  if (options.no_resize) {
-    grid.enableResizing("false");
-  }
-
   // Turn on the sort indicator if the options were passed
   if (options.sortcol) {
     if (options.sortdir) {
@@ -182,22 +125,8 @@ function miqInitGrid(grid_name) {
     grid.setSortImgState(true, options.sortcol, dir);
   }
 
-  if (!options.no_save_state) {
-    grid.attachEvent("onOpenEnd", miqTreeState);
-  }
-
-  if (options.grid_url) {
-    grid_url = options.grid_url;
-    grid.attachEvent("onCheck", miqOnAECheck);
-    grid.attachEvent("onRowSelect", miqAeRowSelected);
-  } else {
-    grid.attachEvent("onCheck", miqGridOnCheck);
-    grid.attachEvent("onBeforeSorting", miqGridSort);
-  }
-
-  if (options.menu_grid_edit) {
-    grid.attachEvent("onRowDblClicked", miqMenuRowSelected);
-  }
+  grid.attachEvent("onCheck", miqGridOnCheck);
+  grid.attachEvent("onBeforeSorting", miqGridSort);
 
   // checking existence on "_none_" at the end of string
   if (options.row_url && options.row_url.lastIndexOf("_none_") != (options.row_url.length - 6) ) {
@@ -206,28 +135,13 @@ function miqInitGrid(grid_name) {
     grid.attachEvent("onRowSelect", miqRowClick);
   }
 
-  if (options.save_col_widths) {
-    grid.attachEvent("onResize", miqResizeCol); // Method called when resize starts
-    grid.attachEvent("onResizeEnd", miqResizeColEnd); // Medhod called when resize ends
-    ManageIQ.grids.gridColumnWidths = grid.cellWidthPX.join(","); // Save the original column widths
-  }
+  grid.attachEvent("onResize", miqResizeCol); // Method called when resize starts
+  grid.attachEvent("onResizeEnd", miqResizeColEnd); // Medhod called when resize ends
+  ManageIQ.grids.gridColumnWidths = grid.cellWidthPX.join(","); // Save the original column widths
+
   grid.attachEvent("onXLE", function () {
     miqSparkle(false);
   });
-}
-
-// Handle checkbox
-function miqOnAECheck(row_id, cell_idx, state) {
-  var crows = this.getCheckedRows(0);
-  $("#miq_grid_checks").val(crows);
-  $("#miq_grid_checks2").val(crows);
-
-  var count = crows ? crows.split(",").length : 0;
-  if (miqDomElementExists('center_tb')) {
-    miqSetButtons(count, "center_tb");
-  } else {
-    miqSetButtons(count, "center_buttons_div");
-  }
 }
 
 // Handle sort
@@ -269,19 +183,4 @@ function miqResizeColEnd(grid_obj) {
 function miqOrderService(id) {
   var url = '/' + ManageIQ.controller + '/x_button/' + id + '?pressed=svc_catalog_provision';
   miqJqueryRequest(url, {beforeSend: true, complete: true});
-}
-
-function miqDhtmlxgridSerialize(gridObj) {
-  var dhtmlxgridXml = "<?xml version='1.0'?>";
-  dhtmlxgridXml += "<rows>";
-  rowIds = gridObj.getAllRowIds().split(',');
-  for (i = 0; i < rowIds.length; i++) {
-    dhtmlxgridXml += "<row id=" + "'" + rowIds[i] + "'>";
-    for (j = 0; j < gridObj.getColumnCount(); j++) {
-      dhtmlxgridXml += "<cell>" + gridObj.cells(rowIds[i], j).getValue() + "</cell>";
-    }
-    dhtmlxgridXml += "</row>";
-  }
-  dhtmlxgridXml += "</rows>";
-  return dhtmlxgridXml;
 }

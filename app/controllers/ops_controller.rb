@@ -45,6 +45,7 @@ class OpsController < ApplicationController
     'rbac_tenant_delete'        => :rbac_tenant_delete,
     'rbac_tenant_edit'          => :rbac_tenant_edit,
     'rbac_tenant_manage_quotas' => :rbac_tenant_manage_quotas,
+    'rbac_tenant_tags_edit'     => :rbac_tenant_tags_edit,
     'refresh_audit_log'         => :refresh_audit_log,
     'refresh_log'               => :refresh_log,
     'refresh_production_log'    => :refresh_production_log,
@@ -399,7 +400,7 @@ class OpsController < ApplicationController
       elsif %w(rbac_group_add rbac_group_edit).include?(@sb[:action])
         action_url = "rbac_group_edit"
         record_id = @edit[:group_id] ? @edit[:group_id] : nil
-      elsif %(rbac_group_tags_edit rbac_user_tags_edit).include?(@sb[:action])
+      elsif %(rbac_group_tags_edit rbac_user_tags_edit rbac_tenant_tags_edit).include?(@sb[:action])
         action_url = "rbac_tags_edit"
         locals[:multi_record] = true    # need save/cancel buttons on edit screen even tho @record.id is not there
         record_id = @edit[:object_ids][0]
@@ -713,9 +714,9 @@ class OpsController < ApplicationController
     end
     # Rebuild the toolbars
     presenter[:set_visible_elements][:center_buttons_div] = c_buttons && c_xml
-    presenter[:reload_toolbars][:center]  = {:buttons => c_buttons, :xml => c_xml}  if c_buttons && c_xml
-    presenter[:show_hide_layout][:toolbar] = c_buttons ? 'show' : 'hide'
-    presenter[:show_hide_layout][:toolbar] = 'hide' if @sb[:center_tb_filename] == "blank_view_tb"
+    presenter[:reload_toolbars][:center] = {:buttons => c_buttons, :xml => c_xml} if c_buttons && c_xml
+    presenter[:set_visible_elements][:toolbar] = c_buttons
+    presenter[:set_visible_elements][:toolbar] = false if @sb[:center_tb_filename] == "blank_view_tb"
 
     if (@record && !@in_a_form) || (@edit && @edit[:rec_id] && @in_a_form)
       # Create ManageIQ.record.recordId JS var, if @record is present
@@ -738,9 +739,9 @@ class OpsController < ApplicationController
         presenter[:set_visible_elements][:form_buttons_div] = true
         presenter[:set_visible_elements][:pc_div_1] = false
       end
-      presenter[:show_hide_layout][:paginator] = 'show'
+      presenter[:set_visible_elements][:paging_div] = true
     else
-      presenter[:show_hide_layout][:paginator] = 'hide'
+      presenter[:set_visible_elements][:paging_div] = false
     end
   end
 

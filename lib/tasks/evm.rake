@@ -41,4 +41,8 @@ namespace :evm do
     Rake::Task["assets:clobber"].invoke
     Rake::Task["assets:precompile"].invoke
   end
+
+  task :compile_sti_loader => :environment do
+    DescendantLoader.instance.class_inheritance_relationships
+  end
 end

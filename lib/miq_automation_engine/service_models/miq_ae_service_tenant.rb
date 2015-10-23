@@ -7,6 +7,8 @@ module MiqAeMethodService
     expose :providers, :association => true
     expose :ext_management_systems, :association => true
     expose :vm_or_templates, :association => true
+    expose :vms, :association => true
+    expose :miq_templates, :association => true
     expose :service_templates, :association => true
     expose :miq_groups, :association => true
     expose :users, :association => true

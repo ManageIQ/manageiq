@@ -143,8 +143,8 @@ class TreeBuilder
     # Save node as open
     open_node(id)
 
-    x_get_tree_objects(object, @tree_state.x_tree(@name), nil, parents).each_with_object([]) do |o, acc|
-      acc.concat(x_build_node_dynatree(o, id, @tree_state.x_tree(@name)))
+    x_get_tree_objects(object, @tree_state.x_tree(@name), nil, parents).map do |o|
+      x_build_node_dynatree(o, id, @tree_state.x_tree(@name))
     end
   end
 
@@ -249,12 +249,12 @@ class TreeBuilder
   def x_build_dynatree(options)
     children = x_get_tree_objects(nil, options, nil, [])
 
-    child_nodes = children.each_with_object([]) do |child, acc|
+    child_nodes = children.map do |child|
       # already a node? FIXME: make a class for node
       if child.kind_of?(Hash) && child.key?(:title) && child.key?(:key) && child.key?(:icon)
-        acc << child
+        child
       else
-        acc.concat(x_build_node_dynatree(child, nil, options))
+        x_build_node_dynatree(child, nil, options)
       end
     end
 
@@ -351,8 +351,8 @@ class TreeBuilder
        options[:open_all] ||
        object[:load_children] ||
        node[:expand]
-      kids = x_get_tree_objects(object, options, nil, parents).each_with_object([]) do |o, acc|
-        acc.concat(x_build_node(o, node[:key], options))
+      kids = x_get_tree_objects(object, options, nil, parents).map do |o|
+        x_build_node(o, node[:key], options)
       end
       node[:children] = kids unless kids.empty?
     else
@@ -360,7 +360,7 @@ class TreeBuilder
         node[:isLazy] = true  # set child flag if children exist
       end
     end
-    [node]
+    node
   end
 
   def x_build_single_node(object, pid, options)

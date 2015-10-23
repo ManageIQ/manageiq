@@ -33,7 +33,9 @@ class ServiceReconfigureTask < MiqRequestTask
         :instance_name    => ra.ae_instance,
         :automate_message => ra.ae_message.blank? ? 'create' : ra.ae_message,
         :attrs            => dialog_values.merge!("request" => req_type),
-        :user_id          => get_user.id
+        :user_id          => get_user.id,
+        :miq_group_id     => get_user.current_group_id,
+        :tenant_id        => get_user.current_tenant.id
       }
 
       MiqQueue.put(

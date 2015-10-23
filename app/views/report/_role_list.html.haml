@@ -30,7 +30,7 @@
                 :tree_state                => true,
                 :multi_lines               => true})
           %td{:valign => "top"}
-            = render :partial => "report/menu_form1", :grid => params[:grid]
+            = render :partial => "report/menu_form1", :locals => {:folders => @grid_folders}
             = render :partial => "report/menu_form2"
     - elsif @sb[:menu]
       = render :partial => "layouts/flash_msg", :locals => {:div_num => "_menu_list"}

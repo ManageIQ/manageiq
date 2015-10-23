@@ -10,6 +10,16 @@ body, html {
   background-image: linear-gradient(to bottom, #FAFAFA 0%, #EDEDED 100%);
 }
 
+#paging_div {
+  width: 100%;
+  border-top: 1px solid #c7c7c7;
+  background-image: linear-gradient(to bottom, #FAFAFA 0%, #EDEDED 100%);
+}
+
+#paging_div ul.pagination {
+  margin: 0;
+}
+
 /* This media query makes the entire main row scrollable once the columns have collapsed */
 
 @media (max-width: $screen-sm) {
@@ -45,6 +55,10 @@ body, html {
   .scrollable {
     height: 100%;
     overflow: auto;
+  }
+  #paging_div {
+    position: absolute;
+    bottom: 0;
   }
   #main_footer {
     position: absolute;
@@ -303,4 +317,10 @@ iframe, .iframe {
 
 .resizer .btn {
   border-color: #d0d0d0
+}
+
+/* eliminates horizontal scrollbar in some browsers */
+
+.bootstrap-select .dropdown-menu {
+  overflow-y: visible !important
 }

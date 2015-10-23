@@ -1,4 +1,4 @@
-#class_fields_div{:style => "width:100%;height:100%;"}
+#class_fields_div
   - if x_node.split('-')[0] == "aec" || params[:pressed] || %w(field_select field_accept field_delete).include?(params[:action])
     - if !@in_a_form_fields
       / Show Schema

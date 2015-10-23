@@ -2,6 +2,7 @@ require "spec_helper"
 
 describe ResourceAction do
   context "#deliver_to_automate_from_dialog" do
+    let(:user) { FactoryGirl.create(:user_with_group) }
     let(:zone_name) { "default" }
     let(:ra) { FactoryGirl.create(:resource_action) }
     let(:q_args) do
@@ -10,7 +11,9 @@ describe ResourceAction do
         :class_name       => nil,
         :instance_name    => nil,
         :automate_message => nil,
-        :user_id          => nil,
+        :user_id          => user.id,
+        :miq_group_id     => user.current_group.id,
+        :tenant_id        => user.current_tenant.id,
         :attrs            => {},
       }
     end
@@ -37,7 +40,7 @@ describe ResourceAction do
       it "validates queue entry" do
         target             = nil
         MiqQueue.should_receive(:put).with(q_options).once
-        ra.deliver_to_automate_from_dialog({}, target)
+        ra.deliver_to_automate_from_dialog({}, target, user)
       end
     end
 
@@ -47,7 +50,7 @@ describe ResourceAction do
         q_args[:object_type] = target.class.base_class.name
         q_args[:object_id]   = target.id
         MiqQueue.should_receive(:put).with(q_options).once
-        ra.deliver_to_automate_from_dialog({}, target)
+        ra.deliver_to_automate_from_dialog({}, target, user)
       end
     end
   end

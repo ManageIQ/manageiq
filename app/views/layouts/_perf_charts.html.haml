@@ -34,7 +34,7 @@
               - unless charts[c][:type] == "None" || chart_data[c].nil?
                 %tr
                   %td{:align => "center", :style => "padding-top: 20px;"}
-                    %h3= _("VM \"#{@perf_record.name}\"")
+                    %h3= _("VM \"%{name}\"") % {:name => @perf_record.name}
                     %div{:style => "width: #{width + 15}px; height: #{height + 15}px; float:left; padding: 0px 5px 20px 0px;"}
                       = render(:partial => '/layouts/perf_chart',
                                :locals  => {:charts      => charts,

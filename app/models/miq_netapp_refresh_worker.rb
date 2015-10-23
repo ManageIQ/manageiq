@@ -1,5 +1,5 @@
 class MiqNetappRefreshWorker < MiqQueueWorkerBase
-  require_dependency 'miq_netapp_refresh_worker/runner'
+  require_nested :Runner
 
   include PerStorageManagerTypeWorkerMixin
 

@@ -1,5 +1,7 @@
 module ManageIQ::Providers
   class BaseManager < ExtManagementSystem
+    require_nested :Refresher
+
     def self.metrics_collector_queue_name
       self::MetricsCollectorWorker.default_queue_name
     end
@@ -17,5 +19,3 @@ module ManageIQ::Providers
     end
   end
 end
-
-require_dependency 'manageiq/providers/base_manager/refresher'

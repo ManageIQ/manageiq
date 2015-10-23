@@ -3,6 +3,7 @@ require "spec_helper"
 silence_warnings { MiqHostProvisionWorkflow.const_set("DIALOGS_VIA_AUTOMATE", false) }
 
 describe MiqHostProvisionWorkflow do
+  let(:user) { FactoryGirl.create(:user_with_group) }
   include WorkflowSpecHelper
   context "seeded" do
     context "After setup," do
@@ -25,7 +26,7 @@ describe MiqHostProvisionWorkflow do
 
       context "Without a Valid IPMI Host," do
         it "should not create an MiqRequest when calling from_ws" do
-          -> { MiqHostProvisionWorkflow.from_ws("1.1", "admin", @templateFields, @hostFields, @requester, false, nil, nil) }.should raise_error(RuntimeError)
+          -> { MiqHostProvisionWorkflow.from_ws("1.1", user, @templateFields, @hostFields, @requester, false, nil, nil) }.should raise_error(RuntimeError)
         end
       end
 
@@ -38,7 +39,7 @@ describe MiqHostProvisionWorkflow do
         end
 
         it "should create an MiqRequest when calling from_ws" do
-          request = MiqHostProvisionWorkflow.from_ws("1.1", "admin", @templateFields, @hostFields, @requester, false, nil, nil)
+          request = MiqHostProvisionWorkflow.from_ws("1.1", user, @templateFields, @hostFields, @requester, false, nil, nil)
           request.should be_a_kind_of(MiqRequest)
           opt = request.options
         end

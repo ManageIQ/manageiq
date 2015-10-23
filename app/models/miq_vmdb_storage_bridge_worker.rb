@@ -1,5 +1,5 @@
 class MiqVmdbStorageBridgeWorker < MiqQueueWorkerBase
-  require_dependency 'miq_vmdb_storage_bridge_worker/runner'
+  require_nested :Runner
 
   self.required_roles       = ["vmdb_storage_bridge"]
   self.default_queue_name   = "vmdb_storage_bridge"

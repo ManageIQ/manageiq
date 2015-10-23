@@ -28,6 +28,8 @@ describe "MultipleStateMachineSteps" do
                         :class_name       => @state_class1,
                         :instance_name    => @state_instance,
                         :user_id          => @user.id,
+                        :miq_group_id     => @user.current_group_id,
+                        :tenant_id        => @user.current_tenant.id,
                         :automate_message => 'create'}
     MiqServer.stub(:my_zone).and_return('default')
     clear_domain

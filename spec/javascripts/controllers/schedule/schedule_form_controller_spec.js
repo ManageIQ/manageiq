@@ -58,11 +58,11 @@ describe('scheduleFormController', function() {
     });
 
     it('sets the logPassword to the log_password returned from the http request', function() {
-      expect($scope.scheduleModel.log_password).toEqual('logPassword');
+      expect($scope.scheduleModel.log_password).toEqual(miqService.storedPasswordPlaceholder);
     });
 
     it('sets the logVerify to the log_verify returned from the http request', function() {
-      expect($scope.scheduleModel.log_verify).toEqual('logVerify');
+      expect($scope.scheduleModel.log_verify).toEqual(miqService.storedPasswordPlaceholder);
     });
 
     it('sets the scheduleName to the name returned from the http request', function() {
@@ -182,8 +182,6 @@ describe('scheduleFormController', function() {
         filter_value: 'filterValue',
         protocol: 'protocol',
         log_userid: 'logUserId',
-        log_password: 'logPassword',
-        log_verify: 'logVerify',
         schedule_name: 'scheduleName',
         schedule_description: 'scheduleDescription',
         schedule_enabled: true,

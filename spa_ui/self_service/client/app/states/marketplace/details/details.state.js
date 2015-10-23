@@ -40,7 +40,7 @@
   }
 
   /** @ngInject */
-  function StateController(dialogs, serviceTemplate) {
+  function StateController($state, CollectionsApi, dialogs, serviceTemplate, Notifications) {
     var vm = this;
 
     vm.title = 'Service Template Details';
@@ -48,6 +48,40 @@
 
     if (dialogs.subcount > 0) {
       vm.dialogs = dialogs.resources[0].content;
+    }
+
+    vm.submitDialog = submitDialog;
+
+    function submitDialog() {
+      var dialogFieldData = {
+        href: '/api/service_templates/' + serviceTemplate.id
+      };
+
+      angular.forEach(vm.dialogs, function(dialog) {
+        angular.forEach(dialog.dialog_tabs, function(dialogTab) {
+          angular.forEach(dialogTab.dialog_groups, function(dialogGroup) {
+            angular.forEach(dialogGroup.dialog_fields, function(dialogField) {
+              dialogFieldData[dialogField.name] = dialogField.default_value;
+            });
+          });
+        });
+      });
+
+      CollectionsApi.post(
+        'service_catalogs/' + serviceTemplate.service_template_catalog_id + '/service_templates',
+        serviceTemplate.id,
+        {},
+        JSON.stringify({action: 'order', resource: dialogFieldData})
+      ).then(submitSuccess, submitFailure);
+
+      function submitSuccess(result) {
+        Notifications.success(result.message);
+        $state.go('requests.list');
+      }
+
+      function submitFailure(result) {
+        Notifications.error('There was an error submitting this request: ' + result);
+      }
     }
   }
 })();

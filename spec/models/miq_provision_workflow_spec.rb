@@ -3,27 +3,27 @@ require "spec_helper"
 silence_warnings { MiqProvisionWorkflow.const_set("DIALOGS_VIA_AUTOMATE", false) }
 
 describe MiqProvisionWorkflow do
+  let(:admin) { FactoryGirl.create(:user_admin) }
+  let(:server) { EvmSpecHelper.local_miq_server }
+  let(:dialog) { FactoryGirl.create(:miq_dialog_provision) }
   context "seeded" do
     context "After setup," do
-      before(:each) do
-        @server = EvmSpecHelper.local_miq_server
-        @zone = @server.zone
-        @guid = @server.guid
-        @admin = FactoryGirl.create(:user_admin)
-        expect(MiqServer.my_server).to eq(@server)
-
-        FactoryGirl.create(:miq_dialog_provision)
+      before do
+        server
+        dialog
       end
-
       context "Without a Valid Template," do
         it "should not create an MiqRequest when calling from_ws" do
-          -> { ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws("1.0", "admin", "template", "target", false, "cc|001|environment|test", "") }.should raise_error(RuntimeError)
+          expect do
+            ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
+              "1.0", admin, "template", "target", false, "cc|001|environment|test", "")
+          end.to raise_error(RuntimeError)
         end
       end
 
       context "With a Valid Template," do
         before(:each) do
-          @ems         = FactoryGirl.create(:ems_vmware,  :name => "Test EMS",  :zone => @zone)
+          @ems         = FactoryGirl.create(:ems_vmware,  :name => "Test EMS",  :zone => server.zone)
           @host        = FactoryGirl.create(:host, :name => "test_host", :hostname => "test_host", :state => 'on', :ext_management_system => @ems)
           @vm_template = FactoryGirl.create(:template_vmware, :name => "template", :ext_management_system => @ems, :host => @host)
           @hardware    = FactoryGirl.create(:hardware, :vm_or_template => @vm_template, :guest_os => "winxppro", :memory_cpu => 512, :numvcpus => 2)
@@ -33,25 +33,46 @@ describe MiqProvisionWorkflow do
         end
 
         it "should create an MiqRequest when calling from_ws" do
-          request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws("1.0", "admin", "template", "target", false, "cc|001|environment|test", "")
+          FactoryGirl.create(:classification_cost_center_with_tags)
+          request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
+            "1.0", admin, "template", "target", false, "cc|001|environment|test","")
           request.should be_a_kind_of(MiqRequest)
+
+          expect(request.options[:vm_tags]).to eq([Classification.find_by_name("cc/001").id])
+        end
+
+        it "should set tags" do
+          FactoryGirl.create(:classification_cost_center_with_tags)
+          request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
+            "1.1", admin, "name=template", "vm_name=spec_test", nil, "cc=001|environment=test", nil, nil, nil)
+          request.should be_a_kind_of(MiqRequest)
+
+          expect(request.options[:vm_tags]).to eq([Classification.find_by_name("cc/001").id])
         end
 
         it "should encrypt fields" do
           password_input = "secret"
           request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
-            "1.1", "admin", "name=template", "vm_name=spec_test|root_password=#{password_input}",
+            "1.1", admin, "name=template", "vm_name=spec_test|root_password=#{password_input}",
             "owner_email=admin|owner_first_name=test|owner_last_name=test", nil, nil, nil, nil)
 
           MiqPassword.encrypted?(request.options[:root_password]).should be_true
           MiqPassword.decrypt(request.options[:root_password]).should == password_input
+        end
+
+        it "should set values" do
+          request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
+            "1.1", admin, "name=template", "vm_name=spec_test",
+            nil, nil, "abc=true", nil, nil)
+
+          expect(request.options[:ws_values]).to include(:abc => "true")
         end
       end
 
       context "#show_customize_fields" do
         it "should show PXE fields when customization supported" do
           fields = {'key' => 'value'}
-          wf = MiqProvisionVirtWorkflow.new({}, @admin)
+          wf = MiqProvisionVirtWorkflow.new({}, admin)
           wf.should_receive(:supports_customization_template?).and_return(true)
           wf.should_receive(:show_customize_fields_pxe).with(fields)
           wf.show_customize_fields(fields, 'linux')

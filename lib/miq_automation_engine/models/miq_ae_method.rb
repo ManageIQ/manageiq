@@ -114,8 +114,8 @@ class MiqAeMethod < ActiveRecord::Base
     end
   end
 
-  def self.get_homonymic_across_domains(fqname, enabled = nil)
-    MiqAeDatastore.get_homonymic_across_domains(::MiqAeMethod, fqname, enabled)
+  def self.get_homonymic_across_domains(user, fqname, enabled = nil)
+    MiqAeDatastore.get_homonymic_across_domains(user, ::MiqAeMethod, fqname, enabled)
   end
 
   def self.find_by_class_id_and_name(class_id, name)

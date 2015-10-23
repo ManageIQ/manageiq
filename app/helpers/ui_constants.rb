@@ -40,6 +40,7 @@ module UiConstants
   TOP_TABLES_BY_ROWS_COUNT = 5
   TOP_TABLES_BY_SIZE_COUNT = 5
   TOP_TABLES_BY_WASTED_SPACE_COUNT = 5
+  GIGABYTE = 1024 * 1024 * 1024
 
   # VMware MKS version choices
   MKS_VERSIONS = ["2.0.1.0", "2.0.2.0", "2.1.0.0"]
@@ -442,7 +443,7 @@ module UiConstants
 
   # This set of assignments was created for miq_alerts
   ASSIGN_TOS["ExtManagementSystem"] = {
-    "enterprise"                 => " The Enterprise",
+    "enterprise"                 => "The Enterprise",
     "ext_management_system"      => "Selected #{ui_lookup(:tables => "ems_infra")}",
     "ext_management_system-tags" => "Tagged #{ui_lookup(:tables => "ems_infra")}"
   }
@@ -461,7 +462,7 @@ module UiConstants
     "vm-tags"            => "Tagged #{ui_lookup(:tables => "vm")}"
   }.merge(ASSIGN_TOS["Host"])
   ASSIGN_TOS["Storage"] = {
-    "enterprise"   => " The Enterprise",
+    "enterprise"   => "The Enterprise",
     "storage"      => "Selected #{ui_lookup(:tables => "storage")}",
     "storage-tags" => "Tagged #{ui_lookup(:tables => "storage")}"
   }
@@ -472,7 +473,7 @@ module UiConstants
   # This set of assignments was created for chargeback_rates
   ASSIGN_TOS[:chargeback_storage] = ASSIGN_TOS["Storage"]
   ASSIGN_TOS[:chargeback_compute] = {
-    "enterprise"            => " The Enterprise",
+    "enterprise"            => "The Enterprise",
     "ext_management_system" => "Selected #{ui_lookup(:tables => "ext_management_systems")}",
     "ems_cluster"           => "Selected #{ui_lookup(:tables => "ems_cluster")}",
     "vm-tags"               => "Tagged #{ui_lookup(:tables => "vm")}"

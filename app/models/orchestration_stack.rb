@@ -1,6 +1,6 @@
 require 'ancestry'
 class OrchestrationStack < ActiveRecord::Base
-  require_dependency 'orchestration_stack/status'
+  require_nested :Status
 
   include NewWithTypeStiMixin
   include ReportableMixin

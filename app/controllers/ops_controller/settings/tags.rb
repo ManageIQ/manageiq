@@ -53,10 +53,10 @@ module OpsController::Settings::Tags
         add_flash(_("%s is required") % "Name", :error)
       end
       if @edit[:new][:description].blank?
-        add_flash(_("%s is required") % "Display Name", :error)
+        add_flash(_("%s is required") % "Description", :error)
       end
       if @edit[:new][:example_text].blank?
-        add_flash(_("%s is required") % "Description", :error)
+        add_flash(_("%s is required") % "Long Description", :error)
       end
       unless @flash_array.nil?
         render :update do |page|

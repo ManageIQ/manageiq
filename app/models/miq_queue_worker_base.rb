@@ -1,5 +1,5 @@
 class MiqQueueWorkerBase < MiqWorker
-  require_dependency 'miq_queue_worker_base/runner'
+  require_nested :Runner
 
   def self.queue_priority
     MiqQueue::MIN_PRIORITY

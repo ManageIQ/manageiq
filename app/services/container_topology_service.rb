@@ -39,6 +39,12 @@ class ContainerTopologyService
     services.each do |s|
       topo_items[s.ems_ref] = build_entity_data(s, "Service")
       s.container_groups.each { |cg| links << build_link(s.ems_ref, cg.ems_ref) } if s.container_groups.size > 0
+      if s.container_routes.size > 0
+        s.container_routes.each { |r|
+          topo_items[r.ems_ref] = build_entity_data(r, "Route")
+          links << build_link(s.ems_ref, r.ems_ref)
+        }
+      end
     end
 
     topology[:items] = topo_items
@@ -60,7 +66,7 @@ class ContainerTopologyService
 
   def entity_status(entity, kind)
     case kind
-    when 'VM', 'Host' then entity.power_state
+    when 'VM', 'Host' then entity.power_state.capitalize
     when 'Node'
       condition = entity.container_conditions.first
       if condition.name == 'Ready' && condition.status == 'True'
@@ -69,14 +75,14 @@ class ContainerTopologyService
         'NotReady'
       end
     when 'Pod' then entity.phase
-    when 'Container' then entity.state
+    when 'Container' then entity.state.capitalize
     when 'Replicator'
       if entity.current_replicas == entity.replicas
         'OK'
       else
-        'warning'
+        'Warning'
       end
-    else 'unknown'
+    else 'Unknown'
     end
   end
 
@@ -109,7 +115,8 @@ class ContainerTopologyService
      :Node       => true,
      :Service    => true,
      :Host       => true,
-     :VM         => true
+     :VM         => true,
+     :Route      => true
     }
   end
 end

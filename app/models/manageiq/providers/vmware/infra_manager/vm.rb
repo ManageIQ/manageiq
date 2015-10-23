@@ -32,7 +32,7 @@ class ManageIQ::Providers::Vmware::InfraManager::Vm < ManageIQ::Providers::Infra
   end
 
   def validate_smartstate_analysis
-    validate_supported
+    validate_supported_check("Smartstate Analysis")
   end
 
   #

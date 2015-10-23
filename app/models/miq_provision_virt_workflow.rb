@@ -1,5 +1,3 @@
-require 'active_support/deprecation'
-
 class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   def auto_placement_enabled?
     get_value(@values[:placement_auto])
@@ -582,7 +580,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def source_vm_rbac_filter(vms, condition = nil)
     filter_id = get_value(@values[:vm_filter]).to_i
-    search_options = {:userid => @requester.userid}
+    search_options = {:user => @requester}
     search_options[:conditions] = condition unless condition.blank?
     template_msg =  "User: <#{@requester.userid}>"
     template_msg += " Role: <#{@requester.current_group.nil? ? "none" : @requester.current_group.miq_user_role.name}>  Group: <#{@requester.current_group.nil? ? "none" : @requester.current_group.description}>"
@@ -619,12 +617,12 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   def allowed_datastore_storage_controller(_options = {})
     {}
   end
-  deprecate :allowed_datastore_storage_controller
+  Vmdb::Deprecation.deprecate_methods(self, :allowed_datastore_storage_controller)
 
   def allowed_datastore_aggregate(_options = {})
     {}
   end
-  deprecate :allowed_datastore_aggregate
+  Vmdb::Deprecation.deprecate_methods(self, :allowed_datastore_aggregate)
 
   def get_source_vm
     get_source_and_targets[:vm]
@@ -1013,18 +1011,14 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     from_ws_ver_1_x(*prov_args)
   end
 
-  def self.from_ws_2(*args)
-    from_ws_ver_1_x(*args)
-  end
-
-  def self.from_ws_ver_1_0(version, userid, src_name, target_name, auto_approve, tags, additional_values)
-    _log.info "Web-service provisioning starting with interface version <#{version}> for user <#{userid}>"
+  def self.from_ws_ver_1_0(version, user, src_name, target_name, auto_approve, tags, additional_values)
+    _log.info "Web-service provisioning starting with interface version <#{version}> for user <#{user.userid}>"
     values = {}
-    p = new(values, userid, :use_pre_dialog => false)
+    p = new(values, user, :use_pre_dialog => false)
     src_name_down = src_name.downcase
     src = p.allowed_templates.detect { |v| v.name.downcase == src_name_down }
     raise "Source template [#{src_name}] was not found" if src.nil?
-    p = class_for_source(src.id).new(values, userid, :use_pre_dialog => false)
+    p = class_for_source(src.id).new(values, user, :use_pre_dialog => false)
 
     # Populate required fields
     p.init_from_dialog(values)
@@ -1032,13 +1026,13 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     p.refresh_field_values(values)
     values[:vm_name]          = target_name
     values[:placement_auto]   = [true, 1]
-    values[:owner_first_name] = userid
-    values[:owner_email]      = userid
-    values[:owner_last_name]  = userid
+    values[:owner_first_name] = user.userid
+    values[:owner_email]      = user.userid
+    values[:owner_last_name]  = user.userid
 
     # Tags are passed as category|value|cat2|...  Example: cc|001|environment|test
-    p.set_ws_tags(values, tags, :parse_ws_string_v1)
-    p.set_ws_values(values, :ws_values, additional_values, :parse_ws_string_v1)
+    values[:vm_tags] = p.ws_tags(tags, :parse_ws_string_v1)
+    values[:ws_values] = p.ws_values(additional_values, :parse_ws_string_v1)
 
     if p.validate(values) == false
       errors = []
@@ -1046,7 +1040,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       raise "Provision failed for the following reasons:\n#{errors.join("\n")}"
     end
 
-    p.create_request(values, userid, auto_approve)
+    p.create_request(values, nil, auto_approve)
   end
 
   def ws_template_fields(values, fields, ws_values)
@@ -1219,24 +1213,23 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     data.keys.each { |k| set_ws_field_value(values, k, data, dialog_name, dlg_fields) if dlg_fields.key?(k) }
   end
 
-  def self.from_ws_ver_1_x(version, userid, template_fields, vm_fields, requester, tags, options)
+  def self.from_ws_ver_1_x(version, user, template_fields, vm_fields, requester, tags, options)
     options = MiqHashStruct.new if options.nil?
-    _log.warn "Web-service provisioning starting with interface version <#{version}> by requester <#{userid}>"
+    _log.warn "Web-service provisioning starting with interface version <#{version}> by requester <#{user.userid}>"
 
     init_options = {:use_pre_dialog => false, :request_type => request_type(parse_ws_string(template_fields)[:request_type])}
     data = parse_ws_string(requester)
     unless data[:user_name].blank?
-      userid = data[:user_name]
-      _log.warn "Web-service requester changed to <#{userid}>"
+      user = User.find_by_userid!(data[:user_name])
+      _log.warn "Web-service requester changed to <#{user.userid}>"
     end
 
-    p = new(values = {}, userid, init_options)
-    userid = p.requester.userid
+    p = new(values = {}, user, init_options)
     src = p.ws_template_fields(values, template_fields, options.values)
     raise "Source template [#{src_name}] was not found" if src.nil?
     # Allow new workflow class to determine dialog name instead of using the stored value from the first call.
     values.delete(:miq_request_dialog_name)
-    p = class_for_source(src.id).new(values, userid, init_options)
+    p = class_for_source(src.id).new(values, user, init_options)
 
     # Populate required fields
     p.init_from_dialog(values)
@@ -1246,10 +1239,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     p.ws_vm_fields(values, vm_fields)
     p.ws_requester_fields(values, requester)
-    p.set_ws_tags(values, tags)    # Tags are passed as category=value|cat2=value2...  Example: cc=001|environment=test
-    p.set_ws_values(values, :ws_values, options.values)
-    p.set_ws_values(values, :ws_ems_custom_attributes, options.ems_custom_attributes, :parse_ws_string, :modify_key_name => false)
-    p.set_ws_values(values, :ws_miq_custom_attributes, options.miq_custom_attributes, :parse_ws_string, :modify_key_name => false)
+    values[:vm_tags] = p.ws_tags(tags)    # Tags are passed as category=value|cat2=value2...  Example: cc=001|environment=test
+    values[:ws_values] = p.ws_values(options.values)
+    values[:ws_ems_custom_attributes] = p.ws_values(options.ems_custom_attributes, :parse_ws_string, :modify_key_name => false)
+    values[:ws_miq_custom_attributes] = p.ws_values(options.miq_custom_attributes, :parse_ws_string, :modify_key_name => false)
 
     p.validate_values(values)
 
@@ -1307,7 +1300,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
             else
               load_ar_obj(allowed_hosts)
             end
-    Rbac.filtered(hosts, :class => Host, :userid => @requester.userid)
+    Rbac.filtered(hosts, :class => Host, :user => @requester)
   end
 
   def all_provider_hosts(src)

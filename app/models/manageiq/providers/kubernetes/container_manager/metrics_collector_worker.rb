@@ -1,6 +1,6 @@
 module ManageIQ::Providers
   class Kubernetes::ContainerManager::MetricsCollectorWorker < BaseManager::MetricsCollectorWorker
-    require_dependency 'manageiq/providers/kubernetes/container_manager/metrics_collector_worker/runner'
+    require_nested :Runner
 
     self.default_queue_name = "kubernetes"
 

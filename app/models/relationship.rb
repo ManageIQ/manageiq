@@ -156,26 +156,28 @@ class Relationship < ActiveRecord::Base
     fields.join(options[:record_delimiter])
   end
 
-  #
-  # Backward compatibility methods
-  #
+  module BackwardCompatability
+    # Gets the entire tree in as few queries as possible, though it may end up
+    #   pulling back many more objects than necessary.
+    #   NOTE: Will only populate .children cache.
+    def get_tree(root, rel_type = nil, options = {})
+      return if root.nil?
 
-  # Gets the entire tree in as few queries as possible, though it may end up
-  #   pulling back many more objects than necessary.
-  #   NOTE: Will only populate .children cache.
-  def self.get_tree(root, rel_type = nil, options = {})
-    deprecate_method("get_tree", "subtree_arranged or descendants_arranged")
-    return if root.nil?
+      # Build a tree of children manually, starting at the root
+      descendants = root.with_relationship_type(rel_type) { root.descendants_arranged(options) }
+      build_tree(root, descendants)
+    end
 
-    # Build a tree of children manually, starting at the root
-    descendants = root.with_relationship_type(rel_type) { root.descendants_arranged(options) }
-    build_tree(root, descendants)
+    def tree_to_a(node, oftype)
+      node.subtree(:of_type => oftype)
+    end
+
+    Vmdb::Deprecation.deprecate_methods(self,
+      :get_tree   => "use subtree_arranged or descendants_arranged instead",
+      :tree_to_a  => "use subtree or descendants instead",
+    ) unless Rails.env.production?
   end
-
-  def self.tree_to_a(node, oftype)
-    deprecate_method("tree_to_a", "subtree or descendants")
-    node.subtree(:of_type => oftype)
-  end
+  extend BackwardCompatability
 
   # Recursive helper method for get_tree
   def self.build_tree(root, descendants)
@@ -184,13 +186,4 @@ class Relationship < ActiveRecord::Base
     root
   end
   private_class_method :build_tree
-
-  def self.deprecate_method(method, instead)
-    unless Rails.env.production?
-      msg = "[DEPRECATION] #{method} method is deprecated.  Please use #{instead} instead.  At #{caller[1]}"
-      $log.warn msg
-      warn msg
-    end
-  end
-  private_class_method :deprecate_method
 end

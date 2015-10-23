@@ -13,10 +13,6 @@ function miqOnLoad() {
   if ($('#widget_select_div').length) {
     miqInitWidgetPulldown();
   }
-  // Need this since IE will not run JS correctly until after page is loaded
-  if (typeof miqInitDhtmlxLayout == "function") {
-    miqInitDhtmlxLayout();
-  }
 
   // Track the mouse coordinates for popup menus
   $(document).mousemove(function (e) {
@@ -73,7 +69,7 @@ function miqPrepRightCellForm(tree) {
   if ($('#adv_searchbox_div').length) {
     $('#adv_searchbox_div').hide();
   }
-  ManageIQ.layout.toolbar.hide();
+  $('#toolbar').hide();
   $('#' + tree).dynatree('disable');
   miqDimDiv(tree + '_div', true);
 }
@@ -819,16 +815,6 @@ function miqSendOneTrans(url) {
   miqJqueryRequest(url);
 }
 
-// Function to write date and time to page footer each second
-function dateTime(offset, abbr) {
-  var date = miqCalendarDateConversion(offset);
-
-  $('#tP').html(date.format("MM/DD/YYYY HH:mm ") + abbr);
-  setTimeout(function () {
-    dateTime(offset, abbr);
-  }, 1000);
-}
-
 // this deletes the remembered treestate when called
 function miqClearTreeState(prefix) {
   var to_remove = [];
@@ -1076,18 +1062,6 @@ function miqSearchByName(button) {
 function miqShowAE_Tree(typ) {
   miqJqueryRequest(miqPassFields("ae_tree_select_toggle", {typ: typ}));
   return true;
-}
-
-// Use the jQuery.form plugin for ajax file upload
-function miqInitJqueryForm() {
-  $('#uploadForm input').change(function () {
-    $(this).parent().ajaxSubmit({
-      beforeSubmit: function (a, f, o) {
-        o.dataType = 'script';
-        miqSparkleOn();
-      }
-    });
-  });
 }
 
 // Toggle the user options div in the page header

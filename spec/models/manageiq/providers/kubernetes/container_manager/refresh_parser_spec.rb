@@ -263,6 +263,57 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
     end
   end
 
+  describe "parse_component_statuses" do
+    example_component_statuses = [
+      {
+        :component_status => RecursiveOpenStruct.new(
+          :metadata   => {:name => "example-component-status1"},
+          :conditions => [
+            RecursiveOpenStruct.new(
+              :type    => "Healthy",
+              :status  => "True",
+              :message => "{'health': 'true'}"
+            )
+          ]),
+        :name             => "example-component-status1",
+        :condition        => "Healthy",
+        :status           => "True",
+        :message          => "{'health': 'true'}",
+        :error            => nil
+      },
+      {
+        :component_status => RecursiveOpenStruct.new(
+          :metadata   => {:name => "example-component-status2"},
+          :conditions => [
+            RecursiveOpenStruct.new(
+              :type   => "Healthy",
+              :status => "Unknown",
+              :error  => "Get http://127.0.0.1:10251/healthz: dial tcp 127.0.0.1:10251: connection refused"
+            )
+          ]),
+        :name             => "example-component-status2",
+        :condition        => "Healthy",
+        :status           => "Unknown",
+        :message          => nil,
+        :error            => "Get http://127.0.0.1:10251/healthz: dial tcp 127.0.0.1:10251: connection refused"
+      }
+    ]
+
+    example_component_statuses.each do |ex|
+      it "tests '#{ex[:name]}'" do
+        parsed_component_status = parser.send(:parse_component_status, ex[:component_status])
+
+        parsed_component_status.should have_attributes(
+          :name      => ex[:name],
+          :condition => ex[:condition],
+          :status    => ex[:status],
+          :message   => ex[:message],
+          :error     => ex[:error]
+        )
+      end
+    end
+  end
+
   describe "parse_iec_number" do
     it "converts IEC bytes size to integer value" do
       [
@@ -453,6 +504,40 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         :project               => nil,
         :container_limit_items => []
       }
+    end
+  end
+  
+  describe "parse_container_image" do
+    shared_image_without_host = "shared/image"
+    shared_image_with_host = "host:1234/shared/image"
+    shared_ref = "shared:ref"
+    unique_ref = "unique:ref"
+
+    it "returns unique object *identity* for same image but different ref/id" do
+      [shared_image_with_host, shared_image_without_host].each do |shared_image|
+        first_obj  = parser.parse_container_image(shared_image, shared_ref)
+        second_obj = parser.parse_container_image(shared_image, unique_ref)
+
+        first_obj.should_not be(second_obj)
+      end
+    end
+
+    it "returns unique object *content* for same image but different ref/id" do
+      [shared_image_with_host, shared_image_without_host].each do |shared_image|
+        first_obj  = parser.parse_container_image(shared_image, shared_ref)
+        second_obj = parser.parse_container_image(shared_image, unique_ref)
+
+        first_obj.should_not == second_obj
+      end
+    end
+
+    it "returns same object *identity* for same image and ref/id" do
+      [shared_image_with_host, shared_image_without_host].each do |shared_image|
+        first_obj  = parser.parse_container_image(shared_image, shared_ref)
+        second_obj = parser.parse_container_image(shared_image, shared_ref)
+
+        first_obj.should be(second_obj)
+      end
     end
   end
 end
