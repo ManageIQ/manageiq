@@ -84,7 +84,7 @@ function miqOnResize() {
 
 // Initialize the widget pulldown on the dashboard
 function miqInitWidgetPulldown() {
-  $("#toolbar button:not(.dropdown-toggle), #toolbar ul.dropdown-menu > li > a").click(miqWidgetToolbarClick);
+  $("#dashboard_dropdown #toolbar button:not(.dropdown-toggle), #toolbar ul.dropdown-menu > li > a").click(miqWidgetToolbarClick);
 }
 
 function miqCalendarDateConversion(server_offset) {
@@ -1248,6 +1248,10 @@ function miqToolbarOnClick(e) {
   parent.children('button.dropdown-toggle').attr('aria-expanded', 'false');
 
   if (button.hasClass('disabled') || button.parent().hasClass('disabled')) {
+    return;
+  }
+
+  if (button.parents('#dashboard_dropdown').length > 0) {
     return;
   }
 
