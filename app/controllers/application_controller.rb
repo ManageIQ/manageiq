@@ -1594,7 +1594,7 @@ class ApplicationController < ActionController::Base
     failure_count = 0
     MiqReportResult.where(:id => saved_reports).order("lower(name)").each do |rep|
       begin
-        rep.public_send(task) if rep.respond_to?(task)    # Run the task
+        rep.public_send(task) if rep.respond_to?(task) # Run the task
       rescue StandardError
         failure_count += 1  # Push msg and error flag
       else
