@@ -10,7 +10,6 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration::Cont
       #####################################################################################################
       set_spec_option(vmcs, :memoryMB, :vm_memory, nil, :to_i)
 
-      cpus    = get_option(:number_of_cpus).to_i     # Old-style
       sockets = get_option(:number_of_sockets).to_i  # New-style based on VMware KB: 1010184
       cores   = get_option(:cores_per_socket).to_i   # New-style
 
