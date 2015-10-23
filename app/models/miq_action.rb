@@ -923,13 +923,13 @@ class MiqAction < ActiveRecord::Base
 
     if inputs[:synchronous]
       MiqPolicy.logger.info("MIQ(action_raise_automation_event): Now executing Raise Automation Event, Event: [#{event}]")
-      MiqAeEvent.raise_synthetic_event(event, aevent)
+      MiqAeEvent.raise_synthetic_event(rec, event, aevent)
     else
       MiqPolicy.logger.info("MIQ(action_raise_automation_event): Queuing Raise Automation Event, Event: [#{event}]")
       MiqQueue.put(
         :class_name  => "MiqAeEvent",
         :method_name => "raise_synthetic_event",
-        :args        => [event, aevent],
+        :args        => [rec, event, aevent],
         :priority    => MiqQueue::HIGH_PRIORITY,
         :zone        => rec.my_zone,
         :role        => "automate"
