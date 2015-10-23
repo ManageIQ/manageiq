@@ -43,16 +43,16 @@
   %tbody
     - grid_hash[:rows].each do |row|
       %tr
-      - row[:cells].each do |cell|
-        %td
-          - if cell[:is_checkbox]
-            = check_box_tag("check_#{row[:id]}", 1, cell[:checked],
-              :onclick => "miqUpdateButtons(this, '#{button_div}');")
-          - elsif cell[:is_button]
-            %button.btn.btn-primary{:onclick => cell[:onclick],
-                                    :title   => cell[:title],
-                                    :alt     => cell[:title]}
+        - row[:cells].each do |cell|
+          %td
+            - if cell[:is_checkbox]
+              = check_box_tag("check_#{row[:id]}", 1, cell[:checked],
+                :onclick => "miqUpdateButtons(this, '#{button_div}');")
+            - elsif cell[:is_button]
+              %button.btn.btn-primary{:onclick => cell[:onclick],
+                                      :title   => cell[:title],
+                                      :alt     => cell[:title]}
+                = cell[:text]
+            - else
+              = image_tag(cell[:image], :alt => cell[:title], :title => cell[:title]) if cell[:image]
               = cell[:text]
-          - else
-            = image_tag(cell[:image], :alt => cell[:title], :title => cell[:title]) if cell[:image]
-            = cell[:text]
