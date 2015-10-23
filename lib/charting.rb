@@ -29,7 +29,7 @@ class Charting
 
   def self.detect_available_plugin
     available = subclasses.select(&:available?)
-    available.max { |klass_a, klass_b| klass_a.priority <=> klass_b.priority }
+    available.max_by(&:priority)
   end
 end
 
