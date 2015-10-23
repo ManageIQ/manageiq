@@ -17,7 +17,7 @@ class TreeBuilderAeClass < TreeBuilder
               else
                 filter_ae_objects(User.current_tenant.visible_domains)
               end
-    count_only_or_objects(options[:count_only], objects, [:priority]).reverse
+    count_only_or_objects(options[:count_only], objects)
   end
 
   def x_get_tree_class_kids(object, options)
