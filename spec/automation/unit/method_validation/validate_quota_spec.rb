@@ -1,22 +1,22 @@
 require "spec_helper"
 include QuotaHelper
 
-def run_automate_method(provision_request)
-  @quota_used       = YAML.dump(:storage => 32_768, :vms => 2, :cpu => 2,  :memory => 4096)
-  @quota_requested  = YAML.dump(:storage => 10_240, :vms => 1, :cpu => 1,  :memory => 1024)
-  attrs = []
-  attrs << "MiqProvisionRequest::miq_provision_request=#{@miq_provision_request.id}&" \
-           "MiqRequest::miq_request=#{@miq_provision_request.id}&" \
-           "quota_limit_max_yaml=#{@quota_limit_max}&" \
-           "quota_limit_warn_yaml=#{@quota_limit_warn}&" \
-           "quota_used_yaml=#{@quota_used}&" \
-           "Tenant::quota_source=#{@tenant.id}&" \
-           "quota_requested_yaml=#{@quota_requested}" if provision_request
-  MiqAeEngine.instantiate("/ManageIQ/system/request/Call_Instance?namespace=System/CommonMethods&" \
-                          "class=QuotaMethods&instance=validate_quota&#{attrs.join('&')}", @user)
-end
-
 describe "Quota Validation" do
+  def run_automate_method(provision_request)
+    @quota_used       = YAML.dump(:storage => 32_768, :vms => 2, :cpu => 2,  :memory => 4096)
+    @quota_requested  = YAML.dump(:storage => 10_240, :vms => 1, :cpu => 1,  :memory => 1024)
+    attrs = []
+    attrs << "MiqProvisionRequest::miq_provision_request=#{@miq_provision_request.id}&" \
+             "MiqRequest::miq_request=#{@miq_provision_request.id}&" \
+             "quota_limit_max_yaml=#{@quota_limit_max}&" \
+             "quota_limit_warn_yaml=#{@quota_limit_warn}&" \
+             "quota_used_yaml=#{@quota_used}&" \
+             "Tenant::quota_source=#{@tenant.id}&" \
+             "quota_requested_yaml=#{@quota_requested}" if provision_request
+    MiqAeEngine.instantiate("/ManageIQ/system/request/Call_Instance?namespace=System/CommonMethods&" \
+                            "class=QuotaMethods&instance=validate_quota&#{attrs.join('&')}", @user)
+  end
+
   before do
     setup_model
   end
