@@ -653,12 +653,12 @@ module ApplicationHelper
     return value if value.to_s.length < TRUNC_AT
     case @settings.fetch_path(:display, :quad_truncate)
     when "b"  # Old version, used first x chars followed by ...
-      return value[0...TRUNC_TO] + "..."
+      value.first(TRUNC_TO) + "..."
     when "f"  # Chop off front
-      return "..." + value[(value.length - TRUNC_TO)..-1]
+      "..." + value.last(TRUNC_TO)
     else      # Chop out the middle
       numchars = TRUNC_TO / 2
-      return value[0...numchars] + "..." + value[(value.length - numchars)..-1]
+      value.first(numchars) + "..." + value.last(numchars)
     end
   end
 
