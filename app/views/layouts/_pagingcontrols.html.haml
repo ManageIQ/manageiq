@@ -39,16 +39,14 @@
         - if pages[:current] > 1
           - if @ajax_paging_buttons
             %li.first
-              %span{:type    => "button",
-                    :onclick => remote_function(:loading  => "miqSparkle(true);",
+              %span{:onclick => remote_function(:loading  => "miqSparkle(true);",
                                                 :complete => "miqSparkle(false);",
                                                 :url      => update_paging_url_parms(action_url, :page => 1)),
                     :class   => "fa fa-angle-double-left",
                     :alt     => "First",
                     :title   => "First"}
             %li.prev
-              %span{:type    => "button",
-                    :onclick => remote_function(:loading  => "miqSparkle(true);",
+              %span{:onclick => remote_function(:loading  => "miqSparkle(true);",
                                                 :complete => "miqSparkle(false);",
                                                 :url      => update_paging_url_parms(action_url, :page => pages[:current] - 1)),
                       :class   => "fa fa-angle-left",
@@ -56,35 +54,31 @@
                       :title   => "Previous"}
           - elsif action_id
             %li.first
-              %span{:type    => "button",
-                      :onclick => "DoNav('#{update_paging_url_parms(action_url, :page => 1, :id => action_id)}')",
-                      :class   => "i fa fa-angle-double-left",
-                      :alt     => "First",
-                      :title   => "First"}
+              %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => 1, :id => action_id)}')",
+                    :class   => "fa fa-angle-double-left",
+                    :alt     => "First",
+                    :title   => "First"}
             %li.prev
-              %span{:type    => "button",
-                        :onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:current] - 1, :id => action_id)}')",
-                        :class   => "i fa fa-angle-left",
-                        :alt     => "Previous",
-                        :title   => "Previous"}
+              %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:current] - 1, :id => action_id)}')",
+                    :class   => "fa fa-angle-left",
+                    :alt     => "Previous",
+                    :title   => "Previous"}
           - else
             %li.first
-              %span{:type    => "button",
-                      :onclick => "DoNav('#{update_paging_url_parms(action_url, :page => 1)}')",
-                      :class   => "i fa fa-angle-double-left",
-                      :alt     => "First",
-                      :title   => "First"}
+              %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => 1)}')",
+                    :class   => "fa fa-angle-double-left",
+                    :alt     => "First",
+                    :title   => "First"}
             %li.prev
-              %span{:type    => "button",
-                        :onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:current] - 1)}')",
-                        :class   => "i fa fa-angle-left",
-                        :alt     => "Previous",
-                        :title   => "Previous"}
+              %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:current] - 1)}')",
+                    :class   => "fa fa-angle-left",
+                    :alt     => "Previous",
+                    :title   => "Previous"}
         - else
           %li.first.disabled
-            %span{:class => "i fa fa-angle-double-left"}
+            %span{:class => "fa fa-angle-double-left"}
           %li.prev.disabled
-            %span{:class => "i fa fa-angle-left"}
+            %span{:class => "fa fa-angle-left"}
 
         %li
           %span
@@ -102,52 +96,46 @@
         - if pages[:current] < pages[:total]
           - if @ajax_paging_buttons
             %li.next
-              %span{:type    => "button",
-                      :onclick => remote_function(:loading  => "miqSparkle(true);",
-                                                  :complete => "miqSparkle(false);",
-                                                  :url      => update_paging_url_parms(action_url, :page => pages[:current] + 1)),
-                      :class   => "i fa fa-angle-right",
-                      :alt     => "Next",
-                      :title   => "Next"}
+              %span{:onclick => remote_function(:loading  => "miqSparkle(true);",
+                                                :complete => "miqSparkle(false);",
+                                                :url      => update_paging_url_parms(action_url, :page => pages[:current] + 1)),
+                    :class   => "fa fa-angle-right",
+                    :alt     => "Next",
+                    :title   => "Next"}
             %li.last
-              %span{:type    => "button",
-                      :onclick => remote_function(:loading  => "miqSparkle(true);",
-                                                  :complete => "miqSparkle(false);",
-                                                  :url      => update_paging_url_parms(action_url, :page => pages[:total])),
-                      :class   => "i fa fa-angle-double-right",
-                      :alt     => "Last",
-                      :title   => "Last"}
+              %span{:onclick => remote_function(:loading  => "miqSparkle(true);",
+                                                :complete => "miqSparkle(false);",
+                                                :url      => update_paging_url_parms(action_url, :page => pages[:total])),
+                    :class   => "fa fa-angle-double-right",
+                    :alt     => "Last",
+                    :title   => "Last"}
           - elsif action_id
             %li.next
-              %span{:type    => "button",
-                      :onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:current] + 1, :id => action_id)}')",
-                      :class   => "i fa fa-angle-right",
-                      :alt     => "Next",
-                      :title   => "Next"}
+              %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:current] + 1, :id => action_id)}')",
+                    :class   => "fa fa-angle-right",
+                    :alt     => "Next",
+                    :title   => "Next"}
             %li.last
-              %span{:type    => "button",
-                        :onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:total], :id => action_id)}')",
-                        :class   => "i fa fa-angle-double-right",
-                        :alt     => "Last",
-                        :title   => "Last"}
+              %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:total], :id => action_id)}')",
+                    :class   => "fa fa-angle-double-right",
+                    :alt     => "Last",
+                    :title   => "Last"}
           - else
             %li.next
-              %span{:type    => "button",
-                      :onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:current] + 1)}')",
-                      :class   => "i fa fa-angle-right",
-                      :alt     => "Next",
-                      :title   => "Next"}
+              %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:current] + 1)}')",
+                    :class   => "fa fa-angle-right",
+                    :alt     => "Next",
+                    :title   => "Next"}
             %li.last
-              %span{:type    => "button",
-                        :onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:total])}')",
-                        :class   => "i fa fa-angle-double-right",
-                        :alt     => "Last",
-                        :title   => "Last"}
+              %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:total])}')",
+                    :class   => "fa fa-angle-double-right",
+                    :alt     => "Last",
+                    :title   => "Last"}
         - else
           %li.next.disabled
-            %span{:class => "i fa fa-angle-right"}
+            %span{:class => "fa fa-angle-right"}
           %li.last.disabled
-            %span{:class => "i fa fa-angle-double-right"}
+            %span{:class => "fa fa-angle-double-right"}
 
     .form-group.pull-right
       = _('Items per page:')
