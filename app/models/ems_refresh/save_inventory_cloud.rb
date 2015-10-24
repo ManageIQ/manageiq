@@ -59,7 +59,8 @@ module EmsRefresh::SaveInventoryCloud
       :floating_ips,
       :cloud_resource_quotas,
       :cloud_object_store_containers,
-      :cloud_object_store_objects
+      :cloud_object_store_objects,
+      :resource_groups
     ]
 
     # Save and link other subsections
@@ -331,5 +332,19 @@ module EmsRefresh::SaveInventoryCloud
 
     save_inventory_multi(:cloud_object_store_objects, ems, hashes, deletes, [:ems_ref], nil, [:tenant, :container])
     store_ids_for_new_records(ems.cloud_object_store_objects, hashes, :ems_ref)
+  end
+
+  def save_resource_groups_inventory(ems, hashes, target = nil)
+    target = ems if target.nil?
+
+    ems.resource_groups(true)
+    deletes = if (target == ems)
+                ems.resource_groups.dup
+              else
+                []
+              end
+
+    save_inventory_multi(:resource_groups, ems, hashes, deletes, [:ems_ref])
+    store_ids_for_new_records(ems.resource_groups, hashes, :ems_ref)
   end
 end
