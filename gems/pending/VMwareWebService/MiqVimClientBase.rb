@@ -25,7 +25,7 @@ class MiqVimClientBase < VimService
     end
 
     on_log_header { |msg| $vim_log.info msg }
-    on_log_body   { |msg| $vim_log.debug msg if $miq_wiredump }
+    on_log_body   { |msg| $vim_log.debug msg } if $miq_wiredump
 
     super(:uri => sdk_uri, :version => 1)
 
