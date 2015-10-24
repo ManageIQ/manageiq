@@ -7,10 +7,6 @@ module ApplicationHelper
   include StiRoutingHelper
   include TextualSummaryHelper
 
-  def css_background_color
-    (@css || {}).fetch_path(:background_color) || 'black'
-  end
-
   # Create a collapsed panel based on a condition
   def miq_accordion_panel(title, condition, id, &block)
     content_tag(:div, :class => "panel panel-default") do
