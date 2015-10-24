@@ -93,32 +93,21 @@ module VMDB
       begin
         _log.info "Opening filename: [#{filename}], size: [#{File.size(filename)}]"
         Zlib::GzipReader.open(filename) do |gz|
-          lcount = 0
-          gz.each_line { |_line| lcount += 1 }
-          _log.info "Lines in file: [#{lcount}]"
+          line_count = 0
+          start_line = nil
+          end_line   = nil
 
-          hlines = []
-          tlines = []
-
-          gz.rewind
-          # Collect 2 arrays of lines
           gz.each_line do |line|
-            hlines << line if gz.lineno <= 50
-            tlines << line if gz.lineno >= (lcount - 50)
+            line_count += 1
+            next unless line =~ LOG_TIMESTAMP_REGEX
+            start_line ||= line
+            end_line     = line
           end
 
-          start_time = nil
-          hlines.each do |l|
-            start_time = log_timestamp(l)
-            break unless start_time.nil?
-          end
+          start_time = log_timestamp(start_line)
+          end_time   = log_timestamp(end_line)
 
-          end_time = nil
-          tlines.reverse_each do |l|
-            end_time = log_timestamp(l)
-            break unless end_time.nil?
-          end
-
+          _log.info "Lines in file: [#{line_count}]"
           _log.info "Start Time: [#{start_time.inspect}]"
           _log.info "End   Time: [#{end_time.inspect}]"
 
