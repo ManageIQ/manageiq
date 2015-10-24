@@ -160,7 +160,6 @@ class PxeController < ApplicationController
 
     # forcing form buttons to turn off, to prevent Abandon changes popup when replacing right cell after form button was pressed
     if c_tb.present?
-      presenter[:set_visible_elements][:center_buttons_div] = true
       presenter[:reload_toolbars][:center] = c_tb
     end
 

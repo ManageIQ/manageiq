@@ -705,10 +705,6 @@ class MiqPolicyController < ApplicationController
     end
     presenter[:right_cell_text] = right_cell_text
 
-    # Rebuild the toolbars
-    presenter[:set_visible_elements][:history_buttons_div] = h_tb.present?
-    presenter[:set_visible_elements][:center_buttons_div]  = c_tb.present?
-
     presenter[:reload_toolbars][:history] = h_tb
     presenter[:reload_toolbars][:center]  = c_tb
 

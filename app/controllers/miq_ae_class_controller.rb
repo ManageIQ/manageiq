@@ -33,12 +33,7 @@ class MiqAeClassController < ApplicationController
     end
     render :update do |page|                      # Use JS to update the display
       page.replace("flash_msg_div#{div_suffix}", :partial => "layouts/flash_msg", :locals => {:div_num => div_suffix})
-      if c_tb.present?
-        page << javascript_pf_toolbar_reload('center_tb', c_tb)
-        page << javascript_show("center_buttons_div")
-      else
-        page << javascript_hide("center_buttons_div")
-      end
+      page << javascript_pf_toolbar_reload('center_tb', c_tb)
       page << "miqSparkle(false);"
     end
   end
@@ -376,10 +371,8 @@ class MiqAeClassController < ApplicationController
     if c_tb.present?
       presenter[:set_visible_elements][:toolbar] = true
       presenter[:reload_toolbars][:center] = c_tb
-      presenter[:set_visible_elements][:center_buttons_div] = true
     else
       presenter[:set_visible_elements][:toolbar] = false
-      presenter[:set_visible_elements][:center_buttons_div] = false
     end
 
     if @record && !@in_a_form

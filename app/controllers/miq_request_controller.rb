@@ -56,7 +56,6 @@ class MiqRequestController < ApplicationController
         render :update do |page|
           page.replace("request_div", :partial => "miq_request/request")
           page << javascript_pf_toolbar_reload('center_tb', c_tb)
-          page << javascript_show("center_buttons_div")
         end
       elsif @display == "miq_provisions"
         show

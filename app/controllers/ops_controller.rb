@@ -713,7 +713,6 @@ class OpsController < ApplicationController
       c_tb = build_toolbar(@sb[:center_tb_filename])
     end
     # Rebuild the toolbars
-    presenter[:set_visible_elements][:center_buttons_div] = c_tb.present?
     presenter[:reload_toolbars][:center] = c_tb
     presenter[:set_visible_elements][:toolbar] = c_tb.present?
     presenter[:set_visible_elements][:toolbar] = false if @sb[:center_tb_filename] == "blank_view_tb"

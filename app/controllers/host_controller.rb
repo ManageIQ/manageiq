@@ -230,8 +230,8 @@ class HostController < ApplicationController
     protect_build_screen
     protect_set_db_record
 
-    render :update do |page|                                # Use RJS to update the display
-      page.replace_html("view_buttons_div", :partial => "layouts/view_buttons")   # Replace the view buttons
+    render :update do |page|
+      # FIXME: do we need to refresh the view toolbar here?
       page.replace_html("main_div", :partial => "layouts/protecting")   # Replace the main div area contents
     end
   end

@@ -29,12 +29,7 @@ module ApplicationController::Automate
       else
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page.replace_html("main_div", :partial => "results_tabs")
-        if c_tb.present?
-          page << javascript_pf_toolbar_reload('center_tb', c_tb)
-          page << javascript_show("center_buttons_div")
-        else
-          page << javascript_hide("center_buttons_div")
-        end
+        page << javascript_pf_toolbar_reload('center_tb', c_tb)
         page << "miqSparkle(false);"
       end
     end
@@ -189,12 +184,7 @@ module ApplicationController::Automate
     render :update do |page|
       page.replace("resolve_form_div", :partial => "resolve_form") unless params[:tab_id]
       page.replace("results_tabs",     :partial => "results_tabs")
-      if c_tb.present?
-        page << javascript_pf_toolbar_reload('center_tb', c_tb)
-        page << javascript_show("center_buttons_div")
-      else
-        page << javascript_hide("center_buttons_div")
-      end
+      page << javascript_pf_toolbar_reload('center_tb', c_tb)
       page << "miqSparkle(false);"
     end
   end

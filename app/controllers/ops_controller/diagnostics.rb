@@ -467,10 +467,8 @@ module OpsController::Diagnostics
       if c_tb.present?
         page << "$('#toolbar').show();"
         page << javascript_pf_toolbar_reload('center_tb', c_tb)
-        page << javascript_show_if_exists("center_buttons_div")
       else
         page << "$('#toolbar').hide();"
-        page << javascript_hide_if_exists("center_buttons_div")
       end
       page << "$('#toolbar').hide();" if @sb[:center_tb_filename] == "blank_view_tb"
     end
@@ -802,10 +800,8 @@ module OpsController::Diagnostics
       if c_tb.present?
         page << "$('#toolbar').show();"
         page << javascript_pf_toolbar_reload('center_tb', c_tb)
-        page << javascript_show_if_exists("center_buttons_div")
       else
         page << "$('#toolbar').hide();"
-        page << javascript_hide_if_exists("center_buttons_div")
       end
       page << "$('#toolbar').hide();" if @sb[:center_tb_filename] == "blank_view_tb"
     end

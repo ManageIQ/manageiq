@@ -765,7 +765,6 @@ class ChargebackController < ApplicationController
     when :cb_rates_tree
       # Rates accordion
       if c_tb.present?
-        presenter[:set_visible_elements][:center_buttons_div] = true
         presenter[:reload_toolbars][:center] = c_tb
       end
       presenter[:set_visible_elements][:toolbar] = c_tb.present?
@@ -776,11 +775,9 @@ class ChargebackController < ApplicationController
       presenter[:update_partials][:main_div] = r[:partial => "assignments_tabs"]
     when :cb_reports_tree
       if c_tb.present?
-        presenter[:set_visible_elements][:center_buttons_div] = true
         presenter[:reload_toolbars][:center] = c_tb
         presenter[:set_visible_elements][:toolbar] = true
       else
-        presenter[:set_visible_elements][:center_buttons_div] = false
         presenter[:set_visible_elements][:toolbar] = false
       end
       presenter[:update_partials][:main_div] = r[:partial => 'reports_list']

@@ -39,12 +39,7 @@ module MiqPolicyController::Rsop
       c_tb = build_toolbar(center_toolbar_filename)
       render :update do |page|
         page.replace_html("main_div", :partial => "rsop_results")
-        if c_tb.present?
-          page << javascript_pf_toolbar_reload('center_tb', c_tb)
-          page << javascript_show("center_buttons_div")
-        else
-          page << javascript_hide("center_buttons_div")
-        end
+        page << javascript_pf_toolbar_reload('center_tb', c_tb)
         page << "miqSparkle(false);"
       end
     elsif params[:button] == "reset"
@@ -156,12 +151,7 @@ module MiqPolicyController::Rsop
         # if rsop_show_options came in
         page.replace_html("main_div", :partial => "rsop_results")
       end
-      if c_tb.present?
-        page << javascript_pf_toolbar_reload('center_tb', c_tb)
-        page << javascript_show("center_buttons_div")
-      else
-        page << javascript_hide("center_buttons_div")
-      end
+      page << javascript_pf_toolbar_reload('center_tb', c_tb)
     end
   end
 

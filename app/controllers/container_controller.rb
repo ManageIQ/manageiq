@@ -269,11 +269,6 @@ class ContainerController < ApplicationController
     # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 
-    # Rebuild the toolbars
-    presenter[:set_visible_elements][:history_buttons_div] = h_tb.present?
-    presenter[:set_visible_elements][:center_buttons_div]  = c_tb.present?
-    presenter[:set_visible_elements][:view_buttons_div]    = v_tb.present?
-
     presenter[:reload_toolbars][:history] = h_tb
     presenter[:reload_toolbars][:center]  = c_tb
     presenter[:reload_toolbars][:view]    = v_tb

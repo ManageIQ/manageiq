@@ -67,8 +67,7 @@ module ApplicationController::Performance
       end
 
       # Cannot replace button divs that contain dhtmlx toolbars, use code below to turn on/off individual buttons
-      #     page.replace("view_buttons_div", :partial=>"layouts/view_buttons")  # Don't need to do view or center buttons, just the perf stuff
-      #     page.replace("center_buttons_div", :partial=>"layouts/center_buttons")
+      # Don't need to do view or center buttons, just the perf stuff
       if ["host", "vm", "vm_or_template"].include?(params[:controller])
         pfx = params[:controller] == "vm_or_template" ? "vm_" : ""
         if @perf_options[:typ] == "realtime"

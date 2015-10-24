@@ -65,12 +65,7 @@ class ConfigurationController < ApplicationController
       render :update do |page|                    # Use RJS to update the display
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page.replace_html("main_div", :partial => "ui_4") # Replace the main div area contents
-        if c_tb.present?
-          page << javascript_pf_toolbar_reload('center_tb', c_tb)
-          page << "$('#center_buttons_div').show();"
-        else
-          page << "$('#center_buttons_div').hide();"
-        end
+        page << javascript_pf_toolbar_reload('center_tb', c_tb)
       end
     end
   end

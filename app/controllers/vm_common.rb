@@ -484,13 +484,8 @@ module VmCommon
     @explorer = true
     c_tb = build_toolbar("x_vm_center_tb")
     render :update do |page|                    # Use RJS to update the display
-      if c_tb.present?
-        page << "$('#toolbar').show();"
-        page << javascript_pf_toolbar_reload('center_tb', c_tb)
-        page << javascript_show_if_exists("center_buttons_div")
-      else
-        page << javascript_hide_if_exists("center_buttons_div")
-      end
+      page << "$('#toolbar').show();" if c_tb.present?
+      page << javascript_pf_toolbar_reload('center_tb', c_tb)
 
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page.replace("desc_content", :partial => "/vm_common/snapshots_desc",
@@ -1619,11 +1614,6 @@ module VmCommon
     end
 
     presenter[:right_cell_text] = @right_cell_text
-    # Rebuild the toolbars
-    presenter[:set_visible_elements][:history_buttons_div] = h_tb.present?
-    presenter[:set_visible_elements][:center_buttons_div]  = c_tb.present?
-    presenter[:set_visible_elements][:view_buttons_div]    = v_tb.present?
-    presenter[:set_visible_elements][:custom_buttons_div]  = cb_tb.present?
 
     presenter[:reload_toolbars][:history] = h_tb
     presenter[:reload_toolbars][:center]  = c_tb

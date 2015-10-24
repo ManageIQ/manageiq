@@ -135,12 +135,10 @@ class MiqCapacityController < ApplicationController
     if x_active_tree != :bottlenecks_tree
       v_tb = build_toolbar("miq_capacity_view_tb")
     end
-    render :update do |page|                      # Use JS to update the display
-      if x_active_tree != :bottlenecks_tree
-        page << javascript_show_if_exists("view_buttons_div") if v_tb.present?
-        page << javascript_pf_toolbar_reload('view_tb', v_tb) if v_tb.present?
-        page << "$('#toolbar').show();"
-      end
+    render :update do |page|
+      page << javascript_pf_toolbar_reload('view_tb', v_tb)
+      page << "$('#toolbar').show();" if v_tb.present?
+
       if x_active_tree == :bottlenecks_tree && @sb[:active_tab] == "summary"
         # need to replace timeline div incase it wasn't there earlier
         page.replace("tl_div", :partial => "bottlenecks_tl_detail")
@@ -491,10 +489,7 @@ class MiqCapacityController < ApplicationController
     # clearing out any selection in tree if active node has been reset to "" upon returning to screen or when first time in
     presenter[:clear_selection] = x_node == ''
 
-    if v_tb.present?
-      presenter[:set_visible_elements][:view_buttons_div] = true
-      presenter[:reload_toolbars][:view] = v_tb
-    end
+    presenter[:reload_toolbars][:view] = v_tb
 
     presenter[:set_visible_elements][:toolbar] = true
     presenter[:update_partials][:main_div] = r[:partial => 'utilization_tabs']
@@ -563,7 +558,6 @@ class MiqCapacityController < ApplicationController
       add_flash(_("Planning options have been reset by the user"))
       v_tb = build_toolbar("miq_capacity_view_tb")
       render :update do |page|  # Redraw the screen
-        page << javascript_show_if_exists("view_buttons_div") if v_tb.present?
         page << "$('#toolbar').show();"
         page << javascript_pf_toolbar_reload('view_tb', v_tb) if v_tb.present?
         page << javascript_for_miq_button_visibility(session[:changed])
@@ -609,12 +603,9 @@ class MiqCapacityController < ApplicationController
 
     presenter[:extra_js] << 'ManageIQ.charts.chartData = ' + @sb[:planning][:chart_data].to_json + ';'
 
-    if v_tb.present?
-      presenter[:set_visible_elements][:view_buttons_div] = true
-      presenter[:reload_toolbars][:view] = v_tb
-    end
-
+    presenter[:reload_toolbars][:view] = v_tb
     presenter[:set_visible_elements][:toolbar] = true
+
     presenter[:update_partials][:main_div] = r[:partial => 'planning_tabs']
     presenter[:replace_cell_text] = _("Best Fit %s") % @sb[:planning][:options][:target_typ] == 'Host' ? 'Hosts' : 'Clusters'
 
