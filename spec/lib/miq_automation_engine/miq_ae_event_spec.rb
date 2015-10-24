@@ -10,6 +10,7 @@ module MiqAeEventSpec
       @user   = FactoryGirl.create(:user_with_group, :userid => "test", :miq_groups => [@group])
       @ems    = FactoryGirl.create(:ext_management_system, :tenant => @tenant)
       @vm     = FactoryGirl.create(:vm_vmware, :ext_management_system => @ems, :miq_group => @group)
+      MiqServer.stub(:my_zone => "zone 1")
     end
 
     context ".raise_ems_event" do
@@ -27,7 +28,7 @@ module MiqAeEventSpec
       it "VM with user owner" do
         @vm.update_attributes(:evm_owner => @user)
         @args.merge!(:user_id => @user.id)
-        expect(MiqAeEngine).to receive(:deliver).with(hash_including(@args))
+        expect(MiqAeEngine).to receive(:deliver_queue).with(hash_including(@args), anything)
 
         MiqAeEvent.raise_ems_event(@event)
       end
@@ -36,7 +37,7 @@ module MiqAeEventSpec
         miq_group = FactoryGirl.create(:miq_group, :tenant => FactoryGirl.create(:tenant))
         @vm.update_attributes(:miq_group => miq_group)
         @args.merge!(:user_id => @admin.id, :miq_group_id => miq_group.id, :tenant_id => miq_group.tenant.id)
-        expect(MiqAeEngine).to receive(:deliver).with(hash_including(@args))
+        expect(MiqAeEngine).to receive(:deliver_queue).with(hash_including(@args), anything)
 
         MiqAeEvent.raise_ems_event(@event)
       end
@@ -52,7 +53,7 @@ module MiqAeEventSpec
         it "with user owner" do
           @vm.update_attributes(:evm_owner => @user)
           @args.merge!(:user_id => @user.id)
-          expect(MiqAeEngine).to receive(:deliver).with(hash_including(@args))
+          expect(MiqAeEngine).to receive(:deliver_queue).with(hash_including(@args), anything)
 
           MiqAeEvent.raise_evm_event(@event, @vm, :vm => @vm)
         end
@@ -61,7 +62,7 @@ module MiqAeEventSpec
           miq_group = FactoryGirl.create(:miq_group, :tenant => FactoryGirl.create(:tenant))
           @vm.update_attributes(:miq_group => miq_group)
           @args.merge!(:user_id => @admin.id, :miq_group_id => miq_group.id, :tenant_id => miq_group.tenant.id)
-          expect(MiqAeEngine).to receive(:deliver).with(hash_including(@args))
+          expect(MiqAeEngine).to receive(:deliver_queue).with(hash_including(@args), anything)
 
           MiqAeEvent.raise_evm_event(@event, @vm, :vm => @vm)
         end
@@ -73,7 +74,7 @@ module MiqAeEventSpec
         host  = FactoryGirl.create(:host, :ext_management_system => @ems)
         event = "host_provisioned"
         args  = {:miq_group_id => @group.id, :tenant_id => @group.tenant.id}
-        expect(MiqAeEngine).to receive(:deliver).with(hash_including(args))
+        expect(MiqAeEngine).to receive(:deliver_queue).with(hash_including(args), anything)
 
         MiqAeEvent.raise_evm_event(event, host, :host => host)
       end
@@ -86,7 +87,7 @@ module MiqAeEventSpec
                   :miq_group_id => @admin.current_group.id,
                   :tenant_id    => @admin.current_group.current_tenant.id
         }
-        expect(MiqAeEngine).to receive(:deliver).with(hash_including(args))
+        expect(MiqAeEngine).to receive(:deliver_queue).with(hash_including(args), anything)
 
         MiqAeEvent.raise_evm_event(event, worker.miq_server)
       end
