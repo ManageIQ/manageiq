@@ -609,9 +609,9 @@ class MiqCapacityController < ApplicationController
 
     presenter[:extra_js] << 'ManageIQ.charts.chartData = ' + @sb[:planning][:chart_data].to_json + ';'
 
-    if v_buttons && v_xml
+    if v_tb.present?
       presenter[:set_visible_elements][:view_buttons_div] = true
-      presenter[:reload_toolbars][:view] = {:toolbar => v_tb, :buttons => v_buttons, :xml => v_xml}
+      presenter[:reload_toolbars][:view] = v_tb
     end
 
     presenter[:set_visible_elements][:toolbar] = true
