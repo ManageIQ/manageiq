@@ -521,10 +521,8 @@ module ApplicationHelper
   end
 
   def javascript_pf_toolbar_reload(div_id, toolbar)
-    # FIXME: simplyfy when debugged
-    markup = buttons_to_html(toolbar)
     out = []
-    out << javascript_update_element(div_id, markup)
+    out << javascript_update_element(div_id, buttons_to_html(toolbar))
     out << "miqInitToolbars();"
     out.join('')
   end
