@@ -520,29 +520,6 @@ module ApplicationHelper
     js_array.join("\n")
   end
 
-  # Reload toolbars using new buttons object and xml
-  def javascript_for_toolbar_reload(tb, buttons, xml)
-    %{
-      if (ManageIQ.toolbars.#{tb} && ManageIQ.toolbars.#{tb}.obj)
-        ManageIQ.toolbars.#{tb}.obj.unload();
-
-      if (document.getElementById('#{tb}') == null) {
-        var tb_div = $('<div id="#{tb}" />');
-        parent_div_id = '#{tb}'.split('_')[0] + '_buttons_div';
-        $("#" + parent_div_id).append(tb_div);
-      }
-
-      window.#{tb} = new dhtmlXToolbarObject('#{tb}', 'miq_blue');
-      ManageIQ.toolbars['#{tb}'] = {
-        obj: window.#{tb},
-        buttons: #{buttons},
-        xml: "#{xml}"
-      };
-
-      miqInitToolbar(ManageIQ.toolbars['#{tb}']);
-    }
-  end
-
   def javascript_pf_toolbar_reload(div_id, toolbar)
     # FIXME: simplyfy when debugged
     markup = buttons_to_html(toolbar)
