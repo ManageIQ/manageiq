@@ -54,6 +54,20 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture do
               {'start' => 1446500000000, 'end' => 1446500020000, 'avg' => 0},
               {'start' => 1446500020000, 'end' => 1446500040000, 'avg' => 4000000000}
             ]
+          },
+          {
+            :args => 'network/tx',
+            :data => [
+              {'start' => 1446500000000, 'end' => 1446500020000, 'avg' => 0},
+              {'start' => 1446500020000, 'end' => 1446500040000, 'avg' => 153600}
+            ]
+          },
+          {
+            :args => 'network/rx',
+            :data => [
+              {'start' => 1446500000000, 'end' => 1446500020000, 'avg' => 0},
+              {'start' => 1446500020000, 'end' => 1446500040000, 'avg' => 51200}
+            ]
           }
         ],
         :gauges => [
@@ -74,6 +88,20 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture do
               {'start' => 1446499980000, 'end' => 1446500000000, 'avg' => 0},
               {'start' => 1446500000000, 'end' => 1446500020000, 'avg' => 4000000000}
             ]
+          },
+          {
+            :args => 'network/tx',
+            :data => [
+              {'start' => 1446499980000, 'end' => 1446500000000, 'avg' => 0},
+              {'start' => 1446500000000, 'end' => 1446500020000, 'avg' => 153600}
+            ]
+          },
+          {
+            :args => 'network/rx',
+            :data => [
+              {'start' => 1446499980000, 'end' => 1446500000000, 'avg' => 0},
+              {'start' => 1446500000000, 'end' => 1446500020000, 'avg' => 51200}
+            ]
           }
         ],
         :gauges => [
@@ -87,7 +115,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture do
         :expected => {
           Time.at(1446500000).utc => {
             "cpu_usage_rate_average"     => 10.0,
-            "mem_usage_absolute_average" => 50.0
+            "mem_usage_absolute_average" => 50.0,
+            "net_usage_rate_average"     => 10.0
           }
         }
       }

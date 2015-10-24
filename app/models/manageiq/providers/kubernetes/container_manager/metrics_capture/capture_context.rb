@@ -58,6 +58,12 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
 
       mem_resid = "machine/#{@target.name}/memory/usage"
       process_mem_gauges_data(fetch_gauges_data(mem_resid))
+
+      net_resid = "machine/#{@target.name}/network"
+      net_counters = [fetch_counters_rate("#{net_resid}/tx"),
+                      fetch_counters_rate("#{net_resid}/rx")]
+
+      process_net_counters_rate(compute_summation(net_counters))
     end
 
     def collect_container_metrics
@@ -68,6 +74,11 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
 
       mem_resid = "#{@target.name}/#{group_id}/memory/usage"
       process_mem_gauges_data(fetch_gauges_data(mem_resid))
+
+      net_resid = "#{@target.name}/#{group_id}/network"
+      net_counters = [fetch_counters_rate("#{net_resid}/tx"),
+                      fetch_counters_rate("#{net_resid}/rx")]
+      process_net_counters_rate(compute_summation(net_counters))
     end
 
     def collect_group_metrics
@@ -82,6 +93,13 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
         fetch_gauges_data("#{c.name}/#{group_id}/memory/usage")
       end
       process_mem_gauges_data(compute_summation(mem_gauges))
+
+      net_counters = @target.containers.collect do |c|
+        net_resid = "#{c.name}/#{group_id}/network"
+        compute_summation([fetch_counters_rate("#{net_resid}/tx"),
+                           fetch_counters_rate("#{net_resid}/rx")])
+      end
+      process_net_counters_rate(compute_summation(net_counters))
     end
 
     def hawkular_client
@@ -147,6 +165,15 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
         timestamp = Time.at(x['start'] / 1.in_milliseconds).utc
         avg_usage = (x['avg'] / 1.megabytes) * 100.0 / @node_memory
         @ts_values[timestamp]['mem_usage_absolute_average'] = avg_usage
+      end
+    end
+
+    def process_net_counters_rate(counters_rate)
+      @metrics |= ['net_usage_rate_average'] if counters_rate.length > 0
+      counters_rate.each do |x|
+        timestamp = Time.at(x['start'] / 1.in_milliseconds).utc
+        avg_usage_kb = x['avg'] / (1.kilobyte.to_f * @interval)
+        @ts_values[timestamp]['net_usage_rate_average'] = avg_usage_kb
       end
     end
 
