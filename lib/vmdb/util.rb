@@ -36,13 +36,15 @@ module VMDB
       files.find { |f| f.match(/\/evm\.log/) }
     end
 
+    LOG_TIMESTAMP_REGEX = /\[(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6})\s#/.freeze
+
     def self.log_timestamp(line)
       ts = nil
 
       # Look for 4 digit year, hyphen, 2 digit month, hyphen, 2 digit day, T, etc.
       # [2009-05-04T18:17:50.350850 #1335]
       # Parse only the time component
-      if line.match(/\[(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6})\s#/)
+      if line.match(LOG_TIMESTAMP_REGEX)
         t  = Time.parse($1)
         ts = Time.utc(t.year, t.month, t.day, t.hour, t.min, t.sec, 0)
       end
