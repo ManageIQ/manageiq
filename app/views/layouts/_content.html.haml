@@ -105,7 +105,9 @@
           - if taskbar_in_header?
             .row
               .col-md-12
-                = render :partial => "layouts/taskbar"
+                .row.toolbar-pf#toolbar
+                  .toolbar-pf-actions{:style => "padding-bottom: 10px"}
+                    = render :partial => "layouts/taskbar"
           .row
             .col-md-12
               = render :partial => "layouts/breadcrumbs"
