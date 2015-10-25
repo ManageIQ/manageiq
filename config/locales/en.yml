@@ -835,6 +835,8 @@ en:
       container_routes:            Routes
       container_project:           Project
       container_projects:          Projects
+      persistent_volume:           Volume
+      persistent_volumes:          Volumes
       custom_button:               Button
       custom_button_set:           Buttons Group
       ems_cloud:                   Cloud Provider

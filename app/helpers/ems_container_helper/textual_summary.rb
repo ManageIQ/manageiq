@@ -13,7 +13,7 @@ module EmsContainerHelper::TextualSummary
     items.concat(%i(container_projects))
     items.concat(%i(container_routes)) if @ems.respond_to?(:container_routes)
     items.concat(%i(container_services container_replicators container_groups containers container_nodes
-                    container_image_registries container_images))
+                    container_image_registries container_images volumes))
     items
   end
 
@@ -96,5 +96,16 @@ module EmsContainerHelper::TextualSummary
      :image => 'topology',
      :link  => url_for(:controller => 'container_topology', :action => 'show', :id => @ems.id),
      :title => N_("Show topology")}
+  end
+
+  def textual_volumes
+    count_of_volumes = @ems.number_of(:persistent_volumes)
+    label = ui_lookup(:tables => "volumes")
+    h     = {:label => label, :image => "container_volume", :value => count_of_volumes}
+    if count_of_volumes > 0 && role_allows(:feature => "persistent_volume_show_list")
+      h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'persistent_volumes')
+      h[:title] = "Show all #{label}"
+    end
+    h
   end
 end
