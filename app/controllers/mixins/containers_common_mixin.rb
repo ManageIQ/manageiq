@@ -90,6 +90,8 @@ module ContainersCommonMixin
       show_container_display(record, "container_image_registries", ContainerImageRegistry)
     elsif @display == "container_nodes" || session[:display] == "container_nodes" && params[:display].nil?
       show_container_display(record, "container_nodes", ContainerNode)
+    elsif @display == "persistent_volumes" || session[:display] == "persistent_volumes" && params[:display].nil?
+      show_container_display(record, "persistent_volumes", PersistentVolume)
     end
     # Came in from outside show_list partial
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]

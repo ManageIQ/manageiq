@@ -3337,6 +3337,52 @@
       :feature_type: control
       :identifier: container_image_registry_tag
 
+# PersistentVolume
+- :name: Volumes
+  :description: Everything under Persistent Volumes
+  :feature_type: node
+  :identifier: persistent_volume
+  :children:
+  - :name: View
+    :description: View Persistent Volumes
+    :feature_type: node
+    :identifier: persistent_volume_view
+    :children:
+    - :name: List
+      :description: Display Lists of Persistent Volumes
+      :feature_type: view
+      :identifier: persistent_volume_show_list
+    - :name: Show
+      :description: Display Individual Persistent Volume
+      :feature_type: view
+      :identifier: persistent_volume_show
+  - :name: Modify
+    :description: Modify Persistent Volumes
+    :feature_type: admin
+    :identifier: persistent_volume_admin
+    :children:
+    - :name: Remove
+      :description: Remove Persistent Volumes from the VMDB
+      :feature_type: admin
+      :identifier: persistent_volume_delete
+    - :name: Edit
+      :description: Edit a Persistent Volume
+      :feature_type: admin
+      :identifier: persistent_volume_edit
+    - :name: Add
+      :description: Add a Persistent Volume
+      :feature_type: admin
+      :identifier: persistent_volume_new
+  - :name: Operate
+    :description: Perform Operations on Persistent Volumes
+    :feature_type: control
+    :identifier: persistent_volume_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Persistent Volumes
+      :feature_type: control
+      :identifier: persistent_volume_tag
+
 # ContainerService
 - :name: Services
   :description: Everything under Container Services
