@@ -30,8 +30,10 @@ class ContainerTopologyService
         links << build_link(n.ems_ref, n.lives_on.uid_ems)
         if kind == 'VM' # add link to Host
           host = n.lives_on.host
-          topo_items[host.uid_ems] = build_entity_data(host, "Host")
-          links << build_link(n.lives_on.uid_ems, host.uid_ems)
+          if host
+            topo_items[host.uid_ems] = build_entity_data(host, "Host")
+            links << build_link(n.lives_on.uid_ems, host.uid_ems)
+          end
         end
       end
     end
