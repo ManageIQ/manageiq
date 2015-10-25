@@ -787,12 +787,9 @@ class ProviderForemanController < ApplicationController
 
     if !@in_a_form && !@sb[:action]
       center_tb ||= center_toolbar_filename
-      custom_btn_tb = center_tb
-      custom_btn_tb ||= "custom_buttons_tb"
       c_tb = build_toolbar(center_tb)
 
       if record_showing
-        cb_tb = build_toolbar(custom_btn_tb)
         v_tb  = build_toolbar("x_summary_view_tb")
       else
         v_tb  = build_toolbar("x_gtl_view_tb")
