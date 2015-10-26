@@ -42,6 +42,7 @@ gulp.task('skin-images', ['images'], task('images', {key: 'skinImages'}));
 gulp.task('imgs', ['images'], task('images', {key: 'imgs'}));
 gulp.task('dev-fonts', task('fonts', {key: 'devFonts'}));
 gulp.task('dev-images', task('images', {key: 'devImages'}));
+gulp.task('dev-skin-images', ['dev-images'], task('images', {key: 'devSkinImages'}));
 gulp.task('dev-imgs', task('images', {key: 'devImgs'}));
 
 /**
@@ -61,7 +62,7 @@ gulp.task('autotest', task('test', {singleRun: false}));
 /**
  * Serves up injected html for dev, builds for evything else.
  */
-gulp.task('serve-dev', ['dev-fonts', 'dev-images', 'dev-imgs', 'inject'], task('serve', {
+gulp.task('serve-dev', ['dev-fonts', 'dev-images', 'dev-skin-images', 'dev-imgs', 'inject'], task('serve', {
   isDev: true,
   specRunner: false
 }));
