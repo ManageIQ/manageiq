@@ -62,13 +62,10 @@ describe VmOrTemplateController do
   context '#explorer' do
     before(:each) do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
-
-      FactoryGirl.create(:vmdb_database)
       EvmSpecHelper.create_guid_miq_server_zone
     end
 
     it 'can render the explorer' do
-      expect(MiqServer.my_server).to be
       get :explorer
       expect(response.status).to eq(200)
       expect(response.body).to_not be_empty
@@ -118,7 +115,6 @@ describe VmOrTemplateController do
   context "skip or drop breadcrumb" do
     before do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
-      FactoryGirl.create(:vmdb_database)
       EvmSpecHelper.create_guid_miq_server_zone
       @vm_or_template = VmOrTemplate.create(:name     => "test_vm_or_template",
                                             :location => "test_vm_or_template_location",
