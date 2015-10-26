@@ -39,11 +39,13 @@ module Metric::Common
     virtual_column :v_month, :type => :string
     virtual_column :v_time,  :type => :datetime
 
-    virtual_column :v_derived_vm_count,            :type => :integer
-    virtual_column :v_derived_host_count,          :type => :integer
-    virtual_column :v_derived_cpu_reserved_pct,    :type => :float
-    virtual_column :v_derived_memory_reserved_pct, :type => :float
-    virtual_column :v_derived_logical_cpus_used,   :type => :float
+    virtual_column :v_derived_vm_count,             :type => :integer
+    virtual_column :v_derived_host_count,           :type => :integer
+    virtual_column :v_derived_cpu_reserved_pct,     :type => :float
+    virtual_column :v_derived_memory_reserved_pct,  :type => :float
+    virtual_column :v_derived_cpu_total_cores_used, :type => :float
+
+    virtual_column :v_derived_logical_cpus_used, :type => :float # Deprecated
   end
 
   def v_find_min_max(vcol)
@@ -141,10 +143,12 @@ module Metric::Common
     (derived_memory_reserved / derived_memory_available * 100)
   end
 
-  def v_derived_logical_cpus_used
+  def v_derived_cpu_total_cores_used
     return nil if cpu_usage_rate_average.nil? || derived_vm_numvcpus.nil? || derived_vm_numvcpus == 0
     (cpu_usage_rate_average * derived_vm_numvcpus) / 100.0
   end
+  alias_method :v_derived_logical_cpus_used, :v_derived_cpu_total_cores_used
+  Vmdb::Deprecation.deprecate_methods(self, :v_derived_logical_cpus_used => :v_derived_cpu_total_cores_used)
 
   def apply_time_profile(profile)
     method = "apply_time_profile_#{capture_interval_name}"
