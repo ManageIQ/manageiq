@@ -32,13 +32,15 @@
     hash: #{raw grid_hash.to_json},
   };
 
+-# ensure row_url ends with a trailing / or = (or is nil)
 - row_url = js_options[:row_url]
 - if row_url.ends_with? '_none_'
   - row_url = nil
 - if row_url && (! row_url.ends_with? '/') && (! row_url.ends_with? '=')
   - row_url += '/'
-- row_url = row_url.nil? ? 'null' : "'#{j row_url}'"
 
+-# pre-escape
+- row_url = row_url.nil? ? 'null' : "'#{j row_url}'"
 - row_url_ajax = !! js_options[:row_url_ajax] # force bool to prevent JS syntax errors
 
 %table.table.table-striped.table-bordered.table-hover.table-selectable

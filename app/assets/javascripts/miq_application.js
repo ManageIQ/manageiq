@@ -36,22 +36,21 @@ function miqOnLoad() {
     }
   }
 
-  // Initialize dhtmlxgrid control
-  if (typeof miqInitGrids == "function") {
-    miqInitGrids();
-  }
   // Init the toolbars
   if (typeof miqInitToolbars == "function") {
     miqInitToolbars();
   }
+
   // Refresh the myCodeMirror editor
   if (ManageIQ.editor !== null) {
     ManageIQ.editor.refresh();
   }
+
   // Run MIQ after onload code if present
   if (typeof miq_after_onload == "string") {
     eval(miq_after_onload);
   }
+
   // Focus on search box, if it's there and allows focus
   if ($('#search_text').length) {
     try {
