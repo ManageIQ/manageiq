@@ -14,15 +14,15 @@ class TreeBuilderPxeServers < TreeBuilder
   end
 
   # Get root nodes count/array for explorer tree
-  def x_get_tree_roots(options)
-    count_only_or_objects(options[:count_only], PxeServer.all, "name")
+  def x_get_tree_roots(count_only, _options)
+    count_only_or_objects(count_only, PxeServer.all, "name")
   end
 
-  def x_get_tree_pxe_server_kids(object, options)
+  def x_get_tree_pxe_server_kids(object, count_only)
     pxe_images = object.pxe_images
     win_images = object.windows_images
     open_nodes = @tree_state.x_tree(@name)[:open_nodes]
-    if options[:count_only]
+    if count_only
       open_nodes.push("xx-pxe_xx-#{to_cid(object.id)}") unless open_nodes.include?("xx-pxe_xx-#{to_cid(object.id)}")
       open_nodes.push("xx-win_xx-#{to_cid(object.id)}") unless open_nodes.include?("xx-win_xx-#{to_cid(object.id)}")
       pxe_images.size + win_images.size
@@ -40,7 +40,7 @@ class TreeBuilderPxeServers < TreeBuilder
     end
   end
 
-  def x_get_tree_custom_kids(object, options)
+  def x_get_tree_custom_kids(object, count_only, _options)
     nodes = (object[:full_id] || object[:id]).split('_')
     ps = PxeServer.find_by_id(from_cid(nodes.last.split('-').last))
     objects = if nodes[0].end_with?("pxe")
@@ -48,6 +48,6 @@ class TreeBuilderPxeServers < TreeBuilder
               elsif nodes[0].end_with?("win")
                 ps.windows_images
               end
-    count_only_or_objects(options[:count_only], objects, "name")
+    count_only_or_objects(count_only, objects, "name")
   end
 end

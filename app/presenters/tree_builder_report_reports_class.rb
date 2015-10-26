@@ -1,9 +1,9 @@
 class TreeBuilderReportReportsClass < TreeBuilder
   private
 
-  def x_get_tree_r_kids(object, options)
+  def x_get_tree_r_kids(object, count_only)
     objects = MiqReportResult.where(set_saved_reports_condition(object.id)).all
-    count_only_or_objects(options[:count_only], objects, nil)
+    count_only_or_objects(count_only, objects, nil)
   end
 
   def set_saved_reports_condition(rep_id = nil)

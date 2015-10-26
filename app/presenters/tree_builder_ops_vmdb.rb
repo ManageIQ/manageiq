@@ -17,28 +17,28 @@ class TreeBuilderOpsVmdb < TreeBuilderOps
   end
 
   # Get root nodes count/array for explorer tree
-  def x_get_tree_roots(options)
+  def x_get_tree_roots(count_only, _options)
     objects = rbac_filtered_objects(VmdbDatabase.my_database.evm_tables).sort { |a, b| a.name.downcase <=> b.name.downcase }
     # storing table names and their id in hash so they can be used ot build links on summary screen in top 5 boxes
     @sb[:vmdb_tables] = {}
     objects.each do |o|
       @sb[:vmdb_tables][o.name] = o.id
     end
-    options[:count_only] ? objects.length : objects
+    count_only ? objects.length : objects
   end
 
   # Handle custom tree nodes (object is a Hash)
-  def x_get_tree_custom_kids(object, options)
+  def x_get_tree_custom_kids(object, count_only, _options)
     rec = VmdbTableEvm.find_by_id(from_cid(object[:id].split("|").last.split('-').last))
     indexes = []
     rec.vmdb_indexes.each do |ind|
       indexes.push(ind) if ind.vmdb_table.type == "VmdbTableEvm"
     end
-    count_only_or_objects(options[:count_only], indexes, "name")
+    count_only_or_objects(count_only, indexes, "name")
   end
 
-  def x_get_tree_vmdb_table_kids(object, options)
-    if options[:count_only]
+  def x_get_tree_vmdb_table_kids(object, count_only)
+    if count_only
       object.vmdb_indexes.count
     else
       # load this node expanded on autoload

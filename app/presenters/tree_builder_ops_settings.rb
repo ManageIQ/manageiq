@@ -17,7 +17,7 @@ class TreeBuilderOpsSettings < TreeBuilderOps
   end
 
   # Get root nodes count/array for explorer tree
-  def x_get_tree_roots(_options)
+  def x_get_tree_roots(_count_only, _options)
     objects = [
       {:id => "sis", :text => "Analysis Profiles", :image => "scan_item_set", :tip => "Analysis Profiles"},
       {:id => "z", :text => "Zones", :image => "zone", :tip => "Zones"}
@@ -28,10 +28,10 @@ class TreeBuilderOpsSettings < TreeBuilderOps
   end
 
   # Handle custom tree nodes (object is a Hash)
-  def x_get_tree_custom_kids(object, options)
+  def x_get_tree_custom_kids(object, count_only, _options)
     case object[:id]
     when "l"
-      count_only_or_objects(options[:count_only], LdapRegion.all, "name.to_s")
+      count_only_or_objects(count_only, LdapRegion.all, "name.to_s")
     when "msc"
       objects = []
       MiqSchedule.where("prod_default != 'system' or prod_default is null").to_a.sort do |a, b|
@@ -39,12 +39,12 @@ class TreeBuilderOpsSettings < TreeBuilderOps
       end.each do |z|
         objects.push(z) if z.adhoc.nil? && (z.towhat != "DatabaseBackup" || DatabaseBackup.backup_supported?)
       end
-      count_only_or_objects(options[:count_only], objects, nil)
+      count_only_or_objects(count_only, objects, nil)
     when "sis"
-      count_only_or_objects(options[:count_only], ScanItemSet.all, "name")
+      count_only_or_objects(count_only, ScanItemSet.all, "name")
     when "z"
       region = MiqRegion.my_region
-      count_only_or_objects(options[:count_only], region.zones, "name")
+      count_only_or_objects(count_only, region.zones, "name")
     end
   end
 end

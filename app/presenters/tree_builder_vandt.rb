@@ -3,10 +3,10 @@ class TreeBuilderVandt < TreeBuilder
     {:leaf => 'VmOrTemplate'}
   end
 
-  def x_get_tree_roots(options)
+  def x_get_tree_roots(count_only, options)
     objects = rbac_filtered_objects(EmsInfra.order("lower(name)"), :match_via_descendants => "VmOrTemplate")
 
-    if options[:count_only]
+    if count_only
       objects.length + 2
     else
       objects.collect! { |o| TreeBuilderVmsAndTemplates.new(o, options).tree }
@@ -27,7 +27,7 @@ class TreeBuilderVandt < TreeBuilder
   end
 
   # Handle custom tree nodes (object is a Hash)
-  def x_get_tree_custom_kids(object, options)
+  def x_get_tree_custom_kids(object, count_only, _options)
     objects = case object[:id]
               when "orph" # Orphaned
                 rbac_filtered_objects(VmInfra.all_orphaned) +
@@ -36,12 +36,12 @@ class TreeBuilderVandt < TreeBuilder
                 rbac_filtered_objects(VmInfra.all_archived) +
                 rbac_filtered_objects(TemplateInfra.all_archived)
               end
-    count_only_or_objects(options[:count_only], objects, "name")
+    count_only_or_objects(count_only, objects, "name")
   end
 
   def x_get_child_nodes(id)
     model, rec_id, prefix = self.class.extract_node_model_and_id(id)
-    model == "Hash" ? super : find_child_recursive(x_get_tree_roots({}), id)
+    model == "Hash" ? super : find_child_recursive(x_get_tree_roots(false, {}), id)
   end
 
   private
