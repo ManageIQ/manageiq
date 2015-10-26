@@ -27,7 +27,6 @@ describe "routing for SecurityGroupController" do
     button
     quick_search
     panel_control
-    save_col_widths
     show
     show_list
     tag_edit_form_field_changed

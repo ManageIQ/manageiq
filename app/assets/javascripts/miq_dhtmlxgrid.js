@@ -119,8 +119,6 @@ function miqInitGrid(grid_name) {
   grid.attachEvent("onCheck", miqGridOnCheck);
   grid.attachEvent("onBeforeSorting", miqGridSort);
 
-  grid.attachEvent("onResize", miqResizeCol); // Method called when resize starts
-  grid.attachEvent("onResizeEnd", miqResizeColEnd); // Medhod called when resize ends
   ManageIQ.grids.gridColumnWidths = grid.cellWidthPX.join(","); // Save the original column widths
 
   grid.attachEvent("onXLE", function () {
@@ -147,21 +145,7 @@ function miqGridSort(col_id, grid_obj, dir) {
   }
 }
 
-// Handle column resize
-function miqResizeCol(cell_idx, width, grid_obj) {
-  return (cell_idx >= 2);
-}
-
-// Handle column resize end
-function miqResizeColEnd(grid_obj) {
-  if (ManageIQ.grids.gridColumnWidths !== null) {
-    if (ManageIQ.grids.gridColumnWidths != grid_obj.cellWidthPX.join(",")) {
-      ManageIQ.grids.gridColumnWidths = grid_obj.cellWidthPX.join(",");
-      var url = '/' + ManageIQ.controller + '/save_col_widths/?col_widths=' + ManageIQ.grids.gridColumnWidths;
-      miqJqueryRequest(url);
-    }
-  }
-}
+// TODO remove grids.gridColumnWidths?
 
 // Order a service from the catalog list view
 function miqOrderService(id) {

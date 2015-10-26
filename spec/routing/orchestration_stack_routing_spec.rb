@@ -36,7 +36,6 @@ describe OrchestrationStackController do
     parameters
     quick_search
     resources
-    save_col_widths
     save_default_search
     sections_field_changed
     show

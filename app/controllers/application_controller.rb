@@ -324,30 +324,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # Save column widths
-  # skip processing when session[:view] is nil. Possible causes:
-  #   - user used back button
-  #   - user has multiple tabs to access the list view screen
-  def save_col_widths
-    @view = session[:view]
-    cws = (params[:col_widths] || "").split(",")[2..-1]
-    if @view && cws.length > 0
-      cols_key = create_cols_key(@view)
-      @settings[:col_widths] ||= {}
-      @settings[:col_widths][cols_key] ||= {}
-      cws.each_with_index do |cw, i|
-        @settings[:col_widths][cols_key][@view.col_order[i]] = cw.to_i
-      end
-
-      if current_user
-        user_settings = current_user.settings || {}
-        user_settings[:col_widths] ||= {}
-        user_settings[:col_widths][cols_key] = @settings[:col_widths][cols_key]
-        current_user.update_attributes(:settings => user_settings)
-      end
-    end
-    render :nothing => true                                 # No response needed
-  end
+  # TODO remove @settings[:col_widths] and user.settings[:col_widths] ?
 
   ###########################################################################
   # Use ajax to retry until the passed in task is complete, then rerun the original action

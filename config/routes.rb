@@ -99,7 +99,6 @@ Vmdb::Application.routes.draw do
   )
 
   save_post = %w(
-    save_col_widths
     save_default_search
   )
 
@@ -143,7 +142,6 @@ Vmdb::Application.routes.draw do
         button
         panel_control
         quick_search
-        save_col_widths
         sections_field_changed
         show
         show_list
@@ -192,7 +190,6 @@ Vmdb::Application.routes.draw do
         reload
         resolve
         resource_delete
-        save_col_widths
         service_dialog_from_ot_submit
         servicetemplate_edit
         sort_ds_grid
@@ -314,7 +311,6 @@ Vmdb::Application.routes.draw do
         explorer
         quick_search
         reload
-        save_col_widths
         tree_autoload_dynatree
         tree_select
         tagging_edit
@@ -345,7 +341,6 @@ Vmdb::Application.routes.draw do
         listnav_search_selected
         panel_control
         quick_search
-        save_col_widths
         sections_field_changed
         show
         show_list
@@ -379,7 +374,6 @@ Vmdb::Application.routes.draw do
         listnav_search_selected
         panel_control
         quick_search
-        save_col_widths
         sections_field_changed
         show
         show_list
@@ -413,7 +407,6 @@ Vmdb::Application.routes.draw do
         listnav_search_selected
         panel_control
         quick_search
-        save_col_widths
         sections_field_changed
         show
         show_list
@@ -426,7 +419,7 @@ Vmdb::Application.routes.draw do
     :container_image          => {
       :get  => %w(download_data edit index new show show_list tagging_edit tag_edit_form_field_changed),
       :post => %w(button create dynamic_checkbox_refresh form_field_changed listnav_search_selected panel_control
-                  quick_search save_col_widths sections_field_changed show show_list update
+                  quick_search sections_field_changed show show_list update
                   tagging_edit tag_edit_form_field_changed) +
                adv_search_post +
                exp_post +
@@ -436,7 +429,7 @@ Vmdb::Application.routes.draw do
     :container_image_registry => {
       :get  => %w(download_data edit index new show show_list tagging_edit tag_edit_form_field_changed),
       :post => %w(button create dynamic_checkbox_refresh form_field_changed listnav_search_selected panel_control
-                  quick_search save_col_widths sections_field_changed show show_list update
+                  quick_search sections_field_changed show show_list update
                   tagging_edit tag_edit_form_field_changed) +
                adv_search_post +
                exp_post +
@@ -462,7 +455,6 @@ Vmdb::Application.routes.draw do
         listnav_search_selected
         panel_control
         quick_search
-        save_col_widths
         sections_field_changed
         show
         show_list
@@ -494,7 +486,6 @@ Vmdb::Application.routes.draw do
         listnav_search_selected
         panel_control
         quick_search
-        save_col_widths
         sections_field_changed
         show
         show_list
@@ -525,7 +516,6 @@ Vmdb::Application.routes.draw do
         listnav_search_selected
         panel_control
         quick_search
-        save_col_widths
         sections_field_changed
         show
         show_list
@@ -606,7 +596,6 @@ Vmdb::Application.routes.draw do
         panel_control
         protect
         quick_search
-        save_col_widths
         sections_field_changed
         show
         show_list
@@ -687,7 +676,6 @@ Vmdb::Application.routes.draw do
         panel_control
         protect
         quick_search
-        save_col_widths
         sections_field_changed
         show
         show_list
@@ -728,7 +716,6 @@ Vmdb::Application.routes.draw do
         listnav_search_selected
         panel_control
         quick_search
-        save_col_widths
         sections_field_changed
         show
         show_list
@@ -761,7 +748,6 @@ Vmdb::Application.routes.draw do
         button
         quick_search
         panel_control
-        save_col_widths
         sections_field_changed
         show
         show_list
@@ -926,7 +912,6 @@ Vmdb::Application.routes.draw do
         old_dialogs_update
         reload
         resolve
-        save_col_widths
         tree_autoload_dynatree
         tree_select
         upload_import_file
@@ -1065,7 +1050,6 @@ Vmdb::Application.routes.draw do
         request_copy
         request_edit
         retrieve_email
-        save_col_widths
         show_list
         sort_configured_system_grid
         sort_ds_grid
@@ -1134,7 +1118,6 @@ Vmdb::Application.routes.draw do
         panel_control
         protect
         quick_search
-        save_col_widths
         sections_field_changed
         show
         show_list
@@ -1164,7 +1147,6 @@ Vmdb::Application.routes.draw do
         perf_chart_chooser
         protect
         quick_search
-        save_col_widths
         sections_field_changed
         show
         show_list
@@ -1197,7 +1179,6 @@ Vmdb::Application.routes.draw do
         panel_control
         protect
         quick_search
-        save_col_widths
         sections_field_changed
         show
         show_list
@@ -1225,7 +1206,6 @@ Vmdb::Application.routes.draw do
         panel_control
         protect
         quick_search
-        save_col_widths
         sections_field_changed
         show
         show_list
@@ -1377,7 +1357,6 @@ Vmdb::Application.routes.draw do
         quick_search
         resources
         retire
-        save_col_widths
         sections_field_changed
         show
         show_list
@@ -1416,7 +1395,6 @@ Vmdb::Application.routes.draw do
         quick_search
         refresh
         reload
-        save_col_widths
         show
         show_list
         tagging
@@ -1581,7 +1559,6 @@ Vmdb::Application.routes.draw do
         listnav_search_selected
         panel_control
         protect
-        save_col_widths
         sections_field_changed
         show
         show_list
@@ -1608,7 +1585,6 @@ Vmdb::Application.routes.draw do
         button
         quick_search
         panel_control
-        save_col_widths
         show
         show_list
         tag_edit_form_field_changed
@@ -1634,7 +1610,6 @@ Vmdb::Application.routes.draw do
         ownership_update
         reload
         retire
-        save_col_widths
         service_edit
         service_form_field_changed
         service_tag
@@ -1712,7 +1687,6 @@ Vmdb::Application.routes.draw do
         form_field_changed
         panel_control
         quick_search
-        save_col_widths
         show
         show_list
         update
@@ -1804,7 +1778,6 @@ Vmdb::Application.routes.draw do
         registry_items
         reload
         retire
-        save_col_widths
         scan_histories
         sections_field_changed
         security_groups
@@ -1883,7 +1856,6 @@ Vmdb::Application.routes.draw do
         registry_items
         reload
         retire
-        save_col_widths
         scan_histories
         sections_field_changed
         security_groups
@@ -1978,7 +1950,6 @@ Vmdb::Application.routes.draw do
         registry_items
         reload
         retire
-        save_col_widths
         scan_histories
         sections_field_changed
         show

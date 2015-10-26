@@ -48,7 +48,6 @@ describe MiqAeCustomizationController do
     old_dialogs_update
     reload
     resolve
-    save_col_widths
     tree_autoload_dynatree
     tree_select
     upload_import_file
