@@ -44,7 +44,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
   def assert_table_counts
     ExtManagementSystem.count.should eql(1)
     Flavor.count.should eql(52)
-    AvailabilityZone.count.should eql(3)
+    AvailabilityZone.count.should eql(1)
     VmOrTemplate.count.should eql(9)
     Vm.count.should eql(9)
     Disk.count.should eql(11)
@@ -67,7 +67,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
       :uid_ems     => "a50f9983-d1a2-4a8d-be7d-123456789012"
     )
     @ems.flavors.size.should eql(52)
-    @ems.availability_zones.size.should eql(3)
+    @ems.availability_zones.size.should eql(1)
     @ems.vms_and_templates.size.should eql(9)
     @ems.vms.size.should eql(9)
     @ems.orchestration_stacks.size.should eql(7)
@@ -96,9 +96,9 @@ describe ManageIQ::Providers::Azure::CloudManager do
   end
 
   def assert_specific_az
-    @az = ManageIQ::Providers::Azure::CloudManager::AvailabilityZone.where(:name => "AvailabilitySet2").first
+    @az = ManageIQ::Providers::Azure::CloudManager::AvailabilityZone.first
     @az.should have_attributes(
-      :name => "AvailabilitySet2",
+      :name => @ems.name,
     )
   end
 
@@ -197,7 +197,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
 
   def assert_specific_vm_powered_off
     v   = ManageIQ::Providers::Azure::CloudManager::Vm.where(:name => "MIQ2", :raw_power_state => "VM deallocated").first
-    az1 = ManageIQ::Providers::Azure::CloudManager::AvailabilityZone.where(:name => "AvailabilitySet1").first
+    az1 = ManageIQ::Providers::Azure::CloudManager::AvailabilityZone.first
 
     assert_specific_vm_powered_off_attributes(v)
 
