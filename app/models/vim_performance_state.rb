@@ -206,7 +206,7 @@ class VimPerformanceState < ActiveRecord::Base
       obj.hardware.try(:cpu_sockets)
     else
       if obj.respond_to?(:hosts)
-        obj.hosts.includes(:hardware).each_with_object([]) { |h, arr| arr << h.hardware.try(:cpu_sockets) }.compact.sum
+        obj.hosts.includes(:hardware).collect { |h| h.hardware.try(:cpu_sockets) }.compact.sum
       end
     end
   end
