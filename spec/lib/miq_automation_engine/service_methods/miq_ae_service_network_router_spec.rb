@@ -1,7 +1,7 @@
 require "spec_helper"
 
 module MiqAeServiceCloudNetworkSpec
-  describe MiqAeMethodService::MiqAeServiceCloudNetwork do
+  describe MiqAeMethodService::MiqAeServiceNetworkRouter do
     it "#ext_management_system" do
       described_class.instance_methods.should include(:ext_management_system)
     end
@@ -10,12 +10,8 @@ module MiqAeServiceCloudNetworkSpec
       described_class.instance_methods.should include(:cloud_tenant)
     end
 
-    it "#cloud_subnets" do
-      described_class.instance_methods.should include(:cloud_subnets)
-    end
-
-    it "#security_groups" do
-      described_class.instance_methods.should include(:security_groups)
+    it "#public_network" do
+      described_class.instance_methods.should include(:public_network)
     end
 
     it "#vms" do
@@ -30,12 +26,8 @@ module MiqAeServiceCloudNetworkSpec
       described_class.instance_methods.should include(:network_ports)
     end
 
-    it "#network_routers" do
-      described_class.instance_methods.should include(:network_routers)
-    end
-
-    it "#public_networks" do
-      described_class.instance_methods.should include(:public_networks)
+    it "#vms" do
+      described_class.instance_methods.should include(:vms)
     end
 
     it "#private_networks" do
