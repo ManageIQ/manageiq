@@ -370,10 +370,10 @@ describe Tenant do
       expect { tenant2.update_attributes!(:default_miq_group => g) }.to raise_error
     end
 
-    it "assigning a group with the correct tenant" do
+    # we may want to change this in the future
+    it "cant change the tenant default group" do
       g = FactoryGirl.create(:miq_group, :tenant => tenant)
-      tenant.update_attributes!(:default_miq_group => g)
-      expect(tenant.default_miq_group).to eq(g)
+      expect { tenant.update_attributes!(:default_miq_group => g) }.to raise_error
     end
   end
 

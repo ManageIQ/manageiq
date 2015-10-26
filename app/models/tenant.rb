@@ -279,8 +279,8 @@ class Tenant < ActiveRecord::Base
   end
 
   def validate_default_tenant
-    if default_miq_group.tenant_id != id
-      errors.add(:default_miq_group, "default group must belong to same tenant")
+    if default_miq_group.tenant_id != id || !default_miq_group.tenant_group?
+      errors.add(:default_miq_group, "default group must be a default group for this tenant")
     end
   end
 end

@@ -26,8 +26,8 @@ class MiqGroup < ActiveRecord::Base
 
   before_destroy do |g|
     raise "Still has users assigned." unless g.users.empty?
-    raise "A tenant default group can not be deleted" if g.tenant_group?
-    raise "A read only group cannot be deleted." if g.read_only?
+    raise "A tenant default group can not be deleted" if g.tenant_group? && g.referenced_by_tenant?
+    raise "A read only group cannot be deleted." if g.system_group?
   end
 
   serialize :filters
@@ -117,8 +117,8 @@ class MiqGroup < ActiveRecord::Base
     # find any default tenant groups that do not have a role
     tenant_role = MiqUserRole.default_tenant_role
     if tenant_role
-      Tenant.includes(:default_miq_group).where(:miq_groups => {:miq_user_role_id => nil}).each do |tenant|
-        tenant.default_miq_group.update_attributes(:miq_user_role => tenant_role)
+      tenant_groups.where(:miq_user_role_id => nil).each do |group|
+        group.update_attributes(:miq_user_role => tenant_role)
       end
     else
       _log.warn("Unable to find default tenant role for tenant access")
@@ -206,6 +206,16 @@ class MiqGroup < ActiveRecord::Base
 
   # @return true if this is a default tenant group
   def tenant_group?
+    group_type == TENANT_GROUP
+  end
+
+  # Asks about the tenant's default_miq_group
+  #
+  # NOTE: this is the old definition for `tenant_group?`
+  #
+  # @return true if this is assigned to the tenant as the default tenant
+  # @return false if the tenant is being deleted or pointing to a different group
+  def referenced_by_tenant?
     tenant.try(:default_miq_group_id) == id
   end
 
@@ -244,8 +254,18 @@ class MiqGroup < ActiveRecord::Base
     all.sort_by { |g| g.description.downcase }
   end
 
+  def self.tenant_groups
+    where(:group_type => TENANT_GROUP)
+  end
+
+  def self.non_tenant_groups
+    where.not(:group_type => TENANT_GROUP)
+  end
+
+  # if this tenant is changing, make this is not a default group
+  # NOTE: old tenant is Tenant.find(tenant_id_was)
   def validate_default_tenant
-    if tenant_id_was && Tenant.find(tenant_id_was).default_miq_group_id == id
+    if tenant_id_was && tenant_group?
       errors.add(:tenant_id, "cant change the tenant of a default group")
     end
   end
