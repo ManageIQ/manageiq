@@ -1915,6 +1915,40 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def replace_list_grid
+    view = @view
+    button_div = 'center_tb'
+    action_url = if @lastaction == "scan_history"
+                   "scan_history"
+                 elsif %w(all_jobs jobs ui_jobs all_ui_jobs).include?(@lastaction)
+                   "jobs"
+                 elsif @lastaction == "get_node_info"
+                   nil
+                 elsif @lastaction != nil
+                   @lastaction
+                 else
+                   "show_list"
+                 end
+
+    ajax_url = !(%w(OntapStorageSystem OntapLogicalDisk OntapStorageVolume OntapFileShare SecurityGroup).include?(view.db) || (request.parameters[:controller] == "service" && view.db == "Vm"))
+
+    url = @showlinks == false ? nil : view_to_url(view, @parent)
+    grid_options = {:grid_id         => "list_grid",
+                    :grid_name       => "gtl_list_grid",
+                    :grid_hash       => @grid_hash,
+                    :button_div      => button_div,
+                    :action_url      => action_url}
+    js_options = {:autosize        => true,
+                  :sortcol         => @sortcol ? @sortcol + 2 : nil,
+                  :sortdir         => @sortdir ? @sortdir[0..2] : nil,
+                  :row_url         => url,
+                  :row_url_ajax    => ajax_url}
+
+    page.replace_html("list_grid", :partial => "layouts/dhtmlxgrid",
+                                    :locals => {:options    => grid_options,
+                                                :js_options => js_options})
+  end
+
   # RJS code to show tag box effects and replace the main list view area
   def replace_gtl_main_div(options = {})
     action_url = options[:action_url] || @lastaction
@@ -1930,10 +1964,11 @@ class ApplicationController < ActionController::Base
         page.replace(:listnav_div, :partial => "layouts/listnav")               # Replace accordion, if list_nav_div is there
       end
       if @grid_hash
-        # TODO replace gtl_list_grid here
+        replace_list_grid
         page << "miqGridOnCheck(null, null, null);" # Reset the center buttons
       else                                          # No grid, replace the gtl div
-        page.replace_html("main_div", :partial => "layouts/gtl")                                                  # Replace the main div area contents
+        # Replace the main div area contents
+        page.replace_html("main_div", :partial => "layouts/gtl")
         page << "$('#adv_div').slideUp(0.3);" if params[:entry]
       end
       page.replace("pc_div_1", :partial => 'layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => action_url, :db => @view.db, :headers => @view.headers})

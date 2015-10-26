@@ -387,7 +387,7 @@ class MiqRequestController < ApplicationController
         page << javascript_hide("records_div")
       end
 
-      # TODO replace gtl_list_grid here
+      replace_list_grid
       page << "miqGridOnCheck(null, null, null);"           # Reset the center buttons
 
       page.replace("pc_div_1", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => "show_list", :db => @view.db, :headers => @view.headers})
