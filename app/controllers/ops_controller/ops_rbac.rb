@@ -775,7 +775,7 @@ module OpsController::OpsRbac
                     when "user"
                       get_view(User, :named_scope => :in_my_region)
                     when "group"
-                      get_view(MiqGroup)
+                      get_view(MiqGroup, :named_scope => :non_tenant_groups)
                     when "role"
                       get_view(MiqUserRole)
                     when "tenant"
@@ -889,7 +889,7 @@ module OpsController::OpsRbac
     else  # Root node
       @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ => "Access Control", :name => "#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]", :model => ui_lookup(:model => "MiqRegion")}
       @users_count   = User.in_my_region.count
-      @groups_count  = MiqGroup.count
+      @groups_count  = MiqGroup.non_tenant_groups.count
       @roles_count   = MiqUserRole.count
       @tenants_count = Tenant.roots.count
     end
@@ -954,7 +954,7 @@ module OpsController::OpsRbac
     @edit[:new][:password] = @user.password
     @edit[:new][:password2] = @user.password
 
-    @edit[:groups] = MiqGroup.all.sort_by { |g| g.description.downcase }.collect { |g| [g.description, g.id] }
+    @edit[:groups] = MiqGroup.non_tenant_groups.sort_by { |g| g.description.downcase }.collect { |g| [g.description, g.id] }
     @edit[:new][:group] = @user.current_group ? @user.current_group.id : nil
 
     @edit[:current] = copy_hash(@edit[:new])

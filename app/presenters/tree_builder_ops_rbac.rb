@@ -31,7 +31,7 @@ class TreeBuilderOpsRbac < TreeBuilder
     objects =
       case object_hash[:id]
       when "u"  then User.in_my_region
-      when "g"  then MiqGroup.all
+      when "g"  then MiqGroup.non_tenant_groups
       when "ur" then MiqUserRole.all
       when "tn" then Tenant.roots
       end
