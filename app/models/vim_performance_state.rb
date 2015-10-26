@@ -158,7 +158,7 @@ class VimPerformanceState < ActiveRecord::Base
       r_off.uniq!
       r_off.sort!
     end
-    result.blank? ? nil : result
+    result.presence
   end
 
   def self.capture_parent_cluster(obj)
