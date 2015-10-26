@@ -38,12 +38,12 @@ describe ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack do
     context "#update_stack" do
       it 'updates the stack' do
         expect(handle).to receive(:patch_stack)
-        orchestration_stack.update_stack({})
+        orchestration_stack.update_stack(nil, {})
       end
 
       it 'catches errors from provider' do
         expect(handle).to receive(:patch_stack).and_throw('bad request')
-        expect { orchestration_stack.update_stack }.to raise_error(MiqException::MiqOrchestrationUpdateError)
+        expect { orchestration_stack.update_stack(nil, {}) }.to raise_error(MiqException::MiqOrchestrationUpdateError)
       end
     end
 
