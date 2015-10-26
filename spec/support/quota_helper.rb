@@ -90,7 +90,6 @@ module QuotaHelper
                                                 :src_vm_id => @vm_template.id,
                                                 :options   => prov_options)
     @miq_request = @miq_provision_request.create_request
-    @miq_request.tenant = @tenant
     @miq_request.save!
   end
 

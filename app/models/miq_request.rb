@@ -14,7 +14,6 @@ class MiqRequest < ActiveRecord::Base
 
   default_value_for(:message)       { |r| "#{r.class::TASK_DESCRIPTION} - Request Created" }
   default_value_for :options,       {}
-  default_value_for(:requester, &:get_user)
   default_value_for :request_state, 'pending'
   default_value_for(:request_type)  { |r| r.request_types.first }
   default_value_for :status,        'Ok'
@@ -95,8 +94,11 @@ class MiqRequest < ActiveRecord::Base
   end
 
   def initialize_attributes
-    self.requester_name ||= requester.name                         if requester.kind_of?(User)
-    self.requester ||= User.find_by_name(self.requester_name) if self.requester_name.kind_of?(String)
+    self.requester ||= User.find_by_userid(userid) if userid
+    self.requester ||= User.find_by_name(requester_name) if requester_name
+    self.requester_name ||= requester.try(:name)
+    self.userid ||= requester.try(:userid)
+    self.tenant ||= requester.try(:current_tenant)
     self.approval_state ||= "pending_approval"
     miq_approvals << build_default_approval
   end
@@ -113,7 +115,7 @@ class MiqRequest < ActiveRecord::Base
   # end
 
   def must_have_user
-    errors.add(:userid, "must have valid user") unless userid && User.exists?(:userid => userid)
+    errors.add(:userid, "must have valid user") unless requester
   end
 
   def call_automate_event_queue(event_name)
@@ -292,7 +294,6 @@ class MiqRequest < ActiveRecord::Base
   end
 
   def create_request
-    self.requester = get_user
     self
   end
 
