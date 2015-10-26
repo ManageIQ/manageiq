@@ -23,7 +23,7 @@ class ExplorerPresenter
   #                                       compulsory key :skip_days
   #   init_dashboard
   #   ajax_action                      -- Hash of options for AJAX action to fire
-  #   clear_gtl_list_grid
+  #   clear_gtl_list_grid              -- Clear ManageIQ.grids.gtl_list_grid
   #   right_cell_text
   #   ManageIQ.record.parentId
   #   ManageIQ.record.parentClass
@@ -136,7 +136,7 @@ class ExplorerPresenter
 
     @out << ajax_action(@options[:ajax_action]) if @options[:ajax_action]
 
-    @out << "ManageIQ.grids.grids['gtl_list_grid'] = undefined;" if @options[:clear_gtl_list_grid]
+    @out << "ManageIQ.grids.gtl_list_grid = undefined;" if @options[:clear_gtl_list_grid]
 
     @options[:set_visible_elements].each do |el, visible|
       @out << set_element_visible(el, visible)

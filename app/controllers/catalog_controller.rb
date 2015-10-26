@@ -1861,7 +1861,6 @@ class CatalogController < ApplicationController
         r[:partial => "layouts/x_gtl"]
       end
 
-    # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 
     presenter[:open_accord] = 'sandt' if @sb[:active_tree] == :sandt_tree

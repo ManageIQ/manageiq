@@ -1930,14 +1930,7 @@ class ApplicationController < ActionController::Base
         page.replace(:listnav_div, :partial => "layouts/listnav")               # Replace accordion, if list_nav_div is there
       end
       if @grid_hash
-        # TODO
-        page << "xml = \"#{j_str(@grid_hash)}\";"            # Set the XML data
-        page << "ManageIQ.grids.grids['gtl_list_grid'].obj.clearAll(true);" # Clear grid data, including headers
-        page << "ManageIQ.grids.grids['gtl_list_grid'].obj.parse(xml);" # Reload grid from XML
-        if @sortcol
-          dir = @sortdir ? @sortdir[0..2] : "asc"
-          page << "ManageIQ.grids.grids['gtl_list_grid'].obj.setSortImgState(true, #{@sortcol + 2}, '#{dir}');"
-        end
+        # TODO replace gtl_list_grid here
         page << "miqGridOnCheck(null, null, null);" # Reset the center buttons
       else                                          # No grid, replace the gtl div
         page.replace_html("main_div", :partial => "layouts/gtl")                                                  # Replace the main div area contents

@@ -386,15 +386,10 @@ class MiqRequestController < ApplicationController
         page << javascript_show("no_records_div")
         page << javascript_hide("records_div")
       end
-      # TODO check this
-      page << "ManageIQ.grids.xml = \"#{j_str(@grid_hash)}\";"  # Set the XML data
-      page << "ManageIQ.grids.grids['gtl_list_grid'].obj.clearAll(true);"               # Clear grid data, including headers
-      page << "ManageIQ.grids.grids['gtl_list_grid'].obj.parse(ManageIQ.grids.xml);"    # Reload grid from XML
-      if @sortcol
-        dir = @sortdir ? @sortdir[0..2] : "asc"
-        page << "ManageIQ.grids.grids['gtl_list_grid'].obj.setSortImgState(true, #{@sortcol + 2}, '#{dir}');"
-      end
+
+      # TODO replace gtl_list_grid here
       page << "miqGridOnCheck(null, null, null);"           # Reset the center buttons
+
       page.replace("pc_div_1", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => "show_list", :db => @view.db, :headers => @view.headers})
       page.replace("pc_div_2", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => "show_list"})
     end

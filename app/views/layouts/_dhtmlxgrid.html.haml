@@ -26,13 +26,11 @@
     ManageIQ.actionUrl = "#{j action_url}";
 
 :javascript
-  ManageIQ.grids.grids["#{j grid_name}"] = {
+  ManageIQ.grids["#{j grid_name}"] = {
     g_id: "#{j grid_id}",
     opts: #{raw js_options.to_json},
     hash: #{raw grid_hash.to_json},
-    obj:  null,
-  };  // TODO who touches grids[*].xml? and obj?
-
+  };
 
 - row_url = js_options[:row_url]
 - if row_url.ends_with? '_none_'

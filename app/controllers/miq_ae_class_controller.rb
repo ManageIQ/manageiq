@@ -361,8 +361,7 @@ class MiqAeClassController < ApplicationController
     if @record.kind_of?(MiqAeMethod) && !@in_a_form
       presenter[:set_visible_elements][:params_div] = !@record.inputs.blank?
     end
-    
-    # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list
+
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 
     # Rebuild the toolbars

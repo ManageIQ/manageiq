@@ -22,7 +22,8 @@ function miqRequestRowSelected(row_id) {
 
 // Handle checkbox
 function miqGridOnCheck(row_id, cell_idx, state) {
-  var crows = ManageIQ.grids.grids['gtl_list_grid'].obj.getCheckedRows(0);
+  // TODO dont touch obj
+  var crows = ManageIQ.grids.gtl_list_grid.obj.getCheckedRows(0);
   $('#miq_grid_checks').val(crows);
   var count = crows ? crows.split(",").length : 0;
   if (miqDomElementExists('center_tb')) {
@@ -36,27 +37,25 @@ function miqCheck_AE_All(button_div, gridname) {
   miqSparkle(true);
   var state = true;
   var crows = "";
-  if (typeof ManageIQ.grids.grids.ns_list_grid != "undefined" &&
-      gridname == "ns_list_grid") {
+
+  if (ManageIQ.grids.ns_list_grid && gridname == "ns_list_grid") {
     state = $('#Toggle1').prop('checked');
-    ManageIQ.grids.grids.ns_list_grid.checkAll(state);
-    crows = ManageIQ.grids.grids.ns_list_grid.getCheckedRows(0);
-  } else if (typeof ManageIQ.grids.grids.ns_grid != "undefined" &&
-             gridname == "ns_grid") {
+    ManageIQ.grids.ns_list_grid.checkAll(state);
+    crows = ManageIQ.grids.ns_list_grid.getCheckedRows(0);
+  } else if (ManageIQ.grids.ns_grid && gridname == "ns_grid") {
     state = $('#Toggle2').prop('checked');
-    ManageIQ.grids.grids.ns_grid.checkAll(state);
+    ManageIQ.grids.ns_grid.checkAll(state);
     crows = ns_grid.getCheckedRows(0);
-  } else if (typeof ManageIQ.grids.grids.instance_grid != "undefined" &&
-             gridname == "instance_grid") {
+  } else if (ManageIQ.grids.instance_grid && gridname == "instance_grid") {
     state = $('#Toggle3').prop('checked');
-    ManageIQ.grids.grids.instance_grid.checkAll(state);
+    ManageIQ.grids.instance_grid.checkAll(state);
     crows = instance_grid.getCheckedRows(0);
-  } else if (typeof ManageIQ.grids.grids.class_methods_grid != "undefined" &&
-             gridname == "class_methods_grid") {
+  } else if (ManageIQ.grids.class_methods_grid && gridname == "class_methods_grid") {
     state = $('#Toggle4').prop('checked');
-    ManageIQ.grids.grids.class_methods_grid.checkAll(state);
+    ManageIQ.grids.class_methods_grid.checkAll(state);
     crows = class_methods_grid.getCheckedRows(0);
   }
+
   if (miqDomElementExists('miq_grid_checks')) {
     $('#miq_grid_checks').val(crows);
   }
@@ -70,41 +69,14 @@ function miqCheck_AE_All(button_div, gridname) {
 
 // This function is called in miqOnLoad to init any grids on the screen
 function miqInitGrids() {
-  if (ManageIQ.grids.grids !== null) {
-    $.each(ManageIQ.grids.grids, function (key) {
-      miqInitGrid(key); // pass they key (grid name), called function will get the grid hash
-    });
-  }
+  _.keys(ManageIQ.grids).forEach(miqInitGrid);
 }
 
 // Initialize a single grid (is called directly after an AJAX trans)
 function miqInitGrid(grid_name) {
   return;  // TODO
 
-  var grid_hash = ManageIQ.grids.grids[grid_name]; // Get the hash for the passed in grid
   var miq_grid_checks = ""; // Keep track of the grid checkboxes
-
-  // Build the grid object, then point a local var at it
-  //var grid = new dhtmlXGridObject(grid_hash.g_id);
-  ManageIQ.grids.grids[grid_name].obj = grid;
-
-  var options = grid_hash.opts;
-
-  // Start with a clear grid
-  grid.clearAll(true);
-
-  // Set paths and skin
-  //grid.setImagePath("/images/dhtmlxgrid/");
-  //grid.imgURL = "/images/dhtmlxgrid/";
-  grid.setSkin("style3");
-
-  if (options.autosize) {
-    grid.enableAutoHeight(true);
-    grid.enableAutoWidth(true);
-    $(grid.objBox).css('overflow', 'hidden'); // IE fix to eliminate scroll bars on initial display
-  }
-
-  grid.setSizes();
 
   // Turn on the sort indicator if the options were passed
   if (options.sortcol) {
@@ -118,12 +90,6 @@ function miqInitGrid(grid_name) {
 
   grid.attachEvent("onCheck", miqGridOnCheck);
   grid.attachEvent("onBeforeSorting", miqGridSort);
-
-  ManageIQ.grids.gridColumnWidths = grid.cellWidthPX.join(","); // Save the original column widths
-
-  grid.attachEvent("onXLE", function () {
-    miqSparkle(false);
-  });
 }
 
 // Handle sort
@@ -144,8 +110,6 @@ function miqGridSort(col_id, grid_obj, dir) {
     }
   }
 }
-
-// TODO remove grids.gridColumnWidths?
 
 // Order a service from the catalog list view
 function miqOrderService(id) {

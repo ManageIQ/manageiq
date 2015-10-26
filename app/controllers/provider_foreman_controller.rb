@@ -742,7 +742,6 @@ class ProviderForemanController < ApplicationController
         r[:partial => 'layouts/x_adv_searchbox',
           :locals  => {:nameonly => ([:foreman_providers_tree].include?(x_active_tree))}]
 
-    # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
   end
 
