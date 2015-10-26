@@ -324,8 +324,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # TODO remove @settings[:col_widths] and user.settings[:col_widths] ?
-
   ###########################################################################
   # Use ajax to retry until the passed in task is complete, then rerun the original action
   # This action can be called directly or via URL
@@ -1065,18 +1063,10 @@ class ApplicationController < ActionController::Base
       root[:head] << {:is_narrow => true}
     end
 
-    cols_key = create_cols_key(view)
     view.headers.each_with_index do |h, i|
-      col_width = 900 / view.headers.length # Set default column width
-      col_width = 100 if h.downcase == 'cost' && view.db.to_s == 'ServiceTemplate'
-
-      # Load saved width, if present
-      col_width = @settings.fetch_path(:col_widths, cols_key, view.col_order[i]) || col_width
-
       align = [:fixnum, :integer, :Fixnum, :float].include?(column_type(view.db, view.col_order[i])) ? 'right' : 'left'
 
       root[:head] << {:text  => h,
-                      :width => col_width.to_i,
                       :sort  => 'str',
                       :align => align}
     end
@@ -1134,14 +1124,6 @@ class ApplicationController < ActionController::Base
     end
 
     root
-  end
-
-  # Create a hash key to store a views column widths
-  def create_cols_key(view)
-    key = view.scoped_association.nil? ? view.db : (view.db + "-" + view.scoped_association)
-    # For certain models, save columns for each tree that uses the view
-    key += ("-" + x_active_tree.to_s) if ("ServiceTemplate" == view.db) && x_active_tree
-    key.to_sym
   end
 
   def calculate_pct_img(val)
