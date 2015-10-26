@@ -124,20 +124,20 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
     )
 
     @host.hardware.should have_attributes(
-      :cpu_speed          => 2394,
-      :cpu_type           => "Intel Xeon 179",
-      :manufacturer       => "Intel",
-      :model              => "Xeon",
-      :memory_mb          => 131_059,
-      :memory_console     => nil,
-      :numvcpus           => 2,
-      :logical_cpus       => 16,
-      :cores_per_socket   => 8,
-      :guest_os           => nil,
-      :guest_os_full_name => nil,
-      #:vmotion_enabled    => true,   # TODO: Add with cluster support
-      :cpu_usage          => nil,
-      :memory_usage       => nil
+      :cpu_speed            => 2394,
+      :cpu_type             => "Intel Xeon 179",
+      :manufacturer         => "Intel",
+      :model                => "Xeon",
+      :memory_mb            => 131_059,
+      :memory_console       => nil,
+      :numvcpus             => 2,
+      :logical_cpus         => 16,
+      :cpu_cores_per_socket => 8,
+      :guest_os             => nil,
+      :guest_os_full_name   => nil,
+      #:vmotion_enabled     => true,   # TODO: Add with cluster support
+      :cpu_usage            => nil,
+      :memory_usage         => nil
     )
 
     @host.hardware.guest_devices.size.should == 5

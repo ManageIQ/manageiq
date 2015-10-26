@@ -134,8 +134,8 @@ module VmHelper::TextualSummary
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'hv_info')
 
       cpu_details =
-        if @record.num_cpu && @record.cores_per_socket
-          " (#{pluralize(@record.num_cpu, 'socket')} x #{pluralize(@record.cores_per_socket, 'core')})"
+        if @record.num_cpu && @record.cpu_cores_per_socket
+          " (#{pluralize(@record.num_cpu, 'socket')} x #{pluralize(@record.cpu_cores_per_socket, 'core')})"
         else
           ""
         end

@@ -14,7 +14,7 @@ class ManageIQ::Providers::InfraManager::ProvisionWorkflow < ::MiqProvisionVirtW
     {
       :number_of_cpus    => vm.hardware.logical_cpus,
       :number_of_sockets => vm.hardware.numvcpus,
-      :cores_per_socket  => vm.hardware.cores_per_socket
+      :cores_per_socket  => vm.hardware.cpu_cores_per_socket
     }
   end
 

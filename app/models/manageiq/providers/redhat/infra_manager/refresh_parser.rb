@@ -187,9 +187,9 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       memory_total = inv[:statistics].to_miq_a.detect { |stat| stat[:name] == 'memory.total' }
       result[:memory_mb] = memory_total.nil? ? 0 : memory_total[:values].first.to_i / 1.megabyte
 
-      result[:cores_per_socket] = hdw.fetch_path(:topology, :cores) || 1        # Number of cores per socket
-      result[:numvcpus]         = hdw.fetch_path(:topology, :sockets) || 1      # Number of physical sockets
-      result[:logical_cpus]     = result[:numvcpus] * result[:cores_per_socket] # Number of cores multiplied by sockets
+      result[:cpu_cores_per_socket] = hdw.fetch_path(:topology, :cores) || 1
+      result[:numvcpus]             = hdw.fetch_path(:topology, :sockets) || 1 # Number of physical sockets
+      result[:logical_cpus]         = result[:numvcpus] * result[:cpu_cores_per_socket] # Number of cores multiplied by sockets
     end
 
     result
@@ -407,9 +407,9 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
     }
 
     hdw = inv[:cpu]
-    result[:cores_per_socket] = hdw.fetch_path(:topology, :cores) || 1        # Number of cores per socket
-    result[:numvcpus]         = hdw.fetch_path(:topology, :sockets) || 1      # Number of sockets
-    result[:logical_cpus]     = result[:numvcpus] * result[:cores_per_socket] # Number of cores multiplied by sockets
+    result[:cpu_cores_per_socket] = hdw.fetch_path(:topology, :cores) || 1
+    result[:numvcpus]             = hdw.fetch_path(:topology, :sockets) || 1 # Number of sockets
+    result[:logical_cpus]         = result[:numvcpus] * result[:cpu_cores_per_socket] # Number of cores multiplied by sockets
 
     result[:memory_mb] = inv[:memory] / 1.megabyte
 
