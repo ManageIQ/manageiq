@@ -27,7 +27,7 @@ class ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow < ManageIQ::P
 
                         return source.security_groups.non_cloud_network if source.tags.present?
 
-                        get_targets_for_ems(source, :cloud_filter, SecurityGroup, 'security_groups.non_cloud_network')
+                        get_targets_for_ems(source, :cloud_filter, ::SecurityGroup, 'security_groups.non_cloud_network')
                       end
 
     security_groups.each_with_object({}) { |sg, hash| hash[sg.id] = display_name_for_name_description(sg) }
