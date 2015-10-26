@@ -1,9 +1,7 @@
 require "spec_helper"
 
 describe VmOrTemplateController do
-  before(:each) do
-    set_user_privileges
-  end
+  before { set_user_privileges }
 
   # All of the x_button is a suplement for Rails routes that is written in
   # controller.
@@ -37,9 +35,7 @@ describe VmOrTemplateController do
 
     context "x_button method check" do
       let(:vm_infra) { FactoryGirl.create(:vm_vmware) }
-      before(:each) do
-        controller.instance_variable_set(:@_orig_action, "x_history")
-      end
+      before { controller.instance_variable_set(:@_orig_action, "x_history") }
 
       it "should set correct VM for right-sizing when on vm list view" do
         controller.should_receive(:replace_right_cell)
@@ -60,7 +56,7 @@ describe VmOrTemplateController do
   render_views
 
   context '#explorer' do
-    before(:each) do
+    before do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
       EvmSpecHelper.create_guid_miq_server_zone
     end
@@ -88,7 +84,7 @@ describe VmOrTemplateController do
   end
 
   context "#tree_select" do
-    before :each do
+    before do
       User.stub(:find_by_userid).and_return(User.current_user)
       EvmSpecHelper.create_guid_miq_server_zone
     end
