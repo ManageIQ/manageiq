@@ -103,6 +103,7 @@ module EmsCloudHelper::TextualSummary
         case auth.authtype
         when "default" then "Default"
         when "metrics" then "C & U Database"
+        when "amqp"    then "AMQP"
         else;           "<Unknown>"
         end
 
