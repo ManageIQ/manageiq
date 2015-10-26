@@ -1341,6 +1341,7 @@ class ApplicationHelper::ToolbarBuilder
 
     # doing eval for ui_lookup in confirm message
     props[:confirm] = eval("\"#{item[:confirm]}\"") if item[:confirm]
+    props
   end
 
   def update_url_parms(url_parm)
