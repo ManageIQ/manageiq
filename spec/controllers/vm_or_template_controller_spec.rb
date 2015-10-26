@@ -1,7 +1,8 @@
 require "spec_helper"
 
 describe VmOrTemplateController do
-  let(:vm_vmware) { FactoryGirl.create(:vm_vmware) }
+  let(:template_vmware) { FactoryGirl.create(:template_vmware, :name => 'template_vmware Name') }
+  let(:vm_vmware)       { FactoryGirl.create(:vm_vmware, :name => "vm_vmware Name") }
   before { set_user_privileges }
 
   # All of the x_button is a suplement for Rails routes that is written in
@@ -65,25 +66,25 @@ describe VmOrTemplateController do
     end
 
     it 'shows a template in the templates list' do
-      FactoryGirl.create(:template_vmware, :name => 'dempsey')
+      template_vmware
       session[:sb] = {:active_accord => :templates_images_filter}
       seed_session_trees('vm_or_template', :templates_images_filter_tree, 'root')
 
       get :explorer
-      expect(response.body).to match(%r({"text":\s*"dempsey"}))
+      expect(response.body).to match(%r({"text":\s*"template_vmware Name"}))
     end
 
     it 'show a vm in the vms instances list' do
-      FactoryGirl.create(:vm_vmware, :name => 'makepeace')
+      vm_vmware
       get :explorer
-      expect(response.body).to match(%r({"text":\s*"makepeace"}))
+      expect(response.body).to match(%r({"text":\s*"vm_vmware Name"}))
     end
   end
 
   context "#tree_select" do
     before do
-      FactoryGirl.create(:vm_vmware)
-      FactoryGirl.create(:template_vmware)
+      template_vmware
+      vm_vmware
     end
 
     [
@@ -106,15 +107,12 @@ describe VmOrTemplateController do
     before do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
       EvmSpecHelper.create_guid_miq_server_zone
-      @vm_or_template = VmOrTemplate.create(:name     => "test_vm_or_template",
-                                            :location => "test_vm_or_template_location",
-                                            :vendor   => "vmware")
       get :explorer
       request.env['HTTP_REFERER'] = request.fullpath
     end
 
     it 'skips dropping a breadcrumb when a button action is executed' do
-      post :x_button, :id => @vm_or_template.id, :pressed => 'miq_template_ownership'
+      post :x_button, :id => vm_vmware.id, :pressed => 'miq_template_ownership'
       breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
       expect(breadcrumbs).to eq([{:name => "VMs and Instances", :url => "/vm_or_template/explorer"}])
     end
