@@ -32,21 +32,18 @@
     .form-group
       %label.control-label.col-md-2
         = _('Available Widgets:')
-      .col-md-8
+      .col-md-4
         .export-choices
           = form_tag({:action => "export_widgets"}, :id => "export-widgets-form", :method => :get) do
             = select_tag("widgets[]",
               options_for_select(@widget_exports),
-              :class    => "widget-export",
-              :size     => 15,
-              :style    => "min-width: 375px",
+              :class    => "widget-export form-control",
+              :style    => "min-height: 200px",
               :multiple => true)
+    .form-group
+      .col-md-6
+        = button_tag("Export", :id => "export-widgets", :class => "btn btn-primary btn-disabled pull-right")
 
-%table{:width => "100%"}
-  %tr
-    %td{:align => "right"}
-      .widget-export-buttons
-        = button_tag("Export", :id => "export-widgets", :class => "btn btn-primary btn-disabled")
 
 .import-data
   %form#import-form
@@ -73,7 +70,6 @@
     $('#upload_widget_import').click(function() {
       miqSparkleOn();
     });
-
     setUpExportWidgetClickHandlers();
     listenForWidgetPostMessages();
     setUpImportWidgetClickHandlers();

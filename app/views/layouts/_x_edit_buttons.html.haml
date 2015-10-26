@@ -38,7 +38,6 @@
 -# need to pass this as true if need to send up serialized form data when save is pressed
 - serialize ||= false
 
-
 - if action_url && !export_button
   #buttons_on{:style => session[:changed] ? "" : "display: none;"}
     - if record_id.blank? && multi_record.nil? && submit_button.nil? && continue_button.nil?
@@ -170,13 +169,7 @@
         :alt     => t,
         :title   => t,
         :onclick => "miqAjaxButton('#{url_for(:action => "x_history", :item   => 0)}');")
-    - else
-      -# export_button
-      = button_tag(_("Export"),
-        :class  => "btn btn-primary #{@export_reports.empty? ? "btn-disabled" : ""}",
-        :type   => "application/txt",
-        :id     => "export_button",
-        :alt    => _("Download Report to YAML"))
+
 - elsif ["compare"].include?(@sb[:action])
   #buttons
     -# Button to cancel policy simulation and return to latest tree node

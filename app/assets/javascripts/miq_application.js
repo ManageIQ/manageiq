@@ -367,6 +367,10 @@ function miqValidateButtons(h_or_s, prefix) {
   }
 }
 
+function miqExportButtonEnable() {
+  $('#export_button').removeClass('btn-disabled');
+}
+
 // Convert Button image to hyperlink
 function toggleConvertButtonToLink(button, url, toggle) {
   if (toggle) {
