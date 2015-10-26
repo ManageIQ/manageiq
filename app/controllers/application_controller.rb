@@ -1944,7 +1944,7 @@ class ApplicationController < ActionController::Base
                   :row_url         => url,
                   :row_url_ajax    => ajax_url}
 
-    page.replace_html("list_grid", :partial => "layouts/dhtmlxgrid",
+    page.replace_html("list_grid", :partial => "layouts/list_grid",
                                     :locals => {:options    => grid_options,
                                                 :js_options => js_options})
   end

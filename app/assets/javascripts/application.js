@@ -89,5 +89,5 @@
 //= require lodash
 //= require miq_formatters
 //= require miq_grid
-//= require miq_dhtmlxgrid
+//= require miq_list_grid
 //= require resizable_sidebar

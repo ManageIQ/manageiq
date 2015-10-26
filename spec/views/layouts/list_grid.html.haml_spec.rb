@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe "layouts/_dhtmlxgrid.html.haml" do
+describe "layouts/_list_grid.html.haml" do
   context "when showtype is 'performance'" do
     it "renders" do
       view.stub(:options).and_return({})

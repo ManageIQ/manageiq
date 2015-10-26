@@ -11,7 +11,7 @@
     #list_grid{:style => "cursor: hand;"}
       - ajax_url = !(%w(OntapStorageSystem OntapLogicalDisk OntapStorageVolume OntapFileShare SecurityGroup).include?(view.db) || (request.parameters[:controller] == "service" && view.db == "Vm"))
       -# don't need a row url to be AJAX when displaying a list of other CI's inside explorer
-      = render(:partial => 'layouts/dhtmlxgrid',
+      = render(:partial => 'layouts/list_grid',
         :locals => {:options    => grid_options,
                     :js_options => {:autosize        => true,
                                     :sortcol         => @sortcol ? @sortcol + 2 : nil,
@@ -22,7 +22,7 @@
     -# TODO: is this still even relevant? haven't seen it yet (--mhradil)
     -# substracting leftcol 219 from @winW to calculate width of div
     #list_grid{:style => "width: #{@winW - 219}; height: #{center_div_height}px; cursor: hand; overflow-x: auto; overflow-y: auto;"}
-      = render(:partial => 'layouts/dhtmlxgrid',
+      = render(:partial => 'layouts/list_grid',
         :locals  => {:options    => grid_options,
                      :js_options => {:sortcol         => @sortcol ? @sortcol + 2 : nil,
                                      :sortdir         => @sortdir ? @sortdir[0..2] : nil,
