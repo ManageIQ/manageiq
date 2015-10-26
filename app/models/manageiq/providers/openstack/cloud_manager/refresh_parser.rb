@@ -466,7 +466,7 @@ module ManageIQ::Providers
           :numvcpus         => flavor[:cpus],
           :cores_per_socket => 1,
           :logical_cpus     => flavor[:cpus],
-          :memory_cpu       => flavor[:memory] / (1024 * 1024), # memory_cpu is in megabytes
+          :memory_mb        => flavor[:memory] / 1.megabyte,
           :disk_capacity    => flavor[:root_disk_size] + flavor[:ephemeral_disk_size] + flavor[:swap_disk_size],
           :disks            => [], # Filled in later conditionally on flavor
           :networks         => [], # Filled in later conditionally on what's available

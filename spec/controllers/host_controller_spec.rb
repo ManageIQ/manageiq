@@ -243,4 +243,18 @@ describe HostController do
                                                                                    :ipmi    => ipmi_creds)
     end
   end
+
+  context "#render pages" do
+    render_views
+    before do
+      set_user_privileges
+      FactoryGirl.create(:vmdb_database)
+      EvmSpecHelper.create_guid_miq_server_zone
+    end
+    it "renders a new page with ng-required condition set to false for password" do
+      get :new
+      expect(response.status).to eq(200)
+      expect(response.body).to include("name='default_password' ng-disabled='!showVerify(&#39;default_userid&#39;)' ng-model='hostModel.default_password' ng-required='false'")
+    end
+  end
 end

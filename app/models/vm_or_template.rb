@@ -328,22 +328,38 @@ class VmOrTemplate < ActiveRecord::Base
     ext_management_system.send(verb, self, options)
   end
 
-  def policy_prevented?(policy_event)
-    enforce_policy(policy_event) unless policy_event.nil?
-    return false
-  rescue MiqException::PolicyPreventAction => err
-    _log.info "#{err}"
-    return true
+  # policy_event: the event sent to automate for policy resolution
+  # cb_method:    the MiqQueue callback method along with the parameters that is called
+  #               when automate process is done and the event is not prevented to proceed by policy
+  def check_policy_prevent(policy_event, *cb_method)
+    cb = {
+      :class_name  => self.class.to_s,
+      :instance_id => id,
+      :method_name => :check_policy_prevent_callback,
+      :args        => [*cb_method],
+      :server_guid => MiqServer.my_guid
+    }
+    enforce_policy(policy_event, {}, :miq_callback => cb) unless policy_event.nil?
   end
 
-  def enforce_policy(event, inputs = {})
-    return  {"result" => true, :details => []} if event.to_s == "rsop" && host.nil?
+  def check_policy_prevent_callback(*action, _status, _message, result)
+    prevented = false
+    if result.kind_of?(MiqAeEngine::MiqAeWorkspaceRuntime)
+      event = result.get_obj_from_path("/")['event_stream']
+      data  = event.attributes["full_data"]
+      prevented = data.fetch_path(:policy, :prevented) if data
+    end
+    prevented ? _log.info("#{event.attributes["message"]}") : send(*action)
+  end
+
+  def enforce_policy(event, inputs = {}, options = {})
+    return {"result" => true, :details => []} if event.to_s == "rsop" && host.nil?
     raise "vm does not belong to any host" if host.nil? && ext_management_system.nil?
 
     inputs[:vm]                    = self
     inputs[:host]                  = host                  unless host.nil?
     inputs[:ext_management_system] = ext_management_system unless ext_management_system.nil?
-    MiqEvent.raise_evm_event(self, event, inputs)
+    MiqEvent.raise_evm_event(self, event, inputs, options)
   end
 
   # override
@@ -1579,7 +1595,7 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def ram_size(check_state = false)
-    hardware.nil? || (check_state && state != 'on') ? 0 : hardware.memory_cpu
+    hardware.nil? || (check_state && state != 'on') ? 0 : hardware.memory_mb
   end
 
   def ram_size_by_state

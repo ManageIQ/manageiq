@@ -57,6 +57,13 @@
             filterType: 'text'
           },
           {
+            id: 'retirement',
+            title: 'Retirement Date',
+            placeholder: 'Filter by Retirement Date',
+            filterType: 'select',
+            filterValues: ['Current', 'Soon', 'Retired']
+          },
+          {
             id: 'vms',
             title: 'Number of VMs',
             placeholder: 'Filter by VMs',
@@ -202,6 +209,23 @@
         return String(item.v_total_vms).toLowerCase().indexOf(filter.value.toLowerCase()) !== -1;
       } else if ('owner' === filter.id && angular.isDefined(item.evm_owner)) {
         return item.evm_owner.name.toLowerCase().indexOf(filter.value.toLowerCase()) !== -1;
+      } else if ('retirement' === filter.id) {
+        return checkRetirementDate(item, filter.value.toLowerCase());
+      }
+
+      return false;
+    }
+
+    function checkRetirementDate(item, filterValue) {
+      var currentDate = new Date();
+
+      if (filterValue === 'retired' && angular.isDefined(item.retires_on)) {
+        return new Date(item.retires_on) < currentDate;
+      } else if (filterValue === 'current') {
+        return !angular.isDefined(item.retires_on) || new Date(item.retires_on) >= currentDate;
+      } else if (filterValue === 'soon' && angular.isDefined(item.retires_on)) {
+        return new Date(item.retires_on) >= currentDate 
+          && new Date(item.retires_on) <= currentDate.setDate(currentDate.getDate() + 30);
       }
 
       return false;

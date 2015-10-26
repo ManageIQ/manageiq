@@ -133,6 +133,7 @@ module OpsController::Settings::Schedules
 
     filter_type, filter_value = determine_filter_type_and_value(schedule)
     filtered_item_list = build_filtered_item_list(filter_type)
+    run_at = schedule.run_at[:start_time].in_time_zone(schedule.run_at[:tz])
 
     render :json => {
       :action_type          => action_type,
@@ -145,9 +146,9 @@ module OpsController::Settings::Schedules
       :schedule_description => schedule.description,
       :schedule_enabled     => schedule.enabled ? "1" : "0",
       :schedule_name        => schedule.name,
-      :schedule_start_date  => schedule.run_at[:start_time].strftime("%m/%d/%Y"),
-      :schedule_start_hour  => schedule.run_at[:start_time].strftime("%H").to_i,
-      :schedule_start_min   => schedule.run_at[:start_time].strftime("%M").to_i,
+      :schedule_start_date  => run_at.strftime("%m/%d/%Y"),
+      :schedule_start_hour  => run_at.strftime("%H").to_i,
+      :schedule_start_min   => run_at.strftime("%M").to_i,
       :schedule_time_zone   => schedule.run_at[:tz],
       :schedule_timer_type  => schedule.run_at[:interval][:unit].capitalize,
       :schedule_timer_value => schedule.run_at[:interval][:value].to_i,

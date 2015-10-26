@@ -10,7 +10,7 @@ class TreeBuilderAeCustomization < TreeBuilder
     locals.merge!(:autoload => true)
   end
 
-  def x_get_tree_roots(options)
-    count_only_or_objects(options[:count_only], nil, nil)
+  def x_get_tree_roots(count_only, _options)
+    count_only_or_objects(count_only, nil, nil)
   end
 end

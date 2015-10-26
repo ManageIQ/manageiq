@@ -40,6 +40,9 @@ class User < ActiveRecord::Base
 
   include ReportableMixin
 
+  include DeprecationMixin
+  deprecate_belongs_to :miq_group, :current_group
+
   @@role_ns  = "/managed/user"
   @@role_cat = "role"
 
@@ -90,26 +93,6 @@ class User < ActiveRecord::Base
   before_validation :nil_email_field_if_blank
   before_validation :dummy_password_for_external_auth
   before_destroy :destroy_subscribed_widget_sets
-
-  def miq_group
-    unless Rails.env.production?
-      msg = "[DEPRECATION] miq_group accessor is deprecated.  Please use current_group instead.  At #{caller[0]}"
-      $log.warn msg
-      warn msg
-    end
-
-    current_group
-  end
-
-  def miq_group=(group)
-    unless Rails.env.production?
-      msg = "[DEPRECATION] miq_group= accessor is deprecated.  Please use current_group= instead.  At #{caller[0]}"
-      $log.warn msg
-      warn msg
-    end
-
-    self.current_group = group
-  end
 
   def miq_group_description=(group_description)
     if group_description

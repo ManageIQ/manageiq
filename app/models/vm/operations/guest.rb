@@ -21,7 +21,7 @@ module Vm::Operations::Guest
   end
 
   def shutdown_guest
-    raw_shutdown_guest unless policy_prevented?(:request_vm_shutdown_guest)
+    check_policy_prevent(:request_vm_shutdown_guest, :raw_shutdown_guest)
   end
 
   def raw_standby_guest
@@ -30,7 +30,7 @@ module Vm::Operations::Guest
   end
 
   def standby_guest
-    raw_standby_guest unless policy_prevented?(:request_vm_standby_guest)
+    check_policy_prevent(:request_vm_standby_guest, :raw_standby_guest)
   end
 
   def raw_reboot_guest
@@ -39,7 +39,7 @@ module Vm::Operations::Guest
   end
 
   def reboot_guest
-    raw_reboot_guest unless policy_prevented?(:request_vm_reboot_guest)
+    check_policy_prevent(:request_vm_reboot_guest, :raw_reboot_guest)
   end
 
   def raw_reset
@@ -48,6 +48,6 @@ module Vm::Operations::Guest
   end
 
   def reset
-    raw_reset unless policy_prevented?(:request_vm_reset)
+    check_policy_prevent(:request_vm_reset, :raw_reset)
   end
 end

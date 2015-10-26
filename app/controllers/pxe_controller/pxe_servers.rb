@@ -100,13 +100,11 @@ module PxeController::PxeServers
       page.replace("form_div", :partial => "pxe_form") if @edit[:new][:protocol] != @edit[:prev_protocol]
       changed = (@edit[:new] != @edit[:current])
       page << javascript_for_miq_button_visibility(changed)
-      if @edit[:log_verify_status] != session[:log_depot_log_verify_status]
-        session[:log_depot_log_verify_status] = @edit[:log_verify_status]
-        if @edit[:log_verify_status]
-          page << "miqValidateButtons('show', 'log_');"
-        else
-          page << "miqValidateButtons('hide', 'log_');"
-        end
+      session[:log_depot_log_verify_status] = @edit[:log_verify_status]
+      if @edit[:log_verify_status]
+        page << "miqValidateButtons('show', 'log_');"
+      else
+        page << "miqValidateButtons('hide', 'log_');"
       end
     end
   end
@@ -418,7 +416,7 @@ module PxeController::PxeServers
     @edit[:new][:windows_images_directory] = params[:windows_images_directory] if params[:windows_images_directory]
     @edit[:new][:customization_directory] = params[:customization_directory] if params[:customization_directory]
     params.each do |var, val|
-      vars = var.split("_")
+      vars = var.to_s.split("_")
       if vars[0] == "pxemenu"
         @edit[:new][:pxe_menus][vars[1].to_i] = val
       end
@@ -428,6 +426,7 @@ module PxeController::PxeServers
     @edit[:new][:log_userid] = params[:log_userid] if params[:log_userid]
     @edit[:new][:log_password] = params[:log_password] if params[:log_password]
     @edit[:new][:log_verify] = params[:log_verify] if params[:log_verify]
+    restore_password if params[:restore_password]
   end
 
   # Set form variables for edit
@@ -496,6 +495,12 @@ module PxeController::PxeServers
         @record = @wimg = WindowsImage.find_by_id(from_cid(nodes[1]))
         @right_cell_text = _("%{model} \"%{name}\"") % {:name => @wimg.name, :model => ui_lookup(:model => "WindowsImage")}
       end
+    end
+  end
+
+  def restore_password
+    if params[:log_password]
+      @edit[:new][:log_password] = @edit[:new][:log_verify] = @ps.authentication_password(:default).to_s
     end
   end
 end

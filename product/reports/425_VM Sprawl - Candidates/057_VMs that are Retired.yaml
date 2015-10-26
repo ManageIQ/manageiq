@@ -25,7 +25,7 @@ col_order:
 - retired
 - retires_on
 - hardware.numvcpus
-- hardware.memory_cpu
+- hardware.memory_mb
 - hardware.size_on_disk
 - managed.department
 - managed.environment
@@ -46,7 +46,7 @@ include:
     columns: 
     - annotation
     - numvcpus
-    - memory_cpu
+    - memory_mb
     - size_on_disk
   managed: 
     columns: 

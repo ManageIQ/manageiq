@@ -70,13 +70,13 @@ describe MiqAction do
     end
 
     it "synchronous" do
-      MiqAeEvent.should_receive(:raise_synthetic_event).with(@event.name, @aevent).once
+      MiqAeEvent.should_receive(:raise_synthetic_event).with(@vm, @event.name, @aevent).once
       MiqQueue.should_receive(:put).never
       @action.action_raise_automation_event(@action, @vm, :vm => @vm, :event => @event, :policy => @policy, :synchronous => true)
     end
 
     it "synchronous, not passing vm in inputs hash" do
-      MiqAeEvent.should_receive(:raise_synthetic_event).with(@event.name, @aevent).once
+      MiqAeEvent.should_receive(:raise_synthetic_event).with(@vm, @event.name, @aevent).once
       MiqQueue.should_receive(:put).never
       @action.action_raise_automation_event(@action, @vm, :vm => nil, :event => @event, :policy => @policy, :synchronous => true)
     end
@@ -88,7 +88,7 @@ describe MiqAction do
       q_options = {
         :class_name  => "MiqAeEvent",
         :method_name => "raise_synthetic_event",
-        :args        => [@event.name, @aevent],
+        :args        => [@vm, @event.name, @aevent],
         :priority    => MiqQueue::HIGH_PRIORITY,
         :zone        => vm_zone,
         :role        => "automate"

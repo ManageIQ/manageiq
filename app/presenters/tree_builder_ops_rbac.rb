@@ -18,8 +18,7 @@ class TreeBuilderOpsRbac < TreeBuilder
   end
 
   # Get root nodes count/array for explorer tree
-  def x_get_tree_roots(options)
-    options.merge!(:expand => false)
+  def x_get_tree_roots(_count_only, _options)
     objects = []
     objects.push(:id => "u",  :text => "Users",   :image => "user",          :tip => "Users")   if ApplicationHelper.role_allows(:feature => "rbac_user_view", :any => true)
     objects.push(:id => "g",  :text => "Groups",  :image => "group",         :tip => "Groups")  if ApplicationHelper.role_allows(:feature => "rbac_group_view", :any => true)
@@ -28,7 +27,7 @@ class TreeBuilderOpsRbac < TreeBuilder
     objects
   end
 
-  def x_get_tree_custom_kids(object_hash, options)
+  def x_get_tree_custom_kids(object_hash, count_only, _options)
     objects =
       case object_hash[:id]
       when "u"  then User.in_my_region
@@ -36,11 +35,10 @@ class TreeBuilderOpsRbac < TreeBuilder
       when "ur" then MiqUserRole.all
       when "tn" then Tenant.roots
       end
-    count_only_or_objects(options[:count_only], objects, "name")
+    count_only_or_objects(count_only, objects, "name")
   end
 
-  def x_get_tree_tenant_kids(object, options)
-    options.merge!(:expand => false)
-    count_only_or_objects(options[:count_only], object.children, "name")
+  def x_get_tree_tenant_kids(object, count_only)
+    count_only_or_objects(count_only, object.children, "name")
   end
 end

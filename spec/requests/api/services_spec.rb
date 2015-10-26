@@ -158,7 +158,7 @@ describe ApiController do
     it "supports single service retirement now" do
       api_basic_authorize collection_action_identifier(:services, :retire)
 
-      expect(MiqAeEvent).to receive(:raise_evm_event).once
+      expect(MiqEvent).to receive(:raise_evm_event).once
 
       run_post(services_url(svc.id), gen_request(:retire))
 
@@ -180,7 +180,7 @@ describe ApiController do
     it "supports multiple service retirement now" do
       api_basic_authorize collection_action_identifier(:services, :retire)
 
-      expect(MiqAeEvent).to receive(:raise_evm_event).twice
+      expect(MiqEvent).to receive(:raise_evm_event).twice
 
       run_post(services_url, gen_request(:retire,
                                          [{"href" => services_url(svc1.id)},

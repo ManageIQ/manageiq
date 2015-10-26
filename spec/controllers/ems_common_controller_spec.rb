@@ -171,5 +171,21 @@ describe EmsInfraController do
       link = controller.send(:show_link, ems, :display => "vms")
       link.should eq("/ems_infra/show/#{ems.id}?display=vms")
     end
+
+    context "#restore_password" do
+      it "populates the password from the ems record if params[:restore_password] exists" do
+        infra_ems = EmsInfra.new
+        infra_ems.stub(:authentication_password).and_return("default_password")
+        edit = {:ems_id => infra_ems.id, :new => {}}
+        controller.instance_variable_set(:@edit, edit)
+        controller.instance_variable_set(:@ems, infra_ems)
+        controller.instance_variable_set(:@_params,
+                                         :restore_password => true,
+                                         :default_password => "[FILTERED]",
+                                         :default_verify   => "[FILTERED]")
+        controller.send(:restore_password)
+        assigns(:edit)[:new][:default_password].should == infra_ems.authentication_password
+      end
+    end
   end
 end

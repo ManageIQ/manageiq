@@ -195,9 +195,9 @@ class MiqRequestController < ApplicationController
       return unless load_edit("stamp_edit__#{params[:id]}", "show")
       stamp_request = MiqRequest.find(@edit[:request].id)         # Get the current request record
       if @edit[:stamp_typ] == "a"
-        stamp_request.approve(session[:userid], @edit[:reason])
+        stamp_request.approve(current_user, @edit[:reason])
       else
-        stamp_request.deny(session[:userid], @edit[:reason])
+        stamp_request.deny(current_user, @edit[:reason])
       end
       #     AuditEvent.success(build_saved_audit(request, @edit))
       add_flash(_("Request \"%{name}\" was %{task}") % {:name => stamp_request.description, :task => (session[:edit] && session[:edit][:stamp_typ]) == "a" ? "approved" : "denied"})

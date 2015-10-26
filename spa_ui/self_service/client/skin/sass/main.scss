@@ -1,0 +1,13 @@
+// Set the splash with CSS since it's displayed before the application will start
+.splash__message:before {
+  content: 'ManageIQ Self Service';
+}
+
+.login-pf {
+  background-color: #1C3753;
+  background-image: url(../images/bg-login-2.png);
+
+  &:before {
+    content: url(../images/bg-login.png);
+  }
+}

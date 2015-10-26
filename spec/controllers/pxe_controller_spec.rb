@@ -36,4 +36,20 @@ describe PxeController do
       assigns(:flash_array).first[:message].should include("Refresh Relationships successfully initiated")
     end
   end
+
+  context "#restore_password" do
+    it "populates the password from the pxe record if params[:restore_password] exists" do
+      ps = PxeServer.create
+      ps.stub(:authentication_password).with(:default).and_return("default_password")
+      edit = {:pxe_id => ps.id, :new => {}}
+      controller.instance_variable_set(:@edit, edit)
+      controller.instance_variable_set(:@ps, ps)
+      controller.instance_variable_set(:@_params,
+                                       :restore_password => "true",
+                                       :log_password     => "[FILTERED]",
+                                       :log_verify       => "[FILTERED]")
+      controller.send(:restore_password)
+      assigns(:edit)[:new][:log_password].should == ps.authentication_password(:default)
+    end
+  end
 end

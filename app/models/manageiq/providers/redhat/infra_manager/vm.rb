@@ -68,7 +68,7 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
     16
   end
 
-  def max_memory_cpu
+  def max_memory_mb
     2.terabyte / 1.megabyte
   end
 end

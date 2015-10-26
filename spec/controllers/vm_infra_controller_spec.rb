@@ -65,7 +65,7 @@ describe VmInfraController do
                               :vmm_vendor  => 'vmware',
                               :vmm_product => "ESX",
                               :hardware    => FactoryGirl.create(:hardware,
-                                                                 :memory_cpu       => 1024,
+                                                                 :memory_mb        => 1024,
                                                                  :logical_cpus     => 1,
                                                                  :cores_per_socket => 1,
                                                                  :numvcpus         => 1
@@ -75,7 +75,7 @@ describe VmInfraController do
                             :name     => 'b_name',
                             :host     => host,
                             :hardware => FactoryGirl.create(:hardware,
-                                                            :memory_cpu         => 1024,
+                                                            :memory_mb          => 1024,
                                                             :logical_cpus       => 1,
                                                             :cores_per_socket   => 1,
                                                             :numvcpus           => 1,
@@ -99,7 +99,7 @@ describe VmInfraController do
                               :vmm_vendor  => 'vmware',
                               :vmm_product => "ESX",
                               :hardware    => FactoryGirl.create(:hardware,
-                                                                 :memory_cpu       => 1024,
+                                                                 :memory_mb        => 1024,
                                                                  :logical_cpus     => 1,
                                                                  :cores_per_socket => 1,
                                                                  :numvcpus         => 1
@@ -109,7 +109,7 @@ describe VmInfraController do
                             :name     => 'b_name',
                             :host     => host,
                             :hardware => FactoryGirl.create(:hardware,
-                                                            :memory_cpu         => 1024,
+                                                            :memory_mb          => 1024,
                                                             :logical_cpus       => 1,
                                                             :cores_per_socket   => 1,
                                                             :numvcpus           => 1,
@@ -130,8 +130,8 @@ describe VmInfraController do
   end
 
   it 'the reconfigure tab for a vm with max_cores_per_socket > 1 should display the cores_per_socket dropdown' do
-    host = FactoryGirl.create(:host, :vmm_vendor => 'vmware', :vmm_product => "ESX", :hardware => FactoryGirl.create(:hardware, :memory_cpu => 1024, :logical_cpus => 4, :cores_per_socket => 4, :numvcpus => 1))
-    vm = FactoryGirl.create(:vm_vmware, :name => 'b_name', :host => host, :hardware => FactoryGirl.create(:hardware, :memory_cpu => 1024, :logical_cpus => 1, :virtual_hw_version => "07", :cores_per_socket => 1, :numvcpus => 1))
+    host = FactoryGirl.create(:host, :vmm_vendor => 'vmware', :vmm_product => "ESX", :hardware => FactoryGirl.create(:hardware, :memory_mb => 1024, :logical_cpus => 4, :cores_per_socket => 4, :numvcpus => 1))
+    vm = FactoryGirl.create(:vm_vmware, :name => 'b_name', :host => host, :hardware => FactoryGirl.create(:hardware, :memory_mb => 1024, :logical_cpus => 1, :virtual_hw_version => "07", :cores_per_socket => 1, :numvcpus => 1))
     controller.stub(:x_node).and_return("v-#{vm.compressed_id}")
 
     get :show, :id => vm.id
@@ -146,8 +146,8 @@ describe VmInfraController do
   end
 
   it 'the reconfigure tab displays the submit and cancel buttons' do
-    host = FactoryGirl.create(:host, :vmm_vendor => 'vmware', :vmm_product => "ESX", :hardware => FactoryGirl.create(:hardware, :memory_cpu => 1024, :logical_cpus => 4))
-    vm = FactoryGirl.create(:vm_vmware, :name => 'b_name', :host => host, :hardware => FactoryGirl.create(:hardware, :memory_cpu => 1024, :logical_cpus => 1, :virtual_hw_version => "07"))
+    host = FactoryGirl.create(:host, :vmm_vendor => 'vmware', :vmm_product => "ESX", :hardware => FactoryGirl.create(:hardware, :memory_mb => 1024, :logical_cpus => 4))
+    vm = FactoryGirl.create(:vm_vmware, :name => 'b_name', :host => host, :hardware => FactoryGirl.create(:hardware, :memory_mb => 1024, :logical_cpus => 1, :virtual_hw_version => "07"))
     controller.stub(:x_node).and_return("v-#{vm.compressed_id}")
 
     get :show, :id => vm.id

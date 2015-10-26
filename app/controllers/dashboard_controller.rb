@@ -140,7 +140,7 @@ class DashboardController < ApplicationController
         tab_features.detect do |f|
           if f == "my_settings" && role_allows(:feature => f, :any => true)
             redirect_to :controller => "configuration", :action => "index", :config_tab => "ui"
-          elsif role_allows(:feature => f)
+          elsif role_allows(:feature => f, :any => true)
             case f
             when "tasks"        then redirect_to(:controller => "configuration", :action => "index")
             when "ops_explorer" then redirect_to(:controller => "ops",       :action => "explorer")
@@ -726,9 +726,9 @@ class DashboardController < ApplicationController
     if ws.nil?
       # Create new db if it doesn't exist
       ws = MiqWidgetSet.new(:name        => db.name,
-                            :group_id    => session[:group],
-                            :userid      => session[:userid],
-                            :description => "#{db.name} dashboard for user #{session[:userid]} in group id #{session[:group]}")
+                            :group_id    => current_group_id,
+                            :userid      => current_userid,
+                            :description => "#{db.name} dashboard for user #{current_userid} in group id #{current_group_id}")
       ws.set_data = db.set_data
       ws.set_data[:last_group_db_updated] = db.updated_on
       ws.save!

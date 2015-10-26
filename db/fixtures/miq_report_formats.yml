@@ -184,7 +184,7 @@
     :memory_allocated_metric: :megabytes
     :memory_metric: :megabytes
     :memory_used_metric: :megabytes
-    :memory_cpu: :megabytes
+    :memory_mb: :megabytes
     :mem_cpu: :megabytes
     :min_derived_memory_used: :megabytes
     :ram_size: :megabytes

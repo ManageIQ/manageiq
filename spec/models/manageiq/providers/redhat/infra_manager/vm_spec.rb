@@ -90,8 +90,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::Vm do
       expect(vm.max_vcpus).to eq(16)
     end
 
-    it "#max_memory_cpu" do
-      expect(vm.max_memory_cpu).to eq(2.terabyte / 1.megabyte)
+    it "#max_memory_mb" do
+      expect(vm.max_memory_mb).to eq(2.terabyte / 1.megabyte)
     end
   end
 end

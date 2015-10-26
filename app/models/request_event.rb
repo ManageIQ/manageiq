@@ -1,0 +1,2 @@
+class RequestEvent < EventStream
+end

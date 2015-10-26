@@ -39,7 +39,7 @@ module AggregationMixin
   end
 
   def aggregate_memory(targets = nil)
-    aggregate_hardware(:hosts, :memory_cpu, targets)
+    aggregate_hardware(:hosts, :memory_mb, targets)
   end
 
   def aggregate_vm_cpus(targets = nil)
@@ -47,7 +47,7 @@ module AggregationMixin
   end
 
   def aggregate_vm_memory(targets = nil)
-    aggregate_hardware(:vms_and_templates, :memory_cpu, targets)
+    aggregate_hardware(:vms_and_templates, :memory_mb, targets)
   end
 
   def aggregate_disk_capacity(targets = nil)
@@ -96,7 +96,7 @@ module AggregationMixin
 
   def aggregate_hardware(from, field, targets = nil)
     from      = from.to_s.singularize
-    select    = field == :aggregate_cpu_speed ? "logical_cpus, cpu_speed" : field
+    select    = field == :aggregate_cpu_speed ? "cpu_total_cores, cpu_speed" : field
     targets ||= send("all_#{from}_ids")
     targets   = targets.collect(&:id) unless targets.first.kind_of?(Integer)
     hdws      = Hardware.where("#{from}_id" => targets).select(select)

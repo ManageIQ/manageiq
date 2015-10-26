@@ -1418,8 +1418,8 @@ class ApplicationController < ActionController::Base
                     :description => "#{db_record.hardware.cpu_speed} MHz",
                     :icon        => "processor") if db_record.hardware.cpu_speed
       @devices.push(:device      => "Memory",
-                    :description => "#{db_record.hardware.memory_cpu} MB",
-                    :icon        => "memory") if db_record.hardware.memory_cpu
+                    :description => "#{db_record.hardware.memory_mb} MB",
+                    :icon        => "memory") if db_record.hardware.memory_mb
 
       # Add disks to the device array
       unless db_record.hardware.disks.nil?
@@ -1873,27 +1873,6 @@ class ApplicationController < ActionController::Base
   end
   private :get_view_pages
 
-  # Generate an include string to append to "include_hash =" and eval'd
-  # This routine is called recursively (passes in the include hash)
-  def make_include_string(include)
-    rt_string = "{"                                                 # Add the :include prefix
-    include.keys.each_with_index do |table, idx|                               # Go thru all of the tables in the include
-      rt_string << "," if idx > 0                                             # Need a comma for second and higher tables
-      rt_string << "'" + table << "'" << "=>{"                                # Add the :only prefix
-      unless include[table]["columns"].nil?                                     # If there are columns
-        rt_string << ":only=>["                                               # Add the :only prefix
-        rt_string << include[table]["columns"].dup.collect! { |col| "'" << col << "'" }.join(",")  # Get all the column name strings
-        rt_string << "]"                                                      # Add final bracket for the cols array
-      end
-      unless include[table]["include"].nil?
-        rt_string << "," unless include[table]["columns"].nil?
-        rt_string << make_include_string(include[table]["include"])           # Check for an embedded include
-      end
-      rt_string << "}"                                                        # Add final bracket for the table hash
-    end
-    rt_string << "}"                                                          # Add final bracket for the include hash
-  end
-
   def get_db_view(db, options = {})
     view_yaml = view_yaml_filename(db, options)
     view      = MiqReport.new(get_db_view_yaml(view_yaml))
@@ -1908,7 +1887,7 @@ class ApplicationController < ActionController::Base
 
     # Special code to build the view file name for users of VM restricted roles
     if %w(ManageIQ::Providers::CloudManager::Template ManageIQ::Providers::InfraManager::Template ManageIQ::Providers::CloudManager::Vm ManageIQ::Providers::InfraManager::Vm VmOrTemplate).include?(db)
-      role = User.current_user.miq_user_role
+      role = current_user.miq_user_role
       if role && role.settings && role.settings.fetch_path(:restrictions, :vms)
         viewfilerestricted = "#{VIEWS_FOLDER}/Vm__restricted.yaml"
       end
@@ -2005,12 +1984,11 @@ class ApplicationController < ActionController::Base
           page << "ManageIQ.grids.grids['gtl_list_grid'].obj.setSortImgState(true, #{@sortcol + 2}, '#{dir}');"
         end
         page << "miqGridOnCheck(null, null, null);" # Reset the center buttons
-        page.replace("pc_div_1", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => action_url, :db => @view.db, :headers => @view.headers})
-        page.replace("pc_div_2", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => action_url})
       else                                          # No grid, replace the gtl div
         page.replace_html("main_div", :partial => "layouts/gtl")                                                  # Replace the main div area contents
         page << "$('#adv_div').slideUp(0.3);" if params[:entry]
       end
+      page.replace("pc_div_1", :partial => 'layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => action_url, :db => @view.db, :headers => @view.headers})
     end
   end
 

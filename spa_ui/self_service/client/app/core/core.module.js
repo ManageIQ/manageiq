@@ -17,6 +17,7 @@
     'blocks.directive-options',
     'blocks.recursion',
 
+    'app.skin',
     'app.resources',
     'app.services',
 
