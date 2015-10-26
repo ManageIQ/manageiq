@@ -30,7 +30,7 @@ module ManageIQ::Providers
 
         _log.info("#{log_header}...")
         get_series
-        get_availability_sets
+        get_availability_zones
         get_stacks
         get_cloud_networks
         get_instances
@@ -57,8 +57,9 @@ module ManageIQ::Providers
         process_collection(series, :flavors) { |s| parse_series(s) }
       end
 
-      def get_availability_sets
-        a_zones = @asm.list_all
+      def get_availability_zones
+        # cannot get availability zones from provider; create a default one
+        a_zones = [::Azure::Armrest::BaseModel.new(:name => @ems.name, :id => 'default')]
         process_collection(a_zones, :availability_zones) { |az| parse_az(az) }
       end
 
@@ -185,7 +186,6 @@ module ManageIQ::Providers
                            instance.type.downcase,
                            instance.name)
         series_name = instance.properties.hardware_profile.vm_size
-        az          = instance.properties.try(:availability_set).try(:id)
         series      = @data_index.fetch_path(:flavors, series_name)
 
         new_result = {
@@ -199,13 +199,12 @@ module ManageIQ::Providers
           :flavor              => series,
           :location            => uid,
           :orchestration_stack => @data_index.fetch_path(:orchestration_stacks, @resource_to_stack[uid]),
+          :availability_zone   => @data_index.fetch_path(:availability_zones, 'default'),
           :hardware            => {
             :disks    => [], # Filled in later conditionally on flavor
             :networks => [], # Filled in later conditionally on what's available
           },
         }
-        new_result[:availability_zone] = fetch_az(az) unless az.nil?
-
         populate_hardware_hash_with_disks(new_result[:hardware][:disks], instance)
         populate_hardware_hash_with_series_attributes(new_result[:hardware], instance, series)
         populate_hardware_hash_with_networks(new_result[:hardware][:networks], instance)
@@ -217,10 +216,6 @@ module ManageIQ::Providers
         view = @vmm.get_instance_view(instance.name, instance.resource_group)
         status = view.statuses.find { |s| s.code =~ %r{^PowerState/} }
         status.display_status if status
-      end
-
-      def fetch_az(availability_zone)
-        @data_index.fetch_path(:availability_zones, availability_zone.downcase)
       end
 
       def process_os(instance)
