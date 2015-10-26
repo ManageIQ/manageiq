@@ -405,15 +405,11 @@ function miqUpdateAllCheckboxes(button_div, override) {
       ));
       return true;
     } else {
-      // Set checkboxes in dhtmlx grid
-      // TODO dont touch *.obj
-      ManageIQ.grids.gtl_list_grid.obj.forEachRow(function (id) {
-        ManageIQ.grids.gtl_list_grid.obj.cells(id, 0).setValue(state ? 1 : 0);
-      });
-      var crows = ManageIQ.grids.gtl_list_grid.obj.getCheckedRows(0);
-      $('#miq_grid_checks').val(crows);
-      var count = !crows ? 0 : crows.split(",").length;
-      miqSetButtons(count, button_div);
+      miqGridCheckAll(state);
+      var crows = miqGridGetCheckedRows();
+
+      $('#miq_grid_checks').val(crows.join(','));
+      miqSetButtons(crows.length, button_div);
     }
   }
   miqSparkle(false);

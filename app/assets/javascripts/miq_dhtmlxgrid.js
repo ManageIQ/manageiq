@@ -20,50 +20,73 @@ function miqRequestRowSelected(row_id) {
   return true;
 }
 
+// returns a list of checked row ids
+function miqGridGetCheckedRows(grid) {
+  grid = grid || 'list_grid';
+  var crows = [];
+
+  $('#' + grid + ' .list-grid-checkbox').each(function(_idx, elem) {
+    if ($(elem).prop('checked')) {
+      crows.push($(elem).val());
+    }
+  });
+
+  return crows;
+}
+
+// checks/unchecks all grid rows
+function miqGridCheckAll(state, grid) {
+  grid = grid || 'list_grid';
+  state = !! state;
+
+  $('#' + grid + ' .list-grid-checkbox').each(function(_idx, elem) {
+    $(elem).prop('checked', state);
+  });
+}
+
 // Handle checkbox
 function miqGridOnCheck(row_id, cell_idx, state) {
-  // TODO dont touch obj
-  var crows = ManageIQ.grids.gtl_list_grid.obj.getCheckedRows(0);
-  $('#miq_grid_checks').val(crows);
-  var count = crows ? crows.split(",").length : 0;
+  var crows = miqGridGetCheckedRows();
+  $('#miq_grid_checks').val(crows.join(','));
+
   if (miqDomElementExists('center_tb')) {
-    miqSetButtons(count, "center_tb");
+    miqSetButtons(crows.length, "center_tb");
   } else {
-    miqSetButtons(count, "center_buttons_div");
+    miqSetButtons(crows.length, "center_buttons_div");
   }
 }
 
 function miqCheck_AE_All(button_div, gridname) {
   miqSparkle(true);
   var state = true;
-  var crows = "";
+  var crows = [];
 
   if (ManageIQ.grids.ns_list_grid && gridname == "ns_list_grid") {
     state = $('#Toggle1').prop('checked');
-    ManageIQ.grids.ns_list_grid.checkAll(state);
-    crows = ManageIQ.grids.ns_list_grid.getCheckedRows(0);
+    miqGridCheckAll(state, 'ns_list_grid');
+    crows = miqGridGetCheckedRows('ns_list_grid');
   } else if (ManageIQ.grids.ns_grid && gridname == "ns_grid") {
     state = $('#Toggle2').prop('checked');
-    ManageIQ.grids.ns_grid.checkAll(state);
-    crows = ns_grid.getCheckedRows(0);
+    miqGridCheckAll(state, 'ns_grid');
+    crows = miqGridGetCheckedRows('ns_grid');
   } else if (ManageIQ.grids.instance_grid && gridname == "instance_grid") {
     state = $('#Toggle3').prop('checked');
-    ManageIQ.grids.instance_grid.checkAll(state);
-    crows = instance_grid.getCheckedRows(0);
+    miqGridCheckAll(state, 'instance_grid');
+    crows = miqGridGetCheckedRows('instance_grid');
   } else if (ManageIQ.grids.class_methods_grid && gridname == "class_methods_grid") {
     state = $('#Toggle4').prop('checked');
-    ManageIQ.grids.class_methods_grid.checkAll(state);
-    crows = class_methods_grid.getCheckedRows(0);
+    miqGridCheckAll(state, 'class_methods_grid');
+    crows = miqGridGetCheckedRows('class_methods_grid');
   }
 
   if (miqDomElementExists('miq_grid_checks')) {
-    $('#miq_grid_checks').val(crows);
+    $('#miq_grid_checks').val(crows.join(','));
   }
   if (miqDomElementExists('miq_grid_checks2')) {
-    $('#miq_grid_checks2').val(crows);
+    $('#miq_grid_checks2').val(crows.join(','));
   }
-  var count = crows ? crows.split(",").length : 0;
-  miqSetButtons(count, button_div);
+
+  miqSetButtons(crows.length, button_div);
   miqSparkle(false);
 }
 
