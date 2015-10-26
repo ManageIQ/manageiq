@@ -1988,13 +1988,8 @@ class ApplicationController < ActionController::Base
     action_url = options[:action_url] || @lastaction
     return if params[:action] == "button" && @lastaction == "show"
     render :update do |page|                        # Use RJS to update the display
-      #     page.visual_effect(:blind_up,"tag_box_div") if session[:applied_tags] != nil && @applied_tags == nil      # Hide div if removing all tags
-      #     page.replace_html("tag_box_div", :partial=>"layouts/tag_box")                                             # Replace the tag box contents
-      #     page.visual_effect(:blind_down, "tag_box_div")  if session[:applied_tags] == nil && @applied_tags != nil  # Show div if not shown already
       page.replace(:flash_msg_div, :partial => "layouts/flash_msg")           # Replace the flash message
-      page << "if (ManageIQ.toolbars !== null){"; # Make sure toolbars exist on the screen before resetting buttons
-      page << "miqSetButtons(0,'center_tb');"                             # Reset the center toolbar
-      page << "}"
+      page << "miqSetButtons(0,'center_tb');" # Reset the center toolbar
       unless @layout == "dashboard" && ["show", "change_tab", "auth_error"].include?(@controller.action_name) ||
              %w(about all_tasks all_ui_tasks configuration diagnostics miq_ae_automate_button
                 miq_ae_customization miq_ae_export miq_ae_logs miq_ae_tools miq_policy miq_policy_export
