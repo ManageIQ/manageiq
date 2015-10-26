@@ -85,6 +85,8 @@ describe VmOrTemplateController do
 
   context "#tree_select" do
     before do
+      FactoryGirl.create(:vm_vmware)
+      FactoryGirl.create(:template_vmware)
       User.stub(:find_by_userid).and_return(User.current_user)
       EvmSpecHelper.create_guid_miq_server_zone
     end
@@ -94,9 +96,6 @@ describe VmOrTemplateController do
       ['Templates & Image', 'templates_images_filter_tree'],
     ].each do |elements, tree|
       it "renders list of #{elements} for #{tree} root node" do
-        FactoryGirl.create(:vm_vmware)
-        FactoryGirl.create(:template_vmware)
-
         session[:settings] = {}
         seed_session_trees('vm_or_template', tree.to_sym)
 
