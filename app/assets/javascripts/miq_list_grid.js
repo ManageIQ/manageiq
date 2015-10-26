@@ -40,13 +40,12 @@ function miqOrderService(id) {
   miqJqueryRequest(url, {beforeSend: true, complete: true});
 }
 
-
-
-
-//--- TODO ---
-
 // Handle checkbox
-function miqGridOnCheck(row_id, cell_idx, state) {
+function miqGridOnCheck(elem, button_div) {
+  if (elem) {
+    miqUpdateButtons(elem, button_div);
+  }
+
   var crows = miqGridGetCheckedRows();
   $('#miq_grid_checks').val(crows.join(','));
 
@@ -56,6 +55,11 @@ function miqGridOnCheck(row_id, cell_idx, state) {
     miqSetButtons(crows.length, "center_buttons_div");
   }
 }
+
+
+
+
+//--- TODO ---
 
 // Handle sort
 function miqGridSort(col_id, grid_obj, dir) {

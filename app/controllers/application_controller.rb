@@ -1965,8 +1965,10 @@ class ApplicationController < ActionController::Base
       end
       if @grid_hash
         replace_list_grid
-        page << "miqGridOnCheck(null, null, null);" # Reset the center buttons
-      else                                          # No grid, replace the gtl div
+        # Reset the center buttons
+        page << "miqGridOnCheck();"
+      else
+        # No grid, replace the gtl div
         # Replace the main div area contents
         page.replace_html("main_div", :partial => "layouts/gtl")
         page << "$('#adv_div').slideUp(0.3);" if params[:entry]

@@ -388,7 +388,7 @@ class MiqRequestController < ApplicationController
       end
 
       replace_list_grid
-      page << "miqGridOnCheck(null, null, null);"           # Reset the center buttons
+      page << "miqGridOnCheck();"           # Reset the center buttons
 
       page.replace("pc_div_1", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => "show_list", :db => @view.db, :headers => @view.headers})
       page.replace("pc_div_2", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => "show_list"})
