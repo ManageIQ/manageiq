@@ -72,8 +72,6 @@
 //= require jquery.observe_field
 //= require miq_jquery_ujs_rails3
 //= require miq_ujs_bindings
-//= require dhtmlx_gpl_36/dhtmlxcommon
-//= require dhtmlx_gpl_36/dhtmlxcontainer
 //= require dynatree/jquery.dynatree
 //= require miq_dynatree
 //= require slickgrid/lib/jquery.event.drag-2.2

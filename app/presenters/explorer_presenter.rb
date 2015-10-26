@@ -165,9 +165,6 @@ class ExplorerPresenter
 
     @out << @options[:extra_js].join("\n")
 
-    # Position the clear_search link
-    @out << "$('.dhtmlxInfoBarLabel').filter(':visible').append($('#clear_search')[0]);"
-
     @out << "$('#clear_search').#{@options[:clear_search_show_or_hide]}();" if @options[:clear_search_show_or_hide]
 
     @out << "$('#quicksearchbox').modal('hide');" if @options[:hide_modal]

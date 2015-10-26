@@ -48,11 +48,6 @@ function miqOnLoad() {
   if (ManageIQ.editor !== null) {
     ManageIQ.editor.refresh();
   }
-  // Position clear search link in right cell header
-  if ($('#clear_search').length) {
-    // Find the right cell header div
-    $('.dhtmlxInfoBarLabel:visible').append($('#clear_search'));
-  }
   // Run MIQ after onload code if present
   if (typeof miq_after_onload == "string") {
     eval(miq_after_onload);

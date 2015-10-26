@@ -1,4 +1,3 @@
--# New code to use DHTMLXGRID below
 - if @grid_hash
   - url = @showlinks == false ? nil : view_to_url(view, @parent)
   - grid_options = {:grid_id         => "list_grid",
@@ -8,6 +7,7 @@
                     :action_url      => action_url}
 
   - if @explorer
+    -# used for most gtl lists
     #list_grid{:style => "cursor: hand;"}
       - ajax_url = !(%w(OntapStorageSystem OntapLogicalDisk OntapStorageVolume OntapFileShare SecurityGroup).include?(view.db) || (request.parameters[:controller] == "service" && view.db == "Vm"))
       -# don't need a row url to be AJAX when displaying a list of other CI's inside explorer
@@ -19,8 +19,8 @@
                                     :row_url         => url,
                                     :row_url_ajax    => ajax_url}})
   - else
+    -# TODO: is this still even relevant? haven't seen it yet (--mhradil)
     -# substracting leftcol 219 from @winW to calculate width of div
-    -# TODO is this still even relevant? haven't seen it yet
     #list_grid{:style => "width: #{@winW - 219}; height: #{center_div_height}px; cursor: hand; overflow-x: auto; overflow-y: auto;"}
       = render(:partial => 'layouts/dhtmlxgrid',
         :locals  => {:options    => grid_options,
