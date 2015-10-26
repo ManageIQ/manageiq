@@ -371,7 +371,7 @@ describe Tenant do
     end
 
     # we may want to change this in the future
-    it "cant change the tenant default group" do
+    it "prevents changing default_miq_group" do
       g = FactoryGirl.create(:miq_group, :tenant => tenant)
       expect { tenant.update_attributes!(:default_miq_group => g) }.to raise_error
     end

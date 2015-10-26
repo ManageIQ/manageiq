@@ -24,12 +24,7 @@ class MiqGroup < ActiveRecord::Base
 
   validates :description, :guid, :presence => true, :uniqueness => true
   validate :validate_default_tenant, :on => :update, :if => :tenant_id_changed?
-
-  before_destroy do |g|
-    raise "Still has users assigned." unless g.users.empty?
-    raise "A tenant default group can not be deleted" if g.tenant_group? && g.referenced_by_tenant?
-    raise "A read only group cannot be deleted." if g.system_group?
-  end
+  before_destroy :ensure_can_be_destroyed
 
   serialize :filters
   serialize :settings
@@ -265,11 +260,19 @@ class MiqGroup < ActiveRecord::Base
     where.not(:group_type => TENANT_GROUP)
   end
 
-  # if this tenant is changing, make this is not a default group
+  private
+
+  # if this tenant is changing, make sure this is not a default group
   # NOTE: old tenant is Tenant.find(tenant_id_was)
   def validate_default_tenant
     if tenant_id_was && tenant_group?
       errors.add(:tenant_id, "cant change the tenant of a default group")
     end
+  end
+
+  def ensure_can_be_destroyed
+    raise "Still has users assigned." unless users.empty?
+    raise "A tenant default group can not be deleted" if tenant_group? && referenced_by_tenant?
+    raise "A read only group cannot be deleted." if system_group?
   end
 end

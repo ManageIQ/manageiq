@@ -35,7 +35,7 @@ describe AssignTenantDefaultGroup do
       end
     end
 
-    it "creates a group (even though it didnt have a role" do
+    it "creates a group (even though group role is not defined yet)" do
       t = tenant_stub.create!
       migrate
 

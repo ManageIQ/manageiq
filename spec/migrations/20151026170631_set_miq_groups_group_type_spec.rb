@@ -5,7 +5,7 @@ describe SetMiqGroupsGroupType do
   let(:group_stub)  { migration_stub(:MiqGroup) }
 
   migration_context :up do
-    it "sets nil groups" do
+    it "sets groups with no type to user" do
       g = group_stub.create
 
       migrate
@@ -13,7 +13,7 @@ describe SetMiqGroupsGroupType do
       expect(g.reload.group_type).to eq("user")
     end
 
-    it "doesnt set system groups" do
+    it "does not change system groups" do
       g = group_stub.create(:group_type => "system")
 
       migrate
@@ -23,5 +23,20 @@ describe SetMiqGroupsGroupType do
   end
 
   migration_context :down do
+    it "clears groups with user type" do
+      g = group_stub.create(:group_type => "user")
+
+      migrate
+
+      expect(g.reload.group_type).to be_nil
+    end
+
+    it "does not change system groups" do
+      g = group_stub.create(:group_type => "system")
+
+      migrate
+
+      expect(g.reload.group_type).to eq("system")
+    end
   end
 end

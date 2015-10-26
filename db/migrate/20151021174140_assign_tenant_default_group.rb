@@ -44,6 +44,8 @@ class AssignTenantDefaultGroup < ActiveRecord::Migration
     Tenant.connection.schema_cache.clear!
     Tenant.reset_column_information
 
-    Tenant.where(:default_miq_group_id => nil).each(&:add_default_miq_group)
+    say_with_time "adding default tenant groups" do
+      Tenant.where(:default_miq_group_id => nil).each(&:add_default_miq_group)
+    end
   end
 end

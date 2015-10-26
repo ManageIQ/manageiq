@@ -5,10 +5,14 @@ class SetMiqGroupsGroupType < ActiveRecord::Migration
   end
 
   def up
-    MiqGroup.where(:group_type => nil).update_all(:group_type => MiqGroup::USER_GROUP)
+    say_with_time "defaulting groups to user groups" do
+      MiqGroup.where(:group_type => nil).update_all(:group_type => MiqGroup::USER_GROUP)
+    end
   end
 
   def down
-    MiqGroup.where(:group_type => MiqGroup::USER_GROUP).update_all(:group_type => nil)
+    say_with_time "rolling back user group changes" do
+      MiqGroup.where(:group_type => MiqGroup::USER_GROUP).update_all(:group_type => nil)
+    end
   end
 end

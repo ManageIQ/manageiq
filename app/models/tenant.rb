@@ -272,9 +272,7 @@ class Tenant < ActiveRecord::Base
   end
 
   def create_tenant_group
-    if default_miq_group_id.nil? && default_miq_group.nil?
-      update_attributes(:default_miq_group => MiqGroup.create_tenant_group(self))
-    end
+    update_attributes!(:default_miq_group => MiqGroup.create_tenant_group(self)) unless default_miq_group_id
     self
   end
 
