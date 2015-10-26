@@ -63,7 +63,11 @@ class ContainerTopologyService
          else entity.ems_ref
          end
 
-    {:id => id, :name => entity.name, :status => status, :kind => kind, :miq_id => entity.id}
+    data = {:id => id, :name => entity.name, :status => status, :kind => kind, :miq_id => entity.id}
+    if(kind.eql?("VM") || kind.eql?("Host"))
+      data.merge!(:provider => entity.ext_management_system.name)
+    end
+    data
   end
 
   def entity_status(entity, kind)

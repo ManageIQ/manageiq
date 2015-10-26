@@ -92,7 +92,13 @@ angular.module('topologyApp', ['kubernetesUI','ui.bootstrap'])
             .text(function(d) { return d.item.name }).style("font-size", function(d) {return "12px"}).style("fill", function(d) {return "black"})
             .style("display", function(d) {if ($scope.checkboxModel.value) {return "block"} else {return "none"}});
 
-        added.selectAll("title").text(function(d) { return "Name: " + d.item.name + "\nType: " + d.item.kind + "\nStatus: " + d.item.status });
+        added.selectAll("title").text(function(d) {
+            var status = "Name: " + d.item.name + "\nType: " + d.item.kind + "\nStatus: " + d.item.status;
+            if (d.item.kind == 'Host' || d.item.kind == 'VM') {
+                    status += "\nProvider: " + d.item.provider;
+            }
+            return status;
+        });
         $scope.vs = vertices;
 
         /* Don't do default rendering */
