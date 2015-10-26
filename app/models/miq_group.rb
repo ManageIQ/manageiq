@@ -18,7 +18,7 @@ class MiqGroup < ActiveRecord::Base
 
   delegate :self_service?, :limited_self_service?, :to => :miq_user_role, :allow_nil => true
 
-  validates_presence_of   :description, :guid
+  validates_presence_of   :description, :guid, :tenant_id
   validates_uniqueness_of :description, :guid
 
   before_destroy do |g|

@@ -179,6 +179,7 @@ class VmOrTemplate < ActiveRecord::Base
   virtual_has_one   :service,              :class_name => 'Service'
 
   before_validation :set_tenant_from_group
+  validates :tenant_id, :presence => true
 
   alias_method :datastores, :storages    # Used by web-services to return datastores as the property name
 

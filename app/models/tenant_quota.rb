@@ -35,6 +35,7 @@ class TenantQuota < ActiveRecord::Base
   validates :unit, :value, :presence => true
   validates :value, :numericality => {:greater_than => 0}
   validates :warn_value, :numericality => {:greater_than => 0}, :if => "warn_value.present?"
+  validates :tenant_id, :presence => true
 
   validate :check_for_over_allocation
 
