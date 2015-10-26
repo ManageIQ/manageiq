@@ -6,26 +6,27 @@
   - planning = controller.controller_name == 'miq_capacity' && controller.action_name == 'planning'
   - simulate =  rsop || resolve || planning
   - session[:sidebar] ||= {}
-  - sidewidth = simulate ? 5 : session[:sidebar][params[:controller]] ||= 2
+  - sidewidth = simulate ? 5 : session[:sidebar][params[:controller]] ||= 3
   - maindiv = 12 - sidewidth
   - sidebar = sidewidth == 0 ? 'hidden-md hidden-lg col-md-0' : "col-md-#{sidewidth} col-md-pull-#{maindiv}"
-  .container-fluid.resizable-sidebar{:style => "overflow: hidden; height: 100%; background: #fff;"}
+  .container-fluid.resizable-sidebar{:style => "overflow: hidden; height: 100%;"}
     .row#center_div{:style => "height: 100%"}
       #right_div.resizable{:style => "height: 100%", :class => "col-md-#{maindiv} col-md-push-#{sidewidth}"}
         .row.toolbar-pf#toolbar
-          .toolbar-pf-actions{:style => "padding-bottom: 10px"}
+          .toolbar-pf-actions
             = render :partial => "layouts/x_taskbar"
-          / .row.toolbar-pf-results
-        .row
-          .col-md-7#explorer
-            %h1#explorer_title
-              = @right_cell_text
-          .col-md-5
-            %br
-            = yield :search
-        .row{:style => "overflow: auto;height: calc(100% - 135px);"}
+        .row{:style => "overflow: auto;height: calc(100% - 88px);"}
           .col-md-12
-            = yield
+            .row
+              .col-md-7#explorer
+                %h1#explorer_title
+                  = @right_cell_text
+              .col-md-5
+                %br
+                = yield :search
+            .row
+              .col-md-12
+                = yield
         .row.toolbar-pf#paging_div
           .toolbar-pf-actions
             - if saved_report_paging?
@@ -62,20 +63,21 @@
         .col-md-10.col-md-push-2.max-height
           - if taskbar_in_header?
             .row.toolbar-pf#toolbar
-              .toolbar-pf-actions{:style => "padding-bottom: 10px"}
+              .toolbar-pf-actions
                 = render :partial => "layouts/taskbar"
-          / .row.toolbar-pf-results
-          .row
-            .col-md-7
-              = render :partial => "layouts/breadcrumbs"
-              - if layout_uses_tabs?
-                = render :partial => 'layouts/tabs'
-            .col-md-5
-              %br
-              = render :partial => 'layouts/searchbar'
-          .row{:style => "overflow: auto;height: calc(100% - 130px);"}
+          .row{:style => "overflow: auto;height: calc(100% - 88px);"}
             .col-md-12
-              = yield
+              .row
+                .col-md-7
+                  = render :partial => "layouts/breadcrumbs"
+                  - if layout_uses_tabs?
+                    = render :partial => 'layouts/tabs'
+                .col-md-5
+                  %br
+                  = render :partial => 'layouts/searchbar'
+              .row
+                .col-md-12
+                  = yield
           .row.toolbar-pf#paging_div
             .toolbar-pf-actions
               - unless @embedded
@@ -102,7 +104,7 @@
       - elsif  @layout == "dashboard" && (controller.action_name == "show" || controller.action_name == "change_tab")
         .row.toolbar-pf#toolbar
           .col-md-12
-            .toolbar-pf-actions{:style => "padding-bottom: 10px"}
+            .toolbar-pf-actions
               - if @widgets_menu
                 = render :partial => "dashboard/dropdownbar"
         .col-md-12{:style => "overflow: auto;height: calc(100% - 40px);"}
@@ -116,7 +118,7 @@
             .row
               .col-md-12
                 .row.toolbar-pf#toolbar
-                  .toolbar-pf-actions{:style => "padding-bottom: 10px"}
+                  .toolbar-pf-actions
                     = render :partial => "layouts/taskbar"
           .row
             .col-md-12
