@@ -115,6 +115,20 @@ describe ChargebackRateDetail do
     cbd.rate_type.should == rate_type
   end
 
+  it "is valid without per_unit, metric and measure" do
+    %w(
+      'cpu' 'derived_vm_numvcpus' nil,
+      nil   nil                   nil)
+      .each_slice(3) do |per_unit, metric, chargeback_rate_detail_measure_id|
+        cbd = FactoryGirl.create(:chargeback_rate_detail,
+                                 :per_unit                          => per_unit,
+                                 :metric                            => metric,
+                                 :chargeback_rate_detail_measure_id => chargeback_rate_detail_measure_id
+                                )
+        cbd.should be_valid
+      end
+  end
+
   it "diferents_per_units_rates_should_have_the_same_cost" do
     cbdm = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
     # should be the same cost. bytes to megabytes and gigabytes to megabytes
