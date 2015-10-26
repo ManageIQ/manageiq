@@ -55,6 +55,7 @@ class VimPerformanceState < ActiveRecord::Base
     state.parent_storage_id = capture_parent_storage(obj)
     state.parent_ems_id = capture_parent_ems(obj)
     state.parent_ems_cluster_id = capture_parent_cluster(obj)
+    # TODO: This is cpu_total_cores and needs to be renamed, but reports depend on the name :numvcpus
     state.numvcpus = capture_cpu_total_cores(obj)
     state.total_cpu = capture_total(obj, :cpu_speed)
     state.total_mem = capture_total(obj, :memory)
@@ -198,10 +199,6 @@ class VimPerformanceState < ActiveRecord::Base
   def self.capture_cpu_total_cores(obj)
     return unless obj.kind_of?(VmOrTemplate)
     obj.hardware.try(:cpu_total_cores)
-  end
-  class << self
-    alias_method :capture_numvcpus, :capture_cpu_total_cores
-    Vmdb::Deprecation.deprecate_methods(self, :capture_numvcpus => :capture_cpu_total_cores)
   end
 
   def self.capture_host_sockets(obj)
