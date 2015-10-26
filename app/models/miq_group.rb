@@ -1,4 +1,5 @@
 class MiqGroup < ActiveRecord::Base
+  USER_GROUP   = "user"
   SYSTEM_GROUP = "system"
   TENANT_GROUP = "tenant"
 
@@ -32,6 +33,8 @@ class MiqGroup < ActiveRecord::Base
 
   serialize :filters
   serialize :settings
+
+  default_value_for :group_type, USER_GROUP
 
   acts_as_miq_taggable
   include ReportableMixin

@@ -409,4 +409,24 @@ describe MiqGroup do
       end.to raise_error
     end
   end
+
+  describe '.tenant_groups' do
+    it "brings back only tenant_groups" do
+      tg = FactoryGirl.create(:tenant).default_miq_group
+      g  = FactoryGirl.create(:miq_group)
+
+      expect(MiqGroup.tenant_groups).to include(tg)
+      expect(MiqGroup.tenant_groups).not_to include(g)
+    end
+  end
+
+  describe '.non_tenant_groups' do
+    it "brings back only non_tenant_groups" do
+      tg = FactoryGirl.create(:tenant).default_miq_group
+      g  = FactoryGirl.create(:miq_group)
+
+      expect(MiqGroup.non_tenant_groups).not_to include(tg)
+      expect(MiqGroup.non_tenant_groups).to include(g)
+    end
+  end
 end
