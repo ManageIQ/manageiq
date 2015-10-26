@@ -1,6 +1,7 @@
 require "spec_helper"
 
 describe VmOrTemplateController do
+  let(:vm_vmware) { FactoryGirl.create(:vm_vmware) }
   before { set_user_privileges }
 
   # All of the x_button is a suplement for Rails routes that is written in
@@ -20,7 +21,7 @@ describe VmOrTemplateController do
         it "calls the appropriate method: '#{actual_method}' for action '#{actual_action}'" do
           controller.stub(:x_button_response)
           controller.should_receive(actual_method)
-          get :x_button, :id => FactoryGirl.create(:vm_redhat), :pressed => actual_action
+          get :x_button, :id => vm_vmware, :pressed => actual_action
         end
       end
     end
