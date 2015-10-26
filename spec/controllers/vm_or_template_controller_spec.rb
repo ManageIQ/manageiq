@@ -51,58 +51,6 @@ describe VmOrTemplateController do
     end
   end
 
-  render_views
-
-  context '#explorer' do
-    before do
-      session[:settings] = {:views => {}, :perpage => {:list => 10}}
-      EvmSpecHelper.create_guid_miq_server_zone
-    end
-
-    it 'can render the explorer' do
-      get :explorer
-      expect(response.status).to eq(200)
-      expect(response.body).to_not be_empty
-    end
-
-    it 'shows a template in the templates list' do
-      template_vmware
-      session[:sb] = {:active_accord => :templates_images_filter}
-      seed_session_trees('vm_or_template', :templates_images_filter_tree, 'root')
-
-      get :explorer
-      expect(response.body).to match(%r({"text":\s*"template_vmware Name"}))
-    end
-
-    it 'show a vm in the vms instances list' do
-      vm_vmware
-      get :explorer
-      expect(response.body).to match(%r({"text":\s*"vm_vmware Name"}))
-    end
-  end
-
-  context "#tree_select" do
-    before do
-      template_vmware
-      vm_vmware
-    end
-
-    [
-      ['Vms & Instances', 'vms_instances_filter_tree'],
-      ['Templates & Image', 'templates_images_filter_tree'],
-    ].each do |elements, tree|
-      it "renders list of #{elements} for #{tree} root node" do
-        session[:settings] = {}
-        seed_session_trees('vm_or_template', tree.to_sym)
-
-        post :tree_select, :id => 'root', :format => :js
-
-        response.should render_template('layouts/gtl/_list')
-        expect(response.status).to eq(200)
-      end
-    end
-  end
-
   context "skip or drop breadcrumb" do
     before do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
@@ -120,6 +68,60 @@ describe VmOrTemplateController do
       post :accordion_select, :id => "templates_images_filter"
       breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
       expect(breadcrumbs).to eq([{:name => "VM Templates and Images", :url => "/vm_or_template/explorer"}])
+    end
+  end
+
+  context 'render_views' do
+    render_views
+
+    context '#explorer' do
+      before do
+        session[:settings] = {:views => {}, :perpage => {:list => 10}}
+        EvmSpecHelper.create_guid_miq_server_zone
+      end
+
+      it 'can render the explorer' do
+        get :explorer
+        expect(response.status).to eq(200)
+        expect(response.body).to_not be_empty
+      end
+
+      it 'shows a template in the templates list' do
+        template_vmware
+        session[:sb] = {:active_accord => :templates_images_filter}
+        seed_session_trees('vm_or_template', :templates_images_filter_tree, 'root')
+
+        get :explorer
+        expect(response.body).to match(%r({"text":\s*"template_vmware Name"}))
+      end
+
+      it 'show a vm in the vms instances list' do
+        vm_vmware
+        get :explorer
+        expect(response.body).to match(%r({"text":\s*"vm_vmware Name"}))
+      end
+    end
+
+    context "#tree_select" do
+      before do
+        template_vmware
+        vm_vmware
+      end
+
+      [
+        ['Vms & Instances', 'vms_instances_filter_tree'],
+        ['Templates & Image', 'templates_images_filter_tree'],
+      ].each do |elements, tree|
+        it "renders list of #{elements} for #{tree} root node" do
+          session[:settings] = {}
+          seed_session_trees('vm_or_template', tree.to_sym)
+
+          post :tree_select, :id => 'root', :format => :js
+
+          response.should render_template('layouts/gtl/_list')
+          expect(response.status).to eq(200)
+        end
+      end
     end
   end
 end
