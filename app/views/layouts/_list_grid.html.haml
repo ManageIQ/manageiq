@@ -39,7 +39,7 @@
   - row_url += '/'
 - row_url = row_url.nil? ? 'null' : "'#{j row_url}'"
 
-- row_url_ajax = !! js_options[:row_url_ajax]
+- row_url_ajax = !! js_options[:row_url_ajax] # force bool to prevent JS syntax errors
 
 %table.table.table-striped.table-bordered.table-hover.table-selectable
   %thead

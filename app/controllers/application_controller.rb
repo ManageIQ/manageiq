@@ -1054,7 +1054,7 @@ class ApplicationController < ActionController::Base
     root = {:head => [], :rows => []}
 
     # Show checkbox or placeholder column
-    unless @embedded || @no_checkboxes  # TODO params
+    unless @embedded || @no_checkboxes
       root[:head] << {:is_narrow => true}
     end
 
@@ -1924,25 +1924,25 @@ class ApplicationController < ActionController::Base
                    "jobs"
                  elsif @lastaction == "get_node_info"
                    nil
-                 elsif @lastaction != nil
+                 elsif ! @lastaction.nil?
                    @lastaction
                  else
                    "show_list"
                  end
 
-    ajax_url = !(%w(OntapStorageSystem OntapLogicalDisk OntapStorageVolume OntapFileShare SecurityGroup).include?(view.db) || (request.parameters[:controller] == "service" && view.db == "Vm"))
+    ajax_url = ! %w(OntapStorageSystem OntapLogicalDisk OntapStorageVolume OntapFileShare SecurityGroup).include?(view.db)
+    ajax_url = false if request.parameters[:controller] == "service" && view.db == "Vm"
 
     url = @showlinks == false ? nil : view_to_url(view, @parent)
-    grid_options = {:grid_id         => "list_grid",
-                    :grid_name       => "gtl_list_grid",
-                    :grid_hash       => @grid_hash,
-                    :button_div      => button_div,
-                    :action_url      => action_url}
-    js_options = {:autosize        => true,
-                  :sortcol         => @sortcol ? @sortcol + 2 : nil,
-                  :sortdir         => @sortdir ? @sortdir[0..2] : nil,
-                  :row_url         => url,
-                  :row_url_ajax    => ajax_url}
+    grid_options = {:grid_id    => "list_grid",
+                    :grid_name  => "gtl_list_grid",
+                    :grid_hash  => @grid_hash,
+                    :button_div => button_div,
+                    :action_url => action_url}
+    js_options = {:sortcol      => @sortcol ? @sortcol + 2 : nil,
+                  :sortdir      => @sortdir ? @sortdir[0..2] : nil,
+                  :row_url      => url,
+                  :row_url_ajax => ajax_url}
 
     page.replace_html("list_grid", :partial => "layouts/list_grid",
                                     :locals => {:options    => grid_options,
