@@ -190,7 +190,7 @@ describe VmInfraController do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
       @vm = VmInfra.create(:name => "testvm", :location => "testvm_location", :vendor => "vmware")
       controller.stub(:render)
-      controller.stub(:build_toolbar_buttons_and_xml)
+      controller.stub(:build_toolbar)
     end
 
     it 'it clears the existing breadcrumb path and assigns the new explorer path when controllers are switched' do

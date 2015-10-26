@@ -4,8 +4,8 @@ textarea { width: 98.5%; border: 1px solid #d1d1d1; padding: 7px; line-height: 1
 
 /* begin modified Patternfly code */
 
-.btn-disabled {
-  opacity:0.4;
+.btn-disabled, .disabled {
+  opacity:0.4 !important;
   filter:alpha(opacity=40);
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);
   cursor: default;
@@ -56,19 +56,6 @@ nobr { white-space: nowrap;}
   color: #fff;
   text-shadow: #000 2px 2px 0;
 }
-
-/********************** Task Bar **********************/
-
-#toolbar  {
-  z-index: 99;
-  width: auto;
-  height: 32px;
-  background-image: linear-gradient(to bottom, #FAFAFA 0%, #EDEDED 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffafafa', endColorstr='#ffededed', GradientType=0);
-  border-bottom: 1px solid #c7c7c7;
-  padding-top: 1px;
-}
-#dashboard_dropdown { position: absolute;right: 0;z-index: 2;padding: 0 8px 0 0; width: 115px; top: 0px;}
 
 /************ Tabs ************/
 

@@ -106,15 +106,7 @@ class CloudTenantController < ApplicationController
       if @refresh_div == "main_div" && @lastaction == "show_list"
         replace_gtl_main_div
       else
-        render :update do |page|                    # Use RJS to update the display
-          if ["vms"].include?(@display) && @refresh_div != "flash_msg_div"
-            page << "miqReinitToolbar('center_tb');"
-            page.replace_html("main_div", :partial => "layouts/gtl",
-                                          :locals  => {:action_url => "show/#{@cloud_tenant.id}"})
-          else
-            page.replace_html(@refresh_div, :partial => @refresh_partial)
-          end
-        end
+        render_flash
       end
     end
   end

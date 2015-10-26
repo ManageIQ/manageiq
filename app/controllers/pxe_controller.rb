@@ -144,8 +144,8 @@ class PxeController < ApplicationController
     )
     r = proc { |opts| render_to_string(opts) }
 
-    c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename) unless @in_a_form
-    h_buttons, h_xml = build_toolbar_buttons_and_xml('x_history_tb')
+    c_tb = build_toolbar(center_toolbar_filename) unless @in_a_form
+    h_tb = build_toolbar('x_history_tb')
 
     # Build hash of trees to replace and optional new node to be selected
     trees.each do |tree_name, tree|
@@ -159,15 +159,14 @@ class PxeController < ApplicationController
     end
 
     # forcing form buttons to turn off, to prevent Abandon changes popup when replacing right cell after form button was pressed
-    if c_buttons && c_xml
-      presenter[:set_visible_elements][:center_buttons_div] = true
-      presenter[:reload_toolbars][:center] = {:buttons => c_buttons, :xml => c_xml}
+    if c_tb.present?
+      presenter[:reload_toolbars][:center] = c_tb
     end
 
-    presenter[:set_visible_elements][:toolbar] = c_buttons
+    presenter[:set_visible_elements][:toolbar] = c_tb.present?
 
     # Rebuild the toolbars
-    presenter[:reload_toolbars][:history] = {:buttons => h_buttons, :xml => h_xml}
+    presenter[:reload_toolbars][:history] = h_tb
     case x_active_tree
     when :pxe_servers_tree
       presenter[:update_partials][:main_div] = r[:partial => "pxe_server_list"]

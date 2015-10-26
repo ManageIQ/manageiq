@@ -110,4 +110,8 @@ module JsHelper
     "if ($('##{j_str(element)}').prop('type') == 'checkbox') {$('##{j_str(element)}').prop('checked', false);}"
       .html_safe
   end
+
+  def javascript_update_element(element, content)
+    "$('##{element}').html('#{escape_javascript(content)}');"
+  end
 end

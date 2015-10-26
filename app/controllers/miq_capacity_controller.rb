@@ -133,14 +133,12 @@ class MiqCapacityController < ApplicationController
       bottleneck_get_node_info(x_node)
     end
     if x_active_tree != :bottlenecks_tree
-      v_buttons, v_xml = build_toolbar_buttons_and_xml("miq_capacity_view_tb")
+      v_tb = build_toolbar("miq_capacity_view_tb")
     end
-    render :update do |page|                      # Use JS to update the display
-      if x_active_tree != :bottlenecks_tree
-        page << javascript_show_if_exists("view_buttons_div") if v_buttons && v_xml
-        page << javascript_for_toolbar_reload('view_tb', v_buttons, v_xml) if v_buttons && v_xml
-        page << "$('#toolbar').show();"
-      end
+    render :update do |page|
+      page << javascript_pf_toolbar_reload('view_tb', v_tb)
+      page << "$('#toolbar').show();" if v_tb.present?
+
       if x_active_tree == :bottlenecks_tree && @sb[:active_tab] == "summary"
         # need to replace timeline div incase it wasn't there earlier
         page.replace("tl_div", :partial => "bottlenecks_tl_detail")
@@ -482,7 +480,7 @@ class MiqCapacityController < ApplicationController
 
     util_build_tree(:utilization, :utilization_tree) if replace_trees.include?(:utilization)
 
-    v_buttons, v_xml = build_toolbar_buttons_and_xml("miq_capacity_view_tb")
+    v_tb = build_toolbar("miq_capacity_view_tb")
     presenter = ExplorerPresenter.new(:active_tree => x_active_tree)
     r = proc { |opts| render_to_string(opts) }
 
@@ -491,10 +489,7 @@ class MiqCapacityController < ApplicationController
     # clearing out any selection in tree if active node has been reset to "" upon returning to screen or when first time in
     presenter[:clear_selection] = x_node == ''
 
-    if v_buttons && v_xml
-      presenter[:set_visible_elements][:view_buttons_div] = true
-      presenter[:reload_toolbars][:view] = {:buttons => v_buttons, :xml => v_xml}
-    end
+    presenter[:reload_toolbars][:view] = v_tb
 
     presenter[:set_visible_elements][:toolbar] = true
     presenter[:update_partials][:main_div] = r[:partial => 'utilization_tabs']
@@ -561,11 +556,10 @@ class MiqCapacityController < ApplicationController
     if params[:button] == "reset"
       session[:changed] = false
       add_flash(_("Planning options have been reset by the user"))
-      v_buttons, v_xml = build_toolbar_buttons_and_xml("miq_capacity_view_tb")
+      v_tb = build_toolbar("miq_capacity_view_tb")
       render :update do |page|  # Redraw the screen
-        page << javascript_show_if_exists("view_buttons_div") if v_buttons && v_xml
-        page << javascript_for_toolbar_reload('view_tb', v_buttons, v_xml) if v_buttons && v_xml
         page << "$('#toolbar').show();"
+        page << javascript_pf_toolbar_reload('view_tb', v_tb) if v_tb.present?
         page << javascript_for_miq_button_visibility(session[:changed])
         page.replace("planning_options_div", :partial => "planning_options")
         page.replace_html("main_div", :partial => "planning_tabs")
@@ -603,18 +597,15 @@ class MiqCapacityController < ApplicationController
   end
 
   def planning_replace_right_cell
-    v_buttons, v_xml = build_toolbar_buttons_and_xml("miq_capacity_view_tb")
+    v_tb = build_toolbar("miq_capacity_view_tb")
     presenter = ExplorerPresenter.new(:active_tree => @sb[:active_tree])
     r = proc { |opts| render_to_string(opts) }
 
     presenter[:extra_js] << 'ManageIQ.charts.chartData = ' + @sb[:planning][:chart_data].to_json + ';'
 
-    if v_buttons && v_xml
-      presenter[:set_visible_elements][:view_buttons_div] = true
-      presenter[:reload_toolbars][:view] = {:buttons => v_buttons, :xml => v_xml}
-    end
-
+    presenter[:reload_toolbars][:view] = v_tb
     presenter[:set_visible_elements][:toolbar] = true
+
     presenter[:update_partials][:main_div] = r[:partial => 'planning_tabs']
     presenter[:replace_cell_text] = _("Best Fit %s") % @sb[:planning][:options][:target_typ] == 'Host' ? 'Hosts' : 'Clusters'
 

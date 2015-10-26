@@ -242,8 +242,7 @@ module ApplicationController::Compare
     @exists_mode = session[:miq_exists_mode]
     @compare.remove_record(params[:id].to_i) if @lastaction == "compare_miq"                      # Remove the VM from the vm compare
     compare_to_json(@compare)
-    render :update do |page|                    # Use RJS to update the display
-      # page.replace("view_buttons_div", :partial=>"layouts/view_buttons")   # Replace the view buttons
+    render :update do |page|
       page.replace_html("main_div", :partial => "layouts/compare")  # Replace the main div area contents
       page << "miqSparkle(false);"
     end

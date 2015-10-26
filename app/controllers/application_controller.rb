@@ -22,6 +22,7 @@ class ApplicationController < ActionController::Base
   include ActionView::Helpers::DateHelper
   include ApplicationHelper
   include JsHelper
+  helper ToolbarHelper
   helper JsHelper
 
   helper CloudResourceQuotaHelper
@@ -44,11 +45,16 @@ class ApplicationController < ActionController::Base
   include_concern 'TreeSupport'
   include_concern 'SysprepAnswerFile'
 
+  before_action :reset_toolbar
   before_action :set_session_tenant, :except => [:window_sizes]
   before_action :get_global_session_data, :except => [:window_sizes, :authenticate]
   before_action :set_user_time_zone, :except => [:window_sizes]
   before_action :set_gettext_locale, :except => [:window_sizes]
   after_action :set_global_session_data, :except => [:window_sizes]
+
+  def reset_toolbar
+    @toolbars = {}
+  end
 
   ensure_security_headers
 
@@ -1961,13 +1967,8 @@ class ApplicationController < ActionController::Base
     action_url = options[:action_url] || @lastaction
     return if params[:action] == "button" && @lastaction == "show"
     render :update do |page|                        # Use RJS to update the display
-      #     page.visual_effect(:blind_up,"tag_box_div") if session[:applied_tags] != nil && @applied_tags == nil      # Hide div if removing all tags
-      #     page.replace_html("tag_box_div", :partial=>"layouts/tag_box")                                             # Replace the tag box contents
-      #     page.visual_effect(:blind_down, "tag_box_div")  if session[:applied_tags] == nil && @applied_tags != nil  # Show div if not shown already
       page.replace(:flash_msg_div, :partial => "layouts/flash_msg")           # Replace the flash message
-      page << "if (ManageIQ.toolbars !== null){"; # Make sure toolbars exist on the screen before resetting buttons
-      page << "miqSetButtons(0,'center_tb');"                             # Reset the center toolbar
-      page << "}"
+      page << "miqSetButtons(0,'center_tb');" # Reset the center toolbar
       unless @layout == "dashboard" && ["show", "change_tab", "auth_error"].include?(@controller.action_name) ||
              %w(about all_tasks all_ui_tasks configuration diagnostics miq_ae_automate_button
                 miq_ae_customization miq_ae_export miq_ae_logs miq_ae_tools miq_policy miq_policy_export

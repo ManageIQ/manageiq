@@ -2687,47 +2687,39 @@ describe ApplicationHelper do
       }
       @tb_buttons = {}
       @parent = nil
+      @item_out = {}
       Object.any_instance.stub(:query_string).and_return("")
       allow_message_expectations_on_nil
     end
 
     context "names the button" do
       subject do
-        build_toolbar_save_button(@tb_buttons, @item, @parent)
-        @tb_buttons
+        build_toolbar_save_button(@item, @item_out, @parent)
       end
 
       it "as item[:buttonSelect] when item[:buttonTwoState] does not exist" do
         @item[:buttonSelect] = 'tree_large'
-        subject.should have_key("tree_large")
+        subject.should include(:name => 'tree_large')
       end
 
       it "as item[:button] when both item[:buttonTwoState] and item[:buttonSelect] not exist" do
-        subject.should have_key("#{@item[:button]}")
+        subject.should include(:name => "#{@item[:button]}")
       end
 
       it "prefixed with 'parent__' when parent is passed in" do
         @parent = "testing"
-        subject.should have_key("#{@parent}__#{@item[:button]}")
+        subject.should include(:name => "#{@parent}__#{@item[:button]}")
       end
     end
 
     context "saves the item info by the same key" do
       subject do
-        build_toolbar_save_button(@tb_buttons, @item)
-        @tb_buttons[@item[:button]]
+        build_toolbar_save_button(@item, @item_out)
       end
 
       it "when item[:hidden] exists" do
         @item[:hidden] = 1
         subject.should have_key(:hidden)
-      end
-
-      it "when both parent and item[:title] exists" do
-        parent = "Vm"
-        @item[:title] = "Power On this VM"
-        build_toolbar_save_button(@tb_buttons, @item, parent)
-        @tb_buttons["#{parent}__#{@item[:button]}"].should have_key(:title)
       end
 
       it "when item[:url_parms] exists" do
@@ -2747,8 +2739,7 @@ describe ApplicationHelper do
 
     context "when item[:url] exists" do
       subject do
-        build_toolbar_save_button(@tb_buttons, @item)
-        @tb_buttons[@item[:button]]
+        build_toolbar_save_button(@item, @item_out)
       end
 
       it "gets rid of first directory and anything after last slash when button is 'view_grid', 'view_tile' or 'view_list'" do
