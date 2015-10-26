@@ -45,20 +45,10 @@ module VMDB
     end
 
     def self.log_duration(filename)
-      first, last = nil
+      require 'elif'
 
-      begin
-        start_of_file = File.open(filename, 'r')
-
-        require 'elif'
-        end_of_file = Elif.open(filename) # Use Elif to read a file backwards just as File.open does forwards
-
-        first = find_timestamp(start_of_file)
-        last  = find_timestamp(end_of_file)
-      ensure
-        start_of_file.close if start_of_file
-        end_of_file.close   if end_of_file
-      end
+      first = File.open(filename, 'r') { |f| find_timestamp(f) }
+      last  = Elif.open(filename, 'r') { |f| find_timestamp(f) }
 
       return first, last
     end
