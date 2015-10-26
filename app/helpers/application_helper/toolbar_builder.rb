@@ -1,7 +1,7 @@
 class ApplicationHelper::ToolbarBuilder
   include MiqAeClassHelper
   def call(toolbar_name)
-    build_toolbar_buttons_and_xml(toolbar_name)
+    build_toolbar(toolbar_name)
   end
 
   private
@@ -27,34 +27,17 @@ class ApplicationHelper::ToolbarBuilder
 
   ###
 
-  def build_toolbar_buttons_and_xml(tb_name)
+  def build_toolbar(tb_name)
     text = nil                                                      # Local vars for text and title
     title = nil
     tb_hash = tb_name == "custom_buttons_tb" ? build_custom_buttons_toolbar(@record) : YAML.load(File.open("#{TOOLBARS_FOLDER}/#{tb_name}.yaml"))
-    # Add custom buttons hash to tb button_groups array
-    # custom_hash = custom_buttons_hash(@record) if @record && @lastaction == "show" &&
-    # tb_name.ends_with?("center_tb") &&
-    # ( (@button_group && ["vm"].include?(@button_group)) ||
-    #   tb_name.starts_with?("miq_template_") ||
-    #   tb_name.starts_with?("ems_cluster_") ||
-    #   tb_name.starts_with?("host_") ||
-    #   tb_name.starts_with?("storage_") ||
-    #   tb_name.starts_with?("management_system_"))
 
-    tb_buttons = {}                                           # Hash to hold button info
-    tb_xml = MiqXml.createDoc(nil)                                  # XML to configure the toolbar
-    root = tb_xml.add_element('toolbar')
     toolbar = []
     groups_added = []
     sep_needed = false
-    # if custom_hash
-    # custom_hash.each do |ch|
-    # tb_hash[:button_groups].push(ch)
-    # end
-    # end
+
     tb_hash[:button_groups].each_with_index do |bg, bg_idx|         # Go thru all of the button groups
       sep_added = false
-      sep_node = false
       if @button_group && (!bg[:name].starts_with?(@button_group + "_") &&
         !bg[:name].starts_with?("custom") && !bg[:name].starts_with?("dialog") &&
         !bg[:name].starts_with?("miq_dialog") && !bg[:name].starts_with?("custom_button") &&
@@ -110,17 +93,8 @@ class ApplicationHelper::ToolbarBuilder
             end
           end
 
-          # Add a separator, if needed, before this buttonSelect
-          if !sep_added && sep_needed
-            if groups_added.include?(bg_idx) && groups_added.length > 1
-              # Commented following line to get some extra space in our toolbars - FB 15875
-              #             sep_node = root.add_element("item", {"id"=>"sep_#{bg_idx}", "type"=>"separator"}) # Put separators between button groups
-            end
-          end
-
           toolbar << props
           current_item = props
-          bs_node = root.add_element("item", props)                 # Add buttonSelect node
           bgi[:items].each_with_index do |bsi, bsi_idx|             # Go thru all of the buttonSelect items
             if bsi.key?(:separator)                             # If separator found, add it
               props = {"id" => "sep_#{bg_idx}_#{bsi_idx}", "type" => "separator"}
@@ -147,17 +121,12 @@ class ApplicationHelper::ToolbarBuilder
               title = eval("\"#{bsi[:title]}\"") unless bsi[:title].blank?  # Evaluate substitutions in text
               props["title"] = dis_title.kind_of?(String) ? CGI.escapeHTML(dis_title) : CGI.escapeHTML("#{title}")
             end
-            bs_node.add_element("item", props)                      # Add buttonSelect child button node
             current_item[:items] ||= []
             current_item[:items] << props
-            build_toolbar_save_button(tb_buttons, bsi, props, bgi[:buttonSelect]) if bsi[:button] # Save if a button (not sep)
+            build_toolbar_save_button(bsi, props, bgi[:buttonSelect]) if bsi[:button] # Save if a button (not sep)
           end
-          build_toolbar_save_button(tb_buttons, bgi, current_item) if bs_children || bgi[:buttonSelect] == "history_choice"
-          unless bs_children                                        # No children?
-            bs_node.remove! if bs_node
-          # Commented following line to get some extra space in our toolbars - FB 15882
-          #           sep_node.remove! if sep_node                            # Remove the separator if it was added for this node
-          else
+          build_toolbar_save_button(bgi, current_item) if bs_children || bgi[:buttonSelect] == "history_choice"
+          if bs_children
             sep_added = true                                        # Separator has officially been added
             sep_needed = true                                       # Need a separator from now on
           end
@@ -192,45 +161,42 @@ class ApplicationHelper::ToolbarBuilder
           # Add a separator, if needed, before this button
           if !sep_added && sep_needed
             if groups_added.include?(bg_idx) && groups_added.length > 1
-              root.add_element("item", sep = {"id" => "sep_#{bg_idx}", "type" => "separator"}) # Put separators between buttons
-              toolbar << sep
+              toolbar << {"id" => "sep_#{bg_idx}", "type" => "separator"} # Put separators between buttons
               sep_added = true
             end
           end
           sep_needed = true                                         # Button was added, need separators from now on
 
           toolbar << props
-          root.add_element("item", props)
-          build_toolbar_save_button(tb_buttons, bgi, props)
+          build_toolbar_save_button(bgi, props)
         elsif bgi.key?(:buttonTwoState)                         # two state button node found
           next if build_toolbar_hide_button(bgi[:buttonTwoState])
-          props = {"id"     => bgi[:buttonTwoState],
-                   "type"   => "buttonTwoState",
-                   "img"    => "#{bgi[:image] ? bgi[:image] : bgi[:buttonTwoState]}.png",
-                   "imgdis" => "#{bgi[:image] ? bgi[:image] : bgi[:buttonTwoState]}.png"}
-          title = eval("\"#{bgi[:title]}\"") unless bgi[:title].blank?
-          props["title"] = bgi[:title] unless bgi[:title].blank?
-          props["enabled"] = "#{bgi[:enabled]}" unless bgi[:enabled].blank?
-          props["enabled"] = "false" if build_toolbar_disable_button(bgi[:buttonTwoState])
-          props["selected"] = "true" if build_toolbar_select_button(bgi[:buttonTwoState])
+          props = {
+            "id"     => bgi[:buttonTwoState],
+            "type"   => "buttonTwoState",
+            "img"    => "#{bgi[:image] ? bgi[:image] : bgi[:buttonTwoState]}.png",
+            "imgdis" => "#{bgi[:image] ? bgi[:image] : bgi[:buttonTwoState]}.png"
+          }
+          props["title"]    = eval("\"#{bgi[:title]}\"") unless bgi[:title].blank?
+          props["enabled"]  = "#{bgi[:enabled]}" unless bgi[:enabled].blank?
+          props["enabled"]  = "false" if build_toolbar_disable_button(bgi[:buttonTwoState])
+          props["selected"] = "true"  if build_toolbar_select_button(bgi[:buttonTwoState])
           if !sep_added && sep_needed
             if groups_added.include?(bg_idx) && groups_added.length > 1
-              root.add_element("item", sep = {"id" => "sep_#{bg_idx}", "type" => "separator"}) # Put separators between buttons
-              toolbar << sep
+              toolbar << {"id" => "sep_#{bg_idx}", "type" => "separator"} # Put separators between buttons
               sep_added = true
             end
           end
           sep_needed = true                                         # Button was added, need separators from now on
 
-          root.add_element("item", props)
           toolbar << props
-          build_toolbar_save_button(tb_buttons, bgi, props)
+          build_toolbar_save_button(bgi, props)
         end
       end
     end
 
     toolbar = nil if toolbar.empty?
-    return tb_buttons.to_json.html_safe, tb_xml.to_s.html_safe, toolbar
+    toolbar
   end
 
   def create_custom_button_hash(input, record, options = {})
@@ -1321,38 +1287,35 @@ class ApplicationHelper::ToolbarBuilder
     false
   end
 
-  # Save a button tb_buttons hash
-  def build_toolbar_save_button(tb_buttons, item, props, parent = nil)
-    confirm_title = nil
-    parms = nil
-    url = nil
-    title = nil
+  def build_toolbar_save_button(item, props, parent = nil)
     button = item.key?(:buttonTwoState) ? item[:buttonTwoState] : (item.key?(:buttonSelect) ? item[:buttonSelect] : item[:button])
     button = parent + "__" + button if parent # Prefix with "parent__" if parent is passed in
-    tb_buttons[button] = {}
-    props[:name]    = tb_buttons[button][:name] = button
-    props[:pressed] = tb_buttons[button][:pressed] = item[:pressed] if item[:pressed]
-    props[:hidden]  = tb_buttons[button][:hidden] = item[:hidden] ? true : false
-    title = eval("\"#{item[:title]}\"") if parent && item[:title]
-    tb_buttons[button][:title] = title if parent && item[:title]
-    url = eval("\"#{item[:url]}\"") if item[:url]
-    if ["view_grid", "view_tile", "view_list"].include?(tb_buttons[button][:name])
-      # blows up in sub screens for CI's, need to get rid of first directory and anything after last slash in @gtl_url, that's being manipulated in JS function
-      url.gsub!(/^\/[a-z|A-Z|0-9|_|-]+/, "")
-      ridx = url.rindex('/') if url
-      url = url.slice(0..ridx - 1)  if ridx
+
+    props.update(
+      :name    => button,
+      :hidden  => !!item[:hidden],
+      :pressed => item[:pressed],
+      :onwhen  => item[:onwhen]
+    )
+
+    if item[:url]
+      url = eval("\"#{item[:url]}\"")
+      if %w(view_grid view_tile view_list).include?(props[:name])
+        # blows up in sub screens for CI's, need to get rid of first directory and anything after last slash in @gtl_url, that's being manipulated in JS function
+        url.gsub!(/^\/[a-z|A-Z|0-9|_|-]+/, "")
+        ridx = url.rindex('/')
+        url = url.slice(0..ridx - 1) if ridx
+      end
+      props[:url] = url
     end
-    if item[:full_path]
-      tb_buttons[button][:full_path] = ERB.new(item[:full_path]).result(@view_binding)
-    end
-    props[:url]      = tb_buttons[button][:url] = url if item[:url]
-    props[:explorer] = tb_buttons[button][:explorer] = true if @explorer && !item[:url] # Add explorer = true if ajax button
+
+    props[:explorer] = true if @explorer && !item[:url] # Add explorer = true if ajax button
     if item[:popup]
-      props[:popup] = tb_buttons[button][:popup] = item[:popup]
+      props[:popup] = item[:popup]
       if item[:url_parms] == "popup_only" # For readonly reports, they don't have confirm message
-        props[:console_url] = tb_buttons[button][:console_url] = "/#{request.parameters["controller"]}#{item[:url]}"
+        props[:console_url] = "/#{request.parameters["controller"]}#{item[:url]}"
       else # Assuming at this point this is a console button
-        props[:console_url] = tb_buttons[button][:console_url] =
+        props[:console_url] =
           if item[:url] == "vnc_console" # This is a VNC console button
             "http://#{@record.ipaddresses[0]}:#{get_vmdb_config[:server][:vnc_port]}"
           else # This is an MKS or VMRC VMware console button
@@ -1367,15 +1330,17 @@ class ApplicationHelper::ToolbarBuilder
                              support_vmdb_choice__zone_collect_current_logs
                           )
 
-    if tb_buttons[button][:name].in?(collect_log_buttons) && @record.try(:log_depot).try(:requires_support_case?)
-      props[:prompt] = tb_buttons[button][:prompt] = true
+    if props[:name].in?(collect_log_buttons) && @record.try(:log_depot).try(:requires_support_case?)
+      props[:prompt] = true
     end
-    parms = eval("\"#{item[:url_parms]}\"") if item[:url_parms]
-    props[:url_parms] = tb_buttons[button][:url_parms] = update_url_parms(parms) if item[:url_parms]
+
+    if item[:url_parms]
+      parms = eval("\"#{item[:url_parms]}\"")
+      props[:url_parms] = update_url_parms(parms)
+    end
+
     # doing eval for ui_lookup in confirm message
-    confirm_title = eval("\"#{item[:confirm]}\"") if item[:confirm]
-    props[:confirm] = tb_buttons[button][:confirm] = confirm_title if item[:confirm]
-    props[:onwhen]  = tb_buttons[button][:onwhen]  = item[:onwhen] if item[:onwhen]
+    props[:confirm] = eval("\"#{item[:confirm]}\"") if item[:confirm]
   end
 
   def update_url_parms(url_parm)
