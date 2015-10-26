@@ -23,7 +23,8 @@ class VmScan < Job
       :cancel             => {'*'                => 'canceling'},
       :finish             => {'*'                => 'finished'},
       :error              => {'*'                => '*'},
-      :start              => {'waiting_to_start' => 'snapshot_create',
+      :start              => {'waiting_to_start' => 'wait_for_policy'},
+      :start_snapshot     => {'wait_for_policy'  => 'snapshot_create',
                               'wait_for_broker'  => 'snapshot_create'},
       :snapshot_complete  => {'snapshot_create' => 'scanning',
                               'snapshot_delete' => 'synchronizing'},
@@ -34,23 +35,56 @@ class VmScan < Job
     }
   end
 
-  def call_snapshot_create
+  def call_check_policy
     _log.info "Enter"
 
     begin
       vm = VmOrTemplate.find(target_id)
-      context[:snapshot_mor] = nil
 
+      cb = {
+        :class_name  => self.class.to_s,
+        :instance_id => id,
+        :method_name => :check_policy_complete,
+        :server_guid => MiqServer.my_guid
+      }
       inputs = {:vm => vm, :host => vm.host}
-      result = MiqEvent.raise_evm_job_event(vm, {:type => "scan", :suffix => "start"}, inputs)
-      if result.kind_of?(Hash)
-        prof_policies = result.fetch_path(:policy, :actions, :assign_scan_profile)
-        unless prof_policies.nil?
-          scan_profiles = []
-          prof_policies.each { |p| scan_profiles += p[:result] unless p[:result].nil? }
-          options[:scan_profiles] = scan_profiles unless scan_profiles.blank?
-        end
+      MiqEvent.raise_evm_job_event(vm, {:type => "scan", :suffix => "start"}, inputs, :miq_callback => cb)
+    rescue => err
+      $log.log_backtrace(err)
+      signal(:abort, err.message, "error")
+      return
+    rescue TimeoutError
+      $log.error("MIQ(scan-action-call_check_policy) #{msg}")
+      signal(:abort, msg, "error")
+    end
+  end
+
+  def check_policy_complete(status, message, result)
+    unless status == 'ok'
+      $log.error("MIQ(scan-action-check_policy_complete) status = #{status}, message = #{message}")
+      signal(:abort, message, "error")
+      return
+    end
+
+    if result.kind_of?(MiqAeEngine::MiqAeWorkspaceRuntime)
+      event = result.get_obj_from_path("/")['event_stream']
+      data  = event.attributes["full_data"]
+      prof_policies = data.fetch_path(:policy, :actions, :assign_scan_profile) if data
+      if prof_policies
+        scan_profiles = []
+        prof_policies.each { |p| scan_profiles += p[:result] unless p[:result].nil? }
+        options[:scan_profiles] = scan_profiles unless scan_profiles.blank?
       end
+    end
+    signal(:start_snapshot)
+  end
+
+  def call_snapshot_create
+    $log.info "action-call_snapshot: Enter"
+
+    begin
+      vm = VmOrTemplate.find(target_id)
+      context[:snapshot_mor] = nil
 
       options[:snapshot] = :skipped
       options[:use_existing_snapshot] = false
@@ -152,7 +186,7 @@ class VmScan < Job
       break if MiqVimBrokerWorker.available?
     end
 
-    signal(:start)
+    signal(:start_snapshot)
   end
 
   def call_scan
@@ -542,7 +576,8 @@ class VmScan < Job
 
   # All other signals
   alias_method :initializing,       :dispatch_start
-  alias_method :start,              :call_snapshot_create
+  alias_method :start,              :call_check_policy
+  alias_method :start_snapshot,     :call_snapshot_create
   alias_method :snapshot_delete,    :call_snapshot_delete
   alias_method :broker_unavailable, :wait_for_vim_broker
   alias_method :abort_job,          :process_abort

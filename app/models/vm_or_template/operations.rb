@@ -46,7 +46,7 @@ module VmOrTemplate::Operations
   end
 
   def unregister
-    raw_unregister unless policy_prevented?(:request_vm_unregister)
+    check_policy_prevent(:request_vm_unregister, :raw_unregister)
   end
 
   def raw_destroy
@@ -55,7 +55,7 @@ module VmOrTemplate::Operations
   end
 
   def vm_destroy
-    raw_destroy unless policy_prevented?(:request_vm_destroy)
+    check_policy_prevent(:request_vm_destroy, :raw_destroy)
   end
 
   private

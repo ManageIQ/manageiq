@@ -54,91 +54,52 @@ describe MiqEvent do
         expect { MiqEvent.raise_evm_event(nil, "some_event") }.to raise_error
       end
 
-      it "will do policy, alerts, and children events for known event on supported policy target" do
-        MiqAeEvent.should_receive(:raise_evm_event).never
-        raw_event = 'vm_start'
-        FactoryGirl.create(:miq_event_definition, :name => raw_event)
-        event = MiqEvent.normalize_event(raw_event)
-        MiqPolicy.should_receive(:enforce_policy).with(@cluster, event, {:type => @cluster.class.name})
-        MiqAlert.should_receive(:evaluate_alerts).with(@cluster, event, {:type => @cluster.class.name})
-        MiqEvent.should_receive(:raise_event_for_children).with(@cluster, raw_event, {:type => @cluster.class.name})
-        results = MiqEvent.raise_evm_event(@cluster, event)
+      it "will raise the event to automate" do
+        event = 'evm_server_start'
+        FactoryGirl.create(:miq_event_definition, :name => event)
+        MiqAeEvent.should_receive(:raise_evm_event)
+        MiqEvent.raise_evm_event(@miq_server, event)
+      end
+    end
 
+    context "#process_evm_event" do
+      before do
+        @cluster    = FactoryGirl.create(:ems_cluster)
+        @zone       = FactoryGirl.create(:zone, :name => "test")
+        @miq_server = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
+      end
+
+      it "will do policy, alerts, and children events for supported policy target" do
+        event = 'vm_start'
+        FactoryGirl.create(:miq_event_definition, :name => event)
+        FactoryGirl.create(:miq_event, :event_type => event, :target => @cluster)
+        target_class = @cluster.class.name
+
+        MiqPolicy.should_receive(:enforce_policy).with(@cluster, event, :type => target_class)
+        MiqAlert.should_receive(:evaluate_alerts).with(@cluster, event, :type => target_class)
+        MiqEvent.should_receive(:raise_event_for_children).with(@cluster, event, :type => target_class)
+
+        results = MiqEvent.first.process_evm_event
         results.keys.should match_array([:policy, :alert, :children_events])
-        results.should_not have_key(:automate)
       end
 
-      it "will do alerts and children events for unknown but alertable event on supported policy target" do
-        MiqAeEvent.should_receive(:raise_evm_event).never
-        MiqAlert.stub(:event_alertable?).and_return true
-        MiqPolicy.should_receive(:enforce_policy).never
-        MiqAlert.should_receive(:evaluate_alerts).with(@cluster, "unknown", {:type => @cluster.class.name})
-        MiqEvent.should_receive(:raise_event_for_children).with(@cluster, "unknown", {:type => @cluster.class.name})
-        MiqEvent.raise_evm_event(@cluster, "unknown")
-      end
-
-      it "will do children events for unknown and not alertable event on supported policy target" do
-        MiqAeEvent.should_receive(:raise_evm_event).never
-        MiqAlert.stub(:event_alertable?).and_return false
-        MiqPolicy.should_receive(:enforce_policy).never
-        MiqAlert.should_receive(:evaluate_alerts).never
-        MiqEvent.should_receive(:raise_event_for_children).with(@cluster, "unknown", {:type => @cluster.class.name})
-        MiqEvent.raise_evm_event(@cluster, "unknown")
-      end
-
-      it "will alert, enforce policy and not raise to automate for known alertable event on supported policy target" do
+      it "will not raise to automate for supported policy target" do
         raw_event = "evm_server_start"
         FactoryGirl.create(:miq_event_definition, :name => raw_event)
-        event = MiqEvent.normalize_event(raw_event)
-        MiqAlert.stub(:event_alertable?).with(raw_event).and_return true
+        FactoryGirl.create(:miq_event, :event_type => raw_event, :target => @miq_server)
+
         MiqAeEvent.should_receive(:raise_evm_event).never
-        MiqPolicy.should_receive(:enforce_policy).once
-        MiqAlert.should_receive(:evaluate_alerts).with(@miq_server, event, {:type => @miq_server.class.name})
-        MiqEvent.should_receive(:raise_event_for_children).once
-        MiqEvent.raise_evm_event(@miq_server, raw_event)
+        MiqEvent.first.process_evm_event
       end
 
-      it "will not raise to automate for known non-alertable event on supported policy target" do
-        raw_event = "evm_server_start"
-        FactoryGirl.create(:miq_event_definition, :name => raw_event)
-        event = MiqEvent.normalize_event(raw_event)
-        MiqAlert.stub(:event_alertable?).with(raw_event).and_return false
-        MiqAeEvent.should_receive(:raise_evm_event).never
-        MiqPolicy.should_receive(:enforce_policy).once
-        MiqAlert.should_receive(:evaluate_alerts).once
-        MiqEvent.should_receive(:raise_event_for_children).once
-        MiqEvent.raise_evm_event(@miq_server, raw_event)
-      end
+      it "will do nothing for unsupported policy target" do
+        FactoryGirl.create(:miq_event_definition, :name => "some_event")
+        FactoryGirl.create(:miq_event, :event_type => "some_event", :target => @zone)
 
-      it "will not raise to automate for known non-alertable event on supported policy target without raising any errors" do
-        raw_event = "evm_worker_start"
-        FactoryGirl.create(:miq_event_definition, :name => raw_event)
-        MiqAlert.stub(:event_alertable?).with(raw_event).and_return false
-        MiqPolicy.should_receive(:enforce_policy).once
-        MiqAlert.should_receive(:evaluate_alerts).once
-        MiqEvent.should_receive(:raise_event_for_children).once
-
-        msg = "Worker started: ID [1], PID [123], GUID [c67bd040-3500-11df-81df-000c295b1696]"
-        lambda do
-          MiqEvent.raise_evm_event(@miq_server, raw_event, :event_details => msg, :type => "MiqGenericWorker")
-        end.should_not raise_error
-      end
-
-      it "will alert and raise to automate for unknown but alertable event on unsupported policy target" do
-        MiqAlert.stub(:event_alertable?).and_return true
-        MiqAeEvent.should_receive(:raise_evm_event).with("unknown", @zone, :type => 'Zone')
-        MiqPolicy.should_receive(:enforce_policy).never
-        MiqAlert.should_receive(:evaluate_alerts).with(@zone, "unknown", :type => 'Zone')
-        MiqEvent.should_receive(:raise_event_for_children).never
-        MiqEvent.raise_evm_event(@zone, "unknown")
-      end
-
-      it "will raise to automate for unknown event on unsupported policy target" do
-        MiqAeEvent.should_receive(:raise_evm_event).with("unknown", @zone, :type => 'Zone')
         MiqPolicy.should_receive(:enforce_policy).never
         MiqAlert.should_receive(:evaluate_alerts).never
         MiqEvent.should_receive(:raise_event_for_children).never
-        MiqEvent.raise_evm_event(@zone, "unknown")
+        MiqEvent.first.process_evm_event
       end
     end
 

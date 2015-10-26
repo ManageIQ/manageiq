@@ -114,7 +114,7 @@ describe Compliance do
 
     context ".scan_and_check_compliance" do
       it "should raise event request_host_scan" do
-        MiqEvent.should_receive(:raise_evm_event).with(@host1, "request_host_scan", {})
+        MiqEvent.should_receive(:raise_evm_event).with(@host1, "request_host_scan", {}, {})
         Compliance.scan_and_check_compliance([@host1.class.name, @host1.id])
       end
     end

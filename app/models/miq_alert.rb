@@ -252,9 +252,9 @@ class MiqAlert < ActiveRecord::Base
     inputs = {:miq_alert_description => description, :miq_alert_id => id, :alert_guid => guid}
     event  = options.fetch_path(:notifications, :automate, :event_name)
     MiqQueue.put(
-      :class_name  => "MiqAeEvent",
+      :class_name  => "MiqEvent",
       :method_name => "raise_evm_event",
-      :args        => [event, [target.class.name, target.id], inputs],
+      :args        => [[target.class.name, target.id], event, inputs],
       :role        => 'automate',
       :priority    => MiqQueue::HIGH_PRIORITY,
       :zone        => target.respond_to?(:my_zone) ? target.my_zone : MiqServer.my_zone

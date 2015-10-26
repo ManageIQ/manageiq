@@ -7,7 +7,7 @@ describe "Service Retirement Management" do
   end
 
   it "#retirement_check" do
-    MiqAeEvent.should_receive(:raise_evm_event)
+    MiqEvent.should_receive(:raise_evm_event)
     @service.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
     expect(@service.retirement_last_warn).to be_nil
     @service.class.any_instance.should_receive(:retire_now).once
@@ -26,7 +26,7 @@ describe "Service Retirement Management" do
 
   it "#retire_now" do
     expect(@service.retirement_state).to be_nil
-    expect(MiqAeEvent).to receive(:raise_evm_event).once
+    expect(MiqEvent).to receive(:raise_evm_event).once
     @service.retire_now
     @service.reload
   end
@@ -37,7 +37,7 @@ describe "Service Retirement Management" do
     event_hash = {:service => @service, :type => "Service",
                   :retirement_initiator => "user", :user_id => "freddy"}
 
-    expect(MiqAeEvent).to receive(:raise_evm_event).with(event_name, @service, event_hash).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash).once
 
     @service.retire_now('freddy')
     @service.reload
@@ -49,7 +49,7 @@ describe "Service Retirement Management" do
     event_hash = {:service => @service, :type => "Service",
                   :retirement_initiator => "system"}
 
-    expect(MiqAeEvent).to receive(:raise_evm_event).with(event_name, @service, event_hash).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash).once
 
     @service.retire_now
     @service.reload
@@ -167,7 +167,7 @@ describe "Service Retirement Management" do
   it "#raise_retirement_event" do
     event_name = 'foo'
     event_hash = {:service => @service, :type => "Service", :retirement_initiator => "system"}
-    expect(MiqAeEvent).to receive(:raise_evm_event).with(event_name, @service, event_hash)
+    expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash)
     @service.raise_retirement_event(event_name)
   end
 

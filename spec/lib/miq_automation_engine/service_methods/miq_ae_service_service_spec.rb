@@ -138,7 +138,7 @@ EOF
 
     it "#retire_now" do
       expect(@service.retirement_state).to be_nil
-      expect(MiqAeEvent).to receive(:raise_evm_event).once
+      expect(MiqEvent).to receive(:raise_evm_event).once
 
       service_service.retire_now
     end
