@@ -127,8 +127,6 @@ describe Host do
         FactoryGirl.create(:miq_event_definition, :name => :request_host_start)
         # admin user is needed to process Events
         FactoryGirl.create(:user_with_group, :userid => "admin", :name => "Administrator")
-        # TODO: fix me when tenant default group is merged
-        ExtManagementSystem.any_instance.stub(:miq_group => FactoryGirl.create(:miq_group))
       end
 
       it "policy passes" do
