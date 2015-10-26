@@ -36,11 +36,7 @@ if (typeof(ManageIQ) === 'undefined') {
       charts: {}, // object with registered charts used in jqplot_register_chart
       formatters: {}, // functions corresponding to MiqReport::Formatting
     },
-    grids: {
-      grids: null, // stored grids on the screen
-      gridColumnWidths: null, // store grid column widths
-      xml: null,
-    },
+    grids: {}, // stored grids on the screen
     layout: { // abstraction over dhxLayout(B)
       sidebar:   null,
       toolbar:   null,

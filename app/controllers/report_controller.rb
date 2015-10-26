@@ -895,7 +895,13 @@ class ReportController < ApplicationController
       end
     elsif nodetype == 'menu_commit_folders'
       # Hide flash_msg if it's being shown from New folder add event
-      presenter[:set_visible_elements][:flash_msg_div_menu_list] = false
+      if flash_errors?
+        presenter[:replace_partials][:flash_msg_div_menu_list] = r[:partial => 'layouts/flash_msg',
+                                                                   :locals  => {:div_num => '_menu_list'}]
+      else
+        presenter[:set_visible_elements][:flash_msg_div_menu_list] = false
+      end
+
       if @sb[:tree_err]
         presenter[:set_visible_elements][:menu_div1] = true
         presenter[:set_visible_elements][:menu_div2] = false

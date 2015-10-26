@@ -36,27 +36,21 @@ function miqOnLoad() {
     }
   }
 
-  // Initialize dhtmlxgrid control
-  if (typeof miqInitGrids == "function") {
-    miqInitGrids();
-  }
   // Init the toolbars
   if (typeof miqInitToolbars == "function") {
     miqInitToolbars();
   }
+
   // Refresh the myCodeMirror editor
   if (ManageIQ.editor !== null) {
     ManageIQ.editor.refresh();
   }
-  // Position clear search link in right cell header
-  if ($('#clear_search').length) {
-    // Find the right cell header div
-    $('.dhtmlxInfoBarLabel:visible').append($('#clear_search'));
-  }
+
   // Run MIQ after onload code if present
   if (typeof miq_after_onload == "string") {
     eval(miq_after_onload);
   }
+
   // Focus on search box, if it's there and allows focus
   if ($('#search_text').length) {
     try {
@@ -389,13 +383,13 @@ function miqUpdateAllCheckboxes(button_div, override) {
     if (override != null) {
       state = override;
     }
-    if (typeof ManageIQ.grids.grids.gtl_list_grid == 'undefined' &&
+    if (typeof ManageIQ.grids.gtl_list_grid == 'undefined' &&
         ($("input[id^='listcheckbox']").length)) {
       // No dhtmlx grid on the screen
       var cbs = $("input[id^='listcheckbox']")
       cbs.prop('checked', state);
       miqUpdateButtons(cbs[0], button_div);
-    } else if (typeof ManageIQ.grids.grids.gtl_list_grid == 'undefined' &&
+    } else if (typeof ManageIQ.grids.gtl_list_grid == 'undefined' &&
                $("input[id^='storage_cb']").length) {
       // to handle check/uncheck all for C&U collection
       $("input[id^='storage_cb']").prop('checked', state);
@@ -405,14 +399,11 @@ function miqUpdateAllCheckboxes(button_div, override) {
       ));
       return true;
     } else {
-      // Set checkboxes in dhtmlx grid
-      ManageIQ.grids.grids.gtl_list_grid.obj.forEachRow(function (id) {
-        ManageIQ.grids.grids.gtl_list_grid.obj.cells(id, 0).setValue(state ? 1 : 0);
-      });
-      var crows = ManageIQ.grids.grids.gtl_list_grid.obj.getCheckedRows(0);
-      $('#miq_grid_checks').val(crows);
-      var count = !crows ? 0 : crows.split(",").length;
-      miqSetButtons(count, button_div);
+      miqGridCheckAll(state);
+      var crows = miqGridGetCheckedRows();
+
+      $('#miq_grid_checks').val(crows.join(','));
+      miqSetButtons(crows.length, button_div);
     }
   }
   miqSparkle(false);
@@ -539,28 +530,19 @@ function miqResetSizeTimer() {
   ManageIQ.sizeTimer = false;
   var sizes = miqGetSize();
   var offset = 427;
-  var h;
+  var h = sizes[1] - offset;
   var url = "/dashboard/window_sizes";
   var args = {width: sizes[0], height: sizes[1]};
 
-  if (ManageIQ.grids.xml !== null) {
-    // If grid xml is available for reload
-    if ($('#list_grid').length) {
-      // Adjust certain elements, if present
-      h = sizes[1] - offset;
-      if (h < 200) {
-        h = 200;
-      }
-      $('#list_grid').css({height: h + 'px'});
-      ManageIQ.grids.grids.gtl_list_grid.obj.clearAll();
-      ManageIQ.grids.grids.gtl_list_grid.obj.parse(xml);
-    } else if ($('#logview').length) {
-        h = sizes[1] - offset;
-      if (h < 200) {
-        h = 200;
-      }
-      $('#logview').css({height: h + 'px'});
-    }
+  if (h < 200) {
+    h = 200;
+  }
+
+  // Adjust certain elements, if present
+  if ($('#list_grid').length) {
+    $('#list_grid').css({height: h + 'px'});
+  } else if ($('#logview').length) {
+    $('#logview').css({height: h + 'px'});
   }
 
   // Send the new values to the server

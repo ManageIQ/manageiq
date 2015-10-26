@@ -9,8 +9,6 @@
 - disabled ||= false
 
 - unless [:hide, :ignore].include?(field_hash[:display])
-  = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "calendar"}
-
   :javascript
     // Create from/to date JS vars to limit calendar starting from
     ManageIQ.calendar.calDateFrom = miqCalendarDateConversion("#{@timezone_offset}");

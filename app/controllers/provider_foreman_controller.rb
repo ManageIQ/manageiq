@@ -742,7 +742,6 @@ class ProviderForemanController < ApplicationController
         r[:partial => 'layouts/x_adv_searchbox',
           :locals  => {:nameonly => ([:foreman_providers_tree].include?(x_active_tree))}]
 
-    # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
   end
 
@@ -938,7 +937,7 @@ class ProviderForemanController < ApplicationController
   def add_unassigned_configuration_profile_record_to_view(unassigned_profile_row, unassigned_configuration_profile)
     @view.table.data.push(unassigned_profile_row)
     @targets_hash[unassigned_profile_row['id']] = unassigned_configuration_profile
-    @grid_xml = view_to_xml(@view, 0, -1, :association => nil)
+    @grid_hash = view_to_hash(@view)
   end
 
   def process_show_list(options = {})

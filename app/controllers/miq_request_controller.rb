@@ -377,6 +377,10 @@ class MiqRequestController < ApplicationController
       prov_set_default_options
     end
     show_list
+
+    # need to call this outside render :update
+    grid_options, js_options = replace_list_grid
+
     render :update do |page|
       page.replace("prov_options_div", :partial => "prov_options")
       if @view.table.data.length >= 1
@@ -386,14 +390,12 @@ class MiqRequestController < ApplicationController
         page << javascript_show("no_records_div")
         page << javascript_hide("records_div")
       end
-      page << "ManageIQ.grids.xml = \"#{j_str(@grid_xml)}\";"  # Set the XML data
-      page << "ManageIQ.grids.grids['gtl_list_grid'].obj.clearAll(true);"               # Clear grid data, including headers
-      page << "ManageIQ.grids.grids['gtl_list_grid'].obj.parse(ManageIQ.grids.xml);"    # Reload grid from XML
-      if @sortcol
-        dir = @sortdir ? @sortdir[0..2] : "asc"
-        page << "ManageIQ.grids.grids['gtl_list_grid'].obj.setSortImgState(true, #{@sortcol + 2}, '#{dir}');"
-      end
-      page << "miqGridOnCheck(null, null, null);"           # Reset the center buttons
+
+      page.replace_html("list_grid", :partial => "layouts/list_grid",
+                                     :locals => {:options    => grid_options,
+                                                 :js_options => js_options})
+      page << "miqGridOnCheck();"           # Reset the center buttons
+
       page.replace("pc_div_1", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => "show_list", :db => @view.db, :headers => @view.headers})
       page.replace("pc_div_2", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => "show_list"})
     end

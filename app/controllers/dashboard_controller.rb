@@ -682,7 +682,6 @@ class DashboardController < ApplicationController
       db_user.settings.delete(:db_item_min)
 
       @settings.each { |key, value| value.merge!(db_user.settings[key]) unless db_user.settings[key].nil? }
-      @settings[:col_widths] = db_user.settings[:col_widths]  # Get the user's column widths
       @settings[:default_search] = db_user.settings[:default_search]  # Get the user's default search setting
     end
 

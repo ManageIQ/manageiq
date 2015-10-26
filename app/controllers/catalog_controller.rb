@@ -950,7 +950,7 @@ class CatalogController < ApplicationController
       @gtl_buttons = ["view_list", "view_tile"]
       @gtl_small_tiles = true
       if role_allows(:feature => 'svc_catalog_provision')
-        @row_button = {:image    => "Order",
+        @row_button = {:label    => "Order",
                        :function => "miqOrderService",
                        :title    => "Order this Service"} # Show a button instead of the checkbox
       end
@@ -1861,7 +1861,6 @@ class CatalogController < ApplicationController
         r[:partial => "layouts/x_gtl"]
       end
 
-    # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 
     presenter[:open_accord] = 'sandt' if @sb[:active_tree] == :sandt_tree

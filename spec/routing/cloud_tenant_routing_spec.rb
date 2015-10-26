@@ -4,7 +4,6 @@ require "routing/shared_examples"
 describe EmsCloudController do
   let(:controller_name) { "ems_cloud" }
 
-  it_behaves_like "A controller that has column width routes"
   it_behaves_like "A controller that has compare routes"
   it_behaves_like "A controller that has tagging routes"
 

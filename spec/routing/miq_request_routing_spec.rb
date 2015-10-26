@@ -6,7 +6,6 @@ describe 'routes for MiqRequestController' do
 
   it_behaves_like "A controller that has dialog runner routes"
   it_behaves_like 'A controller that has show list routes'
-  it_behaves_like 'A controller that has column width routes'
 
   describe '#index' do
     it 'routes with GET' do

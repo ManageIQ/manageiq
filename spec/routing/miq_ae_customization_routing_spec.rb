@@ -4,7 +4,6 @@ require "routing/shared_examples"
 describe MiqAeCustomizationController do
   let(:controller_name) { 'miq_ae_customization' }
 
-  it_behaves_like "A controller that has column width routes"
 
   %w(
     explorer
@@ -48,7 +47,6 @@ describe MiqAeCustomizationController do
     old_dialogs_update
     reload
     resolve
-    save_col_widths
     tree_autoload_dynatree
     tree_select
     upload_import_file
