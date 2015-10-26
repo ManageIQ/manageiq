@@ -162,18 +162,15 @@ class VimPerformanceState < ActiveRecord::Base
   end
 
   def self.capture_parent_cluster(obj)
-    return unless obj.kind_of?(Host) || obj.kind_of?(VmOrTemplate)
-    obj.parent_cluster.try(:id)
+    obj.parent_cluster.try(:id) if (obj.kind_of?(Host) || obj.kind_of?(VmOrTemplate))
   end
 
   def self.capture_parent_host(obj)
-    return unless obj.kind_of?(VmOrTemplate)
-    obj.host_id
+    obj.host_id if obj.kind_of?(VmOrTemplate)
   end
 
   def self.capture_parent_storage(obj)
-    return unless obj.kind_of?(VmOrTemplate)
-    obj.storage_id
+    obj.storage_id if obj.kind_of?(VmOrTemplate)
   end
 
   def self.capture_parent_ems(obj)
@@ -189,13 +186,11 @@ class VimPerformanceState < ActiveRecord::Base
   end
 
   def self.capture_vm_disk_storage(obj, field)
-    return unless obj.kind_of?(VmOrTemplate)
-    obj.send("#{field}_storage")
+    obj.send("#{field}_storage") if obj.kind_of?(VmOrTemplate)
   end
 
   def self.capture_cpu_total_cores(obj)
-    return unless obj.kind_of?(VmOrTemplate)
-    obj.hardware.try(:cpu_total_cores)
+    obj.hardware.try(:cpu_total_cores) if obj.kind_of?(VmOrTemplate)
   end
 
   def self.capture_host_sockets(obj)
