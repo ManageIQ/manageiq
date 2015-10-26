@@ -4,7 +4,6 @@ require 'routing/shared_examples'
 describe 'routes for CatalogController' do
   let(:controller_name) { 'catalog' }
 
-  it_behaves_like 'A controller that has column width routes'
   it_behaves_like 'A controller that has download_data routes'
   it_behaves_like 'A controller that has explorer routes'
 

@@ -4,7 +4,6 @@ require "routing/shared_examples"
 describe MiqAeCustomizationController do
   let(:controller_name) { 'miq_ae_customization' }
 
-  it_behaves_like "A controller that has column width routes"
 
   %w(
     explorer
