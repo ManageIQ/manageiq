@@ -55,7 +55,7 @@ class VimPerformanceState < ActiveRecord::Base
     state.parent_storage_id = capture_parent_storage(obj)
     state.parent_ems_id = capture_parent_ems(obj)
     state.parent_ems_cluster_id = capture_parent_cluster(obj)
-    state.numvcpus = capture_numvcpus(obj)
+    state.numvcpus = capture_cpu_total_cores(obj)
     state.total_cpu = capture_total(obj, :cpu_speed)
     state.total_mem = capture_total(obj, :memory)
     state.reserve_cpu = capture_reserve(obj, :cpu_reserve)
@@ -195,14 +195,13 @@ class VimPerformanceState < ActiveRecord::Base
     obj.send("#{field}_storage")
   end
 
-  def self.capture_numvcpus(obj)
-    return nil unless obj.kind_of?(VmOrTemplate) && obj.respond_to?(:hardware) && obj.hardware
-    # FIXME: this is a z-stream patch
-    # this method name should really be changed to #capture_logical_cpus to
-    # match the actual column being read, however, there are several reports
-    # depending on the name :numvcpus
-    # A larger patch should be done outside of a z-stream release
-    obj.hardware.logical_cpus
+  def self.capture_cpu_total_cores(obj)
+    return unless obj.kind_of?(VmOrTemplate)
+    obj.hardware.try(:cpu_total_cores)
+  end
+  class << self
+    alias_method :capture_numvcpus, :capture_cpu_total_cores
+    Vmdb::Deprecation.deprecate_methods(self, :capture_numvcpus => :capture_cpu_total_cores)
   end
 
   def self.capture_host_sockets(obj)
