@@ -253,7 +253,7 @@ module MiqServer::LogManagement
   end
 
   def base_zip_log_name
-    t = Time.now.utc.iso8601.gsub!(/:|\./, "_")
+    t = Time.now.utc.strftime('%FT%H_%M_%SZ'.freeze)
     # Name the file based on GUID and time.  GUID and Date/time of the request are as close to unique filename as we're going to get
     "App-#{guid}-#{t}"
   end
