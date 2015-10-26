@@ -377,6 +377,10 @@ class MiqRequestController < ApplicationController
       prov_set_default_options
     end
     show_list
+
+    # need to call this outside render :update
+    grid_options, js_options = replace_list_grid
+
     render :update do |page|
       page.replace("prov_options_div", :partial => "prov_options")
       if @view.table.data.length >= 1
@@ -387,7 +391,9 @@ class MiqRequestController < ApplicationController
         page << javascript_hide("records_div")
       end
 
-      replace_list_grid
+      page.replace_html("list_grid", :partial => "layouts/list_grid",
+                                     :locals => {:options    => grid_options,
+                                                 :js_options => js_options})
       page << "miqGridOnCheck();"           # Reset the center buttons
 
       page.replace("pc_div_1", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => "show_list", :db => @view.db, :headers => @view.headers})

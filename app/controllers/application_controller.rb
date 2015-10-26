@@ -1946,15 +1946,19 @@ class ApplicationController < ActionController::Base
                   :row_url      => url,
                   :row_url_ajax => ajax_url}
 
-    page.replace_html("list_grid", :partial => "layouts/list_grid",
-                                    :locals => {:options    => grid_options,
-                                                :js_options => js_options})
+    [grid_options, js_options]
   end
 
   # RJS code to show tag box effects and replace the main list view area
   def replace_gtl_main_div(options = {})
     action_url = options[:action_url] || @lastaction
     return if params[:action] == "button" && @lastaction == "show"
+
+    if @grid_hash
+      # need to call this outside render :update
+      grid_options, js_options = replace_list_grid
+    end
+
     render :update do |page|                        # Use RJS to update the display
       page.replace(:flash_msg_div, :partial => "layouts/flash_msg")           # Replace the flash message
       page << "miqSetButtons(0,'center_tb');" # Reset the center toolbar
@@ -1966,7 +1970,9 @@ class ApplicationController < ActionController::Base
         page.replace(:listnav_div, :partial => "layouts/listnav")               # Replace accordion, if list_nav_div is there
       end
       if @grid_hash
-        replace_list_grid
+        page.replace_html("list_grid", :partial => "layouts/list_grid",
+                                       :locals => {:options    => grid_options,
+                                                   :js_options => js_options})
         # Reset the center buttons
         page << "miqGridOnCheck();"
       else
