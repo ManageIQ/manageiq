@@ -952,7 +952,7 @@ module OpsController::OpsRbac
     @edit[:new][:userid] = @user.userid
     @edit[:new][:email] = @user.email.to_s
     @edit[:new][:password] = @user.password
-    @edit[:new][:password2] = @user.password
+    @edit[:new][:verify] = @user.password
 
     @edit[:groups] = MiqGroup.all.sort_by { |g| g.description.downcase }.collect { |g| [g.description, g.id] }
     @edit[:new][:group] = @user.current_group ? @user.current_group.id : nil
@@ -968,7 +968,7 @@ module OpsController::OpsRbac
     @edit[:new][:group] = params[:chosen_group] if params[:chosen_group]
 
     @edit[:new][:password] = params[:password] if params[:password]
-    @edit[:new][:password2] = params[:password2] if params[:password2]
+    @edit[:new][:verify] = params[:verify] if params[:verify]
   end
 
   # Set user record variables to new values
@@ -977,13 +977,13 @@ module OpsController::OpsRbac
     user.userid     = @edit[:new][:userid]
     user.email      = @edit[:new][:email]
     user.miq_groups = [MiqGroup.find_by_id(@edit[:new][:group])].compact
-    user.password   = @edit[:new][:password]
+    user.password   = @edit[:new][:password] if @edit[:new][:password]
   end
 
   # Validate some of the user fields
   def rbac_user_validate?
     valid = true
-    if @edit[:new][:password] != @edit[:new][:password2]
+    if @edit[:new][:password] != @edit[:new][:verify]
       add_flash(_("Password/Verify Password do not match"), :error)
       valid = false
     end

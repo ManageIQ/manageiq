@@ -1,23 +1,31 @@
 function changeStoredPassword(pfx, url) {
-  $('#' + pfx + '_change_stored_password').css('display', 'none');
-  $('#' + pfx + '_cancel_password_change').css('display', 'block');
-  $('#' + pfx + '_verify_group').css('display', 'block');
-  $('#' + pfx + '_password').removeAttr('disabled');
-  $('#' + pfx + '_verify').removeAttr('disabled');
-  $('#' + pfx + '_password').val('');
-  $('#' + pfx + '_verify').val('');
-  miqJqueryRequest(url + '?' + pfx + '_password' + '=' + '&' + pfx + '_verify' + '=');
-  $('#' + pfx + '_password').focus();
+  var prefix = "";
+  if(pfx.length > 1) {
+    prefix = pfx + '_';
+  }
+  $('#' + prefix + 'change_stored_password').css('display', 'none');
+  $('#' + prefix + 'cancel_password_change').css('display', 'block');
+  $('#' + prefix + 'verify_group').css('display', 'block');
+  $('#' + prefix + 'password').removeAttr('disabled');
+  $('#' + prefix + 'verify').removeAttr('disabled');
+  $('#' + prefix + 'password').val('');
+  $('#' + prefix + 'verify').val('');
+  miqJqueryRequest(url + '?' + prefix + 'password' + '=' + '&' + prefix + 'verify' + '=');
+  $('#' + prefix + 'password').focus();
 };
 
 function cancelPasswordChange(pfx, url) {
   var storedPasswordPlaceholder = '●●●●●●●●'
-  $('#' + pfx + '_cancel_password_change').css('display', 'none');
-  $('#' + pfx + '_change_stored_password').css('display', 'block');
-  $('#' + pfx + '_verify_group').css('display', 'none');
-  $('#' + pfx + '_password').attr('disabled', 'disabled');
-  $('#' + pfx + '_verify').attr('disabled', 'disabled');
-  $('#' + pfx + '_password').val(storedPasswordPlaceholder);
-  $('#' + pfx + '_verify').val(storedPasswordPlaceholder);
-  miqJqueryRequest(url + '?' + pfx + '_password' + '=' + '&' + pfx + '_verify' + '=' + '&restore_password=true');
+  var prefix = "";
+  if(pfx.length > 1) {
+    prefix = pfx + '_';
+  }
+  $('#' + prefix + 'cancel_password_change').css('display', 'none');
+  $('#' + prefix + 'change_stored_password').css('display', 'block');
+  $('#' + prefix + 'verify_group').css('display', 'none');
+  $('#' + prefix + 'password').attr('disabled', 'disabled');
+  $('#' + prefix + 'verify').attr('disabled', 'disabled');
+  $('#' + prefix + 'password').val(storedPasswordPlaceholder);
+  $('#' + prefix + 'verify').val(storedPasswordPlaceholder);
+  miqJqueryRequest(url + '?' + prefix + 'password' + '=' + '&' + prefix + 'verify' + '=' + '&restore_password=true');
 };
