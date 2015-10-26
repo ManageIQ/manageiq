@@ -1,9 +1,3 @@
-/* needed for scrollable rows */
-body, html {
-  height: 100%;
-  overflow: hidden;
-}
-
 #paging_div {
   width: 100%;
   border-top: 1px solid #c7c7c7;
@@ -304,4 +298,9 @@ div#view_tb {
 
 .toolbar-pf-actions .btn-group.dropdown > button > img {
   padding-right: 3px;
+}
+
+/* Adds padding between buttons when they wrap */
+.toolbar-pf#toolbar .toolbar-pf-actions .form-group {
+  margin-bottom: 10px !important
 }
