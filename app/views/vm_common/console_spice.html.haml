@@ -29,11 +29,11 @@
         var encrypt;
 
         $(function () {
-
-          var host     = window.location.hostname;
-          var port     = $('#spice-area').data('port');
-          var password = $('#spice-area').data('password');
-          var encrypt_attr = vnc_el.attr('data-encrypt');
+          var host         = window.location.hostname;
+          var element      = $('#spice-area');
+          var port         = element.data('port');
+          var password     = element.data('password');
+          var encrypt_attr = element.attr('data-encrypt');
           encrypt = (encrypt_attr !== undefined) && (encrypt_attr !== 'false');
           var scheme   = (encrypt ? "wss://" : "ws://"), uri;
 
