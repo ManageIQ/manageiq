@@ -32,21 +32,20 @@ describe VmOrTemplateController do
     end
 
     context "x_button method check" do
-      let(:vm_infra) { FactoryGirl.create(:vm_vmware) }
       before { controller.instance_variable_set(:@_orig_action, "x_history") }
 
       it "should set correct VM for right-sizing when on vm list view" do
         controller.should_receive(:replace_right_cell)
-        post :x_button, :pressed => "vm_right_size", :id => vm_infra.id, :check_10r839 => '1'
+        post :x_button, :pressed => "vm_right_size", :id => vm_vmware.id, :check_10r839 => '1'
         controller.send(:flash_errors?).should_not be_true
-        assigns(:record).id == vm_infra.id
+        assigns(:record).id == vm_vmware.id
       end
 
       it "should set correct VM for right-sizing when from vm summary screen" do
         controller.should_receive(:replace_right_cell)
-        post :x_button, :pressed => "vm_right_size", :id => vm_infra.id
+        post :x_button, :pressed => "vm_right_size", :id => vm_vmware.id
         controller.send(:flash_errors?).should_not be_true
-        assigns(:record).id == vm_infra.id
+        assigns(:record).id == vm_vmware.id
       end
     end
   end
