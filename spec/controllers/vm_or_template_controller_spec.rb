@@ -84,8 +84,6 @@ describe VmOrTemplateController do
     before do
       FactoryGirl.create(:vm_vmware)
       FactoryGirl.create(:template_vmware)
-      User.stub(:find_by_userid).and_return(User.current_user)
-      EvmSpecHelper.create_guid_miq_server_zone
     end
 
     [
