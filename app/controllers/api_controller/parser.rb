@@ -217,9 +217,13 @@ class ApiController
       end
     end
 
-    def validate_post_api_action(cname, mname, cspec, type, target)
+    def parse_action_name
       # for basic HTTP POST, default action is "create" with data being the POST body
-      aname = @req[:action] = json_body["action"] || "create"
+      @req[:action] = @req[:method] == :put ? "edit" : (json_body["action"] || "create")
+    end
+
+    def validate_post_api_action(cname, mname, cspec, type, target)
+      aname = parse_action_name
 
       aspecnames = "#{target}_actions"
       raise BadRequestError, "No actions are supported for #{cname} #{type}" unless cspec.key?(aspecnames.to_sym)
