@@ -32,7 +32,8 @@
         %label.col-md-2.control-label= option[:description]
         - if option[:name].to_s == "password"
           .col-md-8
-            = password_field_tag("production_#{option[:name]}", username.blank? ? "" : stored_password_placeholder,
+            = password_field_tag("production_#{option[:name]}",
+                                  username.blank? ? "" : stored_password_placeholder,
                                   :maxlength         => 50,
                                   :class => "form-control",
                                   :placeholder1       => placeholder_if_present(@edit[:new][option[:name]]),

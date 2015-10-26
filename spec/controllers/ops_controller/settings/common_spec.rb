@@ -240,7 +240,7 @@ describe OpsController do
         edit = {:new => {}}
         controller.instance_variable_set(:@edit, edit)
         controller.instance_variable_set(:@_params,
-                                         :restore_password => true,
+                                         :restore_password    => true,
                                          :production_password => "[FILTERED]",
                                          :production_verify   => "[FILTERED]")
         controller.send(:restore_password)
