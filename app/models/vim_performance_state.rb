@@ -163,8 +163,7 @@ class VimPerformanceState < ActiveRecord::Base
 
   def self.capture_parent_cluster(obj)
     return unless obj.kind_of?(Host) || obj.kind_of?(VmOrTemplate)
-    c = obj.parent_cluster
-    c ? c.id : nil
+    obj.parent_cluster.try(:id)
   end
 
   def self.capture_parent_host(obj)
@@ -178,13 +177,11 @@ class VimPerformanceState < ActiveRecord::Base
   end
 
   def self.capture_parent_ems(obj)
-    return unless obj.respond_to?(:ems_id)
-    obj.ems_id
+    obj.try(:ems_id)
   end
 
   def self.capture_reserve(obj, field)
-    return unless obj.respond_to?(field)
-    obj.send(field)
+    obj.try(field)
   end
 
   def self.capture_tag_names(obj)
