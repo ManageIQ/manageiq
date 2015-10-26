@@ -410,7 +410,8 @@ describe VmOrTemplate do
   context "#tenant" do
     let(:tenant) { FactoryGirl.create(:tenant) }
     it "has a tenant" do
-      vm = FactoryGirl.create(:vm_vmware, :tenant => tenant)
+      vm = FactoryGirl.create(:vm_vmware, :tenant => tenant, :miq_group => nil)
+      expect(vm.reload.tenant).to eq(tenant)
       expect(tenant.vm_or_templates).to include(vm)
     end
   end
