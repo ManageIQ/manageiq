@@ -56,27 +56,27 @@ function miqGridOnCheck(elem, button_div) {
   }
 }
 
-
-
-
-//--- TODO ---
-
 // Handle sort
-function miqGridSort(col_id, grid_obj, dir) {
-  if (ManageIQ.actionUrl == "sort_ds_grid") {
-    var url = '/miq_request/sort_ds_grid?sortby=' + col_id;
-    miqJqueryRequest(url, {beforeSend: true, complete: true});
-  } else {
-    if (grid_obj && col_id > 1) {
-      var url = ManageIQ.actionUrl;
-      if (ManageIQ.record.parentId !== null) {
-        url = "/" + ManageIQ.record.parentClass + "/" + url + "/" + ManageIQ.record.parentId;
-      }
-      url = url + "?sortby=" + (col_id - 1) + "&" + window.location.search.substring(1);
-      miqJqueryRequest(url, {beforeSend: true, complete: true});
-    } else {
-      return false;
-    }
-  }
-}
+function miqGridSort(col_id) {
+  var controller = null;
+  var action = ManageIQ.actionUrl;
+  var id = null;
 
+  if (action == "sort_ds_grid") {
+    controller = 'miq_request';
+  } else if (ManageIQ.record.parentId !== null) {
+    controller = ManageIQ.record.parentClass;
+    id = ManageIQ.record.parentId;
+  }
+
+  var url = action;
+  if (controller) {
+    url = '/' + controller + '/' + url;
+  }
+  if (id) {
+    url = url + '/' + id;
+  }
+
+  url = url + "?sortby=" + col_id + "&" + window.location.search.substring(1);
+  miqJqueryRequest(url, {beforeSend: true, complete: true});
+}

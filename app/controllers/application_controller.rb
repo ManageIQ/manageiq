@@ -1066,9 +1066,10 @@ class ApplicationController < ActionController::Base
     view.headers.each_with_index do |h, i|
       align = [:fixnum, :integer, :Fixnum, :float].include?(column_type(view.db, view.col_order[i])) ? 'right' : 'left'
 
-      root[:head] << {:text  => h,
-                      :sort  => 'str',
-                      :align => align}
+      root[:head] << {:text    => h,
+                      :sort    => 'str',
+                      :col_idx => i,
+                      :align   => align}
     end
 
     if @row_button  # Show a button as last col
@@ -1932,6 +1933,7 @@ class ApplicationController < ActionController::Base
 
     ajax_url = ! %w(OntapStorageSystem OntapLogicalDisk OntapStorageVolume OntapFileShare SecurityGroup).include?(view.db)
     ajax_url = false if request.parameters[:controller] == "service" && view.db == "Vm"
+    ajax_url = false unless @explorer
 
     url = @showlinks == false ? nil : view_to_url(view, @parent)
     grid_options = {:grid_id    => "list_grid",
@@ -1939,7 +1941,7 @@ class ApplicationController < ActionController::Base
                     :grid_hash  => @grid_hash,
                     :button_div => button_div,
                     :action_url => action_url}
-    js_options = {:sortcol      => @sortcol ? @sortcol + 2 : nil,
+    js_options = {:sortcol      => @sortcol ? @sortcol : nil,
                   :sortdir      => @sortdir ? @sortdir[0..2] : nil,
                   :row_url      => url,
                   :row_url_ajax => ajax_url}

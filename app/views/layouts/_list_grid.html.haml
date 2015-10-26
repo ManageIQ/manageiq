@@ -48,7 +48,17 @@
     %tr
       - grid_hash[:head].each do |h|
         %th{:class => h[:is_narrow] ? 'narrow' : ''}
-          = h[:text]
+          - if h[:sort]
+            %a{:href => '#',
+               :onclick => "miqGridSort(#{h[:col_idx] + 1})"}
+              = h[:text]
+          - else
+            = h[:text]
+
+          - if @sortcol && @sortcol == h[:col_idx]
+            .pull-right
+              - sorticon = (@sortdir.nil? || @sortdir == 'ASC') ? 'fa fa-sort-asc' : 'fa fa-sort-desc'
+              %i{:class => sorticon}
   %tbody
     - grid_hash[:rows].each do |row|
       %tr{:onclick => "miqRowClick('#{j row[:id]}', #{raw row_url}, #{j row_url_ajax.to_s}); return false;"}
