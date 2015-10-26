@@ -56,7 +56,7 @@
             - if @html
               %tr
                 %td{:align => "center", :style => "padding-top: 20px;padding-left: 10px;padding-right: 10px;"}
-                  %h3= _("VM \"#{@perf_record.name}\"")
+                  %h3= _("VM \"%{name}\"") % {:name => @perf_record.name}
                   = @html.html_safe
                 - if @p_html
                   %td{:align => "center", :style => "padding-top: 20px;padding-left: 10px;padding-right: 10px;"}
