@@ -47,7 +47,7 @@ module MiqServer::EnvironmentManagement
     end
 
     def get_network_information
-      ipaddr = hostname = mac_address = ''
+      ipaddr = hostname = mac_address = nil
       begin
         if MiqEnvironment::Command.is_linux?
           eth0 = LinuxAdmin::NetworkInterface.new("eth0")
