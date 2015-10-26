@@ -15,7 +15,7 @@
   };
 
   angular.module('app.skin', [])
-    .constant('Text', text)
+    .value('Text', text)
     .config(configure);
 
   /** @ngInject */

@@ -42,7 +42,6 @@ module.exports = (function() {
   var clientJsOrder = [
     '**/app.module.js',
     '**/*.module.js',
-    '**/skin.module.js',
     '**/*.js'
   ];
 
@@ -60,10 +59,10 @@ module.exports = (function() {
   var serverApp = server + 'app.js';
 
   function getClientJsFiles(ordered, excludeSpecs) {
-    var files = [client + 'app/**/*.js'];
+    var files = [client + 'app/**/*.js', client + 'skin/**/*.js'];
 
     if (ordered) {
-      files = [].concat(client + 'app/app.module.js', client + 'app/**/*module*.js', client + 'skin/skin.module.js', files)
+      files = [].concat(client + 'app/app.module.js', client + 'app/**/*module*.js', files)
     }
 
     if (excludeSpecs) {
@@ -194,6 +193,14 @@ module.exports = (function() {
     minify: false
   };
 
+  config.devSkinImages = {
+    src: [
+      client + 'skin/images/**/*.*'
+    ],
+    build: temp + 'images',
+    minify: false
+  };
+
   config.imgs = {
     src: [
       bower + 'patternfly/dist/img/**/*'
@@ -288,7 +295,10 @@ module.exports = (function() {
   config.inject = {
     index: client + indexFile,
     build: client,
-    css: temp + 'styles/' + cssFile
+    css: [
+      temp + 'styles/' + cssFile,
+      client + '/skin/**/*.css'
+    ]
   };
 
   config.optimize = {
