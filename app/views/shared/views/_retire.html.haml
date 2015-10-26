@@ -25,15 +25,17 @@
       %label.col-md-2.control-label
         = _('Retirement Warning')
       .col-md-8
+        - select_options = [{:value => "", :label => _("None")},
+                            {:value => 7,  :label => _("1 Week before retirement")},
+                            {:value => 14, :label => _("2 Weeks before retirement")},
+                            {:value => 30, :label => _("30 Days before retirement")}]
         = select_tag("retirementWarning",
-                      options_for_select([[_("None"), ""],
-                                          [_("1 Week before retirement"), 7],
-                                          [_("2 Weeks before retirement"), 14],
-                                          [_("30 Days before retirement"), 30]], ""),
-                      "ng-model"    => "retirementInfo.retirementWarning",
-                      "ng-disabled" => "!retirementInfo.retirementDate",
-                      "checkchange" => true,
-                      :class    => "selectpicker")
+                     "",
+                     "ng-options"  => "item.value as item.label for item in #{select_options.to_json.gsub('"', '\'')}",
+                     "ng-model"    => "retirementInfo.retirementWarning",
+                     "ng-disabled" => "!retirementInfo.retirementDate",
+                     "checkchange" => true,
+                     "pf-select"   => true)
         :javascript
           miqInitSelectPicker();
   = _('* Saving a blank date will remove all retirement dates')
