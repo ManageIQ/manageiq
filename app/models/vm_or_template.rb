@@ -157,7 +157,7 @@ class VmOrTemplate < ActiveRecord::Base
   virtual_column :num_hard_disks,                       :type => :integer,    :uses => {:hardware => :hard_disks}
   virtual_column :num_disks,                            :type => :integer,    :uses => {:hardware => :disks}
   virtual_column :num_cpu,                              :type => :integer,    :uses => :hardware
-  virtual_column :logical_cpus,                         :type => :integer,    :uses => :hardware
+  virtual_column :cpu_total_cores,                      :type => :integer,    :uses => :hardware
   virtual_column :cpu_cores_per_socket,                 :type => :integer,    :uses => :hardware
   virtual_column :v_annotation,                         :type => :string,     :uses => :hardware
   virtual_column :has_rdm_disk,                         :type => :boolean,    :uses => {:hardware => :disks}
@@ -1616,8 +1616,8 @@ class VmOrTemplate < ActiveRecord::Base
     hardware.nil? ? 0 : hardware.numvcpus
   end
 
-  def logical_cpus
-    hardware.nil? ? 0 : hardware.logical_cpus
+  def cpu_total_cores
+    hardware.nil? ? 0 : hardware.cpu_total_cores
   end
 
   def cpu_cores_per_socket
