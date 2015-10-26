@@ -75,6 +75,11 @@ describe Vm do
       expect(described_class.find_all_by_mac_address_and_hostname_and_ipaddress(nil, nil, ipaddress))
         .to eql([@vm1])
     end
+
+    it "returns an empty list when all are blank" do
+      expect(described_class.find_all_by_mac_address_and_hostname_and_ipaddress(nil, nil, nil)).to eq([])
+      expect(described_class.find_all_by_mac_address_and_hostname_and_ipaddress('', '', '')).to eq([])
+    end
   end
 
   context "with relationships of multiple types" do
