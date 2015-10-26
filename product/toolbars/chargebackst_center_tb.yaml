@@ -1,0 +1,39 @@
+#
+# Toolbar config file
+#
+---
+:model: Chargeback
+:button_groups:
+- :name: chargeback_vmdb
+  :items:
+  - :buttonSelect: chargeback_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: chargeback_tiers_new
+      :image: new
+      :text: "Add a new Chargeback Tier"
+      :title: "Add a new Chargeback Tier"
+    - :button: chargeback_tiers_edit
+      :image: edit
+      :text: Edit the selected Chargeback Tier
+      :title: Edit the selected Chargeback Tier
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: chargeback_tiers_copy
+      :image: copy
+      :title: "Copy the selected Chargeback Tier to a new Chargeback Tier"
+      :text: "Copy the selected Chargeback Tier to a new Chargeback Tier"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: chargeback_tiers_delete
+      :image: remove
+      :text: Remove selected Chargeback Tiers from the VMDB
+      :title: Remove selected Chargeback Tiers from the VMDB
+      :url_parms: 'main_div'
+      :confirm: "Warning: The selected Chargeback Tier will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Chargeback Tiers?"
+      :enabled: 'false'
+      :onwhen: '1+'

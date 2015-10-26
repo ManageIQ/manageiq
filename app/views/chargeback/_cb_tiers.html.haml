@@ -1,0 +1,4 @@
+- if @edit && @edit[:current]
+  = render :partial => "cb_tier_edit"
+- else
+  = render :partial => 'layouts/x_gtl', :locals => {:action_url => "cb_tiers_list"}

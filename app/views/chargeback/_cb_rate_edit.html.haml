@@ -20,6 +20,7 @@
       %tr
         %th= _('Group')
         %th= _('Description')
+        %th= _('Tier')
         %th= _('Rate')
         %th= _('Per Time')
         %th= _('Per Unit')
@@ -35,6 +36,10 @@
             = Dictionary.gettext(r[:group], :type => :rate_detail_group, :notfound => :titleize)
           %td
             = r[:description]
+          %td
+            = select_tag("chargeback_tier_id#{i}",
+              options_for_select(Hash[ChargebackTier.all_names.zip(ChargebackTier.all_ids)],
+                @edit[:new][:details][i][:chargeback_tier_id]), "data-miq_observe" => {:url => url}.to_json)
           %td{:align => 'right'}
             = text_field_tag("rate_#{i}", @edit[:new][:details][i][:rate],
               :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)

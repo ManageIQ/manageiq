@@ -16,6 +16,8 @@ class ChargebackController < ApplicationController
     @_params[:typ] = params[:pressed].split('_').last
     cb_rate_edit if ["chargeback_rates_copy", "chargeback_rates_edit", "chargeback_rates_new"].include?(params[:pressed])
     cb_rates_delete if params[:pressed] == "chargeback_rates_delete"
+    cb_tier_edit if %w(chargeback_tiers_copy chargeback_tiers_edit chargeback_tiers_new).include?(params[:pressed])
+    cb_tiers_delete if params[:pressed] == "chargeback_tiers_delete"
   end
 
   def x_show
@@ -25,6 +27,13 @@ class ChargebackController < ApplicationController
       nodeid = x_build_node_id(@record)
       params[:id] = "xx-#{@record.rate_type}_#{nodeid}"
       params[:tree] = x_active_tree.to_s
+      tree_select
+    elsif x_active_tree == :cb_tiers_tree
+      @record = identify_record(params[:id], ChargebackTier)
+      nodeid = x_build_node_id(@record)
+      params[:id] = "tier_#{nodeid}"
+      params[:tree] = x_active_tree.to_s
+      @record = identify_record(params[:id], ChargebackTier)
       tree_select
     end
   end
@@ -64,13 +73,18 @@ class ChargebackController < ApplicationController
       @trees << cb_rates_build_tree
       @accords << {:name => "cb_rates", :title => "Rates", :container => "cb_rates_accord"}
     end
+    if role_allows(:feature => "chargeback_rates")
+      self.x_active_tree ||= 'cb_tiers_tree'
+      self.x_active_accord ||= 'cb_tiers'
+      @trees << cb_tiers_build_tree
+      @accords << {:name => "cb_tiers", :title => "Tiers", :container => "cb_tiers_accord"}
+    end
     if role_allows(:feature => "chargeback_assignments")
       self.x_active_tree ||= 'cb_assignments_tree'
       self.x_active_accord ||= 'cb_assignments'
       @trees << cb_assignments_build_tree
       @accords << {:name => "cb_assignments", :title => "Assignments", :container => "cb_assignments_accord"}
     end
-
     if params[:accordion]
       self.x_active_tree   = "#{params[:accordion]}_tree"
       self.x_active_accord = params[:accordion]
@@ -78,11 +92,13 @@ class ChargebackController < ApplicationController
 
     @sb[:open_tree_nodes] ||= []
 
-    @right_cell_text = case x_active_tree
-                       when :cb_rates_tree       then _("All %s") % ui_lookup(:models => "ChargebackRate")
-                       when :cb_assignments_tree then _("All %s") % "Assignments"
-                       when :cb_reports_tree     then _("All %s") % "Saved Chargeback Reports"
-                       end
+    @right_cell_text =
+    case x_active_tree
+    when :cb_rates_tree       then _("All %s") % ui_lookup(:models => "ChargebackRate")
+    when :cb_assignments_tree then _("All %s") % "Assignments"
+    when :cb_reports_tree     then _("All %s") % "Saved Chargeback Reports"
+    when :cb_tiers_tree       then _("All %s") % "Tiers"
+    end
     get_node_info(x_node)
     set_form_locals
     session[:changed] = false
@@ -93,6 +109,8 @@ class ChargebackController < ApplicationController
   def set_form_locals
     if x_active_tree == :cb_rates_tree
       @x_edit_buttons_locals = {:action_url => 'cb_rate_edit'}
+    elsif x_active_tree == :cb_tiers_tree
+      @x_edit_buttons_locas = {:action_url => 'cb_tier_edit'}
     elsif x_active_tree == :cb_assignments_tree
       @x_edit_buttons_locals = {
         :action_url   => 'cb_assign_update',
@@ -220,6 +238,7 @@ class ChargebackController < ApplicationController
           detail.source = r[:source]
           detail.rate = r[:rate]
           detail.per_time = r[:per_time]
+          detail.chargeback_tier_id = r[:chargeback_tier_id]
           detail.group = r[:group]
           detail.per_unit = r[:per_unit]
           detail.metric = r[:metric]
@@ -243,6 +262,7 @@ class ChargebackController < ApplicationController
                   # detail.rate = r[:rate]
                   # detail.per_time = r[:per_time]
                   detail.rate = ""
+                  detail.chargeback_tier_id = r[:chargeback_tier_id]
                   detail.per_time = "hourly"
                   detail.group = r[:group]
                   detail.per_unit = r[:per_unit]
@@ -320,6 +340,210 @@ class ChargebackController < ApplicationController
     end
   end
 
+  def cb_tiers_list
+    @listicon = "chargeback_tiers"
+    @gtl_type = "list"
+    @ajax_paging_buttons = true
+    @explorer = true
+    if params[:ppsetting]                                              # User selected new per page value
+      @items_per_page = params[:ppsetting].to_i                        # Set the new per page value
+      @settings[:perpage][@gtl_type.to_sym] = @items_per_page          # Set the per page setting for this gtl type
+    end
+    @sortcol = session[:tiers_sortcol].nil? ? 0 : session[:tiers_sortcol].to_i
+    @sortdir = session[:tiers_sortdir].nil? ? "ASC" : session[:tiers_sortdir]
+    @view, @pages = get_view(ChargebackTier) # Get the records (into a view) and the paginator
+    @current_page = @pages[:current] unless @pages.nil? # save the current page number
+    session[:tiers_sortcol] = @sortcol
+    session[:tiers_sortdir] = @sortdir
+    if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
+      render :update do |page| # Use RJS to update the display
+        page.replace("gtl_div", :partial => "layouts/x_gtl", :locals => {:action_url => "cb_tiers_list"})
+        page.replace_html("paging_div", :partial => "layouts/x_pagingcontrols")
+        page << "miqSparkle(false)"
+      end
+    end
+  end
+
+  def cb_tier_edit
+    case params[:button]
+    when "cancel"
+      add_flash("#{!@sb[:tier] || @sb[:tier].id.blank? ? _("Add of new %s was cancelled by the user") %
+      ui_lookup(:model => "ChargebackTier") : _("Edit of %{model} \"%{name}\" was cancelled by the user") %
+      {:model => ui_lookup(:model => "ChargebackTier"), :name => @sb[:tier].description}}")
+      get_node_info(x_node)
+      @sb[:tier] = @sb[:tier_details] = nil
+      @edit = session[:edit] = nil # clean out the saved info
+      session[:changed] = false
+      replace_right_cell
+    when "save", "add"
+      id = params[:id] && params[:button] == "save" ? params[:id] : "new"
+      return unless load_edit("cbtier_edit__#{id}", "replace_cell__chargeback")
+      @sb[:tier] = @edit[:tier] if @edit && @edit[:tier]
+      if @edit[:new][:description].nil? || @edit[:new][:description] == ""
+        add_flash(_("%s is required") % "Description", :error)
+        render :update do |page|
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        end
+        return
+      end
+      @sb[:tier].description = @edit[:new][:description]
+      @sb[:tier].name = @edit[:new][:name] if @edit[:new][:name]
+      @sb[:tier].rate_below = @edit[:new][:rate_below] # if @edit[:new][:rate_below]
+      @sb[:tier].rate_above = @edit[:new][:rate_above] # if @edit[:new][:rate_above]
+      if params[:button] == "add"
+        cb_tier_set_record_vars
+        @sb[:tier].chargeback_tier_details.replace(@sb[:tier_details])
+
+        if @sb[:tier].save
+          AuditEvent.success(build_saved_audit(@sb[:tier], @edit))
+          add_flash(_("%{model} \"%{name}\" was added") %
+            {:model => ui_lookup(:model => "ChargebackTier"), :name => @sb[:tier].description})
+          @edit = session[:edit] = nil # clean out the saved info
+          session[:changed] = @changed = false
+          get_node_info(x_node)
+          replace_right_cell([:cb_tiers])
+        else
+          @sb[:tier].errors.each do |field, msg|
+            add_flash("#{field.to_s.capitalize} #{msg}", :error)
+          end
+          @sb[:tier_details].each do |detail|
+            detail.errors.each do |field, msg|
+              add_flash("'#{detail.description}' #{field.to_s.capitalize} #{msg}", :error)
+            end
+          end
+          @changed = session[:changed] = (@edit[:new] != @edit[:current])
+          render :update do |page|
+            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          end
+        end
+      else # for save button
+        cb_tier_set_record_vars
+        # Detect errors saving tier details
+        tier_detail_error = false
+        @sb[:tier_details].each { |detail| tier_detail_error = true if detail.save == false }
+        @sb[:tier].chargeback_tier_details.replace(@sb[:tier_details]) if tier_detail_error == false
+        if tier_detail_error == false && @sb[:tier].save
+          AuditEvent.success(build_saved_audit(@sb[:tier], @edit))
+          add_flash(_("%{model} \"%{name}\" was saved") %
+            {:model => ui_lookup(:model => "ChargebackTier"), :name => @sb[:tier].description})
+          @edit = session[:edit] = nil # clean out the saved info
+          @changed = false
+          get_node_info(x_node)
+          replace_right_cell([:cb_tiers])
+        else
+          @sb[:tier].errors.each do |field, msg|
+            add_flash("#{field.to_s.capitalize} #{msg}", :error)
+          end
+          @sb[:tier_details].each do |detail|
+            detail.errors.each do |field, msg|
+              add_flash("'#{detail.description}' #{field.to_s.capitalize} #{msg}", :error)
+            end
+          end
+          @changed = session[:changed] = (@edit[:new] != @edit[:current])
+          render :update do |page|
+            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          end
+        end
+      end
+    when "reset", nil # Reset or first time in
+      obj = find_checked_items # editing from list view
+      obj[0] = params[:id] if obj.blank? && params[:id] # editing from show screen
+      if params[:typ] == "copy" # if tab was not changed
+        session[:changed] = true
+        @sb[:tier_details] = []
+        tier = ChargebackTier.find(obj[0])
+        @sb[:tier] = ChargebackTier.new
+        @sb[:tier].description = "Copy of " + tier.description
+        @sb[:tier].name = tier.name
+        tier_details = tier.chargeback_tier_details
+        # Create new tier detail records for copied tier record
+        tier_details.each do |r|
+          detail = ChargebackTierDetail.new
+          detail.description = r[:description]
+          detail.start = r[:source]
+          detail.end = r[:end]
+          detail.chargeback_tier_id = r[:chargeback_tier_id]
+          @sb[:tier_details].push(detail) unless @sb[:tier_details].include?(detail)
+        end
+      else
+        session[:changed] = false
+        @sb[:tier] = params[:typ] == "new" ? ChargebackTier.new : ChargebackTier.find(obj[0])
+        @sb[:tier_details] = @sb[:tier].chargeback_tier_details.to_a
+        if @sb[:tier_details].blank?
+          fixture_file = File.join(@@fixture_dir, "chargeback_tiers.yml")
+          if File.exist?(fixture_file)
+            fixture = YAML.load_file(fixture_file)
+            fixture.each do |cbr|
+              tiers = cbr.delete(:tiers)
+              tiers.each do |r|
+                detail = ChargebackTierDetail.new
+                detail.description = r[:description]
+                detail.start = r[:start]
+                detail.chargeback_tier_id = r[:chargeback_tier_id]
+                detail.end = r[:end]
+                detail.tier_rate = r[:tier_rate]
+                @sb[:tier_details].push(detail) unless @sb[:tier_details].include?(detail)
+              end
+            end
+          end
+        end
+      end
+      # @sb[:tier_details].sort_by! { |rd| [rd[:name].downcase, rd[:description].downcase] }
+      cb_tier_set_form_vars
+      @in_a_form = true
+      if params[:button] == "reset"
+        add_flash(_("All changes have been reset"), :warning)
+      end
+      replace_right_cell
+    end
+  end
+
+  def cb_tier_show
+    @display = "main"
+    @sb[:selected_tier_details] = ChargebackTierDetail.where(:chargeback_tier_id => @record.id).to_a
+    @sb[:selected_tier_details].sort_by! { |rd| [rd[:start], rd[:end]] }
+    if @record.nil?
+      redirect_to :action => "cb_tiers_list", :flash_msg => _("Error: Record no longer exists in the database"),
+                  :flash_error => true
+      return
+    end
+  end
+
+  def cb_tiers_delete
+    assert_privileges("chargeback_rates_delete")
+    tiers = []
+    if !params[:id] # showing a list
+      tiers = find_checked_items
+      if tiers.empty?
+        add_flash(_("No %s were selected for deletion") % ui_lookup(:models => "ChargebackTier"), :error)
+        render :update do |page|
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        end
+      end
+      process_cb_tiers(tiers, "destroy") unless tiers.empty?
+      add_flash(_("The selected %s were deleted") %
+        ui_lookup(:models => "ChargebackTier"), :info, true) unless flash_errors?
+      cb_tiers_list
+      @right_cell_text = _("All %{model}") % {:model => ui_lookup(:models => "ChargebackTier")}
+      replace_right_cell([:cb_tiers])
+    else # showing 1 tier, delete it
+      if params[:id].nil? || ChargebackTier.find_by_id(params[:id]).nil?
+        add_flash(_("%s no longer exists") % ui_lookup(:model => "ChargebackTier"), :error)
+        render :update do |page|
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        end
+      else
+        tiers.push(params[:id])
+      end
+      process_cb_tiers(tiers, "destroy") unless tiers.empty?
+      add_flash(_("The selected %s was deleted") %
+        ui_lookup(:model => "ChargebackTier"), :info, true) unless flash_errors?
+      self.x_node = "xx-tiers"
+      cb_tiers_list
+      @right_cell_text = _("All %{model}") % {:model => ui_lookup(:models => "ChargebackRate")}
+      replace_right_cell([:cb_tiers])
+    end
+  end
   # AJAX driven routine to check for changes in ANY field on the form
   def cb_assign_field_changed
     return unless load_edit("cbassign_edit__#{x_node}", "replace_cell__chargeback")
@@ -329,6 +553,20 @@ class ChargebackController < ApplicationController
       page.replace("cb_assignment_div", :partial => "cb_assignments") if params[:cbshow_typ] || params[:cbtag_cat]      # only replace if cbshow_typ or cbtag_cat has changed
       page << javascript_for_miq_button_visibility(changed)
     end
+  end
+
+  def cb_tier_form_field_changed
+    return unless load_edit("cbtier_edit__#{params[:id]}", "replace_cell__chargeback")
+    cb_tier_get_form_vars
+    render :update do |page| # Use JS to update the display
+      changed = (@edit[:new] != @edit[:current])
+      if @edit[:new][:num_tiers] != @edit[:current][:num_tiers]
+        @edit[:current][:num_tiers] = @edit[:new][:num_tiers]
+        page.replace("tier_details_div", :partial => "tier_details")
+      end
+      page << javascript_for_miq_button_visibility(changed)
+    end
+    cb_tier_get_form_vars
   end
 
   def cb_assign_update
@@ -444,6 +682,18 @@ class ChargebackController < ApplicationController
       else
         @right_cell_text = _("All %s") % "Assignments"
       end
+    elsif x_active_tree == :cb_tiers_tree
+      if node == "root" || node == "xx-tiers"
+        @sb[:tier] = @record = @sb[:selected_tier_details] = nil
+        @right_cell_text = _("All %s") % ui_lookup(:models => "ChargebackTier")
+        cb_tiers_list
+      else
+        @record = ChargebackTier.find_by_id(node.split('_').last.split('-').last)
+        @sb[:action] = nil
+        @right_cell_text =
+          _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "ChargebackTier"), :name => @record.name}
+        cb_tier_show
+      end
     elsif x_active_tree == :cb_reports_tree
       @nodetype = node.split("-")[0]
       nodes = x_node.split('_')
@@ -521,6 +771,10 @@ class ChargebackController < ApplicationController
     TreeBuilderChargebackAssignments.new("cb_assignments_tree", "cb_assignments", @sb)
   end
 
+  def cb_tiers_build_tree
+    TreeBuilderChargebackTiers.new("cb_tiers_tree", "cb_tiers", @sb)
+  end
+
   # Common Schedule button handler routines
   def process_cb_rates(rates, task)
     process_elements(rates, ChargebackRate, task)
@@ -545,6 +799,7 @@ class ChargebackController < ApplicationController
       temp = {}
       temp[:rate] = (!r.rate.nil? && r.rate != "") ? r.rate : 0
       temp[:per_time] = r.per_time ? r.per_time : "hourly"
+      temp[:chargeback_tier_id] = r.chargeback_tier_id ? r.chargeback_tier_id : "Not tiered"
       @edit[:new][:details].push(temp)
     end
 
@@ -565,6 +820,8 @@ class ChargebackController < ApplicationController
     @edit[:new][:details].each_with_index do |_detail, i|
       @edit[:new][:details][i][:rate] = params["rate_#{i}".to_sym] if params["rate_#{i}".to_sym]
       @edit[:new][:details][i][:per_time] = params["per_time_#{i}".to_sym] if params["per_time_#{i}".to_sym]
+      @edit[:new][:details][i][:chargeback_tier_id] =
+        params["chargeback_tier_id#{i}".to_sym] if params["chargeback_tier_id#{i}".to_sym]
     end
   end
 
@@ -573,6 +830,66 @@ class ChargebackController < ApplicationController
       @sb[:rate_details][i].rate               = @edit[:new][:details][i][:rate]
       @sb[:rate_details][i].per_time           = @edit[:new][:details][i][:per_time]
       @sb[:rate_details][i].chargeback_rate_id = @sb[:rate].id
+      @sb[:rate_details][i].chargeback_tier_id = @edit[:new][:details][i][:chargeback_tier_id]
+      # ChargebackTier.find_by_id(@edit[:new][:details][i][:chargeback_tier_id]).id
+    end
+  end
+
+  def process_cb_tiers(tiers, task)
+    process_elements(tiers, ChargebackTier, task)
+  end
+
+  def cb_tier_set_form_vars
+    @edit = {}
+    @edit[:tier] = @sb[:tier]
+    @edit[:key] = "cbtier_edit__#{@sb[:tier].id || "new"}"
+    @edit[:tier_details] = @sb[:tier_details]
+    @edit[:new]     = HashWithIndifferentAccess.new
+    @edit[:current] = HashWithIndifferentAccess.new
+    @edit[:rec_id] = @sb[:tier].id || nil
+    @in_a_form = true
+
+    @edit[:new][:description] = @sb[:tier].description
+    @edit[:new][:name] = @sb[:tier].name ? @sb[:tier].name : x_node.split('-').last
+    @edit[:new][:rate_below] = @sb[:tier].rate_below
+    @edit[:new][:rate_above] = @sb[:tier].rate_above
+    @edit[:new][:details] = []
+
+    @sb[:tier_details].each do |r|
+      temp = {}
+      temp[:description] = r.description ? r.description : ""
+      temp[:tier_rate] = (!r.tier_rate.nil? && r.tier_rate != "") ? r.tier_rate : 0
+      temp[:start] = r.start ? r.start : "0"
+      temp[:end] = r.end ? r.end : nil
+      temp[:chargeback_tier_id] = r.chargeback_tier_id ? r.chargeback_tier_id : "Not tiered"
+      @edit[:new][:details].push(temp)
+    end
+
+    @edit[:current] = copy_hash(@edit[:new])
+    session[:edit] = @edit
+  end
+
+  def cb_tier_get_form_vars
+    @sb[:tier] = @edit[:tier]
+    @edit[:new][:description] = params[:description] if params[:description]
+    @edit[:new][:name] = params[:name] if params[:name]
+    @edit[:new][:rate_above] = params[:rate_above] if params[:rate_above]
+    @edit[:new][:rate_below] = params[:rate_below] if params[:rate_below]
+    @edit[:new][:num_tiers] = params[:num_tiers] if params[:num_tiers]
+    @edit[:new][:details].each_with_index do |_detail, i|
+      @edit[:new][:details][i][:description] = params["description_#{i}".to_sym] if params["description_#{i}".to_sym]
+      @edit[:new][:details][i][:start] = params["start_#{i}".to_sym] if params["start_#{i}".to_sym]
+      @edit[:new][:details][i][:end] = params["end_#{i}".to_sym] if params["end_#{i}".to_sym]
+      @edit[:new][:details][i][:tier_rate] = params["tier_rate_#{i}".to_sym] if params["tier_rate_#{i}".to_sym]
+    end
+  end
+
+  def cb_tier_set_record_vars
+    @edit[:new][:details].each_with_index do |_tier, i|
+      @sb[:tier_details][i].description = @edit[:new][:details][i][:description]
+      @sb[:tier_details][i].start = @edit[:new][:details][i][:start]
+      @sb[:tier_details][i].end = @edit[:new][:details][i][:end]
+      @sb[:tier_details][i].tier_rate = @edit[:new][:details][i][:tier_rate]
     end
   end
 
@@ -734,6 +1051,7 @@ class ChargebackController < ApplicationController
     replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
     @explorer = true
     chargeback_tree = cb_rates_build_tree if replace_trees.include?(:cb_rates)
+    chargeback_tree = cb_tiers_build_tree if replace_trees.include?(:cb_tiers)
     c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
 
     # Build a presenter to render the JS
@@ -751,6 +1069,9 @@ class ChargebackController < ApplicationController
                          :name => chargeback_tree.name.to_s
             }
         ]
+      when :cb_tiers
+        presenter[:replace_partials][:cb_tiers_tree_div] =
+        r[:partial => 'shared/tree', :locals => {:tree => chargeback_tree, :name => chargeback_tree.name.to_s}]
       end
     end
 
@@ -770,6 +1091,14 @@ class ChargebackController < ApplicationController
       end
       presenter[:set_visible_elements][:toolbar] = c_buttons
       presenter[:update_partials][:main_div]   = r[:partial => 'rates_tabs']
+      presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols']
+    when :cb_tiers_tree
+      if c_buttons && c_xml
+        presenter[:set_visible_elements][:center_buttons_div] = true
+        presenter[:reload_toolbars][:center] = {:buttons => c_buttons, :xml => c_xml}
+      end
+      presenter[:set_visible_elements][:toolbar] = c_buttons
+      presenter[:update_partials][:main_div] = r[:partial => 'tiers_tabs']
       presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols']
     when :cb_assignments_tree
       # Assignments accordion
@@ -795,7 +1124,8 @@ class ChargebackController < ApplicationController
 
     if @record || @in_a_form ||
        (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0))
-      if ["chargeback_rates_copy", "chargeback_rates_edit", "chargeback_rates_new"].include?(@sb[:action]) ||
+      if %w(chargeback_rates_copy chargeback_rates_edit chargeback_rates_new chargeback_tiers_edit
+            chargeback_tiers_new).include?(@sb[:action]) ||
          (x_active_tree == :cb_assignments_tree && ["Compute", "Storage"].include?(x_node.split('-').last))
         presenter[:set_visible_elements][:toolbar] = false
         # incase it was hidden for summary screen, and incase there were no records on show_list
@@ -805,6 +1135,8 @@ class ChargebackController < ApplicationController
         locals = {:record_id => @edit[:rec_id]}
         if x_active_tree == :cb_rates_tree
           locals[:action_url] = 'cb_rate_edit'
+        elsif x_active_tree == :cb_tiers_tree
+          locals[:action_url] = 'cb_tier_edit'
         else
           locals.update(
             :action_url   => 'cb_assign_update',
@@ -824,7 +1156,8 @@ class ChargebackController < ApplicationController
       presenter[:set_visible_elements][:pc_div_1] = true
       if (x_active_tree == :cb_assignments_tree && x_node == "root") ||
          (x_active_tree == :cb_reports_tree && !@report) ||
-         (x_active_tree == :cb_rates_tree && x_node == "root")
+         (x_active_tree == :cb_rates_tree && x_node == "root") ||
+         (x_active_tree == :cb_tiers_tree && x_node == "root")
         presenter[:set_visible_elements][:toolbar] = false
         presenter[:set_visible_elements][:pc_div_1] = false
       end

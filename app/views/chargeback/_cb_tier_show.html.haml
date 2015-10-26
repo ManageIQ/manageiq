@@ -1,0 +1,48 @@
+= render :partial => "layouts/flash_msg"
+- if @edit && @edit[:current]
+  = render :partial => "cb_tier_edit"
+- else
+  %h3= _('Basic Info')
+  .form-horizontal.static
+    .form-group
+      %label.col-md-2.control-label
+        = _('Description')
+      .col-md-8
+        %p.form-control-static
+          = h(@record.description)
+  .form-horizontal.static
+    .form-group
+      %label.col-md-2.control-label
+        = _('Rate below first tier')
+      .col-md-8
+        %p.form-control-static
+          = h(@record.rate_below)
+  .form-horizontal.static
+    .form-group
+      %label.col-md-2.control-label
+        = _('Rate above last tier')
+      .col-md-8
+        %p.form-control-static
+          = h(@record.rate_above)
+  %hr
+  %h3= _('Tier Details')
+  %table.table.table-bordered
+    %thead
+      %tr
+        %th= _('Description')
+        %th= _('Start')
+        %th= _('End')
+        %th= _('Tier rate')
+    %tbody
+      - @sb[:selected_tier_details].each do |r|
+        /%tr
+        /  %td.active{:colspan => "4"} &nbsp;
+        %tr
+          %td
+            = r.description
+          %td
+            = r.start
+          %td{:align => "right"}
+            = r.end
+          %td
+            = r.tier_rate

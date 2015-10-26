@@ -1,0 +1,31 @@
+- if @edit && @edit[:current]
+  = render :partial => "cb_tier_edit"
+#tiers_list_div{:style => "width: 100%; height: 100%; overflow: auto;"}
+  = render :partial => "layouts/flash_msg"
+  - saved_tiers = ChargebackTier.all
+  - if saved_tiers.empty?
+    = render :partial => 'layouts/info_msg', :locals => {:message => _("No Tiers available.")}
+  - else
+    %table.table.table-striped.table-bordered.table-hover
+      %thead
+        %tr
+          %th.narrow
+          %th= _('Created_on')
+          %th= _('Name')
+          %th= _('Description')
+      %tbody
+        - saved_tiers.each do |row|
+          - row_id = row.id
+          %tr{:onclick => remote_function(:loading => "miqSparkle(true);",
+            :complete => "miqSparkle(false);", :url => {:action => 'tree_select', :id => "tier-#{row_id}"})}
+            - t = _("Click to view saved tier")
+            %td{:title => t}
+              %ul.icons.list-unstyled
+                %li
+                  %span.fa.fa-clock-o{:title => "Saved Tier: #{row['name']}"}
+            %td{:title => t}
+              = h(format_timezone(row['created_on'], Time.zone, "gtl"))
+            %td{:title => t}
+              = h(row['name'])
+            %td{:title => t}
+              = h(row['description'])

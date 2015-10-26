@@ -1200,6 +1200,27 @@
       :description: Edit a Chargeback Rate
       :feature_type: admin
       :identifier: chargeback_rates_edit
+  - :name: Tiers
+    :description: Tiers Accordion
+    :feature_type: node
+    :identifier: chargeback_tiers
+    :children:
+    - :name: Add
+      :description: Add a Chargeback Tier
+      :feature_type: admin
+      :identifier: chargeback_tiers_new
+    - :name: Copy
+      :description: Copy a Chargeback Tier
+      :feature_type: admin
+      :identifier: chargeback_tiers_copy
+    - :name: Delete
+      :description: Delete a Chargeback Tier
+      :feature_type: admin
+      :identifier: chargeback_tiers_delete
+    - :name: Edit
+      :description: Edit a Chargeback Tier
+      :feature_type: admin
+      :identifier: chargeback_tiers_edit
   - :name: Assignments
     :description: Assignments Accordion
     :feature_type: node

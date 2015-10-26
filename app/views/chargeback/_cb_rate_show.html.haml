@@ -17,6 +17,7 @@
       %tr
         %th= _('Group')
         %th= _('Description')
+        %th= _('Tier')
         %th= _('Rate')
         %th= _('Per Time')
         %th= _('Per Unit')
@@ -32,6 +33,8 @@
             = h(Dictionary.gettext(r[:group], :type => :rate_detail_group, :notfound => :titleize))
           %td
             = r[:description]
+          %td
+            = ChargebackTier.tier_name(r[:chargeback_tier_id])
           %td{:align => "right"}
             = r[:rate]
           %td

@@ -354,6 +354,11 @@ class ApplicationHelper::ToolbarBuilder
                                                          "chargeback_rates_edit", "chargeback_rates_new"].include?(id)
         return false
       end
+    when :cb_tiers_tree
+      if role_allows(:feature => "chargeback_rates") && %w(chargeback_tiers_copy chargeback_tiers_delete
+                                                           chargeback_tiers_edit chargeback_tiers_new).include?(id)
+        return false
+      end
     end
     true
   end

@@ -1,0 +1,22 @@
+---
+- :description: Default Tier
+  :guid: b47a0ef0-4335-11df-aba8-001d09066d99
+  :name: Default
+  :default: true
+  :tiers:
+    - :description: Tier detail 1
+      :start: 0
+      :end: 5
+      :tier_rate: 0.05
+    - :description: Tier detail 2
+      :start: 5
+      :end: 10
+      :tier_rate: 0.1
+    - :description: Tier detail 3
+      :start: 10
+      :end: 15
+      :tier_rate: 0.15
+    - :description: Tier detail 4
+      :start: 15
+      :end: 20
+      :tier_rate: 0.2

@@ -1,0 +1,84 @@
+- url = url_for(:action => 'cb_tier_form_field_changed', :id => "#{@sb[:tier].id || "new"}")
+- range = (1..20).to_a
+#form_div
+  %h3
+    = _('Basic Info')
+  .form-horizontal.static
+    .form-group
+      %label.col-md-2.control-label
+        = _('Name')
+      .col-md-8
+        = text_field_tag("name", @edit[:new][:name],
+                        :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json,
+                        :class => "form-control")
+        = javascript_tag(javascript_focus('name'))
+  .form-horizontal.static
+    .form-group
+      %label.col-md-2.control-label
+        = _('Description')
+      .col-md-8
+        = text_field_tag("description", @edit[:new][:description],
+                        :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json,
+                        :class => "form-control")
+        = javascript_tag(javascript_focus('description'))
+  .form-horizontal.static
+    .form-group
+      %label.col-md-2.control-label
+        = _('Rate below first tier')
+      .col-md-8
+        = text_field_tag("rate_below", @edit[:new][:rate_below],
+                        :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json,
+                        :class => "form-control")
+        = javascript_tag(javascript_focus('rate_below'))
+  .form-horizontal.static
+    .form-group
+      %label.col-md-2.control-label
+        = _('Rate above last tier')
+      .col-md-8
+        = text_field_tag("rate_above", @edit[:new][:rate_above],
+                        :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json,
+                        :class => "form-control")
+        = javascript_tag(javascript_focus('rate_above'))
+    .form-group
+      %label.control-label.col-md-2
+        = _('* Number of tiers')
+      .col-md-8
+        = select_tag('num_tiers',
+          options_for_select(range, 5),
+          :multiple              => false,
+          :class                 => "selectpicker",
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("num_tiers", "#{url}")
+
+    %strong
+      = _('* Caution: Changing this field will clear all values below!')
+  %hr
+#tier_details_div
+  %h3= _('Tier Details')
+  %table.table.table-bordered
+    %thead
+      %tr
+        %th= _('Description')
+        %th= _('Start')
+        %th= _('End')
+        %th= _('Tier rate')
+    %tbody
+      - @sb[:tier_details].each_with_index do |_r, i|
+        /%tr
+        /  %td.active{:colspan => "6"} &nbsp;
+        %tr
+          %td
+            = text_field_tag("description_#{i}", @edit[:new][:details][i][:description],
+              :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+          %td
+            = text_field_tag("start_#{i}", @edit[:new][:details][i][:start],
+              :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+          %td{:align => 'right'}
+            = text_field_tag("end_#{i}", @edit[:new][:details][i][:end],
+              :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+          %td
+            = text_field_tag("tier_rate_#{i}", @edit[:new][:details][i][:tier_rate],
+              :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)

@@ -59,6 +59,7 @@ class TreeNodeBuilder
 
       generic_node(object.name, "vendor-#{object.image_name}.png", "#{ui_lookup(:model => prefix_model)}: #{object.name}")
     when ChargebackRate       then generic_node(object.description, "chargeback_rate.png")
+    when ChargebackTier       then generic_node(object.name, "chargeback_rate.png")
     when Condition            then generic_node(object.description, "miq_condition.png")
     when ConfigurationProfile then configuration_profile_node(object.name, "configuration_profile.png", "Configuration Profile: #{object.name}")
     when ConfiguredSystem     then generic_node(object.hostname, "configured_system.png", "Configured System: #{object.hostname}")

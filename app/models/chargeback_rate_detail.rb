@@ -4,8 +4,15 @@ class ChargebackRateDetail < ActiveRecord::Base
 
   def cost(value)
     return 0.0 unless self.enabled?
+    unless chargeback_tier_id.nil?
+      tier = ChargebackTier.find_by_id(chargeback_tier_id)
+      unless tier.nil?
+        self.rate = tier.rate(value)
+        hourly_rate = tiered_hourly_rate(value)
+      end
+    end
     value = 1 if group == 'fixed'
-
+    hourly_rate ||= self.hourly_rate()
     value * hourly_rate
   end
 
@@ -24,6 +31,14 @@ class ChargebackRateDetail < ActiveRecord::Base
 
     # Handle cases where we need to adjust per_unit to a common value.
     rate_adjustment(hr)
+  end
+
+  def tiered_hourly_rate(value)
+    tier = ChargebackTier.find_by_id(chargeback_tier_id)
+    unless tier.nil?
+      self.rate = tier.rate(value)
+    end
+    hourly_rate
   end
 
   def rate_adjustment(hr)
