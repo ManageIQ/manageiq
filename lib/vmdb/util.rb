@@ -38,18 +38,10 @@ module VMDB
 
     LOG_TIMESTAMP_REGEX = /\[(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6})\s#/.freeze
 
-    def self.log_timestamp(line)
-      ts = nil
-
-      # Look for 4 digit year, hyphen, 2 digit month, hyphen, 2 digit day, T, etc.
-      # [2009-05-04T18:17:50.350850 #1335]
-      # Parse only the time component
-      if line.match(LOG_TIMESTAMP_REGEX)
-        t  = Time.parse($1)
-        ts = Time.utc(t.year, t.month, t.day, t.hour, t.min, t.sec, 0)
-      end
-
-      ts
+    def self.log_timestamp(str)
+      return nil unless str
+      t  = Time.parse(str)
+      Time.utc(t.year, t.month, t.day, t.hour, t.min, t.sec, 0)
     end
 
     def self.log_duration(filename)
@@ -94,18 +86,18 @@ module VMDB
         _log.info "Opening filename: [#{filename}], size: [#{File.size(filename)}]"
         Zlib::GzipReader.open(filename) do |gz|
           line_count = 0
-          start_line = nil
-          end_line   = nil
+          start_time_str = nil
+          end_time_str   = nil
 
           gz.each_line do |line|
             line_count += 1
             next unless line =~ LOG_TIMESTAMP_REGEX
-            start_line ||= line
-            end_line     = line
+            start_time_str ||= $1
+            end_time_str     = $1
           end
 
-          start_time = log_timestamp(start_line)
-          end_time   = log_timestamp(end_line)
+          start_time = log_timestamp(start_time_str)
+          end_time   = log_timestamp(end_time_str)
 
           _log.info "Lines in file: [#{line_count}]"
           _log.info "Start Time: [#{start_time.inspect}]"
@@ -169,7 +161,7 @@ module VMDB
       handle
         .lazy
         .take(250)
-        .map { |line| log_timestamp(line) if line =~ LOG_TIMESTAMP_REGEX }
+        .map { |line| log_timestamp($1) if line =~ LOG_TIMESTAMP_REGEX }
         .reject(&:nil?)
         .first
     end
