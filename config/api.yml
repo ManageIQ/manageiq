@@ -892,7 +892,7 @@
     :description: Users
     :options:
     - :collection
-    :methods: *70174834085860
+    :methods: *70174834084700
     :klass: User
     :subcollections:
     - :tags
