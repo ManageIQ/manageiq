@@ -4,12 +4,13 @@ describe MiqProvisionVirtWorkflow do
   let(:workflow) { FactoryGirl.create(:miq_provision_virt_workflow) }
 
   context "#continue_request" do
-    let(:sdn)      { "SysprepDomainName" }
+    let(:sdn) { 'SysprepDomainName' }
 
     before do
       workflow.stub(:validate => true)
       workflow.stub(:get_dialogs => {})
-      workflow.instance_variable_set(:@values, :vm_tags => [], :src_vm_id => 123, :sysprep_enabled => 'fields', :sysprep_domain_name => sdn)
+      workflow.instance_variable_set(:@values, :vm_tags => [], :src_vm_id => 123, :sysprep_enabled => 'fields',
+                                     :sysprep_domain_name => sdn)
     end
 
     context "exit_pre_dialog" do
@@ -73,9 +74,9 @@ describe MiqProvisionVirtWorkflow do
 
     context 'dvs' do
       before do
-        @host1_dvs = {'pg1' => ['switch1'],  'pg2' => ['switch2']}
-        @host1_dvs_hash    = {'dvs_pg1' => 'pg1 (switch1)',
-                              'dvs_pg2' => 'pg2 (switch2)'}
+        @host1_dvs = {'pg1' => ['switch1'], 'pg2' => ['switch2']}
+        @host1_dvs_hash = {'dvs_pg1' => 'pg1 (switch1)',
+                           'dvs_pg2' => 'pg2 (switch2)'}
         ManageIQ::Providers::Vmware::InfraManager.any_instance.stub(:connect)
         workflow.stub(:get_host_dvs).with(@host1, nil).and_return(@host1_dvs)
       end
@@ -126,8 +127,46 @@ describe MiqProvisionVirtWorkflow do
     end
   end
 
+  context "#validate email formatting" do
+    context "with specific format regex" do
+      let(:regex) { {:required_regex => %r{\A[\w!#$\%&'*+/=?`\{|\}~^-]+(?:\.[\w!#$\%&'*+/=?`\{|\}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\Z}i} }
+      let(:value_email) { 'n@test.com' }
+      let(:value_no_email) { 'n' }
+
+      it "matches a valid email address" do
+        expect(workflow.validate_regex(nil, {}, {}, regex, value_email)).to be_nil
+      end
+
+      it "returns a formatting error message with a bad email address" do
+        expect(workflow.validate_regex(nil, {}, {}, regex, value_no_email)).to eq "'/' must be correctly formatted"
+      end
+
+      it "returns an email required error with a blank email address" do
+        expect(workflow.validate_regex(nil, {}, {}, regex, '')).to eq "'/' is required"
+      end
+    end
+
+    context "with a match anything regex" do
+      let(:regex) { {:required_regex => '.'} }
+      let(:value_email) { 'n@test.com' }
+      let(:value_no_email) { 'n' }
+
+      it "matches a valid email address" do
+        expect(workflow.validate_regex(nil, {}, {}, regex, value_email)).to be_nil
+      end
+
+      it "matches a bad email address" do
+        expect(workflow.validate_regex(nil, {}, {}, regex, value_no_email)).to be_nil
+      end
+
+      it "returns an email required error with a blank email address" do
+        expect(workflow.validate_regex(nil, {}, {}, regex, '')).to eq "'/' is required"
+      end
+    end
+  end
+
   context "#validate_memory_reservation" do
-    let(:values) { {:vm_memory => ["1024", "1024"]} }
+    let(:values) { {:vm_memory => %w(1024 1024)} }
 
     it "no size" do
       expect(workflow.validate_memory_reservation(nil, values, {}, {}, nil)).to be_nil

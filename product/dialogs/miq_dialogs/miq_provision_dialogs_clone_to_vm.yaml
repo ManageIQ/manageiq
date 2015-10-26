@@ -108,6 +108,8 @@
           :data_type: :string
         :owner_email:
           :description: E-Mail
+          :required_method: :validate_regex
+          :required_regex: !ruby/regexp /\A[\w!#$\%&'*+\/=?`\{|\}~^-]+(?:\.[\w!#$\%&'*+\/=?`\{|\}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\Z/i 
           :required: true
           :display: :edit
           :data_type: :string

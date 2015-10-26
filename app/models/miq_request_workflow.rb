@@ -490,6 +490,12 @@ class MiqRequestWorkflow
     return "#{required_description(dlg, fld)} must not be greater than #{fld[:max_length]} characters" if fld[:max_length] && value.to_s.length > fld[:max_length]
   end
 
+  def validate_regex(_field, _values, dlg, fld, value)
+    regex = fld[:required_regex]
+    return "#{required_description(dlg, fld)} is required" if value.blank?
+    return "#{required_description(dlg, fld)} must be correctly formatted" unless value.match(regex)
+  end
+
   def required_description(dlg, fld)
     "'#{dlg[:description]}/#{fld[:required_description] || fld[:description]}'"
   end
