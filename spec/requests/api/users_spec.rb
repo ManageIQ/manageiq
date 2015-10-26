@@ -43,6 +43,16 @@ RSpec.describe "users API" do
       expect_request_success
     end
 
+    it "will not allow the changing of attributes other than the password" do
+      api_basic_authorize
+
+      expect do
+        run_post users_url(@user.id), gen_request(:edit, :email => "new.email@example.com")
+      end.not_to change { @user.reload.email }
+
+      expect_bad_request
+    end
+
     it "cannot change another user's password" do
       api_basic_authorize
       user = FactoryGirl.create(:user)
