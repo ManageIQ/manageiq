@@ -64,19 +64,13 @@ module VMDB
     end
 
     def self.get_log_start_end_times(filename)
-      start_time = nil
-      end_time   = nil
-
-      # Get the start and end time from the log
-      unless filename.nil? || !File.exist?(filename)
-        if filename.match(/\.gz$/)
-          start_time, end_time = log_duration_gz(filename)
-        else
-          start_time, end_time = log_duration(filename)
-        end
+      if filename.nil? || !File.exist?(filename)
+        return nil, nil
+      elsif filename.ends_with?('.gz')
+        log_duration_gz(filename)
+      else
+        log_duration(filename)
       end
-
-      return start_time, end_time
     end
 
     def self.log_duration_gz(filename)
