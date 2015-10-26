@@ -166,18 +166,12 @@ module VMDB
     end
 
     def self.find_timestamp(handle)
-      lines     = 0
-      max_lines = 250
-      ts        = nil
-
-      handle.each_line do |l|
-        break if lines >= max_lines
-        ts = log_timestamp(l)
-        break if ts
-        lines += 1
-      end
-
-      ts
+      handle
+        .lazy
+        .take(250)
+        .map { |line| log_timestamp(line) if line =~ LOG_TIMESTAMP_REGEX }
+        .reject(&:nil?)
+        .first
     end
   end
 end
