@@ -4,12 +4,15 @@ module Metric::Processing
     :derived_cpu_reserved,
     :derived_host_count_off,
     :derived_host_count_on,
+    :derived_host_count_total,
     :derived_memory_available,
     :derived_memory_reserved,
     :derived_memory_used,
+    :derived_host_sockets,
     :derived_vm_allocated_disk_storage,
     :derived_vm_count_off,
     :derived_vm_count_on,
+    :derived_vm_count_total,
     :derived_vm_numvcpus, # This is actually logical cpus, but needs to be renamed.
     # See VimPerformanceState#capture_numvcpus
     :derived_vm_used_disk_storage,
@@ -88,6 +91,8 @@ module Metric::Processing
         # Do not derive "available" values if there haven't been any usage
         # values collected
         result[col] = state.numvcpus if obj.kind_of?(VmOrTemplate) && have_cpu_metrics && state.numvcpus.to_i > 0
+      when "sockets"
+        result[col] = state.host_sockets
       end
     end
 
