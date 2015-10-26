@@ -1358,7 +1358,7 @@ class ApplicationController < ActionController::Base
     unless db_record.hardware.nil?
       db_notes = db_record.hardware.annotation.nil? ? "<No notes have been entered for this VM>" : db_record.hardware.annotation
 
-      if db_record.hardware.logical_cpus
+      if db_record.hardware.cpu_total_cores
         cpu_details =
           if db_record.num_cpu && db_record.cpu_cores_per_socket
             " (#{pluralize(db_record.num_cpu, 'socket')} x #{pluralize(db_record.cpu_cores_per_socket, 'core')})"
@@ -1367,7 +1367,7 @@ class ApplicationController < ActionController::Base
           end
 
         @devices.push(:device      => "Processors",
-                      :description => "#{db_record.hardware.logical_cpus}#{cpu_details}",
+                      :description => "#{db_record.hardware.cpu_total_cores}#{cpu_details}",
                       :icon        => "processor")
       end
 

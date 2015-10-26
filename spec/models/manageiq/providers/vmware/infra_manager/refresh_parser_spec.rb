@@ -23,7 +23,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::RefreshParser do
 
         expect(result[:numvcpus]).to             eq(sockets)
         expect(result[:cpu_cores_per_socket]).to eq(cores)
-        expect(result[:logical_cpus]).to         eq(total)
+        expect(result[:cpu_total_cores]).to      eq(total)
       end
     end
   end

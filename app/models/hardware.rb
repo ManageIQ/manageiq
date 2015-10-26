@@ -85,8 +85,8 @@ class Hardware < ActiveRecord::Base
   end
 
   def aggregate_cpu_speed
-    return nil if logical_cpus.blank? || cpu_speed.blank?
-    (logical_cpus * cpu_speed)
+    return nil if cpu_total_cores.blank? || cpu_speed.blank?
+    (cpu_total_cores * cpu_speed)
   end
 
   def m_controller(_parent, xmlNode, deletes)

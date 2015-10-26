@@ -42,7 +42,7 @@ class ManageIQ::Providers::Vmware::InfraManager::Vm < ManageIQ::Providers::Infra
   end
 
   def max_total_vcpus
-    [host.hardware.logical_cpus, max_total_vcpus_by_version].min
+    [host.hardware.cpu_total_cores, max_total_vcpus_by_version].min
   end
 
   def max_total_vcpus_by_version

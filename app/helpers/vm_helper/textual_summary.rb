@@ -139,7 +139,7 @@ module VmHelper::TextualSummary
         else
           ""
         end
-      h[:value] = "#{vendor}: #{pluralize(@record.logical_cpus, 'CPU')}#{cpu_details}, #{@record.mem_cpu} MB"
+      h[:value] = "#{vendor}: #{pluralize(@record.cpu_total_cores, 'CPU')}#{cpu_details}, #{@record.mem_cpu} MB"
     end
     h
   end

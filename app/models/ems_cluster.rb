@@ -20,7 +20,7 @@ class EmsCluster < ActiveRecord::Base
   has_many    :miq_events,             :as => :target,    :dependent => :destroy
 
   virtual_column :v_ram_vr_ratio,      :type => :float,   :uses => [:aggregate_memory, :aggregate_vm_memory]
-  virtual_column :v_cpu_vr_ratio,      :type => :float,   :uses => [:aggregate_logical_cpus, :aggregate_vm_cpus]
+  virtual_column :v_cpu_vr_ratio,      :type => :float,   :uses => [:aggregate_cpu_total_cores, :aggregate_vm_cpus]
   virtual_column :v_parent_datacenter, :type => :string,  :uses => :all_relationships
   virtual_column :v_qualified_desc,    :type => :string,  :uses => :all_relationships
   virtual_column :last_scan_on,        :type => :time,    :uses => :last_drift_state_timestamp
@@ -84,7 +84,7 @@ class EmsCluster < ActiveRecord::Base
   end
 
   def v_cpu_vr_ratio
-    total_cpus = aggregate_logical_cpus.to_f
+    total_cpus = aggregate_cpu_total_cores.to_f
     total_cpus == 0 ? 0 : (aggregate_vm_cpus / total_cpus * 10).round * 0.1
   end
 

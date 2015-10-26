@@ -214,7 +214,7 @@ module ManageIQ::Providers::Microsoft
         :template         => true,
         :storages         => process_vm_storages(p),
         :hardware         => {
-          :logical_cpus       => p[:CPUCount],
+          :cpu_total_cores    => p[:CPUCount],
           :memory_mb          => normalize_blank_property_num(p[:Memory]),
           :cpu_type           => p[:CPUType].blank? ? nil : p[:CPUType][:ToString],
           :disks              => process_disks(p),
@@ -240,7 +240,7 @@ module ManageIQ::Providers::Microsoft
         :cpu_speed            => normalize_blank_property_num(p[:ProcessorSpeed]),
         :memory_mb            => normalize_blank_property(p[:TotalMemory]) / 1.megabyte,
         :numvcpus             => normalize_blank_property_num(p[:PhysicalCPUCount]),
-        :logical_cpus         => normalize_blank_property_num(p[:LogicalProcessorCount]),
+        :cpu_total_cores      => normalize_blank_property_num(p[:LogicalProcessorCount]),
         :cpu_cores_per_socket => normalize_blank_property_num(p[:CoresPerCPU]),
         :guest_devices        => process_host_guest_devices(host),
       }
@@ -307,7 +307,7 @@ module ManageIQ::Providers::Microsoft
       p = vm[:Properties][:Props]
 
       {
-        :logical_cpus       => p[:CPUCount],
+        :cpu_total_cores    => p[:CPUCount],
         :guest_os           => p[:OperatingSystem][:Props][:Name],
         :guest_os_full_name => p[:OperatingSystem][:Props][:Name],
         :memory_mb          => normalize_blank_property_num(p[:Memory]),

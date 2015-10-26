@@ -20,16 +20,16 @@ col_options:
     - :avg
     - :max
     - :total
-  vm.logical_cpus__total: 
-    :grouping: 
+  vm.cpu_total_cores__total:
+    :grouping:
     - :total
   vm.disk_6_size_on_disk: 
     :grouping: 
     - :avg
     - :max
     - :total
-  vm.logical_cpus: 
-    :grouping: 
+  vm.cpu_total_cores:
+    :grouping:
     - :avg
     - :max
     - :total
@@ -113,7 +113,7 @@ col_order:
 - managed.folder_path_yellow
 - resource_name
 - vm.v_annotation
-- vm.logical_cpus
+- vm.cpu_total_cores
 - vm.cpu_shares_level
 - vm.mem_cpu
 - vm.memory_reserve
@@ -224,7 +224,7 @@ include:
   vm: 
     columns: 
     - v_annotation
-    - logical_cpus
+    - cpu_total_cores
     - cpu_shares_level
     - mem_cpu
     - memory_reserve

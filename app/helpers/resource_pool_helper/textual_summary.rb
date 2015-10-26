@@ -4,7 +4,7 @@ module ResourcePoolHelper::TextualSummary
   #
 
   def textual_group_properties
-    %i(vapp aggregate_cpu_speed aggregate_cpu_memory aggregate_physical_cpus aggregate_logical_cpus aggregate_vm_memory aggregate_vm_cpus)
+    %i(vapp aggregate_cpu_speed aggregate_cpu_memory aggregate_physical_cpus aggregate_cpu_total_cores aggregate_vm_memory aggregate_vm_cpus)
   end
 
   def textual_group_relationships
@@ -43,8 +43,8 @@ module ResourcePoolHelper::TextualSummary
      :value => number_with_delimiter(@record.aggregate_physical_cpus)}
   end
 
-  def textual_aggregate_logical_cpus
-    {:label => "Total #{title_for_host} CPU Cores", :value => number_with_delimiter(@record.aggregate_logical_cpus)}
+  def textual_aggregate_cpu_total_cores
+    {:label => "Total #{title_for_host} CPU Cores", :value => number_with_delimiter(@record.aggregate_cpu_total_cores)}
   end
 
   def textual_aggregate_vm_memory

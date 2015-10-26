@@ -221,7 +221,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_num_cpu_cores
-    {:label => "Number of CPU Cores", :value => @record.hardware.nil? ? "N/A" : @record.hardware.logical_cpus}
+    {:label => "Number of CPU Cores", :value => @record.hardware.nil? ? "N/A" : @record.hardware.cpu_total_cores}
   end
 
   def textual_cpu_cores_per_socket

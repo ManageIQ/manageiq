@@ -306,9 +306,9 @@ module ManageIQ::Providers
           end
 
           result[:numvcpus] = hdw["numCpuPkgs"] unless hdw["numCpuPkgs"].blank?
-          result[:logical_cpus] = hdw["numCpuCores"] unless hdw["numCpuCores"].blank?
+          result[:cpu_total_cores] = hdw["numCpuCores"] unless hdw["numCpuCores"].blank?
           # Calculate the number of cores per socket by dividing total numCpuCores by numCpuPkgs
-          result[:cpu_cores_per_socket] = (result[:logical_cpus].to_f / result[:numvcpus].to_f).to_i unless hdw["numCpuCores"].blank? || hdw["numCpuPkgs"].blank?
+          result[:cpu_cores_per_socket] = (result[:cpu_total_cores].to_f / result[:numvcpus].to_f).to_i unless hdw["numCpuCores"].blank? || hdw["numCpuPkgs"].blank?
         end
 
         config = inv["config"]
@@ -810,9 +810,9 @@ module ManageIQ::Providers
         result[:bios] = bios unless bios.blank?
 
         if inv["numCpu"].present?
-          result[:logical_cpus] = inv["numCpu"].to_i
+          result[:cpu_total_cores]      = inv["numCpu"].to_i
           result[:cpu_cores_per_socket] = (config.try(:fetch_path, "hardware", "numCoresPerSocket") || 1).to_i
-          result[:numvcpus] = result[:logical_cpus] / result[:cpu_cores_per_socket]
+          result[:numvcpus] = result[:cpu_total_cores] / result[:cpu_cores_per_socket]
         end
 
         result[:annotation] = inv["annotation"] unless inv["annotation"].blank?

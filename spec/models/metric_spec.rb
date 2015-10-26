@@ -430,8 +430,8 @@ describe Metric do
       before(:each) do
         @vm1 = FactoryGirl.create(:vm_vmware)
         @vm2 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 4096, :numvcpus => 2))
-        @host1 = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :memory_mb => 8124, :logical_cpus => 1, :cpu_speed => 9576), :vms => [@vm1])
-        @host2 = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :memory_mb => 8124, :logical_cpus => 1, :cpu_speed => 9576))
+        @host1 = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :memory_mb => 8124, :cpu_total_cores => 1, :cpu_speed => 9576), :vms => [@vm1])
+        @host2 = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :memory_mb => 8124, :cpu_total_cores => 1, :cpu_speed => 9576))
 
         @ems_cluster = FactoryGirl.create(:ems_cluster, :ext_management_system => @ems_vmware)
         @ems_cluster.hosts << @host1

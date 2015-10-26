@@ -53,7 +53,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_cpu_cores
-    {:label => "Aggregate #{title_for_host} CPU Cores", :value => @ems.aggregate_logical_cpus}
+    {:label => "Aggregate #{title_for_host} CPU Cores", :value => @ems.aggregate_cpu_total_cores}
   end
 
   def textual_guid

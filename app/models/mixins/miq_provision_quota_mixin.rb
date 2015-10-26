@@ -164,7 +164,7 @@ module MiqProvisionQuotaMixin
     result[:count] = vms.length
     vms.each do |vm|
       result[:memory] += vm.ram_size.to_i
-      result[:cpu] += vm.logical_cpus
+      result[:cpu] += vm.cpu_total_cores
       result[:snapshot_storage] += vm.snapshot_storage
       result[:used_storage] += vm.used_disk_storage.to_i + vm.snapshot_storage
       result[:allocated_storage] += vm.allocated_disk_storage.to_i

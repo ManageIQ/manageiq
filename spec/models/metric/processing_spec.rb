@@ -85,7 +85,7 @@ describe Metric::Processing do
       let(:vm) do
         FactoryGirl.create(:vm_vmware, :hardware =>
           FactoryGirl.create(:hardware,
-                             :logical_cpus         => 8,
+                             :cpu_total_cores      => 8,
                              :numvcpus             => 4,
                              :cpu_cores_per_socket => 2,
                              :cpu_speed            => 3_000,

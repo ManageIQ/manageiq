@@ -36,7 +36,7 @@ def buildDetails(host)
   body += "<br>Hostname: #{host.hostname}"
   body += "<br>IP Address(es): #{host.ipaddress}"
   body += "<br>CPU Type: #{host.hardware.cpu_type}"
-  body += "<br>Cores per Socket: #{host.hardware.logical_cpus}"
+  body += "<br>Cores per Socket: #{host.hardware.cpu_total_cores}"
   body += "<br>vRAM: #{host.hardware.memory_mb.to_i / 1024} GB"
   body += "<br>Operating System: #{host.vmm_product} #{host.vmm_version} Build #{host.vmm_buildnumber}"
   body += "<br>SSH Permit Root: #{host.ssh_permit_root_login}"

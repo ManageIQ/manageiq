@@ -236,7 +236,7 @@ en:
       active: Active
       admin_disabled: Lockdown Mode
       aggregate_cpu_speed: Total CPU Speed
-      aggregate_logical_cpus: Total Number of Logical CPUs
+      aggregate_cpu_total_cores: Total Number of Logical CPUs
       aggregate_memory: Total Memory
       aggregate_physical_cpus: Total Number of Physical CPUs
       allocated_memory: Allocated Memory
@@ -375,7 +375,7 @@ en:
       last_update_status: Last Update Status Code
       last_update_status_str: Last Update Status
       ldap_group: LDAP Group
-      logical_cpus: Number of CPU Cores
+      cpu_total_cores: Number of CPU Cores
       mac_address: MAC Address
       mac_addresses: MAC Addresses
       macaddress: MAC Address

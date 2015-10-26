@@ -22,7 +22,7 @@ module ActiveVmAggregationMixin
   end
 
   def allocated_vcpu
-    active_vm_aggregation(:logical_cpus)
+    active_vm_aggregation(:cpu_total_cores)
   end
 
   def allocated_storage

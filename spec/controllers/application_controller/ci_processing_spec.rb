@@ -67,8 +67,8 @@ describe ApplicationController do
 
   context "Verify memory format for reconfiguring VMs" do
     it "set_memory_mb should set old values to default when both vms have differnt memory/cpu values" do
-      vm1 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 1024, :logical_cpus => 1))
-      vm2 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 512, :logical_cpus => 2))
+      vm1 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 1024, :cpu_total_cores => 1))
+      vm2 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 512, :cpu_total_cores => 2))
       edit = {}
       edit[:new] = {}
       controller.instance_variable_set(:@reconfigureitems, [vm1, vm2])
@@ -81,8 +81,8 @@ describe ApplicationController do
     end
 
     it "set_memory_mb should use vms value to set old values when both vms have same memory/cpu values" do
-      vm1 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 2048, :logical_cpus => 2))
-      vm2 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 2048, :logical_cpus => 2))
+      vm1 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 2048, :cpu_total_cores => 2))
+      vm2 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 2048, :cpu_total_cores => 2))
       edit = {}
       edit[:new] = {}
       controller.instance_variable_set(:@reconfigureitems, [vm1, vm2])
@@ -188,7 +188,7 @@ describe ApplicationController do
     end
 
     it "does not display the drop list if max_cores_per-socket is one" do
-      vm = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 1024, :logical_cpus => 1, :virtual_hw_version => '04'))
+      vm = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 1024, :cpu_total_cores => 1, :virtual_hw_version => '04'))
       edit = {}
       edit[:new] = {}
       controller.instance_variable_set(:@_params, :id => vm.id)

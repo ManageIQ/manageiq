@@ -191,7 +191,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :memory_mb            => 7806,
       :memory_console       => nil,
       :numvcpus             => 1,
-      :logical_cpus         => 4,
+      :cpu_total_cores      => 4,
       :cpu_cores_per_socket => 4,
       :guest_os             => nil,
       :guest_os_full_name   => nil,
@@ -568,7 +568,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :bios                 => nil,
       :numvcpus             => 2,
       :cpu_cores_per_socket => 1,
-      :logical_cpus         => 2,
+      :cpu_total_cores      => 2,
       :annotation           => "Template for EmsRefresh testing",
       :memory_mb            => 1024
     )

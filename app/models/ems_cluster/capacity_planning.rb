@@ -121,7 +121,7 @@ module EmsCluster::CapacityPlanning
 
   def capacity_effective_host_resources(profile, resource)
     case capacity_profile_method(profile, resource)
-    when :vcpu_average then                      aggregate_logical_cpus
+    when :vcpu_average then                      aggregate_cpu_total_cores
     when :memory_average, :memory_high_norm then effective_memory || aggregate_memory.megabytes
     when :vcpu_high_norm then                    effective_cpu || aggregate_cpu_speed
     end
@@ -141,7 +141,7 @@ module EmsCluster::CapacityPlanning
 
   def capacity_failover_host_resources_with_failover_hosts(profile, resource)
     case capacity_profile_method(profile, resource)
-    when :vcpu_average then                      aggregate_logical_cpus(failover_hosts)
+    when :vcpu_average then                      aggregate_cpu_total_cores(failover_hosts)
     when :memory_average, :memory_high_norm then aggregate_memory(failover_hosts).megabytes
     when :vcpu_high_norm then                    aggregate_cpu_speed(failover_hosts)
     end
@@ -150,7 +150,7 @@ module EmsCluster::CapacityPlanning
   def capacity_failover_host_resources_without_failover_hosts(profile, resource)
     # Take the average resources per 1 Host
     resource_value = case capacity_profile_method(profile, resource)
-                     when :vcpu_average then                      aggregate_logical_cpus
+                     when :vcpu_average then                      aggregate_cpu_total_cores
                      when :memory_average, :memory_high_norm then aggregate_memory.megabytes
                      when :vcpu_high_norm then                    aggregate_cpu_speed
                      end
