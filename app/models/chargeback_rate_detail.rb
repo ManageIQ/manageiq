@@ -1,5 +1,7 @@
 class ChargebackRateDetail < ActiveRecord::Base
   belongs_to :chargeback_rate
+  belongs_to :detail_measure, :class_name => "ChargebackRateDetailMeasure", :foreign_key => :chargeback_rate_detail_measure_id
+
   validates_numericality_of :rate
 
   def cost(value)
@@ -87,10 +89,5 @@ class ChargebackRateDetail < ActiveRecord::Base
   def rate_type
     # Return parent's rate type
     chargeback_rate.rate_type unless chargeback_rate.nil?
-  end
-
-  def detail_measure
-    # Return the measure asociated
-    ChargebackRateDetailMeasure.find_by(:id => chargeback_rate_detail_measure_id)
   end
 end
