@@ -71,13 +71,13 @@ module ApplicationController::Performance
       if ["host", "vm", "vm_or_template"].include?(params[:controller])
         pfx = params[:controller] == "vm_or_template" ? "vm_" : ""
         if @perf_options[:typ] == "realtime"
-          page << "if(ManageIQ.toolbars.center_tb.obj) ManageIQ.toolbars.center_tb.obj.showItem('#{pfx}perf_refresh');"
-          page << "if(ManageIQ.toolbars.center_tb.obj) ManageIQ.toolbars.center_tb.obj.showItem('#{pfx}perf_reload');"
-          page << "if(ManageIQ.toolbars.center_tb.obj) ManageIQ.toolbars.center_tb.obj.enableItem('#{pfx}perf_refresh');"
-          page << "if(ManageIQ.toolbars.center_tb.obj) ManageIQ.toolbars.center_tb.obj.enableItem('#{pfx}perf_reload');"
+          page << "ManageIQ.toolbars.showItem('#center_tb', '#{pfx}perf_refresh');"
+          page << "ManageIQ.toolbars.showItem('#center_tb', '#{pfx}perf_reload');"
+          page << "ManageIQ.toolbars.enableItem('#center_tb', '#{pfx}perf_refresh');"
+          page << "ManageIQ.toolbars.enableItem('#center_tb', '#{pfx}perf_reload');"
         else
-          page << "if(ManageIQ.toolbars.center_tb.obj) ManageIQ.toolbars.center_tb.obj.hideItem('#{pfx}perf_refresh');"
-          page << "if(ManageIQ.toolbars.center_tb.obj) ManageIQ.toolbars.center_tb.obj.hideItem('#{pfx}perf_reload');"
+          page << "ManageIQ.toolbars.hideItem('#center_tb', '#{pfx}perf_refresh');"
+          page << "ManageIQ.toolbars.hideItem('#center_tb', '#{pfx}perf_reload');"
         end
       end
 

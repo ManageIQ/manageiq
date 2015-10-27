@@ -11,7 +11,7 @@ if (typeof(ManageIQ) === 'undefined') {
     editor: null, // instance of CodeMirror editor
     sizeTimer: null, // timer for routines to get size of the window
     timelineFilter: null, //
-    toolbars: null, // toolbars TODO: about to be removed
+    toolbars: null, // toolbars
     oneTransition: {
       IEButtonPressed: null, // pressed save/reset button identificator
       oneTrans: null, // used to generate Ajax request only once for a drawn screen

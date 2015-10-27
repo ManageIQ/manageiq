@@ -577,12 +577,12 @@ class DashboardController < ApplicationController
         status = @report.table.data.length == 0 ? :disabled : :enabled
 
         center_tb_buttons.each do |button_id, typ|
-          page << "ManageIQ.toolbars.center_tb.obj.showItem('#{button_id}');"
+          page << "ManageIQ.toolbars.showItem('#center_tb', '#{button_id}');"
           page << tl_toggle_button_enablement(button_id, status, typ)
         end
       else
         center_tb_buttons.keys.each do |button_id|
-          page << "ManageIQ.toolbars.center_tb.obj.hideItem('#{button_id}');"
+          page << "ManageIQ.toolbars.hideItem('#center_tb', '#{button_id}');"
         end
       end
       page.replace("tl_div", :partial => "dashboard/tl_detail")
@@ -621,10 +621,10 @@ class DashboardController < ApplicationController
   def tl_toggle_button_enablement(button_id, enablement, typ)
     if enablement == :enabled
       tooltip = "Download this Timeline data in #{typ} format"
-      "ManageIQ.toolbars.center_tb.obj.enableItem('#{button_id}'); ManageIQ.toolbars.center_tb.obj.setItemToolTip('#{button_id}', '#{tooltip}');"
+      "ManageIQ.toolbars.enableItem('#center_tb', '#{button_id}'); ManageIQ.toolbars.setItemTooltip('#center_tb', '#{button_id}', '#{tooltip}');"
     else
       tooltip = 'No records found for this timeline'
-      "ManageIQ.toolbars.center_tb.obj.disableItem('#{button_id}'); ManageIQ.toolbars.center_tb.obj.setItemToolTip('#{button_id}', '#{tooltip}');"
+      "ManageIQ.toolbars.disableItem('#center_tb', '#{button_id}'); ManageIQ.toolbars.setItemTooltip('#center_tb', '#{button_id}', '#{tooltip}');"
     end
   end
   helper_method(:tl_toggle_button_enablement)
