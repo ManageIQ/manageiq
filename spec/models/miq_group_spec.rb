@@ -238,21 +238,21 @@ describe MiqGroup do
     end
   end
 
-  describe "#destroy" "should not be deleted while a user is still assigned" do
+  describe "#destroy" do
     let(:group) { FactoryGirl.create(:miq_group) }
 
     it "can succeed" do
       expect { group.destroy }.not_to raise_error
     end
 
-    it "fails if referenced by current_group" do
+    it "fails if referenced by user#current_group" do
       FactoryGirl.create(:user, :miq_groups => [group])
 
       expect { group.destroy }.to raise_error
       MiqGroup.count.should eq 1
     end
 
-    it "fails if referenced by miq_groups" do
+    it "fails if referenced by user#miq_groups" do
       group2 = FactoryGirl.create(:miq_group)
       FactoryGirl.create(:user, :miq_groups => [group, group2], :current_group => group2)
 
@@ -260,8 +260,8 @@ describe MiqGroup do
       MiqGroup.count.should eq 2
     end
 
-    it "fails if referenced by a default tenant" do
-      expect { FactoryGirl.create(:tenant).default_miq_group.destroy }.to raise_error
+    it "fails if referenced by a tenant#default_miq_group" do
+      expect { FactoryGirl.create(:tenant).default_miq_group.reload.destroy }.to raise_error
     end
   end
 
