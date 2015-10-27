@@ -13,6 +13,7 @@ describe ExtManagementSystem do
       ec2
       foreman_configuration
       foreman_provisioning
+      gce
       kubernetes
       openshift
       atomic

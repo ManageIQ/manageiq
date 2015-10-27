@@ -128,6 +128,8 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
        $scope.emsCommonModel.default_password != '' && $scope.angularForm.default_password.$valid &&
        $scope.emsCommonModel.default_verify != '' && $scope.angularForm.default_verify.$valid)) {
       return true;
+    } else if($scope.emsCommonModel.emstype == "gce") {
+      return true;
     }
     else
       return false;

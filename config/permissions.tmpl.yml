@@ -20,3 +20,4 @@
 - ems-type:openshift
 - ems-type:atomic
 - ems-type:foreman_provisioning
+- ems-type:gce

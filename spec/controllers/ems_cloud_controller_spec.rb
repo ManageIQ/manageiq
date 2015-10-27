@@ -248,6 +248,7 @@ describe EmsCloudController do
                                        :default_password => "default_password2")
       creds = {:userid => "default_userid", :password => "default_password2"}
       mocked_ems.should_receive(:supports_authentication?).with(:amqp)
+      mocked_ems.should_receive(:supports_authentication?).with(:oauth)
       expect(controller.send(:build_credentials, mocked_ems)).to include(:default => creds)
     end
 
@@ -256,6 +257,7 @@ describe EmsCloudController do
       mocked_ems.should_receive(:authentication_password).and_return('default_password')
       creds = {:userid => "default_userid", :password => "default_password"}
       mocked_ems.should_receive(:supports_authentication?).with(:amqp)
+      mocked_ems.should_receive(:supports_authentication?).with(:oauth)
       expect(controller.send(:build_credentials, mocked_ems)).to include(:default => creds)
     end
 
@@ -268,6 +270,7 @@ describe EmsCloudController do
       default_creds = {:userid => "default_userid", :password => "default_password2"}
       amqp_creds = {:userid => "amqp_userid", :password => "amqp_password2"}
       mocked_ems.should_receive(:supports_authentication?).with(:amqp).and_return(true)
+      mocked_ems.should_receive(:supports_authentication?).with(:oauth)
       expect(controller.send(:build_credentials, mocked_ems)).to include(:default => default_creds,
                                                                          :amqp    => amqp_creds)
     end
@@ -281,6 +284,7 @@ describe EmsCloudController do
       default_creds = {:userid => "default_userid", :password => "default_password"}
       amqp_creds = {:userid => "amqp_userid", :password => "amqp_password"}
       mocked_ems.should_receive(:supports_authentication?).with(:amqp).and_return(true)
+      mocked_ems.should_receive(:supports_authentication?).with(:oauth)
       expect(controller.send(:build_credentials, mocked_ems)).to include(:default => default_creds,
                                                                          :amqp    => amqp_creds)
     end
@@ -294,6 +298,7 @@ describe EmsCloudController do
       default_creds = {:userid => "default_userid", :password => "default_password2"}
       amqp_creds = {:userid => "amqp_userid", :password => "amqp_password"}
       mocked_ems.should_receive(:supports_authentication?).with(:amqp).and_return(true)
+      mocked_ems.should_receive(:supports_authentication?).with(:oauth)
       expect(controller.send(:build_credentials, mocked_ems)).to include(:default => default_creds,
                                                                          :amqp    => amqp_creds)
     end
