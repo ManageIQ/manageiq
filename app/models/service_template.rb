@@ -145,8 +145,7 @@ class ServiceTemplate < ActiveRecord::Base
                                                           parent_svc) unless parent_svc
     svc = create_service(service_task, parent_svc)
 
-    user = User.find_by_userid(service_task.userid)
-    set_ownership(svc, user) unless user.nil?
+    set_ownership(svc, service_task.get_user)
 
     service_task.destination = svc
 
