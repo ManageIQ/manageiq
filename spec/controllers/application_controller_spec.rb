@@ -143,7 +143,7 @@ describe ApplicationController do
                                  :hardware => FactoryGirl.create(:hardware,
                                                                  :numvcpus             => 2,
                                                                  :cpu_cores_per_socket => 4,
-                                                                 :logical_cpus         => 8),
+                                                                 :cpu_total_cores      => 8),
                                 )
       @host_service = FactoryGirl.create(:system_service, :name => "foo", :host_id => @host.id)
     end

@@ -67,7 +67,7 @@ module EmsContainerHelper::TextualSummary
 
   def textual_cpu_cores
     {:label => "Aggregate Node CPU Cores",
-     :value => @ems.aggregate_logical_cpus}
+     :value => @ems.aggregate_cpu_total_cores}
   end
 
   def textual_port

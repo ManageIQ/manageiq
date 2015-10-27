@@ -91,7 +91,7 @@ host_suspects.each do |h|
   loghost_object(h)
 
   # Get Host CPU Capacity
-  host_cpu_capacity = h.hardware.cpu_speed * h.hardware.logical_cpus
+  host_cpu_capacity = h.hardware.cpu_speed * h.hardware.cpu_total_cores
   host_cpu_percent = (h.cpu_usagemhz_rate_average_avg_over_time_period / host_cpu_capacity)
   $evm.log("info", "Host:<#{h.name}> CPU Capacity: <#{host_cpu_capacity}> CPU Percent: <#{host_cpu_percent}>")
 
@@ -138,7 +138,7 @@ unless host_exceeded.blank?
   $evm.log("info", "VM: <#{vm_culprit.name}> Memory: <#{vm_culprit.mem_cpu}>")
 
   # Log VM CPU Count I.e. CPU Count: <2>
-  $evm.log("info", "VM: <#{vm_culprit.name}> CPU Count: <#{vm_culprit.logical_cpus}>")
+  $evm.log("info", "VM: <#{vm_culprit.name}> CPU Count: <#{vm_culprit.cpu_total_cores}>")
 
   # Log VM CPU average usage I.e. Average CPU Usage: <405.791768303411>
   $evm.log("info", "VM: <#{vm_culprit.name}> Average CPU Usage: <#{vm_culprit.cpu_usagemhz_rate_average_avg_over_time_period}>")

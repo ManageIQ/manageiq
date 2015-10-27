@@ -164,7 +164,7 @@ describe HostController do
                               :hardware => FactoryGirl.create(:hardware,
                                                               :numvcpus             => 2,
                                                               :cpu_cores_per_socket => 4,
-                                                              :logical_cpus         => 8
+                                                              :cpu_total_cores      => 8
                                                              )
                              )
 

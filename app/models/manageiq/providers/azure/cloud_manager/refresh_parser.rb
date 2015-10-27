@@ -272,9 +272,9 @@ module ManageIQ::Providers
 
       def populate_hardware_hash_with_series_attributes(hardware_hash, instance, series)
         return if series.nil?
-        hardware_hash[:logical_cpus]  = series[:cpus]
-        hardware_hash[:memory_mb]     = series[:memory]
-        hardware_hash[:disk_capacity] = series[:root_disk_size] + series[:swap_disk_size]
+        hardware_hash[:cpu_total_cores] = series[:cpus]
+        hardware_hash[:memory_mb]       = series[:memory]
+        hardware_hash[:disk_capacity]   = series[:root_disk_size] + series[:swap_disk_size]
 
         os_disk = instance.properties.storage_profile.os_disk
         sz      = series[:root_disk_size]

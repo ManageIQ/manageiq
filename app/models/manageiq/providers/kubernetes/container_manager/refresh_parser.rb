@@ -149,8 +149,8 @@ module ManageIQ::Providers::Kubernetes
 
       new_result[:computer_system] = {
         :hardware         => {
-          :logical_cpus => node.status.capacity.cpu,
-          :memory_mb    => node_memory
+          :cpu_total_cores => node.status.capacity.cpu,
+          :memory_mb       => node_memory
         },
         :operating_system => {
           :distribution   => node.status.nodeInfo.osImage,

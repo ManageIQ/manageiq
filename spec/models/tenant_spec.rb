@@ -615,9 +615,9 @@ describe Tenant do
         :ext_management_system => ems,
         :hardware              => FactoryGirl.create(
           :hardware,
-          :memory_mb    => 1024,
-          :logical_cpus => 1,
-          :disks        => [FactoryGirl.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
+          :memory_mb       => 1024,
+          :cpu_total_cores => 1,
+          :disks           => [FactoryGirl.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
         )
       )
     end
@@ -630,9 +630,9 @@ describe Tenant do
         :ext_management_system => ems,
         :hardware              => FactoryGirl.create(
           :hardware,
-          :memory_mb    => 1024,
-          :logical_cpus => 1,
-          :disks        => [FactoryGirl.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
+          :memory_mb       => 1024,
+          :cpu_total_cores => 1,
+          :disks           => [FactoryGirl.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
         )
       )
     end
@@ -648,9 +648,9 @@ describe Tenant do
         :ext_management_system => ems,
         :hardware              => FactoryGirl.create(
           :hardware,
-          :memory_mb    => 1024,
-          :logical_cpus => 1,
-          :disks        => [FactoryGirl.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
+          :memory_mb       => 1024,
+          :cpu_total_cores => 1,
+          :disks           => [FactoryGirl.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
         )
       )
     end

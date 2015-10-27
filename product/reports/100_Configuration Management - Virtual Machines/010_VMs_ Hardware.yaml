@@ -12,7 +12,7 @@ priority: 10
 col_order:
 - name
 - hardware.memory_mb
-- hardware.logical_cpus
+- hardware.cpu_total_cores
 - disks.controller_type
 - disks.device_type
 - disks.mode
@@ -28,7 +28,7 @@ include:
   hardware:
     columns:
     - memory_mb
-    - logical_cpus
+    - cpu_total_cores
     include:
       disks:
         columns:

@@ -102,7 +102,7 @@ class MiqScvmmHost
 
     hardware[:numvcpus]             = props[:PhysicalCPUCount]
     hardware[:cpu_cores_per_socket] = props[:CoresPerCPU]
-    hardware[:logical_cpus]         = hardware[:cpu_cores_per_socket].to_i * hardware[:numvcpus].to_i
+    hardware[:cpu_total_cores]      = hardware[:cpu_cores_per_socket].to_i * hardware[:numvcpus].to_i
 
     # Guest OS summary_config['product'] = {'name' => props[:VirtualizationPlatformString]}
 

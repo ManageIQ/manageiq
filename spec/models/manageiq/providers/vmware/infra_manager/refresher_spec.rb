@@ -231,7 +231,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       :memory_mb            => 57334,
       :memory_console       => nil,
       :numvcpus             => 2,
-      :logical_cpus         => 8,
+      :cpu_total_cores      => 8,
       :cpu_cores_per_socket => 4,
       :guest_os             => "ESXi",
       :guest_os_full_name   => "ESXi",

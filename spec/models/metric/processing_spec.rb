@@ -16,14 +16,7 @@ describe Metric::Processing do
     end
 
     context "on :derived_vm_numvcpus" do
-      let(:vm) do
-        FactoryGirl.create(:vm_vmware, :hardware =>
-          FactoryGirl.create(:hardware,
-                             :logical_cpus => 8, # This is actually used for numvcpus, but numvcpus needs to be renamed.
-                            # See note on VimPerformanceState#capture_numvcpus
-                            )
-                          )
-      end
+      let(:vm) { FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :cpu_total_cores => 8)) }
 
       it "with all usage values" do
         m = FactoryGirl.create(:metric_rollup_vm_hr,
@@ -85,7 +78,7 @@ describe Metric::Processing do
       let(:vm) do
         FactoryGirl.create(:vm_vmware, :hardware =>
           FactoryGirl.create(:hardware,
-                             :logical_cpus         => 8,
+                             :cpu_total_cores      => 8,
                              :numvcpus             => 4,
                              :cpu_cores_per_socket => 2,
                              :cpu_speed            => 3_000,

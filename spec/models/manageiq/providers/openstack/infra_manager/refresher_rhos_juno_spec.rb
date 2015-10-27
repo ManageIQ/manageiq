@@ -124,7 +124,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
       :memory_console       => nil,
       :disk_capacity        => 40,
       :numvcpus             => 4,
-      :logical_cpus         => 4,
+      :cpu_total_cores      => 4,
       :cpu_cores_per_socket => 1,
       :guest_os             => nil,
       :guest_os_full_name   => nil,

@@ -362,7 +362,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
         :root_device_type     => root_device_type,
         :numvcpus             => flavor[:cpus],
         :cpu_cores_per_socket => 1,
-        :logical_cpus         => flavor[:cpus],
+        :cpu_total_cores      => flavor[:cpus],
         :memory_mb            => flavor[:memory] / 1.megabyte,
         :disk_capacity        => flavor[:ephemeral_disk_size],
         :disks                => [], # Filled in later conditionally on flavor

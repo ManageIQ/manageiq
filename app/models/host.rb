@@ -113,9 +113,9 @@ class Host < ActiveRecord::Base
   virtual_column :v_total_storages,             :type => :integer,     :uses => :storages
   virtual_column :v_total_vms,                  :type => :integer,     :uses => :vms
   virtual_column :v_total_miq_templates,        :type => :integer,     :uses => :miq_templates
-  virtual_column :total_vcpus,                  :type => :integer,     :uses => :logical_cpus
+  virtual_column :total_vcpus,                  :type => :integer,     :uses => :cpu_total_cores
   virtual_column :num_cpu,                      :type => :integer,     :uses => :hardware
-  virtual_column :logical_cpus,                 :type => :integer,     :uses => :hardware
+  virtual_column :cpu_total_cores,              :type => :integer,     :uses => :hardware
   virtual_column :cpu_cores_per_socket,         :type => :integer,     :uses => :hardware
   virtual_column :ram_size,                     :type => :integer
   virtual_column :enabled_inbound_ports,        :type => :numeric_set  # The following are not set to use anything
@@ -1770,7 +1770,7 @@ class Host < ActiveRecord::Base
   end
 
   def total_vcpus
-    logical_cpus || 0
+    cpu_total_cores || 0
   end
 
   def vcpus_per_core
@@ -1785,8 +1785,8 @@ class Host < ActiveRecord::Base
     hardware.nil? ? 0 : hardware.numvcpus
   end
 
-  def logical_cpus
-    hardware.nil? ? 0 : hardware.logical_cpus
+  def cpu_total_cores
+    hardware.nil? ? 0 : hardware.cpu_total_cores
   end
 
   def cpu_cores_per_socket
