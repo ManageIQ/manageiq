@@ -21,9 +21,7 @@ describe ApplicationHelper do
   end
 
   describe "custom_buttons" do
-    before do
-      @user = FactoryGirl.create(:user, :role => "super_administrator")
-    end
+    let(:user) { FactoryGirl.create(:user, :role => "super_administrator") }
 
     context "when record is VM" do
       before do
@@ -52,7 +50,7 @@ describe ApplicationHelper do
         before do
           @set_data = {:applies_to_class => 'Vm'}
           @button_set = FactoryGirl.create(:custom_button_set, :set_data => @set_data)
-          login_as @user
+          login_as user
           @button1 = FactoryGirl.create(:custom_button, :applies_to_class => 'Vm', :visibility => {:roles => ["_ALL_"]}, :options => {})
           @button_set.add_member @button1
           @button_set.save!
@@ -168,7 +166,7 @@ describe ApplicationHelper do
         before do
           @set_data = {:applies_to_class => 'ServiceTemplate', :applies_to_id => @service_template.id}
           @button_set = FactoryGirl.create(:custom_button_set, :set_data => @set_data)
-          login_as @user
+          login_as user
           @button1 = FactoryGirl.create(:custom_button, :applies_to_class => 'ServiceTemplate', :visibility => {:roles => ["_ALL_"]}, :options => {})
           @button_set.add_member @button1
           @button_set.save!
@@ -330,11 +328,11 @@ describe ApplicationHelper do
   end # get_image
 
   describe "#build_toolbar_hide_button" do
+    let(:user) { FactoryGirl.create(:user) }
     subject { build_toolbar_hide_button(@id) }
     before do
-      @user = FactoryGirl.create(:user)
       @record = double("record")
-      login_as @user
+      login_as user
       @settings = {
         :views => {
           :compare      => 'compressed',
@@ -484,7 +482,7 @@ describe ApplicationHelper do
       end
 
       it "and miq_request_approval feature is allowed" do
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
         subject.should be_false
       end
     end
@@ -496,7 +494,7 @@ describe ApplicationHelper do
       end
 
       it "and miq_request_approval feature is allowed" do
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
         subject.should be_false
       end
     end
@@ -509,14 +507,14 @@ describe ApplicationHelper do
     it "when with miq_request_approve and allowed by the role" do
       @id = "miq_request_approve"
       # when the role allows the feature
-      @user.stub(:role_allows?).and_return(true)
+      user.stub(:role_allows?).and_return(true)
       subject.should be_false
     end
 
     it "when with miq_request_deny and allowed by the role" do
       @id = "miq_request_deny"
       # when the role allows the feature
-      @user.stub(:role_allows?).and_return(true)
+      user.stub(:role_allows?).and_return(true)
       subject.should be_false
     end
 
@@ -551,7 +549,7 @@ describe ApplicationHelper do
      "vm_snapshot_revert"].each do |id|
       it "when with #{id}" do
         @id = id
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
         subject.should be_false
       end
     end
@@ -748,7 +746,7 @@ describe ApplicationHelper do
     ["host_miq_request_new", "vm_miq_request_new", "vm_clone", "vm_publish", "vm_pre_prov"].each do |id|
       it "when with #{id}" do
         @id = id
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
         subject.should be_false
       end
     end
@@ -756,7 +754,7 @@ describe ApplicationHelper do
     context "when with miq_task_canceljob" do
       before do
         @id = 'miq_task_canceljob'
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
       end
 
       it "and @layout != all_tasks" do
@@ -783,7 +781,7 @@ describe ApplicationHelper do
     context "when with vm_console" do
       before do
         @id = "vm_console"
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
         @record.stub(:console_supported? => false)
       end
 
@@ -811,7 +809,7 @@ describe ApplicationHelper do
     context "when with vm_vnc_console" do
       before do
         @id = "vm_vnc_console"
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
         @record.stub(:console_supported? => false)
       end
 
@@ -839,7 +837,7 @@ describe ApplicationHelper do
     context "when with vm_vmrc_console" do
       before do
         @id = "vm_vmrc_console"
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
         @record.stub(:console_supported? => false)
       end
 
@@ -868,7 +866,7 @@ describe ApplicationHelper do
       context "when with #{id}" do
         before do
           @id = id
-          @user.stub(:role_allows?).and_return(true)
+          user.stub(:role_allows?).and_return(true)
         end
 
         it "and @vmdb_config[:product][:smis] != true " do
@@ -886,7 +884,7 @@ describe ApplicationHelper do
     context "when with AssignedServerRole" do
       before do
         @record = AssignedServerRole.new
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
       end
 
       it "and id = delete_server" do
@@ -903,7 +901,7 @@ describe ApplicationHelper do
     context "when with EmsCluster" do
       before do
         @record = EmsCluster.new
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
       end
 
       context "and id = common_drift" do
@@ -926,7 +924,7 @@ describe ApplicationHelper do
     context "when with Host" do
       before do
         @record = Host.new
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
       end
 
       context "and id = common_drift" do
@@ -1027,7 +1025,7 @@ describe ApplicationHelper do
       context "when with #{cls}" do
         before do
           @record = cls.constantize.new
-          @user.stub(:role_allows?).and_return(true)
+          user.stub(:role_allows?).and_return(true)
         end
 
         context "and id = miq_request_approve" do
@@ -1090,8 +1088,8 @@ describe ApplicationHelper do
         context "and id = miq_request_delete" do
           before do
             @id = "miq_request_delete"
-            @record.stub(:resource_type => "something", :approval_state => "xx", :requester_name => @user.name)
-            User.stub(:find_by_userid).and_return(@user)
+            @record.stub(:resource_type => "something", :approval_state => "xx", :requester_name => user.name)
+            User.stub(:find_by_userid).and_return(user)
           end
 
           it "and resource_type = AutomationRequest" do
@@ -1122,8 +1120,8 @@ describe ApplicationHelper do
         context "and id = miq_request_edit" do
           before do
             @id = "miq_request_edit"
-            @record.stub(:resource_type => "something", :approval_state => "xx", :requester_name => @user.name)
-            User.stub(:find_by_userid).and_return(@user)
+            @record.stub(:resource_type => "something", :approval_state => "xx", :requester_name => user.name)
+            User.stub(:find_by_userid).and_return(user)
           end
 
           it "and resource_type = AutomationRequest" do
@@ -1156,8 +1154,8 @@ describe ApplicationHelper do
             @id = "miq_request_copy"
             @record.stub(:resource_type  => "MiqProvisionRequest",
                          :approval_state => "pending_approval",
-                         :requester_name => @user.name)
-            User.stub(:find_by_userid).and_return(@user)
+                         :requester_name => user.name)
+            User.stub(:find_by_userid).and_return(user)
           end
 
           it "and resource_type = AutomationRequest" do
@@ -1208,13 +1206,13 @@ describe ApplicationHelper do
       end
 
       it "alert_copy don't hide if RBAC allows" do
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
         @id = "alert_copy"
         subject.should be_false
       end
 
       it "alert_copy hide if RBAC denies" do
-        @user.stub(:role_allows?).and_return(false)
+        user.stub(:role_allows?).and_return(false)
         @id = "alert_copy"
         subject.should be_true
       end
@@ -1223,7 +1221,7 @@ describe ApplicationHelper do
     context "when with MiqServer" do
       before do
         @record = MiqServer.new
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
       end
 
       ["role_start", "role_suspend", "promote_server", "demote_server",
@@ -1243,7 +1241,7 @@ describe ApplicationHelper do
     context "when with ScanItemSet" do
       before do
         @record = ScanItemSet.new
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
       end
 
       ["scan_delete", "scan_edit"].each do |id|
@@ -1268,7 +1266,7 @@ describe ApplicationHelper do
     context "when with ServerRole" do
       before do
         @record = ServerRole.new
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
       end
 
       ["server_delete", "role_start", "role_suspend", "promote_server", "demote_server"].each do |id|
@@ -1287,7 +1285,7 @@ describe ApplicationHelper do
     context "when with Vm" do
       before do
         @record = Vm.new
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
       end
 
       %w(vm_migrate vm_publish).each do |id|
@@ -1579,7 +1577,7 @@ describe ApplicationHelper do
     context "when with MiqTemplate" do
       before do
         @record = MiqTemplate.new
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
       end
 
       context "and id = miq_template_clone" do
@@ -1678,7 +1676,7 @@ describe ApplicationHelper do
     context "when with record = nil" do
       before do
         @record = nil
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
       end
 
       ["log_download", "log_reload"].each do |id|
@@ -1778,18 +1776,18 @@ describe ApplicationHelper do
         end
 
         it "user allowed" do
-          @user.stub(:role_allows?).and_return(true)
+          user.stub(:role_allows?).and_return(true)
           subject.should == false
         end
 
         it "user not allowed" do
-          @user.stub(:role_allows?).and_return(false)
+          user.stub(:role_allows?).and_return(false)
           subject.should == true
         end
 
         it "button hidden if provider has no stacks" do
           @record = FactoryGirl.create(:ems_openstack_infra)
-          @user.stub(:role_allows?).and_return(true)
+          user.stub(:role_allows?).and_return(true)
           subject.should == true
         end
       end
@@ -1800,12 +1798,12 @@ describe ApplicationHelper do
         end
 
         it "user allowed but hide button because wrong provider" do
-          @user.stub(:role_allows?).and_return(true)
+          user.stub(:role_allows?).and_return(true)
           subject.should == true
         end
 
         it "user not allowed" do
-          @user.stub(:role_allows?).and_return(false)
+          user.stub(:role_allows?).and_return(false)
           subject.should == true
         end
       end
@@ -2566,16 +2564,14 @@ describe ApplicationHelper do
 
     context "and id = miq_request_delete" do
       let(:server) { active_record_instance_double("MiqServer", :logon_status => :ready) }
+      let(:user)   { FactoryGirl.create(:user_admin) }
       before do
         MiqServer.stub(:my_server).with(true).and_return(server)
 
-        # create User record...
-        @user = FactoryGirl.create(:user_admin)
-
         @id = "miq_request_delete"
-        login_as @user
+        login_as user
         @record = MiqProvisionRequest.new
-        @record.stub(:resource_type => "something", :approval_state => "xx", :requester_name => @user.name)
+        @record.stub(:resource_type => "something", :approval_state => "xx", :requester_name => user.name)
       end
 
       it "and requester.name != @record.requester_name" do
