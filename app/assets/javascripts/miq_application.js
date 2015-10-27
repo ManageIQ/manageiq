@@ -385,7 +385,7 @@ function miqUpdateAllCheckboxes(button_div, override) {
     }
     if (typeof ManageIQ.grids.gtl_list_grid == 'undefined' &&
         ($("input[id^='listcheckbox']").length)) {
-      // No dhtmlx grid on the screen
+      // No list_grid on the screen
       var cbs = $("input[id^='listcheckbox']")
       cbs.prop('checked', state);
       miqUpdateButtons(cbs[0], button_div);

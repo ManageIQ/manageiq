@@ -66,7 +66,7 @@ module ApplicationController::Performance
         }.to_json + ';'
       end
 
-      # Cannot replace button divs that contain dhtmlx toolbars, use code below to turn on/off individual buttons
+      # Cannot replace button divs that contain toolbars, use code below to turn on/off individual buttons
       # Don't need to do view or center buttons, just the perf stuff
       if ["host", "vm", "vm_or_template"].include?(params[:controller])
         pfx = params[:controller] == "vm_or_template" ? "vm_" : ""
