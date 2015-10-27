@@ -143,6 +143,7 @@ module EmsRefresh::VcUpdates
       "capability.directoryHierarchySupported",
       "capability.perFileThinProvisioningSupported",
       "capability.rawDiskMappingsSupported",
+      "host",
       "summary.capacity",
       "summary.datastore",
       "summary.freeSpace",
