@@ -42,7 +42,7 @@ module AggregationMixin
   Vmdb::Deprecation.deprecate_methods(self, :aggregate_logical_cpus => :aggregate_cpu_total_cores)
 
   def aggregate_physical_cpus(targets = nil)
-    aggregate_hardware(:hosts, :numvcpus, targets)
+    aggregate_hardware(:hosts, :cpu_sockets, targets)
   end
 
   def aggregate_memory(targets = nil)
@@ -50,7 +50,7 @@ module AggregationMixin
   end
 
   def aggregate_vm_cpus(targets = nil)
-    aggregate_hardware(:vms_and_templates, :numvcpus, targets)
+    aggregate_hardware(:vms_and_templates, :cpu_sockets, targets)
   end
 
   def aggregate_vm_memory(targets = nil)

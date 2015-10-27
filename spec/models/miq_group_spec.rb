@@ -227,7 +227,7 @@ describe MiqGroup do
     end
 
     it "when the virtual column is nil" do
-      hw = FactoryGirl.create(:hardware, :numvcpus => @num_cpu, :memory_mb => @ram_size)
+      hw = FactoryGirl.create(:hardware, :cpu_sockets => @num_cpu, :memory_mb => @ram_size)
       FactoryGirl.create(:vm_vmware,
                          :name         => "VM with no disk",
                          :miq_group_id => @miq_group.id,

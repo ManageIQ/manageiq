@@ -106,7 +106,7 @@ class MiqScvmmVm
     connection_state = false if power_state == "unknown"
 
     hardware = {}
-    hardware[:numvcpus] = props[:CPUCount]
+    hardware[:cpu_sockets] = props[:CPUCount]
     hardware[:annotation] = props[:Description]
     hardware[:memory_mb] = props[:Memory]
     hardware[:guest_os_full_name] = hardware[:guest_os] = "Other"

@@ -3,7 +3,7 @@ require "spec_helper"
 describe VmReconfigureRequest do
   let(:admin)         { FactoryGirl.create(:user, :userid => "tester") }
   let(:ems_vmware)    { FactoryGirl.create(:ems_vmware, :zone => zone2) }
-  let(:host_hardware) { FactoryGirl.build(:hardware, :cpu_total_cores => 40, :numvcpus => 10, :cpu_cores_per_socket => 4) }
+  let(:host_hardware) { FactoryGirl.build(:hardware, :cpu_total_cores => 40, :cpu_sockets => 10, :cpu_cores_per_socket => 4) }
   let(:host)          { FactoryGirl.build(:host, :hardware => host_hardware) }
   let(:request)       { FactoryGirl.create(:vm_reconfigure_request, :userid => admin.userid) }
   let(:vm_hardware)   { FactoryGirl.build(:hardware, :virtual_hw_version => "07") }
