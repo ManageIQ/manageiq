@@ -4,9 +4,9 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: MiqProvisionRequest_starting
+    name: ServiceTemplateProvisionRequest_starting
     inherits: 
     description: 
   fields:
-  - rel5:
-      value: "/System/CommonMethods/QuotaStateMachine/quota"
+  - rel2:
+      value: "/System/CommonMethods/QuotaStatemachine/quota"
