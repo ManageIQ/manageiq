@@ -482,7 +482,11 @@
     :collection_actions:
       :post:
       - :name: create
-        :identifier: chargeback_rates_create
+        :identifier: chargeback_rates_new
+      - :name: edit
+        :identifier: chargeback_rates_edit
+      - :name: delete
+        :identifier: chargeback_rates_delete
     :resource_actions:
       :post:
       - :name: edit
