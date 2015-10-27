@@ -1,6 +1,7 @@
 require "handsoap"
 require 'VMwareWebService/VimTypes'
 require 'active_support/core_ext/object/blank'
+require 'active_support/concurrency/latch'
 
 class VimService < Handsoap::Service
   attr_reader :sic, :about, :apiVersion, :isVirtualCenter, :v20, :v2, :v4, :serviceInstanceMor
@@ -1274,6 +1275,90 @@ class VimService < Handsoap::Service
     end
   end
 
+  class AsyncResponse
+    attr_reader :body_target
+
+    def initialize
+      @header_latch = ActiveSupport::Concurrency::Latch.new
+      @body_latch = ActiveSupport::Concurrency::Latch.new
+      @streaming = false
+    end
+
+    def await_headers
+      @thread = Thread.new do
+        begin
+          yield self
+        ensure
+          @header_latch.release
+        end
+      end
+
+      @header_latch.await
+      @thread.join if @thread.status.nil?
+      self
+    end
+
+    def begin_streaming(response)
+      @streaming = true
+      @base_response = response
+      @header_latch.release
+      @body_latch.await
+    end
+
+    def stream_chunk(res, chunk)
+      begin_streaming(res) unless @streaming
+      @body_target << chunk
+    end
+
+    def write_body_to(io)
+      @body_target = io
+      @body_latch.release
+      @thread.join
+      io
+    end
+
+    ###
+
+    def status
+      @base_response.status
+    end
+
+    def content
+      @content ||= write_body_to('')
+    end
+
+    def http_body
+      self
+    end
+
+    def size
+      nil
+    end
+
+    def contenttype
+      @base_response.contenttype
+    end
+  end
+
+  class AsyncClient
+    def initialize(httpclient)
+      @httpclient = httpclient
+    end
+
+    def post(*args)
+      AsyncResponse.new.await_headers do |async_response|
+        @httpclient.post(*args) do |res, chunk|
+          async_response.stream_chunk res, chunk
+        end
+      end
+    end
+  end
+
+  def fire_on_http_client_init(http_client, headers)
+    super
+    @http_client = AsyncClient.new(@http_client)
+  end
+
   def on_raw_response(http_response, namespace)
     if http_response.status == 200
       http_response
@@ -1284,8 +1369,9 @@ class VimService < Handsoap::Service
 
   def parse_response(response, rType)
     document = SAXDocument.new(rType)
-    parser = Nokogiri::XML::SAX::Parser.new(document)
-    parser.parse(response.content)
+    parser = Nokogiri::XML::SAX::PushParser.new(document)
+    response.write_body_to(parser)
+    parser.finish
     document.content
   end
 end
