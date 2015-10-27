@@ -138,7 +138,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
         args[:automate_message] = ra.ae_message   unless ra.ae_message.blank?
         args[:attrs].merge!(ra.ae_attributes)
       end
-      args[:user_id]      = get_user.id,
+      args[:user_id]      = get_user.id
       args[:miq_group_id] = get_user.current_group.id
       args[:tenant_id]    = get_user.current_tenant.id
 
