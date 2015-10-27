@@ -13,7 +13,7 @@ module MiqAeServiceMiqRequestSpec
       @ae_method     = ::MiqAeMethod.first
       @ae_result_key = 'foo'
 
-      @fred          = FactoryGirl.create(:user_with_group, :name => 'Fred Flintstone',  :userid => 'fred')
+      @fred          = FactoryGirl.create(:user_with_group)
       @miq_request   = FactoryGirl.create(:automation_request, :requester => @fred)
     end
 
@@ -51,8 +51,8 @@ module MiqAeServiceMiqRequestSpec
       @ae_method.update_attributes(:data => method)
       invoke_ae.root(@ae_result_key).should == []
 
-      wilma          = FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'wilma',  :email => 'wilma@bedrock.gov')
-      betty          = FactoryGirl.create(:user, :name => 'Betty Rubble',     :userid => 'betty',  :email => 'betty@bedrock.gov')
+      wilma          = FactoryGirl.create(:user_with_email_and_group)
+      betty          = FactoryGirl.create(:user_with_email_and_group)
       wilma_approval = FactoryGirl.create(:miq_approval, :approver => wilma)
       betty_approval = FactoryGirl.create(:miq_approval, :approver => betty)
       @miq_request.miq_approvals = [wilma_approval, betty_approval]
@@ -96,10 +96,8 @@ module MiqAeServiceMiqRequestSpec
       @ae_method.update_attributes(:data => method)
 
       vm_template = FactoryGirl.create(:template_vmware, :name => "template1")
-      resource    = FactoryGirl.create(:miq_provision_request, :userid => @fred.userid, :src_vm_id => vm_template.id)
-      resource.create_request
+      resource    = FactoryGirl.create(:miq_provision_request, :requester => @fred, :src_vm_id => vm_template.id)
       @miq_request = resource
-      @miq_request.save!
 
       ae_resource = invoke_ae.root(@ae_result_key)
       ae_class    = "MiqAeMethodService::MiqAeService#{resource.class.name.gsub(/::/, '_')}".constantize
@@ -113,7 +111,7 @@ module MiqAeServiceMiqRequestSpec
       reason = invoke_ae.root(@ae_result_key)
       reason.should be_nil
 
-      betty          = FactoryGirl.create(:user, :name => 'Betty Rubble',     :userid => 'betty',  :email => 'betty@bedrock.gov')
+      betty          = FactoryGirl.create(:user_with_email_and_group)
       betty_approval = FactoryGirl.create(:miq_approval, :approver => betty)
       @miq_request.miq_approvals = [betty_approval]
       @miq_request.save!
@@ -127,7 +125,7 @@ module MiqAeServiceMiqRequestSpec
       reason = invoke_ae.root(@ae_result_key)
       reason.should == betty_reason
 
-      wilma          = FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'wilma',  :email => 'wilma@bedrock.gov')
+      wilma          = FactoryGirl.create(:user_with_email_and_group)
       wilma_approval = FactoryGirl.create(:miq_approval, :approver => wilma)
       @miq_request.miq_approvals << wilma_approval
       wilma_reason = "Where's Fred?"

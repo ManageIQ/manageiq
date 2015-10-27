@@ -273,7 +273,7 @@ describe MiqRequest do
     context 'VM provisioning' do
       let(:description) { 'my original information' }
       let(:template)    { FactoryGirl.create(:template_vmware, :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication)) }
-      let(:request)     { FactoryGirl.build(:miq_provision_request, :userid => fred.userid, :description => description, :src_vm_id => template.id) }
+      let(:request)     { FactoryGirl.build(:miq_provision_request, :requester => fred, :description => description, :src_vm_id => template.id).tap(&:valid?) }
 
       it 'with 1 task' do
         request.options[:src_vm_id] = template.id

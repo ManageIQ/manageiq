@@ -19,9 +19,9 @@ describe MiqProvisionRequestTemplate do
   end
   let(:provision_request_template) do
     FactoryGirl.create(:miq_provision_request_template,
-                       :userid    => user.userid,
-                       :src_vm_id => template.id,
-                       :options   => {
+                       :requester    => user,
+                       :src_vm_id    => template.id,
+                       :options      => {
                          :src_vm_id           => template.id,
                          :service_resource_id => service_resource.id
                        })
