@@ -425,31 +425,25 @@ class MiqRequest < ActiveRecord::Base
   end
 
   # Helper method when not using workflow
-  def self.make_request(request, values, requester_id, auto_approve = false)
+  def self.make_request(request, values, requester, auto_approve = false)
     if request
-      update_request(request, values, requester_id)
+      update_request(request, values, requester)
     else
-      create_request(values, requester_id, auto_approve)
+      create_request(values, requester, auto_approve)
     end
   end
 
-  def self.create_request(values, requester_id, auto_approve = false)
-    if requester_id.kind_of?(User)
-      requester = requester_id
-      requester_id = requester.userid
-    else
-      requester = User.find_by_userid(requester_id)
-    end
+  def self.create_request(values, requester, auto_approve = false)
     values[:src_ids] = values[:src_ids].to_miq_a unless values[:src_ids].nil?
     request = new(:options      => values,
-                  :userid       => requester_id,
+                  :requester    => requester,
                   :request_type => request_types.first)
     request.save!
 
     request.set_description
     request.create_request
 
-    request.log_request_success(requester_id, :created)
+    request.log_request_success(requester, :created)
 
     request.call_automate_event_queue("request_created")
     request.approve(requester, "Auto-Approved") if auto_approve
@@ -458,12 +452,12 @@ class MiqRequest < ActiveRecord::Base
   end
 
   # Helper method when not using workflow
-  def self.update_request(request, values, requester_id)
+  def self.update_request(request, values, requester)
     request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
     request.update_attribute(:options, request.options.merge(values))
     request.set_description(true)
 
-    request.log_request_success(requester_id, :updated)
+    request.log_request_success(requester, :updated)
 
     request.call_automate_event_queue("request_updated")
     request
