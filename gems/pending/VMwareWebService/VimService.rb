@@ -1173,6 +1173,14 @@ class VimService < Handsoap::Service
   def parse_response(response, rType)
     doc  = response.document
     raise "Response <#{response.inspect}> has no XML document" if doc.nil?
+
+    # At this point we don't need the internal raw XML content since we
+    #   have the parsed XML document, so we can free it for the GC.
+    response.instance_variable_set(:@http_body, nil)
+    # Force a GC, because Ruby's GC is triggered on number of objects without
+    #   regard to size.  The object we just freed may not be released right away.
+    GC.start
+
     search_path = "//n1:#{rType}"
     node = doc.xpath(search_path, @ns).first
     raise "Node (search=<#{search_path}> namespace=<#{@ns}>) not found in XML document <#{doc.inspect}>" if node.nil?
