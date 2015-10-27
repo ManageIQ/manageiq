@@ -24,26 +24,13 @@ describe ApplicationHelper do
     let(:user) { FactoryGirl.create(:user, :role => "super_administrator") }
 
     context "when record is VM" do
-      before do
-        @record = FactoryGirl.create(:vm_vmware)
-      end
+      let(:vm_vmware) { FactoryGirl.create(:vm_vmware) }
 
       context "and it has no custom buttons" do
-        it "#get_custom_buttons" do
-          get_custom_buttons(@record).should == []
-        end
-
-        it "#custom_buttons_hash" do
-          custom_buttons_hash(@record).should == []
-        end
-
-        it "#build_custom_buttons_toolbar" do
-          build_custom_buttons_toolbar(@record).should == {:button_groups => []}
-        end
-
-        it "#record_to_service_buttons" do
-          record_to_service_buttons(@record).should == []
-        end
+        it("#get_custom_buttons")           { expect(get_custom_buttons(vm_vmware)).to be_blank }
+        it("#custom_buttons_hash")          { expect(custom_buttons_hash(vm_vmware)).to be_blank }
+        it("#build_custom_buttons_toolbar") { expect(build_custom_buttons_toolbar(vm_vmware)[:button_groups]).to be_blank }
+        it("#record_to_service_buttons")    { expect(record_to_service_buttons(vm_vmware)).to be_blank }
       end
 
       context "and it has custom buttons" do
@@ -65,7 +52,7 @@ describe ApplicationHelper do
             :description   => @button1.description,
             :image         => @button1.options[:button_image],
             :text_display  => @button1.options.key?(:display) ? @button1.options[:display] : true,
-            :target_object => @record.id
+            :target_object => vm_vmware.id
           }
           expected_button_set = {
             :id           => @button_set.id,
@@ -76,11 +63,11 @@ describe ApplicationHelper do
             :buttons      => [expected_button1]
           }
 
-          get_custom_buttons(@record).should == [expected_button_set]
+          get_custom_buttons(vm_vmware).should == [expected_button_set]
         end
 
         it "#record_to_service_buttons" do
-          record_to_service_buttons(@record).should == []
+          record_to_service_buttons(vm_vmware).should == []
         end
 
         it "#custom_buttons_hash" do
@@ -92,7 +79,7 @@ describe ApplicationHelper do
             :text      => escaped_button1_text,
             :enabled   => "true",
             :url       => "button",
-            :url_parms => "?id=#{@record.id}&button_id=#{@button1.id}&cls=#{@record.class.name}&pressed=custom_button&desc=#{escaped_button1_text}"
+            :url_parms => "?id=#{vm_vmware.id}&button_id=#{@button1.id}&cls=#{vm_vmware.class.name}&pressed=custom_button&desc=#{escaped_button1_text}"
           }
           button_set_item1_items = [button1]
           button_set_item1 = {
@@ -105,7 +92,7 @@ describe ApplicationHelper do
           }
           items = [button_set_item1]
           name = "custom_buttons_#{@button_set.name}"
-          custom_buttons_hash(@record).should == [:name => name, :items => items]
+          custom_buttons_hash(vm_vmware).should == [:name => name, :items => items]
         end
 
         it "#build_custom_buttons_toolbar" do
@@ -117,7 +104,7 @@ describe ApplicationHelper do
             :text      => escaped_button1_text,
             :enabled   => "true",
             :url       => "button",
-            :url_parms => "?id=#{@record.id}&button_id=#{@button1.id}&cls=#{@record.class.name}&pressed=custom_button&desc=#{escaped_button1_text}"
+            :url_parms => "?id=#{vm_vmware.id}&button_id=#{@button1.id}&cls=#{vm_vmware.class.name}&pressed=custom_button&desc=#{escaped_button1_text}"
           }
           button_set_item1_items = [button1]
           button_set_item1 = {
@@ -133,7 +120,7 @@ describe ApplicationHelper do
             :items => [button_set_item1]
           }
           button_groups = [button_set1_header]
-          build_custom_buttons_toolbar(@record).should == {:button_groups => button_groups}
+          build_custom_buttons_toolbar(vm_vmware).should == {:button_groups => button_groups}
         end
       end
     end
