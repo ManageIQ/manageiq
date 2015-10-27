@@ -360,7 +360,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
         :bitness              => ARCHITECTURE_TO_BITNESS[instance.architecture],
         :virtualization_type  => virtualization_type,
         :root_device_type     => root_device_type,
-        :numvcpus             => flavor[:cpus],
+        :cpu_sockets          => flavor[:cpus],
         :cpu_cores_per_socket => 1,
         :cpu_total_cores      => flavor[:cpus],
         :memory_mb            => flavor[:memory] / 1.megabyte,

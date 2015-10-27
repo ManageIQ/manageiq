@@ -239,7 +239,7 @@ module ManageIQ::Providers::Microsoft
         :model                => cpu_model,
         :cpu_speed            => normalize_blank_property_num(p[:ProcessorSpeed]),
         :memory_mb            => normalize_blank_property(p[:TotalMemory]) / 1.megabyte,
-        :numvcpus             => normalize_blank_property_num(p[:PhysicalCPUCount]),
+        :cpu_sockets          => normalize_blank_property_num(p[:PhysicalCPUCount]),
         :cpu_total_cores      => normalize_blank_property_num(p[:LogicalProcessorCount]),
         :cpu_cores_per_socket => normalize_blank_property_num(p[:CoresPerCPU]),
         :guest_devices        => process_host_guest_devices(host),

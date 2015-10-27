@@ -165,7 +165,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
       :guest_os_full_name  => nil,
       :bios                => nil,
       :annotation          => nil,
-      :numvcpus            => 1,
+      :cpu_sockets         => 1,
       :memory_mb           => 768,
       :disk_capacity       => 1043.megabyte,
       :bitness             => nil,
@@ -246,7 +246,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
       :guest_os_full_name => nil,
       :bios               => nil,
       :annotation         => nil,
-      :numvcpus           => 1,
+      :cpu_sockets        => 1,
       :memory_mb          => 768,
       :disk_capacity      => 1043.megabytes,
       :bitness            => nil

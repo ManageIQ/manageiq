@@ -52,7 +52,7 @@ describe ContainerTopologyService do
                                 :uid_ems => "abcd9a08-7b13-11e5-8546-129aa6621999",
                                 :ext_management_system => ems_rhev,
                                 :hardware => FactoryGirl.create(:hardware,
-                                                                :numvcpus         => 2,
+                                                                :cpu_sockets      => 2,
                                                                 :cores_per_socket => 4,
                                                                 :logical_cpus     => 8))
       vm_rhev.update_attribute(:host, host)

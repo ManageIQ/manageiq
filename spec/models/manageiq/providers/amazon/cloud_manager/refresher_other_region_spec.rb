@@ -170,7 +170,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       :guest_os_full_name => nil,
       :bios               => nil,
       :annotation         => nil,
-      :numvcpus           => 1, # wtf
+      :cpu_sockets        => 1, # wtf
       :memory_mb          => nil,
       :disk_capacity      => nil,
       :bitness            => 64
@@ -226,7 +226,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       :guest_os_full_name => nil,
       :bios               => nil,
       :annotation         => nil,
-      :numvcpus           => 1,
+      :cpu_sockets        => 1,
       :memory_mb          => 613,
       :disk_capacity      => 0, # TODO: Change to a flavor that has disks
       :bitness            => 64

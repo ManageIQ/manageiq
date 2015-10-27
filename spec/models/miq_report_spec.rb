@@ -187,7 +187,7 @@ describe MiqReport do
           when 75..99 then group = 4
           end
           vm = FactoryGirl.build(:vm_vmware, :name => "Test Group #{group} VM #{i}")
-          vm.hardware = FactoryGirl.build(:hardware, :numvcpus => (group * 2), :memory_mb => (group * 1.megabytes), :guest_os => OS_LIST[group])
+          vm.hardware = FactoryGirl.build(:hardware, :cpu_sockets => (group * 2), :memory_mb => (group * 1.megabytes), :guest_os => OS_LIST[group])
           vm.host = @hosts[group - 1]
           vm.evm_owner_id = @user.id  if ((i % 5) == 0)
           vm.miq_group_id = @group.id if ((i % 7) == 0)

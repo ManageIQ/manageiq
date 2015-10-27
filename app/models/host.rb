@@ -1782,7 +1782,7 @@ class Host < ActiveRecord::Base
   end
 
   def num_cpu
-    hardware.nil? ? 0 : hardware.numvcpus
+    hardware.nil? ? 0 : hardware.cpu_sockets
   end
 
   def cpu_total_cores
