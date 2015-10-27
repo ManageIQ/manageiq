@@ -841,7 +841,7 @@ class ReportController < ApplicationController
         presenter[:update_partials][:main_div] = r[:partial => partial]
         presenter[:clear_tree_cookies] = "edit_treeOpenStatex"
         unless @sb[:role_list_flag]
-          # on first time load we dont need to do replace in order to load dhtmlxgrid
+          # we dont need to show the overlay on first time load
           @sb[:role_list_flag] = true
           presenter[:set_visible_elements][:treeStatus] = true
         end

@@ -247,7 +247,7 @@ class DashboardController < ApplicationController
                   @sb[:dashboards][@sb[:active_db]][:col2] +
                   @sb[:dashboards][@sb[:active_db]][:col3]
 
-    # Build the XML to load the widget dropdown list dhtmlxtoolbar
+    # Build widget_list to load the widget dropdown list toolbar
     widget_list = []
     prev_type   = nil
     @available_widgets = []

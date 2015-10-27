@@ -348,15 +348,15 @@ module ReportController::Menus
     @tree_type = "menu"
     @rpt_menu = menus
     base_node = {
-      :key    => "b__Report Menus for #{session[:role_choice]}", # Added divider '|' in case DHTMLX adds something
+      :key    => "b__Report Menus for #{session[:role_choice]}",
       :title  => 'Top Level',
       :icon   => 'folder.png',
       :expand => true,
       :style  => 'background: #fff;
-                    padding: 2px 0 6px 2px;
-                    color:#4b4b4b;
-                    font-size:12px;
-                    font-weight:bold;'
+                  padding: 2px 0 6px 2px;
+                  color:#4b4b4b;
+                  font-size:12px;
+                  font-weight:bold;'
     }
 
     @tree = []
@@ -370,16 +370,16 @@ module ReportController::Menus
           'folder.png',
           "Group: #{menu}",
           :style => 'cursor: default;
-                       color: #4b4b4b;
-                       display: block;
-                       font-size:1.1em bold;
-                       font-weight:bold;
-                       height:22px;
-                       line-height: 22px;
-                       text-decoration:none;
-                       text-indent: 8px;
-                       vertical-align: top;
-                       width: 205px;'
+                     color: #4b4b4b;
+                     display: block;
+                     font-size:1.1em bold;
+                     font-weight:bold;
+                     height:22px;
+                     line-height: 22px;
+                     text-decoration:none;
+                     text-indent: 8px;
+                     vertical-align: top;
+                     width: 205px;'
         )
         if !section.nil? && section.class != String
           section.each do |s|
