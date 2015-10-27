@@ -1366,4 +1366,13 @@ module ApplicationHelper
       @lastaction && @lastaction != "get_node_info" ? @lastaction : "show_list"
     end
   end
+
+  def route_exists?(hash)
+    begin
+      url_for(hash)
+    rescue
+      return false
+    end
+    true
+  end
 end

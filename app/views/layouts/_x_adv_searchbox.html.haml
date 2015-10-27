@@ -41,17 +41,6 @@
                 :title          => t}
           %span.fa.fa-angle-double-down
 
-        -# Link to clear the current applied filter, will be moved via JS to the right cell header
-        %span#clear_search{:style => "display:none"} 
-          (
-          = link_to("clear",
-                    {:action              => "adv_search_clear"},
-                    "data-miq_sparkle_on" => true,
-                    :remote               => true,
-                    :title                => "Remove the current filter",
-                    :style                => "text-decoration: underline;")
-          )
-
     :javascript
       $('#clear_search').#{clear_search_show_or_hide}();
       $(function() {
