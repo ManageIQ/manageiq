@@ -1552,22 +1552,23 @@ class ApplicationController < ActionController::Base
   def process_saved_reports(saved_reports, task)
     success_count = 0
     failure_count = 0
-    MiqReportResult.find_all_by_id(saved_reports, :order => "lower(name)").each do |rep|
-      id = rep.id
-      rep_name = rep.name
-      if task == "destroy"
-        audit = {:event => "rep_record_delete", :message => "[#{rep_name}] Record deleted", :target_id => id, :target_class => "MiqReportResult", :userid => current_userid}
-      end
+    MiqReportResult.where(:id => saved_reports).order("lower(name)").each do |rep|
       begin
-        rep.public_send(task.to_sym) if rep.respond_to?(task)    # Run the task
-      rescue StandardError => bang
+        rep.public_send(task) if rep.respond_to?(task) # Run the task
+      rescue
         failure_count += 1  # Push msg and error flag
       else
         if task == "destroy"
-          AuditEvent.success(audit)
+          AuditEvent.success(
+            :event        => "rep_record_delete",
+            :message      => "[#{rep.name}] Record deleted",
+            :target_id    => rep.id,
+            :target_class => "MiqReportResult",
+            :userid       => current_userid
+          )
           success_count += 1
         else
-          add_flash(_("\"%{record}\": %{task} successfully initiated") % {:record => rep_name, :task => task})
+          add_flash(_("\"%{record}\": %{task} successfully initiated") % {:record => rep.name, :task => task})
         end
       end
     end
