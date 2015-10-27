@@ -572,8 +572,8 @@ class OpsController < ApplicationController
     when "se"         # schedule edit
       # when editing/adding schedule in settings tree
       presenter[:update_partials][:settings_list] = r[:partial => "schedule_form"]
-      presenter[:build_calendar]  = {
-        :date_from => (Time.zone.now - 1.month).in_time_zone(@edit[:tz]).to_i * 1000
+      presenter[:build_calendar] = {
+        :date_from => (Time.zone.now - 1.month).in_time_zone(@edit[:tz]),
       }
       if !@schedule.id
         @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "MiqSchedule")

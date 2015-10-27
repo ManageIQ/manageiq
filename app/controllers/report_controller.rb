@@ -782,7 +782,7 @@ class ReportController < ApplicationController
         presenter[:open_accord] = 'widgets'
         if @in_a_form
           presenter[:build_calendar] = {
-            :date_from => Time.now.in_time_zone(@edit[:tz]).to_i * 1000,
+            :date_from => Time.now.in_time_zone(@edit[:tz]),
             :date_to   => nil,
           }
           # URL to be used in miqDropComplete method

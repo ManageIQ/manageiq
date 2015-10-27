@@ -916,16 +916,16 @@ function miqBuildCalendar() {
       element.datepicker();
     }
 
-    if (typeof ManageIQ.calendar.calDateFrom != "undefined") {
+    if (ManageIQ.calendar.calDateFrom) {
       element.datepicker('setStartDate', ManageIQ.calendar.calDateFrom);
     }
 
-    if (typeof ManageIQ.calendar.calDateTo != "undefined") {
+    if (ManageIQ.calendar.calDateTo) {
       element.datepicker('setEndDate', ManageIQ.calendar.calDateTo);
     }
 
-    if (typeof miq_cal_skipDays != "undefined") {
-      element.datepicker('setDaysOfWeekDisabled', miq_cal_skipDays);
+    if (ManageIQ.calendar.calSkipDays) {
+      element.datepicker('setDaysOfWeekDisabled', ManageIQ.calendar.calSkipDays);
     }
 
     if (observeDateBackup != null) {

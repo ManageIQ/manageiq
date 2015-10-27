@@ -87,18 +87,10 @@ module ApplicationController::Performance
                                        :locals  => {:chart_data => @chart_data, :chart_set => "candu"})
       unless @no_util_data
         if @perf_options[:typ] == "Hourly"
-          page << "ManageIQ.calendar.calDateFrom = new Date(#{@perf_options[:sdate].year},#{@perf_options[:sdate].month - 1},#{@perf_options[:sdate].day});"
-          page << "ManageIQ.calendar.calDateTo   = new Date(#{@perf_options[:edate].year},#{@perf_options[:edate].month - 1},#{@perf_options[:edate].day});"
+          page << js_build_calendar(:date_from => @perf_options[:sdate], :date_to => @perf_options[:edate], :skip_days => @perf_options[:skip_days])
         else
-          page << "ManageIQ.calendar.calDateFrom = new Date(#{@perf_options[:sdate_daily].year},#{@perf_options[:sdate_daily].month - 1},#{@perf_options[:sdate_daily].day});"
-          page << "ManageIQ.calendar.calDateTo   = new Date(#{@perf_options[:edate_daily].year},#{@perf_options[:edate_daily].month - 1},#{@perf_options[:edate_daily].day});"
+          page << js_build_calendar(:date_from => @perf_options[:sdate_daily], :date_to => @perf_options[:edate_daily], :skip_days => @perf_options[:skip_days])
         end
-        if @perf_options[:skip_days]
-          page << "miq_cal_skipDays = '#{@perf_options[:skip_days]}';"
-        else
-          page << "miq_cal_skipDays = null;"
-        end
-        page << 'miqBuildCalendar();'
         page << Charting.js_load_statement
       end
       page << 'miqSparkle(false);'
@@ -222,7 +214,8 @@ module ApplicationController::Performance
     options[:daily_date] ||= [edate_daily.month, edate_daily.day, edate_daily.year].join("/")
 
     if options[:typ] == "Hourly" && options[:time_profile]              # If hourly and profile in effect, set hourly date to a valid day in the profile
-      options[:skip_days] = [0, 1, 2, 3, 4, 5, 6].delete_if { |d| options[:time_profile_days].include?(d) }.join(",")
+      options[:skip_days] = skip_days_from_time_profile(options[:time_profile_days])
+
       hdate = options[:hourly_date].to_date                             # Start at the currently set hourly date
       6.times do                                                        # Go back up to 6 days (try each weekday)
         break if options[:time_profile_days].include?(hdate.wday)       # If weekday is in the profile, use it
@@ -413,14 +406,7 @@ module ApplicationController::Performance
         end
         page.replace("perf_options_div", :partial => "layouts/perf_options")
         page.replace("candu_charts_div", :partial => "layouts/perf_charts", :locals => {:chart_data => @chart_data, :chart_set => "candu"})
-        page << "ManageIQ.calendar.calDateFrom = new Date(#{@perf_options[:sdate].year},#{@perf_options[:sdate].month - 1},#{@perf_options[:sdate].day});"
-        page << "ManageIQ.calendar.calDateTo = new Date(#{@perf_options[:edate].year},#{@perf_options[:edate].month - 1},#{@perf_options[:edate].day});"
-        if @perf_options[:skip_days]
-          page << "miq_cal_skipDays = '#{@perf_options[:skip_days]}';"
-        else
-          page << "miq_cal_skipDays = null;"
-        end
-        page << 'miqBuildCalendar();'
+        page << js_build_calendar(:date_from => @perf_options[:sdate], :date_to => @perf_options[:edate], :skip_days => @perf_options[:skip_days])
         page << Charting.js_load_statement
         page << 'miqSparkle(false);'
       end
@@ -448,14 +434,7 @@ module ApplicationController::Performance
         end
         page.replace("perf_options_div", :partial => "layouts/perf_options")
         page.replace("candu_charts_div", :partial => "layouts/perf_charts", :locals => {:chart_data => @chart_data, :chart_set => "candu"})
-        page << "ManageIQ.calendar.calDateFrom = new Date(#{@perf_options[:sdate_daily].year},#{@perf_options[:sdate_daily].month - 1},#{@perf_options[:sdate_daily].day});"
-        page << "ManageIQ.calendar.calDateTo = new Date(#{@perf_options[:edate_daily].year},#{@perf_options[:edate_daily].month - 1},#{@perf_options[:edate_daily].day});"
-        if @perf_options[:skip_days]
-          page << "miq_cal_skipDays = '#{@perf_options[:skip_days]}';"
-        else
-          page << "miq_cal_skipDays = null;"
-        end
-        page << 'miqBuildCalendar();'
+        page << js_build_calendar(:date_from => @perf_options[:sdate_daily], :date_to => @perf_options[:edate_daily], :skip_days => @perf_options[:skip_days])
         page << Charting.js_load_statement
         page << 'miqSparkle(false);'
       end

@@ -441,12 +441,13 @@ class MiqCapacityController < ApplicationController
     end
     @sb[:util][:options][:trend_start] = sdate
     @sb[:util][:options][:trend_end] = edate
-    @sb[:util][:options][:sdate] = [sdate.year.to_s, (sdate.month - 1).to_s, sdate.day.to_s].join(", ") # Start and end dates for calendar control
-    @sb[:util][:options][:edate] = [edate.year.to_s, (edate.month - 1).to_s, edate.day.to_s].join(", ")
+    @sb[:util][:options][:sdate] = sdate  # Start and end dates for calendar control
+    @sb[:util][:options][:edate] = edate
     @sb[:util][:options][:chart_date] ||= [edate.month, edate.day, edate.year].join("/")
 
     if @sb[:util][:options][:time_profile]                              # If profile in effect, set date to a valid day in the profile
-      @sb[:util][:options][:skip_days] = [0, 1, 2, 3, 4, 5, 6].delete_if { |d| @sb[:util][:options][:time_profile_days].include?(d) }.join(",")
+      @sb[:util][:options][:skip_days] = skip_days_from_time_profile(@sb[:util][:options][:time_profile_days])
+
       cdate = @sb[:util][:options][:chart_date].to_date                 # Start at the currently set date
       6.times do                                                        # Go back up to 6 days (try each weekday)
         break if @sb[:util][:options][:time_profile_days].include?(cdate.wday)  # If weekday is in the profile, use it
@@ -494,10 +495,10 @@ class MiqCapacityController < ApplicationController
     presenter[:set_visible_elements][:toolbar] = true
     presenter[:update_partials][:main_div] = r[:partial => 'utilization_tabs']
     presenter[:right_cell_text] = @right_cell_text
-    presenter[:build_calendar]  = {
-      :skip_days => @sb[:util][:options][:skip_days],
+    presenter[:build_calendar] = {
       :date_from => @sb[:util][:options][:sdate],
       :date_to   => @sb[:util][:options][:edate],
+      :skip_days => @sb[:util][:options][:skip_days],
     }
 
     # FIXME: where is curTab declared?
