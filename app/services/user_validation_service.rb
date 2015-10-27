@@ -131,7 +131,8 @@ class UserValidationService
     return ValidateResult.new(:fail, "Error: New password and verify password must be the same") if
       user[:new_password].present? && user[:new_password] != user[:verify_password]
 
-    return ValidateResult.new(:fail, "Error: New password can not be blank") if user[:new_password] == ''
+    return ValidateResult.new(:fail, "Error: New password can not be blank") if
+      user[:new_password] && user[:new_password].blank?
 
     return ValidateResult.new(:fail, "Error: New password is the same as existing password") if
       user[:new_password].present? && user[:password] == user[:new_password]

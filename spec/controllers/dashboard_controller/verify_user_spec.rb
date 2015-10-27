@@ -46,6 +46,13 @@ describe DashboardController do
     }
   end
 
+  let(:only_blanks_password_change) do
+    {
+      :new_password    => '   ',
+      :verify_password => '   ',
+    }
+  end
+
   context "validate_user" do
     it 'succeeds for a valid user' do
       validation = controller.send(:validate_user, valid_user, nil)
@@ -84,6 +91,13 @@ describe DashboardController do
                                    valid_user.merge(invalid_password_change), nil)
       expect(validation.result).to eq(:fail)
       expect(validation.flash_msg).to eq('Error: New password and verify password must be the same')
+      expect(validation.url).to be_nil
+    end
+
+    it 'fails for a valid user for a change to a blank password' do
+      validation = controller.send(:validate_user, valid_user.merge(only_blanks_password_change), nil)
+      expect(validation.result).to eq(:fail)
+      expect(validation.flash_msg).to eq("Error: New password can not be blank")
       expect(validation.url).to be_nil
     end
   end
