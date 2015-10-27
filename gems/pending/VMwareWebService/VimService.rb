@@ -1,5 +1,6 @@
 require "handsoap"
 require 'VMwareWebService/VimTypes'
+require 'active_support/core_ext/object/blank'
 
 class VimService < Handsoap::Service
   attr_reader :sic, :about, :apiVersion, :isVirtualCenter, :v20, :v2, :v4, :serviceInstanceMor
@@ -1170,67 +1171,121 @@ class VimService < Handsoap::Service
     end
   end
 
-  def parse_response(response, rType)
-    doc  = response.document
-    raise "Response <#{response.inspect}> has no XML document" if doc.nil?
-    search_path = "//n1:#{rType}"
-    node = doc.xpath(search_path, @ns).first
-    raise "Node (search=<#{search_path}> namespace=<#{@ns}>) not found in XML document <#{doc.inspect}>" if node.nil?
-    ur   = unmarshal_response(node, rType)
-    # puts
-    # puts "***** #{rType}"
-    # dumpObj(ur)
-    # puts
-    (ur)
+  class SAXDocument < Nokogiri::XML::SAX::Document
+    def initialize(target)
+      @target = target
+      @base_type = target
+
+      @contents = [[]]
+      @elements = []
+
+      @string = nil
+    end
+
+    ARRAY_MAP = Hash.new { |h, k| h[k] = k =~ /^ArrayOf(.*)$/ && $1.to_sym }
+    MAPPER_MAP = Hash.new { |h, k| h[k] = -> _ { {:type => k} } }
+
+    def content
+      @contents.first.last.last
+    end
+
+    def start_element_namespace(name, attrs = [], prefix = nil, uri = nil, ns = [])
+      return if @target && name != @target
+      @target = nil
+
+      raise "Mixed content not supported" if @string
+
+      name = name.freeze
+
+      vimType = xsiType = nil
+      attrs.each do |att|
+        if att.uri
+          xsiType = att.value
+        else
+          vimType = att.value
+        end
+      end
+      xsiType ||= if @elements.last
+                    ai = @elements.last && @elements.last[3]
+                    if (aih = ai && ai[name])
+                      aih[:type]
+                    else
+                      ''.freeze
+                    end
+                  else
+                    @base_type
+                  end
+
+      if (s = ARRAY_MAP[xsiType])
+        aih = MAPPER_MAP[s]
+      else
+        aih = VimMappingRegistry.argInfoMap(xsiType)
+      end
+
+      @elements << [name, vimType, xsiType, aih]
+      @contents << []
+    end
+
+    def characters(string)
+      return if @target
+      return if string.blank?
+
+      if @string
+        @string << string
+      else
+        @string = string
+      end
+    end
+    alias_method :cdata_block, :characters
+
+    def end_element_namespace(name, prefix = nil, uri = nil)
+      return if @elements.empty?
+      entry = @elements.pop
+      name = entry.first
+      aih = entry.pop
+      xsiType = entry.pop
+      vimType = entry.pop
+
+      value = nil
+      contents = @contents.pop
+
+      if @string
+        value = VimString.new(@string, vimType, xsiType)
+        @string = nil
+      elsif xsiType == "SOAP::SOAPString".freeze || xsiType == :"SOAP::SOAPString"
+        value = VimString.new(''.freeze, vimType, xsiType)
+      elsif ARRAY_MAP[xsiType]
+        value = VimArray.new(xsiType)
+        contents.each do |_cname, cvalue|
+          value << cvalue
+        end
+      else
+        value = VimHash.new(xsiType)
+        contents.each do |cname, cvalue|
+          if aih && (z = aih[cname]) && z[:isArray]
+            (value[cname] ||= VimArray.new(:"ArrayOf#{z[:type]}")) << cvalue
+          else
+            value[cname] = cvalue
+          end
+        end
+      end
+
+      @contents.last << (entry << value)
+    end
   end
 
-  def unmarshal_response(node, vType = nil)
-    return(node.text) if node.text?
-
-    vimType = node.attribute_with_ns('type', nil)
-    vimType = vimType.value if vimType
-    xsiType = node.attribute_with_ns('type', 'http://www.w3.org/2001/XMLSchema-instance')
-    xsiType = xsiType.value if xsiType
-    xsiType ||= vType.to_s
-
-    if node.children.length == 1 && (c = node.child) && c.text?
-      return VimString.new(c.text, vimType, xsiType)
+  def on_raw_response(http_response, namespace)
+    if http_response.status == 200
+      http_response
+    else
+      super
     end
-    if xsiType == "SOAP::SOAPString"
-      return VimString.new("", vimType, xsiType)
-    end
+  end
 
-    if xsiType =~ /^ArrayOf(.*)$/
-      nextType = $1
-      obj = VimArray.new(xsiType)
-      node.children.each do |c|
-        next if c.blank?
-        obj << unmarshal_response(c, nextType)
-      end
-      return(obj)
-    end
-
-    aih = VimMappingRegistry.argInfoMap(xsiType)
-    obj = VimHash.new(xsiType)
-
-    node.children.each do |c|
-      next if c.blank?
-      name = c.name.freeze
-
-      ai = aih[name] if aih
-
-      unless (v = obj[name])
-        v = obj[name] = VimArray.new("ArrayOf#{ai[:type]}") if ai && ai[:isArray]
-      end
-
-      nextType = (ai ? ai[:type] : nil)
-
-      if v.kind_of?(Array)
-        obj[name] << unmarshal_response(c, nextType)
-      else
-        obj[name] = unmarshal_response(c, nextType)
-      end
-    end
-    (obj)
+  def parse_response(response, rType)
+    document = SAXDocument.new(rType)
+    parser = Nokogiri::XML::SAX::Parser.new(document)
+    parser.parse(response.content)
+    document.content
   end
 end
