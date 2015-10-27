@@ -165,7 +165,7 @@ module RetirementMixin
 
   def raise_retirement_event(event_name, requester = nil)
     $log.info("Raising Retirement Event for [#{name}]")
-    MiqAeEvent.raise_evm_event(event_name, self, setup_event_hash(requester))
+    MiqEvent.raise_evm_event(self, event_name, setup_event_hash(requester))
   end
 
   def raise_audit_event(event_name, message)

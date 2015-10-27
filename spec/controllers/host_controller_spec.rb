@@ -162,9 +162,9 @@ describe HostController do
     set_user_privileges
     host = FactoryGirl.create(:host,
                               :hardware => FactoryGirl.create(:hardware,
-                                                              :numvcpus         => 2,
-                                                              :cores_per_socket => 4,
-                                                              :logical_cpus     => 8
+                                                              :numvcpus             => 2,
+                                                              :cpu_cores_per_socket => 4,
+                                                              :cpu_total_cores      => 8
                                                              )
                              )
 
@@ -241,6 +241,20 @@ describe HostController do
       expect(controller.send(:set_credentials, mocked_host, :validate)).to include(:default => default_creds,
                                                                                    :ws      => ws_creds,
                                                                                    :ipmi    => ipmi_creds)
+    end
+  end
+
+  context "#render pages" do
+    render_views
+    before do
+      set_user_privileges
+      FactoryGirl.create(:vmdb_database)
+      EvmSpecHelper.create_guid_miq_server_zone
+    end
+    it "renders a new page with ng-required condition set to false for password" do
+      get :new
+      expect(response.status).to eq(200)
+      expect(response.body).to include("name='default_password' ng-disabled='!showVerify(&#39;default_userid&#39;)' ng-model='hostModel.default_password' ng-required='false'")
     end
   end
 end

@@ -98,11 +98,11 @@ class MiqScvmmHost
     hardware[:manufacturer] = props[:CPUManufacturer]
     hardware[:model] = props[:VirtualizationPlatformDetail]
     # hardware[:number_of_nics] = nil
-    hardware[:memory_cpu] = (props[:TotalMemory].to_f / 1048576).round
+    hardware[:memory_mb] = (props[:TotalMemory].to_f / 1.megabyte).round
 
-    hardware[:numvcpus] = props[:PhysicalCPUCount]
-    hardware[:cores_per_socket] = props[:CoresPerCPU]
-    hardware[:logical_cpus] = hardware[:cores_per_socket].to_i * hardware[:numvcpus].to_i
+    hardware[:numvcpus]             = props[:PhysicalCPUCount]
+    hardware[:cpu_cores_per_socket] = props[:CoresPerCPU]
+    hardware[:cpu_total_cores]      = hardware[:cpu_cores_per_socket].to_i * hardware[:numvcpus].to_i
 
     # Guest OS summary_config['product'] = {'name' => props[:VirtualizationPlatformString]}
 

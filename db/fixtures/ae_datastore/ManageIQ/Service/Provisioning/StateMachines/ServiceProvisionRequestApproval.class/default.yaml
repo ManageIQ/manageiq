@@ -7,4 +7,7 @@ object:
     name: Default
     inherits: 
     description: 
-  fields: []
+  fields:
+  - ValidateRequest:
+      value: "/System/CommonMethods/QuotaStateMachine/quota"
+      on_entry: "#"

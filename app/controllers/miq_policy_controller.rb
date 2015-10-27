@@ -537,8 +537,8 @@ class MiqPolicyController < ApplicationController
       end
     end
 
-    c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
-    h_buttons, h_xml = build_toolbar_buttons_and_xml('x_history_tb')
+    c_tb = build_toolbar(center_toolbar_filename)
+    h_tb = build_toolbar('x_history_tb')
 
     # Build a presenter to render the JS
     presenter ||= ExplorerPresenter.new(:active_tree => x_active_tree)
@@ -705,12 +705,8 @@ class MiqPolicyController < ApplicationController
     end
     presenter[:right_cell_text] = right_cell_text
 
-    # Rebuild the toolbars
-    presenter[:set_visible_elements][:history_buttons_div] = h_buttons && h_xml
-    presenter[:set_visible_elements][:center_buttons_div]  = c_buttons && c_xml
-
-    presenter[:reload_toolbars][:history] = {:buttons => h_buttons, :xml => h_xml} if h_buttons && h_xml
-    presenter[:reload_toolbars][:center]  = {:buttons => c_buttons, :xml => c_xml} if c_buttons && c_xml
+    presenter[:reload_toolbars][:history] = h_tb
+    presenter[:reload_toolbars][:center]  = c_tb
 
     if (@edit && @edit[:new]) || @assign
       locals = {

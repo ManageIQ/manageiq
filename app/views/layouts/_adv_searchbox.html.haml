@@ -1,6 +1,5 @@
 - nameonly ||= false
 #adv_searchbox_div{:style => "display:none;"}
-  = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "calendar"}
   = hidden_div_if(@edit && !@edit[:adv_search_open], :id => "adv_search_div")
   - if @edit && @edit[:adv_search_open]
     = render(:partial => 'layouts/adv_search')

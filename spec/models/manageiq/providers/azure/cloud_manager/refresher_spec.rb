@@ -44,13 +44,13 @@ describe ManageIQ::Providers::Azure::CloudManager do
   def assert_table_counts
     ExtManagementSystem.count.should eql(1)
     Flavor.count.should eql(52)
-    AvailabilityZone.count.should eql(3)
+    AvailabilityZone.count.should eql(1)
     VmOrTemplate.count.should eql(9)
     Vm.count.should eql(9)
     Disk.count.should eql(11)
     GuestDevice.count.should eql(0)
     Hardware.count.should eql(9)
-    Network.count.should eql(18)
+    Network.count.should eql(15)
     OperatingSystem.count.should eql(9)
     Relationship.count.should eql(0)
     MiqQueue.count.should eql(9)
@@ -67,7 +67,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
       :uid_ems     => "a50f9983-d1a2-4a8d-be7d-123456789012"
     )
     @ems.flavors.size.should eql(52)
-    @ems.availability_zones.size.should eql(3)
+    @ems.availability_zones.size.should eql(1)
     @ems.vms_and_templates.size.should eql(9)
     @ems.vms.size.should eql(9)
     @ems.orchestration_stacks.size.should eql(7)
@@ -96,9 +96,9 @@ describe ManageIQ::Providers::Azure::CloudManager do
   end
 
   def assert_specific_az
-    @az = ManageIQ::Providers::Azure::CloudManager::AvailabilityZone.where(:name => "AvailabilitySet2").first
+    @az = ManageIQ::Providers::Azure::CloudManager::AvailabilityZone.first
     @az.should have_attributes(
-      :name => "AvailabilitySet2",
+      :name => @ems.name,
     )
   end
 
@@ -126,12 +126,12 @@ describe ManageIQ::Providers::Azure::CloudManager do
     v = ManageIQ::Providers::Azure::CloudManager::Vm.where(:name => "Chef-Prod", :raw_power_state => "VM running").first
     v.should have_attributes(
       :template              => false,
-      :ems_ref               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\Chef-Prod\\microsoft.compute/virtualmachines\\Chef-Prod",
+      :ems_ref               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\chef-prod\\microsoft.compute/virtualmachines\\Chef-Prod",
       :ems_ref_obj           => nil,
-      :uid_ems               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\Chef-Prod\\microsoft.compute/virtualmachines\\Chef-Prod",
+      :uid_ems               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\chef-prod\\microsoft.compute/virtualmachines\\Chef-Prod",
       :vendor                => "Microsoft",
       :power_state           => "on",
-      :location              => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\Chef-Prod\\microsoft.compute/virtualmachines\\Chef-Prod",
+      :location              => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\chef-prod\\microsoft.compute/virtualmachines\\Chef-Prod",
       :tools_status          => nil,
       :boot_time             => nil,
       :standby_action        => nil,
@@ -166,7 +166,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
       :bios                => nil,
       :annotation          => nil,
       :numvcpus            => 1,
-      :memory_cpu          => 768, # MB
+      :memory_mb           => 768,
       :disk_capacity       => 1043.megabyte,
       :bitness             => nil,
       :virtualization_type => nil
@@ -197,7 +197,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
 
   def assert_specific_vm_powered_off
     v   = ManageIQ::Providers::Azure::CloudManager::Vm.where(:name => "MIQ2", :raw_power_state => "VM deallocated").first
-    az1 = ManageIQ::Providers::Azure::CloudManager::AvailabilityZone.where(:name => "AvailabilitySet1").first
+    az1 = ManageIQ::Providers::Azure::CloudManager::AvailabilityZone.first
 
     assert_specific_vm_powered_off_attributes(v)
 
@@ -216,12 +216,12 @@ describe ManageIQ::Providers::Azure::CloudManager do
   def assert_specific_vm_powered_off_attributes(v)
     v.should have_attributes(
       :template              => false,
-      :ems_ref               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\microsoft.compute/virtualmachines\\MIQ2",
+      :ems_ref               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\computevms\\microsoft.compute/virtualmachines\\MIQ2",
       :ems_ref_obj           => nil,
-      :uid_ems               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\microsoft.compute/virtualmachines\\MIQ2",
+      :uid_ems               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\computevms\\microsoft.compute/virtualmachines\\MIQ2",
       :vendor                => "Microsoft",
       :power_state           => "off",
-      :location              => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\microsoft.compute/virtualmachines\\MIQ2",
+      :location              => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\computevms\\microsoft.compute/virtualmachines\\MIQ2",
       :tools_status          => nil,
       :boot_time             => nil,
       :standby_action        => nil,
@@ -247,7 +247,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
       :bios               => nil,
       :annotation         => nil,
       :numvcpus           => 1,
-      :memory_cpu         => 768, # MB
+      :memory_mb          => 768,
       :disk_capacity      => 1043.megabytes,
       :bitness            => nil
     )
@@ -261,7 +261,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
   def assert_specific_orchestration_template
     @orch_template = OrchestrationTemplateAzure.where(:name => "spec-deployment1-dont-delete").first
     @orch_template.should have_attributes(
-      :md5 => "3036f29db21966d557c9865e107d93b0",
+      :md5 => "83c7f9914808a5ca7c000477a6daa7df"
     )
     @orch_template.description.should eql('contentVersion: 1.0.0.0')
     @orch_template.content.should start_with("{\n  \"$schema\": \"http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json\"")
@@ -336,5 +336,9 @@ describe ManageIQ::Providers::Azure::CloudManager do
     # orchestration stack can have vms
     vm = ManageIQ::Providers::Azure::CloudManager::Vm.where(:name => "spec-VM1").first
     vm.orchestration_stack.should eql(@orch_stack)
+
+    # orchestration stack can have cloud networks
+    cloud_network = CloudNetwork.where(:name => 'spec-VNET').first
+    cloud_network.orchestration_stack.should eql(@orch_stack)
   end
 end

@@ -300,15 +300,15 @@ module ManageIQ::Providers
           result[:number_of_nics] = hdw["numNics"] unless hdw["numNics"].blank?
 
           # Value provided by VC is in bytes, need to convert to MB
-          result[:memory_cpu] = is_numeric?(hdw["memorySize"]) ? (hdw["memorySize"].to_f / 1048576).round : nil
+          result[:memory_mb] = is_numeric?(hdw["memorySize"]) ? (hdw["memorySize"].to_f / 1.megabyte).round : nil
           unless console.nil?
             result[:memory_console] = is_numeric?(console["serviceConsoleReserved"]) ? (console["serviceConsoleReserved"].to_f / 1048576).round : nil
           end
 
           result[:numvcpus] = hdw["numCpuPkgs"] unless hdw["numCpuPkgs"].blank?
-          result[:logical_cpus] = hdw["numCpuCores"] unless hdw["numCpuCores"].blank?
+          result[:cpu_total_cores] = hdw["numCpuCores"] unless hdw["numCpuCores"].blank?
           # Calculate the number of cores per socket by dividing total numCpuCores by numCpuPkgs
-          result[:cores_per_socket] = (result[:logical_cpus].to_f / result[:numvcpus].to_f).to_i unless hdw["numCpuCores"].blank? || hdw["numCpuPkgs"].blank?
+          result[:cpu_cores_per_socket] = (result[:cpu_total_cores].to_f / result[:numvcpus].to_f).to_i unless hdw["numCpuCores"].blank? || hdw["numCpuPkgs"].blank?
         end
 
         config = inv["config"]
@@ -810,13 +810,13 @@ module ManageIQ::Providers
         result[:bios] = bios unless bios.blank?
 
         if inv["numCpu"].present?
-          result[:logical_cpus] = inv["numCpu"].to_i
-          result[:cores_per_socket] = (config.try(:fetch_path, "hardware", "numCoresPerSocket") || 1).to_i
-          result[:numvcpus] = result[:logical_cpus] / result[:cores_per_socket]
+          result[:cpu_total_cores]      = inv["numCpu"].to_i
+          result[:cpu_cores_per_socket] = (config.try(:fetch_path, "hardware", "numCoresPerSocket") || 1).to_i
+          result[:numvcpus] = result[:cpu_total_cores] / result[:cpu_cores_per_socket]
         end
 
         result[:annotation] = inv["annotation"] unless inv["annotation"].blank?
-        result[:memory_cpu] = inv["memorySizeMB"] unless inv["memorySizeMB"].blank?
+        result[:memory_mb] = inv["memorySizeMB"] unless inv["memorySizeMB"].blank?
         result[:virtual_hw_version] = config['version'].to_s.split('-').last if config && config['version']
 
         result

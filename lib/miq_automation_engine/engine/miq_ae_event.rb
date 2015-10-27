@@ -1,11 +1,10 @@
 module MiqAeEvent
   def self.raise_ems_event(event)
     aevent = {
-      :event_id   => event.id,
-      :event_type => event.event_type,
+      :event_id        => event.id,
+      :event_stream_id => event.id,
+      :event_type      => event.event_type,
     }
-
-    user = automate_user
 
     if event.source == 'VC'
       aevent.merge!('ExtManagementSystem::ems' => event.ext_management_system.id, :ems_id => event.ext_management_system.id) unless event.ext_management_system.nil?
@@ -16,30 +15,22 @@ module MiqAeEvent
     aevent.merge!('Host::host'            => event.src_host.id,            :host_id      => event.src_host.id)            unless event.src_host.nil?
     aevent.merge!('Host::dest_host'       => event.dest_host.id,           :dest_host_id => event.dest_host.id)           unless event.dest_host.nil?
 
-    call_automate(event.class.name, event.id, aevent, 'Event', user)
+    call_automate(event, aevent, 'Event')
   end
 
-  def self.raise_synthetic_event(event, inputs, message = nil)
+  def self.raise_synthetic_event(target, event, inputs, options = {})
     if event == 'vm_retired'
-      vm          = inputs[:vm]
-      obj_type    = vm.class.name
-      obj_id      = vm.id
       instance    = 'Automation'
       aevent      = {'request' => event}
     else
-      obj_type    = nil
-      obj_id      = nil
       instance    = 'Event'
       aevent      = build_evm_event(event, inputs)
     end
 
-    user = automate_user
-    call_automate(obj_type, obj_id, aevent, instance, user, nil, message)
+    call_automate(target, aevent, instance, options)
   end
 
-  def self.raise_evm_event(event_name, target, inputs = {}, _message = nil)
-    user = automate_user
-
+  def self.raise_evm_event(event_name, target, inputs = {}, options = {})
     if target.kind_of?(Array)
       klass, id = target
       klass = Object.const_get(klass)
@@ -47,16 +38,14 @@ module MiqAeEvent
       raise "Unable to find object with class: [#{klass}], Id: [#{id}]" if target.nil?
     end
 
-    call_automate(target.class.name, target.id, build_evm_event(event_name, inputs),
-                  'Event', user)
+    call_automate(target, build_evm_event(event_name, inputs), 'Event', options)
   end
 
-  def self.eval_alert_expression(inputs, message = nil)
-    user = automate_user
+  def self.eval_alert_expression(target, inputs, options = {})
     aevent = build_evm_event('alert', inputs)
     aevent[:request] = 'evaluate'
     aevent.merge!(inputs)
-    ws = call_automate(nil, nil, aevent, 'Alert', user, nil, message)
+    ws = call_automate(target, aevent, 'Alert', options)
     return nil if ws.nil? || ws.root.nil?
     ws.root['ae_result']
   end
@@ -121,28 +110,72 @@ module MiqAeEvent
   rescue URI::InvalidURIError => err
   end
 
-  def self.automate_user
-    # TODO: Get the real userid to pass into Automate
-    user = User.where(:userid => "admin").first
-    raise "Admin user needed to raise events" unless user
-    user
-  end
+  def self.call_automate(obj, attrs, instance_name, options = {})
+    user_id, group_id, tenant_id = automate_user_ids(obj, attrs[:event_type])
 
-  def self.call_automate(obj_type, obj_id, attrs, instance_name,
-                         user, state = nil, message = nil)
+    q_options = {
+      :miq_callback => options[:miq_callback],
+      :priority     => MiqQueue::HIGH_PRIORITY,
+      :task_id      => nil          # Clear task_id to allow running synchronously under current worker process
+    }
+
     args = {
-      :object_type      => obj_type,
-      :object_id        => obj_id,
+      :object_type      => obj.class.name,
+      :object_id        => obj.id,
       :attrs            => attrs,
       :instance_name    => instance_name,
-      :user_id          => user.id,
-      :miq_group_id     => user.current_group.id,
-      :tenant_id        => user.current_tenant.id,
-      :automate_message => message,
-      :state            => state
+      :user_id          => user_id,
+      :miq_group_id     => group_id,
+      :tenant_id        => tenant_id,
+      :automate_message => options[:message]
     }
-    MiqAeEngine.deliver(args)
+
+    sync = options[:synchronous]
+    if sync
+      MiqAeEngine.deliver(args)
+    else
+      MiqAeEngine.deliver_queue(args, q_options)
+    end
   end
 
-  private_class_method :automate_user, :call_automate
+  def self.stream_target(object)
+    case object
+    when EmsEvent
+      object.vm_or_template || object.ext_management_system
+    when VmOrTemplate, MiqServer, Service, ExtManagementSystem, MiqRequest
+      object
+    else
+      object.ext_management_system
+    end
+  end
+
+  def self.automate_user_ids(object, event_type)
+    target = stream_target(object)
+    case target
+    when VmOrTemplate, Service
+      group = target.miq_group
+      user = target.evm_owner
+      user = User.super_admin if user.nil? || !user.miq_groups.include?(group)
+      tenant = target.tenant
+    when ExtManagementSystem
+      user = User.super_admin
+      # TODO: uncomment when default group for tenant is merged
+      # group = target.tenant.default_miq_group
+      group = user.current_group # for now
+      tenant = target.tenant
+    when MiqServer
+      user = User.super_admin
+      group = user.current_group
+      tenant = user.current_tenant
+    when MiqRequest
+      user = target.get_user
+      group = user.current_group
+      tenant = user.current_tenant
+    end
+
+    raise "A group is needed to raise an event. [#{object.class.name}] id:[#{object.id}] event_type: [#{event_type}]" unless group
+    [user.id, group.id, tenant.id]
+  end
+
+  private_class_method :call_automate, :automate_user_ids, :stream_target
 end

@@ -30,20 +30,20 @@ class ExtManagementSystem < ActiveRecord::Base
 
   has_many :hosts,  :foreign_key => "ems_id", :dependent => :nullify, :inverse_of => :ext_management_system
   has_many :vms_and_templates, :foreign_key => "ems_id", :dependent => :nullify, :class_name => "VmOrTemplate", :inverse_of => :ext_management_system
-  has_many :miq_templates,     :foreign_key => :ems_id
-  has_many :vms,               :foreign_key => :ems_id
+  has_many :miq_templates,     :foreign_key => :ems_id, :inverse_of => :ext_management_system
+  has_many :vms,               :foreign_key => :ems_id, :inverse_of => :ext_management_system
 
-  has_many :ems_events,     -> { order "timestamp" }, :class_name => "EmsEvent",    :foreign_key => "ems_id"
+  has_many :ems_events,     -> { order "timestamp" }, :class_name => "EmsEvent",    :foreign_key => "ems_id", :inverse_of => :ext_management_system
   has_many :policy_events,  -> { order "timestamp" }, :class_name => "PolicyEvent", :foreign_key => "ems_id"
 
-  has_many :blacklisted_events, :foreign_key => "ems_id", :dependent => :destroy
-  has_many :ems_folders,    :foreign_key => "ems_id", :dependent => :destroy
-  has_many :ems_clusters,   :foreign_key => "ems_id", :dependent => :destroy
-  has_many :resource_pools, :foreign_key => "ems_id", :dependent => :destroy
+  has_many :blacklisted_events, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :ems_folders,    :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :ems_clusters,   :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :resource_pools, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
 
-  has_many :customization_specs, :foreign_key => "ems_id", :dependent => :destroy
+  has_many :customization_specs, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
 
-  has_one  :iso_datastore, :foreign_key => "ems_id", :dependent => :destroy
+  has_one  :iso_datastore, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
 
   belongs_to :zone
 

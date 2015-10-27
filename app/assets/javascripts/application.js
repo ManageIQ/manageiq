@@ -2,6 +2,7 @@
 //= require jquery
 //= require jquery_overrides
 //= require angular
+//= require angular-patternfly
 //= require angular-ui-bootstrap
 //= require angular-ui-bootstrap-tpls
 //= require moment
@@ -14,6 +15,7 @@
 //= require services/miq_db_backup_service
 //= require directives/scheduler/updateDropdownForFilter
 //= require directives/scheduler/updateDropdownForTimer
+//= require directives/miq_calendar
 //= require directives/autofocus
 //= require directives/miqrequired
 //= require directives/checkchange
@@ -42,6 +44,7 @@
 //= require c3/c3
 //= require kubernetes-topology-graph/topology-graph
 //= require miq_application
+//= require miq_change_stored_password
 //= require miq_dynatree_replacement
 //= require dialog_import_export
 //= require widget_import_export
@@ -69,8 +72,6 @@
 //= require jquery.observe_field
 //= require miq_jquery_ujs_rails3
 //= require miq_ujs_bindings
-//= require dhtmlx_gpl_36/dhtmlxcommon
-//= require dhtmlx_gpl_36/dhtmlxcontainer
 //= require dynatree/jquery.dynatree
 //= require miq_dynatree
 //= require slickgrid/lib/jquery.event.drag-2.2
@@ -88,4 +89,5 @@
 //= require lodash
 //= require miq_formatters
 //= require miq_grid
+//= require miq_list_grid
 //= require resizable_sidebar

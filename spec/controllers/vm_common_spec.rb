@@ -32,7 +32,7 @@ describe VmOrTemplateController do
     it "when snapshot is selected center toolbars are replaced" do
       post :snap_pressed, :id => @snapshot.id
       expect(response).to render_template('vm_common/_snapshots_tree')
-      expect(response.body).to include("center_buttons_div")
+      expect(response.body).to include("center_tb")
       expect(assigns(:flash_array)).to be_blank
     end
 

@@ -112,8 +112,6 @@ class OrchestrationTemplateDialogService
       :display        => "edit",
       :required       => false,
       :options        => {:protected => false},
-      :validator_type => 'regex',
-      :validator_rule => '^[1-9][0-9]*$',
       :label          => "Timeout(minutes, optional)",
       :position       => position,
       :dialog_group   => group

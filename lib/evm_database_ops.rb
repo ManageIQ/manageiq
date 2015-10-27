@@ -115,7 +115,7 @@ class EvmDatabaseOps
   def self.database_connections(database = nil, type = :all)
     database ||= MiqDbConfig.current.options[:database]
     conn = ActiveRecord::Base.connection
-    conn.database_connections(database, type) if conn.respond_to?(:database_connections)
+    conn.client_connections.count { |c| c["database"] == database }
   end
 
   def self.stop

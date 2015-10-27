@@ -9,12 +9,12 @@ describe "layouts/_auth_credentials.html.haml" do
                         :pwd_label => "Secret Access Key"}
     response.should have_selector('label', :text => 'Access Key ID')
     response.should have_selector('label', :text => 'Secret Access Key')
-    response.should have_selector('label', :text => 'Verify Secret Access Key')
+    response.should have_selector('label', :text => 'Confirm Secret Access Key')
 
     render
     # showing default labels
     response.should have_selector('label', :text => 'Username')
     response.should have_selector('label', :text => 'Password')
-    response.should have_selector('label', :text => 'Verify Password')
+    response.should have_selector('label', :text => 'Confirm Password')
   end
 end

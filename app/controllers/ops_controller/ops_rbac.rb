@@ -775,7 +775,7 @@ module OpsController::OpsRbac
                     when "user"
                       get_view(User, :named_scope => :in_my_region)
                     when "group"
-                      get_view(MiqGroup)
+                      get_view(MiqGroup, :named_scope => :non_tenant_groups)
                     when "role"
                       get_view(MiqUserRole)
                     when "tenant"
@@ -889,7 +889,7 @@ module OpsController::OpsRbac
     else  # Root node
       @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ => "Access Control", :name => "#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]", :model => ui_lookup(:model => "MiqRegion")}
       @users_count   = User.in_my_region.count
-      @groups_count  = MiqGroup.count
+      @groups_count  = MiqGroup.non_tenant_groups.count
       @roles_count   = MiqUserRole.count
       @tenants_count = Tenant.roots.count
     end
@@ -952,9 +952,9 @@ module OpsController::OpsRbac
     @edit[:new][:userid] = @user.userid
     @edit[:new][:email] = @user.email.to_s
     @edit[:new][:password] = @user.password
-    @edit[:new][:password2] = @user.password
+    @edit[:new][:verify] = @user.password
 
-    @edit[:groups] = MiqGroup.all.sort_by { |g| g.description.downcase }.collect { |g| [g.description, g.id] }
+    @edit[:groups] = MiqGroup.non_tenant_groups.sort_by { |g| g.description.downcase }.collect { |g| [g.description, g.id] }
     @edit[:new][:group] = @user.current_group ? @user.current_group.id : nil
 
     @edit[:current] = copy_hash(@edit[:new])
@@ -968,7 +968,7 @@ module OpsController::OpsRbac
     @edit[:new][:group] = params[:chosen_group] if params[:chosen_group]
 
     @edit[:new][:password] = params[:password] if params[:password]
-    @edit[:new][:password2] = params[:password2] if params[:password2]
+    @edit[:new][:verify] = params[:verify] if params[:verify]
   end
 
   # Set user record variables to new values
@@ -977,13 +977,13 @@ module OpsController::OpsRbac
     user.userid     = @edit[:new][:userid]
     user.email      = @edit[:new][:email]
     user.miq_groups = [MiqGroup.find_by_id(@edit[:new][:group])].compact
-    user.password   = @edit[:new][:password]
+    user.password   = @edit[:new][:password] if @edit[:new][:password]
   end
 
   # Validate some of the user fields
   def rbac_user_validate?
     valid = true
-    if @edit[:new][:password] != @edit[:new][:password2]
+    if @edit[:new][:password] != @edit[:new][:verify]
       add_flash(_("Password/Verify Password do not match"), :error)
       valid = false
     end

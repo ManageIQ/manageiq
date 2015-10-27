@@ -252,9 +252,9 @@ class MiqAlert < ActiveRecord::Base
     inputs = {:miq_alert_description => description, :miq_alert_id => id, :alert_guid => guid}
     event  = options.fetch_path(:notifications, :automate, :event_name)
     MiqQueue.put(
-      :class_name  => "MiqAeEvent",
+      :class_name  => "MiqEvent",
       :method_name => "raise_evm_event",
-      :args        => [event, [target.class.name, target.id], inputs],
+      :args        => [[target.class.name, target.id], event, inputs],
       :role        => 'automate',
       :priority    => MiqQueue::HIGH_PRIORITY,
       :zone        => target.respond_to?(:my_zone) ? target.my_zone : MiqServer.my_zone
@@ -412,7 +412,7 @@ class MiqAlert < ActiveRecord::Base
         ]},
       {:name => "reconfigured_hardware_value", :description => "Hardware Reconfigured", :db => ["Vm"], :responds_to_events => "vm_reconfigure",
         :options => [
-          {:name => :hdw_attr, :description => "Hardware Attribute", :values => {:memory_cpu => Dictionary.gettext("memory_cpu", :type => "column"), :numvcpus => Dictionary.gettext("numvcpus", :type => "column")}},
+          {:name => :hdw_attr, :description => "Hardware Attribute", :values => {:memory_mb => Dictionary.gettext("memory_mb", :type => "column"), :numvcpus => Dictionary.gettext("numvcpus", :type => "column")}},
           {:name => :operator, :description => "Operator", :values => ["Increased", "Decreased"]}
         ]},
       {:name => "changed_vm_value", :description => "VM Value changed", :db => ["Vm"], :responds_to_events => "vm_reconfigure",
@@ -519,7 +519,7 @@ class MiqAlert < ActiveRecord::Base
     expression[:options].each { |k, v| aevent[k] = v } if expression[:options]
 
     begin
-      result = MiqAeEvent.eval_alert_expression(aevent)
+      result = MiqAeEvent.eval_alert_expression(target, aevent)
     rescue => err
       _log.error("#{err.message}")
       result = false

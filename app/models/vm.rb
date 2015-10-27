@@ -26,7 +26,7 @@ class Vm < VmOrTemplate
   end
 
   def self.find_all_by_mac_address_and_hostname_and_ipaddress(mac_address, hostname, ipaddress)
-    return [] if mac_address.nil? && hostname.nil? && ipaddress.nil?
+    return [] if mac_address.blank? && hostname.blank? && ipaddress.blank?
 
     include = [:vm_or_template]
     references = []

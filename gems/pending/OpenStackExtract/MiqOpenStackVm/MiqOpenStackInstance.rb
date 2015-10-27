@@ -30,7 +30,7 @@ class MiqOpenStackInstance
   end
 
   def snapshot_metadata
-    @snapshot_metadata ||= instance.metadata.get(:miq_snapshot)
+    @snapshot_metadata ||= instance.metadata.length > 0 && instance.metadata.get(:miq_snapshot)
   end
 
   def snapshot_image_id

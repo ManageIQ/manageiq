@@ -14,8 +14,7 @@ class TreeBuilderChargebackRates < TreeBuilder
   end
 
   # Get root nodes count/array for explorer tree
-  def x_get_tree_roots(options)
-    count_only = options[:count_only]
+  def x_get_tree_roots(count_only, options)
     # TODO: Common code in CharbackRate & ChargebackAssignments, need to move into module
     case options[:type]
     when :cb_assignments, :cb_rates
@@ -41,9 +40,8 @@ class TreeBuilderChargebackRates < TreeBuilder
   end
 
   # Handle custom tree nodes (object is a Hash)
-  def x_get_tree_custom_kids(object, options)
-    count_only = options[:count_only]
+  def x_get_tree_custom_kids(object, count_only, _options)
     objects = ChargebackRate.where(:rate_type => object[:id]).to_a
-    count_only_or_objects(options[:count_only], objects, "description")
+    count_only_or_objects(count_only, objects, "description")
   end
 end

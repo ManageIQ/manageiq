@@ -113,7 +113,7 @@ module MiqAeServiceVmSpec
     end
 
     it "#retire_now" do
-      expect(MiqAeEvent).to receive(:raise_evm_event).once
+      expect(MiqEvent).to receive(:raise_evm_event).once
 
       service_vm.retire_now
     end

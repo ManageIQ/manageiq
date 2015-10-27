@@ -47,12 +47,14 @@ module MiqServer::EnvironmentManagement
     end
 
     def get_network_information
-      ipaddr = hostname = mac_address = ''
+      ipaddr = hostname = mac_address = nil
       begin
-        if MiqEnvironment::Command.is_linux? && File.exist?('/bin/miqnet.sh')
-          ipaddr      = `/bin/miqnet.sh -GET IP`.chomp
+        if MiqEnvironment::Command.is_appliance?
+          eth0 = LinuxAdmin::NetworkInterface.new("eth0")
+
+          ipaddr      = eth0.address
           hostname    = LinuxAdmin::Hosts.new.hostname
-          mac_address = `/bin/miqnet.sh -GET MAC`.chomp
+          mac_address = eth0.mac_address
         else
           require 'MiqSockUtil'
           ipaddr      = MiqSockUtil.getIpAddr

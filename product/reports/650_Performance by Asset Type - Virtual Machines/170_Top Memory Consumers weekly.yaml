@@ -61,5 +61,5 @@ headers:
 - Asset Name
 - Cluster Name
 - Host Name
-- Memory - Avg Used for Collected Intervals (MB) (Avg)
+- Memory - Used for Collected Intervals (MB) (Avg)
 display_filter: 

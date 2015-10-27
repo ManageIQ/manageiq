@@ -1,4 +1,4 @@
-angular.module('topologyApp', ['kubernetesUI'])
+angular.module('topologyApp', ['kubernetesUI','ui.bootstrap'])
 .config(['$httpProvider', function($httpProvider) {
     $httpProvider.defaults.headers.common['X-CSRF-Token'] = jQuery('meta[name=csrf-token]').attr('content');
 }])
@@ -28,6 +28,7 @@ angular.module('topologyApp', ['kubernetesUI'])
     $scope.checkboxModel = {
         value : false
     };
+    $scope.legendTooltip = "Click here to show/hide entities of this type";
 
     $scope.show_hide_names = function() {
        var vertices = $scope.vs;
@@ -91,7 +92,13 @@ angular.module('topologyApp', ['kubernetesUI'])
             .text(function(d) { return d.item.name }).style("font-size", function(d) {return "12px"}).style("fill", function(d) {return "black"})
             .style("display", function(d) {if ($scope.checkboxModel.value) {return "block"} else {return "none"}});
 
-        added.selectAll("title").text(function(d) { return "Name: " + d.item.name + "\nType: " + d.item.kind + "\nStatus: " + d.item.status });
+        added.selectAll("title").text(function(d) {
+            var status = "Name: " + d.item.name + "\nType: " + d.item.kind + "\nStatus: " + d.item.status;
+            if (d.item.kind == 'Host' || d.item.kind == 'VM') {
+                    status += "\nProvider: " + d.item.provider;
+            }
+            return status;
+        });
         $scope.vs = vertices;
 
         /* Don't do default rendering */

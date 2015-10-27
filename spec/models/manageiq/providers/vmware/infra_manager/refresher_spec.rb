@@ -223,21 +223,21 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     )
 
     @host.hardware.should have_attributes(
-      :cpu_speed          => 2127,
-      :cpu_type           => "Intel(R) Xeon(R) CPU           E5506  @ 2.13GHz",
-      :manufacturer       => "Dell Inc.",
-      :model              => "PowerEdge R410",
-      :number_of_nics     => 4,
-      :memory_cpu         => 57334,
-      :memory_console     => nil,
-      :numvcpus           => 2,
-      :logical_cpus       => 8,
-      :cores_per_socket   => 4,
-      :guest_os           => "ESXi",
-      :guest_os_full_name => "ESXi",
-      :vmotion_enabled    => true,
-      :cpu_usage          => 6789,
-      :memory_usage       => 36508
+      :cpu_speed            => 2127,
+      :cpu_type             => "Intel(R) Xeon(R) CPU           E5506  @ 2.13GHz",
+      :manufacturer         => "Dell Inc.",
+      :model                => "PowerEdge R410",
+      :number_of_nics       => 4,
+      :memory_mb            => 57334,
+      :memory_console       => nil,
+      :numvcpus             => 2,
+      :cpu_total_cores      => 8,
+      :cpu_cores_per_socket => 4,
+      :guest_os             => "ESXi",
+      :guest_os_full_name   => "ESXi",
+      :vmotion_enabled      => true,
+      :cpu_usage            => 6789,
+      :memory_usage         => 36508
     )
 
     @host.hardware.networks.size.should == 2
@@ -363,7 +363,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       :bios               => "422f5d16-c048-19e6-3212-e588fbebf7e0",
       :numvcpus           => 2,
       :annotation         => nil,
-      :memory_cpu         => 4096
+      :memory_mb          => 4096
     )
 
     v.hardware.disks.size.should == 5

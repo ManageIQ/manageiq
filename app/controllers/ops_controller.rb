@@ -572,8 +572,8 @@ class OpsController < ApplicationController
     when "se"         # schedule edit
       # when editing/adding schedule in settings tree
       presenter[:update_partials][:settings_list] = r[:partial => "schedule_form"]
-      presenter[:build_calendar]  = {
-        :date_from => (Time.zone.now - 1.month).in_time_zone(@edit[:tz]).to_i * 1000
+      presenter[:build_calendar] = {
+        :date_from => (Time.zone.now - 1.month).in_time_zone(@edit[:tz]),
       }
       if !@schedule.id
         @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "MiqSchedule")
@@ -710,12 +710,11 @@ class OpsController < ApplicationController
   def rebuild_toolbars(presenter)
     unless @in_a_form
       @sb[:center_tb_filename] = center_toolbar_filename
-      c_buttons, c_xml = build_toolbar_buttons_and_xml(@sb[:center_tb_filename])
+      c_tb = build_toolbar(@sb[:center_tb_filename])
     end
     # Rebuild the toolbars
-    presenter[:set_visible_elements][:center_buttons_div] = c_buttons && c_xml
-    presenter[:reload_toolbars][:center] = {:buttons => c_buttons, :xml => c_xml} if c_buttons && c_xml
-    presenter[:set_visible_elements][:toolbar] = c_buttons
+    presenter[:reload_toolbars][:center] = c_tb
+    presenter[:set_visible_elements][:toolbar] = c_tb.present?
     presenter[:set_visible_elements][:toolbar] = false if @sb[:center_tb_filename] == "blank_view_tb"
 
     if (@record && !@in_a_form) || (@edit && @edit[:rec_id] && @in_a_form)

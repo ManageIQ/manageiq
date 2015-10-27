@@ -52,7 +52,8 @@ module EmsRefresh::SaveInventoryInfra
     end
 
     child_keys = [:storages, :clusters, :hosts, :vms, :folders, :resource_pools, :customization_specs,
-                  :orchestration_templates, :orchestration_stacks]
+                  :orchestration_templates, :orchestration_stacks, :cloud_networks, :security_groups, :floating_ips,
+                  :network_routers, :network_ports]
 
     # Save and link other subsections
     save_child_inventory(ems, hashes, child_keys, target)
@@ -188,6 +189,7 @@ module EmsRefresh::SaveInventoryInfra
 
         found.save!
         h[:id] = found.id
+        h[:_object] = found
       rescue => err
         # If a host failed to process, mark it as invalid and log an error
         h[:invalid] = invalids_found = true

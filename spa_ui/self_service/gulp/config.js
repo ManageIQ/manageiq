@@ -59,7 +59,7 @@ module.exports = (function() {
   var serverApp = server + 'app.js';
 
   function getClientJsFiles(ordered, excludeSpecs) {
-    var files = [client + 'app/**/*.js'];
+    var files = [client + 'app/**/*.js', client + 'skin/**/*.js'];
 
     if (ordered) {
       files = [].concat(client + 'app/app.module.js', client + 'app/**/*module*.js', files)
@@ -164,7 +164,7 @@ module.exports = (function() {
   // task images: Image build options
   config.images = {
     src: imageFiles,
-    build: build + 'assets/images',
+    build: build + 'images',
     minify: true,
     options: {
       optimizationLevel: 5,
@@ -173,9 +173,31 @@ module.exports = (function() {
     }
   };
 
+  config.skinImages = {
+    src: [
+      client + 'skin/images/**/*.*'
+    ],
+    build: build + 'images',
+    minify: true,
+    options: {
+      optimizationLevel: 5,
+      progressive: true,
+      interlaced: true
+    }
+  };
+
+
   config.devImages = {
     src: imageFiles,
-    build: temp + 'assets/images',
+    build: temp + 'images',
+    minify: false
+  };
+
+  config.devSkinImages = {
+    src: [
+      client + 'skin/images/**/*.*'
+    ],
+    build: temp + 'images',
     minify: false
   };
 
@@ -273,7 +295,10 @@ module.exports = (function() {
   config.inject = {
     index: client + indexFile,
     build: client,
-    css: temp + 'styles/' + cssFile
+    css: [
+      temp + 'styles/' + cssFile,
+      client + '/skin/**/*.css'
+    ]
   };
 
   config.optimize = {

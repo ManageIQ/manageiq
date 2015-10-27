@@ -7,26 +7,6 @@ module ApplicationHelper
   include StiRoutingHelper
   include TextualSummaryHelper
 
-  def css_background_color
-    (@css || {}).fetch_path(:background_color) || 'black'
-  end
-
-  # From http://www.juixe.com/techknow/index.php/2006/07/15/acts-as-taggable-tag-cloud
-  #   which refers to http://blog.craz8.com/articles/2005/10/28/acts_as_taggable-is-a-cool-piece-of-code
-  def tag_cloud(tags, classes)
-    max, min = 0, 0
-    tags.each do |t|
-      max = t.count.to_i if t.count.to_i > max
-      min = t.count.to_i if t.count.to_i < min
-    end
-
-    divisor = ((max - min) / classes.size) + 1
-
-    tags.each do |t|
-      yield t.name, classes[(t.count.to_i - min) / divisor]
-    end
-  end
-
   # Create a collapsed panel based on a condition
   def miq_accordion_panel(title, condition, id, &block)
     content_tag(:div, :class => "panel panel-default") do
@@ -86,13 +66,6 @@ module ApplicationHelper
   end
   module_function :role_allows_intern
 
-  # Check group based filtered authorization for a UI task
-  def group_allows(options = {})
-    auth = MiqGroup.allows?(session[:group], :identifier => options[:identifier])
-    $log.debug("Group Authorization #{auth ? "successful" : "failed"} for: userid [#{session[:userid]}], group id [#{session[:group]}], feature identifier [#{options[:identifier]}]")
-    auth
-  end
-
   # NB: This differs from controller_for_model; until they're unified,
   # make sure you have the right one.
   def model_to_controller(record)
@@ -120,13 +93,15 @@ module ApplicationHelper
 
   def url_for_record(record, action = "show") # Default action is show
     @id = to_cid(record.id)
-    if record.kind_of?(VmOrTemplate)
-      return url_for_db(controller_for_vm(model_for_vm(record)), action, record)
-    elsif record.class.respond_to?(:db_name)
-      return url_for_db(record.class.db_name, action, record)
-    else
-      return url_for_db(record.class.base_class.to_s, action, record)
-    end
+    db =
+      if record.kind_of?(VmOrTemplate)
+        controller_for_vm(model_for_vm(record))
+      elsif record.class.respond_to?(:db_name)
+        record.class.db_name
+      else
+        record.class.base_class.to_s
+      end
+    url_for_db(db, action, record)
   end
 
   # Create a url for a record that links to the proper controller
@@ -287,7 +262,7 @@ module ApplicationHelper
   end
 
   # Method to create the center toolbar XML
-  def build_toolbar_buttons_and_xml(tb_name)
+  def build_toolbar(tb_name)
     _toolbar_builder.call(tb_name)
   end
 
@@ -327,10 +302,6 @@ module ApplicationHelper
       :widgetsets            => @widgetsets,
       :zgraph                => @zgraph,
     )
-  end
-
-  def get_console_url
-    url = @record.hostname ? @record.hostname : @record.ipaddress
   end
 
   # Convert a field (Vm.hardware.disks-size) to a col (disks.size)
@@ -445,37 +416,45 @@ module ApplicationHelper
 
   ############# Following methods generate JS lines for render page blocks
   def javascript_for_timer_type(timer_type)
-    js_array = []
-    unless timer_type.nil?
-      case timer_type
-      when "Monthly"
-        js_array << javascript_hide("weekly_span")
-        js_array << javascript_hide("daily_span")
-        js_array << javascript_hide("hourly_span")
-        js_array << javascript_show("monthly_span")
-      when "Weekly"
-        js_array << javascript_hide("daily_span")
-        js_array << javascript_hide("hourly_span")
-        js_array << javascript_hide("monthly_span")
-        js_array << javascript_show("weekly_span")
-      when "Daily"
-        js_array << javascript_hide("hourly_span")
-        js_array << javascript_hide("monthly_span")
-        js_array << javascript_hide("weekly_span")
-        js_array << javascript_show("daily_span")
-      when "Hourly"
-        js_array << javascript_hide("daily_span")
-        js_array << javascript_hide("monthly_span")
-        js_array << javascript_hide("weekly_span")
-        js_array << javascript_show("hourly_span")
-      else
-        js_array << javascript_hide("daily_span")
-        js_array << javascript_hide("hourly_span")
-        js_array << javascript_hide("monthly_span")
-        js_array << javascript_hide("weekly_span")
-      end
+    case timer_type
+    when "Monthly"
+      [
+        javascript_hide("weekly_span"),
+        javascript_hide("daily_span"),
+        javascript_hide("hourly_span"),
+        javascript_show("monthly_span")
+      ]
+    when "Weekly"
+      [
+        javascript_hide("daily_span"),
+        javascript_hide("hourly_span"),
+        javascript_hide("monthly_span"),
+        javascript_show("weekly_span")
+      ]
+    when "Daily"
+      [
+        javascript_hide("hourly_span"),
+        javascript_hide("monthly_span"),
+        javascript_hide("weekly_span"),
+        javascript_show("daily_span")
+      ]
+    when "Hourly"
+      [
+        javascript_hide("daily_span"),
+        javascript_hide("monthly_span"),
+        javascript_hide("weekly_span"),
+        javascript_show("hourly_span")
+      ]
+    when nil
+      []
+    else
+      [
+        javascript_hide("daily_span"),
+        javascript_hide("hourly_span"),
+        javascript_hide("monthly_span"),
+        javascript_hide("weekly_span")
+      ]
     end
-    js_array
   end
 
   # Show/hide the Save and Reset buttons based on whether changes have been made
@@ -511,44 +490,15 @@ module ApplicationHelper
     js_array.join("\n")
   end
 
-  # Reload toolbars using new buttons object and xml
-  def javascript_for_toolbar_reload(tb, buttons, xml)
-    %{
-      if (ManageIQ.toolbars.#{tb} && ManageIQ.toolbars.#{tb}.obj)
-        ManageIQ.toolbars.#{tb}.obj.unload();
-
-      if (document.getElementById('#{tb}') == null) {
-        var tb_div = $('<div id="#{tb}" />');
-        parent_div_id = '#{tb}'.split('_')[0] + '_buttons_div';
-        $("#" + parent_div_id).append(tb_div);
-      }
-
-      window.#{tb} = new dhtmlXToolbarObject('#{tb}', 'miq_blue');
-      ManageIQ.toolbars['#{tb}'] = {
-        obj: window.#{tb},
-        buttons: #{buttons},
-        xml: "#{xml}"
-      };
-
-      miqInitToolbar(ManageIQ.toolbars['#{tb}']);
-    }
+  def javascript_pf_toolbar_reload(div_id, toolbar)
+    out = []
+    out << javascript_update_element(div_id, buttons_to_html(toolbar))
+    out << "miqInitToolbars();"
+    out.join('')
   end
 
   def javascript_for_ae_node_selection(id, prev_id, select)
     "miqSetAETreeNodeSelectionClass('#{id}', '#{prev_id}', '#{select ? true : false}');".html_safe
-  end
-
-  # Generate lines of JS <text> for render page, replacing "~" with the <sub_array> elements
-  def js_multi_lines(sub_array, text)
-    js_array = []
-    sub_array.each do |i|
-      js_array << text.gsub("~", i.to_s)
-    end
-    js_array
-  end
-
-  def javascript_set_value(element_id, value)
-    "$('##{element_id}').val('#{value}');"
   end
   ############# End of methods that generate JS lines for render page blocks
 
@@ -661,12 +611,12 @@ module ApplicationHelper
     return value if value.to_s.length < TRUNC_AT
     case @settings.fetch_path(:display, :quad_truncate)
     when "b"  # Old version, used first x chars followed by ...
-      return value[0...TRUNC_TO] + "..."
+      value.first(TRUNC_TO) + "..."
     when "f"  # Chop off front
-      return "..." + value[(value.length - TRUNC_TO)..-1]
+      "..." + value.last(TRUNC_TO)
     else      # Chop out the middle
       numchars = TRUNC_TO / 2
-      return value[0...numchars] + "..." + value[(value.length - numchars)..-1]
+      value.first(numchars) + "..." + value.last(numchars)
     end
   end
 
@@ -760,16 +710,6 @@ module ApplicationHelper
   # Do we show or hide the clear_search link in the list view title
   def clear_search_show_or_hide
     @edit && @edit.fetch_path(:adv_search_applied, :text) ? "show" : "hide"
-  end
-
-  # Create time zone list for perf chart options screen
-  def perf_options_timezones
-    if @perf_record && @perf_record.kind_of?(MiqCimInstance) && @perf_options[:typ] == "Daily"
-      tp_tzs = TimeProfile.rollup_daily_metrics.all_timezones
-      ALL_TIMEZONES.dup.delete_if { |tz| !tp_tzs.include?(tz.last) }
-    else
-      ALL_TIMEZONES
-    end
   end
 
   # Should we allow the user input checkbox be shown for an atom in the expression editor
@@ -1051,7 +991,7 @@ module ApplicationHelper
   end
 
   def update_query_string_params(update_this_param)
-    exclude_params = %w(button flash_msg page pressed sortby sort_choice type)
+    exclude_params = %w(button flash_msg page ppsetting pressed sortby sort_choice type)
     query_string = Rack::Utils.parse_query URI("?#{request.query_string}").query
     updated_query_string = query_string.symbolize_keys
     updated_query_string.delete_if { |k, _v| exclude_params.include? k.to_s }
@@ -1252,6 +1192,13 @@ module ApplicationHelper
     end
   end
 
+  def skip_days_from_time_profile(time_profile_days)
+    (1..7).to_a.delete_if do |d|
+      # time_profile_days has 0 for sunday, skip_days needs 7 for sunday
+      time_profile_days.include?(d % 7)
+    end
+  end
+
   def breadcrumb_prohibited_for_action?
     !%w(accordion_select explorer tree_select).include?(action_name)
   end
@@ -1407,6 +1354,16 @@ module ApplicationHelper
     case pressed
     when "rbac_project_add", "rbac_tenant_add"
       "rbac_tenant_add"
+    end
+  end
+
+  def action_url_for_views
+    if @lastaction == "scan_history"
+      "scan_history"
+    elsif %w(all_jobs jobs ui_jobs all_ui_jobs).include?(@lastaction)
+      "jobs"
+    else
+      @lastaction && @lastaction != "get_node_info" ? @lastaction : "show_list"
     end
   end
 end

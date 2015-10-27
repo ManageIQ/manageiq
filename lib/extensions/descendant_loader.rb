@@ -88,7 +88,7 @@ class DescendantLoader
         if (container_name = scope_names.pop)
           define_combos = scoped_name(container_name, name_combinations(scope_names))
         else
-          define_combos = search_combos
+          define_combos = search_combos.dup
         end
 
         [search_combos, define_combos, flatten_name(name), flatten_name(sklass)]
@@ -202,7 +202,7 @@ class DescendantLoader
       @class_inheritance_relationships ||= begin
         children = Hash.new { |h, k| h[k] = [] }
         Dir.glob(Rails.root.join("app/models/**/*.rb")) do |file|
-          classes_in(file).each do |define_scopes, search_scopes, name, sklass|
+          classes_in(file).each do |search_scopes, define_scopes, name, sklass|
             possible_names = scoped_name(name, define_scopes)
             possible_superklasses = scoped_name(sklass, search_scopes)
 

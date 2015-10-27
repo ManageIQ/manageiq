@@ -1,6 +1,5 @@
 require 'trollop'
 require 'pathname'
-require 'appliance_console/env'
 require 'appliance_console/utilities'
 require 'appliance_console/logging'
 require 'appliance_console/database_configuration'
@@ -126,9 +125,10 @@ module ApplianceConsole
     def run
       Trollop.educate unless set_host? || key? || database? || tmp_disk? || uninstall_ipa? || install_ipa? || certs?
       if set_host?
+        ip = LinuxAdmin::NetworkInterface.new("eth0").address
         system_hosts = LinuxAdmin::Hosts.new
         system_hosts.hostname = options[:host]
-        system_hosts.update_entry(Env["IP"], options[:host])
+        system_hosts.update_entry(ip, options[:host])
         system_hosts.save
         LinuxAdmin::Service.new("network").restart
       end

@@ -8,6 +8,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
   let(:template) { FactoryGirl.create(:template_amazon, :name => "template", :ext_management_system => ems) }
   let(:workflow) do
     stub_dialog
+    allow_any_instance_of(User).to receive(:get_timezone).and_return(Time.zone)
     ManageIQ::Providers::CloudManager::ProvisionWorkflow.any_instance.stub(:update_field_visibility)
     wf = described_class.new({:src_vm_id => template.id}, admin.userid)
     wf.instance_variable_set("@ems_xml_nodes", {})
@@ -55,6 +56,115 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
     end
   end
 
+  context "without applied tags" do
+    context "availability_zones" do
+      it "#get_targets_for_ems" do
+        az = FactoryGirl.create(:availability_zone_amazon)
+        ems.availability_zones << az
+        filtered = workflow.send(:get_targets_for_ems, ems, :cloud_filter, AvailabilityZone,
+                                 'availability_zones.available')
+        filtered.size.should == 1
+        filtered.first.name.should == az.name
+      end
+
+      it "returns an empty array when no targets are found" do
+        filtered = workflow.send(:get_targets_for_ems, ems, :cloud_filter, AvailabilityZone,
+                                 'availability_zones.available')
+        filtered.should == []
+      end
+    end
+
+    context "security_groups" do
+      context "non cloud network" do
+        it "#get_targets_for_ems" do
+          sg = FactoryGirl.create(:security_group_amazon, :name => "sg_1", :ext_management_system => ems)
+          ems.security_groups << sg
+          filtered = workflow.send(:get_targets_for_ems, ems, :cloud_filter, SecurityGroup,
+                                   'security_groups.non_cloud_network')
+          filtered.size.should == 1
+          filtered.first.name.should == sg.name
+        end
+      end
+
+      context "cloud network" do
+        it "#get_targets_for_ems" do
+          cn1 = FactoryGirl.create(:cloud_network, :ext_management_system => ems)
+          sg_cn = FactoryGirl.create(:security_group_amazon, :name => "sg_2", :ext_management_system => ems,
+                                     :cloud_network => cn1)
+          ems.security_groups << sg_cn
+          filtered = workflow.send(:get_targets_for_ems, ems, :cloud_filter, SecurityGroup, 'security_groups')
+          filtered.size.should == 1
+          filtered.first.name.should == sg_cn.name
+        end
+      end
+    end
+
+    context "Instance Type (Flavor)" do
+      it "#get_targets_for_ems" do
+        flavor = FactoryGirl.create(:flavor, :name => "t1.micro", :supports_32_bit => true, :supports_64_bit => true)
+        ems.flavors << flavor
+        filtered = workflow.send(:get_targets_for_ems, ems, :cloud_filter, Flavor, 'flavors')
+        filtered.size.should == 1
+        filtered.first.name.should == flavor.name
+      end
+    end
+  end
+
+  context "with applied tags" do
+    before do
+      FactoryGirl.create(:classification_cost_center_with_tags)
+      admin.current_group.set_managed_filters([['/managed/cc/001']])
+      admin.current_group.set_belongsto_filters([])
+      admin.current_group.save
+
+      2.times { FactoryGirl.create(:availability_zone_amazon, :ems_id => ems.id) }
+      2.times { FactoryGirl.create(:security_group_amazon, :name => "sgb_1", :ext_management_system => ems) }
+      ems.flavors << FactoryGirl.create(:flavor, :name => "t1.micro", :supports_32_bit => true,
+                                        :supports_64_bit => true)
+      ems.flavors << FactoryGirl.create(:flavor, :name => "m1.large", :supports_32_bit => false,
+                                        :supports_64_bit => true)
+
+      tagged_zone = ems.availability_zones.first
+      tagged_sec = ems.security_groups.first
+      tagged_flavor = ems.flavors.first
+      Classification.classify(tagged_zone, 'cc', '001')
+      Classification.classify(tagged_sec, 'cc', '001')
+      Classification.classify(tagged_flavor, 'cc', '001')
+    end
+
+    context "availability_zones" do
+      it "#get_targets_for_ems" do
+        ems.availability_zones.size.should == 2
+        ems.availability_zones.first.tags.size.should == 1
+        ems.availability_zones.last.tags.size.should == 0
+        filtered = workflow.send(:get_targets_for_ems, ems, :cloud_filter, AvailabilityZone,
+                                 'availability_zones.available')
+        filtered.size.should == 1
+      end
+    end
+
+    context "security groups" do
+      it "#get_targets_for_ems" do
+        ems.security_groups.size.should == 2
+        ems.security_groups.first.tags.size.should == 1
+        ems.security_groups.last.tags.size.should == 0
+
+        filtered = workflow.send(:get_targets_for_ems, ems, :cloud_filter, SecurityGroup, 'security_groups')
+        filtered.size.should == 1
+      end
+    end
+
+    context "instance types (Flavor)" do
+      it "#get_targets_for_ems" do
+        ems.flavors.size.should == 2
+        ems.flavors.first.tags.size.should == 1
+        ems.flavors.last.tags.size.should == 0
+
+        workflow.send(:get_targets_for_ems, ems, :cloud_filter, Flavor, 'flavors').size.should == 1
+      end
+    end
+  end
+
   context "when a template object is returned from the provider" do
     context "with empty relationships" do
       it "#allowed_instance_types" do
@@ -64,8 +174,10 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
 
     context "with valid relationships" do
       before do
-        ems.flavors << FactoryGirl.create(:flavor, :name => "t1.micro",    :supports_32_bit => true,  :supports_64_bit => true)
-        ems.flavors << FactoryGirl.create(:flavor, :name => "m1.large",    :supports_32_bit => false, :supports_64_bit => true)
+        ems.flavors << FactoryGirl.create(:flavor, :name => "t1.micro", :supports_32_bit => true,
+                                          :supports_64_bit => true)
+        ems.flavors << FactoryGirl.create(:flavor, :name => "m1.large", :supports_32_bit => false,
+                                          :supports_64_bit => true)
       end
 
       it "#allowed_instance_types with 32-bit image" do
@@ -94,8 +206,9 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
       @ip1 = FactoryGirl.create(:floating_ip, :cloud_network_only => true,  :ext_management_system => ems)
       @ip2 = FactoryGirl.create(:floating_ip, :cloud_network_only => false, :ext_management_system => ems)
 
-      @sg1 = FactoryGirl.create(:security_group_amazon, :name => "sq_1", :ext_management_system => ems, :cloud_network => @cn1)
-      @sg2 = FactoryGirl.create(:security_group_amazon, :name => "sq_1", :ext_management_system => ems)
+      @sg1 = FactoryGirl.create(:security_group_amazon, :name => "sgn_1", :ext_management_system => ems,
+                                :cloud_network => @cn1)
+      @sg2 = FactoryGirl.create(:security_group_amazon, :name => "sgn_1", :ext_management_system => ems)
     end
 
     it "#allowed_cloud_networks" do

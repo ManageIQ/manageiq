@@ -36,27 +36,21 @@ function miqOnLoad() {
     }
   }
 
-  // Initialize dhtmlxgrid control
-  if (typeof miqInitGrids == "function") {
-    miqInitGrids();
-  }
   // Init the toolbars
   if (typeof miqInitToolbars == "function") {
     miqInitToolbars();
   }
+
   // Refresh the myCodeMirror editor
   if (ManageIQ.editor !== null) {
     ManageIQ.editor.refresh();
   }
-  // Position clear search link in right cell header
-  if ($('#clear_search').length) {
-    // Find the right cell header div
-    $('.dhtmlxInfoBarLabel:visible').append($('#clear_search'));
-  }
+
   // Run MIQ after onload code if present
   if (typeof miq_after_onload == "string") {
     eval(miq_after_onload);
   }
+
   // Focus on search box, if it's there and allows focus
   if ($('#search_text').length) {
     try {
@@ -84,12 +78,7 @@ function miqOnResize() {
 
 // Initialize the widget pulldown on the dashboard
 function miqInitWidgetPulldown() {
-  var miqMenu = new dhtmlXToolbarObject("widget_select_div", "miq_blue");
-  miqMenu.setIconsPath("/images/icons/24/");
-  miqMenu.attachEvent("onClick", miqWidgetToolbarClick);
-  // ManageIQ.widget.menuXml var is loaded in dashboard/_dropdownbar.rhtml
-  miqMenu.loadXMLString(ManageIQ.widget.menuXml);
-  miqSetToolbarButtonIds(miqMenu);
+  $("#dashboard_dropdown #toolbar button:not(.dropdown-toggle), #toolbar ul.dropdown-menu > li > a").click(miqWidgetToolbarClick);
 }
 
 function miqCalendarDateConversion(server_offset) {
@@ -394,13 +383,13 @@ function miqUpdateAllCheckboxes(button_div, override) {
     if (override != null) {
       state = override;
     }
-    if (typeof ManageIQ.grids.grids.gtl_list_grid == 'undefined' &&
+    if (typeof ManageIQ.grids.gtl_list_grid == 'undefined' &&
         ($("input[id^='listcheckbox']").length)) {
       // No dhtmlx grid on the screen
       var cbs = $("input[id^='listcheckbox']")
       cbs.prop('checked', state);
       miqUpdateButtons(cbs[0], button_div);
-    } else if (typeof ManageIQ.grids.grids.gtl_list_grid == 'undefined' &&
+    } else if (typeof ManageIQ.grids.gtl_list_grid == 'undefined' &&
                $("input[id^='storage_cb']").length) {
       // to handle check/uncheck all for C&U collection
       $("input[id^='storage_cb']").prop('checked', state);
@@ -410,14 +399,11 @@ function miqUpdateAllCheckboxes(button_div, override) {
       ));
       return true;
     } else {
-      // Set checkboxes in dhtmlx grid
-      ManageIQ.grids.grids.gtl_list_grid.obj.forEachRow(function (id) {
-        ManageIQ.grids.grids.gtl_list_grid.obj.cells(id, 0).setValue(state ? 1 : 0);
-      });
-      var crows = ManageIQ.grids.grids.gtl_list_grid.obj.getCheckedRows(0);
-      $('#miq_grid_checks').val(crows);
-      var count = !crows ? 0 : crows.split(",").length;
-      miqSetButtons(count, button_div);
+      miqGridCheckAll(state);
+      var crows = miqGridGetCheckedRows();
+
+      $('#miq_grid_checks').val(crows.join(','));
+      miqSetButtons(crows.length, button_div);
     }
   }
   miqSparkle(false);
@@ -444,56 +430,50 @@ function miqUpdateButtons(obj, button_div) {
   miqSetButtons(count, button_div);
 }
 
+// Set button enabled or disabled according to the number of selected items
+function miqButtonOnWhen(button, onwhen, count) {
+  if (typeof onwhen != "undefined") {
+    var toggle = true;
+    switch(onwhen) {
+      case 1:
+      case '1':
+        toggle = count == 1;
+        break;
+      case '1+':
+        toggle = count >= 1;
+        break;
+      case '2+':
+        toggle = count >= 2;
+        break;
+    }
+    button.toggleClass('disabled', !toggle);
+  }
+}
+
 // Set the buttons in a div based on the count of checked items passed in
 function miqSetButtons(count, button_div) {
-  var tb;
-  var buttons;
 
   if (button_div.match("_tb$")) {
-    if (typeof ManageIQ.toolbars[button_div] != "undefined") {
-      tb = ManageIQ.toolbars[button_div].obj;
-      buttons = ManageIQ.toolbars[button_div].buttons;
-      for (var button in buttons) {
-        var onwhen = buttons[button].onwhen;
-        if (typeof onwhen != "undefined") {
-          if (count === 0) {
-            if (button.indexOf("__") >= 0) {
-              tb.disableListOption(button.split("__")[0], button);
-            } else {
-              tb.disableItem(button);
-            }
-          } else if (count == 1) {
-            if (onwhen == "1" || onwhen == "1+") {
-              if (button.indexOf("__") >= 0) {
-                tb.enableListOption(button.split("__")[0], button);
-              } else {
-                tb.enableItem(button);
-              }
-            } else if (onwhen == "2+") {
-              if (button.indexOf("__") >= 0) {
-                tb.disableListOption(button.split("__")[0], button);
-              } else {
-                tb.disableItem(button);
-              }
-            }
-          } else {
-            if (onwhen == "1+" || onwhen == "2+") {
-              if (button.indexOf("__") >= 0) {
-                tb.enableListOption(button.split("__")[0], button);
-              } else {
-                tb.enableItem(button);
-              }
-            } else if (onwhen == "1") {
-              if (button.indexOf("__") >= 0) {
-                tb.disableListOption(button.split("__")[0], button);
-              } else {
-                tb.disableItem(button);
-              }
-            }
-          }
-        }
-      }
-    }
+    var toolbar = $('#' + button_div);
+
+    // Non-dropdown master buttons
+    toolbar.find('button:not(.dropdown-toggle)').each(function (k, v) {
+      var button = $(v);
+      miqButtonOnWhen(button, button.data('onwhen'), count);
+    });
+
+    // Dropdown master buttons
+    toolbar.find('button.dropdown-toggle').each(function (k, v) {
+      var button = $(v);
+      miqButtonOnWhen(button, button.data('onwhen'), count);
+    });
+
+    // Dropdown button items
+    toolbar.find('ul.dropdown-menu > li > a').each(function (k, v) {
+      var button = $(v);
+      miqButtonOnWhen(button.parent(), button.data('onwhen'), count);
+    });
+
   } else if (button_div.match("_buttons$")) {
     // Handle newer divs with button elements
     if (count === 0) {
@@ -550,28 +530,19 @@ function miqResetSizeTimer() {
   ManageIQ.sizeTimer = false;
   var sizes = miqGetSize();
   var offset = 427;
-  var h;
+  var h = sizes[1] - offset;
   var url = "/dashboard/window_sizes";
   var args = {width: sizes[0], height: sizes[1]};
 
-  if (ManageIQ.grids.xml !== null) {
-    // If grid xml is available for reload
-    if ($('#list_grid').length) {
-      // Adjust certain elements, if present
-      h = sizes[1] - offset;
-      if (h < 200) {
-        h = 200;
-      }
-      $('#list_grid').css({height: h + 'px'});
-      ManageIQ.grids.grids.gtl_list_grid.obj.clearAll();
-      ManageIQ.grids.grids.gtl_list_grid.obj.parse(xml);
-    } else if ($('#logview').length) {
-        h = sizes[1] - offset;
-      if (h < 200) {
-        h = 200;
-      }
-      $('#logview').css({height: h + 'px'});
-    }
+  if (h < 200) {
+    h = 200;
+  }
+
+  // Adjust certain elements, if present
+  if ($('#list_grid').length) {
+    $('#list_grid').css({height: h + 'px'});
+  } else if ($('#logview').length) {
+    $('#logview').css({height: h + 'px'});
   }
 
   // Send the new values to the server
@@ -945,16 +916,16 @@ function miqBuildCalendar() {
       element.datepicker();
     }
 
-    if (typeof ManageIQ.calendar.calDateFrom != "undefined") {
+    if (ManageIQ.calendar.calDateFrom) {
       element.datepicker('setStartDate', ManageIQ.calendar.calDateFrom);
     }
 
-    if (typeof ManageIQ.calendar.calDateTo != "undefined") {
+    if (ManageIQ.calendar.calDateTo) {
       element.datepicker('setEndDate', ManageIQ.calendar.calDateTo);
     }
 
-    if (typeof miq_cal_skipDays != "undefined") {
-      element.datepicker('setDaysOfWeekDisabled', miq_cal_skipDays);
+    if (ManageIQ.calendar.calSkipDays) {
+      element.datepicker('setDaysOfWeekDisabled', ManageIQ.calendar.calSkipDays);
     }
 
     if (observeDateBackup != null) {
@@ -1240,5 +1211,168 @@ function miqAccordSelect(e) {
     var url = '/' + $('body').data('controller') + '/accordion_select?id=' + $(e.target).attr('id');
     miqJqueryRequest(url, {beforeSend: true, complete: true});
     return true;
+  }
+}
+
+// This function is called in miqOnLoad
+function miqInitToolbars() {
+  $("#toolbar button:not(.dropdown-toggle), #toolbar ul.dropdown-menu > li > a").click(miqToolbarOnClick);
+}
+
+// Function to run transactions when toolbar button is clicked
+function miqToolbarOnClick(e) {
+  var tb_url;
+  var button = $(this);
+
+  // If it's a dropdown, collapse the parent container
+  var parent = button.parents('div.btn-group.dropdown.open');
+  parent.removeClass('open');
+  parent.children('button.dropdown-toggle').attr('aria-expanded', 'false');
+
+  if (button.hasClass('disabled') || button.parent().hasClass('disabled')) {
+    return;
+  }
+
+  if (button.parents('#dashboard_dropdown').length > 0) {
+    return;
+  }
+
+  if (button.data("confirm") && !button.data("popup")) {
+    if (!confirm(button.data('confirm'))) {
+      return;
+    }
+  } else if (button.data("confirm") && button.data("popup")) {
+    // to open console in a new window
+    if (confirm(button.data('confirm'))) {
+      if (button.data('popup') != "undefined" && button.data('popup')) {
+        if (button.data("console_url")) {
+          window.open(button.data('console_url'));
+        }
+      }
+    }
+    return;
+  } else if (!button.data("confirm") && button.data("popup")) {
+    // to open readonly report in a new window, doesnt have confirm message
+    if (button.data('popup')) {
+      if (button.data("console_url")) {
+        window.open(button.data('console_url'));
+      }
+    }
+    return;
+  }
+
+  if (button.data("url")) {
+    // See if a url is defined
+    if (button.data('url').indexOf("/") === 0) {
+      // If url starts with / it is non-ajax
+      tb_url = "/" + ManageIQ.controller + button.data('url');
+      if (ManageIQ.record.recordId !== null) {
+        tb_url += "/" + ManageIQ.record.recordId;
+      }
+      if (button.data("url_parms")) {
+        tb_url += button.data('url_parms');
+      }
+      DoNav(encodeURI(tb_url));
+      return;
+    } else {
+      // An ajax url was defined
+      tb_url = "/" + ManageIQ.controller + "/" + button.data('url');
+      if (button.data('url').indexOf("x_history") !== 0) {
+        // If not an explorer history button
+        if (ManageIQ.record.recordId !== null) {
+          tb_url += "/" + ManageIQ.record.recordId;
+        }
+      }
+    }
+  } else {
+    // No url specified, run standard button ajax transaction
+    if (typeof button.data('explorer') != "undefined" && button.data('explorer')) {
+      // Use x_button method for explorer ajax
+      tb_url = "/" + ManageIQ.controller + "/x_button";
+    } else {
+      tb_url = "/" + ManageIQ.controller + "/button";
+    }
+    if (ManageIQ.record.recordId !== null) {
+      tb_url += "/" + ManageIQ.record.recordId;
+    }
+    tb_url += "?pressed=";
+    if (typeof button.data('pressed') == "undefined") {
+      tb_url += button.data('click').split("__").pop();
+    } else {
+      tb_url += button.data('pressed');
+    }
+  }
+
+  collect_log_buttons = [ 'support_vmdb_choice__collect_logs',
+                          'support_vmdb_choice__collect_current_logs',
+                          'support_vmdb_choice__zone_collect_logs',
+                          'support_vmdb_choice__zone_collect_current_logs'
+  ];
+  if (jQuery.inArray(button.attr('name'), collect_log_buttons) >= 0 && button.data('prompt')) {
+    tb_url = miqSupportCasePrompt(tb_url);
+    if (!tb_url) {
+      return false;
+    }
+  }
+
+  // put url_parms into params var, if defined
+  var params;
+  if (button.data("url_parms")) {
+    if (button.data('url_parms').match("_div$")) {
+      if (miqDomElementExists('miq_grid_checks')) {
+        params = "miq_grid_checks=" + $('#miq_grid_checks').val();
+      } else {
+        params = miqSerializeForm(button.data('url_parms'));
+      }
+    } else {
+      params = button.data('url_parms').split("?")[1];
+    }
+  }
+
+  // TODO:
+  // Checking for perf_reload button to not turn off spinning Q (will be done after charts are drawn).
+  // Need to design this feature into the toolbar button support at a later time.
+  if ((button.attr('name') == "perf_reload") ||
+      (button.attr('name') == "vm_perf_reload") ||
+      (button.attr('name').match("_console$"))) {
+    if (typeof params == "undefined") {
+      miqJqueryRequest(tb_url, {beforeSend: true});
+    } else {
+      miqJqueryRequest(tb_url, {beforeSend: true, data: params});
+    }
+  } else {
+    if (typeof params == "undefined") {
+      miqJqueryRequest(tb_url, {beforeSend: true, complete: true});
+    } else {
+      miqJqueryRequest(tb_url, {beforeSend: true, complete: true, data: params});
+    }
+  }
+  return false;
+}
+
+function miqSupportCasePrompt(tb_url) {
+  var support_case = prompt('Enter Support Case:', '');
+  if (support_case === null) {
+    return false;
+  } else if (support_case.trim() == '') {
+    alert('Support Case must be provided to collect logs');
+    return false;
+  } else {
+    tb_url = tb_url + '&support_case=' + encodeURIComponent(support_case);
+    return tb_url;
+  }
+}
+
+// Handle chart context menu clicks
+function miqWidgetToolbarClick(e) {
+  var itemId = $(this).data('click');
+  if (itemId == "reset") {
+    if (confirm("Are you sure you want to reset this Dashboard's Widgets to the defaults?")) {
+      miqAjax("/dashboard/reset_widgets");
+    }
+  } else if (itemId == "add_widget") {
+    return;
+  } else {
+    miqAjax("/dashboard/widget_add?widget=" + itemId);
   }
 }

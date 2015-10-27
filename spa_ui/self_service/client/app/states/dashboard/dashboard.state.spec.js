@@ -36,13 +36,24 @@ describe('Dashboard', function() {
 
   describe('controller', function() {
     var controller;
-    var services = {};
-    var requests = {};
+    var retiredServices = {};
+    var expiringServices = {};
+    var pendingRequests = {};
+    var approvedRequests = {};
+    var deniedRequests = {};
 
     beforeEach(function() {
       bard.inject('$controller', '$log', '$state', '$rootScope');
 
-      controller = $controller($state.get('dashboard').controller, {services: services, requests: requests});
+      var controllerResolves = {
+        retiredServices: retiredServices,
+        expiringServices: expiringServices,
+        pendingRequests: pendingRequests,
+        approvedRequests: approvedRequests,
+        deniedRequests: deniedRequests
+      };
+
+      controller = $controller($state.get('dashboard').controller, controllerResolves);
       $rootScope.$apply();
     });
 

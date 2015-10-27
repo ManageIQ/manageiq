@@ -41,7 +41,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
       end
 
       it "handles incorrect password" do
-        ManageIQ::Providers::Azure::CloudManager.stub(:raw_connect).and_raise(RestClient::Unauthorized)
+        ManageIQ::Providers::Azure::CloudManager.stub(:raw_connect).and_raise(Azure::Armrest::UnauthorizedException.new(nil, nil, nil))
         expect { @e.verify_credentials }.to raise_error(MiqException::MiqHostError, /Incorrect credentials*/)
       end
     end

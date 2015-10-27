@@ -74,13 +74,33 @@ describe DashboardController do
       expect(validation.flash_msg).to include('User\'s Role is missing')
     end
 
+    it "returns flash message when user does not have access to any features" do
+      user = FactoryGirl.create(:user, :role => "test")
+      User.stub(:authenticate).and_return(user)
+      controller.stub(:get_vmdb_config).and_return(:product => {})
+      validation = controller.send(:validate_user, user)
+      expect(validation.flash_msg).to include("The user's role is not authorized for any access")
+    end
+
+    it "returns url for the user with access to only Containers maintab" do
+      MiqShortcut.seed
+      described_class.any_instance.stub(:set_user_time_zone)
+      controller.stub(:check_privileges).and_return(true)
+      EvmSpecHelper.seed_specific_product_features("containers")
+      feature_id = MiqProductFeature.find_all_by_identifier(["containers"])
+      user = FactoryGirl.create(:user, :features => feature_id)
+      User.stub(:authenticate).and_return(user)
+      validation = controller.send(:validate_user, user)
+      expect(validation.flash_msg).to be_nil
+    end
+
     it "returns url for the user and sets user's group/role id in session" do
       user = FactoryGirl.create(:user, :role => "test")
       User.stub(:authenticate).and_return(user)
       controller.stub(:get_vmdb_config).and_return(:product => {})
       skip_data_checks('some_url')
       validation = controller.send(:validate_user, user)
-      expect(controller.current_groupid).to eq(user.current_group_id)
+      expect(controller.current_group_id).to eq(user.current_group_id)
       expect(validation.flash_msg).to be_nil
       expect(validation.url).to eq('some_url')
     end
@@ -128,6 +148,23 @@ describe DashboardController do
         url_controller = Menu::Manager.tab_features_by_id(tab).find { |f| f.ends_with?("_explorer") }
         response.body.should include("#{DashboardController::EXPLORER_FEATURE_LINKS[url_controller]}/explorer")
       end
+    end
+  end
+
+  context "#main_tab redirects to correct url when maintab is pressed by user with only Tenant features" do
+    before do
+      described_class.any_instance.stub(:set_user_time_zone)
+      controller.stub(:check_privileges).and_return(true)
+      EvmSpecHelper.seed_specific_product_features("rbac_tenant")
+      feature_id = MiqProductFeature.find_all_by_identifier(["rbac_tenant"])
+      login_as FactoryGirl.create(:user, :features => feature_id)
+    end
+
+    it "for Configure maintab" do
+      session[:tab_url] = {}
+      post :maintab, :tab => "set"
+      url_controller = Menu::Manager.tab_features_by_id(:set).find { |f| f.ends_with?("_explorer") }
+      response.body.should include("#{DashboardController::EXPLORER_FEATURE_LINKS[url_controller]}/explorer")
     end
   end
 

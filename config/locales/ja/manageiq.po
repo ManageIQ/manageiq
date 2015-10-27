@@ -8792,11 +8792,6 @@ msgstr "ノード"
 msgid "Non-VM Files"
 msgstr "VM 以外のファイル"
 
-msgid ""
-"Non-admin users can not access the system until at least 1 VM/Instance has bee"
-"n discovered"
-msgstr "管理者以外のユーザーは 1 つ以上の  VM/インスタンスが検出されるまでシステムにアクセスできません"
-
 msgid "None"
 msgstr "なし"
 
@@ -15211,8 +15206,8 @@ msgstr "locale_name"
 msgid "m"
 msgstr "m"
 
-msgid "memory_cpu"
-msgstr "memory_cpu"
+msgid "memory_mb"
+msgstr "memory_mb"
 
 msgid "no value"
 msgstr ""

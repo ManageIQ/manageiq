@@ -10,6 +10,8 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
 
   alias_attribute :azure_tenant_id, :uid_ems
 
+  has_many :resource_groups, :foreign_key => :ems_id, :dependent => :destroy
+
   def self.ems_type
     @ems_type ||= "azure".freeze
   end
@@ -40,7 +42,7 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
 
   def verify_credentials(_auth_type = nil, options = {})
     connect(options)
-  rescue RestClient::Unauthorized
+  rescue Azure::Armrest::UnauthorizedException
     raise MiqException::MiqHostError, "Incorrect credentials - check your Azure Client ID and Client Key"
   rescue StandardError => err
     _log.error("Error Class=#{err.class.name}, Message=#{err.message}")

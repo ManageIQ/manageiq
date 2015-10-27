@@ -4,7 +4,7 @@ module EmsClusterHelper::TextualSummary
   #
 
   def textual_group_host_totals
-    %i(aggregate_cpu_speed aggregate_memory aggregate_physical_cpus aggregate_logical_cpus aggregate_disk_capacity block_storage_disk_usage object_storage_disk_usage)
+    %i(aggregate_cpu_speed aggregate_memory aggregate_physical_cpus aggregate_cpu_total_cores aggregate_disk_capacity block_storage_disk_usage object_storage_disk_usage)
   end
 
   def textual_group_vm_totals
@@ -84,8 +84,8 @@ module EmsClusterHelper::TextualSummary
     {:label => "Total CPUs", :value => number_with_delimiter(@record.aggregate_physical_cpus)}
   end
 
-  def textual_aggregate_logical_cpus
-    {:label => "Total #{title_for_host} CPU Cores", :value => number_with_delimiter(@record.aggregate_logical_cpus)}
+  def textual_aggregate_cpu_total_cores
+    {:label => "Total #{title_for_host} CPU Cores", :value => number_with_delimiter(@record.aggregate_cpu_total_cores)}
   end
 
   def textual_aggregate_vm_memory

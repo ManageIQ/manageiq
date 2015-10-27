@@ -209,22 +209,7 @@ class EmsClusterController < ApplicationController
       if @refresh_div == "main_div" && @lastaction == "show_list"
         replace_gtl_main_div
       else
-        render :update do |page|                    # Use RJS to update the display
-          unless @refresh_partial.nil?
-            if @refresh_div == "flash_msg_div"
-              page.replace(@refresh_div, :partial => @refresh_partial)
-            else
-              if ["vms", "hosts", "resource_pools"].include?(@display)  # If displaying sub-items, action_url s/b show
-                page << "miqReinitToolbar('center_tb');"
-                page.replace_html("main_div", :partial => "layouts/gtl", :locals => {:action_url => "show/#{@ems_cluster.id}"})
-              elsif @display == "main"
-                page.replace_html("main_div", :partial => "main")
-              else
-                page.replace_html("main_div", :partial => @refresh_partial)
-              end
-            end
-          end
-        end
+        render_flash
       end
     end
   end
@@ -240,6 +225,7 @@ class EmsClusterController < ApplicationController
     protect_build_screen
     protect_set_db_record
 
+    # FIXME: does this still work?
     render :update do |page|                                # Use RJS to update the display
       page.replace_html("view_buttons_div", :partial => "layouts/view_buttons")   # Replace the view buttons
       page.replace_html("main_div", :partial => "layouts/protecting")   # Replace the main div area contents

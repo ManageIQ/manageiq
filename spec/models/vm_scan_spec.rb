@@ -13,7 +13,13 @@ describe VmScan do
       @ems       = FactoryGirl.create(:ems_vmware,       :name => "Test EMS", :zone => @server.zone)
       @storage   = FactoryGirl.create(:storage,          :name => "test_storage", :store_type => "VMFS")
       @host      = FactoryGirl.create(:host,             :name => "test_host", :hostname => "test_host", :state => 'on', :ext_management_system => @ems)
-      @vm        = FactoryGirl.create(:vm_vmware,        :name => "test_vm", :location => "abc/abc.vmx", :raw_power_state => 'poweredOn', :host => @host, :ext_management_system => @ems, :storage => @storage)
+      @vm        = FactoryGirl.create(:vm_vmware,        :name => "test_vm", :location => "abc/abc.vmx",
+                                      :raw_power_state       => 'poweredOn',
+                                      :host                  => @host,
+                                      :ext_management_system => @ems,
+                                      :miq_group             => FactoryGirl.create(:miq_group),
+                                      :storage               => @storage
+                                     )
       @ems_auth  = FactoryGirl.create(:authentication, :resource => @ems)
 
       @job = @vm.scan
@@ -98,6 +104,29 @@ describe VmScan do
         it "should get dispatched" do
           @job.state.should == "waiting_to_start"
           @job.dispatch_status.should == "active"
+        end
+
+        context "when signaled with 'start'" do
+          before(:each) do
+            # admin user is needed to process Events
+            FactoryGirl.create(:user_with_group, :userid => "admin", :name => "Administrator")
+            FactoryGirl.create(:miq_event_definition, :name => "vm_scan_start")
+            q = MiqQueue.last
+            q.delivered(*q.deliver)
+            @job.reload
+          end
+
+          it "should go to state of 'wait_for_policy'" do
+            @job.state.should == 'wait_for_policy'
+            MiqQueue.where(:class_name => "MiqAeEngine", :method_name => "deliver").count.should eq(1)
+          end
+
+          it "should call callback when message is delivered" do
+            VmScan.any_instance.stub(:signal => true)
+            VmScan.any_instance.should_receive(:check_policy_complete)
+            q = MiqQueue.where(:class_name => "MiqAeEngine", :method_name => "deliver").first
+            q.delivered(*q.deliver)
+          end
         end
       end
     end

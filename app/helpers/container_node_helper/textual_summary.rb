@@ -50,13 +50,13 @@ module ContainerNodeHelper::TextualSummary
 
   def textual_num_cpu_cores
     {:label => "Number of CPU Cores",
-     :value => @record.hardware.nil? ? "N/A" : @record.hardware.logical_cpus}
+     :value => @record.hardware.nil? ? "N/A" : @record.hardware.cpu_total_cores}
   end
 
   def textual_memory
-    if @record.try(:hardware).try(:memory_cpu)
+    if @record.try(:hardware).try(:memory_mb)
       memory = number_to_human_size(
-        @record.hardware.memory_cpu * 1.megabyte, :precision => 0)
+        @record.hardware.memory_mb * 1.megabyte, :precision => 0)
     else
       memory = "N/A"
     end

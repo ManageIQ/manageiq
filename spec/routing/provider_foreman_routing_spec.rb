@@ -40,7 +40,6 @@ describe 'routes for ProviderForeman' do
     quick_search
     refresh
     reload
-    save_col_widths
     show
     show_list
     tagging

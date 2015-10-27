@@ -28,6 +28,12 @@ class Hardware < ActiveRecord::Base
 
   include ReportableMixin
 
+  include DeprecationMixin
+  deprecate_attribute :cores_per_socket, :cpu_cores_per_socket
+  deprecate_attribute :logical_cpus, :cpu_total_cores
+  deprecate_attribute :numvcpus, :cpu_sockets
+  deprecate_attribute :memory_cpu, :memory_mb
+
   def ipaddresses
     @ipaddresses ||= networks.collect(&:ipaddress).compact.uniq
   end
@@ -79,8 +85,8 @@ class Hardware < ActiveRecord::Base
   end
 
   def aggregate_cpu_speed
-    return nil if logical_cpus.blank? || cpu_speed.blank?
-    (logical_cpus * cpu_speed)
+    return nil if cpu_total_cores.blank? || cpu_speed.blank?
+    (cpu_total_cores * cpu_speed)
   end
 
   def m_controller(_parent, xmlNode, deletes)
@@ -116,7 +122,7 @@ class Hardware < ActiveRecord::Base
   end
 
   def m_memory(_parent, xmlNode, _deletes)
-    self.memory_cpu = xmlNode.attributes["memsize"]
+    self.memory_mb = xmlNode.attributes["memsize"]
   end
 
   def m_bios(_parent, xmlNode, _deletes)

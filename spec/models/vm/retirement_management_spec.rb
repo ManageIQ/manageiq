@@ -8,7 +8,7 @@ describe "VM Retirement Management" do
   end
 
   it "#retirement_check" do
-    expect(MiqAeEvent).to receive(:raise_evm_event).once
+    expect(MiqEvent).to receive(:raise_evm_event).once
     @vm.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
     expect(@vm.retirement_last_warn).to be_nil
     @vm.class.any_instance.should_receive(:retire_now).once
@@ -27,7 +27,7 @@ describe "VM Retirement Management" do
   end
 
   it "#retire_now" do
-    expect(MiqAeEvent).to receive(:raise_evm_event).once
+    expect(MiqEvent).to receive(:raise_evm_event).once
 
     @vm.retire_now
   end
@@ -37,7 +37,7 @@ describe "VM Retirement Management" do
     event_hash = {:vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm",
                   :retirement_initiator => "user", :user_id => 'freddy'}
 
-    expect(MiqAeEvent).to receive(:raise_evm_event).with(event_name, @vm, event_hash).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash).once
 
     @vm.retire_now('freddy')
   end
@@ -47,7 +47,7 @@ describe "VM Retirement Management" do
     event_hash = {:vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm",
                   :retirement_initiator => "system"}
 
-    expect(MiqAeEvent).to receive(:raise_evm_event).with(event_name, @vm, event_hash).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash).once
 
     @vm.retire_now
   end
@@ -145,7 +145,7 @@ describe "VM Retirement Management" do
     event_hash = {:vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm",
                   :retirement_initiator => "system"}
 
-    expect(MiqAeEvent).to receive(:raise_evm_event).with(event_name, @vm, event_hash).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash).once
 
     @vm.raise_retirement_event(event_name)
   end

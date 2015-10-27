@@ -8,6 +8,7 @@ class VimPerformanceState < ActiveRecord::Base
   # Define accessors for state_data information
   [
     :assoc_ids,
+    :host_sockets,
     :parent_host_id,
     :parent_storage_id,
     :parent_ems_id,
@@ -33,8 +34,11 @@ class VimPerformanceState < ActiveRecord::Base
   # => reserve_cpu
   # => vm_count_on      (derive from assoc_ids)
   # => vm_count_off     (derive from assoc_ids)
+  # => vm_count_total   (derive from assoc_ids)
   # => host_count_on    (derive from assoc_ids)
   # => host_count_off   (derive from assoc_ids)
+  # => host_count_total (derive from assoc_ids)
+  # => host_sockets     (derive from assoc_ids)
 
   def self.capture(obj)
     ts = Time.now.utc
@@ -51,7 +55,8 @@ class VimPerformanceState < ActiveRecord::Base
     state.parent_storage_id = capture_parent_storage(obj)
     state.parent_ems_id = capture_parent_ems(obj)
     state.parent_ems_cluster_id = capture_parent_cluster(obj)
-    state.numvcpus = capture_numvcpus(obj)
+    # TODO: This is cpu_total_cores and needs to be renamed, but reports depend on the name :numvcpus
+    state.numvcpus = capture_cpu_total_cores(obj)
     state.total_cpu = capture_total(obj, :cpu_speed)
     state.total_mem = capture_total(obj, :memory)
     state.reserve_cpu = capture_reserve(obj, :cpu_reserve)
@@ -59,6 +64,7 @@ class VimPerformanceState < ActiveRecord::Base
     state.vm_used_disk_storage = capture_vm_disk_storage(obj, :used_disk)
     state.vm_allocated_disk_storage = capture_vm_disk_storage(obj, :allocated_disk)
     state.tag_names = capture_tag_names(obj)
+    state.host_sockets = capture_host_sockets(obj)
     state.save
 
     state
@@ -72,12 +78,20 @@ class VimPerformanceState < ActiveRecord::Base
     get_assoc(:vms, :off).length
   end
 
+  def vm_count_total
+    get_assoc(:vms).length
+  end
+
   def host_count_on
     get_assoc(:hosts, :on).length
   end
 
   def host_count_off
     get_assoc(:hosts, :off).length
+  end
+
+  def host_count_total
+    get_assoc(:hosts).length
   end
 
   def storages
@@ -116,7 +130,7 @@ class VimPerformanceState < ActiveRecord::Base
   def self.capture_total(obj, field)
     return obj.send("aggregate_#{field}") if obj.respond_to?("aggregate_#{field}")
     return nil unless obj.respond_to?(:hardware) && obj.hardware
-    field == :memory ? obj.hardware.memory_cpu : obj.hardware.aggregate_cpu_speed
+    field == :memory ? obj.hardware.memory_mb : obj.hardware.aggregate_cpu_speed
   end
 
   def self.capture_assoc_ids(obj)
@@ -182,13 +196,18 @@ class VimPerformanceState < ActiveRecord::Base
     obj.send("#{field}_storage")
   end
 
-  def self.capture_numvcpus(obj)
-    return nil unless obj.kind_of?(VmOrTemplate) && obj.respond_to?(:hardware) && obj.hardware
-    # FIXME: this is a z-stream patch
-    # this method name should really be changed to #capture_logical_cpus to
-    # match the actual column being read, however, there are several reports
-    # depending on the name :numvcpus
-    # A larger patch should be done outside of a z-stream release
-    obj.hardware.logical_cpus
+  def self.capture_cpu_total_cores(obj)
+    return unless obj.kind_of?(VmOrTemplate)
+    obj.hardware.try(:cpu_total_cores)
+  end
+
+  def self.capture_host_sockets(obj)
+    if obj.kind_of?(Host)
+      obj.hardware.try(:cpu_sockets)
+    else
+      if obj.respond_to?(:hosts)
+        obj.hosts.includes(:hardware).each_with_object([]) { |h, arr| arr << h.hardware.try(:cpu_sockets) }.compact.sum
+      end
+    end
   end
 end

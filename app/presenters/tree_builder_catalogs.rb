@@ -13,7 +13,7 @@ class TreeBuilderCatalogs < TreeBuilderCatalogsClass
     )
   end
 
-  def x_get_tree_stc_kids(_object, options)
-    count_only_or_objects(options[:count_only], [], nil)
+  def x_get_tree_stc_kids(_object, count_only)
+    count_only_or_objects(count_only, [], nil)
   end
 end

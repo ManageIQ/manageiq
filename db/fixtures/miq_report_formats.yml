@@ -163,7 +163,7 @@
     :v_used_space: :bytes
     :v_total_debris_size:  :bytes
     :v_total_snapshot_size: :bytes
-    :v_total_memory_size:  :bytes 
+    :v_total_memory_size:  :bytes
     :v_total_vm_misc_size:  :bytes
 
     :aggregate_all_vm_memory_on_disk: :bytes
@@ -184,7 +184,7 @@
     :memory_allocated_metric: :megabytes
     :memory_metric: :megabytes
     :memory_used_metric: :megabytes
-    :memory_cpu: :megabytes
+    :memory_mb: :megabytes
     :mem_cpu: :megabytes
     :min_derived_memory_used: :megabytes
     :ram_size: :megabytes
@@ -387,7 +387,7 @@
     :columns:
     :sub_types:
       - :kbps
-    :function: 
+    :function:
       :name: number_with_delimiter
       :delimiter: ","
       :suffix: " KBps"
@@ -399,7 +399,7 @@
     :sub_types:
       - :mhz
       - :mhz_avg
-    :function: 
+    :function:
       :name: mhz_to_human_size
       :delimiter: ","
     :precision: 0
@@ -421,7 +421,7 @@
       - :percent
       - :percent
       - :percent
-    :function: 
+    :function:
       :name: number_with_delimiter
       :delimiter: ","
       :suffix: ! '%'
@@ -447,7 +447,7 @@
       - :percent
       - :percent
       - :percent
-    :function: 
+    :function:
       :name: number_with_delimiter
       :delimiter: ","
       :suffix: ! '%'
@@ -560,7 +560,7 @@
       :format: "%m/%d"
 
   :time:
-    :description: Time (H:M:S Z) 
+    :description: Time (H:M:S Z)
     :data_types:
       - :datetime
       - :timestamp
@@ -568,7 +568,7 @@
       :name: datetime
       :format: "%H:%M %Z"
 
-  :datetime: 
+  :datetime:
     :description: Date/Time (M/D/Y H:M:S Z)
     :data_types:
       - :datetime

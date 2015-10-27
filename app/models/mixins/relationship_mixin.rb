@@ -673,11 +673,7 @@ module RelationshipMixin
   def self.deprecate_of_type_parameter(*args)
     return args if args.empty? || args.first.kind_of?(Hash)
 
-    unless Rails.env.production?
-      msg = "[DEPRECATION] of_type parameter without hash symbol is deprecated.  Please use :of_type => 'Type' style instead.  At #{caller[1]}"
-      $log.warn msg
-      warn msg
-    end
+    Vmdb::Deprecation.deprecation_warning("of_type parameter without hash symbol", "use :of_type => 'Type' style instead") unless Rails.env.production?
 
     options = args.extract_options!
     [options.merge(:of_type => args.first)]
@@ -686,20 +682,12 @@ module RelationshipMixin
   def self.deprecate_of_type_and_rel_type_parameter(*args)
     return args if args.empty? || args.first.kind_of?(Hash)
 
-    unless Rails.env.production?
-      msg = "[DEPRECATION] of_type parameter without hash symbol is deprecated.  Please use :of_type => 'Type' style instead.  At #{caller[1]}"
-      $log.warn msg
-      warn msg
-    end
+    Vmdb::Deprecation.deprecation_warning("of_type parameter without hash symbol", "use :of_type => 'Type' style instead") unless Rails.env.production?
 
     options = args.extract_options!
 
     if args.length > 1
-      unless Rails.env.production?
-        msg = "[DEPRECATION] relationship_type parameter is deprecated.  Please use with_relationship_type method before calling instead.  At #{caller[1]}"
-        $log.warn msg
-        warn msg
-      end
+      Vmdb::Deprecation.deprecation_warning("relationship_type parameter", "use with_relationship_type method before calling instead") unless Rails.env.production?
     end
 
     [options.merge(:of_type => args.first)]
@@ -708,11 +696,7 @@ module RelationshipMixin
   def self.deprecate_start_parameter(*args)
     return args if args.empty? || args.first.kind_of?(Hash)
 
-    unless Rails.env.production?
-      msg = "[DEPRECATION] start parameter is deprecated.  At #{caller[1]}"
-      $log.warn msg
-      warn msg
-    end
+    Vmdb::Deprecation.deprecation_warning("start parameter") unless Rails.env.production?
 
     [args.extract_options!]
   end

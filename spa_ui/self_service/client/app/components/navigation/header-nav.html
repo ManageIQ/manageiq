@@ -6,14 +6,16 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a ui-sref="dashboard" class="navbar-brand"><img class="navbar-brand-name" src="assets/images/brand.svg" alt="Self Service UI" /></a>
+    <a ui-sref="dashboard" class="navbar-brand">
+      <img class="navbar-brand-name" src="images/brand.svg" alt="{{ :: vm.text.name }}"/>
+    </a>
   </div>
 
   <!-- Collect the nav links, forms, and other content for toggling -->
   <nav class="collapse navbar-collapse">
     <ul class="nav navbar-nav">
       <li>
-        <a href="http://manageiq.org/" target="_blank" class="nav-item-iconic nav-item-iconic-new-window">
+        <a ng-href="{{vm.API_BASE}}" target="_blank" class="nav-item-iconic nav-item-iconic-new-window">          
           <i title="Open" class="fa fa-external-link"></i>
         </a>
       </li>
@@ -21,40 +23,10 @@
     <ul class="nav navbar-nav navbar-right navbar-iconic">
       <li dropdown>
         <a dropdown-toggle class="nav-item-iconic">
-          <i title="Notifications" class="fa pficon-flag"></i>
-          <span class="notification-icon-count" ng-if="vm.messages.length > 0">{{ vm.messages.length }}</span>
-        </a>
-
-        <div class="dropdown-menu infotip bottom-right">
-          <div class="arrow"></div>
-          <ul class="list-group">
-            <li ng-repeat="message in vm.messages" class="list-group-item">
-              <span class="i pficon pficon-info"></span> {{ message.text }}
-            </li>
-          </ul>
-          <div class="footer">
-            <a ng-if="vm.messages.length > 0" ng-click="vm.clearMessages()">Clear Messages</a>
-            <span ng-if="vm.messages.length === 0">No Messages</span>
-          </div>
-        </div>
-      </li>
-      <li dropdown>
-        <a dropdown-toggle class="nav-item-iconic">
-          <i title="Help" class="fa pficon-help"></i>
-          <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-          <li><a href="#">Help</a></li>
-          <li><a href="#">About</a></li>
-        </ul>
-      </li>
-      <li dropdown>
-        <a dropdown-toggle class="nav-item-iconic">
           <i title="Username" class="fa pficon-user"></i>
           <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
-          <li class="action"><a href="#">Preferences</a></li>
           <li class="action"><a ui-sref="logout">Logout</a></li>
         </ul>
       </li>

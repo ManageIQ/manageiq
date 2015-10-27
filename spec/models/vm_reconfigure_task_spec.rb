@@ -18,11 +18,11 @@ describe VmReconfigureTask do
     end
 
     context "numCoresPerSocket" do
-      it "virtual_hw_version = 07" do
+      it "vm_vmware virtual_hw_version = 07" do
         expect(subject["extraConfig"]).to eq([{"key" => "cpuid.coresPerSocket", "value" => "2"}])
       end
 
-      it "virtual_hw_version != 07" do
+      it "vm_vmware virtual_hw_version != 07" do
         @vm.hardware.update_attributes(:virtual_hw_version => "08")
         expect(subject["numCoresPerSocket"]).to eq(2)
       end

@@ -1,5 +1,3 @@
-require 'active_support/deprecation'
-
 class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   def auto_placement_enabled?
     get_value(@values[:placement_auto])
@@ -619,12 +617,12 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   def allowed_datastore_storage_controller(_options = {})
     {}
   end
-  deprecate :allowed_datastore_storage_controller
+  Vmdb::Deprecation.deprecate_methods(self, :allowed_datastore_storage_controller)
 
   def allowed_datastore_aggregate(_options = {})
     {}
   end
-  deprecate :allowed_datastore_aggregate
+  Vmdb::Deprecation.deprecate_methods(self, :allowed_datastore_aggregate)
 
   def get_source_vm
     get_source_and_targets[:vm]
@@ -1033,8 +1031,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     values[:owner_last_name]  = user.userid
 
     # Tags are passed as category|value|cat2|...  Example: cc|001|environment|test
-    p.set_ws_tags(values, tags, :parse_ws_string_v1)
-    p.set_ws_values(values, :ws_values, additional_values, :parse_ws_string_v1)
+    values[:vm_tags] = p.ws_tags(tags, :parse_ws_string_v1)
+    values[:ws_values] = p.ws_values(additional_values, :parse_ws_string_v1)
 
     if p.validate(values) == false
       errors = []
@@ -1241,10 +1239,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     p.ws_vm_fields(values, vm_fields)
     p.ws_requester_fields(values, requester)
-    p.set_ws_tags(values, tags)    # Tags are passed as category=value|cat2=value2...  Example: cc=001|environment=test
-    p.set_ws_values(values, :ws_values, options.values)
-    p.set_ws_values(values, :ws_ems_custom_attributes, options.ems_custom_attributes, :parse_ws_string, :modify_key_name => false)
-    p.set_ws_values(values, :ws_miq_custom_attributes, options.miq_custom_attributes, :parse_ws_string, :modify_key_name => false)
+    values[:vm_tags] = p.ws_tags(tags)    # Tags are passed as category=value|cat2=value2...  Example: cc=001|environment=test
+    values[:ws_values] = p.ws_values(options.values)
+    values[:ws_ems_custom_attributes] = p.ws_values(options.ems_custom_attributes, :parse_ws_string, :modify_key_name => false)
+    values[:ws_miq_custom_attributes] = p.ws_values(options.miq_custom_attributes, :parse_ws_string, :modify_key_name => false)
 
     p.validate_values(values)
 
@@ -1263,7 +1261,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       :guid                   => vm_or_template.guid,
       :uid_ems                => vm_or_template.uid_ems,
       :platform               => vm_or_template.platform,
-      :logical_cpus           => vm_or_template.logical_cpus,
+      :logical_cpus           => vm_or_template.cpu_total_cores,
       :mem_cpu                => vm_or_template.mem_cpu,
       :allocated_disk_storage => vm_or_template.allocated_disk_storage,
       :v_total_snapshots      => vm_or_template.v_total_snapshots,

@@ -32,6 +32,8 @@ class Tenant < ActiveRecord::Base
   has_many :miq_request_tasks, :dependent => :destroy
   has_many :services, :dependent => :destroy
 
+  belongs_to :default_miq_group, :class_name => "MiqGroup", :dependent => :destroy, :inverse_of => :tenant
+
   # FUTURE: /uploads/tenant/:id/logos/:basename.:extension # may want style
   has_attached_file :logo,
                     :url  => "/uploads/:basename.:extension",
@@ -48,6 +50,7 @@ class Tenant < ActiveRecord::Base
   validates :description, :presence => true
   validates :name, :presence => true, :unless => :use_config_for_attributes?
   validates :name, :uniqueness => {:scope => :ancestry, :message => "should be unique per parent"}
+  validate :validate_default_tenant, :on => :update, :if => :default_miq_group_id_changed?
 
   # FUTURE: allow more content_types
   validates_attachment_content_type :logo, :content_type => ['image/png']
@@ -60,6 +63,7 @@ class Tenant < ActiveRecord::Base
   virtual_column :display_type, :type => :string
 
   before_save :nil_blanks
+  after_create :create_tenant_group
 
   def all_subtenants
     self.class.descendants_of(self).where(:divisible => true)
@@ -264,6 +268,17 @@ class Tenant < ActiveRecord::Base
     unless parent_id || parent
       root = self.class.root_tenant
       errors.add(:parent, "required") if root && root != self
+    end
+  end
+
+  def create_tenant_group
+    update_attributes!(:default_miq_group => MiqGroup.create_tenant_group(self)) unless default_miq_group_id
+    self
+  end
+
+  def validate_default_tenant
+    if default_miq_group.tenant_id != id || !default_miq_group.tenant_group?
+      errors.add(:default_miq_group, "default group must be a default group for this tenant")
     end
   end
 end

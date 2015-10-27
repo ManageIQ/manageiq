@@ -38,6 +38,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       assert_specific_container_quota
       assert_specific_container_limit
       assert_specific_container_image_and_registry
+      assert_specific_container_component_status
     end
   end
 
@@ -55,6 +56,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     ContainerLimit.count.should == 3
     ContainerImage.count.should == 3
     ContainerImageRegistry.count.should == 1
+    ContainerComponentStatus.count.should == 3
   end
 
   def assert_ems
@@ -187,8 +189,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     )
 
     @containernode.hardware.should have_attributes(
-      :logical_cpus => 2,
-      :memory_cpu   => 2000
+      :cpu_total_cores => 2,
+      :memory_mb       => 2000
     )
 
     @containernode.ready_condition_status.should_not be_nil
@@ -326,5 +328,13 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       :port => "1234",
     )
     @image.container_nodes.count.should == 1
+  end
+
+  def assert_specific_container_component_status
+    @component_status = ContainerComponentStatus.find_by_name("etcd-0")
+    @component_status.should have_attributes(
+      :condition => "Healthy",
+      :status    => "True"
+    )
   end
 end

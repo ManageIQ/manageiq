@@ -1,0 +1,37 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: quota
+    inherits: 
+    description: 
+  fields:
+  - warn_vms:
+      value: '10'
+  - max_vms:
+      value: '20'
+  - warn_storage:
+      value: '1024'
+  - max_storage:
+      value: '2048'
+  - warn_cpu:
+      value: '2'
+  - max_cpu:
+      value: '2'
+  - warn_memory:
+      value: '1024'
+  - max_memory:
+      value: '2048'
+  - quota_source:
+      value: "/System/CommonMethods/QuotaMethods/quota_source"
+  - limits:
+      value: "/System/CommonMethods/QuotaMethods/limits"
+  - used:
+      value: "/System/CommonMethods/QuotaMethods/used"
+  - requested:
+      value: "/System/CommonMethods/QuotaMethods/requested"
+  - validate:
+      value: "/System/CommonMethods/QuotaMethods/validate_quota"
+      on_error: rejected

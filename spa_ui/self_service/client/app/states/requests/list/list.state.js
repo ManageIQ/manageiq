@@ -26,7 +26,8 @@
 
   /** @ngInject */
   function resolveRequests(CollectionsApi) {
-    var options = {expand: 'resources', attributes: ['picture', 'picture.image_href']};
+    var attributes = ['picture', 'picture.image_href', 'approval_state', 'created_on', 'description'];
+    var options = {expand: 'resources', attributes: attributes};
 
     return CollectionsApi.query('service_requests', options);
   }
@@ -62,11 +63,11 @@
             filterType: 'text'
           },
           {
-            id: 'request_state',
+            id: 'approval_state',
             title: 'Request Status',
             placeholder: 'Filter by Status',
             filterType: 'select',
-            filterValues: ['Pending', 'Denied', 'Finished']
+            filterValues: ['Pending', 'Denied', 'Approved']
           }
         ],
         resultsCount: vm.requestsList.length,
@@ -125,7 +126,7 @@
       } else if (vm.toolbarConfig.sortConfig.currentField.id === 'requested') {
         compValue = new Date(item1.created_on) - new Date(item2.created_on);
       } else if (vm.toolbarConfig.sortConfig.currentField.id === 'status') {
-        compValue = item1.request_state.localeCompare(item2.request_state);
+        compValue = item1.approval_state.localeCompare(item2.approval_state);
       }
 
       if (!vm.toolbarConfig.sortConfig.isAscending) {
@@ -186,8 +187,8 @@
     function matchesFilter(item, filter) {
       if ('description' === filter.id) {
         return item.description.toLowerCase().indexOf(filter.value.toLowerCase()) !== -1;
-      } else if (filter.id === 'request_state') {
-        return item.request_state.toLowerCase() === filter.value.toLowerCase();
+      } else if (filter.id === 'approval_state') {
+        return item.approval_state.toLowerCase() === filter.value.toLowerCase();
       } else if (filter.id === 'request_id') {
         return String(item.id).toLowerCase().indexOf(filter.value.toLowerCase()) !== -1;
       } 

@@ -1,3 +1,8 @@
+- change_stored_password ||= _("Change stored password")
+- cancel_password_change ||= _("Cancel password change")
+- stored_password_placeholder = "●●●●●●●●"
+- pfx ||= ""
+
 - if @edit
   - url = url_for(:action => 'rbac_user_field_changed',
                   :id     => "#{@edit[:user_id] || "new"}")
@@ -45,22 +50,29 @@
       - if db_mode == "database" || (db_mode != "database" && disabled)
         .form-group
           %label.col-md-2.control-label
-            = _("Change Password")
+            = _("Password")
           .col-md-8
-            = password_field_tag("password", '',
+            = password_field_tag("password",
+                                 @edit[:new][:userid].blank? ? "" : stored_password_placeholder,
                                  :maxlength         => 50,
-                                 :placeholder       => placeholder_if_present(@edit[:new][:password]),
+                                 :disabled => @edit[:new][:userid].blank? ? false : true,
                                  :class => "form-control",
                                  "data-miq_observe" => observe_url_json)
             - if @edit[:new][:userid] == "admin"
               = javascript_tag(javascript_focus('password'))
-        .form-group
+          - unless @edit[:new][:userid].blank?
+            %div
+              %a{:id => "change_stored_password", "style" => "display:block;cursor: pointer; cursor: hand;", "onclick" => "changeStoredPassword('#{pfx}', '#{url}')"}
+                = change_stored_password
+              %a{:id => "cancel_password_change", "style" => "display:none;cursor: pointer; cursor: hand;", "onclick" => "cancelPasswordChange('#{pfx}', '#{url}')"}
+                = cancel_password_change
+        .form-group{:id => "verify_group", :style => @edit[:new][:userid].blank? ? "display:block" : "display:none"}
           %label.col-md-2.control-label
             = _("Confirm Password")
           .col-md-8
-            = password_field_tag("password2", '',
+            = password_field_tag("verify",
+                                 "",
                                  :maxlength         => 50,
-                                 :placeholder       => placeholder_if_present(@edit[:new][:password2]),
                                  :class => "form-control",
                                  "data-miq_observe" => observe_url_json)
     .form-group

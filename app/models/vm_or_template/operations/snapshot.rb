@@ -33,7 +33,7 @@ module VmOrTemplate::Operations::Snapshot
   end
 
   def create_snapshot(name, desc = nil, memory = false)
-    raw_create_snapshot(name, desc, memory) unless policy_prevented?(:request_vm_create_snapshot)
+    check_policy_prevent(:request_vm_create_snapshot, :raw_create_snapshot, name, desc, memory)
   end
 
   def raw_remove_snapshot(snapshot_id)

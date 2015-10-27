@@ -44,9 +44,8 @@ module MiqProvisionMixin
 
   def call_automate_event(event_name, continue_on_error = true)
     _log.info("Raising event [#{event_name}] to Automate")
-    ws = MiqAeEvent.raise_evm_event(event_name, self)
+    MiqAeEvent.raise_evm_event(event_name, self, build_request_event(event_name))
     _log.info("Raised  event [#{event_name}] to Automate")
-    return ws
   rescue MiqAeException::Error => err
     message = "Error returned from #{event_name} event processing in Automate: #{err.message}"
     if continue_on_error

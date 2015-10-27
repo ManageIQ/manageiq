@@ -30,8 +30,10 @@ class ContainerTopologyService
         links << build_link(n.ems_ref, n.lives_on.uid_ems)
         if kind == 'VM' # add link to Host
           host = n.lives_on.host
-          topo_items[host.uid_ems] = build_entity_data(host, "Host")
-          links << build_link(n.lives_on.uid_ems, host.uid_ems)
+          if host
+            topo_items[host.uid_ems] = build_entity_data(host, "Host")
+            links << build_link(n.lives_on.uid_ems, host.uid_ems)
+          end
         end
       end
     end
@@ -61,7 +63,11 @@ class ContainerTopologyService
          else entity.ems_ref
          end
 
-    {:id => id, :name => entity.name, :status => status, :kind => kind, :miq_id => entity.id}
+    data = {:id => id, :name => entity.name, :status => status, :kind => kind, :miq_id => entity.id}
+    if (kind.eql?("VM") || kind.eql?("Host"))
+      data.merge!(:provider => entity.ext_management_system.name)
+    end
+    data
   end
 
   def entity_status(entity, kind)
@@ -91,16 +97,10 @@ class ContainerTopologyService
   end
 
   def entities
-    # provider id is empty when the topology is generated for all the providers together
-    if @provider_id
-      provider = ExtManagementSystem.find(@provider_id.to_i)
-      if provider.kind_of?(ManageIQ::Providers::Openshift::ContainerManager) || provider.kind_of?(ManageIQ::Providers::Kubernetes::ContainerManager)
-        nodes = provider.container_nodes
-        services = provider.container_services
-      else
-        nodes = ContainerNode.all
-        services = ContainerService.all
-      end
+    provider = @provider_id ? ExtManagementSystem.find(@provider_id.to_i) : nil
+    if provider.respond_to?(:container_nodes) && provider.respond_to?(:container_services)
+      nodes = provider.container_nodes
+      services = provider.container_services
     else
       nodes = ContainerNode.all
       services = ContainerService.all

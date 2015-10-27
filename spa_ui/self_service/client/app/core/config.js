@@ -1,21 +1,12 @@
 (function() {
   'use strict';
 
-  var config = {
-    appErrorPrefix: '[ManageIQ] ',
-    appTitle: 'ManageIQ'
-  };
-
   angular.module('app.core')
-    .value('config', config)
     .config(configure)
     .run(init);
 
   /** @ngInject */
-  function configure($logProvider, routerHelperProvider, exceptionHandlerProvider, $compileProvider) {
-    exceptionHandlerProvider.configure(config.appErrorPrefix);
-    routerHelperProvider.configure({docTitle: config.appTitle + ': '});
-
+  function configure($logProvider, $compileProvider) {
     $logProvider.debugEnabled(true);
     $compileProvider.debugInfoEnabled(false);
   }
