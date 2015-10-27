@@ -1,12 +1,11 @@
 <div class="ss-card">
-  <h2 class="ss-card__title">{{ ::vm.title }}</h2>
+  <h3 class="ss-card__title">{{ ::vm.title }}</h3>
   <h4 class="ss-card__description">{{ ::vm.description }}</h4>
   <div class="ss-card__logo_wrapper">
-    <span class="ss-card__logo-center"></span>
     <img ng-if="vm.img" class="ss-card__logo" alt="{{ ::vm.title }}" ng-src="{{ ::vm.img }}"/>
     <img ng-if="!vm.img" class="ss-card__logo" alt="{{ ::vm.title }}" src="images/service.png"/>
   </div>
   <a class="ss-card__more" popover-placement="right" popover-html="::vm.more" popover-trigger="mouseenter">
-    <i class="fa fa-info-circle"></i>
+    <i class="fa fa-info-circle"></i> More
   </a>
 </div>
