@@ -5,14 +5,16 @@ describe ServiceTemplateProvisionTask do
     before(:each) do
       @admin      = FactoryGirl.create(:user_with_group)
 
-      @request   = FactoryGirl.create(:service_template_provision_request, :description => 'Service Request', :userid => @admin.userid)
-      @task_0    = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 0 (Top)', :userid => @admin.userid, :status => "Ok", :state => "pending",  :miq_request_id => @request.id, :request_type => "clone_to_service")
-      @task_1    = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 1', :userid => @admin.userid, :status => "Ok", :state => "pending",  :miq_request_id => @request.id, :request_type => "clone_to_service", :options => {:service_resource_id => FactoryGirl.create(:service_resource, :provision_index => 7, :scaling_min => 1, :scaling_max => 1, :resource_type => 'ServiceTemplate').id})
-      @task_1_1  = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 1 - 1', :userid => @admin.userid, :status => "Ok", :state => "pending",  :miq_request_id => @request.id, :request_type => "clone_to_service", :options => {:service_resource_id => FactoryGirl.create(:service_resource, :provision_index => 1, :scaling_min => 1, :scaling_max => 3, :resource_type => 'ServiceTemplate').id})
-      @task_1_2  = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 1 - 2', :userid => @admin.userid, :status => "Ok", :state => "pending",  :miq_request_id => @request.id, :request_type => "clone_to_service", :options => {:service_resource_id => FactoryGirl.create(:service_resource, :provision_index => 5, :scaling_min => 1, :scaling_max => 1, :resource_type => 'ServiceTemplate').id})
-      @task_2    = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 2', :userid => @admin.userid, :status => "Ok", :state => "pending",  :miq_request_id => @request.id, :request_type => "clone_to_service", :options => {:service_resource_id => FactoryGirl.create(:service_resource, :provision_index => 9, :scaling_min => 1, :scaling_max => 1, :resource_type => 'ServiceTemplate').id})
-      @task_2_1  = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 2 - 1', :userid => @admin.userid, :status => "Ok", :state => "pending",  :miq_request_id => @request.id, :request_type => "clone_to_service", :options => {:service_resource_id => FactoryGirl.create(:service_resource, :provision_index => 2, :scaling_min => 1, :scaling_max => 1, :resource_type => 'ServiceTemplate').id})
-      @task_3    = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 3', :userid => @admin.userid, :status => "Ok", :state => "finished", :miq_request_id => @request.id, :request_type => "clone_to_service", :options => {:service_resource_id => FactoryGirl.create(:service_resource, :provision_index => 3, :scaling_min => 1, :scaling_max => 5, :resource_type => 'ServiceTemplate').id})
+      @request   = FactoryGirl.create(:service_template_provision_request,
+                                      :description => 'Service Request',
+                                      :userid      => @admin.userid)
+      @task_0 = create_stp('Task 0 (Top)')
+      @task_1 = create_stp('Task 1', 'pending', 7, 1)
+      @task_1_1 = create_stp('Task 1 - 1', 'pending', 1, 3)
+      @task_1_2 = create_stp('Task 1 - 2', 'pending', 5, 1)
+      @task_2 = create_stp('Task 2', 'pending', 9, 1)
+      @task_2_1 = create_stp('Task 2 - 1', 'pending', 2, 1)
+      @task_3 = create_stp('Task 3', 'finished', 3, 5)
 
       @request.miq_request_tasks = [@task_0, @task_1, @task_1_1, @task_1_2, @task_2, @task_2_1, @task_3]
       @task_0.miq_request_tasks  = [@task_1, @task_2, @task_3]
@@ -23,6 +25,30 @@ describe ServiceTemplateProvisionTask do
       @task_2.miq_request_task   =  @task_0
       @task_2.miq_request_tasks  = [@task_2_1]
       @task_3.miq_request_task   =  @task_0
+    end
+
+    def create_stp(description, state = 'pending', prov_index = nil, scaling_max = nil)
+      if prov_index && scaling_max
+        options = {:service_resource_id => service_resource_id(prov_index, scaling_max)}
+      else
+        options = {}
+      end
+      FactoryGirl.create(:service_template_provision_task,
+                         :description    => description,
+                         :userid         => @admin.userid,
+                         :status         => "Ok",
+                         :state          => state,
+                         :miq_request_id => @request.id,
+                         :request_type   => "clone_to_service",
+                         :options        => options)
+    end
+
+    def service_resource_id(index, scaling_max)
+      FactoryGirl.create(:service_resource,
+                         :provision_index => index,
+                         :scaling_min     => 1,
+                         :scaling_max     => scaling_max,
+                         :resource_type   => 'ServiceTemplate').id
     end
 
     it "deliver_to_automate" do
