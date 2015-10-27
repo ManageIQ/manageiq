@@ -317,7 +317,8 @@ module ManageIQ
       def get_clusters_and_host_mapping
         clusters = []
         cluster_host_mapping = {}
-        @data_index.fetch_path(:orchestration_stacks).each_value do |stack|
+        orchestration_stacks = @data_index.fetch_path(:orchestration_stacks)
+        orchestration_stacks.each_value do |stack|
           uid = stack.fetch_path(:parent, :ems_ref)
           next unless uid
 
@@ -326,7 +327,7 @@ module ManageIQ
 
           cluster_host_mapping[nova_server[:physical_resource]] = uid
           clusters << {:name => stack[:parent][:name], :uid => uid}
-        end
+        end if orchestration_stacks
         return clusters.uniq, cluster_host_mapping
       end
 
