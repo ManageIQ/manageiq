@@ -68,7 +68,7 @@ describe OrchestrationTemplateDialogService do
     assert_field(fields[0], DialogFieldDropDownList, :name => "tenant_name",     :dynamic => true)
     assert_field(fields[1], DialogFieldTextBox,      :name => "stack_name",      :validator_rule => '^[A-Za-z][A-Za-z0-9\-]*$')
     assert_field(fields[2], DialogFieldDropDownList, :name => "stack_onfailure", :values => [%w(DO_NOTHING Do\ nothing), %w(ROLLBACK Rollback)])
-    assert_field(fields[3], DialogFieldTextBox,      :name => "stack_timeout",   :validator_rule => '^[1-9][0-9]*$')
+    assert_field(fields[3], DialogFieldTextBox,      :name => "stack_timeout",   :data_type => 'integer')
   end
 
   def assert_azure_stack_group(group)
