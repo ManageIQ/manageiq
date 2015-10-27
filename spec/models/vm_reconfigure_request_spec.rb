@@ -5,7 +5,7 @@ describe VmReconfigureRequest do
   let(:ems_vmware)    { FactoryGirl.create(:ems_vmware, :zone => zone2) }
   let(:host_hardware) { FactoryGirl.build(:hardware, :cpu_total_cores => 40, :cpu_sockets => 10, :cpu_cores_per_socket => 4) }
   let(:host)          { FactoryGirl.build(:host, :hardware => host_hardware) }
-  let(:request)       { FactoryGirl.create(:vm_reconfigure_request, :userid => admin.userid) }
+  let(:request)       { FactoryGirl.create(:vm_reconfigure_request, :requester => admin) }
   let(:vm_hardware)   { FactoryGirl.build(:hardware, :virtual_hw_version => "07") }
   let(:vm_redhat)     { FactoryGirl.create(:vm_redhat) }
   let(:vm_vmware)     { FactoryGirl.create(:vm_vmware, :hardware => vm_hardware, :host => host) }

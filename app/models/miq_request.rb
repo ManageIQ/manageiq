@@ -441,7 +441,6 @@ class MiqRequest < ActiveRecord::Base
     request.save!
 
     request.set_description
-    request.create_request
 
     request.log_request_success(requester, :created)
 

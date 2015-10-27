@@ -121,7 +121,7 @@ describe ApiController do
     end
 
     it "query Provision Requests" do
-      FactoryGirl.create(:miq_provision_request, :source => template, :userid => api_config(:user))
+      FactoryGirl.create(:miq_provision_request, :source => template, :requester => @user)
       test_collection_query(:provision_requests, provision_requests_url, MiqProvisionRequest)
     end
 
@@ -146,7 +146,7 @@ describe ApiController do
     end
 
     it "query Requests" do
-      FactoryGirl.create(:vm_migrate_request, :userid => FactoryGirl.create(:user).userid)
+      FactoryGirl.create(:vm_migrate_request, :requester => @user)
       test_collection_query(:requests, requests_url, MiqRequest)
     end
 
@@ -181,7 +181,7 @@ describe ApiController do
     end
 
     it "query Service Requests" do
-      FactoryGirl.create(:service_template_provision_request, :userid => api_config(:user))
+      FactoryGirl.create(:service_template_provision_request, :requester => @user)
       test_collection_query(:service_requests, service_requests_url, ServiceTemplateProvisionRequest)
     end
 

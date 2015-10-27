@@ -28,8 +28,8 @@ describe MiqProvisionRequest do
     let(:vm)          { FactoryGirl.create(:vm_vmware, :name => "vm1", :location => "abc/def.vmx") }
     let(:vm_template) { FactoryGirl.create(:template_vmware, :name => "template1", :ext_management_system => ems) }
 
-    it "should not be created without userid being specified" do
-      -> { FactoryGirl.create(:miq_provision_request) }.should raise_error(ActiveRecord::RecordInvalid)
+    it "should not be created without requester being specified" do
+      expect { FactoryGirl.create(:miq_provision_request) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "should not be created with an invalid userid being specified" do
@@ -37,22 +37,21 @@ describe MiqProvisionRequest do
     end
 
     it "should not be created with a valid userid but no vm being specified" do
-      -> { FactoryGirl.create(:miq_provision_request, :userid => user.userid) }.should raise_error(ActiveRecord::RecordInvalid)
+      expect { FactoryGirl.create(:miq_provision_request, :requester => user) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "should be created from either a VM or Template" do
-      -> { FactoryGirl.create(:miq_provision_request, :userid => user.userid, :src_vm_id => vm_template.id) }.should_not raise_error
-      -> { FactoryGirl.create(:miq_provision_request, :userid => user.userid, :src_vm_id => vm.id) }.should_not raise_error
+      expect { FactoryGirl.create(:miq_provision_request, :requester => user, :src_vm_id => vm_template.id) }.not_to raise_error
+      expect { FactoryGirl.create(:miq_provision_request, :requester => user, :src_vm_id => vm.id) }.not_to raise_error
     end
 
     it "should not be created with a valid userid but invalid vm being specified" do
-      -> { FactoryGirl.create(:miq_provision_request, :userid => user.userid, :src_vm_id => 42) }.should raise_error(ActiveRecord::RecordInvalid)
+      expect { FactoryGirl.create(:miq_provision_request, :requester => user, :src_vm_id => 42) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     context "with a valid userid and source vm," do
       before do
-        @pr = FactoryGirl.create(:miq_provision_request, :userid => user.userid, :src_vm_id => vm_template.id, :options => {:owner_email => 'tester@miq.com'})
-        @pr.create_request
+        @pr = FactoryGirl.create(:miq_provision_request, :requester => user, :src_vm_id => vm_template.id, :options => {:owner_email => 'tester@miq.com'})
         @request = @pr.miq_request
       end
 
@@ -125,8 +124,7 @@ describe MiqProvisionRequest do
 
         it "should return stats from quota methods" do
           prov_options = {:number_of_vms => [2, '2'], :owner_email => 'tester@miq.com', :vm_memory => ['1024', '1024'], :number_of_cpus => [2, '2']}
-          @pr2 = FactoryGirl.create(:miq_provision_request, :userid => user.userid, :src_vm_id => vm_template.id, :options => prov_options)
-          @pr2.create_request
+          @pr2 = FactoryGirl.create(:miq_provision_request, :requester => user, :src_vm_id => vm_template.id, :options => prov_options)
 
           #:requests_by_group
           stats = @pr.check_quota(:requests_by_owner)

@@ -88,7 +88,6 @@ class MiqRequestWorkflow
     end
 
     request.set_description
-    request.create_request
 
     request.log_request_success(@requester, :created)
 

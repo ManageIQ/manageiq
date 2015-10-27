@@ -24,7 +24,7 @@ describe MiqProvision do
 
       context "with a valid userid and source vm," do
         before(:each) do
-          @pr = FactoryGirl.create(:miq_provision_request, :userid => @admin.userid, :src_vm_id => @vm_template.id)
+          @pr = FactoryGirl.create(:miq_provision_request, :requester => @admin, :src_vm_id => @vm_template.id)
           @options[:src_vm_id] = [@vm_template.id, @vm_template.name]
           @vm_prov = FactoryGirl.create(:miq_provision, :userid => @admin.userid, :miq_request => @pr, :source => @vm_template, :request_type => 'template', :state => 'pending', :status => 'Ok', :options => @options)
         end

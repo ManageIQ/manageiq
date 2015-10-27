@@ -110,7 +110,7 @@ describe MiqRequestController do
       EvmSpecHelper.create_guid_miq_server_zone
       @miq_request = MiqProvisionConfiguredSystemRequest.create(:description    => "Foreman provision",
                                                                 :approval_state => "pending_approval",
-                                                                :userid         => User.current_user.userid)
+                                                                :requester      => User.current_user)
     end
     it "when edit request button is pressed" do
       post :button, :pressed => "miq_request_edit", :id => @miq_request.id, :format => :js
@@ -133,7 +133,7 @@ describe MiqRequestController do
       EvmSpecHelper.create_guid_miq_server_zone
       @miq_request = MiqProvisionConfiguredSystemRequest.create(:description    => "Foreman provision",
                                                                 :approval_state => "pending_approval",
-                                                                :userid         => User.current_user.userid)
+                                                                :requester      => User.current_user)
     end
     it "when the edit button is pressed the request is displayed" do
       session[:settings] = {:display   => {:quad_truncate => 'f'},
