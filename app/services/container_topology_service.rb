@@ -64,7 +64,7 @@ class ContainerTopologyService
          end
 
     data = {:id => id, :name => entity.name, :status => status, :kind => kind, :miq_id => entity.id}
-    if(kind.eql?("VM") || kind.eql?("Host"))
+    if (kind.eql?("VM") || kind.eql?("Host"))
       data.merge!(:provider => entity.ext_management_system.name)
     end
     data
