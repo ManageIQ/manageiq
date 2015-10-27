@@ -362,6 +362,21 @@ describe Tenant do
     end
   end
 
+  context "#validate_default_tenant" do
+    it "fails assigning a group with the wrong tenant" do
+      tenant1 = FactoryGirl.create(:tenant)
+      tenant2 = FactoryGirl.create(:tenant)
+      g = FactoryGirl.create(:miq_group, :tenant => tenant1)
+      expect { tenant2.update_attributes!(:default_miq_group => g) }.to raise_error
+    end
+
+    # we may want to change this in the future
+    it "prevents changing default_miq_group" do
+      g = FactoryGirl.create(:miq_group, :tenant => tenant)
+      expect { tenant.update_attributes!(:default_miq_group => g) }.to raise_error
+    end
+  end
+
   describe "#description" do
     it "has description" do
       tenant.update_attributes(:description => 'very important vm')
