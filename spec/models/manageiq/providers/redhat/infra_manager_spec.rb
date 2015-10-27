@@ -30,7 +30,7 @@ describe ManageIQ::Providers::Redhat::InfraManager do
     before do
       _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
       @ems  = FactoryGirl.create(:ems_redhat_with_authentication, :zone => zone)
-      @hw   = FactoryGirl.create(:hardware, :memory_mb => 1024, :numvcpus => 2, :cpu_cores_per_socket => 1)
+      @hw   = FactoryGirl.create(:hardware, :memory_mb => 1024, :cpu_sockets => 2, :cpu_cores_per_socket => 1)
       @vm   = FactoryGirl.create(:vm_redhat, :ext_management_system => @ems)
 
       @cores_per_socket = 2

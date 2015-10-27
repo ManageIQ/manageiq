@@ -590,7 +590,7 @@ module Openstack
       end
 
       vm.hardware.should have_attributes(
-        :numvcpus      => vm.flavor.cpus,
+        :cpu_sockets   => vm.flavor.cpus,
         :memory_mb     => vm.flavor.memory / 1.megabyte,
         :disk_capacity => 2.5.gigabytes # TODO(lsmola) Where is this coming from?
       )

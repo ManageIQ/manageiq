@@ -485,7 +485,7 @@ en:
       num_cpu: Number of CPUs
       num_disks: Number of Disks
       num_hard_disks: Number of Hard Disks
-      numvcpus: Number of CPUs
+      cpu_sockets: Number of CPUs
       operational_status: Operational Status Code
       operational_status_str: Operational Status
       os_image_name: OS Name

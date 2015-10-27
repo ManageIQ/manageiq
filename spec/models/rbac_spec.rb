@@ -612,7 +612,7 @@ describe Rbac do
           group = i + 1
           guest_os = %w(_none_ windows ubuntu windows ubuntu)[group]
           vm = FactoryGirl.build(:vm_vmware, :name => "Test Group #{group} VM #{i}")
-          vm.hardware = FactoryGirl.build(:hardware, :numvcpus => (group * 2), :memory_mb => (group * 1.megabytes), :guest_os => guest_os)
+          vm.hardware = FactoryGirl.build(:hardware, :cpu_sockets => (group * 2), :memory_mb => (group * 1.megabytes), :guest_os => guest_os)
           vm.host = @hosts[group - 1]
           vm.evm_owner_id = @user.id  if i.even?
           vm.miq_group_id = @group.id if i.odd?

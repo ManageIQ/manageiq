@@ -13,7 +13,7 @@ class ManageIQ::Providers::InfraManager::ProvisionWorkflow < ::MiqProvisionVirtW
   def get_cpu_values_hash(vm)
     {
       :number_of_cpus    => vm.hardware.cpu_total_cores,
-      :number_of_sockets => vm.hardware.numvcpus,
+      :number_of_sockets => vm.hardware.cpu_sockets,
       :cores_per_socket  => vm.hardware.cpu_cores_per_socket
     }
   end
