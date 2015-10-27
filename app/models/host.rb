@@ -47,7 +47,7 @@ class Host < ActiveRecord::Base
   has_many                  :vms_and_templates, :dependent => :nullify
   has_many                  :vms
   has_many                  :miq_templates
-  has_and_belongs_to_many   :storages
+  has_and_belongs_to_many   :storages, :join_table => :host_storages
   has_many                  :switches, :dependent => :destroy
   has_many                  :patches, :dependent => :destroy
   has_many                  :system_services, :dependent => :destroy
