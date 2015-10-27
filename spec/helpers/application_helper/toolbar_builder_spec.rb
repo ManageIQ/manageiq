@@ -21,12 +21,12 @@ describe ApplicationHelper do
   end
 
   describe "custom_buttons" do
-    before(:each) do
+    before do
       @user = FactoryGirl.create(:user, :role => "super_administrator")
     end
 
     context "when record is VM" do
-      before(:each) do
+      before do
         @record = FactoryGirl.create(:vm_vmware)
       end
 
@@ -49,7 +49,7 @@ describe ApplicationHelper do
       end
 
       context "and it has custom buttons" do
-        before(:each) do
+        before do
           @set_data = {:applies_to_class => 'Vm'}
           @button_set = FactoryGirl.create(:custom_button_set, :set_data => @set_data)
           login_as @user
@@ -141,7 +141,7 @@ describe ApplicationHelper do
     end
 
     context "when record is Service" do
-      before(:each) do
+      before do
         @service_template = FactoryGirl.create(:service_template)
         @record = FactoryGirl.create(:service, :service_template => @service_template)
       end
@@ -165,7 +165,7 @@ describe ApplicationHelper do
       end
 
       context "and it has custom buttons" do
-        before(:each) do
+        before do
           @set_data = {:applies_to_class => 'ServiceTemplate', :applies_to_id => @service_template.id}
           @button_set = FactoryGirl.create(:custom_button_set, :set_data => @set_data)
           login_as @user
@@ -1873,7 +1873,7 @@ describe ApplicationHelper do
     end
 
     context "when record class = AssignedServerRole" do
-      before(:each) { @record = AssignedServerRole.new }
+      before { @record = AssignedServerRole.new }
 
       before do
         @sb = {:active_tree => :diagnostics_tree,
@@ -1904,7 +1904,7 @@ describe ApplicationHelper do
       end
 
       context "and id = role_suspend" do
-        before(:each) do
+        before do
           @id = "role_suspend"
           @miq_server = MiqServer.new(:name => "xx miq server", :id => "xx server id")
           @miq_server.stub(:started? => true)
@@ -1935,7 +1935,7 @@ describe ApplicationHelper do
       end
 
       context "and id = ontap_storage_system_statistics" do
-        before(:each) { @id = "ontap_storage_system_statistics" }
+        before { @id = "ontap_storage_system_statistics" }
         it_behaves_like 'record without latest derived metrics', "No Statistics Collected"
         it_behaves_like 'default case'
       end
@@ -2454,7 +2454,7 @@ describe ApplicationHelper do
       end
 
       context "snapshot buttons" do
-        before(:each) do
+        before do
           @record = FactoryGirl.create(:vm_vmware, :vendor => "vmware")
         end
 
@@ -2537,7 +2537,7 @@ describe ApplicationHelper do
     end # end of Vm class
 
     context "Disable Snapshot buttons for RHEV VMs" do
-      before(:each) { @record = FactoryGirl.create(:vm_redhat) }
+      before { @record = FactoryGirl.create(:vm_redhat) }
 
       ['vm_snapshot_add', 'vm_snapshot_delete', 'vm_snapshot_delete_all', 'vm_snapshot_revert'].each do |b|
         it "button #{b}" do
@@ -2566,7 +2566,7 @@ describe ApplicationHelper do
 
     context "and id = miq_request_delete" do
       let(:server) { active_record_instance_double("MiqServer", :logon_status => :ready) }
-      before(:each) do
+      before do
         MiqServer.stub(:my_server).with(true).and_return(server)
 
         # create User record...
@@ -2662,7 +2662,7 @@ describe ApplicationHelper do
   end
 
   describe "#build_toolbar_select_button" do
-    before :each do
+    before do
       @gtl_type = 'list'
       @settings = {
         :views => {
