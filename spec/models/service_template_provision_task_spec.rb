@@ -3,11 +3,11 @@ require "spec_helper"
 describe ServiceTemplateProvisionTask do
   context "with multiple tasks" do
     before(:each) do
-      @admin      = FactoryGirl.create(:user_with_group)
+      @admin = FactoryGirl.create(:user_with_group)
 
-      @request   = FactoryGirl.create(:service_template_provision_request,
-                                      :description => 'Service Request',
-                                      :userid      => @admin.userid)
+      @request = FactoryGirl.create(:service_template_provision_request,
+                                    :description => 'Service Request',
+                                    :userid      => @admin.userid)
       @task_0 = create_stp('Task 0 (Top)')
       @task_1 = create_stp('Task 1', 'pending', 7, 1)
       @task_1_1 = create_stp('Task 1 - 1', 'pending', 1, 3)
