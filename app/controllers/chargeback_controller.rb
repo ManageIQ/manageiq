@@ -249,8 +249,8 @@ class ChargebackController < ApplicationController
                   detail.group = r[:group]
                   detail.per_unit = r[:per_unit]
                   detail.metric = r[:metric]
-                  #Copy the currency id of the rate detail linking with the rate_detail_currency
-                  detail.chargeback_rate_detail_currency_id =  r[:type_currency] ? ChargebackRateDetailCurrency.find_by(name: r[:type_currency]).id : nil
+                  # Copy the currency id of the rate detail linking with the rate_detail_currency
+                  detail.chargeback_rate_detail_currency_id = r[:type_currency] ? ChargebackRateDetailCurrency.find_by(:name => r[:type_currency]).id : nil
                   @sb[:rate_details].push(detail) unless @sb[:rate_details].include?(detail)
                 end
               end
