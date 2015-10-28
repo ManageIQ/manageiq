@@ -171,12 +171,12 @@ module ManageIQ::Providers
           storages = get_mors(host_inv, 'datastore').collect { |s| storage_uids[s] }.compact
 
           # Build list of mount info
-          hosts_storages = []
+          host_storages = []
           ems_inv[:storage].each do |s_mor, storage_inv|
             storage_inv["host"].to_miq_a.each do |mount|
               next if mount["key"] != mor
               access_mode = mount["mountInfo"]["accessMode"]
-              hosts_storages << {
+              host_storages << {
                 :storage   => storage_uids[s_mor],
                 :read_only => access_mode == "readOnly",
               }
@@ -223,7 +223,7 @@ module ManageIQ::Providers
             :ems_cluster      => cluster_uids_by_host[mor],
             :operating_system => host_inv_to_os_hash(host_inv, hostname),
             :system_services  => host_inv_to_system_service_hashes(host_inv),
-            :hosts_storages   => hosts_storages,
+            :host_storages    => host_storages,
 
             :hardware         => hardware,
             :switches         => switches,
