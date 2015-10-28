@@ -25,36 +25,34 @@
   +element(description)
     font-weight: 700
     font-size: 12px
-    margin-top: 15px
+    margin-top: 10px
+    height: 20px
 
   +element(logo_wrapper)
     height: 155px
-    text-align: center  
+    padding-top: 10px
 
   +element(logo)
     display: inline-block
     max-height: 120px
-    max-width: 230px
+    max-width: 190px
     position: relative
     left: -2px
-
-  +element(logo-center)
-    display: inline-block
-    height: 100%
-    vertical-align: middle
 
   +element(more)
     background: $app-color-white
     border: none
     opacity: 0
     transition: opacity 0s .2s, opacity .2s linear
-    position: absolute
-    bottom: 20px
-    left: 50%
-    margin-left: -5px
+    text-align: center
 
     .fa
       font-size: 16px
       margin-right: 5px
+      position: relative
+      top: 1px
+
+    &:hover
+      text-decoration: none 
 
   

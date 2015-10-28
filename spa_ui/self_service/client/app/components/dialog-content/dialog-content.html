@@ -8,8 +8,8 @@
   </div>
   <div ng-if=" vm.dialog.label && vm.supportedDialog ">
     <div>
-      <h2 class="text-capitalize no-wrap">{{ ::vm.dialog.label }} </h2>
-      <h4>{{ ::vm.dialog.description }}</h4>
+      <h2 class="text-capitalize no-wrap">{{ ::vm.dialog.label }}</h2>
+      <p ng-if="vm.dialog.label != vm.dialog.description">{{ ::vm.dialog.description }}</p>
     </div>
     <tabset>
       <tab ng-repeat="dialogTab in ::vm.dialog.dialog_tabs " heading="{{ ::dialogTab.label }}">
@@ -26,11 +26,9 @@
                 ng-init="inputTitle = dialogField.description"
                 class="form-horizontal">
                 <div class="form-group">
-                  <div class="col-sm-3">
-                    {{ ::dialogField.label }}
-                  </div>
+                  <label class="control-label col-sm-2">{{ ::dialogField.label }}</label>
 
-                  <div ng-switch on="dialogField.type" class="col-sm-9">
+                  <div ng-switch on="dialogField.type" class="col-sm-5">
                     <input
                       ng-switch-when="DialogFieldTextBox"
                       ng-model="dialogField.default_value"
@@ -119,7 +117,7 @@
                     {{ ::dialogField.label }}
                   </div>
 
-                  <div ng-switch on="dialogField.type" class="col-sm-9">
+                  <div ng-switch on="dialogField.type" class="col-sm-5">
 
                     <input
                       ng-switch-when="DialogFieldTextBox"
