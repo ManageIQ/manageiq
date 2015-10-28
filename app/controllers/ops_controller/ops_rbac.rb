@@ -1130,8 +1130,6 @@ module OpsController::OpsRbac
   # Set group record variables to new values
   def rbac_group_set_record_vars(group)
     role = MiqUserRole.find_by_id(@edit[:new][:role])
-    groups = MiqGroup.all(:order => "sequence DESC")
-    group.sequence = groups.first.nil? ? 1 : groups.first.sequence + 1
     group.description = @edit[:new][:description]
     group.miq_user_role = role
     group.tenant = Tenant.find_by_id(@edit[:new][:group_tenant]) if @edit[:new][:group_tenant]

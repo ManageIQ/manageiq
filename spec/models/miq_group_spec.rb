@@ -248,16 +248,18 @@ describe MiqGroup do
     it "fails if referenced by user#current_group" do
       FactoryGirl.create(:user, :miq_groups => [group])
 
+      current_count = MiqGroup.count
       expect { group.destroy }.to raise_error
-      MiqGroup.count.should eq 1
+      MiqGroup.count.should eq current_count
     end
 
     it "fails if referenced by user#miq_groups" do
       group2 = FactoryGirl.create(:miq_group)
       FactoryGirl.create(:user, :miq_groups => [group, group2], :current_group => group2)
 
+      current_count = MiqGroup.count
       expect { group.destroy }.to raise_error
-      MiqGroup.count.should eq 2
+      MiqGroup.count.should eq current_count
     end
 
     it "fails if referenced by a tenant#default_miq_group" do
@@ -427,6 +429,46 @@ describe MiqGroup do
 
       expect(MiqGroup.non_tenant_groups).not_to include(tg)
       expect(MiqGroup.non_tenant_groups).to include(g)
+    end
+  end
+
+  describe ".next_sequence" do
+    it "creates the first group" do
+      MiqGroup.delete_all
+      expect(MiqGroup.next_sequence).to eq(1)
+    end
+
+    it "detects existing groups" do
+      expect(MiqGroup.next_sequence).to be < 999 # sanity check
+      FactoryGirl.create(:miq_group, :sequence => 999)
+      expect(MiqGroup.next_sequence).to eq(1000)
+    end
+
+    it "handles nil sequences" do
+      MiqGroup.delete_all
+      g = FactoryGirl.create(:miq_group)
+      g.update_attribute(:sequence, nil)
+
+      expect(MiqGroup.next_sequence).to eq(1)
+    end
+
+    it "auto assigns a sequences" do
+      # don't want to get behavior from factory girl
+      g1 = MiqGroup.create(:description => "one")
+      g2 = MiqGroup.create(:description => "two")
+
+      expect(g1.sequence).to be
+      expect(g2.sequence).to eq(g1.sequence + 1)
+    end
+
+    it "builds a sequence based upon select criteria" do
+      expect(MiqGroup.next_sequence).to be < 999 # sanity check
+
+      FactoryGirl.create(:miq_group, :description => "want 1", :sequence => 999)
+      FactoryGirl.create(:miq_group, :description => "want 2", :sequence => 1000)
+      FactoryGirl.create(:miq_group, :description => "dont want", :sequence => 1009)
+
+      expect(MiqGroup.where("description like 'want%'").next_sequence).to eq(1001)
     end
   end
 end
