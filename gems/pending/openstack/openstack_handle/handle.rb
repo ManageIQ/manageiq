@@ -51,10 +51,11 @@ module OpenstackHandle
 
     def self.raw_connect(username, password, auth_url, service = "Compute", extra_opts = nil)
       opts = {
-        :provider           => 'OpenStack',
-        :openstack_auth_url => auth_url,
-        :openstack_username => username,
-        :openstack_api_key  => password,
+        :provider                => 'OpenStack',
+        :openstack_auth_url      => auth_url,
+        :openstack_username      => username,
+        :openstack_api_key       => password,
+        :openstack_endpoint_type => 'publicURL',
       }
       opts.merge!(extra_opts) if extra_opts
 
