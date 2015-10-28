@@ -52,11 +52,10 @@ class MiqRequestController < ApplicationController
     elsif params[:pressed] == "miq_request_reload"
       if @display == "main" && params[:id].present?
         show
-        c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
+        c_tb = build_toolbar(center_toolbar_filename)
         render :update do |page|
           page.replace("request_div", :partial => "miq_request/request")
-          page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
-          page << javascript_show("center_buttons_div")
+          page << javascript_pf_toolbar_reload('center_tb', c_tb)
         end
       elsif @display == "miq_provisions"
         show
@@ -195,9 +194,9 @@ class MiqRequestController < ApplicationController
       return unless load_edit("stamp_edit__#{params[:id]}", "show")
       stamp_request = MiqRequest.find(@edit[:request].id)         # Get the current request record
       if @edit[:stamp_typ] == "a"
-        stamp_request.approve(session[:userid], @edit[:reason])
+        stamp_request.approve(current_user, @edit[:reason])
       else
-        stamp_request.deny(session[:userid], @edit[:reason])
+        stamp_request.deny(current_user, @edit[:reason])
       end
       #     AuditEvent.success(build_saved_audit(request, @edit))
       add_flash(_("Request \"%{name}\" was %{task}") % {:name => stamp_request.description, :task => (session[:edit] && session[:edit][:stamp_typ]) == "a" ? "approved" : "denied"})
@@ -378,6 +377,10 @@ class MiqRequestController < ApplicationController
       prov_set_default_options
     end
     show_list
+
+    # need to call this outside render :update
+    grid_options, js_options = replace_list_grid
+
     render :update do |page|
       page.replace("prov_options_div", :partial => "prov_options")
       if @view.table.data.length >= 1
@@ -387,14 +390,12 @@ class MiqRequestController < ApplicationController
         page << javascript_show("no_records_div")
         page << javascript_hide("records_div")
       end
-      page << "ManageIQ.grids.xml = \"#{j_str(@grid_xml)}\";"  # Set the XML data
-      page << "ManageIQ.grids.grids['gtl_list_grid'].obj.clearAll(true);"               # Clear grid data, including headers
-      page << "ManageIQ.grids.grids['gtl_list_grid'].obj.parse(ManageIQ.grids.xml);"    # Reload grid from XML
-      if @sortcol
-        dir = @sortdir ? @sortdir[0..2] : "asc"
-        page << "ManageIQ.grids.grids['gtl_list_grid'].obj.setSortImgState(true, #{@sortcol + 2}, '#{dir}');"
-      end
-      page << "miqGridOnCheck(null, null, null);"           # Reset the center buttons
+
+      page.replace_html("list_grid", :partial => "layouts/list_grid",
+                                     :locals => {:options    => grid_options,
+                                                 :js_options => js_options})
+      page << "miqGridOnCheck();"           # Reset the center buttons
+
       page.replace("pc_div_1", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => "show_list", :db => @view.db, :headers => @view.headers})
       page.replace("pc_div_2", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => "show_list"})
     end

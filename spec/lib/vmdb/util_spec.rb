@@ -57,13 +57,11 @@ describe VMDB::Util do
       it "#{file_content.lines.count} lines, #{type == :normal_case ? 'normal case' : 'no leading timestamps'}" do
         filename = "abc.log"
         string1 = StringIO.new(file_content)
-        string1.should_receive(:close)
         string2 = StringIO.new(file_content)
-        string2.should_receive(:close)
 
-        File.stub(:open).with(filename, "r").and_return(string1)
+        File.stub(:open).with(filename, "r").and_yield(string1)
         require 'elif'
-        Elif.stub(:open).and_return(string2)
+        Elif.stub(:open).and_yield(string2)
 
         if type == :normal_case || file_content.lines.count <= 250
           start_time, end_time = described_class.log_duration(filename)

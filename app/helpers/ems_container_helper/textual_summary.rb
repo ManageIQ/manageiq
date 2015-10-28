@@ -11,7 +11,7 @@ module EmsContainerHelper::TextualSummary
     # Order of items should be from parent to child
     items = []
     items.concat(%i(container_projects))
-    items.concat(%i(container_routes)) if @ems.kind_of?(ManageIQ::Providers::Openshift::ContainerManager)
+    items.concat(%i(container_routes)) if @ems.respond_to?(:container_routes)
     items.concat(%i(container_services container_replicators container_groups container_nodes containers
                     container_image_registries container_images))
     items
@@ -67,7 +67,7 @@ module EmsContainerHelper::TextualSummary
 
   def textual_cpu_cores
     {:label => "Aggregate Node CPU Cores",
-     :value => @ems.aggregate_logical_cpus}
+     :value => @ems.aggregate_cpu_total_cores}
   end
 
   def textual_port

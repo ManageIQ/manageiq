@@ -2,15 +2,21 @@ require "spec_helper"
 
 describe Metric::Processing do
   context ".process_derived_columns" do
-    context "on :derived_vm_numvcpus" do
-      let(:vm) do
-        FactoryGirl.create(:vm_vmware, :hardware =>
-          FactoryGirl.create(:hardware,
-                             :logical_cpus => 8, # This is actually used for numvcpus, but numvcpus needs to be renamed.
-                            # See note on VimPerformanceState#capture_numvcpus
-                            )
-                          )
+    context "on :derived_host_sockets" do
+      let(:hardware) { FactoryGirl.create(:hardware, :cpu_sockets => 2) }
+      let(:host) { FactoryGirl.create(:host, :hardware => hardware) }
+
+      it "adds the derived host sockets" do
+        m = FactoryGirl.create(:metric_rollup_vm_hr, :resource => host)
+
+        derived_columns = described_class.process_derived_columns(host, m.attributes.symbolize_keys)
+
+        expect(derived_columns[:derived_host_sockets]).to eq(2)
       end
+    end
+
+    context "on :derived_vm_numvcpus" do
+      let(:vm) { FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :cpu_total_cores => 8)) }
 
       it "with all usage values" do
         m = FactoryGirl.create(:metric_rollup_vm_hr,
@@ -72,10 +78,10 @@ describe Metric::Processing do
       let(:vm) do
         FactoryGirl.create(:vm_vmware, :hardware =>
           FactoryGirl.create(:hardware,
-                             :logical_cpus     => 8,
-                             :numvcpus         => 4,
-                             :cores_per_socket => 2,
-                             :cpu_speed        => 3_000,
+                             :cpu_total_cores      => 8,
+                             :numvcpus             => 4,
+                             :cpu_cores_per_socket => 2,
+                             :cpu_speed            => 3_000,
                             )
                           )
       end
@@ -140,7 +146,7 @@ describe Metric::Processing do
       let(:vm) do
         FactoryGirl.create(:vm_vmware, :hardware =>
           FactoryGirl.create(:hardware,
-                             :memory_cpu => 4_096
+                             :memory_mb => 4_096
                             )
                           )
       end

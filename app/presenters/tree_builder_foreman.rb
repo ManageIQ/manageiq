@@ -11,17 +11,17 @@ class TreeBuilderForeman < TreeBuilder
   end
 
   # Get root nodes count/array for explorer tree
-  def x_get_tree_roots(options)
-    count_only_or_objects(options[:count_only], ManageIQ::Providers::Foreman::ConfigurationManager.all, "name")
+  def x_get_tree_roots(count_only, _options)
+    count_only_or_objects(count_only, ManageIQ::Providers::Foreman::ConfigurationManager.all, "name")
   end
 
-  def x_get_tree_cmf_kids(object, options)
+  def x_get_tree_cmf_kids(object, count_only)
     assigned_configuration_profile_objs =
-      count_only_or_objects(options[:count_only],
+      count_only_or_objects(count_only,
                             ConfigurationProfile.where(:configuration_manager_id => object[:id]),
                             "name")
     unassigned_configuration_profile_objs =
-      fetch_unassigned_configuration_profile_objects(options[:count_only], object[:id])
+      fetch_unassigned_configuration_profile_objects(count_only, object[:id])
 
     assigned_configuration_profile_objs + unassigned_configuration_profile_objs
   end
@@ -45,8 +45,8 @@ class TreeBuilderForeman < TreeBuilder
     unassigned_configuration_profile_objs
   end
 
-  def x_get_tree_cpf_kids(object, options)
-    count_only_or_objects(options[:count_only],
+  def x_get_tree_cpf_kids(object, count_only)
+    count_only_or_objects(count_only,
                           ConfiguredSystem.where(:configuration_profile_id => object[:id]),
                           "hostname")
   end

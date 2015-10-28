@@ -1,4 +1,3 @@
-
 require "spec_helper"
 
 describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
@@ -42,6 +41,9 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     expect(OrchestrationStackResource.count).to  be > 0
     expect(OrchestrationStackOutput.count).to    be > 0
     expect(OrchestrationTemplate.count).to       be > 0
+    expect(CloudNetwork.count).to                be > 0
+    expect(CloudSubnet.count).to                 be > 0
+    expect(NetworkPort.count).to                 be > 0
     expect(VmOrTemplate.count).to                be > 0
     expect(OperatingSystem.count).to             be > 0
     expect(Hardware.count).to                    be > 0
@@ -50,11 +52,11 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     expect(Vm.count).to                          eq 0
     expect(CustomAttribute.count).to             eq 0
     expect(CustomizationSpec.count).to           eq 0
-    expect(GuestDevice.count).to                 eq 0
+    # expect(GuestDevice.count).to                 eq > 0
     expect(Lan.count).to                         eq 0
     expect(MiqScsiLun.count).to                  eq 0
     expect(MiqScsiTarget.count).to               eq 0
-    expect(Network.count).to                     eq 0
+    # expect(Network.count).to                     eq 0
     expect(Snapshot.count).to                    eq 0
     expect(Switch.count).to                      eq 0
     expect(SystemService.count).to               eq 0
@@ -104,27 +106,32 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
       :service_tag      => nil,
     )
 
+    expect(@host.private_networks.count).to be > 0
+    expect(@host.private_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::InfraManager::CloudNetwork::Private)
+    expect(@host.network_ports.count).to    be > 0
+    expect(@host.network_ports.first).to    be_kind_of(ManageIQ::Providers::Openstack::InfraManager::NetworkPort)
+
     @host.operating_system.should have_attributes(
       :product_name     => "linux"
     )
 
     @host.hardware.should have_attributes(
-      :cpu_speed          => 2000,
-      :cpu_type           => "RHEL 7.1.0 PC (i440FX + PIIX, 1996)",
-      :manufacturer       => "Red Hat",
-      :model              => "KVM",
-      :memory_cpu         => 8192,  # MB
-      :memory_console     => nil,
-      :disk_capacity      => 40,
-      :numvcpus           => 4,
-      :logical_cpus       => 4,
-      :cores_per_socket   => 1,
-      :guest_os           => nil,
-      :guest_os_full_name => nil,
-      :cpu_usage          => nil,
-      :memory_usage       => nil,
-      :number_of_nics     => 1,
-      :bios               => "seabios-1.7.5-8.el7"
+      :cpu_speed            => 2000,
+      :cpu_type             => "RHEL 7.1.0 PC (i440FX + PIIX, 1996)",
+      :manufacturer         => "Red Hat",
+      :model                => "KVM",
+      :memory_mb            => 8192,
+      :memory_console       => nil,
+      :disk_capacity        => 40,
+      :numvcpus             => 4,
+      :cpu_total_cores      => 4,
+      :cpu_cores_per_socket => 1,
+      :guest_os             => nil,
+      :guest_os_full_name   => nil,
+      :cpu_usage            => nil,
+      :memory_usage         => nil,
+      :number_of_nics       => 1,
+      :bios                 => "seabios-1.7.5-8.el7"
     )
 
     assert_specific_disk(@host.hardware.disks.first)

@@ -88,8 +88,8 @@ describe ReportFormatter::JqplotFormatter do
       report = MiqReport.new(
         :db          => "Vm",
         :cols        => %w(name),
-        :include     => {"hardware" => {"columns" => %w(cpu_speed numvcpus memory_cpu)}},
-        :col_order   => %w(name hardware.cpu_speed hardware.numvcpus hardware.memory_cpu),
+        :include     => {"hardware" => {"columns" => %w(cpu_speed numvcpus memory_mb)}},
+        :col_order   => %w(name hardware.cpu_speed hardware.numvcpus hardware.memory_mb),
         :headers     => ["Name", "Hardware CPU Speed", "Hardware Number of CPUs", "Hardware RAM"],
         :order       => "Ascending",
         :sortby      => %w(name),
@@ -101,7 +101,7 @@ describe ReportFormatter::JqplotFormatter do
       )
 
       report.table = Ruport::Data::Table.new(
-        :column_names => %w(name hardware.cpu_speed hardware.numvcpus hardware.memory_cpu id),
+        :column_names => %w(name hardware.cpu_speed hardware.numvcpus hardware.memory_mb id),
         :data         => [
           ["Чук", nil, 4,   6_144, 42],
           ["Гек", nil, nil, 1_024, 49],

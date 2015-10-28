@@ -16,5 +16,9 @@ FactoryGirl.define do
         g.miq_user_role = FactoryGirl.create(:miq_user_role, :features => e.features, :role => e.role)
       end
     end
+
+    factory :system_group do
+      group_type "system" # dont want to reference class from factory MiqGroup::SYSTEM_GROUP
+    end
   end
 end

@@ -225,6 +225,7 @@ class ChargebackController < ApplicationController
           detail.per_unit = r[:per_unit]
           detail.metric = r[:metric]
           detail.chargeback_rate_detail_currency_id = r[:chargeback_rate_detail_currency_id]
+          detail.chargeback_rate_detail_measure_id = r[:chargeback_rate_detail_measure_id]
           @sb[:rate_details].push(detail) unless @sb[:rate_details].include?(detail)
         end
       else
@@ -251,6 +252,12 @@ class ChargebackController < ApplicationController
                   detail.metric = r[:metric]
                   # Copy the currency id of the rate detail linking with the rate_detail_currency
                   detail.chargeback_rate_detail_currency_id = r[:type_currency] ? ChargebackRateDetailCurrency.find_by(:name => r[:type_currency]).id : nil
+                  # if the rate detail has a measure associated
+                  unless r[:measure].nil?
+                    # Copy the measure id of the rate_detail linkig with the rate_detail_measure
+                    id_measure = ChargebackRateDetailMeasure.find_by(:name => r[:measure]).id
+                    detail.chargeback_rate_detail_measure_id = id_measure
+                  end
                   @sb[:rate_details].push(detail) unless @sb[:rate_details].include?(detail)
                 end
               end
@@ -551,6 +558,8 @@ class ChargebackController < ApplicationController
       temp = {}
       temp[:rate] = (!r.rate.nil? && r.rate != "") ? r.rate : 0
       temp[:per_time] = r.per_time ? r.per_time : "hourly"
+      temp[:per_unit] = r.per_unit
+      temp[:detail_measure] = r.detail_measure
       temp[:currency] = r.detail_currency.id
       @edit[:new][:details].push(temp)
     end
@@ -572,6 +581,7 @@ class ChargebackController < ApplicationController
     @edit[:new][:details].each_with_index do |_detail, i|
       @edit[:new][:details][i][:rate] = params["rate_#{i}".to_sym] if params["rate_#{i}".to_sym]
       @edit[:new][:details][i][:per_time] = params["per_time_#{i}".to_sym] if params["per_time_#{i}".to_sym]
+      @edit[:new][:details][i][:per_unit] = params["per_unit_#{i}".to_sym] if params["per_unit_#{i}".to_sym]
       @edit[:new][:details][i][:currency] = params["currency".to_sym] if params["currency".to_sym]
     end
   end
@@ -580,6 +590,7 @@ class ChargebackController < ApplicationController
     @edit[:new][:details].each_with_index do |_rate, i|
       @sb[:rate_details][i].rate               = @edit[:new][:details][i][:rate]
       @sb[:rate_details][i].per_time           = @edit[:new][:details][i][:per_time]
+      @sb[:rate_details][i].per_unit           = @edit[:new][:details][i][:per_unit]
       # C: Record the currency selected in the edit view, in my chargeback_rate_details table
       @sb[:rate_details][i].chargeback_rate_detail_currency_id = @edit[:new][:details][i][:currency]
       @sb[:rate_details][i].chargeback_rate_id = @sb[:rate].id
@@ -744,7 +755,7 @@ class ChargebackController < ApplicationController
     replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
     @explorer = true
     chargeback_tree = cb_rates_build_tree if replace_trees.include?(:cb_rates)
-    c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
+    c_tb = build_toolbar(center_toolbar_filename)
 
     # Build a presenter to render the JS
     presenter = ExplorerPresenter.new(
@@ -774,23 +785,20 @@ class ChargebackController < ApplicationController
     case x_active_tree
     when :cb_rates_tree
       # Rates accordion
-      if c_buttons && c_xml
-        presenter[:set_visible_elements][:center_buttons_div] = true
-        presenter[:reload_toolbars][:center] = {:buttons => c_buttons, :xml => c_xml}
+      if c_tb.present?
+        presenter[:reload_toolbars][:center] = c_tb
       end
-      presenter[:set_visible_elements][:toolbar] = c_buttons
+      presenter[:set_visible_elements][:toolbar] = c_tb.present?
       presenter[:update_partials][:main_div]   = r[:partial => 'rates_tabs']
       presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols']
     when :cb_assignments_tree
       # Assignments accordion
       presenter[:update_partials][:main_div] = r[:partial => "assignments_tabs"]
     when :cb_reports_tree
-      if c_buttons && c_xml
-        presenter[:set_visible_elements][:center_buttons_div] = true
-        presenter[:reload_toolbars][:center] = {:buttons => c_buttons, :xml => c_xml}
+      if c_tb.present?
+        presenter[:reload_toolbars][:center] = c_tb
         presenter[:set_visible_elements][:toolbar] = true
       else
-        presenter[:set_visible_elements][:center_buttons_div] = false
         presenter[:set_visible_elements][:toolbar] = false
       end
       presenter[:update_partials][:main_div] = r[:partial => 'reports_list']
@@ -847,8 +855,8 @@ class ChargebackController < ApplicationController
       presenter[:record_id] = @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
     end
 
-    # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
+
     presenter[:right_cell_text]     = @right_cell_text
     unless x_active_tree == :cb_assignments_tree
       presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit

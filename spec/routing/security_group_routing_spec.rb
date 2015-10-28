@@ -5,7 +5,6 @@ describe "routing for SecurityGroupController" do
   let(:controller_name) { "security_group" }
 
   it_behaves_like "A controller that has advanced search routes"
-  it_behaves_like "A controller that has column width routes"
   it_behaves_like "A controller that has compare routes"
   it_behaves_like "A controller that has tagging routes"
 
@@ -27,7 +26,6 @@ describe "routing for SecurityGroupController" do
     button
     quick_search
     panel_control
-    save_col_widths
     show
     show_list
     tag_edit_form_field_changed

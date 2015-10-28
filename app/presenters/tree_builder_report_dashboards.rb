@@ -17,26 +17,26 @@ class TreeBuilderReportDashboards < TreeBuilder
   end
 
   # Get root nodes count/array for explorer tree
-  def x_get_tree_roots(options)
+  def x_get_tree_roots(count_only, _options)
     objects = []
     default_ws = MiqWidgetSet.find_by_name_and_read_only('default', true)
     text = "#{default_ws.description} (#{default_ws.name})"
     objects.push(:id => to_cid(default_ws.id), :text => text, :image => 'dashboard', :tip => text)
     objects.push(:id => 'g', :text => 'All Groups', :image => 'folder', :tip => 'All Groups')
-    count_only_or_objects(options[:count_only], objects, nil)
+    count_only_or_objects(count_only, objects, nil)
   end
 
-  def x_get_tree_custom_kids(object, options)
+  def x_get_tree_custom_kids(object, count_only, options)
     assert_type(options[:type], :db)
     objects = []
     if object[:id].split('-').first == "g"
       objects = MiqGroup.all
-      return options[:count_only] ? objects.count : objects.sort_by(&:name)
+      return count_only ? objects.count : objects.sort_by(&:name)
     end
-    count_only_or_objects(options[:count_only], objects, :name)
+    count_only_or_objects(count_only, objects, :name)
   end
 
-  def x_get_tree_g_kids(object, options)
+  def x_get_tree_g_kids(object, count_only)
     objects = []
     # dashboard nodes under each group
     widgetsets = MiqWidgetSet.find_all_by_owner_type_and_owner_id("MiqGroup", object.id)
@@ -52,6 +52,6 @@ class TreeBuilderReportDashboards < TreeBuilder
     else
       objects = copy_array(widgetsets)
     end
-    options[:count_only] ? objects.count : objects.sort_by { |a| a.name.to_s.downcase }
+    count_only ? objects.count : objects.sort_by { |a| a.name.to_s.downcase }
   end
 end

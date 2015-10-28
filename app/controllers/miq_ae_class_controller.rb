@@ -20,7 +20,7 @@ class MiqAeClassController < ApplicationController
     @explorer = true
     @record = @ae_class = MiqAeClass.find_by_id(from_cid(x_node.split('-').last))
     @sb[:active_tab] = params[:tab_id]
-    c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
+    c_tb = build_toolbar(center_toolbar_filename)
     case params[:tab_id]
     when "instances"
       div_suffix = "_class_instances"
@@ -33,12 +33,7 @@ class MiqAeClassController < ApplicationController
     end
     render :update do |page|                      # Use JS to update the display
       page.replace("flash_msg_div#{div_suffix}", :partial => "layouts/flash_msg", :locals => {:div_num => div_suffix})
-      if c_buttons && c_xml
-        page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
-        page << javascript_show("center_buttons_div")
-      else
-        page << javascript_hide("center_buttons_div")
-      end
+      page << javascript_pf_toolbar_reload('center_tb', c_tb)
       page << "miqSparkle(false);"
     end
   end
@@ -193,9 +188,8 @@ class MiqAeClassController < ApplicationController
         set_right_cell_text(x_node, @record)
       end
     else
-      rec = User.current_tenant.visible_domains
+      @grid_data = User.current_tenant.visible_domains
       @record = nil
-      @grid_data = rec.flatten.sort_by { |a| a.priority.to_s }.reverse
       @right_cell_text = "Datastore"
       @sb[:active_tab] = "namespaces"
       set_right_cell_text(x_node)
@@ -279,8 +273,8 @@ class MiqAeClassController < ApplicationController
     get_node_info(x_node) if !@in_a_form && @button != "reset"
     ae_tree = build_ae_tree if replace_trees
 
-    c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename) unless @in_a_form
-    h_buttons, h_xml = build_toolbar_buttons_and_xml("x_history_tb")
+    c_tb = build_toolbar(center_toolbar_filename) unless @in_a_form
+    h_tb = build_toolbar("x_history_tb")
 
     presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
@@ -367,19 +361,16 @@ class MiqAeClassController < ApplicationController
     if @record.kind_of?(MiqAeMethod) && !@in_a_form
       presenter[:set_visible_elements][:params_div] = !@record.inputs.blank?
     end
-    
-    # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list
+
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 
     # Rebuild the toolbars
-    presenter[:reload_toolbars][:history] = {:buttons => h_buttons, :xml => h_xml}
-    if c_buttons && c_xml
+    presenter[:reload_toolbars][:history] = h_tb
+    if c_tb.present?
       presenter[:set_visible_elements][:toolbar] = true
-      presenter[:reload_toolbars][:center] = {:buttons => c_buttons, :xml => c_xml}
-      presenter[:set_visible_elements][:center_buttons_div] = true
+      presenter[:reload_toolbars][:center] = c_tb
     else
       presenter[:set_visible_elements][:toolbar] = false
-      presenter[:set_visible_elements][:center_buttons_div] = false
     end
 
     if @record && !@in_a_form

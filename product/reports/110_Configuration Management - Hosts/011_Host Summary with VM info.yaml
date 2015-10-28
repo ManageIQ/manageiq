@@ -16,8 +16,8 @@ col_order:
 - name
 - power_state
 - hardware.numvcpus
-- hardware.memory_cpu
-timeline: 
+- hardware.memory_mb
+timeline:
 id: 110
 file_mtime: 
 categories: 
@@ -29,9 +29,9 @@ include:
   hardware: 
     columns: 
     - numvcpus
-    - memory_cpu
-  host: 
-    columns: 
+    - memory_mb
+  host:
+    columns:
     - name
 db: Vm
 cols: 

@@ -119,19 +119,18 @@ describe EmsCluster do
     DriftState.count.should == 1
 
     cluster.drift_states.first.data.should == {
-      :aggregate_cpu_speed     => 0,
-      :aggregate_logical_cpus  => 0,
-      :aggregate_memory        => 0,
-      :aggregate_physical_cpus => 0,
-      :aggregate_vm_cpus       => 0,
-      :aggregate_vm_memory     => 0,
-      :class                   => "EmsCluster",
-      :id                      => cluster.id,
-      :name                    => cluster.name,
-
-      :vms                     => [],
-      :miq_templates           => [],
-      :hosts                   => [],
+      :aggregate_cpu_speed       => 0,
+      :aggregate_cpu_total_cores => 0,
+      :aggregate_memory          => 0,
+      :aggregate_physical_cpus   => 0,
+      :aggregate_vm_cpus         => 0,
+      :aggregate_vm_memory       => 0,
+      :class                     => "EmsCluster",
+      :id                        => cluster.id,
+      :name                      => cluster.name,
+      :vms                       => [],
+      :miq_templates             => [],
+      :hosts                     => [],
     }
   end
 

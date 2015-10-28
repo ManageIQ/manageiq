@@ -57,7 +57,7 @@ describe OpsController do
           :email     => 'test7@foo.bar',
           :group     => 'test_group',
           :password  => 'test7',
-          :password2 => 'test7',
+          :verify    => 'test7',
         }
       }
 
@@ -76,7 +76,7 @@ describe OpsController do
           :email     => 'test7@foo.bar',
           :group     => 'test_group',
           :password  => 'test7',
-          :password2 => 'test8',
+          :verify    => 'test8',
         }
       }
 
@@ -98,7 +98,7 @@ describe OpsController do
           :email     => 'test7@foo.bar',
           :group     => nil,
           :password  => 'test7',
-          :password2 => 'test7',
+          :verify    => 'test7',
         }
       }
 

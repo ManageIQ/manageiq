@@ -22,6 +22,7 @@ class ApplicationController < ActionController::Base
   include ActionView::Helpers::DateHelper
   include ApplicationHelper
   include JsHelper
+  helper ToolbarHelper
   helper JsHelper
 
   helper CloudResourceQuotaHelper
@@ -44,11 +45,16 @@ class ApplicationController < ActionController::Base
   include_concern 'TreeSupport'
   include_concern 'SysprepAnswerFile'
 
+  before_action :reset_toolbar
   before_action :set_session_tenant, :except => [:window_sizes]
   before_action :get_global_session_data, :except => [:window_sizes, :authenticate]
   before_action :set_user_time_zone, :except => [:window_sizes]
   before_action :set_gettext_locale, :except => [:window_sizes]
   after_action :set_global_session_data, :except => [:window_sizes]
+
+  def reset_toolbar
+    @toolbars = {}
+  end
 
   ensure_security_headers
 
@@ -316,31 +322,6 @@ class ApplicationController < ActionController::Base
     when "csv"
       download_csv(@view)
     end
-  end
-
-  # Save column widths
-  # skip processing when session[:view] is nil. Possible causes:
-  #   - user used back button
-  #   - user has multiple tabs to access the list view screen
-  def save_col_widths
-    @view = session[:view]
-    cws = (params[:col_widths] || "").split(",")[2..-1]
-    if @view && cws.length > 0
-      cols_key = create_cols_key(@view)
-      @settings[:col_widths] ||= {}
-      @settings[:col_widths][cols_key] ||= {}
-      cws.each_with_index do |cw, i|
-        @settings[:col_widths][cols_key][@view.col_order[i]] = cw.to_i
-      end
-
-      if current_user
-        user_settings = current_user.settings || {}
-        user_settings[:col_widths] ||= {}
-        user_settings[:col_widths][cols_key] = @settings[:col_widths][cols_key]
-        current_user.update_attributes(:settings => user_settings)
-      end
-    end
-    render :nothing => true                                 # No response needed
   end
 
   ###########################################################################
@@ -1065,67 +1046,56 @@ class ApplicationController < ActionController::Base
     rptmenu
   end
 
-  # Render the view data to xml for the grid view
-  def view_to_xml(view, from_idx = 0, to_idx = -1, _options = {})
+  # Render the view data to a Hash structure for the list view
+  def view_to_hash(view)
     # Get the time zone in effect for this view
     tz = (view.db.downcase == 'miqschedule') ? server_timezone : Time.zone
 
-    xml = MiqXml.createDoc(nil, nil, 1.0, :nokogiri)
-
-    root = xml.add_element('rows')
-
-    head = root.add_element('head')
+    root = {:head => [], :rows => []}
 
     # Show checkbox or placeholder column
     unless @embedded || @no_checkboxes
-      head.add_element('column', 'type' => 'ch', 'width' => 25, 'align' => 'center')
-    else
-      head.add_element('column', 'type' => 'ro', 'width' => 1, 'align' => 'center')
+      root[:head] << {:is_narrow => true}
     end
 
     unless %w(miqaeclass miqaeinstance).include?(view.db.downcase)  # do not add listicon for AE class show_list
-      head.add_element('column', 'type' => 'ro', 'width' => 36, 'align' => 'center')  # Icon column
+      # Icon column
+      root[:head] << {:is_narrow => true}
     end
 
-    cols_key = create_cols_key(view)
     view.headers.each_with_index do |h, i|
-      col_width = 900 / view.headers.length # Set default column width
-      col_width = 100 if h.downcase == 'cost' && view.db.to_s == 'ServiceTemplate'
-
-      # Load saved width, if present
-      col_width = @settings.fetch_path(:col_widths, cols_key, view.col_order[i]) || col_width
-
       align = [:fixnum, :integer, :Fixnum, :float].include?(column_type(view.db, view.col_order[i])) ? 'right' : 'left'
-      new_column = head.add_element('column',
-                                    'width' => col_width.to_s,
-                                    'sort'  => 'str',
-                                    'type'  => 'ro',
-                                    'align' => align)
-      new_column.text = h
+
+      root[:head] << {:text    => h,
+                      :sort    => 'str',
+                      :col_idx => i,
+                      :align   => align}
     end
 
     if @row_button  # Show a button as last col
-      head.add_element('column', 'type' => 'ro', 'width' => 100, 'align' => 'center')
+      root[:head] << {:is_narrow => true}
     end
 
     # Add table elements
     table = view.sub_table ? view.sub_table : view.table
-    table.data[from_idx..to_idx].each do |row|
-      @id = row['id']
+    table.data.each do |row|
+      new_row = {:id => list_row_id(row), :cells => []}
+      root[:rows] << new_row
 
-      new_row = root.add_element('row', "id" => list_row_id(row))
-      new_row.add_element('cell').text = '0'  # Checkbox column unchecked
+      unless @embedded || @no_checkboxes
+        new_row[:cells] << {:is_checkbox => true}
+      end
 
       # Generate html for the list icon
       # do not add listicon for AE class show_list
       unless %w(miqaeclass miqaeinstance).include?(view.db.downcase)
-        cell = new_row.add_element('cell', 'title' => 'View this item')
-        cell.add_cdata("<img src='#{listicon_image(view)}' width='20' height='20' border='0' align='middle' alt='Image missing'>")
+        new_row[:cells] << {:title => 'View this item',
+                            :image => listicon_image(view, row['id'])}
       end
 
       view.col_order.each_with_index do |col, col_idx|
-        cell = new_row.add_element('cell')
         celltext = nil
+
         case view.col_order[col_idx]
         when 'db'
           celltext = Dictionary.gettext(row[col], :type => :model, :notfound => :titleize)
@@ -1142,30 +1112,19 @@ class ApplicationController < ActionController::Base
           end
           celltext = escape_once(format_col_for_display(view, row, col, celltz || tz))
         end
-        cell.text = celltext # Put value into the cell
+
+        new_row[:cells] << {:text => celltext}
       end
 
       if @row_button # Show a button in the last col
-        cell = new_row.add_element('cell', 'title' => @row_button[:title], 'is_button' => 1)
-        cell.add_cdata("<button class   = 'btn btn-primary btn-xs'
-                                title   = '#{@row_button[:title]}'
-                                onclick = '#{@row_button[:function]}(\"#{@id}\");'
-                                alt     = '#{@row_button[:title]}'>#{@row_button[:image]}
-                        </button>")
+        new_row[:cells] << {:is_button => true,
+                            :text      => @row_button[:label],
+                            :title     => @row_button[:title],
+                            :onclick   => "#{@row_button[:function]}(\"#{row['id']}\");"}
       end
     end
 
-    # Use write method with -1 so the xml string is not indented
-    xml.write(xml_str = '', -1)
-    xml_str
-  end
-
-  # Create a hash key to store a views column widths
-  def create_cols_key(view)
-    key = view.scoped_association.nil? ? view.db : (view.db + "-" + view.scoped_association)
-    # For certain models, save columns for each tree that uses the view
-    key += ("-" + x_active_tree.to_s) if ("ServiceTemplate" == view.db) && x_active_tree
-    key.to_sym
+    root
   end
 
   def calculate_pct_img(val)
@@ -1173,12 +1132,13 @@ class ApplicationController < ActionController::Base
   end
 
   # Return the image name for the list view icon of a db,id pair
-  def listicon_image(view)
+  def listicon_image(view, id = nil)
+    id = @id if id.nil?
     item = if @targets_hash
-             @targets_hash[@id] # Get the record from the view
+             @targets_hash[id] # Get the record from the view
            else
              klass = view.db.constantize
-             klass.find(@id)    # Read the record from the db
+             klass.find(id)    # Read the record from the db
            end
 
     p  = "/images/icons/"
@@ -1203,7 +1163,7 @@ class ApplicationController < ActionController::Base
             when OsProcess, EventLog   then "#{pn}#{@listicon.downcase}.png"
             when Service, ServiceTemplate
               if item.try(:picture)
-                "../../../pictures/#{item.picture.basename}"
+                "/pictures/#{item.picture.basename}"
               end
             end
     list_row_image(pn, image, (@listicon || view.db).underscore, item)
@@ -1398,16 +1358,16 @@ class ApplicationController < ActionController::Base
     unless db_record.hardware.nil?
       db_notes = db_record.hardware.annotation.nil? ? "<No notes have been entered for this VM>" : db_record.hardware.annotation
 
-      if db_record.hardware.logical_cpus
+      if db_record.hardware.cpu_total_cores
         cpu_details =
-          if db_record.num_cpu && db_record.cores_per_socket
-            " (#{pluralize(db_record.num_cpu, 'socket')} x #{pluralize(db_record.cores_per_socket, 'core')})"
+          if db_record.num_cpu && db_record.cpu_cores_per_socket
+            " (#{pluralize(db_record.num_cpu, 'socket')} x #{pluralize(db_record.cpu_cores_per_socket, 'core')})"
           else
             ""
           end
 
         @devices.push(:device      => "Processors",
-                      :description => "#{db_record.hardware.logical_cpus}#{cpu_details}",
+                      :description => "#{db_record.hardware.cpu_total_cores}#{cpu_details}",
                       :icon        => "processor")
       end
 
@@ -1418,8 +1378,8 @@ class ApplicationController < ActionController::Base
                     :description => "#{db_record.hardware.cpu_speed} MHz",
                     :icon        => "processor") if db_record.hardware.cpu_speed
       @devices.push(:device      => "Memory",
-                    :description => "#{db_record.hardware.memory_cpu} MB",
-                    :icon        => "memory") if db_record.hardware.memory_cpu
+                    :description => "#{db_record.hardware.memory_mb} MB",
+                    :icon        => "memory") if db_record.hardware.memory_mb
 
       # Add disks to the device array
       unless db_record.hardware.disks.nil?
@@ -1592,22 +1552,23 @@ class ApplicationController < ActionController::Base
   def process_saved_reports(saved_reports, task)
     success_count = 0
     failure_count = 0
-    MiqReportResult.find_all_by_id(saved_reports, :order => "lower(name)").each do |rep|
-      id = rep.id
-      rep_name = rep.name
-      if task == "destroy"
-        audit = {:event => "rep_record_delete", :message => "[#{rep_name}] Record deleted", :target_id => id, :target_class => "MiqReportResult", :userid => current_userid}
-      end
+    MiqReportResult.where(:id => saved_reports).order("lower(name)").each do |rep|
       begin
-        rep.public_send(task.to_sym) if rep.respond_to?(task)    # Run the task
-      rescue StandardError => bang
+        rep.public_send(task) if rep.respond_to?(task) # Run the task
+      rescue
         failure_count += 1  # Push msg and error flag
       else
         if task == "destroy"
-          AuditEvent.success(audit)
+          AuditEvent.success(
+            :event        => "rep_record_delete",
+            :message      => "[#{rep.name}] Record deleted",
+            :target_id    => rep.id,
+            :target_class => "MiqReportResult",
+            :userid       => current_userid
+          )
           success_count += 1
         else
-          add_flash(_("\"%{record}\": %{task} successfully initiated") % {:record => rep_name, :task => task})
+          add_flash(_("\"%{record}\": %{task} successfully initiated") % {:record => rep.name, :task => task})
         end
       end
     end
@@ -1803,7 +1764,7 @@ class ApplicationController < ActionController::Base
     # Set up the grid variables for list view, with exception models below
     if !%w(Job MiqProvision MiqReportResult MiqTask).include?(view.db) &&
        !view.db.ends_with?("Build") && !@force_no_grid_xml && (@gtl_type == "list" || @force_grid_xml)
-      @grid_xml = view_to_xml(view, 0, -1, :association => association)
+      @grid_hash = view_to_hash(view)
     end
 
     [view, get_view_pages(dbname, view)]
@@ -1873,27 +1834,6 @@ class ApplicationController < ActionController::Base
   end
   private :get_view_pages
 
-  # Generate an include string to append to "include_hash =" and eval'd
-  # This routine is called recursively (passes in the include hash)
-  def make_include_string(include)
-    rt_string = "{"                                                 # Add the :include prefix
-    include.keys.each_with_index do |table, idx|                               # Go thru all of the tables in the include
-      rt_string << "," if idx > 0                                             # Need a comma for second and higher tables
-      rt_string << "'" + table << "'" << "=>{"                                # Add the :only prefix
-      unless include[table]["columns"].nil?                                     # If there are columns
-        rt_string << ":only=>["                                               # Add the :only prefix
-        rt_string << include[table]["columns"].dup.collect! { |col| "'" << col << "'" }.join(",")  # Get all the column name strings
-        rt_string << "]"                                                      # Add final bracket for the cols array
-      end
-      unless include[table]["include"].nil?
-        rt_string << "," unless include[table]["columns"].nil?
-        rt_string << make_include_string(include[table]["include"])           # Check for an embedded include
-      end
-      rt_string << "}"                                                        # Add final bracket for the table hash
-    end
-    rt_string << "}"                                                          # Add final bracket for the include hash
-  end
-
   def get_db_view(db, options = {})
     view_yaml = view_yaml_filename(db, options)
     view      = MiqReport.new(get_db_view_yaml(view_yaml))
@@ -1908,7 +1848,7 @@ class ApplicationController < ActionController::Base
 
     # Special code to build the view file name for users of VM restricted roles
     if %w(ManageIQ::Providers::CloudManager::Template ManageIQ::Providers::InfraManager::Template ManageIQ::Providers::CloudManager::Vm ManageIQ::Providers::InfraManager::Vm VmOrTemplate).include?(db)
-      role = User.current_user.miq_user_role
+      role = current_user.miq_user_role
       if role && role.settings && role.settings.fetch_path(:restrictions, :vms)
         viewfilerestricted = "#{VIEWS_FOLDER}/Vm__restricted.yaml"
       end
@@ -1977,18 +1917,52 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def replace_list_grid
+    view = @view
+    button_div = 'center_tb'
+    action_url = if @lastaction == "scan_history"
+                   "scan_history"
+                 elsif %w(all_jobs jobs ui_jobs all_ui_jobs).include?(@lastaction)
+                   "jobs"
+                 elsif @lastaction == "get_node_info"
+                   nil
+                 elsif ! @lastaction.nil?
+                   @lastaction
+                 else
+                   "show_list"
+                 end
+
+    ajax_url = ! %w(OntapStorageSystem OntapLogicalDisk OntapStorageVolume OntapFileShare SecurityGroup).include?(view.db)
+    ajax_url = false if request.parameters[:controller] == "service" && view.db == "Vm"
+    ajax_url = false unless @explorer
+
+    url = @showlinks == false ? nil : view_to_url(view, @parent)
+    grid_options = {:grid_id    => "list_grid",
+                    :grid_name  => "gtl_list_grid",
+                    :grid_hash  => @grid_hash,
+                    :button_div => button_div,
+                    :action_url => action_url}
+    js_options = {:sortcol      => @sortcol ? @sortcol : nil,
+                  :sortdir      => @sortdir ? @sortdir[0..2] : nil,
+                  :row_url      => url,
+                  :row_url_ajax => ajax_url}
+
+    [grid_options, js_options]
+  end
+
   # RJS code to show tag box effects and replace the main list view area
   def replace_gtl_main_div(options = {})
     action_url = options[:action_url] || @lastaction
     return if params[:action] == "button" && @lastaction == "show"
+
+    if @grid_hash
+      # need to call this outside render :update
+      grid_options, js_options = replace_list_grid
+    end
+
     render :update do |page|                        # Use RJS to update the display
-      #     page.visual_effect(:blind_up,"tag_box_div") if session[:applied_tags] != nil && @applied_tags == nil      # Hide div if removing all tags
-      #     page.replace_html("tag_box_div", :partial=>"layouts/tag_box")                                             # Replace the tag box contents
-      #     page.visual_effect(:blind_down, "tag_box_div")  if session[:applied_tags] == nil && @applied_tags != nil  # Show div if not shown already
       page.replace(:flash_msg_div, :partial => "layouts/flash_msg")           # Replace the flash message
-      page << "if (ManageIQ.toolbars !== null){"; # Make sure toolbars exist on the screen before resetting buttons
-      page << "miqSetButtons(0,'center_tb');"                             # Reset the center toolbar
-      page << "}"
+      page << "miqSetButtons(0,'center_tb');" # Reset the center toolbar
       unless @layout == "dashboard" && ["show", "change_tab", "auth_error"].include?(@controller.action_name) ||
              %w(about all_tasks all_ui_tasks configuration diagnostics miq_ae_automate_button
                 miq_ae_customization miq_ae_export miq_ae_logs miq_ae_tools miq_policy miq_policy_export
@@ -1996,21 +1970,19 @@ class ApplicationController < ActionController::Base
                 miq_request_vm my_tasks my_ui_tasks report rss server_build).include?(@layout)
         page.replace(:listnav_div, :partial => "layouts/listnav")               # Replace accordion, if list_nav_div is there
       end
-      if @grid_xml                                  # Replacing a grid
-        page << "xml = \"#{j_str(@grid_xml)}\";"            # Set the XML data
-        page << "ManageIQ.grids.grids['gtl_list_grid'].obj.clearAll(true);" # Clear grid data, including headers
-        page << "ManageIQ.grids.grids['gtl_list_grid'].obj.parse(xml);" # Reload grid from XML
-        if @sortcol
-          dir = @sortdir ? @sortdir[0..2] : "asc"
-          page << "ManageIQ.grids.grids['gtl_list_grid'].obj.setSortImgState(true, #{@sortcol + 2}, '#{dir}');"
-        end
-        page << "miqGridOnCheck(null, null, null);" # Reset the center buttons
-        page.replace("pc_div_1", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => action_url, :db => @view.db, :headers => @view.headers})
-        page.replace("pc_div_2", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => action_url})
-      else                                          # No grid, replace the gtl div
-        page.replace_html("main_div", :partial => "layouts/gtl")                                                  # Replace the main div area contents
+      if @grid_hash
+        page.replace_html("list_grid", :partial => "layouts/list_grid",
+                                       :locals => {:options    => grid_options,
+                                                   :js_options => js_options})
+        # Reset the center buttons
+        page << "miqGridOnCheck();"
+      else
+        # No grid, replace the gtl div
+        # Replace the main div area contents
+        page.replace_html("main_div", :partial => "layouts/gtl")
         page << "$('#adv_div').slideUp(0.3);" if params[:entry]
       end
+      page.replace("pc_div_1", :partial => 'layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => action_url, :db => @view.db, :headers => @view.headers})
     end
   end
 

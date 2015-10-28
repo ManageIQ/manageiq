@@ -4,6 +4,10 @@ class ExplorerPresenter
   include JsHelper
   include ActionView::Helpers::JavaScriptHelper
 
+  include ToolbarHelper
+  include ActionView::Helpers::TagHelper
+  include ActionView::Context
+
   attr_reader :options
 
   # Renders JS to replace the contents of an explorer view as directed by the controller
@@ -13,13 +17,10 @@ class ExplorerPresenter
   #
   #   add_nodes                        -- JSON string of nodes to add to the active tree
   #   delete_node                      -- key of node to be deleted from the active tree
-  #   cal_date_from
-  #   cal_date_to
-  #   build_calendar                   -- call miqBuildCalendar, true/false or Hash with
-  #                                       compulsory key :skip_days
+  #   build_calendar                   -- call miqBuildCalendar, true/false or Hash (:date_from, :date_to, :skip_days)
   #   init_dashboard
   #   ajax_action                      -- Hash of options for AJAX action to fire
-  #   clear_gtl_list_grid
+  #   clear_gtl_list_grid              -- Clear ManageIQ.grids.gtl_list_grid
   #   right_cell_text
   #   ManageIQ.record.parentId
   #   ManageIQ.record.parentClass
@@ -132,7 +133,7 @@ class ExplorerPresenter
 
     @out << ajax_action(@options[:ajax_action]) if @options[:ajax_action]
 
-    @out << "ManageIQ.grids.grids['gtl_list_grid'] = undefined;" if @options[:clear_gtl_list_grid]
+    @out << "ManageIQ.grids.gtl_list_grid = undefined;" if @options[:clear_gtl_list_grid]
 
     @options[:set_visible_elements].each do |el, visible|
       @out << set_element_visible(el, visible)
@@ -144,8 +145,10 @@ class ExplorerPresenter
     @out << "$('h1#explorer_title').html('#{j ERB::Util.h(@options[:right_cell_text])}');" if @options[:right_cell_text]
 
     # Reload toolbars
-    @options[:reload_toolbars].each do |tb, opts|
-      @out << javascript_for_toolbar_reload("#{tb}_tb", opts[:buttons], opts[:xml]).html_safe
+    @options[:reload_toolbars].each_pair do |div_name, toolbar|
+      # we need to render even empty toolbar to actually remove the buttons
+      # that might be there
+      @out << javascript_pf_toolbar_reload("#{div_name}_tb", Array(toolbar)).html_safe
     end
 
     # reset miq_record_id, else it remembers prev id and sends it when add is pressed from list view
@@ -159,9 +162,6 @@ class ExplorerPresenter
 
     @out << @options[:extra_js].join("\n")
 
-    # Position the clear_search link
-    @out << "$('.dhtmlxInfoBarLabel').filter(':visible').append($('#clear_search')[0]);"
-
     @out << "$('#clear_search').#{@options[:clear_search_show_or_hide]}();" if @options[:clear_search_show_or_hide]
 
     @out << "$('#quicksearchbox').modal('hide');" if @options[:hide_modal]
@@ -171,21 +171,13 @@ class ExplorerPresenter
   end
 
   def build_calendar
-    out = []
-    if Hash === @options[:build_calendar]
+    if @options[:build_calendar].kind_of? Hash
       calendar_options = @options[:build_calendar]
-      out << "ManageIQ.calendar.calDateFrom = #{format_cal_date(calendar_options[:date_from])};" if calendar_options.key?(:date_from)
-      out << "ManageIQ.calendar.calDateTo   = #{format_cal_date(calendar_options[:date_to])};"   if calendar_options.key?(:date_to)
-
-      if calendar_options.key?(:skip_days)
-        skip_days = calendar_options[:skip_days].nil? ?
-          'null' : ("'" + calendar_options[:skip_days] + "'")
-        out << "miq_cal_skipDays = #{skip_days};"
-      end
+    else
+      calendar_options = {}
     end
 
-    out << 'miqBuildCalendar();'
-    out.join("\n")
+    js_build_calendar(calendar_options)
   end
 
   # Fire an AJAX action
@@ -212,12 +204,7 @@ class ExplorerPresenter
   end
 
   def update_partial(element, content)
+    # FIXME: replace with javascript_update_element
     "$('##{element}').html('#{escape_javascript(content)}');"
-  end
-
-  private
-
-  def format_cal_date(value)
-    value.nil? ? 'undefined' : "new Date(#{value})"
   end
 end

@@ -124,20 +124,20 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
     )
 
     @host.hardware.should have_attributes(
-      :cpu_speed          => 2394,
-      :cpu_type           => "Intel Xeon 179",
-      :manufacturer       => "Intel",
-      :model              => "Xeon",
-      :memory_cpu         => 131_059,  # MB
-      :memory_console     => nil,
-      :numvcpus           => 2,
-      :logical_cpus       => 16,
-      :cores_per_socket   => 8,
-      :guest_os           => nil,
-      :guest_os_full_name => nil,
-      #:vmotion_enabled    => true,   # TODO: Add with cluster support
-      :cpu_usage          => nil,
-      :memory_usage       => nil
+      :cpu_speed            => 2394,
+      :cpu_type             => "Intel Xeon 179",
+      :manufacturer         => "Intel",
+      :model                => "Xeon",
+      :memory_mb            => 131_059,
+      :memory_console       => nil,
+      :numvcpus             => 2,
+      :cpu_total_cores      => 16,
+      :cpu_cores_per_socket => 8,
+      :guest_os             => nil,
+      :guest_os_full_name   => nil,
+      #:vmotion_enabled     => true,   # TODO: Add with cluster support
+      :cpu_usage            => nil,
+      :memory_usage         => nil
     )
 
     @host.hardware.guest_devices.size.should == 5
@@ -183,9 +183,9 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
       :guest_os           => "64-bit edition of Windows Server 2008 R2 Standard",
       :guest_os_full_name => "64-bit edition of Windows Server 2008 R2 Standard",
       :bios               => "67b7b7ae-34aa-474e-9050-02ed3c633f6c",
-      :logical_cpus       => 1,
+      :cpu_total_cores    => 1,
       :annotation         => nil,
-      :memory_cpu         => 512   # MB
+      :memory_mb          => 512
     )
 
     v.hardware.disks.size.should == 1

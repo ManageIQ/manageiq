@@ -236,7 +236,7 @@ en:
       active: Active
       admin_disabled: Lockdown Mode
       aggregate_cpu_speed: Total CPU Speed
-      aggregate_logical_cpus: Total Number of Logical CPUs
+      aggregate_cpu_total_cores: Total Number of Logical CPUs
       aggregate_memory: Total Memory
       aggregate_physical_cpus: Total Number of Physical CPUs
       allocated_memory: Allocated Memory
@@ -375,7 +375,7 @@ en:
       last_update_status: Last Update Status Code
       last_update_status_str: Last Update Status
       ldap_group: LDAP Group
-      logical_cpus: Number of CPU Cores
+      cpu_total_cores: Number of CPU Cores
       mac_address: MAC Address
       mac_addresses: MAC Addresses
       macaddress: MAC Address
@@ -429,7 +429,7 @@ en:
       mem_usage_absolute_average: Memory - Usage of Total Allocated (%)
       mem_vmmemctl_absolute_average: Memory - Balloon Average
       mem_vmmemctltarget_absolute_average: Memory - Balloon Target Average
-      memory_cpu: RAM
+      memory_mb: RAM
       memory_size: Memory Usage
       min_cpu_usage_rate_average: CPU - Min Usage Rate for Collected Intervals (%)
       min_cpu_usagemhz_rate_average: CPU - Min Usage for Collected Intervals (MHz)
@@ -667,6 +667,7 @@ en:
       v_is_a_template: Is a Template
       v_memory_percent_of_used: VM Memory Files Percent of Used
       v_message: Message
+      v_month: Activity Sample - Month (YYYY/MM)
       v_owning_blue_folder: Parent Folder (VMs & Templates)
       v_owning_blue_folder_path: Parent Folder Path (VMs & Templates)
       v_owning_cluster: Parent Cluster
@@ -851,6 +852,7 @@ en:
       EmsFolder:                Folder
       #EmsInfra:                 Infrastructure Provider
       ExtManagementSystem:      Provider
+      ExtManagementSystemPerformance: Performance - Provider
       FileDepotFtp:             FTP
       FileDepotFtpAnonymous:    Anonymous FTP
       FileDepotNfs:             NFS

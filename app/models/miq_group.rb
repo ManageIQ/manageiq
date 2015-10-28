@@ -1,4 +1,8 @@
 class MiqGroup < ActiveRecord::Base
+  USER_GROUP   = "user"
+  SYSTEM_GROUP = "system"
+  TENANT_GROUP = "tenant"
+
   default_scope { where(conditions_for_my_region_default_scope) }
 
   belongs_to :tenant
@@ -18,16 +22,14 @@ class MiqGroup < ActiveRecord::Base
 
   delegate :self_service?, :limited_self_service?, :to => :miq_user_role, :allow_nil => true
 
-  validates_presence_of   :description, :guid
-  validates_uniqueness_of :description, :guid
-
-  before_destroy do |g|
-    raise "Still has users assigned." unless g.users.empty?
-    raise "A read only group cannot be deleted." if g.read_only
-  end
+  validates :description, :guid, :presence => true, :uniqueness => true
+  validate :validate_default_tenant, :on => :update, :if => :tenant_id_changed?
+  before_destroy :ensure_can_be_destroyed
 
   serialize :filters
   serialize :settings
+
+  default_value_for :group_type, USER_GROUP
 
   acts_as_miq_taggable
   include ReportableMixin
@@ -93,13 +95,13 @@ class MiqGroup < ActiveRecord::Base
         group = find_by_description(g) || new(:description => g)
         user_role = MiqUserRole.find_by_name("EvmRole-#{groups_to_roles[g]}")
         if user_role.nil?
-          _log.warn("Unable to find user_role 'EvmRole-#{groups_to_roles[group]}' for group '#{g}'")
+          _log.warn("Unable to find user_role 'EvmRole-#{groups_to_roles[g]}' for group '#{g}'")
           next
         end
         group.miq_user_role = user_role
         group.sequence      = seq
         group.filters       = ldap_to_filters[g]
-        group.group_type    = "system"
+        group.group_type    = SYSTEM_GROUP
         group.tenant        = root_tenant
 
         mode = group.new_record? ? "Created" : "Added"
@@ -108,6 +110,16 @@ class MiqGroup < ActiveRecord::Base
 
         seq += 1
       end
+    end
+
+    # find any default tenant groups that do not have a role
+    tenant_role = MiqUserRole.default_tenant_role
+    if tenant_role
+      tenant_groups.where(:miq_user_role_id => nil).each do |group|
+        group.update_attributes(:miq_user_role => tenant_role)
+      end
+    else
+      _log.warn("Unable to find default tenant role for tenant access")
     end
   end
 
@@ -186,9 +198,29 @@ class MiqGroup < ActiveRecord::Base
     miq_user_role.nil? ? nil : miq_user_role.name
   end
 
-  def read_only
-    group_type == "system"
+  def system_group?
+    group_type == SYSTEM_GROUP
   end
+
+  # @return true if this is a default tenant group
+  def tenant_group?
+    group_type == TENANT_GROUP
+  end
+
+  # Asks about the tenant's default_miq_group
+  #
+  # NOTE: this is the old definition for `tenant_group?`
+  #
+  # @return true if this is assigned to the tenant as the default tenant
+  # @return false if the tenant is being deleted or pointing to a different group
+  def referenced_by_tenant?
+    tenant.try(:default_miq_group_id) == id
+  end
+
+  def read_only
+    system_group? || tenant_group?
+  end
+  alias_method :read_only?, :read_only
 
   def user_count
     users.count
@@ -206,7 +238,41 @@ class MiqGroup < ActiveRecord::Base
     end
   end
 
+  def self.create_tenant_group(tenant)
+    tenant_full_name = (tenant.ancestors.map(&:name) + [tenant.name]).join("/")
+
+    create_with(
+      :description         => "Tenant #{tenant_full_name} access",
+      :group_type          => TENANT_GROUP,
+      :default_tenant_role => MiqUserRole.default_tenant_role
+    ).find_or_create_by!(:tenant_id => tenant.id)
+  end
+
   def self.sort_by_desc
     all.sort_by { |g| g.description.downcase }
+  end
+
+  def self.tenant_groups
+    where(:group_type => TENANT_GROUP)
+  end
+
+  def self.non_tenant_groups
+    where.not(:group_type => TENANT_GROUP)
+  end
+
+  private
+
+  # if this tenant is changing, make sure this is not a default group
+  # NOTE: old tenant is Tenant.find(tenant_id_was)
+  def validate_default_tenant
+    if tenant_id_was && tenant_group?
+      errors.add(:tenant_id, "cant change the tenant of a default group")
+    end
+  end
+
+  def ensure_can_be_destroyed
+    raise "Still has users assigned." unless users.empty?
+    raise "A tenant default group can not be deleted" if tenant_group? && referenced_by_tenant?
+    raise "A read only group cannot be deleted." if system_group?
   end
 end

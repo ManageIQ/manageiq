@@ -14,7 +14,7 @@ class TreeBuilderPxeImageTypes < TreeBuilder
   end
 
   # Get root nodes count/array for explorer tree
-  def x_get_tree_roots(options)
-    count_only_or_objects(options[:count_only], PxeImageType.all, "name")
+  def x_get_tree_roots(count_only, _options)
+    count_only_or_objects(count_only, PxeImageType.all, "name")
   end
 end

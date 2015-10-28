@@ -226,9 +226,9 @@ describe EmsCluster::CapacityPlanning do
 
   it "#capacity_failover_host_resources_with_failover_hosts" do
     hosts = [
-      FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :logical_cpus => 4), :failover => true),
-      FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :logical_cpus => 2), :failover => true),
-      FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :logical_cpus => 1), :failover => false)
+      FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :cpu_total_cores => 4), :failover => true),
+      FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :cpu_total_cores => 2), :failover => true),
+      FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :cpu_total_cores => 1), :failover => false)
     ]
     @cluster.hosts << hosts
     @cluster.capacity_failover_host_resources_with_failover_hosts(1, :vcpu).should == 6.0
@@ -236,8 +236,8 @@ describe EmsCluster::CapacityPlanning do
 
   it "#capacity_failover_host_resources_without_failover_hosts" do
     hosts = [
-      FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :logical_cpus => 4), :failover => false),
-      FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :logical_cpus => 2), :failover => false)
+      FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :cpu_total_cores => 4), :failover => false),
+      FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :cpu_total_cores => 2), :failover => false)
     ]
     @cluster.hosts << hosts
     @cluster.capacity_failover_host_resources_without_failover_hosts(1, :vcpu).should == 3.0

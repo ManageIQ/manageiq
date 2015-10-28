@@ -205,7 +205,7 @@ class Zone < ActiveRecord::Base
   end
 
   def self.storages_without_a_zone
-    storage_without_hosts = Storage.includes(:hosts).where(:hosts_storages => {:storage_id => nil}).to_a
+    storage_without_hosts = Storage.includes(:hosts).where(:host_storages => {:storage_id => nil}).to_a
     storage_without_ems = Host.where(:ems_id => nil).includes(:storages).flat_map(&:storages).uniq
     storage_without_hosts + storage_without_ems
   end

@@ -21,5 +21,25 @@ module MiqAeServiceCloudNetworkSpec
     it "#vms" do
       described_class.instance_methods.should include(:vms)
     end
+
+    it "#floating_ips" do
+      described_class.instance_methods.should include(:floating_ips)
+    end
+
+    it "#network_ports" do
+      described_class.instance_methods.should include(:network_ports)
+    end
+
+    it "#network_routers" do
+      described_class.instance_methods.should include(:network_routers)
+    end
+
+    it "#public_networks" do
+      described_class.instance_methods.should include(:public_networks)
+    end
+
+    it "#private_networks" do
+      described_class.instance_methods.should include(:private_networks)
+    end
   end
 end

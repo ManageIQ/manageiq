@@ -78,7 +78,7 @@ module MiqAeEngine
         elsif @workspace.root['ae_result'] == 'skip'
           $miq_ae_logger.warn "Skipping State =[#{f['name']}]"
           return set_next_state(f, message)
-        elsif @workspace.root['ae_result'] == 'retry'
+        elsif %w(retry restart).include?(@workspace.root['ae_result'])
           increment_state_retries
         elsif @workspace.root['ae_result'] == 'error'
           $miq_ae_logger.warn "Error in State=[#{f['name']}]"
@@ -142,7 +142,18 @@ module MiqAeEngine
         reset_state_maxima_metadata
         $miq_ae_logger.info "Next State=[#{@workspace.root['ae_state']}]"
         @workspace.root['ae_result'] = 'ok'
+      elsif @workspace.root['ae_result'] == 'restart'
+        $miq_ae_logger.info "State=[#{f['name']}] has requested a restart"
+        @workspace.root['ae_result'] = 'retry'
+        @workspace.root['ae_state'] = restart_state(message).to_s
+        $miq_ae_logger.info "Will restart at State=[#{@workspace.root['ae_state']}]"
       end
+    end
+
+    def restart_state(message)
+      states = fields(message).collect { |f| f['name'] if f['aetype'] == 'state' }.compact
+      validate_state(states)
+      @workspace.root['ae_next_state'].presence || states[0]
     end
 
     def validate_state(states)

@@ -5,7 +5,6 @@ describe "routes for StorageController" do
   let(:controller_name) { "storage" }
 
   it_behaves_like "A controller that has advanced search routes"
-  it_behaves_like "A controller that has column width routes"
   it_behaves_like "A controller that has compare routes"
   it_behaves_like "A controller that has dialog runner routes"
   it_behaves_like "A controller that has download_data routes"

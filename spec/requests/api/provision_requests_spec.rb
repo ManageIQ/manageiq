@@ -25,7 +25,7 @@ describe ApiController do
   end
 
   describe "Provision Requests" do
-    let(:hardware) { FactoryGirl.create(:hardware, :memory_cpu => 1024) }
+    let(:hardware) { FactoryGirl.create(:hardware, :memory_mb => 1024) }
     let(:template) do
       FactoryGirl.create(:template_vmware,
                          :name                  => "template1",

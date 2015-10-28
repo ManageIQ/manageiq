@@ -1,6 +1,3 @@
-= render :partial => "layouts/dhtmlx_tags", :locals => {:control => "calendar"}
-= render :partial => "layouts/dhtmlx_tags", :locals => {:control => "menu"}
-
 %script{:type => "text/javascript"}
   var ManageIQ.calendar.calDateFrom = new Date(#{@perf_options[:sdate]});
   var ManageIQ.calendar.calDateTo = new Date(#{@perf_options[:edate]});

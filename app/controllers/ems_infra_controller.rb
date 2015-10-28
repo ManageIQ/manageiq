@@ -66,7 +66,7 @@ class EmsInfraController < ApplicationController
       elsif scale_parameters_formatted.length > 0
         # A value was changed
         begin
-          @stack.raw_update_stack(scale_parameters_formatted)
+          @stack.raw_update_stack(nil, scale_parameters_formatted)
           redirect_to :action => 'show', :id => params[:id], :flash_msg => return_message
         rescue => ex
           log_and_flash_message(_("Unable to initiate scaling: %s") % ex)

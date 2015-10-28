@@ -1,5 +1,7 @@
 class ChargebackRateDetail < ActiveRecord::Base
   belongs_to :chargeback_rate
+  belongs_to :detail_measure, :class_name => "ChargebackRateDetailMeasure", :foreign_key => :chargeback_rate_detail_measure_id
+
   validates_numericality_of :rate
 
   def cost(value)
@@ -26,10 +28,40 @@ class ChargebackRateDetail < ActiveRecord::Base
     rate_adjustment(hr)
   end
 
+  # Scale the rate in the unit difine by user to the default unit of the metric
+  # It showing the default units of the metrics:
+  # cpu_usagemhz_rate_average --> megahertz
+  # derived_memory_used --> megabytes
+  # derived_memory_available -->megabytes
+  # net_usage_rate_average --> kbps
+  # disk_usage_rate_average --> kbps
+  # derived_vm_allocated_disk_storage --> bytes
+  # derived_vm_used_disk_storage --> bytes
+
   def rate_adjustment(hr)
-    case per_unit
-    when "gigabytes" then hr / 1.gigabyte   # adjust to bytes / per hour
+    case metric
+    when "cpu_usagemhz_rate_average" then
+      per_unit == 'megahertz' ? hr : hr = adjustment_measure(hr, 'megahertz')
+    when "derived_memory_used", "derived_memory_available" then
+      per_unit == 'megabytes' ? hr : hr = adjustment_measure(hr, 'megabytes')
+    when "net_usage_rate_average", "disk_usage_rate_average" then
+      per_unit == 'kbps' ? hr : hr = adjustment_measure(hr, 'kbps')
+    when "derived_vm_allocated_disk_storage", "derived_vm_used_disk_storage" then
+      per_unit == 'bytes' ? hr : hr = adjustment_measure(hr, 'bytes')
     else hr
+    end
+  end
+
+  # Adjusts the hourly rate to the per unit by default
+  def adjustment_measure(hr, pu_destiny)
+    measure = detail_measure
+    pos_pu_destiny = measure.units.index(pu_destiny)
+    pos_per_unit = measure.units.index(per_unit)
+    jumps = (pos_per_unit - pos_pu_destiny).abs
+    if pos_per_unit > pos_pu_destiny
+      hr.to_f / (measure.step**jumps)
+    else
+      hr * (measure.step**jumps)
     end
   end
 
@@ -51,13 +83,7 @@ class ChargebackRateDetail < ActiveRecord::Base
   end
 
   def per_unit_display
-    case per_unit
-    when 'megahertz' then 'MHz'
-    when 'megabytes' then 'MB'
-    when 'gigabytes' then 'GB'
-    when 'kbps' then 'KBps'
-    else per_unit.to_s.capitalize
-    end
+    detail_measure.nil? ? per_unit.to_s.capitalize : detail_measure.measures.key(per_unit)
   end
 
   def rate_type

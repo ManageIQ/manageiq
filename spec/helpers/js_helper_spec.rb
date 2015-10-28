@@ -33,9 +33,6 @@ describe JsHelper do
     end
   end
 
-  context '#update_element' do
-  end
-
   context '#javascript_focus' do
     it 'returns js to focus on an element' do
       javascript_focus('foo').should eq("$('#foo').focus();")
@@ -123,6 +120,44 @@ describe JsHelper do
       javascript_unchecked(
         'foo'
       ).should eq("if ($('#foo').prop('type') == 'checkbox') {$('#foo').prop('checked', false);}")
+    end
+  end
+
+  context '#js_build_calendar' do
+    it 'returns JS to build calendar with no options' do
+      expected = <<EOD
+ManageIQ.calendar.calDateFrom = undefined;
+ManageIQ.calendar.calDateTo = undefined;
+ManageIQ.calendar.calSkipDays = undefined;
+miqBuildCalendar();
+EOD
+
+      js_build_calendar.should eq(expected)
+    end
+
+    it 'returns JS to build calendar with options' do
+      opt = {:date_from => Time.at(0).utc,
+             :date_to   => Time.at(946684800).utc,
+             :skip_days => [ 1, 2, 3 ]}
+
+      expected = <<EOD
+ManageIQ.calendar.calDateFrom = new Date('1970-01-01T00:00:00Z');
+ManageIQ.calendar.calDateTo = new Date('2000-01-01T00:00:00Z');
+ManageIQ.calendar.calSkipDays = [1,2,3];
+miqBuildCalendar();
+EOD
+
+      js_build_calendar(opt).should eq(expected)
+    end
+  end
+
+  context '#js_format_date' do
+    it 'returns undefined for nil' do
+      js_format_date(nil).should eq('undefined')
+    end
+
+    it 'returns new Date with iso string as param' do
+      js_format_date(Time.at(946684800).utc).should eq("new Date('2000-01-01T00:00:00Z')")
     end
   end
 end

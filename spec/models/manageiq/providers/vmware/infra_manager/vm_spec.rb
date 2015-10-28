@@ -66,7 +66,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm do
 
     context "#max_total_vcpus" do
       before do
-        @host = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :logical_cpus => 160))
+        @host = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :cpu_total_cores => 160))
         vm.host = @host
       end
       subject { vm.max_total_vcpus }
@@ -93,7 +93,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm do
       end
 
       it "small host logical cpus" do
-        @host.hardware.update_attributes(:logical_cpus => 4)
+        @host.hardware.update_attributes(:cpu_total_cores => 4)
         expect(subject).to eq(4)
       end
 

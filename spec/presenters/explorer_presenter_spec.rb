@@ -48,43 +48,22 @@ describe ExplorerPresenter do
     end
 
     context "#build_calendar" do
-      it 'returns JS to build calendar with no options' do
+      it 'calls js_build_calendar' do
         @presenter[:build_calendar] = true
-        @presenter.build_calendar.should == 'miqBuildCalendar();'
+        expect(@presenter).to receive(:js_build_calendar)
+        @presenter.build_calendar
       end
 
-      it 'returns JS to build calendar with options' do
-        @presenter[:build_calendar] = {
-          :date_from => 'Fantomas',
-          :date_to   => 'was',
-          :skip_days => 'here!',
-        }
-
-        js_str = @presenter.build_calendar
-
-        expected = <<EOD
-ManageIQ.calendar.calDateFrom = new Date(Fantomas);
-ManageIQ.calendar.calDateTo   = new Date(was);
-miq_cal_skipDays = 'here!';
-miqBuildCalendar();
-EOD
-        (js_str + "\n").should == expected
-      end
-
-      it 'returns JS to undefine a date' do
-        @presenter[:build_calendar] = {
-          :date_from => 'Fantomas is gone!',
-          :date_to   => nil,
-        }
-
-        js_str = @presenter.build_calendar
-
-        expected = <<EOD
-ManageIQ.calendar.calDateFrom = new Date(Fantomas is gone!);
-ManageIQ.calendar.calDateTo   = undefined;
-miqBuildCalendar();
-EOD
-        (js_str + "\n").should == expected
+      it 'calls js_build_calendar with params' do
+        # with_indifferent_access because ExplorerPresenter#options is, and it's recursively infectious - ie. won't compare otherwise
+        obj = {
+          :date_from => Time.at(0).utc,
+          :date_to   => Time.at(946684800).utc,
+          :skip_days => [ 1, 2, 3 ],
+        }.with_indifferent_access
+        @presenter[:build_calendar] = obj
+        expect(@presenter).to receive(:js_build_calendar).with(obj)
+        @presenter.build_calendar
       end
     end
   end

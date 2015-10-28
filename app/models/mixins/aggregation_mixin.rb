@@ -1,24 +1,29 @@
 module AggregationMixin
   extend ActiveSupport::Concern
   included do
-    virtual_column :aggregate_cpu_speed,     :type => :integer, :uses => :all_relationships
-    virtual_column :aggregate_logical_cpus,  :type => :integer, :uses => :all_relationships
-    virtual_column :aggregate_physical_cpus, :type => :integer, :uses => :all_relationships
-    virtual_column :aggregate_memory,        :type => :integer, :uses => :all_relationships
-    virtual_column :aggregate_vm_cpus,       :type => :integer, :uses => :all_relationships
-    virtual_column :aggregate_vm_memory,     :type => :integer, :uses => :all_relationships
-    virtual_column :aggregate_disk_capacity, :type => :integer, :uses => :all_relationships
+    virtual_column :aggregate_cpu_speed,       :type => :integer, :uses => :all_relationships
+    virtual_column :aggregate_cpu_total_cores, :type => :integer, :uses => :all_relationships
+    virtual_column :aggregate_physical_cpus,   :type => :integer, :uses => :all_relationships
+    virtual_column :aggregate_memory,          :type => :integer, :uses => :all_relationships
+    virtual_column :aggregate_vm_cpus,         :type => :integer, :uses => :all_relationships
+    virtual_column :aggregate_vm_memory,       :type => :integer, :uses => :all_relationships
+    virtual_column :aggregate_disk_capacity,   :type => :integer, :uses => :all_relationships
+
+    virtual_column :aggregate_logical_cpus, :type => :integer, :uses => :all_relationships # Deprecated
 
     # Helper method to override the virtual_column :uses definitions in the
     # event that the all_* methods are overridden
     def self.override_aggregation_mixin_virtual_columns_uses(type, new_uses)
       case type
       when :all_hosts
-        virtual_columns_hash["aggregate_cpu_speed"].uses     = new_uses
-        virtual_columns_hash["aggregate_logical_cpus"].uses  = new_uses
-        virtual_columns_hash["aggregate_physical_cpus"].uses = new_uses
-        virtual_columns_hash["aggregate_memory"].uses        = new_uses
-        virtual_columns_hash["aggregate_disk_capacity"].uses = new_uses
+        virtual_columns_hash["aggregate_cpu_speed"].uses       = new_uses
+        virtual_columns_hash["aggregate_cpu_total_cores"].uses = new_uses
+        virtual_columns_hash["aggregate_physical_cpus"].uses   = new_uses
+        virtual_columns_hash["aggregate_memory"].uses          = new_uses
+        virtual_columns_hash["aggregate_disk_capacity"].uses   = new_uses
+
+        virtual_columns_hash["aggregate_logical_cpus"].uses = new_uses # Deprecated
+
       when :all_vms_and_templates
         virtual_columns_hash["aggregate_vm_cpus"].uses       = new_uses
         virtual_columns_hash["aggregate_vm_memory"].uses     = new_uses
@@ -30,16 +35,18 @@ module AggregationMixin
     aggregate_hardware(:hosts, :aggregate_cpu_speed, targets)
   end
 
-  def aggregate_logical_cpus(targets = nil)
-    aggregate_hardware(:hosts, :logical_cpus, targets)
+  def aggregate_cpu_total_cores(targets = nil)
+    aggregate_hardware(:hosts, :cpu_total_cores, targets)
   end
+  alias_method :aggregate_logical_cpus, :aggregate_cpu_total_cores
+  Vmdb::Deprecation.deprecate_methods(self, :aggregate_logical_cpus => :aggregate_cpu_total_cores)
 
   def aggregate_physical_cpus(targets = nil)
     aggregate_hardware(:hosts, :numvcpus, targets)
   end
 
   def aggregate_memory(targets = nil)
-    aggregate_hardware(:hosts, :memory_cpu, targets)
+    aggregate_hardware(:hosts, :memory_mb, targets)
   end
 
   def aggregate_vm_cpus(targets = nil)
@@ -47,7 +54,7 @@ module AggregationMixin
   end
 
   def aggregate_vm_memory(targets = nil)
-    aggregate_hardware(:vms_and_templates, :memory_cpu, targets)
+    aggregate_hardware(:vms_and_templates, :memory_mb, targets)
   end
 
   def aggregate_disk_capacity(targets = nil)

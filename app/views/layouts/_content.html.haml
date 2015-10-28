@@ -6,32 +6,33 @@
   - planning = controller.controller_name == 'miq_capacity' && controller.action_name == 'planning'
   - simulate =  rsop || resolve || planning
   - session[:sidebar] ||= {}
-  - sidewidth = simulate ? 5 : session[:sidebar][params[:controller]] ||= 2
+  - sidewidth = simulate ? 5 : session[:sidebar][params[:controller]] ||= 3
   - maindiv = 12 - sidewidth
   - sidebar = sidewidth == 0 ? 'hidden-md hidden-lg col-md-0' : "col-md-#{sidewidth} col-md-pull-#{maindiv}"
-  .container-fluid.resizable-sidebar{:style => "overflow: hidden; height: 100%; background: #fff;"}
+  .container-fluid.resizable-sidebar{:style => "overflow: hidden; height: 100%;"}
     .row#center_div{:style => "height: 100%"}
       #right_div.resizable{:style => "height: 100%", :class => "col-md-#{maindiv} col-md-push-#{sidewidth}"}
-        .row
-          #toolbar
+        .row.toolbar-pf#toolbar
+          .toolbar-pf-actions
             = render :partial => "layouts/x_taskbar"
-        .row
-          .col-md-7#explorer
-            %h1#explorer_title
-              = @right_cell_text
-          .col-md-5
-            %br
-            = yield :search
-        .row{:style => "overflow: auto;height: calc(100% - 130px);"}
+        .row{:style => "overflow: auto;height: calc(100% - 88px);"}
           .col-md-12
-            = yield
+            .row
+              .col-md-7#explorer
+                %h1#explorer_title
+                  = @right_cell_text
+              .col-md-5
+                %br
+                = yield :search
+            .row
+              .col-md-12
+                = yield
         .row.toolbar-pf#paging_div
-          .col-md-12
-            .toolbar-pf-actions
-              - if saved_report_paging?
-                = render(:partial => 'layouts/saved_report_paging_bar', :locals => {:pages => @sb[:pages]})
-              - else
-                = render(:partial => '/layouts/x_pagingcontrols')
+          .toolbar-pf-actions
+            - if saved_report_paging?
+              = render(:partial => 'layouts/saved_report_paging_bar', :locals => {:pages => @sb[:pages]})
+            - else
+              = render(:partial => '/layouts/x_pagingcontrols')
 
         - unless simulate
           .resizer.hidden-xs
@@ -61,20 +62,33 @@
         -# .max-height.resizable{:class => "col-md-#{maindiv} col-md-push-#{sidewidth}"}
         .col-md-10.col-md-push-2.max-height
           - if taskbar_in_header?
-            .row#main_taskbar
-              .col-md-12
+            .row.toolbar-pf#toolbar
+              .toolbar-pf-actions
                 = render :partial => "layouts/taskbar"
-          .row
-            .col-md-7
-              = render :partial => "layouts/breadcrumbs"
-              - if layout_uses_tabs?
-                = render :partial => 'layouts/tabs'
-            .col-md-5
-              %br
-              = render :partial => 'layouts/searchbar'
-          .row{:style => "overflow: auto;height: calc(100% - 150px);"}
+          .row{:style => "overflow: auto;height: calc(100% - 88px);"}
             .col-md-12
-              = yield
+              .row
+                .col-md-7
+                  = render :partial => "layouts/breadcrumbs"
+                  - if layout_uses_tabs?
+                    = render :partial => 'layouts/tabs'
+                .col-md-5
+                  %br
+                  = render :partial => 'layouts/searchbar'
+              .row
+                .col-md-12
+                  = yield
+          .row.toolbar-pf#paging_div
+            .toolbar-pf-actions
+              - unless @embedded
+                - if @pages && @items_per_page != ONE_MILLION
+                  = render(:partial => '/layouts/pagingcontrols',
+                          :locals => {:pages      => @pages,
+                                       :action_url => action_url_for_views,
+                                       :db         => @view.db,
+                                       :headers    => @view.headers,
+                                       :button_div => 'center_tb'})
+
           -# Resizing buttons for the resizable sidebar
             .resizer.hidden-xs
               .resizer-box
@@ -88,7 +102,12 @@
           = render :partial => "layouts/listnav"
 
       - elsif  @layout == "dashboard" && (controller.action_name == "show" || controller.action_name == "change_tab")
-        .col-md-12.max-height.scrollable
+        .row.toolbar-pf#toolbar
+          .col-md-12
+            .toolbar-pf-actions
+              - if @widgets_menu
+                = render :partial => "dashboard/dropdownbar"
+        .col-md-12{:style => "overflow: auto;height: calc(100% - 40px);"}
           .cpage-header.page-header-bleed-right
             %br
             = render :partial => '/layouts/tabs'
@@ -96,9 +115,11 @@
       - else
         .col-md-12.max-height
           - if taskbar_in_header?
-            .row#main_taskbar
+            .row
               .col-md-12
-                = render :partial => "layouts/taskbar"
+                .row.toolbar-pf#toolbar
+                  .toolbar-pf-actions
+                    = render :partial => "layouts/taskbar"
           .row
             .col-md-12
               = render :partial => "layouts/breadcrumbs"

@@ -34,6 +34,15 @@ class ApiController
       raise BadRequestError, "Could not create a new tag - #{err}"
     end
 
+    def tags_delete_resource(_parent, _type, _id, data)
+      tag_id = parse_id(data, :tags) || parse_by_attr(data, :tags, %w(name))
+      raise BadRequestError, "Tag id, href or name needs to be specified for deleting a tag resource" unless tag_id
+      destroy_tag_and_classification(tag_id)
+      action_result(true, "tags id: #{tag_id} deleting")
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
     def create_resource_tags(_type, _id, data)
       if data.key?("id") || data.key?("href")
         raise BadRequestError,
@@ -67,17 +76,31 @@ class ApiController
       entry.tag
     end
 
+    def delete_resource_tags(_type, id, _data = {})
+      destroy_tag_and_classification(id)
+      action_result(true, "tags id: #{id} deleting")
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
     private
 
     def fetch_category(data)
-      if data.key?("id")
-        category_id = data["id"]
-      elsif data.key?("href")
-        _, category_id = parse_href(data["href"])
-      else
-        raise BadRequestError, "Category id or href needs to be specified for creating a new tag resource"
+      category_id = parse_id(data, :categories) || parse_by_attr(data, :categories, %w(name))
+      unless category_id
+        raise BadRequestError, "Category id, href or name needs to be specified for creating a new tag resource"
       end
       Category.find_by_id(category_id)
+    end
+
+    def destroy_tag_and_classification(tag_id)
+      entry = Classification.find_by_tag_id(tag_id)
+      if entry
+        entry.destroy!
+      else
+        tag = Tag.find_by_id(tag_id)
+        tag.destroy! if tag
+      end
     end
 
     def tag_ident(tag_spec)

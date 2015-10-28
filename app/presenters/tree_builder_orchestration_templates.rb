@@ -1,7 +1,7 @@
 class TreeBuilderOrchestrationTemplates < TreeBuilder
   private
 
-  def x_get_tree_roots(options)
+  def x_get_tree_roots(count_only, _options)
     children = [
       {:id    => 'otcfn',
        :tree  => "otcfn_tree",
@@ -19,7 +19,7 @@ class TreeBuilderOrchestrationTemplates < TreeBuilder
        :image => "orchestration_template_azure",
        :tip   => "Azure Templates"}
     ]
-    options[:count_only] ? children.length : children
+    count_only ? children.length : children
   end
 
   def tree_init_options(_tree_name)
@@ -35,13 +35,13 @@ class TreeBuilderOrchestrationTemplates < TreeBuilder
     )
   end
 
-  def x_get_tree_custom_kids(object, options)
+  def x_get_tree_custom_kids(object, count_only, _options)
     classes = {
       "otcfn" => OrchestrationTemplateCfn,
       "othot" => OrchestrationTemplateHot,
       "otazu" => OrchestrationTemplateAzure
     }
     objects = rbac_filtered_objects(classes[object[:id]].all).sort_by { |o| o.name.downcase }
-    count_only_or_objects(options[:count_only], objects, nil)
+    count_only_or_objects(count_only, objects, nil)
   end
 end

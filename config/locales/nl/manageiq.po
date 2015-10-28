@@ -8583,11 +8583,6 @@ msgstr ""
 msgid "Non-VM Files"
 msgstr ""
 
-msgid ""
-"Non-admin users can not access the system until at least 1 VM/Instance has bee"
-"n discovered"
-msgstr ""
-
 msgid "None"
 msgstr ""
 
@@ -14925,7 +14920,7 @@ msgstr "Nederlands"
 msgid "m"
 msgstr ""
 
-msgid "memory_cpu"
+msgid "memory_mb"
 msgstr ""
 
 msgid "no value"

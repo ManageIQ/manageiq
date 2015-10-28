@@ -348,11 +348,6 @@ module OpsController::Settings::Common
       @edit[:new].set_worker_setting!(:MiqWebServiceWorker, :count, w[:count].to_i)
       @edit[:new].set_worker_setting!(:MiqWebServiceWorker, :memory_threshold, human_size_to_rails_method(w[:memory_threshold]))
 
-      w = qwb[:automate_worker]
-      @edit[:new].set_worker_setting!(:MiqAutomateWorker, :count, w[:count].to_i)
-      @edit[:new].set_worker_setting!(:MiqAutomateWorker, :memory_threshold,
-                                      human_size_to_rails_method(w[:memory_threshold]))
-
       @update = MiqServer.find(@sb[:selected_server_id]).get_config
     when "settings_database"                                      # Database tab
       db_config = MiqDbConfig.new(@edit[:new])
@@ -785,10 +780,7 @@ module OpsController::Settings::Common
       w[:count] = params[:web_service_worker_count].to_i if params[:web_service_worker_count]
       w[:memory_threshold] = params[:web_service_worker_threshold] if params[:web_service_worker_threshold]
 
-      w = qwb[:automate_worker]
-      w[:count] = params[:automate_worker_count].to_i if params[:automate_worker_count]
-      w[:memory_threshold] = params[:automate_worker_threshold] if params[:automate_worker_threshold]
-
+      restore_password if params[:restore_password]
       set_workers_verify_status
     when "settings_database"                                        # database tab
       new[:name] = params[:production_dbtype]  if params[:production_dbtype]
@@ -797,6 +789,7 @@ module OpsController::Settings::Common
         new[option[:name]] = params["production_#{option[:name]}".to_sym]  if params["production_#{option[:name]}".to_sym]
       end
       new[:verify] = params[:production_verify]  if params[:production_verify]
+      restore_password if params[:restore_password]
     when "settings_custom_logos"                                            # Custom Logo tab
       new[:server][:custom_logo] = (params[:server_uselogo] == "1") if params[:server_uselogo]
       new[:server][:custom_login_logo] = (params[:server_useloginlogo] == "1") if params[:server_useloginlogo]
@@ -1011,13 +1004,6 @@ module OpsController::Settings::Common
       @sb[:web_service_threshold] = []
       @sb[:web_service_threshold] = copy_array(@sb[:threshold])
 
-      w = (qwb[:automate_worker] ||= {})
-      w[:count] = @edit[:current].get_raw_worker_setting(:MiqAutomateWorker, :count) || 2
-      mth = rails_method_to_human_size(@edit[:current].get_raw_worker_setting(:MiqAutomateWorker, :memory_threshold))
-      w[:memory_threshold] = mth || rails_method_to_human_size(400.megabytes)
-      @sb[:automate_threshold] = []
-      @sb[:automate_threshold] = copy_array(@sb[:threshold])
-
       @edit[:new].config = copy_hash(@edit[:current].config)
       session[:log_depot_default_verify_status] = true
       set_workers_verify_status
@@ -1226,6 +1212,17 @@ module OpsController::Settings::Common
         :children => [build_smartproxy_affinity_node(zone, s, 'host'),
                       build_smartproxy_affinity_node(zone, s, 'storage')]
       }
+    end
+  end
+
+  def restore_password
+    if params[:production_password]
+      @edit[:new][:password] = @edit[:new][:verify] = MiqDbConfig.current.options[:password]
+    end
+    if params[:replication_worker_password]
+      @edit[:new].config[:workers][:worker_base][:replication_worker][:replication][:destination][:password] =
+        @edit[:new].config[:workers][:worker_base][:replication_worker][:replication][:destination][:verify] =
+        MiqServer.find(@sb[:selected_server_id]).get_config.config[:workers][:worker_base][:replication_worker][:replication][:destination][:password]
     end
   end
 end

@@ -48,9 +48,9 @@ switch (environment) {
   default:
     console.log('** DEV **');
     router.use(express.static('./client/'));
-    app.use(express.static('./client/assets'));
+    router.use(express.static('./tmp'));
+    router.use(express.static('./client/assets'));
     app.use(express.static('./'));
-    app.use(express.static('./tmp'));
     // Any invalid calls for templateUrls are under app/* and should return 404
     router.use('/app/*', function(req, res) {
       four0four.send404(req, res);

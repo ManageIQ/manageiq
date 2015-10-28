@@ -2,7 +2,7 @@ module MiqServer::ConfigurationManagement
   extend ActiveSupport::Concern
 
   included do
-    has_many :configurations, :dependent => :destroy
+    has_many :configurations, :dependent => :destroy, :inverse_of => :miq_server
   end
 
   module ClassMethods

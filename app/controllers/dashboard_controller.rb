@@ -140,7 +140,7 @@ class DashboardController < ApplicationController
         tab_features.detect do |f|
           if f == "my_settings" && role_allows(:feature => f, :any => true)
             redirect_to :controller => "configuration", :action => "index", :config_tab => "ui"
-          elsif role_allows(:feature => f)
+          elsif role_allows(:feature => f, :any => true)
             case f
             when "tasks"        then redirect_to(:controller => "configuration", :action => "index")
             when "ops_explorer" then redirect_to(:controller => "ops",       :action => "explorer")
@@ -248,7 +248,7 @@ class DashboardController < ApplicationController
                   @sb[:dashboards][@sb[:active_db]][:col3]
 
     # Build the XML to load the widget dropdown list dhtmlxtoolbar
-    widget_list = ""
+    widget_list = []
     prev_type   = nil
     @available_widgets = []
     MiqWidget.available_for_user(current_user).sort_by { |a| a.content_type + a.title.downcase }.each do |w|
@@ -261,41 +261,31 @@ class DashboardController < ApplicationController
                      when "report" then ["report",   "Add this Report Widget"]
                      end
         if prev_type && prev_type != w.content_type
-          widget_list << "<item id='#{w.content_type}' type='separator'>" \
-                         "</item>"
+          widget_list << {:id => w.content_type, :type => :separator}
         end
         prev_type = w.content_type
-        w.title.gsub!(/'/, "&apos;")     # Need to escape single quote in title to load toolbar
-        widget_list << "<item id='#{w.id}' type='button' text='#{CGI.escapeHTML(w.title)}' img='button_#{image}.png' title='#{tip}'>" \
-                       "</item>"
+        widget_list << {
+          :id    => w.id,
+          :type  => :button,
+          :text  => w.title,
+          :image => "button_#{image}.png",
+          :title => tip
+        }
       end
     end
-    if role_allows(:feature => "dashboard_add") || role_allows(:feature => "dashboard_reset")
-      @widgets_menu_xml = "<?xml version='1.0'?><toolbar>"
+
+    can_add   = role_allows(:feature => "dashboard_add")
+    can_reset = role_allows(:feature => "dashboard_reset")
+    if can_add || can_reset
+      @widgets_menu = {}
       if widget_list.blank?
-        @widgets_menu_xml << "<item id='add_widget' type='buttonSelect' img='add_widget.png' \
-                             imgdis='add_widget.png' title='No Widgets available to add' enabled='false'>\
-                             </item>"
+        @widgets_menu[:blank] = true
       else
-        if role_allows(:feature => "dashboard_add")
-          if @sb[:dashboards][@sb[:active_db]][:locked]
-            title   = "Cannot add a Widget, this Dashboard has been locked by the Administrator"
-            enabled = 'false'
-          else
-            title   = "Add a widget"
-            enabled = 'true'
-          end
-          @widgets_menu_xml << "<item id='add_widget' type='buttonSelect' maxOpen='15' img='add_widget.png' title='#{title}' imgdis='add_widget.png' enabled='#{enabled}' openAll='true'>" +
-            widget_list +
-            "</item>"
-        end
+        @widgets_menu[:allow_add] = can_add
+        @widgets_menu[:locked]    = @sb[:dashboards][@sb[:active_db]][:locked] if can_add
+        @widgets_menu[:items]     = widget_list
       end
-      if role_allows(:feature => "dashboard_reset")
-        @widgets_menu_xml << "<item id='reset' type='button' img='reset_widgets.png' title='Reset Dashboard Widgets to the defaults'>" \
-                             "</item>"
-      end
-      @widgets_menu_xml << "</toolbar>"
-      @widgets_menu_xml = @widgets_menu_xml.html_safe
+      @widgets_menu[:allow_reset] = can_reset
     end
   end
 
@@ -692,7 +682,6 @@ class DashboardController < ApplicationController
       db_user.settings.delete(:db_item_min)
 
       @settings.each { |key, value| value.merge!(db_user.settings[key]) unless db_user.settings[key].nil? }
-      @settings[:col_widths] = db_user.settings[:col_widths]  # Get the user's column widths
       @settings[:default_search] = db_user.settings[:default_search]  # Get the user's default search setting
     end
 
@@ -726,9 +715,9 @@ class DashboardController < ApplicationController
     if ws.nil?
       # Create new db if it doesn't exist
       ws = MiqWidgetSet.new(:name        => db.name,
-                            :group_id    => session[:group],
-                            :userid      => session[:userid],
-                            :description => "#{db.name} dashboard for user #{session[:userid]} in group id #{session[:group]}")
+                            :group_id    => current_group_id,
+                            :userid      => current_userid,
+                            :description => "#{db.name} dashboard for user #{current_userid} in group id #{current_group_id}")
       ws.set_data = db.set_data
       ws.set_data[:last_group_db_updated] = db.updated_on
       ws.save!

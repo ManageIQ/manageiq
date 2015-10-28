@@ -1,19 +1,14 @@
 class ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow < ::MiqProvisionCloudWorkflow
   def allowed_instance_types(_options = {})
     source = load_ar_obj(get_source_vm)
-    ems = source.try(:ext_management_system)
-
-    return {} if ems.nil?
-    ems.flavors.each_with_object({}) { |f, h| h[f.id] = display_name_for_name_description(f) }
+    ems = get_targets_for_ems(source, :cloud_filter, Flavor, 'flavors')
+    ems.each_with_object({}) { |f, h| h[f.id] = display_name_for_name_description(f) }
   end
 
   def allowed_cloud_tenants(_options = {})
     source = load_ar_obj(get_source_vm)
-    if ems = source.try(:ext_management_system)
-      ems.cloud_tenants.each_with_object({}) { |f, h| h[f.id] = f.name }
-    else
-      {}
-    end
+    ems = get_targets_for_ems(source, :cloud_filter, CloudTenant, 'cloud_tenants')
+    ems.each_with_object({}) { |f, h| h[f.id] = f.name }
   end
 
   def validate_cloud_network(field, values, dlg, fld, value)

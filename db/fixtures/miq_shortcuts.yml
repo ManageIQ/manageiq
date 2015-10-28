@@ -186,7 +186,7 @@
 - :name: container_containers
   :description: Containers / Explorer
   :url: /container/explorer
-  :rbac_feature_name: container_view
+  :rbac_feature_name: containers
   :startup: true
 - :name: control_explorer
   :description: Control / Explorer

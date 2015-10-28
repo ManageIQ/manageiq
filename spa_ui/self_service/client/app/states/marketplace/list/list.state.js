@@ -112,6 +112,9 @@
       /* Keep track of the current filtering state */
       MarketplaceState.setFilters(filters);
 
+      /* Apply Default Sorting */
+      vm.serviceTemplatesList.sort(compareFn);
+
       function filterChecker(item) {
         if (matchesFilters(item, filters)) {
           vm.serviceTemplatesList.push(item);
@@ -145,6 +148,12 @@
       }
 
       return match;
+    }
+
+    function compareFn(item1, item2) {
+      var compValue = item1.name.localeCompare(item2.name);
+      
+      return compValue;
     }
   }
 })();

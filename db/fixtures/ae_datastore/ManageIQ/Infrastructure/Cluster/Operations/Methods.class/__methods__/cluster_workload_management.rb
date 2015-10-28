@@ -52,8 +52,8 @@ def loghost_object(h)
   # Log Host CPU Speed I.e. cpu_speed: 2493
   $evm.log("info", "Host: <#{h.name}> CPU Speed: <#{h.hardware.cpu_speed}>")
 
-  # Log Host Memory  I.e. memory_cpu: 8190
-  $evm.log("info", "Host: <#{h.name}> Memory: <#{h.hardware.memory_cpu}>")
+  # Log Host Memory  I.e. memory_mb: 8190
+  $evm.log("info", "Host: <#{h.name}> Memory: <#{h.hardware.memory_mb}>")
 
   # Log Current Host CPU usage I.e. cpu_usage: 366
   $evm.log("info", "Host: <#{h.name}> Current CPU Usage: <#{h.hardware.cpu_usage}>")
@@ -91,7 +91,7 @@ host_suspects.each do |h|
   loghost_object(h)
 
   # Get Host CPU Capacity
-  host_cpu_capacity = h.hardware.cpu_speed * h.hardware.logical_cpus
+  host_cpu_capacity = h.hardware.cpu_speed * h.hardware.cpu_total_cores
   host_cpu_percent = (h.cpu_usagemhz_rate_average_avg_over_time_period / host_cpu_capacity)
   $evm.log("info", "Host:<#{h.name}> CPU Capacity: <#{host_cpu_capacity}> CPU Percent: <#{host_cpu_percent}>")
 
@@ -103,8 +103,8 @@ host_suspects.each do |h|
     $evm.log("info", "Host: <#{h.name}> CPU Percent: <#{host_cpu_percent}> is within CPU threshold: <#{host_cpu_threshold}>")
   end
 
-  host_mem_percent = (h.derived_memory_used_avg_over_time_period / h.hardware.memory_cpu)
-  $evm.log("info", "Host:<#{h.name}> Memory Capacity: <#{h.hardware.memory_cpu}> CPU Percent: <#{host_mem_percent}>")
+  host_mem_percent = (h.derived_memory_used_avg_over_time_period / h.hardware.memory_mb)
+  $evm.log("info", "Host:<#{h.name}> Memory Capacity: <#{h.hardware.memory_mb}> CPU Percent: <#{host_mem_percent}>")
 
   host_all << {:id => h.id, :percent => host_mem_percent, :type => :mem}
   if host_mem_percent >= host_mem_threshold
@@ -138,7 +138,7 @@ unless host_exceeded.blank?
   $evm.log("info", "VM: <#{vm_culprit.name}> Memory: <#{vm_culprit.mem_cpu}>")
 
   # Log VM CPU Count I.e. CPU Count: <2>
-  $evm.log("info", "VM: <#{vm_culprit.name}> CPU Count: <#{vm_culprit.logical_cpus}>")
+  $evm.log("info", "VM: <#{vm_culprit.name}> CPU Count: <#{vm_culprit.cpu_total_cores}>")
 
   # Log VM CPU average usage I.e. Average CPU Usage: <405.791768303411>
   $evm.log("info", "VM: <#{vm_culprit.name}> Average CPU Usage: <#{vm_culprit.cpu_usagemhz_rate_average_avg_over_time_period}>")

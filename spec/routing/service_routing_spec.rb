@@ -5,7 +5,6 @@ describe 'routes for ServiceController' do
   let(:controller_name) { 'service' }
 
   it_behaves_like "A controller that has dialog runner routes"
-  it_behaves_like 'A controller that has column width routes'
   it_behaves_like 'A controller that has download_data routes'
 
   describe "#button" do

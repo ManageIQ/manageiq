@@ -30,17 +30,14 @@ if (typeof(ManageIQ) === 'undefined') {
     calendar: { // TODO about to be removed
       calDateFrom: null, // to limit calendar starting
       calDateTo: null, // to limit calendar ending
+      calSkipDays: null,  // to disable specific days of week
     },
     charts: {
       chartData: null, // data for charts
       charts: {}, // object with registered charts used in jqplot_register_chart
       formatters: {}, // functions corresponding to MiqReport::Formatting
     },
-    grids: {
-      grids: null, // stored grids on the screen
-      gridColumnWidths: null, // store grid column widths
-      xml: null,
-    },
+    grids: {}, // stored grids on the screen
     layout: { // abstraction over dhxLayout(B)
       sidebar:   null,
       toolbar:   null,

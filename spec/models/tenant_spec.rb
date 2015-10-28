@@ -362,6 +362,21 @@ describe Tenant do
     end
   end
 
+  context "#validate_default_tenant" do
+    it "fails assigning a group with the wrong tenant" do
+      tenant1 = FactoryGirl.create(:tenant)
+      tenant2 = FactoryGirl.create(:tenant)
+      g = FactoryGirl.create(:miq_group, :tenant => tenant1)
+      expect { tenant2.update_attributes!(:default_miq_group => g) }.to raise_error
+    end
+
+    # we may want to change this in the future
+    it "prevents changing default_miq_group" do
+      g = FactoryGirl.create(:miq_group, :tenant => tenant)
+      expect { tenant.update_attributes!(:default_miq_group => g) }.to raise_error
+    end
+  end
+
   describe "#description" do
     it "has description" do
       tenant.update_attributes(:description => 'very important vm')
@@ -600,9 +615,9 @@ describe Tenant do
         :ext_management_system => ems,
         :hardware              => FactoryGirl.create(
           :hardware,
-          :memory_cpu   => 1024,
-          :logical_cpus => 1,
-          :disks        => [FactoryGirl.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
+          :memory_mb       => 1024,
+          :cpu_total_cores => 1,
+          :disks           => [FactoryGirl.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
         )
       )
     end
@@ -615,9 +630,9 @@ describe Tenant do
         :ext_management_system => ems,
         :hardware              => FactoryGirl.create(
           :hardware,
-          :memory_cpu   => 1024,
-          :logical_cpus => 1,
-          :disks        => [FactoryGirl.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
+          :memory_mb       => 1024,
+          :cpu_total_cores => 1,
+          :disks           => [FactoryGirl.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
         )
       )
     end
@@ -633,9 +648,9 @@ describe Tenant do
         :ext_management_system => ems,
         :hardware              => FactoryGirl.create(
           :hardware,
-          :memory_cpu   => 1024,
-          :logical_cpus => 1,
-          :disks        => [FactoryGirl.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
+          :memory_mb       => 1024,
+          :cpu_total_cores => 1,
+          :disks           => [FactoryGirl.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
         )
       )
     end
@@ -763,39 +778,6 @@ describe Tenant do
       expect(combined[:cpu_allocated][:used]).to              eql 2
       expect(combined[:storage_allocated][:used]).to          eql 2
       expect(combined[:templates_allocated][:used]).to        eql 2
-    end
-  end
-
-  describe "assigning tenants" do
-    let(:tenant)       { FactoryGirl.build(:tenant, :parent => default_tenant) }
-    let(:tenant_users) { FactoryGirl.create(:miq_user_role, :name => "tenant-users") }
-    let(:tenant_group) { FactoryGirl.create(:miq_group, :miq_user_role => tenant_users, :tenant => tenant) }
-
-    it "assigns owning group tenant" do
-      vm = FactoryGirl.create(:vm_vmware, :miq_group => tenant_group)
-
-      expect(vm.tenant).to eql tenant
-    end
-
-    it "assigns current user tenant" do
-      User.current_user = FactoryGirl.create(:user, :userid => 'user', :miq_groups => [tenant_group])
-      vm = FactoryGirl.create(:vm_vmware)
-
-      expect(vm.tenant).to eql tenant
-    end
-
-    it "assigns parent EMS tenant" do
-      ems = FactoryGirl.create(:ems_vmware, :name => 'ems', :tenant => tenant)
-      vm  = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
-
-      expect(vm.tenant).to eql tenant
-    end
-
-    it "assigns root tenant" do
-      root_tenant
-      vm = FactoryGirl.create(:vm_vmware)
-
-      expect(vm.tenant).to eql root_tenant
     end
   end
 end
