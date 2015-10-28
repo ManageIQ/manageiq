@@ -100,7 +100,7 @@ module ReportFormatter
           e_icon = "/images/icons/timeline/vendor-#{rec.vmm_vendor.downcase}.png"
           e_image = "/images/icons/new/os-#{rec.os_image_name.downcase}.png"
           e_text = "&lt;a href='/host/show/#{rec.id}'&gt;#{e_title}&lt;/a&gt;"
-        when "EmsEvent"
+        when "EventStream"
           ems_cloud = false
           if rec[:ems_id] && ExtManagementSystem.exists?(rec[:ems_id])
             ems = ExtManagementSystem.find(rec[:ems_id])
@@ -245,7 +245,13 @@ module ReportFormatter
           elsif co == "ems_cluster_name" && !rec.ems_cluster_id.nil?
             e_text += "&lt;a href='/ems_cluster/show/#{to_cid(rec.ems_cluster_id)}'&gt;#{row[co]}&lt;/a&gt;"
           elsif co == "ext_management_system.name" && rec.ext_management_system && !rec.ext_management_system.id.nil?
-            e_text += "&lt;a href='/#{ems_cloud ? "ems_cloud" : "ems_infra"}/show/#{to_cid(rec.ext_management_system.id)}'&gt;#{row[co]}&lt;/a&gt;"
+            provider_id = rec.ext_management_system.id
+            if ems_cloud
+              # restful route is used for cloud provider unlike infrastructure provider
+              e_text += "&lt;a href='/ems_cloud/#{provider_id}'&gt;#{row[co]}&lt;/a&gt;"
+            else
+              e_text += "&lt;a href='/ems_infra/show/#{to_cid(provider_id)}'&gt;#{row[co]}&lt;/a&gt;"
+            end
           elsif co == "availability_zone.name" && !rec.availability_zone_id.nil?
             e_text += "&lt;a href='/availability_zone/show/#{to_cid(rec.availability_zone_id)}'&gt;#{row[co]}&lt;/a&gt;"
           elsif mri.db == "BottleneckEvent" && co == "resource_name"
