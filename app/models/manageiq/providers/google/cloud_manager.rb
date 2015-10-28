@@ -1,6 +1,8 @@
 class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudManager
   require_nested :Refresher
 
+  attr_accessor :project
+
   def self.ems_type
     @ems_type ||= "gce".freeze
   end
@@ -18,7 +20,15 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
   end
 
   def supported_auth_types
-    %w(oauth)
+    %w(
+      oauth
+      service_account
+    )
+  end
+
+  # TODO(lwander) determine if user wants to use OAUTH or a service account
+  def missing_credentials?(_type)
+    false
   end
 
   def supports_authentication?(authtype)
@@ -31,8 +41,14 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
     ManageIQ::Providers::Google::Regions.find_by_name(provider_region)[:description]
   end
 
-  def verify_credentials(_auth_type = nil, _options = {})
-    true
+  def verify_credentials(auth_type = nil, _options = {})
+    require 'fog/google'
+
+    ::Fog::Compute.new(
+      :provider => "Google",
+      :google_project => project,
+      :google_json_key_string => authentication_service_account(auth_type),
+    )
   end
 
   #

@@ -58,6 +58,10 @@ module AuthenticationMixin
     authentication_component(type, :password_encrypted)
   end
 
+  def authentication_service_account(type = nil)
+    authentication_component(type, :service_account)
+  end
+
   def required_credential_fields(_type)
     [:userid]
   end
@@ -158,6 +162,8 @@ module AuthenticationMixin
       cred.userid = value[:userid]
       cred.password = value[:password]
       cred.auth_key = value[:auth_key]
+      # TODO(lwander) this should have its own cred attribute
+      cred.service_account = value[:service_account]
 
       cred.save if options[:save] && id
     end

@@ -75,6 +75,7 @@ gem "aws-sdk",                        "~>1.56.0",  :require => false
 gem "dalli",                          "~>2.7.4",   :require => false
 gem "elif",                           "=0.1.0",    :require => false
 gem "google-api-client",              ">=0.8.0",   :require => false
+gem "fog-google",                     ">=0.1.1",   :require => false
 gem "hamlit",                         "~>1.7.2",   :require => false
 gem "inifile",                        "~>3.0",     :require => false
 gem "logging",                        "~>1.6.1",   :require => false  # Ziya depends on this
