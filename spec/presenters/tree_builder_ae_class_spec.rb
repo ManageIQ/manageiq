@@ -42,4 +42,20 @@ describe TreeBuilderAeClass do
       domains.should_not include %w(test2)
     end
   end
+
+  context "#x_get_tree_roots" do
+    before do
+      user = FactoryGirl.create(:user_with_group)
+      login_as user
+      tenant1 = user.current_tenant
+      FactoryGirl.create(:miq_ae_domain, :name => "test1", :tenant => tenant1, :priority => 1)
+      FactoryGirl.create(:miq_ae_domain, :name => "test2", :tenant => tenant1, :priority => 2)
+    end
+
+    it "should return domains in correct order" do
+      tree = TreeBuilderAeClass.new("ae_tree", "ae", {})
+      domains = JSON.parse(tree.tree_nodes).first['children'].collect { |h| h['title'] }
+      domains.should eq(%w(test2 test1))
+    end
+  end
 end
