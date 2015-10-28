@@ -4,6 +4,7 @@ FactoryGirl.define do
     sequence(:hostname)  { |n| "ems_#{seq_padded_for_sorting(n)}" }
     sequence(:ipaddress) { |n| ip_from_seq(n) }
     guid                 { MiqUUID.new_guid }
+    zone                 { Zone.first || FactoryGirl.create(:zone) }
   end
 
   # Intermediate classes
@@ -72,7 +73,6 @@ FactoryGirl.define do
   # Leaf classes for ems_cloud
 
   factory :ems_amazon, :aliases => ["manageiq/providers/amazon/cloud_manager"], :class => "ManageIQ::Providers::Amazon::CloudManager", :parent => :ems_cloud do
-    zone {  Zone.first || FactoryGirl.create(:zone) }
     provider_region "us-east-1"
   end
 
@@ -89,7 +89,6 @@ FactoryGirl.define do
   end
 
   factory :ems_openstack, :aliases => ["manageiq/providers/openstack/cloud_manager"], :class => "ManageIQ::Providers::Openstack::CloudManager", :parent => :ems_cloud do
-    zone {  Zone.first || FactoryGirl.create(:zone) }
   end
 
   factory :ems_openstack_with_authentication, :parent => :ems_openstack do
@@ -133,7 +132,6 @@ FactoryGirl.define do
   end
 
   factory :ems_azure, :aliases => ["manageiq/providers/azure/cloud_manager"], :class => "ManageIQ::Providers::Azure::CloudManager", :parent => :ems_cloud do
-    zone { Zone.seed }
   end
 
   factory :ems_azure_with_authentication, :parent => :ems_azure do

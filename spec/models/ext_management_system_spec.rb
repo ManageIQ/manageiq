@@ -110,81 +110,85 @@ describe ExtManagementSystem do
   end
 
   context "validates" do
-    described_class.leaf_subclasses.each do |ems|
-      next if ems == ManageIQ::Providers::Amazon::CloudManager # Amazon is tested in ems_amazon_spec.rb
-      t = ems.name.underscore
+    before do
+      Zone.seed
+    end
 
-      context "for #{ems}" do
-        before do
-          _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
-        end
+    context "within the same sub-classes" do
+      described_class.leaf_subclasses.each do |ems|
+        next if ems == ManageIQ::Providers::Amazon::CloudManager # Amazon is tested in ems_amazon_spec.rb
+        t = ems.name.underscore
 
-        it "name" do
-          expect { FactoryGirl.create(t, :name => "ems_1", :ipaddress => "1.1.1.1", :hostname => "ems_1", :zone => @zone) }.to_not raise_error
-          expect { FactoryGirl.create(t, :name => "ems_1", :ipaddress => "2.2.2.2", :hostname => "ems_2", :zone => @zone) }.to     raise_error
-        end
+        context t do
+          it "duplicate name" do
+            expect { FactoryGirl.create(t, :name => "ems_1") }.to_not raise_error
+            expect { FactoryGirl.create(t, :name => "ems_1") }.to     raise_error(ActiveRecord::RecordInvalid)
+          end
 
-        if ems.new.hostname_required?
-          context "hostname" do
+          if ems.new.hostname_required?
             it "duplicate hostname" do
-              expect { FactoryGirl.create(t, :ipaddress => "1.1.1.1", :hostname => "ems_1", :zone => @zone) }.to_not raise_error
-              expect { FactoryGirl.create(t, :ipaddress => "2.2.2.2", :hostname => "ems_1", :zone => @zone) }.to     raise_error
-              expect { FactoryGirl.create(t, :ipaddress => "3.3.3.3", :hostname => "EMS_1", :zone => @zone) }.to     raise_error
+              expect { FactoryGirl.create(t, :hostname => "ems_1") }.to_not raise_error
+              expect { FactoryGirl.create(t, :hostname => "ems_1") }.to     raise_error(ActiveRecord::RecordInvalid)
+              expect { FactoryGirl.create(t, :hostname => "EMS_1") }.to     raise_error(ActiveRecord::RecordInvalid)
             end
 
             it "blank hostname" do
-              expect { FactoryGirl.create(t, :ipaddress => "1.1.1.1", :hostname => "", :zone => @zone) }.to raise_error
+              expect { FactoryGirl.create(t, :hostname => "") }.to raise_error(ActiveRecord::RecordInvalid)
             end
 
             it "nil hostname" do
-              expect { FactoryGirl.create(t, :ipaddress => "1.1.1.1", :hostname => nil, :zone => @zone) }.to raise_error
+              expect { FactoryGirl.create(t, :hostname => nil) }.to raise_error(ActiveRecord::RecordInvalid)
             end
           end
         end
       end
     end
 
-    context "across sub-classes" do
+    context "across sub-classes, from vmware to" do
       before do
-        @same_host_name      = "us-east-1"
-        @different_host_name = "us-west-1"
-        @ems = FactoryGirl.create(:ems_vmware, :hostname => @same_host_name)
-        @zone = Zone.seed
+        @ems_vmware = FactoryGirl.create(:ems_vmware)
       end
 
-      it "duplicate name" do
-        described_class.leaf_subclasses.collect { |ems| ems.name.underscore.to_sym }.each do |t|
-          expect { FactoryGirl.create(t, :name => @ems.name, :hostname => @different_host_name, :zone => @zone) }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Name has already been taken")
-        end
-      end
+      described_class.leaf_subclasses.collect do |ems|
+        t = ems.name.underscore
 
-      it "duplicate hostname" do
-        described_class.leaf_subclasses.collect { |ems| ems.name.underscore.to_sym }.each do |t|
-          provider = FactoryGirl.build(t, :hostname => @same_host_name, :zone => @zone)
+        context t do
+          it "duplicate name" do
+            expect do
+              FactoryGirl.create(t, :name => @ems_vmware.name)
+            end.to raise_error(ActiveRecord::RecordInvalid)
+          end
 
-          if provider.hostname_required?
-            expect { provider.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Host Name has already been taken")
-          else
-            expect { provider.save! }.to_not raise_error
+          it "duplicate hostname" do
+            manager = FactoryGirl.build(t, :hostname => @ems_vmware.hostname)
+
+            if manager.hostname_required?
+              expect { manager.save! }.to raise_error(ActiveRecord::RecordInvalid)
+            else
+              expect { manager.save! }.to_not raise_error
+            end
           end
         end
       end
+    end
 
-      it "allows duplicate name across tenants" do
-        tenant = FactoryGirl.create(:tenant)
-        expect do
-          FactoryGirl.create(:ems_vmware,
-                             :name     => @ems.name,
-                             :hostname => @different_host_name,
-                             :tenant   => tenant)
-        end.not_to raise_error
+    context "across tenants" do
+      before do
+        tenant1  = Tenant.seed
+        @tenant2 = FactoryGirl.create(:tenant, :parent => tenant1)
+        @ems     = FactoryGirl.create(:ems_vmware, :tenant => tenant1)
       end
 
-      it "allows duplicate hostname across tenants" do
-        tenant = FactoryGirl.create(:tenant)
+      it "allowing duplicate name" do
         expect do
-          FactoryGirl.create(:ems_vmware, :hostname => @same_host_name, :tenant => tenant)
-        end.not_to raise_error
+          FactoryGirl.create(:ems_vmware, :name => @ems.name, :tenant => @tenant2)
+        end.to_not raise_error
+      end
+
+      it "allowing duplicate hostname" do
+        expect do
+          FactoryGirl.create(:ems_vmware, :hostname => @ems.hostname, :tenant => @tenant2)
+        end.to_not raise_error
       end
     end
   end
