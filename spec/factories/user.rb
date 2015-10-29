@@ -15,7 +15,10 @@ FactoryGirl.define do
 
     after :build do |u, e|
       if e.miq_groups.blank? && (e.role || e.features)
-        u.miq_groups = [FactoryGirl.create(:miq_group, :features => e.features, :role => e.role)]
+        u.miq_groups = [
+          (e.role && MiqGroup.find_by_description("EvmGroup-#{e.role}")) ||
+          FactoryGirl.create(:miq_group, :features => e.features, :role => e.role)
+        ]
       end
     end
   end
