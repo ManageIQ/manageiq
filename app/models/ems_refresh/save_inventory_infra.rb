@@ -139,7 +139,7 @@ module EmsRefresh::SaveInventoryInfra
           elsif ["localhost", "localhost.localdomain", "127.0.0.1"].include_none?(h[:hostname], h[:ipaddress])
             # host = Host.find_by_hostname(hostname) has a risk of creating duplicate hosts
             _log.debug "#{log_header} Host database lookup - hostname: [#{h[:hostname]}] IP: [#{h[:ipaddress]}]"
-            found = Host.lookUpHost(h[:hostname], h[:ipaddress])
+            found = Host.lookUpHost(h[:hostname], h[:ipaddress], :ems_ref => h[:ems_ref], :ems_id => ems.id)
           end
         end
 
