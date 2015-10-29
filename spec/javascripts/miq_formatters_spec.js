@@ -275,7 +275,7 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(new Date('2015-03-14T11:22:05Z'), options)).toEqual('03/14/2015');
+      expect(fn(new Date(2015, 3 - 1, 14, 11, 22, 05), options)).toEqual('03/14/2015');
     });
 
     it('Date (M/D/YY)', function() {
@@ -286,7 +286,7 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(new Date('2015-03-14T11:22:05Z'), options)).toEqual('03/14/15');
+      expect(fn(new Date(2015, 3 - 1, 14, 11, 22, 05), options)).toEqual('03/14/15');
     });
 
     it('Date (M/D)', function() {
@@ -297,7 +297,7 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(new Date('2015-03-14T11:22:05Z'), options)).toEqual('03/14');
+      expect(fn(new Date(2015, 3 - 1, 14, 11, 22, 05), options)).toEqual('03/14');
     });
 
     it('Time (HM:S Z)', function() {
@@ -374,7 +374,7 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(new Date('2015-03-14T11:22:05Z'), options)).toEqual('11');
+      expect(fn(new Date(2015, 3 - 1, 14, 11, 22, 05), options)).toEqual('11');
     });
 
     it('Day Full (Monday)', function() {
@@ -385,7 +385,7 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(new Date('2015-03-14T11:22:05Z'), options)).toEqual('Saturday');
+      expect(fn(new Date(2015, 3 - 1, 14, 11, 22, 05), options)).toEqual('Saturday');
     });
 
     it('Day Short (Mon)', function() {
@@ -396,7 +396,7 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(new Date('2015-03-14T11:22:05Z'), options)).toEqual('Sat');
+      expect(fn(new Date(2015, 3 - 1, 14, 11, 22, 05), options)).toEqual('Sat');
     });
 
     it('Day of Week (1)', function() {
@@ -407,7 +407,7 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(new Date('2015-03-14T11:22:05Z'), options)).toEqual('6');
+      expect(fn(new Date(2015, 3 - 1, 14, 11, 22, 05), options)).toEqual('6');
     });
 
     it('Day of Month (27)', function() {
@@ -418,7 +418,7 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(new Date('2015-03-14T11:22:05Z'), options)).toEqual('14');
+      expect(fn(new Date(2015, 3 - 1, 14, 11, 22, 05), options)).toEqual('14');
     });
 
     it('Month and Year (January 2011)', function() {
@@ -429,7 +429,7 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(new Date('2015-03-14T11:22:05Z'), options)).toEqual('March 2015');
+      expect(fn(new Date(2015, 3 - 1, 14, 11, 22, 05), options)).toEqual('March 2015');
     });
 
     it('Month and Year Short (Jan 11)', function() {
@@ -440,7 +440,7 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(new Date('2015-03-14T11:22:05Z'), options)).toEqual('Mar 15');
+      expect(fn(new Date(2015, 3 - 1, 14, 11, 22, 05), options)).toEqual('Mar 15');
     });
 
     it('Month Full (January)', function() {
@@ -451,7 +451,7 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(new Date('2015-03-14T11:22:05Z'), options)).toEqual('March');
+      expect(fn(new Date(2015, 3 - 1, 14, 11, 22, 05), options)).toEqual('March');
     });
 
     it('Month Short (Jan)', function() {
@@ -462,7 +462,7 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(new Date('2015-03-14T11:22:05Z'), options)).toEqual('Mar');
+      expect(fn(new Date(2015, 3 - 1, 14, 11, 22, 05), options)).toEqual('Mar');
     });
 
     it('Month of Year (12)', function() {
@@ -473,7 +473,7 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(new Date('2015-03-14T11:22:05Z'), options)).toEqual('03');
+      expect(fn(new Date(2015, 3 - 1, 14, 11, 22, 05), options)).toEqual('03');
     });
 
     it('Week of Year (52)', function() {
@@ -484,7 +484,7 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(new Date('2015-03-14T11:22:05Z'), options)).toEqual('11');
+      expect(fn(new Date(2015, 3 - 1, 14, 11, 22, 05), options)).toEqual('11');
     });
 
     it('Year (YYYY)', function() {
@@ -495,7 +495,7 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(new Date('2015-03-14T11:22:05Z'), options)).toEqual('2015');
+      expect(fn(new Date(2015, 3 - 1, 14, 11, 22, 05), options)).toEqual('2015');
     });
   });
 
@@ -509,7 +509,7 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(new Date('2015-03-14T11:22:05Z'), options)).toEqual('(03/01/15 - 03/31/15)');
+      expect(fn(new Date(2015, 3 - 1, 14, 11, 22, 05), options)).toEqual('(03/01/15 - 03/31/15)');
     });
 
     it('Day Range (M/D - M/D)', function() {
@@ -521,7 +521,7 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(new Date('2015-03-14T11:22:05Z'), options)).toEqual('(03/08 - 03/14)');
+      expect(fn(new Date(2015, 3 - 1, 14, 11, 22, 05), options)).toEqual('(03/08 - 03/14)');
     });
 
     it('Day Range Start (M/D)', function() {
@@ -533,7 +533,7 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(new Date('2015-03-14T11:22:05Z'), options)).toEqual('01/01');
+      expect(fn(new Date(2015, 3 - 1, 14, 11, 22, 05), options)).toEqual('01/01');
     });
   });
 
@@ -559,7 +559,7 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(new Date('2015-07-27T00:00:00Z'), options)).toEqual('27th');
+      expect(fn(new Date(2015, 7 - 1, 27, 00, 00, 00), options)).toEqual('27th');
     });
 
     it('Week of Year (52nd)', function() {
@@ -570,7 +570,7 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(new Date('2015-12-21T00:00:00Z'), options)).toEqual('52nd');
+      expect(fn(new Date(2015, 12 - 1, 21, 00, 00, 00), options)).toEqual('52nd');
     });
   });
 
