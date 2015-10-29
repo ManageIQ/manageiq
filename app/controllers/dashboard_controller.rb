@@ -71,6 +71,7 @@ class DashboardController < ApplicationController
 
   # A main tab was pressed
   def maintab
+    @breadcrumbs.clear
     tab = VALID_TABS[params[:tab]]
 
     unless tab # no tab name or invalid tab name was passed in
