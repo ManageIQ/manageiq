@@ -412,9 +412,9 @@ describe Tenant do
                          :tenant        => tenant1,
                          :miq_user_role => self_service_role)
     end
-    let(:admin) { FactoryGirl.create(:user, :userid => 'admin', :miq_groups => [tenant1_users, tenant1_admins]) }
-    let(:user1) { FactoryGirl.create(:user, :userid => 'user',  :miq_groups => [tenant1_users]) }
-    let(:user2) { FactoryGirl.create(:user, :userid => 'user2') }
+    let(:admin) { FactoryGirl.create(:user, :miq_groups => [tenant1_users, tenant1_admins]) }
+    let(:user1) { FactoryGirl.create(:user, :miq_groups => [tenant1_users]) }
+    let(:user2) { FactoryGirl.create(:user) }
 
     it "has users" do
       admin; user1; user2
