@@ -47,6 +47,7 @@ class ApplicationHelper::ToolbarBuilder
         # keeping track of groups that were not skipped to add separator, else it adds a separator before a button even tho no other groups were shown, i.e. vm sub screens, drift_history
         groups_added.push(bg_idx)
       end
+
       bg[:items].each do |bgi|                                      # Go thru all of the button group items
         if bgi.key?(:buttonSelect)                              # buttonSelect node found
           bs_children = false
@@ -93,6 +94,7 @@ class ApplicationHelper::ToolbarBuilder
 
           toolbar << props
           current_item = props
+          any_visible = false
           bgi[:items].each_with_index do |bsi, bsi_idx|             # Go thru all of the buttonSelect items
             if bsi.key?(:separator)                             # If separator found, add it
               props = {"id" => "sep_#{bg_idx}_#{bsi_idx}", "type" => "separator"}
@@ -122,7 +124,11 @@ class ApplicationHelper::ToolbarBuilder
             current_item[:items] ||= []
             current_item[:items] << props
             build_toolbar_save_button(bsi, props, bgi[:buttonSelect]) if bsi[:button] # Save if a button (not sep)
+
+            any_visible ||= !props[:hidden]
           end
+          current_item[:hidden] = !any_visible
+
           build_toolbar_save_button(bgi, current_item) if bs_children || bgi[:buttonSelect] == "history_choice"
           if bs_children
             sep_added = true                                        # Separator has officially been added
