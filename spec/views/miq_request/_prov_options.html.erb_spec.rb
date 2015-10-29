@@ -4,24 +4,14 @@ include ApplicationHelper
 describe 'miq_request/_prov_options.html.haml' do
   context 'requester dropdown select box is visible' do
     before(:each) do
-      EvmSpecHelper.create_guid_miq_server_zone
-      view.stub(:get_vmdb_config).and_return(:server => {}, :session => {})
-
-      # Create roles/groups
-      role1   = FactoryGirl.create(:miq_user_role, :name    => 'EvmRole-super_administrator')
-      role2   = FactoryGirl.create(:miq_user_role, :name    => 'EvmRole-vm_user')
-      role3   = FactoryGirl.create(:miq_user_role, :name    => 'EvmRole-desktop')
-      role4   = FactoryGirl.create(:miq_user_role, :name    => 'EvmRole-approver')
-      @group1 = FactoryGirl.create(:miq_group, :description => 'EvmGroup-super_administrator', :miq_user_role => role1)
-      @group2 = FactoryGirl.create(:miq_group, :description => 'EvmGroup-vm_user',  :miq_user_role => role2)
-      @group3 = FactoryGirl.create(:miq_group, :description => 'EvmGroup-desktop',  :miq_user_role => role3)
-      @group4 = FactoryGirl.create(:miq_group, :description => 'EvmGroup-approver', :miq_user_role => role4)
+      EvmSpecHelper.local_miq_server
+      stub_server_configuration(:server => {}, :session => {})
 
       # Create users
-      @admin    = FactoryGirl.create(:user, :name => 'Admin',    :userid => 'admin',    :miq_groups => [@group1])
-      @vm_user  = FactoryGirl.create(:user, :name => 'VM User',  :userid => 'vm_user',  :miq_groups => [@group2])
-      @desktop  = FactoryGirl.create(:user, :name => 'Desktop',  :userid => 'desktop',  :miq_groups => [@group3])
-      @approver = FactoryGirl.create(:user, :name => 'Approver', :userid => 'approver', :miq_groups => [@group4])
+      @admin    = FactoryGirl.create(:user, :role => "super_administrator")
+      @vm_user  = FactoryGirl.create(:user, :role => "vm_user")
+      @desktop  = FactoryGirl.create(:user, :role => "desktop")
+      @approver = FactoryGirl.create(:user, :role => "approver")
       @users = [@admin, @vm_user, @desktop, @approver]
 
       # Create requests
@@ -73,9 +63,7 @@ describe 'miq_request/_prov_options.html.haml' do
     end
 
     it 'for desktop' do
-      role    = FactoryGirl.create(:miq_user_role, :name    => 'EvmRole-desktop')
-      group   = FactoryGirl.create(:miq_group, :description => 'EvmGroup-desktop',  :miq_user_role => role)
-      desktop = FactoryGirl.create(:user, :name => 'Desktop',  :userid => 'desktop',  :miq_groups => [group])
+      desktop = FactoryGirl.create(:user, :role => "desktop")
       FactoryGirl.create(:vm_migrate_request, :userid => desktop.userid)
 
       sb = {:prov_options => {
@@ -99,9 +87,7 @@ describe 'miq_request/_prov_options.html.haml' do
     end
 
     it 'for vm_user' do
-      role    = FactoryGirl.create(:miq_user_role, :name => 'EvmRole-vm_user')
-      group   = FactoryGirl.create(:miq_group, :description => 'EvmGroup-vm_user', :miq_user_role => role)
-      vm_user = FactoryGirl.create(:user, :name => 'VM User', :userid => 'vm_user', :miq_groups => [group])
+      vm_user = FactoryGirl.create(:user, :role => "vm_user")
       FactoryGirl.create(:vm_migrate_request, :userid => vm_user.userid)
 
       # Set instance variables
