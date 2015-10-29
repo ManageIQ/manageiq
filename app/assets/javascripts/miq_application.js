@@ -1216,6 +1216,7 @@ function miqAccordSelect(e) {
 
 // This function is called in miqOnLoad
 function miqInitToolbars() {
+  $("#toolbar button:not(.dropdown-toggle), #toolbar ul.dropdown-menu > li > a").off('click');
   $("#toolbar button:not(.dropdown-toggle), #toolbar ul.dropdown-menu > li > a").click(miqToolbarOnClick);
 }
 
