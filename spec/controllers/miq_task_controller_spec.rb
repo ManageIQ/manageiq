@@ -2,10 +2,10 @@ require "spec_helper"
 
 describe MiqTaskController do
   context "#tasks_condition" do
+    let(:user) { FactoryGirl.create(:user) }
     subject { controller.send(:tasks_condition, @opts) }
     before do
-      @user = FactoryGirl.create(:user, :userid => 'admin')
-      controller.stub(:session => @user)
+      controller.stub(:session => user)
     end
 
     describe "My VM Analysis Tasks" do
@@ -42,7 +42,7 @@ describe MiqTaskController do
                 "updated_on>=? AND "\
                 "updated_on<=?"
         expected = [query,
-                    "admin",
+                    user.userid,
                     "waiting_to_start", "Queued",
                     "finished", "ok",
                     "finished", "error",
@@ -68,7 +68,7 @@ describe MiqTaskController do
                 "zone=? AND "\
                 "state=?"
         expected = [query,
-                    "admin",
+                    user.userid,
                     "finished", "ok"]
         expected += get_time_period(@opts[:time_period]) << "default" << "finished"
         subject.should == expected
@@ -90,7 +90,7 @@ describe MiqTaskController do
                 "updated_on<=? AND "\
                 "zone=?"
         expected = [query,
-                    "admin",
+                    user.userid,
                     "finished", "error",
                     "finished", "warn"]
         expected += get_time_period(@opts[:time_period]) << "default"
@@ -110,7 +110,7 @@ describe MiqTaskController do
                 "updated_on<=? AND "\
                 "state=?"
         expected = [query,
-                    "admin",
+                    user.userid,
                     "waiting_to_start", "Queued",
                     "finished", "ok",
                     "finished", "error",
@@ -134,7 +134,7 @@ describe MiqTaskController do
                 "updated_on<=?"
 
         expected = [query,
-                    "admin",
+                    user.userid,
                     "ok", "error", "warn", "finished", "waiting_to_start"]
 
         expected += get_time_period(@opts[:time_period])
@@ -155,7 +155,7 @@ describe MiqTaskController do
                 "updated_on<=? AND "\
                 "state=?"
 
-        expected = [query, "admin", "ok", "error", "warn", "finished", "waiting_to_start"]
+        expected = [query, user.userid, "ok", "error", "warn", "finished", "waiting_to_start"]
         expected += get_time_period(@opts[:time_period]) << "aborting"
         subject.should == expected
       end
@@ -176,7 +176,7 @@ describe MiqTaskController do
                 "updated_on<=? AND "\
                 "zone=? AND "\
                 "state=?"
-        expected = [query, "admin", "ok", "error", "warn", "finished", "waiting_to_start"]
+        expected = [query, user.userid, "ok", "error", "warn", "finished", "waiting_to_start"]
         expected += get_time_period(@opts[:time_period]) << "default" << "waiting_to_start"
         subject.should == expected
       end
@@ -198,7 +198,7 @@ describe MiqTaskController do
                 "updated_on<=? AND "\
                 "zone=? AND "\
                 "state=?"
-        expected = [query, "admin", "waiting_to_start", "Queued", "finished", "waiting_to_start", "queued"]
+        expected = [query, user.userid, "waiting_to_start", "Queued", "finished", "waiting_to_start", "queued"]
         expected += get_time_period(@opts[:time_period]) << "default" << "synchronizing"
         subject.should == expected
       end
@@ -220,7 +220,7 @@ describe MiqTaskController do
                 "updated_on<=? AND "\
                 "zone=? AND "\
                 "state=?"
-        expected = [query, "admin", "waiting_to_start", "Queued", "finished", "waiting_to_start", "queued"]
+        expected = [query, user.userid, "waiting_to_start", "Queued", "finished", "waiting_to_start", "queued"]
         expected += get_time_period(@opts[:time_period]) << "default" << "snapshot_delete"
         subject.should == expected
       end
@@ -252,7 +252,7 @@ describe MiqTaskController do
                 '(state!=? AND state!=? AND state!=?)) AND '\
                 'updated_on>=? AND '\
                 'updated_on<=?'
-        expected = [query, "admin", "waiting_to_start", "Queued", "Finished", "Ok",
+        expected = [query, user.userid, "waiting_to_start", "Queued", "Finished", "Ok",
                     "Finished", "Error", "Finished", "Warn", "Finished", "waiting_to_start", "Queued"
                    ]
         expected += get_time_period(@opts[:time_period])
@@ -272,7 +272,7 @@ describe MiqTaskController do
                 "updated_on>=? AND "\
                 "updated_on<=? AND "\
                 "state=?"
-        expected = [query, "admin", "waiting_to_start", "Queued", "Finished", "waiting_to_start", "Queued"]
+        expected = [query, user.userid, "waiting_to_start", "Queued", "Finished", "waiting_to_start", "Queued"]
         expected += get_time_period(@opts[:time_period]) << "Initialized"
         subject.should == expected
       end
@@ -290,7 +290,7 @@ describe MiqTaskController do
                 "updated_on>=? AND "\
                 "updated_on<=? AND "\
                 "state=?"
-        expected = [query, "admin", "waiting_to_start", "Queued", "Finished", "waiting_to_start", "Queued"]
+        expected = [query, user.userid, "waiting_to_start", "Queued", "Finished", "waiting_to_start", "Queued"]
         expected += get_time_period(@opts[:time_period]) << "Active"
         subject.should == expected
       end
@@ -304,7 +304,7 @@ describe MiqTaskController do
                 "updated_on>=? AND "\
                 "updated_on<=? AND "\
                 "state=?"
-        expected = [query, "admin", "waiting_to_start", "Queued", "Finished", "waiting_to_start", "Queued"]
+        expected = [query, user.userid, "waiting_to_start", "Queued", "Finished", "waiting_to_start", "Queued"]
         expected += get_time_period(@opts[:time_period]) << "Finished"
         subject.should == expected
       end
@@ -324,7 +324,7 @@ describe MiqTaskController do
                 "updated_on<=? AND "\
                 "state=?"
 
-        expected = [query, "admin", "Finished", "Ok"]
+        expected = [query, user.userid, "Finished", "Ok"]
         expected += get_time_period(@opts[:time_period]) << "Queued"
         subject.should == expected
       end
@@ -344,7 +344,7 @@ describe MiqTaskController do
                 "updated_on>=? AND "\
                 "updated_on<=? AND "\
                 "state=?"
-        expected = [query, "admin", "Finished", "Ok", "Finished", "Warn"]
+        expected = [query, user.userid, "Finished", "Ok", "Finished", "Warn"]
         expected += get_time_period(@opts[:time_period]) << "Queued"
         subject.should == expected
       end
@@ -365,7 +365,7 @@ describe MiqTaskController do
                 "updated_on>=? AND "\
                 "updated_on<=? AND "\
                 "state=?"
-        expected = [query, "admin", "Finished", "Ok", "Finished", "Error", "Finished", "Warn"]
+        expected = [query, user.userid, "Finished", "Ok", "Finished", "Error", "Finished", "Warn"]
         expected += get_time_period(@opts[:time_period]) << "Queued"
         subject.should == expected
       end
@@ -377,7 +377,7 @@ describe MiqTaskController do
                 "(status!=? AND status!=? AND status!=? AND state!=? AND state!=?) AND "\
                 "updated_on>=? AND "\
                 "updated_on<=?"
-        expected = [query, "admin", "Ok", "Error", "Warn", "Finished", "Queued"]
+        expected = [query, user.userid, "Ok", "Error", "Warn", "Finished", "Queued"]
         expected += get_time_period(@opts[:time_period])
         subject.should == expected
       end
@@ -390,7 +390,7 @@ describe MiqTaskController do
                 "updated_on>=? AND "\
                 "updated_on<=? AND "\
                 "state=?"
-        expected = [query, "admin", "Ok", "Error", "Warn", "Finished", "Queued"]
+        expected = [query, user.userid, "Ok", "Error", "Warn", "Finished", "Queued"]
         expected += get_time_period(@opts[:time_period]) << "Active"
         subject.should == expected
       end
@@ -409,7 +409,7 @@ describe MiqTaskController do
                 "updated_on>=? AND "\
                 "updated_on<=? AND "\
                 "state=?"
-        expected = [query, "admin", "Ok", "Error", "Warn", "Finished", "Queued"]
+        expected = [query, user.userid, "Ok", "Error", "Warn", "Finished", "Queued"]
         expected += get_time_period(@opts[:time_period]) << "Finished"
         subject.should == expected
       end
@@ -428,7 +428,7 @@ describe MiqTaskController do
                 "updated_on>=? AND "\
                 "updated_on<=? AND "\
                 "state=?"
-        expected = [query, "admin", "Ok", "Error", "Warn", "Finished", "Queued"]
+        expected = [query, user.userid, "Ok", "Error", "Warn", "Finished", "Queued"]
         expected += get_time_period(@opts[:time_period]) << "Initialized"
         subject.should == expected
       end
@@ -447,7 +447,7 @@ describe MiqTaskController do
                 "updated_on>=? AND "\
                 "updated_on<=? AND "\
                 "state=?"
-        expected = [query, "admin", "Ok", "Error", "Warn", "Finished", "Queued"]
+        expected = [query, user.userid, "Ok", "Error", "Warn", "Finished", "Queued"]
         expected += get_time_period(@opts[:time_period]) << "Queued"
         subject.should == expected
       end
