@@ -24,8 +24,7 @@ class MiqEvent < EventStream
     # Policy, automate, and alerting could then consume this type field along with the details
     if target.kind_of?(Array)
       klass, id = target
-      klass = Object.const_get(klass)
-      target = klass.find_by_id(id)
+      target = klass.to_s.constantize.find_by(:id => id)
     end
     raise "Unable to find object for target: [#{target}]" unless target
 
