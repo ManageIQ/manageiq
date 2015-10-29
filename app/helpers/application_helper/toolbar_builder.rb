@@ -28,8 +28,6 @@ class ApplicationHelper::ToolbarBuilder
   ###
 
   def build_toolbar(tb_name)
-    text = nil                                                      # Local vars for text and title
-    title = nil
     tb_hash = tb_name == "custom_buttons_tb" ? build_custom_buttons_toolbar(@record) : YAML.load(File.open("#{TOOLBARS_FOLDER}/#{tb_name}.yaml"))
 
     toolbar = []
