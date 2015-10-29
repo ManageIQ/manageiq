@@ -181,6 +181,24 @@ describe EmsCloudController do
       expect(response.status).to eq(200)
       expect(response.body).to include('"name":"foo_openstack"')
     end
+
+    it 'strips whitespace from the hostname form field on create' do
+      MiqServer.stub(:my_zone).and_return("default")
+      post :create,
+           "button"           => "add",
+           "hostname"         => "host_openstack     ",
+           "name"             => "foo_openstack",
+           "emstype"          => "openstack",
+           "provider_region"  => "",
+           "port"             => "5000",
+           "zone"             => "default",
+           "default_userid"   => "foo",
+           "default_password" => "[FILTERED]",
+           "default_verify"   => "[FILTERED]"
+
+      openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => 'foo_openstack')
+      expect(openstack.to_a[0].hostname).should eq('host_openstack')
+    end
   end
 
   describe "#show_link" do
