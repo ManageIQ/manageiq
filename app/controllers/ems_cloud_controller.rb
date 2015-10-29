@@ -205,7 +205,7 @@ class EmsCloudController < ApplicationController
   def set_ems_record_vars(ems, mode = nil)
     ems.name            = params[:name]
     ems.provider_region = params[:provider_region]
-    ems.hostname        = params[:hostname]
+    ems.hostname        = params[:hostname].strip
     ems.port            = params[:api_port]
     ems.provider_id     = params[:provider_id]
     ems.zone            = Zone.find_by_name(params[:zone])
