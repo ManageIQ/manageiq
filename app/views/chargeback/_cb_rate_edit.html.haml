@@ -21,7 +21,7 @@
   .form-horizontal.static
     .form-group
       %label.col-md-2.control-label
-        = _('Select the currency: ')
+        = _('Select currency: ')
       .col-md-8
         = select_tag("currency",
           options_for_select(currency, @edit[:new][:currency]),

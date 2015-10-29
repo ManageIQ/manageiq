@@ -47,7 +47,7 @@ class ChargebackRate < ActiveRecord::Base
   def self.seed
     # seeding the measure fixture before seed the chargeback rates fixtures
     seed_chargeback_rate_measure
-    #seeding the currencies
+    # seeding the currencies
     seed_chargeback_rate_currency
     seed_chargeback_rate
   end

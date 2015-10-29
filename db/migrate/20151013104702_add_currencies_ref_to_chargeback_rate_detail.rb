@@ -1,5 +1,5 @@
 class AddCurrenciesRefToChargebackRateDetail < ActiveRecord::Migration
   def change
-    add_reference :chargeback_rate_details, :chargeback_rate_detail_currency, :foreign_key => true
+    add_column :chargeback_rate_details, :chargeback_rate_detail_currency_id, :bigint
   end
 end
