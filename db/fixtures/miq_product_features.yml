@@ -3636,10 +3636,22 @@
         :description: Power Off Instance
         :feature_type: control
         :identifier: instance_stop
+      - :name: Pause
+        :description: Pause Instance
+        :feature_type: control
+        :identifier: instance_pause
       - :name: Suspend
         :description: Suspend Instance
         :feature_type: control
         :identifier: instance_suspend
+      - :name: Shelve
+        :description: Shelve Instance
+        :feature_type: control
+        :identifier: instance_shelve
+      - :name: Shelve Offload
+        :description: Shelve Offload Instance
+        :feature_type: control
+        :identifier: instance_shelve_offload
       - :name: Reset
         :description: Reset Instance
         :feature_type: control
