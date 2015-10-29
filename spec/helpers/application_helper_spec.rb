@@ -5,12 +5,8 @@ include ToolbarHelper
 
 describe ApplicationHelper do
   before do
-    # mimic config.include ApplicationController::CurrentUser :type => :controller
-
-    controller.send(:extend, ApplicationHelper)
-
-    # mimic config.include ApplicationController::CurrentUser :type => :helper
-    self.class.send(:include, ApplicationHelper)
+    login_as @user = FactoryGirl.create(:user)
+    @user.stub(:role_allows?).and_return(true)
   end
 
   context "build_toolbar" do
@@ -18,7 +14,7 @@ describe ApplicationHelper do
       req        = ActionDispatch::Request.new Rack::MockRequest.env_for '/?controller=foo'
       allow(controller).to receive(:role_allows).and_return(true)
       allow(controller).to receive(:request).and_return(req)
-      menu_info  = controller.build_toolbar 'storages_center_tb'
+      menu_info  = helper.build_toolbar 'storages_center_tb'
       title_text = ui_lookup(:tables => "storages")
 
       menu_info[0][:items].collect do |value|
@@ -39,7 +35,7 @@ describe ApplicationHelper do
                                        :nodeid      => 'storages',
                                        :mode        => 'foo')
 
-      menu_info  = controller.build_toolbar 'miq_policies_center_tb'
+      menu_info  = helper.build_toolbar 'miq_policies_center_tb'
       title_text = ui_lookup(:model => "storages")
 
       menu_info[0][:items].collect do |value|
@@ -1454,7 +1450,7 @@ describe ApplicationHelper do
                                          }
                                        }
                                       )
-      result = controller.vm_explorer_tree?
+      result = helper.vm_explorer_tree?
       result.should be_true
     end
 
@@ -1468,7 +1464,7 @@ describe ApplicationHelper do
                                          }
                                        }
                                       )
-      result = controller.vm_explorer_tree?
+      result = helper.vm_explorer_tree?
       result.should be_false
     end
   end
@@ -1484,7 +1480,7 @@ describe ApplicationHelper do
                                          }
                                        }
                                       )
-      result = controller.show_advanced_search?
+      result = helper.show_advanced_search?
       result.should be_true
     end
 
@@ -1498,7 +1494,7 @@ describe ApplicationHelper do
                                          }
                                        }
                                       )
-      result = controller.show_advanced_search?
+      result = helper.show_advanced_search?
       result.should be_false
     end
 
@@ -1513,7 +1509,7 @@ describe ApplicationHelper do
                                        }
                                       )
       controller.instance_variable_set(:@show_adv_search, true)
-      result = controller.show_advanced_search?
+      result = helper.show_advanced_search?
       result.should be_true
     end
   end
