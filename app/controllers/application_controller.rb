@@ -2190,7 +2190,7 @@ class ApplicationController < ActionController::Base
         session[:tab_url][:inf] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
       when "container", "container_group", "container_node", "container_service", "ems_container",
            "container_route", "container_project", "container_replicator", "container_image_registry", "container_image",
-           "container_topology"
+           "container_topology", "container_dashboard"
         session[:tab_url][:cnt] = inbound_url if %w(explorer show show_list).include?(action_name)
       when "miq_request"
         session[:tab_url][:svc] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "vm"

@@ -1,0 +1,45 @@
+
+.miq-fixed-body {
+    padding-top: 125px;
+}
+
+.miq-body {
+    background: #f5f5f5;
+}
+
+.miq-dashboard-view .card-pf-aggregate-status .card-pf-title .pficon, .miq-dashboard-view .card-pf-aggregate-status .fa, .miq-objects-view .card-pf-aggregate-status .card-pf-title .pficon, .miq-objects-view .card-pf-aggregate-status .fa {
+    color: #1186C1 !important;
+}
+
+.miq-dashboard-view .data-list-pf .list-group-item.active .pficon, .miq-dashboard-view .data-list-pf .list-group-item.active:hover .pficon, .miq-dashboard-view .data-list-pf .list-group-item.active:focus .pficon, .miq-objects-view .data-list-pf .list-group-item.active .pficon, .miq-objects-view .data-list-pf .list-group-item.active:hover .pficon, .miq-objects-view .data-list-pf .list-group-item.active:focus .pficon {
+    color: #1186C1;
+}
+
+.miq-dashboard-view .data-list-pf .list-group-item .pficon, .miq-objects-view .data-list-pf .list-group-item .pficon {
+    font-size: 18px;
+}
+
+.miq-dashboard-view .tiles-view-pf .tile.active .pficon, .miq-dashboard-view .tiles-view-pf .tile.active:hover .pficon, .miq-dashboard-view .tiles-view-pf .tile.active:focus .pficon, .miq-objects-view .tiles-view-pf .tile.active .pficon, .miq-objects-view .tiles-view-pf .tile.active:hover .pficon, .miq-objects-view .tiles-view-pf .tile.active:focus .pficon {
+    color: #1186C1;
+}
+
+.miq-dashboard-view .card-pf .loading, .miq-objects-view .card-pf .loading {
+    margin: 10px auto;
+}
+
+.miq-dashboard-view .pficon-kubernetes::before, .miq-objects-view .pficon-kubernetes::before {
+    color: #326de6;
+}
+
+.miq-dashboard-view .pficon-openshift::before, .miq-objects-view .pficon-openshift::before {
+    color: #da2430;
+}
+
+.containers-dashboard .card-pf.card-pf-aggregate-status-mini {
+    height: 56px;
+}
+
+.miq-dashboard-view .card-pf-title {
+    font-family: inherit;
+    line-height: 1.1;
+}
