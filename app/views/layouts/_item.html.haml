@@ -57,9 +57,11 @@
         .col-md-8
           - item_data = @item.send(item)
           - if %w(data name).include?(@view.headers[i].downcase)
-            - if item_data.present?
+            - if item_data.respond_to?(:scan)
               - item_data.scan(/.{1,125}/).each do |data_part|
                 = h(data_part)
+            - else
+              = item_data.to_s.capitalize
           - elsif @view.headers[i].downcase == "size"
             = h(number_with_delimiter(item_data))
           - else
