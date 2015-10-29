@@ -331,4 +331,27 @@ describe OpsController do
       end
     end
   end
+
+  context "::MiqGroup" do
+    before do
+      MiqGroup.seed
+      MiqRegion.seed
+      set_user_privileges
+    end
+
+    it "does not display tenant default groups in Edit Sequence" do
+      tg = FactoryGirl.create(:tenant).default_miq_group
+      g  = FactoryGirl.create(:miq_group)
+
+      expect(MiqGroup.tenant_groups).to include(tg)
+      expect(MiqGroup.tenant_groups).not_to include(g)
+      session[:sandboxes] = {"ops" => {:active_tree => :rbac_tree}}
+      controller.stub(:replace_right_cell)
+      controller.send(:rbac_group_seq_edit)
+      expect(response.status).to eq(200)
+      edit = controller.instance_variable_get(:@edit)
+      expect(edit[:current][:ldap_groups].find { |lg| lg.group_type == 'tenant' }).to be(nil)
+      expect(edit[:current][:ldap_groups].find { |lg| lg.group_type == 'user' }).not_to be(nil)
+    end
+  end
 end

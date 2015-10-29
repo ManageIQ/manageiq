@@ -441,7 +441,7 @@ module OpsController::OpsRbac
     @edit = {}
     @edit[:new] = {}
     @edit[:current] = {}
-    @edit[:new][:ldap_groups] = MiqGroup.all(:order => "sequence ASC")  # Get the groups from the DB
+    @edit[:new][:ldap_groups] = MiqGroup.non_tenant_groups.sort_by(&:sequence)  #Get the non-tenant groups from the DB
     @edit[:new][:ldap_groups_list] = []
     @edit[:new][:ldap_groups].each do |g|
       @edit[:new][:ldap_groups_list].push(g.description)
@@ -810,6 +810,7 @@ module OpsController::OpsRbac
       if %w(up down).include?(params[:button])
         page.replace("flash_msg_div", :partial => "layouts/flash_msg") unless @refresh_div && @refresh_div != "column_lists"
         page.replace(@refresh_div, :partial => @refresh_partial) if @refresh_div
+        bad = false
       else
         # only do following for groups
         if x_node.split("-").first == "g" || x_node == "xx-g"
@@ -821,7 +822,7 @@ module OpsController::OpsRbac
           page << "$('#description').val('#{j_str(@edit[:new][:description])}');" if params[:ldap_groups_user]
           page << javascript_for_tree_checkbox_clicked(tree_name) if params[:check] && tree_name
 
-          # don't do anythingto lookup box when checkboxes on the right side are checked
+          # don't do anything to lookup box when checkboxes on the right side are checked
           page << set_element_visible('group_lookup', @edit[:new][:lookup]) unless params[:check]
         end
       end
