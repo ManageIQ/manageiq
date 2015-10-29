@@ -568,6 +568,13 @@ Vmdb::Application.routes.draw do
       )
     },
 
+    :container_dashboard      => {
+      :get => %w(
+        show
+        data
+      )
+    },
+
     :dashboard                => {
       :get  => %w(
         auth_error

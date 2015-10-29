@@ -20,4 +20,5 @@
  *= require product_slickgrid
  *= require kubernetes-topology-graph/topology-graph
  *= require jquery-ui-miq-theme/jquery-ui-1.9.2.custom
+ *= require container_providers_dashboard
 */
