@@ -28,6 +28,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     assert_specific_host
     assert_specific_vm
     assert_cpu_layout
+    assert_read_only_datastore
     assert_relationship_tree
   end
 
@@ -463,6 +464,16 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       :cpu_total_cores      => 4,
       :cpu_cores_per_socket => 2,
       :cpu_sockets          => 2,
+    )
+  end
+
+  def assert_read_only_datastore
+    ro_datastores = Storage.includes(:hosts).where(:host_storages => {:read_only => true}).to_a
+    expect(ro_datastores.length).to eq(1)
+    ro_datastores[0].should have_attributes(
+      :ems_ref  => "datastore-974",
+      :name     => "NetAppSim2Lun1",
+      :location => "4cfd46de-09fb16d0-d60a-0010187f038c"
     )
   end
 

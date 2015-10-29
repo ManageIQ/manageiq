@@ -11,28 +11,45 @@ describe AddVmwareRoDatastoresToHostsStorages do
 
   migration_context :up do
     it "Adds ID in correct region" do
-      seq_start = ActiveRecord::Base.rails_sequence_start
+      seq_start = hosts_storages_stub.rails_sequence_start
       seq_start = 1 if seq_start == 0
 
-      h = hosts_storages_stub.create(:host_id => 1, :storage_id => 2)
+      host_id = seq_start
+      storage_id = seq_start + 1
+
+      hosts_storages_stub.create(:host_id => host_id, :storage_id => storage_id)
       migrate
       h = host_storages_stub.first
 
-      expect(h.id).to eq(seq_start)
+      expect(host_storages_stub.id_to_region h.id).to eq(host_storages_stub.my_region_number)
     end
+
     it "Maintains host_id after rename" do
-      h = hosts_storages_stub.create(:host_id => 1, :storage_id => 2)
+      seq_start = hosts_storages_stub.rails_sequence_start
+      seq_start = 1 if seq_start == 0
+
+      host_id = seq_start
+      storage_id = seq_start + 1
+
+      hosts_storages_stub.create(:host_id => host_id, :storage_id => storage_id)
       migrate
       h = host_storages_stub.first
 
-      expect(h.host_id).to eq(1)
+      expect(h.host_id).to eq(host_id)
     end
+
     it "Maintains storage_id after rename" do
-      h = hosts_storages_stub.create(:host_id => 1, :storage_id => 2)
+      seq_start = hosts_storages_stub.rails_sequence_start
+      seq_start = 1 if seq_start == 0
+
+      host_id = seq_start
+      storage_id = seq_start + 1
+
+      hosts_storages_stub.create(:host_id => host_id, :storage_id => storage_id)
       migrate
       h = host_storages_stub.first
 
-      expect(h.storage_id).to eq(2)
+      expect(h.storage_id).to eq(storage_id)
     end
   end
 end
