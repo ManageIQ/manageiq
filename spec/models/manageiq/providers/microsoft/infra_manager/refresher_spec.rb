@@ -130,7 +130,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
       :model                => "Xeon",
       :memory_mb            => 131_059,
       :memory_console       => nil,
-      :numvcpus             => 2,
+      :cpu_sockets          => 2,
       :cpu_total_cores      => 16,
       :cpu_cores_per_socket => 8,
       :guest_os             => nil,

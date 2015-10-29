@@ -90,4 +90,5 @@
 //= require miq_formatters
 //= require miq_grid
 //= require miq_list_grid
+//= require miq_toolbar
 //= require resizable_sidebar

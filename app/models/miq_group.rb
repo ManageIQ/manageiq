@@ -30,6 +30,7 @@ class MiqGroup < ActiveRecord::Base
   serialize :settings
 
   default_value_for :group_type, USER_GROUP
+  default_value_for(:sequence) { next_sequence }
 
   acts_as_miq_taggable
   include ReportableMixin
@@ -67,17 +68,8 @@ class MiqGroup < ActiveRecord::Base
     true # Remove once this is implemented
   end
 
-  def self.add(attrs)
-    group = new(attrs)
-    if group.resource.nil?
-      groups = where(:resource_id => nil, :resource_type => nil).order("sequence DESC")
-    else
-      groups = group.resource.miq_groups.order("sequence DESC")
-    end
-    group.sequence = groups.first.nil? ? 1 : groups.first.sequence + 1
-    group.save!
-
-    group
+  def self.next_sequence
+    maximum(:sequence).to_i + 1
   end
 
   def self.seed

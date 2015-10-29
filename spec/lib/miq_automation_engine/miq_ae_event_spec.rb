@@ -69,7 +69,7 @@ module MiqAeEventSpec
         context "with user owned VM" do
           let(:vm_owner) { user }
 
-          it "with user owned VM" do
+          it "has tenant" do
             args = {:miq_group_id => group.id, :tenant_id => tenant.id, :user_id => user.id}
             expect(MiqAeEngine).to receive(:deliver_queue).with(hash_including(args), anything)
 
@@ -80,7 +80,7 @@ module MiqAeEventSpec
         context "with group owned VM" do
           let(:vm_group) { FactoryGirl.create(:miq_group, :tenant => FactoryGirl.create(:tenant)) }
 
-          it "with group owned VM" do
+          it "has tenant" do
             args = {:user_id => admin.id, :miq_group_id => vm_group.id, :tenant_id => vm_group.tenant.id}
             expect(MiqAeEngine).to receive(:deliver_queue).with(hash_including(args), anything)
 
@@ -90,9 +90,13 @@ module MiqAeEventSpec
       end
 
       context "with Host event" do
-        it "with Host event" do
-          host  = FactoryGirl.create(:host, :ext_management_system => ems)
-          args  = {:miq_group_id => admin.current_group.id, :tenant_id => ems.tenant.id}
+        it "has tenant" do
+          host = FactoryGirl.create(:host, :ext_management_system => ems)
+          args = {
+            :user_id      => admin.id,
+            :miq_group_id => ems.tenant.default_miq_group.id,
+            :tenant_id    => ems.tenant.id
+          }
           expect(MiqAeEngine).to receive(:deliver_queue).with(hash_including(args), anything)
 
           MiqAeEvent.raise_evm_event("host_provisioned", host, :host => host)
@@ -100,7 +104,7 @@ module MiqAeEventSpec
       end
 
       context "with MiqServer event" do
-        it "with MiqServer event" do
+        it "has tenant" do
           miq_server = EvmSpecHelper.local_miq_server(:is_master => true)
           worker = FactoryGirl.create(:miq_worker, :miq_server_id => miq_server.id)
           args   = {:user_id      => admin.id,
@@ -110,6 +114,47 @@ module MiqAeEventSpec
           expect(MiqAeEngine).to receive(:deliver_queue).with(hash_including(args), anything)
 
           MiqAeEvent.raise_evm_event("evm_worker_start", worker.miq_server)
+        end
+      end
+
+      context "with MiqRequest event" do
+        it "has tenant" do
+          request = FactoryGirl.create(:vm_reconfigure_request, :userid => user.userid)
+          args    = {:user_id      => user.id,
+                     :miq_group_id => user.current_group.id,
+                     :tenant_id    => user.current_tenant.id
+          }
+          expect(MiqAeEngine).to receive(:deliver_queue).with(hash_including(args), anything)
+
+          MiqAeEvent.raise_evm_event("request_approved", request)
+        end
+      end
+
+      context "with Service event" do
+        let(:service_group) { group }
+        let(:service_owner) { nil }
+        let(:service)       { FactoryGirl.create(:service, :miq_group => service_group, :evm_owner => service_owner) }
+
+        context "with user owned service" do
+          let(:service_owner) { user }
+
+          it "has tenant" do
+            args = {:miq_group_id => group.id, :tenant_id => tenant.id, :user_id => user.id}
+            expect(MiqAeEngine).to receive(:deliver_queue).with(hash_including(args), anything)
+
+            MiqAeEvent.raise_evm_event("service_started", service)
+          end
+        end
+
+        context "with group owned service" do
+          let(:service_group) { FactoryGirl.create(:miq_group, :tenant => FactoryGirl.create(:tenant)) }
+
+          it "has tenant" do
+            args = {:user_id => admin.id, :miq_group_id => service_group.id, :tenant_id => service_group.tenant.id}
+            expect(MiqAeEngine).to receive(:deliver_queue).with(hash_including(args), anything)
+
+            MiqAeEvent.raise_evm_event("service_started", service)
+          end
         end
       end
     end

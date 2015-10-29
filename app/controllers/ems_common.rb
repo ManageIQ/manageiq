@@ -689,6 +689,7 @@ module EmsCommon
     @edit[:new][:hostname] = @ems.hostname
     @edit[:new][:emstype] = @ems.emstype
     @edit[:amazon_regions] = get_amazon_regions if @ems.kind_of?(ManageIQ::Providers::Amazon::CloudManager)
+    @edit[:google_regions] = list_google_regions if @ems.kind_of?(ManageIQ::Providers::Google::CloudManager)
     @edit[:new][:port] = @ems.port
     @edit[:new][:api_version] = @ems.api_version
     @edit[:new][:provider_id] = @ems.provider_id
@@ -755,6 +756,7 @@ module EmsCommon
     end
     @ems_types = Array(model.supported_types_and_descriptions_hash.invert).sort_by(&:first)
     @amazon_regions = get_amazon_regions
+    @google_regions = list_google_regions
     @openstack_infra_providers = retrieve_openstack_infra_providers
     @emstype_display = model.supported_types_and_descriptions_hash[@ems.emstype]
   end
@@ -762,6 +764,14 @@ module EmsCommon
   def get_amazon_regions
     regions = {}
     ManageIQ::Providers::Amazon::Regions.all.each do |region|
+      regions[region[:name]] = region[:description]
+    end
+    regions
+  end
+
+  def list_google_regions
+    regions = {}
+    ManageIQ::Providers::Google::Regions.all.each do |region|
       regions[region[:name]] = region[:description]
     end
     regions
@@ -827,6 +837,7 @@ module EmsCommon
     @edit[:new][:host_default_vnc_port_start] = params[:host_default_vnc_port_start] if params[:host_default_vnc_port_start]
     @edit[:new][:host_default_vnc_port_end] = params[:host_default_vnc_port_end] if params[:host_default_vnc_port_end]
     @edit[:amazon_regions] = get_amazon_regions if @edit[:new][:emstype] == "ec2"
+    @edit[:google_regions] = list_google_regions if @edit[:new][:emstype] == "gce"
     @edit[:new][:security_protocol] = params[:security_protocol] if params[:security_protocol]
     @edit[:new][:realm] = nil if params[:security_protocol]
     @edit[:new][:realm] = params[:realm] if params[:realm]

@@ -13,7 +13,7 @@
       <section>
         <div class="col-md-12 ss-details-header">
           <div class="row">
-            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+            <div class="col-md-6">
               <div class="ss-details-header__title-img">
                 <span class="ss-details-header__title-img__center"></span>
                 <img class="ss-details-header__title-img__logo" ng-src="{{ ::vm.service.picture.image_href }}"
@@ -26,7 +26,8 @@
                 <h4>{{ ::vm.service.long_description || vm.service.description }}</h4>
               </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 ss-details-header__actions">
+            <div class="col-md-6 ss-details-header__actions">
+              <custom-button custom-actions="vm.service.custom_actions" actions="vm.service.actions"></custom-button>
               <button class="btn btn-default" type="button"
                     confirmation
                     confirmation-if="true"
@@ -55,9 +56,6 @@
                 </ul>
               </div>
               <button class="btn btn-primary" type="button" ng-click="vm.editServiceModal()">Edit Service</button>
-              <div class="custom-buttons">
-                <custom-button custom-actions="vm.service.custom_actions" actions="vm.service.actions"></custom-button>
-              </div>
             </div>
           </div>
         </div>
@@ -191,7 +189,7 @@
       </section>
     </div>
   </div>
-  <div class="panel panel-default ss-details-panel">
+  <div class="panel panel-default ss-details-panel ss-details-panel-bottom">
     <div class="panel-body">
       <section class="ss-details-section">
         <dialog-content dialog="vm.service.provision_dialog" input-disabled="true" options="vm.service.options.dialog"></dialog-content>

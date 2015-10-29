@@ -82,7 +82,6 @@ describe MiqProvisionRequest do
 
       context "when calling call_automate_event_queue" do
         before do
-          MiqServer.stub(:my_zone).and_return("default")
           @event_name = "request_created"
           @pr.miq_request.call_automate_event_queue(@event_name)
         end
@@ -94,7 +93,7 @@ describe MiqProvisionRequest do
           q.instance_id.should == @pr.miq_request.id
           q.method_name.should == "call_automate_event"
           q.args.should == [@event_name]
-          q.zone.should == "default"
+          q.zone.should == ems.zone.name
         end
       end
 

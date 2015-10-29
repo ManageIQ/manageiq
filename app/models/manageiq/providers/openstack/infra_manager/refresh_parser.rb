@@ -196,9 +196,9 @@ module ManageIQ
       end
 
       def process_host_hardware(host, extra_attributes)
-        numvcpus             = extra_attributes.fetch_path('cpu', 'physical', 'number').to_i
+        cpu_sockets          = extra_attributes.fetch_path('cpu', 'physical', 'number').to_i
         cpu_total_cores      = extra_attributes.fetch_path('cpu', 'logical', 'number').to_i
-        cpu_cores_per_socket = numvcpus > 0 ? cpu_total_cores / numvcpus : 0
+        cpu_cores_per_socket = cpu_sockets > 0 ? cpu_total_cores / cpu_sockets : 0
         # Get Cpu speed in Mhz
         cpu_speed        = extra_attributes.fetch_path('cpu', 'physical_0', 'frequency').to_i / 10**6
 
@@ -206,7 +206,7 @@ module ManageIQ
           :memory_mb            => host.properties['memory_mb'],
           :disk_capacity        => host.properties['local_gb'],
           :cpu_total_cores      => cpu_total_cores,
-          :numvcpus             => numvcpus,
+          :cpu_sockets          => cpu_sockets,
           :cpu_cores_per_socket => cpu_cores_per_socket,
           :cpu_speed            => cpu_speed,
           :cpu_type             => extra_attributes.fetch_path('cpu', 'physical_0', 'version'),

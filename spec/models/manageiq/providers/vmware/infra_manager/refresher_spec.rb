@@ -230,7 +230,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       :number_of_nics       => 4,
       :memory_mb            => 57334,
       :memory_console       => nil,
-      :numvcpus             => 2,
+      :cpu_sockets          => 2,
       :cpu_total_cores      => 8,
       :cpu_cores_per_socket => 4,
       :guest_os             => "ESXi",
@@ -361,7 +361,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       :guest_os           => "rhel5_64",
       :guest_os_full_name => "Red Hat Enterprise Linux 5 (64-bit)",
       :bios               => "422f5d16-c048-19e6-3212-e588fbebf7e0",
-      :numvcpus           => 2,
+      :cpu_sockets        => 2,
       :annotation         => nil,
       :memory_mb          => 4096
     )

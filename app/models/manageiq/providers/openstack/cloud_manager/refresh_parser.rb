@@ -371,7 +371,7 @@ module ManageIQ::Providers
         :connection_state    => "connected",
 
         :hardware            => {
-          :numvcpus             => flavor[:cpus],
+          :cpu_sockets          => flavor[:cpus],
           :cpu_cores_per_socket => 1,
           :cpu_total_cores      => flavor[:cpus],
           :memory_mb            => flavor[:memory] / 1.megabyte,

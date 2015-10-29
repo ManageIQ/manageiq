@@ -66,18 +66,18 @@ module ApplicationController::Performance
         }.to_json + ';'
       end
 
-      # Cannot replace button divs that contain dhtmlx toolbars, use code below to turn on/off individual buttons
+      # Cannot replace button divs that contain toolbars, use code below to turn on/off individual buttons
       # Don't need to do view or center buttons, just the perf stuff
       if ["host", "vm", "vm_or_template"].include?(params[:controller])
         pfx = params[:controller] == "vm_or_template" ? "vm_" : ""
         if @perf_options[:typ] == "realtime"
-          page << "if(ManageIQ.toolbars.center_tb.obj) ManageIQ.toolbars.center_tb.obj.showItem('#{pfx}perf_refresh');"
-          page << "if(ManageIQ.toolbars.center_tb.obj) ManageIQ.toolbars.center_tb.obj.showItem('#{pfx}perf_reload');"
-          page << "if(ManageIQ.toolbars.center_tb.obj) ManageIQ.toolbars.center_tb.obj.enableItem('#{pfx}perf_refresh');"
-          page << "if(ManageIQ.toolbars.center_tb.obj) ManageIQ.toolbars.center_tb.obj.enableItem('#{pfx}perf_reload');"
+          page << "ManageIQ.toolbars.showItem('#center_tb', '#{pfx}perf_refresh');"
+          page << "ManageIQ.toolbars.showItem('#center_tb', '#{pfx}perf_reload');"
+          page << "ManageIQ.toolbars.enableItem('#center_tb', '#{pfx}perf_refresh');"
+          page << "ManageIQ.toolbars.enableItem('#center_tb', '#{pfx}perf_reload');"
         else
-          page << "if(ManageIQ.toolbars.center_tb.obj) ManageIQ.toolbars.center_tb.obj.hideItem('#{pfx}perf_refresh');"
-          page << "if(ManageIQ.toolbars.center_tb.obj) ManageIQ.toolbars.center_tb.obj.hideItem('#{pfx}perf_reload');"
+          page << "ManageIQ.toolbars.hideItem('#center_tb', '#{pfx}perf_refresh');"
+          page << "ManageIQ.toolbars.hideItem('#center_tb', '#{pfx}perf_reload');"
         end
       end
 

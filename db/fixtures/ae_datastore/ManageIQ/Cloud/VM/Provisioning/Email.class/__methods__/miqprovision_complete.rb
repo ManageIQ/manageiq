@@ -6,7 +6,7 @@
 # Model Notes:
 # 1. to_email_address - used to specify an email address in the case where the
 #    vm's owner does not have an  email address. To specify more than one email
-#    address separate email address with commas. (I.e. admin@company.com,user@company.com)
+#    address separate email address with commas. (I.e. admin@example.com,user@example.com)
 # 2. from_email_address - used to specify an email address in the event the
 #    requester replies to the email
 # 3. signature - used to stamp the email with a custom signature
@@ -18,7 +18,7 @@ vm = prov.vm
 raise "VM not found" if vm.nil?
 
 # Override the default appliance IP Address below
-# appliance ||= 'evmserver.company.com'
+# appliance ||= 'evmserver.example.com'
 appliance ||= $evm.root['miq_server'].ipaddress
 
 #
@@ -61,7 +61,7 @@ if prov.vm_template.name.downcase.include?('_xx_')
   $evm.log("info", "Setup of special email for DBMS VM")
 
   # Specify special email address below
-  to      = 'evmadmin@company.com'
+  to      = 'evmadmin@example.com'
 
   body += "This email was sent by EVM to inform you of the provisioning of a new DBMS VM.<br>"
   body += "This new VM requires changes to DNS and DHCP to function correctly.<br>"

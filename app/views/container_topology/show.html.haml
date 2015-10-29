@@ -60,4 +60,9 @@
               %image{:height => "18", :width => "18", :x => "-9", "xlink:href" => "/images/icons/new/host.png", :y => "-9"}
           %label Hosts
 
+  .alert.alert-info.alert-dismissable
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "alert", :type => "button"}
+      %span.pficon.pficon-close
+    %span.pficon.pficon-info
+    %strong  Click on the legend to show/hide entities, and double click on the entities in the graph to navigate to their summary pages. 
   %kubernetes-topology-graph{:items => "items", :relations => "relations", :kinds => "kinds"}

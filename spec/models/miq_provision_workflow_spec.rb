@@ -26,7 +26,7 @@ describe MiqProvisionWorkflow do
           @ems         = FactoryGirl.create(:ems_vmware,  :name => "Test EMS",  :zone => server.zone)
           @host        = FactoryGirl.create(:host, :name => "test_host", :hostname => "test_host", :state => 'on', :ext_management_system => @ems)
           @vm_template = FactoryGirl.create(:template_vmware, :name => "template", :ext_management_system => @ems, :host => @host)
-          @hardware    = FactoryGirl.create(:hardware, :vm_or_template => @vm_template, :guest_os => "winxppro", :memory_mb => 512, :numvcpus => 2)
+          @hardware    = FactoryGirl.create(:hardware, :vm_or_template => @vm_template, :guest_os => "winxppro", :memory_mb => 512, :cpu_sockets => 2)
           @switch      = FactoryGirl.create(:switch, :name => 'vSwitch0', :ports => 32, :host => @host)
           @lan         = FactoryGirl.create(:lan, :name => "VM Network", :switch => @switch)
           @ethernet    = FactoryGirl.create(:guest_device, :hardware => @hardware, :lan => @lan, :device_type => 'ethernet', :controller_type => 'ethernet', :address => '00:50:56:ba:10:6b', :present => false, :start_connected => true)

@@ -21,7 +21,9 @@ describe AssignTenantDefaultGroup do
 
         t.reload
         expect(t.default_miq_group_id).to be
-        expect(group_stub.find(t.default_miq_group_id).miq_user_role_id).to eq(tenant_role.id)
+        g = group_stub.find(t.default_miq_group_id)
+        expect(g.miq_user_role_id).to eq(tenant_role.id)
+        expect(g.sequence).to be
       end
 
       it "skips tenants that already have a group" do

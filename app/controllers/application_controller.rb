@@ -47,10 +47,10 @@ class ApplicationController < ActionController::Base
 
   before_action :reset_toolbar
   before_action :set_session_tenant, :except => [:window_sizes]
-  before_action :get_global_session_data, :except => [:window_sizes, :authenticate]
+  before_action :get_global_session_data, :except => [:resize_layout, :window_sizes, :authenticate]
   before_action :set_user_time_zone, :except => [:window_sizes]
   before_action :set_gettext_locale, :except => [:window_sizes]
-  after_action :set_global_session_data, :except => [:window_sizes]
+  after_action :set_global_session_data, :except => [:resize_layout, :window_sizes]
 
   def reset_toolbar
     @toolbars = {}

@@ -257,7 +257,7 @@ class ChargebackController < ApplicationController
                     detail.chargeback_rate_detail_measure_id = id_measure
                   end
                   # Copy the currency id of the rate detail linking with the rate_detail_currency
-                  unless r[:type_currency].nill?
+                  unless r[:type_currency].nil?
                     id_currency = ChargebackRateDetailCurrency.find_by(:name => r[:type_currency]).id
                     detail.chargeback_rate_detail_currency_id = id_currency
                   end

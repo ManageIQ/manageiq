@@ -153,24 +153,22 @@ module MiqAeEvent
     target = stream_target(object)
     case target
     when VmOrTemplate, Service
-      group = target.miq_group
-      user = target.evm_owner
-      user = User.super_admin if user.nil? || !user.miq_groups.include?(group)
+      group  = target.miq_group
+      user   = target.evm_owner
+      user   = User.super_admin if user.nil? || !user.miq_groups.include?(group)
       tenant = target.tenant
     when ExtManagementSystem
-      user = User.super_admin
-      # TODO: uncomment when default group for tenant is merged
-      # group = target.tenant.default_miq_group
-      group = user.current_group # for now
+      user   = User.super_admin
       tenant = target.tenant
+      group  = tenant.default_miq_group
     when MiqServer
-      user = User.super_admin
-      group = user.current_group
+      user   = User.super_admin
       tenant = user.current_tenant
+      group  = user.current_group
     when MiqRequest
-      user = target.get_user
-      group = user.current_group
+      user   = target.get_user
       tenant = user.current_tenant
+      group  = user.current_group
     end
 
     raise "A group is needed to raise an event. [#{object.class.name}] id:[#{object.id}] event_type: [#{event_type}]" unless group

@@ -162,7 +162,7 @@ describe HostController do
     set_user_privileges
     host = FactoryGirl.create(:host,
                               :hardware => FactoryGirl.create(:hardware,
-                                                              :numvcpus             => 2,
+                                                              :cpu_sockets          => 2,
                                                               :cpu_cores_per_socket => 4,
                                                               :cpu_total_cores      => 8
                                                              )

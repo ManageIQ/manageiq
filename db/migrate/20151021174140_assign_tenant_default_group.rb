@@ -33,6 +33,8 @@ class AssignTenantDefaultGroup < ActiveRecord::Migration
       create_with(
         :description      => "Tenant #{tenant.name} #{tenant.id} access",
         :group_type       => TENANT_GROUP,
+        :sequence         => 1,
+        :guid             => MiqUUID.new_guid,
         :miq_user_role_id => role.try(:id)
       ).find_or_create_by!(:tenant_id => tenant.id)
     end

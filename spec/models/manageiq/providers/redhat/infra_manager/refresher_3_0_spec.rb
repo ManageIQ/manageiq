@@ -190,7 +190,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :number_of_nics       => nil,
       :memory_mb            => 7806,
       :memory_console       => nil,
-      :numvcpus             => 1,
+      :cpu_sockets          => 1,
       :cpu_total_cores      => 4,
       :cpu_cores_per_socket => 4,
       :guest_os             => nil,
@@ -295,7 +295,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :guest_os           => "rhel_6x64",
       :guest_os_full_name => nil,
       :bios               => nil,
-      :numvcpus           => 2,
+      :cpu_sockets        => 2,
       :annotation         => "Powered On VM for EmsRefresh testing",
       :memory_mb          => 1024
     )
@@ -452,7 +452,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :guest_os           => "rhel_6x64",
       :guest_os_full_name => nil,
       :bios               => nil,
-      :numvcpus           => 2,
+      :cpu_sockets        => 2,
       :annotation         => "Powered Off VM for EmsRefresh testing",
       :memory_mb          => 1024
     )
@@ -566,7 +566,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :guest_os             => "rhel_6x64",
       :guest_os_full_name   => nil,
       :bios                 => nil,
-      :numvcpus             => 2,
+      :cpu_sockets          => 2,
       :cpu_cores_per_socket => 1,
       :cpu_total_cores      => 2,
       :annotation           => "Template for EmsRefresh testing",

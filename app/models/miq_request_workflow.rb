@@ -4,6 +4,9 @@ require 'miq-hash_struct'
 class MiqRequestWorkflow
   include Vmdb::Logging
 
+  # We rely on MiqRequestWorkflow's descendants to be comprehensive
+  singleton_class.send(:prepend, DescendantLoader::ArDescendantsWithLoader)
+
   attr_accessor :dialogs, :requester, :values, :last_vm_id
 
   def self.automate_dialog_request

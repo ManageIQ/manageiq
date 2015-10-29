@@ -429,7 +429,7 @@ describe Metric do
     context "with a small environment and time_profile" do
       before(:each) do
         @vm1 = FactoryGirl.create(:vm_vmware)
-        @vm2 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 4096, :numvcpus => 2))
+        @vm2 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 4096, :cpu_sockets => 2))
         @host1 = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :memory_mb => 8124, :cpu_total_cores => 1, :cpu_speed => 9576), :vms => [@vm1])
         @host2 = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :memory_mb => 8124, :cpu_total_cores => 1, :cpu_speed => 9576))
 
