@@ -100,8 +100,9 @@ module MiqAeEngine
       @ae_user = user
       @dom_search.ae_user = user
       scheme, userinfo, host, port, registry, path, opaque, query, fragment = MiqAeUri.split(uri, "miqaedb")
-      raise "Unsupported Scheme [#{scheme}]" unless MiqAeUri.scheme_supported?(scheme)
-      raise "Invalid URI <#{uri}>" if path.nil?
+
+      raise MiqAeException::InvalidPathFormat, "Unsupported Scheme [#{scheme}]" unless MiqAeUri.scheme_supported?(scheme)
+      raise MiqAeException::InvalidPathFormat, "Invalid URI <#{uri}>" if path.nil?
 
       message = fragment.blank? ? "create" : fragment.downcase
       args = MiqAeUri.query2hash(query)
