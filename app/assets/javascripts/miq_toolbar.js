@@ -1,3 +1,5 @@
+ManageIQ.toolbars = {};
+
 ManageIQ.toolbars.findByDataClick = function (toolbar, data_click) {
   $(toolbar).find("[data-click='" + attr_click + "']")
 };
