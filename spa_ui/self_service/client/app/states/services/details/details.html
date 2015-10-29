@@ -13,7 +13,7 @@
       <section>
         <div class="col-md-12 ss-details-header">
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-lg-5 col-md-6 col-sm-6 col-xs-6">
               <div class="ss-details-header__title-img">
                 <span class="ss-details-header__title-img__center"></span>
                 <img class="ss-details-header__title-img__logo" ng-src="{{ ::vm.service.picture.image_href }}"
@@ -26,7 +26,8 @@
                 <h4>{{ ::vm.service.long_description || vm.service.description }}</h4>
               </div>
             </div>
-            <div class="col-md-6 ss-details-header__actions">
+            <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 ss-details-header__actions">
+              <div class="ss-details-header__actions__inner">
               <custom-button custom-actions="vm.service.custom_actions" actions="vm.service.actions"></custom-button>
               <button class="btn btn-default" type="button"
                     confirmation
@@ -56,6 +57,7 @@
                 </ul>
               </div>
               <button class="btn btn-primary" type="button" ng-click="vm.editServiceModal()">Edit Service</button>
+            </div>
             </div>
           </div>
         </div>

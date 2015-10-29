@@ -1,24 +1,49 @@
 <span>
-  <span ng-repeat="button in vm.customActions.buttons">
-     <button class="btn btn-default custom-button"
+  <span ng-if="!vm.collapseCustomButtons">
+    <span ng-repeat="button in vm.customActions.buttons">
+       <button class="btn btn-default custom-button"
              title="{{button.description}}"
              type="button"
              ng-click="vm.customButtonAction(button)">
-       {{button.name }}
-     </button>
-  </span>
-  <span class="dropdown" ng-repeat="buttonGroup in vm.customActions.button_groups">
-    <button class="btn btn-default dropdown-toggle custom-button" title="{{buttonGroup.description}}"
+         {{button.name }}
+       </button>
+    </span>
+    <div class="btn-group dropdown" ng-repeat="buttonGroup in vm.customActions.button_groups">
+      <button class="btn btn-default dropdown-toggle custom-button" title="{{buttonGroup.description}}"
             type="button" id="{{buttonGroup.id}}" data-toggle="dropdown">
-      {{ buttonGroup.name}}
-      <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" role="menu" aria-labelledby="{{buttonGroup.id}}">
-      <li ng-repeat="button in buttonGroup.buttons" role="presentation">
-        <a role="menuitem" tabindex="-1" ng-click="vm.customButtonAction(button)">
-          {{ button.name }}
-        </a>
-      </li>
-    </ul>
+        {{ buttonGroup.name}}
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="{{buttonGroup.id}}">
+        <li ng-repeat="button in buttonGroup.buttons" role="presentation">
+          <a role="menuitem" tabindex="-1" ng-click="vm.customButtonAction(button)">
+            {{ button.name }}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </span>
+  <span ng-if="vm.collapseCustomButtons">
+    <div class="btn-group dropdown custom_actions_menu" ng-if="vm.customActions.buttons.length >=1 || vm.customActions.button_groups >=1">
+      <button class="btn btn-default dropdown-toggle custom-button" title="Actions"
+            type="button" id="button_custom_actions" data-toggle="dropdown">
+        Actions
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="button_custom_actions">
+        <li ng-repeat="button in vm.customActions.buttons" role="presentation">
+          <a role="menuitem" tabindex="-1" ng-click="vm.customButtonAction(button)">
+            {{ button.name }}
+          </a>
+        </li>
+        <div ng-repeat="buttonGroup in vm.customActions.button_groups">
+          <li ng-repeat="button in buttonGroup.buttons" role="presentation">
+            <a role="menuitem" tabindex="-1" ng-click="vm.customButtonAction(button)">
+              {{ buttonGroup.name}} - {{ button.name }}
+            </a>
+          </li>
+        </div>
+      </ul>
+    </div>
   </span>
 </span>
