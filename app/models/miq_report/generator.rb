@@ -241,6 +241,7 @@ module MiqReport::Generator
                 .where(where_clause)
                 .where(time_range_cond)
                 .includes(includes)
+                .references(includes)
                 .limit(options[:limit])
       results = Rbac.filtered(results, :class        => db,
                                        :filter       => conditions,
