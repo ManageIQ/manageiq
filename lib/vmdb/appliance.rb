@@ -141,7 +141,7 @@ module Vmdb
     def self.installed_rpms
       File.open(log_dir.join("package_list_rpm.txt"), "a") do |file|
         file.puts "start: date time is: #{Time.now.utc}"
-        LinuxAdmin.Rpm.list_installed.sort.each do |name, version|
+        LinuxAdmin::Rpm.list_installed.sort.each do |name, version|
           file.puts "#{name} #{version}"
         end
       end
