@@ -48,13 +48,11 @@ describe ContainerTopologyService do
                                    :ext_management_system => ems_rhev)
       vm_rhev.stub(:power_state).and_return("on")
 
+      hardware = FactoryGirl.create(:hardware, :cpu_sockets => 2, :cpu_cores_per_socket => 4, :cpu_total_cores => 8)
       host = FactoryGirl.create(:host, :name => "host1", :id => 25,
                                 :uid_ems => "abcd9a08-7b13-11e5-8546-129aa6621999",
                                 :ext_management_system => ems_rhev,
-                                :hardware => FactoryGirl.create(:hardware,
-                                                                :cpu_sockets      => 2,
-                                                                :cores_per_socket => 4,
-                                                                :logical_cpus     => 8))
+                                :hardware => hardware)
       vm_rhev.update_attribute(:host, host)
 
       container_condition = ContainerCondition.create(:name => 'Ready', :status => 'True')
