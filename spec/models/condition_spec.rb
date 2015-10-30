@@ -27,7 +27,7 @@ describe Condition do
 
       it "invalid expression should not raise security error because it is now parsed and not evaluated" do
         expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> >= 2; system('ls /etc')</check></find>"
-        -> { Condition.subst(expr, @cluster, nil) }.should_not raise_error(SecurityError)
+        expect { Condition.subst(expr, @cluster, nil) }.not_to raise_error
       end
 
       it "valid expression as a tainted object should not raise security error" do
