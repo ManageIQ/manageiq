@@ -42,6 +42,8 @@
 
     h2
       margin-top: 10px
+      text-overflow: ellipsis
+      overflow: hidden
 
     h4
       color: #666
@@ -55,6 +57,10 @@
 
     .btn
       margin-right: 2px
+
+  +element(actions__inner)
+    white-space: nowrap
+    display: inline
 
 .ss-form-readonly
   .form-control

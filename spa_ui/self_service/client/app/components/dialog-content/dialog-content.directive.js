@@ -44,8 +44,9 @@
         if (vm.options) {
           angular.forEach(vm.options, parseOptions);
         }
-
-        vm.dialog.dialog_tabs.forEach(iterateBGroups);
+        if (angular.isDefined(vm.dialog)) {
+          vm.dialog.dialog_tabs.forEach(iterateBGroups);
+        }
       }
 
       // Private functions
