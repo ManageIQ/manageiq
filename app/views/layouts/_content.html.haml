@@ -13,8 +13,9 @@
     .row#center_div{:style => "height: 100%"}
       #right_div.resizable{:style => "height: 100%", :class => "col-md-#{maindiv} col-md-push-#{sidewidth}"}
         .row.toolbar-pf#toolbar
-          .toolbar-pf-actions
-            = render :partial => "layouts/x_taskbar"
+          .col-md-12
+            .toolbar-pf-actions
+              = render :partial => "layouts/x_taskbar"
         .row{:style => "overflow: auto;height: calc(100% - 88px);"}
           .col-md-12
             .row
@@ -74,8 +75,9 @@
         .col-md-10.col-md-push-2.max-height
           - if taskbar_in_header?
             .row.toolbar-pf#toolbar
-              .toolbar-pf-actions
-                = render :partial => "layouts/taskbar"
+              .col-md-12
+                .toolbar-pf-actions
+                  = render :partial => "layouts/taskbar"
           .row{:style => "overflow: auto;height: calc(100% - 88px);"}
             .col-md-12
               .row

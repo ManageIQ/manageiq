@@ -39,6 +39,12 @@
     height: 100%;
     overflow: auto;
   }
+
+  /* compensates for left-padding of first rendered form-group */
+  .toolbar-pf > .col-md-12 {
+    padding-left: 0 !important;
+  }
+
   #paging_div {
     position: absolute;
     bottom: 0;
@@ -292,15 +298,13 @@ iframe, .iframe {
 }
 
 /* toolbar styling */
-div#view_tb {
-  float: right;
-}
 
 .toolbar-pf-actions .btn-group.dropdown > button > img {
   padding-right: 3px;
 }
 
 /* Adds padding between buttons when they wrap */
+
 .toolbar-pf#toolbar .toolbar-pf-actions .form-group {
   margin-bottom: 10px !important
 }
