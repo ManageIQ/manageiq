@@ -8,38 +8,19 @@ describe ContainerTopologyService do
     it "creates the expected number of entity types" do
       ems_kube = FactoryGirl.create(:ems_kubernetes, :name => "ems_kube")
       container_topology_service.stub(:retrieve_providers).and_return([ems_kube ])
-      container_topology_service.build_kinds.size.should eql 9
-    end
-
-    it "kinds contains an expected key" do
-      container_topology_service.build_kinds.key?(:Pod).should be_true
+      expect(container_topology_service.build_kinds.keys).to match_array([:Container, :Host, :Kubernetes, :Node, :Pod, :Replicator, :Route, :Service, :VM])
     end
   end
 
   describe "#build_link" do
     it "creates link between source to target" do
-      container_topology_service.build_link("95e49048-3e00-11e5-a0d2-18037327aaeb",
-                                            "96c35f65-3e00-11e5-a0d2-18037327aaeb").size.should eql 2
-      container_topology_service.build_link("95e49048-3e00-11e5-a0d2-18037327aaeb",
-                                            "96c35f65-3e00-11e5-a0d2-18037327aaeb").key?(:source).should be_true
-      container_topology_service.build_link("95e49048-3e00-11e5-a0d2-18037327aaeb",
-                                            "96c35f65-3e00-11e5-a0d2-18037327aaeb").key?(:target).should be_true
-      container_topology_service.build_link("95e49048-3e00-11e5-a0d2-18037327aaeb",
-                                            "96c35f65-3e00-11e5-a0d2-18037327aaeb")[:source].should eq "95e49048-3e00-11e5-a0d2-18037327aaeb"
-      container_topology_service.build_link("95e49048-3e00-11e5-a0d2-18037327aaeb",
-                                            "96c35f65-3e00-11e5-a0d2-18037327aaeb")[:target].should eq "96c35f65-3e00-11e5-a0d2-18037327aaeb"
+      expect(container_topology_service.build_link("95e49048-3e00-11e5-a0d2-18037327aaeb", "96c35f65-3e00-11e5-a0d2-18037327aaeb")).to eq(:source => "95e49048-3e00-11e5-a0d2-18037327aaeb", :target => "96c35f65-3e00-11e5-a0d2-18037327aaeb")
     end
   end
 
   describe "#build_topology" do
-    it "topology contains expected number of keys" do
-      container_topology_service.build_topology.size.should eql 3
-    end
-
-    it "topology contains expected keys" do
-      container_topology_service.build_topology.key?(:items).should be_true
-      container_topology_service.build_topology.key?(:relations).should be_true
-      container_topology_service.build_topology.key?(:kinds).should be_true
+    it "topology contains only the expected keys" do
+      expect(container_topology_service.build_topology.keys).to match_array([:items, :kinds, :relations])
     end
 
     it "topology contains the expected structure and content" do
