@@ -54,11 +54,18 @@ describe MiqEvent do
         expect { MiqEvent.raise_evm_event(nil, "some_event") }.to raise_error
       end
 
-      it "will raise the event to automate" do
+      it "will raise the event to automate given target directly" do
         event = 'evm_server_start'
         FactoryGirl.create(:miq_event_definition, :name => event)
         MiqAeEvent.should_receive(:raise_evm_event)
         MiqEvent.raise_evm_event(@miq_server, event)
+      end
+
+      it "will raise the event to automate given target type and id" do
+        event = 'evm_server_start'
+        FactoryGirl.create(:miq_event_definition, :name => event)
+        MiqAeEvent.should_receive(:raise_evm_event)
+        MiqEvent.raise_evm_event([:MiqServer, @miq_server.id], event)
       end
     end
 
