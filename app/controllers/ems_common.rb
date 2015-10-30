@@ -778,13 +778,7 @@ module EmsCommon
   end
 
   def retrieve_openstack_infra_providers
-    openstack_infra_providers = []
-    ManageIQ::Providers::Openstack::Provider.all.each do |provider|
-      openstack_infra_providers = [
-        [provider[:name], provider[:id]]
-      ]
-    end
-    openstack_infra_providers
+    ManageIQ::Providers::Openstack::Provider.pluck(:name, :id)
   end
 
   # Get variables from edit form
