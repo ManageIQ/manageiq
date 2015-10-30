@@ -5,9 +5,23 @@ module ToolbarHelper
   #
   # Called directly when updating toolbars in an existing page.
   #
-  def buttons_to_html(buttons)
-    Array(buttons).collect do |button|
-      toolbar_top_button(button)
+  def buttons_to_html(buttons_in)
+    groups = split_to_groups(Array(buttons_in))
+
+    groups.collect do |buttons|
+      # exceptional behavior for view toolbar view mode buttons
+      first_button = Array(buttons)[0]
+      view_buttons = first_button.present? &&
+                     first_button[:name] =~ /^view_/
+
+      cls = view_buttons ? 'toolbar-pf-view-selector ' : ''
+      content_tag(:div, :class => "#{cls} form-group") do # form-group aroung each toolbar section
+        if view_buttons
+          view_mode_buttons(buttons)
+        else
+          normal_toolbar_buttons(buttons)
+        end
+      end
     end.join('').html_safe
   end
 
@@ -30,7 +44,7 @@ module ToolbarHelper
   #
   def render_toolbars
     @toolbars.collect do |div_id, toolbar_name|
-      content_tag(:div, :id => div_id, :class => 'form-group') do # form-group aroung each toolbar
+      content_tag(:div, :id => div_id) do # div for each toolbar
         buttons = toolbar_name ? build_toolbar(toolbar_name) : nil
         buttons_to_html(buttons)
       end
@@ -38,6 +52,33 @@ module ToolbarHelper
   end
 
   # Internal stuff to generate html markup
+
+  # Render a group of view toolbar buttons
+  #
+  def view_mode_buttons(buttons)
+    content_tag(:ul, :class => 'list-inline') do
+      buttons.collect do |button|
+        toolbar_button_normal(button, true)
+      end.join('').html_safe
+    end
+  end
+
+  # Render a group of normal toolbar buttons
+  #
+  def normal_toolbar_buttons(buttons)
+    Array(buttons).collect do |button|
+      toolbar_top_button(button)
+    end.join('').html_safe
+  end
+
+  # Split buttons to groups at separators
+  #
+  def split_to_groups(buttons)
+    buttons.slice_before do |props|
+      props['type'] == 'separator' ||
+        props[:name] == 'download_choice' # exceptional behavior for view toolbar download drop down
+    end.to_a
+  end
 
   # Render toolbar top button.
   #
@@ -124,12 +165,20 @@ module ToolbarHelper
 
   # Render normal push child button
   #
-  def toolbar_button_normal(props)
+  def toolbar_button_normal(props, view_button = false)
     hidden = props[:hidden]
-    cls = props['enabled'].to_s == 'false' ? 'disabled ' : ''
+    cls = if view_button
+            props['enabled'].to_s == 'false' ? 'active ' : ''
+          else
+            props['enabled'].to_s == 'false' ? 'disabled ' : ''
+          end
     content_tag(:li, :class => cls + (hidden ? 'hidden' : '')) do
       content_tag(:a, prepare_tag_keys(props).update(:href => '#')) do
-        (toolbar_image(props) + props['text'].to_s.html_safe)
+        if props[:icon].present?
+          content_tag(:i,  '', :class => props[:icon]).html_safe
+        else
+          (toolbar_image(props) + props['text'].to_s.html_safe)
+        end
       end
     end
   end
