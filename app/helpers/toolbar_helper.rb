@@ -5,12 +5,22 @@ module ToolbarHelper
   #
   # Called directly when updating toolbars in an existing page.
   #
-  def buttons_to_html(buttons)
-    content_tag(:div, :class => 'form-group') do # form-group aroung each toolbar section
-      Array(buttons).collect do |button|
-        toolbar_top_button(button)
-      end.join('').html_safe
-    end
+  def buttons_to_html(buttons_in)
+    groups = split_to_groups(Array(buttons_in))
+
+    groups.collect do |buttons|
+      content_tag(:div, :class => 'form-group') do # form-group aroung each toolbar section
+        Array(buttons).collect do |button|
+          toolbar_top_button(button)
+        end.join('').html_safe
+      end
+    end.join('').html_safe
+  end
+
+  # Split buttons to group at separators
+  #
+  def split_to_groups(buttons)
+    buttons.slice_before { |props| props['type'] == 'separator' }.to_a
   end
 
   # Request that a toolbar is rendered.
