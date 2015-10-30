@@ -35,7 +35,7 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudResourceQuota < ::Cloud
 
   # neutron
   def floatingip_quota_used
-    FloatingIp.where(:cloud_tenant_id => cloud_tenant_id).count
+    ::FloatingIp.where(:cloud_tenant_id => cloud_tenant_id).count
   end
 
   # nova
