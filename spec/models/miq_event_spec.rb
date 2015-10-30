@@ -67,6 +67,17 @@ describe MiqEvent do
         MiqAeEvent.should_receive(:raise_evm_event)
         MiqEvent.raise_evm_event([:MiqServer, @miq_server.id], event)
       end
+
+      it "will raise undefined event for classes that do not support policy" do
+        service = FactoryGirl.create(:service)
+        expect(MiqAeEvent).to receive(:raise_evm_event)
+        MiqEvent.raise_evm_event(service, "request_service_retire")
+      end
+
+      it "will not raise undefined event for classes that support policy" do
+        expect(MiqAeEvent).not_to receive(:raise_evm_event)
+        MiqEvent.raise_evm_event(@miq_server, "evm_server_start")
+      end
     end
 
     context "#process_evm_event" do

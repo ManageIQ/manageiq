@@ -29,8 +29,10 @@ class MiqEvent < EventStream
     raise "Unable to find object for target: [#{target}]" unless target
 
     event = normalize_event(raw_event.to_s)
-    # TODO: how to handle unknow MiqEvent - event not defined in MiqEventDefinition?
-    return if event == 'unknown'
+    if event == 'unknown' && target.class.base_class.in?(SUPPORTED_POLICY_AND_ALERT_CLASSES)
+      _log.warn("Event #{raw_event} for class [#{target.class.name}] id [#{target.id}] was not raised: #{raw_event} is not defined in MiqEventDefinition")
+      return
+    end
 
     event_obj = build_evm_event(event, target)
     inputs.merge!('MiqEvent::miq_event' => event_obj.id, :miq_event_id => event_obj.id)
