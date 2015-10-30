@@ -1,6 +1,3 @@
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "Scvmm")
-require 'MiqScvmm'
-
 class ManageIQ::Providers::Microsoft::InfraManager::Host < ::Host
   def verify_credentials(auth_type = nil, _options = {})
     raise "no credentials defined" if missing_credentials?(auth_type)
