@@ -161,6 +161,10 @@ module VirtualFields
   end
 
   def virtual_has_many(name, options = {})
+    define_method("#{name.to_s.singularize}_ids") do
+      records = send(name)
+      records.respond_to?(:ids) ? records.ids : records.collect(&:id)
+    end
     uses = options.delete :uses
     reflection = ActiveRecord::Associations::Builder::HasMany.build(self, name, nil, options)
     add_virtual_reflection(reflection, name, uses, options)
