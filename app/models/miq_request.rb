@@ -94,13 +94,13 @@ class MiqRequest < ActiveRecord::Base
   end
 
   def initialize_attributes
-    self.requester ||= User.find_by_userid(userid) if userid
-    self.requester ||= User.find_by_name(requester_name) if requester_name
-    self.requester_name ||= requester.try(:name)
-    self.userid ||= requester.try(:userid)
-    self.tenant ||= requester.try(:current_tenant)
     self.approval_state ||= "pending_approval"
-    miq_approvals << build_default_approval
+    miq_approvals << build_default_approval if miq_approvals.empty?
+
+    return unless requester
+    self.requester_name ||= requester.name
+    self.userid         ||= requester.userid
+    self.tenant         ||= requester.current_tenant
   end
 
   # TODO: Move call_automate_event_queue from MiqProvisionWorkflow to be done here automagically
