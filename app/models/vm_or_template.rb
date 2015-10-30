@@ -1931,7 +1931,7 @@ class VmOrTemplate < ActiveRecord::Base
               else
                 nil
               end
-    {:available => true,   :message => message}
+    {:available => message.nil?,   :message => message}
   end
 
   include DeprecatedCpuMethodsMixin
