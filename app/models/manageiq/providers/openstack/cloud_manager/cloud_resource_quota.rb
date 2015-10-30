@@ -11,7 +11,7 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudResourceQuota < ::Cloud
     Hardware.joins(:vm)
       .where(:vms => {:cloud_tenant_id => cloud_tenant_id})
       .where("vms.#{VMS_POWER_FILTER}")
-      .sum(:numvcpus)
+      .sum(:cpu_total_cores)
   end
 
   def instances_quota_used

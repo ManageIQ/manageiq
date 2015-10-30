@@ -77,7 +77,7 @@
     :mode: internal
     :options: 
       :operator: Decreased
-      :hdw_attr: :numvcpus
+      :hdw_attr: :cpu_total_cores
     :eval_method: reconfigured_hardware_value
   description: VM CPU count was decreased
   db: Vm
@@ -125,7 +125,7 @@
     :mode: internal
     :options: 
       :operator: Increased
-      :hdw_attr: :numvcpus
+      :hdw_attr: :cpu_total_cores
     :eval_method: reconfigured_hardware_value
   description: VM CPU count was increased
   db: Vm
@@ -202,8 +202,8 @@
       - CONTAINS: 
           tag: Vm.managed-service_level
           value: silver
-      - ">": 
-          field: Vm.hardware-numvcpus
+      - ">":
+          field: Vm.hardware-cpu_total_cores
           value: 1
   :db: Vm
   :guid: fdee2784-bf2c-11de-b3b4-000c290de4f9
