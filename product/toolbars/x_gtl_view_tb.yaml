@@ -9,14 +9,17 @@
     :title: "Grid View"
     :url: 'explorer'
     :url_parms: '?type=grid'
+    :icon: 'fa fa-th'
   - :buttonTwoState: view_tile
     :title: "Tile View"
     :url: 'explorer'
     :url_parms: '?type=tile'
+    :icon: 'fa fa-th-large'
   - :buttonTwoState: view_list
     :title: "List View"
     :url: 'explorer'
     :url_parms: '?type=list'
+    :icon: 'fa fa-th-list'
 - :name: download_main
   :items:
   - :buttonSelect: download_choice

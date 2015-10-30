@@ -48,13 +48,16 @@ class ApplicationHelper::ToolbarBuilder
         groups_added.push(bg_idx)
       end
 
-      bg[:items].each do |bgi|                                      # Go thru all of the button group items
-        if bgi.key?(:buttonSelect)                              # buttonSelect node found
+      bg[:items].each do |bgi|
+        if bgi.key?(:buttonSelect)
           bs_children = false
-          props = {"id"     => bgi[:buttonSelect],
-                   "type"   => "buttonSelect",
-                   "img"    => "#{bgi[:image] ? bgi[:image] : bgi[:buttonSelect]}.png",
-                   "imgdis" => "#{bgi[:image] ? bgi[:image] : bgi[:buttonSelect]}.png"}
+          props = {
+            "id"     => bgi[:buttonSelect],
+            "type"   => "buttonSelect",
+            "img"    => img = "#{bgi[:image] ? bgi[:image] : bgi[:buttonSelect]}.png",
+            "imgdis" => img,
+            :icon    => bgi[:icon]
+          }
           props["title"] = bgi[:title] unless bgi[:title].blank?
           props["text"] = CGI.escapeHTML("#{bgi[:text]}") unless bgi[:text].blank?
           if bgi[:buttonSelect] == "history_choice" && x_tree_history.length < 2
@@ -102,10 +105,13 @@ class ApplicationHelper::ToolbarBuilder
               next if bsi[:image] == 'pdf' && !PdfGenerator.available?
               next if build_toolbar_hide_button(bsi[:pressed] || bsi[:button])  # Use pressed, else button name
               bs_children = true
-              props = {"id"     => bgi[:buttonSelect] + "__" + bsi[:button],
-                       "type"   => "button",
-                       "img"    => "#{bsi[:image] ? bsi[:image] : bsi[:button]}.png",
-                       "imgdis" => "#{bsi[:image] ? bsi[:image] : bsi[:button]}.png"}
+              props = {
+                "id"     => bgi[:buttonSelect] + "__" + bsi[:button],
+                "type"   => "button",
+                "img"    => img = "#{bsi[:image] ? bsi[:image] : bsi[:button]}.png",
+                "imgdis" => img,
+                :icon    => bsi[:icon]
+              }
               if bsi[:button].starts_with?("history_")
                 if x_tree_history.length > 1
                   props["text"] = CGI.escapeHTML(x_tree_history[bsi[:button].split("_").last.to_i][:text])
@@ -144,10 +150,13 @@ class ApplicationHelper::ToolbarBuilder
                            timeline_txt timeline_csv timeline_pdf).include?(bgi[:button])
           end
           sep_needed = true unless button_hide
-          props = {"id"     => bgi[:button],
-                   "type"   => "button",
-                   "img"    => "#{get_image(bgi[:image], bgi[:button]) ? get_image(bgi[:image], bgi[:button]) : bgi[:button]}.png",
-                   "imgdis" => "#{bgi[:image] ? bgi[:image] : bgi[:button]}.png"}
+          props = {
+            "id"     => bgi[:button],
+            "type"   => "button",
+            "img"    => "#{get_image(bgi[:image], bgi[:button]) ? get_image(bgi[:image], bgi[:button]) : bgi[:button]}.png",
+            "imgdis" => "#{bgi[:image] ? bgi[:image] : bgi[:button]}.png",
+            :icon    => bgi[:icon]
+          }
           props["enabled"] = "#{bgi[:enabled]}" unless bgi[:enabled].blank?
           props["enabled"] = "false" if dis_title = build_toolbar_disable_button(bgi[:button]) || button_hide
           props["text"] = CGI.escapeHTML("#{bgi[:text]}") unless bgi[:text].blank?
@@ -178,8 +187,9 @@ class ApplicationHelper::ToolbarBuilder
           props = {
             "id"     => bgi[:buttonTwoState],
             "type"   => "buttonTwoState",
-            "img"    => "#{bgi[:image] ? bgi[:image] : bgi[:buttonTwoState]}.png",
-            "imgdis" => "#{bgi[:image] ? bgi[:image] : bgi[:buttonTwoState]}.png"
+            "img"    => img = "#{bgi[:image] ? bgi[:image] : bgi[:buttonTwoState]}.png",
+            "imgdis" => img,
+            :icon    => bgi[:icon]
           }
           props["title"]    = eval("\"#{bgi[:title]}\"") unless bgi[:title].blank?
           props["enabled"]  = "#{bgi[:enabled]}" unless bgi[:enabled].blank?

@@ -9,18 +9,20 @@ module ToolbarHelper
     groups = split_to_groups(Array(buttons_in))
 
     groups.collect do |buttons|
-      content_tag(:div, :class => 'form-group') do # form-group aroung each toolbar section
-        Array(buttons).collect do |button|
-          toolbar_top_button(button)
-        end.join('').html_safe
+      # exceptional behavior for view toolbar view mode buttons
+      first_button = Array(buttons)[0]
+      view_buttons = first_button.present? &&
+                     first_button[:name] =~ /^view_/
+
+      cls = view_buttons ? 'toolbar-pf-view-selector ' : ''
+      content_tag(:div, :class => "#{cls} form-group") do # form-group aroung each toolbar section
+        if view_buttons
+          view_mode_buttons(buttons)
+        else
+          normal_toolbar_buttons(buttons)
+        end
       end
     end.join('').html_safe
-  end
-
-  # Split buttons to group at separators
-  #
-  def split_to_groups(buttons)
-    buttons.slice_before { |props| props['type'] == 'separator' }.to_a
   end
 
   # Request that a toolbar is rendered.
@@ -50,6 +52,33 @@ module ToolbarHelper
   end
 
   # Internal stuff to generate html markup
+
+  # Render a group of view toolbar buttons
+  #
+  def view_mode_buttons(buttons)
+    content_tag(:ul, :class => 'list-inline') do
+      buttons.collect do |button|
+        toolbar_button_normal(button)
+      end.join('').html_safe
+    end
+  end
+
+  # Render a group of normal toolbar buttons
+  #
+  def normal_toolbar_buttons(buttons)
+    Array(buttons).collect do |button|
+      toolbar_top_button(button)
+    end.join('').html_safe
+  end
+
+  # Split buttons to groups at separators
+  #
+  def split_to_groups(buttons)
+    buttons.slice_before do |props|
+      props['type'] == 'separator' ||
+        props[:name] == 'download_choice' # exceptional behavior for view toolbar download drop down
+    end.to_a
+  end
 
   # Render toolbar top button.
   #
@@ -141,7 +170,11 @@ module ToolbarHelper
     cls = props['enabled'].to_s == 'false' ? 'disabled ' : ''
     content_tag(:li, :class => cls + (hidden ? 'hidden' : '')) do
       content_tag(:a, prepare_tag_keys(props).update(:href => '#')) do
-        (toolbar_image(props) + props['text'].to_s.html_safe)
+        if props[:icon].present?
+          content_tag(:i,  '', :class => props[:icon]).html_safe
+        else
+          (toolbar_image(props) + props['text'].to_s.html_safe)
+        end
       end
     end
   end
