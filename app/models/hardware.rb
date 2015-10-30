@@ -143,7 +143,7 @@ class Hardware < ActiveRecord::Base
       self.cpu_speed = e.attributes["cpuspeed"] if e.name == "cpuspeed"
       self.cpu_type = e.attributes["cputype"] if e.name == "cputype"
       parent.autostart = e.attributes["autostart"] if e.name == "autostart"
-      self.numvcpus = e.attributes["numvcpus"] if e.name == "numvcpus"
+      self.cpu_sockets = e.attributes["numvcpus"] if e.name == "numvcpus"
     end
   end
 
