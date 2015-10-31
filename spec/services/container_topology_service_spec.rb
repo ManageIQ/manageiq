@@ -19,8 +19,10 @@ describe ContainerTopologyService do
   end
 
   describe "#build_topology" do
+    subject { container_topology_service.build_topology }
+
     it "topology contains only the expected keys" do
-      expect(container_topology_service.build_topology.keys).to match_array([:items, :kinds, :relations])
+      expect(subject.keys).to match_array([:items, :kinds, :relations])
     end
 
     let(:container) { Container.create(:name => "ruby-example", :ems_ref => "3572afee-3a41-11e5-a79a-001a4a231290_ruby-helloworld-database_openshift\n/mysql-55-centos7:latest", :state => 'running') }
@@ -54,47 +56,27 @@ describe ContainerTopologyService do
       container_service = ContainerService.create(:ext_management_system => ems_kube, :container_groups => [container_group],
                                                   :ems_ref => "95e49048-3e00-11e5-a0d2-18037327aaeb",
                                                   :name => "service1", :container_routes => [container_route])
+      expect(subject[:items]).to eq(
+        ems_kube.id.to_s                       => {:id => ems_kube.id.to_s, :name => "ems_kube", :status => "Unknown", :kind => "Kubernetes", :miq_id => ems_kube.id},
+        "905c90ba-3e00-11e5-a0d2-18037327aaeb" => {:id => container_node.ems_ref, :name => container_node.name, :status => "Ready", :kind => "Node", :miq_id => container_node.id},
+        "8f8ca74c-3a41-11e5-a79a-001a4a231290" => {:id => container_replicator.ems_ref, :name => container_replicator.name, :status => "OK", :kind => "Replicator", :miq_id => container_replicator.id},
+        "95e49048-3e00-11e5-a0d2-18037327aaeb" => {:id => container_service.ems_ref, :name => container_service.name, :status => "Unknown", :kind => "Service", :miq_id => container_service.id},
+        "96c35ccd-3e00-11e5-a0d2-18037327aaeb" => {:id => container_group.ems_ref, :name => container_group.name, :status => "Running", :kind => "Pod", :miq_id => container_group.id},
+        "ab5za74c-3a41-11e5-a79a-001a4a231290" => {:id => container_route.ems_ref, :name => container_route.name, :status => "Unknown", :kind => "Route", :miq_id => container_route.id},
+        "3572afee-3a41-11e5-a79a-001a4a231290_ruby-helloworld-database_openshift\n/mysql-55-centos7:latest" => {:id => container.ems_ref, :name => container.name, :status => "Running", :kind => "Container", :miq_id => container.id},
+        "558d9a08-7b13-11e5-8546-129aa6621998" => {:id => vm_rhev.uid_ems, :name => vm_rhev.name, :status => "On", :kind => "VM", :miq_id => vm_rhev.id, :provider => "ems_rhev"},
+        "abcd9a08-7b13-11e5-8546-129aa6621999" => {:id => host.uid_ems, :name => host.name, :status => "On", :kind => "Host", :miq_id => host.id, :provider => "ems_rhev"}
+      )
 
-      topology = container_topology_service.build_topology
-
-      topology[:items].size.should eql 9
-      topology[:relations].size.should eql 8
-
-      topology[:items].key? "905c90ba-3e00-11e5-a0d2-18037327aaeb"
-
-      topology[:items][ems_kube.id.to_s].should eql(:id => ems_kube.id.to_s, :name => "ems_kube", :status => "Unknown", :kind => "Kubernetes", :miq_id => ems_kube.id)
-
-      topology[:items]["905c90ba-3e00-11e5-a0d2-18037327aaeb"].should eql(:id => "905c90ba-3e00-11e5-a0d2-18037327aaeb", :name => "127.0.0.1",
-                                                                          :status => "Ready", :kind => "Node", :miq_id => container_node.id)
-      topology[:items]["8f8ca74c-3a41-11e5-a79a-001a4a231290"].should eql(:id => "8f8ca74c-3a41-11e5-a79a-001a4a231290", :name => "replicator1",
-                                                                          :status => "OK", :kind => "Replicator", :miq_id => container_replicator.id)
-      topology[:items]["95e49048-3e00-11e5-a0d2-18037327aaeb"].should eql(:id => "95e49048-3e00-11e5-a0d2-18037327aaeb", :name => "service1",
-                                                                          :status => "Unknown", :kind => "Service", :miq_id => container_service.id)
-      topology[:items]["96c35ccd-3e00-11e5-a0d2-18037327aaeb"].should eql(:id => "96c35ccd-3e00-11e5-a0d2-18037327aaeb", :name => "myPod",
-                                                                          :status => "Running", :kind => "Pod", :miq_id => container_group.id)
-      topology[:items]["ab5za74c-3a41-11e5-a79a-001a4a231290"].should eql(:id => "ab5za74c-3a41-11e5-a79a-001a4a231290", :name => "route-edge",
-                                                                          :status => "Unknown", :kind => "Route", :miq_id => container_route.id)
-      topology[:items]["3572afee-3a41-11e5-a79a-001a4a231290_ruby-helloworld-database_openshift\n/mysql-55-centos7:latest"].should eql(:id => "3572afee-3a41-11e5-a79a-001a4a231290_ruby-helloworld-database_openshift\n/mysql-55-centos7:latest", :name => "ruby-example", :status => "Running", :kind => "Container",  :miq_id => container.id)
-
-      topology[:items]["558d9a08-7b13-11e5-8546-129aa6621998"].should eql(:id => "558d9a08-7b13-11e5-8546-129aa6621998",
-                                                                          :name => "vm1", :status => "On", :kind => "VM",
-                                                                          :miq_id => vm_rhev.id, :provider => "ems_rhev")
-      topology[:items]["abcd9a08-7b13-11e5-8546-129aa6621999"].should eql(:id => "abcd9a08-7b13-11e5-8546-129aa6621999",
-                                                                          :name => "host1", :status => "On", :kind => "Host",
-                                                                          :miq_id => host.id, :provider => "ems_rhev")
-
-
-      topology[:relations].should include(:source => "96c35ccd-3e00-11e5-a0d2-18037327aaeb",
-                                          :target => "8f8ca74c-3a41-11e5-a79a-001a4a231290")
-      topology[:relations].should include(:source => "95e49048-3e00-11e5-a0d2-18037327aaeb",
-                                          :target => "ab5za74c-3a41-11e5-a79a-001a4a231290")
-      # cross provider correlations
-      topology[:relations].should include(:source => "558d9a08-7b13-11e5-8546-129aa6621998",
-                                          :target => "abcd9a08-7b13-11e5-8546-129aa6621999")
-      topology[:relations].should include(:source => "905c90ba-3e00-11e5-a0d2-18037327aaeb",
-                                          :target => "558d9a08-7b13-11e5-8546-129aa6621998")
-
-      topology[:relations].should include(:source=> ems_kube.id.to_s, :target=>"905c90ba-3e00-11e5-a0d2-18037327aaeb")
+      expect(subject[:relations].size).to eq(8)
+      expect(subject[:relations]).to include(
+        {:source => "96c35ccd-3e00-11e5-a0d2-18037327aaeb", :target => "8f8ca74c-3a41-11e5-a79a-001a4a231290"},
+        {:source => "95e49048-3e00-11e5-a0d2-18037327aaeb", :target => "ab5za74c-3a41-11e5-a79a-001a4a231290"},
+        # cross provider correlations
+        {:source => "558d9a08-7b13-11e5-8546-129aa6621998", :target => "abcd9a08-7b13-11e5-8546-129aa6621999"},
+        {:source => "905c90ba-3e00-11e5-a0d2-18037327aaeb", :target => "558d9a08-7b13-11e5-8546-129aa6621998"},
+        {:source => ems_kube.id.to_s,                       :target => "905c90ba-3e00-11e5-a0d2-18037327aaeb"}
+      )
     end
 
     it "topology contains the expected structure when vm is off" do
@@ -108,33 +90,23 @@ describe ContainerTopologyService do
       container_service = ContainerService.create(:ext_management_system => ems_kube, :container_groups => [container_group],
                                                   :ems_ref => "95e49048-3e00-11e5-a0d2-18037327aaeb",
                                                   :name => "service1")
+      container_topology_service.stub(:entities).and_return([[container_node], [container_service]])
 
-      topology = container_topology_service.build_topology
-      topology[:items].size.should eql 6
-      topology[:relations].size.should eql 5
+      expect(subject[:items]).to eq(
+        "905c90ba-3e00-11e5-a0d2-18037327aaeb" => {:id => container_node.ems_ref, :name => container_node.name, :status => "Ready", :kind => "Node", :miq_id => container_node.id},
+        "95e49048-3e00-11e5-a0d2-18037327aaeb" => {:id => container_service.ems_ref, :name => container_service.name, :status => "Unknown", :kind => "Service", :miq_id => container_service.id},
+        "96c35ccd-3e00-11e5-a0d2-18037327aaeb" => {:id => container_group.ems_ref, :name => container_group.name, :status => "Running", :kind => "Pod", :miq_id => container_group.id},
+        "3572afee-3a41-11e5-a79a-001a4a231290_ruby-helloworld-database_openshift\n/mysql-55-centos7:latest" => {:id => container.ems_ref, :name => container.name, :status => "Running", :kind => "Container", :miq_id => container.id},
+        "558d9a08-7b13-11e5-8546-129aa6621998" => {:id => vm_rhev.uid_ems, :name => vm_rhev.name, :status => "Off", :kind => "VM", :miq_id => vm_rhev.id, :provider => "ems_rhev"},
+        ems_kube.id.to_s                       => {:id => ems_kube.id.to_s, :name => "ems_kube", :status => "Unknown", :kind => "Kubernetes", :miq_id => ems_kube.id}
+      )
 
-      topology[:items].key? "905c90ba-3e00-11e5-a0d2-18037327aaeb"
-
-      topology[:items]["905c90ba-3e00-11e5-a0d2-18037327aaeb"].should eql(:id => "905c90ba-3e00-11e5-a0d2-18037327aaeb",
-                                                                          :name => "127.0.0.1",
-                                                                          :status => "Ready", :kind => "Node", :miq_id => container_node.id)
-      topology[:items]["95e49048-3e00-11e5-a0d2-18037327aaeb"].should eql(:id => "95e49048-3e00-11e5-a0d2-18037327aaeb",
-                                                                          :name => "service1",
-                                                                          :status => "Unknown", :kind => "Service", :miq_id => container_service.id)
-      topology[:items]["96c35ccd-3e00-11e5-a0d2-18037327aaeb"].should eql(:id => "96c35ccd-3e00-11e5-a0d2-18037327aaeb",
-                                                                          :name => "myPod",
-                                                                          :status => "Running", :kind => "Pod", :miq_id => container_group.id)
-      topology[:items]["3572afee-3a41-11e5-a79a-001a4a231290_ruby-helloworld-database_openshift\n/mysql-55-centos7:latest"].should eql(:id => "3572afee-3a41-11e5-a79a-001a4a231290_ruby-helloworld-database_openshift\n/mysql-55-centos7:latest", :name => "ruby-example", :status => "Running", :kind => "Container",  :miq_id => container.id)
-
-      topology[:items]["558d9a08-7b13-11e5-8546-129aa6621998"].should eql(:id => "558d9a08-7b13-11e5-8546-129aa6621998",
-                                                                          :name => "vm1", :status => "Off",
-                                                                          :kind => "VM", :miq_id => vm_rhev.id,
-                                                                          :provider => "ems_rhev")
-
-      topology[:relations].should include(:source => "95e49048-3e00-11e5-a0d2-18037327aaeb",
-                                          :target => "96c35ccd-3e00-11e5-a0d2-18037327aaeb")
-      topology[:relations].should include(:source => "905c90ba-3e00-11e5-a0d2-18037327aaeb",
-                                          :target => "558d9a08-7b13-11e5-8546-129aa6621998")
+      expect(subject[:relations].size).to eq(5)
+      expect(subject[:relations]).to include(
+        {:source => "95e49048-3e00-11e5-a0d2-18037327aaeb", :target => "96c35ccd-3e00-11e5-a0d2-18037327aaeb"},
+        # cross provider correlation
+        {:source => "905c90ba-3e00-11e5-a0d2-18037327aaeb", :target => "558d9a08-7b13-11e5-8546-129aa6621998"},
+      )
     end
   end
 end
