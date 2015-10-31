@@ -212,6 +212,17 @@ describe MiqPolicyController do
       controller.send(:replace_right_cell, 'root', [:policy], presenter)
       expect(presenter[:replace_partials]).to have_key(:policy_tree_div)
     end
+
+    it 'should not hide center toolbar while doing searches' do
+      controller.stub(:params).and_return(:action => 'x_search_by_name')
+      controller.instance_eval { @sb = {:active_tree => :action_tree} }
+      controller.instance_eval { @edit = {:new => {:expression => {"???" => "???", :token => 1}}} }
+      controller.stub(:render).and_return(nil)
+      presenter = ExplorerPresenter.new(:active_tree => :action_tree)
+
+      controller.send(:replace_right_cell, 'root', [:action], presenter)
+      presenter[:set_visible_elements][:toolbar].should be_true
+    end
   end
 
   describe 'x_button' do
