@@ -439,7 +439,9 @@ module ManageIQ::Providers::Kubernetes
         :condition => component_condition.type,
         :status    => component_condition.status,
         :message   => component_condition.message,
-        :error     => component_condition.error
+        # workaround for handling Kubernetes issue: "nil" string is returned in component status error
+        # https://github.com/kubernetes/kubernetes/issues/16721
+        :error     => (component_condition.error unless component_condition.error == "nil")
       )
 
       new_result
