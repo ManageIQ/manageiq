@@ -10,6 +10,8 @@ describe MiqServer do
     File.open(GUID_FILE, 'w') { |f| f.write(number) } if File.exist?(GUID_FILE)
   end
 
+  include_examples ".seed called multiple times"
+
   context "with no guid file" do
     before(:each) do
       MiqServer.my_guid_cache = nil
