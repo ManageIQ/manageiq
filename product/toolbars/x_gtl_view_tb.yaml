@@ -28,19 +28,19 @@
     :items:
     - :button: download_text
       :image: txt
-#      :text: "Text Download"
+      :text: " Download as Text"
       :title: "Download these items in text format"
       :url: '/download_data'
       :url_parms: '?download_type=text'
     - :button: download_csv
       :image: csv
-#      :text: "CSV Download"
+      :text: " Download as CSV"
       :title: "Download these items in CSV format"
       :url: '/download_data'
       :url_parms: '?download_type=csv'
     - :button: download_pdf
       :image: pdf
-#      :text: "PDF Download"
+      :text: " Download as PDF"
       :title: "Download these items in PDF format"
       :url: '/download_data'
       :url_parms: '?download_type=pdf'
