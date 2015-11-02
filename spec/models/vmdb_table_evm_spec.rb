@@ -45,6 +45,42 @@ describe VmdbTableEvm do
     end
   end
 
+  context "#capture_metrics" do
+    let(:table) { FactoryGirl.create(:vmdb_table_evm, :name => "accounts") }
+
+    it "creates a vmdb_metrics record" do
+      # The first capture just gets the raw data
+      table.capture_metrics
+      expect(table.vmdb_metrics).to be_empty
+      expect(table.prior_raw_metrics).to_not be_nil
+
+      # The next capture starts creating the metrics rows
+      table.capture_metrics
+      expect(table.vmdb_metrics.count).to eq(1)
+
+      metric = table.vmdb_metrics.first
+
+      # Verify the column contents
+      columns = %w(
+        size rows pages percent_bloat wasted_bytes otta table_scans
+        sequential_rows_read index_scans index_rows_fetched rows_inserted
+        rows_updated rows_deleted rows_hot_updated rows_live rows_dead timestamp
+      )
+      columns.each do |column|
+        expect(metric.send(column)).to_not be_nil
+      end
+    end
+
+    it "captures index metrics" do
+      index = FactoryGirl.create(:vmdb_index, :name => "accounts_pkey")
+      table.vmdb_database = VmdbDatabase.seed_self
+      table.vmdb_indexes << index
+
+      expect(index).to receive(:capture_metrics)
+      table.capture_metrics
+    end
+  end
+
   context "#rollup_metrics" do
     before :each do
       db = VmdbDatabase.seed_self

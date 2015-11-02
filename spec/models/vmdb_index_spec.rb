@@ -2,47 +2,33 @@ require "spec_helper"
 
 describe VmdbIndex do
   context "#capture_metrics" do
-    before(:each) do
-      MiqDatabase.seed
-      VmdbDatabase.seed
-      MiqRegion.seed
-      table = VmdbTable.where(:name => 'miq_regions').first
-      @index = table.vmdb_indexes.first
-    end
+    let(:index) { FactoryGirl.create(:vmdb_index, :name => "accounts_pkey") }
 
-    it "populates vmdb_metrics columns" do
-      @index.capture_metrics
-      metrics = @index.vmdb_metrics
-      metrics.length.should == 0
+    it "creates a vmdb_metrics record" do
+      # The first capture just gets the raw data
+      index.capture_metrics
+      expect(index.vmdb_metrics).to be_empty
+      expect(index.prior_raw_metrics).to_not be_nil
 
-      @index.capture_metrics
-      metrics = @index.vmdb_metrics
-      metrics.length.should_not == 0
+      # The next capture starts creating the metrics rows
+      index.capture_metrics
+      expect(index.vmdb_metrics.count).to eq(1)
 
-      metric = metrics.first
+      metric = index.vmdb_metrics.first
+
+      # Verify the column contents
       columns = %w( rows pages otta percent_bloat wasted_bytes timestamp )
-
       columns.each do |column|
-        metric.send(column).should_not be_nil
+        expect(metric.send(column)).to_not be_nil
       end
-    end
 
-    it "verifies non-index related metrics columns are nil" do
-      @index.capture_metrics
-      metrics = @index.vmdb_metrics
-      metrics.length.should == 0
-
-      @index.capture_metrics
-      metrics = @index.vmdb_metrics
-      metrics.length.should_not == 0
-
-      metric = metrics.first
-      columns = %w( table_scans sequential_rows_read
-                    rows_inserted rows_updated rows_deleted rows_hot_updated rows_live rows_dead
-                )
-
+      # Verify the non-index columns are nil
+      columns = %w(
+        table_scans sequential_rows_read rows_inserted rows_updated rows_deleted
+        rows_hot_updated rows_live rows_dead
+      )
       columns.each do |column|
-        metric.send(column).should be_nil
+        expect(metric.send(column)).to be_nil
       end
     end
   end
