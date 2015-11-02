@@ -1,4 +1,4 @@
-module ConfigurationHelper
+module VMDBConfigurationHelper
   def stub_server_configuration(config, config_name = "vmdb")
     configuration = double(:config                         => config,
                            :merge_from_template_if_missing => nil,
