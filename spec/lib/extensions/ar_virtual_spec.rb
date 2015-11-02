@@ -434,6 +434,30 @@ describe VirtualFields do
       end
     end
 
+    describe "#virtual_has_many" do
+      it "use collect for virtual_ids column" do
+        c = Class.new(TestClassBase) do
+          virtual_has_many(:hosts)
+          def hosts
+            [OpenStruct.new(:id => 5), OpenStruct.new(:id => 6)]
+          end
+        end.new
+
+        expect(c.host_ids).to eq([5, 6])
+      end
+
+      it "use Relation#ids for virtual_ids column" do
+        c = Class.new(TestClassBase) do
+          virtual_has_many(:hosts)
+          def hosts
+            OpenStruct.new(:ids => [5, 6])
+          end
+        end.new
+
+        expect(c.host_ids).to eq([5, 6])
+      end
+    end
+
     %w(has_one has_many belongs_to).each do |macro|
       virtual_method = "virtual_#{macro}"
 
