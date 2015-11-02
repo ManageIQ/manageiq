@@ -2,6 +2,8 @@ require "spec_helper"
 
 describe VmdbDatabase do
   context "::Seeding" do
+    include_examples(".seed called multiple times")
+
     it ".seed" do
       MiqDatabase.seed
       vmdb_database = double('vmdb_database')

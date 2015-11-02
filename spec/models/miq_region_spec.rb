@@ -45,15 +45,10 @@ describe MiqRegion do
       MiqRegion.seed
     end
 
-    it "seeds 1 row in miq_regions" do
-      MiqRegion.count.should == 1
-      MiqRegion.first.region.should == @region_number
-    end
+    include_examples ".seed called multiple times"
 
-    it "skips seeding if one exists" do
-      MiqRegion.seed
-      MiqRegion.count.should == 1
-      MiqRegion.first.region.should == @region_number
+    it "should have the expected region number" do
+      expect(MiqRegion.first.region).to eq(@region_number)
     end
 
     it "replaces deleted current region" do

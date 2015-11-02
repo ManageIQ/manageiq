@@ -454,6 +454,8 @@ describe User do
   end
 
   context ".seed" do
+    include_examples ".seed called multiple times"
+
     it "empty database" do
       User.seed
       expect(User.where(:userid => "admin").first.current_group).to be_nil
