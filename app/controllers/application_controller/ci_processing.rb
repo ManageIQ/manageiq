@@ -755,7 +755,7 @@ module ApplicationController::CiProcessing
     if session[:type] == "hosts"
       @discover_type = Host.host_discovery_types
     else
-      @discover_type = ExtManagementSystem.ems_discovery_types
+      @discover_type = ExtManagementSystem.ems_infra_discovery_types
     end
     discover_type = []
     @discover_type_checked = []        # to keep track of checked items when start button is pressed

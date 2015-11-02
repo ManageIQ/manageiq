@@ -112,10 +112,15 @@ class ExtManagementSystem < ActiveRecord::Base
 
   alias_method :clusters, :ems_clusters # Used by web-services to return clusters as the property name
 
-  EMS_DISCOVERY_TYPES = {
+  EMS_INFRA_DISCOVERY_TYPES = {
     'vmware'    => 'virtualcenter',
     'microsoft' => 'scvmm',
     'redhat'    => 'rhevm',
+  }
+
+  EMS_CLOUD_DISCOVERY_TYPES = {
+    'azure'  => 'azure',
+    'amazon' => 'ec2',
   }
 
   def self.create_discovered_ems(ost)
@@ -274,8 +279,12 @@ class ExtManagementSystem < ActiveRecord::Base
     EmsRefresh.queue_refresh(self)
   end
 
-  def self.ems_discovery_types
-    EMS_DISCOVERY_TYPES.values
+  def self.ems_infra_discovery_types
+    EMS_INFRA_DISCOVERY_TYPES.values
+  end
+
+  def self.ems_cloud_discovery_types
+    EMS_CLOUD_DISCOVERY_TYPES.values
   end
 
   def disconnect_inv
