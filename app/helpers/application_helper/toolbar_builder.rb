@@ -59,7 +59,7 @@ class ApplicationHelper::ToolbarBuilder
             :icon    => bgi[:icon]
           }
           props["title"] = bgi[:title] unless bgi[:title].blank?
-          props["text"] = CGI.escapeHTML("#{bgi[:text]}") unless bgi[:text].blank?
+          props["text"]  = bgi[:text]  unless bgi[:text].blank?
           if bgi[:buttonSelect] == "history_choice" && x_tree_history.length < 2
             props["enabled"] = false  # Show disabled history button if no history
           else
@@ -114,18 +114,16 @@ class ApplicationHelper::ToolbarBuilder
               }
               if bsi[:button].starts_with?("history_")
                 if x_tree_history.length > 1
-                  props["text"] = CGI.escapeHTML(x_tree_history[bsi[:button].split("_").last.to_i][:text])
+                  props["text"] = x_tree_history[bsi[:button].split("_").last.to_i][:text]
                 end
               else
-                text = eval("\"#{bsi[:text]}\"") unless bsi[:text].blank? # Evaluate substitutions in text
-                props["text"] = CGI.escapeHTML("#{text}") unless bsi[:text].blank?
+                props["text"] = eval("\"#{bsi[:text]}\"") unless bsi[:text].blank?
               end
               props["enabled"] = "#{bsi[:enabled]}" unless bsi[:enabled].blank?
               dis_title = build_toolbar_disable_button(bsi[:button])
               props["enabled"] = "false" if dis_title
-              bsi[:title] = dis_title if dis_title
-              title = eval("\"#{bsi[:title]}\"") unless bsi[:title].blank?  # Evaluate substitutions in text
-              props["title"] = dis_title.kind_of?(String) ? CGI.escapeHTML(dis_title) : CGI.escapeHTML("#{title}")
+              title = eval("\"#{bsi[:title]}\"") unless bsi[:title].blank?
+              props["title"] = dis_title.kind_of?(String) ? dis_title : title
             end
             current_item[:items] ||= []
             current_item[:items] << props
@@ -159,7 +157,7 @@ class ApplicationHelper::ToolbarBuilder
           }
           props["enabled"] = "#{bgi[:enabled]}" unless bgi[:enabled].blank?
           props["enabled"] = "false" if dis_title = build_toolbar_disable_button(bgi[:button]) || button_hide
-          props["text"] = CGI.escapeHTML("#{bgi[:text]}") unless bgi[:text].blank?
+          props["text"]    = bgi[:text] unless bgi[:text].blank?
           # set pdf button to be hidden if graphical summary screen is set by default
           bgi[:hidden] = %w(download_view vm_download_pdf).include?(bgi[:button]) && button_hide
           title = eval("\"#{bgi[:title]}\"") unless bgi[:title].blank? # Evaluate substitutions in text
@@ -217,11 +215,11 @@ class ApplicationHelper::ToolbarBuilder
     options[:enabled]  = "true" unless options.key?(:enabled)
     button             = {}
     button_id          = input[:id]
-    button_name        = CGI.escapeHTML(input[:name].to_s)
+    button_name        = input[:name].to_s
     button[:button]    = "custom__custom_#{button_id}"
     button[:image]     = "custom-#{input[:image]}"
     button[:text]      = button_name if input[:text_display]
-    button[:title]     = CGI.escapeHTML(input[:description].to_s)
+    button[:title]     = input[:description].to_s
     button[:enabled]   = options[:enabled]
     button[:url]       = "button"
     button[:url_parms] = "?id=#{record.id}&button_id=#{button_id}&cls=#{record.class}&pressed=custom_button&desc=#{button_name}"
