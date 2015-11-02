@@ -83,11 +83,35 @@
         resultsCount: vm.serviceTemplatesList.length,
         appliedFilters: MarketplaceState.getFilters(),
         onFilterChange: filterChange
+      },
+      sortConfig: {
+        fields: [
+          {
+            id: 'name',
+            title:  'Name',
+            sortType: 'alpha'
+          },
+          {
+            id: 'catalog_name',
+            title:  'Catalog Name',
+            sortType: 'alpha'
+          }
+        ],
+        onSortChange: sortChange,
+        isAscending: MarketplaceState.getSort().isAscending,
+        currentField: MarketplaceState.getSort().currentField
       }
     };
 
     /* Apply the filtering to the data list */
     filterChange(MarketplaceState.getFilters());
+
+    function sortChange(sortId, isAscending) {
+      vm.serviceTemplatesList.sort(compareFn);
+
+      /* Keep track of the current sorting state */
+      MarketplaceState.setSort(sortId, vm.toolbarConfig.sortConfig.isAscending);
+    }
 
     function filterChange(filters) {
       vm.filtersText = '';
@@ -151,8 +175,28 @@
     }
 
     function compareFn(item1, item2) {
-      var compValue = item1.name.localeCompare(item2.name);
-      
+      var compValue = 0;
+      if (vm.toolbarConfig.sortConfig.currentField.id === 'name') {
+        compValue = item1.name.localeCompare(item2.name);
+      } else if (vm.toolbarConfig.sortConfig.currentField.id === 'catalog_name') {
+        if ( !angular.isDefined(item1.service_template_catalog) 
+           && angular.isDefined(item2.service_template_catalog) ) {
+          compValue = 1;
+        } else if ( angular.isDefined(item1.service_template_catalog) 
+                && !angular.isDefined(item2.service_template_catalog) ) {
+          compValue = -1;
+        } else if ( !angular.isDefined(item1.service_template_catalog) 
+                 && !angular.isDefined(item2.service_template_catalog) ) {
+          compValue = 0;
+        } else {
+          compValue = item1.service_template_catalog.name.localeCompare(item2.service_template_catalog.name);
+        }
+      } 
+
+      if (!vm.toolbarConfig.sortConfig.isAscending) {
+        compValue = compValue * -1;
+      }
+
       return compValue;
     }
   }

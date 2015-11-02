@@ -128,7 +128,18 @@
       if (vm.toolbarConfig.sortConfig.currentField.id === 'name') {
         compValue = item1.name.localeCompare(item2.name);
       } else if (vm.toolbarConfig.sortConfig.currentField.id === 'owner') {
-        compValue = item1.evm_owner.name.localeCompare(item2.evm_owner.name);
+        if ( !angular.isDefined(item1.evm_owner) 
+           && angular.isDefined(item2.evm_owner) ) {
+          compValue = 1;
+        } else if ( angular.isDefined(item1.evm_owner) 
+                && !angular.isDefined(item2.evm_owner) ) {
+          compValue = -1;
+        } else if ( !angular.isDefined(item1.evm_owner) 
+                 && !angular.isDefined(item2.evm_owner) ) {
+          compValue = 0;
+        } else {
+          compValue = item1.evm_owner.name.localeCompare(item2.evm_owner.name);
+        }
       } else if (vm.toolbarConfig.sortConfig.currentField.id === 'created') {
         compValue = new Date(item1.created_at) - new Date(item2.created_at);
       } else if (vm.toolbarConfig.sortConfig.currentField.id === 'retires') {
