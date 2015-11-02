@@ -1,6 +1,8 @@
 require "spec_helper"
 
 describe Tenant do
+  include_examples ".seed called multiple times"
+
   let(:config) { {} }
   let(:tenant) { described_class.new(:domain => 'x.com', :parent => default_tenant) }
 

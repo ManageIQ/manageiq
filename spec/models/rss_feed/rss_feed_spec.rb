@@ -70,6 +70,8 @@ EOXML
     end
   end
 
+  include_examples(".seed called multiple times", 2)
+
   context ".sync_from_yml_file" do
     before(:each) { @name = "newest_hosts" }
 

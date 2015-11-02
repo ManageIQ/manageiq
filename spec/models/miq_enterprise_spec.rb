@@ -1,31 +1,33 @@
 require "spec_helper"
 
 describe MiqEnterprise do
-  before(:each) { @ent = FactoryGirl.create(:miq_enterprise) }
+  include_examples ".seed called multiple times"
+
+  let(:enterprise) { FactoryGirl.create(:miq_enterprise) }
 
   context "with all existing records" do
     it "#miq_regions" do
       MiqRegion.seed
 
-      expect(@ent.miq_regions.size).to eq(1)
+      expect(enterprise.miq_regions.size).to eq(1)
     end
 
     it "#ext_management_systems" do
       ems = [FactoryGirl.create(:ems_vmware), FactoryGirl.create(:ems_vmware)]
 
-      expect(@ent.ext_management_systems).to match_array(ems)
+      expect(enterprise.ext_management_systems).to match_array(ems)
     end
 
     it "#storages" do
       storage = FactoryGirl.create(:storage)
 
-      expect(@ent.storages).to eq([storage])
+      expect(enterprise.storages).to eq([storage])
     end
 
     it "#policy_events" do
       policy_events = [FactoryGirl.create(:policy_event), FactoryGirl.create(:policy_event)]
 
-      expect(@ent.policy_events).to match_array(policy_events)
+      expect(enterprise.policy_events).to match_array(policy_events)
     end
   end
 
@@ -41,7 +43,7 @@ describe MiqEnterprise do
       template_1 = FactoryGirl.create(:template_vmware, :ext_management_system => @ems)
       FactoryGirl.create(:template_vmware)
 
-      expect(@ent.vms_and_templates).to match_array([vm_1, template_1])
+      expect(enterprise.vms_and_templates).to match_array([vm_1, template_1])
     end
 
     it "#vms" do
@@ -50,7 +52,7 @@ describe MiqEnterprise do
 
       FactoryGirl.create(:vm_vmware)
 
-      expect(@ent.vms).to match_array(vm)
+      expect(enterprise.vms).to match_array(vm)
     end
 
     it "#miq_templates" do
@@ -58,7 +60,7 @@ describe MiqEnterprise do
 
       FactoryGirl.create(:template_redhat)
 
-      expect(@ent.miq_templates).to eq([template])
+      expect(enterprise.miq_templates).to eq([template])
     end
 
     it "#hosts" do
@@ -67,7 +69,7 @@ describe MiqEnterprise do
 
       FactoryGirl.create(:host_vmware)
 
-      expect(@ent.hosts).to match_array(hosts)
+      expect(enterprise.hosts).to match_array(hosts)
     end
   end
 end

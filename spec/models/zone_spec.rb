@@ -1,6 +1,8 @@
 require "spec_helper"
 
 describe Zone do
+  include_examples ".seed called multiple times"
+
   context "with two small envs" do
     before(:each) do
       @zone1 = FactoryGirl.create(:small_environment)
