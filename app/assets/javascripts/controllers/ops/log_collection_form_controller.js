@@ -8,14 +8,14 @@ ManageIQ.angularApplication.controller('logCollectionFormController', ['$http', 
       log_protocol: '',
       log_userid: '',
       log_password: '',
-      log_verify: '',
-      rh_dropbox_depot_name: '',
-      rh_dropbox_uri: ''
+      log_verify: ''
     };
     $scope.afterGet = true;
     $scope.modelCopy = angular.copy( $scope.logCollectionModel );
     $scope.logCollectionFormFieldsUrl = $attrs.logCollectionFormFieldsUrl;
+    $scope.logProtocolChangedUrl = $attrs.logProtocolChangedUrl;
     $scope.saveUrl = $attrs.saveUrl;
+    $scope.model = 'logCollectionModel';
 
     ManageIQ.angularApplication.$scope = $scope;
 
@@ -43,9 +43,6 @@ ManageIQ.angularApplication.controller('logCollectionFormController', ['$http', 
         $scope.logCollectionModel.log_password = data.log_password;
         $scope.logCollectionModel.log_verify = data.log_verify;
 
-        $scope.logCollectionModel.rh_dropbox_depot_name = data.rh_dropbox_depot_name;
-        $scope.logCollectionModel.rh_dropbox_uri = data.rh_dropbox_uri;
-
         $scope.afterGet = true;
         $scope.modelCopy = angular.copy( $scope.logCollectionModel );
 
@@ -57,6 +54,20 @@ ManageIQ.angularApplication.controller('logCollectionFormController', ['$http', 
       $scope.form = $scope.angularForm;
       $scope.miqDBBackupService = miqDBBackupService;
     });
+  };
+
+  $scope.logProtocolChanged = function() {
+    if(miqDBBackupService.knownProtocolsList.indexOf($scope.logCollectionModel.log_protocol) == -1) {
+      url = $scope.logProtocolChangedUrl;
+      miqService.sparkleOn();
+      $http.get(url + serverId + '?log_protocol=' + $scope.logCollectionModel.log_protocol).success(function (data) {
+        $scope.logCollectionModel.depot_name = data.depot_name;
+        $scope.logCollectionModel.uri = data.uri;
+        $scope.logCollectionModel.uri_prefix = data.uri_prefix;
+        miqService.sparkleOff();
+      });
+    }
+    miqDBBackupService.logProtocolChanged($scope.logCollectionModel);
   };
 
   $scope.isBasicInfoValid = function() {
@@ -73,8 +84,6 @@ ManageIQ.angularApplication.controller('logCollectionFormController', ['$http', 
   $scope.saveClicked = function() {
     miqService.sparkleOn();
     var url = $scope.saveUrl + serverId + '?button=save';
-    delete $scope.logCollectionModel['rh_dropbox_depot_name'];
-    delete $scope.logCollectionModel['rh_dropbox_uri'];
     moreUrlParams = $.param(miqService.serializeModel($scope.logCollectionModel));
     if(moreUrlParams)
       url += '&' + decodeURIComponent(moreUrlParams);

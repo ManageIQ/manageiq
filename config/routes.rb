@@ -1268,6 +1268,7 @@ Vmdb::Application.routes.draw do
         fetch_log
         fetch_production_log
         log_collection_form_fields
+        log_protocol_changed
         schedule_form_fields
         show_product_update
         tenant_quotas_form_fields

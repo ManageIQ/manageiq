@@ -357,9 +357,6 @@ module OpsController::Diagnostics
     else
       log_depot_json = build_empty_log_depot_json
     end
-    rh_dropbox_json = build_rh_dropbox_json
-    log_depot_json.merge!(rh_dropbox_json)
-
     render :json => log_depot_json
   end
 
@@ -391,12 +388,14 @@ module OpsController::Diagnostics
     log_depot_json
   end
 
-  def build_rh_dropbox_json
-    rh_dropbox = FileDepotFtpAnonymousRedhatDropbox.new
-    rh_dropbox_json = {:rh_dropbox_depot_name => rh_dropbox.name,
-                       :rh_dropbox_uri        => rh_dropbox.uri.split('://')[1]
-    }
-    rh_dropbox_json
+  def log_protocol_changed
+    depot = FileDepot.depot_description_to_class(params[:log_protocol]).new
+
+    log_depot_json = {:depot_name => depot.name,
+                      :uri_prefix => depot.uri ? depot.uri.split('://')[0] : nil,
+                      :uri        => depot.uri ? depot.uri.split('://')[1] : nil
+                     }
+    render :json => log_depot_json
   end
 
   def db_gc_collection
