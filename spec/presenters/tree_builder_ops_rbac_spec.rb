@@ -1,37 +1,40 @@
 require "spec_helper"
 
 describe TreeBuilderOpsRbac do
-  context "initialize" do
-    before do
-      [MiqRegion, MiqProductFeature, MiqUserRole].each(&:seed)
+  describe ".new" do
+    before { MiqRegion.seed }
+
+    def assert_tree_nodes(expected)
+      tree_json  = TreeBuilderOpsRbac.new("rbac_tree", "rbac", {}).tree_nodes
+      tree_nodes = JSON.parse(tree_json).first['children'].collect { |h| h['title'] }
+      expect(tree_nodes).to match_array expected
     end
 
-    it "Super Admin role should see all nodes in Access Control tree" do
-      create_user_with_role('EvmRole-super_administrator')
-      tree = TreeBuilderOpsRbac.new("rbac_tree", "rbac", {})
-      tree_nodes = JSON.parse(tree.tree_nodes).first['children'].collect { |h| h['title'] }
-      tree_nodes.should match_array %w(Groups Users Roles Tenants)
+    it "with user with rbac_group role" do
+      login_as FactoryGirl.create(:user, :features => 'rbac_group_view')
+      assert_tree_nodes(["Groups"])
     end
 
-    it "Tenant Admin role should only all nodes in Access Control tree" do
-      create_user_with_role('EvmRole-tenant_administrator')
-      tree = TreeBuilderOpsRbac.new("rbac_tree", "rbac", {})
-      tree_nodes = JSON.parse(tree.tree_nodes).first['children'].collect { |h| h['title'] }
-      tree_nodes.should match_array %w(Groups Users Roles Tenants)
+    it "with user with rbac_role_view role" do
+      login_as FactoryGirl.create(:user, :features => 'rbac_role_view')
+      assert_tree_nodes(["Roles"])
     end
 
-    it "Tenant Quota Admin role should only see Tenants nodes in Access Control tree" do
-      create_user_with_role('EvmRole-tenant_quota_administrator')
-      tree = TreeBuilderOpsRbac.new("rbac_tree", "rbac", {})
-      tree_nodes = JSON.parse(tree.tree_nodes).first['children'].collect { |h| h['title'] }
-      tree_nodes.should match_array %w(Tenants)
-      tree_nodes.should_not match_array %w(Groups Users Roles)
+    it "with user with rbac_tenant role" do
+      login_as FactoryGirl.create(:user, :features => 'rbac_tenant_view')
+      assert_tree_nodes(["Tenants"])
+    end
+
+    it "with user with rbac_user role" do
+      login_as FactoryGirl.create(:user, :features => 'rbac_user_view')
+      assert_tree_nodes(["Users"])
+    end
+
+    it "with user with multiple rbac roles" do
+      login_as FactoryGirl.create(:user,
+        :features => %w(rbac_group_view rbac_user_view rbac_role_view rbac_tenant_view)
+      )
+      assert_tree_nodes(%w(Groups Users Roles Tenants))
     end
   end
-end
-
-def create_user_with_role(role_name)
-  role = MiqUserRole.find_by_name(role_name)
-  group = FactoryGirl.create(:miq_group, :miq_user_role => role)
-  login_as FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
 end
