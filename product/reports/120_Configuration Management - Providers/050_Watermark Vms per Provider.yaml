@@ -36,7 +36,7 @@ db_options:
   :interval: daily
   :calc_avgs_by: time_interval
   :end_offset: 0
-  :start_offset: 172800
+  :start_offset: 7776000
 generate_cols:
 generate_rows:
 col_formats:
