@@ -14,7 +14,11 @@ FactoryGirl.define do
     after(:build) do |user, evaluator|
       if evaluator.features.present?
         user.miq_product_features = Array.wrap(evaluator.features).map do |f|
-          f.kind_of?(MiqProductFeature) ? f : FactoryGirl.create(:miq_product_feature, :identifier => f)
+          if f.kind_of?(MiqProductFeature) # TODO: remove class reference
+            f
+          else
+            MiqProductFeature.find_by_identifier(f) || FactoryGirl.create(:miq_product_feature, :identifier => f)
+          end
         end
       end
     end

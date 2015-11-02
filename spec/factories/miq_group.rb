@@ -12,8 +12,11 @@ FactoryGirl.define do
     description { |g| g.role ? "EvmGroup-#{g.role}" : generate(:miq_group_description) }
 
     after :build do |g, e|
-      if e.features.present? || e.role
-        g.miq_user_role = FactoryGirl.create(:miq_user_role, :features => e.features, :role => e.role)
+      if e.role
+        g.miq_user_role = MiqUserRole.find_by_name("EvmRole-#{e.role}") ||
+                          FactoryGirl.create(:miq_user_role, :features => e.features, :role => e.role)
+      elsif e.features.present?
+        g.miq_user_role = FactoryGirl.create(:miq_user_role, :features => e.features)
       end
     end
 
