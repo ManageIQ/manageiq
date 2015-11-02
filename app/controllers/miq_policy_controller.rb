@@ -708,7 +708,7 @@ class MiqPolicyController < ApplicationController
     presenter[:reload_toolbars][:history] = h_tb
     presenter[:reload_toolbars][:center]  = c_tb
 
-    if (@edit && @edit[:new]) || @assign
+    if ((@edit && @edit[:new]) || @assign) && params[:action] != "x_search_by_name"
       locals = {
         :action_url => @sb[:action],
         :record_id  => @edit ? @edit[:rec_id] : @assign[:rec_id],
