@@ -75,6 +75,26 @@ describe OpsController do
     end
   end
 
+  context "#log_collection_form_fields" do
+    it "renders log_collection_form_fields" do
+      set_user_privileges
+      FactoryGirl.create(:vmdb_database)
+      EvmSpecHelper.create_guid_miq_server_zone
+      MiqRegion.seed
+
+      _guid, @miq_server, @zone = EvmSpecHelper.remote_guid_miq_server_zone
+      file_depot = FileDepotNfs.create(:name => "abc", :uri => "nfs://abc")
+      @miq_server.update_attributes(:log_file_depot_id => file_depot.id)
+
+      session[:sandboxes] = {"ops" => {:active_tree        => :diagnostics_tree,
+                                       :selected_typ       => "miq_server",
+                                       :selected_server_id => @miq_server.id}}
+      post :tree_select, :id => 'root', :format => :js
+      get :log_collection_form_fields, :id => @miq_server.id
+      expect(response.status).to eq(200)
+    end
+  end
+
   context "::Diagnostics" do
     let(:user) { FactoryGirl.create(:user) }
     before do
