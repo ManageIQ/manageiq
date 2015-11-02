@@ -1,8 +1,8 @@
 require_relative '../bundler_setup'
 
-require 'coveralls'
-Coveralls.wear_merged! do
-  add_filter("/spec/")
+if ENV["TRAVIS"]
+  require 'coveralls'
+  Coveralls.wear_merged! { add_filter("/spec/") }
 end
 
 require 'rspec/autorun'
@@ -24,7 +24,7 @@ RSpec.configure do |config|
     Module.clear_all_cache_with_timeout if Module.respond_to?(:clear_all_cache_with_timeout)
   end
 
-  if ENV["CI"]
+  if ENV["TRAVIS"]
     config.after(:suite) do
       require "spec/coverage_helper.rb"
     end
