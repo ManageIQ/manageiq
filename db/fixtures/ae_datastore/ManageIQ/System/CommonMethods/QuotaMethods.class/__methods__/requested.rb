@@ -8,9 +8,13 @@ def request_info
   $evm.log(:info, "Request: #{@miq_request.description} id: #{@miq_request.id} ")
 end
 
+def cloud?(prov_type)
+  %w(amazon openstack).include?(prov_type)
+end
+
 def calculate_requested(options_hash = {})
   {:memory  => get_total_requested(options_hash, :vm_memory),
-   :cpu     => get_total_requested(options_hash, :cores_per_socket),
+   :cpu     => get_total_requested(options_hash, :number_of_cpus),
    :storage => get_total_requested(options_hash, :storage),
    :vms     => get_total_requested(options_hash, :number_of_vms)}
 end
@@ -27,68 +31,107 @@ def request_totals(template_totals, dialog_totals)
 end
 
 def collect_template_totals(prov_option)
-  @service ? collect_totals(service_prov_option_value(prov_option)) : collect_totals(vm_prov_option_value(prov_option))
+  @service ? collect_totals(service_prov_option(prov_option)) : collect_totals(vm_prov_option_value(prov_option))
 end
 
 def get_option_value(request, option)
   request.get_option(option).to_i
 end
 
-def service_prov_option_value(prov_option, options_array = [])
+def service_prov_option(prov_option, options_array = [])
   @service_template.service_resources.each do |child_service_resource|
     if @service_template.service_type == 'composite'
       composite_service_options_value(child_service_resource, prov_option, options_array)
     else
       next if @service_template.prov_type.starts_with?("generic")
-      options_value(prov_option, child_service_resource.resource, options_array)
+      service_prov_option_value(prov_option, child_service_resource.resource, options_array)
     end
   end
   options_array
 end
 
-def vm_prov_option_value(prov_option, options_array = [])
-  number_of_vms = get_option_value(@miq_request, :number_of_vms)
+def service_prov_option_value(prov_option, resource, options_array = [])
+  args_hash = {:prov_option   => prov_option,
+               :options_array => options_array,
+               :resource      => resource,
+               :flavor        => flavor_obj(resource.get_option(:instance_type)),
+               :number_of_vms => get_option_value(resource, :number_of_vms),
+               :cloud         => cloud?(resource.get_option(:st_prov_type))}
+
   case prov_option
   when :vm_memory
-    memory_in_request = number_of_vms * get_option_value(@miq_request, :vm_memory)
-    set_requested_value(prov_option, memory_in_request,
-                        @miq_request.get_option(:instance_type), options_array)
+    args_hash[:prov_value] = args_hash[:number_of_vms] * get_option_value(resource, :vm_memory)
+    request_hash_value(args_hash)
   when :number_of_cpus
-    requested_number_of_cpus(number_of_vms, options_array)
+    requested_number_of_cpus(args_hash)
   when :storage
-    requested_storage(prov_option, number_of_vms, options_array)
+    requested_storage(args_hash)
   else
-    options_value(prov_option, @miq_request, options_array)
+    options_value(args_hash)
   end
   options_array
 end
 
-def requested_number_of_cpus(number_of_vms, options_array)
-  cpu_in_request = get_option_value(@miq_request, :number_of_cpus)
-  if cpu_in_request.zero?
-    cpu_in_request = get_option_value(@miq_request, :number_of_sockets) *
-                     get_option_value(@miq_request, :cores_per_socket)
+def vm_provision_cloud?
+  @miq_request.source.try(:cloud) || false
+end
+
+def flavor_obj(id)
+  vmdb_object('flavor', id)
+end
+
+def vm_prov_option_value(prov_option, options_array = [])
+  args_hash = {:prov_option   => prov_option,
+               :options_array => options_array,
+               :resource      => @miq_request,
+               :flavor        => flavor_obj(@miq_request.get_option(:instance_type)),
+               :number_of_vms => get_option_value(@miq_request, :number_of_vms),
+               :cloud         => vm_provision_cloud?}
+
+  case prov_option
+  when :vm_memory
+    args_hash[:prov_value] = args_hash[:number_of_vms] * get_option_value(@miq_request, :vm_memory)
+    request_hash_value(args_hash)
+  when :number_of_cpus
+    requested_number_of_cpus(args_hash)
+  when :storage
+    requested_storage(args_hash)
+  else
+    options_value(args_hash)
   end
-  total_cpu = number_of_vms * cpu_in_request
-  set_requested_value(prov_option, total_cpu,
-                      @miq_request.get_option(:instance_type), options_array)
+  options_array
+end
+
+def requested_number_of_cpus(args_hash)
+  cpu_in_request = get_option_value(args_hash[:resource], :number_of_sockets) *
+                   get_option_value(args_hash[:resource], :cores_per_socket)
+  cpu_in_request = get_option_value(args_hash[:resource], args_hash[:number_of_cpus]) if cpu_in_request.zero?
+  args_hash[:prov_value] = args_hash[:number_of_vms] * cpu_in_request
+  request_hash_value(args_hash)
 end
 
 def bytes_to_megabytes(bytes)
   bytes / 1024**2
 end
 
-def requested_storage(prov_option, number_of_vms, options_array)
-  vm_size = bytes_to_megabytes(@miq_request.vm_template.provisioned_storage)
-  total_storage = number_of_vms * vm_size
-  set_requested_value(prov_option, total_storage,
-                      @miq_request.get_option(:instance_type), options_array)
+def vmdb_object(model, id)
+  $evm.vmdb(model, id.to_i) if model && id
 end
 
-def options_value(prov_option, resource, options_array)
-  return unless resource.respond_to?('get_option')
-  set_requested_value(prov_option, resource.get_option(prov_option),
-                      resource.get_option(:instance_type), options_array)
+def requested_storage(args_hash)
+  vm_size = bytes_to_megabytes(args_hash[:resource].vm_template.provisioned_storage)
+  args_hash[:prov_value] = args_hash[:number_of_vms] * vm_size
+  request_hash_value(args_hash)
+end
+
+def request_object?(object)
+  object.respond_to?('get_option')
+end
+
+def options_value(args_hash)
+  return unless request_object?(args_hash[:resource])
+  args_hash[:prov_value] = args_hash[:resource].get_option(args_hash[:prov_option])
+  request_hash_value(args_hash)
 end
 
 def collect_totals(array)
@@ -101,32 +144,51 @@ def collect_dialog_totals(prov_option, options_hash)
 end
 
 def dialog_values(prov_option, options_hash, dialog_array)
+  args_hash = {:prov_option   => prov_option,
+               :options_array => dialog_array,
+               :cloud         => false}
+
   options_hash.each do |_sequence_id, options|
-    set_requested_value(prov_option, options[prov_option], options[:instance_type], dialog_array)
+    args_hash[:prov_value] = options[prov_option]
+    args_hash[:flavor] = flavor_obj(options[:instance_type])
+    request_hash_value(args_hash)
   end
 end
 
-def set_requested_value(prov_option, option_value, find_id, dialog_array)
-  $evm.log(:info, "set requested value: prov_option: #{prov_option} value: #{option_value}")
-  return if cloud_value(prov_option, option_value, find_id, dialog_array)
+def request_hash_value(args_hash)
+  return if cloud_value(args_hash)
 
-  $evm.log(:info, "set requested value default_option: prov_option: #{prov_option} value: #{option_value}")
-  default_option(option_value, dialog_array)
+  default_option(args_hash[:prov_value], args_hash[:options_array])
 end
 
-def cloud_value(prov_option, option_value, find_id, dialog_array)
-  return nil unless @cloud
+def cloud_storage(flavor, dialog_array)
+  return unless flavor
+  storage = flavor.root_disk_size.to_i + flavor.ephemeral_disk_size.to_i + flavor.swap_disk_size.to_i
+  default_option(storage, dialog_array)
+end
 
-  case prov_option
-  when :cores_per_socket
-    $evm.log(:info, "set requested value cores_per_socket: prov_option: #{prov_option} value: #{option_value}")
-    requested_cores_per_socket(find_id, dialog_array)
+def cloud_number_of_cpus(flavor, dialog_array)
+  return unless flavor
+  $evm.log(:info, "Retrieving cloud flavor #{flavor.name} cpus => #{flavor.cpus}")
+  default_option(flavor.cpus, dialog_array)
+end
+
+def cloud_vm_memory(flavor, dialog_array)
+  return unless flavor
+  $evm.log(:info, "Retrieving flavor #{flavor.name} memory => #{flavor.memory}")
+  default_option(flavor.memory, dialog_array)
+end
+
+def cloud_value(args_hash)
+  return false unless args_hash[:cloud]
+
+  case args_hash[:prov_option]
+  when :number_of_cpus
+    cloud_number_of_cpus(args_hash[:flavor], args_hash[:options_array])
   when :vm_memory
-    $evm.log(:info, "set requested value vm_memory: prov_option: #{prov_option} value: #{option_value}")
-    requested_vm_memory(find_id, dialog_array)
+    cloud_vm_memory(args_hash[:flavor], args_hash[:options_array])
   when :storage
-    $evm.log(:info, "set requested value storage: prov_option: #{prov_option} value: #{option_value}")
-    requested_storage(@miq_request.get_option(:src_vm_id), dialog_array)
+    cloud_storage(args_hash[:flavor], args_hash[:options_array])
   end
 end
 
@@ -139,14 +201,13 @@ def service_options
   options_hash = get_dialog_options_hash(@miq_request.options[:dialog])
   @service_template = $evm.vmdb(@miq_request.source_type, @miq_request.source_id)
   $evm.log(:info, "service_template id: #{@service_template.id} service_type: #{@service_template.service_type}")
-  $evm.log(:info, "services: #{@service_template.service_resources.count}")
   options_hash
 end
 
 def composite_service_options_value(child_service_resource, prov_option, options_array)
   return if child_service_resource.resource.prov_type == 'generic'
   child_service_resource.resource.service_resources.each do |grandchild_service_template_service_resource|
-    options_value(prov_option, grandchild_service_template_service_resource.resource, options_array)
+    service_prov_option_value(prov_option, grandchild_service_template_service_resource.resource, options_array)
   end
 end
 
