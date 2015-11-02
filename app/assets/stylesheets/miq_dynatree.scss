@@ -4,9 +4,9 @@
 
 ul.dynatree-container
 {
-	overflow: auto;
+	overflow: hidden !important;
 	font: normal 12px OpenSansRegular,Arial,Helvetica,sans-serif;
-	white-space: nowrap;
+	white-space: nowrap !important;
 	padding: 0px;
 	padding-left: 5px;
 	margin: 0; /* issue 201 */
@@ -32,7 +32,7 @@ ul.dynatree-container
 }
 
 #accordion .panel-body .dynatree-title {
-  white-space: normal !important;
+  white-space: nowrap !important;
 }
 
 /* end - overrides dynatree styling within patternfly accordion */
