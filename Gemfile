@@ -61,7 +61,7 @@ gem "spice-html5-rails"
 gem "thin",                           "~>1.6.0"  # Used by rails server through rack
 
 # Needed by the REST API
-gem "gettext_i18n_rails",             "~>1.3.0"
+gem "gettext_i18n_rails",             "~>1.3.1"
 gem "jbuilder",                       "~>2.3.1"
 gem "paperclip",                      "~>4.3.0"
 gem "rails-i18n",                                                     :git => "git://github.com/svenfuchs/rails-i18n.git", :branch => "master"
