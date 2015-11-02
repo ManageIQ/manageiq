@@ -71,6 +71,15 @@ module ContainerSummaryHelper
     textual_link(@record.container_images)
   end
 
+  def textual_guest_applications
+    textual_link(@record.guest_applications, :feature => "container_image_show",
+                                             :label   => "Packages",
+                                             :link    => url_for(:controller => controller.controller_name,
+                                                                 :action     => 'guest_applications',
+                                                                 :id         => @record,
+                                                                 :db         => controller.controller_name))
+  end
+
   def textual_container_image_registry
     object = @record.container_image_registry
 

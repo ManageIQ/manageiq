@@ -12,23 +12,13 @@ module ContainerImageHelper
       %i(ems container_image_registry container_projects container_groups containers container_nodes)
     end
 
+    def textual_group_configuration
+      %i(guest_applications)
+    end
+
     def textual_group_smart_management
       items = %w(tags)
       items.collect { |m| send("textual_#{m}") }.flatten.compact
-    end
-
-    def textual_group_packages
-      labels = [_("Name"), _("Version"), _("Release"), _("Arch")]
-      h = {:labels => labels}
-      h[:values] = @record.guest_applications.collect do |package|
-        [
-          package.name,
-          package.version,
-          package.release,
-          package.arch
-        ]
-      end
-      h
     end
 
     #
