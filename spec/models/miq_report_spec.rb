@@ -405,4 +405,45 @@ describe MiqReport do
       end
     end
   end
+
+  describe "#generate_table" do
+    before :each do
+      allow(MiqServer).to receive(:my_zone) { "Zone 1" }
+      FactoryGirl.create(:time_profile_utc)
+    end
+    let(:report) do
+      MiqReport.new(
+        :name     => "All Departments with Performance", :title => "All Departments with Performance for last week",
+      :db         => "VmPerformance",
+      :cols       => %w(resource_name max_cpu_usage_rate_average cpu_usage_rate_average),
+      :include    => {"vm" => {"columns" => ["v_annotation"]}, "host" => {"columns" => ["name"]}},
+      :col_order  => ["ems_cluster.name", "vm.v_annotation", "host.name"],
+      :headers    => ["Cluster", "VM Annotations - Notes", "Host Name"],
+      :order      => "Ascending",
+      :group      => "c",
+      :db_options => {:start_offset => 604_800, :end_offset => 0, :interval => interval},
+      :conditions => conditions)
+    end
+    context "daily reports" do
+      let(:interval) { "daily" }
+
+      context "with conditions where is joining with another table" do
+        let(:conditions) do
+          YAML.load '--- !ruby/object:MiqExpression
+                     exp:
+                       IS NOT EMPTY:
+                         field: VmPerformance.host-name
+                       context_type:'
+        end
+
+        it "should not raise an exception" do
+          expect do
+            report.generate_table(:userid        => "admin",
+                                  :mode          => "async",
+                                  :report_source => "Requested by user")
+          end.not_to raise_error
+        end
+      end
+    end
+  end
 end
