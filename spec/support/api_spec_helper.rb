@@ -95,7 +95,7 @@ module ApiSpecHelper
   end
 
   def init_api_spec_env
-    @miq_database = FactoryGirl.create(:miq_database)
+    MiqDatabase.seed
     Vmdb::Application.config.secret_token = MiqDatabase.first.session_secret_token
     @guid, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
