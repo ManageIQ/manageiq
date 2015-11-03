@@ -1,8 +1,10 @@
 require "spec_helper"
 describe ToolbarHelper do
   describe "#buttons_to_html" do
-    subject do
-      buttons_to_html([
+    subject { buttons_to_html(buttons) }
+
+    let(:buttons) do
+      [
         {
           "id"      => "history_choice",
           "type"    => "buttonSelect",
@@ -47,7 +49,7 @@ describe ToolbarHelper do
           :onwhen  => nil,
           :url     => "reload"
         }
-      ])
+      ]
     end
 
     it "renders normal toolbar buttons as <button>" do
@@ -66,34 +68,69 @@ describe ToolbarHelper do
       expect(subject).to have_selector('div.form-group')
     end
 
-    it "splits top buttons into groups on separator" do
-      expect(buttons_to_html([
-        {
-          "id"    => "view_grid",
-          "type"  => "buttonTwoState",
-          "img"   => "view_grid.png",
-          :icon   => "fa fa-th",
-          "title" => "Grid View",
-          :name   => "view_grid",
-        },
-        {
-          "type"  => "separator"
-        },
-        {
-          "id"    => "view_tile",
-          "type"  => "buttonTwoState",
-          "img"   => "view_tile.png",
-          :icon   => "fa fa-th-large",
-          "title" => "Tile View",
-          :name   => "view_tile",
-        }
-      ])).to have_selector('div.form-group', :count => 2)
+    context 'with separator' do
+      let(:buttons) do
+        [
+          {
+            "id"    => "view_grid",
+            "type"  => "buttonTwoState",
+            "img"   => "view_grid.png",
+            :icon   => "fa fa-th",
+            "title" => "Grid View",
+            :name   => "view_grid",
+          },
+          {
+            "type"  => "separator"
+          },
+          {
+            "id"    => "view_tile",
+            "type"  => "buttonTwoState",
+            "img"   => "view_tile.png",
+            :icon   => "fa fa-th-large",
+            "title" => "Tile View",
+            :name   => "view_tile",
+          }
+        ]
+      end
+      it "splits top buttons into groups on separator" do
+        expect(subject).to have_selector('div.form-group', :count => 2)
+      end
+    end
+
+    context 'with icon' do
+      let(:buttons) do
+        [
+          {
+            "id"    => "view_grid",
+            "type"  => "buttonTwoState",
+            "img"   => "view_grid.png",
+            :icon   => "fa fa-th",
+            "title" => "Grid View",
+            :name   => "view_grid",
+          },
+          {
+            "id"    => "view_tile",
+            "type"  => "buttonTwoState",
+            "img"   => "view_tile.png",
+            :icon   => "fa fa-th-large",
+            "title" => "Tile View",
+            :name   => "view_tile",
+          }
+        ]
+      end
+
+      it 'renders icons instead of images' do
+        expect(subject).to have_selector('i.fa', :count => 2)
+        expect(subject).not_to have_selector('img')
+      end
     end
   end
 
   describe "#view_mode_buttons" do
-    subject do
-      view_mode_buttons([
+    subject { view_mode_buttons(buttons) }
+
+    let(:buttons) do
+      [
         {
           "id"       => "view_grid",
           "type"     => "buttonTwoState",
@@ -124,7 +161,7 @@ describe ToolbarHelper do
           :url       => "explorer",
           :url_parms => "?type=tile"
         }
-      ])
+      ]
     end
 
     it 'renders ul with items, links and icons' do
