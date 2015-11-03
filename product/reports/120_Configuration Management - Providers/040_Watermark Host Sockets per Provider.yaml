@@ -9,6 +9,7 @@ rpt_group: Custom
 priority:
 col_order:
 - v_month
+- region_description
 - resource_name
 - derived_host_sockets__max
 timeline:
@@ -20,6 +21,7 @@ include: {}
 db: ExtManagementSystemPerformance
 cols:
 - v_month
+- region_description
 - resource_name
 - derived_host_sockets
 template_type: report
@@ -29,6 +31,7 @@ sortby:
 - resource_name
 headers:
 - Activity Sample - Month (YYYY/MM)
+- Region
 - Asset Name
 - Host Sockets (Max)
 where_clause:
@@ -36,10 +39,11 @@ db_options:
   :interval: daily
   :calc_avgs_by: time_interval
   :end_offset: 0
-  :start_offset: 172800
+  :start_offset: 7776000
 generate_cols:
 generate_rows:
 col_formats:
+-
 -
 -
 -
