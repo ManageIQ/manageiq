@@ -5,9 +5,16 @@ ManageIQ.angularApplication.directive('autoFocus', ['$timeout', function($timeou
       scope['form_focus_' + ctrl.$name] = elem[0];
 
       scope.$watch(scope['afterGet'], function() {
-        $timeout(function(){
-          angular.element(scope['form_focus_' + ctrl.$name]).focus();
-        }, 0);
+        angular.element('#' + attr.startFormDiv).css('display', 'block');
+      });
+
+      scope.$watch(function() { return elem.is(':visible') }, function() {
+        angular.element(scope['form_focus_' + ctrl.$name]).focus();
+        if (!angular.element(scope['form_focus_' + ctrl.$name]).is(":focus")) {
+          $timeout(function(){
+            angular.element(scope['form_focus_' + ctrl.$name]).focus();
+          }, 1000);
+        };
       });
     }
   }
