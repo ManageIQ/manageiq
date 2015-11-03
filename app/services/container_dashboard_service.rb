@@ -8,8 +8,9 @@ class ContainerDashboardService
   def all_data
     {
       :providers_link => get_url_to_entity(:ems_container),
-      :status         => status,
-      :providers      => providers
+      :status    => status,
+      :providers => providers,
+      :heatmaps  => heatmaps
     }
   end
 
@@ -133,5 +134,30 @@ class ContainerDashboardService
       @controller.url_for(:action     => 'show_list',
                           :controller => entity)
     end
+  end
+
+  def heatmaps
+    # Get latest hourly rollup for each node.
+    node_ids = @ems.container_nodes if @ems
+    metrics = MetricRollup.latest_rollups(ContainerNode.name, node_ids)
+
+    {
+      :nodeCpuUsage => metrics.collect { |m|
+        avg_cpu = m.cpu_usage_rate_average.round(2)
+        {
+          :id      => m.resource_id,
+          :tooltip => "#{m.resource.name} - #{avg_cpu}%",
+          :value   => avg_cpu / 100.0 # 1% should be 0.01
+        }
+      },
+      :nodeMemoryUsage => metrics.collect { |m|
+        avg_mem = m.mem_usage_absolute_average.round(2)
+        {
+          :id      => m.resource_id,
+          :tooltip => "#{m.resource.name} - #{avg_mem}%",
+          :value   => avg_mem / 100.0 # 1% should be 0.01
+        }
+      }
+    }
   end
 end

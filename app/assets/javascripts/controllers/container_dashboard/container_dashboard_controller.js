@@ -1,9 +1,9 @@
-angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.charts'])
+angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.charts', 'miq.card', 'miq.util'])
     .config(['$httpProvider', function($httpProvider) {
         $httpProvider.defaults.headers.common['X-CSRF-Token'] = jQuery('meta[name=csrf-token]').attr('content');
     }])
-    .controller('containerDashboardController', ['$scope','ContainerDashboardUtils', '$http', '$interval', "$location",
-        function($scope, containerDashboardUtils, $http, $interval, $location) {
+    .controller('containerDashboardController', ['$scope', 'miq.util', 'ChartsDataMixin', '$http', '$interval', "$location",
+        function($scope, containerDashboardUtils, chartsDataMixin, $http, $interval, $location) {
             document.getElementById("center_div").className += " miq-body";
 
             $scope.objectStatus = {
@@ -17,6 +17,22 @@ angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.
                 images:     containerDashboardUtils.createImagesStatus(),
                 routes:     containerDashboardUtils.createRoutesStatus()
             };
+
+            $scope.nodeCpuUsage = {
+                title: 'CPU',
+                id: 'nodeCpuUsageMap',
+                loadingDone: false
+            };
+
+            $scope.nodeMemoryUsage = {
+                title: 'Memory',
+                id: 'nodeMemoryUsageMap',
+                loadingDone: false
+            };
+
+            $scope.heatmaps = [$scope.nodeCpuUsage, $scope.nodeMemoryUsage];
+            $scope.nodeHeatMapUsageLegendLabels = chartsDataMixin.nodeHeatMapUsageLegendLabels;
+            $scope.dashboardHeatmapChartHeight = chartsDataMixin.dashboardHeatmapChartHeight;
 
             $scope.refresh = function() {
                 var id;
@@ -32,6 +48,8 @@ angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.
                     'use strict';
 
                     var data = response.data;
+
+                    // Obj-status (entity count row)
                     var providers = data.providers;
                     if (providers)
                     {
@@ -58,10 +76,16 @@ angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.
                     containerDashboardUtils.updateStatus($scope.objectStatus.services,   data.status.services);
                     containerDashboardUtils.updateStatus($scope.objectStatus.images,     data.status.images);
                     containerDashboardUtils.updateStatus($scope.objectStatus.routes,     data.status.routes);
+
+                    // Heatmaps
+                    $scope.nodeCpuUsage.data = data.heatmaps.nodeCpuUsage.sort(containerDashboardUtils.heatmapSort);
+                    $scope.nodeCpuUsage.loadingDone = true;
+                    $scope.nodeMemoryUsage.data = data.heatmaps.nodeMemoryUsage.sort(containerDashboardUtils.heatmapSort);
+                    $scope.nodeMemoryUsage.loadingDone = true;
                 });
         };
         $scope.refresh();
-        var promise = $interval( $scope.refresh, 1000*60*3);
+        var promise = $interval($scope.refresh, 1000*60*3);
 
         $scope.$on('$destroy', function() {
             $interval.cancel(promise);
