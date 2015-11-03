@@ -52,8 +52,8 @@
         fields: [
           {
             id: 'name',
-            title: 'Service Name',
-            placeholder: 'Filter by Service Name',
+            title: 'Name',
+            placeholder: 'Filter by Name',
             filterType: 'text'
           },
           {

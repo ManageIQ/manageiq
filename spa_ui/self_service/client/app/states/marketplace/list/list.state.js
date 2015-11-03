@@ -62,13 +62,13 @@
         fields: [
           {
             id: 'template_name',
-            title: 'Service Name',
+            title: 'Name',
             placeholder: 'Filter by Name',
             filterType: 'text'
           },
           {
             id: 'template_description',
-            title: 'Service Description',
+            title: 'Description',
             placeholder: 'Filter by Description',
             filterType: 'text'
           },
