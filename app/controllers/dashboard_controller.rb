@@ -71,6 +71,7 @@ class DashboardController < ApplicationController
 
   # A main tab was pressed
   def maintab
+    @breadcrumbs.clear
     tab = VALID_TABS[params[:tab]]
 
     unless tab # no tab name or invalid tab name was passed in
@@ -82,7 +83,13 @@ class DashboardController < ApplicationController
     when :vi, :svc, :clo, :inf, :cnt, :con, :aut, :opt, :set
 
       if session[:tab_url].key?(tab) # we remember url for this tab
-        redirect_to(session[:tab_url][tab].merge(:only_path => true))
+        if restful_routed_action?(session[:tab_url][tab][:controller], session[:tab_url][tab][:action])
+          session[:tab_url][tab].delete(:action)
+          redirect_to(polymorphic_path(session[:tab_url][tab][:controller],
+                                       session[:tab_url][tab]))
+        else
+          redirect_to(session[:tab_url][tab].merge(:only_path => true))
+        end
         return
       end
 

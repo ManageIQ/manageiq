@@ -91,6 +91,12 @@ module ApplicationHelper
     respond_to?("#{model.model_name.route_key}_path")
   end
 
+  def restful_routed_action?(controller = controller_name, action = action_name)
+    restful_routed?(("#{controller.camelize}Controller").constantize.model) && !%w(explorer show_list).include?(action)
+  rescue
+    false
+  end
+
   def url_for_record(record, action = "show") # Default action is show
     @id = to_cid(record.id)
     db =

@@ -251,6 +251,22 @@ describe DashboardController do
     end
   end
 
+  context "#maintab" do
+    before do
+      described_class.any_instance.stub(:set_user_time_zone)
+      controller.stub(:check_privileges).and_return(true)
+    end
+    it "redirects a restful link correctly" do
+      ems_cloud_amz = FactoryGirl.create(:ems_amazon)
+      breadcrumbs = [{:name => "Name", :url => "/controller/action"}]
+      session[:breadcrumbs] = breadcrumbs
+      session[:tab_url] = {:clo => {:controller => "ems_cloud", :action => "show", :id => ems_cloud_amz.id}}
+      post :maintab, :tab => "clo"
+      expect(response.header['Location']).to include(ems_cloud_path(ems_cloud_amz))
+      expect(controller.instance_variable_get(:@breadcrumbs)).to eq([])
+    end
+  end
+
   def skip_data_checks(url = '/')
     UserValidationService.any_instance.stub(:server_ready?).and_return(true)
     controller.stub(:start_url_for_user).and_return(url)
