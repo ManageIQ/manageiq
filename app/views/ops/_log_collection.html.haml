@@ -28,7 +28,7 @@
       :javascript
         miqInitSelectPicker();
 
-  = render :partial => "layouts/angular/edit_log_depot_settings_angular",
+  = render :partial => "layouts/angular-bootstrap/edit_log_depot_settings_angular_bootstrap",
                        :locals  => {:ng_show             => "miqDBBackupService.logProtocolSelected(logCollectionModel)",
                                     :ng_reqd_depot_name  => "miqDBBackupService.dbRequired(logCollectionModel, logCollectionModel.depot_name)",
                                     :ng_model_depot_name => "logCollectionModel.depot_name",
@@ -37,7 +37,7 @@
                                     :ng_model_uri_prefix => "logCollectionModel.uri_prefix",
                                     :ng_readonly         => "logCollectionModel.log_protocol == 'Red Hat Dropbox'",
                                     :uri_prefix_display  =>  "{{logCollectionModel.uri_prefix}}://"}
-  = render :partial => "layouts/angular/auth_credentials_angular",
+  = render :partial => "layouts/angular-bootstrap/auth_credentials_angular_bootstrap",
                        :locals  => {:ng_show           => "miqDBBackupService.credsProtocol(logCollectionModel)",
                                     :ng_model          => "logCollectionModel",
                                     :ng_reqd_userid    => "miqDBBackupService.credsRequired(logCollectionModel, logCollectionModel.log_userid)",

@@ -15,6 +15,7 @@ ManageIQ.angularApplication.controller('logCollectionFormController', ['$http', 
     $scope.logCollectionFormFieldsUrl = $attrs.logCollectionFormFieldsUrl;
     $scope.logProtocolChangedUrl = $attrs.logProtocolChangedUrl;
     $scope.saveUrl = $attrs.saveUrl;
+    $scope.validateClicked = miqService.validateWithAjax;
     $scope.model = 'logCollectionModel';
 
     ManageIQ.angularApplication.$scope = $scope;
@@ -40,8 +41,10 @@ ManageIQ.angularApplication.controller('logCollectionFormController', ['$http', 
         $scope.logCollectionModel.uri = data.uri;
         $scope.logCollectionModel.uri_prefix = data.uri_prefix;
         $scope.logCollectionModel.log_userid = data.log_userid;
-        $scope.logCollectionModel.log_password = data.log_password;
-        $scope.logCollectionModel.log_verify = data.log_verify;
+
+        if($scope.logCollectionModel.log_userid != '') {
+          $scope.logCollectionModel.log_password = $scope.logCollectionModel.log_verify = miqService.storedPasswordPlaceholder;
+        }
 
         $scope.afterGet = true;
         $scope.modelCopy = angular.copy( $scope.logCollectionModel );
@@ -57,7 +60,8 @@ ManageIQ.angularApplication.controller('logCollectionFormController', ['$http', 
   };
 
   $scope.logProtocolChanged = function() {
-    if(miqDBBackupService.knownProtocolsList.indexOf($scope.logCollectionModel.log_protocol) == -1) {
+    if(miqDBBackupService.knownProtocolsList.indexOf($scope.logCollectionModel.log_protocol) == -1 &&
+       $scope.logCollectionModel.log_protocol != '') {
       url = $scope.logProtocolChangedUrl;
       miqService.sparkleOn();
       $http.get(url + serverId + '?log_protocol=' + $scope.logCollectionModel.log_protocol).success(function (data) {
@@ -92,6 +96,7 @@ ManageIQ.angularApplication.controller('logCollectionFormController', ['$http', 
   };
 
   $scope.resetClicked = function() {
+    $scope.$broadcast('resetClicked');
     $scope.logCollectionModel = angular.copy( $scope.modelCopy );
     $scope.angularForm.$setPristine(true);
     miqService.miqFlash("warn", "All changes have been reset");
@@ -103,6 +108,13 @@ ManageIQ.angularApplication.controller('logCollectionFormController', ['$http', 
     miqService.miqAjaxButton(url, true);
     $scope.angularForm.$setPristine(true);
   };
+
+  $scope.canValidateBasicInfo = function () {
+    if ($scope.isBasicInfoValid())
+      return true;
+    else
+      return false;
+  }
 
   init();
 }]);

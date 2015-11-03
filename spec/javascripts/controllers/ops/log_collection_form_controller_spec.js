@@ -42,8 +42,6 @@ describe('logCollectionFormController', function() {
       uri:          'smb://smb_location',
       uri_prefix:   'smb',
       log_userid:   'admin',
-      log_password: 'smartvm',
-      log_verify:   'smartvm',
       log_protocol: 'Samba'
     };
 
@@ -69,11 +67,11 @@ describe('logCollectionFormController', function() {
     });
 
     it('sets the log_password to the value returned from the http request', function () {
-      expect($scope.logCollectionModel.log_password).toEqual('smartvm');
+      expect($scope.logCollectionModel.log_password).toEqual(miqService.storedPasswordPlaceholder);
     });
 
     it('sets the log_verify to the value returned from the http request', function () {
-      expect($scope.logCollectionModel.log_verify).toEqual('smartvm');
+      expect($scope.logCollectionModel.log_verify).toEqual(miqService.storedPasswordPlaceholder);
     });
 
     it('sets the log_protocol to the value returned from the http request', function () {
