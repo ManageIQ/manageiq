@@ -37,7 +37,7 @@ end
 loop do
   option = ARGV.shift
   case option
-  when '--only-environment'
+  when '--only-environment', '-o'
     argv      = ARGV.shift
     supported = allowed_enviroments
     raise ArgumentError, usage("supported --identity options are #{supported}") unless supported.include?(argv.to_sym)
