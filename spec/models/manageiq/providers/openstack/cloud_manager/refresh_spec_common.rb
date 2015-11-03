@@ -152,7 +152,7 @@ module Openstack
     end
 
     def availability_zones_count
-      2 # This is affected by conf files only, so needs to be hardcoded value
+      3 # This is affected by conf files only, so needs to be hardcoded value
     end
 
     def assert_table_counts
