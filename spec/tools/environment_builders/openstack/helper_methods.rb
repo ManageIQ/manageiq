@@ -21,13 +21,16 @@ module Openstack
     end
 
     def create_or_update_ems(name, hostname, password, port, userid, version)
+      puts "Finding EMS for environment #{hostname}"
       attributes = {:name        => name + " " + hostname,
                     :hostname    => hostname,
                     :ipaddress   => hostname,
                     :port        => port,
-                    :api_version => version}
+                    :api_version => version,
+                    :zone        => Zone.first}
 
       @ems = ManageIQ::Providers::Openstack::CloudManager.where(:hostname => hostname).first
+      puts "Creating EMS for environment #{hostname}" unless @ems
       @ems ||= ManageIQ::Providers::Openstack::CloudManager.new
       @ems.update_attributes(attributes)
       @ems.save

@@ -129,6 +129,7 @@ module Openstack
 
         def wait_for_server(server)
           print "Waiting for server #{server.name} to get in a desired state..."
+          starting_shutdown_server = false
 
           loop do
             case server.reload.state
@@ -137,6 +138,15 @@ module Openstack
             when "ERROR"
               puts "Error creating server"
               exit 1
+            when "SHUTOFF"
+              # When our VCR labs goes down, it shuts off all the VMs, lets start them here
+              unless starting_shutdown_server
+                starting_shutdown_server = true
+                puts "Server was shutoff, starting it again."
+                server.start
+              end
+              print "."
+              sleep 1
             else
               print "."
               sleep 1
