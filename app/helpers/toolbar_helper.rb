@@ -96,13 +96,17 @@ module ToolbarHelper
     end
   end
 
-  # Render image to go on a toolbar button
+  # Render image/icon to go on a toolbar button
   #
   def toolbar_image(props)
-    tag(:img,
-        :src            => t = "/images/toolbars/#{props['img']}",
-        'data-enabled'  => t,
-        'data-disabled' => "/images/toolbars/#{props['imgdis']}")
+    if props[:icon].present?
+      content_tag(:i, '', :class => props[:icon], :style => "#{props['text'].present? ? 'margin-right: 5px;' : ''}")
+    else
+      tag(:img,
+          :src            => t = "/images/toolbars/#{props['img']}",
+          'data-enabled'  => t,
+          'data-disabled' => "/images/toolbars/#{props['imgdis']}")
+    end
   end
 
   # Render drop-down top button
@@ -174,11 +178,7 @@ module ToolbarHelper
           end
     content_tag(:li, :class => cls + (hidden ? 'hidden' : '')) do
       content_tag(:a, prepare_tag_keys(props).update(:href => '#')) do
-        if props[:icon].present?
-          content_tag(:i,  '', :class => props[:icon]).html_safe
-        else
-          (toolbar_image(props) + props['text'].to_s.html_safe)
-        end
+        (toolbar_image(props) + props['text'].to_s.html_safe)
       end
     end
   end
