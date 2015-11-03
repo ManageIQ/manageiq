@@ -89,14 +89,13 @@ module ApiSpecHelper
     @user  = FactoryGirl.create(:user,
                                 :name             => api_config(:user_name),
                                 :userid           => api_config(:user),
-                                :password_digest  => BCrypt::Password.create(api_config(:password)),
+                                :password         => api_config(:password),
                                 :miq_groups       => [@group],
                                 :current_group_id => @group.id)
   end
 
   def init_api_spec_env
-    MiqRegion.seed
-    MiqDatabase.seed
+    @miq_database = FactoryGirl.create(:miq_database)
     Vmdb::Application.config.secret_token = MiqDatabase.first.session_secret_token
     @guid, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
