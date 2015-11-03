@@ -217,7 +217,9 @@ module ApplicationController::Explorer
 
   # Add the children of a node that is being expanded (autoloaded), called by generic tree_autoload method
   def tree_add_child_nodes(id)
-    TreeBuilder.x_get_child_nodes(id)
+    TreeBuilder.tree_add_child_nodes(@sb,
+                                     x_tree[:klass_name],
+                                     id)
   end
 
   def rbac_filtered_objects(objects, options = {})
