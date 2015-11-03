@@ -115,29 +115,39 @@
           = render :partial => "layouts/listnav"
 
       - elsif  @layout == "dashboard" && (controller.action_name == "show" || controller.action_name == "change_tab")
-        .row.toolbar-pf#toolbar
-          .col-md-12
-            .toolbar-pf-actions
-              - if @widgets_menu
-                = render :partial => "dashboard/dropdownbar"
-        .col-md-12{:style => "overflow: auto;height: calc(100% - 40px);"}
-          .cpage-header.page-header-bleed-right
-            %br
-            = render :partial => '/layouts/tabs'
-          = yield
+        .col-md-12.max-height
+          .row.toolbar-pf#toolbar
+            .col-md-12
+              .toolbar-pf-actions
+                - if @widgets_menu
+                  = render :partial => "dashboard/dropdownbar"
+
+          .row{:style => "overflow: auto;height: calc(100% - 44px);"}
+            .col-md-12
+              .row
+                .col-md-12
+                  %br
+                  = render :partial => '/layouts/tabs'
+            .col-md-12
+              .row
+                .col-md-12
+                  = yield
       - else
         .col-md-12.max-height
           - if taskbar_in_header?
-            .row
+            .row.toolbar-pf#toolbar
               .col-md-12
-                .row.toolbar-pf#toolbar
-                  .toolbar-pf-actions
-                    = render :partial => "layouts/taskbar"
-          .row
+                .toolbar-pf-actions
+                  = render :partial => "layouts/taskbar"
+          .row{:style => "overflow: auto;height: calc(100% - 88px);"}
             .col-md-12
-              = render :partial => "layouts/breadcrumbs"
+              .row
+                .col-md-12
+                  = render :partial => "layouts/breadcrumbs"
               - if layout_uses_tabs?
-                = render :partial => 'layouts/tabs'
-          .row{:style => "overflow: auto;height: calc(100% - 90px);"}
-            .col-md-12
-              = yield
+                .row
+                  .col-md-12
+                    = render :partial => 'layouts/tabs'
+              .row
+                .col-md-12
+                  = yield
