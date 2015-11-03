@@ -43,3 +43,54 @@
     font-family: inherit;
     line-height: 1.1;
 }
+
+/*
+ * Charts
+ */
+/* Heap map */
+.heatmap-container {
+    padding-top: 10px;
+    width: 100%;
+}
+
+.heatmap-legend {
+    font-size: 11px;
+    font-weight: normal;
+    line-height: 11px;
+    padding-top: 15px;
+    padding-bottom: 0;
+    display: inline-block;
+    position: relative;
+}
+
+.heatmap-legend .color-box {
+    width: 11px;
+    height: 11px;
+    margin-left: 5px;
+    margin-right: 5px;
+    list-style-type: none;
+    float: left;
+}
+
+.heatmap-legend .legend-text {
+    font-size: 11px;
+    font-weight: normal;
+    line-height: 11px;
+    padding-right: 5px;
+    list-style-type: none;
+    float: left;
+}
+
+.heatmap-legend-container {
+    width: 100%;
+    position: relative;
+}
+
+.heatmap-legend-container .ul {
+    list-style-type: none;
+}
+
+.heatmap-legend-container .li {
+    display: inline;
+}
+
