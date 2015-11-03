@@ -13,8 +13,7 @@ describe MiqServer do
         end
 
         it "with changes in the database" do
-          c = YAML.load_file(Rails.root.join("config/vmdb.tmpl.yml"))
-          c.store_path("server", "name", "XXX")
+          c = {"server" => {"name" => "XXX"}}
           FactoryGirl.create(:configuration, :miq_server => @local_server, :typ => "vmdb", :settings => c)
 
           actual = @local_server.get_config("vmdb").config.fetch_path(:server, :name)
@@ -32,8 +31,7 @@ describe MiqServer do
         end
 
         it "with changes in the database" do
-          c = YAML.load_file(Rails.root.join("config/vmdb.tmpl.yml"))
-          c.store_path("server", "name", "XXX")
+          c = {"server" => {"name" => "XXX"}}
           FactoryGirl.create(:configuration, :miq_server => @remote_server, :typ => "vmdb", :settings => c)
 
           actual = @remote_server.get_config("vmdb").config.fetch_path(:server, :name)
