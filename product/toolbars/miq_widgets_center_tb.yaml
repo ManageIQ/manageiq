@@ -8,7 +8,7 @@
   :items:
   # Roles by Servers tab
   - :button: widget_refresh
-    :image: reload
+    :icon: fa fa-repeat fa-lg
     :title: 'Reload Widgets'
 - :name: widget_vmdb
   :items:

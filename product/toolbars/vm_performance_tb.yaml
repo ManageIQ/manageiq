@@ -10,5 +10,5 @@
     :title: "Initiate refresh of recent C&U data"
     :confirm: "Initiate refresh of recent C&U data?"
   - :button: perf_reload
-    :image: reload
+    :icon: fa fa-repeat fa-lg
     :title: "Reload the charts from the most recent C&U data"

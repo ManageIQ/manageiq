@@ -16,19 +16,19 @@
 - :name: drift_downloading
   :items:
   - :buttonSelect: drift_download_choice
-    :image: download
+    :icon: fa fa-download fa-lg
     :title: "Download"
     :items:
     - :button: drift_download_txt
-      :image: txt
+      :icon: fa fa-file-text-o fa-lg
       :title: "Download comparison report in text format"
       :url: '/drift_to_txt'
     - :button: drift_download_csv
-      :image: csv
+      :icon: fa fa-file-text-o fa-lg
       :title: "Download comparison report in CSV format"
       :url: '/drift_to_csv'
     - :button: drift_pdf
-      :image: pdf
+      :icon: fa fa-file-pdf-o fa-lg
       :title: "Download comparison report in PDF format"
       :url: '/drift_to_pdf'
-    
+

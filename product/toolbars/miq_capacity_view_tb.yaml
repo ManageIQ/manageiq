@@ -7,21 +7,21 @@
 - :name: miq_capacity_download_main
   :items:
   - :buttonSelect: miq_capacity_download_choice
-    :image: download
+    :icon: fa fa-download fa-lg
     :title: "Download"
     :items:
     - :button: miq_capacity_download_text
-      :image: txt
+      :icon: fa fa-file-text-o fa-lg
       :title: "Download this report in text format"
       :url: '/#{x_active_tree == :utilization_tree ? "util_report" : "planning_report"}_download'
       :url_parms: "?typ=txt"
     - :button: miq_capacity_download_csv
-      :image: csv
+      :icon: fa fa-file-text-o fa-lg
       :title: "Download this report in CSV format"
       :url: '/#{x_active_tree == :utilization_tree ? "util_report" : "planning_report"}_download'
       :url_parms: "?typ=csv"
     - :button: miq_capacity_download_pdf
-      :image: pdf
+      :icon: fa fa-file-pdf-o fa-lg
       :title: "Download this report in PDF format"
       :url: '/#{x_active_tree == :utilization_tree ? "util_report" : "planning_report"}_download'
       :url_parms: "?typ=pdf"

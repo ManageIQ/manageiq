@@ -7,7 +7,7 @@
 - :name: miq_task_reloading
   :items:
     - :button: miq_task_reload
-      :image: reload
+      :icon: fa fa-repeat fa-lg
       :text: "Reload"
       :title: Reload the current display
       :url_parms: 'main_div'
@@ -16,7 +16,7 @@
   - :buttonSelect: miq_task_delete_choice
     :image: delete_group
     :title: Delete Tasks
-    :enabled: 'true'    
+    :enabled: 'true'
     :items:
     - :button: miq_task_delete
       :image: delete
