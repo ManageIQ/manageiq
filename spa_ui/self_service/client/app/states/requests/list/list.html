@@ -21,20 +21,22 @@
       </div>
       <div class="col-lg-2 col-md-3 col-sm-4 col-xs-4">
         <span class="no-wrap">
-          <strong>ID: </strong>{{ item.id }}
+          <strong>ID </strong>{{ item.id }}
         </span>
       </div>
       <div class="col-lg-3 hidden-md hidden-sm hidden-xs">
         <span class="no-wrap">
-          <strong>Requested: </strong>{{ item.created_on | date }}
+          <strong>Requested </strong>{{ item.created_on | date }}
         </span>
       </div>
       <div class="col-lg-2 col-md-4 hidden-sm hidden-xs">
         <span class="text-capitalize no-wrap">
-          <strong>Status: </strong>
-          <span class="spinner spinner-xs spinner-inline" ng-if="item.approval_state == 'pending'"></span>
-          <span class="pficon-error-circle-o" ng-if="item.approval_state == 'denied'"></span>
-          <span class="pficon-ok" ng-if="item.approval_state == 'approved'"></span>
+          <span class="spinner spinner-xs spinner-inline" ng-if="item.approval_state == 'pending'" 
+          tooltip="The current approval status of the request" tooltip-placement="bottom"></span>
+          <span class="pficon-error-circle-o" ng-if="item.approval_state == 'denied'" 
+          tooltip="The current approval status of the request" tooltip-placement="bottom"></span>
+          <span class="pficon-ok" ng-if="item.approval_state == 'approved'" 
+          tooltip="The current approval status of the request" tooltip-placement="bottom"></span>
           {{ item.approval_state }}
         </span>
       </div>

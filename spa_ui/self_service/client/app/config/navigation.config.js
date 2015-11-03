@@ -18,35 +18,23 @@
           services: {
             title: 'My Services',
             state: 'services',
-            icon: 'fa fa-file-o'
+            icon: 'fa fa-file-o',
+            tooltip: 'The total number of services that you have ordered, both active and retired'
           },
           requests: {
             title: 'My Requests',
             state: 'requests',
-            icon: 'fa fa-file-text-o'
+            icon: 'fa fa-file-text-o',
+            tooltip: 'The total number of requests that you have submitted'
           },
           marketplace: {
             title: 'Service Catalog',
             state: 'marketplace',
-            icon: 'fa fa-copy'
+            icon: 'fa fa-copy',
+            tooltip: 'The total number of available catalog items'
           }
         },
         secondary: {
-          help: {
-            title: 'Help',
-            icon: 'fa fa-question-circle',
-            state: 'help'
-          },
-          about: {
-            title: 'About Me',
-            icon: 'fa fa-user',
-            state: 'about-me'
-          },
-          search: {
-            title: 'Search',
-            icon: 'fa fa-search',
-            state: 'search'
-          }
         }
       }
     });
