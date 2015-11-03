@@ -69,7 +69,9 @@ class ContainerGroup < ActiveRecord::Base
 
   PERF_ROLLUP_CHILDREN = nil
 
-  def perf_rollup_parents(_interval_name = nil)
-    # No rollups: group performance are collected separately
+  def perf_rollup_parents(interval_name = nil)
+    unless interval_name == 'realtime'
+      ([container_project, container_replicator] + container_services).compact
+    end
   end
 end

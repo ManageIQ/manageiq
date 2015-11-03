@@ -13,11 +13,25 @@ class ContainerService < ActiveRecord::Base
   has_many :selector_parts, -> { where(:section => "selectors") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
   has_many :container_nodes, -> { distinct }, :through => :container_groups
 
+  # Needed for metrics
+  has_many :metrics,                :as => :resource
+  has_many :metric_rollups,         :as => :resource
+  has_many :vim_performance_states, :as => :resource
+  delegate :my_zone,                :to => :ext_management_system
+
   acts_as_miq_taggable
 
   virtual_column :container_groups_count, :type => :integer
 
   def container_groups_count
     number_of(:container_groups)
+  end
+
+  include Metric::CiMixin
+
+  PERF_ROLLUP_CHILDREN = :container_groups
+
+  def perf_rollup_parents(interval_name = nil)
+    []
   end
 end
