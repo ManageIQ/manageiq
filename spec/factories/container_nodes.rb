@@ -4,4 +4,9 @@ FactoryGirl.define do
       x.computer_system = FactoryGirl.create(:computer_system)
     end
   end
+
+  factory :kubernetes_node,
+          :aliases => ['app/models/manageiq/providers/kubernetes/container_manager/container_node'],
+          :class   => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode' do
+  end
 end
