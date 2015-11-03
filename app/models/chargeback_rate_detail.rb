@@ -2,9 +2,23 @@ class ChargebackRateDetail < ApplicationRecord
   belongs_to :chargeback_rate
   belongs_to :detail_measure, :class_name => "ChargebackRateDetailMeasure", :foreign_key => :chargeback_rate_detail_measure_id
   belongs_to :detail_currency, :class_name => "ChargebackRateDetailCurrency", :foreign_key => :chargeback_rate_detail_currency_id
-
-  validates :rate, :numericality => true
+  has_many :chargeback_tiers, :dependent => :destroy
   validates :group, :source, :presence => true
+  validate :complete_tiers, :if => "!respond_to?(:rate)"
+
+  # Set the rates according to the tiers
+  def find_rate(value)
+    fixed_rate = 0.0
+    variable_rate = 0.0
+    chargeback_tiers.each do |tier|
+      next if value < rate_adjustment(tier.start)
+      next if value >= rate_adjustment(tier.end)
+      fixed_rate = tier.fixed_rate
+      variable_rate = tier.variable_rate
+      break
+    end
+    return fixed_rate, variable_rate
+  end
 
   PER_TIME_MAP = {
     :hourly  => "Hour",
@@ -17,12 +31,24 @@ class ChargebackRateDetail < ApplicationRecord
   def cost(value)
     return 0.0 unless self.enabled?
     value = 1 if group == 'fixed'
+    (fixed_rate, variable_rate) = find_rate(value)
+    hourly(fixed_rate) + hourly(variable_rate) * value
+  end
 
-    value * hourly_rate
+  def hourly(rate)
+    case per_time
+    when "hourly"  then rate
+    when "daily"   then rate / 24
+    when "weekly"  then rate / 24 / 7
+    when "monthly" then rate / 24 / 30
+    when "yearly"  then rate / 24 / 365
+    else raise "rate time unit of '#{per_time}' not supported"
+    end
   end
 
   def hourly_rate
-    rate = self.rate.to_s.to_f
+    (fixed_rate, variable_rate) = find_rate(0.0)
+    rate = variable_rate
     return 0.0 if rate.zero?
 
     hr = case per_time
@@ -80,15 +106,20 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   def friendly_rate
+    (fixed_rate, variable_rate) = find_rate(0.0)
     value = read_attribute(:friendly_rate)
     return value unless value.nil?
 
     if group == 'fixed'
       # Example: 10.00 Monthly
-      "#{rate} #{per_time.to_s.capitalize}"
+      "#{fixed_rate + variable_rate} #{per_time.to_s.capitalize}"
     else
-      # Example: Daily @ .02 per MHz
-      "#{per_time.to_s.capitalize} @ #{rate} per #{per_unit_display}"
+      s = ""
+      ChargebackTier.where(:chargeback_rate_detail_id => id).each do |tier|
+        # Example: Daily @ .02 per MHz
+        s += "#{per_time.to_s.capitalize} @ #{tier.fixed_rate} + #{tier.variable_rate} per #{per_unit_display} from #{tier.start} to #{tier.end}\n"
+      end
+      s.chomp
     end
   end
 
@@ -103,12 +134,34 @@ class ChargebackRateDetail < ApplicationRecord
 
   # New method created in order to show the rates in a easier to understand way
   def show_rates(code_currency)
-    rate = self.rate.to_s
-    return code_currency if rate.to_f.zero?
-
     hr = ChargebackRateDetail::PER_TIME_MAP[per_time.to_sym]
     rate_display = "#{detail_currency.code} / #{hr}"
     rate_display_unit = "#{rate_display} / #{per_unit_display}"
     per_unit.nil? ? rate_display : rate_display_unit
+  end
+
+  # Check that tiers are complete and disjoint
+  def complete_tiers
+    cbts = chargeback_tiers
+    start = 0
+    tier_ends = false
+    error = false
+    unless cbts.nil?
+      cbts.each do |tier|
+        if tier.start != start
+          errors.add(:chargeback_tiers, "must include all values from 0 to ∞ once.")
+          error = true
+          break
+        else
+          start = tier.end
+          if tier.end == Float::INFINITY
+            tier_ends = true
+          end
+        end
+      end
+      unless tier_ends || error
+        errors.add(:chargeback_tiers, "must include all values from 0 to ∞.")
+      end
+    end
   end
 end

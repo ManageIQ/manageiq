@@ -1,0 +1,26 @@
+- i = params[:detail_index]
+- url = url_for(:action => 'cb_rate_form_field_changed', :id => "#{@sb[:rate].id || "new"}")
+- n = @sb[:num_tiers][i.to_i]
+- n = params[:tier_row] if params[:tier_row]
+
+%tr{:id => "rate_detail_row_#{i}_#{n - 1}"}
+  %td
+    = text_field_tag("start_#{i}_#{n - 1}",  @edit[:new][:tiers][i.to_i][n - 1][:start],
+      :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+  %td
+    = text_field_tag("end_#{i}_#{n - 1}", @edit[:new][:tiers][i.to_i][n - 1][:end],
+      :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+  %td{:align => 'right'}
+    = text_field_tag("fixed_rate_#{i}_#{n - 1}", @edit[:new][:tiers][i.to_i][n - 1][:fixed_rate],
+      :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+  %td{:align => 'right'}
+    = text_field_tag("variable_rate_#{i}_#{n - 1}", @edit[:new][:tiers][i.to_i][n - 1][:variable_rate],
+      :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+  %td
+    = button_tag(_(""),
+                 :class   => "btn btn-default pficon-delete",
+                 :alt     => t = _("Remove the tier"),
+                 :title   => t,
+                 :onclick => "miqAjaxButton('#{url_for(:action => "cb_tier_remove",
+                                                       :index  => i + "-#{n - 1}",
+                                                       :button => "remove")}');")

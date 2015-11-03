@@ -128,6 +128,17 @@ class ChargebackRate < ApplicationRecord
           if currency
             rate_detail[:chargeback_rate_detail_currency_id] = currency.id
           end
+          rate_tiers = []
+          tiers = rate_detail.delete(:tiers)
+          tiers.each do |tier|
+            tier_start = ChargebackTier.to_float(tier.delete(:start))
+            tier_end = ChargebackTier.to_float(tier.delete(:end))
+            fixed_rate = tier.delete(:fixed_rate)
+            variable_rate = tier.delete(:variable_rate)
+            cbt = ChargebackTier.create(:start => tier_start, :end => tier_end, :fixed_rate => fixed_rate, :variable_rate => variable_rate)
+            rate_tiers.append(cbt)
+          end
+          rate_detail[:chargeback_tiers] = rate_tiers
         end
         if rec.nil?
           _log.info("Creating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")

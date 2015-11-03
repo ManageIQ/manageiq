@@ -15,25 +15,52 @@
   %table.table.table-bordered
     %thead
       %tr
-        %th= _('Group')
-        %th= _('Description')
-        %th= _('Rate')
-        %th= _('Units')
+        %th{:rowspan => "2"}= _('Group')
+        %th{:rowspan => "2"}= _('Description')
+        %th{:colspan => "2"}= _('Range')
+        %th{:colspan => "2"}= _('Rate')
+        %th{:rowspan => "2"}= _('Units')
+      %tr
+        %th= _("Start")
+        %th= _("End")
+        %th= _("Fixed")
+        %th= _("Variable")
     %tbody
       /Currency code is the same for all the chargeback_rate_details
       - code_currency = @sb[:selected_rate_details].first.detail_currency.code
-      - @sb[:selected_rate_details].each do |r|
-        - @cur_group = r[:group] if @cur_group.nil?
-        - if @cur_group != r[:group]
-          - @cur_group = r[:group]
+      - @sb[:selected_rate_details].each do |detail|
+        - @cur_group = detail[:group] if @cur_group.nil?
+        - if @cur_group != detail[:group]
+          - @cur_group = detail[:group]
           %tr
-            %td.active{:colspan => "4"} &nbsp;
+            %td.active{:colspan => "9"} &nbsp;
+        - num_tiers = detail.chargeback_tiers.to_a.blank? ? "1" : detail.chargeback_tiers.to_a.length.to_s
         %tr
+          %td{:rowspan => num_tiers}
+            = h(rate_detail_group(detail[:group]))
+          %td{:rowspan => num_tiers}
+            = detail[:description]
+          - tier = detail.chargeback_tiers.first
           %td
-            = h(rate_detail_group(r[:group]))
+            = tier.start ? tier.start : 0
           %td
-            = r[:description]
-          %td{:align => 'right'}
-            = r[:rate]
+            = tier.end ? tier.end : Float::INFINITY.to_s
           %td{:align => "right"}
-            = r.show_rates(code_currency)
+            = tier.fixed_rate ? tier.fixed_rate : 0.0
+          %td{:align => "right"}
+            = tier.variable_rate ? tier.variable_rate : 0.0
+          %td{:align => "right", :rowspan => num_tiers}
+            = detail.show_rates(code_currency)
+        - (1..num_tiers.to_i - 1).each do |tier_index|
+          - tier = detail.chargeback_tiers.to_a[tier_index]
+          %tr
+            %td
+              = tier.start
+            %td
+              = tier.end
+            %td{:align => "right"}
+              = tier.fixed_rate
+            %td{:align => "right"}
+              = tier.variable_rate
+        %tr
+          %td{:colspan => "9"}
