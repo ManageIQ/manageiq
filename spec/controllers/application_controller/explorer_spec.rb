@@ -117,3 +117,25 @@ describe VmInfraController do
     end
   end
 end
+
+describe ReportController do
+  context '#tree_add_child_nodes' do
+    it 'calls tree_add_child_nodes TreeBuilder method' do
+      widget = FactoryGirl.create(:miq_widget, :description => "Foo", :title => "Foo", :content_type => "report")
+      controller.instance_variable_set(:@sb,
+                                       :trees       => {:widgets_tree => {:active_node => "root",
+                                                                          :klass_name  => "TreeBuilderReportWidgets",
+                                                                          :open_nodes  => []}},
+                                       :active_tree => :widgets_tree
+
+                                      )
+      TreeBuilderReportWidgets.new('widgets_tree', 'widgets', {})
+      nodes = controller.send(:tree_add_child_nodes, 'xx-r')
+      nodes.should eq([{:key     => "-#{controller.to_cid(widget.id)}",
+                        :title   => "Foo",
+                        :icon    => "report_widget.png",
+                        :tooltip => "Foo"}]
+                     )
+    end
+  end
+end
