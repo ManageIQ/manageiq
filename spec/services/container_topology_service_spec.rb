@@ -6,8 +6,7 @@ describe ContainerTopologyService do
 
   describe "#build_kinds" do
     it "creates the expected number of entity types" do
-      ems_kube = FactoryGirl.create(:ems_kubernetes, :name => "ems_kube")
-      container_topology_service.stub(:retrieve_providers).and_return([ems_kube ])
+      container_topology_service.stub(:retrieve_providers).and_return([FactoryGirl.create(:ems_kubernetes)])
       expect(container_topology_service.build_kinds.keys).to match_array([:Container, :Host, :Kubernetes, :Node, :Pod, :Replicator, :Route, :Service, :VM])
     end
   end
@@ -29,14 +28,14 @@ describe ContainerTopologyService do
     let(:container_condition) { ContainerCondition.create(:name => 'Ready', :status => 'True') }
     let(:container_def) { ContainerDefinition.create(:name => "ruby-example", :ems_ref => 'b6976f84-5184-11e5-950e-001a4a231290_ruby-helloworld_172.30.194.30:5000/test/origin-ruby-sample@sha256:0cd076c9beedb3b1f5cf3ba43da6b749038ae03f5886b10438556e36ec2a0dd9', :container => container) }
     let(:container_node) { ContainerNode.create(:ext_management_system => ems_kube, :name => "127.0.0.1", :ems_ref => "905c90ba-3e00-11e5-a0d2-18037327aaeb", :container_conditions => [container_condition], :lives_on => vm_rhev) }
-    let(:ems_kube) { FactoryGirl.create(:ems_kubernetes, :name => "ems_kube") }
-    let(:ems_rhev) { FactoryGirl.create(:ems_redhat, :name => "ems_rhev") }
-    let(:vm_rhev) { FactoryGirl.create(:vm_redhat, :name => "vm1", :uid_ems => "558d9a08-7b13-11e5-8546-129aa6621998", :ext_management_system => ems_rhev) }
+    let(:ems_kube) { FactoryGirl.create(:ems_kubernetes) }
+    let(:ems_rhev) { FactoryGirl.create(:ems_redhat) }
+    let(:vm_rhev) { FactoryGirl.create(:vm_redhat, :uid_ems => "558d9a08-7b13-11e5-8546-129aa6621998", :ext_management_system => ems_rhev) }
 
     it "topology contains the expected structure and content" do
       # vm and host test cross provider correlation to infra provider
       hardware = FactoryGirl.create(:hardware, :cpu_sockets => 2, :cpu_cores_per_socket => 4, :cpu_total_cores => 8)
-      host = FactoryGirl.create(:host, :name => "host1",
+      host = FactoryGirl.create(:host,
                                 :uid_ems => "abcd9a08-7b13-11e5-8546-129aa6621999",
                                 :ext_management_system => ems_rhev,
                                 :hardware => hardware)
@@ -57,15 +56,15 @@ describe ContainerTopologyService do
                                                   :ems_ref => "95e49048-3e00-11e5-a0d2-18037327aaeb",
                                                   :name => "service1", :container_routes => [container_route])
       expect(subject[:items]).to eq(
-        ems_kube.id.to_s                       => {:id => ems_kube.id.to_s, :name => "ems_kube", :status => "Unknown", :kind => "Kubernetes", :miq_id => ems_kube.id},
+        ems_kube.id.to_s                       => {:id => ems_kube.id.to_s, :name => ems_kube.name, :status => "Unknown", :kind => "Kubernetes", :miq_id => ems_kube.id},
         "905c90ba-3e00-11e5-a0d2-18037327aaeb" => {:id => container_node.ems_ref, :name => container_node.name, :status => "Ready", :kind => "Node", :miq_id => container_node.id},
         "8f8ca74c-3a41-11e5-a79a-001a4a231290" => {:id => container_replicator.ems_ref, :name => container_replicator.name, :status => "OK", :kind => "Replicator", :miq_id => container_replicator.id},
         "95e49048-3e00-11e5-a0d2-18037327aaeb" => {:id => container_service.ems_ref, :name => container_service.name, :status => "Unknown", :kind => "Service", :miq_id => container_service.id},
         "96c35ccd-3e00-11e5-a0d2-18037327aaeb" => {:id => container_group.ems_ref, :name => container_group.name, :status => "Running", :kind => "Pod", :miq_id => container_group.id},
         "ab5za74c-3a41-11e5-a79a-001a4a231290" => {:id => container_route.ems_ref, :name => container_route.name, :status => "Unknown", :kind => "Route", :miq_id => container_route.id},
         "3572afee-3a41-11e5-a79a-001a4a231290_ruby-helloworld-database_openshift\n/mysql-55-centos7:latest" => {:id => container.ems_ref, :name => container.name, :status => "Running", :kind => "Container", :miq_id => container.id},
-        "558d9a08-7b13-11e5-8546-129aa6621998" => {:id => vm_rhev.uid_ems, :name => vm_rhev.name, :status => "On", :kind => "VM", :miq_id => vm_rhev.id, :provider => "ems_rhev"},
-        "abcd9a08-7b13-11e5-8546-129aa6621999" => {:id => host.uid_ems, :name => host.name, :status => "On", :kind => "Host", :miq_id => host.id, :provider => "ems_rhev"}
+        "558d9a08-7b13-11e5-8546-129aa6621998" => {:id => vm_rhev.uid_ems, :name => vm_rhev.name, :status => "On", :kind => "VM", :miq_id => vm_rhev.id, :provider => ems_rhev.name},
+        "abcd9a08-7b13-11e5-8546-129aa6621999" => {:id => host.uid_ems, :name => host.name, :status => "On", :kind => "Host", :miq_id => host.id, :provider => ems_rhev.name}
       )
 
       expect(subject[:relations].size).to eq(8)
@@ -97,8 +96,8 @@ describe ContainerTopologyService do
         "95e49048-3e00-11e5-a0d2-18037327aaeb" => {:id => container_service.ems_ref, :name => container_service.name, :status => "Unknown", :kind => "Service", :miq_id => container_service.id},
         "96c35ccd-3e00-11e5-a0d2-18037327aaeb" => {:id => container_group.ems_ref, :name => container_group.name, :status => "Running", :kind => "Pod", :miq_id => container_group.id},
         "3572afee-3a41-11e5-a79a-001a4a231290_ruby-helloworld-database_openshift\n/mysql-55-centos7:latest" => {:id => container.ems_ref, :name => container.name, :status => "Running", :kind => "Container", :miq_id => container.id},
-        "558d9a08-7b13-11e5-8546-129aa6621998" => {:id => vm_rhev.uid_ems, :name => vm_rhev.name, :status => "Off", :kind => "VM", :miq_id => vm_rhev.id, :provider => "ems_rhev"},
-        ems_kube.id.to_s                       => {:id => ems_kube.id.to_s, :name => "ems_kube", :status => "Unknown", :kind => "Kubernetes", :miq_id => ems_kube.id}
+        "558d9a08-7b13-11e5-8546-129aa6621998" => {:id => vm_rhev.uid_ems, :name => vm_rhev.name, :status => "Off", :kind => "VM", :miq_id => vm_rhev.id, :provider => ems_rhev.name},
+        ems_kube.id.to_s                       => {:id => ems_kube.id.to_s, :name => ems_kube.name, :status => "Unknown", :kind => "Kubernetes", :miq_id => ems_kube.id}
       )
 
       expect(subject[:relations].size).to eq(5)
