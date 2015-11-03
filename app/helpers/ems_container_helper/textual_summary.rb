@@ -22,12 +22,11 @@ module EmsContainerHelper::TextualSummary
   end
 
   def textual_group_component_statuses
-    labels = [_("Name"), _("Type"), _("Status"), _("Error")]
+    labels = [_("Name"), _("Healthy"), _("Error")]
     h = {:labels => labels}
     h[:values] = @record.container_component_statuses.collect do |cs|
       [
         cs.name,
-        cs.condition,
         cs.status,
         (cs.error || "")
       ]
