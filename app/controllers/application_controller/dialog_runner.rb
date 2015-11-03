@@ -95,15 +95,6 @@ module ApplicationController::DialogRunner
 
     # Use JS to update the display
     render :update do |page|
-      #     page.replace_html("main_div", :partial=>"st_form") if params[:resource_id] || @group_idx || params[:display]
-      #      if changed
-      #       #sample commands to change values of fields when showing hidden tr's
-      #       page << "$('check_box_1').checked = true"
-      #       page << "$('text_area_box_1').value = 'text'"
-      #       page << "$('f2').options[0]= new Option('value 1', 'val1');"
-      #       page << "$('f2').options[1]= new Option('value 2', 'val2');"
-      #       page << "$('f2').value = 'val2'"
-      #       page << javascript_for_miq_button_visibility(changed)
       @edit[:wf].dialog.dialog_tabs.each do |tab|
         tab.dialog_groups.each do |group|
           group.dialog_fields.each_with_index do |field, _i|
@@ -138,7 +129,6 @@ module ApplicationController::DialogRunner
           end
         end
       end
-      #     end
       page << "miqSparkle(false);"
     end
   end
