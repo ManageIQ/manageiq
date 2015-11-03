@@ -26,9 +26,13 @@ describe "DatabaseConfiguration patch" do
 
   context "when DATABASE_URL is set" do
     around(:each) do |example|
-      old_env, ENV['DATABASE_URL'] = ENV['DATABASE_URL'], 'postgres://'
-      example.run
-      ENV['DATABASE_URL'] = old_env
+      begin
+        old_env = ENV.delete('DATABASE_URL')
+        ENV['DATABASE_URL'] = 'postgres://'
+        example.run
+      ensure
+        ENV['DATABASE_URL'] = old_env if old_env
+      end
     end
 
     it "ignores a missing file" do
@@ -38,7 +42,12 @@ describe "DatabaseConfiguration patch" do
 
   context "with no source of configuration" do
     it "explains the problem" do
-      expect { @app.config.database_configuration }.to raise_error(/Could not load database configuration/)
+      begin
+        old = ENV.delete('DATABASE_URL')
+        expect { @app.config.database_configuration }.to raise_error(/Could not load database configuration/)
+      ensure
+        ENV['DATABASE_URL'] = old if old
+      end
     end
   end
 end
