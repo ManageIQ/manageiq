@@ -84,19 +84,19 @@ describe CatalogController do
     end
 
     it "keeps hours and minutes when setting date" do
-      controller.stub(:params).and_return({'miq_date__name'=> "11/13/2015"})
+      controller.stub(:params).and_return({'miq_date__name' => "11/13/2015"})
       controller.send(:dialog_get_form_vars)
       expect(dialog_field.value).to eq('11/13/2015 14:52')
     end
 
     it "keeps date and minutes when setting hours" do
-      controller.stub(:params).and_return({'start_hour'=> "4"})
+      controller.stub(:params).and_return({'start_hour' => "4"})
       controller.send(:dialog_get_form_vars)
       expect(dialog_field.value).to eq('04/05/2015 04:52')
     end
 
     it "keeps date and hourse when setting minutes" do
-      controller.stub(:params).and_return({'start_min'=> "6"})
+      controller.stub(:params).and_return({'start_min' => "6"})
       controller.send(:dialog_get_form_vars)
       expect(dialog_field.value).to eq('04/05/2015 14:06')
     end

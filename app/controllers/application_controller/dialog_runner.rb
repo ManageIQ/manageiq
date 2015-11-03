@@ -229,7 +229,9 @@ module ApplicationController::DialogRunner
 
       elsif %w(start_hour start_min).include?(parameter_key)
         # find any DateTime field and assume it's the only one..
-        field_name = @edit[:wf].dialog.dialog_fields.select { |f| f.type == 'DialogFieldDateTimeControl' }.last.try(:name)
+        field_name = @edit[:wf].dialog.dialog_fields.reverse.find do |f|
+          f.type == 'DialogFieldDateTimeControl'
+        end.try(:name)
         next if field_name.nil?
 
         # if user didn't choose the date and goes with default shown in the textbox,
@@ -250,7 +252,7 @@ module ApplicationController::DialogRunner
         else
           start_min = parameter_value.to_i
         end
-        date_val[1] = sprintf("%02d:%02d", start_hour, start_min)
+        date_val[1] = "%02d:%02d" % [start_hour, start_min]
 
         @edit[:wf].set_value(field_name, date_val.join(' '))
 
