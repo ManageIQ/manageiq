@@ -248,18 +248,18 @@ describe MiqGroup do
     it "fails if referenced by user#current_group" do
       FactoryGirl.create(:user, :miq_groups => [group])
 
-      current_count = MiqGroup.count
-      expect { group.destroy }.to raise_error
-      MiqGroup.count.should eq current_count
+      expect {
+        expect { group.destroy }.to raise_error
+      }.to_not change { MiqGroup.count }
     end
 
     it "fails if referenced by user#miq_groups" do
       group2 = FactoryGirl.create(:miq_group)
       FactoryGirl.create(:user, :miq_groups => [group, group2], :current_group => group2)
 
-      current_count = MiqGroup.count
-      expect { group.destroy }.to raise_error
-      MiqGroup.count.should eq current_count
+      expect {
+        expect { group.destroy }.to raise_error
+      }.to_not change { MiqGroup.count }
     end
 
     it "fails if referenced by a tenant#default_miq_group" do
@@ -271,7 +271,6 @@ describe MiqGroup do
     it "adds new groups after initial seed" do
       [Tenant, MiqUserRole, MiqGroup].each(&:seed)
 
-      current_count = MiqGroup.count
       role_map_path = File.expand_path(File.join(Rails.root, "db/fixtures/role_map.yaml"))
       role_map = YAML.load_file(role_map_path)
       role_map.unshift('EvmRole-test_role' => 'tenant_quota_administrator')
@@ -281,9 +280,9 @@ describe MiqGroup do
       allow(YAML).to receive(:load_file).with(role_map_path).and_return(role_map)
       allow(YAML).to receive(:load_file).with(filter_map_path).and_return(filter_map)
 
-      MiqGroup.seed
-
-      expect(MiqGroup.count).to eql(current_count + 1)
+      expect {
+        MiqGroup.seed
+      }.to change { MiqGroup.count }
       expect(MiqGroup.last.name).to eql('EvmRole-test_role')
       expect(MiqGroup.last.sequence).to eql(1)
     end
