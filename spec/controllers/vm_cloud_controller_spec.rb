@@ -56,7 +56,6 @@ describe VmCloudController do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
       EvmSpecHelper.create_guid_miq_server_zone
       get :explorer
-      request.env['HTTP_REFERER'] = request.fullpath
     end
 
     it 'skips dropping a breadcrumb when a button action is executed' do
