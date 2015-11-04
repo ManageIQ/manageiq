@@ -18,7 +18,8 @@ describe('emsCommonFormController', function() {
       zone: 'default',
       emstype_vm: false,
       openstack_infra_providers_exist: false,
-      api_port: '5000'
+      api_port: '5000',
+      api_version: 'v2'
     };
     $httpBackend = _$httpBackend_;
     $httpBackend.whenGET('/ems_cloud/ems_cloud_form_fields/new').respond(emsCommonFormResponse);
@@ -64,6 +65,10 @@ describe('emsCommonFormController', function() {
 
     it('sets the api_port to 5000', function() {
       expect($scope.emsCommonModel.api_port).toEqual(5000);
+    });
+
+    it('sets the api_version to v2', function() {
+      expect($scope.emsCommonModel.api_version).toEqual('v2');
     });
   });
 

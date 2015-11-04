@@ -160,6 +160,7 @@ class EmsCloudController < ApplicationController
                      :provider_id                     => @ems.provider_id ? @ems.provider_id : "",
                      :hostname                        => @ems.hostname,
                      :api_port                        => @ems.port,
+                     :api_version                     => @ems.api_version,
                      :provider_region                 => @ems.provider_region,
                      :openstack_infra_providers_exist => retrieve_openstack_infra_providers.length > 0 ? true : false,
                      :default_userid                  => @ems.authentication_userid ? @ems.authentication_userid : "",
@@ -207,6 +208,7 @@ class EmsCloudController < ApplicationController
     ems.provider_region = params[:provider_region]
     ems.hostname        = params[:hostname].strip if params[:hostname]
     ems.port            = params[:api_port].strip if params[:api_port]
+    ems.api_version     = params[:api_version].strip if params[:api_version]
     ems.provider_id     = params[:provider_id]
     ems.zone            = Zone.find_by_name(params[:zone])
 
@@ -255,6 +257,7 @@ class EmsCloudController < ApplicationController
                        :hostname        => ems.hostname,
                        :azure_tenant_id => azure_tenant_id,
                        :port            => ems.port,
+                       :api_version     => ems.api_version,
                        :provider_id     => ems.provider_id,
                        :zone            => ems.zone
     }
@@ -263,6 +266,7 @@ class EmsCloudController < ApplicationController
                    :hostname        => params[:hostname],
                    :azure_tenant_id => params[:azure_tenant_id],
                    :port            => params[:port],
+                   :api_version     => params[:api_version],
                    :provider_id     => params[:provider_id],
                    :zone            => params[:zone]
     }
