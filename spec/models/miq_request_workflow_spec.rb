@@ -47,6 +47,17 @@ describe MiqRequestWorkflow do
         expect(workflow.validate({})).to be_false
       end
     end
+
+    context "failures shouldn't be reverted" do
+      it "validation_method" do
+        dialog.store_path(:dialogs, :customize, :fields, :root_password, :validation_method, :some_validation_method)
+        dialog.store_path(:dialogs, :customize, :fields, :root_password_2, :validation_method, :other_validation_method)
+
+        expect(workflow).to receive(:some_validation_method).and_return("Some Error")
+        expect(workflow).to receive(:other_validation_method)
+        expect(workflow.validate({})).to be_false
+      end
+    end
   end
 
   describe "#init_from_dialog" do
