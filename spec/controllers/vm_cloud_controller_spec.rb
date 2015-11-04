@@ -18,12 +18,9 @@ describe VmCloudController do
       ApplicationController::Explorer::X_BUTTON_ALLOWED_ACTIONS.each_pair do |action_name, method|
         prefixes = ["image", "instance"]
         prefixes.each do |prefix|
-          actual_action = "#{prefix}_" + action_name
-          actual_method = if method == :s1 || method == :s2
-                            "#{prefix}_" + action_name
-                          else
-                            method.to_s
-                          end
+          actual_action = "#{prefix}_#{action_name}"
+          actual_method = [:s1, :s2].include?(method) ? actual_action : method.to_s
+
           it "calls the appropriate method: '#{actual_method}' for action '#{actual_action}'" do
             controller.stub(:x_button_response)
             controller.should_receive(actual_method)
