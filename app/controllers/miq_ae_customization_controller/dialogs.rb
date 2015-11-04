@@ -1043,6 +1043,7 @@ module MiqAeCustomizationController::Dialogs
         @edit[:field_protected]      = field[:protected]
         @edit[:field_validator_type] = field[:validator_type]
         @edit[:field_validator_rule] = field[:validator_rule]
+        @edit[:field_data_typ]       = field[:data_typ]
       end
 
       if field[:typ].include?('Text')
@@ -1187,6 +1188,7 @@ module MiqAeCustomizationController::Dialogs
                 fld[:protected]      = f.protected?
                 fld[:validator_type] = f.validator_type
                 fld[:validator_rule] = f.validator_rule
+                fld[:data_typ]       = f.data_type
               end
               fld[:required]             = f.required
               fld[:default_value]        = f.default_value.nil? ? "" : f.default_value
@@ -1286,6 +1288,7 @@ module MiqAeCustomizationController::Dialogs
                       fld[:protected]      = field[:protected]
                       fld[:validator_type] = field[:validator_type]
                       fld[:validator_rule] = field[:validator_rule]
+                      fld[:data_type]      = field[:data_typ]
                     end
                     fld[:required]             = field[:required]  if field[:typ].include?('Text')
                     fld[:default_value]        = field[:default_value].to_s

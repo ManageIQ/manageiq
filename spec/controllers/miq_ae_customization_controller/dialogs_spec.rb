@@ -79,43 +79,7 @@ describe MiqAeCustomizationController do
         expect(assigns(:flash_array).first[:message]).to include("Dialog a1 must have at least one Tab")
       end
 
-      it "Any Dialog/Tab with empty group should not be added, and display multiple message for each empty group" do
-        new_hash = {
-          :label       => "Dialog 1",
-          :description => "Dialog 1",
-          :buttons     => ["submit"],
-          :tabs        => [
-            {
-              :label       => "Tab 1",
-              :description => "Tab 1",
-              :groups      => [
-                {
-                  :label       => "Box 1",
-                  :description => "Box 1",
-                  :fields      => []
-                },
-                {
-                  :label       => "Box 2",
-                  :description => "Box 2",
-                  :fields      => []
-                }
-              ]
-            }
-          ]
-        }
-        controller.instance_variable_set(:@lastaction, "replace_right_cell")
-        assigns(:edit)[:new] = new_hash
-        allow(controller).to receive(:get_node_info)
-        allow(controller).to receive(:replace_right_cell)
-        allow(controller).to receive(:render_flash)
-        controller.instance_variable_set(:@_params, :button => "add")
-        controller.send(:dialog_edit)
-        expect(assigns(:flash_array).first[:message]).to include("Validation failed:"\
-                                                                 " Dialog Dialog 1 / Tab Tab 1 / Box Box 1 must have at least one Element,"\
-                                                                 " Dialog Dialog 1 / Tab Tab 1 / Box Box 2 must have at least one Element")
-      end
-
-      it "Dialog/Tab with any empty group should not be added" do
+      it "Adds a Dialog with Tab/Groups/Fields & adds data_type for textbox field" do
         new_hash = {
           :label       => "Dialog 1",
           :description => "Dialog 1",
@@ -135,62 +99,29 @@ describe MiqAeCustomizationController do
                       :typ           => "DialogFieldCheckBox",
                       :name          => "Field1",
                       :default_value => false
+                    },
+                    {
+                      :label         => "Field 2",
+                      :description   => "Field 2",
+                      :typ           => "DialogFieldTextBox",
+                      :name          => "Field2",
+                      :default_value => "Foo",
+                      :data_typ      => "integer"
                     }
                   ]
-                },
-                {
-                  :label       => "Box 2",
-                  :description => "Box 2",
-                  :fields      => []
                 }
               ]
             }
           ]
         }
-        controller.instance_variable_set(:@lastaction, "replace_right_cell")
         assigns(:edit)[:new] = new_hash
         allow(controller).to receive(:get_node_info)
         allow(controller).to receive(:replace_right_cell)
         allow(controller).to receive(:render_flash)
-        controller.instance_variable_set(:@_params, :button => "add")
-        controller.send(:dialog_edit)
-        expect(assigns(:flash_array).first[:message]).to include("Validation failed:"\
-                                                                 " Dialog Dialog 1 / Tab Tab 1 / Box Box 2 must have at least one Element")
-      end
-
-      it "Adds a Dialog with Tab/Groups/Field" do
-        new_hash = {
-          :label       => "Dialog 1",
-          :description => "Dialog 1",
-          :buttons     => ["submit"],
-          :tabs        => [
-            {
-              :label       => "Tab 1",
-              :description => "Tab 1",
-              :groups      => [
-                {
-                  :label       => "Box 1",
-                  :description => "Box 1",
-                  :fields      => [
-                    {
-                      :label         => "Field 1",
-                      :description   => "Field 1",
-                      :typ           => "DialogFieldCheckBox",
-                      :name          => "Field1",
-                      :default_value => false
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-        assigns(:edit)[:new] = new_hash
-        allow(controller).to receive(:get_node_info)
-        allow(controller).to receive(:replace_right_cell)
         controller.send(:dialog_edit)
         expect(assigns(:flash_array).first[:message]).to include("Dialog \"Dialog 1\" was added")
-        expect(@dialog.dialog_fields.count).to eq(1)
+        expect(@dialog.dialog_fields.count).to eq(2)
+        expect(@dialog.dialog_fields.last[:data_type]).to eq("integer")
       end
     end
 
