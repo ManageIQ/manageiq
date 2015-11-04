@@ -24,14 +24,14 @@ describe VmCloudController do
           it "calls the appropriate method: '#{actual_method}' for action '#{actual_action}'" do
             controller.stub(:x_button_response)
             controller.should_receive(actual_method)
-            get :x_button, :id => FactoryGirl.create(:template_redhat), :pressed => actual_action
+            get :x_button, :id => nil, :pressed => actual_action
           end
         end
       end
     end
 
     it 'exception is raised for unknown action' do
-      get :x_button, :id => FactoryGirl.create(:template_redhat), :pressed => 'random_dude', :format => :html
+      get :x_button, :id => nil, :pressed => 'random_dude', :format => :html
       expect { response }.to render_template('layouts/exception')
     end
   end
