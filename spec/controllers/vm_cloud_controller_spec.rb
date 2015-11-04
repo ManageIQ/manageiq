@@ -45,7 +45,6 @@ describe VmCloudController do
     session[:settings] = {:views => {}, :perpage => {:list => 10}}
 
     EvmSpecHelper.create_guid_miq_server_zone
-    expect(MiqServer.my_server).to be
     get :explorer
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
