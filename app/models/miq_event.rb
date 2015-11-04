@@ -24,14 +24,15 @@ class MiqEvent < EventStream
     # Policy, automate, and alerting could then consume this type field along with the details
     if target.kind_of?(Array)
       klass, id = target
-      klass = Object.const_get(klass)
-      target = klass.find_by_id(id)
+      target = klass.to_s.constantize.find_by(:id => id)
     end
     raise "Unable to find object for target: [#{target}]" unless target
 
     event = normalize_event(raw_event.to_s)
-    # TODO: how to handle unknow MiqEvent - event not defined in MiqEventDefinition?
-    return if event == 'unknown'
+    if event == 'unknown' && target.class.base_class.in?(SUPPORTED_POLICY_AND_ALERT_CLASSES)
+      _log.warn("Event #{raw_event} for class [#{target.class.name}] id [#{target.id}] was not raised: #{raw_event} is not defined in MiqEventDefinition")
+      return
+    end
 
     event_obj = build_evm_event(event, target)
     inputs.merge!('MiqEvent::miq_event' => event_obj.id, :miq_event_id => event_obj.id)
@@ -121,7 +122,11 @@ class MiqEvent < EventStream
       :prefix => nil,
       :suffix => nil
     )
-    base_event = [target.class.base_model.name.downcase, options[:type]].join("_")
+
+    target_model = target.class.base_model.name.downcase
+    target_model = "vm" if target_model.match("template")
+
+    base_event = [target_model, options[:type]].join("_")
     evm_event  = [options[:prefix], base_event, options[:suffix]].compact.join("_")
     raise_evm_event(target, evm_event, inputs, q_options)
   end

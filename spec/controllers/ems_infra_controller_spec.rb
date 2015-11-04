@@ -202,4 +202,24 @@ describe EmsInfraController do
       end
     end
   end
+
+  describe "breadcrumbs path on a 'show' page of an Infrastructure Provider accessed from Dashboard maintab" do
+    before do
+      set_user_privileges
+      FactoryGirl.create(:vmdb_database)
+      EvmSpecHelper.create_guid_miq_server_zone
+      session[:settings] = {:views => {}}
+    end
+    context "when previous breadcrumbs path contained 'Cloud Providers'" do
+      it "shows 'Infrastructure Providers -> (Summary)' breadcrumb path" do
+        ems = FactoryGirl.create("ems_vmware")
+        get :show, :id => ems.id
+        breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
+        expect(breadcrumbs).to eq([{:name => "Infrastructure Providers",
+                                    :url  => "/ems_infra/show_list?page=&refresh=y"},
+                                   {:name => "#{ems.name} (Summary)",
+                                    :url  => "/ems_infra/show/#{ems.id}"}])
+      end
+    end
+  end
 end

@@ -91,6 +91,12 @@ module ApplicationHelper
     respond_to?("#{model.model_name.route_key}_path")
   end
 
+  def restful_routed_action?(controller = controller_name, action = action_name)
+    restful_routed?(("#{controller.camelize}Controller").constantize.model) && !%w(explorer show_list).include?(action)
+  rescue
+    false
+  end
+
   def url_for_record(record, action = "show") # Default action is show
     @id = to_cid(record.id)
     db =
@@ -558,7 +564,7 @@ module ApplicationHelper
         %w(about chargeback exception miq_ae_automate_button miq_ae_class miq_ae_export
            miq_ae_tools miq_capacity_bottlenecks miq_capacity_planning miq_capacity_utilization
            miq_capacity_waste miq_policy miq_policy_export miq_policy_rsop ops pxe report rss
-           server_build container_topology).include?(@layout) ||
+           server_build container_topology container_dashboard).include?(@layout) ||
         (@layout == "configuration" && @tabform != "ui_4")) && !controller.action_name.end_with?("tagging_edit")
         unless @explorer
           @show_taskbar = true
@@ -969,7 +975,7 @@ module ApplicationHelper
 
   GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_tenant condition container_group
                         container_route container_project container_replicator container_image container_image_registry
-                        container_topology
+                        container_topology container_dashboard
                         container_node container_service ems_cloud ems_cluster ems_container ems_infra event
                         flavor host miq_schedule miq_template offline ontap_file_share
                         ontap_logical_disk ontap_storage_system ontap_storage_volume orchestration_stack
@@ -1365,5 +1371,14 @@ module ApplicationHelper
     else
       @lastaction && @lastaction != "get_node_info" ? @lastaction : "show_list"
     end
+  end
+
+  def route_exists?(hash)
+    begin
+      url_for(hash)
+    rescue
+      return false
+    end
+    true
   end
 end

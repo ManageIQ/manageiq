@@ -1191,7 +1191,7 @@ function miqInitSelectPicker() {
     style: 'btn-info',
     size: 4
   });
-  $('[title]').not('.selectpicker').tooltip({container: 'none'});
+  $('.bootstrap-select > button[title]').not('.selectpicker').tooltip({container: 'none'});
 }
 
 function miqSelectPickerEvent(element, url, options){
@@ -1216,7 +1216,8 @@ function miqAccordSelect(e) {
 
 // This function is called in miqOnLoad
 function miqInitToolbars() {
-  $("#toolbar button:not(.dropdown-toggle), #toolbar ul.dropdown-menu > li > a").click(miqToolbarOnClick);
+  $("#toolbar button:not(.dropdown-toggle), #toolbar ul.dropdown-menu > li > a, #toolbar .toolbar-pf-view-selector > ul.list-inline > li > a").off('click');
+  $("#toolbar button:not(.dropdown-toggle), #toolbar ul.dropdown-menu > li > a, #toolbar .toolbar-pf-view-selector > ul.list-inline > li > a").click(miqToolbarOnClick);
 }
 
 // Function to run transactions when toolbar button is clicked

@@ -28,8 +28,6 @@ class ApplicationHelper::ToolbarBuilder
   ###
 
   def build_toolbar(tb_name)
-    text = nil                                                      # Local vars for text and title
-    title = nil
     tb_hash = tb_name == "custom_buttons_tb" ? build_custom_buttons_toolbar(@record) : YAML.load(File.open("#{TOOLBARS_FOLDER}/#{tb_name}.yaml"))
 
     toolbar = []
@@ -49,15 +47,19 @@ class ApplicationHelper::ToolbarBuilder
         # keeping track of groups that were not skipped to add separator, else it adds a separator before a button even tho no other groups were shown, i.e. vm sub screens, drift_history
         groups_added.push(bg_idx)
       end
-      bg[:items].each do |bgi|                                      # Go thru all of the button group items
-        if bgi.key?(:buttonSelect)                              # buttonSelect node found
+
+      bg[:items].each do |bgi|
+        if bgi.key?(:buttonSelect)
           bs_children = false
-          props = {"id"     => bgi[:buttonSelect],
-                   "type"   => "buttonSelect",
-                   "img"    => "#{bgi[:image] ? bgi[:image] : bgi[:buttonSelect]}.png",
-                   "imgdis" => "#{bgi[:image] ? bgi[:image] : bgi[:buttonSelect]}.png"}
+          props = {
+            "id"     => bgi[:buttonSelect],
+            "type"   => "buttonSelect",
+            "img"    => img = "#{bgi[:image] ? bgi[:image] : bgi[:buttonSelect]}.png",
+            "imgdis" => img,
+            :icon    => bgi[:icon]
+          }
           props["title"] = bgi[:title] unless bgi[:title].blank?
-          props["text"] = CGI.escapeHTML("#{bgi[:text]}") unless bgi[:text].blank?
+          props["text"]  = bgi[:text]  unless bgi[:text].blank?
           if bgi[:buttonSelect] == "history_choice" && x_tree_history.length < 2
             props["enabled"] = false  # Show disabled history button if no history
           else
@@ -95,6 +97,7 @@ class ApplicationHelper::ToolbarBuilder
 
           toolbar << props
           current_item = props
+          any_visible = false
           bgi[:items].each_with_index do |bsi, bsi_idx|             # Go thru all of the buttonSelect items
             if bsi.key?(:separator)                             # If separator found, add it
               props = {"id" => "sep_#{bg_idx}_#{bsi_idx}", "type" => "separator"}
@@ -102,29 +105,34 @@ class ApplicationHelper::ToolbarBuilder
               next if bsi[:image] == 'pdf' && !PdfGenerator.available?
               next if build_toolbar_hide_button(bsi[:pressed] || bsi[:button])  # Use pressed, else button name
               bs_children = true
-              props = {"id"     => bgi[:buttonSelect] + "__" + bsi[:button],
-                       "type"   => "button",
-                       "img"    => "#{bsi[:image] ? bsi[:image] : bsi[:button]}.png",
-                       "imgdis" => "#{bsi[:image] ? bsi[:image] : bsi[:button]}.png"}
+              props = {
+                "id"     => bgi[:buttonSelect] + "__" + bsi[:button],
+                "type"   => "button",
+                "img"    => img = "#{bsi[:image] ? bsi[:image] : bsi[:button]}.png",
+                "imgdis" => img,
+                :icon    => bsi[:icon]
+              }
               if bsi[:button].starts_with?("history_")
                 if x_tree_history.length > 1
-                  props["text"] = CGI.escapeHTML(x_tree_history[bsi[:button].split("_").last.to_i][:text])
+                  props["text"] = x_tree_history[bsi[:button].split("_").last.to_i][:text]
                 end
               else
-                text = eval("\"#{bsi[:text]}\"") unless bsi[:text].blank? # Evaluate substitutions in text
-                props["text"] = CGI.escapeHTML("#{text}") unless bsi[:text].blank?
+                props["text"] = eval("\"#{bsi[:text]}\"") unless bsi[:text].blank?
               end
               props["enabled"] = "#{bsi[:enabled]}" unless bsi[:enabled].blank?
               dis_title = build_toolbar_disable_button(bsi[:button])
               props["enabled"] = "false" if dis_title
-              bsi[:title] = dis_title if dis_title
-              title = eval("\"#{bsi[:title]}\"") unless bsi[:title].blank?  # Evaluate substitutions in text
-              props["title"] = dis_title.kind_of?(String) ? CGI.escapeHTML(dis_title) : CGI.escapeHTML("#{title}")
+              title = eval("\"#{bsi[:title]}\"") unless bsi[:title].blank?
+              props["title"] = dis_title.kind_of?(String) ? dis_title : title
             end
             current_item[:items] ||= []
             current_item[:items] << props
             build_toolbar_save_button(bsi, props, bgi[:buttonSelect]) if bsi[:button] # Save if a button (not sep)
+
+            any_visible ||= !props[:hidden]
           end
+          current_item[:hidden] = !any_visible
+
           build_toolbar_save_button(bgi, current_item) if bs_children || bgi[:buttonSelect] == "history_choice"
           if bs_children
             sep_added = true                                        # Separator has officially been added
@@ -140,13 +148,16 @@ class ApplicationHelper::ToolbarBuilder
                            timeline_txt timeline_csv timeline_pdf).include?(bgi[:button])
           end
           sep_needed = true unless button_hide
-          props = {"id"     => bgi[:button],
-                   "type"   => "button",
-                   "img"    => "#{get_image(bgi[:image], bgi[:button]) ? get_image(bgi[:image], bgi[:button]) : bgi[:button]}.png",
-                   "imgdis" => "#{bgi[:image] ? bgi[:image] : bgi[:button]}.png"}
+          props = {
+            "id"     => bgi[:button],
+            "type"   => "button",
+            "img"    => "#{get_image(bgi[:image], bgi[:button]) ? get_image(bgi[:image], bgi[:button]) : bgi[:button]}.png",
+            "imgdis" => "#{bgi[:image] ? bgi[:image] : bgi[:button]}.png",
+            :icon    => bgi[:icon]
+          }
           props["enabled"] = "#{bgi[:enabled]}" unless bgi[:enabled].blank?
           props["enabled"] = "false" if dis_title = build_toolbar_disable_button(bgi[:button]) || button_hide
-          props["text"] = CGI.escapeHTML("#{bgi[:text]}") unless bgi[:text].blank?
+          props["text"]    = bgi[:text] unless bgi[:text].blank?
           # set pdf button to be hidden if graphical summary screen is set by default
           bgi[:hidden] = %w(download_view vm_download_pdf).include?(bgi[:button]) && button_hide
           title = eval("\"#{bgi[:title]}\"") unless bgi[:title].blank? # Evaluate substitutions in text
@@ -174,8 +185,9 @@ class ApplicationHelper::ToolbarBuilder
           props = {
             "id"     => bgi[:buttonTwoState],
             "type"   => "buttonTwoState",
-            "img"    => "#{bgi[:image] ? bgi[:image] : bgi[:buttonTwoState]}.png",
-            "imgdis" => "#{bgi[:image] ? bgi[:image] : bgi[:buttonTwoState]}.png"
+            "img"    => img = "#{bgi[:image] ? bgi[:image] : bgi[:buttonTwoState]}.png",
+            "imgdis" => img,
+            :icon    => bgi[:icon]
           }
           props["title"]    = eval("\"#{bgi[:title]}\"") unless bgi[:title].blank?
           props["enabled"]  = "#{bgi[:enabled]}" unless bgi[:enabled].blank?
@@ -203,11 +215,11 @@ class ApplicationHelper::ToolbarBuilder
     options[:enabled]  = "true" unless options.key?(:enabled)
     button             = {}
     button_id          = input[:id]
-    button_name        = CGI.escapeHTML(input[:name].to_s)
+    button_name        = input[:name].to_s
     button[:button]    = "custom__custom_#{button_id}"
     button[:image]     = "custom-#{input[:image]}"
     button[:text]      = button_name if input[:text_display]
-    button[:title]     = CGI.escapeHTML(input[:description].to_s)
+    button[:title]     = input[:description].to_s
     button[:enabled]   = options[:enabled]
     button[:url]       = "button"
     button[:url_parms] = "?id=#{record.id}&button_id=#{button_id}&cls=#{record.class}&pressed=custom_button&desc=#{button_name}"

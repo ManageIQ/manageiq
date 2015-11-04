@@ -1,52 +1,57 @@
 class ContainerTopologyService
   def initialize(provider_id)
     @provider_id = provider_id
+    @providers = retrieve_providers
   end
 
   def build_topology
-    nodes, services = entities
     topology = {}
     topo_items = {}
     links = []
-    nodes.each do |n|
-      topo_items[n.ems_ref] = build_entity_data(n, "Node")
-      n.container_groups.each do |cg|
-        topo_items[cg.ems_ref] = build_entity_data(cg, "Pod")
-        links << build_link(n.ems_ref, cg.ems_ref)
-        cg.containers.each do |c|
-          topo_items[c.ems_ref] = build_entity_data(c, "Container")
-          links << build_link(cg.ems_ref, c.ems_ref)
-        end
-        if cg.container_replicator
-          cr = cg.container_replicator
-          topo_items[cr.ems_ref] = build_entity_data(cr, "Replicator")
-          links << build_link(cg.ems_ref, cr.ems_ref)
-        end
-      end
 
-      if n.lives_on
-        kind = n.lives_on.kind_of?(Vm) ? "VM" : "Host"
-        topo_items[n.lives_on.uid_ems] = build_entity_data(n.lives_on, kind)
-        links << build_link(n.ems_ref, n.lives_on.uid_ems)
-        if kind == 'VM' # add link to Host
-          host = n.lives_on.host
-          if host
-            topo_items[host.uid_ems] = build_entity_data(host, "Host")
-            links << build_link(n.lives_on.uid_ems, host.uid_ems)
+    @providers.each do |provider|
+      topo_items[provider.id.to_s] =  build_entity_data(provider, provider.type.split('::')[2])
+      provider.container_nodes.each { |n|
+          topo_items[n.ems_ref] = build_entity_data(n, "Node")
+          links << build_link(provider.id.to_s, n.ems_ref)
+          n.container_groups.each do |cg|
+            topo_items[cg.ems_ref] = build_entity_data(cg, "Pod")
+            links << build_link(n.ems_ref, cg.ems_ref)
+            cg.containers.each do |c|
+              topo_items[c.ems_ref] = build_entity_data(c, "Container")
+              links << build_link(cg.ems_ref, c.ems_ref)
+            end
+            if cg.container_replicator
+              cr = cg.container_replicator
+              topo_items[cr.ems_ref] = build_entity_data(cr, "Replicator")
+              links << build_link(cg.ems_ref, cr.ems_ref)
+            end
+          end
+
+        if n.lives_on
+          kind = n.lives_on.kind_of?(Vm) ? "VM" : "Host"
+          topo_items[n.lives_on.uid_ems] = build_entity_data(n.lives_on, kind)
+          links << build_link(n.ems_ref, n.lives_on.uid_ems)
+          if kind == 'VM' # add link to Host
+            host = n.lives_on.host
+            if host
+              topo_items[host.uid_ems] = build_entity_data(host, "Host")
+              links << build_link(n.lives_on.uid_ems, host.uid_ems)
+            end
           end
         end
-      end
-    end
+      }
 
-    services.each do |s|
-      topo_items[s.ems_ref] = build_entity_data(s, "Service")
-      s.container_groups.each { |cg| links << build_link(s.ems_ref, cg.ems_ref) } if s.container_groups.size > 0
-      if s.container_routes.size > 0
-        s.container_routes.each { |r|
-          topo_items[r.ems_ref] = build_entity_data(r, "Route")
-          links << build_link(s.ems_ref, r.ems_ref)
-        }
-      end
+      provider.container_services.each { |s|
+        topo_items[s.ems_ref] = build_entity_data(s, "Service")
+        s.container_groups.each { |cg| links << build_link(s.ems_ref, cg.ems_ref) } if s.container_groups.size > 0
+        if s.container_routes.size > 0
+          s.container_routes.each { |r|
+            topo_items[r.ems_ref] = build_entity_data(r, "Route")
+            links << build_link(s.ems_ref, r.ems_ref)
+          }
+        end
+      }
     end
 
     topology[:items] = topo_items
@@ -57,9 +62,9 @@ class ContainerTopologyService
 
   def build_entity_data(entity, kind)
     status = entity_status(entity, kind)
-
     id = case kind
-         when 'VM', 'Host' then entity.uid_ems
+           when 'VM', 'Host' then entity.uid_ems
+           when 'Kubernetes', 'Openshift', 'Atomic' then entity.id.to_s
          else entity.ems_ref
          end
 
@@ -96,27 +101,34 @@ class ContainerTopologyService
     {:source => source, :target => target}
   end
 
-  def entities
-    provider = @provider_id ? ExtManagementSystem.find(@provider_id.to_i) : nil
-    if provider.respond_to?(:container_nodes) && provider.respond_to?(:container_services)
-      nodes = provider.container_nodes
-      services = provider.container_services
-    else
-      nodes = ContainerNode.all
-      services = ContainerService.all
+  def retrieve_providers
+    if @provider_id
+      providers = ManageIQ::Providers::ContainerManager.where(:id => @provider_id)
+    else  # provider id is empty when the topology is generated for all the providers together
+      providers = ManageIQ::Providers::ContainerManager.all
     end
-    [nodes, services]
+    providers
   end
 
   def build_kinds
-    {:Replicator => true,
-     :Pod        => true,
-     :Container  => true,
-     :Node       => true,
-     :Service    => true,
-     :Host       => true,
-     :VM         => true,
-     :Route      => true
-    }
+    kinds =  { :Replicator => true,
+               :Pod        => true,
+               :Container  => true,
+               :Node       => true,
+               :Service    => true,
+               :Host       => true,
+               :VM         => true,
+               :Route      => true
+             }
+    if @providers.any? { |instance| instance.kind_of?(ManageIQ::Providers::Kubernetes::ContainerManager) }
+      kinds.merge!(:Kubernetes => true)
+    end
+    if @providers.any? { |instance| instance.kind_of?(ManageIQ::Providers::Openshift::ContainerManager) }
+      kinds.merge!(:Openshift => true)
+    end
+    if @providers.any? { |instance| instance.kind_of?(ManageIQ::Providers::Atomic::ContainerManager) }
+      kinds.merge!(:Atomic => true)
+    end
+    kinds
   end
 end

@@ -1,17 +1,8 @@
 require "spec_helper"
 
 describe MiqDatabase do
-  it "has a size" do
-    db = MiqDatabase.seed
-    expect(db.size).to be >= 0
-  end
-
   context ".seed" do
-    it "When called multiple times should only create 1 record" do
-      3.times { MiqDatabase.seed }
-
-      expect(MiqDatabase.count).to eq(1)
-    end
+    include_examples ".seed called multiple times"
 
     context "default values" do
       it "new record" do

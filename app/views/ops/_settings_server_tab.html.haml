@@ -19,20 +19,15 @@
     .form-group
       %label.col-md-2.control-label
         = _("Resides on VM")
-      .col-md-8{:style => "padding: 0px"}
-        %table{:cellpadding => "0", :cellspacing => "0"}
-          %tr
-            - vm = @selected_server.vm
-            - if vm
-              %td.image.pointer{:onclick => "DoNav('/vm/show/#{vm.id}');", :title => _("Click to view this VM")}
-                %img{:align => "left", :height => "20", :src => "/images/icons/new/vm.png", :width => "20"}/
-              %td.pointer.hover-text{:class => cycle('row0', 'row1'), :onclick => "DoNav('/vm/show/#{vm.id}');",
-                :title => _("Click to view this VM")}
-                = h(vm.name)
-            - else
-              .col-md-8
-                %p.form-control-static
-                  = _("Not Available")
+      .col-md-8
+        - vm = @selected_server.vm
+        - if vm
+          %span.fa.fa-desktop.pointer{:onclick => "DoNav('/vm/show/#{vm.id}')",
+                                      :title   => _("Click to view this VM")}
+            = h(vm.name)
+        - else
+          %span.fa.fa-desktop
+            = _("Not Available")
     .form-group
       %label.col-md-2.control-label
         = _("Company Name")

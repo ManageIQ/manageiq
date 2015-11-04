@@ -191,6 +191,7 @@ class MiqServer < ActiveRecord::Base
 
   def self.seed
     unless exists?(:guid => my_guid)
+      Zone.seed
       _log.info("Creating Default MiqServer with guid=[#{my_guid}], zone=[#{Zone.default_zone.name}]")
       create!(:guid => my_guid, :zone => Zone.default_zone)
       my_server_clear_cache

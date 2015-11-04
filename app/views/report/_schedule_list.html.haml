@@ -5,6 +5,7 @@
     = render :partial => 'show_schedule'
   - elsif @schedules && @view
     - if @view.table.data.empty?
+      = render :partial => "layouts/flash_msg"
       = render :partial => 'layouts/info_msg', :locals => {:message => _("No Schedules available.")}
     - else
       = render :partial => 'layouts/x_gtl'

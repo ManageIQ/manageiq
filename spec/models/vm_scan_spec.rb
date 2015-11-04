@@ -184,5 +184,39 @@ describe VmScan do
         args["vmScanProfiles"].should eq profiles
       end
     end
+
+    context "#call_check_policy" do
+      it "should raise vm_scan_start for Vm" do
+        expect(MiqEvent).to receive(:raise_evm_event).with(
+          an_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm),
+          "vm_scan_start",
+          an_instance_of(Hash),
+          an_instance_of(Hash)
+        )
+        @job.call_check_policy
+      end
+
+      it "should raise vm_scan_start for template" do
+        template = FactoryGirl.create(
+          :template_vmware,
+          :name                  => "test_vm",
+          :location              => "abc/abc.vmx",
+          :raw_power_state       => 'poweredOn',
+          :host                  => @host,
+          :ext_management_system => @ems,
+          :miq_group             => FactoryGirl.create(:miq_group),
+          :storage               => @storage
+        )
+        job = template.scan
+
+        expect(MiqEvent).to receive(:raise_evm_event).with(
+          an_instance_of(ManageIQ::Providers::Vmware::InfraManager::Template),
+          "vm_scan_start",
+          an_instance_of(Hash),
+          an_instance_of(Hash)
+        )
+        job.call_check_policy
+      end
+    end
   end
 end

@@ -19,7 +19,7 @@ gem "jquery-hotkeys-rails"
 gem "jquery-rails",                   "~>4.0.4"
 gem "jquery-rjs",                     "=0.1.1",                       :git => "https://github.com/amatsuda/jquery-rjs.git"
 gem "lodash-rails",                   "~>3.10.0"
-gem "patternfly-sass",                "~>2.4.0"
+gem "patternfly-sass",                "~>2.5.0"
 gem "css_splitter"
 gem "sass-rails"
 
@@ -61,7 +61,7 @@ gem "spice-html5-rails"
 gem "thin",                           "~>1.6.0"  # Used by rails server through rack
 
 # Needed by the REST API
-gem "gettext_i18n_rails",             "~>1.3.0"
+gem "gettext_i18n_rails",             "~>1.3.1"
 gem "jbuilder",                       "~>2.3.1"
 gem "paperclip",                      "~>4.3.0"
 gem "rails-i18n",                                                     :git => "git://github.com/svenfuchs/rails-i18n.git", :branch => "master"
@@ -122,6 +122,7 @@ end
 source "https://rails-assets.org" do
   gem "rails-assets-c3",                              "~>0.4.10"
   gem "rails-assets-angular",                         "~>1.4.3"
+  gem "rails-assets-angular-animate",                 "~>1.4.3"
   gem "rails-assets-angular-mocks",                   "~>1.4.3"
   gem "rails-assets-bootstrap-datepicker",            "~>1.4.0"
   gem "rails-assets-markusslima--bootstrap-filestyle","~>1.2.1"
@@ -131,7 +132,7 @@ source "https://rails-assets.org" do
   gem "rails-assets-moment",                          "~>2.10.3"
   gem "rails-assets-moment-strftime",                 "~>0.1.5"
   gem "rails-assets-moment-timezone",                 "~>0.4.0"
-  gem "rails-assets-angular-patternfly",              "~>2.3.2"
+  gem "rails-assets-angular-patternfly",              "~>2.5.0"
   gem "rails-assets-sprintf",                         "~>1.0.3"
   gem "rails-assets-numeral",                         "~>1.5.3"
   gem "rails-assets-slickgrid",                       "~>2.1.0"

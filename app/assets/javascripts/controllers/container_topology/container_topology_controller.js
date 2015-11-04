@@ -122,17 +122,40 @@ angular.module('topologyApp', ['kubernetesUI','ui.bootstrap'])
             case "Pod":
                 class_name = "container_group";
                 break;
+            case "Kubernetes":
+                class_name = "vendor-kubernetes";
+                break;
+            case "Openshift":
+                class_name = "vendor-openshift";
+                break;
+            case "Atomic":
+                class_name = "vendor-atomic";
+                break;
         }
         return class_name;
     }
 
     function dblclick(d) {
-        var url = '/' + class_name(d) + '/show/' + d.item.miq_id;
+        var entity_url = "";
+        switch (d.item.kind) {
+            case "Kubernetes":
+            case "Openshift":
+            case "Atomic":
+                entity_url = "ems_container";
+                break;
+            default :
+                entity_url = class_name(d);
+        }
+        var url = '/' + entity_url + '/show/' + d.item.miq_id;
         window.location.assign(url);
     }
 
     function getDimensions(d) {
         switch (d.item.kind) {
+            case "Kubernetes":
+            case "Openshift":
+            case "Atomic":
+                return { x: -20, y: -20, height: 40, width: 40, r: 28};
             case "Container" :
                 return { x: -7, y: -7,height: 14, width: 14, r: 13};
             case "Node" :

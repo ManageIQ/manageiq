@@ -1,7 +1,3 @@
-# TODO: is this required?  never seemed to be used anywhere
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "Scvmm")
-require 'MiqScvmmInventory'
-
 module ManageIQ::Providers::Microsoft
   class InfraManager::Refresher < EmsRefresh::Refreshers::BaseRefresher
     include EmsRefresh::Refreshers::EmsRefresherMixin

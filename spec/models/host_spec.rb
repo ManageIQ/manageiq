@@ -362,6 +362,34 @@ describe Host do
         Host.lookUpHost(@bad_partial_hostname_multi, nil).should be_nil
       end
     end
+    context "when hosts have duplicate hostnames" do
+      before do
+        @fqdn_hostname            = "test1.fake.com"
+        @ipaddress_1              = "1.1.1.1"
+        @ipaddress_2              = "2.2.2.2"
+        @ems_id_1                 = 1
+        @ems_id_2                 = 2
+        @ems_ref_1                = "host-1"
+        @ems_ref_2                = "host-2"
+        @host = FactoryGirl.create(:host_vmware, :hostname => @fqdn_hostname, :ipaddress => @ipaddress_1,
+                                   :ems_ref => @ems_ref_1, :ems_id => @ems_id_1)
+      end
+      it "with only fqdn and ipaddress" do
+        Host.lookUpHost(@fqdn_hostname, @ipaddress_1).should == @host
+      end
+      it "with fqdn, ipaddress, and ems_ref finds right host" do
+        Host.lookUpHost(@fqdn_hostname, @ipaddress_1, :ems_ref => @ems_ref_1).should == @host
+      end
+      it "with fqdn, ipaddress, and different ems_ref returns nil" do
+        Host.lookUpHost(@fqdn_hostname, @ipaddress_2, :ems_ref => @ems_ref_2).should be_nil
+      end
+      it "with ems_ref and ems_id" do
+        Host.lookUpHost(@fqdn_hostname, @ipaddress_1, :ems_ref => @ems_ref_1, :ems_id => @ems_id_1).should == @host
+      end
+      it "with ems_ref and other ems_id" do
+        Host.lookUpHost(@fqdn_hostname, @ipaddress_1, :ems_ref => @ems_ref_1, :ems_id => @ems_id_2).should be_nil
+      end
+    end
   end
 
   it ".host_discovery_types" do

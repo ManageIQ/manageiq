@@ -25,6 +25,7 @@ module ActiveRecord
       [:limit, :limit],
       [:order, :order],
       [:offset, :offset],
+      [:select, :select]
     ]
 
     def self.apply_legacy_finder_options(options)

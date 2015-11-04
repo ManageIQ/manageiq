@@ -6,7 +6,7 @@ require_relative 'openstack/helper_methods'
 include Openstack::InteractionMethods
 include Openstack::HelperMethods
 
-require "#{test_base_dir}/openstack/refresh_spec_environments"
+require "#{test_base_dir}/refresh_spec_environments"
 include Openstack::RefreshSpecEnvironments
 
 require_relative 'openstack/services/identity/builder'
@@ -37,7 +37,7 @@ end
 loop do
   option = ARGV.shift
   case option
-  when '--only-environment'
+  when '--only-environment', '-o'
     argv      = ARGV.shift
     supported = allowed_enviroments
     raise ArgumentError, usage("supported --identity options are #{supported}") unless supported.include?(argv.to_sym)

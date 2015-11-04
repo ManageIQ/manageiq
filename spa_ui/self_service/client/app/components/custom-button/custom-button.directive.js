@@ -5,7 +5,7 @@
     .directive('customButton', CustomButtonDirective);
 
   /** @ngInject */
-  function CustomButtonDirective() {
+  function CustomButtonDirective($window, $timeout) {
     var directive = {
       restrict: 'AE',
       replace: true,
@@ -24,6 +24,38 @@
 
     function link(scope, element, attrs, vm, transclude) {
       vm.activate();
+      
+      var win = angular.element($window);
+      win.bind('resize', function() { 
+        scope.$apply();
+      });
+
+      scope.$watch(getWindowWidth, function(newWidth, oldWidth) {
+        if (newWidth !== oldWidth) {
+          checkRoomForButtons();
+        }
+      });
+
+      // Set inital button state
+      checkRoomForButtons();
+
+      function checkRoomForButtons() {
+        // Allow the buttons to render to calculate width
+        vm.collapseCustomButtons = false;
+
+        $timeout(function() {
+          var outerWidth = document.querySelectorAll('.ss-details-header__actions')[0].offsetWidth;
+          var innerWidth = document.querySelectorAll('.ss-details-header__actions__inner')[0].offsetWidth;
+          if (innerWidth >= outerWidth) {
+            // Not enough room - collapse them down
+            vm.collapseCustomButtons = true;
+          }
+        }, 0);
+      }
+
+      function getWindowWidth() {
+        return win.width();
+      }
     }
 
     /** @ngInject */
@@ -32,6 +64,7 @@
 
       vm.activate = activate;
       vm.customButtonAction = customButtonAction;
+      vm.collapseCustomButtons = false;
 
       function activate() {
         angular.forEach(vm.actions, processActionButtons);

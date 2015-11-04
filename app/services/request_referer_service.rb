@@ -34,6 +34,7 @@ class RequestRefererService
     'container_project'        => %w(show:id show_list), # http://localhost:3000/container_project/show/400r1
     'container_image'          => %w(show:id show_list), # http://localhost:3000/container_image/show/400r1
     'container_image_registry' => %w(show:id show_list), # http://localhost:3000/container_image_registry/show/400r1
+    'container_dashboard'      => %w(show:id show_list), # http://localhost:3000/container_dashboard/show/5
     'dashboard'                => %w(report_only),       # needed for IE (multiple versions)
     'report'                   => %w(report_only),       # needed for IE (multiple versions)
   }.freeze

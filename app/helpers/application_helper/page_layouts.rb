@@ -5,6 +5,7 @@ module ApplicationHelper::PageLayouts
          @layout == "exception" ||
          @layout == "chargeback" ||
          @layout == "container_topology" ||
+         @layout == "container_dashboard" ||
          @layout.starts_with?("miq_request") ||
          %w(about all_tasks all_ui_tasks configuration diagnostics miq_ae_automate_button miq_ae_export
             miq_ae_logs miq_ae_tools miq_policy miq_policy_export miq_policy_logs my_tasks my_ui_tasks
@@ -23,7 +24,7 @@ module ApplicationHelper::PageLayouts
        (@layout == 'vm' && controller.action_name == 'edit') ||
        (@layout == "report" && ["new", "create", "edit", "copy", "update", "explorer"].include?(controller.action_name))
       return false
-    elsif @layout == "dashboard" # Dashboard tabs are located in taskbar because they are otherwise hidden behind the taskbar regardless of z-index -->
+    elsif @layout == "dashboard" || @layout == "container_dashboard" # Dashboard tabs are located in taskbar because they are otherwise hidden behind the taskbar regardless of z-index -->
       return false
     end
     true

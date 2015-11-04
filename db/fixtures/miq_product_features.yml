@@ -4102,3 +4102,15 @@
           :description: Revert to selected snapshot on Templates
           :feature_type: control
           :identifier: miq_template_snapshot_revert
+
+# Container Dashboard
+- :name: Containers Dashboard
+  :description: Containers Dashboard
+  :feature_type: node
+  :identifier: container_dashboard
+  :children:
+  - :name: View
+    :description: View Containers Dashboard
+    :feature_type: view
+    :identifier: container_dashboard_view
+

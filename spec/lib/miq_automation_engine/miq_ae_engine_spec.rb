@@ -551,6 +551,14 @@ module MiqAeEngineSpec
       lambda { MiqAeEngine.instantiate("/CYCLICAL/AUTOMATE/test4", @user) }.should raise_error(MiqAeException::CyclicalRelationship)
     end
 
+    it "raises exception if invalid path" do
+      expect { MiqAeEngine.instantiate("miqaedb:A/EVM", @user) }.to raise_exception(MiqAeException::InvalidPathFormat)
+    end
+
+    it "raises exception if invalid path" do
+      expect { MiqAeEngine.instantiate("abc:A/EVM", @user) }.to raise_exception(MiqAeException::InvalidPathFormat)
+    end
+
     it "properly processes assertions" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "miq_ae_engine_spec3"), @domain)
       ws = MiqAeEngine.instantiate("/SYSTEM/EVM/AUTOMATE/test1", @user)

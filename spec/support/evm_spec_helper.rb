@@ -87,22 +87,6 @@ module EvmSpecHelper
   end
   private_class_method :filter_specific_features
 
-  def self.seed_admin_user_and_friends
-    create_guid_miq_server_zone
-
-    FactoryGirl.create(:user,
-                       :name       => "Administrator",
-                       :email      => "admin@example.com",
-                       :password   => "smartvm",
-                       :userid     => "admin",
-                       :settings   => {"Setting1" => 1, "Setting2" => 2, "Setting3" => 3},
-                       :filters    => {"Filter1" => 1, "Filter2" => 2, "Filter3" => 3},
-                       :first_name => "Bob",
-                       :last_name  => "Smith",
-                       :role       => "super_administrator",
-                      )
-  end
-
   def self.ruby_object_usage
     types = Hash.new { |h, k| h[k] = Hash.new(0) }
     ObjectSpace.each_object do |obj|

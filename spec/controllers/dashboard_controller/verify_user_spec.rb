@@ -1,13 +1,18 @@
 require "spec_helper"
 
 describe DashboardController do
+  let(:user) do
+    FactoryGirl.create(:user_with_email, :password => "smartvm", :role => "super_administrator")
+  end
+
   before(:each) do
-    EvmSpecHelper.seed_admin_user_and_friends
+    EvmSpecHelper.local_miq_server
+    user
   end
 
   let(:valid_user) do
     {
-      :name            => 'admin',
+      :name            => user.userid,
       :password        => 'smartvm',
       :new_password    => nil,
       :verify_password => nil,
@@ -16,7 +21,7 @@ describe DashboardController do
 
   let(:invalid_password) do
     {
-      :name            => 'admin',
+      :name            => user.userid,
       :password        => 'foobar',
       :new_password    => nil,
       :verify_password => nil,

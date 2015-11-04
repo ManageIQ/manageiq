@@ -18,8 +18,8 @@ describe EvmDatabase do
 
   context "#seed_primordial" do
     it "populates seeds" do
+      described_class::PRIMORDIAL_CLASSES.each { |klass| expect(klass.constantize).to receive(:seed) }
       described_class.seed_primordial
-      expect(Tenant.count).to eq(1)
     end
   end
 end
