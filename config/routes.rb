@@ -638,6 +638,7 @@ Vmdb::Application.routes.draw do
         listnav_search_selected
         panel_control
         protect
+        provider_type_field_changed
         quick_search
         sections_field_changed
         show
