@@ -54,9 +54,7 @@ describe VmCloudController do
     before do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
       EvmSpecHelper.create_guid_miq_server_zone
-      @vmcloud = VmCloud.create(:name     => "test_vmcloud",
-                                :location => "test_vmcloud_location",
-                                :vendor   => "openstack")
+      @vmcloud = FactoryGirl.create(:vm_cloud)
       get :explorer
       request.env['HTTP_REFERER'] = request.fullpath
     end
