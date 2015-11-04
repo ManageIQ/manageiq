@@ -9,14 +9,14 @@
   - sidewidth = simulate ? 5 : session[:sidebar][params[:controller]] ||= 3
   - maindiv = 12 - sidewidth
   - sidebar = sidewidth == 0 ? 'hidden-md hidden-lg col-md-0' : "col-md-#{sidewidth} col-md-pull-#{maindiv}"
-  .container-fluid.resizable-sidebar{:style => "overflow: hidden; height: 100%;"}
-    .row#center_div{:style => "height: 100%"}
-      #right_div.resizable{:style => "height: 100%", :class => "col-md-#{maindiv} col-md-push-#{sidewidth}"}
+  .container-fluid.resizable-sidebar.max-height{:style => "overflow: hidden; height: 100%;"}
+    .row.scrollable-sm#center_div{:style => "height: 100%"}
+      #right_div.resizable.max-height{:class => "col-md-#{maindiv} col-md-push-#{sidewidth}"}
         .row.toolbar-pf#toolbar
           .col-md-12
             .toolbar-pf-actions
               = render :partial => "layouts/x_taskbar"
-        .row{:style => "overflow: auto;height: calc(100% - 88px);"}
+        .row.max-height{:style => "overflow: auto;height: calc(100% - 88px);"}
           .col-md-12
             .row
               .col-md-7#explorer
@@ -40,11 +40,12 @@
               .col-md-12
                 = yield
         .row.toolbar-pf#paging_div
-          .toolbar-pf-actions
-            - if saved_report_paging?
-              = render(:partial => 'layouts/saved_report_paging_bar', :locals => {:pages => @sb[:pages]})
-            - else
-              = render(:partial => '/layouts/x_pagingcontrols')
+          .col-md-12
+            .toolbar-pf-actions
+              - if saved_report_paging?
+                = render(:partial => 'layouts/saved_report_paging_bar', :locals => {:pages => @sb[:pages]})
+              - else
+                = render(:partial => '/layouts/x_pagingcontrols')
 
         - unless simulate
           .resizer.hidden-xs
@@ -55,7 +56,7 @@
                 .btn.btn-default.resize-right{:class => sidewidth == 5 ? 'btn-disabled' : ''}
                   %span.fa.fa-angle-right
 
-      #left_div.resizable.sidebar-pf.sidebar-pf-left.scrollable{:style => "height: 100%", :class => sidebar}
+      #left_div.resizable.sidebar-pf.sidebar-pf-left.scrollable.max-height{:class => sidebar}
         #default_left_cell
           - if @accords && @trees
             = render :partial => "layouts/listnav"
@@ -63,7 +64,7 @@
         #custom_left_cell
 - else
   -#.container-fluid.resizable-sidebar{:style => "overflow: hidden; height: 100%; background: #fff;"}ű
-  .container-fluid{:style => "overflow: hidden; height: 100%; background: #fff;"}
+  .container-fluid{:style => "overflow: hidden; height: 100%;"}
     .row.scrollable-sm#center_div{:style => "height: 100%"}
       - if layout_uses_listnav?
         -# Helper variables for the sidebar
@@ -78,7 +79,7 @@
               .col-md-12
                 .toolbar-pf-actions
                   = render :partial => "layouts/taskbar"
-          .row{:style => "overflow: auto;height: calc(100% - 88px);"}
+          .row.max-height{:style => "overflow: auto;height: calc(100% - 88px);"}
             .col-md-12
               .row
                 .col-md-7
@@ -92,15 +93,16 @@
                 .col-md-12
                   = yield
           .row.toolbar-pf#paging_div
-            .toolbar-pf-actions
-              - unless @embedded
-                - if @pages && @items_per_page != ONE_MILLION
-                  = render(:partial => '/layouts/pagingcontrols',
-                          :locals => {:pages      => @pages,
-                                       :action_url => action_url_for_views,
-                                       :db         => @view.db,
-                                       :headers    => @view.headers,
-                                       :button_div => 'center_tb'})
+            .col-md-12
+              .toolbar-pf-actions
+                - unless @embedded
+                  - if @pages && @items_per_page != ONE_MILLION
+                    = render(:partial => '/layouts/pagingcontrols',
+                            :locals => {:pages      => @pages,
+                                         :action_url => action_url_for_views,
+                                         :db         => @view.db,
+                                         :headers    => @view.headers,
+                                         :button_div => 'center_tb'})
 
           -# Resizing buttons for the resizable sidebar
             .resizer.hidden-xs
@@ -122,7 +124,7 @@
                 - if @widgets_menu
                   = render :partial => "dashboard/dropdownbar"
 
-          .row{:style => "overflow: auto;height: calc(100% - 44px);"}
+          .row.scrollable-sm{:style => "overflow: auto;height: calc(100% - 44px);"}
             .col-md-12
               .row
                 .col-md-12
@@ -139,7 +141,7 @@
               .col-md-12
                 .toolbar-pf-actions
                   = render :partial => "layouts/taskbar"
-          .row{:style => "overflow: auto;height: calc(100% - 88px);"}
+          .row.scrollable-sm{:style => "overflow: auto;height: calc(100% - 88px);"}
             .col-md-12
               .row
                 .col-md-12
