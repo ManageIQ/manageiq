@@ -51,6 +51,7 @@ describe VmCloudController do
   end
 
   context "skip or drop breadcrumb" do
+    subject { controller.instance_variable_get(:@breadcrumbs) }
     before do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
       EvmSpecHelper.create_guid_miq_server_zone
@@ -60,14 +61,12 @@ describe VmCloudController do
 
     it 'skips dropping a breadcrumb when a button action is executed' do
       post :x_button, :id => nil, :pressed => 'instance_ownership'
-      breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
-      expect(breadcrumbs).to eq([{:name => "Instances", :url => "/vm_cloud/explorer"}])
+      expect(subject).to eq([{:name => "Instances", :url => "/vm_cloud/explorer"}])
     end
 
     it 'drops a breadcrumb when an action allowing breadcrumbs is executed' do
       post :accordion_select, :id => "images_filter"
-      breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
-      expect(breadcrumbs).to eq([{:name => "Images", :url => "/vm_cloud/explorer"}])
+      expect(subject).to eq([{:name => "Images", :url => "/vm_cloud/explorer"}])
     end
   end
 end
