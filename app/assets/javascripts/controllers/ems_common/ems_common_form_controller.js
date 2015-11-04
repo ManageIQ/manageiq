@@ -8,6 +8,7 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
       zone: '',
       hostname: '',
       api_port: '',
+      api_version: '',
       provider_region: '',
       default_userid: '',
       default_password: '',
@@ -45,6 +46,7 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
         $scope.emsCommonModel.emstype_vm                      = data.emstype_vm;
         $scope.emsCommonModel.openstack_infra_providers_exist = data.openstack_infra_providers_exist;
         $scope.emsCommonModel.api_port                        = 5000;
+        $scope.emsCommonModel.api_version                     = 'v2';
         miqService.sparkleOff();
       });
       $scope.afterGet  = true;
@@ -64,6 +66,7 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
         $scope.emsCommonModel.provider_id                     = data.provider_id.toString();
 
         $scope.emsCommonModel.api_port                        = data.api_port;
+        $scope.emsCommonModel.api_version                     = data.api_version;
         $scope.emsCommonModel.provider_region                 = data.provider_region;
 
         $scope.emsCommonModel.default_userid                  = data.default_userid;
