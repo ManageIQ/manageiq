@@ -109,7 +109,7 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
       new_emses << create_discovered_region("Azure-eastus", clientid, clientkey, azure_tenant_id, all_ems_names)
     end
 
-    EmsRefresh.queue_refresh(new_emses) unless new_emses.blank?  # PUT BACK BEFORE PR
+    EmsRefresh.queue_refresh(new_emses) unless new_emses.blank? # PUT BACK BEFORE PR
 
     new_emses
   end

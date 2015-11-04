@@ -2,115 +2,115 @@ module ManageIQ
   module Providers::Azure
     module Regions
       REGIONS = {
-        "westus"      => {
+        "westus" => {
           :name        => "westus",
           :description => "US West",
         },
-        "eastus"      => {
+        "eastus" => {
           :name        => "eastus",
           :description => "US East",
         },
-        "australiaeast"      => {
+        "australiaeast" => {
           :name        => "australiaeast",
           :description => "Australia East",
         },
-        "australiasoutheast"      => {
+        "australiasoutheast" => {
           :name        => "australiasoutheast",
           :description => "Australia South East",
         },
-        "centralus"      => {
+        "centralus" => {
           :name        => "centralus",
           :description => "Central US",
         },
-        "eastus2"      => {
+        "eastus2" => {
           :name        => "eastus2",
           :description => "East US2",
         },
-        "northcentralus"      => {
+        "northcentralus" => {
           :name        => "northcentralus",
           :description => "North Central US",
         },
-        "southcentralus"      => {
+        "southcentralus" => {
           :name        => "southcentralus",
           :description => "South Central US",
         },
-        "northeurope"      => {
+        "northeurope" => {
           :name        => "northeurope",
           :description => "North Eurpoe",
         },
-        "westeurope"      => {
+        "westeurope" => {
           :name        => "westeurope",
           :description => "West Eurpoe",
         },
-        "eastasia"      => {
+        "eastasia" => {
           :name        => "eastasia",
           :description => "East Asia",
         },
-        "southeastasia"      => {
+        "southeastasia" => {
           :name        => "southeastasia",
           :description => "South East Asia",
         },
-        "japaneast"      => {
+        "japaneast" => {
           :name        => "japaneast",
           :description => "Japan East",
         },
-        "japanwest"      => {
+        "japanwest" => {
           :name        => "japanwest",
           :description => "Japan West",
         },
-        "brazilsouth"      => {
+        "brazilsouth" => {
           :name        => "brazilsouth",
           :description => "Brazil South",
         },
-        "westindia"      => {
+        "westindia" => {
           :name        => "westindia",
           :description => "West India",
         },
-        "southindia"      => {
+        "southindia" => {
           :name        => "southindia",
           :description => "South India",
         },
-        "centralindia"      => {
+        "centralindia" => {
           :name        => "centralindia",
           :description => "Central India",
         },
-        "westus(partner)"      => {
+        "westus(partner)" => {
           :name        => "westus(partner)",
-          :description => "West US (partner)",
+          :description => "West US (Partner)",
         },
-        "eastus2(stage)"      => {
+        "eastus2(stage)" => {
           :name        => "eastus2(stage)",
-          :description => "East US2(stage)",
+          :description => "East US2 (Stage)",
         },
-        "northcentralus(stage)"      => {
+        "northcentralus(stage)" => {
           :name        => "northcentralus(stage)",
-          :description => "North Central US (stage)",
+          :description => "North Central US (Stage)",
         },
-        "global"      => {
+        "global" => {
           :name        => "global",
           :description => "Global",
         },
-        "msftwestus"      => {
+        "msftwestus" => {
           :name        => "msftwestus",
           :description => "MSFT West US",
         },
-        "msfteastus"      => {
+        "msfteastus" => {
           :name        => "msfteastus",
           :description => "MSFT East US",
         },
-        "msfteastasia"      => {
+        "msfteastasia" => {
           :name        => "msfteastasia",
           :description => "MSFT East Asia",
         },
-        "msftnortheurope"      => {
+        "msftnortheurope" => {
           :name        => "msftnortheurope",
           :description => "MSFT North Europe",
         },
-        "eastasia(stage)"      => {
+        "eastasia(stage)" => {
           :name        => "eastasia(stage)",
           :description => "East Asia (Stage)",
         },
-        "centralus(stage)"      => {
+        "centralus(stage)" => {
           :name        => "centralus(stage)",
           :description => "Central US (Stage)",
         },
@@ -124,7 +124,7 @@ module ManageIQ
         REGIONS.keys
       end
 
-       def self.find_by_name(name)
+      def self.find_by_name(name)
         REGIONS[name]
       end
     end
