@@ -87,7 +87,7 @@ module ReportController::Schedules
     unless flash_errors?
       msg_str = scheds.length > 1 ? _("The selected %s were deleted") : _("The selected %s was deleted")
       add_flash(msg_str % "#{ui_lookup(:model => "MiqReport")} #{ui_lookup(:models => "MiqSchedule")}",
-                :info, true)
+                :success, true)
     end
     self.x_node = "root"
     replace_right_cell(:replace_trees => [:schedules])
