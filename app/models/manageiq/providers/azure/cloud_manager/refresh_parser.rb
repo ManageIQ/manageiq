@@ -20,6 +20,7 @@ module ManageIQ::Providers
         @vns               = ::Azure::Armrest::Network::VirtualNetworkService.new(@config)
         @ips               = ::Azure::Armrest::Network::IpAddressService.new(@config)
         @rgs               = ::Azure::Armrest::ResourceGroupService.new(@config)
+        @sas               = ::Azure::Armrest::StorageAccountService.new(@config)
         @options           = options || {}
         @data              = {}
         @data_index        = {}
@@ -36,6 +37,7 @@ module ManageIQ::Providers
         get_stacks
         get_cloud_networks
         get_instances
+        get_images
         _log.info("#{log_header}...Complete")
 
         @data
@@ -117,6 +119,11 @@ module ManageIQ::Providers
         process_collection(instances, :vms) { |instance| parse_instance(instance) }
       end
 
+      def get_images
+        images = gather_data_for_this_region(@sas, "list_private_images")
+        process_collection(images, :vms) { |image| parse_image(image) }
+      end
+
       def process_collection(collection, key)
         @data[key] ||= []
 
@@ -129,10 +136,10 @@ module ManageIQ::Providers
         end
       end
 
-      def gather_data_for_this_region(arm_service)
+      def gather_data_for_this_region(arm_service, method = "list")
         results = []
         @data[:resource_groups].each do |resource_group|
-          results << arm_service.list(resource_group[:name])
+          results << arm_service.send(method, resource_group[:name])
         end
         results.flatten
       end
@@ -443,6 +450,26 @@ module ManageIQ::Providers
           :last_updated           => resource.properties.timestamp
         }
         uid = resource_uid(@subscription_id, group.downcase, new_result[:resource_category].downcase, new_result[:name])
+        return uid, new_result
+      end
+
+      def parse_image(image)
+        uid = image.uri
+        new_result = {
+          :type               => ManageIQ::Providers::Azure::CloudManager::Template.name,
+          :uid_ems            => uid,
+          :ems_ref            => uid,
+          :name               => uid.split(%r{Microsoft.Compute\/}i)[1].split('.').first,
+          :location           => @ems.provider_region,
+          :vendor             => "microsoft",
+          :raw_power_state    => "never",
+          :template           => true,
+          :publicly_available => false,
+          :hardware           => {
+            :bitness  => 64,
+            :guest_os => image.operating_system
+          }
+        }
         return uid, new_result
       end
 
