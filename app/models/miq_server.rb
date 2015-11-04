@@ -218,12 +218,12 @@ class MiqServer < ActiveRecord::Base
       update_server_config(cfg, :host, ipaddr)
     end
 
-    unless hostname.empty?
+    unless hostname.blank?
       svr_hash[:hostname] = hostname
       update_server_config(cfg, :hostname, hostname)
     end
 
-    unless mac_address.empty?
+    unless mac_address.blank?
       svr_hash[:mac_address] = mac_address
     end
 
