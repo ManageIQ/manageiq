@@ -39,33 +39,32 @@ describe VmCloudController do
     end
   end
 
-  render_views
-
-  it 'can render the explorer' do
-    session[:settings] = {:views => {}, :perpage => {:list => 10}}
-
-    EvmSpecHelper.create_guid_miq_server_zone
-    get :explorer
-    expect(response.status).to eq(200)
-    expect(response.body).to_not be_empty
-  end
-
-  context "skip or drop breadcrumb" do
-    subject { controller.instance_variable_get(:@breadcrumbs) }
+  context "with rendered views" do
     before do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
       EvmSpecHelper.create_guid_miq_server_zone
       get :explorer
     end
 
-    it 'skips dropping a breadcrumb when a button action is executed' do
-      post :x_button, :id => nil, :pressed => 'instance_ownership'
-      expect(subject).to eq([{:name => "Instances", :url => "/vm_cloud/explorer"}])
+    render_views
+
+    it 'can render the explorer' do
+      expect(response.status).to eq(200)
+      expect(response.body).to_not be_empty
     end
 
-    it 'drops a breadcrumb when an action allowing breadcrumbs is executed' do
-      post :accordion_select, :id => "images_filter"
-      expect(subject).to eq([{:name => "Images", :url => "/vm_cloud/explorer"}])
+    context "skip or drop breadcrumb" do
+      subject { controller.instance_variable_get(:@breadcrumbs) }
+
+      it 'skips dropping a breadcrumb when a button action is executed' do
+        post :x_button, :id => nil, :pressed => 'instance_ownership'
+        expect(subject).to eq([{:name => "Instances", :url => "/vm_cloud/explorer"}])
+      end
+
+      it 'drops a breadcrumb when an action allowing breadcrumbs is executed' do
+        post :accordion_select, :id => "images_filter"
+        expect(subject).to eq([{:name => "Images", :url => "/vm_cloud/explorer"}])
+      end
     end
   end
 end
