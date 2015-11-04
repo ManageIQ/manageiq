@@ -123,6 +123,26 @@ describe MiqHashStruct do
     end
   end
 
+  context '#respond_to?' do
+    let(:hs) { MiqHashStruct.new(:foo => 1) }
+
+    it "getter with existing key" do
+      expect(hs.respond_to?(:foo)).to eq(true)
+    end
+
+    it "setter with existing key" do
+      expect(hs.respond_to?(:foo=)).to eq(true)
+    end
+
+    it "getter with unknown key" do
+      expect(hs.respond_to?(:bar)).to eq(false)
+    end
+
+    it "setter with unknown key" do
+      expect(hs.respond_to?(:bar=)).to eq(true)
+    end
+  end
+
   context "dump and load" do
     let (:orig) { described_class.new("a" => 1, "b" => 2) }
 
