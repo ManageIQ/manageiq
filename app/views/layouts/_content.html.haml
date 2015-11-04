@@ -153,3 +153,6 @@
               .row
                 .col-md-12
                   = yield
+- if show_advanced_search?
+  :javascript
+    #{javascript_show_if_exists("adv_searchbox_div")}
