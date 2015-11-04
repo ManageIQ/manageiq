@@ -54,13 +54,12 @@ describe VmCloudController do
     before do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
       EvmSpecHelper.create_guid_miq_server_zone
-      @vmcloud = FactoryGirl.create(:vm_cloud)
       get :explorer
       request.env['HTTP_REFERER'] = request.fullpath
     end
 
     it 'skips dropping a breadcrumb when a button action is executed' do
-      post :x_button, :id => @vmcloud.id, :pressed => 'instance_ownership'
+      post :x_button, :id => nil, :pressed => 'instance_ownership'
       breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
       expect(breadcrumbs.size).to eq(1)
       expect(breadcrumbs).to include(:name => "Instances", :url => "/vm_cloud/explorer")
