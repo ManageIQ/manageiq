@@ -192,7 +192,7 @@ describe OpsController do
         }
         session[:edit] = edit
         controller.instance_variable_set(:@sb, sb_hash)
-        controller.stub(:set_credentials).and_return({:default => {:userid => "testuser", :password => 'password'}})
+        controller.stub(:set_credentials).and_return(:default => {:userid => "testuser", :password => 'password'})
         controller.instance_variable_set(:@_params,
                                          :log_userid => "default_user",
                                          :button     => "validate",

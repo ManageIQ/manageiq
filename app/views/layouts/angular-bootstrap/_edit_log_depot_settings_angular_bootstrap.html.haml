@@ -28,8 +28,7 @@
                                       "name"        => "uri",
                                       "ng-model"    => "#{ng_model_uri}",
                                       "ng-readonly" => "#{ng_readonly}",
-                                      "checkchange" => "",
-                                      :class        => "form-control"}
+                                      "checkchange" => ""}
       %span.help-block{"ng-show" => "angularForm.uri.$invalid"}
         = _("Required")
       %input{"type" => "hidden", "name" => "uri_prefix", "ng-value" => "#{ng_model_uri_prefix}"}

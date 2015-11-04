@@ -388,10 +388,11 @@ module OpsController::Diagnostics
 
   def log_protocol_changed
     depot = FileDepot.depot_description_to_class(params[:log_protocol]).new
+    uri_prefix, uri = depot.uri ? depot.uri.split('://') : nil
 
     log_depot_json = {:depot_name => depot.name,
-                      :uri_prefix => depot.uri ? depot.uri.split('://')[0] : nil,
-                      :uri        => depot.uri ? depot.uri.split('://')[1] : nil
+                      :uri_prefix => uri_prefix,
+                      :uri        => uri
                      }
     render :json => log_depot_json
   end
