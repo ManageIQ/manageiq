@@ -1,24 +1,16 @@
 require "spec_helper"
-include UiConstants
 
-describe OpsController do
-  render_views
+describe OpsController::RbacTree do
+  let(:role) do
+    # Pick a small subset of the product features tree to allow the spec to
+    #   exercise building more than a single node
+    FactoryGirl.create(:miq_user_role, :features =>
+      %w(all_vm_rules instance instance_view instance_show_list instance_control instance_scan)
+    )
+  end
 
-  context "::RbacTree" do
-    before do
-      [MiqRegion, MiqProductFeature].each(&:seed)
-      feature = MiqProductFeature.find_all_by_identifier("everything")
-      @role   = FactoryGirl.create(:miq_user_role, :name => "Role", :miq_product_features => feature)
-    end
-
-    context "#build" do
-      it "builds features tree" do
-        controller.instance_variable_set(:@role, @role)
-        controller.instance_variable_set(:@role_features, @role.feature_identifiers.sort)
-        features_tree = controller.send(:rbac_build_features_tree)
-        features_tree.should include("Access Rules for all Virtual Machines")
-        expect(response.status).to eq(200)
-      end
-    end
+  it ".build" do
+    features_tree = described_class.build(role, role.feature_identifiers.sort).to_json
+    expect(features_tree).to include("Access Rules for all Virtual Machines")
   end
 end
