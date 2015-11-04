@@ -61,15 +61,13 @@ describe VmCloudController do
     it 'skips dropping a breadcrumb when a button action is executed' do
       post :x_button, :id => nil, :pressed => 'instance_ownership'
       breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
-      expect(breadcrumbs.size).to eq(1)
-      expect(breadcrumbs).to include(:name => "Instances", :url => "/vm_cloud/explorer")
+      expect(breadcrumbs).to eq([{:name => "Instances", :url => "/vm_cloud/explorer"}])
     end
 
     it 'drops a breadcrumb when an action allowing breadcrumbs is executed' do
       post :accordion_select, :id => "images_filter"
       breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
-      expect(breadcrumbs.size).to eq(1)
-      expect(breadcrumbs).to include(:name => "Images", :url => "/vm_cloud/explorer")
+      expect(breadcrumbs).to eq([{:name => "Images", :url => "/vm_cloud/explorer"}])
     end
   end
 end
