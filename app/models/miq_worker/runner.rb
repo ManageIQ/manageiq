@@ -64,6 +64,7 @@ class MiqWorker::Runner
 
   def worker_initialization
     starting_worker_record
+    set_process_title
 
     # Sync the config and roles early since heartbeats and logging require the configuration
     sync_active_roles
@@ -468,5 +469,16 @@ class MiqWorker::Runner
       types = ruby_object_usage
       $log.info("Ruby Object Usage: #{types.sort_by { |_klass, h| h[:count] }.reverse[0, top].inspect}")
     end
+  end
+
+  def set_process_title
+    return unless Process.respond_to?(:setproctitle)
+
+    type   = @worker.type.sub(/^ManageIQ::Providers::/, "")
+    title  = "#{type} id: #{@worker.id}"
+    title << ", queue: #{@worker.queue_name}" if @worker.queue_name
+    title << ", uri: #{@worker.uri}" if @worker.uri
+
+    Process.setproctitle(title)
   end
 end
