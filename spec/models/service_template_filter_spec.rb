@@ -7,7 +7,7 @@ describe "Service Filter" do
     user_helper
     build_small_environment
     build_model
-    @request = build_service_template_request("top", @user.userid)
+    @request = build_service_template_request("top", @user)
     service_template_stubs
     request_stubs
   end
@@ -17,7 +17,7 @@ describe "Service Filter" do
              "middle"     => {:type    => 'composite', :children => ['vm_service']},
              "vm_service" => {:type    => 'atomic',
                               :request => {:target_name => "fred", :src_vm_id => @src_vm.id,
-                                           :number_of_vms => 1, :userid => @user.userid}
+                                           :number_of_vms => 1, :requester => @user}
                              }
             }
     build_service_template_tree(model)

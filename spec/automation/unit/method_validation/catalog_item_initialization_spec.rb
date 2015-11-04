@@ -10,7 +10,7 @@ describe "CatalogItemInitialization Automate Method" do
   end
 
   def create_request_and_tasks(dialog_options = {})
-    @request = build_service_template_request("top", @user.userid, dialog_options)
+    @request = build_service_template_request("top", @user, dialog_options)
     service_template_stubs
     request_stubs
     @request.create_request_tasks
@@ -23,11 +23,11 @@ describe "CatalogItemInitialization Automate Method" do
                                                   'vm_service2' => {:provision_index => 1}}},
              "vm_service1" => {:type    => 'atomic',
                                :request => {:src_vm_id => @src_vm.id,
-                                           :number_of_vms => 1, :userid => @user.userid}
+                                           :number_of_vms => 1, :requester => @user}
                              },
              "vm_service2" => {:type    => 'atomic',
                                :request => {:src_vm_id => @src_vm.id,
-                                           :number_of_vms => 1, :userid => @user.userid}
+                                           :number_of_vms => 1, :requester => @user}
                              }
             }
     build_service_template_tree(model)

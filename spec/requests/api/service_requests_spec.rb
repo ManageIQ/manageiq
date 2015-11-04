@@ -21,7 +21,7 @@ describe ApiController do
 
   let(:service_request) do
     FactoryGirl.create(:service_template_provision_request,
-                       :userid      => api_config(:user),
+                       :requester   => @user,
                        :source_id   => template.id,
                        :source_type => template.class.name)
   end

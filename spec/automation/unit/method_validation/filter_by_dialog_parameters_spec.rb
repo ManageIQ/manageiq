@@ -10,7 +10,7 @@ describe "FilterByDialogParameters Automate Method" do
   end
 
   def post_create(dialog_options = {})
-    @request = build_service_template_request("top", @user.userid, dialog_options)
+    @request = build_service_template_request("top", @user, dialog_options)
     service_template_stubs
     request_stubs
     @request.create_request_tasks
@@ -21,7 +21,7 @@ describe "FilterByDialogParameters Automate Method" do
              "middle"     => {:type    => 'composite', :children => ['vm_service']},
              "vm_service" => {:type    => 'atomic',
                               :request => {:target_name => "fred", :src_vm_id => @src_vm.id,
-                                           :number_of_vms => 1, :userid => @user.userid}
+                                           :number_of_vms => 1, :requester => @user}
                              }
             }
     build_service_template_tree(model)
