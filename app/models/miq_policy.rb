@@ -369,7 +369,7 @@ class MiqPolicy < ActiveRecord::Base
       attrs[:towhat] = "Vm"      if p.towhat.nil?
       attrs[:active] = true      if p.active.nil?
       attrs[:mode]   = "control" if p.mode.nil?
-      if attrs.empty?
+      unless attrs.empty?
         _log.info("Updating [#{p.name}]")
         p.update_attributes(attrs)
       end
