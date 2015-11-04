@@ -36,13 +36,17 @@ namespace :evm do
     EvmApplication.update_stop
   end
 
-  task :compile_assets do
-    ENV["DATABASE_URL"] ||= "postgresql://user:pass@127.0.0.1/dbname"
+  task :compile_assets => :prevent_db_config_load_error do
     Rake::Task["assets:clobber"].invoke
     Rake::Task["assets:precompile"].invoke
   end
 
-  task :compile_sti_loader => :environment do
+  task :compile_sti_loader => :prevent_db_config_load_error do
+    Rake::Task["environment"].invoke
     DescendantLoader.instance.class_inheritance_relationships
+  end
+
+  task :prevent_db_config_load_error do
+    ENV["DATABASE_URL"] ||= "postgresql://user:pass@127.0.0.1/dbname"
   end
 end
