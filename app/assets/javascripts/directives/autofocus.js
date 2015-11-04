@@ -9,11 +9,21 @@ ManageIQ.angularApplication.directive('autoFocus', ['$timeout', function($timeou
       });
 
       scope.$watch(function() { return elem.is(':visible') }, function() {
-        angular.element(scope['form_focus_' + ctrl.$name]).focus();
+        if(attr.autoFocus == "" || attr.autoFocus == "proactiveFocus") {
+          angular.element(scope['form_focus_' + ctrl.$name]).focus();
+          if (!angular.element(scope['form_focus_' + ctrl.$name]).is(":focus")) {
+            $timeout(function () {
+              angular.element(scope['form_focus_' + ctrl.$name]).focus();
+            }, 1000);
+          }
+        }
+      });
+
+      scope.$on('reactiveFocus', function(e) {;
         if (!angular.element(scope['form_focus_' + ctrl.$name]).is(":focus")) {
           $timeout(function(){
             angular.element(scope['form_focus_' + ctrl.$name]).focus();
-          }, 1000);
+          }, 0);
         };
       });
     }

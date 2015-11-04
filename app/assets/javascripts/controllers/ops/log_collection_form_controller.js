@@ -60,6 +60,8 @@ ManageIQ.angularApplication.controller('logCollectionFormController', ['$http', 
   };
 
   $scope.logProtocolChanged = function() {
+    $scope.$broadcast('setNewRecord');
+
     if(miqDBBackupService.knownProtocolsList.indexOf($scope.logCollectionModel.log_protocol) == -1 &&
        $scope.logCollectionModel.log_protocol != '') {
       url = $scope.logProtocolChangedUrl;
@@ -71,6 +73,7 @@ ManageIQ.angularApplication.controller('logCollectionFormController', ['$http', 
         miqService.sparkleOff();
       });
     }
+    $scope.$broadcast('reactiveFocus');
     miqDBBackupService.logProtocolChanged($scope.logCollectionModel);
   };
 

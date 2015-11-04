@@ -11,7 +11,7 @@
                           "ng-model"    => "#{ng_model_depot_name}",
                           "ng-readonly" => "#{ng_readonly}",
                           "checkchange" => "",
-                          :class        => "form-control"}
+                          "auto-focus"  => "reactiveFocus"}
       %span.help-block{"ng-show" => "angularForm.depot_name.$invalid"}
         = _("Required")
 %div{"ng-show" => "#{ng_show}"}
