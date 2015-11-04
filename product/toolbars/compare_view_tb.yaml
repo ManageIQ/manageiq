@@ -16,19 +16,22 @@
 - :name: compare_downloading
   :items:
   - :buttonSelect: compare_download_choice
-    :image: download
+    :icon: fa fa-download fa-lg
     :title: "Download"
     :items:
     - :button: compare_download_txt
-      :image: txt
+      :icon: fa fa-file-text-o fa-lg
+      :text: " Download as Text"
       :title: "Download comparison report in text format"
       :url: '/compare_to_txt'
     - :button: compare_download_csv
-      :image: csv
+      :icon: fa fa-file-text-o fa-lg
+      :text: " Download as CSV"
       :title: "Download comparison report in CSV format"
       :url: '/compare_to_csv'
     - :button: download_pdf
-      :image: pdf
+      :icon: fa fa-file-pdf-o fa-lg
+      :text: " Download as PDF"
       :title: "Download comparison report in PDF format"
       :url: '/compare_to_pdf'
-    
+

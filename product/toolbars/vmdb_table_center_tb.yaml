@@ -7,7 +7,7 @@
 - :name: support_reloading
   :items:
   - :button: db_refresh
-    :image: reload
+    :icon: fa fa-repeat fa-lg
     :title: 'Reload Current Display'
 # commenting these buttons until we have model support for them
 #- :name: zone_vmdb

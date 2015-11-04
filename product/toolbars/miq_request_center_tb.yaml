@@ -18,7 +18,7 @@
     :url_parms: '&refresh=y'
     :confirm: "Are you sure you want to delete this Request?"
   - :button: miq_request_reload
-    :image: reload
+    :icon: fa fa-repeat fa-lg
     :text: Reload
     :title: Reload the current display
     :url_parms: '&display=miq_provisions'

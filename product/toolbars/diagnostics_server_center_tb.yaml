@@ -8,35 +8,35 @@
   :items:
   # Summary tab
   - :button: refresh_server_summary
-    :image: reload
+    :icon: fa fa-repeat fa-lg
     :title: 'Reload Current Display'
   # workers tab
   - :button: refresh_workers
-    :image: reload
+    :icon: fa fa-repeat fa-lg
     :title: 'Reload current workers display'
   # audit log
   - :button: refresh_audit_log
-    :image: reload
+    :icon: fa fa-repeat fa-lg
     :title: 'Reload the Audit Log Display'
   - :button: fetch_audit_log
     :url: '/fetch_audit_log'
-    :image: download
+    :icon: fa fa-download fa-lg
     :title: 'Download the Entire Audit Log File'
   # evm log
   - :button: refresh_log
-    :image: reload
+    :icon: fa fa-repeat fa-lg
     :title: 'Reload the EVM Log Display'
   - :button: fetch_log
     :url: '/fetch_log'
-    :image: download
+    :icon: fa fa-download fa-lg
     :title: 'Download the Entire EVM Log File'
   # production log
   - :button: refresh_production_log
-    :image: reload
+    :icon: fa fa-repeat fa-lg
     :title: 'Reload the #{@sb[:rails_log]} Log Display'
   - :button: fetch_production_log
     :url: '/fetch_production_log'
-    :image: download
+    :icon: fa fa-download fa-lg
     :title: 'Download the Entire #{@sb[:rails_log]} Log File'
 - :name: ldap_domain_vmdb
   :items:
