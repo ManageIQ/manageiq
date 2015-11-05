@@ -8,7 +8,7 @@ namespace :test do
   end
 
   desc "Run all automation specs"
-  RSpec::Core::RakeTask.new(:automation => :initialize) do |t|
+  RSpec::Core::RakeTask.new(:automation => [:initialize, "evm:compile_sti_loader"]) do |t|
     EvmTestHelper.init_rspec_task(t)
     t.pattern = EvmTestHelper::AUTOMATION_SPECS
   end
