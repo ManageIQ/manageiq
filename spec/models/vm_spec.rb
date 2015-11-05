@@ -166,7 +166,7 @@ describe Vm do
                               )
       FactoryGirl.create(:miq_event_definition, :name => :request_vm_start)
       # admin user is needed to process Events
-      FactoryGirl.create(:user_with_group, :userid => "admin", :name => "Administrator")
+      User.super_admin || FactoryGirl.create(:user_with_group, :userid => "admin")
     end
 
     it "policy passes" do
