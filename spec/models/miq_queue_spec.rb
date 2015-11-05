@@ -125,7 +125,7 @@ describe MiqQueue do
        :queue_name   => 'ems_metrics_processor',
        :class_name   => 'Metric::Rollup',
        :instance_id  => nil,
-       :args         => '',
+       :args         => [],
        :zone         => 'default',
        :role         => 'ems_metrics_processor',
        :server_guid  => nil,

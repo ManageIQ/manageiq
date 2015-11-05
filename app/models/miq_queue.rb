@@ -60,8 +60,8 @@ class MiqQueue < ActiveRecord::Base
 
   TIMEOUT = 10.minutes
 
-  serialize :args
-  serialize :miq_callback
+  serialize :args, Array
+  serialize :miq_callback, Hash
 
   STATE_READY   = 'ready'.freeze
   STATE_DEQUEUE = 'dequeue'.freeze
@@ -102,8 +102,6 @@ class MiqQueue < ActiveRecord::Base
 
   def self.put(options)
     options = options.reverse_merge(
-      :args         => [],
-      :miq_callback => {},
       :priority     => NORMAL_PRIORITY,
       :queue_name   => "generic",
       :role         => nil,
