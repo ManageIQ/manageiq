@@ -1229,6 +1229,7 @@ class ApplicationController < ActionController::Base
     else
       @breadcrumbs.push(new_bc)
     end
+    @breadcrumbs.push(new_bc) if onlyreplace && @breadcrumbs.empty?
     if (@lastaction == "registry_items" || @lastaction == "filesystems" || @lastaction == "files") && new_bc[:name].length > 50
       @title = new_bc [:name].slice(0..50) + "..."  # Set the title to be the new breadcrumb
     else

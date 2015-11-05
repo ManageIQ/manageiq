@@ -64,7 +64,7 @@ class MiqGenericMountSession
 
   def mount_share
     require 'tmpdir'
-    @mnt_point = Dir.mktmpdir("miq_", settings_mount_point)
+    @mnt_point = settings_mount_point || Dir.mktmpdir("miq_")
   end
 
   def get_ping_depot_options
@@ -455,8 +455,12 @@ class MiqGenericMountSession
 
   private
 
+  def settings_read_only?
+    @settings[:read_only] == true
+  end
+
   def settings_mount_point
-    return if @settings[:mount_point].blank? # Check if settings contains the mount_point to use
+    return nil if @settings[:mount_point].blank? # Check if settings contains the mount_point to use
     FileUtils.mkdir_p(@settings[:mount_point]).first
   end
 end

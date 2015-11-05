@@ -713,7 +713,7 @@ module EmsCommon
       x.push([openstack_infra_provider.name, openstack_infra_provider.id])
     end
 
-    @edit[:openstack_api_versions] = [['Keystone v2', 'v2'], ['Keystone v3', 'v3']]
+    @edit[:openstack_api_versions] = retrieve_openstack_api_versions
 
     @edit[:new][:default_userid] = @ems.authentication_userid
     @edit[:new][:default_password] = @ems.authentication_password
@@ -758,6 +758,7 @@ module EmsCommon
     @amazon_regions = get_amazon_regions
     @google_regions = list_google_regions
     @openstack_infra_providers = retrieve_openstack_infra_providers
+    @openstack_api_versions = retrieve_openstack_api_versions
     @emstype_display = model.supported_types_and_descriptions_hash[@ems.emstype]
   end
 
@@ -787,6 +788,10 @@ module EmsCommon
     openstack_infra_providers
   end
 
+  def retrieve_openstack_api_versions
+    [['Keystone v2', 'v2'], ['Keystone v3', 'v3']]
+  end
+
   # Get variables from edit form
   def get_form_vars
     @ems = @edit[:ems_id] ? model.find_by_id(@edit[:ems_id]) : model.new
@@ -807,6 +812,8 @@ module EmsCommon
         @edit[:new][:port] = @ems.port ? @ems.port : ManageIQ::Providers::Openshift::ContainerManager::DEFAULT_PORT
       elsif params[:server_emstype] == ManageIQ::Providers::Atomic::ContainerManager.ems_type
         @edit[:new][:port] = @ems.port ? @ems.port : ManageIQ::Providers::Atomic::ContainerManager::DEFAULT_PORT
+      elsif params[:server_emstype] == ManageIQ::Providers::OpenshiftEnterprise::ContainerManager.ems_type
+        @edit[:new][:port] = @ems.port ? @ems.port : ManageIQ::Providers::OpenshiftEnterprise::ContainerManager::DEFAULT_PORT
       else
         @edit[:new][:port] = nil
       end

@@ -8,7 +8,7 @@
   :items:
   # Roles by Servers tab
   - :button: reload
-    :image: reload
+    :icon: fa fa-repeat fa-lg
     :title: 'Reload selected Reports'
     :url: 'reload'
 - :name: saved_report_vmdb

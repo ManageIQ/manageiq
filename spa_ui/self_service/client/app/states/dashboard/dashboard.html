@@ -34,7 +34,7 @@
                 </h2>
                 <p class="card-pf-aggregate-status-notifications">  
                   <span class="card-pf-aggregate-status-notification">
-                    <span class="pficon pficon-warning-triangle-o"></span>
+                    <span class="pficon pficon-warning-triangle-o" tooltip="The number of services retiring within the next 30 days" tooltip-placement="bottom"></span>
                   </span>
                   <span class="card-pf-aggregate-status-notification"><a ng-click="vm.navigateToServicesList('Soon')">{{ ::vm.servicesCount.soon }}</a></span>
                 </p>
@@ -47,9 +47,9 @@
                 </h2>
                 <p class="card-pf-aggregate-status-notifications">    
                   <span class="card-pf-aggregate-status-notification">
-                    <span class="pficon fa fa-check"></span></span>
-                    <span class="card-pf-aggregate-status-notification"><a ng-click="vm.navigateToServicesList('Current')">{{ ::vm.servicesCount.current }}</a>
+                    <span class="pficon fa fa-check" tooltip="The number of active services" tooltip-placement="bottom"></span>
                   </span>
+                  <span class="card-pf-aggregate-status-notification"><a ng-click="vm.navigateToServicesList('Current')">{{ ::vm.servicesCount.current }}</a></span>
                 </p>
               </div>
             </div>
@@ -60,8 +60,9 @@
                 </h2>
                 <p class="card-pf-aggregate-status-notifications">    
                   <span class="card-pf-aggregate-status-notification">
-                    <span class="pficon pficon-close"></span></span>
-                    <span class="card-pf-aggregate-status-notification"><a ng-click="vm.navigateToServicesList('Retired')">{{ ::vm.servicesCount.retired }}</a>
+                    <span class="pficon pficon-close" tooltip="The number of services which have hit their retirement period or been retired" tooltip-placement="bottom"></span>
+                  </span>
+                  <span class="card-pf-aggregate-status-notification"><a ng-click="vm.navigateToServicesList('Retired')">{{ ::vm.servicesCount.retired }}</a>
                   </span>
                 </p>
               </div>

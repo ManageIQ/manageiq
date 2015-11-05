@@ -19,8 +19,10 @@ describe ContainerRouteController do
     get :show, :id => container_route.id
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
-    expect(assigns(:breadcrumbs)).to eq([:name => "Test Route (Summary)",
-                                         :url  => "/container_route/show/#{container_route.id}"])
+    expect(assigns(:breadcrumbs)).to eq([{:name => "Container Routes",
+                                          :url  => "/container_route/show_list?page=&refresh=y"},
+                                         {:name => "Test Route (Summary)",
+                                          :url  => "/container_route/show/#{container_route.id}"}])
   end
 
   it "renders show_list" do

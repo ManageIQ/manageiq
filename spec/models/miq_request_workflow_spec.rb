@@ -4,7 +4,7 @@ describe MiqRequestWorkflow do
   let(:workflow) { FactoryGirl.build(:miq_provision_workflow) }
 
   context "#validate" do
-    let(:dialog)   { workflow.instance_variable_get(:@dialogs) }
+    let(:dialog) { workflow.instance_variable_get(:@dialogs) }
 
     context "validation_method" do
       it "skips validation if no validation_method is defined" do
@@ -44,6 +44,17 @@ describe MiqRequestWorkflow do
         dialog.store_path(:dialogs, :customize, :fields, :root_password, :required, true)
 
         expect(workflow).to receive(:some_required_method).and_return("Some Error")
+        expect(workflow.validate({})).to be_false
+      end
+    end
+
+    context "failures shouldn't be reverted" do
+      it "validation_method" do
+        dialog.store_path(:dialogs, :customize, :fields, :root_password, :validation_method, :some_validation_method)
+        dialog.store_path(:dialogs, :customize, :fields, :root_password_2, :validation_method, :other_validation_method)
+
+        expect(workflow).to receive(:some_validation_method).and_return("Some Error")
+        expect(workflow).to receive(:other_validation_method)
         expect(workflow.validate({})).to be_false
       end
     end
@@ -237,6 +248,27 @@ describe MiqRequestWorkflow do
       expect(hs.id).to               be_kind_of(Integer)
       expect(hs.evm_object_class).to eq(:ConfiguredSystem)
       expect(hs.name).to             be_kind_of(String)
+    end
+  end
+
+  context "#validate regex" do
+    let(:regex) { {:required_regex => "^n@test.com$"} }
+    let(:regex_two) { {:required_regex => "^n$"} }
+    let(:value_email) { 'n@test.com' }
+    let(:value_no_email) { 'n' }
+
+    it "returns nil when the value matches" do
+      expect(workflow.validate_regex(nil, {}, {}, regex, value_email)).to be_nil
+      expect(workflow.validate_regex(nil, {}, {}, regex_two, value_no_email)).to be_nil
+    end
+
+    it "returns a formatting message when value does not match regex" do
+      expect(workflow.validate_regex(nil, {}, {}, regex, value_no_email)).to eq "'/' must be correctly formatted"
+      expect(workflow.validate_regex(nil, {}, {}, regex_two, value_email)).to eq "'/' must be correctly formatted"
+    end
+
+    it "returns an error when no value exists" do
+      expect(workflow.validate_regex(nil, {}, {}, regex, '')).to eq "'/' is required"
     end
   end
 

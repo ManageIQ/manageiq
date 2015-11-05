@@ -20,12 +20,15 @@ class MiqNfsSession < MiqGenericMountSession
     # URI: nfs://192.168.252.139/exported/miq
     # mount 192.168.252.139:/exported/miq /mnt/miq
 
+    mount = "mount"
+    mount << " -r" if settings_read_only?
+
     # Quote the host:exported directory since the directory can have spaces in it
     case Sys::Platform::IMPL
     when :macosx
-      runcmd("sudo mount -t nfs -o resvport '#{@host}:#{@mount_path}' #{@mnt_point}")
+      runcmd("sudo #{mount} -t nfs -o resvport '#{@host}:#{@mount_path}' #{@mnt_point}")
     when :linux
-      runcmd("mount '#{@host}:#{@mount_path}' #{@mnt_point}")
+      runcmd("#{mount} '#{@host}:#{@mount_path}' #{@mnt_point}")
     else
       raise "platform not supported"
     end

@@ -200,8 +200,10 @@ class MiqRequestWorkflow
         end
 
         if fld[:validation_method] && respond_to?(fld[:validation_method])
-          valid = !(fld[:error] = send(fld[:validation_method], f, values, dlg, fld, value))
-          next unless valid
+          if (fld[:error] = send(fld[:validation_method], f, values, dlg, fld, value))
+            valid = false
+            next
+          end
         end
 
         next if value.blank?
@@ -488,6 +490,12 @@ class MiqRequestWorkflow
     return "#{required_description(dlg, fld)} is required" if value.blank?
     return "#{required_description(dlg, fld)} must be at least #{fld[:min_length]} characters"  if fld[:min_length] && value.to_s.length < fld[:min_length]
     return "#{required_description(dlg, fld)} must not be greater than #{fld[:max_length]} characters" if fld[:max_length] && value.to_s.length > fld[:max_length]
+  end
+
+  def validate_regex(_field, _values, dlg, fld, value)
+    regex = fld[:required_regex]
+    return "#{required_description(dlg, fld)} is required" if value.blank?
+    return "#{required_description(dlg, fld)} must be correctly formatted" unless value.match(regex)
   end
 
   def required_description(dlg, fld)

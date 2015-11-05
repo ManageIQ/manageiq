@@ -664,6 +664,15 @@ describe ReportController do
           controller.send(:gfv_key_group_calculations, 'foobar_0', 'total,avg')
           edit_new[:col_options]['foobar'][:grouping].should == [:avg, :total]
         end
+
+        it 'aggregs are stored under pivot_cols as a sorted array of symbols' do
+          edit = assigns(:edit)
+          edit[:pivot_cols] = {}
+          edit[:new][:fields] = [[name = 'Vm-foobar']]
+          edit[:new][:headers] = {name => 'shoot me now!'}
+          controller.send(:gfv_key_pivot_calculations, 'foobar_0', 'total,avg')
+          edit[:pivot_cols][name].should == [:avg, :total]
+        end
       end
 
       context "handle timeline field changes" do

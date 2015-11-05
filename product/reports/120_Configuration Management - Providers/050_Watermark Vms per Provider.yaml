@@ -9,6 +9,7 @@ rpt_group: Custom
 priority:
 col_order:
 - v_month
+- region_description
 - resource_name
 - derived_vm_count_total__max
 timeline:
@@ -20,6 +21,7 @@ include: {}
 db: ExtManagementSystemPerformance
 cols:
 - v_month
+- region_description
 - resource_name
 - derived_vm_count_total
 template_type: report
@@ -31,15 +33,17 @@ headers:
 - Activity Sample - Month (YYYY/MM)
 - Asset Name
 - VM Count Total (Max)
+- Region
 where_clause:
 db_options:
   :interval: daily
   :calc_avgs_by: time_interval
   :end_offset: 0
-  :start_offset: 172800
+  :start_offset: 7776000
 generate_cols:
 generate_rows:
 col_formats:
+-
 -
 -
 -

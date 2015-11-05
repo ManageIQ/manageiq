@@ -523,10 +523,9 @@ module ApplicationController::MiqRequestMethods
     (@edit || @options)[:wf].try(:tag_symbol) || :vm_tags
   end
 
-  def validate_fields
-    # Update/create returned false, validation failed
-    @edit[:wf].get_dialog_order.each do |d|                           # Go thru all dialogs, in order that they are displayed
-      @edit[:wf].get_all_fields(d).keys.each do |f|                 # Go thru all field
+  def validate_fields # This doesn't run validations, it creates flash messages for errors found in MiqRequestWorkflow#validate
+    @edit[:wf].get_dialog_order.each do |d|
+      @edit[:wf].get_all_fields(d).keys.each do |f|
         field = @edit[:wf].get_field(f, d)
         unless field[:error].blank?
           @error_div ||= "#{d}"
@@ -571,9 +570,7 @@ module ApplicationController::MiqRequestMethods
     id = session[:edit][:req_id] || "new"
     return unless load_edit("prov_edit__#{id}", "show_list")
     @edit[:new][:schedule_time] = @edit[:new][:schedule_time].in_time_zone("Etc/UTC") if @edit[:new][:schedule_time]
-    @edit[:wf].make_request(@edit[:req_id], @edit[:new])
-    validate_fields
-    if !@flash_array
+    if @edit[:wf].make_request(@edit[:req_id], @edit[:new])
       @breadcrumbs.pop if @breadcrumbs
       typ = @edit[:org_controller]
       case typ
@@ -599,6 +596,7 @@ module ApplicationController::MiqRequestMethods
         prov_request_cancel_submit_response
       end
     else
+      validate_fields
       @edit[:new][:current_tab_key] = @error_div.split('_')[0].to_sym if @error_div
       @edit[:wf].refresh_field_values(@edit[:new])
       build_grid
