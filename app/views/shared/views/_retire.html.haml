@@ -61,11 +61,13 @@
       %td#buttons_on{:align => "right"}
         = button_tag(_("Save"),
                      :class        => "btn btn-primary",
+                     :alt          => _("Save"),
                      "ng-click"    => "saveClicked()",
                      "ng-disabled" => "angularForm.$pristine || angularForm.$invalid",
                      "ng-class"    => "{'btn-disabled': angularForm.$pristine || angularForm.$invalid}")
         = button_tag(_("Cancel"),
                      :class     => "btn btn-default",
+                     :alt          => _("Cancel"),
                      "ng-click" => "cancelClicked()")
 
 :javascript
