@@ -106,15 +106,15 @@ module ToModelHash
     reflection && reflection.collection?
   end
 
-  def to_model_hash_build_preload(options, parent = nil)
+  def to_model_hash_build_preload(options, parent_class = self.class)
     columns  = ((options && options[:columns]) || [])
     includes = ((options && options[:include]) || {})
 
-    # Preload virtual columns on self, not for included tables' columns
-    result = parent.nil? ? columns.select {|c| self.class.virtual_column?(c)} : []
+    result = columns.select { |c| parent_class.virtual_column?(c) }
 
     result += includes.collect do |k, v|
-      sub_result = to_model_hash_build_preload(v, k)
+      parent_class = parent_class.reflections[k.to_s].klass
+      sub_result = to_model_hash_build_preload(v, parent_class)
       sub_result.blank? ? k : {k => sub_result}
     end
   end
