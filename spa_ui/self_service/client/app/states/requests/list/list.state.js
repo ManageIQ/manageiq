@@ -58,7 +58,7 @@
           },
           {
             id: 'request_id',
-            title: 'Request Id',
+            title: 'Request ID',
             placeholder: 'Filter by ID',
             filterType: 'text'
           },
@@ -83,7 +83,7 @@
           },
           {
             id: 'id',
-            title: 'ID',
+            title: 'Request ID',
             sortType: 'numeric'
           },
           {
@@ -93,7 +93,7 @@
           },
           {
             id: 'status',
-            title: 'Status',
+            title: 'Request Status',
             sortType: 'alpha'
           }
         ],
