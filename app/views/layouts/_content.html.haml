@@ -16,7 +16,7 @@
           .col-md-12
             .toolbar-pf-actions
               = render :partial => "layouts/x_taskbar"
-        .row.max-height{:style => "overflow: auto;height: calc(100% - 88px);"}
+        .row.max-height{:style => "overflow: auto;height: calc(#{calculate_content_height});"}
           .col-md-12
             .row
               .col-md-7#explorer
@@ -79,7 +79,7 @@
               .col-md-12
                 .toolbar-pf-actions
                   = render :partial => "layouts/taskbar"
-          .row.max-height{:style => "overflow: auto;height: calc(100% - 88px);"}
+          .row.max-height{:style => "overflow: auto;height: calc(#{calculate_content_height});"}
             .col-md-12
               .row
                 .col-md-7
@@ -141,7 +141,7 @@
               .col-md-12
                 .toolbar-pf-actions
                   = render :partial => "layouts/taskbar"
-          .row.scrollable-sm{:style => "overflow: auto;height: calc(100% - 88px);"}
+          .row.scrollable-sm{:style => "overflow: auto;height: calc(#{calculate_content_height});"}
             .col-md-12
               .row
                 .col-md-12

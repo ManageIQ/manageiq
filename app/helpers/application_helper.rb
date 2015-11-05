@@ -574,6 +574,16 @@ module ApplicationHelper
     @show_taskbar
   end
 
+  def calculate_content_height
+    if (@explorer || taskbar_in_header?) && @pages
+      "100% - 88px"
+    elsif @explorer || taskbar_in_header? || @pages
+      "100% - 40px"
+    else
+      "100%"
+    end
+  end
+
   def inner_layout_present?
     if @inner_layout_present.nil?
       @inner_layout_present = false
