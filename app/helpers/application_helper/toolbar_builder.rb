@@ -25,6 +25,10 @@ class ApplicationHelper::ToolbarBuilder
     @view_binding.eval(code)
   end
 
+  def safer_eval(code)
+    code.to_s =~ /\#{/ ? eval("\"#{code}\"") : code
+  end
+
   ###
   def load_yaml(tb_name)
     @@toolbar_cache ||= {}
@@ -125,12 +129,12 @@ class ApplicationHelper::ToolbarBuilder
                   props["text"] = x_tree_history[bsi[:button].split("_").last.to_i][:text]
                 end
               else
-                props["text"] = eval("\"#{bsi[:text]}\"") unless bsi[:text].blank?
+                props["text"] = safer_eval(bsi[:text]) unless bsi[:text].blank?
               end
               props["enabled"] = "#{bsi[:enabled]}" unless bsi[:enabled].blank?
               dis_title = build_toolbar_disable_button(bsi[:button])
               props["enabled"] = "false" if dis_title
-              title = eval("\"#{bsi[:title]}\"") unless bsi[:title].blank?
+              title = safer_eval(bsi[:title]) unless bsi[:title].blank?
               props["title"] = dis_title.kind_of?(String) ? dis_title : title
             end
             current_item[:items] ||= []
@@ -168,7 +172,7 @@ class ApplicationHelper::ToolbarBuilder
           props["text"]    = bgi[:text] unless bgi[:text].blank?
           # set pdf button to be hidden if graphical summary screen is set by default
           bgi[:hidden] = %w(download_view vm_download_pdf).include?(bgi[:button]) && button_hide
-          title = eval("\"#{bgi[:title]}\"") unless bgi[:title].blank? # Evaluate substitutions in text
+          title = safer_eval(bgi[:title]) unless bgi[:title].blank?
           props["title"] = dis_title.kind_of?(String) ? dis_title : title
 
           if bgi[:button] == "chargeback_report_only" && x_active_tree == :cb_reports_tree &&
@@ -197,8 +201,8 @@ class ApplicationHelper::ToolbarBuilder
             "imgdis" => img,
             :icon    => bgi[:icon]
           }
-          props["title"]    = eval("\"#{bgi[:title]}\"") unless bgi[:title].blank?
-          props["enabled"]  = "#{bgi[:enabled]}" unless bgi[:enabled].blank?
+          props["title"]    = safer_eval(bgi[:title]) unless bgi[:title].blank?
+          props["enabled"]  = bgi[:enabled].to_s unless bgi[:enabled].blank?
           props["enabled"]  = "false" if build_toolbar_disable_button(bgi[:buttonTwoState])
           props["selected"] = "true"  if build_toolbar_select_button(bgi[:buttonTwoState])
           if !sep_added && sep_needed
@@ -1319,7 +1323,7 @@ class ApplicationHelper::ToolbarBuilder
     )
 
     if item[:url]
-      url = eval("\"#{item[:url]}\"")
+      url = safer_eval(item[:url])
       if %w(view_grid view_tile view_list).include?(props[:name])
         # blows up in sub screens for CI's, need to get rid of first directory and anything after last slash in @gtl_url, that's being manipulated in JS function
         url.gsub!(/^\/[a-z|A-Z|0-9|_|-]+/, "")
@@ -1354,18 +1358,13 @@ class ApplicationHelper::ToolbarBuilder
       props[:prompt] = true
     end
 
-    if item[:url_parms]
-      parms = eval("\"#{item[:url_parms]}\"")
-      props[:url_parms] = update_url_parms(parms)
-    end
-
-    # doing eval for ui_lookup in confirm message
-    props[:confirm] = eval("\"#{item[:confirm]}\"") if item[:confirm]
+    props[:url_parms] = update_url_parms(safer_eval(item[:url_parms])) unless item[:url_parms].blank?
+    props[:confirm] = safer_eval(item[:confirm]) unless item[:confirm].blank?
     props
   end
 
   def update_url_parms(url_parm)
-    return url_parm if /=/.match(url_parm).nil?
+    return url_parm unless url_parm =~ /=/
 
     keep_parms = %w(bc escape menu_click sb_controller)
     query_string = Rack::Utils.parse_query URI("?#{request.query_string}").query
