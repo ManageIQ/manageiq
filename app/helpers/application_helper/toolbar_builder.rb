@@ -26,9 +26,17 @@ class ApplicationHelper::ToolbarBuilder
   end
 
   ###
+  def load_yaml(tb_name)
+    @@toolbar_cache ||= {}
+    @@toolbar_cache[tb_name] ||= (
+      h = YAML.load(File.open("#{TOOLBARS_FOLDER}/#{tb_name}.yaml")).freeze
+      h.values.map(&:freeze)
+      h
+    )
+  end
 
   def build_toolbar(tb_name)
-    tb_hash = tb_name == "custom_buttons_tb" ? build_custom_buttons_toolbar(@record) : YAML.load(File.open("#{TOOLBARS_FOLDER}/#{tb_name}.yaml"))
+    tb_hash = tb_name == "custom_buttons_tb" ? build_custom_buttons_toolbar(@record) : load_yaml(tb_name)
 
     toolbar = []
     groups_added = []
