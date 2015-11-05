@@ -56,9 +56,9 @@ module ManageIQ::Providers
         series = []
         begin
           series = @vmm.series(@ems.provider_region)
-        rescue ::Azure::Armrest::BadGatewayException,
-               ::Azure::Armrest::GatewayTimeoutException,
-               ::Azure::Armrest::BadRequestException
+        rescue ::Azure::Armrest::BadGatewayException, ::Azure::Armrest::GatewayTimeoutException,
+               ::Azure::Armrest::BadRequestException => err
+          _log.error("Error Class=#{err.class.name}, Message=#{err.message}")
         end
         process_collection(series, :flavors) { |s| parse_series(s) }
       end
