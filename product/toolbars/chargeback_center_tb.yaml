@@ -13,14 +13,17 @@
     - :button: chargeback_download_text
       :icon: fa fa-file-text-o fa-lg
       :title: "Download this report in text format"
+      :text: "Download as Text"
       :url: '/render_txt'
     - :button: chargeback_download_csv
       :icon: fa fa-file-text-o fa-lg
       :title: "Download this report in CSV format"
+      :text: "Download as CSV"
       :url: '/render_csv'
     - :button: chargeback_download_pdf
       :icon: fa fa-file-pdf-o fa-lg
       :title: "Download this report in PDF format"
+      :text: "Download as PDF"
       :url: '/render_pdf'
   - :button: chargeback_report_only
     :image: reportonly
