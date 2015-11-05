@@ -22,7 +22,7 @@ describe VmOrTemplateController do
         it "calls the appropriate method: '#{actual_method}' for action '#{actual_action}'" do
           controller.stub(:x_button_response)
           controller.should_receive(actual_method)
-          get :x_button, :id => vm_vmware, :pressed => actual_action
+          get :x_button, :id => nil, :pressed => actual_action
         end
       end
     end
@@ -59,7 +59,7 @@ describe VmOrTemplateController do
     end
 
     it 'skips dropping a breadcrumb when a button action is executed' do
-      post :x_button, :id => vm_vmware.id, :pressed => 'miq_template_ownership'
+      post :x_button, :id => nil, :pressed => 'miq_template_ownership'
       breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
       expect(breadcrumbs).to eq([{:name => "VMs and Instances", :url => "/vm_or_template/explorer"}])
     end
