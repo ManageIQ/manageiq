@@ -692,7 +692,7 @@ module ApplicationController::CiProcessing
   end
 
   def groups
-    @explorer = true if request.xml_http_request? # Ajax request means in explorer
+    @explorer = true if request.xml_http_request? && explorer_controller? # Ajax request means in explorer
     @db = params[:db] ? params[:db] : request.parameters[:controller]
     session[:db] = @db unless @db.nil?
     @db = session[:db] unless session[:db].nil?
@@ -717,7 +717,7 @@ module ApplicationController::CiProcessing
   end
 
   def users
-    @explorer = true if request.xml_http_request? # Ajax request means in explorer
+    @explorer = true if request.xml_http_request? && explorer_controller? # Ajax request means in explorer
     @db = params[:db] ? params[:db] : request.parameters[:controller]
     session[:db] = @db unless @db.nil?
     @db = session[:db] unless session[:db].nil?
