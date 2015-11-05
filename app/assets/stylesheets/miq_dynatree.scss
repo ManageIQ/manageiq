@@ -577,5 +577,7 @@ span.ae-valid-node a
 span.product-strikethru-node a
 {
   color: black !important; /* @ IE6 */
+  font: normal 12px OpenSansRegular,Arial,Helvetica,sans-serif;
+  line-height: 22px !important;
   text-decoration: line-through;
 }
