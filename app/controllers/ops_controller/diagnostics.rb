@@ -115,9 +115,8 @@ module OpsController::Diagnostics
           type    = FileDepot.depot_description_to_class(params[:log_protocol])
           depot   = @record.log_file_depot.instance_of?(type) ? @record.log_file_depot : @record.build_log_file_depot(:type => type.to_s)
           depot.update_attributes(:uri => new_uri, :name => params[:depot_name])
-          depot.update_authentication(:default => {:userid   => params[:log_userid],
-                                                   :password => params[:log_password]
-                                                  }) if type.try(:requires_credentials?)
+          creds = set_credentials
+          depot.update_authentication(creds) if type.try(:requires_credentials?)
           @record.save!
         end
       rescue StandardError => bang
@@ -135,9 +134,10 @@ module OpsController::Diagnostics
       end
     when "validate"
       id = params[:id] ? params[:id] : "new"
+      creds = set_credentials
       settings = {
-        :username => params[:log_userid],
-        :password => params[:log_password],
+        :username => creds[:default][:userid],
+        :password => creds[:default][:password],
         :uri      => "#{params[:uri_prefix]}://#{params[:uri]}"
       }
 
@@ -357,9 +357,6 @@ module OpsController::Diagnostics
     else
       log_depot_json = build_empty_log_depot_json
     end
-    rh_dropbox_json = build_rh_dropbox_json
-    log_depot_json.merge!(rh_dropbox_json)
-
     render :json => log_depot_json
   end
 
@@ -372,8 +369,6 @@ module OpsController::Diagnostics
                       :uri          => uri,
                       :uri_prefix   => prefix,
                       :log_userid   => log_depot.authentication_userid,
-                      :log_password => log_depot.authentication_password,
-                      :log_verify   => log_depot.authentication_password,
                       :log_protocol => protocol
     }
     log_depot_json
@@ -391,12 +386,15 @@ module OpsController::Diagnostics
     log_depot_json
   end
 
-  def build_rh_dropbox_json
-    rh_dropbox = FileDepotFtpAnonymousRedhatDropbox.new
-    rh_dropbox_json = {:rh_dropbox_depot_name => rh_dropbox.name,
-                       :rh_dropbox_uri        => rh_dropbox.uri.split('://')[1]
-    }
-    rh_dropbox_json
+  def log_protocol_changed
+    depot = FileDepot.depot_description_to_class(params[:log_protocol]).new
+    uri_prefix, uri = depot.uri ? depot.uri.split('://') : nil
+
+    log_depot_json = {:depot_name => depot.name,
+                      :uri_prefix => uri_prefix,
+                      :uri        => uri
+                     }
+    render :json => log_depot_json
   end
 
   def db_gc_collection
@@ -1103,5 +1101,14 @@ module OpsController::Diagnostics
 
   def build_supported_depots_for_select
     @supported_depots_for_select = FileDepot.supported_depots.values.sort
+  end
+
+  def set_credentials
+    creds = {}
+    if params[:log_userid]
+      log_password = params[:log_password] ? params[:log_password] : @record.log_depot.authentication_password
+      creds[:default] = {:userid => params[:log_userid], :password => log_password}
+    end
+    creds
   end
 end
