@@ -500,6 +500,10 @@ class ApplicationHelper::ToolbarBuilder
     return @gtl_buttons.include?(id) ? false : true if @gtl_buttons &&
                                                        ["view_grid", "view_tile", "view_list"].include?(id)
 
+    # hide compliance check and comparison buttons rendered for orchestration stack instances
+    return true if @record.kind_of?(OrchestrationStack) && @display == "instances" &&
+                   %w(instance_check_compliance instance_compare).include?(id)
+
     # don't hide view buttons in toolbar
     return false if %( view_grid view_tile view_list refresh_log fetch_log common_drift
       download_text download_csv download_pdf download_view vm_download_pdf
