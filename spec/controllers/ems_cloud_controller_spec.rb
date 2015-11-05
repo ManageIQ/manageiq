@@ -358,4 +358,30 @@ describe EmsCloudController do
                                                                          :amqp    => amqp_creds)
     end
   end
+
+  context "#update_ems_button_validate" do
+    let(:mocked_ems) { mock_model(ManageIQ::Providers::Openstack::CloudManager) }
+    it "calls authentication_check with save = true if validation is done for an existing record" do
+      controller.stub(:set_ems_record_vars)
+      controller.stub(:render)
+      controller.instance_variable_set(:@_params,
+                                       :button    => "validate",
+                                       :id        => mocked_ems.id,
+                                       :cred_type => "default")
+      mocked_ems.should_receive(:authentication_check).with("default", :save => true)
+      controller.send(:update_ems_button_validate, mocked_ems)
+    end
+
+    it "calls authentication_check with save = false if validation is done for a new record" do
+      controller.stub(:set_ems_record_vars)
+      controller.stub(:render)
+      controller.instance_variable_set(:@_params,
+                                       :button           => "validate",
+                                       :id               => "new",
+                                       :default_password => "[FILTERED]",
+                                       :cred_type        => "default")
+      mocked_ems.should_receive(:authentication_check).with("default", :save => false)
+      controller.send(:update_ems_button_validate, mocked_ems)
+    end
+  end
 end
