@@ -812,10 +812,6 @@ class Host < ActiveRecord::Base
     find_by_audit_for_rss("agent_settings_change", options)
   end
 
-  def self.rss_version_changes(_name, options)
-    find_by_audit_for_rss("agent_version_activate", options)
-  end
-
   def self.find_by_audit_for_rss(event_name, options = {})
     result = []
     AuditEvent.where(:target_class => 'Host', :event => event_name)
