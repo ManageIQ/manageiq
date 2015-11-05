@@ -8,7 +8,7 @@ namespace :test do
   end
 
   desc "Run all specs except migrations, replication, and automation"
-  RSpec::Core::RakeTask.new(:vmdb => :initialize) do |t|
+  RSpec::Core::RakeTask.new(:vmdb => [:initialize, "evm:compile_sti_loader"]) do |t|
     EvmTestHelper.init_rspec_task(t)
     t.pattern = EvmTestHelper::VMDB_SPECS
   end
