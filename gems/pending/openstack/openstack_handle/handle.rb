@@ -3,7 +3,7 @@ require 'util/miq-exception'
 
 module OpenstackHandle
   class Handle
-    attr_accessor :username, :password, :address, :port, :api_version, :connection_options
+    attr_accessor :username, :password, :address, :port, :api_version, :security_protocol, :connection_options
     attr_reader :project_name
     attr_writer   :default_tenant_name
 
@@ -27,11 +27,18 @@ module OpenstackHandle
       "Planning"      => :planning
     }
 
-    # Tries both non-SSL and SSL connections to Openstack
-    def self.try_connection
-      # attempt to connect with SSL
-      yield "https", {:ssl_verify_peer => false}
+    def self.try_connection(security_protocol)
+      if security_protocol.blank? || security_protocol == 'ssl'
+        # For backwards compatibility take blank security_protocol as SSL
+        yield "https", {:ssl_verify_peer => false}
+      elsif security_protocol == 'ssl-with-validation'
+        yield "https", {:ssl_verify_peer => true}
+      else
+        yield "http", {}
+      end
     rescue Excon::Errors::SocketError => err
+      # TODO(lsmola) keeping this for backwards compatibility, but it should go away, fallback to non ssl can be be
+      # unsafe. We should never send plain text credentials over wire, when SSL selected
       # TODO: recognizing something in exception message is not very reliable. But somebody would need to go to excon gem
       # and do proper exceptions like Excon::Errors::SocketError::UnknownProtocolSSL,
       # Excon::Errors::SocketError::BadCertificate, etc. all of them inheriting from Excon::Errors::SocketError
@@ -41,8 +48,9 @@ module OpenstackHandle
       yield "http", {}
     end
 
-    def self.raw_connect_try_ssl(username, password, address, port, service = "Compute", opts = nil, api_version = nil)
-      try_connection do |scheme, connection_options|
+    def self.raw_connect_try_ssl(username, password, address, port, service = "Compute", opts = nil, api_version = nil,
+                                 security_protocol = nil)
+      try_connection(security_protocol) do |scheme, connection_options|
         auth_url = auth_url(address, port, scheme, api_version)
         opts[:connection_options] = (opts[:connection_options] || {}).merge(connection_options)
         raw_connect(username, password, auth_url, service, opts)
@@ -105,12 +113,13 @@ module OpenstackHandle
       attr_reader :connection_options
     end
 
-    def initialize(username, password, address, port = nil, api_version = nil)
-      @username    = username
-      @password    = password
-      @address     = address
-      @port        = port || 5000
-      @api_version = api_version || 'v2'
+    def initialize(username, password, address, port = nil, api_version = nil, security_protocol = nil)
+      @username          = username
+      @password          = password
+      @address           = address
+      @port              = port || 5000
+      @api_version       = api_version || 'v2'
+      @security_protocol = security_protocol || 'ssl'
 
       @connection_cache   = {}
       @connection_options = self.class.connection_options
@@ -146,7 +155,8 @@ module OpenstackHandle
       svc_cache[tenant] ||= begin
         opts[:connection_options] = connection_options if connection_options
 
-        raw_service = self.class.raw_connect_try_ssl(username, password, address, port, service, opts, api_version)
+        raw_service = self.class.raw_connect_try_ssl(username, password, address, port, service, opts, api_version,
+                                                     security_protocol)
         service_wrapper_name = "#{service}Delegate"
         # Allow openstack to define new services without explicitly requiring a
         # service wrapper.

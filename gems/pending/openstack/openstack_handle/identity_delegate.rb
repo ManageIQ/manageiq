@@ -32,7 +32,7 @@ module OpenstackHandle
     # retrieve a list of tenants the user can access.
     #
     def visible_tenants_v2
-      response = Handle.try_connection do |scheme, connection_options|
+      response = Handle.try_connection(@os_handle.security_protocol) do |scheme, connection_options|
         url = Handle.url(@os_handle.address, @os_handle.port, scheme, "/v2.0/tenants")
         connection = Fog::Core::Connection.new(url, false, connection_options)
         response = connection.request(

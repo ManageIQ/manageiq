@@ -206,6 +206,10 @@ class ExtManagementSystem < ActiveRecord::Base
     false
   end
 
+  def supports_security_protocol?
+    false
+  end
+
   def supports_provider_id?
     false
   end

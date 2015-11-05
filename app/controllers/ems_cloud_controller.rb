@@ -163,6 +163,7 @@ class EmsCloudController < ApplicationController
                      :hostname                        => @ems.hostname,
                      :api_port                        => @ems.port,
                      :api_version                     => @ems.api_version ? @ems.api_version : "v2",
+                     :security_protocol               => @ems.security_protocol ? @ems.security_protocol : 'ssl',
                      :provider_region                 => @ems.provider_region,
                      :openstack_infra_providers_exist => retrieve_openstack_infra_providers.length > 0 ? true : false,
                      :default_userid                  => @ems.authentication_userid ? @ems.authentication_userid : "",
@@ -221,6 +222,9 @@ class EmsCloudController < ApplicationController
     if ems.kind_of?(ManageIQ::Providers::Microsoft::InfraManager)
       ems.security_protocol = params[:security_protocol]
       ems.realm = params[:realm]
+    elsif ems.supports_security_protocol?
+      # TODO the behavior should be probably rewritten to support methods
+      ems.security_protocol = params[:security_protocol].strip if params[:security_protocol]
     end
 
     if ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
@@ -261,23 +265,25 @@ class EmsCloudController < ApplicationController
   def construct_edit_for_audit(ems)
     @edit ||= {}
     ems.kind_of?(ManageIQ::Providers::Azure::CloudManager) ? azure_tenant_id = ems.azure_tenant_id : azure_tenant_id = nil
-    @edit[:current] = {:name            => ems.name,
-                       :provider_region => ems.provider_region,
-                       :hostname        => ems.hostname,
-                       :azure_tenant_id => azure_tenant_id,
-                       :port            => ems.port,
-                       :api_version     => ems.api_version,
-                       :provider_id     => ems.provider_id,
-                       :zone            => ems.zone
+    @edit[:current] = {:name              => ems.name,
+                       :provider_region   => ems.provider_region,
+                       :hostname          => ems.hostname,
+                       :azure_tenant_id   => azure_tenant_id,
+                       :port              => ems.port,
+                       :api_version       => ems.api_version,
+                       :security_protocol => ems.security_protocol,
+                       :provider_id       => ems.provider_id,
+                       :zone              => ems.zone
     }
-    @edit[:new] = {:name            => params[:name],
-                   :provider_region => params[:provider_region],
-                   :hostname        => params[:hostname],
-                   :azure_tenant_id => params[:azure_tenant_id],
-                   :port            => params[:port],
-                   :api_version     => params[:api_version],
-                   :provider_id     => params[:provider_id],
-                   :zone            => params[:zone]
+    @edit[:new] = {:name              => params[:name],
+                   :provider_region   => params[:provider_region],
+                   :hostname          => params[:hostname],
+                   :azure_tenant_id   => params[:azure_tenant_id],
+                   :port              => params[:port],
+                   :api_version       => params[:api_version],
+                   :security_protocol => params[:security_protocol],
+                   :provider_id       => params[:provider_id],
+                   :zone              => params[:zone]
     }
   end
 
