@@ -33,7 +33,7 @@
   }
 
   /** @ngInject */
-  function StateController($state, requests, RequestsState) {
+  function StateController($state, requests, RequestsState, $filter) {
     var vm = this;
 
     vm.title = 'Request List';
@@ -54,12 +54,18 @@
             id: 'description',
             title:  'Description',
             placeholder: 'Filter by Description',
-            sortType: 'alpha'
+            filterType: 'text'
           },
           {
             id: 'request_id',
             title: 'Request ID',
             placeholder: 'Filter by ID',
+            filterType: 'text'
+          },
+          {
+            id: 'request_date',
+            title: 'Request Date',
+            placeholder: 'Filter by Request Date',
             filterType: 'text'
           },
           {
@@ -88,7 +94,7 @@
           },
           {
             id: 'requested',
-            title: 'Requested Date',
+            title: 'Request Date',
             sortType: 'numeric'
           },
           {
@@ -191,7 +197,9 @@
         return item.approval_state.toLowerCase() === filter.value.toLowerCase();
       } else if (filter.id === 'request_id') {
         return String(item.id).toLowerCase().indexOf(filter.value.toLowerCase()) !== -1;
-      } 
+      } else if ('request_date' === filter.id) {
+        return $filter('date')(item.created_on).toLowerCase().indexOf(filter.value.toLowerCase()) !== -1;
+      }
 
       return false;
     }

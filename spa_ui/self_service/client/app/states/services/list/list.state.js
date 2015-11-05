@@ -32,7 +32,7 @@
   }
 
   /** @ngInject */
-  function StateController($state, services, ServicesState) {
+  function StateController($state, services, ServicesState, $filter) {
     /* jshint validthis: true */
     var vm = this;
 
@@ -73,6 +73,12 @@
             id: 'owner',
             title: 'Owner',
             placeholder: 'Filter by Owner',
+            filterType: 'text'
+          },
+          {
+            id: 'created',
+            title: 'Created',
+            placeholder: 'Filter by Created On',
             filterType: 'text'
           }
         ],
@@ -229,6 +235,8 @@
         return item.evm_owner.name.toLowerCase().indexOf(filter.value.toLowerCase()) !== -1;
       } else if ('retirement' === filter.id) {
         return checkRetirementDate(item, filter.value.toLowerCase());
+      } else if ('created' === filter.id) {
+        return $filter('date')(item.created_at).toLowerCase().indexOf(filter.value.toLowerCase()) !== -1;
       }
 
       return false;
