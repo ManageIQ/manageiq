@@ -37,7 +37,7 @@ describe ApplicationController do
     res.should == "Infrastructure Providers"
 
     res = controller.send(:set_discover_title, "ems", "ems_cloud")
-    res.should == "Amazon Cloud Providers"
+    res.should == "Cloud Providers"
   end
 
   it "Certain actions should not be allowed for a MiqTemplate record" do
@@ -218,6 +218,18 @@ describe ApplicationController do
       to[:second].should == from_second
       to[:third].should == from_third
       controller.send(:flash_errors?).should be_true
+    end
+
+    it "displays options to select Azure or Amazon cloud" do
+      session[:type] = "ems"
+      controller.instance_variable_set( :@_params,
+                                        :controller             => "ems_cloud"
+                                      )
+      controller.stub(:drop_breadcrumb)
+      controller.send(:discover)
+      expect(response.status).to eq(200)
+      expect(controller.instance_variable_get(:@discover_type)).to eq(ExtManagementSystem.ems_cloud_discovery_types)
+
     end
   end
 
