@@ -10,19 +10,23 @@ describe VmScan do
       ManageIQ::Providers::Vmware::InfraManager.any_instance.stub(:authentication_status_ok? => true)
       Vm.stub(:scan_via_ems? => true)
 
-      @ems       = FactoryGirl.create(:ems_vmware,       :name => "Test EMS", :zone => @server.zone)
+      @user      = FactoryGirl.create(:user_with_group, :userid => "tester")
+      @ems       = FactoryGirl.create(:ems_vmware,       :name => "Test EMS", :zone => @server.zone, :tenant => FactoryGirl.create(:tenant))
       @storage   = FactoryGirl.create(:storage,          :name => "test_storage", :store_type => "VMFS")
       @host      = FactoryGirl.create(:host,             :name => "test_host", :hostname => "test_host", :state => 'on', :ext_management_system => @ems)
       @vm        = FactoryGirl.create(:vm_vmware,        :name => "test_vm", :location => "abc/abc.vmx",
                                       :raw_power_state       => 'poweredOn',
                                       :host                  => @host,
                                       :ext_management_system => @ems,
-                                      :miq_group             => FactoryGirl.create(:miq_group),
+                                      :miq_group             => @user.current_group,
+                                      :evm_owner             => @user,
                                       :storage               => @storage
                                      )
       @ems_auth  = FactoryGirl.create(:authentication, :resource => @ems)
 
+      MiqEventDefinition.stub(:find_by_name => true)
       @job = @vm.scan
+      MiqQueue.delete_all # clear the queue items that are not related to Vm scan testing
     end
 
     it "should start in a state of waiting_to_start" do
@@ -108,9 +112,6 @@ describe VmScan do
 
         context "when signaled with 'start'" do
           before(:each) do
-            # admin user is needed to process Events
-            FactoryGirl.create(:user_with_group, :userid => "admin", :name => "Administrator")
-            FactoryGirl.create(:miq_event_definition, :name => "vm_scan_start")
             q = MiqQueue.last
             q.delivered(*q.deliver)
             @job.reload
@@ -187,9 +188,9 @@ describe VmScan do
 
     context "#call_check_policy" do
       it "should raise vm_scan_start for Vm" do
-        expect(MiqEvent).to receive(:raise_evm_event).with(
-          an_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm),
+        expect(MiqAeEvent).to receive(:raise_evm_event).with(
           "vm_scan_start",
+          an_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm),
           an_instance_of(Hash),
           an_instance_of(Hash)
         )
@@ -204,14 +205,15 @@ describe VmScan do
           :raw_power_state       => 'poweredOn',
           :host                  => @host,
           :ext_management_system => @ems,
-          :miq_group             => FactoryGirl.create(:miq_group),
+          :miq_group             => @user.current_group,
+          :evm_owner             => @user,
           :storage               => @storage
         )
         job = template.scan
 
-        expect(MiqEvent).to receive(:raise_evm_event).with(
-          an_instance_of(ManageIQ::Providers::Vmware::InfraManager::Template),
+        expect(MiqAeEvent).to receive(:raise_evm_event).with(
           "vm_scan_start",
+          an_instance_of(ManageIQ::Providers::Vmware::InfraManager::Template),
           an_instance_of(Hash),
           an_instance_of(Hash)
         )
