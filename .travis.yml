@@ -9,8 +9,8 @@ env:
   - RUBY_GC_HEAP_INIT_SLOTS=600000
   - RUBY_GC_HEAP_GROWTH_FACTOR=1.25
   matrix:
-  - TEST_SUITE=vmdb
-  - TEST_SUITE=automation
+  - TEST_SUITE=vmdb COMPILE_STI_LOADER=true
+  - TEST_SUITE=automation COMPILE_STI_LOADER=true
   - TEST_SUITE=migrations
   - TEST_SUITE=self_service SPA_UI=self_service
   - TEST_SUITE=brakeman
@@ -40,6 +40,7 @@ before_script:
 - '[[ -z "$SPA_UI" ]] || npm version'
 - '[[ -z "$SPA_UI" ]] || popd'
 - '[[ -z "$TEST_SUITE" ]] || bundle exec rake test:$TEST_SUITE:setup'
+- '[[ -z "$COMPILE_STI_LOADER" ]] || bundle exec rake evm:compile_sti_loader'
 script:
 - bundle exec rake ${TEST_SUITE+test:$TEST_SUITE}
 notifications:
