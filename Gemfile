@@ -121,6 +121,7 @@ source "https://rails-assets.org" do
   gem "rails-assets-angular",                         "~>1.4.3"
   gem "rails-assets-angular-animate",                 "~>1.4.3"
   gem "rails-assets-angular-mocks",                   "~>1.4.3"
+  gem 'rails-assets-angular-sanitize',                "~>1.4.3"
   gem "rails-assets-bootstrap-datepicker",            "~>1.4.0"
   gem "rails-assets-markusslima--bootstrap-filestyle","~>1.2.1"
   gem "rails-assets-bootstrap-hover-dropdown",        "~>2.0.11"
