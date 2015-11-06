@@ -337,14 +337,27 @@ describe MiqQueue do
     end
 
     it "should accept non-Array args (for now)" do
-      msg = MiqQueue.put(
-        :class_name  => "Class1",
-        :method_name => "Method1",
-        :args        => "not_an_array",
-      )
+      begin
+        class MiqQueueSpecNonArrayArgs
+          def self.some_method(single_arg)
+            single_arg
+          end
+        end
 
-      msg_from_db = MiqQueue.find(msg.id)
-      expect(msg_from_db.args).to eq(["not_an_array"])
+        msg = MiqQueue.put(
+          :class_name  => "MiqQueueSpecNonArrayArgs",
+          :method_name => "some_method",
+          :args        => "not_an_array",
+        )
+
+        msg_from_db = MiqQueue.find(msg.id)
+        expect(msg_from_db.args).to eq(["not_an_array"])
+
+        _, _, result = msg_from_db.deliver
+        expect(result).to eq "not_an_array"
+      ensure
+        Object.send(:remove_const, :MiqQueueSpecNonArrayArgs)
+      end
     end
 
     it "defaults args / miq_callback to [] / {}" do
