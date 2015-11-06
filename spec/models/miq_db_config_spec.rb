@@ -17,7 +17,6 @@ describe MiqDbConfig do
 
   context ".log_activity_statistics" do
     before do
-      FactoryGirl.create(:vmdb_database)
       @buffer = StringIO.new
       class << @buffer
         alias_method :info, :write

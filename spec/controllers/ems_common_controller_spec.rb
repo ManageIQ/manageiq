@@ -134,7 +134,6 @@ describe EmsContainerController do
     context "#button" do
       before(:each) do
         set_user_privileges
-        FactoryGirl.create(:vmdb_database)
         EvmSpecHelper.create_guid_miq_server_zone
       end
 

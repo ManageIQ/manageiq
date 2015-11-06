@@ -4,7 +4,6 @@ describe CloudTenantController do
   context "#button" do
     before(:each) do
       set_user_privileges
-      FactoryGirl.create(:vmdb_database)
       EvmSpecHelper.create_guid_miq_server_zone
     end
 
@@ -23,7 +22,6 @@ describe CloudTenantController do
 
   context "#tags_edit" do
     before(:each) do
-      FactoryGirl.create(:vmdb_database)
       EvmSpecHelper.create_guid_miq_server_zone
       @ct = FactoryGirl.create(:cloud_tenant, :name => "cloud-tenant-01")
       user = FactoryGirl.create(:user, :userid => 'testuser')

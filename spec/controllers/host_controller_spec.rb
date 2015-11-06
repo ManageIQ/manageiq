@@ -6,7 +6,6 @@ describe HostController do
 
     before(:each) do
       set_user_privileges
-      FactoryGirl.create(:vmdb_database)
       EvmSpecHelper.create_guid_miq_server_zone
     end
 
@@ -248,7 +247,6 @@ describe HostController do
     render_views
     before do
       set_user_privileges
-      FactoryGirl.create(:vmdb_database)
       EvmSpecHelper.create_guid_miq_server_zone
     end
     it "renders a new page with ng-required condition set to false for password" do

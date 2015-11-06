@@ -29,7 +29,6 @@ describe ContainerNodeController do
     session[:settings] = {:default_search => 'foo',
                           :views          => {:containernode => 'list'},
                           :perpage        => {:list => 10}}
-    FactoryGirl.create(:vmdb_database)
     EvmSpecHelper.create_guid_miq_server_zone
 
     get :show_list
