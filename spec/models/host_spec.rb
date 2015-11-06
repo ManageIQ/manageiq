@@ -240,7 +240,7 @@ describe Host do
       @tag_ns = "/managed/lifecycles"
       @tag = "SmartProxy"
       @host.tag_with(@tag, :ns => @tag_ns)
-      @event_name = "agent_settings_change"
+      @event_name = "host_created"
       @audit_event = FactoryGirl.create(:audit_event, :event => @event_name, :target_class => "Host", :target_id => @host.id)
     end
 
