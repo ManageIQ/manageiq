@@ -90,7 +90,7 @@ module Metric::Processing
       when "numvcpus" # This is actually logical cpus.  See note above.
         # Do not derive "available" values if there haven't been any usage
         # values collected
-        result[col] = state.numvcpus if obj.kind_of?(VmOrTemplate) && have_cpu_metrics && state.numvcpus.to_i > 0
+        result[col] = state.numvcpus if have_cpu_metrics && state.try(:numvcpus).to_i > 0
       when "sockets"
         result[col] = state.host_sockets
       end

@@ -129,8 +129,16 @@ class VimPerformanceState < ActiveRecord::Base
 
   def self.capture_total(obj, field)
     return obj.send("aggregate_#{field}") if obj.respond_to?("aggregate_#{field}")
-    return nil unless obj.respond_to?(:hardware) && obj.hardware
-    field == :memory ? obj.hardware.memory_mb : obj.hardware.aggregate_cpu_speed
+
+    if obj.respond_to?(:hardware)
+      hardware = obj.hardware
+    elsif obj.respond_to?(:container_node)
+      hardware = obj.container_node.hardware
+    else
+      return nil
+    end
+
+    field == :memory ? hardware.try(:memory_mb) : hardware.try(:aggregate_cpu_speed)
   end
 
   def self.capture_assoc_ids(obj)
@@ -190,7 +198,15 @@ class VimPerformanceState < ActiveRecord::Base
   end
 
   def self.capture_cpu_total_cores(obj)
-    obj.hardware.try(:cpu_total_cores) if obj.kind_of?(VmOrTemplate)
+    if obj.respond_to?(:hardware)
+      hardware = obj.hardware
+    elsif obj.respond_to?(:container_node)
+      hardware = obj.container_node.hardware
+    else
+      return nil
+    end
+
+    hardware.try(:cpu_total_cores)
   end
 
   def self.capture_host_sockets(obj)

@@ -45,3 +45,15 @@
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1+'
+- :name: container_monitoring
+  :items:
+  - :buttonSelect: container_monitoring_choice
+    :image: monitoring
+    :title: Monitoring
+    :text: Monitoring
+    :items:
+    - :button: container_perf
+      :image: capacity
+      :text: "Utilization"
+      :title: "Show Capacity & Utilization data for this Container"
+      :url_parms: '?display=performance'

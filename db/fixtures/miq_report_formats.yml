@@ -273,6 +273,7 @@
     :v_pct_cpu_wait_delta_summation: :percent
     :v_provisioned_percent_of_total: :percent
     :v_vm_misc_percent_of_used: :percent
+    :v_derived_cpu_total_cores_used: :float
 
     # Right Sizing
     :recommended_mem: :megabytes

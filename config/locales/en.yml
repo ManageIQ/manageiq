@@ -534,6 +534,7 @@ en:
       v_derived_host_count: State - Number of Hosts  - Hourly Count / Daily Avg
       v_derived_memory_reserved_pct: Memory - Available (%)
       v_derived_vm_count: State - Peak Avg VMs - Hourly Count / Daily Avg
+      v_derived_cpu_total_cores_used: CPU - Usage Rate for Collected Intervals (Number of Cores)
 
       # Right-Sizing Recommendations
       aggressive_mem_recommended_change: Memory - Aggressive Recommendation Savings
