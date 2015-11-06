@@ -63,7 +63,6 @@ describe OpsController do
   context "#tree_select" do
     it "renders zone list for diagnostics_tree root node" do
       set_user_privileges
-      FactoryGirl.create(:vmdb_database)
       EvmSpecHelper.create_guid_miq_server_zone
       MiqRegion.seed
 
@@ -78,7 +77,6 @@ describe OpsController do
   context "#log_collection_form_fields" do
     it "renders log_collection_form_fields" do
       set_user_privileges
-      FactoryGirl.create(:vmdb_database)
       EvmSpecHelper.create_guid_miq_server_zone
       MiqRegion.seed
 
@@ -98,7 +96,6 @@ describe OpsController do
   context "#set_credentials" do
     it "uses params[:log_password] to set the creds hash if it exists" do
       set_user_privileges
-      FactoryGirl.create(:vmdb_database)
       EvmSpecHelper.create_guid_miq_server_zone
       MiqRegion.seed
 
@@ -113,7 +110,6 @@ describe OpsController do
 
     it "uses stored password to set the creds hash" do
       set_user_privileges
-      FactoryGirl.create(:vmdb_database)
       EvmSpecHelper.create_guid_miq_server_zone
       MiqRegion.seed
 

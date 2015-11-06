@@ -6,7 +6,6 @@ describe VmInfraController do
 
     session[:settings] = {:quadicons => nil, :views => {:treesize => 20}}
 
-    FactoryGirl.create(:vmdb_database)
     EvmSpecHelper.create_guid_miq_server_zone
   end
 

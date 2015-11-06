@@ -30,7 +30,6 @@ describe ContainerReplicatorController do
                           :views          => {:containerreplicator => 'list'},
                           :perpage        => {:list => 10}}
 
-    FactoryGirl.create(:vmdb_database)
     EvmSpecHelper.create_guid_miq_server_zone
 
     get :show_list
