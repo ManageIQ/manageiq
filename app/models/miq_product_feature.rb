@@ -6,9 +6,7 @@ class MiqProductFeature < ActiveRecord::Base
   validates_presence_of   :identifier
   validates_uniqueness_of :identifier
 
-  FIXTURE_DIR  = File.join(Rails.root, "db/fixtures")
-  FIXTURE_PATH = File.join(FIXTURE_DIR, table_name)
-  FIXTURE_YAML = "#{FIXTURE_PATH}.yml"
+  FIXTURE_PATH = Rails.root.join(*["db", "fixtures", table_name])
 
   DETAIL_ATTRS = [
     :name,
@@ -19,6 +17,10 @@ class MiqProductFeature < ActiveRecord::Base
   ]
 
   FEATURE_TYPE_ORDER = ["view", "control", "admin", "node"]
+
+  def self.feature_yaml(path = FIXTURE_PATH)
+    "#{path}.yml".freeze
+  end
 
   def self.feature_root
     features.keys.detect { |k| feature_parent(k).nil? }
@@ -76,12 +78,14 @@ class MiqProductFeature < ActiveRecord::Base
     seed_features
   end
 
-  def self.seed_features
+  def self.seed_features(path = FIXTURE_PATH)
+    fixture_yaml = feature_yaml(path)
+
     features = all.to_a.index_by(&:identifier)
-    seen     = seed_from_hash(YAML.load_file(FIXTURE_YAML), seen, nil, features)
+    seen     = seed_from_hash(YAML.load_file(fixture_yaml), seen, nil, features)
 
     root_feature = MiqProductFeature.find_by(:identifier => 'everything')
-    Dir.glob(File.join(FIXTURE_PATH, "*.yml")).each do |fixture|
+    Dir.glob(path.join("*.yml")).each do |fixture|
       seed_from_hash(YAML.load_file(fixture), seen, root_feature)
     end
 
