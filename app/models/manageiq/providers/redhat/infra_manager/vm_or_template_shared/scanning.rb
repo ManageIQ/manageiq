@@ -42,46 +42,21 @@ module ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared::Scanning
       return
     end
 
-    # Make sure we were given a ems/host to connect to
-    ems_connect_type = ost.scanData.fetch_path('ems', 'connect_to') || 'host'
-    miqVimHost = ost.scanData.fetch_path("ems", ems_connect_type)
-    if miqVimHost
-      st = Time.now
-      use_broker = false
-      miqVimHost[:address] = miqVimHost[:ipaddress] if miqVimHost[:address].nil?
-      ems_display_text = "#{ems_connect_type}(#{use_broker ? 'via broker' : 'directly'}):#{miqVimHost[:address]}"
-      $log.info "#{log_header}: Connecting to [#{ems_display_text}] for VM:[#{@vm_cfg_file}]"
-      miqVimHost[:password_decrypt] = MiqPassword.decrypt(miqVimHost[:password])
+    st = Time.now
+    ems_display_text = "ems(directly):#{ext_management_system.address}"
+    $log.info "#{log_header}: Connecting to [#{ems_display_text}] for VM:[#{@vm_cfg_file}]"
 
-      begin
-        #
-        # The functionality that was formerly required through 'rhevm_inventory'
-        # has been moved to the 'overt' gem. If that functionality is ever moved
-        # out of the 'overt' gem, then this require will need to be changed accordingly.
-        #
-        $log.debug "#{log_header}: before require 'overt'"
-        require 'ovirt'
-        ems_opt = {
-          :server     => miqVimHost[:address],
-          :username   => miqVimHost[:username],
-          :password   => miqVimHost[:password_decrypt],
-          :verify_ssl => false
-        }
-        ems_opt[:port] = miqVimHost[:port] unless miqVimHost[:port].blank?
-
-        rhevm = Ovirt::Inventory.new(ems_opt)
-        rhevm.api
-        ost.miqRhevm = rhevm
-        $log.info "Connection to [#{ems_display_text}] completed for VM:[#{@vm_cfg_file}] in [#{Time.now - st}] seconds"
-      rescue Timeout::Error => err
-        msg = "#{log_header}: Connection to [#{ems_display_text}] timed out for VM:[#{@vm_cfg_file}] with error [#{err}] after [#{Time.now - st}] seconds"
-        $log.error msg
-        raise err, msg, err.backtrace
-      rescue Exception => err
-        msg = "#{log_header}: Connection to [#{ems_display_text}] failed for VM:[#{@vm_cfg_file}] with error [#{err}] after [#{Time.now - st}] seconds"
-        $log.error msg
-        raise err, msg, err.backtrace
-      end
+    begin
+      ost.miqRhevm = ext_management_system.rhevm_inventory
+      $log.info "Connection to [#{ems_display_text}] completed for VM:[#{@vm_cfg_file}] in [#{Time.now - st}] seconds"
+    rescue Timeout::Error => err
+      msg = "#{log_header}: Connection to [#{ems_display_text}] timed out for VM:[#{@vm_cfg_file}] with error [#{err}] after [#{Time.now - st}] seconds"
+      $log.error msg
+      raise
+    rescue Exception => err
+      msg = "#{log_header}: Connection to [#{ems_display_text}] failed for VM:[#{@vm_cfg_file}] with error [#{err}] after [#{Time.now - st}] seconds"
+      $log.error msg
+      raise
     end
   end
 end
