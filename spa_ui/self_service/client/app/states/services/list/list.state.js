@@ -32,7 +32,7 @@
   }
 
   /** @ngInject */
-  function StateController($state, services, ServicesState) {
+  function StateController($state, services, ServicesState, $filter) {
     /* jshint validthis: true */
     var vm = this;
 
@@ -74,6 +74,12 @@
             title: 'Owner',
             placeholder: 'Filter by Owner',
             filterType: 'text'
+          },
+          {
+            id: 'created',
+            title: 'Created',
+            placeholder: 'Filter by Created On',
+            filterType: 'text'
           }
         ],
         resultsCount: vm.servicesList.length,
@@ -90,6 +96,11 @@
           {
             id: 'retires',
             title:  'Retirement Date',
+            sortType: 'numeric'
+          },
+          {
+            id: 'vms',
+            title:  'Number of VMs',
             sortType: 'numeric'
           },
           {
@@ -127,6 +138,8 @@
       var compValue = 0;
       if (vm.toolbarConfig.sortConfig.currentField.id === 'name') {
         compValue = item1.name.localeCompare(item2.name);
+      } else if (vm.toolbarConfig.sortConfig.currentField.id === 'vms') {
+        compValue = item1.v_total_vms - item2.v_total_vms;
       } else if (vm.toolbarConfig.sortConfig.currentField.id === 'owner') {
         if ( !angular.isDefined(item1.evm_owner) 
            && angular.isDefined(item2.evm_owner) ) {
@@ -222,6 +235,8 @@
         return item.evm_owner.name.toLowerCase().indexOf(filter.value.toLowerCase()) !== -1;
       } else if ('retirement' === filter.id) {
         return checkRetirementDate(item, filter.value.toLowerCase());
+      } else if ('created' === filter.id) {
+        return $filter('date')(item.created_at).toLowerCase().indexOf(filter.value.toLowerCase()) !== -1;
       }
 
       return false;
