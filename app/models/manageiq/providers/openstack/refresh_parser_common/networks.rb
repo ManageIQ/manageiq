@@ -167,7 +167,7 @@ module ManageIQ::Providers
 
         def parse_network_router(network_router)
           uid             = network_router.id
-          network_id      = network_router.external_gateway_info.fetch_path("network_id")
+          network_id      = network_router.try(:external_gateway_info).try(:fetch_path, "network_id")
           new_result = {
             :type                  => self.class.network_router_type,
             :name                  => network_router.name,
