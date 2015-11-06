@@ -38,7 +38,7 @@ All notable changes to this project will be documented in this file.
   - Ability to report on Performance
   - Host Socket and Total VMs metrics
   - Watermark reports available out-of-the-box
-  
+
 
 ### Provisioning
 - Filter Service Catalog Items during deployment
@@ -62,6 +62,7 @@ All notable changes to this project will be documented in this file.
 - Added donut charts
 - Tenancy Roles for RBAC
 - Self Service UI is enabled and included in build
+- Updated file upload screens
 
 ### Event Switchboard
 - Initiate event processing through Automate
@@ -74,9 +75,9 @@ All notable changes to this project will be documented in this file.
   - New events must be added to automate model
   - Built-in event handlers added for performance
   - Requires update of the ManageIQ automate domain
- 
+
 ### Tenancy
-- Model 
+- Model
   - new Tenant model associations
   - Automate domains
   - Service Catalogs
@@ -94,9 +95,8 @@ All notable changes to this project will be documented in this file.
   - Quota Management
 - Associate Tenant to Requests and Services
 - Update of VM tenant when owning group changes
-- Tagging support
 - Automate Tenant Quotas
-  - Customizable Automate State Machine for validating quotas for Service, Infrastructure, and Cloud 
+  - Customizable Automate State Machine for validating quotas for Service, Infrastructure, and Cloud
   - Default Setting based on Tenant Quota Model
   - Backward compatibility
   - Can be enforced per tenant and subtenants in the UI
@@ -129,7 +129,7 @@ All notable changes to this project will be documented in this file.
 - Report results collection
 - Access to image_hrefs for Services and Service Templates
 - Support for custom action buttons and dialogs
-- Categories and tags CRUD 
+- Categories and tags CRUD
 - Support password updates
 - Enhancements for Self-Service UI
 - Enhancements for Tenancy
@@ -230,7 +230,6 @@ All notable changes to this project will be documented in this file.
   - Increased chart responsiveness
   - Fixes for Japanese I18n support
   - Fixed alignment of Foreman explorer RBAC features with the UI
-  - Updated file upload screens
 - Chargeback: selectable units for Chargeback Rates
 
 # Botvinnik Release
