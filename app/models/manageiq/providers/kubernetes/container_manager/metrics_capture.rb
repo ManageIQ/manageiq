@@ -25,6 +25,15 @@ module ManageIQ::Providers
         :rollup                => "average",
         :unit_key              => "percent",
         :capture_interval_name => "realtime"
+      },
+      "net_usage_rate_average" => {
+        :counter_key           => "net_usage_rate_average",
+        :instance              => "",
+        :capture_interval      => "#{INTERVAL}",
+        :precision             => 2,
+        :rollup                => "average",
+        :unit_key              => "datagramspersecond",
+        :capture_interval_name => "realtime"
       }
     }
 
