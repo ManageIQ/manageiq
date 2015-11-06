@@ -336,6 +336,28 @@ describe MiqQueue do
       expect(MiqQueue.get).to eq(nil)
     end
 
+    it "should accept non-Array args (for now)" do
+      msg = MiqQueue.put(
+        :class_name  => "Class1",
+        :method_name => "Method1",
+        :args        => "not_an_array",
+      )
+
+      msg_from_db = MiqQueue.find(msg.id)
+      expect(msg_from_db.args).to eq(["not_an_array"])
+    end
+
+    it "defaults args / miq_callback to [] / {}" do
+      msg = MiqQueue.put(
+        :class_name  => "Class1",
+        :method_name => "Method1",
+      )
+
+      msg_from_db = MiqQueue.find(msg.id)
+      expect(msg_from_db.args).to eq([])
+      expect(msg_from_db.miq_callback).to eq({})
+    end
+
     it "should put a unique message on the queue if method_name is different" do
       msg1 = MiqQueue.put(
         :class_name  => 'MyClass',

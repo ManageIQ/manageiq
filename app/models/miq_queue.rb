@@ -117,6 +117,9 @@ class MiqQueue < ActiveRecord::Base
     options[:task_id]      = $_miq_worker_current_msg.try(:task_id) unless options.key?(:task_id)
     options[:role]         = options[:role].to_s unless options[:role].nil?
 
+    # Let's deprecate supplying non-array args soon
+    options[:args] = [options[:args]] if options[:args] && !options[:args].kind_of?(Array)
+
     msg = MiqQueue.create!(options)
     msg.warn_if_large_payload
     _log.info("#{MiqQueue.format_full_log_msg(msg)}")
