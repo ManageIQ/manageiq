@@ -1029,9 +1029,13 @@ module ApplicationHelper
   def update_paging_url_parms(action_url, parameter_to_update = {})
     url = update_query_string_params(parameter_to_update)
     action, an_id = action_url.split("/", 2)
-    url[:action] = action
-    url[:id] = an_id unless an_id.nil?
-    url_for(url)
+    if controller.send(:restful?) && action == 'show'
+      polymorphic_path(@record, url)
+    else
+      url[:action] = action
+      url[:id] = an_id unless an_id.nil?
+      url_for(url)
+    end
   end
 
   def update_query_string_params(update_this_param)
