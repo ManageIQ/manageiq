@@ -273,6 +273,10 @@ module Openstack
                 {
                   :name      => "EmsRefreshSpec-Router_40",
                   :__subnets => [subnets(PRIVATE_NETWORK_NAME_30)[1]]
+                }],
+              'non_existent_network' => [
+                {
+                  :name      => "DisconnectedRouter"
                 }]
             }
 

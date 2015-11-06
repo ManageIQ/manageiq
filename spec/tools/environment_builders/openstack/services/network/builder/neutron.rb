@@ -74,6 +74,14 @@ module Openstack
                              create_router(@service.routers, router_data, subnet_interfaces))
               end
             end
+
+            # Create also disconnected router, to see it's not breaking anything
+            @data.routers('non_existent_network').each do |router_data|
+              router_data = router_data.merge(:tenant_id => @project.id)
+
+              @routers << (find(@service.routers, router_data.slice(:name)) ||
+                           create_router(@service.routers, router_data, []))
+            end
           end
 
           def create_router(collection, data, subnet_interfaces)
