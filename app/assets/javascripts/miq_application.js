@@ -1189,7 +1189,7 @@ function miqInitSelectPicker() {
   $('.selectpicker').selectpicker();
   $('.selectpicker').selectpicker({
     style: 'btn-info',
-    size: 4
+    size: 10
   });
   $('.bootstrap-select > button[title]').not('.selectpicker').tooltip({container: 'none'});
 }

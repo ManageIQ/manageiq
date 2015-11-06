@@ -5,7 +5,7 @@ module MiqAeDiscoverySpec
   describe "MiqAeDiscovery" do
     before(:each) do
       # admin user is needed to process Events
-      @admin = FactoryGirl.create(:user_with_group, :userid => "admin", :name => "Administrator")
+      @admin  = User.super_admin || FactoryGirl.create(:user_with_group, :userid => "admin")
       @tenant = Tenant.root_tenant
       @group  = FactoryGirl.create(:miq_group, :tenant => @tenant)
       @ems    = FactoryGirl.create(:ext_management_system, :tenant => @tenant)

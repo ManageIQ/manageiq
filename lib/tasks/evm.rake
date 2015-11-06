@@ -37,12 +37,26 @@ namespace :evm do
   end
 
   task :compile_assets do
-    ENV["DATABASE_URL"] ||= "postgresql://user:pass@127.0.0.1/dbname"
-    Rake::Task["assets:clobber"].invoke
-    Rake::Task["assets:precompile"].invoke
+    with_dummy_database_url_configuration do
+      Rake::Task["assets:clobber"].invoke
+      Rake::Task["assets:precompile"].invoke
+    end
   end
 
-  task :compile_sti_loader => :environment do
-    DescendantLoader.instance.class_inheritance_relationships
+  task :compile_sti_loader do
+    with_dummy_database_url_configuration do
+      Rake::Task["environment"].invoke
+      DescendantLoader.instance.class_inheritance_relationships
+    end
+  end
+
+  # Loading environment will try to read database.yml unless DATABASE_URL is set.
+  # For some rake tasks, the database.yml may not yet be setup and is not required anyway.
+  # Note: Rails will not actually use the configuration and connect until you issue a query.
+  def with_dummy_database_url_configuration
+    before, ENV["DATABASE_URL"] = ENV["DATABASE_URL"], "postgresql://user:pass@127.0.0.1/dbname"
+    yield
+  ensure
+    before.nil? ? ENV.delete("DATABASE_URL") : ENV["DATABASE_URL"] = before
   end
 end

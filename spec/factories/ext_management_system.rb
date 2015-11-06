@@ -111,7 +111,10 @@ FactoryGirl.define do
   factory :ems_openshift, :aliases => ["manageiq/providers/openshift/container_manager"], :class => "ManageIQ::Providers::Openshift::ContainerManager", :parent => :ems_container do
   end
 
-  factory :ems_atomic, :aliases => ["manageiq/providers/atomic/container_manager"], :class => "ManageIQ::Providers::Openshift::ContainerManager", :parent => :ems_container do
+  factory :ems_atomic, :aliases => ["manageiq/providers/atomic/container_manager"], :class => "ManageIQ::Providers::Atomic::ContainerManager", :parent => :ems_container do
+  end
+
+  factory :ems_openshift_enterprise, :aliases => ["manageiq/providers/openshift_enterprise/container_manager"], :class => "ManageIQ::Providers::OpenshiftEnterprise::ContainerManager", :parent => :ems_container do
   end
 
   # Leaf classes for configuration_manager

@@ -8,7 +8,7 @@
   :items:
   # Roles by Servers tab
   - :button: reload_server_tree
-    :image: reload
+    :icon: fa fa-repeat fa-lg
     :title: 'Reload Current Display'
 - :name: ldap_domain_vmdb
   :items:

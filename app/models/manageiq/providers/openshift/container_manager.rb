@@ -13,7 +13,7 @@ class ManageIQ::Providers::Openshift::ContainerManager < ManageIQ::Providers::Co
   end
 
   def self.description
-    @description ||= "OpenShift".freeze
+    @description ||= "OpenShift Origin".freeze
   end
 
   def self.event_monitor_class

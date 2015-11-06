@@ -102,7 +102,7 @@ class MiqRhevmVm < MiqVm
     return if nfs_mounts[storage_id]
 
     mount_point = ::File.join(nfs_mount_root, nfs_mount_dir(storage_obj))
-    nfs_mounts[storage_id] = {:uri => "nfs://#{nfs_uri(storage_obj)}", :mount_point => mount_point}
+    nfs_mounts[storage_id] = {:uri => "nfs://#{nfs_uri(storage_obj)}", :mount_point => mount_point, :read_only => true}
   end
 
   def nfs_uri(storage_obj)

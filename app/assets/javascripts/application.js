@@ -5,6 +5,7 @@
 //= require angular-patternfly
 //= require angular-ui-bootstrap
 //= require angular-ui-bootstrap-tpls
+//= require angular-sanitize
 //= require moment
 //= require moment-strftime
 //= require moment-timezone

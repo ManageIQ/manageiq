@@ -7,19 +7,19 @@
 - :name: chargeback_download_main
   :items:
   - :buttonSelect: chargeback_download_choice
-    :image: download
+    :icon: fa fa-download fa-lg
     :title: "Download"
     :items:
     - :button: chargeback_download_text
-      :image: txt
+      :icon: fa fa-file-text-o fa-lg
       :title: "Download this report in text format"
       :url: '/render_txt'
     - :button: chargeback_download_csv
-      :image: csv
+      :icon: fa fa-file-text-o fa-lg
       :title: "Download this report in CSV format"
       :url: '/render_csv'
     - :button: chargeback_download_pdf
-      :image: pdf
+      :icon: fa fa-file-pdf-o fa-lg
       :title: "Download this report in PDF format"
       :url: '/render_pdf'
   - :button: chargeback_report_only

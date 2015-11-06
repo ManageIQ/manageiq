@@ -7,9 +7,9 @@
 - :name: log_reloading
   :items:
   - :button: refresh_log
-    :image: reload
+    :icon: fa fa-repeat fa-lg
     :title: 'Reload the #{@msg_title} Log Display'
   - :button: fetch_log
-    :image: download
+    :icon: fa fa-download fa-lg
     :title: 'Download the Entire #{@msg_title} Log File'
     :url: '/fetch_log'

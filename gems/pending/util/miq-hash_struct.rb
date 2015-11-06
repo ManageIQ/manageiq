@@ -57,6 +57,14 @@ class MiqHashStruct
 
   def respond_to_missing?(sym, *)
     # Methods for Marshal and YAML dumping and loading shouldn't #respond_to_missing?
-    !sym.in?([:encode_with, :init_with, :yaml_initialize, :marshal_dump, :_dump])
+    return false if sym.in?([:encode_with, :init_with, :yaml_initialize, :marshal_dump, :_dump])
+
+    # Setters are always true
+    return true if sym.to_s.end_with? '='
+
+    # Getters only when the attribute is defined
+    return true if @hash.key?(sym)
+
+    false
   end
 end

@@ -40,7 +40,6 @@ FactoryGirl.define do
   end
 
   factory :user_admin, :parent => :user do
-    userid          "admin"
     role            "super_administrator"
   end
 

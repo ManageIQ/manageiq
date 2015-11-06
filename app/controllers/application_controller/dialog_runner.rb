@@ -95,15 +95,6 @@ module ApplicationController::DialogRunner
 
     # Use JS to update the display
     render :update do |page|
-      #     page.replace_html("main_div", :partial=>"st_form") if params[:resource_id] || @group_idx || params[:display]
-      #      if changed
-      #       #sample commands to change values of fields when showing hidden tr's
-      #       page << "$('check_box_1').checked = true"
-      #       page << "$('text_area_box_1').value = 'text'"
-      #       page << "$('f2').options[0]= new Option('value 1', 'val1');"
-      #       page << "$('f2').options[1]= new Option('value 2', 'val2');"
-      #       page << "$('f2').value = 'val2'"
-      #       page << javascript_for_miq_button_visibility(changed)
       @edit[:wf].dialog.dialog_tabs.each do |tab|
         tab.dialog_groups.each do |group|
           group.dialog_fields.each_with_index do |field, _i|
@@ -138,7 +129,6 @@ module ApplicationController::DialogRunner
           end
         end
       end
-      #     end
       page << "miqSparkle(false);"
     end
   end
@@ -228,35 +218,43 @@ module ApplicationController::DialogRunner
       parameter_key = parameter_key.split("__protected").first if parameter_key.ends_with?("__protected")
 
       if parameter_key.starts_with?("miq_date__") && @record.field_name_exist?(parameter_key.split("miq_date__").last)
-        @edit[:wf].set_value(parameter_key.split("miq_date__").last, parameter_value)
+        field_name = parameter_key.split("miq_date__").last
+        old = @edit[:wf].value(field_name)
+        new = parameter_value
+
+        # keep the chosen time if DateTime
+        new += old[10..-1] if old && old.length > 10
+
+        @edit[:wf].set_value(field_name, new)
 
       elsif %w(start_hour start_min).include?(parameter_key)
-        field_name = ""
+        # find any DateTime field and assume it's the only one..
+        field_name = @edit[:wf].dialog.dialog_fields.reverse.find do |f|
+          f.type == 'DialogFieldDateTimeControl'
+        end.try(:name)
+        next if field_name.nil?
 
-        @edit[:wf].dialog.dialog_fields.each_with_index do |field, _|
-          field_name = field.name if %w(DialogFieldDateControl DialogFieldDateTimeControl).include?(field.type)
-        end
-
-        # if user didnt choose the date and goes with default shown in the textbox,
+        # if user didn't choose the date and goes with default shown in the textbox,
         # need to set that value in wf before adding hour/min
-        if @edit[:wf].value(field_name).nil?
+        old = @edit[:wf].value(field_name)
+        if old.nil?
           t = Time.zone.now + 1.day
-          date_val = ["#{t.month}/#{t.day}/#{t.year}"]
-          @edit[:wf].set_value(field_name, date_val)
+          date_val = [t.strftime('%m/%d/%Y'), t.strftime('%H:%M')]
         else
-          date_val = @edit[:wf].value(field_name).split(" ")
+          date_val = old.split(" ")
         end
 
-        start_hour = date_val.length >= 2 ? date_val[1].split(":").first : 0
-        start_min = date_val.length >= 3 ? date_val[1].split(":").last : 0
+        start_hour = date_val.length >= 2 ? date_val[1].split(":").first.to_i : 0
+        start_min = date_val.length >= 2 ? date_val[1].split(":").last.to_i : 0
 
         if parameter_key == "start_hour"
-          time_value = "#{parameter_value}:#{start_min}"
+          start_hour = parameter_value.to_i
         else
-          time_value = "#{start_hour}:#{parameter_value}"
+          start_min = parameter_value.to_i
         end
+        date_val[1] = "%02d:%02d" % [start_hour, start_min]
 
-        @edit[:wf].set_value(field_name, "#{date_val[0]} #{time_value}")
+        @edit[:wf].set_value(field_name, date_val.join(' '))
 
       elsif @edit[:wf].dialog.field(parameter_key).try(:type) == "DialogFieldCheckBox"
         checkbox_value = parameter_value == "1" ? "t" : "f"
