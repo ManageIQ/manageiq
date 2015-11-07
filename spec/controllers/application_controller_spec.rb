@@ -21,7 +21,7 @@ describe ApplicationController do
 
     it "Verify record gets set when valid id is passed in" do
       ems = FactoryGirl.create(:ext_management_system)
-      expect(controller.send(:find_by_id_filtered, ExtManagementSystem, ems.id)).to be_kind_of(ExtManagementSystem)
+      expect(controller.send(:find_by_id_filtered, ExtManagementSystem, ems.id)).to eq(ems)
     end
   end
 
