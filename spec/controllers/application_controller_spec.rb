@@ -121,14 +121,10 @@ describe ApplicationController do
   end
 
   context "#set_config" do
-    before do
-      set_user_privileges
-      @host_service = FactoryGirl.create(:system_service, :name => "foo", :host_id => @host.id)
-    end
-
     it "sets Processors details successfully" do
       host_hardware = FactoryGirl.create(:hardware, :cpu_sockets => 2, :cpu_cores_per_socket => 4, :cpu_total_cores => 8)
       host = FactoryGirl.create(:host, :hardware => host_hardware)
+      set_user_privileges
 
       controller.send(:set_config, host)
       expect(response.status).to eq(200)
