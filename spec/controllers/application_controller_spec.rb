@@ -137,7 +137,7 @@ describe ApplicationController do
   end
 
   context "#set_config" do
-    before(:each) do
+    before do
       set_user_privileges
       @host_service = FactoryGirl.create(:system_service, :name => "foo", :host_id => @host.id)
     end
