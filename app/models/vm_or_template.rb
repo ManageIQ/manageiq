@@ -930,6 +930,7 @@ class VmOrTemplate < ActiveRecord::Base
 
   # TODO: Come back to this
   def proxies4job(job = nil)
+    _log.debug "Enter"
     proxies = []
     msg = 'Perform SmartState Analysis on this VM'
     embedded_msg = nil
@@ -942,6 +943,7 @@ class VmOrTemplate < ActiveRecord::Base
 
     all_proxy_list = storage2proxies
     proxies += storage2active_proxies(all_proxy_list)
+    _log.debug "# proxies = #{proxies.length}"
 
     # If we detect that a MiqServer was in the all_proxies list advise that then host need credentials to use it.
     if all_proxy_list.any? { |p| (MiqServer === p && p.state == "on") }
@@ -1020,12 +1022,15 @@ class VmOrTemplate < ActiveRecord::Base
 
   def storage2active_proxies(all_proxy_list = nil)
     all_proxy_list ||= storage2proxies
+    _log.debug "all_proxy_list.length = #{all_proxy_list.length}"
     proxies = all_proxy_list.select(&:is_proxy_active?)
+    _log.debug "proxies1.length = #{proxies.length}"
 
     # MiqServer coresident proxy needs to contact the host and provide credentials.
     # Remove any MiqServer instances if we do not have credentials
     rsc = self.scan_via_ems? ? ext_management_system : host
     proxies.delete_if { |p| MiqServer === p } if rsc && !rsc.authentication_status_ok?
+    _log.debug "proxies2.length = #{proxies.length}"
 
     proxies
   end
@@ -1056,36 +1061,36 @@ class VmOrTemplate < ActiveRecord::Base
     when 'VMware'
       # VM cannot be scanned by server if they are on a repository
       return [] if storage_id.blank? || self.repository_vm?
-    when 'RedHat'
-      return [] if storage_id.blank?
     else
+      _log.debug "else"
       return []
     end
 
     host_server_ids = host ? host.vm_scan_affinity.collect(&:id) : []
+    _log.debug "host_server_ids.length = #{host_server_ids.length}"
+
     storage_server_ids = storages.collect { |s| s.vm_scan_affinity.collect(&:id) }.reject(&:blank?)
+    _log.debug "storage_server_ids.length = #{storage_server_ids.length}"
+
     all_storage_server_ids = storage_server_ids.inject(:&) || []
-    miq_servers = self.class.miq_servers_for_scan.select do |svr|
+    _log.debug "all_storage_server_ids.length = #{all_storage_server_ids.length}"
+
+    srs = self.class.miq_servers_for_scan
+    _log.debug "srs.length = #{srs.length}"
+
+    miq_servers = srs.select do |svr|
       (svr.vm_scan_host_affinity? ? host_server_ids.detect { |id| id == svr.id } : host_server_ids.empty?) &&
       (svr.vm_scan_storage_affinity? ? all_storage_server_ids.detect { |id| id == svr.id } : storage_server_ids.empty?)
     end
+    _log.debug "miq_servers1.length = #{miq_servers.length}"
 
     miq_servers.select do |svr|
       result = svr.status == "started" && svr.has_zone?(my_zone)
       result &&= svr.is_vix_disk? if vm_vendor == 'VMware'
-      # RedHat VMs must be scanned from an EVM server who's host is attached to the same
-      # storage as the VM unless overridden via SmartProxy affinity
-      if vm_vendor == 'RedHat' && !svr.vm_scan_host_affinity? && !svr.vm_scan_storage_affinity?
-        svr_vm = svr.vm
-        if svr_vm && svr_vm.host
-          missing_storage_ids = storages.collect(&:id) - svr_vm.host.storages.collect(&:id)
-          result &&= missing_storage_ids.empty?
-        else
-          result = false
-        end
-      end
       result
     end
+    _log.debug "miq_servers2.length = #{miq_servers.length}"
+    miq_servers
   end
 
   def active_proxy_error_message
