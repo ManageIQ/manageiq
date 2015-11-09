@@ -9,11 +9,7 @@ class TreeBuilderReportWidgets < TreeBuilder
   end
 
   def set_locals_for_render
-    locals = super
-    locals.merge!(
-      :id_prefix => 'widgets_',
-      :autoload  => true
-    )
+    super.merge!(:id_prefix => 'widgets_', :autoload => true)
   end
 
   # Get root nodes count/array for explorer tree

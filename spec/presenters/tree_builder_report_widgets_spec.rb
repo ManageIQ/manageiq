@@ -3,6 +3,10 @@ require "spec_helper"
 describe TreeBuilderReportWidgets do
   subject { described_class.new("cb_rates_tree", "cb_rates", {}) }
 
+  it "#set_locals_for_render" do
+    expect(subject.send(:set_locals_for_render)).to have_attributes(:id_prefix => 'widgets_', :autoload => true)
+  end
+
   it "#x_get_tree_roots" do
     expect(subject.send(:x_get_tree_roots, false, nil)).to match_array([
       {:id => "r",  :text => "Reports",   :image => "folder", :tip => "Reports"},
