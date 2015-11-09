@@ -5,7 +5,8 @@
       %meta{:content => "IE=8", "http-equiv" => "X-UA-Compatible"}
     %meta{:content => "text/html; charset=ISO-8859-1", "http-equiv" => "Content-Type"}
     = stylesheet_link_tag "vmrc"
-    = javascript_include_tag 'jquery'
+    -# need jQuery that works in IE8 mode and has $.browser, the plugin is broken in IE9 mode
+    = javascript_include_tag 'jquery-1.8.3.min'
     = javascript_include_tag 'jquery_overrides'
 
     :javascript
@@ -28,8 +29,6 @@
 
       }
 
-      // decodeURIComponent() converts the "URLEncoded" string back to normal
-      var title = decodeURIComponent("C-5.0.0.4-svn");
       var title = "#{@record.name}";
 
       // VMRC EVENTS
@@ -392,7 +391,10 @@
 
         initVmrc();
 
-        #{os == 'linux' ? '$(vmrc).height($(window).height() - ($("#container").offset().top + 10));' : '$(vmrc).width( $(window).width());'}
+        if (#{os == 'linux'}) {
+          $(vmrc).height( $(window).height() - ($("#container").offset().top + 10) );
+          $(vmrc).width( $(window).width() );
+        }
 
       } catch (error) {
         hideSpinner();
