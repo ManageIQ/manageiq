@@ -127,6 +127,9 @@ module OpenstackHandle
       # TODO(lsmola) figure out from where to take the project name and domain name
       domain   = opts.delete(:domain_name) || 'admin_domain'
 
+      # Do not send auth_type to fog, it throws warning
+      opts.delete(:auth_type)
+
       unless tenant
         tenant = "any_tenant" if service == "Identity"
         tenant ||= default_tenant_name
