@@ -2,10 +2,7 @@ class TreeBuilderReportWidgets < TreeBuilder
   private
 
   def tree_init_options(tree_name)
-    {
-      :leaf     => 'Widgets',
-      :full_ids => true
-    }
+    {:leaf => 'Widgets', :full_ids => true}
   end
 
   def set_locals_for_render
