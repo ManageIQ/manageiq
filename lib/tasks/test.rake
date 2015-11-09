@@ -9,15 +9,14 @@ namespace :test do
   end
 
   task :verify_no_db_access_loading_rails_environment do
-    ENV["DATABASE_URL"] = "postgresql://non_existing_user:pass@127.0.0.1/vmdb_development"
-    begin
-      puts "** Confirming rails environment does not connect to the database"
-      Rake::Task['environment'].invoke
-    rescue ActiveRecord::NoDatabaseError
-      STDERR.write "Detected Rails environment trying to connect to the database!  Check the backtrace for an initializer trying to access the database.\n\n"
-      raise
-    ensure
-      ENV.delete("DATABASE_URL")
+    EvmRakeHelper.with_dummy_database_url_configuration do
+      begin
+        puts "** Confirming rails environment does not connect to the database"
+        Rake::Task['environment'].invoke
+      rescue ActiveRecord::NoDatabaseError
+        STDERR.write "Detected Rails environment trying to connect to the database!  Check the backtrace for an initializer trying to access the database.\n\n"
+        raise
+      end
     end
   end
 
