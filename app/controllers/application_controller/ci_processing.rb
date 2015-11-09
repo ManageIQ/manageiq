@@ -763,7 +763,6 @@ module ApplicationController::CiProcessing
       else
         @discover_type = ExtManagementSystem.ems_cloud_discovery_types
         @discover_type_selected = @discover_type.first
-
       end
     else
       @discover_type = ExtManagementSystem.ems_infra_discovery_types
@@ -806,7 +805,7 @@ module ApplicationController::CiProcessing
       drop_breadcrumb(:name => "#{title} Discovery", :url => "/host/discover")
       @discover_type_selected = params[:discover_type_selected]
 
-      if request.parameters[:controller] == "ems_cloud" && params[:discover_type_selected] == ExtManagementSystem.ems_cloud_discovery_types.first
+      if request.parameters[:controller] == "ems_cloud" && params[:discover_type_selected] == ExtManagementSystem::EMS_CLOUD_DISCOVERY_TYPES[:azure]
         @client_id = params[:client_id] if params[:client_id]
         @client_key = params[:client_key] if params[:client_key]
         @azure_tenant_id = params[:azure_tenant_id] if params[:azure_tenant_id]
@@ -850,7 +849,7 @@ module ApplicationController::CiProcessing
             end
             Host.discoverByIpRange(from_ip, to_ip, options)
           else
-            if params[:discover_type_selected] == ExtManagementSystem.ems_cloud_discovery_types.first
+            if params[:discover_type_selected] == ExtManagementSystem::EMS_CLOUD_DISCOVERY_TYPES['azure']
               ManageIQ::Providers::Azure::CloudManager.discover_queue(@client_id, @client_key, @azure_tenant_id)
             else
               ManageIQ::Providers::Amazon::CloudManager.discover_queue(@userid, @password)
@@ -927,10 +926,10 @@ module ApplicationController::CiProcessing
         page << "$('#to_fourth').val('#{j_str(params[:to_fourth].gsub(/[\D]/, ""))}');"
       end
       if (request.parameters[:controller] == "ems_cloud" && params[:discover_type_selected]) || (params[:discover_type_ipmi] && params[:discover_type_ipmi].to_s == "1")
-        if params[:discover_type_selected] && params[:discover_type_selected] == ExtManagementSystem.ems_cloud_discovery_types.first
+        if params[:discover_type_selected] && params[:discover_type_selected] == ExtManagementSystem::EMS_CLOUD_DISCOVERY_TYPES['azure']
           page << javascript_hide("discover_credentials")
           page << javascript_show("discover_azure_credentials")
-        elsif params[:discover_type_selected] && params[:discover_type_selected] == ExtManagementSystem.ems_cloud_discovery_types.second
+        elsif params[:discover_type_selected] && params[:discover_type_selected] == ExtManagementSystem::EMS_CLOUD_DISCOVERY_TYPES['amazon']
           page << javascript_hide("discover_azure_credentials")
           page << javascript_show("discover_credentials")
         else

@@ -229,7 +229,6 @@ describe ApplicationController do
       controller.send(:discover)
       expect(response.status).to eq(200)
       expect(controller.instance_variable_get(:@discover_type)).to eq(ExtManagementSystem.ems_cloud_discovery_types)
-
     end
   end
 
