@@ -5,6 +5,7 @@ class ServiceTemplate < ActiveRecord::Base
   include NewWithTypeStiMixin
   include TenancyMixin
   include_concern 'Filter'
+  CLOUD_PROVIDERS = %w(amazon openstack)
 
   belongs_to :tenant
   # # These relationships are used to specify children spawned from a parent service
@@ -225,5 +226,9 @@ class ServiceTemplate < ActiveRecord::Base
       r = s.resource
       r.respond_to?(:template_valid?) && !r.template_valid?
     end.try(:resource).try(:validate_template) || {:valid => true, :message => nil}
+  end
+
+  def cloud?
+    CLOUD_PROVIDERS.include?(prov_type)
   end
 end
