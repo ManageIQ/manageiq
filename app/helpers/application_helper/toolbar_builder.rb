@@ -98,9 +98,9 @@ class ApplicationHelper::ToolbarBuilder
           toolbar << props
           current_item = props
           any_visible = false
-          bgi[:items].each_with_index do |bsi, bsi_idx|             # Go thru all of the buttonSelect items
-            if bsi.key?(:separator)                             # If separator found, add it
-              props = {"id" => "sep_#{bg_idx}_#{bsi_idx}", "type" => "separator"}
+          bgi[:items].each_with_index do |bsi, bsi_idx|
+            if bsi.key?(:separator)
+              props = {"id" => "sep_#{bg_idx}_#{bsi_idx}", "type" => "separator", :hidden => !any_visible}
             else
               next if bsi[:image] == 'pdf' && !PdfGenerator.available?
               next if build_toolbar_hide_button(bsi[:pressed] || bsi[:button])  # Use pressed, else button name
