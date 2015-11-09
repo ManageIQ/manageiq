@@ -26,7 +26,7 @@ class TreeBuilderReportWidgets < TreeBuilder
   end
 
   def x_get_tree_custom_kids(object, count_only, _options)
-    count_only_or_objects(count_only,
-                          MiqWidget.find_all_by_content_type(WIDGET_CONTENT_TYPE[object[:id].split('-').last]), 'title')
+    widgets = MiqWidget.where(:content_type => WIDGET_CONTENT_TYPE[object[:id].split('-').last])
+    count_only_or_objects(count_only, widgets, 'title')
   end
 end
