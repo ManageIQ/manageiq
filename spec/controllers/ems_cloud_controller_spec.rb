@@ -19,7 +19,6 @@ describe EmsCloudController do
     render_views
 
     it 'shows the edit page' do
-      expect(MiqServer.my_server).to be
       FactoryGirl.create(:ems_amazon, :zone => Zone.seed)
       ems = ManageIQ::Providers::Amazon::CloudManager.first
       get :edit, :id => ems.id

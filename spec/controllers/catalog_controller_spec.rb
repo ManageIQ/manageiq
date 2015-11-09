@@ -434,8 +434,6 @@ describe CatalogController do
     render_views
     before(:each) do
       EvmSpecHelper.create_guid_miq_server_zone
-      expect(MiqServer.my_guid).to be
-      expect(MiqServer.my_server).to be
       session[:settings] = {
         :views => {:orchestrationtemplate => "grid"}
       }
