@@ -432,6 +432,7 @@ Vmdb::Application.routes.draw do
         show_list
         tagging_edit
         tag_edit_form_field_changed
+        guest_applications
       ),
       :post => %w(
         button
@@ -447,6 +448,7 @@ Vmdb::Application.routes.draw do
         update
         tagging_edit
         tag_edit_form_field_changed
+        guest_applications
       ) + adv_search_post + exp_post + save_post
     },
 
