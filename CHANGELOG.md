@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 
-# Capablanca Beta Release
+# Capablanca RC 1
 
 ## Added Features
 
@@ -15,6 +15,10 @@ All notable changes to this project will be documented in this file.
   - VMware integration
   - Inventory: Replicators, Routes, Projects
   - SmartState Analysis
+- Containers
+  - Resource Quotas
+  - Component Status
+  - Introduction of Atomic
 -  Namespacing
   - Preparation for pluggable providers
   - OpenStack, Containers
@@ -22,6 +26,7 @@ All notable changes to this project will be documented in this file.
 - OpenStack
   - Improved naming for AMQP binding queues
   - Shelve VMs
+  - Neutron Networking
 - Foreman: Exposed additional properties to reporting
 - Azure
   - Initial work for Inventory Collection, OAuth2, [azure-armrest gem](https://github.com/ManageIQ/azure-armrest)
@@ -29,6 +34,10 @@ All notable changes to this project will be documented in this file.
   - Power Operations
 - RHEVM: Reconfigure of Memory and CPU
 - Orchestration: Reconfiguration
+- Reporting on Providers
+  - Ability to report on Performance
+  - Host Socket and Total VMs metrics
+  - Watermark reports available out-of-the-box
   
 
 ### Provisioning
@@ -53,29 +62,63 @@ All notable changes to this project will be documented in this file.
 - Added donut charts
 - Tenancy Roles for RBAC
 - Self Service UI is enabled and included in build
+- Updated file upload screens
 
+### Event Switchboard
+- Initiate event processing through Automate
+- Users can add automate handlers to customize event processing
+- Centralized event mappings
+- Moves provider event mappings from appliance file (config/event_handling.tmpl.yml) into the automate model
+- Organization of Events through automate namespaces
+- Event handling changes without appliance restarts
+- Notes:
+  - New events must be added to automate model
+  - Built-in event handlers added for performance
+  - Requires update of the ManageIQ automate domain
  
-
 ### Tenancy
-- Model - new Tenant model associations
- - Automate domains
- - Service Catalogs
- - Catalog Items
-- Assign existing records to root tenant Provider, Automate Domain, Group, TenantQuota, Vm
+- Model 
+  - new Tenant model associations
+  - Automate domains
+  - Service Catalogs
+  - Catalog Items
+  - Assign default groups to tenants
+  - Assign groups to all VMs and Services
+  - Assign existing records to root tenant Provider, Automate Domain, Group, TenantQuota, Vm
+  - Expose VM/Templates association on Tenant model
 - New Automate Service Models
- - Tenant
- - TenantQuota
+  - Tenant
+  - TenantQuota
 - UI
- - RBAC and Roles - Access Roles features exposed
- - New roles created for RBAC
- - Quota Management
+  - RBAC and Roles - Access Roles features exposed
+  - New roles created for RBAC
+  - Quota Management
 - Associate Tenant to Requests and Services
 - Update of VM tenant when owning group changes
-- Tagging support 
+- Tagging support
+- Automate Tenant Quotas
+  - Customizable Automate State Machine for validating quotas for Service, Infrastructure, and Cloud 
+  - Default Setting based on Tenant Quota Model
+  - Can be enforced per tenant and subtenants in the UI
+  - Selection of multiple constraints (cpu, memory, storage)
+  - Limits are enforced during provisioning
+
+### Control
+- New Events available for use with Policy
+  - Host Start Request
+  - Host Stop Request
+  - Host Shutdown Request
+  - Host Reset Request
+  - Host Reboot Request
+  - Host Standby Request
+  - Host Maintenance Enter Request
+  - Host Maintenance Exit Request
+  - Host Vmotion Enable Request
+  - Host Vmotion Disable Request
 
 ### REST API
 - Querying Service Template images
-- Querying Resource Actions as a formal subcollection of service_templates
+- Querying Resource Actions as a formal sub-collection of service_templates
 - Querying Service Dialogs
 - Querying Provision Dialogs
 - Ability to import reports
@@ -88,6 +131,8 @@ All notable changes to this project will be documented in this file.
 - Support for custom action buttons and dialogs
 - Categories and tags CRUD 
 - Support password updates
+- Enhancements for Self-Service UI
+- Enhancements for Tenancy
 
 ### Automate
 
@@ -98,10 +143,11 @@ All notable changes to this project will be documented in this file.
   - Allow for a state to be skipped (on_entry)
   - Allow for continuation of a state machine in case of errors (on_error)
   - Allow methods to set the next state to execute
+  - Added support for state machine restart
 - Identify Visible/Editable/Enabled Automate domains for tenants
 - Set automate domain priority (scoped per tenant)
 - Service model updates
-- Import changes to include tenant  
+- Import/export updates to honor tenant domains
 
 ### SmartState
 - Support for VMware VDDK version 6
@@ -184,7 +230,7 @@ All notable changes to this project will be documented in this file.
   - Increased chart responsiveness
   - Fixes for Japanese I18n support
   - Fixed alignment of Foreman explorer RBAC features with the UI
-  - Updated file upload screens 
+- Chargeback: selectable units for Chargeback Rates
 
 # Botvinnik Release
 
