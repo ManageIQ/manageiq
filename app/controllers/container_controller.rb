@@ -58,7 +58,22 @@ class ContainerController < ApplicationController
     redirect_to :action => 'show', :controller => record.class.base_model.to_s.underscore, :id => record.id
   end
 
+  def show_timeline
+    @showtype = "timeline"
+    session[:tl_record_id] = params[:id]
+    @record = Container.find_by_id(from_cid(params[:id]))
+    @timeline = @timeline_filter = true
+    @lastaction = "show_timeline"
+    tl_build_timeline                       # Create the timeline report
+    @refresh_partial = "layouts/tl_show"
+    if params[:refresh]
+      @sb[:action] = "timeline"
+      replace_right_cell
+    end
+  end
+
   def explorer
+    @display = params[:display] || "main" unless control_selected?
     @explorer   = true
     @lastaction = "explorer"
 
@@ -99,9 +114,9 @@ class ContainerController < ApplicationController
     params.merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)
 
-    get_node_info(x_node)
-    @in_a_form = false
+    @display == "timeline" ? show_timeline : get_node_info(x_node)
 
+    @in_a_form = false
     render :layout => "application"
   end
 
@@ -248,7 +263,7 @@ class ContainerController < ApplicationController
       presenter[:update_partials][:main_div] = r[:partial => partial]
     elsif params[:display]
       partial_locals = {:controller => "container", :action_url => @lastaction}
-      partial = "layouts/x_gtl"
+      partial = params[:display] == "timeline" ? "layouts/tl_show" : "layouts/x_gtl"
       presenter[:parent_id]    = @record.id           # Set parent rec id for JS function miqGridSort to build URL
       presenter[:parent_class] = request[:controller] # Set parent class for URL also
       presenter[:update_partials][:main_div] = r[:partial => partial, :locals => partial_locals]
@@ -263,6 +278,12 @@ class ContainerController < ApplicationController
       presenter[:set_visible_elements][:pc_div_1] = true
       presenter[:set_visible_elements][:paging_div] = true
     end
+
+    presenter[:ajax_action] = {
+      :controller => request.parameters["controller"],
+      :action     => @ajax_action,
+      :record_id  => @record.id
+    } if ['performance', 'timeline'].include?(@sb[:action])
 
     presenter[:replace_partials][:adv_searchbox_div] = r[:partial => 'layouts/x_adv_searchbox']
 

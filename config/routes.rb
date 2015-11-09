@@ -301,6 +301,8 @@ Vmdb::Application.routes.draw do
         explorer
         perf_top_chart
         show
+        tl_chooser
+        wait_for_task
         tagging_edit
         tag_edit_form_field_changed
       ),
@@ -310,6 +312,8 @@ Vmdb::Application.routes.draw do
         container_edit
         container_form_field_changed
         explorer
+        tl_chooser
+        wait_for_task
         quick_search
         reload
         tree_autoload_dynatree

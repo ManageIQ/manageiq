@@ -3467,6 +3467,10 @@
         :description: Display Lists of Containers
         :feature_type: view
         :identifier: container_show_list
+      - :name: Timeline
+        :description: Display Timelines for Containers
+        :feature_type: view
+        :identifier: container_timeline
     - :name: Modify
       :description: Modify Containers
       :feature_type: admin
