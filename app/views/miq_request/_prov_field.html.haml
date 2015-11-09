@@ -48,6 +48,8 @@
     .form-group
       %label.col-md-2.control-label{:valign => "top"}
         = field_hash[:description]
+        - if field_hash[:description] == "Provision on"
+          (#{get_timezone_abbr(current_user)})
         - if @edit && @edit[:new] && [:vm_description].include?(field)
           (
           %span#description_count
@@ -492,29 +494,29 @@
             -# Display notes if available
             = field_hash[:notes]
       - elsif [:schedule_time].include?(field)
-        .col-md-8
+        .col-md-10
           - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]
             -# Allow editing of the text field
             = datepicker_input_tag("miq_date_1", options[:start_date],
                                    :class                  => "css1",
+                                   "data-width"           => "auto",
                                    :readonly               => "true",
                                    "data-miq_observe_date" => {:url => url}.to_json)
           - else
             = options[:start_date]
-        %label.col-md-2.control-label
-          = _("Starting Time (%s)") % get_timezone_abbr(current_user)
-        .col-md-8
           - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]
             -# Allow editing of the text field
             = select_tag("start_hour",
                          options_for_select((0..23).to_a, options[:start_hour].to_i),
                          :class    => "selectpicker")
+            h
             :javascript
               miqInitSelectPicker();
               miqSelectPickerEvent("start_hour", "#{url}")
             = select_tag("start_min",
                          options_for_select((0..55).step(5).to_a, options[:start_min].to_i),
                          :class    => "selectpicker")
+            m
             :javascript
               miqInitSelectPicker();
               miqSelectPickerEvent("start_min", "#{url}")
