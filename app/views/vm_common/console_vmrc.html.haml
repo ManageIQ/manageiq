@@ -29,8 +29,6 @@
 
       }
 
-      // decodeURIComponent() converts the "URLEncoded" string back to normal
-      var title = decodeURIComponent("C-5.0.0.4-svn");
       var title = "#{@record.name}";
 
       // VMRC EVENTS
@@ -393,7 +391,10 @@
 
         initVmrc();
 
-        #{os == 'linux' ? '$(vmrc).height($(window).height() - ($("#container").offset().top + 10));' : '$(vmrc).width( $(window).width());'}
+        if (#{os == 'linux'}) {
+          $(vmrc).height( $(window).height() - ($("#container").offset().top + 10) );
+          $(vmrc).width( $(window).width() );
+        }
 
       } catch (error) {
         hideSpinner();
