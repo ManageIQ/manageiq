@@ -755,6 +755,7 @@ module EmsCommon
     end
     @ems_types = Array(model.supported_types_and_descriptions_hash.invert).sort_by(&:first)
     @amazon_regions = get_amazon_regions
+    @azure_regions = get_azure_regions
     @openstack_infra_providers = retrieve_openstack_infra_providers
     @openstack_api_versions = retrieve_openstack_api_versions
     @emstype_display = model.supported_types_and_descriptions_hash[@ems.emstype]
@@ -763,6 +764,14 @@ module EmsCommon
   def get_amazon_regions
     regions = {}
     ManageIQ::Providers::Amazon::Regions.all.each do |region|
+      regions[region[:name]] = region[:description]
+    end
+    regions
+  end
+
+  def get_azure_regions
+    regions = {}
+    ManageIQ::Providers::Azure::Regions.all.each do |region|
       regions[region[:name]] = region[:description]
     end
     regions
