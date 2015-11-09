@@ -1924,14 +1924,12 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def validate_supported_check(message_prefix)
-    message = if self.archived?
-                "#{message_prefix} cannot be performed on archived #{self.class.model_suffix} VM."
-              elsif self.orphaned?
-                "#{message_prefix} cannot be performed on orphaned #{self.class.model_suffix} VM."
-              else
-                nil
-              end
-    {:available => message.nil?,   :message => message}
+    return {:available => false, :message => nil} if self.archived?
+    if self.orphaned?
+      return {:available => false,
+              :message   => "#{message_prefix} cannot be performed on orphaned #{self.class.model_suffix} VM."}
+    end
+    {:available => true,   :message => nil}
   end
 
   include DeprecatedCpuMethodsMixin
