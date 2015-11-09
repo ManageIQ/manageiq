@@ -295,9 +295,7 @@ module OpsController::Diagnostics
       :depot_name   => depot.try(:name),
       :uri          => uri_settings[1],
       :uri_prefix   => uri_settings[0],
-      :log_userid   => depot.try(:authentication_userid),
-      :log_password => depot.try(:authentication_password),
-      :log_verify   => depot.try(:authentication_password),
+      :log_userid   => depot.try(:authentication_userid)
     }
   end
 

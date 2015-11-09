@@ -229,7 +229,8 @@ module OpsController::Settings::Schedules
     if params[:log_password]
       file_depot = FileDepot.new
     else
-      file_depot = MiqSchedule.find_by_id(params[:id]).file_depot
+      id = params[:id] || params[:backup_schedule_type]
+      file_depot = MiqSchedule.find_by_id(id).file_depot
     end
     uri_settings = build_uri_settings(file_depot)
     begin
