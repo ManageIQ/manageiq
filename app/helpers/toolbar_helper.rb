@@ -163,8 +163,9 @@ module ToolbarHelper
 
   # Render separator in the drop down
   #
-  def toolbar_button_separator(_props)
-    content_tag(:div, '', :class => :divider, :role => "presentation")
+  def toolbar_button_separator(props)
+    cls = props[:hidden] ? ' hidden' : ''
+    content_tag(:div, '', :class => "divider #{cls}", :role => "presentation")
   end
 
   # Render normal push child button
