@@ -18,10 +18,7 @@ class TreeBuilderReportWidgets < TreeBuilder
 
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
-    objects = []
-    WIDGET_TYPES.keys.each do |w|
-      objects.push(:id => w, :text => WIDGET_TYPES[w], :image => 'folder', :tip => WIDGET_TYPES[w])
-    end
+    objects = WIDGET_TYPES.collect { |k, v| {:id => k, :text => v, :image => 'folder', :tip => v} }
     count_only_or_objects(count_only, objects, nil)
   end
 
