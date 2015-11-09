@@ -79,13 +79,13 @@
             - if [:root_password, :sysprep_password, :sysprep_domain_password].include?(field)
               = password_field_tag(field_id, options[field],
                                    :maxlength         => MAX_NAME_LEN,
-                                   :class             => "form-control",
+                                   :class             => "form-control selectWidth",
                                    :disabled          => disabled,
                                    "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
             - elsif [:request_notes, :vm_description].include?(field)
               = text_area_tag(field_id, options[field],
                               :maxlength                  => field_hash[:max_length],
-                              :class                      => "form-control",
+                              :class                      => "form-control selectWidth",
                               :size                       => "25x4",
                               :counter                    => "description_count",
                               "data-miq_check_max_length" => true,
@@ -94,7 +94,7 @@
               - len =  field_hash[:max_length] ? field_hash[:max_length] : MAX_NAME_LEN
               = text_field_tag(field_id, options[field],
                                :maxlength         => len,
-                               :class             => "form-control",
+                               :class             => "form-control selectWidth",
                                :disabled          => disabled,
                                "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
           - else
