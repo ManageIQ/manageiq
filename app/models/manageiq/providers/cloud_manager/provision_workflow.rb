@@ -41,11 +41,7 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
   def allowed_security_groups(_options = {})
     return {} unless (src = provider_or_tenant_object)
 
-    if src.tags.present?
-      src_obj = get_targets_for_ems(src, :cloud_filter, SecurityGroup, 'security_groups')
-    else
-      src_obj = src.security_groups
-    end
+    src_obj = get_targets_for_source(src, :cloud_filter, SecurityGroup, 'security_groups')
 
     src_obj.each_with_object({}) do |sg, h|
       h[sg.id] = display_name_for_name_description(sg)
@@ -105,6 +101,10 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
 
     rails_logger('get_source_and_targets', 1)
     @target_resource = result
+  end
+
+  def get_targets_for_source(src, filter_name, klass, relats)
+    process_filter(filter_name, klass, src.deep_send(relats))
   end
 
   def get_targets_for_ems(src, filter_name, klass, relats)
