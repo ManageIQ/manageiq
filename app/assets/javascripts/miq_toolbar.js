@@ -1,7 +1,7 @@
 ManageIQ.toolbars = {};
 
-ManageIQ.toolbars.findByDataClick = function (toolbar, data_click) {
-  $(toolbar).find("[data-click='" + attr_click + "']")
+ManageIQ.toolbars.findByDataClick = function (toolbar, attr_click) {
+  return $(toolbar).find("[data-click='" + attr_click + "']");
 };
 
 ManageIQ.toolbars.enableItem = function (toolbar, attr_click) {
