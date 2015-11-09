@@ -126,12 +126,12 @@
       :title: "Suspend this Instance"
       :confirm: "Suspend this Instance?"
     - :button: instance_shelve
-      :image: shelve
+      :image: power_shelve
       :text: "Shelve"
       :title: "Shelve this Instance"
       :confirm: "Shelve this Instance?"
     - :button: instance_shelve_offload
-      :image: shelve_offload
+      :image: power_shelve_offload
       :text: "Shelve Offload"
       :title: "Shelve Offload this Instance"
       :confirm: "Shelve Offload this Instance?"
