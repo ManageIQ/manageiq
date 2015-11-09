@@ -7,34 +7,34 @@
 - :name: scan_vmdb
   :items:
   - :buttonSelect: scan_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: ap_host_edit
-      :image: new
+      :icon: pficon pficon-add-circle-o fa-lg
       :text: "Add Host Analysis Profile"
       :title: "Add a new Host Analysis Profile"
     - :button: ap_vm_edit
-      :image: new
+      :icon: pficon pficon-add-circle-o fa-lg
       :text: "Add VM Analysis Profile"
       :title: "Add a new VM Analysis Profile"
     - :button: ap_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: Edit the selected Analysis Profiles
       :title: Edit the selected Analysis Profiles
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
     - :button: ap_copy
-      :image: copy
+      :icon: fa fa-files-o fa-lg
       :text: Copy the selected Analysis Profiles
       :title: Copy the selected Analysis Profiles
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
     - :button: ap_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: Delete the selected Analysis Profiles from the VMDB
       :title: Delete the selected Analysis Profiles from the VMDB
       :url_parms: 'main_div'

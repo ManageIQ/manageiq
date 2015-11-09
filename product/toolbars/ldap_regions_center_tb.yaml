@@ -7,23 +7,23 @@
 - :name: ldap_region_vmdb
   :items:
   - :buttonSelect: ldap_region_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: ldap_region_add
-      :image: new
+      :icon: pficon pficon-add-circle-o fa-lg
       :text: "Add a new LDAP Region"
       :title: "Add a new LDAP Region"
     - :button: ldap_region_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: Edit the selected LDAP Region
       :title: Select a single LDAP Region to edit
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
     - :button: ldap_region_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: Delete selected LDAP Regions
       :title: Select one or more LDAP Regions to delete
       :url_parms: 'main_div'

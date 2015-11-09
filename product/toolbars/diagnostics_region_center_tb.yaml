@@ -13,13 +13,13 @@
 - :name: ldap_domain_vmdb
   :items:
   - :buttonSelect: support_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     # Roles by Server tab
     - :button: delete_server
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: 'Delete Server #{@record.name} [#{@record.id}]'
       :title: 'Delete Server #{@record.name} [#{@record.id}]'
       :confirm: 'Do you want to delete Server #{@record.name} [#{@record.id}]?'
@@ -34,7 +34,7 @@
       :title: 'Suspend the #{@record.server_role.description} Role on Server #{@record.miq_server.name} [#{@record.miq_server.id}]'
       :confirm: 'Suspend the #{@record.server_role.description} Role on Server #{@record.miq_server.name} [#{@record.miq_server.id}]?'
     - :button: demote_server
-      :image: remove_master
+      :icon: pficon pficon-delete fa-lg_master
       :text: 'Demote Server'
       :title: 'Demote Server #{@record.miq_server.name} [#{@record.miq_server.id}] to secondary for the #{@record.server_role.description} Role'
       :confirm: 'Do you want to demote this Server to secondary?  This will leave no primary Server for this Role.'

@@ -9,7 +9,7 @@
     :text: Policy
     :items:
     - :button: cloud_tenant_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: 'Edit tags for the selected items'
       :url_parms: 'main_div'

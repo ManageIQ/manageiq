@@ -7,17 +7,17 @@
 - :name: container_group_vmdb
   :items:
   - :buttonSelect: container_group_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: container_group_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit this #{ui_lookup(:table=>"container_group")}'
       :title: 'Edit this #{ui_lookup(:table=>"container_group")}'
       :url: '/edit'
     - :button: container_group_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: 'Remove this #{ui_lookup(:table=>"container_group")} from the VMDB'
       :title: 'Remove this #{ui_lookup(:table=>"container_group")} from the VMDB'
       :url_parms: '&refresh=y'
@@ -49,6 +49,6 @@
     :text: Policy
     :items:
     - :button: container_group_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit Tags'
       :title: 'Edit Tags for this #{ui_lookup(:table=>"container_group")}'

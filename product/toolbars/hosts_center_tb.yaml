@@ -7,12 +7,12 @@
 - :name: host_vmdb
   :items:
   - :buttonSelect: host_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: host_refresh
-      :image: refresh
+      :icon: fa fa-refresh fa-lg
       :text: "Refresh Relationships and Power States"
       :title: "Refresh relationships and power states for all items related to the selected items"
       :url_parms: 'main_div'
@@ -20,7 +20,7 @@
       :enabled: 'false'
       :onwhen: '1+'
     - :button: host_scan
-      :image: scan
+      :icon: fa fa-search fa-lg
       :text: "Perform SmartState Analysis"
       :title: "Perform SmartState Analysis on the selected items"
       :url_parms: 'main_div'
@@ -33,7 +33,7 @@
       :title: "Select two or more items to compare"
       :url_parms: 'main_div'
       :enabled: 'false'
-      :onwhen: '2+'    
+      :onwhen: '2+'
     - :button: host_discover
       :image: discover
       :text: "Discover items"
@@ -42,19 +42,19 @@
       :url_parms: '?discover_type=hosts'
     - :separator:
     - :button: host_new
-      :image: new
+      :icon: pficon pficon-add-circle-o fa-lg
       :url: '/new'
       :text: "Add a New item"
       :title: "Add a New item"
     - :button: host_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: Edit Selected items
       :title: Edit Selected items
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1+'
     - :button: host_delete
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: Remove items from the VMDB
       :title: Remove Selected items from the VMDB
       :url_parms: 'main_div'
@@ -78,7 +78,7 @@
       :enabled: 'false'
       :onwhen: '1+'
     - :button: host_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: "Edit Tags for the selected items"
       :url_parms: 'main_div'
@@ -93,7 +93,7 @@
       :enabled: 'false'
       :onwhen: '1+'
     - :button: host_analyze_check_compliance
-      :image: analyze_compliance
+      :icon: fa fa-search fa-lg
       :text: "Analyze then Check Compliance"
       :title: "Analyze then Check Compliance for the selected items"
       :url_parms: 'main_div'
@@ -108,7 +108,7 @@
     :text: Lifecycle
     :items:
     - :button: host_miq_request_new
-      :image: new
+      :icon: pficon pficon-add-circle-o fa-lg
       :url_parms: 'main_div'
       :text: "Provision items"
       :title: "Request to Provision items"
@@ -117,7 +117,7 @@
 - :name: host_operations
   :items:
   - :buttonSelect: host_power_choice
-    :image: power_choice
+    :icon: fa fa-power-off fa-lg
     :title: Power Operations
     :text: Power
     :enabled: 'false'

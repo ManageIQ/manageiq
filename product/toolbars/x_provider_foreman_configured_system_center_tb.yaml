@@ -13,7 +13,7 @@
     :enabled: 'true'
     :items:
     - :button: provider_foreman_configured_system_provision
-      :image: new
+      :icon: pficon pficon-add-circle-o fa-lg
       :text: "Provision Configured System"
       :title: "Provision Configured System"
       :url: provision
@@ -26,7 +26,7 @@
     :enabled: 'true'
     :items:
     - :button: provider_foreman_configured_system_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: "Edit Tags for this Configured System"
       :url: tagging

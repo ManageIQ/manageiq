@@ -7,17 +7,17 @@
 - :name: orchestration_stack_vmdb
   :items:
   - :buttonSelect: orchestration_stack_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
 #    - :button: orchestration_stack_edit
-#      :image: edit
+#      :icon: pficon pficon-edit fa-lg
 #      :text: 'Edit this #{ui_lookup(:table=>"orchestration_stack")}'
 #      :title: 'Edit this #{ui_lookup(:table=>"orchestration_stack")}'
 #      :url: '/edit'
     - :button: orchestration_stack_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: 'Remove this #{ui_lookup(:table=>"orchestration_stack")} from the VMDB'
       :title: 'Remove this #{ui_lookup(:table=>"orchestration_stack")} from the VMDB'
       :url_parms: '&refresh=y'
@@ -30,7 +30,7 @@
     :text: Policy
     :items:
     - :button: orchestration_stack_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: 'Edit Tags for this #{ui_lookup(:tables=>"orchestration_stack")}'
 - :name: orchestration_stack_lifecycle

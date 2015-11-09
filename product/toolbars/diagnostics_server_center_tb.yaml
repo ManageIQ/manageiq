@@ -55,11 +55,11 @@
       :text: 'Collect all logs'
       :title: 'Collect all logs from the selected #{ui_lookup(:table=>"miq_servers")}'
   - :button: log_depot_edit
-    :image: edit
+    :icon: pficon pficon-edit fa-lg
     :text: 'Edit'
     :title: 'Edit the Log Depot settings for the selected #{ui_lookup(:table=>"miq_servers")}'
   - :buttonSelect: support_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:

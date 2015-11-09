@@ -14,12 +14,12 @@
 - :name: saved_report_vmdb
   :items:
   - :buttonSelect: saved_report_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: saved_report_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: Delete selected Saved Reports
       :title: Delete selected Saved Reports
       :url_parms: 'main_div'

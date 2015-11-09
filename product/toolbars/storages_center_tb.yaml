@@ -7,14 +7,14 @@
 - :name: storage_vmdb
   :items:
   - :buttonSelect: storage_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :enabled: 'false'
     :onwhen: '1+'
     :items:
     - :button: storage_scan
-      :image: scan
+      :icon: fa fa-search fa-lg
       :text: 'Perform SmartState Analysis'
       :title: 'Perform SmartState Analysis on the selected #{ui_lookup(:tables=>"storages")}'
       :url_parms: 'main_div'
@@ -22,7 +22,7 @@
       :enabled: 'false'
       :onwhen: '1+'
     - :button: storage_delete
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: 'Remove #{ui_lookup(:tables=>"storages")} from the VMDB'
       :title: 'Remove selected #{ui_lookup(:tables=>"storages")} from the VMDB'
       :url_parms: 'main_div'
@@ -30,7 +30,7 @@
       :enabled: 'false'
       :onwhen: '1+'
 - :name: storage_policy
-  :items: 
+  :items:
   - :buttonSelect: storage_policy_choice
     :image: policy
     :title: Policy
@@ -39,7 +39,7 @@
     :onwhen: '1+'
     :items:
     - :button: storage_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit Tags'
       :title: 'Edit Tags for the selected #{ui_lookup(:tables=>"storages")}'
       :url_parms: 'main_div'

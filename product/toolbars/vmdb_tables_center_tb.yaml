@@ -13,7 +13,7 @@
 #- :name: scan_vmdb
 #  :items:
 #  - :buttonSelect: zone_vmdb_choice
-#    :image: vmdb
+#    :icon: fa fa-cog fa-lg
 #    :title: Configuration
 #    :text: Configuration
 #    :items:

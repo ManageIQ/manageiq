@@ -7,39 +7,39 @@
 - :name: policy_vmdb
   :items:
   - :buttonSelect: policy_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: policy_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit Basic Info, Scope, and Notes'
       :title: 'Edit Basic Info, Scope, and Notes'
       :url_parms: '?typ=basic'
     - :button: policy_copy
-      :image: copy
+      :icon: fa fa-files-o fa-lg
       :text: 'Copy this #{ui_lookup(:model=>@policy.towhat)} Policy'
       :title: 'Copy this Policy to new Policy [#{truncate("Copy of #{@policy.description}", :length => 255, :omission => "")}]'
       :confirm: 'Are you sure you want to create Policy [#{truncate("Copy of #{@policy.description}", :length => 255, :omission => "")}] from this Policy?'
       :url_parms: 'main_div'
     - :button: policy_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: 'Delete this #{ui_lookup(:model=>@policy.towhat)} Policy'
       :title: 'Delete this #{ui_lookup(:model=>@policy.towhat)} Policy'
       :url_parms: 'main_div'
       :confirm: 'Are you sure you want to delete this #{ui_lookup(:model=>@policy.towhat)} Policy?'
     - :button: condition_edit
-      :image: new-condition
+      :icon: pficon pficon-add-circle-o fa-lg-condition
       :text: 'Create a new Condition assigned to this Policy'
       :title: 'Create a new Condition assigned to this Policy'
       :url_parms: '?typ=new'
     - :button: policy_edit_conditions
-      :image: edit-condition
+      :icon: pficon pficon-edit fa-lg-condition
       :text: "Edit this Policy's Condition assignments"
       :title: "Edit this Policy's Condition assignments"
       :url_parms: '?typ=conditions'
     - :button: policy_edit_events
-      :image: edit-event
+      :icon: pficon pficon-edit fa-lg-event
       :text: "Edit this Policy's Event assignments"
       :title: "Edit this Policy's Event assignments"
       :url_parms: '?typ=events'

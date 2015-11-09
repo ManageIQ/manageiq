@@ -7,17 +7,17 @@
 - :name: container_image_registry_vmdb
   :items:
   - :buttonSelect: container_image_registry_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: container_image_registry_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit this #{ui_lookup(:table=>"container_image_registry")}'
       :title: 'Edit this #{ui_lookup(:table=>"container_image_registry")}'
       :url: '/edit'
     - :button: container_image_registry_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: 'Remove this #{ui_lookup(:table=>"container_image_registry")} from the VMDB'
       :title: 'Remove this #{ui_lookup(:table=>"container_image_registry")} from the VMDB'
       :url_parms: '&refresh=y'
@@ -30,6 +30,6 @@
     :text: Policy
     :items:
     - :button: container_image_registry_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit Tags'
       :title: 'Edit Tags for this #{ui_lookup(:table=>"container_image_registry")}'

@@ -7,14 +7,14 @@
 - :name: resource_pool_vmdb
   :items:
   - :buttonSelect: resource_pool_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :enabled: 'false'
     :onwhen: '1+'
     :items:
     - :button: resource_pool_delete
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: Remove Resource Pools from the VMDB
       :title: "Remove selected Resource Pools from the VMDB"
       :url_parms: 'main_div'
@@ -38,7 +38,7 @@
       :enabled: 'false'
       :onwhen: '1+'
     - :button: resource_pool_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: "Edit Tags for the selected Resource Pools"
       :url_parms: 'main_div'

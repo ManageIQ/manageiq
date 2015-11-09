@@ -36,22 +36,22 @@
 - :name: chargeback_vmdb
   :items:
   - :buttonSelect: chargeback_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: chargeback_rates_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit this Chargeback Rate"
       :title: "Edit this Chargeback Rate"
       :url_parms: 'main_div'
     - :button: chargeback_rates_copy
-      :image: copy
+      :icon: fa fa-files-o fa-lg
       :title: "Copy this Chargeback Rate"
       :text: "Copy this Chargeback Rate"
       :url_parms: 'main_div'
     - :button: chargeback_rates_delete
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: "Remove from the VMDB"
       :title: "Remove this Chargeback Rate from the VMDB"
       :url_parms: 'main_div'

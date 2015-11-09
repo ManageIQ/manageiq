@@ -7,7 +7,7 @@
 - :name: miq_ae_tools_vmdb
   :items:
   - :button: ae_copy_simulate
-    :image: copy
+    :icon: fa fa-files-o fa-lg
     :text: "Copy"
     :title: "Copy object details for use in a Button"
     :url: "resolve"

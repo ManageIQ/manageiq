@@ -12,6 +12,6 @@
     :text: Policy
     :items:
     - :button: flavor_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: "Edit Tags for this Flavor"

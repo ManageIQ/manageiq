@@ -14,10 +14,10 @@
     :onwhen: '1+'
     :items:
     - :button: ontap_storage_system_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: "Edit tags for the selected Systems"
       :url_parms: 'main_div'
       :enabled: 'false'
-      :onwhen: '1+'  
+      :onwhen: '1+'
 

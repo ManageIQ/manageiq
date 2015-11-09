@@ -12,7 +12,7 @@
     :text: Policy
     :items:
     - :button: availability_zone_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: "Edit Tags for this Availability Zone"
 - :name: availability_zone_monitoring

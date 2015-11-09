@@ -7,19 +7,19 @@
 - :name: orchestration_stack_vmdb
   :items:
   - :buttonSelect: orchestration_stack_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
 #    - :button: orchestration_stack_edit
-#      :image: edit
+#      :icon: pficon pficon-edit fa-lg
 #      :text: 'Edit Selected #{ui_lookup(:table=>"orchestration_stack")}'
 #      :title: 'Select a single #{ui_lookup(:table=>"orchestration_stack")} to edit'
 #      :url_parms: 'main_div'
 #      :enabled: 'false'
 #      :onwhen: '1'
     - :button: orchestration_stack_delete
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: 'Remove #{ui_lookup(:tables=>"orchestration_stack")} from the VMDB'
       :title: 'Remove selected #{ui_lookup(:tables=>"orchestration_stack")} from the VMDB'
       :url_parms: 'main_div'
@@ -36,7 +36,7 @@
     :onwhen: '1+'
     :items:
     - :button: orchestration_stack_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: 'Edit Tags for the selected #{ui_lookup(:tables=>"orchestration_stack")}'
       :url_parms: 'main_div'

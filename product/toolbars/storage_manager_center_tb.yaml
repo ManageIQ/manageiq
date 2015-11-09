@@ -7,28 +7,28 @@
 - :name: storage_manager_vmdb
   :items:
   - :buttonSelect: storage_manager_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: storage_manager_refresh_inventory
-      :image: refresh
+      :icon: fa fa-refresh fa-lg
       :text: 'Refresh Inventory'
       :title: 'Refresh Inventory for all Storage CIs known to this Storage Manager'
       :confirm: 'Refresh Inventory for all Storage CIs known to this Storage Manager?'
     - :button: storage_manager_refresh_status
-      :image: refresh
+      :icon: fa fa-refresh fa-lg
       :text: 'Refresh Status'
       :title: 'Refresh Status for all Storage CIs known to this Storage Manager'
       :confirm: 'Refresh Status for all Storage CIs known to this Storage Manager?'
     - :separator:
     - :button: storage_manager_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit this Storage Manager'
       :title: 'Edit this Storage Manager'
       :url: '/edit'
     - :button: storage_manager_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: 'Remove this Storage Manager from the VMDB'
       :title: 'Remove this Storage Manager from the VMDB'
       :url_parms: '&refresh=y'
@@ -45,7 +45,7 @@
 #      :text: 'Manage Policies'
 #      :title: 'Manage Policies for this Storage Manager'
 #    - :button: storage_manager_tag
-#      :image: tag
+#      :icon: pficon pficon-edit fa-lg
 #      :text: 'Edit Tags'
 #      :title: 'Edit Tags for this Storage Manager'
 

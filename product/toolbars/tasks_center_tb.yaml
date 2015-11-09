@@ -14,12 +14,12 @@
 - :name: miq_task_delete
   :items:
   - :buttonSelect: miq_task_delete_choice
-    :image: delete_group
+    :icon: pficon pficon-delete fa-lg
     :title: Delete Tasks
     :enabled: 'true'
     :items:
     - :button: miq_task_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: "Delete"
       :title: Delete selected tasks from the VMDB
       :url_parms: 'main_div'
@@ -27,7 +27,7 @@
       :enabled: 'false'
       :onwhen: '1+'
     - :button: miq_task_deleteolder
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: "Delete Older"
       :title: Delete tasks older than the selected task
       :url_parms: 'main_div'
@@ -35,7 +35,7 @@
       :enabled: 'false'
       :onwhen: '1'
     - :button: miq_task_deleteall
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: "Delete All"
       :title: Delete all finished tasks
       :url_parms: 'main_div'

@@ -7,16 +7,16 @@
 - :name: pxe_image_type_vmdb
   :items:
   - :buttonSelect: pxe_image_type_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: pxe_image_type_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit this System Image Type'
       :title: 'Edit this System Image Type'
     - :button: pxe_image_type_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: 'Remove this System Image Type from the VMDB'
       :title: 'Remove this System Image Type from the VMDB'
       :url_parms: '&refresh=y'

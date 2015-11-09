@@ -7,30 +7,30 @@
 - :name: user_vmdb
   :items:
   - :buttonSelect: user_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: rbac_user_add
-      :image: new
+      :icon: pficon pficon-add-circle-o fa-lg
       :text: "Add a new User"
       :title: "Add a new User"
     - :button: rbac_user_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: Edit the selected User
       :title: Select a single User to edit
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
     - :button: rbac_user_copy
-      :image: copy
+      :icon: fa fa-files-o fa-lg
       :text: Copy the selected User to a new User
       :title: Select a single User to copy
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
     - :button: rbac_user_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: Delete selected Users
       :title: Select one or more Users to delete
       :url_parms: 'main_div'
@@ -45,7 +45,7 @@
     :text: Policy
     :items:
     - :button: rbac_user_tags_edit
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit '#{session[:customer_name]}' Tags for the selected Users"
       :title: "Edit '#{session[:customer_name]}' Tags for the selected Users"
       :url_parms: 'main_div'

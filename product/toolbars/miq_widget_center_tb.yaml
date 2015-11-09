@@ -7,20 +7,20 @@
 - :name: widget_vmdb
   :items:
   - :buttonSelect: widget_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: widget_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit this Widget"
       :title: "Edit this Widget"
     - :button: widget_copy
-      :image: copy
+      :icon: fa fa-files-o fa-lg
       :text: "Copy this Widget"
       :title: "Copy this Widget"
     - :button: widget_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: "Delete this Widget from the Database"
       :title: "Delete this Widget from the Database"
       :url_parms: '&refresh=y'

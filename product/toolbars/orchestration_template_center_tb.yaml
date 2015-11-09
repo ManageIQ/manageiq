@@ -4,25 +4,25 @@
 - :name: orchestration_template_vmdb
   :items:
   - :buttonSelect: orchestration_template_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: service_dialog_from_ot
-      :image: add
+      :icon: pficon pficon-add-circle-o fa-lg
       :text: "Create Service Dialog from Orchestration Template"
       :title: "Create Service Dialog from Orchestration Template"
     - :separator:
     - :button: orchestration_template_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit this Orchestration Template"
       :title: "Edit this Orchestration Template"
     - :button: orchestration_template_copy
-      :image: copy
+      :icon: fa fa-files-o fa-lg
       :text: "Copy this Orchestration Template"
       :title: "Copy this Orchestration Template"
     - :button: orchestration_template_remove
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: "Remove this Orchestration Template"
       :title: "Remove this Orchestration Template"
       :confirm: "Remove this Orchestration Template?"
@@ -34,6 +34,6 @@
     :text: Policy
     :items:
     - :button: orchestration_template_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: 'Edit Tags for this Orchestration Template'

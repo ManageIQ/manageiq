@@ -7,12 +7,12 @@
 - :name: repository_vmdb
   :items:
   - :buttonSelect: repository_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: repository_refresh
-      :image: refresh
+      :icon: fa fa-refresh fa-lg
       :text: "Refresh Relationships and Power States"
       :title: "Refresh Relationships and Power States for all items related to the selected Repositories"
       :url_parms: 'main_div'
@@ -21,19 +21,19 @@
       :onwhen: '1+'
     - :separator:
     - :button: repository_new
-      :image: new
+      :icon: pficon pficon-add-circle-o fa-lg
       :url: '/new'
       :text: "Add a new Repository"
       :title: "Add a new Repository"
     - :button: repository_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: Edit the Selected Repository
       :title: "Select a single Repository to edit"
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
     - :button: repository_delete
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: Remove Repositories from the VMDB
       :title: Remove Selected Repositories from the VMDB
       :url_parms: 'main_div'
@@ -57,7 +57,7 @@
       :enabled: 'false'
       :onwhen: '1+'
     - :button: repository_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: "Edit Tags for the selected Repositories"
       :url_parms: 'main_div'

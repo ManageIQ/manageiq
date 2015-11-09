@@ -13,7 +13,7 @@
     :enabled: 'true'
     :items:
     - :button: configured_system_provision
-      :image: new
+      :icon: pficon pficon-add-circle-o fa-lg
       :text: "Provision Configured Systems"
       :title: "Provision Configured Systems"
       :url: provision
@@ -28,7 +28,7 @@
     :text: Policy
     :items:
     - :button: configured_system_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: "Edit Tags for this Configured System"
       :url: tagging

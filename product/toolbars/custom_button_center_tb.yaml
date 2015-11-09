@@ -7,17 +7,17 @@
 - :name: custom_button_vmdb
   :items:
   - :buttonSelect: custom_button_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: ab_button_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit this Button"
       :title: "Edit this Button"
       :url_parms: 'main_div'
     - :button: ab_button_delete
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: "Remove this Button"
       :title: "Remove this Button"
       :url_parms: 'main_div'

@@ -12,7 +12,7 @@
     :text: Policy
     :items:
     - :button: ontap_storage_volume_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: "Edit Tags for this Volume"
 - :name: ontap_storage_volume_monitoring

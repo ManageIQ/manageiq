@@ -7,11 +7,11 @@
 - :name: scan_vmdb
   :items:
   - :buttonSelect: zone_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: zone_new
-      :image: new
+      :icon: pficon pficon-add-circle-o fa-lg
       :text: "Add a new Zone"
       :title: "Add a new Zone"

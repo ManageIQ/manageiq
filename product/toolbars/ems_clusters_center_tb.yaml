@@ -7,14 +7,14 @@
 - :name: ems_cluster_vmdb
   :items:
   - :buttonSelect: ems_cluster_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :enabled: 'false'
     :onwhen: '1+'
     :items:
     - :button: ems_cluster_scan
-      :image: scan
+      :icon: fa fa-search fa-lg
       :text: "Perform SmartState Analysis"
       :title: "Perform SmartState Analysis on the selected items"
       :url_parms: 'main_div'
@@ -30,7 +30,7 @@
       :onwhen: '2+'
     - :separator:
     - :button: ems_cluster_delete
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: Remove selected items from the VMDB
       :title: "Remove selected items from the VMDB"
       :url_parms: 'main_div'
@@ -54,7 +54,7 @@
       :enabled: 'false'
       :onwhen: '1+'
     - :button: ems_cluster_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: "Edit Tags for the selected items"
       :url_parms: 'main_div'

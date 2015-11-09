@@ -7,17 +7,17 @@
 - :name: container_route_vmdb
   :items:
   - :buttonSelect: container_route_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: container_route_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit this #{ui_lookup(:table=>"container_route")}'
       :title: 'Edit this #{ui_lookup(:table=>"container_route")}'
       :url: '/edit'
     - :button: container_route_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: 'Remove this #{ui_lookup(:table=>"container_route")} from the VMDB'
       :title: 'Remove this #{ui_lookup(:table=>"container_route")} from the VMDB'
       :url_parms: '&refresh=y'
@@ -30,6 +30,6 @@
     :text: Policy
     :items:
     - :button: container_route_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit Tags'
       :title: 'Edit Tags for this #{ui_lookup(:table=>"container_route")}'

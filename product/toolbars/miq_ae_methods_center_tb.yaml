@@ -7,45 +7,45 @@
 - :name: miq_ae_method_vmdb
   :items:
   - :buttonSelect: miq_ae_method_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: miq_ae_class_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit this Class'
       :title: 'Edit this Class'
     - :button: miq_ae_class_copy
-      :image: copy
+      :icon: fa fa-files-o fa-lg
       :text: 'Copy this Class'
       :title: 'Copy this Class'
     - :button: miq_ae_class_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: 'Remove this Class'
       :title: 'Remove this Class'
       :url_parms: '&refresh=y'
       :confirm: 'Are you sure you want to remove this Class?'
     - :separator:
     - :button: miq_ae_method_new
-      :image: new_method
+      :icon: pficon pficon-add-circle-o fa-lg_method
       :text: 'Add a New Method'
       :title: 'Add a New Method'
     - :button: miq_ae_method_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit Selected Method'
       :title: 'Select a single Method to edit'
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
     - :button: miq_ae_method_copy
-      :image: copy
+      :icon: fa fa-files-o fa-lg
       :text: 'Copy selected Methods'
       :title: 'Select Methods to copy'
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1+'
     - :button: miq_ae_method_delete
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: 'Remove Methods'
       :title: 'Remove selected Methods'
       :url_parms: 'main_div'

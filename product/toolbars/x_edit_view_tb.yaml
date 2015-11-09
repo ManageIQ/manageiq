@@ -6,13 +6,13 @@
 - :name: form_buttons
   :items:
   - :button: button_add
-    :image: add
+    :icon: pficon pficon-add-circle-o fa-lg
     :title: "Add"
     :text: Add
     :url: '#{@edit[:url]}'
     :url_parms: '?button=add'
   - :button: button_save
-    :image: save
+    :icon: fa fa-floppy-o fa-lg
     :title: "Save Changes"
     :text: Save
     :url: '#{@edit[:url]}'

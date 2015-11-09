@@ -14,12 +14,12 @@
   :items:
     # Roles by Server tab
   - :buttonSelect: support_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: zone_delete_server
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: 'Delete Server #{@record.name} [#{@record.id}]'
       :title: 'Delete Server #{@record.name} [#{@record.id}]'
       :confirm: 'Do you want to delete Server #{@record.name} [#{@record.id}]?'
@@ -34,7 +34,7 @@
       :title: 'Suspend the #{@record.server_role.description} Role on Server #{@record.miq_server.name} [#{@record.miq_server.id}]'
       :confirm: 'Suspend the #{@record.server_role.description} Role on Server #{@record.miq_server.name} [#{@record.miq_server.id}]?'
     - :button: zone_demote_server
-      :image: remove_master
+      :icon: pficon pficon-delete fa-lg_master
       :text: 'Demote Server'
       :title: 'Demote Server #{@record.miq_server.name} [#{@record.miq_server.id}] to secondary for the #{@record.server_role.description} Role'
       :confirm: 'Do you want to demote this Server to secondary?  This will leave no primary Server for this Role.'
@@ -58,6 +58,6 @@
       :text: 'Collect all logs'
       :title: 'Collect all logs from the selected #{ui_lookup(:table=>"zone")}'
   - :button: zone_log_depot_edit
-    :image: edit
+    :icon: pficon pficon-edit fa-lg
     :text: 'Edit'
     :title: 'Edit the Log Depot settings for the selected #{ui_lookup(:table=>"zone")}'

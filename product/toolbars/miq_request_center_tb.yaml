@@ -7,13 +7,13 @@
 - :name: miq_request_editing
   :items:
   - :button: miq_request_copy
-    :image: copy
+    :icon: fa fa-files-o fa-lg
     :title: "Copy original Request"
   - :button: miq_request_edit
-    :image: edit
+    :icon: pficon pficon-edit fa-lg
     :title: Edit the original Request
   - :button: miq_request_delete
-    :image: delete
+    :icon: pficon pficon-delete fa-lg
     :title: "Delete this Request"
     :url_parms: '&refresh=y'
     :confirm: "Are you sure you want to delete this Request?"

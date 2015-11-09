@@ -14,7 +14,7 @@
     :onwhen: '1+'
     :items:
     - :button: flavor_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: "Edit Tags for the selected Flavors"
       :url_parms: 'main_div'

@@ -7,11 +7,11 @@
 - :name: pxe_wimg_vmdb
   :items:
   - :buttonSelect: pxe_wimg_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: pxe_wimg_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit this Windows Image'
       :title: 'Edit this Windows Image'

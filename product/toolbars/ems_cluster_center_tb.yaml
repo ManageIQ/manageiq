@@ -7,17 +7,17 @@
 - :name: ems_cluster_vmdb
   :items:
   - :buttonSelect: cluster_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: ems_cluster_scan
-      :image: scan
+      :icon: fa fa-search fa-lg
       :text: "Perform SmartState Analysis"
       :title: "Perform SmartState Analysis on this item"
       :confirm: "Perform SmartState Analysis on this item?"
     - :button: ems_cluster_delete
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: "Remove from the VMDB"
       :title: "Remove this item from the VMDB"
       :url_parms: '&refresh=y'
@@ -34,7 +34,7 @@
       :text: "Manage Policies"
       :title: "Manage Policies for this item"
     - :button: ems_cluster_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: "Edit Tags for this item"
 - :name: ems_cluster_monitoring

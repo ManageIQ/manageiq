@@ -7,16 +7,16 @@
 - :name: ldap_domain_vmdb
   :items:
   - :buttonSelect: scan_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: ldap_domain_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: Edit this LDAP Domain
       :title: Edit this LDAP Domain
     - :button: ldap_domain_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: Delete this LDAP Domain
       :title: Delete this LDAP Domain
       :url_parms: '&refresh=y'

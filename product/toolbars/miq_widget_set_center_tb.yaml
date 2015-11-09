@@ -7,16 +7,16 @@
 - :name: db_vmdb
   :items:
   - :buttonSelect: db_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: db_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit this Dashboard"
       :title: "Edit this Dashboard"
     - :button: db_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: "Delete this Dashboard from the Database"
       :title: "Delete this Dashboard from the Database"
       :url_parms: '&refresh=y'

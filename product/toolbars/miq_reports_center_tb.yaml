@@ -7,11 +7,11 @@
 - :name: report_vmdb
   :items:
   - :buttonSelect: report_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: miq_report_new
-      :image: new
+      :icon: pficon pficon-add-circle-o fa-lg
       :text: "Add a new Report"
       :title: "Add a new Report"

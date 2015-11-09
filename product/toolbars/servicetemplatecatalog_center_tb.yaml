@@ -7,18 +7,18 @@
 - :name: st_catalog_vmdb
   :items:
   - :buttonSelect: st_catalog_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :onwhen: '1+'
     :items:
     - :button: st_catalog_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: Edit this Item
       :title: Edit this Item
       :url_parms: 'main_div'
     - :button: st_catalog_delete
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: Remove Item from the VMDB
       :title: Remove this Item from the VMDB
       :url_parms: 'main_div'

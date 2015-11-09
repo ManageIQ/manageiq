@@ -14,7 +14,7 @@
     :onwhen: '1+'
     :items:
     - :button: availability_zone_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: "Edit Tags for the selected Availability Zones"
       :url_parms: 'main_div'

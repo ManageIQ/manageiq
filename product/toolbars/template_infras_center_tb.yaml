@@ -7,14 +7,14 @@
 - :name: miq_template_vmdb
   :items:
   - :buttonSelect: miq_template_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :enabled: 'false'
     :onwhen: '1+'
     :items:
     - :button: miq_template_refresh
-      :image: refresh
+      :icon: fa fa-refresh fa-lg
       :text: "Refresh Relationships and Power States"
       :title: "Refresh relationships and power states for all items related to the selected Templates"
       :url_parms: 'main_div'
@@ -22,7 +22,7 @@
       :enabled: 'false'
       :onwhen: '1+'
     - :button: miq_template_scan
-      :image: scan
+      :icon: fa fa-search fa-lg
       :text: "Perform SmartState Analysis"
       :title: "Perform SmartState Analysis on the selected Templates"
       :url_parms: 'main_div'
@@ -35,24 +35,24 @@
       :title: "Select two or more Templates to compare"
       :url_parms: 'main_div'
       :enabled: 'false'
-      :onwhen: '2+'    
+      :onwhen: '2+'
     - :separator:
     - :button: miq_template_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: Edit Selected Template
       :title: Select a single Template to edit
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
     - :button: miq_template_ownership
-      :image: ownership
+      :icon: pficon pficon-user fa-lg
       :text: "Set Ownership"
       :title: "Set Ownership for the selected Templates"
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1+'
     - :button: miq_template_delete
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: Remove Templates from the VMDB
       :title: Remove selected Templates from the VMDB
       :url_parms: 'main_div'
@@ -83,7 +83,7 @@
       :enabled: 'false'
       :onwhen: '1+'
     - :button: miq_template_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: "Edit tags for the selected Templates"
       :url_parms: 'main_div'

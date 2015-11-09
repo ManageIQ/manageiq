@@ -7,23 +7,23 @@
 - :name: pxe_server_vmdb
   :items:
   - :buttonSelect: pxe_server_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: pxe_server_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit this PXE Server'
       :title: 'Edit this PXE Server'
     - :button: pxe_server_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: 'Remove this PXE Server from the VMDB'
       :title: 'Remove this PXE Server from the VMDB'
       :url_parms: '&refresh=y'
       :confirm: 'Warning: This PXE Server and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this PXE Server?'
     - :separator:
     - :button: pxe_server_refresh
-      :image: refresh
+      :icon: fa fa-refresh fa-lg
       :text: 'Refresh Relationships'
       :title: 'Refresh Relationships for this PXE Server'
       :confirm: 'Refresh Relationships for this PXE Server?'

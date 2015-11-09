@@ -7,25 +7,25 @@
 - :name: provider_vmdb
   :items:
   - :buttonSelect: provider_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :enabled: 'true'
     :items:
     - :button: provider_foreman_refresh
-      :image: refresh
+      :icon: fa fa-refresh fa-lg
       :text: "Refresh Relationships and Power states"
       :title: "Refresh relationships for all items related to this Provider"
       :url: refresh
       :confirm: "Refresh relationships for all items related to this Provider?"
     - :separator:
     - :button: provider_foreman_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: Edit this Provider
       :title: Edit this Provider
       :url: edit
     - :button: provider_foreman_delete
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: Remove this Provider from the VMDB
       :title: Remove this Provider from the VMDB
       :url: delete

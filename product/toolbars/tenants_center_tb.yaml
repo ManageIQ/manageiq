@@ -7,19 +7,19 @@
 - :name: rbac_tenant_vmdb
   :items:
   - :buttonSelect: rbac_tenant_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: rbac_tenant_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: Edit the selected item
       :title: Select a single item to edit
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
     - :button: rbac_tenant_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: Delete selected items
       :title: Select one or more items to delete
       :url_parms: 'main_div'
@@ -27,7 +27,7 @@
       :enabled: 'false'
       :onwhen: '1+'
     - :button: rbac_tenant_manage_quotas
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: Manage Quotas for the Selected Item
       :title: Select a single item to manage quotas
       :url_parms: 'main_div'
@@ -41,7 +41,7 @@
     :text: Policy
     :items:
     - :button: rbac_tenant_tags_edit
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit '#{session[:customer_name]}' Tags for the selected Tenant"
       :title: "Edit '#{session[:customer_name]}' Tags for the selected Tenant"
       :url_parms: 'main_div'

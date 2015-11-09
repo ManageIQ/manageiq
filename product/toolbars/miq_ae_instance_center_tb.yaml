@@ -7,20 +7,20 @@
 - :name: miq_ae_instance_vmdb
   :items:
   - :buttonSelect: miq_ae_instance_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: miq_ae_instance_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit this Instance'
       :title: 'Edit this Instance'
     - :button: miq_ae_instance_copy
-      :image: copy
+      :icon: fa fa-files-o fa-lg
       :text: 'Copy this Instance'
       :title: 'Copy this Instance'
     - :button: miq_ae_instance_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: 'Remove this Instance'
       :title: 'Remove this Instance'
       :url_parms: '&refresh=y'

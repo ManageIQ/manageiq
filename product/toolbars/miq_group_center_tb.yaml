@@ -7,16 +7,16 @@
 - :name: rbac_group_vmdb
   :items:
   - :buttonSelect: rbac_group_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: rbac_group_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit this Group"
       :title: "Edit this Group"
     - :button: rbac_group_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: "Delete this Group"
       :title: "Delete this Group"
       :url_parms: '&refresh=y'
@@ -29,6 +29,6 @@
     :text: Policy
     :items:
     - :button: rbac_group_tags_edit
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit '#{session[:customer_name]}' Tags for this Group"
       :title: "Edit '#{session[:customer_name]}' Tags for this Group"

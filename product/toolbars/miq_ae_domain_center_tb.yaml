@@ -7,16 +7,16 @@
 - :name: miq_ae_domain_vmdb
   :items:
   - :buttonSelect: miq_ae_domain_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: miq_ae_domain_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit this Domain'
       :title: 'Edit this Domain'
     - :button: miq_ae_domain_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: 'Remove this Domain'
       :title: 'Remove this Domain'
       :confirm: 'Are you sure you want to remove this Domain?'
@@ -30,18 +30,18 @@
       :title: Lock this Domain
     - :separator:
     - :button: miq_ae_namespace_new
-      :image: new_namespace
+      :icon: pficon pficon-add-circle-o fa-lg_namespace
       :text: 'Add a New Namespace'
       :title: 'Add a New Namespace'
     - :button: miq_ae_namespace_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit Selected Namespace'
       :title: 'Select a single Namespace to edit'
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
     - :button: miq_ae_namespace_delete
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: 'Remove Namespaces'
       :title: 'Remove selected Namespaces'
       :url_parms: 'main_div'

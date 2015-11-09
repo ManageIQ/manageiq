@@ -7,21 +7,21 @@
 - :name: service_vmdb
   :items:
   - :buttonSelect: service_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :enabled: 'false'
     :onwhen: '1+'
     :items:
     - :button: service_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: Edit Selected Service
       :title: Select a single service to edit
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
     - :button: service_delete
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: Remove Services from the VMDB
       :title: Remove selected Services from the VMDB
       :url_parms: 'main_div'
@@ -30,7 +30,7 @@
       :onwhen: '1+'
     - :separator:
     - :button: service_ownership
-      :image: ownership
+      :icon: pficon pficon-user fa-lg
       :text: "Set Ownership"
       :title: "Set Ownership for the selected Services"
       :url_parms: 'main_div'
@@ -46,7 +46,7 @@
     :onwhen: '1+'
     :items:
     - :button: service_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: "Edit tags for the selected Items"
       :url_parms: 'main_div'

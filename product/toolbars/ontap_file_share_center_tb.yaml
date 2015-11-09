@@ -7,12 +7,12 @@
 - :name: ontap_file_share_vmdb
   :items:
   - :buttonSelect: ontap_file_share_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: ontap_file_share_create_datastore
-      :image: create_datastore
+      :icon: pficon pficon-add-circle-o fa-lg
       :text: 'Create Datastore'
       :title: 'Create a Datastore based on this #{ui_lookup(:model=>"OntapFileShare").split(" - ").last}'
 - :name: ontap_file_share_policy
@@ -23,7 +23,7 @@
     :text: Policy
     :items:
     - :button: ontap_file_share_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: 'Edit Tags for this #{ui_lookup(:model=>"OntapFileShare").split(" - ").last}'
 - :name: ontap_file_share_monitoring

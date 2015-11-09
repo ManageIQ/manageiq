@@ -7,20 +7,20 @@
 - :name: user_vmdb
   :items:
   - :buttonSelect: user_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: rbac_user_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit this User"
       :title: "Edit this User"
     - :button: rbac_user_copy
-      :image: copy
+      :icon: fa fa-files-o fa-lg
       :text: "Copy this User to a new User"
       :title: "Copy this User to a new User"
     - :button: rbac_user_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: "Delete this User"
       :title: "Delete this User"
       :url_parms: '&refresh=y'
@@ -33,6 +33,6 @@
     :text: Policy
     :items:
     - :button: rbac_user_tags_edit
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit '#{session[:customer_name]}' Tags for this User"
       :title: "Edit '#{session[:customer_name]}' Tags for this User"
