@@ -215,6 +215,6 @@
   :startup: true
 - :name: miq_proxy_tasks
   :description: Configure / Tasks
-  :url: /configuration/index?jobs_tab=alltasks
+  :url: /miq_task/index?jobs_tab=alltasks
   :rbac_feature_name: tasks
   :startup: true
