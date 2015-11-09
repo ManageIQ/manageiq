@@ -26,6 +26,7 @@
                      options_for_select([["<#{_('Choose>')}", nil]] + @ems_types, disabled: ["<#{_('Choose')}>", nil]),
                      "ng-if"                       => "newRecord",
                      "ng-model"                    => "emsCommonModel.emstype",
+                     "ng-change"                   => "providerTypeChanged()",
                      "required"                    => "",
                      "checkchange"                 => "",
                      "selectpicker-for-select-tag" => "")
@@ -39,17 +40,24 @@
             = @emstype_display
 
 
-    .form-group{"ng-class" => "{'has-error': angularForm.provider_region.$invalid}", "ng-if" => "emsCommonModel.emstype == 'ec2'"}
+    .form-group{"ng-class" => "{'has-error': angularForm.provider_region.$invalid}", "ng-if" => "isRegionSupported()", "ng-switch" => "", "on" => "emsCommonModel.emstype"}
       %label.col-md-2.control-label{"for" => "textInput-markup"}
         = _('Region')
       .col-md-8
         = select_tag('provider_region',
                      options_for_select([["<#{_('Choose')}>", nil]] + Array(@amazon_regions.invert).sort_by { |desc, _name| desc }, disabled: ["<#{_('Choose')}>", nil]),
                      "ng-model"                    => "emsCommonModel.provider_region",
+                     "ng-switch-when"              => "ec2",
                      "required"                    => "",
                      "checkchange"                 => "",
                      "selectpicker-for-select-tag" => "")
-
+        = select_tag('provider_region',
+                     options_for_select([["<#{_('Choose')}>", nil]] + Array(@azure_regions.invert).sort_by { |desc, _name| desc }, disabled: ["<#{_('Choose')}>", nil]),
+                     "ng-model"                    => "emsCommonModel.provider_region",
+                     "ng-switch-when"              => "azure",
+                     "required"                    => "",
+                     "checkchange"                 => "",
+                     "selectpicker-for-select-tag" => "")
     .form-group{"ng-class" => "{'has-error': angularForm.hostname.$invalid}", "ng-if" => "emsCommonModel.emstype != '' && emsCommonModel.emstype == 'openstack'"}
       %label.col-md-2.control-label{"for" => "textInput-markup"}
         = _('Hostname (or IPv4 or IPv6 address)')
