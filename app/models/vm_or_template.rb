@@ -1084,7 +1084,7 @@ class VmOrTemplate < ActiveRecord::Base
     end
     _log.debug "miq_servers1.length = #{miq_servers.length}"
 
-    miq_servers.select do |svr|
+    miq_servers.select! do |svr|
       result = svr.status == "started" && svr.has_zone?(my_zone)
       result &&= svr.is_vix_disk? if vm_vendor == 'VMware'
       result

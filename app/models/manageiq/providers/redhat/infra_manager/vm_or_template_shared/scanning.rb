@@ -55,8 +55,6 @@ module ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared::Scanning
     validate_supported_check("Smartstate Analysis")
   end
 
-  private
-
   def miq_server_proxies
     _log.debug "Enter (RHEVM)"
 
@@ -77,7 +75,7 @@ module ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared::Scanning
     end
     _log.debug "miq_servers1.length = #{miq_servers.length}"
 
-    miq_servers.select do |svr|
+    miq_servers.select! do |svr|
       result = svr.status == "started" && svr.has_zone?(my_zone)
       result &&= svr.is_vix_disk? if vendor == 'VMware'
       # RedHat VMs must be scanned from an EVM server who's host is attached to the same
@@ -96,6 +94,8 @@ module ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared::Scanning
     _log.debug "miq_servers2.length = #{miq_servers.length}"
     miq_servers
   end
+
+  private
 
   def storage2active_proxies(all_proxy_list = nil)
     _log.debug "Enter (RHEVM)"
