@@ -808,26 +808,6 @@ class Host < ActiveRecord::Base
     return false
   end
 
-  def self.find_by_audit_for_rss(event_name, options = {})
-    result = []
-    AuditEvent.where(:target_class => 'Host', :event => event_name)
-      .order(options[:orderby])
-      .limit(options[:limit_to_count])
-      .each do |event|
-      if options[:tags] && options[:tags_include]
-        any_or_all = options[:tags_include].to_sym
-        host = Host.find_tagged_with(
-          any_or_all => options[:tags],
-          :ns        => options[:tag_ns]
-        ).find_by(:id => event.target_id)
-      else
-        host = Host.find(event.target_id)
-      end
-      result.push(OpenStruct.new(host.attributes.merge(event.attributes))) unless host.nil?
-    end
-    result
-  end
-
   def self.multi_host_update(host_ids, attr_hash = {}, creds = {})
     errors = []
     return true if host_ids.blank?
