@@ -373,7 +373,7 @@ class StorageManagerController < ApplicationController
     @edit[:new][:userid] = params[:userid] if params[:userid]
     @edit[:new][:password] = params[:password] if params[:password]
     @edit[:new][:verify] = params[:verify] if params[:verify]
-
+    restore_password if params[:restore_password]
     set_verify_status
   end
 
@@ -486,6 +486,12 @@ class StorageManagerController < ApplicationController
           end
         end
       end
+    end
+  end
+
+  def restore_password
+    if params[:password]
+      @edit[:new][:password] = @edit[:new][:verify] = @sm.authentication_password
     end
   end
 
