@@ -27,7 +27,7 @@ describe VmInfraController do
     seed_session_trees('vm_infra', 'vms_instances_filter_tree')
     xhr :post, :show, :id => vm_vmware.id, :display => 'vmtree_info'
     expect(response.status).to eq(200)
-    response.should render_template('vm_common/_vmtree')
+    expect(response).to render_template('vm_common/_vmtree')
   end
 
   # http://localhost:3000/vm_infra/show/10000000000449
@@ -39,7 +39,7 @@ describe VmInfraController do
     node_id = "v-#{vm_vmware.compressed_id}"
     expect(response.body).to match(/miqDynatreeActivateNodeSilently\('vandt_tree', '#{node_id}'\);/)
 
-    response.should render_template('shared/summary/_textual_tags')
+    expect(response).to render_template('shared/summary/_textual_tags')
     expect(response.body).to match(/VM and Instance &quot;#{vm_vmware.name}&quot;/)
 
     expect(response.status).to eq(200)
@@ -47,7 +47,7 @@ describe VmInfraController do
 
   it 'can open the right size tab' do
     get :show, :id => vm_vmware.id
-    response.should redirect_to(:action => 'explorer')
+    expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
     expect(response.status).to eq(200)
@@ -61,7 +61,7 @@ describe VmInfraController do
     controller.stub(:x_node).and_return("v-#{vm.compressed_id}")
 
     get :show, :id => vm.id
-    response.should redirect_to(:action => 'explorer')
+    expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
     expect(response.status).to eq(200)
@@ -75,7 +75,7 @@ describe VmInfraController do
     controller.stub(:x_node).and_return("v-#{vm.compressed_id}")
 
     get :show, :id => vm.id
-    response.should redirect_to(:action => 'explorer')
+    expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
     expect(response.status).to eq(200)
@@ -90,7 +90,7 @@ describe VmInfraController do
     controller.stub(:x_node).and_return("v-#{vm.compressed_id}")
 
     get :show, :id => vm.id
-    response.should redirect_to(:action => 'explorer')
+    expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
     expect(response.status).to eq(200)
@@ -105,7 +105,7 @@ describe VmInfraController do
     controller.stub(:x_node).and_return("v-#{vm.compressed_id}")
 
     get :show, :id => vm.id
-    response.should redirect_to(:action => 'explorer')
+    expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
     expect(response.status).to eq(200)
