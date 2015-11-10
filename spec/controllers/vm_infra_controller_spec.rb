@@ -1,6 +1,9 @@
 require "spec_helper"
 
 describe VmInfraController do
+  let(:host_1x1)  { FactoryGirl.create(:host_vmware_esx, :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB)) }
+  let(:host_2x2)  { FactoryGirl.create(:host_vmware_esx, :hardware => FactoryGirl.create(:hardware, :cpu2x2, :ram1GB)) }
+  let(:vm_vmware) { FactoryGirl.create(:vm_vmware) }
   before(:each) do
     set_user_privileges
 
@@ -21,46 +24,40 @@ describe VmInfraController do
 
   # http://localhost:3000/vm_infra/show/10000000001403?display=vmtree_info
   it 'can render the genealogy tree' do
-    vm = FactoryGirl.create(:vm_vmware)
     seed_session_trees('vm_infra', 'vms_instances_filter_tree')
-    xhr :post, :show, :id => vm.id, :display => 'vmtree_info'
+    xhr :post, :show, :id => vm_vmware.id, :display => 'vmtree_info'
     expect(response.status).to eq(200)
     response.should render_template('vm_common/_vmtree')
   end
 
   # http://localhost:3000/vm_infra/show/10000000000449
   it 'can open a VM and select it in the left tree' do
-    vm = FactoryGirl.create(:vm_vmware)
-
-    get :show, :id => vm.id
+    get :show, :id => vm_vmware.id
     response.should redirect_to(:action => 'explorer')
 
     post :explorer
-    node_id = "v-#{vm.compressed_id}"
+    node_id = "v-#{vm_vmware.compressed_id}"
     expect(response.body).to match(/miqDynatreeActivateNodeSilently\('vandt_tree', '#{node_id}'\);/)
 
     response.should render_template('shared/summary/_textual_tags')
-    expect(response.body).to match(/VM and Instance &quot;#{vm.name}&quot;/)
+    expect(response.body).to match(/VM and Instance &quot;#{vm_vmware.name}&quot;/)
 
     expect(response.status).to eq(200)
   end
 
   it 'can open the right size tab' do
-    vm = FactoryGirl.create(:vm_vmware)
-
-    get :show, :id => vm.id
+    get :show, :id => vm_vmware.id
     response.should redirect_to(:action => 'explorer')
 
     post :explorer
     expect(response.status).to eq(200)
 
-    post :x_button, :pressed => 'vm_right_size', :id => vm.id
+    post :x_button, :pressed => 'vm_right_size', :id => vm_vmware.id
     expect(response.status).to eq(200)
   end
 
   it 'can open the reconfigure tab' do
-    host = FactoryGirl.create(:host_vmware_esx, :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB))
-    vm   = FactoryGirl.create(:vm_vmware, :host => host, :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => '04'))
+    vm = FactoryGirl.create(:vm_vmware, :host => host_1x1, :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => '04'))
     controller.stub(:x_node).and_return("v-#{vm.compressed_id}")
 
     get :show, :id => vm.id
@@ -74,8 +71,7 @@ describe VmInfraController do
   end
 
   it 'the reconfigure tab for a vm with max_cpu_cores_per_socket <= 1 should not display the cpu_cores_per_socket dropdown' do
-    host = FactoryGirl.create(:host_vmware_esx, :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB))
-    vm   = FactoryGirl.create(:vm_vmware, :host => host, :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => '04'))
+    vm = FactoryGirl.create(:vm_vmware, :host => host_1x1, :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => '04'))
     controller.stub(:x_node).and_return("v-#{vm.compressed_id}")
 
     get :show, :id => vm.id
@@ -90,8 +86,7 @@ describe VmInfraController do
   end
 
   it 'the reconfigure tab for a vm with max_cpu_cores_per_socket > 1 should display the cpu_cores_per_socket dropdown' do
-    host = FactoryGirl.create(:host_vmware_esx, :hardware => FactoryGirl.create(:hardware, :cpu2x2, :ram1GB))
-    vm   = FactoryGirl.create(:vm_vmware, :host => host, :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => "07"))
+    vm = FactoryGirl.create(:vm_vmware, :host => host_2x2, :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => "07"))
     controller.stub(:x_node).and_return("v-#{vm.compressed_id}")
 
     get :show, :id => vm.id
@@ -106,8 +101,7 @@ describe VmInfraController do
   end
 
   it 'the reconfigure tab displays the submit and cancel buttons' do
-    host = FactoryGirl.create(:host_vmware_esx, :hardware => FactoryGirl.create(:hardware, :cpu2x2, :ram1GB))
-    vm   = FactoryGirl.create(:vm_vmware, :host => host, :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => "07"))
+    vm = FactoryGirl.create(:vm_vmware, :host => host_2x2, :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => "07"))
     controller.stub(:x_node).and_return("v-#{vm.compressed_id}")
 
     get :show, :id => vm.id
@@ -125,13 +119,12 @@ describe VmInfraController do
   context "skip or drop breadcrumb" do
     before do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
-      @vm = FactoryGirl.create(:vm_vmware)
       get :explorer
       request.env['HTTP_REFERER'] = request.fullpath
     end
 
     it 'skips dropping a breadcrumb when a button action is executed' do
-      post :x_button, :id => @vm.id, :pressed => 'vm_ownership'
+      post :x_button, :id => vm_vmware.id, :pressed => 'vm_ownership'
       breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
       expect(breadcrumbs.size).to eq(1)
       expect(breadcrumbs).to include(:name => "VM or Templates", :url => "/vm_infra/explorer")
@@ -148,7 +141,6 @@ describe VmInfraController do
   context "clear or retain existing breadcrumb path" do
     before do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
-      @vm = FactoryGirl.create(:vm_vmware)
       controller.stub(:render)
       controller.stub(:build_toolbar)
     end
@@ -157,7 +149,7 @@ describe VmInfraController do
       breadcrumbs = []
       breadcrumbs[0] = {:name => "Instances", :url => "/vm_cloud/explorer"}
       session[:breadcrumbs] = breadcrumbs
-      controller.stub(:x_node).and_return("v-#{@vm.compressed_id}")
+      controller.stub(:x_node).and_return("v-#{vm_vmware.compressed_id}")
       get :explorer
       breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
       expect(breadcrumbs.size).to eq(1)
@@ -166,8 +158,8 @@ describe VmInfraController do
 
     it 'retains the breadcrumb path when cancel is pressed from a VM action' do
       get :explorer
-      controller.stub(:x_node).and_return("v-#{@vm.compressed_id}")
-      post :x_button, :id => @vm.id, :pressed => 'vm_ownership'
+      controller.stub(:x_node).and_return("v-#{vm_vmware.compressed_id}")
+      post :x_button, :id => vm_vmware.id, :pressed => 'vm_ownership'
 
       controller.instance_variable_set(:@in_a_form, nil)
       post :ownership_update, :button => 'cancel'
