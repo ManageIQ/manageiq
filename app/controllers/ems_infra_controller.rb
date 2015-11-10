@@ -21,6 +21,9 @@ class EmsInfraController < ApplicationController
   def scaling
     assert_privileges("ems_infra_scale")
 
+    # Hiding the toolbars
+    @in_a_form = true
+
     redirect_to :action => 'show', :id => params[:id] if params[:cancel]
 
     drop_breadcrumb(:name => _("Scale Infrastructure Provider"), :url => "/ems_infra/scaling")

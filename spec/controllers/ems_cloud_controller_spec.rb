@@ -5,7 +5,6 @@ describe EmsCloudController do
     before do
       controller.stub(:check_privileges).and_return(true)
       controller.stub(:assert_privileges).and_return(true)
-      FactoryGirl.create(:vmdb_database)
       EvmSpecHelper.local_miq_server(:zone => Zone.seed)
       login_as FactoryGirl.create(:user, :features => "ems_cloud_new")
     end
@@ -20,7 +19,6 @@ describe EmsCloudController do
     render_views
 
     it 'shows the edit page' do
-      expect(MiqServer.my_server).to be
       FactoryGirl.create(:ems_amazon, :zone => Zone.seed)
       ems = ManageIQ::Providers::Amazon::CloudManager.first
       get :edit, :id => ems.id

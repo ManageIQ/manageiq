@@ -21,13 +21,11 @@ class ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow < ManageIQ::P
     return {} if src[:ems].nil?
 
     security_groups = if src[:cloud_network]
-                        load_ar_obj(src[:cloud_network]).security_groups
+                        source = load_ar_obj(src[:cloud_network])
+                        get_targets_for_source(source, :cloud_filter, SecurityGroup, 'security_groups')
                       else
                         source = load_ar_obj(src[:ems])
-
-                        return source.security_groups.non_cloud_network if source.tags.present?
-                        klass = ManageIQ::Providers::Amazon::CloudManager::SecurityGroup
-                        get_targets_for_ems(source, :cloud_filter, klass, 'security_groups.non_cloud_network')
+                        get_targets_for_ems(source, :cloud_filter, SecurityGroup, 'security_groups.non_cloud_network')
                       end
 
     security_groups.each_with_object({}) { |sg, hash| hash[sg.id] = display_name_for_name_description(sg) }

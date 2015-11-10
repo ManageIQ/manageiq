@@ -27,6 +27,7 @@ cols:
 - v_pct_cpu_ready_delta_summation
 - v_pct_cpu_wait_delta_summation
 - v_pct_cpu_used_delta_summation
+- v_derived_cpu_total_cores_used
 - derived_memory_used
 - derived_memory_available
 - derived_memory_reserved
@@ -53,6 +54,7 @@ col_order:
 - v_pct_cpu_ready_delta_summation
 - v_pct_cpu_wait_delta_summation
 - v_pct_cpu_used_delta_summation
+- v_derived_cpu_total_cores_used
 - derived_memory_used
 - derived_memory_available
 - derived_memory_reserved

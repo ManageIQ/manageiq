@@ -444,12 +444,6 @@ class MiqQueue < ActiveRecord::Base
     !finished?
   end
 
-  def self.dev_null(id, data)
-    msg = "Id: #{id} delivered, data: \"#{data}\""
-    _log.info msg
-    puts      msg
-  end
-
   def self.atStartup
     if File.exist?(@@delete_command_file)
       options = YAML.load(ERB.new(File.read(@@delete_command_file)).result)

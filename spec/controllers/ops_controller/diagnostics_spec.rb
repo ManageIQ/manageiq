@@ -63,7 +63,6 @@ describe OpsController do
   context "#tree_select" do
     it "renders zone list for diagnostics_tree root node" do
       set_user_privileges
-      FactoryGirl.create(:vmdb_database)
       EvmSpecHelper.create_guid_miq_server_zone
       MiqRegion.seed
 
@@ -72,6 +71,57 @@ describe OpsController do
 
       response.should render_template('ops/_diagnostics_zones_tab')
       expect(response.status).to eq(200)
+    end
+  end
+
+  context "#log_collection_form_fields" do
+    it "renders log_collection_form_fields" do
+      set_user_privileges
+      EvmSpecHelper.create_guid_miq_server_zone
+      MiqRegion.seed
+
+      _guid, @miq_server, @zone = EvmSpecHelper.remote_guid_miq_server_zone
+      file_depot = FileDepotNfs.create(:name => "abc", :uri => "nfs://abc")
+      @miq_server.update_attributes(:log_file_depot_id => file_depot.id)
+
+      session[:sandboxes] = {"ops" => {:active_tree        => :diagnostics_tree,
+                                       :selected_typ       => "miq_server",
+                                       :selected_server_id => @miq_server.id}}
+      post :tree_select, :id => 'root', :format => :js
+      get :log_collection_form_fields, :id => @miq_server.id
+      expect(response.status).to eq(200)
+    end
+  end
+
+  context "#set_credentials" do
+    it "uses params[:log_password] to set the creds hash if it exists" do
+      set_user_privileges
+      EvmSpecHelper.create_guid_miq_server_zone
+      MiqRegion.seed
+
+      _guid, @miq_server, @zone = EvmSpecHelper.remote_guid_miq_server_zone
+      controller.instance_variable_set(:@record, @miq_server)
+      controller.instance_variable_set(:@_params,
+                                       :log_userid   => "default_userid",
+                                       :log_password => "default_password2")
+      default_creds = {:userid => "default_userid", :password => "default_password2"}
+      expect(controller.send(:set_credentials)).to include(:default => default_creds)
+    end
+
+    it "uses stored password to set the creds hash" do
+      set_user_privileges
+      EvmSpecHelper.create_guid_miq_server_zone
+      MiqRegion.seed
+
+      _guid, @miq_server, @zone = EvmSpecHelper.remote_guid_miq_server_zone
+      file_depot = FileDepotSmb.create(:name => "abc", :uri => "smb://abc")
+      @miq_server.should_receive(:log_depot).and_return(file_depot)
+      file_depot.should_receive(:authentication_password).and_return('default_password')
+      controller.instance_variable_set(:@record, @miq_server)
+      controller.instance_variable_set(:@_params,
+                                       :log_userid => "default_userid")
+      default_creds = {:userid => "default_userid", :password => "default_password"}
+      expect(controller.send(:set_credentials)).to include(:default => default_creds)
     end
   end
 
@@ -138,7 +188,11 @@ describe OpsController do
         }
         session[:edit] = edit
         controller.instance_variable_set(:@sb, sb_hash)
-        controller.instance_variable_set(:@_params, :button => "validate", :id => server_id)
+        controller.stub(:set_credentials).and_return(:default => {:userid => "testuser", :password => 'password'})
+        controller.instance_variable_set(:@_params,
+                                         :log_userid => "default_user",
+                                         :button     => "validate",
+                                         :id         => server_id)
         controller.should_receive(:render)
         expect(response.status).to eq(200)
         controller.send(:log_depot_edit)

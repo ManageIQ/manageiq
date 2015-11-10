@@ -208,7 +208,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
 
       @sg1 = FactoryGirl.create(:security_group_amazon, :name => "sgn_1", :ext_management_system => ems,
                                 :cloud_network => @cn1)
-      @sg2 = FactoryGirl.create(:security_group_amazon, :name => "sgn_1", :ext_management_system => ems)
+      @sg2 = FactoryGirl.create(:security_group_amazon, :name => "sgn_2", :ext_management_system => ems)
     end
 
     it "#allowed_cloud_networks" do

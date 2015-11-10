@@ -32,7 +32,6 @@ describe OpsController do
   end
 
   it 'can view the db_connections tab' do
-    FactoryGirl.create(:vmdb_database)
     session[:sandboxes] = {"ops" => {:active_tree => :vmdb_tree,
                                      :active_tab  => 'db_connections',
                                      :trees       => {:vmdb_tree => {:active_node => 'root'}}}}

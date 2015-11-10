@@ -4,7 +4,6 @@ describe EmsInfraController do
   context "#button" do
     before(:each) do
       set_user_privileges
-      FactoryGirl.create(:vmdb_database)
       EvmSpecHelper.create_guid_miq_server_zone
     end
 
@@ -180,7 +179,6 @@ describe EmsInfraController do
     context "#form_field_changed" do
       before do
         set_user_privileges
-        FactoryGirl.create(:vmdb_database)
         EvmSpecHelper.create_guid_miq_server_zone
       end
 
@@ -206,7 +204,6 @@ describe EmsInfraController do
   describe "breadcrumbs path on a 'show' page of an Infrastructure Provider accessed from Dashboard maintab" do
     before do
       set_user_privileges
-      FactoryGirl.create(:vmdb_database)
       EvmSpecHelper.create_guid_miq_server_zone
       session[:settings] = {:views => {}}
     end

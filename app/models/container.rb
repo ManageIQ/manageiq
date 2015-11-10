@@ -18,6 +18,7 @@ class Container < ActiveRecord::Base
   has_many   :vim_performance_states, :as => :resource
 
   # Needed for metrics
+  delegate   :ems_id, :to => :container_group
   delegate   :my_zone, :to => :ext_management_system
 
   include EventMixin

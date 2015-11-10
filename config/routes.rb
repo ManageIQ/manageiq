@@ -299,6 +299,7 @@ Vmdb::Application.routes.draw do
       :get  => %w(
         download_data
         explorer
+        perf_top_chart
         show
         tagging_edit
         tag_edit_form_field_changed
@@ -318,6 +319,7 @@ Vmdb::Application.routes.draw do
       ) +
                adv_search_post +
                exp_post +
+               perf_post +
                save_post +
                x_post
     },
@@ -328,6 +330,7 @@ Vmdb::Application.routes.draw do
         edit
         index
         new
+        perf_top_chart
         show
         show_list
         tagging_edit
@@ -352,6 +355,7 @@ Vmdb::Application.routes.draw do
       ) +
                adv_search_post +
                exp_post +
+               perf_post +
                save_post
     },
 
@@ -361,6 +365,7 @@ Vmdb::Application.routes.draw do
         edit
         index
         new
+        perf_top_chart
         show
         show_list
         tagging_edit
@@ -385,6 +390,7 @@ Vmdb::Application.routes.draw do
       ) +
                adv_search_post +
                exp_post +
+               perf_post +
                save_post
     },
 
@@ -426,6 +432,7 @@ Vmdb::Application.routes.draw do
         show_list
         tagging_edit
         tag_edit_form_field_changed
+        guest_applications
       ),
       :post => %w(
         button
@@ -441,6 +448,7 @@ Vmdb::Application.routes.draw do
         update
         tagging_edit
         tag_edit_form_field_changed
+        guest_applications
       ) + adv_search_post + exp_post + save_post
     },
 
@@ -638,6 +646,7 @@ Vmdb::Application.routes.draw do
         listnav_search_selected
         panel_control
         protect
+        provider_type_field_changed
         quick_search
         sections_field_changed
         show
@@ -1268,6 +1277,7 @@ Vmdb::Application.routes.draw do
         fetch_log
         fetch_production_log
         log_collection_form_fields
+        log_protocol_changed
         schedule_form_fields
         show_product_update
         tenant_quotas_form_fields

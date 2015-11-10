@@ -31,7 +31,8 @@ describe "DatabaseConfiguration patch" do
         ENV['DATABASE_URL'] = 'postgres://'
         example.run
       ensure
-        ENV['DATABASE_URL'] = old_env if old_env
+        # ENV['x'] = nil deletes the key because ENV accepts only string values
+        ENV['DATABASE_URL'] = old_env
       end
     end
 
@@ -46,7 +47,8 @@ describe "DatabaseConfiguration patch" do
         old = ENV.delete('DATABASE_URL')
         expect { @app.config.database_configuration }.to raise_error(/Could not load database configuration/)
       ensure
-        ENV['DATABASE_URL'] = old if old
+        # ENV['x'] = nil deletes the key because ENV accepts only string values
+        ENV['DATABASE_URL'] = old
       end
     end
   end

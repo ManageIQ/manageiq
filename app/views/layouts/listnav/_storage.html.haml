@@ -78,43 +78,43 @@
 
       = miq_accordion_panel(_("Content"), false, "storage_content") do
         %ul.nav.nav-pills.nav-stacked
-          = li_link_if_nonzero(:count => @storage.number_of(:files),
-            :record_id                => @storage.id,
+          = li_link_if_nonzero(:count => @record.number_of(:files),
+            :record_id                => @record.id,
             :table                    => 'storages',
             :action                   => 'files',
             :title                    => _("Show all files on this %s") % ui_lookup(:table => "storages"),
             :link_text                => _('All Files'))
 
-          = li_link_if_nonzero(:count => @storage.number_of(:disk_files),
-            :record_id                => @storage.id,
+          = li_link_if_nonzero(:count => @record.number_of(:disk_files),
+            :record_id                => @record.id,
             :table                    => 'storages',
             :action                   => 'disk_files',
             :title                    => _("Show VM Provisioned Disk Files on this %s") % ui_lookup(:table => "storages"),
             :link_text                => _('VM Provisioned Disk Files'))
 
-          = li_link_if_nonzero(:count => @storage.number_of(:snapshot_files),
-            :record_id                => @storage.id,
+          = li_link_if_nonzero(:count => @record.number_of(:snapshot_files),
+            :record_id                => @record.id,
             :table                    => 'storages',
             :action                   => 'snapshot_files',
             :title                    => _("Show VM snapshot files on this %s") % ui_lookup(:table => "storages"),
             :link_text                => _('VM Snapshot Files'))
 
-          = li_link_if_nonzero(:count => @storage.number_of(:vm_ram_files),
-            :record_id                => @storage.id,
+          = li_link_if_nonzero(:count => @record.number_of(:vm_ram_files),
+            :record_id                => @record.id,
             :table                    => 'storages',
             :action                   => 'vm_ram_files',
             :title                    => _("Show VM memory files on this %s") % ui_lookup(:table => "storages"),
             :link_text                => _('VM Memory Files'))
 
-          = li_link_if_nonzero(:count => @storage.number_of(:vm_misc_files),
-            :record_id                => @storage.id,
+          = li_link_if_nonzero(:count => @record.number_of(:vm_misc_files),
+            :record_id                => @record.id,
             :table                    => 'storages',
             :action                   => 'vm_misc_files',
             :title                    => _("Show Other VM files on this %s") % ui_lookup(:table => "storages"),
             :link_text                => _('Other VM Files'))
 
-          = li_link_if_nonzero(:count => @storage.number_of(:debris_files),
-            :record_id                => @storage.id,
+          = li_link_if_nonzero(:count => @record.number_of(:debris_files),
+            :record_id                => @record.id,
             :table                    => 'storages',
             :action                   => 'debris_files',
             :title                    => _("Show non-VM files on this %s") % ui_lookup(:table => "storages"),

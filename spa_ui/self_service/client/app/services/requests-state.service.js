@@ -10,7 +10,7 @@
 
     service.sort = {
       isAscending: false,
-      currentField: { id: 'requested', title: 'Requested Date', sortType: 'numeric' }
+      currentField: { id: 'requested', title: 'Request Date', sortType: 'numeric' }
     };
     
     service.filters = [];

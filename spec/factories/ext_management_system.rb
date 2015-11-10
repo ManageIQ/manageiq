@@ -143,6 +143,7 @@ FactoryGirl.define do
   end
 
   factory :ems_azure_with_authentication, :parent => :ems_azure do
+    azure_tenant_id "ABCDEFGHIJABCDEFGHIJ0123456789AB"
     after :create do |x|
       x.authentications << FactoryGirl.create(:authentication)
     end

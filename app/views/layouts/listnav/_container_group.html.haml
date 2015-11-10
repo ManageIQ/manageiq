@@ -12,6 +12,15 @@
         %li
           = link_to(_('Summary'), {:action => 'show', :id => @record, :display => 'main'}, :title => _("Show Summary"))
 
+        - if @record.has_perf_data?
+          %li
+            = link_to(_('Capacity & Utilization'),
+              {:action => 'show', :id => @record, :display => 'performance'},
+              :title => _("Show Capacity & Utilization"))
+        - else
+          %li.disabled
+            = link_to(_('Capacity & Utilization'), "#")
+
         - if @record.has_events? || @record.has_events?(:policy_events)
           %li
             = link_to('Timelines',

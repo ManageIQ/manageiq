@@ -433,10 +433,7 @@ describe CatalogController do
   context "#ot_rendering" do
     render_views
     before(:each) do
-      FactoryGirl.create(:vmdb_database)
       EvmSpecHelper.create_guid_miq_server_zone
-      expect(MiqServer.my_guid).to be
-      expect(MiqServer.my_server).to be
       session[:settings] = {
         :views => {:orchestrationtemplate => "grid"}
       }

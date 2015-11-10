@@ -9,10 +9,6 @@ function miqOnLoad() {
   if ($('#col1').length) {
     miqInitDashboardCols();
   }
-  // Initialize the dashboard widget pulldown
-  if ($('#widget_select_div').length) {
-    miqInitWidgetPulldown();
-  }
 
   // Track the mouse coordinates for popup menus
   $(document).mousemove(function (e) {
@@ -39,6 +35,11 @@ function miqOnLoad() {
   // Init the toolbars
   if (typeof miqInitToolbars == "function") {
     miqInitToolbars();
+  }
+
+  // Initialize the dashboard widget pulldown
+  if ($('#widget_select_div').length) {
+    miqInitWidgetPulldown();
   }
 
   // Refresh the myCodeMirror editor
@@ -78,6 +79,7 @@ function miqOnResize() {
 
 // Initialize the widget pulldown on the dashboard
 function miqInitWidgetPulldown() {
+  $("#dashboard_dropdown #toolbar button:not(.dropdown-toggle), #toolbar ul.dropdown-menu > li > a").off('click');
   $("#dashboard_dropdown #toolbar button:not(.dropdown-toggle), #toolbar ul.dropdown-menu > li > a").click(miqWidgetToolbarClick);
 }
 

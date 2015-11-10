@@ -7,6 +7,10 @@ ManageIQ.angularApplication.controller('credentialsController', ['$http', '$scop
       $scope.resetClicked();
     });
 
+    $scope.$on('setNewRecord', function(e) {
+      $scope.setNewRecord();
+    });
+
     ManageIQ.angularApplication.$credentialsScope = $scope;
 
     if ($scope.formId == 'new') {
@@ -40,7 +44,12 @@ ManageIQ.angularApplication.controller('credentialsController', ['$http', '$scop
   };
 
   $scope.resetClicked = function() {
+    $scope.newRecord = false;
     $scope.cancelPasswordChange();
+  };
+
+  $scope.setNewRecord = function() {
+    $scope.newRecord = true;
   };
 
   init();

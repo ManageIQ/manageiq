@@ -1,0 +1,17 @@
+# Container group daily performance chart layouts
+---
+- :title: Cores Used
+  :type: Line
+  :columns:
+  - v_derived_cpu_total_cores_used
+
+- :title: Memory (MB)
+  :type: Line
+  :columns:
+  - derived_memory_used
+  - derived_memory_available
+
+- :title: Network I/O (KBps)
+  :type: Line
+  :columns:
+  - net_usage_rate_average

@@ -5,7 +5,6 @@ describe MiqAeCustomizationController do
   context "::Dialogs" do
     context "#dialog_delete" do
       before do
-        FactoryGirl.create(:vmdb_database)
         EvmSpecHelper.local_miq_server
         login_as FactoryGirl.create(:user, :features => "dialog_delete")
         controller.stub(:check_privileges).and_return(true)

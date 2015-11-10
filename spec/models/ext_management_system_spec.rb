@@ -35,14 +35,23 @@ describe ExtManagementSystem do
     described_class.supported_types.should match_array(all_types)
   end
 
-  it ".ems_discovery_types" do
+  it ".ems_infra_discovery_types" do
     expected_types = [
       "scvmm",
       "rhevm",
       "virtualcenter"
     ]
 
-    expect(described_class.ems_discovery_types).to match_array(expected_types)
+    expect(described_class.ems_infra_discovery_types).to match_array(expected_types)
+  end
+
+  it ".ems_cloud_discovery_types" do
+    expected_types = [
+      "ec2",
+      "azure",
+    ]
+
+    expect(described_class.ems_cloud_discovery_types).to match_array(expected_types)
   end
 
   context "with two small envs" do

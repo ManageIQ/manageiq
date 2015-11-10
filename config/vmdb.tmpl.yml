@@ -348,6 +348,8 @@ workers:
           :poll_method: :escalate
         :ems_metrics_collector_worker_kubernetes:
           :poll_method: :escalate
+          :metrics_port: 5000
+          :metrics_path: '/hawkular/metrics'
         :ems_metrics_collector_worker_openshift:
           :poll_method: :escalate
         :ems_metrics_collector_worker_atomic:
