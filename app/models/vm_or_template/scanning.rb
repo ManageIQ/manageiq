@@ -53,6 +53,14 @@ module VmOrTemplate::Scanning
     end
   end
 
+  #
+  # Smartstate Analysis is unsupported by default.
+  # Subclasses need to override this method if they support SSA.
+  #
+  def validate_smartstate_analysis
+    validate_unsupported("Smartstate Analysis")
+  end
+
   # TODO: Vmware specfic
   def require_snapshot_for_scan?
     return false unless self.runnable?
