@@ -109,6 +109,7 @@ class ApplicationHelper::ToolbarBuilder
 
           toolbar << props
           current_item = props
+          current_item[:items] ||= []
           any_visible = false
           bgi[:items].each_with_index do |bsi, bsi_idx|
             if bsi.key?(:separator)
@@ -137,11 +138,14 @@ class ApplicationHelper::ToolbarBuilder
               title = safer_eval(bsi[:title]) unless bsi[:title].blank?
               props["title"] = dis_title.kind_of?(String) ? dis_title : title
             end
-            current_item[:items] ||= []
             current_item[:items] << props
             build_toolbar_save_button(bsi, props, bgi[:buttonSelect]) if bsi[:button] # Save if a button (not sep)
 
-            any_visible ||= !props[:hidden]
+            any_visible ||= !props[:hidden] && props["type"] != "separator"
+          end
+          current_item[:items].reverse_each do |item|
+            break if ! item[:hidden] && item["type"] != 'separator'
+            item[:hidden] = true if item["type"] == 'separator'
           end
           current_item[:hidden] = !any_visible
 
