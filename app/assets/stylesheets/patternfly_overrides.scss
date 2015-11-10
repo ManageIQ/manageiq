@@ -313,3 +313,14 @@ iframe, .iframe {
 .toolbar-pf#toolbar .toolbar-pf-actions .form-group {
   margin-bottom: 10px !important
 }
+
+/* sets width to auto for bootstrap-select */
+.selectWidth {
+  width: auto !important;
+}
+
+/* compensates for scrollbars in browsers that cover options in very narrow dropdowns */
+
+.selectWidth .dropdown-menu ul li{
+  padding-right: 10px;
+}

@@ -508,15 +508,15 @@
             -# Allow editing of the text field
             = select_tag("start_hour",
                          options_for_select((0..23).to_a, options[:start_hour].to_i),
-                         :class    => "selectpicker")
-            h
+                         :class    => "selectpicker selectWidth")
+            %span h
             :javascript
               miqInitSelectPicker();
               miqSelectPickerEvent("start_hour", "#{url}")
             = select_tag("start_min",
                          options_for_select((0..55).step(5).to_a, options[:start_min].to_i),
-                         :class    => "selectpicker")
-            m
+                         :class    => "selectpicker selectWidth")
+            %span m
             :javascript
               miqInitSelectPicker();
               miqSelectPickerEvent("start_min", "#{url}")
