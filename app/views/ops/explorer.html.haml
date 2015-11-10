@@ -1,8 +1,6 @@
 #main_div
   - if role_allows(:feature => "ops_settings") || role_allows(:feature => "ops_rbac", :any => true) || role_allows(:feature => "ops_diagnostics") || role_allows(:feature => "ops_db")
     #tab_all_tabs_div= render :partial => "all_tabs"
-  %br/
-  %br/
 
 - if params[:action] == "explorer"
   - url = url_for(:action => 'settings_form_field_changed',

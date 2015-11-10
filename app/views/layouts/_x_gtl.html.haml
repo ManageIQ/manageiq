@@ -4,7 +4,7 @@
 - no_rec_display       = "display:none"
 - @ajax_paging_buttons = true
 
-#gtl_div{:style => "height: inherit;background-color: #fff;"}
+#gtl_div
   - view ||= @view
   - table      = view.sub_table ? view.sub_table : view.table unless view.nil?
   - action_url ||= "explorer"
@@ -29,5 +29,3 @@
         = render :partial => "layouts/gtl/tile", :locals => {:table => table, :button_div => button_div, :view => view, :action_url => action_url}
       - elsif @gtl_type == "list"
         = render :partial => "layouts/gtl/list", :locals => {:table => table, :button_div => button_div, :view => view, :action_url => action_url, :listicon_image => listicon_image}
-    %br
-    %br
