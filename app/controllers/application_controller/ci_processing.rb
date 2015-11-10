@@ -805,7 +805,7 @@ module ApplicationController::CiProcessing
       drop_breadcrumb(:name => "#{title} Discovery", :url => "/host/discover")
       @discover_type_selected = params[:discover_type_selected]
 
-      if request.parameters[:controller] == "ems_cloud" && params[:discover_type_selected] == ExtManagementSystem::EMS_CLOUD_DISCOVERY_TYPES[:azure]
+      if request.parameters[:controller] == "ems_cloud" && params[:discover_type_selected] == ExtManagementSystem::EMS_CLOUD_DISCOVERY_TYPES['azure']
         @client_id = params[:client_id] if params[:client_id]
         @client_key = params[:client_key] if params[:client_key]
         @azure_tenant_id = params[:azure_tenant_id] if params[:azure_tenant_id]
