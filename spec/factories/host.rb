@@ -51,8 +51,7 @@ FactoryGirl.define do
 
   # Type specific subclasses
   factory(:host_vmware,     :parent => :host,        :class => "ManageIQ::Providers::Vmware::InfraManager::Host")
-  factory :host_vmware_esx, :parent => :host_vmware, :class => "ManageIQ::Providers::Vmware::InfraManager::HostEsx" do
-  end
+  factory(:host_vmware_esx, :parent => :host_vmware, :class => "ManageIQ::Providers::Vmware::InfraManager::HostEsx") { vmm_product "ESX" }
 
   factory :host_redhat, :parent => :host, :class => "ManageIQ::Providers::Redhat::InfraManager::Host" do
     sequence(:ems_ref) { |n| "host-#{seq_padded_for_sorting(n)}" }
