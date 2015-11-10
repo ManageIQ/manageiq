@@ -1258,6 +1258,20 @@ describe ApplicationHelper do
           "&menu_click=Display-VMs-on_2-6-5&page=1&sb_controller=host")
       end
     end
+    context "when the controller uses restful paths" do
+      before do
+        FactoryGirl.create(:ems_amazon, :zone => Zone.seed)
+        @record = ManageIQ::Providers::Amazon::CloudManager.first
+
+        get("/ems_cloud", :display => 'images')
+        Object.any_instance.stub(:query_string).and_return(@request.query_string)
+        allow_message_expectations_on_nil
+      end
+
+      it "uses restful paths for pages" do
+        update_paging_url_parms("show", :page => 2).should eq("/ems_cloud/#{@record.id}?display=images&page=2")
+      end
+    end
   end
 
   context "#title_for_clusters" do
