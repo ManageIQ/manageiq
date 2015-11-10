@@ -2377,6 +2377,8 @@ describe ApplicationHelper do
         before do
           @id = "vm_scan"
           @record = FactoryGirl.create(:vm_vmware, :vendor => "vmware")
+          @record.stub(:archived? => false)
+          @record.stub(:orphaned? => false)
           @record.stub(:has_active_proxy? => true)
         end
         it "when no active proxy" do
