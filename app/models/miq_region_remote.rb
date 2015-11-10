@@ -35,6 +35,7 @@ class MiqRegionRemote < ActiveRecord::Base
 
     log_details = "Host: [#{host}]}, Database: [#{database}], Adapter: [#{adapter}], User: [#{username}]"
 
+    return ["Validation failed due to missing port"] if port.blank?
     begin
       with_remote_connection(host, port, username, password, database, adapter) do |c|
         _log.info("Attempting to connection to: #{log_details}...")
