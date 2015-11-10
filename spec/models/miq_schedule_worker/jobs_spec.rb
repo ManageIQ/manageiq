@@ -27,14 +27,16 @@ describe MiqScheduleWorker::Jobs do
     require "rufus-scheduler"
 
     it "delegates the queueing to MiqSchedule" do
-      schedule_id = 123
-      scheduler = Rufus::Scheduler.new
-      block = -> { "some work" }
-      rufus_job = Rufus::Scheduler::EveryJob.new(scheduler, 1.hour, {}, block)
+      Timecop.freeze do
+        schedule_id = 123
+        scheduler = Rufus::Scheduler.new
+        block = -> { "some work" }
+        rufus_job = Rufus::Scheduler::EveryJob.new(scheduler, 1.hour, {}, block)
 
-      expect(MiqSchedule).to receive(:queue_scheduled_work).with(schedule_id, rufus_job.job_id, rufus_job.next_time, {})
+        expect(MiqSchedule).to receive(:queue_scheduled_work).with(schedule_id, rufus_job.job_id, 1.hour.from_now.to_i, {})
 
-      described_class.new.miq_schedule_queue_scheduled_work(schedule_id, rufus_job)
+        described_class.new.miq_schedule_queue_scheduled_work(schedule_id, rufus_job)
+      end
     end
   end
 end
