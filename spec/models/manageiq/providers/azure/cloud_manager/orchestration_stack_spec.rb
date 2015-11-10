@@ -20,6 +20,12 @@ describe ManageIQ::Providers::Azure::CloudManager::OrchestrationStack do
   end
 
   describe 'stack operations' do
+    before do
+      rg = double
+      allow(Azure::Armrest::ResourceGroupService).to receive(:new).and_return(rg)
+      allow(rg).to receive(:create)
+    end
+
     context ".create_stack" do
       it 'creates a stack' do
         expect(orchestration_service).to receive(:create).and_return(the_raw_stack)

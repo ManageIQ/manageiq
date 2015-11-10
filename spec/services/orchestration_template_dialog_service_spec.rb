@@ -78,13 +78,14 @@ describe OrchestrationTemplateDialogService do
     )
 
     fields = group.dialog_fields
-    fields.size.should == 4
+    fields.size.should == 5
 
     fields[0].resource_action.fqname.should == "/Cloud/Orchestration/Operations/Methods/Available_Tenants"
-    assert_field(fields[0], DialogFieldDropDownList, :name => "tenant_name",    :dynamic => true)
-    assert_field(fields[1], DialogFieldTextBox,      :name => "stack_name",     :validator_rule => '^[A-Za-z][A-Za-z0-9\-]*$')
-    assert_field(fields[2], DialogFieldDropDownList, :name => "resource_group", :dynamic => true)
-    assert_field(fields[3], DialogFieldDropDownList, :name => "deploy_mode",    :values => [%w(Complete Complete), %w(Incremental Incremental)])
+    assert_field(fields[0], DialogFieldDropDownList, :name => "tenant_name",        :dynamic => true)
+    assert_field(fields[1], DialogFieldTextBox,      :name => "stack_name",         :validator_rule => '^[A-Za-z][A-Za-z0-9\-]*$')
+    assert_field(fields[2], DialogFieldDropDownList, :name => "resource_group",     :dynamic => true)
+    assert_field(fields[3], DialogFieldTextBox,      :name => "new_resource_group", :validator_rule => '^[A-Za-z][A-Za-z0-9\-_]*$')
+    assert_field(fields[4], DialogFieldDropDownList, :name => "deploy_mode",        :values => [%w(Complete Complete), %w(Incremental Incremental)])
   end
 
   def assert_field(field, clss, attributes)

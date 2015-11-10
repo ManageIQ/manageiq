@@ -36,8 +36,9 @@ class OrchestrationTemplateDialogService
   end
 
   def add_azure_stack_options(dialog_group, position)
-    add_resource_group_field(dialog_group, position)
-    add_mode_field(dialog_group, position + 1)
+    add_resource_group_list(dialog_group, position)
+    add_new_resource_group_field(dialog_group, position + 1)
+    add_mode_field(dialog_group, position + 2)
   end
 
   def add_parameter_group(parameter_group, tab, position)
@@ -135,21 +136,38 @@ class OrchestrationTemplateDialogService
     )
   end
 
-  def add_resource_group_field(group, position)
+  def add_resource_group_list(group, position)
     group.dialog_fields.build(
       :type         => "DialogFieldDropDownList",
       :name         => "resource_group",
-      :description  => "Resource group to which stack is to deploy",
+      :description  => "Select an existing resource group for deployment",
       :data_type    => "string",
       :display      => "edit",
       :dynamic      => true,
       :required     => false,
-      :label        => "Resource Group",
+      :label        => "Existing Resource Group",
       :position     => position,
       :dialog_group => group
     ).tap do |dialog_field|
       dialog_field.resource_action.fqname = "/Cloud/Orchestration/Operations/Methods/Available_Resource_Groups"
     end
+  end
+
+  def add_new_resource_group_field(group, position)
+    group.dialog_fields.build(
+      :type           => "DialogFieldTextBox",
+      :name           => "new_resource_group",
+      :description    => "Create a new resource group upon deployment",
+      :data_type      => "string",
+      :display        => "edit",
+      :required       => false,
+      :options        => {:protected => false},
+      :validator_type => 'regex',
+      :validator_rule => '^[A-Za-z][A-Za-z0-9\-_]*$',
+      :label          => "(or) New Resource Group",
+      :position       => position,
+      :dialog_group   => group
+    )
   end
 
   def add_parameter_field(parameter, group, position)
