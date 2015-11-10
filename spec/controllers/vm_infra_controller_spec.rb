@@ -118,12 +118,10 @@ describe VmInfraController do
 
   context "breadcrumbs" do
     subject { controller.instance_variable_get(:@breadcrumbs) }
+    before  { session[:settings] = {:views => {}, :perpage => {:list => 10}} }
 
     context "skip or drop breadcrumb" do
-      before do
-        session[:settings] = {:views => {}, :perpage => {:list => 10}}
-        get :explorer
-      end
+      before { get :explorer }
 
       it 'skips dropping a breadcrumb when a button action is executed' do
         post :x_button, :id => vm_vmware.id, :pressed => 'vm_ownership'
@@ -137,11 +135,7 @@ describe VmInfraController do
     end
 
     context "clear or retain existing breadcrumb path" do
-      before do
-        session[:settings] = {:views => {}, :perpage => {:list => 10}}
-        controller.stub(:render)
-        controller.stub(:build_toolbar)
-      end
+      before { controller.stub(:render => nil, :build_toolbar => nil) }
 
       it 'it clears the existing breadcrumb path and assigns the new explorer path when controllers are switched' do
         session[:breadcrumbs] = [{:name => "Instances", :url => "/vm_cloud/explorer"}]
