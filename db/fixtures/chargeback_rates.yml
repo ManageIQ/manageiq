@@ -12,6 +12,7 @@
       :per_time: daily
       :per_unit: megahertz
       :measure: Hz Units
+      :type_currency: Dollars
     - :description: Allocated CPU Count
       :group: cpu
       :source: allocated
@@ -19,6 +20,7 @@
       :rate: 0
       :per_time: daily
       :per_unit: cpu
+      :type_currency: Dollars
     - :description: Used Memory
       :group: memory
       :source: used
@@ -27,6 +29,7 @@
       :per_time: daily
       :per_unit: megabytes
       :measure: Bytes Units
+      :type_currency: Dollars
     - :description: Allocated Memory
       :group: memory
       :source: allocated
@@ -35,6 +38,7 @@
       :per_time: daily
       :per_unit: megabytes
       :measure: Bytes Units
+      :type_currency: Dollars
     - :description: Used Network I/O
       :group: net_io
       :source: used
@@ -43,6 +47,7 @@
       :per_time: hourly
       :per_unit: kbps
       :measure: Bytes per Second Units
+      :type_currency: Dollars
     - :description: Used Disk I/O
       :group: disk_io
       :source: used
@@ -51,16 +56,19 @@
       :per_time: hourly
       :per_unit: kbps
       :measure: Bytes per Second Units
+      :type_currency: Dollars
     - :description: Fixed Compute Cost 1
       :group: fixed
       :source: compute_1
       :rate: 0
       :per_time: daily
+      :type_currency: Dollars
     - :description: Fixed Compute Cost 2
       :group: fixed
       :source: compute_2
       :rate: 0
       :per_time: monthly
+      :type_currency: Dollars
 - :description: Default
   :guid: 7d7aaf20-5214-11df-a888-001d09066d98
   :rate_type: Storage
@@ -74,6 +82,7 @@
       :per_time: monthly
       :per_unit: gigabytes
       :measure: Bytes Units
+      :type_currency: Dollars
     - :description: Used Disk Storage
       :group: storage
       :source: used
@@ -82,13 +91,16 @@
       :per_time: monthly
       :per_unit: gigabytes
       :measure: Bytes Units
+      :type_currency: Dollars
     - :description: Fixed Storage Cost 1
       :group: fixed
       :source: storage_1
       :rate: 0
       :per_time: daily
+      :type_currency: Dollars
     - :description: Fixed Storage Cost 2
       :group: fixed
       :source: storage_2
       :rate: 0
       :per_time: monthly
+      :type_currency: Dollars

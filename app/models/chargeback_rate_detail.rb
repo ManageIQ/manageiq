@@ -1,6 +1,7 @@
 class ChargebackRateDetail < ApplicationRecord
   belongs_to :chargeback_rate
   belongs_to :detail_measure, :class_name => "ChargebackRateDetailMeasure", :foreign_key => :chargeback_rate_detail_measure_id
+  belongs_to :detail_currency, :class_name => "ChargebackRateDetailCurrency", :foreign_key => :chargeback_rate_detail_currency_id
 
   validates :rate, :numericality => true
   validates :group, :source, :presence => true

@@ -1,4 +1,5 @@
 - url = url_for(:action => 'cb_rate_form_field_changed', :id => "#{@sb[:rate].id || "new"}")
+- currency = ChargebackRateDetailCurrency.currencies_for_select
 #form_div
   %h3
     = _('Basic Info')
@@ -13,6 +14,18 @@
         = javascript_tag(javascript_focus('description'))
 
   %hr
+
+  /Add a new selector for the currencies
+  %h3
+    = _('Currencies')
+  .form-horizontal.static
+    .form-group
+      %label.col-md-2.control-label
+        = _('Select currency: ')
+      .col-md-8
+        = select_tag("currency",
+          options_for_select(currency, @edit[:new][:currency]),
+          "data-miq_observe" => {:url => url}.to_json)
 
   %h3= _('Rate Details')
   %table.table.table-bordered
