@@ -33,49 +33,6 @@
 
     = miq_accordion_panel(_("Relationships"), false, "container_node_rel") do
       %ul.nav.nav-pills.nav-stacked
-
-        - if role_allows(:feature => "ems_container_show") && !@record.ext_management_system.nil?
-          %li
-            = link_to("#{ui_lookup(:table => "ems_container")}: #{@record.ext_management_system.name}",
-                {:controller => "ems_container", :action => 'show', :id => @record.ext_management_system.id.to_s},
-                :title => _("Show this container node's parent %s") % ui_lookup(:table => "ems_container"))
-        - if role_allows(:feature => "container_group_show_list")
-          - num_groups = @record.number_of(:container_groups)
-          - if num_groups == 0
-            %li.disabled
-              = link_to(_('Pods (0)'), "#")
-          - else
-            %li
-              = link_to(_("Pods (%s)") % num_groups,
-                  {:action  => 'show', :id => @record, :display => 'container_groups'},
-                  :title => _("Show Pods"))
-        - if role_allows(:feature => "container_service_show_list")
-          - num_services = @record.number_of(:container_services)
-          - if num_services == 0
-            %li.disabled
-              = link_to("#{ui_lookup(:tables => "container_service")} (0)", "#")
-          - else
-            %li
-              = link_to("#{ui_lookup(:tables => "container_service")} (#{num_services})",
-                  {:action  => 'show', :id => @record, :display => 'container_services'},
-                  :title => _("Show Container Services"))
-        - if role_allows(:feature => "container_replicator_show_list")
-          - num_replicators = @record.number_of(:container_replicators)
-          - if num_replicators == 0
-            %li.disabled
-              = link_to("#{ui_lookup(:tables => "container_replicator")} (0)", "#")
-          - else
-            %li
-              = link_to("#{ui_lookup(:tables => "container_replicator")} (#{num_replicators})",
-                  {:action  => 'show', :id => @record, :display => 'container_replicators'},
-                  :title => _("Show Container Replicators"))
-        - if role_allows(:feature => "containers")
-          - num_containers = @record.number_of(:containers)
-          - if num_containers == 0
-            %li.disabled
-              = link_to("#{ui_lookup(:tables => "container")} (0)", "#")
-          - else
-            %li
-              = link_to("#{ui_lookup(:tables => "container")} (#{num_containers})",
-                  {:action  => 'show', :id => @record, :display => 'containers'},
-                  :title => _("Show Containers"))
+        = single_relationship_link(@record, :ems_container, "ext_management_system")
+        - %i(container_route container_service container_replicator container_group container).each do |ent|
+          = multiple_relationship_link(@record, ent)

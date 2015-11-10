@@ -3458,6 +3458,11 @@
       :description: View Containers
       :feature_type: view
       :identifier: container_view
+      :children:
+      - :name: List
+        :description: Display Lists of Containers
+        :feature_type: view
+        :identifier: container_show_list
     - :name: Modify
       :description: Modify Containers
       :feature_type: admin

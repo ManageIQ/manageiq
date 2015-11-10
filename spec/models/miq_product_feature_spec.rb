@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe MiqProductFeature do
   before do
-    @expected_feature_count = 865
+    @expected_feature_count = 866
   end
 
   context ".seed" do
