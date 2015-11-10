@@ -161,7 +161,7 @@ describe VmInfraController do
   context "skip or drop breadcrumb" do
     before do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
-      @vm = VmInfra.create(:name => "testvm", :location => "testvm_location", :vendor => "vmware")
+      @vm = FactoryGirl.create(:vm_vmware)
       get :explorer
       request.env['HTTP_REFERER'] = request.fullpath
     end
@@ -184,7 +184,7 @@ describe VmInfraController do
   context "clear or retain existing breadcrumb path" do
     before do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
-      @vm = VmInfra.create(:name => "testvm", :location => "testvm_location", :vendor => "vmware")
+      @vm = FactoryGirl.create(:vm_vmware)
       controller.stub(:render)
       controller.stub(:build_toolbar)
     end
