@@ -116,55 +116,55 @@ describe VmInfraController do
     expect(response.body).to include('button=cancel')
   end
 
-  context "skip or drop breadcrumb" do
-    before do
-      session[:settings] = {:views => {}, :perpage => {:list => 10}}
-      get :explorer
-      request.env['HTTP_REFERER'] = request.fullpath
+  context "breadcrumbs" do
+    subject { controller.instance_variable_get(:@breadcrumbs) }
+
+    context "skip or drop breadcrumb" do
+      before do
+        session[:settings] = {:views => {}, :perpage => {:list => 10}}
+        get :explorer
+        request.env['HTTP_REFERER'] = request.fullpath
+      end
+
+      it 'skips dropping a breadcrumb when a button action is executed' do
+        post :x_button, :id => vm_vmware.id, :pressed => 'vm_ownership'
+        expect(subject.size).to eq(1)
+        expect(subject).to include(:name => "VM or Templates", :url => "/vm_infra/explorer")
+      end
+
+      it 'drops a breadcrumb when an action allowing breadcrumbs is executed' do
+        post :accordion_select, :id => "vms_filter"
+        expect(subject.size).to eq(1)
+        expect(subject).to include(:name => "Virtual Machines", :url => "/vm_infra/explorer")
+      end
     end
 
-    it 'skips dropping a breadcrumb when a button action is executed' do
-      post :x_button, :id => vm_vmware.id, :pressed => 'vm_ownership'
-      breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
-      expect(breadcrumbs.size).to eq(1)
-      expect(breadcrumbs).to include(:name => "VM or Templates", :url => "/vm_infra/explorer")
-    end
+    context "clear or retain existing breadcrumb path" do
+      before do
+        session[:settings] = {:views => {}, :perpage => {:list => 10}}
+        controller.stub(:render)
+        controller.stub(:build_toolbar)
+      end
 
-    it 'drops a breadcrumb when an action allowing breadcrumbs is executed' do
-      post :accordion_select, :id => "vms_filter"
-      breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
-      expect(breadcrumbs.size).to eq(1)
-      expect(breadcrumbs).to include(:name => "Virtual Machines", :url => "/vm_infra/explorer")
-    end
-  end
+      it 'it clears the existing breadcrumb path and assigns the new explorer path when controllers are switched' do
+        session[:breadcrumbs] = [{:name => "Instances", :url => "/vm_cloud/explorer"}]
+        controller.stub(:x_node).and_return("v-#{vm_vmware.compressed_id}")
+        get :explorer
+        expect(subject.size).to eq(1)
+        expect(subject).to include(:name => "VM or Templates", :url => "/vm_infra/explorer")
+      end
 
-  context "clear or retain existing breadcrumb path" do
-    before do
-      session[:settings] = {:views => {}, :perpage => {:list => 10}}
-      controller.stub(:render)
-      controller.stub(:build_toolbar)
-    end
+      it 'retains the breadcrumb path when cancel is pressed from a VM action' do
+        get :explorer
+        controller.stub(:x_node).and_return("v-#{vm_vmware.compressed_id}")
+        post :x_button, :id => vm_vmware.id, :pressed => 'vm_ownership'
 
-    it 'it clears the existing breadcrumb path and assigns the new explorer path when controllers are switched' do
-      session[:breadcrumbs] = [{:name => "Instances", :url => "/vm_cloud/explorer"}]
-      controller.stub(:x_node).and_return("v-#{vm_vmware.compressed_id}")
-      get :explorer
-      breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
-      expect(breadcrumbs.size).to eq(1)
-      expect(breadcrumbs).to include(:name => "VM or Templates", :url => "/vm_infra/explorer")
-    end
+        controller.instance_variable_set(:@in_a_form, nil)
+        post :ownership_update, :button => 'cancel'
 
-    it 'retains the breadcrumb path when cancel is pressed from a VM action' do
-      get :explorer
-      controller.stub(:x_node).and_return("v-#{vm_vmware.compressed_id}")
-      post :x_button, :id => vm_vmware.id, :pressed => 'vm_ownership'
-
-      controller.instance_variable_set(:@in_a_form, nil)
-      post :ownership_update, :button => 'cancel'
-
-      breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
-      expect(breadcrumbs.size).to eq(1)
-      expect(breadcrumbs).to include(:name => "VM or Templates", :url => "/vm_infra/explorer")
+        expect(subject.size).to eq(1)
+        expect(subject).to include(:name => "VM or Templates", :url => "/vm_infra/explorer")
+      end
     end
   end
 
