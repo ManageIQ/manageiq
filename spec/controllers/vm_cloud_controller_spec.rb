@@ -30,9 +30,13 @@ describe VmCloudController do
       end
     end
 
+    render_views
+
     it 'exception is raised for unknown action' do
+      EvmSpecHelper.create_guid_miq_server_zone
       get :x_button, :id => nil, :pressed => 'random_dude', :format => :html
-      expect { response }.to render_template('layouts/exception')
+      expect(response).to render_template('layouts/exception')
+      expect(response.body).to include('Action not implemented')
     end
   end
 
