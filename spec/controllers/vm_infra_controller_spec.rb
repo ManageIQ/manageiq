@@ -128,14 +128,12 @@ describe VmInfraController do
 
       it 'skips dropping a breadcrumb when a button action is executed' do
         post :x_button, :id => vm_vmware.id, :pressed => 'vm_ownership'
-        expect(subject.size).to eq(1)
-        expect(subject).to include(:name => "VM or Templates", :url => "/vm_infra/explorer")
+        expect(subject).to eq([{:name => "VM or Templates", :url => "/vm_infra/explorer"}])
       end
 
       it 'drops a breadcrumb when an action allowing breadcrumbs is executed' do
         post :accordion_select, :id => "vms_filter"
-        expect(subject.size).to eq(1)
-        expect(subject).to include(:name => "Virtual Machines", :url => "/vm_infra/explorer")
+        expect(subject).to eq([{:name => "Virtual Machines", :url => "/vm_infra/explorer"}])
       end
     end
 
@@ -150,8 +148,7 @@ describe VmInfraController do
         session[:breadcrumbs] = [{:name => "Instances", :url => "/vm_cloud/explorer"}]
         controller.stub(:x_node).and_return("v-#{vm_vmware.compressed_id}")
         get :explorer
-        expect(subject.size).to eq(1)
-        expect(subject).to include(:name => "VM or Templates", :url => "/vm_infra/explorer")
+        expect(subject).to eq([{:name => "VM or Templates", :url => "/vm_infra/explorer"}])
       end
 
       it 'retains the breadcrumb path when cancel is pressed from a VM action' do
@@ -162,8 +159,7 @@ describe VmInfraController do
         controller.instance_variable_set(:@in_a_form, nil)
         post :ownership_update, :button => 'cancel'
 
-        expect(subject.size).to eq(1)
-        expect(subject).to include(:name => "VM or Templates", :url => "/vm_infra/explorer")
+        expect(subject).to eq([{:name => "VM or Templates", :url => "/vm_infra/explorer"}])
       end
     end
   end
