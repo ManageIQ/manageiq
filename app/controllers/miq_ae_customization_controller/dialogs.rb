@@ -511,8 +511,10 @@ module MiqAeCustomizationController::Dialogs
       none =  [['<None>', nil]]
       values = key[:values].empty? ? none : none + key[:values].collect(&:reverse)
       selected = @edit[:field_default_value]
+      page << "$('#field_default_value').next('.bootstrap-select').remove();"
       page.replace("field_default_value",
                    :text => "#{select_tag('field_default_value', options_for_select(values, selected), 'data-miq_observe' => {:interval => '.5', :url => url}.to_json)}")
+      page << "$('#field_default_value').selectpicker();"
     end
   end
 
@@ -548,10 +550,12 @@ module MiqAeCustomizationController::Dialogs
       none =  [['<None>', nil]]
       values = key[:values].empty? ? none : none + key[:values].collect(&:reverse)
       selected = @edit[:field_default_value]
+      page << "$('#field_default_value').next('.bootstrap-select').remove();"
       page.replace("field_default_value",
                    :text => select_tag('field_default_value',
                                        options_for_select(values, selected),
                                        'data-miq_observe' => {:interval => '.5', :url => url}.to_json))
+      page << "$('#field_default_value').selectpicker();"
     end
   end
 
