@@ -197,9 +197,10 @@ module ManageIQ::Providers
       def parse_cloud_subnet(subnet)
         uid = subnet.id
         new_result = {
-          :ems_ref => uid,
-          :name    => subnet.name,
-          :cidr    => subnet.properties.address_prefix,
+          :ems_ref           => uid,
+          :name              => subnet.name,
+          :cidr              => subnet.properties.address_prefix,
+          :availability_zone => @data_index.fetch_path(:availability_zones, 'default'),
         }
         return uid, new_result
       end
