@@ -1145,6 +1145,11 @@ module ApplicationController::CiProcessing
         return
       end
 
+      if method == 'scan' && !VmOrTemplate.batch_operation_supported?('smartstate_analysis', vms)
+        render_flash_not_applicable_to_model('Smartstate Analysis', ui_lookup(:tables => "vm_or_template"))
+        return
+      end
+
       if vms.empty?
         add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => request.parameters["controller"]), :task => display_name}, :error)
       else
