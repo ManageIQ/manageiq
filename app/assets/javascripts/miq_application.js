@@ -1201,7 +1201,9 @@ function miqSelectPickerEvent(element, url, options){
     var selected = $('#' + element).val();
     options =  typeof options !== 'undefined' ? options : {}
     options['no_encoding'] = true;
-    miqJqueryRequest(url + '?' + element + '=' + escape(selected), options);
+
+    var firstarg = ! _.contains(url, '?');
+    miqJqueryRequest(url + (firstarg ? '?' : '&') + element + '=' + escape(selected), options);
     return true;
   });
 }
