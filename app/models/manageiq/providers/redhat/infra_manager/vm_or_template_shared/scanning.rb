@@ -77,7 +77,6 @@ module ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared::Scanning
 
     miq_servers.select! do |svr|
       result = svr.status == "started" && svr.has_zone?(my_zone)
-      result &&= svr.is_vix_disk? if vendor == 'VMware'
       # RedHat VMs must be scanned from an EVM server who's host is attached to the same
       # storage as the VM unless overridden via SmartProxy affinity
       unless svr.vm_scan_storage_affinity?
