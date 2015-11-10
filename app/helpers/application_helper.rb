@@ -574,14 +574,30 @@ module ApplicationHelper
     @show_taskbar
   end
 
-  def calculate_content_height
-    if (@explorer || taskbar_in_header?) && @pages
+  def calculate_content_height(presenter = false)
+    # use explorer presenter vars when replacing right cell
+    if presenter
+      tb      = @options[:reload_toolbars]
+      toolbar = tb[:center] || tb[:view] || tb[:history]
+      pages   = @options[:update_partials][:paging_div] || @options[:update_partials][:form_buttons_div]
+    else
+      toolbar = toolbars_visible?
+      pages   = @pages || @in_a_form
+    end
+
+    if toolbar && pages
       "100% - 88px"
-    elsif @explorer || taskbar_in_header? || @pages
-      "100% - 40px"
+    elsif toolbar || pages
+      "100% - 44px"
     else
       "100%"
     end
+  end
+
+  # checking if any of the toolbar is visible
+  def toolbars_visible?
+    (@toolbars['history_tb'] || @toolbars['center_tb'] || @toolbars['view_tb']) &&
+    (@toolbars['history_tb'] != 'blank_view_tb' && @toolbars['history_tb'] != 'blank_view_tb' && @toolbars['view_tb'] != 'blank_view_tb')
   end
 
   def inner_layout_present?

@@ -162,7 +162,8 @@ class ExplorerPresenter
     @out << @options[:extra_js].join("\n")
 
     @out << "$('#clear_search').#{@options[:clear_search_show_or_hide]}();" if @options[:clear_search_show_or_hide]
-
+    # always replace content partial to adjust height of content div
+    @out << "$('.row.max-height').css('height', 'calc(#{calculate_content_height(true)})')"
     @out << "$('#quicksearchbox').modal('hide');" if @options[:hide_modal]
 
     # Don't turn off spinner for charts/timelines

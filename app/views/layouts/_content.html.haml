@@ -74,7 +74,7 @@
           - sidebar = sidewidth == 0 ? 'hidden-md hidden-lg col-md-0' : "col-md-#{sidewidth} col-md-pull-#{maindiv}"
         -# .max-height.resizable{:class => "col-md-#{maindiv} col-md-push-#{sidewidth}"}
         .col-md-10.col-md-push-2.max-height
-          - if taskbar_in_header?
+          - if !@in_a_form && taskbar_in_header?
             .row.toolbar-pf#toolbar
               .col-md-12
                 .toolbar-pf-actions
@@ -92,17 +92,18 @@
               .row
                 .col-md-12
                   = yield
-          .row.toolbar-pf#paging_div
-            .col-md-12
-              .toolbar-pf-actions
-                - unless @embedded
-                  - if @pages && @items_per_page != ONE_MILLION
-                    = render(:partial => '/layouts/pagingcontrols',
-                            :locals => {:pages      => @pages,
-                                         :action_url => action_url_for_views,
-                                         :db         => @view.db,
-                                         :headers    => @view.headers,
-                                         :button_div => 'center_tb'})
+          - unless @in_a_form
+            .row.toolbar-pf#paging_div
+              .col-md-12
+                .toolbar-pf-actions
+                  - unless @embedded
+                    - if @pages && @items_per_page != ONE_MILLION
+                      = render(:partial => '/layouts/pagingcontrols',
+                              :locals => {:pages      => @pages,
+                                           :action_url => action_url_for_views,
+                                           :db         => @view.db,
+                                           :headers    => @view.headers,
+                                           :button_div => 'center_tb'})
 
           -# Resizing buttons for the resizable sidebar
             .resizer.hidden-xs
@@ -136,7 +137,7 @@
                   = yield
       - else
         .col-md-12.max-height
-          - if taskbar_in_header?
+          - if !@in_a_form && taskbar_in_header?
             .row.toolbar-pf#toolbar
               .col-md-12
                 .toolbar-pf-actions
