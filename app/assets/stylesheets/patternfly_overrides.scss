@@ -214,6 +214,13 @@ table.table.table-selectable tbody tr.selected td {
   margin-bottom: 5px;
 }
 
+/* resize png files displayed in form-groups */
+
+.form-horizontal.static .form-group img{
+  height: 20px;
+  width: 20px;
+}
+
 /* Ensure .form-control-static doesn't change height when it's empty - Bootstrap fix #15699 */
 .form-control-static {
   min-height: ($line-height-computed + $font-size-small - 20);
