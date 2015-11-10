@@ -36,6 +36,7 @@
         %th= _('Rate')
         %th= _('Per Time')
         %th= _('Per Unit')
+        %th= _('Currency')
     %tbody
       - @sb[:rate_details].each_with_index do |r, i|
         - @cur_group = r[:group] if @cur_group.nil?
@@ -64,3 +65,6 @@
               /if the rate detail have a metric associated, display an options field with per_unit selected
               %td
                 = select_tag("per_unit_#{i}", options_for_select(measure.measures, r.per_unit), "data-miq_observe" => {:url => url}.to_json)
+          /Show the code of the currency selected by the user
+          %td{:id => "column_currency_#{i}"}
+            = r.detail_currency.code
