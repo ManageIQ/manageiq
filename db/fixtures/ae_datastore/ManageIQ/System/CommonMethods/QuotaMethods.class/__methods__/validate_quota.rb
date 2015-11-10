@@ -1,3 +1,6 @@
+GIGA_SIZE = 1_073_741_824.0
+MEGA_SIZE = 1_048_576.0
+KILO_SIZE = 1024.0
 
 def request_info
   @service = ($evm.root['vmdb_object_type'] == 'service_template_provision_task') ? true : false
@@ -22,7 +25,8 @@ end
 def quota_exceeded?(item, used, requested, quota)
   return false if quota.zero?
   if used + requested > quota
-    $evm.log(:info, "#{item} Quota exceeded: Used(#{used}) + Requested(#{requested}) > Quota(#{quota})")
+    $evm.log(:info, "#{item} Quota exceeded: Used(#{display_value(item, used, 2)})" \
+      " + Requested(#{display_value(item, requested, 2)}) > Quota(#{display_value(item, quota, 2)})")
     return true
   end
   false
@@ -49,8 +53,25 @@ def quota_warn_exceeded(item, reason)
   @warn_exceeded[key] = reason
 end
 
+def display_value(item, value, _precision)
+  return value unless %w(memory storage).include?(item)
+  case
+  when value == 1
+    "1 Byte"
+  when value < KILO_SIZE
+    "%d Bytes" % (value)
+  when value < MEGA_SIZE
+    "%.2f KB" % (value / KILO_SIZE)
+  when value < GIGA_SIZE
+    "%.2f MB" % (value / MEGA_SIZE)
+  else
+    "%.2f GB" % (value / GIGA_SIZE)
+  end
+end
+
 def reason(item, used, requested, limits)
-  "#{item} - Used: #{used} plus requested: #{requested} exceeds quota: #{limits}"
+  "#{item} - Used: #{display_value(item, used, 2)} plus requested: #{display_value(item, requested, 2)}" \
+  " exceeds quota: #{display_value(item, limits, 2)}"
 end
 
 def check_quotas
@@ -122,10 +143,6 @@ def error(type)
 end
 
 setup
-
-$evm.log("info", "Listing Root Object Attributes:")
-$evm.root.attributes.sort.each { |k, v| $evm.log("info", "\t#{k}: #{v}") }
-$evm.log("info", "===========================================")
 
 request_info
 error("request") if @miq_request.nil?
