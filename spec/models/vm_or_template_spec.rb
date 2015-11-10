@@ -431,6 +431,8 @@ describe VmOrTemplate do
   context "#is_available? for Smartstate Analysis" do
     it "returns true for VMware VM" do
       vm =  FactoryGirl.create(:vm_vmware)
+      vm.stub(:archived? => false)
+      vm.stub(:orphaned? => false)
       expect(vm.is_available?(:smartstate_analysis)).to eq(true)
     end
 
