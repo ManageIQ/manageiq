@@ -3,17 +3,11 @@ ManageIQ.angularApplication.service('miqDBBackupService', function() {
   this.knownProtocolsList = ["Anonymous FTP", "FTP", "NFS", "Samba"];
 
   this.logProtocolNotSelected = function(model) {
-    if(model.log_protocol == '')
-      return true;
-    else
-      return false;
-    };
+    return model.log_protocol == '' || model.log_protocol == undefined;
+  };
 
   this.logProtocolSelected = function(model) {
-    if(model.log_protocol != '')
-      return true;
-    else
-      return false;
+    return model.log_protocol != '' && model.log_protocol != undefined;
   };
 
   this.logProtocolChanged = function(model) {
