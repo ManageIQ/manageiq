@@ -877,12 +877,7 @@ module ApplicationController::CiProcessing
     if type == "hosts"
       return ui_lookup(:host_types => "hosts")
     else
-      controller_table = ui_lookup(:tables => controller)
-      if controller == "ems_cloud"
-        return "#{controller_table}"
-      else
-        return controller_table
-      end
+      return ui_lookup(:tables => controller)
     end
   end
 
