@@ -1,6 +1,9 @@
 - if edit
   - select_values = field.values.collect(&:reverse)
-  = select_tag(field.name, options_for_select(select_values, field.default_value), drop_down_options(field, url))
+  - if defined? selected
+    = select_tag(field.name, options_for_select(select_values, selected), drop_down_options(field, url))
+  - else
+    = select_tag(field.name, options_for_select(select_values, field.default_value), drop_down_options(field, url))
   :javascript
     miqInitSelectPicker();
     miqSelectPickerEvent('#{field.name}', '#{url}')
