@@ -146,9 +146,7 @@ describe VmInfraController do
     end
 
     it 'it clears the existing breadcrumb path and assigns the new explorer path when controllers are switched' do
-      breadcrumbs = []
-      breadcrumbs[0] = {:name => "Instances", :url => "/vm_cloud/explorer"}
-      session[:breadcrumbs] = breadcrumbs
+      session[:breadcrumbs] = [{:name => "Instances", :url => "/vm_cloud/explorer"}]
       controller.stub(:x_node).and_return("v-#{vm_vmware.compressed_id}")
       get :explorer
       breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
