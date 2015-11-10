@@ -30,7 +30,7 @@ describe VmInfraController do
 
   # http://localhost:3000/vm_infra/show/10000000000449
   it 'can open a VM and select it in the left tree' do
-    vm = FactoryGirl.create(:vm_vmware, :name => 'gabelstaplerfahrer')
+    vm = FactoryGirl.create(:vm_vmware)
 
     get :show, :id => vm.id
     response.should redirect_to(:action => 'explorer')
@@ -46,7 +46,7 @@ describe VmInfraController do
   end
 
   it 'can open the right size tab' do
-    vm = FactoryGirl.create(:vm_vmware, :name => 'a_name')
+    vm = FactoryGirl.create(:vm_vmware)
 
     get :show, :id => vm.id
     response.should redirect_to(:action => 'explorer')
@@ -70,7 +70,6 @@ describe VmInfraController do
                                                                 )
                              )
     vm = FactoryGirl.create(:vm_vmware,
-                            :name     => 'b_name',
                             :host     => host,
                             :hardware => FactoryGirl.create(:hardware,
                                                             :memory_mb            => 1024,
@@ -104,7 +103,6 @@ describe VmInfraController do
                                                                 )
                              )
     vm = FactoryGirl.create(:vm_vmware,
-                            :name     => 'b_name',
                             :host     => host,
                             :hardware => FactoryGirl.create(:hardware,
                                                             :memory_mb            => 1024,
@@ -129,7 +127,7 @@ describe VmInfraController do
 
   it 'the reconfigure tab for a vm with max_cpu_cores_per_socket > 1 should display the cpu_cores_per_socket dropdown' do
     host = FactoryGirl.create(:host, :vmm_vendor => 'vmware', :vmm_product => "ESX", :hardware => FactoryGirl.create(:hardware, :memory_mb => 1024, :cpu_total_cores => 4, :cpu_cores_per_socket => 4, :cpu_sockets => 1))
-    vm = FactoryGirl.create(:vm_vmware, :name => 'b_name', :host => host, :hardware => FactoryGirl.create(:hardware, :memory_mb => 1024, :cpu_total_cores => 1, :virtual_hw_version => "07", :cpu_cores_per_socket => 1, :cpu_sockets => 1))
+    vm = FactoryGirl.create(:vm_vmware, :host => host, :hardware => FactoryGirl.create(:hardware, :memory_mb => 1024, :cpu_total_cores => 1, :virtual_hw_version => "07", :cpu_cores_per_socket => 1, :cpu_sockets => 1))
     controller.stub(:x_node).and_return("v-#{vm.compressed_id}")
 
     get :show, :id => vm.id
@@ -145,7 +143,7 @@ describe VmInfraController do
 
   it 'the reconfigure tab displays the submit and cancel buttons' do
     host = FactoryGirl.create(:host, :vmm_vendor => 'vmware', :vmm_product => "ESX", :hardware => FactoryGirl.create(:hardware, :memory_mb => 1024, :cpu_total_cores => 4))
-    vm = FactoryGirl.create(:vm_vmware, :name => 'b_name', :host => host, :hardware => FactoryGirl.create(:hardware, :memory_mb => 1024, :cpu_total_cores => 1, :virtual_hw_version => "07"))
+    vm = FactoryGirl.create(:vm_vmware, :host => host, :hardware => FactoryGirl.create(:hardware, :memory_mb => 1024, :cpu_total_cores => 1, :virtual_hw_version => "07"))
     controller.stub(:x_node).and_return("v-#{vm.compressed_id}")
 
     get :show, :id => vm.id
