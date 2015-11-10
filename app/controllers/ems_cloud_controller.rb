@@ -75,7 +75,9 @@ class EmsCloudController < ApplicationController
     set_ems_record_vars(verify_ems, :validate)
     @in_a_form = true
 
-    result, details = verify_ems.authentication_check(params[:cred_type], :save => false)
+    save = params[:id] == "new" ? false : true
+    result, details = verify_ems.authentication_check(params[:cred_type], :save => save)
+
     if result
       add_flash(_("Credential validation was successful"))
     else
