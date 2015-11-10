@@ -10,19 +10,19 @@
       .col-md-8
         = select_tag('session_timeout_hours',
                       options_for_select(Array.new(25) { |i| i }, @edit[:new][:session][:timeout] / 3600),
-                      :class    => "selectpicker",
+                      :class    => "selectpicker selectWidth",
                       "data-miq_observe" => {:url => url}.to_json)
         :javascript
           miqInitSelectPicker();
           miqSelectPickerEvent('session_timeout_hours', "#{url}")
-        h
+        %span h
         = select_tag('session_timeout_mins', options_for_select(Array.new(12) { |i| i * 5 }, @edit[:new][:session][:timeout] % 3600 / 60),
-                      :class    => "selectpicker",
+                      :class    => "selectpicker selectWidth",
                       "data-miq_observe" => {:url => url}.to_json)
         :javascript
           miqInitSelectPicker();
           miqSelectPickerEvent('session_timeout_mins', "#{url}")
-        m
+        %span m
     .form-group
       %label.col-md-2.control-label
         = _("Mode")
