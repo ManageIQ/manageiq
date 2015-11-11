@@ -485,8 +485,6 @@ module EmsCommon
       tag(Storage) if params[:pressed] == "storage_tag"
       deletestorages if params[:pressed] == "storage_delete"
 
-      terminatevms if params[:pressed] == "instance_terminate"
-
       pfx = pfx_for_vm_button_pressed(params[:pressed])
       # Handle Host power buttons
       if ["host_shutdown", "host_reboot", "host_standby", "host_enter_maint_mode", "host_exit_maint_mode",
