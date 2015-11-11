@@ -173,7 +173,7 @@ class MiqScheduleWorker::Jobs
   end
 
   def miq_schedule_queue_scheduled_work(schedule_id, rufus_job)
-    MiqSchedule.queue_scheduled_work(schedule_id, rufus_job.job_id, rufus_job.next_time, rufus_job.opts)
+    MiqSchedule.queue_scheduled_work(schedule_id, rufus_job.job_id, rufus_job.next_time.to_i, rufus_job.opts)
   end
 
   def ldap_server_sync_data_from_timer
