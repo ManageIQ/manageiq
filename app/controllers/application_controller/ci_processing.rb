@@ -752,13 +752,24 @@ module ApplicationController::CiProcessing
     @userid = ""
     @password = ""
     @verify = ""
+    @client_id = ""
+    @client_key = ""
+    @azure_tenant_id = ""
     if session[:type] == "hosts"
       @discover_type = Host.host_discovery_types
+    elsif session[:type] == "ems"
+      if request.parameters[:controller] == 'ems_infra'
+        @discover_type = ExtManagementSystem.ems_infra_discovery_types
+      else
+        @discover_type = ExtManagementSystem.ems_cloud_discovery_types
+        @discover_type_selected = @discover_type.first
+      end
     else
       @discover_type = ExtManagementSystem.ems_infra_discovery_types
     end
     discover_type = []
     @discover_type_checked = []        # to keep track of checked items when start button is pressed
+    @discover_type_selected = nil
     if params["start"]
       audit = {:event => "ms_and_host_discovery", :target_class => "Host", :userid => session[:userid]}
       if request.parameters[:controller] != "ems_cloud"
@@ -792,8 +803,19 @@ module ApplicationController::CiProcessing
       end
       @in_a_form = true
       drop_breadcrumb(:name => "#{title} Discovery", :url => "/host/discover")
+      @discover_type_selected = params[:discover_type_selected]
 
-      if request.parameters[:controller] == "ems_cloud" || params[:discover_type_ipmi].to_s == "1"
+      if request.parameters[:controller] == "ems_cloud" && params[:discover_type_selected] == ExtManagementSystem::EMS_CLOUD_DISCOVERY_TYPES['azure']
+        @client_id = params[:client_id] if params[:client_id]
+        @client_key = params[:client_key] if params[:client_key]
+        @azure_tenant_id = params[:azure_tenant_id] if params[:azure_tenant_id]
+
+        if @client_id == "" || @client_key == "" || @azure_tenant_id == ""
+          add_flash(_("%s are required") % "Client ID, Client Key and Azure Tenant ID", :error)
+          render :action => 'discover'
+          return
+        end
+      elsif request.parameters[:controller] == "ems_cloud" || params[:discover_type_ipmi].to_s == "1"
         @userid = params[:userid] if  params[:userid]
         @password = params[:password] if params[:password]
         @verify = params[:verify] if params[:verify]
@@ -827,7 +849,11 @@ module ApplicationController::CiProcessing
             end
             Host.discoverByIpRange(from_ip, to_ip, options)
           else
-            ManageIQ::Providers::Amazon::CloudManager.discover_queue(@userid, @password)
+            if params[:discover_type_selected] == ExtManagementSystem::EMS_CLOUD_DISCOVERY_TYPES['azure']
+              ManageIQ::Providers::Azure::CloudManager.discover_queue(@client_id, @client_key, @azure_tenant_id)
+            else
+              ManageIQ::Providers::Amazon::CloudManager.discover_queue(@userid, @password)
+            end
           end
         rescue StandardError => bang
           #       @flash_msg = "'Host Discovery' returned: " + bang.message; @flash_error = true
@@ -851,12 +877,7 @@ module ApplicationController::CiProcessing
     if type == "hosts"
       return ui_lookup(:host_types => "hosts")
     else
-      controller_table = ui_lookup(:tables => controller)
-      if controller == "ems_cloud"
-        return "Amazon #{controller_table}"
-      else
-        return controller_table
-      end
+      return ui_lookup(:tables => controller)
     end
   end
 
@@ -899,9 +920,17 @@ module ApplicationController::CiProcessing
       elsif params[:to_fourth] && params[:to_fourth] =~ /[\D]/
         page << "$('#to_fourth').val('#{j_str(params[:to_fourth].gsub(/[\D]/, ""))}');"
       end
-      if request.parameters[:controller] == "ems_cloud" || (params[:discover_type_ipmi] && params[:discover_type_ipmi].to_s == "1")
-        @ipmi = true
-        page << javascript_show("discover_credentials")
+      if (request.parameters[:controller] == "ems_cloud" && params[:discover_type_selected]) || (params[:discover_type_ipmi] && params[:discover_type_ipmi].to_s == "1")
+        if params[:discover_type_selected] && params[:discover_type_selected] == ExtManagementSystem::EMS_CLOUD_DISCOVERY_TYPES['azure']
+          page << javascript_hide("discover_credentials")
+          page << javascript_show("discover_azure_credentials")
+        elsif params[:discover_type_selected] && params[:discover_type_selected] == ExtManagementSystem::EMS_CLOUD_DISCOVERY_TYPES['amazon']
+          page << javascript_hide("discover_azure_credentials")
+          page << javascript_show("discover_credentials")
+        else
+          @ipmi = true
+          page << javascript_show("discover_credentials")
+        end
       elsif params[:discover_type_ipmi] && params[:discover_type_ipmi].to_s == "null"
         @ipmi = false
         page << javascript_hide("discover_credentials")
