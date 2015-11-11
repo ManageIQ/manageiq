@@ -121,11 +121,13 @@ describe ManageIQ::Providers::Azure::CloudManager do
     @cn.cloud_subnets.size.should eq(1)
     @subnet = @cn.cloud_subnets.where(:name => "default").first
     @subnet.should have_attributes(
-      :name    => "default",
-      :ems_ref => "/subscriptions/462f2af8-e67e-40c6-9fbf-02824d1dd485"\
-                  "/resourceGroups/Chef-Prod/providers/Microsoft.Network"\
-                  "/virtualNetworks/Chef-Prod/subnets/default",
-      :cidr    => "10.2.0.0/24"
+      :name              => "default",
+      :ems_ref           => "/subscriptions/462f2af8-e67e-40c6-9fbf-02824d1dd485"\
+                             "/resourceGroups/Chef-Prod/providers/Microsoft.Network"\
+                             "/virtualNetworks/Chef-Prod/subnets/default",
+      :cidr              => "10.2.0.0/24",
+      :availability_zone => @az
+
     )
   end
 
