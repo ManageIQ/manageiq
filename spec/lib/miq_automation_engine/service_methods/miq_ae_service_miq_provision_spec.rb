@@ -22,10 +22,7 @@ module MiqAeServiceMiqProvisionSpec
     end
 
     it "#miq_request" do
-      miq_provision_request = FactoryGirl.create(:miq_provision_request, :provision_type => 'template', :state => 'pending', :status => 'Ok', :src_vm_id => @vm_template.id, :userid => @user.userid)
-
-      miq_request = miq_provision_request.create_request
-      miq_provision_request.save!
+      miq_provision_request = FactoryGirl.create(:miq_provision_request, :provision_type => 'template', :state => 'pending', :status => 'Ok', :src_vm_id => @vm_template.id, :requester => @user)
 
       @miq_provision.miq_provision_request = miq_provision_request
       @miq_provision.save!
@@ -33,12 +30,12 @@ module MiqAeServiceMiqProvisionSpec
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision'].miq_request"
       @ae_method.update_attributes(:data => method)
       ae_object = invoke_ae.root(@ae_result_key)
-      ae_object.should be_kind_of(MiqAeMethodService::MiqAeServiceMiqRequest)
-      [:id].each { |method| ae_object.send(method).should == miq_request.send(method) }
+      expect(ae_object).to be_kind_of(MiqAeMethodService::MiqAeServiceMiqRequest)
+      expect(ae_object.id).to eq(miq_provision_request.id)
     end
 
     it "#miq_provision_request" do
-      miq_provision_request = FactoryGirl.create(:miq_provision_request, :provision_type => 'template', :state => 'pending', :status => 'Ok', :src_vm_id => @vm_template.id, :userid => @user.userid)
+      miq_provision_request = FactoryGirl.create(:miq_provision_request, :provision_type => 'template', :state => 'pending', :status => 'Ok', :src_vm_id => @vm_template.id, :requester => @user)
       @miq_provision.miq_provision_request = miq_provision_request
       @miq_provision.save!
 

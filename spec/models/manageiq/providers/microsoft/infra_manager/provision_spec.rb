@@ -28,7 +28,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Provision do
         :cpu_limit             => -1,
         :cpu_reserve           => 0)
       @vm          = FactoryGirl.create(:vm_microsoft, :name => "vm1",       :location => "abc/def.xml")
-      @pr          = FactoryGirl.create(:miq_provision_request, :userid => @admin.userid, :src_vm_id => @vm_template.id)
+      @pr          = FactoryGirl.create(:miq_provision_request, :requester => @admin, :src_vm_id => @vm_template.id)
       @options = {
         :pass           => 1,
         :vm_name        => @target_vm_name,

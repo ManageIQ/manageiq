@@ -14,7 +14,6 @@ class MiqRequest < ActiveRecord::Base
 
   default_value_for(:message)       { |r| "#{r.class::TASK_DESCRIPTION} - Request Created" }
   default_value_for :options,       {}
-  default_value_for(:requester, &:get_user)
   default_value_for :request_state, 'pending'
   default_value_for(:request_type)  { |r| r.request_types.first }
   default_value_for :status,        'Ok'
@@ -95,10 +94,13 @@ class MiqRequest < ActiveRecord::Base
   end
 
   def initialize_attributes
-    self.requester_name ||= requester.name                         if requester.kind_of?(User)
-    self.requester ||= User.find_by_name(self.requester_name) if self.requester_name.kind_of?(String)
     self.approval_state ||= "pending_approval"
-    miq_approvals << build_default_approval
+    miq_approvals << build_default_approval if miq_approvals.empty?
+
+    return unless requester
+    self.requester_name ||= requester.name
+    self.userid         ||= requester.userid
+    self.tenant         ||= requester.current_tenant
   end
 
   # TODO: Move call_automate_event_queue from MiqProvisionWorkflow to be done here automagically
@@ -113,7 +115,7 @@ class MiqRequest < ActiveRecord::Base
   # end
 
   def must_have_user
-    errors.add(:userid, "must have valid user") unless userid && User.exists?(:userid => userid)
+    errors.add(:userid, "must have valid user") unless requester
   end
 
   def call_automate_event_queue(event_name)
@@ -292,7 +294,6 @@ class MiqRequest < ActiveRecord::Base
   end
 
   def create_request
-    self.requester = get_user
     self
   end
 
@@ -424,31 +425,24 @@ class MiqRequest < ActiveRecord::Base
   end
 
   # Helper method when not using workflow
-  def self.make_request(request, values, requester_id, auto_approve = false)
+  def self.make_request(request, values, requester, auto_approve = false)
     if request
-      update_request(request, values, requester_id)
+      update_request(request, values, requester)
     else
-      create_request(values, requester_id, auto_approve)
+      create_request(values, requester, auto_approve)
     end
   end
 
-  def self.create_request(values, requester_id, auto_approve = false)
-    if requester_id.kind_of?(User)
-      requester = requester_id
-      requester_id = requester.userid
-    else
-      requester = User.find_by_userid(requester_id)
-    end
+  def self.create_request(values, requester, auto_approve = false)
     values[:src_ids] = values[:src_ids].to_miq_a unless values[:src_ids].nil?
     request = new(:options      => values,
-                  :userid       => requester_id,
+                  :requester    => requester,
                   :request_type => request_types.first)
     request.save!
 
     request.set_description
-    request.create_request
 
-    request.log_request_success(requester_id, :created)
+    request.log_request_success(requester, :created)
 
     request.call_automate_event_queue("request_created")
     request.approve(requester, "Auto-Approved") if auto_approve
@@ -457,12 +451,12 @@ class MiqRequest < ActiveRecord::Base
   end
 
   # Helper method when not using workflow
-  def self.update_request(request, values, requester_id)
+  def self.update_request(request, values, requester)
     request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
     request.update_attribute(:options, request.options.merge(values))
     request.set_description(true)
 
-    request.log_request_success(requester_id, :updated)
+    request.log_request_success(requester, :updated)
 
     request.call_automate_event_queue("request_updated")
     request

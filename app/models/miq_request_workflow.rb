@@ -62,15 +62,15 @@ class MiqRequestWorkflow
   end
 
   # Helper method when not using workflow
-  def make_request(request, values, requester_id = nil, auto_approve = false)
+  def make_request(request, values, requester = nil, auto_approve = false)
     if request
-      update_request(request, values, requester_id)
+      update_request(request, values, requester)
     else
-      create_request(values, requester_id, auto_approve)
+      create_request(values, requester, auto_approve)
     end
   end
 
-  def create_request(values, _requester_id = nil, auto_approve = false)
+  def create_request(values, _requester = nil, auto_approve = false)
     return false unless validate(values)
 
     set_request_values(values)
@@ -78,7 +78,7 @@ class MiqRequestWorkflow
 
     yield if block_given?
 
-    request = request_class.create(:options => values, :userid => @requester.userid, :request_type => request_type.to_s)
+    request = request_class.create(:options => values, :requester => @requester, :request_type => request_type.to_s)
     begin
       request.save!  # Force validation errors to raise now
     rescue => err
@@ -88,7 +88,6 @@ class MiqRequestWorkflow
     end
 
     request.set_description
-    request.create_request
 
     request.log_request_success(@requester, :created)
 
@@ -98,7 +97,7 @@ class MiqRequestWorkflow
     request
   end
 
-  def update_request(request, values, _requester_id = nil)
+  def update_request(request, values, _requester = nil)
     request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
 
     return false unless validate(values)
@@ -113,7 +112,7 @@ class MiqRequestWorkflow
     request.update_attribute(:options, request.options.merge(values))
     request.set_description(true)
 
-    request.log_request_success(@requester.userid, :updated)
+    request.log_request_success(@requester, :updated)
 
     request.call_automate_event_queue("request_updated")
     request

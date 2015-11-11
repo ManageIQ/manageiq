@@ -5,14 +5,17 @@ describe MiqHostProvisionRequest do
     expect { FactoryGirl.create(:miq_host_provision_request, :userid => 'barney') }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
+  it "validates a requester is specified" do
+    expect { FactoryGirl.create(:miq_host_provision_request) }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
   context "with a valid userid and host," do
     before(:each) do
       @user = FactoryGirl.create(:user, :role => "admin")
       # approver is also an admin
       @approver = FactoryGirl.create(:user_miq_request_approver, :miq_groups => @user.miq_groups)
 
-      @pr = FactoryGirl.create(:miq_host_provision_request, :userid => @user.userid)
-      @pr.create_request
+      @pr = FactoryGirl.create(:miq_host_provision_request, :requester => @user)
     end
 
     it "should create an MiqHostProvisionRequest" do
@@ -206,6 +209,6 @@ describe MiqHostProvisionRequest do
   private
 
   def request(params = {})
-    FactoryGirl.create(:miq_host_provision_request, params.merge(:userid => FactoryGirl.create(:user).userid))
+    FactoryGirl.create(:miq_host_provision_request, params.merge(:requester => FactoryGirl.create(:user)))
   end
 end

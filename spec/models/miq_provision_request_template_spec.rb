@@ -8,7 +8,7 @@ describe MiqProvisionRequestTemplate do
   end
   let(:parent_svc)       { FactoryGirl.create(:service, :guid => MiqUUID.new_guid) }
   let(:service_resource) { FactoryGirl.create(:service_resource) }
-  let(:service_template_request) { FactoryGirl.create(:service_template_provision_request, :userid => user.userid) }
+  let(:service_template_request) { FactoryGirl.create(:service_template_provision_request, :requester => user) }
   let(:service_task) do
     FactoryGirl.create(:service_template_provision_task,
                        :status       => 'Ok',
@@ -19,9 +19,9 @@ describe MiqProvisionRequestTemplate do
   end
   let(:provision_request_template) do
     FactoryGirl.create(:miq_provision_request_template,
-                       :userid    => user.userid,
-                       :src_vm_id => template.id,
-                       :options   => {
+                       :requester    => user,
+                       :src_vm_id    => template.id,
+                       :options      => {
                          :src_vm_id           => template.id,
                          :service_resource_id => service_resource.id
                        })

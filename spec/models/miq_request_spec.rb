@@ -25,7 +25,7 @@ describe MiqRequest do
   context "A new request" do
     let(:event_name)   { "hello" }
     let(:host_request) { FactoryGirl.build(:miq_host_provision_request, :options => {:src_host_ids => [1]}) }
-    let(:request)      { FactoryGirl.create(:vm_migrate_request, :userid => fred.userid) }
+    let(:request)      { FactoryGirl.create(:vm_migrate_request, :requester => fred) }
     let(:ems)          { FactoryGirl.create(:ems_vmware) }
     let(:template)     { FactoryGirl.create(:template_vmware, :ext_management_system => ems) }
 
@@ -117,7 +117,7 @@ describe MiqRequest do
     end
 
     context "using Polymorphic Resource" do
-      let(:provision_request) { FactoryGirl.create(:miq_provision_request, :userid => fred.userid, :src_vm_id => template.id).create_request }
+      let(:provision_request) { FactoryGirl.create(:miq_provision_request, :requester => fred, :src_vm_id => template.id) }
 
       it { expect(provision_request.workflow_class).to eq(ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow) }
       describe("#get_options")          { it { expect(provision_request.get_options).to eq(:number_of_vms => 1) } }
@@ -255,7 +255,7 @@ describe MiqRequest do
       MiqApproval.any_instance.stub(:authorized? => true)
       MiqServer.stub(:my_zone => "default")
 
-      provision_request = FactoryGirl.create(:miq_provision_request, :userid => fred.userid, :src_vm_id => template.id)
+      provision_request = FactoryGirl.create(:miq_provision_request, :requester => fred, :src_vm_id => template.id)
 
       provision_request.deny(fred, "Why Not?")
 
@@ -273,7 +273,7 @@ describe MiqRequest do
     context 'VM provisioning' do
       let(:description) { 'my original information' }
       let(:template)    { FactoryGirl.create(:template_vmware, :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication)) }
-      let(:request)     { FactoryGirl.build(:miq_provision_request, :userid => fred.userid, :description => description, :src_vm_id => template.id) }
+      let(:request)     { FactoryGirl.build(:miq_provision_request, :requester => fred, :description => description, :src_vm_id => template.id).tap(&:valid?) }
 
       it 'with 1 task' do
         request.options[:src_vm_id] = template.id
@@ -297,7 +297,7 @@ describe MiqRequest do
 
     it 'non VM provisioning' do
       description = 'Service Request'
-      request   = FactoryGirl.create(:service_template_provision_request, :description => description, :userid => fred.userid)
+      request = FactoryGirl.create(:service_template_provision_request, :description => description, :requester => fred)
       request.post_create_request_tasks
       expect(request.description).to eq(description)
     end

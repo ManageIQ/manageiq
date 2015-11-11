@@ -163,7 +163,7 @@ describe ApiController do
 
       template = FactoryGirl.create(:template_vmware, :name => "template1")
       request  = FactoryGirl.create(:miq_provision_request,
-                                    :userid      => api_config(:user),
+                                    :requester   => @user,
                                     :description => "sample provision",
                                     :src_vm_id   => template.id,
                                     :options     => options)

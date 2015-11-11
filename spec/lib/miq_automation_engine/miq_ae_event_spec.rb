@@ -119,7 +119,7 @@ module MiqAeEventSpec
 
       context "with MiqRequest event" do
         it "has tenant" do
-          request = FactoryGirl.create(:vm_reconfigure_request, :userid => user.userid)
+          request = FactoryGirl.create(:vm_reconfigure_request, :requester => user)
           args    = {:user_id      => user.id,
                      :miq_group_id => user.current_group.id,
                      :tenant_id    => user.current_tenant.id

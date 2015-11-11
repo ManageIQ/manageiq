@@ -11,7 +11,7 @@ module ServiceTemplateHelper
                                                     :service_type => 'atomic')
       options = value[:request]
       mprt = FactoryGirl.create(:miq_provision_request_template,
-                                :userid    => options[:userid],
+                                :requester => options[:requester],
                                 :src_vm_id => options[:src_vm_id],
                                 :options   => options)
       add_st_resource(item, mprt)
@@ -48,7 +48,7 @@ module ServiceTemplateHelper
     svc.service_resources.each(&:save)
   end
 
-  def build_service_template_request(root_st_name, userid, dialog_options = {})
+  def build_service_template_request(root_st_name, user, dialog_options = {})
     root = ServiceTemplate.find_by_name(root_st_name)
     return nil unless root
     options = {:src_id => root.id, :target_name => "barney"}.merge(dialog_options)
@@ -59,7 +59,7 @@ module ServiceTemplateHelper
                        :request_type   => 'clone_to_service',
                        :approval_state => 'approved',
                        :source_id      => root.id,
-                       :userid         => userid,
+                       :requester      => user,
                        :options        => options)
   end
 
