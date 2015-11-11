@@ -157,61 +157,22 @@ describe EmsCloudController do
       expect(response.body).to include('"name":"foo_openstack"')
     end
 
-    it 'strips whitespace from the name form field on create' do
+    it 'strips whitespace from name, hostname and api_port form fields on create' do
       MiqServer.stub(:my_zone).and_return("default")
       post :create,
            "button"           => "add",
-           "hostname"         => "host_openstack",
-           "name"             => "foo_openstack     ",
+           "hostname"         => "  host_openstack     ",
+           "name"             => "  foo_openstack     ",
            "emstype"          => "openstack",
            "provider_region"  => "",
-           "port"             => "5000",
+           "api_port"         => "   5000     ",
            "zone"             => "default",
            "default_userid"   => "foo",
            "default_password" => "[FILTERED]",
            "default_verify"   => "[FILTERED]"
 
       expect(response.status).to eq(200)
-      openstack = ManageIQ::Providers::Openstack::CloudManager.where(:hostname => 'host_openstack')
-      expect(openstack.to_a[0].name).to eq('foo_openstack')
-    end
-
-    it 'strips whitespace from the hostname form field on create' do
-      MiqServer.stub(:my_zone).and_return("default")
-      post :create,
-           "button"           => "add",
-           "hostname"         => "host_openstack     ",
-           "name"             => "foo_openstack",
-           "emstype"          => "openstack",
-           "provider_region"  => "",
-           "port"             => "5000",
-           "zone"             => "default",
-           "default_userid"   => "foo",
-           "default_password" => "[FILTERED]",
-           "default_verify"   => "[FILTERED]"
-
-      expect(response.status).to eq(200)
-      openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => 'foo_openstack')
-      expect(openstack.to_a[0].hostname).to eq('host_openstack')
-    end
-
-    it 'strips whitespace from the api port form field on create' do
-      MiqServer.stub(:my_zone).and_return("default")
-      post :create,
-           "button"           => "add",
-           "hostname"         => "host_openstack",
-           "name"             => "foo_openstack",
-           "emstype"          => "openstack",
-           "provider_region"  => "",
-           "api_port"         => "5000     ",
-           "zone"             => "default",
-           "default_userid"   => "foo",
-           "default_password" => "[FILTERED]",
-           "default_verify"   => "[FILTERED]"
-
-      expect(response.status).to eq(200)
-      openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => 'foo_openstack')
-      expect(openstack.to_a[0].port).to eq('5000')
+      expect(ManageIQ::Providers::Openstack::CloudManager.where(:hostname => 'host_openstack', :name => 'foo_openstack', :port => '5000').count).to eq(1)
     end
   end
 
