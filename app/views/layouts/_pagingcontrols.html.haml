@@ -18,7 +18,7 @@
                        options_for_select(@view.headers),
                        :class => "selectpicker")
       :javascript
-        miqSelectPickerEvent("sort_choice", "#{update_paging_url_parms(action_url)}", {beforeSend: true, complete: true})
+        miqSelectPickerEvent("sort_choice", "#{update_paging_url_parms(action_url, {}, true)}", {beforeSend: true, complete: true})
   - else
     - if @bottom_msg
       = h(@bottom_msg)
@@ -144,6 +144,6 @@
                    "data-width" => "auto",
                    :class       => "selectpicker")
       :javascript
-        miqSelectPickerEvent("ppsetting", "#{update_paging_url_parms(action_url)}", {beforeSend: true, complete: true})
+        miqSelectPickerEvent("ppsetting", "#{update_paging_url_parms(action_url, {}, true)}", {beforeSend: true, complete: true})
 :javascript
   miqInitSelectPicker();
