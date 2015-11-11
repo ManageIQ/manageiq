@@ -227,8 +227,8 @@ describe EmsCloudController do
                                        :default_password => default_creds[:password],
                                        :amqp_userid      => amqp_creds[:userid],
                                        :amqp_password    => amqp_creds[:password])
-      mocked_ems.should_receive(:supports_authentication?).with(:amqp).and_return(true)
-      mocked_ems.should_receive(:supports_authentication?).with(:oauth)
+      expect(mocked_ems).to receive(:supports_authentication?).with(:amqp).and_return(true)
+      expect(mocked_ems).to receive(:supports_authentication?).with(:oauth)
       expect(controller.send(:build_credentials, mocked_ems)).to eq(:default => default_creds, :amqp => amqp_creds)
     end
 
@@ -236,10 +236,10 @@ describe EmsCloudController do
       controller.instance_variable_set(:@_params,
                                        :default_userid => default_creds[:userid],
                                        :amqp_userid    => amqp_creds[:userid])
-      mocked_ems.should_receive(:authentication_password).and_return(default_creds[:password])
-      mocked_ems.should_receive(:authentication_password).with(:amqp).and_return(amqp_creds[:password])
-      mocked_ems.should_receive(:supports_authentication?).with(:amqp).and_return(true)
-      mocked_ems.should_receive(:supports_authentication?).with(:oauth)
+      expect(mocked_ems).to receive(:authentication_password).and_return(default_creds[:password])
+      expect(mocked_ems).to receive(:authentication_password).with(:amqp).and_return(amqp_creds[:password])
+      expect(mocked_ems).to receive(:supports_authentication?).with(:amqp).and_return(true)
+      expect(mocked_ems).to receive(:supports_authentication?).with(:oauth)
       expect(controller.send(:build_credentials, mocked_ems)).to eq(:default => default_creds, :amqp => amqp_creds)
     end
   end
@@ -253,7 +253,7 @@ describe EmsCloudController do
                                        :button    => "validate",
                                        :id        => mocked_ems.id,
                                        :cred_type => "default")
-      mocked_ems.should_receive(:authentication_check).with("default", :save => true)
+      expect(mocked_ems).to receive(:authentication_check).with("default", :save => true)
       controller.send(:update_ems_button_validate, mocked_ems)
     end
 
@@ -265,7 +265,7 @@ describe EmsCloudController do
                                        :id               => "new",
                                        :default_password => "[FILTERED]",
                                        :cred_type        => "default")
-      mocked_ems.should_receive(:authentication_check).with("default", :save => false)
+      expect(mocked_ems).to receive(:authentication_check).with("default", :save => false)
       controller.send(:update_ems_button_validate, mocked_ems)
     end
   end
