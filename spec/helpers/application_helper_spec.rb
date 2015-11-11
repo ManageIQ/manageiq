@@ -1260,10 +1260,9 @@ describe ApplicationHelper do
     end
     context "when the controller uses restful paths" do
       before do
-        FactoryGirl.create(:ems_amazon, :zone => Zone.seed)
-        @record = ManageIQ::Providers::Amazon::CloudManager.first
-
-        get("/ems_cloud", :display => 'images')
+        FactoryGirl.create(:ems_cloud, :zone => Zone.seed)
+        @record = ManageIQ::Providers::CloudManager.first
+        get("/ems_cloud/#{@record.id}", :display => 'images')
         Object.any_instance.stub(:query_string).and_return(@request.query_string)
         allow_message_expectations_on_nil
       end
