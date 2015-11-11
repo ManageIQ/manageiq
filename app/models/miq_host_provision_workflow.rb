@@ -19,12 +19,12 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     false
   end
 
-  def create_request(values, requester_id, auto_approve = false)
-    super(values, requester_id, auto_approve) { update_selected_storage_names(values) }
+  def create_request(values, requester, auto_approve = false)
+    super(values, requester, auto_approve) { update_selected_storage_names(values) }
   end
 
-  def update_request(request, values, requester_id)
-    super(request, values, requester_id) { update_selected_storage_names(values) }
+  def update_request(request, values, requester)
+    super(request, values, requester) { update_selected_storage_names(values) }
   end
 
   def get_source_and_targets(_refresh = false)

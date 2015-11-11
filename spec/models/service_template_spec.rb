@@ -188,18 +188,14 @@ describe ServiceTemplate do
     end
 
     it "should set the owner and group for the service template" do
-      @group        = FactoryGirl.create(:miq_group, :description => 'Test Group')
-      @user         = FactoryGirl.create(:user,
-                                         :name       => 'Test Service Owner',
-                                         :userid     => 'test_user',
-                                         :miq_groups => [@group])
+      @user         = FactoryGirl.create(:user_with_group)
       @test_service = FactoryGirl.create(:service, :name => 'test service')
       @test_service.evm_owner.should be_nil
       @st1.set_ownership(@test_service, @user)
       @test_service.reload
-      @test_service.evm_owner.name.should == 'Test Service Owner'
+      @test_service.evm_owner.name.should == @user.name
       @test_service.evm_owner.current_group.should_not be_nil
-      @test_service.evm_owner.current_group.description.should == 'Test Group'
+      @test_service.evm_owner.current_group.description.should == @user.current_group.description
     end
 
     it "should create an empty service template without a type" do
@@ -229,7 +225,7 @@ describe ServiceTemplate do
         admin = FactoryGirl.create(:user_admin)
 
         vm_template = Vm.first
-        ptr = FactoryGirl.create(:miq_provision_request_template, :userid => admin.userid, :src_vm_id => vm_template.id)
+        ptr = FactoryGirl.create(:miq_provision_request_template, :requester => admin, :src_vm_id => vm_template.id)
         @st1.add_resource(ptr)
       end
 
@@ -255,7 +251,7 @@ describe ServiceTemplate do
 
       user         = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
       @vm_template = FactoryGirl.create(:template_vmware, :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication))
-      @ptr = FactoryGirl.create(:miq_provision_request_template, :userid => user.userid, :src_vm_id => @vm_template.id)
+      @ptr = FactoryGirl.create(:miq_provision_request_template, :requester => user, :src_vm_id => @vm_template.id)
     end
 
     it 'unknown' do

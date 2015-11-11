@@ -12,7 +12,7 @@ module MiqAeServiceServiceTemplateProvisionRequestSpec
       @ae_method     = ::MiqAeMethod.first
       @ae_result_key = 'foo'
       @user          = FactoryGirl.create(:user_with_group, :name => 'Fred Flintstone',  :userid => 'fred')
-      @service_template_provision_request = FactoryGirl.create(:service_template_provision_request, :requester => @user, :userid => @user.userid)
+      @service_template_provision_request = FactoryGirl.create(:service_template_provision_request, :requester => @user)
     end
 
     def invoke_ae

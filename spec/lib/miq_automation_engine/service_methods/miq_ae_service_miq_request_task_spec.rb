@@ -28,7 +28,7 @@ module MiqAeServiceMiqRequestTaskSpec
       @ae_method.update_attributes(:data => method)
 
       user        = FactoryGirl.create(:user)
-      miq_request = FactoryGirl.create(:vm_migrate_request, :userid => user.userid)
+      miq_request = FactoryGirl.create(:vm_migrate_request, :requester => user)
       @miq_request_task.update_attributes(:miq_request => miq_request)
 
       result = invoke_ae.root(@ae_result_key)

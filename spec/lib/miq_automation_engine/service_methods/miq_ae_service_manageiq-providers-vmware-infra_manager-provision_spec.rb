@@ -35,19 +35,18 @@ module MiqAeServiceManageIQ_Providers_Vmware_InfraManager_ProvisionSpec
                                                     :provision_type => 'template',
                                                     :state => 'pending', :status => 'Ok',
                                                     :src_vm_id => @vm_template.id,
-                                                    :userid => @user.userid)
+                                                    :requester => @user)
         @miq_provision.miq_provision_request = @miq_provision_request
         @miq_provision.save!
         @miq_provision_request.save!
       end
 
       it "#miq_request" do
-        miq_request = @miq_provision_request.create_request
         method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision'].miq_request"
         @ae_method.update_attributes(:data => method)
         ae_object = invoke_ae.root(@ae_result_key)
-        ae_object.should be_kind_of(MiqAeMethodService::MiqAeServiceMiqRequest)
-        [:id].each { |meth| ae_object.send(meth).should == miq_request.send(meth) }
+        expect(ae_object).to be_kind_of(MiqAeMethodService::MiqAeServiceMiqRequest)
+        expect(ae_object.id).to eq(@miq_provision_request.id)
       end
 
       it "#miq_provision_request" do

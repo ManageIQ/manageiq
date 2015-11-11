@@ -25,7 +25,7 @@ describe MiqApproval do
       approval.stub(:authorized?).and_return(false)
       expect { approval.approve(approver, reason) }.to raise_error("not authorized")
 
-      miq_request = FactoryGirl.create(:vm_migrate_request, :userid => user.userid)
+      miq_request = FactoryGirl.create(:vm_migrate_request, :requester => user)
       approval.miq_request = miq_request
       approval.stub(:authorized?).and_return(true)
       Timecop.freeze do
@@ -42,7 +42,7 @@ describe MiqApproval do
     it "with an approver's own request" do
       vm_template = FactoryGirl.create(:template_vmware)
       user        = FactoryGirl.create(:user_miq_request_approver)
-      request     = FactoryGirl.create(:miq_provision_request, :provision_type => 'template', :state => 'pending', :status => 'Ok', :src_vm_id => vm_template.id, :userid => user.userid)
+      request     = FactoryGirl.create(:miq_provision_request, :provision_type => 'template', :state => 'pending', :status => 'Ok', :src_vm_id => vm_template.id, :requester => user)
       approval    = FactoryGirl.create(:miq_approval, :miq_request => request)
 
       expect { approval.approve(user, 'Why Not') }.to_not raise_error
@@ -51,7 +51,7 @@ describe MiqApproval do
     it "with an approver's object'" do
       vm_template = FactoryGirl.create(:template_vmware)
       user        = FactoryGirl.create(:user_miq_request_approver)
-      request     = FactoryGirl.create(:miq_provision_request, :provision_type => 'template', :state => 'pending', :status => 'Ok', :src_vm_id => vm_template.id, :userid => user.userid)
+      request     = FactoryGirl.create(:miq_provision_request, :provision_type => 'template', :state => 'pending', :status => 'Ok', :src_vm_id => vm_template.id, :requester => user)
       approval    = FactoryGirl.create(:miq_approval, :miq_request => request)
 
       expect { approval.approve(user, 'Why Not') }.to_not raise_error
@@ -68,7 +68,7 @@ describe MiqApproval do
     approval.stub(:authorized?).and_return(false)
     expect { approval.deny(approver, reason) }.to raise_error("not authorized")
 
-    miq_request = FactoryGirl.create(:vm_migrate_request, :userid => user.userid)
+    miq_request = FactoryGirl.create(:vm_migrate_request, :requester => user)
     approval.miq_request = miq_request
     approval.stub(:authorized?).and_return(true)
     Timecop.freeze do

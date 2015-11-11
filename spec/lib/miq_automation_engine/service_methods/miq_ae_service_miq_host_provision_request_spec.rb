@@ -15,7 +15,7 @@ module MiqAeServiceMiqHostProvisionRequestSpec
       @ae_result_key = 'foo'
 
       @user                       = FactoryGirl.create(:user_with_group)
-      @miq_host_provision_request = FactoryGirl.create(:miq_host_provision_request, :provision_type => 'host_pxe_install', :state => 'pending', :status => 'Ok', :userid => @user.userid)
+      @miq_host_provision_request = FactoryGirl.create(:miq_host_provision_request, :provision_type => 'host_pxe_install', :state => 'pending', :status => 'Ok', :requester => @user)
     end
 
     def invoke_ae
@@ -23,14 +23,13 @@ module MiqAeServiceMiqHostProvisionRequestSpec
     end
 
     it "#miq_request" do
-      miq_request = @miq_host_provision_request.create_request
       @miq_host_provision_request.save!
 
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_host_provision_request'].miq_request"
       @ae_method.update_attributes(:data => method)
       ae_object = invoke_ae.root(@ae_result_key)
-      ae_object.should be_kind_of(MiqAeMethodService::MiqAeServiceMiqRequest)
-      [:id].each { |method| ae_object.send(method).should == miq_request.send(method) }
+      expect(ae_object).to be_kind_of(MiqAeMethodService::MiqAeServiceMiqRequest)
+      expect(ae_object.id).to eq(@miq_host_provision_request.id)
     end
 
     it "#miq_host_provisions" do

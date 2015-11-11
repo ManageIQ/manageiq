@@ -7,7 +7,7 @@ describe ServiceTemplateProvisionTask do
 
       @request = FactoryGirl.create(:service_template_provision_request,
                                     :description => 'Service Request',
-                                    :userid      => @admin.userid)
+                                    :requester   => @admin)
       @task_0 = create_stp('Task 0 (Top)')
       @task_1 = create_stp('Task 1', 'pending', 7, 1)
       @task_1_1 = create_stp('Task 1 - 1', 'pending', 1, 3)

@@ -6,7 +6,7 @@ describe ServiceReconfigureTask do
   let(:service)  { FactoryGirl.create(:service, :name => 'Test Service', :service_template => template) }
 
   let(:request) do
-    ServiceReconfigureRequest.create(:userid       => user.userid,
+    ServiceReconfigureRequest.create(:requester    => user,
                                      :options      => {:src_id => service.id},
                                      :request_type => 'service_reconfigure')
   end
