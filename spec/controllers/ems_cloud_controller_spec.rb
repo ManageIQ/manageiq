@@ -216,27 +216,10 @@ describe EmsCloudController do
     end
   end
 
-  context "#build_credentials" do
+  context "#build_credentials only contains credentials that it supports and has a username for in params" do
     let(:mocked_ems)    { mock_model(ManageIQ::Providers::Openstack::CloudManager) }
     let(:default_creds) { {:userid => "default_userid", :password => "default_password"} }
     let(:amqp_creds)    { {:userid => "amqp_userid",    :password => "amqp_password"} }
-
-    it "uses params[:default_password] for validation if one exists" do
-      controller.instance_variable_set(:@_params,
-                                       :default_userid   => default_creds[:userid],
-                                       :default_password => default_creds[:password])
-      mocked_ems.should_receive(:supports_authentication?).with(:amqp)
-      mocked_ems.should_receive(:supports_authentication?).with(:oauth)
-      expect(controller.send(:build_credentials, mocked_ems)).to include(:default => default_creds)
-    end
-
-    it "uses the stored password for validation if params[:default_password] does not exist" do
-      controller.instance_variable_set(:@_params, :default_userid => default_creds[:userid])
-      mocked_ems.should_receive(:authentication_password).and_return(default_creds[:password])
-      mocked_ems.should_receive(:supports_authentication?).with(:amqp)
-      mocked_ems.should_receive(:supports_authentication?).with(:oauth)
-      expect(controller.send(:build_credentials, mocked_ems)).to include(:default => default_creds)
-    end
 
     it "uses the passwords from params for validation if they exist" do
       controller.instance_variable_set(:@_params,
@@ -258,20 +241,6 @@ describe EmsCloudController do
       mocked_ems.should_receive(:supports_authentication?).with(:amqp).and_return(true)
       mocked_ems.should_receive(:supports_authentication?).with(:oauth)
       expect(controller.send(:build_credentials, mocked_ems)).to eq(:default => default_creds, :amqp => amqp_creds)
-    end
-
-    it "uses the stored passwords/passwords from params to do validation" do
-      controller.instance_variable_set(:@_params,
-                                       :default_userid   => "default_userid",
-                                       :default_password => "default_password2",
-                                       :amqp_userid      => "amqp_userid")
-      mocked_ems.should_receive(:authentication_password).with(:amqp).and_return('amqp_password')
-      default_creds = {:userid => "default_userid", :password => "default_password2"}
-      amqp_creds = {:userid => "amqp_userid", :password => "amqp_password"}
-      mocked_ems.should_receive(:supports_authentication?).with(:amqp).and_return(true)
-      mocked_ems.should_receive(:supports_authentication?).with(:oauth)
-      expect(controller.send(:build_credentials, mocked_ems)).to include(:default => default_creds,
-                                                                         :amqp    => amqp_creds)
     end
   end
 
