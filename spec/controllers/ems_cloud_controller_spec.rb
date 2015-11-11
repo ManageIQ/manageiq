@@ -73,13 +73,13 @@ describe EmsCloudController do
              "emstype"          => "openstack",
              "provider_region"  => "",
              "port"             => "5000",
-             "default_userid"   => "foo",
+             "default_userid"   => "bar",
              "default_password" => "[FILTERED]",
              "default_verify"   => "[FILTERED]"
       end.not_to change { Authentication.count }
 
       expect(response.status).to eq(200)
-      expect(openstack.authentications.first).to have_attributes(:userid => "foo", :password => "[FILTERED]")
+      expect(openstack.authentications.first).to have_attributes(:userid => "bar", :password => "[FILTERED]")
     end
 
     it "validates credentials for a new record" do
