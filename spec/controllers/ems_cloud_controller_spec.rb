@@ -25,23 +25,24 @@ describe EmsCloudController do
 
     it 'creates on post' do
       expect do
-        post :create,           "button"               => "add",
-                                "name"                 => "foo",
-                                "emstype"              => "ec2",
-                                "provider_region"      => "ap-southeast-1",
-                                "port"                 => "",
-                                "zone"                 => "default",
-                                "default_userid"       => "foo",
-                                "default_password"     => "[FILTERED]",
-                                "default_verify"       => "[FILTERED]",
-                                "metrics_userid"       => "",
-                                "metrics_password"     => "[FILTERED]",
-                                "metrics_verify"       => "[FILTERED]",
-                                "amqp_userid"          => "",
-                                "amqp_password"        => "[FILTERED]",
-                                "amqp_verify"          => "[FILTERED]",
-                                "ssh_keypair_userid"   => "",
-                                "ssh_keypair_password" => "[FILTERED]"
+        post :create,
+             "button"               => "add",
+             "name"                 => "foo",
+             "emstype"              => "ec2",
+             "provider_region"      => "ap-southeast-1",
+             "port"                 => "",
+             "zone"                 => "default",
+             "default_userid"       => "foo",
+             "default_password"     => "[FILTERED]",
+             "default_verify"       => "[FILTERED]",
+             "metrics_userid"       => "",
+             "metrics_password"     => "[FILTERED]",
+             "metrics_verify"       => "[FILTERED]",
+             "amqp_userid"          => "",
+             "amqp_password"        => "[FILTERED]",
+             "amqp_verify"          => "[FILTERED]",
+             "ssh_keypair_userid"   => "",
+             "ssh_keypair_password" => "[FILTERED]"
       end.to change { ManageIQ::Providers::Amazon::CloudManager.count }.by(1)
     end
 
@@ -136,6 +137,7 @@ describe EmsCloudController do
       controller.stub(:check_privileges).and_return(true)
       controller.stub(:assert_privileges).and_return(true)
     end
+
     it 'gets the ems cloud form fields on a get' do
       MiqServer.stub(:my_zone).and_return("default")
       post :create,
@@ -183,6 +185,7 @@ describe EmsCloudController do
       controller.stub(:check_privileges).and_return(true)
       controller.stub(:assert_privileges).and_return(true)
     end
+
     it 'gets the restful show link path' do
       MiqServer.stub(:my_zone).and_return("default")
       post :create,
@@ -229,10 +232,11 @@ describe EmsCloudController do
            "id"               => openstack.to_a[0].id
 
       expect(response.status).to eq(200)
-      show_link_actual_path = controller.send(:show_link, openstack.to_a[0], :display=>"timeline")
+      show_link_actual_path = controller.send(:show_link, openstack.to_a[0], :display => "timeline")
       expect(show_link_actual_path).to eq("/ems_cloud/#{openstack.to_a[0].id}?display=timeline")
     end
   end
+
   context "#build_credentials" do
     let(:mocked_ems) { mock_model(ManageIQ::Providers::Openstack::CloudManager) }
     it "uses params[:default_password] for validation if one exists" do
