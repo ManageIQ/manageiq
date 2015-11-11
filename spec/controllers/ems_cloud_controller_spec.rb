@@ -1,11 +1,13 @@
 require "spec_helper"
 
 describe EmsCloudController do
+  let(:server) { EvmSpecHelper.local_miq_server(:zone => zone) }
+  let(:zone)   { FactoryGirl.build(:zone) }
   describe "#create" do
     before do
+      server
       controller.stub(:check_privileges).and_return(true)
       controller.stub(:assert_privileges).and_return(true)
-      EvmSpecHelper.local_miq_server(:zone => Zone.seed)
       login_as FactoryGirl.create(:user, :features => "ems_cloud_new")
     end
 
@@ -31,7 +33,7 @@ describe EmsCloudController do
              "emstype"              => "ec2",
              "provider_region"      => "ap-southeast-1",
              "port"                 => "",
-             "zone"                 => "default",
+             "zone"                 => zone.name,
              "default_userid"       => "foo",
              "default_password"     => "[FILTERED]",
              "default_verify"       => "[FILTERED]",
@@ -55,7 +57,7 @@ describe EmsCloudController do
              "emstype"          => "openstack",
              "provider_region"  => "",
              "port"             => "5000",
-             "zone"             => "default",
+             "zone"             => zone.name,
              "default_userid"   => "foo",
              "default_password" => "[FILTERED]",
              "default_verify"   => "[FILTERED]"
@@ -119,7 +121,7 @@ describe EmsCloudController do
            "azure_tenant_id"  => "azure",
            "name"             => "foo_azure",
            "emstype"          => "azure",
-           "zone"             => "default",
+           "zone"             => zone.name,
            "default_userid"   => "foo",
            "default_password" => "[FILTERED]",
            "default_verify"   => "[FILTERED]"
@@ -132,14 +134,13 @@ describe EmsCloudController do
 
   describe "#ems_cloud_form_fields" do
     before do
-      Zone.seed
+      server
       described_class.any_instance.stub(:set_user_time_zone)
       controller.stub(:check_privileges).and_return(true)
       controller.stub(:assert_privileges).and_return(true)
     end
 
     it 'gets the ems cloud form fields on a get' do
-      MiqServer.stub(:my_zone).and_return("default")
       post :create,
            "button"           => "add",
            "hostname"         => "host_openstack",
@@ -147,7 +148,7 @@ describe EmsCloudController do
            "emstype"          => "openstack",
            "provider_region"  => "",
            "port"             => "5000",
-           "zone"             => "default",
+           "zone"             => zone.name,
            "default_userid"   => "foo",
            "default_password" => "[FILTERED]",
            "default_verify"   => "[FILTERED]"
@@ -160,7 +161,6 @@ describe EmsCloudController do
     end
 
     it 'strips whitespace from name, hostname and api_port form fields on create' do
-      MiqServer.stub(:my_zone).and_return("default")
       post :create,
            "button"           => "add",
            "hostname"         => "  host_openstack     ",
@@ -168,7 +168,7 @@ describe EmsCloudController do
            "emstype"          => "openstack",
            "provider_region"  => "",
            "api_port"         => "   5000     ",
-           "zone"             => "default",
+           "zone"             => zone.name,
            "default_userid"   => "foo",
            "default_password" => "[FILTERED]",
            "default_verify"   => "[FILTERED]"
@@ -180,14 +180,13 @@ describe EmsCloudController do
 
   describe "#show_link" do
     before do
-      Zone.seed
+      server
       described_class.any_instance.stub(:set_user_time_zone)
       controller.stub(:check_privileges).and_return(true)
       controller.stub(:assert_privileges).and_return(true)
     end
 
     it 'gets the restful show link path' do
-      MiqServer.stub(:my_zone).and_return("default")
       post :create,
            "button"           => "add",
            "hostname"         => "host_openstack",
@@ -195,7 +194,7 @@ describe EmsCloudController do
            "emstype"          => "openstack",
            "provider_region"  => "",
            "port"             => "5000",
-           "zone"             => "default",
+           "zone"             => zone.name,
            "default_userid"   => "foo",
            "default_password" => "[FILTERED]",
            "default_verify"   => "[FILTERED]"
@@ -207,7 +206,6 @@ describe EmsCloudController do
     end
 
     it 'gets the restful timeline link path' do
-      MiqServer.stub(:my_zone).and_return("default")
       session[:settings] = {:views =>{:vm_summary_cool => ""}}
       post :create,
            "button"           => "add",
@@ -216,7 +214,7 @@ describe EmsCloudController do
            "emstype"          => "openstack",
            "provider_region"  => "",
            "port"             => "5000",
-           "zone"             => "default",
+           "zone"             => zone.name,
            "default_userid"   => "foo",
            "default_password" => "[FILTERED]",
            "default_verify"   => "[FILTERED]"
