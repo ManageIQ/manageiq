@@ -63,8 +63,6 @@ class FlavorController < ApplicationController
       pfx = pfx_for_vm_button_pressed(params[:pressed])
       process_vm_buttons(pfx)
 
-      terminatevms if params[:pressed] == "instance_terminate"
-
       # Control transferred to another screen, so return
       return if ["#{pfx}_policy_sim", "#{pfx}_compare", "#{pfx}_tag",
                  "#{pfx}_retire", "#{pfx}_protect", "#{pfx}_ownership",
