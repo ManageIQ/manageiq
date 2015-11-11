@@ -1946,6 +1946,9 @@ class CatalogController < ApplicationController
         presenter[:set_visible_elements][:paging_div] = false
       end
     else
+      if @sb[:active_tree] == :sandt_tree
+        presenter[:set_visible_elements][:center_tb] = true
+      end
       presenter[:set_visible_elements][:form_buttons_div] = true
       presenter[:set_visible_elements][:pc_div_1] = true
       presenter[:set_visible_elements][:toolbar] = true
