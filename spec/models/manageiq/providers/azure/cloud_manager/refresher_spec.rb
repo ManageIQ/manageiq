@@ -7,7 +7,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
     @ems = FactoryGirl.create(:ems_azure, :zone => zone, :provider_region => "eastus")
     cred = {
       :userid   => "f895b5ef-3bb5-4366-8ce5-123456789012",
-      :password => "0+dVmFpJLU0T9gqFWDkWnX9MY3FPb5l1123456789012"
+      :password => "5YcZ1lwRmNPWgo82X%2F1l97Fe4VaBGi%2B123456789012"
     }
     @ems.authentications << FactoryGirl.create(:authentication, cred)
     @ems.update_attributes(:azure_tenant_id => "a50f9983-d1a2-4a8d-be7d-123456789012")
@@ -36,6 +36,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
       assert_specific_flavor
       assert_specific_vm_powered_on
       assert_specific_vm_powered_off
+      assert_specific_template
       assert_specific_orchestration_template
       assert_specific_orchestration_stack
     end
@@ -43,17 +44,18 @@ describe ManageIQ::Providers::Azure::CloudManager do
 
   def assert_table_counts
     ExtManagementSystem.count.should eql(1)
-    Flavor.count.should eql(25)
+    Flavor.count.should eql(33)
     AvailabilityZone.count.should eql(1)
-    VmOrTemplate.count.should eql(9)
+    VmOrTemplate.count.should eql(13)
     Vm.count.should eql(9)
+    MiqTemplate.count.should eql(4)
     Disk.count.should eql(11)
     GuestDevice.count.should eql(0)
-    Hardware.count.should eql(9)
+    Hardware.count.should eql(13)
     Network.count.should eql(15)
     OperatingSystem.count.should eql(9)
     Relationship.count.should eql(0)
-    MiqQueue.count.should eql(9)
+    MiqQueue.count.should eql(13)
     OrchestrationTemplate.count.should eql(3)
     OrchestrationStack.count.should eql(7)
     OrchestrationStackParameter.count.should eql(72)
@@ -66,10 +68,12 @@ describe ManageIQ::Providers::Azure::CloudManager do
       :api_version => nil,
       :uid_ems     => "a50f9983-d1a2-4a8d-be7d-123456789012"
     )
-    @ems.flavors.size.should eql(25)
+    @ems.flavors.size.should eql(33)
     @ems.availability_zones.size.should eql(1)
-    @ems.vms_and_templates.size.should eql(9)
+    @ems.vms_and_templates.size.should eql(13)
     @ems.vms.size.should eql(9)
+    @ems.miq_templates.size.should eq(4)
+
     @ems.orchestration_stacks.size.should eql(7)
     @ems.direct_orchestration_stacks.size.should eql(6)
   end
@@ -267,6 +271,61 @@ describe ManageIQ::Providers::Azure::CloudManager do
     v.hardware.guest_devices.size.should eql(0)
     v.hardware.nics.size.should eql(0)
     v.hardware.networks.size.should eql(2)
+  end
+
+  def assert_specific_template
+    name      = "Images/postgres-cont/postgres-osDisk"
+    @template = ManageIQ::Providers::Azure::CloudManager::Template.where(:name => name).first
+    @template.should have_attributes(
+      :template              => true,
+      :ems_ref               => "https://chefprod5120.blob.core.windows.net/system/"\
+                                "Microsoft.Compute/Images/postgres-cont/"\
+                                "postgres-osDisk.fcf3dcec-fb8d-49f5-9d8c-b15edcff704c.vhd",
+      :ems_ref_obj           => nil,
+      :uid_ems               => "https://chefprod5120.blob.core.windows.net/system/"\
+                                "Microsoft.Compute/Images/postgres-cont/"\
+                                "postgres-osDisk.fcf3dcec-fb8d-49f5-9d8c-b15edcff704c.vhd",
+      :vendor                => "Microsoft",
+      :power_state           => "never",
+      :location              => "eastus",
+      :tools_status          => nil,
+      :boot_time             => nil,
+      :standby_action        => nil,
+      :connection_state      => nil,
+      :cpu_affinity          => nil,
+      :memory_reserve        => nil,
+      :memory_reserve_expand => nil,
+      :memory_limit          => nil,
+      :memory_shares         => nil,
+      :memory_shares_level   => nil,
+      :cpu_reserve           => nil,
+      :cpu_reserve_expand    => nil,
+      :cpu_limit             => nil,
+      :cpu_shares            => nil,
+      :cpu_shares_level      => nil
+    )
+
+    @template.ext_management_system.should eq(@ems)
+    @template.operating_system.should eq(nil)
+    @template.custom_attributes.size.should eq(0)
+    @template.snapshots.size.should eq(0)
+
+    @template.hardware.should have_attributes(
+      :guest_os            => "Windows",
+      :guest_os_full_name  => nil,
+      :bios                => nil,
+      :annotation          => nil,
+      :memory_mb           => nil,
+      :disk_capacity       => nil,
+      :bitness             => 64,
+      :virtualization_type => nil,
+      :root_device_type    => nil
+    )
+
+    @template.hardware.disks.size.should eq(0)
+    @template.hardware.guest_devices.size.should eq(0)
+    @template.hardware.nics.size.should eq(0)
+    @template.hardware.networks.size.should eq(0)
   end
 
   def assert_specific_orchestration_template
