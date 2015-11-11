@@ -92,4 +92,22 @@ class ChargebackRateDetail < ApplicationRecord
     # Return parent's rate type
     chargeback_rate.rate_type unless chargeback_rate.nil?
   end
+
+  # New method created in order to show the rates in a easier to understand way
+  def show_rates
+    rate = self.rate.to_s
+    return detail_currency.code if rate.to_f.zero?
+    hr = case per_time
+         when "hourly"  then "Hour"
+         when "daily"   then "Day"
+         when "weekly"  then "Week"
+         when "monthly" then "Month"
+         when "yearly"  then "Year"
+         else raise "rate time unit of '#{per_time}' not supported"
+         end
+
+    rate_display = detail_currency.code + '/' + hr
+    rate_display_unit = rate_display + '/' + per_unit_display
+    per_unit.nil? ? rate_display : rate_display_unit
+  end
 end
