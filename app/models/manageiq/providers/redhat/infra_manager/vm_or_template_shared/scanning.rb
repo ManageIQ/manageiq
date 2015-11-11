@@ -31,7 +31,6 @@ module ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared::Scanning
   def proxies4job(job = nil)
     _log.debug "Enter (RHEVM)"
     msg = 'Perform SmartState Analysis on this VM'
-    embedded_msg = nil
 
     # If we do not get passed an model object assume it is a job guid
     if job && !job.kind_of?(ActiveRecord::Base)
@@ -44,9 +43,9 @@ module ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared::Scanning
     _log.debug "# proxies = #{proxies.length}"
 
     if proxies.empty?
-      msg = embedded_msg.nil? ? 'No active SmartProxies found to analyze this VM' : embedded_msg
+      msg = 'No active SmartProxies found to analyze this VM'
+      log_proxies(proxies, all_proxy_list, msg, job) if job
     end
-    log_proxies(proxies, all_proxy_list, msg, job) if proxies.empty? && job
 
     {:proxies => proxies.flatten, :message => msg}
   end
