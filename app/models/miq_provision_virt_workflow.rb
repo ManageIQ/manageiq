@@ -269,6 +269,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     update_field_visibility_linked_clone(options, f)
 
+    update_field_visibility_pxe_iso(f)
+
     # Update field :display value
     f.each { |k, v| show_fields(k, v) }
 
@@ -284,9 +286,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     # Update field :notes_display value
     f.each { |k, v| show_fields(k, v, :notes_display) }
 
-    # need to set required to false for the fields that are not being shown on screen,
-    # based upon ISO/PXE choices in provision tpe pulldown
-    update_field_required
 
     update_field_read_only(options)
   end
@@ -303,11 +302,12 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
   end
 
-  def update_field_required
-    fields(:service) do |fn, f, _dn, _d|
-      f[:required] =  supports_pxe? ? f[:required] : false if [:pxe_image_id, :pxe_server_id].include?(fn)
-      f[:required] =  supports_iso? ? f[:required] : false if [:iso_image_id].include?(fn)
-    end
+  def update_field_visibility_pxe_iso(f)
+    show_flag = self.supports_pxe? ? :edit : :hide
+    f[show_flag] += [:pxe_image_id, :pxe_server_id]
+
+    show_flag = self.supports_iso? ? :edit : :hide
+    f[show_flag] += [:iso_image_id]
   end
 
   def show_customize_fields_pxe(fields)
