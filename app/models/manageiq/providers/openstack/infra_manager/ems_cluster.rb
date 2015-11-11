@@ -67,16 +67,16 @@ class ManageIQ::Providers::Openstack::InfraManager::EmsCluster < ::EmsCluster
 
   # TODO: Assumes there is a single overcloud. Will need
   # to change this once we support multiple overclouds.
-  def overcloud
+  def cloud
     ext_management_system.provider.cloud_ems.first
   end
 
   def cloud_block_storage_disk_usage
-    overcloud.block_storage_disk_usage
+    cloud.block_storage_disk_usage
   end
 
   def cloud_object_storage_disk_usage
-    stack = ext_management_system.orchestration_stacks.find_by(:name => overcloud.name)
+    stack = ext_management_system.orchestration_stacks.find_by(:name => cloud.name)
     replicas = stack.parameters.find_by(:name => 'SwiftReplicas').value.to_i
     object_storage_count = stack.parameters.find_by(:name => 'ObjectStorageCount').value.to_i
     # The number of replicas depends on what was configured in swift as replicas
@@ -84,6 +84,6 @@ class ManageIQ::Providers::Openstack::InfraManager::EmsCluster < ::EmsCluster
     # is the minimum between the configured replicas and object storage nodes.
     # Note the controller node currently also serves as a swift storage node. So
     # this doesn't reflect true disk usage over the entire overcloud.
-    overcloud.object_storage_disk_usage([replicas, object_storage_count].min)
+    cloud.object_storage_disk_usage([replicas, object_storage_count].min)
   end
 end

@@ -254,12 +254,12 @@ module EmsClusterHelper::TextualSummary
   end
 
   def textual_block_storage_disk_usage
-    return nil unless @record.respond_to?(:block_storage?) && @record.block_storage?
+    return nil unless @record.respond_to?(:block_storage?) && @record.block_storage? && !@record.cloud.nil?
     {:value => number_to_human_size(@record.cloud_block_storage_disk_usage.bytes, :precision => 2)}
   end
 
   def textual_object_storage_disk_usage
-    return nil unless @record.respond_to?(:object_storage?) && @record.object_storage?
+    return nil unless @record.respond_to?(:object_storage?) && @record.object_storage? && !@record.cloud.nil?
     {:value => number_to_human_size(@record.cloud_object_storage_disk_usage.bytes, :precision => 2)}
   end
 
