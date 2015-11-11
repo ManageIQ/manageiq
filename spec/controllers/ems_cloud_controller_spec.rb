@@ -154,8 +154,8 @@ describe EmsCloudController do
            "default_verify"   => "[FILTERED]"
 
       expect(response.status).to eq(200)
-      openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => "foo_openstack")
-      get :ems_cloud_form_fields, "id" => openstack.to_a[0].id
+      openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => "foo_openstack").first
+      get :ems_cloud_form_fields, "id" => openstack.id
       expect(response.status).to eq(200)
       expect(response.body).to include('"name":"foo_openstack"')
     end
@@ -200,9 +200,9 @@ describe EmsCloudController do
            "default_verify"   => "[FILTERED]"
 
       expect(response.status).to eq(200)
-      openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => "foo_openstack")
-      show_link_actual_path = controller.send(:show_link, openstack.to_a[0])
-      expect(show_link_actual_path).to eq("/ems_cloud/#{openstack.to_a[0].id}")
+      openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => "foo_openstack").first
+      show_link_actual_path = controller.send(:show_link, openstack)
+      expect(show_link_actual_path).to eq("/ems_cloud/#{openstack.id}")
     end
 
     it 'gets the restful timeline link path' do
@@ -220,18 +220,18 @@ describe EmsCloudController do
            "default_verify"   => "[FILTERED]"
 
       expect(response.status).to eq(200)
-      openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => "foo_openstack")
-      show_link_actual_path = controller.send(:show_link, openstack.to_a[0])
-      expect(show_link_actual_path).to eq("/ems_cloud/#{openstack.to_a[0].id}")
+      openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => "foo_openstack").first
+      show_link_actual_path = controller.send(:show_link, openstack)
+      expect(show_link_actual_path).to eq("/ems_cloud/#{openstack.id}")
 
       post :show,
            "button"           => "timeline",
            "display"          => "timeline",
-           "id"               => openstack.to_a[0].id
+           "id"               => openstack.id
 
       expect(response.status).to eq(200)
-      show_link_actual_path = controller.send(:show_link, openstack.to_a[0], :display => "timeline")
-      expect(show_link_actual_path).to eq("/ems_cloud/#{openstack.to_a[0].id}?display=timeline")
+      show_link_actual_path = controller.send(:show_link, openstack, :display => "timeline")
+      expect(show_link_actual_path).to eq("/ems_cloud/#{openstack.id}?display=timeline")
     end
   end
 
