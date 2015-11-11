@@ -24,19 +24,17 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     log_header = "MIQ(#{self.class.name}.#{__method__}) Collecting data for EMS name: [#{@ems.name}] id: [#{@ems.id}]"
 
     $aws_log.info("#{log_header}...")
-    AWS.memoize do
-      get_flavors
-      get_availability_zones
-      get_key_pairs
-      get_stacks
-      get_cloud_networks
-      get_security_groups
-      get_private_images if @options["get_private_images"]
-      get_shared_images  if @options["get_shared_images"]
-      get_public_images  if @options["get_public_images"]
-      get_instances
-      get_floating_ips
-    end
+    get_flavors
+    get_availability_zones
+    get_key_pairs
+    get_stacks
+    get_cloud_networks
+    get_security_groups
+    get_private_images if @options["get_private_images"]
+    get_shared_images  if @options["get_shared_images"]
+    get_public_images  if @options["get_public_images"]
+    get_instances
+    get_floating_ips
     $aws_log.info("#{log_header}...Complete")
 
     filter_unused_disabled_flavors
@@ -471,7 +469,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     child_stacks = []
     resources = raw_resources.collect do |resource|
       physical_id = resource[:physical_resource_id]
-      child_stacks << physical_id if resource[:resource_type] == "AWS::CloudFormation::Stack"
+      child_stacks << physical_id if resource[:resource_type] == "Aws::CloudFormation::Stack"
       @data_index.fetch_path(:orchestration_stack_resources, physical_id)
     end
 

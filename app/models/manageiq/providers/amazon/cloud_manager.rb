@@ -55,15 +55,13 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     proxy_uri ||= VMDB::Util.http_proxy_uri
 
     require 'aws-sdk'
-    AWS.const_get(service).new(
+    Aws.const_get(service)::Resource.new(
       :access_key_id     => access_key_id,
       :secret_access_key => secret_access_key,
       :region            => region,
-      :proxy_uri         => proxy_uri,
-
       :logger            => $aws_log,
       :log_level         => :debug,
-      :log_formatter     => AWS::Core::LogFormatter.new(AWS::Core::LogFormatter.default.pattern.chomp)
+      :log_formatter     => Aws::Log::Formatter.new(Aws::Log::Formatter.default.pattern.chomp)
     )
   end
 
@@ -82,11 +80,11 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
 
   def translate_exception(err)
     case err
-    when AWS::EC2::Errors::SignatureDoesNotMatch
+    when Aws::EC2::Errors::SignatureDoesNotMatch
       MiqException::MiqHostError.new "SignatureMismatch - check your AWS Secret Access Key and signing method"
-    when AWS::EC2::Errors::AuthFailure
+    when Aws::EC2::Errors::AuthFailure
       MiqException::MiqHostError.new "Login failed due to a bad username or password."
-    when AWS::Errors::MissingCredentialsError
+    when Aws::Errors::MissingCredentialsError
       MiqException::MiqHostError.new "Missing credentials"
     else
       MiqException::MiqHostError.new "Unexpected response returned from system: #{err.message}"
@@ -98,7 +96,7 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
 
     begin
       # EC2 does Lazy Connections, so call a cheap function
-      with_provider_connection(options.merge(:auth_type => auth_type)) { |ec2| ec2.regions.map(&:name) }
+      with_provider_connection(options.merge(:auth_type => auth_type)) { |ec2| ec2.client.describe_regions.regions.map(&:region_name) }
     rescue => err
       miq_exception = translate_exception(err)
       raise unless miq_exception
