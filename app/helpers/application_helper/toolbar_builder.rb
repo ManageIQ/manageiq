@@ -496,6 +496,10 @@ class ApplicationHelper::ToolbarBuilder
     return true if id == 'miq_request_edit' &&
                    %w(ServiceReconfigureRequest ServiceTemplateProvisionRequest).include?(@miq_request.try(:type))
 
+    # hide power management buttons for Openstack::InfraManager
+    return true if %w(host_standby host_shutdown host_reboot host_start host_stop host_reset).include?(id) &&
+                   @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
+
     # only hide gtl button if they are not in @gtl_buttons
     return @gtl_buttons.include?(id) ? false : true if @gtl_buttons &&
                                                        ["view_grid", "view_tile", "view_list"].include?(id)
