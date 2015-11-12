@@ -12,3 +12,6 @@
 
 :javascript
   miq_tabs_init('#planning_tabs', '/miq_capacity/change_tab');
+- if @sb[:active_tab] != 'report'
+  :javascript
+    $('#toolbar').hide();

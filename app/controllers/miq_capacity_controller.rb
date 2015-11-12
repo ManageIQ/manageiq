@@ -137,7 +137,11 @@ class MiqCapacityController < ApplicationController
     end
     render :update do |page|
       page << javascript_pf_toolbar_reload('view_tb', v_tb)
-      page << "$('#toolbar').show();" if v_tb.present?
+      if @sb[:active_tab] == 'report' && v_tb.present?
+        page << "$('#toolbar').show();"
+      else
+        page << "$('#toolbar').hide();"
+      end
 
       if x_active_tree == :bottlenecks_tree && @sb[:active_tab] == "summary"
         # need to replace timeline div incase it wasn't there earlier
@@ -492,7 +496,7 @@ class MiqCapacityController < ApplicationController
 
     presenter[:reload_toolbars][:view] = v_tb
 
-    presenter[:set_visible_elements][:toolbar] = true
+    presenter[:set_visible_elements][:toolbar] = @sb[:active_tab] == 'report'
     presenter[:update_partials][:main_div] = r[:partial => 'utilization_tabs']
     presenter[:right_cell_text] = @right_cell_text
     presenter[:build_calendar] = {
@@ -605,7 +609,7 @@ class MiqCapacityController < ApplicationController
     presenter[:extra_js] << 'ManageIQ.charts.chartData = ' + @sb[:planning][:chart_data].to_json + ';'
 
     presenter[:reload_toolbars][:view] = v_tb
-    presenter[:set_visible_elements][:toolbar] = true
+    presenter[:set_visible_elements][:toolbar] = @sb[:active_tab] == 'report'
 
     presenter[:update_partials][:main_div] = r[:partial => 'planning_tabs']
     presenter[:replace_cell_text] = _("Best Fit %s") % @sb[:planning][:options][:target_typ] == 'Host' ? 'Hosts' : 'Clusters'
