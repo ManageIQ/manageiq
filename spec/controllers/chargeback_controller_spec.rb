@@ -1,9 +1,7 @@
 require "spec_helper"
 
 describe ChargebackController do
-  before(:each) do
-    set_user_privileges
-  end
+  before { set_user_privileges }
 
   context "returns current rate assignments or set them to blank if category/tag is deleted" do
     before(:each) do
