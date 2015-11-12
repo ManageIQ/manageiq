@@ -1933,6 +1933,7 @@ module ApplicationController::CiProcessing
     when "#{pfx}_clone"                     then prov_redirect("clone")
     when "#{pfx}_migrate"                   then prov_redirect("migrate")
     when "#{pfx}_publish"                   then prov_redirect("publish")
+    when "#{pfx}_terminate"                 then terminatevms
     end
   end
 
