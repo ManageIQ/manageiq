@@ -48,7 +48,10 @@ class MiqReplicationWorker::Runner < MiqWorker::Runner
     if @last_log_status.nil? || Time.now.utc > (@last_log_status + log_status_interval)
       @last_log_status = Time.now.utc
       count, added, deleted = @worker.class.check_status
-      _log.info("#{log_prefix} Replication Status: Current Backlog=[#{count}], Added=[#{added}], Deleted=[#{deleted}]")
+
+      details = count > 0 ? RrPendingChange.backlog_details : {}
+
+      _log.info("#{log_prefix} Replication Status: Current Backlog=[#{count}], Added=[#{added}], Deleted=[#{deleted}], Tables=[#{details.inspect}]")
     end
   end
 

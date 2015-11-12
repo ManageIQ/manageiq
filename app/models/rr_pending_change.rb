@@ -14,10 +14,7 @@ class RrPendingChange < ActiveRecord::Base
   class << self; alias_method :backlog, :count; end
 
   def self.backlog_details
-    counts = all(
-      :select => "change_table, COUNT(id) AS count_all",
-      :group  => "change_table"
-    )
+    counts = select("change_table, COUNT(id) AS count_all").group("change_table").order('count_all DESC').limit(20)
     counts.each_with_object({}) { |c, h| h[c.change_table] = c.count_all.to_i }
   end
 end
