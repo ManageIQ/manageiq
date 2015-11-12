@@ -897,7 +897,7 @@ module EmsCommon
       creds[:bearer] = {:auth_key => @edit[:new][:bearer_token], :userid => "_"} # Must have userid
     end
     if ems.supports_authentication?(:service_account) && !@edit[:new][:service_account].blank?
-      creds[:service_account] = {:service_account => @edit[:new][:service_account], :userid => "_"}
+      creds[:default] = {:service_account => @edit[:new][:service_account], :userid => "_"}
     end
     ems.update_authentication(creds, :save => (mode != :validate))
   end

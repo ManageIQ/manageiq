@@ -95,7 +95,7 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_authentications
-    authentications = @ems.authentication_userid_passwords
+    authentications = @ems.authentications
     return [{:label => "Default Authentication", :title => "None", :value => "None"}] if authentications.blank?
 
     authentications.collect do |auth|

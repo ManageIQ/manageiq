@@ -248,7 +248,7 @@ class EmsCloudController < ApplicationController
       creds[:amqp] = {:userid => params[:amqp_userid], :password => amqp_password}
     end
     if ems.supports_authentication?(:service_account) && params[:service_account]
-      creds[:service_account] = {:service_account => params[:service_account], :userid => "_"}
+      creds[:default] = {:service_account => params[:service_account], :userid => "_"}
     end
     if ems.supports_authentication?(:oauth) && !session[:oauth_response].blank?
       auth = session[:oauth_response]
