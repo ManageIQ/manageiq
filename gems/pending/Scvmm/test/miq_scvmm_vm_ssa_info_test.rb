@@ -1,5 +1,6 @@
 $LOAD_PATH.push("#{File.dirname(__FILE__)}/..")
 
+require_relative "../../bundler_setup"
 require 'rubygems'
 require 'log4r'
 require 'miq_scvmm_vm_ssa_info'
@@ -32,3 +33,11 @@ vhd_type = vm_info_handle.vm_vhdtype(VM)
 $log.debug "VHD Type is #{vhd_type}"
 vhd = vm_info_handle.vm_harddisks(VM)
 $log.debug "VHD is #{vhd}"
+vm_info_handle.vm_create_checkpoint(VM)
+checkpoint = vm_info_handle.vm_get_checkpoint(VM)
+$log.debug "Checkpoint for #{vhd} is #{checkpoint}"
+vm_info_handle.vm_remove_checkpoint(VM)
+vm_info_handle.vm_create_checkpoint(VM)
+checkpoint = vm_info_handle.vm_get_checkpoint(VM)
+$log.debug "Checkpoint for #{vhd} is #{checkpoint}"
+vm_info_handle.vm_remove_checkpoint(VM)
