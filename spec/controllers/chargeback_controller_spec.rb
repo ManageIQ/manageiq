@@ -4,24 +4,22 @@ describe ChargebackController do
   before { set_user_privileges }
 
   context "returns current rate assignments or set them to blank if category/tag is deleted" do
+    let(:category) { FactoryGirl.create(:classification) }
+    let(:tag)      { FactoryGirl.create(:classification, :parent_id => category.id) }
+    let(:entry)    { FactoryGirl.create(:classification, :parent_id => tag.id) }
     before(:each) do
-      @category = FactoryGirl.create(:classification, :description => "Environment", :name => "environment")
-      @tag = FactoryGirl.create(:classification,
-                                :description => "Test category",
-                                :name        => "test_category",
-                                :parent_id   => @category.id)
-      options = {:parent_id => @tag.id, :name => "test_entry", :description => "Test entry under test category"}
-      @entry = FactoryGirl.create(:classification, options)
       cbr = FactoryGirl.create(:chargeback_rate, :rate_type => "Storage")
       temp = {:cb_rate => cbr, :tag => [@tag, "vm"]}
       ChargebackRate.set_assignments(:Storage, [temp])
     end
 
     context "#get_tags_all" do
+      before { entry }
+
       it "returns the classification entry record" do
         controller.instance_variable_set(:@edit, :cb_assign => {:tags => {}})
-        controller.send(:get_tags_all, @tag.id)
-        assigns(:edit)[:cb_assign][:tags].should eq(@entry.id.to_s => @entry.description)
+        controller.send(:get_tags_all, tag.id)
+        assigns(:edit)[:cb_assign][:tags].should eq(entry.id.to_s => entry.description)
       end
 
       it "returns empty hash when classification entry is not found" do
@@ -38,11 +36,11 @@ describe ChargebackController do
                                          :trees       => {:cb_assignments_tree => {:active_node => 'xx-Storage'}})
         controller.send(:cb_assign_set_form_vars)
         tag = assigns(:edit)[:current_assignment][0][:tag][0]
-        tag['parent_id'].should eq(@category.id)
+        tag['parent_id'].should eq(category.id)
       end
 
       it "returns empty array for current_assignment when tag/category is not found" do
-        @tag.destroy
+        tag.destroy
         controller.instance_variable_set(:@sb,
                                          :active_tree => :cb_assignments_tree,
                                          :trees       => {:cb_assignments_tree => {:active_node => 'xx-Storage'}})
