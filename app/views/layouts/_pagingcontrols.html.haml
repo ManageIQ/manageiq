@@ -16,7 +16,7 @@
       = _('Sorted by: ')
       = select_tag("sort_choice",
                        options_for_select(@view.headers),
-                       :class => "selectpicker")
+                       :class => "selectpicker dropup")
       :javascript
         miqSelectPickerEvent("sort_choice", "#{update_paging_url_parms(action_url, {}, true)}", {beforeSend: true, complete: true})
   - else
@@ -142,7 +142,7 @@
       = select_tag("ppsetting",
                    options_for_select(@pp_choices, pages[:perpage]),
                    "data-width" => "auto",
-                   :class       => "selectpicker")
+                   :class       => "selectpicker dropup")
       :javascript
         miqSelectPickerEvent("ppsetting", "#{update_paging_url_parms(action_url, {}, true)}", {beforeSend: true, complete: true})
 :javascript
