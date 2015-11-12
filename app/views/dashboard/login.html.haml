@@ -62,7 +62,7 @@
                           :title => _("Update Password"))
 
           .col-xs-4.col-md-3.submit
-            = link_to("Login",
+            = link_to(_("Login"),
                       {:action => "authenticate",
                        :button => "login",
                        :method => :post},
@@ -74,7 +74,7 @@
                       "data-miq_sparkle_on" => true,
                       "data-submit"         => 'login_div')
 
-            = link_to("SSO Login",
+            = link_to(_("SSO Login"),
                       {:action => "kerberos_authenticate",
                        :button => "sso_login",
                        :method => :post},
