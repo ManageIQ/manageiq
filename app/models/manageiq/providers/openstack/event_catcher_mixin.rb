@@ -37,6 +37,7 @@ module ManageIQ::Providers::Openstack::EventCatcherMixin
   def monitor_events
     event_monitor_handle.start
     event_monitor_handle.each_batch do |events|
+      event_monitor_running
       if events && !events.empty?
         _log.debug("#{log_prefix} Received events #{events.collect { |e| e.payload["event_type"] }}") if _log.debug?
         @queue.enq events

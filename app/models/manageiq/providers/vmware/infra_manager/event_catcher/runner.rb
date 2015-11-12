@@ -24,6 +24,7 @@ class ManageIQ::Providers::Vmware::InfraManager::EventCatcher::Runner < ManageIQ
   end
 
   def monitor_events
+    event_monitor_running
     event_monitor_handle.monitorEvents do |ea|
       @queue.enq(ea)
       sleep_poll_normal

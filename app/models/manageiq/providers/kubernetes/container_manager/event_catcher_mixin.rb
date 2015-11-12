@@ -26,6 +26,7 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
 
   def monitor_events
     event_monitor_handle.start
+    event_monitor_running
     # TODO: since event_monitor_handle is returning only events that
     # are generated starting from this moment we need to pull the
     # entire # inventory to make sure that it's up-to-date.
