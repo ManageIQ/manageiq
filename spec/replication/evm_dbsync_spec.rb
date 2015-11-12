@@ -92,6 +92,8 @@ describe "evm:dbsync" do
   end
 
   def assert_initial_replicated_records
+    pending "Before cb47c448822, the assertions below weren't running since we weren't populating the initial records.  Now, they fail sporadically."
+
     excluded_tables = @replication_config[:exclude_tables].join("|")
     excluded_tables = "^(#{excluded_tables})$"
     excluded_tables_regex = Regexp.new(excluded_tables)
