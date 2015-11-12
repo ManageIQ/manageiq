@@ -18,6 +18,7 @@ describe OrchestrationStackController do
     show
     show_list
     tagging_edit
+    protect
   ).each do |task|
     describe "##{task}" do
       it 'routes with GET' do
@@ -41,6 +42,7 @@ describe OrchestrationStackController do
     show_list
     tagging_edit
     tag_edit_form_field_changed
+    protect
   ).each do |task|
     describe "##{task}" do
       it 'routes with POST' do
