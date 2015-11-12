@@ -58,6 +58,8 @@ function miqOnLoad() {
       $('#search_text').focus();
     } catch (er) {}
   }
+
+  miqInitAccordions();
 }
 
 function miqPrepRightCellForm(tree) {
@@ -71,9 +73,7 @@ function miqPrepRightCellForm(tree) {
 
 // Things to be done on page resize
 function miqOnResize() {
-  if (typeof dhxLayoutB != "undefined") {
-    dhxLayoutB.setSizes();
-  }
+  $(window).resize(miqInitAccordions);
   miqBrowserSizeTimeout();
 }
 
@@ -1380,4 +1380,15 @@ function miqWidgetToolbarClick(e) {
   } else {
     miqAjax("/dashboard/widget_add?widget=" + itemId);
   }
+}
+
+function miqInitAccordions() {
+  var height = $('#left_div').height();
+  var panel = $('.panel-heading').outerHeight();
+  var count = $('#accordion > .panel .panel-body').length;
+  $('#accordion > .panel .panel-body').each(function (k, v) {
+    $(v).css('max-height', (height - count * panel) + 'px');
+    $(v).css('overflow-y', 'auto')
+    $(v).css('overflow-x', 'hidden')
+  });
 }
