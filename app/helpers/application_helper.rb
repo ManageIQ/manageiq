@@ -1080,7 +1080,9 @@ module ApplicationHelper
     (@lastaction == "show_list" && !session[:menu_click] && show_search.include?(@layout) && !@in_a_form) ||
       (@explorer &&
        x_tree &&
-       [:containers, :filter, :images, :instances, :providers, :vandt].include?(x_tree[:type]) &&
+       %i(containers images instances providers vandt
+        images_filter instances_filter templates_filter templates_images_filter
+        vms_filter vms_instances_filter).include?(x_tree[:type]) &&
        !@record)
   end
 
