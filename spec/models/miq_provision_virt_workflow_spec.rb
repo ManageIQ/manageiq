@@ -165,6 +165,39 @@ describe MiqProvisionVirtWorkflow do
     end
   end
 
+  context "#update_field_visibility_pxe_iso" do
+    let(:show_hide_iso_pxe) { {:hide => [], :edit => []} }
+    describe "supports iso" do
+      before do
+        workflow.stub(:supports_iso?).and_return(true)
+        workflow.stub(:supports_pxe?).and_return(false)
+      end
+
+      it "sets iso_image_id as a validated key" do
+        workflow.update_field_visibility_pxe_iso(show_hide_iso_pxe)
+        expect(show_hide_iso_pxe[:edit]).to eq [:iso_image_id]
+        expect(show_hide_iso_pxe[:edit]).to_not eq [:pxe_image_id, :pxe_server_id]
+        expect(show_hide_iso_pxe[:hide]).to_not eq [:iso_image_id]
+        expect(show_hide_iso_pxe[:hide]).to eq [:pxe_image_id, :pxe_server_id]
+      end
+    end
+
+    describe "supports pxe" do
+      before do
+        workflow.stub(:supports_iso?).and_return(false)
+        workflow.stub(:supports_pxe?).and_return(true)
+      end
+
+      it "sets pxe_server_id and pxe_image_id as validated keys" do
+        workflow.update_field_visibility_pxe_iso(show_hide_iso_pxe)
+        expect(show_hide_iso_pxe[:edit]).to_not eq [:iso_image_id]
+        expect(show_hide_iso_pxe[:edit]).to eq [:pxe_image_id, :pxe_server_id]
+        expect(show_hide_iso_pxe[:hide]).to eq [:iso_image_id]
+        expect(show_hide_iso_pxe[:hide]).to_not eq [:pxe_image_id, :pxe_server_id]
+      end
+    end
+  end
+
   context "#validate_memory_reservation" do
     let(:values) { {:vm_memory => %w(1024 1024)} }
 
