@@ -9,16 +9,19 @@ class ConsoleFormatter < Log4r::Formatter
   end
 end
 
-toplog = Log4r::Logger.new 'toplog'
-Log4r::StderrOutputter.new('err_console', :level => Log4r::INFO, :formatter => ConsoleFormatter)
-toplog.add 'err_console'
-$vim_log = $log = toplog if $log.nil?
+$log = Log4r::Logger.new 'toplog'
+Log4r::StderrOutputter.new('err_console', :level => Log4r::DEBUG, :formatter => ConsoleFormatter)
+$log.add 'err_console'
 
-VMX = "/Users/rpo/Documents/Virtual Machines.localized/Red Hat Enterprise Linux 5.vmwarevm/Red Hat Enterprise Linux 5.vmx"
+VHD = raise "Please define VHD"
+diskid    = "ide0:0"
+hardware  = "#{diskid}.present = \"TRUE\"\n"
+hardware += "#{diskid}.filename = \"#{VHD}\"\n"
 
 begin
   ost = OpenStruct.new
-  vm = MiqVm.new(VMX, ost)
+  ost.fileName = VHD
+  vm = MiqVm.new(hardware, ost)
 
   vm.rootTrees.each do |fs|
     puts "*** Found root tree for #{fs.guestOS}"
@@ -27,11 +30,13 @@ begin
     puts
   end
 
-  # wte = "software"
-  # puts "Extracting: #{wte}:"
-  # xml = vm.extract(wte)
-  # xml.write($stdout, 4)
-  # puts
+  CATEGORIES	= %w(accounts services software system)
+  CATEGORIES.each do |cat|
+    puts "Extracting: #{cat}:"
+    xml = vm.extract(cat)
+    xml.write($stdout, 4)
+    puts
+  end
 
   vm.unmount
 rescue => err
