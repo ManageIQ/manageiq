@@ -28,14 +28,15 @@
         - else
           = h(@edit[:ems_types][@edit[:new][:emstype]])
     = render(:partial => "form_fields", :locals => {:url => url})
-    .form-group#port_tr{:style => %w(openstack rhevm).include?(@edit[:new][:emstype]) ? "" : "display: none;"}
-      %label.control-label.col-md-2
-        = _('API Port')
-      .col-md-8
-        = text_field_tag("port", @edit[:new][:port],
-                          :maxlength         => 15,
-                          "class"            => "form-control",
-                          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+    - if @edit[:new][:emstype] && @edit[:new][:emstype] == 'rhevm'
+      .form-group#port_tr
+        %label.control-label.col-md-2
+          = _('API Port')
+        .col-md-8
+          = text_field_tag("port", @edit[:new][:port],
+                            :maxlength         => 15,
+                            "class"            => "form-control",
+                            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     - if @edit[:new][:emstype] && %w(openstack openstack_infra).include?(@edit[:new][:emstype])
       .form-group
         %label.control-label.col-md-2
