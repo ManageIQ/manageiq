@@ -2,7 +2,7 @@ class TreeBuilderVmsFilter < TreeBuilder
   def tree_init_options(_tree_name)
     {
       :open_all => true,
-      :leaf     => 'Vm'
+      :leaf      => 'ManageIQ::Providers::InfraManager::Vm'
     }
   end
 
