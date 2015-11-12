@@ -78,6 +78,12 @@ module MiqAeServiceSpec
       it "raises error on invalid service_model name" do
         expect { miq_ae_service.service_model(:invalid_model) }.to raise_error(NameError)
       end
+
+      it "loads all mapped models" do
+        MiqAeMethodService::MiqAeService::LEGACY_MODEL_NAMES.values.each do |model_name|
+          expect { "MiqAeMethodService::MiqAeService#{model_name}".constantize }.to_not raise_error
+        end
+      end
     end
   end
 end
