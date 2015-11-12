@@ -207,7 +207,7 @@
                                 :class => "form-control",
                                 "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
         .form-group
-          .col-md-8{:align => "right"}
+          .col-md-10{:align => "right"}
             = render :partial => 'ldap_verify_button', :locals => {:id => "#{@sb[:active_tab].split('_').last}"}
 
   = hidden_div_if(!@edit[:new][:authentication][:ldap_role], :id => "user_proxies_div") do
@@ -225,7 +225,7 @@
                           @edit[:new][:authentication][:amazon_role],
                           "data-miq_observe_checkbox" => {:url => url}.to_json)
       .form-group
-        .col-md-8{:align => "right"}
+        .col-md-10{:align => "right"}
           = render :partial => 'amazon_verify_button', :locals => {:id => @sb[:active_tab].split('_').last}
     %hr/
 
