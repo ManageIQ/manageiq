@@ -28,21 +28,17 @@ describe ChargebackController do
       before do
         cbr = FactoryGirl.create(:chargeback_rate, :rate_type => "Storage")
         ChargebackRate.set_assignments(:Storage, [{:cb_rate => cbr, :tag => [tag, "vm"]}])
+        sandbox = {:active_tree => :cb_assignments_tree, :trees => {:cb_assignments_tree => {:active_node => 'xx-Storage'}}}
+        controller.instance_variable_set(:@sb, sandbox)
       end
 
       it "returns tag for current assignments" do
-        controller.instance_variable_set(:@sb,
-                                         :active_tree => :cb_assignments_tree,
-                                         :trees       => {:cb_assignments_tree => {:active_node => 'xx-Storage'}})
         controller.send(:cb_assign_set_form_vars)
         expect(assigns(:edit)[:current_assignment][0][:tag][0]['parent_id']).to eq(category.id)
       end
 
       it "returns empty array for current_assignment when tag/category is not found" do
         tag.destroy
-        controller.instance_variable_set(:@sb,
-                                         :active_tree => :cb_assignments_tree,
-                                         :trees       => {:cb_assignments_tree => {:active_node => 'xx-Storage'}})
         controller.send(:cb_assign_set_form_vars)
         expect(assigns(:edit)[:current_assignment]).to eq([])
       end
