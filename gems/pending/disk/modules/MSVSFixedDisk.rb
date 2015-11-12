@@ -14,7 +14,11 @@ module MSVSFixedDisk
       raise "Unrecognized mountMode: #{dInfo.mountMode}"
     end
 
-    @msFlatDisk_file = MiqLargeFile.open(dInfo.fileName, fileMode)
+    if dInfo.hyperv_connection
+      @msFlatDisk_file = MSCommon.connect_to_hyperv(dInfo)
+    else
+      @msFlatDisk_file = MiqLargeFile.open(dInfo.fileName, fileMode)
+    end
   end
 
   def d_read(pos, len)

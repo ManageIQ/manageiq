@@ -14,7 +14,11 @@ module MSVSDiffDisk
     else
       raise "Unrecognized mountMode: #{dInfo.mountMode}"
     end
-    @msDisk_file = MiqLargeFile.open(@dInfo.fileName, fileMode) unless @dInfo.baseOnly
+    if @dInfo.hyperv_connection
+      @msDisk_file = MSCommon.connect_to_hyperv(@dInfo)
+    else
+      @msDisk_file = MiqLargeFile.open(@dInfo.fileName, fileMode) unless @dInfo.baseOnly
+    end
     MSCommon.d_init_common(@dInfo, @msDisk_file) unless @dInfo.baseOnly
 
     # Get parent locators.

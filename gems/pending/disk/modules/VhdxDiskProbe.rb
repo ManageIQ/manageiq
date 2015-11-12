@@ -1,5 +1,7 @@
 # encoding: US-ASCII
 
+require 'Scvmm/miq_hyperv_disk'
+
 VHDX_DISK      = "VhdxDisk"
 VHDX_SIGNATURE = "vhdxfile"
 
@@ -31,10 +33,9 @@ module VhdxDiskProbe
   end
 
   def self.connect_to_hyperv(ostruct)
-    raise "Connection to HyperV Server Not Supported Yet"
-    # connection  = ostruct.hyperv_connection
-    # hyperv_disk = MiqHyperVDisk.new(connection[:host], connection[:user], connection[:password], connection[:port])
-    # hyperv_disk.open(ostruct.fileName)
-    # hyperv_disk
+    connection  = ostruct.hyperv_connection
+    hyperv_disk = MiqHyperVDisk.new(connection[:host], connection[:user], connection[:password], connection[:port])
+    hyperv_disk.open(ostruct.fileName)
+    hyperv_disk
   end
 end
