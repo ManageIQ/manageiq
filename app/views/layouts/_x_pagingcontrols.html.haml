@@ -22,7 +22,7 @@
         - if @gtl_type != "list" && @view
           = select_tag("sort_choice",
                        options_for_select([sort_text] + @view.headers),
-                       :class => "selectpicker")
+                       :class => "selectpicker dropup")
           :javascript
             miqSelectPickerEvent("sort_choice", "#{url}", {beforeSend: true, complete: true})
         - elsif @gtl_type == "list" && @view
@@ -98,7 +98,7 @@
       = select_tag("ppsetting",
                    options_for_select(@pp_choices, pages[:perpage]),
                    "data-width" => "auto",
-                   :class       => "selectpicker")
+                   :class       => "selectpicker dropup")
       :javascript
         miqSelectPickerEvent("ppsetting", "#{url}", {beforeSend: true, complete: true})
 
