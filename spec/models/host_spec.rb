@@ -234,33 +234,6 @@ describe Host do
     end
   end
 
-  context ".find_by_audit_for_rss" do
-    before(:each) do
-      @host = FactoryGirl.create(:host)
-      @tag_ns = "/managed/lifecycles"
-      @tag = "SmartProxy"
-      @host.tag_with(@tag, :ns => @tag_ns)
-      @event_name = "agent_settings_change"
-      @audit_event = FactoryGirl.create(:audit_event, :event => @event_name, :target_class => "Host", :target_id => @host.id)
-    end
-
-    it "works when tags are not specified" do
-      events = Host.find_by_audit_for_rss(@event_name)
-      events.first.should have_attributes(@host.attributes.merge(@audit_event.attributes))
-
-      events = Host.find_by_audit_for_rss("foobar")
-      events.should be_empty
-    end
-
-    it "works when tags are specified" do
-      events = Host.find_by_audit_for_rss(@event_name, :tags => @tag, :tags_include => "any", :tag_ns => @tag_ns)
-      events.first.should have_attributes(@host.attributes.merge(@audit_event.attributes))
-
-      events = Host.find_by_audit_for_rss("foobar", :tags => @tag, :tags_include => "any", :tag_ns => @tag_ns)
-      events.should be_empty
-    end
-  end
-
   context "#vmm_vendor" do
     it "with known host type" do
       expect(FactoryGirl.create(:host_vmware_esx).vmm_vendor).to eq("VMware")
