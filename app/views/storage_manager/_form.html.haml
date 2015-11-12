@@ -1,5 +1,9 @@
 - url = url_for(:action => 'form_field_changed', :id => "#{@sm.id || "new"}")
 - validate_url ||= %w(new create).include?(controller.action_name) ? "create" : "update"
+- change_stored_password ||= _("Change stored password")
+- cancel_password_change ||= _("Cancel password change")
+- stored_password_placeholder = "●●●●●●●●"
+- pfx ||= ""
 
 #form_div
   = render :partial => "layouts/flash_msg"
@@ -93,19 +97,26 @@
         = _('Password')
       .col-md-8
         = password_field_tag("password",
-          @edit[:new][:password],
+          @edit[:new][:userid].blank? ? "" : stored_password_placeholder,
           :maxlength => 50,
+          :disabled => @edit[:new][:userid].blank? ? false : true,
           :class     => "form-control",
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-    .form-group
-      %label.control-label.col-md-2
-        = _('Verify Password')
+      - unless @edit[:new][:userid].blank?
+        %div
+          %a{:id => "change_stored_password", "style" => "display:block;cursor: pointer; cursor: hand;", "onclick" => "changeStoredPassword('#{pfx}', '#{url}')"}
+            = change_stored_password
+          %a{:id => "cancel_password_change", "style" => "display:none;cursor: pointer; cursor: hand;", "onclick" => "cancelPasswordChange('#{pfx}', '#{url}')"}
+            = cancel_password_change
+    .form-group{:id => "verify_group", :style => @edit[:new][:userid].blank? ? "display:block" : "display:none"}
+      %label.col-md-2.control-label
+        = _("Confirm Password")
       .col-md-8
         = password_field_tag("verify",
-          @edit[:new][:verify],
-          :maxlength => 50,
-          :class     => "form-control",
-          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+                             "",
+                             :maxlength         => 50,
+                             :class     => "form-control",
+                             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     .form-group
       %label.control-label.col-md-2
       .col-md-8
