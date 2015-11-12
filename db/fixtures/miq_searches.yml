@@ -555,7 +555,7 @@
             field: TemplateInfra-v_pct_free_disk_space
             value: ""
     search_type: default
-    db: TemplateInfra
+    db: ManageIQ::Providers::InfraManager::Template
 - attributes:
     name: default_Environment / UAT
     description: Environment / UAT
@@ -565,7 +565,7 @@
           tag: TemplateInfra.managed-environment
           value: uat
     search_type: default
-    db: TemplateInfra
+    db: ManageIQ::Providers::InfraManager::Template
 - attributes:
     name: default_Environment / Prod
     description: Environment / Prod
@@ -575,7 +575,7 @@
           tag: TemplateInfra.managed-environment
           value: prod
     search_type: default
-    db: TemplateInfra
+    db: ManageIQ::Providers::InfraManager::Template
 - attributes:
     name: default_Environment / Test
     description: Environment / Test
@@ -585,7 +585,7 @@
           tag: TemplateInfra.managed-environment
           value: test
     search_type: default
-    db: TemplateInfra
+    db: ManageIQ::Providers::InfraManager::Template
 - attributes:
     name: default_Platform / Redhat
     description: Platform / Redhat
@@ -596,7 +596,7 @@
           value: ManageIQ::Providers::Redhat::InfraManager::Template
     search_type: default
     search_key: _hidden_
-    db: TemplateInfra
+    db: ManageIQ::Providers::InfraManager::Template
 - attributes:
     name: default_Platform / VMware
     description: Platform / VMware
@@ -607,7 +607,7 @@
           value: ManageIQ::Providers::Vmware::InfraManager::Template
     search_type: default
     search_key: _hidden_
-    db: TemplateInfra
+    db: ManageIQ::Providers::InfraManager::Template
 - attributes:
     name: default_Platform / Microsoft
     description: Platform / Microsoft
@@ -618,7 +618,7 @@
           value: ManageIQ::Providers::Microsoft::InfraManager::Template
     search_type: default
     search_key: _hidden_
-    db: TemplateInfra
+    db: ManageIQ::Providers::InfraManager::Template
 - attributes:
     name: default_Status / Running
     description: Status / Running
@@ -628,7 +628,7 @@
           field: TemplateInfra-power_state
           value: "on"
     search_type: default
-    db: TemplateInfra
+    db: ManageIQ::Providers::InfraManager::Template
 - attributes:
     name: default_Status / Retired
     description: Status / Retired
@@ -638,7 +638,7 @@
           value: "true"
           field: TemplateInfra-retired
     search_type: default
-    db: TemplateInfra
+    db: ManageIQ::Providers::InfraManager::Template
 - attributes:
     name: default_Status / Archived
     description: Status / Archived
@@ -648,7 +648,7 @@
           field: TemplateInfra-archived
           value: "true"
     search_type: default
-    db: TemplateInfra
+    db: ManageIQ::Providers::InfraManager::Template
 - attributes:
     name: default_Status / Orphaned
     description: Status / Orphaned
@@ -658,7 +658,7 @@
           value: "true"
           field: TemplateInfra-orphaned
     search_type: default
-    db: TemplateInfra
+    db: ManageIQ::Providers::InfraManager::Template
 - attributes:
     name: default_Over Allocated
     description: Over Allocated
@@ -672,7 +672,7 @@
             field: TemplateInfra-v_pct_free_disk_space
             value: ""
     search_type: default
-    db: TemplateInfra
+    db: ManageIQ::Providers::InfraManager::Template
 - attributes:
     name: default_Under Allocated
     description: Under Allocated
@@ -688,7 +688,7 @@
         - IS NOT EMPTY:
             field: TemplateInfra.host-name
     search_type: default
-    db: TemplateInfra
+    db: ManageIQ::Providers::InfraManager::Template
 - attributes:
     name: default_Guest OS / Windows
     description: Guest OS / Windows
@@ -698,7 +698,7 @@
           field: TemplateInfra.operating_system-product_name
           value: Win
     search_type: default
-    db: TemplateInfra
+    db: ManageIQ::Providers::InfraManager::Template
 - attributes:
     name: default_Guest OS / Linux
     description: Guest OS / Linux
@@ -709,7 +709,7 @@
             field: TemplateInfra.operating_system-product_name
             value: Win
     search_type: default
-    db: TemplateInfra
+    db: ManageIQ::Providers::InfraManager::Template
 - attributes:
     name: default_Environment / Dev
     description: Environment / Dev
@@ -719,7 +719,7 @@
           tag: TemplateInfra.managed-environment
           value: dev
     search_type: default
-    db: TemplateInfra
+    db: ManageIQ::Providers::InfraManager::Template
 - attributes:
     name: default_Templates I Own
     description: Templates I Own
@@ -729,7 +729,7 @@
           field: TemplateInfra-owned_by_current_user
           value: "true"
     search_type: default
-    db: TemplateInfra
+    db: ManageIQ::Providers::InfraManager::Template
 - attributes:
     name: default_Templates in My LDAP Group
     description: Templates in My LDAP Group
@@ -739,7 +739,7 @@
           field: TemplateInfra-owned_by_current_ldap_group
           value: "true"
     search_type: default
-    db: TemplateInfra
+    db: ManageIQ::Providers::InfraManager::Template
 - attributes:
     name: default_Analysis Failed
     description: Analysis Failed
@@ -749,7 +749,7 @@
           tag: TemplateInfra.managed-operations
           value: analysis_failed
     search_type: default
-    db: TemplateInfra
+    db: ManageIQ::Providers::InfraManager::Template
 - attributes:
     name: default_Analysis Required
     description: Analysis Required
@@ -759,7 +759,7 @@
           tag: TemplateInfra.managed-operations
           value: analysis_required
     search_type: default
-    db: TemplateInfra
+    db: ManageIQ::Providers::InfraManager::Template
 - attributes:
     name: default_Analysis Successful
     description: Analysis Successful
@@ -769,7 +769,7 @@
           tag: TemplateInfra.managed-operations
           value: analysis_success
     search_type: default
-    db: TemplateInfra
+    db: ManageIQ::Providers::InfraManager::Template
 - attributes:
     name: default_Environment / UAT
     description: Environment / UAT
@@ -779,7 +779,7 @@
           tag: TemplateCloud.managed-environment
           value: uat
     search_type: default
-    db: TemplateCloud
+    db: ManageIQ::Providers::CloudManager::Template
 - attributes:
     name: default_Environment / Prod
     description: Environment / Prod
@@ -789,7 +789,7 @@
           tag: TemplateCloud.managed-environment
           value: prod
     search_type: default
-    db: TemplateCloud
+    db: ManageIQ::Providers::CloudManager::Template
 - attributes:
     name: default_Environment / Test
     description: Environment / Test
@@ -799,7 +799,7 @@
           tag: TemplateCloud.managed-environment
           value: test
     search_type: default
-    db: TemplateCloud
+    db: ManageIQ::Providers::CloudManager::Template
 - attributes:
     name: default_Platform / Amazon
     description: Platform / Amazon
@@ -810,7 +810,7 @@
           value: ManageIQ::Providers::Amazon::CloudManager::Template
     search_type: default
     search_key: _hidden_
-    db: TemplateCloud
+    db: ManageIQ::Providers::CloudManager::Template
 - attributes:
     name: default_Platform / Openstack
     description: Platform / Openstack
@@ -821,7 +821,7 @@
           value: ManageIQ::Providers::Openstack::CloudManager::Template
     search_type: default
     search_key: _hidden_
-    db: TemplateCloud
+    db: ManageIQ::Providers::CloudManager::Template
 - attributes:
     name: default_Status / Retired
     description: Status / Retired
@@ -831,7 +831,7 @@
           value: "true"
           field: TemplateCloud-retired
     search_type: default
-    db: TemplateCloud
+    db: ManageIQ::Providers::CloudManager::Template
 - attributes:
     name: default_Status / Archived
     description: Status / Archived
@@ -841,7 +841,7 @@
           field: TemplateCloud-archived
           value: "true"
     search_type: default
-    db: TemplateCloud
+    db: ManageIQ::Providers::CloudManager::Template
 - attributes:
     name: default_Environment / Dev
     description: Environment / Dev
@@ -851,7 +851,7 @@
           tag: TemplateCloud.managed-environment
           value: dev
     search_type: default
-    db: TemplateCloud
+    db: ManageIQ::Providers::CloudManager::Template
 - attributes:
     name: default_Images I Own
     description: Images I Own
@@ -861,7 +861,7 @@
           field: TemplateCloud-owned_by_current_user
           value: "true"
     search_type: default
-    db: TemplateCloud
+    db: ManageIQ::Providers::CloudManager::Template
 - attributes:
     name: default_Images in My LDAP Group
     description: Images in My LDAP Group
@@ -871,7 +871,7 @@
           field: TemplateCloud-owned_by_current_ldap_group
           value: "true"
     search_type: default
-    db: TemplateCloud
+    db: ManageIQ::Providers::CloudManager::Template
 - attributes:
     name: default_Environment / UAT
     description: Environment / UAT
@@ -881,7 +881,7 @@
           tag: VmCloud.managed-environment
           value: uat
     search_type: default
-    db: VmCloud
+    db: ManageIQ::Providers::CloudManager::Vm
 - attributes:
     name: default_Environment / Prod
     description: Environment / Prod
@@ -891,7 +891,7 @@
           tag: VmCloud.managed-environment
           value: prod
     search_type: default
-    db: VmCloud
+    db: ManageIQ::Providers::CloudManager::Vm
 - attributes:
     name: default_Environment / Test
     description: Environment / Test
@@ -901,7 +901,7 @@
           tag: VmCloud.managed-environment
           value: test
     search_type: default
-    db: VmCloud
+    db: ManageIQ::Providers::CloudManager::Vm
 - attributes:
     name: default_Status / Running
     description: Status / Running
@@ -911,7 +911,7 @@
           field: VmCloud-power_state
           value: "on"
     search_type: default
-    db: VmCloud
+    db: ManageIQ::Providers::CloudManager::Vm
 - attributes:
     name: default_Status / Retired
     description: Status / Retired
@@ -921,7 +921,7 @@
           value: "true"
           field: VmCloud-retired
     search_type: default
-    db: VmCloud
+    db: ManageIQ::Providers::CloudManager::Vm
 - attributes:
     name: default_Status / Archived
     description: Status / Archived
@@ -931,7 +931,7 @@
           field: VmCloud-archived
           value: "true"
     search_type: default
-    db: VmCloud
+    db: ManageIQ::Providers::CloudManager::Vm
 - attributes:
     name: default_Environment / Dev
     description: Environment / Dev
@@ -941,7 +941,7 @@
           tag: VmCloud.managed-environment
           value: dev
     search_type: default
-    db: VmCloud
+    db: ManageIQ::Providers::CloudManager::Vm
 - attributes:
     name: default_Platform / Amazon
     description: Platform / Amazon
@@ -952,7 +952,7 @@
           value: ManageIQ::Providers::Amazon::CloudManager::Vm
     search_type: default
     search_key: _hidden_
-    db: VmCloud
+    db: ManageIQ::Providers::CloudManager::Vm
 - attributes:
     name: default_Platform / Openstack
     description: Platform / Openstack
@@ -963,7 +963,7 @@
           value: ManageIQ::Providers::Openstack::CloudManager::Vm
     search_type: default
     search_key: _hidden_
-    db: VmCloud
+    db: ManageIQ::Providers::CloudManager::Vm
 - attributes:
     name: default_Instances I Own
     description: Instances I Own
@@ -973,7 +973,7 @@
           field: VmCloud-owned_by_current_user
           value: "true"
     search_type: default
-    db: VmCloud
+    db: ManageIQ::Providers::CloudManager::Vm
 - attributes:
     name: default_Instances in My LDAP Group
     description: Instances in My LDAP Group
@@ -983,7 +983,7 @@
           field: VmCloud-owned_by_current_ldap_group
           value: "true"
     search_type: default
-    db: VmCloud
+    db: ManageIQ::Providers::CloudManager::Vm
 - attributes:
     name: default_Over Sized
     description: Over Sized
@@ -997,7 +997,7 @@
             field: VmInfra-v_pct_free_disk_space
             value: ""
     search_type: default
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_Environment / UAT
     description: Environment / UAT
@@ -1007,7 +1007,7 @@
           tag: VmInfra.managed-environment
           value: uat
     search_type: default
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_Environment / Prod
     description: Environment / Prod
@@ -1017,7 +1017,7 @@
           tag: VmInfra.managed-environment
           value: prod
     search_type: default
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_Environment / Test
     description: Environment / Test
@@ -1027,7 +1027,7 @@
           tag: VmInfra.managed-environment
           value: test
     search_type: default
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_Platform / Redhat
     description: Platform / Redhat
@@ -1038,7 +1038,7 @@
           value: ManageIQ::Providers::Redhat::InfraManager::Vm
     search_type: default
     search_key: _hidden_
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_Function / Desktop
     description: Function / Desktop
@@ -1048,7 +1048,7 @@
           tag: VmInfra.managed-function
           value: desktop
     search_type: default
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_Platform / VMware
     description: Platform / VMware
@@ -1059,7 +1059,7 @@
           value: ManageIQ::Providers::Vmware::InfraManager::Vm
     search_type: default
     search_key: _hidden_
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_Platform / Microsoft
     description: Platform / Microsoft
@@ -1070,7 +1070,7 @@
           value: ManageIQ::Providers::Microsoft::InfraManager::Vm
     search_type: default
     search_key: _hidden_
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_Status / Running
     description: Status / Running
@@ -1080,7 +1080,7 @@
           field: VmInfra-power_state
           value: "on"
     search_type: default
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_Type / Template
     description: Type / Template
@@ -1090,7 +1090,7 @@
           field: VmInfra-template
           value: "true"
     search_type: default
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_Type / VM
     description: Type / VM
@@ -1101,7 +1101,7 @@
             field: VmInfra-location
             value: .vmtx
     search_type: default
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_Status / Retired
     description: Status / Retired
@@ -1111,7 +1111,7 @@
           value: "true"
           field: VmInfra-retired
     search_type: default
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_Status / Archived
     description: Status / Archived
@@ -1121,7 +1121,7 @@
           field: VmInfra-archived
           value: "true"
     search_type: default
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_Status / Orphaned
     description: Status / Orphaned
@@ -1131,7 +1131,7 @@
           value: "true"
           field: VmInfra-orphaned
     search_type: default
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_Over Allocated
     description: Over Allocated
@@ -1145,7 +1145,7 @@
             field: VmInfra-v_pct_free_disk_space
             value: ""
     search_type: default
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_Under Allocated
     description: Under Allocated
@@ -1161,7 +1161,7 @@
         - IS NOT EMPTY:
             field: VmInfra.host-name
     search_type: default
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_Guest OS / Windows
     description: Guest OS / Windows
@@ -1171,7 +1171,7 @@
           field: VmInfra.operating_system-product_name
           value: Win
     search_type: default
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_Guest OS / Linux
     description: Guest OS / Linux
@@ -1182,7 +1182,7 @@
             field: VmInfra.operating_system-product_name
             value: Win
     search_type: default
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_Environment / Dev
     description: Environment / Dev
@@ -1192,7 +1192,7 @@
           tag: VmInfra.managed-environment
           value: dev
     search_type: default
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_VMs I Own
     description: VMs I Own
@@ -1202,7 +1202,7 @@
           field: VmInfra-owned_by_current_user
           value: "true"
     search_type: default
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_VMs in My LDAP Group
     description: VMs in My LDAP Group
@@ -1212,7 +1212,7 @@
           field: VmInfra-owned_by_current_ldap_group
           value: "true"
     search_type: default
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_Analysis Failed
     description: Analysis Failed
@@ -1222,7 +1222,7 @@
           tag: VmInfra.managed-operations
           value: analysis_failed
     search_type: default
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_Analysis Required
     description: Analysis Required
@@ -1232,7 +1232,7 @@
           tag: VmInfra.managed-operations
           value: analysis_required
     search_type: default
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_Analysis Successful
     description: Analysis Successful
@@ -1242,7 +1242,7 @@
           tag: VmInfra.managed-operations
           value: analysis_success
     search_type: default
-    db: VmInfra
+    db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
     name: default_Type / Container
     description: Type / Container
