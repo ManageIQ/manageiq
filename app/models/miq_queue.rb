@@ -417,7 +417,7 @@ class MiqQueue < ActiveRecord::Base
         end
       rescue => err
         _log.error("#{MiqQueue.format_short_log_msg(self)}: #{err}")
-        _log.debug("backtrace: #{err.backtrace.join("\n")}")
+        _log.error("backtrace: #{err.backtrace.join("\n")}")
       end
     else
       _log.warn "#{MiqQueue.format_short_log_msg(self)}, Callback is not well-defined, skipping"
