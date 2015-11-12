@@ -117,6 +117,20 @@ module MiqAeEventSpec
         end
       end
 
+      context "with Storage event" do
+        it "has tenant" do
+          storage = FactoryGirl.create(:storage, :name => "test_storage_vmfs", :store_type => "VMFS")
+          FactoryGirl.create(:host, :name => "test_host", :hostname => "test_host", :state => 'on', :ems_id => ems.id, :storages => [storage])
+          args = {:user_id      => admin.id,
+                  :miq_group_id => ems.tenant.default_miq_group.id,
+                  :tenant_id    => ems.tenant.id
+          }
+          expect(MiqAeEngine).to receive(:deliver_queue).with(hash_including(args), anything)
+
+          MiqAeEvent.raise_evm_event("request_storage_scan", storage)
+        end
+      end
+
       context "with MiqRequest event" do
         it "has tenant" do
           request = FactoryGirl.create(:vm_reconfigure_request, :requester => user)
