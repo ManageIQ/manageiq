@@ -144,6 +144,8 @@ module MiqAeEvent
       object.vm_or_template || object.ext_management_system
     when VmOrTemplate, MiqServer, Service, ExtManagementSystem, MiqRequest
       object
+    when Storage
+      object.ext_management_systems.first
     else
       object.ext_management_system
     end
