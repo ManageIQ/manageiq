@@ -56,7 +56,7 @@
                 .btn.btn-default.resize-right{:class => sidewidth == 5 ? 'btn-disabled' : ''}
                   %span.fa.fa-angle-right
 
-      #left_div.resizable.sidebar-pf.sidebar-pf-left.scrollable.max-height{:class => sidebar}
+      #left_div.resizable.sidebar-pf.sidebar-pf-left.max-height{:class => sidebar}
         #default_left_cell
           - if @accords && @trees
             = render :partial => "layouts/listnav"
@@ -113,7 +113,7 @@
                   .btn.btn-default.resize-right{:class => sidewidth == 5 ? 'btn-disabled' : ''}
                     %span.fa.fa-angle-right
         -#.sidebar-pf.sidebar-pf-left.scrollable-lg.resizable{:class => sidebar}
-        .col-md-2.col-md-pull-10.sidebar-pf.sidebar-pf-left.scrollable
+        .col-md-2.col-md-pull-10.sidebar-pf.sidebar-pf-left
           = render :partial => "layouts/listnav"
 
       - elsif  @layout == "dashboard" && (controller.action_name == "show" || controller.action_name == "change_tab")
