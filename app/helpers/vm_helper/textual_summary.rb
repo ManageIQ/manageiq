@@ -269,20 +269,23 @@ module VmHelper::TextualSummary
 
   def textual_storage
     storages = @record.storages
-    label = ui_lookup(:tables => "storages")
+    label = ui_lookup(:table => "storages")
     h = {:label => label, :image => "storage"}
     if storages.empty?
       h[:value] = "None"
     elsif storages.length == 1
       storage = storages.first
       h[:value] = storage.name
-      h[:title] = "Show this VM's #{label}"
+      h[:title] = "Show this #{label}"
       h[:link]  = url_for(:controller => 'storage', :action => 'show', :id => storage)
     else
       h.delete(:image) # Image will be part of each line item, instead
       main = @record.storage
       h[:value] = storages.sort_by { |s| s.name.downcase }.collect do |s|
-        {:image => "storage", :value => "#{s.name}#{" (main)" if s == main}", :title => "Show this VM's #{label}", :link => url_for(:controller => 'storage', :action => 'show', :id => s)}
+        {:image => "storage",
+         :value => "#{s.name}#{" (main)" if s == main}",
+         :title => "Show this #{label}",
+         :link => url_for(:controller => 'storage', :action => 'show', :id => s)}
       end
     end
     h
