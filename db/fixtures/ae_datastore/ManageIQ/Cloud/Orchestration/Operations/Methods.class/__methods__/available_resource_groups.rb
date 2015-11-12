@@ -1,10 +1,10 @@
 #
-# Description: provide the dynamic list content from available tenants
+# Description: provide the dynamic list content from available resource groups
 #
-tenant_list = {nil => "<default>"}
+rg_list = {nil => "<default>"}
 service_template = $evm.root.attributes["service_template"]
 if service_template.respond_to?(:orchestration_manager) && service_template.orchestration_manager
-  service_template.orchestration_manager.cloud_tenants.each { |t| tenant_list[t.name] = t.name }
+  service_template.orchestration_manager.resource_groups.each { |t| rg_list[t.name] = t.name }
 end
 
 dialog_field = $evm.object
@@ -21,5 +21,5 @@ dialog_field["data_type"] = "string"
 # required: true / false
 # dialog_field["required"] = "true"
 
-dialog_field["values"] = tenant_list
+dialog_field["values"] = rg_list
 dialog_field["default_value"] = nil
