@@ -2,20 +2,11 @@ require "spec_helper"
 
 describe ToModelHash do
   context "to_model_hash_build_preload" do
+    let(:test_disk_class)     { Class.new(ActiveRecord::Base) { self.table_name = "test_disks" } }
+    let(:test_hardware_class) { Class.new(ActiveRecord::Base) { self.table_name = "test_hardwares" } }
+    let(:test_vm_class)       { Class.new(ActiveRecord::Base) { self.table_name = "test_vms" } }
+
     before do
-      class TestVm < ActiveRecord::Base
-        has_one :test_hardware, :dependent => :destroy
-      end
-
-      class TestHardware < ActiveRecord::Base
-        has_many   :test_disks
-        belongs_to :test_vm
-      end
-
-      class TestDisk < ActiveRecord::Base
-        belongs_to :test_hardware
-      end
-
       ActiveRecord::Schema.define do
         create_table :test_vms, force: true  do |t|
           t.string :name
@@ -31,12 +22,11 @@ describe ToModelHash do
           t.integer :test_hardware_id
         end
       end
-    end
 
-    after do
-      Object.send(:remove_const, :TestVm)
-      Object.send(:remove_const, :TestHardware)
-      Object.send(:remove_const, :TestDisk)
+      test_disk_class.belongs_to     :test_hardware, :anonymous_class => test_hardware_class
+      test_hardware_class.has_many   :test_disks,    :anonymous_class => test_disk_class
+      test_hardware_class.belongs_to :test_vm,       :anonymous_class => test_vm_class
+      test_vm_class.has_one          :test_hardware, :anonymous_class => test_hardware_class, :dependent => :destroy
     end
 
     it "virtual_column" do
@@ -44,10 +34,10 @@ describe ToModelHash do
         "cols" => ["bitness"]
       }
 
-      TestVm.virtual_column :bitness,   :type => :integer, :uses => :test_hardware
+      test_vm_class.virtual_column :bitness, :type => :integer, :uses => :test_hardware
 
-      options = TestVm.send(:to_model_hash_options_fixup, test_to_model_hash_options)
-      expect(TestVm.new.send(:to_model_hash_build_preload, options)).to eq [:bitness]
+      options = test_vm_class.send(:to_model_hash_options_fixup, test_to_model_hash_options)
+      expect(test_vm_class.new.send(:to_model_hash_build_preload, options)).to eq [:bitness]
     end
 
     it "virtual_column and include association column" do
@@ -56,10 +46,10 @@ describe ToModelHash do
         "include" => {"test_hardware" => {"columns" => ["test_vm_id"]}}
       }
 
-      TestVm.virtual_column :bitness, :type => :integer, :uses => :test_hardware
+      test_vm_class.virtual_column :bitness, :type => :integer, :uses => :test_hardware
 
-      options = TestVm.send(:to_model_hash_options_fixup, test_to_model_hash_options)
-      expect(TestVm.new.send(:to_model_hash_build_preload, options)).to match_array [:bitness, :test_hardware]
+      options = test_vm_class.send(:to_model_hash_options_fixup, test_to_model_hash_options)
+      expect(test_vm_class.new.send(:to_model_hash_build_preload, options)).to match_array [:bitness, :test_hardware]
     end
 
     it "virtual column matches included association column" do
@@ -67,24 +57,21 @@ describe ToModelHash do
         "include" => {"test_hardware" => {"columns" => ["bitness"]}}
       }
 
-      TestVm.virtual_column :bitness, :type => :integer, :uses => :test_hardware
+      test_vm_class.virtual_column :bitness, :type => :integer, :uses => :test_hardware
 
-      options = TestVm.send(:to_model_hash_options_fixup, test_to_model_hash_options)
-      expect(TestVm.new.send(:to_model_hash_build_preload, options)).to eq [:test_hardware]
+      options = test_vm_class.send(:to_model_hash_options_fixup, test_to_model_hash_options)
+      expect(test_vm_class.new.send(:to_model_hash_build_preload, options)).to eq [:test_hardware]
     end
 
     it "virtual column on included association" do
-      # TODO: This fails if following one of the other tests that add a virtual column to TestVm.
-      # It appears the .parent_class object_id (in to_model_hash_build_preload) is the same
-      # across tests, is the remove_const not working in the after?
       test_to_model_hash_options = {
         "include" => {"test_hardware" => {"columns" => ["num_disks"]}}
       }
 
-      TestHardware.virtual_column :num_disks, :type => :integer, :uses => :test_disks
+      test_hardware_class.virtual_column :num_disks, :type => :integer, :uses => :test_disks
 
-      options = TestVm.send(:to_model_hash_options_fixup, test_to_model_hash_options)
-      expect(TestVm.new.send(:to_model_hash_build_preload, options)).to match_array [{:test_hardware => [:num_disks]}]
+      options = test_vm_class.send(:to_model_hash_options_fixup, test_to_model_hash_options)
+      expect(test_vm_class.new.send(:to_model_hash_build_preload, options)).to match_array [{:test_hardware => [:num_disks]}]
     end
   end
 end
