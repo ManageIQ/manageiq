@@ -1390,6 +1390,7 @@ Vmdb::Application.routes.draw do
         show
         show_list
         tagging_edit
+        protect
       ),
       :post => %w(
         button
@@ -1404,6 +1405,7 @@ Vmdb::Application.routes.draw do
         sections_field_changed
         show
         show_list
+        protect
         tagging_edit
         tag_edit_form_field_changed
       ) +
