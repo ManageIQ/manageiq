@@ -86,6 +86,9 @@ module MiqServer::ServerSmartProxy
         if target.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm) ||
            target.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
           timeout_adj = 4
+        elsif target.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm) ||
+              target.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Template)
+          timeout_adj = 8
         end
       end
       $log.debug "#{log_prefix}: queuing call to #{self.class.name}##{ost.method_name}"
@@ -112,6 +115,7 @@ module MiqServer::ServerSmartProxy
     job    = Job.find_by_guid(ost.taskid)
     _log.debug "#{target.name} (#{target.class.name})"
     begin
+      ost.args[0]  = target.name
       ost.args[1]  = YAML.load(ost.args[1]) # TODO: YAML.dump'd in call_scan - need it be?
       ost.scanData = ost.args[1].kind_of?(Hash) ? ost.args[1] : {}
       ost.config = OpenStruct.new(

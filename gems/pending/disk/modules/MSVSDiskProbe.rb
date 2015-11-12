@@ -24,14 +24,13 @@ module MSVSDiskProbe
     return nil if ext != ".vhd" && ext != ".avhd" && ext != ".miq"
 
     if ostruct.hyperv_connection
-      msDisk_file = connect_to_hyperv(ostruct)
+      ms_disk_file = connect_to_hyperv(ostruct)
     else
       # Get (assumed) footer.
-      msDisk_file = MiqLargeFile.open(ostruct.fileName, "rb")
+      ms_disk_file = MiqLargeFile.open(ostruct.fileName, "rb")
     end
-    footer = MSCommon.getFooter(msDisk_file, true)
-    msDisk_file.close
-    msDisk_file = nil
+    footer = MSCommon.getFooter(ms_disk_file, true)
+    ms_disk_file.close
 
     # Check for MS disk.
     return nil if footer['cookie'] != MS_MAGIC

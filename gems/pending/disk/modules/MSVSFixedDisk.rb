@@ -15,15 +15,15 @@ module MSVSFixedDisk
     end
 
     if dInfo.hyperv_connection
-      @msFlatDisk_file = MSCommon.connect_to_hyperv(dInfo)
+      @ms_flat_disk_file = MSCommon.connect_to_hyperv(dInfo)
     else
-      @msFlatDisk_file = MiqLargeFile.open(dInfo.fileName, fileMode)
+      @ms_flat_disk_file = MiqLargeFile.open(dInfo.fileName, fileMode)
     end
   end
 
   def d_read(pos, len)
-    @msFlatDisk_file.seek(pos, IO::SEEK_SET)
-    @msFlatDisk_file.read(len)
+    @ms_flat_disk_file.seek(pos, IO::SEEK_SET)
+    @ms_flat_disk_file.read(len)
   end
 
   def getBase
@@ -31,12 +31,12 @@ module MSVSFixedDisk
   end
 
   def d_write(pos, buf, len)
-    @msFlatDisk_file.seek(pos, IO::SEEK_SET)
-    @msFlatDisk_file.write(buf, len)
+    @ms_flat_disk_file.seek(pos, IO::SEEK_SET)
+    @ms_flat_disk_file.write(buf, len)
   end
 
   def d_close
-    @msFlatDisk_file.close
+    @ms_flat_disk_file.close
   end
 
   def d_size

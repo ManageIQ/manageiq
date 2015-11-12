@@ -1055,6 +1055,10 @@ class VmOrTemplate < ActiveRecord::Base
     when 'VMware'
       # VM cannot be scanned by server if they are on a repository
       return [] if storage_id.blank? || self.repository_vm?
+    when 'RedHat'
+      return [] if storage_id.blank?
+    when 'Microsoft'
+      return [] if storage_id.blank?
     else
       _log.debug "else"
       return []
@@ -1257,10 +1261,12 @@ class VmOrTemplate < ActiveRecord::Base
     return rhevm_config_path if vendor.to_s == 'RedHat'
 
     case storage.store_type
-    when "VMFS" then "[#{storage.name}] #{location}"
-    when "VSAN" then "[#{storage.name}] #{location}"
-    when "NFS"  then "[#{storage.name}] #{location}"
-    when "NAS"  then File.join(storage.name, location)
+    when "VMFS"  then "[#{storage.name}] #{location}"
+    when "VSAN"  then "[#{storage.name}] #{location}"
+    when "NFS"   then "[#{storage.name}] #{location}"
+    when "NTFS"  then "[#{storage.name}] #{location}"
+    when "CSVFS" then "[#{storage.name}] #{location}"
+    when "NAS"   then File.join(storage.name, location)
     else
       _log.warn("VM [#{name}] storage type [#{storage.store_type}] not supported")
       @path = location

@@ -13,11 +13,11 @@ module MSVSDynamicDisk
       raise "Unrecognized mountMode: #{dInfo.mountMode}"
     end
     if @dInfo.hyperv_connection
-      @msDisk_file = MSCommon.connect_to_hyperv(@dInfo)
+      @ms_disk_file = MSCommon.connect_to_hyperv(@dInfo)
     else
-      @msDisk_file = MiqLargeFile.open(@dInfo.fileName, fileMode)
+      @ms_disk_file = MiqLargeFile.open(@dInfo.fileName, fileMode)
     end
-    MSCommon.d_init_common(@dInfo, @msDisk_file)
+    MSCommon.d_init_common(@dInfo, @ms_disk_file)
   end
 
   def getBase
@@ -33,7 +33,7 @@ module MSVSDynamicDisk
   end
 
   def d_close
-    @msDisk_file.close
+    @ms_disk_file.close
   end
 
   def d_size

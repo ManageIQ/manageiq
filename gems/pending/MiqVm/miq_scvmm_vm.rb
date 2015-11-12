@@ -2,39 +2,22 @@ require 'MiqVm/MiqVm'
 require 'Scvmm/miq_scvmm_vm_ssa_info'
 
 class MiqScvmmVm < MiqVm
-
   def openDisks(disk_files)
-    part_volumes = Array.new
+    part_volumes = []
 
-    $log.debug "MiqScvmmVm::openDisks: no disk files supplied." if !disk_files
-    raise "MiqScvmmVm::openDisks: Uninitialized miq_scvmm" if @ost.miq_scvmm.nil?
+    $log.debug "MiqScvmmVm::openDisks: no disk files supplied." unless disk_files
+    raise "MiqScvmmVm::openDisks: Uninitialized miq_scvmm" if @ost.miq_hyperv.nil?
     #
     # Build a list of the VM's physical volumes.
     #
     disk_files.each do |disk_tag, disk_file|
-      disk_info = OpenStruct.new
-      disk_info.hyperv_connection            = Hash.new
-      disk_info.fileName                     = disk_file
-      disk_info.hyperv_connection[:host]     = @ost.miq_hyperv[:host]
-      disk_info.hyperv_connection[:port]     = @ost.miq_hyperv[:port]
-      if @ost.miq_hyperv[:domain].nil?
-        disk_info.hyperv_connection[:user] = @ost.miq_hyperv[:user]
-      else
-        disk_info.hyperv_connection[:user] = @ost.miq_hyperv[:domain] + "\\" + @ost.miq_hyperv[:user]
-      end
-      disk_info.hyperv_connection[:password] = @ost.miq_hyperv[:password]
- 
-      mode = @vmConfig.getHash["#{disk_tag}.mode"]
-      disk_info.hardwareId = disk_tag
-      disk_info.baseOnly   = @ost.openParent unless mode && mode["independent"]
-      disk_info.rawDisk    = @ost.rawDisk
-    
+      disk_info = init_disk_info(disk_file, disk_tag)
+
       begin
         disk = MiqDisk.getDisk(disk_info)
         next if disk.nil?
       rescue => err
-        $log.error "Couldn't open disk file: #{diskfile}"
-        $log.error err.to_s
+        $log.error "Couldn't open disk file: #{disk_file} #{err}"
         $log.debug err.backtrace.join("\n")
         @diskInitErrors[disk_file] = err.to_s
         next
@@ -47,11 +30,10 @@ class MiqScvmmVm < MiqVm
         part_volumes.concat(part)
       end
     end
-    return part_volumes
+    part_volumes
   end
 
-  def getCfg(snap = nil)
-
+  def getCfg(_snap = nil)
     cfg_hash = {}
     # Collect disk information
     # Call out to the Hyper-V host for Info about the VM.
@@ -77,5 +59,27 @@ class MiqScvmmVm < MiqVm
       cfg_hash["#{tag}.filename"]   = vhd
     end
     cfg_hash
+  end
+
+  private
+
+  def init_disk_info(disk_file, disk_tag)
+    disk_info                          = OpenStruct.new
+    disk_info.hyperv_connection        = {}
+    disk_info.fileName                 = disk_file
+    disk_info.hyperv_connection[:host] = @ost.miq_hyperv[:host]
+    disk_info.hyperv_connection[:port] = @ost.miq_hyperv[:port]
+    if @ost.miq_hyperv[:domain].nil?
+      disk_info.hyperv_connection[:user] = @ost.miq_hyperv[:user]
+    else
+      disk_info.hyperv_connection[:user] = @ost.miq_hyperv[:domain] + "\\" + @ost.miq_hyperv[:user]
+    end
+    disk_info.hyperv_connection[:password] = @ost.miq_hyperv[:password]
+
+    mode                 = @vmConfig.getHash["#{disk_tag}.mode"]
+    disk_info.hardwareId = disk_tag
+    disk_info.baseOnly   = @ost.openParent unless mode && mode["independent"]
+    disk_info.rawDisk    = @ost.rawDisk
+    disk_info
   end
 end

@@ -102,6 +102,28 @@ class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraM
     execute_power_operation("Resume", vm.uid_ems)
   end
 
+  def vm_create_evm_snapshot(vm, options = {})
+    log_prefix = "vm_create_evm_snapshot: vm=[#{vm.name}]"
+
+    host_handle = vm_host_handle(vm, options)
+    host_handle.vm_create_evm_checkpoint(vm.name)
+  rescue => err
+    $scvmm_log.error "#{log_prefix}, error: #{err}"
+    $scvmm_log.debug { err.backtrace.join("\n") }
+    raise
+  end
+
+  def vm_delete_evm_snapshot(vm, options = {})
+    log_prefix = "vm_delete_evm_snapshot: vm=[#{vm.name}]"
+
+    host_handle = vm_host_handle(vm, options)
+    host_handle.vm_remove_evm_checkpoint(vm.name)
+  rescue => err
+    $scvmm_log.error "#{log_prefix}, error: #{err}"
+    $scvmm_log.debug { err.backtrace.join("\n") }
+    raise
+  end
+
   private
 
   def execute_power_operation(cmdlet, vm_uid_ems, *parameters)
@@ -132,5 +154,14 @@ class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraM
     end
 
     connect_params
+  end
+
+  def vm_host_handle(vm, options)
+    require 'Scvmm/miq_scvmm_vm_ssa_info'
+    raise "no credentials defined in options #{options}" if self.missing_credentials?(options[:auth_type])
+    user = options[:user] || authentication_userid(options[:auth_type])
+    pass = options[:pass] || authentication_password(options[:auth_type])
+
+    MiqScvmmVmSSAInfo.new(vm.host.hostname, user, pass)
   end
 end
