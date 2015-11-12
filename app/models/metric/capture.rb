@@ -56,12 +56,7 @@ module Metric::Capture
     end
   end
 
-  def self.perf_capture_timer(zone = nil)
-    perf_capture_health_check(zone)
-
-    _log.info "Queueing performance capture..."
-
-    targets = Metric::Targets.capture_targets(zone)
+  def self.calc_targets_by_rollup_parent(targets)
 
     # Collect realtime targets and group them by their rollup parent, e.g. {"EmsCluster:4"=>[Host:4], "EmsCluster:5"=>[Host:1, Host:2]}
     targets_by_rollup_parent = targets.inject({}) do |h, target|
@@ -78,7 +73,10 @@ module Metric::Capture
 
       h
     end
+    targets_by_rollup_parent
+  end
 
+  def self.calc_tasks_by_rollup_parent(targets_by_rollup_parent)
     task_end_time           = Time.now.utc.iso8601
     default_task_start_time = 1.hour.ago.utc.iso8601
 
@@ -108,6 +106,10 @@ module Metric::Capture
       h
     end
 
+    tasks_by_rollup_parent
+  end
+
+  def self.queue_captures(targets, targets_by_rollup_parent, tasks_by_rollup_parent)
     # Queue the captures for each target
     use_historical = historical_days != 0
     targets.each do |target|
@@ -131,6 +133,17 @@ module Metric::Capture
         target.perf_capture_queue('historical')
       end
     end
+  end
+
+  def self.perf_capture_timer(zone = nil)
+    _log.info "Queueing performance capture..."
+
+    perf_capture_health_check(zone)
+    targets = Metric::Targets.capture_targets(zone)
+
+    targets_by_rollup_parent = calc_targets_by_rollup_parent(targets)
+    tasks_by_rollup_parent   = calc_tasks_by_rollup_parent(targets_by_rollup_parent)
+    queue_captures(targets, targets_by_rollup_parent, tasks_by_rollup_parent)
 
     # Purge tasks older than 4 hours
     MiqTask.delete_older(4.hours.ago.utc, "name LIKE 'Performance rollup for %'")
