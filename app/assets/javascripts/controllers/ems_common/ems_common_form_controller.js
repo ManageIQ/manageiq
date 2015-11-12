@@ -7,6 +7,7 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
       provider_id: '',
       zone: '',
       hostname: '',
+      project: '',
       api_port: '',
       api_version: '',
       provider_region: '',
@@ -22,6 +23,7 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
       ssh_keypair_userid: '',
       ssh_keypair_password: '',
       ssh_keypair_verify: '',
+      service_account: '',
       emstype_vm: false,
       ems_common: true,
       azure_tenant_id: ''
@@ -61,6 +63,7 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
         $scope.emsCommonModel.emstype                         = data.emstype;
         $scope.emsCommonModel.zone                            = data.zone;
         $scope.emsCommonModel.hostname                        = data.hostname;
+        $scope.emsCommonModel.project                         = data.project;
 
         $scope.emsCommonModel.openstack_infra_providers_exist = data.openstack_infra_providers_exist;
         $scope.emsCommonModel.provider_id                     = data.provider_id.toString();
@@ -71,6 +74,8 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
 
         $scope.emsCommonModel.default_userid                  = data.default_userid;
         $scope.emsCommonModel.amqp_userid                     = data.amqp_userid;
+
+        $scope.emsCommonModel.service_account                 = data.service_account;
 
         $scope.emsCommonModel.azure_tenant_id                 = data.azure_tenant_id;
 
@@ -106,10 +111,7 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
   }
 
   $scope.canValidateBasicInfo = function () {
-    if ($scope.isBasicInfoValid())
-      return true;
-    else
-      return false;
+    return $scope.isBasicInfoValid()
   }
 
   $scope.isBasicInfoValid = function() {
@@ -131,7 +133,9 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
        $scope.emsCommonModel.default_password != '' && $scope.angularForm.default_password.$valid &&
        $scope.emsCommonModel.default_verify != '' && $scope.angularForm.default_verify.$valid)) {
       return true;
-    } else if($scope.emsCommonModel.emstype == "gce") {
+    } else if($scope.emsCommonModel.emstype == "gce" && $scope.emsCommonModel.project != '' &&
+      ($scope.currentTab == "default" || 
+      ($scope.currentTab == "service_account" && $scope.emsCommonModel.service_account != ''))) {
       return true;
     }
     else
