@@ -2580,7 +2580,7 @@ class ApplicationController < ActionController::Base
   def render_flash_not_applicable_to_model(type, model_type = "items")
     add_flash(_("%{task} does not apply to at least one of the selected %{model}") %
                 {:model => model_type,
-                 :task  => type.capitalize}, :error)
+                 :task  => type.split.map(&:capitalize).join(' ')}, :error)
     render_flash { |page| page << '$(\'#main_div\').scrollTop();' } if @explorer
   end
 

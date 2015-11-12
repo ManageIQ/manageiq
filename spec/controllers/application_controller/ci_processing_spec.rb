@@ -310,4 +310,25 @@ describe HostController do
       expect(flash_messages.first[:message]).to include "Refresh Ems initiated for #{vms.length} VMs"
     end
   end
+
+  context "#vm_button_operation" do
+    it "when the vm_or_template supports scan,  returns true" do
+      vm1 =  FactoryGirl.create(:vm_microsoft)
+      vm2 =  FactoryGirl.create(:vm_vmware)
+      controller.instance_variable_set(:@_params, :miq_grid_checks => "#{vm1.id}, #{vm2.id}")
+      controller.send(:vm_button_operation, 'scan', "Smartstate Analysis")
+      flash_messages = assigns(:flash_array)
+      expect(flash_messages.first[:message]).to include "Smartstate Analysis does not apply to at least one of the selected Virtual Machines"
+    end
+
+    it "when the vm_or_template supports scan,  returns true" do
+      vm = FactoryGirl.create(:vm_vmware,
+                              :ext_management_system => FactoryGirl.create(:ems_openstack_infra),
+                              :storage               => FactoryGirl.create(:storage)
+                             )
+      controller.instance_variable_set(:@_params, :miq_grid_checks => "#{vm.id}")
+      controller.should_receive(:process_objects)
+      controller.send(:vm_button_operation, 'scan', "Smartstate Analysis")
+    end
+  end
 end
