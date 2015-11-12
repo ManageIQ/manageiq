@@ -83,7 +83,7 @@ describe OrchestrationTemplateDialogService do
     fields[0].resource_action.fqname.should == "/Cloud/Orchestration/Operations/Methods/Available_Tenants"
     assert_field(fields[0], DialogFieldDropDownList, :name => "tenant_name",    :dynamic => true)
     assert_field(fields[1], DialogFieldTextBox,      :name => "stack_name",     :validator_rule => '^[A-Za-z][A-Za-z0-9\-]*$')
-    assert_field(fields[2], DialogFieldTextBox,      :name => "resource_group", :validator_rule => '^[A-Za-z][A-Za-z0-9\-_]*$')
+    assert_field(fields[2], DialogFieldDropDownList, :name => "resource_group", :dynamic => true)
     assert_field(fields[3], DialogFieldDropDownList, :name => "deploy_mode",    :values => [%w(Complete Complete), %w(Incremental Incremental)])
   end
 
