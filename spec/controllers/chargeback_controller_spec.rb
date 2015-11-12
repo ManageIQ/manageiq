@@ -7,11 +7,6 @@ describe ChargebackController do
     let(:category) { FactoryGirl.create(:classification) }
     let(:tag)      { FactoryGirl.create(:classification, :parent_id => category.id) }
     let(:entry)    { FactoryGirl.create(:classification, :parent_id => tag.id) }
-    before(:each) do
-      cbr = FactoryGirl.create(:chargeback_rate, :rate_type => "Storage")
-      temp = {:cb_rate => cbr, :tag => [@tag, "vm"]}
-      ChargebackRate.set_assignments(:Storage, [temp])
-    end
 
     context "#get_tags_all" do
       before { entry }
@@ -30,6 +25,11 @@ describe ChargebackController do
     end
 
     context "#cb_assign_set_form_vars" do
+      before do
+        cbr = FactoryGirl.create(:chargeback_rate, :rate_type => "Storage")
+        ChargebackRate.set_assignments(:Storage, [{:cb_rate => cbr, :tag => [tag, "vm"]}])
+      end
+
       it "returns tag for current assignments" do
         controller.instance_variable_set(:@sb,
                                          :active_tree => :cb_assignments_tree,
