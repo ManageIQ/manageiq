@@ -69,7 +69,6 @@ module AutomationSpecHelper
     attrs.reverse_merge!(
       :ae_class      => 'CLASS1',
       :ae_namespace  => 'A/B/C',
-      :priority      => 10,
       :enabled       => true,
       :instance_name => 'instance1')
   end
