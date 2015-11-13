@@ -299,6 +299,7 @@ workers:
           :cinder: "notifications.*"
           :glance: "notifications.*"
           :quantum: "notifications.*"
+          :heat: "notifications.*"
         :duration: 10.seconds
         :capacity: 50
         :amqp_port: 5672
