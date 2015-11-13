@@ -19,6 +19,7 @@ describe ToModelHash do
 
         create_table :test_disks, force: true  do |t|
           t.integer :num_disks
+          t.integer :something
           t.integer :test_hardware_id
         end
       end
@@ -66,6 +67,20 @@ describe ToModelHash do
     it "virtual column on included association" do
       test_to_model_hash_options = {
         "include" => {"test_hardware" => {"columns" => ["num_disks"]}}
+      }
+
+      test_hardware_class.virtual_column :num_disks, :type => :integer, :uses => :test_disks
+
+      options = test_vm_class.send(:to_model_hash_options_fixup, test_to_model_hash_options)
+      expect(test_vm_class.new.send(:to_model_hash_build_preload, options)).to match_array [{:test_hardware => [:num_disks]}]
+    end
+
+    it "virtual and regular column includes from different associations" do
+      test_to_model_hash_options = {
+        "include" => [
+          {"test_hardware" => {"columns" => ["num_disks"]}},
+          {"test_disks"    => {"columns" => ["something"]}}
+        ]
       }
 
       test_hardware_class.virtual_column :num_disks, :type => :integer, :uses => :test_disks
