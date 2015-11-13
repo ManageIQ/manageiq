@@ -17,6 +17,10 @@ module Vmdb
       instance.respond_to?(method)
     end
 
+    class << self
+      delegate :silence, :warn, :to => :instance
+    end
+
     private
 
     def self.evm_log
