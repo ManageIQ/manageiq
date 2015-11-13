@@ -344,13 +344,18 @@ module ManageIQ::Providers
 
       def stack_template(deployment)
         uri = deployment.properties.try(:template_link).try(:uri)
-        return unless uri
 
-        content = download_template(uri)
+        content = uri.nil? ? template_from_vmdb(deployment) : download_template(uri)
         return unless content
 
         get_stack_template(deployment, content)
         @data_index.fetch_path(:orchestration_templates, deployment.id)
+      end
+
+      def template_from_vmdb(deployment)
+        find_by = {:name => deployment.name, :ems_ref => deployment.id, :ext_management_system => @ems}
+        stack = ManageIQ::Providers::Azure::CloudManager::OrchestrationStack.find_by(find_by)
+        stack.try(:orchestration_template).try(:content)
       end
 
       def download_template(uri)
@@ -406,7 +411,7 @@ module ManageIQ::Providers
       def parse_stack_template(deployment, content)
         # Only need a temporary unique identifier for the template. Using the stack id is the cheapest way.
         uid = deployment.id
-        ver = deployment.properties.template_link.content_version
+        ver = deployment.properties.try(:template_link).try(:content_version)
 
         new_result = {
           :type        => "OrchestrationTemplateAzure",
