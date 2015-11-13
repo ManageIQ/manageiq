@@ -1,4 +1,10 @@
 module MiqAeMethodService
+  class Deprecation < Vmdb::Deprecation
+    def self.default_log
+      $miq_ae_logger
+    end
+  end
+
   class MiqAeServiceFront
     include DRbUndumped
     def find(id)
