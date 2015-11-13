@@ -824,6 +824,7 @@ class ApplicationHelper::ToolbarBuilder
       when "vm_refresh"
         return true if @record && !@record.ext_management_system && !(@record.host && @record.host.vmm_product.downcase == "workstation")
       when "vm_scan", "instance_scan"
+        return true unless @record.is_available?(:smartstate_analysis) || @record.is_available_now_error_message(:smartstate_analysis)
         return true unless @record.has_proxy?
       when "perf_refresh", "perf_reload", "vm_perf_refresh", "vm_perf_reload"
         return true unless @perf_options[:typ] == "realtime"

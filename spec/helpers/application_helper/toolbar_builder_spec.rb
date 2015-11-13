@@ -1536,7 +1536,10 @@ describe ApplicationHelper do
       context "and id = vm_scan" do
         before do
           @id = "vm_scan"
+          @record = FactoryGirl.create(:vm_vmware)
           @record.stub(:has_proxy?).and_return(true)
+          @record.stub(:archived? => false)
+          @record.stub(:orphaned? => false)
         end
 
         it "and !@record.has_proxy?" do
@@ -1546,6 +1549,11 @@ describe ApplicationHelper do
 
         it "and @record.has_proxy?" do
           subject.should == false
+        end
+
+        it "and @record.has_proxy? and is archived" do
+          @record.stub(:archived? => true)
+          subject.should == true
         end
       end
 
