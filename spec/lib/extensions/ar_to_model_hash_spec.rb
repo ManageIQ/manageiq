@@ -12,16 +12,16 @@ describe ToModelHash do
     before do
       silence_stream($stdout) do
         ActiveRecord::Schema.define do
-          create_table :test_vms, force: true  do |t|
+          create_table :test_vms, :force => true  do |t|
             t.string :name
           end
 
-          create_table :test_hardwares, force: true  do |t|
+          create_table :test_hardwares, :force => true  do |t|
             t.integer :bitness
             t.integer :test_vm_id
           end
 
-          create_table :test_disks, force: true  do |t|
+          create_table :test_disks, :force => true  do |t|
             t.integer :num_disks
             t.integer :something
             t.integer :test_hardware_id
