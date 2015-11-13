@@ -187,15 +187,15 @@ module ApplicationController::Compare
     compare_to_json(@compare)
     render :update do |page|                    # Use RJS to update the display
       if @exists_mode
-        page << "ManageIQ.toolbars.enableItem('#center_tb' 'comparemode_details');"
-        page << "ManageIQ.toolbars.unmarkItem('#center_tb' 'comparemode_details');"
-        page << "ManageIQ.toolbars.disableItem('#center_tb' 'comparemode_exists');"
-        page << "ManageIQ.toolbars.markItem('#center_tb' 'comparemode_exists');"
+        page << "ManageIQ.toolbars.enableItem('#center_tb', 'comparemode_details');"
+        page << "ManageIQ.toolbars.unmarkItem('#center_tb', 'comparemode_details');"
+        page << "ManageIQ.toolbars.disableItem('#center_tb', 'comparemode_exists');"
+        page << "ManageIQ.toolbars.markItem('#center_tb', 'comparemode_exists');"
       else
-        page << "ManageIQ.toolbars.disableItem('#center_tb' 'comparemode_details');"
-        page << "ManageIQ.toolbars.markItem('#center_tb' 'comparemode_details');"
-        page << "ManageIQ.toolbars.enableItem('#center_tb' 'comparemode_exists');"
-        page << "ManageIQ.toolbars.unmarkItem('#center_tb' 'comparemode_exists');"
+        page << "ManageIQ.toolbars.disableItem('#center_tb', 'comparemode_details');"
+        page << "ManageIQ.toolbars.markItem('#center_tb', 'comparemode_details');"
+        page << "ManageIQ.toolbars.enableItem('#center_tb', 'comparemode_exists');"
+        page << "ManageIQ.toolbars.unmarkItem('#center_tb', 'comparemode_exists');"
       end
       page.replace_html("main_div", :partial => "layouts/compare")  # Replace the main div area contents
       page << "miqSparkle(false);"
