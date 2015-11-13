@@ -137,19 +137,19 @@ class OrchestrationTemplateDialogService
 
   def add_resource_group_field(group, position)
     group.dialog_fields.build(
-      :type           => "DialogFieldTextBox",
-      :name           => "resource_group",
-      :description    => "Resource group to which stack is to deploy",
-      :data_type      => "string",
-      :display        => "edit",
-      :required       => true,
-      :options        => {:protected => false},
-      :validator_type => 'regex',
-      :validator_rule => '^[A-Za-z][A-Za-z0-9\-_]*$',
-      :label          => "Resource Group",
-      :position       => position,
-      :dialog_group   => group
-    )
+      :type         => "DialogFieldDropDownList",
+      :name         => "resource_group",
+      :description  => "Resource group to which stack is to deploy",
+      :data_type    => "string",
+      :display      => "edit",
+      :dynamic      => true,
+      :required     => false,
+      :label        => "Resource Group",
+      :position     => position,
+      :dialog_group => group
+    ).tap do |dialog_field|
+      dialog_field.resource_action.fqname = "/Cloud/Orchestration/Operations/Methods/Available_Resource_Groups"
+    end
   end
 
   def add_parameter_field(parameter, group, position)
