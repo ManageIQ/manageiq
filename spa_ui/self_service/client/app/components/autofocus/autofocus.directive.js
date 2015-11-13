@@ -19,9 +19,9 @@
     return directive;
 
     function link(scope, element) {
-      $timeout(focus, 1);
+      $timeout(setFocus, 1);
 
-      function focus() {
+      function setFocus() {
         element[0].focus();
       }
     }

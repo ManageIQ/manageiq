@@ -49,7 +49,7 @@
         $state.go('dashboard');
 
         function handleUserInfo(data) {
-          if (!data.resources || 0 == data.resources.length) {
+          if (!data.resources || 0 === data.resources.length) {
             return Session.currentUser({name: 'Unknown User', email: ''});
           }
 
