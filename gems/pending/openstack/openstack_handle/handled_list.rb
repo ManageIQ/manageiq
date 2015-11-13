@@ -23,6 +23,18 @@ module OpenstackHandle
                 "in provider: #{@os_handle.address}. Message=#{err.message}"
       _log.warn err.backtrace.join("\n")
       []
+    rescue => err
+      # Show any list related exception in a nice format.
+      openstack_service_name = Handle::SERVICE_NAME_MAP[self.class::SERVICE_NAME]
+
+      _log.error "Unable to obtain collection: '#{collection_type}' in service: '#{openstack_service_name}' "\
+                 "using project scope: '#{@os_handle.project_name}' in provider: '#{@os_handle.address}'. "\
+                 "Message=#{err.message}"
+      _log.error err.backtrace.join("\n")
+
+      raise MiqException::MiqOpenstackApiRequestError,
+            "Unable to obtain a collection: '#{collection_type}' in a service: '#{openstack_service_name}' through "\
+            " API. Please, fix your OpenStack installation and run refresh again."
     end
 
     def pagination_handle(collection_type, options = {}, method = :all)

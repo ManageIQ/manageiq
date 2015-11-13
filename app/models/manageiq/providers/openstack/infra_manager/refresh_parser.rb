@@ -31,6 +31,26 @@ module ManageIQ
         @orchestration_service      = @os_handle.detect_orchestration_service
         @image_service              = @os_handle.detect_image_service
         @storage_service            = @os_handle.detect_storage_service
+
+        validate_required_services
+      end
+
+      def validate_required_services
+        unless @identity_service
+          raise MiqException::MiqOpenstackKeystoneServiceMissing, "Required service Keystone is missing in the catalog."
+        end
+
+        unless @compute_service
+          raise MiqException::MiqOpenstackNovaServiceMissing, "Required service Nova is missing in the catalog."
+        end
+
+        unless @image_service
+          raise MiqException::MiqOpenstackGlanceServiceMissing, "Required service Glance is missing in the catalog."
+        end
+
+        unless @baremetal_service
+          raise MiqException::MiqOpenstackIronicServiceMissing, "Required service Ironic is missing in the catalog."
+        end
       end
 
       def ems_inv_to_hashes
