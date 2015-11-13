@@ -49,4 +49,8 @@ class ManageIQ::Providers::Openstack::CloudManager::Template < ManageIQ::Provide
   def has_proxy?
     true
   end
+
+  def validate_smartstate_analysis
+    validate_supported_check("Smartstate Analysis")
+  end
 end
