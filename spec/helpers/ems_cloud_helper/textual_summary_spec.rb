@@ -5,8 +5,8 @@ describe EmsCloudHelper::TextualSummary do
     before do
       @ems = FactoryGirl.create(:ems_openstack, :zone => FactoryGirl.build(:zone))
       allow_any_instance_of(described_class).to receive(:role_allows).and_return(true)
-      controller.stub(:restful?).and_return(true)
-      controller.stub(:controller_name).and_return("ems_cloud")
+      allow(controller).to receive(:restful?).and_return(true)
+      allow(controller).to receive(:controller_name).and_return("ems_cloud")
     end
 
     it "sets restful path for instances in summary for restful controllers" do
