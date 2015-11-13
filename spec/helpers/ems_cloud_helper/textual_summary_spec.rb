@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe EmsCloudHelper do
+describe EmsCloudHelper::TextualSummary do
   context "#textual_instances and #textual_images" do
     def role_allows(_)
       true
