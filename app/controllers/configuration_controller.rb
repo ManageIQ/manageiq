@@ -639,11 +639,11 @@ class ConfigurationController < ApplicationController
     :host             => %w(Infrastructure Hosts),
     :miqtemplate      => %w(Services Workloads Templates\ &\ Images),
     :storage          => %w(Infrastructure Datastores),
-    :templatecloud    => %w(Cloud Instances Images),
-    :templateinfra    => %w(Infrastructure Virtual\ Machines Templates),
     :vm               => %w(Services Workloads VMs\ &\ Instances),
-    :vmcloud          => %w(Cloud Instances Instances),
-    :vminfra          => %w(Infrastructure Virtual\ Machines VMs)
+    :"manageiq::providers::cloudmanager::template" => %w(Cloud Instances Images),
+    :"manageiq::providers::inframanager::template" => %w(Infrastructure Virtual\ Machines Templates),
+    :"manageiq::providers::cloudmanager::vm"       => %w(Cloud Instances Instances),
+    :"manageiq::providers::inframanager::vm"       => %w(Infrastructure Virtual\ Machines VMs)
   }
 
   def merge_in_user_settings(settings)

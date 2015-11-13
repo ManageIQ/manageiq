@@ -792,7 +792,9 @@ module ApplicationController::Filter
         if "cs_filter_tree" == x_active_tree.to_s
           build_foreman_tree(:filter, x_active_tree)
         else
-          build_vm_tree(:filter, x_active_tree) # Rebuild active VM filter tree
+          tree_type = x_active_tree.to_s.sub(/_tree/, '').to_sym
+          builder = TreeBuilder.class_for_type(tree_type)
+          tree = builder.new(x_active_tree, tree_type, @sb)
         end
       else
         build_listnav_search_list(@edit[@expkey][:exp_model])
@@ -813,11 +815,14 @@ module ApplicationController::Filter
 
       if ["delete", "saveit"].include?(params[:button])
         if @edit[:in_explorer]
-          tree = x_active_tree.to_s
-          if "cs_filter_tree" == tree
-            page.replace_html("#{tree}_div", :partial => "provider_foreman/#{tree}")
+          tree_name = x_active_tree.to_s
+          if "cs_filter_tree" == tree_name
+            page.replace_html("#{tree_name}_div", :partial => "provider_foreman/#{tree_name}")
           else
-            page.replace_html("#{tree}_div", :partial => "vm_common/#{tree}")
+            page.replace_html("#{tree_name}_div", :partial => "shared/tree", :locals => {
+              :tree => tree,
+              :name => tree_name
+            })
           end
         else
           page.replace(:listnav_div, :partial => "layouts/listnav")
