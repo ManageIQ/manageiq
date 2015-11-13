@@ -1482,6 +1482,30 @@ describe ApplicationHelper do
     end
   end
 
+  context "#show_adv_search?" do
+    it 'should return false for explorer screen with no trees such as automate/simulation' do
+      controller.instance_variable_set(:@explorer, true)
+      controller.instance_variable_set(:@sb, {})
+      result = helper.show_adv_search?
+      result.should be_false
+    end
+
+    it 'should return true for VM explorer trees' do
+      controller.instance_variable_set(:@explorer, true)
+      controller.instance_variable_set(:@sb,
+                                       :active_tree => :vms_instances_filter_tree,
+                                       :trees       => {
+                                         :vms_instances_filter_tree => {
+                                           :tree => :vms_instances_filter_tree,
+                                           :type => :vms_instances_filter
+                                         }
+                                       }
+      )
+      result = helper.show_adv_search?
+      result.should be_true
+    end
+  end
+
   context "#show_advanced_search?" do
     it 'should return true for VM explorer trees' do
       controller.instance_variable_set(:@sb,
