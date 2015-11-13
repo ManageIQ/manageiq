@@ -5,6 +5,7 @@ describe ToModelHash do
     let(:test_disk_class)     { Class.new(ActiveRecord::Base) { self.table_name = "test_disks" } }
     let(:test_hardware_class) { Class.new(ActiveRecord::Base) { self.table_name = "test_hardwares" } }
     let(:test_vm_class)       { Class.new(ActiveRecord::Base) { self.table_name = "test_vms" } }
+    let(:test_os_class)       { Class.new(ActiveRecord::Base) { self.table_name = "test_operating_systems"} }
     let(:fixed_options)       { test_vm_class.send(:to_model_hash_options_fixup, @test_to_model_hash_options) }
     let(:mocked_preloader)    { double }
 
@@ -25,6 +26,10 @@ describe ToModelHash do
             t.integer :something
             t.integer :test_hardware_id
           end
+
+          create_table :test_operating_systems, :force => true  do |t|
+            t.string :name
+          end
         end
       end
 
@@ -32,6 +37,8 @@ describe ToModelHash do
       test_hardware_class.has_many   :test_disks,    :anonymous_class => test_disk_class
       test_hardware_class.belongs_to :test_vm,       :anonymous_class => test_vm_class
       test_vm_class.has_one          :test_hardware, :anonymous_class => test_hardware_class, :dependent => :destroy
+      test_vm_class.has_one          :test_operating_system, :anonymous_class => test_os_class, :dependent => :destroy
+
       # we're testing the preload of associations, skip the recursive .to_model_hash
       ActiveRecord::Base.any_instance.stub(:to_model_hash_recursive)
       ActiveRecord::Associations::Preloader.stub(:new).and_return(mocked_preloader)
@@ -68,13 +75,13 @@ describe ToModelHash do
 
     it "columns included from different associations" do
       @test_to_model_hash_options = {
-        "include" =>  {
-          "test_hardware" => {"columns" => ["bitness"]},
-          "test_disks"    => {"columns" => ["something"]}
+        "include" => {
+          "test_hardware"         => {"columns" => ["bitness"]},
+          "test_operating_system" => {"columns" => ["name"]}
         }
       }
 
-      assert_preloaded([:test_hardware, :test_disks])
+      assert_preloaded([:test_hardware, :test_operating_system])
     end
 
     context "virtual columns" do
@@ -117,14 +124,14 @@ describe ToModelHash do
 
       it "virtual and regular column included from different associations" do
         @test_to_model_hash_options = {
-          "include" =>  {
-            "test_hardware" => {"columns" => ["num_disks"]},
-            "test_disks"    => {"columns" => ["something"]}
+          "include" => {
+            "test_hardware"         => {"columns" => ["num_disks"]},
+            "test_operating_system" => {"columns" => ["name"]}
           }
         }
 
         test_hardware_class.virtual_column :num_disks, :type => :integer, :uses => :test_disks
-        assert_preloaded([{:test_hardware => [:num_disks]}])
+        assert_preloaded([:test_operating_system, {:test_hardware => [:num_disks]}])
       end
     end
   end
