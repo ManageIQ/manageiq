@@ -1,16 +1,16 @@
 require "spec_helper"
 
 describe EmsCloudHelper do
+  def role_allows(_)
+    true
+  end
+
   before do
     controller.send(:extend, EmsCloudHelper)
     self.class.send(:include, EmsCloudHelper)
   end
 
   context "textual_instances" do
-    def role_allows(_)
-      true
-    end
-
     it "sets restful path for instances in summary for restful controllers" do
       controller.stub(:restful?).and_return(true)
       controller.stub(:controller_name).and_return("ems_cloud")
@@ -26,10 +26,6 @@ describe EmsCloudHelper do
   end
 
   context "textual_images" do
-    def role_allows(_)
-      true
-    end
-
     it "sets restful path for images in summary for restful controllers" do
       controller.stub(:restful?).and_return(true)
       controller.stub(:controller_name).and_return("ems_cloud")
