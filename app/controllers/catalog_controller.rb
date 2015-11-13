@@ -471,7 +471,6 @@ class CatalogController < ApplicationController
       format.js { replace_right_cell }
       format.html do                # HTML, send error screen
         explorer
-        render(:action => "explorer")
       end
       format.any { render :nothing => true, :status => 404 }  # Anything else, just send 404
     end
