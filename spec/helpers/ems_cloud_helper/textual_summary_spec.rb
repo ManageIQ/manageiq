@@ -6,8 +6,6 @@ describe EmsCloudHelper do
   end
 
   before do
-    controller.send(:extend, EmsCloudHelper)
-    self.class.send(:include, EmsCloudHelper)
   end
 
   context "textual_instances" do
