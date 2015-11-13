@@ -109,4 +109,12 @@ module MiqException
   class MiqOrchestrationUpdateError < Error; end
   class MiqOrchestrationDeleteError < Error; end
   class MiqOrchestrationStackNotExistError < Error; end
+
+  class MiqOpenstackRequiredServiceMissing < Error; end
+  class MiqOpenstackKeystoneServiceMissing < MiqOpenstackRequiredServiceMissing; end
+  class MiqOpenstackNovaServiceMissing < MiqOpenstackRequiredServiceMissing; end
+  class MiqOpenstackGlanceServiceMissing < MiqOpenstackRequiredServiceMissing; end
+  class MiqOpenstackIronicServiceMissing < MiqOpenstackRequiredServiceMissing; end
+
+  class MiqOpenstackApiRequestError < Error; end
 end
