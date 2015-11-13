@@ -42,7 +42,8 @@ class MiqAeClassCopy
 
   def target_ns(domain, ns)
     return "#{domain}/#{@partial_ns}" if ns.nil?
-    MiqAeNamespace.find_by_fqname(ns, false).nil? ? "#{domain}/#{ns}" : ns
+    ns_obj = MiqAeNamespace.find_by_fqname(ns, false)
+    ns_obj && !ns_obj.domain? ? ns : "#{domain}/#{ns}"
   end
 
   def copy
