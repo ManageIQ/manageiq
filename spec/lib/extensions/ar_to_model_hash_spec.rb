@@ -54,6 +54,17 @@ describe ToModelHash do
       expect(test_vm_class.new.send(:to_model_hash_build_preload, fixed_options)).to eq [{:test_hardware => [:test_disks]}]
     end
 
+    it "columns included from different associations" do
+      @test_to_model_hash_options = {
+        "include" =>  {
+          "test_hardware" => {"columns" => ["bitness"]},
+          "test_disks"    => {"columns" => ["something"]}
+        }
+      }
+
+      expect(test_vm_class.new.send(:to_model_hash_build_preload, fixed_options)).to match_array [:test_hardware, :test_disks]
+    end
+
     context "virtual columns" do
       it "virtual column on main table" do
         @test_to_model_hash_options = {
