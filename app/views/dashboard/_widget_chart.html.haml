@@ -14,8 +14,6 @@
     - if Charting.data_ok?(datum)
       -# we need to count all charts to be able to display multiple
       -# charts on a dashboard screen
-
-      - datum = widget.contents_for_user(current_user).contents
       - WidgetPresenter.chart_data.push(:xml => datum)
       - chart_index = WidgetPresenter.chart_data.length - 1
       - chart_data = YAML.load(datum) if Charting.backend == :jqplot

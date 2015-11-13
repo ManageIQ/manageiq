@@ -10,6 +10,7 @@ class Charting
       :sample_chart,
       :chart_names_for_select,
       :chart_themes_for_select,
+      :serialized,
       :js_load_statement      # javascript statement to reload charts
     ] => :instance
   end

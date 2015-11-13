@@ -95,6 +95,11 @@ class ZiyaCharting < Charting
     CHART_NAMES
   end
 
+  def serialized(data)
+    # already xml
+    data
+  end
+
   CHART_NAMES = [
     # ["Area",                 "Area"],
     # ["Area, Stacked",        "StackedArea"],
