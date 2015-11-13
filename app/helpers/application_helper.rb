@@ -1070,7 +1070,7 @@ module ApplicationHelper
                      orchestration_stack repository resource_pool retired security_group service
                      snia_local_file_system storage storage_manager templates vm)
     (@lastaction == "show_list" && !session[:menu_click] && show_search.include?(@layout) && !@in_a_form) ||
-      (@explorer && tree_with_advanced_search? && !@record)
+      (@explorer && x_tree && tree_with_advanced_search? && !@record)
   end
 
   def need_prov_dialogs?(type)
