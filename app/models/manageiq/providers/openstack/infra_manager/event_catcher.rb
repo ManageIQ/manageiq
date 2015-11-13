@@ -5,6 +5,10 @@ class ManageIQ::Providers::Openstack::InfraManager::EventCatcher < ::MiqEventCat
     ManageIQ::Providers::Openstack::InfraManager
   end
 
+  def self.settings_name
+    :event_catcher_openstack_infra
+  end
+
   def self.all_valid_ems_in_zone
     require 'openstack/openstack_event_monitor'
     super.select do |ems|
