@@ -19,6 +19,8 @@ ul.dynatree-container
 
 #accordion .panel-body {
   background-color: #f9f9f9 !important;
+  border-right: 1px solid #d4d4d4;
+  margin-right: -1px;
   padding-left: 0 !important;  /*needed so that dynatree hover effect goes to edges*/
   padding-right: 0 !important; /*needed so that dynatree hover effect goes to edges*/
 }
