@@ -411,4 +411,38 @@ describe Storage do
       end
     end
   end
+
+  context "#is_available? for Smartstate Analysis" do
+    before do
+      @storage =  FactoryGirl.create(:storage)
+    end
+
+    it "returns true for VMware Storage" do
+      FactoryGirl.create(:host_vmware,
+                         :ext_management_system => FactoryGirl.create(:ems_vmware),
+                         :storages              => [@storage])
+      expect(@storage.is_available?(:smartstate_analysis)).to eq(true)
+    end
+
+    it "returns false for non-vmware Storage" do
+      expect(@storage.is_available?(:smartstate_analysis)).to_not eq(true)
+    end
+  end
+
+  context ".batch_operation_supported?" do
+    before do
+      @storage =  FactoryGirl.create(:storage)
+    end
+
+    it "when the storage supports smarstate analysis,  returns false" do
+      expect(Storage.batch_operation_supported?(:smartstate_analysis, [@storage.id])).to eq(false)
+    end
+
+    it "when the storage perform smartstate analysis, returns true" do
+      FactoryGirl.create(:host_vmware,
+                         :ext_management_system => FactoryGirl.create(:ems_vmware),
+                         :storages              => [@storage])
+      expect(Storage.batch_operation_supported?(:smartstate_analysis, [@storage.id])).to eq(true)
+    end
+  end
 end

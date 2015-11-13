@@ -151,7 +151,7 @@ class StorageController < ApplicationController
                                                    "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
       render_or_redirect_partial(pfx)
     else
-      if @refresh_div == "main_div" && @lastaction == "show_list"
+      if !flash_errors? && @refresh_div == "main_div" && @lastaction == "show_list"
         replace_gtl_main_div
       else
         render_flash

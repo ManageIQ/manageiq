@@ -1130,6 +1130,8 @@ class ApplicationHelper::ToolbarBuilder
         return "No Capacity & Utilization data has been collected for this #{ui_lookup(:table => "storages")}" unless @record.has_perf_data?
       when "storage_delete"
         return "Only #{ui_lookup(:table => "storages")} without VMs and Hosts can be removed" if @record.vms_and_templates.length > 0 || @record.hosts.length > 0
+      when "storage_scan"
+        return @record.is_available_now_error_message(:smartstate_analysis) unless @record.is_available?(:smartstate_analysis)
       end
     when "Tenant"
       return "Default Tenant can not be deleted" if @record.parent.nil? && id == "rbac_tenant_delete"
