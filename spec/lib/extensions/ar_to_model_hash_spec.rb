@@ -1,11 +1,12 @@
 require "spec_helper"
 
 describe ToModelHash do
-  context "to_model_hash_build_preload" do
+  context "#to_model_hash" do
     let(:test_disk_class)     { Class.new(ActiveRecord::Base) { self.table_name = "test_disks" } }
     let(:test_hardware_class) { Class.new(ActiveRecord::Base) { self.table_name = "test_hardwares" } }
     let(:test_vm_class)       { Class.new(ActiveRecord::Base) { self.table_name = "test_vms" } }
     let(:fixed_options)       { test_vm_class.send(:to_model_hash_options_fixup, @test_to_model_hash_options) }
+    let(:mocked_preloader)    { double }
 
     before do
       silence_stream($stdout) do
@@ -31,6 +32,17 @@ describe ToModelHash do
       test_hardware_class.has_many   :test_disks,    :anonymous_class => test_disk_class
       test_hardware_class.belongs_to :test_vm,       :anonymous_class => test_vm_class
       test_vm_class.has_one          :test_hardware, :anonymous_class => test_hardware_class, :dependent => :destroy
+      # we're testing the preload of associations, skip the recursive .to_model_hash
+      ActiveRecord::Base.any_instance.stub(:to_model_hash_recursive)
+      ActiveRecord::Associations::Preloader.stub(:new).and_return(mocked_preloader)
+    end
+
+    def assert_preloaded(associations)
+      mocked_preloader.should_receive(:preload) do |_recs, assocs|
+        expect(assocs).to match_array(associations)
+      end
+
+      test_vm_class.new.to_model_hash(fixed_options)
     end
 
     it "included column" do
@@ -38,7 +50,7 @@ describe ToModelHash do
         "include" => {"test_hardware" => {"columns" => ["bitness"]}}
       }
 
-      expect(test_vm_class.new.send(:to_model_hash_build_preload, fixed_options)).to eq [:test_hardware]
+      assert_preloaded([:test_hardware])
     end
 
     it "nested included columns" do
@@ -51,7 +63,7 @@ describe ToModelHash do
         }
       }
 
-      expect(test_vm_class.new.send(:to_model_hash_build_preload, fixed_options)).to eq [{:test_hardware => [:test_disks]}]
+      assert_preloaded([{:test_hardware => [:test_disks]}])
     end
 
     it "columns included from different associations" do
@@ -62,7 +74,7 @@ describe ToModelHash do
         }
       }
 
-      expect(test_vm_class.new.send(:to_model_hash_build_preload, fixed_options)).to match_array [:test_hardware, :test_disks]
+      assert_preloaded([:test_hardware, :test_disks])
     end
 
     context "virtual columns" do
@@ -72,7 +84,7 @@ describe ToModelHash do
         }
 
         test_vm_class.virtual_column :bitness, :type => :integer, :uses => :test_hardware
-        expect(test_vm_class.new.send(:to_model_hash_build_preload, fixed_options)).to eq([:bitness])
+        assert_preloaded([:bitness])
       end
 
       it "virtual column and included column" do
@@ -82,7 +94,7 @@ describe ToModelHash do
         }
 
         test_vm_class.virtual_column :bitness, :type => :integer, :uses => :test_hardware
-        expect(test_vm_class.new.send(:to_model_hash_build_preload, fixed_options)).to match_array [:bitness, :test_hardware]
+        assert_preloaded([:bitness, :test_hardware])
       end
 
       it "virtual column matches included association column" do
@@ -91,7 +103,7 @@ describe ToModelHash do
         }
 
         test_vm_class.virtual_column :bitness, :type => :integer, :uses => :test_hardware
-        expect(test_vm_class.new.send(:to_model_hash_build_preload, fixed_options)).to eq [:test_hardware]
+        assert_preloaded([:test_hardware])
       end
 
       it "included association virtual column " do
@@ -100,7 +112,7 @@ describe ToModelHash do
         }
 
         test_hardware_class.virtual_column :num_disks, :type => :integer, :uses => :test_disks
-        expect(test_vm_class.new.send(:to_model_hash_build_preload, fixed_options)).to match_array [{:test_hardware => [:num_disks]}]
+        assert_preloaded([{:test_hardware => [:num_disks]}])
       end
 
       it "virtual and regular column included from different associations" do
@@ -112,7 +124,7 @@ describe ToModelHash do
         }
 
         test_hardware_class.virtual_column :num_disks, :type => :integer, :uses => :test_disks
-        expect(test_vm_class.new.send(:to_model_hash_build_preload, fixed_options)).to match_array [{:test_hardware => [:num_disks]}]
+        assert_preloaded([{:test_hardware => [:num_disks]}])
       end
     end
   end
