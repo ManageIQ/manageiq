@@ -298,6 +298,7 @@ workers:
           :nova: "notifications.*"
           :cinder: "notifications.*"
           :glance: "notifications.*"
+          :neutron: "notifications.*"
           :quantum: "notifications.*"
         :duration: 10.seconds
         :capacity: 50
