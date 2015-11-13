@@ -15,8 +15,7 @@ describe EmsCloudHelper do
     it "sets restful path for instances in summary for restful controllers" do
       FactoryGirl.create(:vm_openstack, :ems_id => @ems.id)
 
-      result = textual_instances
-      expect(result[:link]).to eq("/ems_cloud/#{@ems.id}?display=instances")
+      expect(textual_instances[:link]).to eq("/ems_cloud/#{@ems.id}?display=instances")
     end
   end
 
@@ -24,8 +23,7 @@ describe EmsCloudHelper do
     it "sets restful path for images in summary for restful controllers" do
       FactoryGirl.create(:template_cloud, :ems_id => @ems.id)
 
-      result = textual_images
-      expect(result[:link]).to eq("/ems_cloud/#{@ems.id}?display=images")
+      expect(textual_images[:link]).to eq("/ems_cloud/#{@ems.id}?display=images")
     end
   end
 end
