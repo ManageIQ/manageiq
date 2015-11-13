@@ -10,4 +10,8 @@ class ManageIQ::Providers::Amazon::CloudManager::Template < ManageIQ::Providers:
       :message => 'Perform SmartState Analysis on this Image'
     }
   end
+
+  def validate_smartstate_analysis
+    validate_unsupported("Smartstate Analysis")
+  end
 end
