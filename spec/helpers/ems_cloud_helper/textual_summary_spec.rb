@@ -2,12 +2,9 @@ require "spec_helper"
 
 describe EmsCloudHelper::TextualSummary do
   context "#textual_instances and #textual_images" do
-    def role_allows(_)
-      true
-    end
-
     before do
       @ems = FactoryGirl.create(:ems_openstack, :zone => FactoryGirl.build(:zone))
+      allow_any_instance_of(described_class).to receive(:role_allows).and_return(true)
       controller.stub(:restful?).and_return(true)
       controller.stub(:controller_name).and_return("ems_cloud")
     end
