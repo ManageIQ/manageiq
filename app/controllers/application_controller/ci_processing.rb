@@ -1762,6 +1762,11 @@ module ApplicationController::CiProcessing
     # Either a list or coming from a different controller (eg from host screen, go to its storages)
     if @lastaction == "show_list" || @layout != "storage"
       storages = find_checked_items
+
+      if method == 'scan' && !Storage.batch_operation_supported?('smartstate_analysis', storages)
+        render_flash_not_applicable_to_model('Smartstate Analysis', ui_lookup(:tables => "storage"))
+        return
+      end
       if storages.empty?
         add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "storage"), :task => display_name}, :error)
       else
