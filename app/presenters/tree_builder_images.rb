@@ -1,7 +1,7 @@
 class TreeBuilderImages < TreeBuilder
   def tree_init_options(_tree_name)
     {
-      :leaf => "TemplateCloud"
+      :leaf => "ManageIQ::Providers::CloudManager::Template"
     }
   end
 

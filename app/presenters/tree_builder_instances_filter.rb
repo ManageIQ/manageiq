@@ -1,6 +1,6 @@
 class TreeBuilderInstancesFilter < TreeBuilderVmsFilter
   def tree_init_options(_tree_name)
-    super.update(:leaf => 'VmCloud')
+    super.update(:leaf => 'ManageIQ::Providers::CloudManager::Vm')
   end
 
   def set_locals_for_render

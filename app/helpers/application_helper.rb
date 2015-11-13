@@ -1108,10 +1108,7 @@ module ApplicationHelper
                      orchestration_stack repository resource_pool retired security_group service
                      snia_local_file_system storage storage_manager templates vm)
     (@lastaction == "show_list" && !session[:menu_click] && show_search.include?(@layout) && !@in_a_form) ||
-      (@explorer &&
-       x_tree &&
-       [:containers, :filter, :images, :instances, :providers, :vandt].include?(x_tree[:type]) &&
-       !@record)
+      (@explorer && tree_with_advanced_search? && !@record)
   end
 
   def need_prov_dialogs?(type)
@@ -1287,12 +1284,14 @@ module ApplicationHelper
     @my_server ||= MiqServer.my_server(true)
   end
 
-  def vm_explorer_tree?
-    [:filter, :images, :instances, :templates_images_filter, :vandt, :vms_instances_filter].include?(x_tree[:type])
+  def tree_with_advanced_search?
+    %i(containers images instances providers vandt
+     images_filter instances_filter templates_filter templates_images_filter containers_filter
+     vms_filter vms_instances_filter).include?(x_tree[:type])
   end
 
   def show_advanced_search?
-    x_tree && ((vm_explorer_tree? && !@record) || @show_adv_search)
+    x_tree && ((tree_with_advanced_search? && !@record) || @show_adv_search)
   end
 
   def listicon_image_tag(db, row)
