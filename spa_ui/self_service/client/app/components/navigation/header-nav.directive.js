@@ -24,10 +24,11 @@
     }
 
     /** @ngInject */
-    function HeaderNavController(Text, Navigation, Messages, API_BASE) {
+    function HeaderNavController(Text, Navigation, Messages, Session, API_BASE) {
       var vm = this;
 
       vm.text = Text.app;
+      vm.user = Session.currentUser;
 
       vm.activate = activate;
       vm.toggleNavigation = toggleNavigation;

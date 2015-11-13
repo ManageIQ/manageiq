@@ -15,7 +15,7 @@
   <nav class="collapse navbar-collapse">
     <ul class="nav navbar-nav">
       <li>
-        <a ng-href="{{vm.API_BASE}}" target="_blank" class="nav-item-iconic nav-item-iconic-new-window">          
+        <a ng-href="{{vm.API_BASE}}" target="_blank" class="nav-item-iconic nav-item-iconic-new-window">
           <i class="fa fa-external-link" tooltip="Log into the full administrative UI" tooltip-placement="bottom" tooltip-append-to-body="true"></i>
         </a>
       </li>
@@ -23,7 +23,7 @@
     <ul class="nav navbar-nav navbar-right navbar-iconic">
       <li dropdown>
         <a dropdown-toggle class="nav-item-iconic">
-          <i title="Username" class="fa pficon-user"></i>
+          <i title="{{ ::vm.user().name }}" class="fa pficon-user"></i>
           <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
