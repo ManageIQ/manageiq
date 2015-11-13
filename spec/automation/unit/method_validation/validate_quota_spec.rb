@@ -35,7 +35,7 @@ describe "Quota Validation" do
       @quota_limit_max = YAML.dump(:storage => 0, :vms => 0, :cpu => 0, :memory => 4096)
       @quota_limit_warn = YAML.dump(:storage => 0, :vms => 0, :cpu => 0, :memory => 0)
       err_msg = "Request exceeds maximum allowed for the following:" \
-                " (memory - Used: 4096 plus requested: 1024 exceeds quota: 4096) "
+                " (memory - Used: 4.00 KB plus requested: 1.00 KB exceeds quota: 4.00 KB) "
       ws = run_automate_method(@miq_provision_request)
       expect(ws.root['ae_result']).to eql('error')
       @miq_request.reload
@@ -46,7 +46,7 @@ describe "Quota Validation" do
       @quota_limit_warn = YAML.dump(:storage => 0, :vms => 0, :cpu => 0, :memory => 4096)
       @quota_limit_max = YAML.dump(:storage => 0, :vms => 0, :cpu => 0, :memory => 0)
       err_msg = "Request exceeds warning limits for the following:" \
-                " (memory - Used: 4096 plus requested: 1024 exceeds quota: 4096) "
+                " (memory - Used: 4.00 KB plus requested: 1.00 KB exceeds quota: 4.00 KB) "
       ws = run_automate_method(@miq_provision_request)
       expect(ws.root['ae_result']).to eql('ok')
       @miq_request.reload
@@ -101,7 +101,7 @@ describe "Quota Validation" do
       @quota_limit_max  = YAML.dump(:storage => 20_480, :vms => 0, :cpu => 0, :memory => 0)
       @quota_limit_warn = YAML.dump(:storage => 0, :vms => 0, :cpu => 0, :memory => 0)
       err_msg = "Request exceeds maximum allowed for the following:" \
-                " (storage - Used: 32768 plus requested: 10240 exceeds quota: 20480) "
+                " (storage - Used: 32.00 KB plus requested: 10.00 KB exceeds quota: 20.00 KB) "
       ws = run_automate_method(@miq_provision_request)
       expect(ws.root['ae_result']).to eql('error')
       @miq_request.reload
@@ -112,7 +112,7 @@ describe "Quota Validation" do
       @quota_limit_warn  = YAML.dump(:storage => 10_240, :vms => 0, :cpu => 0, :memory => 0)
       @quota_limit_max = YAML.dump(:storage => 0, :vms => 0, :cpu => 0, :memory => 0)
       err_msg = "Request exceeds warning limits for the following:" \
-                " (storage - Used: 32768 plus requested: 10240 exceeds quota: 10240) "
+                " (storage - Used: 32.00 KB plus requested: 10.00 KB exceeds quota: 10.00 KB) "
       ws = run_automate_method(@miq_provision_request)
       expect(ws.root['ae_result']).to eql('ok')
       @miq_request.reload
