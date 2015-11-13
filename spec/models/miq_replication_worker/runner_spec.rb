@@ -4,7 +4,6 @@ describe MiqReplicationWorker::Runner do
   before do
     MiqReplicationWorker::Runner.any_instance.stub(:worker_initialization)
     @worker = MiqReplicationWorker::Runner.new
-    @hb_file = Rails.root.join('tmp/rubyrep_hb')
   end
 
   context "testing rubyrep_alive?" do
@@ -26,21 +25,14 @@ describe MiqReplicationWorker::Runner do
   end
 
   context "testing child process heartbeat" do
-    after do
-      File.delete(@hb_file) if File.exist?(@hb_file)
-    end
-
     it "should be alive if heartbeat within threshold" do
-      FileUtils.touch(@hb_file)
+      @worker.stub(:child_process_last_heartbeat => 1.second.ago.utc)
       expect(@worker.child_process_recently_active?).to be_true
     end
 
     it "should not be alive if heartbeat beyond threshold" do
-      FileUtils.touch(@hb_file)
-
-      Timecop.travel(301) do
-        expect(@worker.child_process_recently_active?).to be_false
-      end
+      @worker.stub(:child_process_last_heartbeat => 6.minutes.ago.utc)
+      expect(@worker.child_process_recently_active?).to be_false
     end
   end
 end
