@@ -32,4 +32,26 @@ describe RrPendingChange do
       end
     end
   end
+
+  describe ".backlog_details" do
+    it "returns the correct counts" do
+      MiqRegion.seed
+      region = MiqRegion.my_region_number
+
+      silence_stream($stdout) do
+        ActiveRecord::Schema.define do
+          create_table "rr#{region}_pending_changes" do |t|
+            t.string    :change_table
+            t.string    :change_key
+            t.string    :change_new_key
+            t.string    :change_type
+            t.timestamp :change_time
+          end
+        end
+      end
+      FactoryGirl.create(:rr_pending_change, :change_table => "users")
+      FactoryGirl.create_list(:rr_pending_change, 2, :change_table => "miq_servers")
+      expect(described_class.backlog_details).to eq("miq_servers" => 2, "users" => 1)
+    end
+  end
 end
