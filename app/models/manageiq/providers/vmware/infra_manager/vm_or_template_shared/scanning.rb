@@ -28,6 +28,10 @@ module ManageIQ::Providers::Vmware::InfraManager::VmOrTemplateShared::Scanning
     sync_stashed_metadata(ost)
   end
 
+  def validate_smartstate_analysis
+    validate_supported_check("Smartstate Analysis")
+  end
+
   private
 
   # Moved from MIQExtract.rb
