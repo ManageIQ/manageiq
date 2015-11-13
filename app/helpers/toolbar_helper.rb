@@ -44,8 +44,10 @@ module ToolbarHelper
   #
   def render_toolbars
     @toolbars.collect do |div_id, toolbar_name|
-      content_tag(:div, :id => div_id) do # div for each toolbar
-        buttons = toolbar_name ? build_toolbar(toolbar_name) : nil
+      buttons = toolbar_name ? build_toolbar(toolbar_name) : nil
+      visible_div = buttons.any? {|tb| tb[:hidden] == false} if buttons
+      # div for each toolbar
+      content_tag(:div, :id => div_id, :style => visible_div ? "display: block" : "display: none") do
         buttons_to_html(buttons)
       end
     end.join('').html_safe

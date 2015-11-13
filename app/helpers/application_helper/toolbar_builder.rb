@@ -8,7 +8,7 @@ class ApplicationHelper::ToolbarBuilder
 
   delegate :request, :current_user, :to => :@view_context
 
-  delegate :get_vmdb_config, :role_allows, :model_for_vm, :rbac_common_feature_for_buttons, :to => :@view_context
+  delegate :get_vmdb_config, :role_allows, :model_for_vm, :to => :@view_context
   delegate :x_tree_history, :x_node, :x_active_tree, :to => :@view_context
   delegate :is_browser?, :is_browser_os?, :to => :@view_context
 
@@ -399,7 +399,7 @@ class ApplicationHelper::ToolbarBuilder
       end
     when :rbac_tree
       common_buttons = %w(rbac_project_add rbac_tenant_add)
-      feature = common_buttons.include?(id) ? rbac_common_feature_for_buttons(id) : id
+      feature = common_buttons.include?(id) ? "rbac_tenant_add" : id
       return true unless role_allows(:feature => feature)
       return true if common_buttons.include?(id) && @record.project?
       return false
@@ -543,6 +543,10 @@ class ApplicationHelper::ToolbarBuilder
          !["details", "item"].include?(@showtype)) || #       not showing list or single sub screen item i.e VM/Users
          @lastaction == "show_list") ? # or 2) selected node shows a list of records
         false : true
+    end
+
+    if id =~ /atomic.*new/
+      return !role_allows(:feature => "catalogitem_new")
     end
 
     if id.starts_with?("history_")
@@ -787,6 +791,13 @@ class ApplicationHelper::ToolbarBuilder
       end
     when "Service", "ServiceOrchestration"
       return build_toolbar_hide_button_service(id)
+    when "ServiceTemplate"
+      case id
+      when "catalogitem_button_new", "catalogitem_group_new"
+        return !role_allows(:feature => "catalogitem_button_or_group_new")
+      else
+        return !role_allows(:feature => id)
+      end
     when "Vm"
       case id
       when "vm_clone"

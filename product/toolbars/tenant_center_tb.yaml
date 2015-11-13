@@ -15,12 +15,12 @@
       :image: new
       :text: "Add child Tenant to this Tenant"
       :title: "Add child Tenant to this Tenant"
-      :url_parms: '?tenant_type=tenant'
+      :url_parms: '?tenant_type=tenant&common_feature=true'
     - :button: rbac_project_add
       :image: new
       :text: "Add Project to this Tenant"
       :title: "Add Project to this Tenant"
-      :url_parms: '?tenant_type=project'
+      :url_parms: '?tenant_type=project&common_feature=true'
     - :button: rbac_tenant_edit
       :image: edit
       :text: "Edit this item"

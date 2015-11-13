@@ -188,7 +188,11 @@ module ApplicationController::Buttons
   end
 
   def ab_button_new
-    assert_privileges("ab_button_new")
+    if params.key? :common_feature
+      assert_privileges("catalogitem_button_or_group_new")
+    else
+      assert_privileges("ab_button_new")
+    end
     button_new_edit("new")
   end
 
