@@ -4,11 +4,16 @@ class ManageIQ::Providers::Azure::CloudManager::OrchestrationStack < ::Orchestra
   def self.raw_create_stack(orchestration_manager, stack_name, template, options = {})
     resource_group, create_options = make_create_options(template, options)
 
+    # no error is raised if the resource_group already exists
+    orchestration_manager.with_provider_connection do |configure|
+      Azure::Armrest::ResourceGroupService.new(configure).create(resource_group, orchestration_manager.provider_region)
+    end
+
     orchestration_manager.with_provider_connection do |configure|
       Azure::Armrest::TemplateDeploymentService.new(configure).create(stack_name, resource_group, create_options).id
     end
   rescue => err
-    _log.error "stack=[#{stack_name}], error: #{err.inspect}"
+    _log.error "stack=[#{stack_name}], error: #{err}"
     raise MiqException::MiqOrchestrationProvisionError, err.to_s, err.backtrace
   end
 
