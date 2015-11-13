@@ -2398,6 +2398,31 @@ describe ApplicationHelper do
         it_behaves_like 'record with error message', 'smartstate_analysis'
       end
 
+      context "and id = storage_scan" do
+        before do
+          @id = "storage_scan"
+          @record = FactoryGirl.create(:storage)
+          host = FactoryGirl.create(:host_vmware,
+                                    :ext_management_system => FactoryGirl.create(:ems_vmware),
+                                    :storages              => [@record])
+        end
+
+        it "should be available for vmware storages" do
+          subject.should be(false)
+        end
+      end
+
+      context "and id = storage_scan" do
+        before do
+          @id = "storage_scan"
+          @record = FactoryGirl.create(:storage)
+        end
+
+        it "should be not be available for non-vmware storages" do
+          subject.should include('cannot be performed on selected')
+        end
+      end
+
       context "and id = vm_timeline" do
         before do
           @id = "vm_timeline"
