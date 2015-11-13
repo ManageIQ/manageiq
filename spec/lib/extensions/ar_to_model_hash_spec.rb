@@ -5,39 +5,39 @@ describe ToModelHash do
     let(:test_disk_class)     { Class.new(ActiveRecord::Base) { self.table_name = "test_disks" } }
     let(:test_hardware_class) { Class.new(ActiveRecord::Base) { self.table_name = "test_hardwares" } }
     let(:test_vm_class)       { Class.new(ActiveRecord::Base) { self.table_name = "test_vms" } }
-    let(:test_os_class)       { Class.new(ActiveRecord::Base) { self.table_name = "test_operating_systems"} }
+    let(:test_os_class)       { Class.new(ActiveRecord::Base) { self.table_name = "test_operating_systems" } }
     let(:fixed_options)       { test_vm_class.send(:to_model_hash_options_fixup, @test_to_model_hash_options) }
     let(:mocked_preloader)    { double }
 
     before do
       silence_stream($stdout) do
         ActiveRecord::Schema.define do
-          create_table :test_vms, :force => true  do |t|
+          create_table :test_vms, :force => true do |t|
             t.string :name
           end
 
-          create_table :test_hardwares, :force => true  do |t|
+          create_table :test_hardwares, :force => true do |t|
             t.integer :bitness
             t.integer :test_vm_id
           end
 
-          create_table :test_disks, :force => true  do |t|
+          create_table :test_disks, :force => true do |t|
             t.integer :num_disks
             t.integer :something
             t.integer :test_hardware_id
           end
 
-          create_table :test_operating_systems, :force => true  do |t|
+          create_table :test_operating_systems, :force => true do |t|
             t.string :name
           end
         end
       end
 
-      test_disk_class.belongs_to     :test_hardware, :anonymous_class => test_hardware_class
-      test_hardware_class.has_many   :test_disks,    :anonymous_class => test_disk_class
-      test_hardware_class.belongs_to :test_vm,       :anonymous_class => test_vm_class
-      test_vm_class.has_one          :test_hardware, :anonymous_class => test_hardware_class, :dependent => :destroy
-      test_vm_class.has_one          :test_operating_system, :anonymous_class => test_os_class, :dependent => :destroy
+      test_disk_class.belongs_to     :test_hardware,         :anonymous_class => test_hardware_class
+      test_hardware_class.has_many   :test_disks,            :anonymous_class => test_disk_class
+      test_hardware_class.belongs_to :test_vm,               :anonymous_class => test_vm_class
+      test_vm_class.has_one          :test_hardware,         :anonymous_class => test_hardware_class, :dependent => :destroy
+      test_vm_class.has_one          :test_operating_system, :anonymous_class => test_os_class,       :dependent => :destroy
 
       # we're testing the preload of associations, skip the recursive .to_model_hash
       ActiveRecord::Base.any_instance.stub(:to_model_hash_recursive)
