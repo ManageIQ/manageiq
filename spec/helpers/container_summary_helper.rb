@@ -22,15 +22,15 @@ describe ContainerSummaryHelper do
     it 'show link when role allows' do
       @user.stub(:role_allows?).and_return(true)
 
-      subject.keys.should be == REL_HASH_WITH_LINK
-      subject[:value].should be == container_project.name
+      expect(subject.keys).to eq(REL_HASH_WITH_LINK)
+      expect(subject[:value]).to eq(container_project.name)
     end
 
     it 'hide link when role does not allow' do
       @user.stub(:role_allows?).and_return(false)
 
-      subject.keys.should be == REL_HASH_WITHOUT_LINK
-      subject[:value].should be == container_project.name
+      expect(subject.keys).to eq(REL_HASH_WITHOUT_LINK)
+      expect(subject[:value]).to eq(container_project.name)
     end
   end
 
@@ -40,15 +40,15 @@ describe ContainerSummaryHelper do
     it 'show link when role allows' do
       @user.stub(:role_allows?).and_return(true)
 
-      subject.keys.should be == REL_HASH_WITH_LINK
-      subject[:value].should be == "2"
+      expect(subject.keys).to eq(REL_HASH_WITH_LINK)
+      expect(subject[:value]).to eq("2")
     end
 
     it 'hide link when role does not allow' do
       @user.stub(:role_allows?).and_return(false)
 
-      subject.keys.should be == REL_HASH_WITHOUT_LINK
-      subject[:value].should be == "2"
+      expect(subject.keys).to eq(REL_HASH_WITHOUT_LINK)
+      expect(subject[:value]).to eq("2")
     end
   end
 end
