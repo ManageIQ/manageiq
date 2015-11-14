@@ -5,13 +5,14 @@ describe ContainerSummaryHelper do
   REL_HASH_WITH_LINK = [:label, :image, :value, :link, :title]
   REL_HASH_WITHOUT_LINK = [:label, :image, :value]
 
+  let(:container_project) { FactoryGirl.create(:container_project) }
   before do
     controller.send(:extend, ApplicationHelper)
     self.class.send(:include, ApplicationHelper)
 
-    @record = FactoryGirl.create(:container_group, :container_project => FactoryGirl.create(:container_project, :name => "project"))
-    FactoryGirl.create(:container, :container_group => @record, :name => "container1")
-    FactoryGirl.create(:container, :container_group => @record, :name => "container2")
+    @record = FactoryGirl.create(:container_group, :container_project => container_project)
+    FactoryGirl.create(:container, :container_group => @record)
+    FactoryGirl.create(:container, :container_group => @record)
 
     login_as @user = FactoryGirl.create(:user)
   end
@@ -23,7 +24,7 @@ describe ContainerSummaryHelper do
       rel_hash = textual_container_project
 
       rel_hash.keys.to_set.should be == REL_HASH_WITH_LINK.to_set
-      rel_hash[:value].should be == "project"
+      rel_hash[:value].should be == container_project.name
     end
   end
 
@@ -34,7 +35,7 @@ describe ContainerSummaryHelper do
       rel_hash = textual_container_project
 
       rel_hash.keys.to_set.should be == REL_HASH_WITHOUT_LINK.to_set
-      rel_hash[:value].should be == "project"
+      rel_hash[:value].should be == container_project.name
     end
   end
 
