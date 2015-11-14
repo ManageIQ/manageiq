@@ -6,7 +6,6 @@ describe ContainerSummaryHelper do
 
   let(:container_project) { FactoryGirl.create(:container_project) }
   before do
-    controller.send(:extend, ApplicationHelper)
     self.class.send(:include, ApplicationHelper)
 
     @record = FactoryGirl.create(:container_group, :container_project => container_project)
