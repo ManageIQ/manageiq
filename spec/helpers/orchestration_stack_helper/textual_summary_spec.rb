@@ -5,18 +5,8 @@ describe OrchestrationStackHelper::TextualSummary do
     @record = FactoryGirl.create(:orchestration_stack)
   end
 
-  it "defines textual_group_lifecycle" do
-    expect(self).to respond_to(:textual_group_lifecycle)
-  end
-
-  describe "#textual_group_lifecycle" do
-    it "should includes retirement_date" do
-      expect(self.textual_group_lifecycle).to include(:retirement_date)
-    end
-  end
-
-  it "defines textual_retirement_date" do
-    expect(self).to respond_to(:textual_retirement_date)
+  it "#textual_group_lifecycle should includes retirement_date" do
+    expect(self.textual_group_lifecycle).to include(:retirement_date)
   end
 
   describe "#textual_retirement_date" do
