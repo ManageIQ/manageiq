@@ -233,6 +233,32 @@ describe MiqReport do
       expect(results.data.first["host_name"]).to eq "HA"
     end
 
+    it "expression filtering on a virtual column and user filters" do
+      vm1 = FactoryGirl.create(:vm_vmware, :name => "VA", :host => FactoryGirl.create(:host, :name => "HA"))
+      vm2 = FactoryGirl.create(:vm_vmware, :name => "VB", :host => FactoryGirl.create(:host, :name => "HB"))
+      tag = "/managed/environment/prod"
+      @group.update_attributes(:filters => {"managed" => [[tag]], "belongsto" => []})
+      vm1.tag_with(tag, :ns => "*")
+      vm2.tag_with(tag, :ns => "*")
+
+      User.stub(:server_timezone => "UTC")
+
+      report = MiqReport.new(:db => "Vm")
+
+      filter = YAML.load '--- !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: Vm-host_name
+          value: "HA"
+      '
+
+      results, attrs = report.paged_view_search(:only => %w(name host_name), :userid => @user.userid, :filter => filter)
+      expect(results.length).to eq 1
+      expect(results.data.first["name"]).to eq "VA"
+      expect(results.data.first["host_name"]).to eq "HA"
+      expect(attrs[:user_filters]["managed"]).to eq [[tag]]
+    end
+
     context "with tagged VMs" do
       before(:each) do
         @hosts = [
@@ -267,42 +293,6 @@ describe MiqReport do
           @group.update_attributes(:filters => {"managed" => [["/managed/environment/prod"], ["/managed/service_level/silver"]], "belongsto" => []})
         end
 
-
-
-        it "works when filtering on a virtual column and user filters are passed" do
-          report = MiqReport.new(:db => "Vm", :sortby => ["name"], :order => "Descending")
-          filter = YAML.load '--- !ruby/object:MiqExpression
-          exp:
-            and:
-            - IS NOT NULL:
-                field: Vm-name
-                value: ""
-            - IS NOT EMPTY:
-                field: Vm-created_on
-                value: ""
-            - and:
-              - IS NOT NULL:
-                  field: Vm-host_name
-                  value: ""
-          '
-
-          options = {
-            :userid   => @user.userid,
-            :only     => ["name", "host_name"],
-            :page     => 3,
-            :per_page => 2,
-            :filter   => filter
-          }
-          results, attrs = report.paged_view_search(options)
-          results.length.should == 2
-          results.data.first["name"].should == "Test Group 3 VM 50"
-          results.data.last["name"].should == "Test Group 2 VM 40"
-          attrs[:apply_sortby_in_search].should be_true
-          attrs[:apply_limit_in_sql].should be_false
-          attrs[:auth_count].should == 10
-          attrs[:user_filters]["managed"].should == [["/managed/environment/prod"], ["/managed/service_level/silver"]]
-          attrs[:total_count].should == 100
-        end
 
         it "works when filtering on a virtual reflection" do
           report = MiqReport.new(:db => "Vm", :sortby => ["name"], :order => "Descending")
