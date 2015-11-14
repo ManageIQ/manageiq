@@ -248,39 +248,6 @@ describe MiqReport do
           @group.update_attributes(:filters => {"managed" => [["/managed/environment/prod"], ["/managed/service_level/silver"]], "belongsto" => []})
         end
 
-        it "works when sorting on a column in a sub-table" do
-          report = MiqReport.new(:db => "Vm", :cols => ["name", "host.name"], :include => {"host" => {"columns" => ["name"]}}, :sortby => ["host.name", "name"], :order => "Descending")
-          options = {
-            :only     => ["name", "host.name"],
-            :page     => 2,
-            :per_page => 10
-          }
-          results, attrs = report.paged_view_search(options)
-          results.length.should == 10
-          results.data.first["name"].should == "Test Group 1 VM 21"
-          results.data.last["name"].should == "Test Group 1 VM 13"
-          attrs[:apply_sortby_in_search].should be_true
-          attrs[:apply_limit_in_sql].should be_true
-          attrs[:auth_count].should == 100
-          attrs[:user_filters]["managed"].should be_empty
-          attrs[:total_count].should == 100
-
-          report = MiqReport.new(:db => "Vm", :include_for_find => {:hardware => {}}, :include => {"hardware" => {"columns" => ["guest_os"]}}, :sortby => ["hardware.guest_os", "name"], :order => "Descending")
-          options = {
-            :only     => ["name", "hardware.guest_os"],
-            :page     => 2,
-            :per_page => 10
-          }
-          results, attrs = report.paged_view_search(options)
-          results.length.should == 10
-          results.data.first["name"].should == "Test Group 4 VM 89"
-          results.data.last["name"].should == "Test Group 4 VM 80"
-          attrs[:apply_sortby_in_search].should be_true
-          attrs[:apply_limit_in_sql].should be_true
-          attrs[:auth_count].should == 100
-          attrs[:user_filters]["managed"].should be_empty
-          attrs[:total_count].should == 100
-        end
 
         it "works when filtering on a virtual column" do
           report = MiqReport.new(:db => "Vm", :sortby => ["name"], :order => "Ascending")
