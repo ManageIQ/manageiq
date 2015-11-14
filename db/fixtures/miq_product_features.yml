@@ -3219,6 +3219,10 @@
       :description: Display Individual Container Replicators
       :feature_type: view
       :identifier: container_replicator_show
+    - :name: Timeline
+      :description: Display Timelines for container Replicators
+      :feature_type: view
+      :identifier: container_replicator_timeline
   - :name: Modify
     :description: Modify Container Nodes
     :feature_type: admin

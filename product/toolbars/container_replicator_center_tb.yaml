@@ -22,6 +22,19 @@
       :title: 'Remove this #{ui_lookup(:table=>"container_replicator")} from the VMDB'
       :url_parms: '&refresh=y'
       :confirm: 'Warning: This #{ui_lookup(:table=>"container_replicator")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this #{ui_lookup(:table=>"container_replicator")}?'
+- :name: container_replicator_monitoring
+  :items:
+  - :buttonSelect: container_replicator_monitoring_choice
+    :image: monitoring
+    :title: Monitoring
+    :text: Monitoring
+    :items:
+    - :button: container_replicator_timeline
+      :image: timeline
+      :text: "Timelines"
+      :title: "Show Timelines for this Replicator"
+      :url: '/show'
+      :url_parms: '?display=timeline'
 - :name: container_replicator_policy
   :items:
   - :buttonSelect: container_replicator_policy_choice

@@ -529,11 +529,16 @@ event_groups:
     - compute.instance.unshelve.end
     - compute.instance.shelve_offload.end
     - NODE_REBOOT
+    - NODE_NODESCHEDULABLE
+    - NODE_NODENOTSCHEDULABLE
     - POD_SCHEDULED
     - POD_FAILEDSCHEDULING
+    - REPLICATOR_SUCCESSFULCREATE
+    - REPLICATOR_FAILEDCREATE
     - CONTAINER_CREATED
-    - CONTAINER_KILLING
+    - CONTAINER_KILLED
     - CONTAINER_STARTED
+    - CONTAINER_STOPPED
     :detail:
     - PowerOffVM_Task
     - PowerOffVM_Task_Complete
@@ -613,7 +618,12 @@ event_groups:
     - VmConfigMissingEvent
     - NODE_NODEREADY
     - NODE_NODENOTREADY
+    - NODE_FAILEDMOUNT
+    - NODE_INVALIDDISKCAPACITY
     - POD_FAILEDVALIDATION
+    - POD_DEADLINEEXCEEDED
+    - POD_FAILEDSYNC
+    - CONTAINER_UNHEALTHY
     :detail:
     - DatacenterRenamedEvent
     - GeneralUserEvent

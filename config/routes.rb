@@ -416,7 +416,9 @@ Vmdb::Application.routes.draw do
         sections_field_changed
         show
         show_list
+        tl_chooser
         update
+        wait_for_task
         tagging_edit
         tag_edit_form_field_changed
       ) + adv_search_post + exp_post + save_post
