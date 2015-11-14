@@ -1,9 +1,7 @@
 require "spec_helper"
 
 describe OrchestrationStackHelper::TextualSummary do
-  before :each do
-    @record = FactoryGirl.create(:orchestration_stack)
-  end
+  before { @record = FactoryGirl.build(:orchestration_stack) }
 
   it "#textual_group_lifecycle should includes retirement_date" do
     expect(self.textual_group_lifecycle).to include(:retirement_date)
