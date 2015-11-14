@@ -234,12 +234,14 @@ describe MiqReport do
     end
 
     it "expression filtering on a virtual column and user filters" do
-      vm1 = FactoryGirl.create(:vm_vmware, :name => "VA", :host => FactoryGirl.create(:host, :name => "HA"))
-      vm2 = FactoryGirl.create(:vm_vmware, :name => "VB", :host => FactoryGirl.create(:host, :name => "HB"))
+      vm1 = FactoryGirl.create(:vm_vmware, :name => "VA",  :host => FactoryGirl.create(:host, :name => "HA"))
+      vm2 = FactoryGirl.create(:vm_vmware, :name => "VB",  :host => FactoryGirl.create(:host, :name => "HB"))
+      vm3 = FactoryGirl.create(:vm_vmware, :name => "VAA", :host => FactoryGirl.create(:host, :name => "HAA"))
       tag = "/managed/environment/prod"
       @group.update_attributes(:filters => {"managed" => [[tag]], "belongsto" => []})
-      vm1.tag_with(tag, :ns => "*")
+      # vm1's host.name starts with HA but isn't tagged
       vm2.tag_with(tag, :ns => "*")
+      vm3.tag_with(tag, :ns => "*")
 
       User.stub(:server_timezone => "UTC")
 
@@ -247,15 +249,15 @@ describe MiqReport do
 
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
-        "=":
+        "starts with":
           field: Vm-host_name
           value: "HA"
       '
 
       results, attrs = report.paged_view_search(:only => %w(name host_name), :userid => @user.userid, :filter => filter)
       expect(results.length).to eq 1
-      expect(results.data.first["name"]).to eq "VA"
-      expect(results.data.first["host_name"]).to eq "HA"
+      expect(results.data.first["name"]).to eq "VAA"
+      expect(results.data.first["host_name"]).to eq "HAA"
       expect(attrs[:user_filters]["managed"]).to eq [[tag]]
     end
 
