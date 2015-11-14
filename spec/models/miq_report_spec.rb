@@ -170,6 +170,50 @@ describe MiqReport do
       expect(attrs[:total_count]).to eq 2
     end
 
+    it "sortby, order, user filters, where sort column is in a sub-table" do
+      vm1 = FactoryGirl.create(:vm_vmware, :name => "VA", :storage => FactoryGirl.create(:storage, :name => "SA"))
+      vm2 = FactoryGirl.create(:vm_vmware, :name => "VB", :storage => FactoryGirl.create(:storage, :name => "SB"))
+      tag = "/managed/environment/prod"
+      @group.update_attributes(:filters => {"managed" => [[tag]], "belongsto" => []})
+      vm1.tag_with(tag, :ns => "*")
+      vm2.tag_with(tag, :ns => "*")
+
+      User.stub(:server_timezone => "UTC")
+      report = MiqReport.new(:db => "Vm", :sortby => ["storage.name", "name"], :order => "Ascending", :include => {"storage" => {"columns" => ["name"]}})
+      options = {
+        :only   => ["name", "storage.name"],
+        :userid => @user.userid,
+      }
+
+      results, attrs = report.paged_view_search(options)
+
+      # Why do we need to check all of these things?
+      expect(results.length).to eq 2
+      expect(results.data.first["name"]).to eq "VA"
+      expect(results.data.first["storage.name"]).to eq "SA"
+      expect(report.table.length).to eq 2
+      expect(attrs[:apply_sortby_in_search]).to be_true
+      expect(attrs[:apply_limit_in_sql]).to be_true
+      expect(attrs[:auth_count]).to eq 2
+      expect(attrs[:user_filters]["managed"]).to eq [[tag]]
+      expect(attrs[:total_count]).to eq 2
+    end
+
+    it "sorting on a virtual column" do
+      FactoryGirl.create(:vm_vmware, :name => "B", :host => FactoryGirl.create(:host, :name => "A"))
+      FactoryGirl.create(:vm_vmware, :name => "A", :host => FactoryGirl.create(:host, :name => "B"))
+
+      report = MiqReport.new(:db => "Vm", :sortby => ["host_name", "name"], :order => "Descending")
+      options = {
+        :only     => ["name", "host_name"],
+        :page     => 2,
+      }
+
+      results, attrs = report.paged_view_search(options)
+      expect(results.length).to eq 2
+      expect(results.data.first["host_name"]).to eq "B"
+    end
+
     context "with tagged VMs" do
       before(:each) do
         @hosts = [
@@ -202,46 +246,6 @@ describe MiqReport do
         before(:each) do
           User.stub(:server_timezone => "UTC")
           @group.update_attributes(:filters => {"managed" => [["/managed/environment/prod"], ["/managed/service_level/silver"]], "belongsto" => []})
-        end
-
-        it "works when page parameters and user filters are passed and sort column is in a sub-table" do
-          report = MiqReport.new(:db => "Vm", :sortby => ["storage.name", "name"], :order => "Descending", :include => {"storage" => {"columns" => ["name"]}})
-          options = {
-            :only   => ["name", "storage.name"],
-            :userid => @user.userid,
-          }
-          results, attrs = report.paged_view_search(options)
-          results.length.should == 10
-          results.data.first["name"].should == "Test Group 4 VM 90"
-          results.data.last["name"].should == "Test Group 1 VM 0"
-          report.table.length.should == 10
-          attrs[:apply_sortby_in_search].should be_true
-          attrs[:apply_limit_in_sql].should be_true
-          attrs[:auth_count].should == 10
-          attrs[:user_filters]["managed"].should == [["/managed/environment/prod"], ["/managed/service_level/silver"]]
-          attrs[:total_count].should == 100
-        end
-
-        it "works when sorting on a virtual column" do
-          @group.update_attributes(:filters => {"managed" => [["/managed/environment/prod"], ["/managed/service_level/silver"]], "belongsto" => []})
-          report = MiqReport.new(:db => "Vm", :sortby => ["v_total_snapshots", "name"], :order => "Descending")
-          options = {
-            :only     => ["name", "v_total_snapshots"],
-            :page     => 2,
-            :per_page => 10
-          }
-          results, attrs = report.paged_view_search(options)
-          results.length.should == 10
-          results.data.first["name"].should == "Test Group 4 VM 89"
-          results.data.last["name"].should == "Test Group 4 VM 80"
-          report.table.length.should == 10
-          report.table.data.first["name"].should == "Test Group 4 VM 89"
-          report.table.data.last["name"].should == "Test Group 4 VM 80"
-          attrs[:apply_sortby_in_search].should be_false
-          attrs[:apply_limit_in_sql].should be_true
-          attrs[:auth_count].should == 100
-          attrs[:user_filters]["managed"].should be_empty
-          attrs[:total_count].should == 100
         end
 
         it "works when sorting on a column in a sub-table" do
