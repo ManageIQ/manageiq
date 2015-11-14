@@ -1,4 +1,8 @@
-require_relative '../../bundler_setup'
+###################################################################################
+# Usage:
+# bundle exec rails r gems/pending/openstack/test/event_monitor_example.rb
+
+require 'bundler_setup'
 require 'openstack/openstack_event_monitor'
 
 def event_to_hash(event)
@@ -38,13 +42,16 @@ os_monitor = OpenstackEventMonitor.new(:hostname => OPENSTACK_RDU_DEV_SERVER,
                                        :topics   => {"nova"    => "notifications.*",
                                                      "glance"  => "notifications.*",
                                                      "cinder"  => "notifications.*",
-                                                     "quantum" => "notifications.*"})
+                                                     "heat"    => "notifications.*",
+                                                     "quantum" => "notifications.*",
+                                                     "neutron" => "notifications.*"})
 
 Signal.trap("INT") { os_monitor.stop }
 
 os_monitor.start
 puts "Connected ... waiting for Openstack events"
 os_monitor.each do |event|
-  puts "\n\nsaw event: #{event.content["event_type"]}"
+  puts "\n\nsaw event: #{event.inspect
+       }"
   # pp event_to_hash event
 end
