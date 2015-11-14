@@ -10,8 +10,6 @@ describe ContainerSummaryHelper do
     self.class.send(:include, ApplicationHelper)
 
     @record = FactoryGirl.create(:container_group, :container_project => container_project)
-    FactoryGirl.create(:container, :container_group => @record)
-    FactoryGirl.create(:container, :container_group => @record)
 
     login_as @user = FactoryGirl.create(:user)
   end
@@ -35,6 +33,7 @@ describe ContainerSummaryHelper do
   end
 
   context ".textual_containers" do
+    before  { 2.times { FactoryGirl.create(:container, :container_group => @record) } }
     subject { textual_containers }
 
     it 'show link when role allows' do
