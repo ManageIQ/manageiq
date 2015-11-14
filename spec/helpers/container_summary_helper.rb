@@ -16,47 +16,45 @@ describe ContainerSummaryHelper do
     login_as @user = FactoryGirl.create(:user)
   end
 
-  context "single relationship link allowed" do
-    it 'should return linked relationship' do
-      @user.stub(:role_allows?).and_return(true)
+  context ".textual_container_project" do
+    subject { textual_container_project }
+    context "single relationship link allowed" do
+      it 'should return linked relationship' do
+        @user.stub(:role_allows?).and_return(true)
 
-      rel_hash = textual_container_project
+        subject.keys.should be == REL_HASH_WITH_LINK
+        subject[:value].should be == container_project.name
+      end
+    end
 
-      rel_hash.keys.should be == REL_HASH_WITH_LINK
-      rel_hash[:value].should be == container_project.name
+    context "single relationship link not allowed" do
+      it 'should not return linked relationship' do
+        @user.stub(:role_allows?).and_return(false)
+
+        subject.keys.should be == REL_HASH_WITHOUT_LINK
+        subject[:value].should be == container_project.name
+      end
     end
   end
 
-  context "single relationship link not allowed" do
-    it 'should not return linked relationship' do
-      @user.stub(:role_allows?).and_return(false)
+  context ".textual_containers" do
+    subject { textual_containers }
+    context "multiple relationships link allowed" do
+      it 'should return linked relationship' do
+        @user.stub(:role_allows?).and_return(true)
 
-      rel_hash = textual_container_project
-
-      rel_hash.keys.should be == REL_HASH_WITHOUT_LINK
-      rel_hash[:value].should be == container_project.name
+        subject.keys.should be == REL_HASH_WITH_LINK
+        subject[:value].should be == "2"
+      end
     end
-  end
 
-  context "multiple relationships link allowed" do
-    it 'should return linked relationship' do
-      @user.stub(:role_allows?).and_return(true)
+    context "multiple relationships link not allowed" do
+      it 'should not return linked relationship' do
+        @user.stub(:role_allows?).and_return(false)
 
-      rel_hash = textual_containers
-
-      rel_hash.keys.should be == REL_HASH_WITH_LINK
-      rel_hash[:value].should be == "2"
-    end
-  end
-
-  context "multiple relationships link not allowed" do
-    it 'should not return linked relationship' do
-      @user.stub(:role_allows?).and_return(false)
-
-      rel_hash = textual_containers
-
-      rel_hash.keys.should be == REL_HASH_WITHOUT_LINK
-      rel_hash[:value].should be == "2"
+        subject.keys.should be == REL_HASH_WITHOUT_LINK
+        subject[:value].should be == "2"
+      end
     end
   end
 end
