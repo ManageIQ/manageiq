@@ -9,11 +9,7 @@ describe ContainerSummaryHelper do
     controller.send(:extend, ApplicationHelper)
     self.class.send(:include, ApplicationHelper)
 
-    @record = FactoryGirl.create(
-      :container_group,
-      :name              => "group",
-      :container_project => FactoryGirl.create(:container_project, :name => "project")
-    )
+    @record = FactoryGirl.create(:container_group, :container_project => FactoryGirl.create(:container_project, :name => "project"))
     FactoryGirl.create(:container, :container_group => @record, :name => "container1")
     FactoryGirl.create(:container, :container_group => @record, :name => "container2")
 
