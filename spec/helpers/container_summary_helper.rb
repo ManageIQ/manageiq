@@ -1,4 +1,3 @@
-require 'set'
 require "spec_helper"
 
 describe ContainerSummaryHelper do
@@ -23,7 +22,7 @@ describe ContainerSummaryHelper do
 
       rel_hash = textual_container_project
 
-      rel_hash.keys.to_set.should be == REL_HASH_WITH_LINK.to_set
+      rel_hash.keys.should be == REL_HASH_WITH_LINK
       rel_hash[:value].should be == container_project.name
     end
   end
@@ -34,7 +33,7 @@ describe ContainerSummaryHelper do
 
       rel_hash = textual_container_project
 
-      rel_hash.keys.to_set.should be == REL_HASH_WITHOUT_LINK.to_set
+      rel_hash.keys.should be == REL_HASH_WITHOUT_LINK
       rel_hash[:value].should be == container_project.name
     end
   end
@@ -45,7 +44,7 @@ describe ContainerSummaryHelper do
 
       rel_hash = textual_containers
 
-      rel_hash.keys.to_set.should be == REL_HASH_WITH_LINK.to_set
+      rel_hash.keys.should be == REL_HASH_WITH_LINK
       rel_hash[:value].should be == "2"
     end
   end
@@ -56,7 +55,7 @@ describe ContainerSummaryHelper do
 
       rel_hash = textual_containers
 
-      rel_hash.keys.to_set.should be == REL_HASH_WITHOUT_LINK.to_set
+      rel_hash.keys.should be == REL_HASH_WITHOUT_LINK
       rel_hash[:value].should be == "2"
     end
   end
