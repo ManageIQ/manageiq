@@ -9,7 +9,6 @@ describe OrchestrationStackHelper::TextualSummary do
 
   describe "#textual_retirement_date" do
     it "should returns 'Never' if nil values is passed" do
-      @record.retires_on = nil
       expect(self.textual_retirement_date).to include(:value => "Never")
     end
 
