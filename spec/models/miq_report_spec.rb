@@ -214,6 +214,25 @@ describe MiqReport do
       expect(results.data.first["host_name"]).to eq "B"
     end
 
+    it "expression filtering on a virtual column" do
+      FactoryGirl.create(:vm_vmware, :name => "VA", :host => FactoryGirl.create(:host, :name => "HA"))
+      FactoryGirl.create(:vm_vmware, :name => "VB", :host => FactoryGirl.create(:host, :name => "HB"))
+
+      report = MiqReport.new(:db => "Vm")
+
+      filter = YAML.load '--- !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: Vm-host_name
+          value: "HA"
+      '
+
+      results, _attrs = report.paged_view_search(:only => %w(name host_name), :filter => filter)
+      expect(results.length).to eq 1
+      expect(results.data.first["name"]).to eq "VA"
+      expect(results.data.first["host_name"]).to eq "HA"
+    end
+
     context "with tagged VMs" do
       before(:each) do
         @hosts = [
@@ -249,39 +268,6 @@ describe MiqReport do
         end
 
 
-        it "works when filtering on a virtual column" do
-          report = MiqReport.new(:db => "Vm", :sortby => ["name"], :order => "Ascending")
-          filter = YAML.load '--- !ruby/object:MiqExpression
-          exp:
-            and:
-            - IS NOT NULL:
-                field: Vm-name
-                value: ""
-            - IS NOT EMPTY:
-                field: Vm-created_on
-                value: ""
-            - and:
-              - IS NOT NULL:
-                  field: Vm-host_name
-                  value: ""
-          '
-
-          options = {
-            :only     => ["name", "host_name"],
-            :page     => 2,
-            :per_page => 10,
-            :filter   => filter
-          }
-          results, attrs = report.paged_view_search(options)
-          results.length.should == 10
-          results.data.first["name"].should == "Test Group 1 VM 18"
-          results.data.last["name"].should == "Test Group 1 VM 4"
-          attrs[:apply_sortby_in_search].should be_true
-          attrs[:apply_limit_in_sql].should be_false
-          attrs[:auth_count].should == 100
-          attrs[:user_filters]["managed"].should be_empty
-          attrs[:total_count].should == 100
-        end
 
         it "works when filtering on a virtual column and user filters are passed" do
           report = MiqReport.new(:db => "Vm", :sortby => ["name"], :order => "Descending")
