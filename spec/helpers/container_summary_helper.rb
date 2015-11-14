@@ -8,7 +8,7 @@ describe ContainerSummaryHelper do
   before do
     self.class.send(:include, ApplicationHelper)
 
-    @record = FactoryGirl.create(:container_group, :container_project => container_project)
+    @record = FactoryGirl.build(:container_group, :container_project => container_project)
 
     login_as @user = FactoryGirl.create(:user)
   end
