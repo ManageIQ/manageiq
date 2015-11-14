@@ -204,21 +204,22 @@ describe VmOrTemplate do
         @host1 = FactoryGirl.create(:host, :name => 'host1', :storages => [@storage1])
         @host2 = FactoryGirl.create(:host, :name => 'host2', :storages => [@storage2])
         @host3 = FactoryGirl.create(:host, :name => 'host3', :storages => [@storage1, @storage2])
-        @vm = FactoryGirl.create(:vm_redhat,
+        @vm = FactoryGirl.create(:vm_vmware,
                                  :host     => @host1,
                                  :name     => 'vm',
-                                 :vendor   => 'RedHat',
+                                 :vendor   => 'VMware',
                                  :storage  => @storage1,
                                  :storages => [@storage1, @storage2])
         @zone = FactoryGirl.create(:zone, :name => 'zone')
 
+        MiqServer.any_instance.stub(:is_vix_disk? => true)
         @svr1 = EvmSpecHelper.local_miq_server(:name => 'svr1')
         @svr2 = FactoryGirl.create(:miq_server, :name => 'svr2', :zone => @svr1.zone)
         @svr3 = FactoryGirl.create(:miq_server, :name => 'svr3', :zone => @svr1.zone)
 
-        @svr1_vm = FactoryGirl.create(:vm_redhat, :host => @host1, :name => 'svr1_vm', :miq_server => @svr1)
-        @svr2_vm = FactoryGirl.create(:vm_redhat, :host => @host2, :name => 'svr2_vm', :miq_server => @svr2)
-        @svr3_vm = FactoryGirl.create(:vm_redhat, :host => @host3, :name => 'svr3_vm', :miq_server => @svr3)
+        @svr1_vm = FactoryGirl.create(:vm_vmware, :host => @host1, :name => 'svr1_vm', :miq_server => @svr1)
+        @svr2_vm = FactoryGirl.create(:vm_vmware, :host => @host2, :name => 'svr2_vm', :miq_server => @svr2)
+        @svr3_vm = FactoryGirl.create(:vm_vmware, :host => @host3, :name => 'svr3_vm', :miq_server => @svr3)
       end
 
       it "should select SmartProxies with matching VM host affinity" do
