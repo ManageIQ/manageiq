@@ -21,3 +21,31 @@ class QueryCounter
     @count
   end
 end
+
+class QuerySubscriber
+  attr_reader :locations
+
+  def initialize
+    @locations = Hash.new(0)
+  end
+
+  def start(_name, _id, _payload)
+    app_caller = caller.detect { |c| c !~ /rails\-|factory_girl|ancestry|default_value_for|rspec|activerecord-deprecated_finders|\.rubies|lib\/extensions\/ar/ }
+    @locations[app_caller] += 1 if app_caller
+  end
+
+  def finish(name, id, payload); end
+
+  def self.print_top_query_locations(top = 20)
+    subscriber = new
+    ActiveSupport::Notifications.subscribe('sql.active_record', subscriber)
+    at_exit do
+      puts "Top query locations:"
+      subscriber.locations.sort_by { |_loc, count| -count }.take(top).each do |loc, count|
+        puts "#{count} #{loc}"
+      end
+    end
+  end
+end
+
+QuerySubscriber.print_top_query_locations
