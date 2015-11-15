@@ -53,41 +53,22 @@ describe Compliance do
 
     context ".scan_and_check_compliance_queue" do
       it "should queue single host for scan_and_check_compliance via host method" do
-        host1.scan_and_check_compliance_queue
+        create_scan_and_check_compliance_queue_expections(host1)
 
-        expect(MiqQueue.count).to eq(1)
-        validate_scan_and_check_compliance_message(MiqQueue.first, host1)
+        host1.scan_and_check_compliance_queue
       end
 
       it "should queue multiple objects for scan_and_check_compliance" do
-        Compliance.scan_and_check_compliance_queue([vm1, host1, host2])
+        create_scan_and_check_compliance_queue_expections(host1, host2)
 
-        expect(MiqQueue.count).to eq(2)
-        MiqQueue.all.each do |qitem|
-          klass, id = qitem.args.first
-          target = klass.constantize.find(id)
-          case id
-          when host1.id then target.should == host1
-          when host2.id then target.should == host2
-          end
-          validate_scan_and_check_compliance_message(qitem, target)
-        end
+        Compliance.scan_and_check_compliance_queue([vm1, host1, host2])
       end
 
       it "should queue multiple objects for scan_and_check_compliance with inputs" do
         inputs = {:foo => 'bar'}
-        Compliance.scan_and_check_compliance_queue([vm1, host1, host2], inputs)
+        create_scan_and_check_compliance_queue_expections(host1, host2, inputs)
 
-        expect(MiqQueue.count).to eq(2)
-        MiqQueue.all.each do |qitem|
-          klass, id = qitem.args.first
-          target = klass.constantize.find(id)
-          case id
-          when host1.id then target.should == host1
-          when host2.id then target.should == host2
-          end
-          validate_scan_and_check_compliance_message(qitem, target, inputs)
-        end
+        Compliance.scan_and_check_compliance_queue([vm1, host1, host2], inputs)
       end
     end
 
@@ -151,15 +132,18 @@ describe Compliance do
     end
   end
 
-  def validate_scan_and_check_compliance_message(msg, obj, inputs = {})
-    zone = obj.ext_management_system ? obj.ext_management_system.my_zone : nil
-    expect(msg).to have_attributes(
-      :method_name => "scan_and_check_compliance",
-      :class_name  => "Compliance",
-      :task_id     => 'vc-refresher',
-      :role        => 'ems_inventory',
-      :zone        => zone,
-      :args        => [[obj.class.name, obj.id], inputs]
-    )
+  def create_scan_and_check_compliance_queue_expections(*objects)
+    inputs = objects.extract_options!
+    objects.each do |obj|
+      expect(MiqQueue).to receive(:put) do |args|
+        expect(args).to have_attributes(
+          :method_name => "scan_and_check_compliance",
+          :class_name  => "Compliance",
+          :task_id     => 'vc-refresher',
+          :role        => 'ems_inventory',
+          :args        => [[obj.class.name, obj.id], inputs]
+        )
+      end
+    end
   end
 end
