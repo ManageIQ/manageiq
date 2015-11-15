@@ -13,35 +13,35 @@ describe Compliance do
     it "should queue single vm for compliance" do
       Compliance.check_compliance_queue(vm1)
 
-      MiqQueue.count.should == 1
+      expect(MiqQueue.count).to eq(1)
       validate_compliance_message(MiqQueue.first, vm1)
     end
 
     it "should queue single vm for compliance via vm method" do
       vm1.check_compliance_queue
 
-      MiqQueue.count.should == 1
+      expect(MiqQueue.count).to eq(1)
       validate_compliance_message(MiqQueue.first, vm1)
     end
 
     it "should queue single host for compliance" do
       Compliance.check_compliance_queue(host1)
 
-      MiqQueue.count.should == 1
+      expect(MiqQueue.count).to eq(1)
       validate_compliance_message(MiqQueue.first, host1)
     end
 
     it "should queue single host for compliance via host method" do
       host1.check_compliance_queue
 
-      MiqQueue.count.should == 1
+      expect(MiqQueue.count).to eq(1)
       validate_compliance_message(MiqQueue.first, host1)
     end
 
     it "should queue multiple objects for compliance" do
       Compliance.check_compliance_queue([vm1, host1])
 
-      MiqQueue.count.should == 2
+      expect(MiqQueue.count).to eq(2)
       MiqQueue.all.each do |qitem|
         klass, id = qitem.args.first
         target = klass.constantize.find(id)
@@ -57,7 +57,7 @@ describe Compliance do
       inputs = {:foo => 'bar'}
       Compliance.check_compliance_queue([vm1, host1], inputs)
 
-      MiqQueue.count.should == 2
+      expect(MiqQueue.count).to eq(2)
       MiqQueue.all.each do |qitem|
         klass, id = qitem.args.first
         target = klass.constantize.find(id)
@@ -72,14 +72,14 @@ describe Compliance do
     it "should queue single host for scan_and_check_compliance via host method" do
       host1.scan_and_check_compliance_queue
 
-      MiqQueue.count.should == 1
+      expect(MiqQueue.count).to eq(1)
       validate_scan_and_check_compliance_message(MiqQueue.first, host1)
     end
 
     it "should queue multiple objects for scan_and_check_compliance" do
       Compliance.scan_and_check_compliance_queue([vm1, host1, host2])
 
-      MiqQueue.count.should == 2
+      expect(MiqQueue.count).to eq(2)
       MiqQueue.all.each do |qitem|
         klass, id = qitem.args.first
         target = klass.constantize.find(id)
@@ -95,7 +95,7 @@ describe Compliance do
       inputs = {:foo => 'bar'}
       Compliance.scan_and_check_compliance_queue([vm1, host1, host2], inputs)
 
-      MiqQueue.count.should == 2
+      expect(MiqQueue.count).to eq(2)
       MiqQueue.all.each do |qitem|
         klass, id = qitem.args.first
         target = klass.constantize.find(id)
@@ -109,7 +109,7 @@ describe Compliance do
 
     context ".scan_and_check_compliance" do
       it "should raise event request_host_scan" do
-        MiqEvent.should_receive(:raise_evm_event).with(host1, "request_host_scan", {}, {})
+        expect(MiqEvent).to receive(:raise_evm_event).with(host1, "request_host_scan", {}, {})
         Compliance.scan_and_check_compliance([host1.class.name, host1.id])
       end
     end
@@ -155,26 +155,22 @@ describe Compliance do
   private
 
   def validate_compliance_message(msg, obj, inputs = {})
-    msg.method_name.should == "check_compliance"
-    msg.class_name.should == "Compliance"
-    msg_obj = msg.args.first
-    msg_obj.first.should == obj.class.name
-    msg_obj.last.should == obj.id
-    msg_inputs = msg.args.last
-    msg_inputs.should == inputs
+    expect(msg).to have_attributes(
+      :method_name => "check_compliance",
+      :class_name  => "Compliance",
+      :args        => [[obj.class.name, obj.id], inputs]
+    )
   end
 
   def validate_scan_and_check_compliance_message(msg, obj, inputs = {})
-    msg.method_name.should == "scan_and_check_compliance"
-    msg.class_name.should == "Compliance"
-    msg.task_id.should == 'vc-refresher'
-    msg.role.should == 'ems_inventory'
     zone = obj.ext_management_system ? obj.ext_management_system.my_zone : nil
-    msg.zone.should == zone
-    msg_obj = msg.args.first
-    msg_obj.first.should == obj.class.name
-    msg_obj.last.should == obj.id
-    msg_inputs = msg.args.last
-    msg_inputs.should == inputs
+    expect(msg).to have_attributes(
+      :method_name => "scan_and_check_compliance",
+      :class_name  => "Compliance",
+      :task_id     => 'vc-refresher',
+      :role        => 'ems_inventory',
+      :zone        => zone,
+      :args        => [[obj.class.name, obj.id], inputs]
+    )
   end
 end
