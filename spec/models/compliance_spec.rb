@@ -115,44 +115,39 @@ describe Compliance do
     end
 
     context ".check_compliance" do
-      before do
-        event = FactoryGirl.create(:miq_event_definition, :name => "vm_compliance_check")
-        ps    = FactoryGirl.create(:miq_policy_set)
-        @p    = FactoryGirl.create(:miq_policy, :mode => 'compliance', :towhat => 'Vm', :active => true)
-        @p.sync_events([event])
-        @p.conditions << FactoryGirl.create(:condition, :expression => MiqExpression.new("IS NOT EMPTY" => {"field" => "Vm-id"}))
-        ps.add_member(@p)
-        ems_vmware.add_policy(ps)
+      shared_examples ".check_compliance" do
+        let(:policy)     { FactoryGirl.create(:miq_policy, :mode => 'compliance', :towhat => 'Vm', :active => true) }
+        let(:policy_set) { FactoryGirl.create(:miq_policy_set) }
+        let(:template)   { FactoryGirl.create(:template_vmware, :host => host1, :ext_management_system => ems_vmware) }
+
+        before do
+          policy.sync_events([FactoryGirl.create(:miq_event_definition, :name => "vm_compliance_check")])
+          policy.conditions << FactoryGirl.create(:condition, :expression => MiqExpression.new("IS NOT EMPTY" => {"field" => "Vm-id"}))
+          policy_set.add_member(policy)
+          ems_vmware.add_policy(policy_set)
+        end
+
+        it "compliant" do
+          expect(MiqEvent).to receive(:raise_evm_event_queue).with(subject, "vm_compliance_passed")
+          expect(Compliance.check_compliance(subject)).to be_true
+        end
+
+        it "non-compliant" do
+          policy.conditions << FactoryGirl.create(:condition, :expression => MiqExpression.new(">=" => {"field" => "Vm-num_cpu", "value" => "2"}))
+
+          expect(MiqEvent).to receive(:raise_evm_event_queue).with(subject, "vm_compliance_failed")
+          expect(Compliance.check_compliance(subject)).to be_false
+        end
       end
 
       context "VM" do
-        it "compliant" do
-          expect(MiqEvent).to receive(:raise_evm_event_queue).with(vm1, "vm_compliance_passed")
-          expect(Compliance.check_compliance(vm1)).to be_true
-        end
-
-        it "non-compliant" do
-          @p.conditions << FactoryGirl.create(:condition, :expression => MiqExpression.new(">=" => {"field" => "Vm-num_cpu", "value" => "2"}))
-
-          expect(MiqEvent).to receive(:raise_evm_event_queue).with(vm1, "vm_compliance_failed")
-          expect(Compliance.check_compliance(vm1)).to be_false
-        end
+        subject { vm1 }
+        include_examples ".check_compliance"
       end
 
       context "template" do
-        before { @template = FactoryGirl.create(:template_vmware, :name => "Template 1", :host => host1, :ext_management_system => ems_vmware) }
-
-        it "compliant" do
-          expect(MiqEvent).to receive(:raise_evm_event_queue).with(@template, "vm_compliance_passed")
-          expect(Compliance.check_compliance(@template)).to be_true
-        end
-
-        it "non-compliant" do
-          @p.conditions << FactoryGirl.create(:condition, :expression => MiqExpression.new(">=" => {"field" => "Vm-num_cpu", "value" => "2"}))
-
-          expect(MiqEvent).to receive(:raise_evm_event_queue).with(@template, "vm_compliance_failed")
-          expect(Compliance.check_compliance(@template)).to be_false
-        end
+        subject { template }
+        include_examples ".check_compliance"
       end
     end
   end
