@@ -282,65 +282,30 @@ describe MiqReport do
       expect(results.data.first["name"]).to eq "VA"
     end
 
-    context "with tagged VMs" do
-      before(:each) do
-        @hosts = [
-          FactoryGirl.create(:host, :name => "Host1", :hostname => "host1.local"),
-          FactoryGirl.create(:host, :name => "Host2", :hostname => "host2.local"),
-          FactoryGirl.create(:host, :name => "Host3", :hostname => "host3.local"),
-          FactoryGirl.create(:host, :name => "Host4", :hostname => "host4.local")
-        ]
+    it "virtual columns included in cols" do
+      FactoryGirl.create(:vm_vmware, :host => FactoryGirl.create(:host, :name => "HA", :vmm_product => "ESX"))
+      FactoryGirl.create(:vm_vmware, :host => FactoryGirl.create(:host, :name => "HB", :vmm_product => "ESX"))
 
-        100.times do |i|
-          case i
-          when  0..24 then group = 1
-          when 25..49 then group = 2
-          when 50..74 then group = 3
-          when 75..99 then group = 4
-          end
-          vm = FactoryGirl.build(:vm_vmware, :name => "Test Group #{group} VM #{i}")
-          vm.hardware = FactoryGirl.build(:hardware, :cpu_sockets => (group * 2), :memory_mb => (group * 1.megabytes), :guest_os => OS_LIST[group])
-          vm.host = @hosts[group - 1]
-          vm.evm_owner_id = @user.id  if ((i % 5) == 0)
-          vm.miq_group_id = @group.id if ((i % 7) == 0)
-          vm.save
-          tags = []
-          @tags.each { |n, t| tags << t if (i % n) == 0 }
-          vm.tag_with(tags.join(" "), :ns => "*") unless tags.empty?
-        end
-      end
+      report = MiqReport.new(
+        :name      => "VMs",
+        :title     => "Virtual Machines",
+        :db        => "Vm",
+        :cols      => ["name", "host_name", "v_host_vmm_product"],
+        :include   => {"host" => {"columns" => ["name", "vmm_product"]}},
+        :col_order => ["name", "host.name", "host.vmm_product"],
+        :headers   => ["Name", "Host", "Host VMM Product"],
+        :order     => "Ascending",
+        :sortby    => ["host_name"],
+      )
 
-      context "group has managed filters" do
-        before(:each) do
-          User.stub(:server_timezone => "UTC")
-          @group.update_attributes(:filters => {"managed" => [["/managed/environment/prod"], ["/managed/service_level/silver"]], "belongsto" => []})
-        end
-
-        it "does not raise errors when virtual columns are included in cols" do
-          report = MiqReport.new(
-            :name      => "VMs",
-            :title     => "Virtual Machines",
-            :db        => "Vm",
-            :cols      => ["name", "ems_cluster_name", "last_compliance_status", "v_total_snapshots", "last_scan_on"],
-            :include   => {"storage" => {"columns" => ["name"]}, "host" => {"columns" => ["name"]}},
-            :col_order => ["name", "ems_cluster_name", "host.name", "storage.name", "last_compliance_status", "v_total_snapshots", "last_scan_on"],
-            :headers   => ["Name", "Cluster", "Host", "Datastore", "Compliant", "Total Snapshots", "Last Analysis Time"],
-            :order     => "Ascending",
-            :sortby    => ["name"],
-            :group     => "n"
-          )
-          options = {
-            :per_page     => 20,
-            :page         => 1,
-            :targets_hash => true,
-            :userid       => "admin"
-          }
-          results = attrs = nil
-          -> { results, attrs = report.paged_view_search(options) }.should_not raise_error
-          results.length.should == 20
-          attrs[:total_count].should == 100
-        end
-      end
+      options = {
+        :targets_hash => true,
+        :userid       => "admin"
+      }
+      results, _attrs = report.paged_view_search(options)
+      expect(results.length).to eq 2
+      expect(results.data.collect { |rec| rec.data["host_name"]}).to eq(%w(HA HB))
+      expect(results.data.collect { |rec| rec.data["v_host_vmm_product"]}).to eq(%w(ESX ESX))
     end
   end
 
