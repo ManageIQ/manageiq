@@ -57,11 +57,6 @@ describe MiqReport do
   end
 
   context "#paged_view_search" do
-    before(:each) do
-      @group = FactoryGirl.create(:miq_group)
-      @user  = FactoryGirl.create(:user, :miq_groups => [@group])
-    end
-
     it "filters vms in folders" do
       host = FactoryGirl.create(:host)
       vm1  = FactoryGirl.create(:vm_vmware, :host => host)
@@ -135,20 +130,20 @@ describe MiqReport do
     end
 
     it "user managed filters" do
-      # TODO: Move user setup code here, remove @user/@group ivars
       vm1 = FactoryGirl.create(:vm_vmware)
       vm1.tag_with("/managed/environment/prod", :ns => "*")
-
       vm2 = FactoryGirl.create(:vm_vmware)
       vm2.tag_with("/managed/environment/dev", :ns => "*")
 
+      group = FactoryGirl.create(:miq_group)
+      user  = FactoryGirl.create(:user, :miq_groups => [group])
       User.stub(:server_timezone => "UTC")
-      @group.update_attributes(:filters => {"managed" => [["/managed/environment/prod"]], "belongsto" => []})
+      group.update_attributes(:filters => {"managed" => [["/managed/environment/prod"]], "belongsto" => []})
 
       report = MiqReport.new(:db => "Vm")
       results, attrs = report.paged_view_search(
         :only   => ["name"],
-        :userid => @user.userid,
+        :userid => user.userid,
       )
       expect(results.length).to eq 1
       expect(results.data.collect(&:name)).to eq [vm1.name]
@@ -161,10 +156,13 @@ describe MiqReport do
     end
 
     it "sortby, order, user filters, where sort column is in a sub-table" do
+      group = FactoryGirl.create(:miq_group)
+      user  = FactoryGirl.create(:user, :miq_groups => [group])
+
       vm1 = FactoryGirl.create(:vm_vmware, :name => "VA", :storage => FactoryGirl.create(:storage, :name => "SA"))
       vm2 = FactoryGirl.create(:vm_vmware, :name => "VB", :storage => FactoryGirl.create(:storage, :name => "SB"))
       tag = "/managed/environment/prod"
-      @group.update_attributes(:filters => {"managed" => [[tag]], "belongsto" => []})
+      group.update_attributes(:filters => {"managed" => [[tag]], "belongsto" => []})
       vm1.tag_with(tag, :ns => "*")
       vm2.tag_with(tag, :ns => "*")
 
@@ -172,7 +170,7 @@ describe MiqReport do
       report = MiqReport.new(:db => "Vm", :sortby => %w(storage.name name), :order => "Ascending", :include => {"storage" => {"columns" => ["name"]}})
       options = {
         :only   => ["name", "storage.name"],
-        :userid => @user.userid,
+        :userid => user.userid,
       }
 
       results, attrs = report.paged_view_search(options)
@@ -224,11 +222,14 @@ describe MiqReport do
     end
 
     it "expression filtering on a virtual column and user filters" do
+      group = FactoryGirl.create(:miq_group)
+      user  = FactoryGirl.create(:user, :miq_groups => [group])
+
       _vm1 = FactoryGirl.create(:vm_vmware, :name => "VA",  :host => FactoryGirl.create(:host, :name => "HA"))
       vm2 =  FactoryGirl.create(:vm_vmware, :name => "VB",  :host => FactoryGirl.create(:host, :name => "HB"))
       vm3 =  FactoryGirl.create(:vm_vmware, :name => "VAA", :host => FactoryGirl.create(:host, :name => "HAA"))
       tag =  "/managed/environment/prod"
-      @group.update_attributes(:filters => {"managed" => [[tag]], "belongsto" => []})
+      group.update_attributes(:filters => {"managed" => [[tag]], "belongsto" => []})
 
       # vm1's host.name starts with HA but isn't tagged
       vm2.tag_with(tag, :ns => "*")
@@ -245,7 +246,7 @@ describe MiqReport do
           value: "HA"
       '
 
-      results, attrs = report.paged_view_search(:only => %w(name host_name), :userid => @user.userid, :filter => filter)
+      results, attrs = report.paged_view_search(:only => %w(name host_name), :userid => user.userid, :filter => filter)
       expect(results.length).to eq 1
       expect(results.data.first["name"]).to eq "VAA"
       expect(results.data.first["host_name"]).to eq "HAA"
