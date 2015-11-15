@@ -57,21 +57,6 @@ describe MiqReport do
   end
 
   context "#paged_view_search" do
-    OS_LIST = %w(_none_ windows ubuntu windows ubuntu)
-
-    before(:each) do
-      # TODO: Move this setup to the examples that need it.
-      @tags = {
-        2 => "/managed/environment/prod",
-        3 => "/managed/environment/dev",
-        4 => "/managed/service_level/gold",
-        5 => "/managed/service_level/silver"
-      }
-
-      @group = FactoryGirl.create(:miq_group)
-      @user  = FactoryGirl.create(:user, :miq_groups => [@group])
-    end
-
     it "filters vms in folders" do
       host = FactoryGirl.create(:host)
       vm1  = FactoryGirl.create(:vm_vmware, :host => host)
@@ -145,20 +130,20 @@ describe MiqReport do
     end
 
     it "user managed filters" do
-      # TODO: Move user setup code here, remove @user/@group ivars
       vm1 = FactoryGirl.create(:vm_vmware)
       vm1.tag_with("/managed/environment/prod", :ns => "*")
-
       vm2 = FactoryGirl.create(:vm_vmware)
       vm2.tag_with("/managed/environment/dev", :ns => "*")
 
+      group = FactoryGirl.create(:miq_group)
+      user  = FactoryGirl.create(:user, :miq_groups => [group])
       User.stub(:server_timezone => "UTC")
-      @group.update_attributes(:filters => {"managed" => [["/managed/environment/prod"]], "belongsto" => []})
+      group.update_attributes(:filters => {"managed" => [["/managed/environment/prod"]], "belongsto" => []})
 
       report = MiqReport.new(:db => "Vm")
       results, attrs = report.paged_view_search(
         :only   => ["name"],
-        :userid => @user.userid,
+        :userid => user.userid,
       )
       expect(results.length).to eq 1
       expect(results.data.collect(&:name)).to eq [vm1.name]
@@ -171,18 +156,21 @@ describe MiqReport do
     end
 
     it "sortby, order, user filters, where sort column is in a sub-table" do
+      group = FactoryGirl.create(:miq_group)
+      user  = FactoryGirl.create(:user, :miq_groups => [group])
+
       vm1 = FactoryGirl.create(:vm_vmware, :name => "VA", :storage => FactoryGirl.create(:storage, :name => "SA"))
       vm2 = FactoryGirl.create(:vm_vmware, :name => "VB", :storage => FactoryGirl.create(:storage, :name => "SB"))
       tag = "/managed/environment/prod"
-      @group.update_attributes(:filters => {"managed" => [[tag]], "belongsto" => []})
+      group.update_attributes(:filters => {"managed" => [[tag]], "belongsto" => []})
       vm1.tag_with(tag, :ns => "*")
       vm2.tag_with(tag, :ns => "*")
 
       User.stub(:server_timezone => "UTC")
-      report = MiqReport.new(:db => "Vm", :sortby => ["storage.name", "name"], :order => "Ascending", :include => {"storage" => {"columns" => ["name"]}})
+      report = MiqReport.new(:db => "Vm", :sortby => %w(storage.name name), :order => "Ascending", :include => {"storage" => {"columns" => ["name"]}})
       options = {
         :only   => ["name", "storage.name"],
-        :userid => @user.userid,
+        :userid => user.userid,
       }
 
       results, attrs = report.paged_view_search(options)
@@ -203,210 +191,113 @@ describe MiqReport do
       FactoryGirl.create(:vm_vmware, :name => "B", :host => FactoryGirl.create(:host, :name => "A"))
       FactoryGirl.create(:vm_vmware, :name => "A", :host => FactoryGirl.create(:host, :name => "B"))
 
-      report = MiqReport.new(:db => "Vm", :sortby => ["host_name", "name"], :order => "Descending")
+      report = MiqReport.new(:db => "Vm", :sortby => %w(host_name name), :order => "Descending")
       options = {
-        :only     => ["name", "host_name"],
-        :page     => 2,
+        :only => %w(name host_name),
+        :page => 2,
       }
 
-      results, attrs = report.paged_view_search(options)
+      results, _attrs = report.paged_view_search(options)
       expect(results.length).to eq 2
       expect(results.data.first["host_name"]).to eq "B"
     end
 
-    context "with tagged VMs" do
-      before(:each) do
-        @hosts = [
-          FactoryGirl.create(:host, :name => "Host1", :hostname => "host1.local"),
-          FactoryGirl.create(:host, :name => "Host2", :hostname => "host2.local"),
-          FactoryGirl.create(:host, :name => "Host3", :hostname => "host3.local"),
-          FactoryGirl.create(:host, :name => "Host4", :hostname => "host4.local")
-        ]
+    it "expression filtering on a virtual column" do
+      FactoryGirl.create(:vm_vmware, :name => "VA", :host => FactoryGirl.create(:host, :name => "HA"))
+      FactoryGirl.create(:vm_vmware, :name => "VB", :host => FactoryGirl.create(:host, :name => "HB"))
 
-        100.times do |i|
-          case i
-          when  0..24 then group = 1
-          when 25..49 then group = 2
-          when 50..74 then group = 3
-          when 75..99 then group = 4
-          end
-          vm = FactoryGirl.build(:vm_vmware, :name => "Test Group #{group} VM #{i}")
-          vm.hardware = FactoryGirl.build(:hardware, :cpu_sockets => (group * 2), :memory_mb => (group * 1.megabytes), :guest_os => OS_LIST[group])
-          vm.host = @hosts[group - 1]
-          vm.evm_owner_id = @user.id  if ((i % 5) == 0)
-          vm.miq_group_id = @group.id if ((i % 7) == 0)
-          vm.save
-          tags = []
-          @tags.each { |n, t| tags << t if (i % n) == 0 }
-          vm.tag_with(tags.join(" "), :ns => "*") unless tags.empty?
-        end
-      end
+      report = MiqReport.new(:db => "Vm")
 
-      context "group has managed filters" do
-        before(:each) do
-          User.stub(:server_timezone => "UTC")
-          @group.update_attributes(:filters => {"managed" => [["/managed/environment/prod"], ["/managed/service_level/silver"]], "belongsto" => []})
-        end
+      filter = YAML.load '--- !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: Vm-host_name
+          value: "HA"
+      '
 
-        it "works when sorting on a column in a sub-table" do
-          report = MiqReport.new(:db => "Vm", :cols => ["name", "host.name"], :include => {"host" => {"columns" => ["name"]}}, :sortby => ["host.name", "name"], :order => "Descending")
-          options = {
-            :only     => ["name", "host.name"],
-            :page     => 2,
-            :per_page => 10
-          }
-          results, attrs = report.paged_view_search(options)
-          results.length.should == 10
-          results.data.first["name"].should == "Test Group 1 VM 21"
-          results.data.last["name"].should == "Test Group 1 VM 13"
-          attrs[:apply_sortby_in_search].should be_true
-          attrs[:apply_limit_in_sql].should be_true
-          attrs[:auth_count].should == 100
-          attrs[:user_filters]["managed"].should be_empty
-          attrs[:total_count].should == 100
+      results, _attrs = report.paged_view_search(:only => %w(name host_name), :filter => filter)
+      expect(results.length).to eq 1
+      expect(results.data.first["name"]).to eq "VA"
+      expect(results.data.first["host_name"]).to eq "HA"
+    end
 
-          report = MiqReport.new(:db => "Vm", :include_for_find => {:hardware => {}}, :include => {"hardware" => {"columns" => ["guest_os"]}}, :sortby => ["hardware.guest_os", "name"], :order => "Descending")
-          options = {
-            :only     => ["name", "hardware.guest_os"],
-            :page     => 2,
-            :per_page => 10
-          }
-          results, attrs = report.paged_view_search(options)
-          results.length.should == 10
-          results.data.first["name"].should == "Test Group 4 VM 89"
-          results.data.last["name"].should == "Test Group 4 VM 80"
-          attrs[:apply_sortby_in_search].should be_true
-          attrs[:apply_limit_in_sql].should be_true
-          attrs[:auth_count].should == 100
-          attrs[:user_filters]["managed"].should be_empty
-          attrs[:total_count].should == 100
-        end
+    it "expression filtering on a virtual column and user filters" do
+      group = FactoryGirl.create(:miq_group)
+      user  = FactoryGirl.create(:user, :miq_groups => [group])
 
-        it "works when filtering on a virtual column" do
-          report = MiqReport.new(:db => "Vm", :sortby => ["name"], :order => "Ascending")
-          filter = YAML.load '--- !ruby/object:MiqExpression
-          exp:
-            and:
-            - IS NOT NULL:
-                field: Vm-name
-                value: ""
-            - IS NOT EMPTY:
-                field: Vm-created_on
-                value: ""
-            - and:
-              - IS NOT NULL:
-                  field: Vm-host_name
-                  value: ""
-          '
+      _vm1 = FactoryGirl.create(:vm_vmware, :name => "VA",  :host => FactoryGirl.create(:host, :name => "HA"))
+      vm2 =  FactoryGirl.create(:vm_vmware, :name => "VB",  :host => FactoryGirl.create(:host, :name => "HB"))
+      vm3 =  FactoryGirl.create(:vm_vmware, :name => "VAA", :host => FactoryGirl.create(:host, :name => "HAA"))
+      tag =  "/managed/environment/prod"
+      group.update_attributes(:filters => {"managed" => [[tag]], "belongsto" => []})
 
-          options = {
-            :only     => ["name", "host_name"],
-            :page     => 2,
-            :per_page => 10,
-            :filter   => filter
-          }
-          results, attrs = report.paged_view_search(options)
-          results.length.should == 10
-          results.data.first["name"].should == "Test Group 1 VM 18"
-          results.data.last["name"].should == "Test Group 1 VM 4"
-          attrs[:apply_sortby_in_search].should be_true
-          attrs[:apply_limit_in_sql].should be_false
-          attrs[:auth_count].should == 100
-          attrs[:user_filters]["managed"].should be_empty
-          attrs[:total_count].should == 100
-        end
+      # vm1's host.name starts with HA but isn't tagged
+      vm2.tag_with(tag, :ns => "*")
+      vm3.tag_with(tag, :ns => "*")
 
-        it "works when filtering on a virtual column and user filters are passed" do
-          report = MiqReport.new(:db => "Vm", :sortby => ["name"], :order => "Descending")
-          filter = YAML.load '--- !ruby/object:MiqExpression
-          exp:
-            and:
-            - IS NOT NULL:
-                field: Vm-name
-                value: ""
-            - IS NOT EMPTY:
-                field: Vm-created_on
-                value: ""
-            - and:
-              - IS NOT NULL:
-                  field: Vm-host_name
-                  value: ""
-          '
+      User.stub(:server_timezone => "UTC")
 
-          options = {
-            :userid   => @user.userid,
-            :only     => ["name", "host_name"],
-            :page     => 3,
-            :per_page => 2,
-            :filter   => filter
-          }
-          results, attrs = report.paged_view_search(options)
-          results.length.should == 2
-          results.data.first["name"].should == "Test Group 3 VM 50"
-          results.data.last["name"].should == "Test Group 2 VM 40"
-          attrs[:apply_sortby_in_search].should be_true
-          attrs[:apply_limit_in_sql].should be_false
-          attrs[:auth_count].should == 10
-          attrs[:user_filters]["managed"].should == [["/managed/environment/prod"], ["/managed/service_level/silver"]]
-          attrs[:total_count].should == 100
-        end
+      report = MiqReport.new(:db => "Vm")
 
-        it "works when filtering on a virtual reflection" do
-          report = MiqReport.new(:db => "Vm", :sortby => ["name"], :order => "Descending")
-          filter = YAML.load '--- !ruby/object:MiqExpression
-          exp:
-            and:
-            - IS NOT NULL:
-                field: Vm-name
-                value: ""
-            - and:
-              - IS NULL:
-                  field: Vm.parent_resource_pool-name
-                  value: ""
-          '
+      filter = YAML.load '--- !ruby/object:MiqExpression
+      exp:
+        "starts with":
+          field: Vm-host_name
+          value: "HA"
+      '
 
-          options = {
-            :only     => ["name"],
-            :page     => 2,
-            :per_page => 10,
-            :filter   => filter
-          }
-          results, attrs = report.paged_view_search(options)
-          results.length.should == 10
-          results.data.first["name"].should == "Test Group 4 VM 89"
-          results.data.last["name"].should == "Test Group 4 VM 80"
-          attrs[:apply_sortby_in_search].should be_true
-          attrs[:apply_limit_in_sql].should be_false
-          attrs[:auth_count].should == 100
-          attrs[:user_filters]["managed"].should be_empty
-          attrs[:total_count].should == 100
-        end
+      results, attrs = report.paged_view_search(:only => %w(name host_name), :userid => user.userid, :filter => filter)
+      expect(results.length).to eq 1
+      expect(results.data.first["name"]).to eq "VAA"
+      expect(results.data.first["host_name"]).to eq "HAA"
+      expect(attrs[:user_filters]["managed"]).to eq [[tag]]
+    end
 
-        it "does not raise errors when virtual columns are included in cols" do
-          report = MiqReport.new(
-            :name      => "VMs",
-            :title     => "Virtual Machines",
-            :db        => "Vm",
-            :cols      => ["name", "ems_cluster_name", "last_compliance_status", "v_total_snapshots", "last_scan_on"],
-            :include   => {"storage" => {"columns" => ["name"]}, "host" => {"columns" => ["name"]}},
-            :col_order => ["name", "ems_cluster_name", "host.name", "storage.name", "last_compliance_status", "v_total_snapshots", "last_scan_on"],
-            :headers   => ["Name", "Cluster", "Host", "Datastore", "Compliant", "Total Snapshots", "Last Analysis Time"],
-            :order     => "Ascending",
-            :sortby    => ["name"],
-            :group     => "n"
-          )
-          options = {
-            :per_page     => 20,
-            :page         => 1,
-            :targets_hash => true,
-            :userid       => "admin"
-          }
-          results = attrs = nil
-          -> { results, attrs = report.paged_view_search(options) }.should_not raise_error
-          results.length.should == 20
-          attrs[:total_count].should == 100
-        end
-      end
+    it "filtering on a virtual reflection" do
+      vm1 = FactoryGirl.create(:vm_vmware, :name => "VA")
+      vm2 = FactoryGirl.create(:vm_vmware, :name => "VB")
+      rp1 = FactoryGirl.create(:resource_pool, :name => "RPA")
+      rp2 = FactoryGirl.create(:resource_pool, :name => "RPB")
+      rp1.add_child(vm1)
+      rp2.add_child(vm2)
+
+      report = MiqReport.new(:db => "Vm")
+      filter = YAML.load '--- !ruby/object:MiqExpression
+      exp:
+        "starts with":
+          field: Vm.parent_resource_pool-name
+          value: "RPA"
+      '
+
+      results, _attrs = report.paged_view_search(:only => %w(name), :filter => filter)
+      expect(results.length).to eq 1
+      expect(results.data.first["name"]).to eq "VA"
+    end
+
+    it "virtual columns included in cols" do
+      FactoryGirl.create(:vm_vmware, :host => FactoryGirl.create(:host, :name => "HA", :vmm_product => "ESX"))
+      FactoryGirl.create(:vm_vmware, :host => FactoryGirl.create(:host, :name => "HB", :vmm_product => "ESX"))
+
+      report = MiqReport.new(
+        :name      => "VMs",
+        :title     => "Virtual Machines",
+        :db        => "Vm",
+        :cols      => %w(name host_name v_host_vmm_product),
+        :include   => {"host" => {"columns" => %w(name vmm_product)}},
+        :col_order => %w(name host.name host.vmm_product),
+        :headers   => ["Name", "Host", "Host VMM Product"],
+        :order     => "Ascending",
+        :sortby    => ["host_name"],
+      )
+
+      options = {
+        :targets_hash => true,
+        :userid       => "admin"
+      }
+      results, _attrs = report.paged_view_search(options)
+      expect(results.length).to eq 2
+      expect(results.data.collect { |rec| rec.data["host_name"] }).to eq(%w(HA HB))
+      expect(results.data.collect { |rec| rec.data["v_host_vmm_product"] }).to eq(%w(ESX ESX))
     end
   end
 
