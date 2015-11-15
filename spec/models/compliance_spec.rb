@@ -14,32 +14,28 @@ describe Compliance do
       Compliance.check_compliance_queue(vm1)
 
       MiqQueue.count.should == 1
-      msg = MiqQueue.first
-      validate_compliance_message(msg, vm1)
+      validate_compliance_message(MiqQueue.first, vm1)
     end
 
     it "should queue single vm for compliance via vm method" do
       vm1.check_compliance_queue
 
       MiqQueue.count.should == 1
-      msg = MiqQueue.first
-      validate_compliance_message(msg, vm1)
+      validate_compliance_message(MiqQueue.first, vm1)
     end
 
     it "should queue single host for compliance" do
       Compliance.check_compliance_queue(host1)
 
       MiqQueue.count.should == 1
-      msg = MiqQueue.first
-      validate_compliance_message(msg, host1)
+      validate_compliance_message(MiqQueue.first, host1)
     end
 
     it "should queue single host for compliance via host method" do
       host1.check_compliance_queue
 
       MiqQueue.count.should == 1
-      msg = MiqQueue.first
-      validate_compliance_message(msg, host1)
+      validate_compliance_message(MiqQueue.first, host1)
     end
 
     it "should queue multiple objects for compliance" do
@@ -77,8 +73,7 @@ describe Compliance do
       host1.scan_and_check_compliance_queue
 
       MiqQueue.count.should == 1
-      msg = MiqQueue.first
-      validate_scan_and_check_compliance_message(msg, host1)
+      validate_scan_and_check_compliance_message(MiqQueue.first, host1)
     end
 
     it "should queue multiple objects for scan_and_check_compliance" do
