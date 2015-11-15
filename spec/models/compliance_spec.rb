@@ -10,62 +10,44 @@ describe Compliance do
 
     before { allow(MiqServer).to receive(:my_zone).and_return(zone) }
 
-    it "should queue single vm for compliance" do
-      Compliance.check_compliance_queue(vm1)
+    context(".check_compliance_queue") do
+      it "for single vm" do
+        create_check_compliance_queue_expections(vm1)
 
-      expect(MiqQueue.count).to eq(1)
-      validate_compliance_message(MiqQueue.first, vm1)
-    end
-
-    it "should queue single vm for compliance via vm method" do
-      vm1.check_compliance_queue
-
-      expect(MiqQueue.count).to eq(1)
-      validate_compliance_message(MiqQueue.first, vm1)
-    end
-
-    it "should queue single host for compliance" do
-      Compliance.check_compliance_queue(host1)
-
-      expect(MiqQueue.count).to eq(1)
-      validate_compliance_message(MiqQueue.first, host1)
-    end
-
-    it "should queue single host for compliance via host method" do
-      host1.check_compliance_queue
-
-      expect(MiqQueue.count).to eq(1)
-      validate_compliance_message(MiqQueue.first, host1)
-    end
-
-    it "should queue multiple objects for compliance" do
-      Compliance.check_compliance_queue([vm1, host1])
-
-      expect(MiqQueue.count).to eq(2)
-      MiqQueue.all.each do |qitem|
-        klass, id = qitem.args.first
-        target = klass.constantize.find(id)
-        case target
-        when Vm then   target.should == vm1
-        when Host then target.should == host1
-        end
-        validate_compliance_message(qitem, target)
+        Compliance.check_compliance_queue(vm1)
       end
-    end
 
-    it "should queue multiple objects for compliance with inputs" do
-      inputs = {:foo => 'bar'}
-      Compliance.check_compliance_queue([vm1, host1], inputs)
+      it "for single vm via vm method" do
+        create_check_compliance_queue_expections(vm1)
 
-      expect(MiqQueue.count).to eq(2)
-      MiqQueue.all.each do |qitem|
-        klass, id = qitem.args.first
-        target = klass.constantize.find(id)
-        case target
-        when Vm then   target.should == vm1
-        when Host then target.should == host1
-        end
-        validate_compliance_message(qitem, target, inputs)
+        vm1.check_compliance_queue
+      end
+
+      it "for single host" do
+        create_check_compliance_queue_expections(host1)
+
+        Compliance.check_compliance_queue(host1)
+      end
+
+      it "for single host via host method" do
+        create_check_compliance_queue_expections(host1)
+
+        host1.check_compliance_queue
+      end
+
+      it "for multiple objects" do
+        subject = [vm1, host1]
+        create_check_compliance_queue_expections(*subject)
+
+        Compliance.check_compliance_queue(subject)
+      end
+
+      it "for multiple objects with inputs" do
+        inputs = {:foo => 'bar'}
+        subject = [vm1, host1]
+        create_check_compliance_queue_expections(*subject, inputs)
+
+        Compliance.check_compliance_queue(subject, inputs)
       end
     end
 
@@ -154,12 +136,17 @@ describe Compliance do
 
   private
 
-  def validate_compliance_message(msg, obj, inputs = {})
-    expect(msg).to have_attributes(
-      :method_name => "check_compliance",
-      :class_name  => "Compliance",
-      :args        => [[obj.class.name, obj.id], inputs]
-    )
+  def create_check_compliance_queue_expections(*objects)
+    inputs = objects.extract_options!
+    objects.each do |obj|
+      expect(MiqQueue).to receive(:put) do |args|
+        expect(args).to have_attributes(
+          :method_name => "check_compliance",
+          :class_name  => "Compliance",
+          :args        => [[obj.class.name, obj.id], inputs]
+        )
+      end
+    end
   end
 
   def validate_scan_and_check_compliance_message(msg, obj, inputs = {})
