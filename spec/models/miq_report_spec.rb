@@ -261,6 +261,27 @@ describe MiqReport do
       expect(attrs[:user_filters]["managed"]).to eq [[tag]]
     end
 
+    it "filtering on a virtual reflection" do
+      vm1 = FactoryGirl.create(:vm_vmware, :name => "VA")
+      vm2 = FactoryGirl.create(:vm_vmware, :name => "VB")
+      rp1 = FactoryGirl.create(:resource_pool, :name => "RPA")
+      rp2 = FactoryGirl.create(:resource_pool, :name => "RPB")
+      rp1.add_child(vm1)
+      rp2.add_child(vm2)
+
+      report = MiqReport.new(:db => "Vm")
+      filter = YAML.load '--- !ruby/object:MiqExpression
+      exp:
+        "starts with":
+          field: Vm.parent_resource_pool-name
+          value: "RPA"
+      '
+
+      results, _attrs = report.paged_view_search(:only => %w(name), :filter => filter)
+      expect(results.length).to eq 1
+      expect(results.data.first["name"]).to eq "VA"
+    end
+
     context "with tagged VMs" do
       before(:each) do
         @hosts = [
@@ -293,38 +314,6 @@ describe MiqReport do
         before(:each) do
           User.stub(:server_timezone => "UTC")
           @group.update_attributes(:filters => {"managed" => [["/managed/environment/prod"], ["/managed/service_level/silver"]], "belongsto" => []})
-        end
-
-
-        it "works when filtering on a virtual reflection" do
-          report = MiqReport.new(:db => "Vm", :sortby => ["name"], :order => "Descending")
-          filter = YAML.load '--- !ruby/object:MiqExpression
-          exp:
-            and:
-            - IS NOT NULL:
-                field: Vm-name
-                value: ""
-            - and:
-              - IS NULL:
-                  field: Vm.parent_resource_pool-name
-                  value: ""
-          '
-
-          options = {
-            :only     => ["name"],
-            :page     => 2,
-            :per_page => 10,
-            :filter   => filter
-          }
-          results, attrs = report.paged_view_search(options)
-          results.length.should == 10
-          results.data.first["name"].should == "Test Group 4 VM 89"
-          results.data.last["name"].should == "Test Group 4 VM 80"
-          attrs[:apply_sortby_in_search].should be_true
-          attrs[:apply_limit_in_sql].should be_false
-          attrs[:auth_count].should == 100
-          attrs[:user_filters]["managed"].should be_empty
-          attrs[:total_count].should == 100
         end
 
         it "does not raise errors when virtual columns are included in cols" do
