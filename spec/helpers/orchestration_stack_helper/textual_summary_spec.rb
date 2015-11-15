@@ -1,35 +1,20 @@
 require "spec_helper"
 
-describe OrchestrationStackHelper do
-  before :each do
-    @record = FactoryGirl.create(:orchestration_stack)
+describe OrchestrationStackHelper::TextualSummary do
+  before { @record = FactoryGirl.build(:orchestration_stack) }
+
+  it "#textual_group_lifecycle includes retirement_date" do
+    expect(textual_group_lifecycle).to eq([:retirement_date])
   end
 
-  context "::TextualSummary" do
-    it "defines textual_group_lifecycle" do
-      expect(self).to respond_to(:textual_group_lifecycle)
+  describe "#textual_retirement_date value" do
+    it "with no :retires_on returns 'Never'" do
+      expect(textual_retirement_date[:value]).to eq("Never")
     end
 
-    describe "#textual_group_lifecycle" do
-      it "should includes retirement_date" do
-        expect(self.textual_group_lifecycle).to include(:retirement_date)
-      end
-    end
-
-    it "defines textual_retirement_date" do
-      expect(self).to respond_to(:textual_retirement_date)
-    end
-
-    describe "#textual_retirement_date" do
-      it "should returns 'Never' if nil values is passed" do
-        @record.retires_on = nil
-        expect(self.textual_retirement_date).to include(:value => "Never")
-      end
-
-      it "should returns date in %x format" do
-        @record.retires_on = Date.new(2015, 11, 01)
-        expect(self.textual_retirement_date).to include(:value => "11/01/15")
-      end
+    it "with :retires_on returns date in %x format" do
+      @record.retires_on = Date.new(2015, 11, 01)
+      expect(textual_retirement_date[:value]).to eq("11/01/15")
     end
   end
 end
