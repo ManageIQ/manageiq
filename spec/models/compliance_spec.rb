@@ -2,10 +2,10 @@ require "spec_helper"
 
 describe Compliance do
   context "A small virtual infrastructure" do
-    let(:ems_vmware) { FactoryGirl.create(:ems_vmware,    :name => "Test EMS", :zone => zone) }
-    let(:host1)      { FactoryGirl.create(:host,      :name => "Host1", :ext_management_system => ems_vmware) }
-    let(:host2)      { FactoryGirl.create(:host,      :name => "Host2") }
-    let(:vm1)        { FactoryGirl.create(:vm_vmware, :name => "VM1", :host => host1, :ext_management_system => ems_vmware) }
+    let(:ems_vmware) { FactoryGirl.create(:ems_vmware, :zone => zone) }
+    let(:host1)      { FactoryGirl.create(:host, :ext_management_system => ems_vmware) }
+    let(:host2)      { FactoryGirl.create(:host) }
+    let(:vm1)        { FactoryGirl.create(:vm_vmware, :host => host1, :ext_management_system => ems_vmware) }
     let(:zone)       { FactoryGirl.build(:zone) }
 
     before { allow(MiqServer).to receive(:my_zone).and_return(zone) }
