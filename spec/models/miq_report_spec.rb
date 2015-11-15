@@ -179,7 +179,7 @@ describe MiqReport do
       vm2.tag_with(tag, :ns => "*")
 
       User.stub(:server_timezone => "UTC")
-      report = MiqReport.new(:db => "Vm", :sortby => ["storage.name", "name"], :order => "Ascending", :include => {"storage" => {"columns" => ["name"]}})
+      report = MiqReport.new(:db => "Vm", :sortby => %w(storage.name name), :order => "Ascending", :include => {"storage" => {"columns" => ["name"]}})
       options = {
         :only   => ["name", "storage.name"],
         :userid => @user.userid,
@@ -203,13 +203,13 @@ describe MiqReport do
       FactoryGirl.create(:vm_vmware, :name => "B", :host => FactoryGirl.create(:host, :name => "A"))
       FactoryGirl.create(:vm_vmware, :name => "A", :host => FactoryGirl.create(:host, :name => "B"))
 
-      report = MiqReport.new(:db => "Vm", :sortby => ["host_name", "name"], :order => "Descending")
+      report = MiqReport.new(:db => "Vm", :sortby => %w(host_name name), :order => "Descending")
       options = {
-        :only     => ["name", "host_name"],
-        :page     => 2,
+        :only => %w(name host_name),
+        :page => 2,
       }
 
-      results, attrs = report.paged_view_search(options)
+      results, _attrs = report.paged_view_search(options)
       expect(results.length).to eq 2
       expect(results.data.first["host_name"]).to eq "B"
     end
@@ -234,11 +234,12 @@ describe MiqReport do
     end
 
     it "expression filtering on a virtual column and user filters" do
-      vm1 = FactoryGirl.create(:vm_vmware, :name => "VA",  :host => FactoryGirl.create(:host, :name => "HA"))
-      vm2 = FactoryGirl.create(:vm_vmware, :name => "VB",  :host => FactoryGirl.create(:host, :name => "HB"))
-      vm3 = FactoryGirl.create(:vm_vmware, :name => "VAA", :host => FactoryGirl.create(:host, :name => "HAA"))
-      tag = "/managed/environment/prod"
+      _vm1 = FactoryGirl.create(:vm_vmware, :name => "VA",  :host => FactoryGirl.create(:host, :name => "HA"))
+      vm2 =  FactoryGirl.create(:vm_vmware, :name => "VB",  :host => FactoryGirl.create(:host, :name => "HB"))
+      vm3 =  FactoryGirl.create(:vm_vmware, :name => "VAA", :host => FactoryGirl.create(:host, :name => "HAA"))
+      tag =  "/managed/environment/prod"
       @group.update_attributes(:filters => {"managed" => [[tag]], "belongsto" => []})
+
       # vm1's host.name starts with HA but isn't tagged
       vm2.tag_with(tag, :ns => "*")
       vm3.tag_with(tag, :ns => "*")
@@ -290,9 +291,9 @@ describe MiqReport do
         :name      => "VMs",
         :title     => "Virtual Machines",
         :db        => "Vm",
-        :cols      => ["name", "host_name", "v_host_vmm_product"],
-        :include   => {"host" => {"columns" => ["name", "vmm_product"]}},
-        :col_order => ["name", "host.name", "host.vmm_product"],
+        :cols      => %w(name host_name v_host_vmm_product),
+        :include   => {"host" => {"columns" => %w(name vmm_product)}},
+        :col_order => %w(name host.name host.vmm_product),
         :headers   => ["Name", "Host", "Host VMM Product"],
         :order     => "Ascending",
         :sortby    => ["host_name"],
@@ -304,8 +305,8 @@ describe MiqReport do
       }
       results, _attrs = report.paged_view_search(options)
       expect(results.length).to eq 2
-      expect(results.data.collect { |rec| rec.data["host_name"]}).to eq(%w(HA HB))
-      expect(results.data.collect { |rec| rec.data["v_host_vmm_product"]}).to eq(%w(ESX ESX))
+      expect(results.data.collect { |rec| rec.data["host_name"] }).to eq(%w(HA HB))
+      expect(results.data.collect { |rec| rec.data["v_host_vmm_product"] }).to eq(%w(ESX ESX))
     end
   end
 
