@@ -57,17 +57,7 @@ describe MiqReport do
   end
 
   context "#paged_view_search" do
-    OS_LIST = %w(_none_ windows ubuntu windows ubuntu)
-
     before(:each) do
-      # TODO: Move this setup to the examples that need it.
-      @tags = {
-        2 => "/managed/environment/prod",
-        3 => "/managed/environment/dev",
-        4 => "/managed/service_level/gold",
-        5 => "/managed/service_level/silver"
-      }
-
       @group = FactoryGirl.create(:miq_group)
       @user  = FactoryGirl.create(:user, :miq_groups => [@group])
     end
