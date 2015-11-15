@@ -51,41 +51,43 @@ describe Compliance do
       end
     end
 
-    it "should queue single host for scan_and_check_compliance via host method" do
-      host1.scan_and_check_compliance_queue
+    context ".scan_and_check_compliance_queue" do
+      it "should queue single host for scan_and_check_compliance via host method" do
+        host1.scan_and_check_compliance_queue
 
-      expect(MiqQueue.count).to eq(1)
-      validate_scan_and_check_compliance_message(MiqQueue.first, host1)
-    end
-
-    it "should queue multiple objects for scan_and_check_compliance" do
-      Compliance.scan_and_check_compliance_queue([vm1, host1, host2])
-
-      expect(MiqQueue.count).to eq(2)
-      MiqQueue.all.each do |qitem|
-        klass, id = qitem.args.first
-        target = klass.constantize.find(id)
-        case id
-        when host1.id then target.should == host1
-        when host2.id then target.should == host2
-        end
-        validate_scan_and_check_compliance_message(qitem, target)
+        expect(MiqQueue.count).to eq(1)
+        validate_scan_and_check_compliance_message(MiqQueue.first, host1)
       end
-    end
 
-    it "should queue multiple objects for scan_and_check_compliance with inputs" do
-      inputs = {:foo => 'bar'}
-      Compliance.scan_and_check_compliance_queue([vm1, host1, host2], inputs)
+      it "should queue multiple objects for scan_and_check_compliance" do
+        Compliance.scan_and_check_compliance_queue([vm1, host1, host2])
 
-      expect(MiqQueue.count).to eq(2)
-      MiqQueue.all.each do |qitem|
-        klass, id = qitem.args.first
-        target = klass.constantize.find(id)
-        case id
-        when host1.id then target.should == host1
-        when host2.id then target.should == host2
+        expect(MiqQueue.count).to eq(2)
+        MiqQueue.all.each do |qitem|
+          klass, id = qitem.args.first
+          target = klass.constantize.find(id)
+          case id
+          when host1.id then target.should == host1
+          when host2.id then target.should == host2
+          end
+          validate_scan_and_check_compliance_message(qitem, target)
         end
-        validate_scan_and_check_compliance_message(qitem, target, inputs)
+      end
+
+      it "should queue multiple objects for scan_and_check_compliance with inputs" do
+        inputs = {:foo => 'bar'}
+        Compliance.scan_and_check_compliance_queue([vm1, host1, host2], inputs)
+
+        expect(MiqQueue.count).to eq(2)
+        MiqQueue.all.each do |qitem|
+          klass, id = qitem.args.first
+          target = klass.constantize.find(id)
+          case id
+          when host1.id then target.should == host1
+          when host2.id then target.should == host2
+          end
+          validate_scan_and_check_compliance_message(qitem, target, inputs)
+        end
       end
     end
 
