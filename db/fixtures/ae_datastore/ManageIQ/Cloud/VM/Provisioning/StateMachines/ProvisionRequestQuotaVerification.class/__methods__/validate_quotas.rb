@@ -9,6 +9,8 @@
 # tag values: [quota_max_cpu, quota_max_memory, quota_max_storage]
 #
 
+$evm.log("warn", "[DEPRECATION] validate_quotas method will be deprecated.  Please use consolidated quota instead.")
+
 # Initialize Variables
 quota_exceeded = false
 miq_request = $evm.root['miq_request']
