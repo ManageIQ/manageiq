@@ -51,7 +51,8 @@
     }
 
     function fetchServices() {
-      CollectionsApi.query('services').then(lodash.partial(updateCount, 'services'));
+      var options = {expand: false, filter: ['service_id>0'] };
+      CollectionsApi.query('services', options).then(lodash.partial(updateServicesCount, 'services'));
     }
 
     function fetchServiceTemplates() {
@@ -60,6 +61,10 @@
 
     function updateCount(item, data) {
       Navigation.items.primary[item].count = data.count;
+    }
+
+    function updateServicesCount(item, data) {
+      Navigation.items.primary[item].count = data.count - data.subcount;
     }
   }
 })();

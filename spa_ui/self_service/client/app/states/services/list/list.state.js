@@ -37,7 +37,12 @@
     var vm = this;
 
     vm.title = 'Service List';
-    vm.services = services.resources;
+    vm.services = []
+    angular.forEach(services.resources, function(value, key) {
+      if (value['service_id'] > 0 == false)
+        vm.services.push(value);
+    });
+
     vm.servicesList = angular.copy(vm.services);
 
     vm.listConfig = {

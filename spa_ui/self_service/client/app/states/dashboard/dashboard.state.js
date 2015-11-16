@@ -22,6 +22,7 @@
           requireUser: true
         },
         resolve: {
+          definedServiceIdsServices: resolveServicesWithDefinedServiceIds,
           retiredServices: resolveRetiredServices,
           expiringServices: resolveExpiringServices,
           pendingRequests: resolvePendingRequests,
@@ -73,11 +74,18 @@
   }
 
   /** @ngInject */
-  function StateController($state, RequestsState, ServicesState, retiredServices, 
+  function resolveServicesWithDefinedServiceIds(CollectionsApi) {
+    var options = {expand: false, filter: ['service_id>0'] };
+
+    return CollectionsApi.query('services', options);
+  }
+
+  /** @ngInject */
+  function StateController($state, RequestsState, ServicesState, definedServiceIdsServices, retiredServices,
     expiringServices, pendingRequests, approvedRequests, deniedRequests) {
     var vm = this;
     vm.servicesCount = {};
-    vm.servicesCount.total = retiredServices.count;
+    vm.servicesCount.total = definedServiceIdsServices.count - definedServiceIdsServices.subcount;
     vm.servicesCount.retired = retiredServices.subcount;
     vm.servicesCount.current = retiredServices.count - retiredServices.subcount;
     vm.servicesCount.soon = expiringServices.subcount;
