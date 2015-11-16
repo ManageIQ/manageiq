@@ -56,12 +56,12 @@ module ReportController::Widgets
       assert_privileges("widget_#{params[:id] ? "edit" : "new"}")
       id = params[:id] ? params[:id] : "new"
       return unless load_edit("widget_edit__#{id}", "replace_cell__explorer")
-      widget_get_form_vars
-      widget = @edit[:widget_id] ? MiqWidget.find_by_id(@edit[:widget_id]) : MiqWidget.new  # get the current record
-      widget_set_record_vars(widget)
-      if widget_validate_entries && widget.save_with_shortcuts(@edit[:new][:shortcuts].to_a)
-        AuditEvent.success(build_saved_audit(widget, @edit))
-        add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "MiqWidget"), :name => widget.title})
+      widget_get_form_vars # get current record(@widget) of MiqWidget
+      widget_set_record_vars(@widget)
+      if widget_validate_entries && @widget.save_with_shortcuts(@edit[:new][:shortcuts].to_a)
+        AuditEvent.success(build_saved_audit(@widget, @edit))
+        add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "MiqWidget"),
+                                                         :name  => @widget.title})
         params[:id] = @widget.id.to_s   # reset id in params for show
         # Build the filter expression and attach widget to schedule filter
         exp = {}
@@ -72,7 +72,7 @@ module ReportController::Widgets
         # @schedule = nil
         replace_right_cell(:replace_trees => [:widgets])
       else
-        widget.errors.each do |field, msg|
+        @widget.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
         @changed = session[:changed] = (@edit[:new] != @edit[:current])

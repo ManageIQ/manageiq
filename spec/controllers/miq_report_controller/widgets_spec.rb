@@ -1,0 +1,82 @@
+require "spec_helper"
+
+describe ReportController do
+  before(:each) do
+    EvmSpecHelper.create_guid_miq_server_zone
+    set_user_privileges
+  end
+  describe "#widget_edit" do
+    let(:miq_schedule) { FactoryGirl.build(:miq_schedule, :run_at => {}, :sched_action => {}) }
+    let(:new_widget) { controller.instance_variable_get(:@widget) }
+
+    # Configuration Management/Virtual Machines/VMs with Free Space > 50% by Department report
+    let(:report_id) { 100_000_000_000_01 }
+
+    before :each do
+      @previous_count_of_widgets = MiqWidget.count
+      controller.stub(:load_edit => true)
+      controller.stub(:widget_graph_menus)
+      controller.stub(:replace_right_cell)
+      controller.stub(:render)
+      controller.instance_variable_set(:@sb, :wtype => 'c') # chart widget
+    end
+
+    context "add new widget" do
+      before :each do
+        controller.instance_variable_set(:@_params, :button => "add")
+      end
+
+      context "valid attributes" do
+        before :each do
+          controller.instance_variable_set(:@edit,
+                                           :schedule => miq_schedule, :new => {:title => "NewCustomWidget",
+                                                                               :description => "NewCustomWidget",
+                                                                               :enabled => true, :roles => ["_ALL_"],
+                                                                               :groups => [], :timer_weeks => "1",
+                                                                               :timer_days => "1", :timer_hours => "1",
+                                                                               :timer_typ => "Hourly",
+                                                                               :start_hour => "00",
+                                                                               :start_min => "10",
+                                                                               :start_date => "11/13/2015",
+                                                                               :repfilter => report_id})
+          controller.send(:widget_edit)
+        end
+
+        it "adds new widget with entered attributes" do
+          expect(MiqWidget.count).to eq(@previous_count_of_widgets + 1)
+          expect(new_widget.errors.count).to eq(0)
+          expect(new_widget.title).to eq("NewCustomWidget")
+          expect(new_widget.description).to eq("NewCustomWidget")
+          expect(new_widget.enabled).to eq(true)
+        end
+
+        it "creates widget with widget.id in 'value' field from cond. of MiqExpression (in MiqSchedule.filter)" do
+          expect(new_widget.id).to be_instance_of(Fixnum)
+          expect(miq_schedule.filter.exp["="]["value"]).to eq(new_widget.id)
+        end
+      end
+
+      context "invalid attributes" do
+        before :each do
+          controller.instance_variable_set(:@edit,
+                                           :schedule => miq_schedule, :new => {:title => "",
+                                                                               :description => "",
+                                                                               :enabled => true, :roles => ["_ALL_"],
+                                                                               :groups => [], :timer_weeks => "1",
+                                                                               :timer_days => "1", :timer_hours => "1",
+                                                                               :timer_typ => "Hourly",
+                                                                               :start_hour => "00",
+                                                                               :start_min => "10",
+                                                                               :start_date => "11/13/2015",
+                                                                               :repfilter => report_id})
+          controller.send(:widget_edit)
+        end
+
+        it "doesn't add new widget" do
+          expect(MiqWidget.count).to eq(@previous_count_of_widgets)
+          expect(new_widget.errors.count).not_to eq(0)
+        end
+      end
+    end
+  end
+end
