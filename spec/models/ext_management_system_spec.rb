@@ -18,6 +18,7 @@ describe ExtManagementSystem do
       openshift
       atomic
       openshift_enterprise
+      atomic_enterprise
       openstack
       openstack_infra
       rhevm

@@ -815,6 +815,8 @@ module EmsCommon
         @edit[:new][:port] = @ems.port ? @ems.port : ManageIQ::Providers::Atomic::ContainerManager::DEFAULT_PORT
       elsif params[:server_emstype] == ManageIQ::Providers::OpenshiftEnterprise::ContainerManager.ems_type
         @edit[:new][:port] = @ems.port ? @ems.port : ManageIQ::Providers::OpenshiftEnterprise::ContainerManager::DEFAULT_PORT
+      elsif params[:server_emstype] == ManageIQ::Providers::AtomicEnterprise::ContainerManager.ems_type
+        @edit[:new][:port] = @ems.port ? @ems.port : ManageIQ::Providers::AtomicEnterprise::ContainerManager::DEFAULT_PORT
       else
         @edit[:new][:port] = nil
       end
