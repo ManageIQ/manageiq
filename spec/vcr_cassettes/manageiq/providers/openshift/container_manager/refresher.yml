@@ -210,37 +210,6 @@ http_interactions:
   recorded_at: Sun, 02 Aug 2015 07:36:11 GMT
 - request:
     method: get
-    uri: https://10.35.0.174:8443/api/v1/events
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - "*/*"
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.alpha (linux-gnu x86_64) ruby/2.0.0p598
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Cache-Control:
-      - no-store
-      Content-Type:
-      - application/json
-      Date:
-      - Sun, 02 Aug 2015 07:36:11 GMT
-      Content-Length:
-      - '116'
-    body:
-      encoding: UTF-8
-      string: '{"kind":"EventList","apiVersion":"v1","metadata":{"selfLink":"/api/v1/events","resourceVersion":"58707"},"items":[]}'
-    http_version: 
-  recorded_at: Sun, 02 Aug 2015 07:36:11 GMT
-- request:
-    method: get
     uri: https://10.35.0.174:8443/api/v1/endpoints
     body:
       encoding: US-ASCII

@@ -3,7 +3,7 @@ module ManageIQ::Providers::Kubernetes
     include ::EmsRefresh::Refreshers::EmsRefresherMixin
 
     def self.entities
-      %w(pods services replication_controllers nodes events endpoints namespaces resource_quotas limit_ranges
+      %w(pods services replication_controllers nodes endpoints namespaces resource_quotas limit_ranges
          persistent_volumes persistent_volume_claims component_statuses)
     end
 
