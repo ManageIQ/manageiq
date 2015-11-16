@@ -317,6 +317,7 @@ event_groups:
     - VM_WAS_SET_DOWN_DUE_TO_HOST_REBOOT_OR_MANUAL_FENCE
     - VM_RENAMED
     - hardware.ipmi.metrics.update
+    - POD_NODESELECTORMISMATCHING
     :detail: []
     :name: General Activity
   import_export:
@@ -623,6 +624,7 @@ event_groups:
     - POD_FAILEDVALIDATION
     - POD_DEADLINEEXCEEDED
     - POD_FAILEDSYNC
+    - POD_INSUFFICIENTFREECPU
     - CONTAINER_UNHEALTHY
     :detail:
     - DatacenterRenamedEvent
@@ -681,6 +683,8 @@ event_groups:
     - USER_UPDATE_STORAGE_POOL_FAILED
     - volume.create.end
     - volume.delete.end
+    - POD_OUTOFDISK
+    - POD_INSUFFICIENTFREEMEMORY
     :detail: []
     :name: Storage
 
