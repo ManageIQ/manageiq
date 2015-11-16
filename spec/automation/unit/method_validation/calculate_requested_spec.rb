@@ -19,7 +19,7 @@ describe "Quota Validation" do
     root = ws.root
     expect(root['quota_source']).to be_kind_of(MiqAeMethodService::MiqAeServiceTenant)
     expect(root['quota_requested'][:storage]).to eq(512)
-    expect(root['quota_requested'][:cpu]).to eq(2)
+    expect(root['quota_requested'][:cpu]).to eq(4)
     expect(root['quota_requested'][:vms]).to eq(1)
     expect(root['quota_requested'][:memory]).to eq(1024)
   end
