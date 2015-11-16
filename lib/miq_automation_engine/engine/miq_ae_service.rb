@@ -1,3 +1,4 @@
+require_relative 'miq_ae_service_model_legacy'
 module MiqAeMethodService
   class Deprecation < Vmdb::Deprecation
     def self.default_log
@@ -15,6 +16,8 @@ module MiqAeMethodService
   class MiqAeService
     include Vmdb::Logging
     include DRbUndumped
+    include MiqAeServiceModelLegacy
+
     @@id_hash = {}
     @@current = []
 
@@ -202,11 +205,15 @@ module MiqAeMethodService
       end
     end
 
-    def vmdb(type, *args)
-      type = type.to_s.underscore
-      type = "ext_management_system" if type == "ems"
-      service = MiqAeMethodService.const_get("MiqAeService#{type.camelize}")
+    def vmdb(model_name, *args)
+      service = service_model(model_name)
       args.empty? ? service : service.find(*args)
+    end
+
+    def service_model(model_name)
+      "MiqAeMethodService::MiqAeService#{model_name}".constantize
+    rescue NameError
+      service_model_lookup(model_name)
     end
 
     def datastore
