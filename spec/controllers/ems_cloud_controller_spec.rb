@@ -229,7 +229,7 @@ describe EmsCloudController do
                                        :amqp_password    => amqp_creds[:password])
       expect(mocked_ems).to receive(:supports_authentication?).with(:amqp).and_return(true)
       expect(mocked_ems).to receive(:supports_authentication?).with(:oauth)
-      expect(mocked_ems).to receive(:supports_authentication?).with(:service_account)
+      expect(mocked_ems).to receive(:supports_authentication?).with(:auth_key)
       expect(controller.send(:build_credentials, mocked_ems)).to eq(:default => default_creds, :amqp => amqp_creds)
     end
 
@@ -241,7 +241,7 @@ describe EmsCloudController do
       expect(mocked_ems).to receive(:authentication_password).with(:amqp).and_return(amqp_creds[:password])
       expect(mocked_ems).to receive(:supports_authentication?).with(:amqp).and_return(true)
       expect(mocked_ems).to receive(:supports_authentication?).with(:oauth)
-      expect(mocked_ems).to receive(:supports_authentication?).with(:service_account)
+      expect(mocked_ems).to receive(:supports_authentication?).with(:auth_key)
       expect(controller.send(:build_credentials, mocked_ems)).to eq(:default => default_creds, :amqp => amqp_creds)
     end
   end

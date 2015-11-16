@@ -20,7 +20,7 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
   def supported_auth_types
     %w(
       oauth
-      service_account
+      auth_key
     )
   end
 
@@ -67,12 +67,12 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
 
     raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(options[:auth_type])
 
-    auth_key = authentication_token(options[:auth_type])
+    auth_token = authentication_token(options[:auth_type])
 
     ::Fog::Compute.new(
       :provider               => "Google",
       :google_project         => project,
-      :google_json_key_string => auth_key,
+      :google_json_key_string => auth_token,
     )
 
   end
