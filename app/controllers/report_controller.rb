@@ -311,7 +311,7 @@ class ReportController < ApplicationController
       end
     end
 
-    redirect_options[:message] = @flash_array.first.to_json
+    redirect_options[:message] = @flash_array.first
 
     redirect_to redirect_options
   end
