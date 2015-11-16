@@ -44,6 +44,7 @@ module MiqAeServiceSpec
   describe MiqAeService do
     context "#service_model" do
       let(:miq_ae_service) { MiqAeService.new(double('ws', :persist_state_hash => {})) }
+      let(:prefix) { "MiqAeMethodService::MiqAeService" }
 
       it "loads base model" do
         expect(miq_ae_service.service_model(:VmOrTemplate)).to   be(MiqAeMethodService::MiqAeServiceVmOrTemplate)
@@ -82,6 +83,20 @@ module MiqAeServiceSpec
       it "loads all mapped models" do
         MiqAeMethodService::MiqAeService::LEGACY_MODEL_NAMES.values.each do |model_name|
           expect { "MiqAeMethodService::MiqAeService#{model_name}".constantize }.to_not raise_error
+        end
+      end
+
+      it "loads cloud networks" do
+        items = %w(
+          ManageIQ_Providers_Openstack_CloudManager_CloudNetwork
+          ManageIQ_Providers_Openstack_CloudManager_CloudNetwork_Private
+          ManageIQ_Providers_Openstack_CloudManager_CloudNetwork_Public
+          ManageIQ_Providers_Openstack_InfraManager_CloudNetwork
+          ManageIQ_Providers_Openstack_InfraManager_CloudNetwork_Private
+          ManageIQ_Providers_Openstack_InfraManager_CloudNetwork_Public
+        )
+        items.each do |name|
+          expect(miq_ae_service.vmdb(name)).to be("#{prefix}#{name}".constantize)
         end
       end
     end
