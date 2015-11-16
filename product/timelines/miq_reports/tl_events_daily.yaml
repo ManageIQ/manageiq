@@ -31,6 +31,11 @@ cols:
 - dest_vm_name
 - dest_vm_location
 - username
+- container_node_name
+- container_group_name
+- container_namespace
+- container_name
+- container_replicator_name
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -57,6 +62,11 @@ col_order:
 - dest_vm_location
 - availability_zone.name
 - username
+- container_node_name
+- container_group_name
+- container_namespace
+- container_name
+- container_replicator_name
 
 # Column titles, in order
 headers:
@@ -74,6 +84,11 @@ headers:
 - Destination VM Location
 - Availability Zone
 - Provider User Name
+- Container Node
+- Pod
+- Container Project
+- Container
+- Container Replicator
 
 # Condition(s) string for the SQL query
 conditions:

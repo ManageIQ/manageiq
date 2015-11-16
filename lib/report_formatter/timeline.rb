@@ -231,6 +231,22 @@ module ReportFormatter
           end
         elsif co == "availability_zone.name" && !rec.availability_zone_id.nil?
           val = "&lt;a href='/availability_zone/show/#{to_cid(rec.availability_zone_id)}'&gt;#{row[co]}&lt;/a&gt;"
+        elsif co == "container_node_name"
+          if rec.container_node_id
+            val = "<a href='/container_node/show/#{to_cid(rec.container_node_id.id)}'>#{row[co]}</a>"
+          end
+        elsif co == "container_group_name"
+          if rec.container_group_id
+            val = "<a href='/container_group/show/#{to_cid(rec.container_group.id)}'>#{row[co]}</a>"
+          end
+        elsif co == "container_name"
+          if rec.container_id
+            val = "<a href='/container/tree_select/?id=cnt-#{to_cid(rec.container_id)}'>#{row[co]}</a>;"
+          end
+        elsif co == "container_replicator_name" && rec.container_replicator_id
+          if rec.container_replicator_id
+            val = "<a href='/container_replicator/show/#{to_cid(rec.container_replicator_id)}'>#{row[co]}</a>"
+          end
         elsif mri.db == "BottleneckEvent" && co == "resource_name"
           case rec.resource_type
           when "ExtManagementSystem"
