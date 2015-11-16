@@ -1,13 +1,13 @@
 module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
   extend ActiveSupport::Concern
-  # 'Created', 'Failed', 'Started', 'Killed', 'Stopped' and 'Unhealthy' are in fact container related events,
+  # 'Created', 'Failed', 'Started', 'Killing', 'Stopped' and 'Unhealthy' are in fact container related events,
   # returned as part of a pod event.
   ENABLED_EVENTS = {
     'Node'                  => %w(NodeReady NodeNotReady Rebooted NodeSchedulable NodeNotSchedulable InvalidDiskCapacity
                                   FailedMount),
     'Pod'                   => %w(Scheduled FailedScheduling FailedValidation HostPortConflict DeadlineExceeded
                                   FailedSync OutOfDisk NodeSelectorMismatching InsufficientFreeCPU
-                                  InsufficientFreeMemory Created Failed Started Killed Stopped Unhealthy),
+                                  InsufficientFreeMemory Created Failed Started Killing Stopped Unhealthy),
     'ReplicationController' => %w(SuccessfulCreate FailedCreate)
   }
 
