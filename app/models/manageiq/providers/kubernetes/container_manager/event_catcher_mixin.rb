@@ -6,7 +6,8 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
     'Node'                  => %w(NodeReady NodeNotReady Rebooted NodeSchedulable NodeNotSchedulable InvalidDiskCapacity
                                   FailedMount),
     'Pod'                   => %w(Scheduled FailedScheduling FailedValidation HostPortConflict DeadlineExceeded
-                                  FailedSync Created Failed Started Killed Stopped Unhealthy),
+                                  FailedSync OutOfDisk NodeSelectorMismatching InsufficientFreeCPU
+                                  InsufficientFreeMemory Created Failed Started Killed Stopped Unhealthy),
     'ReplicationController' => %w(SuccessfulCreate FailedCreate)
   }
 
