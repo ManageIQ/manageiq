@@ -24,6 +24,7 @@
         resolve: {
           definedServiceIdsServices: resolveServicesWithDefinedServiceIds,
           retiredServices: resolveRetiredServices,
+          nonRetiredServices: resolveNonRetiredServices,
           expiringServices: resolveExpiringServices,
           pendingRequests: resolvePendingRequests,
           approvedRequests: resolveApprovedRequests,
@@ -74,6 +75,13 @@
   }
 
   /** @ngInject */
+  function resolveNonRetiredServices(CollectionsApi) {
+    var options = {expand: false, filter: ['retired=false'] };
+
+    return CollectionsApi.query('services', options);
+  }
+
+  /** @ngInject */
   function resolveServicesWithDefinedServiceIds(CollectionsApi) {
     var options = {expand: false, filter: ['service_id>0'] };
 
@@ -82,12 +90,16 @@
 
   /** @ngInject */
   function StateController($state, RequestsState, ServicesState, definedServiceIdsServices, retiredServices,
-    expiringServices, pendingRequests, approvedRequests, deniedRequests) {
+    nonRetiredServices, expiringServices, pendingRequests, approvedRequests, deniedRequests) {
     var vm = this;
     vm.servicesCount = {};
     vm.servicesCount.total = definedServiceIdsServices.count - definedServiceIdsServices.subcount;
-    vm.servicesCount.retired = retiredServices.subcount;
-    vm.servicesCount.current = retiredServices.count - retiredServices.subcount;
+
+    vm.servicesCount.current = definedServiceIdsServices.subcount == 0 ? nonRetiredServices.count :
+      retiredServices.subcount + nonRetiredServices.subcount;
+
+    vm.servicesCount.retired = vm.servicesCount.total - vm.servicesCount.current;
+
     vm.servicesCount.soon = expiringServices.subcount;
 
     vm.requestsCount = {};
