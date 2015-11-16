@@ -95,19 +95,19 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_authentications
-    authentications = @ems.authentications
+    authentications = @ems.authentication_for_summary
     return [{:label => "Default Authentication", :title => "None", :value => "None"}] if authentications.blank?
 
     authentications.collect do |auth|
       label =
-        case auth.authtype
+        case auth[:authtype]
         when "default" then "Default"
         when "metrics" then "C & U Database"
         when "amqp"    then "AMQP"
         else;           "<Unknown>"
         end
 
-      {:label => "#{label} Credentials", :value => auth.status || "None", :title => auth.status_details}
+      {:label => "#{label} Credentials", :value => auth[:status] || "None", :title => auth[:status_details]}
     end
   end
 

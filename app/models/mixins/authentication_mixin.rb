@@ -34,6 +34,18 @@ module AuthenticationMixin
     authentications.select { |a| a.kind_of?(ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair) }
   end
 
+  def authentication_for_summary
+    summary = []
+    authentications.each do |a|
+      summary << {
+        :authtype       => a.authtype,
+        :status         => a.status,
+        :status_details => a.status_details
+      }
+    end
+    summary
+  end
+
   def has_authentication_type?(type)
     authentication_types.include?(type)
   end
@@ -75,7 +87,7 @@ module AuthenticationMixin
   end
 
   def authentication_status
-    ordered_auths = authentication_userid_passwords.sort_by(&:status_severity)
+    ordered_auths = authentications.sort_by(&:status_severity)
     ordered_auths.last.try(:status) || "None"
   end
 
