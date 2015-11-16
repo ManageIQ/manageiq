@@ -195,4 +195,46 @@ describe OrchestrationTemplate do
       end
     end
   end
+
+  describe ".seed" do
+    let(:azure_template) { "azure-single-vm-from-user-image" }
+
+    context "the first time seeding" do
+      it "adds templates from default location" do
+        OrchestrationTemplate.seed
+        OrchestrationTemplate.where(:name => azure_template).count.should == 1
+      end
+    end
+
+    context "when the seeding has been run before" do
+      before do
+        OrchestrationTemplate.seed
+      end
+
+      let(:seeded_template) { OrchestrationTemplate.find_by(:name => azure_template) }
+
+      it "does not add new templates from following runs" do
+        OrchestrationTemplate.seed
+        OrchestrationTemplate.where(:name => azure_template).count.should == 1
+      end
+
+      it "does not add new template if the original template has been only renamed" do
+        seeded_template.update_attributes(:name => 'other')
+        OrchestrationTemplate.seed
+        OrchestrationTemplate.where(:name => azure_template).count.should == 0
+      end
+
+      it "does not add new template if the original template has modified content" do
+        seeded_template.update_attributes(:content => '{}')
+        OrchestrationTemplate.seed
+        OrchestrationTemplate.where(:name => azure_template).count.should == 1
+      end
+
+      it "adds new template if the original template has been renamed and modified" do
+        seeded_template.update_attributes(:name => 'other', :content => '{}')
+        OrchestrationTemplate.seed
+        OrchestrationTemplate.where(:name => azure_template).count.should == 1
+      end
+    end
+  end
 end

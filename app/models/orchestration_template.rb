@@ -1,5 +1,7 @@
 require 'digest/md5'
 class OrchestrationTemplate < ActiveRecord::Base
+  TEMPLATE_DIR = Rails.root.join("product/orchestration_templates")
+
   include NewWithTypeStiMixin
   include ReportableMixin
 
@@ -13,6 +15,15 @@ class OrchestrationTemplate < ActiveRecord::Base
             :uniqueness => {:scope => :draft, :message => "of content already exists (content must be unique)"},
             :unless     => :draft?
   validates_presence_of :name
+
+  # Try to create the template if the name is not found in table
+  def self.seed
+    Dir.glob(TEMPLATE_DIR.join('*.yml')).each do |file|
+      hash = YAML.load_file(file)
+      next if hash[:type].constantize.find_by(:name => hash[:name])
+      find_or_create_by_contents(hash)
+    end
+  end
 
   def self.available
     where(:draft => false)
