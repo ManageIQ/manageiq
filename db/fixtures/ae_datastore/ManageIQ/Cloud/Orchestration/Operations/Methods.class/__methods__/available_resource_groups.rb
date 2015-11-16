@@ -13,13 +13,13 @@ dialog_field = $evm.object
 dialog_field["sort_by"] = "description"
 
 # sort_order: ascending / descending
-# dialog_field["sort_order"] = "ascending"
+dialog_field["sort_order"] = "ascending"
 
 # data_type: string / integer
 dialog_field["data_type"] = "string"
 
 # required: true / false
-# dialog_field["required"] = "true"
+dialog_field["required"] = "false"
 
 dialog_field["values"] = rg_list
 dialog_field["default_value"] = nil
