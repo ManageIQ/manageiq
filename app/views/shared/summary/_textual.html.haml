@@ -13,9 +13,10 @@
           - click = remote_function(:url => item[:link])
       - else
         - click = "DoNav('#{item[:link]}');"
-      - c = "#{item[:link] ? "" : "no-hover"}"
 
-      %tr{:class => c, :title => item[:title] ? item[:title] : "", :onclick => item[:link] ? click : ""}
+      %tr{:class   => no_hover_class(item),
+          :title   => item[:title] ? item[:title] : "",
+          :onclick => item[:link] ? click : ""}
         %td.label
           = item[:label]
         %td

@@ -82,6 +82,15 @@ module ApplicationHelper
     end
   end
 
+  def no_hover_class(item)
+    klass = if item[:link]
+              ""
+            elsif item.has_key?(:value)
+              "" if item[:value].kind_of?(Array) && item[:value].any? {|val| val[:link]}
+            end
+    klass.nil? ? 'no-hover' : ''
+  end
+
   # Check role based authorization for a UI task
   def role_allows(options = {})
     ApplicationHelper.role_allows_intern(options) rescue false
