@@ -1,38 +1,6 @@
 module MiqProvision::Automate
   extend ActiveSupport::Concern
 
-  module ClassMethods
-    def get_domain_details(domain, with_password, user)
-      _log.info "<< domain=<#{domain}> with_password=#{with_password} user=<#{user}>"
-      if domain.nil?
-        _log.error "Domain Not specified"
-        return nil
-      end
-
-      attrs = MiqAeEngine.set_automation_attributes_from_objects(
-        [user], 'request' => 'UI_PROVISION_INFO', 'message' => 'get_domains')
-
-      ws = MiqAeEngine.resolve_automation_object("REQUEST", user, attrs)
-
-      if ws.root.nil?
-        _log.warn "- Automate Failed (workspace empty)"
-        return nil
-      end
-
-      domains = ws.root['domains']
-
-      domains.each_with_index do |d, _i|
-        next unless domain.casecmp(d[:name]) == 0
-        password = d.delete(:bind_password)
-        d[:bind_password] = MiqAePassword.decrypt_if_password(password) if with_password == true
-        return d
-      end if domains.kind_of?(Array)
-
-      _log.warn "- No Domains matched in Automate Results: #{ws.to_expanded_xml}"
-      nil
-    end
-  end
-
   def get_placement_via_automate
     attrs = automate_attributes('get_placement')
     ws = MiqAeEngine.resolve_automation_object("REQUEST", get_user, attrs, :vmdb_object => self)

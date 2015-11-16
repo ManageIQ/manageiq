@@ -130,23 +130,6 @@ module MiqAeProvisionSpec
         expect(ws.root("customization")).to eq(EXPECTED_CUSTOMIZATION)
       end
 
-      it "should have Domain class" do
-        fqname = "#{@domain}/EVMApplications/Provisioning/Domain"
-        klass = MiqAeClass.find_by_fqname(fqname)
-        expect(klass).not_to be_nil
-        expect(klass.ae_instances.length).not_to eq(0)
-        ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default#get_domains", @user)
-        expect(ws).not_to be_nil
-
-        domains = ws.root['domains']
-        expect(domains).not_to be_nil
-        expect(domains).to be_a_kind_of(Array)
-        domains.each { |domain|
-          expect(domain).to be_a_kind_of(Hash)
-          [:base_dn, :bind_dn, :bind_password, :ldap_host, :ldap_port, :user_type, :name].each { |key| expect(domain).to have_key(key) }
-        }
-      end
-
       it "should have Network class" do
         fqname = "#{@domain}/EVMApplications/Provisioning/Network"
         klass = MiqAeClass.find_by_fqname(fqname)

@@ -192,7 +192,6 @@ module MiqAeEngineSpec
           "/System/Process/REQUEST?#{extras}&message=get_lease_times&object_name=REQUEST&request=UI_PROVISION_INFO"                        => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_lease_times'},
           "/System/Process/REQUEST?#{extras}&message=get_ttl_warnings&object_name=REQUEST&request=UI_PROVISION_INFO"                       => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_ttl_warnings'},
           "/System/Process/REQUEST?#{extras}&message=get_networks&object_name=REQUEST&request=UI_PROVISION_INFO"                           => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_networks'},
-          "/System/Process/REQUEST?#{extras}&message=get_domains&object_name=REQUEST&request=UI_PROVISION_INFO"                            => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_domains'},
           "/System/Process/REQUEST?#{extras}&message=get_vmname&object_name=REQUEST&request=UI_PROVISION_INFO"                             => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_vmname'},
           "/System/Process/REQUEST?#{extras}&message=get_dialogs&object_name=REQUEST&request=UI_PROVISION_INFO"                            => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_dialogs'},
         }.each { |uri, attrs|

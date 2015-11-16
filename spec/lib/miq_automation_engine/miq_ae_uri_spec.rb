@@ -11,7 +11,6 @@ module MiqAeUriSpec
         "message=get_lease_times&request=UI_PROVISION_INFO"                        => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_lease_times'},
         "message=get_ttl_warnings&request=UI_PROVISION_INFO"                       => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_ttl_warnings'},
         "message=get_networks&request=UI_PROVISION_INFO"                           => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_networks'},
-        "message=get_domains&request=UI_PROVISION_INFO"                            => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_domains'},
         "message=get_vmname&request=UI_PROVISION_INFO"                             => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_vmname'},
         "message=get_dialogs&request=UI_PROVISION_INFO"                            => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_dialogs'},
       }.each do |query, hash|

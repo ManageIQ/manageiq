@@ -704,43 +704,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def allowed_organizational_units(options = {})
-    ou_domain = get_value(@values[:sysprep_domain_name])
-    _log.info("sysprep_domain_name=<#{ou_domain}>")
-    return {} if ou_domain.nil?
-
-    if ou_domain != @last_ou_domain
-      _log.info("sysprep_domain_name=<#{ou_domain}> does not match previous=<#{@last_ou_domain}> - recomputing")
-      @last_ou_domain = ou_domain
-      @ldap_ous = {}
-      details   = MiqProvision.get_domain_details(ou_domain, true, @requester)
-      return @ldap_ous if details.nil?
-
-      options[:host]      = details[:ldap_host]  if details.key?(:ldap_host)
-      options[:port]      = details[:ldap_port]  if details.key?(:ldap_port)
-      options[:basedn]    = details[:base_dn]    if details.key?(:base_dn)
-      options[:user_type] = details[:user_type]  if details.key?(:user_type)
-      l = MiqLdap.new(options)
-      userid   = details[:bind_dn]
-      password = details[:bind_password]
-      if userid.nil? || password.nil?
-        _log.info("LDAP Bind with Defaults")
-        ldap_bind = l.bind_with_default
-      else
-        _log.info("LDAP Bind with userid=<#{userid}>")
-        ldap_bind = l.bind(userid, password)
-      end
-
-      if ldap_bind == true
-        ous = l.get_organizationalunits
-        _log.info("LDAP OUs returned: #{ous.inspect}")
-        ous.each { |ou| @ldap_ous[ou[0].dup] = ou[1].dup } if ous.kind_of?(Array)
-      else
-        _log.warn("LDAP Bind failed")
-      end
-    end
-
-    _log.info("returning #{@ldap_ous.inspect}")
-    @ldap_ous
+    {}
   end
 
   def allowed_ous_tree(_options = {})
