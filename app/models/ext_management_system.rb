@@ -17,9 +17,16 @@ class ExtManagementSystem < ActiveRecord::Base
     end
   end
 
+  def self.supported
+    # This can be overridden in the external management systems
+    # subclasses with some additional logic about productization,
+    # etc.
+    true
+  end
+
   def self.supported_types_and_descriptions_hash
     supported_subclasses.each_with_object({}) do |klass, hash|
-      if Vmdb::PermissionStores.instance.supported_ems_type?(klass.ems_type)
+      if Vmdb::PermissionStores.instance.supported_ems_type?(klass.ems_type) && klass.supported
         hash[klass.ems_type] = klass.description
       end
     end
