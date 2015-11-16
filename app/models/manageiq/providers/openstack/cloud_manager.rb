@@ -22,6 +22,7 @@ class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
   require_nested :SecurityGroup
   require_nested :Template
   require_nested :Vm
+  require_nested :CloudNetwork
 
   has_many :public_networks,  :foreign_key => :ems_id, :dependent => :destroy,
            :class_name => "ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public"
