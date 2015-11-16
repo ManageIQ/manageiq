@@ -99,4 +99,44 @@ module MiqAeServiceSpec
       end
     end
   end
+
+  describe MiqAeService do
+    context "service models" do
+      it "expose all expected active_record models as service_models" do
+        excluded_model_names = %w(
+          AuthToken
+          AuthUseridPassword
+          Category
+          Datacenter
+          ManageIQ::Providers::BaseManager
+          ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job
+          VmServer
+          VmSynchronize
+        )
+
+        base_models = MiqAeMethodService::MiqAeServiceModelBase.service_models
+                                                               .collect(&:ar_base_model).uniq!
+
+        # Determine descendants for all base_models of service models
+        all_models = base_models.dup
+        base_models.each { |bm| all_models += bm.descendants }
+        all_models.uniq!
+        all_models.delete_if { |klass| klass.name.nil? } # Ignore anonymous classes loaded from tests
+        all_models.sort_by!(&:name)
+
+        failed_models = []
+        all_models.each do |ar_model|
+          next if excluded_model_names.include?(ar_model.name)
+
+          begin
+            MiqAeMethodService::MiqAeServiceModelBase.model_name_from_active_record_model(ar_model).constantize
+          rescue NameError
+            failed_models << ar_model.name # Collect all failing model names
+          end
+        end
+
+        expect(failed_models).to eq([])
+      end
+    end
+  end
 end
