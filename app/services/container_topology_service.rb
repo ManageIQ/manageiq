@@ -64,7 +64,7 @@ class ContainerTopologyService
     status = entity_status(entity, kind)
     id = case kind
            when 'VM', 'Host' then entity.uid_ems
-           when 'Kubernetes', 'Openshift', 'Atomic' then entity.id.to_s
+           when 'Kubernetes', 'Openshift', 'Atomic', 'OpenshiftEnterprise' then entity.id.to_s
          else entity.ems_ref
          end
 
@@ -128,6 +128,9 @@ class ContainerTopologyService
     end
     if @providers.any? { |instance| instance.kind_of?(ManageIQ::Providers::Atomic::ContainerManager) }
       kinds.merge!(:Atomic => true)
+    end
+    if @providers.any? { |instance| instance.kind_of?(ManageIQ::Providers::OpenshiftEnterprise::ContainerManager) }
+      kinds.merge!(:OpenshiftEnterprise => true)
     end
     kinds
   end
