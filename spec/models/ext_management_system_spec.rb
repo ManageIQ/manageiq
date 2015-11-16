@@ -54,6 +54,47 @@ describe ExtManagementSystem do
     expect(described_class.ems_cloud_discovery_types).to match_array(expected_types)
   end
 
+  context "#ipaddress / #ipaddress=" do
+    it "will delegate to the default endpoint" do
+      ems = FactoryGirl.build(:ems_vmware, :ipaddress => "1.2.3.4")
+      expect(ems.default_endpoint.ipaddress).to eq "1.2.3.4"
+    end
+
+    it "with nil" do
+      ems = FactoryGirl.build(:ems_vmware, :ipaddress => nil)
+      expect(ems.default_endpoint.ipaddress).to be_nil
+    end
+  end
+
+  context "#hostname / #hostname=" do
+    it "will delegate to the default endpoint" do
+      ems = FactoryGirl.build(:ems_vmware, :hostname => "example.org")
+      expect(ems.default_endpoint.hostname).to eq "example.org"
+    end
+
+    it "with nil" do
+      ems = FactoryGirl.build(:ems_vmware, :hostname => nil)
+      expect(ems.default_endpoint.hostname).to be_nil
+    end
+  end
+
+  context "#port, #port=" do
+    it "will delegate to the default endpoint" do
+      ems = FactoryGirl.build(:ems_vmware, :port => 1234)
+      expect(ems.default_endpoint.port).to eq 1234
+    end
+
+    it "will delegate a string to the default endpoint" do
+      ems = FactoryGirl.build(:ems_vmware, :port => "1234")
+      expect(ems.default_endpoint.port).to eq 1234
+    end
+
+    it "with nil" do
+      ems = FactoryGirl.build(:ems_vmware, :port => nil)
+      expect(ems.default_endpoint.port).to be_nil
+    end
+  end
+
   context "with two small envs" do
     before(:each) do
       @zone1 = FactoryGirl.create(:small_environment)
