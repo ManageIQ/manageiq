@@ -583,11 +583,8 @@ class MiqServer < ActiveRecord::Base
   #
   def self.my_guid
     @@my_guid_cache ||= begin
-      guid_file = File.join(File.expand_path(Rails.root), "GUID")
-      unless File.exist?(guid_file)
-        new_guid = MiqUUID.new_guid
-        File.open(guid_file, "w") { |f| f.write(new_guid) }
-      end
+      guid_file = Rails.root.join("GUID")
+      File.write(guid_file, MiqUUID.new_guid) unless File.exist?(guid_file)
       File.read(guid_file).strip
     end
   end
