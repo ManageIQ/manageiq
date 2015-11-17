@@ -347,11 +347,14 @@ module ReportFormatter
     end
 
     def extract_column_names
-      # examples: 'Vm.hardware-cpu_sockets' gives 'hardware-cpu_sockets'
-      #           'Host-v_total_vms'        gives 'v_total_vms'
-      #           'Vm-num_cpu:total'        gives 'num_cpu' and 'num_cpu__total'
+      # examples:
+      #  'Vm.hardware-cpu_sockets' gives 'hardware-cpu_sockets'
+      #  'Host-v_total_vms'        gives 'v_total_vms'
+      #  'Vm-num_cpu:total'        gives 'num_cpu' and 'num_cpu__total'
+      #  "Vm::Providers::InfraManager::Vm-num_cpu:total"
+      #                            gives 'Vm::Providers::InfraManager::Vm' and 'num_cpu__total'
 
-      stage1, aggreg = mri.graph[:column].split(':', 2)
+      stage1, aggreg = mri.graph[:column].split(/(?<!:):(?!:)/) # split by ':', NOT by '::'
       model1, column = stage1.split('-', 2)
       _model, sub_model = model1.split('.', 2)
 

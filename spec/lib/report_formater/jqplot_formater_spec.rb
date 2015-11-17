@@ -155,6 +155,34 @@ describe ReportFormatter::JqplotFormatter do
         expect(report.chart[:data][0][-1]).to eq(1_024) if other
       end
     end
+
+    it 'handles namespace-prefixed class names in chart column' do
+      report = MiqReport.new(
+        :db          => "ManageIQ::Providers::InfraManager::Vm",
+        :cols        => %w(os_image_name cpu_total_cores num_cpu),
+        :include     => {"host" => {"columns" => %w(name)}},
+        :col_order   => %w(os_image_name host.name cpu_total_cores num_cpu),
+        :headers     => ["OS Name", "Host / Node Name", "Number of CPU Cores", "Number of CPUs"],
+        :order       => "Ascending",
+        :sortby      => %w(host.name os_image_name),
+        :group       => "y",
+        :graph       => {:type => "Bar", :mode => "values", :column => "ManageIQ::Providers::InfraManager::Vm-num_cpu:total", :count => 10, :other => true},
+        :dims        => 2,
+        :col_options => {"name" => {:break_label => "Host / Node : Name: "}, "num_cpu" => {:grouping => [:total]}},
+        :rpt_options => {:summary => {:hide_detail_rows => false}},
+        :extras      => {}
+      )
+
+      report.table = Ruport::Data::Table.new(
+        :column_names => %w(os_image_name cpu_total_cores num_cpu host.name id),
+        :data         => [
+          ["linux_centos", 8, 2, "MTC-RHEVM-3.0", 67],
+        ]
+      )
+
+      expect_any_instance_of(described_class).to receive(:build_numeric_chart_grouped_2dim).once.and_call_original
+      render_report(report)
+    end
   end
 
   context '#build_numeric_chart_simple' do
