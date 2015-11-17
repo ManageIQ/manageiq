@@ -1,48 +1,33 @@
 require "spec_helper"
 
 describe MiqServer do
-  GUID_FILE = File.join(Rails.root, "GUID")
-  def read_guid
-    (File.open(GUID_FILE, 'r', &:read)).chomp if File.exist?(GUID_FILE)
-  end
-
-  def write_guid(number)
-    File.open(GUID_FILE, 'w') { |f| f.write(number) } if File.exist?(GUID_FILE)
-  end
-
   include_examples ".seed called multiple times"
 
-  context "with no guid file" do
-    before(:each) do
+  context ".my_guid" do
+    let(:guid_file) { Rails.root.join("GUID") }
+
+    it "should return the GUID from the file" do
       MiqServer.my_guid_cache = nil
-      @guid_existed_before = File.exist?(GUID_FILE)
-      if @guid_existed_before
-        @orig_guid = read_guid
-        File.delete(GUID_FILE)
-      end
+      expect(File).to receive(:exist?).with(guid_file).and_return(true)
+      expect(File).to receive(:read).with(guid_file).and_return("an-existing-guid\n\n")
+      expect(MiqServer.my_guid).to eq("an-existing-guid")
     end
 
-    after(:each) do
-      if File.exist?(GUID_FILE) && !@guid_existed_before
-        File.delete(GUID_FILE)
-      else
-        write_guid(@orig_guid) unless @orig_guid.nil?
-      end
+    it "should generate a new GUID and write it out when there is no GUID file" do
+      MiqServer.my_guid_cache = nil
+      expect(MiqUUID).to receive(:new_guid).and_return("a-new-guid")
+      expect(File).to receive(:exist?).with(guid_file).and_return(false)
+      expect(File).to receive(:write).with(guid_file, "a-new-guid")
+      expect(File).to receive(:read).with(guid_file).and_return("a-new-guid")
+      expect(MiqServer.my_guid).to eq("a-new-guid")
     end
 
-    it "should generate a new GUID file" do
-      File.exist?(GUID_FILE).should be_false
-      guid = MiqServer.my_guid
-      File.exist?(GUID_FILE).should be_true
-      File.read(GUID_FILE).strip.should == guid
-    end
-
-    it "should not generate a new GUID file if new_guid blows up" do
-      # Test for case 10942
-      File.exist?(GUID_FILE).should be_false
-      MiqUUID.should_receive(:new_guid).and_raise(StandardError)
-      -> { MiqServer.my_guid }.should raise_error(StandardError)
-      File.exist?(GUID_FILE).should be_false
+    it "should not generate a new GUID file if new_guid blows up" do # Test for case 10942
+      MiqServer.my_guid_cache = nil
+      expect(MiqUUID).to receive(:new_guid).and_raise(StandardError)
+      expect(File).to receive(:exist?).with(guid_file).and_return(false)
+      expect(File).not_to receive(:write)
+      expect { MiqServer.my_guid }.to raise_error(StandardError)
     end
   end
 
