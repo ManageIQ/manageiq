@@ -80,10 +80,14 @@ class ContainerTopologyService
     when 'VM', 'Host' then entity.power_state.capitalize
     when 'Node'
       condition = entity.container_conditions.first
-      if condition.name == 'Ready' && condition.status == 'True'
-        'Ready'
+      if condition.nil?
+        'Unknown'
       else
-        'NotReady'
+        if condition.name == 'Ready' && condition.status == 'True'
+          'Ready'
+        else
+          'NotReady'
+        end
       end
     when 'Pod' then entity.phase
     when 'Container' then entity.state.capitalize
