@@ -795,6 +795,8 @@ en:
       VmOrTemplate: Workload
 
     discover_types:
+      azure:           Azure
+      ec2:             Amazon
       esx:             ESX
       hyperv:          Hyper-V
       ipmi:            IPMI

@@ -47,12 +47,8 @@ describe ExtManagementSystem do
   end
 
   it ".ems_cloud_discovery_types" do
-    expected_types = [
-      "ec2",
-      "azure",
-    ]
-
-    expect(described_class.ems_cloud_discovery_types).to match_array(expected_types)
+    expected_types = {"azure" => "azure", "amazon" => "ec2"}
+    expect(described_class.ems_cloud_discovery_types).to eq(expected_types)
   end
 
   context "with two small envs" do

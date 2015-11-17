@@ -228,7 +228,7 @@ describe ApplicationController do
       controller.stub(:drop_breadcrumb)
       controller.send(:discover)
       expect(response.status).to eq(200)
-      expect(controller.instance_variable_get(:@discover_type)).to eq(ExtManagementSystem.ems_cloud_discovery_types)
+      expect(controller.instance_variable_get(:@discover_type)).to eq([["Azure", "azure"], ["Amazon", "amazon"]])
     end
   end
 
