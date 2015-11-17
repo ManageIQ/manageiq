@@ -36,7 +36,9 @@ describe('Dashboard', function() {
 
   describe('controller', function() {
     var controller;
+    var resolveServicesWithDefinedServiceIds = {};
     var retiredServices = {};
+    var resolveNonRetiredServices = {};
     var expiringServices = {};
     var pendingRequests = {};
     var approvedRequests = {};
@@ -46,7 +48,9 @@ describe('Dashboard', function() {
       bard.inject('$controller', '$log', '$state', '$rootScope');
 
       var controllerResolves = {
+        definedServiceIdsServices: resolveServicesWithDefinedServiceIds,
         retiredServices: retiredServices,
+        nonRetiredServices: resolveNonRetiredServices,
         expiringServices: expiringServices,
         pendingRequests: pendingRequests,
         approvedRequests: approvedRequests,

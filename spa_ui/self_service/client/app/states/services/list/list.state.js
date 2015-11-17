@@ -37,7 +37,13 @@
     var vm = this;
 
     vm.title = 'Service List';
-    vm.services = services.resources;
+    vm.services = [];
+    angular.forEach(services.resources, function(item) {
+      if (!angular.isDefined(item.service_id)) {
+        vm.services.push(item);
+      }
+    });
+
     vm.servicesList = angular.copy(vm.services);
 
     vm.listConfig = {
@@ -246,9 +252,9 @@
       var currentDate = new Date();
 
       if (filterValue === 'retired' && angular.isDefined(item.retires_on)) {
-        return new Date(item.retires_on) < currentDate;
+        return angular.isDefined(item.retired) && item.retired === true;
       } else if (filterValue === 'current') {
-        return !angular.isDefined(item.retires_on) || new Date(item.retires_on) >= currentDate;
+        return !angular.isDefined(item.retired) || item.retired === false;
       } else if (filterValue === 'soon' && angular.isDefined(item.retires_on)) {
         return new Date(item.retires_on) >= currentDate 
           && new Date(item.retires_on) <= currentDate.setDate(currentDate.getDate() + 30);
