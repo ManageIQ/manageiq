@@ -7,11 +7,11 @@ $LOAD_PATH.push(File.dirname(__FILE__))
 
 ROOT = [
   "/var/www/miq",
-  File.expand_path(File.join(File.dirname(__FILE__), ".."))
+  File.expand_path(File.join(File.dirname(__FILE__), "../.."))
 ].detect { |f| File.exist?(f) }
 
 # Set up Environment
-ENV['BUNDLE_GEMFILE'] ||= "#{ROOT}/vmdb/Gemfile"
+ENV['BUNDLE_GEMFILE'] ||= "#{ROOT}/Gemfile"
 require 'bundler'
 Bundler.setup
 
