@@ -253,10 +253,6 @@ class MiqSshUtil
   def run_session
     first_try = true
 
-    # Make a call to ensure we can resolve our own hostname before we continue
-    # otherwise the SSH layer will raise an unclear error.
-    MiqSockUtil.getFullyQualifiedDomainName
-
     begin
       Net::SSH.start(@host, @user, @options) do |ssh|
         yield(ssh)
