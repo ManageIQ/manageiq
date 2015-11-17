@@ -3,8 +3,11 @@ module ManageIQ::Providers::Kubernetes
     include ::EmsRefresh::Refreshers::EmsRefresherMixin
 
     def self.entities
-      %w(pods services replication_controllers nodes events endpoints namespaces resource_quotas limit_ranges
-         persistent_volumes persistent_volume_claims component_statuses)
+      [{:name => 'pods'}, {:name => 'services'}, {:name => 'replication_controllers'}, {:name => 'nodes'},
+       {:name => 'endpoints'}, {:name => 'namespaces'}, {:name => 'resource_quotas'}, {:name => 'limit_ranges'},
+       {:name => 'persistent_volumes'}, {:name => 'persistent_volume_claims'},
+       # workaround for: https://github.com/openshift/origin/issues/5865
+       {:name => 'component_statuses', :default => []}]
     end
 
     def parse_inventory(ems, _targets = nil)
