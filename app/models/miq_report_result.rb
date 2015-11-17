@@ -114,7 +114,6 @@ class MiqReportResult < ActiveRecord::Base
   def report=(val)
     write_attribute(:report, val.nil? ? nil : val.to_hash)
   end
-  #
 
   def build_html_rows_for_legacy
     return if report && report.respond_to?(:extras) && report.extras.respond_to?(:has_key?) && report.extras.key?(:total_html_rows) && report.extras[:total_html_rows] != 0
