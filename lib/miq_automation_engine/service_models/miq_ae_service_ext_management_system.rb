@@ -8,6 +8,7 @@ module MiqAeMethodService
     expose :ems_folders,    :association => true
     expose :resource_pools, :association => true
     expose :tenant,         :association => true
+    expose :miq_templates,  :association => true
     expose :to_s
     expose :authentication_userid
     expose :authentication_password

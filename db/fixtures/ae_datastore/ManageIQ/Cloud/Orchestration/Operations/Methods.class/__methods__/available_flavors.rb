@@ -1,11 +1,12 @@
 #
-# Description: provide the dynamic list content from available resource groups
+# Description: provide the dynamic list content from available flavors
 #
-rg_list = {nil => "<New resource group>"}
+flavor_list = {}
 service_template = $evm.root.attributes["service_template"]
 if service_template.respond_to?(:orchestration_manager) && service_template.orchestration_manager
-  service_template.orchestration_manager.resource_groups.each { |t| rg_list[t.name] = t.name }
+  service_template.orchestration_manager.flavors.each { |f| flavor_list[f.name] = f.name }
 end
+flavor_list[nil] = flavor_list.empty? ? "<None>" : "<Choose>"
 
 dialog_field = $evm.object
 
@@ -19,7 +20,7 @@ dialog_field["sort_order"] = "ascending"
 dialog_field["data_type"] = "string"
 
 # required: true / false
-dialog_field["required"] = "false"
+dialog_field["required"] = "true"
 
-dialog_field["values"] = rg_list
+dialog_field["values"] = flavor_list
 dialog_field["default_value"] = nil

@@ -1,33 +1,35 @@
 require 'spec_helper'
 
-describe "Available_Resource_Groups Method Validation" do
+describe "Available_Flavors Method Validation" do
   let(:user) { FactoryGirl.create(:user_with_group) }
-  let(:default_desc) { "<New resource group>" }
+  let(:default_desc) { "<None>" }
   before do
-    @ins = "/Cloud/Orchestration/Operations/Methods/Available_Resource_Groups"
+    @ins = "/Cloud/Orchestration/Operations/Methods/Available_Flavors"
   end
 
   context "workspace has no service template" do
-    it "provides only default value to the resource group list" do
+    it "provides only default value to the flavor list" do
       ws = MiqAeEngine.instantiate("#{@ins}", user)
       ws.root["values"].should == {nil => default_desc}
+      ws.root["default_value"].should be_nil
     end
   end
 
   context "workspace has service template other than orchestration" do
     let(:service_template) { FactoryGirl.create(:service_template) }
 
-    it "provides only default value to the resource group list" do
+    it "provides only default value to the flavor list" do
       ws = MiqAeEngine.instantiate("#{@ins}?ServiceTemplate::service_template=#{service_template.id}", user)
       ws.root["values"].should == {nil => default_desc}
+      ws.root["default_value"].should be_nil
     end
   end
 
   context "workspace has orchestration service template" do
     let(:ems) do
-      @rgroup1 = FactoryGirl.create(:resource_group)
-      @rgroup2 = FactoryGirl.create(:resource_group)
-      FactoryGirl.create(:ems_azure, :resource_groups => [@rgroup1, @rgroup2])
+      @flavor1 = FactoryGirl.create(:flavor, :name => 'flavor1')
+      @flavor2 = FactoryGirl.create(:flavor, :name => 'flavor2')
+      FactoryGirl.create(:ems_openstack, :flavors => [@flavor1, @flavor2])
     end
 
     let(:service_template) do
@@ -38,18 +40,20 @@ describe "Available_Resource_Groups Method Validation" do
       FactoryGirl.create(:service_template_orchestration)
     end
 
-    it "finds all the resource groups and populates the list" do
+    it "finds all the flavors and populates the list" do
       ws = MiqAeEngine.instantiate("#{@ins}?ServiceTemplate::service_template=#{service_template.id}", user)
       ws.root["values"].should include(
-        nil           => default_desc,
-        @rgroup1.name => @rgroup1.name,
-        @rgroup2.name => @rgroup2.name
+        nil           => "<Choose>",
+        @flavor1.name => @flavor1.name,
+        @flavor2.name => @flavor2.name
       )
+      ws.root["default_value"].should be_nil
     end
 
-    it "provides only default value to the resource group list if orchestration manager does not exist" do
+    it "provides only default value to the flavor list if orchestration manager does not exist" do
       ws = MiqAeEngine.instantiate("#{@ins}?ServiceTemplate::service_template=#{service_template_no_ems.id}", user)
       ws.root["values"].should == {nil => default_desc}
+      ws.root["default_value"].should be_nil
     end
   end
 end
