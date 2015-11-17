@@ -2,6 +2,7 @@ module ManageIQ::Providers
   module Openshift
     class ContainerManager::Refresher < ManageIQ::Providers::BaseManager::Refresher
       include ::EmsRefresh::Refreshers::EmsRefresherMixin
+      include ::EmsRefresh::Refreshers::ContainerRefresherMixin
 
       KUBERNETES_EMS_TYPE = ManageIQ::Providers::Kubernetes::ContainerManager.ems_type
 

@@ -1,6 +1,7 @@
 module ManageIQ::Providers::Kubernetes
   class ContainerManager::Refresher < ManageIQ::Providers::BaseManager::Refresher
     include ::EmsRefresh::Refreshers::EmsRefresherMixin
+    include ::EmsRefresh::Refreshers::ContainerRefresherMixin
 
     def self.entities
       %w(pods services replication_controllers nodes events endpoints namespaces resource_quotas limit_ranges
