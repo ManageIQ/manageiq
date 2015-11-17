@@ -101,6 +101,8 @@
           miqSelectPickerEvent('cb_end_interval_offset', '#{url}', {beforeSend: true, complete: true});
         = _("going back")
         - case @edit[:new][:cb_interval]
+        - when "daily"
+          - opts = (1..6).map { |i| [n_('%s Day', '%s Days', i) % i, i] } + (1..4).map { |i| [n_('%s Week', '%s Weeks', i) % i, i * 7] }
         - when "weekly"
           - opts = [1, 2, 3, 4, 8, 12].map! { |i| [n_('%s Week', '%s Weeks', i) % i, i] }
         - when "monthly"
