@@ -1,6 +1,6 @@
 puts "Fixing BinaryBlob and BinaryBlobPart sizes"
 
-blob_ids = BinaryBlobPart.select(:binary_blob_id).where("size != #{ActiveRecordQueryParts.binary_length}(data)")
+blob_ids = BinaryBlobPart.select(:binary_blob_id).where("size != LENGTH(data)")
 BinaryBlob.where(:id => blob_ids).find_each do |bb|
   bb_size = bb.binary_blob_parts.inject(0) do |total_size, part|
     data = part.read_attribute(:data) # avoid error due to size mismatch
