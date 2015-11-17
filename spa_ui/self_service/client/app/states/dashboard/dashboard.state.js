@@ -95,7 +95,7 @@
     vm.servicesCount = {};
     vm.servicesCount.total = definedServiceIdsServices.count - definedServiceIdsServices.subcount;
 
-    vm.servicesCount.current = definedServiceIdsServices.subcount == 0 ? nonRetiredServices.count :
+    vm.servicesCount.current = definedServiceIdsServices.subcount === 0 ? nonRetiredServices.count :
       retiredServices.subcount + nonRetiredServices.subcount;
 
     vm.servicesCount.retired = vm.servicesCount.total - vm.servicesCount.current;
