@@ -5,7 +5,7 @@ eval_gemfile(File.expand_path("gems/pending/Gemfile", __dir__))
 #
 
 gem "activerecord-deprecated_finders", "~>1.0.4",  :require => "active_record/deprecated_finders"
-gem "rails", :github => "rails/rails", :branch => "4-2-stable"
+gem "rails",                           "~>4.2.5"
 
 # Local gems
 path "gems/" do
