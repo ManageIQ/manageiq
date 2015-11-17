@@ -284,7 +284,7 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def self.ems_cloud_discovery_types
-    EMS_CLOUD_DISCOVERY_TYPES.values
+    EMS_CLOUD_DISCOVERY_TYPES
   end
 
   def disconnect_inv

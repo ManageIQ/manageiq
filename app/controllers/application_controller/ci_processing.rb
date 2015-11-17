@@ -761,8 +761,8 @@ module ApplicationController::CiProcessing
       if request.parameters[:controller] == 'ems_infra'
         @discover_type = ExtManagementSystem.ems_infra_discovery_types
       else
-        @discover_type = ExtManagementSystem.ems_cloud_discovery_types
-        @discover_type_selected = @discover_type.first
+        @discover_type = ExtManagementSystem.ems_cloud_discovery_types.invert.collect{ |type| [Dictionary.gettext(type[0], :type => :discover_types, :notfound => :titleize), type[1]]}
+        @discover_type_selected = @discover_type.first.last
       end
     else
       @discover_type = ExtManagementSystem.ems_infra_discovery_types
@@ -921,10 +921,10 @@ module ApplicationController::CiProcessing
         page << "$('#to_fourth').val('#{j_str(params[:to_fourth].gsub(/[\D]/, ""))}');"
       end
       if (request.parameters[:controller] == "ems_cloud" && params[:discover_type_selected]) || (params[:discover_type_ipmi] && params[:discover_type_ipmi].to_s == "1")
-        if params[:discover_type_selected] && params[:discover_type_selected] == ExtManagementSystem::EMS_CLOUD_DISCOVERY_TYPES['azure']
+        if params[:discover_type_selected] && params[:discover_type_selected] == 'azure'
           page << javascript_hide("discover_credentials")
           page << javascript_show("discover_azure_credentials")
-        elsif params[:discover_type_selected] && params[:discover_type_selected] == ExtManagementSystem::EMS_CLOUD_DISCOVERY_TYPES['amazon']
+        elsif params[:discover_type_selected] && params[:discover_type_selected] == 'amazon'
           page << javascript_hide("discover_azure_credentials")
           page << javascript_show("discover_credentials")
         else
