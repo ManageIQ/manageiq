@@ -15,7 +15,7 @@ col_order:
 - host.name
 - name
 - power_state
-- hardware.numvcpus
+- hardware.cpu_total_cores
 - hardware.memory_mb
 timeline:
 id: 110
@@ -28,7 +28,7 @@ db_options: {}
 include: 
   hardware: 
     columns: 
-    - numvcpus
+    - cpu_total_cores
     - memory_mb
   host:
     columns:

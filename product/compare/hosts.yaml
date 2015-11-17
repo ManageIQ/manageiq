@@ -27,7 +27,7 @@ include:
   hardware:
     group: Properties
     columns:
-    - numvcpus
+    - cpu_total_cores
     - memory_mb
     - memory_console
     - bios
@@ -164,7 +164,7 @@ col_order:
 - ssh_permit_root_login
 - last_compliance_status
 - last_compliance_timestamp
-- hardware.numvcpus
+- hardware.cpu_total_cores
 - hardware.memory_mb
 - hardware.memory_console
 - hardware.bios

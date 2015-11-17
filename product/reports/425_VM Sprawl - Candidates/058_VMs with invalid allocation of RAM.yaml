@@ -32,7 +32,7 @@ col_order:
 - operating_system.product_name
 - operating_system.bitness
 - hardware.annotation
-- hardware.numvcpus
+- hardware.cpu_total_cores
 timeline: 
 id: 187
 file_mtime: 
@@ -48,7 +48,7 @@ include:
     - memory_mb
     - guest_os_full_name
     - annotation
-    - numvcpus
+    - cpu_total_cores
   operating_system: 
     columns: 
     - product_name
