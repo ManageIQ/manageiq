@@ -1,27 +1,6 @@
 //= require import
 
 var Automate = {
-  listenForAutomatePostMessages: function() {
-    window.addEventListener('message', function(event) {
-      miqSparkleOff();
-      clearMessages();
-
-      var importFileUploadId = event.data.import_file_upload_id;
-
-      if (importFileUploadId) {
-        Automate.getAndRenderAutomateJson(importFileUploadId, event.data.message);
-      } else {
-        var messageData = JSON.parse(event.data.message);
-
-        if (messageData.level == 'warning') {
-          showWarningMessage(messageData.message);
-        } else {
-          showErrorMessage(messageData.message);
-        }
-      }
-    });
-  },
-
   getAndRenderAutomateJson: function(importFileUploadId, message) {
     $('.hidden-import-file-upload-id').val(importFileUploadId);
 
@@ -41,7 +20,7 @@ var Automate = {
     })
     .fail(function(failedMessage) {
       var messageData = JSON.parse(failedMessage.responseText);
-      
+
       if (messageData.level == 'warning') {
         showWarningMessage(messageData.message);
       } else {

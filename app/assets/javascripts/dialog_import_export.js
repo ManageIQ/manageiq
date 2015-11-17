@@ -1,26 +1,5 @@
 //= require import
 
-var listenForDialogPostMessages = function() {
-  window.addEventListener('message', function(event) {
-    miqSparkleOff();
-    clearMessages();
-
-    var importFileUploadId = event.data.import_file_upload_id;
-
-    if (importFileUploadId) {
-      getAndRenderServiceDialogJson(importFileUploadId, event.data.message);
-    } else {
-      var messageData = JSON.parse(event.data.message);
-
-      if (messageData.level == 'warning') {
-        showWarningMessage(messageData.message);
-      } else {
-        showErrorMessage(messageData.message);
-      }
-    }
-  });
-};
-
 var renderServiceDialogJson = function(rows_json, importFileUploadId) {
   var statusFormatter = function(row, cell, value, columnDef, dataContext) {
     var status_img = "<img src=/images/icons/16/" + dataContext.status_icon + ".png >";
