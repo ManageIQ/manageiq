@@ -1,4 +1,87 @@
 describe('import.js', function() {
+  describe('ImportSetup', function() {
+    describe('#respondToPostMessages', function() {
+      var test = {
+        callback: function(uploadId, message) { }
+      };
+
+      beforeEach(function() {
+        spyOn(test, 'callback');
+        spyOn(window, 'miqSparkleOff');
+        spyOn(window, 'clearMessages');
+        spyOn(window, 'showWarningMessage');
+        spyOn(window, 'showErrorMessage');
+      });
+
+      context('when the import file upload id exists', function() {
+        beforeEach(function() {
+          var event = {
+            data: {
+              import_file_upload_id: 123,
+              message: 'the message'
+            }
+          };
+
+          ImportSetup.respondToPostMessages(event, test.callback);
+        });
+
+        it('turns the sparkle off', function() {
+          expect(window.miqSparkleOff).toHaveBeenCalled();
+        });
+
+        it('clears the messages', function() {
+          expect(window.clearMessages).toHaveBeenCalled();
+        });
+
+        it('triggers the callback', function() {
+          expect(test.callback).toHaveBeenCalledWith(123, 'the message');
+        });
+      });
+
+      context('when the import file upload id does not exist', function() {
+        var event = {data: {import_file_upload_id: ''}};
+
+        context('when the message level is warning', function() {
+          beforeEach(function() {
+            event.data.message = '{&quot;message&quot;:&quot;lol&quot;,&quot;level&quot;:&quot;warning&quot;}';
+            ImportSetup.respondToPostMessages(event, test.callback);
+          });
+
+          it('turns the sparkle off', function() {
+            expect(window.miqSparkleOff).toHaveBeenCalled();
+          });
+
+          it('clears the messages', function() {
+            expect(window.clearMessages).toHaveBeenCalled();
+          });
+
+          it('displays a warning message with the message', function() {
+            expect(window.showWarningMessage).toHaveBeenCalledWith('lol');
+          });
+        });
+
+        context('when the message level is not warning', function() {
+          beforeEach(function() {
+            event.data.message = '{&quot;message&quot;:&quot;lol2&quot;,&quot;level&quot;:&quot;error&quot;}';
+            ImportSetup.respondToPostMessages(event, test.callback);
+          });
+
+          it('turns the sparkle off', function() {
+            expect(window.miqSparkleOff).toHaveBeenCalled();
+          });
+
+          it('clears the messages', function() {
+            expect(window.clearMessages).toHaveBeenCalled();
+          });
+
+          it('displays an error message with the message', function() {
+            expect(window.showErrorMessage).toHaveBeenCalledWith('lol2');
+          });
+        });
+      });
+    });
+  });
+
   describe('#clearMessages', function() {
     beforeEach(function() {
       var html = '';

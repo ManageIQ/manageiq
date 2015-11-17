@@ -75,7 +75,7 @@
     });
 
     setUpExportWidgetClickHandlers();
-    listenForWidgetPostMessages();
+    ImportSetup.listenForPostMessages(getAndRenderWidgetJson);
     setUpImportWidgetClickHandlers();
 
     if ($('#toolbar').length > 0) {

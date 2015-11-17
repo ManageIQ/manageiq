@@ -914,7 +914,7 @@ describe ReportController do
         xhr :post, :upload_widget_import_file, params
         response.should redirect_to(
           :action  => :review_import,
-          :message => {:message => "Use the browse button to locate an import file", :level => :warning}.to_json
+          :message => {:message => "Use the browse button to locate an import file", :level => :warning}
         )
       end
     end
@@ -939,7 +939,7 @@ describe ReportController do
           response.should redirect_to(
             :action                => :review_import,
             :import_file_upload_id => 123,
-            :message               => {:message => "Import file was uploaded successfully", :level => :info}.to_json
+            :message               => {:message => "Import file was uploaded successfully", :level => :info}
           )
         end
 
@@ -961,7 +961,7 @@ describe ReportController do
             :message => {
               :message => "Error: the file uploaded is not of the supported format",
               :level   => :error
-            }.to_json
+            }
           )
         end
       end
@@ -978,7 +978,7 @@ describe ReportController do
             :message => {
               :message => "Error: the file uploaded contains no widgets",
               :level   => :error
-            }.to_json
+            }
           )
         end
       end

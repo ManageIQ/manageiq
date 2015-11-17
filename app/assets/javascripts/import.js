@@ -5,6 +5,34 @@
 //= require slickgrid/plugins/slick.rowselectionmodel
 //= require slickgrid/plugins/slick.checkboxselectcolumn
 
+var ImportSetup = {
+  listenForPostMessages: function(getAndRenderJsonCallback) {
+    window.addEventListener('message', function(event) {
+      ImportSetup.respondToPostMessages(event, getAndRenderJsonCallback);
+    });
+  },
+
+  respondToPostMessages: function(event, getAndRenderJsonCallback) {
+    miqSparkleOff();
+    clearMessages();
+
+    var importFileUploadId = event.data.import_file_upload_id;
+
+    if (importFileUploadId) {
+      getAndRenderJsonCallback(importFileUploadId, event.data.message);
+    } else {
+      var unencodedMessage = event.data.message.replace(/&quot;/g, '"');
+      var messageData = JSON.parse(unencodedMessage);
+
+      if (messageData.level == 'warning') {
+        showWarningMessage(messageData.message);
+      } else {
+        showErrorMessage(messageData.message);
+      }
+    }
+  }
+};
+
 var setUpImportClickHandlers = function(url, grid, importCallback) {
   $('.import-commit').click(function() {
     miqSparkleOn();

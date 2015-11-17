@@ -83,6 +83,6 @@
       miqSparkleOn();
     });
 
-    Automate.listenForAutomatePostMessages();
+    ImportSetup.listenForPostMessages(Automate.getAndRenderAutomateJson);
     Automate.setUpAutomateImportClickHandlers();
   });
