@@ -79,12 +79,15 @@ class ContainerTopologyService
     case kind
     when 'VM', 'Host' then entity.power_state.capitalize
     when 'Node'
-      condition = entity.container_conditions.first
-      if condition.name == 'Ready' && condition.status == 'True'
-        'Ready'
-      else
-        'NotReady'
+      ready_status = 'Unknown'
+      entity.container_conditions.each do |condition|
+        if condition.try(:name) == 'Ready' && condition.try(:status) == 'True'
+          ready_status = 'Ready'
+        else
+          ready_status = 'NotReady'
+        end
       end
+      ready_status
     when 'Pod' then entity.phase
     when 'Container' then entity.state.capitalize
     when 'Replicator'
