@@ -70,11 +70,8 @@ class MiqReportResult < ActiveRecord::Base
 
   def report_results
     if binary_blob
-      serializer_name = binary_blob.data_type
-      serializer_name = "Marshal" unless serializer_name == "YAML"  # YAML or Marshal, for now
-      serializer = serializer_name.constantize
-      loaded = serializer.load(binary_blob.binary)
-      loaded.kind_of?(Hash) ? MiqReport.from_hash(loaded) : loaded
+      data = binary_blob.data
+      data.kind_of?(Hash) ? MiqReport.from_hash(data) : data
     elsif report.kind_of?(MiqReport)
       report
     else

@@ -76,4 +76,16 @@ describe BinaryBlob do
     @blob.binary = data.dup # binary= destroys the source data, so dup it
     @blob.binary.length.should == data.length
   end
+
+  describe "#serializer" do
+    it "returns YAML if the data_type is YAML" do
+      bb = FactoryGirl.build(:binary_blob, :data_type => "YAML")
+      expect(bb.serializer).to be(YAML)
+    end
+
+    it "returns Marshal if data_type is not YAML" do
+      bb = FactoryGirl.build(:binary_blob, :data_type => "unknown")
+      expect(bb.serializer).to be(Marshal)
+    end
+  end
 end
