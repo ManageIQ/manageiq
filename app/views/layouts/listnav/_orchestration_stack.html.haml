@@ -16,7 +16,7 @@
           %li
             - l = [ui_lookup(:table => "ems_cloud"), ui_lookup(:table => "orchestration_stack")]
             = link_to("#{ui_lookup(:table => "ext_management_system")}: #{@record.ext_management_system.name}",
-              {:controller => "ems_cloud", :action => 'show', :id => @record.ext_management_system.id.to_s},
+              ems_cloud_path(@record.ext_management_system.id),
               :title => _("Show parent %s for this %s") % l)
 
         - if @record.orchestration_template
