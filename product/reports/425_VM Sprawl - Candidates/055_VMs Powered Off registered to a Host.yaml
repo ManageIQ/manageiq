@@ -34,7 +34,7 @@ col_order:
 - vendor
 - platform
 - operating_system.product_name
-- hardware.numvcpus
+- hardware.cpu_total_cores
 - hardware.memory_mb
 - power_state
 timeline: 
@@ -50,7 +50,7 @@ include:
   hardware: 
     columns: 
     - annotation
-    - numvcpus
+    - cpu_total_cores
     - memory_mb
   operating_system:
     columns:

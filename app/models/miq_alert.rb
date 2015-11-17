@@ -412,7 +412,7 @@ class MiqAlert < ActiveRecord::Base
         ]},
       {:name => "reconfigured_hardware_value", :description => "Hardware Reconfigured", :db => ["Vm"], :responds_to_events => "vm_reconfigure",
         :options => [
-          {:name => :hdw_attr, :description => "Hardware Attribute", :values => {:memory_mb => Dictionary.gettext("memory_mb", :type => "column"), :numvcpus => Dictionary.gettext("numvcpus", :type => "column")}},
+          {:name => :hdw_attr, :description => "Hardware Attribute", :values => {:memory_mb => Dictionary.gettext("memory_mb", :type => "column"), :cpu_total_cores => Dictionary.gettext("cpu_total_cores", :type => "column")}},
           {:name => :operator, :description => "Operator", :values => ["Increased", "Decreased"]}
         ]},
       {:name => "changed_vm_value", :description => "VM Value changed", :db => ["Vm"], :responds_to_events => "vm_reconfigure",
