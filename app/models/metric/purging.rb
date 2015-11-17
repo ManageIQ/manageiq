@@ -50,11 +50,15 @@ module Metric::Purging
     end
   end
 
-  def self.purge_count(older_than, interval)
+  def self.klass_for_interval(interval)
     klass, conditions = case interval
                         when 'realtime' then [Metric,       {}]
                         else             [MetricRollup, {:capture_interval_name => interval}]
                         end
+  end
+
+  def self.purge_count(older_than, interval)
+    klass, conditions = klass_for_interval(interval)
 
     oldest = klass.select(:timestamp).where(conditions).order(:timestamp).first
     oldest = oldest.nil? ? older_than : oldest.timestamp
@@ -65,10 +69,7 @@ module Metric::Purging
   def self.purge(older_than, interval, window = nil, limit = nil)
     _log.info("Purging #{limit.nil? ? "all" : limit} #{interval} metrics older than [#{older_than}]...")
 
-    klass, conditions = case interval
-                        when 'realtime' then [Metric,       {}]
-                        else             [MetricRollup, {:capture_interval_name => interval}]
-                        end
+    klass, conditions = klass_for_interval(interval)
 
     total = 0
     total_tag_values = 0
