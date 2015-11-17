@@ -372,7 +372,7 @@ class Storage < ActiveRecord::Base
   # storages to get total_unmanaged_vms in a report or view is optimized
   cache_with_timeout(:total_unmanaged_vms, 15.seconds) do
     StorageFile.all(
-      :select     => "COUNT(id) AS storage_file_count, storage_id",
+      :select     => "COUNT(*) AS storage_file_count, storage_id",
       :conditions => {:ext_name => "vmx", :vm_or_template_id => nil},
       :group      => :storage_id
     ).each_with_object(Hash.new(0)) { |sf, h| h[sf.storage_id] = sf.storage_file_count.to_i }
@@ -388,7 +388,7 @@ class Storage < ActiveRecord::Base
     snap_clause  = "AND #{ActiveRecordQueryParts.not_regexp("base_name", "%\-[0-9][0-9][0-9][0-9][0-9][0-9]\.vmdk")}"
 
     StorageFile.all(
-      :select     => "COUNT(id) AS storage_file_count, storage_id",
+      :select     => "COUNT(*) AS storage_file_count, storage_id",
       :conditions => "ext_name = 'vmdk' AND #{flat_clause} AND #{delta_clause} #{snap_clause}",
       :group      => :storage_id
     ).each_with_object(Hash.new(0)) { |sf, h| h[sf.storage_id] = sf.storage_file_count.to_i }
@@ -409,7 +409,7 @@ class Storage < ActiveRecord::Base
   cache_with_timeout(:unmanaged_vm_counts_by_storage_id, 15.seconds) do
     Vm.all(
       :conditions => ["((vms.template = ? AND vms.ems_id IS NOT NULL) OR vms.host_id IS NOT NULL)", true],
-      :select     => "COUNT(id) AS vm_count, storage_id",
+      :select     => "COUNT(*) AS vm_count, storage_id",
       :group      => "storage_id"
     ).each_with_object(Hash.new(0)) { |v, h| h[v.storage_id] = v.vm_count.to_i }
   end
@@ -425,7 +425,7 @@ class Storage < ActiveRecord::Base
   cache_with_timeout(:unregistered_vm_counts_by_storage_id, 15.seconds) do
     Vm.all(
       :conditions => ["((vms.template = ? AND vms.ems_id IS NULL) OR vms.host_id IS NOT NULL)", true],
-      :select     => "COUNT(id) AS vm_count, storage_id",
+      :select     => "COUNT(*) AS vm_count, storage_id",
       :group      => "storage_id"
     ).each_with_object(Hash.new(0)) { |v, h| h[v.storage_id] = v.vm_count.to_i }
   end
@@ -441,7 +441,7 @@ class Storage < ActiveRecord::Base
   cache_with_timeout(:managed_unregistered_vm_counts_by_storage_id, 15.seconds) do
     Vm.all(
       :conditions => ["((vms.template = ? AND vms.ems_id IS NOT NULL) OR vms.host_id IS NOT NULL)", true],
-      :select     => "COUNT(id) AS vm_count, storage_id",
+      :select     => "COUNT(*) AS vm_count, storage_id",
       :group      => "storage_id"
     ).each_with_object(Hash.new(0)) { |v, h| h[v.storage_id] = v.vm_count.to_i }
   end
@@ -609,7 +609,7 @@ class Storage < ActiveRecord::Base
 
   cache_with_timeout(:vm_counts_by_storage_id, 15.seconds) do
     Vm.all(
-      :select => "COUNT(id) AS vm_count, storage_id",
+      :select => "COUNT(*) AS vm_count, storage_id",
       :group  => "storage_id"
     ).each_with_object(Hash.new(0)) { |v, h| h[v.storage_id] = v.vm_count.to_i }
   end
