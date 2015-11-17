@@ -74,8 +74,6 @@ class MiqReportResult < ActiveRecord::Base
       data.kind_of?(Hash) ? MiqReport.from_hash(data) : data
     elsif report.kind_of?(MiqReport)
       report
-    else
-      nil
     end
   end
 
