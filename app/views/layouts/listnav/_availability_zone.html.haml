@@ -17,7 +17,7 @@
         - if role_allows(:feature => "ems_cloud_show") && @record.ext_management_system
           %li
             = link_to("#{ui_lookup(:table => "ext_management_systems")}: #{@record.ext_management_system.name}",
-              {:controller => "ems_cloud", :action => 'show', :id => @record.ext_management_system.id.to_s},
+              ems_cloud_path(@record.ext_management_system.id),
               :title => _("Show this Availability Zone's parent %s") % ui_lookup(:table => "ems_cloud"))
         - if role_allows(:feature => "vm_show_list")
           - if @record.number_of(:vms) == 0
