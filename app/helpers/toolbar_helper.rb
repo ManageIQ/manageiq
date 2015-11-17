@@ -140,6 +140,7 @@ module ToolbarHelper
   def toolbar_top_button_normal(props)
     cls = props[:hidden] ? 'hidden ' : ''
     cls += 'active ' if props['selected'] # for buttonTwoState only
+    cls += 'disabled ' if props['enabled'] == 'false'
     content_tag(:button, prepare_tag_keys(props).update(
                            :type  => "button",
                            :class => "#{cls}btn btn-default")) do
