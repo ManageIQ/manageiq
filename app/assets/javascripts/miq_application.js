@@ -60,6 +60,7 @@ function miqOnLoad() {
   }
 
   miqInitAccordions();
+  miqInitMainContent();
 }
 
 function miqPrepRightCellForm(tree) {
@@ -74,6 +75,7 @@ function miqPrepRightCellForm(tree) {
 // Things to be done on page resize
 function miqOnResize() {
   $(window).resize(miqInitAccordions);
+  $(window).resize(miqInitMainContent);
   miqBrowserSizeTimeout();
 }
 
@@ -1391,4 +1393,19 @@ function miqInitAccordions() {
     $(v).css('overflow-y', 'auto')
     $(v).css('overflow-x', 'hidden')
   });
+}
+
+// Function to resize the main content for best fit between the toolbar & footer
+function miqInitMainContent() {
+  var toolbar = $('#toolbar');
+  var footer = $('#paging_div');
+  var height = 0;
+  if (footer.find('.toolbar-pf-actions *:visible').length > 0) {
+    height += footer.outerHeight();
+  }
+  if (toolbar.find("*:visible").length > 0) {
+    height += toolbar.outerHeight();
+  }
+
+  $('#main-content').css('height', 'calc(100% - ' + height + 'px)')
 }
