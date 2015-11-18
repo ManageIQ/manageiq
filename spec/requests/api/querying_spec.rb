@@ -137,6 +137,26 @@ describe ApiController do
                                              {"name" => vm3.name, "guid" => vm3.guid}])
     end
 
+    it "supports NULL/nil equality test via =" do
+      vm1, vm2 = create_vms_by_name(%w(aa bb))
+      vm2.update_attributes!(:retired => true)
+
+      run_get vms_url, :expand => "resources", :filter => ["retired=NULL"]
+
+      expect_query_result(:vms, 1, 2)
+      expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid}])
+    end
+
+    it "supports NULL/nil inequality test via !=" do
+      _vm1, vm2 = create_vms_by_name(%w(aa bb))
+      vm2.update_attributes!(:retired => true)
+
+      run_get vms_url, :expand => "resources", :filter => ["retired!=nil"]
+
+      expect_query_result(:vms, 1, 2)
+      expect_result_resources_to_match_hash([{"name" => vm2.name, "guid" => vm2.guid}])
+    end
+
     it "supports numerical less than comparison via <" do
       vm1, vm2, vm3 = create_vms_by_name(%w(aa bb cc))
 
