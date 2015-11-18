@@ -422,6 +422,28 @@ function miqUpdateButtons(obj, button_div) {
     $("input[id^='" + obj.id + "']").each(function () {
       if (this.checked && !this.disabled) {
         count++;
+        // check if the only selected record is orphaned or archived
+        if (count == 1) {
+          var object = {region: null, id: null};
+          object.region = obj.name.split('_')[1].split('r')[0]
+          object.id = obj.name.split('_')[1].split('r')[1]
+
+          $.ajax({
+            url: '/api/vms/' + object.region + sprintf("%012d", object.id),
+            type: 'GET',
+            success: function(data) {
+              var orphaned = (data.storage_id !== undefined &&
+                              data.ems_id === undefined);
+              var archived = (data.storage_id === undefined &&
+                              data.ems_id === undefined);
+              var inactive = (orphaned || archived)
+              miqSetButtons(count, button_div, inactive);
+            }
+          });
+
+        } else {
+          miqSetButtons(count, button_div, false);
+        }
       }
       if (count > 1) {
         return false;
@@ -429,9 +451,8 @@ function miqUpdateButtons(obj, button_div) {
     });
   // Check for number object, as passed from snapshot tree
   } else if (typeof obj == 'number') {
-    count = 1;
+    miqSetButtons(1, button_div);
   }
-  miqSetButtons(count, button_div);
 }
 
 // Set button enabled or disabled according to the number of selected items
@@ -455,8 +476,7 @@ function miqButtonOnWhen(button, onwhen, count) {
 }
 
 // Set the buttons in a div based on the count of checked items passed in
-function miqSetButtons(count, button_div) {
-
+function miqSetButtons(count, button_div, inactive) {
   if (button_div.match("_tb$")) {
     var toolbar = $('#' + button_div);
 
@@ -475,6 +495,12 @@ function miqSetButtons(count, button_div) {
     // Dropdown button items
     toolbar.find('ul.dropdown-menu > li > a').each(function (k, v) {
       var button = $(v);
+      if (button.attr('name') == 'vm_lifecycle_choice__vm_clone' ||
+          button.attr('name') == 'vm_lifecycle_choice__vm_publish') {
+        if (inactive) {
+          miqButtonOnWhen(button.parent(), '2+', 1);
+        }
+      }
       miqButtonOnWhen(button.parent(), button.data('onwhen'), count);
     });
 
