@@ -1769,7 +1769,7 @@ module ReportController::Reports::Editor
     end
 
     if includes[table] && includes[table]["include"]
-      new_col = [ tables[1..-1], field ].flatten.join('.')
+      new_col = [tables[1..-1], field].flatten.join('.')
       # recursively search it for the table.col
       inc_table = find_includes(new_col, includes[table]["include"])
       return table + '.' + inc_table if inc_table
@@ -1777,13 +1777,13 @@ module ReportController::Reports::Editor
 
     # Need to go to the next level
     includes.each_pair do |key, inc|              # Check each included table
-      if inc["include"]                           # Does the included table have an include?
-        inc_table = find_includes(col, inc["include"])  # Yes, recursively search it for the table.col
-        return nil if inc_table.nil?                         # If it comes back nil, we never found it
+      next unless inc["include"]                           # Does the included table have an include?
 
-        # Otherwise, return the table name + the included string
-        return key + "." + inc_table
-      end
+      inc_table = find_includes(col, inc["include"])  # Yes, recursively search it for the table.col
+      return nil if inc_table.nil?                         # If it comes back nil, we never found it
+
+      # Otherwise, return the table name + the included string
+      return key + "." + inc_table
     end
 
     nil
