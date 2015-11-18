@@ -1,4 +1,5 @@
 class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudManager
+  require_nested :AvailabilityZone
   require_nested :RefreshParser
   require_nested :RefreshWorker
   require_nested :Refresher

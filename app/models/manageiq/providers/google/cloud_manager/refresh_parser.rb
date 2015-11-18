@@ -21,6 +21,7 @@ module ManageIQ::Providers
         log_header = "Collecting data for EMS : [#{@ems.name}] id: [#{@ems.id}]"
 
         _log.info("#{log_header}...")
+        get_zones
         get_images
         get_instances
         _log.info("#{log_header}...Complete")
@@ -29,6 +30,11 @@ module ManageIQ::Providers
       end
 
       private
+
+      def get_zones
+        zones = @connection.zones.all
+        process_collection(zones, :availability_zones) { |zone| parse_zone(zone) }
+      end
 
       def get_images
         images = @connection.images.all
@@ -50,6 +56,19 @@ module ManageIQ::Providers
           @data[key] << new_result
           @data_index.store_path(key, uid, new_result)
         end
+      end
+
+      def parse_zone(zone)
+        name = uid = zone.name
+        type = ManageIQ::Providers::Google::CloudManager::AvailabilityZone.name
+
+        new_result = {
+          :type    => type,
+          :ems_ref => uid,
+          :name    => name,
+        }
+
+        return uid, new_result
       end
 
       def parse_image(image)
@@ -77,6 +96,9 @@ module ManageIQ::Providers
         name   = instance.name
         name ||= uid
 
+        zone_uid   = parse_uid_from_url(instance.zone)
+        zone       = @data_index.fetch_path(:availability_zones, zone_uid)
+
         type = ManageIQ::Providers::Google::CloudManager::Vm.name
         new_result = {
           :type              => type,
@@ -86,9 +108,18 @@ module ManageIQ::Providers
           :description       => instance.description,
           :vendor            => "google",
           :raw_power_state   => instance.state,
+          :availability_zone => zone,
         }
 
         return uid, new_result
+      end
+
+      def parse_uid_from_url(url)
+        # A lot of attributes in gce are full URLs with the
+        # uid being the last component.  This helper method
+        # returns the last component of the url
+        uid = url.split('/')[-1]
+        uid
       end
     end
   end
