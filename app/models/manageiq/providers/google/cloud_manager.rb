@@ -2,6 +2,7 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
   require_nested :RefreshParser
   require_nested :RefreshWorker
   require_nested :Refresher
+  require_nested :Vm
 
   def self.ems_type
     @ems_type ||= "gce".freeze
