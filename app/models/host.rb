@@ -72,8 +72,8 @@ class Host < ActiveRecord::Base
 
   # Accounts - Users and Groups
   has_many                  :accounts, :dependent => :destroy
-  has_many                  :users, -> { where("accttype = 'user'") }, :class_name => "Account", :foreign_key => "host_id"
-  has_many                  :groups, -> { where("accttype = 'group'") }, :class_name => "Account", :foreign_key => "host_id"
+  has_many                  :users,  -> { where(:accttype => 'user') },  :class_name => "Account", :foreign_key => "host_id"
+  has_many                  :groups, -> { where(:accttype => 'group') }, :class_name => "Account", :foreign_key => "host_id"
 
   has_many                  :advanced_settings, :as => :resource, :dependent => :destroy
 
