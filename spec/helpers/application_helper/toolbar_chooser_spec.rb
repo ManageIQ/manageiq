@@ -12,18 +12,19 @@ describe ApplicationHelper do
     end
 
     context "#center_toolbar_filename_classic" do
-      it "miq_request summary screen" do
-        @lastaction = "show"
+      before do
         @view = true
         @layout = "miq_request_vm"
+      end
+
+      it "miq_request summary screen" do
+        @lastaction = "show"
         toolbar_name = center_toolbar_filename_classic
         toolbar_name.should == "miq_request_center_tb"
       end
 
       it "miq_request list screen" do
         @lastaction = "show_list"
-        @view = true
-        @layout = "miq_request_vm"
         toolbar_name = center_toolbar_filename_classic
         toolbar_name.should == "miq_requests_center_tb"
       end
