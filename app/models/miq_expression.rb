@@ -1466,7 +1466,7 @@ class MiqExpression
     case what.to_sym
     when :exp_available_fields then @miq_adv_search_lists[model.to_s][:exp_available_fields] ||= MiqExpression.model_details(model, :typ => "field", :include_model => true)
     when :exp_available_counts then @miq_adv_search_lists[model.to_s][:exp_available_counts] ||= MiqExpression.model_details(model, :typ => "count", :include_model => true)
-    when :exp_available_finds  then @miq_adv_search_lists[model.to_s][:exp_available_finds] ||= MiqExpression.model_details(model, :typ => "find",  :include_model => true)
+    when :exp_available_finds  then @miq_adv_search_lists[model.to_s][:exp_available_finds]  ||= MiqExpression.model_details(model, :typ => "find",  :include_model => true)
     end
   end
 
@@ -1496,7 +1496,12 @@ class MiqExpression
     result = {:columns => model.column_names_with_virtual, :parent => parent}
     result[:reflections] = {}
 
-    model.reflections_with_virtual.each do |assoc, ref|
+    refs = model.reflections_with_virtual
+    if model.try(:include_descendant_classes_in_expressions?)
+      model.descendants.each { |desc| refs.reverse_merge!(desc.reflections_with_virtual) }
+    end
+
+    refs.each do |assoc, ref|
       next unless @@include_tables.include?(assoc.to_s.pluralize)
       next if     assoc.to_s.pluralize == "event_logs" && parent[:root] == "Host" && !@@proto
       next if     assoc.to_s.pluralize == "processes" && parent[:root] == "Host" # Process data not available yet for Host

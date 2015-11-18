@@ -360,6 +360,23 @@ describe MiqExpression do
     end
   end
 
+  context ".build_relats" do
+    it "includes reflections from descendant classes of Vm" do
+      relats = MiqExpression.get_relats(Vm)
+      relats[:reflections][:cloud_tenant].should_not be_blank
+    end
+
+    it "includes reflections from descendant classes of Host" do
+      relats = MiqExpression.get_relats(Host)
+      relats[:reflections][:cloud_networks].should_not be_blank
+    end
+
+    it "excludes reflections from descendant classes of VmOrTemplate " do
+      relats = MiqExpression.get_relats(VmOrTemplate)
+      relats[:reflections][:cloud_tenant].should be_blank
+    end
+  end
+
   context "Date/Time Support" do
     context "Testing expression conversion ruby, sql and human with static dates and times" do
       it "should generate the correct ruby expression with an expression having static dates and times with no time zone" do
