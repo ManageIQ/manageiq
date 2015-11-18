@@ -185,7 +185,13 @@ describe MiqScheduleWorker::Runner do
 
           it "works on nil :first_in" do
             $log.should_receive(:error).never
+            expect_any_instance_of(Rufus::Scheduler).to receive(:schedule_every).with(1, :first_in => nil)
             @schedule_worker.system_schedule_every(1, :first_in => nil) {}
+          end
+
+          it "populates :first_in for default interval" do
+            expect_any_instance_of(Rufus::Scheduler).to receive(:schedule_every).with(1, :first_in => 1)
+            @schedule_worker.system_schedule_every(1, :first_in => :interval) {}
           end
         end
 

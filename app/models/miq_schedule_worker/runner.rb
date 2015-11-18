@@ -74,6 +74,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
   def system_schedule_every(*args, &block)
     raise ArgumentError if args.first.nil?
+    args[1][:first_in] = args[0] if args[1].kind_of?(Hash) && args[1][:first_in] == :interval
     @system_scheduler.schedule_every(*args, &block)
   rescue ArgumentError => err
     _log.error("#{err.class} for schedule_every with #{args.inspect}.  Called from: #{caller[1]}.")
@@ -101,7 +102,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     every = settings(:server_stats_interval)
     @schedules[:all] << system_schedule_every(
       every,
-      :first_in => every,
+      :first_in => :interval,
       :tags     => [:status_update, schedule_category]
     ) { @queue.enq :miq_server_status_update }
 
@@ -109,7 +110,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     every = settings(:server_log_stats_interval)
     @schedules[:all] << system_schedule_every(
       every,
-      :first_in => every,
+      :first_in => :interval,
       :tags     => [:log_status, schedule_category]
     ) { @queue.enq :miq_server_worker_log_status }
 
@@ -149,37 +150,37 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
     # Schedule - Check for VMs to scan
     every = settings(:vm_scan_interval)
-    @schedules[:scheduler] << system_schedule_every(every, :first_in => every) do
+    @schedules[:scheduler] << system_schedule_every(every, :first_in => :interval) do
       @queue.enq :host_check_for_vms_to_scan
     end
 
     # Schedule - Check for timed out jobs
     every = settings(:job_timeout_interval)
-    @schedules[:scheduler] << system_schedule_every(every, :first_in => every) do
+    @schedules[:scheduler] << system_schedule_every(every, :first_in => :interval) do
       @queue.enq :job_check_jobs_for_timeout
     end
 
     # Schedule - Check for Retired Services
     every = settings(:service_retired_interval)
-    @schedules[:scheduler] << system_schedule_every(every, :first_in => every) do
+    @schedules[:scheduler] << system_schedule_every(every, :first_in => :interval) do
       @queue.enq :service_retirement_check
     end
 
     # Schedule - Check for Retired VMs
     every = settings(:vm_retired_interval)
-    @schedules[:scheduler] << system_schedule_every(every, :first_in => every) do
+    @schedules[:scheduler] << system_schedule_every(every, :first_in => :interval) do
       @queue.enq :vm_retirement_check
     end
 
     # Schedule - Check for Retired Orchestration Stacks
     every = settings(:orchestration_stack_retired_interval)
-    @schedules[:scheduler] << system_schedule_every(every, :first_in => every) do
+    @schedules[:scheduler] << system_schedule_every(every, :first_in => :interval) do
       @queue.enq :orchestration_stack_retirement_check
     end
 
     # Schedule - Periodic validation of authentications
     every = settings(:authentication_check_interval, 1.day)
-    @schedules[:scheduler] << system_schedule_every(every, :first_in => every) do
+    @schedules[:scheduler] << system_schedule_every(every, :first_in => :interval) do
       # Queue authentication checks for CIs with credentials
       @queue.enq :host_authentication_check_schedule
       @queue.enq :ems_authentication_check_schedule
@@ -195,7 +196,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     # Schedule - Check for rogue EVM snapshots
     every               = settings(:evm_snapshot_interval, 1.hour)
     job_not_found_delay = settings(:evm_snapshot_delete_delay_for_job_not_found, 1.hour)
-    @schedules[:scheduler] << system_schedule_every(every, :first_in => every) do
+    @schedules[:scheduler] << system_schedule_every(every, :first_in => :interval) do
       @queue.enq [:job_check_for_evm_snapshots, job_not_found_delay]
     end
 
@@ -230,7 +231,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     ) { @queue.enq :storage_scan_timer }
 
     schedule_settings_for_ems_refresh.each do |klass, every|
-      @schedules[:scheduler] << system_schedule_every(every, :first_in => every) do
+      @schedules[:scheduler] << system_schedule_every(every, :first_in => :interval) do
         @queue.enq [:ems_refresh_timer, klass]
       end
     end
