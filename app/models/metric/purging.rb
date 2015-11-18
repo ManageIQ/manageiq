@@ -77,12 +77,12 @@ module Metric::Purging
       end
 
       loop do
-        batch, = Benchmark.realtime_block(:query_batch) do
-          scope.select(:id).where(:timestamp => (oldest..older_than)).limit(window)
+        current_limit = window
+        ids, = Benchmark.realtime_block(:query_batch) do
+          scope.where(:timestamp => (oldest..older_than)).limit(current_limit).pluck(:id)
         end
         break if batch.empty?
 
-        ids = batch.collect(&:id)
         ids = ids[0, limit - total] if limit && total + ids.length > limit
 
         _log.info("Purging #{ids.length} #{interval} metrics.")
