@@ -184,14 +184,18 @@ module VMDB
     end
 
     def merge_from_template(*args)
-      args << template_configuration.fetch_path(*args)
-      config.store_path(*args)
-      save
+      template_configuration.fetch_path(*args).tap do |value|
+        args << value
+        config.store_path(*args)
+        save
+      end
     end
 
-    def merge_from_template_if_missing(*args)
-      merge_from_template(*args) if config.fetch_path(*args).nil?
+    def fetch_with_fallback(*args)
+      value = config.fetch_path(*args)
+      value.nil? ? merge_from_template(*args) : value
     end
+    alias_method :merge_from_template_if_missing, :fetch_with_fallback
 
     def get(section, key = nil)
       # get(section, key) -> value

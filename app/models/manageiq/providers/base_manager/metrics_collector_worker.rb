@@ -18,9 +18,8 @@ class ManageIQ::Providers::BaseManager::MetricsCollectorWorker < MiqQueueWorkerB
 
     old_path = [:workers, :worker_base, :queue_worker_base, :perf_collector_worker]
     new_path = [:workers, :worker_base, :queue_worker_base, :ems_metrics_collector_worker]
-    configuration.merge_from_template_if_missing(*new_path)
 
-    new_collector_worker_settings = configuration.config.fetch_path(*new_path)
+    new_collector_worker_settings = configuration.fetch_with_fallback(*new_path)
     old_collector_worker_settings = configuration.config.fetch_path(*old_path)
     unless old_collector_worker_settings.nil?
       # The subclass list should be discoverable and not hardcoded here

@@ -20,9 +20,8 @@ class ManageIQ::Providers::BaseManager::EventCatcher < MiqWorker
     super
 
     path = [:workers, :worker_base, :event_catcher]
-    configuration.merge_from_template_if_missing(*path)
 
-    ec_settings = configuration.config.fetch_path(*path)
+    ec_settings = configuration.fetch_with_fallback(*path)
     unless ec_settings.key?(:defaults)
       subclasses = %w(redhat vmware openstack).collect { |k| "event_catcher_#{k}".to_sym }
       _log.info("Migrating Settings")

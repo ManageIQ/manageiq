@@ -24,14 +24,9 @@ module OntapDerivedMetricMixin
       @baseCounterNames = nil
       @metadataClass    = (name + "Metadata").constantize
 
-      cfg_base = [:storage, :metrics_collection]
-      storage_metrics_collection_interval = cfg_base + [:collection_interval]
-      storage_metrics_max_gap_to_fill   = cfg_base + [:max_gap_to_fill]
       cfg = VMDB::Config.new("vmdb")
-      cfg.merge_from_template_if_missing(*storage_metrics_collection_interval)
-      cfg.merge_from_template_if_missing(*storage_metrics_max_gap_to_fill)
-      @storageMetricsCollectionInterval = cfg.config.fetch_path(*storage_metrics_collection_interval).to_i_with_method
-      @storageMetricsMaxGapToFill = cfg.config.fetch_path(*storage_metrics_max_gap_to_fill).to_i_with_method
+      @storageMetricsCollectionInterval = cfg.fetch_with_fallback(:storage, :metrics_collection, :collection_interval).to_i_with_method
+      @storageMetricsMaxGapToFill       = cfg.fetch_with_fallback(:storage, :metrics_collection, :max_gap_to_fill).to_i_with_method
     end
 
     def metadataClass
