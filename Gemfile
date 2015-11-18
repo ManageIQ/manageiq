@@ -111,7 +111,7 @@ unless ENV['APPLIANCE']
     gem "factory_girl",     "~>4.5.0",  :require => false
     gem "shoulda-matchers", "~>1.0.0",  :require => false
     gem "vcr",              "~>2.6",    :require => false
-    gem "webmock",                      :require => false
+    gem "webmock",          "~>1.12",   :require => false
   end
 
   group :development, :test do

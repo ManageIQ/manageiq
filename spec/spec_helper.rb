@@ -95,15 +95,6 @@ RSpec.configure do |config|
   end
 end
 
-# PATCH: Temporary monkey patch until a new version of webmock is released
-#   (newer than 1.11.0).  The aws-sdk gem uses a feature of Net::HTTP that has
-#   not yet been properly exposed.
-#   See: https://github.com/aws/aws-sdk-ruby/issues/232
-#        https://github.com/bblimke/webmock/blob/master/lib/webmock/http_lib_adapters/net_http.rb#L196
-class StubSocket
-  attr_accessor :read_timeout, :continue_timeout
-end
-
 VCR.configure do |c|
   c.cassette_library_dir = 'spec/vcr_cassettes'
   c.hook_into :webmock
