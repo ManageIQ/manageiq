@@ -76,14 +76,12 @@ module Metric::Purging
         oldest = scope.minimum(:timestamp) || older_than
       end
 
-      loop do
-        current_limit = window
+      while limit.nil? || total < limit
+        current_limit = limit.nil? ? window : [window, limit - total].min
         ids, = Benchmark.realtime_block(:query_batch) do
           scope.where(:timestamp => (oldest..older_than)).limit(current_limit).pluck(:id)
         end
-        break if batch.empty?
-
-        ids = ids[0, limit - total] if limit && total + ids.length > limit
+        break if ids.empty?
 
         _log.info("Purging #{ids.length} #{interval} metrics.")
         count, = Benchmark.realtime_block(:purge_metrics) do
@@ -107,8 +105,6 @@ module Metric::Purging
         end
 
         yield(count, total) if block_given?
-
-        break if limit && total >= limit
       end
     end
 
