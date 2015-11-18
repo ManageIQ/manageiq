@@ -23,6 +23,13 @@ describe Host do
     expect(described_class.joins(:files, :directories)).to eq [host1]
   end
 
+  it "#ems_custom_attributes" do
+    ems_attr   = FactoryGirl.create(:custom_attribute, :source => 'VC')
+    other_attr = FactoryGirl.create(:custom_attribute, :source => 'NOTVC')
+    host       = FactoryGirl.create(:host_vmware, :custom_attributes => [ems_attr, other_attr])
+    expect(host.ems_custom_attributes).to eq [ems_attr]
+  end
+
   it "#save_drift_state" do
     # TODO: Beef up with more data
     host = FactoryGirl.create(:host_vmware)
