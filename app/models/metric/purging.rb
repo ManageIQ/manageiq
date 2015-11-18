@@ -55,10 +55,7 @@ module Metric::Purging
   end
 
   def self.purge_count(older_than, interval)
-    scope = scope_for_interval(interval)
-
-    oldest = scope.minimum(:timestamp) || older_than
-    scope.where(:timestamp => oldest..older_than).count
+    scope_for_interval(interval).where('timestamp <= ?', older_than).count
   end
 
   def self.purge(older_than, interval, window = nil, limit = nil)
@@ -71,15 +68,10 @@ module Metric::Purging
     _, timings = Benchmark.realtime_block(:total_time) do
       window ||= (VMDB::Config.new("vmdb").config.fetch_path(:performance, :history, :purge_window_size) || 1000)
 
-      oldest = nil
-      Benchmark.realtime_block(:query_oldest) do
-        oldest = scope.minimum(:timestamp) || older_than
-      end
-
       while limit.nil? || total < limit
         current_limit = limit.nil? ? window : [window, limit - total].min
         ids, = Benchmark.realtime_block(:query_batch) do
-          scope.where(:timestamp => (oldest..older_than)).limit(current_limit).pluck(:id)
+          scope.where('timestamp <= ?', older_than).limit(current_limit).pluck(:id)
         end
         break if ids.empty?
 
