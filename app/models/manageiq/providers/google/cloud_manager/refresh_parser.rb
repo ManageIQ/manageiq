@@ -21,6 +21,7 @@ module ManageIQ::Providers
         log_header = "Collecting data for EMS : [#{@ems.name}] id: [#{@ems.id}]"
 
         _log.info("#{log_header}...")
+        get_images
         get_instances
         _log.info("#{log_header}...Complete")
 
@@ -28,6 +29,11 @@ module ManageIQ::Providers
       end
 
       private
+
+      def get_images
+        images = @connection.images.all
+        process_collection(images, :vms) { |image| parse_image(image) }
+      end
 
       def get_instances
         instances = @connection.servers.all
@@ -44,6 +50,26 @@ module ManageIQ::Providers
           @data[key] << new_result
           @data_index.store_path(key, uid, new_result)
         end
+      end
+
+      def parse_image(image)
+        uid    = image.id
+        name   = image.name
+        name ||= uid
+        type   = ManageIQ::Providers::Google::CloudManager::Template.name
+
+        new_result = {
+          :type               => type,
+          :uid_ems            => uid,
+          :ems_ref            => uid,
+          :name               => name,
+          :vendor             => "google",
+          :raw_power_state    => "never",
+          :template           => true,
+          :publicly_available => true,
+        }
+
+        return uid, new_result
       end
 
       def parse_instance(instance)
