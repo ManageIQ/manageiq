@@ -15,11 +15,10 @@
           - if @tl_options[:tl_show_options].length > 1
             = select_tag("tl_show",
               options_for_select(@tl_options[:tl_show_options], @tl_options[:tl_show]),
-              :class                => "selectpicker",
-              "data-miq_sparkle_on" => true)
+              :class                => "selectpicker")
             :javascript
               miqInitSelectPicker();
-              miqSelectPickerEvent('tl_show', '#{url}')
+              miqSelectPickerEvent('tl_show', '#{url}', {beforeSend: true})
           - else
             = h(@tl_options[:tl_show_options].last[0])
       %hr
@@ -29,11 +28,10 @@
         .col-md-8
           = select_tag("tl_typ",
             options_for_select([[_("Hourly"), "Hourly"], [_("Daily"), "Daily"]], @tl_options[:typ]),
-            :class                => "selectpicker",
-            "data-miq_sparkle_on" => true)
+            :class                => "selectpicker")
           :javascript
             miqInitSelectPicker();
-            miqSelectPickerEvent('tl_typ', '#{url}')
+            miqSelectPickerEvent('tl_typ', '#{url}', {beforeSend: true})
       .form-group
         %label.control-label.col-md-2
           = _("Date")
@@ -53,11 +51,10 @@
             .col-md-8
               = select_tag("tl_days",
                 options_for_select((2..31).to_a, @tl_options[:days].to_i),
-                :class                => "selectpicker",
-                "data-miq_sparkle_on" => true)
+                :class                => "selectpicker")
               :javascript
                 miqInitSelectPicker();
-                miqSelectPickerEvent('tl_days', '#{url}')
+                miqSelectPickerEvent('tl_days', '#{url}', {beforeSend: true})
               = _("days back")
       %hr
     - if @tl_options[:tl_show] == "policy_timeline"
@@ -68,11 +65,10 @@
           .col-md-8
             = select_tag("tl_result",
               options_for_select(@tl_options[:all_results], @tl_options[:tl_result]),
-              :class                => "selectpicker",
-              "data-miq_sparkle_on" => true)
+              :class                => "selectpicker")
             :javascript
               miqInitSelectPicker();
-              miqSelectPickerEvent('tl_result', '#{url}')
+              miqSelectPickerEvent('tl_result', '#{url}', {beforeSend: true})
         .form-group
           %label.control-label.col-md-2
             = _("Event Type")
@@ -108,47 +104,41 @@
           .col-md-8
             = select_tag("tl_fl_typ",
               options_for_select([[_("Summary"), "Critical"], [_("Detail"), "Detail"]], @tl_options[:fl_typ]),
-              "data-miq_sparkle_on" => true,
               :class                => "selectpicker")
             :javascript
               miqInitSelectPicker();
-              miqSelectPickerEvent('tl_fl_typ', '#{url}')
+              miqSelectPickerEvent('tl_fl_typ', '#{url}', {beforeSend: true})
         .form-group
           %label.control-label.col-md-2
             = _("Event Groups")
           .col-md-8
             = select_tag("tl_fl_grp1",
               options_for_select([["<#{_('NONE')}> ", ""]] + @tl_options[:groups].sort, @tl_options[:filter1]),
-              :class                => "selectpicker",
-              "data-miq_sparkle_on" => true)
+              :class                => "selectpicker")
             .bootstrap-select{:style => "border-bottom: 6px solid #CD051C;"}
             :javascript
               miqInitSelectPicker();
-              miqSelectPickerEvent('tl_fl_grp1', '#{url}')
+              miqSelectPickerEvent('tl_fl_grp1', '#{url}', {beforeSend: true})
         .form-group
           %label.control-label.col-md-2
           .col-md-8
             = select_tag("tl_fl_grp2",
               options_for_select([["<#{_('NONE')}> ", ""]] + @tl_options[:groups].sort, @tl_options[:filter2]),
-              :class                => "selectpicker",
-              "data-miq_sparkle_on" => true,
-              "data-miq_observe"    => {:url => url}.to_json)
+              :class                => "selectpicker")
             .bootstrap-select{:style => "border-bottom: 6px solid #005C25;"}
             :javascript
               miqInitSelectPicker();
-              miqSelectPickerEvent('tl_fl_grp2', '#{url}')
+              miqSelectPickerEvent('tl_fl_grp2', '#{url}', {beforeSend: true})
         .form-group
           %label.control-label.col-md-2
           .col-md-8
             = select_tag("tl_fl_grp3",
               options_for_select([["<#{_('NONE')}> ", ""]] + @tl_options[:groups].sort, @tl_options[:filter3]),
-              :class                => "selectpicker",
-              "data-miq_sparkle_on" => true,
-              "data-miq_observe"    => {:url => url}.to_json)
+              :class                => "selectpicker")
             .bootstrap-select{:style => "border-bottom: 6px solid #035CB1;"}
             :javascript
               miqInitSelectPicker();
-              miqSelectPickerEvent('tl_fl_grp3', '#{url}')
+              miqSelectPickerEvent('tl_fl_grp3', '#{url}', {beforeSend: true})
       %form#hiddenForm
         %input#filter1{:type => "hidden", :name => "filter1", :value => @tl_options[:fltr1]}
         %input#filter2{:type => "hidden", :name => "filter2", :value => @tl_options[:fltr2]}
