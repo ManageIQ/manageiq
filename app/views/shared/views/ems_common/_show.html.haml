@@ -4,7 +4,7 @@
   - arr.concat(%w(cloud_tenants ems_clusters flavors security_groups hosts instances images miq_templates))
   - arr.concat(%w(orchestration_stacks vms storages miq_proxies))
   - if arr.include?(@display) && @showtype != "compare"
-    = render :partial => "layouts/gtl", :locals => {:action_url => "#{@ems.id}"}
+    = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@ems.id}"}
   - elsif @showtype == "compare"
     = render :partial => "layouts/compare"
   - elsif @showtype == "timeline"

@@ -57,7 +57,7 @@ function miqGridOnCheck(elem, button_div) {
 }
 
 // Handle sort
-function miqGridSort(col_id) {
+function miqGetSortUrl(col_id) {
   var controller = null;
   var action = ManageIQ.actionUrl;
   var id = null;
@@ -73,10 +73,15 @@ function miqGridSort(col_id) {
   if (controller) {
     url = '/' + controller + '/' + url;
   }
-  if (id) {
+  if (id && (url.indexOf(id) < 0)) {
     url = url + '/' + id;
   }
 
   url = url + "?sortby=" + col_id + "&" + window.location.search.substring(1);
+  return url;
+}
+
+function miqGridSort(col_id) {
+  url = miqGetSortUrl(col_id);
   miqJqueryRequest(url, {beforeSend: true, complete: true});
 }
