@@ -385,10 +385,6 @@ class VmConfig
         return nil if c[:username].nil?
         creds = {'host' => c[:address], 'user' => c[:username], 'password' => c[:password], 'use_vim_broker' => c[:use_vim_broker]}
       end
-
-      unless creds.nil?
-        creds['password_decrypt'] = MiqPassword.decrypt(creds['password'])
-      end
     end
     creds
   end
@@ -403,7 +399,9 @@ class VmConfig
       $log.info "#{conn_reason}: Connecting to [#{ems_display_text}] for VM:[#{vmCfgFile}]"
 
       require 'miq_fault_tolerant_vim'
-      hostVim = MiqFaultTolerantVim.new(:ip => ems_host['host'], :user => ems_host['user'], :pass => ems_host['password_decrypt'], :use_broker => ems_host['use_vim_broker'], :vim_broker_drb_port => ems_host['vim_broker_drb_port'])
+
+      password_decrypt = MiqPassword.decrypt(ems_host['password'])
+      hostVim = MiqFaultTolerantVim.new(:ip => ems_host['host'], :user => ems_host['user'], :pass => password_decrypt, :use_broker => ems_host['use_vim_broker'], :vim_broker_drb_port => ems_host['vim_broker_drb_port'])
       $log.info "#{conn_reason}: Connection to [#{ems_display_text}] completed for VM:[#{vmCfgFile}] in [#{Time.now - st}] seconds"
       return hostVim
     rescue Timeout::Error => err
@@ -419,8 +417,9 @@ class VmConfig
     ems = host_vim_credentials
     return (filename) if ems.nil?
 
-    $log.debug "resolve_path_names: emsHost = #{ems['host']}, emsUser = #{ems['user']}, emsPassword = #{ems['password']}" if $log
-    vi = MiqVimInventory.new(ems['host'], ems['user'], ems['password_decrypt'])
+    password_decrypt = MiqPassword.decrypt(ems_host['password'])
+    $log.debug "resolve_path_names: emsHost = #{ems['host']}, emsUser = #{ems['user']}" if $log
+    vi = MiqVimInventory.new(ems['host'], ems['user'], password_decrypt)
     return getDsName(filename, vi)
 
   rescue
