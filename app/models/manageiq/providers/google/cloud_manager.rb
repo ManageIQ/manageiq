@@ -1,4 +1,6 @@
 class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudManager
+  require_nested :RefreshParser
+  require_nested :RefreshWorker
   require_nested :Refresher
 
   def self.ems_type
