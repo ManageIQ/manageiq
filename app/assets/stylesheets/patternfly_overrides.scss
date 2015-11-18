@@ -8,6 +8,10 @@
   margin: 0;
 }
 
+#main-content {
+  overflow: auto;
+}
+
 /* This media query makes the entire main row scrollable once the columns have collapsed */
 
 @media (max-width: $screen-sm) {
@@ -17,10 +21,6 @@
   .scrollable-sm {
     height: 100% !important; //overrides the height calculations used to create the scrollable area
     overflow: auto;
-  }
-  #main_content {
-    overflow: auto;
-    height: 100%;
   }
 }
 
