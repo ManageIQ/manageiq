@@ -57,9 +57,7 @@ module Metric::Purging
   def self.purge_count(older_than, interval)
     scope = scope_for_interval(interval)
 
-    oldest = scope.select(:timestamp).order(:timestamp).first
-    oldest = oldest.nil? ? older_than : oldest.timestamp
-
+    oldest = scope.minimum(:timestamp) || older_than
     scope.where(:timestamp => oldest..older_than).count
   end
 
@@ -75,8 +73,7 @@ module Metric::Purging
 
       oldest = nil
       Benchmark.realtime_block(:query_oldest) do
-        oldest = scope.select(:timestamp).order(:timestamp).first
-        oldest = oldest.nil? ? older_than : oldest.timestamp
+        oldest = scope.minimum(:timestamp) || older_than
       end
 
       loop do
