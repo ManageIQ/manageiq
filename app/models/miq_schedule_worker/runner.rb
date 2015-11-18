@@ -361,12 +361,11 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     storage_inventory_full_refresh_schedule = [:storage, :inventory, :full_refresh_schedule]
 
     cfg = VMDB::Config.new("vmdb")
-    # TODO: change to merge_from_template_if_missing() after beta.
-    cfg.merge_from_template(*storage_metrics_collection_schedule)
-    cfg.merge_from_template(*storage_metrics_hourly_rollup_schedule)
-    cfg.merge_from_template(*storage_metrics_daily_rollup_schedule)
-    cfg.merge_from_template(*storage_metrics_purge_schedule)
-    cfg.merge_from_template(*storage_inventory_full_refresh_schedule)
+    cfg.merge_from_template_if_missing(*storage_metrics_collection_schedule)
+    cfg.merge_from_template_if_missing(*storage_metrics_hourly_rollup_schedule)
+    cfg.merge_from_template_if_missing(*storage_metrics_daily_rollup_schedule)
+    cfg.merge_from_template_if_missing(*storage_metrics_purge_schedule)
+    cfg.merge_from_template_if_missing(*storage_inventory_full_refresh_schedule)
 
     # Schedule - Storage metrics collection
     sched = cfg.config.fetch_path(*storage_metrics_collection_schedule)

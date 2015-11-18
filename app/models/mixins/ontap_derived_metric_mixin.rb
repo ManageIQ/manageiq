@@ -28,13 +28,10 @@ module OntapDerivedMetricMixin
       storage_metrics_collection_interval = cfg_base + [:collection_interval]
       storage_metrics_max_gap_to_fill   = cfg_base + [:max_gap_to_fill]
       cfg = VMDB::Config.new("vmdb")
-      # TODO: change to merge_from_template_if_missing() after beta.
-      cfg.merge_from_template(*storage_metrics_collection_interval)
-      @storageMetricsCollectionInterval = cfg.config.fetch_path(*storage_metrics_collection_interval)
-      @storageMetricsCollectionInterval = @storageMetricsCollectionInterval.to_i_with_method
-      cfg.merge_from_template(*storage_metrics_max_gap_to_fill)
-      @storageMetricsMaxGapToFill = cfg.config.fetch_path(*storage_metrics_max_gap_to_fill)
-      @storageMetricsMaxGapToFill = @storageMetricsMaxGapToFill.to_i_with_method
+      cfg.merge_from_template_if_missing(*storage_metrics_collection_interval)
+      cfg.merge_from_template_if_missing(*storage_metrics_max_gap_to_fill)
+      @storageMetricsCollectionInterval = cfg.config.fetch_path(*storage_metrics_collection_interval).to_i_with_method
+      @storageMetricsMaxGapToFill = cfg.config.fetch_path(*storage_metrics_max_gap_to_fill).to_i_with_method
     end
 
     def metadataClass

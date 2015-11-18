@@ -129,8 +129,7 @@ class MiqStorageMetric < ActiveRecord::Base
   def self.purge_date(type)
     cfg = VMDB::Config.new("vmdb")
     vpath = [:storage, :metrics_history, type.to_sym]
-    # TODO: change to merge_from_template_if_missing() after beta.
-    cfg.merge_from_template(*vpath)
+    cfg.merge_from_template_if_missing(*vpath)
     value = cfg.config.fetch_path(*vpath)
     return nil if value.nil?
 
