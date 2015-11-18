@@ -30,10 +30,10 @@ module QuotaHelper
     @ram_size = 1024
     @disk_size = 1_000_000
     @num_cpu = 0
-    @hw1 = FactoryGirl.create(:hardware, :cpu_sockets => @num_cpu, :memory_cpu => @ram_size)
-    @hw2 = FactoryGirl.create(:hardware, :cpu_sockets => @num_cpu, :memory_cpu => @ram_size)
-    @hw3 = FactoryGirl.create(:hardware, :cpu_sockets => @num_cpu, :memory_cpu => @ram_size)
-    @hw4 = FactoryGirl.create(:hardware, :cpu_sockets => @num_cpu, :memory_cpu => @ram_size)
+    @hw1 = FactoryGirl.create(:hardware, :cpu_sockets => @num_cpu, :memory_mb => @ram_size)
+    @hw2 = FactoryGirl.create(:hardware, :cpu_sockets => @num_cpu, :memory_mb => @ram_size)
+    @hw3 = FactoryGirl.create(:hardware, :cpu_sockets => @num_cpu, :memory_mb => @ram_size)
+    @hw4 = FactoryGirl.create(:hardware, :cpu_sockets => @num_cpu, :memory_mb => @ram_size)
     create_disks
   end
 
@@ -99,7 +99,7 @@ module QuotaHelper
 
     @vm_template = FactoryGirl.create(:template_vmware,
                                       :name     => "template1",
-                                      :hardware => FactoryGirl.create(:hardware, :cpu_sockets => 1, :memory_cpu => 512))
+                                      :hardware => FactoryGirl.create(:hardware, :cpu_sockets => 1, :memory_mb => 512))
 
     create_tenant_quota
     create_request
