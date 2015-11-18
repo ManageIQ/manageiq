@@ -1,7 +1,7 @@
 require "spec_helper"
 include UiConstants
 
-describe ApplicationController do
+describe ApplicationController, "::Filter" do
   before :each do
     controller.instance_variable_set(:@sb, {})
   end
@@ -61,6 +61,60 @@ describe ApplicationController do
       user.reload
 
       expect(user.settings).to eq(:default_search => {:Host => search.id})
+    end
+  end
+
+  describe "#adv_search_build_lists (private)" do
+    let(:user)           { FactoryGirl.create(:user) }
+    let(:user_search)    { FactoryGirl.create(:miq_search_user, :search_key => user.userid) }
+    let(:user_search2)   { FactoryGirl.create(:miq_search_user, :search_key => user.userid) }
+    let(:global_search)  { FactoryGirl.create(:miq_search_global) }
+    let(:global_search2) { FactoryGirl.create(:miq_search_global) }
+
+    before do
+      user_search  # Create the searches
+      user_search2
+
+      session[:userid] = user.userid
+      controller.instance_variable_set(:@expkey, :expression)
+      controller.instance_variable_set(:@edit, :expression => {:exp_model => "Vm"})
+    end
+
+    it "with global searches" do
+      global_search  # Create the searches
+      global_search2
+
+      controller.send(:adv_search_build_lists)
+      actual = controller.instance_variable_get(:@edit)[:expression][:exp_search_expressions]
+
+      expect(actual).to eq [  # eq asserts that the output is sorted
+        ["Global - #{global_search.description}",  global_search.id],
+        ["Global - #{global_search2.description}", global_search2.id],
+        [user_search.description,                  user_search.id],
+        [user_search2.description,                 user_search2.id]
+      ]
+    end
+
+    it "without global searches" do
+      controller.send(:adv_search_build_lists)
+      actual = controller.instance_variable_get(:@edit)[:expression][:exp_search_expressions]
+
+      expect(actual).to eq [  # eq asserts that the output is sorted
+        [user_search.description,  user_search.id],
+        [user_search2.description, user_search2.id]
+      ]
+    end
+
+    it "does not include searches from other users" do
+      FactoryGirl.create(:miq_search_user, :search_key => -1) # A search from another "user"
+
+      controller.send(:adv_search_build_lists)
+      actual = controller.instance_variable_get(:@edit)[:expression][:exp_search_expressions]
+
+      expect(actual).to eq [  # eq asserts that the output is sorted
+        [user_search.description,  user_search.id],
+        [user_search2.description, user_search2.id]
+      ]
     end
   end
 end

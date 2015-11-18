@@ -1621,21 +1621,23 @@ module ApplicationController::Filter
 
   # Build the pulldown lists for the adv search box
   def adv_search_build_lists
-    # converting expressions into Array here, so Global views can be pushed into it and be shown on the top with Global Prefix in load pull down
-    global_expressions = MiqSearch.get_expressions(:db          => @edit[@expkey][:exp_model],
-                                                   :search_type => "global")
-    @edit[@expkey][:exp_search_expressions] = MiqSearch.get_expressions(:db          => @edit[@expkey][:exp_model],
-                                                                        :search_type => "user",
-                                                                        :search_key  => session[:userid])
-    @edit[@expkey][:exp_search_expressions] = Array(@edit[@expkey][:exp_search_expressions]).sort
-    global_expressions = Array(global_expressions).sort unless global_expressions.blank?
-    unless global_expressions.blank?
-      global_expressions.each_with_index do |ge, i|
-        global_expressions[i][0] = "Global - #{ge[0]}"
-        @edit[@expkey][:exp_search_expressions] = @edit[@expkey][:exp_search_expressions].unshift(global_expressions[i])
-      end
-    end
+    db = @edit[@expkey][:exp_model]
+    global_expressions = MiqSearch.get_expressions(
+      :db          => db,
+      :search_type => "global"
+    )
+    user_expressions = MiqSearch.get_expressions(
+      :db          => db,
+      :search_type => "user",
+      :search_key  => session[:userid]
+    )
+
+    user_expressions = Array(user_expressions).sort
+    global_expressions = Array(global_expressions).sort
+    global_expressions.each { |ge| ge[0] = "Global - #{ge[0]}" }
+    @edit[@expkey][:exp_search_expressions] = global_expressions + user_expressions
   end
+  private :adv_search_build_lists
 
   # Build a string from an array of expression symbols by recursively traversing the MiqExpression object
   #   and inserting sequential tokens for each expression part
