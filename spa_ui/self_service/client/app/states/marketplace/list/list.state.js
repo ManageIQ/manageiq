@@ -27,7 +27,9 @@
   /** @ngInject */
   function resolveServiceTemplates(CollectionsApi) {
     var attributes = ['picture', 'picture.image_href', 'service_template_catalog.name'];
-    var options = {expand: 'resources', filter: ['display=true'], attributes: attributes};
+    var options = {expand: 'resources',
+                   filter: ['service_template_catalog_id>0', 'display=true'],
+                   attributes: attributes};
 
     return CollectionsApi.query('service_templates', options);
   }
