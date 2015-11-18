@@ -89,6 +89,17 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     _log.error("#{err.class} for schedule_every with #{args.inspect}.  Called from: #{caller[1]}.")
   end
 
+  def cron(*args, &block)
+    options = args.last
+    args << (options = {}) unless options.kind_of?(Hash)
+    options[:job] = true
+    label = options.delete(:label)
+
+    _log.info { "#{label || options[:tags].detect { |t| t != @role_name }}: #{args.first}" }
+
+    @schedules[@role_name] << @system_scheduler.cron(*args, &block)
+  end
+
   def schedules_for_all_roles
     # These schedules need to be run on all servers regardless of the server's role
     with_role(:all)
@@ -226,33 +237,23 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
   def schedules_for_database_operations_role
     # Schedule - Database Metrics capture run by the appliance with a database_operations role
-    return unless @active_roles.include?("database_operations")
-    @schedules[:database_operations] ||= []
+    with_role(:database_operations) || return
 
     cfg = VMDB::Config.new("vmdb")
 
-    sched = cfg.fetch_with_fallback(:database, :metrics_collection, :collection_schedule)
-    _log.info("database_metrics_collection_schedule: #{sched}")
-    @schedules[:database_operations] << @system_scheduler.cron(
-      sched,
-      :tags => [:database_operations, :database_metrics_collection_schedule],
-      :job  => true
+    cron(
+      cfg.fetch_with_fallback(:database, :metrics_collection, :collection_schedule),
+      :tags => [:database_operations, :database_metrics_collection_schedule]
     ) { @queue.enq :vmdb_database_capture_metrics_timer }
 
-    sched = cfg.fetch_with_fallback(:database, :metrics_collection, :daily_rollup_schedule)
-    _log.info("database_metrics_daily_rollup_schedule: #{sched}")
-    @schedules[:database_operations] << @system_scheduler.cron(
-      sched,
-      :tags => [:database_operations, :database_metrics_daily_rollup_schedule],
-      :job  => true
+    cron(
+      cfg.fetch_with_fallback(:database, :metrics_collection, :daily_rollup_schedule),
+      :tags => [:database_operations, :database_metrics_daily_rollup_schedule]
     ) { @queue.enq :vmdb_database_rollup_metrics_timer }
 
-    sched = cfg.fetch_with_fallback(:database, :metrics_history, :purge_schedule)
-    _log.info("database_metrics_purge_schedule: #{sched}")
-    @schedules[:database_operations] << @system_scheduler.cron(
-      sched,
-      :tags => [:database_operations, :database_metrics_purge_schedule],
-      :job  => true
+    cron(
+      cfg.fetch_with_fallback(:database, :metrics_history, :purge_schedule),
+      :tags => [:database_operations, :database_metrics_purge_schedule]
     ) { @queue.enq :metric_purge_all_timer }
 
     @schedules[:database_operations]
@@ -260,19 +261,15 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
   def schedules_for_ldap_synchronization_role
     # These schedules need to run with the LDAP SYnchronizartion role
-    return unless @active_roles.include?("ldap_synchronization")
-    @schedules[:ldap_synchronization] ||= []
+    with_role(:ldap_synchronization) || return
 
     ldap_synchronization_schedule_default = "0 2 * * *"
     ldap_synchronization_schedule         = [:ldap_synchronization, :ldap_synchronization_schedule]
 
     sched = VMDB::Config.new("vmdb").config.fetch_path(ldap_synchronization_schedule) || ldap_synchronization_schedule_default
-    _log.info("ldap_synchronization_schedule: #{sched}")
-
-    @schedules[:ldap_synchronization] << @system_scheduler.cron(
+    cron(
       sched,
-      :tags => [:ldap_synchronization, :ldap_synchronization_schedule],
-      :job  => true
+      :tags => [:ldap_synchronization, :ldap_synchronization_schedule]
     ) { @queue.enq :ldap_server_sync_data_from_timer }
   end
 
@@ -321,17 +318,13 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
     cfg = VMDB::Config.new("vmdb")
 
-    # Schedule - Storage metrics collection
     sched = cfg.fetch_with_fallback(:storage, :metrics_collection, :collection_schedule)
-    _log.info("storage_metrics_collection_schedule: #{sched}")
-    @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched, :job => true) do
+    cron(sched, :label => :storage_metrics_collection_schedule) do
       @queue.enq :storage_refresh_metrics
     end
 
-    # Schedule - Storage metrics hourly rollup
     sched = cfg.fetch_with_fallback(:storage, :metrics_collection, :hourly_rollup_schedule)
-    _log.info("storage_metrics_hourly_rollup_schedule: #{sched}")
-    @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched, :job => true) do
+    cron(sched, :label => storage_metrics_hourly_rollup_schedule) do
       @queue.enq :storage_metrics_rollup_hourly
     end
 
@@ -339,24 +332,18 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     base_sched = cfg.fetch_with_fallback(:storage, :metrics_collection, :daily_rollup_schedule)
     TimeProfile.rollup_daily_metrics.each do |tp|
       tz = ActiveSupport::TimeZone::MAPPING[tp.tz]
-      sched = "#{base_sched} #{tz}"
-      _log.info("storage_metrics_daily_rollup_schedule: #{sched}")
-      @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched, :job => true) do
+      cron("#{base_sched} #{tz}", :label => :storage_metrics_daily_rollup_schedule) do
         @queue.enq [:storage_metrics_rollup_daily, tp.id]
       end
     end
 
-    # Schedule - Storage metrics purge
     sched = cfg.fetch_with_fallback(:storage, :metrics_history, :purge_schedule)
-    _log.info("storage_metrics_purge_schedule: #{sched}")
-    @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched, :job => true) do
+    cron(sched, :label => :storage_metrics_purge_schedule) do
       @queue.enq :miq_storage_metric_purge_all_timer
     end
 
-    # Schedule - Storage inventory collection
     sched = cfg.fetch_with_fallback(:storage, :inventory, :full_refresh_schedule)
-    _log.info("storage_inventory_full_refresh_schedule: #{sched}")
-    @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched, :job => true) do
+    cron(sched, :label => :storage_inventory_full_refresh_schedule) do
       @queue.enq :storage_refresh_inventory
     end
   end
