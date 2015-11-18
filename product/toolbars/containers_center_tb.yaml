@@ -62,4 +62,5 @@
       :image: capacity
       :text: "Utilization"
       :title: "Show Capacity & Utilization data for this Container"
+      :url: '/explorer'
       :url_parms: '?display=performance'
