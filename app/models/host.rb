@@ -67,8 +67,8 @@ class Host < ActiveRecord::Base
   has_many                  :miq_events, :as => :target, :dependent => :destroy
 
   has_many                  :filesystems, :as => :resource, :dependent => :destroy
-  has_many                  :directories, -> { where("rsc_type = 'dir'") }, :as => :resource, :class_name => "Filesystem"
-  has_many                  :files,       -> { where("rsc_type = 'file'") }, :as => :resource, :class_name => "Filesystem"
+  has_many                  :directories, -> { where(:rsc_type => 'dir') },  :as => :resource, :class_name => "Filesystem"
+  has_many                  :files,       -> { where(:rsc_type => 'file') }, :as => :resource, :class_name => "Filesystem"
 
   # Accounts - Users and Groups
   has_many                  :accounts, :dependent => :destroy

@@ -12,6 +12,17 @@ describe Host do
     expect(described_class.joins(:users, :groups)).to eq [host1]
   end
 
+  it "directories and files joins" do
+    file1  = FactoryGirl.create(:filesystem, :rsc_type => "file")
+    file2  = FactoryGirl.create(:filesystem, :rsc_type => "file")
+    dir    = FactoryGirl.create(:filesystem, :rsc_type => "dir")
+    host1  = FactoryGirl.create(:host_vmware, :files => [file1], :directories => [dir])
+    host2  = FactoryGirl.create(:host_vmware, :files => [file2])
+    expect(described_class.joins(:files)).to match_array([host1, host2])
+    expect(described_class.joins(:directories)).to eq [host1]
+    expect(described_class.joins(:files, :directories)).to eq [host1]
+  end
+
   it "#save_drift_state" do
     # TODO: Beef up with more data
     host = FactoryGirl.create(:host_vmware)
