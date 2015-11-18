@@ -50,7 +50,7 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
   # Connections
   #
 
-  def self.raw_connect(access_key_id, secret_access_key, service, region = nil, proxy_uri = nil)
+  def self.raw_connect(access_key_id, secret_access_key, service, region, proxy_uri = nil)
     service ||= "EC2"
     proxy_uri ||= VMDB::Util.http_proxy_uri
 
@@ -176,13 +176,13 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     known_emses = all_emses.select { |e| e.authentication_userid == access_key_id }
     known_ems_regions = known_emses.index_by(&:provider_region)
 
-    ec2 = raw_connect(access_key_id, secret_access_key, "EC2")
-    ec2.regions.each do |region|
-      next if known_ems_regions.include?(region.name)
-      next if region.instances.count == 0 && # instances
-              region.images.with_owner(:self).count == 0 && # private images
-              region.images.executable_by(:self).count == 0  # shared  images
-      new_emses << create_discovered_region(region.name, access_key_id, secret_access_key, all_ems_names)
+    ec2 = raw_connect(access_key_id, secret_access_key, "EC2", "us-east-1")
+    ec2.client.describe_regions.regions.each do |region|
+      next if known_ems_regions.include?(region.region_name)
+      next if ec2.client.describe_instances({filters: [{name: "availability-zone", values: ["#{region}*"]}] })[:reservations].count == 0 && # instances
+              ec2.client.describe_images(:owners => [:self]).images.count == 0 && # private images
+              ec2.client.describe_images(:executable_users => [:self]).images.count == 0  # shared  images
+      new_emses << create_discovered_region(region.region_name, access_key_id, secret_access_key, all_ems_names)
     end
 
     # If greenfield Amazon, at least create the us-east-1 region.
