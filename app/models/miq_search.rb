@@ -31,7 +31,7 @@ class MiqSearch < ActiveRecord::Base
   end
 
   def self.get_expressions(options)
-    all(:conditions => options).each_with_object({}) do |r, hash|
+    where(options).each_with_object({}) do |r, hash|
       hash[r.description] = r.id unless r.filter.nil?
     end
   end
