@@ -55,7 +55,7 @@ class ExtManagementSystem < ActiveRecord::Base
   validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_id]}
   validates :hostname,
             :presence   => true,
-            :uniqueness => {:scope => [:tenant_id], :case_sensitive => false},
+            :uniqueness => {:case_sensitive => false},
             :if         => :hostname_required?
 
   # TODO: Remove all callers of address

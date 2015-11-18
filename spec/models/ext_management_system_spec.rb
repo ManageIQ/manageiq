@@ -193,10 +193,10 @@ describe ExtManagementSystem do
         end.to_not raise_error
       end
 
-      it "allowing duplicate hostname" do
+      it "not allowing duplicate hostname" do
         expect do
           FactoryGirl.create(:ems_vmware, :hostname => @ems.hostname, :tenant => @tenant2)
-        end.to_not raise_error
+        end.to raise_error(ActiveRecord::RecordInvalid)
       end
     end
   end
