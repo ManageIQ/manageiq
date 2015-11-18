@@ -2,11 +2,6 @@ require "spec_helper"
 
 describe ApplicationHelper do
   context "ToolbarChooser" do
-    before do
-      controller.send(:extend, ApplicationHelper)
-      self.class.send(:include, ApplicationHelper)
-    end
-
     def method_missing(sym, *args)
       b = _toolbar_chooser
       if b.respond_to?(sym, true)
