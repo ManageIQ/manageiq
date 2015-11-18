@@ -38,7 +38,7 @@ authentication:
 coresident_miqproxy:
   concurrent_per_ems: 1
   concurrent_per_host: 1
-  scan_via_host: true
+  scan_via_host: false
   use_vim_broker: true
 database:
   metrics_collection:
