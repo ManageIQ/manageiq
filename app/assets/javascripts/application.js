@@ -40,8 +40,16 @@
 //= require controllers/ops/log_collection_form_controller
 //= require controllers/ops/tenant_form_controller
 //= require controllers/ops/tenant_quota_form_controller
+//= require controllers/container_dashboard/util/util-module
+//= require controllers/container_dashboard/util/dashboard-utils
+//= require controllers/container_dashboard/util/chart-data-mixin
+//= require controllers/container_dashboard/util/chart-config-util
 //= require controllers/container_dashboard/container_dashboard_controller
-//= require controllers/container_dashboard/container_dashboard_utils
+//= require controllers/container_dashboard/card/card.module
+//= require controllers/container_dashboard/card/heatmaps/heatmaps-card-directive
+//= require controllers/container_dashboard/charts/charts-module
+//= require controllers/container_dashboard/charts/heatmap/heatmap-directive
+//= require controllers/container_dashboard/charts/heatmap/heatmap-legend-directive
 //= require controllers/container_topology/container_topology_controller
 //= require d3/d3
 //= require c3/c3

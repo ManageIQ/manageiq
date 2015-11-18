@@ -32,5 +32,29 @@
             </div><!-- /row -->
         </div>
     </div><!-- /row -->
+    <div class="row row-tile-pf">
+        <div class="col-xs-7 col-sm-7 col-md-7">
+            <div pf-card head-title="Node Utilization" hidetopborder="true">
+                <div class="row" ng-if="utilizationLoadingDone">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div pf-utilization-chart sparkline-chart-height="chartHeight" config="cpuUsageConfig" donut-config="cpuUsageDonutConfig" sparkline-config="cpuUsageSparklineConfig" chart-data="cpuUsageData"></div>
+                        <span class="trend-footer-pf">Last 30 Days</span>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div pf-utilization-chart sparkline-chart-height="chartHeight" config="memoryUsageConfig" donut-config="memoryUsageDonutConfig" sparkline-config="memoryUsageSparklineConfig" chart-data="memoryUsageData"></div>
+                        <span class="trend-footer-pf">Last 30 Days</span>
+                    </div>
+                </div>
+                <div ng-if="!utilizationLoadingDone" class="spinner spinner-lg loading"></div>
+            </div>
+        </div>
+    </div><!-- /row -->
+    <div class="row row-tile-pf row-tile-pf-last">
+        <div class="col-md-7">
+            <div heatmaps-card title="Node Utilization" hidetopborder="true"
+                 heatmaps="heatmaps" heatmap-chart-height="dashboardHeatmapChartHeight" columnSizingClass="col-xs-8 col-sm-6 col-md-6"
+                 heat-map-usage-legend-labels="nodeHeatMapUsageLegendLabels">
+            </div>
+        </div>
+    </div>
 </div>
-
