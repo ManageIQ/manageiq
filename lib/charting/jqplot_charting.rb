@@ -52,6 +52,11 @@ class JqplotCharting < Charting
     JqplotThemes::THEMES.collect { |name, _| [name, name] }
   end
 
+  def serialized(data)
+    # ruby hash to yaml
+    data.try(:to_yaml)
+  end
+
   private
 
   def add_sample_chart_data(options, chart)

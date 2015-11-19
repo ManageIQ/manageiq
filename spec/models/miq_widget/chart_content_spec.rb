@@ -60,4 +60,9 @@ describe "Widget Chart Content" do
     content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }.should eq(3)
     widget.contents_for_user(@user).should eq(content)
   end
+
+  it '#generate returns valid data' do
+    content = widget.generate_one_content_for_user(@group, @user)
+    expect(Charting.data_ok? content.contents).to eq(true)
+  end
 end
