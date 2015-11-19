@@ -78,8 +78,8 @@ class MiqReportResult < ActiveRecord::Base
   end
 
   def report_results=(value)
-    build_binary_blob(:name => "report_results", :data_type => "YAML")
-    binary_blob.binary = YAML.dump(value.kind_of?(MiqReport) ? value.to_hash : value)
+    build_binary_blob(:name => "report_results")
+    binary_blob.store_data("YAML", value.kind_of?(MiqReport) ? value.to_hash : value)
   end
 
   def report_html=(html)

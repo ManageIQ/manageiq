@@ -101,4 +101,9 @@ class BinaryBlob < ActiveRecord::Base
   def data
     serializer.load(binary)
   end
+
+  def store_data(data_type, the_data)
+    self.data_type = data_type
+    self.binary = serializer.dump(the_data)
+  end
 end

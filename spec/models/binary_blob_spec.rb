@@ -77,6 +77,26 @@ describe BinaryBlob do
     end
   end
 
+  describe "serializing and deserializing data" do
+    it "can store and load data as YAML" do
+      bb = FactoryGirl.build(:binary_blob)
+      data = "foo"
+
+      bb.store_data("YAML", data)
+
+      expect(bb.data).to eq(data)
+    end
+
+    it "can store and load Marshaled data" do
+      bb = FactoryGirl.build(:binary_blob)
+      data = "foo"
+
+      bb.store_data("Marshal", data)
+
+      expect(bb.data).to eq("foo")
+    end
+  end
+
   describe "#serializer" do
     it "returns YAML if the data_type is YAML" do
       bb = FactoryGirl.build(:binary_blob, :data_type => "YAML")
