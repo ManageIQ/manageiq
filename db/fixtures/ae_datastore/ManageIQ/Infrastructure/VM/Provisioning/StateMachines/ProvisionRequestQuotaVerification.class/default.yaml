@@ -7,7 +7,4 @@ object:
     name: Default
     inherits: 
     description: 
-  fields:
-  - ValidateQuotas:
-      value: "/System/Commonmethods/quota/vm_quota"
-      on_entry: "#"
+  fields: []
