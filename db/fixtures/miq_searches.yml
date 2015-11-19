@@ -1255,22 +1255,22 @@
     db: Container
 - attributes:
     name: default_Project / Pod
-    description: Project / Pod
+    description: Default Project / Pods
     filter: !ruby/object:MiqExpression
       exp:
         "=":
-          field: ContainerGroup-project
+          field: ContainerGroup.container_project-name
           value: default
     search_type: default
     db: ContainerGroup
 - attributes:
     name: default_Project / ContainerService
-    description: Project / Container Services
+    description: Default Project / Container Services
     filter: !ruby/object:MiqExpression
       exp:
         "=":
-          field: ContainerService-project
+          field: ContainerService.container_project-name
           value: default
     search_type: default
     db: ContainerService
-    
+
