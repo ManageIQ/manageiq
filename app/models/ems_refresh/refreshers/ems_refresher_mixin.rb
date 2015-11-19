@@ -77,20 +77,15 @@ module EmsRefresh
       end
 
       def fetch_entities(client, entities)
-        h = {}
-        entities.each do |entity|
+        entities.each_with_object({}) do |entity, h|
           begin
-            h[entity[:name].singularize] = client.send("get_" << entity[:name])
+            h[entity[:name].singularize] = client.send("get_#{entity[:name]}")
           rescue KubeException => e
-            if entity[:default].nil?
-              throw e
-            else
-              $log.error("Unexpected Exception during refresh: #{e}")
-              h[entity[:name].singularize] = entity[:default]
-            end
+            raise e if entity[:default].nil?
+            $log.error("Unexpected Exception during refresh: #{e}")
+            h[entity[:name].singularize] = entity[:default]
           end
         end
-        h
       end
     end
   end
