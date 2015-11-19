@@ -85,6 +85,18 @@ module ManageIQ::Providers
       @servers ||= @connection.handled_list(:servers)
     end
 
+    def availability_zones_compute
+      @availability_zones_compute ||= @connection.availability_zones
+    end
+
+    def availability_zones_volume
+      @availability_zones_volume ||= @volume_service.availability_zones
+    end
+
+    def availability_zones
+      @availability_zones ||= availability_zones_compute + availability_zones_volume
+    end
+
     def volumes
       # TODO: support volumes through :nova as well?
       return [] unless @volume_service.name == :cinder
@@ -102,9 +114,7 @@ module ManageIQ::Providers
     end
 
     def get_availability_zones
-      azs = servers.collect(&:availability_zone)
-      azs.concat(volumes.collect(&:availability_zone)).compact!
-      azs.uniq!
+      azs = availability_zones
       azs << nil # force the null availability zone for openstack
       process_collection(azs, :availability_zones) { |az| parse_availability_zone(az) }
     end
@@ -196,7 +206,7 @@ module ManageIQ::Providers
           :ems_ref => uid
         }
       else
-        uid = name = az
+        uid = name = az.zoneName
         new_result = {
           :type    => "ManageIQ::Providers::Openstack::CloudManager::AvailabilityZone",
           :ems_ref => uid,
