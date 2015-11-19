@@ -42,6 +42,10 @@ class ManageIQ::Providers::Openstack::CloudManager::Template < ManageIQ::Provide
     }
   end
 
+  def allocated_disk_storage
+    hardware.try(:size_on_disk)
+  end
+
   def has_active_proxy?
     true
   end

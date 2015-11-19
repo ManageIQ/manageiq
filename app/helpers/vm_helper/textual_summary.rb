@@ -211,6 +211,7 @@ module VmHelper::TextualSummary
   end
 
   def textual_retirement_date
+    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
     {:label => "Retirement Date", :image => "retirement", :value => (@record.retires_on.nil? ? "Never" : @record.retires_on.to_time.strftime("%x"))}
   end
 
