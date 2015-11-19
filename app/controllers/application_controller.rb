@@ -2618,4 +2618,5 @@ class ApplicationController < ActionController::Base
   def restful?
     false
   end
+  public :restful?
 end
