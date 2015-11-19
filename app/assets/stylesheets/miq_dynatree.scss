@@ -15,6 +15,12 @@ ul.dynatree-container
 	height: 100%; /* issue 263 */
 }
 
+/* makes tree scrollable within a modal */
+
+.modal-body ul.dynatree-container{
+  overflow: auto !important;
+}
+
 /* overrides dynatree styling within patternfly accordion */
 
 #accordion .panel-body {
