@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe ServiceTemplate do
+describe ServiceOrchestration do
   let(:manager_by_setter)  { FactoryGirl.create(:ems_amazon) }
   let(:template_by_setter) { FactoryGirl.create(:orchestration_template) }
   let(:manager_by_dialog)  { FactoryGirl.create(:ems_amazon) }
@@ -155,6 +155,27 @@ describe ServiceTemplate do
       status, message = service_with_deployed_stack.orchestration_stack_status
       status.should == 'check_status_failed'
       message.should == 'test failure'
+    end
+  end
+
+  context '#all_vms' do
+    it 'returns all vms from a deployed stack' do
+      vm1 = double
+      vm2 = double
+      allow(deployed_stack).to receive(:vms).and_return([vm1, vm2])
+      allow(deployed_stack).to receive(:direct_vms).and_return([vm1])
+
+      expect(service_with_deployed_stack.all_vms).to eq([vm1, vm2])
+      expect(service_with_deployed_stack.direct_vms).to eq([vm1])
+      expect(service_with_deployed_stack.indirect_vms).to eq([vm2])
+      expect(service_with_deployed_stack.vms).to eq([vm1, vm2])
+    end
+
+    it 'returns no vm if no stack is deployed' do
+      expect(service.all_vms).to be_empty
+      expect(service.direct_vms).to be_empty
+      expect(service.indirect_vms).to be_empty
+      expect(service.vms).to be_empty
     end
   end
 end

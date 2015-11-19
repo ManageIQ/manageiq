@@ -132,7 +132,7 @@ describe MiqExpression do
       end
 
       it "one_to_many relation" do
-        @ref = OrchestrationStack.reflect_on_association(:vms)
+        @ref = OrchestrationStack.reflections_with_virtual[:vms]
         expect(subject).to eq(@ref.klass.model_name.plural)
       end
     end
