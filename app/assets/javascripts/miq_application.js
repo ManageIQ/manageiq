@@ -1400,7 +1400,7 @@ function miqInitMainContent() {
   var toolbar = $('#toolbar');
   var footer = $('#paging_div');
   var height = 0;
-  if (footer.find('.toolbar-pf-actions *:visible').length > 0) {
+  if (footer.find('*:visible').length > 0) {
     height += footer.outerHeight();
   }
   if (toolbar.find("*:visible").length > 0) {
