@@ -60,7 +60,7 @@ object:
       owner: 
       default_value: 
       substitute: true
-      message: get_state_machine
+      message: get_dialog_name
       visibility: 
       collect: 
       scope: 
