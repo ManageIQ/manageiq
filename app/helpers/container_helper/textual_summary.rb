@@ -18,6 +18,15 @@ module ContainerHelper::TextualSummary
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
+  def textual_group_env
+    @record.container_definition.container_env_vars.collect do |var|
+      {
+        :label => "[#{(var.value.nil? ? "REFERENCE" : "VALUE")}] #{var.name}",
+        :value => (var.value.nil? ? var.field_path : var.value)
+      }
+    end
+  end
+
   #
   # Items
   #
