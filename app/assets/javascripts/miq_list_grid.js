@@ -41,12 +41,12 @@ function miqOrderService(id) {
 }
 
 // Handle checkbox
-function miqGridOnCheck(elem, button_div) {
+function miqGridOnCheck(elem, button_div, grid) {
   if (elem) {
     miqUpdateButtons(elem, button_div);
   }
 
-  var crows = miqGridGetCheckedRows();
+  var crows = miqGridGetCheckedRows(grid);
   $('#miq_grid_checks').val(crows.join(','));
 
   if (miqDomElementExists('center_tb')) {
