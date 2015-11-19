@@ -108,7 +108,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_ipaddress
-    @record.ipaddress
+    {:label => "IP Address", :value => "#{@record.ipaddress}"}
   end
 
   def textual_ipmi_ipaddress
