@@ -85,79 +85,79 @@
             %span.pficon.pficon-user{params}
               = h(u.name)
             %br
-      - unless @edit
-        = render :partial => "rbac_tag_box"
-      - if @edit
-        #group_lookup{:style => "display:none"}
-          %fieldset
-            %h3
-              = _("LDAP Group Look Up")
-            .form-horizontal
-              .form-group#user_id_ext_auth_form_group
-                %label.col-md-2.control-label
-                  = _("User to Look Up")
-                .col-md-8
-                  = text_field_tag("user",
-                                   @edit[:new][:user],
-                                   :maxlength         => 255,
+    - unless @edit
+      = render :partial => "rbac_tag_box"
+    - if @edit
+      #group_lookup{:style => "display:none"}
+        %hr
+        %h3
+          = _("LDAP Group Look Up")
+        .form-horizontal
+          .form-group#user_id_ext_auth_form_group
+            %label.col-md-2.control-label
+              = _("User to Look Up")
+            .col-md-8
+              = text_field_tag("user",
+                               @edit[:new][:user],
+                               :maxlength         => 255,
+                               :class => "form-control",
+                               "data-miq_observe" => {:interval => '.5',
+                                                      :url      => url}.to_json)
+            .col-md-12{:align => "right", :valign => "bottom"}
+              = link_to("Retrieve",
+                        {:action => "rbac_group_user_lookup",
+                         :button => "submit",
+                         :id     => "#{@edit[:group_id] || "new"}"},
+                         :class => "btn btn-primary",
+                         :alt   => _("LDAP Group Lookup"),
+                         "data-miq_sparkle_on"  => true,
+                         "data-miq_sparkle_off" => true,
+                         :remote                => true,
+                         :title                 => _("LDAP Group Lookup"))
+
+          .form-group#user_id_form_group
+            %label.col-md-2.control-label
+              = _("User to Look Up")
+            .col-md-8
+              = text_field_tag("user",
+                               @edit[:new][:user],
+                               :maxlength         => 255,
+                               :class => "form-control",
+                               "data-miq_observe" => {:interval => '.5',
+                                                      :url      => url}.to_json)
+
+          .form-group#user_name_form_group
+            %label.col-md-2.control-label
+              = _("Username")
+            .col-md-8
+              = text_field_tag("user_id",
+                               @edit[:new][:user_id],
+                               :maxlength         => 255,
+                               :class => "form-control",
+                               "data-miq_observe" => {:interval => '.5',
+                                                      :url      => url}.to_json)
+
+          .form-group#user_password_form_group
+            %label.col-md-2.control-label
+              = _("Password")
+            .col-md-8
+              = password_field_tag("password",
+                                   @edit[:new][:password],
+                                   :maxlength         => 50,
                                    :class => "form-control",
                                    "data-miq_observe" => {:interval => '.5',
                                                           :url      => url}.to_json)
-                .col-md-12{:align => "right", :valign => "bottom"}
-                  = link_to("Retrieve",
-                            {:action => "rbac_group_user_lookup",
-                             :button => "submit",
-                             :id     => "#{@edit[:group_id] || "new"}"},
-                             :class => "btn btn-primary",
-                             :alt   => _("LDAP Group Lookup"),
-                             "data-miq_sparkle_on"  => true,
-                             "data-miq_sparkle_off" => true,
-                             :remote                => true,
-                             :title                 => _("LDAP Group Lookup"))
-
-              .form-group#user_id_form_group
-                %label.col-md-2.control-label
-                  = _("User to Look Up")
-                .col-md-8
-                  = text_field_tag("user",
-                                   @edit[:new][:user],
-                                   :maxlength         => 255,
-                                   :class => "form-control",
-                                   "data-miq_observe" => {:interval => '.5',
-                                                          :url      => url}.to_json)
-
-              .form-group#user_name_form_group
-                %label.col-md-2.control-label
-                  = _("Username")
-                .col-md-8
-                  = text_field_tag("user_id",
-                                   @edit[:new][:user_id],
-                                   :maxlength         => 255,
-                                   :class => "form-control",
-                                   "data-miq_observe" => {:interval => '.5',
-                                                          :url      => url}.to_json)
-
-              .form-group#user_password_form_group
-                %label.col-md-2.control-label
-                  = _("Password")
-                .col-md-8
-                  = password_field_tag("password",
-                                       @edit[:new][:password],
-                                       :maxlength         => 50,
-                                       :class => "form-control",
-                                       "data-miq_observe" => {:interval => '.5',
-                                                              :url      => url}.to_json)
-                .col-md-12{:align => "right", :valign => "bottom"}
-                  = link_to("Retrieve",
-                            {:action => "rbac_group_user_lookup",
-                             :button => "submit",
-                             :id     => "#{@edit[:group_id] || "new"}"},
-                             :class => "btn btn-primary",
-                             :alt   => _("LDAP Group Lookup"),
-                             "data-miq_sparkle_on"  => true,
-                             "data-miq_sparkle_off" => true,
-                             :remote                => true,
-                             :title                 => _("LDAP Group Lookup"))
+            .col-md-12{:align => "right", :valign => "bottom"}
+              = link_to("Retrieve",
+                        {:action => "rbac_group_user_lookup",
+                         :button => "submit",
+                         :id     => "#{@edit[:group_id] || "new"}"},
+                         :class => "btn btn-primary",
+                         :alt   => _("LDAP Group Lookup"),
+                         "data-miq_sparkle_on"  => true,
+                         "data-miq_sparkle_off" => true,
+                         :remote                => true,
+                         :title                 => _("LDAP Group Lookup"))
 
   %hr
   %h3
