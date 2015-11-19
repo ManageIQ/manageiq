@@ -22,6 +22,7 @@ module ManageIQ::Providers
 
         _log.info("#{log_header}...")
         get_zones
+        get_flavors
         get_images
         get_instances
         _log.info("#{log_header}...Complete")
@@ -34,6 +35,11 @@ module ManageIQ::Providers
       def get_zones
         zones = @connection.zones.all
         process_collection(zones, :availability_zones) { |zone| parse_zone(zone) }
+      end
+
+      def get_flavors
+        flavors = @connection.flavors.all
+        process_collection(flavors, :flavors) { |flavor| parse_flavor(flavor) }
       end
 
       def get_images
@@ -53,7 +59,7 @@ module ManageIQ::Providers
           uid, new_result = yield(item)
           next if uid.nil?
 
-          @data[key] << new_result
+          @data[key] |= [new_result]
           @data_index.store_path(key, uid, new_result)
         end
       end
@@ -66,6 +72,24 @@ module ManageIQ::Providers
           :type    => type,
           :ems_ref => uid,
           :name    => name,
+        }
+
+        return uid, new_result
+      end
+
+      def parse_flavor(flavor)
+        uid = flavor.name
+
+        type = ManageIQ::Providers::Google::CloudManager::Flavor.name
+        new_result = {
+          :type        => type,
+          :ems_ref     => flavor.name,
+          :name        => flavor.name,
+          :description => flavor.description,
+          :enabled     => !flavor.deprecated,
+          :cpus        => flavor.guest_cpus,
+          :cpu_cores   => flavor.guest_cpus,
+          :memory      => flavor.memory_mb * 1.megabyte,
         }
 
         return uid, new_result
