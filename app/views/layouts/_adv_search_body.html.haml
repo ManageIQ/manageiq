@@ -67,7 +67,7 @@
       .form-horizontal
         .form-group
           %label.control-label.col-md-5
-            = _("Save this %s search as:") % @edit[@expkey][:exp_model]
+            = _("Save this %s search as:") % ui_lookup(:model => @edit[@expkey][:exp_model])
           .col-md-6
             %span#search_name_span
               = text_field_tag("search_name",
