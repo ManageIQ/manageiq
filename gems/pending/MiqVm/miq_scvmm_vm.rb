@@ -2,37 +2,6 @@ require 'MiqVm/MiqVm'
 require 'Scvmm/miq_scvmm_vm_ssa_info'
 
 class MiqScvmmVm < MiqVm
-  def openDisks(disk_files)
-    part_volumes = []
-
-    $log.debug "MiqScvmmVm::openDisks: no disk files supplied." unless disk_files
-    raise "MiqScvmmVm::openDisks: Uninitialized miq_scvmm" if @ost.miq_hyperv.nil?
-    #
-    # Build a list of the VM's physical volumes.
-    #
-    disk_files.each do |disk_tag, disk_file|
-      disk_info = init_disk_info(disk_file, disk_tag)
-
-      begin
-        disk = MiqDisk.getDisk(disk_info)
-        next if disk.nil?
-      rescue => err
-        $log.error "Couldn't open disk file: #{disk_file} #{err}"
-        $log.debug err.backtrace.join("\n")
-        @diskInitErrors[disk_file] = err.to_s
-        next
-      end
-
-      part = disk.getPartitions
-      if part.empty?
-        part_volumes << disk
-      else
-        part_volumes.concat(part)
-      end
-    end
-    part_volumes
-  end
-
   def getCfg(_snap = nil)
     cfg_hash = {}
     # Collect disk information
@@ -63,8 +32,7 @@ class MiqScvmmVm < MiqVm
 
   private
 
-  def init_disk_info(disk_file, disk_tag)
-    disk_info                          = OpenStruct.new
+  def init_disk_info(disk_info, disk_file)
     disk_info.hyperv_connection        = {}
     disk_info.fileName                 = disk_file
     disk_info.hyperv_connection[:host] = @ost.miq_hyperv[:host]
@@ -75,11 +43,5 @@ class MiqScvmmVm < MiqVm
       disk_info.hyperv_connection[:user] = @ost.miq_hyperv[:domain] + "\\" + @ost.miq_hyperv[:user]
     end
     disk_info.hyperv_connection[:password] = @ost.miq_hyperv[:password]
-
-    mode                 = @vmConfig.getHash["#{disk_tag}.mode"]
-    disk_info.hardwareId = disk_tag
-    disk_info.baseOnly   = @ost.openParent unless mode && mode["independent"]
-    disk_info.rawDisk    = @ost.rawDisk
-    disk_info
   end
 end

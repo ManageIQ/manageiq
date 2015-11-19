@@ -13,12 +13,4 @@ class ManageIQ::Providers::Microsoft::InfraManager::Vm < ManageIQ::Providers::In
   def validate_migrate
     validate_unsupported("Migrate")
   end
-
-  def validate_smartstate_analysis
-    validate_supported_check("Smartstate Analysis")
-  end
-
-  def scan_via_ems?
-    false
-  end
 end

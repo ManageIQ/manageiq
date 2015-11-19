@@ -14,18 +14,13 @@ class MiqWinRM
   end
 
   def connect(options = {})
-    raise "no Username defined" if options[:user].nil?
-    raise "no Password defined" if options[:pass].nil?
-    raise "no Hostname defined" if options[:hostname].nil?
-    @username    = options[:user]
-    @password    = options[:pass]
-    @hostname    = options[:hostname]
-    @port        = options[:port] unless options[:port].nil?
-    @uri         = build_uri
-    @connection  = raw_connect(@username, @password, @uri)
+    validate_options(options)
+    @uri        = build_uri
+    @connection = raw_connect(@username, @password, @uri)
   end
 
   def run_powershell_script(script)
+    $log.debug "Running powershell script on #{hostname} as #{username}:\n#{script}"
     @connection.run_powershell_script(script)
   rescue WinRM::WinRMAuthorizationError
     $log.info "Error Logging In to #{hostname} using user \"#{username}\""
@@ -33,6 +28,16 @@ class MiqWinRM
   end
 
   private
+
+  def validate_options(options)
+    raise "no Username defined" if options[:user].nil?
+    raise "no Password defined" if options[:pass].nil?
+    raise "no Hostname defined" if options[:hostname].nil?
+    @username = options[:user]
+    @password = options[:pass]
+    @hostname = options[:hostname]
+    @port     = options[:port] unless options[:port].nil?
+  end
 
   def raw_connect(user, pass, uri)
     # HACK: WinRM depends on the gssapi gem for encryption purposes.

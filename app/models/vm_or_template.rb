@@ -1055,8 +1055,6 @@ class VmOrTemplate < ActiveRecord::Base
     when 'VMware'
       # VM cannot be scanned by server if they are on a repository
       return [] if storage_id.blank? || self.repository_vm?
-    when 'RedHat'
-      return [] if storage_id.blank?
     when 'Microsoft'
       return [] if storage_id.blank?
     else

@@ -48,6 +48,7 @@ class MiqVm
       @vmConfig = VmConfig.new(getCfg(@ost.snapId))
       $log.debug "MiqVm::initialize: @vmConfig.getHash = #{@vmConfig.getHash.inspect}"
       $log.debug "MiqVm::initialize: @vmConfig.getDiskFileHash = #{@vmConfig.getDiskFileHash.inspect}"
+    # TODO: move this to miq_scvmm_vm
     elsif @ost.miq_hyperv
       $log.debug "MiqVm::initialize: accessing VM through HyperV server" if $log.debug?
       @scvmm_vm = @ost.miq_vm
@@ -70,7 +71,7 @@ class MiqVm
   end
 
   def openDisks(diskFiles)
-    pVolumes = Array.new
+    pVolumes = []
 
     $log.debug "openDisks: no disk files supplied." unless diskFiles
 
@@ -99,6 +100,8 @@ class MiqVm
           $log.debug "openDisks (ESX): using disk file path: #{dInfo.vixDiskInfo[:fileName]}"
         end
         dInfo.vixDiskInfo[:connection]  = @vdlConnection
+      elsif @ost.miq_hyperv
+        init_disk_info(dInfo, df)
       else
         dInfo.fileName = df
         disk_format = @vmConfig.getHash["#{dtag}.format"]  # Set by rhevm for iscsi and fcp disks
@@ -109,7 +112,7 @@ class MiqVm
 
       dInfo.hardwareId = dtag
       dInfo.baseOnly = @ost.openParent unless mode && mode["independent"]
-      dInfo.rawDisk = @ost.rawDisk # force raw disk for testing
+      dInfo.rawDisk = @ost.rawDisk
       $log.debug "MiqVm::openDisks: dInfo.baseOnly = #{dInfo.baseOnly}"
 
       begin

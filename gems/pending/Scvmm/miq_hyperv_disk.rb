@@ -18,11 +18,7 @@ class MiqHyperVDisk
     @hostname  = hyperv_host
     @winrm     = MiqWinRM.new
     port ||= 5985
-    options = {:port     => port,
-               :user     => user,
-               :pass     => pass,
-               :hostname => @hostname
-              }
+    options = {:port => port, :user => user, :pass => pass, :hostname => @hostname}
     @connection  = @winrm.connect(options)
     @parser      = MiqScvmmParsePowershell.new
     @block_size  = 4096
@@ -50,8 +46,7 @@ STAT_EOL
 
   def close
     @file_offset   = 0
-    @connection    = nil
-    @winrm         = nil
+    @connection    = @winrm = nil
   end
 
   def seek(offset, whence = IO::SEEK_SET)

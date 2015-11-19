@@ -105,7 +105,7 @@ class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraM
   def vm_create_evm_snapshot(vm, options = {})
     log_prefix = "vm_create_evm_snapshot: vm=[#{vm.name}]"
 
-    host_handle = vm_host_handle(vm, options)
+    host_handle = host_handle(vm, options)
     host_handle.vm_create_evm_checkpoint(vm.name)
   rescue => err
     $scvmm_log.error "#{log_prefix}, error: #{err}"
@@ -116,7 +116,7 @@ class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraM
   def vm_delete_evm_snapshot(vm, options = {})
     log_prefix = "vm_delete_evm_snapshot: vm=[#{vm.name}]"
 
-    host_handle = vm_host_handle(vm, options)
+    host_handle = host_handle(vm, options)
     host_handle.vm_remove_evm_checkpoint(vm.name)
   rescue => err
     $scvmm_log.error "#{log_prefix}, error: #{err}"
@@ -156,7 +156,7 @@ class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraM
     connect_params
   end
 
-  def vm_host_handle(vm, options)
+  def host_handle(vm, options)
     require 'Scvmm/miq_scvmm_vm_ssa_info'
     raise "no credentials defined in options #{options}" if self.missing_credentials?(options[:auth_type])
     user = options[:user] || authentication_userid(options[:auth_type])

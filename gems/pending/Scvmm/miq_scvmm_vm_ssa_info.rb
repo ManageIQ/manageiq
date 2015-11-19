@@ -13,11 +13,7 @@ class MiqScvmmVmSSAInfo
     @vhd_type    = nil
     @winrm       = MiqWinRM.new
     winrmport    = port.nil? ? 5985 : port
-    options      = {:port     => winrmport,
-                    :user     => user,
-                    :pass     => pass,
-                    :hostname => provider
-                   }
+    options      = {:port     => winrmport, :user     => user, :pass     => pass, :hostname => provider}
 
     @connection = @winrm.connect(options)
     @parser     = MiqScvmmParsePowershell.new

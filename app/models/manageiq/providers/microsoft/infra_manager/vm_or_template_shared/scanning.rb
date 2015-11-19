@@ -7,8 +7,7 @@ module ManageIQ::Providers::Microsoft::InfraManager::VmOrTemplateShared::Scannin
     $log.debug "#{log_pref} VM = #{vm_name}"
 
     begin
-      $log.debug "perform_metadata_scan: vm_name = #{vm_name}"
-      connect_to_ems(vm_name, ost)
+      setup_for_ems_connection(vm_name, ost)
       miq_vm = MiqScvmmVm.new(vm_name, ost)
       scan_via_miq_vm(miq_vm, ost)
     rescue => err
@@ -24,11 +23,19 @@ module ManageIQ::Providers::Microsoft::InfraManager::VmOrTemplateShared::Scannin
     sync_stashed_metadata(ost)
   end
 
+  def validate_smartstate_analysis
+    validate_supported_check("Smartstate Analysis")
+  end
+
+  def scan_via_ems?
+    false
+  end
+
   private
 
   # Moved from MIQExtract.rb
   # TODO: Should this be in the ems?
-  def connect_to_ems(vm_name, ost)
+  def setup_for_ems_connection(vm_name, ost)
     log_header = "MIQ(#{self.class.name}.#{__method__})"
 
     # Check if we've been told explicitly not to connect to the ems
@@ -45,7 +52,7 @@ module ManageIQ::Providers::Microsoft::InfraManager::VmOrTemplateShared::Scannin
       use_broker = false
       miq_vm_host[:address] = miq_vm_host[:ipaddress] if miq_vm_host[:address].nil?
       ems_text = "#{ems_connect_type}(#{use_broker ? 'via broker' : 'directly'}):#{miq_vm_host[:address]}"
-      log.text = "#{log_header}: Connection to [#{ems_text}]"
+      log_text = "#{log_header}: Connection to [#{ems_text}]"
       $log.info "#{log_header}: Connecting to [#{ems_text}] for VM:[#{vm_name}]"
       miq_vm_host[:password_decrypt] = MiqPassword.decrypt(miq_vm_host[:password])
 
