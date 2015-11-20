@@ -8,9 +8,7 @@ module MiqReportable
     end
 
     Ruport::Data::Table.new(:data         => data.collect(&:last),
-                            :column_names => data.collect(&:first).flatten.uniq,
-                            :record_class => nil,
-                            :filters      => nil)
+                            :column_names => data.collect(&:first).flatten.uniq)
   end
 
   # generate a ruport table from an array of hashes where the keys are the column names
