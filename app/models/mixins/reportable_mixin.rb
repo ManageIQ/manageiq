@@ -133,13 +133,12 @@ module ReportableMixin
     options = {
         :include     => nil,
         :only        => columns,
-        :except      => nil,
         :tag_filters => nil,
         :methods     => nil
     }
     only_or_except =
-      if options[:only] || options[:except]
-        {:only => options[:only], :except => options[:except]}
+      if options[:only]
+        {:only => options[:only], :except => nil}
       end
     return {} unless only_or_except
 
