@@ -53,8 +53,6 @@ module ReportableMixin
     data_records = [get_attributes_with_options(columns)]
     columns = data_records.first.keys
 
-    data_records =
-      add_includes(data_records, nil) if nil
     [columns, data_records]
   end
 
