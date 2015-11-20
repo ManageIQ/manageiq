@@ -16,8 +16,4 @@ class ChangeOptionsInMiqAlert < ActiveRecord::Migration
       end
     end
   end
-
-  def down
-    # Non-reversible
-  end
 end

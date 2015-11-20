@@ -28,9 +28,6 @@ class CorrectUserCreatedRoleFeatureSets < ActiveRecord::Migration
     end
   end
 
-  def down
-  end
-
   def affected_user_roles
     MiqUserRole
       .includes(:miq_product_features)
