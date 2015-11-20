@@ -3,7 +3,7 @@ module MiqReportable
   def self.records2table(records, only_columns)
     return Ruport::Data::Table.new if records.blank?
 
-    data_records =  records.map do |r|
+    data_records = records.map do |r|
       r.get_attributes(only_columns)
     end
 
