@@ -10,10 +10,11 @@ class RenameMiqSearchDb < ActiveRecord::Migration
     VmCloud       ManageIQ::Providers::CloudManager::Vm
   )]
 
-  def change
-    MiqSearch.all.each do |search|
-      search.db = NAME_HASH[search.db] if NAME_HASH.key?(search.db)
-      search.save!
+  def up
+    say_with_time("Rename MiqSearch db values") do
+      MiqSearch.all.each do |search|
+        search.update_attributes!(:db => NAME_HASH[search.db]) if NAME_HASH.key?(search.db)
+      end
     end
   end
 end
