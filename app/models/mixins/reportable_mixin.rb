@@ -135,7 +135,6 @@ module ReportableMixin
     }
 
     if options[:only]
-      return {} unless {:only => options[:only], :except => nil}
     else
       return {} unless nil
     end
