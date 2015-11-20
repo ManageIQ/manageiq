@@ -290,28 +290,17 @@ describe Host do
   end
 
   context "#get_ports" do
+    let(:os) { FactoryGirl.create(:operating_system) }
+    subject  { FactoryGirl.create(:host, :operating_system => os) }
+
     before do
-      @host = FactoryGirl.create(:host_vmware)
-      os = FactoryGirl.create(:operating_system, :name => 'XUNIL')
-      @host.operating_system = os
-      fr1 = FactoryGirl.create(:firewall_rule, :name => 'fr1', :host_protocol => 'udp',
-                               :direction => "in", :enabled => true, :port => 1001)
-      fr2 = FactoryGirl.create(:firewall_rule, :name => 'fr2', :host_protocol => 'udp',
-                               :direction => "out", :enabled => true, :port => 1002)
-      fr3 = FactoryGirl.create(:firewall_rule, :name => 'fr3', :host_protocol => 'tcp',
-                               :direction => "in", :enabled => true, :port => 1003)
-      [fr1, fr2, fr3].each do |fr|
-        fr.update_attributes(:resource_type => os.class.name, :resource_id => os.id)
-      end
+      FactoryGirl.create(:firewall_rule, :host_protocol => 'udp', :direction => "in", :enabled => true, :port => 1001, :resource => os)
+      FactoryGirl.create(:firewall_rule, :host_protocol => 'udp', :direction => "out", :enabled => true, :port => 1002, :resource => os)
+      FactoryGirl.create(:firewall_rule, :host_protocol => 'tcp', :direction => "in", :enabled => true, :port => 1003, :resource => os)
     end
 
-    it "#enabled_udp_outbound_ports" do
-      expect(@host.enabled_udp_outbound_ports).to match_array([1002])
-    end
-
-    it "#enabled_inbound_ports" do
-      expect(@host.enabled_inbound_ports).to match_array([1003, 1001])
-    end
+    it("#enabled_udp_outbound_ports") { expect(subject.enabled_udp_outbound_ports).to match_array([1002]) }
+    it("#enabled_inbound_ports")      { expect(subject.enabled_inbound_ports).to      match_array([1003, 1001]) }
   end
 
   context ".node_types" do
