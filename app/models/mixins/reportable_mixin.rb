@@ -50,18 +50,11 @@ module ReportableMixin
   end
 
   def reportable_data_with_columns(columns)
-    options = {
-      :include     => nil,
-      :only        => columns,
-      :except      => nil,
-      :tag_filters => nil,
-      :methods     => nil
-    }
-    data_records = [get_attributes_with_options(options)]
+    data_records = [get_attributes_with_options(columns)]
     columns = data_records.first.keys
 
     data_records =
-      add_includes(data_records, options[:include]) if options[:include]
+      add_includes(data_records, nil) if nil
     [columns, data_records]
   end
 
@@ -136,7 +129,14 @@ module ReportableMixin
     data_records
   end
 
-  def get_attributes_with_options(options = {})
+  def get_attributes_with_options(columns)
+    options = {
+        :include     => nil,
+        :only        => columns,
+        :except      => nil,
+        :tag_filters => nil,
+        :methods     => nil
+    }
     only_or_except =
       if options[:only] || options[:except]
         {:only => options[:only], :except => options[:except]}
@@ -152,7 +152,7 @@ module ReportableMixin
     attrs
   end
 
-  def get_attributes_with_options_vague(options = {})
+  def get_attributes_with_options_vague(options)
     only_or_except =
         if options[:only] || options[:except]
           {:only => options[:only], :except => options[:except]}
