@@ -9,65 +9,6 @@ module ReportableMixin
       true
     end
 
-    def report_table(number = :all, options = {})
-      only = options.delete(:only).collect { |c| "category." == c[0..8] ? nil : c }.compact
-      except = options.delete(:except)
-      includes = options.delete(:include)
-      includes_categories = includes.delete("categories") if includes
-      record_class = options.delete(:record_class) || Ruport::Data::Record
-      tag_filters = options.delete(:tag_filters)
-      limit = includes ? options.delete(:limit) : nil # consume the limit here so that is can be applied later after includes are added in.
-
-      unless options.delete(:eager_loading) == false
-        options[:include] = get_include_for_find(includes)
-        options[:eager_loading] = false
-      end
-
-      cond_list = []
-      options[:include].each_key do|k|
-        unless options[:include][k].empty?
-          cond_list.push("#{k.pluralize}.id IS NOT NULL")
-        end
-      end if options[:include]
-      mycond = cond_list.empty? || tag_filters ? nil : "#{cond_list.join(" and ")}"
-
-      db = self
-      method = db.respond_to?(:find_filtered) ? :find_filtered : :find
-      case method
-      when :find_filtered
-        if /[.]+/ =~ options[:conditions] && options[:include] && tag_filters
-          # Has includes and condition references included table.
-          # Can't use tagged find in this case because it does not support includes.
-          # We have to do a tag search woithout the conditions to get the list that matches the tags.
-          # Then we do a normal find with the conditions. Finally, we loop through list from the normal
-          # find and keep only the records that are in the has_tags list.
-          new_opts = options.merge(:tag_filters => tag_filters); new_opts.delete(:conditions)
-          has_tags, total_count = db.send(method, :all, new_opts.merge(:conditions => mycond))
-          options[:conditions] = "(#{options[:conditions]}) and #{mycond}" if mycond
-          options.delete(:eager_loading)
-          unfiltered = db.find(number, options)
-          records = unfiltered.collect { |r| r if has_tags.include?(r) }.compact.flatten
-        else
-          options[:conditions] = options[:conditions] ? "(#{options[:conditions]}) and #{mycond}" : mycond if mycond
-          records = db.send(method, :all, options.merge(:tag_filters => tag_filters)).first.flatten
-        end
-      when :find
-        options.delete(:eager_loading)
-        records = db.send(method, :all, options).flatten
-      end
-
-      MiqReportable.records2table(records,
-                                  :include            => includes,
-                                  :include_categories => includes_categories,
-                                  :only               => only,
-                                  :except             => except,
-                                  :column_names       => db.aar_columns,
-                                  :record_class       => record_class,
-                                  :tag_filters        => tag_filters,
-                                  :limit              => limit
-                                 )
-    end
-
     def search(count = :all, options = {})
       conditions = options.delete(:conditions)
       filter = options.delete(:filter)
