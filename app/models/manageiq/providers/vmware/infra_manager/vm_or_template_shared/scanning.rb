@@ -13,6 +13,7 @@ module ManageIQ::Providers::Vmware::InfraManager::VmOrTemplateShared::Scanning
     begin
       @vm_cfg_file = vm_name
       connect_to_ems(ost)
+      ost.force = !self.template?
       miq_vm = MiqVm.new(@vm_cfg_file, ost) # TODO: Create VMware-specific MiqVm subclass
       scan_via_miq_vm(miq_vm, ost)
     rescue => err
