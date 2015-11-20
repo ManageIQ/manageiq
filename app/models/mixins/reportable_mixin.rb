@@ -136,7 +136,7 @@ module ReportableMixin
 
     if options[:only]
     else
-      return {} unless nil
+      return {}
     end
 
     attrs = {}
