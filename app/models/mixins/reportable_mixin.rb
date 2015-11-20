@@ -138,10 +138,6 @@ module ReportableMixin
 
     attrs = {}
     options[:only].each { |a| attrs[a] = send(a) if self.respond_to?(a) }
-    attrs = attrs.inject({}) do |h, (k, v)|
-      h["#{nil}.#{k}"] = v
-      h
-    end if nil
     attrs
   end
 
