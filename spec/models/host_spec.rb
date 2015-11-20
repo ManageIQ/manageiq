@@ -1,6 +1,35 @@
 require "spec_helper"
 
 describe Host do
+  it "groups and users joins" do
+    user1  = FactoryGirl.create(:account_user)
+    user2  = FactoryGirl.create(:account_user)
+    group  = FactoryGirl.create(:account_group)
+    host1  = FactoryGirl.create(:host_vmware, :users => [user1], :groups => [group])
+    host2  = FactoryGirl.create(:host_vmware, :users => [user2])
+    expect(described_class.joins(:users)).to match_array([host1, host2])
+    expect(described_class.joins(:groups)).to eq [host1]
+    expect(described_class.joins(:users, :groups)).to eq [host1]
+  end
+
+  it "directories and files joins" do
+    file1  = FactoryGirl.create(:filesystem, :rsc_type => "file")
+    file2  = FactoryGirl.create(:filesystem, :rsc_type => "file")
+    dir    = FactoryGirl.create(:filesystem, :rsc_type => "dir")
+    host1  = FactoryGirl.create(:host_vmware, :files => [file1], :directories => [dir])
+    host2  = FactoryGirl.create(:host_vmware, :files => [file2])
+    expect(described_class.joins(:files)).to match_array([host1, host2])
+    expect(described_class.joins(:directories)).to eq [host1]
+    expect(described_class.joins(:files, :directories)).to eq [host1]
+  end
+
+  it "#ems_custom_attributes" do
+    ems_attr   = FactoryGirl.create(:custom_attribute, :source => 'VC')
+    other_attr = FactoryGirl.create(:custom_attribute, :source => 'NOTVC')
+    host       = FactoryGirl.create(:host_vmware, :custom_attributes => [ems_attr, other_attr])
+    expect(host.ems_custom_attributes).to eq [ems_attr]
+  end
+
   it "#save_drift_state" do
     # TODO: Beef up with more data
     host = FactoryGirl.create(:host_vmware)
