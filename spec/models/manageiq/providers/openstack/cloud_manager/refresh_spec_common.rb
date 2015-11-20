@@ -104,6 +104,10 @@ module Openstack
       count = identity_data.projects.count
       # Neutron puts there one extra security group, that is not associated to any tenant
       count += 1 if neutron_networking?
+      # TODO(lsmola) For keystone v3 we get back also sec groups from another domains, we
+      # need to set correctly policies. In total for keystone v3 there are + 2 default
+      # sec groups for services and admin tenant, from default domain.
+      count += 1 if keystone_v3_identity?
       count
     end
 
