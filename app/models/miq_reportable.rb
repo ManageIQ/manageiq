@@ -7,7 +7,7 @@ module MiqReportable
       r.get_attributes(only_columns)
     end
 
-    column_names = data_records.map(&:keys).flatten.uniq
+    column_names = data_records.flat_map(&:keys).uniq
 
     Ruport::Data::Table.new(:data         => data_records,
                             :column_names => column_names)
