@@ -56,76 +56,7 @@ module ReportableMixin
     [columns, data_records]
   end
 
-  def reportable_data_with_columns_vague(options = {})
-    data_records = [get_attributes_with_options_vague(options)]
-    columns = data_records.first.keys
-
-    data_records =
-        add_includes(data_records, options[:include]) if options[:include]
-    [columns, data_records]
-  end
-
-  def reportable_data(options = {})
-    columns, data_records = reportable_data_with_columns_vague(options)
-    self.class.aar_columns |= columns
-    data_records
-  end
-  Vmdb::Deprecation.deprecate_methods(self, :reportable_data => :reportable_data_with_columns)
-
   private
-
-  def add_includes(data_records, includes)
-    include_has_options = includes.kind_of?(Hash)
-    associations = include_has_options ? includes.keys : Array(includes)
-
-    associations.each do |association|
-      existing_records = data_records.dup
-      data_records = []
-
-      if include_has_options
-        assoc_options = includes[association].merge(:qualify_attribute_names => association)
-      else
-        assoc_options = {:qualify_attribute_names => association}
-      end
-
-      if association == "categories"
-        association_hash = {}
-        includes["categories"][:only].each do|c|
-          entries = Classification.all_cat_entries(c, self)
-          descriptions = entries.map(&:description)
-          association_hash["categories." + c] = descriptions unless descriptions.empty?
-        end
-        # join the the category data together
-        max_length = association_hash.map { |_, v| v.length }.max
-        association_objects = Array.new(max_length) do |idx|
-          nh = {}
-          association_hash.each { |k, v| nh[k] = v[idx].nil? ? v.last : v[idx] }
-          OpenStruct.new("reportable_data" => [nh])
-        end
-      else
-        # if respond_to?(:find_filtered_children)
-        #   association_objects = self.find_filtered_children(association, options).first.flatten.compact
-        # else
-        association_objects = [send(association)].flatten.compact
-        # end
-      end
-
-      existing_records.each do |existing_record|
-        if association_objects.empty?
-          data_records << existing_record
-        else
-          association_objects.each do |obj|
-            association_records = obj.reportable_data(assoc_options)
-            association_records.each do |assoc_record|
-              data_records << existing_record.merge(assoc_record)
-            end
-            self.class.aar_columns |= data_records.last.keys
-          end
-        end
-      end
-    end
-    data_records
-  end
 
   def get_attributes_with_options(columns)
     return {} unless columns
