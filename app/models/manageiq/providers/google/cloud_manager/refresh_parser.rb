@@ -108,11 +108,18 @@ module ManageIQ::Providers
           :name               => name,
           :vendor             => "google",
           :raw_power_state    => "never",
+          :operating_system   => process_os(image),
           :template           => true,
           :publicly_available => true,
         }
 
         return uid, new_result
+      end
+
+      def process_os(image)
+        {
+          :product_name => OperatingSystem.normalize_os_name(image.name)
+        }
       end
 
       def parse_instance(instance)
