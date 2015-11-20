@@ -134,10 +134,7 @@ module ReportableMixin
         :only        => columns,
     }
 
-    if options[:only]
-    else
-      return {}
-    end
+    return {} unless options[:only]
 
     attrs = {}
     options[:only].each { |a| attrs[a] = send(a) if self.respond_to?(a) }
