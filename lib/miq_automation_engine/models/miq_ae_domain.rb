@@ -44,7 +44,7 @@ class MiqAeDomain < MiqAeNamespace
                       "about#{CLASS_DIR_SUFFIX}", CLASS_YAML_FILENAME)
     return nil unless File.exist?(fname)
     class_yaml = YAML.load_file(fname)
-    fields  = class_yaml.fetch_path('object', 'schema') if class_yaml.kind_of?(Hash)
+    fields = class_yaml.fetch_path('object', 'schema') if class_yaml.kind_of?(Hash)
     version_field = fields.try(:detect) { |f| f.fetch_path('field', 'name') == 'version' }
     version_field.try(:fetch_path, 'field', 'default_value')
   end
