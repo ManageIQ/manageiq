@@ -137,11 +137,11 @@ module ReportableMixin
 
     if options[:only]
       only_or_except = {:only => options[:only], :except => nil}
+      return {} unless only_or_except
     else
       only_or_except = nil
+      return {} unless only_or_except
     end
-
-    return {} unless only_or_except
 
     attrs = {}
     options[:only].each { |a| attrs[a] = send(a) if self.respond_to?(a) }
