@@ -95,6 +95,9 @@ angular.module('containerDashboard').factory('ContainerDashboardUtils', [functio
           count: data.warningCount
         };
       }
+
+      if (statusObject.count == 0)
+          statusObject.href = "";
     } else {
       statusObject.count = 0;
     }
