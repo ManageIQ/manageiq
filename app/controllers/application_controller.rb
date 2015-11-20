@@ -1230,8 +1230,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def handle_invalid_session
-    timed_out = PrivilegeCheckerService.new.user_session_timed_out?(session, current_user)
+  def handle_invalid_session(timed_out = nil)
+    timed_out = PrivilegeCheckerService.new.user_session_timed_out?(session, current_user) if timed_out.nil?
     reset_session
 
     session[:start_url] = if RequestRefererService.access_whitelisted?(request, controller_name, action_name)
@@ -2107,6 +2107,11 @@ class ApplicationController < ActionController::Base
   def get_global_session_data
     # Set the current userid in the User class for this thread for models to use
     User.current_user = current_user
+    # if session group for user != database group for the user then ensure it is a valid group
+    if current_user.try(:current_group_id_changed?) && !current_user.miq_groups.include?(current_group)
+      handle_invalid_session(true)
+      return
+    end
 
     # Get/init sandbox (@sb) per controller in the session object
     session[:sandboxes] ||= HashWithIndifferentAccess.new

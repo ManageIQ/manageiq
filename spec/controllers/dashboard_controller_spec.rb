@@ -28,6 +28,36 @@ describe DashboardController do
       expect_failed_login('username or password')
     end
 
+    it "remembers group" do
+      group1 = user_with_role.current_group
+      group2 = FactoryGirl.create(:miq_group)
+      user_with_role.update_attributes(:miq_groups => [group1, group2])
+
+      skip_data_checks
+      post :authenticate, :user_name => user_with_role.userid, :user_password => 'dummy'
+      expect_successful_login(user_with_role)
+
+      user_with_role.update_attributes(:current_group => group2)
+
+      controller.instance_variable_set(:@current_user, nil) # force the controller to lookup the user record again
+      get :index
+      expect(controller.send(:current_group)).to eq(group1)
+    end
+
+    it "verifies group" do
+      skip_data_checks
+      post :authenticate, :user_name => user_with_role.userid, :user_password => 'dummy'
+      expect_successful_login(user_with_role)
+
+      # no longer has access to this group
+      group2 = FactoryGirl.create(:miq_group)
+      user_with_role.update_attributes(:current_group => group2, :miq_groups => [group2])
+
+      controller.instance_variable_set(:@current_user, nil) # force the controller to lookup the user record again
+      get :index
+      expect(response.status).to eq(302)
+    end
+
     it "requires group" do
       user = FactoryGirl.create(:user, :current_group => nil)
       post :authenticate, :user_name => user.userid, :user_password => "dummy"
@@ -275,6 +305,7 @@ describe DashboardController do
   # logs in and redirects to home url
   def expect_successful_login(user, target_url = nil)
     expect(controller.send(:current_user)).to eq(user)
+    expect(controller.send(:current_group)).to eq(user.current_group)
     expect(response.body).to match(/location.href.*#{target_url}/)
   end
 
