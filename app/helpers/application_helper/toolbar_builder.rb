@@ -1336,7 +1336,7 @@ class ApplicationHelper::ToolbarBuilder
     false
   end
 
-  def url_for_save_button(name, url_tpl)
+  def url_for_save_button(name, url_tpl, controller_restful)
     url = safer_eval(url_tpl)
 
     if %w(view_grid view_tile view_list).include?(name)
@@ -1344,6 +1344,9 @@ class ApplicationHelper::ToolbarBuilder
       url.gsub!(/^\/[a-z|A-Z|0-9|_|-]+/, "")
       ridx = url.rindex('/')
       url = url.slice(0..ridx - 1) if ridx
+
+      # handle restful routes - we want just / if the url is just an id
+      url = '/' if controller_restful && url =~ %r{^\/(\d+|\d+r\d+)\?$}
     end
 
     url
@@ -1360,7 +1363,7 @@ class ApplicationHelper::ToolbarBuilder
       :onwhen  => item[:onwhen]
     )
 
-    props[:url] = url_for_save_button(button, item[:url]) if item[:url]
+    props[:url] = url_for_save_button(button, item[:url], @view_binding.eval('controller.try(:restful?)')) if item[:url]
 
     props[:explorer] = true if @explorer && !item[:url] # Add explorer = true if ajax button
     if item[:popup]
