@@ -445,4 +445,17 @@ describe Storage do
       expect(Storage.batch_operation_supported?(:smartstate_analysis, [@storage.id])).to eq(true)
     end
   end
+
+  describe "#update_vm_perf" do
+    it "will update a vm_perf with an attributes hash keyed with symbols" do
+      storage = FactoryGirl.create(:storage)
+      vm = FactoryGirl.create(:vm)
+      metric_rollup = FactoryGirl.build(:metric_rollup)
+      attrs = {:resource_name => "test vm"}
+
+      storage.update_vm_perf(vm, metric_rollup, attrs)
+
+      expect(metric_rollup.resource_name).to eq("test vm")
+    end
+  end
 end

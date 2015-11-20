@@ -809,9 +809,7 @@ class Storage < ActiveRecord::Base
             vm_perf   = obj_perfs.fetch_path(vm.class.name, vm.id, interval_name, hour)
             vm_perf ||= obj_perfs.store_path(vm.class.name, vm.id, interval_name, hour, vm.send(meth).build(:timestamp => hour, :capture_interval_name => interval_name))
 
-            vm_attrs.reverse_merge!(vm_perf.attributes)
-            vm_attrs.merge!(Metric::Processing.process_derived_columns(vm, vm_attrs))
-            vm_perf.update_attributes(vm_attrs)
+            update_vm_perf(vm, vm_perf, vm_attrs)
           end
         end
 
@@ -828,6 +826,12 @@ class Storage < ActiveRecord::Base
     end
 
     _log.info "#{log_header} Capture for #{log_target}...Complete - Timings: #{t.inspect}"
+  end
+
+  def update_vm_perf(vm, vm_perf, vm_attrs)
+    vm_attrs.reverse_merge!(vm_perf.attributes.symbolize_keys)
+    vm_attrs.merge!(Metric::Processing.process_derived_columns(vm, vm_attrs))
+    vm_perf.update_attributes(vm_attrs)
   end
 
   def vm_scan_affinity
