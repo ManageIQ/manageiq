@@ -3,14 +3,15 @@ module MiqReportable
   def self.records2table(records, only_columns)
     return Ruport::Data::Table.new if records.blank?
 
-    data = records.map do |r|
-      data_record = r.get_attributes(only_columns)
-      columns = data_record.keys
+    data_records =  records.map do |r|
+      r.get_attributes(only_columns)
+    end
 
+    data = data_records.map do |data_record|
+      columns = data_record.keys
       [columns, data_record]
     end
 
-    data_records = data.collect(&:last)
     column_names = data.collect(&:first).flatten.uniq
 
     Ruport::Data::Table.new(:data         => data_records,
