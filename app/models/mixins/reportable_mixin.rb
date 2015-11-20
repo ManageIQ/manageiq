@@ -131,7 +131,6 @@ module ReportableMixin
 
   def get_attributes_with_options(columns)
     options = {
-        :include     => nil,
         :only        => columns,
         :tag_filters => nil,
         :methods     => nil
