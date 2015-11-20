@@ -7,7 +7,7 @@ module MiqReportable
       r.reportable_data_with_columns(only_columns)
     end
 
-    Ruport::Data::Table.new(:data         => data.collect(&:last).flatten,
+    Ruport::Data::Table.new(:data         => data.collect(&:last),
                             :column_names => data.collect(&:first).flatten.uniq,
                             :record_class => nil,
                             :filters      => nil)

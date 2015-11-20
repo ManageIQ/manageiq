@@ -53,7 +53,7 @@ module ReportableMixin
     data_record = get_attributes(columns)
     columns = data_record.keys
 
-    [columns, [data_record]]
+    [columns, data_record]
   end
 
   private
