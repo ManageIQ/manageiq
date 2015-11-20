@@ -59,8 +59,6 @@ module ReportableMixin
   private
 
   def get_attributes(columns)
-    return {} unless columns
-
     attrs = {}
     columns.each { |a| attrs[a] = send(a) if self.respond_to?(a) }
     attrs
