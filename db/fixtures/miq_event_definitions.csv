@@ -8,8 +8,13 @@ evm_server_not_responding,EVM Server Not Responding,Default,evm_operations
 evm_server_memory_exceeded,EVM Server Exceeded Memory Limit,Default,evm_operations
 evm_server_is_master,EVM Server is Master,Default,evm_operations
 evm_server_system_disk_high_usage,EVM Server High System Disk Usage,Default,evm_operations
-evm_server_app_disk_high_usage,EVM Server High App Disk Usage,Default,evm_operations
-evm_server_log_disk_high_usage,EVM Server High Log Disk Usage,Default,evm_operations
+evm_server_boot_disk_high_usage,EVM Server High /boot Disk Usage,Default,evm_operations
+evm_server_home_disk_high_usage,EVM Server High /home Disk Usage,Default,evm_operations
+evm_server_var_disk_high_usage,EVM Server High /var Disk Usage,Default,evm_operations
+evm_server_var_log_disk_high_usage,EVM Server High /var/log Disk Usage,Default,evm_operations
+evm_server_var_log_audit_disk_high_usage,EVM Server High /var/log/audit Disk Usage,Default,evm_operations
+evm_server_miq_tmp_disk_high_usage,EVM Server High Temp Storage Disk Usage,Default,evm_operations
+evm_server_tmp_disk_high_usage,EVM Server High /tmp Disk Usage,Default,evm_operations
 evm_server_db_disk_high_usage,EVM Server High DB Disk Usage,Default,evm_operations
 evm_server_db_backup_low_space,EVM Server Database Backup Insufficient Space,Default,evm_operations
 evm_worker_start,EVM Worker Started,Default,evm_operations

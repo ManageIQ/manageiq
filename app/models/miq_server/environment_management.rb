@@ -128,18 +128,22 @@ module MiqServer::EnvironmentManagement
     threshold = disk_usage_threshold
 
     disks.each do |disk|
-      if disk[:used_bytes_percent].to_i > threshold
-        disk_usage_event = case disk[:mount_point].chomp
-                           when '/'                     then 'evm_server_system_disk_high_usage'
-                           when '/var/www/miq'          then 'evm_server_app_disk_high_usage'
-                           when '/var/www/miq/vmdb/log' then 'evm_server_log_disk_high_usage'
-                           when /pgsql\/data/           then 'evm_server_db_disk_high_usage'
-                           end
+      next unless disk[:used_bytes_percent].to_i > threshold
+      disk_usage_event = case disk[:mount_point].chomp
+                         when '/'                then 'evm_server_system_disk_high_usage'
+                         when '/boot'            then 'evm_server_boot_disk_high_usage'
+                         when '/home'            then 'evm_server_home_disk_high_usage'
+                         when '/var'             then 'evm_server_var_disk_high_usage'
+                         when '/var/log'         then 'evm_server_var_log_disk_high_usage'
+                         when '/var/log/audit'   then 'evm_server_var_log_audit_disk_high_usage'
+                         when '/var/www/miq_tmp' then 'evm_server_miq_tmp_disk_high_usage'
+                         when '/tmp'             then 'evm_server_tmp_disk_high_usage'
+                         when %r{pgsql/data}     then 'evm_server_db_disk_high_usage'
+                         end
 
-        next unless disk_usage_event
-        msg = "Filesystem: #{disk[:filesystem]} (#{disk[:type]}) on #{disk[:mount_point]} is #{disk[:used_bytes_percent]}% full with #{ActionView::Base.new.number_to_human_size(disk[:available_bytes])} free."
-        MiqEvent.raise_evm_event_queue(self, disk_usage_event, :event_details => msg)
-      end
+      next unless disk_usage_event
+      msg = "Filesystem: #{disk[:filesystem]} (#{disk[:type]}) on #{disk[:mount_point]} is #{disk[:used_bytes_percent]}% full with #{ActionView::Base.new.number_to_human_size(disk[:available_bytes])} free."
+      MiqEvent.raise_evm_event_queue(self, disk_usage_event, :event_details => msg)
     end
   end
 end
