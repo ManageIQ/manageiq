@@ -2883,4 +2883,35 @@ describe ApplicationHelper do
       true
     end
   end
+
+  context "build_toolbar" do
+    before do
+      controller.instance_variable_set(:@sb, :active_tree => :foo_tree)
+      @pdf_button = {"id"       => "download_choice__download_pdf",
+                     "type"     => "button",
+                     "img"      => "download_pdf.png",
+                     "imgdis"   => "download_pdf.png",
+                     :icon      => "fa fa-file-pdf-o fa-lg",
+                     "text"     => "Download as PDF",
+                     "title"    => "Download this report in PDF format",
+                     :name      => "download_choice__download_pdf",
+                     :hidden    => false,
+                     :pressed   => nil,
+                     :onwhen    => nil,
+                     :url       => "/download_data",
+                     :url_parms => "?download_type=pdf"}
+    end
+
+    it "Hides PDF button when PdfGenerator is not available" do
+      PdfGenerator.stub(:available? => false)
+      buttons = helper.build_toolbar('gtl_view_tb').collect { |button| button[:items] if button['id'] == "download_choice" }.compact.flatten
+      buttons.should_not include(@pdf_button)
+    end
+
+    it "Displays PDF button when PdfGenerator is available" do
+      PdfGenerator.stub(:available? => true)
+      buttons = helper.build_toolbar('gtl_view_tb').collect { |button| button[:items] if button['id'] == "download_choice" }.compact.flatten
+      buttons.should include(@pdf_button)
+    end
+  end
 end
