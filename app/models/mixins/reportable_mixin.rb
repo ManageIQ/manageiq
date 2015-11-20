@@ -66,7 +66,7 @@ module ReportableMixin
   end
 
   def reportable_data_with_columns_vague(options = {})
-    data_records = [get_attributes_with_options(options)]
+    data_records = [get_attributes_with_options_vague(options)]
     columns = data_records.first.keys
 
     data_records =
@@ -141,6 +141,22 @@ module ReportableMixin
       if options[:only] || options[:except]
         {:only => options[:only], :except => options[:except]}
       end
+    return {} unless only_or_except
+
+    attrs = {}
+    options[:only].each { |a| attrs[a] = send(a) if self.respond_to?(a) }
+    attrs = attrs.inject({}) do |h, (k, v)|
+      h["#{options[:qualify_attribute_names]}.#{k}"] = v
+      h
+    end if options[:qualify_attribute_names]
+    attrs
+  end
+
+  def get_attributes_with_options_vague(options = {})
+    only_or_except =
+        if options[:only] || options[:except]
+          {:only => options[:only], :except => options[:except]}
+        end
     return {} unless only_or_except
 
     attrs = {}
