@@ -30,8 +30,10 @@ module AutomationSpecHelper
   def create_ae_model(attrs = {})
     attrs = default_ae_model_attributes(attrs)
     instance_name = attrs.delete(:instance_name)
-    ae_fields = {'field1' => {:aetype => 'relationship', :datatype => 'string'}}
-    ae_instances = {instance_name => {'field1' => {:value => 'hello world'}}}
+    ae_fields = attrs.delete(:ae_fields)
+    ae_instances = attrs.delete(:ae_instances)
+    ae_fields ||= {'field1' => {:aetype => 'relationship', :datatype => 'string'}}
+    ae_instances ||= {instance_name => {'field1' => {:value => 'hello world'}}}
 
     FactoryGirl.create(:miq_ae_domain, :with_small_model, :with_instances,
                        attrs.merge('ae_fields' => ae_fields, 'ae_instances' => ae_instances))

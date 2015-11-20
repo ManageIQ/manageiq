@@ -1,3 +1,4 @@
+include MiqAeYamlImportExportMixin
 class MiqAeDomain < MiqAeNamespace
   default_scope { where(:parent_id => nil).where(arel_table[:name].not_eq("$")) }
   validates_inclusion_of :parent_id, :in => [nil], :message => 'should be nil for Domain'
@@ -29,6 +30,23 @@ class MiqAeDomain < MiqAeNamespace
 
   def default_priority
     self.priority = MiqAeDomain.highest_priority(tenant) + 1 unless priority
+  end
+
+  def version
+    system = ae_namespaces.detect { |ns| ns.name == 'System' }
+    about = system.try(:ae_classes).try(:detect) { |cls| cls.name == 'About' }
+    version_field = about.try(:ae_fields).try(:detect) { |fld| fld.name == 'version' }
+    version_field.try(:default_value)
+  end
+
+  def available_version
+    fname = File.join(MiqAeDatastore::DATASTORE_DIRECTORY, name.downcase, 'system',
+                      "about#{CLASS_DIR_SUFFIX}", CLASS_YAML_FILENAME)
+    return nil unless File.exist?(fname)
+    class_yaml = YAML.load_file(fname)
+    fields  = class_yaml.fetch_path('object', 'schema') if class_yaml.kind_of?(Hash)
+    version_field = fields.try(:detect) { |f| f.fetch_path('field', 'name') == 'version' }
+    version_field.try(:fetch_path, 'field', 'default_value')
   end
 
   private
