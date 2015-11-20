@@ -1336,6 +1336,21 @@ class ApplicationHelper::ToolbarBuilder
     false
   end
 
+  def controller_restful?
+    # want to be able to cache false, so no ||=
+    return @_restful_cache unless @_restful_cache.nil?
+
+    @_restful_cache = (
+      obj = @view_binding.receiver
+
+      if obj.respond_to? :controller
+        obj.controller.try(:restful?)
+      else
+        obj.try(:restful?)
+      end
+    )
+  end
+
   def url_for_save_button(name, url_tpl, controller_restful)
     url = safer_eval(url_tpl)
 
@@ -1363,7 +1378,7 @@ class ApplicationHelper::ToolbarBuilder
       :onwhen  => item[:onwhen]
     )
 
-    props[:url] = url_for_save_button(button, item[:url], @view_binding.eval('controller.try(:restful?)')) if item[:url]
+    props[:url] = url_for_save_button(button, item[:url], controller_restful?) if item[:url]
 
     props[:explorer] = true if @explorer && !item[:url] # Add explorer = true if ajax button
     if item[:popup]
