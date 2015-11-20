@@ -132,8 +132,6 @@ module ReportableMixin
   def get_attributes_with_options(columns)
     options = {
         :only        => columns,
-        :tag_filters => nil,
-        :methods     => nil
     }
     only_or_except =
       if options[:only]
