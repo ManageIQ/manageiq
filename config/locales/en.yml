@@ -872,6 +872,8 @@ en:
       ManageIQ::Providers::BaseManager:               Provider
       #ManageIQ::Providers::BaseManager::VmOrTemplate: VM or Template
       #ManageIQ::Providers::BaseManager::Vm:           VM and Instance
+      ManageIQ::Providers::ConfigurationManager:      Configuration Manager
+      ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem: Foreman Configured System
       ManageIQ::Providers::CloudManager:              Cloud Provider
       ManageIQ::Providers::CloudManager::Vm:          Instance
       ManageIQ::Providers::CloudManager::Template:    Image
@@ -1031,6 +1033,9 @@ en:
       miq_custom_attribute:        EVM Custom Attribute
       miq_custom_attributes:       EVM Custom Attributes
       miq_event_definition:        Event
+      manageiq_providers_foreman_configuration_manager_configuration_profile: Configuration Profile (Foreman)
+      manageiq_providers_openstack_infra_manager_cloud_networks: Cloud Networks (Openstack)
+      manageiq_providers_openstack_cloud_manager_cloud_tenant: Cloud Tenants (Openstack)
       miq_provision:               Provision
       miq_provision_template:      Provisioned From Template
       miq_provision_vms:           Provisioned VMs

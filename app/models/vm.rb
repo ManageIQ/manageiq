@@ -7,6 +7,10 @@ class Vm < VmOrTemplate
     Vm
   end
 
+  def self.include_descendant_classes_in_expressions?
+    true
+  end
+
   def self.corresponding_model
     if self == Vm
       MiqTemplate

@@ -174,6 +174,10 @@ class Host < ActiveRecord::Base
   before_create :make_smart
   after_save    :process_events
 
+  def self.include_descendant_classes_in_expressions?
+    true
+  end
+
   def authentication_check_role
     'smartstate'
   end
