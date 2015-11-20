@@ -50,10 +50,10 @@ module ReportableMixin
   end
 
   def reportable_data_with_columns(columns)
-    data_records = [get_attributes(columns)]
-    columns = data_records.first.keys
+    data_record = get_attributes(columns)
+    columns = data_record.keys
 
-    [columns, data_records]
+    [columns, [data_record]]
   end
 
   private
