@@ -7,8 +7,4 @@ class RemoveMiqWorkerRowsWithoutModel < ActiveRecord::Migration
     types = %w(MiqWorkerMonitor MiqStorageStatsCollectorWorker MiqPerfCollectorWorker MiqPerfProcessorWorker)
     MiqWorker.where(:type => types).delete_all
   end
-
-  def down
-    # NO-OP
-  end
 end
