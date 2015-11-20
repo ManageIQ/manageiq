@@ -92,7 +92,7 @@ module ApplicationController::CiProcessing
 
     @ownershipitems = @edit[:klass].find(@edit[:ownership_items]).sort_by(&:name) # Get the db records that are being tagged
     @view = get_db_view(@edit[:klass] == VmOrTemplate ? Vm : @edit[:klass])       # Instantiate the MIQ Report view object
-    @view.table = MiqFilter.records2table(@ownershipitems, :only => @view.cols + ['id'])
+    @view.table = MiqFilter.records2table(@ownershipitems, @view.cols + ['id'])
   end
 
   def ownership_field_changed
@@ -299,7 +299,7 @@ module ApplicationController::CiProcessing
     @retireitems = kls.find(session[:retire_items]).sort_by(&:name) # Get the db records
     build_targets_hash(@retireitems)
     @view = get_db_view(kls)              # Instantiate the MIQ Report view object
-    @view.table = MiqFilter.records2table(@retireitems, :only => @view.cols + ['id'])
+    @view.table = MiqFilter.records2table(@retireitems, @view.cols + ['id'])
     if @retireitems.length == 1 && !@retireitems[0].retires_on.nil?
       t = @retireitems[0].retires_on                                         # Single VM, set to current time
       w = @retireitems[0].retirement_warn if @retireitems[0].retirement_warn # Single VM, get retirement warn
