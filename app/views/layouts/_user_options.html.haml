@@ -13,7 +13,7 @@
         %li.dropdown-submenu
           %a{:href => "#"}
             = _('Change Group:')
-            %ul.dropdown-menu
+            %ul.dropdown-menu.scrollable-menu
               - current_user.miq_groups.sort_by_desc.each do |group|
                 %li
                   %a{:title => _("Select to change to another Group"), :href => "#",
