@@ -41,11 +41,6 @@ class AssignTenantDefaultGroup < ActiveRecord::Migration
   end
 
   def up
-    # depending upon a column we just added
-    # previous migrations accessed an AR model without this column
-    Tenant.connection.schema_cache.clear!
-    Tenant.reset_column_information
-
     say_with_time "adding default tenant groups" do
       Tenant.where(:default_miq_group_id => nil).each(&:add_default_miq_group)
     end

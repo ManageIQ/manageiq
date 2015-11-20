@@ -15,7 +15,7 @@ describe UpdateTenantOverrideSettings do
 
     it "leaves other tenants alone" do
       root_tenant = tenant_stub.create!
-      child_tenant = root_tenant.children.create!
+      child_tenant = tenant_stub.create!(:ancestry => root_tenant.id.to_s)
       expect(child_tenant).not_to be_use_config_for_attributes
 
       migrate

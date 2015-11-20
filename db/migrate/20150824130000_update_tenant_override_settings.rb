@@ -1,10 +1,8 @@
-require 'ancestry'
-
 class UpdateTenantOverrideSettings < ActiveRecord::Migration
   include MigrationHelper
 
   class Tenant < ActiveRecord::Base
-    has_ancestry
+    self.inheritance_column = :_type_disabled # disable STI
   end
 
   def up

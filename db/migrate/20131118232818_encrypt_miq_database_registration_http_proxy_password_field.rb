@@ -1,5 +1,7 @@
 class EncryptMiqDatabaseRegistrationHttpProxyPasswordField < ActiveRecord::Migration
-  class MiqDatabase < ActiveRecord::Base; end
+  class MiqDatabase < ActiveRecord::Base
+    self.inheritance_column = :_type_disabled # disable STI
+  end
 
   def up
     say_with_time("Encrypt miq_database registration_http_proxy_password field") do
