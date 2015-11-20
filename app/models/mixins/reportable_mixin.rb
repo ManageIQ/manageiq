@@ -139,9 +139,9 @@ module ReportableMixin
     attrs = {}
     options[:only].each { |a| attrs[a] = send(a) if self.respond_to?(a) }
     attrs = attrs.inject({}) do |h, (k, v)|
-      h["#{options[:qualify_attribute_names]}.#{k}"] = v
+      h["#{nil}.#{k}"] = v
       h
-    end if options[:qualify_attribute_names]
+    end if nil
     attrs
   end
 
