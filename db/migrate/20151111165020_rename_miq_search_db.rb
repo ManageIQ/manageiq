@@ -1,4 +1,8 @@
 class RenameMiqSearchDb < ActiveRecord::Migration
+  class MiqSearch < ActiveRecord::Base
+    self.inheritance_column = :_type_disabled # disable STI
+  end
+
   NAME_HASH = Hash[*%w(
     TemplateInfra ManageIQ::Providers::InfraManager::Template
     VmInfra       ManageIQ::Providers::InfraManager::Vm
