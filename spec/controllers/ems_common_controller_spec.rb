@@ -117,6 +117,22 @@ describe EmsCloudController do
         end
       end
     end
+
+    context "#button" do
+      before(:each) do
+        set_user_privileges
+        EvmSpecHelper.create_guid_miq_server_zone
+      end
+
+      it "when Retire Button is pressed for a Cloud provider Instance" do
+        controller.stub(:role_allows).and_return(true)
+        vm = FactoryGirl.create(:vm_vmware)
+        ems = FactoryGirl.create("ems_vmware")
+        post :button, :pressed => "instance_retire", "check_#{vm.id}" => "1", :format => :js, :id => ems.id, :display => 'instances'
+        expect(response.status).to eq 200
+        expect(response.body).to include('vm/retire')
+      end
+    end
   end
 
   describe "#show" do
