@@ -61,8 +61,7 @@ describe Host do
   it "emits cluster policy event when the cluster changes" do
     # New host added to a cluster
     cluster1 = FactoryGirl.create(:ems_cluster)
-    host = FactoryGirl.create(:host_vmware)
-    host.ems_cluster = cluster1
+    host = FactoryGirl.build(:host_vmware, :ems_cluster => cluster1)
     expect(MiqEvent).to receive(:raise_evm_event).with(host, "host_add_to_cluster", anything)
     host.save
 
