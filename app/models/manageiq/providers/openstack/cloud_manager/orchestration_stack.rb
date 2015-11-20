@@ -2,8 +2,8 @@ class ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack < ::Orche
   require_nested :Status
 
   def self.raw_create_stack(orchestration_manager, stack_name, template, options = {})
-    create_options = {:stack_name => stack_name, :template => template.content}.merge(options).except(:cloud_tenant)
-    connection_options = {:service => "Orchestration"}.merge(options.slice(:cloud_tenant))
+    create_options = {:stack_name => stack_name, :template => template.content}.merge(options).except(:tenant_name)
+    connection_options = {:service => "Orchestration"}.merge(options.slice(:tenant_name))
     orchestration_manager.with_provider_connection(connection_options) do |service|
       service.stacks.new.save(create_options)["id"]
     end
@@ -37,7 +37,9 @@ class ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack < ::Orche
 
   def raw_status
     ems = ext_management_system
-    ems.with_provider_connection(:service => "Orchestration") do |service|
+    options = {:service => "Orchestration"}
+    options.merge!(:tenant_name => cloud_tenant.name) if cloud_tenant
+    ems.with_provider_connection(options) do |service|
       raw_stack = service.stacks.get(name, ems_ref)
       raise MiqException::MiqOrchestrationStackNotExistError, "#{name} does not exist on #{ems.name}" unless raw_stack
 
