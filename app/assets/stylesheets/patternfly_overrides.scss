@@ -325,3 +325,11 @@ iframe, .iframe {
 .selectWidth .dropdown-menu ul li{
   padding-right: 10px;
 }
+
+/* adds scrollbar to group switcher  */
+
+.scrollable-menu {
+    height: auto;
+    max-height: 400px;
+    overflow-x: hidden;
+}
