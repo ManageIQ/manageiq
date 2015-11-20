@@ -58,8 +58,17 @@ module ReportableMixin
     [columns, data_records]
   end
 
+  def reportable_data_with_columns_vague(options = {})
+    data_records = [get_attributes_with_options(options)]
+    columns = data_records.first.keys
+
+    data_records =
+        add_includes(data_records, options[:include]) if options[:include]
+    [columns, data_records]
+  end
+
   def reportable_data(options = {})
-    columns, data_records = reportable_data_with_columns(options)
+    columns, data_records = reportable_data_with_columns_vague(options)
     self.class.aar_columns |= columns
     data_records
   end
