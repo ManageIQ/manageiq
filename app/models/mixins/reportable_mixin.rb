@@ -59,8 +59,8 @@ module ReportableMixin
   private
 
   def get_attributes(columns)
-    columns.each_with_object({}) do |a, attrs|
-      attrs[a] = send(a) if self.respond_to?(a)
+    columns.each_with_object({}) do |column, attrs|
+      attrs[column] = send(column) if self.respond_to?(column)
     end
   end
 end
