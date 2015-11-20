@@ -29,6 +29,11 @@ class TenantQuota < ActiveRecord::Base
     }
   }
 
+  DEFAULT_TEXT_FOR_ZERO_VALUES = {
+    :total     => "Not defined".freeze,
+    :available => "Not applicable".freeze
+  }
+
   NAMES = QUOTA_BASE.keys.map(&:to_s)
 
   validates :name, :inclusion => {:in => NAMES}
@@ -46,6 +51,10 @@ class TenantQuota < ActiveRecord::Base
 
   before_validation(:on => :create) do
     self.unit = default_unit unless unit.present?
+  end
+
+  def self.default_text_for(metric)
+    DEFAULT_TEXT_FOR_ZERO_VALUES[metric]
   end
 
   def self.quota_definitions
