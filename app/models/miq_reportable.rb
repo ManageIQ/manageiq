@@ -9,10 +9,10 @@ module MiqReportable
 
     data = data_records.map do |data_record|
       columns = data_record.keys
-      [columns, data_record]
+      columns
     end
 
-    column_names = data.collect(&:first).flatten.uniq
+    column_names = data.flatten.uniq
 
     Ruport::Data::Table.new(:data         => data_records,
                             :column_names => column_names)
