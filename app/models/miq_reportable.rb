@@ -7,10 +7,7 @@ module MiqReportable
       r.get_attributes(only_columns)
     end
 
-    data = data_records.map do |data_record|
-      columns = data_record.keys
-      columns
-    end
+    data = data_records.map(&:keys)
 
     column_names = data.flatten.uniq
 
