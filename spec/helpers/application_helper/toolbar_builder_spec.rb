@@ -2798,6 +2798,12 @@ describe ApplicationHelper do
       it "saves the value as it is otherwise" do
         subject.should have_key(:url)
       end
+
+      it "calls url_for_save_button" do
+        b = _toolbar_builder
+        expect(b).to receive(:url_for_save_button).and_call_original
+        b.send(:build_toolbar_save_button, @item, @item_out)
+      end
     end
   end
 
