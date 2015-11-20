@@ -3,7 +3,7 @@ require 'kubeclient'
 class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   PROVIDER_CLASS = ManageIQ::Providers::Kubernetes::ContainerManager
   INSPECTOR_IMAGE = 'docker.io/fsimonce/image-inspector:v0.1.3'
-  INSPECTOR_NAMESPACE = 'default'
+  INSPECTOR_NAMESPACE = 'management-infra'
   INSPECTOR_PORT = 8080
   DOCKER_SOCKET = '/var/run/docker.sock'
   SCAN_CATEGORIES = %w(system software)
@@ -36,13 +36,18 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     image = target_entity
     return queue_signal(:abort_job) unless image
 
+    ems_configs = VMDB::Config.new('vmdb').config[:ems]
+
+    namespace = ems_configs.fetch_path(:ems_kubernetes, :miq_namespace)
+    namespace = INSPECTOR_NAMESPACE if namespace.blank?
+
     update!(:options => options.merge(
       :ems_id          => image.ext_management_system.id,
       :docker_image_id => image.docker_id,
       :image_full_name => image.full_name,
       :pod_name        => "manageiq-img-scan-#{image.docker_id[0..11]}",
       :pod_port        => INSPECTOR_PORT,
-      :pod_namespace   => INSPECTOR_NAMESPACE
+      :pod_namespace   => namespace
     ))
 
     pod = pod_definition
