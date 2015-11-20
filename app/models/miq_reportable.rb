@@ -3,12 +3,8 @@ module MiqReportable
   def self.records2table(records, only_columns)
     return Ruport::Data::Table.new if records.blank?
 
-    data = records.map do|r|
-      r.reportable_data_with_columns(:include     => nil,
-                                     :only        => only_columns,
-                                     :except      => nil,
-                                     :tag_filters => nil,
-                                     :methods     => nil)
+    data = records.map do |r|
+      r.reportable_data_with_columns(only_columns)
     end
 
     Ruport::Data::Table.new(:data         => data.collect(&:last).flatten,

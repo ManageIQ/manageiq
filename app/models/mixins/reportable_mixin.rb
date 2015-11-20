@@ -49,7 +49,14 @@ module ReportableMixin
     end
   end
 
-  def reportable_data_with_columns(options = {})
+  def reportable_data_with_columns(columns)
+    options = {
+      :include     => nil,
+      :only        => columns,
+      :except      => nil,
+      :tag_filters => nil,
+      :methods     => nil
+    }
     data_records = [get_attributes_with_options(options)]
     columns = data_records.first.keys
 
