@@ -49,15 +49,6 @@ module ReportableMixin
     end
   end
 
-  def reportable_data_with_columns(columns)
-    data_record = get_attributes(columns)
-    columns = data_record.keys
-
-    [columns, data_record]
-  end
-
-  private
-
   def get_attributes(columns)
     columns.each_with_object({}) do |column, attrs|
       attrs[column] = send(column) if self.respond_to?(column)

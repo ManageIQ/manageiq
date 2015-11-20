@@ -4,7 +4,10 @@ module MiqReportable
     return Ruport::Data::Table.new if records.blank?
 
     data = records.map do |r|
-      r.reportable_data_with_columns(only_columns)
+      data_record = r.get_attributes(only_columns)
+      columns = data_record.keys
+
+      [columns, data_record]
     end
 
     Ruport::Data::Table.new(:data         => data.collect(&:last),
