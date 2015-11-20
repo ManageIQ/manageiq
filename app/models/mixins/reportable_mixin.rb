@@ -50,7 +50,7 @@ module ReportableMixin
   end
 
   def reportable_data_with_columns(columns)
-    data_records = [get_attributes_with_options(columns)]
+    data_records = [get_attributes(columns)]
     columns = data_records.first.keys
 
     [columns, data_records]
@@ -58,7 +58,7 @@ module ReportableMixin
 
   private
 
-  def get_attributes_with_options(columns)
+  def get_attributes(columns)
     return {} unless columns
 
     attrs = {}
