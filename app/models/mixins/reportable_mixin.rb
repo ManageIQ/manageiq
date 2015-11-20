@@ -130,14 +130,10 @@ module ReportableMixin
   end
 
   def get_attributes_with_options(columns)
-    options = {
-        :only        => columns,
-    }
-
-    return {} unless options[:only]
+    return {} unless columns
 
     attrs = {}
-    options[:only].each { |a| attrs[a] = send(a) if self.respond_to?(a) }
+    columns.each { |a| attrs[a] = send(a) if self.respond_to?(a) }
     attrs
   end
 
