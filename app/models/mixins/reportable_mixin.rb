@@ -54,7 +54,7 @@ module ReportableMixin
     columns = data_records.first.keys
 
     data_records =
-      add_includes(data_records, options) if options[:include]
+      add_includes(data_records, options[:include]) if options[:include]
     [columns, data_records]
   end
 
@@ -67,8 +67,7 @@ module ReportableMixin
 
   private
 
-  def add_includes(data_records, options)
-    includes = options[:include]
+  def add_includes(data_records, includes)
     include_has_options = includes.kind_of?(Hash)
     associations = include_has_options ? includes.keys : Array(includes)
 
