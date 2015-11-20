@@ -417,7 +417,7 @@ class VmConfig
     ems = host_vim_credentials
     return (filename) if ems.nil?
 
-    password_decrypt = MiqPassword.decrypt(ems_host['password'])
+    password_decrypt = MiqPassword.decrypt(ems['password'])
     $log.debug "resolve_path_names: emsHost = #{ems['host']}, emsUser = #{ems['user']}" if $log
     vi = MiqVimInventory.new(ems['host'], ems['user'], password_decrypt)
     return getDsName(filename, vi)
