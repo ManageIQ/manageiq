@@ -65,20 +65,4 @@ module ReportableMixin
     columns.each { |a| attrs[a] = send(a) if self.respond_to?(a) }
     attrs
   end
-
-  def get_attributes_with_options_vague(options)
-    only_or_except =
-        if options[:only] || options[:except]
-          {:only => options[:only], :except => options[:except]}
-        end
-    return {} unless only_or_except
-
-    attrs = {}
-    options[:only].each { |a| attrs[a] = send(a) if self.respond_to?(a) }
-    attrs = attrs.inject({}) do |h, (k, v)|
-      h["#{options[:qualify_attribute_names]}.#{k}"] = v
-      h
-    end if options[:qualify_attribute_names]
-    attrs
-  end
 end
