@@ -70,21 +70,16 @@ class MiqReportResult < ActiveRecord::Base
 
   def report_results
     if binary_blob
-      serializer_name = binary_blob.data_type
-      serializer_name = "Marshal" unless serializer_name == "YAML"  # YAML or Marshal, for now
-      serializer = serializer_name.constantize
-      loaded = serializer.load(binary_blob.binary)
-      loaded.kind_of?(Hash) ? MiqReport.from_hash(loaded) : loaded
+      data = binary_blob.data
+      data.kind_of?(Hash) ? MiqReport.from_hash(data) : data
     elsif report.kind_of?(MiqReport)
       report
-    else
-      nil
     end
   end
 
   def report_results=(value)
-    self.binary_blob = BinaryBlob.new(:name => "report_results", :data_type => "YAML")
-    binary_blob.binary = YAML.dump(value.kind_of?(MiqReport) ? value.to_hash : value)
+    build_binary_blob(:name => "report_results")
+    binary_blob.store_data("YAML", value.kind_of?(MiqReport) ? value.to_hash : value)
   end
 
   def report_html=(html)
@@ -119,7 +114,6 @@ class MiqReportResult < ActiveRecord::Base
   def report=(val)
     write_attribute(:report, val.nil? ? nil : val.to_hash)
   end
-  #
 
   def build_html_rows_for_legacy
     return if report && report.respond_to?(:extras) && report.extras.respond_to?(:has_key?) && report.extras.key?(:total_html_rows) && report.extras[:total_html_rows] != 0

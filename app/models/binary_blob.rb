@@ -93,4 +93,17 @@ class BinaryBlob < ActiveRecord::Base
     part_size = self.part_size || BinaryBlobPart.default_part_size
     (self.size.to_f / part_size).ceil
   end
+
+  def serializer
+    data_type == "YAML" ? YAML : Marshal
+  end
+
+  def data
+    serializer.load(binary)
+  end
+
+  def store_data(data_type, the_data)
+    self.data_type = data_type
+    self.binary = serializer.dump(the_data)
+  end
 end
