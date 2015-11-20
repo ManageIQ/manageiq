@@ -1,5 +1,8 @@
 class LeverageAuthenticationsForRegistrationHttpProxyCredentials < ActiveRecord::Migration
-  class MiqDatabase < ActiveRecord::Base; end
+  class MiqDatabase < ActiveRecord::Base
+    self.inheritance_column = :_type_disabled # disable STI
+  end
+
   class Authentication < ActiveRecord::Base
     self.inheritance_column = :_type_disabled # disable STI
   end

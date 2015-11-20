@@ -10,14 +10,14 @@ class AddContainerImageDigest < ActiveRecord::Migration
     add_column :container_images, :digest, :string
     SUPPORTED_DIGESTS.each do |digest|
       say_with_time("Update container images with digest #{digest}") do
-        ContainerImage.where("tag LIKE '#{digest}:%'").update_all('digest = tag, tag = null')
+        ContainerImage.where("tag LIKE '#{digest}:%'").update_all('digest = tag, tag = NULL')
       end
     end
   end
 
   def down
     say_with_time("Update container images tags from digests") do
-      ContainerImage.where("digest is not null").update_all('tag = digest')
+      ContainerImage.where("digest IS NOT NULL").update_all('tag = digest')
     end
     remove_column :container_images, :digest
   end
