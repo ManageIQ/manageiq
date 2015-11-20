@@ -1,6 +1,7 @@
 module MiqReportable
   # generate a ruport table from an array of db objects
-  def self.records2table(records, options)
+  def self.records2table(records, only_columns)
+    options = {:only => only_columns}
     return Ruport::Data::Table.new if records.blank?
 
     data = records.map do|r|
