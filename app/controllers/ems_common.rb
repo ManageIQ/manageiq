@@ -455,14 +455,14 @@ module EmsCommon
     params[:display] = @display if ["vms", "hosts", "storages", "instances", "images"].include?(@display)  # Were we displaying vms/hosts/storages
     params[:page] = @current_page unless @current_page.nil?   # Save current page for list refresh
 
-    if params[:pressed].starts_with?("vm_") || # Handle buttons from sub-items screen
-       params[:pressed].starts_with?("miq_template_") ||
-       params[:pressed].starts_with?("guest_") ||
-       params[:pressed].starts_with?("image_") ||
-       params[:pressed].starts_with?("instance_") ||
-       params[:pressed].starts_with?("storage_") ||
-       params[:pressed].starts_with?("ems_cluster_") ||
-       params[:pressed].starts_with?("host_")
+    if params[:pressed].starts_with?("vm_", # Handle buttons from sub-items screen
+                                     "miq_template_",
+                                     "guest_",
+                                     "image_",
+                                     "instance_",
+                                     "storage_",
+                                     "ems_cluster_",
+                                     "host_")
 
       scanhosts if params[:pressed] == "host_scan"
       analyze_check_compliance_hosts if params[:pressed] == "host_analyze_check_compliance"
