@@ -571,7 +571,7 @@ class MiqExpression
 
     rt = rel_time.downcase
 
-    if rt.starts_with?("this") || rt.starts_with?("last")
+    if rt.starts_with?("this", "last")
       # Convert these into the time spec form: <value> <interval> Ago
       value, interval = rt.split
       rt = "#{value == "this" ? 0 : 1} #{interval} ago"
