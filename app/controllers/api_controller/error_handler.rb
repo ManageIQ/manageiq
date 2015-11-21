@@ -35,6 +35,7 @@ class ApiController
       api_log_error("\n\n#{backtrace}") if kind == :internal_server_error && !backtrace.empty?
 
       render :json => {:error => err}, :status => status
+      log_api_response
     end
   end
 end
