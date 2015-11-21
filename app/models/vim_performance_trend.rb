@@ -215,7 +215,7 @@ class VimPerformanceTrend < ActsAsArModel
   end
 
   def self.trend_limit_cols(db, col, interval)
-    col = col.starts_with?("min_") || col.starts_with?("max_") ? col[4..-1] : col
+    col = col.starts_with?("min_", "max_") ? col[4..-1] : col
     return [] unless TREND_COLS[db.to_sym]
     return [] unless TREND_COLS[db.to_sym][col.to_sym]
     return [] unless TREND_COLS[db.to_sym][col.to_sym][:limit_cols]
