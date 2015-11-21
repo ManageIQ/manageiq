@@ -613,7 +613,7 @@ class MiqExpression
 
   def self.date_time_value_is_relative?(value)
     v = value.downcase
-    v.starts_with?("this") || v.starts_with?("last") || v.ends_with?("ago") || ["today", "yesterday", "now"].include?(v)
+    v.starts_with?("this", "last") || v.ends_with?("ago") || ["today", "yesterday", "now"].include?(v)
   end
 
   def to_sql(tz = nil)
