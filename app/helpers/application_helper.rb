@@ -429,8 +429,8 @@ module ApplicationHelper
       title += ": Optimize"
     elsif layout.starts_with?("miq_request")
       title += ": Requests"
-    elsif layout.starts_with?("cim_") ||
-          layout.starts_with?("snia_")
+    elsif layout.starts_with?("cim_",
+                              "snia_")
       title += ": Storage - #{ui_lookup(:tables => layout)}"
     elsif layout == "login"
       title += ": Login"
