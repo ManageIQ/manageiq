@@ -702,7 +702,7 @@ class ApplicationController < ActionController::Base
   def build_audit_msg(new, current, msg_in)
     msg_arr = []
     new.each_key do |k|
-      if !(k.to_s.ends_with?("password2") || k.to_s.ends_with?("verify")) &&
+      if !k.to_s.ends_with?("password2", "verify") &&
          (current.nil? || (new[k] != current[k]))
         if password_field?(k) # Asterisk out password fields
           msg_arr << "#{k}:[*]#{' to [*]' unless current.nil?}"
