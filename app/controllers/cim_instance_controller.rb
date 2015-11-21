@@ -21,11 +21,11 @@ class CimInstanceController < ApplicationController
     @edit = session[:edit]                          # Restore @edit for adv search box
     params[:display] = @display if ["host", "vms", "storages"].include?(@display) # Were we displaying vms/storages
 
-    if params[:pressed].starts_with?("vm_") || # Handle buttons from sub-items screen
-       params[:pressed].starts_with?("miq_template_") ||
-       params[:pressed].starts_with?("guest_") ||
-       params[:pressed].starts_with?("storage_") ||
-       params[:pressed].starts_with?("host_")
+    if params[:pressed].starts_with?("vm_", # Handle buttons from sub-items screen
+                                     "miq_template_",
+                                     "guest_",
+                                     "storage_",
+                                     "host_")
 
       scanhosts if params[:pressed] == "host_scan"
       analyze_check_compliance_hosts if params[:pressed] == "host_analyze_check_compliance"
