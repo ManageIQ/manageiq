@@ -251,9 +251,7 @@ module VMDB
       klass = Object.const_get(klass) unless klass.class == Class
 
       # find the key for the class and set the value
-      keys = klass.path_to_my_worker_settings.dup
-      keys.unshift(:workers)
-      keys += setting.to_miq_a
+      keys = klass.config_settings_path + settings.to_miq_a
       config.store_path(keys, value)
     end
 
