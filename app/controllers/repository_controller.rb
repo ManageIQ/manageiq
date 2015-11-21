@@ -158,9 +158,9 @@ class RepositoryController < ApplicationController
     @edit = session[:edit]                          # Restore @edit for adv search box
     params[:display] = "vms" if @display == "vms"   # Were we displaying vms
 
-    if params[:pressed].starts_with?("vm_") || # Handle buttons from sub-items screen
-       params[:pressed].starts_with?("miq_template_") ||
-       params[:pressed].starts_with?("guest_")
+    if params[:pressed].starts_with?("vm_", # Handle buttons from sub-items screen
+                                     "miq_template_",
+                                     "guest_")
 
       pfx = pfx_for_vm_button_pressed(params[:pressed])
       process_vm_buttons(pfx)
