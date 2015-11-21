@@ -1479,7 +1479,7 @@ class MiqExpression
       @reporting_available_fields[model.to_s] ||= {}
       @reporting_available_fields[model.to_s][interval.to_s] ||= MiqExpression.model_details(model, :include_model => false, :include_tags => true, :interval => interval)
     elsif model.to_s == "Chargeback"
-      @reporting_available_fields[model.to_s] ||= MiqExpression.model_details(model, :include_model => false, :include_tags => true).select { |c| c.last.ends_with?("_cost") || c.last.ends_with?("_metric") || c.last.ends_with?("-owner_name") }
+      @reporting_available_fields[model.to_s] ||= MiqExpression.model_details(model, :include_model => false, :include_tags => true).select { |c| c.last.ends_with?("_cost", "_metric", "-owner_name") }
     else
       @reporting_available_fields[model.to_s] ||= MiqExpression.model_details(model, :include_model => false, :include_tags => true)
     end
