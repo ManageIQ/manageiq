@@ -27,7 +27,7 @@ class ContainerDashboardController < ApplicationController
   end
 
   def collect_data(provider_id)
-    ContainerDashboardService.new(provider_id).all_data
+    ContainerDashboardService.new(provider_id, self).all_data
   end
 
   def set_session_data

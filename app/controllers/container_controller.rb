@@ -72,6 +72,11 @@ class ContainerController < ApplicationController
     end
   end
 
+  def show_list
+    redirect_to :controller => "container",
+                :action     => "explorer"
+  end
+
   def explorer
     @display = params[:display] || "main" unless control_selected?
     @record = Container.find_by_id(from_cid(params[:id]))

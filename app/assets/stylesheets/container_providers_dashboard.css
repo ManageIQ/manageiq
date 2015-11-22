@@ -44,10 +44,55 @@
     line-height: 1.1;
 }
 
-
 /* Remove after next pf release */
 .icon-atomic:before {
     max-height: 20px;
     display: inline-block;
-    content:url(/images/icons/new/vendor-atomic_dashboard.png);
+    content: url(/images/icons/new/vendor-atomic_dashboard.png);
+}
+
+/* line 44, scss/main.scss */
+.provider-card {
+    min-height: 140px;
+}
+/* line 47, scss/main.scss */
+.provider-card .providers {
+    padding: 20px 0;
+}
+/* line 50, scss/main.scss */
+.provider-card .providers a {
+    color: #000000;
+    text-decoration: none;
+}
+/* line 55, scss/main.scss */
+.provider-card .providers a:hover {
+    color: #00618a;
+    text-decoration: underline;
+}
+/* line 59, scss/main.scss */
+.provider-card .providers .count {
+    margin: 0 5px;
+}
+/* line 63, scss/main.scss */
+.provider-card .providers .provider-icon {
+    font-size: 22px;
+    position: relative;
+    top: 5px;
+    padding-right: 5px;
+    opacity: .9;
+}
+/* line 70, scss/main.scss */
+.provider-card .providers .provider-icon:hover {
+    opacity: 1;
+}
+/* line 76, scss/main.scss */
+.provider-card .provider-icon-large {
+    font-size: 100px;
+    position: relative;
+    padding-bottom: 4px;
+    width: 100%;
+    text-align: center;
+}
+.single-provider-containers-dashboard .card-pf.card-pf-aggregate-status-mini {
+    height: 62px;
 }

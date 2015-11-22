@@ -3,7 +3,6 @@ angular.module('containerDashboard').factory('ContainerDashboardUtils', [functio
     return {
       title: "Providers",
       count: 0,
-      href: "../ems_container/show_list",
       notifications: []
     };
   };
@@ -12,7 +11,6 @@ angular.module('containerDashboard').factory('ContainerDashboardUtils', [functio
       title: "Nodes",
       iconClass: "pficon pficon-container-node",
       count: 0,
-      href: "../container_node/show_list",
       notification: {}
     };
   };
@@ -21,7 +19,6 @@ angular.module('containerDashboard').factory('ContainerDashboardUtils', [functio
       title: "Containers",
       iconClass: "fa fa-cube",
       count: 0,
-      href: "../container/explorer",
       notification: {}
     };
   };
@@ -30,7 +27,6 @@ angular.module('containerDashboard').factory('ContainerDashboardUtils', [functio
       title:  "Registries",
       iconClass: "pficon pficon-registry",
       count: 0,
-      href: "../container_image_registry/show_list",
       notification: {}
     };
   };
@@ -39,7 +35,6 @@ angular.module('containerDashboard').factory('ContainerDashboardUtils', [functio
       title: "Projects",
       iconClass: "pficon pficon-project",
       count: 0,
-      href: "../container_project/show_list",
       notification: {}
     };
   };
@@ -48,7 +43,6 @@ angular.module('containerDashboard').factory('ContainerDashboardUtils', [functio
       title: "Pods",
       iconClass: "fa fa-cubes",
       count: 0,
-      href: "../container_group/show_list",
       notification: {}
     };
   };
@@ -57,7 +51,6 @@ angular.module('containerDashboard').factory('ContainerDashboardUtils', [functio
       title: "Services",
       iconClass: "pficon pficon-service",
       count: 0,
-      href: "../container_service/show_list",
       notification: {}
     };
   };
@@ -66,7 +59,6 @@ angular.module('containerDashboard').factory('ContainerDashboardUtils', [functio
       title: "Images",
       iconClass: "pficon pficon-image",
       count: 0,
-      href: "../container_image/show_list",
       notification: {}
     };
   };
@@ -75,7 +67,6 @@ angular.module('containerDashboard').factory('ContainerDashboardUtils', [functio
       title: "Routes",
       iconClass: "pficon pficon-route",
       count: 0,
-      href: "../container_route/show_list",
       notification: {}
     };
   };
@@ -96,8 +87,9 @@ angular.module('containerDashboard').factory('ContainerDashboardUtils', [functio
         };
       }
 
-      if (statusObject.count == 0)
-          statusObject.href = "";
+      if (statusObject.count > 0) {
+        statusObject.href = data.href;
+      }
     } else {
       statusObject.count = 0;
     }

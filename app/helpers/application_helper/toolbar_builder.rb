@@ -53,7 +53,7 @@ class ApplicationHelper::ToolbarBuilder
         !bg[:name].starts_with?("miq_dialog") && !bg[:name].starts_with?("custom_button") &&
         !bg[:name].starts_with?("instance_") && !bg[:name].starts_with?("image_")) &&
          !["record_summary", "summary_main", "summary_download", "tree_main",
-           "x_edit_view_tb", "history_main"].include?(bg[:name])
+           "x_edit_view_tb", "history_main", "ems_container_dashboard"].include?(bg[:name])
         next      # Skip if button_group doesn't match
       else
         # keeping track of groups that were not skipped to add separator, else it adds a separator before a button even tho no other groups were shown, i.e. vm sub screens, drift_history
@@ -540,7 +540,7 @@ class ApplicationHelper::ToolbarBuilder
                    %w(instance_check_compliance instance_compare).include?(id)
 
     # don't hide view buttons in toolbar
-    return false if %( view_grid view_tile view_list refresh_log fetch_log common_drift
+    return false if %( view_grid view_tile view_list view_dashboard view_summary refresh_log fetch_log common_drift
       download_text download_csv download_pdf download_view vm_download_pdf
       tree_large tree_small).include?(id) && !%w(miq_policy_rsop ops).include?(@layout)
 
@@ -905,6 +905,8 @@ class ApplicationHelper::ToolbarBuilder
     return true if id.starts_with?("view_") && id.ends_with?("textual")  # Summary view buttons
     return true if @gtl_type && id.starts_with?("view_") && id.ends_with?(@gtl_type)  # GTL view buttons
     return true if id == "history_1" && x_tree_history.length < 2 # Need 1 child button to show parent
+    return true if id == "view_dashboard" && (@showtype == "dashboard")
+    return true if id == "view_summary" && (@showtype != "dashboard")
 
     # Form buttons check if anything on form has changed
     return true if ["button_add", "button_save", "button_reset"].include?(id) && !@changed
