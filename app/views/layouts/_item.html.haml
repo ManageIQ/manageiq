@@ -89,6 +89,8 @@
           = _("Contents")
         .col-md-8
           - if @item.has_contents?
+            %p
+              = link_to("Download", "filesystem_download/#{@item.id}")
             - if @item.contents_displayable?
               = text_area_tag("item_contents", @item.contents, :readonly => "readonly", :style => "overflow:auto;width:600px;height:400px;")
             - else

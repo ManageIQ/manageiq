@@ -9,6 +9,17 @@ FactoryGirl.define do
     association     :miq_group
   end
 
+  factory :miq_report_filesystem, :parent => :miq_report do
+    sequence(:name) { |n| "Files #{seq_padded_for_sorting(n)}" }
+    db              'Filesystem'
+    title           'Files'
+    cols            %w(name base_name file_version size contents_available permissions updated_on mtime)
+    col_order       %w(name base_name file_version size contents_available permissions updated_on mtime)
+    headers         %w(Name File\ Name File\ Version Size Contents\ Available Permissions Collected\ On Last\ Modified)
+    sortby          ["name"]
+    order           "Ascending"
+  end
+
   factory :miq_report_with_results, :parent => :miq_report do
     miq_report_results { [FactoryGirl.create(:miq_report_result)] }
   end
