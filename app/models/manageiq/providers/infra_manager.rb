@@ -41,8 +41,7 @@ module ManageIQ::Providers
     # are merged in upon startup.
     #
     def self.merge_config_settings(cfg = VMDB::Config.new("vmdb"))
-      path = [:ems, :ems_redhat, :service, :read_timeout]
-      cfg.merge_from_template_if_missing(*path)
+      cfg.merge_from_template_if_missing(:ems, :ems_redhat, :service, :read_timeout)
     end
   end
 end

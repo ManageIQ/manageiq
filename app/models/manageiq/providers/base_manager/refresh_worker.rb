@@ -24,9 +24,8 @@ class ManageIQ::Providers::BaseManager::RefreshWorker < MiqQueueWorkerBase
     super
 
     path = [:workers, :worker_base, :queue_worker_base, :ems_refresh_worker]
-    configuration.merge_from_template_if_missing(*path)
 
-    refresh_worker_settings = configuration.config.fetch_path(*path)
+    refresh_worker_settings = configuration.fetch_with_fallback(*path)
     unless refresh_worker_settings.key?(:defaults)
       subclasses = ExtManagementSystem.types.collect { |k| "ems_refresh_worker_#{k}".to_sym }
       _log.info("Migrating Settings")

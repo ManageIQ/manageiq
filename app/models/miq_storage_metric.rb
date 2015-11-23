@@ -128,10 +128,7 @@ class MiqStorageMetric < ActiveRecord::Base
 
   def self.purge_date(type)
     cfg = VMDB::Config.new("vmdb")
-    vpath = [:storage, :metrics_history, type.to_sym]
-    # TODO: change to merge_from_template_if_missing() after beta.
-    cfg.merge_from_template(*vpath)
-    value = cfg.config.fetch_path(*vpath)
+    value = cfg.fetch_with_fallback(:storage, :metrics_history, type.to_sym)
     return nil if value.nil?
 
     value = value.to_i.days if value.kind_of?(Fixnum) # Default unit is days
