@@ -1,20 +1,40 @@
 module ApplicationHelper::PageLayouts
   def layout_uses_listnav?
-    if !(@layout == "dashboard" && ["show", "change_tab", "auth_error"].include?(controller.action_name) ||
-         @layout == "report" ||
-         @layout == "exception" ||
-         @layout == "chargeback" ||
-         @layout == "container_topology" ||
-         @layout == "container_dashboard" ||
-         @layout.starts_with?("miq_request") ||
-         %w(about all_tasks all_ui_tasks configuration diagnostics miq_ae_automate_button miq_ae_export
-            miq_ae_logs miq_ae_tools miq_policy miq_policy_export miq_policy_logs my_tasks my_ui_tasks
-            ops pxe rss server_build).include?(@layout)) &&
-       @showtype != "dialog_provision" && !controller.action_name.end_with?("tagging_edit")
-      return true
-    else
-      return false
-    end
+    return false if %w(
+      about
+      all_tasks
+      all_ui_tasks
+      chargeback
+      configuration
+      container_dashboard
+      container_topology
+      diagnostics
+      exception
+      miq_ae_automate_button
+      miq_ae_export
+      miq_ae_logs
+      miq_ae_tools
+      miq_policy
+      miq_policy_export
+      miq_policy_logs
+      my_tasks
+      my_ui_tasks
+      ops
+      pxe
+      report
+      rss
+      server_build
+    ).include?(@layout)
+
+    return false if @layout == "dashboard" && ["show", "change_tab", "auth_error"].include?(controller.action_name)
+
+    return false if @layout.starts_with?("miq_request")
+
+    return false if @showtype == "dialog_provision"
+
+    return false if controller.action_name.end_with?("tagging_edit")
+
+    true
   end
 
   def layout_uses_tabs?
