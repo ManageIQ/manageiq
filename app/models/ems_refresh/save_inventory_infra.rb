@@ -138,8 +138,9 @@ module EmsRefresh::SaveInventoryInfra
             found = ems.hosts.detect { |e| e.name.downcase == h[:name].downcase }
           elsif ["localhost", "localhost.localdomain", "127.0.0.1"].include_none?(h[:hostname], h[:ipaddress])
             # host = Host.find_by_hostname(hostname) has a risk of creating duplicate hosts
-            _log.debug "#{log_header} Host database lookup - hostname: [#{h[:hostname]}] IP: [#{h[:ipaddress]}]"
-            found = Host.lookUpHost(h[:hostname], h[:ipaddress], :ems_ref => h[:ems_ref], :ems_id => ems.id)
+            # allow a deleted EMS to be re-added an pick up old orphaned hosts
+            _log.debug "#{log_header} Host database lookup - hostname: [#{h[:hostname]}] IP: [#{h[:ipaddress]}] ems_ref: [#{h[:ems_ref]}]"
+            found = Host.lookUpHost(h[:hostname], h[:ipaddress], :ems_ref => h[:ems_ref])
           end
         end
 
