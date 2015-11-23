@@ -19,7 +19,7 @@ module Metric::Targets
     targets += zone.storages.select { |s| Storage::SUPPORTED_STORAGE_TYPES.include?(s.store_type) } unless options[:exclude_storages]
 
     targets = targets.select(&:perf_capture_enabled?)
-    targets = targets.collect { |t| t.kind_of?(EmsCluster) ? t.hosts : t }.flatten
+    targets = targets.flat_map { |t| t.kind_of?(EmsCluster) ? t.hosts : t }
 
     targets += capture_vm_targets(targets, Host, options)
 
@@ -61,7 +61,7 @@ module Metric::Targets
     zone.ems_containers.each do |ems|
       targets += ems.container_nodes
       targets += ems.container_groups
-      targets += ems.container_groups.collect(&:containers).flatten
+      targets += ems.container_groups.flat_map(&:containers)
     end
 
     targets
@@ -77,7 +77,7 @@ module Metric::Targets
         t.respond_to?(:vms)
       end
       MiqPreloader.preload(enabled_parents, :vms)
-      vms = targets.collect { |t| enabled_parents.include?(t) ? t.vms.select { |v| v.state == 'on' } : [] }.flatten.compact
+      vms = targets.flat_map { |t| enabled_parents.include?(t) ? t.vms.select { |v| v.state == 'on' } : [] }
     end
     vms
   end
