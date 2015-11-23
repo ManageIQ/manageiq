@@ -35,19 +35,18 @@ describe MiqAeDomain do
     it "about file present" do
       version = '7.1.1'
       dom2 = create_about_class('Vitalstatistix', version)
-      write_about_file(dom2)
-      expect(dom2.available_version).to eq('7.1.1')
+      write_about_file(dom2, version)
+      expect(dom2.available_version).to eq(version)
     end
   end
 
-  def write_about_file(domain)
-    obj = MiqAeClass.find_by_fqname("/#{domain.name}/System/About")
-    hash = {'object_type' => CLASS_OBJ_TYPE,
-            'version'     => VERSION,
-            'object'      => {'attributes' => obj.export_attributes,
-                              'schema'     => obj.export_schema}}
+  def write_about_file(domain, version)
+    schema = [{"field" => {"name" => "version", "default_value" => version}}]
+    hash = {"object_type" => "class", "version" => 1.0,
+            "object" => {"attributes" => {"name" => "About"}, "schema" => schema}}
     fname = File.join(MiqAeDatastore::DATASTORE_DIRECTORY, domain.name.downcase, 'system',
-                      "about#{CLASS_DIR_SUFFIX}", CLASS_YAML_FILENAME)
+                      "about#{MiqAeYamlImportExportMixin::CLASS_DIR_SUFFIX}",
+                      MiqAeYamlImportExportMixin::CLASS_YAML_FILENAME)
     dirname = File.dirname(fname)
     FileUtils.mkdir_p(dirname) unless File.directory?(dirname)
     File.write(fname, hash.to_yaml)
