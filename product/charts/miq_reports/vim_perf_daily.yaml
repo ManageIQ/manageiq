@@ -163,6 +163,7 @@ headers:
 - ! '% Ready'
 - ! '% Idle'
 - ! '% Used'
+- Number of Cores
 - Avg Used
 - Max Available
 - Max Reserved

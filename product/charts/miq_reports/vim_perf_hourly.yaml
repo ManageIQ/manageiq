@@ -78,6 +78,7 @@ headers:
 - ! '% Ready'
 - ! '% Idle'
 - ! '% Used'
+- Number of Cores
 - Avg Used
 - Available
 - Reserved
