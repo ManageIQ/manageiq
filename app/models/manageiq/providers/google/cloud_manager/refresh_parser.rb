@@ -127,6 +127,9 @@ module ManageIQ::Providers
         name   = instance.name
         name ||= uid
 
+        flavor_uid = parse_uid_from_url(instance.machine_type)
+        flavor     = @data_index.fetch_path(:flavors, flavor_uid)
+
         zone_uid   = parse_uid_from_url(instance.zone)
         zone       = @data_index.fetch_path(:availability_zones, zone_uid)
 
@@ -139,7 +142,16 @@ module ManageIQ::Providers
           :description       => instance.description,
           :vendor            => "google",
           :raw_power_state   => instance.state,
+          :flavor            => flavor,
           :availability_zone => zone,
+          :hardware          => {
+            :cpu_sockets          => flavor[:cpus],
+            :cpu_total_cores      => flavor[:cpu_cores],
+            :cpu_cores_per_socket => 1,
+            :memory_mb            => flavor[:memory] / 1.megabyte,
+            :disks                => [],
+            :networks             => [],
+          }
         }
 
         return uid, new_result
