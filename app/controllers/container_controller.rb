@@ -74,6 +74,16 @@ class ContainerController < ApplicationController
 
   def explorer
     @display = params[:display] || "main" unless control_selected?
+    @record = Container.find_by_id(from_cid(params[:id]))
+    show_timeline if @display == "timeline"
+    if @display == "performance"
+      @showtype = "performance"
+      drop_breadcrumb(
+        :name => "#{@record.name} Capacity & Utilization",
+        :url  => "/container/show/#{@record.id}?display=#{@display}&refresh=n"
+      )
+      perf_gen_init_options # Initialize perf chart options, charts will be generated async
+    end
     @explorer   = true
     @lastaction = "explorer"
 
@@ -114,7 +124,11 @@ class ContainerController < ApplicationController
     params.merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)
 
-    @display == "timeline" ? show_timeline : get_node_info(x_node)
+    if @display == "timeline"
+      show_timeline
+    elsif @display != "performance"
+      get_node_info(x_node)
+    end
 
     @in_a_form = false
     render :layout => "application"
@@ -263,7 +277,13 @@ class ContainerController < ApplicationController
       presenter[:update_partials][:main_div] = r[:partial => partial]
     elsif params[:display]
       partial_locals = {:controller => "container", :action_url => @lastaction}
-      partial = params[:display] == "timeline" ? "layouts/tl_show" : "layouts/x_gtl"
+      if params[:display] == "timeline"
+        partial = "layouts/tl_show"
+      elsif params[:display] == "performance"
+        partial = "layouts/performance"
+      else
+        partial = "layouts/x_gtl"
+      end
       presenter[:parent_id]    = @record.id           # Set parent rec id for JS function miqGridSort to build URL
       presenter[:parent_class] = request[:controller] # Set parent class for URL also
       presenter[:update_partials][:main_div] = r[:partial => partial, :locals => partial_locals]
