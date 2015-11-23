@@ -32,15 +32,14 @@ class MiqAeDomain < MiqAeNamespace
   end
 
   def version
-    system = ae_namespaces.detect { |ns| ns.name == 'System' }
-    about = system.try(:ae_classes).try(:detect) { |cls| cls.name == 'About' }
+    system = ae_namespaces.detect { |ns| ns.name.downcase == 'system' }
+    about = system.try(:ae_classes).try(:detect) { |cls| cls.name.downcase == 'about' }
     version_field = about.try(:ae_fields).try(:detect) { |fld| fld.name == 'version' }
     version_field.try(:default_value)
   end
 
   def available_version
-    fname = File.join(MiqAeDatastore::DATASTORE_DIRECTORY, name.downcase, 'system',
-                      "about#{CLASS_DIR_SUFFIX}", CLASS_YAML_FILENAME)
+    fname = about_file_name.to_s
     return nil unless File.exist?(fname)
     class_yaml = YAML.load_file(fname)
     fields = class_yaml.fetch_path('object', 'schema') if class_yaml.kind_of?(Hash)
@@ -61,5 +60,13 @@ class MiqAeDomain < MiqAeNamespace
 
   def self.all_unlocked
     MiqAeDomain.where('system is null OR system = ?', [false]).order('priority DESC')
+  end
+
+  def about_file_name
+    system = ae_namespaces.detect { |ns| ns.name.downcase == 'system' }
+    about = system.try(:ae_classes).try(:detect) { |cls| cls.name.downcase == 'about' }
+
+    File.join(MiqAeDatastore::DATASTORE_DIRECTORY, name, system.name,
+              "#{about.name}#{CLASS_DIR_SUFFIX}", CLASS_YAML_FILENAME) if about
   end
 end
