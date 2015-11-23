@@ -102,4 +102,8 @@ module VmOrTemplate::Operations
     return {:available => true,   :message => nil}  if current_state.send(check_powered_on ? "==" : "!=", "on")
     {:available => false,  :message => "The VM is#{" not" if check_powered_on} powered on"}
   end
+
+  def validate_unsupported(message_prefix)
+    {:available => false, :message => "#{message_prefix} is not available for #{self.class.model_suffix} VM or Template."}
+  end
 end

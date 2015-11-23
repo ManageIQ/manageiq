@@ -34,10 +34,4 @@ module Vm::Operations
 
     s
   end
-
-  private
-
-  def validate_unsupported(message_prefix)
-    {:available => false, :message => "#{message_prefix} is not available for #{self.class.model_suffix} VM."}
-  end
 end
