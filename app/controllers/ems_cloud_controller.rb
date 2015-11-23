@@ -284,4 +284,5 @@ class EmsCloudController < ApplicationController
   def restful?
     true
   end
+  public :restful?
 end

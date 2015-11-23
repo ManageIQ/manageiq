@@ -1336,6 +1336,37 @@ class ApplicationHelper::ToolbarBuilder
     false
   end
 
+  def controller_restful?
+    # want to be able to cache false, so no ||=
+    return @_restful_cache unless @_restful_cache.nil?
+
+    @_restful_cache = (
+      obj = @view_binding.receiver
+
+      if obj.respond_to? :controller
+        obj.controller.try(:restful?)
+      else
+        obj.try(:restful?)
+      end
+    )
+  end
+
+  def url_for_save_button(name, url_tpl, controller_restful)
+    url = safer_eval(url_tpl)
+
+    if %w(view_grid view_tile view_list).include?(name)
+      # blows up in sub screens for CI's, need to get rid of first directory and anything after last slash in @gtl_url, that's being manipulated in JS function
+      url.gsub!(/^\/[a-z|A-Z|0-9|_|-]+/, "")
+      ridx = url.rindex('/')
+      url = url.slice(0..ridx - 1) if ridx
+
+      # handle restful routes - we want just / if the url is just an id
+      url = '/' if controller_restful && url =~ %r{^\/(\d+|\d+r\d+)\?$}
+    end
+
+    url
+  end
+
   def build_toolbar_save_button(item, props, parent = nil)
     button = item.key?(:buttonTwoState) ? item[:buttonTwoState] : (item.key?(:buttonSelect) ? item[:buttonSelect] : item[:button])
     button = parent + "__" + button if parent # Prefix with "parent__" if parent is passed in
@@ -1347,16 +1378,7 @@ class ApplicationHelper::ToolbarBuilder
       :onwhen  => item[:onwhen]
     )
 
-    if item[:url]
-      url = safer_eval(item[:url])
-      if %w(view_grid view_tile view_list).include?(props[:name])
-        # blows up in sub screens for CI's, need to get rid of first directory and anything after last slash in @gtl_url, that's being manipulated in JS function
-        url.gsub!(/^\/[a-z|A-Z|0-9|_|-]+/, "")
-        ridx = url.rindex('/')
-        url = url.slice(0..ridx - 1) if ridx
-      end
-      props[:url] = url
-    end
+    props[:url] = url_for_save_button(button, item[:url], controller_restful?) if item[:url]
 
     props[:explorer] = true if @explorer && !item[:url] # Add explorer = true if ajax button
     if item[:popup]
