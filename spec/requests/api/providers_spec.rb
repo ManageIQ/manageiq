@@ -24,8 +24,6 @@ describe ApiController do
   let(:openshift_credentials) do
     {
       "auth_type" => "bearer",
-      "userid"    => "foo",
-      "password"  => "bar",
       "auth_key"  => SecureRandom.hex
     }
   end
