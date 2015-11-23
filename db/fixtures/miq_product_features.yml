@@ -168,34 +168,10 @@
         :description: Add Atomic Catalog Item
         :feature_type: admin
         :identifier: atomic_catalogitem_new
-      - :name: Add a new Button Group
-        :description: Add a new Button Group
-        :feature_type: admin
-        :identifier: ab_group_new
-      - :name: Edit Button Group
-        :description: Edit Button Group
-        :feature_type: admin
-        :identifier: ab_group_edit
-      - :name: Remove Button Group
-        :description: Remove Button Group
-        :feature_type: admin
-        :identifier: ab_group_delete
-      - :name: Add a new Button
-        :description: Add a new Button
-        :feature_type: admin
-        :identifier: ab_button_new
       - :name: Edit Button
         :description: Edit Button
         :feature_type: admin
         :identifier: ab_button_edit
-      - :name: Remove Button
-        :description: Remove Button
-        :feature_type: admin
-        :identifier: ab_button_delete
-      - :name: Reorder Buttons and Groups
-        :description: Reorder Buttons and Groups
-        :feature_type: admin
-        :identifier: ab_group_reorder
     - :name: Operate
       :description: Perform Operations on Catalog Items
       :feature_type: control
@@ -1799,16 +1775,6 @@
           :feature_type: admin
           :hidden: true
           :identifier: ab_group_new
-        - :name: Add Button
-          :description: Add Buttons
-          :feature_type: admin
-          :hidden: true
-          :identifier: ab_button_new
-        - :name: Edit
-          :description: Edit Buttons
-          :feature_type: admin
-          :hidden: true
-          :identifier: ab_group_edit
         - :name: Delete
           :description: Delete Buttons
           :feature_type: admin

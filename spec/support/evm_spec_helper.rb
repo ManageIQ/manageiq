@@ -74,7 +74,7 @@ module EvmSpecHelper
 
   def self.seed_specific_product_features(*features)
     features.flatten!
-    hashes   = YAML.load_file(MiqProductFeature::FIXTURE_YAML)
+    hashes   = YAML.load_file(MiqProductFeature.feature_yaml)
     filtered = filter_specific_features([hashes], features).first
     MiqProductFeature.seed_from_hash(filtered)
   end
