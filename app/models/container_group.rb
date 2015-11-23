@@ -25,6 +25,7 @@ class ContainerGroup < ActiveRecord::Base
   has_many :vim_performance_states, :as => :resource
 
   virtual_column :ready_condition_status, :type => :string, :uses => :container_conditions
+  virtual_column :running_containers_summary, :type => :string
 
   # Needed for metrics
   delegate :my_zone, :to => :ext_management_system
@@ -35,6 +36,15 @@ class ContainerGroup < ActiveRecord::Base
 
   def ready_condition_status
     ready_condition.try(:status) || 'None'
+  end
+
+  def container_states_summary
+    containers.group(:state).count.symbolize_keys
+  end
+
+  def running_containers_summary
+    summary = container_states_summary
+    "#{summary[:running] || 0}/#{summary.values.sum}"
   end
 
   # validates :restart_policy, :inclusion => { :in => %w(always onFailure never) }
