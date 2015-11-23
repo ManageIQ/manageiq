@@ -142,7 +142,9 @@ describe Host do
   end
 
   context "power operations" do
-    before(:each) do
+    let(:validation_response) { {:available => false, :message => "The Host is not VMware ESX"} }
+
+    before do
       EvmSpecHelper.create_guid_miq_server_zone
       @ems = FactoryGirl.create(:ext_management_system, :tenant => FactoryGirl.create(:tenant))
       @host = FactoryGirl.create(:host, :ems_id => @ems.id)
@@ -178,68 +180,28 @@ describe Host do
     end
 
     context "with shutdown invalid" do
-      it "#validate_shutdown" do
-        msg = @host.validate_shutdown
-        msg.should be_kind_of(Hash)
-        msg[:available].should be_false
-        msg[:message].should   be_kind_of(String)
-      end
-
-      it "#shutdown" do
-        -> { @host.shutdown }.should_not raise_error
-      end
+      it("#shutdown")          { expect { @host.shutdown }.not_to raise_error }
+      it("#validate_shutdown") { expect(@host.validate_shutdown).to eq(validation_response) }
     end
 
     context "with reboot invalid" do
-      it "#validate_reboot" do
-        msg = @host.validate_reboot
-        msg.should be_kind_of(Hash)
-        msg[:available].should be_false
-        msg[:message].should   be_kind_of(String)
-      end
-
-      it "#reboot" do
-        -> { @host.reboot }.should_not raise_error
-      end
+      it("#reboot")          { expect { @host.reboot }.not_to raise_error }
+      it("#validate_reboot") { expect(@host.validate_reboot).to eq(validation_response) }
     end
 
     context "with standby invalid" do
-      it "#validate_standby" do
-        msg = @host.validate_standby
-        msg.should be_kind_of(Hash)
-        msg[:available].should be_false
-        msg[:message].should   be_kind_of(String)
-      end
-
-      it "#standby" do
-        -> { @host.standby }.should_not raise_error
-      end
+      it("#standby")          { expect { @host.standby }.not_to raise_error }
+      it("#validate_standby") { expect(@host.validate_standby).to eq(validation_response) }
     end
 
     context "with enter_maint_mode invalid" do
-      it "#validate_enter_maint_mode" do
-        msg = @host.validate_enter_maint_mode
-        msg.should be_kind_of(Hash)
-        msg[:available].should be_false
-        msg[:message].should   be_kind_of(String)
-      end
-
-      it "#enter_maint_mode" do
-        -> { @host.enter_maint_mode }.should_not raise_error
-      end
+      it("#enter_maint_mode")          { expect { @host.enter_maint_mode }.not_to raise_error }
+      it("#validate_enter_maint_mode") { expect(@host.validate_enter_maint_mode).to eq(validation_response) }
     end
 
     context "with exit_maint_mode invalid" do
-      it "#validate_exit_maint_mode" do
-        msg = @host.validate_exit_maint_mode
-        msg.should be_kind_of(Hash)
-        msg[:available].should be_false
-        msg[:message].should   be_kind_of(String)
-      end
-
-      it "#exit_maint_mode" do
-        -> { @host.exit_maint_mode }.should_not raise_error
-      end
+      it("#exit_maint_mode")          { expect { @host.exit_maint_mode }.not_to raise_error }
+      it("#validate_exit_maint_mode") { expect(@host.validate_exit_maint_mode).to eq(validation_response) }
     end
   end
 
