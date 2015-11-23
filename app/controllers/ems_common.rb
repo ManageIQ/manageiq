@@ -686,8 +686,8 @@ module EmsCommon
     @edit[:new][:provider_region] = @ems.provider_region
     @edit[:new][:hostname] = @ems.hostname
     @edit[:new][:emstype] = @ems.emstype
-    @edit[:amazon_regions] = get_amazon_regions if @ems.kind_of?(ManageIQ::Providers::Amazon::CloudManager)
-    @edit[:google_regions] = list_google_regions if @ems.kind_of?(ManageIQ::Providers::Google::CloudManager)
+    @edit[:amazon_regions] = get_regions('Amazon') if @ems.kind_of?(ManageIQ::Providers::Amazon::CloudManager)
+    @edit[:google_regions] = get_regions('Google') if @ems.kind_of?(ManageIQ::Providers::Google::CloudManager)
     @edit[:new][:port] = @ems.port
     @edit[:new][:api_version] = @ems.api_version
     @edit[:new][:provider_id] = @ems.provider_id
@@ -753,33 +753,17 @@ module EmsCommon
       @server_zones.push([zone.description, zone.name])
     end
     @ems_types = Array(model.supported_types_and_descriptions_hash.invert).sort_by(&:first)
-    @amazon_regions = get_amazon_regions
-    @azure_regions = get_azure_regions
-    @google_regions = list_google_regions
+    @amazon_regions, @azure_regions, @google_regions = %w(Amazon Azure Google).map do |provider_name|
+      get_regions(provider_name)
+    end
     @openstack_infra_providers = retrieve_openstack_infra_providers
     @openstack_api_versions = retrieve_openstack_api_versions
     @emstype_display = model.supported_types_and_descriptions_hash[@ems.emstype]
   end
 
-  def get_amazon_regions
+  def get_regions(provider_name)
     regions = {}
-    ManageIQ::Providers::Amazon::Regions.all.each do |region|
-      regions[region[:name]] = region[:description]
-    end
-    regions
-  end
-
-  def get_azure_regions
-    regions = {}
-    ManageIQ::Providers::Azure::Regions.all.each do |region|
-      regions[region[:name]] = region[:description]
-    end
-    regions
-  end
-
-  def list_google_regions
-    regions = {}
-    ManageIQ::Providers::Google::Regions.all.each do |region|
+    "ManageIQ::Providers::#{provider_name}::Regions".constantize.all.each do |region|
       regions[region[:name]] = region[:description]
     end
     regions
@@ -846,8 +830,8 @@ module EmsCommon
 
     @edit[:new][:host_default_vnc_port_start] = params[:host_default_vnc_port_start] if params[:host_default_vnc_port_start]
     @edit[:new][:host_default_vnc_port_end] = params[:host_default_vnc_port_end] if params[:host_default_vnc_port_end]
-    @edit[:amazon_regions] = get_amazon_regions if @edit[:new][:emstype] == "ec2"
-    @edit[:google_regions] = list_google_regions if @edit[:new][:emstype] == "gce"
+    @edit[:amazon_regions] = get_regions('Amazon') if @edit[:new][:emstype] == "ec2"
+    @edit[:google_regions] = get_regions('Google') if @edit[:new][:emstype] == "gce"
     @edit[:new][:security_protocol] = params[:security_protocol] if params[:security_protocol]
     @edit[:new][:realm] = nil if params[:security_protocol]
     @edit[:new][:realm] = params[:realm] if params[:realm]
