@@ -44,11 +44,8 @@ describe MiqAeDomain do
     schema = [{"field" => {"name" => "version", "default_value" => version}}]
     hash = {"object_type" => "class", "version" => 1.0,
             "object" => {"attributes" => {"name" => "About"}, "schema" => schema}}
-    fname = File.join(MiqAeDatastore::DATASTORE_DIRECTORY, domain.name.downcase, 'system',
-                      "about#{MiqAeYamlImportExportMixin::CLASS_DIR_SUFFIX}",
-                      MiqAeYamlImportExportMixin::CLASS_YAML_FILENAME)
-    dirname = File.dirname(fname)
-    FileUtils.mkdir_p(dirname) unless File.directory?(dirname)
+    fname = domain.send(:about_file_name)
+    FileUtils.mkdir_p(File.dirname(fname))
     File.write(fname, hash.to_yaml)
   end
 
