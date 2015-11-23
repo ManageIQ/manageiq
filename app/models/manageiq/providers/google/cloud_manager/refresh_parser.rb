@@ -23,6 +23,7 @@ module ManageIQ::Providers
         _log.info("#{log_header}...")
         get_zones
         get_flavors
+        get_cloud_networks
         get_images
         get_instances
         _log.info("#{log_header}...Complete")
@@ -40,6 +41,11 @@ module ManageIQ::Providers
       def get_flavors
         flavors = @connection.flavors.all
         process_collection(flavors, :flavors) { |flavor| parse_flavor(flavor) }
+      end
+
+      def get_cloud_networks
+        networks = @connection.networks.all
+        process_collection(networks, :cloud_networks) { |network| parse_cloud_network(network) }
       end
 
       def get_images
@@ -90,6 +96,20 @@ module ManageIQ::Providers
           :cpus        => flavor.guest_cpus,
           :cpu_cores   => flavor.guest_cpus,
           :memory      => flavor.memory_mb * 1.megabyte,
+        }
+
+        return uid, new_result
+      end
+
+      def parse_cloud_network(network)
+        uid  = network.id
+
+        new_result = {
+          :ems_ref => uid,
+          :name    => network.name,
+          :cidr    => network.ipv4_range,
+          :status  => "active",
+          :enabled => true,
         }
 
         return uid, new_result
