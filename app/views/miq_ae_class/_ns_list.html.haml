@@ -1,5 +1,8 @@
 #ns_list_div
   - if !@in_a_form
+    - unless @version_messages.blank?
+      - @version_messages.each do |msg|
+        = render :partial => 'layouts/info_msg', :locals => {:message => msg}
     = render :partial => "layouts/flash_msg", :locals => {:div_num => "_ns_list"}
     %table#ns_list_grid.table.table-striped.table-bordered.table-hover.table-clickable.table-checkable
       %thead
