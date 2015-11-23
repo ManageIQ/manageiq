@@ -4,13 +4,10 @@ module ManageIQ::Providers
       module Objects
         def get_object_store
           return if @storage_service.blank? || @storage_service.name != :swift
-          # TODO(lsmola) convert to handled_list, we will probably need tenant setter on Fog::Model, so we can pass it
-          # in object
-          @os_handle.service_for_each_accessible_tenant('Storage') do |svc, tenant|
-            svc.directories.each do |dir|
-              result = process_collection_item(dir, :cloud_object_store_containers) { |c| parse_container(c, tenant) }
-              process_collection(dir.files, :cloud_object_store_objects) { |o| parse_object(o, result, tenant) }
-            end
+
+          @storage_service.handled_list(:directories).each do |dir|
+            result = process_collection_item(dir, :cloud_object_store_containers) { |c| parse_container(c, dir.project) }
+            process_collection(dir.files, :cloud_object_store_objects) { |o| parse_object(o, result, dir.project) }
           end
         end
 
