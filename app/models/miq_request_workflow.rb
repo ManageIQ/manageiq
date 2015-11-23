@@ -344,12 +344,19 @@ class MiqRequestWorkflow
     # Rails.logger.warn("#{name} #{start.zero? ? 'start' : 'end'}")
   end
 
+  def self.handle_deprecation(text)
+    deprecated_warn = "method: parse_ws_string, arg Type => String"
+    solution = "arg should be a hash"
+    MiqAeMethodService::Deprecation.deprecation_warning(deprecated_warn, solution) if text.kind_of?(String)
+  end
+
   def parse_ws_string(text_input, options = {})
     self.class.parse_ws_string(text_input, options)
   end
 
   def self.parse_ws_string(text_input, options = {})
     return parse_request_parameter_hash(text_input, options) if text_input.kind_of?(Hash)
+    handle_deprecation(text_input)
     return {} unless text_input.kind_of?(String)
     result = {}
     text_input.split('|').each do |value|
