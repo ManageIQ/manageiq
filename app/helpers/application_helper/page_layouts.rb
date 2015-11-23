@@ -37,6 +37,16 @@ module ApplicationHelper::PageLayouts
     true
   end
 
+  def layout_uses_paging?
+    # listnav always implies paging, this only handles the non-listnav case
+    %w(
+      all_tasks
+      all_ui_tasks
+      my_tasks
+      my_ui_tasks
+    ).include? @layout
+  end
+
   def layout_uses_tabs?
     if (["timeline"].include?(@layout) && ! @in_a_form) ||
        ["login", "authenticate", "auth_error"].include?(controller.action_name) ||
