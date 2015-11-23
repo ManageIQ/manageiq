@@ -101,7 +101,7 @@
         .col-md-2.col-md-pull-10.sidebar-pf.sidebar-pf-left
           = render :partial => "layouts/listnav"
 
-      - elsif  @layout == "dashboard" && (controller.action_name == "show" || controller.action_name == "change_tab")
+      - elsif dashboard_no_listnav?
         .col-md-12.max-height
           .row.toolbar-pf#toolbar
             .col-md-12

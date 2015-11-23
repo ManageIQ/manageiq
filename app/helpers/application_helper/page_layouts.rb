@@ -26,7 +26,7 @@ module ApplicationHelper::PageLayouts
       server_build
     ).include?(@layout)
 
-    return false if @layout == "dashboard" && ["show", "change_tab", "auth_error"].include?(controller.action_name)
+    return false if dashboard_no_listnav?
 
     return false if @layout.starts_with?("miq_request")
 
@@ -60,5 +60,13 @@ module ApplicationHelper::PageLayouts
       "my_ui_tasks",
       "all_tasks",
       "all_ui_tasks"].include?(@layout)
+  end
+
+  def dashboard_no_listnav?
+    @layout == "dashboard" && %w(
+      auth_error
+      change_tab
+      show
+    ).include?(controller.action_name)
   end
 end
