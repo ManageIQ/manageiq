@@ -351,6 +351,11 @@ class MiqRequestWorkflow
   def self.parse_ws_string(text_input, options = {})
     return parse_request_parameter_hash(text_input, options) if text_input.kind_of?(Hash)
     return {} unless text_input.kind_of?(String)
+
+    deprecated_warn = "method: parse_ws_string, arg Type => String"
+    solution = "arg should be a hash"
+    MiqAeMethodService::Deprecation.deprecation_warning(deprecated_warn, solution)
+
     result = {}
     text_input.split('|').each do |value|
       next if value.blank?
