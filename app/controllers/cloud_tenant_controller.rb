@@ -14,11 +14,11 @@ class CloudTenantController < ApplicationController
     params[:display] = @display if %w(vms instances images).include?(@display)
     params[:page] = @current_page unless @current_page.nil?   # Save current page for list refresh
     return tag("CloudTenant") if params[:pressed] == 'cloud_tenant_tag'
-    if params[:pressed].starts_with?("vm_") || # Handle buttons from sub-items screen
-       params[:pressed].starts_with?("miq_template_") ||
-       params[:pressed].starts_with?("guest_") ||
-       params[:pressed].starts_with?("image_") ||
-       params[:pressed].starts_with?("instance_")
+    if params[:pressed].starts_with?("vm_", # Handle buttons from sub-items screen
+                                     "miq_template_",
+                                     "guest_",
+                                     "image_",
+                                     "instance_")
 
       pfx = pfx_for_vm_button_pressed(params[:pressed])
       process_vm_buttons(pfx)

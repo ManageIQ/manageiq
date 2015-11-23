@@ -124,7 +124,7 @@ class VimPerformanceTagValue < ActiveRecord::Base
       col, tag = key.to_s.split(TAG_SEP)
       category = tag.split("/").first
       tag_name = tag.split("/").last
-      Metric::Aggregation::Process.average(key, nil, result, counts) unless col.to_s.starts_with?("assoc_ids") || col.to_s.starts_with?("derived_storage_vm_count")
+      Metric::Aggregation::Process.average(key, nil, result, counts) unless col.to_s.starts_with?("assoc_ids", "derived_storage_vm_count")
       new_rec = {
         :association_type => association_type,
         :category         => category,

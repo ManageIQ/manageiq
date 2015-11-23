@@ -56,7 +56,7 @@ class ConfigurationController < ApplicationController
       @refresh_div = "flash_msg_div"
     end
 
-    if params[:pressed].ends_with?("_edit") || params[:pressed].ends_with?("_copy")
+    if params[:pressed].ends_with?("_edit", "_copy")
       render :update do |page|
         page.redirect_to :action => @refresh_partial, :id => @redirect_id
       end

@@ -218,8 +218,7 @@ module MiqPolicyController::Policies
   end
 
   def excluded_event?(event)
-    event.name.end_with?("compliance_check") ||
-      event.name.end_with?("perf_complete")
+    event.name.end_with?("compliance_check", "perf_complete")
   end
 
   def policy_get_all_folders(parent = nil)

@@ -429,8 +429,8 @@ module ApplicationHelper
       title += ": Optimize"
     elsif layout.starts_with?("miq_request")
       title += ": Requests"
-    elsif layout.starts_with?("cim_") ||
-          layout.starts_with?("snia_")
+    elsif layout.starts_with?("cim_",
+                              "snia_")
       title += ": Storage - #{ui_lookup(:tables => layout)}"
     elsif layout == "login"
       title += ": Login"
@@ -593,7 +593,7 @@ module ApplicationHelper
   # Determine the type of report (performance/trend/chargeback) based on the model
   def model_report_type(model)
     if model
-      if model.ends_with?("Performance") || model.ends_with?("MetricsRollup")
+      if model.ends_with?("Performance", "MetricsRollup")
         return :performance
       elsif model == UiConstants::TREND_MODEL
         return :trend

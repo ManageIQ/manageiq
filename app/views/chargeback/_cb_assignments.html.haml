@@ -29,7 +29,7 @@
           miqSelectPickerEvent("cbtag_cat", "#{url}")
 
   - unless @edit[:new][:cbshow_typ].nil? || @edit[:new][:cbshow_typ] == "nil"
-    - if !@edit[:new][:cbshow_typ].ends_with?("-tags") || (@edit[:new][:cbshow_typ].ends_with?("-tags") && !@edit[:new][:cbtag_cat].blank?)
+    - if !@edit[:new][:cbshow_typ].ends_with?("-tags") || @edit[:new][:cbtag_cat].present?
       %hr
       %h3
         = _('Selections')

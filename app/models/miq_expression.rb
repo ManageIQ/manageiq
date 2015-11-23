@@ -571,7 +571,7 @@ class MiqExpression
 
     rt = rel_time.downcase
 
-    if rt.starts_with?("this") || rt.starts_with?("last")
+    if rt.starts_with?("this", "last")
       # Convert these into the time spec form: <value> <interval> Ago
       value, interval = rt.split
       rt = "#{value == "this" ? 0 : 1} #{interval} ago"
@@ -613,7 +613,7 @@ class MiqExpression
 
   def self.date_time_value_is_relative?(value)
     v = value.downcase
-    v.starts_with?("this") || v.starts_with?("last") || v.ends_with?("ago") || ["today", "yesterday", "now"].include?(v)
+    v.starts_with?("this", "last") || v.ends_with?("ago") || ["today", "yesterday", "now"].include?(v)
   end
 
   def to_sql(tz = nil)
@@ -1456,7 +1456,7 @@ class MiqExpression
     [:exp_available_fields, :exp_available_counts, :exp_available_finds].each { |what| miq_adv_search_lists(model, what) }
 
     # Build reporting lists
-    reporting_available_fields(model) unless model == model.ends_with?("Trend") || model.ends_with?("Performance") # Can't do trend/perf models at startup
+    reporting_available_fields(model) unless model == model.ends_with?("Trend", "Performance") # Can't do trend/perf models at startup
   end
 
   def self.miq_adv_search_lists(model, what)
@@ -1479,7 +1479,7 @@ class MiqExpression
       @reporting_available_fields[model.to_s] ||= {}
       @reporting_available_fields[model.to_s][interval.to_s] ||= MiqExpression.model_details(model, :include_model => false, :include_tags => true, :interval => interval)
     elsif model.to_s == "Chargeback"
-      @reporting_available_fields[model.to_s] ||= MiqExpression.model_details(model, :include_model => false, :include_tags => true).select { |c| c.last.ends_with?("_cost") || c.last.ends_with?("_metric") || c.last.ends_with?("-owner_name") }
+      @reporting_available_fields[model.to_s] ||= MiqExpression.model_details(model, :include_model => false, :include_tags => true).select { |c| c.last.ends_with?("_cost", "_metric", "-owner_name") }
     else
       @reporting_available_fields[model.to_s] ||= MiqExpression.model_details(model, :include_model => false, :include_tags => true)
     end

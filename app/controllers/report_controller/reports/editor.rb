@@ -1726,7 +1726,7 @@ module ReportController::Reports::Editor
       f_len = fields.length
       for f_idx in 1..f_len # Go thru fields in reverse
         f_key = fields[f_len - f_idx].last
-        next if f_key.ends_with?("_cost") || f_key.ends_with?("-owner_name") || f_key.ends_with?("_metric")
+        next if f_key.ends_with?("_cost", "-owner_name", "_metric")
         headers.delete(f_key)
         col_formats.delete(f_key)
         fields.delete_at(f_len - f_idx)

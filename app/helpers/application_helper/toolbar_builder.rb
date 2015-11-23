@@ -533,7 +533,7 @@ class ApplicationHelper::ToolbarBuilder
     return false if id == "show_summary" && !@explorer
 
     # need to hide add buttons when on sub-list view screen of a CI.
-    return true if (id.ends_with?("_new") || id.ends_with?("_discover")) &&
+    return true if id.ends_with?("_new", "_discover") &&
                    @lastaction == "show" && @display != "main"
 
     if id == "summary_reload"                             # Show reload button if
@@ -569,7 +569,7 @@ class ApplicationHelper::ToolbarBuilder
     return false if ["button_cancel"].include?(id)
 
     # buttons on compare/drift screen are allowed if user has access to compare/drift
-    return false if id.starts_with?("compare_") || id.starts_with?("drift_") || id.starts_with?("comparemode_") || id.starts_with?("driftmode_")
+    return false if id.starts_with?("compare_", "drift_", "comparemode_", "driftmode_")
 
     # Allow custom buttons on CI show screen, user can see custom button if they can get to show screen
     return false if id.starts_with?("custom_")
@@ -591,7 +591,7 @@ class ApplicationHelper::ToolbarBuilder
       return res
     end
 
-    if @layout == "pxe" || id.starts_with?("pxe_") || id.starts_with?("customization_template_")
+    if @layout == "pxe" || id.starts_with?("pxe_", "customization_template_")
       res = build_toolbar_hide_button_pxe(id)
       return res
     end

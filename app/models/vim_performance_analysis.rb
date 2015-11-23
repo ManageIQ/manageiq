@@ -591,7 +591,7 @@ module VimPerformanceAnalysis
     end
 
     result.each do |_k, h|
-      h[:min_max] = h.keys.find_all { |k| k.to_s.starts_with?("min") || k.to_s.starts_with?("max") }.inject({}) do |mm, k|
+      h[:min_max] = h.keys.find_all { |k| k.to_s.starts_with?("min", "max") }.inject({}) do |mm, k|
         val = h.delete(k)
         mm[k] = val unless val.nil?
         mm

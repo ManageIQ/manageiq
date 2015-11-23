@@ -137,11 +137,11 @@ class EmsClusterController < ApplicationController
     @edit = session[:edit]                                  # Restore @edit for adv search box
     params[:display] = @display if ["all_vms", "vms", "hosts", "resource_pools"].include?(@display)  # Were we displaying sub-items
 
-    if params[:pressed].starts_with?("vm_") || # Handle buttons from sub-items screen
-       params[:pressed].starts_with?("miq_template_") ||
-       params[:pressed][0..5] == "guest_" ||
-       params[:pressed][0..4] == "host_" ||
-       params[:pressed][0..2] == "rp_"
+    if params[:pressed].starts_with?("vm_", # Handle buttons from sub-items screen
+                                     "miq_template_",
+                                     "guest_",
+                                     "host_",
+                                     "rp_")
 
       scanhosts if params[:pressed] == "host_scan"
       analyze_check_compliance_hosts if params[:pressed] == "host_analyze_check_compliance"

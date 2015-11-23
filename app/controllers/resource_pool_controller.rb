@@ -117,9 +117,9 @@ class ResourcePoolController < ApplicationController
     params[:display] = @display if ["all_vms", "vms", "resource_pools"].include?(@display)  # Were we displaying sub-items
     if ["all_vms", "vms", "resource_pools"].include?(@display)                  # Need to check, since RPs contain RPs
 
-      if params[:pressed].starts_with?("vm_") || # Handle buttons from sub-items screen
-         params[:pressed].starts_with?("miq_template_") ||
-         params[:pressed].starts_with?("guest_")
+      if params[:pressed].starts_with?("vm_", # Handle buttons from sub-items screen
+                                       "miq_template_",
+                                       "guest_")
 
         pfx = pfx_for_vm_button_pressed(params[:pressed])
         process_vm_buttons(pfx)

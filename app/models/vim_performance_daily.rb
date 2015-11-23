@@ -179,7 +179,7 @@ class VimPerformanceDaily < MetricRollup
     results.each do |h|
       min_max = h.delete(:min_max)
 
-      h[:min_max] = h.keys.find_all { |k| k.to_s.starts_with?("min") || k.to_s.starts_with?("max") }.inject({}) do |mm, k|
+      h[:min_max] = h.keys.find_all { |k| k.to_s.starts_with?("min", "max") }.inject({}) do |mm, k|
         val = h.delete(k)
         mm[k] = val unless val.nil?
         mm
@@ -212,7 +212,7 @@ class VimPerformanceDaily < MetricRollup
   def self.process_only_cols(options)
     unless options[:only_cols].nil?
       options[:only_cols] =  options[:only_cols].collect(&:to_sym) if options[:only_cols]
-      options[:only_cols] += options[:only_cols].collect { |c| c.to_s[4..-1].to_sym if c.to_s.starts_with?("min_") || c.to_s.starts_with?("max_") }.compact
+      options[:only_cols] += options[:only_cols].collect { |c| c.to_s[4..-1].to_sym if c.to_s.starts_with?("min_", "max_") }.compact
       options[:only_cols] += options[:only_cols].collect { |c| c.to_s.split("_")[2..-2].join("_").to_sym if c.to_s.starts_with?("abs_") }.compact
       options[:only_cols] += [:cpu_ready_delta_summation, :cpu_wait_delta_summation, :cpu_used_delta_summation] if options[:only_cols].find { |c| c.to_s.starts_with?("v_pct_") }
       options[:only_cols] += [:derived_storage_total, :derived_storage_free] if options[:only_cols].include?(:v_derived_storage_used)
