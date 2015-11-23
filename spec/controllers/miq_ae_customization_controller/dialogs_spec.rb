@@ -133,5 +133,20 @@ describe MiqAeCustomizationController do
       controller.send(:dialog_validate)
       assigns(:flash_array).first[:message].should include("Dropdown elements require some entries")
     end
+
+    it "does not require values for a dynamic drop down" do
+      controller.stub(:x_node) { 'root_-0_-0_-0' }
+      controller.instance_variable_set(:@sb, :node_typ => 'element')
+      session[:edit] = {
+        :field_typ         => "DialogFieldDropDownList",
+        :field_values      => [],
+        :field_label       => 'Dropdown 1',
+        :field_name        => 'Dropdown1',
+        :field_dynamic     => true,
+        :field_entry_point => "entry point"
+      }
+      controller.send(:dialog_validate)
+      assigns(:flash_array).should eq(nil)
+    end
   end
 end
