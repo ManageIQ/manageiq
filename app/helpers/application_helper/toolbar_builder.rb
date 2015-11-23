@@ -115,7 +115,7 @@ class ApplicationHelper::ToolbarBuilder
             if bsi.key?(:separator)
               props = {"id" => "sep_#{bg_idx}_#{bsi_idx}", "type" => "separator", :hidden => !any_visible}
             else
-              next if bsi[:image] == 'pdf' && !PdfGenerator.available?
+              next if download_pdf_buttons.include?(bsi[:button]) && !PdfGenerator.available?
               next if build_toolbar_hide_button(bsi[:pressed] || bsi[:button])  # Use pressed, else button name
               bs_children = true
               props = {
@@ -155,7 +155,7 @@ class ApplicationHelper::ToolbarBuilder
             sep_needed = true                                       # Need a separator from now on
           end
         elsif bgi.key?(:button)                                 # button node found
-          next if bgi[:image] == 'pdf' && !PdfGenerator.available?
+          next if download_pdf_buttons.include?(bgi[:button]) && !PdfGenerator.available?
           button_hide = build_toolbar_hide_button(bgi[:button])
           if button_hide
             # These buttons need to be present even if hidden as we show/hide them dynamically
@@ -225,6 +225,18 @@ class ApplicationHelper::ToolbarBuilder
 
     toolbar = nil if toolbar.empty?
     toolbar
+  end
+
+  def download_pdf_buttons
+    %w(chargeback_download_pdf
+       download_pdf
+       download_view
+       drift_pdf
+       miq_capacity_download_pdf
+       render_report_pdf
+       timeline_pdf
+       vm_download_pdf
+      )
   end
 
   def create_custom_button_hash(input, record, options = {})
