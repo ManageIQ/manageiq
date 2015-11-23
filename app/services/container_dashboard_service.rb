@@ -66,7 +66,10 @@ class ContainerDashboardService
     [
       {
         :iconClass    => "pficon pficon-openshift",
-        :count        => ManageIQ::Providers::Openshift::ContainerManager.count,
+        :count        => ManageIQ::Providers::Openshift::ContainerManager.count +
+                         ManageIQ::Providers::AtomicEnterprise::ContainerManager.count +
+                         ManageIQ::Providers::Atomic::ContainerManager.count +
+                         ManageIQ::Providers::OpenshiftEnterprise::ContainerManager.count,
         :id           => "openshift",
         :providerType => "OpenShift"
       },
