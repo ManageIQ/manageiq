@@ -96,9 +96,11 @@ class MiqGroup < ActiveRecord::Base
         group.group_type    = SYSTEM_GROUP
         group.tenant        = root_tenant
 
-        mode = group.new_record? ? "Created" : "Added"
-        group.save!
-        _log.info("#{mode} Group: #{group.description} with Role: #{user_role.name}")
+        if group.changed?
+          mode = group.new_record? ? "Created" : "Updated"
+          group.save!
+          _log.info("#{mode} Group: #{group.description} with Role: #{user_role.name}")
+        end
 
         seq += 1
       end
