@@ -125,13 +125,6 @@ class ApplicationController < ActionController::Base
   end
   hide_action :render_exception
 
-  # Put out error msg if user's role is not authorized for an action
-  def auth_error
-    add_flash(_("The user is not authorized for this task or item."), :error)
-    add_flash(_("Press your browser's Back button or click a tab to continue"))
-    #   render(:text=>"User is not authorized for this task . . . press your browser's Back button to continue")
-  end
-
   def change_tab
     redirect_to(:action => params[:tab], :id => params[:id])
   end
