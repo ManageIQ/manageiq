@@ -4,7 +4,7 @@ require 'pathname'
 
 describe MiqProductFeature do
   before do
-    @expected_feature_count = 868
+    @expected_feature_count = 871
   end
 
   context ".seed" do

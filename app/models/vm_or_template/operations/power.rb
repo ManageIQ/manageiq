@@ -30,7 +30,7 @@ module VmOrTemplate::Operations::Power
   end
 
   def shelve
-    raw_shelve unless policy_prevented?(:request_vm_shelve)
+    check_policy_prevent(:request_vm_shelve, :raw_shelve)
   end
 
   # Has to be in shelved state first. Data and resource associations are deleted.
@@ -39,7 +39,7 @@ module VmOrTemplate::Operations::Power
   end
 
   def shelve_offload
-    raw_shelve_offload unless policy_prevented?(:request_vm_shelve_offload)
+    check_policy_prevent(:request_vm_shelve_offload, :raw_shelve_offload)
   end
 
   # Pause keeps the VM in memory but does not give it CPU cycles.
