@@ -224,7 +224,7 @@ class MiqCimInstance < ActiveRecord::Base
   #
   def getAssociators(association)
     results = []
-    query = miq_cim_associations.scoped.includes(:result_instance).select(:result_instance_id)
+    query = miq_cim_associations.scoped.includes(:result_instance).select(:result_instance_id, :id)
     query = query.where_association(association)
     query.find_each { |a| results << a.result_instance }
     results.uniq
@@ -232,7 +232,7 @@ class MiqCimInstance < ActiveRecord::Base
 
   def getAssociatedVmdbObjs(association)
     results = []
-    query = miq_cim_associations.scoped.includes(:result_instance => :vmdb_obj).select(:result_instance_id)
+    query = miq_cim_associations.scoped.includes(:result_instance => :vmdb_obj).select(:result_instance_id, :id)
     query = query.where_association(association)
     query.find_each { |a| results << a.result_instance.vmdb_obj }
     results.uniq
