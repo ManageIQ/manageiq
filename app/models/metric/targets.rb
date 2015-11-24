@@ -8,7 +8,7 @@ module Metric::Targets
     MiqRegion.my_region.perf_capture_always = options
   end
 
-  def self.capture_infra_targets(zone, options = {})
+  def self.capture_infra_targets(zone, options)
     # Preload all of the objects we are going to be inspecting.
     # TODO: Include hosts under clusters
     includes = {:ext_management_systems => {:hosts => {:tags => {}}, :ems_clusters => :tags}}
@@ -67,7 +67,7 @@ module Metric::Targets
     targets
   end
 
-  def self.capture_vm_targets(targets, parent_class, options = {})
+  def self.capture_vm_targets(targets, parent_class, options)
     vms = []
     unless options[:exclude_vms]
       enabled_parents = targets.select do |t|

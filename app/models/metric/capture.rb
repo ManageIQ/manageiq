@@ -43,8 +43,7 @@ module Metric::Capture
   # Capture entry points
   #
 
-  def self.perf_capture_health_check(zone = nil)
-    zone ||= MiqServer.my_server.zone(true)
+  def self.perf_capture_health_check(zone)
     q_items = MiqQueue.select("created_on, args").where(:state => "ready", :role => "ems_metrics_collector", :method_name => "perf_capture", :zone => zone.name).order("created_on ASC")
 
     items_by_interval = q_items.group_by { |i| i.args.first }
@@ -138,6 +137,7 @@ module Metric::Capture
   def self.perf_capture_timer(zone = nil)
     _log.info "Queueing performance capture..."
 
+    zone ||= MiqServer.my_server.zone(true)
     perf_capture_health_check(zone)
     targets = Metric::Targets.capture_targets(zone)
 
