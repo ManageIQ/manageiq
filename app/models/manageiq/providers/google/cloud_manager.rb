@@ -1,8 +1,6 @@
 class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudManager
   require_nested :Refresher
 
-  attr_accessor :project
-
   def self.ems_type
     @ems_type ||= "gce".freeze
   end
