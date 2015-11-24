@@ -100,11 +100,7 @@ class MiqTaskController < ApplicationController
       @lastaction = "all_jobs"
       @view, @pages = get_view(Job, :conditions => conditions)  # Get the records (into a view) and the paginator
       drop_breadcrumb(:name => "All VM Analysis Tasks", :url => "/miq_task/index?jobs_tab=alltasks")
-      @user_names = []
-      job_recs = Job.all(:select => "userid", :group => "userid")
-      job_recs.each do |j|
-        @user_names.push(j.userid) unless j.userid.blank?
-      end
+      @user_names = Job.distinct("userid").pluck("userid").delete_if(&:blank?)
 
     elsif @tabform == "tasks_4" || @tabform == "alltasks_2"
       # All UI Tasks
@@ -112,11 +108,7 @@ class MiqTaskController < ApplicationController
       @lastaction = "all_ui_jobs"
       @view, @pages = get_view(MiqTask, :conditions => conditions)  # Get the records (into a view) and the paginator
       drop_breadcrumb(:name => "All Other Tasks", :url => "/miq_task/index?jobs_tab=alltasks")
-      @user_names = []
-      job_recs = MiqTask.all(:select => "userid", :group => "userid")
-      job_recs.each do |j|
-        @user_names.push(j.userid) unless j.userid.blank?
-      end
+      @user_names = MiqTask.distinct("userid").pluck("userid").delete_if(&:blank?)
     end
   end
 

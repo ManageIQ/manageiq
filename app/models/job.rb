@@ -225,25 +225,14 @@ class Job < ActiveRecord::Base
 
   def self.delete_older(ts, condition)
     _log.info("Queuing deletion of jobs older than: #{ts}")
-    cond = condition.blank? ? [] : [[condition].flatten.first, [condition].flatten[1..-1]]
-    cond[0] ||= []
-    cond[1] ||= []
-
-    ts_clause = "updated_on < ?"
-    cond[0].empty? ? cond[0] << ts_clause : cond[0] = "(#{cond[0]}) AND #{ts_clause}"
-    cond[1] << ts.utc
-
-    _log.info("cond.flatten: #{cond.flatten.inspect}")
-    ids = where(cond.flatten).pluck(:id)
-
+    ids = where("updated_on < ?", ts).where(condition).pluck("id")
     delete_by_id(ids)
   end
 
   def self.delete_by_id(ids)
-    ids = [ids].flatten
     _log.info("Queuing deletion of jobs with the following ids: #{ids.inspect}")
     MiqQueue.put(
-      :class_name  => self.name,
+      :class_name  => name,
       :method_name => "destroy",
       :priority    => MiqQueue::HIGH_PRIORITY,
       :args        => [ids],

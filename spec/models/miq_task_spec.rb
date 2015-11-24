@@ -238,14 +238,10 @@ describe MiqTask do
       message = MiqQueue.first
 
       message.class_name.should == "MiqTask"
-      message.method_name.should == "destroy_all"
+      expect(message.method_name).to eq("destroy")
       message.args.should        be_kind_of(Array)
       message.args.length.should == 1
-      message.args.first.should  be_kind_of(Array)
-      message.args.first.length.should == 2
-      str, arr = message.args.first
-      str.should == "id in (?)"
-      arr.should                 match_array([@miq_task1.id, @miq_task3.id])
+      expect(message.args.first).to match_array([@miq_task1.id, @miq_task3.id])
       message.zone.should == @zone
     end
 
@@ -258,14 +254,10 @@ describe MiqTask do
       message = MiqQueue.first
 
       message.class_name.should == "MiqTask"
-      message.method_name.should == "destroy_all"
+      expect(message.method_name).to eq("destroy")
       message.args.should        be_kind_of(Array)
       message.args.length.should == 1
-      message.args.first.should  be_kind_of(Array)
-      message.args.first.length.should == 2
-      str, arr = message.args.first
-      str.should == "id in (?)"
-      arr.should                 match_array([@miq_task2.id, @miq_task3.id])
+      expect(message.args.first).to match_array([@miq_task2.id, @miq_task3.id])
       message.zone.should == @zone
 
       message.destroy
@@ -276,8 +268,10 @@ describe MiqTask do
       message = MiqQueue.first
 
       message.class_name.should == "MiqTask"
-      message.method_name.should == "destroy_all"
-      message.args.should == [["id in (?)", [@miq_task3.id]]]
+      message.method_name.should == "destroy"
+      message.args.should        be_kind_of(Array)
+      message.args.length.should == 1
+      expect(message.args.first).to eq([@miq_task3.id])
       message.zone.should == @zone
     end
   end
