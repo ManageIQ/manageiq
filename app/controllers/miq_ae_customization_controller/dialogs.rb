@@ -698,7 +698,7 @@ module MiqAeCustomizationController::Dialogs
         add_flash(_("%s is required") % "Element Type", :error)
         res = false
       end
-      if @edit[:field_typ] == "DialogFieldDropDownList" && @edit[:field_values].empty?
+      if needs_dropdown_values?
         add_flash(_("Dropdown elements require some entries"), :error)
         res = false
       end
@@ -1386,5 +1386,9 @@ module MiqAeCustomizationController::Dialogs
 
   def needs_entry_point?
     @edit[:field_dynamic] && @edit[:field_entry_point].blank?
+  end
+
+  def needs_dropdown_values?
+    @edit[:field_typ] == "DialogFieldDropDownList" && @edit[:field_values].empty? && !@edit[:field_dynamic]
   end
 end
