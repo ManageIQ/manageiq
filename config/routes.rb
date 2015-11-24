@@ -1800,6 +1800,7 @@ Vmdb::Application.routes.draw do
         drift_to_pdf
         drift_to_txt
         explorer
+        filesystem_download
         retirement_info
         launch_html5_console
         perf_chart_chooser
@@ -1872,6 +1873,7 @@ Vmdb::Application.routes.draw do
         drift_to_pdf
         drift_to_txt
         explorer
+        filesystem_download
         retirement_info
         launch_vmware_console
         launch_html5_console
