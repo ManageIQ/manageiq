@@ -1,5 +1,16 @@
 require "spec_helper"
 
+def set_up_controller_for_show_method(controller, ems_id)
+  controller.instance_variable_set(:@_params, {:display => "download_pdf", :id => ems_id})
+  controller.instance_variable_set(:@settings, :views => {:vm_summary_cool => "summary"})
+  controller.stub(:record_no_longer_exists? => false)
+  controller.stub(:drop_breadcrumb)
+  controller.stub(:disable_client_cache)
+  controller.stub(:render_to_string => "")
+  controller.stub(:send_data)
+  PdfGenerator.stub(:pdf_from_string).with('', 'pdf_summary').and_return("")
+end
+
 describe EmsCloudController do
   context "::EmsCommon" do
     context "#get_form_vars" do
@@ -107,6 +118,27 @@ describe EmsCloudController do
       end
     end
   end
+
+  describe "#show" do
+    let(:provider_openstack) { FactoryGirl.create(:provider_openstack, :name => "Undercloud") }
+    let(:ems_openstack) { FactoryGirl.create(:ems_openstack, :name => "overcloud", :provider => provider_openstack) }
+    let(:pdf_options) { controller.instance_variable_get(:@options) }
+
+    context "download pdf file" do
+      before :each do
+        set_up_controller_for_show_method(controller, ems_openstack.id)
+        controller.send(:show)
+      end
+
+      it "should not contains string 'ManageIQ' in the title of summary report" do
+        expect(pdf_options[:title]).not_to include('ManageIQ')
+      end
+
+      it "should match proper title of report" do
+        expect(pdf_options[:title]).to eq('Cloud Provider (Openstack) "overcloud"')
+      end
+    end
+  end
 end
 
 describe EmsContainerController do
@@ -159,6 +191,27 @@ describe EmsContainerController do
         controller.send(:flash_errors?).should_not be_true
       end
     end
+
+    describe "#show" do
+      let(:ems_kubernetes_container) { FactoryGirl.create(:ems_kubernetes, :name => "test") }
+      let(:pdf_options) { controller.instance_variable_get(:@options) }
+
+      context "download pdf file" do
+        before :each do
+          controller.instance_variable_set(:@table_name, "ems_container")
+          set_up_controller_for_show_method(controller, ems_kubernetes_container.id)
+          controller.send(:show)
+        end
+
+        it "should not contains string 'ManageIQ' in the title of summary report" do
+          expect(pdf_options[:title]).not_to include('ManageIQ')
+        end
+
+        it "should match proper title of report" do
+          expect(pdf_options[:title]).to eq('Container Provider (Kubernetes) "test"')
+        end
+      end
+    end
   end
 end
 
@@ -184,6 +237,27 @@ describe EmsInfraController do
                                          :default_verify   => "[FILTERED]")
         controller.send(:restore_password)
         assigns(:edit)[:new][:default_password].should == infra_ems.authentication_password
+      end
+    end
+  end
+
+  describe "#show" do
+    let(:ems_openstack_infra) { FactoryGirl.create(:ems_openstack_infra, :name => "test") }
+    let(:pdf_options) { controller.instance_variable_get(:@options) }
+
+    context "download pdf file" do
+      before :each do
+        controller.instance_variable_set(:@table_name, "ems_infra")
+        set_up_controller_for_show_method(controller, ems_openstack_infra.id)
+        controller.send(:show)
+      end
+
+      it "should not contains string 'ManageIQ' in the title of summary report" do
+        expect(pdf_options[:title]).not_to include('ManageIQ')
+      end
+
+      it "should match proper title of report" do
+        expect(pdf_options[:title]).to eq('Infrastructure Provider (Openstack) "test"')
       end
     end
   end
