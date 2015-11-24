@@ -99,6 +99,15 @@ module MiqAeServiceSpec
           expect(miq_ae_service.vmdb(name)).to be("#{prefix}#{name}".constantize)
         end
       end
+
+      it "cache object references" do
+        FactoryGirl.create(:vm_vmware)
+        FactoryGirl.create(:vm_vmware)
+
+        vms = miq_ae_service.vmdb('vm').find(:all)
+        cache = miq_ae_service.instance_variable_get(:@drb_server_references)
+        expect(cache.any? { |x| x.object_id == vms.object_id }).to be_true
+      end
     end
   end
 end
