@@ -31,6 +31,20 @@ class MiqAeDomain < MiqAeNamespace
     self.priority = MiqAeDomain.highest_priority(tenant) + 1 unless priority
   end
 
+  def version
+    version_field = about_class.try(:ae_fields).try(:detect) { |fld| fld.name == 'version' }
+    version_field.try(:default_value)
+  end
+
+  def available_version
+    fname = about_file_name
+    return nil if fname.nil? || !File.exist?(fname)
+    class_yaml = YAML.load_file(fname)
+    fields = class_yaml.fetch_path('object', 'schema') if class_yaml.kind_of?(Hash)
+    version_field = fields.try(:detect) { |f| f.fetch_path('field', 'name') == 'version' }
+    version_field.try(:fetch_path, 'field', 'default_value')
+  end
+
   private
 
   def squeeze_priorities
@@ -44,5 +58,15 @@ class MiqAeDomain < MiqAeNamespace
 
   def self.all_unlocked
     MiqAeDomain.where('system is null OR system = ?', [false]).order('priority DESC')
+  end
+
+  def about_class
+    ns = MiqAeNamespace.where(:parent_id => id).find_by("lower(name) = ?", "system")
+    MiqAeClass.where(:namespace_id => ns.id).find_by("lower(name) = ?", "about") if ns
+  end
+
+  def about_file_name
+    about = about_class
+    File.join(MiqAeDatastore::DATASTORE_DIRECTORY, "#{about.fqname}#{CLASS_DIR_SUFFIX}", CLASS_YAML_FILENAME) if about
   end
 end
