@@ -18,6 +18,7 @@ class ApiController
           @req[:prefix]    = "#{@req[:prefix]}/#{ver}"     # /api/v#.#
         end
       end
+      @req[:api_prefix]    = "#{@req[:base]}#{@req[:prefix]}"
 
       @req[:collection]    = params[:collection]
       @req[:c_id]          = params[:c_id]
