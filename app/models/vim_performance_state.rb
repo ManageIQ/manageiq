@@ -3,7 +3,7 @@ class VimPerformanceState < ActiveRecord::Base
 
   belongs_to :resource, :polymorphic => true
 
-  ASSOCIATIONS = [:vms, :hosts, :ems_clusters, :ext_management_systems, :storages]
+  ASSOCIATIONS = [:vms, :hosts, :ems_clusters, :ext_management_systems, :storages, :container_nodes]
 
   # Define accessors for state_data information
   [
@@ -117,6 +117,11 @@ class VimPerformanceState < ActiveRecord::Base
   def vms
     ids = get_assoc(:vms)
     ids.empty? ? [] : VmOrTemplate.where(:id => ids).order(:id).to_a
+  end
+
+  def container_nodes
+    ids = get_assoc(:container_nodes)
+    ids.empty? ? [] : ContainerNode.where(:id => ids).order(:id).to_a
   end
 
   def get_assoc(relat, mode = nil)

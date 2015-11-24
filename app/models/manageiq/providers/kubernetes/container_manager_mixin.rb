@@ -39,6 +39,8 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
     end
   end
 
+  PERF_ROLLUP_CHILDREN = :container_nodes
+
   # UI methods for determining availability of fields
   def supports_port?
     true
