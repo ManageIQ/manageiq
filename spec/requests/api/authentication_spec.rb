@@ -95,7 +95,7 @@ describe ApiController do
     let(:group1) { FactoryGirl.create(:miq_group, :description => "Group1", :miq_user_role => @role) }
     let(:group2) { FactoryGirl.create(:miq_group, :description => "Group2", :miq_user_role => @role) }
 
-    before(:each) do
+    before do
       @user.miq_groups = [group1, group2, @user.current_group]
       @user.current_group = group1
     end
