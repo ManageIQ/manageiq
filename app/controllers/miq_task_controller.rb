@@ -8,10 +8,8 @@ class MiqTaskController < ApplicationController
     @tabform = nil
     @tabform ||= "tasks_1" if role_allows(:feature => "job_my_smartproxy")
     @tabform ||= "tasks_2" if role_allows(:feature => "miq_task_my_ui")
-    @tabform ||= "tasks_3" if role_allows(:feature => "job_all_smartproxy") &&
-                              role_allows(:feature => "job_all_smartproxy")
-    @tabform ||= "tasks_4" if role_allows(:feature => "miq_task_all_ui") &&
-                              role_allows(:feature => "miq_task_all_ui")
+    @tabform ||= "tasks_3" if role_allows(:feature => "job_all_smartproxy")
+    @tabform ||= "tasks_4" if role_allows(:feature => "miq_task_all_ui")
     jobs
     render :action => "jobs"
   end
@@ -38,14 +36,15 @@ class MiqTaskController < ApplicationController
       @tabs ||= [["2", ""]]
       @tabs.push(["2", "My Other UI Tasks"])
     end
-    if role_allows(:feature => "job_all_smartproxy") && role_allows(:feature => "job_all_smartproxy")
+    if role_allows(:feature => "job_all_smartproxy")
       @tabs ||= [["3", ""]]
       @tabs.push(["3", "All VM Analysis Tasks"])
     end
-    if role_allows(:feature => "miq_task_all_ui") && role_allows(:feature => "miq_task_all_ui")
+    if role_allows(:feature => "miq_task_all_ui")
       @tabs ||= [["4", ""]]
       @tabs.push(["4", "All Other Tasks"])
     end
+
     case @tabform
     when "tasks_1"
       @tabs[0][0] = "1"
