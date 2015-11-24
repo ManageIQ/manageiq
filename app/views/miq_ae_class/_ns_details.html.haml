@@ -1,5 +1,6 @@
 #ns_details_div
   - unless @in_a_form
+    = render :partial => 'layouts/info_msg', :locals => {:message => @version_message} if @version_message
     = render :partial => "layouts/flash_msg", :locals  => {:div_num => "_ns_details"}
     %table#ns_details_grid.table.table-striped.table-bordered.table-hover.table-clickable.table-checkable
       %thead
