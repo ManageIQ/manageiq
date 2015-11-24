@@ -73,5 +73,7 @@
   .row
     .col-md-12.col-lg-10
       = render :partial => "shared/summary/textual_listview", :locals => {:title => _("Tenant Quota"), :items => textual_group_tenant_quota_allocations}
+      %p
+        = _("Note: Total quota can be restricted by quotas defined at upper levels")
       %hr/
   = render :partial => "rbac_tag_box"

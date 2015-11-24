@@ -146,17 +146,30 @@ module OpsHelper::TextualSummary
     return "#{fmt_value} #{text_modifier}"
   end
 
+  def convert_to_format_with_default_text(format, text_modifier, value, metric)
+    is_zero_value = value.nil? || value == 0
+    can_display_default_text = !TenantQuota.default_text_for(metric).nil?
+
+    if is_zero_value && can_display_default_text
+      return TenantQuota.default_text_for(metric)
+    end
+
+    convert_to_format(format, text_modifier, value)
+  end
+
   def get_tenant_quota_allocations
     rows = @record.combined_quotas.values.to_a
     rows.collect do |row|
       {
-          :title  => row[:description],
-          :name   => row[:description],
-          :in_use =>  convert_to_format(row[:format], row[:text_modifier], row[:used]),
-          :allocated  => convert_to_format(row[:format], row[:text_modifier], row[:allocated]),
-          :available => convert_to_format(row[:format], row[:text_modifier], row[:available]),
-          :total => convert_to_format(row[:format], row[:text_modifier], row[:value]),
-          :explorer => true
+        :title => row[:description],
+        :name => row[:description],
+        :in_use => convert_to_format_with_default_text(row[:format], row[:text_modifier], row[:used], :in_use),
+        :allocated => convert_to_format_with_default_text(row[:format], row[:text_modifier], row[:allocated],
+                                                          :allocated),
+        :available => convert_to_format_with_default_text(row[:format], row[:text_modifier], row[:available],
+                                                          :available),
+        :total => convert_to_format_with_default_text(row[:format], row[:text_modifier], row[:value], :total),
+        :explorer => true
       }
     end
   end

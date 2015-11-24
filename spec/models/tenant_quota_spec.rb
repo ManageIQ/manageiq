@@ -56,10 +56,16 @@ describe TenantQuota do
         described_class.new(:tenant => grandchild_tenant1, :name => "cpu_allocated", :value => 9).should_not be_valid
       end
 
-      it "connot have less quota than the amount that has already been used" do
+      it "cannot have less quota than the amount that has already been used" do
         nq = described_class.new(:tenant => grandchild_tenant2, :name => "cpu_allocated", :value => 1)
         nq.stub(:used => 2)
         nq.should_not be_valid
+      end
+    end
+
+    context "grandchild tenant, parent with infinity(undefined) quota" do
+      it "can have unlimited quota" do
+        described_class.new(:tenant => grandchild_tenant1, :name => "cpu_allocated", :value => 1000).should be_valid
       end
     end
 
