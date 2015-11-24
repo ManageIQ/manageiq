@@ -73,6 +73,7 @@ class MiqTaskController < ApplicationController
       get_jobs(tasks_condition(@tasks_options[@tabform]))
       render :update do |page|
         page.replace_html("gtl_div", :partial => "layouts/gtl", :locals => {:action_url => @lastaction})
+        page.replace("pc_div_1", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => @lastaction, :db => @view.db, :headers => @view.headers})
         page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
       end
     else                      # Came in from non-ajax, just get the jobs
