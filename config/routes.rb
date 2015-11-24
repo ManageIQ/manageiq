@@ -270,6 +270,14 @@ Vmdb::Application.routes.draw do
                compare_post
     },
 
+    :cloud_volume => {
+      :get => %w(
+        index
+        show
+        show_list
+      )
+    },
+
     :configuration            => {
       # TODO: routes for new/edit/copy buttons need to be revisited
       # TODO: so they can be changed to send up POST request instead of GET

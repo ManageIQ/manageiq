@@ -1144,6 +1144,7 @@ class ApplicationController < ActionController::Base
     pn = "#{p}new/"
 
     image = case item
+            when CloudVolume           then "#{pn}storage.png"
             when ExtManagementSystem   then "#{pn}/vendor-#{item.image_name}.png"
             when Filesystem            then "#{p}ico/win/#{item.image_name.downcase}.ico"
             when Host                  then "#{pn}vendor-#{item.vmm_vendor.downcase}.png"
