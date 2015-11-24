@@ -34,7 +34,6 @@ include:
     columns:
     - name
 
-
 # Included tables and columns for query performance
 # include_for_find:
 
