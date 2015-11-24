@@ -470,6 +470,9 @@ class ApplicationHelper::ToolbarBuilder
           (@zgraph || (@ght_type == "tabular" && @html)) ? false : true
       end
     when :savedreports_tree
+      if %w(saved_report_delete).include?(id)
+        return true unless role_allows(:feature => id)
+      end
       case id
       when "reload"
         return x_node != "root"

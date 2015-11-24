@@ -160,7 +160,7 @@ module ReportController::Reports
       @force_no_grid_xml   = true
       @gtl_type            = "list"
       @ajax_paging_buttons = true
-      @no_checkboxes = false
+      @no_checkboxes = !role_allows(:feature => "miq_report_saved_reports_admin")
 
       if params[:ppsetting]                                             # User selected new per page value
         @items_per_page = params[:ppsetting].to_i                       # Set the new per page value

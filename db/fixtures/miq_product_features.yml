@@ -959,6 +959,10 @@
     :feature_type: node
     :identifier: miq_report_saved_reports
     :children:
+    - :name: View
+      :description: View Saved Reports
+      :feature_type: admin
+      :identifier: miq_report_saved_reports_view
     - :name: Modify
       :description: Modify Saved Reports
       :feature_type: admin
