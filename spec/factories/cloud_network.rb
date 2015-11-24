@@ -18,4 +18,5 @@ FactoryGirl.define do
                                 :parent => :cloud_network
   factory :cloud_network_google, :class  => "ManageIQ::Providers::Google::NetworkManager::CloudNetwork",
                                  :parent => :cloud_network
+  factory :cloud_network_openstack_infra, :class => "ManageIQ::Providers::Openstack::InfraManager::CloudNetwork"
 end
