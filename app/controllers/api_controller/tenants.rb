@@ -8,8 +8,7 @@ class ApiController
         raise BadRequestError,
               "Attribute(s) #{bad_attrs} should not be specified for creating a new tenant resource"
       end
-      parent = fetch_parent(data.delete("parent"))
-      data.merge!("parent" => parent) if parent
+      parse_set_parent(data)
       tenant = Tenant.create(data)
       if tenant.invalid?
         raise BadRequestError, "Failed to add a new tenant resource - #{tenant.errors.full_messages.join(', ')}"
@@ -22,15 +21,15 @@ class ApiController
       if bad_attrs.present?
         raise BadRequestError, "Attributes #{bad_attrs} should not be specified for updating a tenant resource"
       end
-      parent = fetch_parent(data.delete("parent"))
-      data.merge!("parent" => parent) if parent
+      parse_set_parent(data)
       edit_resource(type, id, data)
     end
 
     private
 
-    def fetch_parent(data)
-      Tenant.find_by_id(parse_id(data, :tenants)) if data
+    def parse_set_parent(data)
+      parent = parse_fetch_tenant(data.delete("parent"))
+      data.merge!("parent" => parent) if parent
     end
 
     def data_includes_invalid_attrs(data)

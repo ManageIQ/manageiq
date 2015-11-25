@@ -6,7 +6,7 @@ class ApiController
       end
 
       # Can't create a read-only role (reserved for out-of-box roles)
-      if data ['read_only']
+      if data['read_only']
         raise BadRequestError, "Cannot create a read-only role."
       end
 

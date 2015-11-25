@@ -144,28 +144,54 @@ class ApiController
       objs.collect(&:id).first
     end
 
+    def parse_owner(resource)
+      return nil if resource.blank?
+      owner_id = parse_id(resource, :users)
+      owner_id ? owner_id : parse_by_attr(resource, :users, %w(name userid))
+    end
+
+    def parse_group(resource)
+      return nil if resource.blank?
+      group_id = parse_id(resource, :groups)
+      group_id ? group_id : parse_by_attr(resource, :groups, %w(description))
+    end
+
+    def parse_role(resource)
+      return nil if resource.blank?
+      role_id = parse_id(resource, :roles)
+      role_id ? role_id : parse_by_attr(resource, :roles, %w(name))
+    end
+
+    def parse_tenant(resource)
+      parse_id(resource, :tenants) unless resource.blank?
+    end
+
     def parse_ownership(data)
       {
-        :owner => collection_class(:users).find_by_id(parse_owner(data)),
-        :group => collection_class(:groups).find_by_id(parse_group(data))
+        :owner => collection_class(:users).find_by_id(parse_owner(data["owner"])),
+        :group => collection_class(:groups).find_by_id(parse_group(data["group"]))
       }.compact if data.present?
     end
 
+    # RBAC Aware type specific resource fetches
+
+    def parse_fetch_role(data)
+      if data
+        role_id = parse_role(data)
+        raise BadRequestError, "Missing Role identifier href, id or name" if role_id.nil?
+        resource_search(role_id, :roles, collection_class(:roles))
+      end
+    end
+
+    def parse_fetch_tenant(data)
+      if data
+        tenant_id = parse_tenant(data)
+        raise BadRequestError, "Missing Tenant identifier href or id" if tenant_id.nil?
+        resource_search(tenant_id, :tenants, collection_class(:tenants))
+      end
+    end
+
     private
-
-    def parse_owner(data)
-      owner_resource = data["owner"]
-      return nil if owner_resource.blank?
-      owner_id = parse_id(owner_resource, :users)
-      owner_id ? owner_id : parse_by_attr(owner_resource, :users, %w(name userid))
-    end
-
-    def parse_group(data)
-      group_resource = data["group"]
-      return nil if group_resource.blank?
-      group_id = parse_id(group_resource, :groups)
-      group_id ? group_id : parse_by_attr(group_resource, :groups, %w(description))
-    end
 
     #
     # For Posts we need to support actions, let's validate those
