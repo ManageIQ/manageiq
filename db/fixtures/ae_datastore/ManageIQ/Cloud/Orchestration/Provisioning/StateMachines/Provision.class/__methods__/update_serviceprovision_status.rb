@@ -5,6 +5,11 @@
 
 prov = $evm.root['service_template_provision_task']
 
+unless prov
+  $evm.log(:error, "Service Template Provision Task not provided")
+  exit(MIQ_STOP)
+end
+
 # Get status from input field status
 status = $evm.inputs['status']
 
