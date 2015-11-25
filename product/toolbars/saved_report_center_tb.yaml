@@ -13,8 +13,8 @@
     :items:
     - :button: report_only
       :image: reportonly
-      :text: "Show full screen report"
-      :title: "Show full screen report"
+      :text: "Show full screen Report"
+      :title: "Show full screen Report"
       :url: "/report_only"
       :url_parms: 'popup_only'
       :popup: true
