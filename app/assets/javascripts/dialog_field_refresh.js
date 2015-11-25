@@ -60,7 +60,8 @@ var dialogFieldRefresh = {
       dropdownOptions.push(option);
     });
 
-    $('.dynamic-drop-down-' + fieldId).html(dropdownOptions);
+    $('.dynamic-drop-down-' + fieldId + '.selectpicker').html(dropdownOptions);
+    $('.dynamic-drop-down-' + fieldId + '.selectpicker').selectpicker('refresh');
 
     miqSparkle(false);
   },

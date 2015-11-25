@@ -4,7 +4,7 @@ describe('dialogFieldRefresh', function() {
 
     beforeEach(function() {
       var html = "";
-      html += '<select class="dynamic-drop-down-345">';
+      html += '<select class="dynamic-drop-down-345 selectpicker">';
       html += '</select>';
       setFixtures(html);
     });
@@ -24,7 +24,7 @@ describe('dialogFieldRefresh', function() {
 
         it('selects the option that corresponds to the checked value', function() {
           dialogFieldRefresh.addOptionsToDropDownList(data, 345);
-          expect($('.dynamic-drop-down-345').val()).toBe('123');
+          expect($('.dynamic-drop-down-345.selectpicker').val()).toBe('123');
         });
       });
     });
@@ -36,7 +36,7 @@ describe('dialogFieldRefresh', function() {
 
       it('selects the first option', function() {
         dialogFieldRefresh.addOptionsToDropDownList(data, 345);
-        expect($('.dynamic-drop-down-345').val()).toBe('test');
+        expect($('.dynamic-drop-down-345.selectpicker').val()).toBe('test');
       });
     });
   });
