@@ -36,6 +36,7 @@ var dialogFieldRefresh = {
 
     $.post('dynamic_radio_button_refresh', {name: fieldName, checked_value: selectedValue}).done(function(data) {
       dialogFieldRefresh.addOptionsToDropDownList(data, fieldId);
+      $('#' + fieldName).selectpicker('val', selectedValue);
     });
   },
 

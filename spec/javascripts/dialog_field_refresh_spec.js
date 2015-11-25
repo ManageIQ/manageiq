@@ -45,6 +45,7 @@ describe('dialogFieldRefresh', function() {
     beforeEach(function() {
       spyOn(dialogFieldRefresh, 'addOptionsToDropDownList');
 
+      spyOn($.fn, 'selectpicker');
       spyOn($, 'post').and.callFake(function() {
         var d = $.Deferred();
         d.resolve("the data");
@@ -55,6 +56,16 @@ describe('dialogFieldRefresh', function() {
     it('calls addOptionsToDropDownList', function() {
       dialogFieldRefresh.refreshDropDownList('abc', 123, 'test');
       expect(dialogFieldRefresh.addOptionsToDropDownList).toHaveBeenCalledWith("the data", 123);
+    });
+
+    it('sets the value in the select picker', function() {
+      dialogFieldRefresh.refreshDropDownList('abc', 123, 'test');
+      expect($.fn.selectpicker).toHaveBeenCalledWith('val', 'test');
+    });
+
+    it('uses the correct selector', function() {
+      dialogFieldRefresh.refreshDropDownList('abc', 123, 'test');
+      expect($.fn.selectpicker.calls.mostRecent().object.selector).toEqual('#abc');
     });
   });
 });

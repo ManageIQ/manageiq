@@ -1,12 +1,12 @@
 - if edit
   - select_values = field.values.collect(&:reverse)
-  - if defined? selected
-    = select_tag(field.name, options_for_select(select_values, selected), drop_down_options(field, url))
-  - else
-    = select_tag(field.name, options_for_select(select_values, field.default_value), drop_down_options(field, url))
+  - selected ||= field.default_value
+  = select_tag(field.name, options_for_select(select_values, selected), drop_down_options(field, url))
+
   :javascript
     miqInitSelectPicker();
-    miqSelectPickerEvent('#{field.name}', '#{url}')
+    $('.selectpicker').selectpicker('val', '#{selected}');
+    miqSelectPickerEvent('#{field.name}', '#{url}');
 
 - else
   = h(field.values.detect { |k, _v| k == wf.value(field.name) }.try(:last) || wf.value(field.name))

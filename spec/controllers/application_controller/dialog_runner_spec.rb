@@ -2,6 +2,39 @@ require "spec_helper"
 require "support/controller_spec_helper"
 
 describe CatalogController do
+  describe "#dialog_field_changed" do
+    include_context "valid session"
+
+    let(:dialog) { active_record_instance_double("Dialog") }
+    let(:wf) { double(:dialog => dialog) }
+    let(:dialog_field) do
+      active_record_instance_double("DialogFieldTextBox", :name => "test", :value => nil, :type => "TextBox")
+    end
+    let(:params) { {:test => "new value", :id => 123} }
+    let(:session) { {:edit => {:rec_id => 123, :wf => wf, :key => "dialog_edit__123"}} }
+
+    before do
+      Dialog.stub(:find_by_id).with(123).and_return(dialog)
+      dialog.stub(:field)
+      dialog.stub(:field).with("test").and_return(dialog_field)
+      dialog.stub(:field_name_exist?).and_return(false)
+      dialog.stub(:field_name_exist?).with("test").and_return(true)
+      dialog.stub(:dialog_tabs).and_return([double(:dialog_groups => [double(:dialog_fields => [dialog_field])])])
+      wf.stub(:dialog_field).with("test").and_return(double(:data_type => "string"))
+      wf.stub(:set_value)
+    end
+
+    it "includes disabling the sparkle in the response" do
+      xhr :post, :dialog_field_changed, params, session
+      expect(response.body).to include("miqSparkle(false);")
+    end
+
+    it "stores the incoming value in the edit variable" do
+      expect(wf).to receive(:set_value).with("test", "new value")
+      xhr :post, :dialog_field_changed, params, session
+    end
+  end
+
   describe "#dynamic_text_box_refresh" do
     include_context "valid session"
 
