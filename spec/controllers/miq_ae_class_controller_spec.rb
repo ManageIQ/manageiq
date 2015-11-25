@@ -466,4 +466,39 @@ describe MiqAeClassController do
       assigns(:edit)[:domains].count.should eq(1)
     end
   end
+
+  context "#delete_domain_or_namespaces" do
+    before do
+      set_user_privileges
+      domain = FactoryGirl.create(:miq_ae_domain, :tenant => Tenant.seed)
+      @namespace = FactoryGirl.create(:miq_ae_namespace, :name => "foo_namespace", :parent => domain)
+      @ae_class = FactoryGirl.create(:miq_ae_class, :name => "foo_class", :namespace_id => 1)
+      controller.instance_variable_set(:@sb,
+                                       :trees       => {},
+                                       :active_tree => :ae_tree)
+      controller.stub(:replace_right_cell)
+    end
+
+
+    it "Should delete multiple selected items from list" do
+      controller.instance_variable_set(:@_params,
+                                       :miq_grid_checks => "aec-#{@ae_class.id},aen-#{@namespace.id}",
+                                       :id              => @namespace.id
+      )
+      controller.send(:delete_domain_or_namespaces)
+      flash_messages = assigns(:flash_array)
+      flash_messages.first[:message].should include("Automate Namespace \"foo_namespace\": Delete successful")
+      flash_messages.last[:message].should include("Automate Class \"foo_class\": Delete successful")
+    end
+
+    it "Should delete selected namespace in the tree" do
+      controller.instance_variable_set(:@_params,
+                                       :id => @namespace.id
+      )
+
+      controller.send(:delete_domain_or_namespaces)
+      flash_messages = assigns(:flash_array)
+      flash_messages.first[:message].should include("Automate Namespace \"foo_namespace\": Delete successful")
+    end
+  end
 end

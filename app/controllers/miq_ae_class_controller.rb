@@ -1952,8 +1952,7 @@ class MiqAeClassController < ApplicationController
     selected = find_checked_items
     ae_ns = []
     ae_cs = []
-    if params[:id] && params[:miq_grid_checks] == "" &&
-       params[:pressed] == "miq_ae_namespace_delete"
+    if params[:id] && params[:miq_grid_checks].blank?
       ae_ns.push(params[:id])
       self.x_node = "root"
     elsif selected
