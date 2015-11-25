@@ -907,13 +907,15 @@ module ApplicationHelper
     if args.key?(:tables) # plural case
       entity_name = ui_lookup(:tables => args[:tables])
       link_text   = args.key?(:link_text) ? "#{args[:link_text]} (#{args[:count]})" : "#{entity_name} (#{args[:count]})"
-      none        = '(0)'
       title       = "Show all #{entity_name}"
-    else                  # singular case
+    elsif args.key?(:text)
+      count = args[:count] ? "(#{args[:count]})" : ""
+      link_text = "#{args[:text]} #{count}"
+    elsif args.key?(:table)
+      # singular case
       entity_name = ui_lookup(:table  => args[:table])
       link_text   = args.key?(:link_text) ? args[:link_text] : entity_name
       link_text   = "#{link_text} (#{args[:count]})" if args.key?(:count)
-      none        = '(0)'
       title       = "Show #{entity_name}"
     end
     title = args[:title] if args.key?(:title)
@@ -937,9 +939,7 @@ module ApplicationHelper
       end
     else
       content_tag(:li, :class => "disabled") do
-        content_tag(:a, :href => "#") do
-          "#{args.key?(:link_text) ? args[:link_text] : entity_name} #{none}"
-        end
+        link_to(link_text,  "#")
       end
     end
   end
