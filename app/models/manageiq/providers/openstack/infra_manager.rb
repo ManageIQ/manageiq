@@ -17,6 +17,7 @@ class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
   require_nested :RefreshParser
   require_nested :RefreshWorker
   require_nested :SecurityGroup
+  require_nested :Template
 
   include ManageIQ::Providers::Openstack::ManagerMixin
   include HasManyOrchestrationStackMixin

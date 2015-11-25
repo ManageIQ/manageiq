@@ -12,7 +12,7 @@ module ManageIQ::Providers::Openstack
         parent_server_uid = parse_image_parent_id(image)
 
         new_result = {
-          :type               => "ManageIQ::Providers::Openstack::CloudManager::Template",
+          :type               => self.class.miq_template_type,
           :uid_ems            => uid,
           :ems_ref            => uid,
           :name               => image.name,
