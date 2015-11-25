@@ -811,7 +811,10 @@ module ManageIQ::Providers
 
         if inv["numCpu"].present?
           result[:cpu_total_cores]      = inv["numCpu"].to_i
-          result[:cpu_cores_per_socket] = (config.try(:fetch_path, "hardware", "numCoresPerSocket") || 1).to_i
+
+          # cast numCoresPerSocket to an integer so that we can check for nil and 0
+          cpu_cores_per_socket          = config.try(:fetch_path, "hardware", "numCoresPerSocket").to_i
+          result[:cpu_cores_per_socket] = (cpu_cores_per_socket.zero?) ? 1 : cpu_cores_per_socket
           result[:cpu_sockets]          = result[:cpu_total_cores] / result[:cpu_cores_per_socket]
         end
 
