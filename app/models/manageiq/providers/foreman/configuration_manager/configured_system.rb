@@ -20,6 +20,10 @@ class ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem < ::C
     (connection || connection_source.connect).host(manager_ref)
   end
 
+  def ext_management_system
+    configuration_manager
+  end
+
   private
 
   def connection_source(options = {})

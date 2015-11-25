@@ -360,7 +360,7 @@ describe ProviderForemanController do
     end
   end
 
-  context "when user with limitied privileges logs in" do
+  context "when user with specific tag settings logs in" do
     before do
       login_as user_with_feature %w(providers_accord configured_systems_filter_accord)
     end
@@ -378,7 +378,7 @@ describe ProviderForemanController do
       Classification.seed
       quota_2gb_tag = Classification.where("description" => "2GB").first
       Classification.bulk_reassignment({:model      => "ConfiguredSystem",
-                                        :object_ids => [@configured_system.id],
+                                        :object_ids => @configured_system.id,
                                         :add_ids    => quota_2gb_tag.id,
                                         :delete_ids => []
                                        })
