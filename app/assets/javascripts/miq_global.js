@@ -71,5 +71,6 @@ if (typeof(ManageIQ) === 'undefined') {
       dashboardUrl: null, // set dashboard widget drag drop url
       menuXml: null,
     },
+    gridChecks: [], // list of checked checkboxes in current list grid
   }
 };

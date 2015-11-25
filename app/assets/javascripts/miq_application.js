@@ -406,7 +406,7 @@ function miqUpdateAllCheckboxes(button_div, override) {
       miqGridCheckAll(state);
       var crows = miqGridGetCheckedRows();
 
-      $('#miq_grid_checks').val(crows.join(','));
+      ManageIQ.gridChecks = crows;
       miqSetButtons(crows.length, button_div);
     }
   }
@@ -1310,10 +1310,11 @@ function miqToolbarOnClick(e) {
     }
   }
 
-  collect_log_buttons = [ 'support_vmdb_choice__collect_logs',
-                          'support_vmdb_choice__collect_current_logs',
-                          'support_vmdb_choice__zone_collect_logs',
-                          'support_vmdb_choice__zone_collect_current_logs'
+  var collect_log_buttons = [
+    'support_vmdb_choice__collect_logs',
+    'support_vmdb_choice__collect_current_logs',
+    'support_vmdb_choice__zone_collect_logs',
+    'support_vmdb_choice__zone_collect_current_logs'
   ];
   if (jQuery.inArray(button.attr('name'), collect_log_buttons) >= 0 && button.data('prompt')) {
     tb_url = miqSupportCasePrompt(tb_url);
@@ -1326,8 +1327,8 @@ function miqToolbarOnClick(e) {
   var params;
   if (button.data("url_parms")) {
     if (button.data('url_parms').match("_div$")) {
-      if (miqDomElementExists('miq_grid_checks')) {
-        params = "miq_grid_checks=" + $('#miq_grid_checks').val();
+      if (ManageIQ.gridChecks.length) {
+        params = "miq_grid_checks=" + ManageIQ.gridChecks.join(',');
       } else {
         params = miqSerializeForm(button.data('url_parms'));
       }
