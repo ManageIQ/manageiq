@@ -109,6 +109,7 @@ module Metric::Capture
     end
 
     # Queue the captures for each target
+    use_historical = historical_days != 0
     targets.each do |target|
       interval_name = perf_target_to_interval_name(target)
 
@@ -126,7 +127,7 @@ module Metric::Capture
       end
       target.perf_capture_queue(interval_name, options)
 
-      if !target.kind_of?(Storage) && target.last_perf_capture_on.nil? && historical_days != 0
+      if !target.kind_of?(Storage) && use_historical && target.last_perf_capture_on.nil?
         target.perf_capture_queue('historical')
       end
     end
