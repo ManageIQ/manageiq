@@ -47,7 +47,7 @@ function miqGridOnCheck(elem, button_div) {
   }
 
   var crows = miqGridGetCheckedRows();
-  $('#miq_grid_checks').val(crows.join(','));
+  ManageIQ.gridChecks = crows;
 
   if (miqDomElementExists('center_tb')) {
     miqSetButtons(crows.length, "center_tb");

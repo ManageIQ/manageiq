@@ -6,12 +6,7 @@ describe('miq_grid.js', function () {
     $('table').miqGrid();
   });
 
-  it('creates the list of selected items', function () {
-    expect($('#miq_grid_checks').length).toEqual(1);
-  });
-
   describe('.checkall', function () {
-
     it('checks itself if all checkboxes were checked', function () {
       $('.checkall').trigger('click');
       expect($('.checkall').prop('checked')).toEqual(true);
@@ -45,9 +40,9 @@ describe('miq_grid.js', function () {
 
   it('appends checked elements to the list of selected items', function () {
     $(".noclick > input[type='checkbox']").first().trigger('click');
-    expect($('#miq_grid_checks').val()).toEqual('check_1');
+    expect(ManageIQ.gridChecks.join(',')).toEqual('check_1');
     $(".noclick > input[type='checkbox']").last().trigger('click');
-    expect($('#miq_grid_checks').val()).toEqual('check_1,check_3');
+    expect(ManageIQ.gridChecks.join(',')).toEqual('check_1,check_3');
   });
 
   it('sends an ajax POST request when clicking on a table row', function () {

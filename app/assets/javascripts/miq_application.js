@@ -406,7 +406,7 @@ function miqUpdateAllCheckboxes(button_div, override) {
       miqGridCheckAll(state);
       var crows = miqGridGetCheckedRows();
 
-      $('#miq_grid_checks').val(crows.join(','));
+      ManageIQ.gridChecks = crows;
       miqSetButtons(crows.length, button_div);
     }
   }
@@ -1327,8 +1327,8 @@ function miqToolbarOnClick(e) {
   var params;
   if (button.data("url_parms")) {
     if (button.data('url_parms').match("_div$")) {
-      if (miqDomElementExists('miq_grid_checks')) {
-        params = "miq_grid_checks=" + $('#miq_grid_checks').val();
+      if (ManageIQ.gridChecks.length) {
+        params = "miq_grid_checks=" + ManageIQ.gridChecks.join(',');
       } else {
         params = miqSerializeForm(button.data('url_parms'));
       }
