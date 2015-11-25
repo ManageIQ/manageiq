@@ -216,4 +216,17 @@ describe MiqProvisionVirtWorkflow do
       expect(workflow.validate_memory_reservation(nil, values.merge(:memory_reserve => 2048), {}, {}, nil)).to eq(error)
     end
   end
+
+  context "#allowed_template_condition" do
+    it "without a provider model defined" do
+      expect(workflow.allowed_template_condition).to eq(["vms.template = ? AND vms.ems_id IS NOT NULL", true])
+    end
+
+    it "with a provider model defined" do
+      ems = FactoryGirl.create(:ems_vmware)
+      expect(workflow.class).to receive(:provider_model).once.and_return(ems.class)
+
+      expect(workflow.allowed_template_condition).to eq(["vms.template = ? AND vms.ems_id in (?)", true, [ems.id]])
+    end
+  end
 end

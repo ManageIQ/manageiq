@@ -60,8 +60,8 @@ class ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow < ManageIQ::P
     super(message, {'platform' => 'amazon'})
   end
 
-  def self.allowed_templates_vendor
-    'amazon'
+  def self.provider_model
+    ManageIQ::Providers::Amazon::CloudManager
   end
 
   def security_group_to_availability_zones(src)

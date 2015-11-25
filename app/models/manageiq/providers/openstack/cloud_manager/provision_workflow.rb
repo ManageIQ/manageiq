@@ -22,7 +22,7 @@ class ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow < ::MiqPro
     super(message, {'platform' => 'openstack'})
   end
 
-  def self.allowed_templates_vendor
-    'openstack'
+  def self.provider_model
+    ManageIQ::Providers::Openstack::CloudManager
   end
 end

@@ -504,10 +504,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     :vm_tags
   end
 
-  def self.allowed_templates_vendor
-    nil
-  end
-
   def allowed_templates(options = {})
     # Return pre-selected VM if we are called for cloning
     if [:clone_to_vm, :clone_to_template].include?(request_type)
@@ -522,11 +518,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     rails_logger('allowed_templates', 0)
     vms = []
-    condition = if self.class.allowed_templates_vendor
-                  ["vms.template = ? AND vms.vendor = ? AND vms.ems_id IS NOT NULL", true, self.class.allowed_templates_vendor]
-                else
-                  ["vms.template = ? AND vms.ems_id IS NOT NULL", true]
-                end
+    condition = allowed_template_condition
 
     run_search = true
     unless options[:tag_filters].blank?
@@ -576,6 +568,12 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
 
     @allowed_templates_cache
+  end
+
+  def allowed_template_condition
+    return ["vms.template = ? AND vms.ems_id IS NOT NULL", true] unless self.class.respond_to?(:provider_model)
+
+    ["vms.template = ? AND vms.ems_id in (?)", true, self.class.provider_model.pluck(:id)]
   end
 
   def source_vm_rbac_filter(vms, condition = nil)
