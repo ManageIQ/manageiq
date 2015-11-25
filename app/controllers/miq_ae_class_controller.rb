@@ -2015,11 +2015,8 @@ class MiqAeClassController < ApplicationController
 
   # Common routine to find checked items on a page (checkbox ids are "check_xxx" where xxx is the item id or index)
   def find_checked_items(_prefix = nil)
-    if !params[:miq_grid_checks].blank?
-      return params[:miq_grid_checks].split(",")
-    elsif !params[:miq_grid_checks2].blank?
-      return params[:miq_grid_checks2].split(",")
-    end
+    # AE can't use ApplicationController#find_checked_items because that one expects non-prefixed ids
+    params[:miq_grid_checks].split(",") unless params[:miq_grid_checks].blank?
   end
 
   def field_attributes
