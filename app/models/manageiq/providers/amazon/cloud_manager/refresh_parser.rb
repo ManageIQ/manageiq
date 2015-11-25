@@ -53,17 +53,17 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   end
 
   def get_availability_zones
-    azs = @connection.availability_zones
+    azs = @connection.client.describe_availability_zones[:availability_zones]
     process_collection(azs, :availability_zones) { |az| parse_availability_zone(az) }
   end
 
   def get_key_pairs
-    kps = @connection.key_pairs
+    kps = @connection.client.describe_key_pairs[:key_pairs]
     process_collection(kps, :key_pairs) { |kp| parse_key_pair(kp) }
   end
 
   def get_cloud_networks
-    vpcs = @connection.vpcs
+    vpcs = @connection.client.describe_vpcs[:vpcs]
     process_collection(vpcs, :cloud_networks) { |vpc| parse_cloud_network(vpc) }
   end
 
@@ -93,15 +93,21 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   end
 
   def get_private_images
-    get_images(@connection.images.with_owner(:self))
+    get_images(
+      @connection.client.describe_images(:owners  => [:self],
+                                         :filters => [{:name => "image-type", :values => ["machine"]}]))
   end
 
   def get_shared_images
-    get_images(@connection.images.executable_by(:self))
+    get_images(
+      @connection.client.describe_images(:executable_users => [:self],
+                                         :filters          => [{:name => "image-type", :values => ["machine"]}]))
   end
 
   def get_public_images
-    get_images(@connection.images.executable_by(:all), true)
+    get_images(
+      @connection.client.describe_images(:executable_users => [:all],
+                                         :filters          => [{:name => "image-type", :values => ["machine"]}]))
   end
 
   def get_images(image_collection, is_public = false)
@@ -193,6 +199,18 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :type    => ManageIQ::Providers::Amazon::CloudManager::AvailabilityZone.name,
       :ems_ref => uid,
       :name    => name,
+    }
+
+    return uid, new_result
+  end
+
+  def parse_key_pair(kp)
+    name = uid = kp.name_JJV_START_HERE
+
+    new_result = {
+      :type        => self.class.key_pair_type,
+      :name        => name,
+      :fingerprint => kp.fingerprint
     }
 
     return uid, new_result
