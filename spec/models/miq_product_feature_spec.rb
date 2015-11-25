@@ -76,4 +76,28 @@ describe MiqProductFeature do
       expect(status_seed[:created]).to match_array %w(everything one two)
     end
   end
+
+  describe "#feature_details" do
+    it "returns data for visible features" do
+      EvmSpecHelper.seed_specific_product_features("container_dashboard")
+      expect(MiqProductFeature.feature_details("container_dashboard")).to be
+    end
+
+    it "eats hidden features" do
+      EvmSpecHelper.seed_specific_product_features("widget_refresh")
+      expect(MiqProductFeature.feature_details("widget_refresh")).not_to be
+    end
+  end
+
+  describe "#feature_hidden" do
+    it "detects visible features" do
+      EvmSpecHelper.seed_specific_product_features("container_dashboard")
+      expect(MiqProductFeature.feature_hidden("container_dashboard")).not_to be
+    end
+
+    it "detects hidden features" do
+      EvmSpecHelper.seed_specific_product_features("widget_refresh")
+      expect(MiqProductFeature.feature_hidden("widget_refresh")).to be
+    end
+  end
 end
