@@ -20,6 +20,7 @@ class CloudVolumeController < ApplicationController
   def show
     @display = params[:display] || "main" unless control_selected?
     @showtype = @display
+    @lastaction = "show"
 
     @volume = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@volume)
@@ -42,6 +43,8 @@ class CloudVolumeController < ApplicationController
 
   # Show the main Cloud Volume list view
   def show_list
+    @listicon = "cloud_volume"
+    @lastaction = "show_list"
     process_show_list
   end
 
@@ -52,7 +55,7 @@ class CloudVolumeController < ApplicationController
       render :update do |page|
         page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]
       end
-    elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
+    elsif params[:pshow/#{@volume.id}ressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
                                                    "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
       render_or_redirect_partial(pfx)
     else
