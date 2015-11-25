@@ -75,6 +75,18 @@ class ServiceOrchestration < Service
     converter.stack_create_options.merge(tenant_option)
   end
 
+  def indirect_vms
+    all_vms - direct_vms
+  end
+
+  def direct_vms
+    orchestration_stack.try(:direct_vms) || []
+  end
+
+  def all_vms
+    orchestration_stack.try(:vms) || []
+  end
+
   private
 
   def build_stack_create_options

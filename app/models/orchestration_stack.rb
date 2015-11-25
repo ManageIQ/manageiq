@@ -16,9 +16,14 @@ class OrchestrationStack < ActiveRecord::Base
   belongs_to :orchestration_template
   belongs_to :cloud_tenant
 
-  has_many   :vms, :class_name => "ManageIQ::Providers::CloudManager::Vm"
-  has_many   :security_groups
-  has_many   :cloud_networks
+  has_many   :direct_vms,             :class_name => "ManageIQ::Providers::CloudManager::Vm"
+  has_many   :direct_security_groups, :class_name => "SecurityGroup"
+  has_many   :direct_cloud_networks,  :class_name => "CloudNetwork"
+
+  virtual_has_many :vms, :class_name => "ManageIQ::Providers::CloudManager::Vm"
+  virtual_has_many :security_groups
+  virtual_has_many :cloud_networks
+
   has_many   :parameters, :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackParameter"
   has_many   :outputs,    :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackOutput"
   has_many   :resources,  :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackResource"
@@ -42,6 +47,26 @@ class OrchestrationStack < ActiveRecord::Base
   def total_cloud_networks
     cloud_networks.size
   end
+
+  def vms
+    directs_and_indirects(:direct_vms)
+  end
+
+  def security_groups
+    directs_and_indirects(:direct_security_groups)
+  end
+
+  def cloud_networks
+    directs_and_indirects(:direct_cloud_networks)
+  end
+
+  def directs_and_indirects(direct_attrs)
+    return send(direct_attrs) if descendants.blank?
+
+    indirects = descendants.inject([]) { |arr, child| arr << child.send(direct_attrs) }
+    (indirects << send(direct_attrs)).flatten
+  end
+  private :directs_and_indirects
 
   def self.create_stack(orchestration_manager, stack_name, template, options = {})
     klass = orchestration_manager.class::OrchestrationStack
