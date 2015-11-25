@@ -69,38 +69,12 @@ describe MiqProvisionWorkflow do
           MiqPassword.decrypt(request.options[:root_password]).should == password_input
         end
 
-        it "should set values when extra '|' are passed in" do
-          request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
-            "1.1", admin, {'name' => 'template'}, {'vm_name' => 'spec_test'},
-            nil, nil, {'abc' => 'tr|ue', 'blah' => 'nah'}, nil, nil)
-
-          expect(request.options[:ws_values]).to include(:abc => "tr|ue")
-        end
-
         it "should set values when extra '|' are passed in for multiple values" do
           request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
             "1.1", admin, {'name' => 'template'}, {'vm_name' => 'spec_test'},
             nil, nil, {'abc' => 'tr|ue', 'blah' => 'na|h'}, nil, nil)
 
           expect(request.options[:ws_values]).to include(:blah => "na|h")
-        end
-
-        it "should set values" do
-          request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
-            "1.1", admin, {'name' => 'template'}, {'vm_name' => 'spec_test'},
-            nil, nil, {'abc' => 'true', 'blah' => 'nah'}, nil, nil)
-
-          expect(request.options[:ws_values]).to include(:abc => "true")
-        end
-
-        it "should set values correctly when a string is passed" do
-          Vmdb::Deprecation.silenced do
-            request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
-              "1.1", admin, {'name' => 'template'}, {'vm_name' => 'spec_test'},
-              nil, nil, "abc=true|blah=nah", nil, nil)
-
-            expect(request.options[:ws_values]).to include(:abc => "true")
-          end
         end
 
         it "should set values when only a single key value pair is passed in as a string" do
@@ -118,16 +92,6 @@ describe MiqProvisionWorkflow do
             request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
               "1.1", admin, "name=template", "vm_name=spec_test",
               nil, nil, "abc=true", nil, nil)
-
-            expect(request.options[:ws_values]).to include(:abc => "true")
-          end
-        end
-
-        it "should set values when only a single key value pair is passed in" do
-          Vmdb::Deprecation.silenced do
-            request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
-              "1.1", admin, {'name' => 'template'}, {'vm_name' => 'spec_test'},
-              nil, nil, {'abc' => 'true'}, nil, nil)
 
             expect(request.options[:ws_values]).to include(:abc => "true")
           end

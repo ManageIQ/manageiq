@@ -370,7 +370,6 @@ class MiqRequestWorkflow
   def self.parse_request_parameter_hash(parameter_hash, options = {})
     parameter_hash.each_with_object({}) do |param, hash|
       key, value = param
-      next if value.blank?
       key = key.strip.downcase.to_sym unless options[:modify_key_name] == false
       hash[key] = value
     end
