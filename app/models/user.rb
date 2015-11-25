@@ -130,10 +130,11 @@ class User < ActiveRecord::Base
   def role_allows?(options = {})
     return false if miq_user_role.nil?
     feature = MiqProductFeature.find_by_identifier(options[:identifier])
-    identifiers = {:identifiers => [options[:identifier]]}
     if feature.try(:hidden)
       parent_feature = MiqProductFeature.parent_for_feature(options[:identifier])
-      # always return true for common features that are hidden and are under hidden parent
+      identifiers = {:identifiers => MiqProductFeature.feature_children(parent_feature.identifier) }
+      # return true for common features that are hidden and are under hidden parent
+      # return true if any visible siblings are entitled
       parent_feature.try(:hidden) ? true : miq_user_role.allows_any?(identifiers)
     else
       miq_user_role.allows?(options)
