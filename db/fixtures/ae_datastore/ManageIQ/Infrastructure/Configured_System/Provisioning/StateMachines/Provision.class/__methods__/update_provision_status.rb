@@ -5,6 +5,11 @@
 
 prov = $evm.root['miq_provision_task']
 
+unless prov
+  $evm.log(:error, "miq_provision_task object not provided")
+  exit(MIQ_STOP)
+end
+
 # Get status from input field status
 status = $evm.inputs['status']
 
