@@ -1934,19 +1934,18 @@ class Host < ActiveRecord::Base
   end
 
   def self.node_types
-    return :mixed_hosts if count_of_openstack_hosts > 0 && count_of_non_openstack_hosts > 0
-    return :openstack   if count_of_openstack_hosts > 0
-    :non_openstack
+    return :non_openstack unless openstack_hosts_exists?
+    non_openstack_hosts_exists? ? :mixed_hosts : :openstack
   end
 
-  def self.count_of_openstack_hosts
+  def self.openstack_hosts_exists?
     ems = ManageIQ::Providers::Openstack::InfraManager.pluck(:id)
-    Host.where(:ems_id => ems).count
+    ems.empty? ? false : Host.where(:ems_id => ems).exists?
   end
 
-  def self.count_of_non_openstack_hosts
+  def self.non_openstack_hosts_exists?
     ems = ManageIQ::Providers::Openstack::InfraManager.pluck(:id)
-    Host.where(Host.arel_table[:ems_id].not_in(ems)).count
+    Host.where.not(:ems_id => ems).exists?
   end
 
   def openstack_host?
