@@ -27,7 +27,7 @@
                 :remote               => true,
                 :id                   => "s_#{s_id}_close",
                 :title                => _("Remove this Shortcut"),
-                :class                => "delbox")
+                :class                => "fa fa-close pull-right")
               = link_to("",
                 {:controller => "report", :action => "widget_shortcut_reset", :id => @widget.id || "new", :shortcut => s_id},
                 "data-miq_sparkle_on" => true,
