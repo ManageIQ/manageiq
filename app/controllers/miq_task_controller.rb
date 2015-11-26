@@ -273,6 +273,7 @@ class MiqTaskController < ApplicationController
         else
           page << "miqSetButtons(0, 'center_tb');"                             # Reset the center toolbar
           page.replace_html("main_div", :partial => @refresh_partial)
+          page.replace("pc_div_1", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => @lastaction, :db => @view.db, :headers => @view.headers})
         end
       end
     end
@@ -315,6 +316,7 @@ class MiqTaskController < ApplicationController
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << "miqSetButtons(0, 'center_tb');"                             # Reset the center toolbar
       page.replace("main_div", :partial => "layouts/tasks")
+      page.replace("pc_div_1", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => @lastaction, :db => @view.db, :headers => @view.headers})
       page << "miqSparkle(false);"
     end
   end
