@@ -119,37 +119,6 @@
               .row
                 .col-md-12
                   = yield
-      - elsif layout_uses_paging?
-        .col-md-12.max-height
-          - if !@in_a_form && taskbar_in_header?
-            .row.toolbar-pf#toolbar
-              .col-md-12
-                .toolbar-pf-actions
-                  = render :partial => "layouts/taskbar"
-          #main-content.row
-            .col-md-12
-              .row
-                .col-md-12
-                  = render :partial => "layouts/breadcrumbs"
-              - if layout_uses_tabs?
-                .row
-                  .col-md-12
-                    = render :partial => 'layouts/tabs'
-              .row
-                .col-md-12
-                  = yield
-          - unless @in_a_form
-            .row.toolbar-pf#paging_div
-              .col-md-12
-                .toolbar-pf-actions
-                  - unless @embedded
-                    - if @pages && @items_per_page != ONE_MILLION
-                      = render(:partial => '/layouts/pagingcontrols',
-                              :locals => {:pages      => @pages,
-                                           :action_url => action_url_for_views,
-                                           :db         => @view.db,
-                                           :headers    => @view.headers,
-                                           :button_div => 'center_tb'})
       - else
         .col-md-12.max-height
           - if !@in_a_form && taskbar_in_header?
@@ -169,6 +138,19 @@
               .row
                 .col-md-12
                   = yield
+          - if layout_uses_paging? && !@in_a_form
+            .row.toolbar-pf#paging_div
+              .col-md-12
+                .toolbar-pf-actions
+                  - unless @embedded
+                    - if @pages && @items_per_page != ONE_MILLION
+                      = render(:partial => '/layouts/pagingcontrols',
+                              :locals => {:pages      => @pages,
+                                           :action_url => action_url_for_views,
+                                           :db         => @view.db,
+                                           :headers    => @view.headers,
+                                           :button_div => 'center_tb'})
+
 - if show_advanced_search?
   :javascript
     #{javascript_show_if_exists("adv_searchbox_div")}
