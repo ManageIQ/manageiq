@@ -11,6 +11,7 @@ module ApplicationHelper::PageLayouts
       diagnostics
       exception
       miq_ae_automate_button
+      miq_ae_customization
       miq_ae_export
       miq_ae_logs
       miq_ae_tools

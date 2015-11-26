@@ -1957,11 +1957,7 @@ class ApplicationController < ActionController::Base
     render :update do |page|                        # Use RJS to update the display
       page.replace(:flash_msg_div, :partial => "layouts/flash_msg")           # Replace the flash message
       page << "miqSetButtons(0, 'center_tb');" # Reset the center toolbar
-      unless @layout == "dashboard" && ["show", "change_tab", "auth_error"].include?(@controller.action_name) ||
-             %w(about all_tasks all_ui_tasks configuration diagnostics miq_ae_automate_button
-                miq_ae_customization miq_ae_export miq_ae_logs miq_ae_tools miq_policy miq_policy_export
-                miq_policy_logs miq_request_ae miq_request_configured_system miq_request_host
-                miq_request_vm my_tasks my_ui_tasks report rss server_build).include?(@layout)
+      if layout_uses_listnav?
         page.replace(:listnav_div, :partial => "layouts/listnav")               # Replace accordion, if list_nav_div is there
       end
       if @grid_hash
