@@ -147,7 +147,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
 
     begin
       pod = client.get_pod(options[:pod_name], options[:pod_namespace])
-    rescue SocketError, KubeException => e
+    rescue KubeException => e
       if e.error_code == ERRCODE_POD_NOTFOUND
         _log.info("pod #{pod_full_name} not found, skipping delete")
         return queue_signal(:finish)
