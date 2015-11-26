@@ -151,11 +151,6 @@ class User < ActiveRecord::Base
     miq_user_role.allows_any?(options)
   end
 
-  def role_allows_all?(options = {})
-    return false if miq_user_role.nil?
-    miq_user_role.allows_all?(options)
-  end
-
   def miq_user_role_name
     miq_user_role.try(:name)
   end
