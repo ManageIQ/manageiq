@@ -82,22 +82,21 @@ class MiqTaskController < ApplicationController
   end
 
   def get_jobs(conditions)
+    @lastaction = "jobs"
+
     if @tabform == "tasks_1"
       @layout = "my_tasks"
-      @lastaction = "jobs"
       @view, @pages = get_view(Job, :conditions => conditions)  # Get the records (into a view) and the paginator
       drop_breadcrumb(:name => "My VM Analysis Tasks", :url => "/miq_task/index?jobs_tab=tasks")
 
     elsif @tabform == "tasks_2"
       # My UI Tasks
       @layout = "my_ui_tasks"
-      @lastaction = "ui_jobs"
       @view, @pages = get_view(MiqTask, :conditions => conditions)  # Get the records (into a view) and the paginator
       drop_breadcrumb(:name => "My Other UI Tasks", :url => "/miq_task/index?jobs_tab=tasks")
 
     elsif @tabform == "tasks_3" || @tabform == "alltasks_1"
       @layout = "all_tasks"
-      @lastaction = "all_jobs"
       @view, @pages = get_view(Job, :conditions => conditions)  # Get the records (into a view) and the paginator
       drop_breadcrumb(:name => "All VM Analysis Tasks", :url => "/miq_task/index?jobs_tab=alltasks")
       @user_names = Job.distinct("userid").pluck("userid").delete_if(&:blank?)
@@ -105,7 +104,6 @@ class MiqTaskController < ApplicationController
     elsif @tabform == "tasks_4" || @tabform == "alltasks_2"
       # All UI Tasks
       @layout = "all_ui_tasks"
-      @lastaction = "all_ui_jobs"
       @view, @pages = get_view(MiqTask, :conditions => conditions)  # Get the records (into a view) and the paginator
       drop_breadcrumb(:name => "All Other Tasks", :url => "/miq_task/index?jobs_tab=alltasks")
       @user_names = MiqTask.distinct("userid").pluck("userid").delete_if(&:blank?)
