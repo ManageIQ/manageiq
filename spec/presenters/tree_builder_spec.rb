@@ -32,7 +32,16 @@ describe TreeBuilder do
     it "builds tree object and sets all settings and add nodes to tree object" do
       tree = TreeBuilderChargebackRates.new("cb_rates_tree", "cb_rates", {})
       nodes = [{:key      => "root",
-                :children => [],
+                :children => [{:key     => "xx-Compute",
+                               :icon    => "hardware-processor.png",
+                               :title   => "Compute",
+                               :expand  => true,
+                               :tooltip => "Compute"},
+                              {:key     => "xx-Storage",
+                               :icon    => "hardware-disk.png",
+                               :title   => "Storage",
+                               :expand  => true,
+                               :tooltip => "Storage"}],
                 :expand   => true,
                 :title    => "Rates",
                 :tooltip  => "Rates",
