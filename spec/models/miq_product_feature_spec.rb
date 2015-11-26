@@ -24,7 +24,7 @@ describe MiqProductFeature do
   end
 
   context ".seed_features" do
-    let(:feature_path) { Pathname.new(Dir.tmpdir).join(rand(1000).to_s) }
+    let(:feature_path) { Pathname.new(@tempfile.path.sub(/\.yml/, '')) }
     let(:base) do
       {
         :feature_type => "node",
@@ -41,12 +41,15 @@ describe MiqProductFeature do
     end
 
     before do
-      FileUtils.mkdir_p(feature_path)
-      File.write("#{feature_path}.yml", YAML.dump(base))
+      @tempdir  = Dir.mktmpdir
+      @tempfile = Tempfile.new(['feature', '.yml'], @tempdir)
+      @tempfile.write(YAML.dump(base))
+      @tempfile.close
     end
 
     after do
-      FileUtils.rm_rf(feature_path)
+      @tempfile.unlink
+      Dir.rmdir(@tempdir)
     end
 
     it "existing records" do
@@ -68,12 +71,17 @@ describe MiqProductFeature do
         :children     => []
       }
 
-      additional_file = feature_path.join("additional.yml")
-      File.write(additional_file, YAML.dump(additional))
+      Dir.mkdir(feature_path)
+      additional_file = Tempfile.new(['additional', '.yml'], feature_path)
+      additional_file.write(YAML.dump(additional))
+      additional_file.close
 
       status_seed = MiqProductFeature.seed_features(feature_path)
       MiqProductFeature.count.should eq(3)
       expect(status_seed[:created]).to match_array %w(everything one two)
+
+      additional_file.unlink
+      Dir.rmdir(feature_path)
     end
   end
 end
