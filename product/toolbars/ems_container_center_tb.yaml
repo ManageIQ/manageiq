@@ -35,6 +35,12 @@
     :title: Monitoring
     :text: Monitoring
     :items:
+    - :button: ems_container_perf
+      :image: capacity
+      :text: "Utilization"
+      :title: "Show Capacity & Utilization data for this Provider"
+      :url: '/show'
+      :url_parms: '?display=performance'
     - :button: ems_container_timeline
       :image: timeline
       :text: 'Timelines'
