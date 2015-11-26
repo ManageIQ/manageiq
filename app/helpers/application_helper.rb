@@ -875,6 +875,11 @@ module ApplicationHelper
     end
   end
 
+  # condition is result of any boolean condition
+  def li_link_if(args)
+    li_link_if_condition(args.update(:condition => args[:if]))
+  end
+
   # Same as li_link_if_condition for cases where the condition is a zero equality
   # test.
   #
