@@ -1956,7 +1956,7 @@ class ApplicationController < ActionController::Base
 
     render :update do |page|                        # Use RJS to update the display
       page.replace(:flash_msg_div, :partial => "layouts/flash_msg")           # Replace the flash message
-      page << "miqSetButtons(0,'center_tb');" # Reset the center toolbar
+      page << "miqSetButtons(0, 'center_tb');" # Reset the center toolbar
       unless @layout == "dashboard" && ["show", "change_tab", "auth_error"].include?(@controller.action_name) ||
              %w(about all_tasks all_ui_tasks configuration diagnostics miq_ae_automate_button
                 miq_ae_customization miq_ae_export miq_ae_logs miq_ae_tools miq_policy miq_policy_export

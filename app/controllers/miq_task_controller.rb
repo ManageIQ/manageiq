@@ -270,10 +270,10 @@ class MiqTaskController < ApplicationController
     render :update do |page|                    # Use RJS to update the display
       unless @refresh_partial.nil?
         if @refresh_div == "flash_msg_div"
-          page << "miqSetButtons(0,'center_tb');"                             # Reset the center toolbar
+          page << "miqSetButtons(0, 'center_tb');"                             # Reset the center toolbar
           page.replace(@refresh_div, :partial => @refresh_partial)
         else
-          page << "miqSetButtons(0,'center_tb');"                             # Reset the center toolbar
+          page << "miqSetButtons(0, 'center_tb');"                             # Reset the center toolbar
           page.replace_html("main_div", :partial => @refresh_partial)
         end
       end
@@ -315,7 +315,7 @@ class MiqTaskController < ApplicationController
 
     render :update do |page|
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page << "miqSetButtons(0,'center_tb');"                             # Reset the center toolbar
+      page << "miqSetButtons(0, 'center_tb');"                             # Reset the center toolbar
       page.replace("main_div", :partial => "layouts/tasks")
       page << "miqSparkle(false);"
     end
