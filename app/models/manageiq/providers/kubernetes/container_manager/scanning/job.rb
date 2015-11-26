@@ -34,7 +34,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
 
   def start
     image = target_entity
-    return queue_signal(:abort_job) unless image
+    return queue_signal(:abort_job, "no image found", "error") unless image
 
     ems_configs = VMDB::Config.new('vmdb').config[:ems]
 
@@ -57,8 +57,9 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     begin
       kubernetes_client.create_pod(pod)
     rescue SocketError, KubeException => e
-      _log.info("pod creation for #{pod_full_name} failed: #{e}")
-      return queue_signal(:abort_job)
+      msg = "pod creation for #{pod_full_name} failed: #{e}"
+      _log.info(msg)
+      return queue_signal(:abort_job, msg, "error")
     end
 
     queue_signal(:pod_wait)
@@ -86,9 +87,9 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
         # TODO: check that the pod wasn't terminated (exit code)
         # continue: pod is still not up and running
       else
-        _log.info("unknown access error to pod #{pod_full_name}: " \
-                  "#{response}")
-        return queue_signal(:abort_job)
+        msg = "unknown access error to pod #{pod_full_name}: #{response}"
+        _log.info(msg)
+        return queue_signal(:abort_job, msg, "error")
       end
 
       # TODO: for recovery purposes it would be better if this
@@ -103,7 +104,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
 
   def analyze
     image = target_entity
-    return queue_signal(:abort_job) unless image
+    return queue_signal(:abort_job, "no image found", "error") unless image
 
     _log.info("scanning image #{options[:docker_image_id]}")
 
@@ -123,7 +124,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
 
   def synchronize
     image = target_entity
-    return queue_signal(:abort_job) unless image
+    return queue_signal(:abort_job, "no image found", "error") unless image
 
     image.sync_metadata(SCAN_CATEGORIES,
                         "taskid" => jobid,
@@ -142,7 +143,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     end
   end
 
-  def cleanup(*_args)
+  def cleanup(*args)
     client = kubernetes_client
 
     begin
@@ -150,7 +151,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     rescue KubeException => e
       if e.error_code == ERRCODE_POD_NOTFOUND
         _log.info("pod #{pod_full_name} not found, skipping delete")
-        return queue_signal(:finish)
+        return
       end
       # TODO: handle the cleanup at a later time
       raise
@@ -172,11 +173,13 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
         # TODO: handle the cleanup at a later time
       end
     end
+    set_status('image analysis completed successfully', 'ok')
 
-    queue_signal(:finish)
+  ensure
+    args.empty? ? queue_signal(:finish) : process_abort(*args)
   end
 
-  def finish
+  def finish(*_args)
     # Dummy method, nothing to execute here. Job finished.
   end
 
@@ -196,9 +199,9 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     ext_management_system.connect(:service => PROVIDER_CLASS.ems_type)
   end
 
-  def queue_signal(signal)
+  def queue_signal(*args)
     MiqQueue.put_unless_exists(
-      :args        => [signal.to_s],
+      :args        => args,
       :class_name  => "Job",
       :instance_id => id,
       :method_name => "signal",
