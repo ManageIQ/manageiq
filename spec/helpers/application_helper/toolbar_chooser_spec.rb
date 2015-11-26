@@ -13,48 +13,40 @@ describe ApplicationHelper do
 
     context "#center_toolbar_filename_classic" do
       before do
-        @view = true
+        @view   = true
         @layout = "miq_request_vm"
       end
 
       it "miq_request summary screen" do
         @lastaction = "show"
-        toolbar_name = center_toolbar_filename_classic
-        toolbar_name.should == "miq_request_center_tb"
+        expect(center_toolbar_filename_classic).to eq("miq_request_center_tb")
       end
 
       it "miq_request list screen" do
         @lastaction = "show_list"
-        toolbar_name = center_toolbar_filename_classic
-        toolbar_name.should == "miq_requests_center_tb"
+        expect(center_toolbar_filename_classic).to eq("miq_requests_center_tb")
       end
     end
 
     describe "generate explorer toolbar file names" do
       context "#center_toolbar_filename_automate" do
-        before do
-          @sb = {:active_tree => :ae_tree,
-                 :trees       => {:ae_tree => {:tree => :ae_tree}}}
-        end
+        before { @sb = {:active_tree => :ae_tree, :trees => {:ae_tree => {:tree => :ae_tree}}} }
 
         it "should return domains toolbar on root node" do
           x_node_set('root', :ae_tree)
-          toolbar_name = center_toolbar_filename_automate
-          toolbar_name.should eq("miq_ae_domains_center_tb")
+          expect(center_toolbar_filename_automate).to eq("miq_ae_domains_center_tb")
         end
 
         it "should return namespaces toolbar on domain node" do
           n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :priority => 10)
           x_node_set("aen-#{n1.id}", :ae_tree)
-          toolbar_name = center_toolbar_filename_automate
-          toolbar_name.should eq("miq_ae_domain_center_tb")
+          expect(center_toolbar_filename_automate).to eq("miq_ae_domain_center_tb")
         end
 
         it "should return namespace toolbar on namespace node" do
           n1 = FactoryGirl.create(:miq_ae_namespace, :parent => FactoryGirl.create(:miq_ae_domain))
           x_node_set("aen-#{n1.id}", :ae_tree)
-          toolbar_name = center_toolbar_filename_automate
-          toolbar_name.should eq("miq_ae_namespace_center_tb")
+          expect(center_toolbar_filename_automate).to eq("miq_ae_namespace_center_tb")
         end
 
         it "should return tab specific toolbar on class node" do
@@ -63,20 +55,16 @@ describe ApplicationHelper do
           x_node_set("aec-#{c1.id}", :ae_tree)
 
           @sb[:active_tab] = "props"
-          toolbar_name = center_toolbar_filename_automate
-          toolbar_name.should eq("miq_ae_class_center_tb")
+          expect(center_toolbar_filename_automate).to eq("miq_ae_class_center_tb")
 
           @sb[:active_tab] = "methods"
-          toolbar_name = center_toolbar_filename_automate
-          toolbar_name.should eq("miq_ae_methods_center_tb")
+          expect(center_toolbar_filename_automate).to eq("miq_ae_methods_center_tb")
 
           @sb[:active_tab] = "schema"
-          toolbar_name = center_toolbar_filename_automate
-          toolbar_name.should eq("miq_ae_fields_center_tb")
+          expect(center_toolbar_filename_automate).to eq("miq_ae_fields_center_tb")
 
           @sb[:active_tab] = ""
-          toolbar_name = center_toolbar_filename_automate
-          toolbar_name.should eq("miq_ae_instances_center_tb")
+          expect(center_toolbar_filename_automate).to eq("miq_ae_instances_center_tb")
         end
       end
     end
