@@ -405,6 +405,7 @@ Vmdb::Application.routes.draw do
         edit
         index
         new
+        perf_top_chart
         show
         show_list
         tagging_edit
@@ -426,7 +427,11 @@ Vmdb::Application.routes.draw do
         wait_for_task
         tagging_edit
         tag_edit_form_field_changed
-      ) + adv_search_post + exp_post + save_post
+      ) +
+               adv_search_post +
+               exp_post +
+               perf_post +
+               save_post
     },
 
     :container_image          => {
@@ -493,6 +498,7 @@ Vmdb::Application.routes.draw do
         edit
         index
         new
+        perf_top_chart
         show
         show_list
         tagging_edit
@@ -510,11 +516,13 @@ Vmdb::Application.routes.draw do
         show
         show_list
         update
+        wait_for_task
         tagging_edit
         tag_edit_form_field_changed
       ) +
                adv_search_post +
                exp_post +
+               perf_post +
                save_post
     },
 
@@ -524,6 +532,7 @@ Vmdb::Application.routes.draw do
         edit
         index
         new
+        perf_top_chart
         show
         show_list
         tagging_edit
@@ -545,7 +554,11 @@ Vmdb::Application.routes.draw do
         wait_for_task
         tagging_edit
         tag_edit_form_field_changed
-      ) + adv_search_post + exp_post + save_post
+      ) +
+               adv_search_post +
+               exp_post +
+               perf_post +
+               save_post
     },
 
     :container_route          => {

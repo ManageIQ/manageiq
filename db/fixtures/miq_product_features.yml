@@ -3189,6 +3189,10 @@
       :description: Display Individual Container Replicators
       :feature_type: view
       :identifier: container_replicator_show
+    - :name: Utilization
+      :description: Show Capacity & Utilization data of Replicators
+      :feature_type: view
+      :identifier: container_replicator_perf
     - :name: Timeline
       :description: Display Timelines for container Replicators
       :feature_type: view
@@ -3319,6 +3323,10 @@
       :description: Display Individual Container Services
       :feature_type: view
       :identifier: container_service_show
+    - :name: Utilization
+      :description: Show Capacity & Utilization data of Service
+      :feature_type: view
+      :identifier: container_service_perf
   - :name: Modify
     :description: Modify Container Services
     :feature_type: admin
@@ -3394,6 +3402,10 @@
       :description: Display Individual Container Routes
       :feature_type: view
       :identifier: container_project_show
+    - :name: Utilization
+      :description: Show Capacity & Utilization data of Project
+      :feature_type: view
+      :identifier: container_project_perf
     - :name: Timeline
       :description: Display Timelines for container Projects
       :feature_type: view

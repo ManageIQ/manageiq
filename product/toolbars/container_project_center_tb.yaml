@@ -35,6 +35,12 @@
       :title: "Show Timelines for this Project"
       :url: '/show'
       :url_parms: '?display=timeline'
+    - :button: container_project_perf
+      :image: capacity
+      :text: "Utilization"
+      :title: "Show Capacity & Utilization data for this Project"
+      :url: '/show'
+      :url_parms: '?display=performance'
 - :name: container_project_policy
   :items:
   - :buttonSelect: container_project_policy_choice

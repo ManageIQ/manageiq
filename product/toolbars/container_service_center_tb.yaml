@@ -22,6 +22,19 @@
       :title: 'Remove this #{ui_lookup(:table=>"container_service")} from the VMDB'
       :url_parms: '&refresh=y'
       :confirm: 'Warning: This #{ui_lookup(:table=>"container_service")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this #{ui_lookup(:table=>"container_service")}?'
+- :name: container_service_monitoring
+  :items:
+  - :buttonSelect: container_service_monitoring_choice
+    :image: monitoring
+    :title: Monitoring
+    :text: Monitoring
+    :items:
+    - :button: container_service_perf
+      :image: capacity
+      :text: "Utilization"
+      :title: "Show Capacity & Utilization data for this Service"
+      :url: '/show'
+      :url_parms: '?display=performance'
 - :name: container_service_policy
   :items:
   - :buttonSelect: container_service_policy_choice

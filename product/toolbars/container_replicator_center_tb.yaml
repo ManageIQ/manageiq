@@ -35,6 +35,12 @@
       :title: "Show Timelines for this Replicator"
       :url: '/show'
       :url_parms: '?display=timeline'
+    - :button: container_replicator_perf
+      :image: capacity
+      :text: "Utilization"
+      :title: "Show Capacity & Utilization data for this Replicator"
+      :url: '/show'
+      :url_parms: '?display=performance'
 - :name: container_replicator_policy
   :items:
   - :buttonSelect: container_replicator_policy_choice
