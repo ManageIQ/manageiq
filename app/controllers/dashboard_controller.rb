@@ -56,7 +56,7 @@ class DashboardController < ApplicationController
 
   VALID_TABS = ->(x) { Hash[x.map(&:to_s).zip(x)] }[[
     :vi, :svc, :clo, :inf, :cnt, :con, :aut, :opt, :set,  # normal tabs
-    :vs, :sto                                       # hidden tabs
+    :sto                                                  # hidden tabs
   ]] # format is {"vi" => :vi, "svc" => :svc . . }
 
   EXPLORER_FEATURE_LINKS = {
@@ -79,9 +79,7 @@ class DashboardController < ApplicationController
       return
     end
 
-    case tab
-    when :vi, :svc, :clo, :inf, :cnt, :con, :aut, :opt, :set
-
+    if %i(vi svc clo inf cnt con aut opt set).include?(tab)
       if session[:tab_url].key?(tab) # we remember url for this tab
         if restful_routed_action?(session[:tab_url][tab][:controller], session[:tab_url][tab][:action])
           session[:tab_url][tab].delete(:action)
@@ -102,7 +100,6 @@ class DashboardController < ApplicationController
           elsif role_allows(:feature => f)
             case f
             when "miq_report" then redirect_to(:controller => "report",    :action => "explorer")
-            when "usage"      then redirect_to(:controller => "report",    :action => f)
             when "chargeback" then redirect_to(:controller => f,           :action => f)
             when "timeline"   then redirect_to(:controller => "dashboard", :action => f)
             when "rss"        then redirect_to(:controller => "alert",     :action => "show_list")
@@ -134,7 +131,6 @@ class DashboardController < ApplicationController
           case f
           when "miq_ae_class_explorer"      then redirect_to(:controller => "miq_ae_class", :action => "explorer")
           when "miq_ae_class_simulation"    then redirect_to(:controller => "miq_ae_tools", :action => "resolve")
-          when "miq_ae_class_custom_button" then redirect_to(:controller => "miq_ae_tools", :action => "custom_button")
           when "miq_ae_class_import_export" then redirect_to(:controller => "miq_ae_tools", :action => "import_export")
           when "miq_ae_class_log"           then redirect_to(:controller => "miq_ae_tools", :action => "log")
           end
@@ -159,10 +155,7 @@ class DashboardController < ApplicationController
     else
       tab_features = Menu::Manager.tab_features_by_id(tab)
       if Array(session[:tab_bc][tab]).empty? # no saved breadcrumbs for this tab
-        case tab
-        when :vs
-          redirect_to :controller => "service"
-        when :sto
+        if tab == :sto
           feature = tab_features.detect { |f| role_allows(:feature => "#{f}_show_list") }
           redirect_to(:controller => feature) if feature
         end
