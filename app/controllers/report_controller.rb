@@ -995,6 +995,7 @@ class ReportController < ApplicationController
     @report_groups    = session[:report_groups]
     @edit             = session[:edit] unless session[:edit].nil?
     @catinfo          = session[:vm_catinfo]
+    @grid_folders     = session[:report_grid_folders]
   end
 
   def set_session_data
@@ -1009,6 +1010,7 @@ class ReportController < ApplicationController
     session[:report_result_id]  = @report_result_id
     session[:report_menu]       = @menu
     session[:report_folders]    = @folders
+    session[:report_grid_folders] = @grid_folders
   end
 
   def widget_import_service
