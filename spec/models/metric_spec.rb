@@ -1252,6 +1252,64 @@ describe Metric do
     end
   end
 
+  context "as kubernetes" do
+    before do
+      @ems_kubernetes = FactoryGirl.create(:ems_kubernetes, :zone => @zone)
+
+      @node_a = FactoryGirl.create(:container_node, :ext_management_system => @ems_kubernetes)
+      @node_a.computer_system.hardware = FactoryGirl.create(:hardware, :cpu_total_cores => 2)
+
+      @node_b = FactoryGirl.create(:container_node, :ext_management_system => @ems_kubernetes)
+      @node_b.computer_system.hardware = FactoryGirl.create(:hardware, :cpu_total_cores => 8)
+
+      @node_a.metric_rollups << FactoryGirl.create(
+        :metric_rollup,
+        :timestamp                  => ROLLUP_CHAIN_TIMESTAMP,
+        :cpu_usage_rate_average     => 50.0,
+        :capture_interval_name      => 'hourly',
+        :derived_vm_numvcpus        => 2,
+        :parent_ems_id              => @ems_kubernetes.id
+      )
+
+      @node_b.metric_rollups << FactoryGirl.create(
+        :metric_rollup,
+        :timestamp                  => ROLLUP_CHAIN_TIMESTAMP,
+        :cpu_usage_rate_average     => 75.0,
+        :capture_interval_name      => 'hourly',
+        :derived_vm_numvcpus        => 8,
+        :parent_ems_id              => @ems_kubernetes.id
+      )
+    end
+
+    it "cpu usage rollups should be a weighted average over cores" do
+      @ems_kubernetes.perf_rollup(ROLLUP_CHAIN_TIMESTAMP, 'hourly')
+      ems_rollup = @ems_kubernetes.metric_rollups.first
+
+      expect(ems_rollup.derived_vm_numvcpus).to eq(10.0)
+
+      # NOTE: The expected cpu_usage_rate_average must be a weighted average
+      # over number of cores. In fact an 8 cores node (as in this example)
+      # with 75% usage can be compared and aggregated with a 2 cores only
+      # after being normalized.
+      #
+      # In fact:
+      #
+      #   50% of 2 cores system ~ 1 core in use
+      #   75% of 8 cores system ~ 6 cores in use
+      #
+      # Total: 10 cores and 7 in use => 70% usage
+      #
+      # *NOT*
+      #
+      #   average of 50% and 75% = 87.5%
+      #
+      # 87.5% of 10 cores => 8.75 cores in use (WRONG)
+      #
+      expect(ems_rollup.cpu_usage_rate_average).to eq(70.0)
+      expect(ems_rollup.v_derived_cpu_total_cores_used).to eq(7.0)
+    end
+  end
+
   private
 
   def assert_queued_rollup(q_item, instance_id, class_name, args, deliver_on, method = "perf_rollup")

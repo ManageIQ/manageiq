@@ -3,11 +3,12 @@ module Metric::Rollup
   STORAGE_COLS = Metric.columns_hash.collect { |c, _h| c.to_sym if c.starts_with?("derived_storage_") }.compact
 
   AGGREGATE_COLS = {
-    :MiqEnterprise_miq_regions        => (ROLLUP_COLS),
-    :MiqRegion_ext_management_systems => (ROLLUP_COLS - STORAGE_COLS),
-    :MiqRegion_storages               => STORAGE_COLS,
-    :ExtManagementSystem_hosts        => (ROLLUP_COLS - STORAGE_COLS),
-    :EmsCluster_hosts                 => [
+    :MiqEnterprise_miq_regions            => (ROLLUP_COLS),
+    :MiqRegion_ext_management_systems     => (ROLLUP_COLS - STORAGE_COLS),
+    :MiqRegion_storages                   => STORAGE_COLS,
+    :ExtManagementSystem_hosts            => (ROLLUP_COLS - STORAGE_COLS),
+    :ExtManagementSystem_container_nodes  => (ROLLUP_COLS - STORAGE_COLS),
+    :EmsCluster_hosts                     => [
       :cpu_ready_delta_summation,
       :cpu_system_delta_summation,
       :cpu_usage_rate_average,
@@ -24,7 +25,7 @@ module Metric::Rollup
       :mem_usage_absolute_average,
       :net_usage_rate_average,
     ],
-    :Host_vms                         => [
+    :Host_vms                             => [
       :cpu_ready_delta_summation,
       :cpu_system_delta_summation,
       :cpu_used_delta_summation,
@@ -33,7 +34,7 @@ module Metric::Rollup
       :derived_vm_numvcpus,
       :derived_vm_used_disk_storage,
     ],
-    :AvailabilityZone_vms             => [
+    :AvailabilityZone_vms                 => [
       :cpu_usage_rate_average,
       :net_usage_rate_average,
       :disk_usage_rate_average

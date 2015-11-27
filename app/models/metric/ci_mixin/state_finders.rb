@@ -33,6 +33,10 @@ module Metric::CiMixin::StateFinders
     vim_performance_state_for_ts(ts).hosts
   end
 
+  def container_nodes_from_vim_performance_state_for_ts(ts)
+    vim_performance_state_for_ts(ts).container_nodes
+  end
+
   def vms_from_vim_performance_state_for_ts(ts)
     vim_performance_state_for_ts(ts).vms
   end
