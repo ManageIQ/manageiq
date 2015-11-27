@@ -1,6 +1,6 @@
 - auth_mode   = get_vmdb_config[:authentication][:mode]
 %span#badge
-  %img{:src => "#{session[:custom_logo] ? '/upload/custom_logo.png' : image_path("login-screen-logo.png")}"}
+  %img{:src => "#{current_tenant.logo? ? '/upload/custom_logo.png' : image_path("login-screen-logo.png")}"}
 .container
   .row
     .col-md-12

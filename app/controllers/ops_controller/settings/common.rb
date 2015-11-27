@@ -424,8 +424,6 @@ module OpsController::Settings::Common
         if @sb[:active_tab] == "settings_server" && @sb[:selected_server_id] == MiqServer.my_server.id  # Reset session variables for names fields, if editing current server config
           session[:customer_name] = @update.config[:server][:company]
           session[:vmdb_name] = @update.config[:server][:name]
-        elsif @sb[:active_tab] == "settings_custom_logos"                           # Reset session variable for logo field
-          session[:custom_logo] = @update.config[:server][:custom_logo]
         end
         set_user_time_zone if @sb[:active_tab] == "settings_server"
         # settings_set_form_vars

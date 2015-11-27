@@ -18,7 +18,6 @@ module ApplicationController::Tenancy
   # NOTE: remove when these session vars are removed
   def set_session_tenant(tenant = current_tenant)
     session[:customer_name] = tenant.try(:name)
-    session[:custom_logo]   = tenant.try(:logo?)
     tenant
   end
 end

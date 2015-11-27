@@ -7,7 +7,7 @@
       = render :partial => 'layouts/adv_search'
 
   -# Name based search box
-  #searchbox.search-pf.has-button.form-group.pull-right{:class => session[:custom_logo] ? "whitelabeled" : ""}
+  #searchbox.search-pf.has-button.form-group.pull-right{:class => current_tenant.logo? ? "whitelabeled" : ""}
     .form-group.has-clear
       .search-pf-input-group
         %label{"for"  => "search_text",

@@ -1,6 +1,6 @@
 :css
 - if big_iframe
-  - padding_top = session[:custom_logo] ? 83 : 70
+  - padding_top = current_tenant.logo? ? 83 : 70
   :css
     @media (min-width: 1080px) {
       .navbar-pf ul > li.active { margin-bottom: 0 !important; }
@@ -8,7 +8,7 @@
       body { padding-top: #{padding_top}px !important }
     }
 - else
-  - padding_top = session[:custom_logo] ? 116 : 100
+  - padding_top = current_tenant.logo? ? 116 : 100
   :css
     @media (min-width: 1080px) {
       body { padding-top: #{padding_top}px !important }
