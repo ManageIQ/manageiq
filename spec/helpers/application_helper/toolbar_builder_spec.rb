@@ -23,246 +23,116 @@ describe ApplicationHelper do
   describe "custom_buttons" do
     let(:user) { FactoryGirl.create(:user, :role => "super_administrator") }
 
-    context "when record is VM" do
-      let(:vm_vmware) { FactoryGirl.create(:vm_vmware) }
-
-      context "and it has no custom buttons" do
-        it("#get_custom_buttons")           { expect(get_custom_buttons(vm_vmware)).to be_blank }
-        it("#custom_buttons_hash")          { expect(custom_buttons_hash(vm_vmware)).to be_blank }
-        it("#build_custom_buttons_toolbar") { expect(build_custom_buttons_toolbar(vm_vmware)[:button_groups]).to be_blank }
-        it("#record_to_service_buttons")    { expect(record_to_service_buttons(vm_vmware)).to be_blank }
-      end
-
-      context "and it has custom buttons" do
-        before do
-          @set_data = {:applies_to_class => 'Vm'}
-          @button_set = FactoryGirl.create(:custom_button_set, :set_data => @set_data)
-          login_as user
-          @button1 = FactoryGirl.create(:custom_button, :applies_to_class => 'Vm', :visibility => {:roles => ["_ALL_"]}, :options => {})
-          @button_set.add_member @button1
-          @button_set.save!
-          @button1.save!
-        end
-
-        it "#get_custom_buttons" do
-          expected_button1 = {
-            :id            => @button1.id,
-            :class         => @button1.applies_to_class,
-            :name          => @button1.name,
-            :description   => @button1.description,
-            :image         => @button1.options[:button_image],
-            :text_display  => @button1.options.key?(:display) ? @button1.options[:display] : true,
-            :target_object => vm_vmware.id
-          }
-          expected_button_set = {
-            :id           => @button_set.id,
-            :text         => @button_set.name,
-            :description  => @button_set.description,
-            :image        => @button_set.set_data[:button_image],
-            :text_display => @button_set.set_data.key?(:display) ? @button_set.set_data[:display] : true,
-            :buttons      => [expected_button1]
-          }
-
-          expect(get_custom_buttons(vm_vmware)).to eq([expected_button_set])
-        end
-
-        it "#record_to_service_buttons" do
-          expect(record_to_service_buttons(vm_vmware)).to be_blank
-        end
-
-        it "#custom_buttons_hash" do
-          escaped_button1_text = CGI.escapeHTML(@button1.name.to_s)
-          button1 = {
-            :button    => "custom__custom_#{@button1.id}",
-            :image     => "custom-#{@button1.options[:button_image]}",
-            :title     => CGI.escapeHTML(@button1.description.to_s),
-            :text      => escaped_button1_text,
-            :enabled   => "true",
-            :url       => "button",
-            :url_parms => "?id=#{vm_vmware.id}&button_id=#{@button1.id}&cls=#{vm_vmware.class.name}&pressed=custom_button&desc=#{escaped_button1_text}"
-          }
-          button_set_item1_items = [button1]
-          button_set_item1 = {
-            :buttonSelect => "custom_#{@button_set.id}",
-            :image        => "custom-#{@button_set.set_data[:button_image]}",
-            :title        => @button_set.description,
-            :text         => @button_set.name,
-            :enabled      => "true",
-            :items        => button_set_item1_items
-          }
-          items = [button_set_item1]
-          name = "custom_buttons_#{@button_set.name}"
-          expect(custom_buttons_hash(vm_vmware)).to eq([:name => name, :items => items])
-        end
-
-        it "#build_custom_buttons_toolbar" do
-          escaped_button1_text = CGI.escapeHTML(@button1.name.to_s)
-          button1 = {
-            :button    => "custom__custom_#{@button1.id}",
-            :image     => "custom-#{@button1.options[:button_image]}",
-            :title     => CGI.escapeHTML(@button1.description.to_s),
-            :text      => escaped_button1_text,
-            :enabled   => "true",
-            :url       => "button",
-            :url_parms => "?id=#{vm_vmware.id}&button_id=#{@button1.id}&cls=#{vm_vmware.class.name}&pressed=custom_button&desc=#{escaped_button1_text}"
-          }
-          button_set_item1_items = [button1]
-          button_set_item1 = {
-            :buttonSelect => "custom_#{@button_set.id}",
-            :image        => "custom-#{@button_set.set_data[:button_image]}",
-            :title        => @button_set.description,
-            :text         => @button_set.name,
-            :enabled      => "true",
-            :items        => button_set_item1_items
-          }
-          button_set1_header = {
-            :name  => "custom_buttons_#{@button_set.name}",
-            :items => [button_set_item1]
-          }
-          button_groups = [button_set1_header]
-          expect(build_custom_buttons_toolbar(vm_vmware)).to eq(:button_groups => button_groups)
-        end
-      end
+    shared_examples "no custom buttons" do
+      it("#get_custom_buttons")           { expect(get_custom_buttons(subject)).to be_blank }
+      it("#custom_buttons_hash")          { expect(custom_buttons_hash(subject)).to be_blank }
+      it("#build_custom_buttons_toolbar") { expect(build_custom_buttons_toolbar(subject)[:button_groups]).to be_blank }
+      it("#record_to_service_buttons")    { expect(record_to_service_buttons(subject)).to be_blank }
     end
 
-    context "when record is Service" do
+    shared_examples "with custom buttons" do
       before do
-        @service_template = FactoryGirl.create(:service_template)
-        @record = FactoryGirl.create(:service, :service_template => @service_template)
+        @button_set = FactoryGirl.create(:custom_button_set, :set_data => {:applies_to_class => applies_to_class})
+        login_as user
+        @button1 = FactoryGirl.create(:custom_button, :applies_to_class => applies_to_class, :visibility => {:roles => ["_ALL_"]}, :options => {})
+        @button_set.add_member @button1
       end
 
-      context "and it has no custom buttons" do
-        it("#get_custom_buttons")           { expect(get_custom_buttons(@record)).to be_blank }
-        it("#custom_buttons_hash")          { expect(custom_buttons_hash(@record)).to be_blank }
-        it("#build_custom_buttons_toolbar") { expect(build_custom_buttons_toolbar(@record)[:button_groups]).to be_blank }
-        it("#record_to_service_buttons")    { expect(record_to_service_buttons(@record)).to be_blank }
-      end
+      it "#get_custom_buttons" do
+        expected_button1 = {
+          :id            => @button1.id,
+          :class         => @button1.applies_to_class,
+          :name          => @button1.name,
+          :description   => @button1.description,
+          :image         => @button1.options[:button_image],
+          :text_display  => @button1.options.key?(:display) ? @button1.options[:display] : true,
+          :target_object => subject.id
+        }
+        expected_button_set = {
+          :id           => @button_set.id,
+          :text         => @button_set.name,
+          :description  => @button_set.description,
+          :image        => @button_set.set_data[:button_image],
+          :text_display => @button_set.set_data.key?(:display) ? @button_set.set_data[:display] : true,
+          :buttons      => [expected_button1]
+        }
 
-      context "and it has custom buttons" do
-        before do
-          @set_data = {:applies_to_class => 'ServiceTemplate', :applies_to_id => @service_template.id}
-          @button_set = FactoryGirl.create(:custom_button_set, :set_data => @set_data)
-          login_as user
-          @button1 = FactoryGirl.create(:custom_button, :applies_to_class => 'ServiceTemplate', :visibility => {:roles => ["_ALL_"]}, :options => {})
-          @button_set.add_member @button1
-          @button_set.save!
-          @button1.save!
-        end
-
-        it "#custom_buttons_hash" do
-          escaped_button1_text = CGI.escapeHTML(@button1.name.to_s)
-          button1 = {
-            :button    => "custom__custom_#{@button1.id}",
-            :image     => "custom-#{@button1.options[:button_image]}",
-            :title     => CGI.escapeHTML(@button1.description.to_s),
-            :text      => escaped_button1_text,
-            :enabled   => "true",
-            :url       => "button",
-            :url_parms => "?id=#{@record.id}&button_id=#{@button1.id}&cls=#{@record.class.name}&pressed=custom_button&desc=#{escaped_button1_text}"
-          }
-          button_set_item1_items = [button1]
-          button_set_item1 = {
-            :buttonSelect => "custom_#{@button_set.id}",
-            :image        => "custom-#{@button_set.set_data[:button_image]}",
-            :title        => @button_set.description,
-            :text         => @button_set.name,
-            :enabled      => "true",
-            :items        => button_set_item1_items
-          }
-          items = [button_set_item1]
-          name = "custom_buttons_#{@button_set.name}"
-          expect(custom_buttons_hash(@record)).to eq([:name => name, :items => items])
-        end
-
-        it "#build_custom_buttons_toolbar" do
-          escaped_button1_text = CGI.escapeHTML(@button1.name.to_s)
-          button1 = {
-            :button    => "custom__custom_#{@button1.id}",
-            :image     => "custom-#{@button1.options[:button_image]}",
-            :title     => CGI.escapeHTML(@button1.description.to_s),
-            :text      => escaped_button1_text,
-            :enabled   => "true",
-            :url       => "button",
-            :url_parms => "?id=#{@record.id}&button_id=#{@button1.id}&cls=#{@record.class.name}&pressed=custom_button&desc=#{escaped_button1_text}"
-          }
-          button_set_item1_items = [button1]
-          button_set_item1 = {
-            :buttonSelect => "custom_#{@button_set.id}",
-            :image        => "custom-#{@button_set.set_data[:button_image]}",
-            :title        => @button_set.description,
-            :text         => @button_set.name,
-            :enabled      => "true",
-            :items        => button_set_item1_items
-          }
-          button_set1_header = {
-            :name  => "custom_buttons_#{@button_set.name}",
-            :items => [button_set_item1]
-          }
-          button_groups = [button_set1_header]
-          expect(build_custom_buttons_toolbar(@record)).to eq(:button_groups => button_groups)
-
-          @button2 = FactoryGirl.create(:custom_button, :applies_to_class => 'ServiceTemplate', :applies_to_id => @service_template.id, :visibility => {:roles => ["_ALL_"]}, :options => {})
-
-          escaped_button2_text = CGI.escapeHTML(@button2.name.to_s)
-          expected_button2 = {
-            :button    => "custom__custom_#{@button2.id}",
-            :image     => "custom-#{@button2.options[:button_image]}",
-            :title     => CGI.escapeHTML(@button2.description.to_s),
-            :text      => escaped_button2_text,
-            :enabled   => nil,
-            :url       => "button",
-            :url_parms => "?id=#{@record.id}&button_id=#{@button2.id}&cls=#{@record.class.name}&pressed=custom_button&desc=#{escaped_button2_text}"
-          }
-          button_set2_header = {
-            :name  => "custom_buttons_",
-            :items => [expected_button2]
-          }
-          button_groups = [button_set1_header, button_set2_header]
-          expect(build_custom_buttons_toolbar(@record)).to eq(:button_groups => button_groups)
-        end
-
-        it "#get_custom_buttons" do
-          expected_button1 = {
-            :id            => @button1.id,
-            :class         => @button1.applies_to_class,
-            :name          => @button1.name,
-            :description   => @button1.description,
-            :image         => @button1.options[:button_image],
-            :text_display  => @button1.options.key?(:display) ? @button1.options[:display] : true,
-            :target_object => @record.id
-          }
-          expected_buttons = [expected_button1]
-          expected_button_set = {
-            :id           => @button_set.id,
-            :text         => @button_set.name,
-            :description  => @button_set.description,
-            :image        => @button_set.set_data[:button_image],
-            :text_display => @button_set.set_data.key?(:display) ? @button_set.set_data[:display] : true,
-            :buttons      => [expected_button1]
-          }
-
-          expect(get_custom_buttons(@record)).to eq([expected_button_set])
-
-          button2 = FactoryGirl.create(:custom_button, :applies_to_class => 'ServiceTemplate', :applies_to_id => @service_template.id, :visibility => {:roles => ["_ALL_"]}, :options => {})
-
-          expect(get_custom_buttons(@record)).to eq([expected_button_set])
-        end
+        expect(get_custom_buttons(subject)).to eq([expected_button_set])
       end
 
       it "#record_to_service_buttons" do
-        expect(record_to_service_buttons(@record)).to be_blank
-        button2 = FactoryGirl.create(:custom_button, :applies_to_class => 'ServiceTemplate', :applies_to_id => @service_template.id, :visibility => {:roles => ["_ALL_"]}, :options => {})
-        expected_button2 = {
-          :id            => button2.id,
-          :class         => button2.applies_to_class,
-          :name          => button2.name,
-          :description   => button2.description,
-          :image         => button2.options[:button_image],
-          :text_display  => button2.options.key?(:display) ? button2.options[:display] : true,
-          :target_object => @record.id
-        }
-        expect(record_to_service_buttons(@record)).to eq([expected_button2])
+        expect(record_to_service_buttons(subject)).to be_blank
       end
+
+      it "#custom_buttons_hash" do
+        escaped_button1_text = CGI.escapeHTML(@button1.name.to_s)
+        button1 = {
+          :button    => "custom__custom_#{@button1.id}",
+          :image     => "custom-#{@button1.options[:button_image]}",
+          :title     => CGI.escapeHTML(@button1.description.to_s),
+          :text      => escaped_button1_text,
+          :enabled   => "true",
+          :url       => "button",
+          :url_parms => "?id=#{subject.id}&button_id=#{@button1.id}&cls=#{subject.class.name}&pressed=custom_button&desc=#{escaped_button1_text}"
+        }
+        button_set_item1_items = [button1]
+        button_set_item1 = {
+          :buttonSelect => "custom_#{@button_set.id}",
+          :image        => "custom-#{@button_set.set_data[:button_image]}",
+          :title        => @button_set.description,
+          :text         => @button_set.name,
+          :enabled      => "true",
+          :items        => button_set_item1_items
+        }
+        items = [button_set_item1]
+        name = "custom_buttons_#{@button_set.name}"
+        expect(custom_buttons_hash(subject)).to eq([:name => name, :items => items])
+      end
+
+      it "#build_custom_buttons_toolbar" do
+        escaped_button1_text = CGI.escapeHTML(@button1.name.to_s)
+        button1 = {
+          :button    => "custom__custom_#{@button1.id}",
+          :image     => "custom-#{@button1.options[:button_image]}",
+          :title     => CGI.escapeHTML(@button1.description.to_s),
+          :text      => escaped_button1_text,
+          :enabled   => "true",
+          :url       => "button",
+          :url_parms => "?id=#{subject.id}&button_id=#{@button1.id}&cls=#{subject.class.name}&pressed=custom_button&desc=#{escaped_button1_text}"
+        }
+        button_set_item1_items = [button1]
+        button_set_item1 = {
+          :buttonSelect => "custom_#{@button_set.id}",
+          :image        => "custom-#{@button_set.set_data[:button_image]}",
+          :title        => @button_set.description,
+          :text         => @button_set.name,
+          :enabled      => "true",
+          :items        => button_set_item1_items
+        }
+        button_set1_header = {
+          :name  => "custom_buttons_#{@button_set.name}",
+          :items => [button_set_item1]
+        }
+        button_groups = [button_set1_header]
+        expect(build_custom_buttons_toolbar(subject)).to eq(:button_groups => button_groups)
+      end
+    end
+
+    context "for VM" do
+      let(:applies_to_class) { 'Vm' }
+      subject { FactoryGirl.create(:vm_vmware) }
+
+      it_behaves_like "no custom buttons"
+      it_behaves_like "with custom buttons"
+    end
+
+    context "for Service" do
+      let(:applies_to_class) { 'ServiceTemplate' }
+      let(:service_template) { FactoryGirl.create(:service_template) }
+      subject                { FactoryGirl.create(:service, :service_template => service_template) }
+
+      it_behaves_like "no custom buttons"
+      it_behaves_like "with custom buttons"
     end
   end
 
