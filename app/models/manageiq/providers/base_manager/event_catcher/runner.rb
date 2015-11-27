@@ -149,13 +149,14 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
 
   def do_work
     if @tid.nil? || !@tid.alive?
-      _log.info("#{log_prefix} Event Monitor Thread gone. Restarting...")
-      @tid ||= start_event_monitor
-
-      if @tid.status.nil?
+      if !@tid.nil? && @tid.status.nil?
         dead_tid, @tid = @tid, nil
+        _log.info("#{log_prefix} Waiting for the Monitor Thread to exit...")
         dead_tid.join # raise the exception the dead thread failed with
       end
+
+      _log.info("#{log_prefix} Event Monitor Thread gone. Restarting...")
+      @tid = start_event_monitor
     end
 
     process_events(@queue.deq) while @queue.length > 0
