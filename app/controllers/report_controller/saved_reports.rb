@@ -157,10 +157,10 @@ module ReportController::SavedReports
 
     # Admin users can see all saved reports
     unless admin_user?
-      cond[0] << " AND miq_group_id=?"
-      cond.push(current_group_id)
+      cond[0] << " AND miq_group_id IN (?)"
+      cond.push(current_user.miq_groups.collect(&:id))
     end
 
-    cond.flatten
+    cond
   end
 end

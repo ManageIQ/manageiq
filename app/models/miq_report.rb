@@ -50,17 +50,30 @@ class MiqReport < ActiveRecord::Base
   GROUPINGS = [[:min, "Minimum"], [:avg, "Average"], [:max, "Maximum"], [:total, "Total"]]
   PIVOTS    = [[:min, "Minimum"], [:avg, "Average"], [:max, "Maximum"], [:total, "Total"]]
 
+  def self.filter_with_report_results_by(miq_group_ids)
+    miq_group_condition = {:miq_report_results => {:miq_group_id => miq_group_ids}}
+
+    if miq_group_ids.nil?
+      miq_group_relation = where.not(miq_group_condition)
+    else
+      miq_group_relation = where(miq_group_condition)
+    end
+
+    miq_group_relation.includes(:miq_report_results).references(:miq_report_results)
+  end
+
   # Scope on reports that have report results.
   #
   # Valid options are:
-  #   ::miq_group:    An MiqGroup instance on which to filter
-  #   ::miq_group_id: An MiqGroup id on which to filter
+  #   ::miq_groups:    An MiqGroups instance on which to filter
+  #   ::miq_group_ids: An MiqGroup ids on which to filter
   #   ::select:       An Array of MiqReport columns to fetch
   def self.having_report_results(options = {})
-    q = joins(:miq_report_results).order(arel_table[:id])
+    miq_group_ids = options[:miq_groups].collect(&:id) unless options[:miq_groups].nil?
 
-    miq_group = MiqGroup.extract_ids(options[:miq_group] || options[:miq_group_id])
-    q = q.where(MiqReportResult.arel_table[:miq_group_id].eq(miq_group)) unless miq_group.nil?
+    miq_group_ids ||= options[:miq_group_ids]
+
+    q = filter_with_report_results_by(miq_group_ids)
 
     if options[:select]
       cols = options[:select].to_miq_a
