@@ -376,19 +376,18 @@ class EmsCluster < ActiveRecord::Base
   end
 
   def self.node_types
-    return :mixed_clusters if count_of_openstack_clusters > 0 && count_of_non_openstack_clusters > 0
-    return :openstack      if count_of_openstack_clusters > 0
-    :non_openstack
+    return :non_openstack unless openstack_clusters_exists?
+    non_openstack_clusters_exists? ? :mixed_clusters : :openstack
   end
 
-  def self.count_of_openstack_clusters
+  def self.openstack_clusters_exists?
     ems = ManageIQ::Providers::Openstack::InfraManager.pluck(:id)
-    EmsCluster.where(:ems_id => ems).count
+    ems.empty? ? false : EmsCluster.where(:ems_id => ems).exists?
   end
 
-  def self.count_of_non_openstack_clusters
+  def self.non_openstack_clusters_exists?
     ems = ManageIQ::Providers::Openstack::InfraManager.pluck(:id)
-    EmsCluster.where(EmsCluster.arel_table[:ems_id].not_in(ems)).count
+    EmsCluster.where.not(:ems_id => ems).exists?
   end
 
   def openstack_cluster?
