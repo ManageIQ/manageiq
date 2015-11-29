@@ -20,20 +20,17 @@ describe ApplicationHelper::Dialogs do
 
     it "not required" do
       @field.required = false
-      values = helper.dialog_dropdown_select_values(@field, nil)
-      values.should == [["<None>", nil]] + @val_array_reversed
+      expect(helper.dialog_dropdown_select_values(@field, nil)).to eq([["<None>", nil]] + @val_array_reversed)
     end
 
     it "required, nil selected" do
       @field.required = true
-      values = helper.dialog_dropdown_select_values(@field, nil)
-      values.should == [["<Choose>", nil]] + @val_array_reversed
+      expect(helper.dialog_dropdown_select_values(@field, nil)).to eq([["<Choose>", nil]] + @val_array_reversed)
     end
 
     it "required, non-nil selected" do
       @field.required = true
-      values = helper.dialog_dropdown_select_values(@field, "cat")
-      values.should == @val_array_reversed
+      expect(helper.dialog_dropdown_select_values(@field, "cat")).to eq(@val_array_reversed)
     end
   end
 
