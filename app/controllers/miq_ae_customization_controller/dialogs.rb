@@ -33,7 +33,7 @@ module MiqAeCustomizationController::Dialogs
       else
         page.replace_html(@refresh_div, :partial => @refresh_partial, :locals => {:entry => nil}) if @refresh_div
         changed = (@edit[:new] != @edit[:current])
-        page.replace_html("dialog_edit_tree_div", :partial => "dialog_edit_tree")
+        page.replace_html("custom_left_cell", :partial => "dialog_edit_tree")
         page << javascript_for_miq_button_visibility(changed)
 
         if params[:field_past_dates]
