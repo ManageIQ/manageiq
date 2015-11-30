@@ -270,7 +270,7 @@
       :post:
       - :name: edit
         :identifier: host_edit
-        :disabled: true
+        :disabled: false
       - :name: refresh
         :identifier: host_refresh
         :disabled: true
