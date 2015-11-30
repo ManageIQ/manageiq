@@ -23,19 +23,26 @@ describe MiqProvisionWorkflow do
 
       context "With a Valid Template," do
         before(:each) do
-          @ems         = FactoryGirl.create(:ems_vmware,  :name => "Test EMS",  :zone => server.zone)
-          @host        = FactoryGirl.create(:host, :name => "test_host", :hostname => "test_host", :state => 'on', :ext_management_system => @ems)
-          @vm_template = FactoryGirl.create(:template_vmware, :name => "template", :ext_management_system => @ems, :host => @host)
-          @hardware    = FactoryGirl.create(:hardware, :vm_or_template => @vm_template, :guest_os => "winxppro", :memory_mb => 512, :cpu_sockets => 2)
+          @ems         = FactoryGirl.create(:ems_vmware, :name => "Test EMS", :zone => server.zone)
+          @host        = FactoryGirl.create(:host, :name => "test_host", :hostname => "test_host", :state => 'on',
+                                            :ext_management_system => @ems)
+          @vm_template = FactoryGirl.create(:template_vmware, :name => "template", :ext_management_system => @ems,
+                                            :host => @host)
+          @hardware    = FactoryGirl.create(:hardware, :vm_or_template => @vm_template, :guest_os => "winxppro",
+                                            :memory_mb => 512,
+                                            :cpu_sockets => 2)
           @switch      = FactoryGirl.create(:switch, :name => 'vSwitch0', :ports => 32, :host => @host)
           @lan         = FactoryGirl.create(:lan, :name => "VM Network", :switch => @switch)
-          @ethernet    = FactoryGirl.create(:guest_device, :hardware => @hardware, :lan => @lan, :device_type => 'ethernet', :controller_type => 'ethernet', :address => '00:50:56:ba:10:6b', :present => false, :start_connected => true)
+          @ethernet    = FactoryGirl.create(:guest_device, :hardware => @hardware, :lan => @lan,
+                                            :device_type => 'ethernet',
+                                            :controller_type => 'ethernet', :address => '00:50:56:ba:10:6b',
+                                            :present => false, :start_connected => true)
         end
 
         it "should create an MiqRequest when calling from_ws" do
           FactoryGirl.create(:classification_cost_center_with_tags)
           request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
-            "1.0", admin, "template", "target", false, "cc|001|environment|test","")
+            "1.0", admin, "template", "target", false, "cc|001|environment|test", "")
           request.should be_a_kind_of(MiqRequest)
 
           expect(request.options[:vm_tags]).to eq([Classification.find_by_name("cc/001").id])
@@ -44,7 +51,8 @@ describe MiqProvisionWorkflow do
         it "should set tags" do
           FactoryGirl.create(:classification_cost_center_with_tags)
           request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
-            "1.1", admin, "name=template", "vm_name=spec_test", nil, "cc=001|environment=test", nil, nil, nil)
+            "1.1", admin, {'name' => 'template'}, {'vm_name' => 'spec_test'}, nil,
+            {'cc' => '001', 'environment' => 'test'}, nil, nil, nil)
           request.should be_a_kind_of(MiqRequest)
 
           expect(request.options[:vm_tags]).to eq([Classification.find_by_name("cc/001").id])
@@ -53,19 +61,40 @@ describe MiqProvisionWorkflow do
         it "should encrypt fields" do
           password_input = "secret"
           request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
-            "1.1", admin, "name=template", "vm_name=spec_test|root_password=#{password_input}",
-            "owner_email=admin|owner_first_name=test|owner_last_name=test", nil, nil, nil, nil)
+            "1.1", admin, {'name' => 'template'}, {'vm_name' => 'spec_test', 'root_password' => "#{password_input}"},
+            {'owner_email' => 'admin'}, {'owner_first_name' => 'test'},
+            {'owner_last_name' => 'test'}, nil, nil, nil, nil)
 
           MiqPassword.encrypted?(request.options[:root_password]).should be_true
           MiqPassword.decrypt(request.options[:root_password]).should == password_input
         end
 
-        it "should set values" do
+        it "should set values when extra '|' are passed in for multiple values" do
           request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
-            "1.1", admin, "name=template", "vm_name=spec_test",
-            nil, nil, "abc=true", nil, nil)
+            "1.1", admin, {'name' => 'template'}, {'vm_name' => 'spec_test'},
+            nil, nil, {'abc' => 'tr|ue', 'blah' => 'na|h'}, nil, nil)
 
-          expect(request.options[:ws_values]).to include(:abc => "true")
+          expect(request.options[:ws_values]).to include(:blah => "na|h")
+        end
+
+        it "should set values when only a single key value pair is passed in as a string" do
+          Vmdb::Deprecation.silenced do
+            request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
+              "1.1", admin, {'name' => 'template'}, {'vm_name' => 'spec_test'},
+              nil, nil, "abc=true", nil, nil)
+
+            expect(request.options[:ws_values]).to include(:abc => "true")
+          end
+        end
+
+        it "should set values when all args are passed in as a string" do
+          Vmdb::Deprecation.silenced do
+            request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
+              "1.1", admin, "name=template", "vm_name=spec_test",
+              nil, nil, "abc=true", nil, nil)
+
+            expect(request.options[:ws_values]).to include(:abc => "true")
+          end
         end
       end
 
