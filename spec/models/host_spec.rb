@@ -274,96 +274,53 @@ describe Host do
   end
 
   context ".lookUpHost" do
-    context "when database has 3 part FQDN, " do
-      before do
-        @fqdn_hostname            = "test1.fake.com"
-        @partial_hostname         = "test1"
-        @bad_fqdn_hostname        = "test1.dummy.com"
-        @bad_partial_hostname     = "test"
-        @ipaddress                = "1.1.1.1"
-        @host = FactoryGirl.create(:host_vmware, :hostname => @fqdn_hostname, :ipaddress => @ipaddress)
-      end
-
-      it "with exact hostname and IP" do
-        Host.lookUpHost(@fqdn_hostname, @ipaddress).should == @host
-      end
-
-      it "with exact hostname and updated IP" do
-        Host.lookUpHost(@fqdn_hostname, "2.2.2.2").should == @host
-      end
-
-      it "with exact IP and updated hostname" do
-        Host.lookUpHost("not_it.test.com", @ipaddress).should == @host
-      end
-
-      it "with exact IP only" do
-        Host.lookUpHost(nil, @ipaddress).should == @host
-      end
-
-      it "with hostname only" do
-        Host.lookUpHost(@fqdn_hostname, nil).should == @host
-      end
-
-      it "with partial hostname only" do
-        Host.lookUpHost(@partial_hostname, nil).should == @host
-      end
-
-      it "with bad fqdn hostname only" do
-        Host.lookUpHost(@bad_fqdn_hostname, nil).should be_nil
-      end
-
-      it "with bad partial hostname only" do
-        Host.lookUpHost(@bad_partial_hostname, nil).should be_nil
-      end
+    let(:host_3_part_hostname) { FactoryGirl.create(:host_vmware, :hostname => "test1.example.com",       :ipaddress => "192.168.1.1") }
+    let(:host_4_part_hostname) { FactoryGirl.create(:host_vmware, :hostname => "test2.dummy.example.com", :ipaddress => "192.168.1.2") }
+    before do
+      host_3_part_hostname
+      host_4_part_hostname
     end
 
-    context "when database has 4+ part FQDN, " do
-      before do
-        @fqdn_hostname               = "test1.dummy.fake.com"
-        @partial_hostname_multi      = "test1.dummy"
-        @partial_hostname_single     = "test1"
-        @bad_fqdn_hostname           = "test1.something.fake.com"
-        @bad_partial_hostname_multi  = "test1.something"
-        @ipaddress                   = "1.1.1.1"
-        @host = FactoryGirl.create(:host_vmware, :hostname => @fqdn_hostname, :ipaddress => @ipaddress)
-      end
-
-      it "with exact hostname and IP" do
-        Host.lookUpHost(@fqdn_hostname, @ipaddress).should == @host
-      end
-
-      it "with exact hostname and updated IP" do
-        Host.lookUpHost(@fqdn_hostname, "2.2.2.2").should == @host
-      end
-
-      it "with exact IP and updated hostname" do
-        Host.lookUpHost("not_it.dummy.test.com", @ipaddress).should == @host
-      end
-
-      it "with exact IP only" do
-        Host.lookUpHost(nil, @ipaddress).should == @host
-      end
-
-      it "with exact hostname only" do
-        Host.lookUpHost(@fqdn_hostname, nil).should == @host
-      end
-
-      it "with partial hostname (multi part) only" do
-        Host.lookUpHost(@partial_hostname_multi, nil).should == @host
-      end
-
-      it "with partial hostname (single part) only" do
-        Host.lookUpHost(@partial_hostname_single, nil).should == @host
-      end
-
-      it "with bad fqdn hostname only" do
-        Host.lookUpHost(@bad_fqdn_hostname, nil).should be_nil
-      end
-
-      it "with bad partial hostname (multi part) only" do
-        Host.lookUpHost(@bad_partial_hostname_multi, nil).should be_nil
-      end
+    it "with exact hostname and IP" do
+      expect(Host.lookUpHost(host_3_part_hostname.hostname, host_3_part_hostname.ipaddress)).to eq(host_3_part_hostname)
+      expect(Host.lookUpHost(host_4_part_hostname.hostname, host_4_part_hostname.ipaddress)).to eq(host_4_part_hostname)
     end
+
+    it "with exact hostname and updated IP" do
+      expect(Host.lookUpHost(host_3_part_hostname.hostname, "192.168.1.254")).to eq(host_3_part_hostname)
+      expect(Host.lookUpHost(host_4_part_hostname.hostname, "192.168.1.254")).to eq(host_4_part_hostname)
+    end
+
+    it "with exact IP and updated hostname" do
+      expect(Host.lookUpHost("not_it.example.com", host_3_part_hostname.ipaddress)).to       eq(host_3_part_hostname)
+      expect(Host.lookUpHost("not_it.dummy.example.com", host_4_part_hostname.ipaddress)).to eq(host_4_part_hostname)
+    end
+
+    it "with exact IP only" do
+      expect(Host.lookUpHost(nil, host_3_part_hostname.ipaddress)).to eq(host_3_part_hostname)
+      expect(Host.lookUpHost(nil, host_4_part_hostname.ipaddress)).to eq(host_4_part_hostname)
+    end
+
+    it "with exact hostname only" do
+      expect(Host.lookUpHost(host_3_part_hostname.hostname, nil)).to eq(host_3_part_hostname)
+      expect(Host.lookUpHost(host_4_part_hostname.hostname, nil)).to eq(host_4_part_hostname)
+    end
+
+    it "with bad fqdn hostname only" do
+      expect(Host.lookUpHost("test1.example.org", nil)).to           be_nil
+      expect(Host.lookUpHost("test2.something.example.com", nil)).to be_nil
+    end
+
+    it "with bad partial hostname only" do
+      expect(Host.lookUpHost("test", nil)).to            be_nil
+      expect(Host.lookUpHost("test2.something", nil)).to be_nil
+    end
+
+    it "with partial hostname only" do
+      expect(Host.lookUpHost("test1", nil)).to       eq(host_3_part_hostname)
+      expect(Host.lookUpHost("test2.dummy", nil)).to eq(host_4_part_hostname)
+    end
+
     context "when hosts have duplicate hostnames" do
       before do
         @fqdn_hostname_1 = "test1.fake.com"
