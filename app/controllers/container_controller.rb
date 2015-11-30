@@ -32,7 +32,6 @@ class ContainerController < ApplicationController
     end
     send_action
   end
-  hide_action :whitelisted_action
 
   def x_button
     @explorer = true

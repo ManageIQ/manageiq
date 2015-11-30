@@ -22,26 +22,10 @@ module OpsController::Settings::RHN
   end
 
   included do
-    hide_action(:rhn_subscription_map)
-    hide_action(:rhn_update_information)
-    hide_action(:rhn_subscription)
-    hide_action(:rhn_save_subscription)
-    hide_action(:rhn_credentials_from_edit)
-    hide_action(:rhn_fire_available_organizations)
-    hide_action(:rhn_load_session)
-    hide_action(:rhn_gather_checks)
-
     helper_method(:rhn_subscription_types)
-    hide_action(:rhn_subscription_types)
-
     helper_method(:rhn_address_string)
-    hide_action(:rhn_address_string)
-
     helper_method(:rhn_account_info_string)
-    hide_action(:rhn_account_info_string)
-
     helper_method(:rhn_default_enabled)
-    hide_action(:rhn_default_enabled)
   end
 
   def rhn_address_string
