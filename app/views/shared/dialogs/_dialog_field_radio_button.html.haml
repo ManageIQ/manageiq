@@ -5,7 +5,7 @@
       - values = [['', "<#{_('None')}>"]] + values if !field.required && !field.dynamic
       - values.each do |rb|
 
-        %input{radio_options(field, url, rb[0])}
+        %input{radio_options(field, url, rb[0], wf.value(field.name))}
         %label.dynamic-radio-label= rb[1]
 
   - else

@@ -92,13 +92,13 @@ module ApplicationHelper::Dialogs
     add_options_unless_read_only(extra_options, tag_options, field)
   end
 
-  def radio_options(field, url, value)
+  def radio_options(field, url, value, selected_value)
     tag_options = {
       :type    => 'radio',
       :id      => field.id,
       :value   => value,
       :name    => field.name,
-      :checked => field.default_value.to_s == value.to_s ? '' : nil
+      :checked => selected_value.to_s == value.to_s ? '' : nil
     }
 
     auto_refresh_string = field.trigger_auto_refresh ? "dialogFieldRefresh.triggerAutoRefresh('#{field.id}', '#{field.trigger_auto_refresh}');" : ""
