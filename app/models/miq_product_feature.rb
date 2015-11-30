@@ -36,8 +36,7 @@ class MiqProductFeature < ActiveRecord::Base
 
   def self.feature_children(identifier)
     feat = features[identifier.to_s]
-    children = (feat && !feat[:hidden] ? feat[:children] : [])
-    sort_children(children)
+    feat && !feat[:details][:hidden] ? sort_children(feat[:children]) : []
   end
 
   def self.feature_all_children(identifier)
@@ -49,7 +48,12 @@ class MiqProductFeature < ActiveRecord::Base
 
   def self.feature_details(identifier)
     feat = features[identifier.to_s]
-    feat[:details] if feat && !feat[:hidden]
+    feat[:details] if feat && !feat[:details][:hidden]
+  end
+
+  def self.feature_hidden(identifier)
+    feat = features[identifier.to_s]
+    feat[:details][:hidden] if feat
   end
 
   def self.feature_exists?(ident)
@@ -68,10 +72,11 @@ class MiqProductFeature < ActiveRecord::Base
   end
 
   def self.sort_children(children)
-    # Build an array of arrays as [[feature_type, name, identifier], ...]
-    c_array = children.collect { |c| [feature_details(c)[:feature_type], feature_details(c)[:name], c] }
     # Sort by feature_type and name forcing the ordering of feature_type to match FEATURE_TYPE_ORDER
-    c_array.sort_by { |ftype, name, _ident| [FEATURE_TYPE_ORDER.index(ftype), name] }.collect(&:last)
+    children.sort_by do |c|
+      details = feature_details(c)
+      details ? [FEATURE_TYPE_ORDER.index(details[:feature_type]), details[:name] || "", c] : [10, "", c]
+    end
   end
 
   def self.seed
