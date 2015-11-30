@@ -398,6 +398,10 @@ module ManageIQ
         "ManageIQ::Providers::Openstack::InfraManager::NetworkPort"
       end
 
+      def self.miq_template_type
+        "ManageIQ::Providers::Openstack::InfraManager::Template"
+      end
+
       #
       # Helper methods
       #

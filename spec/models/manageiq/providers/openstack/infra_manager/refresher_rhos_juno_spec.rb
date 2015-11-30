@@ -155,7 +155,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
   end
 
   def assert_specific_template(name, is_public = false)
-    template = ManageIQ::Providers::Openstack::CloudManager::Template.where(:name => name).first
+    template = ManageIQ::Providers::Openstack::InfraManager::Template.where(:name => name).first
     template.should have_attributes(
       :template              => true,
       :publicly_available    => is_public,

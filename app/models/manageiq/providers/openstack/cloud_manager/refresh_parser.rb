@@ -297,6 +297,10 @@ module ManageIQ::Providers
       "ManageIQ::Providers::Openstack::CloudManager::NetworkPort"
     end
 
+    def self.miq_template_type
+      "ManageIQ::Providers::Openstack::CloudManager::Template"
+    end
+
     def parse_volume(volume)
       log_header = "MIQ(#{self.class.name}.#{__method__})"
 
