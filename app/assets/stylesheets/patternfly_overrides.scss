@@ -222,6 +222,11 @@ table.table.table-selectable tbody tr.selected td {
   width: 20px;
 }
 
+.form-horizontal.static .form-group .control-labelimage img{
+  height: 80px;
+  width: 80px;
+}
+
 /* Ensure .form-control-static doesn't change height when it's empty - Bootstrap fix #15699 */
 .form-control-static {
   min-height: ($line-height-computed + $font-size-small - 20);
