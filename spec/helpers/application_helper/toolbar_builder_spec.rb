@@ -2935,6 +2935,9 @@ describe ApplicationHelper do
                      :onwhen    => nil,
                      :url       => "/download_data",
                      :url_parms => "?download_type=pdf"}
+      @layout = "catalogs"
+      helper.stub(:role_allows).and_return(true)
+      helper.stub(:x_active_tree).and_return(:ot_tree)
     end
 
     it "Hides PDF button when PdfGenerator is not available" do
@@ -2947,6 +2950,24 @@ describe ApplicationHelper do
       PdfGenerator.stub(:available? => true)
       buttons = helper.build_toolbar('gtl_view_tb').collect { |button| button[:items] if button['id'] == "download_choice" }.compact.flatten
       buttons.should include(@pdf_button)
+    end
+
+    it "Enables edit and remove buttons for read-write orchestration templates" do
+      @record = FactoryGirl.create(:orchestration_template)
+      buttons = helper.build_toolbar('orchestration_template_center_tb').first[:items]
+      edit_btn = buttons.select {|b| b['id'].end_with?("_edit")}.first
+      remove_btn = buttons.select {|b| b['id'].end_with?("_remove")}.first
+      expect(edit_btn["enabled"]).to eq("true")
+      expect(remove_btn["enabled"]).to eq("true")
+    end
+
+    it "Disables edit and remove buttons for read-only orchestration templates" do
+      @record = FactoryGirl.create(:orchestration_template_with_stacks)
+      buttons = helper.build_toolbar('orchestration_template_center_tb').first[:items]
+      edit_btn = buttons.select {|b| b['id'].end_with?("_edit")}.first
+      remove_btn = buttons.select {|b| b['id'].end_with?("_remove")}.first
+      expect(edit_btn["enabled"]).to eq("false")
+      expect(remove_btn["enabled"]).to eq("false")
     end
   end
 end
