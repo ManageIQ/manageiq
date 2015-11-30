@@ -21,6 +21,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     assert_specific_storage
     assert_specific_host
     assert_specific_vm
+    assert_cpu_layout
     assert_relationship_tree
   end
 
@@ -432,6 +433,30 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       :is_datacenter => false,
 
       :folder_path   => "Datacenters/Prod/vm/JFitzgerald"
+    )
+  end
+
+  def assert_cpu_layout
+    # Test a VM that has numCoresPerSocket = 0
+    v = ManageIQ::Providers::Vmware::InfraManager::Vm.find_by_ems_ref("vm-12443")
+    v.should have_attributes(
+      :cpu_total_cores => 2,
+    )
+    v.hardware.should have_attributes(
+      :cpu_total_cores      => 2,
+      :cpu_cores_per_socket => 1,
+      :cpu_sockets          => 2,
+    )
+
+    # Test a VM that has numCoresPerSocket = 2
+    v = ManageIQ::Providers::Vmware::InfraManager::Vm.find_by_ems_ref("vm-12203")
+    v.should have_attributes(
+      :cpu_total_cores => 4,
+    )
+    v.hardware.should have_attributes(
+      :cpu_total_cores      => 4,
+      :cpu_cores_per_socket => 2,
+      :cpu_sockets          => 2,
     )
   end
 
