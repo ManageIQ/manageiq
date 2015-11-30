@@ -21,7 +21,7 @@ module CloudVolumeHelper::TextualSummary
   end
 
   def textual_size
-    @record.size
+    {:label => "Size", :value => number_to_human_size(@record.size, :precision => 2)}
   end
 
   def textual_bootable
