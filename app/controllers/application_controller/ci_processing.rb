@@ -1506,7 +1506,7 @@ module ApplicationController::CiProcessing
 
   # Common Cluster button handler routines
   def process_clusters(clusters, task)
-    clusters, clusters_out_region = filter_ids_in_region(clusters, "Cluster")
+    clusters, _clusters_out_region = filter_ids_in_region(clusters, "Cluster")
     return if clusters.empty?
 
     if task == "destroy"
@@ -1533,7 +1533,7 @@ module ApplicationController::CiProcessing
 
   # Common RP button handler routines
   def process_resourcepools(rps, task)
-    rps, rps_out_region = filter_ids_in_region(rps, "Resource Pool")
+    rps, _rps_out_region = filter_ids_in_region(rps, "Resource Pool")
     return if rps.empty?
 
     if task == "destroy"
@@ -1550,7 +1550,7 @@ module ApplicationController::CiProcessing
         begin
           rp.send(task.to_sym) if rp.respond_to?(task)    # Run the task
         rescue StandardError => bang
-          add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "ResourcePool"), :name => rp_name, :task => task} << bang.message, :error) # Push msg and error flag
+          add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "ResourcePool"), :name => rp_name, :task => task} << bang.message, :error)
         else
           add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model => ui_lookup(:model => "ResourcePool"), :name => rp_name, :task => task})
         end
@@ -1607,41 +1607,55 @@ module ApplicationController::CiProcessing
     cluster_button_operation('scan', 'Analysis')
   end
 
+  def each_host(hosts, task_name)
+    Host.where(:id => hosts).order("lower(name)").each do |host|
+      begin
+        yield host
+      rescue StandardError => bang
+        add_flash(_("%{model} \"%{name}\": Error during '%{task}': %{message}") % {
+                    :model => ui_lookup(:model => "Host"), 
+                    :name => host.name, 
+                    :task => task_name,
+                    :message => bang.message 
+                  }, :error)
+      end
+    end
+  end
+
   # Common Host button handler routines
   def process_hosts(hosts, task, display_name = nil)
-    hosts, hosts_out_region = filter_ids_in_region(hosts, "Host")
+    hosts, _hosts_out_region = filter_ids_in_region(hosts, "Host")
     return if hosts.empty?
+    task_name = (display_name || task)
 
-    if task == "refresh_ems"
+    case task
+    when "refresh_ems"
       Host.refresh_ems(hosts)
-      #      add_flash("'" + task.titleize + "' initiated for " + pluralize(hosts.length,"Host"))
       add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task => (display_name || Dictionary.gettext(task, :type => :task).titleize), :count_model => pluralize(hosts.length, "Host")})
       AuditEvent.success(:userid => session[:userid], :event => "host_#{task}",
-          :message => "'#{display_name || task}' successfully initiated for #{pluralize(hosts.length, "Host")}",
+          :message => "'#{task_name}' successfully initiated for #{pluralize(hosts.length, "Host")}",
           :target_class => "Host")
-    elsif task == "destroy"
-      Host.where(:id => hosts).order("lower(name)").each do |host|
-        id = host.id
-        host_name = host.name
-        audit = {:event => "host_record_delete_initiated", :message => "[#{host_name}] Record delete initiated", :target_id => id, :target_class => "Host", :userid => session[:userid]}
+    when "destroy"
+      each_host(hosts, task_name) do |host|
+        audit = {:event => "host_record_delete_initiated", :message => "[#{host.name}] Record delete initiated", :target_id => id, :target_class => "Host", :userid => session[:userid]}
         AuditEvent.success(audit)
       end
       Host.destroy_queue(hosts)
-    else
-      Host.where(:id => hosts).order("lower(name)").each do |host|
-        host_name = host.name
-        begin
-          if host.respond_to?(task)  # Run the task
-            if task == "scan"
-              host.send(task.to_sym, session[:userid]) # Scan needs userid
-            else
-              host.send(task.to_sym)          # Run the task
-            end
-          end
-        rescue StandardError => bang
-          add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "Host"), :name => host_name, :task => (display_name || task)} << bang.message, :error) # Push msg and error flag
+    when "scan"
+      each_host(hosts, task_name) do |host|
+        if host.respond_to?(:scan)
+          add_flash(_("\"%{task}\": not supported for %{hostname}") % {:hostname => host.name, :task => (task_name || task)}, :error)
         else
-          add_flash(_("\"%{record}\": %{task} successfully initiated") % {:record => host_name, :task => (display_name || task)})
+          host.send(task.to_sym, session[:userid]) # Scan needs userid
+        end
+      end
+    else
+      each_host(hosts, task_name) do |host|
+        if host.respond_to?(task) && host.is_available?(task)
+          host.send(task.to_sym)
+          add_flash(_("\"%{record}\": %{task} successfully initiated") % {:record => host.name, :task => (display_name || task)})
+        else
+          add_flash(_("\"%{task}\": not available for %{hostname}") % {:hostname => host.name, :task => (display_name || task)}, :error)
         end
       end
     end
@@ -1747,7 +1761,7 @@ module ApplicationController::CiProcessing
   end
 
   def process_storage(storages, task)
-    storages, storages_out_region = filter_ids_in_region(storages, "Datastore")
+    storages, _storages_out_region = filter_ids_in_region(storages, "Datastore")
     return if storages.empty?
 
     if task == "destroy"
