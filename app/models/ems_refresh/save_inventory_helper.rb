@@ -22,7 +22,7 @@ module EmsRefresh::SaveInventoryHelper
 
       # Coerce each hash value into the db column type for valid lookup during fetch_path
       coerced_hash_values = hash_values.zip(record_index_columns).collect do |value, column|
-        column.type_cast_from_user(value)
+        ExtManagementSystem.connection.type_cast_from_column(column, value)
       end
 
       record_index.fetch_path(coerced_hash_values)
@@ -98,7 +98,7 @@ module EmsRefresh::SaveInventoryHelper
   def store_ids_for_new_records(records, hashes, keys)
     keys = Array(keys)
     hashes.each do |h|
-      r = records.detect { |r| keys.all? { |k| r.send(k) == r.class.type_for_attribute(k.to_s).type_cast_from_user(h[k]) } }
+      r = records.detect { |r| keys.all? { |k| r.send(k) == r.class.type_for_attribute(k.to_s).cast(h[k]) } }
       h[:id]      = r.id
       h[:_object] = r
     end
