@@ -256,7 +256,7 @@ module ApplicationController::MiqRequestMethods
   # get the sort column that was clicked on, else use the current one
   def sort_template_grid
     @edit = session[:edit]
-    sort_grid('script', @edit[:wf].get_field(:customization_template_id, :customize)[:values])
+    sort_grid('template', @edit[:wf].get_field(:customization_template_id, :customize)[:values])
   end
 
   private ############################
