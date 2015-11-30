@@ -8,10 +8,8 @@ class MiqTaskController < ApplicationController
     @tabform = nil
     @tabform ||= "tasks_1" if role_allows(:feature => "job_my_smartproxy")
     @tabform ||= "tasks_2" if role_allows(:feature => "miq_task_my_ui")
-    @tabform ||= "tasks_3" if role_allows(:feature => "job_all_smartproxy") &&
-                              role_allows(:feature => "job_all_smartproxy")
-    @tabform ||= "tasks_4" if role_allows(:feature => "miq_task_all_ui") &&
-                              role_allows(:feature => "miq_task_all_ui")
+    @tabform ||= "tasks_3" if role_allows(:feature => "job_all_smartproxy")
+    @tabform ||= "tasks_4" if role_allows(:feature => "miq_task_all_ui")
     jobs
     render :action => "jobs"
   end
@@ -38,14 +36,15 @@ class MiqTaskController < ApplicationController
       @tabs ||= [["2", ""]]
       @tabs.push(["2", "My Other UI Tasks"])
     end
-    if role_allows(:feature => "job_all_smartproxy") && role_allows(:feature => "job_all_smartproxy")
+    if role_allows(:feature => "job_all_smartproxy")
       @tabs ||= [["3", ""]]
       @tabs.push(["3", "All VM Analysis Tasks"])
     end
-    if role_allows(:feature => "miq_task_all_ui") && role_allows(:feature => "miq_task_all_ui")
+    if role_allows(:feature => "miq_task_all_ui")
       @tabs ||= [["4", ""]]
       @tabs.push(["4", "All Other Tasks"])
     end
+
     case @tabform
     when "tasks_1"
       @tabs[0][0] = "1"
@@ -74,6 +73,7 @@ class MiqTaskController < ApplicationController
       get_jobs(tasks_condition(@tasks_options[@tabform]))
       render :update do |page|
         page.replace_html("gtl_div", :partial => "layouts/gtl", :locals => {:action_url => @lastaction})
+        page.replace("pc_div_1", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => @lastaction, :db => @view.db, :headers => @view.headers})
         page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
       end
     else                      # Came in from non-ajax, just get the jobs
@@ -82,22 +82,21 @@ class MiqTaskController < ApplicationController
   end
 
   def get_jobs(conditions)
+    @lastaction = "jobs"
+
     if @tabform == "tasks_1"
       @layout = "my_tasks"
-      @lastaction = "jobs"
       @view, @pages = get_view(Job, :conditions => conditions)  # Get the records (into a view) and the paginator
       drop_breadcrumb(:name => "My VM Analysis Tasks", :url => "/miq_task/index?jobs_tab=tasks")
 
     elsif @tabform == "tasks_2"
       # My UI Tasks
       @layout = "my_ui_tasks"
-      @lastaction = "ui_jobs"
       @view, @pages = get_view(MiqTask, :conditions => conditions)  # Get the records (into a view) and the paginator
       drop_breadcrumb(:name => "My Other UI Tasks", :url => "/miq_task/index?jobs_tab=tasks")
 
     elsif @tabform == "tasks_3" || @tabform == "alltasks_1"
       @layout = "all_tasks"
-      @lastaction = "all_jobs"
       @view, @pages = get_view(Job, :conditions => conditions)  # Get the records (into a view) and the paginator
       drop_breadcrumb(:name => "All VM Analysis Tasks", :url => "/miq_task/index?jobs_tab=alltasks")
       @user_names = Job.distinct("userid").pluck("userid").delete_if(&:blank?)
@@ -105,7 +104,6 @@ class MiqTaskController < ApplicationController
     elsif @tabform == "tasks_4" || @tabform == "alltasks_2"
       # All UI Tasks
       @layout = "all_ui_tasks"
-      @lastaction = "all_ui_jobs"
       @view, @pages = get_view(MiqTask, :conditions => conditions)  # Get the records (into a view) and the paginator
       drop_breadcrumb(:name => "All Other Tasks", :url => "/miq_task/index?jobs_tab=alltasks")
       @user_names = MiqTask.distinct("userid").pluck("userid").delete_if(&:blank?)
@@ -270,11 +268,12 @@ class MiqTaskController < ApplicationController
     render :update do |page|                    # Use RJS to update the display
       unless @refresh_partial.nil?
         if @refresh_div == "flash_msg_div"
-          page << "miqSetButtons(0,'center_tb');"                             # Reset the center toolbar
+          page << "miqSetButtons(0, 'center_tb');"                             # Reset the center toolbar
           page.replace(@refresh_div, :partial => @refresh_partial)
         else
-          page << "miqSetButtons(0,'center_tb');"                             # Reset the center toolbar
+          page << "miqSetButtons(0, 'center_tb');"                             # Reset the center toolbar
           page.replace_html("main_div", :partial => @refresh_partial)
+          page.replace("pc_div_1", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => @lastaction, :db => @view.db, :headers => @view.headers})
         end
       end
     end
@@ -315,8 +314,9 @@ class MiqTaskController < ApplicationController
 
     render :update do |page|
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page << "miqSetButtons(0,'center_tb');"                             # Reset the center toolbar
+      page << "miqSetButtons(0, 'center_tb');"                             # Reset the center toolbar
       page.replace("main_div", :partial => "layouts/tasks")
+      page.replace("pc_div_1", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => @lastaction, :db => @view.db, :headers => @view.headers})
       page << "miqSparkle(false);"
     end
   end

@@ -841,25 +841,12 @@ function miqEnterPressed(e) {
 }
 
 // Send login authentication via ajax
-function miqAjaxAuth(button) {
-  if (button == null) {
-    miqEnableLoginFields(false);
-    miqJqueryRequest(
-      '/dashboard/authenticate',
-      {beforeSend: true, data: miqSerializeForm('login_div')}
-    );
-  } else if (button == 'more' || button == 'back') {
-    miqJqueryRequest(
-      '/dashboard/authenticate?' +
-      miqSerializeForm('login_div') + '&button=' + button
-    );
-  } else {
-    miqEnableLoginFields(false);
-    miqAsyncAjax(
-      '/dashboard/authenticate?' +
-      miqSerializeForm('login_div') + '&button=' + button
-    );
-  }
+function miqAjaxAuth() {
+  miqEnableLoginFields(false);
+  miqJqueryRequest('/dashboard/authenticate', {
+    beforeSend: true,
+    data: miqSerializeForm('login_div'),
+  });
 }
 
 function miqEnableLoginFields(enabled) {
