@@ -9,23 +9,17 @@ class SetCorrectStiTypeOnOpenstackInfraMiqTemplate < ActiveRecord::Migration
 
   def up
     # Set OpenStack Infra specific STI types for miq_template under that provider
-    connection.execute <<-SQL
-      UPDATE vms v
-      SET type = 'ManageIQ::Providers::Openstack::InfraManager::Template'
-      FROM ext_management_systems e
-      WHERE v.ems_id = e.id AND v.type = 'ManageIQ::Providers::Openstack::CloudManager::Template' AND
-            e.type = 'ManageIQ::Providers::Openstack::InfraManager'
-    SQL
+    Vm.joins('join ext_management_systems on vms.ems_id = ext_management_systems.id').
+      where(vms:                    { type: 'ManageIQ::Providers::Openstack::CloudManager::Template'},
+            ext_management_systems: { type: 'ManageIQ::Providers::Openstack::InfraManager'}).
+      update_all("type = 'ManageIQ::Providers::Openstack::InfraManager::Template'")
   end
 
   def down
     # Set back Openstack cloud specific STI types for miq_template under infra that provider
-    connection.execute <<-SQL
-      UPDATE vms v
-      SET type = 'ManageIQ::Providers::Openstack::CloudManager::Template'
-      FROM ext_management_systems e
-      WHERE v.ems_id = e.id AND v.type = 'ManageIQ::Providers::Openstack::InfraManager::Template' AND
-            e.type = 'ManageIQ::Providers::Openstack::InfraManager'
-    SQL
+    Vm.joins('join ext_management_systems on vms.ems_id = ext_management_systems.id').
+      where(vms:                    { type: 'ManageIQ::Providers::Openstack::InfraManager::Template'},
+            ext_management_systems: { type: 'ManageIQ::Providers::Openstack::InfraManager'}).
+      update_all("type = 'ManageIQ::Providers::Openstack::CloudManager::Template'")
   end
 end
