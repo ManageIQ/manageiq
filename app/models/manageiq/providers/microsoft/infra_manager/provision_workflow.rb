@@ -9,8 +9,8 @@ class ManageIQ::Providers::Microsoft::InfraManager::ProvisionWorkflow < ::MiqPro
     }
   end
 
-  def self.allowed_templates_vendor
-    'microsoft'
+  def self.provider_model
+    ManageIQ::Providers::Microsoft::InfraManager
   end
 
   def update_field_visibility(_options = {})

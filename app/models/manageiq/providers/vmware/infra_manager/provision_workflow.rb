@@ -108,8 +108,8 @@ class ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow < ManageIQ::P
     SYSPREP_TIMEZONES.collect(&:reverse)
   end
 
-  def self.allowed_templates_vendor
-    'vmware'
+  def self.provider_model
+    ManageIQ::Providers::Vmware::InfraManager
   end
 
   def update_field_visibility
