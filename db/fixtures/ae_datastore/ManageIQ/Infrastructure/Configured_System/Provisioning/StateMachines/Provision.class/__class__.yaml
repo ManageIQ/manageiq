@@ -18,7 +18,7 @@ object:
       datatype: string
       priority: 1
       owner: 
-      default_value: /Infrastructure/Configured_System/Provisioning/StateMachines/Methods/Preprovision
+      default_value: "/Infrastructure/Configured_System/Provisioning/StateMachines/Methods/Preprovision"
       substitute: true
       message: create
       visibility: 
@@ -118,7 +118,7 @@ object:
       datatype: string
       priority: 6
       owner: 
-      default_value: /Infrastructure/Configured_System/Provisioning/StateMachines/Methods/Provision
+      default_value: "/Infrastructure/Configured_System/Provisioning/StateMachines/Methods/Provision"
       substitute: true
       message: create
       visibility: 
@@ -138,7 +138,7 @@ object:
       datatype: string
       priority: 7
       owner: 
-      default_value: /Infrastructure/Configured_System/Provisioning/StateMachines/Methods/CheckProvisioned
+      default_value: "/Infrastructure/Configured_System/Provisioning/StateMachines/Methods/CheckProvisioned"
       substitute: true
       message: create
       visibility: 
@@ -258,7 +258,7 @@ object:
       datatype: string
       priority: 13
       owner: 
-      default_value: /Infrastructure/Configured_System/Provisioning/Email/Provision_complete?event=configured_system_provisioned
+      default_value: "/Infrastructure/Configured_System/Provisioning/Email/Provision_complete?event=configured_system_provisioned"
       substitute: true
       message: create
       visibility: 
@@ -278,7 +278,7 @@ object:
       datatype: string
       priority: 14
       owner: 
-      default_value: /System/CommonMethods/StateMachineMethods/configured_system_provision_finished
+      default_value: "/System/CommonMethods/StateMachineMethods/configured_system_provision_finished"
       substitute: true
       message: create
       visibility: 
