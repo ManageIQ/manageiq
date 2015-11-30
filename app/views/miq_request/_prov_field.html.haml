@@ -258,7 +258,7 @@
                 - else
                   - opts = [["<#{_('Choose')}>", nil]]
               - else
-                - opts = [["<#{_('None')}>", nil]]
+                - opts = multiple ? [] : [["<#{_('None')}>", nil]]
               - if field_hash[:data_type] == :integer
                 - opts += Array(field_hash[:values].invert).sort_by(&:last)
               - else
