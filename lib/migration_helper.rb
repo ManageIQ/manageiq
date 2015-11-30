@@ -7,9 +7,9 @@
 # any "extension" methods will need the original method defined.  For example,
 # remove_index_ex expects remove_index to be defined.
 module MigrationHelper
-  def sanitize_sql_for_conditions(conditions, table)
+  def sanitize_sql_for_conditions(conditions)
     Object.const_set(:DummyActiveRecordForMigrationHelper, Class.new(ActiveRecord::Base)) unless defined?(::DummyActiveRecordForMigrationHelper)
-    DummyActiveRecordForMigrationHelper.send(:sanitize_sql_for_conditions, conditions, table)
+    DummyActiveRecordForMigrationHelper.send(:sanitize_sql_for_conditions, conditions)
   end
 
   #
@@ -67,7 +67,7 @@ module MigrationHelper
     quoted_constraint = connection.quote_column_name("#{table}_inheritance_check")
 
     say_with_time("add_table_inheritance(:#{table}, :#{inherit_from})") do
-      conditions = sanitize_sql_for_conditions(options[:conditions], table)
+      conditions = sanitize_sql_for_conditions(options[:conditions])
       connection.execute("ALTER TABLE #{quoted_table} ADD CONSTRAINT #{quoted_constraint} CHECK (#{conditions})", 'Add inheritance check constraint')
       connection.execute("ALTER TABLE #{quoted_table} INHERIT #{quoted_inherit}", 'Add table inheritance')
     end
