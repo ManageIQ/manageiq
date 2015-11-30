@@ -31,7 +31,7 @@ class CloudVolumeController < ApplicationController
     case @display
     when "download_pdf", "main", "summary_only"
       get_tagdata(@volume)
-      drop_breadcrumb(:name => @volume.name + " (Summary)", :url => "/cloud_volume/show/#{@volume.id}")
+      drop_breadcrumb(:name => @volume.name.to_s + " (Summary)", :url => "/cloud_volume/show/#{@volume.id}")
       @showtype = "main"
       set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
     end
