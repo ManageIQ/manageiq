@@ -384,8 +384,8 @@ module ActiveRecord
   end
 
   module Calculations
-    def calculate_with_virtual(operation, column_name, options = {})
-      without_virtual_includes.send(:calculate_without_virtual, operation, column_name, options)
+    def calculate_with_virtual(operation, column_name)
+      without_virtual_includes.send(:calculate_without_virtual, operation, column_name)
     end
     alias_method_chain :calculate, :virtual
   end
