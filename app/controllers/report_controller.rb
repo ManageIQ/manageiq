@@ -141,7 +141,7 @@ class ReportController < ApplicationController
       return
     end
 
-    if role_allows(:feature => "miq_report_saved_reports")
+    if role_allows(:feature => "miq_report_saved_reports", :any => true)
       @trees << build_savedreports_tree
       @accords.push(:name => "savedreports", :title => "Saved Reports", :container => "savedreports_accord")
       @lists.push("savedreports_list")

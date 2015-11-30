@@ -20,7 +20,7 @@ class TreeBuilderReportSavedReports < TreeBuilderReportReportsClass
   def x_get_tree_roots(count_only, _options)
     folder_ids = {}
     u = User.current_user
-    g = u.admin_user? ? nil : u.miq_group.miq_user_role.name.split('-').last
+    g = u.admin_user? ? nil : u.miq_group
     MiqReport.having_report_results(:miq_group => g, :select => [:id, :name]).each do |r|
       folder_ids[r.name] = to_cid(r.id.to_i)
     end

@@ -2629,6 +2629,44 @@ describe ApplicationHelper do
     end
   end
 
+  describe "#build_toolbar_hide_button_report saved_report admin" do
+    subject { build_toolbar_hide_button_report(@id) }
+    before do
+      @record = FactoryGirl.create(:miq_report_result)
+      feature = EvmSpecHelper.specific_product_features(%w(saved_report_delete))
+      login_as FactoryGirl.create(:user, :features => feature)
+      @sb = {:active_tree => :savedreports_tree}
+    end
+
+    %w(saved_report_delete).each do |id|
+      context "when with #{id} button should be visible" do
+        before { @id = id }
+        it "and record_id" do
+          subject.should be_false
+        end
+      end
+    end
+  end
+
+  describe "#build_toolbar_hide_button_report with saved_report view only" do
+    subject { build_toolbar_hide_button_report(@id) }
+    before do
+      @record = FactoryGirl.create(:miq_report_result)
+      feature = EvmSpecHelper.specific_product_features(%w(miq_report_saved_reports_view))
+      login_as FactoryGirl.create(:user, :features => feature)
+      @sb = {:active_tree => :savedreports_tree}
+    end
+
+    %w(saved_report_delete).each do |id|
+      context "when with #{id} button should not be visible as user does not have access to these features" do
+        before { @id = id }
+        it "and record_id" do
+          subject.should be_true
+        end
+      end
+    end
+  end
+
   describe "#get_record_cls"  do
     subject { get_record_cls(record) }
     context "when record not exist" do
