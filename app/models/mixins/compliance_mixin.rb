@@ -12,7 +12,7 @@ module ComplianceMixin
 
   def last_compliance
     return @last_compliance unless @last_compliance.nil?
-    @last_compliance = if association_cache.include?(:compliances)
+    @last_compliance = if @association_cache.include?(:compliances)
                          compliances.max_by(&:timestamp)
                        else
                          compliances.order("timestamp DESC").first

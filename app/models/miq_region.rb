@@ -270,7 +270,7 @@ class MiqRegion < ApplicationRecord
     end
 
     # Clear tag association cache instead of full reload.
-    association_cache.except!(:tags, :taggings)
+    @association_cache.except!(:tags, :taggings)
 
     # Set @perf_capture_always since we already know all the answers
     options = options.dup

@@ -49,7 +49,7 @@ module RelationshipMixin
     to_clear = options[:only] ? options[:only].to_miq_a : (RelationshipMixin::MEMOIZED_METHODS - options[:except].to_miq_a)
     flush_cache *to_clear
 
-    association_cache.delete(:all_relationships)
+    @association_cache.delete(:all_relationships)
   end
 
   #
@@ -89,7 +89,7 @@ module RelationshipMixin
   end
 
   def relationships_of(rel_type)
-    if association_cache.include?(:all_relationships)
+    if @association_cache.include?(:all_relationships)
       all_relationships.select { |r| r.relationship == rel_type }
     else
       all_relationships.in_relationship(rel_type)

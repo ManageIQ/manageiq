@@ -360,7 +360,7 @@ class Storage < ApplicationRecord
   end
 
   def unmanaged_vm_config_files
-    files = if association_cache.include?(:storage_files)
+    files = if @association_cache.include?(:storage_files)
               storage_files.select { |f| f.ext_name == "vmx" && f.vm_or_template_id.nil? }
             else
               storage_files.where(:ext_name => "vmx", :vm_or_template_id => nil)
@@ -406,7 +406,7 @@ class Storage < ApplicationRecord
   end
 
   def total_managed_registered_vms
-    if association_cache.include?(:vms)
+    if @association_cache.include?(:vms)
       registered_vms.length
     else
       self.class.unmanaged_vm_counts_by_storage_id[id]
@@ -420,7 +420,7 @@ class Storage < ApplicationRecord
   end
 
   def total_unregistered_vms
-    if association_cache.include?(:vms)
+    if @association_cache.include?(:vms)
       unregistered_vms.length
     else
       self.class.unregistered_vm_counts_by_storage_id[id]
@@ -434,7 +434,7 @@ class Storage < ApplicationRecord
   end
 
   def total_managed_unregistered_vms
-    if association_cache.include?(:vms)
+    if @association_cache.include?(:vms)
       unregistered_vms.length
     else
       self.class.managed_unregistered_vm_counts_by_storage_id[id]
@@ -587,7 +587,7 @@ class Storage < ApplicationRecord
   alias_method :v_free_space_percent_of_total, :free_space_percent_of_total
 
   def v_total_hosts
-    if association_cache.include?(:hosts)
+    if @association_cache.include?(:hosts)
       hosts.size
     else
       hosts_storages.length
@@ -600,7 +600,7 @@ class Storage < ApplicationRecord
   end
 
   def v_total_vms
-    if association_cache.include?(:vms)
+    if @association_cache.include?(:vms)
       vms.size
     else
       self.class.vm_counts_by_storage_id[id]
