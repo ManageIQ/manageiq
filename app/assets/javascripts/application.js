@@ -7,7 +7,7 @@
 //= require angular-ui-bootstrap-tpls
 //= require angular-sanitize
 //= require moment
-//= require moment-strftime
+//= require moment-strftime/build/moment-strftime.min
 //= require moment-timezone
 //= require sprintf
 //= require numeral
@@ -45,7 +45,7 @@
 //= require controllers/container_topology/container_topology_controller
 //= require d3/d3
 //= require c3/c3
-//= require kubernetes-topology-graph/topology-graph
+//= require kubernetes-topology-graph/dist/topology-graph
 //= require miq_application
 //= require miq_change_stored_password
 //= require miq_dynatree_replacement
