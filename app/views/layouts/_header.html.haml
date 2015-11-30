@@ -1,4 +1,4 @@
-%nav{:class => "navbar navbar-default navbar-fixed-top navbar-pf #{session[:custom_logo] ? "whitelabeled" : ""}", :role => "navigation"}
+%nav{:class => "navbar navbar-default navbar-fixed-top navbar-pf #{current_tenant.logo? ? "whitelabeled" : ""}", :role => "navigation"}
   %div{:class => "navbar-header"}
     %button{:type => "button", :class => "navbar-toggle", "data-target" => ".navbar-collapse-1", "data-toggle" => "collapse"}
       %span.sr-only
@@ -10,7 +10,7 @@
       %img{:src => image_path("brand.svg"), :alt => "ManageIQ"}
   %div{:class => "collapse navbar-collapse navbar-collapse-1"}
     %ul{:class => "nav navbar-nav navbar-utility"}
-      %li{:class => "brand-white-label #{session[:custom_logo] ? "whitelabeled" : ""}"}
+      %li{:class => "brand-white-label #{current_tenant.logo? ? "whitelabeled" : ""}"}
       - Menu::Manager.menu(:top_right) do |menu_section|
         - if menu_section.visible?
           %li.dropdown
