@@ -1,14 +1,4 @@
--# #main_div
--#   - case @showtype
--#   - when "details"
--#     = render(:partial => "layouts/gtl", :locals => {:action_url => @lastaction})
--#   - when "compare", "item"
--#     = render(:partial => "layouts/#{@showtype}")
--#   - when "download_pdf"
--#     = render(:partial => "layouts/show_pdf")
--#   - else
--#     = render :partial => @showtype
 - if @display == 'clouds'
-= render :partial => "layouts/gtl", :locals => {:action_url => "@lastaction"}
+  = render :partial => "layouts/gtl", :locals => {:action_url => "@lastaction"}
 - else
-= render :partial => @showtype
+  = render :partial => @showtype
