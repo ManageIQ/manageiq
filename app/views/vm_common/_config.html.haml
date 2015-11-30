@@ -90,30 +90,6 @@
                 = h(v.product_name)
   = render :partial => "vm_common/vmtree"
 
-- when "networks"
-  - if @vmminfo
-    .modbox{:style => "margin: 0px 0px 20px 30px"}
-      %h2.modtitle= _('Network Adapters')
-      %table.table.table-bordered.table-striped
-        - if @record.hardware.networks.blank?
-          %tbody
-            %tr
-              %td
-                %strong
-                  = _("%s has no network adapters") % @record.name
-        - else
-          %thead
-            %tr
-              - [_("IPAddress"), _("Description"), _("DHCP Server"), _("DHCP Enabled"), _("Default Gateway"), _("Subnet Mask"), _("DNS Server")].each do |title|
-                %th
-                  = h(title)
-          %tbody
-            %tr
-              - @record.hardware.networks.each do |v|
-                %tr
-                  - [:ipaddress, :description, :dhcp_server, :dhcp_enabled, :default_gateway, :subnet_mask, :dns_server].each do |item|
-                    %td
-                      = v[item]
 - when "resources_info"
   %table.table.table-bordered.table-striped
     %thead
