@@ -35,6 +35,7 @@ cols:
 - v_pct_cpu_used_delta_summation
 - v_derived_cpu_total_cores_used
 - derived_memory_used
+- derived_memory_available
 - max_derived_memory_available
 - max_derived_memory_reserved
 - min_derived_memory_used
@@ -102,6 +103,7 @@ col_order:
 - v_pct_cpu_used_delta_summation
 - v_derived_cpu_total_cores_used
 - derived_memory_used
+- derived_memory_available
 - max_derived_memory_available
 - max_derived_memory_reserved
 - min_derived_memory_used
@@ -165,6 +167,7 @@ headers:
 - ! '% Used'
 - Number of Cores
 - Avg Used
+- Avg Available
 - Max Available
 - Max Reserved
 - Min Used
