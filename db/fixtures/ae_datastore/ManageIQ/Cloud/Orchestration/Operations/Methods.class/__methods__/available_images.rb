@@ -2,9 +2,9 @@
 # Description: provide the dynamic list content from available images
 #
 image_list = {}
-service_template = $evm.root.attributes["service_template"]
-if service_template.respond_to?(:orchestration_manager) && service_template.orchestration_manager
-  service_template.orchestration_manager.miq_templates.each do |img|
+service = $evm.root.attributes["service_template"] || $evm.root.attributes["service"]
+if service.respond_to?(:orchestration_manager) && service.orchestration_manager
+  service.orchestration_manager.miq_templates.each do |img|
     os = img.hardware.try(:guest_os) || "unknown"
     image_list[img.uid_ems] = "#{os} | #{img.name}"
   end

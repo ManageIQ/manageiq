@@ -2,9 +2,9 @@
 # Description: provide the dynamic list content from available resource groups
 #
 rg_list = {nil => "<New resource group>"}
-service_template = $evm.root.attributes["service_template"]
-if service_template.respond_to?(:orchestration_manager) && service_template.orchestration_manager
-  service_template.orchestration_manager.resource_groups.each { |t| rg_list[t.name] = t.name }
+service = $evm.root.attributes["service_template"] || $evm.root.attributes["service"]
+if service.respond_to?(:orchestration_manager) && service.orchestration_manager
+  service.orchestration_manager.resource_groups.each { |t| rg_list[t.name] = t.name }
 end
 
 dialog_field = $evm.object
