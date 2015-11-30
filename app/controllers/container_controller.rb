@@ -127,6 +127,10 @@ class ContainerController < ApplicationController
     if @display == "timeline"
       show_timeline
     elsif @display != "performance"
+      if @record.nil?
+        self.x_node = "root"
+        @showtype = ""
+      end
       get_node_info(x_node)
     end
 
