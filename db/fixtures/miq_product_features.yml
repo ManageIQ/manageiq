@@ -471,7 +471,7 @@
       :feature_type: view
       :identifier: cloud_volume_show_list
     - :name: Show
-      :descriptions: Display Individual Volumes
+      :description: Display Individual Volumes
       :feature_type: view
       :identifier: cloud_volume_show
   - :name: Operate
