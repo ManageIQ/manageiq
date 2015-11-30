@@ -66,7 +66,8 @@ class ContainerDashboardService
     [
       {
         :iconClass    => "pficon pficon-openshift",
-        :count        => ManageIQ::Providers::Openshift::ContainerManager.count,
+        :count        => ManageIQ::Providers::Openshift::ContainerManager.count +
+                         ManageIQ::Providers::OpenshiftEnterprise::ContainerManager.count,
         :id           => "openshift",
         :providerType => "OpenShift"
       },
@@ -75,6 +76,13 @@ class ContainerDashboardService
         :count        => ManageIQ::Providers::Kubernetes::ContainerManager.count,
         :id           => "kubernetes",
         :providerType => "Kubernetes"
+      },
+      {
+        :iconClass    => "pficon icon-atomic", # Fix in the next PF release
+        :count        => ManageIQ::Providers::Atomic::ContainerManager.count +
+                         ManageIQ::Providers::AtomicEnterprise::ContainerManager.count,
+        :id           => "atomic",
+        :providerType => "Atomic"
       }
     ]
   end
