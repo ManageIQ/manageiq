@@ -80,12 +80,7 @@ class MiqAeField < ApplicationRecord
   end
 
   def substitute=(value)
-    # Any invalid boolean string should be converted to default
-    column_class = self.class.columns_hash['substitute'].class
-    unless column_class::TRUE_VALUES.include?(value) ||
-           column_class::FALSE_VALUES.include?(value)
-      value = DEFAULTS[:substitute]
-    end
+    value = false if value.nil?
     super
   end
 
