@@ -167,11 +167,6 @@ class MiqReportResult < ActiveRecord::Base
   end
 
   def to_pdf
-    page_size = "a4"
-    if report.rpt_options && report.rpt_options[:pdf]
-      page_size = report.rpt_options[:pdf][:page_size] || "a4"
-    end
-
     curr_tz = Time.zone # Save current time zone setting
     user = userid.include?("|") ? nil : User.find_by_userid(userid)
     Time.zone = user ? user.get_timezone : MiqServer.my_server.server_timezone
@@ -179,7 +174,7 @@ class MiqReportResult < ActiveRecord::Base
     # Create the pdf header section
     html_string = generate_pdf_header(
       :title     => name.gsub(/'/, '\\\\\&'), # Escape single quotes
-      :page_size => page_size,
+      :page_size => report.page_size,
       :run_date  => format_timezone(last_run_on, Time.zone, "gtl")
     )
 
