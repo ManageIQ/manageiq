@@ -29,7 +29,7 @@ module ReportFormatter
         maxval = 0
         mri.graph[:columns].each_with_index do |col, col_idx|
           next if col_idx >= maxcols
-          newmax = mri.table.data.collect { |r| r[col].nil? ? 0 : r[col] }.sort.last
+          newmax = mri.table.data.collect { |r| r[col].nil? ? 0 : r[col] }.max
           maxval = newmax if newmax > maxval
         end
         if maxval > 10.gigabytes

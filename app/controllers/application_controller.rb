@@ -839,7 +839,7 @@ class ApplicationController < ActionController::Base
     tp = TimeProfile.default_time_profile if tp.nil?
 
     if tp.nil? && !session[:time_profiles].blank?
-      first_id_in_hash = Array(session[:time_profiles].invert).sort_by(&:first).first.last
+      first_id_in_hash = Array(session[:time_profiles].invert).min_by(&:first).last
       tp = TimeProfile.find_by_id(first_id_in_hash)
     end
     tp
