@@ -1,5 +1,4 @@
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/ntp")
-require 'miq-ntp'
+require 'linux_admin'
 
 module MiqServer::NtpManagement
   extend ActiveSupport::Concern
@@ -47,7 +46,18 @@ module MiqServer::NtpManagement
       return
     end
     _log.info("Synchronizing ntp settings: #{ntp_settings.inspect}")
-    MiqNtp.sync_settings(ntp_settings)
+    apply_ntp_server_settings(ntp_settings)
     @ntp_settings = ntp_settings
+  end
+
+  def apply_ntp_server_settings(settings)
+    return unless Sys::Platform::IMPL == :linux
+
+    chrony_conf = LinuxAdmin::Chrony.new
+    chrony_conf.clear_servers
+
+    servers = settings[:server]
+    servers = [servers] unless servers.kind_of?(Array)
+    chrony_conf.add_servers(*servers)
   end
 end

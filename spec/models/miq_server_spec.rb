@@ -133,7 +133,6 @@ describe MiqServer do
     end
 
     context "#ntp_reload" do
-      require 'miq-ntp'
       let(:config)     { @miq_server.get_config("vmdb") }
       let(:server_ntp) { {:server => ["server.pool.com"]} }
       let(:zone_ntp)   { {:server => ["zone.pool.com"]} }
@@ -143,7 +142,10 @@ describe MiqServer do
         config.config = {:ntp => server_ntp}
         config.save
 
-        MiqNtp.should_receive(:sync_settings).with(server_ntp)
+        chrony = double
+        expect(LinuxAdmin::Chrony).to receive(:new).and_return(chrony)
+        expect(chrony).to receive(:clear_servers)
+        expect(chrony).to receive(:add_servers).with(*server_ntp[:server])
         @miq_server.ntp_reload
       end
 
@@ -152,7 +154,10 @@ describe MiqServer do
         config.config = {}
         config.save
 
-        MiqNtp.should_receive(:sync_settings).with(zone_ntp)
+        chrony = double
+        expect(LinuxAdmin::Chrony).to receive(:new).and_return(chrony)
+        expect(chrony).to receive(:clear_servers)
+        expect(chrony).to receive(:add_servers).with(*zone_ntp[:server])
         @miq_server.ntp_reload
       end
 
@@ -161,7 +166,10 @@ describe MiqServer do
         config.config = {}
         config.save
 
-        MiqNtp.should_receive(:sync_settings).with(Zone::DEFAULT_NTP_SERVERS)
+        chrony = double
+        expect(LinuxAdmin::Chrony).to receive(:new).and_return(chrony)
+        expect(chrony).to receive(:clear_servers)
+        expect(chrony).to receive(:add_servers).with(*Zone::DEFAULT_NTP_SERVERS[:server])
         @miq_server.ntp_reload
       end
     end
