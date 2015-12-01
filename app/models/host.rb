@@ -87,6 +87,7 @@ class Host < ActiveRecord::Base
 
   # TODO: Remove all callers of address
   alias_attribute :address, :hostname
+  alias_attribute :to_s,    :name
 
   def settings
     super || self.settings = VMDB::Config.new("hostdefaults").get(:host)
@@ -180,10 +181,6 @@ class Host < ActiveRecord::Base
 
   def authentication_check_role
     'smartstate'
-  end
-
-  def to_s
-    name
   end
 
   def v_annotation
