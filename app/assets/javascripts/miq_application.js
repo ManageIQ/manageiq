@@ -81,8 +81,8 @@ function miqOnResize() {
 
 // Initialize the widget pulldown on the dashboard
 function miqInitWidgetPulldown() {
-  $("#dashboard_dropdown #toolbar button:not(.dropdown-toggle), #toolbar ul.dropdown-menu > li > a").off('click');
-  $("#dashboard_dropdown #toolbar button:not(.dropdown-toggle), #toolbar ul.dropdown-menu > li > a").click(miqWidgetToolbarClick);
+  $("#dashboard_dropdown button:not(.dropdown-toggle), #toolbar ul.dropdown-menu > li > a").off('click');
+  $("#dashboard_dropdown button:not(.dropdown-toggle), #toolbar ul.dropdown-menu > li > a").on('click', miqWidgetToolbarClick);
 }
 
 function miqCalendarDateConversion(server_offset) {
