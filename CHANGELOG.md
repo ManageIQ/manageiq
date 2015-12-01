@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 
-# Capablanca RC 1
+# Capablanca RC 2
 
 ## Added Features
 
@@ -19,6 +19,9 @@ All notable changes to this project will be documented in this file.
   - Resource Quotas
   - Component Status
   - Introduction of Atomic
+  - Dashboard Over Page
+  - Visualization of packages inside of a Container
+  - Cap & U: Cores Used, Memory
 -  Namespacing
   - Preparation for pluggable providers
   - OpenStack, Containers
@@ -27,17 +30,24 @@ All notable changes to this project will be documented in this file.
   - Improved naming for AMQP binding queues
   - Shelve VMs
   - Neutron Networking
+  - No longer using adminURL
 - Foreman: Exposed additional properties to reporting
 - Azure
   - Initial work for Inventory Collection, OAuth2, [azure-armrest gem](https://github.com/ManageIQ/azure-armrest)
   - Azure Provider models
   - Power Operations
+  - Added as a type for Cloud Provider discovery
+  - User Image Inventory
+  - Provision from private user image with template
 - RHEVM: Reconfigure of Memory and CPU
 - Orchestration: Reconfiguration
 - Reporting on Providers
   - Ability to report on Performance
   - Host Socket and Total VMs metrics
   - Watermark reports available out-of-the-box
+- Google
+  - Community addition
+  - Work has begun on this provider  
   
 
 ### Provisioning
@@ -49,6 +59,8 @@ All notable changes to this project will be documented in this file.
 - Provision Dialogs: field validation for non-required fields
 - Service Dialogs: Auto-refresh for dynamic dialog fields
 - Foreman: Filtering of available Configuration Profiles based on selected Configured Systems in provisioning dialog
+- Applied regex validation which can be applied to any text in a dialog field
+UI
 
 ### User Interface
 - Charting by field values
@@ -148,6 +160,8 @@ All notable changes to this project will be documented in this file.
 - Set automate domain priority (scoped per tenant)
 - Service model updates
 - Import/export updates to honor tenant domains
+- Easier access to categories and their tags
+- Updated messages for quotas for usability
 
 ### SmartState
 - Support for VMware VDDK version 6
@@ -170,19 +184,21 @@ All notable changes to this project will be documented in this file.
 - Added support for systemctl
 - Support for running on Puma, but default is Thin
 - Reworked report serialization for Rails 4.2
-- Replication: Added Diagnostics
+- Replication
+  - Added Diagnostics
+  - Additional logging in replication worker of top 20 tables
 - Appliance Console
- - Standard login: type root (not admin)
- - Standard bash: type appliance_console   
+  - Standard login: type root (not admin)
+  - Standard bash: type appliance_console   
 - GitHub Repository
- - vmdb rerooted to look like a Rails app
- - lib moved into gems/pending
- - Build and system directories extracted to new repositories
+  - vmdb rerooted to look like a Rails app
+  - lib moved into gems/pending
+  - Build and system directories extracted to new repositories
 - Extracted C code to external gems
- - MiqLargeFileLinux => [large\_file\_linux]( https://github.com/ManageIQ/large_file_linux) gem
- - MiqBlockDevOps => [linux\_block\_device](https://github.com/ManageIQ/linux_block_device) and [memory\_buffer](https://github.com/ManageIQ/memory_buffer) gems
- - MiqMemory => [memory\_buffer](https://github.com/ManageIQ/memory_buffer) gem
- - SlpLib => [slp](https://github.com/ManageIQ/slp) gem  
+  - MiqLargeFileLinux => [large\_file\_linux]( https://github.com/ManageIQ/large_file_linux) gem
+  - MiqBlockDevOps => [linux\_block\_device](https://github.com/ManageIQ/linux_block_device) and [memory\_buffer](https://github.com/ManageIQ/memory_buffer) gems
+  - MiqMemory => [memory\_buffer](https://github.com/ManageIQ/memory_buffer) gem
+  - SlpLib => [slp](https://github.com/ManageIQ/slp) gem  
 - Gem updates
   - Upgraded rufus scheduler to version 3
   - Upgraded to latest net-sftp
@@ -218,6 +234,7 @@ All notable changes to this project will be documented in this file.
     - Generic Pagination
     - Better Neutron support
     - Deleting unused RabbitMIQ queues
+    - Using publicURL for api communication with OpenStack
 - Provisioning: Fixed unique names for provisioned VMs when ordered through a service  
 - UI
   - Technical Debt Progress
