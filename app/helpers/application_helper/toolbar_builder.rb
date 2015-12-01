@@ -95,13 +95,13 @@ class ApplicationHelper::ToolbarBuilder
               end
             end
           end
-          if bgi[:buttonSelect] == "orchestration_template_vmdb_choice" && x_active_tree == :ot_tree && @record && @record.in_use?
+          if bgi[:buttonSelect] == "orchestration_template_vmdb_choice" && x_active_tree == :ot_tree && @record
             bgi[:items].each do |bgsi|
               if bgsi[:button] == "orchestration_template_edit"
-                bgsi[:enabled] = 'false'
+                bgsi[:enabled] = @record.in_use? ? 'false' : 'true'
                 bgsi[:title] = _('Orchestration Templates that are in use cannot be edited')
               elsif bgsi[:button] == "orchestration_template_remove"
-                bgsi[:enabled] = 'false'
+                bgsi[:enabled] = @record.in_use? ? 'false' : 'true'
                 bgsi[:title] = _('Orchestration Templates that are in use cannot be removed')
               end
             end
