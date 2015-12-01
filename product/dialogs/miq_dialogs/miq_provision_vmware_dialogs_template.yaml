@@ -1,5 +1,5 @@
 ---
-:name: miq_provision_dialogs_template
+:name: miq_provision_vmware_dialogs_template
 :description: Sample VM Provisioning Dialog (Template)
 :dialog_type: MiqProvisionWorkflow
 :content:
