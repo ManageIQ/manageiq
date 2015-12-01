@@ -40,14 +40,188 @@ class ApplicationHelper::ToolbarBuilder
   end
 
   def build_toolbar(tb_name)
-    tb_hash = tb_name == "custom_buttons_tb" ? build_custom_buttons_toolbar(@record) : load_yaml(tb_name)
+    definition = tb_name == "custom_buttons_tb" ? build_custom_buttons_toolbar(@record) : load_yaml(tb_name)
+    build(definition)
+  end
 
-    toolbar = []
-    groups_added = []
-    sep_needed = false
+  def build_select_button(bgi, index)
+    bs_children = false
+    props = {
+      "id"     => bgi[:buttonSelect],
+      "type"   => "buttonSelect",
+      "img"    => img = "#{bgi[:image] ? bgi[:image] : bgi[:buttonSelect]}.png",
+      "imgdis" => img,
+      :icon    => bgi[:icon]
+    }
+    props["title"] = bgi[:title] unless bgi[:title].blank?
+    props["text"]  = bgi[:text]  unless bgi[:text].blank?
+    if bgi[:buttonSelect] == "history_choice" && x_tree_history.length < 2
+      props["enabled"] = false  # Show disabled history button if no history
+    else
+      props["enabled"] = "#{bgi[:enabled]}" unless bgi[:enabled].blank?
+    end
+    props["openAll"] = true # Open/close the button select on click
 
-    tb_hash[:button_groups].each_with_index do |bg, bg_idx|         # Go thru all of the button groups
-      sep_added = false
+    if bgi[:buttonSelect] == "chargeback_download_choice" && x_active_tree == :cb_reports_tree &&
+       @report && !@report.contains_records?
+      props["enabled"] = "false"
+      props["title"] = _("No records found for this report")
+    end
+    if bgi[:buttonSelect] == "host_vmdb_choice" && x_active_tree == :old_dialogs_tree && @record && @record[:default]
+      bgi[:items].each do |bgsi|
+        if bgsi[:button] == "old_dialogs_edit"
+          bgsi[:enabled] = 'false'
+          bgsi[:title] = _('Default dialogs cannot be edited')
+        elsif bgsi[:button] == "old_dialogs_delete"
+          bgsi[:enabled] = 'false'
+          bgsi[:title] = _('Default dialogs cannot be removed from the VMDB')
+        end
+      end
+    end
+    if bgi[:buttonSelect] == "orchestration_template_vmdb_choice" && x_active_tree == :ot_tree && @record
+      bgi[:items].each do |bgsi|
+        if bgsi[:button] == "orchestration_template_edit"
+          bgsi[:enabled] = @record.in_use? ? 'false' : 'true'
+          bgsi[:title] = _('Orchestration Templates that are in use cannot be edited')
+        elsif bgsi[:button] == "orchestration_template_remove"
+          bgsi[:enabled] = @record.in_use? ? 'false' : 'true'
+          bgsi[:title] = _('Orchestration Templates that are in use cannot be removed')
+        end
+      end
+    end
+
+    current_item = props
+    current_item[:items] ||= []
+    any_visible = false
+    bgi[:items].each_with_index do |bsi, bsi_idx|
+      if bsi.key?(:separator)
+        props = {"id" => "sep_#{index}_#{bsi_idx}", "type" => "separator", :hidden => !any_visible}
+      else
+        next if download_pdf_buttons.include?(bsi[:button]) && !PdfGenerator.available?
+        next if build_toolbar_hide_button(bsi[:pressed] || bsi[:button])  # Use pressed, else button name
+        bs_children = true
+        props = {
+          "id"     => bgi[:buttonSelect] + "__" + bsi[:button],
+          "type"   => "button",
+          "img"    => img = "#{bsi[:image] ? bsi[:image] : bsi[:button]}.png",
+          "imgdis" => img,
+          :icon    => bsi[:icon]
+        }
+        if bsi[:button].starts_with?("history_")
+          if x_tree_history.length > 1
+            props["text"] = x_tree_history[bsi[:button].split("_").last.to_i][:text]
+          end
+        else
+          props["text"] = safer_eval(bsi[:text]) unless bsi[:text].blank?
+        end
+        props["enabled"] = "#{bsi[:enabled]}" unless bsi[:enabled].blank?
+        dis_title = build_toolbar_disable_button(bsi[:button])
+        props["enabled"] = "false" if dis_title
+        title = safer_eval(bsi[:title]) unless bsi[:title].blank?
+        props["title"] = dis_title.kind_of?(String) ? dis_title : title
+      end
+      current_item[:items] << props
+      build_toolbar_save_button(bsi, props, bgi[:buttonSelect]) if bsi[:button] # Save if a button (not sep)
+
+      any_visible ||= !props[:hidden] && props["type"] != "separator"
+    end
+    current_item[:items].reverse_each do |item|
+      break if ! item[:hidden] && item["type"] != 'separator'
+      item[:hidden] = true if item["type"] == 'separator'
+    end
+    current_item[:hidden] = !any_visible
+
+    if bs_children
+      @sep_added = true                                        # Separator has officially been added
+      @sep_needed = true                                       # Need a separator from now on
+    end
+    current_item
+  end
+
+  def build_normal_button(bgi, index)
+    return nil if download_pdf_buttons.include?(bgi[:button]) && !PdfGenerator.available?
+    button_hide = build_toolbar_hide_button(bgi[:button])
+    if button_hide
+      # These buttons need to be present even if hidden as we show/hide them dynamically
+      return nil unless %w(perf_refresh perf_reload vm_perf_refresh vm_perf_reload
+                     timeline_txt timeline_csv timeline_pdf).include?(bgi[:button])
+    end
+    @sep_needed = true unless button_hide
+    props = {
+      "id"     => bgi[:button],
+      "type"   => "button",
+      "img"    => "#{get_image(bgi[:image], bgi[:button]) ? get_image(bgi[:image], bgi[:button]) : bgi[:button]}.png",
+      "imgdis" => "#{bgi[:image] ? bgi[:image] : bgi[:button]}.png",
+      :icon    => bgi[:icon]
+    }
+    props["enabled"] = "#{bgi[:enabled]}" unless bgi[:enabled].blank?
+    props["enabled"] = "false" if dis_title = build_toolbar_disable_button(bgi[:button]) || button_hide
+    props["text"]    = bgi[:text] unless bgi[:text].blank?
+    # set pdf button to be hidden if graphical summary screen is set by default
+    bgi[:hidden] = %w(download_view vm_download_pdf).include?(bgi[:button]) && button_hide
+    title = safer_eval(bgi[:title]) unless bgi[:title].blank?
+    props["title"] = dis_title.kind_of?(String) ? dis_title : title
+
+    if bgi[:button] == "chargeback_report_only" && x_active_tree == :cb_reports_tree &&
+       @report && !@report.contains_records?
+      props["enabled"] = "false"
+      props["title"] = _("No records found for this report")
+    end
+    _add_separator(index)
+
+    props
+  end
+
+  def _add_separator(index)
+    # Add a separator, if needed, before this button
+    if !@sep_added && @sep_needed
+      if @groups_added.include?(index) && @groups_added.length > 1
+        @toolbar << {"id" => "sep_#{index}", "type" => "separator"} # Put separators between buttons
+        @sep_added = true
+      end
+    end
+    @sep_needed = true                                         # Button was added, need separators from now on
+  end
+
+  def build_twostate_button(bgi, index)
+    return nil if build_toolbar_hide_button(bgi[:buttonTwoState])
+
+    props = {
+      "id"     => bgi[:buttonTwoState],
+      "type"   => "buttonTwoState",
+      "img"    => img = "#{bgi[:image] ? bgi[:image] : bgi[:buttonTwoState]}.png",
+      "imgdis" => img,
+      :icon    => bgi[:icon]
+    }
+    props["title"]    = safer_eval(bgi[:title]) unless bgi[:title].blank?
+    props["enabled"]  = bgi[:enabled].to_s unless bgi[:enabled].blank?
+    props["enabled"]  = "false" if build_toolbar_disable_button(bgi[:buttonTwoState])
+    props["selected"] = "true"  if build_toolbar_select_button(bgi[:buttonTwoState])
+    _add_separator(index)
+
+    props
+  end
+
+  def build_button(bgi, index)
+    props = if bgi.key?(:buttonSelect)
+              build_select_button(bgi, index)
+            elsif bgi.key?(:button)
+              build_normal_button(bgi, index)
+            elsif bgi.key?(:buttonTwoState)
+              build_twostate_button(bgi, index)
+            end
+
+    @toolbar << build_toolbar_save_button(bgi, props) unless props.nil?
+  end
+
+  def build(definition)
+    @toolbar = []
+    @groups_added = []
+    @sep_needed = false
+    @sep_added = nil
+
+    definition[:button_groups].each_with_index do |bg, bg_idx|
+      @sep_added = false
       if @button_group && (!bg[:name].starts_with?(@button_group + "_") &&
         !bg[:name].starts_with?("custom") && !bg[:name].starts_with?("dialog") &&
         !bg[:name].starts_with?("miq_dialog") && !bg[:name].starts_with?("custom_button") &&
@@ -57,174 +231,16 @@ class ApplicationHelper::ToolbarBuilder
         next      # Skip if button_group doesn't match
       else
         # keeping track of groups that were not skipped to add separator, else it adds a separator before a button even tho no other groups were shown, i.e. vm sub screens, drift_history
-        groups_added.push(bg_idx)
+        @groups_added.push(bg_idx)
       end
 
       bg[:items].each do |bgi|
-        if bgi.key?(:buttonSelect)
-          bs_children = false
-          props = {
-            "id"     => bgi[:buttonSelect],
-            "type"   => "buttonSelect",
-            "img"    => img = "#{bgi[:image] ? bgi[:image] : bgi[:buttonSelect]}.png",
-            "imgdis" => img,
-            :icon    => bgi[:icon]
-          }
-          props["title"] = bgi[:title] unless bgi[:title].blank?
-          props["text"]  = bgi[:text]  unless bgi[:text].blank?
-          if bgi[:buttonSelect] == "history_choice" && x_tree_history.length < 2
-            props["enabled"] = false  # Show disabled history button if no history
-          else
-            props["enabled"] = "#{bgi[:enabled]}" unless bgi[:enabled].blank?
-          end
-          props["openAll"] = true # Open/close the button select on click
-
-          if bgi[:buttonSelect] == "chargeback_download_choice" && x_active_tree == :cb_reports_tree &&
-             @report && !@report.contains_records?
-            props["enabled"] = "false"
-            props["title"] = _("No records found for this report")
-          end
-          if bgi[:buttonSelect] == "host_vmdb_choice" && x_active_tree == :old_dialogs_tree && @record && @record[:default]
-            bgi[:items].each do |bgsi|
-              if bgsi[:button] == "old_dialogs_edit"
-                bgsi[:enabled] = 'false'
-                bgsi[:title] = _('Default dialogs cannot be edited')
-              elsif bgsi[:button] == "old_dialogs_delete"
-                bgsi[:enabled] = 'false'
-                bgsi[:title] = _('Default dialogs cannot be removed from the VMDB')
-              end
-            end
-          end
-          if bgi[:buttonSelect] == "orchestration_template_vmdb_choice" && x_active_tree == :ot_tree && @record
-            bgi[:items].each do |bgsi|
-              if bgsi[:button] == "orchestration_template_edit"
-                bgsi[:enabled] = @record.in_use? ? 'false' : 'true'
-                bgsi[:title] = _('Orchestration Templates that are in use cannot be edited')
-              elsif bgsi[:button] == "orchestration_template_remove"
-                bgsi[:enabled] = @record.in_use? ? 'false' : 'true'
-                bgsi[:title] = _('Orchestration Templates that are in use cannot be removed')
-              end
-            end
-          end
-
-          toolbar << props
-          current_item = props
-          current_item[:items] ||= []
-          any_visible = false
-          bgi[:items].each_with_index do |bsi, bsi_idx|
-            if bsi.key?(:separator)
-              props = {"id" => "sep_#{bg_idx}_#{bsi_idx}", "type" => "separator", :hidden => !any_visible}
-            else
-              next if download_pdf_buttons.include?(bsi[:button]) && !PdfGenerator.available?
-              next if build_toolbar_hide_button(bsi[:pressed] || bsi[:button])  # Use pressed, else button name
-              bs_children = true
-              props = {
-                "id"     => bgi[:buttonSelect] + "__" + bsi[:button],
-                "type"   => "button",
-                "img"    => img = "#{bsi[:image] ? bsi[:image] : bsi[:button]}.png",
-                "imgdis" => img,
-                :icon    => bsi[:icon]
-              }
-              if bsi[:button].starts_with?("history_")
-                if x_tree_history.length > 1
-                  props["text"] = x_tree_history[bsi[:button].split("_").last.to_i][:text]
-                end
-              else
-                props["text"] = safer_eval(bsi[:text]) unless bsi[:text].blank?
-              end
-              props["enabled"] = "#{bsi[:enabled]}" unless bsi[:enabled].blank?
-              dis_title = build_toolbar_disable_button(bsi[:button])
-              props["enabled"] = "false" if dis_title
-              title = safer_eval(bsi[:title]) unless bsi[:title].blank?
-              props["title"] = dis_title.kind_of?(String) ? dis_title : title
-            end
-            current_item[:items] << props
-            build_toolbar_save_button(bsi, props, bgi[:buttonSelect]) if bsi[:button] # Save if a button (not sep)
-
-            any_visible ||= !props[:hidden] && props["type"] != "separator"
-          end
-          current_item[:items].reverse_each do |item|
-            break if ! item[:hidden] && item["type"] != 'separator'
-            item[:hidden] = true if item["type"] == 'separator'
-          end
-          current_item[:hidden] = !any_visible
-
-          build_toolbar_save_button(bgi, current_item) if bs_children || bgi[:buttonSelect] == "history_choice"
-          if bs_children
-            sep_added = true                                        # Separator has officially been added
-            sep_needed = true                                       # Need a separator from now on
-          end
-        elsif bgi.key?(:button)                                 # button node found
-          next if download_pdf_buttons.include?(bgi[:button]) && !PdfGenerator.available?
-          button_hide = build_toolbar_hide_button(bgi[:button])
-          if button_hide
-            # These buttons need to be present even if hidden as we show/hide them dynamically
-            next unless %w(perf_refresh perf_reload
-                           vm_perf_refresh vm_perf_reload
-                           timeline_txt timeline_csv timeline_pdf).include?(bgi[:button])
-          end
-          sep_needed = true unless button_hide
-          props = {
-            "id"     => bgi[:button],
-            "type"   => "button",
-            "img"    => "#{get_image(bgi[:image], bgi[:button]) ? get_image(bgi[:image], bgi[:button]) : bgi[:button]}.png",
-            "imgdis" => "#{bgi[:image] ? bgi[:image] : bgi[:button]}.png",
-            :icon    => bgi[:icon]
-          }
-          props["enabled"] = "#{bgi[:enabled]}" unless bgi[:enabled].blank?
-          props["enabled"] = "false" if dis_title = build_toolbar_disable_button(bgi[:button]) || button_hide
-          props["text"]    = bgi[:text] unless bgi[:text].blank?
-          # set pdf button to be hidden if graphical summary screen is set by default
-          bgi[:hidden] = %w(download_view vm_download_pdf).include?(bgi[:button]) && button_hide
-          title = safer_eval(bgi[:title]) unless bgi[:title].blank?
-          props["title"] = dis_title.kind_of?(String) ? dis_title : title
-
-          if bgi[:button] == "chargeback_report_only" && x_active_tree == :cb_reports_tree &&
-             @report && !@report.contains_records?
-            props["enabled"] = "false"
-            props["title"] = _("No records found for this report")
-          end
-
-          # Add a separator, if needed, before this button
-          if !sep_added && sep_needed
-            if groups_added.include?(bg_idx) && groups_added.length > 1
-              toolbar << {"id" => "sep_#{bg_idx}", "type" => "separator"} # Put separators between buttons
-              sep_added = true
-            end
-          end
-          sep_needed = true                                         # Button was added, need separators from now on
-
-          toolbar << props
-          build_toolbar_save_button(bgi, props)
-        elsif bgi.key?(:buttonTwoState)                         # two state button node found
-          next if build_toolbar_hide_button(bgi[:buttonTwoState])
-          props = {
-            "id"     => bgi[:buttonTwoState],
-            "type"   => "buttonTwoState",
-            "img"    => img = "#{bgi[:image] ? bgi[:image] : bgi[:buttonTwoState]}.png",
-            "imgdis" => img,
-            :icon    => bgi[:icon]
-          }
-          props["title"]    = safer_eval(bgi[:title]) unless bgi[:title].blank?
-          props["enabled"]  = bgi[:enabled].to_s unless bgi[:enabled].blank?
-          props["enabled"]  = "false" if build_toolbar_disable_button(bgi[:buttonTwoState])
-          props["selected"] = "true"  if build_toolbar_select_button(bgi[:buttonTwoState])
-          if !sep_added && sep_needed
-            if groups_added.include?(bg_idx) && groups_added.length > 1
-              toolbar << {"id" => "sep_#{bg_idx}", "type" => "separator"} # Put separators between buttons
-              sep_added = true
-            end
-          end
-          sep_needed = true                                         # Button was added, need separators from now on
-
-          toolbar << props
-          build_toolbar_save_button(bgi, props)
-        end
+        build_button(bgi, bg_idx)
       end
     end
 
-    toolbar = nil if toolbar.empty?
-    toolbar
+    @toolbar = nil if @toolbar.empty?
+    @toolbar
   end
 
   def download_pdf_buttons
