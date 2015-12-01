@@ -1,17 +1,8 @@
 ---
-:name: miq_provision_dialogs_clone_to_vm
-:description: Sample VM Clone to VM Dialog
+:name: miq_provision_vmware_dialogs_template
+:description: Sample VM Provisioning Dialog (Template)
 :dialog_type: MiqProvisionWorkflow
 :content:
-  :dialog_order:
-  - :requester
-  - :purpose
-  - :service
-  - :environment
-  - :hardware
-  - :network
-  - :customize
-  - :schedule
   :buttons:
   - :submit
   - :cancel
@@ -365,6 +356,29 @@
           :display: :edit
           :default: 1
           :data_type: :integer
+        :customization_template_id:
+          :values_from:
+            :method: :allowed_customization_templates
+          :auto_select_single: false
+          :description: Script Name
+          :required: false
+          :display: :edit
+          :data_type: :integer
+        :root_password:
+          :description: Root Password
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :hostname:
+          :description: Host Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :customization_template_script:
+          :description: Script Text
+          :required: false
+          :display: :edit
+          :data_type: :string
       :display: :show
     :environment:
       :description: Environment
@@ -519,6 +533,24 @@
           :notes_display: :show
           :min_length:
           :max_length:
+        :pxe_image_id:
+          :values_from:
+            :method: :allowed_images
+          :auto_select_single: false
+          :description: Image
+          :required: true
+          :required_method: :validate_pxe_image_id
+          :display: :edit
+          :data_type: :string
+        :pxe_server_id:
+          :values_from:
+            :method: :allowed_pxe_servers
+          :auto_select_single: false
+          :description: Server
+          :required: true
+          :required_method: :validate_pxe_server_id
+          :display: :edit
+          :data_type: :integer
         :host_name:
           :description: Host Name
           :required: false
@@ -719,3 +751,12 @@
           :default: 1
           :data_type: :integer
       :display: :show
+  :dialog_order:
+  - :requester
+  - :purpose
+  - :service
+  - :environment
+  - :hardware
+  - :network
+  - :customize
+  - :schedule

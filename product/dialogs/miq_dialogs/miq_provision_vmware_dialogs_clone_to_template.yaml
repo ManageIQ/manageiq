@@ -1,5 +1,5 @@
 ---
-:name: miq_provision_dialogs_clone_to_template
+:name: miq_provision_vmware_dialogs_clone_to_template
 :description: Sample VM Clone to Template Dialog
 :dialog_type: MiqProvisionWorkflow
 :content:

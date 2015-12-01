@@ -1,8 +1,17 @@
 ---
-:name: miq_provision_dialogs-user
-:description: Sample VM Provisioning Dialog for User
+:name: miq_provision_vmware_dialogs_clone_to_vm
+:description: Sample VM Clone to VM Dialog
 :dialog_type: MiqProvisionWorkflow
 :content:
+  :dialog_order:
+  - :requester
+  - :purpose
+  - :service
+  - :environment
+  - :hardware
+  - :network
+  - :customize
+  - :schedule
   :buttons:
   - :submit
   - :cancel
@@ -109,7 +118,7 @@
           :required: false
           :display: :edit
           :data_type: :string
-      :display: :hide
+      :display: :show
       :field_order:
     :purpose:
       :description: Purpose
@@ -131,7 +140,7 @@
           :required_tags: []
 
           :data_type: :integer
-      :display: :hide
+      :display: :show
       :field_order:
     :customize:
       :description: Customize
@@ -356,7 +365,7 @@
           :display: :edit
           :default: 1
           :data_type: :integer
-      :display: :hide
+      :display: :show
     :environment:
       :description: Environment
       :fields:
@@ -404,7 +413,7 @@
           :auto_select_single: false
           :description: Name
           :required_method: :validate_placement
-          :required: false
+          :required: true
           :display: :edit
           :data_type: :integer
           :required_description: Host Name
@@ -414,7 +423,7 @@
           :auto_select_single: false
           :description: Name
           :required_method: :validate_placement
-          :required: false
+          :required: true
           :display: :edit
           :data_type: :integer
           :required_description: Datastore Name
@@ -435,7 +444,7 @@
           :description: Choose Automatically
           :required: false
           :display: :edit
-          :default: true
+          :default: false
           :data_type: :boolean
         :placement_folder_name:
           :values_from:
@@ -461,14 +470,14 @@
           :required: false
           :display: :edit
           :data_type: :integer
-      :display: :hide
+      :display: :show
     :service:
       :description: Catalog
       :fields:
         :number_of_vms:
           :values_from:
             :options:
-              :max: 5
+              :max: 50
             :method: :allowed_number_of_vms
           :description: Count
           :required: false
@@ -520,7 +529,7 @@
             :method: :allowed_provision_types
           :description: Provision Type
           :required: true
-          :display: :hide
+          :display: :edit
           :default: vmware
           :data_type: :string
         :linked_clone:
@@ -571,7 +580,7 @@
           :description: Power on virtual machines after creation
           :required: false
           :display: :edit
-          :default: false
+          :default: true
           :data_type: :boolean
         :schedule_time:
           :values_from:
@@ -627,7 +636,7 @@
           :required: false
           :display: :hide
           :data_type: :string
-      :display: :hide
+      :display: :show
     :hardware:
       :description: Hardware
       :fields:
@@ -709,13 +718,4 @@
           :display: :hide
           :default: 1
           :data_type: :integer
-      :display: :hide
-  :dialog_order:
-  - :requester
-  - :purpose
-  - :service
-  - :environment
-  - :hardware
-  - :network
-  - :customize
-  - :schedule
+      :display: :show
