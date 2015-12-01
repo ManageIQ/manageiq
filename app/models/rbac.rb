@@ -277,7 +277,7 @@ module Rbac
   end
 
   def self.accessible_tenant_ids_strategy(klass)
-    TENANT_ACCESS_STRATEGY[klass.to_s]
+    TENANT_ACCESS_STRATEGY[klass.base_model.to_s]
   end
 
   def self.find_targets_with_rbac(klass, scope, rbac_filters, find_options = {}, user_or_group = nil)
