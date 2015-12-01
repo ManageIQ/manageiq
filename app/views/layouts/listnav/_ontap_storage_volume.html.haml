@@ -13,14 +13,11 @@
     = miq_accordion_panel(_("Relationships"), false, "cim_sv_rel") do
       %ul.nav.nav-pills.nav-stacked
         - if role_allows(:feature => "ontap_storage_system_show")
-          - if @record.storage_system.nil?
-            %li.disabled
-              = link_to(_("%s: None") % ui_lookup(:table => "ontap_storage_system"), "#")
-          - else
-            %li
-              = link_to("#{ui_lookup(:table => "ontap_storage_system")}: #{@record.storage_system.evm_display_name}",
-                {:controller => "ontap_storage_system", :action => 'show', :id => @record.storage_system.id},
-                :title => _("Show %s") % ui_lookup(:table => "ontap_storage_system"))
+          = li_link_if(:if => !@record.storage_system.nil?,
+            :text          => "#{ui_lookup(:table => 'ontap_storage_system')}: #{@record.storage_system.evm_display_name}",
+            :controller    => "ontap_storage_system",
+            :record_id     => @record.storage_system.id,
+            :title         => _("Show %s") % ui_lookup(:table => "ontap_storage_system"))
 
         - if role_allows(:feature => "cim_base_storage_extent_show_list")
           = li_link_if_nonzero(:count => @record.base_storage_extents_size,
