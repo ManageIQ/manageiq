@@ -4,7 +4,7 @@
   - defered_toolbar_render('view_tb', 'compare_view_tb')
 - elsif @lastaction == "drift"
   - defered_toolbar_render('view_tb', 'drift_view_tb')
-- elsif %w(ems_container).include?(@layout)
+- elsif %w(ems_container container_project container_group).include?(@layout)
   - defered_toolbar_render('view_tb', 'dashboard_summary_toggle_view_tb')
 - elsif !%w(all_tasks all_ui_tasks timeline diagnostics my_tasks my_ui_tasks miq_server usage).include?(@layout) |
   && (!@layout.starts_with?("miq_request")) && !@treesize_buttons |

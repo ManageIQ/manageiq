@@ -7,10 +7,10 @@ class ContainerDashboardService
 
   def all_data
     {
-      :providers_link => get_url_to_entity(:ems_container),
-      :status    => status,
-      :providers => providers,
-      :heatmaps  => heatmaps
+      :providers_link => url_to_entity(:ems_container),
+      :status         => status,
+      :providers      => providers,
+      :heatmaps       => heatmaps
     }
   end
 
@@ -22,53 +22,53 @@ class ContainerDashboardService
     end
 
     {
-      :nodes      => {
+      :container_nodes            => {
         :count        => @ems.present? ? @ems.container_nodes.count : ContainerNode.count,
         :errorCount   => 0,
         :warningCount => 0,
-        :href         => get_url_to_entity(:container_node)
+        :href         => url_to_entity(:container_node)
       },
-      :containers => {
+      :containers                 => {
         :count        => @ems.present? ? @ems.containers.count : Container.count,
         :errorCount   => 0,
         :warningCount => 0,
-        :href         => get_url_to_entity(:container)
+        :href         => url_to_entity(:container)
       },
-      :registries => {
+      :container_image_registries => {
         :count        => @ems.present? ? @ems.container_image_registries.count : ContainerImageRegistry.count,
         :errorCount   => 0,
         :warningCount => 0,
-        :href         => get_url_to_entity(:container_image_registry)
+        :href         => url_to_entity(:container_image_registry)
       },
-      :projects   => {
+      :container_projects         => {
         :count        => @ems.present? ? @ems.container_projects.count : ContainerProject.count,
         :errorCount   => 0,
         :warningCount => 0,
-        :href         => get_url_to_entity(:container_project)
+        :href         => url_to_entity(:container_project)
       },
-      :pods       => {
+      :container_groups           => {
         :count        => @ems.present? ? @ems.container_groups.count : ContainerGroup.count,
         :errorCount   => 0,
         :warningCount => 0,
-        :href         => get_url_to_entity(:container_group)
+        :href         => url_to_entity(:container_group)
       },
-      :services   => {
+      :container_services         => {
         :count        => @ems.present? ? @ems.container_services.count : ContainerService.count,
         :errorCount   => 0,
         :warningCount => 0,
-        :href         => get_url_to_entity(:container_service)
+        :href         => url_to_entity(:container_service)
       },
-      :images     => {
+      :container_images           => {
         :count        => @ems.present? ? @ems.container_images.count : ContainerImage.count,
         :errorCount   => 0,
         :warningCount => 0,
-        :href         => get_url_to_entity(:container_image)
+        :href         => url_to_entity(:container_image)
       },
-      :routes     => {
+      :container_routes           => {
         :count        => routes_count,
         :errorCount   => 0,
         :warningCount => 0,
-        :href         => get_url_to_entity(:container_route)
+        :href         => url_to_entity(:container_route)
       }
     }
   end
@@ -124,7 +124,7 @@ class ContainerDashboardService
 
   private
 
-  def get_url_to_entity(entity)
+  def url_to_entity(entity)
     if @ems.present?
       @controller.url_for(:action     => 'show',
                           :id         => @provider_id,

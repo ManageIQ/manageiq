@@ -3,7 +3,7 @@ describe('containerDashboardController', function() {
     var mock_data = {
         data: {
             status: {
-                services: {
+                container_services: {
                     errorCount: 0,
                     count: 9,
                     warningCount: 0
@@ -13,32 +13,37 @@ describe('containerDashboardController', function() {
                     errorCount: 0,
                     warningCount: 0
                 },
-                projects: {
+                container_projects: {
                     count: 11,
                     errorCount: 0,
                     warningCount: 0
                 },
-                pods: {
+                container_groups: {
                     warningCount: 0,
                     errorCount: 0,
                     count: 11
                 },
-                routes: {
+                container_routes: {
                     count: 2,
                     errorCount: 0,
                     warningCount: 0
                 },
-                images: {
+                container_images: {
                     errorCount: 0,
                     count: 8,
                     warningCount: 0
                 },
-                nodes: {
+                container_nodes: {
                     errorCount: 0,
                     count: 9,
                     warningCount: 0
                 },
-                registries: {
+                container_image_registries: {
+                    count: 3,
+                    errorCount: 0,
+                    warningCount: 0
+                },
+                container_replicators: {
                     count: 3,
                     errorCount: 0,
                     warningCount: 0
