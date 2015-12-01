@@ -31,5 +31,6 @@
     :items:
     - :button: container_tag
       :image: tag
+      :url_parms: 'main_div'
       :text: 'Edit Tags'
       :title: 'Edit Tags for this #{ui_lookup(:table=>"container")}'

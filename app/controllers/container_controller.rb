@@ -8,7 +8,8 @@ class ContainerController < ApplicationController
 
   CONTAINER_X_BUTTON_ALLOWED_ACTIONS = {
     'container_delete' => :container_delete,
-    'container_edit'   => :container_edit
+    'container_edit'   => :container_edit,
+    'container_tag'    => :container_tag
   }
 
   def button
@@ -22,13 +23,18 @@ class ContainerController < ApplicationController
       CONTAINER_X_BUTTON_ALLOWED_ACTIONS.key?(action)
 
     send_action = CONTAINER_X_BUTTON_ALLOWED_ACTIONS[action]
-    send(send_action)
+    if [:container_tag].include?(send_action)
+      send(send_action, 'Container')
+    else
+      send(send_action)
+    end
     send_action
   end
   hide_action :whitelisted_action
 
   def x_button
     @explorer = true
+    @flash_array = []
     model, action = pressed2model_action(params[:pressed])
     @sb[:action] = action
 
@@ -50,7 +56,7 @@ class ContainerController < ApplicationController
     record = Container.find_by_id(from_cid(params[:id]))
     unless @explorer
       tree_node_id = TreeBuilder.build_node_id(record)
-      redirect_to :controller => "container",
+      redirect_to :controller => "Container",
                   :action     => "explorer",
                   :id         => tree_node_id
       return
@@ -86,6 +92,7 @@ class ContainerController < ApplicationController
     end
     @explorer   = true
     @lastaction = "explorer"
+    @flash_array = []
 
     # if AJAX request, replace right cell, and return
     if request.xml_http_request?
@@ -164,6 +171,7 @@ class ContainerController < ApplicationController
   # Tree node selected in explorer
   def tree_select
     @explorer = true
+    @flash_array = []
     @lastaction = "explorer"
     self.x_node = params[:id]
     @nodetype, id = params[:id].split("_").last.split("-")
@@ -234,6 +242,10 @@ class ContainerController < ApplicationController
       header = _("Editing %{model} \"%{name}\"") % {:name  => @record.name,
                                                     :model => ui_lookup(:model => "Container")}
       action = "container_edit"
+    when "tag"
+      partial = "layouts/tagging"
+      header = _("Edit Tags for %s") % ui_lookup(:model => "Container")
+      action = "container_tag"
     else
       action = nil
     end
@@ -277,7 +289,7 @@ class ContainerController < ApplicationController
     end
     presenter[:right_cell_text] = @right_cell_text
 
-    if action == "container_edit"
+    if action == "container_edit" || action == "tag"
       presenter[:update_partials][:main_div] = r[:partial => partial]
     elsif params[:display]
       partial_locals = {:controller => "container", :action_url => @lastaction}
@@ -301,6 +313,17 @@ class ContainerController < ApplicationController
       presenter[:set_visible_elements][:form_buttons_div] = false
       presenter[:set_visible_elements][:pc_div_1] = true
       presenter[:set_visible_elements][:paging_div] = true
+    end
+
+    if %w(tag).include?(action)
+      presenter[:set_visible_elements][:form_buttons_div] = true
+      presenter[:set_visible_elements][:pc_div_1] = false
+      presenter[:set_visible_elements][:toolbar] = false
+      presenter[:set_visible_elements][:paging_div] = true
+      locals = {:action_url => action_url}
+      locals[:multi_record] = true # need save/cancel buttons on edit screen even tho @record.id is not there
+      locals[:record_id]    = @sb[:rec_id] || @edit[:object_ids] && @edit[:object_ids][0]
+      presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
     end
 
     presenter[:ajax_action] = {
@@ -349,5 +372,9 @@ class ContainerController < ApplicationController
     @showtype = "main"
     identify_container(id)
     return if record_no_longer_exists?(@record)
+  end
+
+  def tagging_explorer_controller?
+    @explorer
   end
 end

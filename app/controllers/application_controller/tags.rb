@@ -20,6 +20,7 @@ module ApplicationController::Tags
   alias_method :vm_tag, :tagging_edit
   alias_method :miq_template_tag, :tagging_edit
   alias_method :service_tag, :tagging_edit
+  alias_method :container_tag, :tagging_edit
 
   # New classification category chosen on the classify screen
   def classify_new_cat

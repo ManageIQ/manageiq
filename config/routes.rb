@@ -318,7 +318,7 @@ Vmdb::Application.routes.draw do
         reload
         tree_autoload_dynatree
         tree_select
-        tagging_edit
+        container_tag
         tag_edit_form_field_changed
       ) +
                adv_search_post +
