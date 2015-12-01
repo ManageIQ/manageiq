@@ -40,7 +40,7 @@ class TreeBuilderVandt < TreeBuilder
   end
 
   def x_get_child_nodes(id)
-    model, rec_id, prefix = self.class.extract_node_model_and_id(id)
+    model, _, prefix = self.class.extract_node_model_and_id(id)
     model == "Hash" ? super : find_child_recursive(x_get_tree_roots(false, {}), id)
   end
 
