@@ -1976,7 +1976,7 @@ class ApplicationController < ActionController::Base
         page.replace_html("main_div", :partial => "layouts/gtl")
         page << "$('#adv_div').slideUp(0.3);" if params[:entry]
       end
-      page.replace("pc_div_1", :partial => 'layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => action_url, :db => @view.db, :headers => @view.headers})
+      page.replace_html("paging_div", :partial => 'layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => action_url, :db => @view.db, :headers => @view.headers})
     end
   end
 
