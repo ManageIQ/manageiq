@@ -23,7 +23,7 @@ describe ApiController do
   let(:group2) { FactoryGirl.create(:miq_group, sample_group2) }
 
   let(:role3)    { FactoryGirl.create(:miq_user_role) }
-  let(:tenant3)  { FactoryGirl.create(:tenant, :name => "Tenant2") }
+  let(:tenant3)  { FactoryGirl.create(:tenant, :name => "Tenant3") }
 
   before(:each) do
     init_api_spec_env
@@ -83,7 +83,7 @@ describe ApiController do
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       group_id = @result["results"].first["id"]
-      expect(MiqGroup.exists?(group_id)).to be_true
+      expect(MiqGroup.exists?(group_id)).to be true
     end
 
     it "supports single group creation via action" do
@@ -95,7 +95,7 @@ describe ApiController do
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       group_id = @result["results"].first["id"]
-      expect(MiqGroup.exists?(group_id)).to be_true
+      expect(MiqGroup.exists?(group_id)).to be true
     end
 
     it "supports single group creation via action with role and tenant specified" do
@@ -111,7 +111,7 @@ describe ApiController do
 
       result = @result["results"].first
       group_id = result["id"]
-      expect(MiqGroup.exists?(group_id)).to be_true
+      expect(MiqGroup.exists?(group_id)).to be true
 
       expect_result_to_match_hash(result,
                                   "description"      => "sample_group3",
@@ -135,7 +135,7 @@ describe ApiController do
 
       result = @result["results"].first
       group_id = result["id"]
-      expect(MiqGroup.exists?(group_id)).to be_true
+      expect(MiqGroup.exists?(group_id)).to be true
 
       expect_result_to_match_hash(result, sample_group)
     end
@@ -151,8 +151,8 @@ describe ApiController do
       results = @result["results"]
       group1_id = results.first["id"]
       group2_id = results.second["id"]
-      expect(MiqGroup.exists?(group1_id)).to be_true
-      expect(MiqGroup.exists?(group2_id)).to be_true
+      expect(MiqGroup.exists?(group1_id)).to be true
+      expect(MiqGroup.exists?(group2_id)).to be true
     end
   end
 

@@ -3,7 +3,7 @@ class ApiController
 
   module Groups
     def create_resource_groups(_type, _id, data)
-      validate_data(data)
+      validate_group_data(data)
       parse_set_role(data)
       parse_set_tenant(data)
       group = collection_class(:groups).create(data)
@@ -14,7 +14,7 @@ class ApiController
     end
 
     def edit_resource_groups(type, id, data)
-      validate_data(data)
+      validate_group_data(data)
       parse_set_role(data)
       parse_set_tenant(data)
       group = resource_search(id, type, collection_class(:groups))
@@ -34,13 +34,13 @@ class ApiController
       data.merge!("tenant" => tenant) if tenant
     end
 
-    def data_includes_invalid_attrs(data)
+    def group_data_includes_invalid_attrs(data)
       data.keys.select { |k| INVALID_GROUP_ATTRS.include?(k) }.compact.join(", ") if data
     end
 
-    def validate_data(data)
+    def validate_group_data(data)
       klass = collection_class(:groups)
-      bad_attrs = data_includes_invalid_attrs(data)
+      bad_attrs = group_data_includes_invalid_attrs(data)
       raise BadRequestError, "Invalid attribute(s) #{bad_attrs} specified for a group" if bad_attrs.present?
       raise BadRequestError, "Invalid filters specified" unless klass.valid_filters?(data["filters"])
     end
