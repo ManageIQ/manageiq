@@ -3,16 +3,12 @@
     #tab_all_tabs_div= render :partial => "all_tabs"
 
 - if params[:action] == "explorer"
-  - url = url_for(:action => 'settings_form_field_changed',
-                  :id     => "#{@sb[:active_tab].split('_').last}")
-  - w = @winW - 450
+  - url = url_for(:action => 'settings_form_field_changed', :id => "#{@sb[:active_tab].split('_').last}")
   = render :partial => "/layouts/my_code_mirror",
            :locals => {:text_area_id => "file_data",
-                     :mode         => "yaml",
-                     :line_numbers => true,
-                     :url          => url,
-                     :height       => center_div_height(true, 550),
-                     :width        => w}
+                       :mode         => "yaml",
+                       :line_numbers => true,
+                       :url          => url}
 
 %script{:type => "text/javascript"}
   -# Create from/to date JS vars to limit calendar starting from

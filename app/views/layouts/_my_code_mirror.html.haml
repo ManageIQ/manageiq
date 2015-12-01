@@ -21,20 +21,25 @@
   = javascript_include_tag "codemirror/modes/#{mode}"
 - unless theme == "default"
   = stylesheet_link_tag "codemirror/themes/#{theme}"
-%script{:type => "text/javascript"}
+:javascript
   if (miqDomElementExists('#{text_area_id}')) {
-  ManageIQ.editor = CodeMirror.fromTextArea($('##{text_area_id}')[0],
-  {mode: '#{mode}',
-  lineNumbers: #{line_numbers},
-  matchBrackets: true,
-  theme: '#{theme}',
-  readOnly: #{read_only ? "'nocursor'".html_safe : false}
+    var textarea = $('##{text_area_id}')[0];
+    ManageIQ.editor = CodeMirror.fromTextArea(textarea, {
+      mode:          '#{mode}',
+      lineNumbers:   #{line_numbers},
+      matchBrackets: true,
+      theme:         '#{theme}',
+      readOnly:      #{read_only ? "'nocursor'".html_safe : false}
+    });
+    ManageIQ.editor.on('change', function (cm, change) {
+      miqSendOneTrans('#{url}');
+    });
+    ManageIQ.editor.on('blur', function (cm, change) {
+      ManageIQ.editor.save();
+    });
+    $('.CodeMirror').css('height', '#{height}');
+    $('.CodeMirror').css('width', '#{width}');
   }
-  );
-  ManageIQ.editor.on("change", function(cm, change) {miqSendOneTrans('#{url}')}),
-  ManageIQ.editor.on("blur", function(cm) {ManageIQ.editor.save()}),
-  $('.CodeMirror-scroll')[0].style.height = '#{height}px';
-  $('.CodeMirror-scroll')[0].style.width = '#{width}px';
+%script{:tyle => "text/javascript"}
   - unless no_focus
-    ManageIQ.editor.focus();
-  }
+    if (ManageIQ.editor) ManageIQ.editor.focus();
