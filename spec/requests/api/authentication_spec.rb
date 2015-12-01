@@ -14,6 +14,8 @@ describe ApiController do
     Vmdb::Application
   end
 
+  ENTRYPOINT_KEYS = %w(name description version versions identity collections)
+
   context "Basic Authentication" do
     it "test basic authentication with bad credentials" do
       basic_authorize "baduser", "badpassword"
@@ -29,7 +31,7 @@ describe ApiController do
       run_get entrypoint_url
 
       expect_single_resource_query
-      expect_result_to_have_keys(%w(name description version versions collections))
+      expect_result_to_have_keys(ENTRYPOINT_KEYS)
     end
 
     it "test basic authentication with a user without a role" do
@@ -89,6 +91,36 @@ describe ApiController do
     end
   end
 
+  context "Authentication/Authorization Identity" do
+    let(:group1) { FactoryGirl.create(:miq_group, :description => "Group1", :miq_user_role => @role) }
+    let(:group2) { FactoryGirl.create(:miq_group, :description => "Group2", :miq_user_role => @role) }
+
+    before do
+      @user.miq_groups = [group1, group2, @user.current_group]
+      @user.current_group = group1
+    end
+
+    it "basic authentication with a secondary group" do
+      api_basic_authorize
+
+      run_get entrypoint_url, :headers => {"miq_group" => group2.description}
+
+      expect_single_resource_query
+      expect_result_to_have_keys(ENTRYPOINT_KEYS)
+      expect_result_to_match_hash(
+        @result["identity"],
+        "userid"     => @user.userid,
+        "name"       => @user.name,
+        "user_href"  => "/api/users/#{@user.id}",
+        "group"      => group2.description,
+        "group_href" => "/api/groups/#{group2.id}",
+        "role"       => @role.name,
+        "tenant"     => @group.tenant.name
+      )
+      expect(@result["identity"]["groups"]).to match_array(@user.miq_groups.pluck(:description))
+    end
+  end
+
   context "Token Based Authentication" do
     it "gets a token based identifier" do
       api_basic_authorize
@@ -118,7 +150,7 @@ describe ApiController do
       run_get entrypoint_url, :headers => {"auth_token" => auth_token}
 
       expect_single_resource_query
-      expect_result_to_have_keys(%w(name description version versions collections))
+      expect_result_to_have_keys(ENTRYPOINT_KEYS)
     end
 
     it "authentication using a valid token updates the token's expiration time" do
@@ -140,7 +172,7 @@ describe ApiController do
       run_get entrypoint_url, :headers => {"auth_token" => auth_token}
 
       expect_single_resource_query
-      expect_result_to_have_keys(%w(name description version versions collections))
+      expect_result_to_have_keys(ENTRYPOINT_KEYS)
     end
 
     it "gets a token based identifier with the default API based token_ttl" do

@@ -275,7 +275,7 @@ module ApiSpecHelper
     fetch_value(attr_hash).each do |key, value|
       expect(result).to have_key(key)
       value = fetch_value(value)
-      if key == "href" || value.kind_of?(Regexp)
+      if key == "href" || key.ends_with?("_href") || value.kind_of?(Regexp)
         expect(result[key]).to match(value)
       else
         expect(result[key]).to eq(value)

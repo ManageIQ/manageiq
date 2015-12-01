@@ -54,6 +54,21 @@ class ApiController
       log_api_auth
     end
 
+    def auth_identity
+      user  = @auth_user_obj
+      group = user.current_group
+      {
+        :userid     => user.userid,
+        :name       => user.name,
+        :user_href  => "#{@req[:api_prefix]}/users/#{user.id}",
+        :group      => group.description,
+        :group_href => "#{@req[:api_prefix]}/groups/#{group.id}",
+        :role       => group.miq_user_role_name,
+        :tenant     => group.tenant.name,
+        :groups     => user.miq_groups.pluck(:description)
+      }
+    end
+
     def userid_to_userobj(userid)
       User.find_by_userid(userid)
     end
