@@ -1519,7 +1519,6 @@ module ApplicationController::CiProcessing
       EmsCluster.destroy_queue(clusters)
     else
       EmsCluster.find_all_by_id(clusters, :order => "lower(name)").each do |cluster|
-        id = cluster.id
         cluster_name = cluster.name
         begin
           cluster.send(task.to_sym) if cluster.respond_to?(task)    # Run the task
@@ -1547,7 +1546,6 @@ module ApplicationController::CiProcessing
       ResourcePool.destroy_queue(rps)
     else
       ResourcePool.find_all_by_id(rps, :order => "lower(name)").each do |rp|
-        id = rp.id
         rp_name = rp.name
         begin
           rp.send(task.to_sym) if rp.respond_to?(task)    # Run the task
@@ -1631,7 +1629,6 @@ module ApplicationController::CiProcessing
       Host.destroy_queue(hosts)
     else
       Host.where(:id => hosts).order("lower(name)").each do |host|
-        id = host.id
         host_name = host.name
         begin
           if host.respond_to?(task)  # Run the task
@@ -1764,7 +1761,6 @@ module ApplicationController::CiProcessing
       add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task => "Delete", :count_model => pluralize(storages.length, "Datastore")})
     else
       Storage.find_all_by_id(storages, :order => "lower(name)").each do |storage|
-        id = storage.id
         storage_name = storage.name
         begin
           if task == "scan"
