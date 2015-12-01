@@ -364,47 +364,36 @@ describe Host do
         Host.lookUpHost(@bad_partial_hostname_multi, nil).should be_nil
       end
     end
+
     context "when hosts have duplicate hostnames" do
       before do
-        @fqdn_hostname_1 = "test1.fake.com"
-        @fqdn_hostname_2 = "test2.fake.com"
-        @ipaddress_1     = "1.1.1.1"
-        @ipaddress_2     = "2.2.2.2"
-        @ems_id_1        = 1
-        @ems_id_2        = 2
-        @ems_ref_1       = "host-1"
-        @ems_ref_2       = "host-2"
-        @host            = FactoryGirl.create(:host_vmware, :hostname => @fqdn_hostname_1, :ipaddress => @ipaddress_1,
-                                              :ems_ref => @ems_ref_1, :ems_id => @ems_id_1)
         # when an EMS is removed, the host is left behind with a nil ems_id
-        @host_no_ems_id  = FactoryGirl.create(:host_vmware, :hostname => @fqdn_hostname_2, :ipaddress => @ipaddress_2,
-                                              :ems_ref => @ems_ref_2)
+        @host_no_ems_id = FactoryGirl.create(:host_vmware, :hostname => "test1.example.com", :ipaddress => "192.168.1.2", :ems_ref => "host-2")
+        @host           = FactoryGirl.create(:host_vmware, :hostname => "test1.example.com", :ipaddress => "192.168.1.1", :ems_ref => "host-1", :ems_id => 1)
       end
 
       it "with only fqdn and ipaddress" do
-        Host.lookUpHost(@fqdn_hostname_1, @ipaddress_1).should == @host
+        expect(Host.lookUpHost(@host.hostname, @host.ipaddress)).to eq(@host)
       end
 
       it "with fqdn, ipaddress, and ems_ref finds right host" do
-        Host.lookUpHost(@fqdn_hostname_1, @ipaddress_1, :ems_ref => @ems_ref_1).should == @host
+        expect(Host.lookUpHost(@host.hostname, @host.ipaddress, :ems_ref => @host.ems_ref)).to eq(@host)
       end
 
-      it "with fqdn, ipaddress, and ems_ref finds right host without an ems_id" do
-        # this allows a recently deleted EMS to be re-added and pick up the
-        # old orphaned host
-        Host.lookUpHost(@fqdn_hostname_2, @ipaddress_2, :ems_ref => @ems_ref_2).should == @host_no_ems_id
+      it "with fqdn, ipaddress, and ems_ref finds right host without an ems_id (reconnect orphaned host)" do
+        expect(Host.lookUpHost(@host_no_ems_id.hostname, @host_no_ems_id.ipaddress, :ems_ref => @host_no_ems_id.ems_ref)).to eq(@host_no_ems_id)
       end
 
       it "with fqdn, ipaddress, and different ems_ref returns nil" do
-        Host.lookUpHost(@fqdn_hostname_1, @ipaddress_2, :ems_ref => @ems_ref_2).should be_nil
+        expect(Host.lookUpHost(@host.hostname, @host.ipaddress, :ems_ref => "dummy_ref")).to be_nil
       end
 
       it "with ems_ref and ems_id" do
-        Host.lookUpHost(@fqdn_hostname_1, @ipaddress_1, :ems_ref => @ems_ref_1, :ems_id => @ems_id_1).should == @host
+        expect(Host.lookUpHost(@host.hostname, @host.ipaddress, :ems_ref => @host.ems_ref, :ems_id => 1)).to eq(@host)
       end
 
       it "with ems_ref and other ems_id" do
-        Host.lookUpHost(@fqdn_hostname_1, @ipaddress_1, :ems_ref => @ems_ref_1, :ems_id => @ems_id_2).should be_nil
+        expect(Host.lookUpHost(@host.hostname, @host.ipaddress, :ems_ref => @host.ems_ref, :ems_id => 0)).to be_nil
       end
     end
   end
