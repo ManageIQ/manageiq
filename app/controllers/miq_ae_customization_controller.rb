@@ -513,4 +513,14 @@ class MiqAeCustomizationController < ApplicationController
   def dialog_import_export_build_tree
     TreeBuilderAeCustomization.new("dialog_import_export_tree", "dialog_import_export", @sb)
   end
+
+  def group_button_add_save(typ)
+    # override for AE Customization Buttons - the label doesn't say Description
+    if @edit[:new][:description].blank?
+      render_flash(_("%s is required") % "Button Group Hover Text", :error)
+      return
+    end
+
+    super(typ)
+  end
 end
