@@ -58,6 +58,11 @@ describe('dialogFieldRefresh', function() {
       expect(dialogFieldRefresh.addOptionsToDropDownList).toHaveBeenCalledWith("the data", 123);
     });
 
+    it('ensures the select picker is refreshed', function() {
+      dialogFieldRefresh.refreshDropDownList('abc', 123, 'test');
+      expect($.fn.selectpicker).toHaveBeenCalledWith('refresh');
+    });
+
     it('sets the value in the select picker', function() {
       dialogFieldRefresh.refreshDropDownList('abc', 123, 'test');
       expect($.fn.selectpicker).toHaveBeenCalledWith('val', 'test');
