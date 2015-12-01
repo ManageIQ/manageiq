@@ -23,22 +23,6 @@ class ApiController
       @req[:c_id]          = params[:c_id]
       @req[:subcollection] = params[:subcollection]
       @req[:s_id]          = params[:s_id]
-
-      log_api_request
-    end
-
-    def log_api_request
-      @parameter_filter ||= ActionDispatch::Http::ParameterFilter.new(Rails.application.config.filter_parameters)
-      api_log_info("\n#{@name} Request URL: #{@req[:url]}")
-      if api_log_debug?
-        msg  = "\n#{@name} Request Details"
-        @req.each { |k, v| msg << "\n  #{k[0..14].ljust(14, ' ')}: #{v}" if v.present? }
-        if params.size > 0
-          msg << "\n\n  Parameters:"
-          @parameter_filter.filter(params).each { |k, v| msg << "\n    #{k[0..12].ljust(12, ' ')}: #{v}" }
-        end
-        api_log_debug(msg)
-      end
     end
 
     def validate_api_request

@@ -158,8 +158,10 @@ class ApiController < ApplicationController
   #
   def api_request_handler(expected_method)
     parse_api_request
+    log_api_request
     validate_api_request
     api_error_type(:not_found, "Unknown resource specified") unless redirect_api_request(expected_method)
+    log_api_response
   end
 
   def show    # GET

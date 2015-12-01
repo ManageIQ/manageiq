@@ -21,6 +21,7 @@ class ApiController
     # REST APIs Authenticator and Redirector
     #
     def require_api_user_or_token
+      log_request_initiated
       @auth_token = @auth_user = nil
       if request.env.key?('HTTP_X_AUTH_TOKEN')
         @auth_token  = request.env['HTTP_X_AUTH_TOKEN']
@@ -50,6 +51,7 @@ class ApiController
           request_http_basic_authentication
         end
       end
+      log_api_auth
     end
 
     def userid_to_userobj(userid)
