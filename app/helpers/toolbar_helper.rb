@@ -9,10 +9,11 @@ module ToolbarHelper
     groups = split_to_groups(Array(buttons_in))
 
     groups.collect do |buttons|
+      buttons = Array(buttons)
+
       # exceptional behavior for view toolbar view mode buttons
-      first_button = Array(buttons)[0]
-      view_buttons = first_button.present? &&
-                     first_button[:name] =~ /^view_/
+      view_buttons = buttons.first.present? &&
+                     buttons.first[:name] =~ /^view_/
 
       cls = view_buttons ? 'toolbar-pf-view-selector ' : ''
       cls += 'hidden ' unless buttons.find { |button| !button[:hidden] }
@@ -67,7 +68,7 @@ module ToolbarHelper
   # Render a group of normal toolbar buttons
   #
   def normal_toolbar_buttons(buttons)
-    Array(buttons).collect do |button|
+    buttons.collect do |button|
       toolbar_top_button(button)
     end.join('').html_safe
   end
