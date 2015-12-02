@@ -254,6 +254,13 @@ class MiqGroup < ActiveRecord::Base
     where.not(:group_type => TENANT_GROUP)
   end
 
+  def self.valid_filters?(filters_hash)
+    return true  unless filters_hash                  # nil ok
+    return false unless filters_hash.kind_of?(Hash)   # must be Hash
+    return true  if filters_hash.blank?               # {} ok
+    filters_hash["managed"].present? || filters_hash["belongsto"].present?
+  end
+
   private
 
   # if this tenant is changing, make sure this is not a default group

@@ -197,13 +197,13 @@
     :description: Groups
     :options:
     - :collection
-    :methods: *70174834086080
+    :methods: *70174834084700
     :klass: MiqGroup
     :subcollections:
     - :tags
     :collection_actions:
       :post:
-      - :name: add
+      - :name: create
         :identifier: rbac_group_add
       - :name: edit
         :identifier: rbac_group_edit
@@ -213,6 +213,8 @@
       :post:
       - :name: edit
         :identifier: rbac_group_edit
+      - :name: delete
+        :identifier: rbac_group_delete
       :delete:
       - :name: delete
         :identifier: rbac_group_delete

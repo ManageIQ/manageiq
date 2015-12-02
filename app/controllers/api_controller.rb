@@ -55,6 +55,7 @@ class ApiController < ApplicationController
   include_concern 'Categories'
   include_concern 'CustomAttributes'
   include_concern 'Conditions'
+  include_concern 'Groups'
   include_concern 'Policies'
   include_concern 'PolicyActions'
   include_concern 'Providers'

@@ -69,8 +69,7 @@ RSpec.describe "tenants API" do
         run_post tenants_url, :parent => {:id => invalid_tenant.id}
       end.not_to change(Tenant, :count)
 
-      expect_bad_request
-      expect(@result["error"]["message"]).to match(/Failed to add a new tenant resource/)
+      expect_resource_not_found
     end
 
     it "can update a tenant with POST" do
