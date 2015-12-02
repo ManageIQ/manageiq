@@ -869,18 +869,29 @@ en:
       LdapDomain:               LDAP Domain
       LdapRegion:               LDAP Region
       LdapServer:               LDAP Server
-      ManageIQ::Providers::BaseManager:               Provider
+      ManageIQ::Providers::BaseManager:                                     Provider
       #ManageIQ::Providers::BaseManager::VmOrTemplate: VM or Template
       #ManageIQ::Providers::BaseManager::Vm:           VM and Instance
-      ManageIQ::Providers::ConfigurationManager:      Configuration Manager
+      ManageIQ::Providers::ConfigurationManager:                            Configuration Manager
       ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem: Foreman Configured System
-      ManageIQ::Providers::CloudManager:              Cloud Provider
-      ManageIQ::Providers::CloudManager::Vm:          Instance
-      ManageIQ::Providers::CloudManager::Template:    Image
-      ManageIQ::Providers::ContainerManager:          Containers Provider
-      ManageIQ::Providers::InfraManager:              Infrastructure Provider
-      ManageIQ::Providers::InfraManager::Vm:          Virtual Machine
-      ManageIQ::Providers::InfraManager::Template:    Template
+      ManageIQ::Providers::CloudManager:                                    Cloud Provider
+      ManageIQ::Providers::CloudManager::Vm:                                Instance
+      ManageIQ::Providers::CloudManager::Template:                          Image
+      ManageIQ::Providers::ContainerManager:                                Containers Provider
+      ManageIQ::Providers::InfraManager:                                    Infrastructure Provider
+      ManageIQ::Providers::InfraManager::Vm:                                Virtual Machine
+      ManageIQ::Providers::InfraManager::Template:                          Template
+      ManageIQ::Providers::Openstack::InfraManager:                         Infrastructure Provider (Openstack)
+      ManageIQ::Providers::Microsoft::InfraManager:                         Infrastructure Provider (Microsoft)
+      ManageIQ::Providers::Redhat::InfraManager:                            Infrastructure Provider (Redhat)
+      ManageIQ::Providers::Vmware::InfraManager:                            Infrastructure Provider (Vmware)
+      ManageIQ::Providers::Openstack::CloudManager:                         Cloud Provider (Openstack)
+      ManageIQ::Providers::Amazon::CloudManager:                            Cloud Provider (Amazon)
+      ManageIQ::Providers::Azure::CloudManager:                             Cloud Provider (Microsoft Azure)
+      ManageIQ::Providers::Atomic::ContainerManager:                        Container Provider (Atomic)
+      ManageIQ::Providers::Kubernetes::ContainerManager:                    Container Provider (Kubernetes)
+      ManageIQ::Providers::Openshift::ContainerManager:                     Container Provider (Openshift)
+      ManageIQ::Providers::OpenshiftEnterprise::ContainerManager:           Container Provider (Openshift Enterprise)
       MiqAction:                Action
       MiqAeClass:               Automate Class
       MiqAeDomain:              Automate Domain
