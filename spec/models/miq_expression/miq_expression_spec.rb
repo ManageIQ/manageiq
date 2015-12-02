@@ -1,48 +1,44 @@
 require "spec_helper"
 
 describe MiqExpression do
-  before(:each) do
-    # Create a single host and vm for searching
-    @host = FactoryGirl.create(:host)
-    @host.filesystems << FactoryGirl.create(:filesystem)
-    @host.save
-
-    @vm   = FactoryGirl.create(:vm_vmware)
+  let(:exp) { {"=" => {"field" => "Vm-name", "value" => "test"}} }
+  let(:qs_exp) { {"=" => {"field" => "Vm-name", "value" => :user_input}} }
+  let(:complex_qs_exp) do
+    {"AND" => [
+      {"=" => {"field" => "Vm-name", "value" => "test"}}, {"=" => {"field" => "Vm-name", "value" => :user_input}}
+    ]}
   end
 
-  # Based on FogBugz 6181: something INCLUDES []
-  it "should test bracket characters" do
-    exp    = MiqExpression.new("INCLUDES" => {"field" => "Vm-name", "value" => "/[]/"})
-    # puts "Expression in Human: #{exp.to_human}"
-    # puts "Expression in SQL:   #{exp.to_sql}"
-    clause = exp.to_ruby
-    # puts "Expression in Ruby:  #{clause}"
-    # puts
+  describe ".to_ruby" do
+    # Based on FogBugz 6181: something INCLUDES []
+    it "detects value empty array" do
+      exp = MiqExpression.new("INCLUDES" => {"field" => "Vm-name", "value" => "/[]/"})
+      expect(exp.to_ruby).to eq("<value ref=vm, type=string>/virtual/name</value> =~ /\\/\\[\\]\\//")
+    end
   end
 
-  it "should test numeric set expressions" do
-    filter = YAML.load '--- !ruby/object:MiqExpression
+  it "supports yaml" do
+    exp = YAML.load '--- !ruby/object:MiqExpression
     exp:
       "=":
         field: Host-enabled_inbound_ports
         value: "22,427,5988,5989"
     '
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
-    filter.to_ruby.should == '<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> == [22,427,5988,5989]'
+    expect(exp.to_ruby).to eq('<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> == [22,427,5988,5989]')
+  end
 
+  it "tests numeric set expressions" do
+    exp = MiqExpression.new("=" => {"field" => "Host-enabled_inbound_ports", "value" => "22,427,5988,5989"})
+    expect(exp.to_ruby).to eq('<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> == [22,427,5988,5989]')
+  end
+
+  it "expands ranges" do
     filter = YAML.load '--- !ruby/object:MiqExpression
     exp:
       INCLUDES ALL:
         field: Host-enabled_inbound_ports
         value: 22, 427, 5988, 5989, 1..4
     '
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
     filter.to_ruby.should == '(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> & [1,2,3,4,22,427,5988,5989]) == [1,2,3,4,22,427,5988,5989]'
 
     filter = YAML.load '--- !ruby/object:MiqExpression
@@ -51,10 +47,7 @@ describe MiqExpression do
         field: Host-enabled_inbound_ports
         value: 22, 427, 5988, 5989, 1..3
     '
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
+
     filter.to_ruby.should == '([1,2,3,22,427,5988,5989] - <value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value>) != [1,2,3,22,427,5988,5989]'
 
     filter = YAML.load '--- !ruby/object:MiqExpression
@@ -63,10 +56,6 @@ describe MiqExpression do
         field: Host-enabled_inbound_ports
         value: 22
     '
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
     filter.to_ruby.should == '(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> - [22]) == []'
 
     filter = YAML.load '--- !ruby/object:MiqExpression
@@ -75,10 +64,6 @@ describe MiqExpression do
         field: Host-enabled_inbound_ports
         value: 22
     '
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
     filter.to_ruby.should == '(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> - [22]) == []'
   end
 
@@ -288,25 +273,6 @@ describe MiqExpression do
     Condition.subst(filter.to_ruby, data, {}).should == '"VMware, Inc." =~ /^[^.]*ware.*$/'
   end
 
-  it "should test atom error" do
-    MiqExpression.atom_error("Host-xx", "regular expression matches", '123[)').should_not be_false
-
-    MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '').should_not be_false
-    MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '123abc').should_not be_false
-    MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '123').should be_false
-    MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '123.456').should be_false
-    MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '2,123.456').should be_false
-
-    MiqExpression.atom_error("Vm-cpu_limit", "=", '').should_not be_false
-    MiqExpression.atom_error("Vm-cpu_limit", "=", '123.5').should_not be_false
-    MiqExpression.atom_error("Vm-cpu_limit", "=", '123.5.abc').should_not be_false
-    MiqExpression.atom_error("Vm-cpu_limit", "=", '123').should be_false
-    MiqExpression.atom_error("Vm-cpu_limit", "=", '2,123').should be_false
-
-    MiqExpression.atom_error("Vm-created_on", "=", Time.now.to_s).should be_false
-    MiqExpression.atom_error("Vm-created_on", "=", "123456").should_not be_false
-  end
-
   it "should test numbers with methods" do
     filter = YAML.load '--- !ruby/object:MiqExpression
     context_type:
@@ -335,6 +301,29 @@ describe MiqExpression do
     filter.to_ruby.should == '<value ref=vm, type=integer>/virtual/used_disk_storage</value> >= 1048576000'
   end
 
+  # end to_ruby
+
+  describe ".atom_error" do
+    it "should test atom error" do
+      MiqExpression.atom_error("Host-xx", "regular expression matches", '123[)').should_not be_false
+
+      MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '').should_not be_false
+      MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '123abc').should_not be_false
+      MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '123').should be_false
+      MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '123.456').should be_false
+      MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '2,123.456').should be_false
+
+      MiqExpression.atom_error("Vm-cpu_limit", "=", '').should_not be_false
+      MiqExpression.atom_error("Vm-cpu_limit", "=", '123.5').should_not be_false
+      MiqExpression.atom_error("Vm-cpu_limit", "=", '123.5.abc').should_not be_false
+      MiqExpression.atom_error("Vm-cpu_limit", "=", '123').should be_false
+      MiqExpression.atom_error("Vm-cpu_limit", "=", '2,123').should be_false
+
+      MiqExpression.atom_error("Vm-created_on", "=", Time.now.to_s).should be_false
+      MiqExpression.atom_error("Vm-created_on", "=", "123456").should_not be_false
+    end
+  end
+
   context "._model_details" do
     it "should not be overly aggressive in filtering out columns for logical CPUs" do
       relats  = MiqExpression.get_relats(Vm)
@@ -345,9 +334,7 @@ describe MiqExpression do
       hardware_sorted = details.select { |d| d.first.starts_with?("Hardware") }.sort
       hardware_sorted.map(&:first).should_not include("Hardware : Logical Cpus")
     end
-  end
 
-  context ".model_details" do
     it "should not contain duplicate tag fields" do
       category = FactoryGirl.create(:classification, :name => 'environment', :description => 'Environment')
       FactoryGirl.create(:classification, :parent_id => category.id, :name => 'prod', :description => 'Production')
@@ -843,47 +830,78 @@ describe MiqExpression do
     attrs[:supported_by_sql].should == false
   end
 
-  context "Testing quick_search? methods" do
-    before :each do
-      @exp = {"=" => {"field" => "Vm-name", "value" => "test"}}
-      @qs_exp = {"=" => {"field" => "Vm-name", "value" => :user_input}}
-      @complex_qs_exp = {"AND" => [{"=" => {"field" => "Vm-name", "value" => "test"}}, {"=" => {"field" => "Vm-name", "value" => :user_input}}]}
+  describe ".quick_search?" do
+    it "detects false in hash" do
+      MiqExpression.quick_search?(exp).should be_false
     end
 
-    context "calling class method with array/hash" do
-      it "should return false if not a quick search" do
-        MiqExpression.quick_search?(@exp).should be_false
-      end
-      it "should return true if a quick search" do
-        MiqExpression.quick_search?(@qs_exp).should be_true
-      end
-      it "should return true if a complex quick search" do
-        MiqExpression.quick_search?(@complex_qs_exp).should be_true
-      end
+    it "detects in hash" do
+      MiqExpression.quick_search?(qs_exp).should be_true
     end
 
-    context "calling class method with MiqExpression object" do
-      it "should return false if not a quick search" do
-        MiqExpression.quick_search?(MiqExpression.new(@exp)).should be_false
-      end
-      it "should return true if a quick search" do
-        MiqExpression.quick_search?(MiqExpression.new(@qs_exp)).should be_true
-      end
-      it "should return true if a complex quick search" do
-        MiqExpression.quick_search?(MiqExpression.new(@complex_qs_exp)).should be_true
-      end
+    it "detects in complex hash" do
+      MiqExpression.quick_search?(complex_qs_exp).should be_true
     end
 
-    context "calling instance method" do
-      it "should return false if not a quick search" do
-        MiqExpression.new(@exp).quick_search?.should be_false
-      end
-      it "should return true if a quick search" do
-        MiqExpression.new(@qs_exp).quick_search?.should be_true
-      end
-      it "should return true if a complex quick search" do
-        MiqExpression.new(@complex_qs_exp).quick_search?.should be_true
-      end
+    it "detects false in miq expression" do
+      MiqExpression.quick_search?(MiqExpression.new(exp)).should be_false
+    end
+
+    it "detects in miq expression" do
+      MiqExpression.quick_search?(MiqExpression.new(qs_exp)).should be_true
+    end
+  end
+
+  describe "#quick_search?" do
+    it "detects false in hash" do
+      MiqExpression.new(exp).quick_search?.should be_false
+    end
+
+    it "detects in hash" do
+      MiqExpression.new(qs_exp).quick_search?.should be_true
+    end
+
+    it "detects in complex hash" do
+      MiqExpression.new(complex_qs_exp).quick_search?.should be_true
+    end
+  end
+
+  describe ".merge_where_clauses" do
+    it "returns nil for nil" do
+      expect(MiqExpression.merge_where_clauses(nil)).to be_nil
+    end
+
+    it "returns nil for blank" do
+      expect(MiqExpression.merge_where_clauses("")).to be_nil
+    end
+
+    it "returns nil for multiple empty arrays" do
+      expect(MiqExpression.merge_where_clauses([],[])).to be_nil
+    end
+
+    it "returns same string single results" do
+      expect(MiqExpression.merge_where_clauses("a=5")).to eq("a=5")
+    end
+
+    it "returns same string when concatinating blank results" do
+      expect(MiqExpression.merge_where_clauses("a=5", [])).to eq("a=5")
+    end
+
+    # would be nice if we returned a hash
+    it "returns a string if the only argument is a hash" do
+      expect(MiqExpression.merge_where_clauses({"vms.id" => 5})).to eq("\"vms\".\"id\" = 5")
+    end
+
+    it "concatinates 2 arrays" do
+      expect(MiqExpression.merge_where_clauses(["a=?",5], ["b=?",5])).to eq("(a=5) AND (b=5)")
+    end
+
+    it "concatinates 2 string" do
+      expect(MiqExpression.merge_where_clauses("a=5", "b=5")).to eq("(a=5) AND (b=5)")
+    end
+
+    it "concatinates a string and a hash" do
+      expect(MiqExpression.merge_where_clauses("a=5", {"vms.id" => 5})).to eq("(a=5) AND (\"vms\".\"id\" = 5)")
     end
   end
 end

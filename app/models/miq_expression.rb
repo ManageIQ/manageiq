@@ -911,11 +911,17 @@ class MiqExpression
   end
 
   def self.merge_where_clauses(*list)
-    l = list.compact.collect do |s|
+    list = list.compact.collect do |s|
       s = ActiveSupport::Deprecation.silence { MiqReport.send(:sanitize_sql_for_conditions, s) }
-      "(#{s})"
+    end.compact
+
+    if list.size == 0
+      nil
+    elsif list.size == 1
+      list.first
+    else
+      "(#{list.join(") AND (")})"
     end
-    l.empty? ? nil : l.join(" AND ")
   end
 
   def self.merge_includes(*incl_list)
