@@ -1,6 +1,14 @@
 require "spec_helper"
 
 describe MiqExpression do
+  let(:exp) { {"=" => {"field" => "Vm-name", "value" => "test"}} }
+  let(:qs_exp) { {"=" => {"field" => "Vm-name", "value" => :user_input}} }
+  let(:complex_qs_exp) do
+    {"AND" => [
+      {"=" => {"field" => "Vm-name", "value" => "test"}}, {"=" => {"field" => "Vm-name", "value" => :user_input}}
+    ]}
+  end
+
   # Based on FogBugz 6181: something INCLUDES []
   it "should test bracket characters" do
     exp    = MiqExpression.new("INCLUDES" => {"field" => "Vm-name", "value" => "/[]/"})
@@ -336,9 +344,7 @@ describe MiqExpression do
       hardware_sorted = details.select { |d| d.first.starts_with?("Hardware") }.sort
       hardware_sorted.map(&:first).should_not include("Hardware : Logical Cpus")
     end
-  end
 
-  context ".model_details" do
     it "should not contain duplicate tag fields" do
       category = FactoryGirl.create(:classification, :name => 'environment', :description => 'Environment')
       FactoryGirl.create(:classification, :parent_id => category.id, :name => 'prod', :description => 'Production')
@@ -834,47 +840,39 @@ describe MiqExpression do
     attrs[:supported_by_sql].should == false
   end
 
-  context "Testing quick_search? methods" do
-    before :each do
-      @exp = {"=" => {"field" => "Vm-name", "value" => "test"}}
-      @qs_exp = {"=" => {"field" => "Vm-name", "value" => :user_input}}
-      @complex_qs_exp = {"AND" => [{"=" => {"field" => "Vm-name", "value" => "test"}}, {"=" => {"field" => "Vm-name", "value" => :user_input}}]}
+  describe ".quick_search?" do
+    it "detects false in hash" do
+      MiqExpression.quick_search?(exp).should be_false
     end
 
-    context "calling class method with array/hash" do
-      it "should return false if not a quick search" do
-        MiqExpression.quick_search?(@exp).should be_false
-      end
-      it "should return true if a quick search" do
-        MiqExpression.quick_search?(@qs_exp).should be_true
-      end
-      it "should return true if a complex quick search" do
-        MiqExpression.quick_search?(@complex_qs_exp).should be_true
-      end
+    it "detects in hash" do
+      MiqExpression.quick_search?(qs_exp).should be_true
     end
 
-    context "calling class method with MiqExpression object" do
-      it "should return false if not a quick search" do
-        MiqExpression.quick_search?(MiqExpression.new(@exp)).should be_false
-      end
-      it "should return true if a quick search" do
-        MiqExpression.quick_search?(MiqExpression.new(@qs_exp)).should be_true
-      end
-      it "should return true if a complex quick search" do
-        MiqExpression.quick_search?(MiqExpression.new(@complex_qs_exp)).should be_true
-      end
+    it "detects in complex hash" do
+      MiqExpression.quick_search?(complex_qs_exp).should be_true
     end
 
-    context "calling instance method" do
-      it "should return false if not a quick search" do
-        MiqExpression.new(@exp).quick_search?.should be_false
-      end
-      it "should return true if a quick search" do
-        MiqExpression.new(@qs_exp).quick_search?.should be_true
-      end
-      it "should return true if a complex quick search" do
-        MiqExpression.new(@complex_qs_exp).quick_search?.should be_true
-      end
+    it "detects false in miq expression" do
+      MiqExpression.quick_search?(MiqExpression.new(exp)).should be_false
+    end
+
+    it "detects in miq expression" do
+      MiqExpression.quick_search?(MiqExpression.new(qs_exp)).should be_true
+    end
+  end
+
+  describe "#quick_search?" do
+    it "detects false in hash" do
+      MiqExpression.new(exp).quick_search?.should be_false
+    end
+
+    it "detects in hash" do
+      MiqExpression.new(qs_exp).quick_search?.should be_true
+    end
+
+    it "detects in complex hash" do
+      MiqExpression.new(complex_qs_exp).quick_search?.should be_true
     end
   end
 end
