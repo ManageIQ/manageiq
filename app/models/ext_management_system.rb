@@ -230,8 +230,7 @@ class ExtManagementSystem < ActiveRecord::Base
   delegate :hostname_required?, :to => :class
 
   def my_zone
-    zone = self.zone
-    zone.nil? || zone.name.blank? ? MiqServer.my_zone : zone.name
+    zone.try(:name).presence || MiqServer.my_zone
   end
   alias_method :zone_name, :my_zone
 
