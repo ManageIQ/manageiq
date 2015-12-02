@@ -1,6 +1,6 @@
 module MiqFilter
-  def self.records2table(records, options)
-    MiqReportable.records2table(records, options)
+  def self.records2table(records, only_columns)
+    MiqReportable.records2table(records, only_columns)
   end
 
   def self.determine_mode_for_find_children_of(reflection, obj, assoc)

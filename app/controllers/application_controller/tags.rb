@@ -234,7 +234,7 @@ module ApplicationController::Tags
   def tagging_build_screen
     @tagitems = session[:tag_db].find(session[:tag_items]).sort_by(&:name)  # Get the db records that are being tagged
     @view = get_db_view(session[:tag_db])       # Instantiate the MIQ Report view object
-    @view.table = MiqFilter.records2table(@tagitems, :only => @view.cols + ['id'])
+    @view.table = MiqFilter.records2table(@tagitems, @view.cols + ['id'])
 
     session[:mytags] = @tagitems[0].tagged_with(:cat => session[:userid])   # Start with the first items tags
     @tagitems.each do |item|
@@ -278,7 +278,7 @@ module ApplicationController::Tags
     @tagitems = session[:tag_db].find(session[:tag_items]).sort_by(&:name)  # Get the db records that are being tagged
 
     @view = get_db_view(session[:tag_db])       # Instantiate the MIQ Report view object
-    @view.table = MiqFilter.records2table(@tagitems, :only => @view.cols + ['id'])
+    @view.table = MiqFilter.records2table(@tagitems, @view.cols + ['id'])
 
     session[:assignments] = Classification.find_assigned_entries(@tagitems[0])    # Start with the first items assignments
     @tagitems.each do |item|
@@ -342,7 +342,7 @@ module ApplicationController::Tags
     @tagitems = @tagging.constantize.find(@object_ids).sort_by { |t| t.name.downcase } unless @object_ids.blank?
 
     @view = get_db_view(@tagging)               # Instantiate the MIQ Report view object
-    @view.table = MiqFilter.records2table(@tagitems, :only => @view.cols + ['id'])
+    @view.table = MiqFilter.records2table(@tagitems, @view.cols + ['id'])
 
     # Start with the first items assignments
     @edit[:new][:assignments] =

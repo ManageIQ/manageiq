@@ -1,22 +1,16 @@
 module MiqReportable
   # generate a ruport table from an array of db objects
-  def self.records2table(records, options)
+  def self.records2table(records, only_columns)
     return Ruport::Data::Table.new if records.blank?
 
-    data = records.map do|r|
-      options[:include]["categories"] = options[:include_categories] if options[:include] && options[:include_categories]
-      r.reportable_data_with_columns(:include     => options[:include],
-                                     :only        => options[:only],
-                                     :except      => options[:except],
-                                     :tag_filters => options[:tag_filters],
-                                     :methods     => options[:methods])
+    data_records = records.map do |r|
+      r.get_attributes(only_columns)
     end
 
-    data = data[0..options[:limit] - 1] if options[:limit] # apply limit after includes are processed
-    Ruport::Data::Table.new(:data         => data.collect(&:last).flatten,
-                            :column_names => data.collect(&:first).flatten.uniq,
-                            :record_class => options[:record_class],
-                            :filters      => options[:filters])
+    column_names = data_records.flat_map(&:keys).uniq
+
+    Ruport::Data::Table.new(:data         => data_records,
+                            :column_names => column_names)
   end
 
   # generate a ruport table from an array of hashes where the keys are the column names
