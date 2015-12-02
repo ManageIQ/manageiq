@@ -59,7 +59,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     sync_all_user_schedules
   end
 
-  def worker_setting_or_default(keys, default = nil)
+  def settings(keys, default = nil)
     keys    = [keys] unless keys.kind_of?(Array)
     value   = worker_settings.fetch_path(keys)
     value ||= begin
@@ -86,19 +86,19 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     schedule_category = :schedules_for_all_roles
 
     # Schedule - Log current system configuration
-    every = worker_setting_or_default(:log_active_configuration_interval, 1.days)
+    every = settings(:log_active_configuration_interval, 1.days)
     @schedules[:all] << system_schedule_every(every, :tags => [:vmdb_appliance_log_config, schedule_category]) do
       @queue.enq :vmdb_appliance_log_config
     end
 
     # Schedule - Log current database statistics and bloat
-    every = worker_setting_or_default(:log_database_statistics_interval, 1.days)
+    every = settings(:log_database_statistics_interval, 1.days)
     @schedules[:all] << system_schedule_every(every, :tags => [:log_all_database_statistics, schedule_category]) do
       @queue.enq :vmdb_database_log_all_database_statistics
     end
 
     # Schedule - Update Server Statistics
-    every = worker_setting_or_default(:server_stats_interval)
+    every = settings(:server_stats_interval)
     @schedules[:all] << system_schedule_every(
       every,
       :first_in => every,
@@ -106,7 +106,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     ) { @queue.enq :miq_server_status_update }
 
     # Schedule - Log Server and Worker Statistics
-    every = worker_setting_or_default(:server_log_stats_interval)
+    every = settings(:server_log_stats_interval)
     @schedules[:all] << system_schedule_every(
       every,
       :first_in => every,
@@ -114,7 +114,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     ) { @queue.enq :miq_server_worker_log_status }
 
     # Schedule - Periodic logging of database statistics
-    interval = worker_setting_or_default(:db_diagnostics_interval, 30.minutes)
+    interval = settings(:db_diagnostics_interval, 30.minutes)
     @schedules[:all] << system_schedule_every(
       interval,
       :first_in => 1.minute,
@@ -123,7 +123,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
     # Schedule - Periodic check for updates on appliances only
     if MiqEnvironment::Command.is_appliance?
-      interval = worker_setting_or_default(:yum_update_check, 12.hours)
+      interval = settings(:yum_update_check, 12.hours)
       @schedules[:all] << system_schedule_every(
         interval,
         :first_in => 1.minute,
@@ -133,7 +133,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
     # Schedule - Periodic resync of RHN Mirror
     if MiqEnvironment::Command.is_appliance? && MiqServer.my_server.has_assigned_role?("rhn_mirror")
-      interval = worker_setting_or_default(:resync_rhn_mirror, 12.hours)
+      interval = settings(:resync_rhn_mirror, 12.hours)
       @schedules[:all] << system_schedule_every(
         interval,
         :first_in => 1.minute,
@@ -148,37 +148,37 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     @schedules[:scheduler] ||= []
 
     # Schedule - Check for VMs to scan
-    every = worker_setting_or_default(:vm_scan_interval)
+    every = settings(:vm_scan_interval)
     @schedules[:scheduler] << system_schedule_every(every, :first_in => every) do
       @queue.enq :host_check_for_vms_to_scan
     end
 
     # Schedule - Check for timed out jobs
-    every = worker_setting_or_default(:job_timeout_interval)
+    every = settings(:job_timeout_interval)
     @schedules[:scheduler] << system_schedule_every(every, :first_in => every) do
       @queue.enq :job_check_jobs_for_timeout
     end
 
     # Schedule - Check for Retired Services
-    every = worker_setting_or_default(:service_retired_interval)
+    every = settings(:service_retired_interval)
     @schedules[:scheduler] << system_schedule_every(every, :first_in => every) do
       @queue.enq :service_retirement_check
     end
 
     # Schedule - Check for Retired VMs
-    every = worker_setting_or_default(:vm_retired_interval)
+    every = settings(:vm_retired_interval)
     @schedules[:scheduler] << system_schedule_every(every, :first_in => every) do
       @queue.enq :vm_retirement_check
     end
 
     # Schedule - Check for Retired Orchestration Stacks
-    every = worker_setting_or_default(:orchestration_stack_retired_interval)
+    every = settings(:orchestration_stack_retired_interval)
     @schedules[:scheduler] << system_schedule_every(every, :first_in => every) do
       @queue.enq :orchestration_stack_retirement_check
     end
 
     # Schedule - Periodic validation of authentications
-    every = worker_setting_or_default(:authentication_check_interval, 1.day)
+    every = settings(:authentication_check_interval, 1.day)
     @schedules[:scheduler] << system_schedule_every(every, :first_in => every) do
       # Queue authentication checks for CIs with credentials
       @queue.enq :host_authentication_check_schedule
@@ -187,14 +187,14 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     end
 
     # Schedule - Check for session timeouts
-    @schedules[:scheduler] << system_schedule_every(worker_setting_or_default(:session_timeout_interval)) do
+    @schedules[:scheduler] << system_schedule_every(settings(:session_timeout_interval)) do
       # Session is global to the region, therefore, run it only once on the scheduler's server
       @queue.enq :session_check_session_timeout
     end
 
     # Schedule - Check for rogue EVM snapshots
-    every               = worker_setting_or_default(:evm_snapshot_interval, 1.hour)
-    job_not_found_delay = worker_setting_or_default(:evm_snapshot_delete_delay_for_job_not_found, 1.hour)
+    every               = settings(:evm_snapshot_interval, 1.hour)
+    job_not_found_delay = settings(:evm_snapshot_delete_delay_for_job_not_found, 1.hour)
     @schedules[:scheduler] << system_schedule_every(every, :first_in => every) do
       @queue.enq [:job_check_for_evm_snapshots, job_not_found_delay]
     end
@@ -202,12 +202,12 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     # Queue a JobProxyDispatcher dispatch task at high priority unless there's already one on the queue
     # This dispatch method goes through all pending jobs to see if there's a free proxy available to work on one of them
     # It is very expensive to constantly do this, hence the need to ensure only one is on the queue at one time
-    @schedules[:scheduler] << system_schedule_every(worker_setting_or_default(:job_proxy_dispatcher_interval)) do
+    @schedules[:scheduler] << system_schedule_every(settings(:job_proxy_dispatcher_interval)) do
       @queue.enq :job_proxy_dispatcher_dispatch
     end
 
-    stale_interval = worker_setting_or_default(:job_proxy_dispatcher_stale_message_check_interval, 60.seconds)
-    threshold_seconds = worker_setting_or_default(:job_proxy_dispatcher_stale_message_timeout, 2.minutes)
+    stale_interval = settings(:job_proxy_dispatcher_stale_message_check_interval, 60.seconds)
+    threshold_seconds = settings(:job_proxy_dispatcher_stale_message_timeout, 2.minutes)
     @schedules[:scheduler] << system_schedule_every(stale_interval) do
       @queue.enq [:check_for_stuck_dispatch, threshold_seconds]
     end
@@ -218,14 +218,14 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     end
 
     # Schedule every 24 hours
-    at = worker_setting_or_default(:storage_file_collection_time_utc)
+    at = settings(:storage_file_collection_time_utc)
     if Time.now.strftime("%Y-%m-%d #{at}").to_time(:utc) < Time.now.utc
       time_at = 1.day.from_now.utc.strftime("%Y-%m-%d #{at}").to_time(:utc)
     else
       time_at = Time.now.strftime("%Y-%m-%d #{at}").to_time(:utc)
     end
     @schedules[:scheduler] << system_schedule_every(
-      worker_setting_or_default(:storage_file_collection_interval),
+      settings(:storage_file_collection_interval),
       :first_at => time_at
     ) { @queue.enq :storage_scan_timer }
 
@@ -294,24 +294,24 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     @schedules[:ems_metrics_coordinator] ||= []
 
     # Schedule - Performance Collection and Performance Purging
-    every    = worker_setting_or_default(:performance_collection_interval, 3.minutes)
-    first_in = worker_setting_or_default(:performance_collection_start_delay, 5.minutes)
+    every    = settings(:performance_collection_interval, 3.minutes)
+    first_in = settings(:performance_collection_start_delay, 5.minutes)
     @schedules[:ems_metrics_coordinator] << system_schedule_every(
       every,
       :first_in => first_in,
       :tags     => [:ems_metrics_coordinator, :perf_capture_timer]
     ) { @queue.enq :metric_capture_perf_capture_timer }
 
-    every    = worker_setting_or_default(:performance_realtime_purging_interval, 15.minutes)
-    first_in = worker_setting_or_default(:performance_realtime_purging_start_delay, 5.minutes)
+    every    = settings(:performance_realtime_purging_interval, 15.minutes)
+    first_in = settings(:performance_realtime_purging_start_delay, 5.minutes)
     @schedules[:ems_metrics_coordinator] << system_schedule_every(
       every,
       :first_in => first_in,
       :tags     => [:ems_metrics_coordinator, :purge_realtime_timer]
     ) { @queue.enq :metric_purging_purge_realtime_timer }
 
-    every    = worker_setting_or_default(:performance_rollup_purging_interval, 4.hours)
-    first_in = worker_setting_or_default(:performance_rollup_purging_start_delay, 5.minutes)
+    every    = settings(:performance_rollup_purging_interval, 4.hours)
+    first_in = settings(:performance_rollup_purging_start_delay, 5.minutes)
     @schedules[:ems_metrics_coordinator] << system_schedule_every(
       every,
       :first_in => first_in,
@@ -325,7 +325,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     @schedules[:event] ||= []
 
     # Schedule - Event Purging
-    interval = worker_setting_or_default(:ems_events_purge_interval, 1.day)
+    interval = settings(:ems_events_purge_interval, 1.day)
     @schedules[:event] << system_schedule_every(
       interval,
       :first_in => "300s",
@@ -333,7 +333,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     ) { @queue.enq :ems_event_purge_timer }
 
     # Schedule - Policy Event Purging
-    interval = worker_setting_or_default(:policy_events_purge_interval, 1.day)
+    interval = settings(:policy_events_purge_interval, 1.day)
     @schedules[:event] << system_schedule_every(
       interval,
       :first_in => "300s",
