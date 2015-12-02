@@ -381,11 +381,8 @@ class Storage < ActiveRecord::Base
   end
 
   cache_with_timeout(:count_of_vmdk_disk_files, 15.seconds) do
-    flat_clause  = "base_name NOT LIKE '%-flat.vmdk'"
-    delta_clause = "base_name NOT LIKE '%-delta.vmdk'"
-    snap_clause  = "AND #{ActiveRecordQueryParts.not_regexp("base_name", "%\-[0-9][0-9][0-9][0-9][0-9][0-9]\.vmdk")}"
-
-    StorageFile.where("ext_name = 'vmdk' AND #{flat_clause} AND #{delta_clause} #{snap_clause}")
+    # doesnt match *-111111.vmdk, *-flat.vmdk, or *-delta.vmdk
+    StorageFile.where(:ext_name => 'vmdk').where("base_name !~ '-([0-9]{6}|flat|delta)\\.vmdk$'")
       .group("storage_id").pluck("storage_id, COUNT(*) AS vm_count")
       .each_with_object(Hash.new(0)) { |(storage_id, count), h| h[storage_id] = count.to_i }
   end

@@ -18,18 +18,6 @@ module ActiveRecordQueryParts
     " FOR SHARE"
   end
 
-  def self.regexp(field, regex, qualifier = nil)
-    operator = "SIMILAR TO"
-
-    operator = "NOT #{operator}" if qualifier == :negate
-
-    "#{field} #{operator} '#{regex}'"
-  end
-
-  def self.not_regexp(field, regex)
-    regexp(field, regex, :negate)
-  end
-
   def self.glob_to_sql_like(text)
     text.tr!('*?', '%_')
     text

@@ -458,4 +458,23 @@ describe Storage do
       expect(metric_rollup.resource_name).to eq("test vm")
     end
   end
+
+  describe "#count_of_vmdk_disk_files" do
+    it "ignores the correct files" do
+      FactoryGirl.create(:storage_file, :storage_id => 1, :ext_name => 'vmdk', :base_name => "good-stuff.vmdk")
+      FactoryGirl.create(:storage_file, :storage_id => 2, :ext_name => 'dat', :base_name => "bad-stuff.dat")
+      FactoryGirl.create(:storage_file, :storage_id => 3, :ext_name => 'vmdk', :base_name => "bad-flat.vmdk")
+      FactoryGirl.create(:storage_file, :storage_id => 4, :ext_name => 'vmdk', :base_name => "bad-delta.vmdk")
+      FactoryGirl.create(:storage_file, :storage_id => 5, :ext_name => 'vmdk', :base_name => "bad-123456.vmdk")
+      FactoryGirl.create(:storage_file, :storage_id => 6, :ext_name => 'vmdk', :base_name => "good-11.vmdk")
+
+      counts = Storage.count_of_vmdk_disk_files
+      expect(counts[1]).to eq(1)
+      expect(counts[2]).to eq(0)
+      expect(counts[3]).to eq(0)
+      expect(counts[4]).to eq(0)
+      expect(counts[5]).to eq(0)
+      expect(counts[6]).to eq(1)
+    end
+  end
 end
