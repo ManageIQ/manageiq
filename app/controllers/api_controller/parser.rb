@@ -160,6 +160,14 @@ class ApiController
 
     # RBAC Aware type specific resource fetches
 
+    def parse_fetch_group(data)
+      if data
+        group_id = parse_group(data)
+        raise BadRequestError, "Missing Group identifier href, id or description" if group_id.nil?
+        resource_search(group_id, :groups, collection_class(:groups))
+      end
+    end
+
     def parse_fetch_role(data)
       if data
         role_id = parse_role(data)
