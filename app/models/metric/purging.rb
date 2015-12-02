@@ -50,49 +50,34 @@ module Metric::Purging
     end
   end
 
+  def self.scope_for_interval(interval)
+    interval == 'realtime' ? Metric : MetricRollup.where(:capture_interval_name => interval)
+  end
+
   def self.purge_count(older_than, interval)
-    klass, conditions = case interval
-                        when 'realtime' then [Metric,       {}]
-                        else             [MetricRollup, {:capture_interval_name => interval}]
-                        end
-
-    oldest = klass.select(:timestamp).where(conditions).order(:timestamp).first
-    oldest = oldest.nil? ? older_than : oldest.timestamp
-
-    klass.where(conditions).where(:timestamp => oldest..older_than).count
+    scope_for_interval(interval).where('timestamp <= ?', older_than).count
   end
 
   def self.purge(older_than, interval, window = nil, limit = nil)
     _log.info("Purging #{limit.nil? ? "all" : limit} #{interval} metrics older than [#{older_than}]...")
 
-    klass, conditions = case interval
-                        when 'realtime' then [Metric,       {}]
-                        else             [MetricRollup, {:capture_interval_name => interval}]
-                        end
+    scope = scope_for_interval(interval)
 
     total = 0
     total_tag_values = 0
     _, timings = Benchmark.realtime_block(:total_time) do
       window ||= (VMDB::Config.new("vmdb").config.fetch_path(:performance, :history, :purge_window_size) || 1000)
 
-      oldest = nil
-      Benchmark.realtime_block(:query_oldest) do
-        oldest = klass.select(:timestamp).where(conditions).order(:timestamp).first
-        oldest = oldest.nil? ? older_than : oldest.timestamp
-      end
-
-      loop do
-        batch, = Benchmark.realtime_block(:query_batch) do
-          klass.select(:id).where(conditions).where(:timestamp => (oldest..older_than)).limit(window)
+      while limit.nil? || total < limit
+        current_limit = limit.nil? ? window : [window, limit - total].min
+        ids, = Benchmark.realtime_block(:query_batch) do
+          scope.where('timestamp <= ?', older_than).limit(current_limit).pluck(:id)
         end
-        break if batch.empty?
-
-        ids = batch.collect(&:id)
-        ids = ids[0, limit - total] if limit && total + ids.length > limit
+        break if ids.empty?
 
         _log.info("Purging #{ids.length} #{interval} metrics.")
         count, = Benchmark.realtime_block(:purge_metrics) do
-          klass.delete_all(:id => ids)
+          scope.unscoped.delete_all(:id => ids)
         end
         total += count
 
@@ -103,7 +88,7 @@ module Metric::Purging
           _log.info("Purging associated tag values.")
           ids.each_slice(50) do |vp_ids|
             tv_count, = Benchmark.realtime_block(:purge_vim_performance_tag_values) do
-              VimPerformanceTagValue.delete_all(:metric_id => vp_ids, :metric_type => klass.name)
+              VimPerformanceTagValue.delete_all(:metric_id => vp_ids, :metric_type => scope.name)
             end
             count_tag_values += tv_count
             total_tag_values += tv_count
@@ -112,8 +97,6 @@ module Metric::Purging
         end
 
         yield(count, total) if block_given?
-
-        break if limit && total >= limit
       end
     end
 
