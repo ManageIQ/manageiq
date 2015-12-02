@@ -32,6 +32,17 @@ RSpec.describe "hosts API" do
         end.to change { host.reload.authentication_password(:default) }.to("abc123")
         expect_request_success
       end
+
+      it "sending non-credentials attributes will result in a bad request error" do
+        host = FactoryGirl.create(:host_with_authentication)
+        api_basic_authorize action_identifier(:hosts, :edit)
+        options = {:name => "new name"}
+
+        expect do
+          run_post hosts_url(host.id), gen_request(:edit, options)
+        end.not_to change { host.reload.name }
+        expect_bad_request
+      end
     end
 
     context "without an appropriate role" do
