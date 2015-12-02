@@ -3,12 +3,11 @@ module ManageIQ::Providers::Microsoft::InfraManager::VmOrTemplateShared::Scannin
     require 'MiqVm/miq_scvmm_vm'
 
     log_pref = "MIQ(#{self.class.name}##{__method__})"
-    vm_name  = name
-    $log.debug "#{log_pref} VM = #{vm_name}"
+    $log.debug "#{log_pref} VM = #{name}"
 
     begin
-      setup_for_ems_connection(vm_name, ost)
-      miq_vm = MiqScvmmVm.new(vm_name, ost)
+      setup_for_ems_connection(name, ost)
+      miq_vm = MiqScvmmVm.new(name, ost)
       scan_via_miq_vm(miq_vm, ost)
     rescue => err
       $log.error "#{log_pref}: #{err}"

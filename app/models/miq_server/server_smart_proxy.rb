@@ -115,7 +115,6 @@ module MiqServer::ServerSmartProxy
     job    = Job.find_by_guid(ost.taskid)
     _log.debug "#{target.name} (#{target.class.name})"
     begin
-      ost.args[0]  = target.name
       ost.args[1]  = YAML.load(ost.args[1]) # TODO: YAML.dump'd in call_scan - need it be?
       ost.scanData = ost.args[1].kind_of?(Hash) ? ost.args[1] : {}
       ost.config = OpenStruct.new(
