@@ -100,12 +100,24 @@ describe Rbac do
           expect(results).to eq []
         end
 
-        it "can see descendant tenant's Vm" do
-          child_tenant         = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
-          @owned_vm.tenant     = child_tenant
-          @owned_vm.save
+        it "can see descendant tenant's Vms" do
+          child_tenant = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
+          child_group  = FactoryGirl.create(:miq_group, :tenant => child_tenant)
+          @owned_vm.update_attributes(:tenant_id => child_tenant.id, :miq_group_id => child_group.id)
+          expect(@owned_vm.tenant).to eq child_tenant
+
           results, = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @owner_group.id)
           expect(results).to eq [@owned_vm]
+        end
+
+        it "can see descendant tenant's Openstack Vm" do
+          child_tenant         = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
+          child_tenant_group   = FactoryGirl.create(:miq_group, :tenant => child_tenant)
+          owned_openstack_vm   = FactoryGirl.create(:vm_openstack, :tenant => child_tenant, :miq_group => child_tenant_group)
+          expect(owned_openstack_vm.tenant).to eq child_tenant
+
+          results, = Rbac.search(:class => "ManageIQ::Providers::Openstack::CloudManager::Vm", :results_format => :objects, :miq_group_id => @owner_group.id)
+          expect(results).to eq [owned_openstack_vm]
         end
       end
 
