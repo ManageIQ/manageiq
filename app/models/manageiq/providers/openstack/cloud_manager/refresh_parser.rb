@@ -433,11 +433,11 @@ module ManageIQ::Providers
       if (sz = flavor[:root_disk_size]) == 0
         sz = 1.gigabytes
       end
-      add_instance_disk(disks, sz, dev.dup, "Root disk")
+      add_instance_disk(disks, sz, dev.dup,       "Root disk")
       sz = flavor[:ephemeral_disk_size]
-      add_instance_disk(disks, sz, dev.succ!.dup, "Ephemeral disk")
+      add_instance_disk(disks, sz, dev.succ!.dup, "Ephemeral disk") unless sz.zero?
       sz = flavor[:swap_disk_size]
-      add_instance_disk(disks, sz, dev.succ!.dup, "Swap disk")
+      add_instance_disk(disks, sz, dev.succ!.dup, "Swap disk")      unless sz.zero?
 
       return uid, new_result
     end

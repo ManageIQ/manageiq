@@ -143,16 +143,28 @@ module Openstack
       1
     end
 
+    def all_vms_and_stacks
+      all_vms = compute_data.servers + compute_data.servers_from_snapshot
+      all_vms += orchestration_data.stacks if orchestration_supported?
+      all_vms
+    end
+
     def vms_count
-      # VMs + Vms created from snapshots
-      vms_count = compute_data.servers.count + compute_data.servers_from_snapshot.count
-      vms_count += orchestration_data.stacks.count if orchestration_supported?
-      vms_count
+      # VMs + Vms created from snapshots + stacks (each stack has one vm)
+      all_vms_and_stacks.count
     end
 
     def disks_count
       # There are 3 disks per each vm: Root disk, Ephemeral disk and Swap disk
-      vms_count * 3
+      # TODO(lsmola) env builder has broken image, so it doesn't really create root disk and others from flavor,
+      # otherwise this needs to contain also number of attached volumes.
+      all_vms_and_stacks.sum do |vm_or_stack|
+        flavor = compute_data.flavors.detect do |x|
+          x[:name] == vm_or_stack[:__flavor_name] || x[:name] == vm_or_stack.fetch_path(:parameters, "instance_type")
+        end
+        # Count only disks that have size bigger that 0
+        (flavor[:disk] > 0 ? 1 : 0) + (flavor[:ephemeral] > 0 ? 1 : 0) + (flavor[:swap] > 0 ? 1 : 0)
+      end
     end
 
     def availability_zones_count
