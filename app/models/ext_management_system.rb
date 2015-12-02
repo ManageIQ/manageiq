@@ -111,6 +111,7 @@ class ExtManagementSystem < ActiveRecord::Base
   virtual_column :total_vms_suspended,     :type => :integer
 
   alias_method :clusters, :ems_clusters # Used by web-services to return clusters as the property name
+  alias_attribute :to_s, :name
 
   EMS_INFRA_DISCOVERY_TYPES = {
     'vmware'    => 'virtualcenter',
@@ -223,17 +224,10 @@ class ExtManagementSystem < ActiveRecord::Base
     'ems_operations'
   end
 
-  def to_s
-    name
-  end
-
-  def hostname_required?
-    self.class.hostname_required?
-  end
-
   def self.hostname_required?
     true
   end
+  delegate :hostname_required?, :to => :class
 
   def my_zone
     zone = self.zone
