@@ -9,39 +9,36 @@ describe MiqExpression do
     ]}
   end
 
-  # Based on FogBugz 6181: something INCLUDES []
-  it "should test bracket characters" do
-    exp    = MiqExpression.new("INCLUDES" => {"field" => "Vm-name", "value" => "/[]/"})
-    # puts "Expression in Human: #{exp.to_human}"
-    # puts "Expression in SQL:   #{exp.to_sql}"
-    clause = exp.to_ruby
-    # puts "Expression in Ruby:  #{clause}"
-    # puts
+  describe ".to_ruby" do
+    # Based on FogBugz 6181: something INCLUDES []
+    it "detects value empty array" do
+      exp = MiqExpression.new("INCLUDES" => {"field" => "Vm-name", "value" => "/[]/"})
+      expect(exp.to_ruby).to eq("<value ref=vm, type=string>/virtual/name</value> =~ /\\/\\[\\]\\//")
+    end
   end
 
-  it "should test numeric set expressions" do
-    filter = YAML.load '--- !ruby/object:MiqExpression
+  it "supports yaml" do
+    exp = YAML.load '--- !ruby/object:MiqExpression
     exp:
       "=":
         field: Host-enabled_inbound_ports
         value: "22,427,5988,5989"
     '
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
-    filter.to_ruby.should == '<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> == [22,427,5988,5989]'
+    expect(exp.to_ruby).to eq('<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> == [22,427,5988,5989]')
+  end
 
+  it "tests numeric set expressions" do
+    exp = MiqExpression.new("=" => {"field" => "Host-enabled_inbound_ports", "value" => "22,427,5988,5989"})
+    expect(exp.to_ruby).to eq('<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> == [22,427,5988,5989]')
+  end
+
+  it "expands ranges" do
     filter = YAML.load '--- !ruby/object:MiqExpression
     exp:
       INCLUDES ALL:
         field: Host-enabled_inbound_ports
         value: 22, 427, 5988, 5989, 1..4
     '
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
     filter.to_ruby.should == '(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> & [1,2,3,4,22,427,5988,5989]) == [1,2,3,4,22,427,5988,5989]'
 
     filter = YAML.load '--- !ruby/object:MiqExpression
@@ -50,10 +47,7 @@ describe MiqExpression do
         field: Host-enabled_inbound_ports
         value: 22, 427, 5988, 5989, 1..3
     '
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
+
     filter.to_ruby.should == '([1,2,3,22,427,5988,5989] - <value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value>) != [1,2,3,22,427,5988,5989]'
 
     filter = YAML.load '--- !ruby/object:MiqExpression
@@ -62,10 +56,6 @@ describe MiqExpression do
         field: Host-enabled_inbound_ports
         value: 22
     '
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
     filter.to_ruby.should == '(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> - [22]) == []'
 
     filter = YAML.load '--- !ruby/object:MiqExpression
@@ -74,10 +64,6 @@ describe MiqExpression do
         field: Host-enabled_inbound_ports
         value: 22
     '
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
     filter.to_ruby.should == '(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> - [22]) == []'
   end
 
@@ -287,25 +273,6 @@ describe MiqExpression do
     Condition.subst(filter.to_ruby, data, {}).should == '"VMware, Inc." =~ /^[^.]*ware.*$/'
   end
 
-  it "should test atom error" do
-    MiqExpression.atom_error("Host-xx", "regular expression matches", '123[)').should_not be_false
-
-    MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '').should_not be_false
-    MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '123abc').should_not be_false
-    MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '123').should be_false
-    MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '123.456').should be_false
-    MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '2,123.456').should be_false
-
-    MiqExpression.atom_error("Vm-cpu_limit", "=", '').should_not be_false
-    MiqExpression.atom_error("Vm-cpu_limit", "=", '123.5').should_not be_false
-    MiqExpression.atom_error("Vm-cpu_limit", "=", '123.5.abc').should_not be_false
-    MiqExpression.atom_error("Vm-cpu_limit", "=", '123').should be_false
-    MiqExpression.atom_error("Vm-cpu_limit", "=", '2,123').should be_false
-
-    MiqExpression.atom_error("Vm-created_on", "=", Time.now.to_s).should be_false
-    MiqExpression.atom_error("Vm-created_on", "=", "123456").should_not be_false
-  end
-
   it "should test numbers with methods" do
     filter = YAML.load '--- !ruby/object:MiqExpression
     context_type:
@@ -332,6 +299,29 @@ describe MiqExpression do
     # puts "Expression in Ruby:  #{filter.to_ruby}"
     # puts
     filter.to_ruby.should == '<value ref=vm, type=integer>/virtual/used_disk_storage</value> >= 1048576000'
+  end
+
+  # end to_ruby
+
+  describe ".atom_error" do
+    it "should test atom error" do
+      MiqExpression.atom_error("Host-xx", "regular expression matches", '123[)').should_not be_false
+
+      MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '').should_not be_false
+      MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '123abc').should_not be_false
+      MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '123').should be_false
+      MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '123.456').should be_false
+      MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '2,123.456').should be_false
+
+      MiqExpression.atom_error("Vm-cpu_limit", "=", '').should_not be_false
+      MiqExpression.atom_error("Vm-cpu_limit", "=", '123.5').should_not be_false
+      MiqExpression.atom_error("Vm-cpu_limit", "=", '123.5.abc').should_not be_false
+      MiqExpression.atom_error("Vm-cpu_limit", "=", '123').should be_false
+      MiqExpression.atom_error("Vm-cpu_limit", "=", '2,123').should be_false
+
+      MiqExpression.atom_error("Vm-created_on", "=", Time.now.to_s).should be_false
+      MiqExpression.atom_error("Vm-created_on", "=", "123456").should_not be_false
+    end
   end
 
   context "._model_details" do
