@@ -1,7 +1,7 @@
 class ApiController
   module Hosts
     CREDENTIALS_ATTR = "credentials"
-    AUTH_TYPE_ATTR = "type"
+    AUTH_TYPE_ATTR = "auth_type"
     DEFAULT_AUTH_TYPE = "default"
 
     def edit_resource_hosts(type, id, data = {})
