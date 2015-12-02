@@ -329,7 +329,14 @@ iframe, .iframe {
 /* adds scrollbar to group switcher  */
 
 .scrollable-menu {
-    height: auto;
-    max-height: 400px;
-    overflow-x: hidden;
+  height: auto;
+  max-height: 400px;
+  overflow-x: hidden;
+}
+
+/* make it possible to drop a dashboard widget into a previously empty column */
+
+.db_widgets_target {
+  padding-top: 20px;  // same as .panel's margin-bottom
+  min-height: 78px; // .panel.height + (2 * 20px)
 }
