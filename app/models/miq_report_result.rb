@@ -171,7 +171,7 @@ class MiqReportResult < ActiveRecord::Base
     html_string = generate_pdf_header(
       :title     => name.gsub(/'/, '\\\\\&'), # Escape single quotes
       :page_size => report.page_size,
-      :run_date  => in_user_timezone { format_timezone(last_run_on, Time.zone, "gtl") }
+      :run_date  => format_timezone(last_run_on, user_timezone, "gtl")
     )
 
     html_string << report_build_html_table(report_results, html_rows.join)  # Build the html report table using all html rows
@@ -332,14 +332,6 @@ class MiqReportResult < ActiveRecord::Base
   end
 
   private
-
-  def in_user_timezone
-    curr_tz = Time.zone # Save current time zone setting
-    Time.zone = user_timezone
-    result = yield
-    Time.zone = curr_tz # Restore original time zone setting
-    result
-  end
 
   def user_timezone
     user = userid.include?("|") ? nil : User.find_by_userid(userid)
