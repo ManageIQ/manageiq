@@ -2,9 +2,9 @@
 # Description: provide the dynamic list content from available flavors
 #
 flavor_list = {}
-service_template = $evm.root.attributes["service_template"]
-if service_template.respond_to?(:orchestration_manager) && service_template.orchestration_manager
-  service_template.orchestration_manager.flavors.each { |f| flavor_list[f.name] = f.name }
+service = $evm.root.attributes["service_template"] || $evm.root.attributes["service"]
+if service.respond_to?(:orchestration_manager) && service.orchestration_manager
+  service.orchestration_manager.flavors.each { |f| flavor_list[f.name] = f.name }
 end
 flavor_list[nil] = flavor_list.empty? ? "<None>" : "<Choose>"
 
