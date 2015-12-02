@@ -392,7 +392,6 @@ module ManageIQ::Providers::Microsoft
                  when "HostDrive" then process_vm_physical_dvd_drive(dvdprops)
                  when "ISOImage"  then process_iso_image(vm)
                  end
-
       devices.compact
     end
 

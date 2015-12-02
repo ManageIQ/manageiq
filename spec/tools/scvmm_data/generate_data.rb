@@ -3,11 +3,11 @@ ARGV.shift if ARGV[0] == '--'
 opts = Trollop.options do
   banner "Generate SCVMM test data.\n\nUsage: rails runner #{$PROGRAM_NAME} [-- options]\n\nOptions:\n\t"
   opt :username,  "User Name",  :type => :string
-  opt :ipaddress, "IP Address", :type => :string
+  opt :hostname,  "IP Address", :type => :string
   opt :port,      "Port",       :type => :integer
 end
 Trollop.die "username must be passed"  unless opts[:username_given]
-Trollop.die "ipaddress must be passed" unless opts[:ipaddress_given]
+Trollop.die "hostname must be passed" unless opts[:hostname]
 
 require 'io/console' if RUBY_VERSION < "2"
 STDOUT.write("Password: ")
@@ -16,9 +16,10 @@ puts
 
 puts "Connecting"
 win_rm = ManageIQ::Providers::Microsoft::InfraManager.raw_connect(
-  opts[:username],
-  password,
-  ManageIQ::Providers::Microsoft::InfraManager.auth_url(opts[:ipaddress], opts[:port])
+  ManageIQ::Providers::Microsoft::InfraManager.auth_url(opts[:hostname], opts[:port]),
+  "ssl",
+  :user => opts[:username],
+  :pass => password
 )
 
 puts "Collecting"
