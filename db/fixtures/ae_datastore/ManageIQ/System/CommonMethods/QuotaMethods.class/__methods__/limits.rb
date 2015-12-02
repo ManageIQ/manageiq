@@ -77,6 +77,8 @@ def set_root_limit_values(quota_max, quota_warn)
 end
 
 def model_and_tag_quota_values
+  quota_max = {}
+  quota_warn = {}
   QUOTA_ATTRIBUTES.each do |name|
     quota_max[name.to_sym] = quota_values("max_#{name}", "quota_max_#{name}".to_sym)
     quota_warn[name.to_sym] = quota_values("warn_#{name}", "quota_warn_#{name}".to_sym)
