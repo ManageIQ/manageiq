@@ -335,10 +335,14 @@ class MiqReportResult < ActiveRecord::Base
 
   def in_user_timezone
     curr_tz = Time.zone # Save current time zone setting
-    user = userid.include?("|") ? nil : User.find_by_userid(userid)
-    Time.zone = user ? user.get_timezone : MiqServer.my_server.server_timezone
+    Time.zone = user_timezone
     result = yield
     Time.zone = curr_tz # Restore original time zone setting
     result
+  end
+
+  def user_timezone
+    user = userid.include?("|") ? nil : User.find_by_userid(userid)
+    user ? user.get_timezone : MiqServer.my_server.server_timezone
   end
 end
