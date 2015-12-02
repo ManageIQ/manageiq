@@ -43,6 +43,36 @@ RSpec.describe "hosts API" do
         end.not_to change { host.reload.name }
         expect_bad_request
       end
+
+      it "can update passwords on multiple hosts by href" do
+        host1 = FactoryGirl.create(:host_with_authentication)
+        host2 = FactoryGirl.create(:host_with_authentication)
+        api_basic_authorize action_identifier(:hosts, :edit)
+        options = [
+          {:href => hosts_url(host1.id), :credentials => {:password => "abc123"}},
+          {:href => hosts_url(host2.id), :credentials => {:password => "def456"}}
+        ]
+
+        run_post hosts_url, gen_request(:edit, options)
+        expect_request_success
+        expect(host1.reload.authentication_password(:default)).to eq("abc123")
+        expect(host2.reload.authentication_password(:default)).to eq("def456")
+      end
+
+      it "can update passwords on multiple hosts by id" do
+        host1 = FactoryGirl.create(:host_with_authentication)
+        host2 = FactoryGirl.create(:host_with_authentication)
+        api_basic_authorize action_identifier(:hosts, :edit)
+        options = [
+          {:id => host1.id, :credentials => {:password => "abc123"}},
+          {:id => host2.id, :credentials => {:password => "def456"}}
+        ]
+
+        run_post hosts_url, gen_request(:edit, options)
+        expect_request_success
+        expect(host1.reload.authentication_password(:default)).to eq("abc123")
+        expect(host2.reload.authentication_password(:default)).to eq("def456")
+      end
     end
 
     context "without an appropriate role" do

@@ -241,7 +241,6 @@
         :disabled: true
       - :name: edit
         :identifier: host_edit
-        :disabled: true
       - :name: refresh
         :identifier: host_refresh
         :disabled: true
