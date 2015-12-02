@@ -172,20 +172,30 @@ describe MiqScheduleWorker::Runner do
           end
         end
 
-        context "#system_schedule_every" do
+        context "#every" do
           it "catches an error on nil first arg" do
-            $log.should_receive(:error).once
-            @schedule_worker.system_schedule_every(nil) {}
+            expect($log).to receive(:error)
+            @schedule_worker.with_role(:all)
+            @schedule_worker.every(nil) {}
           end
 
           it "catches an error on 0 first arg" do
-            $log.should_receive(:error).once
-            @schedule_worker.system_schedule_every(0) {}
+            expect($log).to receive(:error)
+            @schedule_worker.with_role(:all)
+            @schedule_worker.every(0) {}
           end
 
           it "works on nil :first_in" do
             $log.should_receive(:error).never
-            @schedule_worker.system_schedule_every(1, :first_in => nil) {}
+            expect_any_instance_of(Rufus::Scheduler).to receive(:schedule_every).with(1, :first_in => nil)
+            @schedule_worker.with_role(:all)
+            @schedule_worker.every(1, :first_in => nil) {}
+          end
+
+          it "populates :first_in for default interval" do
+            expect_any_instance_of(Rufus::Scheduler).to receive(:schedule_every).with(1, :first_in => 1)
+            @schedule_worker.with_role(:all)
+            @schedule_worker.every(1, :first_in => :interval) {}
           end
         end
 
