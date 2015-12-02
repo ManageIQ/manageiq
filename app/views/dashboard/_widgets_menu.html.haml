@@ -28,5 +28,5 @@
                   = item[:text]
 
   - if @widgets_menu[:allow_reset]
-    %button.disabled.btn.btn-default.dropdown-toggle{'data-toggle' => 'dropdown', :title => _('Reset Dashboard Widgets to the defaults'), 'data-click' => 'reset'}
+    %button.btn.btn-default{:title => _('Reset Dashboard Widgets to the defaults'), 'data-click' => 'reset'}
       %img{:src => '/images/dashboard/reset_widgets.png'}
