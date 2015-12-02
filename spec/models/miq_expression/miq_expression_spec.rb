@@ -1,15 +1,6 @@
 require "spec_helper"
 
 describe MiqExpression do
-  before(:each) do
-    # Create a single host and vm for searching
-    @host = FactoryGirl.create(:host)
-    @host.filesystems << FactoryGirl.create(:filesystem)
-    @host.save
-
-    @vm   = FactoryGirl.create(:vm_vmware)
-  end
-
   # Based on FogBugz 6181: something INCLUDES []
   it "should test bracket characters" do
     exp    = MiqExpression.new("INCLUDES" => {"field" => "Vm-name", "value" => "/[]/"})
