@@ -297,11 +297,11 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def non_clustered_hosts
-    hosts.select { |h| h.ems_cluster.nil? }
+    hosts.where(:ems_cluster_id => nil)
   end
 
   def clustered_hosts
-    hosts.select { |h| !h.ems_cluster.nil? }
+    hosts.where.not(:ems_cluster_id => nil)
   end
 
   def clear_association_cache_with_storages
