@@ -13,11 +13,13 @@ class ApiController
                                     :token       => @auth_token,
                                     :x_miq_group => request.env['HTTP_X_MIQ_GROUP'],
                                     :user        => @auth_user)
-      group = @auth_user_obj.current_group
-      log_request("Authorization", :user   => @auth_user,
-                                   :group  => group.description,
-                                   :role   => group.miq_user_role_name,
-                                   :tenant => group.tenant.name)
+      if @auth_user_obj
+        group = @auth_user_obj.current_group
+        log_request("Authorization", :user   => @auth_user,
+                                     :group  => group.description,
+                                     :role   => group.miq_user_role_name,
+                                     :tenant => group.tenant.name)
+      end
     end
 
     def log_api_request
