@@ -14,4 +14,10 @@ class ContainerService < ActiveRecord::Base
   has_many :container_nodes, -> { distinct }, :through => :container_groups
 
   acts_as_miq_taggable
+
+  virtual_column :container_groups_count, :type => :integer
+
+  def container_groups_count
+    number_of(:container_groups)
+  end
 end

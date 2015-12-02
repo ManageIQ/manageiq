@@ -23,6 +23,7 @@ cols:
 - service_type
 - portal_ip
 - session_affinity
+- container_groups_count
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -44,6 +45,7 @@ col_order:
 - service_type
 - portal_ip
 - session_affinity
+- container_groups_count
 
 # Column titles, in order
 headers:
@@ -53,6 +55,7 @@ headers:
 - Type
 - Portal IP
 - Session Affinity
+- Pods
 
 # Condition(s) string for the SQL query
 conditions: 
@@ -65,6 +68,7 @@ sortby:
 - name
 - portal_ip
 - session_affinity
+- container_groups_count
 
 # Group rows (y=yes,n=no,c=count)
 group: n
