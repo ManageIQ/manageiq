@@ -9,5 +9,5 @@ object:
     description: 
   fields:
   - execute:
-      value: task_finished(object => 'service_reconfigure_task', message =>
-        'Service Reconfigured Successfully')
+      value: task_finished(object => 'service_reconfigure_task', message => 'Service
+        Reconfigured Successfully')

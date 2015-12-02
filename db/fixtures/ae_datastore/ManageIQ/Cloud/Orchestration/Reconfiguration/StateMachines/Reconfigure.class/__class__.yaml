@@ -168,7 +168,8 @@ object:
       condition: 
       on_entry: update_servicereconfigure_status(status => 'Processing Post1 Customizations')
       on_exit: update_servicereconfigure_status(status => 'Processed Post1 Customizations')
-      on_error: update_servicereconfigure_status(status => 'Error Processing Post1 Customizations')
+      on_error: update_servicereconfigure_status(status => 'Error Processing Post1
+        Customizations')
       max_retries: '100'
       max_time: 
   - field:
@@ -188,7 +189,8 @@ object:
       condition: 
       on_entry: update_servicereconfigure_status(status => 'Processing Post2 Customizations')
       on_exit: update_servicereconfigure_status(status => 'Processed Post2 Customizations')
-      on_error: update_servicereconfigure_status(status => 'Error Processing Post2 Customizations')
+      on_error: update_servicereconfigure_status(status => 'Error Processing Post2
+        Customizations')
       max_retries: 
       max_time: 
   - field:
@@ -208,7 +210,8 @@ object:
       condition: 
       on_entry: update_servicereconfigure_status(status => 'Processing Post3 Customizations')
       on_exit: update_servicereconfigure_status(status => 'Processed Post3 Customizations')
-      on_error: update_servicereconfigure_status(status => 'Error Processing Post3 Customizations')
+      on_error: update_servicereconfigure_status(status => 'Error Processing Post3
+        Customizations')
       max_retries: 
       max_time: 
   - field:
@@ -228,7 +231,8 @@ object:
       condition: 
       on_entry: update_servicereconfigure_status(status => 'Processing Post4 Customizations')
       on_exit: update_servicereconfigure_status(status => 'Processed Post4 Customizations')
-      on_error: update_servicereconfigure_status(status => 'Error Processing Post4 Customizations')
+      on_error: update_servicereconfigure_status(status => 'Error Processing Post4
+        Customizations')
       max_retries: 
       max_time: 
   - field:
@@ -248,7 +252,8 @@ object:
       condition: 
       on_entry: update_servicereconfigure_status(status => 'Processing Post5 Customizations')
       on_exit: update_servicereconfigure_status(status => 'Processed Post5 Customizations')
-      on_error: update_servicereconfigure_status(status => 'Error Processing Post5 Customizations')
+      on_error: update_servicereconfigure_status(status => 'Error Processing Post5
+        Customizations')
       max_retries: 
       max_time: 
   - field:
