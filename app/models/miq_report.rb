@@ -149,4 +149,8 @@ class MiqReport < ActiveRecord::Base
   def self.from_hash(h)
     new(h)
   end
+
+  def page_size
+    rpt_options.try(:fetch_path, :pdf, :page_size) || "a4"
+  end
 end
