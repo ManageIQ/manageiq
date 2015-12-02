@@ -38,12 +38,6 @@ if (typeof(ManageIQ) === 'undefined') {
       formatters: {}, // functions corresponding to MiqReport::Formatting
     },
     grids: {}, // stored grids on the screen
-    layout: { // abstraction over dhxLayout(B)
-      sidebar:   null,
-      toolbar:   null,
-      content:   null,
-      paginator: null
-    },
     mouse: {
       x: null, // mouse X coordinate for popup menu
       y: null, // mouse Y coordinate for popup menu
