@@ -1607,8 +1607,8 @@ module ApplicationController::CiProcessing
     cluster_button_operation('scan', 'Analysis')
   end
 
-  def each_host(hosts, task_name)
-    Host.where(:id => hosts).order("lower(name)").each do |host|
+  def each_host(host_ids, task_name)
+    Host.where(:id => host_ids).order("lower(name)").each do |host|
       begin
         yield host
       rescue => err
