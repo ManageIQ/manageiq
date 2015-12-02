@@ -855,9 +855,9 @@ module ApplicationController::CiProcessing
               ManageIQ::Providers::Amazon::CloudManager.discover_queue(@userid, @password)
             end
           end
-        rescue StandardError => bang
-          #       @flash_msg = "'Host Discovery' returned: " + bang.message; @flash_error = true
-          add_flash(_("%s Discovery returned: ") % title << bang.message, :error)
+        rescue => err
+          #       @flash_msg = "'Host Discovery' returned: " + err.message; @flash_error = true
+          add_flash(_("%s Discovery returned: ") % title << err.message, :error)
           render :action => 'discover'
           return
         else
@@ -958,8 +958,8 @@ module ApplicationController::CiProcessing
       model_name = ui_lookup(:model => klass.name)  # Lookup friendly model name in dictionary
       begin
         elem.send(task.to_sym) if elem.respond_to?(task)    # Run the task
-      rescue StandardError => bang
-        add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => model_name, :name => description, :task => (display_name || task)} << bang.message,
+      rescue => err
+        add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => model_name, :name => description, :task => (display_name || task)} << err.message,
                   :error)
       else
         if task == "destroy"
@@ -979,7 +979,7 @@ module ApplicationController::CiProcessing
     begin
       record = find_by_id_filtered(klass, from_cid(id))
     rescue ActiveRecord::RecordNotFound
-    rescue StandardError => @bang
+    rescue => @bang
       if @explorer
         self.x_node = "root"
         add_flash(@bang.message, :error, true)
@@ -1248,8 +1248,8 @@ module ApplicationController::CiProcessing
     options = {:ids => objs, :task => task, :userid => session[:userid]}
     options[:snap_selected] = session[:snap_selected] if task == "remove_snapshot" || task == "revert_to_snapshot"
     klass.process_tasks(options)
-  rescue StandardError => bang
-    add_flash(_("Error during '%s': ") % task << bang.message, :error)
+  rescue => err
+    add_flash(_("Error during '%s': ") % task << err.message, :error)
   else
     add_flash(_("%{task} initiated for %{model} from the CFME Database") %
       {:task  => display_name ? display_name.titleize : Dictionary.gettext(task, :type => :task).titleize,
@@ -1283,8 +1283,8 @@ module ApplicationController::CiProcessing
     options = {:ids => providers, :task => task, :userid => session[:userid]}
     kls = ManageIQ::Providers::Foreman::ConfigurationManager.find_by_id(providers.first).class.base_model
     ManageIQ::Providers::Foreman::ConfigurationManager.process_tasks(options)
-  rescue StandardError => bang                            # Catch any errors
-    add_flash(_("Error during '%s': ") % task << bang.message, :error)
+  rescue => err
+    add_flash(_("Error during '%s': ") % task << err.message, :error)
   else
     add_flash(_("%{task} initiated for %{count_model} (%{controller}) from the CFME Database") %
       {:task        => Dictionary.gettext(task, :type => :task).titleize.gsub("Ems",
@@ -1522,8 +1522,8 @@ module ApplicationController::CiProcessing
         cluster_name = cluster.name
         begin
           cluster.send(task.to_sym) if cluster.respond_to?(task)    # Run the task
-        rescue StandardError => bang
-          add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "EmsCluster"), :name => cluster_name, :task => task} << bang.message, :error)  # Push msg and error flag
+        rescue => err
+          add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "EmsCluster"), :name => cluster_name, :task => task} << err.message, :error)  # Push msg and error flag
         else
           add_flash(_("%{model}: %{task} successfully initiated") % {:model => ui_lookup(:model => "EmsCluster"), :task => task})
         end
@@ -1549,8 +1549,8 @@ module ApplicationController::CiProcessing
         rp_name = rp.name
         begin
           rp.send(task.to_sym) if rp.respond_to?(task)    # Run the task
-        rescue StandardError => bang
-          add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "ResourcePool"), :name => rp_name, :task => task} << bang.message, :error)
+        rescue => err
+          add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "ResourcePool"), :name => rp_name, :task => task} << err.message, :error)
         else
           add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model => ui_lookup(:model => "ResourcePool"), :name => rp_name, :task => task})
         end
@@ -1611,12 +1611,13 @@ module ApplicationController::CiProcessing
     Host.where(:id => hosts).order("lower(name)").each do |host|
       begin
         yield host
-      rescue StandardError => bang
-        add_flash(_("%{model} \"%{name}\": Error during '%{task}': %{message}") % {
-                    :model => ui_lookup(:model => "Host"), 
-                    :name => host.name, 
-                    :task => task_name,
-                    :message => bang.message 
+      rescue => err
+        add_flash(_("%{model} \"%{name}\": Error during '%{task}': %{message}") %
+                  {
+                    :model   => ui_lookup(:model => "Host"),
+                    :name    => host.name,
+                    :task    => task_name,
+                    :message => err.message
                   }, :error)
       end
     end
@@ -1782,8 +1783,8 @@ module ApplicationController::CiProcessing
           else
             storage.send(task.to_sym) if storage.respond_to?(task)    # Run the task
           end
-        rescue StandardError => bang
-          add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "Storage"), :name => storage_name, :task => task} << bang.message, :error) # Push msg and error flag
+        rescue => err
+          add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "Storage"), :name => storage_name, :task => task} << err.message, :error) # Push msg and error flag
         else
           if task == "refresh_ems"
             add_flash(_("\"%{record}\": %{task} successfully initiated") % {:record => storage_name, :task => "Refresh"})
