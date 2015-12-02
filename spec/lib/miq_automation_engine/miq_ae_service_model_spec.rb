@@ -80,4 +80,18 @@ module MiqAeServiceModelSpec
       end
     end
   end
+
+  describe MiqAeMethodService::MiqAeServiceMiqAeDomain do
+    let(:tenant) { Tenant.seed }
+    let(:domain) { FactoryGirl.create(:miq_ae_domain, :tenant => tenant) }
+
+    it "#ae_domains" do
+      domain
+      t = MiqAeMethodService::MiqAeServiceTenant.new(tenant)
+      dom = t.ae_domains.first
+      [:name, :system, :priority, :id].each do |attr|
+        expect(dom.send(attr)).to eql(domain.send(attr))
+      end
+    end
+  end
 end
