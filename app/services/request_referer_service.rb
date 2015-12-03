@@ -23,6 +23,8 @@ class RequestRefererService
     'miq_request'              => %w(show:id show_list), # http://localhost:3000/miq_request/show/400r3
     'ems_cluster'              => %w(show:id show_list), # http://localhost:3000/ems_cluster/show/400r2
     'storage'                  => %w(show:id show_list), # http://localhost:3000//storage/show/400r1
+    'ems_middleware'           => %w(show:id show_list), # http://localhost:3000/ems_middleware/show/400r1
+    'middleware_server'        => %w(show:id show_list), # http://localhost:3000/middleware_server/show/400r1
     'ems_container'            => %w(show:id show_list), # http://localhost:3000/ems_container/show/400r1
     'cloud_volume'             => %w(show:id show_list), # http://localhost:3000/cloud_volume/show
     'container'                => %w(explorer), # http://localhost:3000/container/explorer

@@ -1,0 +1,9 @@
+= render :partial => "layouts/flash_msg"
+.row
+  .col-sm-12.col-md-12.col-lg-6
+    = render :partial => "shared/summary/textual", :locals => {:title => _("Properties"),
+                                                               :items => textual_group_properties}
+    = render :partial => "shared/summary/textual", :locals => {:title => _("Status"), :items => textual_group_status}
+  .col-sm-12.col-md-12.col-lg-6
+    = render :partial => "shared/summary/textual", :locals => {:title => _("Relationships"),
+                                                               :items => textual_group_relationships}

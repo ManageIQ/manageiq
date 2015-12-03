@@ -1,0 +1,17 @@
+- if @record.try(:name)
+  #accordion.panel-group
+    = miq_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
+      = render(:partial => "layouts/quadicon",
+        :locals         => {:mode => :icon,
+          :item                   => @record,
+          :size                   => 72,
+          :typ                    => :listnav})
+
+    = miq_accordion_panel(_("Properties"), false, "ems_middleware_prop") do
+      %ul.nav.nav-pills.nav-stacked
+        %li
+          = link_to(_('Summary'), {:action => 'show', :id => @record, :display => 'main'}, :title => _("Show Summary"))
+    = miq_accordion_panel(_("Relationships"), false, "ems_middleware_rel") do
+      %ul.nav.nav-pills.nav-stacked
+        - %w(middleware_server).each do |ent|
+          = multiple_relationship_link(@record, ent)

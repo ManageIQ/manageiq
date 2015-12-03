@@ -153,6 +153,10 @@ class MiqRegion < ApplicationRecord
     ext_management_systems.select { |e| e.kind_of? ManageIQ::Providers::ContainerManager }
   end
 
+  def ems_middlewares
+    ext_management_systems.select { |e| e.kind_of? ManageIQ::Providers::MiddlewareManager }
+  end
+
   def assigned_roles
     miq_servers.collect(&:assigned_roles).flatten.uniq.compact
   end
