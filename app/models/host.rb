@@ -87,6 +87,8 @@ class Host < ActiveRecord::Base
 
   # TODO: Remove all callers of address
   alias_attribute :address, :hostname
+  alias_attribute :state,   :power_state
+  alias_attribute :to_s,    :name
 
   def settings
     super || self.settings = VMDB::Config.new("hostdefaults").get(:host)
@@ -180,10 +182,6 @@ class Host < ActiveRecord::Base
 
   def authentication_check_role
     'smartstate'
-  end
-
-  def to_s
-    name
   end
 
   def v_annotation
@@ -651,18 +649,6 @@ class Host < ActiveRecord::Base
   def is_vmware_esxi?
     product = vmm_product.to_s.strip.downcase
     is_vmware? && product.starts_with?('esx') && product.ends_with?('i')
-  end
-
-  def state
-    power_state
-  end
-
-  def state=(new_state)
-    return if power_state == new_state
-
-    # state_changed_on = Time.now.utc
-    # previous_state = power_state
-    self.power_state = new_state
   end
 
   def self.lookUpHost(hostname, ipaddr, opts = {})
