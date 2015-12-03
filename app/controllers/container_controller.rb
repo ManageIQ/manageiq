@@ -56,7 +56,7 @@ class ContainerController < ApplicationController
     record = Container.find_by_id(from_cid(params[:id]))
     unless @explorer
       tree_node_id = TreeBuilder.build_node_id(record)
-      redirect_to :controller => "Container",
+      redirect_to :controller => "container",
                   :action     => "explorer",
                   :id         => tree_node_id
       return
