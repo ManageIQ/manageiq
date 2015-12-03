@@ -689,11 +689,12 @@ module OpsController::Diagnostics
     if @sb[:diag_selected_id].nil?
       servers = []
       add_flash(_("%s no longer exists") % ui_lookup(:table => "evm_server"), :error)
+      process_servers(servers, "destroy") unless servers.empty?
     else
       servers = []
       servers.push(@sb[:diag_selected_id])
+      process_servers(servers, "destroy") unless servers.empty?
     end
-    process_servers(servers, "destroy") unless servers.empty?
     add_flash(_("The selected %s was deleted") % ui_lookup(:table => "evm_server")) if @flash_array.nil?
     refresh_screen
   end
