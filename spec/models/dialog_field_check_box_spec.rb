@@ -124,7 +124,7 @@ describe DialogFieldCheckBox do
     end
   end
 
-  describe "#validate" do
+  describe "#validate_field_data" do
     let(:dialog_field_check_box) do
       described_class.new(:label    => 'dialog_field_check_box',
                           :name     => 'dialog_field_check_box',
@@ -134,9 +134,9 @@ describe DialogFieldCheckBox do
     let(:dialog_tab)   { active_record_instance_double('DialogTab',   :label => 'tab') }
     let(:dialog_group) { active_record_instance_double('DialogGroup', :label => 'group') }
 
-    shared_examples_for "DialogFieldCheckBox#validate that returns nil" do
+    shared_examples_for "DialogFieldCheckBox#validate_field_data that returns nil" do
       it "returns nil" do
-        expect(dialog_field_check_box.validate(dialog_tab, dialog_group)).to be_nil
+        expect(dialog_field_check_box.validate_field_data(dialog_tab, dialog_group)).to be_nil
       end
     end
 
@@ -146,14 +146,14 @@ describe DialogFieldCheckBox do
       context "with a true value" do
         let(:value) { "t" }
 
-        it_behaves_like "DialogFieldCheckBox#validate that returns nil"
+        it_behaves_like "DialogFieldCheckBox#validate_field_data that returns nil"
       end
 
       context "with a false value" do
         let(:value) { "f" }
 
         it "returns error message" do
-          expect(dialog_field_check_box.validate(dialog_tab, dialog_group)).to eq(
+          expect(dialog_field_check_box.validate_field_data(dialog_tab, dialog_group)).to eq(
             "tab/group/dialog_field_check_box is required"
           )
         end
@@ -166,13 +166,13 @@ describe DialogFieldCheckBox do
       context "with a true value" do
         let(:value) { "t" }
 
-        it_behaves_like "DialogFieldCheckBox#validate that returns nil"
+        it_behaves_like "DialogFieldCheckBox#validate_field_data that returns nil"
       end
 
       context "with a false value" do
         let(:value) { "f" }
 
-        it_behaves_like "DialogFieldCheckBox#validate that returns nil"
+        it_behaves_like "DialogFieldCheckBox#validate_field_data that returns nil"
       end
     end
   end

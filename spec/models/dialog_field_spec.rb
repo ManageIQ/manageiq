@@ -39,7 +39,7 @@ describe DialogField do
 
       shared_examples_for "DialogField#validate that returns nil" do
         it "returns nil" do
-          expect(dialog_field.validate(dialog_tab, dialog_group)).to be_nil
+          expect(dialog_field.validate_field_data(dialog_tab, dialog_group)).to be_nil
         end
       end
 
@@ -50,7 +50,7 @@ describe DialogField do
           let(:value) { "" }
 
           it "returns error message" do
-            expect(dialog_field.validate(dialog_tab, dialog_group)).to eq("tab/group/dialog_field is required")
+            expect(dialog_field.validate_field_data(dialog_tab, dialog_group)).to eq("tab/group/dialog_field is required")
           end
         end
 
