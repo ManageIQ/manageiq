@@ -183,14 +183,10 @@ module MiqProvisionMixin
   end
 
   def set_customization_spec(custom_spec_name, override = false)
-    unless source.ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
-      _log.info "Specifying a Customization spec is not valid for provision type #{self.class.name}.  Spec name: <#{custom_spec_name.inspect}>"
-      return false
-    end
-
     if custom_spec_name.nil?
       disable_customization_spec
     else
+      custom_spec_name = custom_spec_name.name unless custom_spec_name.kind_of?(String)
       options = self.options.dup
       prov_wf = workflow
       options[:sysprep_enabled]       = ['fields', 'Specification']

@@ -1,5 +1,9 @@
 module MiqAeMethodService
   class MiqAeServiceManageIQ_Providers_Vmware_InfraManager_Provision < MiqAeServiceMiqProvision
+    def set_customization_spec(name = nil, override = false)
+      object_send(:set_customization_spec, name, override)
+    end
+
     def eligible_customization_specs
       sysprep = options[:sysprep_enabled]
       options[:sysprep_enabled] = %w(fields Specification)

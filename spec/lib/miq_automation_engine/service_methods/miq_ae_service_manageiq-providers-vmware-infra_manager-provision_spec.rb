@@ -287,6 +287,20 @@ module MiqAeServiceManageIQ_Providers_Vmware_InfraManager_ProvisionSpec
         result.should be_kind_of(Array)
         result.first.class.should == MiqAeMethodService::MiqAeServiceCustomizationSpec
       end
+
+      it "#set_customization_spec" do
+        method = <<-AUTOMATE_SCRIPT
+          prov = $evm.root['miq_provision']
+          prov.eligible_customization_specs.each {|cs| prov.set_customization_spec(cs)}
+        AUTOMATE_SCRIPT
+        @ae_method.update_attributes(:data => method)
+        invoke_ae.root(@ae_result_key)
+        @miq_provision.reload.options[:sysprep_custom_spec].should == [@cs.id, @cs.name]
+        @miq_provision.reload.options[:sysprep_enabled].should == %w(fields Specification)
+      end
+
+
+
     end
 
     context "resource_pools" do
