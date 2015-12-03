@@ -49,12 +49,12 @@ class Dialog < ActiveRecord::Base
     result
   end
 
-  def validate
+  def validate_field_data
     result = []
     dialog_tabs.each do |dt|
       dt.dialog_groups.each do |dg|
         dg.dialog_fields.each do |df|
-          err_msg = df.validate(dt, dg)
+          err_msg = df.validate_field_data(dt, dg)
           result << err_msg unless err_msg.blank?
         end
       end

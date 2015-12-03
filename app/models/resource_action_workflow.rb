@@ -25,7 +25,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   def submit_request
     result = {}
 
-    result[:errors] = @dialog.validate
+    result[:errors] = @dialog.validate_field_data
     return result unless result[:errors].blank?
 
     values = create_values_hash
