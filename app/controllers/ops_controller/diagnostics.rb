@@ -687,7 +687,6 @@ module OpsController::Diagnostics
   def delete_server
     assert_privileges("delete_server")
     if @sb[:diag_selected_id].nil?
-      servers = []
       add_flash(_("%s no longer exists") % ui_lookup(:table => "evm_server"), :error)
     else
       servers = []
