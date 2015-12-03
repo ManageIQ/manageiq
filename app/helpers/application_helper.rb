@@ -1108,7 +1108,7 @@ module ApplicationHelper
 
   def render_listnav_filename
     if @lastaction == "show_list" && !session[:menu_click] &&
-       %w(auth_key_pair_cloud cloud_volume container_node container_service ems_container container_group ems_cloud
+       %w(auth_key_pair_cloud cloud_volume cloud_volume_snapshot container_node container_service ems_container container_group ems_cloud
           ems_cluster container_route container_project container_replicator container_image container_image_registry
           ems_infra host miq_template offline orchestration_stack persistent_volume repository ems_middleware
           middleware_server middleware_deployment
@@ -1120,7 +1120,7 @@ module ApplicationHelper
       "explorer"
     elsif %w(offline retired templates vm vm_cloud vm_or_template).include?(@layout)
       "vm"
-    elsif %w(action auth_key_pair_cloud availability_zone cim_base_storage_extent cloud_tenant cloud_volume condition container_group
+    elsif %w(action auth_key_pair_cloud availability_zone cim_base_storage_extent cloud_tenant cloud_volume cloud_volume_snapshot condition container_group
              container_route container_project container_replicator container_image container_image_registry
              container_node container_service persistent_volume ems_cloud ems_container ems_cluster ems_infra
              ems_middleware middleware_server middleware_deployment flavor
@@ -1133,7 +1133,7 @@ module ApplicationHelper
   end
 
   def show_adv_search?
-    show_search = %w(availability_zone cim_base_storage_extent cloud_volume container_group container_node container_service
+    show_search = %w(availability_zone cim_base_storage_extent cloud_volume cloud_volume_snapshot container_group container_node container_service
                      container_route container_project container_replicator container_image container_image_registry
                      persistent_volume ems_cloud ems_cluster ems_container ems_infra flavor host miq_template offline
                      ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume

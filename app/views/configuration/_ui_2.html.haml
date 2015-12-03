@@ -61,7 +61,7 @@
                 .col-md-8
                   %ul.list-inline= render_view_buttons(resource, @edit[:new][:views][resource])
       .col-md-12.col-lg-6
-        - if has_any_role?(%w(ems_cloud_show_list availability_zone_show_list cloud_tenant_show_list flavor_show_list instances_accord instances_filter_accord images_filter_accord orchestration_stack_show_list cloud_volume_show_list))
+        - if has_any_role?(%w(ems_cloud_show_list availability_zone_show_list cloud_tenant_show_list flavor_show_list instances_accord instances_filter_accord images_filter_accord orchestration_stack_show_list cloud_volume_show_list cloud_volume_snapshot_show_list))
           %fieldset
             %h3
               = _('Clouds')
@@ -111,7 +111,6 @@
               .form-group
                 %label.col-md-3.control-label
                   = _('Volumes')
-                .col-md-8
                   %ul.list-inline= render_view_buttons(:cloudvolume, @edit[:new][:views][:cloudvolume])
             - if role_allows(:feature => "auth_key_pair_cloud_show_list")
               .form-group
@@ -119,6 +118,12 @@
                   = _('Key Pairs')
                 .col-md-8
                   %ul.list-inline= render_view_buttons(:authkeypaircloud, @edit[:new][:views][:authkeypaircloud])
+            - if role_allows(:feature => "cloud_volume_snapshot_show_list")
+              .form-group
+                %label.col-md-3.control-label
+                  = _('Snapshots')
+                .col-md-8
+                  %ul.list-inline= render_view_buttons(:cloudvolumesnapshot, @edit[:new][:views][:cloudvolumesnapshot])
         - if has_any_role?(%w(ems_infra_show_list ems_cluster_show_list host_show_list resource_pool_show_list storage_show_list repository_show_list vandt_accord vms_filter_accord templates_filter_accord))
           %fieldset
             %h3
