@@ -233,7 +233,7 @@ module ApplicationController::CiProcessing
     when "service"
       assert_privileges("service_retire")
       kls = Service
-    when "vm_cloud"
+    when "vm_cloud", "vm"
       assert_privileges("instance_retire")
       kls = Vm
     when "vm_infra"
