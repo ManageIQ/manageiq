@@ -67,7 +67,7 @@
               = _('Clouds')
             - if role_allows(:feature => "ems_cloud_show_list")
               .form-group
-                %label.col-md-3.control-labelpersistent
+                %label.col-md-3.control-label
                   #{ui_lookup(:tables => "ems_clouds")}
                 .col-md-8
                   %ul.list-inline= render_view_buttons(:emscloud, @edit[:new][:views][:emscloud])
