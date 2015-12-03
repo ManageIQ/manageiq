@@ -700,21 +700,20 @@ module OpsController::Diagnostics
     svr = MiqServer.find_by(:id => server_id)
     return unless svr
 
-    svr_name = svr.name
     begin
       svr.destroy if svr.respond_to?(:destroy)    # Run the task
     rescue StandardError => bang
-      add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "MiqServer"), :name => svr_name, :task => "destroy"} << bang.message,
+      add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "MiqServer"), :name => svr.name, :task => "destroy"} << bang.message,
                 :error)
     else
       AuditEvent.success(
         :event        => "svr_record_delete",
-        :message      => "[#{svr_name}] Record deleted",
+        :message      => "[#{svr.name}] Record deleted",
         :target_id    => svr.id,
         :target_class => "MiqServer",
         :userid       => session[:userid]
       )
-      add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => "MiqServer"), :name => "#{svr_name} [#{svr.id}]"})
+      add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => "MiqServer"), :name => "#{svr.name} [#{svr.id}]"})
     end
   end
 
