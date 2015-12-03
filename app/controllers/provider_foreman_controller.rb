@@ -948,11 +948,10 @@ class ProviderForemanController < ApplicationController
     raise "Invalid input" unless is_integer?(from_cid(id))
     begin
       record = model.where(:id => from_cid(id)).first
-    rescue ActiveRecord::RecordNotFound
-    rescue StandardError => @bang
+    rescue ActiveRecord::RecordNotFound, StandardError => ex
       if @explorer
         self.x_node = "root"
-        add_flash(@bang.message, :error, true)
+        add_flash(ex.message, :error, true)
         session[:flash_msgs] = @flash_array.dup
       end
     end

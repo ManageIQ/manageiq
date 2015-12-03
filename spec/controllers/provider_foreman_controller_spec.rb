@@ -377,11 +377,10 @@ describe ProviderForemanController do
       User.any_instance.stub(:get_filters).and_return(user_filters)
       Classification.seed
       quota_2gb_tag = Classification.where("description" => "2GB").first
-      Classification.bulk_reassignment({:model      => "ConfiguredSystem",
-                                        :object_ids => @configured_system.id,
-                                        :add_ids    => quota_2gb_tag.id,
-                                        :delete_ids => []
-                                       })
+      Classification.bulk_reassignment(:model      => "ConfiguredSystem",
+                                       :object_ids => @configured_system.id,
+                                       :add_ids    => quota_2gb_tag.id,
+                                       :delete_ids => [])
       controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
       node1 = find_treenode_for_provider(@provider)
       node2 = find_treenode_for_provider(@provider2)

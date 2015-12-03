@@ -28,9 +28,11 @@ class TreeBuilderForeman < TreeBuilder
   end
 
   def fetch_unassigned_configuration_profile_objects(count_only, configuration_manager_id)
-    unprovisioned_configured_systems = rbac_filtered_objects(ConfiguredSystem.where(:configuration_profile_id => nil,
-                                                              :configuration_manager_id => configuration_manager_id), :match_via_descendants => ConfiguredSystem)
-    if unprovisioned_configured_systems.count > 0
+    unprovisioned_configured_systems = ConfiguredSystem.where(:configuration_profile_id => nil,
+                                                              :configuration_manager_id => configuration_manager_id)
+    unprovisioned_configured_systems_filtered = rbac_filtered_objects(unprovisioned_configured_systems,
+                                                                      :match_via_descendants => ConfiguredSystem)
+    if unprovisioned_configured_systems_filtered.count > 0
       unassigned_id = "#{configuration_manager_id}-unassigned"
       unassigned_configuration_profile =
         [ConfigurationProfile.new(:name                     => "Unassigned Profiles Group|#{unassigned_id}",
