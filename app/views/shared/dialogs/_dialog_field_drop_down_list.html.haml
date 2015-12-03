@@ -1,6 +1,6 @@
 - if edit
   - select_values = field.values.collect(&:reverse)
-  - selected ||= field.default_value
+  - selected ||= wf.value(field.name)
   = select_tag(field.name, options_for_select(select_values, selected), drop_down_options(field, url))
 
   :javascript
