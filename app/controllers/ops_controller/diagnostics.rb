@@ -697,7 +697,8 @@ module OpsController::Diagnostics
 
   # Common Server button handler routines
   def process_server(server_id, task)
-    MiqServer.where(:id => server_id).each do |svr|
+    svr = MiqServer.find_by(:id => server_id)
+    if svr
       id = svr.id
       svr_name = svr.name
       if task == "destroy"
