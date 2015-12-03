@@ -270,8 +270,8 @@ Vmdb::Application.routes.draw do
                compare_post
     },
 
-    :cloud_volume => {
-      :get => %w(
+    :cloud_volume             => {
+      :get  => %w(
         download_data
         edit
         index
