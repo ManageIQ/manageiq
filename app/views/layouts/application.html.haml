@@ -3,7 +3,6 @@
   %html
     %head
       %title CloudForms Management Engine: #{@layout.titleize}
-      = stylesheet_link_tag 'template'
       = split_stylesheet_link_tag 'application'
       = javascript_include_tag 'application'
       - if Rails.env.development?
@@ -23,7 +22,6 @@
 
       = tag :link, :rel => "shortcut icon", :href => image_path("favicon.ico")
       = split_stylesheet_link_tag 'application'
-      = stylesheet_link_tag 'template'
       = render :partial => "stylesheets/template50"
       = javascript_include_tag 'application'
       - if Rails.env.development?
