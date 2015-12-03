@@ -689,14 +689,14 @@ module OpsController::Diagnostics
     if @sb[:diag_selected_id].nil?
       add_flash(_("%s no longer exists") % ui_lookup(:table => "evm_server"), :error)
     else
-      process_servers(@sb[:diag_selected_id], "destroy")
+      process_server(@sb[:diag_selected_id], "destroy")
     end
     add_flash(_("The selected %s was deleted") % ui_lookup(:table => "evm_server")) if @flash_array.nil?
     refresh_screen
   end
 
   # Common Server button handler routines
-  def process_servers(server, task)
+  def process_server(server, task)
     servers = [server]
     MiqServer.where(:id => servers).order("lower(name)").each do |svr|
       id = svr.id
