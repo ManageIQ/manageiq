@@ -10,10 +10,10 @@ class ManageIQ::Providers::ConfigurationManager < ::ExtManagementSystem
   end
 
   def total_configuration_profiles
-    configuration_profiles.count
+    Rbac.filtered(configuration_profiles, :match_via_descendants => ConfiguredSystem).count
   end
 
   def total_configured_systems
-    configured_systems.count
+    Rbac.filtered(configured_systems, :match_via_descendants => ConfiguredSystem).count
   end
 end

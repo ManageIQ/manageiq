@@ -7,6 +7,7 @@ module Rbac
   CLASSES_THAT_PARTICIPATE_IN_RBAC = %w(
     AvailabilityZone
     CloudTenant
+    ConfigurationProfile
     ConfiguredSystem
     Container
     ContainerGroup
@@ -40,11 +41,13 @@ module Rbac
   )
 
   MATCH_VIA_DESCENDANT_RELATIONSHIPS = {
-    "VmOrTemplate::ExtManagementSystem" => :ext_management_system,
-    "VmOrTemplate::Host"                => :host,
-    "VmOrTemplate::EmsCluster"          => :ems_cluster,
-    "VmOrTemplate::EmsFolder"           => :parent_blue_folders,
-    "VmOrTemplate::ResourcePool"        => :resource_pool,
+    "VmOrTemplate::ExtManagementSystem"      => :ext_management_system,
+    "VmOrTemplate::Host"                     => :host,
+    "VmOrTemplate::EmsCluster"               => :ems_cluster,
+    "VmOrTemplate::EmsFolder"                => :parent_blue_folders,
+    "VmOrTemplate::ResourcePool"             => :resource_pool,
+    "ConfiguredSystem::ExtManagementSystem"  => :ext_management_system,
+    "ConfiguredSystem::ConfigurationProfile" => :configuration_profile
   }
 
   # These classes should accept any of the relationship_mixin methods including:

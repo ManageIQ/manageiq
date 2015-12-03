@@ -427,17 +427,17 @@ class TreeBuilder
     return objects if objects.empty?
 
     # Remove VmOrTemplate :match_via_descendants option if present, comment to let Rbac.search process it
-    check_vm_descendants = false
-    check_vm_descendants = options.delete(:match_via_descendants) if options[:match_via_descendants] == "VmOrTemplate"
+    descendants = false
+    descendants = options.delete(:match_via_descendants) if %w(ConfiguredSystems VmOrTemplate).include?(options[:match_via_descendants])
 
     results = Rbac.filtered(objects, options)
 
     # If we are processing :match_via_descendants and user is filtered (i.e. not like admin/super-admin)
-    if check_vm_descendants && User.current_user.has_filters?
+    if descendants && User.current_user.has_filters?
       filtered_objects = objects - results
       results = objects.select do |o|
         if o.kind_of?(EmsFolder) || filtered_objects.include?(o)
-          rbac_has_visible_vm_descendants?(o)
+          rbac_has_visible_descendants?(o, descendants)
         else
           true
         end
@@ -447,13 +447,13 @@ class TreeBuilder
     results
   end
 
-  def self.rbac_has_visible_vm_descendants?(o)
-    target_ids = o.descendant_ids(:of_type => "VmOrTemplate").transpose.last
+  def self.rbac_has_visible_descendants?(o, type)
+    target_ids = o.descendant_ids(:of_type => type).transpose.last
     return false if target_ids.blank?
-    results, _attrs = Rbac.search(:targets => target_ids, :class => VmOrTemplate)
+    results, _attrs = Rbac.search(:targets => target_ids, :class => type.constantize)
     results.length > 0
   end
-  private_class_method :rbac_has_visible_vm_descendants?
+  private_class_method :rbac_has_visible_descendants?
 
   # Tree node prefixes for generic explorers
   X_TREE_NODE_PREFIXES = {

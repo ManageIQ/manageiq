@@ -360,6 +360,35 @@ describe ProviderForemanController do
     end
   end
 
+  context "when user with specific tag settings logs in" do
+    before do
+      login_as user_with_feature %w(providers_accord configured_systems_filter_accord)
+    end
+    it "builds foreman tree with no nodes after rbac filtering" do
+      user_filters = {'belongs' => [], 'managed' => [["/managed/quota_max_memory/2048"]]}
+      User.any_instance.stub(:get_filters).and_return(user_filters)
+      controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
+      first_child = find_treenode_for_provider(@provider)
+      expect(first_child).to eq(nil)
+    end
+
+    it "builds foreman tree with only those nodes that contain the filtered configured systems" do
+      user_filters = {'belongs' => [], 'managed' => [["/managed/quota_max_memory/2048"]]}
+      User.any_instance.stub(:get_filters).and_return(user_filters)
+      Classification.seed
+      quota_2gb_tag = Classification.where("description" => "2GB").first
+      Classification.bulk_reassignment(:model      => "ConfiguredSystem",
+                                       :object_ids => @configured_system.id,
+                                       :add_ids    => quota_2gb_tag.id,
+                                       :delete_ids => [])
+      controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
+      node1 = find_treenode_for_provider(@provider)
+      node2 = find_treenode_for_provider(@provider2)
+      expect(node1).not_to be_nil
+      expect(node2).to be_nil
+    end
+  end
+
   def user_with_feature(features)
     features = EvmSpecHelper.specific_product_features(*features)
     FactoryGirl.create(:user, :features => features)

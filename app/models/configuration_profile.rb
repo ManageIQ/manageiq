@@ -70,6 +70,6 @@ class ConfigurationProfile < ActiveRecord::Base
   alias_method :manager, :configuration_manager
 
   def total_configured_systems
-    configured_systems.count
+    Rbac.filtered(configured_systems, :match_via_descendants => ConfiguredSystem).count
   end
 end

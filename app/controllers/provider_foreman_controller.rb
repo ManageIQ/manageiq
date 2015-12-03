@@ -36,10 +36,8 @@ class ProviderForemanController < ApplicationController
       save_provider_foreman
     else
       assert_privileges("provider_foreman_edit_provider")
-      @provider_foreman = find_by_id_filtered(ManageIQ::Providers::Foreman::ConfigurationManager,
-                                              from_cid(params[:miq_grid_checks] ||
-                                                       params[:id] ||
-                                                       find_checked_items[0]))
+      @provider_foreman = find_record(ManageIQ::Providers::Foreman::ConfigurationManager,
+                                      from_cid(params[:miq_grid_checks] || params[:id] || find_checked_items[0]))
       render_form
     end
   end
@@ -169,7 +167,7 @@ class ProviderForemanController < ApplicationController
 
   def provider_foreman_form_fields
     assert_privileges("provider_foreman_edit_provider")
-    config_mgr_foreman = find_by_id_filtered(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id])
+    config_mgr_foreman = find_record(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id])
     provider_foreman = ManageIQ::Providers::Foreman::Provider.find(config_mgr_foreman.provider_id)
     authentications_foreman = Authentication.where(:resource_id => provider_foreman[:id], :resource_type => "Provider")
 
@@ -188,7 +186,7 @@ class ProviderForemanController < ApplicationController
                                                                      :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
                                                                      :verify_ssl => params[:verify_ssl].eql?("on"))
     else
-      @provider_foreman = find_by_id_filtered(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id]).provider
+      @provider_foreman = find_record(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id]).provider
     end
     update_authentication_provider_foreman
 
@@ -212,7 +210,7 @@ class ProviderForemanController < ApplicationController
     @lastaction = "show"
     @showtype = "config"
     @record =
-      identify_record(id || params[:id], configuration_profile_record? ? ConfigurationProfile : ConfiguredSystem)
+      find_record(configuration_profile_record? ? ConfigurationProfile : ConfiguredSystem, id || params[:id])
     return if record_no_longer_exists?(@record)
 
     @explorer = true if request.xml_http_request? # Ajax request means in explorer
@@ -332,9 +330,9 @@ class ProviderForemanController < ApplicationController
   def foreman_providers_tree_rec
     nodes = x_node.split('-')
     case nodes.first
-    when "root" then  rec = identify_record(params[:id], ManageIQ::Providers::Foreman::ConfigurationManager)
-    when "e"    then  rec = identify_record(params[:id], ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile)
-    when "cp"   then  rec = identify_record(params[:id], ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem)
+    when "root" then  rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id])
+    when "e"    then  rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
+    when "cp"   then  rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
     end
     rec
   end
@@ -342,8 +340,8 @@ class ProviderForemanController < ApplicationController
   def cs_filter_tree_rec
     nodes = x_node.split('-')
     case nodes.first
-    when "root" then  rec = identify_record(params[:id], ConfiguredSystem)
-    when "ms"   then  rec = identify_record(from_cid(params[:id]), ConfiguredSystem)
+    when "root" then  rec = find_record(ConfiguredSystem, params[:id])
+    when "ms"   then  rec = find_record(ConfiguredSystem, from_cid(params[:id]))
     end
     rec
   end
@@ -506,13 +504,13 @@ class ProviderForemanController < ApplicationController
   end
 
   def provider_node(id, model)
-    @record = provider = identify_record(id, ExtManagementSystem)
+    @record = provider = find_record(ExtManagementSystem, id)
     if provider.nil?
       self.x_node = "root"
       get_node_info("root")
       return
     else
-      options = {:model => "ConfigurationProfile"}
+      options = {:model => "ConfigurationProfile", :match_via_descendants => ConfiguredSystem}
       options[:where_clause] = ["configuration_manager_id IN (?)", provider.id]
       @no_checkboxes = true
       process_show_list(options)
@@ -527,7 +525,7 @@ class ProviderForemanController < ApplicationController
 
   def configuration_profile_node(id, model)
     if model
-      @record = @configuration_profile_record = identify_record(id, ConfigurationProfile)
+      @record = @configuration_profile_record = find_record(ConfigurationProfile, id)
     else
       @record = @configuration_profile_record = ConfigurationProfile.new
     end
@@ -536,7 +534,7 @@ class ProviderForemanController < ApplicationController
       get_node_info("root")
       return
     else
-      options = {:model => "ConfiguredSystem"}
+      options = {:model => "ConfiguredSystem", :match_via_descendants => ConfiguredSystem}
       options[:where_clause] = ["configuration_profile_id IN (?)", @configuration_profile_record.id]
       options[:where_clause] =
         ["configuration_manager_id IN (?) AND \
@@ -558,7 +556,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def configured_system_node(id, model)
-    @record = @configured_system_record = identify_record(id, ConfiguredSystem)
+    @record = @configured_system_record = find_record(ConfiguredSystem, id)
     if @record.nil?
       self.x_node = "root"
       get_node_info("root")
@@ -581,7 +579,7 @@ class ProviderForemanController < ApplicationController
   def default_node
     return unless x_node == "root"
     if self.x_active_tree == :foreman_providers_tree
-      options = {:model => "ManageIQ::Providers::Foreman::ConfigurationManager"}
+      options = {:model => "ManageIQ::Providers::Foreman::ConfigurationManager", :match_via_descendants => ConfiguredSystem}
       process_show_list(options)
       @right_cell_text = _("All %s Providers") % ui_lookup(:ui_title => "foreman")
     elsif self.x_active_tree == :cs_filter_tree
@@ -944,6 +942,20 @@ class ProviderForemanController < ApplicationController
     options[:dbname] = :cm_providers if x_active_accord == :foreman_providers
     options[:dbname] = :cm_configured_systems if x_active_accord == :cs_filter
     super
+  end
+
+  def find_record(model, id)
+    raise "Invalid input" unless is_integer?(from_cid(id))
+    begin
+      record = model.where(:id => from_cid(id)).first
+    rescue ActiveRecord::RecordNotFound, StandardError => ex
+      if @explorer
+        self.x_node = "root"
+        add_flash(ex.message, :error, true)
+        session[:flash_msgs] = @flash_array.dup
+      end
+    end
+    record
   end
 
   def set_root_node

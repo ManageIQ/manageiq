@@ -12,13 +12,14 @@ class TreeBuilderForeman < TreeBuilder
 
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
-    count_only_or_objects(count_only, ManageIQ::Providers::Foreman::ConfigurationManager.all, "name")
+    objects = rbac_filtered_objects(ManageIQ::Providers::Foreman::ConfigurationManager.order("lower(name)"), :match_via_descendants => %w(ConfiguredSystem))
+    count_only_or_objects(count_only, objects)
   end
 
   def x_get_tree_cmf_kids(object, count_only)
     assigned_configuration_profile_objs =
       count_only_or_objects(count_only,
-                            ConfigurationProfile.where(:configuration_manager_id => object[:id]),
+                            rbac_filtered_objects(ConfigurationProfile.where(:configuration_manager_id => object[:id]), :match_via_descendants => %w(ConfiguredSystem)),
                             "name")
     unassigned_configuration_profile_objs =
       fetch_unassigned_configuration_profile_objects(count_only, object[:id])
@@ -29,7 +30,9 @@ class TreeBuilderForeman < TreeBuilder
   def fetch_unassigned_configuration_profile_objects(count_only, configuration_manager_id)
     unprovisioned_configured_systems = ConfiguredSystem.where(:configuration_profile_id => nil,
                                                               :configuration_manager_id => configuration_manager_id)
-    if unprovisioned_configured_systems.count > 0
+    unprovisioned_configured_systems_filtered = rbac_filtered_objects(unprovisioned_configured_systems,
+                                                                      :match_via_descendants => ConfiguredSystem)
+    if unprovisioned_configured_systems_filtered.count > 0
       unassigned_id = "#{configuration_manager_id}-unassigned"
       unassigned_configuration_profile =
         [ConfigurationProfile.new(:name                     => "Unassigned Profiles Group|#{unassigned_id}",
@@ -47,7 +50,7 @@ class TreeBuilderForeman < TreeBuilder
 
   def x_get_tree_cpf_kids(object, count_only)
     count_only_or_objects(count_only,
-                          ConfiguredSystem.where(:configuration_profile_id => object[:id]),
+                          rbac_filtered_objects(ConfiguredSystem.where(:configuration_profile_id => object[:id]), :match_via_descendants => ConfiguredSystem),
                           "hostname")
   end
 end

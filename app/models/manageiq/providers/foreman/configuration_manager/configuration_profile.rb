@@ -15,4 +15,8 @@ class ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile <
                           :join_table  => 'direct_configuration_profiles_configuration_tags',
                           :class_name  => 'ConfigurationTag',
                           :foreign_key => :configuration_profile_id
+
+  def configuration_profile
+    self
+  end
 end
