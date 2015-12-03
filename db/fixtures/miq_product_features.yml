@@ -513,6 +513,35 @@
       :feature_type: control
       :identifier: auth_key_pair_cloud_tag
 
+# CloudVolumeSnapshot
+- :name: Cloud Volume Snapshots
+  :description: Everything under Cloud Volume Snapshots
+  :feature_type: node
+  :identifier: cloud_volume_snapshot
+  :children:
+  - :name: View
+    :description: View Snapshots
+    :feature_type: view
+    :identifier: cloud_volume_snapshot_view
+    :children:
+    - :name: List
+      :description: Display Lists of Snapshots
+      :feature_type: view
+      :identifier: cloud_volume_snapshot_show_list
+    - :name: Show
+      :description: Display Individual Snapshots
+      :feature_type: view
+      :identifier: cloud_volume_snapshot_show
+  - :name: Operate
+    :description: Perform Operations on Snapshots
+    :feature_type: control
+    :identifier: cloud_volume_snapshot_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Snapshots
+      :feature_type: control
+      :identifier: cloud_volume_snapshot_tag
+
 # Security Group
 - :name: Security Groups
   :description: Everything under Security Groups

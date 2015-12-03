@@ -1,0 +1,14 @@
+---
+:model: CloudVolumeSnapshot
+:button_groups:
+- :name: cloud_volume_snapshot_policy
+  :items:
+  - :buttonSelect: cloud_volume_snapshot_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: cloud_volume_snapshot_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: 'Edit tags for this #{ui_lookup(:table=>"cloud_volume_snapshots")}''

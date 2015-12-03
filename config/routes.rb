@@ -324,6 +324,32 @@ Vmdb::Application.routes.draw do
       ) + compare_post + adv_search_post + exp_post + save_post
     },
 
+    :cloud_volume_snapshot => {
+      :get => %w(
+        download_data
+        edit
+        index
+        new
+        show
+        show_list
+        tagging_edit
+        tag_edit_form_field_changed
+      ) + compare_get,
+      :post => %w(
+        create
+        dynamic_checkbox_refresh
+        form_field_changed
+        listnav_search_selected
+        panel_control
+        quick_search
+        show
+        show_list
+        tagging_edit
+        tag_edit_form_field_changed
+        update
+      ) + compare_post + adv_search_post + exp_post + save_post
+    },
+
     :configuration            => {
       # TODO: routes for new/edit/copy buttons need to be revisited
       # TODO: so they can be changed to send up POST request instead of GET
