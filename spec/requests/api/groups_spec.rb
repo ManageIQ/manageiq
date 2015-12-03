@@ -47,7 +47,7 @@ describe ApiController do
 
       run_post(groups_url, "description" => "sample group", "id" => 100)
 
-      expect_bad_request(/Invalid attribute/i)
+      expect_bad_request(/id or href should not be specified/i)
     end
 
     it "rejects group creation with invalid role specified" do

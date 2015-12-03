@@ -35,7 +35,7 @@ class ApiController
     end
 
     def tags_delete_resource(_parent, _type, id, data)
-      id ||= parse_by_attr(data, :tags, %w(name))
+      id ||= parse_id(data, :tags) || parse_by_attr(data, :tags, %w(name))
       raise BadRequestError, "Tag id, href or name needs to be specified for deleting a tag resource" unless id
       destroy_tag_and_classification(id)
       action_result(true, "tags id: #{id} deleting")

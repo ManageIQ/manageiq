@@ -105,7 +105,7 @@ RSpec.describe "users API" do
 
       run_post(users_url, "userid" => "userid1", "id" => 100)
 
-      expect_bad_request(/Invalid attribute/i)
+      expect_bad_request(/id or href should not be specified/i)
     end
 
     it "rejects user creation with invalid group specified" do
