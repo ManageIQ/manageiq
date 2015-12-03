@@ -18,8 +18,7 @@ class TreeBuilderChargebackRates < TreeBuilder
     # TODO: Common code in CharbackRate & ChargebackAssignments, need to move into module
     case options[:type]
     when :cb_assignments, :cb_rates
-      rates = ChargebackRate.all
-      rate_types = rates.collect(&:rate_type).uniq.sort
+      rate_types = ChargebackRate::VALID_CB_RATE_TYPES
 
       if count_only
         rate_types.length
