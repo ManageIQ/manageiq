@@ -700,7 +700,6 @@ module OpsController::Diagnostics
     svr = MiqServer.find_by(:id => server_id)
     return unless svr
 
-    id = svr.id
     svr_name = svr.name
     begin
       svr.destroy if svr.respond_to?(:destroy)    # Run the task
@@ -711,7 +710,7 @@ module OpsController::Diagnostics
       AuditEvent.success(
         :event        => "svr_record_delete",
         :message      => "[#{svr_name}] Record deleted",
-        :target_id    => id,
+        :target_id    => svr.id,
         :target_class => "MiqServer",
         :userid       => session[:userid]
       )
