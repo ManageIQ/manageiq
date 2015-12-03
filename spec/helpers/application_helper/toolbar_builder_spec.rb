@@ -1724,6 +1724,38 @@ describe ApplicationHelper do
       end
     end
 
+    it "disables Lifecycle options in archived VMs list" do
+      ApplicationHelper.stub(:get_record_cls).and_return(nil)
+      @sb = {:trees => {:vandt_tree => {:active_node => "xx-arch"}}}
+      %w(vm_clone vm_publish vm_migrate).each do |tb_button|
+        build_toolbar_disable_button(tb_button).should be_true
+      end
+    end
+
+    it "disables Lifecycle options in orphaned VMs list" do
+      ApplicationHelper.stub(:get_record_cls).and_return(nil)
+      @sb = {:trees => {:vandt_tree => {:active_node => "xx-orph"}}}
+      %w(vm_clone vm_publish vm_migrate).each do |tb_button|
+        build_toolbar_disable_button(tb_button).should be_true
+      end
+    end
+
+    it "disables Lifecycle options for archived VMs" do
+      @record = FactoryGirl.create(:vm_vmware)
+      @record.stub(:archived?).and_return(true)
+      %w(vm_clone vm_publish vm_migrate).each do |tb_button|
+        build_toolbar_disable_button(tb_button).should be_true
+      end
+    end
+
+    it "disables Lifecycle options for orphaned VMs" do
+      @record = FactoryGirl.create(:vm_vmware)
+      @record.stub(:orphaned?).and_return(true)
+      %w(vm_clone vm_publish vm_migrate).each do |tb_button|
+        build_toolbar_disable_button(tb_button).should be_true
+      end
+    end
+
     it "when with 'history_1' and x_tree_history.length < 2" do
       # setup for x_tree_history
       @sb = {:history     => {:testing => %w(something)},
