@@ -1047,7 +1047,7 @@ class MiqAction < ActiveRecord::Base
         action = create(rec)
       else
         action.attributes = rec
-        if action.changed? || action.options_was != actions.options
+        if action.changed? || action.options_was != action.options
           _log.info("Updating [#{rec[:name]}]")
           action.save
         end
