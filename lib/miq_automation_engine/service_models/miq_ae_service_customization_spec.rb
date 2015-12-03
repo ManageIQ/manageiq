@@ -3,4 +3,3 @@ module MiqAeMethodService
     expose :ext_management_system, :association => true
   end
 end
-

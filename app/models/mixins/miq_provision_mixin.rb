@@ -82,7 +82,10 @@ module MiqProvisionMixin
     klass = resource_type_to_class(rsc_type)
 
     allowed_method = "allowed_#{rsc_type}"
-    raise MiqException::MiqProvisionError, "Provision workflow does not contain the expected method <#{allowed_method}>" unless prov_wf.respond_to?(allowed_method)
+    unless prov_wf.respond_to?(allowed_method)
+      error_str = "Provision workflow does not contain the expected method <#{allowed_method}>"
+      raise MiqException::MiqProvisionError, error_str
+    end
 
     result = prov_wf.send(allowed_method)
     result = result.collect { |rsc| eligible_resource_lookup(klass, rsc) }
@@ -108,12 +111,17 @@ module MiqProvisionMixin
 
     rsc_class = resource_class(rsc)
     rsc_type, key = class_to_resource_type_and_key(rsc_class)
-    raise "Unsupported resource type <#{rsc.class.base_class.name}> passed to set_resource for provisioning." if rsc_type.nil?
+    if rsc_type.nil?
+      raise "Unsupported resource type <#{rsc.class.base_class.name}> passed to set_resource for provisioning."
+    end
 
     rsc_name = resource_display_name(rsc)
     result   = eligible_resources(rsc_type).any? { |r| r.id == rsc.id }
-    raise "Resource <#{rsc_class}> <#{rsc.id}:#{rsc_name}> is not an eligible resource for this provisioning instance." if result == false
 
+    if result == false
+      resource_str = "<#{rsc_class}> <#{rsc.id}:#{rsc_name}>"
+      raise "Resource #{resource_str} is not an eligible resource for this provisioning instance."
+    end
     value = construct_value(key, rsc_class, rsc.id, rsc_name)
     _log.info("option <#{key}> being set to <#{value.inspect}>")
     options[key] = value
@@ -128,7 +136,7 @@ module MiqProvisionMixin
   end
 
   def set_folder(folder)
-    return nil  if folder.blank?
+    return nil if folder.blank?
     return set_resource(folder) if folder.kind_of?(MiqAeMethodService::MiqAeServiceEmsFolder)
 
     result = nil
@@ -189,16 +197,18 @@ module MiqProvisionMixin
       custom_spec_name = custom_spec_name.name unless custom_spec_name.kind_of?(String)
       options = self.options.dup
       prov_wf = workflow
-      options[:sysprep_enabled]       = ['fields', 'Specification']
+      options[:sysprep_enabled] = %w(fields Specification)
       prov_wf.init_from_dialog(options)
       prov_wf.get_all_dialogs
       prov_wf.allowed_customization_specs
       prov_wf.get_timezones
       prov_wf.refresh_field_values(options)
       custom_spec = prov_wf.allowed_customization_specs.detect { |cs| cs.name == custom_spec_name }
-      raise MiqException::MiqProvisionError, "Customization Specification [#{custom_spec_name}] does not exist." if custom_spec.nil?
+      if custom_spec.nil?
+        raise MiqException::MiqProvisionError, "Customization Specification [#{custom_spec_name}] does not exist."
+      end
 
-      options[:sysprep_custom_spec]   = [custom_spec.id, custom_spec.name]
+      options[:sysprep_custom_spec] = [custom_spec.id, custom_spec.name]
       override_value = override == false ? [false, 0] : [true, 0]
       options[:sysprep_spec_override] = override_value
       # Call refresh_field_values a second time so it recognizes the config change
@@ -291,7 +301,7 @@ module MiqProvisionMixin
   def resource_display_name(rsc)
     return rsc.address if rsc.respond_to?(:address)
     return rsc.name    if rsc.respond_to?(:name)
-    ""
+    ''
   end
 
   def construct_value(key, rsc_class, rsc_id, rsc_name)
@@ -303,7 +313,9 @@ module MiqProvisionMixin
   end
 
   def resource_class(rsc)
-    return "ManageIQ::Providers::CloudManager::AuthKeyPair" if rsc.kind_of?(MiqAeMethodService::MiqAeServiceManageIQ_Providers_CloudManager_AuthKeyPair)
+    if rsc.kind_of?(MiqAeMethodService::MiqAeServiceManageIQ_Providers_CloudManager_AuthKeyPair)
+      return 'ManageIQ::Providers::CloudManager::AuthKeyPair'
+    end
     $1 if rsc.class.base_class.name =~ /::MiqAeService(.*)/
   end
 end
