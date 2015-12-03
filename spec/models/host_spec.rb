@@ -276,7 +276,7 @@ describe Host do
   context ".lookUpHost" do
     let(:host_3_part_hostname)    { FactoryGirl.create(:host_vmware, :hostname => "test1.example.com",       :ipaddress => "192.168.1.1") }
     let(:host_4_part_hostname)    { FactoryGirl.create(:host_vmware, :hostname => "test2.dummy.example.com", :ipaddress => "192.168.1.2") }
-    let(:host_duplicate_hostname) { FactoryGirl.create(:host_vmware, :hostname => "test1.example.com",       :ipaddress => "192.168.1.3", :ems_ref => "host-1", :ems_id => 1) }
+    let(:host_duplicate_hostname) { FactoryGirl.create(:host_vmware, :hostname => "test2.example.com",       :ipaddress => "192.168.1.3", :ems_ref => "host-1", :ems_id => 1) }
     let(:host_no_ems_id)          { FactoryGirl.create(:host_vmware, :hostname => "test2.example.com",       :ipaddress => "192.168.1.4", :ems_ref => "host-2") }
     before do
       host_3_part_hostname
