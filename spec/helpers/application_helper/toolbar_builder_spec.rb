@@ -1694,6 +1694,45 @@ describe ApplicationHelper do
       end
     end
 
+    it "hides Lifecycle options in archived VMs list" do
+      allow(ApplicationHelper).to receive(:get_record_cls).and_return(nil)
+      @sb = {:trees => {:vandt_tree => {:active_node => "xx-arch"}}}
+      %w(vm_clone vm_publish vm_migrate).each do |tb_button|
+        expect(build_toolbar_hide_button(tb_button)).to be_truthy
+      end
+    end
+
+    it "hides Lifecycle options in orphaned VMs list" do
+      allow(ApplicationHelper).to receive(:get_record_cls).and_return(nil)
+      @sb = {:trees => {:vandt_tree => {:active_node => "xx-orph"}}}
+      %w(vm_clone vm_publish vm_migrate).each do |tb_button|
+        expect(build_toolbar_hide_button(tb_button)).to be_truthy
+      end
+    end
+
+    it "disables Lifecycle options for archived VMs" do
+      @record = FactoryGirl.create(:vm_microsoft)
+      allow(@record).to receive(:archived?).and_return(true)
+      %w(vm_clone vm_publish vm_migrate).each do |tb_button|
+        expect(build_toolbar_disable_button(tb_button)).to be_truthy
+      end
+    end
+
+    it "disables Lifecycle options for orphaned VMs" do
+      @record = FactoryGirl.create(:vm_microsoft)
+      allow(@record).to receive(:orphaned?).and_return(true)
+      %w(vm_clone vm_publish vm_migrate).each do |tb_button|
+        expect(build_toolbar_disable_button(tb_button)).to be_truthy
+      end
+    end
+
+    it "when with 'history_1' and x_tree_history.length < 2" do
+      # setup for x_tree_history
+      @sb = {:history     => {:testing => %w(something)},
+             :active_tree => :testing}
+      expect(build_toolbar_disable_button('history_1')).to be_truthy
+    end
+
     ['button_add', 'button_save', 'button_reset'].each do |b|
       it "when with #{b} and not changed" do
         @changed = false
