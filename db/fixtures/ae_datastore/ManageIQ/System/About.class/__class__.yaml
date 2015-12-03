@@ -18,7 +18,7 @@ object:
       datatype: string
       priority: 1
       owner: 
-      default_value: capablanca-1-rc2
+      default_value: capablanca-1
       substitute: true
       message: create
       visibility: 
