@@ -102,7 +102,7 @@ module ToolbarHelper
   #
   def toolbar_image(props)
     if props[:icon].present?
-      content_tag(:i, '', :class => props[:icon], :style => "#{props['text'].present? ? 'margin-right: 5px;' : ''}")
+      content_tag(:i, '', :class => props[:icon], :style => props['text'].present? ? 'margin-right: 5px;' : '')
     else
       tag(:img,
           :src            => t = "/images/toolbars/#{props['img']}",
@@ -125,7 +125,7 @@ module ToolbarHelper
                            'data-toggle' => "dropdown",
                          )) do
         (toolbar_image(props) +
-          props['text'].to_s + "&nbsp;".html_safe +
+          _(props['text'].to_s) + "&nbsp;".html_safe +
           content_tag(:span, '', :class => "caret")).html_safe
       end
       out << content_tag(:ul, :class => 'dropdown-menu') do
@@ -147,7 +147,7 @@ module ToolbarHelper
                            :type  => "button",
                            :class => "#{cls}btn btn-default")) do
       (toolbar_image(props) +
-        props['text'].to_s + "&nbsp;".html_safe).html_safe
+        _(props['text'].to_s) + "&nbsp;".html_safe).html_safe
     end
   end
 
@@ -182,7 +182,7 @@ module ToolbarHelper
           end
     content_tag(:li, :class => cls + (hidden ? 'hidden' : '')) do
       content_tag(:a, prepare_tag_keys(props).update(:href => '#')) do
-        (toolbar_image(props) + props['text'].to_s.html_safe)
+        (toolbar_image(props) + _(props['text'].to_s).html_safe)
       end
     end
   end
@@ -191,9 +191,11 @@ module ToolbarHelper
   # attributes in html
   #
   def data_hash_keys(props)
-    %i(pressed popup console_url prompt explorer confirm onwhen url_parms url).each_with_object({}) do |key, h|
+    hsh = %i(pressed popup console_url prompt explorer onwhen url_parms url).each_with_object({}) do |key, h|
       h["data-#{key}"] = props[key] if props.key?(key)
     end
+    hsh["data-confirm"] = _("#{props[:confirm]}") if props.key?(:confirm)
+    hsh
   end
 
   # Calculate common html tag keys and values from toolbar button definition
@@ -201,7 +203,7 @@ module ToolbarHelper
   def prepare_tag_keys(props)
     h = data_hash_keys(props)
     h['name']       = props[:name] if props.key?(:name)
-    h['title']      = props['title']
+    h['title']      = _(props['title'])
     h['data-click'] = props['id']
     h
   end
