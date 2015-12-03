@@ -321,12 +321,12 @@ describe ApplicationHelper::Dialogs do
 
     context "when the field is read_only" do
       let(:read_only) { true }
-
+      let(:selected_value) { "some_value" }
       context "when the current value is equal to the default value" do
         let(:value) { "some_value" }
 
         it "returns the tag options with a disabled true and checked" do
-          expect(helper.radio_options(dialog_field, "url", value)).to eq(
+          expect(helper.radio_options(dialog_field, "url", value, selected_value)).to eq(
             :type     => "radio",
             :id       => "100",
             :value    => "some_value",
@@ -342,7 +342,7 @@ describe ApplicationHelper::Dialogs do
         let(:value) { "bogus" }
 
         it "returns the tag options with a disabled true and checked" do
-          expect(helper.radio_options(dialog_field, "url", value)).to eq(
+          expect(helper.radio_options(dialog_field, "url", value, selected_value)).to eq(
             :type     => "radio",
             :id       => "100",
             :value    => "bogus",
@@ -357,6 +357,7 @@ describe ApplicationHelper::Dialogs do
 
     context "when the dialog field is not read only" do
       let(:read_only) { false }
+      let(:selected_value) { "some_value" }
       let(:onclick_string) do
         "$.ajax(" \
           "{beforeSend:function(request){miqSparkle(true);}, " \
@@ -375,7 +376,7 @@ describe ApplicationHelper::Dialogs do
           let(:trigger_auto_refresh) { true }
 
           it "returns the tag options with a disabled true and checked" do
-            expect(helper.radio_options(dialog_field, "url", value)).to eq(
+            expect(helper.radio_options(dialog_field, "url", value, selected_value)).to eq(
               :type    => "radio",
               :id      => "100",
               :value   => "some_value",
@@ -390,7 +391,7 @@ describe ApplicationHelper::Dialogs do
           let(:trigger_auto_refresh) { false }
 
           it "returns the tag options with a disabled true and checked" do
-            expect(helper.radio_options(dialog_field, "url", value)).to eq(
+            expect(helper.radio_options(dialog_field, "url", value, selected_value)).to eq(
               :type    => "radio",
               :id      => "100",
               :value   => "some_value",
@@ -409,7 +410,7 @@ describe ApplicationHelper::Dialogs do
           let(:trigger_auto_refresh) { true }
 
           it "returns the tag options with a disabled true and checked" do
-            expect(helper.radio_options(dialog_field, "url", value)).to eq(
+            expect(helper.radio_options(dialog_field, "url", value, selected_value)).to eq(
               :type    => "radio",
               :id      => "100",
               :value   => "bogus",
@@ -424,7 +425,7 @@ describe ApplicationHelper::Dialogs do
           let(:trigger_auto_refresh) { false }
 
           it "returns the tag options with a disabled true and checked" do
-            expect(helper.radio_options(dialog_field, "url", value)).to eq(
+            expect(helper.radio_options(dialog_field, "url", value, selected_value)).to eq(
               :type    => "radio",
               :id      => "100",
               :value   => "bogus",

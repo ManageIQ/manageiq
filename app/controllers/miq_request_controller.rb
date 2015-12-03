@@ -193,7 +193,7 @@ class MiqRequestController < ApplicationController
     elsif params[:button] == "submit"
       return unless load_edit("stamp_edit__#{params[:id]}", "show")
       stamp_request = MiqRequest.find(@edit[:request].id)         # Get the current request record
-      if @edit[:stamp_typ] == "a"
+      if @edit[:stamp_typ] == "approve"
         stamp_request.approve(current_user, @edit[:reason])
       else
         stamp_request.deny(current_user, @edit[:reason])
@@ -211,9 +211,10 @@ class MiqRequestController < ApplicationController
       @edit[:dialog_mode] = :review
       @edit[:request] = @miq_request
       @edit[:key] = "stamp_edit__#{@miq_request.id}"
-      @edit[:stamp_typ] = params[:typ]
+      # set approve/deny based upon params[:typ] value
+      @edit[:stamp_typ] = params[:typ] == 'a' ? 'approve' : 'deny'
       show
-      drop_breadcrumb(:name => "Request #{@edit[:stamp_typ] == "a" ? "Approval" : "Denial"}", :url => "/miq_request/stamp")
+      drop_breadcrumb(:name => "Request #{@edit[:stamp_typ] == "approve" ? "Approval" : "Denial"}", :url => "/miq_request/stamp")
       render :action => "show"
     end
   end
