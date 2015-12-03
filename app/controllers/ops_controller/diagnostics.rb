@@ -710,7 +710,7 @@ module OpsController::Diagnostics
       :userid => session[:userid]
     }
     begin
-      svr.send("destroy".to_sym) if svr.respond_to?("destroy")    # Run the task
+      svr.destroy if svr.respond_to?(:destroy)    # Run the task
     rescue StandardError => bang
       add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "MiqServer"), :name => svr_name, :task => "destroy"} << bang.message,
                 :error)
