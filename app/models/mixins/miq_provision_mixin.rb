@@ -11,6 +11,7 @@ module MiqProvisionMixin
     "WindowsImage"                                   => [:windows_images,          :pxe_image_id],
     "CustomizationTemplate"                          => [:customization_templates, :customization_template_id],
     "IsoImage"                                       => [:iso_images,              :iso_image_id],
+    "CustomizationSpec"                              => [:customization_specs,     :sysprep_custom_spec],
 
     # Cloud
     "AvailabilityZone"                               => [:availability_zones,      :placement_availability_zone],

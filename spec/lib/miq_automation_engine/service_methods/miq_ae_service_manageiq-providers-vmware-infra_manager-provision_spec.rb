@@ -268,6 +268,27 @@ module MiqAeServiceManageIQ_Providers_Vmware_InfraManager_ProvisionSpec
       end
     end
 
+    context "customization_specs" do
+      before(:each) do
+        @cs = FactoryGirl.create(:customization_spec, :name => "Test Specs", :spec => {"script_text" => "blah"})
+        cs_struct = [MiqHashStruct.new(:id => @cs.id, :name => @cs.name,
+                                       :evm_object_class => @cs.class.base_class.name.to_sym)]
+        MiqProvisionVirtWorkflow.any_instance.stub(:allowed_customization_specs).and_return(cs_struct)
+
+        MiqProvisionVirtWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
+        MiqRequestWorkflow.any_instance.stub(:normalize_numeric_fields)
+        ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.any_instance.stub(:update_field_visibility)
+      end
+
+      it "#eligible_customization_specs" do
+        method = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision'].eligible_customization_specs"
+        @ae_method.update_attributes(:data => method)
+        result = invoke_ae.root(@ae_result_key)
+        result.should be_kind_of(Array)
+        result.first.class.should == MiqAeMethodService::MiqAeServiceCustomizationSpec
+      end
+    end
+
     context "resource_pools" do
       before(:each) do
         @rsc = FactoryGirl.create(:resource_pool)
