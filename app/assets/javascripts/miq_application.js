@@ -1198,6 +1198,9 @@ function miqSelectPickerEvent(element, url, options){
 }
 
 function miqAccordSelect(e) {
+  if (ManageIQ.noCollapseEvent) { // implicitly return true when the noCollapseEvent is set
+    return true;
+  }
   if (!miqCheckForChanges()) {
     return false;
   } else {
@@ -1205,6 +1208,29 @@ function miqAccordSelect(e) {
     miqJqueryRequest(url, {beforeSend: true, complete: true});
     return true;
   }
+}
+
+// Function to expand/collapse a pair of accordions
+function miqAccordionSwap(collapse, expand) {
+  /*
+   * Blocked by: https://github.com/twbs/bootstrap/issues/18418
+   * TODO: uncomment this and delete below when the issue is fixed
+   *
+   * // Fire an one-time event after the collapse is done
+   * $(collapse).one('hidden.bs.collapse', function () {
+   *   $(expand).collapse('show');
+   * });
+   * // Fire an one-time event fater the expand is done
+   * $(expand).one('shown.bs.collapse', function () {
+   *   ManageIQ.noCollapseEvent = false;
+   * })
+   * ManageIQ.noCollapseEvent = true;
+   * $(collapse).collapse('hide');
+   *
+   */
+   ManageIQ.noCollapseEvent = true;
+   $(expand).parent().find('.panel-heading a').trigger('click');
+   ManageIQ.noCollapseEvent = false;
 }
 
 // This function is called in miqOnLoad

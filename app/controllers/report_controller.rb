@@ -741,7 +741,6 @@ class ReportController < ApplicationController
       presenter[:update_partials][:main_div] = r[:partial => partial]
       case x_active_tree
       when :db_tree
-        presenter[:open_accord] = 'db'   # have to make db accordion active incase coming from report list
         if @in_a_form
           if @edit[:new][:dashboard_order]
             @right_cell_text = _("Editing %{model} sequence for \"%{name}\"") % {:name => @sb[:group_desc], :model => "Dashboard"}
@@ -757,7 +756,6 @@ class ReportController < ApplicationController
         @right_cell_text = _("Import / Export")
       when :reports_tree
         if params[:pressed] == "miq_report_schedule_add"
-          presenter[:open_accord] = 'schedules'
           if @in_a_form
             presenter[:build_calendar] = true
             @right_cell_text = @schedule.id ?
@@ -771,7 +769,6 @@ class ReportController < ApplicationController
           end
         end
       when :schedules_tree
-        presenter[:open_accord] = 'schedules'
         if @in_a_form
           presenter[:build_calendar] = true
           @right_cell_text = @schedule.id ?
@@ -779,7 +776,6 @@ class ReportController < ApplicationController
               _("Adding a new %s") % ui_lookup(:model => 'MiqSchedule')
         end
       when :widgets_tree
-        presenter[:open_accord] = 'widgets'
         if @in_a_form
           presenter[:build_calendar] = {
             :date_from => Time.now.in_time_zone(@edit[:tz]),
