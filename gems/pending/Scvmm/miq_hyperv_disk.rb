@@ -10,7 +10,7 @@ require 'rufus/lru'
 
 class MiqHyperVDisk
   MIN_SECTORS_TO_CACHE = 4
-  DEF_BLOCK_CACHE_SIZE = 200
+  DEF_BLOCK_CACHE_SIZE = 300
 
   attr_reader :hostname, :virtual_disk, :file_offset, :file_size, :parser, :vm_name, :temp_snapshot_name
 

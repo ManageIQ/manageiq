@@ -21,12 +21,19 @@ module VmOrTemplate::Scanning
       return nil
     end
 
+    timeout_adj = 1
+    vm = VmOrTemplate.find(id)
+    if vm.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm) ||
+       vm.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Template)
+      timeout_adj = 4
+    end
     options = {
       :target_id    => id,
       :target_class => self.class.base_class.name,
       :name         => "Scan from Vm #{name}",
       :userid       => userid,
-      :sync_key     => guid
+      :sync_key     => guid,
+      :timeout_adj  => timeout_adj
     }.merge(options)
     options[:zone] = ext_management_system.my_zone unless ext_management_system.nil?
     # options = {:agent_id => myhost.id, :agent_class => myhost.class.to_s}.merge!(options) unless myhost.nil?
