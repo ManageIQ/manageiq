@@ -686,10 +686,11 @@ module OpsController::Diagnostics
   # Delete all selected server
   def delete_server
     assert_privileges("delete_server")
-    servers = []
     if @sb[:diag_selected_id].nil?
+      servers = []
       add_flash(_("%s no longer exists") % ui_lookup(:table => "evm_server"), :error)
     else
+      servers = []
       servers.push(@sb[:diag_selected_id])
     end
     process_servers(servers, "destroy") unless servers.empty?
