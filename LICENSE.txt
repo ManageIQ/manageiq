@@ -120,6 +120,18 @@ WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWIS
 USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
+The XMLDisplay component - app/assets/javascripts/XMLDisplay.js - is covered by
+the following copyright and licence notice:
+
+Copyright (c) 2007 Lev Muchnik <LevMuchnik@gmail.com>. All rights reserved.
+You may copy and modify this script as long as the above copyright notice,
+this condition and the following disclaimer is left intact.
+This software is provided by the author "AS IS" and no warranties are
+implied, including fitness for a particular purpose. In no event shall
+the author be liable for any damages arising in any way out of the use
+of this software, even if advised of the possibility of such damage.
+
+
 Additional third-party legal notices are contained in pertinent files
 in the ManageIQ source code repository.
 
