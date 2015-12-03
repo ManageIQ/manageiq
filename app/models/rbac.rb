@@ -226,14 +226,12 @@ module Rbac
   end
 
   def self.get_belongsto_filter_object_ids(klass, filter)
-    return nil if filter.nil? || filter.empty?
-    return nil unless BELONGSTO_FILTER_CLASSES.include?(safe_base_class(klass).name)
+    return nil if !BELONGSTO_FILTER_CLASSES.include?(safe_base_class(klass).name) || filter.blank?
     get_belongsto_matches(filter, rbac_class(klass)).collect(&:id)
   end
 
   def self.get_managed_filter_object_ids(klass, scope, filter)
-    return nil if filter.nil? || filter.empty?
-    return nil unless TAGGABLE_FILTER_CLASSES.include?(safe_base_class(klass).name)
+    return nil if !TAGGABLE_FILTER_CLASSES.include?(safe_base_class(klass).name) || filter.blank?
     scope.find_tags_by_grouping(filter, :ns => '*', :select => minimum_columns_for(klass)).collect(&:id)
   end
 
