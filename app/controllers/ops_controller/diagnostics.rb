@@ -715,12 +715,8 @@ module OpsController::Diagnostics
       add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "MiqServer"), :name => svr_name, :task => "destroy"} << bang.message,
                 :error)
     else
-      if "destroy" == "destroy"
-        AuditEvent.success(audit)
-        add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => "MiqServer"), :name => "#{svr_name} [#{svr.id}]"})
-      else
-        add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model => ui_lookup(:model => "MiqServer"), :name => "#{svr_name} [#{svr.id}]", :task => "destroy"})
-      end
+      AuditEvent.success(audit)
+      add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => "MiqServer"), :name => "#{svr_name} [#{svr.id}]"})
     end
   end
 
