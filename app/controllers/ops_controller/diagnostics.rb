@@ -697,26 +697,25 @@ module OpsController::Diagnostics
 
   # Common Server button handler routines
   def process_server(server_id)
-    task = "destroy"
     svr = MiqServer.find_by(:id => server_id)
     return unless svr
 
     id = svr.id
     svr_name = svr.name
-    if task == "destroy"
+    if "destroy" == "destroy"
       audit = {:event => "svr_record_delete", :message => "[#{svr_name}] Record deleted", :target_id => id, :target_class => "MiqServer", :userid => session[:userid]}
     end
     begin
-      svr.send(task.to_sym) if svr.respond_to?(task)    # Run the task
+      svr.send("destroy".to_sym) if svr.respond_to?("destroy")    # Run the task
     rescue StandardError => bang
-      add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "MiqServer"), :name => svr_name, :task => task} << bang.message,
+      add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "MiqServer"), :name => svr_name, :task => "destroy"} << bang.message,
                 :error)
     else
-      if task == "destroy"
+      if "destroy" == "destroy"
         AuditEvent.success(audit)
         add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => "MiqServer"), :name => "#{svr_name} [#{svr.id}]"})
       else
-        add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model => ui_lookup(:model => "MiqServer"), :name => "#{svr_name} [#{svr.id}]", :task => task})
+        add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model => ui_lookup(:model => "MiqServer"), :name => "#{svr_name} [#{svr.id}]", :task => "destroy"})
       end
     end
   end
