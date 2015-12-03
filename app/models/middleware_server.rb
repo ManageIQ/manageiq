@@ -1,3 +1,6 @@
 class MiddlewareServer < ActiveRecord::Base
-  belongs_to :ext_management_system
+  include ReportableMixin
+
+  belongs_to :ext_management_system, :foreign_key => "ems_id"
+  acts_as_miq_taggable
 end

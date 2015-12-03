@@ -151,6 +151,10 @@ class Zone < ApplicationRecord
     ext_management_systems.select { |e| e.kind_of? ManageIQ::Providers::ContainerManager }
   end
 
+  def ems_middlewares
+    ext_management_systems.select { |e| e.kind_of? ManageIQ::Providers::MiddlewareManager }
+  end
+
   def ems_clouds
     ext_management_systems.select { |e| e.kind_of? EmsCloud }
   end

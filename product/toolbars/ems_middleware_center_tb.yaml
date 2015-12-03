@@ -1,0 +1,54 @@
+#
+# Toolbar config file
+#
+---
+:model: ManageIQ::Providers::MiddlewareManager
+:button_groups:
+- :name: ems_middleware_vmdb
+  :items:
+  - :buttonSelect: ems_middleware_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: ems_middleware_refresh
+      :image: refresh
+      :text: 'Refresh items and relationships'
+      :title: 'Refresh items and relationships related to this #{ui_lookup(:table=>"ems_middleware")}'
+      :confirm: 'Refresh items and relationships related to this #{ui_lookup(:table=>"ems_middleware")}?'
+    - :separator:
+    - :button: ems_middleware_edit
+      :image: edit
+      :text: 'Edit this #{ui_lookup(:table=>"ems_middleware")}'
+      :title: 'Edit this #{ui_lookup(:table=>"ems_middleware")}'
+      :url: '/edit'
+    - :button: ems_middleware_delete
+      :image: delete
+      :text: 'Remove this #{ui_lookup(:table=>"ems_middleware")} from the VMDB'
+      :title: 'Remove this #{ui_lookup(:table=>"ems_middleware")} from the VMDB'
+      :url_parms: '&refresh=y'
+      :confirm: 'Warning: This #{ui_lookup(:table=>"ems_middleware")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this #{ui_lookup(:table=>"ems_middleware")}?'
+- :name: ems_middleware_monitoring
+  :items:
+  - :buttonSelect: ems_middlewarer_monitoring_choice
+    :image: monitoring
+    :title: Monitoring
+    :text: Monitoring
+    :items:
+    - :button: ems_middleware_timeline
+      :image: timeline
+      :text: 'Timelines'
+      :title: 'Show Timelines for this #{ui_lookup(:table=>"ems_middleware")}'
+      :url: '/show'
+      :url_parms: '?display=timeline'
+- :name: ems_middleware_policy
+  :items:
+  - :buttonSelect: ems_middleware_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: ems_middleware_tag
+      :image: tag
+      :text: 'Edit Tags'
+      :title: 'Edit Tags for this #{ui_lookup(:table=>"ems_middleware")}'

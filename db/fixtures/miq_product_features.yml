@@ -3124,6 +3124,114 @@
       :feature_type: admin
       :identifier: ems_container_new
 
+  # EmsMiddleware
+  - :name: Providers
+    :description: Everything under Middleware Providers
+    :feature_type: node
+    :identifier: ems_middleware
+    :children:
+    - :name: View
+      :description: View Middleware Providers
+      :feature_type: view
+      :identifier: ems_middleware_view
+      :children:
+      - :name: List
+        :description: Display Lists of Middleware Providers
+        :feature_type: view
+        :identifier: ems_middleware_show_list
+      - :name: Show
+        :description: Display Individual Middleware Providers
+        :feature_type: view
+        :identifier: ems_middleware_show
+      - :name: Timeline
+        :description: Display Timelines for Middleware Providers
+        :feature_type: view
+        :identifier: ems_middleware_timeline
+    - :name: Operate
+      :description: Perform Operations on Middleware Providers
+      :feature_type: control
+      :identifier: ems_middleware_control
+      :children:
+      - :name: Refresh
+        :description: Refresh Middleware Providers
+        :feature_type: control
+        :identifier: ems_middleware_refresh
+      - :name: Edit Tags
+        :description: Edit Tags of Middleware Providers
+        :feature_type: control
+        :identifier: ems_middleware_tag
+    - :name: Modify
+      :description: Modify Middleware Providers
+      :feature_type: admin
+      :identifier: ems_middleware_admin
+      :children:
+      - :name: Remove
+        :description: Remove Middleware Providers from the VMDB
+        :feature_type: admin
+        :identifier: ems_middleware_delete
+      - :name: Edit
+        :description: Edit a Middleware Provider
+        :feature_type: admin
+        :identifier: ems_middleware_edit
+      - :name: Add
+        :description: Add a Middleware Provider
+        :feature_type: admin
+        :identifier: ems_middleware_new
+
+  # MiddlewareServer
+  - :name: MiddlewareServer
+    :description: Everything under Middleware Servers
+    :feature_type: node
+    :identifier: middleware_server
+    :children:
+    - :name: View
+      :description: View Middleware Servers
+      :feature_type: view
+      :identifier: middleware_server_view
+      :children:
+      - :name: List
+        :description: Display Lists of Middleware Servers
+        :feature_type: view
+        :identifier: middleware_server_show_list
+      - :name: Show
+        :description: Display Individual Middleware Servers
+        :feature_type: view
+        :identifier: middleware_server_show
+      - :name: Timeline
+        :description: Display Timelines for Middleware Servers
+        :feature_type: view
+        :identifier: middleware_server_timeline
+      - :name: Utilization
+        :description: Show Capacity & Utilization data of Middleware Servers
+        :feature_type: view
+        :identifier: middleware_server_perf
+    - :name: Modify
+      :description: Modify Middleware Servers
+      :feature_type: admin
+      :identifier: middleware_server_admin
+      :children:
+      - :name: Remove
+        :description: Remove Middleware Servers from the VMDB
+        :feature_type: admin
+        :identifier: middleware_server_delete
+      - :name: Edit
+        :description: Edit a Middleware Server
+        :feature_type: admin
+        :identifier: middleware_server_edit
+      - :name: Add
+        :description: Add a Middleware Server
+        :feature_type: admin
+        :identifier: middleware_server_new
+    - :name: Operate
+      :description: Perform Operations on Middleware Servers
+      :feature_type: control
+      :identifier: middleware_server_control
+      :children:
+      - :name: Edit Tags
+        :description: Edit Tags of Middleware Servers
+        :feature_type: control
+        :identifier: middleware_server_tag
+
 # ContainerGroup
 - :name: Pods
   :description: Everything under Pods

@@ -1,0 +1,47 @@
+#
+# Toolbar config file
+#
+---
+:model: MiddlewareServer
+:button_groups:
+- :name: middleware_server_vmdb
+  :items:
+  - :buttonSelect: middleware_server_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: middleware_server_new
+      :image: new
+      :url: '/new'
+      :text: 'Add a New #{ui_lookup(:table=>"middleware_server")}'
+      :title: 'Add a New #{ui_lookup(:table=>"middleware_server")}'
+    - :button: middleware_server_edit
+      :image: edit
+      :text: 'Edit Selected #{ui_lookup(:table=>"middleware_server")}'
+      :title: 'Select a single #{ui_lookup(:table=>"middleware_server")} to edit'
+      :url_parms: 'main_div'
+      :onwhen: '1'
+    - :button: middleware_server_delete
+      :image: remove
+      :text: 'Remove #{ui_lookup(:tables=>"middleware_servers")} from the VMDB'
+      :title: 'Remove selected #{ui_lookup(:tables=>"middleware_servers")} from the VMDB'
+      :url_parms: 'main_div'
+      :confirm: 'Warning: The selected #{ui_lookup(:tables=>"middleware_servers")} and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected #{ui_lookup(:tables=>"middleware_servers")}?'
+      :onwhen: '1+'
+- :name: middleware_server_policy
+  :items:
+  - :buttonSelect: middleware_server_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :enabled: 'false'
+    :onwhen: '1+'
+    :items:
+    - :button: middleware_server_tag
+      :image: tag
+      :text: 'Edit Tags'
+      :title: 'Edit Tags for this #{ui_lookup(:table=>"middleware_servers")}'
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'

@@ -55,7 +55,7 @@ class DashboardController < ApplicationController
   end
 
   VALID_TABS = ->(x) { Hash[x.map(&:to_s).zip(x)] }[[
-    :vi, :svc, :clo, :inf, :cnt, :con, :aut, :opt, :set,  # normal tabs
+    :vi, :svc, :clo, :inf, :cnt, :mdl, :con, :aut, :opt, :set,  # normal tabs
     :sto                                                  # hidden tabs
   ]] # format is {"vi" => :vi, "svc" => :svc . . }
 

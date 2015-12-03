@@ -855,6 +855,10 @@ en:
       ems_infras:                  Infrastructure Providers
       ems_container:               Containers Provider
       ems_containers:              Containers Providers
+      ems_middleware:              Middleware Provider
+      ems_middlewares:             Middleware Providers
+      middleware_server:           Middleware Server
+      middleware_servers:          Middleware Servers
       evm_owner:                   EVM Owner
       ext_management_system:       Cloud/Infrastructure Provider
       ext_management_systems:      Cloud/Infrastructure Providers

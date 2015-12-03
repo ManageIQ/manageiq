@@ -443,7 +443,7 @@ class ApplicationHelper::ToolbarChooser
       unless @in_a_form
         if %w(auth_key_pair_cloud availability_zone cloud_tenant cloud_volume container_group
               container_node container_service ems_cloud ems_cluster
-              ems_container container_project container_route container_replicator container_image
+              ems_container ems_middleware container_project container_route container_replicator container_image
               container_image_registry ems_infra flavor host
               ontap_file_share ontap_logical_disk container_topology
               ontap_storage_system orchestration_stack repository resource_pool storage storage_manager
