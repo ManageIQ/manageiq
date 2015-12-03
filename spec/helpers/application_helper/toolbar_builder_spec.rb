@@ -21,274 +21,118 @@ describe ApplicationHelper do
   end
 
   describe "custom_buttons" do
-    before(:each) do
-      @user = FactoryGirl.create(:user, :role => "super_administrator")
+    let(:user) { FactoryGirl.create(:user, :role => "super_administrator") }
+
+    shared_examples "no custom buttons" do
+      it("#get_custom_buttons")           { expect(get_custom_buttons(subject)).to be_blank }
+      it("#custom_buttons_hash")          { expect(custom_buttons_hash(subject)).to be_blank }
+      it("#build_custom_buttons_toolbar") { expect(build_custom_buttons_toolbar(subject)[:button_groups]).to be_blank }
+      it("#record_to_service_buttons")    { expect(record_to_service_buttons(subject)).to be_blank }
     end
 
-    context "when record is VM" do
-      before(:each) do
-        @record = FactoryGirl.create(:vm_vmware)
+    shared_examples "with custom buttons" do
+      before do
+        @button_set = FactoryGirl.create(:custom_button_set, :set_data => {:applies_to_class => applies_to_class})
+        login_as user
+        @button1 = FactoryGirl.create(:custom_button, :applies_to_class => applies_to_class, :visibility => {:roles => ["_ALL_"]}, :options => {})
+        @button_set.add_member @button1
       end
 
-      context "and it has no custom buttons" do
-        it "#get_custom_buttons" do
-          get_custom_buttons(@record).should == []
-        end
+      it "#get_custom_buttons" do
+        expected_button1 = {
+          :id            => @button1.id,
+          :class         => @button1.applies_to_class,
+          :name          => @button1.name,
+          :description   => @button1.description,
+          :image         => @button1.options[:button_image],
+          :text_display  => @button1.options.key?(:display) ? @button1.options[:display] : true,
+          :target_object => subject.id
+        }
+        expected_button_set = {
+          :id           => @button_set.id,
+          :text         => @button_set.name,
+          :description  => @button_set.description,
+          :image        => @button_set.set_data[:button_image],
+          :text_display => @button_set.set_data.key?(:display) ? @button_set.set_data[:display] : true,
+          :buttons      => [expected_button1]
+        }
 
-        it "#custom_buttons_hash" do
-          custom_buttons_hash(@record).should == []
-        end
-
-        it "#build_custom_buttons_toolbar" do
-          build_custom_buttons_toolbar(@record).should == {:button_groups => []}
-        end
-
-        it "#record_to_service_buttons" do
-          record_to_service_buttons(@record).should == []
-        end
-      end
-
-      context "and it has custom buttons" do
-        before(:each) do
-          @set_data = {:applies_to_class => 'Vm'}
-          @button_set = FactoryGirl.create(:custom_button_set, :set_data => @set_data)
-          login_as @user
-          @button1 = FactoryGirl.create(:custom_button, :applies_to_class => 'Vm', :visibility => {:roles => ["_ALL_"]}, :options => {})
-          @button_set.add_member @button1
-          @button_set.save!
-          @button1.save!
-        end
-
-        it "#get_custom_buttons" do
-          expected_button1 = {
-            :id            => @button1.id,
-            :class         => @button1.applies_to_class,
-            :name          => @button1.name,
-            :description   => @button1.description,
-            :image         => @button1.options[:button_image],
-            :text_display  => @button1.options.key?(:display) ? @button1.options[:display] : true,
-            :target_object => @record.id
-          }
-          expected_button_set = {
-            :id           => @button_set.id,
-            :text         => @button_set.name,
-            :description  => @button_set.description,
-            :image        => @button_set.set_data[:button_image],
-            :text_display => @button_set.set_data.key?(:display) ? @button_set.set_data[:display] : true,
-            :buttons      => [expected_button1]
-          }
-
-          get_custom_buttons(@record).should == [expected_button_set]
-        end
-
-        it "#record_to_service_buttons" do
-          record_to_service_buttons(@record).should == []
-        end
-
-        it "#custom_buttons_hash" do
-          escaped_button1_text = CGI.escapeHTML(@button1.name.to_s)
-          button1 = {
-            :button    => "custom__custom_#{@button1.id}",
-            :image     => "custom-#{@button1.options[:button_image]}",
-            :title     => CGI.escapeHTML(@button1.description.to_s),
-            :text      => escaped_button1_text,
-            :enabled   => "true",
-            :url       => "button",
-            :url_parms => "?id=#{@record.id}&button_id=#{@button1.id}&cls=#{@record.class.name}&pressed=custom_button&desc=#{escaped_button1_text}"
-          }
-          button_set_item1_items = [button1]
-          button_set_item1 = {
-            :buttonSelect => "custom_#{@button_set.id}",
-            :image        => "custom-#{@button_set.set_data[:button_image]}",
-            :title        => @button_set.description,
-            :text         => @button_set.name,
-            :enabled      => "true",
-            :items        => button_set_item1_items
-          }
-          items = [button_set_item1]
-          name = "custom_buttons_#{@button_set.name}"
-          custom_buttons_hash(@record).should == [:name => name, :items => items]
-        end
-
-        it "#build_custom_buttons_toolbar" do
-          escaped_button1_text = CGI.escapeHTML(@button1.name.to_s)
-          button1 = {
-            :button    => "custom__custom_#{@button1.id}",
-            :image     => "custom-#{@button1.options[:button_image]}",
-            :title     => CGI.escapeHTML(@button1.description.to_s),
-            :text      => escaped_button1_text,
-            :enabled   => "true",
-            :url       => "button",
-            :url_parms => "?id=#{@record.id}&button_id=#{@button1.id}&cls=#{@record.class.name}&pressed=custom_button&desc=#{escaped_button1_text}"
-          }
-          button_set_item1_items = [button1]
-          button_set_item1 = {
-            :buttonSelect => "custom_#{@button_set.id}",
-            :image        => "custom-#{@button_set.set_data[:button_image]}",
-            :title        => @button_set.description,
-            :text         => @button_set.name,
-            :enabled      => "true",
-            :items        => button_set_item1_items
-          }
-          button_set1_header = {
-            :name  => "custom_buttons_#{@button_set.name}",
-            :items => [button_set_item1]
-          }
-          button_groups = [button_set1_header]
-          build_custom_buttons_toolbar(@record).should == {:button_groups => button_groups}
-        end
-      end
-    end
-
-    context "when record is Service" do
-      before(:each) do
-        @service_template = FactoryGirl.create(:service_template)
-        @record = FactoryGirl.create(:service, :service_template => @service_template)
-      end
-
-      context "and it has no custom buttons" do
-        it "#get_custom_buttons" do
-          get_custom_buttons(@record).should == []
-        end
-
-        it "#custom_buttons_hash" do
-          custom_buttons_hash(@record).should == []
-        end
-
-        it "#build_custom_buttons_toolbar" do
-          build_custom_buttons_toolbar(@record).should == {:button_groups => []}
-        end
-
-        it "#record_to_service_buttons" do
-          record_to_service_buttons(@record).should == []
-        end
-      end
-
-      context "and it has custom buttons" do
-        before(:each) do
-          @set_data = {:applies_to_class => 'ServiceTemplate', :applies_to_id => @service_template.id}
-          @button_set = FactoryGirl.create(:custom_button_set, :set_data => @set_data)
-          login_as @user
-          @button1 = FactoryGirl.create(:custom_button, :applies_to_class => 'ServiceTemplate', :visibility => {:roles => ["_ALL_"]}, :options => {})
-          @button_set.add_member @button1
-          @button_set.save!
-          @button1.save!
-        end
-
-        it "#custom_buttons_hash" do
-          escaped_button1_text = CGI.escapeHTML(@button1.name.to_s)
-          button1 = {
-            :button    => "custom__custom_#{@button1.id}",
-            :image     => "custom-#{@button1.options[:button_image]}",
-            :title     => CGI.escapeHTML(@button1.description.to_s),
-            :text      => escaped_button1_text,
-            :enabled   => "true",
-            :url       => "button",
-            :url_parms => "?id=#{@record.id}&button_id=#{@button1.id}&cls=#{@record.class.name}&pressed=custom_button&desc=#{escaped_button1_text}"
-          }
-          button_set_item1_items = [button1]
-          button_set_item1 = {
-            :buttonSelect => "custom_#{@button_set.id}",
-            :image        => "custom-#{@button_set.set_data[:button_image]}",
-            :title        => @button_set.description,
-            :text         => @button_set.name,
-            :enabled      => "true",
-            :items        => button_set_item1_items
-          }
-          items = [button_set_item1]
-          name = "custom_buttons_#{@button_set.name}"
-          custom_buttons_hash(@record).should == [:name => name, :items => items]
-        end
-
-        it "#build_custom_buttons_toolbar" do
-          escaped_button1_text = CGI.escapeHTML(@button1.name.to_s)
-          button1 = {
-            :button    => "custom__custom_#{@button1.id}",
-            :image     => "custom-#{@button1.options[:button_image]}",
-            :title     => CGI.escapeHTML(@button1.description.to_s),
-            :text      => escaped_button1_text,
-            :enabled   => "true",
-            :url       => "button",
-            :url_parms => "?id=#{@record.id}&button_id=#{@button1.id}&cls=#{@record.class.name}&pressed=custom_button&desc=#{escaped_button1_text}"
-          }
-          button_set_item1_items = [button1]
-          button_set_item1 = {
-            :buttonSelect => "custom_#{@button_set.id}",
-            :image        => "custom-#{@button_set.set_data[:button_image]}",
-            :title        => @button_set.description,
-            :text         => @button_set.name,
-            :enabled      => "true",
-            :items        => button_set_item1_items
-          }
-          button_set1_header = {
-            :name  => "custom_buttons_#{@button_set.name}",
-            :items => [button_set_item1]
-          }
-          button_groups = [button_set1_header]
-          build_custom_buttons_toolbar(@record).should == {:button_groups => button_groups}
-
-          @button2 = FactoryGirl.create(:custom_button, :applies_to_class => 'ServiceTemplate', :applies_to_id => @service_template.id, :visibility => {:roles => ["_ALL_"]}, :options => {})
-
-          escaped_button2_text = CGI.escapeHTML(@button2.name.to_s)
-          expected_button2 = {
-            :button    => "custom__custom_#{@button2.id}",
-            :image     => "custom-#{@button2.options[:button_image]}",
-            :title     => CGI.escapeHTML(@button2.description.to_s),
-            :text      => escaped_button2_text,
-            :enabled   => nil,
-            :url       => "button",
-            :url_parms => "?id=#{@record.id}&button_id=#{@button2.id}&cls=#{@record.class.name}&pressed=custom_button&desc=#{escaped_button2_text}"
-          }
-          button_set2_header = {
-            :name  => "custom_buttons_",
-            :items => [expected_button2]
-          }
-          button_groups = [button_set1_header, button_set2_header]
-          build_custom_buttons_toolbar(@record).should == {:button_groups => button_groups}
-        end
-
-        it "#get_custom_buttons" do
-          expected_button1 = {
-            :id            => @button1.id,
-            :class         => @button1.applies_to_class,
-            :name          => @button1.name,
-            :description   => @button1.description,
-            :image         => @button1.options[:button_image],
-            :text_display  => @button1.options.key?(:display) ? @button1.options[:display] : true,
-            :target_object => @record.id
-          }
-          expected_buttons = [expected_button1]
-          expected_button_set = {
-            :id           => @button_set.id,
-            :text         => @button_set.name,
-            :description  => @button_set.description,
-            :image        => @button_set.set_data[:button_image],
-            :text_display => @button_set.set_data.key?(:display) ? @button_set.set_data[:display] : true,
-            :buttons      => [expected_button1]
-          }
-
-          get_custom_buttons(@record).should == [expected_button_set]
-
-          button2 = FactoryGirl.create(:custom_button, :applies_to_class => 'ServiceTemplate', :applies_to_id => @service_template.id, :visibility => {:roles => ["_ALL_"]}, :options => {})
-
-          get_custom_buttons(@record).should == [expected_button_set]
-        end
+        expect(get_custom_buttons(subject)).to eq([expected_button_set])
       end
 
       it "#record_to_service_buttons" do
-        record_to_service_buttons(@record).should == []
-        button2 = FactoryGirl.create(:custom_button, :applies_to_class => 'ServiceTemplate', :applies_to_id => @service_template.id, :visibility => {:roles => ["_ALL_"]}, :options => {})
-        expected_button2 = {
-          :id            => button2.id,
-          :class         => button2.applies_to_class,
-          :name          => button2.name,
-          :description   => button2.description,
-          :image         => button2.options[:button_image],
-          :text_display  => button2.options.key?(:display) ? button2.options[:display] : true,
-          :target_object => @record.id
-        }
-        record_to_service_buttons(@record).should == [expected_button2]
+        expect(record_to_service_buttons(subject)).to be_blank
       end
+
+      it "#custom_buttons_hash" do
+        escaped_button1_text = CGI.escapeHTML(@button1.name.to_s)
+        button1 = {
+          :button    => "custom__custom_#{@button1.id}",
+          :image     => "custom-#{@button1.options[:button_image]}",
+          :title     => CGI.escapeHTML(@button1.description.to_s),
+          :text      => escaped_button1_text,
+          :enabled   => "true",
+          :url       => "button",
+          :url_parms => "?id=#{subject.id}&button_id=#{@button1.id}&cls=#{subject.class.name}&pressed=custom_button&desc=#{escaped_button1_text}"
+        }
+        button_set_item1_items = [button1]
+        button_set_item1 = {
+          :buttonSelect => "custom_#{@button_set.id}",
+          :image        => "custom-#{@button_set.set_data[:button_image]}",
+          :title        => @button_set.description,
+          :text         => @button_set.name,
+          :enabled      => "true",
+          :items        => button_set_item1_items
+        }
+        items = [button_set_item1]
+        name = "custom_buttons_#{@button_set.name}"
+        expect(custom_buttons_hash(subject)).to eq([:name => name, :items => items])
+      end
+
+      it "#build_custom_buttons_toolbar" do
+        escaped_button1_text = CGI.escapeHTML(@button1.name.to_s)
+        button1 = {
+          :button    => "custom__custom_#{@button1.id}",
+          :image     => "custom-#{@button1.options[:button_image]}",
+          :title     => CGI.escapeHTML(@button1.description.to_s),
+          :text      => escaped_button1_text,
+          :enabled   => "true",
+          :url       => "button",
+          :url_parms => "?id=#{subject.id}&button_id=#{@button1.id}&cls=#{subject.class.name}&pressed=custom_button&desc=#{escaped_button1_text}"
+        }
+        button_set_item1_items = [button1]
+        button_set_item1 = {
+          :buttonSelect => "custom_#{@button_set.id}",
+          :image        => "custom-#{@button_set.set_data[:button_image]}",
+          :title        => @button_set.description,
+          :text         => @button_set.name,
+          :enabled      => "true",
+          :items        => button_set_item1_items
+        }
+        button_set1_header = {
+          :name  => "custom_buttons_#{@button_set.name}",
+          :items => [button_set_item1]
+        }
+        button_groups = [button_set1_header]
+        expect(build_custom_buttons_toolbar(subject)).to eq(:button_groups => button_groups)
+      end
+    end
+
+    context "for VM" do
+      let(:applies_to_class) { 'Vm' }
+      subject { FactoryGirl.create(:vm_vmware) }
+
+      it_behaves_like "no custom buttons"
+      it_behaves_like "with custom buttons"
+    end
+
+    context "for Service" do
+      let(:applies_to_class) { 'ServiceTemplate' }
+      let(:service_template) { FactoryGirl.create(:service_template) }
+      subject                { FactoryGirl.create(:service, :service_template => service_template) }
+
+      it_behaves_like "no custom buttons"
+      it_behaves_like "with custom buttons"
     end
   end
 
@@ -303,38 +147,38 @@ describe ApplicationHelper do
 
       it "and layout is scan_profile" do
         @layout = "scan_profile"
-        subject.should == "summary-green"
+        expect(subject).to eq("summary-green")
       end
 
       it "and layout is miq_schedule" do
         @layout = "miq_schedule"
-        subject.should == "summary-green"
+        expect(subject).to eq("summary-green")
       end
 
       it "and layout is miq_proxy" do
         @layout = "miq_schedule"
-        subject.should == "summary-green"
+        expect(subject).to eq("summary-green")
       end
 
       it "otherwise" do
         @layout = "some_thing"
-        subject.should == @img
+        expect(subject).to eq(@img)
       end
     end
 
     it "when not with show_summary" do
       @button_name = "summary_reload"
       @img = "reload"
-      subject.should == @img
+      expect(subject).to eq(@img)
     end
   end # get_image
 
   describe "#build_toolbar_hide_button" do
+    let(:user) { FactoryGirl.create(:user) }
     subject { build_toolbar_hide_button(@id) }
     before do
-      @user = FactoryGirl.create(:user)
       @record = double("record")
-      login_as @user
+      login_as user
       @settings = {
         :views => {
           :compare      => 'compressed',
@@ -365,62 +209,62 @@ describe ApplicationHelper do
     ).each do |item|
       it "when with #{item}" do
         @id = item
-        subject.should be_false
+        expect(subject).to be_false
       end
     end
 
     it "when with show_summary and not explorer" do
       @id = "show_summary"
       @explorer = false
-      subject.should be_false
+      expect(subject).to be_false
     end
 
     it "when with show_summary and explorer" do
       @id = "show_summary"
       @explorer = true
-      subject.should be_true
+      expect(subject).to be_true
     end
 
     it "when with history_1" do
       setup_x_tree_history
       @id = "history_1"
-      subject.should be_false
+      expect(subject).to be_false
     end
 
     %w(0 1 2 3 4).each do |n|
       it "when with existing history_#{n}" do
         setup_x_tree_history
         @id = "history_#{n}"
-        subject.should be_false
+        expect(subject).to be_false
       end
     end
 
     it "when not history_1 and the tree history not exist" do
       setup_x_tree_history
       @id = "history_10"
-      subject.should be_true
+      expect(subject).to be_true
     end
 
     it "when id likes old_dialogs_*" do
       @id = "old_dialogs_some_thing"
-      subject.should be_true
+      expect(subject).to be_true
     end
 
     it "when id likes ab_*" do
       @id = "ab_some_thing"
-      subject.should be_true
+      expect(subject).to be_true
     end
 
     context "when with button_add" do
       before { @id = "button_add" }
       it "and no record_id" do
         @edit = {:rec_id => nil}
-        subject.should be_false
+        expect(subject).to be_false
       end
 
       it "and record_id" do
         @edit = {:rec_id => "record id"}
-        subject.should be_true
+        expect(subject).to be_true
       end
     end
 
@@ -429,25 +273,25 @@ describe ApplicationHelper do
         before { @id = id }
         it "and record_id" do
           @edit = {:rec_id => "record id"}
-          subject.should be_false
+          expect(subject).to be_false
         end
 
         it "and no record_id" do
           @edit = {:rec_id => nil}
-          subject.should be_true
+          expect(subject).to be_true
         end
       end
     end
 
     it "when with button_cancel" do
       @id = "button_cancel"
-      subject.should be_false
+      expect(subject).to be_false
     end
 
     ["miq_task_", "compare_", "drift_", "comparemode_", "driftmode_", "custom_"].each do |i|
       it "when id likes #{i}*" do
         @id = "#{i}some_thing"
-        subject.should be_false
+        expect(subject).to be_false
       end
     end
 
@@ -455,12 +299,12 @@ describe ApplicationHelper do
       before { @id = "miq_request_reload" }
       it "and lastaction is show_list" do
         @lastaction = "show_list"
-        subject.should be_false
+        expect(subject).to be_false
       end
 
       it "and lastaction is not show_list" do
         @lastaction = "log"
-        subject.should be_true
+        expect(subject).to be_true
       end
     end
 
@@ -468,61 +312,61 @@ describe ApplicationHelper do
       before { @id = "miq_request_reload" }
       it "and showtype is miq_provisions" do
         @showtype = "miq_provisions"
-        subject.should be_false
+        expect(subject).to be_false
       end
 
       it "and showtype is not miq_provisions" do
         @showtype = "compare"
-        subject.should be_true
+        expect(subject).to be_true
       end
     end
 
     context "when with miq_request_approve" do
       before { @id = "miq_request_approve" }
       it "and miq_request_approval feature is not allowed" do
-        subject.should be_true
+        expect(subject).to be_true
       end
 
       it "and miq_request_approval feature is allowed" do
-        @user.stub(:role_allows?).and_return(true)
-        subject.should be_false
+        user.stub(:role_allows?).and_return(true)
+        expect(subject).to be_false
       end
     end
 
     context "when with miq_request_deny" do
       before { @id = "miq_request_deny" }
       it "and miq_request_approval feature is not allowed" do
-        subject.should be_true
+        expect(subject).to be_true
       end
 
       it "and miq_request_approval feature is allowed" do
-        @user.stub(:role_allows?).and_return(true)
-        subject.should be_false
+        user.stub(:role_allows?).and_return(true)
+        expect(subject).to be_false
       end
     end
 
     it "when id likes dialog_*" do
       @id = "dialog_some_thing"
-      subject.should be_false
+      expect(subject).to be_false
     end
 
     it "when with miq_request_approve and allowed by the role" do
       @id = "miq_request_approve"
       # when the role allows the feature
-      @user.stub(:role_allows?).and_return(true)
-      subject.should be_false
+      user.stub(:role_allows?).and_return(true)
+      expect(subject).to be_false
     end
 
     it "when with miq_request_deny and allowed by the role" do
       @id = "miq_request_deny"
       # when the role allows the feature
-      @user.stub(:role_allows?).and_return(true)
-      subject.should be_false
+      user.stub(:role_allows?).and_return(true)
+      expect(subject).to be_false
     end
 
     it "when not with miq_request_approve or miq_request_deny and not allowed by the role" do
       @id = "miq_request_edit"
-      subject.should be_true
+      expect(subject).to be_true
     end
 
     ["ems_cluster_protect", "ext_management_system_protect",
@@ -551,8 +395,8 @@ describe ApplicationHelper do
      "vm_snapshot_revert"].each do |id|
       it "when with #{id}" do
         @id = id
-        @user.stub(:role_allows?).and_return(true)
-        subject.should be_false
+        user.stub(:role_allows?).and_return(true)
+        expect(subject).to be_false
       end
     end
 
@@ -564,35 +408,35 @@ describe ApplicationHelper do
 
       it "and !@edit" do
         @edit = nil
-        subject.should be_true
+        expect(subject).to be_true
       end
 
       it "and nodes < 2" do
         @sb = {:trees       => {:svcs_tree => {:active_node => 'root'}},
                :active_tree => :svcs_tree}
-        subject.should be_true
+        expect(subject).to be_true
 
         @sb = {:trees       => {:svcs_tree => {:active_node => ''}},
                :active_tree => :svcs_tree}
-        subject.should be_true
+        expect(subject).to be_true
       end
 
       it "and 2 nodes" do
         @sb = {:trees       => {:svcs_tree => {:active_node => 'some_thing'}},
                :active_tree => :svcs_tree}
-        subject.should be_false
+        expect(subject).to be_false
       end
 
       it "and 3 nodes" do
         @sb = {:trees       => {:svcs_tree => {:active_node => 'something_to_test'}},
                :active_tree => :svcs_tree}
-        subject.should be_false
+        expect(subject).to be_false
       end
 
       it "and nodes > 3" do
         @sb = {:trees       => {:svcs_tree => {:active_node => 'some_thing_to_test'}},
                :active_tree => :svcs_tree}
-        subject.should be_true
+        expect(subject).to be_true
       end
     end
 
@@ -604,35 +448,35 @@ describe ApplicationHelper do
 
       it "and !@edit" do
         @edit = nil
-        subject.should be_true
+        expect(subject).to be_true
       end
 
       it "and nodes < 3" do
         @sb = {:trees       => {:svcs_tree => {:active_node => 'some_thing'}},
                :active_tree => :svcs_tree}
-        subject.should be_true
+        expect(subject).to be_true
 
         @sb = {:trees       => {:svcs_tree => {:active_node => ''}},
                :active_tree => :svcs_tree}
-        subject.should be_true
+        expect(subject).to be_true
       end
 
       it "and 3 nodes" do
         @sb = {:trees       => {:svcs_tree => {:active_node => 'something_to_test'}},
                :active_tree => :svcs_tree}
-        subject.should be_false
+        expect(subject).to be_false
       end
 
       it "and 4 nodes" do
         @sb = {:trees       => {:svcs_tree => {:active_node => 'some_thing_to_test'}},
                :active_tree => :svcs_tree}
-        subject.should be_false
+        expect(subject).to be_false
       end
 
       it "and nodes > 4" do
         @sb = {:trees       => {:svcs_tree => {:active_node => 'some_thing_to_test_with'}},
                :active_tree => :svcs_tree}
-        subject.should be_true
+        expect(subject).to be_true
       end
     end
 
@@ -644,27 +488,27 @@ describe ApplicationHelper do
 
       it "and !@edit" do
         @edit = nil
-        subject.should be_true
+        expect(subject).to be_true
       end
 
       it "and nodes <= 2" do
         @sb = {:trees       => {:svcs_tree => {:active_node => 'some_thing'}},
                :active_tree => :svcs_tree}
-        subject.should be_false
+        expect(subject).to be_false
 
         @sb = {:trees       => {:svcs_tree => {:active_node => 'something'}},
                :active_tree => :svcs_tree}
-        subject.should be_false
+        expect(subject).to be_false
 
         @sb = {:trees       => {:svcs_tree => {:active_node => ''}},
                :active_tree => :svcs_tree}
-        subject.should be_false
+        expect(subject).to be_false
       end
 
       it "and nodes > 2" do
         @sb = {:trees       => {:svcs_tree => {:active_node => 'something_to_test'}},
                :active_tree => :svcs_tree}
-        subject.should be_true
+        expect(subject).to be_true
       end
     end
 
@@ -676,12 +520,12 @@ describe ApplicationHelper do
 
       it "and !@edit" do
         @edit = nil
-        subject.should be_true
+        expect(subject).to be_true
       end
 
       it "and @sb[:edit_typ] != 'add'" do
         @sb = {:edit_typ => "something"}
-        subject.should be_true
+        expect(subject).to be_true
       end
 
       it "and @sb[:edit_typ] = 'add'" do
@@ -690,7 +534,7 @@ describe ApplicationHelper do
                :active_tree => :svcs_tree,
                :edit_typ    => 'add'}
 
-        subject.should be_false
+        expect(subject).to be_false
       end
     end
 
@@ -704,26 +548,26 @@ describe ApplicationHelper do
 
       it "and !@edit" do
         @edit = nil
-        subject.should be_true
+        expect(subject).to be_true
       end
 
       it "and @sb[:edit_typ] = 'add'" do
         @sb[:edit_typ] = 'add'
-        subject.should be_true
+        expect(subject).to be_true
       end
 
       it "and @sb[:edit_typ] != 'add'" do
-        subject.should be_false
+        expect(subject).to be_false
       end
 
       it "and active_node = 'root'" do
         @sb = {:trees       => {:svcs_tree => {:active_node => 'root'}},
                :active_tree => :svcs_tree}
-        subject.should be_true
+        expect(subject).to be_true
       end
 
       it "and active_node != 'root'" do
-        subject.should be_false
+        expect(subject).to be_false
       end
     end
 
@@ -736,11 +580,11 @@ describe ApplicationHelper do
 
         it "and @edit" do
           @edit = {:rec_id => "record id", :current => {}}
-          subject.should be_true
+          expect(subject).to be_true
         end
 
         it "and !@edit" do
-          subject.should be_false
+          expect(subject).to be_false
         end
       end
     end
@@ -748,119 +592,119 @@ describe ApplicationHelper do
     ["host_miq_request_new", "vm_miq_request_new", "vm_clone", "vm_publish", "vm_pre_prov"].each do |id|
       it "when with #{id}" do
         @id = id
-        @user.stub(:role_allows?).and_return(true)
-        subject.should be_false
+        user.stub(:role_allows?).and_return(true)
+        expect(subject).to be_false
       end
     end
 
     context "when with miq_task_canceljob" do
       before do
         @id = 'miq_task_canceljob'
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
       end
 
       it "and @layout != all_tasks" do
         @layout = "x_tasks"
-        subject.should == true
+        expect(subject).to be_true
       end
 
       it "and @layout != all_ui_tasks" do
         @layout = "x_ui_tasks"
-        subject.should == true
+        expect(subject).to be_true
       end
 
       it "and @layout = all_tasks" do
         @layout = "all_tasks"
-        subject.should == false
+        expect(subject).to be_false
       end
 
       it "and @layout = all_ui_tasks" do
         @layout = "all_ui_tasks"
-        subject.should == false
+        expect(subject).to be_false
       end
     end
 
     context "when with vm_console" do
       before do
         @id = "vm_console"
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
         @record.stub(:console_supported? => false)
       end
 
       it "and record is not console supported" do
-        subject.should be_true
+        expect(subject).to be_true
       end
 
       it "and server's remote_console_type not set" do
         @vmdb_config = {:server => nil}
-        subject.should be_true
+        expect(subject).to be_true
       end
 
       it "and server's remote_console_type is not MKS" do
         @vmdb_config = {:server => {:remote_console_type => "not_MKS"}}
-        subject.should be_true
+        expect(subject).to be_true
       end
 
       it "and record is console supported and server's remote_console_type is MKS" do
         @record.stub(:console_supported? => true)
         @vmdb_config = {:server => {:remote_console_type => "MKS"}}
-        subject.should be_false
+        expect(subject).to be_false
       end
     end
 
     context "when with vm_vnc_console" do
       before do
         @id = "vm_vnc_console"
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
         @record.stub(:console_supported? => false)
       end
 
       it "and record is not console supported" do
-        subject.should == true
+        expect(subject).to be_true
       end
 
       it "and server's remote_console_type not set" do
         @vmdb_config = {:server => nil}
-        subject.should == true
+        expect(subject).to be_true
       end
 
       it "and server's remote_console_type is not VNC" do
         @vmdb_config = {:server => {:remote_console_type => "not_VNC"}}
-        subject.should == true
+        expect(subject).to be_true
       end
 
       it "and record is console supported and server's remote_console_type is VNC" do
         @record.stub(:console_supported? => true)
         @vmdb_config = {:server => {:remote_console_type => "VNC"}}
-        subject.should == false
+        expect(subject).to be_false
       end
     end
 
     context "when with vm_vmrc_console" do
       before do
         @id = "vm_vmrc_console"
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
         @record.stub(:console_supported? => false)
       end
 
       it "and record is not console supported" do
-        subject.should == true
+        expect(subject).to be_true
       end
 
       it "and server's remote_console_type not set" do
         @vmdb_config = {:server => nil}
-        subject.should == true
+        expect(subject).to be_true
       end
 
       it "and server's remote_console_type is not VMRC" do
         @vmdb_config = {:server => {:remote_console_type => "not_VMRC"}}
-        subject.should == true
+        expect(subject).to be_true
       end
 
       it "and record is console supported and server's remote_console_type is VMRC" do
         @record.stub(:console_supported? => true)
         @vmdb_config = {:server => {:remote_console_type => "VMRC"}}
-        subject.should == false
+        expect(subject).to be_false
       end
     end
 
@@ -868,17 +712,17 @@ describe ApplicationHelper do
       context "when with #{id}" do
         before do
           @id = id
-          @user.stub(:role_allows?).and_return(true)
+          user.stub(:role_allows?).and_return(true)
         end
 
         it "and @vmdb_config[:product][:smis] != true " do
           @vmdb_config = {:product => {:smis => false}}
-          subject.should == true
+          expect(subject).to be_true
         end
 
         it "and @vmdb_config[:product][:smis] = true " do
           @vmdb_config = {:product => {:smis => true}}
-          subject.should == false
+          expect(subject).to be_false
         end
       end
     end
@@ -886,24 +730,24 @@ describe ApplicationHelper do
     context "when with AssignedServerRole" do
       before do
         @record = AssignedServerRole.new
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
       end
 
       it "and id = delete_server" do
         @id = "delete_server"
-        subject.should == true
+        expect(subject).to be_true
       end
 
       it "and id != server_delete" do
         @id = "server_add"
-        subject.should == false
+        expect(subject).to be_false
       end
     end
 
     context "when with EmsCluster" do
       before do
         @record = EmsCluster.new
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
       end
 
       context "and id = common_drift" do
@@ -913,20 +757,20 @@ describe ApplicationHelper do
         end
 
         it "and lastaction = drift_history" do
-          subject.should == false
+          expect(subject).to be_false
         end
       end
 
       it "and id != common_drift" do
         @id = 'ems_cluster_view'
-        subject.should == false
+        expect(subject).to be_false
       end
     end
 
     context "when with Host" do
       before do
         @record = Host.new
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
       end
 
       context "and id = common_drift" do
@@ -936,7 +780,7 @@ describe ApplicationHelper do
         end
 
         it "and lastaction = drift_history" do
-          subject.should == false
+          expect(subject).to be_false
         end
       end
 
@@ -947,12 +791,12 @@ describe ApplicationHelper do
         end
 
         it "and record is not smart" do
-          subject.should == true
+          expect(subject).to be_true
         end
 
         it "and record is smart" do
           @record.stub(:smart? => true)
-          subject.should == false
+          expect(subject).to be_false
         end
       end
 
@@ -963,12 +807,12 @@ describe ApplicationHelper do
         end
 
         it "and record is not refreshable" do
-          subject.should == true
+          expect(subject).to be_true
         end
 
         it "and record is refreshable" do
           @record.stub(:is_refreshable? => true)
-          subject.should == false
+          expect(subject).to be_false
         end
       end
 
@@ -977,12 +821,12 @@ describe ApplicationHelper do
 
         it "and record is not scannable" do
           @record.stub(:is_scannable? => false)
-          subject.should == true
+          expect(subject).to be_true
         end
 
         it "and record is scannable" do
           @record.stub(:is_scannable? => true)
-          subject.should == false
+          expect(subject).to be_false
         end
       end
 
@@ -994,12 +838,12 @@ describe ApplicationHelper do
           end
 
           it "and record is not available" do
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and record is available" do
             @record.stub(:is_available? => true)
-            subject.should == false
+            expect(subject).to be_false
           end
         end
       end
@@ -1013,11 +857,11 @@ describe ApplicationHelper do
 
           it "and @perf_options[:typ] != 'realtime'" do
             @perf_options = {:typ => "Daily"}
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and @perf_options[:typ] = 'realtime'" do
-            subject.should == false
+            expect(subject).to be_false
           end
         end
       end
@@ -1027,7 +871,7 @@ describe ApplicationHelper do
       context "when with #{cls}" do
         before do
           @record = cls.constantize.new
-          @user.stub(:role_allows?).and_return(true)
+          user.stub(:role_allows?).and_return(true)
         end
 
         context "and id = miq_request_approve" do
@@ -1038,21 +882,21 @@ describe ApplicationHelper do
 
           it "and resource_type = AutomationRequest" do
             @record.stub(:resource_type => "AutomationRequest")
-            subject.should == false
+            expect(subject).to be_false
           end
 
           it "and approval_state = approved" do
             @record.stub(:approval_state => "approved")
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and showtype = miq_provisions" do
             @showtype = "miq_provisions"
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and approval_state != approved and showtype != miq_provisions" do
-            subject.should == false
+            expect(subject).to be_false
           end
         end
 
@@ -1064,90 +908,90 @@ describe ApplicationHelper do
 
           it "and resource_type = AutomationRequest" do
             @record.stub(:resource_type => "AutomationRequest")
-            subject.should == false
+            expect(subject).to be_false
           end
 
           it "and approval_state = approved" do
             @record.stub(:approval_state => "approved")
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and approval_state = denied" do
             @record.stub(:approval_state => "denied")
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and showtype = miq_provisions" do
             @showtype = "miq_provisions"
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and approval_state != approved|denied and showtype != miq_provisions" do
-            subject.should == false
+            expect(subject).to be_false
           end
         end
 
         context "and id = miq_request_delete" do
           before do
             @id = "miq_request_delete"
-            @record.stub(:resource_type => "something", :approval_state => "xx", :requester_name => @user.name)
-            User.stub(:find_by_userid).and_return(@user)
+            @record.stub(:resource_type => "something", :approval_state => "xx", :requester_name => user.name)
+            User.stub(:find_by_userid).and_return(user)
           end
 
           it "and resource_type = AutomationRequest" do
             @record.stub(:resource_type => "AutomationRequest")
-            subject.should == false
+            expect(subject).to be_false
           end
 
           it "and requester.name != @record.requester_name" do
             @record.stub(:requester_name => 'admin')
-            subject.should == false
+            expect(subject).to be_false
           end
 
           it "and approval_state = approved" do
             @record.stub(:approval_state => "approved")
-            subject.should == false
+            expect(subject).to be_false
           end
 
           it "and approval_state = denied" do
             @record.stub(:approval_state => "denied")
-            subject.should == false
+            expect(subject).to be_false
           end
 
           it "and requester.name = @record.requester_name & approval_state != approved|denied" do
-            subject.should == false
+            expect(subject).to be_false
           end
         end
 
         context "and id = miq_request_edit" do
           before do
             @id = "miq_request_edit"
-            @record.stub(:resource_type => "something", :approval_state => "xx", :requester_name => @user.name)
-            User.stub(:find_by_userid).and_return(@user)
+            @record.stub(:resource_type => "something", :approval_state => "xx", :requester_name => user.name)
+            User.stub(:find_by_userid).and_return(user)
           end
 
           it "and resource_type = AutomationRequest" do
             @record.stub(:resource_type => "AutomationRequest")
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and requester.name != @record.requester_name" do
             @record.stub(:requester_name => 'admin')
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and approval_state = approved" do
             @record.stub(:approval_state => "approved")
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and approval_state = denied" do
             @record.stub(:approval_state => "denied")
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and requester.name = @record.requester_name & approval_state != approved|denied" do
-            subject.should == false
+            expect(subject).to be_false
           end
         end
 
@@ -1156,46 +1000,46 @@ describe ApplicationHelper do
             @id = "miq_request_copy"
             @record.stub(:resource_type  => "MiqProvisionRequest",
                          :approval_state => "pending_approval",
-                         :requester_name => @user.name)
-            User.stub(:find_by_userid).and_return(@user)
+                         :requester_name => user.name)
+            User.stub(:find_by_userid).and_return(user)
           end
 
           it "and resource_type = AutomationRequest" do
             @record.stub(:resource_type => "AutomationRequest")
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and resource_type != MiqProvisionRequest" do
             @record.stub(:resource_type => "SomeRequest")
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and requester.name != @record.requester_name & showtype = miq_provisions" do
             @showtype = "miq_provisions"
             @record.stub(:requester_name => 'admin')
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and approval_state = approved & showtype = miq_provisions" do
             @showtype = "miq_provisions"
             @record.stub(:approval_state => "approved")
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and approval_state = denied & showtype = miq_provisions" do
             @showtype = "miq_provisions"
             @record.stub(:approval_state => "denied")
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and resource_type = MiqProvisionRequest & requester.name = @record.requester_name & approval_state != approved|denied" do
             @showtype = "miq_provisions"
-            subject.should == false
+            expect(subject).to be_false
           end
 
           it "and resource_type = MiqProvisionRequest & showtype != miq_provisions" do
             @record.stub(:requester_name => 'admin')
-            subject.should == false
+            expect(subject).to be_false
           end
         end
       end
@@ -1208,42 +1052,42 @@ describe ApplicationHelper do
       end
 
       it "alert_copy don't hide if RBAC allows" do
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
         @id = "alert_copy"
-        subject.should be_false
+        expect(subject).to be_false
       end
 
       it "alert_copy hide if RBAC denies" do
-        @user.stub(:role_allows?).and_return(false)
+        user.stub(:role_allows?).and_return(false)
         @id = "alert_copy"
-        subject.should be_true
+        expect(subject).to be_true
       end
     end
 
     context "when with MiqServer" do
       before do
         @record = MiqServer.new
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
       end
 
       ["role_start", "role_suspend", "promote_server", "demote_server",
        "log_download", "refresh_logs", "log_collect", "log_reload", "logdepot_edit", "processmanager_restart", "refresh_workers"].each do |id|
         it "and id = #{id}" do
           @id = id
-          subject.should == true
+          expect(subject).to be_true
         end
       end
 
       it "otherwise" do
         @id = 'xx'
-        subject.should == false
+        expect(subject).to be_false
       end
     end
 
     context "when with ScanItemSet" do
       before do
         @record = ScanItemSet.new
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
       end
 
       ["scan_delete", "scan_edit"].each do |id|
@@ -1255,11 +1099,11 @@ describe ApplicationHelper do
 
           it "and record read only" do
             @record.stub(:read_only => true)
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and record not read only" do
-            subject.should == false
+            expect(subject).to be_false
           end
         end
       end
@@ -1268,26 +1112,26 @@ describe ApplicationHelper do
     context "when with ServerRole" do
       before do
         @record = ServerRole.new
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
       end
 
       ["server_delete", "role_start", "role_suspend", "promote_server", "demote_server"].each do |id|
         it "and id = #{id}" do
           @id = id
-          subject.should == true
+          expect(subject).to be_true
         end
       end
 
       it "otherwise" do
         @id = 'xx'
-        subject.should == false
+        expect(subject).to be_false
       end
     end
 
     context "when with Vm" do
       before do
         @record = Vm.new
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
       end
 
       %w(vm_migrate vm_publish).each do |id|
@@ -1296,12 +1140,12 @@ describe ApplicationHelper do
 
           it "and vendor is redhat" do
             @record = FactoryGirl.create(:vm_redhat)
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and vendor is not redhat" do
             @record = FactoryGirl.create(:vm_vmware)
-            subject.should == false
+            expect(subject).to be_false
           end
         end
       end
@@ -1314,11 +1158,11 @@ describe ApplicationHelper do
 
         it "and !@record.reconfigurable?" do
           @record.stub(:reconfigurable?).and_return(false)
-          subject.should == true
+          expect(subject).to be_true
         end
 
         it "and @record.reconfigurable?" do
-          subject.should == false
+          expect(subject).to be_false
         end
       end
 
@@ -1327,12 +1171,12 @@ describe ApplicationHelper do
 
         it "record is not cloneable" do
           @record = Vm.create(:type => "ManageIQ::Providers::Microsoft::InfraManager::Vm", :name => "vm", :location => "l2", :vendor => "microsoft")
-          subject.should == true
+          expect(subject).to be_true
         end
 
         it "record is cloneable" do
           @record = Vm.create(:type => "ManageIQ::Providers::Redhat::InfraManager::Vm", :name => "rh", :location => "l1", :vendor => "redhat")
-          subject.should == false
+          expect(subject).to be_false
         end
       end
 
@@ -1346,21 +1190,21 @@ describe ApplicationHelper do
         it "and @record.retired & !@record.is_available?(:collect_running_processes)" do
           @record.stub(:retired => true)
           @record.stub(:is_available?).with(:collect_running_processes).and_return(false)
-          subject.should == true
+          expect(subject).to be_true
         end
 
         it "and @record.current_state = never & !@record.is_available?(:collect_running_processes)" do
           @record.stub(:is_available?).with(:collect_running_processes).and_return(false)
           @record.stub(:current_state => "never")
-          subject.should == true
+          expect(subject).to be_true
         end
 
         it "and @record.is_available?(:collect_running_processes)" do
-          subject.should == false
+          expect(subject).to be_false
         end
 
         it "and !@record.retired & @record.current_state != never" do
-          subject.should == false
+          expect(subject).to be_false
         end
       end
 
@@ -1372,7 +1216,7 @@ describe ApplicationHelper do
 
         it "and @lastaction = drift_history" do
           @lastaction = "drift_history"
-          subject.should == false
+          expect(subject).to be_false
         end
       end
 
@@ -1385,11 +1229,11 @@ describe ApplicationHelper do
 
           it "and !@record.is_available?(:start)" do
             @record.stub(:is_available?).with(:start).and_return(false)
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and @record.is_available?(:start)" do
-            subject.should == false
+            expect(subject).to be_false
           end
         end
       end
@@ -1402,11 +1246,11 @@ describe ApplicationHelper do
 
         it "and !@record.is_available?(:standby_guest)" do
           @record.stub(:is_available?).with(:standby_guest).and_return(false)
-          subject.should == true
+          expect(subject).to be_true
         end
 
         it "and @record.is_available?(:standby_guest)" do
-          subject.should == false
+          expect(subject).to be_false
         end
       end
 
@@ -1418,11 +1262,11 @@ describe ApplicationHelper do
 
         it "and !@record.is_available?(:shutdown_guest)" do
           @record.stub(:is_available?).with(:shutdown_guest).and_return(false)
-          subject.should == true
+          expect(subject).to be_true
         end
 
         it "and @record.is_available?(:shutdown_guest)" do
-          subject.should == false
+          expect(subject).to be_false
         end
       end
 
@@ -1434,11 +1278,11 @@ describe ApplicationHelper do
 
         it "and !@record.is_available?(:reboot_guest)" do
           @record.stub(:is_available?).with(:reboot_guest).and_return(false)
-          subject.should == true
+          expect(subject).to be_true
         end
 
         it "and @record.is_available?(:reboot_guest)" do
-          subject.should == false
+          expect(subject).to be_false
         end
       end
 
@@ -1450,11 +1294,11 @@ describe ApplicationHelper do
 
         it "and !@record.is_available?(:stop)" do
           @record.stub(:is_available?).with(:stop).and_return(false)
-          subject.should == true
+          expect(subject).to be_true
         end
 
         it "and @record.is_available?(:stop)" do
-          subject.should == false
+          expect(subject).to be_false
         end
       end
 
@@ -1466,11 +1310,11 @@ describe ApplicationHelper do
 
         it "and !@record.is_available?(:reset)" do
           @record.stub(:is_available?).with(:reset).and_return(false)
-          subject.should == true
+          expect(subject).to be_true
         end
 
         it "and @record.is_available?(:reset)" do
-          subject.should == false
+          expect(subject).to be_false
         end
       end
 
@@ -1482,11 +1326,11 @@ describe ApplicationHelper do
 
         it "and !@record.is_available?(:suspend)" do
           @record.stub(:is_available?).with(:suspend).and_return(false)
-          subject.should == true
+          expect(subject).to be_true
         end
 
         it "and @record.is_available?(:suspend)" do
-          subject.should == false
+          expect(subject).to be_false
         end
       end
 
@@ -1499,16 +1343,16 @@ describe ApplicationHelper do
 
           it "and @record.host.vmm_product = workstation" do
             @record.stub(:host => double(:vmm_product => "Workstation"))
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and @record.host.vmm_product != workstation" do
-            subject.should == false
+            expect(subject).to be_false
           end
 
           it "and @record.host does exist" do
             @record.stub(:host => nil)
-            subject.should == false
+            expect(subject).to be_false
           end
         end
       end
@@ -1521,15 +1365,15 @@ describe ApplicationHelper do
 
         it "and !@record.ext_management_system & @record.host.vmm_product.downcase != workstation" do
           @record.stub(:host => double(:vmm_product => "Server"), :ext_management_system => false)
-          subject.should == true
+          expect(subject).to be_true
         end
 
         it "and @record.ext_management_system" do
-          subject.should == false
+          expect(subject).to be_false
         end
 
         it "and @record.host.vmm_product.downcase = workstation" do
-          subject.should == false
+          expect(subject).to be_false
         end
       end
 
@@ -1544,11 +1388,11 @@ describe ApplicationHelper do
 
         it "and !@record.has_proxy?" do
           @record.stub(:has_proxy?).and_return(false)
-          subject.should == true
+          expect(subject).to be_true
         end
 
         it "and @record.has_proxy?" do
-          subject.should == false
+          expect(subject).to be_false
         end
 
         it "and @record.has_proxy? and is archived" do
@@ -1566,11 +1410,11 @@ describe ApplicationHelper do
 
           it "and @perf_options[:typ] != realtime" do
             @perf_options = {:typ => "Daily"}
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and @perf_options[:typ] = realtime" do
-            subject.should == false
+            expect(subject).to be_false
           end
         end
       end
@@ -1579,7 +1423,7 @@ describe ApplicationHelper do
     context "when with MiqTemplate" do
       before do
         @record = MiqTemplate.new
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
       end
 
       context "and id = miq_template_clone" do
@@ -1592,7 +1436,7 @@ describe ApplicationHelper do
                                         :name     => "rh",
                                         :location => "loc1",
                                         :vendor   => "redhat")
-          subject.should == true
+          expect(subject).to be_true
         end
 
         it "record is cloneable" do
@@ -1600,7 +1444,7 @@ describe ApplicationHelper do
                                         :name     => "vm",
                                         :location => "loc2",
                                         :vendor   => "vmware")
-          subject.should == false
+          expect(subject).to be_false
         end
       end
 
@@ -1613,16 +1457,16 @@ describe ApplicationHelper do
 
           it "and @record.host.vmm_product = workstation" do
             @record.stub(:host => double(:vmm_product => "Workstation"))
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and !@record.host" do
             @record.stub(:host => nil)
-            subject.should == false
+            expect(subject).to be_false
           end
 
           it "and @record.host.vmm_product != workstation" do
-            subject.should == false
+            expect(subject).to be_false
           end
         end
       end
@@ -1635,15 +1479,15 @@ describe ApplicationHelper do
 
         it "and !@record.ext_management_system & @record.host.vmm_product != workstation" do
           @record.stub(:host => double(:vmm_product => "Server"), :ext_management_system => false)
-          subject.should == true
+          expect(subject).to be_true
         end
 
         it "and @record.ext_management_system" do
-          subject.should == false
+          expect(subject).to be_false
         end
 
         it "and @record.host.vmm_product = workstation" do
-          subject.should == false
+          expect(subject).to be_false
         end
       end
 
@@ -1651,12 +1495,12 @@ describe ApplicationHelper do
         before { @id = "miq_template_scan" }
 
         it "and !@record.has_proxy?" do
-          subject.should == true
+          expect(subject).to be_true
         end
 
         it "and @record.has_proxy?" do
           @record.stub(:has_proxy? => true)
-          subject.should == false
+          expect(subject).to be_false
         end
       end
 
@@ -1665,12 +1509,12 @@ describe ApplicationHelper do
 
         it "and @perf_options[:typ] != realtime" do
           @perf_options = {:typ => "Daily"}
-          subject.should == true
+          expect(subject).to be_true
         end
 
         it "and @perf_options[:typ] = realtime" do
           @perf_options = {:typ => "realtime"}
-          subject.should == false
+          expect(subject).to be_false
         end
       end
     end # MiqTemplate
@@ -1678,7 +1522,7 @@ describe ApplicationHelper do
     context "when with record = nil" do
       before do
         @record = nil
-        @user.stub(:role_allows?).and_return(true)
+        user.stub(:role_allows?).and_return(true)
       end
 
       ["log_download", "log_reload"].each do |id|
@@ -1687,16 +1531,16 @@ describe ApplicationHelper do
 
           it "and @lastaction = workers" do
             @lastaction = "workers"
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and @lastaction = download_logs" do
             @lastaction = "download_logs"
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "otherwise" do
-            subject.should == false
+            expect(subject).to be_false
           end
         end
       end
@@ -1707,21 +1551,21 @@ describe ApplicationHelper do
 
           it "and @lastaction = workers" do
             @lastaction = "workers"
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and @lastaction = evm_logs" do
             @lastaction = "evm_logs"
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and @lastaction = audit_logs" do
             @lastaction = "audit_logs"
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "otherwise" do
-            subject.should == false
+            expect(subject).to be_false
           end
         end
       end
@@ -1732,21 +1576,21 @@ describe ApplicationHelper do
 
           it "and @lastaction = download_logs" do
             @lastaction = "download_logs"
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and @lastaction = evm_logs" do
             @lastaction = "evm_logs"
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and @lastaction = audit_logs" do
             @lastaction = "audit_logs"
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "otherwise" do
-            subject.should == false
+            expect(subject).to be_false
           end
         end
       end
@@ -1756,12 +1600,12 @@ describe ApplicationHelper do
           before { @id = id }
 
           it "and !@report" do
-            subject.should == true
+            expect(subject).to be_true
           end
 
           it "and @report" do
             @report = ''
-            subject.should == false
+            expect(subject).to be_false
           end
         end
       end
@@ -1778,19 +1622,19 @@ describe ApplicationHelper do
         end
 
         it "user allowed" do
-          @user.stub(:role_allows?).and_return(true)
-          subject.should == false
+          user.stub(:role_allows?).and_return(true)
+          expect(subject).to be_false
         end
 
         it "user not allowed" do
-          @user.stub(:role_allows?).and_return(false)
-          subject.should == true
+          user.stub(:role_allows?).and_return(false)
+          expect(subject).to be_true
         end
 
         it "button hidden if provider has no stacks" do
           @record = FactoryGirl.create(:ems_openstack_infra)
-          @user.stub(:role_allows?).and_return(true)
-          subject.should == true
+          user.stub(:role_allows?).and_return(true)
+          expect(subject).to be_true
         end
       end
 
@@ -1800,13 +1644,13 @@ describe ApplicationHelper do
         end
 
         it "user allowed but hide button because wrong provider" do
-          @user.stub(:role_allows?).and_return(true)
-          subject.should == true
+          user.stub(:role_allows?).and_return(true)
+          expect(subject).to be_true
         end
 
         it "user not allowed" do
-          @user.stub(:role_allows?).and_return(false)
-          subject.should == true
+          user.stub(:role_allows?).and_return(false)
+          expect(subject).to be_true
         end
       end
     end
@@ -1819,13 +1663,13 @@ describe ApplicationHelper do
       it "vm_scan button should be hidden when user does not have access to vm_rules feature" do
         feature = EvmSpecHelper.specific_product_features("vm_infra_explorer")
         login_as FactoryGirl.create(:user, :features => feature)
-        subject.should == true
+        expect(subject).to be_true
       end
 
       it "vm_scan button should be displayed when user does has access to vm_scan feature" do
         feature = EvmSpecHelper.specific_product_features("vm_infra_explorer", "vm_scan")
         login_as FactoryGirl.create(:user, :features => feature)
-        subject.should == false
+        expect(subject).to be_false
       end
     end
   end # end of build_toolbar_hide_button
@@ -1873,7 +1717,7 @@ describe ApplicationHelper do
     end
 
     context "when record class = AssignedServerRole" do
-      before(:each) { @record = AssignedServerRole.new }
+      before { @record = AssignedServerRole.new }
 
       before do
         @sb = {:active_tree => :diagnostics_tree,
@@ -1891,20 +1735,20 @@ describe ApplicationHelper do
 
         it "when miq server not started" do
           @record.stub(:miq_server => double(:started? => false))
-          subject.should == @message
+          expect(subject).to eq(@message)
         end
 
         it "when miq server started but not active" do
           @record.stub(:active => false)
           @record.stub(:miq_server => double(:started? => false))
-          subject.should == "Only available Roles on active Servers can be started"
+          expect(subject).to eq("Only available Roles on active Servers can be started")
         end
 
         it_behaves_like 'default true_case'
       end
 
       context "and id = role_suspend" do
-        before(:each) do
+        before do
           @id = "role_suspend"
           @miq_server = MiqServer.new(:name => "xx miq server", :id => "xx server id")
           @miq_server.stub(:started? => true)
@@ -1916,14 +1760,14 @@ describe ApplicationHelper do
         context "when miq server started and active" do
           it "and server_role.max_concurrent == 1" do
             @record.stub(:miq_server => @miq_server)
-            subject.should == "Activate the #{@record.server_role.description} Role on another Server to suspend it on #{@record.miq_server.name} [#{@record.miq_server.id}]"
+            expect(subject).to eq("Activate the #{@record.server_role.description} Role on another Server to suspend it on #{@record.miq_server.name} [#{@record.miq_server.id}]")
           end
           it_behaves_like 'default true_case'
         end
 
         it "when miq_server not started or not active" do
           @record.stub(:miq_server => double(:started? => false), :active => false)
-          subject.should == "Only active Roles on active Servers can be suspended"
+          expect(subject).to eq("Only active Roles on active Servers can be suspended")
         end
       end
     end
@@ -1935,7 +1779,7 @@ describe ApplicationHelper do
       end
 
       context "and id = ontap_storage_system_statistics" do
-        before(:each) { @id = "ontap_storage_system_statistics" }
+        before { @id = "ontap_storage_system_statistics" }
         it_behaves_like 'record without latest derived metrics', "No Statistics Collected"
         it_behaves_like 'default case'
       end
@@ -2104,12 +1948,12 @@ describe ApplicationHelper do
         end
         it "when without mac address" do
           @record.stub(:mac_address).and_return(false)
-          subject.should == "This Host can not be provisioned because the MAC address is not known"
+          expect(subject).to eq("This Host can not be provisioned because the MAC address is not known")
         end
 
         it "when no PXE servers" do
           PxeServer.stub(:all).and_return([])
-          subject.should == "No PXE Servers are available for Host provisioning"
+          expect(subject).to eq("No PXE Servers are available for Host provisioning")
         end
 
         it_behaves_like 'default case'
@@ -2123,7 +1967,7 @@ describe ApplicationHelper do
         it "when not configured for refresh" do
           message = "Host not configured for refresh"
           @record.stub(:is_refreshable_now_error_message => message, :is_refreshable_now? => false)
-          subject.should == message
+          expect(subject).to eq(message)
         end
 
         it_behaves_like 'default case'
@@ -2138,7 +1982,7 @@ describe ApplicationHelper do
         it "when not scannable now" do
           message = "Provide credentials for IPMI"
           @record.stub(:is_scannable_now? => false, :is_scannable_now_error_message => message)
-          subject.should == message
+          expect(subject).to eq(message)
         end
 
         it_behaves_like 'default case'
@@ -2182,8 +2026,8 @@ describe ApplicationHelper do
         end
         it "is deleteable?" do
           @record.stub(:is_deleteable?).and_return(false)
-          subject.should include('Server ')
-          subject.should include('can only be deleted if it is stopped or has not responded for a while')
+          expect(subject).to include('Server ')
+          expect(subject).to include('can only be deleted if it is stopped or has not responded for a while')
         end
         it_behaves_like 'default case'
       end
@@ -2196,14 +2040,14 @@ describe ApplicationHelper do
           @record = FactoryGirl.create(:miq_widget)
         end
         it "when not member of a widgetset" do
-          subject.should == "Widget has to be assigned to a dashboard to generate content"
+          expect(subject).to eq("Widget has to be assigned to a dashboard to generate content")
         end
 
         it "when Widget content generation is already running or queued up" do
           @widget_running = true
           db = FactoryGirl.create(:miq_widget_set)
           db.replace_children([@record])
-          subject.should == "This Widget content generation is already running or queued up"
+          expect(subject).to eq("This Widget content generation is already running or queued up")
         end
       end
     end
@@ -2217,13 +2061,13 @@ describe ApplicationHelper do
 
         it "no provision dialog is available when action = 'provision'" do
           @record.stub(:resource_actions).and_return([])
-          subject.should == "No Ordering Dialog is available"
+          expect(subject).to eq("No Ordering Dialog is available")
         end
 
         it "when a provision dialog is available" do
           @record.stub(:resource_actions => [double(:action => 'Provision', :dialog_id => '10')])
           Dialog.stub(:find_by_id => 'some thing')
-          subject.should be_false
+          expect(subject).to be_false
         end
       end
     end
@@ -2244,10 +2088,10 @@ describe ApplicationHelper do
         before { @id = "storage_delete" }
         it "when with VMs or Hosts" do
           @record.stub(:hosts).and_return(['h1', 'h2'])
-          subject.should == "Only Datastore without VMs and Hosts can be removed"
+          expect(subject).to eq("Only Datastore without VMs and Hosts can be removed")
 
           @record.stub(:hosts => [], :vms_and_templates => ['v1'])
-          subject.should == "Only Datastore without VMs and Hosts can be removed"
+          expect(subject).to eq("Only Datastore without VMs and Hosts can be removed")
         end
         it_behaves_like 'default case'
       end
@@ -2304,8 +2148,8 @@ describe ApplicationHelper do
 
         it "raise MiqException::RemoteConsoleNotSupportedError when can't get remote console url" do
           @record.unstub(:validate_remote_console_vmrc_support)
-          subject.should include("VM VMRC Console error")
-          subject.should include("VMRC remote console is not supported on")
+          expect(subject).to include("VM VMRC Console error")
+          expect(subject).to include("VMRC remote console is not supported on")
         end
 
         it_behaves_like 'vm not powered on', "The web-based console is not available because the VM is not powered on"
@@ -2388,7 +2232,7 @@ describe ApplicationHelper do
           before { @id = button_id }
           it "when VM is already retired" do
             @record.stub(:retired => true)
-            subject.should == "VM is already retired"
+            expect(subject).to eq("VM is already retired")
           end
           it_behaves_like 'default case'
         end
@@ -2404,7 +2248,7 @@ describe ApplicationHelper do
         end
         it "when no active proxy" do
           @record.stub(:has_active_proxy? => false)
-          subject.should == "No active SmartProxies found to analyze this VM"
+          expect(subject).to eq("No active SmartProxies found to analyze this VM")
         end
         it_behaves_like 'default case'
       end
@@ -2454,7 +2298,7 @@ describe ApplicationHelper do
       end
 
       context "snapshot buttons" do
-        before(:each) do
+        before do
           @record = FactoryGirl.create(:vm_vmware, :vendor => "vmware")
         end
 
@@ -2480,7 +2324,7 @@ describe ApplicationHelper do
             it "when no available message but active" do
               @record.stub(:is_available?).with(:create_snapshot).and_return(false)
               @active = true
-              subject.should == "The VM is not connected to a Host"
+              expect(subject).to eq("The VM is not connected to a Host")
             end
           end
           it_behaves_like 'default true_case'
@@ -2537,7 +2381,7 @@ describe ApplicationHelper do
     end # end of Vm class
 
     context "Disable Snapshot buttons for RHEV VMs" do
-      before(:each) { @record = FactoryGirl.create(:vm_redhat) }
+      before { @record = FactoryGirl.create(:vm_redhat) }
 
       ['vm_snapshot_add', 'vm_snapshot_delete', 'vm_snapshot_delete_all', 'vm_snapshot_revert'].each do |b|
         it "button #{b}" do
@@ -2566,37 +2410,33 @@ describe ApplicationHelper do
 
     context "and id = miq_request_delete" do
       let(:server) { active_record_instance_double("MiqServer", :logon_status => :ready) }
-      before(:each) do
+      let(:user)   { FactoryGirl.create(:user_admin) }
+      before do
         MiqServer.stub(:my_server).with(true).and_return(server)
 
-        # create User record...
-        @user = FactoryGirl.create(:user_admin)
-
         @id = "miq_request_delete"
-        login_as @user
+        login_as user
         @record = MiqProvisionRequest.new
-        @record.stub(:resource_type => "something", :approval_state => "xx", :requester_name => @user.name)
+        @record.stub(:resource_type => "something", :approval_state => "xx", :requester_name => user.name)
       end
 
       it "and requester.name != @record.requester_name" do
         @record.stub(:requester_name => 'admin')
-        res = build_toolbar_disable_button("miq_request_delete")
-        res.should == false
+        expect(build_toolbar_disable_button("miq_request_delete")).to be_false
       end
 
       it "and approval_state = approved" do
         @record.stub(:approval_state => "approved")
-        subject.should == false
+        expect(subject).to be_false
       end
 
       it "and requester.name = @record.requester_name & approval_state != approved|denied" do
-        subject.should == false
+        expect(subject).to be_false
       end
 
       it "and requester.name != @record.requester_name" do
         login_as FactoryGirl.create(:user, :role => "test")
-        res = build_toolbar_disable_button("miq_request_delete")
-        res.should include("Users are only allowed to delete their own requests")
+        expect(build_toolbar_disable_button("miq_request_delete")).to include("Users are only allowed to delete their own requests")
       end
     end
   end # end of disable button
@@ -2614,7 +2454,7 @@ describe ApplicationHelper do
       context "when with #{id} button should be visible" do
         before { @id = id }
         it "and record_id" do
-          subject.should be_false
+          expect(subject).to be_false
         end
       end
     end
@@ -2623,7 +2463,7 @@ describe ApplicationHelper do
       context "when with #{id} button should not be visible as user does not have access to these features" do
         before { @id = id }
         it "and record_id" do
-          subject.should be_true
+          expect(subject).to be_true
         end
       end
     end
@@ -2671,36 +2511,36 @@ describe ApplicationHelper do
     subject { get_record_cls(record) }
     context "when record not exist" do
       let(:record) { nil }
-      it { should == "NilClass" }
+      it { should eq("NilClass") }
     end
 
     context "when record is array" do
       let(:record) { ["some", "thing"] }
-      it { should == record.class.name }
+      it { should eq(record.class.name) }
     end
 
     context "when record is valid" do
       [ManageIQ::Providers::Redhat::InfraManager::Host].each do |c|
         it "and with #{c}" do
           record = c.new
-          get_record_cls(record).should eql(record.class.base_class.to_s)
+          expect(get_record_cls(record)).to eq(record.class.base_class.to_s)
         end
       end
 
       it "and with 'VmOrTemplate'" do
         record = ManageIQ::Providers::Vmware::InfraManager::Template.new
-        get_record_cls(record).should eql(record.class.base_model.to_s)
+        expect(get_record_cls(record)).to eq(record.class.base_model.to_s)
       end
 
       it "otherwise" do
         record = Job.new
-        get_record_cls(record).should eql(record.class.to_s)
+        expect(get_record_cls(record)).to eq(record.class.to_s)
       end
     end
   end
 
   describe "#build_toolbar_select_button" do
-    before :each do
+    before do
       @gtl_type = 'list'
       @settings = {
         :views => {
@@ -2717,18 +2557,18 @@ describe ApplicationHelper do
     ['list', 'tile', 'grid'].each do |g|
       it "when with view_#{g}" do
         @gtl_type = g
-        build_toolbar_select_button("view_#{g}").should be_true
+        expect(build_toolbar_select_button("view_#{g}")).to be_true
       end
     end
 
     it "when with tree_large" do
       @settings[:views][:treesize] = 32
-      build_toolbar_select_button("tree_large").should be_true
+      expect(build_toolbar_select_button("tree_large")).to be_true
     end
 
     it "when with tree_small" do
       @settings[:views][:treesize] = 16
-      build_toolbar_select_button("tree_small").should be_true
+      expect(build_toolbar_select_button("tree_small")).to be_true
     end
 
     context  "when with 'compare_compressed'" do
@@ -2785,16 +2625,16 @@ describe ApplicationHelper do
 
       it "as item[:buttonSelect] when item[:buttonTwoState] does not exist" do
         @item[:buttonSelect] = 'tree_large'
-        subject.should include(:name => 'tree_large')
+        expect(subject).to include(:name => 'tree_large')
       end
 
       it "as item[:button] when both item[:buttonTwoState] and item[:buttonSelect] not exist" do
-        subject.should include(:name => "#{@item[:button]}")
+        expect(subject).to include(:name => "#{@item[:button]}")
       end
 
       it "prefixed with 'parent__' when parent is passed in" do
         @parent = "testing"
-        subject.should include(:name => "#{@parent}__#{@item[:button]}")
+        expect(subject).to include(:name => "#{@parent}__#{@item[:button]}")
       end
     end
 
@@ -2805,21 +2645,21 @@ describe ApplicationHelper do
 
       it "when item[:hidden] exists" do
         @item[:hidden] = 1
-        subject.should have_key(:hidden)
+        expect(subject).to have_key(:hidden)
       end
 
       it "when item[:url_parms] exists" do
-        subject.should have_key(:url_parms)
+        expect(subject).to have_key(:url_parms)
       end
 
       it "when item[:confirm] exists" do
         @item[:confirm] = 'Are you sure?'
-        subject.should have_key(:confirm)
+        expect(subject).to have_key(:confirm)
       end
 
       it "when item[:onwhen] exists" do
         @item[:onwhen] = '1+'
-        subject.should have_key(:onwhen)
+        expect(subject).to have_key(:onwhen)
       end
     end
 
@@ -2830,11 +2670,11 @@ describe ApplicationHelper do
 
       it "gets rid of first directory and anything after last slash when button is 'view_grid', 'view_tile' or 'view_list'" do
         @item = {:button => 'view_list', :url => '/some/path/to/the/testing/code'}
-        subject.should include(:url => '/path/to/the/testing')
+        expect(subject).to include(:url => '/path/to/the/testing')
       end
 
       it "saves the value as it is otherwise" do
-        subject.should have_key(:url)
+        expect(subject).to have_key(:url)
       end
 
       it "calls url_for_save_button" do
@@ -2884,7 +2724,7 @@ describe ApplicationHelper do
       end
 
       it "updates the query string with the given parameter value" do
-        update_url_parms("?type=list").should eq("?type=list")
+        expect(update_url_parms("?type=list")).to eq("?type=list")
       end
     end
 
@@ -2897,7 +2737,7 @@ describe ApplicationHelper do
       end
 
       it "adds the params in the query string" do
-        update_url_parms("?refresh=y&type=list").should eq("?refresh=y&type=list")
+        expect(update_url_parms("?refresh=y&type=list")).to eq("?refresh=y&type=list")
       end
     end
 
@@ -2911,7 +2751,7 @@ describe ApplicationHelper do
       end
 
       it "retains the specific parameters and adds the new one" do
-        update_url_parms("?type=list").should eq("?bc=VMs+running+on+2014-08-25&menu_click=Display-VMs-on_2-6-5"\
+        expect(update_url_parms("?type=list")).to eq("?bc=VMs+running+on+2014-08-25&menu_click=Display-VMs-on_2-6-5"\
           "&sb_controller=host&type=list")
       end
     end
@@ -2925,7 +2765,7 @@ describe ApplicationHelper do
       end
 
       it "excludes specific parameters and adds the new one" do
-        update_url_parms("?type=list").should eq("?type=list")
+        expect(update_url_parms("?type=list")).to eq("?type=list")
       end
     end
   end
@@ -2941,15 +2781,13 @@ describe ApplicationHelper do
     end
 
     it "Enables buttons for Unlocked domain" do
-      enabled = build_toolbar_hide_button('miq_ae_class_edit')
-      enabled.should eq(false)
+      expect(build_toolbar_hide_button('miq_ae_class_edit')).to be_false
     end
 
     it "Disables buttons for Locked domain" do
       @domain.update_attributes(:system => true)
       @domain.reload
-      enabled = build_toolbar_hide_button('miq_ae_class_edit')
-      enabled.should eq(true)
+      expect(build_toolbar_hide_button('miq_ae_class_edit')).to be_true
     end
 
     def role_allows(_)
