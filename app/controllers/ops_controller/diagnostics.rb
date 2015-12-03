@@ -702,20 +702,19 @@ module OpsController::Diagnostics
 
     id = svr.id
     svr_name = svr.name
-    audit = {
-      :event => "svr_record_delete",
-      :message => "[#{svr_name}] Record deleted",
-      :target_id => id,
-      :target_class => "MiqServer",
-      :userid => session[:userid]
-    }
     begin
       svr.destroy if svr.respond_to?(:destroy)    # Run the task
     rescue StandardError => bang
       add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "MiqServer"), :name => svr_name, :task => "destroy"} << bang.message,
                 :error)
     else
-      AuditEvent.success(audit)
+      AuditEvent.success(
+        :event        => "svr_record_delete",
+        :message      => "[#{svr_name}] Record deleted",
+        :target_id    => id,
+        :target_class => "MiqServer",
+        :userid       => session[:userid]
+      )
       add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => "MiqServer"), :name => "#{svr_name} [#{svr.id}]"})
     end
   end
