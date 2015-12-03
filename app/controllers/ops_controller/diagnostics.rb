@@ -702,7 +702,13 @@ module OpsController::Diagnostics
 
     id = svr.id
     svr_name = svr.name
-    audit = {:event => "svr_record_delete", :message => "[#{svr_name}] Record deleted", :target_id => id, :target_class => "MiqServer", :userid => session[:userid]}
+    audit = {
+      :event => "svr_record_delete",
+      :message => "[#{svr_name}] Record deleted",
+      :target_id => id,
+      :target_class => "MiqServer",
+      :userid => session[:userid]
+    }
     begin
       svr.send("destroy".to_sym) if svr.respond_to?("destroy")    # Run the task
     rescue StandardError => bang
