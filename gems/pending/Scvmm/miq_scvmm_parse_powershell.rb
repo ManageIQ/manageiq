@@ -57,8 +57,8 @@ class MiqScvmmParsePowershell
 
   def parse_powershell_value(output)
     stdout, stderr = stdout_stderr(output)
-    $log.debug "MiqScvmmParsePowershell: STDOUT is \"#{stdout}\"" unless stdout.nil?
-    $log.debug "MiqScvmmParsePowershell: STDERR is \"#{stderr}\"" unless stderr.nil?
+    $log.debug "MiqScvmmParsePowershell: STDOUT is \"#{stdout}\"" unless stdout.nil? || $log.nil?
+    $log.debug "MiqScvmmParsePowershell: STDERR is \"#{stderr}\"" unless stderr.nil? || $log.nil?
     return stdout, stderr
   end
 

@@ -20,10 +20,10 @@ class MiqWinRM
   end
 
   def run_powershell_script(script)
-    $log.debug "Running powershell script on #{hostname} as #{username}:\n#{script}"
+    $log.debug "Running powershell script on #{hostname} as #{username}:\n#{script}" unless $log.nil?
     @connection.run_powershell_script(script)
   rescue WinRM::WinRMAuthorizationError
-    $log.info "Error Logging In to #{hostname} using user \"#{username}\""
+    $log.info "Error Logging In to #{hostname} using user \"#{username}\"" unless $log.nil?
     raise
   end
 

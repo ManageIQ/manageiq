@@ -8,9 +8,9 @@ class VmScan < Job
   DEFAULT_TIMEOUT = defined?(RSpec) ? 300 : 3000
 
   def self.current_job_timeout
-    if options[:timeout_adj].nil?
+    if options.nil? || options[:timeout_adj].nil? || defined?(RSpec)
       timeout_adj = 1
-    else 
+    else
       timeout_adj = options[:timeout_adj]
     end
     DEFAULT_TIMEOUT * timeout_adj
