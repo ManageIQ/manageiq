@@ -173,14 +173,14 @@ module ApplicationController::Tags
     id = params[:id]
     return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}")
     add_flash(_("%s was cancelled by the user") % "Tag Edit")
-    session[:flash_msgs] = @flash_array.dup                   # Put msg in session for next transaction to display
     session[:tag_items] = nil                                 # reset tag_items in session
     if tagging_explorer_controller?
       @edit = nil # clean out the saved info
       @sb[:action] = nil
       replace_right_cell
     else
-      @edit = nil # clean out the saved info
+      @edit = nil                               # clean out the saved info
+      session[:flash_msgs] = @flash_array.dup   # Put msg in session for next transaction to display
       render :update do |page|
         page.redirect_to(previous_breadcrumb_url)
       end
@@ -193,13 +193,13 @@ module ApplicationController::Tags
 
     tagging_save_tags
 
-    session[:flash_msgs] = @flash_array.dup                   # Put msg in session for next transaction to display
     if tagging_explorer_controller?
       @edit = nil # clean out the saved info
       @sb[:action] = nil
       replace_right_cell
     else
       @edit = nil
+      session[:flash_msgs] = @flash_array.dup   # Put msg in session for next transaction to display
       render :update do |page|
         page.redirect_to(previous_breadcrumb_url)
       end

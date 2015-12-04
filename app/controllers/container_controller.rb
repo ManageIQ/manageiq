@@ -34,7 +34,7 @@ class ContainerController < ApplicationController
 
   def x_button
     @explorer = true
-    @flash_array = []
+
     model, action = pressed2model_action(params[:pressed])
     @sb[:action] = action
 
@@ -92,7 +92,7 @@ class ContainerController < ApplicationController
     end
     @explorer   = true
     @lastaction = "explorer"
-    @flash_array = []
+
 
     # if AJAX request, replace right cell, and return
     if request.xml_http_request?
@@ -171,7 +171,7 @@ class ContainerController < ApplicationController
   # Tree node selected in explorer
   def tree_select
     @explorer = true
-    @flash_array = []
+
     @lastaction = "explorer"
     self.x_node = params[:id]
     @nodetype, id = params[:id].split("_").last.split("-")

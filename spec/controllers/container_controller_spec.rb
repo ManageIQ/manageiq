@@ -52,7 +52,7 @@ describe ContainerController do
 
     it "builds tagging screen" do
       post :x_button, :pressed => "container_tag", :format => :js, :id => @ct.id
-      assigns(:flash_array).should be_empty
+      assigns(:flash_array).should be_nil
       assigns(:entries).should_not be_nil
     end
 
