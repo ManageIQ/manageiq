@@ -40,6 +40,10 @@ class MiqSearch < ActiveRecord::Base
     end
   end
 
+  def self.descriptions
+    Hash[*all.select(:id, :description).flat_map {|x| [x.id.to_s, x.description] }]
+  end
+
   FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
   def self.seed
     fixture_file = File.join(FIXTURE_DIR, "miq_searches.yml")

@@ -210,8 +210,7 @@ class MiqCapacityController < ApplicationController
     end
     if params[:target_typ]
       @sb[:planning][:options][:target_typ] = params[:target_typ]
-      @sb[:planning][:options][:target_filters] = {}
-      MiqSearch.where(:id => @sb[:planning][:options][:target_typ]).each { |ms| @sb[:planning][:options][:target_filters][ms.id.to_s] = ms.description }
+      @sb[:planning][:options][:target_filters] = MiqSearch.where(:id => params[:target_typ]).descriptions
       @sb[:planning][:options][:target_filter] = nil
     end
     @sb[:planning][:options][:target_filter] = params[:target_filter].blank? ? nil : params[:target_filter] if params.key?(:target_filter)
@@ -539,8 +538,7 @@ class MiqCapacityController < ApplicationController
     end
 
     @sb[:planning][:options][:target_typ] ||= "EmsCluster"
-    @sb[:planning][:options][:target_filters] = {}
-    MiqSearch.where(:db => @sb[:planning][:options][:target_typ]).each { |s| @sb[:planning][:options][:target_filters][s.id.to_s] = s.description }
+    @sb[:planning][:options][:target_filters] = MiqSearch.where(:db => @sb[:planning][:options][:target_typ]).descriptions
     @sb[:planning][:options][:limit_cpu] ||= 90
     @sb[:planning][:options][:limit_vcpus] ||= 10
     @sb[:planning][:options][:limit_memory] ||= 90
@@ -555,8 +553,7 @@ class MiqCapacityController < ApplicationController
     find_filtered(Host, :all).each { |e| @sb[:planning][:hosts][e.id.to_s] = e.name }
     @sb[:planning][:datastores] = {}
     find_filtered(Storage, :all).each { |e| @sb[:planning][:datastores][e.id.to_s] = e.name }
-    @sb[:planning][:vm_filters] = {}
-    MiqSearch.where(:db => "Vm").each { |s| @sb[:planning][:vm_filters][s.id.to_s] = s.description }
+    @sb[:planning][:vm_filters] = MiqSearch.where(:db => "Vm").descriptions
     @right_cell_text = "Planning Summary"
     if params[:button] == "reset"
       session[:changed] = false
