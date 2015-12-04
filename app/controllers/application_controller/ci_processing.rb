@@ -214,6 +214,7 @@ module ApplicationController::CiProcessing
     if @explorer
       retire
     else
+      drop_breadcrumb(:name => "Retire #{rec_cls.to_s.pluralize}", :url => "/#{session[:controller]}/retire")
       render :update do |page|
         page.redirect_to :controller => rec_cls, :action => 'retire'      # redirect to build the retire screen
       end
@@ -232,7 +233,7 @@ module ApplicationController::CiProcessing
     when "service"
       assert_privileges("service_retire")
       kls = Service
-    when "vm_cloud"
+    when "vm_cloud", "vm"
       assert_privileges("instance_retire")
       kls = Vm
     when "vm_infra"
@@ -254,7 +255,7 @@ module ApplicationController::CiProcessing
             OrchestrationStack
           when "service"
             Service
-          when "vm_infra", "vm_cloud"
+          when "vm_infra", "vm_cloud", "vm"
             Vm
           end
     if params[:button]
@@ -294,7 +295,7 @@ module ApplicationController::CiProcessing
       return
     end
     session[:changed] = @changed = false
-    drop_breadcrumb(:name => "Retire #{kls.to_s.pluralize}", :url => "/#{session[:controller]}/tagging")
+    drop_breadcrumb(:name => "Retire #{kls.to_s.pluralize}", :url => "/#{session[:controller]}/retire")
     session[:cat] = nil                 # Clear current category
     @retireitems = kls.find(session[:retire_items]).sort_by(&:name) # Get the db records
     build_targets_hash(@retireitems)
