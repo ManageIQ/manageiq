@@ -20,8 +20,8 @@ class TreeBuilderReportSavedReports < TreeBuilderReportReportsClass
   def x_get_tree_roots(count_only, _options)
     folder_ids = {}
     u = User.current_user
-    g = u.admin_user? ? nil : u.miq_group
-    MiqReport.having_report_results(:miq_group => g, :select => [:id, :name]).each do |r|
+    user_groups = u.admin_user? ? nil : u.miq_groups
+    MiqReport.having_report_results(:miq_groups => user_groups, :select => [:id, :name]).each do |r|
       folder_ids[r.name] = to_cid(r.id.to_i)
     end
     objects = []
@@ -32,7 +32,7 @@ class TreeBuilderReportSavedReports < TreeBuilderReportReportsClass
   end
 
   def x_get_tree_custom_kids(object, count_only, _options)
-    objects = MiqReportResult.where(set_saved_reports_condition(from_cid(object[:id].split('-').last))).all
+    objects = MiqReportResult.where(set_saved_reports_condition(from_cid(object[:id].split('-').last))).to_a
     count_only_or_objects(count_only, objects, nil)
   end
 end

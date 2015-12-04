@@ -1,5 +1,19 @@
 require "spec_helper"
 
+def create_user_with_group(user_id, group_name, role)
+  group = FactoryGirl.create(:miq_group, :miq_user_role => role, :description => group_name)
+  FactoryGirl.create(:user, :userid => user_id, :miq_groups => [group])
+end
+
+def create_and_generate_report_for_user(report_name, user_id)
+  MiqReport.seed_report(report_name)
+  @rpt = MiqReport.where(:name => report_name).last
+  @rpt.generate_table(:userid => user_id)
+  report_result = @rpt.build_create_results(:userid => user_id)
+  report_result.reload
+  @rpt
+end
+
 describe ReportHelper do
   context '#chart_fields_options' do
     it 'should return fields with models and aggregate functions from summary when "Show Sort Breaks" is not "No"' do

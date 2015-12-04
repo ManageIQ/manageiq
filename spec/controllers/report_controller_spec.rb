@@ -1,4 +1,5 @@
 require "spec_helper"
+require "helpers/report_helper_spec"
 include UiConstants
 
 describe ReportController do
@@ -1235,6 +1236,50 @@ describe ReportController do
       res = controller.send(:rebuild_trees)
       res.should be(false)
       assigns(:sb)[:rep_tree_build_time].should eq(last_build_time)
+    end
+  end
+
+  describe "#get_all_saved_reports" do
+    before do
+      EvmSpecHelper.local_miq_server
+    end
+
+    context "User1 has Group1(current group: Group1), User2 has Group1, Group2(current group: Group2)" do
+      before do
+        EvmSpecHelper.local_miq_server
+
+        MiqUserRole.seed
+        role = MiqUserRole.find_by_name("EvmRole-operator")
+
+        # User1 with 2 groups(Group1,Group2), current group for User2 is Group2
+        create_user_with_group('User2', "Group1", role)
+
+        @user1 = create_user_with_group('User1', "Group2", role)
+        @user1.miq_groups << MiqGroup.where(:description => "Group1")
+        login_as @user1
+      end
+
+      context "User2 generates report under Group1" do
+        before :each do
+          @rpt = create_and_generate_report_for_user("Vendor and Guest OS", "User2")
+        end
+
+        it "is allowed to see report created under Group1 for User 1(with current group Group2)" do
+          controller.instance_variable_set(:@_params, :controller => "report", :action => "explorer")
+          controller.instance_variable_set(:@sb, :saved_reports => nil)
+          controller.stub(:x_active_tree).and_return("savedreports")
+          controller.stub(:get_view_calculate_gtl_type).and_return("list")
+          controller.stub(:get_view_pages_perpage).and_return(20)
+
+          controller.send(:get_all_saved_reports)
+
+          displayed_items = controller.instance_variable_get(:@pages)[:items]
+          expect(displayed_items).to eq(1)
+
+          expected_report_id = controller.instance_variable_get(:@view).table.data.last.miq_report_id
+          expect(expected_report_id).to eq(@rpt.id)
+        end
+      end
     end
   end
 end
