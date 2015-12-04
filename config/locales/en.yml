@@ -813,6 +813,7 @@ en:
       auth_key_pair_cloud:         Key Pair
       auth_key_pair_clouds:        Key Pairs
       availability_zone:           Availability Zone
+      base_snapshot:               Base Snapshot
       based_volumes:               Cloud Volumes Based on Snapshot
       cdroms:                      CD/DVD Drives
       cim_base_storage_extent:     Base Extents

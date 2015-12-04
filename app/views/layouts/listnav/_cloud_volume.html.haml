@@ -29,3 +29,17 @@
             = link_to("#{ui_lookup(:table => "cloud_tenant")}: #{@record.cloud_tenant.name}",
               {:action => 'show', :id => @record.cloud_tenant.id, :controller => 'cloud_tenant'},
               :title => _("Show this Cloud Volumes's parent %s") % ui_lookup(:table => "cloud_tenant"))
+        - if role_allows(:feature => "cloud_volume_snapshot_show") && @record.base_snapshot
+          %li
+            = link_to("#{ui_lookup(:table => "base_snapshot")}: #{@record.base_snapshot.name}",
+              cloud_volume_snapshot_path(@record.base_snapshot.id),
+              :title => _("Show this Cloud Volume's parent %s") % ui_lookup(:table => "cloud_volume_snapshot"))
+        - if role_allows(:feature => "cloud_volume_snapshot_show")
+          - if @record.number_of(:cloud_volume_snapshots) == 0
+            %li.disabled
+              = link_to(_("#{ui_lookup(:tables => "cloud_volume_snapshots")} (0)"), "#")
+          - else
+            %li
+              = link_to(_("#{ui_lookup(:tables => "cloud_volume_snapshots")} (%s)") % @record.number_of(:cloud_volume_snapshots),
+                {:action => 'show', :id => @record, :display => 'cloud_volumes'},
+                :title => _("Show all #{ui_lookup(:table => "cloud_volume_snapshots")}"))

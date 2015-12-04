@@ -324,8 +324,8 @@ Vmdb::Application.routes.draw do
       ) + compare_post + adv_search_post + exp_post + save_post
     },
 
-    :cloud_volume_snapshot => {
-      :get => %w(
+    :cloud_volume_snapshot    => {
+      :get  => %w(
         download_data
         edit
         index
@@ -336,6 +336,7 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
       ) + compare_get,
       :post => %w(
+        button
         create
         dynamic_checkbox_refresh
         form_field_changed
