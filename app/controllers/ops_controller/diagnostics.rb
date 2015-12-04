@@ -689,16 +689,14 @@ module OpsController::Diagnostics
     if @sb[:diag_selected_id].nil?
       add_flash(_("%s no longer exists") % ui_lookup(:table => "evm_server"), :error)
     else
-      process_server_deletion(@sb[:diag_selected_id])
+      svr = MiqServer.find_by(:id => @sb[:diag_selected_id])
+      process_server_deletion(svr) if svr
     end
     add_flash(_("The selected %s was deleted") % ui_lookup(:table => "evm_server")) if @flash_array.nil?
     refresh_screen
   end
 
-  def process_server_deletion(server_id)
-    svr = MiqServer.find_by(:id => server_id)
-    return unless svr
-
+  def process_server_deletion(svr)
     begin
       svr.destroy
     rescue StandardError => bang
