@@ -18,27 +18,6 @@ module ActiveRecordQueryParts
     " FOR SHARE"
   end
 
-  # Links for the various string length functions:
-  #   http://www.postgresql.org/docs/9.1/static/functions-binarystring.html
-  #   http://www.postgresql.org/docs/9.1/static/functions-string.html
-  #   http://blog.sqlauthority.com/2007/06/20/sql-server-find-length-of-text-field/
-
-  def self.string_length
-    "LENGTH"
-  end
-
-  def self.text_length
-    "LENGTH"
-  end
-
-  def self.binary_length
-    "LENGTH"
-  end
-
-  def self.concat(*args)
-    args.join('||')
-  end
-
   def self.regexp(field, regex, qualifier = nil)
     operator = "SIMILAR TO"
 
@@ -52,8 +31,7 @@ module ActiveRecordQueryParts
   end
 
   def self.glob_to_sql_like(text)
-    text.tr!('*', '%')
-    text.tr!('?', '_')
+    text.tr!('*?', '%_')
     text
   end
 end
