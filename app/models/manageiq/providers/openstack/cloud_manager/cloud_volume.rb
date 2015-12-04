@@ -64,8 +64,8 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudVolume < ::CloudVolume
   private
 
   def connection_options
-    # TODO(lsmola) expand with cinder connection when we have Cinder v2, based on respond to on service.volumes method, but
-    # best if we can fetch endpoint list and do discovery of available versions
+    # TODO(lsmola) expand with cinder connection when we have Cinder v2, based on respond to on service.volumes method,
+    #  but best if we can fetch endpoint list and do discovery of available versions
     nova_connection_options
   end
 
