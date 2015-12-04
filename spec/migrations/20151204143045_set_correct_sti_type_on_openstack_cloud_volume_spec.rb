@@ -11,36 +11,37 @@ describe SetCorrectStiTypeOnOpenstackCloudVolume do
     {:type => "ManageIQ::Providers::AnotherManager"}
   ]
 
-  ROW_ENTRIES = [{
-                   :ems      => EMS_ROW_ENTRIES[0],
-                   :name     => "volume_1",
-                   :type_in  => nil,
-                   :type_out => 'ManageIQ::Providers::Openstack::CloudManager::CloudVolume'
-                 },
-                 {
-                   :ems      => EMS_ROW_ENTRIES[1],
-                   :name     => "volume_2",
-                   :type_in  => 'ManageIQ::Providers::Openstack::CloudManager::CloudVolume',
-                   :type_out => 'ManageIQ::Providers::Openstack::CloudManager::CloudVolume'
-                 },
-                 {
-                   :ems      => EMS_ROW_ENTRIES[1],
-                   :name     => "volume_3",
-                   :type_in  => 'ManageIQ::Providers::Amazon::CloudManager::CloudVolume',
-                   :type_out => 'ManageIQ::Providers::Amazon::CloudManager::CloudVolume'
-                 },
-                 {
-                   :ems      => EMS_ROW_ENTRIES[1],
-                   :name     => "volume_4",
-                   :type_in  => nil,
-                   :type_out => nil
-                 },
-                 {
-                   :ems      => EMS_ROW_ENTRIES[2],
-                   :name     => "volume_5",
-                   :type_in  => 'ManageIQ::Providers::AnyManager::CloudVolume',
-                   :type_out => 'ManageIQ::Providers::AnyManager::CloudVolume'
-                 },
+  ROW_ENTRIES = [
+    {
+      :ems      => EMS_ROW_ENTRIES[0],
+      :name     => "volume_1",
+      :type_in  => nil,
+      :type_out => 'ManageIQ::Providers::Openstack::CloudManager::CloudVolume'
+    },
+    {
+      :ems      => EMS_ROW_ENTRIES[1],
+      :name     => "volume_2",
+      :type_in  => 'ManageIQ::Providers::Openstack::CloudManager::CloudVolume',
+      :type_out => 'ManageIQ::Providers::Openstack::CloudManager::CloudVolume'
+    },
+    {
+      :ems      => EMS_ROW_ENTRIES[1],
+      :name     => "volume_3",
+      :type_in  => 'ManageIQ::Providers::Amazon::CloudManager::CloudVolume',
+      :type_out => 'ManageIQ::Providers::Amazon::CloudManager::CloudVolume'
+    },
+    {
+      :ems      => EMS_ROW_ENTRIES[1],
+      :name     => "volume_4",
+      :type_in  => nil,
+      :type_out => nil
+    },
+    {
+      :ems      => EMS_ROW_ENTRIES[2],
+      :name     => "volume_5",
+      :type_in  => 'ManageIQ::Providers::AnyManager::CloudVolume',
+      :type_out => 'ManageIQ::Providers::AnyManager::CloudVolume'
+    },
   ]
 
   migration_context :up do
@@ -50,7 +51,9 @@ describe SetCorrectStiTypeOnOpenstackCloudVolume do
       end
 
       ROW_ENTRIES.each do |x|
-        x[:cloud_volume] = cloud_volume_stub.create!(:type => x[:type_in], :ems_id => x[:ems][:ems].id, :name => x[:name])
+        x[:cloud_volume] = cloud_volume_stub.create!(:type   => x[:type_in],
+                                                     :ems_id => x[:ems][:ems].id,
+                                                     :name   => x[:name])
       end
 
       migrate
@@ -72,7 +75,9 @@ describe SetCorrectStiTypeOnOpenstackCloudVolume do
       end
 
       ROW_ENTRIES.each do |x|
-        x[:cloud_volume] = cloud_volume_stub.create!(:type => x[:type_out], :ems_id => x[:ems][:ems].id, :name => x[:name])
+        x[:cloud_volume] = cloud_volume_stub.create!(:type   => x[:type_out],
+                                                     :ems_id => x[:ems][:ems].id,
+                                                     :name   => x[:name])
       end
 
       migrate
