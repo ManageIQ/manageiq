@@ -172,7 +172,10 @@ describe EmsCloudController do
            "default_verify"   => "[FILTERED]"
 
       expect(response.status).to eq(200)
-      expect(ManageIQ::Providers::Openstack::CloudManager.where(:hostname => 'host_openstack', :name => 'foo_openstack', :port => '5000').count).to eq(1)
+      expect(ManageIQ::Providers::Openstack::CloudManager.with_hostname('host_openstack')
+                                                         .with_port('5000')
+                                                         .where(:name => 'foo_openstack')
+                                                         .count).to eq(1)
     end
   end
 

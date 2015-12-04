@@ -154,6 +154,10 @@ class ExtManagementSystem < ActiveRecord::Base
     joins(:endpoints).where(:endpoints => {:hostname => hostname})
   end
 
+  def self.with_port(port)
+    joins(:endpoints).where(:endpoints => {:port => port})
+  end
+
   def self.create_discovered_ems(ost)
     ip = ost.ipaddr
     unless with_ipaddress(ip).exist?
