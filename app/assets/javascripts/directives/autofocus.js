@@ -5,7 +5,9 @@ ManageIQ.angularApplication.directive('autoFocus', ['$timeout', function($timeou
       scope['form_focus_' + ctrl.$name] = elem[0];
 
       scope.$watch(scope['afterGet'], function() {
-        angular.element('#' + attr.startFormDiv).css('display', 'block');
+        $timeout(function () {
+          angular.element('#' + attr.startFormDiv).css('display', 'block');
+        }, 0);
       });
 
       scope.$watch(function() { return elem.is(':visible') }, function() {

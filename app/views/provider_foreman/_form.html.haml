@@ -1,58 +1,64 @@
 - @angularForm = true
 
-%form#form_div.form-horizontal{:name => "angularForm", 'ng-controller' => "providerForemanFormController", 'ng-show' => "afterGet", :novalidate => true}
-  = render :partial => "layouts/flash_msg"
-  %br
-  .form-group{"ng-class" => "{'has-error': angularForm.name.$invalid}"}
-    %label.col-md-2.control-label
-      = _("Name")
-    .col-md-8
-      %input.form-control{:type        => "text",
-                          :name        => "name",
-                          'ng-model'   => "providerForemanModel.name",
-                          :maxlength   => MAX_NAME_LEN,
-                          :required    => "",
-                          :checkchange => true}
-      %span.help-block{"ng-show" => "angularForm.name.$error.required"}
-        = _("Required")
-  .form-group{"ng-class" => "{'has-error': angularForm.url.$invalid}"}
-    %label.col-md-2.control-label
-      = _("Url")
-    .col-md-8
-      %input.form-control{:type        => "text",
-                          :name        => "url",
-                          'ng-model'   => "providerForemanModel.url",
-                          :maxlength   => MAX_DESC_LEN,
-                          :required    => "",
-                          :checkchange => true}
-      %span.help-block{"ng-show" => "angularForm.url.$error.required"}
-        = _("Required")
-  .form-group
-    %label.col-md-2.control-label
-      = _("Verify Peer Certificate")
-    .col-md-8
-      %input{:type            => "checkbox",
-             :name            => "verify_ssl",
-             'ng-model'       => "providerForemanModel.verify_ssl",
-             :checkchange     => true}
+.form-horizontal{:id => "start_form_div", :style => "display:none"}
+  %form#form_div{:name           => "angularForm",
+                 'ng-controller' => "providerForemanFormController",
+                 'ng-show'       => "afterGet",
+                 :novalidate     => true}
+    = render :partial => "layouts/flash_msg"
+    %br
+    .form-group{"ng-class" => "{'has-error': angularForm.name.$invalid}"}
+      %label.col-md-2.control-label
+        = _("Name")
+      .col-md-8
+        %input.form-control{:type            => "text",
+                            :name            => "name",
+                            'ng-model'       => "providerForemanModel.name",
+                            :maxlength       => MAX_NAME_LEN,
+                            :required        => "",
+                            :checkchange     => true,
+                            "auto-focus"     => "",
+                            "start-form-div" => "start_form_div"}
+        %span.help-block{"ng-show" => "angularForm.name.$error.required"}
+          = _("Required")
+    .form-group{"ng-class" => "{'has-error': angularForm.url.$invalid}"}
+      %label.col-md-2.control-label
+        = _("Url")
+      .col-md-8
+        %input.form-control{:type        => "text",
+                            :name        => "url",
+                            'ng-model'   => "providerForemanModel.url",
+                            :maxlength   => MAX_DESC_LEN,
+                            :required    => "",
+                            :checkchange => true}
+        %span.help-block{"ng-show" => "angularForm.url.$error.required"}
+          = _("Required")
+    .form-group
+      %label.col-md-2.control-label
+        = _("Verify Peer Certificate")
+      .col-md-8
+        %input{:type            => "checkbox",
+               :name            => "verify_ssl",
+               'ng-model'       => "providerForemanModel.verify_ssl",
+               :checkchange     => true}
 
 
-  %hr
-  %h3
-    = _("Credentials")
-  = render :partial => "layouts/angular-bootstrap/auth_credentials_angular_bootstrap",
-           :locals  => {:ng_show           => true,
-                        :ng_model          => "providerForemanModel",
-                        :ng_reqd_userid    => true,
-                        :ng_reqd_password  => true,
-                        :ng_reqd_verify    => true,
-                        :validate_url      => "authentication_validate",
-                        :id                => @provider_foreman.id || "new",
-                        :valtype           => nil,
-                        :basic_info_needed => true}
+    %hr
+    %h3
+      = _("Credentials")
+    = render :partial => "layouts/angular-bootstrap/auth_credentials_angular_bootstrap",
+             :locals  => {:ng_show           => true,
+                          :ng_model          => "providerForemanModel",
+                          :ng_reqd_userid    => true,
+                          :ng_reqd_password  => true,
+                          :ng_reqd_verify    => true,
+                          :validate_url      => "authentication_validate",
+                          :id                => @provider_foreman.id || "new",
+                          :valtype           => nil,
+                          :basic_info_needed => true}
 
-  = render :partial => "layouts/angular/x_edit_buttons_angular"
-  %span{:style => "color:black"}= _("Required. Should have privileged access, such as root or administrator.")
+    = render :partial => "layouts/angular/x_edit_buttons_angular"
+    %span{:style => "color:black"}= _("Required. Should have privileged access, such as root or administrator.")
 
 :javascript
   ManageIQ.angularApplication.value('providerForemanFormId', '#{@provider_foreman.id || "new"}');

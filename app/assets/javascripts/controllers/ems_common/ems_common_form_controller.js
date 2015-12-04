@@ -193,10 +193,6 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
     }
   };
 
-  $scope.$watch('$viewContentLoaded', function() {
-    $scope.afterGet = true;
-  });
-
   $scope.isRegionSupported = function() {
     if ($scope.emsCommonModel.emstype === 'ec2' || $scope.emsCommonModel.emstype === 'azure') {
       return true;

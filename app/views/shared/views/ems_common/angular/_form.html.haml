@@ -1,20 +1,21 @@
 - @angularForm = true
 
-.form-horizontal
+.form-horizontal{:id => "start_form_div", :style => "display:none"}
   = render :partial => "layouts/flash_msg"
   %div
     .form-group{"ng-class" => "{'has-error': angularForm.name.$invalid}"}
       %label.col-md-2.control-label{"for" => "textInput-markup"}
         = _('Name')
       .col-md-8
-        %input.form-control{"type"        => "text",
-                            "id"          => "textInput-markup",
-                            "name"        => "name",
-                            "ng-model"    => "emsCommonModel.name",
-                            "maxlength"   => "#{MAX_NAME_LEN}",
-                            "required"    => "",
-                            "checkchange" => "",
-                            "auto-focus"  => ""}
+        %input.form-control{"type"           => "text",
+                            "id"             => "textInput-markup",
+                            "name"           => "name",
+                            "ng-model"       => "emsCommonModel.name",
+                            "maxlength"      => "#{MAX_NAME_LEN}",
+                            "required"       => "",
+                            "checkchange"    => "",
+                            "auto-focus"     => "",
+                            "start-form-div" => "start_form_div"}
         %span.help-block{"ng-show" => "angularForm.name.$error.required"}
           = _("Required")
 
