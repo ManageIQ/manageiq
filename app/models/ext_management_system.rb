@@ -110,7 +110,7 @@ class ExtManagementSystem < ActiveRecord::Base
            :port=,
            :to => :default_endpoint
 
-  alias_method :address, :hostname   # TODO: Remove all callers of address
+  alias_method :address, :hostname # TODO: Remove all callers of address
 
   virtual_column :ipaddress,               :type => :string,  :uses => :endpoints
   virtual_column :hostname,                :type => :string,  :uses => :endpoints
@@ -125,7 +125,7 @@ class ExtManagementSystem < ActiveRecord::Base
   virtual_column :total_hosts,             :type => :integer
   virtual_column :total_storages,          :type => :integer
   virtual_column :total_clusters,          :type => :integer
-  virtual_column :zone_name,               :type => :string,  :uses => :zone
+  virtual_column :zone_name,               :type => :string, :uses => :zone
   virtual_column :total_vms_on,            :type => :integer
   virtual_column :total_vms_off,           :type => :integer
   virtual_column :total_vms_unknown,       :type => :integer
