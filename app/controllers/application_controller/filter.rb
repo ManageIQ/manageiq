@@ -890,7 +890,7 @@ module ApplicationController::Filter
     cols_key = @view.scoped_association.nil? ? @view.db.to_sym : (@view.db + "-" + @view.scoped_association).to_sym
     if params[:id]
       if params[:id] != "0"
-        s = MiqSearch.find_by_id(params[:id])
+        s = MiqSearch.find_by(:id => params[:id])
         if s.nil?
           add_flash(_("The selected Filter record was not found"), :error)
         elsif MiqExpression.quick_search?(s.filter)
