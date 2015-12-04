@@ -202,24 +202,6 @@ module ReportController::Reports
     @right_cell_text = _("%{model} \"%{name}\"") % {:name => @miq_report.name, :model => ui_lookup(:model => "MiqReport")}
   end
 
-  # Show the current report in text format
-  def show_text
-    @text = @report.to_text(100)
-    render :partial => "reports"
-  end
-
-  # Show the current report in csv format
-  def show_csv
-    @csv = @report.to_csv
-    render :partial => "reports"
-  end
-
-  # Show the current report in pdf format
-  def show_pdf
-    @pdf = @report.to_pdf
-    render :partial => "reports"
-  end
-
   def rep_change_tab
     @sb[:active_tab] = params[:tab_id]
     replace_right_cell
