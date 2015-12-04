@@ -1,5 +1,5 @@
 module CloudVolume::Operations
-  def self.included base
+  def self.included(base)
     base.send :include, InstanceMethods
     base.extend ClassMethods
   end
@@ -46,18 +46,18 @@ module CloudVolume::Operations
     def validate_volume(ext_management_system)
       if ext_management_system.nil?
         return {:available => false,
-                :message => "The Volume is not connected to an active #{ui_lookup(:table => "ext_management_systems")}"}
+                :message   => "The Volume is not connected to an active #{ui_lookup(:table => "ext_management_systems")}"}
       end
       {:available => true, :message => nil}
     end
 
     def validate_unsupported(message_prefix)
-      {:available => false, :message => "#{message_prefix} is not available for #{self.name}."}
+      {:available => false, :message => "#{message_prefix} is not available for #{name}."}
     end
 
     def validation_failed(operation, reason)
       {:available => false,
-       :message   => "Validation failed for #{self.name} operation #{operation}. #{reason}"}
+       :message   => "Validation failed for #{name} operation #{operation}. #{reason}"}
     end
   end
 end
