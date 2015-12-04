@@ -695,7 +695,6 @@ module OpsController::Diagnostics
     refresh_screen
   end
 
-  # Common Server button handler routines
   def process_server_deletion(server_id)
     svr = MiqServer.find_by(:id => server_id)
     return unless svr
