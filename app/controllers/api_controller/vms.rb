@@ -140,6 +140,16 @@ class ApiController
       end
     end
 
+    def retire_resource_vms(type, id = nil, data = nil)
+      raise BadRequestError, "Must specify an id for retiring a #{type} resource" unless id
+
+      api_action(type, id) do |klass|
+        vm = resource_search(id, type, klass)
+        api_log_info("Retiring #{vm_ident(vm)}")
+        retire_vm(vm, id, data)
+      end
+    end
+
     private
 
     def vm_ident(vm)
@@ -246,6 +256,15 @@ class ApiController
       event_timestamp = event_time.blank? ? Time.now.utc : event_time.to_time(:utc)
 
       vm.add_ems_event(event_type, event_message, event_timestamp)
+      action_result(true, desc)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
+    def retire_vm(vm, id, data)
+      desc = "#{vm_ident(vm)} retiring"
+      desc << " on #{data['date']}" if Hash(data)['date'].present?
+      retire_resource(:vms, id, data)
       action_result(true, desc)
     rescue => err
       action_result(false, err.to_s)
