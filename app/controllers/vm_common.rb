@@ -595,7 +595,7 @@ module VmCommon
         params[:id] = @record.id.to_s   # reset id in params for show
         # params[:display] = "snapshot_info"
         if session[:edit] && session[:edit][:explorer]
-          add_flash(flash, flash_error ? :error : :info)
+          add_flash(flash, flash_error ? :error : :success)
           @_params[:display] = "snapshot_info"
           show
         else
