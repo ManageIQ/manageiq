@@ -971,7 +971,7 @@ describe ReportController do
           expect(response).to redirect_to(
             :action                => :review_import,
             :import_file_upload_id => 123,
-            :message               => {:message => "Import file was uploaded successfully", :level => :info}
+            :message               => {:message => "Import file was uploaded successfully", :level => :success}
           )
         end
 
@@ -1131,7 +1131,7 @@ describe ReportController do
 
       it "returns the flash message" do
         xhr :post, :import_widgets, params
-        expect(response.body).to eq([{:message => "Widgets imported successfully", :level => :info}].to_json)
+        expect(response.body).to eq([{:message => "Widgets imported successfully", :level => :success}].to_json)
       end
     end
 

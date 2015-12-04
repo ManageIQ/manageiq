@@ -263,7 +263,7 @@ describe MiqAeCustomizationController do
           expect(response).to redirect_to(
             :action                => :review_import,
             :import_file_upload_id => 123,
-            :message               => {:message => "Import file was uploaded successfully", :level => :info}.to_json
+            :message               => {:message => "Import file was uploaded successfully", :level => :success}.to_json
           )
         end
 
@@ -376,7 +376,7 @@ describe MiqAeCustomizationController do
 
       it "returns the flash message" do
         xhr :post, :import_service_dialogs, params
-        expect(response.body).to eq([{:message => "Service dialogs imported successfully", :level => :info}].to_json)
+        expect(response.body).to eq([{:message => "Service dialogs imported successfully", :level => :success}].to_json)
       end
     end
 
@@ -436,7 +436,7 @@ describe MiqAeCustomizationController do
 
     it "returns the flash messages" do
       xhr :post, :cancel_import, params
-      expect(response.body).to eq([{:message => "Service dialog import cancelled", :level => :info}].to_json)
+      expect(response.body).to eq([{:message => "Service dialog import cancelled", :level => :success}].to_json)
     end
   end
 

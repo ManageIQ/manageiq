@@ -147,7 +147,7 @@ class MiqAeToolsController < ApplicationController
 Namespaces updated/added: %{namespace_stats}
 Classes updated/added: %{class_stats}
 Instances updated/added: %{instance_stats}
-Methods updated/added: %{method_stats}") % stat_options, :info)
+Methods updated/added: %{method_stats}") % stat_options, :success)
       else
         add_flash(_("Error: Datastore import file upload expired"), :error)
       end
@@ -169,7 +169,7 @@ Methods updated/added: %{method_stats}") % stat_options, :info)
       add_flash("Use the browse button to locate an import file", :warning)
     else
       import_file_upload_id = automate_import_service.store_for_import(upload_file.read)
-      add_flash(_("Import file was uploaded successfully"), :info)
+      add_flash(_("Import file was uploaded successfully"), :success)
       redirect_options[:import_file_upload_id] = import_file_upload_id
     end
 

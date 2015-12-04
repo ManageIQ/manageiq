@@ -300,7 +300,7 @@ class ReportController < ApplicationController
     else
       begin
         import_file_upload_id = widget_import_service.store_for_import(upload_file.read)
-        add_flash(_("Import file was uploaded successfully"), :info)
+        add_flash(_("Import file was uploaded successfully"), :success)
         redirect_options[:import_file_upload_id] = import_file_upload_id
       rescue WidgetImportValidator::NonYamlError
         add_flash(_("Error: the file uploaded is not of the supported format"), :error)
@@ -320,7 +320,7 @@ class ReportController < ApplicationController
     if import_file_upload
       $log.info("[#{session[:userid]}] initiated import")
       widget_import_service.import_widgets(import_file_upload, params[:widgets_to_import])
-      add_flash(_("Widgets imported successfully"), :info)
+      add_flash(_("Widgets imported successfully"), :success)
     else
       add_flash(_("Error: Widget import file upload expired"), :error)
     end
