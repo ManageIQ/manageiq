@@ -549,20 +549,6 @@ describe MiqQueue do
     end
   end
 
-  it "should warn if the data size is too big" do
-    EvmSpecHelper.create_guid_miq_server_zone
-
-    $log.should_receive(:warn).with(/miq_queue_spec.rb.*large payload/)
-    MiqQueue.put(:class_name => 'MyClass', :method_name => 'method1', :data => 'a' * 600)
-  end
-
-  it "should not warn if the data size is small" do
-    EvmSpecHelper.create_guid_miq_server_zone
-
-    $log.should_not_receive(:warn).with(/large payload/)
-    MiqQueue.put(:class_name => 'MyClass', :method_name => 'method1', :args => [1, 2, 3, 4, 5])
-  end
-
   # this is a private method, but there are too many permutations to properly test get/put
   context "#default_get_options" do
     before do

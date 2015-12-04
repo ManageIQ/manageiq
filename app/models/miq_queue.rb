@@ -90,16 +90,6 @@ class MiqQueue < ActiveRecord::Base
     self.msg_data = Marshal.dump(value)
   end
 
-  def warn_if_large_payload
-    args_size = args ? YAML.dump(args).length : 0
-    data_size = data ? data.length : 0
-
-    if (args_size + data_size) > 512
-      culprit = caller.detect { |r| ! (r =~ /miq_queue.rb/) } || ""
-      _log.warn("#{culprit.split(":in ").first} called with large payload (args: #{args_size} bytes, data: #{data_size} bytes) #{MiqQueue.format_full_log_msg(self)}")
-    end
-  end
-
   def self.put(options)
     options = options.reverse_merge(
       :priority     => NORMAL_PRIORITY,
@@ -121,7 +111,6 @@ class MiqQueue < ActiveRecord::Base
     options[:args] = [options[:args]] if options[:args] && !options[:args].kind_of?(Array)
 
     msg = MiqQueue.create!(options)
-    msg.warn_if_large_payload
     _log.info("#{MiqQueue.format_full_log_msg(msg)}")
     msg
   end
