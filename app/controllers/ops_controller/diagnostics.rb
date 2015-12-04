@@ -697,21 +697,19 @@ module OpsController::Diagnostics
   end
 
   def process_server_deletion(svr)
-    begin
-      svr.destroy
-    rescue StandardError => bang
-      add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "MiqServer"), :name => svr.name, :task => "destroy"} << bang.message,
-                :error)
-    else
-      AuditEvent.success(
-        :event        => "svr_record_delete",
-        :message      => "[#{svr.name}] Record deleted",
-        :target_id    => svr.id,
-        :target_class => "MiqServer",
-        :userid       => session[:userid]
-      )
-      add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => "MiqServer"), :name => "#{svr.name} [#{svr.id}]"})
-    end
+    svr.destroy
+  rescue StandardError => bang
+    add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "MiqServer"), :name => svr.name, :task => "destroy"} << bang.message,
+              :error)
+  else
+    AuditEvent.success(
+      :event        => "svr_record_delete",
+      :message      => "[#{svr.name}] Record deleted",
+      :target_id    => svr.id,
+      :target_class => "MiqServer",
+      :userid       => session[:userid]
+    )
+    add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => "MiqServer"), :name => "#{svr.name} [#{svr.id}]"})
   end
 
   def promote_server
