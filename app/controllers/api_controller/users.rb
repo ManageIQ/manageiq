@@ -1,5 +1,5 @@
 class ApiController
-  INVALID_USER_ATTRS = %w(id href)
+  INVALID_USER_ATTRS = %w(id href current_group_id)
 
   module Users
     def update_users

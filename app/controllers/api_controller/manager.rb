@@ -29,7 +29,7 @@ class ApiController
     end
 
     def put_resource(type, id)
-      edit_resource(type, id, json_body)
+      send(target_resource_method(false, type, "edit"), type, id, json_body)
     end
 
     #
@@ -62,7 +62,7 @@ class ApiController
           patched_attrs[attr] = nil if action == "remove"
         end
       end
-      edit_resource(type, id, patched_attrs)
+      send(target_resource_method(false, type, "edit"), type, id, patched_attrs)
     end
 
     def delete_subcollection_resource(type, id = nil)
