@@ -1,5 +1,7 @@
 - if @display == 'clouds'
   = render :partial => "layouts/gtl", :locals => {:action_url => "@lastaction"}
+- if @display == 'cloud_volume_snapshots'
+  = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@volume.id}"}
 - else
   - if @showtype == "item"
     = render :partial => "layouts/item"

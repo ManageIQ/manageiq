@@ -1,5 +1,4 @@
 module CloudVolumeSnapshotHelper::TextualSummary
-
   def textual_group_properties
     %i(name size description)
   end
@@ -31,7 +30,7 @@ module CloudVolumeSnapshotHelper::TextualSummary
     if num > 0 && role_allows(:feature => "cloud_volume_show_list")
       label = ui_lookup(:table => "cloud_volumes")
       h[:title] = "Show all #{label} based on this Snapshot."
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'cloud_volumes')
+      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'based_volumes')
     end
     h
   end

@@ -1067,8 +1067,9 @@ module ApplicationHelper
     "#{@options[:page_size] || "US-Legal"} #{@options[:page_layout]}"
   end
 
-  GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_tenant cloud_volume condition container_group
-                        container_route container_project container_replicator container_image container_image_registry
+  GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_tenant cloud_volume cloud_volume_snapshot 
+                        condition container_group container_route container_project
+                        container_replicator container_image container_image_registry
                         container_topology container_dashboard middleware_topology persistent_volume
                         container_node container_service ems_cloud ems_cluster ems_container ems_infra event
                         flavor host miq_schedule miq_template offline ontap_file_share

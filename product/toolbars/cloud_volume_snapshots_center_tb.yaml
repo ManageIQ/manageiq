@@ -7,6 +7,8 @@
     :image: policy
     :title: Policy
     :text: Policy
+    :enabled: 'false'
+    :onwhen: '1+'
     :items:
     - :button: cloud_volume_snapshot_tag
       :image: tag
