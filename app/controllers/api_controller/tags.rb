@@ -34,11 +34,11 @@ class ApiController
       raise BadRequestError, "Could not create a new tag - #{err}"
     end
 
-    def tags_delete_resource(_parent, _type, _id, data)
-      tag_id = parse_id(data, :tags) || parse_by_attr(data, :tags, %w(name))
-      raise BadRequestError, "Tag id, href or name needs to be specified for deleting a tag resource" unless tag_id
-      destroy_tag_and_classification(tag_id)
-      action_result(true, "tags id: #{tag_id} deleting")
+    def tags_delete_resource(_parent, _type, id, data)
+      id ||= parse_id(data, :tags) || parse_by_attr(data, :tags, %w(name))
+      raise BadRequestError, "Tag id, href or name needs to be specified for deleting a tag resource" unless id
+      destroy_tag_and_classification(id)
+      action_result(true, "tags id: #{id} deleting")
     rescue => err
       action_result(false, err.to_s)
     end

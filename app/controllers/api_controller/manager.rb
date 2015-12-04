@@ -118,11 +118,12 @@ class ApiController
     end
 
     def update_one_collection(is_subcollection, target, type, id, resource)
+      id = id.to_i unless id.blank?
       parent_resource = parent_resource_obj if is_subcollection
       if is_subcollection
-        send(target, parent_resource, type, id.to_i, resource)
+        send(target, parent_resource, type, id, resource)
       else
-        send(target, type, id.to_i, resource)
+        send(target, type, id, resource)
       end
     end
 
@@ -133,8 +134,11 @@ class ApiController
       results = resources.each.collect do |r|
         next if r.blank?
 
-        collection, rid = parse_href(r["href"])
-        r.except!(*ID_ATTRS) if collection == type && rid
+        rid = parse_id(r, type)
+        if rid && %w(create add).include?(action)
+          raise BadRequestError, "Resource id or href should not be specified for creating a new #{type}"
+        end
+        r.except!(*ID_ATTRS) if rid
         processed += 1
         update_one_collection(is_subcollection, target, type, rid, r)
       end
