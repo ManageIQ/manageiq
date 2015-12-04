@@ -31,6 +31,15 @@ ul.dynatree-container
   padding-right: 0 !important; /*needed so that dynatree hover effect goes to edges*/
 }
 
+
+// Report menu editor styling (report names not clickable)
+#menu_roles_treebox ul ul ul ul span.dynatree-node a {
+  cursor: default !important;
+}
+#menu_roles_treebox ul ul ul ul span.dynatree-node:hover {
+  background-color: transparent !important;
+}
+
 #accordion a.btn {
   margin-right: 10px;
 }
