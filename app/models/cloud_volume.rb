@@ -42,7 +42,7 @@ class CloudVolume < ApplicationRecord
   end
 
   def self.validate_create_volume(ext_management_system, options = {})
-    klass = self.class_by_ems(ext_management_system)
+    klass = class_by_ems(ext_management_system)
     return klass.validate_create_volume(ext_management_system, options) if klass != CloudVolume &&
                                                                            klass.respond_to?(:validate_create_volume)
 
