@@ -553,7 +553,7 @@ describe MiqQueue do
     EvmSpecHelper.create_guid_miq_server_zone
 
     $log.should_receive(:warn).with(/miq_queue_spec.rb.*large payload/)
-    MiqQueue.put(:class_name => 'MyClass', :method_name => 'method1', :data => 'a' * 600)
+    MiqQueue.put(:class_name => 'MyClass', :method_name => 'method1', :data => 'a' * 10600)
   end
 
   it "should not warn if the data size is small" do

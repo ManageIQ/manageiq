@@ -94,7 +94,7 @@ class MiqQueue < ActiveRecord::Base
     args_size = args ? YAML.dump(args).length : 0
     data_size = data ? data.length : 0
 
-    if (args_size + data_size) > 512
+    if (args_size + data_size) > 10240
       culprit = caller.detect { |r| ! (r =~ /miq_queue.rb/) } || ""
       _log.warn("#{culprit.split(":in ").first} called with large payload (args: #{args_size} bytes, data: #{data_size} bytes) #{MiqQueue.format_full_log_msg(self)}")
     end
@@ -121,7 +121,7 @@ class MiqQueue < ActiveRecord::Base
     options[:args] = [options[:args]] if options[:args] && !options[:args].kind_of?(Array)
 
     msg = MiqQueue.create!(options)
-    msg.warn_if_large_payload
+    msg.warn_if_large_payload unless Rails.env.production?
     _log.info("#{MiqQueue.format_full_log_msg(msg)}")
     msg
   end
