@@ -701,7 +701,7 @@ module OpsController::Diagnostics
     return unless svr
 
     begin
-      svr.destroy if svr.respond_to?(:destroy)    # Run the task
+      svr.destroy
     rescue StandardError => bang
       add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "MiqServer"), :name => svr.name, :task => "destroy"} << bang.message,
                 :error)
