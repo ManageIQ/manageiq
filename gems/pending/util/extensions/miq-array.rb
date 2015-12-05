@@ -1,32 +1,15 @@
 require 'more_core_extensions/core_ext/array'
+require 'active_support/core_ext/array/wrap'
 
 class Object #:nodoc:
   def to_miq_a
-    [*self]
+    Array.wrap(self)
   end
 end
 
 class String
   def to_miq_a
     lines.to_a
-  end
-end
-
-class Array
-  def to_miq_a
-    to_a
-  end
-end
-
-class Hash
-  def to_miq_a
-    [self]
-  end
-end
-
-class NilClass
-  def to_miq_a
-    []
   end
 end
 
