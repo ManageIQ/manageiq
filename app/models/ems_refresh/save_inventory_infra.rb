@@ -308,10 +308,27 @@ module EmsRefresh::SaveInventoryInfra
         # host = Host.find_by_hostname(hostname) has a risk of creating duplicate hosts
         # allow a deleted EMS to be re-added an pick up old orphaned hosts
         _log.debug "EMS ID: #{ems_id} Host database lookup - hostname: [#{h[:hostname]}] IP: [#{h[:ipaddress]}] ems_ref: [#{h[:ems_ref]}]"
-        found = Host.lookUpHost(h[:hostname], h[:ipaddress], :ems_ref => h[:ems_ref])
+        found = look_up_host(h[:hostname], h[:ipaddress], :ems_ref => h[:ems_ref])
       end
     end
 
     found
+  end
+
+  def look_up_host(hostname, ipaddr, opts = {})
+    h   = Host.where("lower(hostname) = ?", hostname.downcase).find_by(:ipaddress => ipaddr) if hostname && ipaddr
+    h ||= Host.find_by("lower(hostname) = ?", hostname.downcase)                             if hostname
+    h ||= Host.find_by(:ipaddress => ipaddr)                                                 if ipaddr
+    h ||= Host.find_by("lower(hostname) LIKE ?", "#{hostname.downcase}.%")                   if hostname
+
+    # If we're given an ems_ref or ems_id then ensure that the host
+    # we looked-up does not have a different ems_ref and is not
+    # owned by another provider, this would cause us to overwrite
+    # a different host record
+    if (opts[:ems_ref] && h.ems_ref != opts[:ems_ref]) || (opts[:ems_id] && h.ems_id != opts[:ems_id])
+      h = nil
+    end unless h.nil?
+
+    h
   end
 end

@@ -637,23 +637,6 @@ class Host < ApplicationRecord
     is_vmware? && product.starts_with?('esx') && product.ends_with?('i')
   end
 
-  def self.lookUpHost(hostname, ipaddr, opts = {})
-    h   = Host.where("lower(hostname) = ?", hostname.downcase).find_by(:ipaddress => ipaddr) if hostname && ipaddr
-    h ||= Host.find_by("lower(hostname) = ?", hostname.downcase)                             if hostname
-    h ||= Host.find_by(:ipaddress => ipaddr)                                                 if ipaddr
-    h ||= Host.find_by("lower(hostname) LIKE ?", "#{hostname.downcase}.%")                   if hostname
-
-    # If we're given an ems_ref or ems_id then ensure that the host
-    # we looked-up does not have a different ems_ref and is not
-    # owned by another provider, this would cause us to overwrite
-    # a different host record
-    if (opts[:ems_ref] && h.ems_ref != opts[:ems_ref]) || (opts[:ems_id] && h.ems_id != opts[:ems_id])
-      h = nil
-    end unless h.nil?
-
-    h
-  end
-
   def vmm_vendor_display
     VENDOR_TYPES[vmm_vendor]
   end
