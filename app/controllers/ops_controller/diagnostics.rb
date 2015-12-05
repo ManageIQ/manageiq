@@ -683,7 +683,7 @@ module OpsController::Diagnostics
     refresh_screen
   end
 
-  # Delete all selected server
+  # Delete selected server
   def delete_server
     assert_privileges("delete_server")
     if @sb[:diag_selected_id].nil?
