@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 
-# Capablanca RC 1
+# Capablanca Release
 
 ## Added Features
 
