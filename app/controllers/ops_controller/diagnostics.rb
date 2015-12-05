@@ -689,27 +689,27 @@ module OpsController::Diagnostics
     if @sb[:diag_selected_id].nil?
       add_flash(_("%s no longer exists") % ui_lookup(:table => "evm_server"), :error)
     else
-      svr = MiqServer.find_by(:id => @sb[:diag_selected_id])
-      process_server_deletion(svr) if svr
+      server = MiqServer.find_by(:id => @sb[:diag_selected_id])
+      process_server_deletion(server) if server
     end
     add_flash(_("The selected %s was deleted") % ui_lookup(:table => "evm_server")) if @flash_array.nil?
     refresh_screen
   end
 
-  def process_server_deletion(svr)
-    svr.destroy
+  def process_server_deletion(server)
+    server.destroy
   rescue StandardError => bang
-    add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "MiqServer"), :name => svr.name, :task => "destroy"} << bang.message,
+    add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "MiqServer"), :name => server.name, :task => "destroy"} << bang.message,
               :error)
   else
     AuditEvent.success(
       :event        => "svr_record_delete",
-      :message      => "[#{svr.name}] Record deleted",
-      :target_id    => svr.id,
+      :message      => "[#{server.name}] Record deleted",
+      :target_id    => server.id,
       :target_class => "MiqServer",
       :userid       => session[:userid]
     )
-    add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => "MiqServer"), :name => "#{svr.name} [#{svr.id}]"})
+    add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => "MiqServer"), :name => "#{server.name} [#{svr.id}]"})
   end
 
   def promote_server
