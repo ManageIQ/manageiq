@@ -144,12 +144,12 @@ module ManageIQ::Providers::Kubernetes
         :lives_on_type              => nil
       )
 
-      node_memory = node.status.capacity.memory
+      node_memory = node.status.capacity.try(:memory)
       node_memory &&= parse_iec_number(node_memory) / 1.megabyte
 
       new_result[:computer_system] = {
         :hardware         => {
-          :cpu_total_cores => node.status.capacity.cpu,
+          :cpu_total_cores => node.status.capacity.try(:cpu),
           :memory_mb       => node_memory
         },
         :operating_system => {
@@ -158,7 +158,7 @@ module ManageIQ::Providers::Kubernetes
         }
       }
 
-      max_container_groups = node.status.capacity.pods
+      max_container_groups = node.status.capacity.try(:pods)
       new_result[:max_container_groups] = max_container_groups && parse_iec_number(max_container_groups)
 
       new_result[:container_conditions] = parse_conditions(node)

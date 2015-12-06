@@ -540,4 +540,109 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       end
     end
   end
+
+  describe "parse_node" do
+    it "handles node without capacity" do
+      parser.send(
+        :parse_node,
+        RecursiveOpenStruct.new(
+          :metadata => {
+            :name              => 'test-node',
+            :uid               => 'f0c1fe7e-9c09-11e5-bb22-28d2447dcefe',
+            :resourceVersion   => '369104',
+            :creationTimestamp => '2015-12-06T11:10:21Z'
+          },
+          :spec     => {
+            :externalID => '10.35.17.99'
+          },
+          :status   => {
+            :nodeInfo => {
+              :machineID  => 'id',
+              :systemUUID => 'uuid'
+            }
+          }
+        )
+      ).should == {
+        :name                       => 'test-node',
+        :ems_ref                    => 'f0c1fe7e-9c09-11e5-bb22-28d2447dcefe',
+        :creation_timestamp         => '2015-12-06T11:10:21Z',
+        :container_conditions       => [],
+        :container_runtime_version  => nil,
+        :identity_infra             => '10.35.17.99',
+        :identity_machine           => 'id',
+        :identity_system            => 'uuid',
+        :kubernetes_kubelet_version => nil,
+        :kubernetes_proxy_version   => nil,
+        :labels                     => [],
+        :lives_on_id                => nil,
+        :lives_on_type              => nil,
+        :max_container_groups       => nil,
+        :computer_system            => {
+          :hardware         => {
+            :cpu_total_cores => nil,
+            :memory_mb       => nil
+          },
+          :operating_system => {
+            :distribution   => nil,
+            :kernel_version => nil
+          }
+        },
+        :namespace                  => nil,
+        :resource_version           => '369104',
+        :type                       => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode'
+      }
+    end
+
+    it "handles node without memory, cpu and pods" do
+      parser.send(
+        :parse_node,
+        RecursiveOpenStruct.new(
+          :metadata => {
+            :name              => 'test-node',
+            :uid               => 'f0c1fe7e-9c09-11e5-bb22-28d2447dcefe',
+            :resourceVersion   => '3691041',
+            :creationTimestamp => '2015-12-06T11:10:21Z'
+          },
+          :spec     => {
+            :externalID => '10.35.17.99'
+          },
+          :status   => {
+            :nodeInfo => {
+              :machineID  => 'id',
+              :systemUUID => 'uuid'
+            },
+            :capacity => {}
+          }
+        )
+      ).should == {
+        :name                       => 'test-node',
+        :ems_ref                    => 'f0c1fe7e-9c09-11e5-bb22-28d2447dcefe',
+        :creation_timestamp         => '2015-12-06T11:10:21Z',
+        :container_conditions       => [],
+        :container_runtime_version  => nil,
+        :identity_infra             => '10.35.17.99',
+        :identity_machine           => 'id',
+        :identity_system            => 'uuid',
+        :kubernetes_kubelet_version => nil,
+        :kubernetes_proxy_version   => nil,
+        :labels                     => [],
+        :lives_on_id                => nil,
+        :lives_on_type              => nil,
+        :max_container_groups       => nil,
+        :computer_system            => {
+          :hardware         => {
+            :cpu_total_cores => nil,
+            :memory_mb       => nil
+          },
+          :operating_system => {
+            :distribution   => nil,
+            :kernel_version => nil
+          }
+        },
+        :namespace                  => nil,
+        :resource_version           => '3691041',
+        :type                       => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode'
+      }
+    end
+  end
 end
