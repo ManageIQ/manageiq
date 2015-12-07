@@ -132,7 +132,7 @@ describe ApiController do
 
       expect_request_success
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
-      expect_results_to_match_hash("results", [sample_openshift])
+      expect_results_to_match_hash("results", [sample_openshift.except(*ENDPOINT_ATTRS)])
 
       provider_id = @result["results"].first["id"]
       expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
