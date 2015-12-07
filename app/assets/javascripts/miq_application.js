@@ -1056,73 +1056,33 @@ function miqQsEnterEscape(e) {
 
 // Start/stop the JS spinner
 function miqSpinner(status) {
-  if (status) {
-    if (ManageIQ.spinner.spinner === null) {
-      var opts = {
-        lines: 15, // The number of lines to draw
-        length: 18, // The length of each line
-        width: 4, // The line thickness
-        radius: 25, // The radius of the inner circle
-        corners: 1, // Corner roundness (0..1)
-        rotate: 0, // The rotation offset
-        color: '#fff', // #rgb or #rrggbb
-        speed: 1, // Rounds per second
-        trail: 60, // Afterglow percentage
-        shadow: false, // Whether to render a shadow
-        hwaccel: false, // Whether to use hardware acceleration
-        className: 'miq-spinner', // The CSS class to assign to the spinner
-        zIndex: 2e9, // The z-index (defaults to 2000000000)
-        top: '50%', // Top position relative to parent in px
-        left: '50%' // Left position relative to parent in px
-      };
-      ManageIQ.spinner.spinner = new Spinner(opts).spin($('#spinner_div')[0]);
-    } else {
-      ManageIQ.spinner.spinner.spin($('#spinner_div')[0]);
-    }
-  } else {
-    if (ManageIQ.spinner.spinner !== null) {
-      ManageIQ.spinner.spinner.stop();
-    }
-  }
+  var opts = {
+    lines: 15, // The number of lines to draw
+    length: 18, // The length of each line
+    width: 4, // The line thickness
+    radius: 25, // The radius of the inner circle
+    color: '#fff', // #rgb or #rrggbb
+    trail: 60, // Afterglow percentage
+    className: 'miq-spinner', // The CSS class to assign to the spinner
+  };
+
+  $('#spinner_div').spin(status ? opts : false);
 }
 
 // Start/stop the search spinner
 function miqSearchSpinner(status) {
-  if (status) {
-    if ($('#search_notification').length) {
-      $('#search_notification').show();
-    }
-    if (ManageIQ.spinner.searchSpinner === null) {
-      var opts = {
-        lines: 13, // The number of lines to draw
-        length: 20, // The length of each line
-        width: 10, // The line thickness
-        radius: 30, // The radius of the inner circle
-        corners: 1, // Corner roundness (0..1)
-        rotate: 0, // The rotation offset
-        direction: 1, // 1: clockwise, -1: counterclockwise
-        color: '#000', // #rgb or #rrggbb or array of colors
-        speed: 1, // Rounds per second
-        trail: 60, // Afterglow percentage
-        shadow: false, // Whether to render a shadow
-        hwaccel: false, // Whether to use hardware acceleration
-        className: 'miq-spinner', // The CSS class to assign to the spinner
-        zIndex: 2e9, // The z-index (defaults to 2000000000)
-        top: 'auto', // Top position relative to parent in px
-        left: 'auto' // Left position relative to parent in px
-      };
-      ManageIQ.spinner.searchSpinner = new Spinner(opts).spin($('#searching_spinner_center')[0]);
-    } else {
-      ManageIQ.spinner.searchSpinner.spin($('#searching_spinner_center')[0]);
-    }
-  } else {
-    if ($('#search_notification').length) {
-      $('#search_notification').hide();
-    }
-    if (ManageIQ.spinner.searchSpinner !== null) {
-      ManageIQ.spinner.searchSpinner.stop();
-    }
-  }
+  var opts = {
+    lines: 13, // The number of lines to draw
+    length: 20, // The length of each line
+    width: 10, // The line thickness
+    radius: 30, // The radius of the inner circle
+    color: '#000', // #rgb or #rrggbb or array of colors
+    trail: 60, // Afterglow percentage
+    className: 'miq-spinner', // The CSS class to assign to the spinner
+  };
+
+  $('#search_notification').toggle(!! status);
+  $('#searching_spinner_center').spin(status ? opts : false);
 }
 
 /*
