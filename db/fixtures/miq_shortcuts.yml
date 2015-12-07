@@ -1,4 +1,4 @@
---- 
+---
 - :name: dashboard_show
   :description: Cloud Intelligence / Dashboard
   :url: /dashboard/show
@@ -68,6 +68,11 @@
   :description: Clouds / Flavors
   :url: /flavor/show_list
   :rbac_feature_name: flavor_show_list
+  :startup: true
+- :name: cloud_volumes
+  :description: Clouds / Volumes
+  :url: /cloud_volume/show_list
+  :rbac_feature_name: cloud_volume_show_list
   :startup: true
 - :name: vm_cloud_instances_accord
   :description: Clouds / Instances / Instances By Providers
