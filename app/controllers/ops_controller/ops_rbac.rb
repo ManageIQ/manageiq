@@ -1179,22 +1179,16 @@ module OpsController::OpsRbac
     if ids.include?(node)   # This node is selected, return all children
       return [node] + MiqProductFeature.feature_all_children(node)
     else                    # Node is not selected, check this nodes direct children
-      nodes = []
-      MiqProductFeature.feature_children(node).each do |n|
-        nodes += rbac_expand_features(ids, n)
-      end
-      return nodes
+      MiqProductFeature.feature_children(node).flat_map { rbac_expand_features(ids, n) }
     end
   end
 
   # Get array of all fully selected parent or leaf node features
   def rbac_compact_features(ids, node)  # Selected IDS and node to check
     return [node] if ids.include?(node) # This feature is selected, return this node
-    nodes = []
-    MiqProductFeature.feature_children(node).each do |n|
-      nodes += rbac_compact_features(ids, n)
+    MiqProductFeature.feature_children(node, false).flat_map do |n|
+      rbac_compact_features(ids, n)
     end
-    nodes
   end
 
   def rbac_role_get_form_vars
