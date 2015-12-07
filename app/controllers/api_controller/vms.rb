@@ -210,6 +210,7 @@ class ApiController
     def set_owner_vm(vm, owner)
       desc = "#{vm_ident(vm)} setting owner to '#{owner}'"
       user = User.lookup_by_identity(owner)
+      raise "Invalid user #{owner} specified" unless user
       vm.evm_owner = user
       vm.miq_group = user.current_group unless user.nil?
       vm.save!

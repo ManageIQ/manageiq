@@ -347,7 +347,7 @@ module ApiSpecHelper
 
   def expect_single_action_result(options = {})
     expect_request_success
-    if options[:success]
+    if options.key?(:success)
       expect(@result).to have_key("success")
       expect(@result["success"]).to eq(options[:success])
     end
