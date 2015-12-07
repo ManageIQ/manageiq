@@ -16,20 +16,20 @@
               ems_cloud_path(@record.ext_management_system.id),
               :title => _("Show this Cloud Tenant's parent %s") % ui_lookup(:table => "ems_cloud"))
         - if role_allows(:feature => "security_group_show_list")
-          = li_link_if_nonzero(:count     => @record.number_of(:security_groups),
-                               :text      => _("Security Groups"),
-                               :record_id => @record.id,
-                               :display   => 'security_groups',
-                               :title     => _("Show all Security Groups"))
+          = li_link(:count => @record.number_of(:security_groups),
+            :text          => _("Security Groups"),
+            :record_id     => @record.id,
+            :display       => 'security_groups',
+            :title         => _("Show all Security Groups"))
         - if role_allows(:feature => "vm_show_list")
-          = li_link_if_nonzero(:count     => @record.number_of(:vms),
-                               :text      => _("Instances"),
-                               :record_id => @record.id,
-                               :display   => 'instances',
-                               :title     => _("Show all Instances"))
+          = li_link(:count => @record.number_of(:vms),
+            :text          => _("Instances"),
+            :record_id     => @record.id,
+            :display       => 'instances',
+            :title         => _("Show all Instances"))
         - if role_allows(:feature => "miq_template_show_list")
-          = li_link_if_nonzero(:count     => @record.number_of(:miq_templates),
-                               :text      => _("Images"),
-                               :record_id => @record.id,
-                               :display   => 'images',
-                               :title     => _("Show all Images"))
+          = li_link(:count => @record.number_of(:miq_templates),
+            :text          => _("Images"),
+            :record_id     => @record.id,
+            :display       => 'images',
+            :title         => _("Show all Images"))

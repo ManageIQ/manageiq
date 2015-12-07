@@ -24,35 +24,35 @@
             = link_to("#{ui_lookup(:table => 'orchestration_template')}: #{@record.orchestration_template.name}", "#")
 
         - if role_allows(:feature => "vm_show_list")
-          = li_link_if_nonzero(:count     => @record.number_of(:vms),
-                               :text      => _("Instances"),
-                               :record_id => @record.id,
-                               :display   => 'instances',
-                               :title     => _("Show all Instances"))
+          = li_link(:count => @record.number_of(:vms),
+            :text          => _("Instances"),
+            :record_id     => @record.id,
+            :display       => 'instances',
+            :title         => _("Show all Instances"))
 
         - if role_allows(:feature => "security_group_show_list")
-          = li_link_if_nonzero(:count     => @record.number_of(:security_groups),
-                               :text      => _("Security Groups"),
-                               :record_id => @record.id,
-                               :display   => 'security_groups',
-                               :title     => _("Show all Security Groups"))
-        = li_link_if_nonzero(:count     => @record.number_of(:cloud_networks),
-                             :text      => _("Cloud Networks"),
-                             :action    => "cloud_networks",
-                             :record_id => @record.id,
-                             :title     => _("Show all Cloud Networks"))
-        = li_link_if_nonzero(:count     => @record.number_of(:parameters),
-                             :text      => _("Parameters"),
-                             :action    => 'parameters',
-                             :record_id => @record.id,
-                             :title     => _("Show all Parameters"))
-        = li_link_if_nonzero(:count     => @record.number_of(:outputs),
-                             :text      => _("Outputs"),
-                             :action    => 'outputs',
-                             :record_id => @record.id,
-                             :title     => _("Show all Outputs"))
-        = li_link_if_nonzero(:count     => @record.number_of(:resources),
-                             :text      => _("Resources"),
-                             :action    => 'resources',
-                             :record_id => @record.id,
-                             :title     => _("Show all Resources"))
+          = li_link(:count => @record.number_of(:security_groups),
+            :text          => _("Security Groups"),
+            :record_id     => @record.id,
+            :display       => 'security_groups',
+            :title         => _("Show all Security Groups"))
+        = li_link(:count => @record.number_of(:cloud_networks),
+          :text          => _("Cloud Networks"),
+          :action        => "cloud_networks",
+          :record_id     => @record.id,
+          :title         => _("Show all Cloud Networks"))
+        = li_link(:count => @record.number_of(:parameters),
+          :text          => _("Parameters"),
+          :action        => 'parameters',
+          :record_id     => @record.id,
+          :title         => _("Show all Parameters"))
+        = li_link(:count => @record.number_of(:outputs),
+          :text          => _("Outputs"),
+          :action        => 'outputs',
+          :record_id     => @record.id,
+          :title         => _("Show all Outputs"))
+        = li_link(:count => @record.number_of(:resources),
+          :text          => _("Resources"),
+          :action        => 'resources',
+          :record_id     => @record.id,
+          :title         => _("Show all Resources"))
