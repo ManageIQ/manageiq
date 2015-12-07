@@ -1245,8 +1245,8 @@ module OpsController::OpsRbac
 
   # Walk the features tree, adding features up to the top
   def rbac_role_add_parent(node)
-    return unless parent = MiqProductFeature.feature_parent(node) # Intentional single =, using parent var below
-    if MiqProductFeature.feature_children(parent) - @edit[:new][:features] == []  # All siblings of node are selected
+    return unless (parent = MiqProductFeature.feature_parent(node)) # Intentional single =, using parent var below
+    if MiqProductFeature.feature_children(parent, false) - @edit[:new][:features] == []  # All siblings of node are selected
       @edit[:new][:features] += [parent]  # Add the parent to the features array
       rbac_role_add_parent(parent)        # See if this nodes parent needs to be added
     end
