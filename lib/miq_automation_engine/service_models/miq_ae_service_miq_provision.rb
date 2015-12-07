@@ -20,10 +20,6 @@ module MiqAeMethodService
     expose_eligible_resources :customization_templates
     expose_eligible_resources :iso_images
 
-    def set_customization_spec(name = nil, override = false)
-      object_send(:set_customization_spec, name, override)
-    end
-
     def get_network_scope
       object_send(:get_network_scope)
     end
@@ -46,7 +42,7 @@ module MiqAeMethodService
 
     def statemachine_task_status
       ar_method do
-        if ['finished', 'provisioned'].include?(@object.state)
+        if %w(finished provisioned).include?(@object.state)
           if @object.status.to_s.downcase == 'error' || @object.vm.nil?
             'error'
           else

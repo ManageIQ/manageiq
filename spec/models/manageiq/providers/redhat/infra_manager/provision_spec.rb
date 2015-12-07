@@ -35,11 +35,6 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
         expect(@vm_prov.workflow_class).to eq workflow_class
       end
 
-      it "disable_customization_spec" do
-        @vm_prov.should_receive(:disable_customization_spec).never
-        @vm_prov.set_customization_spec(nil).should be_false
-      end
-
       it "eligible_resources for iso_images" do
         iso_image = FactoryGirl.create(:iso_image, :name => "Test ISO Image")
         iso_image_struct = [MiqHashStruct.new(:id => "IsoImage::#{iso_image.id}", :name => iso_image.name, :evm_object_class => iso_image.class.base_class.name.to_sym)]
