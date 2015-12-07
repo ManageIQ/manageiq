@@ -78,7 +78,7 @@ class OpsController
     def rbac_features_tree_add_node(feature, _pid, parent_checked = false)
       details = MiqProductFeature.feature_details(feature)
 
-      unless details[:hidden]
+      if details && !details[:hidden]
         f_kids = [] # Array to hold node children
         f_node = {
           :key     => "#{@role.id ? to_cid(@role.id) : "new"}__#{feature}",
