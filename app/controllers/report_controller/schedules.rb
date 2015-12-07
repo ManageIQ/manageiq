@@ -471,11 +471,16 @@ module ReportController::Schedules
     schedule.description = @edit[:new][:description]
     schedule.enabled = @edit[:new][:enabled]
     schedule.towhat = "MiqReport"                           # Default schedules apply to MiqReport model for now
-    schedule.sched_action = {:method  => "run_report",                    # Set method
-                             :options => {:send_email       => @edit[:new][:send_email] == true,  # Set send_email flag
-                                          :email_url_prefix => url_for(:controller => "report", :action => "show_saved") + "/"  # Set email URL
-                                        }
-                            }
+
+    email_url_prefix = url_for(:controller => "report", :action => "show_saved") + "/"
+    schedule_options = {
+      :send_email       => @edit[:new][:send_email],
+      :email_url_prefix => email_url_prefix,
+      :miq_group_id     => current_user.current_group.id
+    }
+
+    schedule.sched_action = {:method => "run_report", :options => schedule_options}
+
     schedule.sched_action[:options][:email] = copy_hash(@edit[:new][:email]) if @edit[:new][:send_email]
 
     schedule.run_at ||= {}

@@ -761,8 +761,12 @@ describe ReportController do
   end
 
   context "ReportController::Schedules" do
+    let(:miq_report) { FactoryGirl.create(:miq_report) }
+
     before do
-      login_as FactoryGirl.create(:user, :features => %w(miq_report_schedule_enable miq_report_schedule_disable))
+      @current_user = login_as FactoryGirl.create(:user, :features => %w(miq_report_schedule_enable
+                                                                         miq_report_schedule_disable
+                                                                         miq_report_schedule_edit))
     end
 
     context "no schedules selected" do
@@ -818,6 +822,33 @@ describe ReportController do
         @sch.reload
         @sch.should_not be_enabled
         @sch.updated_at.should be > 10.minutes.ago.utc
+      end
+
+      it "contains current group id in sched_action field" do
+        controller.instance_variable_set(:@_params, :button => "add", :controller => "report",
+                                                    :action => "schedule_edit")
+        controller.miq_report_schedule_disable
+        controller.stub(:load_edit => true)
+        controller.stub(:replace_right_cell)
+        controller.instance_variable_set(:@edit,
+                                         :sched_id => nil, :new => {:name => "test_1", :description => "test_1",
+                                                                    :enabled => true, :send_email => false,
+                                                                    :email => {:send_if_empty => true},
+                                                                    :timer_months => "1", :timer_weeks => "1",
+                                                                    :timer_days => "1", :timer_hours => "1",
+                                                                    :timer_typ => "Once", :start_hour => "00",
+                                                                    :start_min => "00", :start_date => "12/04/2015",
+                                                                    :filter => "Configuration Management",
+                                                                    :subfilter => "Virtual Machines",
+                                                                    :repfilter => miq_report.id},
+                                         :key => "schedule_edit__new")
+        controller.instance_variable_set(:@sb, :trees => {:schedules_tree => {:schedules_tree => "root"}})
+        controller.send(:schedule_edit)
+        miq_schedule = MiqSchedule.find_by(:name => "test_1")
+        expect(miq_schedule.sched_action).to be_kind_of(Hash)
+        expect(miq_schedule.sched_action[:method]).to eq("run_report")
+        expect(miq_schedule.sched_action[:options]).to be_kind_of(Hash)
+        expect(miq_schedule.sched_action[:options][:miq_group_id]).to eq(@current_user.current_group.id)
       end
     end
   end
