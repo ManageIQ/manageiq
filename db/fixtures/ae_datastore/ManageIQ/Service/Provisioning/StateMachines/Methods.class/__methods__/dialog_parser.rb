@@ -102,11 +102,9 @@ def parent_task_dialog_information(task)
     $evm.log('error', "Unable to locate Dialog information")
     exit MIQ_ABORT
   end
-
   $evm.log('info', "Current task has empty dialogs, getting dialog information from parent task")
-  options_hash = YAML.load(bundle_task.get_option(:parsed_dialog_options))
-  tags_hash = YAML.load(bundle_task.get_option(:parsed_dialog_tags))
-  return options_hash, tags_hash
+  return YAML.load(bundle_task.get_option(:parsed_dialog_options) || "{}"),
+         YAML.load(bundle_task.get_option(:parsed_dialog_tags) || "{}")
 end
 
 def save_parsed_dialog_information(options_hash, tags_hash, task)

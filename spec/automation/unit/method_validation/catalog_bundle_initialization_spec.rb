@@ -94,5 +94,9 @@ describe "CatalogBundleInitialization Automate Method" do
       process_stp(:dialog => @dialog_hash)
       check_svc_attrs
     end
+
+    it "allows blank dialogs" do
+      expect { process_stp(:dialog => {'dialog_option_1_service_name' => ''}) }.not_to raise_exception
+    end
   end
 end

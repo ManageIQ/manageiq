@@ -73,6 +73,11 @@ describe "CatalogItemInitialization Automate Method" do
       process_stp(stp2, parsed_options, required_options, required_tags)
     end
 
+    it "allows blank dialogs" do
+      create_request_and_tasks
+      process_stp(root_service_template_task, {0 => {:location => ""}}, {}, {})
+    end
+
     def process_stp(stp, parsed_options, required_options, required_tags)
       stp.options = stp.options.merge(parsed_options)
       stp.save
