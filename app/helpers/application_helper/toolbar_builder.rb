@@ -1404,7 +1404,7 @@ class ApplicationHelper::ToolbarBuilder
 
     props.update(
       :name    => button,
-      :hidden  => !!item[:hidden],
+      :hidden  => props[:hidden] || !!item[:hidden],
       :pressed => item[:pressed],
       :onwhen  => item[:onwhen]
     )
