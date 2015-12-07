@@ -185,7 +185,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   private
 
   def target_entity
-    target_class.constantize.find(target_id)
+    target_class.constantize.find_by_id(target_id)
   end
 
   def ext_management_system
