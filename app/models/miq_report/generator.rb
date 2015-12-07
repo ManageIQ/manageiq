@@ -309,7 +309,8 @@ module MiqReport::Generator
       :db               => db,
       :last_run_on      => ts,
       :last_accessed_on => ts,
-      :miq_report_id    => id
+      :miq_report_id    => id,
+      :miq_group_id     => options[:miq_group_id]
     }
 
     _log.info("Creating report results with hash: [#{attrs.inspect}]")

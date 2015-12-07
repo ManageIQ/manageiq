@@ -20,7 +20,7 @@ class MiqReportResult < ActiveRecord::Base
     user_info = userid.to_s.split("|")
     if user_info.length == 1
       user = User.find_by_userid(user_info.first)
-      self.miq_group_id = user.current_group_id unless user.nil?
+      self.miq_group_id ||= user.current_group_id unless user.nil?
     end
   end
 
