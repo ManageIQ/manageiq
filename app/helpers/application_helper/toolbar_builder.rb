@@ -750,7 +750,7 @@ class ApplicationHelper::ToolbarBuilder
       when "alert_profile_delete"
         return true unless role_allows(:feature => "alert_profile_delete")
       end
-    when "MiqEvent"
+    when "MiqEventDefinition"
       case id
       when "event_edit"
         return true if x_active_tree == :event_tree || !role_allows(:feature => "event_edit")
