@@ -618,13 +618,13 @@ class OpsController < ApplicationController
       end
       active_id = from_cid(x_node.split("-").last)
       # server node
-      if x_node.split("-").first == "svr" && @sb[:my_server_id] == active_id.to_i
+      if x_node.split("-").first == "svr" && my_server_id == active_id.to_i
         # show all the tabs if on current server node
         @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
         if %w(save reset).include?(params[:button]) && is_browser_ie?
           presenter[:extra_js] << "ManageIQ.oneTransition.IEButtonPressed = true;"
         end
-      elsif x_node.split("-").first.split("__")[1] == "svr" && @sb[:my_server_id] != active_id.to_i
+      elsif x_node.split("-").first.split("__")[1] == "svr" && my_server_id != active_id.to_i
         # show only 4 tabs if not on current server node
         @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
       end
@@ -699,7 +699,7 @@ class OpsController < ApplicationController
   def extra_js_commands(presenter)
     presenter[:right_cell_text] = @right_cell_text
     presenter[:osf_node] = x_node
-    presenter[:extra_js] << "miqOneTrans = 0;"                  # resetting miqOneTrans when tab loads
+    presenter[:extra_js] << "ManageIQ.oneTransition.oneTrans = 0;" # resetting miqOneTrans when tab loads
     presenter[:extra_js] << "if ($('#server_company').length) $('#server_company').focus();"
     presenter[:ajax_action] = {
       :action    => @ajax_action,
