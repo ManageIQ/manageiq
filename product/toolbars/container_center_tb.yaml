@@ -34,3 +34,20 @@
       :url_parms: 'main_div'
       :text: 'Edit Tags'
       :title: 'Edit Tags for this #{ui_lookup(:table=>"container")}'
+- :name: container_monitoring
+  :items:
+  - :buttonSelect: container_monitoring_choice
+    :image: monitoring
+    :title: Monitoring
+    :text: Monitoring
+    :items:
+    - :button: container_timeline
+      :image: timeline
+      :text: "Timelines"
+      :title: "Show Timelines for this Container"
+      :url_parms: '?display=timeline'
+    - :button: container_perf
+      :image: capacity
+      :text: "Utilization"
+      :title: "Show Capacity & Utilization data for this Container"
+      :url_parms: '?display=performance'

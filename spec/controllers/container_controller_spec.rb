@@ -70,4 +70,42 @@ describe ContainerController do
       expect(assigns(:edit)).to be_nil
     end
   end
+
+  context "#x_button" do
+    before(:each) do
+      ems = FactoryGirl.create(:ems_kubernetes)
+      container_project = ContainerProject.create(:ext_management_system => ems)
+      container_group = ContainerGroup.create(:ext_management_system => ems,
+                                              :container_project     => container_project)
+      @ct = FactoryGirl.create(:container,
+                               :name            => "container-01",
+                               :container_group => container_group
+                              )
+      controller.stub(:x_node).and_return("cnt_#{controller.to_cid(@ct.id)}")
+      controller.instance_variable_set(:@record, @ct)
+      FactoryGirl.create(:ems_event, :container_id => @ct.id)
+    end
+
+    after(:each) do
+      expect(response.status).to eq(200)
+    end
+
+    it "renders timeline views" do
+      post :x_button,
+           :pressed => "container_timeline",
+           :id      => @ct.id,
+           :display => 'timeline'
+      response.should render_template('layouts/_tl_show')
+      response.should render_template('layouts/_tl_detail')
+    end
+
+    it "renders utilization views" do
+      post :x_button,
+           :pressed => "container_perf",
+           :id      => @ct.id,
+           :display => 'performance'
+      response.should render_template('layouts/_perf_options')
+      response.should render_template('layouts/_perf_charts')
+    end
+  end
 end
