@@ -709,7 +709,7 @@ module OpsController::Diagnostics
       :target_class => "MiqServer",
       :userid       => session[:userid]
     )
-    add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => "MiqServer"), :name => "#{server.name} [#{svr.id}]"})
+    add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => "MiqServer"), :name => "#{server.name} [#{server.id}]"})
   end
 
   def promote_server
