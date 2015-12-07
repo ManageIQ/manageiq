@@ -15,7 +15,7 @@ describe "MiqServer" do
 
         FileUtils.should_not_receive(:rm_f)
         File.should_receive(:read).with("/etc/hosts").and_return("\n #Some Comment\n127.0.0.1\tlocalhost")
-        File.should_receive(:write).with("/etc/hosts", "\n#Some Comment\n127.0.0.1        localhost\n#{@server1.ipaddress}          #{@server1.guid}\n#{@server2.ipaddress}          #{@server2.guid}")
+        File.should_receive(:write).with("/etc/hosts", "\n#Some Comment\n127.0.0.1        localhost\n#{@server1.ipaddress}          #{@server1.guid}\n#{@server2.ipaddress}          #{@server2.guid}\n")
         MiqServer.any_instance.should_receive(:write_yum_repo_file).with([@server2])
 
         @server1.configure_rhn_mirror_client
