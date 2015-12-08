@@ -702,8 +702,9 @@ class OpsController < ApplicationController
     presenter[:extra_js] << "ManageIQ.oneTransition.oneTrans = 0;" # resetting miqOneTrans when tab loads
     presenter[:extra_js] << "if ($('#server_company').length) $('#server_company').focus();"
     presenter[:ajax_action] = {
-      :action    => @ajax_action,
-      :record_id => @record.id
+      :controller => controller_name,
+      :action     => @ajax_action,
+      :record_id  => @record.id
     } if @ajax_action
   end
 
