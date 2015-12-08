@@ -39,6 +39,12 @@ ul.dynatree-container
 #menu_roles_treebox ul ul ul ul span.dynatree-node:hover {
   background-color: transparent !important;
 }
+// C & U collection tab styling (report names not clickable)
+
+#clhosts_treebox span.dynatree-node a,
+#cu_datastore_treebox span.dynatree-node a{
+  cursor: default !important;
+}
 
 #accordion a.btn {
   margin-right: 10px;
