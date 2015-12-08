@@ -2703,6 +2703,18 @@ describe ApplicationHelper do
         b.send(:build_toolbar_save_button, @item, @item_out)
       end
     end
+
+    context "button visibility" do
+      it "defaults to hidden false" do
+        props = build_toolbar_save_button(@item, @item_out)
+        expect(props[:hidden]).to be(false)
+      end
+
+      it "honors explicit item's hidden properties" do
+        props = build_toolbar_save_button(@item, {:hidden => true})
+        expect(props[:hidden]).to be(true)
+      end
+    end
   end
 
   describe "url_for_save_button" do
