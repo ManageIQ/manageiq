@@ -6,7 +6,7 @@ module ManageIQ::Providers::Microsoft::InfraManager::VmOrTemplateShared::Scannin
     $log.debug "#{log_pref} VM = #{name}"
 
     begin
-      setup_for_ems_connection(name, ost)
+      connect_to_ems(name, ost)
       miq_vm = MiqScvmmVm.new(name, ost)
       scan_via_miq_vm(miq_vm, ost)
     rescue => err
@@ -34,7 +34,7 @@ module ManageIQ::Providers::Microsoft::InfraManager::VmOrTemplateShared::Scannin
 
   # Moved from MIQExtract.rb
   # TODO: Should this be in the ems?
-  def setup_for_ems_connection(vm_name, ost)
+  def connect_to_ems(vm_name, ost)
     log_header = "MIQ(#{self.class.name}.#{__method__})"
 
     # Check if we've been told explicitly not to connect to the ems
@@ -53,17 +53,22 @@ module ManageIQ::Providers::Microsoft::InfraManager::VmOrTemplateShared::Scannin
       ems_text = "#{ems_connect_type}(#{use_broker ? 'via broker' : 'directly'}):#{miq_vm_host[:address]}"
       log_text = "#{log_header}: Connection to [#{ems_text}]"
       $log.info "#{log_header}: Connecting to [#{ems_text}] for VM:[#{vm_name}]"
-      miq_vm_host[:password_decrypt] = MiqPassword.decrypt(miq_vm_host[:password])
+      password = MiqPassword.decrypt(miq_vm_host[:password])
+      miq_vm_host[:username] = miq_vm_host[:domain] + "\\" + miq_vm_host[:username] unless miq_vm_host[:domain].nil?
 
       begin
         hyperv_config = {:host     => miq_vm_host[:address],
                          :port     => miq_vm_host[:port],
                          :user     => miq_vm_host[:username],
-                         :password => miq_vm_host[:password_decrypt],
+                         :password => password
         }
 
-        ost.miq_scvmm  = ost.miq_hyperv = hyperv_config
+        ost.miq_hyperv = hyperv_config
         ost.miq_vm     = ost.fileName = vm_name
+        ost.miq_scvmm  = MiqScvmmVmSSAInfo.new(hyperv_config[:host],
+                                               hyperv_config[:user],
+                                               hyperv_config[:password],
+                                               hyperv_config[:port])
         $log.info "#{log_text} completed for VM:[#{vm_name}] in [#{Time.now.getlocal - st}] seconds"
       rescue Timeout::Error => err
         msg = "#{log_text} timed out for VM:[#{vm_name}] with error [#{err}] after [#{Time.now.getlocal - st}] seconds"

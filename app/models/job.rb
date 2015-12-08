@@ -31,7 +31,7 @@ class Job < ActiveRecord::Base
     job
   end
 
-  def self.current_job_timeout
+  def self.current_job_timeout(_timeout_adjustment = 1)
     DEFAULT_TIMEOUT
   end
 
@@ -171,7 +171,7 @@ class Job < ActiveRecord::Base
         .where("state != 'finished' and (state != 'waiting_to_start' or dispatch_status = 'active')")
         .where("zone is null or zone = ?", MiqServer.my_zone)
         .each do |job|
-          next unless job.updated_on < job.current_job_timeout.seconds.ago
+          next unless job.updated_on < job.current_job_timeout(timeout_adjustment(job)).seconds.ago
 
           # Allow jobs to run longer if the MiqQueue task is still active.  (Limited to MiqServer for now.)
           if job.agent_class == "MiqServer"
@@ -183,6 +183,16 @@ class Job < ActiveRecord::Base
     rescue Exception
       _log.error("#{$!}")
     end
+  end
+
+  def self.timeout_adjustment(job)
+    timeout_adjustment = 1
+    vm = VmOrTemplate.find(job.target_id)
+    if vm.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm) ||
+       vm.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Template)
+      timeout_adjustment = 4
+    end
+    timeout_adjustment
   end
 
   def self.check_for_evm_snapshots(job_not_found_delay = 1.hour)

@@ -5,17 +5,7 @@ class MiqScvmmVm < MiqVm
   def getCfg(_snap = nil)
     cfg_hash = {}
     # Collect disk information
-    # Call out to the Hyper-V host for Info about the VM.
-    host              = @ost.miq_hyperv[:host]
-    port              = @ost.miq_hyperv[:port]
-    if @ost.miq_hyperv[:domain].nil?
-      user = @ost.miq_hyperv[:user]
-    else
-      user = @ost.miq_hyperv[:domain] + "\\" + @ost.miq_hyperv[:user]
-    end
-    password          = @ost.miq_hyperv[:password]
-    scvmm_info_handle = MiqScvmmVmSSAInfo.new(host, user, password, port)
-    vhds              = scvmm_info_handle.vm_all_harddisks(@ost.miq_vm)
+    vhds = @scvmm.vm_all_harddisks(@ost.miq_vm)
     raise "Unable to get Hard Disk Info from VM #{@ost.miq_vm}." unless vhds.any?
     vhds.each do |vhd_attributes|
       vhd      = vhd_attributes["Path"]

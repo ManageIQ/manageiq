@@ -49,10 +49,8 @@ class MiqVm
       $log.debug "MiqVm::initialize: @vmConfig.getHash = #{@vmConfig.getHash.inspect}"
       $log.debug "MiqVm::initialize: @vmConfig.getDiskFileHash = #{@vmConfig.getDiskFileHash.inspect}"
     # TODO: move this to miq_scvmm_vm
-    elsif @ost.miq_hyperv
+    elsif @scvmm = @ost.miq_scvmm
       $log.debug "MiqVm::initialize: accessing VM through HyperV server" if $log.debug?
-      @scvmm_vm = @ost.miq_vm
-      @ost.miq_scvmm_vm = @scvmm_vm
       @vmConfig = VmConfig.new(getCfg(@ost.snapId))
       $log.debug "MiqVm::initialize: setting @ost.miq_scvmm_vm = #{@scvmm_vm.class}" if $log.debug?
     else
