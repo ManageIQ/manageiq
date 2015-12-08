@@ -5,6 +5,7 @@ class Dialog < ActiveRecord::Base
   ALL_YAML_FILES = DIALOG_DIR.join("{,*/**/}*.{yaml,yml}")
 
   has_many :dialog_tabs, -> { order :position }, :dependent => :destroy
+  validate :validate_children
 
   include DialogMixin
   include ReportableMixin
@@ -47,6 +48,19 @@ class Dialog < ActiveRecord::Base
     result = {}
     each_dialog_field { |df| result[df.automate_key_name] = df.automate_output_value }
     result
+  end
+
+  def validate_children
+    # To remove the meaningless error message like "Dialog tabs is invalid" when child's validation fails
+    errors[:dialog_tabs].delete("is invalid")
+    errors.add(:base, "Dialog #{label} must have at least one Tab") if dialog_tabs.blank?
+
+    dialog_tabs.each do |dt|
+      next if dt.valid?
+      dt.errors.full_messages.each do |err_msg|
+        errors.add(:base, "Dialog #{label} / #{err_msg}")
+      end
+    end
   end
 
   def validate_field_data
