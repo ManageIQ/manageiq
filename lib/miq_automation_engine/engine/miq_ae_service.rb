@@ -222,30 +222,6 @@ module MiqAeMethodService
     def ldap
     end
 
-    CUSTOMER_ROOT = File.expand_path(File.join(Rails.root, "..", "customer"))
-    $:.push CUSTOMER_ROOT
-    def new_object(what, *args)
-      begin
-        require what.underscore
-      rescue LoadError => err
-        _log.warn("Error requiring <#{what}> from #{CUSTOMER_ROOT} because <#{err.message}>")
-        return nil
-      end
-
-      begin
-        klass = what.constantize
-      rescue NameError => err
-        _log.warn("Error converting <#{what}> to a constant because <#{err.message}>")
-        ruby_file = File.join(CUSTOMER_ROOT, "#{what.underscore}.rb")
-        contents  = File.read(ruby_file) rescue nil
-        _log.warn("Contents of Customer Library <#{ruby_file}> are:\n#{contents}")
-        return nil
-      end
-
-      klass.send(:include, DRbUndumped) unless klass.ancestors.include?(DRbUndumped)
-      drb_return klass.new(*args)
-    end
-
     def execute(m, *args)
       drb_return MiqAeServiceMethods.send(m, *args)
     rescue NoMethodError => err
