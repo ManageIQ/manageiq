@@ -184,18 +184,10 @@ module Rbac
     scope.where(cond_for_count).includes(includes).references(includes).count
   end
 
-  def self.find_reflection(klass, association_to_match)
-    klass.reflections.each do |association, reflection|
-      next unless association == association_to_match
-      return reflection
-    end
-    nil
-  end
-
   def self.find_targets_filtered_by_parent_ids(parent_class, klass, scope, find_options, filtered_ids)
     total_count = scope.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count
     if filtered_ids.kind_of?(Array)
-      reflection = find_reflection(klass, parent_class.name.underscore.to_sym)
+      reflection = klass.reflections[parent_class.name.underscore]
       if reflection
         ids_clause = ["#{klass.table_name}.#{reflection.foreign_key} IN (?)", filtered_ids]
       else
