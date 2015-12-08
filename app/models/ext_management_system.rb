@@ -111,6 +111,7 @@ class ExtManagementSystem < ActiveRecord::Base
   virtual_column :total_vms_suspended,     :type => :integer
 
   alias_method :clusters, :ems_clusters # Used by web-services to return clusters as the property name
+  alias_attribute :to_s, :name
 
   EMS_INFRA_DISCOVERY_TYPES = {
     'vmware'    => 'virtualcenter',
@@ -227,21 +228,13 @@ class ExtManagementSystem < ActiveRecord::Base
     'ems_operations'
   end
 
-  def to_s
-    name
-  end
-
-  def hostname_required?
-    self.class.hostname_required?
-  end
-
   def self.hostname_required?
     true
   end
+  delegate :hostname_required?, :to => :class
 
   def my_zone
-    zone = self.zone
-    zone.nil? || zone.name.blank? ? MiqServer.my_zone : zone.name
+    zone.try(:name).presence || MiqServer.my_zone
   end
   alias_method :zone_name, :my_zone
 
@@ -308,11 +301,11 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def non_clustered_hosts
-    hosts.select { |h| h.ems_cluster.nil? }
+    hosts.where(:ems_cluster_id => nil)
   end
 
   def clustered_hosts
-    hosts.select { |h| !h.ems_cluster.nil? }
+    hosts.where.not(:ems_cluster_id => nil)
   end
 
   def clear_association_cache_with_storages
