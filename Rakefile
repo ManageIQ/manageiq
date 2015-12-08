@@ -13,3 +13,8 @@ begin
   load 'jasmine/tasks/jasmine.rake'
 rescue LoadError
 end
+
+# Clear noisy and unusable tasks added by rspec-rails
+if defined?(RSpec)
+  Rake::Task.tasks.select { |t| t.name =~ /^spec(:)?/ }.each(&:clear)
+end
