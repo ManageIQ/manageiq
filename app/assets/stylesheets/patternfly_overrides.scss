@@ -252,6 +252,7 @@ table.table.table-selectable tbody tr.selected td {
       @include text-overflow();
     }
     dd {
+      word-break: break-all;
       margin-left: 110px;
     }
   }
