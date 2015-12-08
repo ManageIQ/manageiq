@@ -107,7 +107,6 @@ module ManageIQ::Providers::Openstack::ManagerMixin
   def verify_amqp_credentials(_options = {})
     require 'openstack/openstack_event_monitor'
     OpenstackEventMonitor.test_amqp_connection(event_monitor_options)
-    true
   rescue => err
     miq_exception = translate_exception(err)
     raise unless miq_exception
