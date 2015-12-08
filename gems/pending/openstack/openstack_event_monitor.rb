@@ -14,7 +14,7 @@ class OpenstackEventMonitor
   end
 
   def self.available?(options)
-    !event_monitor_class(options).kind_of? OpenstackNullEventMonitor
+    event_monitor_class(options) != OpenstackNullEventMonitor
   end
 
   DEFAULT_PLUGIN_PRIORITY = 0
