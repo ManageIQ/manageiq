@@ -749,10 +749,13 @@ class ApplicationController < ActionController::Base
   # Build the user_emails hash for edit screens needing the edit_email view
   def build_user_emails_for_edit
     @edit[:user_emails] = {}
+    group_id = User.find_by_userid(session[:userid])[:current_group_id]
     User.all.sort_by { |u| u.name.downcase }.each do |u|
       unless u.email.blank? ||
              (@edit[:new][:email][:to] && @edit[:new][:email][:to].include?(u.email))
-        @edit[:user_emails][u.email] = "#{u.name} (#{u.email})"
+        if u.current_group_id == group_id
+          @edit[:user_emails][u.email] = "#{u.name} (#{u.email})"
+        end
       end
     end
   end
