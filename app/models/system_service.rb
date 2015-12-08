@@ -33,6 +33,16 @@ class SystemService < ActiveRecord::Base
     "4" => "Disabled"
   }
 
+  def start
+    s = self['start']
+    START_TYPES[s] || s
+  end
+
+  def svc_type
+    svc = self['svc_type']
+    SVC_TYPES[svc] || svc
+  end
+
   def self.running_systemd_services_condition
     arel_table[:systemd_active].eq('active').and(arel_table[:systemd_sub].eq('running'))
   end
@@ -79,35 +89,6 @@ class SystemService < ActiveRecord::Base
       result << nh
     end
     result
-  end
-
-  def self.friendly(data)
-    # Convert service start and svc_type fields to friendly values.
-    return if data.nil?
-
-    isarray = data.kind_of?(Array)
-    data = [data] unless isarray
-    data.each do|s|
-      s.start = START_TYPES[s.start] if s.attribute_names.include?("start") &&
-                                        START_TYPES.include?(s.start)
-    end
-    data.each do|s|
-      s.svc_type = SVC_TYPES[s.svc_type] if s.attribute_names.include?("svc_type") &&
-                                            SVC_TYPES.include?(s.svc_type)
-    end
-    isarray ? data : data[0]
-  end
-
-  def self.find(*args)
-    # Redefind find method to allow for friendly name conversion of results.
-    data = super
-    friendly(data)
-  end
-
-  def self.method_missing(*args)
-    # Handle friendly name conversion for dynamic find methods.
-    data = super
-    friendly(data)
   end
 
   def required_by
