@@ -683,42 +683,33 @@ module OpsController::Diagnostics
     refresh_screen
   end
 
-  # Delete all selected server
+  # Delete selected server
   def delete_server
     assert_privileges("delete_server")
-    servers = []
     if @sb[:diag_selected_id].nil?
       add_flash(_("%s no longer exists") % ui_lookup(:table => "evm_server"), :error)
     else
-      servers.push(@sb[:diag_selected_id])
+      server = MiqServer.find_by(:id => @sb[:diag_selected_id])
+      process_server_deletion(server) if server
     end
-    process_servers(servers, "destroy") unless servers.empty?
     add_flash(_("The selected %s was deleted") % ui_lookup(:table => "evm_server")) if @flash_array.nil?
     refresh_screen
   end
 
-  # Common Server button handler routines
-  def process_servers(servers, task)
-    MiqServer.where(:id => servers).order("lower(name)").each do |svr|
-      id = svr.id
-      svr_name = svr.name
-      if task == "destroy"
-        audit = {:event => "svr_record_delete", :message => "[#{svr_name}] Record deleted", :target_id => id, :target_class => "MiqServer", :userid => session[:userid]}
-      end
-      begin
-        svr.send(task.to_sym) if svr.respond_to?(task)    # Run the task
-      rescue StandardError => bang
-        add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "MiqServer"), :name => svr_name, :task => task} << bang.message,
-                  :error)
-      else
-        if task == "destroy"
-          AuditEvent.success(audit)
-          add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => "MiqServer"), :name => "#{svr_name} [#{svr.id}]"})
-        else
-          add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model => ui_lookup(:model => "MiqServer"), :name => "#{svr_name} [#{svr.id}]", :task => task})
-        end
-      end
-    end
+  def process_server_deletion(server)
+    server.destroy
+  rescue StandardError => bang
+    add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "MiqServer"), :name => server.name, :task => "destroy"} << bang.message,
+              :error)
+  else
+    AuditEvent.success(
+      :event        => "svr_record_delete",
+      :message      => "[#{server.name}] Record deleted",
+      :target_id    => server.id,
+      :target_class => "MiqServer",
+      :userid       => session[:userid]
+    )
+    add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => "MiqServer"), :name => "#{server.name} [#{server.id}]"})
   end
 
   def promote_server
