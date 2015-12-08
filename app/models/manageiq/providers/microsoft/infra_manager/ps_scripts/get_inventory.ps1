@@ -85,10 +85,27 @@ $r["datastores"] = $diskvols
 $c = Get-SCVMHostCluster -VMMServer "localhost"
 $r["clusters"] = get_clusters($c)
 
-$e = Get-VMMServer -ComputerName "localhost"
+$e = Get-SCVMMServer -ComputerName "localhost"
 $r["ems"] = $e
 
-$file = [System.IO.Path]::GetTempFileName()
-$r | Export-CLIXML -Path $file -Encoding UTF8
-Get-Content $file -ReadCount 0
-Remove-Item -Force $file
+$inFile = [System.IO.Path]::GetTempFileName()
+$outFile = $inFile + '.gz'
+
+$r | Export-CLIXML -Path $inFile -Encoding UTF8
+
+$in = New-Object System.IO.FileStream $inFile, ([IO.FileMode]::Open), ([IO.FileAccess]::Read), ([IO.FileShare]::Read)
+$buf = New-Object byte[]($in.Length)
+$x = $in.Read($buf, 0, $in.Length)
+$in.Dispose()
+
+$out = New-Object System.IO.FileStream $outFile, ([IO.FileMode]::Create), ([IO.FileAccess]::Write), ([IO.FileShare]::None)
+
+$gStream = New-Object System.IO.Compression.GzipStream $out, ([IO.Compression.CompressionMode]::Compress)
+$x = $gStream.Write($buf, 0, $buf.Length)
+$gStream.Dispose()
+$out.Dispose()
+
+[System.convert]::ToBase64String([System.IO.File]::ReadAllBytes($outFile))
+
+Remove-Item -Force $inFile
+Remove-Item -Force $outFile
