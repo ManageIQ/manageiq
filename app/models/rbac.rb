@@ -118,6 +118,8 @@ module Rbac
     klass.select(minimum_columns_for(klass)).where(cond)
   end
 
+  # @return nil if no objects are owned by self service or user not a selfservice user
+  # @return [Array<Integer>] object_ids owned by a user or group
   def self.get_self_service_object_ids(user_or_group, klass)
     targets = get_self_service_objects(user_or_group, klass)
     targets = targets.collect(&:id) if targets.respond_to?(:collect)
@@ -127,8 +129,16 @@ module Rbac
   #
   # Algorithm: filter = u_filtered_ids UNION (b_filtered_ids INTERSECTION m_filtered_ids)
   #            filter = filter UNION d_filtered_ids if filter is not nil
-  #  Each of the x_filtered_ids can be nil, which means that it does not apply
-  # Output can be nil (filters do not apply) or an array of ids
+  #
+  # a nil as input for any field means it does not apply
+  # a nil as output means there is not filter
+  #
+  # @param u_filtered_ids [nil|Array<Integer>] self service user owned objects
+  # @param b_filtered_ids [nil|Array<Integer>] objects that belong to parent
+  # @param m_filtered_ids [nil|Array<Integer>] managed filter object ids
+  # @param d_filtered_ids [nil|Array<Integer>] ids from descendants
+  # @return nil if filters do not aply
+  # @return [Array<Integer>] target ids for filter
   def self.combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids)
     filtered_ids =
       if b_filtered_ids.nil?
@@ -184,18 +194,17 @@ module Rbac
     scope.where(cond_for_count).includes(includes).references(includes).count
   end
 
-  def self.find_reflection(klass, association_to_match)
-    klass.reflections.each do |association, reflection|
-      next unless association == association_to_match
-      return reflection
-    end
-    nil
-  end
-
+  # @param parent_class [Class] Class of parent (e.g. Host)
+  # @param klass [Class] Class of child node (e.g. Vm)
+  # @param scope [] scope for active records (e.g. Vm.archived)
+  # @param find_options [Hash<Symbol,String|Array>] options for active record conditions
+  # @option find_options :conditions [String|Hash|Array] active record where conditions for primary records (e.g. { "vms.archived" => true} )
+  # @param filtered_ids [nil|Array<Integer>] ids for the parent class (e.g. [1,2,3] for host)
+  # @return [Array<Array<Object>,Integer,Integer] targets, total count, authorized count
   def self.find_targets_filtered_by_parent_ids(parent_class, klass, scope, find_options, filtered_ids)
     total_count = scope.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count
     if filtered_ids.kind_of?(Array)
-      reflection = find_reflection(klass, parent_class.name.underscore.to_sym)
+      reflection = klass.reflections[parent_class.name.underscore]
       if reflection
         ids_clause = ["#{klass.table_name}.#{reflection.foreign_key} IN (?)", filtered_ids]
       else
@@ -226,14 +235,12 @@ module Rbac
   end
 
   def self.get_belongsto_filter_object_ids(klass, filter)
-    return nil if filter.nil? || filter.empty?
-    return nil unless BELONGSTO_FILTER_CLASSES.include?(safe_base_class(klass).name)
+    return nil if !BELONGSTO_FILTER_CLASSES.include?(safe_base_class(klass).name) || filter.blank?
     get_belongsto_matches(filter, rbac_class(klass)).collect(&:id)
   end
 
   def self.get_managed_filter_object_ids(klass, scope, filter)
-    return nil if filter.nil? || filter.empty?
-    return nil unless TAGGABLE_FILTER_CLASSES.include?(safe_base_class(klass).name)
+    return nil if !TAGGABLE_FILTER_CLASSES.include?(safe_base_class(klass).name) || filter.blank?
     scope.find_tags_by_grouping(filter, :ns => '*', :select => minimum_columns_for(klass)).collect(&:id)
   end
 
@@ -386,6 +393,40 @@ module Rbac
     method_name ||= lookup_method_for_descendant_class(klass, descendant_klass)
     return descendant_klass, method_name
   end
+
+  # @param  options filtering options
+  # @option options :targets       [nil|Array<Numeric|Object>|scope] Objects to be filtered
+  #   - an empty entry uses the optional where_clause
+  #   - Array<Numeric> list if ids. :class is required. results are returned as ids
+  #   - Array<Object> list of objects. results are returned as objects
+  # @option options :named_scope   [Symbol|Array<String,Integer>] support for using named scope in search
+  #     Example without args: :named_scope => :in_my_region
+  #     Example with args:    :named_scope => [in_region, 1]
+  # @option options :class_or_name [Class|String]
+  # @option options :conditions    [Hash|String|Array<String>]
+  # @option options :where_clause  []
+  # @option options :sub_filter
+  # @option options :include_for_find [Array<Symbol>]
+  # @option options :filter
+  # @option options :results_format [:id, :objects] (default: for object targets, :object, otherwise :id)
+
+  # @option options :user         [User]     (default: current_user)
+  # @option options :userid       [String]   User#userid (not user_id)
+  # @option options :miq_group    [MiqGroup] (default: current_user.current_group)
+  # @option options :miq_group_id [Numeric]
+  # @option options :match_via_descendants [Hash]
+  # @option options :order        [Numeric] (default: no order)
+  # @option options :limit        [Numeric] (default: no limit)
+  # @option options :offset       [Numeric] (default: no offset)
+  # @option options :apply_limit_in_sql [Boolean]
+  # @option options :ext_options
+  # @return [Array<Array<Numeric|Object>,Hash>] list of object and the associated search options
+  #   Array<Numeric|Object> list of object in the same order as input targets if possible
+  # @option attrs :total_count [Numeric]
+  # @option attrs :auth_count [Numeric]
+  # @option attrs :user_filters
+  # @option attrs apply_limit_in_sql
+  # @option attrs target_ids_for_paging
 
   def self.search(options = {})
     # => empty inputs - normal find with optional where_clause

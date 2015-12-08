@@ -1030,4 +1030,89 @@ describe Rbac do
       end
     end
   end
+
+  describe ".filter" do
+    let(:vm_location_filter) do
+      MiqExpression.new("=" => {"field" => "Vm-location", "value" => "good"})
+    end
+
+    let(:matched_vms) { FactoryGirl.create_list(:vm_vmware, 2, :location => "good") }
+    let(:other_vms)   { FactoryGirl.create_list(:vm_vmware, 1, :location => "other") }
+    let(:all_vms)     { matched_vms + other_vms }
+    let(:partial_matched_vms) { [matched_vms.first] }
+    let(:partial_vms) { partial_matched_vms + other_vms }
+
+    it "skips rbac on empty empty arrays" do
+      all_vms
+      expect(Rbac.filtered([], :class => Vm)).to eq([])
+    end
+
+    # TODO: return all_vms
+    it "skips rbac on nil targets" do
+      all_vms
+      expect(Rbac.filtered(nil, :class => Vm)).to be_nil
+    end
+
+    # it returns objects too
+    # TODO: cap number of queries here
+    it "runs rbac on array target" do
+      all_vms
+      expect(Rbac.filtered(all_vms, :class => Vm)).to match_array(all_vms)
+    end
+  end
+
+  # -------------------------------
+  # find targets with rbac are split up into 4 types
+
+  # determine what to run
+  it ".apply_rbac_to_class?" do
+    expect(Rbac.apply_rbac_to_class?(Vm)).to be
+    expect(Rbac.apply_rbac_to_class?(Rbac)).not_to be
+  end
+
+  it ".apply_rbac_to_associated_class?" do
+    expect(Rbac.apply_rbac_to_associated_class?(HostMetric)).to be
+    expect(Rbac.apply_rbac_to_associated_class?(Vm)).not_to be
+  end
+
+  it ".apply_user_group_rbac_to_class?" do
+    expect(Rbac.apply_user_group_rbac_to_class?(User)).to be
+    expect(Rbac.apply_user_group_rbac_to_class?(Vm)).not_to be
+  end
+
+  # find_targets_with_direct_rbac(klass, scope, rbac_filters, find_options, user_or_group)
+  describe "find_targets_with_direct_rbac" do
+    let(:host_filter_find_options) do
+      {:conditions => {"hosts.hostname" => "good"}, :include => "host"}
+    end
+
+    let(:host_match) { FactoryGirl.create(:host, :hostname => 'good') }
+    let(:host_other) { FactoryGirl.create(:host, :hostname => 'bad') }
+    let(:vms_match) { FactoryGirl.create_list(:vm_vmware, 2, :host => host_match) }
+    let(:vm_host2) { FactoryGirl.create_list(:vm_vmware, 1, :host => host_other) }
+    let(:all_vms) { vms_match + vm_host2 }
+
+    it "works with no filters" do
+      all_vms
+      result = Rbac.find_targets_with_direct_rbac(Vm, Vm, {})
+      expect_counts(result, all_vms, all_vms.size, all_vms.size)
+    end
+
+    # most of the functionality of search is channeled through find_options. including filters
+    # including :conditions, :include, :order, :limit
+    it "applies find_options[:conditions, :include]" do
+      all_vms
+      result = Rbac.find_targets_with_direct_rbac(Vm, Vm, {}, host_filter_find_options)
+      expect_counts(result, vms_match, 2, 2)
+    end
+  end
+
+  private
+
+  # separate them to match easier for failures
+  def expect_counts(actual, expected_targets, expected_count, expected_auth_count)
+    expect(actual[1]).to eq(expected_count)
+    expect(actual[2]).to eq(expected_auth_count)
+    expect(actual[0].to_a).to match_array(expected_targets)
+  end
 end
