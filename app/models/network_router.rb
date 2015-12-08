@@ -10,8 +10,9 @@ class NetworkRouter < ActiveRecord::Base
   has_many :floating_ips
   has_many :network_ports, :as => :device
   has_many :cloud_networks, :through => :network_ports
+  has_many :cloud_subnets, :through => :network_ports
   alias_method :private_networks, :cloud_networks
-  has_many :vms_network_ports, :through => :cloud_networks, :source => :network_ports
+  has_many :vms_network_ports, :through => :cloud_subnets, :source => :network_ports
   has_many :vms, :through => :vms_network_ports, :source => :device, :source_type => 'VmOrTemplate'
 
   # Use for virtual columns, mainly for modeling array and hash types, we get from the API

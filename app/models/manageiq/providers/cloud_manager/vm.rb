@@ -5,8 +5,8 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   has_many :cloud_networks, :through => :network_ports
   alias_method :private_networks, :cloud_networks
   has_many :cloud_subnets, :through => :network_ports
-  has_many :network_routers, :through => :cloud_networks
-  has_many :public_networks, :through => :cloud_networks
+  has_many :network_routers, :through => :cloud_subnets
+  has_many :public_networks, :through => :cloud_subnets
   belongs_to :orchestration_stack
 
   # TODO(lsmola) need to go away, but relation needs to be fixed in AWS and Azure first, then we can delete the
