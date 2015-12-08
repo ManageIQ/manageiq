@@ -883,4 +883,52 @@ describe ApiController do
                                                 [/adding event .*etype1/i, /adding event .*etype2/i])
     end
   end
+
+  context "Vm retire action" do
+    it "to an invalid vm" do
+      api_basic_authorize action_identifier(:vms, :retire)
+
+      run_post(invalid_vm_url, gen_request(:retire))
+
+      expect_resource_not_found
+    end
+
+    it "to an invalid vm without appropriate role" do
+      api_basic_authorize
+
+      run_post(invalid_vm_url, gen_request(:retire))
+
+      expect_request_forbidden
+    end
+
+    it "to a single Vm" do
+      api_basic_authorize action_identifier(:vms, :retire)
+
+      run_post(vm_url, gen_request(:retire))
+
+      expect_single_action_result(:success => true, :message => /#{vm.id}.* retiring/i, :href => :vm_url)
+    end
+
+    it "to multiple Vms" do
+      api_basic_authorize collection_action_identifier(:vms, :retire)
+
+      run_post(vms_url, gen_request(:retire, [{"href" => vm1_url}, {"href" => vm2_url}]))
+
+      expect_multiple_action_result(2)
+      expect_result_resources_to_include_hrefs("results", :vms_list)
+      expect_result_resources_to_match_key_data(
+        "results",
+        "message",
+        [/#{vm1.id}.* retiring/i, /#{vm2.id}.* retiring/i]
+      )
+    end
+
+    it "in the future" do
+      api_basic_authorize action_identifier(:vms, :retire)
+      date = 2.weeks.from_now.to_date
+      run_post(vm_url, gen_request(:retire, :date => date.strftime("%m/%d/%Y")))
+
+      expect_single_action_result(:success => true, :message => /#{vm.id}.* retiring/i, :href => :vm_url)
+    end
+  end
 end

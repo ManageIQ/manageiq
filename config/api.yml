@@ -993,7 +993,6 @@
         :disabled: true
       - :name: retire
         :identifier: vm_retire
-        :disabled: true
       - :name: set_owner
         :identifier: vm_edit
       - :name: set_ownership
@@ -1037,7 +1036,6 @@
         :disabled: true
       - :name: retire
         :identifier: vm_retire
-        :disabled: true
       - :name: delete
         :identifier: vm_delete
       - :name: set_owner
