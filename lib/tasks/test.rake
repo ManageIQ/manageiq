@@ -27,4 +27,7 @@ namespace :test do
 end
 
 task :default => 'test:vmdb'
+
+desc "Run vmdb specs"
+task :test => 'test:vmdb' # TODO: Run all test suites?
 end # ifdef

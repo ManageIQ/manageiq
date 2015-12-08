@@ -7,7 +7,7 @@ namespace :test do
     task :setup => [:verify_no_db_access_loading_rails_environment, :setup_db]
   end
 
-  desc "Run all specs except migrations, replication, and automation"
+  desc "Run all core specs (excludes automation, migrations, replication, etc)"
   RSpec::Core::RakeTask.new(:vmdb => [:initialize, "evm:compile_sti_loader"]) do |t|
     EvmTestHelper.init_rspec_task(t)
     t.pattern = EvmTestHelper::VMDB_SPECS

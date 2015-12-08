@@ -1,6 +1,12 @@
 require File.expand_path('../boot', __FILE__)
 require File.expand_path('../preinitializer', __FILE__)
-require 'rails/all'
+require 'rails'
+require 'active_record/railtie'
+require 'action_controller/railtie'
+require 'action_view/railtie'
+require 'action_mailer/railtie'
+require 'active_job/railtie'
+require 'sprockets/railtie'
 
 if defined?(Bundler)
   Bundler.require *Rails.groups(:assets => %w(development test))
