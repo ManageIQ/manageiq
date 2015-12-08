@@ -43,8 +43,6 @@ class CloudVolumeController < ApplicationController
 
   # Show the main Cloud Volume list view
   def show_list
-    @listicon = "cloud_volume"
-    @lastaction = "show_list"
     process_show_list
   end
 
