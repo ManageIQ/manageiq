@@ -84,30 +84,6 @@ class MiqUserRole < ActiveRecord::Base
     role.allows_any?(options)
   end
 
-  def allows_all?(options = {})
-    scope = options[:scope] || :sub
-    raise ":scope must be one of #{SCOPES.inspect}" unless SCOPES.include?(scope)
-
-    options[:scope] ||= :sub
-    idents = options[:identifiers].to_miq_a
-    return false if idents.empty?
-
-    if [:base, :sub].include?(scope)
-      # Check passed in identifiers
-      return true if idents.all? { |i| self.allows?(:identifier => i) }
-    end
-    return false if scope == :base
-
-    # Check children of passed in identifiers (scopes :one and :base)
-    idents.all? { |i| self.allows_all_children?(:scope => (scope == :one ? :base : :sub), :identifier => i) }
-  end
-
-  def self.allows_all?(role, options = {})
-    role = get_role(role)
-    return false if role.nil?
-    role.allows_all?(options)
-  end
-
   def allows_any_children?(options = {})
     ident = options.delete(:identifier)
     return false if ident.nil? || !MiqProductFeature.feature_exists?(ident)
@@ -120,20 +96,6 @@ class MiqUserRole < ActiveRecord::Base
     role = get_role(role)
     return false if role.nil?
     role.allows_any_children?(options)
-  end
-
-  def allows_all_children?(options = {})
-    ident = options.delete(:identifier)
-    return false if ident.nil? || !MiqProductFeature.feature_exists?(ident)
-
-    child_idents = MiqProductFeature.feature_children(ident)
-    self.allows_all?(options.merge(:identifiers => child_idents))
-  end
-
-  def self.allows_all_children?(role, options = {})
-    role = get_role(role)
-    return false if role.nil?
-    role.allows_all_children?(options)
   end
 
   def self.get_role(role)
