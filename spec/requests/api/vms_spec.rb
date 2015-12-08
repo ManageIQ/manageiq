@@ -971,4 +971,44 @@ describe ApiController do
       )
     end
   end
+
+  context "Vm refresh action" do
+    it "to an invalid vm" do
+      api_basic_authorize action_identifier(:vms, :refresh)
+
+      run_post(invalid_vm_url, gen_request(:refresh))
+
+      expect_resource_not_found
+    end
+
+    it "to an invalid vm without appropriate role" do
+      api_basic_authorize
+
+      run_post(invalid_vm_url, gen_request(:refresh))
+
+      expect_request_forbidden
+    end
+
+    it "to a single Vm" do
+      api_basic_authorize action_identifier(:vms, :refresh)
+
+      run_post(vm_url, gen_request(:refresh))
+
+      expect_single_action_result(:success => true, :message => /#{vm.id}.* refreshing/i, :href => :vm_url)
+    end
+
+    it "to multiple Vms" do
+      api_basic_authorize collection_action_identifier(:vms, :refresh)
+
+      run_post(vms_url, gen_request(:refresh, [{"href" => vm1_url}, {"href" => vm2_url}]))
+
+      expect_multiple_action_result(2)
+      expect_result_resources_to_include_hrefs("results", :vms_list)
+      expect_result_resources_to_match_key_data(
+        "results",
+        "message",
+        [/#{vm1.id}.* refreshing/i, /#{vm2.id}.* refreshing/i]
+      )
+    end
+  end
 end

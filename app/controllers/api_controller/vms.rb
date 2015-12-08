@@ -163,6 +163,16 @@ class ApiController
       end
     end
 
+    def refresh_resource_vms(type, id = nil, _data = nil)
+      raise BadRequestError, "Must specify an id for refreshing a #{type} resource" unless id
+
+      api_action(type, id) do |klass|
+        vm = resource_search(id, type, klass)
+        api_log_info("Refreshing #{vm_ident(vm)}")
+        refresh_vm(vm)
+      end
+    end
+
     private
 
     def vm_ident(vm)
@@ -287,6 +297,14 @@ class ApiController
     def reset_vm(vm)
       desc = "#{vm_ident(vm)} resetting"
       task_id = queue_object_action(vm, desc, :method_name => "reset", :role => "ems_operations")
+      action_result(true, desc, :task_id => task_id)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
+    def refresh_vm(vm)
+      desc = "#{vm_ident(vm)} refreshing"
+      task_id = queue_object_action(vm, desc, :method_name => "refresh_ems", :role => "ems_operations")
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
