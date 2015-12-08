@@ -1,6 +1,5 @@
 namespace :test do
   namespace :self_service do
-    desc "Setup environment for self_service tests"
     task :setup # NOOP - Stub for consistent CI testing
   end
 
