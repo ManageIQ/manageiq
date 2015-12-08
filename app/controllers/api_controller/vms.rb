@@ -163,6 +163,19 @@ class ApiController
       end
     end
 
+    def reboot_guest_resource_vms(type, id = nil, _data = nil)
+      raise BadRequestError, "Must specify an id for rebooting a #{type} resource" unless id
+
+      api_action(type, id) do |klass|
+        vm = resource_search(id, type, klass)
+        api_log_info("Rebooting #{vm_ident(vm)}")
+
+        result = validate_vm_for_action(vm, "reboot_guest")
+        result = reboot_guest_vm(vm) if result[:success]
+        result
+      end
+    end
+
     def shutdown_guest_resource_vms(type, id = nil, _data = nil)
       raise BadRequestError, "Must specify an id for shutting down a #{type} resource" unless id
 
@@ -326,6 +339,14 @@ class ApiController
     def shutdown_guest_vm(vm)
       desc = "#{vm_ident(vm)} shutting down"
       task_id = queue_object_action(vm, desc, :method_name => "shutdown_guest", :role => "ems_operations")
+      action_result(true, desc, :task_id => task_id)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
+    def reboot_guest_vm(vm)
+      desc = "#{vm_ident(vm)} rebooting"
+      task_id = queue_object_action(vm, desc, :method_name => "reboot_guest", :role => "ems_operations")
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
