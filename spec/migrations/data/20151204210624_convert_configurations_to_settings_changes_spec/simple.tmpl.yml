@@ -1,0 +1,19 @@
+---
+values:
+  array:
+  - val1
+  - val2
+  boolean: true
+  empty_hash: {}
+  int_with_method: 10.minutes
+  integer: 10
+  nil:
+  non_nil: some_value
+  string: some_value
+  string_of_numbers: '10'
+  extra_key1: x
+  extra_key2: y
+very:
+  deeply:
+    nested:
+      string: deep_value
