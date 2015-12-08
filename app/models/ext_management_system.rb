@@ -63,7 +63,6 @@ class ExtManagementSystem < ActiveRecord::Base
     return unless hostname.present? # Presence is checked elsewhere
 
     query = ExtManagementSystem.where.not(:id => id).includes(:hostname)
-    query = query.where(:tenant_id => tenant_id) if tenant_id
     existing_hostnames = query.collect { |e| e.hostname.downcase }
 
     errors.add(:hostname, "has already been taken") if existing_hostnames.include?(hostname.downcase)
