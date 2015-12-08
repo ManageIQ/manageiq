@@ -136,41 +136,58 @@ describe MiqServer do
       let(:config)     { @miq_server.get_config("vmdb") }
       let(:server_ntp) { {:server => ["server.pool.com"]} }
       let(:zone_ntp)   { {:server => ["zone.pool.com"]} }
+      let(:chrony)     { double }
 
-      it "syncs with server settings with zone and server configured" do
-        @zone.update_attribute(:settings, :ntp => zone_ntp)
-        config.config = {:ntp => server_ntp}
-        config.save
-
-        chrony = double
-        expect(LinuxAdmin::Chrony).to receive(:new).and_return(chrony)
-        expect(chrony).to receive(:clear_servers)
-        expect(chrony).to receive(:add_servers).with(*server_ntp[:server])
-        @miq_server.ntp_reload
+      before do
+        stub_const("Sys::Platform::IMPL", platform)
       end
 
-      it "syncs with zone settings if server not configured" do
-        @zone.update_attribute(:settings, :ntp => zone_ntp)
-        config.config = {}
-        config.save
+      context "on a Linux platform" do
+        let(:platform) { :linux }
 
-        chrony = double
-        expect(LinuxAdmin::Chrony).to receive(:new).and_return(chrony)
-        expect(chrony).to receive(:clear_servers)
-        expect(chrony).to receive(:add_servers).with(*zone_ntp[:server])
-        @miq_server.ntp_reload
+        it "syncs with server settings with zone and server configured" do
+          @zone.update_attribute(:settings, :ntp => zone_ntp)
+          config.config = {:ntp => server_ntp}
+          config.save
+
+          expect(LinuxAdmin::Chrony).to receive(:new).and_return(chrony)
+          expect(chrony).to receive(:clear_servers)
+          expect(chrony).to receive(:add_servers).with(*server_ntp[:server])
+          @miq_server.ntp_reload
+        end
+
+        it "syncs with zone settings if server not configured" do
+          @zone.update_attribute(:settings, :ntp => zone_ntp)
+          config.config = {}
+          config.save
+
+          expect(LinuxAdmin::Chrony).to receive(:new).and_return(chrony)
+          expect(chrony).to receive(:clear_servers)
+          expect(chrony).to receive(:add_servers).with(*zone_ntp[:server])
+          @miq_server.ntp_reload
+        end
+
+        it "syncs with default zone settings if server and zone not configured" do
+          @zone.update_attribute(:settings, {})
+          config.config = {}
+          config.save
+
+          expect(LinuxAdmin::Chrony).to receive(:new).and_return(chrony)
+          expect(chrony).to receive(:clear_servers)
+          expect(chrony).to receive(:add_servers).with(*Zone::DEFAULT_NTP_SERVERS[:server])
+          @miq_server.ntp_reload
+        end
       end
 
-      it "syncs with default zone settings if server and zone not configured" do
-        @zone.update_attribute(:settings, {})
-        config.config = {}
-        config.save
+      context "on a non-Linux platform" do
+        let(:platform) { :macosx }
 
-        chrony = double
-        expect(LinuxAdmin::Chrony).to receive(:new).and_return(chrony)
-        expect(chrony).to receive(:clear_servers)
-        expect(chrony).to receive(:add_servers).with(*Zone::DEFAULT_NTP_SERVERS[:server])
-        @miq_server.ntp_reload
+        it "does not apply NTP settings" do
+          expect(LinuxAdmin::Chrony).to_not receive(:new)
+          expect(chrony).to_not receive(:clear_servers)
+          expect(chrony).to_not receive(:add_servers)
+          @miq_server.ntp_reload
+        end
       end
     end
 
