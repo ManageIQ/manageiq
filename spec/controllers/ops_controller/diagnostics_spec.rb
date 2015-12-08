@@ -164,6 +164,56 @@ describe OpsController do
       flash_message[:level].should be(:success)
     end
 
+    describe '#delete_server' do
+      context ':diag_selected_id is not set' do
+        it 'should set the flash saying that server no longer exists' do
+          controller.instance_variable_set(:@sb, {})
+          expect(controller).to receive :refresh_screen
+
+          controller.send(:delete_server)
+
+          expect(assigns(:flash_array)).to eq [
+            {
+              message: 'Evm Server no longer exists',
+              level: :error
+            }
+          ]
+        end
+      end
+
+      context "server doesn't exist" do
+        it 'should set the flash saying that server no longer exists' do
+          controller.instance_variable_set(:@sb, { diag_selected_id: -100500 })
+          expect(controller).to receive :refresh_screen
+
+          controller.send(:delete_server)
+
+          expect(assigns(:flash_array)).to eq [
+            {
+              message: 'The selected Evm Server was deleted',
+              level: :success
+            }
+          ]
+        end
+      end
+
+      context "server does exist, but something goes wrong during deletion" do
+        it 'should set the flash saying that server no longer exists' do
+          controller.instance_variable_set(:@sb, { diag_selected_id: @miq_server.id })
+          expect(controller).to receive :refresh_screen
+          expect_any_instance_of(MiqServer).to receive(:destroy).and_raise 'boom'
+
+          controller.send(:delete_server)
+
+          flash_array = assigns(:flash_array)
+          expect(flash_array.size).to eq 1
+
+          expect(flash_array.first[:level]).to eq :error
+          expect(flash_array.first[:message]).to match /Server .*: Error during 'destroy': boom/
+        end
+      end
+    end
+
     context "#logs_collect" do
       context "Server" do
         let(:active_node) { "svr-#{@miq_server.id}" }
