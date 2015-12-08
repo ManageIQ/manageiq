@@ -691,13 +691,27 @@ module EmsCommon
     @edit[:new][:port] = @ems.port
     @edit[:new][:api_version] = @ems.api_version
     @edit[:new][:provider_id] = @ems.provider_id
-    @edit[:protocols] = [['Basic (SSL)', 'ssl'], ['Kerberos', 'kerberos']]
-    if @ems.id
-      # for existing provider before this fix, set default to ssl
+    if @ems.kind_of?(ManageIQ::Providers::Openstack::CloudManager) ||
+       @ems.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
+      # Special behaviour for OpenStack while keeping it backwards compatible for the rest
+      @edit[:protocols] = retrieve_openstack_security_protocols
+    else
+      @edit[:protocols] = [['Basic (SSL)', 'ssl'], ['Kerberos', 'kerberos']]
+    end
+
+    if @ems.kind_of?(ManageIQ::Providers::Openstack::CloudManager) ||
+       @ems.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
+      # Special behaviour for OpenStack while keeping it backwards compatible for the rest
       @edit[:new][:security_protocol] = @ems.security_protocol ? @ems.security_protocol : 'ssl'
     else
-      @edit[:new][:security_protocol] = 'kerberos'
+      if @ems.id
+        # for existing provider before this fix, set default to ssl
+        @edit[:new][:security_protocol] = @ems.security_protocol ? @ems.security_protocol : 'ssl'
+      else
+        @edit[:new][:security_protocol] = 'kerberos'
+      end
     end
+
     @edit[:new][:realm] = @ems.realm if @edit[:new][:emstype] == "scvmm"
     if @ems.zone.nil? || @ems.my_zone == ""
       @edit[:new][:zone] = "default"
@@ -758,6 +772,7 @@ module EmsCommon
     end
     @openstack_infra_providers = retrieve_openstack_infra_providers
     @openstack_api_versions = retrieve_openstack_api_versions
+    @openstack_security_protocols = retrieve_openstack_security_protocols
     @emstype_display = model.supported_types_and_descriptions_hash[@ems.emstype]
   end
 
@@ -777,6 +792,10 @@ module EmsCommon
     [['Keystone v2', 'v2'], ['Keystone v3', 'v3']]
   end
 
+  def retrieve_openstack_security_protocols
+    [['SSL without validation', 'ssl'], ['SSL', 'ssl-with-validation'], ['Non-SSL', 'non-ssl']]
+  end
+
   # Get variables from edit form
   def get_form_vars
     @ems = @edit[:ems_id] ? model.find_by_id(@edit[:ems_id]) : model.new
@@ -791,6 +810,7 @@ module EmsCommon
       if ["openstack", "openstack_infra"].include?(params[:server_emstype])
         @edit[:new][:port] = @ems.port ? @ems.port : 5000
         @edit[:new][:api_version] = @ems.api_version ? @ems.api_version : 'v2'
+        @edit[:new][:security_protocol] = @ems.security_protocol ? @ems.security_protocol : 'ssl'
       elsif params[:server_emstype] == ManageIQ::Providers::Kubernetes::ContainerManager.ems_type
         @edit[:new][:port] = @ems.port ? @ems.port : ManageIQ::Providers::Kubernetes::ContainerManager::DEFAULT_PORT
       elsif params[:server_emstype] == ManageIQ::Providers::Openshift::ContainerManager.ems_type
@@ -807,6 +827,7 @@ module EmsCommon
     end
     @edit[:new][:port] = params[:port] if params[:port]
     @edit[:new][:api_version] = params[:api_version] if params[:api_version]
+    @edit[:new][:security_protocol] = params[:security_protocol] if params[:security_protocol]
     @edit[:new][:provider_id] = params[:provider_id] if params[:provider_id]
     @edit[:new][:zone] = params[:server_zone] if params[:server_zone]
 
@@ -846,10 +867,12 @@ module EmsCommon
     ems.hostname = @edit[:new][:hostname].strip unless @edit[:new][:hostname].nil?
     ems.port = @edit[:new][:port] if ems.supports_port?
     ems.api_version = @edit[:new][:api_version] if ems.supports_api_version?
+    ems.security_protocol = @edit[:new][:security_protocol] if ems.supports_security_protocol?
     ems.provider_id = @edit[:new][:provider_id] if ems.supports_provider_id?
     ems.zone = Zone.find_by_name(@edit[:new][:zone])
 
     if ems.kind_of?(ManageIQ::Providers::Microsoft::InfraManager)
+      # TODO should be refactored to support methods, although there seems to be no UI for Microsoft provider
       ems.security_protocol = @edit[:new][:security_protocol]
       ems.realm = @edit[:new][:realm]
     end

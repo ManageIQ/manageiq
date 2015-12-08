@@ -55,6 +55,10 @@ class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
     true
   end
 
+  def supports_security_protocol?
+    true
+  end
+
   def supported_auth_types
     %w(default amqp)
   end

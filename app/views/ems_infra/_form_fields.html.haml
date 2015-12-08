@@ -9,7 +9,7 @@
         "data-miq_observe" => {:interval => '.5', :url => url}.to_json,
         :class => "form-control",
         :title => _("Hostname or IPv4/IPv6 address"))
-  - if @edit[:new][:emstype] == "scvmm"
+  - if @edit[:new][:emstype] == "scvmm" || @edit[:new][:emstype] == "openstack" || @edit[:new][:emstype] == "openstack_infra"
     .form-group
       %label.control-label.col-md-2
         = _('Security Protocol')
