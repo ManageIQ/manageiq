@@ -1,8 +1,7 @@
-$LOAD_PATH.push("#{File.dirname(__FILE__)}/../util")
-$LOAD_PATH.push("#{File.dirname(__FILE__)}")
+# encoding: US-ASCII
 
-require 'miq_winrm'
-require 'miq_scvmm_parse_powershell'
+require 'util/miq_winrm'
+require 'Scvmm/miq_scvmm_parse_powershell'
 
 class MiqScvmmVmSSAInfo
   attr_reader :vhds, :hostname, :checkpoints, :connection, :vhd_type

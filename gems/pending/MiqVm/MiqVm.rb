@@ -49,7 +49,7 @@ class MiqVm
       $log.debug "MiqVm::initialize: @vmConfig.getHash = #{@vmConfig.getHash.inspect}"
       $log.debug "MiqVm::initialize: @vmConfig.getDiskFileHash = #{@vmConfig.getDiskFileHash.inspect}"
     # TODO: move this to miq_scvmm_vm
-    elsif @scvmm = @ost.miq_scvmm
+    elsif (@scvmm = @ost.miq_scvmm)
       $log.debug "MiqVm::initialize: accessing VM through HyperV server" if $log.debug?
       @vmConfig = VmConfig.new(getCfg(@ost.snapId))
       $log.debug "MiqVm::initialize: setting @ost.miq_scvmm_vm = #{@scvmm_vm.class}" if $log.debug?
@@ -306,7 +306,7 @@ if __FILE__ == $0
     puts "\t#{rt.guestOS}"
     if rt.guestOS == "Linux"
       puts "\n\t\t*** /etc/fstab contents:"
-      rt.fileOpen("/etc/fstab") { |fo| fo.read }.each_line do |fstl|
+      rt.fileOpen("/etc/fstab", &:read).each_line do |fstl|
         next if fstl =~ /^#.*$/
         puts "\t\t\t#{fstl}"
       end

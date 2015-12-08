@@ -1,5 +1,3 @@
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "Scvmm")
-
 class ManageIQ::Providers::Microsoft::InfraManager::Host < ::Host
   def verify_credentials(auth_type = nil, _options = {})
     raise MiqException::MiqHostError "No credentials defined" if missing_credentials?(auth_type)
@@ -24,5 +22,13 @@ class ManageIQ::Providers::Microsoft::InfraManager::Host < ::Host
       raise MiqException::MiqHostError, "Unable to connect: #{e.message}."
     end
     true
+  end
+
+  def host_handle
+    require 'Scvmm/miq_scvmm_vm_ssa_info'
+
+    auth_type = nil
+    user, pass = auth_user_pwd(auth_type)
+    MiqScvmmVmSSAInfo.new(hostname, user, pass)
   end
 end

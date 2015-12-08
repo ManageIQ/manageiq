@@ -1,7 +1,6 @@
 # encoding: US-ASCII
-$LOAD_PATH.push("#{File.dirname(__FILE__)}/../../Scvmm")
 
-require 'miq_hyperv_disk'
+require 'Scvmm/miq_hyperv_disk'
 require 'disk/modules/MiqLargeFile'
 require 'disk/modules/MSCommon'
 

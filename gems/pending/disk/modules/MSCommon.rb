@@ -2,7 +2,7 @@ require 'disk/modules/MiqLargeFile'
 require 'util/miq-unicode'
 require 'binary_struct'
 require 'memory_buffer'
-require 'miq_hyperv_disk'
+require 'Scvmm/miq_hyperv_disk'
 
 module MSCommon
   # NOTE: All values are stored in network byte order.
@@ -96,6 +96,7 @@ module MSCommon
       @blockSectorBitmapByteCount = @blockSectorBitmapByteCount + 512 - bd
     end
     @batBase = getHiLo(@header, "table_offset")
+    process_bae
   end
 
   def self.d_read_common(pos, len, parent = nil)
@@ -243,9 +244,16 @@ module MSCommon
     return blockNumber, secInBlock, byteOffset
   end
 
+  def self.process_bae
+    @file.seek(@batBase, IO::SEEK_SET)
+    @bae = []
+    1.step(@header['max_tbl_ent'], 1) do |block_num|
+      @bae << @file.read(BAE_SIZE).unpack('N')[0]
+    end
+  end
+
   def self.getBAE(blockNumber)
-    seekBAE(blockNumber)
-    @file.read(BAE_SIZE).unpack('N')[0]
+    @bae[blockNumber]
   end
 
   def self.putBAE(blockNum, bae)

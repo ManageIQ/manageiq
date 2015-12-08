@@ -1,7 +1,7 @@
-$LOAD_PATH.push("#{File.dirname(__FILE__)}/../util")
+# encoding: US-ASCII
 
-require 'miq_winrm'
-require 'miq_scvmm_parse_powershell'
+require 'util/miq_winrm'
+require 'Scvmm/miq_scvmm_parse_powershell'
 require 'base64'
 require 'securerandom'
 require 'memory_buffer'
@@ -9,8 +9,9 @@ require 'memory_buffer'
 require 'rufus/lru'
 
 class MiqHyperVDisk
-  MIN_SECTORS_TO_CACHE = 4
+  MIN_SECTORS_TO_CACHE = 8
   DEF_BLOCK_CACHE_SIZE = 300
+  DEBUG_CACHE_STATS    = false
 
   attr_reader :hostname, :virtual_disk, :file_offset, :file_size, :parser, :vm_name, :temp_snapshot_name
 
@@ -18,12 +19,15 @@ class MiqHyperVDisk
     @hostname  = hyperv_host
     @winrm     = MiqWinRM.new
     port ||= 5985
-    options = {:port => port, :user => user, :pass => pass, :hostname => @hostname}
-    @connection  = @winrm.connect(options)
-    @parser      = MiqScvmmParsePowershell.new
-    @block_size  = 4096
-    @file_size   = 0
-    @block_cache = LruHash.new(DEF_BLOCK_CACHE_SIZE)
+    options       = {:port => port, :user => user, :pass => pass, :hostname => @hostname}
+    @connection   = @winrm.connect(options)
+    @parser       = MiqScvmmParsePowershell.new
+    @block_size   = 4096
+    @file_size    = 0
+    @block_cache  = LruHash.new(DEF_BLOCK_CACHE_SIZE)
+    @cache_hits   = Hash.new(0)
+    @cache_misses = Hash.new(0)
+    @total_read_execution_time = @total_copy_from_remote_time = 0
   end
 
   def open(vm_disk)
@@ -32,12 +36,12 @@ class MiqHyperVDisk
     stat_script = <<-STAT_EOL
     (Get-Item "#{@virtual_disk}").length
 STAT_EOL
-    file_size, _stderr  = @parser.parse_single_powershell_value(@winrm.run_powershell_script(stat_script))
-    @file_size          = file_size.to_i
-    @end_byte_addr      = @file_size - 1
-    # @size_in_blocks     = @file_size / @block_size
-    @size_in_blocks     = @file_size / @block_size + 1
-    @lba_end            = @size_in_blocks - 1
+    file_size, _stderr   = @parser.parse_single_powershell_value(@winrm.run_powershell_script(stat_script))
+    @file_size           = file_size.to_i
+    @end_byte_addr       = @file_size - 1
+    @size_in_blocks, rem = @file_size.divmod(@block_size)
+    @size_in_blocks += 1 if rem > 0
+    @lba_end = @size_in_blocks - 1
   end
 
   def size
@@ -45,11 +49,27 @@ STAT_EOL
   end
 
   def close
+    hit_or_miss if DEBUG_CACHE_STATS
     @file_offset   = 0
     @connection    = @winrm = nil
   end
 
+  def hit_or_miss
+    $log.debug "\nmiq_hyperv_disk cache hits:"
+    @cache_hits.keys.sort.each do |block|
+      $log.debug "block #{block} - #{@cache_hits[block]}"
+    end
+    $log.debug "\nmiq_hyperv_disk cache misses:"
+    @cache_misses.keys.sort.each do |block|
+      $log.debug "block #{block} - #{@cache_misses[block]}"
+    end
+    $log.debug "Total time spent copying reads from remote system is #{@total_copy_from_remote_time}"
+    $log.debug "Total time spent transferring and decoding reads on local system is #{@total_read_execution_time - @total_copy_from_remote_time}"
+    $log.debug "Total time spent processing remote reads is #{@total_read_execution_time}"
+  end
+
   def seek(offset, whence = IO::SEEK_SET)
+    $log.debug "miq_hyperv_disk.seek(#{offset})"
     case whence
     when IO::SEEK_CUR
       @file_offset += offset
@@ -81,10 +101,12 @@ STAT_EOL
       sector_offset = start_sector - block_range.first
       buffer_offset = sector_offset * @block_size
       length        = number_sectors * @block_size
+      @cache_hits[start_sector] += 1
       return @block_cache[block_range][buffer_offset, length]
     end
     block_range               = entry_range(start_sector, number_sectors)
     @block_cache[block_range] = bread(start_sector, block_range.last - start_sector + 1)
+    @cache_misses[start_sector] += 1
 
     sector_offset             = start_sector - block_range.first
     buffer_offset             = sector_offset * @block_size
@@ -107,10 +129,13 @@ $file_stream.Close()
 READ_EOL
 
     # TODO: Error Handling
+    t1           = Time.now.getlocal
     encoded_data = @parser.output_to_attribute(@winrm.run_powershell_script(read_script))
-    buffer       = MemoryBuffer.create(@block_size * number_sectors)
+    t2           = Time.now.getlocal
     buffer       = ""
     Base64.decode64(encoded_data).split(' ').each { |c| buffer += c.to_i.chr }
+    @total_copy_from_remote_time += t2 - t1
+    @total_read_execution_time += Time.now.getlocal - t1
     buffer
   end
 
