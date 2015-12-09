@@ -127,11 +127,24 @@ class TimeProfile < ActiveRecord::Base
     )
   end
 
+  # Support for multi-region DB. We need to try to find a time profile in each
+  # region that matches the selected profile to ensure that we get results for
+  # all the regions in the database. We only want one match from each region
+  # otherwise we'll end up with duplicate daily rows.
+  def profile_for_each_region
+    if rollup_daily_metrics
+      TimeProfile.rollup_daily_metrics.select { |p| p.profile == profile }
+        .group_by(&:region_id).values.map(&:first)
+    else
+      TimeProfile.none
+    end
+  end
+
   def for_user_tz?(user_id, user_tz)
     user_id = user_id.to_s
     tz == user_tz &&
-     (profile_type == "global" ||
-      (profile_type == "user" && profile_key == user_id))
+      (profile_type == "global" ||
+        (profile_type == "user" && profile_key == user_id))
   end
 
   private

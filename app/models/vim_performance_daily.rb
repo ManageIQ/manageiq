@@ -43,18 +43,8 @@ class VimPerformanceDaily < MetricRollup
     time_profile = ext_options[:time_profile] ||= TimeProfile.default_time_profile(ext_options[:tz])
     klass = ext_options[:class] || MetricRollup
 
-    # Support for multi-region DB. We need to try to find a time profile in each
-    # region that matches the selected profile to ensure that we get results for
-    # all the regions in the database. We only want one match from each region
-    # otherwise we'll end up with duplicate daily rows.
-    if (tp = ext_options[:time_profile]) && tp.rollup_daily_metrics
-      tps = TimeProfile.rollup_daily_metrics.select { |p| p.profile == tp.profile }.group_by(&:region_id).values.flatten
-      tp_ids = tps.collect(&:id)
-
-      klass.where(:time_profile_id => tp_ids, :capture_interval_name => 'daily')
-    else
-      klass.none
-    end
+    tp_ids = time_profile ? time_profile.profile_for_each_region.collect(&:id) : []
+    klass.where(:time_profile_id => tp_ids, :capture_interval_name => 'daily')
   end
 
   def self.find_adhoc(*_args)
