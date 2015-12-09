@@ -79,7 +79,7 @@ describe MiqAeCustomizationController do
       it "Dialog with out Dialog fields should not be saved" do
         allow(controller).to receive(:render_flash)
         controller.send(:dialog_edit)
-        expect(assigns(:flash_array).first[:message]).to include("Dialog must have at least one Element")
+        expect(assigns(:flash_array).first[:message]).to include("Dialog a1 must have at least one Tab")
       end
 
       it "Any Dialog/Tab with empty group should not be added, and display multiple message for each empty group" do
@@ -113,53 +113,12 @@ describe MiqAeCustomizationController do
         controller.stub(:render_flash)
         controller.instance_variable_set(:@_params, :button => "add")
         controller.send(:dialog_edit)
-        assigns(:flash_array).first[:message].should include("Validation failed: Dialog Dialog 1 / Tab Tab 1 / Box Box 1 must have at least one Element, Dialog Dialog 1 / Tab Tab 1 / Box Box 2 must have at least one Element")
+        expect(assigns(:flash_array).first[:message]).to include("Validation failed:"\
+                                                                 " Dialog Dialog 1 / Tab Tab 1 / Box Box 1 must have at least one Element,"\
+                                                                 " Dialog Dialog 1 / Tab Tab 1 / Box Box 2 must have at least one Element")
       end
 
-
-    it "Dialog/Tab with any empty group should not be added" do
-      new_hash = {
-        :label       => "Dialog 1",
-        :description => "Dialog 1",
-        :buttons     => ["submit"],
-        :tabs        => [
-          {
-            :label       => "Tab 1",
-            :description => "Tab 1",
-            :groups      => [
-              {
-                :label       => "Box 1",
-                :description => "Box 1",
-                :fields      => [
-                  {
-                    :label         => "Field 1",
-                    :description   => "Field 1",
-                    :typ           => "DialogFieldCheckBox",
-                    :name          => "Field1",
-                    :default_value => false
-                  }
-                ]
-              },
-              {
-                :label       => "Box 2",
-                :description => "Box 2",
-                :fields      => []
-              }
-            ]
-          }
-        ]
-      }
-      controller.instance_variable_set(:@lastaction, "replace_right_cell")
-      assigns(:edit)[:new] = new_hash
-      controller.stub(:get_node_info)
-      controller.stub(:replace_right_cell)
-      controller.stub(:render_flash)
-      controller.instance_variable_set(:@_params, :button => "add")
-      controller.send(:dialog_edit)
-      assigns(:flash_array).first[:message].should include("Validation failed: Dialog Dialog 1 / Tab Tab 1 / Box Box 2 must have at least one Element")
-    end
-
-      it "Adds a Dialog with Tab/Groups/Field" do
+      it "Dialog/Tab with any empty group should not be added" do
         new_hash = {
           :label       => "Dialog 1",
           :description => "Dialog 1",
@@ -183,7 +142,47 @@ describe MiqAeCustomizationController do
                   ]
                 },
                 {
-                  :label => "Box 2", :description => "Box 2"
+                  :label       => "Box 2",
+                  :description => "Box 2",
+                  :fields      => []
+                }
+              ]
+            }
+          ]
+        }
+        controller.instance_variable_set(:@lastaction, "replace_right_cell")
+        assigns(:edit)[:new] = new_hash
+        controller.stub(:get_node_info)
+        controller.stub(:replace_right_cell)
+        controller.stub(:render_flash)
+        controller.instance_variable_set(:@_params, :button => "add")
+        controller.send(:dialog_edit)
+        expect(assigns(:flash_array).first[:message]).to include("Validation failed:"\
+                                                                 " Dialog Dialog 1 / Tab Tab 1 / Box Box 2 must have at least one Element")
+      end
+
+      it "Adds a Dialog with Tab/Groups/Field" do
+        new_hash = {
+          :label       => "Dialog 1",
+          :description => "Dialog 1",
+          :buttons     => ["submit"],
+          :tabs        => [
+            {
+              :label       => "Tab 1",
+              :description => "Tab 1",
+              :groups      => [
+                {
+                  :label       => "Box 1",
+                  :description => "Box 1",
+                  :fields      => [
+                    {
+                      :label         => "Field 1",
+                      :description   => "Field 1",
+                      :typ           => "DialogFieldCheckBox",
+                      :name          => "Field1",
+                      :default_value => false
+                    }
+                  ]
                 }
               ]
             }

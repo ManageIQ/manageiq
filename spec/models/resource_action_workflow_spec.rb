@@ -10,10 +10,10 @@ describe ResourceActionWorkflow do
       @dialog_field = FactoryGirl.create(:dialog_field_text_box, :label => 'field 1', :name => 'field_1')
       @dialog_field2 = FactoryGirl.create(:dialog_field_text_box, :label => 'field 2', :name => 'field_2')
 
-      @dialog.add_resource!(@dialog_tab)
       @dialog_tab.add_resource!(@dialog_group)
       @dialog_group.add_resource!(@dialog_field)
       @dialog_group.add_resource!(@dialog_field2)
+      @dialog.add_resource!(@dialog_tab)
 
       @resource_action = FactoryGirl.create(:resource_action, :action => "Provision", :dialog => @dialog)
     end
