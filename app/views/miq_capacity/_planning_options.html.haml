@@ -199,7 +199,7 @@
           = _('CPU Speed')
         .col-md-8
           = select_tag("limit_cpu",
-                        options_for_select(TREND_LIMIT_PERCENTS.invert.sort_by(&:last).reverse, @sb[:planning][:options][:limit_cpu]),
+                        options_for_select(TREND_LIMIT_PERCENTS, @sb[:planning][:options][:limit_cpu]),
                         :disabled              => !@sb[:planning][:options][:trend_cpu],
                         "class"                => "selectpicker",
                         "data-miq_sparkle_on"  => true,
@@ -227,7 +227,7 @@
           = _('Memory Size')
         .col-md-8
           = select_tag("limit_memory",
-                        options_for_select(TREND_LIMIT_PERCENTS.invert.sort_by(&:last).reverse, @sb[:planning][:options][:limit_memory]),
+                        options_for_select(TREND_LIMIT_PERCENTS, @sb[:planning][:options][:limit_memory]),
                         :disabled              => !@sb[:planning][:options][:trend_memory],
                         "class"                => "selectpicker",
                         "data-miq_sparkle_on"  => true,
@@ -241,7 +241,7 @@
           = _('Datastore Space')
         .col-md-8
           = select_tag("limit_storage",
-                        options_for_select(TREND_LIMIT_PERCENTS.invert.sort_by(&:last).reverse, @sb[:planning][:options][:limit_storage]),
+                        options_for_select(TREND_LIMIT_PERCENTS, @sb[:planning][:options][:limit_storage]),
                         :disabled => !@sb[:planning][:options][:trend_storage],
                         "class"                => "selectpicker",
                         "data-miq_sparkle_on"  => true,
