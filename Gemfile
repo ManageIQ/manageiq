@@ -138,6 +138,7 @@ source "https://rails-assets.org" do
   gem "rails-assets-sprintf",                         "~>1.0.3"
   gem "rails-assets-numeral",                         "~>1.5.3"
   gem "rails-assets-slickgrid",                       "~>2.1.0"
+  gem "rails-assets-himdel--jquery.observe_field",    "~>0.1.0"
   gem "rails-assets-jqueryui",                        "~>1.9.2"
   gem "rails-assets-jquery-1.8",                      "~>1.8.3"
 end
