@@ -143,12 +143,20 @@ class TimeProfile < ActiveRecord::Base
     @rebuild_daily_metrics_on_create = false
   end
 
+  # TODO: use AR "or" here
+  def self.for_user(user_id)
+    where("profile_type = ? or (profile_type = ? and profile_key = ?)", "global", "user", user_id)
+  end
+
+  def self.ordered_by_desc
+    order("lower(description) ASC")
+  end
+
   def self.profiles_for_user(user_id, region_id)
-    TimeProfile
-      .in_region(region_id)
-      .where("profile_type = ? or (profile_type = ? and profile_key = ?)", "global", "user", user_id)
-      .where(:rollup_daily_metrics => true)
-      .order("lower(description) ASC")
+    in_region(region_id)
+      .for_user(user_id)
+      .rollup_daily_metrics
+      .ordered_by_desc
   end
 
   def self.profile_for_user_tz(user_id, user_tz)
