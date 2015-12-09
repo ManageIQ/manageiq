@@ -10,9 +10,9 @@ describe MiqPolicyController do
       before :each do
         event = FactoryGirl.create(:miq_event_definition, :name => "host_compliance_check")
         action = FactoryGirl.create(:miq_action, :name => "compliance_failed")
-        controller.stub(:policy_get_node_info)
-        controller.stub(:get_node_info)
-        controller.stub(:replace_right_cell)
+        allow(controller).to receive(:policy_get_node_info)
+        allow(controller).to receive(:get_node_info)
+        allow(controller).to receive(:replace_right_cell)
       end
 
       it "Correct active tree node is saved in @sb after Policy is added" do
@@ -32,8 +32,8 @@ describe MiqPolicyController do
         controller.instance_variable_set(:@_params, :button => "add")
         controller.policy_edit
         sb = assigns(:sb)
-        sb[:trees][sb[:active_tree]][:active_node].should include("#{active_node}_p-")
-        assigns(:flash_array).first[:message].should include("added")
+        expect(sb[:trees][sb[:active_tree]][:active_node]).to include("#{active_node}_p-")
+        expect(assigns(:flash_array).first[:message]).to include("added")
       end
     end
   end

@@ -12,13 +12,13 @@ describe MiqPolicyController do
     let(:miq_policy_import_service) { auto_loaded_instance_double("MiqPolicyImportService") }
 
     before do
-      MiqPolicyImportService.stub(:new).and_return(miq_policy_import_service)
+      allow(MiqPolicyImportService).to receive(:new).and_return(miq_policy_import_service)
     end
 
     shared_examples_for "MiqPolicyController#import" do
       it "assigns the import file upload id" do
         post :import, params
-        assigns(:import_file_upload_id).should == "123"
+        expect(assigns(:import_file_upload_id)).to eq("123")
       end
     end
 
@@ -26,13 +26,13 @@ describe MiqPolicyController do
       let(:commit) { "import" }
 
       before do
-        miq_policy_import_service.stub(:import_policy)
+        allow(miq_policy_import_service).to receive(:import_policy)
       end
 
       it_behaves_like "MiqPolicyController#import"
 
       it "imports a policy" do
-        miq_policy_import_service.should_receive(:import_policy).with("123")
+        expect(miq_policy_import_service).to receive(:import_policy).with("123")
         post :import, params
       end
     end
@@ -41,13 +41,13 @@ describe MiqPolicyController do
       let(:commit) { "cancel" }
 
       before do
-        miq_policy_import_service.stub(:cancel_import)
+        allow(miq_policy_import_service).to receive(:cancel_import)
       end
 
       it_behaves_like "MiqPolicyController#import"
 
       it "cancels the import" do
-        miq_policy_import_service.should_receive(:cancel_import).with("123")
+        expect(miq_policy_import_service).to receive(:cancel_import).with("123")
         post :import, params
       end
     end
@@ -59,7 +59,7 @@ describe MiqPolicyController do
     shared_examples_for "MiqPolicyController#upload that cannot locate an import file" do
       it "redirects with a cannot locate import file error message" do
         post :upload, params
-        response.should redirect_to(
+        expect(response).to redirect_to(
           :action      => "export",
           :dbtype      => "dbtype",
           :flash_msg   => "Use the Browse button to locate an Import file",
@@ -82,42 +82,42 @@ describe MiqPolicyController do
           let(:miq_policy_import_service) { auto_loaded_instance_double("MiqPolicyImportService") }
 
           before do
-            MiqPolicyImportService.stub(:new).and_return(miq_policy_import_service)
-            file_contents.stub(:read).and_return("file")
+            allow(MiqPolicyImportService).to receive(:new).and_return(miq_policy_import_service)
+            allow(file_contents).to receive(:read).and_return("file")
           end
 
           context "when there is not an error while importing" do
             let(:import_file_upload) { active_record_instance_double("ImportFileUpload", :id => 123) }
 
             before do
-              miq_policy_import_service.stub(:store_for_import).and_return(import_file_upload)
+              allow(miq_policy_import_service).to receive(:store_for_import).and_return(import_file_upload)
             end
 
             it "sets the sandbox hide variable to true" do
               post :upload, params
-              assigns(:sb)[:hide].should be_true
+              expect(assigns(:sb)[:hide]).to be_truthy
             end
 
             it "imports a policy" do
-              miq_policy_import_service.should_receive(:store_for_import).with(file_contents)
+              expect(miq_policy_import_service).to receive(:store_for_import).with(file_contents)
               post :upload, params
             end
 
             it "redirects to import with the import_file_upload_id" do
               post :upload, params
-              response.should redirect_to(:action => "import", :dbtype => "dbtype", :import_file_upload_id => 123)
+              expect(response).to redirect_to(:action => "import", :dbtype => "dbtype", :import_file_upload_id => 123)
             end
           end
 
           context "when there is an error while importing" do
             before do
-              miq_policy_import_service.stub(:store_for_import)
+              allow(miq_policy_import_service).to receive(:store_for_import)
                 .with(file_contents).and_raise(StandardError.new("message"))
             end
 
             it "redirects to export with an error message" do
               post :upload, params
-              response.should redirect_to(
+              expect(response).to redirect_to(
                 :action      => "export",
                 :dbtype      => "dbtype",
                 :flash_msg   => "Error during 'Policy Import': message",
@@ -152,30 +152,30 @@ describe MiqPolicyController do
     context 'when profile param present, but non-existent' do
       it 'renders explorer with flash message' do
         post :explorer, :profile => 42
-        response.should render_template('explorer')
+        expect(response).to render_template('explorer')
         flash_messages = controller.instance_variable_get(:@flash_array)
-        flash_messages.find { |m| m[:message] == 'Policy Profile no longer exists' }.should_not be_nil
+        expect(flash_messages.find { |m| m[:message] == 'Policy Profile no longer exists' }).not_to be_nil
       end
     end
 
     context 'when profile param not present' do
       it 'renders explorer w/o flash message' do
         post :explorer
-        response.should render_template('explorer')
+        expect(response).to render_template('explorer')
         flash_messages = controller.instance_variable_get(:@flash_array)
-        flash_messages.should be_nil
+        expect(flash_messages).to be_nil
       end
     end
 
     context 'when profile param is valid' do
       it 'renders explorer w/o flash and assigns to x_node' do
         profile = FactoryGirl.create(:miq_policy_set)
-        controller.stub(:get_node_info).and_return(true)
+        allow(controller).to receive(:get_node_info).and_return(true)
         post :explorer, :profile => profile.id
-        response.should render_template('explorer')
+        expect(response).to render_template('explorer')
         flash_messages = controller.instance_variable_get(:@flash_array)
-        flash_messages.should be_nil
-        controller.x_node.should == "pp_#{profile.id}"
+        expect(flash_messages).to be_nil
+        expect(controller.x_node).to eq("pp_#{profile.id}")
       end
     end
   end
@@ -196,7 +196,7 @@ describe MiqPolicyController do
         session[:settings] ||= {}
 
         post :tree_select, :id => node, :format => :js
-        response.should render_template(partial_name)
+        expect(response).to render_template(partial_name)
         expect(response.status).to eq(200)
       end
     end
@@ -204,9 +204,9 @@ describe MiqPolicyController do
 
   describe '#replace_right_cell' do
     it 'should replace policy_tree_div when replace_trees contains :policy' do
-      controller.stub(:params).and_return(:action => 'whatever')
+      allow(controller).to receive(:params).and_return(:action => 'whatever')
       controller.instance_eval { @sb = {:active_tree => :policy_tree} }
-      controller.stub(:render).and_return(nil)
+      allow(controller).to receive(:render).and_return(nil)
       presenter = ExplorerPresenter.new(:active_tree => :policy_tree)
 
       controller.send(:replace_right_cell, 'root', [:policy], presenter)
@@ -214,14 +214,14 @@ describe MiqPolicyController do
     end
 
     it 'should not hide center toolbar while doing searches' do
-      controller.stub(:params).and_return(:action => 'x_search_by_name')
+      allow(controller).to receive(:params).and_return(:action => 'x_search_by_name')
       controller.instance_eval { @sb = {:active_tree => :action_tree} }
       controller.instance_eval { @edit = {:new => {:expression => {"???" => "???", :token => 1}}} }
-      controller.stub(:render).and_return(nil)
+      allow(controller).to receive(:render).and_return(nil)
       presenter = ExplorerPresenter.new(:active_tree => :action_tree)
 
       controller.send(:replace_right_cell, 'root', [:action], presenter)
-      presenter[:set_visible_elements][:toolbar].should be_true
+      expect(presenter[:set_visible_elements][:toolbar]).to be_truthy
     end
   end
 
@@ -229,7 +229,7 @@ describe MiqPolicyController do
     describe 'corresponding methods are called for allowed actions' do
       MiqPolicyController::POLICY_X_BUTTON_ALLOWED_ACTIONS.each_pair do |action_name, method|
         it "calls the appropriate method: '#{method}' for action '#{action_name}'" do
-          controller.should_receive(method)
+          expect(controller).to receive(method)
           get :x_button, :pressed => action_name
         end
       end

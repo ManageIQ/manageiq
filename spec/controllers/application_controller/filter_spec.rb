@@ -11,7 +11,7 @@ describe ApplicationController, "::Filter" do
       e = MiqExpression.new({"=" => {:field => "Vm.name", :value => "Test"}, :token => 1})
       exp = e.exp
       controller.send(:exp_remove_tokens, exp)
-      exp.inspect.include?(":token").should be_false
+      expect(exp.inspect.include?(":token")).to be_falsey
     end
 
     it "removes tokens if present in complex expression" do
@@ -19,7 +19,7 @@ describe ApplicationController, "::Filter" do
                                      {"=" => {:field => "Vm.name", :value => "Test2"}, :token => 2}])
       exp = e.exp
       controller.send(:exp_remove_tokens, exp)
-      exp.inspect.include?(":token").should be_false
+      expect(exp.inspect.include?(":token")).to be_falsey
     end
 
     it "leaves expression untouched if no tokens present" do
@@ -27,7 +27,7 @@ describe ApplicationController, "::Filter" do
       exp = e.exp
       exp2 = copy_hash(exp)
       controller.send(:exp_remove_tokens, exp2)
-      exp.inspect.should == exp2.inspect
+      expect(exp.inspect).to eq(exp2.inspect)
     end
 
     it "removes tokens if present" do
@@ -37,12 +37,12 @@ describe ApplicationController, "::Filter" do
       session[:edit] = edit
       controller.instance_variable_set(:@_params, :pressed => "discard")
       controller.instance_variable_set(:@expkey, :expression)
-      controller.should_receive(:render)
+      expect(controller).to receive(:render)
       controller.send(:exp_button)
-      session[:edit][:expression].should_not include(:val1)
-      session[:edit][:expression].should_not include(:val2)
-      session[:edit].should_not include(:edit_exp)
-      session[:edit][:expression][:expression].should == edit[:new][:expression]
+      expect(session[:edit][:expression]).not_to include(:val1)
+      expect(session[:edit][:expression]).not_to include(:val2)
+      expect(session[:edit]).not_to include(:edit_exp)
+      expect(session[:edit][:expression][:expression]).to eq(edit[:new][:expression])
     end
   end
 

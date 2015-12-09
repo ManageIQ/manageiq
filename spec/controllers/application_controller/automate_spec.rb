@@ -18,7 +18,7 @@ describe MiqAeCustomizationController do
         session[:resolve] = resolve
         controller.instance_variable_set(:@resolve, resolve)
         post :resolve, :button => "simulate", :id => custom_button.id
-        response.body.should include("miq_ae_tools/resolve?escape=false&simulate=simulate")
+        expect(response.body).to include("miq_ae_tools/resolve?escape=false&simulate=simulate")
       end
     end
   end

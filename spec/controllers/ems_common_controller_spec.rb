@@ -4,11 +4,11 @@ def set_up_controller_for_show_method(controller, ems_id)
   controller.instance_variable_set(:@_params, {:display => "download_pdf", :id => ems_id})
   controller.instance_variable_set(:@settings, :views => {:vm_summary_cool => "summary"})
   controller.stub(:record_no_longer_exists? => false)
-  controller.stub(:drop_breadcrumb)
-  controller.stub(:disable_client_cache)
+  allow(controller).to receive(:drop_breadcrumb)
+  allow(controller).to receive(:disable_client_cache)
   controller.stub(:render_to_string => "")
-  controller.stub(:send_data)
-  PdfGenerator.stub(:pdf_from_string).with('', 'pdf_summary').and_return("")
+  allow(controller).to receive(:send_data)
+  allow(PdfGenerator).to receive(:pdf_from_string).with('', 'pdf_summary').and_return("")
 end
 
 describe EmsCloudController do
@@ -18,15 +18,15 @@ describe EmsCloudController do
         controller.instance_variable_set(:@edit, :new => {})
         controller.instance_variable_set(:@_params, :server_emstype => "openstack")
         controller.send(:get_form_vars)
-        assigns(:edit)[:new][:port].should == 5000
+        expect(assigns(:edit)[:new][:port]).to eq(5000)
 
         controller.instance_variable_set(:@_params, {:server_emstype => "openstack_infra"})
         controller.send(:get_form_vars)
-        assigns(:edit)[:new][:port].should == 5000
+        expect(assigns(:edit)[:new][:port]).to eq(5000)
 
         controller.instance_variable_set(:@_params, :server_emstype => "ec2")
         controller.send(:get_form_vars)
-        assigns(:edit)[:new][:port].should.nil?
+        expect(assigns(:edit)[:new][:port]).to.nil?
       end
     end
 
@@ -37,11 +37,11 @@ describe EmsCloudController do
         controller.instance_variable_set(:@_params, :provider_region => "some_region")
 
         controller.send(:get_form_vars)
-        assigns(:edit)[:new][:provider_region].should == "some_region"
+        expect(assigns(:edit)[:new][:provider_region]).to eq("some_region")
 
         controller.instance_variable_set(:@_params, :server_emstype => "openstack")
         controller.send(:get_form_vars)
-        assigns(:edit)[:new][:provider_region].should be_nil
+        expect(assigns(:edit)[:new][:provider_region]).to be_nil
       end
     end
 
@@ -54,14 +54,14 @@ describe EmsCloudController do
         controller.instance_variable_set(:@edit, :new => {}, :key => "ems_edit__new")
         session[:edit] = assigns(:edit)
         post :form_field_changed, :server_emstype => "rhevm", :id => "new"
-        response.body.should include("form_div")
+        expect(response.body).to include("form_div")
       end
 
       it "form_div should not be updated when other fields are sent up" do
         controller.instance_variable_set(:@edit, :new => {}, :key => "ems_edit__new")
         session[:edit] = assigns(:edit)
         post :form_field_changed, :name => "Test", :id => "new"
-        response.body.should_not include("form_div")
+        expect(response.body).not_to include("form_div")
       end
     end
 
@@ -96,23 +96,23 @@ describe EmsCloudController do
         let(:mocked_ems_cloud) { mock_model(EmsCloud) }
         before(:each) do
           controller.instance_variable_set(:@_params, :id => "42", :type => "amqp")
-          controller.should_receive(:find_by_id_filtered).with(EmsCloud, "42").and_return(mocked_ems_cloud)
-          controller.should_receive(:set_record_vars).with(mocked_ems_cloud, :validate).and_return(mocked_ems_cloud)
+          expect(controller).to receive(:find_by_id_filtered).with(EmsCloud, "42").and_return(mocked_ems_cloud)
+          expect(controller).to receive(:set_record_vars).with(mocked_ems_cloud, :validate).and_return(mocked_ems_cloud)
         end
 
         it "successful flash message (unchanged)" do
           controller.stub(:edit_changed? => false)
-          mocked_ems_cloud.should_receive(:authentication_check).with("amqp", :save => true).and_return([true, ""])
-          controller.should_receive(:add_flash).with(_("Credential validation was successful"))
-          controller.should_receive(:render_flash)
+          expect(mocked_ems_cloud).to receive(:authentication_check).with("amqp", :save => true).and_return([true, ""])
+          expect(controller).to receive(:add_flash).with(_("Credential validation was successful"))
+          expect(controller).to receive(:render_flash)
           controller.send(:update_button_validate)
         end
 
         it "unsuccessful flash message (changed)" do
           controller.stub(:edit_changed? => true)
-          mocked_ems_cloud.should_receive(:authentication_check).with("amqp", :save => false).and_return([false, "Invalid"])
-          controller.should_receive(:add_flash).with(_("Credential validation was not successful: Invalid"), :error)
-          controller.should_receive(:render_flash)
+          expect(mocked_ems_cloud).to receive(:authentication_check).with("amqp", :save => false).and_return([false, "Invalid"])
+          expect(controller).to receive(:add_flash).with(_("Credential validation was not successful: Invalid"), :error)
+          expect(controller).to receive(:render_flash)
           controller.send(:update_button_validate)
         end
       end
@@ -125,7 +125,7 @@ describe EmsCloudController do
       end
 
       it "when Retire Button is pressed for a Cloud provider Instance" do
-        controller.stub(:role_allows).and_return(true)
+        allow(controller).to receive(:role_allows).and_return(true)
         vm = FactoryGirl.create(:vm_vmware)
         ems = FactoryGirl.create("ems_vmware")
         post :button, :pressed => "instance_retire", "check_#{vm.id}" => "1", :format => :js, :id => ems.id, :display => 'instances'
@@ -161,7 +161,7 @@ describe EmsContainerController do
   context "::EmsCommon" do
     context "#update" do
       it "updates provider with new token" do
-        MiqServer.stub(:my_zone).and_return("default")
+        allow(MiqServer).to receive(:my_zone).and_return("default")
         set_user_privileges
         @ems = ManageIQ::Providers::Kubernetes::ContainerManager.create(:name => "k8s", :hostname => "10.10.10.1", :port => 5000)
         controller.instance_variable_set(:@edit,
@@ -174,8 +174,8 @@ describe EmsContainerController do
                                          :ems_id => @ems.id)
         session[:edit] = assigns(:edit)
         post :update, :button => "save", :id => @ems.id, :type => @ems.type
-        response.status.should == 200
-        ManageIQ::Providers::Kubernetes::ContainerManager.last.authentication_token("bearer").should == "valid-token"
+        expect(response.status).to eq(200)
+        expect(ManageIQ::Providers::Kubernetes::ContainerManager.last.authentication_token("bearer")).to eq("valid-token")
       end
     end
 
@@ -186,25 +186,25 @@ describe EmsContainerController do
       end
 
       it "when VM Migrate is pressed for unsupported type" do
-        controller.stub(:role_allows).and_return(true)
+        allow(controller).to receive(:role_allows).and_return(true)
         vm = FactoryGirl.create(:vm_microsoft)
         post :button, :pressed => "vm_migrate", :format => :js, "check_#{vm.id}" => "1"
-        controller.send(:flash_errors?).should be_true
-        assigns(:flash_array).first[:message].should include('does not apply')
+        expect(controller.send(:flash_errors?)).to be_truthy
+        expect(assigns(:flash_array).first[:message]).to include('does not apply')
       end
 
       it "when VM Migrate is pressed for supported type" do
-        controller.stub(:role_allows).and_return(true)
+        allow(controller).to receive(:role_allows).and_return(true)
         vm = FactoryGirl.create(:vm_vmware)
         post :button, :pressed => "vm_migrate", :format => :js, "check_#{vm.id}" => "1"
-        controller.send(:flash_errors?).should_not be_true
+        expect(controller.send(:flash_errors?)).not_to be_truthy
       end
 
       it "when VM Migrate is pressed for supported type" do
-        controller.stub(:role_allows).and_return(true)
+        allow(controller).to receive(:role_allows).and_return(true)
         vm = FactoryGirl.create(:vm_vmware)
         post :button, :pressed => "vm_edit", :format => :js, "check_#{vm.id}" => "1"
-        controller.send(:flash_errors?).should_not be_true
+        expect(controller.send(:flash_errors?)).not_to be_truthy
       end
     end
 
@@ -237,13 +237,13 @@ describe EmsInfraController do
     it "sets relative url" do
       controller.instance_variable_set(:@table_name, "ems_infra")
       link = controller.send(:show_link, ems, :display => "vms")
-      link.should eq("/ems_infra/show/#{ems.id}?display=vms")
+      expect(link).to eq("/ems_infra/show/#{ems.id}?display=vms")
     end
 
     context "#restore_password" do
       it "populates the password from the ems record if params[:restore_password] exists" do
         infra_ems = EmsInfra.new
-        infra_ems.stub(:authentication_password).and_return("default_password")
+        allow(infra_ems).to receive(:authentication_password).and_return("default_password")
         edit = {:ems_id => infra_ems.id, :new => {}}
         controller.instance_variable_set(:@edit, edit)
         controller.instance_variable_set(:@ems, infra_ems)
@@ -252,7 +252,7 @@ describe EmsInfraController do
                                          :default_password => "[FILTERED]",
                                          :default_verify   => "[FILTERED]")
         controller.send(:restore_password)
-        assigns(:edit)[:new][:default_password].should == infra_ems.authentication_password
+        expect(assigns(:edit)[:new][:default_password]).to eq(infra_ems.authentication_password)
       end
     end
   end

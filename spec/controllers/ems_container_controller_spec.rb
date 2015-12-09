@@ -11,7 +11,7 @@ describe EmsContainerController do
     get :new
 
     expect(response.status).to eq(200)
-    expect(controller.stub(:edit)).to_not be_nil
+    expect(allow(controller).to receive(:edit)).to_not be_nil
   end
 
   it "#show" do

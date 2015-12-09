@@ -10,7 +10,7 @@ describe ConfigurationController do
     context ".get_hr_str" do
       it "should return interval for #{io[0]} o'clock: #{io[1]}" do
         interval = controller.get_hr_str(io[0])
-        interval.should eql(io[1])
+        expect(interval).to eql(io[1])
       end
     end
   end
@@ -23,7 +23,7 @@ describe ConfigurationController do
     it "#successfully sets all_view_tree for default filters tree" do
       controller.instance_variable_set(:@tabform, "ui_3")
       controller.send(:set_form_vars)
-      assigns(:all_views_tree).should_not be_nil
+      expect(assigns(:all_views_tree)).not_to be_nil
     end
   end
 end

@@ -24,8 +24,8 @@ describe ReportController do
           controller.send(:check_tabs)
           flash_messages = assigns(:flash_array)
           flash_str = "#{title} tab is not available until at least 1 field has been selected"
-          flash_messages.first[:message].should eq(flash_str)
-          flash_messages.first[:level].should eq(:error)
+          expect(flash_messages.first[:message]).to eq(flash_str)
+          expect(flash_messages.first[:level]).to eq(:error)
         end
 
         it "flash messages should be nil when tab is changed to #{title} after selecting fields" do
@@ -37,7 +37,7 @@ describe ReportController do
                                            })
           controller.instance_variable_set(:@_params, :tab => "new_#{tab_number}")
           controller.send(:check_tabs)
-          assigns(:flash_array).should be_nil
+          expect(assigns(:flash_array)).to be_nil
         end
       end
     end

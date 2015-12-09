@@ -33,7 +33,7 @@ describe VmInfraController do
   # http://localhost:3000/vm_infra/show/10000000000449
   it 'can open a VM and select it in the left tree' do
     get :show, :id => vm_vmware.id
-    response.should redirect_to(:action => 'explorer')
+    expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
     node_id = "v-#{vm_vmware.compressed_id}"
@@ -58,7 +58,7 @@ describe VmInfraController do
 
   it 'can open the reconfigure tab' do
     vm = FactoryGirl.create(:vm_vmware, :host => host_1x1, :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => '04'))
-    controller.stub(:x_node).and_return("v-#{vm.compressed_id}")
+    allow(controller).to receive(:x_node).and_return("v-#{vm.compressed_id}")
 
     get :show, :id => vm.id
     expect(response).to redirect_to(:action => 'explorer')
@@ -72,7 +72,7 @@ describe VmInfraController do
 
   it 'the reconfigure tab for a vm with max_cpu_cores_per_socket <= 1 should not display the cpu_cores_per_socket dropdown' do
     vm = FactoryGirl.create(:vm_vmware, :host => host_1x1, :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => '04'))
-    controller.stub(:x_node).and_return("v-#{vm.compressed_id}")
+    allow(controller).to receive(:x_node).and_return("v-#{vm.compressed_id}")
 
     get :show, :id => vm.id
     expect(response).to redirect_to(:action => 'explorer')
@@ -87,7 +87,7 @@ describe VmInfraController do
 
   it 'the reconfigure tab for a vm with max_cpu_cores_per_socket > 1 should display the cpu_cores_per_socket dropdown' do
     vm = FactoryGirl.create(:vm_vmware, :host => host_2x2, :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => "07"))
-    controller.stub(:x_node).and_return("v-#{vm.compressed_id}")
+    allow(controller).to receive(:x_node).and_return("v-#{vm.compressed_id}")
 
     get :show, :id => vm.id
     expect(response).to redirect_to(:action => 'explorer')
@@ -102,7 +102,7 @@ describe VmInfraController do
 
   it 'the reconfigure tab displays the submit and cancel buttons' do
     vm = FactoryGirl.create(:vm_vmware, :host => host_2x2, :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => "07"))
-    controller.stub(:x_node).and_return("v-#{vm.compressed_id}")
+    allow(controller).to receive(:x_node).and_return("v-#{vm.compressed_id}")
 
     get :show, :id => vm.id
     expect(response).to redirect_to(:action => 'explorer')
@@ -139,14 +139,14 @@ describe VmInfraController do
 
       it 'it clears the existing breadcrumb path and assigns the new explorer path when controllers are switched' do
         session[:breadcrumbs] = [{:name => "Instances", :url => "/vm_cloud/explorer"}]
-        controller.stub(:x_node).and_return("v-#{vm_vmware.compressed_id}")
+        allow(controller).to receive(:x_node).and_return("v-#{vm_vmware.compressed_id}")
         get :explorer
         expect(subject).to eq([{:name => "VM or Templates", :url => "/vm_infra/explorer"}])
       end
 
       it 'retains the breadcrumb path when cancel is pressed from a VM action' do
         get :explorer
-        controller.stub(:x_node).and_return("v-#{vm_vmware.compressed_id}")
+        allow(controller).to receive(:x_node).and_return("v-#{vm_vmware.compressed_id}")
         post :x_button, :id => vm_vmware.id, :pressed => 'vm_ownership'
 
         controller.instance_variable_set(:@in_a_form, nil)
@@ -159,7 +159,7 @@ describe VmInfraController do
 
   it "gets explorer when the request.referrer action is of type 'post'" do
     session[:settings] = {:views => {}, :perpage => {:list => 10}}
-    request.stub(:referrer).and_return("http://localhost:3000/configuration/update")
+    allow(request).to receive(:referrer).and_return("http://localhost:3000/configuration/update")
     get :explorer
     expect(response.status).to eq(200)
   end

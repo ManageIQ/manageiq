@@ -7,15 +7,15 @@ describe ContainerImageController do
   end
 
   it "when Smart Analysis is pressed" do
-    controller.should_receive(:scan_images)
+    expect(controller).to receive(:scan_images)
     post :button, :pressed => 'container_image_scan', :format => :js
-    controller.send(:flash_errors?).should_not be_true
+    expect(controller.send(:flash_errors?)).not_to be_truthy
   end
 
   it "renders index" do
     get :index
     expect(response.status).to eq(302)
-    response.should redirect_to(:action => 'show_list')
+    expect(response).to redirect_to(:action => 'show_list')
   end
 
   it "renders show screen" do

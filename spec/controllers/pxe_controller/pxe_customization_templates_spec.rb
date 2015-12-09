@@ -25,10 +25,10 @@ describe PxeController do
       controller.instance_variable_set(:@_params,                                           :id     => customization_template.id,
                                                                                             :button => "reset"
                                       )
-      controller.should_receive(:customization_template_edit)
+      expect(controller).to receive(:customization_template_edit)
       controller.template_create_update
-      assigns(:flash_array).first[:message].should include("reset")
-      controller.send(:flash_errors?).should_not be_true
+      expect(assigns(:flash_array).first[:message]).to include("reset")
+      expect(controller.send(:flash_errors?)).not_to be_truthy
     end
   end
 end

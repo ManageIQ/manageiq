@@ -106,17 +106,17 @@ describe ApplicationController do
 
     it "returns true for list views" do
       controller.instance_variable_set(:@_params, :action => "show_list")
-      expect(controller.send(:render_gtl_view_tb?)).to be_true
+      expect(controller.send(:render_gtl_view_tb?)).to be_truthy
     end
 
     it "returns true for list views when navigating thru relationships" do
       controller.instance_variable_set(:@_params, :action => "show")
-      expect(controller.send(:render_gtl_view_tb?)).to be_true
+      expect(controller.send(:render_gtl_view_tb?)).to be_truthy
     end
 
     it "returns false for sub list views" do
       controller.instance_variable_set(:@_params, :action => "host_services")
-      expect(controller.send(:render_gtl_view_tb?)).to be_false
+      expect(controller.send(:render_gtl_view_tb?)).to be_falsey
     end
   end
 
@@ -153,7 +153,7 @@ describe ApplicationController do
       controller.instance_variable_set(:@_params, :pressed         => "vm_migrate",
                                                   :miq_grid_checks => "#{vm1.id},#{vm2.id}")
       controller.send(:prov_redirect, "migrate")
-      expect(controller.send(:flash_errors?)).to be_false
+      expect(controller.send(:flash_errors?)).to be_falsey
       expect(assigns(:org_controller)).to eq("vm")
     end
   end

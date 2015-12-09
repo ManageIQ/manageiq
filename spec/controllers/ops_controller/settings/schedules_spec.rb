@@ -17,13 +17,13 @@ describe OpsController do
       let(:filter_type) { "vm" }
 
       before do
-        Vm.stub(:find).with(:all, {}).and_return([vm])
+        allow(Vm).to receive(:find).with(:all, {}).and_return([vm])
         post :schedule_form_filter_type_field_changed, params, session
       end
 
       it "responds with a filtered vm list" do
         json = JSON.parse(response.body)
-        json["filtered_item_list"].should == ["vmtest"]
+        expect(json["filtered_item_list"]).to eq(["vmtest"])
       end
     end
 
@@ -32,13 +32,13 @@ describe OpsController do
       let(:filter_type) { "ems" }
 
       before do
-        ExtManagementSystem.stub(:find).with(:all, {}).and_return([ext_management_system])
+        allow(ExtManagementSystem).to receive(:find).with(:all, {}).and_return([ext_management_system])
         post :schedule_form_filter_type_field_changed, params, session
       end
 
       it "responds with a filtered ext management system list" do
         json = JSON.parse(response.body)
-        json["filtered_item_list"].should == ["emstest"]
+        expect(json["filtered_item_list"]).to eq(["emstest"])
       end
     end
 
@@ -55,13 +55,13 @@ describe OpsController do
 
       before do
         bypass_rescue
-        EmsCluster.stub(:find).with(:all, {}).and_return([cluster])
+        allow(EmsCluster).to receive(:find).with(:all, {}).and_return([cluster])
         post :schedule_form_filter_type_field_changed, params, session
       end
 
       it "responds with a filtered cluster list" do
         json = JSON.parse(response.body)
-        json["filtered_item_list"].should == [%w(clustertest__datacenter desc)]
+        expect(json["filtered_item_list"]).to eq([%w(clustertest__datacenter desc)])
       end
     end
 
@@ -70,13 +70,13 @@ describe OpsController do
       let(:filter_type) { "host" }
 
       before do
-        Host.stub(:find).with(:all, {}).and_return([host])
+        allow(Host).to receive(:find).with(:all, {}).and_return([host])
         post :schedule_form_filter_type_field_changed, params, session
       end
 
       it "responds with a filtered host list" do
         json = JSON.parse(response.body)
-        json["filtered_item_list"].should == ["hosttest"]
+        expect(json["filtered_item_list"]).to eq(["hosttest"])
       end
     end
   end
@@ -103,7 +103,7 @@ describe OpsController do
                                        :uri_prefix   => "smb",
                                        :uri          => "samba_uri",
                                        :log_protocol => "Samba")
-      mocked_filedepot.should_receive(:try).with(:authentication_password).and_return('password')
+      expect(mocked_filedepot).to receive(:try).with(:authentication_password).and_return('password')
       settings = {:username   => "userid",
                   :password   => "password",
                   :uri        => "smb://samba_uri",

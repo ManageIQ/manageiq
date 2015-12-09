@@ -62,42 +62,42 @@ describe DashboardController do
 
     it "returns flash message when user's group is missing" do
       user = FactoryGirl.create(:user)
-      User.stub(:authenticate).and_return(user)
+      allow(User).to receive(:authenticate).and_return(user)
       validation = controller.send(:validate_user, user)
       expect(validation.flash_msg).to include('User\'s Group is missing')
     end
 
     it "returns flash message when user's role is missing" do
       user = FactoryGirl.create(:user_with_group)
-      User.stub(:authenticate).and_return(user)
+      allow(User).to receive(:authenticate).and_return(user)
       validation = controller.send(:validate_user, user)
       expect(validation.flash_msg).to include('User\'s Role is missing')
     end
 
     it "returns flash message when user does not have access to any features" do
       user = FactoryGirl.create(:user, :role => "test")
-      User.stub(:authenticate).and_return(user)
-      controller.stub(:get_vmdb_config).and_return(:product => {})
+      allow(User).to receive(:authenticate).and_return(user)
+      allow(controller).to receive(:get_vmdb_config).and_return(:product => {})
       validation = controller.send(:validate_user, user)
       expect(validation.flash_msg).to include("The user's role is not authorized for any access")
     end
 
     it "returns url for the user with access to only Containers maintab" do
       MiqShortcut.seed
-      described_class.any_instance.stub(:set_user_time_zone)
-      controller.stub(:check_privileges).and_return(true)
+      allow_any_instance_of(described_class).to receive(:set_user_time_zone)
+      allow(controller).to receive(:check_privileges).and_return(true)
       EvmSpecHelper.seed_specific_product_features("containers")
       feature_id = MiqProductFeature.find_all_by_identifier(["containers"])
       user = FactoryGirl.create(:user, :features => feature_id)
-      User.stub(:authenticate).and_return(user)
+      allow(User).to receive(:authenticate).and_return(user)
       validation = controller.send(:validate_user, user)
       expect(validation.flash_msg).to be_nil
     end
 
     it "returns url for the user and sets user's group/role id in session" do
       user = FactoryGirl.create(:user, :role => "test")
-      User.stub(:authenticate).and_return(user)
-      controller.stub(:get_vmdb_config).and_return(:product => {})
+      allow(User).to receive(:authenticate).and_return(user)
+      allow(controller).to receive(:get_vmdb_config).and_return(:product => {})
       skip_data_checks('some_url')
       validation = controller.send(:validate_user, user)
       expect(controller.current_group_id).to eq(user.current_group_id)
@@ -125,14 +125,14 @@ describe DashboardController do
                          :name     => "#{user.userid}|#{group.id}|#{ws.name}",
                          :set_data => {:last_group_db_updated => Time.now.utc, :col1 => [1], :col2 => [], :col3 => []})
       controller.show
-      controller.send(:flash_errors?).should_not be_true
+      expect(controller.send(:flash_errors?)).not_to be_truthy
     end
   end
 
   context "#main_tab redirects to correct url when maintab is pressed by limited access user" do
     before do
-      described_class.any_instance.stub(:set_user_time_zone)
-      controller.stub(:check_privileges).and_return(true)
+      allow_any_instance_of(described_class).to receive(:set_user_time_zone)
+      allow(controller).to receive(:check_privileges).and_return(true)
     end
 
     main_tabs = {
@@ -146,15 +146,15 @@ describe DashboardController do
         session[:tab_url] = {}
         post :maintab, :tab => tab
         url_controller = Menu::Manager.tab_features_by_id(tab).find { |f| f.ends_with?("_explorer") }
-        response.body.should include("#{DashboardController::EXPLORER_FEATURE_LINKS[url_controller]}/explorer")
+        expect(response.body).to include("#{DashboardController::EXPLORER_FEATURE_LINKS[url_controller]}/explorer")
       end
     end
   end
 
   context "#main_tab redirects to correct url when maintab is pressed by user with only Tenant features" do
     before do
-      described_class.any_instance.stub(:set_user_time_zone)
-      controller.stub(:check_privileges).and_return(true)
+      allow_any_instance_of(described_class).to receive(:set_user_time_zone)
+      allow(controller).to receive(:check_privileges).and_return(true)
       EvmSpecHelper.seed_specific_product_features("rbac_tenant")
       feature_id = MiqProductFeature.find_all_by_identifier(["rbac_tenant"])
       login_as FactoryGirl.create(:user, :features => feature_id)
@@ -164,30 +164,30 @@ describe DashboardController do
       session[:tab_url] = {}
       post :maintab, :tab => "set"
       url_controller = Menu::Manager.tab_features_by_id(:set).find { |f| f.ends_with?("_explorer") }
-      response.body.should include("#{DashboardController::EXPLORER_FEATURE_LINKS[url_controller]}/explorer")
+      expect(response.body).to include("#{DashboardController::EXPLORER_FEATURE_LINKS[url_controller]}/explorer")
     end
   end
 
   context "#start_url_for_user" do
     before do
       MiqShortcut.seed
-      controller.stub(:check_privileges).and_return(true)
+      allow(controller).to receive(:check_privileges).and_return(true)
     end
 
     it "retuns start page url that user has set as startpage in settings" do
       login_as FactoryGirl.create(:user, :features => "everything")
       controller.instance_variable_set(:@settings, :display => {:startpage => "/dashboard/show"})
 
-      controller.stub(:role_allows).and_return(true)
+      allow(controller).to receive(:role_allows).and_return(true)
       url = controller.send(:start_url_for_user, nil)
-      url.should eq("/dashboard/show")
+      expect(url).to eq("/dashboard/show")
     end
 
     it "returns first url that user has access to as start page when user doesn't have access to startpage set in settings" do
       login_as FactoryGirl.create(:user, :features => "vm_cloud_explorer")
       controller.instance_variable_set(:@settings, :display => {:startpage => "/dashboard/show"})
       url = controller.send(:start_url_for_user, nil)
-      url.should eq("/vm_cloud/explorer?accordion=instances")
+      expect(url).to eq("/vm_cloud/explorer?accordion=instances")
     end
   end
 
@@ -196,12 +196,12 @@ describe DashboardController do
       request.parameters["action"] = "window_sizes"
       session[:layout] = "host"
       layout = controller.send(:get_layout)
-      layout.should eq(session[:layout])
+      expect(layout).to eq(session[:layout])
     end
 
     it "defaults layout to login on Login screen" do
       layout = controller.send(:get_layout)
-      layout.should eq("login")
+      expect(layout).to eq("login")
     end
   end
 
@@ -253,8 +253,8 @@ describe DashboardController do
 
   context "#maintab" do
     before do
-      described_class.any_instance.stub(:set_user_time_zone)
-      controller.stub(:check_privileges).and_return(true)
+      allow_any_instance_of(described_class).to receive(:set_user_time_zone)
+      allow(controller).to receive(:check_privileges).and_return(true)
     end
     it "redirects a restful link correctly" do
       ems_cloud_amz = FactoryGirl.create(:ems_amazon)
@@ -268,8 +268,8 @@ describe DashboardController do
   end
 
   def skip_data_checks(url = '/')
-    UserValidationService.any_instance.stub(:server_ready?).and_return(true)
-    controller.stub(:start_url_for_user).and_return(url)
+    allow_any_instance_of(UserValidationService).to receive(:server_ready?).and_return(true)
+    allow(controller).to receive(:start_url_for_user).and_return(url)
   end
 
   # logs in and redirects to home url

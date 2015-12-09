@@ -8,15 +8,15 @@ describe MiqAeCustomizationController do
   context "#get_node_info" do
     it "Don't need to validate active node when editing Dialogs" do
       controller.instance_variable_set(:@sb, :trees => {:dialog_edit_tree => {:active_node => "root"}}, :active_tree => :dialog_edit_tree)
-      controller.should_not_receive(:valid_active_node)
-      controller.should_receive(:dialog_edit_set_form_vars)
+      expect(controller).not_to receive(:valid_active_node)
+      expect(controller).to receive(:dialog_edit_set_form_vars)
       controller.send(:get_node_info)
     end
   end
 
   describe "group_reorder_field_changed" do
     before(:each) do
-      controller.stub(:load_edit).and_return(true)
+      allow(controller).to receive(:load_edit).and_return(true)
       controller.instance_variable_set(:@edit, :new => {:fields => [['test', 100], ['test1', 101], ['test2', 102], ['test3', 103]]})
     end
 
@@ -59,7 +59,7 @@ describe MiqAeCustomizationController do
 
   describe "#group_form_field_changed" do
     before(:each) do
-      controller.stub(:load_edit).and_return(true)
+      allow(controller).to receive(:load_edit).and_return(true)
       controller.instance_variable_set(:@edit, :new => {:fields => [['value', 100], ['value1', 101], ['value2', 102], ['value3', 103]]})
     end
 
@@ -122,14 +122,14 @@ describe MiqAeCustomizationController do
 
   describe 'x_button' do
     before(:each) do
-      described_class.any_instance.stub(:set_user_time_zone)
-      controller.stub(:check_privileges).and_return(true)
+      allow_any_instance_of(described_class).to receive(:set_user_time_zone)
+      allow(controller).to receive(:check_privileges).and_return(true)
     end
 
     describe 'corresponding methods are called for allowed actions' do
       MiqAeCustomizationController::AE_CUSTOM_X_BUTTON_ALLOWED_ACTIONS.each_pair do |action_name, method|
         it "calls the appropriate method: '#{method}' for action '#{action_name}'" do
-          controller.should_receive(method)
+          expect(controller).to receive(method)
           get :x_button, :pressed => action_name
         end
       end
@@ -155,17 +155,17 @@ describe MiqAeCustomizationController do
 
     it "assigns the sandbox active tree" do
       get :explorer
-      assigns(:sb)[:active_tree].should == :old_dialogs_tree
+      expect(assigns(:sb)[:active_tree]).to eq(:old_dialogs_tree)
     end
 
     it "assigns the sandbox active accord" do
       get :explorer
-      assigns(:sb)[:active_accord].should == :old_dialogs
+      expect(assigns(:sb)[:active_accord]).to eq(:old_dialogs)
     end
 
     it "assigns the sandbox active node on old dialogs tree to root" do
       get :explorer
-      assigns(:sb)[:active_node][:old_dialogs_tree].should == "root"
+      expect(assigns(:sb)[:active_node][:old_dialogs_tree]).to eq("root")
     end
 
     it "builds the old dialogs tree" do
@@ -175,51 +175,51 @@ describe MiqAeCustomizationController do
 
     it "assigns the sandbox active node on dialogs tree to root" do
       get :explorer
-      assigns(:sb)[:active_node][:dialogs_tree].should == "root"
+      expect(assigns(:sb)[:active_node][:dialogs_tree]).to eq("root")
     end
 
     it "builds the dialog tree" do
       get :explorer
-      assigns(:trees)[1].name.should == :dialogs_tree
+      expect(assigns(:trees)[1].name).to eq(:dialogs_tree)
     end
 
     it "assigns the sandbox active node on ab tree to root" do
       get :explorer
-      assigns(:sb)[:active_node][:ab_tree].should == "root"
+      expect(assigns(:sb)[:active_node][:ab_tree]).to eq("root")
     end
 
     it "builds the ab tree" do
       get :explorer
-      assigns(:trees)[2].name.should == :ab_tree
+      expect(assigns(:trees)[2].name).to eq(:ab_tree)
     end
 
     it "assigns the sandbox active node on import/export tree to root" do
       get :explorer
-      assigns(:sb)[:active_node][:dialog_import_export_tree].should == "root"
+      expect(assigns(:sb)[:active_node][:dialog_import_export_tree]).to eq("root")
     end
 
     it "builds the import/export tree" do
       get :explorer
-      assigns(:trees)[3].name.should == :dialog_import_export_tree
+      expect(assigns(:trees)[3].name).to eq(:dialog_import_export_tree)
     end
 
     context "when the sandbox has flash messages" do
       let(:sandbox_flash_messages) { ["the flash messages"] }
 
       before do
-        controller.stub(:get_global_session_data)
+        allow(controller).to receive(:get_global_session_data)
       end
 
       it "includes the flash messages from the sandbox" do
         get :explorer
-        assigns(:flash_array).should include("the flash messages")
+        expect(assigns(:flash_array)).to include("the flash messages")
       end
     end
 
     context "when the sandbox does not have flash messages" do
       it "does not include the flash message from the sandbox" do
         get :explorer
-        assigns(:flash_array).should_not include("the flash messages")
+        expect(assigns(:flash_array)).not_to include("the flash messages")
       end
     end
   end
@@ -236,7 +236,7 @@ describe MiqAeCustomizationController do
     shared_examples_for "MiqAeCustomizationController#upload_import_file that does not upload a file" do
       it "redirects with a warning message" do
         xhr :post, :upload_import_file, params
-        response.should redirect_to(
+        expect(response).to redirect_to(
           :action  => :review_import,
           :message => {:message => "Use the browse button to locate an import file", :level => :warning}.to_json
         )
@@ -249,18 +249,18 @@ describe MiqAeCustomizationController do
       let(:params) { {:upload => {:file => file}} }
 
       before do
-        DialogImportService.stub(:new).and_return(dialog_import_service)
+        allow(DialogImportService).to receive(:new).and_return(dialog_import_service)
       end
 
       context "when the dialog importer does not raise an error" do
         before do
-          dialog_import_service.stub(:store_for_import).with("the yaml data").and_return(123)
-          file.stub(:read).and_return("the yaml data")
+          allow(dialog_import_service).to receive(:store_for_import).with("the yaml data").and_return(123)
+          allow(file).to receive(:read).and_return("the yaml data")
         end
 
         it "redirects to review_import with an import file upload id" do
           xhr :post, :upload_import_file, params
-          response.should redirect_to(
+          expect(response).to redirect_to(
             :action                => :review_import,
             :import_file_upload_id => 123,
             :message               => {:message => "Import file was uploaded successfully", :level => :info}.to_json
@@ -268,19 +268,19 @@ describe MiqAeCustomizationController do
         end
 
         it "imports the dialogs" do
-          dialog_import_service.should_receive(:store_for_import).with("the yaml data")
+          expect(dialog_import_service).to receive(:store_for_import).with("the yaml data")
           xhr :post, :upload_import_file, params
         end
       end
 
       context "when the dialog importer raises an import error" do
         before do
-          dialog_import_service.stub(:store_for_import).and_raise(DialogImportValidator::ImportNonYamlError)
+          allow(dialog_import_service).to receive(:store_for_import).and_raise(DialogImportValidator::ImportNonYamlError)
         end
 
         it "redirects with an error message" do
           xhr :post, :upload_import_file, params
-          response.should redirect_to(
+          expect(response).to redirect_to(
             :action  => :review_import,
             :message => {
               :message => "Error: the file uploaded is not of the supported format",
@@ -292,12 +292,12 @@ describe MiqAeCustomizationController do
 
       context "when the dialog importer raises a parse non dialog yaml error" do
         before do
-          dialog_import_service.stub(:store_for_import).and_raise(DialogImportValidator::ParsedNonDialogYamlError)
+          allow(dialog_import_service).to receive(:store_for_import).and_raise(DialogImportValidator::ParsedNonDialogYamlError)
         end
 
         it "redirects with an error message" do
           xhr :post, :upload_import_file, params
-          response.should redirect_to(
+          expect(response).to redirect_to(
             :action  => :review_import,
             :message => {
               :message => "Error during upload: incorrect Dialog format, only service dialogs can be imported",
@@ -309,12 +309,12 @@ describe MiqAeCustomizationController do
 
       context "when the dialog importer raises an invalid dialog field type error" do
         before do
-          dialog_import_service.stub(:store_for_import).and_raise(DialogImportValidator::InvalidDialogFieldTypeError)
+          allow(dialog_import_service).to receive(:store_for_import).and_raise(DialogImportValidator::InvalidDialogFieldTypeError)
         end
 
         it "redirects with an error message" do
           xhr :post, :upload_import_file, params
-          response.should redirect_to(
+          expect(response).to redirect_to(
             :action  => :review_import,
             :message => {
               :message => "Error during upload: one of the DialogField types is not supported",
@@ -346,14 +346,14 @@ describe MiqAeCustomizationController do
 
     before do
       bypass_rescue
-      ImportFileUpload.stub(:first).with(:conditions => {:id => "123"}).and_return(import_file_upload)
-      DialogImportService.stub(:new).and_return(dialog_import_service)
+      allow(ImportFileUpload).to receive(:first).with(:conditions => {:id => "123"}).and_return(import_file_upload)
+      allow(DialogImportService).to receive(:new).and_return(dialog_import_service)
     end
 
     shared_examples_for "MiqAeCustomizationController#import_service_dialogs" do
       it "returns a status of 200" do
         xhr :post, :import_service_dialogs, params
-        response.status.should == 200
+        expect(response.status).to eq(200)
       end
     end
 
@@ -361,19 +361,19 @@ describe MiqAeCustomizationController do
       let(:import_file_upload) { active_record_instance_double("ImportFileUpload") }
 
       before do
-        dialog_import_service.stub(:import_service_dialogs)
+        allow(dialog_import_service).to receive(:import_service_dialogs)
       end
 
       it_behaves_like "MiqAeCustomizationController#import_service_dialogs"
 
       it "imports the data" do
-        dialog_import_service.should_receive(:import_service_dialogs).with(import_file_upload, ["potato"])
+        expect(dialog_import_service).to receive(:import_service_dialogs).with(import_file_upload, ["potato"])
         xhr :post, :import_service_dialogs, params
       end
 
       it "returns the flash message" do
         xhr :post, :import_service_dialogs, params
-        response.body.should == [{:message => "Service dialogs imported successfully", :level => :info}].to_json
+        expect(response.body).to eq([{:message => "Service dialogs imported successfully", :level => :info}].to_json)
       end
     end
 
@@ -384,7 +384,7 @@ describe MiqAeCustomizationController do
 
       it "returns the flash message" do
         xhr :post, :import_service_dialogs, params
-        response.body.should == [{:message => "Error: ImportFileUpload expired", :level => :error}].to_json
+        expect(response.body).to eq([{:message => "Error: ImportFileUpload expired", :level => :error}].to_json)
       end
     end
   end
@@ -400,12 +400,12 @@ describe MiqAeCustomizationController do
 
     it "assigns the import file upload id" do
       get :review_import, params
-      assigns(:import_file_upload_id).should == "123"
+      expect(assigns(:import_file_upload_id)).to eq("123")
     end
 
     it "assigns the message" do
       get :review_import, params
-      assigns(:message).should == "the message"
+      expect(assigns(:message)).to eq("the message")
     end
   end
 
@@ -417,23 +417,23 @@ describe MiqAeCustomizationController do
 
     before do
       bypass_rescue
-      DialogImportService.stub(:new).and_return(dialog_import_service)
-      dialog_import_service.stub(:cancel_import)
+      allow(DialogImportService).to receive(:new).and_return(dialog_import_service)
+      allow(dialog_import_service).to receive(:cancel_import)
     end
 
     it "cancels the import" do
-      dialog_import_service.should_receive(:cancel_import).with("123")
+      expect(dialog_import_service).to receive(:cancel_import).with("123")
       xhr :post, :cancel_import, params
     end
 
     it "returns a 200" do
       xhr :post, :cancel_import, params
-      response.status.should == 200
+      expect(response.status).to eq(200)
     end
 
     it "returns the flash messages" do
       xhr :post, :cancel_import, params
-      response.body.should == [{:message => "Service dialog import cancelled", :level => :info}].to_json
+      expect(response.body).to eq([{:message => "Service dialog import cancelled", :level => :info}].to_json)
     end
   end
 
@@ -445,13 +445,13 @@ describe MiqAeCustomizationController do
 
     before do
       bypass_rescue
-      ImportFileUpload.stub(:find).with("123").and_return(import_file_upload)
-      import_file_upload.stub(:service_dialog_json).and_return("the service dialog json")
+      allow(ImportFileUpload).to receive(:find).with("123").and_return(import_file_upload)
+      allow(import_file_upload).to receive(:service_dialog_json).and_return("the service dialog json")
     end
 
     it "returns the json" do
       xhr :get, :service_dialog_json, params
-      response.body.should == "the service dialog json"
+      expect(response.body).to eq("the service dialog json")
     end
   end
 
@@ -470,25 +470,25 @@ describe MiqAeCustomizationController do
       let(:service_dialogs) { %w(1, 2, 3) }
 
       before do
-        DialogYamlSerializer.stub(:new).and_return(dialog_yaml_serializer)
-        dialog_yaml_serializer.stub(:serialize).with(dialogs).and_return("the dialog yml")
-        Dialog.stub(:where).with(:id => service_dialogs).and_return(dialogs)
+        allow(DialogYamlSerializer).to receive(:new).and_return(dialog_yaml_serializer)
+        allow(dialog_yaml_serializer).to receive(:serialize).with(dialogs).and_return("the dialog yml")
+        allow(Dialog).to receive(:where).with(:id => service_dialogs).and_return(dialogs)
       end
 
       it "serializes given dialogs to yml" do
-        dialog_yaml_serializer.should_receive(:serialize).with(dialogs)
+        expect(dialog_yaml_serializer).to receive(:serialize).with(dialogs)
         get :export_service_dialogs, params
       end
 
       it "sends the data" do
         get :export_service_dialogs, params
-        response.body.should == "the dialog yml"
+        expect(response.body).to eq("the dialog yml")
       end
 
       it "sets the filename to the current date" do
         Timecop.freeze(2013, 1, 2) do
           get :export_service_dialogs, params
-          response.header['Content-Disposition'].should include("dialog_export_20130102_000000.yml")
+          expect(response.header['Content-Disposition']).to include("dialog_export_20130102_000000.yml")
         end
       end
     end
@@ -498,23 +498,23 @@ describe MiqAeCustomizationController do
 
       it "sets a flash message" do
         get :export_service_dialogs, params
-        assigns(:flash_array).should == [{
+        expect(assigns(:flash_array)).to eq([{
           :message => "At least 1 item must be selected for export",
           :level   => :error
-        }]
+        }])
       end
 
       it "sets the flash array on the sandbox" do
         get :export_service_dialogs, params
-        assigns(:sb)[:flash_msg].should == [{
+        expect(assigns(:sb)[:flash_msg]).to eq([{
           :message => "At least 1 item must be selected for export",
           :level   => :error
-        }]
+        }])
       end
 
       it "redirects to the explorer" do
         get :export_service_dialogs, params
-        response.should redirect_to(:action => :explorer)
+        expect(response).to redirect_to(:action => :explorer)
       end
     end
   end

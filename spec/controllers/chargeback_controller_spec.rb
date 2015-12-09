@@ -69,7 +69,7 @@ describe ChargebackController do
       controller.instance_variable_set(:@_params, :id => node)
       controller.send(:tree_select)
       expect(response).to                        render_template('layouts/_saved_report_paging_bar')
-      expect(controller.send(:flash_errors?)).to be_false
+      expect(controller.send(:flash_errors?)).to be_falsey
       expect(response.status).to                 eq(200)
     end
   end

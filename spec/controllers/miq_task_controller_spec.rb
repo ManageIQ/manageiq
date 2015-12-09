@@ -49,7 +49,7 @@ describe MiqTaskController do
                     "finished", "warn",
                     "finished", "waiting_to_start", "queued"]
         expected += get_time_period(@opts[:time_period])
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "Zone: default, Time period: 1 Day Ago, status:  Ok, State:  Finished" do
@@ -71,7 +71,7 @@ describe MiqTaskController do
                     user.userid,
                     "finished", "ok"]
         expected += get_time_period(@opts[:time_period]) << "default" << "finished"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "zone: default, Time period: 6 Days Ago, status: Error and Warn, State: All " do
@@ -94,7 +94,7 @@ describe MiqTaskController do
                     "finished", "error",
                     "finished", "warn"]
         expected += get_time_period(@opts[:time_period]) << "default"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "zone: <All Zones>, Time period: Last 24, Status: Queued, Running, Ok, Error and Warn, State: Aborting" do
@@ -118,7 +118,7 @@ describe MiqTaskController do
                     "finished", "waiting_to_start", "queued"]
 
         expected += get_time_period(@opts[:time_period]) << "aborting"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "zone: <All Zones>, Time period: Last 24, Status: none, State: All" do
@@ -138,7 +138,7 @@ describe MiqTaskController do
                     "ok", "error", "warn", "finished", "waiting_to_start"]
 
         expected += get_time_period(@opts[:time_period])
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "zone: <All Zones>, Time period: Last 24, Status: none, State: Aborting" do
@@ -157,7 +157,7 @@ describe MiqTaskController do
 
         expected = [query, user.userid, "ok", "error", "warn", "finished", "waiting_to_start"]
         expected += get_time_period(@opts[:time_period]) << "aborting"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "zone: default, Time period: 1 Day Ago, Status: none, State: Waiting to Start" do
@@ -178,7 +178,7 @@ describe MiqTaskController do
                 "state=?"
         expected = [query, user.userid, "ok", "error", "warn", "finished", "waiting_to_start"]
         expected += get_time_period(@opts[:time_period]) << "default" << "waiting_to_start"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "zone: default, Time period: 4 Days Ago, Status: Queued and Running, State: Synchronizing" do
@@ -200,7 +200,7 @@ describe MiqTaskController do
                 "state=?"
         expected = [query, user.userid, "waiting_to_start", "Queued", "finished", "waiting_to_start", "queued"]
         expected += get_time_period(@opts[:time_period]) << "default" << "synchronizing"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "zone: default, Time period: 4 Days Ago, Status: Queued and Running, State: Snapshot Delete" do
@@ -222,7 +222,7 @@ describe MiqTaskController do
                 "state=?"
         expected = [query, user.userid, "waiting_to_start", "Queued", "finished", "waiting_to_start", "queued"]
         expected += get_time_period(@opts[:time_period]) << "default" << "snapshot_delete"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
     end
 
@@ -256,7 +256,7 @@ describe MiqTaskController do
                     "Finished", "Error", "Finished", "Warn", "Finished", "waiting_to_start", "Queued"
                    ]
         expected += get_time_period(@opts[:time_period])
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "Time period: 6 Days ago, status: queued and running, state: initialized" do
@@ -274,7 +274,7 @@ describe MiqTaskController do
                 "state=?"
         expected = [query, user.userid, "waiting_to_start", "Queued", "Finished", "waiting_to_start", "Queued"]
         expected += get_time_period(@opts[:time_period]) << "Initialized"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "Time period: 6 Days Ago, status: queued and running, state: active" do
@@ -292,7 +292,7 @@ describe MiqTaskController do
                 "state=?"
         expected = [query, user.userid, "waiting_to_start", "Queued", "Finished", "waiting_to_start", "Queued"]
         expected += get_time_period(@opts[:time_period]) << "Active"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "Time period: 6 Days Ago, status: queued and running, state: finished" do
@@ -306,7 +306,7 @@ describe MiqTaskController do
                 "state=?"
         expected = [query, user.userid, "waiting_to_start", "Queued", "Finished", "waiting_to_start", "Queued"]
         expected += get_time_period(@opts[:time_period]) << "Finished"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "Time period: 6 Days Ago, status: ok, state: queued" do
@@ -326,7 +326,7 @@ describe MiqTaskController do
 
         expected = [query, user.userid, "Finished", "Ok"]
         expected += get_time_period(@opts[:time_period]) << "Queued"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "Time period: 6 Days Ago, status: ok and warn, state: queued" do
@@ -346,7 +346,7 @@ describe MiqTaskController do
                 "state=?"
         expected = [query, user.userid, "Finished", "Ok", "Finished", "Warn"]
         expected += get_time_period(@opts[:time_period]) << "Queued"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "Time period: 6 Days Ago, status: ok and warn and error, state: queued" do
@@ -367,7 +367,7 @@ describe MiqTaskController do
                 "state=?"
         expected = [query, user.userid, "Finished", "Ok", "Finished", "Error", "Finished", "Warn"]
         expected += get_time_period(@opts[:time_period]) << "Queued"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "Time Period: Last 24, Status: none checked, State: All" do
@@ -379,7 +379,7 @@ describe MiqTaskController do
                 "updated_on<=?"
         expected = [query, user.userid, "Ok", "Error", "Warn", "Finished", "Queued"]
         expected += get_time_period(@opts[:time_period])
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "Time Period: Last 24, Status: none checked, State: Active" do
@@ -392,7 +392,7 @@ describe MiqTaskController do
                 "state=?"
         expected = [query, user.userid, "Ok", "Error", "Warn", "Finished", "Queued"]
         expected += get_time_period(@opts[:time_period]) << "Active"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "Time Period: 1 Day Ago, Status: none checked, State: Finished" do
@@ -411,7 +411,7 @@ describe MiqTaskController do
                 "state=?"
         expected = [query, user.userid, "Ok", "Error", "Warn", "Finished", "Queued"]
         expected += get_time_period(@opts[:time_period]) << "Finished"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "Time Period: 2 Day Ago, Status: none checked, State: Initialized" do
@@ -430,7 +430,7 @@ describe MiqTaskController do
                 "state=?"
         expected = [query, user.userid, "Ok", "Error", "Warn", "Finished", "Queued"]
         expected += get_time_period(@opts[:time_period]) << "Initialized"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "Time Period: 3 Day Ago, Status: none checked, State: Queued" do
@@ -449,7 +449,7 @@ describe MiqTaskController do
                 "state=?"
         expected = [query, user.userid, "Ok", "Error", "Warn", "Finished", "Queued"]
         expected += get_time_period(@opts[:time_period]) << "Queued"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
     end
 
@@ -490,7 +490,7 @@ describe MiqTaskController do
                     "finished", "warn", "finished", "waiting_to_start", "queued"
                    ]
         expected += get_time_period(@opts[:time_period])
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "zone: default, user: all, Time  period: 6 Days Ago, status: queued and running, state: all" do
@@ -503,7 +503,7 @@ describe MiqTaskController do
                 "zone=?"
         expected = [query, "waiting_to_start", "Queued", "finished", "waiting_to_start", "queued"]
         expected += get_time_period(@opts[:time_period]) << "default"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "zone: default, user: all, Time period: 6 Days Ago, status: queued and running, state: snapshot create" do
@@ -523,7 +523,7 @@ describe MiqTaskController do
                 "state=?"
         expected = [query, "waiting_to_start", "Queued", "finished", "waiting_to_start", "queued"]
         expected += get_time_period(@opts[:time_period]) << "default" << "snapshot_create"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "zone: default, user: all, Time period: 6 Days Ago, status: queued and running and ok, state: snapshot create" do
@@ -545,7 +545,7 @@ describe MiqTaskController do
         expected = [query, "waiting_to_start", "Queued", "finished", "ok",
                     "finished", "waiting_to_start", "queued"]
         expected += get_time_period(@opts[:time_period]) << "default" << "snapshot_create"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "zone: <All Zones>, Time period: Last 24, Status: none checked, State: Snapshot Create" do
@@ -562,7 +562,7 @@ describe MiqTaskController do
                 "state=?"
         expected = [query, "ok", "error", "warn", "finished", "waiting_to_start"]
         expected += get_time_period(@opts[:time_period]) << "snapshot_create"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "zone: <All Zones>, Time period: 2 Days Ago, Status: none checked, State: Scanning" do
@@ -580,7 +580,7 @@ describe MiqTaskController do
                 "state=?"
         expected = [query, "ok", "error", "warn", "finished", "waiting_to_start"]
         expected += get_time_period(@opts[:time_period]) << "scanning"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "zone: <All Zones>, Time period: 3 Days Ago, Status: none checked, State: Initializing" do
@@ -598,7 +598,7 @@ describe MiqTaskController do
                 "state=?"
         expected = [query, "ok", "error", "warn", "finished", "waiting_to_start"]
         expected += get_time_period(@opts[:time_period]) << "initializing"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "zone: <All Zones>, Time period: 4 Days Ago, Status: none checked, State: Finished" do
@@ -616,7 +616,7 @@ describe MiqTaskController do
                 "state=?"
         expected = [query, "ok", "error", "warn", "finished", "waiting_to_start"]
         expected += get_time_period(@opts[:time_period]) << "finished"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "zone: <All Zones>, Time period: 5 Days Ago, Status: none checked, State: Deploy Smartproxy" do
@@ -634,7 +634,7 @@ describe MiqTaskController do
                 "state=?"
         expected = [query, "ok", "error", "warn", "finished", "waiting_to_start"]
         expected += get_time_period(@opts[:time_period]) << "deploy_smartproxy"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "zone: <All Zones>, Time period: 6 Days Ago, Status: Ok, Error and Warn, State: Cancelling" do
@@ -654,7 +654,7 @@ describe MiqTaskController do
                 "state=?"
         expected = [query, "finished", "ok", "finished", "error", "finished", "warn"]
         expected += get_time_period(@opts[:time_period]) << "cancelling"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
     end
 
@@ -689,7 +689,7 @@ describe MiqTaskController do
         expected = [query, "waiting_to_start", "Queued", "Finished", "Ok", "Finished", "Error",
                     "Finished", "Warn", "Finished", "waiting_to_start", "Queued"]
         expected += get_time_period(@opts[:time_period])
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "user: all, Time period: 1 Day Ago, status: queued, running, ok, error and warn, state: active" do
@@ -706,7 +706,7 @@ describe MiqTaskController do
         expected = [query, "waiting_to_start", "Queued", "Finished", "Ok", "Finished", "Error",
                     "Finished", "Warn", "Finished", "waiting_to_start", "Queued"]
         expected += get_time_period(@opts[:time_period]) << "Active"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "user: all, Time period: 1 Day Ago, status: queued, running, ok, error and warn, state: finished" do
@@ -723,7 +723,7 @@ describe MiqTaskController do
         expected = [query, "waiting_to_start", "Queued", "Finished", "Ok", "Finished", "Error",
                     "Finished", "Warn", "Finished", "waiting_to_start", "Queued"]
         expected += get_time_period(@opts[:time_period]) << "Finished"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "user: all, Time period: 1 Day Ago, status: queued, running, ok, error and warn, state: initialized" do
@@ -739,7 +739,7 @@ describe MiqTaskController do
         expected = [query, "waiting_to_start", "Queued", "Finished", "Ok", "Finished", "Error",
                     "Finished", "Warn", "Finished", "waiting_to_start", "Queued"]
         expected += get_time_period(@opts[:time_period]) << "Initialized"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "user: all, Time period: 1 Day Ago, status: queued, running, ok, error and warn, state: queued" do
@@ -756,7 +756,7 @@ describe MiqTaskController do
         expected = [query, "waiting_to_start", "Queued", "Finished", "Ok", "Finished", "Error",
                     "Finished", "Warn", "Finished", "waiting_to_start", "Queued"]
         expected += get_time_period(@opts[:time_period]) << "Queued"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "User: All Users, Time Period: Last 24, Status: none checked, State: All" do
@@ -767,7 +767,7 @@ describe MiqTaskController do
                 "updated_on<=?"
         expected = [query, "Ok", "Error", "Warn", "Finished", "Queued"]
         expected += get_time_period(@opts[:time_period])
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "User: system, Time Period: 1 Day Ago, Status: none checked, State: Active" do
@@ -787,7 +787,7 @@ describe MiqTaskController do
                 "state=?"
         expected = [query, "system", "Ok", "Error", "Warn", "Finished", "Queued"]
         expected += get_time_period(@opts[:time_period]) << "Active"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "User: system, Time Period: 2 Day Ago, Status: Queued, State: Finished" do
@@ -807,7 +807,7 @@ describe MiqTaskController do
                 "state=?"
         expected = [query, "system", "waiting_to_start", "Queued"]
         expected += get_time_period(@opts[:time_period]) << "Finished"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
 
       it "User: system, Time Period: 3 Day Ago, Status: Running, State: Initialized" do
@@ -827,7 +827,7 @@ describe MiqTaskController do
                 "state=?"
         expected = [query, "system", "Finished", "waiting_to_start", "Queued"]
         expected += get_time_period(@opts[:time_period]) << "Initialized"
-        subject.should == expected
+        expect(subject).to eq(expected)
       end
     end
 
