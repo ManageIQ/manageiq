@@ -209,7 +209,7 @@ class Job < ActiveRecord::Base
     jobs = Marshal.load(jobs)
     job_guids = jobs.collect { |j| j[:taskid] }
     unless job_guids.empty?
-      Job.find(:all, :conditions => ["state != 'finished' and guid in (?)", job_guids]).each do |job|
+      Job.where(:guid => job_guids).where.not(:state => 'finished').each do |job|
         _log.debug("Job: guid: [#{job.guid}], job timeout extended due to work pending.")
         job.updated_on = Time.now.utc
         job.save
