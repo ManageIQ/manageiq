@@ -506,4 +506,9 @@ class ExtManagementSystem < ActiveRecord::Base
   def self.blacklisted_events
     BlacklistedEvent.where(:provider_model => name, :ems_id => nil)
   end
+
+  # @return [Boolean] true if a datastore exists for this type of ems
+  def self.datastore?
+    IsoDatastore.where(:ems_id => all).exists?
+  end
 end
