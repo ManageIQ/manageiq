@@ -114,8 +114,8 @@ module ToolbarHelper
   # Render drop-down top button
   #
   def toolbar_top_button_select(props)
-    content_tag(:div, :class => 'btn-group dropdown') do
-      cls = props[:hidden] ? 'hidden ' : ''
+    cls = props[:hidden] ? 'hidden ' : ''
+    content_tag(:div, :class => "#{cls}btn-group dropdown") do
       cls += 'disabled ' if props['enabled'].to_s == 'false'
       out = []
       out << content_tag(:button,
