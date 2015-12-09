@@ -203,7 +203,7 @@ class MiqAeClassController < ApplicationController
     version = domain.version
     available_version = domain.available_version
     return if version.nil? || available_version.nil?
-    _("%s domain: Currently version - %s, Available version - %s") % [domain.name, version, available_version] if version != available_version
+    _("%s domain: Current version - %s, Available version - %s") % [domain.name, version, available_version] if version != available_version
   end
 
   def add_all_domains_version_message(domains)
