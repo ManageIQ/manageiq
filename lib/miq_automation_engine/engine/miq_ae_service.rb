@@ -1,4 +1,6 @@
-require_relative 'miq_ae_service_model_legacy'
+require_relative 'miq_ae_service/miq_ae_service_model_legacy'
+require_relative 'miq_ae_service/miq_ae_service_object_common'
+require_relative 'miq_ae_service/miq_ae_service_vmdb'
 module MiqAeMethodService
   class Deprecation < Vmdb::Deprecation
     def self.default_log
@@ -16,7 +18,8 @@ module MiqAeMethodService
   class MiqAeService
     include Vmdb::Logging
     include DRbUndumped
-    include MiqAeServiceModelLegacy
+    include MiqAeMethodService::MiqAeServiceModelLegacy
+    include MiqAeMethodService::MiqAeServiceVmdb
 
     @@id_hash = {}
     @@current = []
@@ -205,17 +208,6 @@ module MiqAeMethodService
       end
     end
 
-    def vmdb(model_name, *args)
-      service = service_model(model_name)
-      args.empty? ? service : service.find(*args)
-    end
-
-    def service_model(model_name)
-      "MiqAeMethodService::MiqAeService#{model_name}".constantize
-    rescue NameError
-      service_model_lookup(model_name)
-    end
-
     def datastore
     end
 
@@ -359,67 +351,9 @@ module MiqAeMethodService
     end
   end
 
-  module MiqAeServiceObjectCommon
-    def attributes
-      @object.attributes.each_with_object({}) do |(key, value), hash|
-        hash[key] = value.kind_of?(MiqAePassword) ? value.to_s : value
-      end
-    end
-
-    def attributes=(hash)
-      @object.attributes = hash
-    end
-
-    def [](attr)
-      value = @object[attr.downcase]
-      value = value.to_s if value.kind_of?(MiqAePassword)
-      value
-    end
-
-    def []=(attr, value)
-      @object[attr.downcase] = value
-    end
-
-    # To explicitly override Object#id method, which is spewing deprecation warnings to use Object#object_id
-    def id
-      @object ? @object.id : nil
-    end
-
-    def decrypt(attr)
-      MiqAePassword.decrypt_if_password(@object[attr.downcase])
-    end
-
-    def current_field_name
-      @object.current_field_name
-    end
-
-    def current_field_type
-      @object.current_field_type
-    end
-
-    def current_message
-      @object.current_message
-    end
-
-    def namespace
-      @object.namespace
-    end
-
-    def class_name
-      @object.klass
-    end
-
-    def instance_name
-      @object.instance
-    end
-
-    def name
-      @object.object_name
-    end
-  end
 
   class MiqAeServiceObject
-    include MiqAeServiceObjectCommon
+    include MiqAeMethodService::MiqAeServiceObjectCommon
     include DRbUndumped
 
     def initialize(obj, svc)
