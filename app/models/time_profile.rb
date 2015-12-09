@@ -17,12 +17,12 @@ class TimeProfile < ActiveRecord::Base
   after_create :rebuild_daily_metrics_on_create
   after_save   :rebuild_daily_metrics_on_save
 
-  def self.find_all_with_entire_tz(*args)
-    all(*args).select(&:entire_tz?)
+  def self.find_all_with_entire_tz
+    all.select(&:entire_tz?)
   end
 
-  def self.all_timezones(*args)
-    all(*args).collect(&:tz).uniq
+  def self.all_timezones
+    select(%w(id profile)).collect(&:tz).uniq
   end
 
   def self.seed
