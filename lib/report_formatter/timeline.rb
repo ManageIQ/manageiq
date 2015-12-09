@@ -106,12 +106,22 @@ module ReportFormatter
             ems = ExtManagementSystem.find(rec[:ems_id])
             ems_cloud =  true if ems.kind_of?(EmsCloud)
           end
-          if rec[:vm_name] && !ems_cloud             # Create the title using VM name
-            e_title = rec[:vm_name]
-          elsif rec[:host_name] && !ems_cloud                 #   or Host Name
-            e_title = rec[:host_name]
-          elsif rec[:ems_cluster_name] && !ems_cloud          #   or Cluster Name
-            e_title = rec[:ems_cluster_name]
+          if !ems_cloud
+            e_title = if rec[:vm_name] # Create the title using VM name
+                        rec[:vm_name]
+                      elsif rec[:host_name] # or Host Name
+                        rec[:host_name]
+                      elsif rec[:ems_cluster_name] # or Cluster Name
+                        rec[:ems_cluster_name]
+                      elsif rec[:container_name]
+                        rec[:container_name]
+                      elsif rec[:container_group_name]
+                        rec[:container_group_name]
+                      elsif rec[:container_replicator_name]
+                        rec[:container_replicator_name]
+                      elsif rec[:container_node_name]
+                        rec[:container_node_name]
+                      end
           elsif ems                             #   or EMS name
             e_title = ems.name
           else
