@@ -19,18 +19,17 @@ module OpsController::Db
     # @explorer = true if model == VmdbIndex
 
     if model == VmdbIndex
-      # building a filter with expression to only show VmdbTableEvm tables only
-      cond = []
-      cond_hash = {}
-      cond_hash["="] = {"value" => "VmdbTableEvm", "field" => "VmdbIndex.vmdb_table-type"}
-      cond.push(cond_hash)
-
-      condition = {}
-      condition["and"] = []
-      cond.each do |c|
-        condition["and"].push(c)
-      end
-      exp =  MiqExpression.new(condition)
+      # building a filter with expression to show VmdbTableEvm tables only
+      exp = MiqExpression.new(
+        "and" => [
+          {
+            "=" => {
+              "value" => "VmdbTableEvm",
+              "field" => "VmdbIndex.vmdb_table-type"
+            }
+          }
+        ]
+      )
     elsif model == VmdbDatabaseConnection
       @zones = Zone.all.sort_by(&:name).collect { |z| [z.name, z.name] }
       # for now we dont need this pulldown, need ot get a method that could give us a list of workers for filter pulldown
