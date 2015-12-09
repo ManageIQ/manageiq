@@ -144,7 +144,13 @@ li.brand-white-label.whitelabeled {
 
 table.table td {
   word-break: break-all
- }
+}
+
+//Enable normal word wrapping in List View
+
+#gtl_div table.table td {
+  word-break: normal !important;
+}
 
 table.table tbody td img {
   height: 20px;
