@@ -1,11 +1,7 @@
 class ManageIQ::Providers::Openstack::CloudManager::CloudVolume < ::CloudVolume
   include_concern 'Operations'
 
-  def self.validate_create_volume(ext_management_system, options)
-    mandatory_options = [:size, :display_name, :cloud_tenant]
-    unless mandatory_options.all? { |x| !options[x].blank? }
-      return validation_failed("Create Volume", "Mandatory parameters are #{mandatory_options.join(", ")}.")
-    end
+  def self.validate_create_volume(ext_management_system)
     validate_volume(ext_management_system)
   end
 
