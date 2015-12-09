@@ -185,7 +185,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     template.operating_system.should           be_nil # TODO: This should probably not be nil
     expect(template.custom_attributes.size).to eq 0
     expect(template.snapshots.size).to         eq 0
-    template.hardware.should                   be_nil
+    template.hardware.should_not               be_nil
     template.parent.should                     be_nil
     template
   end

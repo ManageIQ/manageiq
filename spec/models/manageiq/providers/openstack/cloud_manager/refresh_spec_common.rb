@@ -189,7 +189,7 @@ module Openstack
       expect(MiqTemplate.count).to         eq images_count
       expect(Disk.count).to                eq disks_count
       # One hardware per each VM
-      expect(Hardware.count).to            eq vms_count
+      expect(Hardware.count).to            eq vms_count + images_count
       # TODO(lsmola) 2 networks per each floatingip assigned, it's kinda weird now, will replace with
       # neutron models, then the number of networks will fit the number of neutron networks
       # expect(Network.count).to           eq vms_count * 2
@@ -499,8 +499,7 @@ module Openstack
         expect(template.operating_system).to       be_nil # TODO: This should probably not be nil
         expect(template.custom_attributes.size).to eq 0
         expect(template.snapshots.size).to         eq 0
-        expect(template.hardware).to               be_nil
-
+        expect(template.hardware).not_to           be_nil
         expect(template.parent).to                 be_nil
       end
     end
