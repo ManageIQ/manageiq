@@ -1179,7 +1179,7 @@ module OpsController::OpsRbac
     if ids.include?(node)   # This node is selected, return all children
       return [node] + MiqProductFeature.feature_all_children(node)
     else                    # Node is not selected, check this nodes direct children
-      MiqProductFeature.feature_children(node).flat_map { rbac_expand_features(ids, n) }
+      MiqProductFeature.feature_children(node).flat_map { |n| rbac_expand_features(ids, n) }
     end
   end
 
