@@ -22,8 +22,7 @@ class CloudVolume < ApplicationRecord
   def self.class_by_ems(ext_management_system)
     # TODO(lsmola) taken from OrchesTration stacks, correct approach should be to have a factory on ExtManagementSystem
     # side, that would return correct class for each provider
-    return ext_management_system.class::CloudVolume if ext_management_system
-    CloudVolume
+    ext_management_system.class::CloudVolume
   end
 
   def self.create_volume(ext_management_system, options = {})
@@ -41,11 +40,10 @@ class CloudVolume < ApplicationRecord
       :cloud_tenant          => tenant)
   end
 
-  def self.validate_create_volume(ext_management_system, options = {})
+  def self.validate_create_volume(ext_management_system)
     klass = class_by_ems(ext_management_system)
-    return klass.validate_create_volume(ext_management_system, options) if klass != CloudVolume &&
-                                                                           klass.respond_to?(:validate_create_volume)
-
+    return klass.validate_create_volume(ext_management_system) if ext_management_system &&
+                                                                  klass.respond_to?(:validate_create_volume)
     validate_unsupported("Create Volume Operation")
   end
 
@@ -57,7 +55,7 @@ class CloudVolume < ApplicationRecord
     raw_update_volume(options)
   end
 
-  def validate_update_volume(_options = {})
+  def validate_update_volume
     validate_unsupported("Update Volume Operation")
   end
 

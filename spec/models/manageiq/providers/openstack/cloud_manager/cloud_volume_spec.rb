@@ -57,17 +57,12 @@ describe ManageIQ::Providers::Openstack::CloudManager::CloudVolume do
       end
 
       it "validates the volume create operation" do
-        validation = CloudVolume.validate_create_volume(ems, volume_options)
+        validation = CloudVolume.validate_create_volume(ems)
         expect(validation[:available]).to be_true
       end
 
-      it "validates the volume create operation when mandatory option are missing" do
-        validation = CloudVolume.validate_create_volume(ems, {})
-        expect(validation[:available]).to be_false
-      end
-
       it "validates the volume create operation when ems is missing" do
-        validation = CloudVolume.validate_create_volume(nil, volume_options)
+        validation = CloudVolume.validate_create_volume(nil)
         expect(validation[:available]).to be_false
       end
 
