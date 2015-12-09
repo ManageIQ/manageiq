@@ -3,20 +3,30 @@ require 'tmpdir'
 require 'pathname'
 
 describe MiqProductFeature do
-  before do
-    @expected_feature_count = 872
+  let(:expected_feature_count) { 872 }
+
+  # - container_dashboard
+  # - miq_report_widget_editor
+  #   - miq_report_widget_admin
+  #     - widget_edit
+  #     - widget_copy
+  #     - widget_refresh (H)
+  let(:hierarchical_features) do
+    EvmSpecHelper.seed_specific_product_features(
+      %w(miq_report_widget_editor miq_report_widget_admin widget_refresh widget_edit widget_copy container_dashboard)
+    )
   end
 
   context ".seed" do
     it "creates feature identifiers once on first seed, changes nothing on second seed" do
       status_seed1 = MiqProductFeature.seed
-      expect(MiqProductFeature.count).to eq(@expected_feature_count)
+      expect(MiqProductFeature.count).to eq(expected_feature_count)
       expect(status_seed1[:created]).to match_array status_seed1[:created].uniq
       expect(status_seed1[:updated]).to match_array []
       expect(status_seed1[:unchanged]).to match_array []
 
       status_seed2 = MiqProductFeature.seed
-      MiqProductFeature.count.should eq(@expected_feature_count)
+      MiqProductFeature.count.should eq(expected_feature_count)
       expect(status_seed2[:created]).to match_array []
       expect(status_seed2[:updated]).to match_array []
       expect(status_seed2[:unchanged]).to match_array status_seed1[:created]
@@ -82,6 +92,43 @@ describe MiqProductFeature do
 
       additional_file.unlink
       Dir.rmdir(feature_path)
+    end
+  end
+
+  describe '#feature_children' do
+    it "returns only visible features" do
+      hierarchical_features
+      expect(MiqProductFeature).not_to receive(:sort_children)
+      expect(MiqProductFeature.feature_children("miq_report_widget_admin", false)).to match_array(
+        %w(widget_copy widget_edit))
+    end
+
+    it "returns direct children only" do
+      hierarchical_features
+      expect(MiqProductFeature.feature_children("miq_report_widget_editor")).to eq(
+        %w(miq_report_widget_admin))
+    end
+
+    it "sorts features" do
+      hierarchical_features
+      expect(MiqProductFeature).to receive(:sort_children).and_call_original
+      expect(MiqProductFeature.feature_children("miq_report_widget_admin")).to eq(%w(widget_copy widget_edit))
+    end
+  end
+
+  describe '#feature_all_children' do
+    it "returns all visible children" do
+      hierarchical_features
+      expect(MiqProductFeature).not_to receive(:sort_children)
+      expect(MiqProductFeature.feature_all_children("miq_report_widget_editor", false)).to match_array(
+        %w(widget_copy widget_edit miq_report_widget_admin))
+    end
+
+    it "returns all visible children sorted" do
+      hierarchical_features
+      expect(MiqProductFeature).to receive(:sort_children).and_call_original
+      expect(MiqProductFeature.feature_all_children("miq_report_widget_editor")).to eq(
+        %w(widget_copy widget_edit miq_report_widget_admin))
     end
   end
 

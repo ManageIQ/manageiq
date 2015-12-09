@@ -34,16 +34,22 @@ class MiqProductFeature < ActiveRecord::Base
     find_by_identifier(feature_parent(identifier))
   end
 
-  def self.feature_children(identifier)
+  def self.feature_children(identifier, sort = true)
     feat = features[identifier.to_s]
-    feat && !feat[:details][:hidden] ? sort_children(feat[:children]) : []
+    if feat && !feat[:details][:hidden] && feat[:children]
+      visible_children = feat[:children].select { |f| !feature_hidden(f) }
+      sort ? sort_children(visible_children) : visible_children
+    else
+      []
+    end
   end
 
-  def self.feature_all_children(identifier)
-    result = children = feature_children(identifier)
-    children.collect { |c| result += feature_all_children(c) unless feature_children(c).empty? }
-
-    sort_children(result.flatten.compact)
+  # Are we ever going to need to sort these?
+  def self.feature_all_children(identifier, sort = true)
+    children = feature_children(identifier, false)
+    return [] if children.empty?
+    result   = children + children.flat_map { |c| feature_all_children(c, false) }
+    sort ? sort_children(result) : result
   end
 
   def self.feature_details(identifier)
@@ -75,7 +81,7 @@ class MiqProductFeature < ActiveRecord::Base
     # Sort by feature_type and name forcing the ordering of feature_type to match FEATURE_TYPE_ORDER
     children.sort_by do |c|
       details = feature_details(c)
-      details ? [FEATURE_TYPE_ORDER.index(details[:feature_type]), details[:name] || "", c] : [10, "", c]
+      [FEATURE_TYPE_ORDER.index(details[:feature_type]), details[:name], c]
     end
   end
 
