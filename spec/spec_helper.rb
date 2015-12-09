@@ -38,6 +38,10 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = true
   config.use_instantiated_fixtures  = false
 
+  # From rspec-rails, infer what helpers to mix in, such as `get` and
+  # `post` methods in spec/controllers, without specifying type
+  config.infer_spec_type_from_file_location!
+
   # config.before(:all) do
   #   EvmSpecHelper.log_ruby_object_usage
   # end
