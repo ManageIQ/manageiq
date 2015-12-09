@@ -84,6 +84,8 @@ module Vmdb
         ui_lookup_for_ems_cluster_types(options[:ems_cluster_types])
       elsif options[:ui_title]
         ui_lookup_for_title(options[:ui_title])
+      elsif options[:availability_zone_types]
+        ui_lookup_for_availability_zone_types(options[:availability_zone_types])
       else
         ''
       end
@@ -108,6 +110,10 @@ module Vmdb
 
     def ui_lookup_for_title(text)
       Dictionary.gettext(text, :type => :ui_title, :notfound => :titleize)
+    end
+
+    def ui_lookup_for_availability_zone_types(text)
+      Dictionary.gettext(text, :type => :availability_zone_types, :notfound => :titleize)
     end
 
     # Wrap a report html table body with html table tags and headers for the columns
