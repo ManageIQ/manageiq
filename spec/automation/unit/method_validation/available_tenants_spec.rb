@@ -9,7 +9,7 @@ describe "Available_Tenants Method Validation" do
   context "workspace has no service template" do
     it "provides only default value to the tenant list" do
       ws = MiqAeEngine.instantiate("#{@ins}", user)
-      ws.root["values"].should == {nil => "<default>"}
+      expect(ws.root["values"]).to eq({nil => "<default>"})
     end
   end
 
@@ -18,7 +18,7 @@ describe "Available_Tenants Method Validation" do
 
     it "provides only default value to the tenant list" do
       ws = MiqAeEngine.instantiate("#{@ins}?ServiceTemplate::service_template=#{service_template.id}", user)
-      ws.root["values"].should == {nil => "<default>"}
+      expect(ws.root["values"]).to eq({nil => "<default>"})
     end
   end
 
@@ -39,7 +39,7 @@ describe "Available_Tenants Method Validation" do
 
     it "finds all the tenants and populates the list" do
       ws = MiqAeEngine.instantiate("#{@ins}?ServiceTemplate::service_template=#{service_template.id}", user)
-      ws.root["values"].should include(
+      expect(ws.root["values"]).to include(
         nil           => "<default>",
         @tenant1.name => @tenant1.name,
         @tenant2.name => @tenant2.name
@@ -48,7 +48,7 @@ describe "Available_Tenants Method Validation" do
 
     it "provides only default value to the tenant list if orchestration manager does not exist" do
       ws = MiqAeEngine.instantiate("#{@ins}?ServiceTemplate::service_template=#{service_template_no_ems.id}", user)
-      ws.root["values"].should == {nil => "<default>"}
+      expect(ws.root["values"]).to eq({nil => "<default>"})
     end
   end
 
@@ -63,7 +63,7 @@ describe "Available_Tenants Method Validation" do
 
     it "finds all the tenants and populates the list" do
       ws = MiqAeEngine.instantiate("#{@ins}?Service::service=#{service.id}", user)
-      ws.root["values"].should include(
+      expect(ws.root["values"]).to include(
         nil           => "<default>",
         @tenant1.name => @tenant1.name,
         @tenant2.name => @tenant2.name
@@ -72,7 +72,7 @@ describe "Available_Tenants Method Validation" do
 
     it "provides only default value to the tenant list if orchestration manager does not exist" do
       ws = MiqAeEngine.instantiate("#{@ins}?Service::service=#{service_no_ems.id}", user)
-      ws.root["values"].should == {nil => "<default>"}
+      expect(ws.root["values"]).to eq({nil => "<default>"})
     end
   end
 end

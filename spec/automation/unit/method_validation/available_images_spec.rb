@@ -10,8 +10,8 @@ describe "Available_Images Method Validation" do
   context "workspace has no service template" do
     it "provides only default value to the image list" do
       ws = MiqAeEngine.instantiate("#{@ins}", user)
-      ws.root["values"].should == {nil => default_desc}
-      ws.root["default_value"].should be_nil
+      expect(ws.root["values"]).to eq({nil => default_desc})
+      expect(ws.root["default_value"]).to be_nil
     end
   end
 
@@ -20,8 +20,8 @@ describe "Available_Images Method Validation" do
 
     it "provides only default value to the image list" do
       ws = MiqAeEngine.instantiate("#{@ins}?ServiceTemplate::service_template=#{service_template.id}", user)
-      ws.root["values"].should == {nil => default_desc}
-      ws.root["default_value"].should be_nil
+      expect(ws.root["values"]).to eq({nil => default_desc})
+      expect(ws.root["default_value"]).to be_nil
     end
   end
 
@@ -49,26 +49,26 @@ describe "Available_Images Method Validation" do
 
     it "finds all the images and populates the list" do
       ws = MiqAeEngine.instantiate("#{@ins}?ServiceTemplate::service_template=#{service_template.id}", user)
-      ws.root["values"].should include(
+      expect(ws.root["values"]).to include(
         nil           => "<Choose>",
         @img1.uid_ems => "windows | #{@img1.name}",
         @img2.uid_ems => "linux | #{@img2.name}"
       )
-      ws.root["default_value"].should be_nil
+      expect(ws.root["default_value"]).to be_nil
     end
 
     it "finds the only image and set it as the only item in the list" do
       ws = MiqAeEngine.instantiate("#{@ins}?ServiceTemplate::service_template=#{service_template_one_img.id}", user)
-      ws.root["values"].should include(
+      expect(ws.root["values"]).to include(
         @img1.uid_ems => "unknown | #{@img1.name}"
       )
-      ws.root["default_value"].should == @img1.uid_ems
+      expect(ws.root["default_value"]).to eq(@img1.uid_ems)
     end
 
     it "provides only default value to the image list if orchestration manager does not exist" do
       ws = MiqAeEngine.instantiate("#{@ins}?ServiceTemplate::service_template=#{service_template_no_ems.id}", user)
-      ws.root["values"].should == {nil => default_desc}
-      ws.root["default_value"].should be_nil
+      expect(ws.root["values"]).to eq({nil => default_desc})
+      expect(ws.root["default_value"]).to be_nil
     end
   end
 
@@ -96,26 +96,26 @@ describe "Available_Images Method Validation" do
 
     it "finds all the images and populates the list" do
       ws = MiqAeEngine.instantiate("#{@ins}?Service::service=#{service.id}", user)
-      ws.root["values"].should include(
+      expect(ws.root["values"]).to include(
         nil           => "<Choose>",
         @img1.uid_ems => "windows | #{@img1.name}",
         @img2.uid_ems => "linux | #{@img2.name}"
       )
-      ws.root["default_value"].should be_nil
+      expect(ws.root["default_value"]).to be_nil
     end
 
     it "finds the only image and set it as the only item in the list" do
       ws = MiqAeEngine.instantiate("#{@ins}?Service::service=#{service_one_img.id}", user)
-      ws.root["values"].should include(
+      expect(ws.root["values"]).to include(
         @img1.uid_ems => "unknown | #{@img1.name}"
       )
-      ws.root["default_value"].should == @img1.uid_ems
+      expect(ws.root["default_value"]).to eq(@img1.uid_ems)
     end
 
     it "provides only default value to the image list if orchestration manager does not exist" do
       ws = MiqAeEngine.instantiate("#{@ins}?Service::service=#{service_no_ems.id}", user)
-      ws.root["values"].should == {nil => default_desc}
-      ws.root["default_value"].should be_nil
+      expect(ws.root["values"]).to eq({nil => default_desc})
+      expect(ws.root["default_value"]).to be_nil
     end
   end
 end

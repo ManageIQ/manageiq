@@ -20,22 +20,22 @@ describe "amazon_check_pre_retirement Method Validation" do
   it "returns 'ok' for instance store instances even with power on" do
     @vm.hardware = @is_hardware
     ws = MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}#amazon", @user)
-    ws.root['ae_result'].should be == 'ok'
-    ws.root['vm'].power_state.should be == 'on'
+    expect(ws.root['ae_result']).to eq('ok')
+    expect(ws.root['vm'].power_state).to eq('on')
   end
 
   it "returns 'retry' for running ebs instances" do
     @vm.hardware = @ebs_hardware
     ws = MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}#amazon", @user)
-    ws.root['ae_result'].should be == 'retry'
-    ws.root['vm'].power_state.should be == 'on'
+    expect(ws.root['ae_result']).to eq('retry')
+    expect(ws.root['vm'].power_state).to eq('on')
   end
 
   it "returns 'ok' for stopped ebs instances" do
     @vm.hardware = @ebs_hardware
     @vm.update_attributes(:raw_power_state => "off")
     ws = MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}#amazon", @user)
-    ws.root['ae_result'].should be == 'ok'
-    ws.root['vm'].power_state.should be == 'off'
+    expect(ws.root['ae_result']).to eq('ok')
+    expect(ws.root['vm'].power_state).to eq('off')
   end
 end

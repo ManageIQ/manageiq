@@ -20,13 +20,13 @@ describe "Available_Os_Types Method Validation" do
 
   it "provides all os types and default to unknown" do
     ws = MiqAeEngine.instantiate("#{@ins}?ServiceTemplate::service_template=#{service_template.id}", user)
-    ws.root["values"].should include(os_list)
-    ws.root["default_value"].should == 'unknown'
+    expect(ws.root["values"]).to include(os_list)
+    expect(ws.root["default_value"]).to eq('unknown')
   end
 
   it "provides all os types and auto selects the type based on the user selection of an image" do
     ws = MiqAeEngine.instantiate("#{@ins}?ServiceTemplate::service_template=#{service_template.id}&dialog_param_userImageName=uid1", user)
-    ws.root["values"].should include(os_list)
-    ws.root["default_value"].should == 'windows'
+    expect(ws.root["values"]).to include(os_list)
+    expect(ws.root["default_value"]).to eq('windows')
   end
 end

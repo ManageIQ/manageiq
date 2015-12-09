@@ -14,44 +14,44 @@ describe "Orchestration check_provisioned Method Validation" do
   let(:ws_with_refresh_started) { MiqAeEngine.instantiate("#{ws_url}&ae_state_data=#{URI.escape(YAML.dump('provider_last_refresh' => Time.now.to_i, 'deploy_result' => deploy_result))}", user) }
 
   it "waits for the deployment to complete" do
-    ServiceOrchestration.any_instance.stub(:orchestration_stack_status) { ['CREATING', nil] }
-    ws.root['ae_result'].should == 'retry'
+    allow_any_instance_of(ServiceOrchestration).to receive(:orchestration_stack_status) { ['CREATING', nil] }
+    expect(ws.root['ae_result']).to eq('retry')
   end
 
   it "catches the error during stack deployment" do
-    ServiceOrchestration.any_instance.stub(:orchestration_stack_status) { ['CREATE_FAILED', failure_msg] }
-    ws.root['ae_result'].should == 'error'
-    ws.root['ae_reason'].should == failure_msg
-    request.reload.message.should == failure_msg
+    allow_any_instance_of(ServiceOrchestration).to receive(:orchestration_stack_status) { ['CREATE_FAILED', failure_msg] }
+    expect(ws.root['ae_result']).to eq('error')
+    expect(ws.root['ae_reason']).to eq(failure_msg)
+    expect(request.reload.message).to eq(failure_msg)
   end
 
   it "truncates the error message that exceeds 255 characters" do
     long_error = 't' * 300
-    ServiceOrchestration.any_instance.stub(:orchestration_stack_status) { ['CREATE_FAILED', long_error] }
-    ws.root['ae_result'].should == 'error'
-    ws.root['ae_reason'].should == long_error
-    request.reload.message.should == 't' * 252 + '...'
+    allow_any_instance_of(ServiceOrchestration).to receive(:orchestration_stack_status) { ['CREATE_FAILED', long_error] }
+    expect(ws.root['ae_result']).to eq('error')
+    expect(ws.root['ae_reason']).to eq(long_error)
+    expect(request.reload.message).to eq('t' * 252 + '...')
   end
 
   it "considers rollback as provision error" do
-    ServiceOrchestration.any_instance.stub(:orchestration_stack_status) { ['ROLLBACK_COMPLETE', 'Stack was rolled back'] }
-    ws.root['ae_result'].should == 'error'
-    ws.root['ae_reason'].should == 'Stack was rolled back'
+    allow_any_instance_of(ServiceOrchestration).to receive(:orchestration_stack_status) { ['ROLLBACK_COMPLETE', 'Stack was rolled back'] }
+    expect(ws.root['ae_result']).to eq('error')
+    expect(ws.root['ae_reason']).to eq('Stack was rolled back')
   end
 
   it "refreshes the provider and waits for it to complete" do
-    ServiceOrchestration.any_instance.stub(:orchestration_stack_status) { ['CREATE_COMPLETE', nil] }
-    ServiceOrchestration.any_instance.stub(:orchestration_stack) { FactoryGirl.create(:orchestration_stack_amazon) }
-    ManageIQ::Providers::Amazon::CloudManager.any_instance.should_receive(:refresh_ems)
-    ws.root['ae_result'].should == 'retry'
+    allow_any_instance_of(ServiceOrchestration).to receive(:orchestration_stack_status) { ['CREATE_COMPLETE', nil] }
+    allow_any_instance_of(ServiceOrchestration).to receive(:orchestration_stack) { FactoryGirl.create(:orchestration_stack_amazon) }
+    expect_any_instance_of(ManageIQ::Providers::Amazon::CloudManager).to receive(:refresh_ems)
+    expect(ws.root['ae_result']).to eq('retry')
   end
 
   it "waits the refresh to complete" do
-    ws_with_refresh_started.root['ae_result'].should == "retry"
+    expect(ws_with_refresh_started.root['ae_result']).to eq("retry")
   end
 
   it "completes check_provisioned step when refresh is done" do
     ems_amazon.update_attributes(:last_refresh_date => Time.now + 100)
-    ws_with_refresh_started.root['ae_result'].should == deploy_result
+    expect(ws_with_refresh_started.root['ae_result']).to eq(deploy_result)
   end
 end

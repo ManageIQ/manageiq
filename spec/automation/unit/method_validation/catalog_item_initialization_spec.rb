@@ -90,16 +90,16 @@ describe "CatalogItemInitialization Automate Method" do
 
     def check_options(request_task, required_options)
       options = request_task.options
-      required_options.each { |k, v| options[k].should eql(v) }
+      required_options.each { |k, v| expect(options[k]).to eql(v) }
     end
 
     def check_tags(request_task, required_tags)
       tags = request_task.get_tags
-      required_tags.each { |k, v| tags[k].should eql(v) }
+      required_tags.each { |k, v| expect(tags[k]).to eql(v) }
     end
 
     def check_destination_options(service, required_options)
-      required_options.each { |k, v| service.options[:dialog]["dialog_#{k}"].should eql(v) }
+      required_options.each { |k, v| expect(service.options[:dialog]["dialog_#{k}"]).to eql(v) }
     end
   end
 end
