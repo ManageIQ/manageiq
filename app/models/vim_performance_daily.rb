@@ -34,21 +34,13 @@ class VimPerformanceDaily < MetricRollup
       .to_a
   end
 
-  def self.default_time_profile(ext_options)
-    if (tz = Metric::Helper.get_time_zone(ext_options))
-      # Determine if this search falls into an existing valid TimeProfile
-      TimeProfile.rollup_daily_metrics.find_all_with_entire_tz.detect { |p| p.tz_or_default == tz }
-    end
-  end
-
+  # @param ext_options [Hash] search options
+  # @opts ext_options :klass [Class] class for metrics (default: MetricRollup)
+  # @opts ext_options :tp [TimeProfile]
+  # @opts ext_options :tz [Timezone] (default: DEFUULTf)
   def self.find_entries(ext_options)
     ext_options ||= {}
-    ext_options[:time_profile] ||= default_time_profile(ext_options)
-
-    find_by_time_profile(ext_options)
-  end
-
-  def self.find_by_time_profile(ext_options)
+    time_profile = ext_options[:time_profile] ||= TimeProfile.default_time_profile(ext_options[:tz])
     klass = ext_options[:class] || MetricRollup
 
     # Support for multi-region DB. We need to try to find a time profile in each

@@ -150,6 +150,47 @@ describe TimeProfile do
     end
   end
 
+  describe ".all_timezones" do
+    it "works with seeds" do
+      FactoryGirl.create(:time_profile, :tz => "tz")
+      FactoryGirl.create(:time_profile, :tz => "tz")
+      FactoryGirl.create(:time_profile, :tz => "other_tz")
+
+      expect(TimeProfile.all_timezones).to eq(%w(tz other_tz))
+    end
+  end
+
+  describe ".find_all_with_entire_tz" do
+    it "only returns profiles with all days" do
+      FactoryGirl.create(:time_profile, :days => [1, 2])
+      tp = FactoryGirl.create(:time_profile)
+
+      expect(TimeProfile.find_all_with_entire_tz).to eq([tp])
+    end
+  end
+
+  describe ".profile_for_user_tz" do
+    it "finds global profiles" do
+      FactoryGirl.create(:time_profile_with_rollup, :tz => "good", :profile_type => "global")
+      expect(TimeProfile.profile_for_user_tz(1, "good")).to be
+    end
+
+    it "finds user profiles" do
+      FactoryGirl.create(:time_profile_with_rollup, :tz => "good", :profile_type => "user", :profile_key => 1)
+      expect(TimeProfile.profile_for_user_tz(1, "good")).to be
+    end
+
+    it "skips invalid records" do
+      FactoryGirl.create(:time_profile_with_rollup, :tz => "bad", :profile_type => "global")
+      FactoryGirl.create(:time_profile, :tz => "good", :profile_type => "global", :rollup_daily_metrics => false)
+      FactoryGirl.create(:time_profile_with_rollup, :tz => "good", :profile_type => "user", :profile_key => "2")
+
+      expect(TimeProfile.profile_for_user_tz(1, "good")).not_to be
+    end
+  end
+
+  private
+
   def assert_rebuild_daily_queued
     q_all = MiqQueue.all
     q_all.length.should == 1

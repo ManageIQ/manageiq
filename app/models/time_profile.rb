@@ -127,6 +127,13 @@ class TimeProfile < ActiveRecord::Base
     )
   end
 
+  def for_user_tz?(user_id, user_tz)
+    user_id = user_id.to_s
+    tz == user_tz &&
+     (profile_type == "global" ||
+      (profile_type == "user" && profile_key == user_id))
+  end
+
   private
 
   def rebuild_daily_metrics_on_create
@@ -160,14 +167,11 @@ class TimeProfile < ActiveRecord::Base
   end
 
   def self.profile_for_user_tz(user_id, user_tz)
-    TimeProfile.rollup_daily_metrics.detect { |tp| tp.tz == user_tz && profile_type_for_tz?(tp, user_id) }
+    TimeProfile.rollup_daily_metrics.detect { |tp| tp.for_user_tz?(user_id, user_tz) }
   end
 
-  def self.profile_type_for_tz?(tp, user_id)
-    tp.profile_type == "global" || (tp.profile_type == "user" && tp.profile_key == user_id)
-  end
-
-  def self.default_time_profile
-    TimeProfile.rollup_daily_metrics.detect { |tp| tp.tz == DEFAULT_TZ && tp.entire_tz? }
+  def self.default_time_profile(tz = DEFAULT_TZ)
+    tz ||= DEFAULT_TZ
+    rollup_daily_metrics.find_all_with_entire_tz.detect { |tp| tp.tz_or_default == tz }
   end
 end
