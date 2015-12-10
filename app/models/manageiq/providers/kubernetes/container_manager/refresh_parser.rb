@@ -212,7 +212,11 @@ module ManageIQ::Providers::Kubernetes
 
       ports = service.spec.ports
       new_result[:container_service_port_configs] = Array(ports).collect do |port_entry|
-        parse_service_port_config(port_entry, new_result[:ems_ref])
+        pc = parse_service_port_config(port_entry, new_result[:ems_ref])
+        new_result[:container_image_registry] = @data_index.fetch_path(
+          :container_image_registry, :by_host_and_port, "#{new_result[:portal_ip]}:#{pc[:port]}"
+        )
+        pc
       end
 
       new_result[:project] = @data_index.fetch_path(:container_projects, :by_name,
