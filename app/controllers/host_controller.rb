@@ -383,9 +383,9 @@ class HostController < ApplicationController
                                                params[:validate_id] :
                                                session[:host_items].first.to_i)
         # Set the record variables, but don't save
-        settings, creds, verify = set_credentials_record_vars(valid_host, :validate)
-        if valid_record?(valid_host) && verify
-          @error = Host.multi_host_update(session[:host_items], settings, creds)
+        creds = set_credentials(valid_host, :validate)
+        if valid_record?(valid_host)
+          @error = Host.batch_update_authentication(session[:host_items], creds)
         end
         if @error || @error.blank?
           # redirect_to :action => 'show_list', :flash_msg=>_("Credentials/Settings saved successfully")
@@ -414,7 +414,7 @@ class HostController < ApplicationController
       if session[:host_items].nil?
         set_record_vars(verify_host, :validate)
       else
-        set_credentials_record_vars(verify_host, :validate)
+        set_credentials(verify_host, :validate)
       end
       @in_a_form = true
       @changed = session[:changed]
@@ -797,15 +797,8 @@ class HostController < ApplicationController
     host.mac_address      = params[:mac_address]
     host.custom_1         = params[:custom_1] unless mode == :validate
     host.user_assigned_os = params[:user_assigned_os]
-    _ = set_credentials(host, mode)
+    set_credentials(host, mode)
     true
-  end
-
-  # Set record variables to new values
-  def set_credentials_record_vars(host, mode = nil)
-    settings = {}
-    creds = set_credentials(host, mode)
-    return settings, creds, true
   end
 
   def set_credentials(host, mode)

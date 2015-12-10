@@ -768,14 +768,13 @@ class Host < ActiveRecord::Base
     return false
   end
 
-  def self.multi_host_update(host_ids, attr_hash = {}, creds = {})
+  def self.batch_update_authentication(host_ids, creds = {})
     errors = []
     return true if host_ids.blank?
     host_ids.each do |id|
       begin
         host = Host.find(id)
         host.update_authentication(creds)
-        host.update_attributes!(attr_hash)
       rescue ActiveRecord::RecordNotFound => err
         _log.warn("#{err.class.name}-#{err}")
         next
