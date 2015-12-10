@@ -42,6 +42,15 @@ RSpec.configure do |config|
   # `post` methods in spec/controllers, without specifying type
   config.infer_spec_type_from_file_location!
 
+  # == RSPEC 3 UPGRADE ==
+  # TODO: These config options should be reevaluated after RSpec 3 conversion.
+  #
+  # RSpec::Core::ExampleGroup#example is removed in RSpec 3
+  # Can't currently update the code at the call site (capybara),
+  # so we're temporarily adding the method for now
+  config.expose_current_running_example_as :example
+  # =====================
+
   # config.before(:all) do
   #   EvmSpecHelper.log_ruby_object_usage
   # end
