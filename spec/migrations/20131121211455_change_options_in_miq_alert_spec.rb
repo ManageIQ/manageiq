@@ -12,7 +12,7 @@ describe ChangeOptionsInMiqAlert do
       migrate
 
       alert.reload
-      expect(alert.options).to eq({:notifications => {:email => {:to => ''}}})
+      expect(alert.options).to eq(:notifications => {:email => {:to => ''}})
     end
 
     it 'non-default miq_alert email is ignored' do

@@ -12,7 +12,7 @@ describe ChangeOptionsInMiqAlertForEmailTo do
       migrate
 
       alert.reload
-      expect(alert.options).to eq({:notifications => {:email => {:to => []}}})
+      expect(alert.options).to eq(:notifications => {:email => {:to => []}})
     end
 
     it 'existing string type miq_alert emails are converted to an array' do
@@ -22,7 +22,7 @@ describe ChangeOptionsInMiqAlertForEmailTo do
       migrate
 
       alert.reload
-      expect(alert.options).to eq({:notifications => {:email => {:to => %w(mail1 mail2)}}})
+      expect(alert.options).to eq(:notifications => {:email => {:to => %w(mail1 mail2)}})
     end
 
     it 'existing array type miq_alert emails remain unchanged' do

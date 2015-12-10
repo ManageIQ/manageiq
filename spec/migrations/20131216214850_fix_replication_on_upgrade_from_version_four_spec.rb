@@ -29,8 +29,10 @@ describe FixReplicationOnUpgradeFromVersionFour do
       migrate
 
       settings = configuration_stub.first.settings
-      expect(settings.key_path?("workers", "worker_base", :replication_worker, :replication, :include_tables)).to be_falsey
-      expect(settings.fetch_path("workers", "worker_base", :replication_worker, :replication, :exclude_tables)).to eq(described_class::V5_DEFAULT_EXCLUDE_TABLES)
+      expect(settings.key_path?("workers", "worker_base", :replication_worker, :replication, :include_tables))
+        .to be_falsey
+      expect(settings.fetch_path("workers", "worker_base", :replication_worker, :replication, :exclude_tables))
+        .to eq(described_class::V5_DEFAULT_EXCLUDE_TABLES)
     end
 
     context "handles replication" do
@@ -44,8 +46,12 @@ describe FixReplicationOnUpgradeFromVersionFour do
         # them unless we have replication set up, which is not yet possible in a
         # migration spec.
         require 'awesome_spawn'
-        expect(AwesomeSpawn).to receive(:run!).with("bin/rake evm:db:environmentlegacykey evm:dbsync:prepare_replication_without_sync")
-        expect(AwesomeSpawn).to receive(:run!).with("bin/rake evm:db:environmentlegacykey evm:dbsync:uninstall drift_states miq_cim_derived_metrics miq_request_tasks miq_storage_metrics storages_vms_and_templates")
+        expect(AwesomeSpawn)
+          .to receive(:run!).with("bin/rake evm:db:environmentlegacykey evm:dbsync:prepare_replication_without_sync")
+        expect(AwesomeSpawn)
+          .to receive(:run!).with("bin/rake evm:db:environmentlegacykey evm:dbsync:uninstall" \
+                                  " drift_states miq_cim_derived_metrics miq_request_tasks" \
+                                  " miq_storage_metrics storages_vms_and_templates")
       end
 
       it "for renamed tables in rr_pending_changes" do

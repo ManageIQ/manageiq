@@ -52,9 +52,9 @@ describe ExpandDialogFieldDefaultValueSize do
 
       reserve1 = reserve_stub.where(:resource_id   => field1.id,
                                     :resource_type => 'DialogField').first!
-      expect(reserve1.reserved).to eq({:default_value => val1})
+      expect(reserve1.reserved).to eq(:default_value => val1)
       expect(reserve_stub.where(:resource_id   => field2.id,
-                         :resource_type => 'DialogField')).not_to exist
+                                :resource_type => 'DialogField')).not_to exist
     end
   end
 end
