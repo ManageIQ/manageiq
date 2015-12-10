@@ -1,4 +1,4 @@
-ManageIQ.angularApplication.directive('updateDropdownForTimer', ['$timeout', function($timeout) {
+ManageIQ.angular.app.directive('updateDropdownForTimer', ['$timeout', function($timeout) {
   return {
     require: 'ngModel',
       link: function (scope, elem, attr, ctrl) {

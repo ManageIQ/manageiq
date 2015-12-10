@@ -1,4 +1,4 @@
-ManageIQ.angularApplication.controller('credentialsController', ['$http', '$scope', 'miqService', function($http, $scope, miqService) {
+ManageIQ.angular.app.controller('credentialsController', ['$http', '$scope', 'miqService', function($http, $scope, miqService) {
   var init = function() {
     $scope.bChangeStoredPassword = undefined;
     $scope.bCancelPasswordChange = undefined;

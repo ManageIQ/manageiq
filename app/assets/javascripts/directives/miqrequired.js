@@ -1,4 +1,4 @@
-ManageIQ.angularApplication.directive('miqrequired', function() {
+ManageIQ.angular.app.directive('miqrequired', function() {
   return {
     require: 'ngModel',
       link: function (scope, elem, attrs, ctrl) {
