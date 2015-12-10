@@ -6,13 +6,11 @@ require 'yaml'
 module Psych
   module Visitors
     class ToRuby
-      SHOVEL      = '<<'
-      IVAR_MARKER = '__iv__'
       def revive_hash(hash, o)
         o.children.each_slice(2) do |k, v|
           key = accept(k)
 
-          if key == SHOVEL
+          if key == '<<'.freeze
             case v
             when Nodes::Alias
               hash.merge! accept(v)
@@ -26,7 +24,7 @@ module Psych
 
           # We need to migrate all old YAML before we can remove this
           #### Reapply the instance variables, see https://github.com/tenderlove/psych/issues/43
-          elsif key.to_s.start_with?(IVAR_MARKER)
+          elsif key.to_s.start_with?('__iv__'.freeze)
             hash.instance_variable_set(key.to_s[6..-1], accept(v))
 
           else
