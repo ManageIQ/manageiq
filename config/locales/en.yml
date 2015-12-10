@@ -818,6 +818,8 @@ en:
       based_volumes:               Cloud Volumes Based on Snapshot
       cdroms:                      CD/DVD Drives
       cim_base_storage_extent:     Base Extents
+      cloud_resource_quota:        Cloud Resource Quota
+      cloud_resource_quotas:       Cloud Resource Quotas
       cloud_volume:                Cloud Volume
       cloud_volumes:               Cloud Volumes
       cloud_volume_snapshot:       Cloud Volume Snapshot

@@ -418,6 +418,35 @@
       :feature_type: control
       :identifier: availability_zone_tag
 
+# CloudResourceQuota
+- :name: Cloud Resource Quotas
+  :description: Everything under Cloud Resource Quotas
+  :feature_type: node
+  :identifier: cloud_resource_quota
+  :children:
+  - :name: View
+    :description: View Resource Quotas
+    :feature_type: view
+    :identifier: cloud_resource_quota_view
+    :children:
+    - :name: List
+      :description: Display Lists of Resource Quotas
+      :feature_type: view
+      :identifier: cloud_resource_quota_show_list
+    - :name: Show
+      :description: Display Individual Resource Quotas
+      :feature_type: view
+      :identifier: cloud_resource_quota_show
+  - :name: Operate
+    :description: Perform Operations on Resource Quotas
+    :feature_type: control
+    :identifier: cloud_resource_quota_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Resource Quotas
+      :feature_type: control
+      :identifier: cloud_resource_quota_tag
+
 # CloudTenant
 - :name: Cloud Tenants
   :description: Everything under Cloud Tenants

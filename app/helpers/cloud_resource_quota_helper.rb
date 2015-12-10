@@ -1,4 +1,5 @@
 module CloudResourceQuotaHelper
+  include_concern 'TextualSummary'
   # lookup a cloud_resource_quota by name for the tenant and service
   def lookup_quota(cloud_tenant_id, service_name, quota_name)
     return unless cloud_tenant_id && service_name && quota_name

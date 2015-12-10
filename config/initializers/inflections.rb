@@ -31,6 +31,9 @@ ActiveSupport::Inflector.inflections do |inflect|
   inflect.singular(/Quota$/, "Quota")
   inflect.plural(/quota$/, "quotas")
   inflect.irregular("container_quota", "container_quotas")
+  inflect.irregular("cloud_resource_quota", "cloud_resource_quotas")
+  inflect.plural(/cloud_resource_quota$/, "cloud_resource_quotas")
+  inflect.plural(/CloudResourceQuota$/, 'CloudResourceQuotas')
 
   inflect.acronym 'ManageIQ'
 end

@@ -16,4 +16,6 @@ class CloudResourceQuota < ApplicationRecord
     # UI should interpret -1 as "Unknown"
     method.to_s.end_with?("_quota_used") ? -1 : super
   end
+
+  acts_as_miq_taggable
 end
