@@ -3,7 +3,7 @@ require "spec_helper"
 describe TextualSummaryHelper do
   before do
     login_as @user = FactoryGirl.create(:user)
-    @user.stub(:role_allows?).and_return(true)
+    allow(@user).to receive(:role_allows?).and_return(true)
   end
 
   context "textual_link" do

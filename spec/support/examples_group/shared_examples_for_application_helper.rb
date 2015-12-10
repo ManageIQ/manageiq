@@ -29,11 +29,11 @@ shared_examples_for 'record with error message' do |name|
 end
 
 shared_examples_for 'default case' do
-  it { should be_false }
+  it { should be_falsey }
 end
 
 shared_examples_for 'default true_case' do
-  it { should be_true }
+  it { should be_truthy }
 end
 
 shared_examples_for 'vm not powered on' do |message|
