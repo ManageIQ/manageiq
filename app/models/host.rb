@@ -83,16 +83,12 @@ class Host < ActiveRecord::Base
 
   has_many                  :host_service_groups, :dependent => :destroy
 
-  serialize                 :settings
+  serialize :settings, Hash
 
   # TODO: Remove all callers of address
   alias_attribute :address, :hostname
   alias_attribute :state,   :power_state
   alias_attribute :to_s,    :name
-
-  def settings
-    super || self.settings = VMDB::Config.new("hostdefaults").get(:host)
-  end
 
   include SerializedEmsRefObjMixin
   include ProviderObjectMixin
@@ -187,32 +183,6 @@ class Host < ActiveRecord::Base
   def v_annotation
     hardware.try(:annotation)
   end
-
-  # host settings
-  def autoscan
-    settings[:autoscan]
-  end
-
-  def autoscan=(switch)
-    settings[:autoscan] = switch
-  end
-
-  def inherit_mgt_tags
-    settings[:inherit_mgt_tags]
-  end
-
-  def inherit_mgt_tags=(switch)
-    settings[:inherit_mgt_tags] = switch
-  end
-
-  def scan_frequency
-    settings[:scan_frequency]
-  end
-
-  def scan_frequency=(switch)
-    settings[:scan_frequency] = switch
-  end
-  # end host settings
 
   def my_zone
     ems = ext_management_system
@@ -926,7 +896,7 @@ class Host < ActiveRecord::Base
     end
 
     make_smart # before_create callback
-    self.settings   = VMDB::Config.new("hostdefaults").get(:host)
+    self.settings   = nil
     self.name       = "IPMI <#{ipmi_address}>"
     self.vmm_vendor = 'unknown'
     save!
@@ -1382,27 +1352,6 @@ class Host < ActiveRecord::Base
 
   def first_cat_entry(name)
     Classification.first_cat_entry(name, self)
-  end
-
-  def self.check_for_vms_to_scan
-    _log.debug "Checking for VMs that are scheduled to be scanned"
-
-    hosts = MiqServer.my_server.zone.hosts
-    MiqPreloader.preload(hosts, :vms)
-    hosts.each do |h|
-      next if h.scan_frequency.to_i == 0
-
-      h.vms.each do |vm|
-        if vm.last_scan_attempt_on.nil? || h.scan_frequency.to_i.seconds.ago.utc > vm.last_scan_attempt_on
-          begin
-            _log.info("Creating scan job on [(#{vm.class.name}) #{vm.name}]")
-            vm.scan
-          rescue => err
-            _log.log_backtrace(err)
-          end
-        end
-      end
-    end
   end
 
   # TODO: Rename this to scan_queue and rename scan_from_queue to scan to match

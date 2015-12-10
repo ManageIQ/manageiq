@@ -804,7 +804,6 @@ class HostController < ApplicationController
   # Set record variables to new values
   def set_credentials_record_vars(host, mode = nil)
     settings = {}
-    settings[:scan_frequency] = params[:scan_frequency]
     creds = set_credentials(host, mode)
     return settings, creds, true
   end
