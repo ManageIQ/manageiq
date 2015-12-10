@@ -22,8 +22,6 @@ ManageIQ.angularApplication.controller('credentialsController', ['$http', '$scop
       }
     });
 
-    ManageIQ.angularApplication.$credentialsScope = $scope;
-
     if ($scope.formId == 'new') {
       $scope.newRecord = true;
     }
