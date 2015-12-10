@@ -172,8 +172,8 @@ class NetappRemoteService < StorageManager
   end
 
   def self.agent_query(nrsIds)
-    return where(:conditions => {:agent_type => DEFAULT_AGENT_TYPE, :zone_id => MiqServer.my_server.zone.id}) if nrsIds.empty?
-    where(:id => nrsIds)
+    return where(:id => nrsIds) if nrsIds.present?
+    where(:agent_type => DEFAULT_AGENT_TYPE, :zone_id => MiqServer.my_server.zone.id)
   end
 
   def self.update_ontap(nrsIds = [])
