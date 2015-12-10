@@ -105,6 +105,7 @@ module ReportFormatter
           if rec[:ems_id] && ExtManagementSystem.exists?(rec[:ems_id])
             ems = ExtManagementSystem.find(rec[:ems_id])
             ems_cloud =  true if ems.kind_of?(EmsCloud)
+            ems_container = true if ems.kind_of?(::ManageIQ::Providers::ContainerManager)
           end
           if !ems_cloud
             e_title = if rec[:vm_name] # Create the title using VM name
@@ -236,6 +237,8 @@ module ReportFormatter
           if ems_cloud
             # restful route is used for cloud provider unlike infrastructure provider
             val = "&lt;a href='/ems_cloud/#{provider_id}'&gt;#{row[co]}&lt;/a&gt;"
+          elsif ems_container
+            val = "&lt;a href='/ems_container/show/#{to_cid(provider_id)}'&gt;#{row[co]}&lt;/a&gt;"
           else
             val = "&lt;a href='/ems_infra/show/#{to_cid(provider_id)}'&gt;#{row[co]}&lt;/a&gt;"
           end
