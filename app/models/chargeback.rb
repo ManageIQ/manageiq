@@ -240,11 +240,7 @@ class Chargeback < ActsAsArModel
   end
 
   def self.default_rates
-    rates = []
-    ChargebackRate.find(:all, :conditions => {:default => true}).each do |rate|
-      rates += rate.chargeback_rate_details
-    end
-    rates
+    ChargebackRate.where(:default => true).flat_map(&:chargeback_rate_details)
   end
 
   def self.get_report_time_range(options, interval, tz)
