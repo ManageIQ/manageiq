@@ -60,7 +60,8 @@ describe "Orchestration retirement state machine Methods Validation" do
     end
 
     it "completes the step when stack no longer exists" do
-      allow_any_instance_of(OrchestrationStack).to receive(:raw_status) { raise MiqException::MiqOrchestrationStackNotExistError, 'stack not exist' }
+      allow_any_instance_of(OrchestrationStack)
+        .to receive(:raw_status) { raise MiqException::MiqOrchestrationStackNotExistError, 'stack not exist' }
       expect(ws.root['ae_result']).to eq("ok")
     end
 

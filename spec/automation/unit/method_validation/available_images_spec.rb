@@ -10,7 +10,7 @@ describe "Available_Images Method Validation" do
   context "workspace has no service template" do
     it "provides only default value to the image list" do
       ws = MiqAeEngine.instantiate("#{@ins}", user)
-      expect(ws.root["values"]).to eq({nil => default_desc})
+      expect(ws.root["values"]).to eq(nil => default_desc)
       expect(ws.root["default_value"]).to be_nil
     end
   end
@@ -20,7 +20,7 @@ describe "Available_Images Method Validation" do
 
     it "provides only default value to the image list" do
       ws = MiqAeEngine.instantiate("#{@ins}?ServiceTemplate::service_template=#{service_template.id}", user)
-      expect(ws.root["values"]).to eq({nil => default_desc})
+      expect(ws.root["values"]).to eq(nil => default_desc)
       expect(ws.root["default_value"]).to be_nil
     end
   end
@@ -67,7 +67,7 @@ describe "Available_Images Method Validation" do
 
     it "provides only default value to the image list if orchestration manager does not exist" do
       ws = MiqAeEngine.instantiate("#{@ins}?ServiceTemplate::service_template=#{service_template_no_ems.id}", user)
-      expect(ws.root["values"]).to eq({nil => default_desc})
+      expect(ws.root["values"]).to eq(nil => default_desc)
       expect(ws.root["default_value"]).to be_nil
     end
   end
@@ -114,7 +114,7 @@ describe "Available_Images Method Validation" do
 
     it "provides only default value to the image list if orchestration manager does not exist" do
       ws = MiqAeEngine.instantiate("#{@ins}?Service::service=#{service_no_ems.id}", user)
-      expect(ws.root["values"]).to eq({nil => default_desc})
+      expect(ws.root["values"]).to eq(nil => default_desc)
       expect(ws.root["default_value"]).to be_nil
     end
   end

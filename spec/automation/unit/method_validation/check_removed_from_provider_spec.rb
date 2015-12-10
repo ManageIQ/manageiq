@@ -24,7 +24,7 @@ describe "check_removed_from_provider Method Validation" do
     @vm.update_attributes(:host => @host, :ems_id => @ems.id,
                           :registered => true)
     allow_any_instance_of(Vm).to receive(:refresh_ems)
-    expect(ws.root['ae_result']).to         eql("retry")
+    expect(ws.root['ae_result']).to eql("retry")
     expect(ws.root['vm']['registered']).to eq(true)
   end
 end

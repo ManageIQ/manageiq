@@ -19,7 +19,8 @@ describe "Orchestration check_provisioned Method Validation" do
   end
 
   it "catches the error during stack deployment" do
-    allow_any_instance_of(ServiceOrchestration).to receive(:orchestration_stack_status) { ['CREATE_FAILED', failure_msg] }
+    allow_any_instance_of(ServiceOrchestration)
+      .to receive(:orchestration_stack_status) { ['CREATE_FAILED', failure_msg] }
     expect(ws.root['ae_result']).to eq('error')
     expect(ws.root['ae_reason']).to eq(failure_msg)
     expect(request.reload.message).to eq(failure_msg)
@@ -27,21 +28,25 @@ describe "Orchestration check_provisioned Method Validation" do
 
   it "truncates the error message that exceeds 255 characters" do
     long_error = 't' * 300
-    allow_any_instance_of(ServiceOrchestration).to receive(:orchestration_stack_status) { ['CREATE_FAILED', long_error] }
+    allow_any_instance_of(ServiceOrchestration)
+      .to receive(:orchestration_stack_status) { ['CREATE_FAILED', long_error] }
     expect(ws.root['ae_result']).to eq('error')
     expect(ws.root['ae_reason']).to eq(long_error)
     expect(request.reload.message).to eq('t' * 252 + '...')
   end
 
   it "considers rollback as provision error" do
-    allow_any_instance_of(ServiceOrchestration).to receive(:orchestration_stack_status) { ['ROLLBACK_COMPLETE', 'Stack was rolled back'] }
+    allow_any_instance_of(ServiceOrchestration)
+      .to receive(:orchestration_stack_status) { ['ROLLBACK_COMPLETE', 'Stack was rolled back'] }
     expect(ws.root['ae_result']).to eq('error')
     expect(ws.root['ae_reason']).to eq('Stack was rolled back')
   end
 
   it "refreshes the provider and waits for it to complete" do
-    allow_any_instance_of(ServiceOrchestration).to receive(:orchestration_stack_status) { ['CREATE_COMPLETE', nil] }
-    allow_any_instance_of(ServiceOrchestration).to receive(:orchestration_stack) { FactoryGirl.create(:orchestration_stack_amazon) }
+    allow_any_instance_of(ServiceOrchestration)
+      .to receive(:orchestration_stack_status) { ['CREATE_COMPLETE', nil] }
+    allow_any_instance_of(ServiceOrchestration)
+      .to receive(:orchestration_stack) { FactoryGirl.create(:orchestration_stack_amazon) }
     expect_any_instance_of(ManageIQ::Providers::Amazon::CloudManager).to receive(:refresh_ems)
     expect(ws.root['ae_result']).to eq('retry')
   end
