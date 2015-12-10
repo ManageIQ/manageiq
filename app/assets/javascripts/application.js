@@ -88,7 +88,8 @@
 //= require miq_slickgrid
 //= require codemirror
 //= require codemirror/modes/yaml
-//= require spin
+//= require spin.js/spin
+//= require spin.js/jquery.spin
 //= require jquery-hotkeys
 //= require lodash
 //= require miq_formatters

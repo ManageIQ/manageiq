@@ -58,10 +58,6 @@ if (typeof(ManageIQ) === 'undefined') {
       slickRows: null,
       slickDataView: null,
     },
-    spinner: {
-      spinner: null, // spinner instance
-      searchSpinner: null, // search spinner instance
-    },
     widget: {
       dashboardUrl: null, // set dashboard widget drag drop url
       menuXml: null,
