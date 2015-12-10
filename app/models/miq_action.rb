@@ -728,7 +728,7 @@ class MiqAction < ActiveRecord::Base
 
     has_ch = false
     snap   = nil
-    rec.snapshots.all(:order => "create_time DESC").each do |s|
+    rec.snapshots.order("create_time DESC").each do |s|
       if s.is_a_type?(:consolidate_helper)
         has_ch = true
         next

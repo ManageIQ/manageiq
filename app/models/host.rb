@@ -1831,13 +1831,12 @@ class Host < ActiveRecord::Base
             else VmPerformance
             end
 
-    vm_perfs = klass.all(:conditions => [
+    vm_perfs = klass.where(
       "parent_host_id = ? AND capture_interval_name = ? AND timestamp >= ? AND timestamp <= ?",
       id,
       capture_interval.to_s,
       time_range[0],
-      time_range[1]
-    ])
+      time_range[1])
 
     perf_hash = {}
     vm_perfs.each do |p|

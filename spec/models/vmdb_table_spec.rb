@@ -303,31 +303,38 @@ EOF
       context "all" do
         it "without conditions" do
           t = VmdbTable.vmdb_table_names
-          VmdbTable.all.collect(&:name).should == t
+          expect(VmdbTable.all.collect(&:name)).to eq(t)
+        end
+      end
+
+      context ".where" do
+        it "without conditions" do
+          t = VmdbTable.vmdb_table_names
+          expect(VmdbTable.where({}).collect(&:name)).to eq(t)
         end
 
         context "with conditions" do
           it "of an array of ids" do
             t = VmdbTable.vmdb_table_names[0, 2]
-            VmdbTable.all(:conditions => {:id => [1, 2]}).collect(&:name).should == t
+            expect(VmdbTable.where(:id => [1, 2]).collect(&:name)).to eq(t)
           end
 
           it "of a single id" do
             t = [VmdbTable.vmdb_table_names.second]
-            VmdbTable.all(:conditions => {:id => 2}).collect(&:name).should == t
+            expect(VmdbTable.where(:id => 1).collect(&:name)).to eq(t)
           end
 
           it "of an array of invalid ids" do
-            VmdbTable.all(:conditions => {:id => [650, 651]}).collect(&:name).should        be_empty
+            expect(VmdbTable.where(:id => [650, 651])).to be_empty
           end
 
           it "of an array of both invalid and valid ids" do
             t = [VmdbTable.vmdb_table_names.first]
-            VmdbTable.all(:conditions => {:id => [650, 1]}).collect(&:name).should == t
+            expect(VmdbTable.where(:id => [650, 1]).collect(&:name)).to eq(t)
           end
 
           it "of a single invalid id" do
-            VmdbTable.all(:conditions => {:id => 650}).should        be_empty
+            expect(VmdbTable.where(:id => 650)).to be_empty
           end
         end
       end
