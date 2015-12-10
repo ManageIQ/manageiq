@@ -12,6 +12,7 @@ class ContainerService < ApplicationRecord
   has_many :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
   has_many :selector_parts, -> { where(:section => "selectors") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
   has_many :container_nodes, -> { distinct }, :through => :container_groups
+  belongs_to :container_image_registry
 
   # Needed for metrics
   has_many :metrics,                :as => :resource
