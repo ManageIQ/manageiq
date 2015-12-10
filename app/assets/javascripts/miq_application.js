@@ -303,11 +303,11 @@ function miqDimDiv(divname, status) {
 
 // Check for changes and prompt
 function miqCheckForChanges() {
-  if (ManageIQ.angularApplication.$scope) {
-    if (ManageIQ.angularApplication.$scope.form.$dirty) {
+  if (ManageIQ.angular.scope) {
+    if (ManageIQ.angular.scope.form.$dirty) {
       var answer = confirm(__("Abandon changes?"));
       if (answer) {
-        ManageIQ.angularApplication.$scope.form.$setPristine(true);
+        ManageIQ.angular.scope.form.$setPristine(true);
       }
       return answer;
     }

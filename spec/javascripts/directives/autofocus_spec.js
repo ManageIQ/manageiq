@@ -1,6 +1,6 @@
 describe('autofocus initialization', function() {
   var $scope, form;
-  beforeEach(module('ManageIQ.angularApplication'));
+  beforeEach(module('ManageIQ'));
   beforeEach(inject(function($compile, $rootScope) {
     $scope = $rootScope;
     var element = angular.element(

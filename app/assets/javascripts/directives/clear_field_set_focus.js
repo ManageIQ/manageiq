@@ -1,4 +1,4 @@
-ManageIQ.angularApplication.directive('clearFieldSetFocus', ['$timeout', 'miqService', function($timeout, miqService) {
+ManageIQ.angular.app.directive('clearFieldSetFocus', ['$timeout', 'miqService', function($timeout, miqService) {
   return {
     require: 'ngModel',
     link: function (scope, elem, attr, ctrl) {

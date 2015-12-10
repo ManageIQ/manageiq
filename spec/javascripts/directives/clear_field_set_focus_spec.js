@@ -1,6 +1,6 @@
 describe('clearFieldSetFocus initialization', function() {
   var $scope, form;
-  beforeEach(module('ManageIQ.angularApplication'));
+  beforeEach(module('ManageIQ'));
   beforeEach(inject(function($compile, $rootScope, _miqService_) {
     $scope = $rootScope;
     miqService = _miqService_;

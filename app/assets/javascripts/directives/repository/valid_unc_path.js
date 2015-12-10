@@ -1,4 +1,4 @@
-ManageIQ.angularApplication.directive('checkpath', ['miqService', function (miqService){
+ManageIQ.angular.app.directive('checkpath', ['miqService', function (miqService){
   return {
     require: 'ngModel',
        link: function (scope, elem, attrs, ctrl) {
