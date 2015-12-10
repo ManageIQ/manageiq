@@ -259,7 +259,7 @@ module EmsCommon
     set_form_vars
     @in_a_form = true
     session[:changed] = nil
-    drop_breadcrumb({:name => "Add New #{ui_lookup(:table => @table_name)}", :url => "/#{@table_name}/new"})
+    drop_breadcrumb({:name => "Add a New #{ui_lookup(:table => @table_name)}", :url => "/#{@table_name}/new"})
   end
 
   def create
