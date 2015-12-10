@@ -16,5 +16,5 @@
 
 :javascript
   ManageIQ.angular.app.value('emsCommonFormId', '#{@ems.id || "new"}');
-  angular.bootstrap($($('#form_id').val()), ['ManageIQ'], { strictDi: true });
+  miq_bootstrap($('#form_id').val());
 

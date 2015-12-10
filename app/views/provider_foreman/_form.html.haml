@@ -62,4 +62,4 @@
 
 :javascript
   ManageIQ.angular.app.value('providerForemanFormId', '#{@provider_foreman.id || "new"}');
-  angular.bootstrap(jQuery('#form_div'), ['ManageIQ'], { strictDi: true });
+  miq_bootstrap('#form_div');
