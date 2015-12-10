@@ -246,7 +246,7 @@ EOF
         task_id = VmdbTable.export_queue(@ids.first, :userid => "admin", :action => "Export Tables")
         task_id.should be_kind_of(Integer)
 
-        q = MiqQueue.first(:conditions => {:class_name  => "VmdbTable", :method_name => "export_all_by_id"})
+        q = MiqQueue.find_by(:class_name => "VmdbTable", :method_name => "export_all_by_id")
         q.should_not be_nil
 
         q.delivered(*q.deliver)
@@ -261,7 +261,7 @@ EOF
         taskid = VmdbTable.export_queue(@ids, :userid => "admin", :action => "Export Tables")
         taskid.should be_kind_of(Integer)
 
-        q = MiqQueue.first(:conditions => {:class_name  => "VmdbTable", :method_name => "export_all_by_id"})
+        q = MiqQueue.find_by(:class_name => "VmdbTable", :method_name => "export_all_by_id")
         q.should_not be_nil
 
         q.delivered(*q.deliver)
