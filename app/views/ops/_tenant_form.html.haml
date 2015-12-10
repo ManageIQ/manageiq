@@ -50,4 +50,4 @@
 :javascript
   ManageIQ.angular.app.value('tenantFormId', '#{@tenant.id || "new"}');
   ManageIQ.angular.app.value('tenantType', '#{@tenant_type}');
-  angular.bootstrap(jQuery('#form_div'), ['ManageIQ'], { strictDi: true });
+  miq_bootstrap('#form_div');
