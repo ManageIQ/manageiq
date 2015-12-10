@@ -496,7 +496,7 @@ class ChargebackController < ApplicationController
   def cb_rpt_build_folder_nodes
     @parent_reports = {}
 
-    MiqReportResult.auto_generated.select("miq_report_id, name").group("miq_report_id, name").where(
+    MiqReportResult.auto_generated.select(:miq_report_id, :name).distinct.where(
       :db     => "Chargeback",
       :userid => session[:userid]
     ).sort_by { |sr| sr.name.downcase }.each_with_index do |sr, sr_idx|
@@ -507,7 +507,8 @@ class ChargebackController < ApplicationController
   def cb_rpts_get_all_reps(nodeid)
     @sb[:miq_report_id] = from_cid(nodeid)
     miq_report = MiqReport.find(@sb[:miq_report_id])
-    saved_reports = MiqReportResult.all(:conditions => ["miq_report_id = ? and userid = ?", @sb[:miq_report_id], session[:userid]], :order => "created_on DESC", :select => "id, miq_report_id, name,last_run_on,report_source")
+    saved_reports = miq_report.miq_report_results.where(:userid => session[:userid])
+                    .select("id, miq_report_id, name,last_run_on,report_source").order("created_on DESC")
     @sb[:last_run_on] = {}
     @sb[:timezone_abbr] = @timezone_abbr if @timezone_abbr  # Saving converted time to be displayed on saved reports list view
     saved_reports.each do |s|
