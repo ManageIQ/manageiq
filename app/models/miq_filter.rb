@@ -38,12 +38,11 @@ module MiqFilter
       if reflection.macro == :has_one
         result = [obj.send(reflection.name)]
       else
-        result = obj.send(reflection.name).find(:all,
-                                                :order      => options[:order],
-                                                :offset     => options[:offset],
-                                                :limit      => options[:limit],
-                                                :conditions => options[:conditions]
-                                               )
+        result = obj.send(reflection.name)
+                 .where(options[:conditions])
+                 .order(options[:order])
+                 .offset(options[:offset])
+                 .limit(options[:limit])
       end
       total_count = result.length
     end
