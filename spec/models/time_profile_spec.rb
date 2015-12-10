@@ -180,7 +180,7 @@ describe TimeProfile do
       FactoryGirl.create(:time_profile, :tz => "tz")
       FactoryGirl.create(:time_profile, :tz => "other_tz")
 
-      expect(TimeProfile.all_timezones).to eq(%w(tz other_tz))
+      expect(TimeProfile.all_timezones).to match_array(%w(tz other_tz))
     end
   end
 
