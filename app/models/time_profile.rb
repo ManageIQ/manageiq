@@ -17,12 +17,12 @@ class TimeProfile < ActiveRecord::Base
   after_create :rebuild_daily_metrics_on_create
   after_save   :rebuild_daily_metrics_on_save
 
-  def self.find_all_with_entire_tz(*args)
-    all(*args).select(&:entire_tz?)
+  def self.find_all_with_entire_tz
+    all.select(&:entire_tz?)
   end
 
-  def self.all_timezones(*args)
-    all(*args).collect(&:tz).uniq
+  def self.all_timezones
+    select(%w(id profile)).collect(&:tz).uniq
   end
 
   def self.seed
@@ -127,6 +127,26 @@ class TimeProfile < ActiveRecord::Base
     )
   end
 
+  # Support for multi-region DB. We need to try to find a time profile in each
+  # region that matches the selected profile to ensure that we get results for
+  # all the regions in the database. We only want one match from each region
+  # otherwise we'll end up with duplicate daily rows.
+  def profile_for_each_region
+    if rollup_daily_metrics
+      TimeProfile.rollup_daily_metrics.select { |p| p.profile == profile }
+        .group_by(&:region_id).values.map(&:first)
+    else
+      TimeProfile.none
+    end
+  end
+
+  def for_user_tz?(user_id, user_tz)
+    user_id = user_id.to_s
+    tz == user_tz &&
+      (profile_type == "global" ||
+        (profile_type == "user" && profile_key == user_id))
+  end
+
   private
 
   def rebuild_daily_metrics_on_create
@@ -143,23 +163,28 @@ class TimeProfile < ActiveRecord::Base
     @rebuild_daily_metrics_on_create = false
   end
 
+  # TODO: use AR "or" here
+  def self.for_user(user_id)
+    where("profile_type = ? or (profile_type = ? and profile_key = ?)", "global", "user", user_id)
+  end
+
+  def self.ordered_by_desc
+    order("lower(description) ASC")
+  end
+
   def self.profiles_for_user(user_id, region_id)
-    TimeProfile
-      .in_region(region_id)
-      .where("profile_type = ? or (profile_type = ? and profile_key = ?)", "global", "user", user_id)
-      .where(:rollup_daily_metrics => true)
-      .order("lower(description) ASC")
+    in_region(region_id)
+      .for_user(user_id)
+      .rollup_daily_metrics
+      .ordered_by_desc
   end
 
   def self.profile_for_user_tz(user_id, user_tz)
-    TimeProfile.rollup_daily_metrics.detect { |tp| tp.tz == user_tz && profile_type_for_tz?(tp, user_id) }
+    TimeProfile.rollup_daily_metrics.detect { |tp| tp.for_user_tz?(user_id, user_tz) }
   end
 
-  def self.profile_type_for_tz?(tp, user_id)
-    tp.profile_type == "global" || (tp.profile_type == "user" && tp.profile_key == user_id)
-  end
-
-  def self.default_time_profile
-    TimeProfile.rollup_daily_metrics.detect { |tp| tp.tz == DEFAULT_TZ && tp.entire_tz? }
+  def self.default_time_profile(tz = DEFAULT_TZ)
+    tz ||= DEFAULT_TZ
+    rollup_daily_metrics.find_all_with_entire_tz.detect { |tp| tp.tz_or_default == tz }
   end
 end

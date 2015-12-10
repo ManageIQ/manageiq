@@ -288,9 +288,9 @@ class ConfigurationController < ApplicationController
   def show_timeprofiles
     build_tabs if params[:action] == "change_tab" || ["cancel", "add", "save"].include?(params[:button])
     if admin_user?
-      @timeprofiles = TimeProfile.in_my_region.all(:order => "lower(description) ASC")
+      @timeprofiles = TimeProfile.in_my_region.ordered_by_desc
     else
-      @timeprofiles = TimeProfile.in_my_region.all(:conditions => ["(profile_type = ? or (profile_type = ? and  profile_key = ?))", "global", "user", session[:userid]], :order => "lower(description) ASC")
+      @timeprofiles = TimeProfile.in_my_region.for_user(session[:userid]).ordered_by_desc
     end
     timeprofile_set_days_hours
     drop_breadcrumb(:name => "Time Profiles", :url => "/configuration/change_tab/?tab=4")
