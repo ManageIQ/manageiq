@@ -4,7 +4,10 @@ module MiddlewareServerHelper::TextualSummary
   #
 
   def textual_group_properties
-    %i(name)
+
+    @prop_hash = eval(@record.properties)
+
+    %i(name host bind_addr product version)
   end
 
   def textual_group_relationships
@@ -15,9 +18,9 @@ module MiddlewareServerHelper::TextualSummary
   end
 
 
-  # def textual_group_smart_management
-  #   %i(zone tags)
-  # end
+  def textual_group_smart_management
+    []
+  end
 
   # def textual_group_topology
   #   items = %w(topology)
@@ -28,7 +31,23 @@ module MiddlewareServerHelper::TextualSummary
   #
 
   def textual_name
-    @ems.name
+    @record.name
+  end
+
+  def textual_host
+    @record.host
+  end
+
+  def textual_bind_addr
+    @prop_hash['Bound Address']
+  end
+
+  def textual_product
+    @record.product
+  end
+
+  def textual_version
+    @prop_hash['Version']
   end
 
   # def textual_type

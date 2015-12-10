@@ -8,6 +8,7 @@ module ManageIQ::Providers
     DEFAULT_PORT = 80
     default_value_for :port, DEFAULT_PORT
     has_many :middleware_servers, :foreign_key => :ems_id
+    has_many :middleware_deployments, :foreign_key => :ems_id
 
     def verify_credentials(auth_type = nil, options = {})
       auth_type ||= 'default'
@@ -32,11 +33,11 @@ module ManageIQ::Providers
     end
 
     def eaps(feed)
-      connection.list_resources_for_type(feed, 'WildFly Server')
+      connection.list_resources_for_type(feed, 'WildFly Server', true)
     end
 
-    def deployments(feed)
-      connection.list_resources_for_type(feed, 'Deployment')
+    def children(eap_parent)
+      connection.list_child_resources(eap_parent)
     end
 
     # UI methods for determining availability of fields

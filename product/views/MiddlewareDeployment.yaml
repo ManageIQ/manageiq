@@ -9,24 +9,22 @@
 #
 
 # Report title
-title: Middleware Servers
+title: Middleware Deployments
 
 # Menu name
-name: Middleware Servers
+name: Middleware Deployments
 
 # Main DB table report is based on
-db: MiddlewareServer
+db: MiddlewareDeployments
 
 # Columns to fetch from the main table
 cols:
-- feed
-- host
 - name
 
 
 # Included tables (joined, has_one, has_many) and columns
 include:
-  ext_management_system:
+  middleware_server:
     columns:
     - name
 
@@ -36,16 +34,12 @@ include:
 # Order of columns (from all tables)
 col_order:
 - name
-- host
-- feed
-- ext_management_system.name
+- middleware_server.name
 
 # Column titles, in order
 headers:
-- Server Name
-- Host
-- Feed
-- Provider
+- Deployment Name
+- Server
 
 # Condition(s) string for the SQL query
 conditions:
@@ -56,12 +50,11 @@ order: Ascending
 # Columns to sort the report on, in order
 sortby:
 - name
-- host
-- feed
-- ext_management_system.name
+- middleware_server.name
 
 # Group rows (y=yes,n=no,c=count)
-group: n
+group: y
+
 
 # Graph type
 #   Bar
