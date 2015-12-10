@@ -12,7 +12,7 @@ ext = "yaml"
 
 dir = Dir.pwd
 
-MiqPolicySet.find(:all).each do |ps|
+MiqPolicySet.all.each do |ps|
   begin
     contents = ps.export_to_yaml if ext == "yaml"
     contents = ps.export_to_xml  if ext == "xml"
