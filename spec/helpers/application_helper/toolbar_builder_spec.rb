@@ -1711,8 +1711,10 @@ describe ApplicationHelper do
 
     def setup_firefox_with_linux
       # setup for mocking is_browser? and is_browser_os?
-      allow_any_instance_of(ActionController::TestSession).to receive(:fetch_path).with(:browser, :name).and_return('firefox')
-      allow_any_instance_of(ActionController::TestSession).to receive(:fetch_path).with(:browser, :os).and_return('linux')
+      allow_any_instance_of(ActionController::TestSession)
+        .to receive(:fetch_path).with(:browser, :name).and_return('firefox')
+      allow_any_instance_of(ActionController::TestSession)
+        .to receive(:fetch_path).with(:browser, :os).and_return('linux')
     end
 
     ['list', 'tile', 'grid'].each do |g|
@@ -1964,7 +1966,7 @@ describe ApplicationHelper do
         before do
           @id = "host_miq_request_new"
           allow(@record).to receive(:mac_address).and_return("00:0D:93:13:51:1A")
-          allow(PxeServer).to receive(:all).and_return(['p1', 'p2'])
+          allow(PxeServer).to receive(:all).and_return(%w(p1 p2))
         end
         it "when without mac address" do
           allow(@record).to receive(:mac_address).and_return(false)
@@ -2107,7 +2109,7 @@ describe ApplicationHelper do
       context "and id = storage_delete" do
         before { @id = "storage_delete" }
         it "when with VMs or Hosts" do
-          allow(@record).to receive(:hosts).and_return(['h1', 'h2'])
+          allow(@record).to receive(:hosts).and_return(%w(h1 h2))
           expect(subject).to eq("Only Datastore without VMs and Hosts can be removed")
 
           @record.stub(:hosts => [], :vms_and_templates => ['v1'])

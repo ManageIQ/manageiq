@@ -157,7 +157,7 @@ EOD
     end
 
     it 'returns new Date with iso string as param' do
-      expect(js_format_date(Time.at(946684800).utc)).to eq("new Date('2000-01-01T00:00:00Z')")
+      expect(js_format_date(Time.at(946_684_800).utc)).to eq("new Date('2000-01-01T00:00:00Z')")
     end
   end
 end

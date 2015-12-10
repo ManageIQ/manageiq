@@ -245,9 +245,9 @@ describe ApplicationHelper do
           db = d
           @last_action = (d == "Account" ? "users" : d.tableize)
           expect(url_for_db(db, @action)).to eq(url_for(:controller => "vm_or_template",
-                                                    :action     => @lastaction,
-                                                    :id         => @vm,
-                                                    :show       => @id))
+                                                        :action     => @lastaction,
+                                                        :id         => @vm,
+                                                        :show       => @id))
         end
       end
 
@@ -267,7 +267,8 @@ describe ApplicationHelper do
       ["Patch", "GuestApplication"].each do |d|
         it "and db = #{d}" do
           db = d
-          expect(url_for_db(db, @action)).to eq(url_for(:controller => "host", :action => @lastaction, :id => @host, :show => @id))
+          expect(url_for_db(db, @action))
+            .to eq(url_for(:controller => "host", :action => @lastaction, :id => @host, :show => @id))
         end
       end
 
@@ -533,13 +534,13 @@ describe ApplicationHelper do
 
   context "#to_cid" "(id)" do
     it "converts record id to compressed id" do
-      expect(to_cid(12000000000056)).to eq('12r56')
+      expect(to_cid(12_000_000_000_056)).to eq('12r56')
     end
   end
 
   context "#from_cid" "(cid)" do
     it "converts compressed id to record id" do
-      expect(from_cid("12r56")).to eq(12000000000056)
+      expect(from_cid("12r56")).to eq(12_000_000_000_056)
     end
   end
 
@@ -647,58 +648,69 @@ describe ApplicationHelper do
 
   context "#is_browser_ie7?" do
     it "when browser's explorer version 7.x" do
-      allow_any_instance_of(ActionController::TestSession).to receive(:fetch_path).with(:browser, :name).and_return('explorer')
-      allow_any_instance_of(ActionController::TestSession).to receive(:fetch_path).with(:browser, :version).and_return('7.10')
+      allow_any_instance_of(ActionController::TestSession)
+        .to receive(:fetch_path).with(:browser, :name).and_return('explorer')
+      allow_any_instance_of(ActionController::TestSession)
+        .to receive(:fetch_path).with(:browser, :version).and_return('7.10')
       expect(is_browser_ie7?).to be_truthy
     end
 
     it "when browser's NOT explorer version 7.x" do
-      allow_any_instance_of(ActionController::TestSession).to receive(:fetch_path).with(:browser, :name).and_return('explorer')
-      allow_any_instance_of(ActionController::TestSession).to receive(:fetch_path).with(:browser, :version).and_return('6.10')
+      allow_any_instance_of(ActionController::TestSession)
+        .to receive(:fetch_path).with(:browser, :name).and_return('explorer')
+      allow_any_instance_of(ActionController::TestSession)
+        .to receive(:fetch_path).with(:browser, :version).and_return('6.10')
       expect(is_browser_ie7?).to be_falsey
     end
   end
 
   context "#is_browser_ie?" do
     it "when browser's explorer" do
-      allow_any_instance_of(ActionController::TestSession).to receive(:fetch_path).with(:browser, :name).and_return('explorer')
+      allow_any_instance_of(ActionController::TestSession)
+        .to receive(:fetch_path).with(:browser, :name).and_return('explorer')
       expect(is_browser_ie?).to be_truthy
     end
 
     it "when browser's NOT explorer" do
-      allow_any_instance_of(ActionController::TestSession).to receive(:fetch_path).with(:browser, :name).and_return('safari')
+      allow_any_instance_of(ActionController::TestSession)
+        .to receive(:fetch_path).with(:browser, :name).and_return('safari')
       expect(is_browser_ie?).to be_falsey
     end
   end
 
   context "#is_browser?" do
     it "when browser's name is in the list" do
-      allow_any_instance_of(ActionController::TestSession).to receive(:fetch_path).with(:browser, :name).and_return('safari')
-      expect(is_browser?(["firefox", "opera", "safari"])).to be_truthy
+      allow_any_instance_of(ActionController::TestSession)
+        .to receive(:fetch_path).with(:browser, :name).and_return('safari')
+      expect(is_browser?(%w(firefox opera safari))).to be_truthy
     end
 
     it "when browser's name is NOT in the list" do
-      allow_any_instance_of(ActionController::TestSession).to receive(:fetch_path).with(:browser, :name).and_return('explorer')
-      expect(is_browser?(["firefox", "opera", "safari"])).to be_falsey
+      allow_any_instance_of(ActionController::TestSession)
+        .to receive(:fetch_path).with(:browser, :name).and_return('explorer')
+      expect(is_browser?(%w(firefox opera safari))).to be_falsey
     end
   end
 
   context "#is_browser_os?" do
     it "when browser's OS is in the list" do
-      allow_any_instance_of(ActionController::TestSession).to receive(:fetch_path).with(:browser, :os).and_return('windows')
-      expect(is_browser_os?(["windows", "linux"])).to be_truthy
+      allow_any_instance_of(ActionController::TestSession)
+        .to receive(:fetch_path).with(:browser, :os).and_return('windows')
+      expect(is_browser_os?(%w(windows linux))).to be_truthy
     end
 
     it "when browser's OS is NOT in the list" do
-      allow_any_instance_of(ActionController::TestSession).to receive(:fetch_path).with(:browser, :os).and_return('macos')
-      expect(is_browser_os?(["windows", "linux"])).to be_falsey
+      allow_any_instance_of(ActionController::TestSession)
+        .to receive(:fetch_path).with(:browser, :os).and_return('macos')
+      expect(is_browser_os?(%w(windows linux))).to be_falsey
     end
   end
 
   context "#browser_info" do
     it "preserves the case" do
       type = :a_type
-      allow_any_instance_of(ActionController::TestSession).to receive(:fetch_path).with(:browser, type).and_return('checked_by_A_TYPE')
+      allow_any_instance_of(ActionController::TestSession)
+        .to receive(:fetch_path).with(:browser, type).and_return('checked_by_A_TYPE')
       expect(browser_info(type)).to eq('checked_by_A_TYPE')
     end
   end
@@ -1019,19 +1031,17 @@ describe ApplicationHelper do
       it "does not replace existing trees" do
         x_tree_init(:svcs_tree, :xxx, "XXX")
 
-        expect(@sb[:trees][:svcs_tree]).to eq({:tree => :svcs_tree})
+        expect(@sb[:trees][:svcs_tree]).to eq(:tree => :svcs_tree)
       end
 
       it "has default values" do
         x_tree_init(:vm_filter_tree, :vm_filter, "Vm")
 
-        expect(@sb[:trees][:vm_filter_tree]).to eq({
-          :tree       => :vm_filter_tree,
-          :type       => :vm_filter,
-          :leaf       => "Vm",
-          :add_root   => true,
-          :open_nodes => []
-        })
+        expect(@sb[:trees][:vm_filter_tree]).to eq(:tree       => :vm_filter_tree,
+                                                   :type       => :vm_filter,
+                                                   :leaf       => "Vm",
+                                                   :add_root   => true,
+                                                   :open_nodes => [])
       end
 
       it "can override default values" do
@@ -1042,15 +1052,13 @@ describe ApplicationHelper do
                     :full_ids   => true
                    )
 
-        expect(@sb[:trees][:vm_filter_tree]).to eq({
-          :tree       => :vm_filter_tree,
-          :type       => :vm_filter,
-          :leaf       => "Vm",
-          :add_root   => false,
-          :open_nodes => [:a],
-          :open_all   => true,
-          :full_ids   => true
-        })
+        expect(@sb[:trees][:vm_filter_tree]).to eq(:tree       => :vm_filter_tree,
+                                                   :type       => :vm_filter,
+                                                   :leaf       => "Vm",
+                                                   :add_root   => false,
+                                                   :open_nodes => [:a],
+                                                   :open_all   => true,
+                                                   :full_ids   => true)
       end
     end
 
@@ -1086,19 +1094,19 @@ describe ApplicationHelper do
         it "when value is 13 long" do
           text = truncate_for_quad("ABCDEooo12345")
           expect(text).to eq(case trunc[0]
-                         when "f" then "...DEooo12345"
-                         when "m" then "ABCDE...12345"
-                         when "b" then "ABCDEooo12..."
-                         end)
+                             when "f" then "...DEooo12345"
+                             when "m" then "ABCDE...12345"
+                             when "b" then "ABCDEooo12..."
+                             end)
         end
 
         it "when value is 25 long" do
           text = truncate_for_quad("ABCDEooooooooooooooo12345")
           expect(text).to eq(case trunc[0]
-                         when "f" then "...ooooo12345"
-                         when "m" then "ABCDE...12345"
-                         when "b" then "ABCDEooooo..."
-                         end)
+                             when "f" then "...ooooo12345"
+                             when "m" then "ABCDE...12345"
+                             when "b" then "ABCDEooooo..."
+                             end)
         end
       end
     end
@@ -1555,7 +1563,8 @@ describe ApplicationHelper do
     it "returns correct image for job record based upon it's status" do
       job_attrs = {"state" => "running", "status" => "ok"}
       image = listicon_image_tag("Job", job_attrs)
-      expect(image).to eq("<img valign=\"middle\" width=\"16\" height=\"16\" title=\"Status = Running\" src=\"/images/icons/new/job-running.png\" />")
+      expect(image).to eq("<img valign=\"middle\" width=\"16\" height=\"16\" title=\"Status = Running\"" \
+                          " src=\"/images/icons/new/job-running.png\" />")
     end
   end
 
