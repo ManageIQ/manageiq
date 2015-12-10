@@ -16,8 +16,8 @@ describe "power_off Method Validation" do
   it "powers off a vm in a 'powered on' state" do
     ws
 
-    MiqQueue.exists?(:method_name => 'stop', :instance_id => @vm.id,
-    :role => 'ems_operations').should be_true
+    expect(MiqQueue.exists?(:method_name => 'stop', :instance_id => @vm.id,
+    :role => 'ems_operations')).to be_truthy
   end
 
   it "does not queue any operation for a vm in 'powered_off' state" do
@@ -25,6 +25,6 @@ describe "power_off Method Validation" do
 
     ws
 
-    MiqQueue.exists?(:method_name => 'stop', :instance_id => @vm.id, :role => 'ems_operations').should be_false
+    expect(MiqQueue.exists?(:method_name => 'stop', :instance_id => @vm.id, :role => 'ems_operations')).to be_falsey
   end
 end

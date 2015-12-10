@@ -49,7 +49,7 @@ describe "FilterByDialogParameters Automate Method" do
       ws = run_automate_method(ServiceTemplate.find_by_name("top"),
                                root_service_template_task,
                                FactoryGirl.create(:service))
-      expect(ws.root['include_service']).to be_true
+      expect(ws.root['include_service']).to be_truthy
     end
 
     it "with vm_serice" do
@@ -57,7 +57,7 @@ describe "FilterByDialogParameters Automate Method" do
       ws = run_automate_method(ServiceTemplate.find_by_name("vm_service"),
                                root_service_template_task,
                                FactoryGirl.create(:service))
-      expect(ws.root['include_service']).to be_true
+      expect(ws.root['include_service']).to be_truthy
     end
 
     it "with missing dialog_environment" do
@@ -73,7 +73,7 @@ describe "FilterByDialogParameters Automate Method" do
       ws = run_automate_method(ServiceTemplate.find_by_name("vm_service"),
                                root_service_template_task,
                                FactoryGirl.create(:service))
-      expect(ws.root['include_service']).to be_false
+      expect(ws.root['include_service']).to be_falsey
     end
   end
 end

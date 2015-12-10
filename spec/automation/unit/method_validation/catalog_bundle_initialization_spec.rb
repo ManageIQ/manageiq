@@ -70,9 +70,9 @@ describe "CatalogBundleInitialization Automate Method" do
     def check_svc_attrs
       @stp.reload
       service = @stp.destination
-      service.description.should eql(@service_description)
-      service.name.should eql(@service_name)
-      service.tags[0].name.should eql('/managed/tracker/gps')
+      expect(service.description).to eql(@service_description)
+      expect(service.name).to eql(@service_name)
+      expect(service.tags[0].name).to eql('/managed/tracker/gps')
     end
 
     def process_stp(options)

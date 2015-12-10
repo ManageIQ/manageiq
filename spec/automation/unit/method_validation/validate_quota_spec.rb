@@ -26,7 +26,7 @@ describe "Quota Validation" do
       @quota_limit_max  = YAML.dump(:storage => 0, :vms => 0, :cpu => 0, :memory => 0)
       @quota_limit_warn = YAML.dump(:storage => 0, :vms => 0, :cpu => 0, :memory => 0)
       ws = run_automate_method(@miq_provision_request)
-      ws.root['ae_result'].should == 'ok'
+      expect(ws.root['ae_result']).to eq('ok')
     end
   end
 

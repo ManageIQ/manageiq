@@ -13,14 +13,14 @@ describe "openstack_check_pre_retirement Method Validation" do
 
   it "returns 'retry' for running instances" do
     ws = MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}#openstack", @user)
-    ws.root['ae_result'].should be == 'retry'
-    ws.root['vm'].power_state.should be == 'on'
+    expect(ws.root['ae_result']).to eq('retry')
+    expect(ws.root['vm'].power_state).to eq('on')
   end
 
   it "returns 'ok' for stopped instances" do
     @vm.update_attributes(:raw_power_state => "SHUTOFF")
     ws = MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}#openstack", @user)
-    ws.root['ae_result'].should be == 'ok'
-    ws.root['vm'].power_state.should be == 'off'
+    expect(ws.root['ae_result']).to eq('ok')
+    expect(ws.root['vm'].power_state).to eq('off')
   end
 end

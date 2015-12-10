@@ -13,12 +13,12 @@ describe "openstack_pre_retirement Method Validation" do
 
   it "call suspend for running instances" do
     MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}#Openstack", @user)
-    MiqQueue.exists?(:method_name => 'suspend', :instance_id => @vm.id, :role => 'ems_operations').should be_true
+    expect(MiqQueue.exists?(:method_name => 'suspend', :instance_id => @vm.id, :role => 'ems_operations')).to be_truthy
   end
 
   it "does not call suspend for powered off instances" do
     @vm.update_attributes(:raw_power_state => 'SHUTOFF')
     MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}#Openstack", @user)
-    MiqQueue.exists?(:method_name => 'suspend', :instance_id => @vm.id, :role => 'ems_operations').should be_false
+    expect(MiqQueue.exists?(:method_name => 'suspend', :instance_id => @vm.id, :role => 'ems_operations')).to be_falsey
   end
 end

@@ -21,7 +21,7 @@ describe "MiqAeStateMachineRetry" do
                         :miq_group_id     => @user.current_group_id,
                         :tenant_id        => @user.current_tenant.id,
                         :automate_message => 'create'}
-    MiqServer.stub(:my_zone).and_return('default')
+    allow(MiqServer).to receive(:my_zone).and_return('default')
     clear_domain
   end
 
@@ -179,13 +179,13 @@ describe "MiqAeStateMachineRetry" do
     expected = {'three' => 3, 'one'  => 1, 'two'  => 2, 'gravy' => 'train'}
     send_ae_request_via_queue(@automate_args)
     status, _message, ws = deliver_ae_request_from_queue
-    status.should_not eq(MiqQueue::STATUS_ERROR)
-    ws.should_not be_nil
-    MiqQueue.count.should eq(2)
+    expect(status).not_to eq(MiqQueue::STATUS_ERROR)
+    expect(ws).not_to be_nil
+    expect(MiqQueue.count).to eq(2)
     status, _message, ws = deliver_ae_request_from_queue
-    status.should_not eq(MiqQueue::STATUS_ERROR)
-    ws.persist_state_hash.should eq(expected)
-    ws.root.attributes['finished'].should be_true
+    expect(status).not_to eq(MiqQueue::STATUS_ERROR)
+    expect(ws.persist_state_hash).to eq(expected)
+    expect(ws.root.attributes['finished']).to be_truthy
   end
 
   it "check max retries" do
@@ -193,10 +193,10 @@ describe "MiqAeStateMachineRetry" do
     send_ae_request_via_queue(@automate_args)
     (@max_retries + 2).times do
       status, _message, ws = deliver_ae_request_from_queue
-      status.should_not eq(MiqQueue::STATUS_ERROR)
-      ws.should_not be_nil
+      expect(status).not_to eq(MiqQueue::STATUS_ERROR)
+      expect(ws).not_to be_nil
     end
-    deliver_ae_request_from_queue.should be_nil
+    expect(deliver_ae_request_from_queue).to be_nil
   end
 
   it "check max_time" do
@@ -223,8 +223,8 @@ describe "MiqAeStateMachineRetry" do
     create_restart_model(simpleton_script, simpleton_script, perpetual_restart_script)
     send_ae_request_via_queue(@automate_args)
     status, _message, ws = deliver_ae_request_from_queue
-    status.should_not eq(MiqQueue::STATUS_ERROR)
-    ws.should_not be_nil
+    expect(status).not_to eq(MiqQueue::STATUS_ERROR)
+    expect(ws).not_to be_nil
     q = MiqQueue.where(:state => 'ready').first
     expect(q.args[0][:state]).to eql('state1')
   end
@@ -233,8 +233,8 @@ describe "MiqAeStateMachineRetry" do
     create_restart_model(simpleton_script, simpleton_script, perpetual_restart_script_with_nextstate)
     send_ae_request_via_queue(@automate_args)
     status, _message, ws = deliver_ae_request_from_queue
-    status.should_not eq(MiqQueue::STATUS_ERROR)
-    ws.should_not be_nil
+    expect(status).not_to eq(MiqQueue::STATUS_ERROR)
+    expect(ws).not_to be_nil
     q = MiqQueue.where(:state => 'ready').first
     expect(q.args[0][:state]).to eql('state2')
   end
