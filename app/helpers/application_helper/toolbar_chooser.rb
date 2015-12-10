@@ -391,6 +391,8 @@ class ApplicationHelper::ToolbarChooser
         return "storages_center_tb"
       elsif (@layout == "vm" || @layout == "host") && @display == "performance"
         return "#{@explorer ? "x_" : ""}vm_performance_tb"
+      elsif @display == "dashboard"
+        return "#{@layout}_center_tb"
       end
     elsif @lastaction == "compare_miq" || @lastaction == "compare_compress"
       return "compare_center_tb"

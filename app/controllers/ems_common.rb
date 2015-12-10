@@ -38,6 +38,10 @@ module EmsCommon
       @lastaction = "show_timeline"
       tl_build_timeline                       # Create the timeline report
       drop_breadcrumb(:name => "Timelines", :url => show_link(@record, :refresh => "n", :display => "timeline"))
+    elsif @display == "dashboard"
+      @showtype = "dashboard"
+      @lastaction = "show_dashboard"
+      drop_breadcrumb(:name => @ems.name + " (Dashboard)", :url => show_link(@ems))
     elsif ["instances", "images", "miq_templates", "vms"].include?(@display) || session[:display] == "vms" && params[:display].nil?
       if @display == "instances"
         title = "Instances"

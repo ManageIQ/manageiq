@@ -303,6 +303,7 @@ Vmdb::Application.routes.draw do
         show
         tl_chooser
         wait_for_task
+        show_list
         tagging_edit
         tag_edit_form_field_changed
       ),
