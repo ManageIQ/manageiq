@@ -9,9 +9,9 @@ describe TimeProfile do
 
   it "will default to the correct profile values" do
     t = TimeProfile.new
-    t.days.should == TimeProfile::ALL_DAYS
-    t.hours.should == TimeProfile::ALL_HOURS
-    t.tz.should    be_nil
+    expect(t.days).to eq(TimeProfile::ALL_DAYS)
+    expect(t.hours).to eq(TimeProfile::ALL_HOURS)
+    expect(t.tz).to be_nil
   end
 
   context "will seed the database" do
@@ -21,32 +21,32 @@ describe TimeProfile do
 
     it do
       t = TimeProfile.first
-      t.days.should == TimeProfile::ALL_DAYS
-      t.hours.should == TimeProfile::ALL_HOURS
-      t.tz.should == TimeProfile::DEFAULT_TZ
-      t.entire_tz?.should be_true
+      expect(t.days).to eq(TimeProfile::ALL_DAYS)
+      expect(t.hours).to eq(TimeProfile::ALL_HOURS)
+      expect(t.tz).to eq(TimeProfile::DEFAULT_TZ)
+      expect(t).to be_entire_tz
     end
 
     it "but not reseed when called twice" do
       TimeProfile.seed
-      TimeProfile.count.should == 1
+      expect(TimeProfile.count).to eq(1)
       t = TimeProfile.first
-      t.days.should == TimeProfile::ALL_DAYS
-      t.hours.should == TimeProfile::ALL_HOURS
-      t.tz.should == TimeProfile::DEFAULT_TZ
-      t.entire_tz?.should be_true
+      expect(t.days).to eq(TimeProfile::ALL_DAYS)
+      expect(t.hours).to eq(TimeProfile::ALL_HOURS)
+      expect(t.tz).to eq(TimeProfile::DEFAULT_TZ)
+      expect(t).to be_entire_tz
     end
   end
 
   it "will return the correct values for tz_or_default" do
     t = TimeProfile.new
-    t.tz_or_default.should == TimeProfile::DEFAULT_TZ
-    t.tz_or_default("Hawaii").should == "Hawaii"
+    expect(t.tz_or_default).to eq(TimeProfile::DEFAULT_TZ)
+    expect(t.tz_or_default("Hawaii")).to eq("Hawaii")
 
     t.tz = "Hawaii"
-    t.tz.should == "Hawaii"
-    t.tz_or_default.should == "Hawaii"
-    t.tz_or_default("Alaska").should == "Hawaii"
+    expect(t.tz).to eq("Hawaii")
+    expect(t.tz_or_default).to eq("Hawaii")
+    expect(t.tz_or_default("Alaska")).to eq("Hawaii")
   end
 
   it "will not rollup daily performances on create if rollups are disabled" do
@@ -122,7 +122,7 @@ describe TimeProfile do
                          :profile_key          => "foo",
                          :rollup_daily_metrics => true)
       tp = TimeProfile.profiles_for_user("foo", MiqRegion.my_region_number)
-      tp.count.should == 2
+      expect(tp.count).to eq(2)
     end
   end
 
@@ -146,7 +146,7 @@ describe TimeProfile do
                          :tz                   => "foo_tz",
                          :rollup_daily_metrics => true)
       tp = TimeProfile.profile_for_user_tz("foo", "foo_tz")
-      tp.description.should == "test2"
+      expect(tp.description).to eq("test2")
     end
   end
 
@@ -180,7 +180,7 @@ describe TimeProfile do
       FactoryGirl.create(:time_profile, :tz => "tz")
       FactoryGirl.create(:time_profile, :tz => "other_tz")
 
-      expect(TimeProfile.all_timezones).to eq(%w(tz other_tz))
+      expect(TimeProfile.all_timezones).to match_array(%w(tz other_tz))
     end
   end
 
@@ -221,21 +221,21 @@ describe TimeProfile do
 
   def assert_rebuild_daily_queued
     q_all = MiqQueue.all
-    q_all.length.should == 1
-    q_all[0].class_name.should == "TimeProfile"
-    q_all[0].instance_id.should == @tp.id
-    q_all[0].method_name.should == "rebuild_daily_metrics"
+    expect(q_all.length).to eq(1)
+    expect(q_all[0].class_name).to eq("TimeProfile")
+    expect(q_all[0].instance_id).to eq(@tp.id)
+    expect(q_all[0].method_name).to eq("rebuild_daily_metrics")
   end
 
   def assert_destroy_queued
     q_all = MiqQueue.all
-    q_all.length.should == 1
-    q_all[0].class_name.should == "TimeProfile"
-    q_all[0].instance_id.should == @tp.id
-    q_all[0].method_name.should == "destroy_metric_rollups"
+    expect(q_all.length).to eq(1)
+    expect(q_all[0].class_name).to eq("TimeProfile")
+    expect(q_all[0].instance_id).to eq(@tp.id)
+    expect(q_all[0].method_name).to eq("destroy_metric_rollups")
   end
 
   def assert_nothing_queued
-    MiqQueue.count.should == 0
+    expect(MiqQueue.count).to eq(0)
   end
 end
