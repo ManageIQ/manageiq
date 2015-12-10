@@ -26,6 +26,10 @@ class MiqSearch < ActiveRecord::Base
     Rbac.filtered(targets, options.merge(:class => db, :filter => filter).merge(opts))
   end
 
+  def self.visible_to_all
+    where("search_type=? or (search_type=? and (search_key is null or search_key<>?))", "global", "default", "_hidden_")
+  end
+
   def self.get_expressions_by_model(db)
     get_expressions(:db => db.to_s)
   end

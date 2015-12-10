@@ -48,16 +48,11 @@ class TreeBuilderForemanConfiguredSystems < TreeBuilder
   end
 
   def x_get_global_filter_search_results(leaf)
-    MiqSearch
-      .where(:db => leaf)
-      .where("search_type=? or (search_type=? and (search_key is null or search_key<>?))", "global", "default", "_hidden_")
-      .sort_by { |a| a.description.downcase }
+    MiqSearch.where(:db => leaf).visible_to_all.sort_by { |a| a.description.downcase }
   end
 
   def x_get_my_filter_search_results(leaf)
-    MiqSearch
-      .where(:db => leaf)
-      .where(:search_type => "user", :search_key => User.current_user.userid)
+    MiqSearch.where(:db => leaf, :search_type => "user", :search_key => User.current_user.userid)
       .sort_by { |a| a.description.downcase }
   end
 end
