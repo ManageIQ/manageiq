@@ -52,8 +52,8 @@ headers:
 - Image Path
 - Display Name
 - Description
-- Enable Run Levels
-- Disble Run Levels
+- Enabled Run Levels
+- Disabled Run Levels
 
 # Condition(s) string for the SQL query
 conditions: 
