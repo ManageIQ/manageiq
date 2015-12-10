@@ -150,7 +150,7 @@ class MiqSmisAgent < StorageManager
   end
 
   def self.update_stats
-    find(:all, :conditions => {:agent_type => 'SMIS'}).each do |agent|
+    where(:agent_type => 'SMIS').each do |agent|
       # TODO: Log hostname, not ipaddress
       _log.info "Agent: #{agent.ipaddress}"
 
@@ -197,7 +197,7 @@ class MiqSmisAgent < StorageManager
   end
 
   def self.update_status
-    find(:all, :conditions => {:agent_type => 'SMIS'}).each do |agent|
+    where(:agent_type => 'SMIS').each do |agent|
       # TODO: Log hostname, not ipaddress
       _log.info "Agent: #{agent.ipaddress}"
 
