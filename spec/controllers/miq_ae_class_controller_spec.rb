@@ -26,7 +26,7 @@ describe MiqAeClassController do
       id = "aec-#{cls.id}"
       fq_name = cls.fqname
       controller.send(:set_right_cell_text, id, cls)
-      expect(assigns(:sb)[:namespace_path]).to eq(fq_name.gsub!(/\//, " / "))
+      expect(assigns(:sb)[:namespace_path]).to eq(fq_name.gsub!(%r{\/}, " / "))
 
       id = "root"
       fq_name = ""
@@ -281,7 +281,8 @@ describe MiqAeClassController do
         before do
           allow(MiqAeInstance).to receive(:find_by_id).with(123).and_return(miq_ae_instance)
           allow(miq_ae_instance).to receive(:ae_class).and_return(miq_ae_class)
-          allow(MiqAeInstance).to receive(:get_homonymic_across_domains).with(@user, "fqname").and_return([override, override2])
+          allow(MiqAeInstance).to receive(:get_homonymic_across_domains)
+            .with(@user, "fqname").and_return([override, override2])
         end
 
         it "return instance record and check count of override instances being returned" do
@@ -312,7 +313,8 @@ describe MiqAeClassController do
       context "when the record exists" do
         before do
           allow(MiqAeClass).to receive(:find_by_id).with(1).and_return(miq_ae_class)
-          allow(MiqAeClass).to receive(:get_homonymic_across_domains).with(@user, "cls_fqname").and_return([override, override2])
+          allow(MiqAeClass).to receive(:get_homonymic_across_domains)
+            .with(@user, "cls_fqname").and_return([override, override2])
         end
 
         it "returns class record and check count of override classes being returned" do
@@ -344,7 +346,8 @@ describe MiqAeClassController do
         before do
           allow(MiqAeMethod).to receive(:find_by_id).with(123).and_return(miq_ae_method)
           allow(miq_ae_method).to receive(:ae_class).and_return(miq_ae_class)
-          allow(MiqAeMethod).to receive(:get_homonymic_across_domains).with(@user, "fqname").and_return([override, override2])
+          allow(MiqAeMethod).to receive(:get_homonymic_across_domains)
+            .with(@user, "fqname").and_return([override, override2])
         end
 
         it "returns method record and check count of override methods being returned" do

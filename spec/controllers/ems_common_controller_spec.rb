@@ -110,7 +110,8 @@ describe EmsCloudController do
 
         it "unsuccessful flash message (changed)" do
           controller.stub(:edit_changed? => true)
-          expect(mocked_ems_cloud).to receive(:authentication_check).with("amqp", :save => false).and_return([false, "Invalid"])
+          expect(mocked_ems_cloud).to receive(:authentication_check)
+            .with("amqp", :save => false).and_return([false, "Invalid"])
           expect(controller).to receive(:add_flash).with(_("Credential validation was not successful: Invalid"), :error)
           expect(controller).to receive(:render_flash)
           controller.send(:update_button_validate)
@@ -175,7 +176,8 @@ describe EmsContainerController do
         session[:edit] = assigns(:edit)
         post :update, :button => "save", :id => @ems.id, :type => @ems.type
         expect(response.status).to eq(200)
-        expect(ManageIQ::Providers::Kubernetes::ContainerManager.last.authentication_token("bearer")).to eq("valid-token")
+        expect(ManageIQ::Providers::Kubernetes::ContainerManager.last.authentication_token("bearer"))
+          .to eq("valid-token")
       end
     end
 

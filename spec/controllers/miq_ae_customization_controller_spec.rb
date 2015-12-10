@@ -275,7 +275,8 @@ describe MiqAeCustomizationController do
 
       context "when the dialog importer raises an import error" do
         before do
-          allow(dialog_import_service).to receive(:store_for_import).and_raise(DialogImportValidator::ImportNonYamlError)
+          allow(dialog_import_service).to receive(:store_for_import)
+            .and_raise(DialogImportValidator::ImportNonYamlError)
         end
 
         it "redirects with an error message" do
@@ -292,7 +293,8 @@ describe MiqAeCustomizationController do
 
       context "when the dialog importer raises a parse non dialog yaml error" do
         before do
-          allow(dialog_import_service).to receive(:store_for_import).and_raise(DialogImportValidator::ParsedNonDialogYamlError)
+          allow(dialog_import_service).to receive(:store_for_import)
+            .and_raise(DialogImportValidator::ParsedNonDialogYamlError)
         end
 
         it "redirects with an error message" do
@@ -309,7 +311,8 @@ describe MiqAeCustomizationController do
 
       context "when the dialog importer raises an invalid dialog field type error" do
         before do
-          allow(dialog_import_service).to receive(:store_for_import).and_raise(DialogImportValidator::InvalidDialogFieldTypeError)
+          allow(dialog_import_service).to receive(:store_for_import)
+            .and_raise(DialogImportValidator::InvalidDialogFieldTypeError)
         end
 
         it "redirects with an error message" do
@@ -498,18 +501,15 @@ describe MiqAeCustomizationController do
 
       it "sets a flash message" do
         get :export_service_dialogs, params
-        expect(assigns(:flash_array)).to eq([{
-          :message => "At least 1 item must be selected for export",
-          :level   => :error
-        }])
+        expect(assigns(:flash_array))
+          .to eq([{:message => "At least 1 item must be selected for export",
+                   :level   => :error}])
       end
 
       it "sets the flash array on the sandbox" do
         get :export_service_dialogs, params
-        expect(assigns(:sb)[:flash_msg]).to eq([{
-          :message => "At least 1 item must be selected for export",
-          :level   => :error
-        }])
+        expect(assigns(:sb)[:flash_msg]).to eq([{:message => "At least 1 item must be selected for export",
+                                                 :level   => :error}])
       end
 
       it "redirects to the explorer" do

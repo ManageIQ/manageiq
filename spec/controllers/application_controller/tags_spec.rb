@@ -83,7 +83,8 @@ describe ApplicationController  do
       session[:assigned_filters] = {:Test => %w("Entry1 Entry2)}
 
       controller.send(:tag_edit_build_screen)
-      expect(convert_to_region_id(assigns(:categories)['Clergy'])).to eq(convert_to_region_id(assigns(:entries)['Bishop']))
+      expect(convert_to_region_id(assigns(:categories)['Clergy']))
+        .to eq(convert_to_region_id(assigns(:entries)['Bishop']))
     end
   end
 end

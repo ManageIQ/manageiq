@@ -131,11 +131,11 @@ describe ReportController do
                                       )
       TreeBuilderReportWidgets.new('widgets_tree', 'widgets', {})
       nodes = controller.send(:tree_add_child_nodes, 'xx-r')
-      expect(nodes).to eq([{:key     => "-#{controller.to_cid(widget.id)}",
-                        :title   => "Foo",
-                        :icon    => "report_widget.png",
-                        :tooltip => "Foo"}]
-                     )
+      expected = [{:key     => "-#{controller.to_cid(widget.id)}",
+                   :title   => "Foo",
+                   :icon    => "report_widget.png",
+                   :tooltip => "Foo"}]
+      expect(nodes).to eq(expected)
     end
   end
 end

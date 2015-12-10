@@ -201,7 +201,7 @@ describe HostController do
       default_creds = {:userid => "default_userid", :password => "default_password2"}
       remote_creds = {:userid => "remote_userid", :password => "remote_password2"}
       expect(mocked_host).to receive(:update_authentication).with({:default => default_creds,
-                                                               :remote  => remote_creds}, :save => false)
+                                                                   :remote  => remote_creds}, :save => false)
 
       expect(controller.send(:set_credentials, mocked_host, :validate)).to include(:default => default_creds,
                                                                                    :remote  => remote_creds)

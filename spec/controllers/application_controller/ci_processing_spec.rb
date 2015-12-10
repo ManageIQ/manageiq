@@ -10,7 +10,8 @@ describe ApplicationController do
 
   context "Verify proper methods are called for snapshot" do
     it "Delete All" do
-      expect(controller).to receive(:vm_button_operation).with('remove_all_snapshots', 'delete all snapshots', 'vm_common/config')
+      expect(controller).to receive(:vm_button_operation)
+        .with('remove_all_snapshots', 'delete all snapshots', 'vm_common/config')
       controller.send(:vm_snapshot_delete_all)
     end
 
@@ -244,7 +245,8 @@ describe ApplicationController do
       pxe = FactoryGirl.create(:pxe_server)
       allow(MiqServer).to receive(:my_zone).and_return("default")
       controller.send(:process_elements, [pxe.id], PxeServer, 'synchronize_advertised_images_queue')
-      expect(assigns(:flash_array).first[:message]).to include("synchronize_advertised_images_queue successfully initiated")
+      expect(assigns(:flash_array).first[:message])
+        .to include("synchronize_advertised_images_queue successfully initiated")
     end
   end
 

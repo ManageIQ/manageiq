@@ -238,7 +238,8 @@ describe OpsController do
         }
         session[:edit] = edit
         controller.instance_variable_set(:@sb, sb_hash)
-        allow(controller).to receive(:set_credentials).and_return(:default => {:userid => "testuser", :password => 'password'})
+        allow(controller).to receive(:set_credentials)
+          .and_return(:default => {:userid => "testuser", :password => 'password'})
         controller.instance_variable_set(:@_params,
                                          :log_userid => "default_user",
                                          :button     => "validate",

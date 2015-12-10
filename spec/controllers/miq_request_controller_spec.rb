@@ -96,8 +96,9 @@ describe MiqRequestController do
 
     it "empty options hash" do
       expect(MiqExpression).to receive(:new).with { |h|
-        expect(h.fetch_path("and", 2, "or", 0, "=", "field") == "MiqRequest-approval_state").to be_falsey  # Doesn't set approval_states
-        expect(h.fetch_path("and", 3, "INCLUDES")).to                                           be_nil  # Doesn't set reason_text
+        expect(h.fetch_path("and", 2, "or", 0, "=", "field") == "MiqRequest-approval_state")
+          .to be_falsey # Doesn't set approval_states
+        expect(h.fetch_path("and", 3, "INCLUDES")).to be_nil # Doesn't set reason_text
       }
       controller.send(:prov_condition, {})
     end

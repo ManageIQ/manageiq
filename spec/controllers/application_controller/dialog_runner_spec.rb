@@ -19,7 +19,8 @@ describe CatalogController do
       allow(dialog).to receive(:field).with("test").and_return(dialog_field)
       allow(dialog).to receive(:field_name_exist?).and_return(false)
       allow(dialog).to receive(:field_name_exist?).with("test").and_return(true)
-      allow(dialog).to receive(:dialog_tabs).and_return([double(:dialog_groups => [double(:dialog_fields => [dialog_field])])])
+      allow(dialog).to receive(:dialog_tabs)
+        .and_return([double(:dialog_groups => [double(:dialog_fields => [dialog_field])])])
       allow(wf).to receive(:dialog_field).with("test").and_return(double(:data_type => "string"))
       allow(wf).to receive(:set_value)
     end
@@ -117,19 +118,19 @@ describe CatalogController do
     end
 
     it "keeps hours and minutes when setting date" do
-      allow(controller).to receive(:params).and_return({'miq_date__name' => "11/13/2015"})
+      allow(controller).to receive(:params).and_return('miq_date__name' => "11/13/2015")
       controller.send(:dialog_get_form_vars)
       expect(dialog_field.value).to eq('11/13/2015 14:52')
     end
 
     it "keeps date and minutes when setting hours" do
-      allow(controller).to receive(:params).and_return({'start_hour' => "4"})
+      allow(controller).to receive(:params).and_return('start_hour' => "4")
       controller.send(:dialog_get_form_vars)
       expect(dialog_field.value).to eq('04/05/2015 04:52')
     end
 
     it "keeps date and hourse when setting minutes" do
-      allow(controller).to receive(:params).and_return({'start_min' => "6"})
+      allow(controller).to receive(:params).and_return('start_min' => "6")
       controller.send(:dialog_get_form_vars)
       expect(dialog_field.value).to eq('04/05/2015 14:06')
     end

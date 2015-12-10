@@ -238,7 +238,8 @@ describe OpsController do
         expect(response.status).to eq(200)
         controller.send(:rbac_tenant_manage_quotas)
         flash_message = assigns(:flash_array).first
-        expect(flash_message[:message]).to include("Manage quotas for Tenant \"#{@tenant.name}\" was cancelled by the user")
+        expect(flash_message[:message])
+          .to include("Manage quotas for Tenant \"#{@tenant.name}\" was cancelled by the user")
         expect(flash_message[:level]).to be(:success)
       end
 

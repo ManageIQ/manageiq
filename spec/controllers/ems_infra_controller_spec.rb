@@ -96,7 +96,8 @@ describe EmsInfraController do
       @ems = FactoryGirl.create(:ems_openstack_infra_with_stack)
       @orchestration_stack_parameter_compute = FactoryGirl.create(:orchestration_stack_parameter_openstack_infra_compute)
 
-      allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack).to receive(:raw_status).and_return(["CREATE_COMPLETE", nil])
+      allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack)
+        .to receive(:raw_status).and_return(["CREATE_COMPLETE", nil])
     end
 
     it "when values are not changed" do
@@ -116,7 +117,8 @@ describe EmsInfraController do
     end
 
     it "when values are changed, and values do not exceed number of hosts available" do
-      allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack).to receive(:raw_update_stack)
+      allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack)
+        .to receive(:raw_update_stack)
       post :scaling, :id => @ems.id, :scale => "", :orchestration_stack_id => @ems.orchestration_stacks.first.id,
            @orchestration_stack_parameter_compute.name => 2
       expect(controller.send(:flash_errors?)).to be_falsey
@@ -134,7 +136,8 @@ describe EmsInfraController do
     end
 
     it "when patch operation fails, an error message should be displayed" do
-      allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack).to receive(:raw_update_stack) { raise _("my error") }
+      allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack)
+        .to receive(:raw_update_stack) { raise _("my error") }
       post :scaling, :id => @ems.id, :scale => "", :orchestration_stack_id => @ems.orchestration_stacks.first.id,
            @orchestration_stack_parameter_compute.name => 2
       expect(controller.send(:flash_errors?)).to be_truthy
@@ -143,7 +146,8 @@ describe EmsInfraController do
     end
 
     it "when operation in progress, an error message should be displayed" do
-      allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack).to receive(:raw_status).and_return(["CREATE_IN_PROGRESS", nil])
+      allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack)
+        .to receive(:raw_status).and_return(["CREATE_IN_PROGRESS", nil])
       post :scaling, :id => @ems.id, :scale => "", :orchestration_stack_id => @ems.orchestration_stacks.first.id,
            @orchestration_stack_parameter_compute.name => 2
       expect(controller.send(:flash_errors?)).to be_truthy

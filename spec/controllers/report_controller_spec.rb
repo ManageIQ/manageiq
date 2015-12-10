@@ -45,7 +45,7 @@ describe ReportController do
     context "handle input fields" do
       before :each do
         controller.instance_variable_set(:@edit, {:new => {}})  # Editor methods need @edit[:new]
-        allow(controller).to receive(:build_edit_screen)                  # Don't actually build the edit screen
+        allow(controller).to receive(:build_edit_screen) # Don't actually build the edit screen
       end
 
       context "handle report fields" do
@@ -143,7 +143,8 @@ describe ReportController do
       context "handle trend field changes" do
         it "sets trend column (non % based)" do
           tc = "VmPerformance-derived_memory_used"
-          allow(MiqExpression).to receive(:reporting_available_fields).and_return([["Test", tc]]) # Hand back array of arrays
+          allow(MiqExpression).to receive(:reporting_available_fields)
+            .and_return([["Test", tc]]) # Hand back array of arrays
           controller.instance_variable_set(:@_params, :chosen_trend_col => tc)
           controller.send(:gfv_trend)
           edit = assigns(:edit)
@@ -162,7 +163,8 @@ describe ReportController do
 
         it "sets trend column (% based)" do
           tc = "VmPerformance-derived_memory_used"
-          allow(MiqExpression).to receive(:reporting_available_fields).and_return([["Test (%)", tc]]) # Hand back array of arrays
+          allow(MiqExpression).to receive(:reporting_available_fields)
+            .and_return([["Test (%)", tc]]) # Hand back array of arrays
           controller.instance_variable_set(:@_params, :chosen_trend_col => tc)
           controller.send(:gfv_trend)
           edit = assigns(:edit)
@@ -911,18 +913,16 @@ describe ReportController do
 
       it "sets a flash message" do
         get :export_widgets, params
-        expect(assigns(:flash_array)).to eq([{
-          :message => "At least 1 item must be selected for export",
-          :level   => :error
-        }])
+        expect(assigns(:flash_array))
+          .to eq([{:message => "At least 1 item must be selected for export",
+                   :level   => :error}])
       end
 
       it "sets the flash array on the sandbox" do
         get :export_widgets, params
-        expect(assigns(:sb)[:flash_msg]).to eq([{
-          :message => "At least 1 item must be selected for export",
-          :level   => :error
-        }])
+        expect(assigns(:sb)[:flash_msg])
+          .to eq([{:message => "At least 1 item must be selected for export",
+                   :level   => :error}])
       end
 
       it "redirects to the explorer" do
@@ -1000,7 +1000,8 @@ describe ReportController do
 
       context "when the widget importer raises a non valid widget yaml error" do
         before do
-          allow(widget_import_service).to receive(:store_for_import).and_raise(WidgetImportValidator::InvalidWidgetYamlError)
+          allow(widget_import_service).to receive(:store_for_import)
+            .and_raise(WidgetImportValidator::InvalidWidgetYamlError)
         end
 
         it "redirects with an error message" do
@@ -1141,7 +1142,8 @@ describe ReportController do
 
       it "returns the flash message" do
         xhr :post, :import_widgets, params
-        expect(response.body).to eq([{:message => "Error: Widget import file upload expired", :level => :error}].to_json)
+        expect(response.body)
+          .to eq([{:message => "Error: Widget import file upload expired", :level => :error}].to_json)
       end
     end
   end
