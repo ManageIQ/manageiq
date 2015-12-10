@@ -1184,7 +1184,7 @@ class MiqRequestWorkflow
   end
 
   def folder_to_respool(src)
-    return nil if src[:folder_id].nil?
+    return nil if src[:folder].nil?
     datacenter = find_datacenter_for_ci(src[:folder])
     targets = find_respools_under_ci(datacenter)
     res_pool_with_path = get_ems_respool(get_ems_metadata_tree(src))
@@ -1248,7 +1248,7 @@ class MiqRequestWorkflow
   end
 
   def respool_to_folder(src)
-    return nil if src[:respool_id].nil?
+    return nil if src[:respool].nil?
     sources = [src[:respool]]
     datacenters = sources.collect { |h| find_datacenter_for_ci(h) }.compact
     folders = {}
