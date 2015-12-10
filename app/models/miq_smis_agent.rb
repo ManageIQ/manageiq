@@ -46,9 +46,8 @@ class MiqSmisAgent < StorageManager
       agent.save
     end
 
-    MiqCimInstance.find(:all, :conditions => {:source => 'SMIS', :zone_id => zoneId}).each do |inst|
-      inst.last_update_status = STORAGE_UPDATE_NO_AGENT
-      inst.save
+    MiqCimInstance.where(:source => 'SMIS', :zone_id => zoneId).each do |inst|
+      inst.update_attributes(:last_update_status => STORAGE_UPDATE_NO_AGENT)
     end
 
     pendingAgents = []
@@ -252,10 +251,10 @@ class MiqSmisAgent < StorageManager
   def self.cleanup
     zoneId = MiqServer.my_server.zone.id
 
-    MiqCimInstance.find(:all, :conditions => [
-      "zone_id = ? and source = ? and (last_update_status = ? or last_update_status = ?)",
-      zoneId, "SMIS", STORAGE_UPDATE_NO_AGENT, STORAGE_UPDATE_AGENT_OK_NO_INSTANCE
-    ]).each do |inst|
+    MiqCimInstance.where(
+      :zone_id            => zoneId,
+      :source             => "SMIS",
+      :last_update_status => [STORAGE_UPDATE_NO_AGENT, STORAGE_UPDATE_AGENT_OK_NO_INSTANCE]).each do |inst|
       if inst.last_update_status == STORAGE_UPDATE_AGENT_OK_NO_INSTANCE
         alus = inst.agent.last_update_status
         next if alus == STORAGE_UPDATE_FAILED || alus == STORAGE_UPDATE_IN_PROGRESS
