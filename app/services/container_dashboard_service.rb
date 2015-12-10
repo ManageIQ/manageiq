@@ -73,52 +73,32 @@ class ContainerDashboardService
   end
 
   def providers
-    if @ems.present?
-      if @ems.kind_of?(ManageIQ::Providers::Openshift::ContainerManager) ||
-         @ems.kind_of?(ManageIQ::Providers::OpenshiftEnterprise::ContainerManager)
-        {
-          :iconClass    => "pficon pficon-openshift",
-          :id           => "openshift",
-          :providerType => "OpenShift"
-        }
-      elsif @ems.kind_of?(ManageIQ::Providers::Kubernetes::ContainerManager)
-        {
-          :iconClass    => "pficon pficon-kubernetes",
-          :id           => "kubernetes",
-          :providerType => "Kubernetes"
-        }
-      elsif @ems.kind_of?(ManageIQ::Providers::Atomic::ContainerManager) ||
-            @ems.kind_of?(ManageIQ::Providers::AtomicEnterprise::ContainerManager)
-        {
-          :iconClass    => "pficon icon-atomic",
-          :id           => "atomic",
-          :providerType => "Atomic"
-        }
-      end
-    else
-      [
-        {
-          :iconClass    => "pficon pficon-openshift",
-          :count        => ManageIQ::Providers::Openshift::ContainerManager.count +
-                           ManageIQ::Providers::OpenshiftEnterprise::ContainerManager.count,
-          :id           => "openshift",
-          :providerType => "OpenShift"
-        },
-        {
-          :iconClass    => "pficon pficon-kubernetes",
-          :count        => ManageIQ::Providers::Kubernetes::ContainerManager.count,
-          :id           => "kubernetes",
-          :providerType => "Kubernetes"
-        },
-        {
-          :iconClass    => "pficon icon-atomic", # Fix in the next PF release
-          :count        => ManageIQ::Providers::Atomic::ContainerManager.count +
-                           ManageIQ::Providers::AtomicEnterprise::ContainerManager.count,
-          :id           => "atomic",
-          :providerType => "Atomic"
-        }
-      ]
+    provider_classes_to_ui_types = {
+      "ManageIQ::Providers::Openshift::ContainerManager"           => :openshift,
+      "ManageIQ::Providers::OpenshiftEnterprise::ContainerManager" => :openshift,
+      "ManageIQ::Providers::Kubernetes::ContainerManager"          => :kubernetes,
+      "ManageIQ::Providers::Atomic::ContainerManager"              => :atomic,
+      "ManageIQ::Providers::AtomicEnterprise::ContainerManager"    => :atomic
+    }
+
+    providers = @ems.present? ? {@ems.type => 1} : ManageIQ::Providers::ContainerManager.group(:type).count
+
+    result = {}
+    providers.each do |type, count|
+      ui_type = provider_classes_to_ui_types[type]
+      (result[ui_type] ||= build_provider_status(ui_type))[:count] += count
     end
+
+    result.values
+  end
+
+  def build_provider_status(ui_type)
+    {
+      :iconClass    => "pficon pficon-#{ui_type}",
+      :id           => ui_type,
+      :providerType => ui_type.capitalize,
+      :count        => 0
+    }
   end
 
   private
