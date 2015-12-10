@@ -16,6 +16,7 @@ if (typeof(ManageIQ) === 'undefined') {
       IEButtonPressed: null, // pressed save/reset button identificator
       oneTrans: null, // used to generate Ajax request only once for a drawn screen
     },
+    noCollapseEvent: false, // enable/disable events fired after collapsing an accordion
     expEditor: {
       prefillCount: 0, //
       first: {

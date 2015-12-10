@@ -87,6 +87,11 @@ class ExplorerPresenter
 
     @out << "miqDeleteDynatreeCookies('#{@options[:clear_tree_cookies]}')" if @options[:clear_tree_cookies]
 
+    # Open an accordion inside an other AJAX call
+    unless @options[:open_accord].to_s.empty?
+      @out << "miqAccordionSwap('#accordion .panel-collapse.collapse.in', '##{j(@options[:open_accord])}_accord');"
+    end
+
     if @options[:remove_nodes]
       @out << "miqRemoveNodeChildren('#{@options[:active_tree]}',
                                      '#{@options[:add_nodes][:key]}'
