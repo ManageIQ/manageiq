@@ -990,7 +990,6 @@
         :identifier: vm_pause
       - :name: reset
         :identifier: vm_reset
-        :disabled: true
       - :name: retire
         :identifier: vm_retire
       - :name: set_owner
@@ -1033,7 +1032,6 @@
         :identifier: vm_pause
       - :name: reset
         :identifier: vm_reset
-        :disabled: true
       - :name: retire
         :identifier: vm_retire
       - :name: delete
