@@ -12,7 +12,7 @@ describe AddLoopbackToMemcacheServerOptsInConfiguration do
 
       migrate
 
-      config.reload.settings.fetch_path("session", "memcache_server_opts").should == custom_binding
+      expect(config.reload.settings.fetch_path("session", "memcache_server_opts")).to eq(custom_binding)
     end
 
     it "adds listen on localhost binding to memcache_server_opts" do
@@ -22,7 +22,7 @@ describe AddLoopbackToMemcacheServerOptsInConfiguration do
 
       migrate
 
-      config.reload.settings.fetch_path("session", "memcache_server_opts").should == default_binding
+      expect(config.reload.settings.fetch_path("session", "memcache_server_opts")).to eq(default_binding)
     end
   end
 
@@ -34,7 +34,7 @@ describe AddLoopbackToMemcacheServerOptsInConfiguration do
 
       migrate
 
-      config.reload.settings.fetch_path("session", "memcache_server_opts").should == custom_binding
+      expect(config.reload.settings.fetch_path("session", "memcache_server_opts")).to eq(custom_binding)
     end
 
     it "reverts listen on localhost binding to blank option" do
@@ -44,7 +44,7 @@ describe AddLoopbackToMemcacheServerOptsInConfiguration do
 
       migrate
 
-      config.reload.settings.fetch_path("session", "memcache_server_opts").should == ""
+      expect(config.reload.settings.fetch_path("session", "memcache_server_opts")).to eq("")
     end
   end
 end

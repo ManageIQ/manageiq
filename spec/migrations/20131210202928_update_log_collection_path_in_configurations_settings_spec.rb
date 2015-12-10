@@ -35,8 +35,8 @@ describe UpdateLogCollectionPathInConfigurationsSettings do
       migrate
 
       settings = configuration_stub.first.settings
-      settings.fetch_path("log", "collection", :current, :pattern, 4).should eq("/opt/rh/postgresql92/root/var/lib/pgsql/data/*.conf")
-      settings.fetch_path("log", "collection", :current, :pattern, 5).should eq("/opt/rh/postgresql92/root/var/lib/pgsql/data/pg_log/*")
+      expect(settings.fetch_path("log", "collection", :current, :pattern, 4)).to eq("/opt/rh/postgresql92/root/var/lib/pgsql/data/*.conf")
+      expect(settings.fetch_path("log", "collection", :current, :pattern, 5)).to eq("/opt/rh/postgresql92/root/var/lib/pgsql/data/pg_log/*")
     end
 
     it "ignores changes when expected path doesn't exist" do
@@ -54,7 +54,7 @@ describe UpdateLogCollectionPathInConfigurationsSettings do
       migrate
 
       settings = configuration_stub.first.settings
-      settings.fetch_path("log", "collection", :current, :pattern).should be_empty
+      expect(settings.fetch_path("log", "collection", :current, :pattern)).to be_empty
     end
   end
 
@@ -89,8 +89,8 @@ describe UpdateLogCollectionPathInConfigurationsSettings do
       migrate
 
       settings = configuration_stub.first.settings
-      settings.fetch_path("log", "collection", :current, :pattern, 4).should eq("/var/lib/pgsql/data/*.conf")
-      settings.fetch_path("log", "collection", :current, :pattern, 5).should eq("/var/lib/pgsql/data/serverlog*")
+      expect(settings.fetch_path("log", "collection", :current, :pattern, 4)).to eq("/var/lib/pgsql/data/*.conf")
+      expect(settings.fetch_path("log", "collection", :current, :pattern, 5)).to eq("/var/lib/pgsql/data/serverlog*")
     end
 
     it "ignores changes when expected path doesn't exist" do
@@ -108,7 +108,7 @@ describe UpdateLogCollectionPathInConfigurationsSettings do
       migrate
 
       settings = configuration_stub.first.settings
-      settings.fetch_path("log", "collection", :current, :pattern).should be_empty
+      expect(settings.fetch_path("log", "collection", :current, :pattern)).to be_empty
     end
   end
 end

@@ -7,9 +7,9 @@ describe ExpandDialogFieldDefaultValueSize do
 
   migration_context :up do
     it "should convert default_value to text type" do
-      dialog_field_stub.columns_hash['default_value'].type.should == :string
+      expect(dialog_field_stub.columns_hash['default_value'].type).to eq(:string)
       migrate
-      dialog_field_stub.columns_hash['default_value'].type.should == :text
+      expect(dialog_field_stub.columns_hash['default_value'].type).to eq(:text)
     end
 
     it "should migrate default_value from the reserved table" do
@@ -30,17 +30,17 @@ describe ExpandDialogFieldDefaultValueSize do
 
       expect { reserved1.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { reserved2.reload }.to_not raise_error
-      field1.reload.default_value.should == val1
-      field2.reload.default_value.should == val2
-      field3.reload.default_value.should == val3
+      expect(field1.reload.default_value).to eq(val1)
+      expect(field2.reload.default_value).to eq(val2)
+      expect(field3.reload.default_value).to eq(val3)
     end
   end
 
   migration_context :down do
     it "should convert default_value to string type" do
-      dialog_field_stub.columns_hash['default_value'].type.should == :text
+      expect(dialog_field_stub.columns_hash['default_value'].type).to eq(:text)
       migrate
-      dialog_field_stub.columns_hash['default_value'].type.should == :string
+      expect(dialog_field_stub.columns_hash['default_value'].type).to eq(:string)
     end
 
     it "should migrate default_value to the reserved table" do
@@ -52,9 +52,9 @@ describe ExpandDialogFieldDefaultValueSize do
 
       reserve1 = reserve_stub.where(:resource_id   => field1.id,
                                     :resource_type => 'DialogField').first!
-      reserve1.reserved.should == {:default_value => val1}
-      reserve_stub.where(:resource_id   => field2.id,
-                         :resource_type => 'DialogField').should_not exist
+      expect(reserve1.reserved).to eq({:default_value => val1})
+      expect(reserve_stub.where(:resource_id   => field2.id,
+                         :resource_type => 'DialogField')).not_to exist
     end
   end
 end
