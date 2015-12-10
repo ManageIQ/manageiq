@@ -2733,6 +2733,58 @@ describe ApplicationHelper do
     end
   end
 
+  describe "#apply_common_props" do
+    before do
+      @record = double(:id => 'record_id_xxx_001', :class => double(:name => 'record_xxx_class'))
+      btn_num = "x_button_id_001"
+      desc = 'the description for the button'
+      @input = {:url       => "button",
+                :url_parms => "?id=#{@record.id}&button_id=#{btn_num}&cls=#{@record.class.name}&pressed=custom_button&desc=#{desc}"
+      }
+      @tb_buttons = {}
+      @button = {'id' => "custom_#{btn_num}"}
+      allow_any_instance_of(Object).to receive(:query_string).and_return("")
+      allow_message_expectations_on_nil
+    end
+
+    context "button visibility" do
+      it "defaults to hidden false" do
+        props = apply_common_props(@button, @input)
+        expect(props[:hidden]).to be(false)
+      end
+
+      it "honors explicit input's hidden properties" do
+        props = apply_common_props(@button, {:hidden => true})
+        expect(props[:hidden]).to be(true)
+      end
+    end
+
+    context "saves the item info by the same key" do
+      subject do
+        apply_common_props(@button, @input)
+      end
+
+      it "when input[:hidden] exists" do
+        @input[:hidden] = 1
+        expect(subject).to have_key(:hidden)
+      end
+
+      it "when input[:url_parms] exists" do
+        expect(subject).to have_key(:url_parms)
+      end
+
+      it "when input[:confirm] exists" do
+        @input[:confirm] = 'Are you sure?'
+        expect(subject).to have_key(:confirm)
+      end
+
+      it "when input[:onwhen] exists" do
+        @input[:onwhen] = '1+'
+        expect(subject).to have_key(:onwhen)
+      end
+    end
+  end
+
   describe "#build_toolbar_save_button" do
     before do
       @record = double(:id => 'record_id_xxx_001', :class => 'record_xxx_class')
@@ -2743,55 +2795,9 @@ describe ApplicationHelper do
                :url_parms => "?id=#{@record.id}&button_id=#{btn_num}&cls=#{@record.class}&pressed=custom_button&desc=#{desc}"
       }
       @tb_buttons = {}
-      @parent = nil
       @item_out = {}
       allow_any_instance_of(Object).to receive(:query_string).and_return("")
       allow_message_expectations_on_nil
-    end
-
-    context "names the button" do
-      subject do
-        build_toolbar_save_button(@item, @item_out, @parent)
-      end
-
-      it "as item[:buttonSelect] when item[:buttonTwoState] does not exist" do
-        @item[:buttonSelect] = 'tree_large'
-        expect(subject).to include(:name => 'tree_large')
-      end
-
-      it "as item[:button] when both item[:buttonTwoState] and item[:buttonSelect] not exist" do
-        expect(subject).to include(:name => "#{@item[:button]}")
-      end
-
-      it "prefixed with 'parent__' when parent is passed in" do
-        @parent = "testing"
-        expect(subject).to include(:name => "#{@parent}__#{@item[:button]}")
-      end
-    end
-
-    context "saves the item info by the same key" do
-      subject do
-        build_toolbar_save_button(@item, @item_out)
-      end
-
-      it "when item[:hidden] exists" do
-        @item[:hidden] = 1
-        expect(subject).to have_key(:hidden)
-      end
-
-      it "when item[:url_parms] exists" do
-        expect(subject).to have_key(:url_parms)
-      end
-
-      it "when item[:confirm] exists" do
-        @item[:confirm] = 'Are you sure?'
-        expect(subject).to have_key(:confirm)
-      end
-
-      it "when item[:onwhen] exists" do
-        @item[:onwhen] = '1+'
-        expect(subject).to have_key(:onwhen)
-      end
     end
 
     context "when item[:url] exists" do
@@ -2800,7 +2806,8 @@ describe ApplicationHelper do
       end
 
       it "gets rid of first directory and anything after last slash when button is 'view_grid', 'view_tile' or 'view_list'" do
-        @item = {:button => 'view_list', :url => '/some/path/to/the/testing/code'}
+        @item = {:url => '/some/path/to/the/testing/code'}
+        @item_out = {'id' => 'view_list'}
         expect(subject).to include(:url => '/path/to/the/testing')
       end
 
@@ -2812,18 +2819,6 @@ describe ApplicationHelper do
         b = _toolbar_builder
         expect(b).to receive(:url_for_save_button).and_call_original
         b.send(:build_toolbar_save_button, @item, @item_out)
-      end
-    end
-
-    context "button visibility" do
-      it "defaults to hidden false" do
-        props = build_toolbar_save_button(@item, @item_out)
-        expect(props[:hidden]).to be(false)
-      end
-
-      it "honors explicit item's hidden properties" do
-        props = build_toolbar_save_button(@item, {:hidden => true})
-        expect(props[:hidden]).to be(true)
       end
     end
   end
@@ -2942,6 +2937,7 @@ describe ApplicationHelper do
     before do
       controller.instance_variable_set(:@sb, :active_tree => :foo_tree)
       @pdf_button = {"id"       => "download_choice__download_pdf",
+                     "child_id" => "download_pdf",
                      "type"     => "button",
                      "img"      => "download_pdf.png",
                      "imgdis"   => "download_pdf.png",

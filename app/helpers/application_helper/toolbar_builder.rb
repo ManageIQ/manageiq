@@ -15,6 +15,7 @@ class ApplicationHelper::ToolbarBuilder
   def initialize(view_context, view_binding, instance_data)
     @view_context = view_context
     @view_binding = view_binding
+    @instance_data = instance_data
 
     instance_data.each do |name, value|
       instance_variable_set(:"@#{name}", value)
@@ -46,87 +47,43 @@ class ApplicationHelper::ToolbarBuilder
 
   def build_select_button(bgi, index)
     bs_children = false
-    props = {
+    props = ApplicationHelper::ToolbarButtons.button(@view_context, @view_binding, @instance_data,
       "id"     => bgi[:buttonSelect],
       "type"   => "buttonSelect",
       "img"    => img = "#{bgi[:image] ? bgi[:image] : bgi[:buttonSelect]}.png",
       "imgdis" => img,
       :icon    => bgi[:icon]
-    }
-    props["title"] = bgi[:title] unless bgi[:title].blank?
-    props["text"]  = bgi[:text]  unless bgi[:text].blank?
-    if bgi[:buttonSelect] == "history_choice" && x_tree_history.length < 2
-      props["enabled"] = false  # Show disabled history button if no history
-    else
-      props["enabled"] = "#{bgi[:enabled]}" unless bgi[:enabled].blank?
-    end
+    )
+    apply_common_props(props, bgi)
     props["openAll"] = true # Open/close the button select on click
-
-    if bgi[:buttonSelect] == "chargeback_download_choice" && x_active_tree == :cb_reports_tree &&
-       @report && !@report.contains_records?
-      props["enabled"] = "false"
-      props["title"] = _("No records found for this report")
-    end
-    if bgi[:buttonSelect] == "host_vmdb_choice" && x_active_tree == :old_dialogs_tree && @record && @record[:default]
-      bgi[:items].each do |bgsi|
-        if bgsi[:button] == "old_dialogs_edit"
-          bgsi[:enabled] = 'false'
-          bgsi[:title] = _('Default dialogs cannot be edited')
-        elsif bgsi[:button] == "old_dialogs_delete"
-          bgsi[:enabled] = 'false'
-          bgsi[:title] = _('Default dialogs cannot be removed from the VMDB')
-        end
-      end
-    end
-    if bgi[:buttonSelect] == "orchestration_template_vmdb_choice" && x_active_tree == :ot_tree && @record
-      bgi[:items].each do |bgsi|
-        if bgsi[:button] == "orchestration_template_edit"
-          bgsi[:enabled] = @record.in_use? ? 'false' : 'true'
-          bgsi[:title] = _('Orchestration Templates that are in use cannot be edited')
-        elsif bgsi[:button] == "orchestration_template_remove"
-          bgsi[:enabled] = @record.in_use? ? 'false' : 'true'
-          bgsi[:title] = _('Orchestration Templates that are in use cannot be removed')
-        end
-      end
-    end
 
     current_item = props
     current_item[:items] ||= []
     any_visible = false
     bgi[:items].each_with_index do |bsi, bsi_idx|
       if bsi.key?(:separator)
-        props = {"id" => "sep_#{index}_#{bsi_idx}", "type" => "separator", :hidden => !any_visible}
+        props = ApplicationHelper::Button::Separator.new("id" => "sep_#{index}_#{bsi_idx}", :hidden => !any_visible)
       else
-        next if download_pdf_buttons.include?(bsi[:button]) && !PdfGenerator.available?
         next if build_toolbar_hide_button(bsi[:pressed] || bsi[:button])  # Use pressed, else button name
         bs_children = true
-        props = {
-          "id"     => bgi[:buttonSelect] + "__" + bsi[:button],
-          "type"   => "button",
-          "img"    => img = "#{bsi[:image] ? bsi[:image] : bsi[:button]}.png",
-          "imgdis" => img,
-          :icon    => bsi[:icon]
-        }
-        if bsi[:button].starts_with?("history_")
-          if x_tree_history.length > 1
-            props["text"] = x_tree_history[bsi[:button].split("_").last.to_i][:text]
-          end
-        else
-          props["text"] = safer_eval(bsi[:text]) unless bsi[:text].blank?
-        end
-        props["enabled"] = "#{bsi[:enabled]}" unless bsi[:enabled].blank?
-        dis_title = build_toolbar_disable_button(bsi[:button])
-        props["enabled"] = "false" if dis_title
-        title = safer_eval(bsi[:title]) unless bsi[:title].blank?
-        props["title"] = dis_title.kind_of?(String) ? dis_title : title
+        props = ApplicationHelper::ToolbarButtons.button(@view_context, @view_binding, @instance_data,
+          "child_id" => bsi[:button],
+          "id"       => bgi[:buttonSelect] + "__" + bsi[:button],
+          "type"     => "button",
+          "img"      => img = "#{bsi[:image] ? bsi[:image] : bsi[:button]}.png",
+          "imgdis"   => img,
+          :icon      => bsi[:icon]
+        )
+        apply_common_props(props, bsi)
+        props.calculate_properties
       end
-      current_item[:items] << props
-      build_toolbar_save_button(bsi, props, bgi[:buttonSelect]) if bsi[:button] # Save if a button (not sep)
+      build_toolbar_save_button(bsi, props) unless bsi.key?(:separator)
+      current_item[:items] << props unless props.skip?
 
       any_visible ||= !props[:hidden] && props["type"] != "separator"
     end
     current_item[:items].reverse_each do |item|
-      break if ! item[:hidden] && item["type"] != 'separator'
+      break if !item[:hidden] && item["type"] != 'separator'
       item[:hidden] = true if item["type"] == 'separator'
     end
     current_item[:hidden] = !any_visible
@@ -138,37 +95,50 @@ class ApplicationHelper::ToolbarBuilder
     current_item
   end
 
+  def apply_common_props(button, input)
+    button.update(
+      :name    => button['id'],
+      :hidden  => button[:hidden] || !!input[:hidden],
+      :pressed => input[:pressed],
+      :onwhen  => input[:onwhen]
+    )
+
+    button["title"]    = safer_eval(input[:title])   unless input[:title].blank?
+    button["enabled"]  = input[:enabled].to_s        unless input[:enabled].blank?
+    button["text"]     = safer_eval(input[:text])    unless input[:text].blank?
+    button[:confirm]   = safer_eval(input[:confirm]) unless input[:confirm].blank?
+    button[:url_parms] = update_url_parms(safer_eval(input[:url_parms])) unless input[:url_parms].blank?
+
+    dis_title = build_toolbar_disable_button(button['id'])
+    if dis_title
+      button["enabled"] = "false"
+      button["title"]    = dis_title
+    end
+    button
+  end
+
   def build_normal_button(bgi, index)
-    return nil if download_pdf_buttons.include?(bgi[:button]) && !PdfGenerator.available?
     button_hide = build_toolbar_hide_button(bgi[:button])
     if button_hide
       # These buttons need to be present even if hidden as we show/hide them dynamically
       return nil unless %w(perf_refresh perf_reload vm_perf_refresh vm_perf_reload
-                     timeline_txt timeline_csv timeline_pdf).include?(bgi[:button])
+                           timeline_txt timeline_csv timeline_pdf).include?(bgi[:button])
     end
+
     @sep_needed = true unless button_hide
-    props = {
+    props = ApplicationHelper::ToolbarButtons.button(@view_context, @view_binding, @instance_data,
       "id"     => bgi[:button],
       "type"   => "button",
       "img"    => "#{get_image(bgi[:image], bgi[:button]) ? get_image(bgi[:image], bgi[:button]) : bgi[:button]}.png",
       "imgdis" => "#{bgi[:image] ? bgi[:image] : bgi[:button]}.png",
       :icon    => bgi[:icon]
-    }
-    props["enabled"] = "#{bgi[:enabled]}" unless bgi[:enabled].blank?
-    props["enabled"] = "false" if dis_title = build_toolbar_disable_button(bgi[:button]) || button_hide
-    props["text"]    = bgi[:text] unless bgi[:text].blank?
+    )
+    apply_common_props(props, bgi)
+
     # set pdf button to be hidden if graphical summary screen is set by default
-    bgi[:hidden] = %w(download_view vm_download_pdf).include?(bgi[:button]) && button_hide
-    title = safer_eval(bgi[:title]) unless bgi[:title].blank?
-    props["title"] = dis_title.kind_of?(String) ? dis_title : title
+    props[:hidden] = %w(download_view vm_download_pdf).include?(bgi[:button]) && button_hide
 
-    if bgi[:button] == "chargeback_report_only" && x_active_tree == :cb_reports_tree &&
-       @report && !@report.contains_records?
-      props["enabled"] = "false"
-      props["title"] = _("No records found for this report")
-    end
     _add_separator(index)
-
     props
   end
 
@@ -186,19 +156,18 @@ class ApplicationHelper::ToolbarBuilder
   def build_twostate_button(bgi, index)
     return nil if build_toolbar_hide_button(bgi[:buttonTwoState])
 
-    props = {
+    props = ApplicationHelper::ToolbarButtons.button(@view_context, @view_binding, @instance_data,
       "id"     => bgi[:buttonTwoState],
       "type"   => "buttonTwoState",
       "img"    => img = "#{bgi[:image] ? bgi[:image] : bgi[:buttonTwoState]}.png",
       "imgdis" => img,
       :icon    => bgi[:icon]
-    }
-    props["title"]    = safer_eval(bgi[:title]) unless bgi[:title].blank?
-    props["enabled"]  = bgi[:enabled].to_s unless bgi[:enabled].blank?
-    props["enabled"]  = "false" if build_toolbar_disable_button(bgi[:buttonTwoState])
-    props["selected"] = "true"  if build_toolbar_select_button(bgi[:buttonTwoState])
-    _add_separator(index)
+    )
+    apply_common_props(props, bgi)
 
+    props["selected"] = "true"  if build_toolbar_select_button(bgi[:buttonTwoState])
+
+    _add_separator(index)
     props
   end
 
@@ -211,7 +180,10 @@ class ApplicationHelper::ToolbarBuilder
               build_twostate_button(bgi, index)
             end
 
-    @toolbar << build_toolbar_save_button(bgi, props) unless props.nil?
+    unless props.nil?
+      props.calculate_properties
+      @toolbar << build_toolbar_save_button(bgi, props) unless props.skip?
+    end
   end
 
   def build(definition)
@@ -241,18 +213,6 @@ class ApplicationHelper::ToolbarBuilder
 
     @toolbar = nil if @toolbar.empty?
     @toolbar
-  end
-
-  def download_pdf_buttons
-    %w(chargeback_download_pdf
-       download_pdf
-       download_view
-       drift_pdf
-       miq_capacity_download_pdf
-       render_report_pdf
-       timeline_pdf
-       vm_download_pdf
-      )
   end
 
   def create_custom_button_hash(input, record, options = {})
@@ -1400,21 +1360,11 @@ class ApplicationHelper::ToolbarBuilder
     url
   end
 
-  def build_toolbar_save_button(item, props, parent = nil)
-    button = item.key?(:buttonTwoState) ? item[:buttonTwoState] : (item.key?(:buttonSelect) ? item[:buttonSelect] : item[:button])
-    button = parent + "__" + button if parent # Prefix with "parent__" if parent is passed in
-
-    props.update(
-      :name    => button,
-      :hidden  => props[:hidden] || !!item[:hidden],
-      :pressed => item[:pressed],
-      :onwhen  => item[:onwhen]
-    )
-
-    props[:url] = url_for_save_button(button, item[:url], controller_restful?) if item[:url]
-
+  def build_toolbar_save_button(item, props)
+    props[:url] = url_for_save_button(props['id'], item[:url], controller_restful?) if item[:url]
     props[:explorer] = true if @explorer && !item[:url] # Add explorer = true if ajax button
-    if item[:popup]
+
+    if item[:popup] # FIXME: move this code to button classes
       props[:popup] = item[:popup]
       if item[:url_parms] == "popup_only" # For readonly reports, they don't have confirm message
         props[:console_url] = "/#{request.parameters["controller"]}#{item[:url]}"
@@ -1428,18 +1378,6 @@ class ApplicationHelper::ToolbarBuilder
       end
     end
 
-    collect_log_buttons = %w(support_vmdb_choice__collect_logs
-                             support_vmdb_choice__collect_current_logs
-                             support_vmdb_choice__zone_collect_logs
-                             support_vmdb_choice__zone_collect_current_logs
-                          )
-
-    if props[:name].in?(collect_log_buttons) && @record.try(:log_file_depot).try(:requires_support_case?)
-      props[:prompt] = true
-    end
-
-    props[:url_parms] = update_url_parms(safer_eval(item[:url_parms])) unless item[:url_parms].blank?
-    props[:confirm] = safer_eval(item[:confirm]) unless item[:confirm].blank?
     props
   end
 
