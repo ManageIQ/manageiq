@@ -13,7 +13,7 @@ class ScanItem < ActiveRecord::Base
   DEFAULT_HOST_PROFILE = {:name => "host default", :description => "Host Default", :mode => 'Host'}.freeze
 
   def self.sync_from_dir
-    find(:all, :conditions => "prod_default = 'Default'").each do|f|
+    where(:prod_default => 'Default').where.not(:filename => nil).each do|f|
       next unless f.filename
       unless File.exist?(File.join(YAML_DIR, f.filename))
         $log.info("Scan Item: file [#{f.filename}] has been deleted from disk, deleting from model")
@@ -68,7 +68,7 @@ class ScanItem < ActiveRecord::Base
     load_host_default = host_default.new_record?
     host_default.update_attributes(DEFAULT_HOST_PROFILE)
 
-    find(:all, :conditions => {:prod_default => 'Default'}).each do |s|
+    where(:prod_default => 'Default').each do |s|
       case s.mode
       when "Host"
         host_profile.add_member(s) unless host_profile.members.include?(s)
