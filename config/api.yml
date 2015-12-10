@@ -971,9 +971,8 @@
         :identifier: vm_refresh
       - :name: shutdown_guest
         :identifier: vm_guest_shutdown
-      - :name: restart
+      - :name: reboot_guest
         :identifier: vm_guest_restart
-        :disabled: true
       - :name: start
         :identifier: vm_start
       - :name: stop
@@ -1011,9 +1010,8 @@
         :identifier: vm_refresh
       - :name: shutdown_guest
         :identifier: vm_guest_shutdown
-      - :name: restart
+      - :name: reboot_guest
         :identifier: vm_guest_restart
-        :disabled: true
       - :name: start
         :identifier: vm_start
       - :name: stop
