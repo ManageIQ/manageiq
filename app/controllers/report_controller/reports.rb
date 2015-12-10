@@ -81,8 +81,8 @@ module ReportController::Reports
   def miq_report_delete
     assert_privileges("miq_report_delete")
     rpt = MiqReport.find(params[:id])
-    report_widgets = MiqWidget.all(:conditions => {:resource_id => rpt.id})
-    if report_widgets.length > 0
+
+    if rpt.widgets.exist?
       add_flash(_("Report cannot be deleted if it's being used by one or more Widgets"), :error)
       render :update do |page|
         page.replace("flash_msg_div_report_list", :partial => "layouts/flash_msg", :locals => {:div_num => "_report_list"})
@@ -195,7 +195,7 @@ module ReportController::Reports
         end
       end
 
-      @widget_nodes = MiqWidget.all(:conditions => ["resource_id = ?", @miq_report.id.to_i])
+      @widget_nodes = @miq_report.widgets.to_a
     end
 
     @sb[:tree_typ]   = "reports"

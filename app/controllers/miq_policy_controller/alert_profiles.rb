@@ -245,7 +245,7 @@ module MiqPolicyController::AlertProfiles
     alerts.each { |a| @edit[:new][:alerts][a.description] = a.id } # Build a hash for the members list box
 
     @edit[:choices] = {}
-    MiqAlert.all(:conditions => ["db = ?", @edit[:new][:mode]]).each do |a|
+    MiqAlert.where(:db => @edit[:new][:mode]).select(:id, :description).each do |a|
       @edit[:choices][a.description] = a.id           # Build a hash for the alerts to choose from
     end
 

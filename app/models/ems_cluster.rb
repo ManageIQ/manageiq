@@ -310,10 +310,8 @@ class EmsCluster < ActiveRecord::Base
   end
 
   def self.get_perf_collection_object_list
-    # cl_hash = self.in_my_region.all(:include => [:tags, :taggings, :ext_management_system], :select => "name, id, ems_id").inject({}) do |h,c|
-    cl_hash = in_my_region.all(:include => [:tags, :taggings], :select => "name, id").inject({}) do |h, c|
+    cl_hash = in_my_region.includes(:tags, :taggings).select(:id, :name).each_with_object({}) do |c, h|
       h[c.id] = {:cl_rec => c, :ho_ids => c.host_ids}
-      h
     end
 
     hids = cl_hash.values.flat_map { |v| v[:ho_ids] }.compact.uniq
