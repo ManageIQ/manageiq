@@ -969,7 +969,6 @@
         :identifier: vm_edit
       - :name: refresh
         :identifier: vm_refresh
-        :disabled: true
       - :name: shutdown
         :identifier: vm_guest_shutdown
         :disabled: true
@@ -1011,7 +1010,6 @@
         :identifier: vm_edit
       - :name: refresh
         :identifier: vm_refresh
-        :disabled: true
       - :name: shutdown
         :identifier: vm_guest_shutdown
         :disabled: true
