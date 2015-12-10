@@ -972,7 +972,7 @@ describe ApiController do
     end
   end
 
-  context "Vm guest shutdown guest action" do
+  context "Vm shutdown guest action" do
     it "to an invalid vm" do
       api_basic_authorize action_identifier(:vms, :shutdown_guest)
 
