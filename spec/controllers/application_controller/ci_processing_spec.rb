@@ -251,7 +251,7 @@ describe ApplicationController do
   context "#identify_record" do
     it "Verify flash error message when passed in ID no longer exists in database" do
       record = controller.send(:identify_record, "1", ExtManagementSystem)
-      expect(record).to.nil?
+      expect(record).to be_nil
       expect(assigns(:bang).message).to include("Selected Provider no longer exists")
     end
 

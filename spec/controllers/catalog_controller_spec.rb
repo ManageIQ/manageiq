@@ -112,7 +112,7 @@ describe CatalogController do
       session[:edit] = edit
       allow(controller).to receive(:replace_right_cell)
       controller.send(:st_edit)
-      expect(assigns(:record)).to.nil?
+      expect(assigns(:record)).to be_nil
     end
   end
 

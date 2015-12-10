@@ -26,7 +26,7 @@ describe EmsCloudController do
 
         controller.instance_variable_set(:@_params, :server_emstype => "ec2")
         controller.send(:get_form_vars)
-        expect(assigns(:edit)[:new][:port]).to.nil?
+        expect(assigns(:edit)[:new][:port]).to be_nil
       end
     end
 
