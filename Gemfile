@@ -22,6 +22,7 @@ gem "lodash-rails",                   "~>3.10.0"
 gem "patternfly-sass",                "~>2.7.0"
 gem "css_splitter"
 gem "sass-rails"
+gem "bower-rails",                    "~>0.10.0"
 
 # Vendored and required
 gem "ruport",                         "=1.7.0",                       :git => "git://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-2"
@@ -117,29 +118,6 @@ unless ENV['APPLIANCE']
   group :development, :test do
     gem "rspec-rails",      "~>2.99.0"
   end
-end
-
-# Assets from rails-assets.org
-source "https://rails-assets.org" do
-  gem "rails-assets-c3",                              "~>0.4.10"
-  gem "rails-assets-angular",                         "~>1.4.3"
-  gem "rails-assets-angular-animate",                 "~>1.4.3"
-  gem "rails-assets-angular-mocks",                   "~>1.4.3"
-  gem 'rails-assets-angular-sanitize',                "~>1.4.3"
-  gem "rails-assets-bootstrap-datepicker",            "~>1.4.0"
-  gem "rails-assets-markusslima--bootstrap-filestyle","~>1.2.1"
-  gem "rails-assets-bootstrap-hover-dropdown",        "~>2.0.11"
-  gem "rails-assets-bootstrap-select",                "~>1.7.3"
-  gem "rails-assets-kubernetes-topology-graph",       "=0.0.18"
-  gem "rails-assets-moment",                          "~>2.10.3"
-  gem "rails-assets-moment-strftime",                 "~>0.1.5"
-  gem "rails-assets-moment-timezone",                 "~>0.4.0"
-  gem "rails-assets-angular-patternfly",              "~>2.6.0"
-  gem "rails-assets-sprintf",                         "~>1.0.3"
-  gem "rails-assets-numeral",                         "~>1.5.3"
-  gem "rails-assets-slickgrid",                       "~>2.1.0"
-  gem "rails-assets-jqueryui",                        "~>1.9.2"
-  gem "rails-assets-jquery-1.8",                      "~>1.8.3"
 end
 
 #
