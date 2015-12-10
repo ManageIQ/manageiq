@@ -37,7 +37,7 @@ class VimPerformanceDaily < MetricRollup
   # @param ext_options [Hash] search options
   # @opts ext_options :klass [Class] class for metrics (default: MetricRollup)
   # @opts ext_options :tp [TimeProfile]
-  # @opts ext_options :tz [Timezone] (default: DEFUULTf)
+  # @opts ext_options :tz [Timezone] (default: DEFAULT_TIMEZONE)
   def self.find_entries(ext_options)
     ext_options ||= {}
     time_profile = ext_options[:time_profile] ||= TimeProfile.default_time_profile(ext_options[:tz])
