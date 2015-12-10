@@ -183,17 +183,9 @@ module ReportController::Reports
     end
 
     if @sb[:active_tab] == "report_info"
-      if super_admin_user? # Super admins see all report schedules
-        schedules = MiqSchedule.all(:conditions => ["towhat=?", "MiqReport"])
-      else
-        schedules = MiqSchedule.all(:conditions => ["towhat=? AND userid=?", "MiqReport", session[:userid]])
-      end
-      @schedules = []
-      schedules.sort_by(&:name).each do |s|
-        if s.filter.exp["="]["value"].to_i == @miq_report.id.to_i
-          @schedules.push(s)
-        end
-      end
+      schedules = MiqSchedule.where(:towhat => "MiqReport")
+      schedules = schedules.where(:userid => current_userid) unless super_admin_user?
+      @schedules = schedules.select { |s| s.filter.exp["="]["value"].to_i == @miq_report.id.to_i }.sort_by(&:name)
 
       @widget_nodes = @miq_report.widgets.to_a
     end

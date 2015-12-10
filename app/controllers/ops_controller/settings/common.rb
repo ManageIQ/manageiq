@@ -1167,12 +1167,9 @@ module OpsController::Settings::Common
       @scan_items = ScanItemSet.all
       @zones = Zone.in_my_region
       @ldap_regions = LdapRegion.in_my_region
-      @miq_schedules = []
-      MiqSchedule.all(:conditions => "prod_default != 'system' or prod_default is null").sort_by { |s| s.name.downcase }.each do |s|
-        if s.adhoc.nil? && (s.towhat != "DatabaseBackup" || (s.towhat == "DatabaseBackup" && DatabaseBackup.backup_supported?))
-          @miq_schedules.push(s) unless @miq_schedules.include?(s)
-        end
-      end
+      @miq_schedules = MiqSchedule.where("(prod_default != 'system' or prod_default is null) and adhoc IS NULL")
+                       .select { |s| s.towhat != "DatabaseBackup" || DatabaseBackup.backup_supported? }
+                       .sort_by { |s| s.name.downcase }
     end
   end
 
