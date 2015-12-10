@@ -1107,7 +1107,7 @@ class Host < ActiveRecord::Base
   end
 
   def refresh_patches(ssu)
-    return unless vmm_buildnumber && vmm_buildnumber != Patch.highest_patch_level(self)
+    return unless vmm_buildnumber && vmm_buildnumber != patches.highest_patch_level
 
     patches = []
     begin
