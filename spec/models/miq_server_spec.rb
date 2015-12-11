@@ -138,12 +138,10 @@ describe MiqServer do
       let(:zone_ntp)   { {:server => ["zone.pool.com"]} }
       let(:chrony)     { double }
 
-      before do
-        stub_const("Sys::Platform::IMPL", platform)
-      end
-
-      context "on a Linux platform" do
-        let(:platform) { :linux }
+      context "on an appliance" do
+        before do
+          allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
+        end
 
         it "syncs with server settings with zone and server configured" do
           @zone.update_attribute(:settings, :ntp => zone_ntp)
@@ -180,7 +178,9 @@ describe MiqServer do
       end
 
       context "on a non-Linux platform" do
-        let(:platform) { :macosx }
+        before do
+          allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
+        end
 
         it "does not apply NTP settings" do
           expect(LinuxAdmin::Chrony).to_not receive(:new)

@@ -261,7 +261,7 @@ class MiqServer < ActiveRecord::Base
 
     Vmdb::Appliance.log_config_on_startup
 
-    svr.ntp_reload(svr.server_ntp_settings) if MiqEnvironment::Command.is_appliance?
+    svr.ntp_reload(svr.server_ntp_settings)
     # Update the config settings in the db table for MiqServer
     svr.config_updated(OpenStruct.new(:name => cfg.get(:server, :name)))
 
