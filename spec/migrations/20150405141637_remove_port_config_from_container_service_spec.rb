@@ -14,9 +14,9 @@ describe RemovePortConfigFromContainerService do
                                                :container_port => 2222)
       migrate
       pconfig = container_service_port_config_stub.where(:container_service_id => service.id).first
-      pconfig.protocol.should == "TCP"
-      pconfig.port.should == 1111
-      pconfig.target_port.should == "2222" # container_port:integer turns into target_port:string
+      expect(pconfig.protocol).to eq("TCP")
+      expect(pconfig.port).to eq(1111)
+      expect(pconfig.target_port).to eq("2222") # container_port:integer turns into target_port:string
     end
   end
 
@@ -30,9 +30,9 @@ describe RemovePortConfigFromContainerService do
                                                  :target_port          => "2222")
       migrate
       service.reload
-      service.protocol.should == "TCP"
-      service.port.should == 1111
-      service.container_port.should == 2222
+      expect(service.protocol).to eq("TCP")
+      expect(service.port).to eq(1111)
+      expect(service.container_port).to eq(2222)
     end
   end
 end

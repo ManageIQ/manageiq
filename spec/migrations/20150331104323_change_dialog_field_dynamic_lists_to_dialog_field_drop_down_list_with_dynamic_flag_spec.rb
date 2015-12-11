@@ -12,7 +12,7 @@ describe ChangeDialogFieldDynamicListsToDialogFieldDropDownListWithDynamicFlag d
 
       dialog_field.reload
       expect(dialog_field.type).to eq("DialogFieldDropDownList")
-      expect(dialog_field.dynamic).to be_true
+      expect(dialog_field.dynamic).to be_truthy
     end
   end
 
@@ -26,9 +26,9 @@ describe ChangeDialogFieldDynamicListsToDialogFieldDropDownListWithDynamicFlag d
       dialog_field.reload
       dialog_field_2.reload
       expect(dialog_field.type).to eq("DialogFieldDropDownList")
-      expect(dialog_field.dynamic).to be_false
+      expect(dialog_field.dynamic).to be_falsey
       expect(dialog_field_2.type).to eq("DialogFieldDynamicList")
-      expect(dialog_field_2.dynamic).to be_false
+      expect(dialog_field_2.dynamic).to be_falsey
     end
   end
 end

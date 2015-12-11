@@ -11,7 +11,7 @@ describe AddCloudTenantStiColumn do
 
       migrate
 
-      cloud_tenant_stub.all.each { |tenant| tenant.type.should be == "CloudTenantOpenstack" }
+      cloud_tenant_stub.all.each { |tenant| expect(tenant.type).to eq("CloudTenantOpenstack") }
     end
   end
 end

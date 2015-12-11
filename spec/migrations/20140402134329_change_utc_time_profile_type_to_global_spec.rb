@@ -11,7 +11,7 @@ describe ChangeUtcTimeProfileTypeToGlobal do
       migrate
 
       tp.reload
-      tp.profile_type.should == 'global'
+      expect(tp.profile_type).to eq('global')
     end
   end
 end

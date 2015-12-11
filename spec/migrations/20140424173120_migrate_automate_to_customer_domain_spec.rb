@@ -18,10 +18,10 @@ describe MigrateAutomateToCustomerDomain do
 
         test_ns.reload
 
-        miq_ae_namespace_stub.where(:name => '$').first.should_not be_nil
+        expect(miq_ae_namespace_stub.where(:name => '$').first).not_to be_nil
 
         domain = miq_ae_namespace_stub.where(:name => 'Customer').first
-        test_ns.parent_id.should eq(domain.id)
+        expect(test_ns.parent_id).to eq(domain.id)
       end
 
       it 'with existing Customer namespace' do
@@ -35,8 +35,8 @@ describe MigrateAutomateToCustomerDomain do
         test_ns.reload
         customer_ns.reload
 
-        test_ns.parent_id.should     eq(domain.id)
-        customer_ns.parent_id.should eq(domain.id)
+        expect(test_ns.parent_id).to     eq(domain.id)
+        expect(customer_ns.parent_id).to eq(domain.id)
       end
 
       it 'with existing domain' do
@@ -49,7 +49,7 @@ describe MigrateAutomateToCustomerDomain do
 
         test_ns.reload
 
-        test_ns.parent_id.should eq(domain.id)
+        expect(test_ns.parent_id).to eq(domain.id)
       end
 
       it 'with inherited class' do
@@ -59,7 +59,7 @@ describe MigrateAutomateToCustomerDomain do
         migrate
 
         ae_class.reload
-        ae_class.inherits.should eq('Customer/ns_test/class1')
+        expect(ae_class.inherits).to eq('Customer/ns_test/class1')
       end
 
       it 'with inherited class from another domain' do
@@ -70,7 +70,7 @@ describe MigrateAutomateToCustomerDomain do
         migrate
 
         ae_class.reload
-        ae_class.inherits.should eq('domain2/ns_test/class1')
+        expect(ae_class.inherits).to eq('domain2/ns_test/class1')
       end
     end
   end
@@ -87,11 +87,11 @@ describe MigrateAutomateToCustomerDomain do
 
         migrate
 
-        miq_ae_namespace_stub.where(:name => '$').first.should_not    be_nil
-        miq_ae_namespace_stub.where(:name => 'Customer').first.should be_nil
+        expect(miq_ae_namespace_stub.where(:name => '$').first).not_to    be_nil
+        expect(miq_ae_namespace_stub.where(:name => 'Customer').first).to be_nil
 
         test_ns.reload
-        test_ns.parent_id.should be_nil
+        expect(test_ns.parent_id).to be_nil
       end
 
       it 'with existing Customer namespace' do
@@ -101,14 +101,14 @@ describe MigrateAutomateToCustomerDomain do
 
         migrate
 
-        miq_ae_namespace_stub.where(:name => 'Customer').first.should_not             be_nil
-        miq_ae_namespace_stub.where(:name => 'Customer', :priority => 1).first.should be_nil
+        expect(miq_ae_namespace_stub.where(:name => 'Customer').first).not_to             be_nil
+        expect(miq_ae_namespace_stub.where(:name => 'Customer', :priority => 1).first).to be_nil
 
         test_ns.reload
         customer_ns.reload
 
-        test_ns.parent_id.should     be_nil
-        customer_ns.parent_id.should be_nil
+        expect(test_ns.parent_id).to     be_nil
+        expect(customer_ns.parent_id).to be_nil
       end
 
       it 'with existing domain' do
@@ -118,11 +118,11 @@ describe MigrateAutomateToCustomerDomain do
 
         migrate
 
-        miq_ae_namespace_stub.where(:name => 'Customer').first.should     be_nil
-        miq_ae_namespace_stub.where(:name => 'ManageIQ').first.should_not be_nil
+        expect(miq_ae_namespace_stub.where(:name => 'Customer').first).to     be_nil
+        expect(miq_ae_namespace_stub.where(:name => 'ManageIQ').first).not_to be_nil
 
         test_ns.reload
-        test_ns.parent_id.should be_nil
+        expect(test_ns.parent_id).to be_nil
       end
 
       it 'with inherited class' do
@@ -133,7 +133,7 @@ describe MigrateAutomateToCustomerDomain do
         migrate
 
         ae_class.reload
-        ae_class.inherits.should eq('ns_test/class1')
+        expect(ae_class.inherits).to eq('ns_test/class1')
       end
 
       it 'with inherited class from another domain' do
@@ -144,7 +144,7 @@ describe MigrateAutomateToCustomerDomain do
         migrate
 
         ae_class.reload
-        ae_class.inherits.should eq('domain2/ns_test/class1')
+        expect(ae_class.inherits).to eq('domain2/ns_test/class1')
       end
     end
   end
