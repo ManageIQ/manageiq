@@ -22,7 +22,7 @@ describe Condition do
 
       it "valid expression" do
         expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> >= 2</check></find>"
-        Condition.subst(expr, @cluster, nil).should be_true
+        Condition.subst(expr, @cluster, nil).should be
       end
 
       it "invalid expression should not raise security error because it is now parsed and not evaluated" do
@@ -30,34 +30,28 @@ describe Condition do
         expect { Condition.subst(expr, @cluster, nil) }.not_to raise_error
       end
 
-      it "valid expression as a tainted object should not raise security error" do
-        expr = "<find><search>__start_ruby__ __start_context__<value ref=host, type=raw>/virtual/vms/hostnames</value>__type__string_set__end_context__ __start_script__return true__end_script__ __end_ruby__</search><check mode=count><count> >= 0</check></find>"
-        expr.taint
-        expect { Condition.subst(expr, @cluster, nil) }.to raise_error(RuntimeError, "Ruby script raised error [Insecure operation - eval]")
-      end
-
       it "tests all allowed operators in find/check expression clause" do
-        expr = "<find><search>__start_ruby__ __start_context__<value ref=host, type=raw>/virtual/vms/hostnames</value>__type__string_set__end_context__ __start_script__return true__end_script__ __end_ruby__</search><check mode=count><count> == 0</check></find>"
+        expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> == 0</check></find>"
         Condition.subst(expr, @cluster, nil).should == 'false'
 
-        expr = "<find><search>__start_ruby__ __start_context__<value ref=host, type=raw>/virtual/vms/hostnames</value>__type__string_set__end_context__ __start_script__return true__end_script__ __end_ruby__</search><check mode=count><count> > 0</check></find>"
+        expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> > 0</check></find>"
         Condition.subst(expr, @cluster, nil).should == 'true'
 
-        expr = "<find><search>__start_ruby__ __start_context__<value ref=host, type=raw>/virtual/vms/hostnames</value>__type__string_set__end_context__ __start_script__return true__end_script__ __end_ruby__</search><check mode=count><count> >= 0</check></find>"
+        expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> >= 0</check></find>"
         Condition.subst(expr, @cluster, nil).should == 'true'
 
-        expr = "<find><search>__start_ruby__ __start_context__<value ref=host, type=raw>/virtual/vms/hostnames</value>__type__string_set__end_context__ __start_script__return true__end_script__ __end_ruby__</search><check mode=count><count> < 0</check></find>"
+        expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'true'</search><check mode=count><count> < 0</check></find>"
         Condition.subst(expr, @cluster, nil).should == 'false'
 
-        expr = "<find><search>__start_ruby__ __start_context__<value ref=host, type=raw>/virtual/vms/hostnames</value>__type__string_set__end_context__ __start_script__return true__end_script__ __end_ruby__</search><check mode=count><count> <= 0</check></find>"
+        expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> <= 0</check></find>"
         Condition.subst(expr, @cluster, nil).should == 'false'
 
-        expr = "<find><search>__start_ruby__ __start_context__<value ref=host, type=raw>/virtual/vms/hostnames</value>__type__string_set__end_context__ __start_script__return true__end_script__ __end_ruby__</search><check mode=count><count> != 0</check></find>"
+        expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> != 0</check></find>"
         Condition.subst(expr, @cluster, nil).should == 'true'
       end
 
       it "rejects and expression with an illegal operator" do
-        expr = "<find><search>__start_ruby__ __start_context__<value ref=host, type=raw>/virtual/vms/hostnames</value>__type__string_set__end_context__ __start_script__return true__end_script__ __end_ruby__</search><check mode=count><count> !! 0</check></find>"
+        expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> !! 0</check></find>"
         expect { Condition.subst(expr, @cluster, nil).should == 'false' }.to raise_error(RuntimeError, "Illegal operator, '!!'")
       end
     end

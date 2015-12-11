@@ -88,16 +88,7 @@ class Condition < ActiveRecord::Base
   end
 
   def self.do_eval(expr)
-    # Remove this [DEPRECATION] in the next version
-    if expr =~ /^__start_ruby__\s?__start_context__\s?(.*)\s?__type__\s?(.*)\s?__end_context__\s?__start_script__\s?(.*)\s?__end_script__\s?__end_ruby__$/im
-      context, col_type, script = [$1, $2, $3]
-      context = MiqExpression.quote(context, col_type)
-      result = SafeNamespace.eval_script(script, context)
-      raise "Expected return value of true or false from ruby script but instead got result: [#{result.inspect}]" unless result.kind_of?(TrueClass) || result.kind_of?(FalseClass)
-    else
-      result = eval(expr) ? true : false
-    end
-    result
+    eval(expr) ? true : false
   end
 
   def self.subst(expr, rec, inputs)
@@ -111,7 +102,7 @@ class Condition < ActiveRecord::Base
     rec.class.acts_as_miq_taggable unless rec.respond_to?("tag_list") || rec.kind_of?(Hash)
 
     # <mode>/virtual/operating_system/product_name</mode>
-    # <mode ref=host>/managed/environment/prod</mode>
+    # <mode WE/JWSref=host>/managed/environment/prod</mode>
     expr.gsub!(/<(value|exist|count|registry)([^>]*)>([^<]+)<\/(value|exist|count|registry)>/im) { |_s| _subst(rec, inputs, $2.strip, $3.strip, $1.strip) }
 
     # <mode /virtual/operating_system/product_name />
@@ -302,43 +293,6 @@ class Condition < ActiveRecord::Base
     end
 
     return c, status
-  end
-
-  protected
-
-  module SafeNamespace
-    def self.eval_script(script, context)
-      _log.debug("Context: [#{context}], Class: [#{context.class.name}]")
-      _log.debug("Script:\n#{script}")
-      begin
-        t = Thread.new do
-          Thread.current["result"] = _eval(context, script)
-        end
-        to = 20 # allow 20 seconds for script to complete
-        Timeout::timeout(to) { t.join }
-      rescue Timeout::Error => err
-        t.exit
-        _log.error  "The following error occurred during ruby evaluation"
-        _log.error  "  #{err.class}: #{err.message}"
-        raise "Ruby script timed out after #{to} seconds"
-      rescue Exception => err
-        _log.error  "The following error occurred during ruby evaluation"
-        _log.error  "  #{err.class}: #{err.message}"
-        raise "Ruby script raised error [#{err.message}]"
-      ensure
-        (t["log"] || []).each {|m| _log.info("#{m}")} unless t.nil?
-      end
-      return t["result"]
-    end
-
-    def self._eval(context, script)
-      proc { $SAFE = 3; eval(script) }.call
-    end
-
-    def self.log(msg)
-      Thread.current["log"] ||= []
-      Thread.current["log"] << "[#{Time.now.utc.iso8601(6).chop}] #{msg}"
-    end
   end
 
 end # class Condition
