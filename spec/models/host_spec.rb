@@ -116,32 +116,6 @@ describe Host do
     end
   end
 
-  context ".check_for_vms_to_scan" do
-    before do
-      @zone1 = FactoryGirl.create(:small_environment)
-      @zone2 = FactoryGirl.create(:small_environment)
-
-      Host.any_instance.stub(:scan_frequency).and_return(30)
-    end
-
-    it "in zone1 will only scan Vms in zone1" do
-      should_only_scan_in_its_zone(@zone1)
-    end
-
-    it "in zone2 will only scan Vms in zone2" do
-      should_only_scan_in_its_zone(@zone2)
-    end
-
-    def should_only_scan_in_its_zone(zone)
-      vms = zone.vms_and_templates
-      MiqServer.stub(:my_server).and_return(zone.miq_servers.first)
-      Host.check_for_vms_to_scan
-      jobs = Job.where(:target_class => 'VmOrTemplate')
-      jobs.length.should == 2
-      jobs.collect(&:target_id).should match_array vms.collect(&:id)
-    end
-  end
-
   context "power operations" do
     let(:validation_response) { {:available => false, :message => "The Host is not VMware ESX"} }
 

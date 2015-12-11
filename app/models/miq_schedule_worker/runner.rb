@@ -151,12 +151,6 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     return unless @active_roles.include?("scheduler")
     @schedules[:scheduler] ||= []
 
-    # Schedule - Check for VMs to scan
-    every = worker_setting_or_default(:vm_scan_interval)
-    @schedules[:scheduler] << system_schedule_every(every, :first_in => every) do
-      enqueue :host_check_for_vms_to_scan
-    end
-
     # Schedule - Check for timed out jobs
     every = worker_setting_or_default(:job_timeout_interval)
     @schedules[:scheduler] << system_schedule_every(every, :first_in => every) do

@@ -556,7 +556,6 @@ workers:
       :storage_file_collection_interval: 1.days
       :storage_file_collection_time_utc: 06:00
       :vm_retired_interval: 10.minutes
-      :vm_scan_interval: 10.minutes
     :smis_refresh_worker:
       :connection_pool_size: 5
       :memory_threshold: 1.gigabytes
