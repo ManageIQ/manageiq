@@ -101,6 +101,7 @@ gem "uglifier",                       "~>2.7.1",   :require => false
 unless ENV['APPLIANCE']
   group :development do
     gem "gettext",          "3.1.4",    :require => false  # Used for finding translations
+    gem "rubocop",                      :require => false
     gem "ruby-prof",                    :require => false
     gem "ruby-graphviz",                :require => false  # Used by state_machine:draw Rake Task
   end
