@@ -17,12 +17,16 @@ describe GenericMailer do
     expect(BinaryBlob.count).to eq(0)
     GenericMailer.deliver_queue(:generic_notification, @args)
     expect(BinaryBlob.count).to eq(1)
-    expect(MiqQueue.exists?(:method_name => 'deliver', :class_name => described_class, :role => 'notifier')).to be_truthy
+    expect(MiqQueue.exists?(:method_name => 'deliver',
+                            :class_name  => described_class,
+                            :role        => 'notifier')).to be_truthy
   end
 
   it "call deliver_queue for automation_notification" do
     GenericMailer.deliver_queue(:automation_notification, @args)
-    expect(MiqQueue.exists?(:method_name => 'deliver', :class_name => described_class, :role => 'notifier')).to be_truthy
+    expect(MiqQueue.exists?(:method_name => 'deliver',
+                            :class_name  => described_class,
+                            :role        => 'notifier')).to be_truthy
   end
 
   context "delivery error" do
@@ -188,7 +192,7 @@ describe GenericMailer do
     expect(mail.parts[0].mime_type).to eq("text/plain")
     expect(mail.parts[0].body).to match(/Do something on vm start policy/)
     expect(mail.parts[1].mime_type).to eq("text/html")
-    expect(mail.parts[1].body).to match(/<h3>[\s]*Alert Triggered[\s]*<\/h3>/)
+    expect(mail.parts[1].body).to match(%r{<h3>[\s]*Alert Triggered[\s]*</h3>})
   end
 
   describe "#test_mail" do
