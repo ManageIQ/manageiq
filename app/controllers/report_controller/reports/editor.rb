@@ -339,23 +339,14 @@ module ReportController::Reports::Editor
     if @edit[:new][:model] == TREND_MODEL
       @tabs = [
         ["#{req}_1", "Columns"],
-        #               ["#{req}_8", "Consolidation"],
-        #               ["#{req}_2", "Formatting"],
         ["#{req}_3", "Filter"],
-        #               ["#{req}_4", "Summary"],
-        #               ["#{req}_5", "Charts"],
-        #               ["#{req}_6", "Timeline"],
         ["#{req}_7", "Preview"]
       ]
     elsif @edit[:new][:model] == "Chargeback"
       @tabs = [
         ["#{req}_1", "Columns"],
-        #               ["#{req}_8", "Consolidation"],
         ["#{req}_2", "Formatting"],
         ["#{req}_3", "Filter"],
-        #               ["#{req}_4", "Summary"],
-        #               ["#{req}_5", "Charts"],
-        #               ["#{req}_6", "Timeline"],
         ["#{req}_7", "Preview"]
       ]
     else
