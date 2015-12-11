@@ -14,7 +14,7 @@ module ReportController::Reports::Editor
       check_tabs
       build_edit_screen
     else
-      @sb[:miq_tab] = "new_1"
+      @sb[:miq_tab] = "edit_1"
       @rpt          = MiqReport.find(params[:id])
       @rpt.id       = nil # Treat as a new report
       set_form_vars
@@ -48,7 +48,7 @@ module ReportController::Reports::Editor
       end
       if @edit[:new][:graph_type] && (@edit[:new][:sortby1].blank? || @edit[:new][:sortby1] == NOTHING_STRING)
         add_flash(_("Report can not be saved unless sort field has been configured for Charts"), :error)
-        @sb[:miq_tab] = "new_4"
+        @sb[:miq_tab] = "edit_4"
         build_edit_screen
         replace_right_cell
         return
@@ -91,7 +91,7 @@ module ReportController::Reports::Editor
         check_tabs
         build_edit_screen
       else
-        @sb[:miq_tab] = "new_1"
+        @sb[:miq_tab] = "edit_1"
         @rpt = params[:id] && params[:id] != "new" ? MiqReport.find(params[:id]) :
                 MiqReport.new
         if @rpt.rpt_type == "Default"
@@ -335,11 +335,7 @@ module ReportController::Reports::Editor
   end
 
   def build_tabs
-    #   req = "new" if ["new", "copy", "create"].include?(request.parameters["action"])
-    #   req = "edit" if ["edit", "update"].include?(request.parameters["action"])
-    @edit[:request] ||= "new" if ["miq_report_new", "miq_report_copy"].include?(request.parameters["pressed"])
-    @edit[:request] ||= "edit" if ["miq_report_edit"].include?(request.parameters["pressed"])
-    req = @edit[:request]
+    req = "edit"
     if @edit[:new][:model] == TREND_MODEL
       @tabs = [
         ["#{req}_1", "Columns"],
@@ -1384,10 +1380,6 @@ module ReportController::Reports::Editor
   # Set form variables for edit
   def set_form_vars
     @edit = {}
-
-    # Remember how this edit started
-    @edit[:type] = ["copy", "new"].include?(params[:pressed]) ? "miq_report_new" : "miq_report_edit"
-
     @edit[:rpt_id] = @rpt.id  # Save a record id to use it later to look a record
     @edit[:rpt_title] = @rpt.title
     @edit[:rpt_name] = @rpt.name

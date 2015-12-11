@@ -70,5 +70,52 @@ describe ReportController do
         rep.tz.should == "Eastern Time (US & Canada)"
       end
     end
+
+    context "#miq_report_edit" do
+      it "should build tabs with correct tab id after reset button is pressed to prevent error when changing tabs" do
+        user = FactoryGirl.create(:user)
+        login_as user
+        rep = FactoryGirl.create(
+          :miq_report,
+          :rpt_type   => "Custom",
+          :db         => "Host",
+          :name       => 'name',
+          :title      => 'title',
+          :db_options => {},
+          :col_order  => ["name"],
+          :headers    => ["Name"],
+          :tz         => nil
+        )
+
+        edit = {
+          :rpt_id  => rep.id,
+          :new     => {
+            :model  => "Host",
+            :name   => 'name',
+            :title  => 'title',
+            :tz     => "test",
+            :fields => []
+          },
+          :current => {}
+        }
+
+        controller.instance_variable_set(:@edit, edit)
+        session[:edit] = assigns(:edit)
+
+        allow(User).to receive(:server_timezone).and_return("UTC")
+
+        login_as user
+        User.any_instance.stub(:role_allows?).and_return(true)
+
+        controller.stub(:check_privileges).and_return(true)
+        controller.stub(:load_edit).and_return(true)
+
+        controller.stub(:replace_right_cell)
+
+        post :miq_report_edit, :id => rep.id, :button => 'reset'
+        assigns(:sb)[:miq_tab].should eq("edit_1")
+        assigns(:tabs).should include(["edit_1", ""])
+      end
+    end
   end
 end
