@@ -92,18 +92,24 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   end
 
   def get_private_images
-    get_images(@connection.client.describe_images(:owners  => [:self],
-                                                  :filters => [{:name => "image-type", :values => ["machine"]}])[:images])
+    get_images(
+      @connection.client.describe_images(:owners  => [:self],
+                                         :filters => [{:name   => "image-type",
+                                                       :values => ["machine"]}])[:images])
   end
 
   def get_shared_images
-    get_images(@connection.client.describe_images(:executable_users => [:self],
-                                                  :filters          => [{:name => "image-type", :values => ["machine"]}])[:images])
+    get_images(
+      @connection.client.describe_images(:executable_users => [:self],
+                                         :filters          => [{:name   => "image-type",
+                                                                :values => ["machine"]}])[:images])
   end
 
   def get_public_images
-    get_images(@connection.client.describe_images(:executable_users => [:all],
-                                                  :filters          => [{:name => "image-type", :values => ["machine"]}])[:images], true)
+    get_images(
+      @connection.client.describe_images(:executable_users => [:all],
+                                         :filters          => [{:name   => "image-type",
+                                                                :values => ["machine"]}])[:images], true)
   end
 
   def get_images(images, is_public = false)

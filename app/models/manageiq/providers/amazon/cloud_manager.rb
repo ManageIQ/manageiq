@@ -96,7 +96,9 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
 
     begin
       # EC2 does Lazy Connections, so call a cheap function
-      with_provider_connection(options.merge(:auth_type => auth_type)) { |ec2| ec2.client.describe_regions.regions.map(&:region_name) }
+      with_provider_connection(options.merge(:auth_type => auth_type)) do |ec2|
+        ec2.client.describe_regions.regions.map(&:region_name)
+      end
     rescue => err
       miq_exception = translate_exception(err)
       raise unless miq_exception
@@ -179,9 +181,10 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     ec2 = raw_connect(access_key_id, secret_access_key, "EC2", "us-east-1")
     ec2.client.describe_regions.regions.each do |region|
       next if known_ems_regions.include?(region.region_name)
-      next if ec2.client.describe_instances({filters: [{name: "availability-zone", values: ["#{region}*"]}] })[:reservations].count == 0 && # instances
+      next if ec2.client.describe_instances(:filters => [{:name   => "availability-zone",
+                                                          :values => ["#{region}*"]}])[:reservations].count == 0 &&
               ec2.client.describe_images(:owners => [:self]).images.count == 0 && # private images
-              ec2.client.describe_images(:executable_users => [:self]).images.count == 0  # shared  images
+              ec2.client.describe_images(:executable_users => [:self]).images.count == 0 # shared  images
       new_emses << create_discovered_region(region.region_name, access_key_id, secret_access_key, all_ems_names)
     end
 
