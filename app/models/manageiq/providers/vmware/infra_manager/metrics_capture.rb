@@ -320,7 +320,7 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
       _log.error("#{msg}...Failed after [#{attempts}] retry attempts")
       _log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
       raise MiqException::MiqCommunicationsTimeoutError, err.message
-    rescue TimeoutError
+    rescue Timeout::Error
       _log.error("#{log_header} Timeout Error during metrics data collection")
       _log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
       raise MiqException::MiqTimeoutError, err.message

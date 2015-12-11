@@ -115,7 +115,7 @@ class MiqReplicationWorker::Runner < MiqWorker::Runner
           heartbeat
         end
       end
-    rescue TimeoutError
+    rescue Timeout::Error
       _log.info("#{log_prefix} Killing replication process with pid=#{@pid}")
       Process.kill(9, @pid)
     end

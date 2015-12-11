@@ -316,7 +316,7 @@ class Condition < ActiveRecord::Base
         end
         to = 20 # allow 20 seconds for script to complete
         Timeout::timeout(to) { t.join }
-      rescue TimeoutError => err
+      rescue Timeout::Error => err
         t.exit
         _log.error  "The following error occurred during ruby evaluation"
         _log.error  "  #{err.class}: #{err.message}"
