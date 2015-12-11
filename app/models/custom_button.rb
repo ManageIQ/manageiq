@@ -82,22 +82,6 @@ class CustomButton < ActiveRecord::Base
     )
   end
 
-  def self.save_as_button(opts)
-    [:uri, :userid, :target_attr_name].each { |a| raise "no value given for '#{a}'" if opts[a].nil? }
-
-    opts[:options] = {:target_attr_name => opts.delete(:target_attr_name)}
-    opts[:uri_path], opts[:uri_attributes], opts[:uri_message] = parse_uri(opts.delete(:uri))
-
-    rec = new(opts)
-    if opts[:description].nil? && !rec.new_record?
-      rec.destroy
-      return nil
-    end
-
-    rec.new_record? ? rec.save! : rec.update_attributes!(opts)
-    rec
-  end
-
   def to_export_xml(_options)
   end
 

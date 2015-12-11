@@ -36,29 +36,6 @@ module ApplicationController::Automate
   end
   private :resolve_button_throw
 
-  def resolve_button_save # Save current URI as an automate button
-    # need to strip and pass description as nil, incase button is being deleted
-    @resolve[:button_text] = @resolve[:button_text].strip == "" ? nil : @resolve[:button_text] unless @resolve[:button_text].nil?
-    begin
-      CustomButton.save_as_button(
-        :description      => @resolve[:button_text],
-        :applies_to_class => @resolve[:button_class],
-        :uri              => @resolve[:uri],
-        :userid           => session[:userid]
-      )
-    rescue StandardError => bang
-      add_flash(_("Error during '%s': ") % "save" << bang.message, :error)
-    else
-      if @resolve[:button_text].blank?
-        add_flash(_("Automate button %s has been cleared") % @resolve[:button_number])
-      else
-        add_flash(_("Automate button %{btn_num} has been set to %{btn_txt}") % {:btn_num => @resolve[:button_number], :btn_txt => @resolve[:button_text]})
-      end
-    end
-    render_flash
-  end
-  private :resolve_button_save
-
   def resolve_button_copy # Copy current URI as an automate button
     session[:resolve_object] = copy_hash(@resolve)
     render :nothing => true
@@ -152,7 +129,6 @@ module ApplicationController::Automate
 
     case params[:button]
     when "throw"    then resolve_button_throw
-    when "save"     then resolve_button_save
     when "copy"     then resolve_button_copy
     when "paste"    then resolve_button_paste
     when "simulate" then resolve_button_simulate
