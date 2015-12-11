@@ -456,6 +456,18 @@ describe ApplianceConsole::Prompts do
     end
   end
 
+  describe "#ask_for_domain" do
+    it "supports second-level domains" do
+      say "example.com"
+      expect(subject.ask_for_domain("prompt")).to eq("example.com")
+    end
+
+    it "supports top-level domains" do
+      say "example"
+      expect(subject.ask_for_domain("prompt")).to eq("example")
+    end
+  end
+
   context "#just_ask (private method)" do
     it "should work without a default" do
       say "x"
