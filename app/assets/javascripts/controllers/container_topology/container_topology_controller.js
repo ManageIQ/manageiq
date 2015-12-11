@@ -104,39 +104,28 @@ angular.module('topologyApp', ['kubernetesUI','ui.bootstrap'])
     });
 
     function class_name(d) {
-        var class_name = "";
         switch (d.item.kind) {
             case "Service":
             case "Route":
             case "Node":
             case "Replicator":
-                class_name = "container_" + d.item.kind.toLowerCase();
-                break;
+                return "container_" + d.item.kind.toLowerCase();
+
             case "VM":
             case "Host":
             case "Container":
-                class_name = d.item.kind.toLowerCase();
-                break;
+                return d.item.kind.toLowerCase();
+
             case "Pod":
-                class_name = "container_group";
-                break;
+                return "container_group";
+
             case "Kubernetes":
-                class_name = "vendor-kubernetes";
-                break;
             case "Openshift":
-                class_name = "vendor-openshift";
-                break;
             case "Atomic":
-                class_name = "vendor-atomic";
-                break;
             case "OpenshiftEnterprise":
-                class_name = "vendor-openshift_enterprise";
-                break;
             case "AtomicEnterprise":
-                class_name = "vendor-atomic_enterprise";
-                break;
+                return "vendor-" + _.snakeCase(d.item.kind);
         }
-        return class_name;
     }
 
     function dblclick(d) {
