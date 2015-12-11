@@ -13,9 +13,9 @@ $color-warning:                             #ec7a08;
 $color-critical:                            #cc0000;
 
 // Product overrides of Patternfly Login variables
-$img-bg-login:                              "../bg-login.png";
-$img-bg-login-2:                            "../bg-login-2.png";
-$img-bg-login-whitelabel:                   "../../upload/custom_login_logo.png";
+$img-bg-login:                              "bg-login.png";
+$img-bg-login-2:                            "bg-login-2.png";
+$img-bg-login-whitelabel:                   "/upload/custom_login_logo.png";
 $login-bg-color:                            #083c5a;
 $login-container-bg-color:                  #000000;
 $login-container-bg-color-rgba:             rgba(0, 0, 0, 0.2);
@@ -34,5 +34,5 @@ $login-container-details-border-color-rgba: rgba(0, 0, 0, 0.5);
 }
 
 body.whitelabel {
-  background: url("#{$img-path}/#{$img-bg-login-whitelabel}");
+  background: url($img-bg-login-whitelabel);
 }
