@@ -49,6 +49,10 @@
                        options_for_select(category_tags, wf.value(field.name)),
                        drop_down_options(field, url).merge(:multiple => true))
 
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent('#{field.name}', '#{url}');
+
       - else
         - value = wf.value(field.name) || ''
         - classification_ids = value.split(',')
