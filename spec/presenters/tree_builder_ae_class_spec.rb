@@ -15,13 +15,13 @@ describe TreeBuilderAeClass do
       @sb[:cached_waypoint_ids] =  MiqAeClass.waypoint_ids_for_state_machines
       tree = TreeBuilderAeClass.new(:automate_tree, "automate", @sb)
       domains = JSON.parse(tree.tree_nodes).first['children'].collect { |h| h['title'] }
-      domains.should match_array ['LUIGI']
+      expect(domains).to match_array ['LUIGI']
     end
 
     it "a tree without filter" do
       tree = TreeBuilderAeClass.new(:automate_tree, "automate", @sb)
       domains = JSON.parse(tree.tree_nodes).first['children'].collect { |h| h['title'] }
-      domains.should match_array %w(LUIGI MARIO)
+      expect(domains).to match_array %w(LUIGI MARIO)
     end
   end
 
@@ -38,8 +38,8 @@ describe TreeBuilderAeClass do
     it "should only return domains in a user's current tenant" do
       tree = TreeBuilderAeClass.new("ae_tree", "ae", {})
       domains = JSON.parse(tree.tree_nodes).first['children'].collect { |h| h['title'] }
-      domains.should match_array %w(test1)
-      domains.should_not include %w(test2)
+      expect(domains).to match_array %w(test1)
+      expect(domains).not_to include %w(test2)
     end
   end
 
@@ -55,7 +55,7 @@ describe TreeBuilderAeClass do
     it "should return domains in correct order" do
       tree = TreeBuilderAeClass.new("ae_tree", "ae", {})
       domains = JSON.parse(tree.tree_nodes).first['children'].collect { |h| h['title'] }
-      domains.should eq(%w(test2 test1))
+      expect(domains).to eq(%w(test2 test1))
     end
   end
 end

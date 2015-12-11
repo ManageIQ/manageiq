@@ -11,28 +11,28 @@ describe ExplorerPresenter do
     context "#replace_partial" do
       it 'returns proper JS' do
         js_str = @presenter.replace_partial(@el, @content)
-        js_str.should == "$('##{@el}').replaceWith('#{escape_javascript(@content)}');"
+        expect(js_str).to eq("$('##{@el}').replaceWith('#{escape_javascript(@content)}');")
       end
     end
 
     context "#update_partial" do
       it 'returns proper JS' do
         js_str = @presenter.update_partial(@el, @content)
-        js_str.should == "$('##{@el}').html('#{escape_javascript(@content)}');"
+        expect(js_str).to eq("$('##{@el}').html('#{escape_javascript(@content)}');")
       end
     end
 
     context "#set_or_undef" do
       it 'return proper JS for nil' do
         js_str = @presenter.set_or_undef("var1")
-        js_str.should == 'ManageIQ.record.var1 = null;'
+        expect(js_str).to eq('ManageIQ.record.var1 = null;')
       end
 
       it 'return proper JS for a random value' do
         random_value = 'xxx' + rand(10).to_s
         @presenter['var2'] = random_value
         js_str = @presenter.set_or_undef("var2")
-        js_str.should == "ManageIQ.record.var2 = '#{random_value}';"
+        expect(js_str).to eq("ManageIQ.record.var2 = '#{random_value}';")
       end
     end
 
@@ -43,7 +43,7 @@ describe ExplorerPresenter do
           :action     => 'bar',
           :record_id  => 42,
         )
-        js_str.should == "miqAsyncAjax('/foo/bar/42');"
+        expect(js_str).to eq("miqAsyncAjax('/foo/bar/42');")
       end
     end
 

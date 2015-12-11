@@ -22,7 +22,7 @@ describe TreeBuilderAeCustomization  do
     end
 
     it "stores values into the sandbox" do
-      sandbox[:trees][:dialog_import_export_tree].should == expected_sandbox_values
+      expect(sandbox[:trees][:dialog_import_export_tree]).to eq(expected_sandbox_values)
     end
   end
 end
