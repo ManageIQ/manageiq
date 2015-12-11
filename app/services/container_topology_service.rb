@@ -1,4 +1,6 @@
 class ContainerTopologyService
+  include ActionView::Helpers::AssetUrlHelper
+
   def initialize(provider_id)
     @provider_id = provider_id
     @providers = retrieve_providers
@@ -63,15 +65,38 @@ class ContainerTopologyService
   def build_entity_data(entity, kind)
     status = entity_status(entity, kind)
     id = case kind
-           when 'VM', 'Host' then entity.uid_ems
-           when 'Kubernetes', 'Openshift', 'Atomic', 'OpenshiftEnterprise', 'AtomicEnterprise' then entity.id.to_s
-         else entity.ems_ref
+         when 'VM', 'Host'
+           entity.uid_ems
+         when 'Kubernetes', 'Openshift', 'Atomic', 'OpenshiftEnterprise', 'AtomicEnterprise'
+           entity.id.to_s
+         else
+           entity.ems_ref
          end
 
-    data = {:id => id, :name => entity.name, :status => status, :kind => kind, :miq_id => entity.id}
-    if (kind.eql?("VM") || kind.eql?("Host"))
+    icon = case kind
+           when "Service", "Route", "Node", "Replicator"
+             "container_" + kind.downcase
+           when "VM", "Host", "Container"
+             kind.downcase
+           when "Pod"
+             "container_group"
+           when "Kubernetes", "Openshift", "Atomic", "OpenshiftEnterprise", "AtomicEnterprise"
+             "vendor-#{kind.underscore}"
+           else
+             raise "No icon for #{kind}"
+           end
+
+    data = {:id     => id,
+            :name   => entity.name,
+            :status => status,
+            :kind   => kind,
+            :miq_id => entity.id,
+            :icon   => image_path("icons/new/#{icon}.png")}
+
+    if %w(VM Host).include? kind
       data.merge!(:provider => entity.ext_management_system.name)
     end
+
     data
   end
 

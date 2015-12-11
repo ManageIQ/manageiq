@@ -79,9 +79,7 @@ angular.module('topologyApp', ['kubernetesUI','ui.bootstrap'])
         added.append("title");
         added.on("dblclick", function(d) {return dblclick(d)});
         added.append("image")
-            .attr("xlink:href",function(d) {
-                return "/images/icons/new/" + class_name(d) + ".png";
-            })
+            .attr("xlink:href", function(d) { return d.item.icon; })
             .attr("y", function(d) { return getDimensions(d).y})
             .attr("x", function(d) { return getDimensions(d).x})
             .attr("height", function(d) { return getDimensions(d).height})
@@ -178,4 +176,4 @@ angular.module('topologyApp', ['kubernetesUI','ui.bootstrap'])
 
     }
 
-    }]);
+}]);
