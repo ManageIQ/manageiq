@@ -7,7 +7,7 @@
   }
   @media (min-width: $screen-sm) {
     &.login-pf {
-      background: url("#{$img-path}/#{$img-bg-login-2}");
+      background: image-url($img-bg-login-2);
       background-position: 100% 100%;
       background-repeat: no-repeat;
       background-size: 30%;
@@ -26,7 +26,7 @@
   }
   @media (min-width: $screen-sm) {
     &.login-pf body {
-      background: url("#{$img-path}/#{$img-bg-login}");
+      background: image-url($img-bg-login);
       background-repeat: no-repeat;
       background-size: 30%;
       height: 100%;
