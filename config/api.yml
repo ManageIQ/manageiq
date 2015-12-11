@@ -997,6 +997,8 @@
         :identifier: vm_scan
       - :name: delete
         :identifier: vm_delete
+      - :name: terminate
+        :identifier: instance_terminate
     :resource_actions:
       :post:
       - :name: edit
@@ -1030,6 +1032,8 @@
         :identifier: vm_retire
       - :name: delete
         :identifier: vm_delete
+      - :name: terminate
+        :identifier: instance_terminate
       - :name: set_owner
         :identifier: vm_edit
       - :name: set_ownership
