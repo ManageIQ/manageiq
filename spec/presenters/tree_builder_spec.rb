@@ -4,15 +4,15 @@ describe TreeBuilder do
   context "initialize" do
     it "initializes a tree" do
       tree = TreeBuilderChargebackRates.new("cb_rates_tree", "cb_rates", {})
-      tree.should be_a_kind_of(TreeBuilder)
-      tree.name.should == :cb_rates_tree
+      expect(tree).to be_a_kind_of(TreeBuilder)
+      expect(tree.name).to eq(:cb_rates_tree)
     end
 
     it "sets sandbox hash that can be accessed by other methods in the class" do
       sb = {}
       tree = TreeBuilderChargebackRates.new("cb_rates_tree", "cb_rates", sb)
-      tree.should be_a_kind_of(TreeBuilder)
-      tree.name.should == :cb_rates_tree
+      expect(tree).to be_a_kind_of(TreeBuilder)
+      expect(tree.name).to eq(:cb_rates_tree)
       sb.key?(:trees)
       sb[:trees].key?(:cb_rates_tree)
     end
@@ -22,9 +22,9 @@ describe TreeBuilder do
     it "sets title and tooltip for the passed in root node" do
       tree = TreeBuilderChargebackRates.new("cb_rates_tree", "cb_rates", {})
       title, tooltip, icon = tree.root_options
-      title.should == "Rates"
-      tooltip.should == "Rates"
-      icon.should be_nil
+      expect(title).to eq("Rates")
+      expect(tooltip).to eq("Rates")
+      expect(icon).to be_nil
     end
   end
 
@@ -48,7 +48,7 @@ describe TreeBuilder do
                 :icon     => "folder.png"
               }]
       tree.locals_for_render.key?(:json_tree)
-      tree.locals_for_render[:json_tree].should == nodes.to_json
+      expect(tree.locals_for_render[:json_tree]).to eq(nodes.to_json)
     end
   end
 
@@ -57,7 +57,7 @@ describe TreeBuilder do
       tree = TreeBuilderChargebackRates.new("cb_rates_tree", "cb_rates", {})
 
       active_node = 'foobar'
-      TreeState.any_instance.stub(:x_node).and_return(active_node)
+      allow_any_instance_of(TreeState).to receive(:x_node).and_return(active_node)
 
       expect(tree.locals_for_render[:select_node]).to eq(active_node)
     end
