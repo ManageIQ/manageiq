@@ -19,25 +19,29 @@ describe CustomButton do
         @button_text   = "Power ON during Business Hours ONLY"
         @button_number = 3
         @button_class  = "Vm"
+        @target_id     = 2
         @ae_name       = 'Automation'
         @ae_attributes = {'phrase' => 'Hello World'}
         @ae_uri        = MiqAeEngine.create_automation_object(@ae_name, @ae_attributes)
         @userid        = "guest"
-        @target_attr_name = "foo"
-        @button = described_class.save_as_button(
+        uri_path, uri_attributes, uri_message = CustomButton.parse_uri(@ae_uri)
+        @button = FactoryGirl.create(:custom_button,
           :name             => @button_name,
           :description      => @button_text,
           :applies_to_class => @button_class,
+          :applies_to_id    => @target_id,
           :uri              => @ae_uri,
-          :userid           => @userid,
-          :target_attr_name => @target_attr_name
+          :uri_path         => uri_path,
+          :uri_attributes   => uri_attributes,
+          :uri_message      => uri_message,
+          :userid           => @userid
         )
       end
 
       it "creates the proper button" do
         described_class.count.should == 1
-        @button.uri_path.should == '/System/Process/Automation'
-        @button.options[:target_attr_name].should == @target_attr_name
+        @button.uri_path.should eq('/System/Process/Automation')
+        @button.applies_to_id.should eq(@target_id)
         @button.uri_object_name.should == @ae_name
         @ae_attributes.each { |key, value| @button.uri_attributes[key].should == value.to_s }
 
