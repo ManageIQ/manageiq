@@ -1,45 +1,27 @@
-.button-group{"ng-controller" => "buttonGroupController"}
-  = button_tag("Add",
-               "class"       => "btn btn-primary btn-disabled",
-               :alt          => "Add",
-               :title        => "Add",
-               "ng-click"    => "disabledClick($event)",
-               :style        => "cursor:not-allowed",
-               "ng-show"     => "newRecord && !saveable(angularForm)")
-
-  = button_tag("Add",
-               :class        => "btn btn-primary",
-               :alt          => "Add",
-               :title        => "Add",
-               "ng-click"    => "addClicked($event, true)",
-               "ng-show"     => "newRecord && saveable(angularForm)")
-
-  = button_tag("Save",
-               :class        => "btn btn-primary btn-disabled",
-               :alt          => "Save changes",
-               :title        => "Save changes",
-               "ng-click"    => "disabledClick($event)",
-               :style        => "cursor:not-allowed",
-               "ng-show"     => "!newRecord && !saveable(angularForm)")
-
-  = button_tag("Save",
-               :class        => "btn btn-primary",
-               :alt          => "Save changes",
-               :title        => "Save changes",
-               "ng-click"    => "saveClicked($event, true)",
-               "ng-show"     => "!newRecord && saveable(angularForm)")
-
-  = button_tag("Reset",
-               :class        => "btn btn-default btn-disabled",
-               :alt          => "Reset changes",
-               :title        => "Reset changes",
-               "ng-class"    => "{'btn-disabled': angularForm.$pristine}",
-               "ng-click"    => "resetClicked()",
-               "ng-disabled" => "angularForm.$pristine",
-               "ng-hide"     => "newRecord")
-
-  = button_tag("Cancel",
-               :class => "btn btn-default",
-               :alt   => "Cancel",
-               :title => "Cancel",
-               "ng-click" => "cancelClicked($event)")
+.button-group
+  %button-group{:visible    => "newRecord",
+                :submit     => "addClicked($event, true)",
+                :disabled   => "!miqService.saveable(angularForm)",
+                :label      => _("Add"),
+                "title-on"  => _("Add"),
+                "title-off" => _("Add"),
+                "btn-class" => "btn-primary"}
+  %button-group{:visible    => "!newRecord",
+                :submit     => "saveClicked($event, true)",
+                :disabled   => "!miqService.saveable(angularForm)",
+                :label      => _("Save"),
+                "title-on"  => _("Save changes"),
+                "title-off" => _("Save changes"),
+                "btn-class" => "btn-primary"}
+  %button-group{:visible    => "!newRecord",
+                :submit     => "resetClicked()",
+                :disabled   => "angularForm.$pristine",
+                :label      => _("Reset"),
+                "title-on"  => _("Reset changes"),
+                "btn-class" => "btn-default"}
+  %button-group{:visible    => "true",
+                :submit     => "cancelClicked($event)",
+                :disabled   => "false",
+                :label      => _("Cancel"),
+                "title-on"  => _("Cancel"),
+                "btn-class" => "btn-default"}

@@ -1,25 +1,18 @@
 - if !session[:host_items].nil?
-  - verify_title_on ||= "Validate the credentials by logging into the selected %s" % title_for_host
-  - verify_title_off ||= _("%s to validate against, Username and matching password fields are needed to perform verification of credentials") % title_for_host
+  - verify_title_on ||= _("Validate the credentials by logging into the selected %{title}") % {:title => title_for_host}
+  - verify_title_off ||= _("%{title} to validate against, Username and matching password fields are needed to perform verification of credentials") % {:title => title_for_host}
 - else
-  - verify_title_on = "Validate the credentials by logging into the Server"
+  - verify_title_on = _("Validate the credentials by logging into the Server")
   - verify_title_off ||= _("Server information, Username and matching password fields are needed to perform verification of credentials")
 - if controller.send(:restful?)
   - validate = "validateClicked($event, '#{valtype}', '#{url_for(:action => validate_url, :id => id, :type => valtype, :button => "validate")}', true)"
 - else
   - validate = "validateClicked('#{url_for(:action => validate_url, :id => id, :type => valtype, :button => "validate")}')"
 
-%div{"ng-show" => ng_show, "ng-controller" => "buttonGroupController"}
-  = button_tag("Validate",
-                 :class     => "btn btn-primary btn-xs btn-disabled",
-                 :alt       => verify_title_off,
-                 :title     => verify_title_off,
-                 :style     => "cursor:not-allowed",
-                 "ng-show"  => basic_info_needed ? "!canValidateBasicInfo()" : "!canValidate()",
-                 "ng-click" => "disabledClick($event)")
-  = button_tag("Validate",
-                 :class     => "btn btn-primary btn-xs",
-                 :alt       => verify_title_on,
-                 :title     => verify_title_on,
-                 "ng-show"  => basic_info_needed ? "canValidateBasicInfo()" : "canValidate()",
-                 "ng-click" => validate)
+%button-group{:visible    => ng_show,
+              :submit     => validate,
+              :disabled   => basic_info_needed ? "!canValidateBasicInfo()" : "!canValidate()",
+              :label      => _("Validate"),
+              "title-on"  => verify_title_on,
+              "title-off" => verify_title_off,
+              "btn-class" => "btn-primary btn-xs"}
