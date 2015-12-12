@@ -87,22 +87,7 @@ module ApplicationController::Buttons
   end
 
   def automate_button_field_changed
-    if params[:target_class]
-    #     @resolve[:target_class] = params[:target_class]
-    #     @resolve[:saved_buttons] = Array.new
-    #     aset = CustomButtonSet.find_by_name("#{@resolve[:target_class].to_s.downcase}_custom")
-    #     if aset
-    #       aset.members.sort_by(&:button_id).each do |as|
-    #         @resolve[:saved_buttons].push(as)
-    #       end
-    #     end
-    #     uri = CustomButton.all(:conditions => {:applies_to_class=>@resolve[:target_class].to_s, :button_id=>0}).sort_by(&:description)
-    #     if uri    # add uri records that dont have button number assigned to them
-    #       uri.each do |u|
-    #         @resolve[:saved_buttons].push(u)
-    #       end
-    #     end
-    else
+    unless params[:target_class]
       @edit = session[:edit]
       @custom_button = @edit[:custom_button]
       if params[:readonly]
