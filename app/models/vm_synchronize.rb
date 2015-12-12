@@ -21,7 +21,7 @@ class VmSynchronize < Job
       host = Host.find(agent_id)
       vm   = VmOrTemplate.find(target_id)
       vm.sync_metadata(options[:categories], "taskid" => jobid, "host" => host)
-    rescue TimeoutError
+    rescue Timeout::Error
       message = "timed out attempting to synchronize, aborting"
       _log.error("#{message}")
       signal(:abort, message, "error")

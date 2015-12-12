@@ -441,7 +441,7 @@ class MiqAlert < ActiveRecord::Base
     alarms = []
     begin
       Timeout.timeout(to) { alarms = ems.get_alarms if ems.respond_to?(:get_alarms) }
-    rescue TimeoutError
+    rescue Timeout::Error
       msg = "Request to retrieve alarms timed out after #{to} seconds"
       $log.warn(msg)
       raise msg

@@ -56,7 +56,7 @@ class VmScan < Job
     rescue => err
       _log.log_backtrace(err)
       signal(:abort, err.message, "error")
-    rescue TimeoutError
+    rescue Timeout::Error
       msg = "Request to check policy timed out"
       _log.error(msg)
       signal(:abort, msg, "error")
@@ -170,7 +170,7 @@ class VmScan < Job
       _log.log_backtrace(err)
       signal(:abort, err.message, "error")
       return
-    rescue TimeoutError
+    rescue Timeout::Error
       msg = case options[:snapshot]
             when :smartProxy, :skipped then "Request to log snapshot user event with EMS timed out."
             else "Request to create snapshot timed out"
@@ -215,7 +215,7 @@ class VmScan < Job
 
       _log.info "[#{host.name}] communicates with [#{scan_ci_type}:#{ems_list[scan_ci_type][:hostname]}(#{ems_list[scan_ci_type][:address]})] to scan vm [#{vm.name}]" if agent_class == "MiqServer" && !ems_list[scan_ci_type].nil?
       vm.scan_metadata(options[:categories], "taskid" => jobid, "host" => host, "args" => [YAML.dump(scan_args)])
-    rescue TimeoutError
+    rescue Timeout::Error
       message = "timed out attempting to scan, aborting"
       _log.error("#{message}")
       signal(:abort, message, "error")
@@ -286,7 +286,7 @@ class VmScan < Job
         rescue => err
           _log.error("#{err}")
           return
-        rescue TimeoutError
+        rescue Timeout::Error
           msg = "Request to delete snapshot timed out"
           _log.error("#{msg}")
         end
@@ -317,7 +317,7 @@ class VmScan < Job
                        "taskid" => jobid,
                        "host"   => host
                       )
-    rescue TimeoutError
+    rescue Timeout::Error
       message = "timed out attempting to synchronize, aborting"
       _log.error("#{message}")
       signal(:abort, message, "error")

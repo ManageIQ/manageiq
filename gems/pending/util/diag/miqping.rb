@@ -44,8 +44,8 @@ module Manageiq
         begin
           t1 = Time.now
           result = driver.send(ws, cfg.data)
-        rescue TimeoutError
-          puts "ERROR: TimeoutError after [#{Time.now - t1}] seconds"
+        rescue Timeout::Error
+          puts "ERROR: Timeout::Error after [#{Time.now - t1}] seconds"
         rescue => err
           puts "ERROR: #{err}"
         end

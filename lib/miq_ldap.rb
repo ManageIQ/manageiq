@@ -149,7 +149,7 @@ class MiqLdap
 
   def search(opts, &blk)
     Timeout.timeout(@search_timeout) { _search(opts, &blk) }
-  rescue TimeoutError
+  rescue Timeout::Error
     _log.error("LDAP search timed out after #{@search_timeout} seconds")
     raise
   end
