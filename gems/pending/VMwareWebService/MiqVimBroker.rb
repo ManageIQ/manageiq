@@ -91,7 +91,6 @@ class MiqVimBroker
       @selectorHash = @@selectorHash
       @cacheScope   = @@cacheScope
 
-      # $SAFE = 1
       acl = ACL.new(%w( deny all allow 127.0.0.1/32 ))
       DRb.install_acl(acl)
       DRb.start_service("druby://127.0.0.1:#{port}", self, :idconv => VimBrokerIdConv.new)
