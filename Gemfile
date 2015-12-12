@@ -142,6 +142,7 @@ source "https://rails-assets.org" do
   gem "rails-assets-slickgrid",                       "~>2.1.0"
   gem "rails-assets-spin.js",                         "~>2.3.2"
   gem "rails-assets-sprintf",                         "~>1.0.3"
+  gem "rails-assets-xml_display",                     "~>0.1.1"
 end
 
 #
