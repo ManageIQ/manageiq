@@ -453,10 +453,7 @@ class ExtManagementSystem < ActiveRecord::Base
   def self.event_monitor_class
     nil
   end
-
-  def event_monitor_class
-    self.class.event_monitor_class
-  end
+  delegate :event_monitor_class, :to => :class
 
   def event_monitor
     return if event_monitor_class.nil?

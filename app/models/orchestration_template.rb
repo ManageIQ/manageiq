@@ -91,9 +91,7 @@ class OrchestrationTemplate < ActiveRecord::Base
     ExtManagementSystem.where(:type => eligible_manager_types.collect(&:name))
   end
 
-  def eligible_managers
-    self.class.eligible_managers
-  end
+  delegate :eligible_managers, :to => :class
 
   # return the validation error message; otherwise nil
   def validate_content(manager = nil)

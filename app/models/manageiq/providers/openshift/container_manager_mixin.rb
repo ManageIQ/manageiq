@@ -15,9 +15,7 @@ module ManageIQ::Providers::Openshift::ContainerManagerMixin
   # decided by the user nor out of control in the defaults of openshift gem
   # because it's not guaranteed that the next default version will work with
   # our specific code in ManageIQ.
-  def api_version
-    self.class.api_version
-  end
+  delegate :api_version, :to => :class
 
   def api_version=(_value)
     raise 'OpenShift api_version cannot be modified'

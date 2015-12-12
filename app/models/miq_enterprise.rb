@@ -45,9 +45,7 @@ class MiqEnterprise < ActiveRecord::Base
     MiqRegion.count > 1
   end
 
-  def is_enterprise?
-    self.class.is_enterprise?
-  end
+  delegate :is_enterprise?, :to => :class
 
   def my_zone
     MiqServer.my_zone

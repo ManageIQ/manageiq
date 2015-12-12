@@ -143,7 +143,5 @@ module ManageIQ::Providers::Openstack::ManagerMixin
     raise MiqException::MiqOrchestrationValidationError, err.to_s, err.backtrace
   end
 
-  def description
-    self.class.description
-  end
+  delegate :description, :to => :class
 end
