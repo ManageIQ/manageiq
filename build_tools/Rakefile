@@ -1,0 +1,11 @@
+
+# no op rakefile
+
+# skip any tasks called
+ARGV.each do |arg|
+  task arg
+end
+
+task :default
+
+puts "rake task skipped"
