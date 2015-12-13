@@ -271,9 +271,7 @@ class MiqStorageMetric < ActiveRecord::Base
   # The derived metrics class for this subclass.
   # Called from an instance of subclass of MiqStorageMetric.
   #
-  def derived_metrics_class
-    self.class.derived_metrics_class
-  end
+  delegate :derived_metrics_class, :to => :class
 
   #
   # The name of the metrics rollup class for this subclass.
@@ -298,7 +296,5 @@ class MiqStorageMetric < ActiveRecord::Base
   # The metrics rollup class for this subclass.
   # Called from an instance of subclass of MiqStorageMetric.
   #
-  def metrics_rollup_class
-    self.class.metrics_rollup_class
-  end
+  delegate :metrics_rollup_class, :to => :class
 end

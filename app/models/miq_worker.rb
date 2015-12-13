@@ -432,9 +432,7 @@ class MiqWorker < ActiveRecord::Base
     normalized_type.titleize
   end
 
-  def normalized_type
-    self.class.normalized_type
-  end
+  delegate :normalized_type, :to => :class
 
   def format_full_log_msg
     "Worker [#{self.class}] with ID: [#{id}], PID: [#{pid}], GUID: [#{guid}]"

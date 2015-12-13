@@ -23,9 +23,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager < ManageIQ::Providers::C
   # decided by the user nor out of control in the defaults of kubeclient gem
   # because it's not guaranteed that the next default version will work with
   # our specific code in ManageIQ.
-  def api_version
-    self.class.api_version
-  end
+  delegate :api_version, :to => :class
 
   def api_version=(_value)
     raise 'Kubernetes api_version cannot be modified'

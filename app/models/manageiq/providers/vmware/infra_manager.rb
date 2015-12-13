@@ -65,9 +65,7 @@ module ManageIQ::Providers
       false
     end
 
-    def use_vim_broker?
-      self.class.use_vim_broker?
-    end
+    delegate :use_vim_broker?, :to => :class
 
     def self.event_monitor_class
       self::EventCatcher

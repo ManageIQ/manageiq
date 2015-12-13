@@ -78,9 +78,7 @@ module AssignmentMixin
     reload
   end
 
-  def namespace
-    self.class.namespace
-  end
+  delegate :namespace, :to => :class
 
   module ClassMethods
     def assignments

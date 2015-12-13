@@ -3,9 +3,7 @@ class ManageIQ::Providers::Vmware::InfraManager::HostEsx < ManageIQ::Providers::
     false
   end
 
-  def use_vim_broker?
-    self.class.use_vim_broker?
-  end
+  delegate :use_vim_broker?, :to => :class
 
   def vim_shutdown(force = false)
     with_provider_object do |vim_host|

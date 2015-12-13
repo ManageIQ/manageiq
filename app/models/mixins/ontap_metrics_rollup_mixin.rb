@@ -99,17 +99,7 @@ module OntapMetricsRollupMixin
     smm.counter_info
   end
 
-  def counterNames
-    self.class.counterNames
-  end
-
-  def minCounterNames
-    self.class.minCounterNames
-  end
-
-  def maxCounterNames
-    self.class.maxCounterNames
-  end
+  delegate :counterNames, :minCounterNames, :maxCounterNames, :to => :class
 
   def rateCounterNames
     self.class.rateCounterNames(counter_info)

@@ -902,9 +902,7 @@ class VmOrTemplate < ActiveRecord::Base
     !self.scan_via_host?
   end
 
-  def scan_via_ems?
-    self.class.scan_via_ems?
-  end
+  delegate :scan_via_ems?, :to => :class
 
   # Cache the proxy host for repository scans because the JobProxyDispatch calls this for each Vm scan job in a loop
   cache_with_timeout(:proxy_host_for_repository_scans, 30.seconds) do

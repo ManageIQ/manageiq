@@ -86,9 +86,7 @@ class DatabaseBackup < ActiveRecord::Base
     "region_#{my_region_number}"
   end
 
-  def region_name
-    self.class.region_name
-  end
+  delegate :region_name, :to => :class
 
   def schedule_name
     @schedule_name ||= begin

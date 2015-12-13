@@ -12,9 +12,7 @@ class MiqTemplate < VmOrTemplate
   end
   class << self; alias_method :corresponding_vm_model, :corresponding_model; end
 
-  def corresponding_model
-    self.class.corresponding_model
-  end
+  delegate :corresponding_model, :to => :class
   alias_method :corresponding_vm_model, :corresponding_model
 
   def scan_via_ems?
@@ -25,9 +23,7 @@ class MiqTemplate < VmOrTemplate
     false
   end
 
-  def supports_kickstart_provisioning?
-    self.class.supports_kickstart_provisioning?
-  end
+  delegate :supports_kickstart_provisioning?, :to => :class
 
   def self.eligible_for_provisioning
     where(arel_table[:ems_id].not_eq(nil))

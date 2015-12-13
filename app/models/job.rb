@@ -35,9 +35,7 @@ class Job < ActiveRecord::Base
     DEFAULT_TIMEOUT
   end
 
-  def current_job_timeout
-    self.class.current_job_timeout
-  end
+  delegate :current_job_timeout, :to => :class
 
   def initialize_attributes
     self.name ||= "#{type} created on #{Time.now.utc}"

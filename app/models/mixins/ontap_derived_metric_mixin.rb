@@ -114,9 +114,7 @@ module OntapDerivedMetricMixin
     smm.counter_info
   end
 
-  def counterNames
-    self.class.counterNames
-  end
+  delegate :counterNames, :to => :class
 
   def rateCounterNames(counterInfo = nil)
     counterInfo = counter_info if counterInfo.nil?
