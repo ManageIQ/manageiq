@@ -31,7 +31,8 @@ describe EmsCluster::CapacityPlanning do
 
   it "#capacity_profile_method_description" do
     settings_path = [:profile, :"1", :vcpu_method_description]
-    expect(@cluster.capacity_profile_method_description(1, :vcpu)).to eq(EmsCluster.capacity_settings.fetch_path(settings_path))
+    expect(@cluster.capacity_profile_method_description(1, :vcpu))
+      .to eq(EmsCluster.capacity_settings.fetch_path(settings_path))
     EmsCluster.capacity_settings.store_path(settings_path, "Test Description")
     expect(@cluster.capacity_profile_method_description(1, :vcpu)).to eq("Test Description")
   end
@@ -156,7 +157,9 @@ describe EmsCluster::CapacityPlanning do
       allow(@cluster).to receive(:max_cpu_usage_rate_average_high_over_time_period_without_overhead).and_return(11.32)
       expect(@cluster.capacity_peak_usage_percentage(:vcpu)).to eq(11.32)
 
-      allow(@cluster).to receive(:max_mem_usage_absolute_average_high_over_time_period_without_overhead).and_return(35.23)
+      allow(@cluster)
+        .to receive(:max_mem_usage_absolute_average_high_over_time_period_without_overhead)
+        .and_return(35.23)
       expect(@cluster.capacity_peak_usage_percentage(:memory)).to eq(35.23)
     end
 
@@ -171,8 +174,8 @@ describe EmsCluster::CapacityPlanning do
 
   context "#capacity_effective_host_resources" do
     it "with effective_resource set" do
-      allow(@cluster).to receive(:effective_cpu).and_return(31000)
-      expect(@cluster.capacity_effective_host_resources(2, :vcpu)).to eq(31000)
+      allow(@cluster).to receive(:effective_cpu).and_return(31_000)
+      expect(@cluster.capacity_effective_host_resources(2, :vcpu)).to eq(31_000)
     end
 
     context "with effective_resource not set" do
@@ -181,8 +184,8 @@ describe EmsCluster::CapacityPlanning do
       end
 
       it "and normal data" do
-        allow(@cluster).to receive(:aggregate_cpu_speed).and_return(12345)
-        expect(@cluster.capacity_effective_host_resources(2, :vcpu)).to eq(12345)
+        allow(@cluster).to receive(:aggregate_cpu_speed).and_return(12_345)
+        expect(@cluster.capacity_effective_host_resources(2, :vcpu)).to eq(12_345)
       end
 
       it "and missing data" do
@@ -245,9 +248,9 @@ describe EmsCluster::CapacityPlanning do
 
   context "#capacity_used_host_resources" do
     it "with normal data" do
-      allow(@cluster).to receive(:capacity_available_host_resources).and_return(31000)
+      allow(@cluster).to receive(:capacity_available_host_resources).and_return(31_000)
       allow(@cluster).to receive(:max_cpu_usage_rate_average_high_over_time_period_without_overhead).and_return(11.32)
-      expect(@cluster.capacity_used_host_resources(2, :vcpu)).to be_within(0.001).of(3509.200)
+      expect(@cluster.capacity_used_host_resources(2, :vcpu)).to be_within(0.001).of(3_509.200)
     end
 
     it "with missing data" do
@@ -255,15 +258,15 @@ describe EmsCluster::CapacityPlanning do
       allow(@cluster).to receive(:max_cpu_usage_rate_average_high_over_time_period_without_overhead).and_return(nil)
       expect(@cluster.capacity_used_host_resources(2, :vcpu)).to eq(0.0)
 
-      allow(@cluster).to receive(:capacity_available_host_resources).and_return(31000)
-      expect(@cluster.capacity_used_host_resources(2, :vcpu)).to be_within(0.001).of(31000.000)
+      allow(@cluster).to receive(:capacity_available_host_resources).and_return(31_000)
+      expect(@cluster.capacity_used_host_resources(2, :vcpu)).to be_within(0.001).of(31_000.000)
     end
   end
 
   context "#capacity_resources_per_vm" do
     it "with normal data" do
       allow(@cluster).to receive(:total_vms).and_return(994)
-      allow(@cluster).to receive(:capacity_available_host_resources).and_return(31000)
+      allow(@cluster).to receive(:capacity_available_host_resources).and_return(31_000)
       allow(@cluster).to receive(:max_cpu_usage_rate_average_high_over_time_period_without_overhead).and_return(11.32)
       expect(@cluster.capacity_resources_per_vm(2, :vcpu)).to be_within(0.001).of(3.530)
     end
@@ -277,7 +280,7 @@ describe EmsCluster::CapacityPlanning do
       allow(@cluster).to receive(:total_vms).and_return(994)
       expect(@cluster.capacity_resources_per_vm(2, :vcpu)).to eq(0.0)
 
-      allow(@cluster).to receive(:capacity_available_host_resources).and_return(31000)
+      allow(@cluster).to receive(:capacity_available_host_resources).and_return(31_000)
       expect(@cluster.capacity_resources_per_vm(2, :vcpu)).to be_within(0.001).of(31.187)
     end
   end
@@ -339,9 +342,9 @@ describe EmsCluster::CapacityPlanning do
   it "#capacity_remaining_vm_count" do
     @cluster.update_attribute(:ha_enabled, false)
     allow(@cluster).to receive(:total_vms).and_return(994)
-    allow(@cluster).to receive(:effective_cpu).and_return(31000)
+    allow(@cluster).to receive(:effective_cpu).and_return(31_000)
     allow(@cluster).to receive(:max_cpu_usage_rate_average_high_over_time_period_without_overhead).and_return(11.32)
-    expect(@cluster.capacity_remaining_vm_count(2, :vcpu)).to eq(7786)
+    expect(@cluster.capacity_remaining_vm_count(2, :vcpu)).to eq(7_786)
   end
 
   it "#capacity_remaining_vm_count_based_on_all" do

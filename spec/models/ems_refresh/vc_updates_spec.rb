@@ -62,7 +62,8 @@ describe EmsRefresh::VcUpdates do
       expect(EmsRefresh::VcUpdates.selected_property?(:vm, "summary.run")).to be_false
       expect(EmsRefresh::VcUpdates.selected_property?(:vm, "sum")).to be_false
 
-      expect(EmsRefresh::VcUpdates.selected_property?(:vm, "config.hardware.device[2000].backing.compatibilityMode")).to be_true
+      expect(EmsRefresh::VcUpdates.selected_property?(:vm, "config.hardware.device[2000].backing.compatibilityMode"))
+        .to be_true
       expect(EmsRefresh::VcUpdates.selected_property?(:vm, "config.hardware.device[2000].backing")).to be_true
       expect(EmsRefresh::VcUpdates.selected_property?(:vm, "config.hardware.device[2000]")).to be_true
       expect(EmsRefresh::VcUpdates.selected_property?(:vm, "config.hardware.device")).to be_true

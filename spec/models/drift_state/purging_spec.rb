@@ -75,11 +75,13 @@ describe DriftState do
     end
 
     it "#purge_ids_for_remaining" do
-      expect(described_class.send(:purge_ids_for_remaining, 1)).to eq({["VmOrTemplate", 1] => @rr1.last.id, ["VmOrTemplate", 2] => @rr2.last.id})
+      expect(described_class.send(:purge_ids_for_remaining, 1))
+        .to eq(["VmOrTemplate", 1] => @rr1.last.id, ["VmOrTemplate", 2] => @rr2.last.id)
     end
 
     it "#purge_counts_for_remaining" do
-      expect(described_class.send(:purge_counts_for_remaining, 1)).to eq({["VmOrTemplate", 1] => 1, ["VmOrTemplate", 2] => 2})
+      expect(described_class.send(:purge_counts_for_remaining, 1))
+        .to eq(["VmOrTemplate", 1] => 1, ["VmOrTemplate", 2] => 2)
     end
 
     context "#purge_count" do

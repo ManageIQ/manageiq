@@ -20,25 +20,19 @@ describe EmsRefresh::MetadataRelats do
     end
 
     it "with a Vm" do
-      expect(EmsRefresh.vmdb_relats(@vm)).to eq({
-        :folders_to_clusters        => {@folder.id  => [@cluster.id]},
-        :clusters_to_resource_pools => {@cluster.id => [@rp.id]},
-        :resource_pools_to_vms      => {@rp.id      => [@vm.id]},
-      })
+      expect(EmsRefresh.vmdb_relats(@vm)).to eq(:folders_to_clusters        => {@folder.id  => [@cluster.id]},
+                                                :clusters_to_resource_pools => {@cluster.id => [@rp.id]},
+                                                :resource_pools_to_vms      => {@rp.id      => [@vm.id]})
     end
 
     it "with a Host" do
-      expect(EmsRefresh.vmdb_relats(@host)).to eq({
-        :folders_to_clusters        => {@folder.id  => [@cluster.id]},
-      })
+      expect(EmsRefresh.vmdb_relats(@host)).to eq(:folders_to_clusters => {@folder.id => [@cluster.id]})
     end
 
     it "with an EMS" do
-      expect(EmsRefresh.vmdb_relats(@ems)).to eq({
-        :folders_to_clusters        => {@folder.id  => [@cluster.id]},
-        :clusters_to_resource_pools => {@cluster.id => [@rp.id]},
-        :resource_pools_to_vms      => {@rp.id      => [@vm.id]},
-      })
+      expect(EmsRefresh.vmdb_relats(@ems)).to eq(:folders_to_clusters        => {@folder.id  => [@cluster.id]},
+                                                 :clusters_to_resource_pools => {@cluster.id => [@rp.id]},
+                                                 :resource_pools_to_vms      => {@rp.id      => [@vm.id]})
     end
 
     context "with an invalid relats tree" do
@@ -52,13 +46,11 @@ describe EmsRefresh::MetadataRelats do
       end
 
       it "with an EMS" do
-        expect(EmsRefresh.vmdb_relats(@ems)).to eq({
-          :folders_to_hosts           => {@folder.id  => [@host.id]},
-          :folders_to_clusters        => {@folder.id  => [@cluster.id]},
-          :clusters_to_resource_pools => {@cluster.id => [@rp.id]},
-          :hosts_to_resource_pools    => {@host.id    => [@rp2.id]},
-          :resource_pools_to_vms      => {@rp.id      => [@vm.id]},
-        })
+        expect(EmsRefresh.vmdb_relats(@ems)).to eq(:folders_to_hosts           => {@folder.id  => [@host.id]},
+                                                   :folders_to_clusters        => {@folder.id  => [@cluster.id]},
+                                                   :clusters_to_resource_pools => {@cluster.id => [@rp.id]},
+                                                   :hosts_to_resource_pools    => {@host.id    => [@rp2.id]},
+                                                   :resource_pools_to_vms      => {@rp.id      => [@vm.id]})
       end
     end
   end
