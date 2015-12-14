@@ -65,7 +65,8 @@
                     :title  => t)
 :javascript
   $(function(){
-    $("button[data-dismiss='modal']").click(function(){
+    $("button[data-dismiss='modal']").off('click');
+    $("button[data-dismiss='modal']").on('click', function(){
       miqJqueryRequest("ae_tree_select_toggle?button=cancel", {beforeSend: true});
       return true;
     });

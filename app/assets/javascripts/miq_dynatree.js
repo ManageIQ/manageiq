@@ -516,10 +516,10 @@ function miqMenuChangeRow(action, elem) {
 }
 
 function miqSetAETreeNodeSelectionClass(id, prevId, bValidNode) {
-  if (prevId) {
+  if (prevId && $('#' + prevId).length) {
     miqDynatreeNodeRemoveClass("automate_tree", prevId);
   }
-  if (bValidNode == "true") {
+  if (bValidNode == "true" && $('#' + id).length) {
     miqDynatreeNodeAddClass("automate_tree", id, "ae-valid-node");
   }
 }
