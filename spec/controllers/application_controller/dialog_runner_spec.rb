@@ -134,4 +134,28 @@ describe CatalogController do
       expect(dialog_field.value).to eq('04/05/2015 14:06')
     end
   end
+
+  describe "#dialog_form_button_pressed" do
+    let(:dialog) { active_record_instance_double("Dialog") }
+    let(:wf) { double(:dialog => dialog) }
+
+    before do
+      edit = {:rec_id => 1, :wf => wf, :key => 'dialog_edit__foo', :explorer => 'true'}
+      controller.instance_variable_set(:@edit, edit)
+      controller.instance_variable_set(:@sb, {})
+      session[:edit] = edit
+    end
+
+    it "redirects to requests show list after dialog is submitted" do
+      controller.instance_variable_set(:@_params, :button => 'submit', :id => 'foo')
+      controller.stub(:role_allows).and_return(true)
+      wf.stub(:submit_request).and_return({})
+      page = mock('page')
+      page.should_receive(:redirect_to).with(:controller => "miq_request",
+                                             :action     => "show_list",
+                                             :flash_msg  => "Order Request was Submitted")
+      controller.should_receive(:render).with(:update).and_yield(page)
+      controller.send(:dialog_form_button_pressed)
+    end
+  end
 end

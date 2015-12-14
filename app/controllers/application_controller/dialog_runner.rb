@@ -46,15 +46,11 @@ module ApplicationController::DialogRunner
             @in_a_form = false
             if session[:edit][:explorer]
               add_flash(flash)
-              if request.parameters[:controller] == "catalog"
-                # only do this Service PRovision requests
-                render :update do |page|
-                  page.redirect_to :controller => 'miq_request',
-                                   :action     => 'show_list',
-                                   :flash_msg  => flash  # redirect to miq_request show_list screen
-                end
-              else
-                replace_right_cell
+              # redirect to miq_request show_list screen
+              render :update do |page|
+                page.redirect_to :controller => 'miq_request',
+                                 :action     => 'show_list',
+                                 :flash_msg  => flash
               end
             else
               render :update do |page|
