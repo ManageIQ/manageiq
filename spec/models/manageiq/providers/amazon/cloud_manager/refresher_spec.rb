@@ -161,7 +161,8 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       :ems_ref => "subnet-f849ff96",
       :cidr    => "10.0.0.0/24"
     )
-    expect(@subnet.availability_zone).to eq(ManageIQ::Providers::Amazon::CloudManager::AvailabilityZone.where(:name => "us-east-1e").first)
+    expect(@subnet.availability_zone)
+      .to eq(ManageIQ::Providers::Amazon::CloudManager::AvailabilityZone.where(:name => "us-east-1e").first)
 
     subnet2 = @cn.cloud_subnets.where(:name => "EmsRefreshSpec-Subnet2").first
     expect(subnet2).to have_attributes(
@@ -169,7 +170,8 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       :ems_ref => "subnet-16c70477",
       :cidr    => "10.0.1.0/24"
     )
-    expect(subnet2.availability_zone).to eq(ManageIQ::Providers::Amazon::CloudManager::AvailabilityZone.where(:name => "us-east-1d").first)
+    expect(subnet2.availability_zone)
+      .to eq(ManageIQ::Providers::Amazon::CloudManager::AvailabilityZone.where(:name => "us-east-1d").first)
   end
 
   def assert_specific_security_group
@@ -305,7 +307,10 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     expect(v.key_pairs).to eq([@kp])
     expect(v.cloud_network).to          be_nil
     expect(v.cloud_subnet).to           be_nil
-    expect(v.security_groups).to        match_array [@sg, ManageIQ::Providers::Amazon::CloudManager::SecurityGroup.where(:name => "EmsRefreshSpec-SecurityGroup2").first]
+    sg_2 = ManageIQ::Providers::Amazon::CloudManager::SecurityGroup
+           .where(:name => "EmsRefreshSpec-SecurityGroup2").first
+    expect(v.security_groups)
+      .to match_array [@sg, sg_2]
 
     expect(v.operating_system).to       be_nil # TODO: This should probably not be nil
     expect(v.custom_attributes.size).to eq(0)
@@ -374,13 +379,14 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     )
 
     expect(v.ext_management_system).to eq(@ems)
-    expect(v.availability_zone).to eq(ManageIQ::Providers::Amazon::CloudManager::AvailabilityZone.find_by_name("us-east-1d"))
-    expect(v.floating_ip).to            be_nil
+    expect(v.availability_zone)
+      .to eq(ManageIQ::Providers::Amazon::CloudManager::AvailabilityZone.find_by_name("us-east-1d"))
+    expect(v.floating_ip).to be_nil
     expect(v.key_pairs).to eq([@kp])
-    expect(v.cloud_network).to          be_nil
-    expect(v.cloud_subnet).to           be_nil
+    expect(v.cloud_network).to be_nil
+    expect(v.cloud_subnet).to be_nil
     expect(v.security_groups).to eq([@sg])
-    expect(v.operating_system).to       be_nil # TODO: This should probably not be nil
+    expect(v.operating_system).to be_nil # TODO: This should probably not be nil
     expect(v.custom_attributes.size).to eq(0)
     expect(v.snapshots.size).to eq(0)
 
@@ -447,9 +453,9 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   end
 
   def assert_specific_orchestration_stack
-    expect(ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack.where(:name => "cloudformation-spec").first.status_reason).to eq(
-      "The following resource(s) failed to create: [IPAddress, WebServerWaitCondition]. "
-    )
+    stack = ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack.where(:name => "cloudformation-spec").first
+    expect(stack.status_reason)
+      .to eq("The following resource(s) failed to create: [IPAddress, WebServerWaitCondition]. ")
 
     @orch_stack = ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack.where(:name => "cloudformation-spec-WebServerInstance-QS899ZNAHZU6").first
     expect(@orch_stack).to have_attributes(

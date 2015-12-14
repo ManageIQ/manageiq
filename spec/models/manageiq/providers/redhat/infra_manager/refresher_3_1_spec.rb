@@ -225,7 +225,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :subnet_mask  => "255.255.254.0"
     )
 
-    expect(@host.hardware.guest_devices.size).to eq(2) # TODO: Verify this host should have 2 nics, 2 cdroms, 1 floppy, any storage adapters?
+    # TODO: Verify this host should have 2 nics, 2 cdroms, 1 floppy, any storage adapters?
+    expect(@host.hardware.guest_devices.size).to eq(2)
 
     expect(@host.hardware.nics.size).to eq(2)
     nic = @host.hardware.nics.find_by_device_name("em1")
@@ -426,7 +427,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     expect(v.ext_management_system).to eq(@ems)
     expect(v.ems_cluster).to eq(@cluster)
     expect(v.parent_resource_pool).to eq(@default_rp)
-    expect(v.host).to                  be_nil
+    expect(v.host).to be_nil
     expect(v.storages).to eq([@storage2])
     # v.storage  # TODO: Fix bug where duplication location GUIDs could cause the wrong value to appear.
 

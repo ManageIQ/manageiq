@@ -26,7 +26,9 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
   end
 
   def refresh_ems(ems, error)
-    allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Refresher).to receive(:refresh_targets_for_ems).and_raise(StandardError.new(error))
+    allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Refresher)
+      .to receive(:refresh_targets_for_ems)
+      .and_raise(StandardError.new(error))
     EmsRefresh.refresh(ems)
   end
 end

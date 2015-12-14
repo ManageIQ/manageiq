@@ -133,9 +133,9 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
     it "will set the attributes on the VC side" do
       vim_vm = double("MiqVimVm")
       expect(vim_vm).to receive(:setRemoteDisplayVncAttributes) do |args|
-        expect(args[:enabled]).to  be_truthy
+        expect(args[:enabled]).to be_truthy
         expect(args[:port]).to eq(5901)
-        expect(args[:password]).to match(/^[A-Za-z0-9+\/]{8}$/)
+        expect(args[:password]).to match(%r{^[A-Za-z0-9+/]{8}$})
       end
       allow(@vm).to receive(:with_provider_object).and_yield(vim_vm)
 
@@ -147,7 +147,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
 
       password, host_address, host_port, proxy_address, proxy_port = @vm.remote_console_vnc_acquire_ticket
 
-      expect(password).to match(/^[A-Za-z0-9+\/]{8}$/)
+      expect(password).to match(%r{^[A-Za-z0-9+/]{8}$})
       expect(host_address).to eq("192.168.252.4")
       expect(host_port).to eq(5901)
       expect(proxy_address).to be_nil
@@ -162,7 +162,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
 
         password, host_address, host_port, proxy_address, proxy_port = @vm.remote_console_vnc_acquire_ticket(server)
 
-        expect(password).to match(/^[A-Za-z0-9+\/]{8}$/)
+        expect(password).to match(%r{^[A-Za-z0-9+/]{8}$})
         expect(host_address).to eq("192.168.252.4")
         expect(host_port).to eq(5901)
         expect(proxy_address).to be_nil
@@ -176,7 +176,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
 
         password, host_address, host_port, proxy_address, proxy_port = @vm.remote_console_vnc_acquire_ticket(server)
 
-        expect(password).to match(/^[A-Za-z0-9+\/]{8}$/)
+        expect(password).to match(%r{^[A-Za-z0-9+/]{8}$})
         expect(host_address).to eq(@host.guid)
         expect(host_port).to eq(5901)
         expect(proxy_address).to eq("1.2.3.4")

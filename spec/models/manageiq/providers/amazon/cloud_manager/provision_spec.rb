@@ -69,7 +69,8 @@ describe ManageIQ::Providers::Amazon::CloudManager::Provision do
         security_group_1 = FactoryGirl.create(:security_group_amazon, :name => "group_1")
         security_group_2 = FactoryGirl.create(:security_group_amazon, :name => "group_2")
         subject.options[:security_groups] = [security_group_1.id, security_group_2.id]
-        expect(subject.prepare_for_clone_task[:security_group_ids]).to match_array([security_group_1.ems_ref, security_group_2.ems_ref])
+        expect(subject.prepare_for_clone_task[:security_group_ids])
+          .to match_array([security_group_1.ems_ref, security_group_2.ems_ref])
       end
 
       it "with a missing security group" do

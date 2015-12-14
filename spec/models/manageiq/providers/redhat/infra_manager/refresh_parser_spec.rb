@@ -31,7 +31,13 @@ describe ManageIQ::Providers::Redhat::InfraManager::RefreshParser do
       ]}
 
       result = ManageIQ::Providers::Redhat::InfraManager::RefreshParser.vm_inv_to_disk_hashes(disk_inv, {})
-      expect(result.collect { |d| {:interface => d[:controller_type], :location => d[:location], :device_name => d[:device_name]} }).to eq([
+      hashes = result.collect do |d|
+        {:interface   => d[:controller_type],
+         :location    => d[:location],
+         :device_name => d[:device_name]}
+      end
+
+      expect(hashes).to eq([
         {
           :interface   => 'virtio',
           :location    => '0',

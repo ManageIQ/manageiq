@@ -66,7 +66,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
     end
 
     it "#poll_destination_powered_off_in_provider" do
-      expect_any_instance_of(ManageIQ::Providers::Redhat::InfraManager::Vm).to receive(:with_provider_object).and_return(:state => "up")
+      expect_any_instance_of(ManageIQ::Providers::Redhat::InfraManager::Vm)
+        .to receive(:with_provider_object).and_return(:state => "up")
       expect(@task).to receive(:requeue_phase)
 
       @task.poll_destination_powered_off_in_provider

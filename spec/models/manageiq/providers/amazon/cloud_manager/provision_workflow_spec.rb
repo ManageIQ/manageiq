@@ -40,19 +40,19 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
     it "#allowed_availability_zones" do
       az = FactoryGirl.create(:availability_zone_amazon)
       ems.availability_zones << az
-      expect(workflow.allowed_availability_zones).to eq({az.id => az.name})
+      expect(workflow.allowed_availability_zones).to eq(az.id => az.name)
     end
 
     it "#allowed_guest_access_key_pairs" do
       kp = AuthPrivateKey.create(:name => "auth_1")
       ems.key_pairs << kp
-      expect(workflow.allowed_guest_access_key_pairs).to eq({kp.id => kp.name})
+      expect(workflow.allowed_guest_access_key_pairs).to eq(kp.id => kp.name)
     end
 
     it "#allowed_security_groups" do
       sg = FactoryGirl.create(:security_group_amazon, :name => "sq_1")
       ems.security_groups << sg
-      expect(workflow.allowed_security_groups).to eq({sg.id => sg.name})
+      expect(workflow.allowed_security_groups).to eq(sg.id => sg.name)
     end
   end
 
@@ -217,25 +217,21 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
 
     context "#allowed_availability_zones" do
       it "with no placement options" do
-        expect(workflow.allowed_availability_zones).to eq({
-          @az1.id => @az1.name,
-          @az2.id => @az2.name,
-          @az3.id => @az3.name
-        })
+        expect(workflow.allowed_availability_zones).to eq(@az1.id => @az1.name,
+                                                          @az2.id => @az2.name,
+                                                          @az3.id => @az3.name)
       end
 
       it "with a cloud_network" do
         workflow.values[:cloud_network] = [@cn1.id, @cn1.name]
-        expect(workflow.allowed_availability_zones).to eq({
-          @az1.id => @az1.name,
-          @az2.id => @az2.name
-        })
+        expect(workflow.allowed_availability_zones).to eq(@az1.id => @az1.name,
+                                                          @az2.id => @az2.name)
       end
 
       it "with a cloud_network and cloud_subnet" do
         workflow.values[:cloud_network] = [@cn1.id, @cn1.name]
         workflow.values[:cloud_subnet]  = [@cs2.id, @cs2.name]
-        expect(workflow.allowed_availability_zones).to eq({@az2.id => @az2.name})
+        expect(workflow.allowed_availability_zones).to eq(@az2.id => @az2.name)
       end
     end
 
@@ -259,23 +255,23 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
 
     context "#allowed_floating_ip_addresses" do
       it "without a cloud_network" do
-        expect(workflow.allowed_floating_ip_addresses).to eq({@ip2.id => @ip2.address})
+        expect(workflow.allowed_floating_ip_addresses).to eq(@ip2.id => @ip2.address)
       end
 
       it "with a cloud_network" do
         workflow.values[:cloud_network] = [@cn1.id, @cn1.name]
-        expect(workflow.allowed_floating_ip_addresses).to eq({@ip1.id => @ip1.address})
+        expect(workflow.allowed_floating_ip_addresses).to eq(@ip1.id => @ip1.address)
       end
     end
 
     context "#allowed_security_groups" do
       it "without a cloud_network" do
-        expect(workflow.allowed_security_groups).to eq({@sg2.id => @sg2.name})
+        expect(workflow.allowed_security_groups).to eq(@sg2.id => @sg2.name)
       end
 
       it "with a cloud_network" do
         workflow.values[:cloud_network] = [@cn1.id, @cn1.name]
-        expect(workflow.allowed_security_groups).to eq({@sg1.id => @sg1.name})
+        expect(workflow.allowed_security_groups).to eq(@sg1.id => @sg1.name)
       end
     end
   end

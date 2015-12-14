@@ -6,9 +6,12 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => zone, :name => "VC41Test-Prod", :hostname => "VC41Test-Prod.MIQTEST.LOCAL", :ipaddress => "192.168.252.14")
 
-    allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive(:connect).and_return(FakeMiqVimHandle.new)
-    allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive(:disconnect).and_return(true)
-    allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive(:has_credentials?).and_return(true)
+    allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager)
+      .to receive(:connect).and_return(FakeMiqVimHandle.new)
+    allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager)
+      .to receive(:disconnect).and_return(true)
+    allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager)
+      .to receive(:has_credentials?).and_return(true)
   end
 
   it "will perform a full refresh" do
@@ -78,7 +81,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       :last_update_time => Time.parse("2011-05-17T15:54:37Z")
     )
     expect(cspec.spec).to      be_a_kind_of(VimHash)
-    expect(cspec.spec.keys).to match_array(["identity", "encryptionKey", "nicSettingMap", "globalIPSettings", "options"])
+    expect(cspec.spec.keys).to match_array(%w(identity encryptionKey nicSettingMap globalIPSettings options))
   end
 
   def assert_specific_cluster

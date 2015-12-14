@@ -57,7 +57,8 @@ describe ManageIQ::Providers::Openstack::CloudManager do
     @ems = FactoryGirl.build(:ems_openstack, :hostname => "host", :ipaddress => "::1")
     require 'openstack/openstack_event_monitor'
 
-    expect(@ems.event_monitor_options).to eq({:hostname => "host", :port => 1234})
+    expect(@ems.event_monitor_options)
+      .to eq(:hostname => "host", :port => 1234)
   end
 
   context "translate_exception" do

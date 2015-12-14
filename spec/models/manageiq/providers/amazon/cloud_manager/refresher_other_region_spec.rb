@@ -211,7 +211,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
     expect(v.ext_management_system).to eq(@ems)
     expect(v.availability_zone).to eq(@az)
-    expect(v.floating_ip).to            be_nil
+    expect(v.floating_ip).to be_nil
     expect(v.flavor).to eq(@flavor)
     expect(v.cloud_network).to          be_nil
     expect(v.cloud_subnet).to           be_nil
@@ -266,6 +266,6 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
   def assert_subnet_required
     @flavor = ManageIQ::Providers::Amazon::CloudManager::Flavor.where(:name => "t2.small").first
-    expect(@flavor).to have_attributes(:cloud_subnet_required  => true)
+    expect(@flavor).to have_attributes(:cloud_subnet_required => true)
   end
 end

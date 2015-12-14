@@ -53,7 +53,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack::Statu
     expect(status.deleted?).to     be_falsey
     expect(status.rolled_back?).to be_falsey
     expect(status.updated?).to     be_truthy
-    expect(status.normalized_status).to eq(['update_complete', 'OK'])
+    expect(status.normalized_status).to eq(%w(update_complete OK))
   end
 
   it 'parses transient status' do

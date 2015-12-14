@@ -120,7 +120,12 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
         expect(provider.security_groups.first.tags.size).to eq(1)
         expect(provider.security_groups.last.tags.size).to eq(0)
 
-        expect(workflow.send(:get_targets_for_ems, provider, :cloud_filter, SecurityGroup, 'security_groups').size).to eq(1)
+        expect(workflow.send(:get_targets_for_ems,
+                             provider,
+                             :cloud_filter,
+                             SecurityGroup,
+                             'security_groups').size)
+          .to eq(1)
       end
     end
 
@@ -182,13 +187,13 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
         it "#allowed_instance_types" do
           flavor = FactoryGirl.create(:flavor, :name => "flavor_1")
           provider.flavors << flavor
-          expect(workflow.allowed_instance_types).to eq({flavor.id => flavor.name})
+          expect(workflow.allowed_instance_types).to eq(flavor.id => flavor.name)
         end
 
         it "#allowed_availability_zones" do
           az = FactoryGirl.create(:availability_zone_openstack)
           provider.availability_zones << az
-          expect(workflow.allowed_availability_zones).to eq({az.id => az.name})
+          expect(workflow.allowed_availability_zones).to eq(az.id => az.name)
         end
 
         it "#allowed_availability_zones with NULL AZ" do
@@ -203,13 +208,13 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
         it "#allowed_guest_access_key_pairs" do
           kp = AuthPrivateKey.create(:name => "auth_1")
           provider.key_pairs << kp
-          expect(workflow.allowed_guest_access_key_pairs).to eq({kp.id => kp.name})
+          expect(workflow.allowed_guest_access_key_pairs).to eq(kp.id => kp.name)
         end
 
         it "#allowed_security_groups" do
           sg = FactoryGirl.create(:security_group_openstack, :name => "sq_1")
           provider.security_groups << sg
-          expect(workflow.allowed_security_groups).to eq({sg.id => sg.name})
+          expect(workflow.allowed_security_groups).to eq(sg.id => sg.name)
         end
       end
 
