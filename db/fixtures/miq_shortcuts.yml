@@ -218,3 +218,8 @@
   :url: /miq_task/index?jobs_tab=alltasks
   :rbac_feature_name: tasks
   :startup: true
+- :name: miq_automate_log
+  :description: Automate Log
+  :url: /miq_ae_tools/log
+  :rbac_feature_name: miq_ae_class_log
+  :startup: true
