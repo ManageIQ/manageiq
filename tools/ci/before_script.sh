@@ -1,3 +1,4 @@
+set -v
 
 if [[ -n "$TEST_SUITE" ]] ; then
   if [[ -n "$SPA_UI" ]] ; then
@@ -9,3 +10,5 @@ if [[ -n "$TEST_SUITE" ]] ; then
   fi
   bundle exec rake test:$TEST_SUITE:setup
 fi
+
+set +v
