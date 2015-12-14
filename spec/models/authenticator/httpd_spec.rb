@@ -27,7 +27,10 @@ describe Authenticator::Httpd do
     )
   end
 
-  its(:uses_stored_password?) { should be_false }
+  describe '#uses_stored_password?' do
+    subject { super().uses_stored_password? }
+    it { should be_false }
+  end
 
   describe '#lookup_by_identity' do
     it "finds existing users" do
