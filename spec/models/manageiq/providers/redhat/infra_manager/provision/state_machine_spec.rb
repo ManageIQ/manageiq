@@ -14,60 +14,60 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
     end
 
     it "#create_destination" do
-      @task.should_receive(:determine_placement)
+      expect(@task).to receive(:determine_placement)
 
       @task.create_destination
     end
 
     it "#determine_placement" do
-      @task.stub(:placement)
+      allow(@task).to receive(:placement)
 
-      @task.should_receive(:prepare_provision)
+      expect(@task).to receive(:prepare_provision)
 
       @task.determine_placement
     end
 
     it "#start_clone_task" do
-      @task.stub(:update_and_notify_parent)
-      @task.stub(:log_clone_options)
-      @task.stub(:start_clone)
+      allow(@task).to receive(:update_and_notify_parent)
+      allow(@task).to receive(:log_clone_options)
+      allow(@task).to receive(:start_clone)
 
-      @task.should_receive(:poll_clone_complete)
+      expect(@task).to receive(:poll_clone_complete)
 
       @task.start_clone_task
     end
 
     context "#poll_clone_complete" do
       it "cloning" do
-        @task.should_receive(:clone_complete?).and_return(false)
-        @task.should_receive(:requeue_phase)
+        expect(@task).to receive(:clone_complete?).and_return(false)
+        expect(@task).to receive(:requeue_phase)
 
         @task.poll_clone_complete
       end
 
       it "clone complete" do
-        @task.should_receive(:clone_complete?).and_return(true)
-        EmsRefresh.should_receive(:queue_refresh)
-        @task.should_receive(:poll_destination_in_vmdb)
+        expect(@task).to receive(:clone_complete?).and_return(true)
+        expect(EmsRefresh).to receive(:queue_refresh)
+        expect(@task).to receive(:poll_destination_in_vmdb)
 
         @task.poll_clone_complete
       end
     end
 
     it "#customize_destination" do
-      @task.stub(:get_provider_destination).and_return(nil)
-      @task.stub(:update_and_notify_parent)
+      allow(@task).to receive(:get_provider_destination).and_return(nil)
+      allow(@task).to receive(:update_and_notify_parent)
 
-      @task.should_receive(:configure_container)
-      @task.should_receive(:configure_cloud_init)
-      @task.should_receive(:poll_destination_powered_off_in_provider)
+      expect(@task).to receive(:configure_container)
+      expect(@task).to receive(:configure_cloud_init)
+      expect(@task).to receive(:poll_destination_powered_off_in_provider)
 
       @task.customize_destination
     end
 
     it "#poll_destination_powered_off_in_provider" do
-      ManageIQ::Providers::Redhat::InfraManager::Vm.any_instance.should_receive(:with_provider_object).and_return(:state => "up")
-      @task.should_receive(:requeue_phase)
+      expect_any_instance_of(ManageIQ::Providers::Redhat::InfraManager::Vm).to receive(:with_provider_object).and_return(:state => "up")
+      expect(@task).to receive(:requeue_phase)
 
       @task.poll_destination_powered_off_in_provider
     end

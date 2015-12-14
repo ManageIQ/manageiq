@@ -14,10 +14,10 @@ describe ManageIQ::Providers::Openstack::InfraManager::EventParser do
         :message      => "Success"
       )
 
-      data.should have_attributes(expected_attributes)
+      expect(data).to have_attributes(expected_attributes)
 
-      data[:full_data].should    be_instance_of Hash
-      data[:host_ems_ref].should be_instance_of String
+      expect(data[:full_data]).to    be_instance_of Hash
+      expect(data[:host_ems_ref]).to be_instance_of String
     end
 
     it "with a compute.instance.create.error event" do
@@ -34,10 +34,10 @@ describe ManageIQ::Providers::Openstack::InfraManager::EventParser do
                          " baremetal_2."
       )
 
-      data.should have_attributes(expected_attributes)
+      expect(data).to have_attributes(expected_attributes)
 
-      data[:full_data].should    be_instance_of Hash
-      data[:host_ems_ref].should be_instance_of String
+      expect(data[:full_data]).to    be_instance_of Hash
+      expect(data[:host_ems_ref]).to be_instance_of String
     end
 
     it "with an orchestration.stack.create.end event" do
@@ -49,9 +49,9 @@ describe ManageIQ::Providers::Openstack::InfraManager::EventParser do
         :timestamp  => "2015-05-12 07:24:45.026776"
       )
 
-      data.should have_attributes(expected_attributes)
+      expect(data).to have_attributes(expected_attributes)
 
-      data[:full_data].should be_instance_of Hash
+      expect(data[:full_data]).to be_instance_of Hash
     end
 
     it "with an orchestration.stack.update.end event" do
@@ -63,9 +63,9 @@ describe ManageIQ::Providers::Openstack::InfraManager::EventParser do
         :timestamp  => "2015-05-12 07:33:57.772136"
       )
 
-      data.should have_attributes(expected_attributes)
+      expect(data).to have_attributes(expected_attributes)
 
-      data[:full_data].should be_instance_of Hash
+      expect(data[:full_data]).to be_instance_of Hash
     end
 
     it "with a port.create.end event" do
@@ -77,9 +77,9 @@ describe ManageIQ::Providers::Openstack::InfraManager::EventParser do
         :timestamp  => "2015-05-12 07:22:37.008738"
       )
 
-      data.should have_attributes(expected_attributes)
+      expect(data).to have_attributes(expected_attributes)
 
-      data[:full_data].should be_instance_of Hash
+      expect(data[:full_data]).to be_instance_of Hash
     end
 
     it "with a port.update.end event" do
@@ -91,9 +91,9 @@ describe ManageIQ::Providers::Openstack::InfraManager::EventParser do
         :timestamp  => "2015-05-12 07:22:43.948145"
       )
 
-      data.should have_attributes(expected_attributes)
+      expect(data).to have_attributes(expected_attributes)
 
-      data[:full_data].should be_instance_of Hash
+      expect(data[:full_data]).to be_instance_of Hash
     end
   end
 

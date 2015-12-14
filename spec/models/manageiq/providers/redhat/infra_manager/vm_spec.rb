@@ -75,7 +75,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Vm do
     let(:vm) { FactoryGirl.create(:vm_redhat) }
 
     it "#reconfigurable?" do
-      expect(vm.reconfigurable?).to be_true
+      expect(vm.reconfigurable?).to be_truthy
     end
 
     it "#max_total_vcpus" do

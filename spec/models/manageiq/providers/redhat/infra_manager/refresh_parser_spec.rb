@@ -31,7 +31,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::RefreshParser do
       ]}
 
       result = ManageIQ::Providers::Redhat::InfraManager::RefreshParser.vm_inv_to_disk_hashes(disk_inv, {})
-      result.collect { |d| {:interface => d[:controller_type], :location => d[:location], :device_name => d[:device_name]} }.should == [
+      expect(result.collect { |d| {:interface => d[:controller_type], :location => d[:location], :device_name => d[:device_name]} }).to eq([
         {
           :interface   => 'virtio',
           :location    => '0',
@@ -52,7 +52,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::RefreshParser do
           :location    => '0',
           :device_name => 'abc'
         }
-      ]
+      ])
     end
   end
 
@@ -65,14 +65,14 @@ describe ManageIQ::Providers::Redhat::InfraManager::RefreshParser do
         ]
       }
       result = ManageIQ::Providers::Redhat::InfraManager::RefreshParser.vm_inv_to_custom_attribute_hashes(inv)
-      result.should == [
+      expect(result).to eq([
         {
           :section => "custom_field",
           :name    => "custom_attribute",
           :value   => "#{"0" * 252}...",
           :source  => "VC"
         }
-      ]
+      ])
     end
   end
 end

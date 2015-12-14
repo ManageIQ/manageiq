@@ -69,7 +69,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
   end
 
   def assert_ems
-    @ems.should have_attributes(
+    expect(@ems).to have_attributes(
       :api_version => nil,
       :uid_ems     => nil
     )
@@ -90,13 +90,13 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
   def assert_specific_host
     @host = ManageIQ::Providers::Openstack::InfraManager::Host.all.detect { |x| x.name.include?('(Controller)') }
 
-    @host.ems_ref.should_not be nil
-    @host.ems_ref_obj.should_not be nil
-    @host.mac_address.should_not be nil
-    @host.ipaddress.should_not be nil
-    @host.ems_cluster.should_not be nil
+    expect(@host.ems_ref).not_to be nil
+    expect(@host.ems_ref_obj).not_to be nil
+    expect(@host.mac_address).not_to be nil
+    expect(@host.ipaddress).not_to be nil
+    expect(@host.ems_cluster).not_to be nil
 
-    @host.should have_attributes(
+    expect(@host).to have_attributes(
       :ipmi_address     => nil,
       :vmm_vendor       => "RedHat",
       :vmm_version      => nil,
@@ -111,11 +111,11 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     expect(@host.network_ports.count).to    be > 0
     expect(@host.network_ports.first).to    be_kind_of(ManageIQ::Providers::Openstack::InfraManager::NetworkPort)
 
-    @host.operating_system.should have_attributes(
+    expect(@host.operating_system).to have_attributes(
       :product_name     => "linux"
     )
 
-    @host.hardware.should have_attributes(
+    expect(@host.hardware).to have_attributes(
       :cpu_speed            => 2000,
       :cpu_type             => "RHEL 7.1.0 PC (i440FX + PIIX, 1996)",
       :manufacturer         => "Red Hat",
@@ -138,7 +138,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
   end
 
   def assert_specific_disk(disk)
-    disk.should have_attributes(
+    expect(disk).to have_attributes(
       :device_name     => 'sda',
       :device_type     => 'disk',
       :controller_type => 'scsi',
@@ -156,7 +156,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
 
   def assert_specific_template(name, is_public = false)
     template = ManageIQ::Providers::Openstack::InfraManager::Template.where(:name => name).first
-    template.should have_attributes(
+    expect(template).to have_attributes(
       :template              => true,
       :publicly_available    => is_public,
       :ems_ref_obj           => nil,
@@ -179,14 +179,14 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
       :cpu_shares            => nil,
       :cpu_shares_level      => nil
     )
-    template.ems_ref.should be_guid
+    expect(template.ems_ref).to be_guid
 
     expect(template.ext_management_system).to  eq @ems
-    template.operating_system.should           be_nil # TODO: This should probably not be nil
+    expect(template.operating_system).to           be_nil # TODO: This should probably not be nil
     expect(template.custom_attributes.size).to eq 0
     expect(template.snapshots.size).to         eq 0
-    template.hardware.should_not               be_nil
-    template.parent.should                     be_nil
+    expect(template.hardware).not_to               be_nil
+    expect(template.parent).to                     be_nil
     template
   end
 end

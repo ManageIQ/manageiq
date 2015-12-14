@@ -36,7 +36,7 @@ module Openstack
                                                          key_translate_table,
                                                          value_translate_table,
                                                          key_blacklist)
-      comparable_hashes[0].should match_array(comparable_hashes[1])
+      expect(comparable_hashes[0]).to match_array(comparable_hashes[1])
     end
 
     private

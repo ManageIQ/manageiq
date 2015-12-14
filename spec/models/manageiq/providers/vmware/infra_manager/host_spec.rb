@@ -15,36 +15,36 @@ describe ManageIQ::Providers::Vmware::InfraManager::Host do
       it "normal case" do
         @host.update_attributes(:next_available_vnc_port => 5901)
 
-        @host.reserve_next_available_vnc_port.should == 5901
-        @host.next_available_vnc_port.should == 5902
+        expect(@host.reserve_next_available_vnc_port).to eq(5901)
+        expect(@host.next_available_vnc_port).to eq(5902)
       end
 
       it "with last value of nil" do
         @host.update_attributes(:next_available_vnc_port => nil)
 
-        @host.reserve_next_available_vnc_port.should == 5900
-        @host.next_available_vnc_port.should == 5901
+        expect(@host.reserve_next_available_vnc_port).to eq(5900)
+        expect(@host.next_available_vnc_port).to eq(5901)
       end
 
       it "with last value at end of range" do
         @host.update_attributes(:next_available_vnc_port => 5999)
 
-        @host.reserve_next_available_vnc_port.should == 5999
-        @host.next_available_vnc_port.should == 5900
+        expect(@host.reserve_next_available_vnc_port).to eq(5999)
+        expect(@host.next_available_vnc_port).to eq(5900)
       end
 
       it "with last value before start of range" do
         @host.update_attributes(:next_available_vnc_port => 5899)
 
-        @host.reserve_next_available_vnc_port.should == 5900
-        @host.next_available_vnc_port.should == 5901
+        expect(@host.reserve_next_available_vnc_port).to eq(5900)
+        expect(@host.next_available_vnc_port).to eq(5901)
       end
 
       it "with last value after end of range" do
         @host.update_attributes(:next_available_vnc_port => 6000)
 
-        @host.reserve_next_available_vnc_port.should == 5900
-        @host.next_available_vnc_port.should == 5901
+        expect(@host.reserve_next_available_vnc_port).to eq(5900)
+        expect(@host.next_available_vnc_port).to eq(5901)
       end
     end
 
@@ -57,36 +57,36 @@ describe ManageIQ::Providers::Vmware::InfraManager::Host do
       it "normal case" do
         @host.update_attributes(:next_available_vnc_port => 5926)
 
-        @host.reserve_next_available_vnc_port.should == 5926
-        @host.next_available_vnc_port.should == 5927
+        expect(@host.reserve_next_available_vnc_port).to eq(5926)
+        expect(@host.next_available_vnc_port).to eq(5927)
       end
 
       it "with last value of nil" do
         @host.update_attributes(:next_available_vnc_port => nil)
 
-        @host.reserve_next_available_vnc_port.should == 5925
-        @host.next_available_vnc_port.should == 5926
+        expect(@host.reserve_next_available_vnc_port).to eq(5925)
+        expect(@host.next_available_vnc_port).to eq(5926)
       end
 
       it "with last value at end of range" do
         @host.update_attributes(:next_available_vnc_port => 5930)
 
-        @host.reserve_next_available_vnc_port.should == 5930
-        @host.next_available_vnc_port.should == 5925
+        expect(@host.reserve_next_available_vnc_port).to eq(5930)
+        expect(@host.next_available_vnc_port).to eq(5925)
       end
 
       it "with last value before start of range" do
         @host.update_attributes(:next_available_vnc_port => 5924)
 
-        @host.reserve_next_available_vnc_port.should == 5925
-        @host.next_available_vnc_port.should == 5926
+        expect(@host.reserve_next_available_vnc_port).to eq(5925)
+        expect(@host.next_available_vnc_port).to eq(5926)
       end
 
       it "with last value after end of range" do
         @host.update_attributes(:next_available_vnc_port => 5931)
 
-        @host.reserve_next_available_vnc_port.should == 5925
-        @host.next_available_vnc_port.should == 5926
+        expect(@host.reserve_next_available_vnc_port).to eq(5925)
+        expect(@host.next_available_vnc_port).to eq(5926)
       end
     end
   end

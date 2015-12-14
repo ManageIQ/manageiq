@@ -31,9 +31,9 @@ describe ManageIQ::Providers::Azure::CloudManager::OrchestrationStack do
         expect(orchestration_service).to receive(:create).and_return(the_raw_stack)
 
         stack = OrchestrationStack.create_stack(ems, 'mystack', template, {})
-        stack.class.should   == described_class
-        stack.name.should    == 'mystack'
-        stack.ems_ref.should == the_raw_stack.id
+        expect(stack.class).to   eq(described_class)
+        expect(stack.name).to    eq('mystack')
+        expect(stack.ems_ref).to eq(the_raw_stack.id)
       end
 
       it 'catches errors from provider' do
@@ -76,14 +76,14 @@ describe ManageIQ::Providers::Azure::CloudManager::OrchestrationStack do
         rstatus = orchestration_stack.raw_status
         expect(rstatus).to have_attributes(:status => 'Succeeded', :reason => nil)
 
-        orchestration_stack.raw_exists?.should be_true
+        expect(orchestration_stack.raw_exists?).to be_truthy
       end
 
       it 'parses error message to determine stack not exist' do
         allow(orchestration_service).to receive(:get).and_throw("Deployment xxx could not be found")
         expect { orchestration_stack.raw_status }.to raise_error(MiqException::MiqOrchestrationStackNotExistError)
 
-        orchestration_stack.raw_exists?.should be_false
+        expect(orchestration_stack.raw_exists?).to be_falsey
       end
 
       it 'catches errors from provider' do

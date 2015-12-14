@@ -25,55 +25,55 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
   end
 
   def assert_table_counts
-    ExtManagementSystem.count.should == 1
-    EmsFolder.count.should == 10
-    EmsCluster.count.should == 5
-    Host.count.should == 1
-    ResourcePool.count.should == 5
-    VmOrTemplate.count.should == 35
-    Vm.count.should == 21
-    MiqTemplate.count.should == 14
-    Storage.count.should == 6
+    expect(ExtManagementSystem.count).to eq(1)
+    expect(EmsFolder.count).to eq(10)
+    expect(EmsCluster.count).to eq(5)
+    expect(Host.count).to eq(1)
+    expect(ResourcePool.count).to eq(5)
+    expect(VmOrTemplate.count).to eq(35)
+    expect(Vm.count).to eq(21)
+    expect(MiqTemplate.count).to eq(14)
+    expect(Storage.count).to eq(6)
 
-    CustomAttribute.count.should == 3
-    CustomizationSpec.count.should == 0
-    Disk.count.should == 124
-    GuestDevice.count.should == 26
-    Hardware.count.should == 36
-    Lan.count.should == 2
-    MiqScsiLun.count.should == 0
-    MiqScsiTarget.count.should == 0
-    Network.count.should == 2
-    OperatingSystem.count.should == 36
-    Snapshot.count.should == 41
-    Switch.count.should == 2
-    SystemService.count.should == 0
+    expect(CustomAttribute.count).to eq(3)
+    expect(CustomizationSpec.count).to eq(0)
+    expect(Disk.count).to eq(124)
+    expect(GuestDevice.count).to eq(26)
+    expect(Hardware.count).to eq(36)
+    expect(Lan.count).to eq(2)
+    expect(MiqScsiLun.count).to eq(0)
+    expect(MiqScsiTarget.count).to eq(0)
+    expect(Network.count).to eq(2)
+    expect(OperatingSystem.count).to eq(36)
+    expect(Snapshot.count).to eq(41)
+    expect(Switch.count).to eq(2)
+    expect(SystemService.count).to eq(0)
 
-    Relationship.count.should == 77
+    expect(Relationship.count).to eq(77)
     # MiqQueue.count.should            == 35 #PENDING: Some timing issue keeps flipping this between 35 and 36
   end
 
   def assert_ems
-    @ems.should have_attributes(
+    expect(@ems).to have_attributes(
       :api_version => "3.0.0.0",
       :uid_ems     => nil
     )
 
-    @ems.ems_folders.size.should == 10
-    @ems.ems_clusters.size.should == 5
-    @ems.resource_pools.size.should == 5
-    @ems.storages.size.should == 2 # TODO: The table count is 6, but this is 4 ??
-    @ems.hosts.size.should == 1
-    @ems.vms_and_templates.size.should == 35
-    @ems.vms.size.should == 21
-    @ems.miq_templates.size.should == 14
+    expect(@ems.ems_folders.size).to eq(10)
+    expect(@ems.ems_clusters.size).to eq(5)
+    expect(@ems.resource_pools.size).to eq(5)
+    expect(@ems.storages.size).to eq(2) # TODO: The table count is 6, but this is 4 ??
+    expect(@ems.hosts.size).to eq(1)
+    expect(@ems.vms_and_templates.size).to eq(35)
+    expect(@ems.vms.size).to eq(21)
+    expect(@ems.miq_templates.size).to eq(14)
 
-    @ems.customization_specs.size.should == 0
+    expect(@ems.customization_specs.size).to eq(0)
   end
 
   def assert_specific_cluster
     @cluster = EmsCluster.find_by_name("Cluster2")
-    @cluster.should have_attributes(
+    expect(@cluster).to have_attributes(
       :ems_ref                 => "/api/clusters/40c1c666-e919-11e0-9c6b-005056af0085",
       :ems_ref_obj             => "/api/clusters/40c1c666-e919-11e0-9c6b-005056af0085",
       :uid_ems                 => "40c1c666-e919-11e0-9c6b-005056af0085",
@@ -86,9 +86,9 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :drs_migration_threshold => nil
     )
 
-    @cluster.all_resource_pools_with_default.size.should == 1
+    expect(@cluster.all_resource_pools_with_default.size).to eq(1)
     @default_rp = @cluster.default_resource_pool
-    @default_rp.should have_attributes(
+    expect(@default_rp).to have_attributes(
       :ems_ref               => nil,
       :ems_ref_obj           => nil,
       :uid_ems               => "40c1c666-e919-11e0-9c6b-005056af0085_respool",
@@ -110,7 +110,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
 
   def assert_specific_storage
     @storage = Storage.find_by_name("HostNFS")
-    @storage.should have_attributes(
+    expect(@storage).to have_attributes(
       :ems_ref                       => "/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4",
       :ems_ref_obj                   => "/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4",
       :name                          => "HostNFS",
@@ -128,7 +128,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
 
   def assert_specific_host
     @host = ManageIQ::Providers::Redhat::InfraManager::Host.find_by_name("rhelvirt.manageiq.com")
-    @host.should have_attributes(
+    expect(@host).to have_attributes(
       :ems_ref          => "/api/hosts/ca389dbc-2054-11e1-9241-005056af0085",
       :ems_ref_obj      => "/api/hosts/ca389dbc-2054-11e1-9241-005056af0085",
       :name             => "rhelvirt.manageiq.com",
@@ -143,11 +143,11 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :connection_state => "connected"
     )
 
-    @host.ems_cluster.should == @cluster
-    @host.storages.size.should == 2
-    @host.storages.should      include(@storage)
+    expect(@host.ems_cluster).to eq(@cluster)
+    expect(@host.storages.size).to eq(2)
+    expect(@host.storages).to      include(@storage)
 
-    @host.operating_system.should have_attributes(
+    expect(@host.operating_system).to have_attributes(
       :name         => "192.168.252.119", # TODO: ?????
       :product_name => "linux",
       :version      => nil,
@@ -155,11 +155,11 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :product_type => nil
     )
 
-    @host.system_services.size.should == 0
+    expect(@host.system_services.size).to eq(0)
 
-    @host.switches.size.should == 2
+    expect(@host.switches.size).to eq(2)
     switch = @host.switches.find_by_name("rhevm")
-    switch.should have_attributes(
+    expect(switch).to have_attributes(
       :uid_ems           => "00000000-0000-0000-0000-000000000009",
       :name              => "rhevm",
       :ports             => nil,
@@ -168,9 +168,9 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :mac_changes       => nil
     )
 
-    switch.lans.size.should == 1
+    expect(switch.lans.size).to eq(1)
     @lan = switch.lans.find_by_name("rhevm")
-    @lan.should have_attributes(
+    expect(@lan).to have_attributes(
       :uid_ems                    => "00000000-0000-0000-0000-000000000009",
       :name                       => "rhevm",
       :tag                        => nil,
@@ -182,7 +182,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :computed_mac_changes       => nil
     )
 
-    @host.hardware.should have_attributes(
+    expect(@host.hardware).to have_attributes(
       :cpu_speed            => 2394,
       :cpu_type             => "Intel(R) Core(TM)2 Quad CPU    Q6600  @ 2.40GHz",
       :manufacturer         => "",
@@ -200,20 +200,20 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :memory_usage         => nil
     )
 
-    @host.hardware.networks.size.should == 2
+    expect(@host.hardware.networks.size).to eq(2)
     network = @host.hardware.networks.find_by_description("eth0")
-    network.should have_attributes(
+    expect(network).to have_attributes(
       :description  => "eth0",
       :dhcp_enabled => nil,
       :ipaddress    => "192.168.252.119",
       :subnet_mask  => "255.255.254.0"
     )
 
-    @host.hardware.guest_devices.size.should == 2 # TODO: Verify this host should have 2 nics, 2 cdroms, 1 floppy, any storage adapters?
+    expect(@host.hardware.guest_devices.size).to eq(2) # TODO: Verify this host should have 2 nics, 2 cdroms, 1 floppy, any storage adapters?
 
-    @host.hardware.nics.size.should == 2
+    expect(@host.hardware.nics.size).to eq(2)
     nic = @host.hardware.nics.find_by_device_name("eth0")
-    nic.should have_attributes(
+    expect(nic).to have_attributes(
       :uid_ems         => "dc7bc21d-f0e6-4b1d-a627-adb82dfe9777",
       :device_name     => "eth0",
       :device_type     => "ethernet",
@@ -221,15 +221,15 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :present         => true,
       :controller_type => "ethernet"
     )
-    nic.switch.should == switch
-    nic.network.should == network
+    expect(nic.switch).to eq(switch)
+    expect(nic.network).to eq(network)
 
-    @host.hardware.storage_adapters.size.should == 0 # TODO: See @host.hardware.guest_devices TODO
+    expect(@host.hardware.storage_adapters.size).to eq(0) # TODO: See @host.hardware.guest_devices TODO
   end
 
   def assert_specific_vm_powered_on
     v = ManageIQ::Providers::Redhat::InfraManager::Vm.find_by_name("EmsRefreshSpec-PoweredOn")
-    v.should have_attributes(
+    expect(v).to have_attributes(
       :template              => false,
       :ems_ref               => "/api/vms/fe052832-2350-48ce-8e56-c24b4cd91876",
       :ems_ref_obj           => "/api/vms/fe052832-2350-48ce-8e56-c24b4cd91876",
@@ -255,22 +255,22 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :cpu_shares_level      => nil
     )
 
-    v.ext_management_system.should == @ems
-    v.ems_cluster.should == @cluster
-    v.parent_resource_pool.should == @default_rp
-    v.host.should.nil?
-    v.storages.should == [@storage]
+    expect(v.ext_management_system).to eq(@ems)
+    expect(v.ems_cluster).to eq(@cluster)
+    expect(v.parent_resource_pool).to eq(@default_rp)
+    expect(v.host).to be_nil
+    expect(v.storages).to eq([@storage])
     # v.storage  # TODO: Fix bug where duplication location GUIDs could cause the wrong value to appear.
 
-    v.operating_system.should have_attributes(
+    expect(v.operating_system).to have_attributes(
       :product_name => "rhel_6x64"
     )
 
-    v.custom_attributes.size.should == 0
+    expect(v.custom_attributes.size).to eq(0)
 
-    v.snapshots.size.should == 2
+    expect(v.snapshots.size).to eq(2)
     snapshot = v.snapshots.detect { |s| s.current == 1 } # TODO: Fix this boolean column
-    snapshot.should have_attributes(
+    expect(snapshot).to have_attributes(
       :uid         => "b5557722-d376-4201-b869-538204f67c01",
       :parent_uid  => "cf999f1f-aa72-4a0b-8fac-b208ce1de882",
       :uid_ems     => "b5557722-d376-4201-b869-538204f67c01",
@@ -281,7 +281,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :filename    => nil
     )
     snapshot = snapshot.parent
-    snapshot.should have_attributes(
+    expect(snapshot).to have_attributes(
       :uid         => "cf999f1f-aa72-4a0b-8fac-b208ce1de882",
       :parent_uid  => nil,
       :uid_ems     => "cf999f1f-aa72-4a0b-8fac-b208ce1de882",
@@ -289,9 +289,9 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :description => "_ActiveImage_EmsRefreshSpec-PoweredOn_Wed Sep 26 14:49:58 EDT 2012",
       :current     => 0
     )
-    snapshot.parent.should be_nil
+    expect(snapshot.parent).to be_nil
 
-    v.hardware.should have_attributes(
+    expect(v.hardware).to have_attributes(
       :guest_os           => "rhel_6x64",
       :guest_os_full_name => nil,
       :bios               => nil,
@@ -300,9 +300,9 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :memory_mb          => 1024
     )
 
-    v.hardware.disks.size.should == 2
+    expect(v.hardware.disks.size).to eq(2)
     disk = v.hardware.disks.find_by_device_name("Disk 1")
-    disk.should have_attributes(
+    expect(disk).to have_attributes(
       :device_name     => "Disk 1",
       :device_type     => "disk",
       :controller_type => "virtio",
@@ -314,12 +314,12 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :disk_type       => "thin",
       :start_connected => true
     )
-    disk.storage.should == @storage
+    expect(disk.storage).to eq(@storage)
 
-    v.hardware.guest_devices.size.should == 3
-    v.hardware.nics.size.should == 3
+    expect(v.hardware.guest_devices.size).to eq(3)
+    expect(v.hardware.nics.size).to eq(3)
     nic = v.hardware.nics.find_by_device_name("nic1")
-    nic.should have_attributes(
+    expect(nic).to have_attributes(
       :uid_ems         => "82a2b96c-b17d-4d22-9445-31da58f8b24a",
       :device_name     => "nic1",
       :device_type     => "ethernet",
@@ -330,12 +330,12 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     )
     # nic.lan.should == @lan # TODO: Hook up this connection
 
-    v.hardware.networks.size.should == 0
+    expect(v.hardware.networks.size).to eq(0)
     network = v.hardware.networks.first
-    network.should be_nil
+    expect(network).to be_nil
     # nic.network.should == network # TODO: Hook up this connection
 
-    v.parent_datacenter.should have_attributes(
+    expect(v.parent_datacenter).to have_attributes(
       :ems_ref       => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
       :ems_ref_obj   => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
       :uid_ems       => "eb5592d2-ce76-11e0-a703-005056af0085",
@@ -345,7 +345,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :folder_path   => "Datacenters/Default"
     )
 
-    v.parent_folder.should have_attributes(
+    expect(v.parent_folder).to have_attributes(
       :ems_ref       => nil,
       :ems_ref_obj   => nil,
       :uid_ems       => "root_dc",
@@ -355,7 +355,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :folder_path   => "Datacenters"
     )
 
-    v.parent_blue_folder.should have_attributes(
+    expect(v.parent_blue_folder).to have_attributes(
       :ems_ref       => nil,
       :ems_ref_obj   => nil,
       :uid_ems       => "eb5592d2-ce76-11e0-a703-005056af0085_vm",
@@ -368,7 +368,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
 
   def assert_specific_vm_powered_off
     v = ManageIQ::Providers::Redhat::InfraManager::Vm.find_by_name("EmsRefreshSpec-PoweredOff")
-    v.should have_attributes(
+    expect(v).to have_attributes(
       :template              => false,
       :ems_ref               => "/api/vms/26a050fb-62c3-4645-9088-be6efec860e1",
       :ems_ref_obj           => "/api/vms/26a050fb-62c3-4645-9088-be6efec860e1",
@@ -394,22 +394,22 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :cpu_shares_level      => nil
     )
 
-    v.ext_management_system.should == @ems
-    v.ems_cluster.should == @cluster
-    v.parent_resource_pool.should == @default_rp
-    v.host.should                  be_nil
-    v.storages.should == [@storage]
+    expect(v.ext_management_system).to eq(@ems)
+    expect(v.ems_cluster).to eq(@cluster)
+    expect(v.parent_resource_pool).to eq(@default_rp)
+    expect(v.host).to                  be_nil
+    expect(v.storages).to eq([@storage])
     # v.storage  # TODO: Fix bug where duplication location GUIDs could cause the wrong value to appear.
 
-    v.operating_system.should have_attributes(
+    expect(v.operating_system).to have_attributes(
       :product_name => "rhel_6x64"
     )
 
-    v.custom_attributes.size.should == 0
+    expect(v.custom_attributes.size).to eq(0)
 
-    v.snapshots.size.should == 4
+    expect(v.snapshots.size).to eq(4)
     snapshot = v.snapshots.detect { |s| s.current == 1 } # TODO: Fix this boolean column
-    snapshot.should have_attributes(
+    expect(snapshot).to have_attributes(
       :uid         => "4ecc2f4c-2932-4eea-8597-e6aad5da305a",
       :parent_uid  => "abf6f7aa-cd46-426e-83be-9f7a492a073b",
       :uid_ems     => "4ecc2f4c-2932-4eea-8597-e6aad5da305a",
@@ -420,7 +420,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :filename    => nil
     )
     snapshot = snapshot.parent
-    snapshot.should have_attributes(
+    expect(snapshot).to have_attributes(
       :uid         => "abf6f7aa-cd46-426e-83be-9f7a492a073b",
       :parent_uid  => "123c6a56-7998-4275-bb8d-0f232f5d19a5",
       :uid_ems     => "abf6f7aa-cd46-426e-83be-9f7a492a073b",
@@ -429,7 +429,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :current     => 0
     )
     snapshot = snapshot.parent
-    snapshot.should have_attributes(
+    expect(snapshot).to have_attributes(
       :uid         => "123c6a56-7998-4275-bb8d-0f232f5d19a5",
       :parent_uid  => "1eaef769-fea8-4177-9f94-b78ef8f7a992",
       :uid_ems     => "123c6a56-7998-4275-bb8d-0f232f5d19a5",
@@ -438,7 +438,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :current     => 0
     )
     snapshot = snapshot.parent # TODO: This doesn't seem right. Also check powered on and template.
-    snapshot.should have_attributes(
+    expect(snapshot).to have_attributes(
       :uid         => "1eaef769-fea8-4177-9f94-b78ef8f7a992",
       :parent_uid  => nil,
       :uid_ems     => "1eaef769-fea8-4177-9f94-b78ef8f7a992",
@@ -446,9 +446,9 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :description => "Snapshot1",
       :current     => 0
     )
-    snapshot.parent.should be_nil
+    expect(snapshot.parent).to be_nil
 
-    v.hardware.should have_attributes(
+    expect(v.hardware).to have_attributes(
       :guest_os           => "rhel_6x64",
       :guest_os_full_name => nil,
       :bios               => nil,
@@ -457,9 +457,9 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :memory_mb          => 1024
     )
 
-    v.hardware.disks.size.should == 2
+    expect(v.hardware.disks.size).to eq(2)
     disk = v.hardware.disks.find_by_device_name("Disk 1")
-    disk.should have_attributes(
+    expect(disk).to have_attributes(
       :device_name     => "Disk 1",
       :device_type     => "disk",
       :controller_type => "virtio",
@@ -471,12 +471,12 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :disk_type       => "thin",
       :start_connected => true
     )
-    disk.storage.should == @storage
+    expect(disk.storage).to eq(@storage)
 
-    v.hardware.guest_devices.size.should == 3
-    v.hardware.nics.size.should == 3
+    expect(v.hardware.guest_devices.size).to eq(3)
+    expect(v.hardware.nics.size).to eq(3)
     nic = v.hardware.nics.find_by_device_name("nic1")
-    nic.should have_attributes(
+    expect(nic).to have_attributes(
       :uid_ems         => "c586cd90-fc74-4b17-9fad-f5a559b40bf2",
       :device_name     => "nic1",
       :device_type     => "ethernet",
@@ -485,12 +485,12 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :start_connected => true,
       :address         => "00:1a:4a:a8:fc:0c"
     )
-    nic.lan.should     be_nil
-    nic.network.should be_nil
+    expect(nic.lan).to     be_nil
+    expect(nic.network).to be_nil
 
-    v.hardware.networks.size.should == 0
+    expect(v.hardware.networks.size).to eq(0)
 
-    v.parent_datacenter.should have_attributes(
+    expect(v.parent_datacenter).to have_attributes(
       :ems_ref       => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
       :ems_ref_obj   => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
       :uid_ems       => "eb5592d2-ce76-11e0-a703-005056af0085",
@@ -500,7 +500,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :folder_path   => "Datacenters/Default"
     )
 
-    v.parent_folder.should have_attributes(
+    expect(v.parent_folder).to have_attributes(
       :ems_ref       => nil,
       :ems_ref_obj   => nil,
       :uid_ems       => "root_dc",
@@ -510,7 +510,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :folder_path   => "Datacenters"
     )
 
-    v.parent_blue_folder.should have_attributes(
+    expect(v.parent_blue_folder).to have_attributes(
       :ems_ref       => nil,
       :ems_ref_obj   => nil,
       :uid_ems       => "eb5592d2-ce76-11e0-a703-005056af0085_vm",
@@ -523,7 +523,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
 
   def assert_specific_template
     v = ManageIQ::Providers::Redhat::InfraManager::Template.find_by_name("EmsRefreshSpec")
-    v.should have_attributes(
+    expect(v).to have_attributes(
       :template              => true,
       :ems_ref               => "/api/templates/7a6db798-9df9-40ca-8cc3-3baab32e7613",
       :ems_ref_obj           => "/api/templates/7a6db798-9df9-40ca-8cc3-3baab32e7613",
@@ -548,21 +548,21 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :cpu_shares_level      => nil
     )
 
-    v.ext_management_system.should == @ems
-    v.ems_cluster.should == @cluster
-    v.parent_resource_pool.should  be_nil
-    v.host.should                  be_nil
-    v.storages.should == [@storage]
+    expect(v.ext_management_system).to eq(@ems)
+    expect(v.ems_cluster).to eq(@cluster)
+    expect(v.parent_resource_pool).to  be_nil
+    expect(v.host).to                  be_nil
+    expect(v.storages).to eq([@storage])
     # v.storage  # TODO: Fix bug where duplication location GUIDs could cause the wrong value to appear.
 
-    v.operating_system.should have_attributes(
+    expect(v.operating_system).to have_attributes(
       :product_name => "rhel_6x64"
     )
 
-    v.custom_attributes.size.should == 0
-    v.snapshots.size.should == 0
+    expect(v.custom_attributes.size).to eq(0)
+    expect(v.snapshots.size).to eq(0)
 
-    v.hardware.should have_attributes(
+    expect(v.hardware).to have_attributes(
       :guest_os             => "rhel_6x64",
       :guest_os_full_name   => nil,
       :bios                 => nil,
@@ -573,9 +573,9 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :memory_mb            => 1024
     )
 
-    v.hardware.disks.size.should == 2
+    expect(v.hardware.disks.size).to eq(2)
     disk = v.hardware.disks.find_by_device_name("Disk 1")
-    disk.should have_attributes(
+    expect(disk).to have_attributes(
       :device_name     => "Disk 1",
       :device_type     => "disk",
       :controller_type => "virtio",
@@ -587,13 +587,13 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :disk_type       => "thin",
       :start_connected => true
     )
-    disk.storage.should == @storage
+    expect(disk.storage).to eq(@storage)
 
-    v.hardware.guest_devices.size.should == 0 # TODO: Should this be 3 like the other tests?
-    v.hardware.nics.size.should == 0
-    v.hardware.networks.size.should == 0
+    expect(v.hardware.guest_devices.size).to eq(0) # TODO: Should this be 3 like the other tests?
+    expect(v.hardware.nics.size).to eq(0)
+    expect(v.hardware.networks.size).to eq(0)
 
-    v.parent_datacenter.should have_attributes(
+    expect(v.parent_datacenter).to have_attributes(
       :ems_ref       => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
       :ems_ref_obj   => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
       :uid_ems       => "eb5592d2-ce76-11e0-a703-005056af0085",
@@ -603,7 +603,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :folder_path   => "Datacenters/Default"
     )
 
-    v.parent_folder.should have_attributes(
+    expect(v.parent_folder).to have_attributes(
       :ems_ref       => nil,
       :ems_ref_obj   => nil,
       :uid_ems       => "root_dc",
@@ -613,7 +613,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :folder_path   => "Datacenters"
     )
 
-    v.parent_blue_folder.should have_attributes(
+    expect(v.parent_blue_folder).to have_attributes(
       :ems_ref       => nil,
       :ems_ref_obj   => nil,
       :uid_ems       => "eb5592d2-ce76-11e0-a703-005056af0085_vm",
@@ -625,7 +625,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
   end
 
   def assert_relationship_tree
-    @ems.descendants_arranged.should match_relationship_tree(
+    expect(@ems.descendants_arranged).to match_relationship_tree(
       [EmsFolder, "Datacenters", {:is_datacenter => false}] => {
         [EmsFolder, "DC-iSCSI", {:is_datacenter => true}] => {
           [EmsFolder, "host", {:is_datacenter => false}] => {

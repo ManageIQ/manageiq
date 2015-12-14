@@ -36,52 +36,52 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
   end
 
   def assert_table_counts
-    ExtManagementSystem.count.should == 1
-    EmsFolder.count.should == 4 # HACK: Folder structure for UI a la VMware
-    EmsCluster.count.should == 1
-    Host.count.should == 3
-    ResourcePool.count.should == 0
-    Vm.count.should == 23
-    VmOrTemplate.count.should == 28
-    CustomAttribute.count.should == 0
-    CustomizationSpec.count.should == 0
-    Disk.count.should == 23
-    GuestDevice.count.should == 11
-    Hardware.count.should == 31
-    Lan.count.should == 0
-    MiqScsiLun.count.should == 0
-    MiqScsiTarget.count.should == 0
-    Network.count.should == 23
-    OperatingSystem.count.should == 31
-    Snapshot.count.should == 9
-    Switch.count.should == 0
-    SystemService.count.should == 0
-    Relationship.count.should == 35
+    expect(ExtManagementSystem.count).to eq(1)
+    expect(EmsFolder.count).to eq(4) # HACK: Folder structure for UI a la VMware
+    expect(EmsCluster.count).to eq(1)
+    expect(Host.count).to eq(3)
+    expect(ResourcePool.count).to eq(0)
+    expect(Vm.count).to eq(23)
+    expect(VmOrTemplate.count).to eq(28)
+    expect(CustomAttribute.count).to eq(0)
+    expect(CustomizationSpec.count).to eq(0)
+    expect(Disk.count).to eq(23)
+    expect(GuestDevice.count).to eq(11)
+    expect(Hardware.count).to eq(31)
+    expect(Lan.count).to eq(0)
+    expect(MiqScsiLun.count).to eq(0)
+    expect(MiqScsiTarget.count).to eq(0)
+    expect(Network.count).to eq(23)
+    expect(OperatingSystem.count).to eq(31)
+    expect(Snapshot.count).to eq(9)
+    expect(Switch.count).to eq(0)
+    expect(SystemService.count).to eq(0)
+    expect(Relationship.count).to eq(35)
 
-    MiqQueue.count.should == 28
-    Storage.count.should == 6
+    expect(MiqQueue.count).to eq(28)
+    expect(Storage.count).to eq(6)
   end
 
   def assert_ems
-    @ems.should have_attributes(
+    expect(@ems).to have_attributes(
       :api_version => "2.1.0",
       :uid_ems     => "aa767b2f-7ca4-4a2c-bdb3-d269cbef3f8f"
     )
-    @ems.ems_folders.size.should == 4 # HACK: Folder structure for UI a la VMware
-    @ems.ems_clusters.size.should == 1
-    @ems.resource_pools.size.should == 0
+    expect(@ems.ems_folders.size).to eq(4) # HACK: Folder structure for UI a la VMware
+    expect(@ems.ems_clusters.size).to eq(1)
+    expect(@ems.resource_pools.size).to eq(0)
 
-    @ems.storages.size.should == 6
-    @ems.hosts.size.should == 3
-    @ems.vms_and_templates.size.should == 28
-    @ems.vms.size.should == 23
-    @ems.miq_templates.size.should == 5
-    @ems.customization_specs.size.should == 0
+    expect(@ems.storages.size).to eq(6)
+    expect(@ems.hosts.size).to eq(3)
+    expect(@ems.vms_and_templates.size).to eq(28)
+    expect(@ems.vms.size).to eq(23)
+    expect(@ems.miq_templates.size).to eq(5)
+    expect(@ems.customization_specs.size).to eq(0)
   end
 
   def assert_specific_storage
     @storage = Storage.find_by_name("file://hyperv-h01.manageiq.com/G:/")
-    @storage.should have_attributes(
+    expect(@storage).to have_attributes(
       :ems_ref                     => "afc847e1-9d85-4488-91bb-4284c9a29d07",
       :name                        => "file://hyperv-h01.manageiq.com/G:/",
       :store_type                  => "NTFS",
@@ -96,7 +96,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
 
   def assert_specific_cluster
     @cluster = EmsCluster.find_by_name("US_East")
-    @cluster.should have_attributes(
+    expect(@cluster).to have_attributes(
       :ems_ref => "0be27f13-2a7a-4803-8d12-a460b94fdd71",
       :uid_ems => "0be27f13-2a7a-4803-8d12-a460b94fdd71",
       :name    => "US_East",
@@ -105,7 +105,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
 
   def assert_specific_host
     @host = ManageIQ::Providers::Microsoft::InfraManager::Host.find_by_name("hyperv-h01.manageiq.com")
-    @host.should have_attributes(
+    expect(@host).to have_attributes(
       :ems_ref          => "60e92646-b9f8-432a-a71a-5bc169ceeca2",
       :name             => "hyperv-h01.manageiq.com",
       :hostname         => "hyperv-h01.manageiq.com",
@@ -117,13 +117,13 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
       :connection_state => "connected"
     )
 
-    @host.operating_system.should have_attributes(
+    expect(@host.operating_system).to have_attributes(
       :product_name => "Microsoft Windows Server 2012 R2 Datacenter ",
       :version      => "6.3.9600",
       :product_type => "microsoft"
     )
 
-    @host.hardware.should have_attributes(
+    expect(@host.hardware).to have_attributes(
       :cpu_speed            => 2394,
       :cpu_type             => "Intel Xeon 179",
       :manufacturer         => "Intel",
@@ -140,10 +140,10 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
       :memory_usage         => nil
     )
 
-    @host.hardware.guest_devices.size.should == 5
-    @host.hardware.nics.size.should == 4
+    expect(@host.hardware.guest_devices.size).to eq(5)
+    expect(@host.hardware.nics.size).to eq(4)
     nic = @host.hardware.nics.find_by_device_name("Ethernet")
-    nic.should have_attributes(
+    expect(nic).to have_attributes(
       :device_name     => "Ethernet",
       :device_type     => "ethernet",
       :location        => "PCI bus 1, device 0, function 0",
@@ -152,13 +152,13 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
     )
 
     @host2 = Host.find_by_name("SFBronagh.manageiq.com")
-    @host2.ems_cluster.should == @cluster
+    expect(@host2.ems_cluster).to eq(@cluster)
   end
 
   def assert_specific_vm
     v = ManageIQ::Providers::Microsoft::InfraManager::Vm.find_by_name("Salesforce_A")
 
-    v.should have_attributes(
+    expect(v).to have_attributes(
       :template         => false,
       :ems_ref          => "ae9c0f43-295e-4a73-adba-b4cbc7875563",
       :vendor           => "Microsoft",
@@ -169,17 +169,17 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
       :connection_state => "connected",
     )
 
-    v.ext_management_system.should == @ems
-    v.host.should == @host
+    expect(v.ext_management_system).to eq(@ems)
+    expect(v.host).to eq(@host)
 
-    v.operating_system.should have_attributes(
+    expect(v.operating_system).to have_attributes(
       :product_name => "64-bit edition of Windows Server 2008 R2 Standard"
     )
 
-    v.custom_attributes.size.should == 0
-    v.snapshots.size.should == 1
+    expect(v.custom_attributes.size).to eq(0)
+    expect(v.snapshots.size).to eq(1)
 
-    v.hardware.should have_attributes(
+    expect(v.hardware).to have_attributes(
       :guest_os           => "64-bit edition of Windows Server 2008 R2 Standard",
       :guest_os_full_name => "64-bit edition of Windows Server 2008 R2 Standard",
       :bios               => "67b7b7ae-34aa-474e-9050-02ed3c633f6c",
@@ -188,9 +188,9 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
       :memory_mb          => 512
     )
 
-    v.hardware.disks.size.should == 1
+    expect(v.hardware.disks.size).to eq(1)
     disk = v.hardware.disks.find_by_device_name("WS2008R2Corex64Ent_F5C854FE-D17D-4AE1-BC32-B55F189D807A")
-    disk.should have_attributes(
+    expect(disk).to have_attributes(
       :device_name     => "WS2008R2Corex64Ent_F5C854FE-D17D-4AE1-BC32-B55F189D807A",
       :device_type     => "disk",
       :controller_type => "IDE",
@@ -205,7 +205,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
 
     v.snapshots.size == 1
     snapshot = v.snapshots.find_by_name("Salesforce_A - (05/05/2014 07:57:13)")
-    snapshot.should have_attributes(
+    expect(snapshot).to have_attributes(
       :uid         => "51629E91-8D04-4266-98F5-1DB77E88EE9A",
       :ems_ref     => "51629E91-8D04-4266-98F5-1DB77E88EE9A",
       :parent_uid  => "194AE824-BA4A-4809-B3BB-86E0ACA1489B",
@@ -214,9 +214,9 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
     )
     # TODO: Add "Stored" status value in DB. This is a VM that has been provisioned but not deployed
 
-    v.hardware.guest_devices.size.should == 1
+    expect(v.hardware.guest_devices.size).to eq(1)
     dvd = v.hardware.guest_devices.first
-    dvd.should have_attributes(
+    expect(dvd).to have_attributes(
       :device_name     => "rhel-server-6.2-x86_64-boot.iso",
       :device_type     => "cdrom",
       :filename        => "C:\\ProgramData\\Microsoft\\Windows\\Hyper-V\\Salesforce_A\\rhel-server-6.2-x86_64-boot.iso",
@@ -226,23 +226,23 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
     )
 
     v = Vm.find_by_name("SCVMM1111")
-    v.hardware.networks.size.should == 1
+    expect(v.hardware.networks.size).to eq(1)
     network = v.hardware.networks.first
-    network.should have_attributes(
+    expect(network).to have_attributes(
       :hostname  => "SCVMM1111.manageiq.com",
       :ipaddress => "192.168.252.90"
     )
 
     v = Vm.find_by_name("ERP_A")
     dvd = v.hardware.guest_devices.first
-    dvd.should have_attributes(
+    expect(dvd).to have_attributes(
       :device_name => "ERP_A",
       :filename    => "D:",
     )
   end
 
   def assert_relationship_tree
-    @ems.descendants_arranged.should match_relationship_tree(
+    expect(@ems.descendants_arranged).to match_relationship_tree(
       [EmsFolder, "Datacenters", {:is_datacenter => false}] => {
         [EmsFolder, "SCVMM", {:is_datacenter => true}] => {
           [EmsFolder, "host", {:is_datacenter => false}] => {

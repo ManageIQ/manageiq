@@ -21,12 +21,12 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
   end
 
   def assert_failed_refresh(error)
-    @ems.last_refresh_status.should == "error"
-    @ems.last_refresh_error.should == error
+    expect(@ems.last_refresh_status).to eq("error")
+    expect(@ems.last_refresh_error).to eq(error)
   end
 
   def refresh_ems(ems, error)
-    ManageIQ::Providers::Openstack::CloudManager::RefreshParser.stub(:ems_inv_to_hashes).and_raise(Excon::Errors::BadRequest.new(error))
+    allow(ManageIQ::Providers::Openstack::CloudManager::RefreshParser).to receive(:ems_inv_to_hashes).and_raise(Excon::Errors::BadRequest.new(error))
     EmsRefresh.refresh(ems)
   end
 end
