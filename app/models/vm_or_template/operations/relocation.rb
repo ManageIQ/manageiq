@@ -1,4 +1,16 @@
 module VmOrTemplate::Operations::Relocation
+  def raw_live_migrate(_options = nil)
+    raise NotImplementedError, "raw_live_migrate must be implemented in a subclass"
+  end
+
+  def live_migrate(options = nil)
+    raw_live_migrate(options)
+  end
+
+  def validate_live_migrate
+    validate_unsupported("Live Migrate VM Operation")
+  end
+
   def raw_migrate(host, pool = nil, priority = "defaultPriority", state = nil)
     raise "VM has no EMS, unable to migrate VM" unless ext_management_system
     raise "Host not specified, unable to migrate VM" unless host.kind_of?(Host)

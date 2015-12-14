@@ -31,6 +31,7 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
     when "ERROR"                 then "non_operational"
     when "BUILD", "REBUILD"      then "wait_for_launch"
     when "DELETED"               then "archived"
+    when "MIGRATING"             then "migrating"
     else                              "unknown"
     end
   end
@@ -83,14 +84,10 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
     true
   end
 
-  def validate_migrate
-    validate_supported
-  end
-
   def memory_mb_available?
     true
   end
-
+  
   def validate_smartstate_analysis
     validate_supported_check("Smartstate Analysis")
   end
