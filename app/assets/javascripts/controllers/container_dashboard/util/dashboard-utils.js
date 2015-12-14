@@ -1,4 +1,4 @@
-angular.module('containerDashboard').factory('ContainerDashboardUtils', [function ContainerDashboardUtils () {
+angular.module('miq.util').factory('miq.util', [function dashboardUtilsFactory () {
   var createProvidersStatus = function() {
     return {
       title: "Providers",
@@ -94,9 +94,10 @@ angular.module('containerDashboard').factory('ContainerDashboardUtils', [functio
       statusObject.count = 0;
     }
   };
-
+  var heatmapSort = function(a, b) {return b.value - a.value};
 
   return {
+    heatmapSort: heatmapSort,
     createProvidersStatus: createProvidersStatus,
     createNodesStatus: createNodesStatus,
     createContainersStatus: createContainersStatus,

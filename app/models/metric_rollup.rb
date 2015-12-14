@@ -47,4 +47,13 @@ class MetricRollup < ActiveRecord::Base
       return val
     end
   end
+
+  def self.latest_rollups(resource_type, resource_ids = nil, capture_interval_name = nil)
+    capture_interval_name ||= "hourly"
+    metrics = where(:resource_type => resource_type, :capture_interval_name => capture_interval_name)
+    metrics = metrics.where(:resource_id => resource_ids) if resource_ids
+    metrics = metrics.order(:resource_id, :timestamp => :desc)
+    metrics = metrics.select('DISTINCT ON (metric_rollups.resource_id) metric_rollups.*')
+    metrics.includes(:resource)
+  end
 end
