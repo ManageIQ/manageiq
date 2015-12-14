@@ -95,7 +95,7 @@
                 - click = "DoNav('/vm/show/#{to_cid(rec.destination_id)}');"
                 - title = _("Click to view this VM")
             - when "Job"
-              - click = "DoNav('/vm/show/#{to_cid(row["target_id"])}');"
+              - click = "DoNav('/#{row['target_class'].underscore}/show/#{to_cid(row["target_id"])}');"
             - when @vm && view.db
               - click = "DoNav('/vm/#{@listicon.pluralize}/#{@vm.id}?show=#{@id}');"
             - when "Action"
