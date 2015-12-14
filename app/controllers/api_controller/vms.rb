@@ -199,16 +199,6 @@ class ApiController
       end
     end
 
-    def terminate_resource_vms(type, id = nil, _data = nil)
-      raise BadRequestError, "Must specify an id for terminating a #{type} resource" unless id
-
-      api_action(type, id) do |klass|
-        vm = resource_search(id, type, klass)
-        api_log_info("Terminating #{vm_ident(vm)}")
-        terminate_vm(vm)
-      end
-    end
-
     private
 
     def vm_ident(vm)
@@ -357,14 +347,6 @@ class ApiController
     def reboot_guest_vm(vm)
       desc = "#{vm_ident(vm)} rebooting"
       task_id = queue_object_action(vm, desc, :method_name => "reboot_guest", :role => "ems_operations")
-      action_result(true, desc, :task_id => task_id)
-    rescue => err
-      action_result(false, err.to_s)
-    end
-
-    def terminate_vm(vm)
-      desc = "#{vm_ident(vm)} terminating"
-      task_id = queue_object_action(vm, desc, :method_name => "vm_destroy", :role => "ems_operations")
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)

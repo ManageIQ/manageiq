@@ -311,6 +311,20 @@
         :identifier: host_protect
       - :name: unassign
         :identifier: host_protect
+  :instances:
+    :description: Instances
+    :klass: Vm
+    :methods: *70174834085860
+    :options:
+    - :collection
+    :collection_actions:
+      :post:
+      - :name: terminate
+        :identifier: instance_terminate
+    :resource_actions:
+      :post:
+      - :name: terminate
+        :identifier: instance_terminate
   :pictures:
     :description: Pictures
     :options:
@@ -997,8 +1011,6 @@
         :identifier: vm_scan
       - :name: delete
         :identifier: vm_delete
-      - :name: terminate
-        :identifier: instance_terminate
     :resource_actions:
       :post:
       - :name: edit
@@ -1032,8 +1044,6 @@
         :identifier: vm_retire
       - :name: delete
         :identifier: vm_delete
-      - :name: terminate
-        :identifier: instance_terminate
       - :name: set_owner
         :identifier: vm_edit
       - :name: set_ownership
