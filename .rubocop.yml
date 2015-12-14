@@ -64,6 +64,8 @@ TrivialAccessors:
 #
 AllCops:
   RunRailsCops: true
+  Exclude:
+    - config/toolbar_strings.rb
 ClassAndModuleChildren:
   Enabled: false
 DefEndAlignment:
@@ -115,3 +117,4 @@ ClassAndModuleCamelCase:
 FileName:
   Exclude:
     - lib/miq_automation_engine/service_models/*.rb
+    - config/toolbar_strings.rb
