@@ -5,7 +5,7 @@
 #   PWD
 
 echo "gem: --no-ri --no-rdoc --no-document" > ~/.gemrc
-travis_retry gem install bundler -v ">= 1.8.4"
+travis_retry gem install bundler -v "~> 1.10.6"
 
 if [[ -n "${GEM}" ]] ; then
   cd gems/${GEM}
