@@ -96,8 +96,6 @@ class ReportController < ApplicationController
   # New tab was pressed
   def change_tab
     case params[:tab].split("_")[0]
-    when "new"
-      redirect_to(:action => "miq_report_new", :tab => params[:tab])
     when "edit"
       redirect_to(:action => "miq_report_edit", :tab => params[:tab])
     when "schedules"
