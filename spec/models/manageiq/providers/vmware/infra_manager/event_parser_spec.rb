@@ -8,7 +8,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::EventParser do
       event = YAML.load_file(File.join(EPV_DATA_DIR, 'general_user_event.yml'))
       data = described_class.event_to_hash(event, 12345)
 
-      data.should have_attributes(
+      expect(data).to have_attributes(
         :event_type   => "GeneralUserEvent",
         :chain_id     => "5361104",
         :is_task      => false,
@@ -26,9 +26,9 @@ describe ManageIQ::Providers::Vmware::InfraManager::EventParser do
         :host_name    => "yoda.manageiq.com",
       )
 
-      data[:full_data].should    be_instance_of VimHash
-      data[:vm_ems_ref].should   be_instance_of String
-      data[:host_ems_ref].should be_instance_of String
+      expect(data[:full_data]).to    be_instance_of VimHash
+      expect(data[:vm_ems_ref]).to   be_instance_of String
+      expect(data[:host_ems_ref]).to be_instance_of String
     end
 
     context "with an EventEx event" do
@@ -37,7 +37,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::EventParser do
         data = described_class.event_to_hash(event, 12345)
 
         assert_result_fields(data, event)
-        data.should have_attributes(
+        expect(data).to have_attributes(
           :event_type => "vprob.vmfs.resource.corruptondisk",
           :message    => "event.vprob.vmfs.resource.corruptondisk.fullFormat (vprob.vmfs.resource.corruptondisk)"
         )
@@ -48,14 +48,14 @@ describe ManageIQ::Providers::Vmware::InfraManager::EventParser do
         data = described_class.event_to_hash(event, 12345)
 
         assert_result_fields(data, event)
-        data.should have_attributes(
+        expect(data).to have_attributes(
           :event_type => "EventEx",
           :message    => ""
         )
       end
 
       def assert_result_fields(data, event)
-        data.should have_attributes(
+        expect(data).to have_attributes(
           :chain_id     => "297179",
           :is_task      => false,
           :source       => "VC",
@@ -71,8 +71,8 @@ describe ManageIQ::Providers::Vmware::InfraManager::EventParser do
           :host_name    => "vi4esx1.galaxy.local",
         )
 
-        data[:full_data].should    be_instance_of VimHash
-        data[:host_ems_ref].should be_instance_of String
+        expect(data[:full_data]).to    be_instance_of VimHash
+        expect(data[:host_ems_ref]).to be_instance_of String
       end
     end
   end

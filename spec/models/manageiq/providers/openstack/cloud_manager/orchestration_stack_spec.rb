@@ -42,10 +42,10 @@ describe ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack do
         expect(the_new_stack).to receive(:save).and_return(the_new_stack)
 
         stack = OrchestrationStack.create_stack(ems, 'mystack', template, stack_option)
-        stack.class.should == described_class
-        stack.name.should == 'mystack'
-        stack.ems_ref.should == 'new_id'
-        stack.cloud_tenant.should == tenant
+        expect(stack.class).to eq(described_class)
+        expect(stack.name).to eq('mystack')
+        expect(stack.ems_ref).to eq('new_id')
+        expect(stack.cloud_tenant).to eq(tenant)
       end
 
       it 'catches errors from provider' do
@@ -89,14 +89,14 @@ describe ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack do
         rstatus = orchestration_stack.raw_status
         expect(rstatus).to have_attributes(:status => 'CREATE_COMPLETE', :reason => 'complete')
 
-        orchestration_stack.raw_exists?.should be_true
+        expect(orchestration_stack.raw_exists?).to be_truthy
       end
 
       it 'determines stack not exist' do
         allow(raw_stacks).to receive(:get).with(orchestration_stack.name, orchestration_stack.ems_ref).and_return(nil)
         expect { orchestration_stack.raw_status }.to raise_error(MiqException::MiqOrchestrationStackNotExistError)
 
-        orchestration_stack.raw_exists?.should be_false
+        expect(orchestration_stack.raw_exists?).to be_falsey
       end
 
       it 'catches errors from provider' do

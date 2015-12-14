@@ -7,11 +7,11 @@ describe ContainerImage do
       :name => "group",
       :container_node => FactoryGirl.create(:container_node, :name => "node")
     )
-    FactoryGirl.create(
+    expect(FactoryGirl.create(
       :container_image,
       :containers => [FactoryGirl.create(:container, :name => "container_a", :container_group => group),
                       FactoryGirl.create(:container, :name => "container_b", :container_group => group)]
-      ).container_nodes.count.should == 1
+      ).container_nodes.count).to eq(1)
     end
 end
 

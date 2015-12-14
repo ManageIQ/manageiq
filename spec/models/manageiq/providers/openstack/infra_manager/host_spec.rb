@@ -22,13 +22,13 @@ openstack-keystone:                     active
 
     let(:ssu) do
       double('ssu').tap do |ssu|
-        ssu.should_receive(:shell_exec).with("openstack-status").and_return(openstack_status_text)
+        expect(ssu).to receive(:shell_exec).with("openstack-status").and_return(openstack_status_text)
       end
     end
 
     let(:host) do
       FactoryGirl.create(:host_openstack_infra).tap do |host|
-        host.stub(:connect_ssh).and_yield(ssu)
+        allow(host).to receive(:connect_ssh).and_yield(ssu)
 
         # create generic SystemService
         host.system_services << FactoryGirl.create(:system_service)
@@ -72,7 +72,7 @@ openstack-keystone:                     active
     context "with stubbed MiqLinux::Utils" do
       it "makes proper utils calls" do
         miq_linux_utils_double = double('MiqLinux::Utils')
-        miq_linux_utils_double.should_receive(:parse_openstack_status).with(openstack_status_text).and_return([])
+        expect(miq_linux_utils_double).to receive(:parse_openstack_status).with(openstack_status_text).and_return([])
         stub_const('MiqLinux::Utils', miq_linux_utils_double)
         host.refresh_openstack_services(ssu)
       end
@@ -98,8 +98,8 @@ openstack-keystone:                     active
         ]
       end
 
-      it { should include(*expected) }
-      it { should_not include(*unexpected) }
+      it { is_expected.to include(*expected) }
+      it { is_expected.not_to include(*unexpected) }
     end
 
     describe "system_services names" do
@@ -123,8 +123,8 @@ openstack-keystone:                     active
         ]
       end
 
-      it { should include(*expected) }
-      it { should_not include(*unexpected) }
+      it { is_expected.to include(*expected) }
+      it { is_expected.not_to include(*unexpected) }
     end
 
     describe "filesystems names" do
@@ -142,7 +142,7 @@ openstack-keystone:                     active
         ]
       end
 
-      it { should include(*expected) }
+      it { is_expected.to include(*expected) }
     end
 
     describe "existing HostServiceGroupOpenstack gets updated" do
@@ -171,8 +171,8 @@ openstack-keystone:                     active
           ]
         end
 
-        it { should include(*expected) }
-        it { should_not include(*unexpected) }
+        it { is_expected.to include(*expected) }
+        it { is_expected.not_to include(*unexpected) }
       end
 
       describe "filesystem names" do
@@ -194,8 +194,8 @@ openstack-keystone:                     active
           ]
         end
 
-        it { should include(*expected) }
-        it { should_not include(*unexpected) }
+        it { is_expected.to include(*expected) }
+        it { is_expected.not_to include(*unexpected) }
       end
     end
 
@@ -203,14 +203,14 @@ openstack-keystone:                     active
       host.refresh_openstack_services(ssu)
       # we test if SystemServices with associated HostServiceGroupOpenstacks from current Host
       # are included among all SystemServices of that host
-      host.system_services.should include(*(host.host_service_group_openstacks.flat_map(&:system_services)))
+      expect(host.system_services).to include(*(host.host_service_group_openstacks.flat_map(&:system_services)))
     end
 
     it "creates association with existing Filesystems" do
       host.refresh_openstack_services(ssu)
       # we test if Filesystems with associated HostServiceGroupOpenstacks from current Host
       # are included among all Filesystems of that host
-      host.filesystems.should include(*(host.host_service_group_openstacks.flat_map(&:filesystems)))
+      expect(host.filesystems).to include(*(host.host_service_group_openstacks.flat_map(&:filesystems)))
     end
   end
 
@@ -232,7 +232,7 @@ openstack-keystone:                     active
     end
 
     before :each do
-      Authentication.any_instance.stub(:raise_event)
+      allow_any_instance_of(Authentication).to receive(:raise_event)
     end
 
     it "#get_parent_keypair returns parent provider auth" do
@@ -413,7 +413,7 @@ openstack-keystone:                     active
     context "#update_ssh_auth_status!" do
       context "when ssh connection causes exception," do
         before :each do
-          host.stub(:verify_credentials_with_ssh) { raise "some error" }
+          allow(host).to receive(:verify_credentials_with_ssh) { raise "some error" }
         end
 
         it "sets auth to 'Error' state if credentials exists" do
@@ -437,7 +437,7 @@ openstack-keystone:                     active
 
       context "when ssh connection succeeds and verification returns true," do
         before :each do
-          host.stub(:verify_credentials_with_ssh).and_return(true)
+          allow(host).to receive(:verify_credentials_with_ssh).and_return(true)
         end
 
         it "sets auth to valid, when credentials verification succeeds" do

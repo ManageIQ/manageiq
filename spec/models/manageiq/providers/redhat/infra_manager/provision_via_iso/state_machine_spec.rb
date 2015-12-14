@@ -12,11 +12,11 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionViaIso do
     end
 
     it "#customize_destination" do
-      @task.stub(:update_and_notify_parent)
+      allow(@task).to receive(:update_and_notify_parent)
 
-      @task.should_receive(:configure_container)
-      @task.should_receive(:attach_floppy_payload)
-      @task.should_receive(:boot_from_cdrom)
+      expect(@task).to receive(:configure_container)
+      expect(@task).to receive(:attach_floppy_payload)
+      expect(@task).to receive(:boot_from_cdrom)
 
       @task.customize_destination
     end

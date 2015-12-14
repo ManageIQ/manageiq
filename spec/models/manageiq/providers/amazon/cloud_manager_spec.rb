@@ -2,11 +2,11 @@ require "spec_helper"
 
 describe ManageIQ::Providers::Amazon::CloudManager do
   it ".ems_type" do
-    described_class.ems_type.should == 'ec2'
+    expect(described_class.ems_type).to eq('ec2')
   end
 
   it ".description" do
-    described_class.description.should == 'Amazon EC2'
+    expect(described_class.description).to eq('Amazon EC2')
   end
 
   describe ".metrics_collector_queue_name" do
@@ -33,100 +33,100 @@ describe ManageIQ::Providers::Amazon::CloudManager do
     end
 
     def assert_region(ems, name)
-      ems.name.should == name
-      ems.provider_region.should == name.split(" ").first
-      ems.auth_user_pwd.should == [@ec2_user, @ec2_pass]
+      expect(ems.name).to eq(name)
+      expect(ems.provider_region).to eq(name.split(" ").first)
+      expect(ems.auth_user_pwd).to eq([@ec2_user, @ec2_pass])
     end
 
     def assert_region_on_another_account(ems, name)
-      ems.name.should == name
-      ems.provider_region.should == name.split(" ").first
-      ems.auth_user_pwd.should == [@ec2_user2, @ec2_pass2]
+      expect(ems.name).to eq(name)
+      expect(ems.provider_region).to eq(name.split(" ").first)
+      expect(ems.auth_user_pwd).to eq([@ec2_user2, @ec2_pass2])
     end
 
-    it "with no existing records" do
+    it "with no existing records" do |example|
       found = recorded_discover(example)
-      found.count.should == 2
+      expect(found.count).to eq(2)
 
       emses = ManageIQ::Providers::Amazon::CloudManager.order(:name)
-      emses.count.should == 2
+      expect(emses.count).to eq(2)
       assert_region(emses[0], "us-east-1")
       assert_region(emses[1], "us-west-1")
     end
 
-    it "with no existing records and greenfield Amazon" do
+    it "with no existing records and greenfield Amazon" do |example|
       found = recorded_discover(example)
-      found.count.should == 1
+      expect(found.count).to eq(1)
 
       emses = ManageIQ::Providers::Amazon::CloudManager.order(:name)
-      emses.count.should == 1
+      expect(emses.count).to eq(1)
       assert_region(emses[0], "us-east-1")
     end
 
-    it "with some existing records" do
+    it "with some existing records" do |example|
       FactoryGirl.create(:ems_amazon_with_authentication, :name => "us-west-1", :provider_region => "us-west-1")
 
       found = recorded_discover(example)
-      found.count.should == 1
+      expect(found.count).to eq(1)
 
       emses = ManageIQ::Providers::Amazon::CloudManager.order(:name)
-      emses.count.should == 2
+      expect(emses.count).to eq(2)
       assert_region(emses[0], "us-east-1")
       assert_region(emses[1], "us-west-1")
     end
 
-    it "with all existing records" do
+    it "with all existing records" do |example|
       FactoryGirl.create(:ems_amazon_with_authentication, :name => "us-east-1", :provider_region => "us-east-1")
       FactoryGirl.create(:ems_amazon_with_authentication, :name => "us-west-1", :provider_region => "us-west-1")
 
       found = recorded_discover(example)
-      found.count.should == 0
+      expect(found.count).to eq(0)
 
       emses = ManageIQ::Providers::Amazon::CloudManager.order(:name)
-      emses.count.should == 2
+      expect(emses.count).to eq(2)
       assert_region(emses[0], "us-east-1")
       assert_region(emses[1], "us-west-1")
     end
 
     context "with records from a different account" do
-      it "with the same name" do
+      it "with the same name" do |example|
         FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1", :provider_region => "us-west-1")
 
         found = recorded_discover(example)
-        found.count.should == 2
+        expect(found.count).to eq(2)
 
         emses = ManageIQ::Providers::Amazon::CloudManager.order(:name).includes(:authentications)
-        emses.count.should == 3
+        expect(emses.count).to eq(3)
         assert_region(emses[0], "us-east-1")
         assert_region_on_another_account(emses[1], "us-west-1")
         assert_region(emses[2], "us-west-1 #{@ec2_user}")
       end
 
-      it "with the same name and backup name" do
+      it "with the same name and backup name" do |example|
         FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1", :provider_region => "us-west-1")
         FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1 #{@ec2_user}", :provider_region => "us-west-1")
 
         found = recorded_discover(example)
-        found.count.should == 2
+        expect(found.count).to eq(2)
 
         emses = ManageIQ::Providers::Amazon::CloudManager.order(:name).includes(:authentications)
-        emses.count.should == 4
+        expect(emses.count).to eq(4)
         assert_region(emses[0], "us-east-1")
         assert_region_on_another_account(emses[1], "us-west-1")
         assert_region_on_another_account(emses[2], "us-west-1 #{@ec2_user}")
         assert_region(emses[3], "us-west-1 1")
       end
 
-      it "with the same name, backup name, and secondary backup name" do
+      it "with the same name, backup name, and secondary backup name" do |example|
         FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1", :provider_region => "us-west-1")
         FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1 #{@ec2_user}", :provider_region => "us-west-1")
         FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1 1", :provider_region => "us-west-1")
 
         found = recorded_discover(example)
-        found.count.should == 2
+        expect(found.count).to eq(2)
 
         emses = ManageIQ::Providers::Amazon::CloudManager.order(:name).includes(:authentications)
-        emses.count.should == 5
+        expect(emses.count).to eq(5)
         assert_region(emses[0], "us-east-1")
         assert_region_on_another_account(emses[1], "us-west-1")
         assert_region_on_another_account(emses[2], "us-west-1 #{@ec2_user}")
@@ -138,10 +138,10 @@ describe ManageIQ::Providers::Amazon::CloudManager do
 
   it "#description" do
     ems = FactoryGirl.build(:ems_amazon, :provider_region => "us-east-1")
-    ems.description.should == "US East (Northern Virginia)"
+    expect(ems.description).to eq("US East (Northern Virginia)")
 
     ems = FactoryGirl.build(:ems_amazon, :provider_region => "us-west-1")
-    ems.description.should == "US West (Northern California)"
+    expect(ems.description).to eq("US West (Northern California)")
   end
 
   context "validates_uniqueness_of" do
@@ -177,23 +177,23 @@ describe ManageIQ::Providers::Amazon::CloudManager do
     end
 
     it "preserves and logs message for unknown exceptions" do
-      @ems.stub(:with_provider_connection).and_raise(StandardError, "unlikely")
-      $log.should_receive(:error).with(/unlikely/)
+      allow(@ems).to receive(:with_provider_connection).and_raise(StandardError, "unlikely")
+      expect($log).to receive(:error).with(/unlikely/)
       expect { @ems.verify_credentials }.to raise_error(MiqException::MiqHostError, /Unexpected.*unlikely/)
     end
 
     it "handles SignatureDoesNotMatch" do
-      @ems.stub(:with_provider_connection).and_raise(AWS::EC2::Errors::SignatureDoesNotMatch)
+      allow(@ems).to receive(:with_provider_connection).and_raise(AWS::EC2::Errors::SignatureDoesNotMatch)
       expect { @ems.verify_credentials }.to raise_error(MiqException::MiqHostError, /Signature.*match/)
     end
 
     it "handles AuthFailure" do
-      @ems.stub(:with_provider_connection).and_raise(AWS::EC2::Errors::AuthFailure)
+      allow(@ems).to receive(:with_provider_connection).and_raise(AWS::EC2::Errors::AuthFailure)
       expect { @ems.verify_credentials }.to raise_error(MiqException::MiqHostError, /Login failed/)
     end
 
     it "handles MissingCredentialsErrror" do
-      @ems.stub(:with_provider_connection).and_raise(AWS::Errors::MissingCredentialsError)
+      allow(@ems).to receive(:with_provider_connection).and_raise(AWS::Errors::MissingCredentialsError)
       expect { @ems.verify_credentials }.to raise_error(MiqException::MiqHostError, /Missing credentials/i)
     end
   end
