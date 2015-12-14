@@ -226,6 +226,10 @@ class User < ActiveRecord::Base
     miq_groups
   end
 
+  def groups_include?(group)
+    miq_group_ids.include?(group.id)
+  end
+
   def admin?
     userid == "admin"
   end
