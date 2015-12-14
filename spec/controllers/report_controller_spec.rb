@@ -1310,6 +1310,18 @@ describe ReportController do
           expected_report_id = controller.instance_variable_get(:@view).table.data.last.miq_report_id
           expect(expected_report_id).to eq(@rpt.id)
         end
+
+        it "is allowed to see miq report result for User1(with current group Group2)" do
+          report_result_id = @rpt.miq_report_results.first.id
+          controller.instance_variable_set(:@_params, :id => controller.to_cid(report_result_id),
+                                                      :controller => "report", :action => "explorer")
+          controller.instance_variable_set(:@sb, :last_savedreports_id => nil)
+          controller.stub(:get_all_reps)
+          controller.send(:show_saved_report)
+          fetched_report_result = controller.instance_variable_get(:@report_result)
+          expect(fetched_report_result.id).to eq(@rpt.miq_report_results.first.id)
+          expect(fetched_report_result.miq_report.id).to eq(@rpt.id)
+        end
       end
     end
   end
