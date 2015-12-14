@@ -29,7 +29,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
 
       it "#workflow" do
         workflow_class = ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow
-        workflow_class.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
+        allow_any_instance_of(workflow_class).to receive(:get_dialogs).and_return(:dialogs => {})
 
         expect(@vm_prov.workflow.class).to eq workflow_class
         expect(@vm_prov.workflow_class).to eq workflow_class
@@ -38,64 +38,64 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
       it "eligible_resources for iso_images" do
         iso_image = FactoryGirl.create(:iso_image, :name => "Test ISO Image")
         iso_image_struct = [MiqHashStruct.new(:id => "IsoImage::#{iso_image.id}", :name => iso_image.name, :evm_object_class => iso_image.class.base_class.name.to_sym)]
-        MiqProvisionWorkflow.any_instance.stub(:allowed_iso_images).and_return(iso_image_struct)
-        @vm_prov.eligible_resources(:iso_images).should == [iso_image]
+        allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_iso_images).and_return(iso_image_struct)
+        expect(@vm_prov.eligible_resources(:iso_images)).to eq([iso_image])
       end
 
       context "#sparse_disk_value" do
         it "with nil disk_format value" do
-          @vm_prov.sparse_disk_value.should be_nil
+          expect(@vm_prov.sparse_disk_value).to be_nil
         end
 
         it "with :default disk_format value" do
           @vm_prov.options[:disk_format] = %w(default Default)
-          @vm_prov.sparse_disk_value.should be_nil
+          expect(@vm_prov.sparse_disk_value).to be_nil
         end
 
         it "with :thin disk_format value" do
           @vm_prov.options[:disk_format] = %w(thin Thin)
-          @vm_prov.sparse_disk_value.should be_true
+          expect(@vm_prov.sparse_disk_value).to be_truthy
         end
 
         it "with :preallocated disk_format value" do
           @vm_prov.options[:disk_format] = %w(preallocated Preallocated)
-          @vm_prov.sparse_disk_value.should be_false
+          expect(@vm_prov.sparse_disk_value).to be_falsey
         end
       end
 
       context "#prepare_for_clone_task" do
         before do
           @ems_cluster = FactoryGirl.create(:ems_cluster, :ems_ref => "test_ref")
-          @vm_prov.stub(:dest_cluster).and_return(@ems_cluster)
+          allow(@vm_prov).to receive(:dest_cluster).and_return(@ems_cluster)
         end
 
         it "with default options" do
           clone_options = @vm_prov.prepare_for_clone_task
 
-          clone_options[:name].should == @target_vm_name
-          clone_options[:clone_type].should == :full
-          clone_options[:cluster].should == @ems_cluster.ems_ref
+          expect(clone_options[:name]).to eq(@target_vm_name)
+          expect(clone_options[:clone_type]).to eq(:full)
+          expect(clone_options[:cluster]).to eq(@ems_cluster.ems_ref)
         end
 
         it "with linked-clone true" do
           @vm_prov.options[:linked_clone] = true
           clone_options = @vm_prov.prepare_for_clone_task
 
-          clone_options[:clone_type].should == :linked
+          expect(clone_options[:clone_type]).to eq(:linked)
         end
 
         it "with linked-clone false" do
           @vm_prov.options[:linked_clone] = false
           clone_options = @vm_prov.prepare_for_clone_task
 
-          clone_options[:clone_type].should == :full
+          expect(clone_options[:clone_type]).to eq(:full)
         end
       end
 
       context "#log_clone_options" do
         let(:ems_cluster) { FactoryGirl.create(:ems_cluster, :ems_ref => "test_ref") }
         before do
-          @vm_prov.stub(:dest_cluster).and_return(ems_cluster)
+          allow(@vm_prov).to receive(:dest_cluster).and_return(ems_cluster)
         end
 
         it "doesnt display passwords for clone options" do
@@ -111,37 +111,37 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
       context "with a destination vm" do
         before do
           rhevm_vm = double(:attributes => {:status => {:state => "down"}})
-          @vm_prov.stub(:get_provider_destination).and_return(rhevm_vm)
+          allow(@vm_prov).to receive(:get_provider_destination).and_return(rhevm_vm)
         end
 
         context "destination_image_locked?" do
           it "with a powered-off destination" do
-            subject.destination_image_locked?.should be_false
+            expect(subject.destination_image_locked?).to be_falsey
           end
 
           it "with an imaged_locked destination" do
             @vm_prov.get_provider_destination.attributes[:status][:state] = "image_locked"
 
-            @vm_prov.destination_image_locked?.should be_true
+            expect(@vm_prov.destination_image_locked?).to be_truthy
           end
 
           it "when destination is nil" do
-            @vm_prov.stub(:get_provider_destination).and_return(nil)
-            @vm_prov.destination_image_locked?.should be_false
+            allow(@vm_prov).to receive(:get_provider_destination).and_return(nil)
+            expect(@vm_prov.destination_image_locked?).to be_falsey
           end
         end
 
         context "customize_destination" do
           it "when destination_image_locked is false" do
-            @vm_prov.stub(:for_destination).and_return("display_string")
-            @vm_prov.should_receive(:configure_container)
+            allow(@vm_prov).to receive(:for_destination).and_return("display_string")
+            expect(@vm_prov).to receive(:configure_container)
 
             @vm_prov.customize_destination
           end
 
           it "when destination_image_locked is true" do
             @vm_prov.get_provider_destination.attributes[:status][:state] = "image_locked"
-            @vm_prov.should_receive(:requeue_phase)
+            expect(@vm_prov).to receive(:requeue_phase)
 
             @vm_prov.customize_destination
           end

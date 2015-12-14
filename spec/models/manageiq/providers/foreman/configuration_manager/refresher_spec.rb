@@ -40,7 +40,7 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::Refresher do
   it "will perform a full refresh on api v2" do
     # Stub the queueing of the refresh so that when the manager
     #  queues up an alternate refresh we will execute it immediately.
-    EmsRefresh.stub(:queue_refresh) { |*args| EmsRefresh.refresh(*args) }
+    allow(EmsRefresh).to receive(:queue_refresh) { |*args| EmsRefresh.refresh(*args) }
 
     VCR.use_cassette("#{described_class.name.underscore}_api_v2") do
       EmsRefresh.refresh(configuration_manager)

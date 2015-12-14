@@ -9,7 +9,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
 
   before do
     stub_dialog(:get_dialogs)
-    described_class.any_instance.stub(:update_field_visibility)
+    allow_any_instance_of(described_class).to receive(:update_field_visibility)
   end
 
   it "pass platform attributes to automate" do
@@ -27,26 +27,26 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
         host.storages << FactoryGirl.create(:storage, :storage_domain_type => domain_type)
       end
       host.reload
-      workflow.stub(:process_filter).and_return(host.storages.to_a)
-      workflow.stub(:allowed_hosts_obj).and_return([host])
+      allow(workflow).to receive(:process_filter).and_return(host.storages.to_a)
+      allow(workflow).to receive(:allowed_hosts_obj).and_return([host])
     end
 
     it "for ISO and PXE provisioning" do
       result = workflow.allowed_storages
-      result.length.should == 2
-      result.each { |storage| storage.should be_kind_of(MiqHashStruct) }
-      result.each { |storage| storage.storage_domain_type.should == "data" }
+      expect(result.length).to eq(2)
+      result.each { |storage| expect(storage).to be_kind_of(MiqHashStruct) }
+      result.each { |storage| expect(storage.storage_domain_type).to eq("data") }
     end
 
     it "for linked-clone provisioning" do
-      workflow.stub(:supports_linked_clone?).and_return(true)
+      allow(workflow).to receive(:supports_linked_clone?).and_return(true)
       template.storage = Storage.where(:storage_domain_type => "data").first
       template.save
 
       result = workflow.allowed_storages
-      result.length.should == 1
-      result.each { |storage| storage.should be_kind_of(MiqHashStruct) }
-      result.each { |storage| storage.storage_domain_type.should == "data" }
+      expect(result.length).to eq(1)
+      result.each { |storage| expect(storage).to be_kind_of(MiqHashStruct) }
+      result.each { |storage| expect(storage.storage_domain_type).to eq("data") }
     end
   end
 
@@ -54,13 +54,13 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
     let(:workflow) { described_class.new({:src_vm_id => template.id, :linked_clone => true}, admin) }
 
     it "when supports_native_clone? is true" do
-      workflow.stub(:supports_native_clone?).and_return(true)
-      workflow.supports_linked_clone?.should be_true
+      allow(workflow).to receive(:supports_native_clone?).and_return(true)
+      expect(workflow.supports_linked_clone?).to be_truthy
     end
 
     it "when supports_native_clone? is false " do
-      workflow.stub(:supports_native_clone?).and_return(false)
-      workflow.supports_linked_clone?.should be_false
+      allow(workflow).to receive(:supports_native_clone?).and_return(false)
+      expect(workflow.supports_linked_clone?).to be_falsey
     end
   end
 
@@ -68,7 +68,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
     let(:workflow) { described_class.new({:src_vm_id => template.id}, admin) }
 
     it "should support cloud-init" do
-      workflow.supports_cloud_init?.should == true
+      expect(workflow.supports_cloud_init?).to eq(true)
     end
   end
 
@@ -77,8 +77,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
 
     it "should retrieve cloud-init templates when cloning" do
       options = {'key' => 'value'}
-      workflow.stub(:supports_native_clone?).and_return(true)
-      workflow.should_receive(:allowed_cloud_init_customization_templates).with(options)
+      allow(workflow).to receive(:supports_native_clone?).and_return(true)
+      expect(workflow).to receive(:allowed_cloud_init_customization_templates).with(options)
       workflow.allowed_customization_templates(options)
     end
 
@@ -92,8 +92,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
       workflow.extend(SuperAllowedCustomizationTemplates)
 
       options = {'key' => 'value'}
-      workflow.stub(:supports_native_clone?).and_return(false)
-      workflow.should_receive(:super_allowed_customization_templates).with(options)
+      allow(workflow).to receive(:supports_native_clone?).and_return(false)
+      expect(workflow).to receive(:super_allowed_customization_templates).with(options)
       workflow.allowed_customization_templates(options)
     end
   end

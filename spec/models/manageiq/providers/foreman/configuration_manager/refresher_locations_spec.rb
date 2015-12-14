@@ -25,7 +25,7 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::Refresher do
   let(:locs) { provisioning_manager.configuration_locations.where(spec_related).sort_by(&:name) }
 
   it "loads data with locations and organizations" do
-    EmsRefresh.stub(:queue_refresh) { |*args| EmsRefresh.refresh(*args) }
+    allow(EmsRefresh).to receive(:queue_refresh) { |*args| EmsRefresh.refresh(*args) }
 
     2.times do
       VCR.use_cassette("#{described_class.name.underscore}_api_locations_v2") do

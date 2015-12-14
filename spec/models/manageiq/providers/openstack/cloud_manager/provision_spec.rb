@@ -24,19 +24,19 @@ describe ManageIQ::Providers::Openstack::CloudManager::Provision do
 
   context "#validate_dest_name" do
     it "with valid name" do
-      subject.stub(:dest_name).and_return("new_vm_1")
+      allow(subject).to receive(:dest_name).and_return("new_vm_1")
 
       expect { subject.validate_dest_name }.to_not raise_error
     end
 
     it "with a nil name" do
-      subject.stub(:dest_name).and_return(nil)
+      allow(subject).to receive(:dest_name).and_return(nil)
 
       expect { subject.validate_dest_name }.to raise_error(MiqException::MiqProvisionError)
     end
 
     it "with a duplicate name" do
-      subject.stub(:dest_name).and_return(vm_openstack.name)
+      allow(subject).to receive(:dest_name).and_return(vm_openstack.name)
 
       expect { subject.validate_dest_name }.to raise_error(MiqException::MiqProvisionError)
     end
@@ -94,7 +94,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::Provision do
 
   it "#workflow" do
     workflow_class = ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow
-    workflow_class.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
+    allow_any_instance_of(workflow_class).to receive(:get_dialogs).and_return(:dialogs => {})
 
     expect(vm_prov.workflow.class).to eq workflow_class
     expect(vm_prov.workflow_class).to eq workflow_class

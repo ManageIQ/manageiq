@@ -9,7 +9,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
   let(:workflow) do
     stub_dialog
     allow_any_instance_of(User).to receive(:get_timezone).and_return(Time.zone)
-    ManageIQ::Providers::CloudManager::ProvisionWorkflow.any_instance.stub(:update_field_visibility)
+    allow_any_instance_of(ManageIQ::Providers::CloudManager::ProvisionWorkflow).to receive(:update_field_visibility)
     wf = described_class.new({:src_vm_id => template.id}, admin.userid)
     wf.instance_variable_set("@ems_xml_nodes", {})
     wf
@@ -24,15 +24,15 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
 
   context "with empty relationships" do
     it "#allowed_availability_zones" do
-      workflow.allowed_availability_zones.should == {}
+      expect(workflow.allowed_availability_zones).to eq({})
     end
 
     it "#allowed_guest_access_key_pairs" do
-      workflow.allowed_guest_access_key_pairs.should == {}
+      expect(workflow.allowed_guest_access_key_pairs).to eq({})
     end
 
     it "#allowed_security_groups" do
-      workflow.allowed_security_groups.should == {}
+      expect(workflow.allowed_security_groups).to eq({})
     end
   end
 
@@ -40,19 +40,19 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
     it "#allowed_availability_zones" do
       az = FactoryGirl.create(:availability_zone_amazon)
       ems.availability_zones << az
-      workflow.allowed_availability_zones.should == {az.id => az.name}
+      expect(workflow.allowed_availability_zones).to eq({az.id => az.name})
     end
 
     it "#allowed_guest_access_key_pairs" do
       kp = AuthPrivateKey.create(:name => "auth_1")
       ems.key_pairs << kp
-      workflow.allowed_guest_access_key_pairs.should == {kp.id => kp.name}
+      expect(workflow.allowed_guest_access_key_pairs).to eq({kp.id => kp.name})
     end
 
     it "#allowed_security_groups" do
       sg = FactoryGirl.create(:security_group_amazon, :name => "sq_1")
       ems.security_groups << sg
-      workflow.allowed_security_groups.should == {sg.id => sg.name}
+      expect(workflow.allowed_security_groups).to eq({sg.id => sg.name})
     end
   end
 
@@ -63,14 +63,14 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
         ems.availability_zones << az
         filtered = workflow.send(:get_targets_for_ems, ems, :cloud_filter, AvailabilityZone,
                                  'availability_zones.available')
-        filtered.size.should == 1
-        filtered.first.name.should == az.name
+        expect(filtered.size).to eq(1)
+        expect(filtered.first.name).to eq(az.name)
       end
 
       it "returns an empty array when no targets are found" do
         filtered = workflow.send(:get_targets_for_ems, ems, :cloud_filter, AvailabilityZone,
                                  'availability_zones.available')
-        filtered.should == []
+        expect(filtered).to eq([])
       end
     end
 
@@ -81,8 +81,8 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
           ems.security_groups << sg
           filtered = workflow.send(:get_targets_for_ems, ems, :cloud_filter, SecurityGroup,
                                    'security_groups.non_cloud_network')
-          filtered.size.should == 1
-          filtered.first.name.should == sg.name
+          expect(filtered.size).to eq(1)
+          expect(filtered.first.name).to eq(sg.name)
         end
       end
 
@@ -93,8 +93,8 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
                                      :cloud_network => cn1)
           ems.security_groups << sg_cn
           filtered = workflow.send(:get_targets_for_ems, ems, :cloud_filter, SecurityGroup, 'security_groups')
-          filtered.size.should == 1
-          filtered.first.name.should == sg_cn.name
+          expect(filtered.size).to eq(1)
+          expect(filtered.first.name).to eq(sg_cn.name)
         end
       end
     end
@@ -104,8 +104,8 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
         flavor = FactoryGirl.create(:flavor, :name => "t1.micro", :supports_32_bit => true, :supports_64_bit => true)
         ems.flavors << flavor
         filtered = workflow.send(:get_targets_for_ems, ems, :cloud_filter, Flavor, 'flavors')
-        filtered.size.should == 1
-        filtered.first.name.should == flavor.name
+        expect(filtered.size).to eq(1)
+        expect(filtered.first.name).to eq(flavor.name)
       end
     end
   end
@@ -134,33 +134,33 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
 
     context "availability_zones" do
       it "#get_targets_for_ems" do
-        ems.availability_zones.size.should == 2
-        ems.availability_zones.first.tags.size.should == 1
-        ems.availability_zones.last.tags.size.should == 0
+        expect(ems.availability_zones.size).to eq(2)
+        expect(ems.availability_zones.first.tags.size).to eq(1)
+        expect(ems.availability_zones.last.tags.size).to eq(0)
         filtered = workflow.send(:get_targets_for_ems, ems, :cloud_filter, AvailabilityZone,
                                  'availability_zones.available')
-        filtered.size.should == 1
+        expect(filtered.size).to eq(1)
       end
     end
 
     context "security groups" do
       it "#get_targets_for_ems" do
-        ems.security_groups.size.should == 2
-        ems.security_groups.first.tags.size.should == 1
-        ems.security_groups.last.tags.size.should == 0
+        expect(ems.security_groups.size).to eq(2)
+        expect(ems.security_groups.first.tags.size).to eq(1)
+        expect(ems.security_groups.last.tags.size).to eq(0)
 
         filtered = workflow.send(:get_targets_for_ems, ems, :cloud_filter, SecurityGroup, 'security_groups')
-        filtered.size.should == 1
+        expect(filtered.size).to eq(1)
       end
     end
 
     context "instance types (Flavor)" do
       it "#get_targets_for_ems" do
-        ems.flavors.size.should == 2
-        ems.flavors.first.tags.size.should == 1
-        ems.flavors.last.tags.size.should == 0
+        expect(ems.flavors.size).to eq(2)
+        expect(ems.flavors.first.tags.size).to eq(1)
+        expect(ems.flavors.last.tags.size).to eq(0)
 
-        workflow.send(:get_targets_for_ems, ems, :cloud_filter, Flavor, 'flavors').size.should == 1
+        expect(workflow.send(:get_targets_for_ems, ems, :cloud_filter, Flavor, 'flavors').size).to eq(1)
       end
     end
   end
@@ -168,7 +168,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
   context "when a template object is returned from the provider" do
     context "with empty relationships" do
       it "#allowed_instance_types" do
-        workflow.allowed_instance_types.should == {}
+        expect(workflow.allowed_instance_types).to eq({})
       end
     end
 
@@ -182,12 +182,12 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
 
       it "#allowed_instance_types with 32-bit image" do
         template.hardware = FactoryGirl.create(:hardware, :bitness => 32)
-        workflow.allowed_instance_types.length.should == 1
+        expect(workflow.allowed_instance_types.length).to eq(1)
       end
 
       it "#allowed_instance_types with 64-bit image" do
         template.hardware = FactoryGirl.create(:hardware, :bitness => 64)
-        workflow.allowed_instance_types.length.should == 2
+        expect(workflow.allowed_instance_types.length).to eq(2)
       end
     end
   end
@@ -212,70 +212,70 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
     end
 
     it "#allowed_cloud_networks" do
-      workflow.allowed_cloud_networks.length.should == 1
+      expect(workflow.allowed_cloud_networks.length).to eq(1)
     end
 
     context "#allowed_availability_zones" do
       it "with no placement options" do
-        workflow.allowed_availability_zones.should == {
+        expect(workflow.allowed_availability_zones).to eq({
           @az1.id => @az1.name,
           @az2.id => @az2.name,
           @az3.id => @az3.name
-        }
+        })
       end
 
       it "with a cloud_network" do
         workflow.values[:cloud_network] = [@cn1.id, @cn1.name]
-        workflow.allowed_availability_zones.should == {
+        expect(workflow.allowed_availability_zones).to eq({
           @az1.id => @az1.name,
           @az2.id => @az2.name
-        }
+        })
       end
 
       it "with a cloud_network and cloud_subnet" do
         workflow.values[:cloud_network] = [@cn1.id, @cn1.name]
         workflow.values[:cloud_subnet]  = [@cs2.id, @cs2.name]
-        workflow.allowed_availability_zones.should == {@az2.id => @az2.name}
+        expect(workflow.allowed_availability_zones).to eq({@az2.id => @az2.name})
       end
     end
 
     context "#allowed_cloud_subnets" do
       it "without a cloud_network" do
-        workflow.allowed_cloud_subnets.length.should be_zero
+        expect(workflow.allowed_cloud_subnets.length).to be_zero
       end
 
       it "with a cloud_network" do
         workflow.values[:cloud_network] = [@cn1.id, @cn1.name]
-        workflow.allowed_cloud_subnets.length.should == 2
+        expect(workflow.allowed_cloud_subnets.length).to eq(2)
       end
 
       it "with an cloud_network and Availability Zone" do
         workflow.values[:cloud_network]               = [@cn1.id, @cn1.name]
         workflow.values[:placement_availability_zone] = [@az1.id, @az1.name]
 
-        workflow.allowed_cloud_subnets.length.should == 1
+        expect(workflow.allowed_cloud_subnets.length).to eq(1)
       end
     end
 
     context "#allowed_floating_ip_addresses" do
       it "without a cloud_network" do
-        workflow.allowed_floating_ip_addresses.should == {@ip2.id => @ip2.address}
+        expect(workflow.allowed_floating_ip_addresses).to eq({@ip2.id => @ip2.address})
       end
 
       it "with a cloud_network" do
         workflow.values[:cloud_network] = [@cn1.id, @cn1.name]
-        workflow.allowed_floating_ip_addresses.should == {@ip1.id => @ip1.address}
+        expect(workflow.allowed_floating_ip_addresses).to eq({@ip1.id => @ip1.address})
       end
     end
 
     context "#allowed_security_groups" do
       it "without a cloud_network" do
-        workflow.allowed_security_groups.should == {@sg2.id => @sg2.name}
+        expect(workflow.allowed_security_groups).to eq({@sg2.id => @sg2.name})
       end
 
       it "with a cloud_network" do
         workflow.values[:cloud_network] = [@cn1.id, @cn1.name]
-        workflow.allowed_security_groups.should == {@sg1.id => @sg1.name}
+        expect(workflow.allowed_security_groups).to eq({@sg1.id => @sg1.name})
       end
     end
   end
@@ -284,12 +284,12 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
     let(:flavor) { FactoryGirl.create(:flavor_amazon, :name => "test_flavor") }
 
     it "with name only" do
-      workflow.display_name_for_name_description(flavor).should == "test_flavor"
+      expect(workflow.display_name_for_name_description(flavor)).to eq("test_flavor")
     end
 
     it "with name and description" do
       flavor.description = "Small"
-      workflow.display_name_for_name_description(flavor).should == "test_flavor: Small"
+      expect(workflow.display_name_for_name_description(flavor)).to eq("test_flavor: Small")
     end
   end
 
@@ -319,12 +319,12 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
 
     it "#allowed_instance_types with 32-bit and hvm image" do
       template.hardware = FactoryGirl.create(:hardware, :bitness => 32, :virtualization_type => 'hvm')
-      workflow.allowed_instance_types.collect { |_, v| v }.should match_array(@instance_types_32)
+      expect(workflow.allowed_instance_types.collect { |_, v| v }).to match_array(@instance_types_32)
     end
 
     it "#allowed_instance_types with 64-bit and pv image" do
       template.hardware = FactoryGirl.create(:hardware, :bitness => 64, :virtualization_type => 'paravirtual')
-      workflow.allowed_instance_types.collect { |_, v| v }.should match_array(@instance_types_64)
+      expect(workflow.allowed_instance_types.collect { |_, v| v }).to match_array(@instance_types_64)
     end
   end
 
@@ -359,7 +359,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
                                              :bitness             => 32,
                                              :virtualization_type => 'paravirtual',
                                              :root_device_type    => 'instance_store')
-      workflow.allowed_instance_types.collect { |_, v| v }.should be_empty
+      expect(workflow.allowed_instance_types.collect { |_, v| v }).to be_empty
     end
 
     it "#allowed_instance_types with 64-bit, pv and ebs" do
@@ -367,7 +367,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
                                              :bitness             => 64,
                                              :virtualization_type => 'paravirtual',
                                              :root_device_type    => 'ebs')
-      workflow.allowed_instance_types.collect { |_, v| v }.should match_array(@instance_types_64)
+      expect(workflow.allowed_instance_types.collect { |_, v| v }).to match_array(@instance_types_64)
     end
   end
 

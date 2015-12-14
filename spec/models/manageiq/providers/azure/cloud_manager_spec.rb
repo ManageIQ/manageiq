@@ -2,11 +2,11 @@ require "spec_helper"
 
 describe ManageIQ::Providers::Azure::CloudManager do
   it ".ems_type" do
-    described_class.ems_type.should == 'azure'
+    expect(described_class.ems_type).to eq('azure')
   end
 
   it ".description" do
-    described_class.description.should == 'Azure'
+    expect(described_class.description).to eq('Azure')
   end
 
   context "#connectivity" do
@@ -18,30 +18,30 @@ describe ManageIQ::Providers::Azure::CloudManager do
 
     context "#connect " do
       it "defaults" do
-        described_class.should_receive(:raw_connect).with do |clientid, clientkey|
-          clientid.should eq("klmnopqrst")
-          clientkey.should eq("1234567890")
-        end
+        expect(described_class).to receive(:raw_connect).with { |clientid, clientkey|
+          expect(clientid).to eq("klmnopqrst")
+          expect(clientkey).to eq("1234567890")
+        }
         @e.connect
       end
 
       it "accepts overrides" do
-        described_class.should_receive(:raw_connect).with do |clientid, clientkey|
-          clientid.should eq("user")
-          clientkey.should eq("pass")
-        end
+        expect(described_class).to receive(:raw_connect).with { |clientid, clientkey|
+          expect(clientid).to eq("user")
+          expect(clientkey).to eq("pass")
+        }
         @e.connect(:user => "user", :pass => "pass")
       end
     end
 
     context "#validation" do
       it "handles unknown error" do
-        ManageIQ::Providers::Azure::CloudManager.stub(:raw_connect).and_raise(StandardError)
+        allow(ManageIQ::Providers::Azure::CloudManager).to receive(:raw_connect).and_raise(StandardError)
         expect { @e.verify_credentials }.to raise_error(MiqException::MiqHostError, /Unexpected response returned*/)
       end
 
       it "handles incorrect password" do
-        ManageIQ::Providers::Azure::CloudManager.stub(:raw_connect).and_raise(
+        allow(ManageIQ::Providers::Azure::CloudManager).to receive(:raw_connect).and_raise(
           Azure::Armrest::UnauthorizedException.new(nil, nil, nil))
         expect { @e.verify_credentials }.to raise_error(MiqException::MiqHostError, /Incorrect credentials*/)
       end
@@ -72,17 +72,17 @@ describe ManageIQ::Providers::Azure::CloudManager do
     end
 
     def assert_region(ems, name)
-      ems.name.should eq(name)
-      ems.provider_region.should eq(name[AZURE_PREFIX, 1])
-      ems.auth_user_pwd.should eq([@user, @pass])
-      ems.azure_tenant_id.should eq(@tenant_id)
+      expect(ems.name).to eq(name)
+      expect(ems.provider_region).to eq(name[AZURE_PREFIX, 1])
+      expect(ems.auth_user_pwd).to eq([@user, @pass])
+      expect(ems.azure_tenant_id).to eq(@tenant_id)
     end
 
     def assert_region_on_another_account(ems, name)
-      ems.name.should eq(name)
-      ems.provider_region.should eq(name[AZURE_PREFIX, 1])
-      ems.auth_user_pwd.should eq([@another_user, @another_password])
-      ems.azure_tenant_id.should eq(@another_tenant_id)
+      expect(ems.name).to eq(name)
+      expect(ems.provider_region).to eq(name[AZURE_PREFIX, 1])
+      expect(ems.auth_user_pwd).to eq([@another_user, @another_password])
+      expect(ems.azure_tenant_id).to eq(@another_tenant_id)
     end
 
     def create_factory_ems(name, region)
@@ -95,56 +95,56 @@ describe ManageIQ::Providers::Azure::CloudManager do
       ems.authentications << FactoryGirl.create(:authentication, cred)
     end
 
-    it "with no existing records" do
+    it "with no existing records" do |example|
       found = recorded_discover(example)
-      found.count.should eq(2)
+      expect(found.count).to eq(2)
 
       emses = ManageIQ::Providers::Azure::CloudManager.order(:name)
-      emses.count.should eq(2)
+      expect(emses.count).to eq(2)
       assert_region(emses[0], "Azure-eastus")
       assert_region(emses[1], "Azure-westus")
     end
 
-    it "with some existing records" do
+    it "with some existing records" do |example|
       create_factory_ems("Azure-eastus", "eastus")
 
       found = recorded_discover(example)
-      found.count.should eq(1)
+      expect(found.count).to eq(1)
 
       emses = ManageIQ::Providers::Azure::CloudManager.order(:name)
-      emses.count.should eq(2)
+      expect(emses.count).to eq(2)
       assert_region(emses[0], "Azure-eastus")
       assert_region(emses[1], "Azure-westus")
     end
 
-    it "with all existing records" do
+    it "with all existing records" do |example|
       create_factory_ems("Azure-eastus", "eastus")
       create_factory_ems("Azure-westus", "westus")
 
       found = recorded_discover(example)
-      found.count.should eq(0)
+      expect(found.count).to eq(0)
 
       emses = ManageIQ::Providers::Azure::CloudManager.order(:name)
-      emses.count.should eq(2)
+      expect(emses.count).to eq(2)
       assert_region(emses[0], "Azure-eastus")
       assert_region(emses[1], "Azure-westus")
     end
 
     context "with records from a different account" do
-      it "with the same name" do
+      it "with the same name" do |example|
         FactoryGirl.create(:ems_azure_with_authentication, :name => "Azure-westus", :provider_region => "westus")
 
         found = recorded_discover(example)
-        found.count.should eq(2)
+        expect(found.count).to eq(2)
 
         emses = ManageIQ::Providers::Azure::CloudManager.order(:name).includes(:authentications)
-        emses.count.should eq(3)
+        expect(emses.count).to eq(3)
         assert_region(emses[0], "Azure-eastus")
         assert_region_on_another_account(emses[1], "Azure-westus")
         assert_region(emses[2], "Azure-westus #{@user}")
       end
 
-      it "with the same name and backup name" do
+      it "with the same name and backup name" do |example|
         FactoryGirl.create(
           :ems_azure_with_authentication,
           :name            => "Azure-westus",
@@ -155,10 +155,10 @@ describe ManageIQ::Providers::Azure::CloudManager do
           :provider_region => "westus")
 
         found = recorded_discover(example)
-        found.count.should eq(2)
+        expect(found.count).to eq(2)
 
         emses = ManageIQ::Providers::Azure::CloudManager.order(:name).includes(:authentications)
-        emses.count.should eq(4)
+        expect(emses.count).to eq(4)
 
         assert_region(emses[0], "Azure-eastus")
         assert_region_on_another_account(emses[1], "Azure-westus")
@@ -166,7 +166,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
         assert_region(emses[3], "Azure-westus 1")
       end
 
-      it "with the same name, backup name, and secondary backup name" do
+      it "with the same name, backup name, and secondary backup name" do |example|
         FactoryGirl.create(:ems_azure_with_authentication, :name => "Azure-westus", :provider_region => "westus")
         FactoryGirl.create(
           :ems_azure_with_authentication,
@@ -175,10 +175,10 @@ describe ManageIQ::Providers::Azure::CloudManager do
         FactoryGirl.create(:ems_azure_with_authentication, :name => "Azure-westus 1", :provider_region => "westus")
 
         found = recorded_discover(example)
-        found.count.should eq(2)
+        expect(found.count).to eq(2)
 
         emses = ManageIQ::Providers::Azure::CloudManager.order(:name).includes(:authentications)
-        emses.count.should eq(5)
+        expect(emses.count).to eq(5)
 
         assert_region(emses[0], "Azure-eastus")
         assert_region_on_another_account(emses[1], "Azure-westus")

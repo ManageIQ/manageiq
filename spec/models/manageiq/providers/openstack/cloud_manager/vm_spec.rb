@@ -58,8 +58,8 @@ describe ManageIQ::Providers::Openstack::CloudManager::Vm do
     it "sets the raw_power_state and not state" do
       expect(vm).to receive(:with_provider_object).and_yield(provider_object)
       vm.raw_destroy
-      vm.raw_power_state.should == "DELETED"
-      vm.state.should == "archived"
+      expect(vm.raw_power_state).to eq("DELETED")
+      expect(vm.state).to eq("archived")
     end
   end
 end
