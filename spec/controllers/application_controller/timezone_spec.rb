@@ -11,25 +11,25 @@ describe ApplicationController, "#Timezone" do
         stub_server_configuration(:server => {:timezone => "Eastern Time (US & Canada)"})
 
         Timecop.freeze(Time.utc(2013, 1, 1)) do
-          subject.get_timezone_offset.should == -5.hours
+          expect(subject.get_timezone_offset).to eq(-5.hours)
         end
       end
 
       it "without a system default" do
         stub_server_configuration({})
-        subject.get_timezone_offset.should == 0.hours
+        expect(subject.get_timezone_offset).to eq(0.hours)
       end
     end
 
     context "for a user" do
       it "who doesn't exist" do
-        subject.get_timezone_offset(nil).should == 0.hours
+        expect(subject.get_timezone_offset(nil)).to eq(0.hours)
       end
 
       it "with a timezone" do
         user = FactoryGirl.create(:user, :settings => {:display => {:timezone => "Pacific Time (US & Canada)"}})
         Timecop.freeze(Time.utc(2013, 1, 1)) do
-          subject.get_timezone_offset(user).should == -8.hours
+          expect(subject.get_timezone_offset(user)).to eq(-8.hours)
         end
       end
 
@@ -39,14 +39,14 @@ describe ApplicationController, "#Timezone" do
           stub_server_configuration(:server => {:timezone => "Eastern Time (US & Canada)"})
 
           Timecop.freeze(Time.utc(2013, 1, 1)) do
-            subject.get_timezone_offset(user).should == -5.hours
+            expect(subject.get_timezone_offset(user)).to eq(-5.hours)
           end
         end
 
         it "with a system default and nil user" do
           stub_server_configuration(:server => {:timezone => "Eastern Time (US & Canada)"})
           Timecop.freeze(Time.utc(2013, 1, 1)) do
-            subject.get_timezone_offset(nil).should == -5.hours
+            expect(subject.get_timezone_offset(nil)).to eq(-5.hours)
           end
         end
 
@@ -54,7 +54,7 @@ describe ApplicationController, "#Timezone" do
           user = FactoryGirl.create(:user)
           stub_server_configuration({})
 
-          subject.get_timezone_offset(user).should == 0.hours
+          expect(subject.get_timezone_offset(user)).to eq(0.hours)
         end
       end
     end

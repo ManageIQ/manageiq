@@ -17,8 +17,8 @@ describe ReportController do
         controller.instance_variable_set(:@rpt, rep)
         controller.send(:set_form_vars)
         new_hash = assigns(:edit)[:new]
-        new_hash.should have_key(:cb_owner_id)
-        new_hash[:cb_owner_id].should == user.userid
+        expect(new_hash).to have_key(:cb_owner_id)
+        expect(new_hash[:cb_owner_id]).to eq(user.userid)
       end
 
       it "should save the selected time zone with a chargeback report" do
@@ -52,22 +52,22 @@ describe ReportController do
         allow(User).to receive(:server_timezone).and_return("UTC")
 
         login_as user
-        User.any_instance.stub(:role_allows?).and_return(true)
+        allow_any_instance_of(User).to receive(:role_allows?).and_return(true)
 
-        controller.stub(:check_privileges).and_return(true)
-        controller.stub(:load_edit).and_return(true)
-        controller.stub(:valid_report?).and_return(true)
-        controller.stub(:x_node).and_return("")
-        controller.stub(:gfv_sort)
-        controller.stub(:build_edit_screen)
-        controller.stub(:get_all_widgets)
-        controller.stub(:replace_right_cell)
+        allow(controller).to receive(:check_privileges).and_return(true)
+        allow(controller).to receive(:load_edit).and_return(true)
+        allow(controller).to receive(:valid_report?).and_return(true)
+        allow(controller).to receive(:x_node).and_return("")
+        allow(controller).to receive(:gfv_sort)
+        allow(controller).to receive(:build_edit_screen)
+        allow(controller).to receive(:get_all_widgets)
+        allow(controller).to receive(:replace_right_cell)
 
         post :miq_report_edit, :id => rep.id, :button => 'save'
 
         rep.reload
 
-        rep.tz.should == "Eastern Time (US & Canada)"
+        expect(rep.tz).to eq("Eastern Time (US & Canada)")
       end
     end
   end

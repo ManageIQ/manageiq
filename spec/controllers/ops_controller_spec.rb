@@ -11,7 +11,7 @@ describe OpsController do
     describe 'corresponding methods are called for allowed actions' do
       OpsController::OPS_X_BUTTON_ALLOWED_ACTIONS.each_pair do |action_name, method|
         it "calls the appropriate method: '#{method}' for action '#{action_name}'" do
-          controller.should_receive(method)
+          expect(controller).to receive(method)
           get :x_button, :pressed => action_name
         end
       end
@@ -36,7 +36,7 @@ describe OpsController do
                                      :active_tab  => 'db_connections',
                                      :trees       => {:vmdb_tree => {:active_node => 'root'}}}}
     session[:settings] = {:views => {}, :perpage => {:list => 10}}
-    controller.should_receive(:render)
+    expect(controller).to receive(:render)
     post :change_tab, :tab_id => 'db_connections', :format => :json
     expect(response.status).to eq(200)
   end
@@ -60,7 +60,7 @@ describe OpsController do
         }
       }
 
-      controller.should_receive(:replace_right_cell)
+      expect(controller).to receive(:replace_right_cell)
       get :rbac_user_edit, :button => 'add'
     end
 
@@ -79,11 +79,11 @@ describe OpsController do
         }
       }
 
-      controller.should_receive(:render_flash)
+      expect(controller).to receive(:render_flash)
       get :rbac_user_edit, :button => 'add'
       flash_messages = assigns(:flash_array)
-      flash_messages.first[:message].should == "Password/Verify Password do not match"
-      flash_messages.first[:level].should == :error
+      expect(flash_messages.first[:message]).to eq("Password/Verify Password do not match")
+      expect(flash_messages.first[:level]).to eq(:error)
     end
 
     it 'cannot add a user w/o group' do
@@ -101,11 +101,11 @@ describe OpsController do
         }
       }
 
-      controller.should_receive(:render_flash)
+      expect(controller).to receive(:render_flash)
       get :rbac_user_edit, :button => 'add'
       flash_messages = assigns(:flash_array)
-      flash_messages.first[:message].should == "A User must be assigned to a Group"
-      flash_messages.first[:level].should == :error
+      expect(flash_messages.first[:message]).to eq("A User must be assigned to a Group")
+      expect(flash_messages.first[:level]).to eq(:error)
     end
   end
 
@@ -142,7 +142,7 @@ describe OpsController do
       }
       controller.instance_variable_set(:@edit, edit)
       controller.send(:edit_changed?)
-      session[:changed].should eq(false)
+      expect(session[:changed]).to eq(false)
     end
 
     it "should set session[:changed] as true" do
@@ -152,7 +152,7 @@ describe OpsController do
       }
       controller.instance_variable_set(:@edit, edit)
       controller.send(:edit_changed?)
-      session[:changed].should eq(true)
+      expect(session[:changed]).to eq(true)
     end
 
     it "should set session[:changed] as false when config is same" do
@@ -164,7 +164,7 @@ describe OpsController do
       }
       controller.instance_variable_set(:@edit, edit)
       controller.send(:edit_changed?)
-      session[:changed].should eq(false)
+      expect(session[:changed]).to eq(false)
     end
 
     it "should set session[:changed] as true when config is sadifferentme" do
@@ -174,15 +174,15 @@ describe OpsController do
       }
       controller.instance_variable_set(:@edit, edit)
       controller.send(:edit_changed?)
-      session[:changed].should eq(true)
+      expect(session[:changed]).to eq(true)
     end
   end
 
   it "executes action schedule_edit" do
     schedule = FactoryGirl.create(:miq_schedule, :name => "test_schedule", :description => "old_schedule_desc")
-    controller.stub(:get_node_info)
-    controller.stub(:replace_right_cell)
-    controller.stub(:render)
+    allow(controller).to receive(:get_node_info)
+    allow(controller).to receive(:replace_right_cell)
+    allow(controller).to receive(:render)
 
     post :schedule_edit,
          :id          => schedule.id,
@@ -244,37 +244,37 @@ describe OpsController do
     MiqRegion.seed
     EvmSpecHelper.local_miq_server
     login_as FactoryGirl.create(:user, :features => "ops_rbac")
-    controller.stub(:get_vmdb_config).and_return(:product => {})
+    allow(controller).to receive(:get_vmdb_config).and_return(:product => {})
   end
 
   context "#explorer" do
     it "sets correct active accordion value" do
       controller.instance_variable_set(:@sb, {})
-      controller.stub(:get_node_info)
-      controller.should_receive(:render)
+      allow(controller).to receive(:get_node_info)
+      expect(controller).to receive(:render)
       controller.send(:explorer)
       expect(response.status).to eq(200)
-      assigns(:sb)[:active_accord].should eq(:rbac)
+      expect(assigns(:sb)[:active_accord]).to eq(:rbac)
     end
   end
 
   context "#explorer" do
     it "sets analytics active accordion value" do
       controller.instance_variable_set(:@sb, {})
-      controller.stub(:role_allows).and_return(false)
-      controller.stub(:get_vmdb_config).and_return(:product => {:analytics => true})
-      controller.stub(:get_node_info)
-      controller.should_receive(:render)
+      allow(controller).to receive(:role_allows).and_return(false)
+      allow(controller).to receive(:get_vmdb_config).and_return(:product => {:analytics => true})
+      allow(controller).to receive(:get_node_info)
+      expect(controller).to receive(:render)
       controller.send(:explorer)
       expect(response.status).to eq(200)
-      assigns(:sb)[:active_accord].should eq(:analytics)
+      expect(assigns(:sb)[:active_accord]).to eq(:analytics)
     end
   end
 
   context "#replace_explorer_trees" do
     it "build trees that are passed in and met other conditions" do
       controller.instance_variable_set(:@sb, {})
-      controller.stub(:x_build_dyna_tree)
+      allow(controller).to receive(:x_build_dyna_tree)
       r = proc { |opts| opts }
       replace_trees = [:settings, :diagnostics, :analytics]
       presenter = ExplorerPresenter.new

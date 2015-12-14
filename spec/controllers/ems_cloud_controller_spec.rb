@@ -6,8 +6,8 @@ describe EmsCloudController do
   describe "#create" do
     before do
       server
-      controller.stub(:check_privileges).and_return(true)
-      controller.stub(:assert_privileges).and_return(true)
+      allow(controller).to receive(:check_privileges).and_return(true)
+      allow(controller).to receive(:assert_privileges).and_return(true)
       login_as FactoryGirl.create(:user, :features => "ems_cloud_new")
     end
 
@@ -15,7 +15,7 @@ describe EmsCloudController do
       controller.instance_variable_set(:@breadcrumbs, [])
       get :new
       expect(response.status).to eq(200)
-      expect(controller.stub(:edit)).to_not be_nil
+      expect(allow(controller).to receive(:edit)).to_not be_nil
     end
 
     render_views
@@ -135,9 +135,9 @@ describe EmsCloudController do
   describe "#ems_cloud_form_fields" do
     before do
       server
-      described_class.any_instance.stub(:set_user_time_zone)
-      controller.stub(:check_privileges).and_return(true)
-      controller.stub(:assert_privileges).and_return(true)
+      allow_any_instance_of(described_class).to receive(:set_user_time_zone)
+      allow(controller).to receive(:check_privileges).and_return(true)
+      allow(controller).to receive(:assert_privileges).and_return(true)
     end
 
     it 'gets the ems cloud form fields on a get' do
@@ -181,9 +181,9 @@ describe EmsCloudController do
   describe "#show_link" do
     before do
       server
-      described_class.any_instance.stub(:set_user_time_zone)
-      controller.stub(:check_privileges).and_return(true)
-      controller.stub(:assert_privileges).and_return(true)
+      allow_any_instance_of(described_class).to receive(:set_user_time_zone)
+      allow(controller).to receive(:check_privileges).and_return(true)
+      allow(controller).to receive(:assert_privileges).and_return(true)
     end
 
     it 'gets the restful show link and timeline link paths' do
@@ -249,8 +249,8 @@ describe EmsCloudController do
   context "#update_ems_button_validate" do
     let(:mocked_ems) { mock_model(ManageIQ::Providers::Openstack::CloudManager) }
     it "calls authentication_check with save = true if validation is done for an existing record" do
-      controller.stub(:set_ems_record_vars)
-      controller.stub(:render)
+      allow(controller).to receive(:set_ems_record_vars)
+      allow(controller).to receive(:render)
       controller.instance_variable_set(:@_params,
                                        :button    => "validate",
                                        :id        => mocked_ems.id,
@@ -260,8 +260,8 @@ describe EmsCloudController do
     end
 
     it "calls authentication_check with save = false if validation is done for a new record" do
-      controller.stub(:set_ems_record_vars)
-      controller.stub(:render)
+      allow(controller).to receive(:set_ems_record_vars)
+      allow(controller).to receive(:render)
       controller.instance_variable_set(:@_params,
                                        :button           => "validate",
                                        :id               => "new",

@@ -7,7 +7,7 @@ describe MiqAeCustomizationController do
       before do
         EvmSpecHelper.local_miq_server
         login_as FactoryGirl.create(:user, :features => "dialog_delete")
-        controller.stub(:check_privileges).and_return(true)
+        allow(controller).to receive(:check_privileges).and_return(true)
       end
 
       it "flash message displays Dialog Label being deleted" do
@@ -24,7 +24,7 @@ describe MiqAeCustomizationController do
         session[:settings] = {:display   => {:locale => 'default'}}
 
         controller.instance_variable_set(:@settings, :display => {:locale => 'default'})
-        controller.stub(:replace_right_cell)
+        allow(controller).to receive(:replace_right_cell)
 
         # Now delete the Dialog
         controller.instance_variable_set(:@_params, :id => dialog.id)
@@ -32,9 +32,9 @@ describe MiqAeCustomizationController do
 
         # Check for Dialog Label to be part of flash message displayed
         flash_messages = assigns(:flash_array)
-        flash_messages.first[:message].should include("Dialog \"Test Label\": Delete successful")
+        expect(flash_messages.first[:message]).to include("Dialog \"Test Label\": Delete successful")
 
-        controller.send(:flash_errors?).should be_false
+        expect(controller.send(:flash_errors?)).to be_falsey
       end
     end
 
@@ -77,9 +77,9 @@ describe MiqAeCustomizationController do
       end
 
       it "Dialog with out Dialog fields should not be saved" do
-        controller.stub(:render_flash)
+        allow(controller).to receive(:render_flash)
         controller.send(:dialog_edit)
-        assigns(:flash_array).first[:message].should include("Dialog must have at least one Element")
+        expect(assigns(:flash_array).first[:message]).to include("Dialog must have at least one Element")
       end
 
       it "Adds a Dialog with Tab/Groups/Field" do
@@ -113,16 +113,16 @@ describe MiqAeCustomizationController do
           ]
         }
         assigns(:edit)[:new] = new_hash
-        controller.stub(:get_node_info)
-        controller.stub(:replace_right_cell)
+        allow(controller).to receive(:get_node_info)
+        allow(controller).to receive(:replace_right_cell)
         controller.send(:dialog_edit)
-        assigns(:flash_array).first[:message].should include("Dialog \"Dialog 1\" was added")
-        @dialog.dialog_fields.count.should eq(1)
+        expect(assigns(:flash_array).first[:message]).to include("Dialog \"Dialog 1\" was added")
+        expect(@dialog.dialog_fields.count).to eq(1)
       end
     end
 
     it "Empty dropdown element has to be invalid" do
-      controller.stub(:x_node) { 'root_-0_-0_-0' }
+      allow(controller).to receive(:x_node) { 'root_-0_-0_-0' }
       controller.instance_variable_set(:@sb, :node_typ => 'element')
       session[:edit] = {
         :field_typ    => "DialogFieldDropDownList",
@@ -131,11 +131,11 @@ describe MiqAeCustomizationController do
         :field_name   => 'Dropdown1'
       }
       controller.send(:dialog_validate)
-      assigns(:flash_array).first[:message].should include("Dropdown elements require some entries")
+      expect(assigns(:flash_array).first[:message]).to include("Dropdown elements require some entries")
     end
 
     it "does not require values for a dynamic drop down" do
-      controller.stub(:x_node) { 'root_-0_-0_-0' }
+      allow(controller).to receive(:x_node) { 'root_-0_-0_-0' }
       controller.instance_variable_set(:@sb, :node_typ => 'element')
       session[:edit] = {
         :field_typ         => "DialogFieldDropDownList",
@@ -146,7 +146,7 @@ describe MiqAeCustomizationController do
         :field_entry_point => "entry point"
       }
       controller.send(:dialog_validate)
-      assigns(:flash_array).should eq(nil)
+      expect(assigns(:flash_array)).to eq(nil)
     end
   end
 end

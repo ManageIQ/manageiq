@@ -37,9 +37,9 @@ describe MiqCapacityController do
                                                                                                      :bottlenecks => {:options => {}},
                                                                                                      :util        => {:options => {}}
                                           )
-          controller.should_not_receive(:render)
+          expect(controller).not_to receive(:render)
           controller.send(method.to_sym, node[:active_node])
-          assigns(:right_cell_text).should == "#{node[:title_prefix]} \"#{node[:title]}\" #{title_suffix}"
+          expect(assigns(:right_cell_text)).to eq("#{node[:title_prefix]} \"#{node[:title]}\" #{title_suffix}")
         end
       end
     end

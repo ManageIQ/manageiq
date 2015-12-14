@@ -19,14 +19,14 @@ describe ReportController do
 
       it 'renders list' do
         post :tree_select, :id => 'root', :format => :js, :accord => 'savedreports'
-        response.should render_template('report/_savedreports_list')
+        expect(response).to render_template('report/_savedreports_list')
       end
 
       it 'renders show' do
         user = FactoryGirl.create(:user_with_group)
         login_as user
         controller.instance_variable_set(:@html, "<h1>Test</h1>")
-        controller.stub(:report_first_page)
+        allow(controller).to receive(:report_first_page)
         report = FactoryGirl.create(:miq_report_with_results)
         allow(report).to receive(:contains_records?).and_return(true)
         task = FactoryGirl.create(:miq_task)
@@ -44,7 +44,7 @@ describe ReportController do
                            :binary_blob_id => binary_blob.id)
 
         post :tree_select, :id => "rr-#{report_result.id}", :format => :js, :accord => 'savedreports'
-        response.should render_template('shared/_report_chart_and_html')
+        expect(response).to render_template('shared/_report_chart_and_html')
       end
     end
 
@@ -56,7 +56,7 @@ describe ReportController do
       it 'renders list of Reports in Reports - Custom tree' do
         FactoryGirl.create(:miq_report)
         post :tree_select, :id => 'reports_xx-0', :format => :js
-        response.should render_template('report/_report_list')
+        expect(response).to render_template('report/_report_list')
       end
     end
 
@@ -67,13 +67,13 @@ describe ReportController do
 
       it 'renders list of Schedules in Schedules tree' do
         post :tree_select, :id => 'root', :format => :js, :accord => 'schedules'
-        response.should render_template('report/_schedule_list')
+        expect(response).to render_template('report/_schedule_list')
       end
 
       it 'renders show of Schedule in Schedules tree' do
         schedule = FactoryGirl.create(:miq_schedule)
         post :tree_select, :id => "msc-#{schedule.id}", :format => :js, :accord => 'schedules'
-        response.should render_template('report/_show_schedule')
+        expect(response).to render_template('report/_show_schedule')
       end
     end
 
@@ -85,7 +85,7 @@ describe ReportController do
       it 'renders list of Dashboards in Dashboards tree' do
         MiqWidgetSet.seed
         post :tree_select, :id => 'root', :format => :js, :accord => 'db'
-        response.should render_template('report/_db_list')
+        expect(response).to render_template('report/_db_list')
       end
 
       it 'renders show of Dashboards in Dashboards tree' do
@@ -94,7 +94,7 @@ describe ReportController do
         login_as user
         widget_set = FactoryGirl.create(:miq_widget_set, :group_id => user.current_group.id)
         post :tree_select, :id => "xx-g_g-#{user.current_group.id}_-#{widget_set.id}", :format => :js, :accord => 'db'
-        response.should render_template('report/_db_show')
+        expect(response).to render_template('report/_db_show')
       end
     end
 
@@ -105,13 +105,13 @@ describe ReportController do
 
       it 'renders list of Dashboard Widgets in Widgets tree' do
         post :tree_select, :id => 'root', :format => :js, :accord => 'widgets'
-        response.should render_template('report/_widget_list')
+        expect(response).to render_template('report/_widget_list')
       end
 
       it 'renders show of Dashboard Widget in Widgets tree' do
         widget = FactoryGirl.create(:miq_widget)
         post :tree_select, :id => "xx-r_-#{widget.id}", :format => :js, :accord => 'widgets'
-        response.should render_template('report/_widget_show')
+        expect(response).to render_template('report/_widget_show')
       end
     end
 
@@ -123,7 +123,7 @@ describe ReportController do
       it 'renders list of Roles in Roles tree' do
         login_as (FactoryGirl.create(:user_with_group))
         post :tree_select, :id => 'root', :format => :js, :accord => 'roles'
-        response.should render_template('report/_role_list')
+        expect(response).to render_template('report/_role_list')
       end
 
       it 'renders form to edit Role in Roles tree' do
@@ -131,7 +131,7 @@ describe ReportController do
         user = FactoryGirl.create(:user_with_group)
         login_as user
         post :tree_select, :id => "g-#{user.current_group.id}", :format => :js, :accord => 'roles'
-        response.should render_template('report/_menu_form1')
+        expect(response).to render_template('report/_menu_form1')
       end
     end
     after do

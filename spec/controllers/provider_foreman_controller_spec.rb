@@ -40,7 +40,7 @@ describe ProviderForemanController do
     set_user_privileges
     get :index
     expect(response.status).to eq(302)
-    response.should redirect_to(:action => 'explorer')
+    expect(response).to redirect_to(:action => 'explorer')
   end
 
   it "renders explorer" do
@@ -88,15 +88,15 @@ describe ProviderForemanController do
     end
 
     it "should not raise an error for feature that user has access to" do
-      lambda do
+      expect do
         controller.send(:assert_privileges, "configured_system_provision")
-      end.should_not raise_error
+      end.not_to raise_error
     end
 
     it "should raise an error for feature that user has access to" do
-      lambda do
+      expect do
         controller.send(:assert_privileges, "provider_foreman_add_provider")
-      end.should raise_error
+      end.to raise_error
     end
   end
 
@@ -142,18 +142,18 @@ describe ProviderForemanController do
       controller.instance_variable_set(:@right_cell_text, right_cell_text)
       controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
 
-      controller.stub(:get_view_calculate_gtl_type)
-      controller.stub(:get_view_pages)
-      controller.stub(:build_listnav_search_list)
-      controller.stub(:load_or_clear_adv_search)
-      controller.stub(:replace_search_box)
-      controller.stub(:update_partials)
-      controller.stub(:render)
+      allow(controller).to receive(:get_view_calculate_gtl_type)
+      allow(controller).to receive(:get_view_pages)
+      allow(controller).to receive(:build_listnav_search_list)
+      allow(controller).to receive(:load_or_clear_adv_search)
+      allow(controller).to receive(:replace_search_box)
+      allow(controller).to receive(:update_partials)
+      allow(controller).to receive(:render)
 
       controller.instance_variable_set(:@settings, :per_page => {:list => 20})
-      controller.stub(:items_per_page).and_return(20)
-      controller.stub(:gtl_type).and_return("list")
-      controller.stub(:current_page).and_return(1)
+      allow(controller).to receive(:items_per_page).and_return(20)
+      allow(controller).to receive(:gtl_type).and_return("list")
+      allow(controller).to receive(:current_page).and_return(1)
       controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
     end
     it "renders right cell text for root node" do
@@ -182,18 +182,18 @@ describe ProviderForemanController do
     before do
       right_cell_text = nil
       controller.instance_variable_set(:@right_cell_text, right_cell_text)
-      controller.stub(:get_view_calculate_gtl_type)
-      controller.stub(:get_view_pages)
-      controller.stub(:build_listnav_search_list)
-      controller.stub(:load_or_clear_adv_search)
-      controller.stub(:replace_search_box)
-      controller.stub(:update_partials)
-      controller.stub(:render)
+      allow(controller).to receive(:get_view_calculate_gtl_type)
+      allow(controller).to receive(:get_view_pages)
+      allow(controller).to receive(:build_listnav_search_list)
+      allow(controller).to receive(:load_or_clear_adv_search)
+      allow(controller).to receive(:replace_search_box)
+      allow(controller).to receive(:update_partials)
+      allow(controller).to receive(:render)
 
       controller.instance_variable_set(:@settings, :perpage => {:list => 20})
-      controller.stub(:items_per_page).and_return(20)
-      controller.stub(:gtl_type).and_return("list")
-      controller.stub(:current_page).and_return(1)
+      allow(controller).to receive(:items_per_page).and_return(20)
+      allow(controller).to receive(:gtl_type).and_return("list")
+      allow(controller).to receive(:current_page).and_return(1)
       controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
     end
     it "renders the list view based on the nodetype(root,provider,config_profile) and the search associated with it" do
@@ -224,12 +224,12 @@ describe ProviderForemanController do
       view = controller.instance_variable_get(:@view)
       expect(view.table.data[0].hostname).to eq("test2b_configured_system")
 
-      controller.stub(:x_node).and_return("root")
-      controller.stub(:x_tree).and_return(:type => :filter)
+      allow(controller).to receive(:x_node).and_return("root")
+      allow(controller).to receive(:x_tree).and_return(:type => :filter)
       controller.instance_variable_set(:@_params, :id => "cs_filter")
       controller.send(:accordion_select)
       controller.instance_variable_set(:@search_text, "brew")
-      controller.stub(:x_tree).and_return(:type => :providers)
+      allow(controller).to receive(:x_tree).and_return(:type => :providers)
       controller.instance_variable_set(:@_params, :id => "foreman_providers")
       controller.send(:accordion_select)
 
@@ -292,13 +292,13 @@ describe ProviderForemanController do
   it "renders tree_select as js" do
     controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
 
-    controller.stub(:process_show_list)
-    controller.stub(:add_unassigned_configuration_profile_record)
-    controller.stub(:replace_explorer_trees)
-    controller.stub(:build_listnav_search_list)
-    controller.stub(:rebuild_toolbars)
-    controller.stub(:replace_search_box)
-    controller.stub(:update_partials)
+    allow(controller).to receive(:process_show_list)
+    allow(controller).to receive(:add_unassigned_configuration_profile_record)
+    allow(controller).to receive(:replace_explorer_trees)
+    allow(controller).to receive(:build_listnav_search_list)
+    allow(controller).to receive(:rebuild_toolbars)
+    allow(controller).to receive(:replace_search_box)
+    allow(controller).to receive(:update_partials)
 
     set_user_privileges
 
@@ -309,14 +309,14 @@ describe ProviderForemanController do
 
   context "fetches the list setting:Grid/Tile/List from settings" do
     before do
-      controller.stub(:items_per_page).and_return(20)
-      controller.stub(:current_page).and_return(1)
-      controller.stub(:get_view_pages)
-      controller.stub(:build_listnav_search_list)
-      controller.stub(:load_or_clear_adv_search)
-      controller.stub(:replace_search_box)
-      controller.stub(:update_partials)
-      controller.stub(:render)
+      allow(controller).to receive(:items_per_page).and_return(20)
+      allow(controller).to receive(:current_page).and_return(1)
+      allow(controller).to receive(:get_view_pages)
+      allow(controller).to receive(:build_listnav_search_list)
+      allow(controller).to receive(:load_or_clear_adv_search)
+      allow(controller).to receive(:replace_search_box)
+      allow(controller).to receive(:update_partials)
+      allow(controller).to receive(:render)
 
       controller.instance_variable_set(:@settings,
                                        :per_page => {:list => 20},
@@ -327,7 +327,7 @@ describe ProviderForemanController do
 
     it "fetches list type = 'grid' from settings for Providers accordion" do
       key = ems_key_for_provider(@provider)
-      controller.stub(:x_active_accord).and_return(:foreman_providers)
+      allow(controller).to receive(:x_active_accord).and_return(:foreman_providers)
       controller.send(:get_node_info, key)
       list_type = controller.instance_variable_get(:@gtl_type)
       expect(list_type).to eq("grid")
@@ -335,7 +335,7 @@ describe ProviderForemanController do
 
     it "fetches list type = 'tile' from settings for Configured Systems accordion" do
       key = ems_key_for_provider(@provider)
-      controller.stub(:x_active_accord).and_return(:cs_filter)
+      allow(controller).to receive(:x_active_accord).and_return(:cs_filter)
       controller.send(:get_node_info, key)
       list_type = controller.instance_variable_get(:@gtl_type)
       expect(list_type).to eq("tile")
@@ -354,7 +354,7 @@ describe ProviderForemanController do
     it "uses the stored password for validation if params[:log_password] does not exist" do
       controller.instance_variable_set(:@_params, :log_userid => "userid")
       controller.instance_variable_set(:@provider_foreman, @provider)
-      @provider.should_receive(:authentication_password).and_return('password')
+      expect(@provider).to receive(:authentication_password).and_return('password')
       creds = {:userid => "userid", :password => "password"}
       expect(controller.send(:build_credentials)).to include(:default => creds)
     end
@@ -366,7 +366,7 @@ describe ProviderForemanController do
     end
     it "builds foreman tree with no nodes after rbac filtering" do
       user_filters = {'belongs' => [], 'managed' => [["/managed/quota_max_memory/2048"]]}
-      User.any_instance.stub(:get_filters).and_return(user_filters)
+      allow_any_instance_of(User).to receive(:get_filters).and_return(user_filters)
       controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
       first_child = find_treenode_for_provider(@provider)
       expect(first_child).to eq(nil)
@@ -374,7 +374,7 @@ describe ProviderForemanController do
 
     it "builds foreman tree with only those nodes that contain the filtered configured systems" do
       user_filters = {'belongs' => [], 'managed' => [["/managed/quota_max_memory/2048"]]}
-      User.any_instance.stub(:get_filters).and_return(user_filters)
+      allow_any_instance_of(User).to receive(:get_filters).and_return(user_filters)
       Classification.seed
       quota_2gb_tag = Classification.where("description" => "2GB").first
       Classification.bulk_reassignment(:model      => "ConfiguredSystem",

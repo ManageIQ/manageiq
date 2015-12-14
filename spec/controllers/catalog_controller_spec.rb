@@ -18,7 +18,7 @@ describe CatalogController do
     describe 'corresponding methods are called for allowed actions' do
       CatalogController::CATALOG_X_BUTTON_ALLOWED_ACTIONS.each_pair do |action_name, actual_method|
         it "calls the appropriate method: '#{actual_method}' for action '#{action_name}'" do
-          controller.should_receive(actual_method)
+          expect(controller).to receive(actual_method)
           get :x_button, :pressed => action_name
         end
       end
@@ -56,10 +56,10 @@ describe CatalogController do
       }
       controller.instance_variable_set(:@edit, edit)
       session[:edit] = edit
-      controller.stub(:replace_right_cell)
+      allow(controller).to receive(:replace_right_cell)
       controller.send(:atomic_st_edit)
       {'Provision' => provision_fqname, 'Reconfigure' => recon_fqname, 'Retirement' => retire_fqname}.each do |k, v|
-        st.resource_actions.find_by_action(k).fqname.should == "/#{v}"
+        expect(st.resource_actions.find_by_action(k).fqname).to eq("/#{v}")
       end
     end
 
@@ -84,11 +84,11 @@ describe CatalogController do
       }
       controller.instance_variable_set(:@edit, edit)
       session[:edit] = edit
-      controller.stub(:replace_right_cell)
+      allow(controller).to receive(:replace_right_cell)
       controller.send(:atomic_st_edit)
-      controller.send(:flash_errors?).should be_true
+      expect(controller.send(:flash_errors?)).to be_truthy
       flash_messages = assigns(:flash_array)
-      expect(flash_messages).to have_exactly(3).items
+      expect(flash_messages.size).to eq(3)
       entry_point_names = %w(Provisioning Reconfigure Retirement)
       flash_messages.each_with_index do |msg, i|
         expect(msg[:message]).to eq("Please correct invalid #{entry_point_names[i]} Entry Point prior to saving")
@@ -110,9 +110,9 @@ describe CatalogController do
       }
       controller.instance_variable_set(:@edit, edit)
       session[:edit] = edit
-      controller.stub(:replace_right_cell)
+      allow(controller).to receive(:replace_right_cell)
       controller.send(:st_edit)
-      assigns(:record).should.nil?
+      expect(assigns(:record)).to be_nil
     end
   end
 
@@ -140,16 +140,16 @@ describe CatalogController do
       controller.params.merge!(:id => ot.id, :template_content => @new_content)
       session[:edit][:key] = "ot_edit__#{ot.id}"
       session[:edit][:rec_id] = ot.id
-      controller.stub(:replace_right_cell)
+      allow(controller).to receive(:replace_right_cell)
       controller.send(:ot_edit_submit)
-      controller.send(:flash_errors?).should_not be_true
-      assigns(:flash_array).first[:message].should include("was saved")
+      expect(controller.send(:flash_errors?)).not_to be_truthy
+      expect(assigns(:flash_array).first[:message]).to include("was saved")
       ot.reload
-      ot.name.should == @new_name
-      ot.description.should == @new_description
-      ot.content.should == @new_content
+      expect(ot.name).to eq(@new_name)
+      expect(ot.description).to eq(@new_description)
+      expect(ot.content).to eq(@new_content)
       expect(response.status).to eq(200)
-      assigns(:edit).should be_nil
+      expect(assigns(:edit)).to be_nil
     end
 
     it "Azure Orchestration Template name and description are edited" do
@@ -158,16 +158,16 @@ describe CatalogController do
       controller.params.merge!(:id => ot.id, :template_content => @new_content)
       session[:edit][:key] = "ot_edit__#{ot.id}"
       session[:edit][:rec_id] = ot.id
-      controller.stub(:replace_right_cell)
+      allow(controller).to receive(:replace_right_cell)
       controller.send(:ot_edit_submit)
-      controller.send(:flash_errors?).should_not be_true
-      assigns(:flash_array).first[:message].should include("was saved")
+      expect(controller.send(:flash_errors?)).not_to be_truthy
+      expect(assigns(:flash_array).first[:message]).to include("was saved")
       ot.reload
-      ot.name.should == @new_name
-      ot.description.should == @new_description
-      ot.content.should == @new_content
+      expect(ot.name).to eq(@new_name)
+      expect(ot.description).to eq(@new_description)
+      expect(ot.content).to eq(@new_content)
       expect(response.status).to eq(200)
-      assigns(:edit).should be_nil
+      expect(assigns(:edit)).to be_nil
     end
 
     it "Read-only Orchestration Template content cannot be edited" do
@@ -176,12 +176,12 @@ describe CatalogController do
       controller.params.merge!(:id => ot.id, :template_content => @new_content)
       session[:edit][:key] = "ot_edit__#{ot.id}"
       session[:edit][:rec_id] = ot.id
-      controller.stub(:replace_right_cell)
+      allow(controller).to receive(:replace_right_cell)
       controller.send(:ot_edit_submit)
       ot.reload
-      ot.content.should == original_content
+      expect(ot.content).to eq(original_content)
       expect(response.status).to eq(200)
-      assigns(:edit).should be_nil
+      expect(assigns(:edit)).to be_nil
     end
 
     it "Orchestration Template content cannot be empty during edit" do
@@ -193,12 +193,12 @@ describe CatalogController do
       original_content = ot.content
       new_content = ""
       controller.params.merge!(:id => ot.id, :template_content => new_content)
-      controller.stub(:replace_right_cell)
+      allow(controller).to receive(:replace_right_cell)
       controller.send(:ot_edit_submit)
-      controller.send(:flash_errors?).should be_true
-      assigns(:flash_array).first[:message].should include("cannot be empty")
+      expect(controller.send(:flash_errors?)).to be_truthy
+      expect(assigns(:flash_array).first[:message]).to include("cannot be empty")
       ot.reload
-      ot.content.should == original_content
+      expect(ot.content).to eq(original_content)
     end
 
     it "Draft flag is set for an Orchestration Template" do
@@ -207,11 +207,11 @@ describe CatalogController do
       session[:edit][:key] = "ot_edit__#{ot.id}"
       session[:edit][:rec_id] = ot.id
       session[:edit][:new][:draft] = "true"
-      controller.stub(:replace_right_cell)
+      allow(controller).to receive(:replace_right_cell)
       controller.send(:ot_edit_submit)
       ot.reload
-      ot.draft.should be_true
-      assigns(:edit).should be_nil
+      expect(ot.draft).to be_truthy
+      expect(assigns(:edit)).to be_nil
     end
   end
 
@@ -237,22 +237,22 @@ describe CatalogController do
     end
 
     after(:each) do
-      controller.send(:flash_errors?).should_not be_true
-      assigns(:flash_array).first[:message].should include("was saved")
+      expect(controller.send(:flash_errors?)).not_to be_truthy
+      expect(assigns(:flash_array).first[:message]).to include("was saved")
       expect(response.status).to eq(200)
-      OrchestrationTemplate.where(:name => @new_name).first.should_not be_nil
+      expect(OrchestrationTemplate.where(:name => @new_name).first).not_to be_nil
     end
 
     it "Orchestration Template is copied" do
-      controller.stub(:replace_right_cell)
+      allow(controller).to receive(:replace_right_cell)
       controller.send(:ot_copy_submit)
     end
 
     it "Orchestration Template is copied as a draft" do
       session[:edit][:new][:draft] = "true"
-      controller.stub(:replace_right_cell)
+      allow(controller).to receive(:replace_right_cell)
       controller.send(:ot_copy_submit)
-      OrchestrationTemplate.where(:name => @new_name).first.draft.should be_true
+      expect(OrchestrationTemplate.where(:name => @new_name).first.draft).to be_truthy
     end
   end
 
@@ -260,7 +260,7 @@ describe CatalogController do
     before(:each) do
       controller.instance_variable_set(:@sb, {})
       controller.instance_variable_set(:@_params, :pressed => "orchestration_template_remove")
-      controller.stub(:replace_right_cell)
+      allow(controller).to receive(:replace_right_cell)
     end
 
     after(:each) do
@@ -272,18 +272,18 @@ describe CatalogController do
       controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
       controller.params.merge!(:id => ot.id)
       controller.send(:ot_remove_submit)
-      controller.send(:flash_errors?).should_not be_true
-      assigns(:flash_array).first[:message].should include("was deleted")
-      OrchestrationTemplate.find_by_id(ot.id).should be_nil
+      expect(controller.send(:flash_errors?)).not_to be_truthy
+      expect(assigns(:flash_array).first[:message]).to include("was deleted")
+      expect(OrchestrationTemplate.find_by_id(ot.id)).to be_nil
     end
 
     it "Read-only Orchestration Template cannot deleted" do
       ot = FactoryGirl.create(:orchestration_template_with_stacks)
       controller.params.merge!(:id => ot.id)
       controller.send(:ot_remove_submit)
-      controller.send(:flash_errors?).should be_true
-      assigns(:flash_array).first[:message].should include("read-only and cannot be deleted")
-      OrchestrationTemplate.find_by_id(ot.id).should_not be_nil
+      expect(controller.send(:flash_errors?)).to be_truthy
+      expect(assigns(:flash_array).first[:message]).to include("read-only and cannot be deleted")
+      expect(OrchestrationTemplate.find_by_id(ot.id)).not_to be_nil
     end
   end
 
@@ -308,45 +308,45 @@ describe CatalogController do
 
     it "Orchestration Template is created" do
       controller.instance_variable_set(:@_params, :content => @new_content, :button => "add")
-      controller.stub(:replace_right_cell)
+      allow(controller).to receive(:replace_right_cell)
       controller.send(:ot_add_submit)
-      controller.send(:flash_errors?).should_not be_true
-      assigns(:flash_array).first[:message].should include("was saved")
-      assigns(:edit).should be_nil
+      expect(controller.send(:flash_errors?)).not_to be_truthy
+      expect(assigns(:flash_array).first[:message]).to include("was saved")
+      expect(assigns(:edit)).to be_nil
       expect(response.status).to eq(200)
-      OrchestrationTemplate.where(:name => @new_name).first.should_not be_nil
+      expect(OrchestrationTemplate.where(:name => @new_name).first).not_to be_nil
     end
 
     it "Orchestration Template draft is created" do
       controller.instance_variable_set(:@_params, :content => @new_content, :button => "add")
       session[:edit][:new][:draft] = true
-      controller.stub(:replace_right_cell)
+      allow(controller).to receive(:replace_right_cell)
       controller.send(:ot_add_submit)
-      controller.send(:flash_errors?).should_not be_true
-      assigns(:flash_array).first[:message].should include("was saved")
-      assigns(:edit).should be_nil
+      expect(controller.send(:flash_errors?)).not_to be_truthy
+      expect(assigns(:flash_array).first[:message]).to include("was saved")
+      expect(assigns(:edit)).to be_nil
       expect(response.status).to eq(200)
       ot = OrchestrationTemplate.where(:name => @new_name).first
-      ot.should_not be_nil
-      ot.draft.should be_true
+      expect(ot).not_to be_nil
+      expect(ot.draft).to be_truthy
     end
 
     it "Orchestration Template creation is cancelled" do
       controller.instance_variable_set(:@_params, :content => @new_content, :button => "cancel")
-      controller.stub(:replace_right_cell)
+      allow(controller).to receive(:replace_right_cell)
       controller.send(:ot_add_submit)
-      controller.send(:flash_errors?).should_not be_true
-      assigns(:flash_array).first[:message].should include("was cancelled")
-      assigns(:edit).should be_nil
+      expect(controller.send(:flash_errors?)).not_to be_truthy
+      expect(assigns(:flash_array).first[:message]).to include("was cancelled")
+      expect(assigns(:edit)).to be_nil
       expect(response.status).to eq(200)
-      OrchestrationTemplate.where(:name => @new_name).first.should be_nil
+      expect(OrchestrationTemplate.where(:name => @new_name).first).to be_nil
     end
   end
 
   describe "#tags_edit" do
     before(:each) do
       @ot = FactoryGirl.create(:orchestration_template, :name => "foo")
-      @ot.stub(:tagged_with).with(:cat => user.userid).and_return("my tags")
+      allow(@ot).to receive(:tagged_with).with(:cat => user.userid).and_return("my tags")
       classification = FactoryGirl.create(:classification, :name => "department", :description => "Department")
       @tag1 = FactoryGirl.create(:classification_tag,
                                  :name   => "tag1",
@@ -356,12 +356,12 @@ describe CatalogController do
                                  :name   => "tag2",
                                  :parent => classification
                                 )
-      Classification.stub(:find_assigned_entries).with(@ot).and_return([@tag1, @tag2])
+      allow(Classification).to receive(:find_assigned_entries).with(@ot).and_return([@tag1, @tag2])
       controller.instance_variable_set(:@sb,
                                        :trees       => {:ot_tree => {:active_node => "root"}},
                                        :active_tree => :ot_tree)
-      controller.stub(:get_node_info)
-      controller.stub(:replace_right_cell)
+      allow(controller).to receive(:get_node_info)
+      allow(controller).to receive(:replace_right_cell)
       session[:tag_db] = "OrchestrationTemplate"
       edit = {
         :key        => "OrchestrationTemplate_edit_tags__#{@ot.id}",
@@ -383,22 +383,22 @@ describe CatalogController do
       controller.instance_variable_set(:@sb, :action => "ot_tags_edit")
       controller.instance_variable_set(:@_params, :miq_grid_checks => @ot.id.to_s)
       controller.send(:tags_edit, "OrchestrationTemplate")
-      assigns(:flash_array).should be_nil
-      assigns(:entries).should_not be_nil
+      expect(assigns(:flash_array)).to be_nil
+      expect(assigns(:entries)).not_to be_nil
     end
 
     it "cancels tags edit" do
       controller.instance_variable_set(:@_params, :button => "cancel", :id => @ot.id)
       controller.send(:tags_edit, "OrchestrationTemplate")
-      assigns(:flash_array).first[:message].should include("was cancelled")
-      assigns(:edit).should be_nil
+      expect(assigns(:flash_array).first[:message]).to include("was cancelled")
+      expect(assigns(:edit)).to be_nil
     end
 
     it "save tags" do
       controller.instance_variable_set(:@_params, :button => "save", :id => @ot.id)
       controller.send(:tags_edit, "OrchestrationTemplate")
-      assigns(:flash_array).first[:message].should include("Tag edits were successfully saved")
-      assigns(:edit).should be_nil
+      expect(assigns(:flash_array).first[:message]).to include("Tag edits were successfully saved")
+      expect(assigns(:edit)).to be_nil
     end
   end
 
@@ -416,17 +416,17 @@ describe CatalogController do
     end
 
     after(:each) do
-      controller.send(:flash_errors?).should_not be_true
-      assigns(:edit).should be_nil
+      expect(controller.send(:flash_errors?)).not_to be_truthy
+      expect(assigns(:edit)).to be_nil
       expect(response.status).to eq(200)
     end
 
     it "Service Dialog is created from an Orchestration Template" do
       controller.instance_variable_set(:@_params, :button => "save", :id => @ot.id)
-      controller.stub(:replace_right_cell)
+      allow(controller).to receive(:replace_right_cell)
       controller.send(:service_dialog_from_ot_submit)
-      assigns(:flash_array).first[:message].should include("was successfully created")
-      Dialog.where(:label => @dialog_label).first.should_not be_nil
+      expect(assigns(:flash_array).first[:message]).to include("was successfully created")
+      expect(Dialog.where(:label => @dialog_label).first).not_to be_nil
     end
   end
 
@@ -449,14 +449,14 @@ describe CatalogController do
     end
 
     after(:each) do
-      controller.send(:flash_errors?).should_not be_true
+      expect(controller.send(:flash_errors?)).not_to be_truthy
       expect(response.status).to eq(200)
     end
 
     it "Renders list of orchestration templates using correct GTL type" do
       %w(root xx-otcfn xx-othot xx-otazu).each do |id|
         post :tree_select, :id => id, :format => :js
-        response.should render_template('layouts/gtl/_grid')
+        expect(response).to render_template('layouts/gtl/_grid')
       end
     end
   end

@@ -13,7 +13,7 @@ describe MiqAeCustomizationController do
         CustomButton.button_classes.each { |db| target_classes[db] = ui_lookup(:model => db) }
         controller.instance_variable_set(:@sb, :target_classes => target_classes)
         controller.send(:ab_get_node_info, "xx-ab_Host_cbg-10r95_cb-#{custom_button.id}")
-        assigns(:resolve)[:new][:target_class].should == "Host"
+        expect(assigns(:resolve)[:new][:target_class]).to eq("Host")
       end
     end
   end

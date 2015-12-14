@@ -4,7 +4,7 @@ describe VmOrTemplateController do
   context "#snap_pressed" do
     before :each do
       set_user_privileges
-      controller.stub(:role_allows).and_return(true)
+      allow(controller).to receive(:role_allows).and_return(true)
       vm = FactoryGirl.create(:vm_vmware)
       @snapshot = FactoryGirl.create(:snapshot, :vm_or_template_id => vm.id,
                                                 :name              => 'EvmSnapshot',
@@ -37,7 +37,7 @@ describe VmOrTemplateController do
     end
 
     it "deleted node pressed in snapshot tree" do
-      controller.should_receive(:build_snapshot_tree)
+      expect(controller).to receive(:build_snapshot_tree)
       post :snap_pressed, :id => "some_id"
       expect(response).to render_template('vm_common/_snapshots_tree')
       expect(assigns(:flash_array).first[:message]).to eq("Last selected Snapshot no longer exists")
