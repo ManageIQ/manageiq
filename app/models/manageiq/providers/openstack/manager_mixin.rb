@@ -32,7 +32,14 @@ module ManageIQ::Providers::Openstack::ManagerMixin
       username = options[:user] || authentication_userid(options[:auth_type])
       password = options[:pass] || authentication_password(options[:auth_type])
 
-      osh = OpenstackHandle::Handle.new(username, password, address, port, api_version, security_protocol)
+      vmdb_config = VMDB::Config.new("vmdb").config
+      extra_options = {
+        :ssl_ca_file    => vmdb_config.fetch_path(:ssl, :ssl_ca_file),
+        :ssl_ca_path    => vmdb_config.fetch_path(:ssl, :ssl_ca_path),
+        :ssl_cert_store => OpenSSL::X509::Store.new
+      }
+
+      osh = OpenstackHandle::Handle.new(username, password, address, port, api_version, security_protocol, extra_options)
       osh.connection_options = {:instrumentor => $fog_log}
       osh
     end

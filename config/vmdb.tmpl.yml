@@ -237,6 +237,9 @@ smtp:
 snapshots:
   :create_free_percent: 100
   :remove_free_percent: 100
+ssl:
+  :ssl_ca_file:
+  :ssl_ca_path:
 storage:
   inventory:
     :full_refresh_schedule: "38 * * * *"

@@ -27,12 +27,13 @@ module OpenstackHandle
       "Planning"      => :planning
     }
 
-    def self.try_connection(security_protocol)
+    def self.try_connection(security_protocol, ssl_options = {})
       if security_protocol.blank? || security_protocol == 'ssl'
         # For backwards compatibility take blank security_protocol as SSL
         yield "https", {:ssl_verify_peer => false}
       elsif security_protocol == 'ssl-with-validation'
-        yield "https", {:ssl_verify_peer => true}
+        excon_options = {:ssl_verify_peer => true}.merge(ssl_options)
+        yield "https", excon_options
       else
         yield "http", {}
       end
@@ -40,7 +41,8 @@ module OpenstackHandle
 
     def self.raw_connect_try_ssl(username, password, address, port, service = "Compute", opts = nil, api_version = nil,
                                  security_protocol = nil)
-      try_connection(security_protocol) do |scheme, connection_options|
+      ssl_options = opts.delete(:ssl_options)
+      try_connection(security_protocol, ssl_options) do |scheme, connection_options|
         auth_url = auth_url(address, port, scheme, api_version)
         opts[:connection_options] = (opts[:connection_options] || {}).merge(connection_options)
         raw_connect(username, password, auth_url, service, opts)
@@ -103,16 +105,29 @@ module OpenstackHandle
       attr_reader :connection_options
     end
 
-    def initialize(username, password, address, port = nil, api_version = nil, security_protocol = nil)
+    def initialize(username, password, address, port = nil, api_version = nil, security_protocol = nil,
+                   extra_options = {})
       @username          = username
       @password          = password
       @address           = address
       @port              = port || 5000
       @api_version       = api_version || 'v2'
       @security_protocol = security_protocol || 'ssl'
+      @extra_options     = extra_options
 
       @connection_cache   = {}
       @connection_options = self.class.connection_options
+    end
+
+    def ssl_options
+      @ssl_options ||= {}
+      return @ssl_options unless @ssl_options.blank?
+
+      @ssl_options[:ssl_ca_file]    = @extra_options[:ssl_ca_file] unless @extra_options[:ssl_ca_file].blank?
+      @ssl_options[:ssl_ca_path]    = @extra_options[:ssl_ca_path] unless @extra_options[:ssl_ca_path].blank?
+      # ssl_cert_store is dependent on the presence of ssl_ca_file
+      @ssl_options[:ssl_cert_store] = @extra_options[:ssl_cert_store] unless @extra_options[:ssl_ca_file].blank?
+      @ssl_options
     end
 
     def browser_url
@@ -144,6 +159,7 @@ module OpenstackHandle
       svc_cache = (@connection_cache[service] ||= {})
       svc_cache[tenant] ||= begin
         opts[:connection_options] = connection_options if connection_options
+        opts[:ssl_options]        = ssl_options
 
         raw_service = self.class.raw_connect_try_ssl(username, password, address, port, service, opts, api_version,
                                                      security_protocol)
