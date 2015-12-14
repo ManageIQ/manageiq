@@ -4,9 +4,7 @@
   = select_tag(field.name, options_for_select(select_values, selected), drop_down_options(field, url))
 
   :javascript
-    miqInitSelectPicker();
-    $('.selectpicker').selectpicker('val', '#{selected}');
-    miqSelectPickerEvent('#{field.name}', '#{url}');
+    dialogFieldRefresh.initializeDialogSelectPicker('#{field.name}', '#{field.id}', '#{selected}', '#{url}');
 
 - else
   = h(field.values.detect { |k, _v| k == wf.value(field.name) }.try(:last) || wf.value(field.name))
