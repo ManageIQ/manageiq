@@ -10,3 +10,5 @@
   && (!@layout.starts_with?("miq_request")) && !@treesize_buttons |
   && @display == "main" && @showtype == "main" && !@in_a_form |
   - defered_toolbar_render('view_tb', controller.send(:restful?) ? "summary_view_restful_tb" : "summary_view_tb")
+- else
+  - defered_toolbar_render('view_tb', 'blank_view_tb')

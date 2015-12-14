@@ -8,3 +8,5 @@
   - defered_toolbar_render('view_tb', @report ? "report_view_tb" : "blank_view_tb")
 - elsif %w(provider_foreman).include?(@layout)
   - defered_toolbar_render('view_tb', @showtype == 'main' ? "x_summary_view_tb" : "x_gtl_view_tb")
+- else
+  - defered_toolbar_render('view_tb', 'blank_view_tb')
