@@ -22,6 +22,8 @@
       :image: reportonly
       :text: "Show full screen Report"
       :title: "Show full screen Report"
+      :enabled: 'false'
+      :onwhen: '1'
       :url: "/report_only"
       :url_parms: 'popup_only'
       :popup: true
