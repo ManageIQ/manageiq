@@ -15,6 +15,11 @@ describe MiqExpression do
       exp = MiqExpression.new("INCLUDES" => {"field" => "Vm-name", "value" => "/[]/"})
       expect(exp.to_ruby).to eq("<value ref=vm, type=string>/virtual/name</value> =~ /\\/\\[\\]\\//")
     end
+
+    it "raises error if expression contains ruby script" do
+      exp = MiqExpression.new("RUBY" => {"field" => "Host-name", "value" => "puts 'Hello world!'"})
+      expect { exp.to_ruby }.to raise_error(RuntimeError, "Ruby scripts in expressions are no longer supported. Please use the regular expression feature of conditions instead.")
+    end
   end
 
   it "supports yaml" do
