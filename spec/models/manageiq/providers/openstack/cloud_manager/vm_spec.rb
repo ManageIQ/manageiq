@@ -1,4 +1,44 @@
 describe ManageIQ::Providers::Openstack::CloudManager::Vm do
+  describe "vm actions" do
+    let(:ems) { FactoryGirl.create(:ems_openstack) }
+    let(:tenant) { FactoryGirl.create(:cloud_tenant_openstack, :ext_management_system => ems) }
+    let(:vm) do
+      FactoryGirl.create(:vm_openstack,
+                         :ext_management_system => ems,
+                         :name                  => 'test',
+                         :ems_ref               => 'one_id',
+                         :cloud_tenant          => tenant)
+    end
+
+    let(:handle) do
+      double.tap do |handle|
+        allow(ems).to receive(:connect).with({}).and_return(handle)
+      end
+    end
+
+    before do
+      handle
+    end
+
+    context "#live_migrate" do
+      it "live migrates with default options" do
+        expect(handle).to receive(:live_migrate_server).with(vm.ems_ref, nil, false, false)
+        vm.live_migrate
+        expect(vm.power_state).to eq 'migrating'
+      end
+
+      it "live migrates with special options" do
+        expect(handle).to receive(:live_migrate_server).with(vm.ems_ref, 'host_1.localdomain', true, true)
+        vm.live_migrate(:hostname => 'host_1.localdomain', :disk_over_commit => true, :block_migration => true)
+        expect(vm.power_state).to eq 'migrating'
+      end
+
+      it "checks live migration is_available?" do
+        expect(vm.is_available?(:live_migrate)).to eq true
+      end
+    end
+  end
+
   context "#is_available?" do
     let(:ems) { FactoryGirl.create(:ems_openstack) }
     let(:vm)  { FactoryGirl.create(:vm_openstack, :ext_management_system => ems) }
