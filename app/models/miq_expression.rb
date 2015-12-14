@@ -16,6 +16,9 @@ class MiqExpression
     Container
     ContainerGroup
     ContainerNode
+    ContainerProject
+    ContainerService
+    ContainerReplicator
     ManageIQ::Providers::CloudManager
     EmsCluster
     EmsClusterPerformance
