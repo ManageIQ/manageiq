@@ -38,6 +38,17 @@ describe TreeBuilderReportSavedReports do
           # logged User1 can see report with Group1
           expect(displayed_report_ids).to include(@rpt.id)
         end
+
+        it "is allowed to see report result created under Group1 for User 1(with current group Group2)" do
+          # there is calling of x_get_tree_roots
+          tree = TreeBuilderReportSavedReports.new('savedreports_tree', 'savedreports', {})
+          cond = tree.send(:set_saved_reports_condition, @rpt.id)
+
+          displayed_report_result_ids = MiqReportResult.where(cond).collect(&:id)
+
+          # logged User1 can see report with Group1
+          expect(displayed_report_result_ids).to include(@rpt.miq_report_results.first.id)
+        end
       end
     end
   end
