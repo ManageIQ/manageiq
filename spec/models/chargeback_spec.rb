@@ -96,13 +96,13 @@ describe Chargeback do
                          :rate               => @count_hourly_rate.to_s,
                         )
 
-      subject.cpu_allocated_metric.should == @cpu_count * @metric_size
-      subject.cpu_used_metric.should == @cpu_usagemhz_rate * @metric_size
-      subject.cpu_metric.should == subject.cpu_allocated_metric + subject.cpu_used_metric
+      expect(subject.cpu_allocated_metric).to eq(@cpu_count * @metric_size)
+      expect(subject.cpu_used_metric).to eq(@cpu_usagemhz_rate * @metric_size)
+      expect(subject.cpu_metric).to eq(subject.cpu_allocated_metric + subject.cpu_used_metric)
 
-      subject.cpu_allocated_cost.should == @cpu_count * @count_hourly_rate * @metric_size
-      subject.cpu_used_cost.should == @cpu_usagemhz_rate * @hourly_rate * @metric_size
-      subject.cpu_cost.should == subject.cpu_allocated_cost + subject.cpu_used_cost
+      expect(subject.cpu_allocated_cost).to eq(@cpu_count * @count_hourly_rate * @metric_size)
+      expect(subject.cpu_used_cost).to eq(@cpu_usagemhz_rate * @hourly_rate * @metric_size)
+      expect(subject.cpu_cost).to eq(subject.cpu_allocated_cost + subject.cpu_used_cost)
     end
 
     it "memory" do
@@ -117,13 +117,13 @@ describe Chargeback do
                          :rate               => @hourly_rate.to_s,
                         )
 
-      subject.memory_allocated_metric.should == @memory_available * @metric_size
-      subject.memory_used_metric.should == @memory_used * @metric_size
-      subject.memory_metric.should == subject.memory_allocated_metric + subject.memory_used_metric
+      expect(subject.memory_allocated_metric).to eq(@memory_available * @metric_size)
+      expect(subject.memory_used_metric).to eq(@memory_used * @metric_size)
+      expect(subject.memory_metric).to eq(subject.memory_allocated_metric + subject.memory_used_metric)
 
-      subject.memory_allocated_cost.should == @memory_available * @hourly_rate * @metric_size
-      subject.memory_used_cost.should == @memory_used * @hourly_rate * @metric_size
-      subject.memory_cost.should == subject.memory_allocated_cost + subject.memory_used_cost
+      expect(subject.memory_allocated_cost).to eq(@memory_available * @hourly_rate * @metric_size)
+      expect(subject.memory_used_cost).to eq(@memory_used * @hourly_rate * @metric_size)
+      expect(subject.memory_cost).to eq(subject.memory_allocated_cost + subject.memory_used_cost)
     end
 
     it "disk io" do
@@ -133,11 +133,11 @@ describe Chargeback do
                          :rate               => @hourly_rate.to_s,
                         )
 
-      subject.disk_io_used_metric.should == @disk_usage_rate * @metric_size
-      subject.disk_io_metric.should == subject.disk_io_metric
+      expect(subject.disk_io_used_metric).to eq(@disk_usage_rate * @metric_size)
+      expect(subject.disk_io_metric).to eq(subject.disk_io_metric)
 
-      subject.disk_io_used_cost.should == @disk_usage_rate * @hourly_rate * @metric_size
-      subject.disk_io_cost.should == subject.disk_io_used_cost
+      expect(subject.disk_io_used_cost).to eq(@disk_usage_rate * @hourly_rate * @metric_size)
+      expect(subject.disk_io_cost).to eq(subject.disk_io_used_cost)
     end
 
     it "net io" do
@@ -147,11 +147,11 @@ describe Chargeback do
                          :rate               => @hourly_rate.to_s,
                         )
 
-      subject.net_io_used_metric.should == @net_usage_rate * @metric_size
-      subject.net_io_metric.should == subject.net_io_metric
+      expect(subject.net_io_used_metric).to eq(@net_usage_rate * @metric_size)
+      expect(subject.net_io_metric).to eq(subject.net_io_metric)
 
-      subject.net_io_used_cost.should == @net_usage_rate * @hourly_rate * @metric_size
-      subject.net_io_cost.should == subject.net_io_used_cost
+      expect(subject.net_io_used_cost).to eq(@net_usage_rate * @hourly_rate * @metric_size)
+      expect(subject.net_io_cost).to eq(subject.net_io_used_cost)
     end
 
     it "storage" do
@@ -173,13 +173,13 @@ describe Chargeback do
                          :chargeback_rate_detail_measure_id => cbdm.id
                         )
 
-      subject.storage_allocated_metric.should == @vm_allocated_disk_storage.gigabytes * @metric_size
-      subject.storage_used_metric.should == @vm_used_disk_storage.gigabytes * @metric_size
-      subject.storage_metric.should == subject.storage_allocated_metric + subject.storage_used_metric
+      expect(subject.storage_allocated_metric).to eq(@vm_allocated_disk_storage.gigabytes * @metric_size)
+      expect(subject.storage_used_metric).to eq(@vm_used_disk_storage.gigabytes * @metric_size)
+      expect(subject.storage_metric).to eq(subject.storage_allocated_metric + subject.storage_used_metric)
 
-      subject.storage_allocated_cost.should == @vm_allocated_disk_storage * @count_hourly_rate * @metric_size
-      subject.storage_used_cost.should == @vm_used_disk_storage * @count_hourly_rate * @metric_size
-      subject.storage_cost.should == subject.storage_allocated_cost + subject.storage_used_cost
+      expect(subject.storage_allocated_cost).to eq(@vm_allocated_disk_storage * @count_hourly_rate * @metric_size)
+      expect(subject.storage_used_cost).to eq(@vm_used_disk_storage * @count_hourly_rate * @metric_size)
+      expect(subject.storage_cost).to eq(subject.storage_allocated_cost + subject.storage_used_cost)
     end
   end
 
@@ -229,13 +229,13 @@ describe Chargeback do
                          :rate               => @count_hourly_rate.to_s,
                         )
 
-      subject.cpu_allocated_metric.should == @cpu_count * @metric_size
-      subject.cpu_used_metric.should == @cpu_usagemhz_rate * @metric_size
-      subject.cpu_metric.should == subject.cpu_allocated_metric + subject.cpu_used_metric
+      expect(subject.cpu_allocated_metric).to eq(@cpu_count * @metric_size)
+      expect(subject.cpu_used_metric).to eq(@cpu_usagemhz_rate * @metric_size)
+      expect(subject.cpu_metric).to eq(subject.cpu_allocated_metric + subject.cpu_used_metric)
 
-      subject.cpu_allocated_cost.should == @cpu_count * @count_hourly_rate * @metric_size
-      subject.cpu_used_cost.should == @cpu_usagemhz_rate * @hourly_rate * @metric_size
-      subject.cpu_cost.should == subject.cpu_allocated_cost + subject.cpu_used_cost
+      expect(subject.cpu_allocated_cost).to eq(@cpu_count * @count_hourly_rate * @metric_size)
+      expect(subject.cpu_used_cost).to eq(@cpu_usagemhz_rate * @hourly_rate * @metric_size)
+      expect(subject.cpu_cost).to eq(subject.cpu_allocated_cost + subject.cpu_used_cost)
     end
 
     it "memory" do
@@ -250,13 +250,13 @@ describe Chargeback do
                          :rate               => @hourly_rate.to_s,
                         )
 
-      subject.memory_allocated_metric.should == @memory_available * @metric_size
-      subject.memory_used_metric.should == @memory_used * @metric_size
-      subject.memory_metric.should == subject.memory_allocated_metric + subject.memory_used_metric
+      expect(subject.memory_allocated_metric).to eq(@memory_available * @metric_size)
+      expect(subject.memory_used_metric).to eq(@memory_used * @metric_size)
+      expect(subject.memory_metric).to eq(subject.memory_allocated_metric + subject.memory_used_metric)
 
-      subject.memory_allocated_cost.should == @memory_available * @hourly_rate * @metric_size
-      subject.memory_used_cost.should == @memory_used * @hourly_rate * @metric_size
-      subject.memory_cost.should == subject.memory_allocated_cost + subject.memory_used_cost
+      expect(subject.memory_allocated_cost).to eq(@memory_available * @hourly_rate * @metric_size)
+      expect(subject.memory_used_cost).to eq(@memory_used * @hourly_rate * @metric_size)
+      expect(subject.memory_cost).to eq(subject.memory_allocated_cost + subject.memory_used_cost)
     end
 
     it "disk io" do
@@ -266,11 +266,11 @@ describe Chargeback do
                          :rate               => @hourly_rate.to_s,
                         )
 
-      subject.disk_io_used_metric.should == @disk_usage_rate * @metric_size
-      subject.disk_io_metric.should == subject.disk_io_metric
+      expect(subject.disk_io_used_metric).to eq(@disk_usage_rate * @metric_size)
+      expect(subject.disk_io_metric).to eq(subject.disk_io_metric)
 
-      subject.disk_io_used_cost.should == @disk_usage_rate * @hourly_rate * @metric_size
-      subject.disk_io_cost.should == subject.disk_io_used_cost
+      expect(subject.disk_io_used_cost).to eq(@disk_usage_rate * @hourly_rate * @metric_size)
+      expect(subject.disk_io_cost).to eq(subject.disk_io_used_cost)
     end
 
     it "net io" do
@@ -280,11 +280,11 @@ describe Chargeback do
                          :rate               => @hourly_rate.to_s,
                         )
 
-      subject.net_io_used_metric.should == @net_usage_rate * @metric_size
-      subject.net_io_metric.should == subject.net_io_metric
+      expect(subject.net_io_used_metric).to eq(@net_usage_rate * @metric_size)
+      expect(subject.net_io_metric).to eq(subject.net_io_metric)
 
-      subject.net_io_used_cost.should == @net_usage_rate * @hourly_rate * @metric_size
-      subject.net_io_cost.should == subject.net_io_used_cost
+      expect(subject.net_io_used_cost).to eq(@net_usage_rate * @hourly_rate * @metric_size)
+      expect(subject.net_io_cost).to eq(subject.net_io_used_cost)
     end
 
     it "storage" do
@@ -302,13 +302,13 @@ describe Chargeback do
                          :chargeback_rate_detail_measure_id => cbdm.id
                         )
 
-      subject.storage_allocated_metric.should == @vm_allocated_disk_storage.gigabytes * @metric_size
-      subject.storage_used_metric.should == @vm_used_disk_storage.gigabytes * @metric_size
-      subject.storage_metric.should == subject.storage_allocated_metric + subject.storage_used_metric
+      expect(subject.storage_allocated_metric).to eq(@vm_allocated_disk_storage.gigabytes * @metric_size)
+      expect(subject.storage_used_metric).to eq(@vm_used_disk_storage.gigabytes * @metric_size)
+      expect(subject.storage_metric).to eq(subject.storage_allocated_metric + subject.storage_used_metric)
 
-      subject.storage_allocated_cost.should == @vm_allocated_disk_storage * @count_hourly_rate * @metric_size
-      subject.storage_used_cost.should == @vm_used_disk_storage * @count_hourly_rate * @metric_size
-      subject.storage_cost.should == subject.storage_allocated_cost + subject.storage_used_cost
+      expect(subject.storage_allocated_cost).to eq(@vm_allocated_disk_storage * @count_hourly_rate * @metric_size)
+      expect(subject.storage_used_cost).to eq(@vm_used_disk_storage * @count_hourly_rate * @metric_size)
+      expect(subject.storage_cost).to eq(subject.storage_allocated_cost + subject.storage_used_cost)
     end
 
     context "by owner" do
@@ -323,12 +323,12 @@ describe Chargeback do
       end
 
       it "valid" do
-        subject.owner_name.should == @user.name
+        expect(subject.owner_name).to eq(@user.name)
       end
 
       it "not exist" do
         @user.delete
-        -> { subject }.should raise_error(MiqException::Error, "Unable to find user '#{@user.userid}'")
+        expect { subject }.to raise_error(MiqException::Error, "Unable to find user '#{@user.userid}'")
       end
     end
   end

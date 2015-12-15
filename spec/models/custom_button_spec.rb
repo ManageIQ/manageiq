@@ -5,12 +5,12 @@ describe CustomButton do
     before(:each) do
       @miq_server = EvmSpecHelper.local_miq_server(:is_master => true, :zone => Zone.seed)
 
-      User.any_instance.stub(:role).and_return("admin")
+      allow_any_instance_of(User).to receive(:role).and_return("admin")
       @user = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
     end
 
     it "should validate there are no buttons" do
-      described_class.count.should == 0
+      expect(described_class.count).to eq(0)
     end
 
     context "when I create a button via save_as_button class method" do
@@ -39,15 +39,15 @@ describe CustomButton do
       end
 
       it "creates the proper button" do
-        described_class.count.should == 1
-        @button.uri_path.should eq('/System/Process/Automation')
-        @button.applies_to_id.should eq(@target_id)
-        @button.uri_object_name.should == @ae_name
-        @ae_attributes.each { |key, value| @button.uri_attributes[key].should == value.to_s }
+        expect(described_class.count).to eq(1)
+        expect(@button.uri_path).to eq('/System/Process/Automation')
+        expect(@button.applies_to_id).to eq(@target_id)
+        expect(@button.uri_object_name).to eq(@ae_name)
+        @ae_attributes.each { |key, value| expect(@button.uri_attributes[key]).to eq(value.to_s) }
 
         # These attributes are not longer stored with the button
-        @button.uri_attributes['User::user'].should be_nil
-        @button.uri_attributes['MiqServer::miq_server'].should be_nil
+        expect(@button.uri_attributes['User::user']).to be_nil
+        expect(@button.uri_attributes['MiqServer::miq_server']).to be_nil
       end
 
       context "when invoking for a particular VM" do
@@ -59,22 +59,22 @@ describe CustomButton do
         it "calls automate without saved User and MiqServer" do
           User.with_user(@user2) { @button.invoke(@vm) }
 
-          MiqQueue.count.should == 1
+          expect(MiqQueue.count).to eq(1)
           q = MiqQueue.first
-          q.class_name.should == "MiqAeEngine"
-          q.method_name.should == "deliver"
-          q.role.should == "automate"
-          q.zone.should eq("default")
-          q.priority.should == MiqQueue::HIGH_PRIORITY
+          expect(q.class_name).to eq("MiqAeEngine")
+          expect(q.method_name).to eq("deliver")
+          expect(q.role).to eq("automate")
+          expect(q.zone).to eq("default")
+          expect(q.priority).to eq(MiqQueue::HIGH_PRIORITY)
           a = q.args
-          a.should be_kind_of(Array)
+          expect(a).to be_kind_of(Array)
           h = a.first
-          h.should be_kind_of(Hash)
-          h[:user_id].should == @user2.id
-          h[:object_type].should == @vm.class.base_class.name
-          h[:object_id].should == @vm.id
+          expect(h).to be_kind_of(Hash)
+          expect(h[:user_id]).to eq(@user2.id)
+          expect(h[:object_type]).to eq(@vm.class.base_class.name)
+          expect(h[:object_id]).to eq(@vm.id)
           expect(h[:attrs]).to include(@ae_attributes)
-          h[:instance_name].should == @ae_name
+          expect(h[:instance_name]).to eq(@ae_name)
         end
       end
     end
@@ -98,10 +98,10 @@ describe CustomButton do
                                     :name        => "foo",
                                     :description => "foo foo")
 
-    described_class.buttons_for(Host).should == []
-    described_class.buttons_for(Vm).should == [button1all]
-    described_class.buttons_for(vm).should  match_array([button1vm, button2vm])
-    described_class.buttons_for(vm_other).should == []
+    expect(described_class.buttons_for(Host)).to eq([])
+    expect(described_class.buttons_for(Vm)).to eq([button1all])
+    expect(described_class.buttons_for(vm)).to  match_array([button1vm, button2vm])
+    expect(described_class.buttons_for(vm_other)).to eq([])
   end
 
   it "#save" do
@@ -112,7 +112,7 @@ describe CustomButton do
     ra.ae_message = "new message"
     button.save
 
-    button.reload.resource_action.ae_message.should == 'new message'
+    expect(button.reload.resource_action.ae_message).to eq('new message')
   end
 
   context "validates uniqueness" do
@@ -126,37 +126,37 @@ describe CustomButton do
                                               :applies_to_class => 'Vm',
                                               :name             => @default_name,
                                               :description      => @default_description)
-      button_for_all_vms.should be_valid
+      expect(button_for_all_vms).to be_valid
 
       new_host_button = described_class.new(
         :applies_to_class => 'Host',
         :name             => @default_name,
         :description      => @default_description)
-      new_host_button.should be_valid
+      expect(new_host_button).to be_valid
 
       dup_vm_button = described_class.new(
         :applies_to_class => 'Vm',
         :name             => @default_name,
         :description      => @default_description)
-      dup_vm_button.should_not be_valid
+      expect(dup_vm_button).not_to be_valid
 
       dup_vm_name_button = described_class.new(
         :applies_to_class => 'Vm',
         :name             => @default_name,
         :description      => "hello world")
-      dup_vm_name_button.should_not be_valid
+      expect(dup_vm_name_button).not_to be_valid
 
       dup_vm_desc_button = described_class.new(
         :applies_to_class => 'Vm',
         :name             => "hello",
         :description      => @default_description)
-      dup_vm_desc_button.should_not be_valid
+      expect(dup_vm_desc_button).not_to be_valid
 
       new_vm_button = described_class.new(
         :applies_to_class => 'Vm',
         :name             => "hello",
         :description      => "hello world")
-      new_vm_button.should be_valid
+      expect(new_vm_button).to be_valid
     end
 
     it "applies_to_instance" do
@@ -168,57 +168,57 @@ describe CustomButton do
                                                 :applies_to  => @vm,
                                                 :name        => @default_name,
                                                 :description => @default_description)
-      button_for_single_vm.should be_valid
+      expect(button_for_single_vm).to be_valid
 
       # For same VM
       dup_vm_button = described_class.new(
         :applies_to  => @vm,
         :name        => @default_name,
         :description => @default_description)
-      dup_vm_button.should_not be_valid
+      expect(dup_vm_button).not_to be_valid
 
       dup_vm_name_button = described_class.new(
         :applies_to  => @vm,
         :name        => @default_name,
         :description => "hello world")
-      dup_vm_name_button.should_not be_valid
+      expect(dup_vm_name_button).not_to be_valid
 
       dup_vm_desc_button = described_class.new(
         :applies_to  => @vm,
         :name        => "hello",
         :description => @default_description)
-      dup_vm_desc_button.should_not be_valid
+      expect(dup_vm_desc_button).not_to be_valid
 
       new_vm_button = described_class.new(
         :applies_to  => @vm,
         :name        => "hello",
         :description => "hello world")
-      new_vm_button.should be_valid
+      expect(new_vm_button).to be_valid
 
       # For other VM
       dup_vm_button = described_class.new(
         :applies_to  => vm_other,
         :name        => @default_name,
         :description => @default_description)
-      dup_vm_button.should be_valid
+      expect(dup_vm_button).to be_valid
 
       dup_vm_name_button = described_class.new(
         :applies_to  => vm_other,
         :name        => @default_name,
         :description => "hello world")
-      dup_vm_name_button.should be_valid
+      expect(dup_vm_name_button).to be_valid
 
       dup_vm_desc_button = described_class.new(
         :applies_to  => vm_other,
         :name        => "hello",
         :description => @default_description)
-      dup_vm_desc_button.should be_valid
+      expect(dup_vm_desc_button).to be_valid
 
       new_vm_button = described_class.new(
         :applies_to  => vm_other,
         :name        => "hello",
         :description => "hello world")
-      new_vm_button.should be_valid
+      expect(new_vm_button).to be_valid
     end
   end
 end

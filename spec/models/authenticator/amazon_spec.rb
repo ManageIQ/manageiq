@@ -124,12 +124,12 @@ describe Authenticator::Amazon do
   end
 
   before(:each) do
-    allow_any_instance_of(described_class).to receive(:aws_connect) { |*args| FakeAmazon.new(user_data, *args) }
+    allow_any_instance_of(described_class).to receive(:aws_connect) { |instance, *args| FakeAmazon.new(user_data, *args) }
   end
 
   describe '#uses_stored_password?' do
     it "is false" do
-      expect(subject.uses_stored_password?).to be_false
+      expect(subject.uses_stored_password?).to be_falsey
     end
   end
 
@@ -456,7 +456,7 @@ describe Authenticator::Amazon do
             task_id = authenticate
             task = MiqTask.find(task_id)
             expect(task.status).to eq('Error')
-            expect(MiqTask.status_error?(task.status)).to be_true
+            expect(MiqTask.status_error?(task.status)).to be_truthy
           end
         end
       end

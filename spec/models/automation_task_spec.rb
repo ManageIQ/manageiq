@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe AutomationTask do
   before(:each) do
-    MiqServer.stub(:my_zone).and_return("default")
+    allow(MiqServer).to receive(:my_zone).and_return("default")
     admin         = FactoryGirl.create(:user_admin)
 
     @ae_instance = "IIII"
@@ -20,8 +20,8 @@ describe AutomationTask do
   end
 
   it "#execute" do
-    MiqAeEngine.should_receive(:deliver).once
+    expect(MiqAeEngine).to receive(:deliver).once
     @at.execute
-    @ar.reload.message.should == "#{AutomationRequest::TASK_DESCRIPTION} initiated"
+    expect(@ar.reload.message).to eq("#{AutomationRequest::TASK_DESCRIPTION} initiated")
   end
 end

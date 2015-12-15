@@ -31,7 +31,7 @@ describe DialogFieldDateControl do
         let(:dynamic) { true }
 
         before do
-          DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("2015-01-02")
+          allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return("2015-01-02")
         end
 
         it "returns the values from the value processor" do
@@ -43,7 +43,7 @@ describe DialogFieldDateControl do
         let(:dynamic) { false }
 
         before do
-          described_class.stub(:server_timezone).and_return("UTC")
+          allow(described_class).to receive(:server_timezone).and_return("UTC")
         end
 
         it "returns tomorrow's date" do
@@ -66,7 +66,7 @@ describe DialogFieldDateControl do
     end
 
     before do
-      described_class.stub(:server_timezone).and_return("UTC")
+      allow(described_class).to receive(:server_timezone).and_return("UTC")
     end
 
     shared_examples_for "DialogFieldDateControl#normalize_automate_values" do
@@ -75,11 +75,11 @@ describe DialogFieldDateControl do
       end
 
       it "sets the show_past_dates" do
-        expect(dialog_field.show_past_dates).to be_true
+        expect(dialog_field.show_past_dates).to be_truthy
       end
 
       it "sets the read_only" do
-        expect(dialog_field.read_only).to be_true
+        expect(dialog_field.read_only).to be_truthy
       end
     end
 
@@ -132,7 +132,7 @@ describe DialogFieldDateControl do
     let(:dialog_field) { described_class.new }
 
     before do
-      DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("2015-01-02")
+      allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return("2015-01-02")
     end
 
     it "returns the values from the value processor" do
@@ -177,19 +177,19 @@ describe DialogFieldDateControl do
 
   context "#show_past_dates" do
     it "default" do
-      subject.show_past_dates.should == false
+      expect(subject.show_past_dates).to eq(false)
     end
 
     it "when true" do
       subject.show_past_dates = true
-      subject.options[:show_past_dates].should be_true
-      subject.show_past_dates.should be_true
+      expect(subject.options[:show_past_dates]).to be_truthy
+      expect(subject.show_past_dates).to be_truthy
     end
 
     it "when false" do
       subject.show_past_dates = false
-      subject.options[:show_past_dates].should be_false
-      subject.show_past_dates.should be_false
+      expect(subject.options[:show_past_dates]).to be_falsey
+      expect(subject.show_past_dates).to be_falsey
     end
   end
 end
