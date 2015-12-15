@@ -549,11 +549,7 @@ class VmOrTemplate < ActiveRecord::Base
 
   # Generates the contents of the RSS feed that lists VMs that fail policy
   def self.rss_fails_policy(_name, options)
-    result = []
-    vms = find(:all,
-               :order => options[:orderby],
-               :limit => options[:limit_to_count]
-              ).each do|vm|
+    order(options[:orderby]).limit(options[:limit_to_count]).each_with_object([]) do |vm, result|
       rec = OpenStruct.new(vm.attributes)
       if vm.host.nil?
         rec.host_name = "unknown"
@@ -573,7 +569,6 @@ class VmOrTemplate < ActiveRecord::Base
         end
       end
     end
-    result
   end
 
   def vendor

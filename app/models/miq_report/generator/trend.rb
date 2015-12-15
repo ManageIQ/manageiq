@@ -35,11 +35,8 @@ module MiqReport::Generator::Trend
       trend_klass = db_options[:trend_db].kind_of?(Class) ? db_options[:trend_db] : Object.const_get(db_options[:trend_db])
 
       time_range_cond = ["timestamp BETWEEN ? AND ?", start_time, end_time]
-      recs = VimPerformanceDaily.find(:all,
-                                      :conditions  => VimPerformanceDaily.merge_conditions(where_clause, time_range_cond),
-                                      :include     => includes,
-                                      :ext_options => {:class => trend_klass, :only_cols => only_cols, :reflections => associations, :tz => tz, :time_profile => time_profile}
-                                     )
+      recs = VimPerformanceDaily.find_entries(:class => trend_klass, :tz => tz, :time_profile => time_profile)
+             .where(where_clause).where(time_range_cond).includes(includes)
       results = Rbac.filtered(recs, :class        => db_options[:trend_db],
                                     :filter       => db_options[:trend_filter],
                                     :userid       => options[:userid],

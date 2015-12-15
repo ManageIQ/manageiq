@@ -195,7 +195,8 @@ module OpsController::Settings::CapAndU
 
     @edit[:current][:storages] = []
     @st_recs = {}
-    Storage.in_my_region.all(:include => [:taggings, :tags, :hosts], :select => "id, name, store_type, location").sort_by { |s| s.name.downcase }.each do |s|
+    Storage.in_my_region.includes(:taggings, :tags, :hosts).select(:id, :name, :store_type, :location)
+      .sort_by { |s| s.name.downcase }.each do |s|
       @st_recs[s.id] = s
       @edit[:current][:storages].push(:name       => s.name,
                                       :id         => s.id,

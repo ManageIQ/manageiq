@@ -237,8 +237,7 @@ module ReportController::Widgets
         @view, @pages = get_view(MiqWidget, :where_clause => ["content_type=?", nodeid])
       else
         # get all widgets for passed in report id
-        # @view, @pages = get_view(MiqWidget, :where_clause=>["content_type=? AND resource_id=?",nodeid, rep_id])
-        @widget_nodes = MiqWidget.all(:conditions => ["content_type = ? AND resource_id = ?", "report", rep_id])
+        @widget_nodes = MiqWidget.where(:content_type => "report", :resource_id => rep_id)
       end
     end
 

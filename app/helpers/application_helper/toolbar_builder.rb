@@ -928,8 +928,8 @@ class ApplicationHelper::ToolbarBuilder
     return true if ["button_add", "button_save", "button_reset"].include?(id) && !@changed
 
     # need to add this here, since this button is on list view screen
-    if @layout == "pxe" && id == "iso_datastore_new"
-      return "No #{ui_lookup(:tables => "ext_management_system")} are available to create an ISO Datastore on" if ManageIQ::Providers::Redhat::InfraManager.find(:all).delete_if { |e| !e.iso_datastore.nil? }.count <= 0
+    if @layout == "pxe" && id == "iso_datastore_new" && ManageIQ::Providers::Redhat::InfraManager.datastore?
+      return "No #{ui_lookup(:tables => "ext_management_system")} are available to create an ISO Datastore on"
     end
 
     case get_record_cls(@record)

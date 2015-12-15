@@ -16,7 +16,7 @@ class VmdbStorageBridge
 
   def initialize
     @zone = MiqServer.my_server.zone.id
-    @agent  = CimVmdbAgent.find(:all, :conditions => {:agent_type => 'VMDB', :zone_id => @zone}).first
+    @agent  = CimVmdbAgent.find_by(:agent_type => 'VMDB', :zone_id => @zone)
     @agent  = CimVmdbAgent.add(nil, nil, nil, 'VMDB', @zone, "VMDB-#{@zone}") unless @agent
   end
 

@@ -140,7 +140,7 @@ class TimeProfile < ActiveRecord::Base
     end
   end
 
-  def for_user_tz?(user_id, user_tz)
+  def match_user_tz?(user_id, user_tz)
     user_id = user_id.to_s
     tz == user_tz &&
       (profile_type == "global" ||
@@ -180,7 +180,7 @@ class TimeProfile < ActiveRecord::Base
   end
 
   def self.profile_for_user_tz(user_id, user_tz)
-    TimeProfile.rollup_daily_metrics.detect { |tp| tp.for_user_tz?(user_id, user_tz) }
+    TimeProfile.rollup_daily_metrics.detect { |tp| tp.match_user_tz?(user_id, user_tz) }
   end
 
   def self.default_time_profile(tz = DEFAULT_TZ)

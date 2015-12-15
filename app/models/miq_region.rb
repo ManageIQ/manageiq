@@ -226,7 +226,7 @@ class MiqRegion < ActiveRecord::Base
     total_hosts   = 0
     total_sockets = 0
 
-    ExtManagementSystem.all(:order => :id).each do |e|
+    ExtManagementSystem.all.each do |e|
       vms     = e.all_vms_and_templates.count
       hosts   = e.all_hosts.count
       sockets = e.aggregate_physical_cpus

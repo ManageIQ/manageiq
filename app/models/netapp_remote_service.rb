@@ -172,8 +172,8 @@ class NetappRemoteService < StorageManager
   end
 
   def self.agent_query(nrsIds)
-    return where(:conditions => {:agent_type => DEFAULT_AGENT_TYPE, :zone_id => MiqServer.my_server.zone.id}) if nrsIds.empty?
-    where(:id => nrsIds)
+    return where(:id => nrsIds) if nrsIds.present?
+    where(:agent_type => DEFAULT_AGENT_TYPE, :zone_id => MiqServer.my_server.zone.id)
   end
 
   def self.update_ontap(nrsIds = [])
@@ -329,27 +329,21 @@ class NetappRemoteService < StorageManager
   end
 
   def self.aggregate_names(oss)
-    ocea = MiqCimInstance.find(:all,  :conditions => {
-                                 :class_name             => "ONTAP_ConcreteExtent",
-                                 :top_managed_element_id => oss.id
-                               })
-    ocea.collect { |oce| oce.property('name') }
+    MiqCimInstance.select(:id, :properites)
+      .where(:class_name => "ONTAP_ConcreteExtent", :top_managed_element_id => oss.id)
+      .collect { |oce| oce.property('name') }
   end
 
   def self.volume_names(oss)
-    olda = MiqCimInstance.find(:all,  :conditions => {
-                                 :class_name             => "ONTAP_LogicalDisk",
-                                 :top_managed_element_id => oss.id
-                               })
-    olda.collect { |old| old.property('name') }
+    MiqCimInstance.select(:id, :properites)
+      .where(:class_name => "ONTAP_LogicalDisk", :top_managed_element_id => oss.id)
+      .collect { |old| old.property('name') }
   end
 
   def self.remote_service_ips(oss)
-    rsapa = MiqCimInstance.find(:all,  :conditions => {
-                                  :class_name             => "ONTAP_RemoteServiceAccessPoint",
-                                  :top_managed_element_id => oss.id
-                                })
-    rsapa.collect { |rsap| rsap.property('name').split(':').first }
+    MiqCimInstance.select(:id, :properites)
+      .where(:class_name => "ONTAP_RemoteServiceAccessPoint", :top_managed_element_id => oss.id)
+      .collect { |rsap| rsap.property('name').split(':').first }
   end
 
   def self.find_controller_by_ip(ip)

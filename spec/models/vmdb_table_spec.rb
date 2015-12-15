@@ -246,7 +246,7 @@ EOF
         task_id = VmdbTable.export_queue(@ids.first, :userid => "admin", :action => "Export Tables")
         task_id.should be_kind_of(Integer)
 
-        q = MiqQueue.first(:conditions => {:class_name  => "VmdbTable", :method_name => "export_all_by_id"})
+        q = MiqQueue.find_by(:class_name => "VmdbTable", :method_name => "export_all_by_id")
         q.should_not be_nil
 
         q.delivered(*q.deliver)
@@ -261,7 +261,7 @@ EOF
         taskid = VmdbTable.export_queue(@ids, :userid => "admin", :action => "Export Tables")
         taskid.should be_kind_of(Integer)
 
-        q = MiqQueue.first(:conditions => {:class_name  => "VmdbTable", :method_name => "export_all_by_id"})
+        q = MiqQueue.find_by(:class_name => "VmdbTable", :method_name => "export_all_by_id")
         q.should_not be_nil
 
         q.delivered(*q.deliver)
@@ -291,51 +291,50 @@ EOF
       context "last" do
         it "without conditions" do
           t = VmdbTable.vmdb_table_names.last
-          VmdbTable.find(:last).name.should == t
           VmdbTable.last.name.should == t
         end
 
         it "with conditions" do
           t = VmdbTable.vmdb_table_names.third
-          VmdbTable.find(:last, :conditions => {:id => [2, 3]}).name.should == t
-          VmdbTable.last(:conditions => {:id => [2, 3]}).name.should == t
+          VmdbTable.where(:id => [2, 3]).last.name.should == t
         end
       end
 
       context "all" do
         it "without conditions" do
           t = VmdbTable.vmdb_table_names
-          VmdbTable.find(:all).collect(&:name).should == t
-          VmdbTable.all.collect(&:name).should == t
+          expect(VmdbTable.all.collect(&:name)).to eq(t)
+        end
+      end
+
+      context ".where" do
+        it "without conditions" do
+          t = VmdbTable.vmdb_table_names
+          expect(VmdbTable.where({}).collect(&:name)).to eq(t)
         end
 
         context "with conditions" do
           it "of an array of ids" do
             t = VmdbTable.vmdb_table_names[0, 2]
-            VmdbTable.find(:all, :conditions => {:id => [1, 2]}).collect(&:name).should == t
-            VmdbTable.all(:conditions => {:id => [1, 2]}).collect(&:name).should == t
+            expect(VmdbTable.where(:id => [1, 2]).collect(&:name)).to eq(t)
           end
 
           it "of a single id" do
             t = [VmdbTable.vmdb_table_names.second]
-            VmdbTable.find(:all, :conditions => {:id => 2}).collect(&:name).should == t
-            VmdbTable.all(:conditions => {:id => 2}).collect(&:name).should == t
+            expect(VmdbTable.where(:id => 1).collect(&:name)).to eq(t)
           end
 
           it "of an array of invalid ids" do
-            VmdbTable.find(:all, :conditions => {:id => [650, 651]}).collect(&:name).should be_empty
-            VmdbTable.all(:conditions => {:id => [650, 651]}).collect(&:name).should        be_empty
+            expect(VmdbTable.where(:id => [650, 651])).to be_empty
           end
 
           it "of an array of both invalid and valid ids" do
             t = [VmdbTable.vmdb_table_names.first]
-            VmdbTable.find(:all, :conditions => {:id => [650, 1]}).collect(&:name).should == t
-            VmdbTable.all(:conditions => {:id => [650, 1]}).collect(&:name).should == t
+            expect(VmdbTable.where(:id => [650, 1]).collect(&:name)).to eq(t)
           end
 
           it "of a single invalid id" do
-            VmdbTable.find(:all, :conditions => {:id => 650}).should be_empty
-            VmdbTable.all(:conditions => {:id => 650}).should        be_empty
+            expect(VmdbTable.where(:id => 650)).to be_empty
           end
         end
       end

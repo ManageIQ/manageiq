@@ -5,7 +5,7 @@
 fixed_vms = []
 rels_to_delete = []
 
-Vm.all(:include => :all_relationships).each do |v|
+Vm.includes(:all_relationships).each do |v|
   begin
     v.parent_resource_pool
   rescue ActiveRecord::RecordNotFound => err

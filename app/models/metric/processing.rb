@@ -118,7 +118,7 @@ module Metric::Processing
     end
 
     last_perf = {}
-    obj.send(meth).all(:conditions => cond, :order => "timestamp, capture_interval_name").each do |perf|
+    obj.send(meth).where(cond).order("timestamp, capture_interval_name").each do |perf|
       interval = interval_name_to_interval(perf.capture_interval_name)
       last_perf[interval] = perf if last_perf[interval].nil?
 

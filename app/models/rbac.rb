@@ -526,7 +526,7 @@ module Rbac
     if ar_scope == VmdbDatabaseConnection || ar_scope == VmdbDatabaseSetting
       ar_scope.all
     elsif ar_scope < ActsAsArModel || (ar_scope.respond_to?(:instances_are_derived?) && ar_scope.instances_are_derived?)
-      ar_scope.find(:all, options)
+      ar_scope.all(options)
     else
       ar_scope.apply_legacy_finder_options(options)
     end

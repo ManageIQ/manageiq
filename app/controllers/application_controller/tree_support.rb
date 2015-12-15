@@ -46,7 +46,7 @@ module ApplicationController::TreeSupport
   # Build a compliance history tree
   def compliance_history_tree(rec, count)
     t_kids = []                          # Array to hold node children
-    rec.compliances.all(:limit => count, :order => "timestamp DESC").each do |c|
+    rec.compliances.order("timestamp DESC").limit(count).each do |c|
       c_node = TreeNodeBuilder.generic_tree_node(
         "c_#{c.id}",
         format_timezone(c.timestamp, Time.zone, 'gtl'),
@@ -59,7 +59,7 @@ module ApplicationController::TreeSupport
       temp_pol_id = nil
       p_node = {}
       p_kids = []
-      c.compliance_details.all(:order => "miq_policy_desc, condition_desc").each do |d|
+      c.compliance_details.order("miq_policy_desc, condition_desc").each do |d|
         if d.miq_policy_id != temp_pol_id
           unless p_node.empty?
             p_node[:children] = p_kids unless p_kids.empty?

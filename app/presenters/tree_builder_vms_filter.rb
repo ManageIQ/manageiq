@@ -28,7 +28,7 @@ class TreeBuilderVmsFilter < TreeBuilder
     objects = MiqSearch.where(:db => options[:leaf])
     objects = case object[:id]
               when "global" # Global filters
-                objects.where("search_type=? or (search_type=? and (search_key is null or search_key<>?))", "global", "default", "_hidden_")
+                objects.visible_to_all
               when "my"     # My filters
                 objects.where(:search_type => "user", :search_key => User.current_user.userid)
               end

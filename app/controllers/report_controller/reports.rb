@@ -81,8 +81,8 @@ module ReportController::Reports
   def miq_report_delete
     assert_privileges("miq_report_delete")
     rpt = MiqReport.find(params[:id])
-    report_widgets = MiqWidget.all(:conditions => {:resource_id => rpt.id})
-    if report_widgets.length > 0
+
+    if rpt.widgets.exist?
       add_flash(_("Report cannot be deleted if it's being used by one or more Widgets"), :error)
       render :update do |page|
         page.replace("flash_msg_div_report_list", :partial => "layouts/flash_msg", :locals => {:div_num => "_report_list"})
@@ -183,19 +183,11 @@ module ReportController::Reports
     end
 
     if @sb[:active_tab] == "report_info"
-      if super_admin_user? # Super admins see all report schedules
-        schedules = MiqSchedule.all(:conditions => ["towhat=?", "MiqReport"])
-      else
-        schedules = MiqSchedule.all(:conditions => ["towhat=? AND userid=?", "MiqReport", session[:userid]])
-      end
-      @schedules = []
-      schedules.sort_by(&:name).each do |s|
-        if s.filter.exp["="]["value"].to_i == @miq_report.id.to_i
-          @schedules.push(s)
-        end
-      end
+      schedules = MiqSchedule.where(:towhat => "MiqReport")
+      schedules = schedules.where(:userid => current_userid) unless super_admin_user?
+      @schedules = schedules.select { |s| s.filter.exp["="]["value"].to_i == @miq_report.id.to_i }.sort_by(&:name)
 
-      @widget_nodes = MiqWidget.all(:conditions => ["resource_id = ?", @miq_report.id.to_i])
+      @widget_nodes = @miq_report.widgets.to_a
     end
 
     @sb[:tree_typ]   = "reports"

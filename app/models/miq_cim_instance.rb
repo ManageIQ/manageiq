@@ -81,11 +81,9 @@ class MiqCimInstance < ActiveRecord::Base
     # should be returned, because the true status of the instance can only be determined when the full
     # scan is complete.
     #
-    aa = MiqSmisAgent.find(:all, :conditions => [
-      "zone_id = ? and (last_update_status = ? or last_update_status = ?)",
-      zone_id, STORAGE_UPDATE_IN_PROGRESS, STORAGE_UPDATE_PENDING
-    ])
-    return "In Progress"    unless aa.empty?
+    aa = MiqSmisAgent.where(:zone_id            => zone_id,
+                            :last_update_status => [STORAGE_UPDATE_IN_PROGRESS, STORAGE_UPDATE_PENDING])
+    return "In Progress"    unless aa.exists?
     return "Agent Inaccessible" if last_update_status == STORAGE_UPDATE_AGENT_INACCESSIBLE
 
     if last_update_status == STORAGE_UPDATE_NO_AGENT
@@ -119,35 +117,19 @@ class MiqCimInstance < ActiveRecord::Base
   def last_capture(interval_name = "hourly")
     return nil unless has_metrics?
     if interval_name == "realtime"
-      perf = metrics.miq_derived_metrics.first(
-        :select => "statistic_time",
-        :order  => "statistic_time DESC"
-      )
+      metrics.miq_derived_metrics.maximum("statistic_time")
     else
-      perf = metrics.miq_metrics_rollups.first(
-        :select     => "statistic_time",
-        :conditions => {:rollup_type => interval_name},
-        :order      => "statistic_time DESC"
-      )
+      metrics.miq_metrics_rollups.where(:rollup_type => interval_name).maximum("statistic_time")
     end
-    perf.nil? ? nil : perf.statistic_time
   end
 
   def first_capture(interval_name = "hourly")
     return nil unless has_metrics?
     if interval_name == "realtime"
-      perf = metrics.miq_derived_metrics.first(
-        :select => "statistic_time",
-        :order  => "statistic_time ASC"
-      )
+      metrics.miq_derived_metrics.minimum("statistic_time")
     else
-      perf = metrics.miq_metrics_rollups.first(
-        :select     => "statistic_time",
-        :conditions => {:rollup_type => interval_name},
-        :order      => "statistic_time ASC"
-      )
+      metrics.miq_metrics_rollups.where(:rollup_type => interval_name).minimum("statistic_time")
     end
-    perf.nil? ? nil : perf.statistic_time
   end
 
   def first_and_last_capture(interval_name = "hourly")

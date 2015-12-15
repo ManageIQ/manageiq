@@ -349,7 +349,7 @@ describe MiqAeCustomizationController do
 
     before do
       bypass_rescue
-      allow(ImportFileUpload).to receive(:first).with(:conditions => {:id => "123"}).and_return(import_file_upload)
+      allow(ImportFileUpload).to receive(:find_by).with(:id => "123").and_return(import_file_upload)
       allow(DialogImportService).to receive(:new).and_return(dialog_import_service)
     end
 

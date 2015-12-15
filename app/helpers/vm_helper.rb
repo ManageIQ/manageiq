@@ -9,9 +9,7 @@ module VmHelper
   end
 
   def last_date_processes
-    return nil if @record.operating_system.nil?
-    p = @record.operating_system.processes.first(:select => "updated_on", :order => "updated_on DESC")
-    p.nil? ? nil : p.updated_on
+    @record.operating_system && @record.operating_system.processes.max(:updated_on)
   end
 
   def set_controller_action

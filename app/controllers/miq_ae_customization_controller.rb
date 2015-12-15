@@ -68,7 +68,7 @@ class MiqAeCustomizationController < ApplicationController
   end
 
   def import_service_dialogs
-    import_file_upload = ImportFileUpload.first(:conditions => {:id => params[:import_file_upload_id]})
+    import_file_upload = ImportFileUpload.find_by(:id => params[:import_file_upload_id])
 
     if import_file_upload
       dialog_import_service.import_service_dialogs(import_file_upload, params[:dialogs_to_import])

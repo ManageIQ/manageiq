@@ -4,7 +4,7 @@ dir = Dir.pwd
 # ext = "xml"
 ext = "yaml"
 
-Policy.find(:all).each do |p|
+Policy.all.each do |p|
   fname = File.join(dir, "policy#{p.id}.#{ext}")
   puts "Creating #{fname}"
   f = File.new(fname, "w")

@@ -9,11 +9,8 @@ class CimBaseStorageExtent < ActsAsArModel
     CimStorageExtent._virtual_reflections
   end
 
-  def self.find(*args)
-    options = args.extract_options!
-    options[:conditions] = CimStorageExtent.merge_conditions(options[:conditions], :id => base_storage_extent_ids)
-    args << options
-    CimStorageExtent.find(*args)
+  def self.aar_scope
+    CimStorageExtent.where(:id => base_storage_extent_ids)
   end
 
   def self.base_storage_extent_ids

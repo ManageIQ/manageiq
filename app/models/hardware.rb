@@ -58,14 +58,13 @@ class Hardware < ActiveRecord::Base
     deletes = {:gd => [], :disk => []}
 
     # Excluding ethernet devices from deletes because the refresh is the master of the data and it will handle the deletes.
-    deletes[:gd] = parent.hardware.guest_devices.find(:all,
-                                                      :conditions => ["device_type != ?", "ethernet"],
-                                                      :select     => "id, device_type, location, address"
-                                                     ).collect { |rec| [rec.id, [rec.device_type, rec.location, rec.address]] }
+    deletes[:gd] = parent.hardware.guest_devices
+                   .where.not(:device_type => "ethernet")
+                   .select(:id, :device_type, :location, :address)
+                   .collect { |rec| [rec.id, [rec.device_type, rec.location, rec.address]] }
 
-    deletes[:disk] = parent.hardware.disks.find(:all,
-                                                :select => "id, device_type, location"
-                                               ).collect { |rec| [rec.id, [rec.device_type, rec.location]] }
+    deletes[:disk] = parent.hardware.disks.select(:id, :device_type, :location)
+                     .collect { |rec| [rec.id, [rec.device_type, rec.location]] }
 
     xmlNode.root.each_recursive do |e|
       begin
@@ -106,8 +105,8 @@ class Hardware < ActiveRecord::Base
       end
 
       # Try to find the existing row
-      found = target.find_by_device_type_and_location(da["device_type"], da["location"])
-      found = target.find_by_device_type_and_address(da["device_type"], da["address"]) if found.nil? && !da["address"].nil?
+      found = target.find_by(:device_type => da["device_type"], :location => da["location"])
+      found ||= da["address"] && target.find_by(:device_type => da["device_type"], :address => da["address"])
       # Add or update the device
       if found.nil?
         target.create(da)
