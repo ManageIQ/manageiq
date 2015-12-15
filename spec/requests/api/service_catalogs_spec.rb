@@ -16,6 +16,8 @@
 # - Order service               /api/service_catalogs/:id/service_templates/:id action "order"
 # - Order services              /api/service_catalogs/:id/service_templates     action "order"
 #
+# - Refresh dialog fields       /api/service_catalogs/:id/service_templates/:id action "refresh_dialog_fields"
+#
 require 'spec_helper'
 
 describe ApiController do
@@ -25,8 +27,9 @@ describe ApiController do
     init_api_spec_env
   end
 
-  def sc_templates_url(id)
-    "#{service_catalogs_url(id)}/service_templates"
+  def sc_templates_url(id, st_id = nil)
+    st_base = "#{service_catalogs_url(id)}/service_templates"
+    st_id ? "#{st_base}/#{st_id}" : st_base
   end
 
   def app
@@ -324,7 +327,7 @@ describe ApiController do
       st1 = FactoryGirl.create(:service_template, :name => "service template 1")
       sc.service_templates = [st1]
 
-      run_post("#{sc_templates_url(sc.id)}/#{st1.id}", gen_request(:order))
+      run_post(sc_templates_url(sc.id, st1.id), gen_request(:order))
 
       expect_single_resource_query(order_request)
     end
@@ -341,6 +344,65 @@ describe ApiController do
                                                              {"href" => service_templates_url(st2.id)}]))
       expect_request_success
       expect_results_to_match_hash("results", [order_request, order_request])
+    end
+  end
+
+  describe "Service Catalogs service template refresh dialog fields" do
+    let(:dialog1) { FactoryGirl.create(:dialog, :label => "Dialog1") }
+    let(:tab1)    { FactoryGirl.create(:dialog_tab, :label => "Tab1") }
+    let(:group1)  { FactoryGirl.create(:dialog_group, :label => "Group1") }
+    let(:text1)   { FactoryGirl.create(:dialog_field_text_box, :label => "TextBox1", :name => "text1") }
+    let(:ra1)     { FactoryGirl.create(:resource_action, :action => "Provision", :dialog => dialog1) }
+    let(:st1)     { FactoryGirl.create(:service_template, :name => "service template 1") }
+    let(:sc)      { FactoryGirl.create(:service_template_catalog, :name => "sc", :description => "sc description") }
+
+    def init_st
+      sc.service_templates = [st1]
+      st1.resource_actions = [ra1]
+    end
+
+    def init_st_dialog
+      init_st
+      dialog1.dialog_tabs << tab1
+      tab1.dialog_groups << group1
+      group1.dialog_fields << text1
+    end
+
+    it "rejects refresh dialog fields requests without appropriate role" do
+      api_basic_authorize
+
+      run_post(sc_templates_url(sc.id, st1.id), gen_request(:refresh_dialog_fields, "fields" => %w(test1)))
+
+      expect_request_forbidden
+    end
+
+    it "rejects refresh dialog fields with unspecified fields" do
+      api_basic_authorize subcollection_action_identifier(:service_catalogs, :service_templates, :refresh_dialog_fields)
+      sc.service_templates = [st1]
+
+      run_post(sc_templates_url(sc.id, st1.id), gen_request(:refresh_dialog_fields))
+
+      expect_single_action_result(:success => false, :message => /must specify fields/i)
+    end
+
+    it "rejects refresh dialog fields of invalid fields" do
+      api_basic_authorize subcollection_action_identifier(:service_catalogs, :service_templates, :refresh_dialog_fields)
+      init_st_dialog
+
+      run_post(sc_templates_url(sc.id, st1.id), gen_request(:refresh_dialog_fields, "fields" => %w(bad_field)))
+
+      expect_single_action_result(:success => false, :message => /unknown dialog field bad_field/i)
+    end
+
+    it "supports refresh dialog fields of valid fields" do
+      api_basic_authorize subcollection_action_identifier(:service_catalogs, :service_templates, :refresh_dialog_fields)
+      init_st_dialog
+
+      run_post(sc_templates_url(sc.id, st1.id), gen_request(:refresh_dialog_fields, "fields" => %w(text1)))
+
+      expect_single_action_result(:success => true, :message => /refreshing dialog fields/i)
+      expect_hash_to_have_keys(@result, %w(success href service_template_id service_template_href result))
+      expect_hash_to_have_keys(@result["result"], %w(text1))
     end
   end
 end

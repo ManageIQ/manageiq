@@ -42,6 +42,16 @@ class ApiController
       klass.new.request_class.make_request(nil, options, @auth_user_obj)
     end
 
+    def service_templates_refresh_dialog_fields_resource(object, type, id = nil, data = nil)
+      raise BadRequestError, "Must specify an id for Refreshing dialog fields of a #{type} resource" unless id
+
+      service_template_subcollection_action(type, id) do |st|
+        api_log_info("Refreshing dialog fields for #{service_template_ident(st)}")
+
+        refresh_dialog_fields_service_template(object, st, data)
+      end
+    end
+
     private
 
     def service_template_ident(st)
@@ -89,6 +99,44 @@ class ApiController
       end
     rescue => err
       action_result(false, err)
+    end
+
+    def refresh_dialog_fields_service_template(_object, st, data = {})
+      dialog_fields = Hash(data["dialog_fields"])
+      refresh_fields = data["fields"]
+      return action_result(false, "Must specify fields to refresh") if refresh_fields.blank?
+
+      dialog = define_service_template_dialog(st, dialog_fields)
+      return action_result(false, "Service Template has no provision dialog defined") unless dialog
+
+      refresh_dialog_fields_action(st, dialog, dialog_fields, refresh_fields)
+    rescue => err
+      action_result(false, err)
+    end
+
+    def define_service_template_dialog(st, dialog_fields)
+      resource_action = st.resource_actions.find_by_action("Provision")
+      workflow = ResourceActionWorkflow.new({}, @auth_user_obj, resource_action, :target => st)
+      dialog_fields.each { |key, value| workflow.set_value(key, value) }
+      workflow.dialog
+    end
+
+    def refresh_dialog_fields_action(st, dialog, dialog_fields, refresh_fields)
+      result = {}
+      refresh_fields.each do |field|
+        dynamic_field = dialog.field(field)
+        return action_result(false, "Unknown dialog field #{field} specified") unless dynamic_field
+        unless dynamic_field.respond_to?(:refresh_json_value)
+          return action_result(false, "Dialog field #{field} specified cannot be refreshed")
+        end
+        result[field] =
+          if dynamic_field.method(:refresh_json_value).arity == 1
+            dynamic_field.refresh_json_value(dialog_fields[field] || "")
+          else
+            dynamic_field.refresh_json_value
+          end
+      end
+      action_result(true, "Refreshing dialog fields for #{service_template_ident(st)}", :result => result)
     end
   end
 end

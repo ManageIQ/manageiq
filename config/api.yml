@@ -700,6 +700,8 @@
         :identifier: catalogitem_delete
       - :name: order
         :identifier: svc_catalog_provision
+      - :name: refresh_dialog_fields
+        :identifier: svc_catalog_provision
       - :name: assign
         :identifier: st_catalog_edit
       - :name: unassign
@@ -716,6 +718,8 @@
       - :name: edit
         :identifier: catalogitem_edit
       - :name: order
+        :identifier: svc_catalog_provision
+      - :name: refresh_dialog_fields
         :identifier: svc_catalog_provision
       - :name: assign
         :identifier: st_catalog_edit
