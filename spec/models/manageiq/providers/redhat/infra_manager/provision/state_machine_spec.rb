@@ -54,6 +54,44 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
       end
     end
 
+    context "#autostart_destination" do
+      it "with use_cloud_init" do
+        expect(@task).to receive(:phase_context).and_return(:boot_with_cloud_init => true)
+        expect(@task).to receive(:get_option).with(:vm_auto_start).and_return(true)
+        allow(@task).to receive(:for_destination)
+        expect(@task).to receive(:update_and_notify_parent)
+
+        rhevm_vm = double("RHEVM VM")
+        expect(@task).to receive(:get_provider_destination).and_return(rhevm_vm)
+
+        xml = double("XML")
+        expect(xml).to receive(:use_cloud_init).with(true)
+        expect(rhevm_vm).to receive(:start).and_yield(xml)
+
+        expect(@task).to receive(:post_create_destination)
+
+        @task.autostart_destination
+      end
+
+      it "without use_cloud_init" do
+        expect(@task).to receive(:phase_context).and_return({})
+        expect(@task).to receive(:get_option).with(:vm_auto_start).and_return(true)
+        allow(@task).to receive(:for_destination)
+        expect(@task).to receive(:update_and_notify_parent)
+
+        rhevm_vm = double("RHEVM VM")
+        expect(@task).to receive(:get_provider_destination).and_return(rhevm_vm)
+
+        xml = double("XML")
+        expect(xml).not_to receive(:use_cloud_init)
+        expect(rhevm_vm).to receive(:start).and_yield(xml)
+
+        expect(@task).to receive(:post_create_destination)
+
+        @task.autostart_destination
+      end
+    end
+
     it "#customize_destination" do
       @task.stub(:get_provider_destination).and_return(nil)
       @task.stub(:update_and_notify_parent)
