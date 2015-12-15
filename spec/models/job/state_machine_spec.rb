@@ -30,28 +30,28 @@ describe Job::StateMachine do
 
   it "should transition from one state to another by a signal" do
     @obj.signal(:initializing)
-    @obj.state.should eq 'waiting'
+    expect(@obj.state).to eq 'waiting'
   end
 
   it "should transition to another by a signal according to its current state" do
     @obj.state = 'waiting'
     @obj.signal(:start)
-    @obj.state.should eq 'doing'
+    expect(@obj.state).to eq 'doing'
 
     @obj.state = 'retrying'
     @obj.signal(:start)
-    @obj.state.should eq 'working'
+    expect(@obj.state).to eq 'working'
   end
 
   it "should transition to some selected state from any state" do
     @obj.signal(:cancel)
-    @obj.state.should eq 'canceling'
+    expect(@obj.state).to eq 'canceling'
   end
 
   it "should leave the state unchanged for some selected signal" do
     @obj.state = 'doing'
     @obj.signal(:error)
-    @obj.state.should eq 'doing'
+    expect(@obj.state).to eq 'doing'
   end
 
   it "should raise an error if the transition is not allowed" do

@@ -127,7 +127,11 @@ describe Authenticator::Amazon do
     allow_any_instance_of(described_class).to receive(:aws_connect) { |*args| FakeAmazon.new(user_data, *args) }
   end
 
-  its(:uses_stored_password?) { should be_false }
+  describe '#uses_stored_password?' do
+    it "is false" do
+      expect(subject.uses_stored_password?).to be_false
+    end
+  end
 
   describe '#lookup_by_identity' do
     it "finds existing users" do
