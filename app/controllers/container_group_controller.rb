@@ -10,7 +10,15 @@ class ContainerGroupController < ApplicationController
     process_show_list
   end
 
-  private ############################
+  def data
+    render :json => {:data => collect_data(params[:id])}
+  end
+
+  private
+
+  def collect_data(project_id)
+    ContainerGroupDashboardService.new(project_id, self).all_data
+  end
 
   def display_name
     "Pods"

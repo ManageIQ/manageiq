@@ -1,0 +1,24 @@
+<div ng-app="containerProjectDashboard" ng-controller="containerProjectDashboardController as dashboard" class="container-fluid container-tiles-pf containers-dashboard miq-dashboard-view single-provider-containers-dashboard">
+    <div class="row row-tile-pf" >
+        <div class="col-xs-7 col-sm-7 col-md-7 project-objects-status">
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-4">
+                    <div  pf-aggregate-status-card status="objectStatus.container_groups" url="navigation" show-top-border="true" layout="mini"></div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-4">
+                    <div  pf-aggregate-status-card status="objectStatus.container_routes" url="navigation" show-top-border="true" layout="mini"></div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-4">
+                    <div  pf-aggregate-status-card status="objectStatus.container_services" url="navigation" show-top-border="true" layout="mini" class="card-pf-title-container-dash"></div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-4">
+                    <div  pf-aggregate-status-card status="objectStatus.container_nodes" url="navigation" show-top-border="true" layout="mini" class="card-pf-title-container-dash"></div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-4">
+                    <div  pf-aggregate-status-card status="objectStatus.container_replicators" url="navigation" show-top-border="true" layout="mini" class="card-pf-title-container-dash"></div>
+                </div>
+            </div><!-- /row -->
+        </div>
+    </div><!-- /row -->
+</div>
+

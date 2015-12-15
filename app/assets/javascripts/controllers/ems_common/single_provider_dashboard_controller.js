@@ -6,17 +6,7 @@ angular.module('containerDashboard')
         function($scope, containerDashboardUtils, $http, $interval, $location) {
             document.getElementById("center_div").className += " miq-body";
 
-            $scope.objectStatus = {
-                providers:  containerDashboardUtils.createProvidersStatus(),
-                nodes:      containerDashboardUtils.createNodesStatus(),
-                containers: containerDashboardUtils.createContainersStatus(),
-                registries: containerDashboardUtils.createRegistriesStatus(),
-                projects:   containerDashboardUtils.createProjectsStatus(),
-                pods:       containerDashboardUtils.createPodsStatus(),
-                services:   containerDashboardUtils.createServicesStatus(),
-                images:     containerDashboardUtils.createImagesStatus(),
-                routes:     containerDashboardUtils.createRoutesStatus()
-            };
+            $scope.objectStatus = containerDashboardUtils.createAllStatuses();
 
             $scope.refresh = function() {
                 var id = '/'+ (/ems_container\/show\/(\d+)/.exec($location.absUrl())[1]);
@@ -28,14 +18,7 @@ angular.module('containerDashboard')
                     var data = response.data;
                     $scope.providerTypeIconClass = data.providers.iconClass;
 
-                    containerDashboardUtils.updateStatus($scope.objectStatus.nodes,      data.status.nodes);
-                    containerDashboardUtils.updateStatus($scope.objectStatus.containers, data.status.containers);
-                    containerDashboardUtils.updateStatus($scope.objectStatus.registries, data.status.registries);
-                    containerDashboardUtils.updateStatus($scope.objectStatus.projects,   data.status.projects);
-                    containerDashboardUtils.updateStatus($scope.objectStatus.pods,       data.status.pods);
-                    containerDashboardUtils.updateStatus($scope.objectStatus.services,   data.status.services);
-                    containerDashboardUtils.updateStatus($scope.objectStatus.images,     data.status.images);
-                    containerDashboardUtils.updateStatus($scope.objectStatus.routes,     data.status.routes);
+                    containerDashboardUtils.updateAllStatuses($scope.objectStatus, data.status)
                 });
             };
             $scope.refresh();

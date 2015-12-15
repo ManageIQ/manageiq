@@ -340,6 +340,7 @@ Vmdb::Application.routes.draw do
         show_list
         tagging_edit
         tag_edit_form_field_changed
+        data
       ),
       :post => %w(
         button
@@ -528,6 +529,7 @@ Vmdb::Application.routes.draw do
         show_list
         tagging_edit
         tag_edit_form_field_changed
+        data
       ),
       :post => %w(
         button

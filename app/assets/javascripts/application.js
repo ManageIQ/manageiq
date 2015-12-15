@@ -47,6 +47,8 @@
 //= require controllers/ems_common/single_provider_dashboard_controller
 //= require controllers/container_dashboard/card/card-module
 //= require controllers/container_dashboard/card/heatmaps/heatmaps-card-directive
+//= require controllers/container_project/container_project_controller
+//= require controllers/container_group/container_group_controller
 //= require controllers/container_topology/container_topology_controller
 //= require d3/d3
 //= require c3/c3

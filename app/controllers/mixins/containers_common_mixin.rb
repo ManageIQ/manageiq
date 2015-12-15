@@ -66,6 +66,12 @@ module ContainersCommonMixin
                       :url  => "/#{controller_name}/show/#{record.id}" \
                                "?display=#{@display}&refresh=n")
       perf_gen_init_options # Intialize options, charts are generated async
+    elsif @display == "dashboard"
+      @showtype = "dashboard"
+      @lastaction = "show_dashboard"
+      drop_breadcrumb(:name => "#{record.name} (Dashboard)",
+                      :url  => "/#{controller_name}/show/#{record.id}" \
+                               "?display=#{@display}&refresh=n")
     elsif @display == "container_groups" || session[:display] == "container_groups" && params[:display].nil?
       show_container_display(record, "container_groups", ContainerGroup)
     elsif @display == "containers"

@@ -70,6 +70,14 @@ angular.module('miq.util').factory('miq.util', [function dashboardUtilsFactory (
       notification: {}
     };
   };
+  var createReplicatorsStatus = function() {
+    return {
+        title: "Replicators",
+        iconClass: "pficon pficon-replicator",
+        count: 0,
+        notification: {}
+    };
+  };
   var updateStatus = function (statusObject, data) {
     statusObject.notification = {};
     if (data) {
@@ -94,7 +102,29 @@ angular.module('miq.util').factory('miq.util', [function dashboardUtilsFactory (
       statusObject.count = 0;
     }
   };
+
   var heatmapSort = function(a, b) {return b.value - a.value};
+
+  var createAllStatuses = function() {
+    return {
+      providers: createProvidersStatus(),
+      container_nodes: createNodesStatus(),
+      containers: createContainersStatus(),
+      container_image_registries: createRegistriesStatus(),
+      container_projects: createProjectsStatus(),
+      container_groups: createPodsStatus(),
+      container_services: createServicesStatus(),
+      container_images: createImagesStatus(),
+      container_routes: createRoutesStatus(),
+      container_replicators: createReplicatorsStatus()
+    }
+  };
+
+  var updateAllStatuses = function(objStatues, data) {
+      for (var key in data){
+          updateStatus(objStatues[key], data[key]);
+      }
+  };
 
   return {
     heatmapSort: heatmapSort,
@@ -107,6 +137,9 @@ angular.module('miq.util').factory('miq.util', [function dashboardUtilsFactory (
     createServicesStatus: createServicesStatus,
     createImagesStatus: createImagesStatus,
     createRoutesStatus: createRoutesStatus,
-    updateStatus: updateStatus
+    createReplicatorsStatus: createReplicatorsStatus,
+    createAllStatuses: createAllStatuses,
+    updateStatus: updateStatus,
+    updateAllStatuses: updateAllStatuses
   };
 }]);

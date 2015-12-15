@@ -6,17 +6,7 @@ angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.
         function($scope, containerDashboardUtils, chartsDataMixin, $http, $interval, $location) {
             document.getElementById("center_div").className += " miq-body";
 
-            $scope.objectStatus = {
-                providers:  containerDashboardUtils.createProvidersStatus(),
-                nodes:      containerDashboardUtils.createNodesStatus(),
-                containers: containerDashboardUtils.createContainersStatus(),
-                registries: containerDashboardUtils.createRegistriesStatus(),
-                projects:   containerDashboardUtils.createProjectsStatus(),
-                pods:       containerDashboardUtils.createPodsStatus(),
-                services:   containerDashboardUtils.createServicesStatus(),
-                images:     containerDashboardUtils.createImagesStatus(),
-                routes:     containerDashboardUtils.createRoutesStatus()
-            };
+            $scope.objectStatus = containerDashboardUtils.createAllStatuses();
 
             $scope.nodeCpuUsage = {
                 title: 'CPU',
@@ -68,20 +58,15 @@ angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.
                         }
                     }
 
-                    containerDashboardUtils.updateStatus($scope.objectStatus.nodes,      data.status.nodes);
-                    containerDashboardUtils.updateStatus($scope.objectStatus.containers, data.status.containers);
-                    containerDashboardUtils.updateStatus($scope.objectStatus.registries, data.status.registries);
-                    containerDashboardUtils.updateStatus($scope.objectStatus.projects,   data.status.projects);
-                    containerDashboardUtils.updateStatus($scope.objectStatus.pods,       data.status.pods);
-                    containerDashboardUtils.updateStatus($scope.objectStatus.services,   data.status.services);
-                    containerDashboardUtils.updateStatus($scope.objectStatus.images,     data.status.images);
-                    containerDashboardUtils.updateStatus($scope.objectStatus.routes,     data.status.routes);
+                    // Update entity counts
+                    containerDashboardUtils.updateAllStatuses($scope.objectStatus, data.status)
 
                     // Heatmaps
                     $scope.nodeCpuUsage.data = data.heatmaps.nodeCpuUsage.sort(containerDashboardUtils.heatmapSort);
                     $scope.nodeCpuUsage.loadingDone = true;
                     $scope.nodeMemoryUsage.data = data.heatmaps.nodeMemoryUsage.sort(containerDashboardUtils.heatmapSort);
                     $scope.nodeMemoryUsage.loadingDone = true;
+
                 });
         };
         $scope.refresh();
