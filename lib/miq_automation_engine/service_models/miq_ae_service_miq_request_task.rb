@@ -17,7 +17,7 @@ module MiqAeMethodService
     end
 
     def finished(msg)
-      object_send(:update_and_notify_parent, :state => 'finished', :message => msg)
+      object_send(:update_and_notify_parent, :state => 'finished', :message => msg, :status => 'Ok')
     end
 
     def status
