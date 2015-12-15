@@ -31,7 +31,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
     end
 
     it "#automatic_placement" do
-      @task.should_receive(:get_most_suitable_host_and_storage).and_return([@host, @storage])
+      expect(@task).to receive(:get_most_suitable_host_and_storage).and_return([@host, @storage])
       @task.options[:placement_auto] = true
       check
     end
@@ -39,15 +39,15 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
     it "automate returns nothing" do
       @task.options[:placement_host_name] = @host.id
       @task.options[:placement_ds_name]   = @storage.id
-      @task.should_receive(:get_most_suitable_host_and_storage).and_return([nil, nil])
+      expect(@task).to receive(:get_most_suitable_host_and_storage).and_return([nil, nil])
       @task.options[:placement_auto] = true
       check
     end
 
     def check
       host, storage = @task.send(:placement)
-      host.should eql(@host)
-      storage.should eql(@storage)
+      expect(host).to eql(@host)
+      expect(storage).to eql(@storage)
     end
   end
 end

@@ -2,11 +2,11 @@ require "spec_helper"
 
 describe ManageIQ::Providers::Vmware::InfraManager do
   it ".ems_type" do
-    described_class.ems_type.should == 'vmwarews'
+    expect(described_class.ems_type).to eq('vmwarews')
   end
 
   it ".description" do
-    described_class.description.should == 'VMware vCenter'
+    expect(described_class.description).to eq('VMware vCenter')
   end
 
   describe ".metrics_collector_queue_name" do
@@ -23,22 +23,22 @@ describe ManageIQ::Providers::Vmware::InfraManager do
 
     it "not raise for api_version == 5.0" do
       @ems.update_attributes(:api_version => "5.0", :uid_ems => "2E1C1E82-BD83-4E54-9271-630C6DFAD4D1")
-      -> { @ems.validate_remote_console_vmrc_support }.should_not raise_error
+      expect { @ems.validate_remote_console_vmrc_support }.not_to raise_error
     end
 
     it "raise for api_version == 4.0" do
       @ems.update_attributes(:api_version => "4.0", :uid_ems => "2E1C1E82-BD83-4E54-9271-630C6DFAD4D1")
-      -> { @ems.validate_remote_console_vmrc_support }.should raise_error MiqException::RemoteConsoleNotSupportedError
+      expect { @ems.validate_remote_console_vmrc_support }.to raise_error MiqException::RemoteConsoleNotSupportedError
     end
 
     it "raise for api_version == 4.1" do
       @ems.update_attributes(:api_version => "4.1", :uid_ems => "2E1C1E82-BD83-4E54-9271-630C6DFAD4D1")
-      -> { @ems.validate_remote_console_vmrc_support }.should raise_error MiqException::RemoteConsoleNotSupportedError
+      expect { @ems.validate_remote_console_vmrc_support }.to raise_error MiqException::RemoteConsoleNotSupportedError
     end
 
     it "raise for missing/blank values" do
       @ems.update_attributes(:api_version => "", :uid_ems => "2E1C1E82-BD83-4E54-9271-630C6DFAD4D1")
-      -> { @ems.validate_remote_console_vmrc_support }.should raise_error MiqException::RemoteConsoleNotSupportedError
+      expect { @ems.validate_remote_console_vmrc_support }.to raise_error MiqException::RemoteConsoleNotSupportedError
     end
   end
 
@@ -49,37 +49,37 @@ describe ManageIQ::Providers::Vmware::InfraManager do
 
     it "true with nothing missing/blank" do
       @ems.update_attributes(:api_version => "5.0", :uid_ems => "2E1C1E82-BD83-4E54-9271-630C6DFAD4D1")
-      @ems.remote_console_vmrc_support_known?.should be_true
+      expect(@ems.remote_console_vmrc_support_known?).to be_truthy
     end
 
     it "false for missing hostname" do
       @ems.update_attributes(:hostname => nil, :api_version => "5.0", :uid_ems => "2E1C1E82-BD83-4E54-9271-630C6DFAD4D1")
-      @ems.remote_console_vmrc_support_known?.should_not be_true
+      expect(@ems.remote_console_vmrc_support_known?).not_to be_truthy
     end
 
     it "false for blank hostname" do
       @ems.update_attributes(:hostname => "", :api_version => "5.0", :uid_ems => "2E1C1E82-BD83-4E54-9271-630C6DFAD4D1")
-      @ems.remote_console_vmrc_support_known?.should_not be_true
+      expect(@ems.remote_console_vmrc_support_known?).not_to be_truthy
     end
 
     it "false for missing api_version" do
       @ems.update_attributes(:api_version => nil, :uid_ems => "2E1C1E82-BD83-4E54-9271-630C6DFAD4D1")
-      @ems.remote_console_vmrc_support_known?.should_not be_true
+      expect(@ems.remote_console_vmrc_support_known?).not_to be_truthy
     end
 
     it "false for blank api_version" do
       @ems.update_attributes(:api_version => "", :uid_ems => "2E1C1E82-BD83-4E54-9271-630C6DFAD4D1")
-      @ems.remote_console_vmrc_support_known?.should_not be_true
+      expect(@ems.remote_console_vmrc_support_known?).not_to be_truthy
     end
 
     it "false for missing uid_ems" do
       @ems.update_attributes(:api_version => "5.0", :uid_ems => nil)
-      @ems.remote_console_vmrc_support_known?.should_not be_true
+      expect(@ems.remote_console_vmrc_support_known?).not_to be_truthy
     end
 
     it "false for blank uid_ems" do
       @ems.update_attributes(:api_version => "5.0", :uid_ems => "")
-      @ems.remote_console_vmrc_support_known?.should_not be_true
+      expect(@ems.remote_console_vmrc_support_known?).not_to be_truthy
     end
   end
 
@@ -112,7 +112,7 @@ describe ManageIQ::Providers::Vmware::InfraManager do
 
     it "will not restart EventCatcher when name changes" do
       @ems.update_attributes(:name => "something else")
-      MiqQueue.count.should == 0
+      expect(MiqQueue.count).to eq(0)
     end
   end
 
@@ -120,9 +120,9 @@ describe ManageIQ::Providers::Vmware::InfraManager do
 
   def assert_event_catcher_restart_queued
     q = MiqQueue.where(:method_name => "stop_event_monitor")
-    q.length.should == 1
-    q[0].class_name.should == "ManageIQ::Providers::Vmware::InfraManager"
-    q[0].instance_id.should == @ems.id
-    q[0].role.should == "event"
+    expect(q.length).to eq(1)
+    expect(q[0].class_name).to eq("ManageIQ::Providers::Vmware::InfraManager")
+    expect(q[0].instance_id).to eq(@ems.id)
+    expect(q[0].role).to eq("event")
   end
 end

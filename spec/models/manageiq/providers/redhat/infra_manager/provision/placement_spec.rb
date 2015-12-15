@@ -28,21 +28,21 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
     end
 
     it "#automatic_placement" do
-      @task.should_receive(:get_placement_via_automate).and_return(:cluster => @cluster)
+      expect(@task).to receive(:get_placement_via_automate).and_return(:cluster => @cluster)
       @task.options[:placement_auto]         = true
       check
     end
 
     it "automate returns nothing" do
       @task.options[:placement_cluster_name] = @cluster.id
-      @task.should_receive(:get_placement_via_automate).and_return({})
+      expect(@task).to receive(:get_placement_via_automate).and_return({})
       @task.options[:placement_auto]         = true
       check
     end
 
     def check
       @task.send(:placement)
-      @task.options[:dest_cluster].should eql([@cluster.id, @cluster.name])
+      expect(@task.options[:dest_cluster]).to eql([@cluster.id, @cluster.name])
     end
   end
 end

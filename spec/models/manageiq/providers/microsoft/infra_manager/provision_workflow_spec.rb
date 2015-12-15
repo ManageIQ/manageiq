@@ -8,7 +8,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::ProvisionWorkflow do
   let(:template) { FactoryGirl.create(:template_microsoft, :name => "template", :ext_management_system => ems) }
 
   before do
-    described_class.any_instance.stub(:update_field_visibility)
+    allow_any_instance_of(described_class).to receive(:update_field_visibility)
   end
 
   it "pass platform attributes to automate" do

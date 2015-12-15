@@ -2,11 +2,11 @@ require "spec_helper"
 
 describe ManageIQ::Providers::Openstack::InfraManager do
   it ".ems_type" do
-    described_class.ems_type.should == 'openstack_infra'
+    expect(described_class.ems_type).to eq('openstack_infra')
   end
 
   it ".description" do
-    described_class.description.should == 'OpenStack Platform Director'
+    expect(described_class.description).to eq('OpenStack Platform Director')
   end
 
   describe ".metrics_collector_queue_name" do
@@ -28,23 +28,23 @@ describe ManageIQ::Providers::Openstack::InfraManager do
       creds = {}
       creds[:amqp] = {:userid => "amqp_user", :password => "amqp_password"}
       @ems.update_authentication(creds, :save => false)
-      @ems.verify_credentials(:amqp).should be_true
+      expect(@ems.verify_credentials(:amqp)).to be_truthy
     end
 
     it "indicates that an event monitor is available" do
-      OpenstackEventMonitor.stub(:available?).and_return(true)
-      @ems.event_monitor_available?.should be_true
+      allow(OpenstackEventMonitor).to receive(:available?).and_return(true)
+      expect(@ems.event_monitor_available?).to be_truthy
     end
 
     it "indicates that an event monitor is not available" do
-      OpenstackEventMonitor.stub(:available?).and_return(false)
-      @ems.event_monitor_available?.should be_false
+      allow(OpenstackEventMonitor).to receive(:available?).and_return(false)
+      expect(@ems.event_monitor_available?).to be_falsey
     end
 
     it "logs an error and indicates that an event monitor is not available when there's an error checking for an event monitor" do
-      OpenstackEventMonitor.stub(:available?).and_raise(StandardError)
-      $log.should_receive(:error).with(/Exeption trying to find openstack event monitor/)
-      @ems.event_monitor_available?.should be_false
+      allow(OpenstackEventMonitor).to receive(:available?).and_raise(StandardError)
+      expect($log).to receive(:error).with(/Exeption trying to find openstack event monitor/)
+      expect(@ems.event_monitor_available?).to be_falsey
     end
   end
 
@@ -54,15 +54,15 @@ describe ManageIQ::Providers::Openstack::InfraManager do
     end
 
     it "creates related ProviderOpenstack after creating EmsOpenstackInfra" do
-      @ems.provider.name.should eq @ems.name
-      @ems.provider.zone.should == @ems.zone
-      ManageIQ::Providers::Openstack::Provider.count.should eq 1
+      expect(@ems.provider.name).to eq @ems.name
+      expect(@ems.provider.zone).to eq(@ems.zone)
+      expect(ManageIQ::Providers::Openstack::Provider.count).to eq 1
     end
 
     it "destroys related ProviderOpenstack after destroying EmsOpenstackInfra" do
-      ManageIQ::Providers::Openstack::Provider.count.should eq 1
+      expect(ManageIQ::Providers::Openstack::Provider.count).to eq 1
       @ems.destroy
-      ManageIQ::Providers::Openstack::Provider.count.should eq 0
+      expect(ManageIQ::Providers::Openstack::Provider.count).to eq 0
     end
 
     it "related EmsOpenstack nullifies relation to ProviderOpenstack on EmsOpenstackInfra destroy" do
@@ -71,12 +71,12 @@ describe ManageIQ::Providers::Openstack::InfraManager do
       @ems.provider.cloud_ems << @ems_cloud
 
       # compare they both use the same provider
-      @ems_cloud.provider.should == @ems.provider
+      expect(@ems_cloud.provider).to eq(@ems.provider)
 
       # destroy ems and see the relation of ems_cloud to provider nullified
       @ems.destroy
-      ManageIQ::Providers::Openstack::Provider.count.should eq 0
-      @ems_cloud.reload.provider.should be_nil
+      expect(ManageIQ::Providers::Openstack::Provider.count).to eq 0
+      expect(@ems_cloud.reload.provider).to be_nil
     end
   end
 

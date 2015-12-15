@@ -44,7 +44,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Provision do
     context "SCVMM provisioning" do
       it "#workflow" do
         workflow_class = ManageIQ::Providers::Microsoft::InfraManager::ProvisionWorkflow
-        workflow_class.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
+        allow_any_instance_of(workflow_class).to receive(:get_dialogs).and_return(:dialogs => {})
 
         expect(vm_prov.workflow.class).to eq workflow_class
         expect(vm_prov.workflow_class).to eq workflow_class
@@ -54,13 +54,13 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Provision do
     context "#prepare_for_clone_task" do
       before do
         @host = FactoryGirl.create(:host_microsoft, :ems_ref => "test_ref")
-        vm_prov.stub(:dest_host).and_return(@host)
+        allow(vm_prov).to receive(:dest_host).and_return(@host)
       end
 
       it "with default options" do
         clone_options = vm_prov.prepare_for_clone_task
-        clone_options[:name].should == @target_vm_name
-        clone_options[:host].should == @host
+        expect(clone_options[:name]).to eq(@target_vm_name)
+        expect(clone_options[:host]).to eq(@host)
       end
     end
 
@@ -68,11 +68,11 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Provision do
       before do
         ds_name = "file://server.local/C:/ClusterStorage/CLUSP04%20Prod%20Volume%203-1"
         @datastore = FactoryGirl.create(:storage, :name => ds_name)
-        vm_prov.stub(:dest_datastore).and_return(@datastore)
+        allow(vm_prov).to receive(:dest_datastore).and_return(@datastore)
       end
 
       it "valid drive" do
-        vm_prov.dest_mount_point.should == "C:\\ClusterStorage\\CLUSP04 Prod Volume 3-1"
+        expect(vm_prov.dest_mount_point).to eq("C:\\ClusterStorage\\CLUSP04 Prod Volume 3-1")
       end
     end
 
@@ -100,7 +100,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Provision do
       end
 
       it "set vm" do
-        vm_prov.cpu_ps_script.should == "-CPUCount 2 "
+        expect(vm_prov.cpu_ps_script).to eq("-CPUCount 2 ")
       end
     end
 
@@ -112,7 +112,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Provision do
       end
 
       it "set vm" do
-        vm_prov.cpu_ps_script.should == "-CPUCount 2 -CPUMaximumPercent 40 "
+        expect(vm_prov.cpu_ps_script).to eq("-CPUCount 2 -CPUMaximumPercent 40 ")
       end
     end
 
@@ -124,7 +124,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Provision do
       end
 
       it "set vm" do
-        vm_prov.cpu_ps_script.should == "-CPUCount 2 -CPUReserve 15 "
+        expect(vm_prov.cpu_ps_script).to eq("-CPUCount 2 -CPUReserve 15 ")
       end
     end
   end

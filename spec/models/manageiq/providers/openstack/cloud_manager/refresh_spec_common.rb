@@ -223,7 +223,7 @@ module Openstack
     end
 
     def assert_ems
-      @ems.should have_attributes(
+      expect(@ems).to have_attributes(
         :api_version => identity_service.to_s,
         :uid_ems     => nil
       )
@@ -284,7 +284,7 @@ module Openstack
         :type => ManageIQ::Providers::Openstack::CloudManager::AvailabilityZone, :ems_id => @ems.id).first
       # standard openstack AZs have their ems_ref set to their name ("nova" in the test case)...
       # the "null" openstack AZ has a unique ems_ref and name
-      @nova_az.should have_attributes(
+      expect(@nova_az).to have_attributes(
         :ems_ref => @nova_az.name
       )
     end
@@ -292,7 +292,7 @@ module Openstack
     def assert_availability_zone_null
       # This tests OpenStack functionality more than ManageIQ
       @az_null = ManageIQ::Providers::Openstack::CloudManager::AvailabilityZoneNull.where(:ems_id => @ems.id).first
-      @az_null.should have_attributes(
+      expect(@az_null).to have_attributes(
         :ems_ref => "null_az"
       )
     end
@@ -301,8 +301,8 @@ module Openstack
       assert_objects_with_hashes(CloudTenant.all, identity_data.projects)
 
       CloudTenant.all.each do |tenant|
-        tenant.should be_kind_of(CloudTenant)
-        tenant.ext_management_system.should == @ems
+        expect(tenant).to be_kind_of(CloudTenant)
+        expect(tenant.ext_management_system).to eq(@ems)
       end
     end
 
@@ -325,7 +325,7 @@ module Openstack
     end
 
     def assert_security_group_rules_neutron(security_group)
-      security_group.ems_ref.should be_guid
+      expect(security_group.ems_ref).to be_guid
       # Each security group starts with these rules created
       default_test_data = [{
         :direction => "outbound",
@@ -362,7 +362,7 @@ module Openstack
       assert_objects_with_hashes(networks, network_data.networks, network_data.network_translate_table)
 
       networks.each do |network|
-        network.ems_ref.should be_guid
+        expect(network.ems_ref).to be_guid
 
         assert_objects_with_hashes(network.cloud_subnets,
                                    network_data.subnets(network.name),
@@ -415,7 +415,7 @@ module Openstack
         expect(network_router.network_ports.first).to  be_kind_of(ManageIQ::Providers::Openstack::CloudManager::NetworkPort)
         expect(network_router.cloud_networks.count).to be > 0
         expect(network_router.cloud_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private)
-        network_router.cloud_networks.should match_array network_router.private_networks
+        expect(network_router.cloud_networks).to match_array network_router.private_networks
         expect(network_router.cloud_network).to        be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public)
         expect(network_router.cloud_network).to        be == network_router.public_network
         expect(network_router.vms.first).to            be_kind_of(ManageIQ::Providers::Openstack::CloudManager::Vm)
@@ -470,7 +470,7 @@ module Openstack
 
       # TODO(lsmola) expose below in Builder's data
       without_aki_and_ari.each do |template|
-        template.should have_attributes(
+        expect(template).to have_attributes(
           :template              => true,
           #:publicly_available    => is_public, # is not exposed now
           :ems_ref_obj           => nil,
@@ -493,7 +493,7 @@ module Openstack
           :cpu_shares            => nil,
           :cpu_shares_level      => nil
         )
-        template.ems_ref.should be_guid
+        expect(template.ems_ref).to be_guid
 
         expect(template.ext_management_system).to  eq @ems
         expect(template.operating_system).to       be_nil # TODO: This should probably not be nil
@@ -545,7 +545,7 @@ module Openstack
       vm = ManageIQ::Providers::Openstack::CloudManager::Vm.where(:name => vm_name).first
       vm_expected = compute_data.servers.detect { |x| x[:name] == vm_name }
 
-      vm.should have_attributes({
+      expect(vm).to have_attributes({
         :template              => false,
         :cloud                 => true,
         :ems_ref_obj           => nil,
@@ -586,7 +586,7 @@ module Openstack
         expect(vm.network_ports.count).to   be > 0
         expect(vm.network_ports.first).to   be_kind_of(ManageIQ::Providers::Openstack::CloudManager::NetworkPort)
         expect(vm.cloud_networks.count).to  be > 0
-        vm.cloud_networks.should match_array vm.private_networks
+        expect(vm.cloud_networks).to match_array vm.private_networks
         expect(vm.cloud_networks.first).to  be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private)
         expect(vm.cloud_subnets.count).to   be > 0
         expect(vm.cloud_subnets.first).to   be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudSubnet)
@@ -595,16 +595,16 @@ module Openstack
         expect(vm.public_networks.count).to be > 0
         expect(vm.public_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public)
 
-        vm.private_networks.map(&:name).should match_array [vm_expected[:__network_name]]
+        expect(vm.private_networks.map(&:name)).to match_array [vm_expected[:__network_name]]
       end
 
       if vm_expected[:security_groups].kind_of?(Array)
-        vm.security_groups.map(&:name).should match_array vm_expected[:security_groups]
+        expect(vm.security_groups.map(&:name)).to match_array vm_expected[:security_groups]
       else
         expect(vm.security_groups.map(&:name)).to eq [vm_expected[:security_groups]]
       end
 
-      vm.hardware.should have_attributes(
+      expect(vm.hardware).to have_attributes(
         :cpu_sockets   => vm.flavor.cpus,
         :memory_mb     => vm.flavor.memory / 1.megabyte,
         :disk_capacity => 2.5.gigabytes # TODO(lsmola) Where is this coming from?
@@ -617,19 +617,19 @@ module Openstack
       flavor_expected = compute_data.flavors.detect { |x| x[:name] == vm.flavor.name }
 
       disk = vm.hardware.disks.find_by_device_name("Root disk")
-      disk.should have_attributes(
+      expect(disk).to have_attributes(
         :device_name => "Root disk",
         :device_type => "disk",
         :size        => flavor_expected[:disk].gigabyte
       )
       disk = vm.hardware.disks.find_by_device_name("Ephemeral disk")
-      disk.should have_attributes(
+      expect(disk).to have_attributes(
         :device_name => "Ephemeral disk",
         :device_type => "disk",
         :size        => flavor_expected[:ephemeral].gigabyte
       )
       disk = vm.hardware.disks.find_by_device_name("Swap disk")
-      disk.should have_attributes(
+      expect(disk).to have_attributes(
         :device_name => "Swap disk",
         :device_type => "disk",
         :size        => flavor_expected[:swap].megabytes
@@ -639,12 +639,12 @@ module Openstack
       # when clud network models are merged in and used for refresh
       expect(vm.hardware.networks.size).to eq 2
       network_public = vm.hardware.networks.where(:description => "public").first
-      network_public.should have_attributes(
+      expect(network_public).to have_attributes(
         :description => "public",
       )
 
       network_private = vm.hardware.networks.where(:description => "private").first
-      network_private.should have_attributes(
+      expect(network_private).to have_attributes(
         :description => "private",
       )
     end
@@ -653,17 +653,17 @@ module Openstack
     def assert_specific_template_created_from_vm
       @snap = ManageIQ::Providers::Openstack::CloudManager::Template.where(
         :name => "EmsRefreshSpec-PoweredOn-SnapShot").first
-      @snap.should_not be_nil
+      expect(@snap).not_to be_nil
       # FIXME: @snap.parent.should == @vm
     end
 
     def assert_specific_vm_created_from_snapshot_template
       t = ManageIQ::Providers::Openstack::CloudManager::Vm.where(:name => "EmsRefreshSpec-PoweredOn-FromSnapshot").first
-      t.parent.should == @snap
+      expect(t.parent).to eq(@snap)
     end
 
     def assert_relationship_tree
-      @ems.descendants_arranged.should match_relationship_tree({})
+      expect(@ems.descendants_arranged).to match_relationship_tree({})
     end
   end
 end

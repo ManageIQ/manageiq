@@ -61,7 +61,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm do
     let(:vm) { vm = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :virtual_hw_version => "07")) }
 
     it "#reconfigurable?" do
-      expect(vm.reconfigurable?).to be_true
+      expect(vm.reconfigurable?).to be_truthy
     end
 
     context "#max_total_vcpus" do
@@ -114,7 +114,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm do
       expect(vm).to receive(:with_provider_object).and_yield(provider_object)
       expect(provider_object).to receive(:send).and_return("nada")
 
-      ems.invoke_vim_ws(:do_nothing, vm).should eq("nada")
+      expect(ems.invoke_vim_ws(:do_nothing, vm)).to eq("nada")
     end
   end
 end
