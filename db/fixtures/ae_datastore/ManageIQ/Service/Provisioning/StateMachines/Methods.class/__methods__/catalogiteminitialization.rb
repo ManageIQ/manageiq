@@ -179,6 +179,8 @@ def pass_dialog_values_to_provision_task(provision_task, dialog_options_hash, di
 end
 
 def pass_dialog_values_to_children(dialog_options_hash, dialog_tags_hash)
+  return if dialog_options_hash.blank? && dialog_tags_hash.blank?
+
   set_option_on_destination(dialog_options_hash, @task.destination)
 
   @task.miq_request_tasks.each do |t|
@@ -208,11 +210,6 @@ def merge_dialog_information(dialog_options_hash, dialog_tags_hash)
   return merged_options_hash, merged_tags_hash
 end
 
-def dialog_parser_error
-  log_and_update_message(:error, "Error loading dialog options")
-  exit MIQ_ABORT
-end
-
 def yaml_data(option)
   @task.get_option(option).nil? ? nil : YAML.load(@task.get_option(option))
 end
@@ -225,7 +222,6 @@ def parsed_dialog_information
     $evm.instantiate('/Service/Provisioning/StateMachines/Methods/DialogParser')
     dialog_options_hash = yaml_data(:parsed_dialog_options)
     dialog_tags_hash = yaml_data(:parsed_dialog_tags)
-    dialog_parser_error if dialog_options_hash.blank? && dialog_tags_hash.blank?
   end
 
   merged_options_hash, merged_tags_hash = merge_dialog_information(dialog_options_hash, dialog_tags_hash)
@@ -233,6 +229,7 @@ def parsed_dialog_information
 end
 
 begin
+
   @task = $evm.root['service_template_provision_task']
 
   @service = @task.destination
@@ -240,13 +237,15 @@ begin
 
   dialog_options_hash, dialog_tags_hash = parsed_dialog_information
 
-  override_service_name(dialog_options_hash)
+  unless dialog_options_hash.blank?
+    override_service_name(dialog_options_hash)
+    override_service_description(dialog_options_hash)
+  end
 
-  override_service_description(dialog_options_hash)
-
-  create_category_and_tags_if_necessary(dialog_tags_hash)
-
-  tag_service(dialog_tags_hash)
+  unless dialog_tags_hash.blank?
+    create_category_and_tags_if_necessary(dialog_tags_hash)
+    tag_service(dialog_tags_hash)
+  end
 
   pass_dialog_values_to_children(dialog_options_hash, dialog_tags_hash)
 

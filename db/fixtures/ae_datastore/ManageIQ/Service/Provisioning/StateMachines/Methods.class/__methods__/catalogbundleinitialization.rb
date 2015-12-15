@@ -68,11 +68,6 @@ def tag_service(dialogs_tags_hash)
   log_and_update_message(:info, "Processing tag_service...Complete", true)
 end
 
-def dialog_parser_error
-  log_and_update_message(:error, "Error loading dialog options")
-  exit MIQ_ABORT
-end
-
 def yaml_data(option)
   @task.get_option(option).nil? ? nil : YAML.load(@task.get_option(option))
 end
@@ -85,7 +80,6 @@ def parsed_dialog_information
     $evm.instantiate('/Service/Provisioning/StateMachines/Methods/DialogParser')
     dialog_options_hash = yaml_data(:parsed_dialog_options)
     dialog_tags_hash = yaml_data(:parsed_dialog_tags)
-    dialog_parser_error if dialog_options_hash.blank? && dialog_tags_hash.blank?
   end
 
   log_and_update_message(:info, "dialog_options: #{dialog_options_hash.inspect}")
@@ -101,11 +95,12 @@ begin
 
   dialog_options_hash, dialog_tags_hash = parsed_dialog_information
 
-  override_service_attribute(dialog_options_hash.fetch(0, {}), "name")
+  unless dialog_options_hash.blank?
+    override_service_attribute(dialog_options_hash.fetch(0, {}), "name")
+    override_service_attribute(dialog_options_hash.fetch(0, {}), "description")
+  end
 
-  override_service_attribute(dialog_options_hash.fetch(0, {}), "description")
-
-  tag_service(dialog_tags_hash)
+  tag_service(dialog_tags_hash) unless dialog_tags_hash.blank?
 
 rescue => err
   log_and_update_message(:error, "[#{err}]\n#{err.backtrace.join("\n")}")
