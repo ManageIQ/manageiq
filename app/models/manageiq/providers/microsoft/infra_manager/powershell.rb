@@ -22,11 +22,7 @@ class ManageIQ::Providers::Microsoft::InfraManager
       end
 
       def powershell_results_to_hash(results)
-        powershell_xml_to_hash(powershell_results_to_xml(results))
-      end
-
-      def powershell_results_to_xml(results)
-        results[:data].collect { |d| d[:stdout] }.join
+        powershell_xml_to_hash(decompress_results(results))
       end
 
       def powershell_xml_to_hash(xml)
@@ -36,13 +32,21 @@ class ManageIQ::Providers::Microsoft::InfraManager
 
       def log_dos_error_results(results)
         log_header = "MIQ(#{self.class.name}##{__method__})"
-        error = results[:data].collect { |d| d[:stderr] }.join
+        error = results.stderr
         $scvmm_log.error("#{log_header} #{error}") unless error.blank?
       end
 
       def parse_json_results(results)
-        output = results[:data].collect { |d| d[:stdout] }.join
+        output = decompress_results(results)
         JSON.parse(output)
+      end
+
+      def decompress_results(results)
+        begin
+          ActiveSupport::Gzip.decompress(Base64.decode64(results.stdout))
+        rescue Zlib::GzipFile::Error # Not in gzip format
+          results.stdout
+        end
       end
     end
 

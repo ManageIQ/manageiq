@@ -15,7 +15,14 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
     # is required by rspec since it also depends on the GSSAPI gem too.
     require 'winrm'
 
-    WinRM::WinRMWebService.any_instance.stub(:run_powershell_script => YAML.load_file(data_file))
+    # Match the output returned by winrm with our compressed output.
+    output = WinRM::Output.new
+    output.merge!(YAML.load_file(data_file))
+    temp = output.stdout
+    output[:data].map{ |h| h.delete(:stdout) }
+    output[:data][0][:stdout] = Base64.encode64(ActiveSupport::Gzip.compress(temp))
+
+    WinRM::WinRMWebService.any_instance.stub(:run_powershell_script => output)
   end
 
   it "will perform a full refresh" do
