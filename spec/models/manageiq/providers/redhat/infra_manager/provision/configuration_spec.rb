@@ -10,7 +10,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration do
   let(:template)      { FactoryGirl.create(:template_redhat, :ext_management_system => ems) }
   let(:vm)            { FactoryGirl.create(:vm_redhat) }
 
-  before { task.stub(:get_provider_destination => rhevm_vm) }
+  before { allow_any_instance_of(ManageIQ::Providers::Redhat::InfraManager::Provision).to receive(:get_provider_destination).and_return(rhevm_vm) }
 
   context "#attach_floppy_payload" do
     it "should attach floppy if customization template provided" do
@@ -31,6 +31,32 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration do
       expect(rhevm_vm).to receive(:cloud_init=).with('#some_script')
 
       task.configure_cloud_init
+    end
+
+    context "set phase_context[:boot_with_cloud_init]" do
+      it "old RHEV" do
+        allow_any_instance_of(ManageIQ::Providers::Redhat::InfraManager).to receive(:api_version).and_return("3.5.0.0")
+        task.options[:customization_template_id] = cust_template.id
+
+        expect(task).to     receive(:prepare_customization_template_substitution_options).and_return('key' => 'value')
+        expect(rhevm_vm).to receive(:cloud_init=).with('#some_script')
+
+        task.configure_cloud_init
+
+        expect(task.phase_context[:boot_with_cloud_init]).to be_nil
+      end
+
+      it "new RHEV" do
+        allow_any_instance_of(ManageIQ::Providers::Redhat::InfraManager).to receive(:api_version).and_return("3.5.5.0")
+        task.options[:customization_template_id] = cust_template.id
+
+        expect(task).to     receive(:prepare_customization_template_substitution_options).and_return('key' => 'value')
+        expect(rhevm_vm).to receive(:cloud_init=).with('#some_script')
+
+        task.configure_cloud_init
+
+        expect(task.phase_context[:boot_with_cloud_init]).to eq(true)
+      end
     end
   end
 
