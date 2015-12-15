@@ -68,6 +68,14 @@
         });
       }
 
+      if (options.sort_by) {
+        params.push('sort_by=' + options.sort_by);
+      }
+
+      if (options.sort_options) {
+        params.push('sort_options=' + options.sort_options);
+      }
+
       if (0 < params.length) {
         return '?' + params.join('&');
       }

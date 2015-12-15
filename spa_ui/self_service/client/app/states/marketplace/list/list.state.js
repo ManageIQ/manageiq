@@ -18,7 +18,8 @@
         controllerAs: 'vm',
         title: 'Service Catalog',
         resolve: {
-          serviceTemplates: resolveServiceTemplates
+          serviceTemplates: resolveServiceTemplates,
+          serviceCatalogs: resolveServiceCatalogs
         }
       }
     };
@@ -34,13 +35,23 @@
     return CollectionsApi.query('service_templates', options);
   }
 
+  function resolveServiceCatalogs(CollectionsApi) {
+    var options = {
+      expand: 'resources',
+      sort_by: 'name',
+      sort_options: 'ignore_case'};
+
+    return CollectionsApi.query('service_catalogs', options);
+  }
+
   /** @ngInject */
-  function StateController($state, serviceTemplates, MarketplaceState) {
+  function StateController($state, serviceTemplates, serviceCatalogs, MarketplaceState) {
     var vm = this;
 
     vm.title = 'Service Catalog';
     vm.serviceTemplates = serviceTemplates.resources;
     vm.serviceTemplatesList = angular.copy(vm.serviceTemplates);
+    vm.serviceCatalogs = serviceCatalogs.resources;
 
     vm.showDetails = showDetails;
 
@@ -49,15 +60,11 @@
     }
 
     function addCategoryFilter(item) {
-      if (angular.isDefined(item.service_template_catalog) 
-        && angular.isDefined(item.service_template_catalog.name)
-        && categoryNames.indexOf(item.service_template_catalog.name) === -1) {
-        categoryNames.push(item.service_template_catalog.name); 
-      }
+      categoryNames.push(item.name);
     }
 
     var categoryNames = [];
-    angular.forEach(vm.serviceTemplates, addCategoryFilter);
+    angular.forEach(vm.serviceCatalogs, addCategoryFilter);
 
     vm.toolbarConfig = {
       filterConfig: {
