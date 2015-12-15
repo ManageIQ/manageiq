@@ -149,6 +149,13 @@ module ManageIQ::Providers
         end
       end
 
+      def get_security_group_for_nic(nic)
+        security_group = nic.properties.network_security_group
+        resource_group = security_group.id[%r{resourceGroups/(.*?)/}, 1]
+        sec_group_name = File.basename(security_group.id)
+        @nsg.get(sec_group_name, resource_group)
+      end
+
       # To get the list of security groups for a VM we need to find any
       # NIC's associated with the security group, and then get the VM's
       # associated with the NIC's.
