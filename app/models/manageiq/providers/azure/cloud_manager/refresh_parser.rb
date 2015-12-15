@@ -19,6 +19,7 @@ module ManageIQ::Providers
         @tds               = ::Azure::Armrest::TemplateDeploymentService.new(@config)
         @vns               = ::Azure::Armrest::Network::VirtualNetworkService.new(@config)
         @ips               = ::Azure::Armrest::Network::IpAddressService.new(@config)
+        @nis               = ::Azure::Armrest::Network::NetworkInterfaceService.new(@config)
         @rgs               = ::Azure::Armrest::ResourceGroupService.new(@config)
         @sas               = ::Azure::Armrest::StorageAccountService.new(@config)
         @options           = options || {}
@@ -124,6 +125,14 @@ module ManageIQ::Providers
         process_collection(images, :vms) { |image| parse_image(image) }
       end
 
+      def get_vm_nics(instance)
+        instance.properties.network_profile.network_interfaces.collect do |nic|
+          group = nic.id[%r{resourceGroups/(.*?)/}, 1]
+          nic_name = File.basename(nic.id)
+          @nis.get(nic_name, group)
+        end
+      end
+
       def process_collection(collection, key)
         @data[key] ||= []
 
@@ -220,6 +229,8 @@ module ManageIQ::Providers
         series_name = instance.properties.hardware_profile.vm_size
         series      = @data_index.fetch_path(:flavors, series_name)
 
+        hardware_network_info = get_hardware_network_info(instance)
+
         new_result = {
           :type                => 'ManageIQ::Providers::Azure::CloudManager::Vm',
           :uid_ems             => uid,
@@ -234,12 +245,11 @@ module ManageIQ::Providers
           :availability_zone   => @data_index.fetch_path(:availability_zones, 'default'),
           :hardware            => {
             :disks    => [], # Filled in later conditionally on flavor
-            :networks => [], # Filled in later conditionally on what's available
+            :networks => hardware_network_info
           },
         }
         populate_hardware_hash_with_disks(new_result[:hardware][:disks], instance)
         populate_hardware_hash_with_series_attributes(new_result[:hardware], instance, series)
-        populate_hardware_hash_with_networks(new_result[:hardware][:networks], instance)
 
         return uid, new_result
       end
@@ -278,14 +288,10 @@ module ManageIQ::Providers
         super(disks, size, name, location, "azure")
       end
 
-      def populate_hardware_hash_with_networks(networks_array, instance)
-        instance.properties.network_profile.network_interfaces.each do |nic|
-          pattern = %r{/subscriptions/(.+)/resourceGroups/([\w-]+)/.+/networkInterfaces/(.+)}i
-          _m, sub, group, nic_name = nic.id.match(pattern).to_a
+      def get_hardware_network_info(instance)
+        networks_array = []
 
-          cfg = @config.clone.tap { |c| c.subscription_id = sub }
-          nic_profile = ::Azure::Armrest::Network::NetworkInterfaceService.new(cfg).get(nic_name, group)
-
+        get_vm_nics(instance).each do |nic_profile|
           nic_profile.properties.ip_configurations.each do |ipconfig|
             hostname = ipconfig.name
             private_ip_addr = ipconfig.properties.try(:private_ip_address)
@@ -297,11 +303,13 @@ module ManageIQ::Providers
             next unless public_ip_obj
 
             name = File.basename(public_ip_obj.id)
-            ip_profile = ::Azure::Armrest::Network::IpAddressService.new(cfg).get(name, group)
+            ip_profile = @ips.get(name, nic_profile.resource_group)
             public_ip_addr = ip_profile.properties.try(:ip_address)
             networks_array << {:description => "public", :ipaddress => public_ip_addr, :hostname => hostname}
           end
         end
+
+        networks_array
       end
 
       def populate_hardware_hash_with_series_attributes(hardware_hash, instance, series)
