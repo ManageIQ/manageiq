@@ -122,4 +122,24 @@ module ContainerGroupHelper::TextualSummary
       )
     }
   end
+
+  def textual_container_statuses_summary
+    %i(waiting running terminated)
+  end
+
+  def container_statuses_summary
+    @container_statuses_summary ||= @record.container_states_summary
+  end
+
+  def textual_waiting
+    container_statuses_summary[:waiting] || 0
+  end
+
+  def textual_running
+    container_statuses_summary[:running] || 0
+  end
+
+  def textual_terminated
+    container_statuses_summary[:terminated] || 0
+  end
 end
