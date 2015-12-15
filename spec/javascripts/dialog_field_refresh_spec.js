@@ -73,4 +73,48 @@ describe('dialogFieldRefresh', function() {
       expect($.fn.selectpicker.calls.mostRecent().object.selector).toEqual('#abc');
     });
   });
+  
+  describe('#initializeDialogSelectPicker', function() {
+    var fieldName, selectedValue, url;
+
+    beforeEach(function() {
+      spyOn(dialogFieldRefresh, 'triggerAutoRefresh');
+      spyOn(window, 'miqInitSelectPicker');
+      spyOn(window, 'miqSelectPickerEvent');
+      spyOn($.fn, 'selectpicker');
+      fieldName = 'fieldName';
+      fieldId = 'fieldId';
+      selectedValue = 'selectedValue';
+      url = 'url';
+
+      var html = "";
+      html += '<select id=fieldName class="dynamic-drop-down-193 selectpicker">';
+      html += '<option value="1">1</option>';
+      html += '<option value="2" selected="selected">2</option>';
+      html += '</select>';
+
+      setFixtures(html);
+    });
+
+    it('initializes the select picker', function() {
+      dialogFieldRefresh.initializeDialogSelectPicker(fieldName, fieldId, selectedValue, url);
+      expect(window.miqInitSelectPicker).toHaveBeenCalled();
+    });
+
+    it('sets the value of the select picker', function() {
+      dialogFieldRefresh.initializeDialogSelectPicker(fieldName, fieldId, selectedValue, url);
+      expect($.fn.selectpicker).toHaveBeenCalledWith('val', 'selectedValue');
+    });
+
+    it('sets up the select picker event', function() {
+      dialogFieldRefresh.initializeDialogSelectPicker(fieldName, fieldId, selectedValue, url);
+      expect(window.miqSelectPickerEvent).toHaveBeenCalledWith('fieldName', 'url');
+    });
+
+    it('triggers the auto refresh when the drop down changes', function() {
+      dialogFieldRefresh.initializeDialogSelectPicker(fieldName, fieldId, selectedValue, url);
+      $("#"+fieldName).trigger('change');
+      expect(dialogFieldRefresh.triggerAutoRefresh).toHaveBeenCalledWith(fieldName, 'true');
+    });
+  });
 });

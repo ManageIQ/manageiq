@@ -7,6 +7,16 @@ var dialogFieldRefresh = {
     });
   },
 
+  initializeDialogSelectPicker: function(fieldName, fieldId, selectedValue, url) {
+    miqInitSelectPicker();
+    $('.selectpicker').selectpicker('val', selectedValue);
+    miqSelectPickerEvent(fieldName, url);
+    $('#' + fieldName).on('change', function(){
+      dialogFieldRefresh.triggerAutoRefresh(fieldName, "true");
+      return true;
+    });
+  },
+
   refreshCheckbox: function(fieldName, fieldId) {
     miqSparkleOn();
 
