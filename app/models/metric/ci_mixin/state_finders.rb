@@ -41,6 +41,10 @@ module Metric::CiMixin::StateFinders
     vim_performance_state_for_ts(ts).vms
   end
 
+  def container_groups_from_vim_performance_state_for_ts(ts)
+    vim_performance_state_for_ts(ts).container_groups
+  end
+
   def ext_management_systems_from_vim_performance_state_for_ts(ts)
     vim_performance_state_for_ts(ts).ext_management_systems
   end

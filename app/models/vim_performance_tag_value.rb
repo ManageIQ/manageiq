@@ -36,6 +36,9 @@ class VimPerformanceTagValue < ActiveRecord::Base
     "ContainerNode"       => [],
     "Container"           => [],
     "ContainerGroup"      => [],
+    "ContainerProject"    => [],
+    "ContainerService"    => [],
+    "ContainerReplicator" => []
   }
 
   def self.build_from_performance_record(parent_perf, options = {:save => true})

@@ -9,7 +9,16 @@ class ContainerReplicator < ActiveRecord::Base
   has_many :selector_parts, -> { where(:section => "selectors") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
   has_many :container_nodes, -> { distinct }, :through => :container_groups
 
+  # Needed for metrics
+  has_many :metrics,                :as => :resource
+  has_many :metric_rollups,         :as => :resource
+  has_many :vim_performance_states, :as => :resource
+  delegate :my_zone,                :to => :ext_management_system
+
   include EventMixin
+  include Metric::CiMixin
+
+  PERF_ROLLUP_CHILDREN = :container_groups
 
   acts_as_miq_taggable
 
@@ -23,5 +32,9 @@ class ContainerReplicator < ActiveRecord::Base
       # TODO: implement policy events and its relationship
       ["#{events_table_name(assoc)}.ems_id = ?", ems_id]
     end
+  end
+
+  def perf_rollup_parents(interval_name = nil)
+    []
   end
 end
