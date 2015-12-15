@@ -44,6 +44,7 @@ module ApplianceConsole
         AwesomeSpawn.run!(IPA_INSTALL_COMMAND,
                           :params => [
                             "-N", :force_join, :fixed_primary, :unattended, {
+                              :hostname=  => LinuxAdmin::Hosts.new.hostname,
                               :realm=     => realm,
                               :domain=    => domain,
                               :server=    => server,
