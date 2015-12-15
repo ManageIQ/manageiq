@@ -308,11 +308,11 @@ module ManageIQ::Providers
       new_result = {
         :ems_ref           => uid,
         :type              => "ManageIQ::Providers::Openstack::CloudManager::CloudVolume",
-        :name              => volume.display_name,
+        :name              => volume_name(volume),
         :status            => volume.status,
         :bootable          => volume.attributes['bootable'],
         :creation_time     => volume.created_at,
-        :description       => volume.display_description,
+        :description       => volume_description(volume),
         :volume_type       => volume.volume_type,
         :snapshot_uid      => volume.snapshot_id,
         :size              => volume.size.to_i.gigabytes,
@@ -345,15 +345,31 @@ module ManageIQ::Providers
       return uid, new_result
     end
 
+    def volume_name(volume)
+      # Cinder v1
+      return volume.display_name if volume.respond_to?(:display_name)
+      # Cinder v2
+      return volume.name
+    end
+
+    def volume_description(volume)
+      # Cinder v1
+      return volume.display_description if volume.respond_to?(:display_description)
+      # Cinder v2
+      return volume.description
+    end
+
     def parse_snapshot(snap)
       uid = snap['id']
       new_result = {
         :ems_ref       => uid,
         :type          => "ManageIQ::Providers::Openstack::CloudManager::CloudVolumeSnapshot",
-        :name          => snap['display_name'],
+        # Supporting both Cinder v1 and Cinder v2
+        :name          => snap['display_name'] || snap['name'],
         :status        => snap['status'],
         :creation_time => snap['created_at'],
-        :description   => snap['display_description'],
+        # Supporting both Cinder v1 and Cinder v2
+        :description   => snap['display_description'] || snap['description'],
         :size          => snap['size'].to_i.gigabytes,
         :tenant        => @data_index.fetch_path(:cloud_tenants, snap['os-extended-snapshot-attributes:project_id']),
         :volume        => @data_index.fetch_path(:cloud_volumes, snap['volume_id'])
