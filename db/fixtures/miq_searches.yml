@@ -234,6 +234,40 @@
     search_type: default
     db: Host
 - attributes:
+    name: default_Platform / ESX 5.5
+    description: Platform / ESX 5.5
+    filter: !ruby/object:MiqExpression
+      exp:
+        and:
+        - "=":
+            field: Host-vmm_vendor
+            value: VMware
+        - INCLUDES:
+            field: Host-vmm_product
+            value: ESX
+        - "=":
+            field: Host-vmm_version
+            value: 5.5.0
+    search_type: default
+    db: Host
+- attributes:
+    name: default_Platform / ESX 6.0
+    description: Platform / ESX 6.0
+    filter: !ruby/object:MiqExpression
+      exp:
+        and:
+        - "=":
+            field: Host-vmm_vendor
+            value: VMware
+        - INCLUDES:
+            field: Host-vmm_product
+            value: ESX
+        - "=":
+            field: Host-vmm_version
+            value: 6.0.0
+    search_type: default
+    db: Host
+- attributes:
     name: default_Platform / HyperV
     description: Platform / HyperV
     filter: !ruby/object:MiqExpression
