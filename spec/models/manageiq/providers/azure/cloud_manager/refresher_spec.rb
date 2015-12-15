@@ -140,7 +140,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
       :ems_ref_obj           => nil,
       :uid_ems               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\chef-prod"\
                                 "\\microsoft.compute/virtualmachines\\Chef-Prod",
-      :vendor                => "Microsoft",
+      :vendor                => "Azure",
       :power_state           => "on",
       :location              => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\chef-prod"\
                                 "\\microsoft.compute/virtualmachines\\Chef-Prod",
@@ -235,7 +235,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
       :ems_ref_obj           => nil,
       :uid_ems               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\computevms\\"\
                                 "microsoft.compute/virtualmachines\\MIQ2",
-      :vendor                => "Microsoft",
+      :vendor                => "Azure",
       :power_state           => "off",
       :location              => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\computevms\\"\
                                 "microsoft.compute/virtualmachines\\MIQ2",
@@ -287,7 +287,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
       :uid_ems               => "https://chefprod5120.blob.core.windows.net/system/"\
                                 "Microsoft.Compute/Images/postgres-cont/"\
                                 "postgres-osDisk.fcf3dcec-fb8d-49f5-9d8c-b15edcff704c.vhd",
-      :vendor                => "Microsoft",
+      :vendor                => "Azure",
       :power_state           => "never",
       :location              => "eastus",
       :tools_status          => nil,
