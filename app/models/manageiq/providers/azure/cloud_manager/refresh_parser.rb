@@ -141,6 +141,14 @@ module ManageIQ::Providers
         end
       end
 
+      def get_nics_for_vm(vm)
+        vm.properties.network_profile.network_interfaces.collect do |nic|
+          group = nic.id[%r{resourceGroups/(.*?)/}, 1]
+          nic_name = File.basename(nic.id)
+          @nis.get(nic_name, group)
+        end
+      end
+
       # To get the list of security groups for a VM we need to find any
       # NIC's associated with the security group, and then get the VM's
       # associated with the NIC's.
@@ -360,11 +368,7 @@ module ManageIQ::Providers
       end
 
       def populate_hardware_hash_with_networks(networks_array, instance)
-        instance.properties.network_profile.network_interfaces.each do |nic|
-          group = nic.id[%r{resourceGroups/(.*?)/}, 1]
-          nic_name = File.basename(nic.id)
-          nic_profile = @nis.get(nic_name, group)
-
+        get_nics_for_vm(instance).each do |nic_profile|
           nic_profile.properties.ip_configurations.each do |ipconfig|
             hostname = ipconfig.name
             private_ip_addr = ipconfig.properties.try(:private_ip_address)
@@ -376,7 +380,7 @@ module ManageIQ::Providers
             next unless public_ip_obj
 
             name = File.basename(public_ip_obj.id)
-            ip_profile = @ips.get(name, group)
+            ip_profile = @ips.get(name, nic_profile.resource_group)
             public_ip_addr = ip_profile.properties.try(:ip_address)
             networks_array << {:description => "public", :ipaddress => public_ip_addr, :hostname => hostname}
           end
