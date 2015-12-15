@@ -361,10 +361,8 @@ module ManageIQ::Providers
 
       def populate_hardware_hash_with_networks(networks_array, instance)
         instance.properties.network_profile.network_interfaces.each do |nic|
-          pattern = %r{/subscriptions/(.+)/resourceGroups/([\w-]+)/.+/networkInterfaces/(.+)}i
-          _m, sub, group, nic_name = nic.id.match(pattern).to_a
-
-          cfg = @config.clone.tap { |c| c.subscription_id = sub }
+          group = nic.id[%r{resourceGroups/(.*?)/}, 1]
+          nic_name = File.basename(nic.id)
           nic_profile = @nis.get(nic_name, group)
 
           nic_profile.properties.ip_configurations.each do |ipconfig|
