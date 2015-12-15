@@ -5,8 +5,9 @@ describe Authenticator::Database do
   let!(:alice) { FactoryGirl.create(:user, :userid => 'alice', :password => 'secret') }
 
   describe '#uses_stored_password?' do
-    subject { super().uses_stored_password? }
-    it { should be_true }
+    it "is true" do
+      expect(subject.uses_stored_password?).to be_true
+    end
   end
 
   describe '#lookup_by_identity' do

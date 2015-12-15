@@ -28,8 +28,9 @@ describe Authenticator::Httpd do
   end
 
   describe '#uses_stored_password?' do
-    subject { super().uses_stored_password? }
-    it { should be_false }
+    it "is false" do
+      expect(subject.uses_stored_password?).to be_false
+    end
   end
 
   describe '#lookup_by_identity' do
