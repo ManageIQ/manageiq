@@ -103,8 +103,14 @@ describe CatalogController do
       controller.instance_variable_set(:@_params, :button => "add")
       st = FactoryGirl.create(:service_template)
       controller.instance_variable_set(:@record, st)
+      provision_fqname = 'ns1/cls1/inst1'
       edit = {
-        :new    => {:name => "New Name", :description => "New Description", :selected_resources => [st.id], :rsc_groups => [[{:name => "Some name"}]]},
+        :new    => {:name               => "New Name",
+                    :description        => "New Description",
+                    :selected_resources => [st.id],
+                    :rsc_groups         => [[{:name => "Some name"}]],
+                    :fqname             => provision_fqname,
+                   },
         :key    => "st_edit__new",
         :rec_id => st.id,
       }

@@ -26,33 +26,32 @@
                           "data-miq_observe_checkbox" => {:url => url}.to_json)
           = _('Display in Catalog')
     = javascript_tag(javascript_focus('name'))
-    - if @edit[:new][:display]
-      .form-group
-        %label.col-md-2.control-label
-          = _('Catalog')
-        .col-md-4
-          - available_catalogs = @edit[:new][:available_catalogs]
-          - catalog_id = @edit[:new][:catalog_id]
-          = select_tag('catalog_id',
-                       options_for_select(([["<#{_('Unassigned')}>", nil]]) + available_catalogs, catalog_id),
-                       "data-miq_sparkle_on" => true,
-                       :class                => "selectpicker")
+    .form-group
+      %label.col-md-2.control-label
+        = _('Catalog')
+      .col-md-4
+        - available_catalogs = @edit[:new][:available_catalogs]
+        - catalog_id = @edit[:new][:catalog_id]
+        = select_tag('catalog_id',
+                     options_for_select(([["<#{_('Unassigned')}>", nil]]) + available_catalogs, catalog_id),
+                     "data-miq_sparkle_on" => true,
+                     :class                => "selectpicker")
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent('catalog_id', '#{url}')
+    .form-group
+      %label.col-md-2.control-label
+        = _('Dialog')
+      .col-md-4
+        %p.form-control-static
+          - available_dialogs =  @edit[:new][:available_dialogs].invert.to_a.sort_by { |a| a.first.downcase }
+          - options = [["<#{_('No Dialog')}>", nil]] + available_dialogs
+          = select_tag('dialog_id',
+                        options_for_select(options, @edit[:new][:dialog_id]),
+                        "data-miq_sparkle_on" => true,
+                        :class                => "selectpicker")
           :javascript
-            miqInitSelectPicker();
-            miqSelectPickerEvent('catalog_id', '#{url}')
-      .form-group
-        %label.col-md-2.control-label
-          = _('Dialog')
-        .col-md-4
-          %p.form-control-static
-            - available_dialogs =  @edit[:new][:available_dialogs].invert.to_a.sort_by { |a| a.first.downcase }
-            - options = [["<#{_('No Dialog')}>", nil]] + available_dialogs
-            = select_tag('dialog_id',
-                          options_for_select(options, @edit[:new][:dialog_id]),
-                          "data-miq_sparkle_on" => true,
-                          :class                => "selectpicker")
-            :javascript
-              miqSelectPickerEvent('dialog_id', '#{url}')
+            miqSelectPickerEvent('dialog_id', '#{url}')
 
       - if @edit[:new][:st_prov_type] == "generic_orchestration"
         - opts = [["<#{_('Choose')}>", nil]] + @edit[:new][:available_templates]
@@ -78,74 +77,74 @@
                            :class               => "selectpicker")
               :javascript
                 miqSelectPickerEvent('manager_id', '#{url}')
-      .form-group
-        %label.col-md-2.control-label{:title => _("Provisioning Entry Point (NameSpace/Class/Instance)")}
-          = _('Provisioning Entry Point')
-          %br
-          = _('State Machine (NS/Cls/Inst)')
-        .col-md-8{:title => @edit[:new][:fqname]}
-          .input-group
-            = text_field_tag("fqname",
-                             @edit[:new][:fqname],
-                             :class   => "form-control",
-                             :onFocus => 'miqShowAE_Tree("provision");miqButtons("hide", "automate");')
-            %span.input-group-btn
-              #fqname_div{:style => @edit[:new][:fqname] != "" ? "" : "display:none"}
-                = link_to({:action => 'ae_tree_select_discard',
-                           :typ => "provision"},
-                          "data-miq_sparkle_on"  => true,
-                          "data-miq_sparkle_off" => true,
-                          "data-confirm-ujs"     => _("Are you sure you want to remove this Provisioning Entry Point?"),
-                          :remote                => true,
-                          :class                 => "btn btn-default",
-                          :title                 => _("Remove this Provisioning Entry Point")) do
-                  %i.pficon.pficon-close
-            %span.input-group-addon{:style => "visibility:hidden"}
-      .form-group
-        %label.col-md-2.control-label{:title => _("Reconfigure Entry Point (NameSpace/Class/Instance)")}
-          = _('Reconfigure Entry Point')
-          %br
-          = _('State Machine (NS/Cls/Inst)')
-        .col-md-8{:title => @edit[:new][:reconfigure_fqname]}
-          .input-group
-            = text_field_tag("reconfigure_fqname",
-                             @edit[:new][:reconfigure_fqname],
-                             :class             => "form-control",
-                             :onFocus           => 'miqShowAE_Tree("reconfigure");miqButtons("hide", "automate");',
-                             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-            %span.input-group-btn
-              #reconfigure_fqname_div{:style => @edit[:new][:reconfigure_fqname] != "" ? "" : "display:none"}
-                = link_to({:action => 'ae_tree_select_discard',
-                           :typ => "reconfigure"},
-                          "data-miq_sparkle_on"  => true,
-                          "data-miq_sparkle_off" => true,
-                          "data-confirm-ujs"     => _("Are you sure you want to remove this Reconfigure Entry Point?"),
-                          :remote                => true,
-                          :class                 => "btn btn-default",
-                          :title                 => _("Remove this Reconfigure Entry Point")) do
-                  %i.pficon.pficon-close
-            %span.input-group-addon{:style => "visibility:hidden"}
+    .form-group
+      %label.col-md-2.control-label{:title => _("Provisioning Entry Point (NameSpace/Class/Instance)")}
+        = _('Provisioning Entry Point')
+        %br
+        = _('State Machine (NS/Cls/Inst)')
+      .col-md-8{:title => @edit[:new][:fqname]}
+        .input-group
+          = text_field_tag("fqname",
+                           @edit[:new][:fqname],
+                           :class   => "form-control",
+                           :onFocus => 'miqShowAE_Tree("provision");miqButtons("hide", "automate");')
+          %span.input-group-btn
+            #fqname_div{:style => @edit[:new][:fqname] != "" ? "" : "display:none"}
+              = link_to({:action => 'ae_tree_select_discard',
+                         :typ => "provision"},
+                        "data-miq_sparkle_on"  => true,
+                        "data-miq_sparkle_off" => true,
+                        "data-confirm-ujs"     => _("Are you sure you want to remove this Provisioning Entry Point?"),
+                        :remote                => true,
+                        :class                 => "btn btn-default",
+                        :title                 => _("Remove this Provisioning Entry Point")) do
+                %i.pficon.pficon-close
+          %span.input-group-addon{:style => "visibility:hidden"}
+    .form-group
+      %label.col-md-2.control-label{:title => _("Reconfigure Entry Point (NameSpace/Class/Instance)")}
+        = _('Reconfigure Entry Point')
+        %br
+        = _('State Machine (NS/Cls/Inst)')
+      .col-md-8{:title => @edit[:new][:reconfigure_fqname]}
+        .input-group
+          = text_field_tag("reconfigure_fqname",
+                           @edit[:new][:reconfigure_fqname],
+                           :class             => "form-control",
+                           :onFocus           => 'miqShowAE_Tree("reconfigure");miqButtons("hide", "automate");',
+                           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+          %span.input-group-btn
+            #reconfigure_fqname_div{:style => @edit[:new][:reconfigure_fqname] != "" ? "" : "display:none"}
+              = link_to({:action => 'ae_tree_select_discard',
+                         :typ => "reconfigure"},
+                        "data-miq_sparkle_on"  => true,
+                        "data-miq_sparkle_off" => true,
+                        "data-confirm-ujs"     => _("Are you sure you want to remove this Reconfigure Entry Point?"),
+                        :remote                => true,
+                        :class                 => "btn btn-default",
+                        :title                 => _("Remove this Reconfigure Entry Point")) do
+                %i.pficon.pficon-close
+          %span.input-group-addon{:style => "visibility:hidden"}
 
-      .form-group
-        %label.col-md-2.control-label{:title => _("Retirement Entry Point (NameSpace/Class/Instance)")}
-          = _('Retirement Entry Point')
-          %br
-          = _('State Machine (NS/Cls/Inst)')
-        .col-md-8{:title => @edit[:new][:retire_fqname]}
-          .input-group
-            = text_field_tag("retire_fqname",
-                             @edit[:new][:retire_fqname],
-                             :class   => "form-control",
-                             :onFocus => 'miqShowAE_Tree("retire");miqButtons("hide", "automate");')
-            %span.input-group-btn
-              #retire_fqname_div{:style => @edit[:new][:retire_fqname] != "" ? "" : "display:none"}
-                = link_to({:action => 'ae_tree_select_discard',
-                           :typ => "retire"},
-                          "data-miq_sparkle_on"  => true,
-                          "data-miq_sparkle_off" => true,
-                          "data-confirm-ujs"     => _("Are you sure you want to remove this Retirement Entry Point?"),
-                          :remote                => true,
-                          :class                 => "btn btn-default",
-                          :title                 => _("Remove this Retirement Entry Point")) do
-                  %i.pficon.pficon-close
-            %span.input-group-addon{:style => "visibility:hidden"}
+    .form-group
+      %label.col-md-2.control-label{:title => _("Retirement Entry Point (NameSpace/Class/Instance)")}
+        = _('Retirement Entry Point')
+        %br
+        = _('State Machine (NS/Cls/Inst)')
+      .col-md-8{:title => @edit[:new][:retire_fqname]}
+        .input-group
+          = text_field_tag("retire_fqname",
+                           @edit[:new][:retire_fqname],
+                           :class   => "form-control",
+                           :onFocus => 'miqShowAE_Tree("retire");miqButtons("hide", "automate");')
+          %span.input-group-btn
+            #retire_fqname_div{:style => @edit[:new][:retire_fqname] != "" ? "" : "display:none"}
+              = link_to({:action => 'ae_tree_select_discard',
+                         :typ => "retire"},
+                        "data-miq_sparkle_on"  => true,
+                        "data-miq_sparkle_off" => true,
+                        "data-confirm-ujs"     => _("Are you sure you want to remove this Retirement Entry Point?"),
+                        :remote                => true,
+                        :class                 => "btn btn-default",
+                        :title                 => _("Remove this Retirement Entry Point")) do
+                %i.pficon.pficon-close
+          %span.input-group-addon{:style => "visibility:hidden"}
