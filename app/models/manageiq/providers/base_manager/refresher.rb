@@ -26,8 +26,7 @@ module ManageIQ
       private
 
       def self.ems_type
-        # e.g. ManageIQ::Providers::Vmware::InfraManager::Refresher => :vmware
-        @ems_type ||= parent.short_token.underscore.to_sym
+        @ems_type ||= parent.ems_type.to_sym
       end
 
       def group_targets_by_ems(targets)

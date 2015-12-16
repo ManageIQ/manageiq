@@ -14,6 +14,10 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       .to receive(:has_credentials?).and_return(true)
   end
 
+  it ".ems_type" do
+    expect(described_class.ems_type).to eq(:vmwarews)
+  end
+
   it "will perform a full refresh" do
     EmsRefresh.refresh(@ems)
     @ems.reload

@@ -1,7 +1,7 @@
 require "spec_helper"
 require 'azure-armrest'
 
-describe ManageIQ::Providers::Azure::CloudManager do
+describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   before(:each) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_azure, :zone => zone, :provider_region => "eastus")
@@ -19,6 +19,10 @@ describe ManageIQ::Providers::Azure::CloudManager do
         def join; end
       end.new
     end
+  end
+
+  it ".ems_type" do
+    expect(described_class.ems_type).to eq(:azure)
   end
 
   it "will perform a full refresh" do

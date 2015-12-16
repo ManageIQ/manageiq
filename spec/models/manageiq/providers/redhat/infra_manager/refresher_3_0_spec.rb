@@ -7,6 +7,10 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     @ems.update_authentication(:default => {:userid => "evm@manageiq.com", :password => "password"})
   end
 
+  it ".ems_type" do
+    expect(described_class.ems_type).to eq(:rhevm)
+  end
+
   it "will perform a full refresh on v3.0" do
     VCR.use_cassette("#{described_class.name.underscore}_3_0") do
       EmsRefresh.refresh(@ems)

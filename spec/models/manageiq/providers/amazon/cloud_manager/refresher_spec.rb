@@ -7,6 +7,10 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     @ems.update_authentication(:default => {:userid => "0123456789ABCDEFGHIJ", :password => "ABCDEFGHIJKLMNO1234567890abcdefghijklmno"})
   end
 
+  it ".ems_type" do
+    expect(described_class.ems_type).to eq(:ec2)
+  end
+
   it "will perform a full refresh" do
     2.times do  # Run twice to verify that a second run with existing data does not change anything
       @ems.reload

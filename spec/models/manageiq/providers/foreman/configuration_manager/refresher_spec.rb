@@ -37,6 +37,10 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::Refresher do
   let(:my_env)                { environments.reverse.find  { |a| a.name = 'production' } }
   let(:my_arch)               { architectures.reverse.find { |a| a.name = 'x86_64' } }
 
+  it ".ems_type" do
+    expect(described_class.ems_type).to eq(:foreman_configuration)
+  end
+
   it "will perform a full refresh on api v2" do
     # Stub the queueing of the refresh so that when the manager
     #  queues up an alternate refresh we will execute it immediately.

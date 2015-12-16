@@ -17,6 +17,10 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       :uid_ems => 'cad16607-fb88-4412-a993-5242030f6afa')
   end
 
+  it ".ems_type" do
+    expect(described_class.ems_type).to eq(:kubernetes)
+  end
+
   it "will perform a full refresh on k8s" do
     2.times do  # Run twice to verify that a second run with existing data does not change anything
       VCR.use_cassette("#{described_class.name.underscore}") do # , :record => :new_episodes) do
