@@ -3,6 +3,7 @@
   height: 18px;
   padding-right: 3px;
 }
+
 /* begin icon class customizations */
 .fa-bar-chart-o:before, .fa-chart:before {
   content: "\f080";
@@ -35,8 +36,20 @@
 
 /* custom font for this product */
 
+@font-face {
+  font-family: 'icomoon';
+  src: url('#{$font-path}/../icomoon.eot?1i9inh');
+  src: url('#{$font-path}/../icomoon.eot?1i9inh#iefix') format('embedded-opentype'),
+       url('#{$font-path}/../icomoon.woff?1i9inh') format('woff'),
+       url('#{$font-path}/../icomoon.ttf?1i9inh') format('truetype'),
+       url('#{$font-path}/../icomoon.svg?1i9inh#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
 [class^="product-"], [class*=" product-"] {
-  font-family: "product";
+    /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
   speak: none;
   font-style: normal;
   font-weight: normal;
@@ -47,17 +60,6 @@
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-@font-face {
-  font-family: 'product';
-  font-style: normal;
-  font-weight: 300;
-  src: url('#{$font-path}/../product.eot');
-  src: url('#{$font-path}/../product.eot?#iefix') format('embedded-opentype'),
-       url('#{$font-path}/../product.woff') format('woff'),
-       url('#{$font-path}/../product.ttf') format('truetype'),
-       url('#{$font-path}/../product.svg') format('svg');
 }
 
 .product-role:before {
@@ -206,6 +208,12 @@
 }
 .product-project:before {
   content: "\e629";
+}
+.product-exists:before {
+  content: "\e62a";
+}
+.product-view_expanded:before {
+  content: "\e62b";
 }
 
 /* define  colors */

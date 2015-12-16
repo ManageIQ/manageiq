@@ -352,3 +352,15 @@ iframe, .iframe {
   padding-top: 20px;  // same as .panel's margin-bottom
   min-height: 78px; // .panel.height + (2 * 20px)
 }
+
+/* Sets font icon styling for view buttons on Default Views screen */
+
+#tab_div ul.list-inline a{
+  font-size: 16px;
+  color: #222222 !important
+}
+
+#tab_div ul.list-inline li.active {
+  font-size: 16px;
+  color: $link-color !important
+}
