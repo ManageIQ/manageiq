@@ -695,6 +695,7 @@ module EmsCommon
     @edit[:new][:port] = @ems.port
     @edit[:new][:api_version] = @ems.api_version
     @edit[:new][:provider_id] = @ems.provider_id
+
     if @ems.kind_of?(ManageIQ::Providers::Openstack::CloudManager) ||
        @ems.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
       # Special behaviour for OpenStack while keeping it backwards compatible for the rest
@@ -827,6 +828,12 @@ module EmsCommon
         @edit[:new][:port] = @ems.port ? @ems.port : ManageIQ::Providers::AtomicEnterprise::ContainerManager::DEFAULT_PORT
       else
         @edit[:new][:port] = nil
+      end
+
+      if ["openstack", "openstack_infra"].include?(params[:server_emstype])
+        @edit[:protocols] = retrieve_openstack_security_protocols
+      else
+        @edit[:protocols] = [['Basic (SSL)', 'ssl'], ['Kerberos', 'kerberos']]
       end
     end
     @edit[:new][:port] = params[:port] if params[:port]
