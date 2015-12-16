@@ -484,6 +484,35 @@
       :feature_type: control
       :identifier: cloud_volume_tag
 
+# AuthKeyPair
+- :name: Auth Key Pairs
+  :description: Everything under Auth Key Pairs
+  :feature_type: node
+  :identifier: auth_key_pair_cloud
+  :children:
+  - :name: View
+    :description: View Key Pairs
+    :feature_type: view
+    :identifier: auth_key_pair_cloud_view
+    :children:
+    - :name: List
+      :description: Display Lists of Key Pairs
+      :feature_type: view
+      :identifier: auth_key_pair_cloud_show_list
+    - :name: Show
+      :description: Display Individual Key Pairs
+      :feature_type: view
+      :identifier: auth_key_pair_cloud_show
+  - :name: Operate
+    :description: Perform Operations on Key Pairs
+    :feature_type: control
+    :identifier: auth_key_pair_cloud_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Key Pairs
+      :feature_type: control
+      :identifier: auth_key_pair_cloud_tag
+
 # Security Group
 - :name: Security Groups
   :description: Everything under Security Groups
