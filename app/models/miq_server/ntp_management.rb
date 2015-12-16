@@ -26,6 +26,8 @@ module MiqServer::NtpManagement
   # Called when zone ntp settings changed... run by the appropriate server
   # Also, called in atStartup of miq_server and on a configuration change for the server
   def ntp_reload(ntp_settings = server_ntp_settings)
+    return unless MiqEnvironment::Command.is_appliance?
+
     if @ntp_settings && @ntp_settings == ntp_settings
       _log.info("Skipping reload of ntp settings since they are unchanged")
       return
@@ -50,9 +52,9 @@ module MiqServer::NtpManagement
     @ntp_settings = ntp_settings
   end
 
-  def apply_ntp_server_settings(settings)
-    return unless Sys::Platform::IMPL == :linux
+  private
 
+  def apply_ntp_server_settings(settings)
     chrony_conf = LinuxAdmin::Chrony.new
     chrony_conf.clear_servers
 
