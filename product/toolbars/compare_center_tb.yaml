@@ -21,7 +21,7 @@
 - :name: compare_mode
   :items:
   - :buttonTwoState: comparemode_details
-    :icon: fa fa-bars fa-rotate-90 fa-lg
+    :icon: fa fa-bars fa-lg
     :title: "Details Mode"
     :url: 'compare_mode'
   - :buttonTwoState: comparemode_exists
