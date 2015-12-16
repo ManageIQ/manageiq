@@ -4,7 +4,7 @@ module AvailabilityZoneHelper::TextualSummary
   #
 
   def textual_group_relationships
-    %i(ems_cloud instances)
+    %i(ems_cloud instances cloud_volumes)
   end
 
   def textual_group_tags
@@ -18,6 +18,17 @@ module AvailabilityZoneHelper::TextualSummary
   #
   # Items
   #
+
+  def textual_cloud_volumes
+    label = ui_lookup(:tables => "cloud_volume")
+    num   = @record.number_of(:cloud_volumes)
+    h     = {:label => label, :image => "cloud_volume", :value => num}
+    if num > 0 && role_allows(:feature => "cloud_volume_show_list")
+      h[:link]  = url_for(:action => 'show', :id => @availability_zone, :display => 'cloud_volumes')
+      h[:title] = "Show all #{label}"
+    end
+    h
+  end
 
   def textual_ems_cloud
     textual_link(@record.ext_management_system)

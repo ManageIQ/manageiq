@@ -28,3 +28,13 @@
               = link_to(_("Instances (%s)") % @record.number_of(:vms),
                 {:action => 'show', :id => @record, :display => 'instances'},
                 :title => _("Show all Instances"))
+        - if role_allows(:feature => "cloud_volume_show_list")
+          - label = ui_lookup(:tables => 'cloud_volume')
+          - if @record.number_of(:vms) == 0
+            %li.disabled
+              = link_to(_("#{label} (%s)") % @record.number_of(:cloud_volumes), "#")
+          - else
+            %li
+              = link_to(_("#{label} (%s)") % @record.number_of(:vms),
+                {:action => 'show', :id => @record, :display => 'cloud_volumes'},
+                :title => _("Show all #{label}"))
