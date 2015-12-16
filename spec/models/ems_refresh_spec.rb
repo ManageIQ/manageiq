@@ -44,11 +44,11 @@ describe EmsRefresh do
       described_class.queue_refresh(target)
 
       q_all = MiqQueue.all
-      q_all.length.should == 1
-      q_all[0].args.should == [expected_targets.collect { |t| [t.class.name, t.id] }]
-      q_all[0].class_name.should == described_class.name
-      q_all[0].method_name.should == 'refresh'
-      q_all[0].role.should == "ems_inventory"
+      expect(q_all.length).to eq(1)
+      expect(q_all[0].args).to eq([expected_targets.collect { |t| [t.class.name, t.id] }])
+      expect(q_all[0].class_name).to eq(described_class.name)
+      expect(q_all[0].method_name).to eq('refresh')
+      expect(q_all[0].role).to eq("ems_inventory")
     end
   end
 
@@ -61,7 +61,7 @@ describe EmsRefresh do
         [ems2.class, ems2.id]
       ]
 
-      described_class.get_ar_objects(pairs).should match_array([ems1, ems2])
+      expect(described_class.get_ar_objects(pairs)).to match_array([ems1, ems2])
     end
   end
 
@@ -70,11 +70,11 @@ describe EmsRefresh do
       ems = FactoryGirl.create(:ems_vmware, :name => "ems_vmware1")
       vm1 = FactoryGirl.create(:vm_vmware, :name => "vm_vmware1", :ext_management_system => ems)
       vm2 = FactoryGirl.create(:vm_vmware, :name => "vm_vmware2", :ext_management_system => ems)
-      ManageIQ::Providers::Vmware::InfraManager::Refresher.should_receive(:refresh).with do |args|
+      expect(ManageIQ::Providers::Vmware::InfraManager::Refresher).to receive(:refresh).with { |args|
         # Refresh code doesn't care about args order so neither does the test
         # TODO: use array_including in rspec 3
         (args - [vm2, vm1]).empty?
-      end
+      }
 
       EmsRefresh.refresh([
         [vm1.class, vm1.id],
@@ -86,7 +86,7 @@ describe EmsRefresh do
       ems = FactoryGirl.create(:ems_vmware, :name => "ems_vmware1")
       vm1 = FactoryGirl.create(:vm_vmware, :name => "vm_vmware1", :ext_management_system => ems)
       vm2 = FactoryGirl.create(:vm_vmware, :name => "vm_vmware2", :ext_management_system => nil)
-      ManageIQ::Providers::Vmware::InfraManager::Refresher.should_receive(:refresh).with([vm1])
+      expect(ManageIQ::Providers::Vmware::InfraManager::Refresher).to receive(:refresh).with([vm1])
       EmsRefresh.refresh([
         [vm1.class, vm1.id],
         [vm2.class, vm2.id],

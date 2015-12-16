@@ -3,9 +3,9 @@ require "spec_helper"
 describe ExtManagementSystem do
   it ".model_name_from_emstype" do
     described_class.leaf_subclasses.each do |klass|
-      described_class.model_name_from_emstype(klass.ems_type).should == klass.name
+      expect(described_class.model_name_from_emstype(klass.ems_type)).to eq(klass.name)
     end
-    described_class.model_name_from_emstype('foo').should be_nil
+    expect(described_class.model_name_from_emstype('foo')).to be_nil
   end
 
   let(:all_types) do
@@ -29,11 +29,11 @@ describe ExtManagementSystem do
   end
 
   it ".types" do
-    described_class.types.should match_array(all_types)
+    expect(described_class.types).to match_array(all_types)
   end
 
   it ".supported_types" do
-    described_class.supported_types.should match_array(all_types)
+    expect(described_class.supported_types).to match_array(all_types)
   end
 
   it ".ems_infra_discovery_types" do
@@ -59,15 +59,15 @@ describe ExtManagementSystem do
 
     it "refresh_all_ems_timer will refresh for all emses in zone1" do
       @ems1 = @zone1.ext_management_systems.first
-      MiqServer.stub(:my_server).and_return(@zone1.miq_servers.first)
-      described_class.should_receive(:refresh_ems).with([@ems1.id], true)
+      allow(MiqServer).to receive(:my_server).and_return(@zone1.miq_servers.first)
+      expect(described_class).to receive(:refresh_ems).with([@ems1.id], true)
       described_class.refresh_all_ems_timer
     end
 
     it "refresh_all_ems_timer will refresh for all emses in zone2" do
       @ems2 = @zone2.ext_management_systems.first
-      MiqServer.stub(:my_server).and_return(@zone2.miq_servers.first)
-      described_class.should_receive(:refresh_ems).with([@ems2.id], true)
+      allow(MiqServer).to receive(:my_server).and_return(@zone2.miq_servers.first)
+      expect(described_class).to receive(:refresh_ems).with([@ems2.id], true)
       described_class.refresh_all_ems_timer
     end
   end
@@ -79,40 +79,40 @@ describe ExtManagementSystem do
     end
 
     it "#total_vms_on" do
-      @ems.total_vms_on.should == 5
+      expect(@ems.total_vms_on).to eq(5)
     end
 
     it "#total_vms_off" do
-      @ems.total_vms_off.should == 0
+      expect(@ems.total_vms_off).to eq(0)
 
       @ems.vms.each { |v| v.update_attributes(:raw_power_state => "poweredOff") }
-      @ems.total_vms_off.should == 5
+      expect(@ems.total_vms_off).to eq(5)
     end
 
     it "#total_vms_unknown" do
-      @ems.total_vms_unknown.should == 0
+      expect(@ems.total_vms_unknown).to eq(0)
 
       @ems.vms.each { |v| v.update_attributes(:raw_power_state => "unknown") }
-      @ems.total_vms_unknown.should == 5
+      expect(@ems.total_vms_unknown).to eq(5)
     end
 
     it "#total_vms_never" do
-      @ems.total_vms_never.should == 0
+      expect(@ems.total_vms_never).to eq(0)
 
       @ems.vms.each { |v| v.update_attributes(:raw_power_state => "never") }
-      @ems.total_vms_never.should == 5
+      expect(@ems.total_vms_never).to eq(5)
     end
 
     it "#total_vms_suspended" do
-      @ems.total_vms_suspended.should == 0
+      expect(@ems.total_vms_suspended).to eq(0)
 
       @ems.vms.each { |v| v.update_attributes(:raw_power_state => "suspended") }
-      @ems.total_vms_suspended.should == 5
+      expect(@ems.total_vms_suspended).to eq(5)
     end
 
     %w(total_vms_on total_vms_off total_vms_unknown total_vms_never total_vms_suspended).each do |vcol|
       it "should have virtual column #{vcol} " do
-        described_class.should have_virtual_column "#{vcol}", :integer
+        expect(described_class).to have_virtual_column "#{vcol}", :integer
       end
     end
   end
