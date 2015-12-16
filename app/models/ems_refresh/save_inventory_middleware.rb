@@ -23,7 +23,7 @@ module EmsRefresh::SaveInventoryMiddleware
                 []
               end
 
-    save_inventory_multi(:middleware_servers, ems, hashes, deletes, [:ems_ref])
+    save_inventory_multi(:middleware_servers, ems, hashes, deletes, [:ems_ref], [:middleware_deployments])
     store_ids_for_new_records(ems.middleware_servers, hashes, :ems_ref)
   end
 
@@ -33,7 +33,7 @@ module EmsRefresh::SaveInventoryMiddleware
 
     ems.middleware_deployments(true)
     deletes = if target.kind_of?(ExtManagementSystem)
-                ems.middleware_servers.dup
+                ems.middleware_deployments.dup
               else
                 []
               end

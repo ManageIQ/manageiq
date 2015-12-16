@@ -6,41 +6,46 @@ module ManageIQ::Providers
       end
 
       def initialize(ems, options = nil)
-        @eaps = []
         @ems = ems
+        @eaps = []
+        @data = {}
+        @data_index = {}
       end
 
       def ems_inv_to_hashes
-        @data = {}
         @data[:middleware_servers] = get_middleware_servers
-        @data[:middleware_deployments] = get_deployments
+        get_deployments
         @data
       end
 
       def get_middleware_servers
+        @data[:middleware_servers] = []
         @ems.feeds.map do |feed|
           @ems.eaps(feed).map do |eap|
             @eaps << eap
-            parse_middleware_servers(eap)
+            server = parse_middleware_server(eap)
+            @data[:middleware_servers] << server
+            @data_index.store_path(:middleware_servers, :by_nativeid, server[:nativeid], server)
           end
         end.flatten
       end
 
       def get_deployments
-        ret = @eaps.map do |server|
-          @ems.children(server).map do |child|
+        @data[:middleware_deployments] = []
+        @eaps.map do |eap|
+          @ems.children(eap).map do |child|
             next unless child.type_path.end_with? 'Deployment'
-            parse_deployment(server, child)
+            server = @data_index.fetch_path(:middleware_servers, :nativeid, eap.id)
+            puts server
+            @data[:middleware_deployments] << parse_deployment(server, child)
           end
-        end.flatten
-        ret.delete(nil)
-        ret
+        end
       end
 
-      def parse_deployment(eap, deployment)
+      def parse_deployment(server, deployment)
         {
           :name => parse_deployment_name(deployment.id),
-          :server => eap.id,  # TODO does that make sense? What is better?
+          :middleware_server => server,  # TODO does that make sense? What is better?
           :nativeid => deployment.id,
           :ems_ref => deployment.path
         }
@@ -52,7 +57,7 @@ module ManageIQ::Providers
         tmp
       end
 
-      def parse_middleware_servers(eap)
+      def parse_middleware_server(eap)
         {
           :feed       => eap.feed,
           :ems_ref    => eap.path,
