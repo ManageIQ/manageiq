@@ -69,7 +69,7 @@ describe DialogFieldDropDownList do
       it "no default value" do
         @df.default_value = nil
         @df.initialize_with_values({})
-        expect(@df.value).to.nil?
+        expect(@df.value).to be_nil
       end
 
       it "with default value" do
@@ -81,7 +81,7 @@ describe DialogFieldDropDownList do
       it "with non-matching default value" do
         @df.default_value = "4"
         @df.initialize_with_values({})
-        expect(@df.value).to.nil?
+        expect(@df.value).to be_nil
       end
     end
 
