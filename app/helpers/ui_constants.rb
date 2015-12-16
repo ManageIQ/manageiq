@@ -171,6 +171,7 @@ module UiConstants
       :vm           => true
     },
     :views     => { # List view setting, by resource type
+      :authkeypaircloud                         => "list",
       :availabilityzone                         => "list",
       :catalog                                  => "list",
       :cm_providers                             => "list",
