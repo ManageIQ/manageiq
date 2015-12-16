@@ -94,6 +94,15 @@ describe ApiController do
       expect_query_result(:vms, 3, 3)
       expect_result_resources_to_match_hash([{"name" => "cc"}, {"name" => "bb"}, {"name" => "aa"}])
     end
+
+    it "supports case insensitive ordering" do
+      create_vms_by_name %w(B c a)
+
+      run_get vms_url, :sort_by => "name", :sort_order => "asc", :sort_options => "nocase", :expand => "resources"
+
+      expect_query_result(:vms, 3, 3)
+      expect_result_resources_to_match_hash([{"name" => "a"}, {"name" => "B"}, {"name" => "c"}])
+    end
   end
 
   describe "Filtering vms" do
