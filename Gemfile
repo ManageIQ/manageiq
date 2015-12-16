@@ -139,6 +139,8 @@ source "https://rails-assets.org" do
   gem "rails-assets-himdel--jquery.observe_field",    "~>0.1.0"
   gem "rails-assets-jquery-1.8",                      "~>1.8.3"
   gem "rails-assets-jqueryui",                        "~>1.9.2"
+  gem "rails-assets-bootstrap-switch",                "~>3.3.2"
+  gem "rails-assets-angular-bootstrap-switch",        "~>0.4.1"
   gem "rails-assets-kubernetes-topology-graph",       "= 0.0.18"
   gem "rails-assets-moment",                          "~>2.10.3"
   gem "rails-assets-moment-strftime",                 "~>0.1.5"
