@@ -69,7 +69,7 @@ module OntapMetricsRollupMixin
     end
 
     def find_all_by_interval_and_time_range(interval, start_time, end_time)
-      where("rollup_type = ? and statistic_time > ? and statistic_time <= ?", interval, start_time, end_time)
+      where(:rollup_type => interval, :statistic_time => start_time..end_time)
     end
   end # module ClassMethods
 
