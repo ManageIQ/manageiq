@@ -24,6 +24,7 @@ module ManageIQ::Providers
         get_zones
         get_flavors
         get_cloud_networks
+        get_disks
         get_images
         get_instances
         _log.info("#{log_header}...Complete")
@@ -46,6 +47,11 @@ module ManageIQ::Providers
       def get_cloud_networks
         networks = @connection.networks.all
         process_collection(networks, :cloud_networks) { |network| parse_cloud_network(network) }
+      end
+
+      def get_disks
+        disks = @connection.disks.all
+        process_collection(disks, :disks) { |disk| parse_disk(disk) }
       end
 
       def get_images
@@ -115,6 +121,18 @@ module ManageIQ::Providers
         return uid, new_result
       end
 
+      def parse_disk(disk)
+        new_result = {
+          :name        => disk.name,
+          :description => disk.description,
+          :size        => disk.size_gb.to_i * 1.gigabyte,
+          :location    => disk.zone,
+          :filename    => disk.self_link,
+        }
+
+        return disk.self_link, new_result
+      end
+
       def parse_image(image)
         uid    = image.id
         name   = image.name
@@ -174,7 +192,26 @@ module ManageIQ::Providers
           }
         }
 
+        populate_hardware_hash_with_disks(new_result[:hardware][:disks], instance)
+
         return uid, new_result
+      end
+
+      def populate_hardware_hash_with_disks(hardware_disks_array, instance)
+        instance.disks.each do |disk|
+          # lookup the full disk information from the data_index by source link
+          d = @data_index.fetch_path(:disks, disk["source"])
+
+          disk_size     = d[:size]
+          disk_name     = disk["deviceName"]
+          disk_location = disk["index"]
+
+          add_instance_disk(hardware_disks_array, disk_size, disk_name, disk_location)
+        end
+      end
+
+      def add_instance_disk(disks, size, name, location)
+        super(disks, size, location, name, "google")
       end
 
       def parse_uid_from_url(url)
