@@ -3232,6 +3232,52 @@
         :feature_type: control
         :identifier: middleware_server_tag
 
+  # MiddlewareDeployment
+  - :name: MiddlewareDeployment
+    :description: Everything under Middleware Deployments
+    :feature_type: node
+    :identifier: middleware_deployment
+    :children:
+    - :name: View
+      :description: View Middleware Deployments
+      :feature_type: view
+      :identifier: middleware_deployment_view
+      :children:
+      - :name: List
+        :description: Display Lists of Middleware Deployments
+        :feature_type: view
+        :identifier: middleware_deployment_show_list
+      - :name: Show
+        :description: Display Individual Middleware Deployments
+        :feature_type: view
+        :identifier: middleware_deployment_show
+    - :name: Modify
+      :description: Modify Middleware Deployments
+      :feature_type: admin
+      :identifier: middleware_deployment_admin
+      :children:
+      - :name: Remove
+        :description: Remove Middleware Deployments from the VMDB
+        :feature_type: admin
+        :identifier: middleware_deployment_delete
+      - :name: Edit
+        :description: Edit a Middleware Deployment
+        :feature_type: admin
+        :identifier: middleware_deployment_edit
+      - :name: Add
+        :description: Add a Middleware Deployment
+        :feature_type: admin
+        :identifier: middleware_deployment_new
+    - :name: Operate
+      :description: Perform Operations on Middleware Deployments
+      :feature_type: control
+      :identifier: middleware_deployment_control
+      :children:
+      - :name: Edit Tags
+        :description: Edit Tags of Middleware Deployments
+        :feature_type: control
+        :identifier: middleware_deployment_tag
+
 # ContainerGroup
 - :name: Pods
   :description: Everything under Pods

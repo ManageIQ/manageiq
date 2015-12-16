@@ -7,11 +7,13 @@
           :size                   => 72,
           :typ                    => :listnav})
 
-    = miq_accordion_panel(_("Properties"), false, "ems_middleware_prop") do
+    = miq_accordion_panel(_("Properties"), false, "middleware_deployment_prop") do
       %ul.nav.nav-pills.nav-stacked
         %li
           = link_to(_('Summary'), {:action => 'show', :id => @record, :display => 'main'}, :title => _("Show Summary"))
-    = miq_accordion_panel(_("Relationships"), false, "ems_middleware_rel") do
+
+    = miq_accordion_panel(_("Relationships"), false, "middleware_deployment_rel") do
       %ul.nav.nav-pills.nav-stacked
-        - %w(middleware_server middleware_deployment).each do |ent|
-          = multiple_relationship_link(@record, ent)
+        = single_relationship_link(@record, :ems_middleware, "ext_management_system")
+        -#- %i(container_route container_service container_replicator container_group container_node).each do |ent|
+        -#  = multiple_relationship_link(@record, ent)_show.html.haml

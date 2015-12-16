@@ -116,7 +116,13 @@ module Menu
                              deferred_ui_lookup(:tables => 'middleware_server'),
                              'middleware_server',
                              {:feature => 'middleware_server_show_list'},
-                             '/middleware_server')
+                             '/middleware_server'),
+              Menu::Item.new('middleware_deployment',
+                             deferred_ui_lookup(:tables => 'middleware_deployment'),
+                             'middleware_deployment',
+                             {:feature => 'middleware_deployment_show_list'},
+                             '/middleware_deployment')
+
 
                               ])
       end

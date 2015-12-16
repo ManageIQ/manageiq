@@ -2209,7 +2209,7 @@ class ApplicationController < ActionController::Base
            "container_route", "container_project", "container_replicator", "persistent_volume",
            "container_image_registry", "container_image", "container_topology", "container_dashboard"
         session[:tab_url][:cnt] = inbound_url if %w(explorer show show_list).include?(action_name)
-      when "ems_middleware", "middleware_server"
+      when "ems_middleware", "middleware_server" "middleware_deployment"
         session[:tab_url][:mdl] = inbound_url if %w(show show_list).include?(action_name)
       when "miq_request"
         session[:tab_url][:svc] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "vm"

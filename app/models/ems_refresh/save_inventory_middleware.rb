@@ -23,7 +23,7 @@ module EmsRefresh::SaveInventoryMiddleware
                 []
               end
 
-    save_inventory_multi(:middleware_servers, ems, hashes, deletes, [:ems_ref], [:middleware_deployments])
+    save_inventory_multi(:middleware_servers, ems, hashes, deletes, [:ems_ref],)
     store_ids_for_new_records(ems.middleware_servers, hashes, :ems_ref)
   end
 

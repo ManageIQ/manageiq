@@ -1,13 +1,10 @@
-module MiddlewareServerHelper::TextualSummary
+module MiddlewareDeploymentHelper::TextualSummary
   #
   # Groups
   #
 
   def textual_group_properties
-
-    @prop_hash = eval(@record.properties)
-
-    %i(name host bind_addr product version)
+    %i(name nativeid)
   end
 
   def textual_group_relationships
@@ -34,20 +31,8 @@ module MiddlewareServerHelper::TextualSummary
     @record.name
   end
 
-  def textual_host
-    @record.host
-  end
-
-  def textual_bind_addr
-    @prop_hash['Bound Address']
-  end
-
-  def textual_product
-    @record.product
-  end
-
-  def textual_version
-    @prop_hash['Version']
+  def textual_nativeid
+    @record.nativeid
   end
 
   # def textual_type
