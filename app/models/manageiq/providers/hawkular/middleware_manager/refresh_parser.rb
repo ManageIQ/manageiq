@@ -35,7 +35,7 @@ module ManageIQ::Providers
         @eaps.map do |eap|
           @ems.children(eap).map do |child|
             next unless child.type_path.end_with? 'Deployment'
-            server = @data_index.fetch_path(:middleware_servers, :nativeid, eap.id)
+            server = @data_index.fetch_path(:middleware_servers, :by_nativeid, eap.id)
             @data[:middleware_deployments] << parse_deployment(server, child)
           end
         end

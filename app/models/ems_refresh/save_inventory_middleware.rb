@@ -23,7 +23,7 @@ module EmsRefresh::SaveInventoryMiddleware
                 []
               end
 
-    save_inventory_multi(:middleware_servers, ems, hashes, deletes, [:ems_ref],)
+    save_inventory_multi(:middleware_servers, ems, hashes, deletes, [:ems_ref])
     store_ids_for_new_records(ems.middleware_servers, hashes, :ems_ref)
   end
 
@@ -38,7 +38,11 @@ module EmsRefresh::SaveInventoryMiddleware
                 []
               end
 
-    save_inventory_multi(:middleware_deployments, ems, hashes, deletes, [:ems_ref])
+    hashes.each do |h|
+      h[:server_id] = h.fetch_path(:middleware_server, :id)
+    end
+
+    save_inventory_multi(:middleware_deployments, ems, hashes, deletes, [:ems_ref], nil, [:middleware_server])
     store_ids_for_new_records(ems.middleware_deployments, hashes, :ems_ref)
   end
 end
