@@ -2033,28 +2033,14 @@ class ApplicationController < ActionController::Base
 
   def task_supported?(typ)
     vm_ids = find_checked_items.map(&:to_i).uniq
+
     if %w(migrate publish).include?(typ) && VmOrTemplate.includes_template?(vm_ids)
       render_flash_not_applicable_to_model(typ, ui_lookup(:table => "miq_template"))
       return
     end
 
-    case typ
-    when "clone"
-      if vm_ids.present? && !VmOrTemplate.cloneable?(vm_ids)
-        render_flash_not_applicable_to_model(typ)
-        return
-      end
-    when "migrate"
-      if vm_ids.present? && !VmOrTemplate.batch_operation_supported?('migrate', vm_ids)
-        render_flash_not_applicable_to_model(typ)
-        return
-      end
-    when "publish"
-      if VmOrTemplate.where(:id => vm_ids, :type => %w(ManageIQ::Providers::Microsoft::InfraManager::Vm ManageIQ::Providers::Redhat::InfraManager::Vm)).exists?
-        render_flash_not_applicable_to_model(typ)
-        return
-      end
-    end
+    vms = VmOrTemplate.where(:id => vm_ids)
+    vms.each { |vm| render_flash_not_applicable_to_model(typ) unless vm.is_available?(typ) }
   end
 
   def prov_redirect(typ = nil)

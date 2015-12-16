@@ -1,6 +1,7 @@
 module Vm::Operations
   include_concern 'Guest'
   include_concern 'Power'
+  include_concern 'Lifecycle'
 
   def validate_collect_running_processes
     s = {:available => false, :message => nil}
