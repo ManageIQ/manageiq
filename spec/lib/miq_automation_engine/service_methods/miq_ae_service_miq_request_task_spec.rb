@@ -133,7 +133,7 @@ module MiqAeServiceMiqRequestTaskSpec
       message = 'message1'
       method   = "$evm.root['miq_request_task'].finished('#{message}')"
       @ae_method.update_attributes(:data => method)
-      MiqRequestTask.any_instance.should_receive(:update_and_notify_parent).with(:state => 'finished', :message => message).once
+      MiqRequestTask.any_instance.should_receive(:update_and_notify_parent).with(:state => 'finished', :message => message, :status => 'Ok').once
       invoke_ae
     end
   end
