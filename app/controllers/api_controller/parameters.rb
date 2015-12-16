@@ -121,7 +121,7 @@ class ApiController
 
     def sort_directive(attr, order, options)
       sort_item = attr
-      sort_item = "LOWER(#{sort_item})" if options.map(&:downcase).include?("nocase")
+      sort_item = "LOWER(#{sort_item})" if options.map(&:downcase).include?("ignore_case")
       sort_item << " ASC"  if order && order.downcase.start_with?("asc")
       sort_item << " DESC" if order && order.downcase.start_with?("desc")
       sort_item
