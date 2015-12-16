@@ -10,13 +10,18 @@ module EmsMiddlewareHelper::TextualSummary
   def textual_group_relationships
     # Order of items should be from parent to child
     items = []
-    items.concat(%i(middleware_servers))
+    items.concat(%i(middleware_servers middleware_deployments))
     items
   end
 
   def textual_group_status
     %i(refresh_status)
   end
+
+  def textual_group_smart_management
+    %i(tags)
+  end
+
 
   def textual_refresh_status
     last_refresh_status = @ems.last_refresh_status.titleize

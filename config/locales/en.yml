@@ -859,6 +859,8 @@ en:
       ems_middlewares:             Middleware Providers
       middleware_server:           Middleware Server
       middleware_servers:          Middleware Servers
+      middleware_deployment:       Middleware Deployment
+      middleware_deployments:      Middleware Deployments
       evm_owner:                   EVM Owner
       ext_management_system:       Cloud/Infrastructure Provider
       ext_management_systems:      Cloud/Infrastructure Providers

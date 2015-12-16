@@ -7,7 +7,7 @@
           :size                   => 72,
           :typ                    => :listnav})
 
-    = miq_accordion_panel(_("Properties"), false, "container_project_prop") do
+    = miq_accordion_panel(_("Properties"), false, "middleware_server_prop") do
       %ul.nav.nav-pills.nav-stacked
         %li
           = link_to(_('Summary'), {:action => 'show', :id => @record, :display => 'main'}, :title => _("Show Summary"))
