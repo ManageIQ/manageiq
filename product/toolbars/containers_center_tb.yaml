@@ -41,26 +41,8 @@
     - :button: container_tag
       :image: tag
       :text: 'Edit Tags'
-      :title: 'Edit Tags for this #{ui_lookup(:table=>"container")}'
+      :title: 'Edit Tags for selected #{ui_lookup(:tables=>"container")}'
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1+'
-- :name: container_monitoring
-  :items:
-  - :buttonSelect: container_monitoring_choice
-    :image: monitoring
-    :title: Monitoring
-    :text: Monitoring
-    :items:
-    - :button: container_timeline
-      :image: timeline
-      :text: "Timelines"
-      :title: "Show Timelines for this Container"
-      :url: '/explorer'
-      :url_parms: '?display=timeline'
-    - :button: container_perf
-      :image: capacity
-      :text: "Utilization"
-      :title: "Show Capacity & Utilization data for this Container"
-      :url: '/explorer'
-      :url_parms: '?display=performance'
+

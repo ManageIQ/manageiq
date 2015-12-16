@@ -7,9 +7,11 @@ class ContainerController < ApplicationController
   after_action :set_session_data
 
   CONTAINER_X_BUTTON_ALLOWED_ACTIONS = {
-    'container_delete' => :container_delete,
-    'container_edit'   => :container_edit,
-    'container_tag'    => :container_tag
+    'container_delete'   => :container_delete,
+    'container_edit'     => :container_edit,
+    'container_tag'      => :container_tag,
+    'container_timeline' => :show_timeline,
+    'container_perf'     => :show
   }
 
   def button
@@ -53,15 +55,20 @@ class ContainerController < ApplicationController
 
   # Container show selected, redirect to proper controller
   def show
-    record = Container.find_by_id(from_cid(params[:id]))
-    unless @explorer
-      tree_node_id = TreeBuilder.build_node_id(record)
-      redirect_to :controller => "container",
-                  :action     => "explorer",
-                  :id         => tree_node_id
-      return
+    return if perfmenu_click?
+    @sb[:action] = params[:display]
+    @display = params[:display] || "main" unless control_selected?
+
+    identify_container(params[:id])
+    if @display == "performance"
+      @showtype = "performance"
+      perf_gen_init_options
+      @refresh_partial = "layouts/performance"
     end
-    redirect_to :action => 'show', :controller => record.class.base_model.to_s.underscore, :id => record.id
+
+    redirect_to :action     => 'show',
+                :controller => @record.class.base_model.to_s.underscore,
+                :id         => @record.id unless @display == "performance"
   end
 
   def show_timeline
@@ -84,17 +91,6 @@ class ContainerController < ApplicationController
   end
 
   def explorer
-    @display = params[:display] || "main" unless control_selected?
-    @record = Container.find_by_id(from_cid(params[:id]))
-    show_timeline if @display == "timeline"
-    if @display == "performance"
-      @showtype = "performance"
-      drop_breadcrumb(
-        :name => "#{@record.name} Capacity & Utilization",
-        :url  => "/container/show/#{@record.id}?display=#{@display}&refresh=n"
-      )
-      perf_gen_init_options # Initialize perf chart options, charts will be generated async
-    end
     @explorer   = true
     @lastaction = "explorer"
 
@@ -135,17 +131,7 @@ class ContainerController < ApplicationController
 
     params.merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)
-
-    if @display == "timeline"
-      show_timeline
-    elsif @display != "performance"
-      if @record.nil?
-        self.x_node = "root"
-        @showtype = ""
-      end
-      get_node_info(x_node)
-    end
-
+    get_node_info(x_node)
     @in_a_form = false
     render :layout => "application"
   end
