@@ -68,14 +68,8 @@ module OntapMetricsRollupMixin
       @baseCounterNames = counterNames & bca
     end
 
-    def find_all_by_interval_and_time_range(interval, start_time, end_time = nil, count = :all, options = {})
-      my_cond = ["rollup_type = ? and statistic_time > ? and statistic_time <= ?", interval, start_time, end_time]
-
-      passed_cond = options.delete(:conditions)
-      options[:conditions] = passed_cond.nil? ? my_cond : "( #{send(:sanitize_sql_for_conditions, my_cond)} ) AND ( #{send(:sanitize_sql, passed_cond)} )"
-
-      _log.debug("Find options: #{options.inspect}")
-      find(count, options)
+    def find_all_by_interval_and_time_range(interval, start_time, end_time)
+      where(:rollup_type => interval, :statistic_time => start_time..end_time)
     end
   end # module ClassMethods
 
