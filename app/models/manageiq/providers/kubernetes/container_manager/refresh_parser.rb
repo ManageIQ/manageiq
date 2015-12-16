@@ -234,7 +234,8 @@ module ManageIQ::Providers::Kubernetes
         :reason                => pod.status.reason,
         :container_node        => nil,
         :container_definitions => [],
-        :container_replicator  => nil
+        :container_replicator  => nil,
+        :build_pod_name        => pod.metadata.try(:annotations).try("openshift.io/build.name".to_sym)
       )
 
       unless pod.spec.nodeName.nil?

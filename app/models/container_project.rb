@@ -12,6 +12,7 @@ class ContainerProject < ActiveRecord::Base
   has_many :container_quota_items, :through => :container_quotas
   has_many :container_limits
   has_many :container_limit_items, :through => :container_limits
+  has_many :container_builds
 
   # Needed for metrics
   has_many :metrics,                :as => :resource
