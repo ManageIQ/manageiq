@@ -9,7 +9,7 @@ describe DialogGroup do
     end
 
     it "validates with at least one element" do
-      dialog_group.add_resource(FactoryGirl.create(:dialog_field, :label => 'field 1', :name => 'field1'))
+      dialog_group.dialog_fields << FactoryGirl.create(:dialog_field, :label => 'field 1', :name => 'field1')
       expect_any_instance_of(DialogField).to receive(:valid?)
       expect(dialog_group.errors.full_messages).to be_empty
       dialog_group.validate_children

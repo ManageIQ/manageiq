@@ -9,7 +9,7 @@ describe DialogTab do
     end
 
     it "validates with box" do
-      dialog_tab.add_resource(FactoryGirl.create(:dialog_group, :label => 'box'))
+      dialog_tab.dialog_groups << FactoryGirl.create(:dialog_group, :label => 'box')
       expect_any_instance_of(DialogGroup).to receive(:valid?)
       expect(dialog_tab.errors.full_messages).to be_empty
       dialog_tab.validate_children
