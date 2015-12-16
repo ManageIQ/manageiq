@@ -6,6 +6,10 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     @ems = FactoryGirl.create(:ems_openshift, :hostname => "10.35.0.174")
   end
 
+  it ".ems_type" do
+    expect(described_class.ems_type).to eq(:openshift)
+  end
+
   it "will perform a full refresh on openshift" do
     2.times do
       @ems.reload
