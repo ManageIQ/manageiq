@@ -24,7 +24,7 @@ gem "css_splitter"
 gem "sass-rails"
 
 # Vendored and required
-gem "ruport",                         "=1.7.0",                       :git => "git://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-2"
+gem "ruport",                         "=1.7.0",                       :git => "git://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-3"
 
 # HACK: Force color to be required before azure-armrest. color is lazy required
 #   by ruport.  However, due to a bug in color, it detects the top level
