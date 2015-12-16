@@ -1,5 +1,4 @@
 module CloudVolumeHelper::TextualSummary
-
   def textual_group_properties
     %i(name size bootable description)
   end
@@ -35,7 +34,11 @@ module CloudVolumeHelper::TextualSummary
   def textual_availability_zone
     availability_zone = @record.availability_zone
     label = ui_lookup(:table => "availability_zone")
-    h = {:label => label, :image => "availability_zone", :value => (availability_zone.nil? ? "None" : availability_zone.name)}
+    h = {
+      :label => label,
+      :image => "availability_zone",
+      :value => (availability_zone.nil? ? "None" : availability_zone.name)
+    }
     if availability_zone && role_allows(:feature => "availability_zone_show")
       h[:title] = "Show this Volume's #{label}"
       h[:link]  = url_for(:controller => 'availability_zone', :action => 'show', :id => availability_zone)
