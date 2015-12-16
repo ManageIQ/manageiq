@@ -32,7 +32,7 @@ describe "JobProxyDispatcherGetEligibleProxiesForJob" do
           end
 
           it "should return an empty array" do
-            @jpd.get_eligible_proxies_for_job(@job).should be_empty
+            expect(@jpd.get_eligible_proxies_for_job(@job)).to be_empty
           end
         end
 
@@ -44,7 +44,7 @@ describe "JobProxyDispatcherGetEligibleProxiesForJob" do
           end
 
           it "should return an empty array" do
-            @jpd.get_eligible_proxies_for_job(@job).should be_empty
+            expect(@jpd.get_eligible_proxies_for_job(@job)).to be_empty
           end
         end
 
@@ -54,7 +54,7 @@ describe "JobProxyDispatcherGetEligibleProxiesForJob" do
           end
 
           it "should return an empty array" do
-            @jpd.get_eligible_proxies_for_job(@job).should be_empty
+            expect(@jpd.get_eligible_proxies_for_job(@job)).to be_empty
           end
         end
       end
