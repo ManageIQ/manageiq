@@ -16,7 +16,7 @@ module MiqServer::LogManagement
     time.respond_to?(:strftime) ? time.strftime("%Y%m%d_%H%M%S") : "unknown"
   end
 
-  def post_historical_logs(taskid)
+  def post_historical_logs(taskid, log_depot)
     task = MiqTask.find(taskid)
     resource = who_am_i
 
@@ -124,13 +124,14 @@ module MiqServer::LogManagement
   def post_logs(options)
     taskid = options[:taskid]
     task = MiqTask.find(taskid)
+    context_log_depot = log_depot(options[:context])
 
     # the current queue item and task must be errored out on exceptions so re-raise any caught errors
-    raise "Log depot settings not configured" unless log_depot
-    log_depot.update_attributes(:support_case => options[:support_case].presence)
+    raise "Log depot settings not configured" unless context_log_depot
+    context_log_depot.update_attributes(:support_case => options[:support_case].presence)
 
-    post_historical_logs(taskid) unless options[:only_current]
-    post_current_logs(taskid)
+    post_historical_logs(taskid, context_log_depot) unless options[:only_current]
+    post_current_logs(taskid, context_log_depot)
     task.update_status("Finished", "Ok", "Log files were successfully collected")
   end
 
@@ -155,7 +156,7 @@ module MiqServer::LogManagement
     [pg_data.join("*.conf"), pg_data.join("pg_log/*")]
   end
 
-  def post_current_logs(taskid)
+  def post_current_logs(taskid, log_depot)
     resource = who_am_i
     task = MiqTask.find(taskid)
 
@@ -248,8 +249,8 @@ module MiqServer::LogManagement
     MiqTask.exists?(["miq_server_id = ? and name like ? and state != ?", id, "Zipped log retrieval for %", "Finished"])
   end
 
-  def log_depot
-    log_file_depot || zone.log_file_depot
+  def log_depot(context)
+    context == "Zone" ? zone.log_file_depot : log_file_depot
   end
 
   def base_zip_log_name
