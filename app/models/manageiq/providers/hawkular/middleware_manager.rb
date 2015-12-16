@@ -7,8 +7,8 @@ module ManageIQ::Providers
 
     DEFAULT_PORT = 80
     default_value_for :port, DEFAULT_PORT
-    has_many :middleware_servers, :foreign_key => :ems_id
-    has_many :middleware_deployments, :foreign_key => :ems_id
+    has_many :middleware_servers, :foreign_key => :ems_id, :dependent => :destroy
+    has_many :middleware_deployments, :foreign_key => :ems_id, :dependent => :destroy
 
     def verify_credentials(auth_type = nil, options = {})
       auth_type ||= 'default'

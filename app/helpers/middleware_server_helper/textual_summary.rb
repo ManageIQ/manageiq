@@ -12,7 +12,7 @@ module MiddlewareServerHelper::TextualSummary
 
   def textual_group_relationships
     # Order of items should be from parent to child
-    items = []
+    %i(ems)
     # items.concat(%i(middleware_servers))
     # items
   end

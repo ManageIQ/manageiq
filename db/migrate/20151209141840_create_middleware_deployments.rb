@@ -3,7 +3,6 @@ class CreateMiddlewareDeployments < ActiveRecord::Migration
     create_table :middleware_deployments do |t|
       t.string :name # name of the deployment
       t.string :ems_ref    # path
-      t.string :server
       t.string :nativeid
       t.bigint :server_id
       t.bigint :ems_id

@@ -1,6 +1,7 @@
 #main_div
   - arr = %w(container_images container_image_registries containers container_replicators container_routes)
   - arr.concat(%w(container_projects container_nodes container_services container_groups availability_zones))
+  - arr.concat(%w(middleware_servers))
   - arr.concat(%w(cloud_tenants ems_clusters flavors security_groups resource_group hosts instances images miq_templates cloud_volumes))
   - arr.concat(%w(orchestration_stacks vms storages miq_proxies persistent_volumes))
   - if arr.include?(@display) && @showtype != "compare"
