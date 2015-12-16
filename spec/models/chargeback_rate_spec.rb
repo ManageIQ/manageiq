@@ -4,7 +4,7 @@ describe ChargebackRate do
   context "#validate_rate_type" do
     it "handles valid types" do
       [:compute, :storage, 'compute', 'storage', 'Compute', 'Storage'].each do |type|
-        -> { ChargebackRate.validate_rate_type(type) }.should_not raise_error
+        expect { ChargebackRate.validate_rate_type(type) }.not_to raise_error
       end
     end
 

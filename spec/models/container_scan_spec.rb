@@ -41,26 +41,26 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
         :image_ref => 'docker://3629a651e6c11d7435937bdf41da11cf87863c03f2587fa788cf5cbfe8a11b9a'
       )
 
-      @image.class.any_instance.stub(:scan_metadata) do |_args|
+      allow_any_instance_of(@image.class).to receive(:scan_metadata) do |instance, _args|
         @job.signal(:data, '<summary><scanmetadata></scanmetadata></summary>')
       end
 
-      @image.class.any_instance.stub(:sync_metadata) do |_args|
+      allow_any_instance_of(@image.class).to receive(:sync_metadata) do |instance, _args|
         @job.signal(:data, '<summary><syncmetadata></syncmetadata></summary>')
       end
 
       @job = @image.scan
-      MiqQueue.stub(:put_unless_exists) do |args|
+      allow(MiqQueue).to receive(:put_unless_exists) do |args|
         @job.signal(*args[:args])
       end
     end
 
     it 'should report success' do
       VCR.use_cassette(described_class.name.underscore, :record => :none) do # needed for health check
-        @job.state.should eq 'waiting_to_start'
+        expect(@job.state).to eq 'waiting_to_start'
         @job.signal(:start)
-        @job.state.should eq 'finished'
-        @job.status.should eq 'ok'
+        expect(@job.state).to eq 'finished'
+        expect(@job.status).to eq 'ok'
       end
     end
 
@@ -71,9 +71,9 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
 
       it 'should report the error' do
         @job.signal(:start)
-        @job.state.should eq 'finished'
-        @job.status.should eq 'error'
-        @job.message.should eq "no image found"
+        expect(@job.state).to eq 'finished'
+        expect(@job.status).to eq 'error'
+        expect(@job.message).to eq "no image found"
       end
     end
 
@@ -81,16 +81,16 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
       CODE = 0
       CLIENT_MESSAGE = 'error'
       before(:each) do
-        MockClient.any_instance.stub(:create_pod) do |*_args|
+        allow_any_instance_of(MockClient).to receive(:create_pod) do |instance, *_args|
           raise KubeException.new(CODE, CLIENT_MESSAGE, nil)
         end
       end
 
       it 'should report the error' do
         @job.signal(:start)
-        @job.state.should eq 'finished'
-        @job.status.should eq 'error'
-        @job.message.should eq "pod creation for management-infra/manageiq-img-scan-3629a651e6c1" \
+        expect(@job.state).to eq 'finished'
+        expect(@job.status).to eq 'error'
+        expect(@job.message).to eq "pod creation for management-infra/manageiq-img-scan-3629a651e6c1" \
                                " failed: HTTP status code #{CODE}, #{CLIENT_MESSAGE}"
       end
     end

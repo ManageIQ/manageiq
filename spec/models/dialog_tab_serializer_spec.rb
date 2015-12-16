@@ -31,11 +31,11 @@ describe DialogTabSerializer do
     end
 
     before do
-      dialog_group_serializer.stub(:serialize).with(dialog_group).and_return("serialized dialog group")
+      allow(dialog_group_serializer).to receive(:serialize).with(dialog_group).and_return("serialized dialog group")
     end
 
     it "serializes the dialog tab" do
-      dialog_tab_serializer.serialize(dialog_tab).should == expected_serialized_values
+      expect(dialog_tab_serializer.serialize(dialog_tab)).to eq(expected_serialized_values)
     end
   end
 end

@@ -94,14 +94,14 @@ describe Compliance do
 
         it "compliant" do
           expect(MiqEvent).to receive(:raise_evm_event_queue).with(subject, "vm_compliance_passed")
-          expect(Compliance.check_compliance(subject)).to be_true
+          expect(Compliance.check_compliance(subject)).to be_truthy
         end
 
         it "non-compliant" do
           policy.conditions << FactoryGirl.create(:condition, :expression => MiqExpression.new(">=" => {"field" => "Vm-num_cpu", "value" => "2"}))
 
           expect(MiqEvent).to receive(:raise_evm_event_queue).with(subject, "vm_compliance_failed")
-          expect(Compliance.check_compliance(subject)).to be_false
+          expect(Compliance.check_compliance(subject)).to be_falsey
         end
       end
 
