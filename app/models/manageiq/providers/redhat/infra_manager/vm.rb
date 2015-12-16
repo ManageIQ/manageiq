@@ -44,6 +44,10 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
     validate_unsupported("Migrate")
   end
 
+  def validate_publish
+    validate_unsupported("Publish VM")
+  end
+
   # Show Reconfigure VM task
   def reconfigurable?
     true
