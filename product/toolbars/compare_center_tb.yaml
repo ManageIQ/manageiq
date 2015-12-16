@@ -21,10 +21,10 @@
 - :name: compare_mode
   :items:
   - :buttonTwoState: comparemode_details
-    :image: view_list
+    :icon: fa fa-bars fa-rotate-90 fa-lg
     :title: "Details Mode"
     :url: 'compare_mode'
   - :buttonTwoState: comparemode_exists
-    :image: exists
+    :icon: product product-exists fa-lg
     :title: "Exists Mode"
     :url: 'compare_mode'

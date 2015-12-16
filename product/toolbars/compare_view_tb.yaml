@@ -6,11 +6,11 @@
 - :name: compare_view
   :items:
   - :buttonTwoState: compare_expanded
-    :image: view_expanded
+    :icon: product product-view_expanded fa-lg
     :title: "Expanded View"
     :url: 'compare_compress'
   - :buttonTwoState: compare_compressed
-    :image: view_compressed
+    :icon: fa fa-bars fa-rotate-90 fa-lg
     :title: "Compressed View"
     :url: 'compare_compress'
 - :name: compare_downloading
