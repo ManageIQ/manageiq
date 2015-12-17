@@ -94,7 +94,7 @@ module ManageIQ::Providers
           :description => flavor.description,
           :enabled     => !flavor.deprecated,
           :cpus        => flavor.guest_cpus,
-          :cpu_cores   => flavor.guest_cpus,
+          :cpu_cores   => 1,
           :memory      => flavor.memory_mb * 1.megabyte,
         }
 
