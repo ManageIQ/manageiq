@@ -1,5 +1,5 @@
 = render :partial => 'layouts/doctype'
-%html
+%html{:lang => I18n.locale.to_s.sub('-', '_')}
   %head
     %title
       = _('VNC Console')

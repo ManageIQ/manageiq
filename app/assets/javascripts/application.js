@@ -101,4 +101,4 @@
 //= require miq_list_grid
 //= require miq_toolbar
 //= require resizable_sidebar
-
+//= require i18n

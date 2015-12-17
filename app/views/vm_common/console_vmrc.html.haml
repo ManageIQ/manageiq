@@ -1,5 +1,5 @@
 = render :partial => 'layouts/doctype'
-%html
+%html{:lang => I18n.locale.to_s.sub('-', '_')}
   %head
     - if %w(5.1 5.5).include?(api_version) && is_browser_ie? && browser_info(:version).to_i > 9
       %meta{:content => "IE=8", "http-equiv" => "X-UA-Compatible"}

@@ -39,6 +39,9 @@ if (typeof(ManageIQ) === 'undefined') {
       formatters: {}, // functions corresponding to MiqReport::Formatting
     },
     grids: {}, // stored grids on the screen
+    i18n: {
+      mark_translated_strings: false
+    },
     mouse: {
       x: null, // mouse X coordinate for popup menu
       y: null, // mouse Y coordinate for popup menu

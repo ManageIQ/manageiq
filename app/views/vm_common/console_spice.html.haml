@@ -1,6 +1,6 @@
 - record_name = (@record.name rescue '')
 = render :partial => 'layouts/doctype'
-%html
+%html{:lang => I18n.locale.to_s.sub('-', '_')}
   %head
     %title
       = _('SPICE Console')

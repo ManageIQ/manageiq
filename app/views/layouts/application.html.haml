@@ -1,17 +1,18 @@
 = render :partial => 'layouts/doctype'
 - if @report_only
-  %html
+  %html{:lang => I18n.locale.to_s.sub('-', '_')}
     %head
       %title CloudForms Management Engine: #{@layout.titleize}
       = split_stylesheet_link_tag 'application'
       = javascript_include_tag 'application'
       - if Rails.env.development?
         = javascript_include_tag 'miq_debug'
+      = render :partial => 'layouts/i18n_js'
     %body{:style => "overflow: scroll; padding: 0 20px 0 20px !important"}
       = yield
 - else
   <!--[if IE 9]><html class="ie9"><![endif]-->
-  %html
+  %html{:lang => I18n.locale.to_s.sub('-', '_')}
     %head
       %title= h(title_from_layout(@layout))
 
@@ -27,6 +28,7 @@
       - if Rails.env.development?
         = javascript_include_tag 'miq_debug'
       = csrf_meta_tag
+      = render :partial => 'layouts/i18n_js'
       - if @timeline
         = javascript_include_tag '/javascripts/timeline/api/timeline-api.js'
         - if @timeline_filter
