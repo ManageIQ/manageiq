@@ -28,8 +28,10 @@ module Vmdb
     end
 
     def replace_directive_processor(type)
-      Rails.application.assets.unregister_processor(type, Sprockets::DirectiveProcessor)
-      Rails.application.assets.register_processor(type, DirectiveProcessor)
+      if Rails.application.assets.respond_to?(:register_processor)
+        Rails.application.assets.unregister_processor(type, Sprockets::DirectiveProcessor)
+        Rails.application.assets.register_processor(type, DirectiveProcessor)
+      end
     end
 
     # Override Rails' rake task component for precompilation to log separators on
