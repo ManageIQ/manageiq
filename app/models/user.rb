@@ -116,10 +116,10 @@ class User < ActiveRecord::Base
   def change_password(oldpwd, newpwd)
     auth = self.class.authenticator(userid)
     raise MiqException::MiqEVMLoginError, "password change not allowed when authentication mode is #{auth.class.proper_name}" unless auth.uses_stored_password?
-    raise MiqException::MiqEVMLoginError, "old password does not match current password" unless User.authenticate(userid, oldpwd)
-
-    self.password = newpwd
-    self.save!
+    if auth.authenticate(userid, oldpwd)
+      self.password = newpwd
+      self.save!
+    end
   end
 
   def ldap_group
