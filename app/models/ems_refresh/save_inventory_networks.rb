@@ -153,12 +153,12 @@ module EmsRefresh
       store_ids_for_new_records(ems.network_routers, hashes, :ems_ref)
     end
 
-    def save_network_ports_inventory(ems, hashes, target = nil)
+    def save_network_ports_inventory(ems, hashes, target = nil, source = :neutron)
       target = ems if target.nil?
 
       ems.network_ports(true)
       deletes = if (target == ems)
-                  ems.network_ports.dup
+                  ems.network_ports.where(:source => source).dup
                 else
                   []
                 end
@@ -168,12 +168,13 @@ module EmsRefresh
           h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
         end
 
-        h[:security_groups] = h.fetch_path(:security_groups).map { |x| x[:_object] }
+        h[:security_groups] = h.fetch_path(:security_groups).map { |x| x[:_object] } if h.fetch_path(:security_groups)
+        h[:source] = source
       end
 
-      save_inventory_multi(:network_ports, ems, hashes, deletes, [:ems_ref], nil, [])
+      save_inventory_multi(:network_ports, ems, hashes, deletes, [:mac_address], nil, [])
 
-      store_ids_for_new_records(ems.network_ports, hashes, :ems_ref)
+      store_ids_for_new_records(ems.network_ports, hashes, :mac_address)
     end
 
     def link_floating_ips_to_network_ports(hashes)
