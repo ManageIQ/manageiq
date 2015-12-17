@@ -1862,7 +1862,6 @@ class CatalogController < ApplicationController
 
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 
-    presenter[:open_accord] = 'sandt' if @sb[:active_tree] == :sandt_tree
     # have to make Catalog Items accordion active incase link on Catalog show screen was pressed
 
     # Decide whether to show paging controls
