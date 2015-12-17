@@ -7,6 +7,9 @@ eval_gemfile(File.expand_path("gems/pending/Gemfile", __dir__))
 gem "activerecord-deprecated_finders", "~>1.0.4",  :require => "active_record/deprecated_finders"
 gem "rails",                           "~>4.2.5"
 
+# Temporarily restrict Sprockets to < 3.0 while we deal with compatibility issues
+gem "sprockets-rails", "< 3.0.0"
+
 # Local gems
 path "gems/" do
   gem "manageiq_foreman", :require => false
