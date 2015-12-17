@@ -82,7 +82,7 @@ module ReportController::Reports
     assert_privileges("miq_report_delete")
     rpt = MiqReport.find(params[:id])
 
-    if rpt.widgets.exist?
+    if rpt.miq_widgets.exists?
       add_flash(_("Report cannot be deleted if it's being used by one or more Widgets"), :error)
       render :update do |page|
         page.replace("flash_msg_div_report_list", :partial => "layouts/flash_msg", :locals => {:div_num => "_report_list"})
@@ -94,10 +94,11 @@ module ReportController::Reports
         audit = {:event => "report_record_delete", :message => "[#{rpt_name}] Record deleted", :target_id => rpt.id, :target_class => "MiqReport", :userid => session[:userid]}
         rpt.destroy
       rescue StandardError => bang
-        add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "MiqReport"), :name => rpt_name, :task => task} << bang.message, :error)
+        add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "MiqReport"), :name => rpt_name, :task => 'miq_report_delete'} << bang.message, :error)
         render :update do |page|
           page.replace("flash_msg_div_report_list", :partial => "layouts/flash_msg", :locals => {:div_num => "_report_list"})
         end
+        return
       else
         AuditEvent.success(audit)
         add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => "MiqReport"), :name => rpt_name})
@@ -187,7 +188,7 @@ module ReportController::Reports
       schedules = schedules.where(:userid => current_userid) unless super_admin_user?
       @schedules = schedules.select { |s| s.filter.exp["="]["value"].to_i == @miq_report.id.to_i }.sort_by(&:name)
 
-      @widget_nodes = @miq_report.widgets.to_a
+      @widget_nodes = @miq_report.miq_widgets.to_a
     end
 
     @sb[:tree_typ]   = "reports"
