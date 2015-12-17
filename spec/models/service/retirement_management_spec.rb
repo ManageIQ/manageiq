@@ -7,10 +7,10 @@ describe "Service Retirement Management" do
   end
 
   it "#retirement_check" do
-    MiqEvent.should_receive(:raise_evm_event)
+    expect(MiqEvent).to receive(:raise_evm_event)
     @service.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
     expect(@service.retirement_last_warn).to be_nil
-    @service.class.any_instance.should_receive(:retire_now).once
+    expect_any_instance_of(@service.class).to receive(:retire_now).once
     @service.retirement_check
     @service.reload
     expect(@service.retirement_last_warn).not_to be_nil
@@ -77,7 +77,7 @@ describe "Service Retirement Management" do
     ems = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
     vm  = FactoryGirl.create(:vm_vmware, :ems_id => ems.id)
     @service << vm
-    expect(@service.service_resources).to have(1).thing
+    expect(@service.service_resources.size).to eq(1)
     expect(@service.service_resources.first.resource).to receive(:retire_now).once
     @service.retire_service_resources
   end
@@ -88,7 +88,7 @@ describe "Service Retirement Management" do
     userid = 'freddy'
     @service.update_attributes(:retirement_requester => userid)
     @service << vm
-    expect(@service.service_resources).to have(1).thing
+    expect(@service.service_resources.size).to eq(1)
     expect(@service.service_resources.first.resource).to receive(:retire_now).with(userid).once
     @service.retire_service_resources
   end
@@ -97,7 +97,7 @@ describe "Service Retirement Management" do
     ems = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
     vm  = FactoryGirl.create(:vm_vmware, :ems_id => ems.id)
     @service << vm
-    expect(@service.service_resources).to have(1).thing
+    expect(@service.service_resources.size).to eq(1)
     expect(@service.service_resources.first.resource).to receive(:retire_now).with(nil).once
     @service.retire_service_resources
   end
@@ -106,41 +106,41 @@ describe "Service Retirement Management" do
     expect(@service.retirement_state).to be_nil
     @service.finish_retirement
     @service.reload
-    expect(@service.retired).to be_true
+    expect(@service.retired).to be_truthy
     expect(@service.retires_on).to eq(Date.today)
     expect(@service.retirement_state).to eq("retired")
   end
 
   it "#retiring - false" do
     expect(@service.retirement_state).to be_nil
-    expect(@service.retiring?).to be_false
+    expect(@service.retiring?).to be_falsey
   end
 
   it "#retiring - true" do
     @service.update_attributes(:retirement_state => 'retiring')
-    expect(@service.retiring?).to be_true
+    expect(@service.retiring?).to be_truthy
   end
 
   it "#error_retiring - false" do
     expect(@service.retirement_state).to be_nil
-    expect(@service.error_retiring?).to be_false
+    expect(@service.error_retiring?).to be_falsey
   end
 
   it "#error_retiring - true" do
     @service.update_attributes(:retirement_state => 'error')
-    expect(@service.error_retiring?).to be_true
+    expect(@service.error_retiring?).to be_truthy
   end
 
   it "#retires_on - today" do
-    expect(@service.retirement_due?).to be_false
+    expect(@service.retirement_due?).to be_falsey
     @service.retires_on = Date.today
-    expect(@service.retirement_due?).to be_true
+    expect(@service.retirement_due?).to be_truthy
   end
 
   it "#retires_on - tomorrow" do
-    expect(@service.retirement_due?).to be_false
+    expect(@service.retirement_due?).to be_falsey
     @service.retires_on = Date.today + 1
-    expect(@service.retirement_due?).to be_false
+    expect(@service.retirement_due?).to be_falsey
   end
 
   # it "#retirement_warn" do
@@ -152,16 +152,16 @@ describe "Service Retirement Management" do
   # end
 
   it "#retirement_due?" do
-    expect(@service.retirement_due?).to be_false
+    expect(@service.retirement_due?).to be_falsey
 
     @service.update_attributes(:retires_on => Date.today + 1.day)
-    expect(@service.retirement_due?).to be_false
+    expect(@service.retirement_due?).to be_falsey
 
     @service.update_attributes(:retires_on => Date.today)
-    expect(@service.retirement_due?).to be_true
+    expect(@service.retirement_due?).to be_truthy
 
     @service.update_attributes(:retires_on => Date.today - 1.day)
-    expect(@service.retirement_due?).to be_true
+    expect(@service.retirement_due?).to be_truthy
   end
 
   it "#raise_retirement_event" do

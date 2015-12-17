@@ -61,24 +61,24 @@ describe Tenant do
   describe "#tenant?" do
     it "detects tenant" do
       t = Tenant.new(:divisible => true)
-      expect(t.tenant?).to be_true
+      expect(t.tenant?).to be_truthy
     end
 
     it "detects non tenant" do
       t = Tenant.new(:divisible => false)
-      expect(t.tenant?).not_to be_true
+      expect(t.tenant?).not_to be_truthy
     end
   end
 
   describe "#project?" do
     it "detects project" do
       t = Tenant.new(:divisible => false)
-      expect(t.project?).to be_true
+      expect(t.project?).to be_truthy
     end
 
     it "detects non project" do
       t = Tenant.new(:divisible => true)
-      expect(t.project?).not_to be_true
+      expect(t.project?).not_to be_truthy
     end
   end
 

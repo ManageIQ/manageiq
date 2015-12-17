@@ -25,13 +25,13 @@ describe RssFeed::ImportExport do
     context "new" do
       it "preview" do
         expect(subject[:status]).to eq(:add)
-        RssFeed.count.should == 0
+        expect(RssFeed.count).to eq(0)
       end
 
       it "import" do
         @options[:save] = true
         expect(subject[:status]).to eq(:add)
-        RssFeed.count.should == 1
+        expect(RssFeed.count).to eq(1)
       end
     end
 
@@ -48,13 +48,13 @@ describe RssFeed::ImportExport do
       context "overwrite" do
         it "preview" do
           expect(subject[:status]).to eq(:update)
-          RssFeed.first.title.should == @title
+          expect(RssFeed.first.title).to eq(@title)
         end
 
         it "import" do
           @options[:save] = true
           expect(subject[:status]).to eq(:update)
-          RssFeed.first.title.should == "My test RSS feed"
+          expect(RssFeed.first.title).to eq("My test RSS feed")
         end
       end
 
@@ -63,13 +63,13 @@ describe RssFeed::ImportExport do
 
         it "preview" do
           expect(subject[:status]).to eq(:keep)
-          RssFeed.first.title.should == @title
+          expect(RssFeed.first.title).to eq(@title)
         end
 
         it "import" do
           @options[:save] = true
           expect(subject[:status]).to eq(:keep)
-          RssFeed.first.title.should == @title
+          expect(RssFeed.first.title).to eq(@title)
         end
       end
     end

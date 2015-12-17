@@ -3,9 +3,9 @@ require "spec_helper"
 describe Repository do
   it "is not valid with empty attributes" do
     repo = Repository.new
-    repo.should_not be_valid
-    repo.errors.should include(:name)
-    repo.errors.should include(:relative_path)
+    expect(repo).not_to be_valid
+    expect(repo.errors).to include(:name)
+    expect(repo.errors).to include(:relative_path)
   end
 
   it "is not valid with duplicate name" do
@@ -19,8 +19,8 @@ describe Repository do
     vmfs = FactoryGirl.create(:repository, :name => vmfs_name, :relative_path => vmfs_relative_path)
 
     repo = Repository.new(:name => nas_name, :relative_path => nas_relative_path)
-    repo.save.should_not be_true
-    repo.errors[:name].should == ["has already been taken"]
+    expect(repo.save).not_to be_truthy
+    expect(repo.errors[:name]).to eq(["has already been taken"])
   end
 
   it "#valid_path class method works properly" do
@@ -34,8 +34,8 @@ describe Repository do
       '\hostname\share\directory\valid',
       'c:\program files\myrepo'
     ]
-    good.each { |path| Repository.should     be_valid_path(path) }
-    bad.each  { |path| Repository.should_not be_valid_path(path) }
+    good.each { |path| expect(Repository).to     be_valid_path(path) }
+    bad.each  { |path| expect(Repository).not_to be_valid_path(path) }
   end
 
   it "is creates needed storage" do
@@ -43,8 +43,8 @@ describe Repository do
     relpath = "mydir"
     repo = Repository.add("test_storage_created", File.join(sname, relpath))
 
-    repo.storage.should_not be_nil
-    repo.storage.name.should == sname
-    repo.relative_path.should == relpath
+    expect(repo.storage).not_to be_nil
+    expect(repo.storage.name).to eq(sname)
+    expect(repo.relative_path).to eq(relpath)
   end
 end

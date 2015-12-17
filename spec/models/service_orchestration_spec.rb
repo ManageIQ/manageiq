@@ -40,12 +40,12 @@ describe ServiceOrchestration do
 
   context "#stack_name" do
     it "gets stack name from dialog options" do
-      service_with_dialog_options.stack_name.should == 'test123'
+      expect(service_with_dialog_options.stack_name).to eq('test123')
     end
 
     it "gets stack name from overridden value" do
       service_with_dialog_options.stack_name = "new_name"
-      service_with_dialog_options.stack_name.should == "new_name"
+      expect(service_with_dialog_options.stack_name).to eq("new_name")
     end
   end
 
@@ -56,41 +56,41 @@ describe ServiceOrchestration do
     end
 
     it "gets stack options set by dialog" do
-      service_with_dialog_options.stack_options.should == dialog_options
+      expect(service_with_dialog_options.stack_options).to eq(dialog_options)
     end
 
     it "gets stack options from overridden values" do
       new_options = {"any_key" => "any_value"}
       service_with_dialog_options.stack_options = new_options
-      service_with_dialog_options.stack_options.should == new_options
+      expect(service_with_dialog_options.stack_options).to eq(new_options)
     end
 
     it "encrypts password when saves to DB" do
       new_options = {:parameters => {"my_password" => "secret"}}
       service_with_dialog_options.stack_options = new_options
-      service_with_dialog_options.options[:create_options][:parameters]["my_password"].should == MiqPassword.encrypt("secret")
+      expect(service_with_dialog_options.options[:create_options][:parameters]["my_password"]).to eq(MiqPassword.encrypt("secret"))
     end
 
     it "prefers the orchestration template set by dialog" do
-      service_mix_dialog_setter.orchestration_template.should == template_by_setter
+      expect(service_mix_dialog_setter.orchestration_template).to eq(template_by_setter)
       service_mix_dialog_setter.stack_options
-      service_mix_dialog_setter.orchestration_template.should == template_by_dialog
+      expect(service_mix_dialog_setter.orchestration_template).to eq(template_by_dialog)
     end
 
     it "prefers the orchestration manager set by dialog" do
-      service_mix_dialog_setter.orchestration_manager.should == manager_by_setter
+      expect(service_mix_dialog_setter.orchestration_manager).to eq(manager_by_setter)
       service_mix_dialog_setter.stack_options
-      service_mix_dialog_setter.orchestration_manager.should == manager_by_dialog
+      expect(service_mix_dialog_setter.orchestration_manager).to eq(manager_by_dialog)
     end
   end
 
   context '#deploy_orchestration_stack' do
     it 'creates a stack through cloud manager' do
-      ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack.stub(:raw_create_stack) do |manager, name, template, opts|
-        manager.should == manager_by_setter
-        name.should == 'test123'
-        template.should be_kind_of OrchestrationTemplate
-        opts.should be_kind_of Hash
+      allow(ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack).to receive(:raw_create_stack) do |manager, name, template, opts|
+        expect(manager).to eq(manager_by_setter)
+        expect(name).to eq('test123')
+        expect(template).to be_kind_of OrchestrationTemplate
+        expect(opts).to be_kind_of Hash
       end
 
       service_mix_dialog_setter.deploy_orchestration_stack
@@ -98,9 +98,9 @@ describe ServiceOrchestration do
 
     it 'always saves options even when the manager fails to create a stack' do
       ProvisionError = MiqException::MiqOrchestrationProvisionError
-      ManageIQ::Providers::Amazon::CloudManager.any_instance.stub(:stack_create).and_raise(ProvisionError, 'test failure')
+      allow_any_instance_of(ManageIQ::Providers::Amazon::CloudManager).to receive(:stack_create).and_raise(ProvisionError, 'test failure')
 
-      service_mix_dialog_setter.should_receive(:save_create_options)
+      expect(service_mix_dialog_setter).to receive(:save_create_options)
       expect { service_mix_dialog_setter.deploy_orchestration_stack }.to raise_error(ProvisionError)
     end
   end
@@ -119,42 +119,42 @@ describe ServiceOrchestration do
     end
 
     it 'updates a stack through cloud manager' do
-      OrchestrationStack.any_instance.stub(:raw_update_stack) do |_instance, new_template, opts|
-        opts[:parameters].should include(
+      allow_any_instance_of(OrchestrationStack).to receive(:raw_update_stack) do |instance, _instance, new_template, opts|
+        expect(opts[:parameters]).to include(
           'InstanceType'   => 'cg1.4xlarge',
           'DBRootPassword' => 'admin'
         )
-        new_template.should == template_by_setter
+        expect(new_template).to eq(template_by_setter)
       end
       reconfigurable_service.update_orchestration_stack
     end
 
     it 'saves update options and encrypts password' do
-      reconfigurable_service.options[:update_options][:parameters]['DBRootPassword'].should == MiqPassword.encrypt("admin")
+      expect(reconfigurable_service.options[:update_options][:parameters]['DBRootPassword']).to eq(MiqPassword.encrypt("admin"))
     end
   end
 
   context '#orchestration_stack_status' do
     it 'returns an error if stack has never been deployed' do
       status, _message = service_mix_dialog_setter.orchestration_stack_status
-      status.should == 'check_status_failed'
+      expect(status).to eq('check_status_failed')
     end
 
     it 'returns current stack status through provider' do
       status_obj = ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack::Status.new('CREATE_COMPLETE', 'no error')
-      deployed_stack.stub(:raw_status).and_return(status_obj)
+      allow(deployed_stack).to receive(:raw_status).and_return(status_obj)
 
       status, message = service_with_deployed_stack.orchestration_stack_status
-      status.should == 'create_complete'
-      message.should == 'no error'
+      expect(status).to eq('create_complete')
+      expect(message).to eq('no error')
     end
 
     it 'returns an error message when the provider fails to retrieve the status' do
-      deployed_stack.stub(:raw_status).and_raise(MiqException::MiqOrchestrationStatusError, 'test failure')
+      allow(deployed_stack).to receive(:raw_status).and_raise(MiqException::MiqOrchestrationStatusError, 'test failure')
 
       status, message = service_with_deployed_stack.orchestration_stack_status
-      status.should == 'check_status_failed'
-      message.should == 'test failure'
+      expect(status).to eq('check_status_failed')
+      expect(message).to eq('test failure')
     end
   end
 

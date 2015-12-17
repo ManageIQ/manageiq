@@ -46,26 +46,26 @@ describe ResourcePool do
     end
 
     it "should return the correct values for v_direct_vms and v_total_vms" do
-      @rp1.v_direct_vms.should == 5
-      @rp1.v_total_vms.should == 15
+      expect(@rp1.v_direct_vms).to eq(5)
+      expect(@rp1.v_total_vms).to eq(15)
 
-      @rp2.v_direct_vms.should == 10
-      @rp2.v_total_vms.should == 10
+      expect(@rp2.v_direct_vms).to eq(10)
+      expect(@rp2.v_total_vms).to eq(10)
 
-      @rp3.v_direct_vms.should == 15
-      @rp3.v_total_vms.should == 15
+      expect(@rp3.v_direct_vms).to eq(15)
+      expect(@rp3.v_total_vms).to eq(15)
 
-      @rp4.v_direct_vms.should == 1
-      @rp4.v_total_vms.should == 3
+      expect(@rp4.v_direct_vms).to eq(1)
+      expect(@rp4.v_total_vms).to eq(3)
 
-      @rp5.v_direct_vms.should == 0
-      @rp5.v_total_vms.should == 2
+      expect(@rp5.v_direct_vms).to eq(0)
+      expect(@rp5.v_total_vms).to eq(2)
 
-      @rp6.v_direct_vms.should == 2
-      @rp6.v_total_vms.should == 2
+      expect(@rp6.v_direct_vms).to eq(2)
+      expect(@rp6.v_total_vms).to eq(2)
 
-      @rp7.v_direct_vms.should == 0
-      @rp7.v_total_vms.should == 0
+      expect(@rp7.v_direct_vms).to eq(0)
+      expect(@rp7.v_total_vms).to eq(0)
     end
   end
 end
