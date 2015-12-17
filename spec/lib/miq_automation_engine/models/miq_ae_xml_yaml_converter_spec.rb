@@ -57,36 +57,36 @@ module MiqAeDatastoreConverter
 
       it "convert a domain from XML into a ZIP and import it in" do
         MiqAeDatastore::XmlYamlConverter.convert(@root_xml, @domain, 'zip_file' => @zip_file)
-        MiqAeDomain.count.should eql(0)
-        MiqAeNamespace.count.should eql(0)
-        MiqAeClass.count.should eql(0)
-        MiqAeInstance.count.should eql(0)
-        MiqAeField.count.should eql(0)
+        expect(MiqAeDomain.count).to eql(0)
+        expect(MiqAeNamespace.count).to eql(0)
+        expect(MiqAeClass.count).to eql(0)
+        expect(MiqAeInstance.count).to eql(0)
+        expect(MiqAeField.count).to eql(0)
         import_options = {}
         import_options['preview'] = false
         import_options['zip_file'] = @zip_file
         MiqAeImport.new(@domain, import_options).import
-        MiqAeDomain.count.should eql(1)
-        MiqAeDomain.first.ae_namespaces.count.should eql(1)
-        MiqAeClass.count.should eql(1)
-        MiqAeInstance.count.should eql(2)
+        expect(MiqAeDomain.count).to eql(1)
+        expect(MiqAeDomain.first.ae_namespaces.count).to eql(1)
+        expect(MiqAeClass.count).to eql(1)
+        expect(MiqAeInstance.count).to eql(2)
       end
 
       it "convert a domain from XML into filesystem and import it in" do
         MiqAeDatastore::XmlYamlConverter.convert(@root_xml, @domain, 'export_dir' => @export_dir)
-        MiqAeDomain.count.should eql(0)
-        MiqAeNamespace.count.should eql(0)
-        MiqAeClass.count.should eql(0)
-        MiqAeInstance.count.should eql(0)
-        MiqAeField.count.should eql(0)
+        expect(MiqAeDomain.count).to eql(0)
+        expect(MiqAeNamespace.count).to eql(0)
+        expect(MiqAeClass.count).to eql(0)
+        expect(MiqAeInstance.count).to eql(0)
+        expect(MiqAeField.count).to eql(0)
         import_options = {}
         import_options['preview'] = false
         import_options['import_dir'] = @export_dir
         MiqAeImport.new(@domain, import_options).import
-        MiqAeDomain.count.should eql(1)
-        MiqAeDomain.first.ae_namespaces.count.should eql(1)
-        MiqAeClass.count.should eql(1)
-        MiqAeInstance.count.should eql(2)
+        expect(MiqAeDomain.count).to eql(1)
+        expect(MiqAeDomain.first.ae_namespaces.count).to eql(1)
+        expect(MiqAeClass.count).to eql(1)
+        expect(MiqAeInstance.count).to eql(2)
       end
     end
   end

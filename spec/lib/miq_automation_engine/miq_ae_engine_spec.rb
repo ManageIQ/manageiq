@@ -69,12 +69,12 @@ module MiqAeEngineSpec
           puts "#{q.last_exception.class.name}: #{q.last_exception.message}"
           puts q.last_exception.backtrace
         end
-        status.should_not == MiqQueue::STATUS_ERROR
+        expect(status).not_to eq(MiqQueue::STATUS_ERROR)
       end
 
       context "when Automate instantiation fails" do
         before(:each) do
-          MiqAeEngine.stub(:resolve_automation_object).and_return(nil)
+          allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(nil)
         end
 
         it "with defaults and non-STI object" do
@@ -82,8 +82,8 @@ module MiqAeEngineSpec
           object_id   = @cluster.id
           automate_attrs = {"#{object_type}::#{object_type.underscore}" => object_id,
                             "User::user"                                => @user.id}
-          MiqAeEngine.should_receive(:create_automation_object).with(@instance_name, automate_attrs, {:vmdb_object => @cluster}).and_return('uri')
-          call_automate(object_type, object_id).should be_nil
+          expect(MiqAeEngine).to receive(:create_automation_object).with(@instance_name, automate_attrs, {:vmdb_object => @cluster}).and_return('uri')
+          expect(call_automate(object_type, object_id)).to be_nil
         end
 
         it "with defaults and STI object" do
@@ -92,8 +92,8 @@ module MiqAeEngineSpec
           object_id   = @ems.id
           automate_attrs = {"#{base_name}::#{base_name.underscore}" => object_id,
                             "User::user"                            => @user.id}
-          MiqAeEngine.should_receive(:create_automation_object).with(@instance_name, automate_attrs, {:vmdb_object => @ems}).and_return('uri')
-          call_automate(object_type, object_id).should be_nil
+          expect(MiqAeEngine).to receive(:create_automation_object).with(@instance_name, automate_attrs, {:vmdb_object => @ems}).and_return('uri')
+          expect(call_automate(object_type, object_id)).to be_nil
         end
       end
 
@@ -103,13 +103,13 @@ module MiqAeEngineSpec
             root = {'ae_result' => 'error'}
             @ws = double('ws')
             @ws.stub(:root => root)
-            MiqAeEngine.stub(:resolve_automation_object).and_return(@ws)
+            allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(@ws)
           end
 
           it "with defaults" do
             object_type = @ems.class.name
             object_id   = @ems.id
-            call_automate(object_type, object_id).should == @ws
+            expect(call_automate(object_type, object_id)).to eq(@ws)
           end
         end
 
@@ -118,13 +118,13 @@ module MiqAeEngineSpec
             root = {'ae_result' => 'ok'}
             @ws = double('ws')
             @ws.stub(:root => root)
-            MiqAeEngine.stub(:resolve_automation_object).and_return(@ws)
+            allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(@ws)
           end
 
           it "with defaults" do
             object_type = @ems.class.name
             object_id   = @ems.id
-            call_automate(object_type, object_id).should == @ws
+            expect(call_automate(object_type, object_id)).to eq(@ws)
           end
 
           it "with a starting point instead of /SYSTEM/PROCESS" do
@@ -133,8 +133,8 @@ module MiqAeEngineSpec
             args[:instance_name]    = "DEFAULT"
             args[:fqclass_name] = "Factory/StateMachines/ServiceProvision_template"
             args[:user_id] = @user.id
-            MiqAeEngine.should_receive(:create_automation_object).with("DEFAULT", attrs, :fqclass => "Factory/StateMachines/ServiceProvision_template").and_return('uri')
-            MiqAeEngine.deliver(args).should == @ws
+            expect(MiqAeEngine).to receive(:create_automation_object).with("DEFAULT", attrs, :fqclass => "Factory/StateMachines/ServiceProvision_template").and_return('uri')
+            expect(MiqAeEngine.deliver(args)).to eq(@ws)
           end
         end
 
@@ -145,22 +145,22 @@ module MiqAeEngineSpec
             @ws.stub(:root => root)
             @ws.stub(:persist_state_hash => {})
             @ws.stub(:current_state_info => {})
-            MiqAeEngine.stub(:resolve_automation_object).and_return(@ws)
+            allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(@ws)
           end
 
           it "with defaults" do
             object_type = @ems.class.name
             object_id   = @ems.id
-            call_automate(object_type, object_id).should == @ws
+            expect(call_automate(object_type, object_id)).to eq(@ws)
 
-            MiqQueue.count.should == 1
+            expect(MiqQueue.count).to eq(1)
 
             q = MiqQueue.first
-            q.class_name.should == 'MiqAeEngine'
-            q.method_name.should == 'deliver'
-            q.zone.should == MiqServer.my_zone
-            q.role.should == 'automate'
-            q.msg_timeout.should == 60.minutes
+            expect(q.class_name).to eq('MiqAeEngine')
+            expect(q.method_name).to eq('deliver')
+            expect(q.zone).to eq(MiqServer.my_zone)
+            expect(q.role).to eq('automate')
+            expect(q.msg_timeout).to eq(60.minutes)
 
             args = {
               :object_type      => object_type,
@@ -176,7 +176,7 @@ module MiqAeEngineSpec
               :ae_state_started => @ae_state_started,
               :ae_state_retries => @ae_state_retries,
             }
-            q.args.first.should == args
+            expect(q.args.first).to eq(args)
           end
         end
       end
@@ -197,19 +197,19 @@ module MiqAeEngineSpec
           "/System/Process/REQUEST?#{extras}&message=get_dialogs&object_name=REQUEST&request=UI_PROVISION_INFO"                            => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_dialogs'},
         }.each { |uri, attrs|
           saved = attrs.dup
-          MiqAeEngine.create_automation_object('REQUEST', attrs).should == uri
-          attrs.should == saved
+          expect(MiqAeEngine.create_automation_object('REQUEST', attrs)).to eq(uri)
+          expect(attrs).to eq(saved)
         }
 
         prov = MiqProvision.new
         prov.id = 42
-        MiqAeEngine.create_automation_object('REQUEST', {'request' => 'UI_PROVISION_INFO', 'message' => 'get_host_and_storage'}, :vmdb_object => prov).should == "/System/Process/REQUEST?MiqProvision%3A%3Amiq_provision=#{prov.id}&#{extras}&message=get_host_and_storage&object_name=REQUEST&request=UI_PROVISION_INFO&vmdb_object_type=miq_provision"
+        expect(MiqAeEngine.create_automation_object('REQUEST', {'request' => 'UI_PROVISION_INFO', 'message' => 'get_host_and_storage'}, :vmdb_object => prov)).to eq("/System/Process/REQUEST?MiqProvision%3A%3Amiq_provision=#{prov.id}&#{extras}&message=get_host_and_storage&object_name=REQUEST&request=UI_PROVISION_INFO&vmdb_object_type=miq_provision")
 
         user = User.new
         user.id = 42
         begin
           Thread.current[:user] = user
-          MiqAeEngine.create_automation_object('REQUEST', {'request' => 'UI_PROVISION_INFO', 'message' => 'get_host_and_storage'}, :vmdb_object => prov).should == "/System/Process/REQUEST?MiqProvision%3A%3Amiq_provision=#{prov.id}&#{extras}&User%3A%3Auser=#{user.id}&message=get_host_and_storage&object_name=REQUEST&request=UI_PROVISION_INFO&vmdb_object_type=miq_provision"
+          expect(MiqAeEngine.create_automation_object('REQUEST', {'request' => 'UI_PROVISION_INFO', 'message' => 'get_host_and_storage'}, :vmdb_object => prov)).to eq("/System/Process/REQUEST?MiqProvision%3A%3Amiq_provision=#{prov.id}&#{extras}&User%3A%3Auser=#{user.id}&message=get_host_and_storage&object_name=REQUEST&request=UI_PROVISION_INFO&vmdb_object_type=miq_provision")
         ensure
           Thread.current[:user] = nil
         end
@@ -219,7 +219,7 @@ module MiqAeEngineSpec
         vm = FactoryGirl.create(:vm_vmware)
         extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}"
         uri = "/System/Process/AUTOMATION?#{extras}&VmOrTemplate%3A%3Avm=#{vm.id}&object_name=AUTOMATION&vmdb_object_type=vm"
-        MiqAeEngine.create_automation_object("AUTOMATION", {}, :vmdb_object => vm).should == uri
+        expect(MiqAeEngine.create_automation_object("AUTOMATION", {}, :vmdb_object => vm)).to eq(uri)
       end
 
       it "with a starting point other than /SYSTEM/PROCESS" do
@@ -228,7 +228,7 @@ module MiqAeEngineSpec
         uri = MiqAeEngine.create_automation_object("DEFAULT", {}, :vmdb_object => vm, :fqclass => fqclass)
         extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}"
         expected_uri = "/#{fqclass}/DEFAULT?#{extras}&VmOrTemplate%3A%3Avm=#{vm.id}&object_name=DEFAULT&vmdb_object_type=vm"
-        uri.should == expected_uri
+        expect(uri).to eq(expected_uri)
       end
 
       it "will not override values in attrs" do
@@ -236,7 +236,7 @@ module MiqAeEngineSpec
         attrs = {"Host::host" => host.id, "MiqServer::miq_server" => "12"}
         extras = "MiqServer%3A%3Amiq_server=12"
         uri = "/System/Process/AUTOMATION?Host%3A%3Ahost=#{host.id}&#{extras}&object_name=AUTOMATION&vmdb_object_type=host"
-        MiqAeEngine.create_automation_object("AUTOMATION", attrs, :vmdb_object => host).should == uri
+        expect(MiqAeEngine.create_automation_object("AUTOMATION", attrs, :vmdb_object => host)).to eq(uri)
       end
 
       it "will process an array of objects" do
@@ -246,7 +246,7 @@ module MiqAeEngineSpec
         result_str = "Array%3A%3Amy_hosts=" + hash["hosts"].collect { |h| "Host%3A%3A#{h.id}" }.join(",")
         extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}"
         uri = "/System/Process/AUTOMATION?#{result_str}&#{extras}&object_name=AUTOMATION"
-        MiqAeEngine.create_automation_object("AUTOMATION", attrs).should == uri
+        expect(MiqAeEngine.create_automation_object("AUTOMATION", attrs)).to eq(uri)
       end
 
       it "will process an empty array" do
@@ -254,7 +254,7 @@ module MiqAeEngineSpec
         result_str = "Array%3A%3Amy_hosts="""
         extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}"
         uri = "/System/Process/AUTOMATION?#{result_str}&#{extras}&object_name=AUTOMATION"
-        MiqAeEngine.create_automation_object("AUTOMATION", attrs).should == uri
+        expect(MiqAeEngine.create_automation_object("AUTOMATION", attrs)).to eq(uri)
       end
 
       it "will process an array of objects with a server and user" do
@@ -263,49 +263,49 @@ module MiqAeEngineSpec
         attrs = {"MiqServer::miq_server" => "12", "array::tag" => "Classification::1,Classification::2"}
         result_str = "array%3A%3Atag=Classification%3A%3A1%2CClassification%3A%3A2"
         uri = "/System/Process/AUTOMATION?#{extras}&#{result_str}&object_name=AUTOMATION"
-        MiqAeEngine.create_automation_object("AUTOMATION", attrs).should == uri
+        expect(MiqAeEngine.create_automation_object("AUTOMATION", attrs)).to eq(uri)
       end
     end
 
     context ".create_automation_attribute_key" do
       it "with a Vm (special case)" do
         vm = FactoryGirl.create(:vm_vmware)
-        MiqAeEngine.create_automation_attribute_key(vm).should == "VmOrTemplate::vm"
+        expect(MiqAeEngine.create_automation_attribute_key(vm)).to eq("VmOrTemplate::vm")
       end
 
       it "with an EMS" do
         ems = FactoryGirl.create(:ems_vmware)
-        MiqAeEngine.create_automation_attribute_key(ems).should == "ExtManagementSystem::ext_management_system"
+        expect(MiqAeEngine.create_automation_attribute_key(ems)).to eq("ExtManagementSystem::ext_management_system")
       end
 
       it "with a Host" do
         host = FactoryGirl.create(:host)
-        MiqAeEngine.create_automation_attribute_key(host).should == "Host::host"
+        expect(MiqAeEngine.create_automation_attribute_key(host)).to eq("Host::host")
       end
 
       it "with an EmsCluster" do
         cluster = FactoryGirl.create(:ems_cluster)
-        MiqAeEngine.create_automation_attribute_key(cluster).should == "EmsCluster::ems_cluster"
+        expect(MiqAeEngine.create_automation_attribute_key(cluster)).to eq("EmsCluster::ems_cluster")
       end
 
       it "with an Array:: name" do
-        MiqAeEngine.create_automation_attribute_key("Array::var1").should == "Array::var1"
+        expect(MiqAeEngine.create_automation_attribute_key("Array::var1")).to eq("Array::var1")
       end
     end
 
     context ".create_automation_attribute_class_name" do
       it "with an Array:: name" do
-        MiqAeEngine.create_automation_attribute_class_name("Array::fred").should == "Array::fred"
+        expect(MiqAeEngine.create_automation_attribute_class_name("Array::fred")).to eq("Array::fred")
       end
 
       it "with an VmOrTemplate" do
         vm = FactoryGirl.create(:vm_vmware)
-        MiqAeEngine.create_automation_attribute_class_name(vm).should == "VmOrTemplate"
+        expect(MiqAeEngine.create_automation_attribute_class_name(vm)).to eq("VmOrTemplate")
       end
 
       it "with an Host" do
         host = FactoryGirl.create(:host)
-        MiqAeEngine.create_automation_attribute_class_name(host).should == "Host"
+        expect(MiqAeEngine.create_automation_attribute_class_name(host)).to eq("Host")
       end
     end
 
@@ -319,8 +319,8 @@ module MiqAeEngineSpec
         result_str    = "Array::vms=" + hash["vms"].collect { |v| "ManageIQ::Providers::Vmware::InfraManager::Vm::#{v.id}" }.join(",")
         result_arr    = hash["vms"].collect { |v| "ManageIQ::Providers::Vmware::InfraManager::Vm::#{v.id}" }.join(",")
         result        = MiqAeEngine.create_automation_attributes(hash)
-        MiqAeEngine.create_automation_attributes_string(hash).should == result_str
-        result["Array::vms"].should == result_arr
+        expect(MiqAeEngine.create_automation_attributes_string(hash)).to eq(result_str)
+        expect(result["Array::vms"]).to eq(result_arr)
       end
 
       it "with an array containing a single Vm" do
@@ -328,21 +328,21 @@ module MiqAeEngineSpec
         result_str    = "Array::vms=" + hash["vms"].collect { |v| "ManageIQ::Providers::Vmware::InfraManager::Vm::#{v.id}" }.join(",")
         result_arr    = hash["vms"].collect { |v| "ManageIQ::Providers::Vmware::InfraManager::Vm::#{v.id}" }.join(",")
         result        = MiqAeEngine.create_automation_attributes(hash)
-        MiqAeEngine.create_automation_attributes_string(hash).should == result_str
-        result["Array::vms"].should == result_arr
+        expect(MiqAeEngine.create_automation_attributes_string(hash)).to eq(result_str)
+        expect(result["Array::vms"]).to eq(result_arr)
       end
 
       it "with an empty array" do
         result        = MiqAeEngine.create_automation_attributes({"vms" => []})
-        result["Array::vms"].should == ""
+        expect(result["Array::vms"]).to eq("")
       end
 
       it "with a hash containing a single Vm" do
         vm            = Vm.first
         hash          = {"vms" => vm}
         result        = MiqAeEngine.create_automation_attributes(hash)
-        MiqAeEngine.create_automation_attributes_string(hash).should == "VmOrTemplate::vms=#{vm.id}"
-        result["VmOrTemplate::vms"].should == vm.id
+        expect(MiqAeEngine.create_automation_attributes_string(hash)).to eq("VmOrTemplate::vms=#{vm.id}")
+        expect(result["VmOrTemplate::vms"]).to eq(vm.id)
       end
 
       it "with an array of Hosts" do
@@ -350,8 +350,8 @@ module MiqAeEngineSpec
         result_str    = "Array::hosts=" + hash["hosts"].collect { |h| "Host::#{h.id}" }.join(",")
         result_arr    = hash["hosts"].collect { |h| "Host::#{h.id}" }.join(",")
         result        = MiqAeEngine.create_automation_attributes(hash)
-        MiqAeEngine.create_automation_attributes_string(hash).should == result_str
-        result["Array::hosts"].should == result_arr
+        expect(MiqAeEngine.create_automation_attributes_string(hash)).to eq(result_str)
+        expect(result["Array::hosts"]).to eq(result_arr)
       end
 
       it "with multiple arrays" do
@@ -362,36 +362,36 @@ module MiqAeEngineSpec
         host_result_str = "Array::hosts=" + hash["hosts"].collect { |h| "Host::#{h.id}" }.join(",")
         host_result_arr = hash["hosts"].collect { |h| "Host::#{h.id}" }.join(",")
         result          = MiqAeEngine.create_automation_attributes(hash)
-        result["Array::vms"].should == vm_result_arr
-        result["Array::hosts"].should == host_result_arr
+        expect(result["Array::vms"]).to eq(vm_result_arr)
+        expect(result["Array::hosts"]).to eq(host_result_arr)
         result_str = MiqAeEngine.create_automation_attributes_string(hash)
-        result_str.should include(vm_result_str)
-        result_str.should include(host_result_str)
+        expect(result_str).to include(vm_result_str)
+        expect(result_str).to include(host_result_str)
       end
 
       it "with invalid object references" do
         hash          = {"vms" => ["bogus::12"]}
         result        = MiqAeEngine.create_automation_attributes(hash)
-        result["Array::vms"].should == "bogus::12"
-        MiqAeEngine.create_automation_attributes_string(hash).should == "Array::vms=bogus::12"
+        expect(result["Array::vms"]).to eq("bogus::12")
+        expect(MiqAeEngine.create_automation_attributes_string(hash)).to eq("Array::vms=bogus::12")
       end
 
       it "with garbage values" do
         hash          = {"vms" => ["bogus::12,garbage::moreso,notevenclose"]}
         bogus_arr     = "bogus::12,garbage::moreso,notevenclose"
         result        = MiqAeEngine.create_automation_attributes(hash)
-        result["Array::vms"].should == bogus_arr
-        MiqAeEngine.create_automation_attributes_string(hash).should == "Array::vms=bogus::12,garbage::moreso,notevenclose"
+        expect(result["Array::vms"]).to eq(bogus_arr)
+        expect(MiqAeEngine.create_automation_attributes_string(hash)).to eq("Array::vms=bogus::12,garbage::moreso,notevenclose")
       end
 
       it "with a string value" do
-        MiqAeEngine.create_automation_attributes("somestring").should == "somestring"
-        MiqAeEngine.create_automation_attributes("somestring").should == "somestring"
+        expect(MiqAeEngine.create_automation_attributes("somestring")).to eq("somestring")
+        expect(MiqAeEngine.create_automation_attributes("somestring")).to eq("somestring")
       end
 
       it "with a string value" do
-        MiqAeEngine.create_automation_attributes("").should == ""
-        MiqAeEngine.create_automation_attributes("").should == ""
+        expect(MiqAeEngine.create_automation_attributes("")).to eq("")
+        expect(MiqAeEngine.create_automation_attributes("")).to eq("")
       end
     end
 
@@ -420,19 +420,19 @@ module MiqAeEngineSpec
 
     context ".automation_attribute_is_array?" do
       it "is true" do
-        MiqAeEngine.automation_attribute_is_array?("Array::doesntmatter").should be_true
+        expect(MiqAeEngine.automation_attribute_is_array?("Array::doesntmatter")).to be_truthy
       end
 
       it "is true lower case" do
-        MiqAeEngine.automation_attribute_is_array?("array::doesntmatter").should be_true
+        expect(MiqAeEngine.automation_attribute_is_array?("array::doesntmatter")).to be_truthy
       end
 
       it "is false" do
-        MiqAeEngine.automation_attribute_is_array?("somethingelse::doesntmatter").should be_false
+        expect(MiqAeEngine.automation_attribute_is_array?("somethingelse::doesntmatter")).to be_falsey
       end
 
       it "is false with nil value" do
-        MiqAeEngine.automation_attribute_is_array?(nil).should be_false
+        expect(MiqAeEngine.automation_attribute_is_array?(nil)).to be_falsey
       end
     end
 
@@ -442,7 +442,7 @@ module MiqAeEngineSpec
       extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}"
       uri =  "/namespace/more_namespace/my_favorite_class/REQUEST?#{extras}&#{msg_attrs}"
       attrs  = {'request' => 'NOT_THERE', 'message' => 'testmessage'}
-      MiqAeEngine.create_automation_object('REQUEST', attrs, :fqclass => start).should == uri
+      expect(MiqAeEngine.create_automation_object('REQUEST', attrs, :fqclass => start)).to eq(uri)
     end
 
     it "a namespace not containing a slash is parsed correctly " do
@@ -451,104 +451,104 @@ module MiqAeEngineSpec
       extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}"
       uri =  "/namespace/my_favorite_class/REQUEST?#{extras}&#{msg_attrs}"
       attrs  = {'request' => 'NOT_THERE', 'message' => 'testmessage'}
-      MiqAeEngine.create_automation_object('REQUEST', attrs, :fqclass => start).should == uri
+      expect(MiqAeEngine.create_automation_object('REQUEST', attrs, :fqclass => start)).to eq(uri)
     end
 
     it "instantiates attributes properly" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "miq_ae_engine_spec1"), @domain)
 
       ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test3", @user)
-      ws.should_not be_nil
+      expect(ws).not_to be_nil
       roots = ws.roots
-      roots.should_not be_nil
-      roots.should be_a_kind_of(Array)
-      roots.length.should == 1
-      roots.first.attributes["attr1"].should == "Gregg TEST2 Oleg"
+      expect(roots).not_to be_nil
+      expect(roots).to be_a_kind_of(Array)
+      expect(roots.length).to eq(1)
+      expect(roots.first.attributes["attr1"]).to eq("Gregg TEST2 Oleg")
 
       ws.instantiate("/EVM/AUTOMATE/test2", @user)
-      ws.roots.length.should == 2
-      ws.roots[1].attributes["attr1"].should == "TEST2"
+      expect(ws.roots.length).to eq(2)
+      expect(ws.roots[1].attributes["attr1"]).to eq("TEST2")
 
       ws.instantiate("/EVM/AUTOMATE/test1", @user)
-      ws.roots.length.should == 3
-      ws.roots[2].attributes["attr1"].should == "frank"
+      expect(ws.roots.length).to eq(3)
+      expect(ws.roots[2].attributes["attr1"]).to eq("frank")
 
       ws.instantiate("/EVM/AUTOMATE/test4", @user)
-      ws.roots.length.should == 4
-      ws.roots[3].attributes["attr1"].should == "frank"
+      expect(ws.roots.length).to eq(4)
+      expect(ws.roots[3].attributes["attr1"]).to eq("frank")
 
       # puts ws.to_expanded_xml()
 
       ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test_password", @user)
-      ws.should_not be_nil
+      expect(ws).not_to be_nil
       roots = ws.roots
-      roots.should_not be_nil
-      roots.should be_a_kind_of(Array)
-      roots.length.should == 1
-      MiqAePassword.decrypt_if_password(roots.first.attributes["password"]).should == "secret"
+      expect(roots).not_to be_nil
+      expect(roots).to be_a_kind_of(Array)
+      expect(roots.length).to eq(1)
+      expect(MiqAePassword.decrypt_if_password(roots.first.attributes["password"])).to eq("secret")
       # puts ws.to_expanded_xml()
     end
 
     it "follows relationships properly" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "relation"), @domain)
       ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test3", @user)
-      ws.should_not be_nil
+      expect(ws).not_to be_nil
       roots = ws.roots
-      roots.should_not be_nil
-      roots.should be_a_kind_of(Array)
-      roots.length.should == 1
+      expect(roots).not_to be_nil
+      expect(roots).to be_a_kind_of(Array)
+      expect(roots.length).to eq(1)
 
       root = roots.first
-      root.namespace.should eql("#{@domain}/EVM")
-      root.klass.should eql("AUTOMATE")
-      root.instance.should eql("test3")
+      expect(root.namespace).to eql("#{@domain}/EVM")
+      expect(root.klass).to eql("AUTOMATE")
+      expect(root.instance).to eql("test3")
 
       children = root.children
-      children.should_not be_nil
-      children.length.should == 1
+      expect(children).not_to be_nil
+      expect(children.length).to eq(1)
 
       child = children.first
-      child.namespace.should eql("#{@domain}/EVM")
-      child.klass.should eql("AUTOMATE")
-      child.instance.should eql("test2")
+      expect(child.namespace).to eql("#{@domain}/EVM")
+      expect(child.klass).to eql("AUTOMATE")
+      expect(child.instance).to eql("test2")
 
       ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test_wildcard", @user)
-      ws.should_not be_nil
+      expect(ws).not_to be_nil
       roots = ws.roots
-      roots.should_not be_nil
-      roots.should be_a_kind_of(Array)
-      roots.length.should == 1
+      expect(roots).not_to be_nil
+      expect(roots).to be_a_kind_of(Array)
+      expect(roots.length).to eq(1)
       root = roots.first
       children = root.children
-      children.should_not be_nil
-      children.length.should == 2
+      expect(children).not_to be_nil
+      expect(children.length).to eq(2)
 
       ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test_message1", @user)
-      ws.should_not be_nil
+      expect(ws).not_to be_nil
       roots = ws.roots
-      roots.should_not be_nil
-      roots.should be_a_kind_of(Array)
-      roots.length.should == 1
+      expect(roots).not_to be_nil
+      expect(roots).to be_a_kind_of(Array)
+      expect(roots.length).to eq(1)
       root = roots.first
       children = root.children
-      children.should_not be_nil
-      children.length.should == 1
+      expect(children).not_to be_nil
+      expect(children.length).to eq(1)
 
       ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test_message1#discover", @user)
-      ws.should_not be_nil
+      expect(ws).not_to be_nil
       roots = ws.roots
-      roots.should_not be_nil
-      roots.should be_a_kind_of(Array)
-      roots.length.should == 1
+      expect(roots).not_to be_nil
+      expect(roots).to be_a_kind_of(Array)
+      expect(roots.length).to eq(1)
       root = roots.first
       children = root.children
-      children.should_not be_nil
-      children.length.should == 2
+      expect(children).not_to be_nil
+      expect(children.length).to eq(2)
     end
 
     it "does not allow cyclical relationships" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "miq_ae_engine_spec2"), @domain)
-      lambda { MiqAeEngine.instantiate("/CYCLICAL/AUTOMATE/test4", @user) }.should raise_error(MiqAeException::CyclicalRelationship)
+      expect { MiqAeEngine.instantiate("/CYCLICAL/AUTOMATE/test4", @user) }.to raise_error(MiqAeException::CyclicalRelationship)
     end
 
     it "raises exception if invalid path" do
@@ -562,166 +562,166 @@ module MiqAeEngineSpec
     it "properly processes assertions" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "miq_ae_engine_spec3"), @domain)
       ws = MiqAeEngine.instantiate("/SYSTEM/EVM/AUTOMATE/test1", @user)
-      ws.should_not be_nil
+      expect(ws).not_to be_nil
       roots = ws.roots
-      roots.should_not be_nil
-      roots.should be_a_kind_of(Array)
-      roots.length.should == 1
+      expect(roots).not_to be_nil
+      expect(roots).to be_a_kind_of(Array)
+      expect(roots.length).to eq(1)
 
       ws = MiqAeEngine.instantiate("/SYSTEM/EVM/AUTOMATE/test2", @user)
-      ws.should_not be_nil
+      expect(ws).not_to be_nil
       roots = ws.roots
-      roots.should_not be_nil
-      roots.should be_a_kind_of(Array)
-      roots.length.should == 0
+      expect(roots).not_to be_nil
+      expect(roots).to be_a_kind_of(Array)
+      expect(roots.length).to eq(0)
 
       ws = MiqAeEngine.instantiate("/SYSTEM/EVM/AUTOMATE/test3", @user)
-      ws.should_not be_nil
+      expect(ws).not_to be_nil
       roots = ws.roots
-      roots.should_not be_nil
-      roots.should be_a_kind_of(Array)
-      roots.length.should == 1
+      expect(roots).not_to be_nil
+      expect(roots).to be_a_kind_of(Array)
+      expect(roots.length).to eq(1)
 
       ws = MiqAeEngine.instantiate("/SYSTEM/EVM/AUTOMATE/test4", @user)
-      ws.should_not be_nil
+      expect(ws).not_to be_nil
       roots = ws.roots
-      roots.should_not be_nil
-      roots.should be_a_kind_of(Array)
-      roots.length.should == 1
+      expect(roots).not_to be_nil
+      expect(roots).to be_a_kind_of(Array)
+      expect(roots.length).to eq(1)
     end
 
     it "properly processes inheritance" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "relation"), @domain)
 
       ws = MiqAeEngine.instantiate("/EVM/MY_AUTOMATE/test1", @user)
-      ws.should_not be_nil
+      expect(ws).not_to be_nil
       roots = ws.roots
-      roots.should_not be_nil
-      roots.should be_a_kind_of(Array)
-      roots.length.should == 1
+      expect(roots).not_to be_nil
+      expect(roots).to be_a_kind_of(Array)
+      expect(roots.length).to eq(1)
 
       obj = roots.first
-      ["attr1", "foo"].each { |a| obj.attributes.should have_key(a) }
-      obj.attributes["attr1"].should == "frank"
-      obj.attributes["foo"].should == "bar"
+      ["attr1", "foo"].each { |a| expect(obj.attributes).to have_key(a) }
+      expect(obj.attributes["attr1"]).to eq("frank")
+      expect(obj.attributes["foo"]).to eq("bar")
 
       ws = MiqAeEngine.instantiate("/EVM/MY_AUTOMATE/test2", @user)
-      ws.should_not be_nil
+      expect(ws).not_to be_nil
       roots = ws.roots
-      roots.should_not be_nil
-      roots.should be_a_kind_of(Array)
-      roots.length.should == 1
+      expect(roots).not_to be_nil
+      expect(roots).to be_a_kind_of(Array)
+      expect(roots.length).to eq(1)
 
       obj = roots.first
       ["attr1", "foo"].each { |a| assert obj.attributes.key?(a) }
-      obj.attributes["attr1"].should == "miqaedb:/EVM/AUTOMATE/test1"
-      obj.attributes["foo"].should == "bar"
+      expect(obj.attributes["attr1"]).to eq("miqaedb:/EVM/AUTOMATE/test1")
+      expect(obj.attributes["foo"]).to eq("bar")
     end
 
     it "properly processes .missing_instance" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "relation"), @domain)
 
       ws = MiqAeEngine.instantiate("/EVM/MY_AUTOMATE/test_boo", @user)
-      ws.should_not be_nil
+      expect(ws).not_to be_nil
       roots = ws.roots
-      roots.should_not be_nil
-      roots.should be_a_kind_of(Array)
-      roots.length.should == 0
+      expect(roots).not_to be_nil
+      expect(roots).to be_a_kind_of(Array)
+      expect(roots.length).to eq(0)
     end
 
     it "properly processes substitution" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "substitution"), @domain)
       ws = MiqAeEngine.instantiate("/EVM/A/a1", @user)
-      ws.should_not be_nil
+      expect(ws).not_to be_nil
       roots = ws.roots
-      roots.should_not be_nil
-      roots.should be_a_kind_of(Array)
-      roots.length.should == 1
+      expect(roots).not_to be_nil
+      expect(roots).to be_a_kind_of(Array)
+      expect(roots.length).to eq(1)
       a1 = roots[0]
       b1 = a1.children[0]
-      b1.attributes["attr1"].should == "defaultA"
+      expect(b1.attributes["attr1"]).to eq("defaultA")
 
       ws = MiqAeEngine.instantiate("/EVM/A/a2", @user)
-      ws.should_not be_nil
+      expect(ws).not_to be_nil
       roots = ws.roots
-      roots.should_not be_nil
-      roots.should be_a_kind_of(Array)
-      roots.length.should == 1
+      expect(roots).not_to be_nil
+      expect(roots).to be_a_kind_of(Array)
+      expect(roots.length).to eq(1)
       a2 = roots[0]
       b2 = a2.children[0]
-      b2.attributes["attr1"].should == "a2"
+      expect(b2.attributes["attr1"]).to eq("a2")
 
       ws = MiqAeEngine.instantiate("/EVM/B/b3", @user)
-      ws.should_not be_nil
+      expect(ws).not_to be_nil
       roots = ws.roots
-      roots.should_not be_nil
-      roots.should be_a_kind_of(Array)
-      roots.length.should == 1
+      expect(roots).not_to be_nil
+      expect(roots).to be_a_kind_of(Array)
+      expect(roots.length).to eq(1)
       b3 = roots[0]
-      b3.attributes["attr2"].should == "b3"
+      expect(b3.attributes["attr2"]).to eq("b3")
 
       ws = MiqAeEngine.instantiate("/EVM/A/a4", @user)
-      ws.should_not be_nil
+      expect(ws).not_to be_nil
       roots = ws.roots
-      roots.should_not be_nil
-      roots.should be_a_kind_of(Array)
-      roots.length.should == 1
+      expect(roots).not_to be_nil
+      expect(roots).to be_a_kind_of(Array)
+      expect(roots.length).to eq(1)
       a4 = roots[0]
       b4 = a4.children[0]
-      b4.attributes["attr1"].should == "a4"
+      expect(b4.attributes["attr1"]).to eq("a4")
 
-      -> { MiqAeEngine.instantiate("/EVM/A/a5", @user) }.should raise_error(MiqAeException::InvalidPathFormat)
-      -> { MiqAeEngine.instantiate("/EVM/A/a6", @user) }.should raise_error(MiqAeException::ObjectNotFound)
-      -> { MiqAeEngine.instantiate("/EVM/A/a7", @user) }.should raise_error(MiqAeException::ObjectNotFound)
+      expect { MiqAeEngine.instantiate("/EVM/A/a5", @user) }.to raise_error(MiqAeException::InvalidPathFormat)
+      expect { MiqAeEngine.instantiate("/EVM/A/a6", @user) }.to raise_error(MiqAeException::ObjectNotFound)
+      expect { MiqAeEngine.instantiate("/EVM/A/a7", @user) }.to raise_error(MiqAeException::ObjectNotFound)
 
       ws = MiqAeEngine.instantiate("/EVM/A/a8", @user)
-      ws.should_not be_nil
+      expect(ws).not_to be_nil
       roots = ws.roots
-      roots.should_not be_nil
-      roots.should be_a_kind_of(Array)
-      roots.length.should == 1
+      expect(roots).not_to be_nil
+      expect(roots).to be_a_kind_of(Array)
+      expect(roots.length).to eq(1)
       a8 = roots[0]
       b8 = a8.children[0]
-      b8.attributes["attr1"].should == "${}"
+      expect(b8.attributes["attr1"]).to eq("${}")
 
       ws = MiqAeEngine.instantiate("/EVM/A/a9", @user)
-      ws.should_not be_nil
+      expect(ws).not_to be_nil
       roots = ws.roots
-      roots.should_not be_nil
-      roots.should be_a_kind_of(Array)
-      roots.length.should == 1
+      expect(roots).not_to be_nil
+      expect(roots).to be_a_kind_of(Array)
+      expect(roots.length).to eq(1)
       a9 = roots[0]
       b9 = a9.children[0]
-      b9.attributes["attr1"].should == "foo"
+      expect(b9.attributes["attr1"]).to eq("foo")
 
       ws = MiqAeEngine.instantiate("/EVM/A/a10", @user)
-      ws.should_not be_nil
+      expect(ws).not_to be_nil
       roots = ws.roots
-      roots.should_not be_nil
-      roots.should be_a_kind_of(Array)
-      roots.length.should eql(1)
+      expect(roots).not_to be_nil
+      expect(roots).to be_a_kind_of(Array)
+      expect(roots.length).to eql(1)
       a10 = roots[0]
       b10 = a10.children[0]
-      b10.attributes["attr1"].should eql('Bamm Bamm Rubble')
-      b10.attributes["attr3"].should eql('Pearl/Slaghoople')
+      expect(b10.attributes["attr1"]).to eql('Bamm Bamm Rubble')
+      expect(b10.attributes["attr3"]).to eql('Pearl/Slaghoople')
     end
 
     it "properly processes substitution with methods" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "miq_ae_engine_spec4"), @domain)
-      MiqProvision.any_instance.stub(:validate).and_return(:true)
-      MiqProvision.any_instance.stub(:set_template_and_networking)
+      allow_any_instance_of(MiqProvision).to receive(:validate).and_return(:true)
+      allow_any_instance_of(MiqProvision).to receive(:set_template_and_networking)
       prov = MiqProvision.create!(:provision_type => 'clone_to_template', :state => 'pending', :status => 'Ok')
       ws   = MiqAeEngine.instantiate("/System/Process/REQUEST?MiqProvision::miq_provision=#{prov.id}&request=test_subst", @user)
-      ws.should_not be_nil
+      expect(ws).not_to be_nil
 
       roots = ws.roots
-      roots.should_not be_nil
-      roots.should be_a_kind_of(Array)
-      roots.length.should eql(1)
+      expect(roots).not_to be_nil
+      expect(roots).to be_a_kind_of(Array)
+      expect(roots.length).to eql(1)
       root  = roots[0]
-      root['request'].should eql('test_subst')
+      expect(root['request']).to eql('test_subst')
       child = root.children[0]
-      child['test_attr'].should == "target_type=template"
+      expect(child['test_attr']).to eq("target_type=template")
     end
 
     it "processes arrays arguments properly" do
@@ -733,7 +733,7 @@ module MiqAeEngineSpec
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "miq_ae_engine_spec5"), @domain)
       ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?Array::my_objects=Vm::#{vm1.id},ExtManagementSystem::#{ems.id},Vm::#{vm2.id}", @user)
       my_objects_array = ws.root("my_objects")
-      my_objects_array.length.should == 3
+      expect(my_objects_array.length).to eq(3)
       my_objects_array.each { |o| o.kind_of?(MiqAeMethodService::MiqAeServiceModelBase) }
     end
 
@@ -741,8 +741,8 @@ module MiqAeEngineSpec
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "miq_ae_engine_spec6"), @domain)
       ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?Array::my_objects=", @user)
       my_objects_array = ws.root("my_objects")
-      my_objects_array.length.should == 0
-      my_objects_array.should == []
+      expect(my_objects_array.length).to eq(0)
+      expect(my_objects_array).to eq([])
     end
   end
 end

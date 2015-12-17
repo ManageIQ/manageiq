@@ -29,13 +29,13 @@ module MiqAeServiceServiceReconfigureTaskSpec
       it "returns 'ok' when state is finished" do
         task.update_attributes(:state => "finished")
 
-        invoke_ae.root('result').should == 'ok'
+        expect(invoke_ae.root('result')).to eq('ok')
       end
 
       it "returns 'retry' when state is pending" do
         task.update_attributes(:state => "pending")
 
-        invoke_ae.root('result').should == 'retry'
+        expect(invoke_ae.root('result')).to eq('retry')
       end
     end
   end

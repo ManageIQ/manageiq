@@ -184,7 +184,7 @@ describe MiqAeClassCompareFields do
   def class_check_status(class1, class2, status)
     diff_obj = MiqAeClassCompareFields.new(class1, class2)
     diff_obj.compare
-    diff_obj.status.should equal(status)
+    expect(diff_obj.status).to equal(status)
   end
 
   def prep_class_file_names(class1 = nil, class2 = nil)

@@ -80,7 +80,7 @@ describe MiqAeInstanceCopy do
       cp.as('incompatible_one', 'NS2', true)
       ns2 = MiqAeNamespace.find_by_fqname("#{@src_domain}/ns2", false)
       ic_class = MiqAeClass.find_by_namespace_id_and_name(ns2.id, @src_class)
-      MiqAeInstance.find_by_class_id_and_name(ic_class.id, 'incompatible_one').should_not be_nil
+      expect(MiqAeInstance.find_by_class_id_and_name(ic_class.id, 'incompatible_one')).not_to be_nil
     end
   end
 
@@ -101,19 +101,19 @@ describe MiqAeInstanceCopy do
       ids    = [1, 2, 3]
       ins_copy = double(MiqAeInstanceCopy)
       ins = mock_model(MiqAeInstance)
-      ins_copy.should_receive(:to_domain).with(domain, nil, false).exactly(ids.length).times { ins }
+      expect(ins_copy).to receive(:to_domain).with(domain, nil, false).exactly(ids.length).times { ins }
       new_ids = [ins.id] * ids.length
-      ins.should_receive(:fqname).with(no_args).exactly(ids.length).times { fqname }
-      MiqAeInstance.should_receive(:find).with(an_instance_of(Fixnum)).exactly(ids.length).times { ins }
-      MiqAeInstanceCopy.should_receive(:new).with(fqname, true).exactly(1).times { ins_copy }
-      MiqAeInstanceCopy.should_receive(:new).with(fqname, false).exactly(ids.length - 1).times { ins_copy }
-      MiqAeInstanceCopy.copy_multiple(ids, domain).should match_array(new_ids)
+      expect(ins).to receive(:fqname).with(no_args).exactly(ids.length).times { fqname }
+      expect(MiqAeInstance).to receive(:find).with(an_instance_of(Fixnum)).exactly(ids.length).times { ins }
+      expect(MiqAeInstanceCopy).to receive(:new).with(fqname, true).exactly(1).times { ins_copy }
+      expect(MiqAeInstanceCopy).to receive(:new).with(fqname, false).exactly(ids.length - 1).times { ins_copy }
+      expect(MiqAeInstanceCopy.copy_multiple(ids, domain)).to match_array(new_ids)
     end
   end
 
   def validate_instance(instance1, instance2, status)
     obj = MiqAeInstanceCompareValues.new(instance1, instance2)
     obj.compare
-    obj.status.should eq(status)
+    expect(obj.status).to eq(status)
   end
 end

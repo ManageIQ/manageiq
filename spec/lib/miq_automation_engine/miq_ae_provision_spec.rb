@@ -53,121 +53,121 @@ module MiqAeProvisionSpec
 
       it "should instantiate lease_times" do
         ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default#get_lease_times", @user)
-        ws.should_not be_nil
+        expect(ws).not_to be_nil
         ttls  = ws.root("ttls")
-        ttls.class.name.should == "Hash"
-        ttls.length.should == 5
+        expect(ttls.class.name).to eq("Hash")
+        expect(ttls.length).to eq(5)
       end
 
       it "should properly instantiate /EVMApplications/Provisioning/Information/Default#debug" do
         ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default#debug", @user)
-        ws.should_not be_nil
+        expect(ws).not_to be_nil
         roots = ws.roots
-        roots.should_not be_nil
-        roots.should be_a_kind_of(Array)
-        roots.length.should == 1
+        expect(roots).not_to be_nil
+        expect(roots).to be_a_kind_of(Array)
+        expect(roots.length).to eq(1)
       end
 
       it "should instantiate ttl_warnings" do
         ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default#get_ttl_warnings", @user)
-        ws.should_not be_nil
+        expect(ws).not_to be_nil
         warnings = ws.root("warnings")
-        warnings.class.name.should == "Hash"
-        warnings.length.should == 3
+        expect(warnings.class.name).to eq("Hash")
+        expect(warnings.length).to eq(3)
       end
 
       it "should instantiate allowed_num_vms" do
         ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=dev#get_allowed_num_vms", @user)
-        ws.should_not be_nil
-        ws.root("allowed").should == 3
+        expect(ws).not_to be_nil
+        expect(ws.root("allowed")).to eq(3)
 
         ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=test#get_allowed_num_vms", @user)
-        ws.should_not be_nil
-        ws.root("allowed").should == 5
+        expect(ws).not_to be_nil
+        expect(ws.root("allowed")).to eq(5)
 
         ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=foo#get_allowed_num_vms", @user)
-        ws.should_not be_nil
-        ws.root("allowed").should == 1
+        expect(ws).not_to be_nil
+        expect(ws.root("allowed")).to eq(1)
 
         ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=#get_allowed_num_vms", @user)
-        ws.should_not be_nil
-        ws.root("allowed").should == 0
+        expect(ws).not_to be_nil
+        expect(ws.root("allowed")).to eq(0)
 
         ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default#get_allowed_num_vms", @user)
-        ws.should_not be_nil
-        ws.root("allowed").should == 0
+        expect(ws).not_to be_nil
+        expect(ws.root("allowed")).to eq(0)
       end
 
       it "should instantiate container_info" do
         ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=dev#get_container_info", @user)
-        ws.should_not be_nil
-        ws.root("ncpus").should == 1
-        ws.root("memory").should == 1
-        ws.root("vlan").should == "dev"
+        expect(ws).not_to be_nil
+        expect(ws.root("ncpus")).to eq(1)
+        expect(ws.root("memory")).to eq(1)
+        expect(ws.root("vlan")).to eq("dev")
 
         ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=test#get_container_info", @user)
-        ws.should_not be_nil
-        ws.root("ncpus").should == 2
-        ws.root("memory").should be_nil
-        ws.root("vlan").should be_nil
+        expect(ws).not_to be_nil
+        expect(ws.root("ncpus")).to eq(2)
+        expect(ws.root("memory")).to be_nil
+        expect(ws.root("vlan")).to be_nil
 
         ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=prod#get_container_info", @user)
-        ws.should_not be_nil
-        ws.root("ncpus").should be_nil
-        ws.root("memory").should == 4
-        ws.root("vlan").should == "production"
+        expect(ws).not_to be_nil
+        expect(ws.root("ncpus")).to be_nil
+        expect(ws.root("memory")).to eq(4)
+        expect(ws.root("vlan")).to eq("production")
 
         ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default?environment=foo#get_container_info", @user)
-        ws.should_not be_nil
-        ws.root("ncpus").should be_nil
-        ws.root("memory").should be_nil
-        ws.root("vlan").should be_nil
+        expect(ws).not_to be_nil
+        expect(ws.root("ncpus")).to be_nil
+        expect(ws.root("memory")).to be_nil
+        expect(ws.root("vlan")).to be_nil
       end
 
       it "should instantiate customization" do
         ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default#get_customization", @user)
-        ws.should_not be_nil
-        ws.root("customization").should == EXPECTED_CUSTOMIZATION
+        expect(ws).not_to be_nil
+        expect(ws.root("customization")).to eq(EXPECTED_CUSTOMIZATION)
       end
 
       it "should have Domain class" do
         fqname = "#{@domain}/EVMApplications/Provisioning/Domain"
         klass = MiqAeClass.find_by_fqname(fqname)
-        klass.should_not be_nil
-        klass.ae_instances.length.should_not == 0
+        expect(klass).not_to be_nil
+        expect(klass.ae_instances.length).not_to eq(0)
         ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default#get_domains", @user)
-        ws.should_not be_nil
+        expect(ws).not_to be_nil
 
         domains = ws.root['domains']
-        domains.should_not be_nil
-        domains.should be_a_kind_of(Array)
+        expect(domains).not_to be_nil
+        expect(domains).to be_a_kind_of(Array)
         domains.each { |domain|
-          domain.should be_a_kind_of(Hash)
-          [:base_dn, :bind_dn, :bind_password, :ldap_host, :ldap_port, :user_type, :name].each { |key| domain.should have_key(key) }
+          expect(domain).to be_a_kind_of(Hash)
+          [:base_dn, :bind_dn, :bind_password, :ldap_host, :ldap_port, :user_type, :name].each { |key| expect(domain).to have_key(key) }
         }
       end
 
       it "should have Network class" do
         fqname = "#{@domain}/EVMApplications/Provisioning/Network"
         klass = MiqAeClass.find_by_fqname(fqname)
-        klass.should_not be_nil
-        klass.ae_instances.length.should_not == 0
+        expect(klass).not_to be_nil
+        expect(klass.ae_instances.length).not_to eq(0)
 
         ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default#get_networks", @user)
-        ws.should_not be_nil
+        expect(ws).not_to be_nil
 
         networks = ws.root['networks']
-        networks.should_not be_nil
-        networks.should be_a_kind_of(Array)
+        expect(networks).not_to be_nil
+        expect(networks).to be_a_kind_of(Array)
         networks.each { |network|
-          network.should be_a_kind_of(Hash)
-          [:scope, :vlan, :vc_id, :dhcp_servers].each { |key| network.should have_key(key) }
-          network[:dhcp_servers].should be_a_kind_of(Array)
+          expect(network).to be_a_kind_of(Hash)
+          [:scope, :vlan, :vc_id, :dhcp_servers].each { |key| expect(network).to have_key(key) }
+          expect(network[:dhcp_servers]).to be_a_kind_of(Array)
           network[:dhcp_servers].each { |dhcp|
-            dhcp.should be_a_kind_of(Hash)
-            [:domain, :ip, :name].each { |key| dhcp.should have_key(key) }
-            dhcp[:domain].should be_a_kind_of(Hash)
-            [:base_dn, :bind_dn, :bind_password, :ldap_host, :ldap_port, :user_type, :name].each { |key| dhcp[:domain].should have_key(key) }
+            expect(dhcp).to be_a_kind_of(Hash)
+            [:domain, :ip, :name].each { |key| expect(dhcp).to have_key(key) }
+            expect(dhcp[:domain]).to be_a_kind_of(Hash)
+            [:base_dn, :bind_dn, :bind_password, :ldap_host, :ldap_port, :user_type, :name].each { |key| expect(dhcp[:domain]).to have_key(key) }
           }
         }
       end

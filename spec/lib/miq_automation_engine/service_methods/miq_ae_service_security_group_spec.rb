@@ -3,23 +3,23 @@ require "spec_helper"
 module MiqAeServiceSecurityGroupSpec
   describe MiqAeMethodService::MiqAeServiceSecurityGroup do
     it "#ext_management_system" do
-      described_class.instance_methods.should include(:ext_management_system)
+      expect(described_class.instance_methods).to include(:ext_management_system)
     end
 
     it "#cloud_network" do
-      described_class.instance_methods.should include(:cloud_network)
+      expect(described_class.instance_methods).to include(:cloud_network)
     end
 
     it "#cloud_tenant" do
-      described_class.instance_methods.should include(:cloud_tenant)
+      expect(described_class.instance_methods).to include(:cloud_tenant)
     end
 
     it "#firewall_rules" do
-      described_class.instance_methods.should include(:firewall_rules)
+      expect(described_class.instance_methods).to include(:firewall_rules)
     end
 
     it "#vms" do
-      described_class.instance_methods.should include(:vms)
+      expect(described_class.instance_methods).to include(:vms)
     end
   end
 end
