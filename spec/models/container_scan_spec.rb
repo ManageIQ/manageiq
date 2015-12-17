@@ -41,11 +41,11 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
         :image_ref => 'docker://3629a651e6c11d7435937bdf41da11cf87863c03f2587fa788cf5cbfe8a11b9a'
       )
 
-      allow_any_instance_of(@image.class).to receive(:scan_metadata) do |instance, _args|
+      allow_any_instance_of(@image.class).to receive(:scan_metadata) do |_instance, _args|
         @job.signal(:data, '<summary><scanmetadata></scanmetadata></summary>')
       end
 
-      allow_any_instance_of(@image.class).to receive(:sync_metadata) do |instance, _args|
+      allow_any_instance_of(@image.class).to receive(:sync_metadata) do |_instance, _args|
         @job.signal(:data, '<summary><syncmetadata></syncmetadata></summary>')
       end
 
@@ -81,7 +81,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
       CODE = 0
       CLIENT_MESSAGE = 'error'
       before(:each) do
-        allow_any_instance_of(MockClient).to receive(:create_pod) do |instance, *_args|
+        allow_any_instance_of(MockClient).to receive(:create_pod) do |_instance, *_args|
           raise KubeException.new(CODE, CLIENT_MESSAGE, nil)
         end
       end

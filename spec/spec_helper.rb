@@ -49,6 +49,14 @@ RSpec.configure do |config|
   # Can't currently update the code at the call site (capybara),
   # so we're temporarily adding the method for now
   config.expose_current_running_example_as :example
+
+  # In RSpec 3, `any_instance` implementation blocks will be yielded the receiving
+  # instance as the first block argument to allow the implementation block to use
+  # the state of the receiver. This opts-in to the behavior now and can be removed
+  # once the upgrade is complete.
+  config.mock_with :rspec do |mocks|
+    mocks.yield_receiver_to_any_instance_implementation_blocks = true
+  end
   # =====================
 
   # config.before(:all) do

@@ -124,7 +124,7 @@ describe Authenticator::Amazon do
   end
 
   before(:each) do
-    allow_any_instance_of(described_class).to receive(:aws_connect) { |instance, *args| FakeAmazon.new(user_data, *args) }
+    allow_any_instance_of(described_class).to receive(:aws_connect) { |_instance, *args| FakeAmazon.new(user_data, *args) }
   end
 
   describe '#uses_stored_password?' do
