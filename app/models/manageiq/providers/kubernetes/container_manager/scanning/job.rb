@@ -2,7 +2,6 @@ require 'kubeclient'
 
 class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   PROVIDER_CLASS = ManageIQ::Providers::Kubernetes::ContainerManager
-  INSPECTOR_IMAGE = 'docker.io/fsimonce/image-inspector:v0.1.3'
   INSPECTOR_NAMESPACE = 'management-infra'
   INSPECTOR_PORT = 8080
   DOCKER_SOCKET = '/var/run/docker.sock'
@@ -256,7 +255,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
         :containers    => [
           {
             :name            => "image-inspector",
-            :image           => INSPECTOR_IMAGE,
+            :image           => inspector_image,
             :command         => [
               "/usr/bin/image-inspector",
               "--image=#{options[:image_full_name]}",
@@ -280,5 +279,9 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
         ]
       }
     )
+  end
+
+  def inspector_image
+    'docker.io/openshift/image-inspector:v1.0.z'
   end
 end
