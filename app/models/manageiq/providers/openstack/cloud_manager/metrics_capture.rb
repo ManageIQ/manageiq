@@ -1,5 +1,6 @@
 class ManageIQ::Providers::Openstack::CloudManager::MetricsCapture < ManageIQ::Providers::Openstack::BaseMetricsCapture
   CPU_METERS     = ["cpu_util"]
+  MEMORY_METERS  = ["memory.usage"]
   DISK_METERS    = ["disk.read.bytes", "disk.write.bytes"]
   NETWORK_METERS = ["network.incoming.bytes", "network.outgoing.bytes"]
 
@@ -28,6 +29,12 @@ class ManageIQ::Providers::Openstack::CloudManager::MetricsCapture < ManageIQ::P
     },
 
     {
+      :openstack_counters    => MEMORY_METERS,
+      :calculation           => ->(stat, _) { stat },
+      :vim_style_counter_key => "derived_memory_used"
+    },
+
+    {
       :openstack_counters    => DISK_METERS,
       :calculation           => method(:counter_sum_per_second_calculation).to_proc,
       :vim_style_counter_key => "disk_usage_rate_average"
@@ -50,6 +57,16 @@ class ManageIQ::Providers::Openstack::CloudManager::MetricsCapture < ManageIQ::P
       :precision             => 1,
       :rollup                => "average",
       :unit_key              => "percent",
+      :capture_interval_name => "realtime"
+    },
+
+    "derived_memory_used"   => {
+      :counter_key           => "derived_memory_used",
+      :instance              => "",
+      :capture_interval      => "20",
+      :precision             => 1,
+      :rollup                => "average",
+      :unit_key              => "megabytes",
       :capture_interval_name => "realtime"
     },
 

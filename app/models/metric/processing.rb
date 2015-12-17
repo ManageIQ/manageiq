@@ -46,7 +46,7 @@ module Metric::Processing
     result = {}
 
     have_cpu_metrics = attrs[:cpu_usage_rate_average] || attrs[:cpu_usagemhz_rate_average]
-    have_mem_metrics = attrs[:mem_usage_absolute_average]
+    have_mem_metrics = attrs[:mem_usage_absolute_average] || attrs[:derived_memory_used]
 
     DERIVED_COLS.each do |col|
       dummy, group, typ, mode = col.to_s.split("_")
@@ -72,7 +72,13 @@ module Metric::Processing
           # directly if avaiable, otherwise do the calculation below.
           result[col] = (attrs[:cpu_usage_rate_average] / 100 * total_cpu) unless total_cpu == 0 || attrs[:cpu_usage_rate_average].nil?
         elsif group == "memory"
-          result[col] = (attrs[:mem_usage_absolute_average] / 100 * total_mem) unless total_mem == 0 || attrs[:mem_usage_absolute_average].nil?
+          if attrs[:mem_usage_absolute_average].nil?
+            # If we can't get percentage usage, just used RAM in MB, lets compute percentage usage
+            attrs[:mem_usage_absolute_average] = 100.0 / total_mem * attrs[:derived_memory_used] if total_mem > 0 && !attrs[:derived_memory_used].nil?
+          else
+            # We have percentage usage of RAM, lets compute consumed RAM in MB
+            result[col] = (attrs[:mem_usage_absolute_average] / 100 * total_mem) unless total_mem == 0 || attrs[:mem_usage_absolute_average].nil?
+          end
         else
           method = col.to_s.split("_")[1..-1].join("_")
           result[col] = state.send(method) if state.respond_to?(method)
