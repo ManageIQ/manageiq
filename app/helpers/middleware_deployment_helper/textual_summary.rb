@@ -9,7 +9,7 @@ module MiddlewareDeploymentHelper::TextualSummary
 
   def textual_group_relationships
     # Order of items should be from parent to child
-    %i(ems)
+    %i(ems middleware_server)
     # items.concat(%i(middleware_servers))
     # items
   end
