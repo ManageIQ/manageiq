@@ -34,8 +34,8 @@ module Menu
       end
 
       def infrastructure_menu_section
-        hosts_name    = hybrid_name(EmsCluster, N_("Hosts"),    N_("Nodes"),            N_("Hosts / Nodes"))
-        clusters_name = hybrid_name(Host,       N_("Clusters"), N_("Deployment Roles"), N_("Clusters / Deployment Roles"))
+        hosts_name    = hybrid_name(Host,       N_("Hosts"),    N_("Nodes"),            N_("Hosts / Nodes"))
+        clusters_name = hybrid_name(EmsCluster, N_("Clusters"), N_("Deployment Roles"), N_("Clusters / Deployment Roles"))
 
         Menu::Section.new(:inf, N_("Infrastructure"), [
           Menu::Item.new('ems_infra',        N_('Providers'),        'ems_infra',     {:feature => 'ems_infra_show_list'},     '/ems_infra'),
