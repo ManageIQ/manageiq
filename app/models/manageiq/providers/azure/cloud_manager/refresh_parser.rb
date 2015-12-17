@@ -275,7 +275,7 @@ module ManageIQ::Providers
       end
 
       def add_instance_disk(disks, size, name, location)
-        super(disks, size, name, location, "azure")
+        super(disks, size, location, name, "azure")
       end
 
       def populate_hardware_hash_with_networks(networks_array, instance)
@@ -313,7 +313,7 @@ module ManageIQ::Providers
         os_disk = instance.properties.storage_profile.os_disk
         sz      = series[:root_disk_size]
 
-        add_instance_disk(hardware_hash[:disks], sz, os_disk.name, os_disk.vhd) unless sz.zero?
+        add_instance_disk(hardware_hash[:disks], sz, os_disk.name, os_disk.vhd.uri) unless sz.zero?
 
         # No data availbale on swap disk? Called temp or resource disk.
       end
