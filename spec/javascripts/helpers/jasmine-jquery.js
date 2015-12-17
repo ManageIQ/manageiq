@@ -216,7 +216,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
   jasmine.JSONFixtures = function () {
     this.fixturesCache_ = {}
-    this.fixturesPath = 'spec/javascripts/fixtures/json'
+    this.fixturesPath = '__spec__/fixtures/json'
   }
 
   jasmine.JSONFixtures.prototype.load = function () {
@@ -248,6 +248,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       , url = this.fixturesPath.match('/$') ? this.fixturesPath + relativeUrl : this.fixturesPath + '/' + relativeUrl
 
     $.ajax({
+      method: 'GET',
       async: false, // must be synchronous to guarantee that no tests are run before fixture is loaded
       cache: false,
       dataType: 'json',
