@@ -174,6 +174,8 @@ module ManageIQ::Providers
         parent_image_uid = parse_parent_image(instance)
         parent_image     = @data_index.fetch_path(:vms, parent_image_uid)
 
+        operating_system = parent_image[:operating_system] unless parent_image.nil?
+
         type = ManageIQ::Providers::Google::CloudManager::Vm.name
         new_result = {
           :type              => type,
@@ -186,6 +188,7 @@ module ManageIQ::Providers
           :flavor            => flavor,
           :availability_zone => zone,
           :parent_vm         => parent_image,
+          :operating_system  => operating_system,
           :hardware          => {
             :cpu_sockets          => flavor[:cpus],
             :cpu_total_cores      => flavor[:cpu_cores],
