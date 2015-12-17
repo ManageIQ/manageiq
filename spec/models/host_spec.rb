@@ -35,10 +35,10 @@ describe Host do
     host = FactoryGirl.create(:host_vmware)
     host.save_drift_state
 
-    host.drift_states.size.should == 1
-    DriftState.count.should == 1
+    expect(host.drift_states.size).to eq(1)
+    expect(DriftState.count).to eq(1)
 
-    host.drift_states.first.data.should == {
+    expect(host.drift_states.first.data).to eq({
       :class              => "ManageIQ::Providers::Vmware::InfraManager::Host",
       :id                 => host.id,
       :name               => host.name,
@@ -57,7 +57,7 @@ describe Host do
       :tags                          => [],
       :users                         => [],
       :vms                           => [],
-    }
+    })
   end
 
   it "emits cluster policy event when the cluster changes" do
@@ -65,19 +65,19 @@ describe Host do
     cluster1 = FactoryGirl.create(:ems_cluster)
     host = FactoryGirl.create(:host_vmware)
     host.ems_cluster = cluster1
-    MiqEvent.should_receive(:raise_evm_event).with(host, "host_add_to_cluster", anything)
+    expect(MiqEvent).to receive(:raise_evm_event).with(host, "host_add_to_cluster", anything)
     host.save
 
     # Existing host changes clusters
     cluster2 = FactoryGirl.create(:ems_cluster)
     host.ems_cluster = cluster2
-    MiqEvent.should_receive(:raise_evm_event).with(host, "host_remove_from_cluster", hash_including(:ems_cluster => cluster1))
-    MiqEvent.should_receive(:raise_evm_event).with(host, "host_add_to_cluster", hash_including(:ems_cluster => cluster2))
+    expect(MiqEvent).to receive(:raise_evm_event).with(host, "host_remove_from_cluster", hash_including(:ems_cluster => cluster1))
+    expect(MiqEvent).to receive(:raise_evm_event).with(host, "host_add_to_cluster", hash_including(:ems_cluster => cluster2))
     host.save
 
     # Existing host becomes cluster-less
     host.ems_cluster = nil
-    MiqEvent.should_receive(:raise_evm_event).with(host, "host_remove_from_cluster", hash_including(:ems_cluster => cluster2))
+    expect(MiqEvent).to receive(:raise_evm_event).with(host, "host_remove_from_cluster", hash_including(:ems_cluster => cluster2))
     host.save
   end
 
@@ -136,7 +136,7 @@ describe Host do
       end
 
       it "policy passes" do
-        described_class.any_instance.should_receive(:ipmi_power_on)
+        expect_any_instance_of(described_class).to receive(:ipmi_power_on)
 
         @host.start
         status, message, result = MiqQueue.first.deliver
@@ -144,10 +144,10 @@ describe Host do
       end
 
       it "policy prevented" do
-        described_class.any_instance.should_not_receive(:ipmi_power_on)
+        expect_any_instance_of(described_class).not_to receive(:ipmi_power_on)
 
         event = {:attributes => {"full_data" => {:policy => {:pprevented => true}}}}
-        MiqAeEngine::MiqAeWorkspaceRuntime.any_instance.stub(:get_obj_from_path).with("/").and_return(:event_stream => event)
+        allow_any_instance_of(MiqAeEngine::MiqAeWorkspaceRuntime).to receive(:get_obj_from_path).with("/").and_return(:event_stream => event)
         @host.start
         status, message, _result = MiqQueue.first.deliver
         MiqQueue.first.delivered(status, message, MiqAeEngine::MiqAeWorkspaceRuntime.new)
@@ -187,16 +187,16 @@ describe Host do
 
     it "#current_memory_usage" do
       mem_usage = @host.current_memory_usage
-      mem_usage.should be_an(Integer)
+      expect(mem_usage).to be_an(Integer)
 
-      -> { @host.current_memory_usage }.should_not raise_error
+      expect { @host.current_memory_usage }.not_to raise_error
     end
 
     it "#current_cpu_usage" do
       cpu_usage = @host.current_cpu_usage
-      cpu_usage.should be_an(Integer)
+      expect(cpu_usage).to be_an(Integer)
 
-      -> { @host.current_cpu_usage }.should_not raise_error
+      expect { @host.current_cpu_usage }.not_to raise_error
     end
   end
 
@@ -309,13 +309,13 @@ describe Host do
       it "save" do
         @host.update_authentication(@data, @options)
         @host.save
-        @host.authentications.count.should eq(1)
+        expect(@host.authentications.count).to eq(1)
       end
 
       it "validate" do
-        @host.stub(:connect_ssh)
+        allow(@host).to receive(:connect_ssh)
         assert_default_credentials_validated
-        @host.authentications.count.should eq(0)
+        expect(@host.authentications.count).to eq(0)
       end
     end
 
@@ -323,19 +323,19 @@ describe Host do
       it "save default, then save remote" do
         @host.update_authentication(@data, @options)
         @host.save
-        @host.authentications.count.should eq(1)
+        expect(@host.authentications.count).to eq(1)
 
         @data[:remote] = {:userid => "root", :password => @password}
         @host.update_authentication(@data, @options)
         @host.save
-        @host.authentications.count.should eq(2)
+        expect(@host.authentications.count).to eq(2)
       end
 
       it "save both together" do
         @data[:remote] = {:userid => "root", :password => @password}
         @host.update_authentication(@data, @options)
         @host.save
-        @host.authentications.count.should eq(2)
+        expect(@host.authentications.count).to eq(2)
       end
 
       it "validate remote with both credentials" do
@@ -349,7 +349,7 @@ describe Host do
       end
 
       it "validate default, then validate remote" do
-        @host.stub(:connect_ssh)
+        allow(@host).to receive(:connect_ssh)
         assert_default_credentials_validated
 
         @data[:remote] = {:userid => "root", :password => @password}
@@ -385,11 +385,11 @@ describe Host do
     end
 
     it "#enabled_udp_outbound_ports" do
-      @host.enabled_udp_outbound_ports.should match_array([1002])
+      expect(@host.enabled_udp_outbound_ports).to match_array([1002])
     end
 
     it "#enabled_inbound_ports" do
-      @host.enabled_inbound_ports.should match_array([1003, 1001])
+      expect(@host.enabled_inbound_ports).to match_array([1003, 1001])
     end
   end
 
@@ -404,19 +404,19 @@ describe Host do
       FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
 
       result = Host.node_types
-      result.should eq(:mixed_hosts)
+      expect(result).to eq(:mixed_hosts)
     end
 
     it "returns :openstack when there are only openstack hosts in db" do
       FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
       result = Host.node_types
-      result.should eq(:openstack)
+      expect(result).to eq(:openstack)
     end
 
     it "returns :non_openstack when there are non-openstack hosts in db" do
       FactoryGirl.create(:host_vmware_esx, :ems_id => @ems1.id)
       result = Host.node_types
-      result.should eq(:non_openstack)
+      expect(result).to eq(:non_openstack)
     end
   end
 
@@ -426,26 +426,26 @@ describe Host do
       host = FactoryGirl.create(:host_redhat, :ems_id => ems.id)
 
       result = host.openstack_host?
-      result.should be_true
+      expect(result).to be_truthy
     end
 
     it "returns false for non-openstack host" do
       ems = FactoryGirl.create(:ems_vmware)
       host = FactoryGirl.create(:host_vmware_esx, :ems_id => ems.id)
       result = host.openstack_host?
-      result.should be_false
+      expect(result).to be_falsey
     end
   end
 
   def assert_default_credentials_validated
-    @host.stub(:verify_credentials_with_ws)
+    allow(@host).to receive(:verify_credentials_with_ws)
     @host.update_authentication(@data, @options)
-    @host.verify_credentials(:default).should be_true
+    expect(@host.verify_credentials(:default)).to be_truthy
   end
 
   def assert_remote_credentials_validated
-    @host.stub(:connect_ssh)
+    allow(@host).to receive(:connect_ssh)
     @host.update_authentication(@data, @options)
-    @host.verify_credentials(:remote).should be_true
+    expect(@host.verify_credentials(:remote)).to be_truthy
   end
 end

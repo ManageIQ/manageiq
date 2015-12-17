@@ -41,26 +41,26 @@ module JobProxyDispatcherSpec
       # Don't run these tests if we only want to run dispatch for load testing
       unless DISPATCH_ONLY
         it "should have a server in default zone" do
-          @server.zone.should_not be_nil
-          @server.should_not be_nil
+          expect(@server.zone).not_to be_nil
+          expect(@server).not_to be_nil
         end
 
         it "should have #{NUM_HOSTS} hosts" do
-          NUM_HOSTS.should == @hosts.length
+          expect(NUM_HOSTS).to eq(@hosts.length)
         end
 
         it "should have #{NUM_VMS} vms and #{NUM_REPO_VMS} repo vms" do
-          NUM_VMS.should == @vms.length
+          expect(NUM_VMS).to eq(@vms.length)
         end
 
         it "should have #{NUM_REPO_VMS} repo vms" do
-          NUM_REPO_VMS.should == @repo_vms.length
+          expect(NUM_REPO_VMS).to eq(@repo_vms.length)
         end
 
         context "with a vm without a storage" do
           before(:each) do
             # Test a vm without a storage (ie, removed from VC but retained in the VMDB)
-            MiqVimBrokerWorker.stub(:available_in_zone?).and_return(true)
+            allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
             @vm = @vms.first
             @vm.storage = nil
             @vm.save
@@ -69,15 +69,15 @@ module JobProxyDispatcherSpec
 
           it "should expect queue_signal and dispatch without errors" do
             dispatcher = JobProxyDispatcher.new
-            dispatcher.should_receive(:queue_signal)
-            lambda { dispatcher.dispatch }.should_not raise_error
+            expect(dispatcher).to receive(:queue_signal)
+            expect { dispatcher.dispatch }.not_to raise_error
           end
         end
       end
 
       context "with jobs, a default smartproxy for repo scanning" do
         before(:each) do
-          MiqVimBrokerWorker.stub(:available?).and_return(true)
+          allow(MiqVimBrokerWorker).to receive(:available?).and_return(true)
           # JobProxyDispatcher.stub(:start_job_on_proxy).and_return(nil)
           # MiqProxy.any_instance.stub(:concurrent_job_max).and_return(1)
           @repo_proxy = @proxies.last
@@ -88,7 +88,7 @@ module JobProxyDispatcherSpec
             @repo_proxy.host.save
             cfg = VMDB::Config.new("vmdb")
             cfg.config.store_path(:repository_scanning, :defaultsmartproxy, @repo_proxy.id)
-            VMDB::Config.stub(:new).and_return(cfg)
+            allow(VMDB::Config).to receive(:new).and_return(cfg)
           end
           @jobs = (@vms + @repo_vms).collect(&:scan)
         end
@@ -97,28 +97,28 @@ module JobProxyDispatcherSpec
         unless DISPATCH_ONLY
           if @repo_proxy
             it "should have repository host set" do
-              @repo_vms.first.myhost.id.should == @repo_proxy.host_id
+              expect(@repo_vms.first.myhost.id).to eq(@repo_proxy.host_id)
             end
           end
 
           it "should have #{NUM_VMS + NUM_REPO_VMS} jobs" do
             total = NUM_VMS + NUM_REPO_VMS
-            @jobs.length.should == total
+            expect(@jobs.length).to eq(total)
           end
         end
 
         it "should run dispatch" do
-          lambda { JobProxyDispatcher.dispatch }.should_not raise_error
+          expect { JobProxyDispatcher.dispatch }.not_to raise_error
         end
 
         it "dispatch should handle a job with a deleted target VM" do
           @job = Job.first
           @job.target_id = 999999
           @job.save!
-          lambda { JobProxyDispatcher.dispatch }.should_not raise_error
+          expect { JobProxyDispatcher.dispatch }.not_to raise_error
           @job.reload
-          @job.state.should == "finished"
-          @job.status.should == "warn"
+          expect(@job.state).to eq("finished")
+          expect(@job.status).to eq("warn")
         end
       end
     end

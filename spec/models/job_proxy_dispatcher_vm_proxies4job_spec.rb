@@ -28,7 +28,7 @@ describe "JobProxyDispatcherVmProxies4Job" do
           end
 
           it "should return with message asking for VM's host's creds" do
-            @vm.proxies4job[:message].should == "Provide credentials for this VM's Host to perform SmartState Analysis"
+            expect(@vm.proxies4job[:message]).to eq("Provide credentials for this VM's Host to perform SmartState Analysis")
           end
         end
 
@@ -38,7 +38,7 @@ describe "JobProxyDispatcherVmProxies4Job" do
           end
 
           it "should return with message 'No active SmartProxies'" do
-            @vm.proxies4job[:message].should == "No active SmartProxies found to analyze this VM"
+            expect(@vm.proxies4job[:message]).to eq("No active SmartProxies found to analyze this VM")
           end
         end
       end
@@ -54,7 +54,7 @@ describe "JobProxyDispatcherVmProxies4Job" do
         end
 
         it "should return with message Smarstate Analysis is available through registered Host only" do
-          @vm.proxies4job[:message].should == 'SmartState Analysis is only available through the registered Host for running VM'
+          expect(@vm.proxies4job[:message]).to eq('SmartState Analysis is only available through the registered Host for running VM')
         end
 
         context "with a server in the all proxy list" do
@@ -62,7 +62,7 @@ describe "JobProxyDispatcherVmProxies4Job" do
             @vm.stub(:storage2proxies => [@server1])
           end
           it "should return with message to start a smart proxy or provide Vm's hosts creds" do
-            @vm.proxies4job[:message].should == "Start a SmartProxy or provide credentials for this VM's Host to perform SmartState Analysis"
+            expect(@vm.proxies4job[:message]).to eq("Start a SmartProxy or provide credentials for this VM's Host to perform SmartState Analysis")
           end
         end
       end
@@ -75,13 +75,13 @@ describe "JobProxyDispatcherVmProxies4Job" do
         end
 
         it "should accept an instance of a job and call log proxies with a job" do
-          @vm.should_receive(:log_proxies).with([], [], (instance_of(String)), (instance_of(VmScan)))
-          @vm.proxies4job(@job)[:proxies].should be_empty
+          expect(@vm).to receive(:log_proxies).with([], [], (instance_of(String)), (instance_of(VmScan)))
+          expect(@vm.proxies4job(@job)[:proxies]).to be_empty
         end
 
         it "should accept a job guid and call log proxies with a job" do
-          @vm.should_receive(:log_proxies).with([], [], (instance_of(String)), (instance_of(VmScan)))
-          @vm.proxies4job(@job.guid)[:proxies].should be_empty
+          expect(@vm).to receive(:log_proxies).with([], [], (instance_of(String)), (instance_of(VmScan)))
+          expect(@vm.proxies4job(@job.guid)[:proxies]).to be_empty
         end
 
         context "with VmAmazon, " do
@@ -93,7 +93,7 @@ describe "JobProxyDispatcherVmProxies4Job" do
           end
 
           it "should return my_server" do
-            @vm.proxies4job[:proxies].should == [@server1]
+            expect(@vm.proxies4job[:proxies]).to eq([@server1])
           end
         end
       end

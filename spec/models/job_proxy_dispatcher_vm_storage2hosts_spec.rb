@@ -29,7 +29,7 @@ describe "JobProxyDispatcherVmStorage2Hosts" do
             vm_storage.save
           end
           it "should return storage's hosts" do
-            @vm.storage2hosts.should == @vm.storage.hosts
+            expect(@vm.storage2hosts).to eq(@vm.storage.hosts)
           end
         end
 
@@ -41,7 +41,7 @@ describe "JobProxyDispatcherVmStorage2Hosts" do
           end
 
           it "should return repo host" do
-            @vm.storage2hosts.should == [@repo_host]
+            expect(@vm.storage2hosts).to eq([@repo_host])
           end
         end
 
@@ -55,7 +55,7 @@ describe "JobProxyDispatcherVmStorage2Hosts" do
           end
 
           it "should return storage's hosts" do
-            @vm.storage2hosts.should == @vm.storage.hosts
+            expect(@vm.storage2hosts).to eq(@vm.storage.hosts)
           end
         end
 
@@ -69,7 +69,7 @@ describe "JobProxyDispatcherVmStorage2Hosts" do
           end
 
           it "should return repo host" do
-            @vm.storage2hosts.should == [@repo_host]
+            expect(@vm.storage2hosts).to eq([@repo_host])
           end
         end
 
@@ -86,7 +86,7 @@ describe "JobProxyDispatcherVmStorage2Hosts" do
           end
 
           it "should exlude non-vmware hosts" do
-            @vm.storage2hosts.should be_empty
+            expect(@vm.storage2hosts).to be_empty
           end
         end
       end

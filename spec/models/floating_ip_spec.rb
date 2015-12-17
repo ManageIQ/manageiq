@@ -6,6 +6,6 @@ describe FloatingIp do
     ip1 = FactoryGirl.create(:floating_ip_amazon, :vm => vm)
     ip2 = FactoryGirl.create(:floating_ip_amazon)
 
-    described_class.available.should == [ip2]
+    expect(described_class.available).to eq([ip2])
   end
 end
