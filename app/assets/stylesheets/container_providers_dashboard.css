@@ -45,7 +45,7 @@
 }
 
 /* Remove after next pf release */
-.icon-atomic:before {
+.pficon-atomic:before {
     max-height: 20px;
     display: inline-block;
     content: url(/images/icons/new/vendor-atomic_dashboard.png);

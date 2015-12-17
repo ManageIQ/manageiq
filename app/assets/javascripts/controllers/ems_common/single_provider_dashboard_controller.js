@@ -26,7 +26,7 @@ angular.module('containerDashboard')
                     'use strict';
 
                     var data = response.data;
-                    $scope.providerTypeIconClass = data.providers.iconClass;
+                    $scope.providerTypeIconClass = data.providers[0].iconClass;
 
                     containerDashboardUtils.updateStatus($scope.objectStatus.nodes,      data.status.nodes);
                     containerDashboardUtils.updateStatus($scope.objectStatus.containers, data.status.containers);
