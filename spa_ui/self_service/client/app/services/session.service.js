@@ -8,7 +8,6 @@
   function SessionFactory($http, moment, $sessionStorage) {
     var model = {
       token: null,
-      expiresOn: moment().subtract(1, 'seconds'),
       user: {}
     };
 
@@ -26,14 +25,12 @@
 
     function create(data) {
       model.token = data.auth_token;
-      model.expiresOn = moment(data.expires_on);
       $http.defaults.headers.common['X-Auth-Token'] = model.token;
       $sessionStorage.token = model.token;
     }
 
     function destroy() {
       model.token = null;
-      model.expiresOn = moment().subtract(1, 'seconds');
       model.user = {};
       delete $http.defaults.headers.common['X-Auth-Token'];
       delete $sessionStorage.token;
@@ -50,7 +47,8 @@
     // Helpers
 
     function active() {
-      return model.token && model.expiresOn.isAfter();
+      // may not be current, but if we have one, we'll rely on API 401ing if it's not
+      return model.token;
     }
   }
 })();
