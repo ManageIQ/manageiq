@@ -11,6 +11,18 @@ module VmOrTemplate::Operations::Relocation
     validate_unsupported("Live Migrate VM Operation")
   end
 
+  def raw_evacuate(_options = nil)
+    raise NotImplementedError, "raw_evacuate must be implemented in a subclass"
+  end
+
+  def evacuate(options = nil)
+    raw_evacuate(options)
+  end
+
+  def validate_evacuate
+    validate_unsupported("Evacuate VM Operation")
+  end
+
   def raw_migrate(host, pool = nil, priority = "defaultPriority", state = nil)
     raise "VM has no EMS, unable to migrate VM" unless ext_management_system
     raise "Host not specified, unable to migrate VM" unless host.kind_of?(Host)
