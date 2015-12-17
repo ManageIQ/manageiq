@@ -235,7 +235,7 @@ module ApiSpecHelper
     href_list = fetch_value(hrefs)
     expect(@result[collection].size).to eq(href_list.size)
     href_list.each do |href|
-      expect(resources_include_suffix?(@result[collection], "href", href)).to be_true
+      expect(resources_include_suffix?(@result[collection], "href", href)).to be true
     end
   end
 
@@ -252,7 +252,7 @@ module ApiSpecHelper
   def expect_result_resource_keys_to_match_pattern(collection, key, pattern)
     pattern = fetch_value(pattern)
     expect(@result).to have_key(collection)
-    expect(@result[collection].all? { |result| result[key].match(pattern) }).to be_true
+    expect(@result[collection].all? { |result| result[key].match(pattern) }).to be true
   end
 
   def expect_result_to_have_keys(keys)
@@ -296,25 +296,25 @@ module ApiSpecHelper
 
   def expect_result_resource_keys_to_be_like_klass(collection, key, klass)
     expect(@result).to have_key(collection)
-    expect(@result[collection].all? { |result| result[key].kind_of?(klass) }).to be_true
+    expect(@result[collection].all? { |result| result[key].kind_of?(klass) }).to be true
   end
 
   def expect_result_resources_to_include_keys(collection, keys)
     expect(@result).to have_key(collection)
     results = @result[collection]
-    fetch_value(keys).each { |key| expect(results.all? { |r| r.key?(key) }).to be_true }
+    fetch_value(keys).each { |key| expect(results.all? { |r| r.key?(key) }).to be true }
   end
 
   def expect_result_resources_to_have_only_keys(collection, keys)
     key_list = fetch_value(keys).sort
     expect(@result).to have_key(collection)
-    expect(@result[collection].all? { |result| result.keys.sort == key_list }).to be_true
+    expect(@result[collection].all? { |result| result.keys.sort == key_list }).to be true
   end
 
   def expect_results_match_key_pattern(collection, key, value)
     pattern = fetch_value(value)
     expect(@result).to have_key(collection)
-    expect(@result[collection].all? { |result| result[key].match(pattern) }).to be_true
+    expect(@result[collection].all? { |result| result[key].match(pattern) }).to be true
   end
 
   def expect_result_to_represent_task(result)
@@ -368,7 +368,7 @@ module ApiSpecHelper
     expect(@result).to have_key("results")
     results = @result["results"]
     expect(results.size).to eq(count)
-    expect(results.all? { |r| r["success"] }).to be_true
+    expect(results.all? { |r| r["success"] }).to be true
 
     results.each { |r| expect_result_to_represent_task(r) } if options[:task]
   end

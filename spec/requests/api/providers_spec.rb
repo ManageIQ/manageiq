@@ -120,7 +120,7 @@ describe ApiController do
       expect_results_to_match_hash("results", [sample_rhevm])
 
       provider_id = @result["results"].first["id"]
-      expect(ExtManagementSystem.exists?(provider_id)).to be_true
+      expect(ExtManagementSystem.exists?(provider_id)).to be true
     end
 
     it "supports openshift creation with auth_key specified" do
@@ -134,7 +134,7 @@ describe ApiController do
 
       provider_id = @result["results"].first["id"]
       expect(ExtManagementSystem.exists?(provider_id)).to be true
-      expect(ExtManagementSystem.find(provider_id)).to have(1).authentication
+      expect(ExtManagementSystem.find(provider_id).authentications.size).to eq(1)
     end
 
     it "supports single provider creation via action" do
@@ -147,7 +147,7 @@ describe ApiController do
       expect_results_to_match_hash("results", [sample_rhevm])
 
       provider_id = @result["results"].first["id"]
-      expect(ExtManagementSystem.exists?(provider_id)).to be_true
+      expect(ExtManagementSystem.exists?(provider_id)).to be true
     end
 
     it "supports single provider creation with simple credentials" do
@@ -160,7 +160,7 @@ describe ApiController do
       expect_results_to_match_hash("results", [sample_vmware])
 
       provider_id = @result["results"].first["id"]
-      expect(ExtManagementSystem.exists?(provider_id)).to be_true
+      expect(ExtManagementSystem.exists?(provider_id)).to be true
       provider = ExtManagementSystem.find(provider_id)
       expect(provider.authentication_userid).to eq(default_credentials["userid"])
       expect(provider.authentication_password).to eq(default_credentials["password"])
@@ -176,7 +176,7 @@ describe ApiController do
       expect_results_to_match_hash("results", [sample_rhevm])
 
       provider_id = @result["results"].first["id"]
-      expect(ExtManagementSystem.exists?(provider_id)).to be_true
+      expect(ExtManagementSystem.exists?(provider_id)).to be true
       provider = ExtManagementSystem.find(provider_id)
       expect(provider.authentication_userid(:default)).to eq(default_credentials["userid"])
       expect(provider.authentication_password(:default)).to eq(default_credentials["password"])
@@ -195,8 +195,8 @@ describe ApiController do
 
       results = @result["results"]
       p1_id, p2_id = results.first["id"], results.second["id"]
-      expect(ExtManagementSystem.exists?(p1_id)).to be_true
-      expect(ExtManagementSystem.exists?(p2_id)).to be_true
+      expect(ExtManagementSystem.exists?(p1_id)).to be true
+      expect(ExtManagementSystem.exists?(p2_id)).to be true
     end
   end
 

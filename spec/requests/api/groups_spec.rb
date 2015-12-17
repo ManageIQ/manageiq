@@ -232,7 +232,7 @@ describe ApiController do
       run_delete(groups_url(g1_id))
 
       expect_request_success_with_no_content
-      expect(MiqGroup.exists?(g1_id)).to be_false
+      expect(MiqGroup.exists?(g1_id)).to be false
     end
 
     it "supports single group delete action" do
@@ -244,7 +244,7 @@ describe ApiController do
       run_post(g1_url, gen_request(:delete))
 
       expect_single_action_result(:success => true, :message => "deleting", :href => g1_url)
-      expect(MiqGroup.exists?(g1_id)).to be_false
+      expect(MiqGroup.exists?(g1_id)).to be false
     end
 
     it "supports multiple group deletes" do
@@ -257,8 +257,8 @@ describe ApiController do
 
       expect_multiple_action_result(2)
       expect_result_resources_to_include_hrefs("results", [g1_url, g2_url])
-      expect(MiqGroup.exists?(g1_id)).to be_false
-      expect(MiqGroup.exists?(g2_id)).to be_false
+      expect(MiqGroup.exists?(g1_id)).to be false
+      expect(MiqGroup.exists?(g2_id)).to be false
     end
   end
 end

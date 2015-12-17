@@ -69,7 +69,7 @@ describe ApiController do
 
       sc_id = @result["results"].first["id"]
 
-      expect(ServiceTemplateCatalog.find(sc_id)).to be_true
+      expect(ServiceTemplateCatalog.find(sc_id)).to be_truthy
     end
 
     it "supports single resource creation via create action" do
@@ -83,7 +83,7 @@ describe ApiController do
 
       sc_id = @result["results"].first["id"]
 
-      expect(ServiceTemplateCatalog.find(sc_id)).to be_true
+      expect(ServiceTemplateCatalog.find(sc_id)).to be_truthy
     end
 
     it "supports multiple resource creation" do
@@ -97,8 +97,8 @@ describe ApiController do
 
       results = @result["results"]
       sc_id1, sc_id2 = results.first["id"], results.second["id"]
-      expect(ServiceTemplateCatalog.find(sc_id1)).to be_true
-      expect(ServiceTemplateCatalog.find(sc_id2)).to be_true
+      expect(ServiceTemplateCatalog.find(sc_id1)).to be_truthy
+      expect(ServiceTemplateCatalog.find(sc_id2)).to be_truthy
     end
 
     it "supports single resource creation with service templates" do
@@ -120,7 +120,7 @@ describe ApiController do
 
       sc_id = @result["results"].first["id"]
 
-      expect(ServiceTemplateCatalog.find(sc_id)).to be_true
+      expect(ServiceTemplateCatalog.find(sc_id)).to be_truthy
       expect(ServiceTemplateCatalog.find(sc_id).service_templates.pluck(:id)).to match_array([st1.id, st2.id])
     end
   end

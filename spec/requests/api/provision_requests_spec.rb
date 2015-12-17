@@ -74,7 +74,7 @@ describe ApiController do
       expect_results_to_match_hash("results", [expected_hash])
 
       task_id = @result["results"].first["id"]
-      expect(MiqProvisionRequest.exists?(task_id)).to be_true
+      expect(MiqProvisionRequest.exists?(task_id)).to be true
     end
 
     it "supports single request with create action" do
@@ -88,7 +88,7 @@ describe ApiController do
       expect_results_to_match_hash("results", [expected_hash])
 
       task_id = @result["results"].first["id"]
-      expect(MiqProvisionRequest.exists?(task_id)).to be_true
+      expect(MiqProvisionRequest.exists?(task_id)).to be true
     end
 
     it "supports multiple requests" do
@@ -102,8 +102,8 @@ describe ApiController do
       expect_results_to_match_hash("results", [expected_hash, expected_hash])
 
       task_id1, task_id2 = @result["results"].collect { |r| r["id"] }
-      expect(MiqProvisionRequest.exists?(task_id1)).to be_true
-      expect(MiqProvisionRequest.exists?(task_id2)).to be_true
+      expect(MiqProvisionRequest.exists?(task_id1)).to be true
+      expect(MiqProvisionRequest.exists?(task_id2)).to be true
     end
   end
 end
