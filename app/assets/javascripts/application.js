@@ -40,9 +40,9 @@
 //= require controllers/ops/log_collection_form_controller
 //= require controllers/ops/tenant_form_controller
 //= require controllers/ops/tenant_quota_form_controller
-//= require controllers/container_dashboard/util/util-module
-//= require controllers/container_dashboard/util/dashboard-utils
-//= require controllers/container_dashboard/util/chart-data-mixin
+//= require controllers/container_dashboard/util/dashboard-util-module
+//= require controllers/container_dashboard/util/dashboard-utils-factory
+//= require controllers/container_dashboard/util/charts-mixin
 //= require controllers/container_dashboard/container_dashboard_controller
 //= require controllers/ems_common/single_provider_dashboard_controller
 //= require controllers/container_dashboard/card/card-module

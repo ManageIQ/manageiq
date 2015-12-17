@@ -8,9 +8,10 @@ class ContainerDashboardService
   def all_data
     {
       :providers_link => get_url_to_entity(:ems_container),
-      :status    => status,
-      :providers => providers,
-      :heatmaps  => heatmaps
+      :status           => status,
+      :providers        => providers,
+      :heatmaps         => heatmaps,
+      :node_utilization => node_utilization
     }
   end
 
@@ -102,8 +103,6 @@ class ContainerDashboardService
     }
   end
 
-  private
-
   def get_url_to_entity(entity)
     if @ems.present?
       @controller.url_for(:action     => 'show',
@@ -139,5 +138,45 @@ class ContainerDashboardService
         }
       }
     }
+  end
+
+  def node_utilization
+    resource_ids = @ems.present? ? [@ems.id] : ManageIQ::Providers::ContainerManager.all.pluck(:id)
+    metrics = VimPerformanceDaily.find_entries({:tz => @controller.current_user.get_timezone})
+    metrics = metrics.where(:resource_type => 'ExtManagementSystem', :resource_id => resource_ids)
+    metrics = metrics.where("timestamp > ?", 30.days.ago)
+    metrics = metrics.order("timestamp")
+
+    used_cpu = Hash.new(0)
+    used_mem = Hash.new(0)
+    total_cpu = Hash.new(0)
+    total_mem = Hash.new(0)
+
+    metrics.each do |metric|
+      date = metric.timestamp.strftime("%Y-%m-%d")
+      used_cpu[date] += metric.v_derived_cpu_total_cores_used
+      used_mem[date] += metric.derived_memory_used
+      total_cpu[date] += metric.derived_vm_numvcpus
+      total_mem[date] += metric.derived_memory_available
+    end
+
+    if metrics.any?
+      {
+        :cpu => {
+          :used  => used_cpu.values.last.round,
+          :total => total_cpu.values.last.round,
+          :xData => ["date"] + used_cpu.keys,
+          :yData => ["used"] + used_cpu.values.map(&:round)
+        },
+        :mem => {
+          :used  => (used_mem.values.last / 1024.0).round,
+          :total => (total_mem.values.last / 1024.0).round,
+          :xData => ["date"] + used_mem.keys,
+          :yData => ["used"] + used_mem.values.map { |m| (m / 1024.0).round }
+        }
+      }
+    else
+      {}
+    end
   end
 end

@@ -1,1 +1,1 @@
-angular.module('miq.card', []);
+angular.module('miq.card', ['miq.util']);
