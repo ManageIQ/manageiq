@@ -220,7 +220,7 @@ module MiqAeServiceSpec
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_get_display_name('#{@domain}/EVM/AUTOMATE/testadd')"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
-        expect(result).to.nil?
+        expect(result).to be_nil
       end
 
       it "instance does exist" do
