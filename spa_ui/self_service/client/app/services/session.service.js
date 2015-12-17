@@ -5,7 +5,7 @@
     .factory('Session', SessionFactory);
 
   /** @ngInject */
-  function SessionFactory($http, moment) {
+  function SessionFactory($http, moment, $sessionStorage) {
     var model = {
       token: null,
       expiresOn: moment().subtract(1, 'seconds'),
@@ -28,6 +28,7 @@
       model.token = data.auth_token;
       model.expiresOn = moment(data.expires_on);
       $http.defaults.headers.common['X-Auth-Token'] = model.token;
+      $sessionStorage.token = model.token;
     }
 
     function destroy() {
@@ -35,6 +36,7 @@
       model.expiresOn = moment().subtract(1, 'seconds');
       model.user = {};
       delete $http.defaults.headers.common['X-Auth-Token'];
+      delete $sessionStorage.token;
     }
 
     function currentUser(user) {

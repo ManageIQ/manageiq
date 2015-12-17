@@ -49,7 +49,7 @@
   }
 
   /** @ngInject */
-  function init($rootScope, $state, Session, jQuery) {
+  function init($rootScope, $state, Session, jQuery, $sessionStorage) {
     $rootScope.$on('$stateChangeStart', changeStart);
     $rootScope.$on('$stateChangeError', changeError);
     $rootScope.$on('$stateChangeSuccess', changeSuccess);
@@ -59,10 +59,25 @@
         return;
       }
 
-      if (!Session.active()) {
-        event.preventDefault();
-        $state.transitionTo('login');
+      if (Session.active()) {
+        return;
       }
+
+      $sessionStorage.$sync();
+      if ($sessionStorage.token) {
+        event.preventDefault();
+
+        Session.create({
+          auth_token: $sessionStorage.token,
+          expires_on: moment().add(5, 'minutes'),
+        });
+
+        $state.go('dashboard');
+        return;
+      }
+
+      event.preventDefault();
+      $state.transitionTo('login');
     }
 
     function changeError(event, toState, toParams, fromState, fromParams, error) {
