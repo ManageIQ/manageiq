@@ -7,11 +7,11 @@ class ContainerDashboardService
 
   def all_data
     {
-      :providers_link => get_url_to_entity(:ems_container),
-      :status           => status,
-      :providers        => providers,
-      :heatmaps         => heatmaps,
-      :node_utilization => node_utilization
+      :providers_link  => get_url_to_entity(:ems_container),
+      :status          => status,
+      :providers       => providers,
+      :heatmaps        => heatmaps,
+      :ems_utilization => ems_utilization
     }
   end
 
@@ -140,11 +140,11 @@ class ContainerDashboardService
     }
   end
 
-  def node_utilization
+  def ems_utilization
     resource_ids = @ems.present? ? [@ems.id] : ManageIQ::Providers::ContainerManager.all.pluck(:id)
-    metrics = VimPerformanceDaily.find_entries({:tz => @controller.current_user.get_timezone})
-    metrics = metrics.where(:resource_type => 'ExtManagementSystem', :resource_id => resource_ids)
-    metrics = metrics.where("timestamp > ?", 30.days.ago)
+    metrics = VimPerformanceDaily.find_entries(:tz => @controller.current_user.get_timezone)
+    metrics = metrics.where('resource_type = :type and resource_id in (:resource_ids) and timestamp > :min_time',
+                            :type => 'ExtManagementSystem', :resource_ids => resource_ids, :min_time => 30.days.ago)
     metrics = metrics.order("timestamp")
 
     used_cpu = Hash.new(0)

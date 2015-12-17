@@ -103,8 +103,8 @@ angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.
                     dashboardUtilsFactory.updateStatus($scope.objectStatus.routes,     data.status.routes);
 
                     // Node utilization donut
-                    $scope.cpuUsageData = data.node_utilization.cpu;
-                    $scope.memoryUsageData = data.node_utilization.mem;
+                    $scope.cpuUsageData = data.ems_utilization.cpu;
+                    $scope.memoryUsageData = data.ems_utilization.mem;
                     $scope.utilizationLoadingDone = true;
 
                     // Heatmaps

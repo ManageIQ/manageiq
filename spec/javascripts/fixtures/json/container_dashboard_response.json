@@ -1,0 +1,90 @@
+{
+  "data": {
+    "status": {
+      "services": {
+        "errorCount": 0,
+        "count": 9,
+        "warningCount": 0
+      },
+      "containers": {
+        "count": 11,
+        "errorCount": 0,
+        "warningCount": 0
+      },
+      "projects": {
+        "count": 11,
+        "errorCount": 0,
+        "warningCount": 0
+      },
+      "pods": {
+        "warningCount": 0,
+        "errorCount": 0,
+        "count": 11
+      },
+      "routes": {
+        "count": 2,
+        "errorCount": 0,
+        "warningCount": 0
+      },
+      "images": {
+        "errorCount": 0,
+        "count": 8,
+        "warningCount": 0
+      },
+      "nodes": {
+        "errorCount": 0,
+        "count": 9,
+        "warningCount": 0
+      },
+      "registries": {
+        "count": 3,
+        "errorCount": 0,
+        "warningCount": 0
+      }
+    },
+    "heatmaps": {
+      "nodeCpuUsage": [],
+      "nodeMemoryUsage": []
+    },
+    "providers": [
+      {
+        "count": 2,
+        "providerType": "OpenShift",
+        "id": "openshift",
+        "iconClass": "pficon pficon-openshift"
+      },
+      {
+        "iconClass": "pficon pficon-kubernetes",
+        "id": "kubernetes",
+        "count": 1,
+        "providerType": "Kubernetes"
+      }
+    ],
+    "ems_utilization": {
+      "cpu": {
+        "total": 8,
+        "used": 3,
+        "xData": [
+          "dates",
+          "2015-11-26"
+        ],
+        "yData": [
+          "used",
+          3
+        ]
+      },
+      "mem": {
+        "total": 21,
+        "used": 12,
+        "xData": [
+          "dates",
+          "2015-11-26"
+        ],
+        "yData": [
+          "used",
+          12
+        ]
+      }
+    }
+  }
+}

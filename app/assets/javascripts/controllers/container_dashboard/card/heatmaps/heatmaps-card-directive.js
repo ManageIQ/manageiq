@@ -1,4 +1,4 @@
-angular.module('miq.card').directive('heatmapsCard', ['chartsMixin' ,function(chartsDataMixin) {
+angular.module('miq.card').directive('heatmapsCard', ['chartsMixin' ,function(chartsMixin) {
     'use strict';
     return {
         restrict: 'A',

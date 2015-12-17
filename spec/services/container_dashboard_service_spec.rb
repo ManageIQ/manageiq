@@ -38,12 +38,21 @@ describe ContainerDashboardService do
       current_date = 7.days.ago
       old_date = 35.days.ago
 
-      current_metric = FactoryGirl.create(
+      current_metric_openshift = FactoryGirl.create(
         :metric_rollup_cm_daily,
         :timestamp                => current_date,
         :derived_memory_used      => 1024,
         :derived_vm_numvcpus      => 2,
         :derived_memory_available => 2048,
+        :cpu_usage_rate_average   => 100,
+        :time_profile             => @time_profile)
+
+      current_metric_kubernetes = FactoryGirl.create(
+        :metric_rollup_cm_daily,
+        :timestamp                => current_date,
+        :derived_memory_used      => 512,
+        :derived_vm_numvcpus      => 1,
+        :derived_memory_available => 1024,
         :cpu_usage_rate_average   => 100,
         :time_profile             => @time_profile)
 
@@ -56,14 +65,14 @@ describe ContainerDashboardService do
         :cpu_usage_rate_average   => 100,
         :time_profile             => @time_profile)
 
-      ems_openshift.metric_rollups << current_metric
+      ems_openshift.metric_rollups << current_metric_openshift
       ems_openshift.metric_rollups << old_metric
-      ems_kubernetes.metric_rollups << current_metric.dup
+      ems_kubernetes.metric_rollups << current_metric_kubernetes
       ems_kubernetes.metric_rollups << old_metric.dup
 
       controller = RecursiveOpenStruct.new(:current_user => {:get_timezone => "UTC"})
-      node_utilization_all_providers = ContainerDashboardService.new(nil, controller).node_utilization
-      node_utilization_single_provider = ContainerDashboardService.new(ems_openshift.id, controller).node_utilization
+      node_utilization_all_providers = ContainerDashboardService.new(nil, controller).ems_utilization
+      node_utilization_single_provider = ContainerDashboardService.new(ems_openshift.id, controller).ems_utilization
 
       expect(node_utilization_single_provider).to eq(
         :cpu => {
@@ -82,14 +91,14 @@ describe ContainerDashboardService do
 
       expect(node_utilization_all_providers).to eq(
         :cpu => {
-          :used  => 4,
-          :total => 4,
+          :used  => 3,
+          :total => 3,
           :xData => ["date", current_date.strftime("%Y-%m-%d")],
-          :yData => ["used", 4]
+          :yData => ["used", 3]
         },
         :mem => {
           :used  => 2,
-          :total => 4,
+          :total => 3,
           :xData => ["date", current_date.strftime("%Y-%m-%d")],
           :yData => ["used", 2]
         }
