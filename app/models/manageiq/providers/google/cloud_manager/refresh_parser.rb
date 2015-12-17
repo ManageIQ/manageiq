@@ -123,11 +123,11 @@ module ManageIQ::Providers
 
       def parse_disk(disk)
         new_result = {
-          :name        => disk.name,
-          :description => disk.description,
-          :size        => disk.size_gb.to_i * 1.gigabyte,
-          :location    => disk.zone,
-          :filename    => disk.self_link,
+          :name         => disk.name,
+          :description  => disk.description,
+          :size         => disk.size_gb.to_i * 1.gigabyte,
+          :location     => disk.zone,
+          :parent_image => disk.source_image_id,
         }
 
         return disk.self_link, new_result
@@ -165,11 +165,14 @@ module ManageIQ::Providers
         name   = instance.name
         name ||= uid
 
-        flavor_uid = parse_uid_from_url(instance.machine_type)
-        flavor     = @data_index.fetch_path(:flavors, flavor_uid)
+        flavor_uid       = parse_uid_from_url(instance.machine_type)
+        flavor           = @data_index.fetch_path(:flavors, flavor_uid)
 
-        zone_uid   = parse_uid_from_url(instance.zone)
-        zone       = @data_index.fetch_path(:availability_zones, zone_uid)
+        zone_uid         = parse_uid_from_url(instance.zone)
+        zone             = @data_index.fetch_path(:availability_zones, zone_uid)
+
+        parent_image_uid = parse_parent_image(instance)
+        parent_image     = @data_index.fetch_path(:vms, parent_image_uid)
 
         type = ManageIQ::Providers::Google::CloudManager::Vm.name
         new_result = {
@@ -182,6 +185,7 @@ module ManageIQ::Providers
           :raw_power_state   => instance.state,
           :flavor            => flavor,
           :availability_zone => zone,
+          :parent_vm         => parent_image,
           :hardware          => {
             :cpu_sockets          => flavor[:cpus],
             :cpu_total_cores      => flavor[:cpu_cores],
@@ -201,6 +205,7 @@ module ManageIQ::Providers
         instance.disks.each do |disk|
           # lookup the full disk information from the data_index by source link
           d = @data_index.fetch_path(:disks, disk["source"])
+          next if d.nil?
 
           disk_size     = d[:size]
           disk_name     = disk["deviceName"]
@@ -212,6 +217,20 @@ module ManageIQ::Providers
 
       def add_instance_disk(disks, size, name, location)
         super(disks, size, location, name, "google")
+      end
+
+      def parse_parent_image(instance)
+        parent_image_uid = nil
+
+        instance.disks.each do |disk|
+          d = @data_index.fetch_path(:disks, disk["source"])
+          next if d.nil? || d[:parent_image].nil?
+
+          parent_image_uid = d[:parent_image]
+          break
+        end
+
+        parent_image_uid
       end
 
       def parse_uid_from_url(url)
