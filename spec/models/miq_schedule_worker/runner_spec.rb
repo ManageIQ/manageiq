@@ -9,10 +9,10 @@ describe MiqScheduleWorker::Runner do
       worker_guid = MiqUUID.new_guid
       @worker = FactoryGirl.create(:miq_schedule_worker, :guid => worker_guid, :miq_server_id => @miq_server.id)
 
-      MiqScheduleWorker::Runner.any_instance.stub(:initialize_rufus)
-      MiqScheduleWorker::Runner.any_instance.stub(:sync_active_roles)
-      MiqScheduleWorker::Runner.any_instance.stub(:sync_config)
-      MiqScheduleWorker::Runner.any_instance.stub(:set_connection_pool_size)
+      allow_any_instance_of(MiqScheduleWorker::Runner).to receive(:initialize_rufus)
+      allow_any_instance_of(MiqScheduleWorker::Runner).to receive(:sync_active_roles)
+      allow_any_instance_of(MiqScheduleWorker::Runner).to receive(:sync_config)
+      allow_any_instance_of(MiqScheduleWorker::Runner).to receive(:set_connection_pool_size)
 
       @schedule_worker = MiqScheduleWorker::Runner.new(:guid => worker_guid)
     end
@@ -22,7 +22,7 @@ describe MiqScheduleWorker::Runner do
         @cond = {:class_name => 'JobProxyDispatcher', :method_name => 'dispatch'}
         @opts = @cond.merge({:state => 'dequeue', :updated_on => Time.now.utc})
         @stale_timeout = 2.minutes
-        @schedule_worker.stub(:worker_settings).and_return(:job_proxy_dispatcher_stale_message_timeout => @stale_timeout)
+        allow(@schedule_worker).to receive(:worker_settings).and_return(:job_proxy_dispatcher_stale_message_timeout => @stale_timeout)
 
         @zone1 = @zone
         @worker1 = FactoryGirl.create(:miq_worker, :status => MiqWorker::STATUS_STOPPED)
@@ -31,7 +31,7 @@ describe MiqScheduleWorker::Runner do
         @zone2 = FactoryGirl.create(:zone, :name => 'zone2')
         @worker2 = FactoryGirl.create(:miq_worker, :status => MiqWorker::STATUS_STOPPED)
 
-        MiqServer.stub(:my_zone).and_return(@zone1.name)
+        allow(MiqServer).to receive(:my_zone).and_return(@zone1.name)
         Timecop.travel 5.minutes
       end
 
@@ -44,9 +44,9 @@ describe MiqScheduleWorker::Runner do
                  :handler_id => @worker2.id}
         @dispatch2 = FactoryGirl.create(:miq_queue, attrs.merge(@opts))
 
-        MiqQueue.where(@cond).count.should == 2
+        expect(MiqQueue.where(@cond).count).to eq(2)
         MiqScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout.to_i)
-        MiqQueue.where(@cond).count.should == 0
+        expect(MiqQueue.where(@cond).count).to eq(0)
       end
 
       it "check_for_dispatch calls check_for_timeout which deletes both dispatches" do
@@ -54,9 +54,9 @@ describe MiqScheduleWorker::Runner do
                  :handler_id => @worker2.id}
         @dispatch2 = FactoryGirl.create(:miq_queue, attrs.merge(@opts))
 
-        MiqQueue.where(@cond).count.should == 2
+        expect(MiqQueue.where(@cond).count).to eq(2)
         MiqScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout)
-        MiqQueue.where(@cond).count.should == 0
+        expect(MiqQueue.where(@cond).count).to eq(0)
       end
 
       it "check_for_dispatch calls check_for_timeout with triple threshold for active worker" do
@@ -80,10 +80,10 @@ describe MiqScheduleWorker::Runner do
         @worker1.update_attribute(:status, MiqWorker::STATUS_STARTED)
         cond_active = @cond.dup
         cond_active[:handler_id] = @worker1.id
-        MiqQueue.where(@cond).count.should == 2
+        expect(MiqQueue.where(@cond).count).to eq(2)
         MiqScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout)
-        MiqQueue.where(@cond).count.should == 1
-        MiqQueue.where(cond_active).count.should == 1
+        expect(MiqQueue.where(@cond).count).to eq(1)
+        expect(MiqQueue.where(cond_active).count).to eq(1)
       end
     end
 
@@ -123,11 +123,11 @@ describe MiqScheduleWorker::Runner do
           tag = "miq_schedules_1"
           @sch = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2011-01-01 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
           @schedule_worker.rufus_add_schedule(:method => :schedule_at, :interval => first_at, :months => 1, :schedule_id => @sch.id, :discard_past => true, :tags => tag)
-          @schedule_worker.queue_length.should == 0
+          expect(@schedule_worker.queue_length).to eq(0)
 
           @schedule_worker.rufus_remove_schedules_by_tag(tag)
 
-          @user.jobs(:tag => tag).should be_empty
+          expect(@user.jobs(:tag => tag)).to be_empty
         end
 
         it "monthly creates a schedule each month for 5 years" do
@@ -137,7 +137,7 @@ describe MiqScheduleWorker::Runner do
           Timecop.freeze(first_at - 1.minute) do
             @schedule_worker.rufus_add_schedule(:method => :schedule_at, :interval => first_at, :months => 1, :schedule_id => @sch.id, :discard_past => true, :tags => "miq_schedules_1")
             schedules = @schedule_worker.instance_variable_get(:@schedules)
-            schedules[:scheduler].length.should == 60
+            expect(schedules[:scheduler].length).to eq(60)
           end
         end
 
@@ -149,7 +149,7 @@ describe MiqScheduleWorker::Runner do
             schedules = @schedule_worker.rufus_add_schedule(:method => :schedule_at, :interval => first_at, :months => 1, :schedule_id => @sch.id, :discard_past => true, :tags => "miq_schedules_1")
 
             job = @user.jobs(:tag => "miq_schedules_1").first
-            job.next_time.should == Time.utc(2011, 2, 28, 8, 30, 0)
+            expect(job.next_time).to eq(Time.utc(2011, 2, 28, 8, 30, 0))
           end
         end
 
@@ -174,17 +174,17 @@ describe MiqScheduleWorker::Runner do
 
         context "#system_schedule_every" do
           it "catches an error on nil first arg" do
-            $log.should_receive(:error).once
+            expect($log).to receive(:error).once
             @schedule_worker.system_schedule_every(nil) {}
           end
 
           it "catches an error on 0 first arg" do
-            $log.should_receive(:error).once
+            expect($log).to receive(:error).once
             @schedule_worker.system_schedule_every(0) {}
           end
 
           it "works on nil :first_in" do
-            $log.should_receive(:error).never
+            expect($log).to receive(:error).never
             @schedule_worker.system_schedule_every(1, :first_in => nil) {}
           end
         end
@@ -192,7 +192,7 @@ describe MiqScheduleWorker::Runner do
         context "calling check_roles_changed" do
           before(:each) do
             # MiqScheduleWorker::Runner.any_instance.stub(:schedules_for_scheduler_role)
-            @schedule_worker.stub(:worker_settings).and_return(Hash.new(5.minutes))
+            allow(@schedule_worker).to receive(:worker_settings).and_return(Hash.new(5.minutes))
             @schedule_worker.instance_variable_set(:@schedules, :scheduler => [])
 
             @sch1 = FactoryGirl.create(:miq_schedule)
@@ -203,13 +203,13 @@ describe MiqScheduleWorker::Runner do
             @schedule_worker.instance_variable_set(:@active_roles,  ["scheduler"])
             @schedule_worker.instance_variable_set(:@current_roles, [])
 
-            @user.jobs.length.should == 0
+            expect(@user.jobs.length).to eq(0)
 
             @schedule_worker.schedules_for_scheduler_role
-            @system.jobs.length.should > 0
+            expect(@system.jobs.length).to be > 0
 
             @schedule_worker.check_roles_changed
-            @user.jobs.length.should == 2
+            expect(@user.jobs.length).to eq(2)
           end
 
           it "should unload all user schedules when scheduler role is removed" do
@@ -218,10 +218,10 @@ describe MiqScheduleWorker::Runner do
             @schedule_worker.instance_variable_set(:@current_roles, [])
 
             @schedule_worker.schedules_for_scheduler_role
-            @system.jobs.length.should > 0
+            expect(@system.jobs.length).to be > 0
 
             @schedule_worker.sync_all_user_schedules
-            @user.jobs.length.should == 2
+            expect(@user.jobs.length).to eq(2)
 
             # Make sure only real schedules are processed
             schedules = @schedule_worker.instance_variable_get(:@schedules)
@@ -233,15 +233,15 @@ describe MiqScheduleWorker::Runner do
             @schedule_worker.instance_variable_set(:@current_roles, ["scheduler"])
             @schedule_worker.check_roles_changed
 
-            @system.jobs.length.should == 0
-            @user.jobs.length.should == 0
+            expect(@system.jobs.length).to eq(0)
+            expect(@user.jobs.length).to eq(0)
           end
         end
 
         context "nil worker_settings values" do
           before do
-            @schedule_worker.stub(:worker_settings).and_return({})
-            $log.should_receive(:error).never
+            allow(@schedule_worker).to receive(:worker_settings).and_return({})
+            expect($log).to receive(:error).never
           end
 
           it "#schedules_for_all_roles" do
@@ -272,13 +272,13 @@ describe MiqScheduleWorker::Runner do
         context "LDAP synchronization role" do
           before(:each) do
             stub_server_configuration(Hash.new(5.minutes))
-            @schedule_worker.stub(:heartbeat)
+            allow(@schedule_worker).to receive(:heartbeat)
 
             # Initialize active_roles
             @schedule_worker.instance_variable_set(:@active_roles, [])
 
             @region = MiqRegion.seed
-            MiqRegion.stub(:my_region).and_return(@region)
+            allow(MiqRegion).to receive(:my_region).and_return(@region)
             @schedule_worker.instance_variable_set(:@active_roles, ["ldap_synchronization"])
 
             @ldap_synchronization_collection = {:ldap_synchronization_schedule => "0 2 * * *"}
@@ -289,7 +289,7 @@ describe MiqScheduleWorker::Runner do
 
           context "#schedules_for_ldap_synchronization_role" do
             before(:each) do
-              @region.stub(:role_active?).with("ldap_synchronization").and_return(true)
+              allow(@region).to receive(:role_active?).with("ldap_synchronization").and_return(true)
             end
 
             it "queues the right items" do
@@ -298,13 +298,13 @@ describe MiqScheduleWorker::Runner do
               scheduled_jobs.each do |job|
                 case job.tags
                 when %w(ldap_synchronization ldap_synchronization_schedule)
-                  job.should be_kind_of(Rufus::Scheduler::CronJob)
-                  job.original.should == @ldap_synchronization_collection[:ldap_synchronization_schedule]
+                  expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
+                  expect(job.original).to eq(@ldap_synchronization_collection[:ldap_synchronization_schedule])
                   job.call
                   @schedule_worker.do_work
-                  MiqQueue.count.should == 1
+                  expect(MiqQueue.count).to eq(1)
                   message = MiqQueue.where(:class_name  => "LdapServer", :method_name => "sync_data_from_timer").first
-                  message.should_not be_nil
+                  expect(message).not_to be_nil
 
                   MiqQueue.delete_all
                 else
@@ -335,10 +335,10 @@ describe MiqScheduleWorker::Runner do
         context "Database operations role" do
           before(:each) do
             stub_server_configuration(Hash.new(5.minutes))
-            @schedule_worker.stub(:heartbeat)
+            allow(@schedule_worker).to receive(:heartbeat)
 
             @region = MiqRegion.seed
-            MiqRegion.stub(:my_region).and_return(@region)
+            allow(MiqRegion).to receive(:my_region).and_return(@region)
             @schedule_worker.instance_variable_set(:@active_roles, ["database_operations"])
 
             @metrics_collection = {:collection_schedule => "1 * * * *", :daily_rollup_schedule => "23 0 * * *"}
@@ -349,7 +349,7 @@ describe MiqScheduleWorker::Runner do
 
           context "with database_owner in region" do
             before(:each) do
-              @region.stub(:role_active?).with("database_owner").and_return(true)
+              allow(@region).to receive(:role_active?).with("database_owner").and_return(true)
             end
 
             it "queues the right items" do
@@ -358,41 +358,41 @@ describe MiqScheduleWorker::Runner do
               scheduled_jobs.each do |job|
                 case job.tags
                 when %w(database_operations database_metrics_collection_schedule)
-                  job.should be_kind_of(Rufus::Scheduler::CronJob)
-                  job.original.should == @metrics_collection[:collection_schedule]
+                  expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
+                  expect(job.original).to eq(@metrics_collection[:collection_schedule])
                   job.call
                   @schedule_worker.do_work
-                  MiqQueue.count.should == 1
+                  expect(MiqQueue.count).to eq(1)
                   message = MiqQueue.where(:class_name  => "VmdbDatabase", :method_name => "capture_metrics_timer").first
-                  message.should_not be_nil
-                  message.role.should == "database_owner"
-                  message.zone.should be_nil
+                  expect(message).not_to be_nil
+                  expect(message.role).to eq("database_owner")
+                  expect(message.zone).to be_nil
 
                   MiqQueue.delete_all
                 when %w(database_operations database_metrics_daily_rollup_schedule)
-                  job.should be_kind_of(Rufus::Scheduler::CronJob)
-                  job.original.should == @metrics_collection[:daily_rollup_schedule]
+                  expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
+                  expect(job.original).to eq(@metrics_collection[:daily_rollup_schedule])
                   job.call
                   @schedule_worker.do_work
-                  MiqQueue.count.should == 1
+                  expect(MiqQueue.count).to eq(1)
                   message = MiqQueue.where(:class_name  => "VmdbDatabase", :method_name => "rollup_metrics_timer").first
-                  message.should_not be_nil
-                  message.role.should == "database_owner"
-                  message.zone.should be_nil
+                  expect(message).not_to be_nil
+                  expect(message.role).to eq("database_owner")
+                  expect(message.zone).to be_nil
 
                   MiqQueue.delete_all
                 when %w(database_operations database_metrics_purge_schedule)
-                  job.should be_kind_of(Rufus::Scheduler::CronJob)
-                  job.original.should == @metrics_history[:purge_schedule]
+                  expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
+                  expect(job.original).to eq(@metrics_history[:purge_schedule])
                   job.call
                   @schedule_worker.do_work
-                  MiqQueue.count.should == 2
+                  expect(MiqQueue.count).to eq(2)
 
                   ["VmdbDatabaseMetric", "VmdbMetric"].each do |class_name|
                     message = MiqQueue.where(:class_name  => class_name, :method_name => "purge_all_timer").first
-                    message.should_not be_nil
-                    message.role.should == "database_operations"
-                    message.zone.should be_nil
+                    expect(message).not_to be_nil
+                    expect(message.role).to eq("database_operations")
+                    expect(message.zone).to be_nil
                   end
 
                   MiqQueue.delete_all
@@ -409,7 +409,7 @@ describe MiqScheduleWorker::Runner do
 
           context "without database_owner in region" do
             before(:each) do
-              @region.stub(:role_active?).with("database_owner").and_return(false)
+              allow(@region).to receive(:role_active?).with("database_owner").and_return(false)
             end
 
             it "queues the right items" do
@@ -418,41 +418,41 @@ describe MiqScheduleWorker::Runner do
               scheduled_jobs.each do |job|
                 case job.tags
                 when %w(database_operations database_metrics_collection_schedule)
-                  job.should be_kind_of(Rufus::Scheduler::CronJob)
-                  job.original.should == @metrics_collection[:collection_schedule]
+                  expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
+                  expect(job.original).to eq(@metrics_collection[:collection_schedule])
                   job.call
                   @schedule_worker.do_work
-                  MiqQueue.count.should == 1
+                  expect(MiqQueue.count).to eq(1)
                   message = MiqQueue.where(:class_name  => "VmdbDatabase", :method_name => "capture_metrics_timer").first
-                  message.should_not be_nil
-                  message.role.should == "database_operations"
-                  message.zone.should be_nil
+                  expect(message).not_to be_nil
+                  expect(message.role).to eq("database_operations")
+                  expect(message.zone).to be_nil
 
                   MiqQueue.delete_all
                 when %w(database_operations database_metrics_daily_rollup_schedule)
-                  job.should be_kind_of(Rufus::Scheduler::CronJob)
-                  job.original.should == @metrics_collection[:daily_rollup_schedule]
+                  expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
+                  expect(job.original).to eq(@metrics_collection[:daily_rollup_schedule])
                   job.call
                   @schedule_worker.do_work
-                  MiqQueue.count.should == 1
+                  expect(MiqQueue.count).to eq(1)
                   message = MiqQueue.where(:class_name  => "VmdbDatabase", :method_name => "rollup_metrics_timer").first
-                  message.should_not be_nil
-                  message.role.should == "database_operations"
-                  message.zone.should be_nil
+                  expect(message).not_to be_nil
+                  expect(message.role).to eq("database_operations")
+                  expect(message.zone).to be_nil
 
                   MiqQueue.delete_all
                 when %w(database_operations database_metrics_purge_schedule)
-                  job.should be_kind_of(Rufus::Scheduler::CronJob)
-                  job.original.should == @metrics_history[:purge_schedule]
+                  expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
+                  expect(job.original).to eq(@metrics_history[:purge_schedule])
                   job.call
                   @schedule_worker.do_work
-                  MiqQueue.count.should == 2
+                  expect(MiqQueue.count).to eq(2)
 
                   ["VmdbDatabaseMetric", "VmdbMetric"].each do |class_name|
                     message = MiqQueue.where(:class_name  => class_name, :method_name => "purge_all_timer").first
-                    message.should_not be_nil
-                    message.role.should == "database_operations"
-                    message.zone.should be_nil
+                    expect(message).not_to be_nil
+                    expect(message.role).to eq("database_operations")
+                    expect(message.zone).to be_nil
                   end
 
                   MiqQueue.delete_all
@@ -470,9 +470,9 @@ describe MiqScheduleWorker::Runner do
 
         context "end-to-end schedules modified to run every 5 minutes" do
           before(:each) do
-            @schedule_worker.stub(:worker_settings).and_return(Hash.new(5.minutes))
+            allow(@schedule_worker).to receive(:worker_settings).and_return(Hash.new(5.minutes))
             stub_server_configuration(Hash.new(5.minutes))
-            @schedule_worker.stub(:heartbeat)
+            allow(@schedule_worker).to receive(:heartbeat)
 
             # Initialize active_roles
             @schedule_worker.instance_variable_set(:@active_roles, [])
@@ -499,8 +499,8 @@ describe MiqScheduleWorker::Runner do
                 first_in_expectations.each do |tag, expected_minutes|
                   job = @system.jobs(:tag => tag).first
                   expected = @start_time + expected_minutes.minutes
-                  job.next_time.should eq(expected), "Schedule tag: #{tag}"
-                  job.frequency.should == 5.minutes
+                  expect(job.next_time).to eq(expected), "Schedule tag: #{tag}"
+                  expect(job.frequency).to eq(5.minutes)
                 end
               end
             end
@@ -508,7 +508,7 @@ describe MiqScheduleWorker::Runner do
             context "#do_work appliance_specific" do
               it "on an appliance" do
                 MiqEnvironment::Command.stub(:is_appliance? => true)
-                MiqServer.any_instance.should_receive(:has_assigned_role?).with("rhn_mirror").and_return(true)
+                expect_any_instance_of(MiqServer).to receive(:has_assigned_role?).with("rhn_mirror").and_return(true)
 
                 Timecop.freeze(@start_time) do
                   @schedule_worker.schedules_for_all_roles
@@ -534,28 +534,28 @@ describe MiqScheduleWorker::Runner do
 
         context "#schedules_for_event_role" do
           before(:each) do
-            @schedule_worker.stub(:heartbeat)
+            allow(@schedule_worker).to receive(:heartbeat)
             @schedule_worker.instance_variable_set(:@active_roles, ["event"])
-            @schedule_worker.stub(:worker_settings).and_return(:ems_events_purge_interval => 1.day)
-            Zone.any_instance.stub(:role_active?).with("event").and_return(true)
+            allow(@schedule_worker).to receive(:worker_settings).and_return(:ems_events_purge_interval => 1.day)
+            allow_any_instance_of(Zone).to receive(:role_active?).with("event").and_return(true)
           end
 
           it "queues the right items" do
             scheduled_jobs = @schedule_worker.schedules_for_event_role
 
             scheduled_jobs.each do |job|
-              job.should be_kind_of(Rufus::Scheduler::EveryJob)
-              job.original.should == 1.day
+              expect(job).to be_kind_of(Rufus::Scheduler::EveryJob)
+              expect(job.original).to eq(1.day)
               job.call
               @schedule_worker.do_work
 
               case job.tags
               when %w(ems_event purge_schedule)
                 messages = MiqQueue.where(:class_name  => "EmsEvent", :method_name => "purge_timer")
-                messages.count.should == 1
+                expect(messages.count).to eq(1)
               when %w(policy_event purge_schedule)
                 messages = MiqQueue.where(:class_name  => "PolicyEvent", :method_name => "purge_timer")
-                messages.count.should == 1
+                expect(messages.count).to eq(1)
               else
                 raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, "\
                       "last_time=#{job.last_time.inspect}, id=#{job.job_id.inspect}, next=#{job.next_time.inspect}, "\
@@ -570,31 +570,31 @@ describe MiqScheduleWorker::Runner do
 
       it "should never sync_all_user_schedules if scheduler role disabled" do
         @schedule_worker.instance_variable_set(:@active_roles, [])
-        @schedule_worker.should_receive(:sync_all_user_schedules).never
+        expect(@schedule_worker).to receive(:sync_all_user_schedules).never
         @schedule_worker.load_user_schedules
       end
 
       it "should sync_all_user_schedules if scheduler role enabled" do
         @schedule_worker.instance_variable_set(:@active_roles, ['scheduler'])
-        @schedule_worker.should_receive(:sync_all_user_schedules).once
+        expect(@schedule_worker).to receive(:sync_all_user_schedules).once
         @schedule_worker.load_user_schedules
       end
     end
 
     context "with Daylight Savings Time changes" do
       before do
-        @schedule_worker.stub(:dst?).and_return(true)
+        allow(@schedule_worker).to receive(:dst?).and_return(true)
         @schedule_worker.reset_dst
       end
 
       it "should not invoke after_dst_change callbacks if Daylight Savings Time is unchanged" do
-        @schedule_worker.should_receive(:load_user_schedules).never
+        expect(@schedule_worker).to receive(:load_user_schedules).never
         @schedule_worker.check_dst
       end
 
       it "should invoke after_dst_change callbacks only once if Daylight Savings Time changes" do
-        @schedule_worker.stub(:dst?).and_return(false)
-        @schedule_worker.should_receive(:load_user_schedules).once
+        allow(@schedule_worker).to receive(:dst?).and_return(false)
+        expect(@schedule_worker).to receive(:load_user_schedules).once
         @schedule_worker.check_dst
         @schedule_worker.check_dst
       end

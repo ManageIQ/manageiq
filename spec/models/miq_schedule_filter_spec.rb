@@ -54,15 +54,15 @@ describe "MiqSchedule Filter" do
 
       it "should get the correct report" do
         targets = @report_schedule.get_targets
-        targets.length.should == 1
-        targets.first.name.should == @report.name
+        expect(targets.length).to eq(1)
+        expect(targets.first.name).to eq(@report.name)
       end
     end
 
     it "should get the correct target VM from a schedule to scan a single VM" do
       targets = @vm_single_schedule.get_targets
-      targets.length.should == 1
-      targets.first.name.should == "Special Test VM"
+      expect(targets.length).to eq(1)
+      expect(targets.first.name).to eq("Special Test VM")
     end
 
     it "should queue a scan job for target VM from a schedule to scan a single VM" do
@@ -72,29 +72,29 @@ describe "MiqSchedule Filter" do
       msg.destroy
 
       msgs = MiqQueue.all
-      msgs.length.should == 1
+      expect(msgs.length).to eq(1)
 
       msg = msgs.first
-      msg.class_name.should == @vm4.class.base_class.name
-      msg.method_name.should == "scan"
-      msg.instance_id.should == @vm4.id
+      expect(msg.class_name).to eq(@vm4.class.base_class.name)
+      expect(msg.method_name).to eq("scan")
+      expect(msg.instance_id).to eq(@vm4.id)
     end
 
     it "should get the correct target VM from a schedule to scan all VMs" do
       targets = @vm_all_schedule.get_targets
-      targets.length.should == 4
+      expect(targets.length).to eq(4)
     end
 
     it "should get the correct target VM from a schedule based on a saved search" do
       targets = @vm_search_schedule.get_targets
-      targets.length.should == 1
-      targets.first.name.should == "Test VM 2"
+      expect(targets.length).to eq(1)
+      expect(targets.first.name).to eq("Test VM 2")
     end
 
     it "should get the the DatabaseBackup class for a scheduled DB Backup" do
       targets = @db_backup.get_targets
-      targets.length.should == 1
-      targets.first.name.should == "DatabaseBackup"
+      expect(targets.length).to eq(1)
+      expect(targets.first.name).to eq("DatabaseBackup")
     end
   end
 end

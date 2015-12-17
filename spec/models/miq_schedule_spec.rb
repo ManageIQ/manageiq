@@ -15,12 +15,12 @@ describe MiqSchedule do
       current = Time.parse("Sat March 10 3:00:00 -0600 2012") # CST
       Timecop.travel(current) do
         time = hourly_schedule.next_interval_time
-        time.zone.should == "CST"
-        time.hour.should == 3
-        time.min.should == 35
-        time.month.should == 3
-        time.day.should == 10
-        time.year.should == 2012
+        expect(time.zone).to eq("CST")
+        expect(time.hour).to eq(3)
+        expect(time.min).to eq(35)
+        expect(time.month).to eq(3)
+        expect(time.day).to eq(10)
+        expect(time.year).to eq(2012)
       end
     end
 
@@ -31,12 +31,12 @@ describe MiqSchedule do
       current = Time.parse("Sun March 11 3:00:00 -0500 2012") # CDT
       Timecop.travel(current) do
         time = hourly_schedule.next_interval_time
-        time.zone.should == "CDT"
-        time.hour.should == 3
-        time.min.should == 35
-        time.month.should == 3
-        time.day.should == 11
-        time.year.should == 2012
+        expect(time.zone).to eq("CDT")
+        expect(time.hour).to eq(3)
+        expect(time.min).to eq(35)
+        expect(time.month).to eq(3)
+        expect(time.day).to eq(11)
+        expect(time.year).to eq(2012)
       end
     end
 
@@ -45,14 +45,14 @@ describe MiqSchedule do
       start_of_every_month = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => start_time, :interval => {:unit => "monthly", :value => "1"}})
       Timecop.travel(start_of_every_month.run_at[:start_time] - 5.minutes) do
         time = start_of_every_month.next_interval_time
-        time.month.should == start_time.month
-        time.day.should == start_time.day
+        expect(time.month).to eq(start_time.month)
+        expect(time.day).to eq(start_time.day)
       end
 
       Timecop.travel(start_of_every_month.run_at[:start_time] + 5.minutes) do
         time = start_of_every_month.next_interval_time
-        time.month.should == (start_time + 1.month).month
-        time.day.should == start_time.day
+        expect(time.month).to eq((start_time + 1.month).month)
+        expect(time.day).to eq(start_time.day)
       end
     end
 
@@ -60,9 +60,9 @@ describe MiqSchedule do
       start_of_every_month = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2005-01-01 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
       Timecop.travel(Time.parse("2013-01-01 08:31:00 UTC")) do
         time = start_of_every_month.next_interval_time
-        time.month.should == 2
-        time.day.should == 1
-        time.year.should == 2013
+        expect(time.month).to eq(2)
+        expect(time.day).to eq(1)
+        expect(time.year).to eq(2013)
       end
     end
 
@@ -70,14 +70,14 @@ describe MiqSchedule do
       end_of_every_month = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2012-01-31 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
       Timecop.travel(end_of_every_month.run_at[:start_time] - 5.minutes) do
         time = end_of_every_month.next_interval_time
-        time.month.should == 1
-        time.day.should == 31
+        expect(time.month).to eq(1)
+        expect(time.day).to eq(31)
       end
 
       Timecop.travel(end_of_every_month.run_at[:start_time] + 5.minutes) do
         time = end_of_every_month.next_interval_time
-        time.month.should == 2
-        time.day.should == 29
+        expect(time.month).to eq(2)
+        expect(time.day).to eq(29)
       end
     end
 
@@ -85,9 +85,9 @@ describe MiqSchedule do
       end_of_every_month = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2005-01-31 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
       Timecop.travel(Time.parse("2013-01-31 08:31:00 UTC")) do
         time = end_of_every_month.next_interval_time
-        time.month.should == 2
-        time.day.should == 28
-        time.year.should == 2013
+        expect(time.month).to eq(2)
+        expect(time.day).to eq(28)
+        expect(time.year).to eq(2013)
       end
     end
 
@@ -95,14 +95,14 @@ describe MiqSchedule do
       end_of_every_month = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2012-01-30 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
       Timecop.travel(end_of_every_month.run_at[:start_time] - 5.minutes) do
         time = end_of_every_month.next_interval_time
-        time.month.should == 1
-        time.day.should == 30
+        expect(time.month).to eq(1)
+        expect(time.day).to eq(30)
       end
 
       Timecop.travel(end_of_every_month.run_at[:start_time] + 5.minutes) do
         time = end_of_every_month.next_interval_time
-        time.month.should == 2
-        time.day.should == 29
+        expect(time.month).to eq(2)
+        expect(time.day).to eq(29)
       end
     end
 
@@ -110,8 +110,8 @@ describe MiqSchedule do
       start_of_every_two_months = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2012-01-01 08:30:00 Z", :interval => {:unit => "monthly", :value => "2"}})
       Timecop.travel(start_of_every_two_months.run_at[:start_time] + 5.minutes) do
         time = start_of_every_two_months.next_interval_time
-        time.month.should == 3
-        time.day.should == 1
+        expect(time.month).to eq(3)
+        expect(time.day).to eq(1)
       end
     end
 
@@ -119,8 +119,8 @@ describe MiqSchedule do
       end_of_every_two_months = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2012-01-31 08:30:00 Z", :interval => {:unit => "monthly", :value => "2"}})
       Timecop.travel(end_of_every_two_months.run_at[:start_time] + 5.minutes) do
         time = end_of_every_two_months.next_interval_time
-        time.month.should == 3
-        time.day.should == 31
+        expect(time.month).to eq(3)
+        expect(time.day).to eq(31)
       end
     end
 
@@ -136,37 +136,37 @@ describe MiqSchedule do
 
       it "should be invalid with run_at missing" do
         @first.run_at = nil
-        @first.valid?.should_not be_true
+        expect(@first.valid?).not_to be_truthy
       end
 
       it "should be invalid with run_at :start_time missing" do
         @first.run_at = {:interval => {:unit => "daily", :value => "1"}}
-        @first.valid?.should_not be_true
+        expect(@first.valid?).not_to be_truthy
       end
 
       it "should be invalid with run_at :interval missing" do
         @first.run_at = {:start_time => "2010-07-08 04:10:00 Z"}
-        @first.valid?.should_not be_true
+        expect(@first.valid?).not_to be_truthy
       end
 
       it "should be invalid with run_at :interval :unit missing" do
         @first.run_at = {:start_time => "2010-07-08 04:10:00 Z", :interval => {:value => "1"}}
-        @first.valid?.should_not be_true
+        expect(@first.valid?).not_to be_truthy
       end
 
       it "should be invalid with run_at :interval :value missing" do
         @first.run_at = {:start_time => "2010-07-08 04:10:00 Z", :interval => {:unit => "daily"}}
-        @first.valid?.should_not be_true
+        expect(@first.valid?).not_to be_truthy
       end
 
       it "should be valid with a valid run_at daily" do
         @first.run_at = {:start_time => "2010-07-08 04:10:00 Z", :interval => {:unit => "daily", :value => "1"}}
-        @first.valid?.should be_true
+        expect(@first.valid?).to be_truthy
       end
 
       it "should be valid with a valid run_at once" do
         @first.run_at = {:start_time => "2010-07-08 04:10:00 Z", :interval => {:unit => "once"}}
-        @first.valid?.should be_true
+        expect(@first.valid?).to be_truthy
       end
 
       context "at 1 AM EST create start_time and tz based on Eastern Time" do
@@ -182,11 +182,11 @@ describe MiqSchedule do
         end
 
         it "should have start_time with start hour of 1 AM in Eastern Time" do
-          @first.run_at[:start_time].in_time_zone(@east_tz).hour.should == 1
+          expect(@first.run_at[:start_time].in_time_zone(@east_tz).hour).to eq(1)
         end
 
         it "should have next_interval_time hour of 1 AM in Eastern Time " do
-          @first.next_interval_time.in_time_zone(@east_tz).hour.should == 1
+          expect(@first.next_interval_time.in_time_zone(@east_tz).hour).to eq(1)
         end
 
         context "after jumping to 1 AM EDT" do
@@ -200,11 +200,11 @@ describe MiqSchedule do
           end
 
           it "should have start_time with start hour of 1 AM in Eastern Time" do
-            @first.run_at[:start_time].in_time_zone(@east_tz).hour.should == 1
+            expect(@first.run_at[:start_time].in_time_zone(@east_tz).hour).to eq(1)
           end
 
           it "should have next_interval_time hour of 1 AM in Eastern Time" do
-            @first.next_interval_time.in_time_zone(@east_tz).hour.should == 1
+            expect(@first.next_interval_time.in_time_zone(@east_tz).hour).to eq(1)
           end
         end
       end
@@ -222,11 +222,11 @@ describe MiqSchedule do
         end
 
         it "should have start_time with start hour of 1 AM in Eastern Time" do
-          @first.run_at[:start_time].in_time_zone(@east_tz).hour.should == 1
+          expect(@first.run_at[:start_time].in_time_zone(@east_tz).hour).to eq(1)
         end
 
         it "should have next_interval_time hour of 1 AM in Eastern Time " do
-          @first.next_interval_time.in_time_zone(@east_tz).hour.should == 1
+          expect(@first.next_interval_time.in_time_zone(@east_tz).hour).to eq(1)
         end
 
         context "after jumping to 1 AM EST" do
@@ -240,11 +240,11 @@ describe MiqSchedule do
           end
 
           it "should have start_time with start hour of 1 AM in Eastern Time" do
-            @first.run_at[:start_time].in_time_zone(@east_tz).hour.should == 1
+            expect(@first.run_at[:start_time].in_time_zone(@east_tz).hour).to eq(1)
           end
 
           it "should have next_interval_time hour of 1 AM in Eastern Time" do
-            @first.next_interval_time.in_time_zone(@east_tz).hour.should == 1
+            expect(@first.next_interval_time.in_time_zone(@east_tz).hour).to eq(1)
           end
         end
       end
@@ -263,19 +263,19 @@ describe MiqSchedule do
         end
 
         it "should have start_time with start hour of 1 AM in Eastern Time" do
-          @first.run_at[:start_time].in_time_zone(@east_tz).hour.should == 1
+          expect(@first.run_at[:start_time].in_time_zone(@east_tz).hour).to eq(1)
         end
 
         it "should have next_interval_time hour of 1 AM in Eastern Time " do
-          @first.next_interval_time.in_time_zone(@east_tz).hour.should == 1
+          expect(@first.next_interval_time.in_time_zone(@east_tz).hour).to eq(1)
         end
 
         it "should have start_time with start hour of 6 AM in UTC" do
-          @first.run_at[:start_time].in_time_zone(@utc_tz).hour.should == 6
+          expect(@first.run_at[:start_time].in_time_zone(@utc_tz).hour).to eq(6)
         end
 
         it "should have next_interval_time hour of 6 AM in UTC" do
-          @first.next_interval_time.in_time_zone(@utc_tz).hour.should == 6
+          expect(@first.next_interval_time.in_time_zone(@utc_tz).hour).to eq(6)
         end
 
         context "after jumping to 1 AM EDT" do
@@ -289,19 +289,19 @@ describe MiqSchedule do
           end
 
           it "should have start_time with start hour of 1 AM in Eastern Time" do
-            @first.run_at[:start_time].in_time_zone(@east_tz).hour.should == 1
+            expect(@first.run_at[:start_time].in_time_zone(@east_tz).hour).to eq(1)
           end
 
           it "should have next_interval_time hour of 2 AM in Eastern Time " do
-            @first.next_interval_time.in_time_zone(@east_tz).hour.should == 2
+            expect(@first.next_interval_time.in_time_zone(@east_tz).hour).to eq(2)
           end
 
           it "should have start_time with start hour of 6 AM in UTC" do
-            @first.run_at[:start_time].in_time_zone(@utc_tz).hour.should == 6
+            expect(@first.run_at[:start_time].in_time_zone(@utc_tz).hour).to eq(6)
           end
 
           it "should have next_interval_time hour of 6 AM in UTC" do
-            @first.next_interval_time.in_time_zone(@utc_tz).hour.should == 6
+            expect(@first.next_interval_time.in_time_zone(@utc_tz).hour).to eq(6)
           end
         end
       end
@@ -322,23 +322,23 @@ describe MiqSchedule do
         end
 
         it "should have start_time with start hour of 1 AM in Alaska Time" do
-          @first.run_at[:start_time].in_time_zone(@ak_tz).hour.should == 1
+          expect(@first.run_at[:start_time].in_time_zone(@ak_tz).hour).to eq(1)
         end
 
         it "should have next_interval_time hour of 1 AM in Alaska Time " do
-          @first.next_interval_time.in_time_zone(@ak_tz).hour.should == 1
+          expect(@first.next_interval_time.in_time_zone(@ak_tz).hour).to eq(1)
         end
 
         it "should have start_time with start hour of 5 AM in Eastern Time" do
-          @first.run_at[:start_time].in_time_zone(@east_tz).hour.should == 5
+          expect(@first.run_at[:start_time].in_time_zone(@east_tz).hour).to eq(5)
         end
 
         it "should have next_interval_time hour of 5 AM in Eastern Time " do
-          @first.next_interval_time.in_time_zone(@east_tz).hour.should == 5
+          expect(@first.next_interval_time.in_time_zone(@east_tz).hour).to eq(5)
         end
 
         it "should have next_interval_time in 3 days" do
-          @first.next_interval_time.in_time_zone(@ak_tz).should == Time.parse("Fri October 9 01:00:00 -0800 2010").in_time_zone(@ak_tz)
+          expect(@first.next_interval_time.in_time_zone(@ak_tz)).to eq(Time.parse("Fri October 9 01:00:00 -0800 2010").in_time_zone(@ak_tz))
         end
 
         context "after jumping to EST" do
@@ -352,19 +352,19 @@ describe MiqSchedule do
           end
 
           it "should have start_time with start hour of 1 AM in Alaska Time" do
-            @first.run_at[:start_time].in_time_zone(@ak_tz).hour.should == 1
+            expect(@first.run_at[:start_time].in_time_zone(@ak_tz).hour).to eq(1)
           end
 
           it "should have next_interval_time hour of 1 AM in Alaska Time " do
-            @first.next_interval_time.in_time_zone(@ak_tz).hour.should == 1
+            expect(@first.next_interval_time.in_time_zone(@ak_tz).hour).to eq(1)
           end
 
           it "should have start_time with start hour of 5 AM in Eastern Time" do
-            @first.run_at[:start_time].in_time_zone(@east_tz).hour.should == 5
+            expect(@first.run_at[:start_time].in_time_zone(@east_tz).hour).to eq(5)
           end
 
           it "should have next_interval_time hour of 5 AM in Eastern Time " do
-            @first.next_interval_time.in_time_zone(@east_tz).hour.should == 5
+            expect(@first.next_interval_time.in_time_zone(@east_tz).hour).to eq(5)
           end
         end
       end
@@ -387,31 +387,31 @@ describe MiqSchedule do
           it "should return next interval 'today at 8am UTC' in localtime if start_time is in the past at '8am UTC' with interval daily 1" do
             @first.update_attribute(:run_at, :start_time => '2010-12-02 08:00:00 Z', :interval => {:unit => "daily", :value => "1"})
             expected = Time.parse('2011-01-01 08:00:00 Z').localtime
-            @first.next_interval_time.should == expected
+            expect(@first.next_interval_time).to eq(expected)
           end
 
           it "should return next interval 'tomorrow at 5am UTC' in localtime if start_time is in the past at '5am UTC' with interval daily 1" do
             @first.update_attribute(:run_at, :start_time => '2010-12-02 05:00:00 Z', :interval => {:unit => "daily", :value => "1"})
             expected = Time.parse('2011-01-02 05:00:00 Z').localtime
-            @first.next_interval_time.should == expected
+            expect(@first.next_interval_time).to eq(expected)
           end
 
           it "should return next interval 'today at 7am UTC' in localtime if start_time is in the past at '8am UTC' with interval hourly 1" do
             @first.update_attribute(:run_at, :start_time => '2010-12-02 08:00:00 Z', :interval => {:unit => "hourly", :value => "1"})
             expected = Time.parse('2011-01-01 07:00:00 Z').localtime
-            @first.next_interval_time.should == expected
+            expect(@first.next_interval_time).to eq(expected)
           end
 
           it "should return next interval 'at the future date' in localtime if start_time is in the future with interval daily 1" do
             @first.update_attribute(:run_at, :start_time => '2011-01-25 05:00:00 Z', :interval => {:unit => "daily", :value => "1"})
             expected = Time.parse('2011-01-25 05:00:00 Z').localtime
-            @first.next_interval_time.should == expected
+            expect(@first.next_interval_time).to eq(expected)
           end
 
           it "should return next interval 'at the future date' in localtime if start_time is in the future with interval hourly 1" do
             @first.update_attribute(:run_at, :start_time => '2011-01-25 05:00:00 Z', :interval => {:unit => "hourly", :value => "1"})
             expected = Time.parse('2011-01-25 05:00:00 Z').localtime
-            @first.next_interval_time.should == expected
+            expect(@first.next_interval_time).to eq(expected)
           end
         end
 
@@ -424,55 +424,55 @@ describe MiqSchedule do
           it "should return next interval 'today at 8am UTC' in localtime if start_time is in the past at '8am UTC' with interval daily 1" do
             @first.update_attribute(:run_at, :start_time => '2010-12-02 08:00:00 Z', :interval => {:unit => "daily", :value => "1"})
             expected = Time.parse('2011-01-01 08:00:00 Z').localtime
-            @first.next_interval_time.should == expected
+            expect(@first.next_interval_time).to eq(expected)
           end
 
           it "should return next interval 'tomorrow at 5am UTC' in localtime if start_time is in the past at '5am UTC' with interval daily 1" do
             @first.update_attribute(:run_at, :start_time => '2010-12-02 05:00:00 Z', :interval => {:unit => "daily", :value => "1"})
             expected = Time.parse('2011-01-02 05:00:00 Z').localtime
-            @first.next_interval_time.should == expected
+            expect(@first.next_interval_time).to eq(expected)
           end
 
           it "should return next interval 'today at 8am UTC' in localtime if start_time is in the past at '8am UTC' with interval daily 5" do
             @first.update_attribute(:run_at, :start_time => '2010-12-02 08:00:00 Z', :interval => {:unit => "daily", :value => "5"})
             expected = Time.parse('2011-01-01 08:00:00 Z').localtime
-            @first.next_interval_time.should == expected
+            expect(@first.next_interval_time).to eq(expected)
           end
 
           it "should return next interval 'in 5 days at 5am UTC' in localtime if start_time is in the past at '5am UTC' with interval daily 5" do
             @first.update_attribute(:run_at, :start_time => '2010-12-02 05:00:00 Z', :interval => {:unit => "daily", :value => "5"})
             expected = Time.parse('2011-01-06 05:00:00 Z').localtime
-            @first.next_interval_time.should == expected
+            expect(@first.next_interval_time).to eq(expected)
           end
 
           it "should return next interval 'today at 7am UTC' in localtime if start_time is in the past at '8am UTC' with interval hourly 1" do
             @first.update_attribute(:run_at, :start_time => '2010-12-02 08:00:00 Z', :interval => {:unit => "hourly", :value => "1"})
             expected = Time.parse('2011-01-01 07:00:00 Z').localtime
-            @first.next_interval_time.should == expected
+            expect(@first.next_interval_time).to eq(expected)
           end
 
           it "should return next interval 'today at 8am UTC' in localtime if start_time is in the past at '8am UTC' with interval hourly 5" do
             @first.update_attribute(:run_at, :start_time => '2010-12-02 08:00:00 Z', :interval => {:unit => "hourly", :value => "5"})
             expected = Time.parse('2011-01-01 08:00:00 Z').localtime
-            @first.next_interval_time.should == expected
+            expect(@first.next_interval_time).to eq(expected)
           end
 
           it "should return next interval 'today at 10am UTC' in localtime if start_time is in the past at '5am UTC' with interval hourly 5" do
             @first.update_attribute(:run_at, :start_time => '2010-12-02 05:00:00 Z', :interval => {:unit => "hourly", :value => "5"})
             expected = Time.parse('2011-01-01 10:00:00 Z').localtime
-            @first.next_interval_time.should == expected
+            expect(@first.next_interval_time).to eq(expected)
           end
 
           it "should return next interval 'at the future date' in localtime if start_time is in the future with interval daily 1" do
             @first.update_attribute(:run_at, :start_time => '2011-01-25 05:00:00 Z', :interval => {:unit => "daily", :value => "1"})
             expected = Time.parse('2011-01-25 05:00:00 Z').localtime
-            @first.next_interval_time.should == expected
+            expect(@first.next_interval_time).to eq(expected)
           end
 
           it "should return next interval 'at the future date' in localtime if start_time is in the future with interval hourly 1" do
             @first.update_attribute(:run_at, :start_time => '2011-01-25 05:00:00 Z', :interval => {:unit => "hourly", :value => "1"})
             expected = Time.parse('2011-01-25 05:00:00 Z').localtime
-            @first.next_interval_time.should == expected
+            expect(@first.next_interval_time).to eq(expected)
           end
         end
       end
@@ -484,50 +484,50 @@ describe MiqSchedule do
         @gc_message = MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "gc", :role => "database_operations").first
 
         @region = FactoryGirl.create(:miq_region)
-        MiqRegion.stub(:my_region).and_return(@region)
+        allow(MiqRegion).to receive(:my_region).and_return(@region)
       end
 
       it "should create 1 miq task" do
         tasks = MiqTask.where(:name => "Database GC", :userid => "admin")
-        tasks.length.should == 1
-        tasks.first.id.should == @task_id
+        expect(tasks.length).to eq(1)
+        expect(tasks.first.id).to eq(@task_id)
       end
 
       it "should create one gc queue message for the database role" do
-        MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "gc", :role => "database_operations").count.should == 1
+        expect(MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "gc", :role => "database_operations").count).to eq(1)
       end
 
       context "deliver DatabaseBackup.gc message and gc is supported" do
         before(:each) do
-          DatabaseBackup.stub(:gc_supported?).and_return(true)
+          allow(DatabaseBackup).to receive(:gc_supported?).and_return(true)
 
           # stub out the actual backup behavior
-          DatabaseBackup.stub(:_gc)
+          allow(DatabaseBackup).to receive(:_gc)
 
           @status, message, result = @gc_message.deliver
           @gc_message.delivered(@status, message, result)
         end
 
         it "should have queue message ok, and task is Ok and Finished" do
-          @status.should == "ok"
-          MiqTask.where(:state => "Finished", :status => "Ok").count.should == 1
+          expect(@status).to eq("ok")
+          expect(MiqTask.where(:state => "Finished", :status => "Ok").count).to eq(1)
         end
       end
 
       context "deliver DatabaseBackup.gc message and backup is unsupported" do
         before(:each) do
-          DatabaseBackup.stub(:gc_supported?).and_return(false)
+          allow(DatabaseBackup).to receive(:gc_supported?).and_return(false)
 
           # stub out the actual backup behavior
-          DatabaseBackup.stub(:_gc)
+          allow(DatabaseBackup).to receive(:_gc)
 
           @status, message, result = @gc_message.deliver
           @gc_message.delivered(@status, message, result)
         end
 
         it "should have queue message in error, and task is Error and Finished" do
-          @status.should == "error"
-          MiqTask.where(:state => "Finished", :status => "Error").count.should == 1
+          expect(@status).to eq("error")
+          expect(MiqTask.where(:state => "Finished", :status => "Error").count).to eq(1)
         end
       end
     end
@@ -548,22 +548,22 @@ describe MiqSchedule do
           @backup_message = MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations").first
 
           @region = FactoryGirl.create(:miq_region)
-          MiqRegion.stub(:my_region).and_return(@region)
+          allow(MiqRegion).to receive(:my_region).and_return(@region)
         end
 
         it "should create no database backups" do
-          DatabaseBackup.count.should == 0
-          @region.database_backups.count.should == 0
+          expect(DatabaseBackup.count).to eq(0)
+          expect(@region.database_backups.count).to eq(0)
         end
 
         it "should create 1 miq task" do
           tasks = MiqTask.where(:name => "Database backup", :userid => @schedule.userid)
-          tasks.length.should == 1
-          tasks.first.id.should == @task_id
+          expect(tasks.length).to eq(1)
+          expect(tasks.first.id).to eq(@task_id)
         end
 
         it "should create one backup queue message for our db backup instance for the database role" do
-          MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations").count.should == 1
+          expect(MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations").count).to eq(1)
         end
       end
 
@@ -574,11 +574,11 @@ describe MiqSchedule do
         end
 
         it "should create an invoke_actions queue message" do
-          @invoke_actions_message.should_not be_nil
+          expect(@invoke_actions_message).not_to be_nil
         end
 
         it "should have no other DatabaseBackups" do
-          DatabaseBackup.count.should == 0
+          expect(DatabaseBackup.count).to eq(0)
         end
 
         context "deliver invoke actions message" do
@@ -588,46 +588,46 @@ describe MiqSchedule do
             @backup_message = MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations").first
 
             @region = FactoryGirl.create(:miq_region)
-            MiqRegion.stub(:my_region).and_return(@region)
+            allow(MiqRegion).to receive(:my_region).and_return(@region)
           end
 
           it "should create no database backups" do
-            DatabaseBackup.count.should == 0
-            @region.database_backups.count.should == 0
+            expect(DatabaseBackup.count).to eq(0)
+            expect(@region.database_backups.count).to eq(0)
           end
 
           it "should create 1 miq task" do
-            MiqTask.where(:name => "Database backup", :userid => @schedule.userid).count.should == 1
+            expect(MiqTask.where(:name => "Database backup", :userid => @schedule.userid).count).to eq(1)
           end
 
           it "should create one backup queue message for our db backup instance for the database role" do
-            MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations").count.should == 1
+            expect(MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations").count).to eq(1)
           end
 
           context "deliver DatabaseBackup.backup message and backup is unsupported" do
             before(:each) do
-              DatabaseBackup.stub(:backup_supported?).and_return(false)
+              allow(DatabaseBackup).to receive(:backup_supported?).and_return(false)
 
               # stub out the actual backup behavior
-              DatabaseBackup.any_instance.stub(:_backup)
+              allow_any_instance_of(DatabaseBackup).to receive(:_backup)
 
               @status, message, result = @backup_message.deliver
               @backup_message.delivered(@status, message, result)
             end
 
             it "should create 1 database backup, queue message is in error, and task is Error and Finished" do
-              @status.should == "error"
-              @region.database_backups.count.should == 1
-              MiqTask.where(:state => "Finished", :status => "Error").count.should == 1
+              expect(@status).to eq("error")
+              expect(@region.database_backups.count).to eq(1)
+              expect(MiqTask.where(:state => "Finished", :status => "Error").count).to eq(1)
             end
           end
 
           context "Backup is supported and _backup is stubbed" do
             before(:each) do
-              DatabaseBackup.stub(:backup_supported?).and_return(true)
+              allow(DatabaseBackup).to receive(:backup_supported?).and_return(true)
 
               # stub out the actual backup behavior
-              DatabaseBackup.any_instance.stub(:_backup)
+              allow_any_instance_of(DatabaseBackup).to receive(:_backup)
             end
 
             context "deliver DatabaseBackup.backup message" do
@@ -637,9 +637,9 @@ describe MiqSchedule do
               end
 
               it "should create 1 database backup, queue message is ok, and task is Ok and Finished" do
-                @status.should == "ok"
-                @region.database_backups.count.should == 1
-                MiqTask.where(:state => "Finished", :status => "Ok").count.should == 1
+                expect(@status).to eq("ok")
+                expect(@region.database_backups.count).to eq(1)
+                expect(MiqTask.where(:state => "Finished", :status => "Ok").count).to eq(1)
               end
             end
 
@@ -652,7 +652,7 @@ describe MiqSchedule do
               end
 
               it "should delete the adhoc schedule" do
-                MiqSchedule.exists?(@schedule_id).should_not be_true
+                expect(MiqSchedule.exists?(@schedule_id)).not_to be_truthy
               end
             end
 
@@ -665,7 +665,7 @@ describe MiqSchedule do
               end
 
               it "should not delete the schedule" do
-                MiqSchedule.exists?(@schedule_id).should be_true
+                expect(MiqSchedule.exists?(@schedule_id)).to be_truthy
               end
             end
           end
@@ -673,7 +673,7 @@ describe MiqSchedule do
       end
 
       it "should have valid depots" do
-        @valid_schedules.each { |sch| sch.valid?.should be_true }
+        @valid_schedules.each { |sch| expect(sch.valid?).to be_truthy }
       end
 
       it "should return the expected FileDepot subclass" do
@@ -686,7 +686,7 @@ describe MiqSchedule do
     let(:params) { {:uri_prefix => "ftp", :uri => "ftp://ftp.example.com", :name => "Test Backup Depot", :username => "user", :password => "password"} }
 
     it "builds a file_depot of the correct type and validates it, does not save" do
-      FileDepotFtp.any_instance.should_receive(:verify_credentials).and_return(true)
+      expect_any_instance_of(FileDepotFtp).to receive(:verify_credentials).and_return(true)
 
       MiqSchedule.new.verify_file_depot(params)
 
