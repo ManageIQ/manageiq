@@ -1346,9 +1346,10 @@ class ApplicationHelper::ToolbarBuilder
       record.class.base_class.name
     else
       klass = case record
-              when Host, ExtManagementSystem then record.class.base_class
-              when VmOrTemplate then              record.class.base_model
-              else                            record.class
+              when ContainerNode, ContainerGroup, Container then record.class.base_class
+              when Host, ExtManagementSystem                then record.class.base_class
+              when VmOrTemplate                             then record.class.base_model
+              else                                               record.class
               end
       klass.name
     end
