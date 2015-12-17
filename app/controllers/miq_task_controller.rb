@@ -30,7 +30,7 @@ class MiqTaskController < ApplicationController
 
     if role_allows(:feature => "job_my_smartproxy")
       @tabs ||= [["1", ""]]
-      @tabs.push(["1", _("My VM Analysis Tasks")])
+      @tabs.push(["1", _("My VM and Container Analysis Tasks")])
     end
     if role_allows(:feature => "miq_task_my_ui")
       @tabs ||= [["2", ""]]
@@ -38,7 +38,7 @@ class MiqTaskController < ApplicationController
     end
     if role_allows(:feature => "job_all_smartproxy")
       @tabs ||= [["3", ""]]
-      @tabs.push(["3", _("All VM Analysis Tasks")])
+      @tabs.push(["3", _("All VM and Container Analysis Tasks")])
     end
     if role_allows(:feature => "miq_task_all_ui")
       @tabs ||= [["4", ""]]
@@ -91,7 +91,7 @@ class MiqTaskController < ApplicationController
     if @tabform == "tasks_1"
       @layout = "my_tasks"
       @view, @pages = get_view(Job, :conditions => conditions)  # Get the records (into a view) and the paginator
-      drop_breadcrumb(:name => _("My VM Analysis Tasks"), :url => "/miq_task/index?jobs_tab=tasks")
+      drop_breadcrumb(:name => _("My VM and Container Analysis Tasks"), :url => "/miq_task/index?jobs_tab=tasks")
 
     elsif @tabform == "tasks_2"
       # My UI Tasks
@@ -102,7 +102,7 @@ class MiqTaskController < ApplicationController
     elsif @tabform == "tasks_3" || @tabform == "alltasks_1"
       @layout = "all_tasks"
       @view, @pages = get_view(Job, :conditions => conditions)  # Get the records (into a view) and the paginator
-      drop_breadcrumb(:name => _("All VM Analysis Tasks"), :url => "/miq_task/index?jobs_tab=alltasks")
+      drop_breadcrumb(:name => _("All VM and Container Analysis Tasks"), :url => "/miq_task/index?jobs_tab=alltasks")
       @user_names = Job.distinct("userid").pluck("userid").delete_if(&:blank?)
 
     elsif @tabform == "tasks_4" || @tabform == "alltasks_2"
