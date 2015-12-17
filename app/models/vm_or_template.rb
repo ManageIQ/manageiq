@@ -41,6 +41,7 @@ class VmOrTemplate < ActiveRecord::Base
     "amazon"    => "Amazon",
     "redhat"    => "RedHat",
     "openstack" => "OpenStack",
+    "google"    => "Google",
     "unknown"   => "Unknown"
   }
 

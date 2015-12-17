@@ -1,5 +1,11 @@
 class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudManager
+  require_nested :AvailabilityZone
+  require_nested :Flavor
+  require_nested :RefreshParser
+  require_nested :RefreshWorker
   require_nested :Refresher
+  require_nested :Template
+  require_nested :Vm
 
   def self.ems_type
     @ems_type ||= "gce".freeze
@@ -62,19 +68,23 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
   # Connections
   #
 
+  def self.raw_connect(google_project, google_json_key)
+    require 'fog/google'
+
+    ::Fog::Compute.new(
+      :provider               => "Google",
+      :google_project         => google_project,
+      :google_json_key_string => google_json_key,
+    )
+  end
+
   def connect(options = {})
     require 'fog/google'
 
     raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(options[:auth_type])
 
     auth_token = authentication_token(options[:auth_type])
-
-    ::Fog::Compute.new(
-      :provider               => "Google",
-      :google_project         => project,
-      :google_json_key_string => auth_token,
-    )
-
+    self.class.raw_connect(project, auth_token)
   end
 
   def gce
