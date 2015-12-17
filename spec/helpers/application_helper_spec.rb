@@ -1617,4 +1617,35 @@ describe ApplicationHelper do
       end
     end
   end
+
+  describe '#li_link' do
+    context 'with :if condition true' do
+      let(:args) do
+        {:if         => true,
+         :controller => "ems_infra",
+         :record_id  => 1}
+      end
+
+      subject { li_link(args) }
+
+      it "returns HTML with enabled links" do
+        expect(subject).to_not have_selector('li.disabled')
+      end
+
+    end
+
+    context 'with :if condition false' do
+
+      let(:args) do
+        {:if        => false,
+         :record_id => 1}
+      end
+
+      subject { li_link(args) }
+
+      it 'renders disabled link_to' do
+        expect(subject).to have_selector('li.disabled')
+      end
+    end
+  end
 end
