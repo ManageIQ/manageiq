@@ -3757,6 +3757,17 @@
         :feature_type: view
         :identifier: container_topology_view
 
+  # Middleware Topology
+  - :name: Middleware Topology
+    :description: Middleware Topology
+    :feature_type: node
+    :identifier: middleware_topology
+    :children:
+      - :name: View
+        :description: View Middleware Topology
+        :feature_type: view
+        :identifier: middleware_topology_view
+
 # Foreman
 - :name: Configuration Management
   :description: Everything under Configuration Management

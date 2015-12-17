@@ -678,6 +678,13 @@ Vmdb::Application.routes.draw do
       )
     },
 
+    :middleware_topology       => {
+        :get => %w(
+        show
+        data
+      )
+    },
+
     :container_dashboard      => {
       :get => %w(
         show

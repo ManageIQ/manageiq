@@ -121,10 +121,11 @@ module Menu
                              deferred_ui_lookup(:tables => 'middleware_deployment'),
                              'middleware_deployment',
                              {:feature => 'middleware_deployment_show_list'},
-                             '/middleware_deployment')
+                             '/middleware_deployment'),
+              Menu::Item.new('middleware_topology', N_('Topology'), 'middleware_topology',
+                             {:feature => 'middleware_topology', :any => true}, '/middleware_topology')
 
-
-                              ])
+        ])
       end
 
 
