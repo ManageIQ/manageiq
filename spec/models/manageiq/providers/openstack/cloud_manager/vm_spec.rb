@@ -37,6 +37,30 @@ describe ManageIQ::Providers::Openstack::CloudManager::Vm do
         expect(vm.is_available?(:live_migrate)).to eq true
       end
     end
+
+    context "evacuate" do
+      it "evacuates with default options" do
+        expect(handle).to receive(:evacuate_server).with(vm.ems_ref, nil, true, nil)
+        vm.evacuate
+        expect(vm.power_state).to eq 'migrating'
+      end
+
+      it "evacuates with special options" do
+        expect(handle).to receive(:evacuate_server).with(vm.ems_ref, 'host_1.localdomain', false, 'blah')
+        vm.evacuate(:hostname => 'host_1.localdomain', :on_shared_storage => false, :admin_password => 'blah')
+        expect(vm.power_state).to eq 'migrating'
+      end
+
+      it "evacuates with special options" do
+        expect(handle).to receive(:evacuate_server).with(vm.ems_ref, 'host_1.localdomain', true, nil)
+        vm.evacuate(:hostname => 'host_1.localdomain', :on_shared_storage => true)
+        expect(vm.power_state).to eq 'migrating'
+      end
+
+      it "checks evacuation is_available?" do
+        expect(vm.is_available?(:evacuate)).to eq true
+      end
+    end
   end
 
   context "#is_available?" do
