@@ -16,6 +16,13 @@ module TenancyMixin
 
       tenant.accessible_tenant_ids(strategy)
     end
+
+    def tenant_id_clause(user_or_group)
+      tenant_ids = accessible_tenant_ids(user_or_group, Rbac.accessible_tenant_ids_strategy(self))
+      return if tenant_ids.empty?
+
+      {table_name => {:tenant_id => tenant_ids}}
+    end
   end
 
   def set_tenant
