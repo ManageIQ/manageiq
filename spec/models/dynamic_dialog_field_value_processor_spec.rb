@@ -23,8 +23,8 @@ describe DynamicDialogFieldValueProcessor do
     let(:resource_action) { active_record_instance_double("ResourceAction") }
 
     before do
-      dialog_field.stub(:dialog).and_return(dialog)
-      dialog_field.stub(:resource_action).and_return(resource_action)
+      allow(dialog_field).to receive(:dialog).and_return(dialog)
+      allow(dialog_field).to receive(:resource_action).and_return(resource_action)
     end
 
     context "when there is no error delivering to automate from dialog field" do
@@ -44,13 +44,13 @@ describe DynamicDialogFieldValueProcessor do
 
       before do
         User.current_user = user
-        resource_action.stub(:deliver_to_automate_from_dialog_field).with(
+        allow(resource_action).to receive(:deliver_to_automate_from_dialog_field).with(
           {:dialog => "automate_values_hash"},
           "target_resource",
           user
         ).and_return(workspace)
-        workspace.stub(:root).and_return(workspace_attributes)
-        dialog_field.stub(:normalize_automate_values).with(workspace_attributes.attributes).and_return(
+        allow(workspace).to receive(:root).and_return(workspace_attributes)
+        allow(dialog_field).to receive(:normalize_automate_values).with(workspace_attributes.attributes).and_return(
           "normalized values"
         )
       end
@@ -62,7 +62,7 @@ describe DynamicDialogFieldValueProcessor do
 
     context "when there is an error delivering to automate from dialog field" do
       before do
-        resource_action.stub(:deliver_to_automate_from_dialog_field).and_raise("O noes")
+        allow(resource_action).to receive(:deliver_to_automate_from_dialog_field).and_raise("O noes")
       end
 
       it "returns the dialog field's script error values" do

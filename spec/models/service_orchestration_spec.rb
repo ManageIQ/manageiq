@@ -119,7 +119,7 @@ describe ServiceOrchestration do
     end
 
     it 'updates a stack through cloud manager' do
-      OrchestrationStack.any_instance.stub(:raw_update_stack) do |new_template, opts|
+      OrchestrationStack.any_instance.stub(:raw_update_stack) do |_instance, new_template, opts|
         opts[:parameters].should include(
           'InstanceType'   => 'cg1.4xlarge',
           'DBRootPassword' => 'admin'

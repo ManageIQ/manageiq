@@ -74,7 +74,7 @@ describe EmsFolder do
         @sib2.id => "root/dc/sib2",
         @leaf.id => "root/dc/sib2/leaf"
       }
-      @root.child_folder_paths.should == expected
+      expect(@root.child_folder_paths).to eq(expected)
     end
   end
 end

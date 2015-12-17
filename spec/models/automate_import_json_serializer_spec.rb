@@ -44,29 +44,29 @@ describe AutomateImportJsonSerializer do
     end
 
     before do
-      import_file_upload.stub(:binary_blob).and_return(binary_blob)
-      binary_blob.stub(:binary).and_return("a bunch of junk")
-      MiqAeImport.stub(:new).with("*", "zip_file" => "automate_temporary_zip.zip").and_return(miq_ae_yaml_import_zipfs)
-      miq_ae_yaml_import_zipfs.stub(:domain_entries).with("*").and_return(["Customer/test1.yml", "ManageIQ/test2.yml"])
-      miq_ae_yaml_import_zipfs.stub(:namespace_files).with("Customer").and_return([
+      allow(import_file_upload).to receive(:binary_blob).and_return(binary_blob)
+      allow(binary_blob).to receive(:binary).and_return("a bunch of junk")
+      allow(MiqAeImport).to receive(:new).with("*", "zip_file" => "automate_temporary_zip.zip").and_return(miq_ae_yaml_import_zipfs)
+      allow(miq_ae_yaml_import_zipfs).to receive(:domain_entries).with("*").and_return(["Customer/test1.yml", "ManageIQ/test2.yml"])
+      allow(miq_ae_yaml_import_zipfs).to receive(:namespace_files).with("Customer").and_return([
         "Customer/EVMApplications/test.yml"
       ])
-      miq_ae_yaml_import_zipfs.stub(:namespace_files).with("ManageIQ").and_return([])
-      miq_ae_yaml_import_zipfs.stub(:namespace_files).with("Customer/EVMApplications").and_return([
+      allow(miq_ae_yaml_import_zipfs).to receive(:namespace_files).with("ManageIQ").and_return([])
+      allow(miq_ae_yaml_import_zipfs).to receive(:namespace_files).with("Customer/EVMApplications").and_return([
         "Customer/EVMApplications/Operations/test.yml"
       ])
-      miq_ae_yaml_import_zipfs.stub(:namespace_files).with("Customer/EVMApplications/Operations").and_return([
+      allow(miq_ae_yaml_import_zipfs).to receive(:namespace_files).with("Customer/EVMApplications/Operations").and_return([
         "Customer/EVMApplications/Operations/Profile/test.yml"
       ])
-      miq_ae_yaml_import_zipfs.stub(:namespace_files).with("Customer/EVMApplications/Operations/Profile").and_return([])
+      allow(miq_ae_yaml_import_zipfs).to receive(:namespace_files).with("Customer/EVMApplications/Operations/Profile").and_return([])
 
-      miq_ae_yaml_import_zipfs.stub(:class_files).with("Customer").and_return([])
-      miq_ae_yaml_import_zipfs.stub(:class_files).with("Customer/EVMApplications").and_return([])
-      miq_ae_yaml_import_zipfs.stub(:class_files).with("Customer/EVMApplications/Operations").and_return([
+      allow(miq_ae_yaml_import_zipfs).to receive(:class_files).with("Customer").and_return([])
+      allow(miq_ae_yaml_import_zipfs).to receive(:class_files).with("Customer/EVMApplications").and_return([])
+      allow(miq_ae_yaml_import_zipfs).to receive(:class_files).with("Customer/EVMApplications/Operations").and_return([
         "Customer/EVMApplications/Operations/Profile.class/test.yml"
       ])
-      miq_ae_yaml_import_zipfs.stub(:class_files).with("Customer/EVMApplications/Operations/Profile").and_return([])
-      miq_ae_yaml_import_zipfs.stub(:class_files).with("ManageIQ").and_return([])
+      allow(miq_ae_yaml_import_zipfs).to receive(:class_files).with("Customer/EVMApplications/Operations/Profile").and_return([])
+      allow(miq_ae_yaml_import_zipfs).to receive(:class_files).with("ManageIQ").and_return([])
     end
 
     it "returns the correct json" do

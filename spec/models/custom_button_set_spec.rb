@@ -16,10 +16,10 @@ describe CustomButtonSet do
       button_set3.save!
 
       button_sets = CustomButtonSet.find_all_by_class_name("ServiceTemplate", 1)
-      button_sets.count.should == 2
+      expect(button_sets.count).to eq(2)
 
       all_button_sets = CustomButtonSet.all
-      all_button_sets.count.should == 3
+      expect(all_button_sets.count).to eq(3)
     end
   end
 end

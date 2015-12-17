@@ -6,7 +6,7 @@ describe Authenticator::Database do
 
   describe '#uses_stored_password?' do
     it "is true" do
-      expect(subject.uses_stored_password?).to be_true
+      expect(subject.uses_stored_password?).to be_truthy
     end
   end
 

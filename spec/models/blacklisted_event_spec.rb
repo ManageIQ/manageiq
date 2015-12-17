@@ -38,9 +38,9 @@ describe BlacklistedEvent do
   it '#enabled=' do
     User.current_user = FactoryGirl.create(:user)
     f = FactoryGirl.create(:blacklisted_event, :event_name => 'event_1')
-    expect(f.enabled).to be_true
+    expect(f.enabled).to be_truthy
 
     f.enabled = false
-    expect(f.enabled).to be_false
+    expect(f.enabled).to be_falsey
   end
 end
