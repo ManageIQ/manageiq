@@ -37,75 +37,75 @@ describe MiqServer do
     end
 
     it "should have proper guid" do
-      @miq_server.guid.should == @guid
+      expect(@miq_server.guid).to eq(@guid)
     end
 
     it "should have default zone" do
-      @miq_server.zone.name.should == @zone.name
+      expect(@miq_server.zone.name).to eq(@zone.name)
     end
 
     it "shutdown will raise an event and quiesce" do
-      MiqEvent.should_receive(:raise_evm_event)
-      @miq_server.should_receive(:quiesce)
+      expect(MiqEvent).to receive(:raise_evm_event)
+      expect(@miq_server).to receive(:quiesce)
       @miq_server.shutdown
     end
 
     it "sync stop will do nothing if stopped" do
       @miq_server.update_attributes(:status => 'stopped')
-      @miq_server.should_receive(:wait_for_stopped).never
+      expect(@miq_server).to receive(:wait_for_stopped).never
       @miq_server.stop(true)
-      MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid).should_not be_true
+      expect(MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid)).not_to be_truthy
     end
 
     it "async stop will do nothing if stopped" do
       @miq_server.update_attributes(:status => 'stopped')
-      @miq_server.should_receive(:wait_for_stopped).never
+      expect(@miq_server).to receive(:wait_for_stopped).never
       @miq_server.stop(false)
-      MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid).should_not be_true
+      expect(MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid)).not_to be_truthy
     end
 
     it "sync stop will do nothing if killed" do
       @miq_server.update_attributes(:status => 'killed')
       @miq_server.reload
-      @miq_server.should_receive(:wait_for_stopped).never
+      expect(@miq_server).to receive(:wait_for_stopped).never
       @miq_server.stop(true)
-      MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid).should_not be_true
+      expect(MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid)).not_to be_truthy
     end
 
     it "sync stop will queue shutdown_and_exit and wait_for_stopped" do
       @miq_server.update_attributes(:status => 'started')
-      @miq_server.should_receive(:wait_for_stopped)
+      expect(@miq_server).to receive(:wait_for_stopped)
       @miq_server.stop(true)
-      MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid).should be_true
+      expect(MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid)).to be_truthy
     end
 
     it "async stop will queue shutdown_and_exit and return" do
       @miq_server.update_attributes(:status => 'started')
-      @miq_server.should_receive(:wait_for_stopped).never
+      expect(@miq_server).to receive(:wait_for_stopped).never
       @miq_server.stop(false)
-      MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid).should be_true
+      expect(MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid)).to be_truthy
     end
 
     it "async stop will not update existing exit message and return" do
       @miq_server.update_attributes(:status => 'started')
-      @miq_server.should_receive(:wait_for_stopped).never
+      expect(@miq_server).to receive(:wait_for_stopped).never
       @miq_server.stop(false)
     end
 
     context "#is_recently_active?" do
       it "should return false when last_heartbeat is nil" do
         @miq_server.last_heartbeat = nil
-        @miq_server.is_recently_active?.should be_false
+        expect(@miq_server.is_recently_active?).to be_falsey
       end
 
       it "should return false when last_heartbeat is at least 10.minutes ago" do
         @miq_server.last_heartbeat = 10.minutes.ago.utc
-        @miq_server.is_recently_active?.should be_false
+        expect(@miq_server.is_recently_active?).to be_falsey
       end
 
       it "should return true when last_heartbeat is less than 10.minutes ago" do
         @miq_server.last_heartbeat = 500.seconds.ago.utc
-        @miq_server.is_recently_active?.should be_true
+        expect(@miq_server.is_recently_active?).to be_truthy
       end
     end
 
@@ -118,17 +118,17 @@ describe MiqServer do
       end
 
       it "will queue up a message" do
-        @message.should_not be_nil
+        expect(@message).not_to be_nil
       end
 
       it "message will be high priority" do
-        @message.priority.should == MiqQueue::HIGH_PRIORITY
+        expect(@message.priority).to eq(MiqQueue::HIGH_PRIORITY)
       end
 
       it "will not requeue if one exists" do
-        MiqQueue.where(@cond).count.should == 1
+        expect(MiqQueue.where(@cond).count).to eq(1)
         @miq_server.ntp_reload_queue
-        MiqQueue.where(@cond).count.should == 1
+        expect(MiqQueue.where(@cond).count).to eq(1)
       end
     end
 
@@ -199,11 +199,11 @@ describe MiqServer do
 
       it "will queue only one restart_apache" do
         @miq_server.queue_restart_apache
-        MiqQueue.where(@cond).count.should == 1
+        expect(MiqQueue.where(@cond).count).to eq(1)
       end
 
       it "delivering will restart apache" do
-        MiqApache::Control.should_receive(:restart).with(false)
+        expect(MiqApache::Control).to receive(:restart).with(false)
         @miq_server.process_miq_queue
       end
     end
@@ -211,66 +211,66 @@ describe MiqServer do
     context "with a worker" do
       before(:each) do
         @worker = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id, :pid => Process.pid)
-        @miq_server.stub(:validate_worker).and_return(true)
+        allow(@miq_server).to receive(:validate_worker).and_return(true)
         @miq_server.setup_drb_variables
         @miq_server.worker_add(@worker.pid)
       end
 
       it "quiesce will update status to quiesce, deactivate_roles, quiesce workers, clean active messages, and set status to stopped" do
-        @miq_server.should_receive(:status=).with('quiesce')
-        @miq_server.should_receive(:deactivate_roles)
-        @miq_server.should_receive(:quiesce_workers_loop)
-        MiqWorker.any_instance.should_receive(:clean_active_messages)
-        @miq_server.should_receive(:status=).with('stopped')
+        expect(@miq_server).to receive(:status=).with('quiesce')
+        expect(@miq_server).to receive(:deactivate_roles)
+        expect(@miq_server).to receive(:quiesce_workers_loop)
+        expect_any_instance_of(MiqWorker).to receive(:clean_active_messages)
+        expect(@miq_server).to receive(:status=).with('stopped')
         @miq_server.quiesce
       end
 
       it "quiesce_workers_loop will initiate shutdown of workers" do
-        @miq_server.should_receive(:stop_worker)
+        expect(@miq_server).to receive(:stop_worker)
         @miq_server.instance_variable_set(:@worker_monitor_settings, :quiesce_loop_timeout => 15.minutes)
-        @miq_server.should_receive(:workers_quiesced?).and_return(true)
+        expect(@miq_server).to receive(:workers_quiesced?).and_return(true)
         @miq_server.quiesce_workers_loop
       end
 
       it "quiesce_workers do mini-monitor_workers loop" do
-        @miq_server.should_receive(:heartbeat)
-        @miq_server.should_receive(:quiesce_workers_loop_timeout?).never
-        @miq_server.should_receive(:kill_timed_out_worker_quiesce).never
-        MiqWorker.any_instance.stub(:is_stopped?).and_return(true, false)
+        expect(@miq_server).to receive(:heartbeat)
+        expect(@miq_server).to receive(:quiesce_workers_loop_timeout?).never
+        expect(@miq_server).to receive(:kill_timed_out_worker_quiesce).never
+        allow_any_instance_of(MiqWorker).to receive(:is_stopped?).and_return(true, false)
         @miq_server.workers_quiesced?
       end
 
       it "quiesce_workers_loop_timeout? will return true if timeout reached" do
         @miq_server.instance_variable_set(:@quiesce_started_on, Time.now.utc)
         @miq_server.instance_variable_set(:@quiesce_loop_timeout, 10.minutes)
-        @miq_server.quiesce_workers_loop_timeout?.should_not be_true
+        expect(@miq_server.quiesce_workers_loop_timeout?).not_to be_truthy
 
         Timecop.travel 10.minutes do
-          @miq_server.quiesce_workers_loop_timeout?.should be_true
+          expect(@miq_server.quiesce_workers_loop_timeout?).to be_truthy
         end
       end
 
       it "quiesce_workers_loop_timeout? will return false if timeout is not reached" do
         @miq_server.instance_variable_set(:@quiesce_started_on, Time.now.utc)
         @miq_server.instance_variable_set(:@quiesce_loop_timeout, 10.minutes)
-        MiqWorker.any_instance.should_receive(:kill).never
-        @miq_server.quiesce_workers_loop_timeout?.should_not be_true
+        expect_any_instance_of(MiqWorker).to receive(:kill).never
+        expect(@miq_server.quiesce_workers_loop_timeout?).not_to be_truthy
       end
 
       it "will not kill workers if their quiesce timeout is not reached" do
         @miq_server.instance_variable_set(:@quiesce_started_on, Time.now.utc)
-        MiqWorker.any_instance.stub(:quiesce_time_allowance).and_return(10.minutes)
-        MiqWorker.any_instance.should_receive(:kill).never
+        allow_any_instance_of(MiqWorker).to receive(:quiesce_time_allowance).and_return(10.minutes)
+        expect_any_instance_of(MiqWorker).to receive(:kill).never
         @miq_server.kill_timed_out_worker_quiesce
       end
 
       it "will kill workers if their quiesce timeout is reached" do
         @miq_server.instance_variable_set(:@quiesce_started_on, Time.now.utc)
-        MiqWorker.any_instance.stub(:quiesce_time_allowance).and_return(10.minutes)
+        allow_any_instance_of(MiqWorker).to receive(:quiesce_time_allowance).and_return(10.minutes)
         @miq_server.kill_timed_out_worker_quiesce
 
         Timecop.travel 10.minutes do
-          MiqWorker.any_instance.should_receive(:kill).once
+          expect_any_instance_of(MiqWorker).to receive(:kill).once
           @miq_server.kill_timed_out_worker_quiesce
         end
       end
@@ -284,7 +284,7 @@ describe MiqServer do
         it "will validate the 'started' first server's active message when called on it" do
           @msg.handler = @miq_server.reload
           @msg.save
-          MiqQueue.any_instance.should_receive(:check_for_timeout)
+          expect_any_instance_of(MiqQueue).to receive(:check_for_timeout)
           @miq_server.validate_active_messages
         end
 
@@ -292,7 +292,7 @@ describe MiqServer do
           @miq_server.update_attribute(:status, 'not responding')
           @msg.handler = @miq_server.reload
           @msg.save
-          MiqQueue.any_instance.should_receive(:check_for_timeout)
+          expect_any_instance_of(MiqQueue).to receive(:check_for_timeout)
           @miq_server.validate_active_messages
         end
 
@@ -300,7 +300,7 @@ describe MiqServer do
           @miq_server2.update_attribute(:status, 'not responding')
           @msg.handler = @miq_server2
           @msg.save
-          MiqQueue.any_instance.should_receive(:check_for_timeout)
+          expect_any_instance_of(MiqQueue).to receive(:check_for_timeout)
           @miq_server.validate_active_messages
         end
 
@@ -308,21 +308,21 @@ describe MiqServer do
           @miq_server2.update_attribute(:status, 'started')
           @msg.handler = @miq_server2
           @msg.save
-          MiqQueue.any_instance.should_receive(:check_for_timeout).never
+          expect_any_instance_of(MiqQueue).to receive(:check_for_timeout).never
           @miq_server.validate_active_messages
         end
 
         it "will validate a worker's active message when called on the worker's server" do
           @msg.handler = @worker
           @msg.save
-          MiqQueue.any_instance.should_receive(:check_for_timeout)
+          expect_any_instance_of(MiqQueue).to receive(:check_for_timeout)
           @miq_server.validate_active_messages
         end
 
         it "will not validate a worker's active message when called on the worker's server if already processed" do
           @msg.handler = @worker
           @msg.save
-          MiqQueue.any_instance.should_receive(:check_for_timeout).never
+          expect_any_instance_of(MiqQueue).to receive(:check_for_timeout).never
           @miq_server.validate_active_messages([@worker.id])
         end
       end
@@ -353,7 +353,7 @@ describe MiqServer do
       end
 
       it "should have all server roles" do
-        @miq_server.server_roles.should match_array(@server_roles)
+        expect(@miq_server.server_roles).to match_array(@server_roles)
       end
 
       context "activating All roles" do
@@ -362,7 +362,7 @@ describe MiqServer do
         end
 
         it "should have activated All roles" do
-          @miq_server.active_roles.should match_array(@server_roles)
+          expect(@miq_server.active_roles).to match_array(@server_roles)
         end
       end
 
@@ -372,7 +372,7 @@ describe MiqServer do
         end
 
         it "should have activated Event role" do
-          @miq_server.active_role_names.include?("event").should be_true
+          expect(@miq_server.active_role_names.include?("event")).to be_truthy
         end
       end
     end
@@ -382,13 +382,13 @@ describe MiqServer do
     context "Active status returns true" do
       ["starting", "started"].each do |status|
         it status do
-          expect(described_class.new(:status => status).active?).to be_true
+          expect(described_class.new(:status => status).active?).to be_truthy
         end
       end
     end
 
     it "Inactive status returns false" do
-      expect(described_class.new(:status => "stopped").active?).to be_false
+      expect(described_class.new(:status => "stopped").active?).to be_falsey
     end
   end
 end

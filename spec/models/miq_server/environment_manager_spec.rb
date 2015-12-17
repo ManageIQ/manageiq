@@ -6,43 +6,43 @@ describe "Server Environment Management" do
     after(:each) { MiqServer.class_eval { instance_variable_set :@spartan_mode, nil } }
 
     it "when ENV['MIQ_SPARTAN'] is not set" do
-      ENV.stub(:[]).with('MIQ_SPARTAN').and_return(nil)
-      MiqServer.spartan_mode.should be_blank
+      allow(ENV).to receive(:[]).with('MIQ_SPARTAN').and_return(nil)
+      expect(MiqServer.spartan_mode).to be_blank
     end
 
     it "when ENV['MIQ_SPARTAN'] is set" do
       spartan = "minimal:foo:bar"
-      ENV.stub(:[]).with('MIQ_SPARTAN').and_return(spartan)
-      MiqServer.spartan_mode.should == spartan
+      allow(ENV).to receive(:[]).with('MIQ_SPARTAN').and_return(spartan)
+      expect(MiqServer.spartan_mode).to eq(spartan)
     end
   end
 
   context ".minimal_env?" do
     it "when spartan_mode is 'minimal'" do
-      MiqServer.stub(:spartan_mode).and_return("minimal")
-      MiqServer.minimal_env?.should be_true
+      allow(MiqServer).to receive(:spartan_mode).and_return("minimal")
+      expect(MiqServer.minimal_env?).to be_truthy
     end
 
     it "when spartan_mode starts with 'minimal'" do
-      MiqServer.stub(:spartan_mode).and_return("minimal:foo:bar")
-      MiqServer.minimal_env?.should be_true
+      allow(MiqServer).to receive(:spartan_mode).and_return("minimal:foo:bar")
+      expect(MiqServer.minimal_env?).to be_truthy
     end
 
     it "when spartan_mode does not start with 'minimal'" do
-      MiqServer.stub(:spartan_mode).and_return("foo:bar")
-      MiqServer.minimal_env?.should be_false
+      allow(MiqServer).to receive(:spartan_mode).and_return("foo:bar")
+      expect(MiqServer.minimal_env?).to be_falsey
     end
   end
 
   context ".normal_env?" do
     it "when minimal_env? is true" do
-      MiqServer.stub(:minimal_env?).and_return(true)
-      MiqServer.normal_env?.should be_false
+      allow(MiqServer).to receive(:minimal_env?).and_return(true)
+      expect(MiqServer.normal_env?).to be_falsey
     end
 
     it "when minimal_env? is false" do
-      MiqServer.stub(:minimal_env?).and_return(false)
-      MiqServer.normal_env?.should be_true
+      allow(MiqServer).to receive(:minimal_env?).and_return(false)
+      expect(MiqServer.normal_env?).to be_truthy
     end
   end
 
@@ -51,45 +51,45 @@ describe "Server Environment Management" do
     after(:each) { MiqServer.class_eval { instance_variable_set :@minimal_env_options, nil } }
 
     it "when spartan_mode is 'minimal'" do
-      MiqServer.stub(:spartan_mode).and_return("minimal")
-      MiqServer.minimal_env_options.should == []
+      allow(MiqServer).to receive(:spartan_mode).and_return("minimal")
+      expect(MiqServer.minimal_env_options).to eq([])
     end
 
     it "when spartan_mode starts with 'minimal' and has various roles" do
-      MiqServer.stub(:spartan_mode).and_return("minimal:foo:bar")
-      MiqServer.minimal_env_options.should == %w(foo bar)
+      allow(MiqServer).to receive(:spartan_mode).and_return("minimal:foo:bar")
+      expect(MiqServer.minimal_env_options).to eq(%w(foo bar))
     end
 
     it "when spartan_mode starts with 'minimal' and has various roles, including netbeans" do
-      MiqServer.stub(:spartan_mode).and_return("minimal:foo:netbeans:bar")
-      MiqServer.minimal_env_options.should == %w(foo schedule reporting noui bar)
+      allow(MiqServer).to receive(:spartan_mode).and_return("minimal:foo:netbeans:bar")
+      expect(MiqServer.minimal_env_options).to eq(%w(foo schedule reporting noui bar))
     end
 
     it "when spartan_mode does not start with 'minimal'" do
-      MiqServer.stub(:spartan_mode).and_return("foo:bar")
-      MiqServer.minimal_env_options.should == []
+      allow(MiqServer).to receive(:spartan_mode).and_return("foo:bar")
+      expect(MiqServer.minimal_env_options).to eq([])
     end
   end
 
   context ".startup_mode" do
     context "when minimal_env? is true" do
-      before(:each) { MiqServer.stub(:minimal_env?).and_return(true) }
+      before(:each) { allow(MiqServer).to receive(:minimal_env?).and_return(true) }
 
       it "when minimal_env_options is empty" do
-        MiqServer.stub(:minimal_env_options).and_return([])
-        MiqServer.startup_mode.should == "Minimal"
+        allow(MiqServer).to receive(:minimal_env_options).and_return([])
+        expect(MiqServer.startup_mode).to eq("Minimal")
       end
 
       it "when minimal_env_options is not empty" do
         minimal_env_options = %w(foo bar)
-        MiqServer.stub(:minimal_env_options).and_return(minimal_env_options)
-        MiqServer.startup_mode.should == "Minimal [#{minimal_env_options.join(', ')}]"
+        allow(MiqServer).to receive(:minimal_env_options).and_return(minimal_env_options)
+        expect(MiqServer.startup_mode).to eq("Minimal [#{minimal_env_options.join(', ')}]")
       end
     end
 
     it "when minimal_env? is false" do
-      MiqServer.stub(:minimal_env?).and_return(false)
-      MiqServer.startup_mode.should == "Normal"
+      allow(MiqServer).to receive(:minimal_env?).and_return(false)
+      expect(MiqServer.startup_mode).to eq("Normal")
     end
   end
 

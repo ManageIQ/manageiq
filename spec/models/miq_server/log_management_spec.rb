@@ -51,14 +51,14 @@ describe MiqServer do
         server_depot = FactoryGirl.create(:file_depot)
         @miq_server.log_file_depot = server_depot
 
-        @miq_server.log_depot.should == server_depot
+        expect(@miq_server.log_depot).to eq(server_depot)
       end
 
       it "zone log_file_depot configured" do
         zone_depot = FactoryGirl.create(:file_depot)
         @zone.log_file_depot = zone_depot
 
-        @miq_server.log_depot.should == zone_depot
+        expect(@miq_server.log_depot).to eq(zone_depot)
       end
 
       it "server and zone log_file_depot configured" do
@@ -67,7 +67,7 @@ describe MiqServer do
         @miq_server.log_file_depot = server_depot
         @zone.log_file_depot = zone_depot
 
-        @miq_server.log_depot.should == server_depot
+        expect(@miq_server.log_depot).to eq(server_depot)
       end
     end
   end
