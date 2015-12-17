@@ -7,7 +7,7 @@ describe "StatusManagement" do
 
   # for now, just making sure there are no syntax errors
   it ".log_status" do
-    MiqServer.should_receive(:log_system_status).once
+    expect(MiqServer).to receive(:log_system_status).once
     MiqServer.log_status
   end
 end

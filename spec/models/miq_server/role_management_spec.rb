@@ -24,7 +24,7 @@ describe "Server Role Management" do
         user_interface,User Interface,0,false,region
         web_services,Web Services,0,false,region
       CSV
-      ServerRole.stub(:seed_data).and_return(@csv)
+      allow(ServerRole).to receive(:seed_data).and_return(@csv)
       MiqRegion.seed
       ServerRole.seed
       @server_roles = ServerRole.all
@@ -35,28 +35,28 @@ describe "Server Role Management" do
     context "#apache_needed?" do
       it "false with neither webservices or user_interface active" do
         @miq_server.stub(:active_role_names => ["reporting"])
-        @miq_server.apache_needed?.should be_false
+        expect(@miq_server.apache_needed?).to be_falsey
       end
 
       it "true with web_services active" do
         @miq_server.stub(:active_role_names => ["web_services"])
-        @miq_server.apache_needed?.should be_true
+        expect(@miq_server.apache_needed?).to be_truthy
       end
 
       it "true with both web_services and user_interface active" do
         @miq_server.stub(:active_role_names => ["web_services", "user_interface"])
-        @miq_server.apache_needed?.should be_true
+        expect(@miq_server.apache_needed?).to be_truthy
       end
     end
 
     context "role=" do
       it "normal case" do
         @miq_server.assign_role('ems_operations', 1)
-        @miq_server.server_role_names.should == ['ems_operations']
+        expect(@miq_server.server_role_names).to eq(['ems_operations'])
 
         desired = 'event,scheduler,user_interface'
         @miq_server.role = desired
-        @miq_server.server_role_names.should == desired.split(",")
+        expect(@miq_server.server_role_names).to eq(desired.split(","))
       end
 
       it "with a duplicate existing role" do
@@ -64,7 +64,7 @@ describe "Server Role Management" do
 
         desired = 'ems_operations,ems_operations,scheduler'
         @miq_server.role = desired
-        @miq_server.server_role_names.should == %w( ems_operations scheduler )
+        expect(@miq_server.server_role_names).to eq(%w( ems_operations scheduler ))
       end
 
       it "with duplicate new roles" do
@@ -72,7 +72,7 @@ describe "Server Role Management" do
 
         desired = 'ems_operations,scheduler,scheduler'
         @miq_server.role = desired
-        @miq_server.server_role_names.should == %w( ems_operations scheduler )
+        expect(@miq_server.server_role_names).to eq(%w( ems_operations scheduler ))
       end
     end
 
@@ -80,8 +80,8 @@ describe "Server Role Management" do
       @roles = [['ems_operations', 1], ['event', 2], ['ems_metrics_coordinator', 1], ['scheduler', 1], ['reporting', 1]]
       @roles.each do |role, priority|
         asr = @miq_server.assign_role(role, priority)
-        asr.priority.should == priority
-        asr.server_role.name.should == role
+        expect(asr.priority).to eq(priority)
+        expect(asr.server_role.name).to eq(role)
       end
     end
   end

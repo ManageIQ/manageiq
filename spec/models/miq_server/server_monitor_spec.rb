@@ -24,22 +24,22 @@ describe "Server Monitor" do
         user_interface,User Interface,0,false,region
         web_services,Web Services,0,false,region
       CSV
-      ServerRole.stub(:seed_data).and_return(@csv)
+      allow(ServerRole).to receive(:seed_data).and_return(@csv)
       MiqRegion.seed
       ServerRole.seed
 
       # Do this manually, to avoid caching at the class level
-      ServerRole.stub(:database_owner).and_return(ServerRole.find_by_name('database_owner'))
+      allow(ServerRole).to receive(:database_owner).and_return(ServerRole.find_by_name('database_owner'))
 
       @server_roles = ServerRole.all
     end
 
     it "should respond properly to UI helper methods" do
       @server_roles.each do |server_role|
-        server_role.unlimited?.should be_true        if server_role.max_concurrent == 0
-        server_role.master_supported?.should be_true if server_role.max_concurrent == 1
-        ServerRole.to_role(server_role).should == server_role
-        ServerRole.to_role(server_role.name).should == server_role
+        expect(server_role.unlimited?).to be_truthy        if server_role.max_concurrent == 0
+        expect(server_role.master_supported?).to be_truthy if server_role.max_concurrent == 1
+        expect(ServerRole.to_role(server_role)).to eq(server_role)
+        expect(ServerRole.to_role(server_role.name)).to eq(server_role)
       end
     end
 
@@ -53,9 +53,9 @@ describe "Server Monitor" do
       end
 
       it "should have no roles active after start" do
-        @miq_server.server_roles.length.should == 4
-        @miq_server.inactive_roles.length.should == 4
-        @miq_server.active_roles.length.should == 0
+        expect(@miq_server.server_roles.length).to eq(4)
+        expect(@miq_server.inactive_roles.length).to eq(4)
+        expect(@miq_server.active_roles.length).to eq(0)
       end
 
       it "should activate unlimited zone role via activate_in_zone method" do
@@ -65,10 +65,10 @@ describe "Server Monitor" do
           asr.activate_in_zone
         end
         @miq_server.reload
-        @miq_server.inactive_roles.length.should == 3
-        @miq_server.active_role_names.length.should == 1
-        @miq_server.active_role_names.include?(rolename).should be_true
-        @miq_server.inactive_role_names.include?(rolename).should_not be_true
+        expect(@miq_server.inactive_roles.length).to eq(3)
+        expect(@miq_server.active_role_names.length).to eq(1)
+        expect(@miq_server.active_role_names.include?(rolename)).to be_truthy
+        expect(@miq_server.inactive_role_names.include?(rolename)).not_to be_truthy
       end
 
       it "should activate limited zone role via activate_in_zone method" do
@@ -78,10 +78,10 @@ describe "Server Monitor" do
           asr.activate_in_zone
         end
         @miq_server.reload
-        @miq_server.inactive_roles.length.should == 3
-        @miq_server.active_role_names.length.should == 1
-        @miq_server.active_role_names.include?(rolename).should be_true
-        @miq_server.inactive_role_names.include?(rolename).should_not be_true
+        expect(@miq_server.inactive_roles.length).to eq(3)
+        expect(@miq_server.active_role_names.length).to eq(1)
+        expect(@miq_server.active_role_names.include?(rolename)).to be_truthy
+        expect(@miq_server.inactive_role_names.include?(rolename)).not_to be_truthy
       end
 
       it "should activate unlimited region role via activate_in_region method" do
@@ -91,10 +91,10 @@ describe "Server Monitor" do
           asr.activate_in_region
         end
         @miq_server.reload
-        @miq_server.inactive_roles.length.should == 3
-        @miq_server.active_role_names.length.should == 1
-        @miq_server.active_role_names.include?(rolename).should be_true
-        @miq_server.inactive_role_names.include?(rolename).should_not be_true
+        expect(@miq_server.inactive_roles.length).to eq(3)
+        expect(@miq_server.active_role_names.length).to eq(1)
+        expect(@miq_server.active_role_names.include?(rolename)).to be_truthy
+        expect(@miq_server.inactive_role_names.include?(rolename)).not_to be_truthy
       end
 
       it "should activate limited region role via activate_in_region method" do
@@ -104,10 +104,10 @@ describe "Server Monitor" do
           asr.activate_in_region
         end
         @miq_server.reload
-        @miq_server.inactive_roles.length.should == 3
-        @miq_server.active_role_names.length.should == 1
-        @miq_server.active_role_names.include?(rolename).should be_true
-        @miq_server.inactive_role_names.include?(rolename).should_not be_true
+        expect(@miq_server.inactive_roles.length).to eq(3)
+        expect(@miq_server.active_role_names.length).to eq(1)
+        expect(@miq_server.active_role_names.include?(rolename)).to be_truthy
+        expect(@miq_server.inactive_role_names.include?(rolename)).not_to be_truthy
       end
 
       context "after initial monitor_servers" do
@@ -116,11 +116,11 @@ describe "Server Monitor" do
         end
 
         it "should have all roles active after monitor_servers" do
-          @miq_server.active_role_names.length.should == 4
-          @miq_server.active_role_names.include?("ems_operations").should be_true
-          @miq_server.active_role_names.include?("event").should be_true
-          @miq_server.active_role_names.include?("scheduler").should be_true
-          @miq_server.active_role_names.include?("reporting").should be_true
+          expect(@miq_server.active_role_names.length).to eq(4)
+          expect(@miq_server.active_role_names.include?("ems_operations")).to be_truthy
+          expect(@miq_server.active_role_names.include?("event")).to be_truthy
+          expect(@miq_server.active_role_names.include?("scheduler")).to be_truthy
+          expect(@miq_server.active_role_names.include?("reporting")).to be_truthy
         end
 
         it "should deactivate unlimited role via deactivate_in_zone method" do
@@ -130,10 +130,10 @@ describe "Server Monitor" do
             asr.deactivate_in_zone
           end
           @miq_server.reload
-          @miq_server.inactive_roles.length.should == 1
-          @miq_server.active_role_names.length.should == 3
-          @miq_server.active_role_names.include?(rolename).should_not be_true
-          @miq_server.inactive_role_names.include?(rolename).should be_true
+          expect(@miq_server.inactive_roles.length).to eq(1)
+          expect(@miq_server.active_role_names.length).to eq(3)
+          expect(@miq_server.active_role_names.include?(rolename)).not_to be_truthy
+          expect(@miq_server.inactive_role_names.include?(rolename)).to be_truthy
         end
 
         it "should deactivate limited role via deactivate_in_zone method" do
@@ -143,90 +143,90 @@ describe "Server Monitor" do
             asr.deactivate_in_zone
           end
           @miq_server.reload
-          @miq_server.inactive_roles.length.should == 1
-          @miq_server.active_role_names.length.should == 3
-          @miq_server.active_role_names.include?(rolename).should_not be_true
-          @miq_server.inactive_role_names.include?(rolename).should be_true
+          expect(@miq_server.inactive_roles.length).to eq(1)
+          expect(@miq_server.active_role_names.length).to eq(3)
+          expect(@miq_server.active_role_names.include?(rolename)).not_to be_truthy
+          expect(@miq_server.inactive_role_names.include?(rolename)).to be_truthy
         end
 
         it "should activate newly assigned unlimited zone role" do
           @miq_server.role = 'event, ems_operations, scheduler, reporting, smartstate'
           @miq_server.monitor_server_roles
-          @miq_server.active_role_names.length.should == 5
-          @miq_server.active_role_names.include?("ems_operations").should be_true
-          @miq_server.active_role_names.include?("event").should be_true
-          @miq_server.active_role_names.include?("scheduler").should be_true
-          @miq_server.active_role_names.include?("reporting").should be_true
-          @miq_server.active_role_names.include?("smartstate").should be_true
+          expect(@miq_server.active_role_names.length).to eq(5)
+          expect(@miq_server.active_role_names.include?("ems_operations")).to be_truthy
+          expect(@miq_server.active_role_names.include?("event")).to be_truthy
+          expect(@miq_server.active_role_names.include?("scheduler")).to be_truthy
+          expect(@miq_server.active_role_names.include?("reporting")).to be_truthy
+          expect(@miq_server.active_role_names.include?("smartstate")).to be_truthy
         end
 
         it "should activate newly assigned limited zone role" do
           @miq_server.role = 'event, ems_operations, scheduler, reporting, ems_inventory'
           @miq_server.monitor_server_roles
-          @miq_server.active_role_names.length.should == 5
-          @miq_server.active_role_names.include?("ems_operations").should be_true
-          @miq_server.active_role_names.include?("event").should be_true
-          @miq_server.active_role_names.include?("scheduler").should be_true
-          @miq_server.active_role_names.include?("reporting").should be_true
-          @miq_server.active_role_names.include?("ems_inventory").should be_true
+          expect(@miq_server.active_role_names.length).to eq(5)
+          expect(@miq_server.active_role_names.include?("ems_operations")).to be_truthy
+          expect(@miq_server.active_role_names.include?("event")).to be_truthy
+          expect(@miq_server.active_role_names.include?("scheduler")).to be_truthy
+          expect(@miq_server.active_role_names.include?("reporting")).to be_truthy
+          expect(@miq_server.active_role_names.include?("ems_inventory")).to be_truthy
         end
 
         it "should activate newly assigned unlimited region role" do
           @miq_server.role = 'event, ems_operations, scheduler, reporting, database_operations'
           @miq_server.monitor_server_roles
-          @miq_server.active_role_names.length.should == 5
-          @miq_server.active_role_names.include?("ems_operations").should be_true
-          @miq_server.active_role_names.include?("event").should be_true
-          @miq_server.active_role_names.include?("scheduler").should be_true
-          @miq_server.active_role_names.include?("reporting").should be_true
-          @miq_server.active_role_names.include?("database_operations").should be_true
+          expect(@miq_server.active_role_names.length).to eq(5)
+          expect(@miq_server.active_role_names.include?("ems_operations")).to be_truthy
+          expect(@miq_server.active_role_names.include?("event")).to be_truthy
+          expect(@miq_server.active_role_names.include?("scheduler")).to be_truthy
+          expect(@miq_server.active_role_names.include?("reporting")).to be_truthy
+          expect(@miq_server.active_role_names.include?("database_operations")).to be_truthy
         end
 
         it "should activate newly assigned limited region role" do
           @miq_server.role = 'event, ems_operations, scheduler, reporting, database_synchronization'
           @miq_server.monitor_server_roles
-          @miq_server.active_role_names.length.should == 5
-          @miq_server.active_role_names.include?("ems_operations").should be_true
-          @miq_server.active_role_names.include?("event").should be_true
-          @miq_server.active_role_names.include?("scheduler").should be_true
-          @miq_server.active_role_names.include?("reporting").should be_true
-          @miq_server.active_role_names.include?("database_synchronization").should be_true
+          expect(@miq_server.active_role_names.length).to eq(5)
+          expect(@miq_server.active_role_names.include?("ems_operations")).to be_truthy
+          expect(@miq_server.active_role_names.include?("event")).to be_truthy
+          expect(@miq_server.active_role_names.include?("scheduler")).to be_truthy
+          expect(@miq_server.active_role_names.include?("reporting")).to be_truthy
+          expect(@miq_server.active_role_names.include?("database_synchronization")).to be_truthy
         end
 
         it "should deactivate removed unlimited zone role" do
           @miq_server.role = 'event, scheduler, reporting'
           @miq_server.monitor_server_roles
-          @miq_server.active_role_names.length.should == 3
-          @miq_server.active_role_names.include?("event").should be_true
-          @miq_server.active_role_names.include?("scheduler").should be_true
-          @miq_server.active_role_names.include?("reporting").should be_true
+          expect(@miq_server.active_role_names.length).to eq(3)
+          expect(@miq_server.active_role_names.include?("event")).to be_truthy
+          expect(@miq_server.active_role_names.include?("scheduler")).to be_truthy
+          expect(@miq_server.active_role_names.include?("reporting")).to be_truthy
         end
 
         it "should deactivate removed limited zone role" do
           @miq_server.role = 'ems_operations, scheduler, reporting'
           @miq_server.monitor_server_roles
-          @miq_server.active_role_names.length.should == 3
-          @miq_server.active_role_names.include?("ems_operations").should be_true
-          @miq_server.active_role_names.include?("scheduler").should be_true
-          @miq_server.active_role_names.include?("reporting").should be_true
+          expect(@miq_server.active_role_names.length).to eq(3)
+          expect(@miq_server.active_role_names.include?("ems_operations")).to be_truthy
+          expect(@miq_server.active_role_names.include?("scheduler")).to be_truthy
+          expect(@miq_server.active_role_names.include?("reporting")).to be_truthy
         end
 
         it "should deactivate removed unlimited region role" do
           @miq_server.role = 'event, ems_operations, scheduler'
           @miq_server.monitor_server_roles
-          @miq_server.active_role_names.length.should == 3
-          @miq_server.active_role_names.include?("event").should be_true
-          @miq_server.active_role_names.include?("ems_operations").should be_true
-          @miq_server.active_role_names.include?("scheduler").should be_true
+          expect(@miq_server.active_role_names.length).to eq(3)
+          expect(@miq_server.active_role_names.include?("event")).to be_truthy
+          expect(@miq_server.active_role_names.include?("ems_operations")).to be_truthy
+          expect(@miq_server.active_role_names.include?("scheduler")).to be_truthy
         end
 
         it "should deactivate removed limited region role" do
           @miq_server.role = 'event, ems_operations, reporting'
           @miq_server.monitor_server_roles
-          @miq_server.active_role_names.length.should == 3
-          @miq_server.active_role_names.include?("event").should be_true
-          @miq_server.active_role_names.include?("ems_operations").should be_true
-          @miq_server.active_role_names.include?("reporting").should be_true
+          expect(@miq_server.active_role_names.length).to eq(3)
+          expect(@miq_server.active_role_names.include?("event")).to be_truthy
+          expect(@miq_server.active_role_names.include?("ems_operations")).to be_truthy
+          expect(@miq_server.active_role_names.include?("reporting")).to be_truthy
         end
       end
     end
@@ -243,13 +243,13 @@ describe "Server Monitor" do
       end
 
       it "should have no roles active after start" do
-        @miq_server1.server_roles.length.should == 4
-        @miq_server1.inactive_roles.length.should == 4
-        @miq_server1.active_roles.length.should == 0
+        expect(@miq_server1.server_roles.length).to eq(4)
+        expect(@miq_server1.inactive_roles.length).to eq(4)
+        expect(@miq_server1.active_roles.length).to eq(0)
 
-        @miq_server2.server_roles.length.should == 4
-        @miq_server2.inactive_roles.length.should == 4
-        @miq_server2.active_roles.length.should == 0
+        expect(@miq_server2.server_roles.length).to eq(4)
+        expect(@miq_server2.inactive_roles.length).to eq(4)
+        expect(@miq_server2.active_roles.length).to eq(0)
       end
 
       it "should activate unlimited role via activate_in_zone method" do
@@ -262,13 +262,13 @@ describe "Server Monitor" do
         end
         @miq_server1.reload
         @miq_server2.reload
-        @miq_server1.inactive_roles.length.should == 3
-        @miq_server1.active_role_names.length.should == 1
-        @miq_server1.active_role_names.include?(rolename).should be_true
+        expect(@miq_server1.inactive_roles.length).to eq(3)
+        expect(@miq_server1.active_role_names.length).to eq(1)
+        expect(@miq_server1.active_role_names.include?(rolename)).to be_truthy
 
-        @miq_server2.inactive_roles.length.should == 3
-        @miq_server2.active_role_names.length.should == 1
-        @miq_server2.active_role_names.include?(rolename).should be_true
+        expect(@miq_server2.inactive_roles.length).to eq(3)
+        expect(@miq_server2.active_role_names.length).to eq(1)
+        expect(@miq_server2.active_role_names.include?(rolename)).to be_truthy
       end
 
       context "after monitor_servers" do
@@ -278,10 +278,10 @@ describe "Server Monitor" do
         end
 
         it "should have all roles active after sync between them" do
-          (@miq_server1.active_role_names.include?("ems_operations") && @miq_server2.active_role_names.include?("ems_operations")).should be_true
-          (@miq_server1.active_role_names.include?("event") ^ @miq_server2.active_role_names.include?("event")).should be_true
-          (@miq_server1.active_role_names.include?("reporting") && @miq_server2.active_role_names.include?("reporting")).should be_true
-          (@miq_server1.active_role_names.include?("scheduler") ^ @miq_server2.active_role_names.include?("scheduler")).should be_true
+          expect(@miq_server1.active_role_names.include?("ems_operations") && @miq_server2.active_role_names.include?("ems_operations")).to be_truthy
+          expect(@miq_server1.active_role_names.include?("event") ^ @miq_server2.active_role_names.include?("event")).to be_truthy
+          expect(@miq_server1.active_role_names.include?("reporting") && @miq_server2.active_role_names.include?("reporting")).to be_truthy
+          expect(@miq_server1.active_role_names.include?("scheduler") ^ @miq_server2.active_role_names.include?("scheduler")).to be_truthy
         end
       end
 
@@ -292,8 +292,8 @@ describe "Server Monitor" do
         end
 
         it "should have all roles on the desired servers" do
-          (@miq_server1.active_role_names.include?("ems_operations") && @miq_server2.active_role_names.include?("ems_operations")).should be_true
-          (@miq_server1.inactive_role_names.include?("event") && @miq_server2.active_role_names.include?("event")).should be_true
+          expect(@miq_server1.active_role_names.include?("ems_operations") && @miq_server2.active_role_names.include?("ems_operations")).to be_truthy
+          expect(@miq_server1.inactive_role_names.include?("event") && @miq_server2.active_role_names.include?("event")).to be_truthy
         end
 
         context "where Non-Master shuts down cleanly" do
@@ -310,9 +310,9 @@ describe "Server Monitor" do
           end
 
           it "should migrate roles to Master" do
-            @miq_server1.active_role_names.include?("ems_operations").should be_true
-            @miq_server1.active_role_names.include?("event").should be_true
-            @miq_server2.active_role_names.should be_empty
+            expect(@miq_server1.active_role_names.include?("ems_operations")).to be_truthy
+            expect(@miq_server1.active_role_names.include?("event")).to be_truthy
+            expect(@miq_server2.active_role_names).to be_empty
           end
         end
 
@@ -325,25 +325,25 @@ describe "Server Monitor" do
           end
 
           it "should mark server as not responding" do
-            @miq_server2.reload.status.should == "not responding"
+            expect(@miq_server2.reload.status).to eq("not responding")
           end
 
           it "should migrate roles to Master" do
             @miq_server1.monitor_server_roles
             @miq_server2.reload
 
-            @miq_server2.server_roles.length.should == 4
-            @miq_server2.inactive_roles.length.should == 4
-            @miq_server2.active_roles.length.should == 0
+            expect(@miq_server2.server_roles.length).to eq(4)
+            expect(@miq_server2.inactive_roles.length).to eq(4)
+            expect(@miq_server2.active_roles.length).to eq(0)
 
-            @miq_server1.server_roles.length.should == 4
-            @miq_server1.inactive_roles.length.should == 0
-            @miq_server1.active_roles.length.should == 4
+            expect(@miq_server1.server_roles.length).to eq(4)
+            expect(@miq_server1.inactive_roles.length).to eq(0)
+            expect(@miq_server1.active_roles.length).to eq(4)
 
-            @miq_server1.active_role_names.include?("ems_operations").should be_true
-            @miq_server1.active_role_names.include?("event").should be_true
-            @miq_server1.active_role_names.include?("reporting").should be_true
-            @miq_server1.active_role_names.include?("scheduler").should be_true
+            expect(@miq_server1.active_role_names.include?("ems_operations")).to be_truthy
+            expect(@miq_server1.active_role_names.include?("event")).to be_truthy
+            expect(@miq_server1.active_role_names.include?("reporting")).to be_truthy
+            expect(@miq_server1.active_role_names.include?("scheduler")).to be_truthy
           end
         end
       end
@@ -369,10 +369,10 @@ describe "Server Monitor" do
       end
 
       it "should have all roles active after sync between them" do
-        (@miq_server1.active_role_names.include?("ems_operations") && @miq_server2.active_role_names.include?("ems_operations")).should be_true
-        (@miq_server1.active_role_names.include?("event") ^ @miq_server2.active_role_names.include?("event")).should be_true
-        (@miq_server1.active_role_names.include?("reporting") && @miq_server2.active_role_names.include?("reporting")).should be_true
-        (@miq_server1.active_role_names.include?("scheduler") ^ @miq_server2.active_role_names.include?("scheduler")).should be_true
+        expect(@miq_server1.active_role_names.include?("ems_operations") && @miq_server2.active_role_names.include?("ems_operations")).to be_truthy
+        expect(@miq_server1.active_role_names.include?("event") ^ @miq_server2.active_role_names.include?("event")).to be_truthy
+        expect(@miq_server1.active_role_names.include?("reporting") && @miq_server2.active_role_names.include?("reporting")).to be_truthy
+        expect(@miq_server1.active_role_names.include?("scheduler") ^ @miq_server2.active_role_names.include?("scheduler")).to be_truthy
       end
 
       context "where Master shuts down cleanly" do
@@ -386,19 +386,19 @@ describe "Server Monitor" do
         end
 
         it "should takeover as Master" do
-          @miq_server1.is_master?.should be_true
+          expect(@miq_server1.is_master?).to be_truthy
           @miq_server2.reload
-          @miq_server2.is_master?.should_not be_true
+          expect(@miq_server2.is_master?).not_to be_truthy
         end
 
         it "should migrate roles to Master" do
           @miq_server1.monitor_server_roles if @miq_server1.is_master?
-          @miq_server1.active_role_names.include?("ems_operations").should be_true
-          @miq_server1.active_role_names.include?("event").should be_true
-          @miq_server1.active_role_names.include?("reporting").should be_true
-          @miq_server1.active_role_names.include?("scheduler").should be_true
+          expect(@miq_server1.active_role_names.include?("ems_operations")).to be_truthy
+          expect(@miq_server1.active_role_names.include?("event")).to be_truthy
+          expect(@miq_server1.active_role_names.include?("reporting")).to be_truthy
+          expect(@miq_server1.active_role_names.include?("scheduler")).to be_truthy
           @miq_server2.reload
-          @miq_server2.active_role_names.should be_empty
+          expect(@miq_server2.active_role_names).to be_empty
         end
       end
 
@@ -413,28 +413,28 @@ describe "Server Monitor" do
         end
 
         it "should takeover as Master" do
-          @miq_server1.is_master?.should be_true
+          expect(@miq_server1.is_master?).to be_truthy
           @miq_server2.reload
-          @miq_server2.is_master?.should_not be_true
+          expect(@miq_server2.is_master?).not_to be_truthy
         end
 
         it "should migrate roles to Master" do
           @miq_server1.monitor_server_roles if @miq_server1.is_master?
           @miq_server2.reload
 
-          @miq_server2.status.should == "not responding"
-          @miq_server2.server_roles.length.should == 4
-          @miq_server2.inactive_roles.length.should == 4
-          @miq_server2.active_roles.length.should == 0
+          expect(@miq_server2.status).to eq("not responding")
+          expect(@miq_server2.server_roles.length).to eq(4)
+          expect(@miq_server2.inactive_roles.length).to eq(4)
+          expect(@miq_server2.active_roles.length).to eq(0)
 
-          @miq_server1.inactive_roles.length.should == 0
-          @miq_server1.active_roles.length.should == 4
-          @miq_server1.active_role_names.include?("database_owner").should be_false
+          expect(@miq_server1.inactive_roles.length).to eq(0)
+          expect(@miq_server1.active_roles.length).to eq(4)
+          expect(@miq_server1.active_role_names.include?("database_owner")).to be_falsey
 
-          @miq_server1.active_role_names.include?("ems_operations").should be_true
-          @miq_server1.active_role_names.include?("event").should be_true
-          @miq_server1.active_role_names.include?("reporting").should be_true
-          @miq_server1.active_role_names.include?("scheduler").should be_true
+          expect(@miq_server1.active_role_names.include?("ems_operations")).to be_truthy
+          expect(@miq_server1.active_role_names.include?("event")).to be_truthy
+          expect(@miq_server1.active_role_names.include?("reporting")).to be_truthy
+          expect(@miq_server1.active_role_names.include?("scheduler")).to be_truthy
         end
       end
     end
@@ -463,39 +463,39 @@ describe "Server Monitor" do
       end
 
       it "should have all roles active after sync between them" do
-        @miq_server1.active_role_names.include?("ems_operations").should be_true
-        @miq_server2.active_role_names.include?("ems_operations").should be_true
-        @miq_server3.active_role_names.include?("ems_operations").should be_true
+        expect(@miq_server1.active_role_names.include?("ems_operations")).to be_truthy
+        expect(@miq_server2.active_role_names.include?("ems_operations")).to be_truthy
+        expect(@miq_server3.active_role_names.include?("ems_operations")).to be_truthy
 
-        @miq_server1.active_role_names.include?("event").should_not be_true
-        @miq_server2.active_role_names.include?("event").should be_true
-        @miq_server3.active_role_names.include?("event").should_not be_true
+        expect(@miq_server1.active_role_names.include?("event")).not_to be_truthy
+        expect(@miq_server2.active_role_names.include?("event")).to be_truthy
+        expect(@miq_server3.active_role_names.include?("event")).not_to be_truthy
 
-        @miq_server1.active_role_names.include?("ems_metrics_coordinator").should_not be_true
-        @miq_server2.active_role_names.include?("ems_metrics_coordinator").should_not be_true
-        @miq_server3.active_role_names.include?("ems_metrics_coordinator").should be_true
+        expect(@miq_server1.active_role_names.include?("ems_metrics_coordinator")).not_to be_truthy
+        expect(@miq_server2.active_role_names.include?("ems_metrics_coordinator")).not_to be_truthy
+        expect(@miq_server3.active_role_names.include?("ems_metrics_coordinator")).to be_truthy
 
-        @miq_server1.active_role_names.include?("ems_inventory").should_not be_true
-        @miq_server2.active_role_names.include?("ems_inventory").should_not be_true
-        @miq_server3.active_role_names.include?("ems_inventory").should be_true
+        expect(@miq_server1.active_role_names.include?("ems_inventory")).not_to be_truthy
+        expect(@miq_server2.active_role_names.include?("ems_inventory")).not_to be_truthy
+        expect(@miq_server3.active_role_names.include?("ems_inventory")).to be_truthy
       end
 
       it "should respond to helper methods for UI" do
-        @miq_server1.is_master_for_role?("ems_operations").should_not be_true
-        @miq_server2.is_master_for_role?("ems_operations").should be_true
-        @miq_server3.is_master_for_role?("ems_operations").should_not be_true
+        expect(@miq_server1.is_master_for_role?("ems_operations")).not_to be_truthy
+        expect(@miq_server2.is_master_for_role?("ems_operations")).to be_truthy
+        expect(@miq_server3.is_master_for_role?("ems_operations")).not_to be_truthy
 
-        @miq_server1.is_master_for_role?("event").should_not be_true
-        @miq_server2.is_master_for_role?("event").should be_true
-        @miq_server3.is_master_for_role?("event").should_not be_true
+        expect(@miq_server1.is_master_for_role?("event")).not_to be_truthy
+        expect(@miq_server2.is_master_for_role?("event")).to be_truthy
+        expect(@miq_server3.is_master_for_role?("event")).not_to be_truthy
 
-        @miq_server1.is_master_for_role?("ems_inventory").should_not be_true
-        @miq_server2.is_master_for_role?("ems_inventory").should_not be_true
-        @miq_server3.is_master_for_role?("ems_inventory").should be_true
+        expect(@miq_server1.is_master_for_role?("ems_inventory")).not_to be_truthy
+        expect(@miq_server2.is_master_for_role?("ems_inventory")).not_to be_truthy
+        expect(@miq_server3.is_master_for_role?("ems_inventory")).to be_truthy
 
-        @miq_server1.is_master_for_role?("ems_metrics_coordinator").should_not be_true
-        @miq_server2.is_master_for_role?("ems_metrics_coordinator").should_not be_true
-        @miq_server3.is_master_for_role?("ems_metrics_coordinator").should be_true
+        expect(@miq_server1.is_master_for_role?("ems_metrics_coordinator")).not_to be_truthy
+        expect(@miq_server2.is_master_for_role?("ems_metrics_coordinator")).not_to be_truthy
+        expect(@miq_server3.is_master_for_role?("ems_metrics_coordinator")).to be_truthy
       end
 
       context "when Server3 is stopped" do
@@ -513,19 +513,19 @@ describe "Server Monitor" do
         end
 
         it "should migrate all roles properly" do
-          @miq_server3.active_role_names.should be_empty
+          expect(@miq_server3.active_role_names).to be_empty
 
-          @miq_server1.active_role_names.include?("ems_operations").should be_true
-          @miq_server2.active_role_names.include?("ems_operations").should be_true
+          expect(@miq_server1.active_role_names.include?("ems_operations")).to be_truthy
+          expect(@miq_server2.active_role_names.include?("ems_operations")).to be_truthy
 
-          @miq_server1.active_role_names.include?("event").should_not be_true
-          @miq_server2.active_role_names.include?("event").should be_true
+          expect(@miq_server1.active_role_names.include?("event")).not_to be_truthy
+          expect(@miq_server2.active_role_names.include?("event")).to be_truthy
 
-          @miq_server1.active_role_names.include?("ems_metrics_coordinator").should be_true
-          @miq_server2.active_role_names.include?("ems_metrics_coordinator").should_not be_true
+          expect(@miq_server1.active_role_names.include?("ems_metrics_coordinator")).to be_truthy
+          expect(@miq_server2.active_role_names.include?("ems_metrics_coordinator")).not_to be_truthy
 
-          @miq_server1.active_role_names.include?("ems_inventory").should_not be_true
-          @miq_server2.active_role_names.include?("ems_inventory").should be_true
+          expect(@miq_server1.active_role_names.include?("ems_inventory")).not_to be_truthy
+          expect(@miq_server2.active_role_names.include?("ems_inventory")).to be_truthy
         end
 
         context "and then restarted" do
@@ -540,21 +540,21 @@ describe "Server Monitor" do
           end
 
           it "should have all roles active after sync between them" do
-            @miq_server1.active_role_names.include?("ems_operations").should be_true
-            @miq_server2.active_role_names.include?("ems_operations").should be_true
-            @miq_server3.active_role_names.include?("ems_operations").should be_true
+            expect(@miq_server1.active_role_names.include?("ems_operations")).to be_truthy
+            expect(@miq_server2.active_role_names.include?("ems_operations")).to be_truthy
+            expect(@miq_server3.active_role_names.include?("ems_operations")).to be_truthy
 
-            @miq_server1.active_role_names.include?("event").should_not be_true
-            @miq_server2.active_role_names.include?("event").should be_true
-            @miq_server3.active_role_names.include?("event").should_not be_true
+            expect(@miq_server1.active_role_names.include?("event")).not_to be_truthy
+            expect(@miq_server2.active_role_names.include?("event")).to be_truthy
+            expect(@miq_server3.active_role_names.include?("event")).not_to be_truthy
 
-            @miq_server1.active_role_names.include?("ems_metrics_coordinator").should_not be_true
-            @miq_server2.active_role_names.include?("ems_metrics_coordinator").should_not be_true
-            @miq_server3.active_role_names.include?("ems_metrics_coordinator").should be_true
+            expect(@miq_server1.active_role_names.include?("ems_metrics_coordinator")).not_to be_truthy
+            expect(@miq_server2.active_role_names.include?("ems_metrics_coordinator")).not_to be_truthy
+            expect(@miq_server3.active_role_names.include?("ems_metrics_coordinator")).to be_truthy
 
-            @miq_server1.active_role_names.include?("ems_inventory").should_not be_true
-            @miq_server2.active_role_names.include?("ems_inventory").should_not be_true
-            @miq_server3.active_role_names.include?("ems_inventory").should be_true
+            expect(@miq_server1.active_role_names.include?("ems_inventory")).not_to be_truthy
+            expect(@miq_server2.active_role_names.include?("ems_inventory")).not_to be_truthy
+            expect(@miq_server3.active_role_names.include?("ems_inventory")).to be_truthy
           end
         end
       end
@@ -574,19 +574,19 @@ describe "Server Monitor" do
         end
 
         it "should have migrate all roles properly" do
-          @miq_server2.active_role_names.should be_empty
+          expect(@miq_server2.active_role_names).to be_empty
 
-          @miq_server1.active_role_names.include?("ems_operations").should be_true
-          @miq_server3.active_role_names.include?("ems_operations").should be_true
+          expect(@miq_server1.active_role_names.include?("ems_operations")).to be_truthy
+          expect(@miq_server3.active_role_names.include?("ems_operations")).to be_truthy
 
-          @miq_server1.active_role_names.include?("event").should be_true
-          @miq_server3.active_role_names.include?("event").should_not be_true
+          expect(@miq_server1.active_role_names.include?("event")).to be_truthy
+          expect(@miq_server3.active_role_names.include?("event")).not_to be_truthy
 
-          @miq_server1.active_role_names.include?("ems_metrics_coordinator").should_not be_true
-          @miq_server3.active_role_names.include?("ems_metrics_coordinator").should be_true
+          expect(@miq_server1.active_role_names.include?("ems_metrics_coordinator")).not_to be_truthy
+          expect(@miq_server3.active_role_names.include?("ems_metrics_coordinator")).to be_truthy
 
-          @miq_server1.active_role_names.include?("ems_inventory").should_not be_true
-          @miq_server3.active_role_names.include?("ems_inventory").should be_true
+          expect(@miq_server1.active_role_names.include?("ems_inventory")).not_to be_truthy
+          expect(@miq_server3.active_role_names.include?("ems_inventory")).to be_truthy
         end
 
         context "and then restarted" do
@@ -601,21 +601,21 @@ describe "Server Monitor" do
           end
 
           it "should have all roles active after sync between them" do
-            @miq_server1.active_role_names.include?("ems_operations").should be_true
-            @miq_server2.active_role_names.include?("ems_operations").should be_true
-            @miq_server3.active_role_names.include?("ems_operations").should be_true
+            expect(@miq_server1.active_role_names.include?("ems_operations")).to be_truthy
+            expect(@miq_server2.active_role_names.include?("ems_operations")).to be_truthy
+            expect(@miq_server3.active_role_names.include?("ems_operations")).to be_truthy
 
-            @miq_server1.active_role_names.include?("event").should_not be_true
-            @miq_server2.active_role_names.include?("event").should be_true
-            @miq_server3.active_role_names.include?("event").should_not be_true
+            expect(@miq_server1.active_role_names.include?("event")).not_to be_truthy
+            expect(@miq_server2.active_role_names.include?("event")).to be_truthy
+            expect(@miq_server3.active_role_names.include?("event")).not_to be_truthy
 
-            @miq_server1.active_role_names.include?("ems_metrics_coordinator").should_not be_true
-            @miq_server2.active_role_names.include?("ems_metrics_coordinator").should_not be_true
-            @miq_server3.active_role_names.include?("ems_metrics_coordinator").should be_true
+            expect(@miq_server1.active_role_names.include?("ems_metrics_coordinator")).not_to be_truthy
+            expect(@miq_server2.active_role_names.include?("ems_metrics_coordinator")).not_to be_truthy
+            expect(@miq_server3.active_role_names.include?("ems_metrics_coordinator")).to be_truthy
 
-            @miq_server1.active_role_names.include?("ems_inventory").should_not be_true
-            @miq_server2.active_role_names.include?("ems_inventory").should_not be_true
-            @miq_server3.active_role_names.include?("ems_inventory").should be_true
+            expect(@miq_server1.active_role_names.include?("ems_inventory")).not_to be_truthy
+            expect(@miq_server2.active_role_names.include?("ems_inventory")).not_to be_truthy
+            expect(@miq_server3.active_role_names.include?("ems_inventory")).to be_truthy
           end
         end
       end
@@ -642,19 +642,19 @@ describe "Server Monitor" do
       end
 
       it "should have the master on Server 2" do
-        @miq_server1.is_master?.should_not be_true
-        @miq_server2.is_master?.should be_true
-        @miq_server3.is_master?.should_not be_true
+        expect(@miq_server1.is_master?).not_to be_truthy
+        expect(@miq_server2.is_master?).to be_truthy
+        expect(@miq_server3.is_master?).not_to be_truthy
       end
 
       it "should have all roles active after sync between them" do
-        @miq_server1.active_role_names.include?("ems_operations").should be_true
-        @miq_server2.active_role_names.include?("ems_operations").should be_true
-        @miq_server3.active_role_names.include?("ems_operations").should be_true
+        expect(@miq_server1.active_role_names.include?("ems_operations")).to be_truthy
+        expect(@miq_server2.active_role_names.include?("ems_operations")).to be_truthy
+        expect(@miq_server3.active_role_names.include?("ems_operations")).to be_truthy
 
-        (@miq_server1.active_role_names.include?("event") ^ @miq_server2.active_role_names.include?("event")).should be_true
-        (@miq_server2.active_role_names.include?("ems_metrics_coordinator") ^ @miq_server3.active_role_names.include?("ems_metrics_coordinator")).should be_true
-        (@miq_server1.active_role_names.include?("ems_inventory") ^ @miq_server3.active_role_names.include?("ems_inventory")).should be_true
+        expect(@miq_server1.active_role_names.include?("event") ^ @miq_server2.active_role_names.include?("event")).to be_truthy
+        expect(@miq_server2.active_role_names.include?("ems_metrics_coordinator") ^ @miq_server3.active_role_names.include?("ems_metrics_coordinator")).to be_truthy
+        expect(@miq_server1.active_role_names.include?("ems_inventory") ^ @miq_server3.active_role_names.include?("ems_inventory")).to be_truthy
       end
 
       context "where Master shuts down cleanly" do
@@ -671,9 +671,9 @@ describe "Server Monitor" do
         it "should takeover as Master" do
           @miq_server2.reload
           @miq_server3.reload
-          @miq_server1.is_master?.should be_true
-          @miq_server2.is_master?.should_not be_true
-          @miq_server3.is_master?.should_not be_true
+          expect(@miq_server1.is_master?).to be_truthy
+          expect(@miq_server2.is_master?).not_to be_truthy
+          expect(@miq_server3.is_master?).not_to be_truthy
         end
 
         it "should migrate roles to Master" do
@@ -681,21 +681,21 @@ describe "Server Monitor" do
           @miq_server2.reload
           @miq_server3.reload
 
-          @miq_server1.inactive_roles.length.should == 0
-          @miq_server1.active_roles.length.should == 3
+          expect(@miq_server1.inactive_roles.length).to eq(0)
+          expect(@miq_server1.active_roles.length).to eq(3)
 
-          @miq_server2.server_roles.length.should == 3
-          @miq_server2.inactive_roles.length.should == 3
-          @miq_server2.active_roles.length.should == 0
+          expect(@miq_server2.server_roles.length).to eq(3)
+          expect(@miq_server2.inactive_roles.length).to eq(3)
+          expect(@miq_server2.active_roles.length).to eq(0)
 
-          @miq_server3.server_roles.length.should == 3
-          @miq_server3.inactive_roles.length.should == 1
-          @miq_server3.active_roles.length.should == 2
+          expect(@miq_server3.server_roles.length).to eq(3)
+          expect(@miq_server3.inactive_roles.length).to eq(1)
+          expect(@miq_server3.active_roles.length).to eq(2)
 
-          @miq_server1.active_role_names.include?("ems_operations").should be_true
-          @miq_server1.active_role_names.include?("event").should be_true
-          @miq_server1.active_role_names.include?("ems_inventory").should be_true
-          @miq_server3.active_role_names.include?("ems_metrics_coordinator").should be_true
+          expect(@miq_server1.active_role_names.include?("ems_operations")).to be_truthy
+          expect(@miq_server1.active_role_names.include?("event")).to be_truthy
+          expect(@miq_server1.active_role_names.include?("ems_inventory")).to be_truthy
+          expect(@miq_server3.active_role_names.include?("ems_metrics_coordinator")).to be_truthy
         end
       end
 
@@ -713,9 +713,9 @@ describe "Server Monitor" do
           @miq_server2.reload
           @miq_server3.reload
 
-          @miq_server1.is_master?.should be_true
-          @miq_server2.is_master?.should_not be_true
-          @miq_server3.is_master?.should_not be_true
+          expect(@miq_server1.is_master?).to be_truthy
+          expect(@miq_server2.is_master?).not_to be_truthy
+          expect(@miq_server3.is_master?).not_to be_truthy
         end
 
         it "should migrate roles to Master" do
@@ -723,18 +723,18 @@ describe "Server Monitor" do
           @miq_server2.reload
           @miq_server3.reload
 
-          @miq_server2.status.should == "not responding"
-          @miq_server2.server_roles.length.should == 3
-          @miq_server2.inactive_roles.length.should == 3
-          @miq_server2.active_roles.length.should == 0
+          expect(@miq_server2.status).to eq("not responding")
+          expect(@miq_server2.server_roles.length).to eq(3)
+          expect(@miq_server2.inactive_roles.length).to eq(3)
+          expect(@miq_server2.active_roles.length).to eq(0)
 
-          @miq_server1.inactive_roles.length.should == 0
-          @miq_server1.active_roles.length.should == 3
+          expect(@miq_server1.inactive_roles.length).to eq(0)
+          expect(@miq_server1.active_roles.length).to eq(3)
 
-          @miq_server1.active_role_names.include?("ems_operations").should be_true
-          @miq_server1.active_role_names.include?("event").should be_true
-          @miq_server1.active_role_names.include?("ems_inventory").should be_true
-          @miq_server3.active_role_names.include?("ems_metrics_coordinator").should be_true
+          expect(@miq_server1.active_role_names.include?("ems_operations")).to be_truthy
+          expect(@miq_server1.active_role_names.include?("event")).to be_truthy
+          expect(@miq_server1.active_role_names.include?("ems_inventory")).to be_truthy
+          expect(@miq_server3.active_role_names.include?("ems_metrics_coordinator")).to be_truthy
         end
       end
     end
@@ -757,13 +757,13 @@ describe "Server Monitor" do
         it "should allow only 1 Master in the Region" do
           @miq_server1.monitor_servers
           @miq_server2.reload
-          @miq_server1.is_master.should be_true
-          @miq_server2.is_master.should be_false
+          expect(@miq_server1.is_master).to be_truthy
+          expect(@miq_server2.is_master).to be_falsey
 
           @miq_server2.monitor_servers
           @miq_server2.reload
-          @miq_server1.is_master.should be_true
-          @miq_server2.is_master.should be_false
+          expect(@miq_server1.is_master).to be_truthy
+          expect(@miq_server2.is_master).to be_falsey
         end
 
         it "should allow only 1 Limited Regional Role in the Region" do
@@ -773,8 +773,8 @@ describe "Server Monitor" do
           @miq_server1.monitor_server_roles
           @miq_server2.reload
 
-          (@miq_server1.active_role_names.include?("scheduler") && @miq_server2.active_role_names.include?("scheduler")).should be_false
-          (@miq_server1.active_role_names.include?("scheduler") ^ @miq_server2.active_role_names.include?("scheduler")).should be_true
+          expect(@miq_server1.active_role_names.include?("scheduler") && @miq_server2.active_role_names.include?("scheduler")).to be_falsey
+          expect(@miq_server1.active_role_names.include?("scheduler") ^ @miq_server2.active_role_names.include?("scheduler")).to be_truthy
         end
       end
 
@@ -794,19 +794,19 @@ describe "Server Monitor" do
         end
 
         it "should have proper roles active after start" do
-          @miq_server1.server_roles.length.should == 5
-          @miq_server1.inactive_roles.length.should == 0
-          @miq_server1.active_roles.length.should == 5
+          expect(@miq_server1.server_roles.length).to eq(5)
+          expect(@miq_server1.inactive_roles.length).to eq(0)
+          expect(@miq_server1.active_roles.length).to eq(5)
 
-          @miq_server2.server_roles.length.should == 5
-          @miq_server2.inactive_roles.length.should == 1
-          @miq_server2.active_roles.length.should == 4
+          expect(@miq_server2.server_roles.length).to eq(5)
+          expect(@miq_server2.inactive_roles.length).to eq(1)
+          expect(@miq_server2.active_roles.length).to eq(4)
 
-          (@miq_server1.active_role_names.include?("ems_operations") && @miq_server2.active_role_names.include?("ems_operations")).should be_true
-          (@miq_server1.active_role_names.include?("event") && @miq_server2.active_role_names.include?("event")).should be_true
-          (@miq_server1.active_role_names.include?("ems_metrics_coordinator") && @miq_server2.active_role_names.include?("ems_metrics_coordinator")).should be_true
-          (@miq_server1.active_role_names.include?("reporting") && @miq_server2.active_role_names.include?("reporting")).should be_true
-          (@miq_server1.active_role_names.include?("scheduler") && !@miq_server2.active_role_names.include?("scheduler")).should be_true
+          expect(@miq_server1.active_role_names.include?("ems_operations") && @miq_server2.active_role_names.include?("ems_operations")).to be_truthy
+          expect(@miq_server1.active_role_names.include?("event") && @miq_server2.active_role_names.include?("event")).to be_truthy
+          expect(@miq_server1.active_role_names.include?("ems_metrics_coordinator") && @miq_server2.active_role_names.include?("ems_metrics_coordinator")).to be_truthy
+          expect(@miq_server1.active_role_names.include?("reporting") && @miq_server2.active_role_names.include?("reporting")).to be_truthy
+          expect(@miq_server1.active_role_names.include?("scheduler") && !@miq_server2.active_role_names.include?("scheduler")).to be_truthy
         end
 
         context "Server2 moved into zone of Server 1" do
@@ -818,18 +818,18 @@ describe "Server Monitor" do
           it "should resolve 1 Master in the Zone" do
             @miq_server1.monitor_servers
             @miq_server2.reload
-            @miq_server1.is_master?.should be_true
-            @miq_server2.is_master?.should_not be_true
+            expect(@miq_server1.is_master?).to be_truthy
+            expect(@miq_server2.is_master?).not_to be_truthy
           end
 
           it "should have proper roles after rezoning" do
             @miq_server1.monitor_server_roles
             @miq_server2.reload
-            (@miq_server1.active_role_names.include?("ems_operations") && @miq_server2.active_role_names.include?("ems_operations")).should be_true
-            (@miq_server1.active_role_names.include?("event") && !@miq_server2.active_role_names.include?("event")).should be_true
-            (!@miq_server1.active_role_names.include?("ems_metrics_coordinator") && @miq_server2.active_role_names.include?("ems_metrics_coordinator")).should be_true
-            (@miq_server1.active_role_names.include?("reporting") && @miq_server2.active_role_names.include?("reporting")).should be_true
-            (@miq_server1.active_role_names.include?("scheduler") && !@miq_server2.active_role_names.include?("scheduler")).should be_true
+            expect(@miq_server1.active_role_names.include?("ems_operations") && @miq_server2.active_role_names.include?("ems_operations")).to be_truthy
+            expect(@miq_server1.active_role_names.include?("event") && !@miq_server2.active_role_names.include?("event")).to be_truthy
+            expect(!@miq_server1.active_role_names.include?("ems_metrics_coordinator") && @miq_server2.active_role_names.include?("ems_metrics_coordinator")).to be_truthy
+            expect(@miq_server1.active_role_names.include?("reporting") && @miq_server2.active_role_names.include?("reporting")).to be_truthy
+            expect(@miq_server1.active_role_names.include?("scheduler") && !@miq_server2.active_role_names.include?("scheduler")).to be_truthy
           end
         end
       end

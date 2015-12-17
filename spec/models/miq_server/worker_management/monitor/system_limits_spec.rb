@@ -23,12 +23,12 @@ describe MiqServer do
       context "#enough_resource_to_start_worker?" do
         it "70% swap used" do
           MiqSystem.stub(:memory => @memory_usage.merge(:SwapFree => 3.gigabytes))
-          expect(@server.enough_resource_to_start_worker?(MiqGenericWorker)).to be_false
+          expect(@server.enough_resource_to_start_worker?(MiqGenericWorker)).to be_falsey
         end
 
         it "30% swap used" do
           MiqSystem.stub(:memory => @memory_usage.merge(:SwapFree => 7.gigabytes))
-          expect(@server.enough_resource_to_start_worker?(MiqGenericWorker)).to be_true
+          expect(@server.enough_resource_to_start_worker?(MiqGenericWorker)).to be_truthy
         end
 
         it "child_worker_settings overrides worker_monitor_settings" do
@@ -42,19 +42,19 @@ describe MiqServer do
           @server.stub(:child_worker_settings => child)
 
           MiqSystem.stub(:memory => @memory_usage.merge(:SwapFree => 7.gigabytes))
-          expect(@server.enough_resource_to_start_worker?(MiqGenericWorker)).to be_false
+          expect(@server.enough_resource_to_start_worker?(MiqGenericWorker)).to be_falsey
         end
       end
 
       context "#kill_workers_due_to_resources_exhausted?" do
         it "90% swap used" do
           MiqSystem.stub(:memory => @memory_usage.merge(:SwapFree => 1.gigabytes))
-          expect(@server.kill_workers_due_to_resources_exhausted?).to be_true
+          expect(@server.kill_workers_due_to_resources_exhausted?).to be_truthy
         end
 
         it "70% swap used" do
           MiqSystem.stub(:memory => @memory_usage.merge(:SwapFree => 3.gigabytes))
-          expect(@server.kill_workers_due_to_resources_exhausted?).to be_false
+          expect(@server.kill_workers_due_to_resources_exhausted?).to be_falsey
         end
       end
     end
