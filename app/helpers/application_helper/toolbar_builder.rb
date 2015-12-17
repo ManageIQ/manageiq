@@ -868,6 +868,12 @@ class ApplicationHelper::ToolbarBuilder
         return true unless @report
       when "timeline_txt"
         return true unless @report
+      when "vm_clone", "vm_publish", "vm_migrate"
+        if @sb[:trees][:vandt_tree].present? &&
+           (@sb[:trees][:vandt_tree][:active_node] == "xx-arch" ||
+            @sb[:trees][:vandt_tree][:active_node] == "xx-orph")
+          return "%{task} does not apply to archived or orphaned VMs" % {:task => id.split('_').last.capitalize}
+        end
       else
         return !role_allows(:feature => id)
       end
@@ -1160,6 +1166,10 @@ class ApplicationHelper::ToolbarBuilder
       when "instance_check_compliance", "vm_check_compliance"
         model = model_for_vm(@record).to_s
         return "No Compliance Policies assigned to this #{model == "ManageIQ::Providers::InfraManager::Vm" ? "VM" : ui_lookup(:model => model)}" unless @record.has_compliance_policies?
+      when "vm_clone", "vm_publish", "vm_migrate"
+        task = id.split('_').last
+        return "%{task} does not apply to archived or orphaned VMs" % {:task => task.capitalize} unless @record.is_available?(task)
+      when "wm_publish"
       when "vm_collect_running_processes"
         return @record.is_available_now_error_message(:collect_running_processes) if @record.is_available_now_error_message(:collect_running_processes)
       when "vm_console", "vm_vmrc_console"
