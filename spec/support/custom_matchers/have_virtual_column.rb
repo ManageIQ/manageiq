@@ -3,7 +3,7 @@ RSpec::Matchers.define :have_virtual_column do |name, type|
     vcol = klass.virtual_columns_hash[name.to_s]
     vcol.should_not  be_nil
     vcol.type.should == type
-    klass.instance_methods.include?(name.to_sym).should be_true
+    klass.instance_methods.include?(name.to_sym).should be_truthy
   end
 
   failure_message_for_should do |klass|

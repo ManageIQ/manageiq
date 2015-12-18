@@ -21,10 +21,10 @@ module AutomationSpecHelper
 
   def assert_method_executed(uri, value, user)
     ws = MiqAeEngine.instantiate(uri, user)
-    ws.should_not be_nil
+    expect(ws).not_to be_nil
     roots = ws.roots
-    roots.should have(1).item
-    roots.first.attributes['method_executed'].should == value
+    expect(roots.size).to eq(1)
+    expect(roots.first.attributes['method_executed']).to eq(value)
   end
 
   def create_ae_model(attrs = {})
