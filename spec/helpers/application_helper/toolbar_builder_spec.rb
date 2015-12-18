@@ -2928,6 +2928,16 @@ describe ApplicationHelper do
       expect(build_toolbar_hide_button('miq_ae_class_edit')).to be_truthy
     end
 
+    it "Enables copy button when there are Editable domains available" do
+      expect(build_toolbar_hide_button('miq_ae_class_copy')).to be_falsey
+    end
+
+    it "Disables copy button when there are no Editable domains available" do
+      @domain.update_attributes(:system => true)
+      @domain.reload
+      expect(build_toolbar_hide_button('miq_ae_class_copy')).to be_truthy
+    end
+
     def role_allows(_)
       true
     end

@@ -488,6 +488,25 @@ describe Tenant do
       dom1
       expect(dom1.tenant.name).to eq(t1.name)
     end
+
+    it "no editable domains available for current tenant" do
+      t1_1
+      FactoryGirl.create(:miq_ae_domain,
+                         :name      => 'non_editable',
+                         :priority  => 3,
+                         :tenant_id => t1_1.id,
+                         :system    => true)
+      expect(t1_1.any_editable_domains?).to eq(false)
+    end
+
+    it "editable domains available for current_tenant" do
+      t1_1
+      FactoryGirl.create(:miq_ae_domain,
+                         :name      => 'editable',
+                         :priority  => 3,
+                         :tenant_id => t1_1.id)
+      expect(t1_1.any_editable_domains?).to eq(true)
+    end
   end
 
   describe ".set_quotas" do
