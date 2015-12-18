@@ -7,10 +7,10 @@ describe MiqPolicyImportService do
 
   describe "#cancel_import" do
     before do
-      import_file_upload.stub(:destroy)
-      miq_queue.stub(:destroy)
-      ImportFileUpload.stub(:find).with(123).and_return(import_file_upload)
-      MiqQueue.stub(:first).with(
+      allow(import_file_upload).to receive(:destroy)
+      allow(miq_queue).to receive(:destroy)
+      allow(ImportFileUpload).to receive(:find).with(123).and_return(import_file_upload)
+      allow(MiqQueue).to receive(:first).with(
         :conditions => {
           :class_name  => "ImportFileUpload",
           :instance_id => 123,
@@ -20,25 +20,25 @@ describe MiqPolicyImportService do
     end
 
     it "destroys the import file upload" do
-      import_file_upload.should_receive(:destroy)
+      expect(import_file_upload).to receive(:destroy)
       miq_policy_import_service.cancel_import(123)
     end
 
     it "destroys the queue item" do
-      miq_queue.should_receive(:destroy)
+      expect(miq_queue).to receive(:destroy)
       miq_policy_import_service.cancel_import(123)
     end
   end
 
   describe "#import_policy" do
     before do
-      import_file_upload.stub(:destroy)
-      import_file_upload.stub(:uploaded_yaml_content).and_return("upload_content")
-      miq_queue.stub(:destroy)
+      allow(import_file_upload).to receive(:destroy)
+      allow(import_file_upload).to receive(:uploaded_yaml_content).and_return("upload_content")
+      allow(miq_queue).to receive(:destroy)
 
-      ImportFileUpload.stub(:find).with(123).and_return(import_file_upload)
-      MiqPolicy.stub(:import_from_array)
-      MiqQueue.stub(:first).with(
+      allow(ImportFileUpload).to receive(:find).with(123).and_return(import_file_upload)
+      allow(MiqPolicy).to receive(:import_from_array)
+      allow(MiqQueue).to receive(:first).with(
         :conditions => {
           :class_name  => "ImportFileUpload",
           :instance_id => 123,
@@ -48,17 +48,17 @@ describe MiqPolicyImportService do
     end
 
     it "imports the policy using MiqPolicy" do
-      MiqPolicy.should_receive(:import_from_array).with("upload_content", :save => true)
+      expect(MiqPolicy).to receive(:import_from_array).with("upload_content", :save => true)
       miq_policy_import_service.import_policy(123)
     end
 
     it "destroys the import file upload" do
-      import_file_upload.should_receive(:destroy)
+      expect(import_file_upload).to receive(:destroy)
       miq_policy_import_service.import_policy(123)
     end
 
     it "destroys the queue item" do
-      miq_queue.should_receive(:destroy)
+      expect(miq_queue).to receive(:destroy)
       miq_policy_import_service.import_policy(123)
     end
   end
@@ -69,23 +69,23 @@ describe MiqPolicyImportService do
 
     context "when the import does not raise an error" do
       before do
-        MiqPolicy.stub(:import).with("file contents", :preview => true).and_return(:uploaded => "content")
-        MiqQueue.stub(:put_or_update)
-        ImportFileUpload.stub(:create).and_return(import_file_upload)
+        allow(MiqPolicy).to receive(:import).with("file contents", :preview => true).and_return(:uploaded => "content")
+        allow(MiqQueue).to receive(:put_or_update)
+        allow(ImportFileUpload).to receive(:create).and_return(import_file_upload)
       end
 
       it "stores the import file upload" do
-        import_file_upload.should_receive(:store_binary_data_as_yml).with("---\n:uploaded: content\n", "Policy import")
+        expect(import_file_upload).to receive(:store_binary_data_as_yml).with("---\n:uploaded: content\n", "Policy import")
         miq_policy_import_service.store_for_import(file_contents)
       end
 
       it "returns the import file upload" do
-        miq_policy_import_service.store_for_import(file_contents).should == import_file_upload
+        expect(miq_policy_import_service.store_for_import(file_contents)).to eq(import_file_upload)
       end
 
       it "queues deletion of the object" do
         Timecop.freeze(2014, 3, 4) do
-          MiqQueue.should_receive(:put_or_update).with(
+          expect(MiqQueue).to receive(:put_or_update).with(
             :class_name  => "ImportFileUpload",
             :instance_id => 1,
             :deliver_on  => 1.day.from_now,
@@ -98,7 +98,7 @@ describe MiqPolicyImportService do
 
     context "when the import does raise an error" do
       before do
-        MiqPolicy.stub(:import).with("file contents", :preview => true).and_raise
+        allow(MiqPolicy).to receive(:import).with("file contents", :preview => true).and_raise
       end
 
       it "reraises an InvalidMiqPolicyYaml error with a message" do
