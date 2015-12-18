@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe "Widget Report Content" do
+describe MiqWidget, "::ReportContent" do
   let(:widget) do
     MiqWidget.sync_from_hash(YAML.load('
     description: report_vendor_and_guest_os
@@ -33,7 +33,7 @@ describe "Widget Report Content" do
     end
   end
 
-  it "#generate_content_for_user" do
+  it "#generate_one_content_for_user" do
     content = widget.generate_one_content_for_user(@admin_group, @admin)
     content.should be_kind_of MiqWidgetContent
     content.contents.scan("</tr>").length.should == widget.options[:row_count] + 1
@@ -45,7 +45,7 @@ describe "Widget Report Content" do
     widget.contents_for_user(@admin).should == content
   end
 
-  it "#generate_content_for_group" do
+  it "#generate_one_content_for_group" do
     content = widget.generate_one_content_for_group(@admin.current_group, @admin.get_timezone)
     content.should be_kind_of MiqWidgetContent
     content.contents.scan("</tr>").length.should == widget.options[:row_count] + 1
@@ -57,7 +57,7 @@ describe "Widget Report Content" do
     widget.contents_for_user(@admin).should == content
   end
 
-  it "should work for self service users (FB#17125)" do
+  it "#generate with self service user" do
     self_service_role = FactoryGirl.create(
       :miq_user_role,
       :name     => "ss_role",
@@ -70,8 +70,7 @@ describe "Widget Report Content" do
       :miq_user_role => self_service_role
     )
     user2   = FactoryGirl.create(:user, :miq_groups => [self_service_group])
-
-    report = widget.generate_report(self_service_group, user2)
+    report  = widget.generate_report(self_service_group, user2)
     content = MiqWidget::ReportContent.new(:report => report, :resource => widget.resource, :timezone => "UTC", :widget_options => widget.options)
 
     -> { content.generate(user2) }.should_not raise_error
