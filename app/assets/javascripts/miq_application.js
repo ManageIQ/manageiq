@@ -1022,7 +1022,8 @@ function miqSearchByName(button) {
 // Send transaction to server so automate tree selection box can be made active
 // and rest of the screen can be blocked
 function miqShowAE_Tree(typ) {
-  miqJqueryRequest(miqPassFields("ae_tree_select_toggle", {typ: typ}));
+  ae_url = "/" + ManageIQ.controller + "/ae_tree_select_toggle";
+  miqJqueryRequest(miqPassFields(ae_url, {typ: typ}));
   return true;
 }
 
