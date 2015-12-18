@@ -774,6 +774,7 @@ Vmdb::Application.routes.draw do
         edit
         index
         new
+        perf_top_chart
         show
         show_list
         tagging_edit
@@ -800,6 +801,7 @@ Vmdb::Application.routes.draw do
                adv_search_post +
                compare_post +
                exp_post +
+               perf_post +
                save_post
     },
 

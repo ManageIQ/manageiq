@@ -3027,6 +3027,10 @@
       :description: Display Individual Containers Providers
       :feature_type: view
       :identifier: ems_container_show
+    - :name: Utilization
+      :description: Show Capacity & Utilization data of Providers
+      :feature_type: view
+      :identifier: ems_container_perf
     - :name: Timeline
       :description: Display Timelines for Containers Providers
       :feature_type: view
