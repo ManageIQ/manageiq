@@ -30,42 +30,42 @@ describe ServiceTemplateProvisionRequest do
 
     it "pending state" do
       @request.update_request_status
-      @request.message.should == "Pending = 4"
-      @request.state.should == "pending"
-      @request.status.should == "Ok"
+      expect(@request.message).to eq("Pending = 4")
+      expect(@request.state).to eq("pending")
+      expect(@request.status).to eq("Ok")
     end
 
     it "queued state" do
       @task_1_1.update_and_notify_parent(:state => "queued", :status => "Ok", :message => "Test Message")
       @request.reload
-      @request.message.should == "Pending = 2; Queued = 2"
-      @request.state.should == "active"
-      @request.status.should == "Ok"
+      expect(@request.message).to eq("Pending = 2; Queued = 2")
+      expect(@request.state).to eq("active")
+      expect(@request.status).to eq("Ok")
     end
 
     it "all queued state" do
       @task_1_1.update_and_notify_parent(:state => "queued", :status => "Ok", :message => "Test Message")
       @task_2_1.update_and_notify_parent(:state => "queued", :status => "Ok", :message => "Test Message")
       @request.reload
-      @request.message.should == "Queued = 4"
-      @request.state.should == "queued"
-      @request.status.should == "Ok"
+      expect(@request.message).to eq("Queued = 4")
+      expect(@request.state).to eq("queued")
+      expect(@request.status).to eq("Ok")
     end
 
     it "active state" do
       @task_1_1.update_and_notify_parent(:state => "active", :status => "Ok", :message => "Test Message")
       @request.reload
-      @request.message.should == "Active = 2; Pending = 2"
-      @request.state.should == "active"
-      @request.status.should == "Ok"
+      expect(@request.message).to eq("Active = 2; Pending = 2")
+      expect(@request.state).to eq("active")
+      expect(@request.status).to eq("Ok")
     end
 
     it "partial tasks finished" do
       @task_1_1.update_and_notify_parent(:state => "finished", :status => "Ok", :message => "Test Message")
       @request.reload
-      @request.message.should == "Finished = 1; Pending = 2; Provisioned = 1"
-      @request.state.should == "active"
-      @request.status.should == "Ok"
+      expect(@request.message).to eq("Finished = 1; Pending = 2; Provisioned = 1")
+      expect(@request.state).to eq("active")
+      expect(@request.status).to eq("Ok")
     end
 
     it "finished state" do
@@ -74,39 +74,39 @@ describe ServiceTemplateProvisionRequest do
       @task_2.update_attributes(:state => "finished")
       @task_2_1.update_and_notify_parent(:state => "finished", :status => "Ok", :message => "Test Message")
       @request.reload
-      @request.message.should == "Request complete"
-      @request.state.should == "finished"
-      @request.status.should == "Ok"
+      expect(@request.message).to eq("Request complete")
+      expect(@request.state).to eq("finished")
+      expect(@request.status).to eq("Ok")
     end
 
     it "active with error state" do
       @task_1_1.update_and_notify_parent(:state => "active", :status => "Error", :message => "Error Message")
       @request.reload
-      @request.message.should == "Active = 2; Pending = 2"
-      @request.state.should == "active"
-      @request.status.should == "Error"
+      expect(@request.message).to eq("Active = 2; Pending = 2")
+      expect(@request.state).to eq("active")
+      expect(@request.status).to eq("Error")
     end
 
     it "partial finish with error state" do
       @task_1_1.update_and_notify_parent(:state => "finished", :status => "Error", :message => "Error Message")
       @request.reload
-      @request.message.should == "Finished = 2; Pending = 2"
-      @request.state.should == "active"
-      @request.status.should == "Error"
+      expect(@request.message).to eq("Finished = 2; Pending = 2")
+      expect(@request.state).to eq("active")
+      expect(@request.status).to eq("Error")
     end
 
     it "finished with errors state" do
       @task_1_1.update_and_notify_parent(:state => "finished", :status => "Error", :message => "Error Message")
       @task_2_1.update_and_notify_parent(:state => "finished", :status => "Error", :message => "Test Message")
       @request.reload
-      @request.message.should == "Request completed with errors"
-      @request.state.should == "finished"
-      @request.status.should == "Error"
+      expect(@request.message).to eq("Request completed with errors")
+      expect(@request.state).to eq("finished")
+      expect(@request.status).to eq("Error")
     end
 
     it "generic service do_request" do
-      -> { @task_1_1.do_request }.should_not raise_error
-      @task_1_1.state.should == 'provisioned'
+      expect { @task_1_1.do_request }.not_to raise_error
+      expect(@task_1_1.state).to eq('provisioned')
     end
   end
 

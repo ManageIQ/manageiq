@@ -2,19 +2,19 @@ require "spec_helper"
 
 describe ServiceResource do
   it "default values" do
-    subject.group_idx.should == 0
-    subject.scaling_min.should == 1
-    subject.scaling_max.should == -1
-    subject.provision_index.should == 0
+    expect(subject.group_idx).to eq(0)
+    expect(subject.scaling_min).to eq(1)
+    expect(subject.scaling_max).to eq(-1)
+    expect(subject.provision_index).to eq(0)
   end
 
   context "with a nil resource" do
     it "#resource_name" do
-      subject.resource_name.should == ""
+      expect(subject.resource_name).to eq("")
     end
 
     it "#resource_description" do
-      subject.resource_description.should == ""
+      expect(subject.resource_description).to eq("")
     end
   end
 
@@ -25,11 +25,11 @@ describe ServiceResource do
     end
 
     it "#resource_name" do
-      subject.resource_name.should == @service.name
+      expect(subject.resource_name).to eq(@service.name)
     end
 
     it "#resource_description" do
-      subject.resource_description.should == @service.description
+      expect(subject.resource_description).to eq(@service.description)
     end
   end
 end

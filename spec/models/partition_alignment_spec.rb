@@ -88,23 +88,23 @@ describe "PartitionAlignment" do
     end
 
     it "should return True for Vm alignment method" do
-      @vm1.disks_aligned.should == "True"
+      expect(@vm1.disks_aligned).to eq("True")
     end
 
     it "should return False for Vm alignment method" do
-      @vm2.disks_aligned.should == "False"
+      expect(@vm2.disks_aligned).to eq("False")
     end
 
     it "should return Unknown for Vm with no disks" do
-      @vm3.disks_aligned.should == "Unknown"
+      expect(@vm3.disks_aligned).to eq("Unknown")
     end
 
     it "should return Unknown for Vm with disk with no partitions" do
-      @vm4.disks_aligned.should == "Unknown"
+      expect(@vm4.disks_aligned).to eq("Unknown")
     end
 
     it "should return Unknown for Vm with disk with a partition that has no start_address" do
-      @vm5.disks_aligned.should == "Unknown"
+      expect(@vm5.disks_aligned).to eq("Unknown")
     end
   end
 end

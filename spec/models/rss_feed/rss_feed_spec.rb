@@ -14,7 +14,7 @@ describe RssFeed do
     it "#generate 2 hosts in newest_hosts rss" do
       RssFeed.sync_from_yml_file("newest_hosts")
       feed_container = RssFeed.where(:name => "newest_hosts").first.generate
-      feed_container[:text].should == <<-EOXML
+      expect(feed_container[:text]).to eq <<-EOXML
 <?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <rss version=\"2.0\">
   <channel>
@@ -40,7 +40,7 @@ describe RssFeed do
   </channel>
 </rss>
 EOXML
-      feed_container[:content_type].should == 'application/rss+xml'
+      expect(feed_container[:content_type]).to eq('application/rss+xml')
     end
   end
 
@@ -50,23 +50,23 @@ EOXML
     end
 
     it "loads the files from the yaml directory" do
-      RssFeed.count.should == Dir.glob(File.join(Y_DIR, "*.yml")).count
+      expect(RssFeed.count).to eq(Dir.glob(File.join(Y_DIR, "*.yml")).count)
     end
 
     it "when new yaml file is added" do
       all_files = Dir.glob(File.join(Y_DIR, "*.yml")) + [File.join(Y_DIR, "test.yml")]
-      Dir.stub(:glob).and_return(all_files)
+      allow(Dir).to receive(:glob).and_return(all_files)
 
-      described_class.should_receive(:sync_from_yml_file).exactly(all_files.length).times
+      expect(described_class).to receive(:sync_from_yml_file).exactly(all_files.length).times
       described_class.sync_from_yml_dir
     end
 
     it "when a yaml file is deleted" do
-      RssFeed.count.should > 0
+      expect(RssFeed.count).to be > 0
 
-      File.stub(:exist?).and_return(false)
+      allow(File).to receive(:exist?).and_return(false)
       described_class.sync_from_yml_dir
-      RssFeed.count.should == 0
+      expect(RssFeed.count).to eq(0)
     end
   end
 
@@ -77,7 +77,7 @@ EOXML
 
     it "when the model does not exist" do
       described_class.sync_from_yml_file(@name)
-      RssFeed.count.should == 1
+      expect(RssFeed.count).to eq(1)
     end
 
     it "when the yaml file is updated" do
@@ -92,14 +92,14 @@ EOXML
         EOF
 
       File.stub(:mtime => Time.now.utc)
-      File.stub(:read).and_return(NEW_YML_FILE)
+      allow(File).to receive(:read).and_return(NEW_YML_FILE)
 
       described_class.sync_from_yml_file(@name)
-      RssFeed.count.should == old_count
+      expect(RssFeed.count).to eq(old_count)
 
       feed = RssFeed.find_by_name(@name)
-      feed.title.should == "new_title"
-      feed.description.should == "new_description"
+      expect(feed.title).to eq("new_title")
+      expect(feed.description).to eq("new_description")
     end
   end
 end

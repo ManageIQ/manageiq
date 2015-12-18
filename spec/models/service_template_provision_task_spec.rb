@@ -64,8 +64,8 @@ describe ServiceTemplateProvisionTask do
         :miq_group_id     => @admin.current_group_id,
         :tenant_id        => @admin.current_tenant.id,
       }
-      @task_0.stub(:task_check_on_execute)
-      MiqQueue.should_receive(:put).with(
+      allow(@task_0).to receive(:task_check_on_execute)
+      expect(MiqQueue).to receive(:put).with(
         :class_name  => 'MiqAeEngine',
         :method_name => 'deliver',
         :args        => [automate_args],
@@ -76,39 +76,39 @@ describe ServiceTemplateProvisionTask do
     end
 
     it "service 1 child provision priority" do
-      @task_1_1.provision_priority.should == 1
+      expect(@task_1_1.provision_priority).to eq(1)
     end
 
     it "service 2 child provision priority" do
-      @task_2_1.provision_priority.should == 2
+      expect(@task_2_1.provision_priority).to eq(2)
     end
 
     it "service 1 can run now" do
-      @task_1.group_sequence_run_now?.should == true
+      expect(@task_1.group_sequence_run_now?).to eq(true)
     end
 
     it "service 1 child 1 can run now" do
-      @task_1_1.group_sequence_run_now?.should == true
+      expect(@task_1_1.group_sequence_run_now?).to eq(true)
     end
 
     it "service 1 child 2 cannot run yet" do
-      @task_1_2.group_sequence_run_now?.should == false
+      expect(@task_1_2.group_sequence_run_now?).to eq(false)
     end
 
     it "service 2 cannot run yet" do
-      @task_2.group_sequence_run_now?.should == false
+      expect(@task_2.group_sequence_run_now?).to eq(false)
     end
 
     it "service 2 child 1 cannot run yet" do
-      @task_2_1.group_sequence_run_now?.should == false
+      expect(@task_2_1.group_sequence_run_now?).to eq(false)
     end
 
     it "service 3 can run now" do
-      @task_3.group_sequence_run_now?.should == true
+      expect(@task_3.group_sequence_run_now?).to eq(true)
     end
 
     it "call task_finished" do
-      @task_1_2.should_receive(:task_finished).once
+      expect(@task_1_2).to receive(:task_finished).once
       @task_1_2.update_and_notify_parent(:state => "finished", :status => "Ok", :message => "Test Message")
     end
 

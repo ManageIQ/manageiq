@@ -21,31 +21,31 @@ describe ResourceActionWorkflow do
     it "new from resource_action" do
       @wf = ResourceActionWorkflow.new({}, admin, @resource_action)
       values = @wf.create_values_hash
-      values.fetch_path(:workflow_settings, :resource_action_id).should == @resource_action.id
-      @wf.dialog.id.should == @dialog.id
+      expect(values.fetch_path(:workflow_settings, :resource_action_id)).to eq(@resource_action.id)
+      expect(@wf.dialog.id).to eq(@dialog.id)
     end
 
     it "new from hash" do
       nh = {:workflow_settings => {:resource_action_id => @resource_action.id}}
       @wf = ResourceActionWorkflow.new(nh, admin, nil)
       values = @wf.create_values_hash
-      values.fetch_path(:workflow_settings, :resource_action_id).should == @resource_action.id
-      @wf.dialog.id.should == @dialog.id
+      expect(values.fetch_path(:workflow_settings, :resource_action_id)).to eq(@resource_action.id)
+      expect(@wf.dialog.id).to eq(@dialog.id)
     end
 
     it "load default_value" do
       @dialog_field.update_attribute(:default_value, "testing default")
       @wf = ResourceActionWorkflow.new({}, admin, @resource_action)
-      @wf.value(@dialog_field.name).should == "testing default"
+      expect(@wf.value(@dialog_field.name)).to eq("testing default")
       df = @wf.dialog_field(@dialog_field.name)
-      df.value.should == "testing default"
+      expect(df.value).to eq("testing default")
     end
 
     it "field_name_exists?" do
-      @dialog.field_name_exist?('field_1').should  be_true
-      @dialog.field_name_exist?('field_11').should be_false
-      @dialog.field_name_exist?('FIELD_11').should be_false
-      @dialog.field_name_exist?(:field_11).should  be_false
+      expect(@dialog.field_name_exist?('field_1')).to  be_truthy
+      expect(@dialog.field_name_exist?('field_11')).to be_falsey
+      expect(@dialog.field_name_exist?('FIELD_11')).to be_falsey
+      expect(@dialog.field_name_exist?(:field_11)).to  be_falsey
     end
 
     context "with workflow" do
@@ -55,7 +55,7 @@ describe ResourceActionWorkflow do
 
       it "set_value" do
         @wf.set_value(:field_1, "test_var_1")
-        @wf.value(:field_1).should == "test_var_1"
+        expect(@wf.value(:field_1)).to eq("test_var_1")
       end
 
       it "#validate" do
