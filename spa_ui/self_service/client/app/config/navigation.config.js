@@ -47,18 +47,34 @@
     NavCounts.add('marketplace', fetchServiceTemplates, 60 * 1000);
 
     function fetchRequests() {
-      CollectionsApi.query('service_requests').then(lodash.partial(updateCount, 'requests'));
+      var options = {
+        _auto_refresh: true,
+      };
+
+      CollectionsApi.query('service_requests', options)
+        .then(lodash.partial(updateCount, 'requests'));
     }
 
     function fetchServices() {
-      var options = {expand: false, filter: ['service_id>0'] };
-      CollectionsApi.query('services', options).then(lodash.partial(updateServicesCount, 'services'));
+      var options = {
+        expand: false,
+        filter: ['service_id>0'],
+        _auto_refresh: true,
+      };
+
+      CollectionsApi.query('services', options)
+        .then(lodash.partial(updateServicesCount, 'services'));
     }
 
     function fetchServiceTemplates() {
-      var options = {expand: false, filter: ['service_template_catalog_id>0', 'display=true'] };
-      CollectionsApi.query('service_templates', options).then(
-        lodash.partial(updateServiceTemplatesCount, 'marketplace'));
+      var options = {
+        expand: false,
+        filter: ['service_template_catalog_id>0', 'display=true'],
+        _auto_refresh: true,
+      };
+
+      CollectionsApi.query('service_templates', options)
+        .then(lodash.partial(updateServiceTemplatesCount, 'marketplace'));
     }
 
     function updateCount(item, data) {
