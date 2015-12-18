@@ -67,7 +67,7 @@ describe ApiController do
       expect_single_resource_query("id" => svc.id, "name" => "updated svc1", "display" => true)
       expect(svc.reload.name).to eq("updated svc1")
       expect(svc.description).to be_nil
-      expect(svc.display).to be true
+      expect(svc.display).to be_truthy
     end
 
     it "supports edits of multiple resources" do

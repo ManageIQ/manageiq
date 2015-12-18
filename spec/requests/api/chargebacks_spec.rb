@@ -79,7 +79,7 @@ RSpec.describe "chargebacks API" do
       expect { run_post rates_url, :rate => "0", :enabled => true }.to change(ChargebackRateDetail, :count).by(1)
       actual = @result["results"].first
       expect(actual["rate"]).to eq("0")
-      expect(actual["enabled"]).to be true
+      expect(actual["enabled"]).to be_truthy
       expect_request_success
     end
 

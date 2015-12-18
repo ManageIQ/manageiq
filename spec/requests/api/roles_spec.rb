@@ -121,11 +121,11 @@ describe ApiController do
 
       run_get "#{roles_url}/#{role_id}/", :expand => "features"
 
-      expect(MiqUserRole.exists?(role_id)).to be true
+      expect(MiqUserRole.exists?(role_id)).to be_truthy
       role = MiqUserRole.find(role_id)
 
       sample_role1['features'].each do |feature|
-        expect(role.allows?(feature)).to be true
+        expect(role.allows?(feature)).to be_truthy
       end
     end
 
@@ -138,10 +138,10 @@ describe ApiController do
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       role_id = @result["results"].first["id"]
-      expect(MiqUserRole.exists?(role_id)).to be true
+      expect(MiqUserRole.exists?(role_id)).to be_truthy
       role = MiqUserRole.find(role_id)
       sample_role1['features'].each do |feature|
-        expect(role.allows?(feature)).to be true
+        expect(role.allows?(feature)).to be_truthy
       end
     end
 
@@ -156,17 +156,17 @@ describe ApiController do
       results = @result["results"]
       r1_id = results.first["id"]
       r2_id = results.second["id"]
-      expect(MiqUserRole.exists?(r1_id)).to be true
-      expect(MiqUserRole.exists?(r2_id)).to be true
+      expect(MiqUserRole.exists?(r1_id)).to be_truthy
+      expect(MiqUserRole.exists?(r2_id)).to be_truthy
 
       role1 = MiqUserRole.find(r1_id)
       role2 = MiqUserRole.find(r2_id)
 
       sample_role1['features'].each do |feature|
-        expect(role1.allows?(feature)).to be true
+        expect(role1.allows?(feature)).to be_truthy
       end
       sample_role2['features'].each do |feature|
-        expect(role2.allows?(feature)).to be true
+        expect(role2.allows?(feature)).to be_truthy
       end
     end
   end
@@ -238,10 +238,10 @@ describe ApiController do
       role = MiqUserRole.find(role.id)
 
       # Confirm original feature
-      expect(role.allows?(:identifier => 'miq_request_approval')).to be true
+      expect(role.allows?(:identifier => 'miq_request_approval')).to be_truthy
 
       # Confirm new feature
-      expect(role.allows?(new_feature)).to be true
+      expect(role.allows?(new_feature)).to be_truthy
     end
 
     it "supports assigning multiple product features" do
@@ -258,11 +258,11 @@ describe ApiController do
       role = MiqUserRole.find(role.id)
 
       # Confirm original feature
-      expect(role.allows?(:identifier => 'miq_request_approval')).to be true
+      expect(role.allows?(:identifier => 'miq_request_approval')).to be_truthy
 
       # Confirm new features
       features_list['features'].each do |feature|
-        expect(role.allows?(feature)).to be true
+        expect(role.allows?(feature)).to be_truthy
       end
     end
 
@@ -282,8 +282,8 @@ describe ApiController do
       role = MiqUserRole.find(role.id)
 
       @product_features.each do |feature|
-        expect(role.allows?(feature)).to be true unless feature[:identifier].eql?('ems_infra_tag')
-        expect(role.allows?(feature)).to be false if feature[:identifier].eql?('ems_infra_tag')
+        expect(role.allows?(feature)).to be_truthy unless feature[:identifier].eql?('ems_infra_tag')
+        expect(role.allows?(feature)).to be_falsey if feature[:identifier].eql?('ems_infra_tag')
       end
     end
 
@@ -302,10 +302,10 @@ describe ApiController do
 
       # Confirm requested features removed first, and others remain
       @product_features.each do |feature|
-        expect(role.allows?(feature)).to be true unless features_list['features'].find do |removed_feature|
+        expect(role.allows?(feature)).to be_truthy unless features_list['features'].find do |removed_feature|
           removed_feature[:identifier] == feature[:identifier]
         end
-        expect(role.allows?(feature)).to be false if features_list['features'].find do |removed_feature|
+        expect(role.allows?(feature)).to be_falsey if features_list['features'].find do |removed_feature|
           removed_feature[:identifier] == feature[:identifier]
         end
       end
@@ -345,7 +345,7 @@ describe ApiController do
       run_delete(roles_url(role.id))
 
       expect_request_success_with_no_content
-      expect(MiqUserRole.exists?(role.id)).to be false
+      expect(MiqUserRole.exists?(role.id)).to be_falsey
     end
 
     it "supports single role delete action" do
@@ -356,7 +356,7 @@ describe ApiController do
       run_post(roles_url(role.id), gen_request(:delete))
 
       expect_request_success
-      expect(MiqUserRole.exists?(role.id)).to be false
+      expect(MiqUserRole.exists?(role.id)).to be_falsey
     end
 
     it "supports multiple role deletes" do
@@ -370,8 +370,8 @@ describe ApiController do
                                        {"href" => roles_url(r2.id)}]))
 
       expect_request_success
-      expect(MiqUserRole.exists?(r1.id)).to be false
-      expect(MiqUserRole.exists?(r2.id)).to be false
+      expect(MiqUserRole.exists?(r1.id)).to be_falsey
+      expect(MiqUserRole.exists?(r2.id)).to be_falsey
     end
   end
 end

@@ -83,7 +83,7 @@ describe ApiController do
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       group_id = @result["results"].first["id"]
-      expect(MiqGroup.exists?(group_id)).to be true
+      expect(MiqGroup.exists?(group_id)).to be_truthy
     end
 
     it "supports single group creation via action" do
@@ -95,7 +95,7 @@ describe ApiController do
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       group_id = @result["results"].first["id"]
-      expect(MiqGroup.exists?(group_id)).to be true
+      expect(MiqGroup.exists?(group_id)).to be_truthy
     end
 
     it "supports single group creation via action with role and tenant specified" do
@@ -111,7 +111,7 @@ describe ApiController do
 
       result = @result["results"].first
       group_id = result["id"]
-      expect(MiqGroup.exists?(group_id)).to be true
+      expect(MiqGroup.exists?(group_id)).to be_truthy
 
       expect_result_to_match_hash(result,
                                   "description"      => "sample_group3",
@@ -135,7 +135,7 @@ describe ApiController do
 
       result = @result["results"].first
       group_id = result["id"]
-      expect(MiqGroup.exists?(group_id)).to be true
+      expect(MiqGroup.exists?(group_id)).to be_truthy
 
       expect_result_to_match_hash(result, sample_group)
     end
@@ -151,8 +151,8 @@ describe ApiController do
       results = @result["results"]
       group1_id = results.first["id"]
       group2_id = results.second["id"]
-      expect(MiqGroup.exists?(group1_id)).to be true
-      expect(MiqGroup.exists?(group2_id)).to be true
+      expect(MiqGroup.exists?(group1_id)).to be_truthy
+      expect(MiqGroup.exists?(group2_id)).to be_truthy
     end
   end
 
@@ -232,7 +232,7 @@ describe ApiController do
       run_delete(groups_url(g1_id))
 
       expect_request_success_with_no_content
-      expect(MiqGroup.exists?(g1_id)).to be false
+      expect(MiqGroup.exists?(g1_id)).to be_falsey
     end
 
     it "supports single group delete action" do
@@ -244,7 +244,7 @@ describe ApiController do
       run_post(g1_url, gen_request(:delete))
 
       expect_single_action_result(:success => true, :message => "deleting", :href => g1_url)
-      expect(MiqGroup.exists?(g1_id)).to be false
+      expect(MiqGroup.exists?(g1_id)).to be_falsey
     end
 
     it "supports multiple group deletes" do
@@ -257,8 +257,8 @@ describe ApiController do
 
       expect_multiple_action_result(2)
       expect_result_resources_to_include_hrefs("results", [g1_url, g2_url])
-      expect(MiqGroup.exists?(g1_id)).to be false
-      expect(MiqGroup.exists?(g2_id)).to be false
+      expect(MiqGroup.exists?(g1_id)).to be_falsey
+      expect(MiqGroup.exists?(g2_id)).to be_falsey
     end
   end
 end

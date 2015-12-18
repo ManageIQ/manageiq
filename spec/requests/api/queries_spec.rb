@@ -133,7 +133,7 @@ describe ApiController do
       expect_result_to_have_keys(%w(authentications))
       authentication = @result["authentications"].first
       expect(authentication["userid"]).to eq("admin")
-      expect(authentication.key?("password")).to be false
+      expect(authentication.key?("password")).to be_falsey
     end
 
     it "hides them from configuration hashes" do
@@ -152,7 +152,7 @@ describe ApiController do
       authentication = configuration.fetch_path("settings", "authentication")
       expect(authentication).to_not be_nil
       expect(authentication["userid"]).to eq("admin")
-      expect(authentication.key?(password_field)).to be false
+      expect(authentication.key?(password_field)).to be_falsey
     end
 
     it "hides them from provisioning hashes" do
@@ -175,7 +175,7 @@ describe ApiController do
       provision_attrs = @result.fetch_path("options", "attrs")
       expect(provision_attrs).to_not be_nil
       expect(provision_attrs["userid"]).to eq("admin")
-      expect(provision_attrs.key?(password_field)).to be false
+      expect(provision_attrs.key?(password_field)).to be_falsey
     end
   end
 end
