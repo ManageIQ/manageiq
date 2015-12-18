@@ -25,7 +25,7 @@ describe "report/_report_list.html.haml" do
 
   it "Check links in the list view" do
     render
-    response.should have_selector("//tr[@onclick=\"miqDynatreeActivateNode('reports_tree','xx-1_xx-1-0_rep-5');\"]")
-    response.should have_selector("//tr[@onclick=\"miqDynatreeActivateNode('reports_tree','xx-1_xx-1-0_rep-6');\"]")
+    expect(response).to have_selector("//tr[@onclick=\"miqDynatreeActivateNode('reports_tree','xx-1_xx-1-0_rep-5');\"]")
+    expect(response).to have_selector("//tr[@onclick=\"miqDynatreeActivateNode('reports_tree','xx-1_xx-1-0_rep-6');\"]")
   end
 end

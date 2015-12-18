@@ -12,6 +12,6 @@ describe "miq_ae_customization/_dialog_res_remove.html.haml" do
                         :obj       => {:id => 0},
                         :parent_id => 0,
                         :typ       => "Tab"}
-    response.should have_selector('a.fa.fa-close.pull-right')
+    expect(response).to have_selector('a.fa.fa-close.pull-right')
   end
 end

@@ -9,6 +9,6 @@ describe "miq_ae_tools/_results_xml.html.haml" do
 
   it "html_safe XML and escape characters in results" do
     render
-    response.should include("\"<MiqAeAttribute>MiqAeService \\n \\\"EmsCluster\\\"<\\/send><\\/MiqAeAttribute>\"")
+    expect(response).to include("\"<MiqAeAttribute>MiqAeService \\n \\\"EmsCluster\\\"<\\/send><\\/MiqAeAttribute>\"")
   end
 end

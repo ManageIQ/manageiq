@@ -6,7 +6,7 @@ describe "host/show.html.haml" do
     it "renders proper JS" do
       js_string = "var miq_after_onload = \"miqAsyncAjax('/host/#{action}/#{host.id}');\""
       render
-      rendered.should include(js_string)
+      expect(rendered).to include(js_string)
     end
   end
 

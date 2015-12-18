@@ -5,8 +5,8 @@ describe "layouts/listnav/_orchestration_stack.html.haml" do
   before :each do
     set_controller_for_view("orchestration_stack")
     assign(:panels, "ems_prop" => true, "ems_rel" => true)
-    view.stub(:truncate_length).and_return(10)
-    ActionView::Base.any_instance.stub(:role_allows).and_return(true)
+    allow(view).to receive(:truncate_length).and_return(10)
+    allow_any_instance_of(ActionView::Base).to receive(:role_allows).and_return(true)
   end
 
   let(:provider) do

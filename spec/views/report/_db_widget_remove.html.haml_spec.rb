@@ -10,7 +10,7 @@ describe "report/_db_widget_remove.html.haml" do
     widget = FactoryGirl.create(:miq_widget)
     render :partial => "report/db_widget_remove",
            :locals  => {:widget => widget}
-    response.should have_selector('a.pull-right')
-    response.should have_selector('i.fa.fa-remove')
+    expect(response).to have_selector('a.pull-right')
+    expect(response).to have_selector('i.fa.fa-remove')
   end
 end
