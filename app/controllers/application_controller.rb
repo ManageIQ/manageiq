@@ -551,6 +551,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def render_flash_and_scroll(*args)
+    render_flash(*args) do |page|
+      page << '$("#main_div").scrollTop(0);'
+    end
+  end
+
   def tagging_explorer_controller?
     false
   end
@@ -2569,7 +2575,7 @@ class ApplicationController < ActionController::Base
     add_flash(_("%{task} does not apply to at least one of the selected %{model}") %
                 {:model => model_type,
                  :task  => type.split.map(&:capitalize).join(' ')}, :error)
-    render_flash { |page| page << '$(\'#main_div\').scrollTop();' } if @explorer
+    render_flash_and_scroll if @explorer
   end
 
   def set_gettext_locale

@@ -154,3 +154,7 @@
 - if show_advanced_search?
   :javascript
     #{javascript_show_if_exists("adv_searchbox_div")}
+
+:javascript
+  // a hack to prevent toolbars disappearing behind top menus, see BZ#1291465 for details
+  $('.container-fluid').scrollTop(0);

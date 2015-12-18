@@ -187,7 +187,7 @@ module ApplicationController::CiProcessing
     vms = find_checked_items
     if VmOrTemplate.includes_template?(vms.map(&:to_i).uniq)
       add_flash(_("%{task} does not apply to selected %{model}") % {:model => ui_lookup(:table => "miq_template"), :task => "Set Retirement Dates"}, :error)
-      render_flash { |page| page << '$(\'#main_div\').scrollTop();' }
+      render_flash_and_scroll
       return
     end
     # check to see if coming from show_list or drilled into vms from another CI
@@ -326,7 +326,7 @@ module ApplicationController::CiProcessing
     else
       if VmOrTemplate.includes_template?(recs)
         add_flash(_("%{task} does not apply to selected %{model}") % {:model => ui_lookup(:table => "miq_template"), :task => "Right-Size Recommendations"}, :error)
-        render_flash { |page| page << '$(\'#main_div\').scrollTop();' }
+        render_flash_and_scroll
         return
       end
     end
@@ -1053,17 +1053,17 @@ module ApplicationController::CiProcessing
     end
     if recs.length < 1
       add_flash(_("One or more %{model} must be selected to %{task}") % {:model => Dictionary.gettext(db.to_s, :type => :model, :notfound => :titleize).pluralize, :task => "Reconfigure"}, :error)
-      render_flash { |page| page << '$(\'#main_div\').scrollTop();' }
+      render_flash_and_scroll
       return
     else
       if VmOrTemplate.includes_template?(recs)
         add_flash(_("%{task} does not apply because you selected at least one %{model}") % {:model => ui_lookup(:table => "miq_template"), :task => "Reconfigure"}, :error)
-        render_flash { |page| page << '$(\'#main_div\').scrollTop();' }
+        render_flash_and_scroll
         return
       end
       unless VmOrTemplate.reconfigurable?(recs)
         add_flash(_("%{task} does not apply because you selected at least one un-reconfigurable VM") % {:task => "Reconfigure"}, :error)
-        render_flash { |page| page << '$(\'#main_div\').scrollTop();' }
+        render_flash_and_scroll
         return
       end
       @edit[:reconfigure_items] = recs.collect(&:to_i)
@@ -1172,7 +1172,7 @@ module ApplicationController::CiProcessing
       vms = find_checked_items
       if method == 'retire_now' && VmOrTemplate.includes_template?(vms)
         add_flash(_("%{task} does not apply to selected %{model}") % {:model => ui_lookup(:table => "miq_template"), :task => "Retire"}, :error)
-        render_flash { |page| page << '$(\'#main_div\').scrollTop();' }
+        render_flash_and_scroll
         return
       end
 
