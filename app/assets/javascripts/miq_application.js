@@ -302,7 +302,7 @@ function miqDimDiv(divname, status) {
 function miqCheckForChanges() {
   if (ManageIQ.angularApplication.$scope) {
     if (ManageIQ.angularApplication.$scope.form.$dirty) {
-      var answer = confirm("Abandon changes?");
+      var answer = confirm(__("Abandon changes?"));
       if (answer) {
         ManageIQ.angularApplication.$scope.form.$setPristine(true);
       }
@@ -313,7 +313,7 @@ function miqCheckForChanges() {
           $('#buttons_on').is(":visible")) ||
          ManageIQ.changes !== null) &&
         !$('#ignore_form_changes').length) {
-      return confirm("Abandon changes?");
+      return confirm(__("Abandon changes?"));
     }
   }
   // use default browser reaction for onclick
