@@ -56,7 +56,7 @@ describe MiqAeInstanceCompareValues do
   def instance_check_status(instance1, instance2, status)
     diff_obj = MiqAeInstanceCompareValues.new(instance1, instance2)
     diff_obj.compare
-    diff_obj.status.should equal(status)
+    expect(diff_obj.status).to equal(status)
   end
 
   def prep_instance_file_names(inst1 = nil, inst2 = nil)

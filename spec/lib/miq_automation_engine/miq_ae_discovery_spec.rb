@@ -18,7 +18,7 @@ module MiqAeDiscoverySpec
     end
 
     it "properly processes MiqAeEvent.raise_ems_event" do
-      MiqAeEngine.should_receive(:deliver_queue)
+      expect(MiqAeEngine).to receive(:deliver_queue)
       MiqAeEvent.raise_ems_event(@event)
     end
 
@@ -42,14 +42,14 @@ module MiqAeDiscoverySpec
                 :tenant_id        => @tenant.id,
                 :automate_message => nil}
 
-        MiqAeEngine.should_receive(:deliver_queue).with(args, anything)
+        expect(MiqAeEngine).to receive(:deliver_queue).with(args, anything)
          MiqAeEvent.raise_ems_event(@event)
       end
     end
 
     it "properly processes Vm Scan Request" do
       ws = MiqAeEngine.instantiate("/EVM/VMSCAN/foo?target_vm_id=#{@vm.id}", @admin)
-      ws.should_not be_nil
+      expect(ws).not_to be_nil
     end
   end
 end

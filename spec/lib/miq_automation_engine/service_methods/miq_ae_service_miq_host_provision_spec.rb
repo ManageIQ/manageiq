@@ -24,8 +24,8 @@ module MiqAeServiceMiqHostProvisionSpec
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_host_provision'].miq_host_provision_request"
       @ae_method.update_attributes!(:data => method)
       ae_object = invoke_ae.root(@ae_result_key)
-      ae_object.should be_kind_of(MiqAeMethodService::MiqAeServiceMiqHostProvisionRequest)
-      [:id, :provision_type, :state, :userid].each { |method| ae_object.send(method).should == miq_host_provision_request.send(method) }
+      expect(ae_object).to be_kind_of(MiqAeMethodService::MiqAeServiceMiqHostProvisionRequest)
+      [:id, :provision_type, :state, :userid].each { |method| expect(ae_object.send(method)).to eq(miq_host_provision_request.send(method)) }
     end
 
     it "#host" do
@@ -35,8 +35,8 @@ module MiqAeServiceMiqHostProvisionSpec
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_host_provision'].host"
       @ae_method.update_attributes!(:data => method)
       ae_object = invoke_ae.root(@ae_result_key)
-      ae_object.should be_kind_of(MiqAeMethodService::MiqAeServiceHost)
-      [:id].each { |method| ae_object.send(method).should == host.send(method) }
+      expect(ae_object).to be_kind_of(MiqAeMethodService::MiqAeServiceHost)
+      [:id].each { |method| expect(ae_object.send(method)).to eq(host.send(method)) }
     end
 
     context "#status" do
@@ -47,22 +47,22 @@ module MiqAeServiceMiqHostProvisionSpec
 
       it "#status should return 'retry' unless state is finished or provisioned" do
         @miq_host_provision.update_attributes(:state => 'queued')
-        invoke_ae.root(@ae_result_key).should == 'retry'
+        expect(invoke_ae.root(@ae_result_key)).to eq('retry')
       end
 
       it "#status should return 'ok' when state is finished or provisioned and host has been rediscovered" do
-        MiqHostProvision.any_instance.stub(:host_rediscovered?).and_return(true)
+        allow_any_instance_of(MiqHostProvision).to receive(:host_rediscovered?).and_return(true)
         ['finished', 'provisioned'].each do |state|
           @miq_host_provision.update_attributes(:state => state)
-          invoke_ae.root(@ae_result_key).should == 'ok'
+          expect(invoke_ae.root(@ae_result_key)).to eq('ok')
         end
       end
 
       it "#status should return 'error' when state is finished or provisioned and host has not been rediscovered" do
-        MiqHostProvision.any_instance.stub(:host_rediscovered?).and_return(false)
+        allow_any_instance_of(MiqHostProvision).to receive(:host_rediscovered?).and_return(false)
         ['finished', 'provisioned'].each do |state|
           @miq_host_provision.update_attributes(:state => state)
-          invoke_ae.root(@ae_result_key).should == 'error'
+          expect(invoke_ae.root(@ae_result_key)).to eq('error')
         end
       end
     end

@@ -15,12 +15,12 @@ module MiqAeServiceManageIQ_Providers_Amazon_CloudManagerSpec
 
     it "#flavors" do
       flavor = @ems_amazon.flavors.first
-      flavor.should be_kind_of(MiqAeMethodService::MiqAeServiceFlavor)
+      expect(flavor).to be_kind_of(MiqAeMethodService::MiqAeServiceFlavor)
     end
 
     it "#availability_zones" do
       availability_zone = @ems_amazon.availability_zones.first
-      availability_zone.should be_kind_of(MiqAeMethodService::MiqAeServiceAvailabilityZone)
+      expect(availability_zone).to be_kind_of(MiqAeMethodService::MiqAeServiceAvailabilityZone)
     end
   end
 end

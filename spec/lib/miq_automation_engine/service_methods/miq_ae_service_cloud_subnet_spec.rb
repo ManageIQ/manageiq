@@ -3,15 +3,15 @@ require "spec_helper"
 module MiqAeServiceCloudSubnetSpec
   describe MiqAeMethodService::MiqAeServiceCloudSubnet do
     it "#cloud_network" do
-      described_class.instance_methods.should include(:cloud_network)
+      expect(described_class.instance_methods).to include(:cloud_network)
     end
 
     it "#availability_zone" do
-      described_class.instance_methods.should include(:availability_zone)
+      expect(described_class.instance_methods).to include(:availability_zone)
     end
 
     it "#vms" do
-      described_class.instance_methods.should include(:vms)
+      expect(described_class.instance_methods).to include(:vms)
     end
   end
 end

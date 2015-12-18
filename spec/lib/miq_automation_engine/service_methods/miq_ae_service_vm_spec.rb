@@ -23,24 +23,24 @@ module MiqAeServiceVmSpec
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['vm'].ems_custom_keys"
       @ae_method.update_attributes(:data => method)
       ae_object = invoke_ae.root(@ae_result_key)
-      ae_object.should be_kind_of(Array)
-      ae_object.should be_empty
+      expect(ae_object).to be_kind_of(Array)
+      expect(ae_object).to be_empty
 
       key1   = 'key1'
       value1 = 'value1'
       c1 = FactoryGirl.create(:ems_custom_attribute, :resource => @vm, :name => key1, :value => value1)
       ae_object = invoke_ae.root(@ae_result_key)
-      ae_object.should be_kind_of(Array)
-      ae_object.length.should == 1
-      ae_object.first.should == key1
+      expect(ae_object).to be_kind_of(Array)
+      expect(ae_object.length).to eq(1)
+      expect(ae_object.first).to eq(key1)
 
       key2   = 'key2'
       value2 = 'value2'
       c1 = FactoryGirl.create(:ems_custom_attribute, :resource => @vm, :name => key2, :value => value2)
       ae_object = invoke_ae.root(@ae_result_key)
-      ae_object.should be_kind_of(Array)
-      ae_object.length.should == 2
-      ae_object.sort.should == [key1, key2]
+      expect(ae_object).to be_kind_of(Array)
+      expect(ae_object.length).to eq(2)
+      expect(ae_object.sort).to eq([key1, key2])
     end
 
     it "#ems_custom_get" do
@@ -49,19 +49,19 @@ module MiqAeServiceVmSpec
       method = "$evm.root['#{@ae_result_key}'] = $evm.root['vm'].ems_custom_get('#{key}')"
       @ae_method.update_attributes(:data => method)
       ae_object = invoke_ae.root(@ae_result_key)
-      ae_object.should be_nil
+      expect(ae_object).to be_nil
 
       c1 = FactoryGirl.create(:ems_custom_attribute, :resource => @vm, :name => key, :value => value)
       ae_object = invoke_ae.root(@ae_result_key)
-      ae_object.should == value
+      expect(ae_object).to eq(value)
     end
 
     it "#remove_from_vmdb" do
-      VmOrTemplate.count.should == 1
+      expect(VmOrTemplate.count).to eq(1)
       method = "$evm.root['#{@ae_result_key}'] = $evm.root['vm'].remove_from_vmdb"
       @ae_method.update_attributes(:data => method)
       ae_object = invoke_ae.root(@ae_result_key)
-      VmOrTemplate.count.should == 0
+      expect(VmOrTemplate.count).to eq(0)
     end
 
     context "with a service" do
@@ -75,8 +75,8 @@ module MiqAeServiceVmSpec
           @ae_method.update_attributes(:data => method)
           ae_object = invoke_ae.root(@ae_result_key)
 
-          ae_object.should be_kind_of(MiqAeMethodService::MiqAeServiceServiceResource)
-          @service.vms.count.should == 1
+          expect(ae_object).to be_kind_of(MiqAeMethodService::MiqAeServiceServiceResource)
+          expect(@service.vms.count).to eq(1)
         end
 
         it "with an existing service relationship" do
@@ -93,7 +93,7 @@ module MiqAeServiceVmSpec
           method = "$evm.root['#{@ae_result_key}'] = $evm.root['vm'].remove_from_service"
           @ae_method.update_attributes(:data => method)
 
-          invoke_ae.root(@ae_result_key).should be_nil
+          expect(invoke_ae.root(@ae_result_key)).to be_nil
         end
 
         it "with an existing service relationship" do
@@ -101,7 +101,7 @@ module MiqAeServiceVmSpec
           method = "$evm.root['#{@ae_result_key}'] = $evm.root['vm'].remove_from_service"
           @ae_method.update_attributes(:data => method)
 
-          invoke_ae.root(@ae_result_key).should be_kind_of(MiqAeMethodService::MiqAeServiceServiceResource)
+          expect(invoke_ae.root(@ae_result_key)).to be_kind_of(MiqAeMethodService::MiqAeServiceServiceResource)
         end
       end
     end
@@ -125,43 +125,43 @@ module MiqAeServiceVmSpec
 
       service_vm.finish_retirement
 
-      expect(service_vm.retired).to be_true
+      expect(service_vm.retired).to be_truthy
       expect(service_vm.retires_on).to eq(Date.today)
       expect(service_vm.retirement_state).to eq("retired")
     end
 
     it "#retiring? - false" do
-      expect(service_vm.retiring?).to be_false
+      expect(service_vm.retiring?).to be_falsey
     end
 
     it "#retiring - true" do
       service_vm.retirement_state = 'retiring'
 
-      expect(service_vm.retiring?).to be_true
+      expect(service_vm.retiring?).to be_truthy
     end
 
     it "#error_retiring? - false" do
-      expect(service_vm.error_retiring?).to be_false
+      expect(service_vm.error_retiring?).to be_falsey
     end
 
     it "#error_retiring - true" do
       service_vm.retirement_state = 'error'
 
-      expect(service_vm.error_retiring?).to be_true
+      expect(service_vm.error_retiring?).to be_truthy
     end
 
     it "#retires_on - today" do
       service_vm.retires_on = Date.today
       vm.reload
 
-      expect(vm.retirement_due?).to be_true
+      expect(vm.retirement_due?).to be_truthy
     end
 
     it "#retires_on - tomorrow" do
       service_vm.retires_on = Date.today + 1
       vm.reload
 
-      expect(vm.retirement_due?).to be_false
+      expect(vm.retirement_due?).to be_falsey
     end
 
     it "#retirement_warn" do

@@ -20,7 +20,7 @@ module MiqAeServiceServiceSpec
     end
 
     it "#remove_from_vmdb" do
-      Service.count.should == 1
+      expect(Service.count).to eq(1)
       method = "$evm.root['#{@ae_result_key}'] = $evm.root['service'].remove_from_vmdb"
       @ae_method.update_attributes(:data => method)
       ae_object = invoke_ae.root(@ae_result_key)
@@ -55,7 +55,7 @@ module MiqAeServiceServiceSpec
         invoke_ae
 
         @service.reload
-        expect(@service.display).to be_false
+        expect(@service.display).to be_falsey
       end
     end
 
@@ -70,7 +70,7 @@ module MiqAeServiceServiceSpec
         invoke_ae
 
         @parent.reload
-        @parent.direct_service_children.collect(&:id).should == [@service.id]
+        expect(@parent.direct_service_children.collect(&:id)).to eq([@service.id])
       end
 
       it "clears the parent service" do
@@ -150,8 +150,8 @@ EOF
       # method = "$evm.root['#{@ae_result_key}'] = $evm.root['service'].retire_service_resources"
 
       # @ae_method.update_attributes(:data => method)
-      expect(service.service_resources).to have(1).thing
-      expect(service.service_resources.first.resource.respond_to?(:retire_now)).to be_true
+      expect(service.service_resources.size).to eq(1)
+      expect(service.service_resources.first.resource.respond_to?(:retire_now)).to be_truthy
       service_service.retire_service_resources
       # ae_object = invoke_ae.root(@ae_result_key)
     end
@@ -163,43 +163,43 @@ EOF
 
       service_service.finish_retirement
 
-      expect(service_service.retired).to be_true
+      expect(service_service.retired).to be_truthy
       expect(service_service.retires_on).to eq(Date.today)
       expect(service_service.retirement_state).to eq("retired")
     end
 
     it "#retiring - false" do
-      expect(service_service.retiring?).to be_false
+      expect(service_service.retiring?).to be_falsey
     end
 
     it "#retiring? - true" do
       service_service.retirement_state = 'retiring'
 
-      expect(service_service.retiring?).to be_true
+      expect(service_service.retiring?).to be_truthy
     end
 
     it "#error_retiring? - false" do
-      expect(service_service.error_retiring?).to be_false
+      expect(service_service.error_retiring?).to be_falsey
     end
 
     it "#error_retiring? - true" do
       service_service.retirement_state = 'error'
 
-      expect(service_service.error_retiring?).to be_true
+      expect(service_service.error_retiring?).to be_truthy
     end
 
     it "#retires_on - today" do
       service_service.retires_on = Date.today
       service.reload
 
-      expect(service.retirement_due?).to be_true
+      expect(service.retirement_due?).to be_truthy
     end
 
     it "#retires_on - tomorrow" do
       service_service.retires_on = Date.today + 1
       service.reload
 
-      expect(service.retirement_due?).to be_false
+      expect(service.retirement_due?).to be_falsey
     end
 
     it "#retirement_warn" do

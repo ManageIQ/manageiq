@@ -25,7 +25,7 @@ describe MiqAeClassCopy do
       class_check_status(class1, class2, MiqAeClassCompareFields::CONGRUENT_SCHEMA)
       @ns2 = MiqAeNamespace.find_by_fqname("#{@dest_domain}/#{@src_ns}", false)
       class2 = MiqAeClass.find_by_namespace_id_and_name(@ns2.id, @src_class)
-      class2.should_not be_nil
+      expect(class2).not_to be_nil
     end
   end
 
@@ -41,7 +41,7 @@ describe MiqAeClassCopy do
       class_check_status(class1, class2, MiqAeClassCompareFields::CONGRUENT_SCHEMA)
       @ns2 = MiqAeNamespace.find_by_fqname("#{@dest_domain}/#{new_ns}", false)
       class2 = MiqAeClass.find_by_namespace_id_and_name(@ns2.id, @src_class)
-      class2.should_not be_nil
+      expect(class2).not_to be_nil
     end
   end
 
@@ -56,7 +56,7 @@ describe MiqAeClassCopy do
       class2 = MiqAeClassCopy.new(@src_fqname).as(new_name)
       class_check_status(class1, class2, MiqAeClassCompareFields::CONGRUENT_SCHEMA)
       class2 = MiqAeClass.find_by_namespace_id_and_name(@ns1.id, new_name)
-      class2.should_not be_nil
+      expect(class2).not_to be_nil
     end
   end
 
@@ -83,7 +83,7 @@ describe MiqAeClassCopy do
       class_check_status(class1, class2, MiqAeClassCompareFields::CONGRUENT_SCHEMA)
       @ns2 = MiqAeNamespace.find_by_fqname("#{@src_domain}/#{new_ns}", false)
       class2 = MiqAeClass.find_by_namespace_id_and_name(@ns2.id, new_name)
-      class2.should_not be_nil
+      expect(class2).not_to be_nil
     end
   end
 
@@ -105,17 +105,17 @@ describe MiqAeClassCopy do
       miq_ae_class_copy = double(MiqAeClassCopy)
       miq_ae_class = mock_model(MiqAeClass)
       new_ids = [miq_ae_class.id] * ids.length
-      miq_ae_class_copy.should_receive(:to_domain).with(domain, nil, false).exactly(ids.length).times { miq_ae_class }
-      miq_ae_class.should_receive(:fqname).with(no_args).exactly(ids.length).times { fqname }
-      MiqAeClass.should_receive(:find).with(an_instance_of(Fixnum)).exactly(ids.length).times { miq_ae_class }
-      MiqAeClassCopy.should_receive(:new).with(anything).exactly(ids.length).times { miq_ae_class_copy }
-      MiqAeClassCopy.copy_multiple(ids, domain).should match_array(new_ids)
+      expect(miq_ae_class_copy).to receive(:to_domain).with(domain, nil, false).exactly(ids.length).times { miq_ae_class }
+      expect(miq_ae_class).to receive(:fqname).with(no_args).exactly(ids.length).times { fqname }
+      expect(MiqAeClass).to receive(:find).with(an_instance_of(Fixnum)).exactly(ids.length).times { miq_ae_class }
+      expect(MiqAeClassCopy).to receive(:new).with(anything).exactly(ids.length).times { miq_ae_class_copy }
+      expect(MiqAeClassCopy.copy_multiple(ids, domain)).to match_array(new_ids)
     end
   end
 
   def class_check_status(class1, class2, status)
     diff_obj = MiqAeClassCompareFields.new(class1, class2)
     diff_obj.compare
-    diff_obj.status.should equal(status)
+    expect(diff_obj.status).to equal(status)
   end
 end

@@ -20,38 +20,38 @@ module MiqAeServiceHostSpec
         method   = "$evm.root['#{@ae_result_key}'] = $evm.vmdb('host')"
         @ae_method.update_attributes(:data => method)
         ae_result = invoke_ae.root(@ae_result_key)
-        ae_result.should == MiqAeMethodService::MiqAeServiceHost
+        expect(ae_result).to eq(MiqAeMethodService::MiqAeServiceHost)
 
-        ae_result.count.should == 1
+        expect(ae_result.count).to eq(1)
 
         hosts = ae_result.all
-        hosts[0].should be_kind_of(MiqAeMethodService::MiqAeServiceHost)
-        hosts[0].id.should == @host.id
+        expect(hosts[0]).to be_kind_of(MiqAeMethodService::MiqAeServiceHost)
+        expect(hosts[0].id).to eq(@host.id)
 
         method   = "$evm.root['#{@ae_result_key}'] = $evm.vmdb('host').count"
         @ae_method.update_attributes(:data => method)
         ae_result = invoke_ae.root(@ae_result_key)
-        ae_result.should == 1
+        expect(ae_result).to eq(1)
       end
 
       it "with id" do
         method   = "$evm.root['#{@ae_result_key}'] = $evm.vmdb('host', #{@host.id})"
         @ae_method.update_attributes(:data => method)
         ae_result = invoke_ae.root(@ae_result_key)
-        ae_result.should be_kind_of(MiqAeMethodService::MiqAeServiceHost)
-        ae_result.id.should == @host.id
+        expect(ae_result).to be_kind_of(MiqAeMethodService::MiqAeServiceHost)
+        expect(ae_result.id).to eq(@host.id)
       end
 
       it "with array of ids" do
         method   = "$evm.root['#{@ae_result_key}'] = $evm.vmdb('host', [#{@host.id}])"
         @ae_method.update_attributes(:data => method)
         ae_result = invoke_ae.root(@ae_result_key)
-        ae_result.should be_kind_of(Array)
+        expect(ae_result).to be_kind_of(Array)
 
         hosts = ae_result
-        hosts.length.should == 1
-        hosts[0].should be_kind_of(MiqAeMethodService::MiqAeServiceHost)
-        hosts[0].id.should == @host.id
+        expect(hosts.length).to eq(1)
+        expect(hosts[0]).to be_kind_of(MiqAeMethodService::MiqAeServiceHost)
+        expect(hosts[0].id).to eq(@host.id)
       end
     end
 
@@ -59,24 +59,24 @@ module MiqAeServiceHostSpec
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['host'].ems_custom_keys"
       @ae_method.update_attributes(:data => method)
       ae_result = invoke_ae.root(@ae_result_key)
-      ae_result.should be_kind_of(Array)
-      ae_result.should be_empty
+      expect(ae_result).to be_kind_of(Array)
+      expect(ae_result).to be_empty
 
       key1   = 'key1'
       value1 = 'value1'
       c1 = FactoryGirl.create(:ems_custom_attribute, :resource => @host, :name => key1, :value => value1)
       ae_result = invoke_ae.root(@ae_result_key)
-      ae_result.should be_kind_of(Array)
-      ae_result.length.should == 1
-      ae_result.first.should == key1
+      expect(ae_result).to be_kind_of(Array)
+      expect(ae_result.length).to eq(1)
+      expect(ae_result.first).to eq(key1)
 
       key2   = 'key2'
       value2 = 'value2'
       c1 = FactoryGirl.create(:ems_custom_attribute, :resource => @host, :name => key2, :value => value2)
       ae_result = invoke_ae.root(@ae_result_key)
-      ae_result.should be_kind_of(Array)
-      ae_result.length.should == 2
-      ae_result.sort.should == [key1, key2]
+      expect(ae_result).to be_kind_of(Array)
+      expect(ae_result.length).to eq(2)
+      expect(ae_result.sort).to eq([key1, key2])
     end
 
     it "#ems_custom_get" do
@@ -85,11 +85,11 @@ module MiqAeServiceHostSpec
       method = "$evm.root['#{@ae_result_key}'] = $evm.root['host'].ems_custom_get('#{key}')"
       @ae_method.update_attributes(:data => method)
       ae_result = invoke_ae.root(@ae_result_key)
-      ae_result.should be_nil
+      expect(ae_result).to be_nil
 
       c1 = FactoryGirl.create(:ems_custom_attribute, :resource => @host, :name => key, :value => value)
       ae_result = invoke_ae.root(@ae_result_key)
-      ae_result.should == value
+      expect(ae_result).to eq(value)
     end
 
     it "#get_realtime_metric" do
@@ -98,9 +98,9 @@ module MiqAeServiceHostSpec
       function = :max
       method = "$evm.root['#{@ae_result_key}'] = $evm.root['host'].get_realtime_metric('#{metric}', #{range}, :#{function})"
       @ae_method.update_attributes(:data => method)
-      Host.any_instance.should_receive(:get_performance_metric).with(:realtime, metric, range, function).once
+      expect_any_instance_of(Host).to receive(:get_performance_metric).with(:realtime, metric, range, function).once
       ae_result = invoke_ae.root(@ae_result_key)
-      ae_result.should be_nil
+      expect(ae_result).to be_nil
     end
   end
 end

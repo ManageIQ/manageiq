@@ -21,7 +21,7 @@ module MiqAeServiceServiceTemplateSpec
           method = "$evm.root['#{@ae_result_key}'] = $evm.root['service_template'].type_display "
           @ae_method.update_attributes(:data => method)
           type_display = invoke_ae.root(@ae_result_key)
-          type_display.should == 'Unknown'
+          expect(type_display).to eq('Unknown')
         end
 
         it "with service_type of atomic" do
@@ -29,7 +29,7 @@ module MiqAeServiceServiceTemplateSpec
           method = "$evm.root['#{@ae_result_key}'] = $evm.root['service_template'].type_display "
           @ae_method.update_attributes(:data => method)
           type_display = invoke_ae.root(@ae_result_key)
-          type_display.should == 'Item'
+          expect(type_display).to eq('Item')
         end
 
         it "with service_type of composite" do
@@ -37,7 +37,7 @@ module MiqAeServiceServiceTemplateSpec
           method = "$evm.root['#{@ae_result_key}'] = $evm.root['service_template'].type_display "
           @ae_method.update_attributes(:data => method)
           type_display = invoke_ae.root(@ae_result_key)
-          type_display.should == 'Bundle'
+          expect(type_display).to eq('Bundle')
         end
       end
     end
@@ -52,8 +52,8 @@ module MiqAeServiceServiceTemplateSpec
         service = FactoryGirl.create(:service, :service_template_id => @service_service_template.id)
         first_service = @service_service_template.services.first
 
-        first_service.should    be_kind_of(MiqAeMethodService::MiqAeServiceService)
-        first_service.id.should eq(service.id)
+        expect(first_service).to    be_kind_of(MiqAeMethodService::MiqAeServiceService)
+        expect(first_service.id).to eq(service.id)
       end
 
       context "with a service resource" do
@@ -65,8 +65,8 @@ module MiqAeServiceServiceTemplateSpec
         it "#service_resources" do
           first_service_resource = @service_service_template.service_resources.first
 
-          first_service_resource.should    be_kind_of(MiqAeMethodService::MiqAeServiceServiceResource)
-          first_service_resource.id.should eq(@service_resource.id)
+          expect(first_service_resource).to    be_kind_of(MiqAeMethodService::MiqAeServiceServiceResource)
+          expect(first_service_resource.id).to eq(@service_resource.id)
         end
 
         it "#service_templates" do
@@ -74,8 +74,8 @@ module MiqAeServiceServiceTemplateSpec
           @service_resource.update_attributes(:resource => sub_service_template)
           first_service_template = @service_service_template.service_templates.first
 
-          first_service_template.should    be_kind_of(MiqAeMethodService::MiqAeServiceServiceTemplate)
-          first_service_template.id.should eq(sub_service_template.id)
+          expect(first_service_template).to    be_kind_of(MiqAeMethodService::MiqAeServiceServiceTemplate)
+          expect(first_service_template.id).to eq(sub_service_template.id)
         end
       end
     end

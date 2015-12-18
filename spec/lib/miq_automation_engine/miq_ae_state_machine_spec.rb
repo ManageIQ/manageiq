@@ -21,9 +21,9 @@ module MiqAeStateMachineSpec
       ws = MiqAeEngine.instantiate("/SYSTEM/EVENT/VM_PROVISION_REQUESTED", @user)
       t1 = Time.now
 
-      ws.should_not be_nil
-      ws.root['ae_result'].should == 'ok'
-      ws.root['ae_state'].should == 'final'
+      expect(ws).not_to be_nil
+      expect(ws.root['ae_result']).to eq('ok')
+      expect(ws.root['ae_state']).to eq('final')
 
       # puts ws.to_xml
       #     puts "Old Provision Technique took #{t1 - t0} seconds"
@@ -37,9 +37,9 @@ module MiqAeStateMachineSpec
       ws = MiqAeEngine.instantiate("/SYSTEM/EVENT/VM_PROVISION_REQUESTED_NEW", @user)
       t1 = Time.now
 
-      ws.should_not be_nil
-      ws.root['ae_result'].should == 'ok'
-      ws.root['ae_state'].should == ''
+      expect(ws).not_to be_nil
+      expect(ws.root['ae_result']).to eq('ok')
+      expect(ws.root['ae_state']).to eq('')
       # puts ws.to_xml
       #     puts "New Provision Technique took #{t1 - t0} seconds"
     end
@@ -53,9 +53,9 @@ module MiqAeStateMachineSpec
 
       ws = MiqAeEngine.instantiate("/SYSTEM/EVENT/VM_PROVISION_REQUESTED_NEW", @user)
 
-      ws.should_not be_nil
-      ws.root['ae_result'].should == 'error'
-      ws.root['ae_state'].should == 'ProvisionCheck'
+      expect(ws).not_to be_nil
+      expect(ws.root['ae_result']).to eq('error')
+      expect(ws.root['ae_state']).to eq('ProvisionCheck')
       # puts ws.to_xml
     end
 
@@ -69,9 +69,9 @@ module MiqAeStateMachineSpec
 
       ws = MiqAeEngine.instantiate("/SYSTEM/EVENT/VM_PROVISION_REQUESTED_NEW", @user)
 
-      ws.should_not be_nil
-      ws.root['ae_result'].should == 'error'
-      ws.root['ae_state'].should == 'ProvisionCheck'
+      expect(ws).not_to be_nil
+      expect(ws.root['ae_result']).to eq('error')
+      expect(ws.root['ae_state']).to eq('ProvisionCheck')
       # puts ws.to_xml
     end
 
@@ -87,7 +87,7 @@ module MiqAeStateMachineSpec
       ws = MiqAeEngine.instantiate("/SYSTEM/EVENT/VM_PROVISION_REQUESTED_NEW", @user)
       t1 = Time.now
 
-      ws.should_not be_nil
+      expect(ws).not_to be_nil
       # puts ws.to_xml
       # puts "New Provision (with instance override) Technique took #{t1 - t0} seconds"
     end
@@ -102,14 +102,14 @@ module MiqAeStateMachineSpec
       i1.set_field_attribute(f1, method_string, :on_entry)
 
       ws = MiqAeEngine.instantiate("#{@domain}/Factory/statemachine/Provisioning", @user)
-      ws.root("test_root_object_attribute").should == "update_provision_status"
+      expect(ws.root("test_root_object_attribute")).to eq("update_provision_status")
     end
 
     it "sets ae_status_state properly" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "state_machine"), @domain)
 
       ws = MiqAeEngine.instantiate("#{@domain}/Factory/statemachine/Provisioning", @user)
-      ws.root['ae_status_state'].should == 'on_exit'
+      expect(ws.root['ae_status_state']).to eq('on_exit')
     end
 
     it "executes on_entry fully qualified class methods properly" do
@@ -121,7 +121,7 @@ module MiqAeStateMachineSpec
       method_string = "SPEC_DOMAIN/factory/method.test_class_method(status => 'Testing class on entry method',status_state => 'on_entry')"
       i1.set_field_attribute(f1, method_string, :on_entry)
       ws = MiqAeEngine.instantiate("#{@domain}/Factory/statemachine/Provisioning", @user)
-      ws.root("test_root_object_attribute").should == "test_class_method"
+      expect(ws.root("test_root_object_attribute")).to eq("test_class_method")
     end
   end
 end

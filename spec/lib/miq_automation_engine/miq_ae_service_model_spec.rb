@@ -9,32 +9,32 @@ module MiqAeServiceModelSpec
     end
 
     it ".base_model" do
-      MiqAeMethodService::MiqAeServiceManageIQ_Providers_Vmware_InfraManager_Vm.base_model.should == MiqAeMethodService::MiqAeServiceVm
+      expect(MiqAeMethodService::MiqAeServiceManageIQ_Providers_Vmware_InfraManager_Vm.base_model).to eq(MiqAeMethodService::MiqAeServiceVm)
     end
 
     it ".base_class" do
-      MiqAeMethodService::MiqAeServiceManageIQ_Providers_Vmware_InfraManager_Vm.base_class.should == MiqAeMethodService::MiqAeServiceVmOrTemplate
+      expect(MiqAeMethodService::MiqAeServiceManageIQ_Providers_Vmware_InfraManager_Vm.base_class).to eq(MiqAeMethodService::MiqAeServiceVmOrTemplate)
     end
 
     it "vm should be valid" do
-      @vm.should be_kind_of(Vm)
-      @vm.should_not be_nil
-      @vm.id.should_not be_nil
+      expect(@vm).to be_kind_of(Vm)
+      expect(@vm).not_to be_nil
+      expect(@vm.id).not_to be_nil
     end
 
     it "ae_vm should be valid" do
-      @ae_vm.should be_kind_of(MiqAeMethodService::MiqAeServiceVm)
-      @ae_vm.instance_variable_get("@object").should == @vm
+      expect(@ae_vm).to be_kind_of(MiqAeMethodService::MiqAeServiceVm)
+      expect(@ae_vm.instance_variable_get("@object")).to eq(@vm)
     end
 
     it "ae_vm should have a special inspect method" do
       inspect = @ae_vm.inspect
-      inspect[0, 2].should == '#<'
-      inspect[-1, 1].should == '>'
+      expect(inspect[0, 2]).to eq('#<')
+      expect(inspect[-1, 1]).to eq('>')
     end
 
     it "ae_vm should have an associations method" do
-      @ae_vm.associations.should be_kind_of(Array)
+      expect(@ae_vm.associations).to be_kind_of(Array)
     end
 
     describe "#tag_assign" do
@@ -42,13 +42,13 @@ module MiqAeServiceModelSpec
       let(:tag)         { FactoryGirl.create(:classification_tag, :parent_id => category.id) }
 
       it "can assign an exiting tag to ae_vm" do
-        @ae_vm.tag_assign("#{category.name}/#{tag.name}").should be_true
-        @ae_vm.tagged_with?(category.name, tag.name).should be_true
+        expect(@ae_vm.tag_assign("#{category.name}/#{tag.name}")).to be_truthy
+        expect(@ae_vm.tagged_with?(category.name, tag.name)).to be_truthy
       end
 
       it "cannot assign a non-existing tag to ae_vm, but no error is raised" do
-        @ae_vm.tag_assign("#{category.name}/non_exisiting_tag").should be_true
-        @ae_vm.tagged_with?(category.name, 'non_exisiting_tag').should be_false
+        expect(@ae_vm.tag_assign("#{category.name}/non_exisiting_tag")).to be_truthy
+        expect(@ae_vm.tagged_with?(category.name, 'non_exisiting_tag')).to be_falsey
       end
     end
 
@@ -63,20 +63,20 @@ module MiqAeServiceModelSpec
         end
 
         it "can unassign a tag from ae_vm" do
-          @ae_vm.tag_unassign("#{category.name}/#{tag.name}").should be_true
-          @ae_vm.tagged_with?(category.name, tag.name).should be_false
+          expect(@ae_vm.tag_unassign("#{category.name}/#{tag.name}")).to be_truthy
+          expect(@ae_vm.tagged_with?(category.name, tag.name)).to be_falsey
         end
 
         it "unassigns only specified tag from ae_vm but not other tags from the same category" do
-          @ae_vm.tag_assign("#{category.name}/#{another_tag.name}").should be_true
+          expect(@ae_vm.tag_assign("#{category.name}/#{another_tag.name}")).to be_truthy
 
-          @ae_vm.tag_unassign("#{category.name}/#{tag.name}").should be_true
-          @ae_vm.tagged_with?(category.name, another_tag.name).should be_true
+          expect(@ae_vm.tag_unassign("#{category.name}/#{tag.name}")).to be_truthy
+          expect(@ae_vm.tagged_with?(category.name, another_tag.name)).to be_truthy
         end
       end
 
       it "does not raise an error when attempts to unassign a non-existing tag" do
-        @ae_vm.tag_unassign("#{category.name}/non_exisiting_tag").should be_true
+        expect(@ae_vm.tag_unassign("#{category.name}/non_exisiting_tag")).to be_truthy
       end
     end
   end
