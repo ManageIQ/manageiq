@@ -250,7 +250,7 @@ class CatalogController < ApplicationController
       @nodetype, id = params[:id].split("_").last.split("-")
       self.x_active_tree   = 'sandt_tree'
       self.x_active_accord = 'sandt'
-      st = ServiceTemplate.find_by_id(params[:id].split("-").last)
+      st = ServiceTemplate.find_by_id(from_cid(params[:id].split("-").last))
       prefix = st.service_template_catalog_id ? "stc-#{to_cid(st.service_template_catalog_id)}_st-" : "-Unassigned_st-"
       add_nodes = open_parent_nodes(st)
       @add_nodes = {}
@@ -460,6 +460,10 @@ class CatalogController < ApplicationController
         @record.picture.extension = ext
         @record.save
         msg = _("Custom Image file \"%s\" successfully uploaded") % params[:upload][:image].original_filename
+
+        #identify_catalog(from_cid(params[:id]))
+        #@record = ServiceTemplateCatalog.find_by_id(from_cid(params[:id])) if @record.nil?
+        params[:id] = x_build_node_id(@record, nil, x_tree(x_active_tree))  # Get the tree node id
       end
     else
       msg = _("Use the Browse button to locate a %s image file") % ".png or .jpg"
