@@ -1176,11 +1176,6 @@ module ApplicationHelper
     attributes
   end
 
-  def title_for_availability_zones(plural = false)
-    key = "availability_zone"
-    ui_lookup(:availability_zone_types => plural ? key.pluralize : key)
-  end
-
   def title_for_hosts
     title_for_host(true)
   end
