@@ -45,6 +45,7 @@ module PurgingMixin
       _log.info("Purging records older than [#{older_than}]...")
       total = purge_in_batches(purge_conditions(older_than), window, &block)
       _log.info("Purging records older than [#{older_than}]...Complete - Deleted #{total} records")
+      total
     end
 
     def purge_in_batches(conditions, window, total = 0)
