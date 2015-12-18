@@ -115,7 +115,6 @@ module XFS
       @stream.seek(AG_INODEINFO_SIZE, IO::SEEK_CUR)
       @agfl                   = AG_FREELIST.decode(@stream.read(AG_FREELIST_SIZE))
       @stream.seek(-(AG_FREESPACE_SIZE + AG_INODEINFO_SIZE + AG_FREELIST_SIZE))
-      @allocation_group_block = MemoryBuffer.create(sb['block_size'])
       @allocation_group_block = @stream.read(sb['block_size'])
 
       # Grab some quick facts & make sure there's nothing wrong. Tight qualification.
