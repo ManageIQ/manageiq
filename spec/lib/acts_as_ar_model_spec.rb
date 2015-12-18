@@ -20,58 +20,58 @@ describe ActsAsArModel do
   end
 
   describe "subclass, base_class," do
-    it(".base_class") { base_class.base_class.should == base_class }
-    it(".base_model") { base_class.base_model.should == base_class }
+    it(".base_class") { expect(base_class.base_class).to eq(base_class) }
+    it(".base_model") { expect(base_class.base_model).to eq(base_class) }
 
-    it { base_class.should respond_to(:columns_hash) }
-    it { base_class.should respond_to(:columns) }
-    it { base_class.should respond_to(:column_names) }
-    it { base_class.should respond_to(:column_names_symbols) }
+    it { expect(base_class).to respond_to(:columns_hash) }
+    it { expect(base_class).to respond_to(:columns) }
+    it { expect(base_class).to respond_to(:column_names) }
+    it { expect(base_class).to respond_to(:column_names_symbols) }
 
-    it { base_class.should respond_to(:virtual_columns) }
+    it { expect(base_class).to respond_to(:virtual_columns) }
 
-    it { base_class.should respond_to(:aar_columns) }
+    it { expect(base_class).to respond_to(:aar_columns) }
 
-    it { base_class.columns_hash.values[0].should be_kind_of(ActsAsArModelColumn) }
-    it { base_class.columns_hash.keys.should      match_array(col_names_strs) }
-    it { base_class.column_names.should           match_array(col_names_strs) }
-    it { base_class.column_names_symbols.should   match_array(col_names_syms) }
+    it { expect(base_class.columns_hash.values[0]).to be_kind_of(ActsAsArModelColumn) }
+    it { expect(base_class.columns_hash.keys).to      match_array(col_names_strs) }
+    it { expect(base_class.column_names).to           match_array(col_names_strs) }
+    it { expect(base_class.column_names_symbols).to   match_array(col_names_syms) }
 
-    it { base_class.columns_hash["str_with_options"].options[:some_opt].should == 'opt_value' }
+    it { expect(base_class.columns_hash["str_with_options"].options[:some_opt]).to eq('opt_value') }
 
     describe "instance" do
-      it { base_class.new.should respond_to(:attributes) }
-      it { base_class.new.should respond_to(:str) }
+      it { expect(base_class.new).to respond_to(:attributes) }
+      it { expect(base_class.new).to respond_to(:str) }
 
       it "should allow attribute initialization" do
         t = base_class.new(:str => "test_value")
-        t.str.should == "test_value"
+        expect(t.str).to eq("test_value")
       end
 
       it "should allow attribute access" do
         t = base_class.new
-        t.str.should be_nil
+        expect(t.str).to be_nil
 
         t.str = "test_value"
-        t.str.should == "test_value"
+        expect(t.str).to eq("test_value")
       end
     end
 
     describe "subclass, TestSubClass1," do
       let(:sub_class) { Class.new(base_class) }
 
-      it(".base_class") { sub_class.base_class.should == base_class }
-      it(".base_model") { sub_class.base_model.should == base_class }
+      it(".base_class") { expect(sub_class.base_class).to eq(base_class) }
+      it(".base_model") { expect(sub_class.base_model).to eq(base_class) }
     end
   end
 
   describe "subclass, TestClass2," do
     let(:sub_class) { Class.new(ActsAsArModel) }
 
-    it(".base_class") { sub_class.base_class.should == sub_class }
-    it(".base_model") { sub_class.base_model.should == sub_class }
+    it(".base_class") { expect(sub_class.base_class).to eq(sub_class) }
+    it(".base_model") { expect(sub_class.base_model).to eq(sub_class) }
 
-    it { sub_class.columns_hash.should be_empty }
+    it { expect(sub_class.columns_hash).to be_empty }
   end
 
   context "AR backed model" do

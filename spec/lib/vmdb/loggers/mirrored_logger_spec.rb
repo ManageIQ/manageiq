@@ -29,25 +29,25 @@ describe Vmdb::Loggers::MirroredLogger do
 
           @log_stream.rewind
           lines = @log_stream.each_line.to_a
-          lines.length.should == 1
+          expect(lines.length).to eq(1)
           line = lines.first.chomp
-          line[7, 1].should == level.to_s[0, 1].upcase
-          line[-13..-1].should == "-- : Testing!"
+          expect(line[7, 1]).to eq(level.to_s[0, 1].upcase)
+          expect(line[-13..-1]).to eq("-- : Testing!")
 
           @mirror_stream.rewind
           lines = @mirror_stream.each_line.to_a
           if mirrored
-            lines.length.should == 1
+            expect(lines.length).to eq(1)
             line = lines.first.chomp
-            line[7, 1].should == level.to_s[0, 1].upcase
-            line[-28..-1].should == "-- : <MirrorPrefix> Testing!"
+            expect(line[7, 1]).to eq(level.to_s[0, 1].upcase)
+            expect(line[-28..-1]).to eq("-- : <MirrorPrefix> Testing!")
           else
-            lines.length.should == 0
+            expect(lines.length).to eq(0)
           end
         end
 
         it "#mirror?(#{level.to_s.upcase})" do
-          @log.mirror?(VMDBLogger.const_get(level.to_s.upcase)).should == mirrored
+          expect(@log.mirror?(VMDBLogger.const_get(level.to_s.upcase))).to eq(mirrored)
         end
       end
     end

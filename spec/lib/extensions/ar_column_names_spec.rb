@@ -6,7 +6,7 @@ describe "ar_column_names extension" do
     after(:each)  { Object.send(:remove_const, :SchemaMigration) }
 
     it "should have the correct column names symbols" do
-      SchemaMigration.column_names_symbols.should == [:version]
+      expect(SchemaMigration.column_names_symbols).to eq([:version])
     end
   end
 end
