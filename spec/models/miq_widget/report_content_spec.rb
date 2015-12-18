@@ -69,7 +69,7 @@ describe "Widget Report Content" do
       :description   => "EvmGroup-self_service",
       :miq_user_role => self_service_role
     )
-    user2   = FactoryGirl.create(:user, :userid => "user2", :miq_groups => [self_service_group])
+    user2   = FactoryGirl.create(:user, :miq_groups => [self_service_group])
 
     report = widget.generate_report(self_service_group, user2)
     content = MiqWidget::ReportContent.new(:report => report, :resource => widget.resource, :timezone => "UTC", :widget_options => widget.options)
