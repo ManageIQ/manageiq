@@ -139,30 +139,13 @@ class ContainerTopologyService
   end
 
   def build_kinds
-    kinds =  { :Replicator => true,
-               :Pod        => true,
-               :Container  => true,
-               :Node       => true,
-               :Service    => true,
-               :Host       => true,
-               :VM         => true,
-               :Route      => true
-             }
-    if @providers.any? { |instance| instance.kind_of?(ManageIQ::Providers::Kubernetes::ContainerManager) }
-      kinds.merge!(:Kubernetes => true)
+    kinds = [:Replicator, :Pod, :Container, :Node, :Service, :Host, :VM, :Route]
+
+    provider_types = ManageIQ::Providers::ContainerManager.group(:type).pluck(:type)
+    provider_types.each do |provider_type|
+      kinds << provider_type.split("::")[2].to_sym
     end
-    if @providers.any? { |instance| instance.kind_of?(ManageIQ::Providers::Openshift::ContainerManager) }
-      kinds.merge!(:Openshift => true)
-    end
-    if @providers.any? { |instance| instance.kind_of?(ManageIQ::Providers::Atomic::ContainerManager) }
-      kinds.merge!(:Atomic => true)
-    end
-    if @providers.any? { |instance| instance.kind_of?(ManageIQ::Providers::OpenshiftEnterprise::ContainerManager) }
-      kinds.merge!(:OpenshiftEnterprise => true)
-    end
-    if @providers.any? { |instance| instance.kind_of?(ManageIQ::Providers::AtomicEnterprise::ContainerManager) }
-      kinds.merge!(:AtomicEnterprise => true)
-    end
-    kinds
+
+    kinds.each_with_object({}) { |kind, h| h[kind] = true }
   end
 end
