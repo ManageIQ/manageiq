@@ -133,7 +133,7 @@ RSpec.describe "users API" do
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       user_id = @result["results"].first["id"]
-      expect(User.exists?(user_id)).to be true
+      expect(User.exists?(user_id)).to be_truthy
     end
 
     it "supports single user creation via action" do
@@ -145,7 +145,7 @@ RSpec.describe "users API" do
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       user_id = @result["results"].first["id"]
-      expect(User.exists?(user_id)).to be true
+      expect(User.exists?(user_id)).to be_truthy
     end
 
     it "supports multiple user creation" do
@@ -158,8 +158,8 @@ RSpec.describe "users API" do
 
       results = @result["results"]
       user1_hash, user2_hash = results.first, results.second
-      expect(User.exists?(user1_hash["id"])).to be true
-      expect(User.exists?(user2_hash["id"])).to be true
+      expect(User.exists?(user1_hash["id"])).to be_truthy
+      expect(User.exists?(user2_hash["id"])).to be_truthy
       expect(user1_hash["current_group_id"]).to eq(group1.id)
       expect(user2_hash["current_group_id"]).to eq(group2.id)
     end
@@ -267,7 +267,7 @@ RSpec.describe "users API" do
       run_delete(users_url(user1_id))
 
       expect_request_success_with_no_content
-      expect(User.exists?(user1_id)).to be false
+      expect(User.exists?(user1_id)).to be_falsey
     end
 
     it "supports single user delete action" do
@@ -279,7 +279,7 @@ RSpec.describe "users API" do
       run_post(user1_url, gen_request(:delete))
 
       expect_single_action_result(:success => true, :message => "deleting", :href => user1_url)
-      expect(User.exists?(user1_id)).to be false
+      expect(User.exists?(user1_id)).to be_falsey
     end
 
     it "supports multiple user deletes" do
@@ -292,8 +292,8 @@ RSpec.describe "users API" do
 
       expect_multiple_action_result(2)
       expect_result_resources_to_include_hrefs("results", [user1_url, user2_url])
-      expect(User.exists?(user1_id)).to be false
-      expect(User.exists?(user2_id)).to be false
+      expect(User.exists?(user1_id)).to be_falsey
+      expect(User.exists?(user2_id)).to be_falsey
     end
   end
 end
