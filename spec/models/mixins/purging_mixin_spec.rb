@@ -64,16 +64,16 @@ describe PurgingMixin do
 
     it "with a date and a window" do
       events # create events
-      expect(example_class.purge(purge_date + 1.second, 2)).to eq(2)
-      expect(example_class.pluck(:id)).to match_array all_ids[-3, 3]
+      expect(example_class.purge(purge_date + 1.second, 2)).to eq(3)
+      expect(example_class.pluck(:id)).to match_array all_ids[-2, 2]
     end
 
     it "with a date and a window from configuration" do
       events # create events
       allow(example_class).to receive(:purge_date).and_return(purge_date + 1.second)
       allow(example_class).to receive(:purge_window_size).and_return(2)
-      expect(example_class.purge).to eq(2)
-      expect(example_class.pluck(:id)).to match_array all_ids[-3, 3]
+      expect(example_class.purge).to eq(3)
+      expect(example_class.pluck(:id)).to match_array all_ids[-2, 2]
     end
   end
 end
