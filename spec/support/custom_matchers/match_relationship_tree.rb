@@ -1,6 +1,6 @@
 RSpec::Matchers.define :match_relationship_tree do |expected_tree|
   match do |actual_tree|
-    actual_tree.length.should == expected_tree.length
+    expect(actual_tree.length).to eq(expected_tree.length)
 
     actual_tree   = sort_tree(actual_tree)
     expected_tree = sort_tree(expected_tree)
@@ -9,11 +9,11 @@ RSpec::Matchers.define :match_relationship_tree do |expected_tree|
       expected_array, expected_children = expected_tree[i]
       expected_type, expected_name, expected_options = expected_array
 
-      obj.should      be_instance_of(expected_type)
-      obj.name.should == expected_name
-      expected_options.each { |k, v| obj.send(k).should == v } if expected_options
+      expect(obj).to be_instance_of(expected_type)
+      expect(obj.name).to eq(expected_name)
+      expected_options.each { |k, v| expect(obj.send(k)).to eq(v) } if expected_options
 
-      children.should match_relationship_tree expected_children
+      expect(children).to match_relationship_tree expected_children
     end
   end
 
