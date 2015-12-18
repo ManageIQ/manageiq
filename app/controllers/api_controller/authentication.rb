@@ -30,7 +30,11 @@ class ApiController
         else
           @auth_user     = @api_token_mgr.token_get_info(@module, @auth_token, :userid)
           @auth_user_obj = userid_to_userobj(@auth_user)
-          @api_token_mgr.reset_token(@module, @auth_token)
+
+          unless request.env['HTTP_X_AUTH_SKIP_TOKEN_RENEWAL'] == 'true'
+            @api_token_mgr.reset_token(@module, @auth_token)
+          end
+
           authorize_user_group(@auth_user_obj)
           validate_user_identity(@auth_user_obj)
           User.current_user = @auth_user_obj
