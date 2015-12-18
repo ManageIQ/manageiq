@@ -65,11 +65,7 @@
 
       $sessionStorage.$sync();  // needed when called right on reload
       if ($sessionStorage.token) {
-        event.preventDefault();
-
         Session.create({ auth_token: $sessionStorage.token });
-
-        $state.go('dashboard');
         return;
       }
 
