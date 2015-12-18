@@ -22,8 +22,7 @@ describe MiqWidget, "::ReportContent" do
   "))
   end
 
-  before(:each) do
-    RssFeed.sync_from_yml_dir
+  before do
     MiqReport.seed_report("Vendor and Guest OS")
 
     EvmSpecHelper.create_guid_miq_server_zone
