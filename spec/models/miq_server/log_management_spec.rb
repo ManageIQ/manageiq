@@ -1,7 +1,89 @@
 require "spec_helper"
 
+def stub_vmdb_util_methods_for_collection_log
+  VMDB::Util.stub(:zip_logs)
+  VMDB::Util.stub(:compressed_log_patterns).and_return(["log/evm.1122.gz"])
+  VMDB::Util.stub(:get_evm_log_for_date).and_return("20151209_141429_20151217_140845")
+  VMDB::Util.stub(:get_log_start_end_times).and_return([Time.zone.now, Time.zone.now])
+end
+
+shared_examples "post_[type_of_log]_logs" do |type, type_of_log|
+  it "uses #{type} file_depot in LogFile for upload" do
+    @zone.log_file_depot = zone_depot
+    @miq_server.log_file_depot = server_depot
+
+    stub_vmdb_util_methods_for_collection_log
+    allow_any_instance_of(LogFile).to receive(:upload)
+    allow_any_instance_of(MiqServer).to receive(:current_log_patterns)
+
+    method = "post_#{type_of_log}_logs".to_sym
+    @miq_server.send(method, miq_task.id, @miq_server.log_depot(type))
+    log_file_depot = LogFile.first.file_depot
+
+    if type == "Zone"
+      expect(log_file_depot).to eq(zone_depot)
+      expect(log_file_depot).not_to eq(server_depot)
+    else
+      expect(log_file_depot).not_to eq(zone_depot)
+      expect(log_file_depot).to eq(server_depot)
+    end
+
+    expect(LogFile.first.miq_task).to eq(miq_task)
+  end
+end
+
+shared_examples "post_logs_uses_depot" do |is_zone_depot, is_server_depot, context|
+  it "uses #{context} depot" do
+    if is_zone_depot
+      @zone.log_file_depot = zone_depot
+    end
+
+    if is_server_depot
+      @miq_server.log_file_depot = server_depot
+    end
+
+    stub_vmdb_util_methods_for_collection_log
+    allow_any_instance_of(LogFile).to receive(:upload)
+    allow_any_instance_of(MiqServer).to receive(:current_log_patterns)
+
+    @miq_server.post_logs(:taskid => miq_task.id, :context => context)
+
+    log_file_depot = LogFile.first.file_depot
+
+    if context == "Zone"
+      expect(log_file_depot).to eq(zone_depot)
+    else
+      expect(log_file_depot).to eq(server_depot)
+    end
+  end
+end
+
+shared_examples "post_logs_fails" do |is_zone_depot, is_server_depot, context|
+  it "raises error 'Log depot settings not configured'" do
+    if is_zone_depot
+      @zone.log_file_depot = zone_depot
+    end
+
+    if is_server_depot
+      @miq_server.log_file_depot = server_depot
+    end
+
+    stub_vmdb_util_methods_for_collection_log
+    allow_any_instance_of(LogFile).to receive(:upload)
+    allow_any_instance_of(MiqServer).to receive(:current_log_patterns)
+
+    expect do
+      @miq_server.post_logs(:taskid => miq_task.id, :context => context)
+    end.to raise_error(RuntimeError, "Log depot settings not configured")
+  end
+end
+
 describe MiqServer do
   context "LogManagement" do
+    let(:server_depot) { FactoryGirl.create(:file_depot) }
+    let(:zone_depot) { FactoryGirl.create(:file_depot) }
+    let(:miq_task) { FactoryGirl.create(:miq_task) }
+
     before do
       _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
       @miq_server2          = FactoryGirl.create(:miq_server, :zone => @zone)
@@ -46,28 +128,89 @@ describe MiqServer do
       end
     end
 
-    context "#log_depot" do
+    describe "#log_depot" do
       it "server log_file_depot configured" do
-        server_depot = FactoryGirl.create(:file_depot)
         @miq_server.log_file_depot = server_depot
-
-        expect(@miq_server.log_depot).to eq(server_depot)
+        expect(@miq_server.log_depot("MiqServer")).to eq(server_depot)
       end
 
       it "zone log_file_depot configured" do
-        zone_depot = FactoryGirl.create(:file_depot)
         @zone.log_file_depot = zone_depot
-
-        expect(@miq_server.log_depot).to eq(zone_depot)
+        expect(@miq_server.log_depot("Zone")).to eq(zone_depot)
       end
 
       it "server and zone log_file_depot configured" do
-        server_depot = FactoryGirl.create(:file_depot)
-        zone_depot   = FactoryGirl.create(:file_depot)
         @miq_server.log_file_depot = server_depot
         @zone.log_file_depot = zone_depot
+        expect(@miq_server.log_depot("Zone")).to eq(zone_depot)
+        expect(@miq_server.log_depot("MiqServer")).to eq(server_depot)
+      end
+    end
 
-        expect(@miq_server.log_depot).to eq(server_depot)
+    describe "#post_historical_logs" do
+      context "Server" do
+        include_examples "post_[type_of_log]_logs", "MiqServer", :historical
+      end
+
+      context "Zone" do
+        include_examples "post_[type_of_log]_logs", "Zone", :historical
+      end
+    end
+
+    describe "#post_current_logs" do
+      context "Server" do
+        include_examples "post_[type_of_log]_logs", "MiqServer", :current
+      end
+
+      context "Zone" do
+        include_examples "post_[type_of_log]_logs", "Zone", :current
+      end
+    end
+    def post_logs(options)
+      taskid = options[:taskid]
+      task = MiqTask.find(taskid)
+      context_log_depot = log_depot(options[:context])
+
+      # the current queue item and task must be errored out on exceptions so re-raise any caught errors
+      raise "Log depot settings not configured" unless context_log_depot
+      context_log_depot.update_attributes(:support_case => options[:support_case].presence)
+
+      post_historical_logs(taskid, context_log_depot) unless options[:only_current]
+      post_current_logs(taskid, context_log_depot)
+      task.update_status("Finished", "Ok", "Log files were successfully collected")
+    end
+
+    describe "#post_logs" do
+      context "Zone collection log requested, Zone depot is defined, MiqServer is defined" do
+        include_examples "post_logs_uses_depot", true, true, "Zone"
+      end
+
+      context "Zone collection log requested, Zone depot is defined, MiqServer is not defined" do
+        include_examples "post_logs_uses_depot", true, false, "Zone"
+      end
+
+      context "Zone collection log requested, zone depot is not defined, MiqServer defined" do
+        include_examples "post_logs_fails", false, true, "Zone"
+      end
+
+      context "Zone collection log requested, zone depot is not defined, MiqServer is not defined" do
+        include_examples "post_logs_fails", false, false, "Zone"
+      end
+
+      context "MiqServer collection log requested, Zone depot is defined, MiqServer is defined" do
+        include_examples "post_logs_uses_depot", true, true, "MiqServer"
+      end
+
+      context "MiqServer collection log requested, Zone depot is defined, MiqServer is not defined" do
+        include_examples "post_logs_fails", true, false, "MiqServer"
+      end
+
+      context "MiqServer collection log requested, zone depot is not defined, server defined" do
+        include_examples "post_logs_uses_depot", false, true, "MiqServer"
+      end
+
+      context "MiqServer collection log requested, zone depot is not defined, MiqServer is not defined" do
+        include_examples "post_logs_fails", false, false, "MiqServer"
       end
     end
   end

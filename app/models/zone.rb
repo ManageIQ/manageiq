@@ -7,7 +7,6 @@ class Zone < ActiveRecord::Base
   serialize :settings, Hash
 
   belongs_to      :log_file_depot, :class_name => "FileDepot"
-  alias_attribute :log_depot, :log_file_depot
 
   has_many :miq_servers
   has_many :ext_management_systems
@@ -227,6 +226,10 @@ class Zone < ActiveRecord::Base
 
   def active?
     miq_servers.any?(&:active?)
+  end
+
+  def any_started_miq_servers?
+    miq_servers.any?(&:started?)
   end
 
   protected

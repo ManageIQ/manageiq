@@ -611,6 +611,7 @@ module OpsController::Diagnostics
       add_flash(_("Cannot start log collection, a log collection is already in progress within this scope"), :error)
     else
       begin
+        options[:context] = klass.name
         instance.synchronize_logs(session[:userid], options)
       rescue StandardError => bang
         add_flash(_("Log collection error returned: ") << bang.message, :error)
@@ -1095,7 +1096,7 @@ module OpsController::Diagnostics
   def set_credentials
     creds = {}
     if params[:log_userid]
-      log_password = params[:log_password] ? params[:log_password] : @record.log_depot.authentication_password
+      log_password = params[:log_password] ? params[:log_password] : @record.log_file_depot.authentication_password
       creds[:default] = {:userid => params[:log_userid], :password => log_password}
     end
     creds
