@@ -1,8 +1,9 @@
 require "spec_helper"
 
 describe MiqWidget, "::ReportContent" do
+  let(:vm_count) { 2 }
   let(:widget) do
-    MiqWidget.sync_from_hash(YAML.load('
+    MiqWidget.sync_from_hash(YAML.load("
     description: report_vendor_and_guest_os
     title: Vendor and Guest OS
     content_type: report
@@ -10,7 +11,7 @@ describe MiqWidget, "::ReportContent" do
       :col_order:
         - name
         - vendor
-      :row_count: 10
+      :row_count: #{vm_count}
     visibility:
       :roles:
       - _ALL_
@@ -18,7 +19,7 @@ describe MiqWidget, "::ReportContent" do
     resource_type: MiqReport
     enabled: true
     read_only: true
-  '))
+  "))
   end
 
   before(:each) do
@@ -28,9 +29,7 @@ describe MiqWidget, "::ReportContent" do
     EvmSpecHelper.create_guid_miq_server_zone
     @admin       = FactoryGirl.create(:user_admin)
     @admin_group = @admin.current_group
-    10.times do |_i|
-      FactoryGirl.create(:vm_vmware)
-    end
+    vm_count.times { FactoryGirl.create(:vm_vmware) }
   end
 
   it "#generate_one_content_for_user" do
@@ -40,7 +39,7 @@ describe MiqWidget, "::ReportContent" do
     content.contents.scan("</td>").length.should == widget.options[:row_count] * widget.options[:col_order].length
     content.contents.scan("</th>").length.should == widget.options[:col_order].length
     content.miq_report_result.html_rows(:offset => 0, :limit => 1).first.scan("</td>").length.should == widget.resource.col_order.length
-    content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }.should == ManageIQ::Providers::Vmware::InfraManager::Vm.count
+    content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }.should == vm_count
     content.contents.should match "<tr><th>Name</th><th>Container</th></tr>"
     widget.contents_for_user(@admin).should == content
   end
@@ -52,7 +51,7 @@ describe MiqWidget, "::ReportContent" do
     content.contents.scan("</td>").length.should == widget.options[:row_count] * widget.options[:col_order].length
     content.contents.scan("</th>").length.should == widget.options[:col_order].length
     content.miq_report_result.html_rows(:offset => 0, :limit => 1).first.scan("</td>").length.should == widget.resource.col_order.length
-    content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }.should == ManageIQ::Providers::Vmware::InfraManager::Vm.count
+    content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }.should == vm_count
     content.contents.should match "<tr><th>Name</th><th>Container</th></tr>"
     widget.contents_for_user(@admin).should == content
   end
