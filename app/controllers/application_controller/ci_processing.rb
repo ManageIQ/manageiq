@@ -534,6 +534,7 @@ module ApplicationController::CiProcessing
     # generate the grid/tile/list url to come back here when gtl buttons are pressed
     @gtl_url       = "/#{@db}/#{@listicon.pluralize}/#{@record.id}?"
     @showtype      = "details"
+    @display       = "main"
     @no_checkboxes = true
     @showlinks     = true
 
