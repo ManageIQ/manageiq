@@ -99,13 +99,8 @@ class MiqCimAssociation < ActiveRecord::Base
     q
   end
 
-  def self.cleanup_by_zone(zoneId)
-    total = 0
-    aq = select(:id).where(:zone_id => zoneId, :status => STATUS_STALE)
-    aq.find_in_batches(:batch_size => 100) do |aa|
-      ids = aa.collect(&:id)
-      total += delete_all(:id => ids)
-    end
-    _log.info "deleted #{total} stale associations for zone id #{zoneId}"
+  def self.cleanup_by_zone(zone_id)
+    total = where(:zone_id => zone_id, :status => STATUS_STALE).delete_all_in_batches(100)
+    _log.info "deleted #{total} stale associations for zone id #{zone_id}"
   end
 end

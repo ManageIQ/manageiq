@@ -344,23 +344,14 @@ class EmsEvent < EventStream
   end
 
   def self.purge(older_than, window = nil, limit = nil)
-    _log.info("Purging #{limit.nil? ? "all" : limit} events older than [#{older_than}]...")
+    _log.info("Purging #{limit || "all"} events older than [#{older_than}]...")
 
     window ||= purge_window_size
 
-    oldest = select(:timestamp).order(:timestamp).first
-    oldest = oldest.nil? ? older_than : oldest.timestamp
-
-    total = 0
-    until (ids = where(:timestamp => oldest..older_than).limit(window).ids).empty?
-      ids = ids[0, limit - total] if limit && total + ids.length > limit
-
-      _log.info("Purging #{ids.length} events.")
-      total += delete_all(:id => ids)
-
-      break if limit && total >= limit
+    total = where(arel_table[:timestamp].lteq(older_than)).delete_in_batches(window, limit) do |count, _total|
+      _log.info("Purging #{count} events.")
     end
 
-    _log.info("Purging #{limit.nil? ? "all" : limit} events older than [#{older_than}]...Complete - Deleted #{total} records")
+    _log.info("Purging #{limit || "all"} events older than [#{older_than}]...Complete - Deleted #{total} records")
   end
 end
