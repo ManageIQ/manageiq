@@ -270,6 +270,7 @@ module EmsCommon
   end
 
   def new
+    @doc_url = provider_documentation_url
     assert_privileges("#{permission_prefix}_new")
     @ems = model.new
     set_form_vars
@@ -322,6 +323,7 @@ module EmsCommon
   end
 
   def edit
+    @doc_url = provider_documentation_url
     assert_privileges("#{permission_prefix}_edit")
     @ems = find_by_id_filtered(model, params[:id])
     set_form_vars
@@ -567,6 +569,10 @@ module EmsCommon
         render_flash
       end
     end
+  end
+
+  def provider_documentation_url
+    "http://manageiq.org/documentation/getting-started/#adding-a-provider"
   end
 
   private ############################
