@@ -76,17 +76,17 @@ describe Tag do
     end
 
     it "finds tag by name" do
-      expect(Tag.find_by_classification_name("test_category")).not_to.nil?
+      expect(Tag.find_by_classification_name("test_category")).not_to be_nil
       expect(Tag.find_by_classification_name("test_category").name).to eq('/managed/test_category')
     end
 
     it "doesn't find non tag" do
-      expect(Tag.find_by_classification_name("test_entry")).to.nil?
+      expect(Tag.find_by_classification_name("test_entry")).to be_nil
     end
 
     it "finds tag by name and ns" do
       ns = '/managed/test_category'
-      expect(Tag.find_by_classification_name("test_entry", nil, ns)).not_to.nil?
+      expect(Tag.find_by_classification_name("test_entry", nil, ns)).not_to be_nil
       expect(Tag.find_by_classification_name("test_entry", nil, ns).name).to eq("#{ns}/test_entry")
     end
   end

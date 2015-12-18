@@ -8,7 +8,7 @@ describe Picture do
   end
 
   it "#content" do
-    expect(subject.content).to.nil?
+    expect(subject.content).to be_nil
     expected = "FOOBAR"
     subject.content         = expected.dup
     expect(subject.content).to eq(expected)
@@ -16,7 +16,7 @@ describe Picture do
 
   context "#extension" do
     it "on new record" do
-      expect(subject.extension).to.nil?
+      expect(subject.extension).to be_nil
       ext = "foo"
       subject.extension         = ext.dup
       expect(subject.extension).to eq(ext)
@@ -34,7 +34,7 @@ describe Picture do
       subject.save
 
       subject.reload
-      expect(subject.extension).to.nil?
+      expect(subject.extension).to be_nil
       ext = "foo"
       subject.extension         = ext.dup
       expect(subject.extension).to eq(ext)

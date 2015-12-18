@@ -119,7 +119,7 @@ describe ServiceOrchestration do
     end
 
     it 'updates a stack through cloud manager' do
-      allow_any_instance_of(OrchestrationStack).to receive(:raw_update_stack) do |instance, _instance, new_template, opts|
+      allow_any_instance_of(OrchestrationStack).to receive(:raw_update_stack) do |_instance, new_template, opts|
         expect(opts[:parameters]).to include(
           'InstanceType'   => 'cg1.4xlarge',
           'DBRootPassword' => 'admin'
