@@ -22,6 +22,10 @@ describe Metric::Purging do
     end
 
     context "with data" do
+      let(:vm1) { FactoryGirl.create(:vm_vmware) }
+      let(:vm2) { FactoryGirl.create(:vm_vmware) }
+      let(:host) { FactoryGirl.create(:host) }
+
       before(:each) do
         @vmdb_config = {
           :performance => {
@@ -36,13 +40,13 @@ describe Metric::Purging do
         stub_server_configuration(@vmdb_config)
 
         @metrics1 = [
-          FactoryGirl.create(:metric_rollup_vm_hr, :resource_id => 1, :timestamp => (6.months + 1.days).ago.utc),
-          FactoryGirl.create(:metric_rollup_vm_hr, :resource_id => 1, :timestamp => (6.months - 1.days).ago.utc)
+          FactoryGirl.create(:metric_rollup_vm_hr, :resource_id => vm1.id, :timestamp => (6.months + 1.days).ago.utc),
+          FactoryGirl.create(:metric_rollup_vm_hr, :resource_id => vm1.id, :timestamp => (6.months - 1.days).ago.utc)
         ]
         @metrics2 = [
-          FactoryGirl.create(:metric_rollup_vm_hr, :resource_id => 2, :timestamp => (6.months + 2.days).ago.utc),
-          FactoryGirl.create(:metric_rollup_vm_hr, :resource_id => 2, :timestamp => (6.months + 1.days).ago.utc),
-          FactoryGirl.create(:metric_rollup_vm_hr, :resource_id => 2, :timestamp => (6.months - 1.days).ago.utc)
+          FactoryGirl.create(:metric_rollup_vm_hr, :resource_id => vm2.id, :timestamp => (6.months + 2.days).ago.utc),
+          FactoryGirl.create(:metric_rollup_vm_hr, :resource_id => vm2.id, :timestamp => (6.months + 1.days).ago.utc),
+          FactoryGirl.create(:metric_rollup_vm_hr, :resource_id => vm2.id, :timestamp => (6.months - 1.days).ago.utc)
         ]
       end
 
@@ -53,8 +57,8 @@ describe Metric::Purging do
       context "#purge" do
         it "without block" do
           described_class.purge(6.months.ago, "hourly")
-          expect(MetricRollup.where(:resource_id => 1)).to eq([@metrics1.last])
-          expect(MetricRollup.where(:resource_id => 2)).to eq([@metrics2.last])
+          expect(MetricRollup.where(:resource_id => @metrics1.last.resource_id)).to eq([@metrics1.last])
+          expect(MetricRollup.where(:resource_id => @metrics2.last.resource_id)).to eq([@metrics2.last])
         end
 
         it "with a block" do
@@ -63,8 +67,8 @@ describe Metric::Purging do
           @vmdb_config.store_path(:performance, :history, :purge_window_size, 2)
 
           described_class.purge(6.months.ago, "hourly") { |count, total| callbacks << [count, total] }
-          expect(MetricRollup.where(:resource_id => 1)).to eq([@metrics1.last])
-          expect(MetricRollup.where(:resource_id => 2)).to eq([@metrics2.last])
+          expect(MetricRollup.where(:resource_id => @metrics1.last.resource_id)).to eq([@metrics1.last])
+          expect(MetricRollup.where(:resource_id => @metrics2.last.resource_id)).to eq([@metrics2.last])
 
           expect(callbacks).to eq([[2, 2], [1, 3]])
         end
