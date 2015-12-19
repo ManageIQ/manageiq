@@ -3,7 +3,7 @@ require "spec_helper"
 describe MiqStorageMetric do
   let(:time) { Time.utc(2013, 4, 22, 8, 31) }
 
-  context ".purge_date" do
+  describe ".purge_date" do
     it "using Fixnum" do
       stub_server_configuration(:storage => {:metrics_history => {:token => 20}})
       Timecop.freeze(time) do
@@ -30,6 +30,15 @@ describe MiqStorageMetric do
       Timecop.freeze(time) do
         expect(described_class.purge_date(:token)).to eq nil
       end
+    end
+  end
+
+  describe '.purge_all_timer' do
+    it "works" do
+      # just use default of derived: 4.hours, hourly: 6.months, daily: 6.months
+      stub_server_configuration(:storage => {:metrics_history => {}})
+      OntapAggregateMetric.create
+      MiqStorageMetric.purge_all_timer
     end
   end
 end
