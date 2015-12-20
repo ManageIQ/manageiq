@@ -66,6 +66,7 @@
       $sessionStorage.$sync();  // needed when called right on reload
       if ($sessionStorage.token) {
         Session.create({ auth_token: $sessionStorage.token });
+
         return;
       }
 

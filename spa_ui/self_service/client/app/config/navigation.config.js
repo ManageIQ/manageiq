@@ -48,7 +48,7 @@
 
     function fetchRequests() {
       var options = {
-        _auto_refresh: true,
+        auto_refresh: true,
       };
 
       CollectionsApi.query('service_requests', options)
@@ -59,7 +59,7 @@
       var options = {
         expand: false,
         filter: ['service_id>0'],
-        _auto_refresh: true,
+        auto_refresh: true,
       };
 
       CollectionsApi.query('services', options)
@@ -70,7 +70,7 @@
       var options = {
         expand: false,
         filter: ['service_template_catalog_id>0', 'display=true'],
-        _auto_refresh: true,
+        auto_refresh: true,
       };
 
       CollectionsApi.query('service_templates', options)

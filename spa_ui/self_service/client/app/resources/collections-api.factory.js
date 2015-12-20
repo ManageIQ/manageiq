@@ -89,7 +89,7 @@
       var config = {};
       options = options || {};
 
-      if (options._auto_refresh) {
+      if (options.auto_refresh) {
         config.headers = {
           'X-Auth-Skip-Token-Renewal': 'true',
         };

@@ -47,7 +47,6 @@
   "disallowSpacesInNamedFunctionExpression": {
     "beforeOpeningRoundBrace": true
   },
-  "disallowTrailingComma": true,
   "maximumLineLength": {
     "value": 120,
     "allExcept": [
