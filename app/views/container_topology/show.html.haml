@@ -21,14 +21,14 @@
     .legend
       %label#selected
       %div{'ng-if' => "kinds"}
-        %kubernetes-topology-icon{:kind => "Replicator", "tooltip-placement" => "bottom", "tooltip" => "{{legendTooltip}}"}
+        %kubernetes-topology-icon{:kind => "ContainerReplicator", "tooltip-placement" => "bottom", "tooltip" => "{{legendTooltip}}"}
           %svg.kube-topology
             %g.EntityLegend.Containers
               %circle{:r => "17"}
               -# pficon-replicator
               %text{:y => "8"} &#xE624;
           %label Replicators
-        %kubernetes-topology-icon{:kind => "Pod", "tooltip-placement" => "bottom", "tooltip" => "{{legendTooltip}}"}
+        %kubernetes-topology-icon{:kind => "ContainerGroup", "tooltip-placement" => "bottom", "tooltip" => "{{legendTooltip}}"}
           %svg.kube-topology
             %g.EntityLegend.Containers.Pod
               %circle{:r => "17"}
@@ -42,28 +42,28 @@
               -# fa-cube
               %text{:y => "7"} &#xF1B2;
           %label Containers
-        %kubernetes-topology-icon{:kind => "Service", "tooltip-placement" => "bottom", "tooltip" => "{{legendTooltip}}"}
+        %kubernetes-topology-icon{:kind => "ContainerService", "tooltip-placement" => "bottom", "tooltip" => "{{legendTooltip}}"}
           %svg.kube-topology
             %g.EntityLegend.Containers
               %circle{:r => "17"}
               -# pficon-service
               %text{:y => "8"} &#xE61E;
           %label Services
-        %kubernetes-topology-icon{:kind => "Route", "tooltip-placement" => "bottom", "tooltip" => "{{legendTooltip}}"}
+        %kubernetes-topology-icon{:kind => "ContainerRoute", "tooltip-placement" => "bottom", "tooltip" => "{{legendTooltip}}"}
           %svg.kube-topology
             %g.EntityLegend.Containers
               %circle{:r => "17"}
               -# pficon-route
               %text{:y => "8"} &#xE625;
           %label Routes
-        %kubernetes-topology-icon{:kind => "Node", "tooltip-placement" => "bottom", "tooltip" => "{{legendTooltip}}"}
+        %kubernetes-topology-icon{:kind => "ContainerNode", "tooltip-placement" => "bottom", "tooltip" => "{{legendTooltip}}"}
           %svg.kube-topology
             %g.EntityLegend.Containers
               %circle{:r => "17"}
               -# pficon-container-node
               %text{:y => "9"} &#xE621;
           %label Nodes
-        %kubernetes-topology-icon{:kind => "VM", "tooltip-placement" => "bottom", "tooltip" => "{{legendTooltip}}"}
+        %kubernetes-topology-icon{:kind => "Vm", "tooltip-placement" => "bottom", "tooltip" => "{{legendTooltip}}"}
           %svg.kube-topology
             %g.EntityLegend.Infra
               %circle{:r => "17"}
