@@ -27,4 +27,11 @@ describe('containerTopologyController', function() {
             expect($scope.kinds).not.toBe(undefined);
         });
     });
+
+    describe('kinds contain all expected kinds', function() {
+        it('in all main objects', function() {
+            expect(Object.keys($scope.kinds).length).toBeGreaterThan(7);
+            expect($scope.kinds["Container"]).not.toBe(undefined);
+        });
+    });
 });

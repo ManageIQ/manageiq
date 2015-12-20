@@ -1,0 +1,97 @@
+<div data-ng-app="topologyApp" ng-controller="containerTopologyController">
+    <%= stylesheet_link_tag 'container_topology' %>
+    <div class="topology_header">
+        <div class="refresh">
+            <label class="checkbox-inline">
+                <input id="box" ng-change="show_hide_names(checkboxModel.value)" ng-false-value="false" ng-model="checkboxModel.value" ng-true-value="true" type="checkbox"></input>
+                Display Names
+            </label>
+            <i class="btn btn-default fa fa-refresh refresh-topology" ng-click="refresh()"></i>
+        </div>
+        <div class="legend">
+            <label id="selected"></label>
+            <div ng-if="kinds">
+                <kubernetes-topology-icon kind="Replicator" tooltip-placement="bottom" tooltip="{{legendTooltip}}">
+                    <svg class="kube-topology">
+                        <g class="Replicator" transform="translate(21, 21)">
+                            <circle r="17"></circle>
+                            <image height="18" width="18" x="-9" xlink:href="/images/icons/new/container_replicator.png" y="-9"></image>
+                        </g>
+                    </svg>
+                    <label>Replicators</label>
+                </kubernetes-topology-icon>
+                <kubernetes-topology-icon kind="Pod" tooltip-placement="bottom" tooltip="{{legendTooltip}}">
+                    <svg class="kube-topology">
+                        <g class="Pod" transform="translate(21, 21)">
+                            <circle r="17"></circle>
+                            <image height="18" width="18" x="-9" xlink:href="/images/icons/new/container_group.png" y="-9"></image>
+                        </g>
+                    </svg>
+                    <label>Pods</label>
+                </kubernetes-topology-icon>
+                <kubernetes-topology-icon kind="Container" tooltip-placement="bottom" tooltip="{{legendTooltip}}">
+                    <svg class="kube-topology">
+                        <g class="Container" transform="translate(21, 21)">
+                            <circle r="17"></circle>
+                            <image height="18" width="18" x="-9" xlink:href="/images/icons/new/container.png" y="-9"></image>
+                        </g>
+                    </svg>
+                    <label>Containers</label>
+                </kubernetes-topology-icon>
+                <kubernetes-topology-icon kind="Service" tooltip-placement="bottom" tooltip="{{legendTooltip}}">
+                    <svg class="kube-topology">
+                        <g class="Service" transform="translate(21, 21)">
+                            <circle r="17"></circle>
+                            <image height="18" width="18" x="-9" xlink:href="/images/icons/new/container_service.png" y="-9"></image>
+                        </g>
+                    </svg>
+                    <label>Services</label>
+                </kubernetes-topology-icon>
+                <kubernetes-topology-icon kind="Route" tooltip-placement="bottom" tooltip="{{legendTooltip}}">
+                    <svg class="kube-topology">
+                        <g class="Route" transform="translate(21, 21)">
+                            <circle r="17"></circle>
+                            <image height="18" width="18" x="-9" xlink:href="/images/icons/new/container_route.png" y="-9"></image>
+                        </g>
+                    </svg>
+                    <label>Routes</label>
+                </kubernetes-topology-icon>
+                <kubernetes-topology-icon kind="Node" tooltip-placement="bottom" tooltip="{{legendTooltip}}">
+                    <svg class="kube-topology">
+                        <g class="Node" transform="translate(21, 21)">
+                            <circle r="17"></circle>
+                            <image height="18" width="18" x="-9" xlink:href="/images/icons/new/container_node.png" y="-9"></image>
+                        </g>
+                    </svg>
+                    <label>Nodes</label>
+                </kubernetes-topology-icon>
+                <kubernetes-topology-icon kind="VM" tooltip-placement="bottom" tooltip="{{legendTooltip}}">
+                    <svg class="kube-topology">
+                        <g class="VM" transform="translate(21, 21)">
+                            <circle r="17"></circle>
+                            <image height="18" width="18" x="-9" xlink:href="/images/icons/new/vm.png" y="-9"></image>
+                        </g>
+                    </svg>
+                    <label>VMs</label>
+                </kubernetes-topology-icon>
+                <kubernetes-topology-icon kind="Host" tooltip-placement="bottom" tooltip="{{legendTooltip}}">
+                    <svg class="kube-topology">
+                        <g class="Host" transform="translate(21, 21)">
+                            <circle r="17"></circle>
+                            <image height="18" width="18" x="-9" xlink:href="/images/icons/new/host.png" y="-9"></image>
+                        </g>
+                    </svg>
+                    <label>Hosts</label>
+                </kubernetes-topology-icon>
+            </div>
+        </div>
+    </div>
+    <div class="alert alert-info alert-dismissable">
+        <button aria-hidden="true" class="close" data-dismiss="alert" type="button">
+            <span class="pficon pficon-close"></span>
+        </button>
+        <span class="pficon pficon-info"></span>
+        <strong>Click on the legend to show/hide entities, and double click on the entities in the graph to navigate to their summary pages. </strong>
+    </div>
+    <kubernetes-topology-graph  items="items" relations="relations" kinds="kinds"/>
+</div>
