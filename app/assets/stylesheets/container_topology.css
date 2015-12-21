@@ -90,3 +90,17 @@ kubernetes-topology-icon svg {
 .kube-topology g circle {
   stroke-width: 2px;
 }
+
+.kube-topology g.Pod text, .kube-topology g.Container text  {
+    fill: #1186C1;
+    font-family: FontAwesome;
+}
+
+.kube-topology g.Replicator text, .kube-topology g.Node text,
+.kube-topology g.Service text, .kube-topology g.Route text {
+    fill: #1186C1;
+}
+
+.kube-topology g.VM text, .kube-topology g.Host text {
+    fill: #636363;
+}
