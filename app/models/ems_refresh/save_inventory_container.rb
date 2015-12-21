@@ -25,7 +25,7 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(:container_projects, ems, hashes, deletes, [:ems_ref],
+    save_inventory_multi(ems.container_projects, hashes, deletes, [:ems_ref],
                          :labels)
     store_ids_for_new_records(ems.container_projects, hashes, :ems_ref)
   end
@@ -41,7 +41,7 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(:persistent_volumes, ems, hashes, deletes, [:ems_ref], [], [:namespace])
+    save_inventory_multi(ems.persistent_volumes, hashes, deletes, [:ems_ref], [], [:namespace])
     store_ids_for_new_records(ems.persistent_volumes, hashes, :ems_ref)
   end
 
@@ -60,7 +60,7 @@ module EmsRefresh::SaveInventoryContainer
       h[:container_project_id] = h.fetch_path(:project, :id)
     end
 
-    save_inventory_multi(:container_quotas, ems, hashes, deletes, [:ems_ref], :container_quota_items, :project)
+    save_inventory_multi(ems.container_quotas, hashes, deletes, [:ems_ref], :container_quota_items, :project)
     store_ids_for_new_records(ems.container_quotas, hashes, :ems_ref)
   end
 
@@ -72,7 +72,7 @@ module EmsRefresh::SaveInventoryContainer
               else
                 []
               end
-    save_inventory_multi(:container_quota_items, container_quota, hashes, deletes, [:resource])
+    save_inventory_multi(container_quota.container_quota_items, hashes, deletes, [:resource])
     store_ids_for_new_records(container_quota.container_quota_items, hashes, :resource)
   end
 
@@ -90,7 +90,7 @@ module EmsRefresh::SaveInventoryContainer
       h[:container_project_id] = h.fetch_path(:project, :id)
     end
 
-    save_inventory_multi(:container_limits, ems, hashes, deletes, [:ems_ref], :container_limit_items, :project)
+    save_inventory_multi(ems.container_limits, hashes, deletes, [:ems_ref], :container_limit_items, :project)
     store_ids_for_new_records(ems.container_limits, hashes, :ems_ref)
   end
 
@@ -102,7 +102,7 @@ module EmsRefresh::SaveInventoryContainer
               else
                 []
               end
-    save_inventory_multi(:container_limit_items, container_limit, hashes, deletes, [:resource, :item_type])
+    save_inventory_multi(container_limit.container_limit_items, hashes, deletes, [:resource, :item_type])
     store_ids_for_new_records(container_limit.container_limit_items, hashes, [:resource, :item_type])
   end
 
@@ -122,7 +122,7 @@ module EmsRefresh::SaveInventoryContainer
       h[:container_service_id] = h.fetch_path(:container_service, :id)
     end
 
-    save_inventory_multi(:container_routes, ems, hashes, deletes, [:ems_ref],
+    save_inventory_multi(ems.container_routes, hashes, deletes, [:ems_ref],
                          :labels, [:container_service, :project, :namespace])
     store_ids_for_new_records(ems.container_routes, hashes, :ems_ref)
   end
@@ -138,7 +138,7 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(:container_nodes, ems, hashes, deletes, [:ems_ref],
+    save_inventory_multi(ems.container_nodes, hashes, deletes, [:ems_ref],
                          [:labels, :computer_system, :container_conditions], [:namespace])
     store_ids_for_new_records(ems.container_nodes, hashes, :ems_ref)
   end
@@ -162,7 +162,7 @@ module EmsRefresh::SaveInventoryContainer
       h[:container_project_id] = h.fetch_path(:project, :id)
     end
 
-    save_inventory_multi(:container_replicators, ems, hashes, deletes, [:ems_ref],
+    save_inventory_multi(ems.container_replicators, hashes, deletes, [:ems_ref],
                          [:labels, :selector_parts], [:project, :namespace])
     store_ids_for_new_records(ems.container_replicators, hashes, :ems_ref)
   end
@@ -183,7 +183,7 @@ module EmsRefresh::SaveInventoryContainer
       h[:container_project_id] = h.fetch_path(:project, :id)
     end
 
-    save_inventory_multi(:container_services, ems, hashes, deletes, [:ems_ref],
+    save_inventory_multi(ems.container_services, hashes, deletes, [:ems_ref],
                          [:labels, :selector_parts, :container_service_port_configs],
                          [:container_groups, :project, :namespace])
 
@@ -207,7 +207,7 @@ module EmsRefresh::SaveInventoryContainer
       h[:container_project_id] = h.fetch_path(:project, :id)
     end
 
-    save_inventory_multi(:container_groups, ems, hashes, deletes, [:ems_ref],
+    save_inventory_multi(ems.container_groups, hashes, deletes, [:ems_ref],
                          [:container_definitions, :containers, :labels, :node_selector_parts, :container_conditions,
                           :container_volumes], [:container_node, :container_replicator, :project, :namespace])
     store_ids_for_new_records(ems.container_groups, hashes, :ems_ref)
@@ -223,7 +223,7 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(:container_definitions, container_group, hashes, deletes,
+    save_inventory_multi(container_group.container_definitions, hashes, deletes,
                          [:ems_ref], [:container_port_configs, :container_env_vars, :security_context, :container])
     store_ids_for_new_records(container_group.container_definitions, hashes, :ems_ref)
   end
@@ -238,7 +238,7 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(:container_port_configs, container_definition, hashes, deletes, [:ems_ref])
+    save_inventory_multi(container_definition.container_port_configs, hashes, deletes, [:ems_ref])
     store_ids_for_new_records(container_definition.container_port_configs, hashes, :ems_ref)
   end
 
@@ -252,7 +252,7 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(:container_service_port_configs, container_service, hashes, deletes, [:ems_ref])
+    save_inventory_multi(container_service.container_service_port_configs, hashes, deletes, [:ems_ref])
     store_ids_for_new_records(container_service.container_service_port_configs, hashes, :ems_ref)
   end
 
@@ -264,7 +264,7 @@ module EmsRefresh::SaveInventoryContainer
               else
                 []
               end
-    save_inventory_multi(:container_env_vars, container_definition, hashes, deletes, [:name, :value, :field_path])
+    save_inventory_multi(container_definition.container_env_vars, hashes, deletes, [:name, :value, :field_path])
     store_ids_for_new_records(container_definition.container_env_vars, hashes, [:name, :value, :field_path])
   end
 
@@ -282,7 +282,7 @@ module EmsRefresh::SaveInventoryContainer
       h[:container_image_registry_id] = h[:container_image_registry][:id] unless h[:container_image_registry].nil?
     end
 
-    save_inventory_multi(:container_images, ems, hashes, deletes, [:image_ref, :container_image_registry_id], [],
+    save_inventory_multi(ems.container_images, hashes, deletes, [:image_ref, :container_image_registry_id], [],
                          :container_image_registry)
     store_ids_for_new_records(ems.container_images, hashes,
                               [:image_ref, :container_image_registry_id])
@@ -299,7 +299,7 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(:container_image_registries, ems, hashes, deletes, [:host, :port])
+    save_inventory_multi(ems.container_image_registries, hashes, deletes, [:host, :port])
     store_ids_for_new_records(ems.container_image_registries, hashes, [:host, :port])
   end
 
@@ -313,7 +313,7 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(:container_component_statuses, ems, hashes, deletes, [:name])
+    save_inventory_multi(ems.container_component_statuses, hashes, deletes, [:name])
     store_ids_for_new_records(ems.container_component_statuses, hashes, :name)
   end
 
@@ -335,7 +335,7 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(:container_conditions, container_entity, hashes, deletes, [:name])
+    save_inventory_multi(container_entity.container_conditions, hashes, deletes, [:name])
     store_ids_for_new_records(container_entity.container_conditions, hashes, :name)
   end
 
@@ -353,7 +353,7 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(:container_volumes, container_group, hashes, deletes, [:name])
+    save_inventory_multi(container_group.container_volumes, hashes, deletes, [:name])
     store_ids_for_new_records(container_group.container_volumes, hashes, :name)
   end
 
@@ -367,7 +367,7 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(:labels, entity, hashes, deletes, [:section, :name])
+    save_inventory_multi(entity.labels, hashes, deletes, [:section, :name])
     store_ids_for_new_records(entity.labels, hashes, [:section, :name])
   end
 
@@ -381,7 +381,7 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(:selector_parts, entity, hashes, deletes, [:section, :name])
+    save_inventory_multi(entity.selector_parts, hashes, deletes, [:section, :name])
     store_ids_for_new_records(entity.selector_parts, hashes, [:section, :name])
   end
 
@@ -395,7 +395,7 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(:node_selector_parts, entity, hashes, deletes, [:section, :name])
+    save_inventory_multi(entity.node_selector_parts, hashes, deletes, [:section, :name])
     store_ids_for_new_records(entity.node_selector_parts, hashes, [:section, :name])
   end
 end
