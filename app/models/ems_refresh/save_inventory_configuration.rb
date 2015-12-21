@@ -19,7 +19,7 @@ module EmsRefresh
 
     def save_configuration_profiles_inventory(manager, hashes, target)
       delete_missing_records = target.nil? || manager == target
-      save_inventory_assoc(:configuration_profiles, manager, hashes, delete_missing_records, [:manager_ref])
+      save_inventory_assoc(manager.configuration_profiles, hashes, delete_missing_records, [:manager_ref])
 
       link_children_references(manager.configuration_profiles)
     end
@@ -31,7 +31,7 @@ module EmsRefresh
       hashes.each do |hash|
         hash[:configuration_profile_id] = hash.fetch_path(:configuration_profile, :id)
       end
-      save_inventory_assoc(:configured_systems, manager, hashes, delete_missing_records, [:manager_ref], nil,
+      save_inventory_assoc(manager.configured_systems, hashes, delete_missing_records, [:manager_ref], nil,
                            [:configuration_profile])
     end
   end
