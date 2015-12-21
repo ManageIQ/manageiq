@@ -8,9 +8,9 @@ describe MiqUserScope do
     it "should return the correct converted scope instance" do
       filters = {"managed" => [["/managed/function/desktop"]], "belongsto" => []}
       scope = MiqUserScope.hash_to_scope(filters)
-      scope.view.should == {:managed => {:_all_ => [["/managed/function/desktop"]]}}
-      scope.admin.should.nil?
-      scope.control.should.nil?
+      expect(scope.view).to eq({:managed => {:_all_ => [["/managed/function/desktop"]]}})
+      expect(scope.admin).to.nil?
+      expect(scope.control).to.nil?
     end
   end
 
@@ -57,7 +57,7 @@ describe MiqUserScope do
     end
 
     it "should return the correct filters for search" do
-      @scope1.get_filters(:class => Vm, :feature_type => :view).should == {
+      expect(@scope1.get_filters(:class => Vm, :feature_type => :view)).to eq({
         :belongsto  =>
                        ["/belongsto/ExtManagementSystem|VC1/EmsFolder|Datacenters/EmsFolder|DataCenter1/EmsFolder|host/EmsCluster|Cluster1",
                         "/belongsto/ExtManagementSystem|VC1/EmsFolder|Datacenters/EmsFolder|DataCenter2/EmsFolder|host/EmsCluster|Cluster3"],
@@ -66,25 +66,25 @@ describe MiqUserScope do
                         ["/managed/location/london", "/managed/location/ny"],
                         ["/managed/service_level/gold", "/managed/service_level/platinum"]],
         :expression => nil
-      }
-      @scope1.get_filters(:class => Vm, :feature_type => :admin).should == {:expression => nil, :belongsto => nil, :managed => nil}
-      @scope1.get_filters(:class => Vm, :feature_type => :control).should == {:expression => nil, :belongsto => nil, :managed => nil}
+      })
+      expect(@scope1.get_filters(:class => Vm, :feature_type => :admin)).to eq({:expression => nil, :belongsto => nil, :managed => nil})
+      expect(@scope1.get_filters(:class => Vm, :feature_type => :control)).to eq({:expression => nil, :belongsto => nil, :managed => nil})
 
-      @scope2.get_filters(:class => Vm, :feature_type => :view).should == {
+      expect(@scope2.get_filters(:class => Vm, :feature_type => :view)).to eq({
         :belongsto  =>
                        ["/belongsto/ExtManagementSystem|VC4 IP 14/EmsFolder|Datacenters/EmsFolder|Prod/EmsFolder|vm/EmsFolder|Discovered virtual machine"],
         :managed    =>
                        [["/managed/location/chicago", "/managed/location/ny"], ["/managed/environment/dev"]],
         :expression => nil
-      }
+      })
 
       filters = @scope2.get_filters(:class => Storage, :feature_type => :view)
-      filters[:belongsto].should.nil?
-      filters[:managed].should == [["/managed/location/chicago", "/managed/location/ny"]]
-      filters[:expression].should == @scope2_exp
+      expect(filters[:belongsto]).to.nil?
+      expect(filters[:managed]).to eq([["/managed/location/chicago", "/managed/location/ny"]])
+      expect(filters[:expression]).to eq(@scope2_exp)
 
-      @scope2.get_filters(:class => Vm, :feature_type => :control).should == {:expression => nil, :belongsto => nil, :managed => [["/managed/location/chicago"]]}
-      @scope2.get_filters(:class => Vm, :feature_type => :admin).should == {:expression => nil, :belongsto => nil, :managed => [["/managed/location/ny"]]}
+      expect(@scope2.get_filters(:class => Vm, :feature_type => :control)).to eq({:expression => nil, :belongsto => nil, :managed => [["/managed/location/chicago"]]})
+      expect(@scope2.get_filters(:class => Vm, :feature_type => :admin)).to eq({:expression => nil, :belongsto => nil, :managed => [["/managed/location/ny"]]})
     end
   end
 
@@ -113,21 +113,21 @@ describe MiqUserScope do
 
     it "should correctly merge managed filters" do
       filters = @scope.get_filters(:class => Vm, :feature_type => :view)
-      filters[:managed].should == [["/managed/location/chicago", "/managed/location/ny"]]
+      expect(filters[:managed]).to eq([["/managed/location/chicago", "/managed/location/ny"]])
 
       filters = @scope.get_filters(:class => Host, :feature_type => :view)
-      filters[:managed].should == [["/managed/location/chicago", "/managed/location/ny", "/managed/location/london"], ["/managed/environment/prod"]]
+      expect(filters[:managed]).to eq([["/managed/location/chicago", "/managed/location/ny", "/managed/location/london"], ["/managed/environment/prod"]])
     end
 
     it "should correctly merge belongsto filters" do
       filters = @scope.get_filters(:class => Vm, :feature_type => :view)
-      filters[:belongsto].should == ["/belongsto/ExtManagementSystem|VC1", "/belongsto/ExtManagementSystem|VC4", "/belongsto/ExtManagementSystem|VC4/EmsFolder|Datacenters/EmsFolder|Prod/EmsFolder|vm/EmsFolder|Discovered virtual machine"]
+      expect(filters[:belongsto]).to eq(["/belongsto/ExtManagementSystem|VC1", "/belongsto/ExtManagementSystem|VC4", "/belongsto/ExtManagementSystem|VC4/EmsFolder|Datacenters/EmsFolder|Prod/EmsFolder|vm/EmsFolder|Discovered virtual machine"])
       # filters[:belongsto].should == ["/belongsto/ExtManagementSystem|VC1", "/belongsto/ExtManagementSystem|VC4"]
     end
 
     it "should correctly merge expression filters" do
       filters = @scope.get_filters(:class => Vm, :feature_type => :view)
-      filters[:expression].exp.should == {"or" => [@exp1, @exp2]}
+      expect(filters[:expression].exp).to eq({"or" => [@exp1, @exp2]})
     end
   end
 end

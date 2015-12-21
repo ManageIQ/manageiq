@@ -30,15 +30,15 @@ describe MiqReport::ImportExport do
       it "preview" do
         _, result = subject
 
-        result[:status].should == :add
-        MiqReport.count.should == 0
+        expect(result[:status]).to eq(:add)
+        expect(MiqReport.count).to eq(0)
       end
 
       it "import" do
         @options[:save] = true
         _, result = subject
-        result[:status].should == :add
-        MiqReport.count.should == 1
+        expect(result[:status]).to eq(:add)
+        expect(MiqReport.count).to eq(1)
       end
     end
 
@@ -48,15 +48,15 @@ describe MiqReport::ImportExport do
       context "overwrite" do
         it "preview" do
           _, result = subject
-          result[:status].should == :update
-          MiqReport.first.tz.should == "UTC"
+          expect(result[:status]).to eq(:update)
+          expect(MiqReport.first.tz).to eq("UTC")
         end
 
         it "import" do
           @options[:save] = true
           _, result = subject
-          result[:status].should == :update
-          MiqReport.first.tz.should == "Eastern Time (US & Canada)"
+          expect(result[:status]).to eq(:update)
+          expect(MiqReport.first.tz).to eq("Eastern Time (US & Canada)")
         end
       end
 
@@ -65,15 +65,15 @@ describe MiqReport::ImportExport do
 
         it "preview" do
           _, result = subject
-          result[:status].should == :keep
-          MiqReport.first.tz.should == "UTC"
+          expect(result[:status]).to eq(:keep)
+          expect(MiqReport.first.tz).to eq("UTC")
         end
 
         it "import" do
           @options[:save] = true
           _, result = subject
-          result[:status].should == :keep
-          MiqReport.first.tz.should == "UTC"
+          expect(result[:status]).to eq(:keep)
+          expect(MiqReport.first.tz).to eq("UTC")
         end
       end
     end
@@ -83,7 +83,7 @@ describe MiqReport::ImportExport do
         @new_report = @new_report["MiqReport"]
 
         _, result = subject
-        result[:status].should == :update
+        expect(result[:status]).to eq(:update)
       end
     end
   end

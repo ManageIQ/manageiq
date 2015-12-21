@@ -23,8 +23,8 @@ describe MiqHostProvisionWorkflow do
       context "Without a Valid IPMI Host," do
         it "should not create an MiqRequest when calling from_ws" do
           lambda do
-            MiqHostProvisionWorkflow.from_ws("1.1", user, @template_fields, @host_fields, @requester, false, nil, nil)
-              .should raise_error(RuntimeError)
+            expect(MiqHostProvisionWorkflow.from_ws("1.1", user, @template_fields, @host_fields, @requester, false, nil, nil))
+              .to raise_error(RuntimeError)
           end
         end
       end
@@ -48,7 +48,7 @@ describe MiqHostProvisionWorkflow do
                                                      @template_fields,
                                                      @host_fields,
                                                      @requester, false, nil, nil)
-          request.should be_a_kind_of(MiqRequest)
+          expect(request).to be_a_kind_of(MiqRequest)
           request.options
         end
       end

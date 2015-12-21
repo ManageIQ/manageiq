@@ -40,9 +40,9 @@ describe MiqDbConfig do
     end
 
     it "exception" do
-      VmdbDatabaseConnection.stub(:all).and_raise("FAILURE")
+      allow(VmdbDatabaseConnection).to receive(:all).and_raise("FAILURE")
       MiqDbConfig.log_activity_statistics(@buffer)
-      @buffer.string.lines.first.should == "MIQ(DbConfig.log_activity_statistics) Unable to log stats, 'FAILURE'"
+      expect(@buffer.string.lines.first).to eq("MIQ(DbConfig.log_activity_statistics) Unable to log stats, 'FAILURE'")
     end
   end
 
@@ -53,7 +53,7 @@ describe MiqDbConfig do
       "postgresql"   => "External Postgres Database"
     }
 
-    MiqDbConfig.get_db_types.should == expected
+    expect(MiqDbConfig.get_db_types).to eq(expected)
   end
 
   context ".raw_config" do
@@ -73,17 +73,17 @@ EOF
 
     it "production" do
       Rails.stub(:env => ActiveSupport::StringInquirer.new("production"))
-      ERB.should_not_receive(:new)
+      expect(ERB).not_to receive(:new)
 
       expected = {"host" => "localhost", "username" => "root", "password" => "<%= MiqPassword.decrypt(\"#{enc_pass}\")%>"}
-      MiqDbConfig.raw_config["production"].should == expected
+      expect(MiqDbConfig.raw_config["production"]).to eq(expected)
     end
 
     it "non-production" do
-      ERB.should_receive(:new).and_call_original
+      expect(ERB).to receive(:new).and_call_original
 
       expected = {"host" => "localhost", "username" => "root", "password" => password}
-      MiqDbConfig.raw_config["production"].should == expected
+      expect(MiqDbConfig.raw_config["production"]).to eq(expected)
     end
   end
 
@@ -191,14 +191,14 @@ EOF
     subject { described_class.new(:name => "internal").save_internal }
 
     it "returns saved VMDB::Config" do
-      described_class.stub(:backup_file)
-      VMDB::Config.any_instance.should_receive(:save_file)
+      allow(described_class).to receive(:backup_file)
+      expect_any_instance_of(VMDB::Config).to receive(:save_file)
       expect(subject.config.fetch_path(:production, :host)).to be_nil
     end
 
     it "resets cache" do
-      described_class.stub(:backup_file)
-      VMDB::Config.any_instance.should_receive(:save_file)
+      allow(described_class).to receive(:backup_file)
+      expect_any_instance_of(VMDB::Config).to receive(:save_file)
       subject
       expect(described_class.raw_config.fetch_path('production')).to eq(
         "adapter"      => "postgresql",
@@ -214,8 +214,8 @@ EOF
       subject { described_class.new(:name => "internal", :host => 'localhost', :password => "x").save_internal }
 
       it "should save password to database.yml" do
-        described_class.stub(:backup_file)
-        VMDB::Config.any_instance.should_receive(:save_file)
+        allow(described_class).to receive(:backup_file)
+        expect_any_instance_of(VMDB::Config).to receive(:save_file)
         subject
         expect(described_class.raw_config.fetch_path('production')).to eq(
           "adapter"      => "postgresql",
@@ -233,19 +233,19 @@ EOF
 
   context "#save_common" do
     before do
-      described_class.should_receive(:backup_file)
-      VMDB::Config.any_instance.should_receive(:save_file)
+      expect(described_class).to receive(:backup_file)
+      expect_any_instance_of(VMDB::Config).to receive(:save_file)
 
       config = described_class.new({:name => "external_evm", :host => "abc"})
       @vmdb_config = config.save_common
     end
 
     it "returns saved VMDB::Config" do
-      @vmdb_config.config.fetch_path(:production, :host).should == "abc"
+      expect(@vmdb_config.config.fetch_path(:production, :host)).to eq("abc")
     end
 
     it "resets cache" do
-      described_class.raw_config.fetch_path('production', 'host').should == "abc"
+      expect(described_class.raw_config.fetch_path('production', 'host')).to eq("abc")
     end
   end
 

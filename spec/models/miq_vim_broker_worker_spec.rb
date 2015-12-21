@@ -9,6 +9,6 @@ describe MiqVimBrokerWorker do
   end
 
   it ".emses_to_monitor" do
-    described_class.emses_to_monitor.should match_array @zone.ext_management_systems
+    expect(described_class.emses_to_monitor).to match_array @zone.ext_management_systems
   end
 end

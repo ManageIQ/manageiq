@@ -8,7 +8,7 @@ describe MiqReport do
     before = MiqReport.new
     before.table = fake_ruport_data_table
     after = YAML.load(YAML.dump(before))
-    after.table.should == fake_ruport_data_table
+    expect(after.table).to eq(fake_ruport_data_table)
   end
 
   it '.get_expressions_by_model' do
@@ -148,8 +148,8 @@ describe MiqReport do
       expect(results.length).to eq 1
       expect(results.data.collect(&:name)).to eq [vm1.name]
       expect(report.table.length).to eq 1
-      expect(attrs[:apply_sortby_in_search]).to be_true
-      expect(attrs[:apply_limit_in_sql]).to be_true
+      expect(attrs[:apply_sortby_in_search]).to be_truthy
+      expect(attrs[:apply_limit_in_sql]).to be_truthy
       expect(attrs[:auth_count]).to eq 1
       expect(attrs[:user_filters]["managed"]).to eq [["/managed/environment/prod"]]
       expect(attrs[:total_count]).to eq 2
@@ -180,8 +180,8 @@ describe MiqReport do
       expect(results.data.first["name"]).to eq "VA"
       expect(results.data.first["storage.name"]).to eq "SA"
       expect(report.table.length).to eq 2
-      expect(attrs[:apply_sortby_in_search]).to be_true
-      expect(attrs[:apply_limit_in_sql]).to be_true
+      expect(attrs[:apply_sortby_in_search]).to be_truthy
+      expect(attrs[:apply_limit_in_sql]).to be_truthy
       expect(attrs[:auth_count]).to eq 2
       expect(attrs[:user_filters]["managed"]).to eq [[tag]]
       expect(attrs[:total_count]).to eq 2

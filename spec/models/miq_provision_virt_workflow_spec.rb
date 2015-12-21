@@ -15,20 +15,20 @@ describe MiqProvisionVirtWorkflow do
 
     context "exit_pre_dialog" do
       it "doesn't exit when not running" do
-        workflow.should_not_receive(:exit_pre_dialog)
+        expect(workflow).not_to receive(:exit_pre_dialog)
 
-        expect(workflow.continue_request({})).to be_true
+        expect(workflow.continue_request({})).to be_truthy
       end
 
       it "exits when running" do
         workflow.instance_variable_set(:@running_pre_dialog, true)
         new_values = workflow.instance_variable_get(:@values)
 
-        workflow.should_receive(:exit_pre_dialog).once.and_call_original
+        expect(workflow).to receive(:exit_pre_dialog).once.and_call_original
 
-        expect(workflow.continue_request({})).to                        be_true
+        expect(workflow.continue_request({})).to                        be_truthy
         expect(workflow.instance_variable_get(:@last_vm_id)).to         eq(123)
-        expect(workflow.instance_variable_get(:@running_pre_dialog)).to be_false
+        expect(workflow.instance_variable_get(:@running_pre_dialog)).to be_falsey
         expect(workflow.instance_variable_get(:@tags)).to               be_nil
         expect(new_values[:forced_sysprep_enabled]).to                  eq('fields')
         expect(new_values[:forced_sysprep_domain_name]).to              eq([sdn])
@@ -43,11 +43,11 @@ describe MiqProvisionVirtWorkflow do
       @ems    = FactoryGirl.create(:ems_vmware)
       @host1  = FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
       @src_vm = FactoryGirl.create(:vm_vmware, :host => @host1, :ems_id => @ems.id)
-      Rbac.stub(:search) do |hash|
+      allow(Rbac).to receive(:search) do |hash|
         [Array.wrap(hash[:targets])]
       end
-      VmOrTemplate.any_instance.stub(:archived?).with(no_args).and_return(false)
-      VmOrTemplate.any_instance.stub(:orphaned?).with(no_args).and_return(false)
+      allow_any_instance_of(VmOrTemplate).to receive(:archived?).with(no_args).and_return(false)
+      allow_any_instance_of(VmOrTemplate).to receive(:orphaned?).with(no_args).and_return(false)
       workflow.instance_variable_set(:@values, :vm_tags => [], :src_vm_id => @src_vm.id)
       workflow.instance_variable_set(:@target_resource, nil)
     end
@@ -64,11 +64,11 @@ describe MiqProvisionVirtWorkflow do
       end
 
       it '#allowed_vlans' do
-        workflow.stub(:allowed_hosts).with(no_args).and_return([workflow.host_to_hash_struct(@host1)])
+        allow(workflow).to receive(:allowed_hosts).with(no_args).and_return([workflow.host_to_hash_struct(@host1)])
         vlans = workflow.allowed_vlans(:vlans => true, :dvs => false)
         lan_keys = [@lan11.name, @lan13.name, @lan12.name]
-        vlans.keys.should match_array(lan_keys)
-        vlans.values.should match_array(lan_keys)
+        expect(vlans.keys).to match_array(lan_keys)
+        expect(vlans.values).to match_array(lan_keys)
       end
     end
 
@@ -77,8 +77,8 @@ describe MiqProvisionVirtWorkflow do
         @host1_dvs = {'pg1' => ['switch1'], 'pg2' => ['switch2']}
         @host1_dvs_hash = {'dvs_pg1' => 'pg1 (switch1)',
                            'dvs_pg2' => 'pg2 (switch2)'}
-        ManageIQ::Providers::Vmware::InfraManager.any_instance.stub(:connect)
-        workflow.stub(:get_host_dvs).with(@host1, nil).and_return(@host1_dvs)
+        allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive(:connect)
+        allow(workflow).to receive(:get_host_dvs).with(@host1, nil).and_return(@host1_dvs)
       end
 
       it '#allowed_dvs single host' do
@@ -89,14 +89,14 @@ describe MiqProvisionVirtWorkflow do
                                        :ems     => workflow.ci_to_hash_struct(@ems),
                                        :host_id => @host1.id)
         dvs = workflow.allowed_dvs({}, nil)
-        dvs.should eql(@host1_dvs_hash)
+        expect(dvs).to eql(@host1_dvs_hash)
       end
 
       context "#allowed_dvs" do
         before do
           @host2 = FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
           @host2_dvs = {'pg1' => ['switch21'], 'pg2' => ['switch2'], 'pg3' => ['switch23']}
-          workflow.stub(:get_host_dvs).with(@host2, nil).and_return(@host2_dvs)
+          allow(workflow).to receive(:get_host_dvs).with(@host2, nil).and_return(@host2_dvs)
           workflow.instance_variable_set(:@values, :vm_tags => [], :src_vm_id => @src_vm.id,
                                         :placement_auto => true)
 
@@ -107,7 +107,7 @@ describe MiqProvisionVirtWorkflow do
 
         it 'multiple hosts auto placement' do
           dvs = workflow.allowed_dvs({}, nil)
-          dvs.should eql(@combined_dvs_hash)
+          expect(dvs).to eql(@combined_dvs_hash)
         end
 
         it 'cached filtering' do
@@ -121,7 +121,7 @@ describe MiqProvisionVirtWorkflow do
                                          :ems     => workflow.ci_to_hash_struct(@ems),
                                          :host_id => @host1.id)
           dvs = workflow.allowed_dvs({}, nil)
-          dvs.should eql(@host1_dvs_hash)
+          expect(dvs).to eql(@host1_dvs_hash)
         end
       end
     end
@@ -169,8 +169,8 @@ describe MiqProvisionVirtWorkflow do
     let(:show_hide_iso_pxe) { {:hide => [], :edit => []} }
     describe "supports iso" do
       before do
-        workflow.stub(:supports_iso?).and_return(true)
-        workflow.stub(:supports_pxe?).and_return(false)
+        allow(workflow).to receive(:supports_iso?).and_return(true)
+        allow(workflow).to receive(:supports_pxe?).and_return(false)
       end
 
       it "sets iso_image_id as a validated key" do
@@ -184,8 +184,8 @@ describe MiqProvisionVirtWorkflow do
 
     describe "supports pxe" do
       before do
-        workflow.stub(:supports_iso?).and_return(false)
-        workflow.stub(:supports_pxe?).and_return(true)
+        allow(workflow).to receive(:supports_iso?).and_return(false)
+        allow(workflow).to receive(:supports_pxe?).and_return(true)
       end
 
       it "sets pxe_server_id and pxe_image_id as validated keys" do
@@ -212,7 +212,7 @@ describe MiqProvisionVirtWorkflow do
     it "invalid size" do
       error = "Memory Reservation is larger than VM Memory"
 
-      workflow.should_receive(:required_description).and_return("Memory")
+      expect(workflow).to receive(:required_description).and_return("Memory")
       expect(workflow.validate_memory_reservation(nil, values.merge(:memory_reserve => 2048), {}, {}, nil)).to eq(error)
     end
   end

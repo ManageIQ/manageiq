@@ -5,7 +5,7 @@ describe MiqHostProvision do
     host_name = "fred"
     host = FactoryGirl.create(:host, :name => host_name)
     mhp  = MiqHostProvision.create(:host => host)
-    mhp.host_name.should == host_name
+    expect(mhp.host_name).to eq(host_name)
   end
 
   it "#host_rediscovered?" do
@@ -13,14 +13,14 @@ describe MiqHostProvision do
     pxe_image = FactoryGirl.create(:pxe_image, :pxe_image_type => pxe_image_type)
 
     mhp = MiqHostProvision.create
-    mhp.stub(:pxe_image).and_return(pxe_image)
-    mhp.host_rediscovered?.should be_false
+    allow(mhp).to receive(:pxe_image).and_return(pxe_image)
+    expect(mhp.host_rediscovered?).to be_falsey
 
     mhp.host = FactoryGirl.create(:host, :vmm_vendor => 'unknown')
-    mhp.host_rediscovered?.should be_false
+    expect(mhp.host_rediscovered?).to be_falsey
 
     mhp.host.vmm_vendor = 'vmware'
-    mhp.host_rediscovered?.should be_true
+    expect(mhp.host_rediscovered?).to be_truthy
   end
 
   context "with default server and zone" do
@@ -34,12 +34,12 @@ describe MiqHostProvision do
 
       it "#reset_host_credentials" do
         password = 'secret'
-        mhp.stub(:get_option).with(:root_password).and_return(password)
-        mhp.should_receive(:signal).with(:create_pxe_configuration_files)
+        allow(mhp).to receive(:get_option).with(:root_password).and_return(password)
+        expect(mhp).to receive(:signal).with(:create_pxe_configuration_files)
         mhp.reset_host_credentials
-        mhp.host.authentications.length.should == 1
-        mhp.host.authentication_userid(:default).should == 'root'
-        mhp.host.authentication_password(:default).should == password
+        expect(mhp.host.authentications.length).to eq(1)
+        expect(mhp.host.authentication_userid(:default)).to eq('root')
+        expect(mhp.host.authentication_password(:default)).to eq(password)
       end
 
       it "#reset_host_in_vmdb" do
@@ -55,30 +55,30 @@ describe MiqHostProvision do
         host.update_authentication(:ipmi    => {:userid => ipmi_userid,    :password => ipmi_password})
         host.update_authentication(:default => {:userid => default_userid, :password => default_password})
 
-        mhp.host.should be_kind_of(ManageIQ::Providers::Vmware::InfraManager::HostEsx)
-        mhp.stub(:get_option).with(:root_password).and_return(dialog_password)
-        mhp.should_receive(:signal).with(:reset_host_credentials)
+        expect(mhp.host).to be_kind_of(ManageIQ::Providers::Vmware::InfraManager::HostEsx)
+        allow(mhp).to receive(:get_option).with(:root_password).and_return(dialog_password)
+        expect(mhp).to receive(:signal).with(:reset_host_credentials)
         mhp.reset_host_in_vmdb
 
-        mhp.host.should be_kind_of(Host)
-        mhp.host.operating_system.should be_nil
+        expect(mhp.host).to be_kind_of(Host)
+        expect(mhp.host.operating_system).to be_nil
 
-        mhp.host.authentications.length.should == 2
-        mhp.host.authentication_userid(:ipmi).should == ipmi_userid
-        mhp.host.authentication_password(:ipmi).should == ipmi_password
+        expect(mhp.host.authentications.length).to eq(2)
+        expect(mhp.host.authentication_userid(:ipmi)).to eq(ipmi_userid)
+        expect(mhp.host.authentication_password(:ipmi)).to eq(ipmi_password)
 
-        mhp.host.authentication_userid(:default).should == dialog_userid
-        mhp.host.authentication_password(:default).should == dialog_password
+        expect(mhp.host.authentication_userid(:default)).to eq(dialog_userid)
+        expect(mhp.host.authentication_password(:default)).to eq(dialog_password)
       end
 
       it "#provision_completed" do
-        mhp.should_receive(:signal).with(:post_install_callback)
+        expect(mhp).to receive(:signal).with(:post_install_callback)
         mhp.provision_completed
       end
 
       it "#post_install_callback" do
-        mhp.should_receive(:update_and_notify_parent)
-        mhp.should_receive(:signal).with(:delete_pxe_configuration_files)
+        expect(mhp).to receive(:update_and_notify_parent)
+        expect(mhp).to receive(:signal).with(:delete_pxe_configuration_files)
         mhp.post_install_callback
       end
     end

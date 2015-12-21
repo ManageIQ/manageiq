@@ -18,7 +18,7 @@ describe MiqReportResult do
       @show_title   = true
       @options = MiqReport.graph_options(600, 400)
 
-      Charting.stub(:detect_available_plugin).and_return(JqplotCharting)
+      allow(Charting).to receive(:detect_available_plugin).and_return(JqplotCharting)
     end
 
     it "should save the original report metadata and the generated table as a binary blob" do
@@ -29,12 +29,12 @@ describe MiqReportResult do
 
       report_result.reload
 
-      report_result.should_not be_nil
-      report_result.report.kind_of?(MiqReport).should be_true
-      report_result.binary_blob.should_not be_nil
-      report_result.report_results.kind_of?(MiqReport).should be_true
-      report_result.report_results.table.should_not be_nil
-      report_result.report_results.table.data.should_not be_nil
+      expect(report_result).not_to be_nil
+      expect(report_result.report.kind_of?(MiqReport)).to be_truthy
+      expect(report_result.binary_blob).not_to be_nil
+      expect(report_result.report_results.kind_of?(MiqReport)).to be_truthy
+      expect(report_result.report_results.table).not_to be_nil
+      expect(report_result.report_results.table.data).not_to be_nil
     end
 
     context "for miq_report_result is used different miq_group_id than user's current id" do

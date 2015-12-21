@@ -26,7 +26,7 @@ describe MiqProductFeature do
       expect(status_seed1[:unchanged]).to match_array []
 
       status_seed2 = MiqProductFeature.seed
-      MiqProductFeature.count.should eq(expected_feature_count)
+      expect(MiqProductFeature.count).to eq(expected_feature_count)
       expect(status_seed2[:created]).to match_array []
       expect(status_seed2[:updated]).to match_array []
       expect(status_seed2[:unchanged]).to match_array status_seed1[:created]
@@ -70,8 +70,8 @@ describe MiqProductFeature do
 
       MiqProductFeature.seed_features(feature_path)
       expect { deleted.reload }.to raise_error(ActiveRecord::RecordNotFound)
-      changed.reload.name.should == "One"
-      unchanged.reload.updated_at.should be_same_time_as unchanged_orig_updated_at
+      expect(changed.reload.name).to eq("One")
+      expect(unchanged.reload.updated_at).to be_same_time_as unchanged_orig_updated_at
     end
 
     it "additional yaml feature" do
@@ -87,7 +87,7 @@ describe MiqProductFeature do
       additional_file.close
 
       status_seed = MiqProductFeature.seed_features(feature_path)
-      MiqProductFeature.count.should eq(3)
+      expect(MiqProductFeature.count).to eq(3)
       expect(status_seed[:created]).to match_array %w(everything one two)
 
       additional_file.unlink

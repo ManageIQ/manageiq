@@ -30,8 +30,8 @@ describe MiqProvisionRequestTemplate do
   describe '#create_tasks_for_service' do
     before do
       MiqRegion.seed
-      ManageIQ::Providers::Vmware::InfraManager::Provision.any_instance.stub(:get_hostname).and_return('hostname')
-      MiqAeEngine.stub(:resolve_automation_object).and_return(double(:root => 'miq'))
+      allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Provision).to receive(:get_hostname).and_return('hostname')
+      allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(double(:root => 'miq'))
     end
 
     it 'should only call get_next_vm_name once' do

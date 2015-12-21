@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe MiqQueue do
-  specify { FactoryGirl.build(:miq_queue).should be_valid }
+  specify { expect(FactoryGirl.build(:miq_queue)).to be_valid }
 
   context "#deliver" do
     before do
@@ -10,45 +10,45 @@ describe MiqQueue do
 
     it "works with deliver_on" do
       deliver_on = Time.now.utc + 1.minute
-      Storage.stub(:foobar).and_raise(MiqException::MiqQueueRetryLater.new(:deliver_on => deliver_on))
+      allow(Storage).to receive(:foobar).and_raise(MiqException::MiqQueueRetryLater.new(:deliver_on => deliver_on))
       msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'Storage', :method_name => 'foobar')
       status, message, result = msg.deliver
 
-      status.should == MiqQueue::STATUS_RETRY
-      msg.state.should == MiqQueue::STATE_READY
-      msg.handler.should    be_nil
-      msg.deliver_on.should == deliver_on
+      expect(status).to eq(MiqQueue::STATUS_RETRY)
+      expect(msg.state).to eq(MiqQueue::STATE_READY)
+      expect(msg.handler).to    be_nil
+      expect(msg.deliver_on).to eq(deliver_on)
 
-      Storage.stub(:foobar).and_raise(MiqException::MiqQueueRetryLater.new)
+      allow(Storage).to receive(:foobar).and_raise(MiqException::MiqQueueRetryLater.new)
       msg.state   = MiqQueue::STATE_DEQUEUE
       msg.handler = @miq_server
       status, message, result = msg.deliver
 
-      status.should == MiqQueue::STATUS_RETRY
-      msg.state.should == MiqQueue::STATE_READY
-      msg.handler.should be_nil
+      expect(status).to eq(MiqQueue::STATUS_RETRY)
+      expect(msg.state).to eq(MiqQueue::STATE_READY)
+      expect(msg.handler).to be_nil
     end
 
     it "works with expires_on" do
-      MiqServer.stub(:foobar).and_return(0)
+      allow(MiqServer).to receive(:foobar).and_return(0)
 
       expires_on = 1.minute.from_now.utc
       msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'MiqServer', :method_name => 'foobar', :expires_on => expires_on)
       status, message, result = msg.deliver
-      status.should == MiqQueue::STATUS_OK
+      expect(status).to eq(MiqQueue::STATUS_OK)
 
       expires_on = 1.minute.ago.utc
       msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'MiqServer', :method_name => 'foobar', :expires_on => expires_on)
       status, message, result = msg.deliver
-      status.should == MiqQueue::STATUS_EXPIRED
+      expect(status).to eq(MiqQueue::STATUS_EXPIRED)
     end
 
     it "sets last_exception on raised Exception" do
-      MiqServer.stub(:foobar).and_raise(Exception)
+      allow(MiqServer).to receive(:foobar).and_raise(Exception)
       msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'MiqServer', :method_name => 'foobar')
       status, message, result = msg.deliver
-      status.should == MiqQueue::STATUS_ERROR
-      msg.last_exception.should be_kind_of(Exception)
+      expect(status).to eq(MiqQueue::STATUS_ERROR)
+      expect(msg.last_exception).to be_kind_of(Exception)
     end
   end
 
@@ -71,8 +71,8 @@ describe MiqQueue do
         @msg.update_attributes(:msg_timeout => 1.minutes)
         begin
           Timecop.travel 10.minute
-          $log.should_receive(:warn)
-          @msg.should_receive(:destroy)
+          expect($log).to receive(:warn)
+          expect(@msg).to receive(:destroy)
           @msg.check_for_timeout
         ensure
           Timecop.return
@@ -83,7 +83,7 @@ describe MiqQueue do
         MiqQueue.atStartup
 
         @msg.reload
-        @msg.state.should == MiqQueue::STATE_ERROR
+        expect(@msg.state).to eq(MiqQueue::STATE_ERROR)
       end
     end
 
@@ -96,7 +96,7 @@ describe MiqQueue do
         MiqQueue.atStartup
 
         @msg.reload
-        @msg.state.should == MiqQueue::STATE_DEQUEUE
+        expect(@msg.state).to eq(MiqQueue::STATE_DEQUEUE)
       end
     end
 
@@ -109,7 +109,7 @@ describe MiqQueue do
         MiqQueue.atStartup
 
         @msg.reload
-        @msg.state.should == MiqQueue::STATE_ERROR
+        expect(@msg.state).to eq(MiqQueue::STATE_ERROR)
       end
     end
   end
@@ -137,8 +137,8 @@ describe MiqQueue do
     message_parms.each do |mparms|
       msg = FactoryGirl.create(:miq_queue)
       mparms.each { |k, v| msg.send("#{k}=", v) }
-      MiqQueue.format_short_log_msg(msg).should == "Message id: [#{msg.id}]"
-      MiqQueue.format_full_log_msg(msg).should == "Message id: [#{msg.id}], #{msg.handler_type} id: [#{msg.handler_id}], Zone: [#{msg.zone}], Role: [#{msg.role}], Server: [#{msg.server_guid}], Ident: [#{msg.queue_name}], Target id: [#{msg.target_id}], Instance id: [#{msg.instance_id}], Task id: [#{msg.task_id}], Command: [#{msg.class_name}.#{msg.method_name}], Timeout: [#{msg.msg_timeout}], Priority: [#{msg.priority}], State: [#{msg.state}], Deliver On: [#{msg.deliver_on}], Data: [#{msg.data.nil? ? "" : "#{msg.data.length} bytes"}], Args: #{msg.args.inspect}"
+      expect(MiqQueue.format_short_log_msg(msg)).to eq("Message id: [#{msg.id}]")
+      expect(MiqQueue.format_full_log_msg(msg)).to eq("Message id: [#{msg.id}], #{msg.handler_type} id: [#{msg.handler_id}], Zone: [#{msg.zone}], Role: [#{msg.role}], Server: [#{msg.server_guid}], Ident: [#{msg.queue_name}], Target id: [#{msg.target_id}], Instance id: [#{msg.instance_id}], Task id: [#{msg.task_id}], Command: [#{msg.class_name}.#{msg.method_name}], Timeout: [#{msg.msg_timeout}], Priority: [#{msg.priority}], State: [#{msg.state}], Deliver On: [#{msg.deliver_on}], Data: [#{msg.data.nil? ? "" : "#{msg.data.length} bytes"}], Args: #{msg.args.inspect}")
     end
   end
 
@@ -174,43 +174,43 @@ describe MiqQueue do
 
     message_parms.each do |mparms|
       msg = FactoryGirl.create(:miq_queue, mparms)
-      MiqQueue.format_short_log_msg(msg).should == "Message id: [#{msg.id}]"
-      MiqQueue.format_full_log_msg(msg).should == "Message id: [#{msg.id}], #{msg.handler_type} id: [#{msg.handler_id}], Zone: [#{msg.zone}], Role: [#{msg.role}], Server: [#{msg.server_guid}], Ident: [#{msg.queue_name}], Target id: [#{msg.target_id}], Instance id: [#{msg.instance_id}], Task id: [#{msg.task_id}], Command: [#{msg.class_name}.#{msg.method_name}], Timeout: [#{msg.msg_timeout}], Priority: [#{msg.priority}], State: [#{msg.state}], Deliver On: [#{msg.deliver_on}], Data: [#{msg.data.nil? ? "" : "#{msg.data.length} bytes"}], Args: #{args_cleaned_password.inspect}"
+      expect(MiqQueue.format_short_log_msg(msg)).to eq("Message id: [#{msg.id}]")
+      expect(MiqQueue.format_full_log_msg(msg)).to eq("Message id: [#{msg.id}], #{msg.handler_type} id: [#{msg.handler_id}], Zone: [#{msg.zone}], Role: [#{msg.role}], Server: [#{msg.server_guid}], Ident: [#{msg.queue_name}], Target id: [#{msg.target_id}], Instance id: [#{msg.instance_id}], Task id: [#{msg.task_id}], Command: [#{msg.class_name}.#{msg.method_name}], Timeout: [#{msg.msg_timeout}], Priority: [#{msg.priority}], State: [#{msg.state}], Deliver On: [#{msg.deliver_on}], Data: [#{msg.data.nil? ? "" : "#{msg.data.length} bytes"}], Args: #{args_cleaned_password.inspect}")
     end
   end
 
   context "executing priority" do
     it "should return adjusted value" do
-      MiqQueue.priority(:max).should == MiqQueue::MAX_PRIORITY
-      MiqQueue.priority(:high).should == MiqQueue::HIGH_PRIORITY
-      MiqQueue.priority(:normal).should == MiqQueue::NORMAL_PRIORITY
-      MiqQueue.priority(:low).should == MiqQueue::LOW_PRIORITY
-      MiqQueue.priority(:min).should == MiqQueue::MIN_PRIORITY
+      expect(MiqQueue.priority(:max)).to eq(MiqQueue::MAX_PRIORITY)
+      expect(MiqQueue.priority(:high)).to eq(MiqQueue::HIGH_PRIORITY)
+      expect(MiqQueue.priority(:normal)).to eq(MiqQueue::NORMAL_PRIORITY)
+      expect(MiqQueue.priority(:low)).to eq(MiqQueue::LOW_PRIORITY)
+      expect(MiqQueue.priority(:min)).to eq(MiqQueue::MIN_PRIORITY)
 
-      MiqQueue.priority(5000).should == MiqQueue::MIN_PRIORITY
-      MiqQueue.priority(-5000).should == MiqQueue::MAX_PRIORITY
-      MiqQueue.priority(100).should == 100
+      expect(MiqQueue.priority(5000)).to eq(MiqQueue::MIN_PRIORITY)
+      expect(MiqQueue.priority(-5000)).to eq(MiqQueue::MAX_PRIORITY)
+      expect(MiqQueue.priority(100)).to eq(100)
 
-      -> { MiqQueue.priority(:other)        }.should raise_error(ArgumentError)
-      -> { MiqQueue.priority(:high, :other) }.should raise_error(ArgumentError)
+      expect { MiqQueue.priority(:other)        }.to raise_error(ArgumentError)
+      expect { MiqQueue.priority(:high, :other) }.to raise_error(ArgumentError)
 
-      MiqQueue.priority(:normal, :higher, 10).should == MiqQueue::NORMAL_PRIORITY - 10
-      MiqQueue.priority(:normal, :lower,  10).should == MiqQueue::NORMAL_PRIORITY + 10
+      expect(MiqQueue.priority(:normal, :higher, 10)).to eq(MiqQueue::NORMAL_PRIORITY - 10)
+      expect(MiqQueue.priority(:normal, :lower,  10)).to eq(MiqQueue::NORMAL_PRIORITY + 10)
 
-      MiqQueue.priority(:min, :lower,  1).should == MiqQueue::MIN_PRIORITY
-      MiqQueue.priority(:max, :higher, 1).should == MiqQueue::MAX_PRIORITY
+      expect(MiqQueue.priority(:min, :lower,  1)).to eq(MiqQueue::MIN_PRIORITY)
+      expect(MiqQueue.priority(:max, :higher, 1)).to eq(MiqQueue::MAX_PRIORITY)
     end
 
     it "should validate comparisons" do
-      MiqQueue.higher_priority(MiqQueue::MIN_PRIORITY, MiqQueue::MAX_PRIORITY).should == MiqQueue::MAX_PRIORITY
-      MiqQueue.higher_priority(MiqQueue::MAX_PRIORITY, MiqQueue::MIN_PRIORITY).should == MiqQueue::MAX_PRIORITY
-      MiqQueue.higher_priority?(MiqQueue::MIN_PRIORITY, MiqQueue::MAX_PRIORITY).should be_false
-      MiqQueue.higher_priority?(MiqQueue::MAX_PRIORITY, MiqQueue::MIN_PRIORITY).should be_true
+      expect(MiqQueue.higher_priority(MiqQueue::MIN_PRIORITY, MiqQueue::MAX_PRIORITY)).to eq(MiqQueue::MAX_PRIORITY)
+      expect(MiqQueue.higher_priority(MiqQueue::MAX_PRIORITY, MiqQueue::MIN_PRIORITY)).to eq(MiqQueue::MAX_PRIORITY)
+      expect(MiqQueue.higher_priority?(MiqQueue::MIN_PRIORITY, MiqQueue::MAX_PRIORITY)).to be_falsey
+      expect(MiqQueue.higher_priority?(MiqQueue::MAX_PRIORITY, MiqQueue::MIN_PRIORITY)).to be_truthy
 
-      MiqQueue.lower_priority(MiqQueue::MIN_PRIORITY,  MiqQueue::MAX_PRIORITY).should == MiqQueue::MIN_PRIORITY
-      MiqQueue.lower_priority(MiqQueue::MAX_PRIORITY,  MiqQueue::MIN_PRIORITY).should == MiqQueue::MIN_PRIORITY
-      MiqQueue.lower_priority?(MiqQueue::MIN_PRIORITY,  MiqQueue::MAX_PRIORITY).should be_true
-      MiqQueue.lower_priority?(MiqQueue::MAX_PRIORITY,  MiqQueue::MIN_PRIORITY).should be_false
+      expect(MiqQueue.lower_priority(MiqQueue::MIN_PRIORITY,  MiqQueue::MAX_PRIORITY)).to eq(MiqQueue::MIN_PRIORITY)
+      expect(MiqQueue.lower_priority(MiqQueue::MAX_PRIORITY,  MiqQueue::MIN_PRIORITY)).to eq(MiqQueue::MIN_PRIORITY)
+      expect(MiqQueue.lower_priority?(MiqQueue::MIN_PRIORITY,  MiqQueue::MAX_PRIORITY)).to be_truthy
+      expect(MiqQueue.lower_priority?(MiqQueue::MAX_PRIORITY,  MiqQueue::MIN_PRIORITY)).to be_falsey
     end
   end
 
@@ -245,10 +245,10 @@ describe MiqQueue do
 
     it "should calculate wait times" do
       cor = MiqQueue.wait_times_by_role
-      cor.should == {
+      expect(cor).to eq({
         "role1" => {:next => (Time.now - @t3), :last => (Time.now - @t1)},
         "role3" => {:next => (Time.now - @t3), :last => (Time.now - @t3)}
-      }
+      })
     end
   end
 
@@ -275,7 +275,7 @@ describe MiqQueue do
       @new_msg = @msg.requeue(options)
       @new_msg_id = @new_msg.id
 
-      @msg.id.should_not == @msg.requeue(options).id
+      expect(@msg.id).not_to eq(@msg.requeue(options).id)
     end
 
     it "should requeue a message with message id higher last" do
@@ -293,13 +293,13 @@ describe MiqQueue do
       @new_msg = @msg.requeue(options)
       @new_msg_id = @new_msg.id
 
-      @msg.requeue(options).id.should be > @msg.id
+      expect(@msg.requeue(options).id).to be > @msg.id
     end
 
     it "should requeue a message" do
       hash_value = "test_string_2_05312011"
       @msg.data = hash_value
-      @msg.data.should == "test_string_2_05312011"
+      expect(@msg.data).to eq("test_string_2_05312011")
     end
   end
 
@@ -312,11 +312,11 @@ describe MiqQueue do
     end
 
     it "should find a message by task id" do
-      MiqQueue.get_worker("task123").should == @worker
+      expect(MiqQueue.get_worker("task123")).to eq(@worker)
     end
 
     it "should return worker handler" do
-      @msg.get_worker.should == @worker
+      expect(@msg.get_worker).to eq(@worker)
     end
   end
 

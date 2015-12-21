@@ -7,11 +7,11 @@ describe MiqEmsRefreshCoreWorker::Runner do
 
     # General stubbing for testing any worker (methods called during initialize)
     @worker_record = FactoryGirl.create(:miq_ems_refresh_core_worker, :queue_name => "ems_#{@ems.id}", :miq_server => server)
-    described_class.any_instance.stub(:sync_active_roles)
-    described_class.any_instance.stub(:sync_config)
-    described_class.any_instance.stub(:set_connection_pool_size)
-    described_class.any_instance.stub(:heartbeat_using_drb?).and_return(false)
-    ManageIQ::Providers::Vmware::InfraManager.any_instance.stub(:authentication_check).and_return([true, ""])
+    allow_any_instance_of(described_class).to receive(:sync_active_roles)
+    allow_any_instance_of(described_class).to receive(:sync_config)
+    allow_any_instance_of(described_class).to receive(:set_connection_pool_size)
+    allow_any_instance_of(described_class).to receive(:heartbeat_using_drb?).and_return(false)
+    allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive(:authentication_check).and_return([true, ""])
 
     @worker = MiqEmsRefreshCoreWorker::Runner.new(:guid => @worker_record.guid, :ems_id => @ems.id)
   end
@@ -43,9 +43,9 @@ describe MiqEmsRefreshCoreWorker::Runner do
       end
 
       it "with non-VM updates" do
-        lambda do
+        expect do
           @worker.process_update([VimString.new("host-123", "HostSystem", "ManagedObjectReference"), {"unknown.property" => "unknown_value"}])
-        end.should_not raise_error
+        end.not_to raise_error
       end
 
       context "with runtime.powerState and/or config.template set to" do
@@ -86,7 +86,7 @@ describe MiqEmsRefreshCoreWorker::Runner do
         it "and no networks persisted" do
           props = {"guest.net" => [{"ipAddress" => ["1.2.3.4", "::1:2:3:4"], 'macAddress' => "00:00:00:00:00:00"}]}
           @worker.process_update([@vm.ems_ref_obj, props])
-          @vm.ipaddresses.should be_empty
+          expect(@vm.ipaddresses).to be_empty
         end
 
         context "and networks already persisted" do
@@ -137,11 +137,11 @@ describe MiqEmsRefreshCoreWorker::Runner do
         end
 
         def should_not_have_network_changes
-          @hw.nics(true).sort_by(&:address).collect { |n| [n.network.try(:ipaddress), n.network.try(:ipv6address)] }.should == @expected_addresses
+          expect(@hw.nics(true).sort_by(&:address).collect { |n| [n.network.try(:ipaddress), n.network.try(:ipv6address)] }).to eq(@expected_addresses)
         end
 
         def should_have_network_changes(expected)
-          @hw.nics(true).sort_by(&:address).collect { |n| [n.network.try(:ipaddress), n.network.try(:ipv6address)] }.should == expected
+          expect(@hw.nics(true).sort_by(&:address).collect { |n| [n.network.try(:ipaddress), n.network.try(:ipv6address)] }).to eq(expected)
         end
       end
     end
@@ -187,16 +187,16 @@ describe MiqEmsRefreshCoreWorker::Runner do
         @worker.process_update([obj.ems_ref_obj, props])
         expected_time = Time.now.utc
       end
-      lambda do
+      expect do
         if template_changes
           obj = obj.corresponding_model.find(obj.id)
         else
           obj.reload
         end
-      end.should_not raise_error
-      obj.template.should == expected_template
-      obj.state.should == expected_state
-      obj.state_changed_on.should be_same_time_as expected_time
+      end.not_to raise_error
+      expect(obj.template).to eq(expected_template)
+      expect(obj.state).to eq(expected_state)
+      expect(obj.state_changed_on).to be_same_time_as expected_time
     end
 
     def should_not_have_changed(obj, props)
@@ -204,10 +204,10 @@ describe MiqEmsRefreshCoreWorker::Runner do
       expected_state    = obj.state
       expected_time     = obj.state_changed_on
       @worker.process_update([obj.ems_ref_obj, props])
-      -> { obj.reload }.should_not raise_error
-      obj.template.should == expected_template
-      obj.state.should == expected_state
-      obj.state_changed_on.should be_same_time_as expected_time
+      expect { obj.reload }.not_to raise_error
+      expect(obj.template).to eq(expected_template)
+      expect(obj.state).to eq(expected_state)
+      expect(obj.state_changed_on).to be_same_time_as expected_time
     end
   end
 end
