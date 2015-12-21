@@ -14,6 +14,7 @@ module FsProbe
   PROBE_FILES.unshift("Ext4Probe")     if PROBE_FILES.delete("Ext4Probe")
   PROBE_FILES.unshift("Ext3Probe")     if PROBE_FILES.delete("Ext3Probe")
   PROBE_FILES.unshift("NTFSProbe")     if PROBE_FILES.delete("NTFSProbe")
+  PROBE_FILES.unshift("XFSProbe")      if PROBE_FILES.delete("XFSProbe")
 
   def self.getFsMod(dobj, probes = nil)
     probes = PROBE_FILES if probes.nil?
