@@ -26,24 +26,24 @@ describe MiqWidget::ImportExport do
     subject { @widget_report_vendor_and_guest_os.export_to_array.first }
 
     it "MiqWidget" do
-      subject["MiqWidget"].should_not be_empty
+      expect(subject["MiqWidget"]).not_to be_empty
     end
 
     it "MiqReportContent" do
       report = MiqReport.where(:name => "Vendor and Guest OS").first
-      subject["MiqWidget"]["MiqReportContent"].should == report.export_to_array
+      expect(subject["MiqWidget"]["MiqReportContent"]).to eq(report.export_to_array)
     end
 
     it "no id" do
-      subject["MiqWidget"]["id"].should be_nil
+      expect(subject["MiqWidget"]["id"]).to be_nil
     end
 
     it "no created_at" do
-      subject["MiqWidget"]["created_at"].should be_nil
+      expect(subject["MiqWidget"]["created_at"]).to be_nil
     end
 
     it "no updated_at" do
-      subject["MiqWidget"]["updated_at"].should be_nil
+      expect(subject["MiqWidget"]["updated_at"]).to be_nil
     end
   end
 end

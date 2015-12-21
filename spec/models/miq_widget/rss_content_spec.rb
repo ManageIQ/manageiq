@@ -101,44 +101,44 @@ describe "Widget RSS Content" do
   it "#generate_content external rss for user" do
     widget = MiqWidget.find_by_description("rss_cnn")
 
-    Net::HTTP.stub(:get).and_return(CNN_XML)
+    allow(Net::HTTP).to receive(:get).and_return(CNN_XML)
     content = widget.generate_one_content_for_user(@admin_group, @admin)
-    content.should be_kind_of MiqWidgetContent
-    content.contents.scan("</tr>").length.should == widget.options[:row_count]
-    content.contents.scan("onclick").length.should eq(widget.options[:row_count])
-    widget.contents_for_user(@admin).should == content
-    Net::HTTP.unstub(:get)
+    expect(content).to be_kind_of MiqWidgetContent
+    expect(content.contents.scan("</tr>").length).to eq(widget.options[:row_count])
+    expect(content.contents.scan("onclick").length).to eq(widget.options[:row_count])
+    expect(widget.contents_for_user(@admin)).to eq(content)
+    allow(Net::HTTP).to receive(:get).and_call_original
   end
 
   it "#generate_content internal rss for user" do
     widget = MiqWidget.find_by_description("rss_newest_vms")
 
     content = widget.generate_one_content_for_user(@admin_group, @admin)
-    content.should be_kind_of MiqWidgetContent
-    content.contents.scan("</tr>").length.should == widget.options[:row_count]
-    content.contents.scan("VmVmware").length.should == widget.options[:row_count]
-    widget.contents_for_user(@admin).should == content
+    expect(content).to be_kind_of MiqWidgetContent
+    expect(content.contents.scan("</tr>").length).to eq(widget.options[:row_count])
+    expect(content.contents.scan("VmVmware").length).to eq(widget.options[:row_count])
+    expect(widget.contents_for_user(@admin)).to eq(content)
   end
 
   it "#generate_content external rss for group" do
     widget = MiqWidget.find_by_description("rss_cnn")
 
-    Net::HTTP.stub(:get).and_return(CNN_XML)
+    allow(Net::HTTP).to receive(:get).and_return(CNN_XML)
     content = widget.generate_one_content_for_group(@admin.current_group, @admin.get_timezone)
-    content.should be_kind_of MiqWidgetContent
-    content.contents.scan("</tr>").length.should == widget.options[:row_count]
-    content.contents.scan("onclick").length.should eq(widget.options[:row_count])
-    widget.contents_for_user(@admin).should == content
-    Net::HTTP.unstub(:get)
+    expect(content).to be_kind_of MiqWidgetContent
+    expect(content.contents.scan("</tr>").length).to eq(widget.options[:row_count])
+    expect(content.contents.scan("onclick").length).to eq(widget.options[:row_count])
+    expect(widget.contents_for_user(@admin)).to eq(content)
+    allow(Net::HTTP).to receive(:get).and_call_original
   end
 
   it "#generate_content internal rss for group" do
     widget = MiqWidget.find_by_description("rss_newest_vms")
 
     content = widget.generate_one_content_for_group(@admin.current_group, @admin.get_timezone)
-    content.should be_kind_of MiqWidgetContent
-    content.contents.scan("</tr>").length.should == widget.options[:row_count]
-    content.contents.scan("VmVmware").length.should == widget.options[:row_count]
-    widget.contents_for_user(@admin).should == content
+    expect(content).to be_kind_of MiqWidgetContent
+    expect(content.contents.scan("</tr>").length).to eq(widget.options[:row_count])
+    expect(content.contents.scan("VmVmware").length).to eq(widget.options[:row_count])
+    expect(widget.contents_for_user(@admin)).to eq(content)
   end
 end

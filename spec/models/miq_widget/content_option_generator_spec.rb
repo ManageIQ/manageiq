@@ -12,12 +12,12 @@ describe MiqWidget::ContentOptionGenerator do
     let(:user4) { 4 }
 
     before do
-      group.stub(:kind_of?).with(MiqGroup).and_return(kind_of_miq_group)
+      allow(group).to receive(:kind_of?).with(MiqGroup).and_return(kind_of_miq_group)
     end
 
     shared_examples_for "WidgetContentOptionGenerator#generate that returns User related options" do
       it "returns an array of User, userids, and nil" do
-        content_option_generator.generate(group, users).should == ["User", group.description, [1, 2, 3, 4], nil]
+        expect(content_option_generator.generate(group, users)).to eq(["User", group.description, [1, 2, 3, 4], nil])
       end
     end
 
@@ -25,7 +25,7 @@ describe MiqWidget::ContentOptionGenerator do
       let(:kind_of_miq_group) { true }
 
       before do
-        group.stub(:self_service?).and_return(self_service)
+        allow(group).to receive(:self_service?).and_return(self_service)
       end
 
       context "when the group is self service" do
@@ -38,7 +38,7 @@ describe MiqWidget::ContentOptionGenerator do
         let(:self_service) { false }
 
         it "returns an array of MiqGroup, description, timezones" do
-          content_option_generator.generate(group, users).should == ["MiqGroup", "description", nil, ["PST", "UTC"]]
+          expect(content_option_generator.generate(group, users)).to eq(["MiqGroup", "description", nil, ["PST", "UTC"]])
         end
       end
     end

@@ -15,10 +15,10 @@ describe MiqWidget::ContentGenerator do
       let(:group_description) { "description" }
 
       before do
-        User.stub(:where).with(:userid => 1).and_return([user1])
-        User.stub(:where).with(:userid => 2).and_return([user2])
+        allow(User).to receive(:where).with(:userid => 1).and_return([user1])
+        allow(User).to receive(:where).with(:userid => 2).and_return([user2])
         record = group
-        MiqGroup.stub(:find_by).with(:description => "description").and_return(record)
+        allow(MiqGroup).to receive(:find_by).with(:description => "description").and_return(record)
       end
 
       context "when the group exists" do
@@ -26,19 +26,19 @@ describe MiqWidget::ContentGenerator do
 
         context "when the resulting length is equal to the expected count" do
           before do
-            widget.stub(:generate_one_content_for_group).with(group, "PST").and_return(4)
-            widget.stub(:generate_one_content_for_group).with(group, "UTC").and_return(5)
+            allow(widget).to receive(:generate_one_content_for_group).with(group, "PST").and_return(4)
+            allow(widget).to receive(:generate_one_content_for_group).with(group, "UTC").and_return(5)
           end
 
           it "returns the result" do
-            content_generator.generate(widget, klass, group_description, nil, timezones).should == [4, 5]
+            expect(content_generator.generate(widget, klass, group_description, nil, timezones)).to eq([4, 5])
           end
         end
 
         context "when the resulting length is not equal to the expected count" do
           before do
-            widget.stub(:generate_one_content_for_group).with(group, "PST").and_return(4)
-            widget.stub(:generate_one_content_for_group).with(group, "UTC").and_return(nil)
+            allow(widget).to receive(:generate_one_content_for_group).with(group, "PST").and_return(4)
+            allow(widget).to receive(:generate_one_content_for_group).with(group, "UTC").and_return(nil)
           end
 
           it "raises an MiqException::Error" do
@@ -66,30 +66,30 @@ describe MiqWidget::ContentGenerator do
 
       before do
         record = group
-        MiqGroup.stub(:find_by).with(:description => "EvmGroup-administrator").and_return(record)
+        allow(MiqGroup).to receive(:find_by).with(:description => "EvmGroup-administrator").and_return(record)
       end
 
       context "when the resulting length is equal to the expected count" do
         before do
-          widget.stub(:generate_one_content_for_user).with(group, 1).and_return(4)
-          widget.stub(:generate_one_content_for_user).with(group, 2).and_return(5)
+          allow(widget).to receive(:generate_one_content_for_user).with(group, 1).and_return(4)
+          allow(widget).to receive(:generate_one_content_for_user).with(group, 2).and_return(5)
         end
 
         it "returns the result" do
-          widget.should_receive(:delete_legacy_contents_for_group)
-          content_generator.generate(widget, klass, group_description, userids).should == [4, 5]
+          expect(widget).to receive(:delete_legacy_contents_for_group)
+          expect(content_generator.generate(widget, klass, group_description, userids)).to eq([4, 5])
         end
       end
 
       context "when the resulting length is not equal to the expected count" do
         before do
-          widget.stub(:generate_one_content_for_user).with(group, 1).and_return(4)
-          widget.stub(:generate_one_content_for_user).with(group, 2).and_return(nil)
+          allow(widget).to receive(:generate_one_content_for_user).with(group, 1).and_return(4)
+          allow(widget).to receive(:generate_one_content_for_user).with(group, 2).and_return(nil)
         end
 
         it "raises an MiqException::Error" do
           expected_error_message = "Expected 2 contents, received 1 contents for [1, 2]"
-          widget.should_receive(:delete_legacy_contents_for_group)
+          expect(widget).to receive(:delete_legacy_contents_for_group)
           expect { content_generator.generate(widget, klass, group_description, userids) }.to raise_error(MiqException::Error, expected_error_message)
         end
       end
