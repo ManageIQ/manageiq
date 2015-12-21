@@ -42,6 +42,11 @@ Vmdb::Application.configure do
     end
   end
 
+  # Any exception that gets past our ApplicationController's rescue_from
+  # should just be raised intact
+  config.middleware.delete ::ActionDispatch::ShowExceptions
+  config.middleware.delete ::ActionDispatch::DebugExceptions
+
   # Raise exceptions in transactional callbacks
   config.active_record.raise_in_transactional_callbacks = true
 
