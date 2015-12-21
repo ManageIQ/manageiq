@@ -5,7 +5,7 @@ describe VimPerformanceTag do
     @server = EvmSpecHelper.local_miq_server
     @ems    = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
 
-    Classification.stub(:category_names_for_perf_by_tag).and_return(["environment"])
+    allow(Classification).to receive(:category_names_for_perf_by_tag).and_return(["environment"])
     @classification_entries = ["prod", "dev", "test"]
   end
 
@@ -133,20 +133,20 @@ describe VimPerformanceTag do
         classification_entries_with_none = @classification_entries + ["_none_"]
 
         classification_entries_with_none.each do |entry|
-          group_by_tags.should include(entry)
+          expect(group_by_tags).to include(entry)
           VimPerformanceTagValue::TAG_COLS[:default].each do |column|
-            group_by_tag_cols.should include("#{column}_#{entry}")
+            expect(group_by_tag_cols).to include("#{column}_#{entry}")
           end
         end
 
-        results.length.should == @timestamps.length
+        expect(results.length).to eq(@timestamps.length)
 
         results.each do |t|
           ts = t.timestamp.iso8601.to_s
           @classification_entries.each do |entry|
-            @precomputed[ts][entry.to_sym].should == t.send("cpu_usagemhz_rate_average_#{entry}")
+            expect(@precomputed[ts][entry.to_sym]).to eq(t.send("cpu_usagemhz_rate_average_#{entry}"))
           end
-          @precomputed[ts][:none].should == t.send("cpu_usagemhz_rate_average__none_")
+          expect(@precomputed[ts][:none]).to eq(t.send("cpu_usagemhz_rate_average__none_"))
         end
       end
     end

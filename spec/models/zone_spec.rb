@@ -14,27 +14,27 @@ describe Zone do
     end
 
     it "zone1#hosts will return hosts in zone1" do
-      @zone1.hosts.should match_array([@host1])
+      expect(@zone1.hosts).to match_array([@host1])
     end
 
     it "zone2#hosts will return hosts in zone2" do
-      @zone2.hosts.should match_array([@host2])
+      expect(@zone2.hosts).to match_array([@host2])
     end
 
     it "zone1#vms will return vms in zone1" do
-      @zone1.vms.should match_array(@host1.vms)
+      expect(@zone1.vms).to match_array(@host1.vms)
     end
 
     it "zone2#vms will return vms in zone2" do
-      @zone2.vms.should match_array(@host2.vms)
+      expect(@zone2.vms).to match_array(@host2.vms)
     end
 
     it "hosts in virtual reflections" do
-      described_class.includes(:aggregate_cpu_speed).should_not be_nil
+      expect(described_class.includes(:aggregate_cpu_speed)).not_to be_nil
     end
 
     it "vms_and_templates in virtual reflections" do
-      described_class.includes(:aggregate_vm_cpus).should_not be_nil
+      expect(described_class.includes(:aggregate_vm_cpus)).not_to be_nil
     end
   end
 
@@ -50,9 +50,9 @@ describe Zone do
       ems_infra = FactoryGirl.create(:ems_vmware, :zone => @zone)
 
       zone_clouds = @zone.ems_clouds
-      zone_clouds.should =~ ems_clouds
+      expect(zone_clouds).to match_array(ems_clouds)
 
-      zone_clouds.should_not include ems_infra
+      expect(zone_clouds).not_to include ems_infra
     end
 
     it "returns the set of availability_zones" do
@@ -60,7 +60,7 @@ describe Zone do
       azs = []
       3.times { azs << FactoryGirl.create(:availability_zone, :ems_id => openstack.id) }
 
-      @zone.availability_zones.should =~ azs
+      expect(@zone.availability_zones).to match_array(azs)
     end
 
     it "returns the set of vms_without_availability_zones" do
@@ -83,7 +83,7 @@ describe Zone do
       3.times { vms_not_in_az << FactoryGirl.create(:vm_openstack, :ems_id => openstacks[0].id) }
       3.times { vms_not_in_az << FactoryGirl.create(:vm_openstack, :ems_id => openstacks[1].id) }
 
-      @zone.vms_without_availability_zone.should =~ vms_not_in_az
+      expect(@zone.vms_without_availability_zone).to match_array(vms_not_in_az)
     end
   end
 
@@ -92,7 +92,7 @@ describe Zone do
 
     before do
       ServerRole.stub(:region_scoped_roles => [ServerRole.new(:name => "inregion")])
-      MiqServer.stub(:my_zone) { "myzone" }
+      allow(MiqServer).to receive(:my_zone) { "myzone" }
     end
 
     context "with no zone specified" do
@@ -124,15 +124,15 @@ describe Zone do
     let(:miq_server) { MiqServer.new }
 
     it "true" do
-      miq_server.stub(:active?).and_return(true)
+      allow(miq_server).to receive(:active?).and_return(true)
 
-      expect(zone.active?).to be_true
+      expect(zone.active?).to be_truthy
     end
 
     it "false" do
-      miq_server.stub(:active?).and_return(false)
+      allow(miq_server).to receive(:active?).and_return(false)
 
-      expect(zone.active?).to be_false
+      expect(zone.active?).to be_falsey
     end
   end
 
@@ -159,7 +159,7 @@ describe Zone do
     end
 
     it "settings changed queues ntp reload" do
-      described_class.any_instance.should_receive(:queue_ntp_reload_if_changed).once.and_call_original
+      expect_any_instance_of(described_class).to receive(:queue_ntp_reload_if_changed).once.and_call_original
 
       @zone.update_attributes(:settings => {:ntp => {:server => ["tock.example.com"]}})
 
@@ -167,7 +167,7 @@ describe Zone do
     end
 
     it "settings not changed does not queue ntp reload" do
-      described_class.any_instance.should_receive(:queue_ntp_reload_if_changed).once.and_call_original
+      expect_any_instance_of(described_class).to receive(:queue_ntp_reload_if_changed).once.and_call_original
 
       @zone.update_attributes(:settings => {:ntp => {:server => ["tick.example.com"]}})
 

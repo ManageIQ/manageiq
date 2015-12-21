@@ -13,16 +13,16 @@ describe VmMigrateWorkflow do
       context "#allowed_hosts" do
         it "with no hosts" do
           stub_dialog
-          workflow.allowed_hosts.should == []
+          expect(workflow.allowed_hosts).to eq([])
         end
 
         it "with a host" do
           stub_dialog
           host = FactoryGirl.create(:host_vmware, :ext_management_system => ems)
           host.set_parent(ems)
-          workflow.stub(:process_filter).and_return([host])
+          allow(workflow).to receive(:process_filter).and_return([host])
 
-          workflow.allowed_hosts.should == [workflow.ci_to_hash_struct(host)]
+          expect(workflow.allowed_hosts).to eq([workflow.ci_to_hash_struct(host)])
         end
       end
     end

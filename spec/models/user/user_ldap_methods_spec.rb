@@ -110,7 +110,7 @@ describe Authenticator::Ldap do
   def init_ldap_setup
     @login_ldap = double('login_ldap')
     @login_ldap.stub(:bind => true)
-    MiqLdap.stub(:new).and_return(@login_ldap)
+    allow(MiqLdap).to receive(:new).and_return(@login_ldap)
 
     @ldap = double('ldap')
     @auth.stub(:ldap => @ldap)

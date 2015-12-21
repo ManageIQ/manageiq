@@ -122,65 +122,65 @@ describe User do
 
       @user.reload
 
-      @user.has_filters?.should be_true
-      @user.get_managed_filters.should == mfilters
-      @user.get_belongsto_filters.should == bfilters
+      expect(@user.has_filters?).to be_truthy
+      expect(@user.get_managed_filters).to eq(mfilters)
+      expect(@user.get_belongsto_filters).to eq(bfilters)
     end
 
     it "should check Self Service Roles" do
       @user.current_group = @self_service_group
-      @user.self_service?.should be_true
+      expect(@user.self_service?).to be_truthy
 
       @user.current_group = @limited_self_service_group
-      @user.self_service?.should be_true
+      expect(@user.self_service?).to be_truthy
 
       @miq_group.miq_user_role = nil
       @user.current_group = @miq_group
-      @user.self_service?.should be_false
+      expect(@user.self_service?).to be_falsey
 
       @user.current_group = nil
-      @user.self_service?.should be_false
+      expect(@user.self_service?).to be_falsey
     end
 
     it "should check Limited Self Service Roles" do
       @user.current_group = @limited_self_service_group
-      @user.limited_self_service?.should be_true
+      expect(@user.limited_self_service?).to be_truthy
 
       @user.current_group = nil
       @user.current_group = @miq_group
-      @user.limited_self_service?.should be_false
+      expect(@user.limited_self_service?).to be_falsey
     end
 
     it "should check Super Admin Roles" do
-      @user.super_admin_user?.should be_true
+      expect(@user.super_admin_user?).to be_truthy
 
       @user.current_group = @admin_group
-      @user.super_admin_user?.should be_false
+      expect(@user.super_admin_user?).to be_falsey
 
       @user.current_group = @limited_self_service_group
-      @user.super_admin_user?.should be_false
+      expect(@user.super_admin_user?).to be_falsey
     end
 
     it "should check Admin Roles" do
-      @user.admin_user?.should be_true
+      expect(@user.admin_user?).to be_truthy
 
       @user.current_group = @admin_group
-      @user.admin_user?.should be_true
+      expect(@user.admin_user?).to be_truthy
 
       @user.current_group = @limited_self_service_group
-      @user.admin_user?.should be_false
+      expect(@user.admin_user?).to be_falsey
     end
 
     it "should get Server time zone setting" do
-      @user.get_timezone.should == "UTC"
+      expect(@user.get_timezone).to eq("UTC")
     end
 
     it "with_my_timezone sets the user's zone in a block" do
       @user.settings.store_path(:display, :timezone, "Hawaii")
       @user.with_my_timezone do
-        Time.zone.to_s.should == "(GMT-10:00) Hawaii"
+        expect(Time.zone.to_s).to eq("(GMT-10:00) Hawaii")
       end
-      Time.zone.to_s.should == "(GMT+00:00) UTC"
+      expect(Time.zone.to_s).to eq("(GMT+00:00) UTC")
     end
   end
 
@@ -219,16 +219,16 @@ describe User do
       it "will fail task if user object not found in ldap" do
         @miq_ldap.stub(:get_user_object => nil)
 
-        AuditEvent.should_receive(:failure).once
+        expect(AuditEvent).to receive(:failure).once
         authenticate = Authenticator::Ldap.new(@auth_config[:authentication])
         authenticate.stub(:ldap => @miq_ldap)
 
-        authenticate.authorize(@task.id, @fq_user).should be_nil
+        expect(authenticate.authorize(@task.id, @fq_user)).to be_nil
 
         @task.reload
-        @task.state.should == "Finished"
-        @task.status.should == "Error"
-        @task.message.should =~ /unable to find user object/
+        expect(@task.state).to eq("Finished")
+        expect(@task.status).to eq("Error")
+        expect(@task.message).to match(/unable to find user object/)
       end
 
       it "will fail task if user group doesn't match an EVM role" do
@@ -240,13 +240,13 @@ describe User do
         authenticate.stub(:ldap => @miq_ldap)
         authenticate.stub(:groups_for => [])
 
-        AuditEvent.should_receive(:failure).once
-        authenticate.authorize(@task.id, @fq_user).should be_nil
+        expect(AuditEvent).to receive(:failure).once
+        expect(authenticate.authorize(@task.id, @fq_user)).to be_nil
 
         @task.reload
-        @task.state.should == "Finished"
-        @task.status.should == "Error"
-        @task.message.should =~ /unable to match user's group membership/
+        expect(@task.state).to eq("Finished")
+        expect(@task.status).to eq("Error")
+        expect(@task.message).to match(/unable to match user's group membership/)
       end
     end
 
@@ -258,28 +258,28 @@ describe User do
       end
 
       it "sets miq_groups" do
-        @user.miq_groups.should match_array [@group3]
+        expect(@user.miq_groups).to match_array [@group3]
       end
 
       it "sets current_group" do
-        @user.current_group.should == @group3
+        expect(@user.current_group).to eq(@group3)
       end
 
       it "sets filters" do
-        @user.filters.should == @group3.filters
-        @user.filters.should == @filter1
+        expect(@user.filters).to eq(@group3.filters)
+        expect(@user.filters).to eq(@filter1)
       end
 
       it "when including current group" do
         @user.miq_groups = [@group1, @group2, @group3]
-        @user.valid?.should be_true
-        @user.current_group.should == @group3
+        expect(@user.valid?).to be_truthy
+        expect(@user.current_group).to eq(@group3)
       end
 
       it "when not including currrent group" do
         @user.miq_groups = [@group1, @group2]
-        @user.valid?.should be_true
-        @user.current_group.should == @group1
+        expect(@user.valid?).to be_truthy
+        expect(@user.current_group).to eq(@group1)
       end
 
       it "when nil" do
@@ -295,26 +295,26 @@ describe User do
       end
 
       it "sets current_group" do
-        @user.current_group.should == @group1
+        expect(@user.current_group).to eq(@group1)
       end
 
       it "sets filters" do
-        @user.filters.should == @group1.filters
-        @user.filters.should == @filter1
+        expect(@user.filters).to eq(@group1.filters)
+        expect(@user.filters).to eq(@filter1)
       end
 
       it "when belongs to miq_groups" do
-        @user.valid?.should be_true
+        expect(@user.valid?).to be_truthy
       end
 
       it "when not belongs to miq_groups" do
         @user.miq_groups = [@group2, @group3]
-        @user.current_group.should == @group2
+        expect(@user.current_group).to eq(@group2)
       end
 
       it "when nil" do
         @user.current_group = nil
-        @user.valid?.should be_true
+        expect(@user.valid?).to be_truthy
       end
     end
   end
@@ -362,28 +362,28 @@ describe User do
     end
 
     it "#active_vms" do
-      @user.active_vms.should match_array([@active_vm])
+      expect(@user.active_vms).to match_array([@active_vm])
     end
 
     it "#allocated_memory" do
-      @user.allocated_memory.should == @ram_size.megabyte
+      expect(@user.allocated_memory).to eq(@ram_size.megabyte)
     end
 
     it "#allocated_vcpu" do
-      @user.allocated_vcpu.should == @num_cpu
+      expect(@user.allocated_vcpu).to eq(@num_cpu)
     end
 
     it "#allocated_storage" do
-      @user.allocated_storage.should == @disk_size
+      expect(@user.allocated_storage).to eq(@disk_size)
     end
 
     it "#provisioned_storage" do
-      @user.provisioned_storage.should == @ram_size.megabyte + @disk_size
+      expect(@user.provisioned_storage).to eq(@ram_size.megabyte + @disk_size)
     end
 
     %w(allocated_memory allocated_vcpu allocated_storage provisioned_storage).each do |vcol|
       it "should have virtual column #{vcol} " do
-        described_class.should have_virtual_column "#{vcol}", :integer
+        expect(described_class).to have_virtual_column "#{vcol}", :integer
       end
     end
   end
@@ -394,12 +394,12 @@ describe User do
                               :email      => "admin@email.com",
                               :miq_groups => [group]
                              )
-    user.should be_valid
+    expect(user).to be_valid
 
     user.email = "admin@email.com
                   ); INSERT INTO users
                   (password, userid) VALUES ('bar', 'foo')--"
-    user.should_not be_valid
+    expect(user).not_to be_valid
   end
 
   context "#group_ids_of_subscribed_widget_sets" do
@@ -440,16 +440,16 @@ describe User do
     let(:user) { FactoryGirl.create(:user, :password => "dummy") }
 
     it "should login with good username/password" do
-      User.authenticate_with_http_basic(user.userid, user.password).should eq([true, user.userid])
+      expect(User.authenticate_with_http_basic(user.userid, user.password)).to eq([true, user.userid])
     end
 
     it "should fail with bad username" do
       bad_userid = "bad_userid"
-      User.authenticate_with_http_basic(bad_userid, user.password).should eq([false, bad_userid])
+      expect(User.authenticate_with_http_basic(bad_userid, user.password)).to eq([false, bad_userid])
     end
 
     it "should fail with bad password" do
-      User.authenticate_with_http_basic(user.userid, "bad_pwd").should eq([false, user.userid])
+      expect(User.authenticate_with_http_basic(user.userid, "bad_pwd")).to eq([false, user.userid])
     end
   end
 
