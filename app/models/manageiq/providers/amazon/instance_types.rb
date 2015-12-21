@@ -13,6 +13,30 @@
 module ManageIQ::Providers::Amazon::InstanceTypes
   # Types that are currently advertised for use
   AVAILABLE_TYPES = {
+    "t2.nano"     => {
+      :name                    => "t2.nano",
+      :family                  => "General Purpose",
+      :description             => "T2 Nano",
+      :memory                  => 0.5.gigabyte,
+      :vcpu                    => 1,
+      :ebs_only                => true,
+      :instance_store_size     => 0,
+      :instance_store_volumes  => 0,
+      :architecture            => [:i386, :x86_64],
+      :virtualization_type     => [:hvm],
+      :network_performance     => :low,
+      :physical_processor      => "Intel Xeon Family",
+      :processor_clock_speed   => 3.3, # GHz
+      :intel_aes_ni            => true,
+      :intel_avx               => true,
+      :intel_avx2              => nil,
+      :intel_turbo             => true,
+      :ebs_optimized_available => nil,
+      :enhanced_networking     => nil,
+      :cluster_networking      => nil,
+      :vpc_only                => true,
+    },
+
     "t2.micro"    => {
       :default                 => true,
       :name                    => "t2.micro",
