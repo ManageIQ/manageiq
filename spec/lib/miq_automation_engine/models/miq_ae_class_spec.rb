@@ -2,14 +2,14 @@ require "spec_helper"
 
 include AutomationSpecHelper
 describe MiqAeClass do
-  it { should validate_presence_of(:name) }
-  it { should validate_presence_of(:namespace_id) }
+  it { is_expected.to validate_presence_of(:name) }
+  it { is_expected.to validate_presence_of(:namespace_id) }
 
-  it { should allow_value("cla.ss1").for(:name) }
-  it { should allow_value("cla-ss1").for(:name) }
+  it { is_expected.to allow_value("cla.ss1").for(:name) }
+  it { is_expected.to allow_value("cla-ss1").for(:name) }
 
-  it { should_not allow_value("cla ss1").for(:name) }
-  it { should_not allow_value("cla:ss1").for(:name) }
+  it { is_expected.not_to allow_value("cla ss1").for(:name) }
+  it { is_expected.not_to allow_value("cla:ss1").for(:name) }
 
   it "should not create class without namespace" do
     expect { MiqAeClass.new(:name => "TEST").save! }.to raise_error(ActiveRecord::RecordInvalid)
@@ -21,29 +21,29 @@ describe MiqAeClass do
 
   it "should set the updated_by field on save" do
     c1 = MiqAeClass.create(:namespace => "TEST", :name => "oleg")
-    c1.updated_by.should == 'system'
+    expect(c1.updated_by).to eq('system')
   end
 
   it "should not create classes with the same name in the same namespace" do
     c1 = MiqAeClass.new(:namespace => "TEST", :name => "oleg")
-    c1.should_not be_nil
-    c1.save!.should be_true
+    expect(c1).not_to be_nil
+    expect(c1.save!).to be_truthy
     expect { MiqAeClass.new(:namespace => "TEST", :name => "OLEG").save! }.to raise_error(ActiveRecord::RecordInvalid)
     c2 = MiqAeClass.new(:namespace => "PROD", :name => "oleg")
-    c2.should_not be_nil
-    c2.save!.should be_true
+    expect(c2).not_to be_nil
+    expect(c2.save!).to be_truthy
   end
 
   it "should return editable as false if the parent namespace is not editable" do
     n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :priority => 10, :system => true)
     c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
-    c1.should_not be_editable
+    expect(c1).not_to be_editable
   end
 
   it "should return editable as true if the parent namespace is editable" do
     n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1')
     c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
-    c1.should be_editable
+    expect(c1).to be_editable
   end
 
   context "cross domain instances" do
@@ -69,79 +69,79 @@ describe MiqAeClass do
     end
 
     it 'invalid path should return an empty array' do
-      MiqAeClass.find_distinct_instances_across_domains(@user, 'UNKNOWN').should be_empty
-      MiqAeClass.find_distinct_instances_across_domains(@user, nil).should be_empty
-      MiqAeClass.find_distinct_instances_across_domains(@user, 'UNKNOWN/').should be_empty
+      expect(MiqAeClass.find_distinct_instances_across_domains(@user, 'UNKNOWN')).to be_empty
+      expect(MiqAeClass.find_distinct_instances_across_domains(@user, nil)).to be_empty
+      expect(MiqAeClass.find_distinct_instances_across_domains(@user, 'UNKNOWN/')).to be_empty
     end
 
     it 'if the namespace does not exist we should get an empty array' do
-      MiqAeClass.find_distinct_instances_across_domains(@user, 'UNKNOWN/PROCESS').should be_empty
+      expect(MiqAeClass.find_distinct_instances_across_domains(@user, 'UNKNOWN/PROCESS')).to be_empty
     end
 
     it 'if the namespace exists but the class does not exist we should get an empty array' do
-      MiqAeClass.find_distinct_instances_across_domains(@user, 'SYSTEM/UNKNOWN').should be_empty
+      expect(MiqAeClass.find_distinct_instances_across_domains(@user, 'SYSTEM/UNKNOWN')).to be_empty
     end
 
     it 'if the namespace does not exist and the class does not exist we should get an empty array' do
-      MiqAeClass.find_distinct_instances_across_domains(@user, 'UNKNOWN/UNKNOWN').should be_empty
+      expect(MiqAeClass.find_distinct_instances_across_domains(@user, 'UNKNOWN/UNKNOWN')).to be_empty
     end
 
     it 'get sorted list of instances across domains with partial namespace' do
       non_fq_klass = 'SYSTEM/PROCESS'
       x = MiqAeClass.find_distinct_instances_across_domains(@user, non_fq_klass).collect(&:fqname)
-      @sorted_inst_list.should match_string_array_ignorecase(x)
+      expect(@sorted_inst_list).to match_string_array_ignorecase(x)
     end
 
     it 'get sorted list of instances across domains with FQ namespace' do
       fq_klass = 'DOMAIN1/SYSTEM/PROCESS'
       x = MiqAeClass.find_distinct_instances_across_domains(@user, fq_klass).collect(&:fqname)
-      @sorted_inst_list.should match_string_array_ignorecase(x)
+      expect(@sorted_inst_list).to match_string_array_ignorecase(x)
     end
 
     it 'get sorted list of instances across domains with /FQ namespace' do
       fq_klass = '/DOMAIN1/SYSTEM/PROCESS'
       x = MiqAeClass.find_distinct_instances_across_domains(@user, fq_klass).collect(&:fqname)
-      @sorted_inst_list.should match_string_array_ignorecase(x)
+      expect(@sorted_inst_list).to match_string_array_ignorecase(x)
     end
 
     it 'invalid path for similar named instance should return an empty array' do
-      MiqAeClass.find_homonymic_instances_across_domains(@user, 'UNKNOWN').should be_empty
-      MiqAeClass.find_homonymic_instances_across_domains(@user, nil).should be_empty
-      MiqAeClass.find_homonymic_instances_across_domains(@user, 'UNKNOWN/').should be_empty
+      expect(MiqAeClass.find_homonymic_instances_across_domains(@user, 'UNKNOWN')).to be_empty
+      expect(MiqAeClass.find_homonymic_instances_across_domains(@user, nil)).to be_empty
+      expect(MiqAeClass.find_homonymic_instances_across_domains(@user, 'UNKNOWN/')).to be_empty
     end
 
     it 'invalid path no instance specified we should get an empty array' do
-      MiqAeClass.find_homonymic_instances_across_domains(@user, 'UNKNOWN/PROCESS').should be_empty
+      expect(MiqAeClass.find_homonymic_instances_across_domains(@user, 'UNKNOWN/PROCESS')).to be_empty
     end
 
     it 'if the namespace does not exist but class and instance exist we should get an empty array' do
-      MiqAeClass.find_homonymic_instances_across_domains(@user, 'UNKNOWN/PROCESS/FRED').should be_empty
+      expect(MiqAeClass.find_homonymic_instances_across_domains(@user, 'UNKNOWN/PROCESS/FRED')).to be_empty
     end
 
     it 'if the namespace, instance exists but the class does not exist we should get an empty array' do
-      MiqAeClass.find_homonymic_instances_across_domains(@user, 'SYSTEM/UNKNOWN/FRED').should be_empty
+      expect(MiqAeClass.find_homonymic_instances_across_domains(@user, 'SYSTEM/UNKNOWN/FRED')).to be_empty
     end
 
     it 'if the namespace,class, instance does not exist we should get an empty array' do
-      MiqAeClass.find_homonymic_instances_across_domains(@user, 'UNKOWN/UNKNOWN/UNKNOWN').should be_empty
+      expect(MiqAeClass.find_homonymic_instances_across_domains(@user, 'UNKOWN/UNKNOWN/UNKNOWN')).to be_empty
     end
 
     it 'get sorted list of same named instances across domains with partial namespace' do
       non_fq_inst = 'SYSTEM/PROCESS/Inst4'
       x = MiqAeClass.find_homonymic_instances_across_domains(@user, non_fq_inst).collect(&:fqname)
-      @inst4_list.should match_string_array_ignorecase(x)
+      expect(@inst4_list).to match_string_array_ignorecase(x)
     end
 
     it 'get sorted list of same named instances across domains with FQ namespace' do
       fq_inst = 'DOMAIN1/SYSTEM/PROCESS/Inst4'
       x = MiqAeClass.find_homonymic_instances_across_domains(@user, fq_inst).collect(&:fqname)
-      @inst4_list.should match_string_array_ignorecase(x)
+      expect(@inst4_list).to match_string_array_ignorecase(x)
     end
 
     it 'get sorted list of same named instances across domains with /FQ namespace' do
       fq_inst = '/DOMAIN1/SYSTEM/PROCESS/Inst4'
       x = MiqAeClass.find_homonymic_instances_across_domains(@user, fq_inst).collect(&:fqname)
-      @inst4_list.should match_string_array_ignorecase(x)
+      expect(@inst4_list).to match_string_array_ignorecase(x)
     end
   end
 
@@ -169,7 +169,7 @@ describe MiqAeClass do
       }
 
       res = MiqAeClass.copy(options)
-      res.count.should eq(2)
+      expect(res.count).to eq(2)
     end
 
     it "copy classes under same namespace raise error when class exists" do
@@ -192,7 +192,7 @@ describe MiqAeClass do
       }
 
       res = MiqAeClass.copy(options)
-      res.count.should eq(2)
+      expect(res.count).to eq(2)
     end
   end
 
@@ -217,15 +217,15 @@ describe MiqAeClass do
     let(:ae_instance2) { MiqAeInstance.new }
 
     before do
-      ae_method1.stub(:fqname).and_return("z")
-      ae_method2.stub(:fqname).and_return("a")
-      ae_method1.stub(:to_export_xml) { |options| options[:builder].ae_method1 }
-      ae_method2.stub(:to_export_xml) { |options| options[:builder].ae_method2 }
+      allow(ae_method1).to receive(:fqname).and_return("z")
+      allow(ae_method2).to receive(:fqname).and_return("a")
+      allow(ae_method1).to receive(:to_export_xml) { |options| options[:builder].ae_method1 }
+      allow(ae_method2).to receive(:to_export_xml) { |options| options[:builder].ae_method2 }
 
-      ae_instance1.stub(:fqname).and_return("z")
-      ae_instance2.stub(:fqname).and_return("a")
-      ae_instance1.stub(:to_export_xml) { |options| options[:builder].ae_instance1 }
-      ae_instance2.stub(:to_export_xml) { |options| options[:builder].ae_instance2 }
+      allow(ae_instance1).to receive(:fqname).and_return("z")
+      allow(ae_instance2).to receive(:fqname).and_return("a")
+      allow(ae_instance1).to receive(:to_export_xml) { |options| options[:builder].ae_instance1 }
+      allow(ae_instance2).to receive(:to_export_xml) { |options| options[:builder].ae_instance2 }
     end
 
     context "when the class has ae_fields" do
@@ -234,8 +234,8 @@ describe MiqAeClass do
       let(:ae_field2) { MiqAeField.new(:priority => 1) }
 
       before do
-        ae_field1.stub(:to_export_xml) { |options| options[:builder].ae_field1 }
-        ae_field2.stub(:to_export_xml) { |options| options[:builder].ae_field2 }
+        allow(ae_field1).to receive(:to_export_xml) { |options| options[:builder].ae_field1 }
+        allow(ae_field2).to receive(:to_export_xml) { |options| options[:builder].ae_field2 }
       end
 
       it "produces the expected xml" do
@@ -262,7 +262,7 @@ describe MiqAeClass do
 
   it "#domain" do
     c1 = MiqAeClass.create(:namespace => "TEST/ABC", :name => "oleg")
-    c1.domain.name.should eql('TEST')
+    expect(c1.domain.name).to eql('TEST')
   end
 
   context "state_machine_class tests" do
@@ -274,31 +274,31 @@ describe MiqAeClass do
     it "class with only state field" do
       @c1.ae_fields.create(:name => "test_field", :substitute => false, :aetype => 'state')
       @c1.reload
-      @c1.state_machine?.should be_true
+      expect(@c1.state_machine?).to be_truthy
     end
 
     it "class with only attribute field" do
       @c1.ae_fields.create(:name => "test_field", :substitute => false, :aetype => 'attribute')
       @c1.reload
-      @c1.state_machine?.should be_false
+      expect(@c1.state_machine?).to be_falsey
     end
 
     it "update the field from attribute to state" do
       field1 = @c1.ae_fields.create(:name => "test_field", :substitute => false, :aetype => 'attribute')
       @c1.reload
-      @c1.state_machine?.should be_false
+      expect(@c1.state_machine?).to be_falsey
       field1.update_attributes(:aetype => 'state')
       @c1.reload
-      @c1.state_machine?.should be_true
+      expect(@c1.state_machine?).to be_truthy
     end
 
     it "remove the state field" do
       field1 = @c1.ae_fields.create(:name => "test_field1", :substitute => false, :aetype => 'state')
       @c1.reload
-      @c1.state_machine?.should be_true
+      expect(@c1.state_machine?).to be_truthy
       field1.destroy
       @c1.reload
-      @c1.state_machine?.should be_false
+      expect(@c1.state_machine?).to be_falsey
     end
   end
 
@@ -311,12 +311,12 @@ describe MiqAeClass do
       class_fqnames = %w(/FRED/A/B/C/CLASS1 /FREDDY/C/D/E/CLASS2)
       ids = ns_fqnames.collect { |ns| "MiqAeNamespace::#{MiqAeNamespace.find_by_fqname(ns, false).id}" }
       ids += class_fqnames.collect { |cls| "MiqAeClass::#{MiqAeClass.find_by_fqname(cls).id}" }
-      MiqAeClass.waypoint_ids_for_state_machines.should match_array(ids)
+      expect(MiqAeClass.waypoint_ids_for_state_machines).to match_array(ids)
     end
 
     it "no state machine classes" do
       create_ae_model(:name => 'MARIO', :ae_class => 'CLASS3', :ae_namespace  => 'C/D/E')
-      MiqAeClass.waypoint_ids_for_state_machines.should be_empty
+      expect(MiqAeClass.waypoint_ids_for_state_machines).to be_empty
     end
   end
 end

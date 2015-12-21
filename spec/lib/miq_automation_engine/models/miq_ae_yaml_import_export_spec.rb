@@ -74,7 +74,7 @@ describe MiqAeDatastore do
       options = {'zip_file' => @zip_file}
       expect { export_model(@manageiq_domain.name, options) }
         .to raise_error(MiqAeException::FileExists)
-      File.exist?(@zip_file).should be_true
+      expect(File.exist?(@zip_file)).to be_truthy
     end
 
     it "an existing yaml file should raise exception" do
@@ -82,7 +82,7 @@ describe MiqAeDatastore do
       options = {'yaml_file' => @yaml_file}
       expect { export_model(@manageiq_domain.name, options) }
         .to raise_error(MiqAeException::FileExists)
-      File.exist?(@yaml_file).should be_true
+      expect(File.exist?(@yaml_file)).to be_truthy
     end
 
     it "an existing directory with overwrite should not raise exception" do
@@ -172,7 +172,7 @@ describe MiqAeDatastore do
       namespace_file = File.join(@export_dir, @manageiq_domain.name, @aen1.name, '__namespace__.yaml')
       data = YAML.load_file(namespace_file)
       hash = data.fetch_path('object', 'attributes')
-      expect(hash.key?('tenant_id')).to be_false
+      expect(hash.key?('tenant_id')).to be_falsey
     end
   end
 
@@ -230,14 +230,14 @@ describe MiqAeDatastore do
       export_model(@manageiq_domain.name)
       data = YAML.load_file(@instance_file)
       password_field_hash = data.fetch_path('object', 'fields').detect { |h| h.keys[0] == 'password_field' }
-      password_field_hash.fetch_path('password_field', 'value').should eq(MiqAePassword.encrypt(@clear_password))
+      expect(password_field_hash.fetch_path('password_field', 'value')).to eq(MiqAePassword.encrypt(@clear_password))
     end
 
     it "domain, check default password field is not in clear text" do
       export_model(@manageiq_domain.name)
       data = YAML.load_file(@class_file)
       password_field_hash = data.fetch_path('object', 'schema').detect { |h| h['field']['name'] == 'default_password_field' }
-      password_field_hash.fetch_path('field', 'default_value').should eq(MiqAePassword.encrypt(@clear_default_password))
+      expect(password_field_hash.fetch_path('field', 'default_value')).to eq(MiqAePassword.encrypt(@clear_default_password))
     end
 
     it "domain, as directory" do
@@ -261,19 +261,19 @@ describe MiqAeDatastore do
       check_counts('dom'  => 1, 'ns'    => 3,  'class' => 4, 'inst'  => 10,
                    'meth' => 3, 'field' => 12, 'value' => 8)
       dom = MiqAeDomain.find_by_fqname(@manageiq_domain.name, false)
-      dom.should be_system
-      dom.should be_enabled
+      expect(dom).to be_system
+      expect(dom).to be_enabled
     end
 
     it "domain, priority 0 should get retained for manageiq domain" do
       export_model(@manageiq_domain.name)
-      @manageiq_domain.priority.should equal(0)
+      expect(@manageiq_domain.priority).to equal(0)
       reset_and_import(@export_dir, @manageiq_domain.name)
       check_counts('dom'  => 1,  'ns'   => 3,  'class' => 4, 'inst'  => 10,
                    'meth' => 3, 'field' => 12, 'value' => 8)
 
       ns = MiqAeNamespace.find_by_fqname(@manageiq_domain.name, false)
-      ns.priority.should equal(0)
+      expect(ns.priority).to equal(0)
     end
 
     it "domain, using import_as (new domain name), to directory" do
@@ -298,7 +298,7 @@ describe MiqAeDatastore do
       reset_and_import(@export_dir, @manageiq_domain.name, import_options)
       check_counts('dom'  => 2, 'ns'    => 6,  'class' => 8,  'inst'  => 20,
                    'meth' => 6, 'field' => 24, 'value' => 16)
-      MiqAeDomain.find_by_fqname(import_options['import_as']).should_not be_nil
+      expect(MiqAeDomain.find_by_fqname(import_options['import_as'])).not_to be_nil
     end
 
     it "domain, using export_as (new domain name), to directory" do
@@ -323,7 +323,7 @@ describe MiqAeDatastore do
       reset_and_import(@export_dir, @export_as, import_options)
       check_counts('dom'  => 1, 'ns'    => 3,  'class' => 4, 'inst'  => 10,
                    'meth' => 3, 'field' => 12, 'value' => 8)
-      MiqAeDomain.find_by_fqname(@export_as).should_not be_nil
+      expect(MiqAeDomain.find_by_fqname(@export_as)).not_to be_nil
     end
 
     it "domain, import only namespace, to directory" do
@@ -523,8 +523,8 @@ describe MiqAeDatastore do
                    'meth' => 2, 'field' => 6, 'value' => 4)
       aen1_aec1  = MiqAeClass.find_by_name('manageiq_test_class_1')
       builtin_method = MiqAeMethod.find_by_class_id_and_name(aen1_aec1.id, 'test2')
-      builtin_method.location.should eql 'builtin'
-      builtin_method.data.should be_nil
+      expect(builtin_method.location).to eql 'builtin'
+      expect(builtin_method.data).to be_nil
     end
 
     it "class, without methods, to directory" do
@@ -567,11 +567,11 @@ describe MiqAeDatastore do
       @customer_domain.update_attributes(:enabled => true)
       export_model(ALL_DOMAINS, export_options)
       reset_and_import(@export_dir, ALL_DOMAINS, import_options)
-      MiqAeDomain.find_by_fqname(@manageiq_domain.name, false).priority.should eql(0)
+      expect(MiqAeDomain.find_by_fqname(@manageiq_domain.name, false).priority).to eql(0)
       cust_domain = MiqAeDomain.find_by_fqname(@customer_domain.name, false)
-      cust_domain.priority.should eql(1)
-      cust_domain.should be_enabled
-      MiqAeNamespace.find_by_fqname('$', false).should_not be_nil
+      expect(cust_domain.priority).to eql(1)
+      expect(cust_domain).to be_enabled
+      expect(MiqAeNamespace.find_by_fqname('$', false)).not_to be_nil
     end
   end
 
@@ -580,7 +580,7 @@ describe MiqAeDatastore do
     import_as = options['import_as'].presence
     if import_as.blank?
       MiqAeDatastore.reset
-      [MiqAeClass, MiqAeField, MiqAeInstance, MiqAeNamespace, MiqAeMethod, MiqAeValue].each { |k| k.count.should == 0 }
+      [MiqAeClass, MiqAeField, MiqAeInstance, MiqAeNamespace, MiqAeMethod, MiqAeValue].each { |k| expect(k.count).to eq(0) }
     end
     import_options = {'preview' => true,
                       'tenant'  => @tenant,
@@ -588,7 +588,7 @@ describe MiqAeDatastore do
     MiqAeImport.new(domain, import_options).import
 
     if import_as.blank?
-      [MiqAeClass, MiqAeField, MiqAeInstance, MiqAeNamespace, MiqAeMethod, MiqAeValue].each { |k| k.count.should == 0 }
+      [MiqAeClass, MiqAeField, MiqAeInstance, MiqAeNamespace, MiqAeMethod, MiqAeValue].each { |k| expect(k.count).to eq(0) }
     end
     import_options['preview'] = false
     MiqAeImport.new(domain, import_options).import
@@ -742,13 +742,13 @@ describe MiqAeDatastore do
   end
 
   def check_counts(counts)
-    MiqAeDomain.count.should eql(counts['dom'])    if counts.key?('dom')
+    expect(MiqAeDomain.count).to eql(counts['dom'])    if counts.key?('dom')
     ns_count = 0
     MiqAeDomain.all.each do |d|
       d.ae_namespaces.each { |ns| ns_count += child_namespace_count(ns) }
     end
-    ns_count.should eql(counts['ns'])    if counts.key?('ns')
-    MiqAeClass.count.should eql(counts['class']) if counts.key?('class')
+    expect(ns_count).to eql(counts['ns'])    if counts.key?('ns')
+    expect(MiqAeClass.count).to eql(counts['class']) if counts.key?('class')
     check_class_component_counts counts
     validate_additional_columns
   end
@@ -770,14 +770,14 @@ describe MiqAeDatastore do
   end
 
   def validate_relation(rel)
-    @additional_columns.each { |k, v| v.should eql(rel[k]) }
+    @additional_columns.each { |k, v| expect(v).to eql(rel[k]) }
   end
 
   def check_class_component_counts(counts)
-    MiqAeInstance.count.should eql(counts['inst'])  if counts.key?('inst')
-    MiqAeMethod.count.should eql(counts['meth'])  if counts.key?('meth')
-    MiqAeField.count.should eql(counts['field']) if counts.key?('field')
-    MiqAeValue.count.should eql(counts['value']) if counts.key?('value')
+    expect(MiqAeInstance.count).to eql(counts['inst'])  if counts.key?('inst')
+    expect(MiqAeMethod.count).to eql(counts['meth'])  if counts.key?('meth')
+    expect(MiqAeField.count).to eql(counts['field']) if counts.key?('field')
+    expect(MiqAeValue.count).to eql(counts['value']) if counts.key?('value')
   end
 
   def create_bogus_zip_file

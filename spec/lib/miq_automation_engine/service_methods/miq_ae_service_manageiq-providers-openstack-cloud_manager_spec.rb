@@ -15,12 +15,12 @@ module MiqAeServiceEmsOpenstackSpec
 
     it "#flavors" do
       flavor = @ems_openstack.flavors.first
-      flavor.should be_kind_of(MiqAeMethodService::MiqAeServiceManageIQ_Providers_Openstack_CloudManager_Flavor)
+      expect(flavor).to be_kind_of(MiqAeMethodService::MiqAeServiceManageIQ_Providers_Openstack_CloudManager_Flavor)
     end
 
     it "#availability_zones" do
       availability_zone = @ems_openstack.availability_zones.first
-      availability_zone.should be_kind_of(MiqAeMethodService::MiqAeServiceManageIQ_Providers_Openstack_CloudManager_AvailabilityZone)
+      expect(availability_zone).to be_kind_of(MiqAeMethodService::MiqAeServiceManageIQ_Providers_Openstack_CloudManager_AvailabilityZone)
     end
   end
 end

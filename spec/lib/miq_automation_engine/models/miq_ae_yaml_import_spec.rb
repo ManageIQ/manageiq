@@ -14,7 +14,7 @@ describe MiqAeYamlImport do
       let(:options) { {"overwrite" => true, "tenant" => Tenant.root_tenant} }
 
       it "returns true" do
-        expect(miq_ae_yaml_import.new_domain_name_valid?).to be_true
+        expect(miq_ae_yaml_import.new_domain_name_valid?).to be_truthy
       end
     end
   end

@@ -10,24 +10,24 @@ module MiqAeServiceAvailabilityZoneSpec
     end
 
     it "check values" do
-      @service_availability_zone.name.should == "us-west-1a"
-      @service_availability_zone.should be_kind_of(MiqAeMethodService::MiqAeServiceAvailabilityZone)
+      expect(@service_availability_zone.name).to eq("us-west-1a")
+      expect(@service_availability_zone).to be_kind_of(MiqAeMethodService::MiqAeServiceAvailabilityZone)
     end
 
     it "#ext_management_system" do
-      described_class.instance_methods.should include(:ext_management_system)
+      expect(described_class.instance_methods).to include(:ext_management_system)
     end
 
     it "#vms" do
-      described_class.instance_methods.should include(:vms)
+      expect(described_class.instance_methods).to include(:vms)
     end
 
     it "#vms_and_templates" do
-      described_class.instance_methods.should include(:vms_and_templates)
+      expect(described_class.instance_methods).to include(:vms_and_templates)
     end
 
     it "#cloud_subnets" do
-      described_class.instance_methods.should include(:cloud_subnets)
+      expect(described_class.instance_methods).to include(:cloud_subnets)
     end
   end
 end

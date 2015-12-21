@@ -12,7 +12,7 @@ module MiqAeServiceSpec
 
     context "#attributes" do
       before do
-        @object.stub(:attributes).and_return('true'     => true,
+        allow(@object).to receive(:attributes).and_return('true'     => true,
                                              'false'    => false,
                                              'time'     => Time.parse('Aug 30, 2013'),
                                              'symbol'   => :symbol,
@@ -26,17 +26,17 @@ module MiqAeServiceSpec
       it "obscures passwords" do
         original_attributes = @object.attributes.dup
         attributes = @service_object.attributes
-        attributes['password'].should == '********'
-        @object.attributes.should == original_attributes
+        expect(attributes['password']).to eq('********')
+        expect(@object.attributes).to eq(original_attributes)
       end
     end
 
     context "#inspect" do
       it "returns the class, id and name" do
-        @object.stub(:object_name).and_return('fred')
+        allow(@object).to receive(:object_name).and_return('fred')
         regex = /#<MiqAeMethodService::MiqAeServiceObject:0x(\w+) name:.\"(?<name>\w+)\">/
         match = regex.match(@service_object.inspect)
-        match[:name].should eq('fred')
+        expect(match[:name]).to eq('fred')
       end
     end
   end
@@ -106,7 +106,7 @@ module MiqAeServiceSpec
 
         vms = miq_ae_service.vmdb('vm').find(:all)
         cache = miq_ae_service.instance_variable_get(:@drb_server_references)
-        expect(cache.any? { |x| x.object_id == vms.object_id }).to be_true
+        expect(cache.any? { |x| x.object_id == vms.object_id }).to be_truthy
       end
     end
   end

@@ -15,18 +15,18 @@ module MiqAeUriSpec
         "message=get_vmname&request=UI_PROVISION_INFO"                             => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_vmname'},
         "message=get_dialogs&request=UI_PROVISION_INFO"                            => {'request' => 'UI_PROVISION_INFO', 'message' => 'get_dialogs'},
       }.each do |query, hash|
-        MiqAeUri.hash2query(hash).should == query
-        MiqAeUri.query2hash(query).should == hash
+        expect(MiqAeUri.hash2query(hash)).to eq(query)
+        expect(MiqAeUri.query2hash(query)).to eq(hash)
       end
     end
 
     it "escape non-ASCII Numeric characters" do
       hash = {"test://dev?lab$~" => "OU=serverbuildingtest, OU=dev2"}
       query = MiqAeUri.hash2query(hash)
-      query.should == "test%3A%2F%2Fdev%3Flab%24%7E=OU%3Dserverbuildingtest%2C%20OU%3Ddev2"
+      expect(query).to eq("test%3A%2F%2Fdev%3Flab%24%7E=OU%3Dserverbuildingtest%2C%20OU%3Ddev2")
 
       result_hash = MiqAeUri.query2hash(query)
-      result_hash.should == hash
+      expect(result_hash).to eq(hash)
     end
   end
 end
