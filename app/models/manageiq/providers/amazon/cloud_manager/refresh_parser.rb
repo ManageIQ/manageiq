@@ -6,12 +6,12 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   end
 
   def initialize(ems, options = nil)
-    @ems             = ems
-    @connection      = ems.connect
-    @cloud_formation = ems.cloud_formation
-    @data            = {}
-    @data_index      = {}
-    @known_flavors   = Set.new
+    @ems                 = ems
+    @aws_ec2             = ems.connect
+    @aws_cloud_formation = ems.cloud_formation
+    @data                = {}
+    @data_index          = {}
+    @known_flavors       = Set.new
 
     @options    = options || {}
     # Default the collection of images unless explicitly declined
@@ -45,7 +45,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   private
 
   def security_groups
-    @security_groups ||= @connection.security_groups
+    @security_groups ||= @aws_ec2.security_groups
   end
 
   def get_flavors
@@ -53,17 +53,17 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   end
 
   def get_availability_zones
-    azs = @connection.client.describe_availability_zones[:availability_zones]
+    azs = @aws_ec2.client.describe_availability_zones[:availability_zones]
     process_collection(azs, :availability_zones) { |az| parse_availability_zone(az) }
   end
 
   def get_key_pairs
-    kps = @connection.client.describe_key_pairs[:key_pairs]
+    kps = @aws_ec2.client.describe_key_pairs[:key_pairs]
     process_collection(kps, :key_pairs) { |kp| parse_key_pair(kp) }
   end
 
   def get_cloud_networks
-    vpcs = @connection.client.describe_vpcs[:vpcs]
+    vpcs = @aws_ec2.client.describe_vpcs[:vpcs]
     process_collection(vpcs, :cloud_networks) { |vpc| parse_cloud_network(vpc) }
   end
 
@@ -93,23 +93,23 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
 
   def get_private_images
     get_images(
-      @connection.client.describe_images(:owners  => [:self],
-                                         :filters => [{:name   => "image-type",
-                                                       :values => ["machine"]}])[:images])
+      @aws_ec2.client.describe_images(:owners  => [:self],
+                                      :filters => [{:name   => "image-type",
+                                                    :values => ["machine"]}])[:images])
   end
 
   def get_shared_images
     get_images(
-      @connection.client.describe_images(:executable_users => [:self],
-                                         :filters          => [{:name   => "image-type",
-                                                                :values => ["machine"]}])[:images])
+      @aws_ec2.client.describe_images(:executable_users => [:self],
+                                      :filters          => [{:name   => "image-type",
+                                                             :values => ["machine"]}])[:images])
   end
 
   def get_public_images
     get_images(
-      @connection.client.describe_images(:executable_users => [:all],
-                                         :filters          => [{:name   => "image-type",
-                                                                :values => ["machine"]}])[:images], true)
+      @aws_ec2.client.describe_images(:executable_users => [:all],
+                                      :filters          => [{:name   => "image-type",
+                                                             :values => ["machine"]}])[:images], true)
   end
 
   def get_images(images, is_public = false)
@@ -117,7 +117,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   end
 
   def get_stacks
-    stacks = @cloud_formation.stacks
+    stacks = @aws_cloud_formation.stacks
     process_collection(stacks, :orchestration_stacks) { |stack| parse_stack(stack) }
     update_nested_stack_relations
   end
@@ -143,12 +143,12 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   end
 
   def get_instances
-    instances = @connection.instances
+    instances = @aws_ec2.instances
     process_collection(instances, :vms) { |instance| parse_instance(instance) }
   end
 
   def get_floating_ips
-    ips = @connection.elastic_ips
+    ips = @aws_ec2.elastic_ips
     process_collection(ips, :floating_ips) { |ip| parse_floating_ip(ip) }
   end
 
@@ -229,7 +229,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
 
     status  = (vpc.state == :available) ? "active" : "inactive"
 
-    subnets = @connection.client.describe_subnets(:filters => [{:name => "vpc-id", :values => [vpc.vpc_id]}])[:subnets]
+    subnets = @aws_ec2.client.describe_subnets(:filters => [{:name => "vpc-id", :values => [vpc.vpc_id]}])[:subnets]
     get_cloud_subnets(subnets)
     cloud_subnets = subnets.collect { |s| @data_index.fetch_path(:cloud_subnets, s.subnet_id) }
 
@@ -438,7 +438,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :type               => ManageIQ::Providers::Amazon::CloudManager::FloatingIp.name,
       :ems_ref            => uid,
       :address            => address,
-      :cloud_network_only => ip.vpc?,
+      :cloud_network_only => ip.domain["vpc"] ? true : false,
 
       :vm                 => associated_vm
     }
@@ -512,7 +512,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :type        => "OrchestrationTemplateCfn",
       :name        => stack.name,
       :description => stack.description,
-      :content     => stack.client.get_template(:stack_name => stack.name),
+      :content     => stack.client.get_template(:stack_name => stack.name).template_body,
     }
     return uid, new_result
   end
