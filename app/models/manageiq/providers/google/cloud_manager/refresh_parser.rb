@@ -178,6 +178,8 @@ module ManageIQ::Providers
 
         operating_system = parent_image[:operating_system] unless parent_image.nil?
 
+        ssh_keys   = parse_ssh_keys(instance)
+
         type = ManageIQ::Providers::Google::CloudManager::Vm.name
         new_result = {
           :type              => type,
@@ -244,6 +246,16 @@ module ManageIQ::Providers
         # returns the last component of the url
         uid = url.split('/')[-1]
         uid
+      end
+
+      def parse_ssh_keys(instance)
+        ssh_keys = []
+        if instance.metadata["items"]
+          instance.metadata["items"].select { |x| x["key"] == "sshKeys" }.each do |ssh_key|
+            ssh_keys |= ssh_key["value"].split("\n")
+          end
+        end
+        ssh_keys
       end
     end
   end
