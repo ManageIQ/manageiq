@@ -33,26 +33,26 @@ describe MiqWidget, "::ReportContent" do
 
   it "#generate_one_content_for_user" do
     content = widget.generate_one_content_for_user(@admin_group, @admin)
-    content.should be_kind_of MiqWidgetContent
-    content.contents.scan("</tr>").length.should == widget.options[:row_count] + 1
-    content.contents.scan("</td>").length.should == widget.options[:row_count] * widget.options[:col_order].length
-    content.contents.scan("</th>").length.should == widget.options[:col_order].length
-    content.miq_report_result.html_rows(:offset => 0, :limit => 1).first.scan("</td>").length.should == widget.resource.col_order.length
-    content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }.should == vm_count
-    content.contents.should match "<tr><th>Name</th><th>Container</th></tr>"
-    widget.contents_for_user(@admin).should == content
+    expect(content).to be_kind_of MiqWidgetContent
+    expect(content.contents.scan("</tr>").length).to eq(widget.options[:row_count] + 1)
+    expect(content.contents.scan("</td>").length).to eq(widget.options[:row_count] * widget.options[:col_order].length)
+    expect(content.contents.scan("</th>").length).to eq(widget.options[:col_order].length)
+    expect(content.miq_report_result.html_rows(:offset => 0, :limit => 1).first.scan("</td>").length).to eq(widget.resource.col_order.length)
+    expect(content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }).to eq(vm_count)
+    expect(content.contents).to match "<tr><th>Name</th><th>Container</th></tr>"
+    expect(widget.contents_for_user(@admin)).to eq(content)
   end
 
   it "#generate_one_content_for_group" do
     content = widget.generate_one_content_for_group(@admin.current_group, @admin.get_timezone)
-    content.should be_kind_of MiqWidgetContent
-    content.contents.scan("</tr>").length.should == widget.options[:row_count] + 1
-    content.contents.scan("</td>").length.should == widget.options[:row_count] * widget.options[:col_order].length
-    content.contents.scan("</th>").length.should == widget.options[:col_order].length
-    content.miq_report_result.html_rows(:offset => 0, :limit => 1).first.scan("</td>").length.should == widget.resource.col_order.length
-    content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }.should == vm_count
-    content.contents.should match "<tr><th>Name</th><th>Container</th></tr>"
-    widget.contents_for_user(@admin).should == content
+    expect(content).to be_kind_of MiqWidgetContent
+    expect(content.contents.scan("</tr>").length).to eq(widget.options[:row_count] + 1)
+    expect(content.contents.scan("</td>").length).to eq(widget.options[:row_count] * widget.options[:col_order].length)
+    expect(content.contents.scan("</th>").length).to eq(widget.options[:col_order].length)
+    expect(content.miq_report_result.html_rows(:offset => 0, :limit => 1).first.scan("</td>").length).to eq(widget.resource.col_order.length)
+    expect(content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }).to eq(vm_count)
+    expect(content.contents).to match "<tr><th>Name</th><th>Container</th></tr>"
+    expect(widget.contents_for_user(@admin)).to eq(content)
   end
 
   it "#generate with self service user" do
@@ -71,6 +71,6 @@ describe MiqWidget, "::ReportContent" do
     report  = widget.generate_report(self_service_group, user2)
     content = MiqWidget::ReportContent.new(:report => report, :resource => widget.resource, :timezone => "UTC", :widget_options => widget.options)
 
-    -> { content.generate(user2) }.should_not raise_error
+    expect { content.generate(user2) }.not_to raise_error
   end
 end
