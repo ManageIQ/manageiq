@@ -388,6 +388,9 @@ describe MiqAeClassController do
       set_user_privileges
       ns = FactoryGirl.create(:miq_ae_namespace)
       @cls = FactoryGirl.create(:miq_ae_class, :namespace_id => ns.id)
+      @cls.ae_fields << FactoryGirl.create(:miq_ae_field, :name => 'fred',
+                                           :class_id => @cls.id, :priority => 1)
+      @cls.save
       @method = FactoryGirl.create(:miq_ae_method, :name => "method01", :scope => "class",
         :language => "ruby", :class_id => @cls.id, :data => "exit MIQ_OK", :location => "inline")
       expect(controller).to receive(:render)
@@ -502,6 +505,34 @@ describe MiqAeClassController do
       controller.send(:delete_domain_or_namespaces)
       flash_messages = assigns(:flash_array)
       expect(flash_messages.first[:message]).to include("Automate Namespace \"foo_namespace\": Delete successful")
+    end
+  end
+
+  context "#set_field_vars" do
+    it "sets priority of new schema fields" do
+      ns = FactoryGirl.create(:miq_ae_namespace)
+      cls = FactoryGirl.create(:miq_ae_class, :namespace_id => ns.id)
+      field1 = FactoryGirl.create(:miq_ae_field,
+                                  :aetype   => "attribute",
+                                  :datatype => "string",
+                                  :name     => "name01",
+                                  :class_id => cls.id,
+                                  :priority => 1)
+      field2 = FactoryGirl.create(:miq_ae_field,
+                                  :aetype   => "attribute",
+                                  :datatype => "string",
+                                  :name     => "name02",
+                                  :class_id => cls.id,
+                                  :priority => 2)
+      field3 = {"aetype"   => "attribute",
+                "datatype" => "string",
+                "name"     => "name03"}
+      edit = {:fields_to_delete => [], :new => {:fields => [field2, field3, field1]}}
+      controller.instance_variable_set(:@edit, edit)
+      controller.instance_variable_set(:@ae_class, cls)
+      fields = controller.send(:set_field_vars, cls)
+      priorities = fields.collect(&:priority)
+      expect(priorities).to eq([1, 2, 3])
     end
   end
 end
