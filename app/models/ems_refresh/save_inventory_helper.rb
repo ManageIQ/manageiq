@@ -55,25 +55,20 @@ module EmsRefresh::SaveInventoryHelper
   end
 
   def save_inventory_single(type, parent, hash, child_keys = [], extra_keys = [])
-    child_keys = Array.wrap(child_keys)
-    remove_keys = Array.wrap(extra_keys) + child_keys
+    child = parent.send(type)
     if hash.blank?
-      parent.send(type).try(:destroy)
-    else
-      save_inventory(type, parent, hash.except(*remove_keys))
-      save_child_inventory(parent.send(type), hash, child_keys)
+      child.try(:destroy)
+      return
     end
-  end
 
-  def save_inventory(type, parent, hash)
-    # Find the record, and update if found, else create it
-    found = parent.send(type)
-    if found.nil?
-      found = parent.send("create_#{type}!", hash.except(:id))
+    child_keys = Array.wrap(child_keys)
+    remove_keys = Array.wrap(extra_keys) + child_keys + [:id]
+    if child
+      child.update_attributes!(hash.except(:type, *remove_keys))
     else
-      found.update_attributes!(hash.except(:id, :type))
+      child = parent.send("create_#{type}!", hash.except(*remove_keys))
     end
-    found
+    save_child_inventory(child, hash, child_keys)
   end
 
   def save_inventory_with_findkey(association, hash, deletes, new_records, record_index)
