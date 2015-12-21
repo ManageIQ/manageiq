@@ -17,7 +17,7 @@ describe Metric::Capture do
 
     it "realtime vm uses capture_threshold_with_alerts minutes ago" do
       target = FactoryGirl.build(:vm_vmware)
-      MiqAlert.stub(:target_needs_realtime_capture?).with(target).and_return(true)
+      allow(MiqAlert).to receive(:target_needs_realtime_capture?).with(target).and_return(true)
 
       Timecop.freeze(time) do
         expect(described_class.capture_threshold(target)).to eq capture_rt.minutes.ago.utc
@@ -26,7 +26,7 @@ describe Metric::Capture do
 
     it "realtime host uses capture_threshold_with_alerts minutes ago" do
       target = FactoryGirl.build(:host_vmware)
-      MiqAlert.stub(:target_needs_realtime_capture?).with(target).and_return(true)
+      allow(MiqAlert).to receive(:target_needs_realtime_capture?).with(target).and_return(true)
 
       Timecop.freeze(time) do
         expect(described_class.capture_threshold(target)).to eq capture_rt.minutes.ago.utc
@@ -35,7 +35,7 @@ describe Metric::Capture do
 
     it "non-realtime vm uses capture_threshold minutes ago" do
       target = FactoryGirl.build(:vm_vmware)
-      MiqAlert.stub(:target_needs_realtime_capture?).with(target).and_return(false)
+      allow(MiqAlert).to receive(:target_needs_realtime_capture?).with(target).and_return(false)
 
       Timecop.freeze(time) do
         result = threshold_default.minutes.ago.utc
@@ -46,7 +46,7 @@ describe Metric::Capture do
 
     it "non-realtime host uses capture_threshold minutes ago" do
       target = FactoryGirl.build(:host_vmware)
-      MiqAlert.stub(:target_needs_realtime_capture?).with(target).and_return(false)
+      allow(MiqAlert).to receive(:target_needs_realtime_capture?).with(target).and_return(false)
 
       Timecop.freeze(time) do
         result = threshold_default.minutes.ago.utc

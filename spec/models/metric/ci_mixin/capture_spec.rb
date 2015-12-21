@@ -11,12 +11,12 @@ describe Metric::CiMixin::Capture do
     @mock_stats_data = OpenstackMetricStatsData.new
 
     @metering = double(:metering)
-    @metering.stub(:list_meters).and_return(
+    allow(@metering).to receive(:list_meters).and_return(
       OpenstackApiResult.new((@mock_meter_list.list_meters("resource_counters") +
                               @mock_meter_list.list_meters("metadata_counters"))))
 
     @ems_openstack = FactoryGirl.create(:ems_openstack, :zone => @zone)
-    @ems_openstack.stub(:connect).with(:service => "Metering").and_return(@metering)
+    allow(@ems_openstack).to receive(:connect).with(:service => "Metering").and_return(@metering)
 
     @vm = FactoryGirl.create(:vm_perf_openstack, :ext_management_system => @ems_openstack)
   end
@@ -50,27 +50,27 @@ describe Metric::CiMixin::Capture do
       stats_period_end = [api_time_as_utc(@read_bytes.last), api_time_as_utc(@write_bytes.last)].min
 
       # check start date and end date
-      stats_period_start.should eq expected_stats_period_start
-      stats_period_end.should eq expected_stats_period_end
+      expect(stats_period_start).to eq expected_stats_period_start
+      expect(stats_period_end).to eq expected_stats_period_end
 
       # check that 20s block is not interrupted between start and end time for net_usage_rate_average
       stats_counter = 0
       (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
-        @metrics_by_ts[timestamp.iso8601].try(:net_usage_rate_average).should_not eq nil
+        expect(@metrics_by_ts[timestamp.iso8601].try(:net_usage_rate_average)).not_to eq nil
         stats_counter += 1
       end
 
       # check that 20s block is not interrupted between start and end time for disk_usage_rate_average
       stats_counter = 0
       (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
-        @metrics_by_ts[timestamp.iso8601].try(:disk_usage_rate_average).should_not eq nil
+        expect(@metrics_by_ts[timestamp.iso8601].try(:disk_usage_rate_average)).not_to eq nil
         stats_counter += 1
       end
 
       # check that 20s block is not interrupted between start and end time for cpu_usage_rate_average
       stats_counter = 0
       (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
-        @metrics_by_ts[timestamp.iso8601].try(:cpu_usage_rate_average).should_not eq nil
+        expect(@metrics_by_ts[timestamp.iso8601].try(:cpu_usage_rate_average)).not_to eq nil
         stats_counter += 1
       end
     end
@@ -88,27 +88,27 @@ describe Metric::CiMixin::Capture do
       stats_period_end = [api_time_as_utc(@read_bytes.last), api_time_as_utc(@write_bytes.last)].min
 
       # check start date and end date
-      stats_period_start.should eq expected_stats_period_start
-      stats_period_end.should eq expected_stats_period_end
+      expect(stats_period_start).to eq expected_stats_period_start
+      expect(stats_period_end).to eq expected_stats_period_end
 
       # check that 20s block is not interrupted between start and end time for net_usage_rate_average
       stats_counter = 0
       (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
-        @metrics_by_ts[timestamp.iso8601].try(:net_usage_rate_average).should_not eq nil
+        expect(@metrics_by_ts[timestamp.iso8601].try(:net_usage_rate_average)).not_to eq nil
         stats_counter += 1
       end
 
       # check that 20s block is not interrupted between start and end time for disk_usage_rate_average
       stats_counter = 0
       (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
-        @metrics_by_ts[timestamp.iso8601].try(:disk_usage_rate_average).should_not eq nil
+        expect(@metrics_by_ts[timestamp.iso8601].try(:disk_usage_rate_average)).not_to eq nil
         stats_counter += 1
       end
 
       # check that 20s block is not interrupted between start and end time for cpu_usage_rate_average
       stats_counter = 0
       (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
-        @metrics_by_ts[timestamp.iso8601].try(:cpu_usage_rate_average).should_not eq nil
+        expect(@metrics_by_ts[timestamp.iso8601].try(:cpu_usage_rate_average)).not_to eq nil
         stats_counter += 1
       end
     end
@@ -117,11 +117,11 @@ describe Metric::CiMixin::Capture do
   context "2 collection periods total, there is data hole between periods" do
     it "verifies that hole in the data is logged, corrupted data is logged and no other warnings are logged" do
       # Hole in the data is logged
-      $log.should_receive(:warn).with(/expected to get data as of/).exactly(:once)
+      expect($log).to receive(:warn).with(/expected to get data as of/).exactly(:once)
       # Corrupted data is logged
-      $log.should_receive(:warn).with(/Distance of the multiple streams of data is invalid/).exactly(:once)
+      expect($log).to receive(:warn).with(/Distance of the multiple streams of data is invalid/).exactly(:once)
       # No to other warnings should be logged
-      $log.should_not_receive(:warn)
+      expect($log).not_to receive(:warn)
 
       # sending no collection period overlap will cause hole in the data
       capture_data('2013-08-28T11:56:00Z', nil)
@@ -130,7 +130,7 @@ describe Metric::CiMixin::Capture do
 
   def capture_data(second_collection_period_start, collection_overlap_period)
     # 1.collection period, save all metrics
-    @metering.stub(:get_statistics) do |name, _options|
+    allow(@metering).to receive(:get_statistics) do |name, _options|
       first_collection_period = filter_statistics(@mock_stats_data.get_statistics(name,
                                                                                   "multiple_collection_periods"),
                                                   '<=',
@@ -139,11 +139,11 @@ describe Metric::CiMixin::Capture do
       OpenstackApiResult.new(first_collection_period)
     end
 
-    @vm.stub(:state_changed_on).and_return(second_collection_period_start)
+    allow(@vm).to receive(:state_changed_on).and_return(second_collection_period_start)
     @vm.perf_capture('realtime', Time.parse('2013-08-28T11:01:40Z'), Time.parse(second_collection_period_start))
 
     # 2.collection period, save all metrics
-    @metering.stub(:get_statistics) do |name, _options|
+    allow(@metering).to receive(:get_statistics) do |name, _options|
       second_collection_period = filter_statistics(@mock_stats_data.get_statistics(name,
                                                                                    "multiple_collection_periods"),
                                                    '>',
@@ -153,7 +153,7 @@ describe Metric::CiMixin::Capture do
       OpenstackApiResult.new(second_collection_period)
     end
 
-    @vm.stub(:state_changed_on).and_return(second_collection_period_start)
+    allow(@vm).to receive(:state_changed_on).and_return(second_collection_period_start)
     @vm.perf_capture('realtime', Time.parse(second_collection_period_start), Time.parse('2013-08-28T14:02:00Z'))
 
     @metrics_by_ts = {}

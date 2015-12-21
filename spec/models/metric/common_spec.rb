@@ -25,7 +25,7 @@ describe Metric::Common do
                                                     :hours => TimeProfile::ALL_HOURS}
                                   )
       res = @metric.apply_time_profile_hourly(profile)
-      res.should be_true
+      expect(res).to be_truthy
     end
 
     it "with specific days and hours selected it should return false" do
@@ -36,7 +36,7 @@ describe Metric::Common do
                                                     :hours => [1]}
                                   )
       res = @metric.apply_time_profile_hourly(profile)
-      res.should be_false
+      expect(res).to be_falsey
     end
   end
 
@@ -49,7 +49,7 @@ describe Metric::Common do
                                                     :hours => [1]}
                                   )
       res = @metric.apply_time_profile_daily(profile)
-      res.should be_true
+      expect(res).to be_truthy
     end
 
     it "with specific days selected it should return false" do
@@ -60,7 +60,7 @@ describe Metric::Common do
                                                     :hours => [1]}
                                   )
       res = @metric.apply_time_profile_daily(profile)
-      res.should be_false
+      expect(res).to be_falsey
     end
   end
 
