@@ -96,7 +96,7 @@ class DialogField < ActiveRecord::Base
     "dialog_#{name}"
   end
 
-  def validate(dialog_tab, dialog_group)
+  def validate_field_data(dialog_tab, dialog_group)
     validate_error_message(dialog_tab, dialog_group) if required? && required_value_error?
   end
 

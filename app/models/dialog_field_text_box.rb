@@ -33,7 +33,7 @@ class DialogFieldTextBox < DialogField
     super
   end
 
-  def validate(dialog_tab, dialog_group)
+  def validate_field_data(dialog_tab, dialog_group)
     return if !required? && value.blank?
 
     return "#{dialog_tab.label}/#{dialog_group.label}/#{label} is required" if required? && value.blank?

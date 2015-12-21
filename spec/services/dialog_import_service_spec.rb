@@ -22,7 +22,7 @@ describe DialogImportService do
 
     let(:dialogs) do
       [{"label" => "Test", "dialog_tabs" => dialog_tabs},
-       {"label" => "Test2", "dialog_tabs" => [], "description" => "potato"}]
+       {"label" => "Test2", "dialog_tabs" => dialog_tabs, "description" => "potato"}]
     end
 
     let(:not_dialogs) { [{"this is not" => "a dialog"}] }
@@ -71,7 +71,7 @@ describe DialogImportService do
 
       context "when there is an existing dialog" do
         before do
-          Dialog.create!(:label => "Test2")
+          FactoryGirl.create(:dialog, :label => "Test2")
         end
 
         it "does not create a third dialog" do
@@ -151,7 +151,7 @@ describe DialogImportService do
 
     context "when there is already an existing dialog" do
       before do
-        Dialog.create!(:label => "Test2", :description => "not potato")
+        FactoryGirl.create(:dialog, :label => "Test2", :description => "not potato")
       end
 
       it "overwrites the existing dialog" do
@@ -223,7 +223,7 @@ describe DialogImportService do
 
       context "when the list of dialogs to import from the yaml includes an existing dialog" do
         before do
-          Dialog.create!(:label => "Test2", :description => "not potato")
+          FactoryGirl.create(:dialog, :label => "Test2", :description => "not potato")
         end
 
         it_behaves_like "DialogImportService#import_service_dialogs that destroys temporary data"

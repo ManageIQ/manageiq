@@ -1240,13 +1240,11 @@ module MiqAeCustomizationController::Dialogs
 
       if @edit[:new][:tabs]
         @edit[:new][:tabs].each_with_index do |tab, i|
-          dt = DialogTab.new(:label => tab[:label], :description => tab[:description], :display => :edit)
-          dialog.add_resource(dt, :order => i)
+          dt = DialogTab.new(:label => tab[:label], :description => tab[:description], :display => :edit, :order => i)
 
           if tab[:groups]
             tab[:groups].each_with_index do |group, j|
-              dg = DialogGroup.new(:label => group[:label], :description => group[:description], :display => :edit)
-              dt.add_resource(dg, :order => j)
+              dg = DialogGroup.new(:label => group[:label], :description => group[:description], :display => :edit, :order => j)
 
               if group[:fields]
                 group[:fields].each_with_index do |field, k|
@@ -1306,21 +1304,20 @@ module MiqAeCustomizationController::Dialogs
                     )
                   end
 
+                  fld[:order] = k
                   df = field[:typ].constantize.new(fld)
                   df.resource_action.fqname = field[:entry_point] if dynamic_field?(field)
-                  dg.add_resource(df, :order => k)
+                  dg.dialog_fields << df
                 end
               end
+              dt.dialog_groups << dg
             end
           end
+          dialog.dialog_tabs << dt
         end
       end
 
-      if dialog.dialog_fields.blank?
-        raise "Dialog must have at least one Element"
-      else
-        dialog.save!
-      end
+      dialog.save!
     end
   end
 

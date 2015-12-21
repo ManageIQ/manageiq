@@ -80,7 +80,7 @@ describe DialogFieldTextBox do
   context "validation" do
     let(:df) { FactoryGirl.build(:dialog_field_text_box, :label => 'test field', :name => 'test field') }
 
-    context "#validate" do
+    context "#validate_field_data" do
       let(:dt) { active_record_instance_double('DialogTab', :label => 'tab') }
       let(:dg) { active_record_instance_double('DialogGroup', :label => 'group') }
 
@@ -92,24 +92,24 @@ describe DialogFieldTextBox do
 
       it "should return nil when no error is detected" do
         df.value = 'Abc'
-        expect(df.validate(dt, dg)).to be_nil
+        expect(df.validate_field_data(dt, dg)).to be_nil
       end
 
       it "should return an error when the value doesn't match the regex rule" do
         df.value = '123'
-        expect(df.validate(dt, dg)).to eq('tab/group/test field is invalid')
+        expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field is invalid')
       end
 
       it "should return an error when a required value is not provided" do
         df.value = ''
         df.validator_rule = ''
-        expect(df.validate(dt, dg)).to eq('tab/group/test field is required')
+        expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field is required')
       end
 
       it "should return an error when a required value is nil" do
         df.value = nil
         df.validator_rule = nil
-        expect(df.validate(dt, dg)).to eq('tab/group/test field is required')
+        expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field is required')
       end
     end
   end

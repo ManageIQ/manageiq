@@ -66,8 +66,8 @@ describe HostController do
       host = FactoryGirl.create(:host)
       custom_button = FactoryGirl.create(:custom_button, :applies_to_class => "Host")
       d = FactoryGirl.create(:dialog, :label => "Some Label")
-      dt = FactoryGirl.create(:dialog_tab, :label => "Some Tab")
-      d.add_resource(dt, :order => 0)
+      dt = FactoryGirl.create(:dialog_tab, :label => "Some Tab", :order => 0)
+      d.dialog_tabs << dt
       ra = FactoryGirl.create(:resource_action, :dialog_id => d.id)
       custom_button.resource_action = ra
       custom_button.save

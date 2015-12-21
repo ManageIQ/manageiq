@@ -42,6 +42,8 @@ class OrchestrationTemplateDialogService
   end
 
   def add_parameter_group(parameter_group, tab, position)
+    return if parameter_group.parameters.blank?
+
     tab.dialog_groups.build(
       :display  => "edit",
       :label    => parameter_group.label,
