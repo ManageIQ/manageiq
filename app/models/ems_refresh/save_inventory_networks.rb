@@ -13,7 +13,6 @@ module EmsRefresh
     def save_cloud_networks_inventory(ems, hashes, target = nil)
       target = ems if target.nil?
 
-      ems.cloud_networks(true)
       deletes = if (target == ems)
                   ems.cloud_networks.dup
                 else
@@ -36,7 +35,7 @@ module EmsRefresh
     end
 
     def save_cloud_subnets_inventory(cloud_network, hashes)
-      deletes = cloud_network.cloud_subnets(true).dup
+      deletes = cloud_network.cloud_subnets.dup
 
       hashes.each do |h|
         h[:availability_zone_id] = h.fetch_path(:availability_zone, :id)
@@ -51,7 +50,6 @@ module EmsRefresh
     def save_security_groups_inventory(ems, hashes, target = nil)
       target = ems if target.nil?
 
-      ems.security_groups(true)
       deletes = if (target == ems)
                   ems.security_groups.dup
                 else
@@ -86,7 +84,6 @@ module EmsRefresh
     def save_floating_ips_inventory(ems, hashes, target = nil)
       target = ems if target.nil?
 
-      ems.floating_ips(true)
       deletes = if (target == ems)
                   ems.floating_ips.dup
                 else
@@ -121,7 +118,7 @@ module EmsRefresh
           [:name]
         end
 
-      deletes = parent.firewall_rules(true).dup
+      deletes = parent.firewall_rules.dup
       save_inventory_multi(:firewall_rules, parent, hashes, deletes, find_key, nil, [:source_security_group])
 
       parent.save!
@@ -131,7 +128,6 @@ module EmsRefresh
     def save_network_routers_inventory(ems, hashes, target = nil)
       target = ems if target.nil?
 
-      ems.network_routers(true)
       deletes = if (target == ems)
                   ems.network_routers.dup
                 else
@@ -156,7 +152,6 @@ module EmsRefresh
     def save_network_ports_inventory(ems, hashes, target = nil)
       target = ems if target.nil?
 
-      ems.network_ports(true)
       deletes = if (target == ems)
                   ems.network_ports.dup
                 else
