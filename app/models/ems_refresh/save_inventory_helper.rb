@@ -30,26 +30,28 @@ module EmsRefresh::SaveInventoryHelper
   end
 
   def save_inventory_multi(type, parent, hashes, deletes, find_key, child_keys = [], extra_keys = [])
+    association = parent.send(type)
     deletes = deletes.to_a # make sure to load the association if it's an association
     child_keys = Array.wrap(child_keys)
     remove_keys = Array.wrap(extra_keys) + child_keys
 
-    record_index = TypedIndex.new(parent.send(type), find_key)
+    record_index = TypedIndex.new(association, find_key)
 
     new_records = []
     hashes.each do |h|
-      found = save_inventory_with_findkey(type, parent, h.except(*remove_keys), deletes, new_records, record_index)
+      found = save_inventory_with_findkey(association, h.except(*remove_keys), deletes, new_records, record_index)
       save_child_inventory(found, h, child_keys)
     end
 
     # Delete the items no longer found
     unless deletes.blank?
+      type = association.proxy_association.reflection.name
       _log.info("[#{type}] Deleting #{log_format_deletes(deletes)}")
-      parent.send(type).delete(deletes)
+      association.delete(deletes)
     end
 
     # Add the new items
-    parent.send(type).push(new_records)
+    association.push(new_records)
   end
 
   def save_inventory_single(type, parent, hash, child_keys = [], extra_keys = [])
@@ -74,11 +76,11 @@ module EmsRefresh::SaveInventoryHelper
     found
   end
 
-  def save_inventory_with_findkey(type, parent, hash, deletes, new_records, record_index)
+  def save_inventory_with_findkey(association, hash, deletes, new_records, record_index)
     # Find the record, and update if found, else create it
     found = record_index.fetch(hash)
     if found.nil?
-      found = parent.send(type).build(hash.except(:id))
+      found = association.build(hash.except(:id))
       new_records << found
     else
       found.update_attributes!(hash.except(:id, :type))
