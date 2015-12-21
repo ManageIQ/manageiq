@@ -19,20 +19,20 @@ describe YAMLImportExportMixin do
 
     it "invalid class" do
       @list, @klass = [12345], "xxx"
-      subject.should == []
+      expect(subject).to eq([])
     end
 
     it "invalid instance" do
       @list = [12345]
-      subject.should == []
+      expect(subject).to eq([])
     end
 
     it "single valid instance" do
       policy = FactoryGirl.create(:miq_policy, :name => "test_policy")
       @list = [@report1.id, policy.id]
 
-      MiqPolicy.any_instance.should_receive(:export_to_array).never
-      MiqReport.any_instance.should_receive(:export_to_array).once
+      expect_any_instance_of(MiqPolicy).to receive(:export_to_array).never
+      expect_any_instance_of(MiqReport).to receive(:export_to_array).once
       subject
     end
 
@@ -40,12 +40,12 @@ describe YAMLImportExportMixin do
       @report2 = FactoryGirl.create(:miq_report, :name => "test_report_2")
       @list = [@report1.id, @report2.id]
 
-      subject.size.should == 2
+      expect(subject.size).to eq(2)
     end
   end
 
   it ".export_to_yaml" do
-    TestClass.should_receive(:export_to_array).once.with([@report1.id], MiqReport)
+    expect(TestClass).to receive(:export_to_array).once.with([@report1.id], MiqReport)
     TestClass.export_to_yaml([@report1.id], MiqReport)
   end
 
@@ -61,7 +61,7 @@ describe YAMLImportExportMixin do
 
     it "invalid YAML file" do
       @fd = StringIO.new("---\na:\nb")
-      -> { subject.import(@fd) }.should raise_error("Invalid YAML file")
+      expect { subject.import(@fd) }.to raise_error("Invalid YAML file")
     end
   end
 end

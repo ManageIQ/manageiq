@@ -12,20 +12,20 @@ describe PerEmsWorkerMixin do
   end
 
   it ".queue_name_for_ems" do
-    @worker_class.queue_name_for_ems(nil).should.nil?
-    @worker_class.queue_name_for_ems("foo").should == "foo"
-    @worker_class.queue_name_for_ems(@ems).should == @ems_queue_name
+    expect(@worker_class.queue_name_for_ems(nil)).to be_nil
+    expect(@worker_class.queue_name_for_ems("foo")).to eq("foo")
+    expect(@worker_class.queue_name_for_ems(@ems)).to eq(@ems_queue_name)
   end
 
   context ".start_worker_for_ems" do
     it "works when queue name is passed" do
       queue_name = "foo"
-      @worker_class.should_receive(:start_worker).with({:queue_name => queue_name})
+      expect(@worker_class).to receive(:start_worker).with({:queue_name => queue_name})
       @worker_class.start_worker_for_ems(queue_name)
     end
 
     it "works when ems is passed" do
-      @worker_class.should_receive(:start_worker).with(:queue_name => @ems_queue_name)
+      expect(@worker_class).to receive(:start_worker).with(:queue_name => @ems_queue_name)
       @worker_class.start_worker_for_ems(@ems)
     end
   end
@@ -38,22 +38,22 @@ describe PerEmsWorkerMixin do
       end
 
       it "stops worker when queue name is passed" do
-        @worker_class.any_instance.should_receive(:stop).once
+        expect_any_instance_of(@worker_class).to receive(:stop).once
         @worker_class.stop_worker_for_ems(@ems_queue_name)
       end
 
       it "does not stop worker when non-existent queue_name is passed" do
-        @worker_class.any_instance.should_receive(:stop).never
+        expect_any_instance_of(@worker_class).to receive(:stop).never
         @worker_class.stop_worker_for_ems("foo")
       end
 
       it "stops worker when existing ems is passed" do
-        @worker_class.any_instance.should_receive(:stop).once
+        expect_any_instance_of(@worker_class).to receive(:stop).once
         @worker_class.stop_worker_for_ems(@ems)
       end
 
       it "does not stop worker when non-existent ems is passed" do
-        @worker_class.any_instance.should_receive(:stop).never
+        expect_any_instance_of(@worker_class).to receive(:stop).never
         @ems.id += 1
         @worker_class.stop_worker_for_ems(@ems)
       end
@@ -66,22 +66,22 @@ describe PerEmsWorkerMixin do
       end
 
       it "does not stop worker when queue name is passed" do
-        @worker_class.any_instance.should_receive(:stop).never
+        expect_any_instance_of(@worker_class).to receive(:stop).never
         @worker_class.stop_worker_for_ems(@ems_queue_name)
       end
 
       it "does not stop worker when non-existent queue_name is passed" do
-        @worker_class.any_instance.should_receive(:stop).never
+        expect_any_instance_of(@worker_class).to receive(:stop).never
         @worker_class.stop_worker_for_ems("foo")
       end
 
       it "does not stop worker when existing ems is passed" do
-        @worker_class.any_instance.should_receive(:stop).never
+        expect_any_instance_of(@worker_class).to receive(:stop).never
         @worker_class.stop_worker_for_ems(@ems)
       end
 
       it "does not stop worker when non-existent ems is passed" do
-        @worker_class.any_instance.should_receive(:stop).never
+        expect_any_instance_of(@worker_class).to receive(:stop).never
         @ems.id += 1
         @worker_class.stop_worker_for_ems(@ems)
       end

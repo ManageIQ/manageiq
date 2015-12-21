@@ -15,15 +15,15 @@ describe CustomAttributeMixin do
   end
 
   it "defines #miq_custom_keys" do
-    TestClass.new.should respond_to(:miq_custom_keys)
+    expect(TestClass.new).to respond_to(:miq_custom_keys)
   end
 
   it "defines #miq_custom_get" do
-    TestClass.new.should respond_to(:miq_custom_get)
+    expect(TestClass.new).to respond_to(:miq_custom_get)
   end
 
   it "defines #miq_custom_set" do
-    TestClass.new.should respond_to(:miq_custom_set)
+    expect(TestClass.new).to respond_to(:miq_custom_set)
   end
 
   it "defines custom getter and setter methods" do
@@ -33,17 +33,17 @@ describe CustomAttributeMixin do
       getter     = custom_str.to_sym
       setter     = "#{custom_str}=".to_sym
 
-      t.should respond_to(getter)
-      t.should respond_to(setter)
+      expect(t).to respond_to(getter)
+      expect(t).to respond_to(setter)
     end
   end
 
   it "#miq_custom_keys" do
-    TestClass.new.miq_custom_keys.should == []
+    expect(TestClass.new.miq_custom_keys).to eq([])
     @supported_factories.each do |factory_name|
       object = FactoryGirl.create(factory_name)
 
-      object.miq_custom_keys.should == []
+      expect(object.miq_custom_keys).to eq([])
 
       key  = "foo"
       FactoryGirl.create(:miq_custom_attribute,
@@ -52,7 +52,7 @@ describe CustomAttributeMixin do
                          :name          => key,
                          :value         => "bar")
 
-      object.reload.miq_custom_keys.should == [key]
+      expect(object.reload.miq_custom_keys).to eq([key])
 
       key2 = "foobar"
       FactoryGirl.create(:miq_custom_attribute,
@@ -60,7 +60,7 @@ describe CustomAttributeMixin do
                          :resource_id   => object.id,
                          :name          => key2,
                          :value         => "bar")
-      object.reload.miq_custom_keys.should match_array([key, key2])
+      expect(object.reload.miq_custom_keys).to match_array([key, key2])
     end
   end
 
@@ -72,33 +72,33 @@ describe CustomAttributeMixin do
       value  = "bar"
       source = 'EVM'
 
-      CustomAttribute.where(
+      expect(CustomAttribute.where(
         :resource_type => object.class.base_class.name,
         :resource_id   => object.id,
         :source        => source,
-        :name          => key).first.should be_nil
+        :name          => key).first).to be_nil
 
       object.miq_custom_set(key, "")
-      CustomAttribute.where(
+      expect(CustomAttribute.where(
         :resource_type => object.class.base_class.name,
         :resource_id   => object.id,
         :source        => source,
-        :name          => key).first.should be_nil
+        :name          => key).first).to be_nil
 
       object.miq_custom_set(key, value)
-      CustomAttribute.where(
+      expect(CustomAttribute.where(
         :resource_type => object.class.base_class.name,
         :resource_id   => object.id,
         :source        => source,
         :name          => key,
-        :value         => value).first.should_not be_nil
+        :value         => value).first).not_to be_nil
 
       object.miq_custom_set(key, "")
-      CustomAttribute.where(
+      expect(CustomAttribute.where(
         :resource_type => object.class.base_class.name,
         :resource_id   => object.id,
         :source        => source,
-        :name          => key).first.should be_nil
+        :name          => key).first).to be_nil
     end
   end
 
@@ -109,7 +109,7 @@ describe CustomAttributeMixin do
       key   = "foo"
       value = "bar"
 
-      object.miq_custom_get(key).should be_nil
+      expect(object.miq_custom_get(key)).to be_nil
 
       FactoryGirl.create(:miq_custom_attribute,
                          :resource_type => object.class.base_class.name,
@@ -117,7 +117,7 @@ describe CustomAttributeMixin do
                          :name          => key,
                          :value         => value)
 
-      object.reload.miq_custom_get(key).should == value
+      expect(object.reload.miq_custom_get(key)).to eq(value)
     end
   end
 end
