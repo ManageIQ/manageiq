@@ -67,7 +67,7 @@
       if ($sessionStorage.token) {
         Session.create({ auth_token: $sessionStorage.token });
 
-        return;
+        return Session.loadUser();
       }
 
       event.preventDefault();

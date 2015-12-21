@@ -16,7 +16,8 @@
       create: create,
       destroy: destroy,
       active: active,
-      currentUser: currentUser
+      currentUser: currentUser,
+      loadUser: loadUser,
     };
 
     destroy();
@@ -34,6 +35,13 @@
       model.user = {};
       delete $http.defaults.headers.common['X-Auth-Token'];
       delete $sessionStorage.token;
+    }
+
+    function loadUser() {
+      return $http.get('/api')
+        .then(function(response) {
+          currentUser(response.data.identity);
+        });
     }
 
     function currentUser(user) {
