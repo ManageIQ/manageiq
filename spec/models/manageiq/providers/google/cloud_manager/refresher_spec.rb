@@ -48,8 +48,8 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(GuestDevice.count).to         eql(0)
     expect(Hardware.count).to            eql(2)
     expect(Network.count).to             eql(0)
-    expect(OperatingSystem.count).to     eql(346)
-    expect(Relationship.count).to        eql(0)
+    expect(OperatingSystem.count).to     eql(348)
+    expect(Relationship.count).to        eql(4)
     expect(MiqQueue.count).to            eql(348)
   end
 
@@ -149,11 +149,23 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(v.hardware.nics.size).to          eql(0)
 
     assert_specific_vm_powered_on_hardware_networks(v)
+    assert_specific_vm_powered_on_hardware_disks(v)
   end
 
   def assert_specific_vm_powered_on_hardware_networks(v)
     expect(v.hardware.networks.size).to eql(0)
     # TODO inventory network hardware
+  end
+
+  def assert_specific_vm_powered_on_hardware_disks(v)
+    disk = v.hardware.disks.first
+    expect(disk).to have_attributes(
+      :device_name     => "rhel7",
+      :device_type     => "disk",
+      :location        => "0",
+      :controller_type => "google",
+      :size            => 10 * 1.gigabyte,
+    )
   end
 
   def assert_specific_vm_powered_off
