@@ -7,7 +7,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
 
   def initialize(ems, options = nil)
     @ems                 = ems
-    @aws_ec2             = ems.connect
+    @aws_ec2             = ems.ec2
     @aws_cloud_formation = ems.cloud_formation
     @data                = {}
     @data_index          = {}
@@ -148,7 +148,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   end
 
   def get_floating_ips
-    ips = @aws_ec2.elastic_ips
+    ips = @aws_ec2.client.describe_addresses.addresses
     process_collection(ips, :floating_ips) { |ip| parse_floating_ip(ip) }
   end
 
