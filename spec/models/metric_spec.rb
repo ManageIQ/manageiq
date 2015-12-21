@@ -66,7 +66,7 @@ describe Metric do
         end
 
         it "should queue up enabled targets" do
-          MiqQueue.count.should == 47
+          expect(MiqQueue.count).to eq(47)
 
           expected_targets = Metric::Targets.capture_targets
           expected = expected_targets.collect do |t|
@@ -79,7 +79,7 @@ describe Metric do
             [Object.const_get(q.class_name).find(q.instance_id), q.args.first]
           end.flatten
 
-          selected.should == expected
+          expect(selected).to eq(expected)
         end
 
         context "executing capture_targets for realtime targets with parent objects" do
@@ -93,26 +93,26 @@ describe Metric do
               next if expected_hosts.empty?
 
               task = MiqTask.find_by_name("Performance rollup for EmsCluster:#{cluster.id}")
-              task.should_not be_nil
-              task.context_data[:targets].sort.should == cluster.hosts.collect { |h| "Host:#{h.id}" }.sort
+              expect(task).not_to be_nil
+              expect(task.context_data[:targets].sort).to eq(cluster.hosts.collect { |h| "Host:#{h.id}" }.sort)
 
               expected_hosts.each do |host|
                 messages = MiqQueue.where(:class_name => "Host", :instance_id => host.id).select { |m| m.args.first == "realtime" }
                 messages.each do |m|
-                  m.miq_callback.should_not be_nil
-                  m.miq_callback[:method_name].should == :perf_capture_callback
-                  m.miq_callback[:args].should == [[task.id]]
+                  expect(m.miq_callback).not_to be_nil
+                  expect(m.miq_callback[:method_name]).to eq(:perf_capture_callback)
+                  expect(m.miq_callback[:args]).to eq([[task.id]])
 
                   m.delivered("ok", "Message delivered successfully", nil)
                 end
               end
 
               task.reload
-              task.state.should == "Finished"
+              expect(task.state).to eq("Finished")
 
               message = MiqQueue.find_by(:method_name => "perf_rollup_range", :class_name => "EmsCluster", :instance_id => cluster.id)
-              message.should_not be_nil
-              message.args.should == [task.context_data[:start], task.context_data[:end], task.context_data[:interval], nil]
+              expect(message).not_to be_nil
+              expect(message.args).to eq([task.context_data[:start], task.context_data[:end], task.context_data[:interval], nil])
             end
           end
 
@@ -123,9 +123,9 @@ describe Metric do
               next if expected_hosts.empty?
 
               tasks = MiqTask.where(:name => "Performance rollup for EmsCluster:#{cluster.id}").order("id DESC")
-              tasks.length.should == 2
+              expect(tasks.length).to eq(2)
               tasks.each do |task|
-                task.context_data[:targets].sort.should == cluster.hosts.collect { |h| "Host:#{h.id}" }.sort
+                expect(task.context_data[:targets].sort).to eq(cluster.hosts.collect { |h| "Host:#{h.id}" }.sort)
               end
 
               task_ids = tasks.collect(&:id)
@@ -136,9 +136,9 @@ describe Metric do
                 messages.each do |m|
                   next if m.miq_callback[:args].blank?
 
-                  m.miq_callback.should_not be_nil
-                  m.miq_callback[:method_name].should == :perf_capture_callback
-                  m.miq_callback[:args].first.sort.should == task_ids.sort
+                  expect(m.miq_callback).not_to be_nil
+                  expect(m.miq_callback[:method_name]).to eq(:perf_capture_callback)
+                  expect(m.miq_callback[:args].first.sort).to eq(task_ids.sort)
 
                   status, message, result = m.deliver
                   m.delivered(status, message, result)
@@ -147,7 +147,7 @@ describe Metric do
 
               tasks.each do |task|
                 task.reload
-                task.state.should == "Finished"
+                expect(task.state).to eq("Finished")
               end
             end
           end
@@ -159,7 +159,7 @@ describe Metric do
             Metric::Capture.perf_capture_timer
 
             messages = MiqQueue.where(:class_name => "Host").select { |m| m.args.first == "realtime" }
-            messages.each { |m| m.lock_version.should == 1 }
+            messages.each { |m| expect(m.lock_version).to eq(1) }
           end
 
           it "calling perf_capture_timer a second time should create another task with the correct time window" do
@@ -170,10 +170,10 @@ describe Metric do
               next if expected_hosts.empty?
 
               tasks = MiqTask.where(:name => "Performance rollup for EmsCluster:#{cluster.id}").order("id")
-              tasks.length.should == 2
+              expect(tasks.length).to eq(2)
 
               t1, t2 = tasks
-              t2.context_data[:start].should == t1.context_data[:end]
+              expect(t2.context_data[:start]).to eq(t1.context_data[:end])
             end
           end
         end
@@ -186,7 +186,7 @@ describe Metric do
         end
 
         it "should queue up enabled targets for historical" do
-          MiqQueue.count.should == 10
+          expect(MiqQueue.count).to eq(10)
 
           expected_targets = Metric::Targets.capture_targets(nil, :exclude_storages => true)
           expected = expected_targets.collect { |t| [t, "historical"] * 2 }.flatten # Vm, Host, Host, Vm, Host
@@ -195,7 +195,7 @@ describe Metric do
             [Object.const_get(q.class_name).find(q.instance_id), q.args.first]
           end.flatten
 
-          selected.should == expected
+          expect(selected).to eq(expected)
         end
       end
 
@@ -206,12 +206,12 @@ describe Metric do
         end
 
         it "should queue up realtime capture for vm" do
-          MiqQueue.count.should == 1
+          expect(MiqQueue.count).to eq(1)
 
           msg = MiqQueue.first
-          msg.priority.should == MiqQueue::HIGH_PRIORITY
-          msg.instance_id.should == @vm.id
-          msg.class_name.should == "ManageIQ::Providers::Vmware::InfraManager::Vm"
+          expect(msg.priority).to eq(MiqQueue::HIGH_PRIORITY)
+          expect(msg.instance_id).to eq(@vm.id)
+          expect(msg.class_name).to eq("ManageIQ::Providers::Vmware::InfraManager::Vm")
         end
 
         context "with an existing queue item at a lower priority" do
@@ -221,12 +221,12 @@ describe Metric do
           end
 
           it "should raise the priority of the existing queue item" do
-            MiqQueue.count.should == 1
+            expect(MiqQueue.count).to eq(1)
 
             msg = MiqQueue.first
-            msg.priority.should == MiqQueue::HIGH_PRIORITY
-            msg.instance_id.should == @vm.id
-            msg.class_name.should == "ManageIQ::Providers::Vmware::InfraManager::Vm"
+            expect(msg.priority).to eq(MiqQueue::HIGH_PRIORITY)
+            expect(msg.instance_id).to eq(@vm.id)
+            expect(msg.class_name).to eq("ManageIQ::Providers::Vmware::InfraManager::Vm")
           end
         end
 
@@ -237,12 +237,12 @@ describe Metric do
           end
 
           it "should not lower the priority of the existing queue item" do
-            MiqQueue.count.should == 1
+            expect(MiqQueue.count).to eq(1)
 
             msg = MiqQueue.first
-            msg.priority.should == MiqQueue::MAX_PRIORITY
-            msg.instance_id.should == @vm.id
-            msg.class_name.should == "ManageIQ::Providers::Vmware::InfraManager::Vm"
+            expect(msg.priority).to eq(MiqQueue::MAX_PRIORITY)
+            expect(msg.instance_id).to eq(@vm.id)
+            expect(msg.class_name).to eq("ManageIQ::Providers::Vmware::InfraManager::Vm")
           end
         end
       end
@@ -255,8 +255,8 @@ describe Metric do
 
       context "and a fake vim handle" do
         before(:each) do
-          ManageIQ::Providers::Vmware::InfraManager.any_instance.stub(:connect).and_return(FakeMiqVimHandle.new)
-          ManageIQ::Providers::Vmware::InfraManager.any_instance.stub(:disconnect).and_return(true)
+          allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive(:connect).and_return(FakeMiqVimHandle.new)
+          allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive(:disconnect).and_return(true)
         end
 
         context "collecting vm realtime data" do
@@ -265,11 +265,11 @@ describe Metric do
           end
 
           it "should have collected counters and values" do
-            @counters_by_mor.length.should == 1
-            @counter_values_by_mor_and_ts.length.should == 1
+            expect(@counters_by_mor.length).to eq(1)
+            expect(@counter_values_by_mor_and_ts.length).to eq(1)
 
             counters = @counters_by_mor[@vm.ems_ref_obj]
-            counters.length.should == 18
+            expect(counters.length).to eq(18)
 
             expected = [
               ["realtime", "cpu_ready_delta_summation",           ""],
@@ -293,19 +293,19 @@ describe Metric do
             ]
 
             selected = counters.values.collect { |c| c.values_at(:capture_interval_name, :counter_key, :instance) }.sort
-            selected.should == expected
+            expect(selected).to eq(expected)
 
             counter_values = @counter_values_by_mor_and_ts[@vm.ems_ref_obj]
             timestamps = counter_values.keys.sort
-            timestamps.first.should == "2011-08-12T20:33:20Z"
-            timestamps.last.should == "2011-08-12T21:33:00Z"
+            expect(timestamps.first).to eq("2011-08-12T20:33:20Z")
+            expect(timestamps.last).to eq("2011-08-12T21:33:00Z")
 
             # Check every timestamp is present
-            counter_values.length.should == 180
+            expect(counter_values.length).to eq(180)
 
             ts = timestamps.first
             until ts > timestamps.last
-              counter_values.key?(ts).should be_true
+              expect(counter_values.key?(ts)).to be_truthy
               ts = (Time.parse(ts).utc + 20.seconds).iso8601
             end
 
@@ -321,7 +321,7 @@ describe Metric do
             ]
             selected = expected.transpose[0].collect { |k| [k, counter_values[k].values.sort] }
 
-            selected.should == expected
+            expect(selected).to eq(expected)
           end
         end
 
@@ -333,17 +333,17 @@ describe Metric do
 
           it "should have collected performances" do
             # Check Vm record was updated
-            @vm.last_perf_capture_on.utc.iso8601.should == "2011-08-12T21:33:00Z"
+            expect(@vm.last_perf_capture_on.utc.iso8601).to eq("2011-08-12T21:33:00Z")
 
             # Check performances
-            Metric.count.should == 180
+            expect(Metric.count).to eq(180)
 
             # Check every timestamp is present; performance realtime timestamps
             #   are to the nearest 20 second interval
             ts = "2011-08-12T20:33:20Z"
             Metric.order(:timestamp).each do |p|
               p_ts = p.timestamp.utc
-              p_ts.iso8601.should == ts
+              expect(p_ts.iso8601).to eq(ts)
               ts = (p_ts + 20.seconds).iso8601
             end
 
@@ -359,9 +359,9 @@ describe Metric do
               ts = p.timestamp.inspect
               expected[i].each do |k, v|
                 if v.kind_of?(Float)
-                  p.send(k).should be_within(0.00001).of(v)
+                  expect(p.send(k)).to be_within(0.00001).of(v)
                 else
-                  p.send(k).should == v
+                  expect(p.send(k)).to eq(v)
                 end
               end
             end
@@ -371,13 +371,13 @@ describe Metric do
             q_all = MiqQueue.order(:id)
 
             if MiqAlert.alarm_has_alerts?(@alarm_event)
-              MiqQueue.count.should == 3
+              expect(MiqQueue.count).to eq(3)
               q = q_all.shift
-              q.class_name.should == "MiqAlert"
-              q.method_name.should == "evaluate_alerts"
-              q.args.should == [["ManageIQ::Providers::Vmware::InfraManager::Vm", @vm.id], @alarm_event, {}]
+              expect(q.class_name).to eq("MiqAlert")
+              expect(q.method_name).to eq("evaluate_alerts")
+              expect(q.args).to eq([["ManageIQ::Providers::Vmware::InfraManager::Vm", @vm.id], @alarm_event, {}])
             else
-              MiqQueue.count.should == 2
+              expect(MiqQueue.count).to eq(2)
             end
             assert_queue_items_are_hourly_rollups(q_all, "2011-08-12T20:00:00Z", @vm.id, "ManageIQ::Providers::Vmware::InfraManager::Vm")
           end
@@ -392,7 +392,7 @@ describe Metric do
 
         it "should have queued rollups for vm hourly" do
           q_all = MiqQueue.order(:id)
-          q_all.length.should == 2
+          expect(q_all.length).to eq(2)
           assert_queue_items_are_hourly_rollups(q_all, "2010-04-14T21:00:00Z", @vm.id, "ManageIQ::Providers::Vmware::InfraManager::Vm")
         end
 
@@ -403,7 +403,7 @@ describe Metric do
 
           it "should have one set of queued rollups" do
             q_all = MiqQueue.order(:id)
-            q_all.length.should == 2
+            expect(q_all.length).to eq(2)
             assert_queue_items_are_hourly_rollups(q_all, "2010-04-14T21:00:00Z", @vm.id, "ManageIQ::Providers::Vmware::InfraManager::Vm")
           end
         end
@@ -415,12 +415,12 @@ describe Metric do
         end
 
         it "without alerts assigned" do
-          MiqAlert.stub(:target_needs_realtime_capture?).and_return(false)
+          allow(MiqAlert).to receive(:target_needs_realtime_capture?).and_return(false)
           assert_perf_capture_now @vm, :without_alerts
         end
 
         it "with alerts assigned" do
-          MiqAlert.stub(:target_needs_realtime_capture?).and_return(true)
+          allow(MiqAlert).to receive(:target_needs_realtime_capture?).and_return(true)
           assert_perf_capture_now @vm, :with_alerts
         end
       end
@@ -464,8 +464,8 @@ describe Metric do
         end
 
         it "should find the correct rows" do
-          Metric::Finders.hour_to_range("2010-04-14T21:00:00Z").should == ["2010-04-14T21:00:00Z", "2010-04-14T21:59:59Z"]
-          Metric::Finders.find_all_by_hour(@vm1, "2010-04-14T21:00:00Z", 'realtime').should match_array @vm1.metrics.sort_by(&:timestamp)[1..5]
+          expect(Metric::Finders.hour_to_range("2010-04-14T21:00:00Z")).to eq(["2010-04-14T21:00:00Z", "2010-04-14T21:59:59Z"])
+          expect(Metric::Finders.find_all_by_hour(@vm1, "2010-04-14T21:00:00Z", 'realtime')).to match_array @vm1.metrics.sort_by(&:timestamp)[1..5]
         end
 
         context "calling perf_rollup to hourly on the Vm" do
@@ -474,21 +474,21 @@ describe Metric do
           end
 
           it "should rollup Vm realtime into Vm hourly rows correctly" do
-            MetricRollup.hourly.count.should == 1
+            expect(MetricRollup.hourly.count).to eq(1)
             perf = MetricRollup.hourly.first
 
-            perf.resource_type.should == 'VmOrTemplate'
-            perf.resource_id.should == @vm1.id
-            perf.capture_interval_name.should == 'hourly'
-            perf.timestamp.iso8601.should == "2010-04-14T21:00:00Z"
+            expect(perf.resource_type).to eq('VmOrTemplate')
+            expect(perf.resource_id).to eq(@vm1.id)
+            expect(perf.capture_interval_name).to eq('hourly')
+            expect(perf.timestamp.iso8601).to eq("2010-04-14T21:00:00Z")
 
-            perf.cpu_usage_rate_average.should == 6.0
-            perf.cpu_ready_delta_summation.should == 30000.0
-            perf.v_pct_cpu_ready_delta_summation.should == 30.0
-            perf.sys_uptime_absolute_latest.should == 15.0
+            expect(perf.cpu_usage_rate_average).to eq(6.0)
+            expect(perf.cpu_ready_delta_summation).to eq(30000.0)
+            expect(perf.v_pct_cpu_ready_delta_summation).to eq(30.0)
+            expect(perf.sys_uptime_absolute_latest).to eq(15.0)
 
-            perf.abs_max_cpu_usage_rate_average_value.should == 15.0
-            perf.abs_max_cpu_usage_rate_average_timestamp.utc.iso8601.should == "2010-04-14T21:52:30Z"
+            expect(perf.abs_max_cpu_usage_rate_average_value).to eq(15.0)
+            expect(perf.abs_max_cpu_usage_rate_average_timestamp.utc.iso8601).to eq("2010-04-14T21:52:30Z")
 
             perf.abs_min_cpu_usage_rate_average_value == 1.0
             perf.abs_min_cpu_usage_rate_average_timestamp.utc.iso8601 == "2010-04-14T21:51:10Z"
@@ -524,8 +524,8 @@ describe Metric do
         end
 
         it "should find the correct rows" do
-          Metric::Finders.day_to_range("2010-04-14T00:00:00Z", @time_profile).should == ["2010-04-14T00:00:00Z", "2010-04-14T23:59:59Z"]
-          Metric::Finders.find_all_by_day(@vm1, "2010-04-14T00:00:00Z", 'hourly', @time_profile).should match_array @vm1.metric_rollups.sort_by(&:timestamp)[1..5]
+          expect(Metric::Finders.day_to_range("2010-04-14T00:00:00Z", @time_profile)).to eq(["2010-04-14T00:00:00Z", "2010-04-14T23:59:59Z"])
+          expect(Metric::Finders.find_all_by_day(@vm1, "2010-04-14T00:00:00Z", 'hourly', @time_profile)).to match_array @vm1.metric_rollups.sort_by(&:timestamp)[1..5]
         end
 
         it "should find multiple resource types" do
@@ -533,7 +533,7 @@ describe Metric do
                                                       :resource  => @host1,
                                                       :timestamp => "2010-04-14T22:00:00Z")
           metrics = Metric::Finders.find_all_by_day([@vm1, @host1], "2010-04-14T00:00:00Z", 'hourly', @time_profile)
-          metrics.collect(&:resource_type).uniq.sort.should == %w(VmOrTemplate Host).uniq.sort
+          expect(metrics.collect(&:resource_type).uniq.sort).to eq(%w(VmOrTemplate Host).uniq.sort)
         end
 
         context "calling perf_rollup to daily on the Vm" do
@@ -542,27 +542,27 @@ describe Metric do
           end
 
           it "should rollup Vm hourly into Vm daily rows correctly" do
-            MetricRollup.daily.count.should == 1
+            expect(MetricRollup.daily.count).to eq(1)
             perf = MetricRollup.daily.first
 
-            perf.resource_type.should == 'VmOrTemplate'
-            perf.resource_id.should == @vm1.id
-            perf.capture_interval_name.should == 'daily'
-            perf.timestamp.iso8601.should == "2010-04-14T00:00:00Z"
-            perf.time_profile_id.should == @time_profile.id
+            expect(perf.resource_type).to eq('VmOrTemplate')
+            expect(perf.resource_id).to eq(@vm1.id)
+            expect(perf.capture_interval_name).to eq('daily')
+            expect(perf.timestamp.iso8601).to eq("2010-04-14T00:00:00Z")
+            expect(perf.time_profile_id).to eq(@time_profile.id)
 
-            perf.cpu_usage_rate_average.should == 6.0
-            perf.cpu_ready_delta_summation.should == 60000.0 # actually uses average
-            perf.v_pct_cpu_ready_delta_summation.should == 1.7
-            perf.sys_uptime_absolute_latest.should == 6.0     # actually uses average
+            expect(perf.cpu_usage_rate_average).to eq(6.0)
+            expect(perf.cpu_ready_delta_summation).to eq(60000.0) # actually uses average
+            expect(perf.v_pct_cpu_ready_delta_summation).to eq(1.7)
+            expect(perf.sys_uptime_absolute_latest).to eq(6.0)     # actually uses average
 
-            perf.max_cpu_usage_rate_average.should == 15.0
-            perf.abs_max_cpu_usage_rate_average_value.should == 15.0
-            perf.abs_max_cpu_usage_rate_average_timestamp.utc.iso8601.should == "2010-04-14T22:00:20Z"
+            expect(perf.max_cpu_usage_rate_average).to eq(15.0)
+            expect(perf.abs_max_cpu_usage_rate_average_value).to eq(15.0)
+            expect(perf.abs_max_cpu_usage_rate_average_timestamp.utc.iso8601).to eq("2010-04-14T22:00:20Z")
 
-            perf.min_cpu_usage_rate_average.should == 1.0
-            perf.abs_min_cpu_usage_rate_average_value.should == 1.0
-            perf.abs_min_cpu_usage_rate_average_timestamp.utc.iso8601.should == "2010-04-14T18:00:40Z"
+            expect(perf.min_cpu_usage_rate_average).to eq(1.0)
+            expect(perf.abs_min_cpu_usage_rate_average_value).to eq(1.0)
+            expect(perf.abs_min_cpu_usage_rate_average_timestamp.utc.iso8601).to eq("2010-04-14T18:00:40Z")
           end
         end
 
@@ -573,8 +573,8 @@ describe Metric do
 
           it "should rollup Vm hourly into Vm daily rows correctly" do
             perfs = MetricRollup.daily
-            perfs.length.should == 3
-            perfs.collect { |r| r.timestamp.iso8601 }.sort.should == ["2010-04-13T00:00:00Z", "2010-04-14T00:00:00Z", "2010-04-15T00:00:00Z"]
+            expect(perfs.length).to eq(3)
+            expect(perfs.collect { |r| r.timestamp.iso8601 }.sort).to eq(["2010-04-13T00:00:00Z", "2010-04-14T00:00:00Z", "2010-04-15T00:00:00Z"])
           end
         end
 
@@ -588,22 +588,22 @@ describe Metric do
 
           it "VimPerformanceDaily.find should return existing daily performances when a time_profile is passed" do
             rec = VimPerformanceDaily.find_entries(:time_profile => @time_profile)
-            rec.should == [@perf]
+            expect(rec).to eq([@perf])
           end
 
           it "VimPerformanceDaily.find should return existing daily performances when a time_profile is not passed, but an associated tz is" do
             rec = VimPerformanceDaily.find_entries(:tz => "UTC")
-            rec.should == [@perf]
+            expect(rec).to eq([@perf])
           end
 
           it "VimPerformanceDaily.find should return existing daily performances when defaulting to UTC time zone" do
             rec = VimPerformanceDaily.find_entries({})
-            rec.should == [@perf]
+            expect(rec).to eq([@perf])
           end
 
           it "VimPerformanceDaily.find should return an empty array when a time_profile is not passed" do
             rec = VimPerformanceDaily.find_entries(:tz => "Alaska")
-            rec.length.should == 0
+            expect(rec.length).to eq(0)
           end
         end
 
@@ -640,22 +640,22 @@ describe Metric do
           end
 
           it "should calculate the correct normal operating range values" do
-            @vm1.max_cpu_usage_rate_average_avg_over_time_period.should     be_within(0.001).of(13.692)
-            @vm1.max_mem_usage_absolute_average_avg_over_time_period.should be_within(0.001).of(33.085)
+            expect(@vm1.max_cpu_usage_rate_average_avg_over_time_period).to     be_within(0.001).of(13.692)
+            expect(@vm1.max_mem_usage_absolute_average_avg_over_time_period).to be_within(0.001).of(33.085)
           end
 
           it "should calculate the correct right-size values" do
-            ManageIQ::Providers::Vmware::InfraManager::Vm.stub(:mem_recommendation_minimum).and_return(0)
+            allow(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:mem_recommendation_minimum).and_return(0)
 
-            @vm1.recommended_vcpus.should == 1
-            @vm1.recommended_mem.should == 4
-            @vm1.overallocated_vcpus_pct.should == 0
-            @vm1.overallocated_mem_pct.should == 0
+            expect(@vm1.recommended_vcpus).to eq(1)
+            expect(@vm1.recommended_mem).to eq(4)
+            expect(@vm1.overallocated_vcpus_pct).to eq(0)
+            expect(@vm1.overallocated_mem_pct).to eq(0)
 
-            @vm2.recommended_vcpus.should == 1
-            @vm2.recommended_mem.should == 1356
-            @vm2.overallocated_vcpus_pct.should be_within(0.01).of(50.0)
-            @vm2.overallocated_mem_pct.should   be_within(0.01).of(66.9)
+            expect(@vm2.recommended_vcpus).to eq(1)
+            expect(@vm2.recommended_mem).to eq(1356)
+            expect(@vm2.overallocated_vcpus_pct).to be_within(0.01).of(50.0)
+            expect(@vm2.overallocated_mem_pct).to   be_within(0.01).of(66.9)
           end
         end
 
@@ -704,18 +704,18 @@ describe Metric do
             end
 
             it "should rollup Host realtime and Vm hourly into Host hourly rows correctly" do
-              MetricRollup.hourly.where(:resource_type => 'Host', :resource_id => @host1.id).count.should == 1
+              expect(MetricRollup.hourly.where(:resource_type => 'Host', :resource_id => @host1.id).count).to eq(1)
               perf = MetricRollup.hourly.where(:resource_type => 'Host', :resource_id => @host1.id).first
 
-              perf.resource_type.should == 'Host'
-              perf.resource_id.should == @host1.id
-              perf.capture_interval_name.should == 'hourly'
-              perf.timestamp.iso8601.should == "2010-04-14T21:00:00Z"
+              expect(perf.resource_type).to eq('Host')
+              expect(perf.resource_id).to eq(@host1.id)
+              expect(perf.capture_interval_name).to eq('hourly')
+              expect(perf.timestamp.iso8601).to eq("2010-04-14T21:00:00Z")
 
-              perf.cpu_usage_rate_average.should == 12.0    # pulled from Host realtime
-              perf.cpu_ready_delta_summation.should == 80000.0 # pulled from Vm hourly
-              perf.v_pct_cpu_ready_delta_summation.should == 2.2
-              perf.sys_uptime_absolute_latest.should == 30.0    # pulled from Host realtime
+              expect(perf.cpu_usage_rate_average).to eq(12.0)    # pulled from Host realtime
+              expect(perf.cpu_ready_delta_summation).to eq(80000.0) # pulled from Vm hourly
+              expect(perf.v_pct_cpu_ready_delta_summation).to eq(2.2)
+              expect(perf.sys_uptime_absolute_latest).to eq(30.0)    # pulled from Host realtime
 
               # NOTE: min / max / burst are only pulled in from Vm realtime.
             end
@@ -727,28 +727,28 @@ describe Metric do
             end
 
             it "should rollup Host realtime Cluster realtime rows correctly" do
-              Metric.where(:resource_type => 'EmsCluster', :resource_id => @ems_cluster.id).count.should == 5
+              expect(Metric.where(:resource_type => 'EmsCluster', :resource_id => @ems_cluster.id).count).to eq(5)
               perfs = Metric.where(:resource_type => 'EmsCluster', :resource_id => @ems_cluster.id).order("timestamp")
 
-              perfs[0].resource_type.should == 'EmsCluster'
-              perfs[0].resource_id.should == @ems_cluster.id
-              perfs[0].capture_interval_name.should == 'realtime'
-              perfs[0].timestamp.iso8601.should == "2010-04-14T21:51:20Z"
+              expect(perfs[0].resource_type).to eq('EmsCluster')
+              expect(perfs[0].resource_id).to eq(@ems_cluster.id)
+              expect(perfs[0].capture_interval_name).to eq('realtime')
+              expect(perfs[0].timestamp.iso8601).to eq("2010-04-14T21:51:20Z")
 
-              perfs[0].cpu_usage_rate_average.should == 2.5 # pulled from Host realtime
-              perfs[0].cpu_usagemhz_rate_average.should == 5.0 # pulled from Host realtime
-              perfs[0].sys_uptime_absolute_latest.should == 3.0 # pulled from Host realtime
-              perfs[0].derived_cpu_available.should == 19152
+              expect(perfs[0].cpu_usage_rate_average).to eq(2.5) # pulled from Host realtime
+              expect(perfs[0].cpu_usagemhz_rate_average).to eq(5.0) # pulled from Host realtime
+              expect(perfs[0].sys_uptime_absolute_latest).to eq(3.0) # pulled from Host realtime
+              expect(perfs[0].derived_cpu_available).to eq(19152)
 
-              perfs[2].cpu_usage_rate_average.should == 12.0  # pulled from Host realtime
-              perfs[2].cpu_usagemhz_rate_average.should == 24.0  # pulled from Host realtime
-              perfs[2].sys_uptime_absolute_latest.should == 16.0  # pulled from Host realtime
-              perfs[2].derived_cpu_available.should == 19152
+              expect(perfs[2].cpu_usage_rate_average).to eq(12.0)  # pulled from Host realtime
+              expect(perfs[2].cpu_usagemhz_rate_average).to eq(24.0)  # pulled from Host realtime
+              expect(perfs[2].sys_uptime_absolute_latest).to eq(16.0)  # pulled from Host realtime
+              expect(perfs[2].derived_cpu_available).to eq(19152)
 
-              perfs[3].cpu_usage_rate_average.should == 24.0  # pulled from Host realtime
-              perfs[3].cpu_usagemhz_rate_average.should == 48.0  # pulled from Host realtime
-              perfs[3].sys_uptime_absolute_latest.should == 32.0  # pulled from Host realtime
-              perfs[3].derived_cpu_available.should == 19152
+              expect(perfs[3].cpu_usage_rate_average).to eq(24.0)  # pulled from Host realtime
+              expect(perfs[3].cpu_usagemhz_rate_average).to eq(48.0)  # pulled from Host realtime
+              expect(perfs[3].sys_uptime_absolute_latest).to eq(32.0)  # pulled from Host realtime
+              expect(perfs[3].derived_cpu_available).to eq(19152)
             end
           end
 
@@ -760,7 +760,7 @@ describe Metric do
 
             it "should queue up perf_rollup_gap" do
               q_all = MiqQueue.order(:class_name)
-              q_all.length.should == 1
+              expect(q_all.length).to eq(1)
 
               expected = {
                 :args        => @args,
@@ -769,7 +769,7 @@ describe Metric do
                 :role        => nil
               }
 
-              q_all[0].should have_attributes(expected)
+              expect(q_all[0]).to have_attributes(expected)
             end
           end
 
@@ -780,26 +780,26 @@ describe Metric do
             end
 
             it "should queue up the rollups" do
-              MiqQueue.count.should == 3
+              expect(MiqQueue.count).to eq(3)
 
               [@host1, @host2, @vm1].each do |ci|
                 message = MiqQueue.where(:class_name => ci.class.name, :instance_id => ci.id).first
-                message.should have_attributes(:method_name => "perf_rollup_range", :args => @args)
+                expect(message).to have_attributes(:method_name => "perf_rollup_range", :args => @args)
               end
             end
           end
 
           context "calling get_performance_metric" do
             it "should return the correct value(s)" do
-              @host1.get_performance_metric(:realtime, :cpu_usage_rate_average, ["2010-04-14T20:52:40Z", "2010-04-14T22:52:40Z"]).should == [100.0, 2.0, 4.0, 8.0, 16.0, 30.0, 100.0]
-              @host1.get_performance_metric(:realtime, :cpu_usage_rate_average, ["2010-04-14T20:52:40Z", "2010-04-14T22:52:40Z"], :avg).should be_within(0.0001).of(37.1428571428571)
-              @host1.get_performance_metric(:realtime, :cpu_usage_rate_average, ["2010-04-14T20:52:40Z", "2010-04-14T22:52:40Z"], :min).should == 2.0
-              @host1.get_performance_metric(:realtime, :cpu_usage_rate_average, ["2010-04-14T20:52:40Z", "2010-04-14T22:52:40Z"], :max).should == 100.0
+              expect(@host1.get_performance_metric(:realtime, :cpu_usage_rate_average, ["2010-04-14T20:52:40Z", "2010-04-14T22:52:40Z"])).to eq([100.0, 2.0, 4.0, 8.0, 16.0, 30.0, 100.0])
+              expect(@host1.get_performance_metric(:realtime, :cpu_usage_rate_average, ["2010-04-14T20:52:40Z", "2010-04-14T22:52:40Z"], :avg)).to be_within(0.0001).of(37.1428571428571)
+              expect(@host1.get_performance_metric(:realtime, :cpu_usage_rate_average, ["2010-04-14T20:52:40Z", "2010-04-14T22:52:40Z"], :min)).to eq(2.0)
+              expect(@host1.get_performance_metric(:realtime, :cpu_usage_rate_average, ["2010-04-14T20:52:40Z", "2010-04-14T22:52:40Z"], :max)).to eq(100.0)
 
               # Test supported formats of time range
-              @host1.get_performance_metric(:realtime, :cpu_usage_rate_average, ["2010-04-14T20:52:40Z".to_time(:utc), "2010-04-14T22:52:40Z".to_time(:utc)], :min).should == 2.0
-              @host1.get_performance_metric(:realtime, :cpu_usage_rate_average, "2010-04-14T20:52:40Z", :max).should == 100.0
-              @host1.get_performance_metric(:realtime, :cpu_usage_rate_average, "2010-04-14T20:52:40Z".to_time(:utc), :max).should == 100.0
+              expect(@host1.get_performance_metric(:realtime, :cpu_usage_rate_average, ["2010-04-14T20:52:40Z".to_time(:utc), "2010-04-14T22:52:40Z".to_time(:utc)], :min)).to eq(2.0)
+              expect(@host1.get_performance_metric(:realtime, :cpu_usage_rate_average, "2010-04-14T20:52:40Z", :max)).to eq(100.0)
+              expect(@host1.get_performance_metric(:realtime, :cpu_usage_rate_average, "2010-04-14T20:52:40Z".to_time(:utc), :max)).to eq(100.0)
             end
           end
         end
@@ -822,21 +822,21 @@ describe Metric do
         it "should queue up from Vm realtime to Vm hourly" do
           @vm.perf_rollup_to_parents('realtime', ROLLUP_CHAIN_TIMESTAMP)
           q_all = MiqQueue.order(:id)
-          q_all.length.should == 1
+          expect(q_all.length).to eq(1)
           assert_queue_item_rollup_chain(q_all[0], @vm, 'hourly')
         end
 
         it "should queue up from Host realtime to Host hourly" do
           @host.perf_rollup_to_parents('realtime', ROLLUP_CHAIN_TIMESTAMP)
           q_all = MiqQueue.order(:id)
-          q_all.length.should == 1
+          expect(q_all.length).to eq(1)
           assert_queue_item_rollup_chain(q_all[0], @host, 'hourly')
         end
 
         it "should queue up from Vm hourly to Host hourly and Vm daily" do
           @vm.perf_rollup_to_parents('hourly', ROLLUP_CHAIN_TIMESTAMP)
           q_all = MiqQueue.order(:id)
-          q_all.length.should == 2
+          expect(q_all.length).to eq(2)
           assert_queue_item_rollup_chain(q_all[0], @host, 'hourly')
           assert_queue_item_rollup_chain(q_all[1], @vm,   'daily', @time_profile)
         end
@@ -844,7 +844,7 @@ describe Metric do
         it "should queue up from Host hourly to EmsCluster hourly and Host daily" do
           @host.perf_rollup_to_parents('hourly', ROLLUP_CHAIN_TIMESTAMP)
           q_all = MiqQueue.order(:id)
-          q_all.length.should == 2
+          expect(q_all.length).to eq(2)
           assert_queue_item_rollup_chain(q_all[0], @ems_cluster, 'hourly')
           assert_queue_item_rollup_chain(q_all[1], @host,        'daily', @time_profile)
         end
@@ -852,29 +852,29 @@ describe Metric do
         it "should queue up from EmsCluster hourly to EMS hourly and EmsCluster daily" do
           @ems_cluster.perf_rollup_to_parents('hourly', ROLLUP_CHAIN_TIMESTAMP)
           q_all = MiqQueue.order(:id)
-          q_all.length.should == 2
+          expect(q_all.length).to eq(2)
           assert_queue_item_rollup_chain(q_all[0], @ems_vmware,         'hourly')
           assert_queue_item_rollup_chain(q_all[1], @ems_cluster, 'daily', @time_profile)
         end
 
         it "should queue up from Vm daily to nothing" do
           @vm.perf_rollup_to_parents('daily', ROLLUP_CHAIN_TIMESTAMP)
-          MiqQueue.count.should == 0
+          expect(MiqQueue.count).to eq(0)
         end
 
         it "should queue up from Host daily to nothing" do
           @host.perf_rollup_to_parents('daily', ROLLUP_CHAIN_TIMESTAMP)
-          MiqQueue.count.should == 0
+          expect(MiqQueue.count).to eq(0)
         end
 
         it "should queue up from EmsCluster daily to nothing" do
           @ems_cluster.perf_rollup_to_parents('daily', ROLLUP_CHAIN_TIMESTAMP)
-          MiqQueue.count.should == 0
+          expect(MiqQueue.count).to eq(0)
         end
 
         it "should queue up from EMS daily to nothing" do
           @ems_vmware.perf_rollup_to_parents('daily', ROLLUP_CHAIN_TIMESTAMP)
-          MiqQueue.count.should == 0
+          expect(MiqQueue.count).to eq(0)
         end
       end
     end
@@ -882,37 +882,37 @@ describe Metric do
     context ".day_to_range" do
       it "should return the correct start and end dates when calling day_to_range before DST starts" do
         s, e = Metric::Finders.day_to_range("2011-03-12T05:00:00Z", TimeProfile.new(:tz => "Eastern Time (US & Canada)"))
-        s.should == '2011-03-12T05:00:00Z'
-        e.should == '2011-03-13T04:59:59Z'
+        expect(s).to eq('2011-03-12T05:00:00Z')
+        expect(e).to eq('2011-03-13T04:59:59Z')
       end
 
       it "should return the correct start and end dates when calling day_to_range on the day DST starts" do
         s, e = Metric::Finders.day_to_range("2011-03-13T05:00:00Z", TimeProfile.new(:tz => "Eastern Time (US & Canada)"))
-        s.should == '2011-03-13T05:00:00Z'
-        e.should == '2011-03-14T03:59:59Z'
+        expect(s).to eq('2011-03-13T05:00:00Z')
+        expect(e).to eq('2011-03-14T03:59:59Z')
       end
 
       it "should return the correct start and end dates when calling day_to_range after DST starts" do
         s, e = Metric::Finders.day_to_range("2011-03-14T04:00:00Z", TimeProfile.new(:tz => "Eastern Time (US & Canada)"))
-        s.should == '2011-03-14T04:00:00Z'
-        e.should == '2011-03-15T03:59:59Z'
+        expect(s).to eq('2011-03-14T04:00:00Z')
+        expect(e).to eq('2011-03-15T03:59:59Z')
       end
     end
 
     context ".days_from_range" do
       it "should return the correct dates and times when calling days_from_range before DST starts" do
         days = Metric::Helper.days_from_range('2011-03-01T15:24:00Z', '2011-03-03T13:45:00Z', "Eastern Time (US & Canada)")
-        days.should == ["2011-03-01T05:00:00Z", "2011-03-02T05:00:00Z", "2011-03-03T05:00:00Z"]
+        expect(days).to eq(["2011-03-01T05:00:00Z", "2011-03-02T05:00:00Z", "2011-03-03T05:00:00Z"])
       end
 
       it "should return the correct dates and times when calling days_from_range when start and end dates span DST" do
         days = Metric::Helper.days_from_range('2011-03-12T11:23:00Z', '2011-03-14T14:33:00Z', "Eastern Time (US & Canada)")
-        days.should == ["2011-03-12T05:00:00Z", "2011-03-13T05:00:00Z", "2011-03-14T04:00:00Z"]
+        expect(days).to eq(["2011-03-12T05:00:00Z", "2011-03-13T05:00:00Z", "2011-03-14T04:00:00Z"])
       end
 
       it "should return the correct dates and times when calling days_from_range before DST starts" do
         days = Metric::Helper.days_from_range('2011-03-15T17:22:00Z', '2011-03-17T19:52:00Z', "Eastern Time (US & Canada)")
-        days.should == ["2011-03-15T04:00:00Z", "2011-03-16T04:00:00Z", "2011-03-17T04:00:00Z"]
+        expect(days).to eq(["2011-03-15T04:00:00Z", "2011-03-16T04:00:00Z", "2011-03-17T04:00:00Z"])
       end
     end
 
@@ -927,9 +927,9 @@ describe Metric do
         }
         perf = Metric.new(pdata)
 
-        perf.v_pct_cpu_ready_delta_summation.should == 5.3
-        perf.v_pct_cpu_used_delta_summation.should == 20.1
-        perf.v_pct_cpu_wait_delta_summation.should == 135.5
+        expect(perf.v_pct_cpu_ready_delta_summation).to eq(5.3)
+        expect(perf.v_pct_cpu_used_delta_summation).to eq(20.1)
+        expect(perf.v_pct_cpu_wait_delta_summation).to eq(135.5)
       end
 
       it "should return the correct values for Vm hourly" do
@@ -943,9 +943,9 @@ describe Metric do
         }
         perf = MetricRollup.new(pdata)
 
-        perf.v_pct_cpu_ready_delta_summation.should == 0.3
-        perf.v_pct_cpu_used_delta_summation.should == 11.1
-        perf.v_pct_cpu_wait_delta_summation.should == 186.4
+        expect(perf.v_pct_cpu_ready_delta_summation).to eq(0.3)
+        expect(perf.v_pct_cpu_used_delta_summation).to eq(11.1)
+        expect(perf.v_pct_cpu_wait_delta_summation).to eq(186.4)
       end
 
       it "should return the correct values for Vm daily" do
@@ -959,9 +959,9 @@ describe Metric do
         }
         perf = MetricRollup.new(pdata)
 
-        perf.v_pct_cpu_ready_delta_summation.should == 0.3
-        perf.v_pct_cpu_used_delta_summation.should == 3.7
-        perf.v_pct_cpu_wait_delta_summation.should == 188.1
+        expect(perf.v_pct_cpu_ready_delta_summation).to eq(0.3)
+        expect(perf.v_pct_cpu_used_delta_summation).to eq(3.7)
+        expect(perf.v_pct_cpu_wait_delta_summation).to eq(188.1)
       end
 
       it "should return the correct values for Host hourly" do
@@ -976,21 +976,21 @@ describe Metric do
         }
         perf = MetricRollup.new(pdata)
 
-        perf.v_pct_cpu_ready_delta_summation.should == 0.3
-        perf.v_pct_cpu_used_delta_summation.should == 10.8
-        perf.v_pct_cpu_wait_delta_summation.should == 170.0
+        expect(perf.v_pct_cpu_ready_delta_summation).to eq(0.3)
+        expect(perf.v_pct_cpu_used_delta_summation).to eq(10.8)
+        expect(perf.v_pct_cpu_wait_delta_summation).to eq(170.0)
 
         pdata[:derived_vm_count_on] = nil
         perf = MetricRollup.new(pdata)
-        perf.v_pct_cpu_ready_delta_summation.should == 0
-        perf.v_pct_cpu_used_delta_summation.should == 0
-        perf.v_pct_cpu_wait_delta_summation.should == 0
+        expect(perf.v_pct_cpu_ready_delta_summation).to eq(0)
+        expect(perf.v_pct_cpu_used_delta_summation).to eq(0)
+        expect(perf.v_pct_cpu_wait_delta_summation).to eq(0)
 
         pdata[:derived_vm_count_on] = 0
         perf = MetricRollup.new(pdata)
-        perf.v_pct_cpu_ready_delta_summation.should == 0
-        perf.v_pct_cpu_used_delta_summation.should == 0
-        perf.v_pct_cpu_wait_delta_summation.should == 0
+        expect(perf.v_pct_cpu_ready_delta_summation).to eq(0)
+        expect(perf.v_pct_cpu_used_delta_summation).to eq(0)
+        expect(perf.v_pct_cpu_wait_delta_summation).to eq(0)
       end
 
       it "should return the correct values for Host daily" do
@@ -1005,21 +1005,21 @@ describe Metric do
         }
         perf = MetricRollup.new(pdata)
 
-        perf.v_pct_cpu_ready_delta_summation.should == 0.2
-        perf.v_pct_cpu_used_delta_summation.should == 10.1
-        perf.v_pct_cpu_wait_delta_summation.should == 170.9
+        expect(perf.v_pct_cpu_ready_delta_summation).to eq(0.2)
+        expect(perf.v_pct_cpu_used_delta_summation).to eq(10.1)
+        expect(perf.v_pct_cpu_wait_delta_summation).to eq(170.9)
 
         pdata[:derived_vm_count_on] = nil
         perf = MetricRollup.new(pdata)
-        perf.v_pct_cpu_ready_delta_summation.should == 0
-        perf.v_pct_cpu_used_delta_summation.should == 0
-        perf.v_pct_cpu_wait_delta_summation.should == 0
+        expect(perf.v_pct_cpu_ready_delta_summation).to eq(0)
+        expect(perf.v_pct_cpu_used_delta_summation).to eq(0)
+        expect(perf.v_pct_cpu_wait_delta_summation).to eq(0)
 
         pdata[:derived_vm_count_on] = 0
         perf = MetricRollup.new(pdata)
-        perf.v_pct_cpu_ready_delta_summation.should == 0
-        perf.v_pct_cpu_used_delta_summation.should == 0
-        perf.v_pct_cpu_wait_delta_summation.should == 0
+        expect(perf.v_pct_cpu_ready_delta_summation).to eq(0)
+        expect(perf.v_pct_cpu_used_delta_summation).to eq(0)
+        expect(perf.v_pct_cpu_wait_delta_summation).to eq(0)
       end
 
       it "should return the correct values for Cluster hourly" do
@@ -1034,21 +1034,21 @@ describe Metric do
         }
         perf = MetricRollup.new(pdata)
 
-        perf.v_pct_cpu_ready_delta_summation.should == 0.2
-        perf.v_pct_cpu_used_delta_summation.should == 10.2
-        perf.v_pct_cpu_wait_delta_summation.should == 167.9
+        expect(perf.v_pct_cpu_ready_delta_summation).to eq(0.2)
+        expect(perf.v_pct_cpu_used_delta_summation).to eq(10.2)
+        expect(perf.v_pct_cpu_wait_delta_summation).to eq(167.9)
 
         pdata[:derived_vm_count_on] = nil
         perf = MetricRollup.new(pdata)
-        perf.v_pct_cpu_ready_delta_summation.should == 0
-        perf.v_pct_cpu_used_delta_summation.should == 0
-        perf.v_pct_cpu_wait_delta_summation.should == 0
+        expect(perf.v_pct_cpu_ready_delta_summation).to eq(0)
+        expect(perf.v_pct_cpu_used_delta_summation).to eq(0)
+        expect(perf.v_pct_cpu_wait_delta_summation).to eq(0)
 
         pdata[:derived_vm_count_on] = 0
         perf = MetricRollup.new(pdata)
-        perf.v_pct_cpu_ready_delta_summation.should == 0
-        perf.v_pct_cpu_used_delta_summation.should == 0
-        perf.v_pct_cpu_wait_delta_summation.should == 0
+        expect(perf.v_pct_cpu_ready_delta_summation).to eq(0)
+        expect(perf.v_pct_cpu_used_delta_summation).to eq(0)
+        expect(perf.v_pct_cpu_wait_delta_summation).to eq(0)
       end
 
       it "should return the correct values for Cluster daily" do
@@ -1063,21 +1063,21 @@ describe Metric do
         }
         perf = MetricRollup.new(pdata)
 
-        perf.v_pct_cpu_ready_delta_summation.should == 0.2
-        perf.v_pct_cpu_used_delta_summation.should == 8.9
-        perf.v_pct_cpu_wait_delta_summation.should == 169.1
+        expect(perf.v_pct_cpu_ready_delta_summation).to eq(0.2)
+        expect(perf.v_pct_cpu_used_delta_summation).to eq(8.9)
+        expect(perf.v_pct_cpu_wait_delta_summation).to eq(169.1)
 
         pdata[:derived_vm_count_on] = nil
         perf = MetricRollup.new(pdata)
-        perf.v_pct_cpu_ready_delta_summation.should == 0
-        perf.v_pct_cpu_used_delta_summation.should == 0
-        perf.v_pct_cpu_wait_delta_summation.should == 0
+        expect(perf.v_pct_cpu_ready_delta_summation).to eq(0)
+        expect(perf.v_pct_cpu_used_delta_summation).to eq(0)
+        expect(perf.v_pct_cpu_wait_delta_summation).to eq(0)
 
         pdata[:derived_vm_count_on] = 0
         perf = MetricRollup.new(pdata)
-        perf.v_pct_cpu_ready_delta_summation.should == 0
-        perf.v_pct_cpu_used_delta_summation.should == 0
-        perf.v_pct_cpu_wait_delta_summation.should == 0
+        expect(perf.v_pct_cpu_ready_delta_summation).to eq(0)
+        expect(perf.v_pct_cpu_used_delta_summation).to eq(0)
+        expect(perf.v_pct_cpu_wait_delta_summation).to eq(0)
       end
     end
 
@@ -1098,7 +1098,7 @@ describe Metric do
                      :starting_on     => Time.parse("2011-08-12T20:33:20Z"),
                      :trend_direction => "none"
           }
-          @ems_cluster.performances_maintains_value_for_duration?(options).should == false
+          expect(@ems_cluster.performances_maintains_value_for_duration?(options)).to eq(false)
         end
       end
     end
@@ -1145,7 +1145,7 @@ describe Metric do
           expected_targets = Metric::Targets.capture_targets
           expected_queue_count = expected_targets.size * 9  # 1 realtime, 8 historical
           expected_queue_count += 1                         # cleanup task
-          MiqQueue.count.should == expected_queue_count
+          expect(MiqQueue.count).to eq(expected_queue_count)
 
           expected = expected_targets.collect do |t|
             # Storage is hourly only
@@ -1157,7 +1157,7 @@ describe Metric do
             [Object.const_get(q.class_name).find(q.instance_id), q.args.first]
           end.flatten
 
-          selected.should match_array(expected)
+          expect(selected).to match_array(expected)
         end
       end
     end
@@ -1175,7 +1175,7 @@ describe Metric do
 
         it "should have queued rollups for vm hourly" do
           q_all = MiqQueue.order(:id)
-          q_all.length.should == 2
+          expect(q_all.length).to eq(2)
           assert_queue_items_are_hourly_rollups(q_all, "2010-04-14T21:00:00Z", @vm.id, "ManageIQ::Providers::Openstack::CloudManager::Vm")
         end
 
@@ -1186,7 +1186,7 @@ describe Metric do
 
           it "should have one set of queued rollups" do
             q_all = MiqQueue.order(:id)
-            q_all.length.should == 2
+            expect(q_all.length).to eq(2)
             assert_queue_items_are_hourly_rollups(q_all, "2010-04-14T21:00:00Z", @vm.id, "ManageIQ::Providers::Openstack::CloudManager::Vm")
           end
         end
@@ -1207,21 +1207,21 @@ describe Metric do
         it "should queue up from Vm realtime to Vm hourly" do
           @vm.perf_rollup_to_parents('realtime', ROLLUP_CHAIN_TIMESTAMP)
           q_all = MiqQueue.order(:id)
-          q_all.length.should == 1
+          expect(q_all.length).to eq(1)
           assert_queue_item_rollup_chain(q_all[0], @vm, 'hourly')
         end
 
         it "should queue up from AvailabilityZone realtime to AvailabilityZone hourly" do
           @availability_zone.perf_rollup_to_parents('realtime', ROLLUP_CHAIN_TIMESTAMP)
           q_all = MiqQueue.order(:id)
-          q_all.length.should == 1
+          expect(q_all.length).to eq(1)
           assert_queue_item_rollup_chain(q_all[0], @availability_zone, 'hourly')
         end
 
         it "should queue up from Vm hourly to AvailabilityZone hourly and Vm daily" do
           @vm.perf_rollup_to_parents('hourly', ROLLUP_CHAIN_TIMESTAMP)
           q_all = MiqQueue.order(:id)
-          q_all.length.should == 2
+          expect(q_all.length).to eq(2)
           assert_queue_item_rollup_chain(q_all[0], @availability_zone, 'hourly')
           assert_queue_item_rollup_chain(q_all[1], @vm,   'daily', @time_profile)
         end
@@ -1229,24 +1229,24 @@ describe Metric do
         it "should queue up from AvailabilityZone hourly to EMS hourly and AvailabilityZone daily" do
           @availability_zone.perf_rollup_to_parents('hourly', ROLLUP_CHAIN_TIMESTAMP)
           q_all = MiqQueue.order(:id)
-          q_all.length.should == 2
+          expect(q_all.length).to eq(2)
           assert_queue_item_rollup_chain(q_all[0], @ems_openstack,  'hourly')
           assert_queue_item_rollup_chain(q_all[1], @availability_zone, 'daily', @time_profile)
         end
 
         it "should queue up from Vm daily to nothing" do
           @vm.perf_rollup_to_parents('daily', ROLLUP_CHAIN_TIMESTAMP)
-          MiqQueue.count.should == 0
+          expect(MiqQueue.count).to eq(0)
         end
 
         it "should queue up from AvailabilityZone daily to nothing" do
           @availability_zone.perf_rollup_to_parents('daily', ROLLUP_CHAIN_TIMESTAMP)
-          MiqQueue.count.should == 0
+          expect(MiqQueue.count).to eq(0)
         end
 
         it "should queue up from EMS daily to nothing" do
           @ems_openstack.perf_rollup_to_parents('daily', ROLLUP_CHAIN_TIMESTAMP)
-          MiqQueue.count.should == 0
+          expect(MiqQueue.count).to eq(0)
         end
       end
     end
@@ -1314,13 +1314,12 @@ describe Metric do
 
   def assert_queued_rollup(q_item, instance_id, class_name, args, deliver_on, method = "perf_rollup")
     deliver_on = Time.parse(deliver_on).utc if deliver_on.kind_of?(String)
-    expected_deliver_on = q_item.deliver_on.utc.should unless deliver_on.nil?
 
-    q_item.method_name.should == method
-    q_item.instance_id.should == instance_id
-    q_item.class_name.should == class_name
-    q_item.args.should == args
-    expected_deliver_on == deliver_on
+    expect(q_item.method_name).to eq(method)
+    expect(q_item.instance_id).to eq(instance_id)
+    expect(q_item.class_name).to eq(class_name)
+    expect(q_item.args).to eq(args)
+    expect(q_item.deliver_on.utc).to eq(deliver_on) unless deliver_on.nil?
   end
 
   def assert_queue_items_are_hourly_rollups(q_items, first_time, instance_id, class_name)
@@ -1360,10 +1359,10 @@ describe Metric do
                          when Host then    t.perf_capture_enabled? || t.ems_cluster.perf_capture_enabled?
                          when Storage then t.perf_capture_enabled?
                          end
-      expected_enabled.should be_true
+      expect(expected_enabled).to be_truthy
     end
 
-    selected_types.should match_array(expected_types)
+    expect(selected_types).to match_array(expected_types)
   end
 
   def assert_cloud_targets_enabled(targets, expected_types)
@@ -1378,25 +1377,25 @@ describe Metric do
                          when AvailabilityZone then  t.perf_capture_enabled?
                          when Storage then           t.perf_capture_enabled?
                          end
-      expected_enabled.should be_true
+      expect(expected_enabled).to be_truthy
     end
 
-    selected_types.should =~ expected_types
+    expect(selected_types).to match_array(expected_types)
   end
 
   def assert_perf_capture_now(target, mode)
     Timecop.freeze(Time.now) do
       target.update_attribute(:last_perf_capture_on, nil)
-      target.perf_capture_now?.should be_true
+      expect(target.perf_capture_now?).to be_truthy
 
       target.update_attribute(:last_perf_capture_on, Time.now.utc - 15.minutes)
-      target.perf_capture_now?.should be_true
+      expect(target.perf_capture_now?).to be_truthy
 
       target.update_attribute(:last_perf_capture_on, Time.now.utc - 7.minutes)
-      (mode == :with_alerts ? target.perf_capture_now? : !target.perf_capture_now?).should be_true
+      expect(mode == :with_alerts ? target.perf_capture_now? : !target.perf_capture_now?).to be_truthy
 
       target.update_attribute(:last_perf_capture_on, Time.now.utc - 1.minutes)
-      target.perf_capture_now?.should_not be_true
+      expect(target.perf_capture_now?).not_to be_truthy
     end
   end
 end
