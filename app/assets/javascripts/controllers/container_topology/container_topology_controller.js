@@ -73,9 +73,12 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
           case "Ready":
           case "Running":
           case "Succeeded":
+          case "Valid":
             return "#3F9C35";
           case "NotReady":
           case "Failed":
+          case "Error":
+          case "Unreachable":
             return "#CC0000";
           case 'Warning':
           case 'Waiting':

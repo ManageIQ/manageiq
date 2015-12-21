@@ -6,6 +6,10 @@ FactoryGirl.define do
     authtype    "default"
   end
 
+  factory :authentication_status_error, :parent => :authentication do
+    status      "Error"
+  end
+
   factory :authentication_ipmi, :parent => :authentication do
     authtype    "ipmi"
   end

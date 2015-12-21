@@ -108,6 +108,13 @@ FactoryGirl.define do
   factory :ems_kubernetes, :aliases => ["manageiq/providers/kubernetes/container_manager"], :class => "ManageIQ::Providers::Kubernetes::ContainerManager", :parent => :ems_container do
   end
 
+  factory :ems_kubernetes_with_authentication_err, :parent => :ems_kubernetes do
+    after :create do |x|
+      x.authentications << FactoryGirl.create(:authentication_status_error)
+    end
+  end
+
+
   factory :ems_openshift, :aliases => ["manageiq/providers/openshift/container_manager"], :class => "ManageIQ::Providers::Openshift::ContainerManager", :parent => :ems_container do
   end
 
