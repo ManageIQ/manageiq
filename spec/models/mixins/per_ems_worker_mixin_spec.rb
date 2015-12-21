@@ -12,7 +12,7 @@ describe PerEmsWorkerMixin do
   end
 
   it ".queue_name_for_ems" do
-    expect(@worker_class.queue_name_for_ems(nil)).to.nil?
+    expect(@worker_class.queue_name_for_ems(nil)).to be_nil
     expect(@worker_class.queue_name_for_ems("foo")).to eq("foo")
     expect(@worker_class.queue_name_for_ems(@ems)).to eq(@ems_queue_name)
   end

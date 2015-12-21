@@ -563,7 +563,7 @@ describe AuthenticationMixin do
 
         it "deletes the record if userid is blank" do
           @host.update_authentication(@data, :save => true)
-          expect(@host.auth_user_pwd(:default)).to.nil?
+          expect(@host.auth_user_pwd(:default)).to be_nil
           expect(@host.has_authentication_type?(:default)).not_to be_truthy
         end
       end
