@@ -18,7 +18,7 @@ module EmsRefresh
     def save_orchestration_stacks_inventory(ems, hashes, target = nil)
       target = ems if target.nil?
 
-      deletes = target == ems ? ems.orchestration_stacks(true).dup : []
+      deletes = target == ems ? ems.orchestration_stacks.dup : []
 
       hashes.each do |h|
         h[:orchestration_template_id] = h.fetch_path(:orchestration_template, :id)
@@ -33,7 +33,7 @@ module EmsRefresh
                                     [:parameters, :outputs, :resources],
                                     [:parent, :orchestration_template, :cloud_tenant])
 
-      store_ids_for_new_records(ems.orchestration_stacks(true), hashes, :ems_ref)
+      store_ids_for_new_records(ems.orchestration_stacks, hashes, :ems_ref)
 
       save_orchestration_stack_nesting(stacks.index_by(&:id), hashes)
     end
@@ -46,7 +46,7 @@ module EmsRefresh
     end
 
     def save_parameters_inventory(orchestration_stack, hashes)
-      deletes = orchestration_stack.parameters(true).dup
+      deletes = orchestration_stack.parameters.dup
 
       save_inventory_multi(:parameters,
                            orchestration_stack,
@@ -56,7 +56,7 @@ module EmsRefresh
     end
 
     def save_outputs_inventory(orchestration_stack, hashes)
-      deletes = orchestration_stack.outputs(true).dup
+      deletes = orchestration_stack.outputs.dup
 
       save_inventory_multi(:outputs,
                            orchestration_stack,
@@ -66,7 +66,7 @@ module EmsRefresh
     end
 
     def save_resources_inventory(orchestration_stack, hashes)
-      deletes = orchestration_stack.resources(true).dup
+      deletes = orchestration_stack.resources.dup
 
       save_inventory_multi(:resources,
                            orchestration_stack,
