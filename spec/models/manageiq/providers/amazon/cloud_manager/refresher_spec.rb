@@ -44,7 +44,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
   def assert_table_counts
     expect(ExtManagementSystem.count).to eq(1)
-    expect(Flavor.count).to eq(54)
+    expect(Flavor.count).to eq(55)
     expect(AvailabilityZone.count).to eq(5)
     expect(FloatingIp.count).to eq(5)
     expect(AuthPrivateKey.count).to eq(7)
@@ -80,7 +80,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       :uid_ems     => nil
     )
 
-    expect(@ems.flavors.size).to eq(54)
+    expect(@ems.flavors.size).to eq(55)
     expect(@ems.availability_zones.size).to eq(5)
     expect(@ems.floating_ips.size).to eq(5)
     expect(@ems.key_pairs.size).to eq(7)
