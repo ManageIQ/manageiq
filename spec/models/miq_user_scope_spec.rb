@@ -9,8 +9,8 @@ describe MiqUserScope do
       filters = {"managed" => [["/managed/function/desktop"]], "belongsto" => []}
       scope = MiqUserScope.hash_to_scope(filters)
       expect(scope.view).to eq({:managed => {:_all_ => [["/managed/function/desktop"]]}})
-      expect(scope.admin).to.nil?
-      expect(scope.control).to.nil?
+      expect(scope.admin).to be_nil
+      expect(scope.control).to be_nil
     end
   end
 
@@ -79,7 +79,7 @@ describe MiqUserScope do
       })
 
       filters = @scope2.get_filters(:class => Storage, :feature_type => :view)
-      expect(filters[:belongsto]).to.nil?
+      expect(filters[:belongsto]).to be_nil
       expect(filters[:managed]).to eq([["/managed/location/chicago", "/managed/location/ny"]])
       expect(filters[:expression]).to eq(@scope2_exp)
 
