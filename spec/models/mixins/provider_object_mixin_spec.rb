@@ -14,7 +14,7 @@ describe ProviderObjectMixin do
   def mock_ems_with_connection
     @ems        = double("ems")
     @connection = double("connection")
-    @ems.should_receive(:with_provider_connection).and_yield(@connection)
+    expect(@ems).to receive(:with_provider_connection).and_yield(@connection)
     TestClass.any_instance.stub(:ext_management_system => @ems)
   end
 

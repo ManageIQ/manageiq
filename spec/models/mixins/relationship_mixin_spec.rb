@@ -16,28 +16,28 @@ describe RelationshipMixin do
     end
 
     it "#with_relationship_type and #relationship_type" do
-      @vms[0].relationship_type.should_not == TEST_REL_TYPE
+      expect(@vms[0].relationship_type).not_to eq(TEST_REL_TYPE)
       @vms[0].with_relationship_type(TEST_REL_TYPE) do
-        @vms[0].relationship_type.should == TEST_REL_TYPE
+        expect(@vms[0].relationship_type).to eq(TEST_REL_TYPE)
       end
 
-      @vms[0].parents.should be_empty
-      @vms[0].children.should be_empty
+      expect(@vms[0].parents).to be_empty
+      expect(@vms[0].children).to be_empty
 
       @vms[0].clear_relationships_cache
 
-      @vms[0].with_relationship_type(TEST_REL_TYPE) { |v| v.parents.length  }.should == 0
-      @vms[0].with_relationship_type(TEST_REL_TYPE) { |v| v.children.length }.should == 2
+      expect(@vms[0].with_relationship_type(TEST_REL_TYPE) { |v| v.parents.length  }).to eq(0)
+      expect(@vms[0].with_relationship_type(TEST_REL_TYPE) { |v| v.children.length }).to eq(2)
 
-      @vms[0].parents.should be_empty
-      @vms[0].children.should be_empty
+      expect(@vms[0].parents).to be_empty
+      expect(@vms[0].children).to be_empty
     end
 
     it "#parents" do
-      @vms[0].parents.should be_empty
+      expect(@vms[0].parents).to be_empty
       recurse_relationship_tree(VMS_REL_TREE) do |parent, child|
         @vms[child].with_relationship_type(TEST_REL_TYPE) do |c|
-          c.parents.should == [@vms[parent]]
+          expect(c.parents).to eq([@vms[parent]])
         end
       end
     end
@@ -45,7 +45,7 @@ describe RelationshipMixin do
     it "#children" do
       recurse_relationship_tree(VMS_REL_TREE) do |parent, child|
         @vms[parent].with_relationship_type(TEST_REL_TYPE) do |p|
-          p.children.should include @vms[child]
+          expect(p.children).to include @vms[child]
         end
       end
     end
@@ -205,73 +205,73 @@ describe RelationshipMixin do
       new_vms = (0...2).collect { FactoryGirl.create(:vm_vmware) }
       @vms[0].with_relationship_type(TEST_REL_TYPE) do |v|
         v.replace_children(new_vms)
-        new_vms.should match_array(v.children)
+        expect(new_vms).to match_array(v.children)
       end
 
       @vms[1].with_relationship_type(TEST_REL_TYPE) do |v|
-        v.parents.should be_empty
+        expect(v.parents).to be_empty
       end
     end
 
     it "#remove_all_parents" do
       @vms[1].with_relationship_type(TEST_REL_TYPE) do |v|
         v.remove_all_parents
-        v.parents.should be_empty
+        expect(v.parents).to be_empty
       end
     end
 
     it "#remove_all_children" do
       @vms[1].with_relationship_type(TEST_REL_TYPE) do |v|
         v.remove_all_children
-        v.children.should be_empty
+        expect(v.children).to be_empty
       end
     end
 
     it "#remove_all_relationships" do
       @vms[1].with_relationship_type(TEST_REL_TYPE) do |v|
         v.remove_all_relationships
-        v.parents.should be_empty
-        v.children.should be_empty
+        expect(v.parents).to be_empty
+        expect(v.children).to be_empty
       end
     end
 
     it "#is_descendant_of?" do
-      @vms[1].with_relationship_type(TEST_REL_TYPE) { |v| v.is_descendant_of?(@vms[0]) }.should be_true
-      @vms[3].with_relationship_type(TEST_REL_TYPE) { |v| v.is_descendant_of?(@vms[0]) }.should be_true
-      @vms[2].with_relationship_type(TEST_REL_TYPE) { |v| v.is_descendant_of?(@vms[1]) }.should_not be_true
+      expect(@vms[1].with_relationship_type(TEST_REL_TYPE) { |v| v.is_descendant_of?(@vms[0]) }).to be_truthy
+      expect(@vms[3].with_relationship_type(TEST_REL_TYPE) { |v| v.is_descendant_of?(@vms[0]) }).to be_truthy
+      expect(@vms[2].with_relationship_type(TEST_REL_TYPE) { |v| v.is_descendant_of?(@vms[1]) }).not_to be_truthy
     end
 
     it "#is_ancestor_of?" do
-      @vms[0].with_relationship_type(TEST_REL_TYPE) { |v| v.is_ancestor_of?(@vms[1]) }.should be_true
-      @vms[0].with_relationship_type(TEST_REL_TYPE) { |v| v.is_ancestor_of?(@vms[3]) }.should be_true
-      @vms[2].with_relationship_type(TEST_REL_TYPE) { |v| v.is_ancestor_of?(@vms[1]) }.should_not be_true
+      expect(@vms[0].with_relationship_type(TEST_REL_TYPE) { |v| v.is_ancestor_of?(@vms[1]) }).to be_truthy
+      expect(@vms[0].with_relationship_type(TEST_REL_TYPE) { |v| v.is_ancestor_of?(@vms[3]) }).to be_truthy
+      expect(@vms[2].with_relationship_type(TEST_REL_TYPE) { |v| v.is_ancestor_of?(@vms[1]) }).not_to be_truthy
     end
 
     it "#ancestors" do
-      @vms[0].with_relationship_type(TEST_REL_TYPE) { |v| v.ancestors.empty? }.should be_true
-      @vms[9].with_relationship_type(TEST_REL_TYPE, &:ancestors).should match_array([@vms[7], @vms[2], @vms[0]])
+      expect(@vms[0].with_relationship_type(TEST_REL_TYPE) { |v| v.ancestors.empty? }).to be_truthy
+      expect(@vms[9].with_relationship_type(TEST_REL_TYPE, &:ancestors)).to match_array([@vms[7], @vms[2], @vms[0]])
     end
 
     it "#descendants" do
-      @vms[9].with_relationship_type(TEST_REL_TYPE) { |v| v.descendants.empty? }.should be_true
-      @vms[0].with_relationship_type(TEST_REL_TYPE, &:descendants).should match_array(@vms - [@vms[0]])
+      expect(@vms[9].with_relationship_type(TEST_REL_TYPE) { |v| v.descendants.empty? }).to be_truthy
+      expect(@vms[0].with_relationship_type(TEST_REL_TYPE, &:descendants)).to match_array(@vms - [@vms[0]])
     end
   end
 
   context "tree with no relationships" do
     before(:each) { @host = FactoryGirl.create(:host) }
 
-    it('#root') { @host.root.should == @host }
+    it('#root') { expect(@host.root).to eq(@host) }
 
-    it('#ancestors')   { @host.ancestors.should == [] }
-    it('#path')        { @host.path.should == [@host] }
-    it('#descendants') { @host.descendants.should == [] }
-    it('#subtree')     { @host.subtree.should == [@host] }
-    it('#fulltree')    { @host.fulltree.should == [@host] }
+    it('#ancestors')   { expect(@host.ancestors).to eq([]) }
+    it('#path')        { expect(@host.path).to eq([@host]) }
+    it('#descendants') { expect(@host.descendants).to eq([]) }
+    it('#subtree')     { expect(@host.subtree).to eq([@host]) }
+    it('#fulltree')    { expect(@host.fulltree).to eq([@host]) }
 
-    it('#descendants_arranged') { @host.descendants_arranged.should == {} }
-    it('#subtree_arranged')     { @host.subtree_arranged.should == {@host => {}} }
-    it('#fulltree_arranged')    { @host.fulltree_arranged.should == {@host => {}} }
+    it('#descendants_arranged') { expect(@host.descendants_arranged).to eq({}) }
+    it('#subtree_arranged')     { expect(@host.subtree_arranged).to eq({@host => {}}) }
+    it('#fulltree_arranged')    { expect(@host.fulltree_arranged).to eq({@host => {}}) }
   end
 
   context "tree with relationship type 'ems_metadata'" do
@@ -281,8 +281,8 @@ describe RelationshipMixin do
     end
 
     it "#detect_ancestor" do
-      @vms[8].with_relationship_type("ems_metadata") { |v| v.detect_ancestor { |a| a.id == @vms[2].id } }.should_not be_nil
-      @vms[8].with_relationship_type("ems_metadata") { |v| v.detect_ancestor { |a| a.id == @vms[1].id } }.should be_nil
+      expect(@vms[8].with_relationship_type("ems_metadata") { |v| v.detect_ancestor { |a| a.id == @vms[2].id } }).not_to be_nil
+      expect(@vms[8].with_relationship_type("ems_metadata") { |v| v.detect_ancestor { |a| a.id == @vms[1].id } }).to be_nil
     end
   end
 
@@ -297,11 +297,11 @@ describe RelationshipMixin do
 
     it "of a method with arguments" do
       @ws.remove_member(@w1)
-      @ws.members.length.should == 1
+      expect(@ws.members.length).to eq(1)
     end
 
     it "of a method without arguments" do
-      @ws.members.length.should == 2
+      expect(@ws.members.length).to eq(2)
     end
   end
 
@@ -326,19 +326,19 @@ describe RelationshipMixin do
 
   def assert_parent_child_structure(rel_type, parent, p_rels_count, p_parents, p_children, child, c_rels_count, c_parents, c_children)
     parent.with_relationship_type(rel_type) do
-      parent.relationships.length.should == p_rels_count
-      parent.parents.length.should == p_parents.length
-      parent.parents.should              match_array(p_parents)
-      parent.children.length.should == p_children.length
-      parent.children.should             match_array(p_children)
+      expect(parent.relationships.length).to eq(p_rels_count)
+      expect(parent.parents.length).to eq(p_parents.length)
+      expect(parent.parents).to              match_array(p_parents)
+      expect(parent.children.length).to eq(p_children.length)
+      expect(parent.children).to             match_array(p_children)
     end
 
     child.with_relationship_type(rel_type) do
-      child.relationships.length.should == c_rels_count
-      child.parents.length.should == c_parents.length
-      child.parents.should              match_array(c_parents)
-      child.children.length.should == c_children.length
-      child.children.should             match_array(c_children)
+      expect(child.relationships.length).to eq(c_rels_count)
+      expect(child.parents.length).to eq(c_parents.length)
+      expect(child.parents).to              match_array(c_parents)
+      expect(child.children.length).to eq(c_children.length)
+      expect(child.children).to             match_array(c_children)
     end
   end
 end
