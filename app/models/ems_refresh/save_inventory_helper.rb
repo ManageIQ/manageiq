@@ -29,22 +29,7 @@ module EmsRefresh::SaveInventoryHelper
     end
   end
 
-  # first argument is either an association or a symbol and the parent class
-  # save_inventory_multi(hardware.guest_devices, hashes, deletes, [:uid_ems], [:miq_scsi_targets], [:switch, :lan])
-  # save_inventory_multi(:guest_devices, hardware, hashes, deletes, [:uid_ems], [:miq_scsi_targets], [:switch, :lan])
-  def save_inventory_multi(type, parent, hashes, deletes, find_key = [], child_keys = [], extra_keys = [])
-    association = nil
-    if !type.kind_of?(Symbol) && type < ActiveRecord::Associations
-      association = type
-      # shift args left one
-      raise IllegalArgument, "too many parameters" unless extra_keys.blank?
-      hashes, deletes, find_key, child_keys, extra_keys = parent, hashes, deletes, find_key, child_keys
-    else
-      # legacy accessor
-      association = parent.send(type)
-    end
-    raise IllegalArgument, "missing parameter find_key" if find_key.blank?
-
+  def save_inventory_multi(association, hashes, deletes, find_key, child_keys = [], extra_keys = [])
     deletes = deletes.to_a # make sure to load the association if it's an association
     child_keys = Array.wrap(child_keys)
     remove_keys = Array.wrap(extra_keys) + child_keys
@@ -128,19 +113,7 @@ module EmsRefresh::SaveInventoryHelper
 
   # most of the refresh_inventory_multi calls follow the same pattern
   # this pulls it out
-  def save_inventory_assoc(type, parent, hashes, target, find_key = [], child_keys = [], extra_keys = [])
-    association = nil
-    if !type.kind_of?(Symbol) && type < ActiveRecord::Associations
-      association = type
-      # shift args left one
-      raise IllegalArgument, "too many parameters" unless extra_keys.blank?
-      hashes, target, find_key, child_keys, extra_keys = parent, hashes, target, find_key, child_keys
-    else
-      # legacy accessor
-      association = parent.send(type)
-    end
-    raise IllegalArgument, "missing parameter find_key" if find_key.blank?
-
+  def save_inventory_assoc(association, hashes, target, find_key = [], child_keys = [], extra_keys = [])
     deletes = relation_values(association, target)
     save_inventory_multi(association, hashes, deletes, find_key, child_keys, extra_keys)
     store_ids_for_new_records(association, hashes, find_key)
