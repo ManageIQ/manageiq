@@ -4,37 +4,37 @@ describe VMDB::Util do
   context ".http_proxy_uri" do
     it "without config settings" do
       stub_server_configuration({})
-      described_class.http_proxy_uri.should be_nil
+      expect(described_class.http_proxy_uri).to be_nil
     end
 
     it "without a host" do
       stub_server_configuration(:http_proxy => {})
-      described_class.http_proxy_uri.should be_nil
+      expect(described_class.http_proxy_uri).to be_nil
     end
 
     it "with host" do
       stub_server_configuration(:http_proxy => {:host => "1.2.3.4", :port => nil, :user => nil, :password => nil})
-      described_class.http_proxy_uri.should == URI::Generic.build(:scheme => "http", :host => "1.2.3.4")
+      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4"))
     end
 
     it "with host, port" do
       stub_server_configuration(:http_proxy => {:host => "1.2.3.4", :port => 4321, :user => nil, :password => nil})
-      described_class.http_proxy_uri.should == URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321)
+      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321))
     end
 
     it "with host, port, user" do
       stub_server_configuration(:http_proxy => {:host => "1.2.3.4", :port => 4321, :user => "testuser", :password => nil})
-      described_class.http_proxy_uri.should == URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321, :userinfo => "testuser")
+      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321, :userinfo => "testuser"))
     end
 
     it "with host, port, user, password" do
       stub_server_configuration(:http_proxy => {:host => "1.2.3.4", :port => 4321, :user => "testuser", :password => "secret"})
-      described_class.http_proxy_uri.should == URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321, :userinfo => "testuser:secret")
+      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321, :userinfo => "testuser:secret"))
     end
 
     it "with user missing" do
       stub_server_configuration(:http_proxy => {:host => "1.2.3.4", :port => 4321, :user => nil, :password => "secret"})
-      described_class.http_proxy_uri.should == URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321)
+      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321))
     end
 
     it "with unescaped user value" do
@@ -43,12 +43,12 @@ describe VMDB::Util do
       stub_server_configuration(config)
       userinfo = "testuser:secret%23"
       uri_parts = {:scheme => "http", :host => "1.2.3.4", :port => 4321, :userinfo => userinfo}
-      described_class.http_proxy_uri.should == URI::Generic.build(uri_parts)
+      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(uri_parts))
     end
 
     it "with scheme overridden" do
       stub_server_configuration(:http_proxy => {:scheme => "https", :host => "1.2.3.4", :port => 4321, :user => "testuser", :password => "secret"})
-      described_class.http_proxy_uri.should == URI::Generic.build(:scheme => "https", :host => "1.2.3.4", :port => 4321, :userinfo => "testuser:secret")
+      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "https", :host => "1.2.3.4", :port => 4321, :userinfo => "testuser:secret"))
     end
   end
 
@@ -59,16 +59,16 @@ describe VMDB::Util do
         string1 = StringIO.new(file_content)
         string2 = StringIO.new(file_content)
 
-        File.stub(:open).with(filename, "r").and_yield(string1)
+        allow(File).to receive(:open).with(filename, "r").and_yield(string1)
         require 'elif'
-        Elif.stub(:open).and_yield(string2)
+        allow(Elif).to receive(:open).and_yield(string2)
 
         if type == :normal_case || file_content.lines.count <= 250
           start_time, end_time = described_class.log_duration(filename)
-          start_time.should be_kind_of(Time)
-          end_time.should   be_kind_of(Time)
+          expect(start_time).to be_kind_of(Time)
+          expect(end_time).to   be_kind_of(Time)
         else
-          described_class.log_duration(filename).should == [nil, nil]
+          expect(described_class.log_duration(filename)).to eq([nil, nil])
         end
       end
     end
@@ -86,12 +86,12 @@ describe VMDB::Util do
 
   context ".zip_entry_from_path (private)" do
     before do
-      Rails.stub(:root).and_return(Pathname.new("/var/www/miq/vmdb"))
+      allow(Rails).to receive(:root).and_return(Pathname.new("/var/www/miq/vmdb"))
     end
 
     def self.assert_zip_entry_from_path(expected_entry, path)
       it "#{path} => #{expected_entry}" do
-        described_class.zip_entry_from_path(path).should == expected_entry
+        expect(described_class.zip_entry_from_path(path)).to eq(expected_entry)
       end
     end
 
@@ -107,23 +107,23 @@ describe VMDB::Util do
     file  = "/var/log/messages.log"
     entry = "ROOT/var/log/messages.log"
     mtime = Time.parse("2013-09-24 09:00:45 -0400")
-    File.should_receive(:mtime).with(file).and_return(mtime)
-    File.should_receive(:directory?).with(file).and_return(false)
-    described_class.should_receive(:zip_entry_from_path).with(file).and_return(entry)
+    expect(File).to receive(:mtime).with(file).and_return(mtime)
+    expect(File).to receive(:directory?).with(file).and_return(false)
+    expect(described_class).to receive(:zip_entry_from_path).with(file).and_return(entry)
 
     zip = double
-    zip.should_receive(:add).with(entry, file)
+    expect(zip).to receive(:add).with(entry, file)
     zip_file = double
-    zip_file.should_receive(:utime).with(mtime, entry)
-    zip.should_receive(:file).and_return(zip_file)
+    expect(zip_file).to receive(:utime).with(mtime, entry)
+    expect(zip).to receive(:file).and_return(zip_file)
 
-    described_class.add_zip_entry(zip, file).should == [entry, mtime]
+    expect(described_class.add_zip_entry(zip, file)).to eq([entry, mtime])
   end
 
   it ".get_evm_log_for_date" do
     log_files = ["log/rhevm.log", "log/evm.log"]
     Dir.stub(:glob => log_files)
 
-    described_class.get_evm_log_for_date("log/*.log").should == "log/evm.log"
+    expect(described_class.get_evm_log_for_date("log/*.log")).to eq("log/evm.log")
   end
 end

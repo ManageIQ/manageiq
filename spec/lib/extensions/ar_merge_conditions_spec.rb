@@ -41,7 +41,7 @@ describe ActiveRecord::Base do
         result = MetricRollup.apply_legacy_finder_options(:include => @include).to_a
       end.not_to raise_error
 
-      result.length.should == 1
+      expect(result.length).to eq(1)
     end
   end
 end

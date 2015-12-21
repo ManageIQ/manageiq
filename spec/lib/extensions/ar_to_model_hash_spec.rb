@@ -40,12 +40,12 @@ describe ToModelHash do
       test_vm_class.has_one          :test_operating_system, :anonymous_class => test_os_class,       :dependent => :destroy
 
       # we're testing the preload of associations, skip the recursive .to_model_hash
-      ActiveRecord::Base.any_instance.stub(:to_model_hash_recursive)
-      ActiveRecord::Associations::Preloader.stub(:new).and_return(mocked_preloader)
+      allow_any_instance_of(ActiveRecord::Base).to receive(:to_model_hash_recursive)
+      allow(ActiveRecord::Associations::Preloader).to receive(:new).and_return(mocked_preloader)
     end
 
     def assert_preloaded(associations)
-      mocked_preloader.should_receive(:preload) do |_recs, assocs|
+      expect(mocked_preloader).to receive(:preload) do |_recs, assocs|
         expect(assocs).to match_array(associations)
       end
 

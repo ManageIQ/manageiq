@@ -66,8 +66,8 @@ describe Vmdb::PermissionStores do
 
         Vmdb::PermissionStores.initialize!
         instance = Vmdb::PermissionStores.instance
-        expect(instance.can?('foo')).to be_true
-        expect(instance.can?('bar')).to be_false
+        expect(instance.can?('foo')).to be_truthy
+        expect(instance.can?('bar')).to be_falsey
       end
     end
   end

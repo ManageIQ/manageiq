@@ -6,7 +6,7 @@ describe Vmdb::ConfigurationEncoder do
   context ".dump" do
     it "stringifies keys" do
       hash = {:one => {:two => nil}}
-      described_class.dump(hash).should == "---\none:\n  two: \n"
+      expect(described_class.dump(hash)).to eq("---\none:\n  two: \n")
     end
 
     it "to a file descriptor" do
@@ -14,34 +14,34 @@ describe Vmdb::ConfigurationEncoder do
       StringIO.open do |io|
         described_class.dump(hash, io)
         io.rewind
-        io.read.should eq("---\nsmtp:\n  password: #{enc_pass}\n")
+        expect(io.read).to eq("---\nsmtp:\n  password: #{enc_pass}\n")
       end
     end
 
     context "with passwords" do
       it "in clear text" do
         hash = {:smtp => {:password => password}}
-        described_class.dump(hash).should eq("---\nsmtp:\n  password: #{enc_pass}\n")
+        expect(described_class.dump(hash)).to eq("---\nsmtp:\n  password: #{enc_pass}\n")
       end
 
       it "encrypted" do
         hash = {:smtp => {:password => enc_pass}}
-        described_class.dump(hash).should eq("---\nsmtp:\n  password: #{enc_pass}\n")
+        expect(described_class.dump(hash)).to eq("---\nsmtp:\n  password: #{enc_pass}\n")
       end
 
       it "set to nil" do
         hash = {:smtp => {:password => nil}}
-        described_class.dump(hash).should == "---\nsmtp:\n  password: \n"
+        expect(described_class.dump(hash)).to eq("---\nsmtp:\n  password: \n")
       end
 
       it "set to blank" do
         hash = {:smtp => {:password => ""}}
-        described_class.dump(hash).should == "---\nsmtp:\n  password: ''\n"
+        expect(described_class.dump(hash)).to eq("---\nsmtp:\n  password: ''\n")
       end
 
       it "with missing key" do
         hash = {}
-        described_class.dump(hash).should == "--- {}\n"
+        expect(described_class.dump(hash)).to eq("--- {}\n")
       end
     end
   end
@@ -92,21 +92,21 @@ describe Vmdb::ConfigurationEncoder do
 
     context "symbolizes" do
       it "two levels of stringed keys" do
-        described_class.load(VMDB_CONFIG_STRINGS).should == VMDB_CONFIG_SYMBOLIZED_HASH
+        expect(described_class.load(VMDB_CONFIG_STRINGS)).to eq(VMDB_CONFIG_SYMBOLIZED_HASH)
       end
 
       it "two levels of mixed keys" do
-        described_class.load(VMDB_CONFIG_MIXED).should == VMDB_CONFIG_SYMBOLIZED_HASH
+        expect(described_class.load(VMDB_CONFIG_MIXED)).to eq(VMDB_CONFIG_SYMBOLIZED_HASH)
       end
 
       it "numerics" do
-        described_class.load(VMDB_CONFIG_NUMERICS).should == VMDB_CONFIG_NUMERICS_SYMBOLIZED_HASH
+        expect(described_class.load(VMDB_CONFIG_NUMERICS)).to eq(VMDB_CONFIG_NUMERICS_SYMBOLIZED_HASH)
       end
 
       it "all hashes for easy merging" do
         string_keyed_hash = described_class.load(VMDB_CONFIG_DIFFERENT_STRINGS)
         symbol_keyed_hash = described_class.load(VMDB_CONFIG_SYMBOLIZED)
-        string_keyed_hash.merge(symbol_keyed_hash).should == VMDB_CONFIG_SYMBOLIZED_HASH
+        expect(string_keyed_hash.merge(symbol_keyed_hash)).to eq(VMDB_CONFIG_SYMBOLIZED_HASH)
       end
     end
 
@@ -114,13 +114,13 @@ describe Vmdb::ConfigurationEncoder do
       it "with encrypted" do
         hash = described_class.load("---\r\nsmtp:\r\n  password: #{enc_pass}\r\n")
         password = hash.fetch_path(:smtp, :password)
-        password.should == password
+        expect(password).to eq(password)
       end
 
       it "with unencrypted" do
         hash = described_class.load("---\r\nsmtp:\r\n  password: #{password}\r\n")
         password = hash.fetch_path(:smtp, :password)
-        password.should == password
+        expect(password).to eq(password)
       end
 
       it "with custom decryption function" do
@@ -139,7 +139,7 @@ describe Vmdb::ConfigurationEncoder do
       end
 
       it "will not evaluate ERB" do
-        ERB.should_not_receive(:new)
+        expect(ERB).not_to receive(:new)
         described_class.load("---\r\nsmtp:\r\n  password: pass\r\n")
       end
 
@@ -148,7 +148,7 @@ describe Vmdb::ConfigurationEncoder do
 
     context "in non-production" do
       it "will evaluate ERB" do
-        ERB.should_receive(:new).and_call_original
+        expect(ERB).to receive(:new).and_call_original
         described_class.load("---\r\nsmtp:\r\n  password: pass\r\n")
       end
 
@@ -162,13 +162,13 @@ describe Vmdb::ConfigurationEncoder do
     it "should not change original hash" do
       @config = {:one => {:two => :three}}
 
-      subject.should == {"one" => {"two" => :three}}
-      @config.should == {:one => {:two => :three}}
+      expect(subject).to eq({"one" => {"two" => :three}})
+      expect(@config).to eq({:one => {:two => :three}})
     end
 
     it "should handle two layers deep hash" do
       @config = {:one => {:two => {:three => :four}}}
-      subject.should == {"one" => {"two" => {:three => :four}}}
+      expect(subject).to eq({"one" => {"two" => {:three => :four}}})
     end
   end
 
@@ -177,7 +177,7 @@ describe Vmdb::ConfigurationEncoder do
 
     it "should handle two layers deep hash" do
       @config = {"one" => {"two" => {"three" => "four"}}}
-      subject.should == {:one => {:two => {"three" => "four"}}}
+      expect(subject).to eq({:one => {:two => {"three" => "four"}}})
     end
   end
 
@@ -186,12 +186,12 @@ describe Vmdb::ConfigurationEncoder do
 
     it "valid" do
       @hash = {"a" => {"b" => "c"}}
-      subject.should == {:a => {:b => "c"}}
+      expect(subject).to eq({:a => {:b => "c"}})
     end
 
     it "invalid" do
       @hash = {"a" => "b"}
-      -> { subject }.should raise_error
+      expect { subject }.to raise_error
     end
   end
 
