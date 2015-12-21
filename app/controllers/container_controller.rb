@@ -130,7 +130,7 @@ class ContainerController < ApplicationController
       @reselect_node = self.x_node = "#{nodetype}-#{to_cid(id)}"
     end
 
-    params.merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
+    params.instance_variable_get(:@parameters).merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)
     get_node_info(x_node)
     @in_a_form = false

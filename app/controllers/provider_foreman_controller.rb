@@ -453,7 +453,7 @@ class ProviderForemanController < ApplicationController
     # Build the Explorer screen from scratch
     build_trees_and_accordions
 
-    params.merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
+    params.instance_variable_get(:@parameters).merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)
 
     if params[:id]
