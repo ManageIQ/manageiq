@@ -120,10 +120,11 @@ module EmsRefresh::SaveInventoryHelper
   # most of the refresh_inventory_multi calls follow the same pattern
   # this pulls it out
   def save_inventory_assoc(type, parent, hashes, target, find_key, child_keys = [], extra_keys = [])
-    deletes = relation_values(parent, type, target)
+    association = parent.send(type)
+    deletes = relation_values(association, target)
 
     save_inventory_multi(type, parent, hashes, deletes, find_key, child_keys, extra_keys)
-    store_ids_for_new_records(parent.send(type), hashes, find_key)
+    store_ids_for_new_records(association, hashes, find_key)
   end
 
   # We need to determine our intent:
@@ -137,12 +138,11 @@ module EmsRefresh::SaveInventoryHelper
   #   If we are targeting something else, chances are it is a partial refresh. Don't delete.
   #   If we are targeting this node, or targeting anything (nil), then delete.
   #   Some places don't have the target==parent concept. So they can pass in true instead.
-  def relation_values(parent, type, target)
+  def relation_values(association, target)
     # always want to refresh this association
-    reflection = parent.class.reflect_on_association(type)
     # if this association isn't the definitive source
-    top_level = reflection.options[:dependent] == :destroy
+    top_level = association.proxy_association.options[:dependent] == :destroy
 
-    top_level && (target == true || target.nil? || parent == target) ? parent.send(reflection.name).to_a.dup : []
+    top_level && (target == true || target.nil? || parent == target) ? association.to_a.dup : []
   end
 end
