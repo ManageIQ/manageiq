@@ -25,19 +25,19 @@ describe MiqHostProvisionRequest do
     end
 
     it "should create a valid MiqRequest" do
-      @pr.miq_request.should == MiqRequest.first
-      @pr.miq_request.valid?.should be_true
-      @pr.miq_request.approval_state.should == "pending_approval"
-      @pr.miq_request.resource.should == @pr
-      @pr.miq_request.requester_userid.should == @user.userid
-      @pr.miq_request.stamped_on.should be_nil
+      expect(@pr.miq_request).to eq(MiqRequest.first)
+      expect(@pr.miq_request.valid?).to be_truthy
+      expect(@pr.miq_request.approval_state).to eq("pending_approval")
+      expect(@pr.miq_request.resource).to eq(@pr)
+      expect(@pr.miq_request.requester_userid).to eq(@user.userid)
+      expect(@pr.miq_request.stamped_on).to be_nil
 
       expect(@pr.miq_request).not_to be_approved
       expect(MiqApproval.all).to eq([@pr.miq_request.first_approval])
     end
 
     it "should return a workflow class" do
-      @pr.workflow_class.should == MiqHostProvisionWorkflow
+      expect(@pr.workflow_class).to eq(MiqHostProvisionWorkflow)
     end
 
     context "when calling call_automate_event_queue" do
@@ -47,13 +47,13 @@ describe MiqHostProvisionRequest do
       end
 
       it "should create proper MiqQueue item" do
-        MiqQueue.count.should == 1
+        expect(MiqQueue.count).to eq(1)
         q = MiqQueue.first
-        q.class_name.should == @pr.miq_request.class.name
-        q.instance_id.should == @pr.miq_request.id
-        q.method_name.should == "call_automate_event"
-        q.args.should == %w(request_created)
-        q.zone.should == "default"
+        expect(q.class_name).to eq(@pr.miq_request.class.name)
+        expect(q.instance_id).to eq(@pr.miq_request.id)
+        expect(q.method_name).to eq("call_automate_event")
+        expect(q.args).to eq(%w(request_created))
+        expect(q.zone).to eq("default")
       end
     end
 
@@ -63,11 +63,11 @@ describe MiqHostProvisionRequest do
       end
 
       it "should delete MiqHostProvisionRequest" do
-        MiqHostProvisionRequest.count.should == 0
+        expect(MiqHostProvisionRequest.count).to eq(0)
       end
 
       it "should delete MiqApproval" do
-        MiqApproval.count.should == 0
+        expect(MiqApproval.count).to eq(0)
       end
 
       it "should not delete Approver" do
@@ -81,72 +81,72 @@ describe MiqHostProvisionRequest do
       end
 
       it "should add and delete tags from a request" do
-        @pr.get_tags.length.should == 0
+        expect(@pr.get_tags.length).to eq(0)
 
         t = Classification.where(:description => 'Department', :parent_id => 0).includes(:tag).first
         @pr.add_tag(t.name, t.children.first.name)
-        @pr.get_tags[t.name.to_sym].should be_kind_of(String) # Single tag returns as a String
-        @pr.get_tags[t.name.to_sym].should == t.children.first.name
+        expect(@pr.get_tags[t.name.to_sym]).to be_kind_of(String) # Single tag returns as a String
+        expect(@pr.get_tags[t.name.to_sym]).to eq(t.children.first.name)
 
         # Adding the same tag again should not increase the tag count
         @pr.add_tag(t.name, t.children.first.name)
-        @pr.get_tags[t.name.to_sym].should be_kind_of(String) # Single tag returns as a String
-        @pr.get_tags[t.name.to_sym].should == t.children.first.name
+        expect(@pr.get_tags[t.name.to_sym]).to be_kind_of(String) # Single tag returns as a String
+        expect(@pr.get_tags[t.name.to_sym]).to eq(t.children.first.name)
 
         # Verify that #get_tag with classification returns the single child tag name
-        @pr.get_tags[t.name.to_sym].should == @pr.get_tag(t.name)
+        expect(@pr.get_tags[t.name.to_sym]).to eq(@pr.get_tag(t.name))
 
         t.children.each { |c| @pr.add_tag(t.name, c.name) }
-        @pr.get_tags[t.name.to_sym].should be_kind_of(Array)
-        @pr.get_tags[t.name.to_sym].length.should == t.children.length
+        expect(@pr.get_tags[t.name.to_sym]).to be_kind_of(Array)
+        expect(@pr.get_tags[t.name.to_sym].length).to eq(t.children.length)
 
         child_names = t.children.collect(&:name)
         # Make sure each child name is yield from the tag method
         @pr.tags { |tag_name, _classification| child_names.delete(tag_name) }
-        child_names.should be_empty
+        expect(child_names).to be_empty
 
         tags = @pr.get_classification(t.name)
-        tags.should be_kind_of(Array)
+        expect(tags).to be_kind_of(Array)
         classification = tags.first
-        classification.should be_kind_of(Hash)
-        classification.keys.should include(:name)
-        classification.keys.should include(:description)
+        expect(classification).to be_kind_of(Hash)
+        expect(classification.keys).to include(:name)
+        expect(classification.keys).to include(:description)
 
         child_names = t.children.collect(&:name)
 
         @pr.clear_tag(t.name, child_names[0])
-        @pr.get_tags[t.name.to_sym].should be_kind_of(Array) # Multiple tags return as an Array
-        @pr.get_tags[t.name.to_sym].length.should == t.children.length - 1
+        expect(@pr.get_tags[t.name.to_sym]).to be_kind_of(Array) # Multiple tags return as an Array
+        expect(@pr.get_tags[t.name.to_sym].length).to eq(t.children.length - 1)
 
         @pr.clear_tag(t.name, child_names[1])
-        @pr.get_tags[t.name.to_sym].should be_kind_of(String) # Single tag returns as a String
-        @pr.get_tags[t.name.to_sym].should == child_names[2]
+        expect(@pr.get_tags[t.name.to_sym]).to be_kind_of(String) # Single tag returns as a String
+        expect(@pr.get_tags[t.name.to_sym]).to eq(child_names[2])
 
         @pr.clear_tag(t.name)
-        @pr.get_tags[t.name.to_sym].should be_nil # No tags returns as nil
-        @pr.get_tags.length.should == 0
+        expect(@pr.get_tags[t.name.to_sym]).to be_nil # No tags returns as nil
+        expect(@pr.get_tags.length).to eq(0)
       end
 
       it "should return classifications for tags" do
-        @pr.get_tags.length.should == 0
+        expect(@pr.get_tags.length).to eq(0)
 
         t = Classification.where(:description => 'Department', :parent_id => 0).includes(:tag).first
         @pr.add_tag(t.name, t.children.first.name)
-        @pr.get_tags[t.name.to_sym].should be_kind_of(String)
+        expect(@pr.get_tags[t.name.to_sym]).to be_kind_of(String)
 
         classification = @pr.get_classification(t.name)
-        classification.should be_kind_of(Hash)
-        classification.keys.should include(:name)
-        classification.keys.should include(:description)
+        expect(classification).to be_kind_of(Hash)
+        expect(classification.keys).to include(:name)
+        expect(classification.keys).to include(:description)
 
         @pr.add_tag(t.name, t.children[1].name)
-        @pr.get_tags[t.name.to_sym].should be_kind_of(Array)
+        expect(@pr.get_tags[t.name.to_sym]).to be_kind_of(Array)
 
         classification = @pr.get_classification(t.name)
-        classification.should be_kind_of(Array)
+        expect(classification).to be_kind_of(Array)
         first = classification.first
-        first.keys.should include(:name)
-        first.keys.should include(:description)
+        expect(first.keys).to include(:name)
+        expect(first.keys).to include(:description)
       end
     end
   end

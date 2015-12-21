@@ -7,13 +7,13 @@ describe MiqUserRole do
   context ".seed" do
     it "empty table" do
       MiqUserRole.seed
-      MiqUserRole.count.should == @expected_user_role_count
+      expect(MiqUserRole.count).to eq(@expected_user_role_count)
     end
 
     it "run twice" do
       MiqUserRole.seed
       MiqUserRole.seed
-      MiqUserRole.count.should == @expected_user_role_count
+      expect(MiqUserRole.count).to eq(@expected_user_role_count)
     end
 
     it "with existing records" do
@@ -23,9 +23,9 @@ describe MiqUserRole do
 
       MiqUserRole.seed
 
-      MiqUserRole.count.should == @expected_user_role_count + 1
-      changed.reload.read_only.should    be_true
-      unchanged.reload.updated_at.should be_same_time_as unchanged_orig_updated_at
+      expect(MiqUserRole.count).to eq(@expected_user_role_count + 1)
+      expect(changed.reload.read_only).to    be_truthy
+      expect(unchanged.reload.updated_at).to be_same_time_as unchanged_orig_updated_at
     end
   end
 
@@ -59,55 +59,55 @@ describe MiqUserRole do
     end
 
     it "should return the correct answer calling allows? when requested feature is directly assigned or a descendant of a feature in a role" do
-      MiqUserRole.allows?(@role1.name, :identifier => "dashboard_admin").should == true
-      MiqUserRole.allows?(@role1.name, :identifier => "dashboard_add").should == true
-      MiqUserRole.allows?(@role1.name, :identifier => "dashboard_view").should == false
-      MiqUserRole.allows?(@role1.name, :identifier => "policy").should == false
+      expect(MiqUserRole.allows?(@role1.name, :identifier => "dashboard_admin")).to eq(true)
+      expect(MiqUserRole.allows?(@role1.name, :identifier => "dashboard_add")).to eq(true)
+      expect(MiqUserRole.allows?(@role1.name, :identifier => "dashboard_view")).to eq(false)
+      expect(MiqUserRole.allows?(@role1.name, :identifier => "policy")).to eq(false)
 
-      MiqUserRole.allows?(@role2.name, :identifier => "dashboard_admin").should == true
-      MiqUserRole.allows?(@role2.name, :identifier => "dashboard_add").should == true
-      MiqUserRole.allows?(@role2.name, :identifier => "dashboard_view").should == true
-      MiqUserRole.allows?(@role2.name, :identifier => "policy").should == true
+      expect(MiqUserRole.allows?(@role2.name, :identifier => "dashboard_admin")).to eq(true)
+      expect(MiqUserRole.allows?(@role2.name, :identifier => "dashboard_add")).to eq(true)
+      expect(MiqUserRole.allows?(@role2.name, :identifier => "dashboard_view")).to eq(true)
+      expect(MiqUserRole.allows?(@role2.name, :identifier => "policy")).to eq(true)
 
       # Test calling with an id of a role
       ident = MiqProductFeature.find_by_identifier("dashboard_admin")
-      MiqUserRole.allows?(@role1.id, :identifier => ident).should == true
+      expect(MiqUserRole.allows?(@role1.id, :identifier => ident)).to eq(true)
     end
 
     it "should return the correct answer calling allows_any? with scope => :base)" do
-      MiqUserRole.allows_any?(@role1.name, :scope => :base, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should == true
+      expect(MiqUserRole.allows_any?(@role1.name, :scope => :base, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
 
-      MiqUserRole.allows_any?(@role2.name, :scope => :base, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should == true
+      expect(MiqUserRole.allows_any?(@role2.name, :scope => :base, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
 
-      MiqUserRole.allows_any?(@role3.name, :scope => :base, :identifiers => ["host_view"]).should == false
-      MiqUserRole.allows_any?(@role3.name, :scope => :base, :identifiers => ["vm"]).should == false
-      MiqUserRole.allows_any?(@role3.name, :scope => :base, :identifiers => ["everything"]).should == false
+      expect(MiqUserRole.allows_any?(@role3.name, :scope => :base, :identifiers => ["host_view"])).to eq(false)
+      expect(MiqUserRole.allows_any?(@role3.name, :scope => :base, :identifiers => ["vm"])).to eq(false)
+      expect(MiqUserRole.allows_any?(@role3.name, :scope => :base, :identifiers => ["everything"])).to eq(false)
     end
 
     it "should return the correct answer calling allows_any? with scope => :one)" do
-      MiqUserRole.allows_any?(@role1.name, :scope => :one, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should == true
+      expect(MiqUserRole.allows_any?(@role1.name, :scope => :one, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
 
-      MiqUserRole.allows_any?(@role2.name, :scope => :one, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should == true
+      expect(MiqUserRole.allows_any?(@role2.name, :scope => :one, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
 
-      MiqUserRole.allows_any?(@role3.name, :scope => :one, :identifiers => ["host_view"]).should == true
-      MiqUserRole.allows_any?(@role3.name, :scope => :one, :identifiers => ["vm"]).should == false
-      MiqUserRole.allows_any?(@role3.name, :scope => :one, :identifiers => ["everything"]).should == false
+      expect(MiqUserRole.allows_any?(@role3.name, :scope => :one, :identifiers => ["host_view"])).to eq(true)
+      expect(MiqUserRole.allows_any?(@role3.name, :scope => :one, :identifiers => ["vm"])).to eq(false)
+      expect(MiqUserRole.allows_any?(@role3.name, :scope => :one, :identifiers => ["everything"])).to eq(false)
     end
 
     it "should return the correct answer calling allows_any? with default scope => :sub" do
-      MiqUserRole.allows_any?(@role1.name, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should == true
-      MiqUserRole.allows_any?(@role2.name, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should == true
-      MiqUserRole.allows_any?(@role3.name, :identifiers => ["host_view"]).should == true
-      MiqUserRole.allows_any?(@role3.name, :identifiers => ["vm"]).should == false
-      MiqUserRole.allows_any?(@role3.name, :identifiers => ["everything"]).should == true
+      expect(MiqUserRole.allows_any?(@role1.name, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
+      expect(MiqUserRole.allows_any?(@role2.name, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
+      expect(MiqUserRole.allows_any?(@role3.name, :identifiers => ["host_view"])).to eq(true)
+      expect(MiqUserRole.allows_any?(@role3.name, :identifiers => ["vm"])).to eq(false)
+      expect(MiqUserRole.allows_any?(@role3.name, :identifiers => ["everything"])).to eq(true)
     end
 
     it "should return the correct answer calling allows_any_children?" do
-      MiqUserRole.allows_any_children?(@role1.name, :identifier => "dashboard_admin").should == true
-      MiqUserRole.allows_any_children?(@role2.name, :identifier => "dashboard_admin").should == true
-      MiqUserRole.allows_any_children?(@role2.name, :identifier => "everything").should == true
-      MiqUserRole.allows_any_children?(@role1.name, :identifier => "everything").should == true
-      MiqUserRole.allows_any_children?(@role1.name, :identifier => "dashboard").should == true
+      expect(MiqUserRole.allows_any_children?(@role1.name, :identifier => "dashboard_admin")).to eq(true)
+      expect(MiqUserRole.allows_any_children?(@role2.name, :identifier => "dashboard_admin")).to eq(true)
+      expect(MiqUserRole.allows_any_children?(@role2.name, :identifier => "everything")).to eq(true)
+      expect(MiqUserRole.allows_any_children?(@role1.name, :identifier => "everything")).to eq(true)
+      expect(MiqUserRole.allows_any_children?(@role1.name, :identifier => "dashboard")).to eq(true)
     end
   end
 

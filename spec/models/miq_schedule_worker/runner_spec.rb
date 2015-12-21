@@ -61,15 +61,15 @@ describe MiqScheduleWorker::Runner do
 
       it "check_for_dispatch calls check_for_timeout with triple threshold for active worker" do
         @worker1.update_attribute(:status, MiqWorker::STATUS_STARTED)
-        MiqQueue.any_instance.should_receive(:check_for_timeout).once do |_instance, _prefix, _grace, timeout|
-          timeout.should == @stale_timeout * 3
+        expect_any_instance_of(MiqQueue).to receive(:check_for_timeout).once do |_instance, _prefix, _grace, timeout|
+          expect(timeout).to eq(@stale_timeout * 3)
         end
         MiqScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout)
       end
 
       it "check_for_dispatch calls check_for_timeout with threshold for inactive worker" do
-        MiqQueue.any_instance.should_receive(:check_for_timeout).once do |_instance, _prefix, _grace, timeout|
-          timeout.should == @stale_timeout
+        expect_any_instance_of(MiqQueue).to receive(:check_for_timeout).once do |_instance, _prefix, _grace, timeout|
+          expect(timeout).to eq(@stale_timeout)
         end
         MiqScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout)
       end

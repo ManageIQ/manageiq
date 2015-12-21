@@ -43,7 +43,7 @@ describe MiqProvisionWorkflow do
           FactoryGirl.create(:classification_cost_center_with_tags)
           request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
             "1.0", admin, "template", "target", false, "cc|001|environment|test", "")
-          request.should be_a_kind_of(MiqRequest)
+          expect(request).to be_a_kind_of(MiqRequest)
 
           expect(request.options[:vm_tags]).to eq([Classification.find_by_name("cc/001").id])
         end
@@ -53,7 +53,7 @@ describe MiqProvisionWorkflow do
           request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
             "1.1", admin, {'name' => 'template'}, {'vm_name' => 'spec_test'}, nil,
             {'cc' => '001', 'environment' => 'test'}, nil, nil, nil)
-          request.should be_a_kind_of(MiqRequest)
+          expect(request).to be_a_kind_of(MiqRequest)
 
           expect(request.options[:vm_tags]).to eq([Classification.find_by_name("cc/001").id])
         end
@@ -65,8 +65,8 @@ describe MiqProvisionWorkflow do
             {'owner_email' => 'admin'}, {'owner_first_name' => 'test'},
             {'owner_last_name' => 'test'}, nil, nil, nil, nil)
 
-          MiqPassword.encrypted?(request.options[:root_password]).should be_true
-          MiqPassword.decrypt(request.options[:root_password]).should == password_input
+          expect(MiqPassword.encrypted?(request.options[:root_password])).to be_truthy
+          expect(MiqPassword.decrypt(request.options[:root_password])).to eq(password_input)
         end
 
         it "should set values when extra '|' are passed in for multiple values" do
@@ -102,8 +102,8 @@ describe MiqProvisionWorkflow do
         it "should show PXE fields when customization supported" do
           fields = {'key' => 'value'}
           wf = MiqProvisionVirtWorkflow.new({}, admin)
-          wf.should_receive(:supports_customization_template?).and_return(true)
-          wf.should_receive(:show_customize_fields_pxe).with(fields)
+          expect(wf).to receive(:supports_customization_template?).and_return(true)
+          expect(wf).to receive(:show_customize_fields_pxe).with(fields)
           wf.show_customize_fields(fields, 'linux')
         end
       end
@@ -112,7 +112,7 @@ describe MiqProvisionWorkflow do
 
   context ".encrypted_options_fields" do
     MiqProvisionWorkflow.descendants.each do |sub_klass|
-      it("with class #{sub_klass}") { sub_klass.encrypted_options_fields.should include(:root_password) }
+      it("with class #{sub_klass}") { expect(sub_klass.encrypted_options_fields).to include(:root_password) }
     end
   end
 
@@ -127,13 +127,13 @@ describe MiqProvisionWorkflow do
     end
 
     it 'with orphaned source' do
-      template.stub(:storage).and_return([])
-      expect(template.orphaned?).to be_true
+      allow(template).to receive(:storage).and_return([])
+      expect(template.orphaned?).to be_truthy
       expect(described_class.class_for_source(template.id)).to eq(workflow_class)
     end
 
     it 'with archived source' do
-      expect(template.archived?).to be_true
+      expect(template.archived?).to be_truthy
       expect(described_class.class_for_source(template.id)).to eq(workflow_class)
     end
   end

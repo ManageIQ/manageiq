@@ -10,7 +10,7 @@ describe MiqGroup do
       it "normal" do
         expected = {:test => "test filter"}
         @miq_group.filters = expected
-        @miq_group.get_filters.should == expected
+        expect(@miq_group.get_filters).to eq(expected)
       end
 
       it "when nil" do
@@ -20,7 +20,7 @@ describe MiqGroup do
 
       it "when {}" do
         @miq_group.filters = {}
-        @miq_group.get_filters.should == {}
+        expect(@miq_group.get_filters).to eq({})
       end
     end
 
@@ -53,50 +53,50 @@ describe MiqGroup do
         it "normal" do
           expected = {type => "test filter"}
           @miq_group.filters = expected
-          @miq_group.public_send(method).should == expected[type]
+          expect(@miq_group.public_send(method)).to eq(expected[type])
         end
 
         it "when nil" do
           @miq_group.filters = nil
-          @miq_group.public_send(method).should == []
+          expect(@miq_group.public_send(method)).to eq([])
         end
 
         it "when []" do
           @miq_group.filters = []
-          @miq_group.public_send(method).should == []
+          expect(@miq_group.public_send(method)).to eq([])
         end
 
         it "missing the #{type} key" do
           expected = {"something" => "test filter"}
           @miq_group.filters = expected
-          @miq_group.public_send(method).should == []
+          expect(@miq_group.public_send(method)).to eq([])
         end
       end
 
       it "#set_#{type}_filters" do
         filters = {type => "test"}
         @miq_group.public_send("set_#{type}_filters", filters[type])
-        @miq_group.public_send("get_#{type}_filters").should == filters[type]
-        @miq_group.get_filters.should == filters
+        expect(@miq_group.public_send("get_#{type}_filters")).to eq(filters[type])
+        expect(@miq_group.get_filters).to eq(filters)
       end
     end
 
     it "should return user role name" do
-      @miq_group.miq_user_role_name.should == "EvmRole-super_administrator"
+      expect(@miq_group.miq_user_role_name).to eq("EvmRole-super_administrator")
     end
 
     it "should set group type to 'system' " do
-      @miq_group.group_type.should == "system"
+      expect(@miq_group.group_type).to eq("system")
     end
 
     it "should return user count" do
       # TODO: - add more users to check for proper user count...
-      @miq_group.user_count.should == 0
+      expect(@miq_group.user_count).to eq(0)
     end
 
     it "should strip group description of leading and trailing spaces" do
       @miq_group.description = "      leading and trailing white spaces     "
-      @miq_group.description.should == "leading and trailing white spaces"
+      expect(@miq_group.description).to eq("leading and trailing white spaces")
     end
   end
 
@@ -108,19 +108,19 @@ describe MiqGroup do
       ifp_object  = double('ifp_object')
       @ifp_interface = double('ifp_interface')
 
-      DBus.stub(:system_bus).and_return(sysbus)
-      sysbus.stub(:[]).with("org.freedesktop.sssd.infopipe").and_return(ifp_service)
-      ifp_service.stub(:object).with("/org/freedesktop/sssd/infopipe").and_return(ifp_object)
-      ifp_object.stub(:introspect)
-      ifp_object.stub(:[]).with("org.freedesktop.sssd.infopipe").and_return(@ifp_interface)
+      allow(DBus).to receive(:system_bus).and_return(sysbus)
+      allow(sysbus).to receive(:[]).with("org.freedesktop.sssd.infopipe").and_return(ifp_service)
+      allow(ifp_service).to receive(:object).with("/org/freedesktop/sssd/infopipe").and_return(ifp_object)
+      allow(ifp_object).to receive(:introspect)
+      allow(ifp_object).to receive(:[]).with("org.freedesktop.sssd.infopipe").and_return(@ifp_interface)
     end
 
     it "should return groups by user name with external authentication" do
       memberships = [%w(foo bar)]
 
-      @ifp_interface.stub(:GetUserGroups).with('user').and_return(memberships)
+      allow(@ifp_interface).to receive(:GetUserGroups).with('user').and_return(memberships)
 
-      MiqGroup.get_httpd_groups_by_user('user').should == memberships.first
+      expect(MiqGroup.get_httpd_groups_by_user('user')).to eq(memberships.first)
     end
   end
 
@@ -134,11 +134,11 @@ describe MiqGroup do
                         :bind            => true,
                         :get_user_object => 'user object',
                         :get_memberships => %w(foo bar))
-      MiqLdap.stub(:new).and_return(miq_ldap)
+      allow(MiqLdap).to receive(:new).and_return(miq_ldap)
     end
 
     it "should return LDAP groups by user name" do
-      MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password').should == %w(foo bar)
+      expect(MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password')).to eq(%w(foo bar))
     end
 
     it "should issue an error message when user name could not be bound to LDAP" do
@@ -201,28 +201,28 @@ describe MiqGroup do
     end
 
     it "#active_vms" do
-      @miq_group.active_vms.should match_array([@active_vm])
+      expect(@miq_group.active_vms).to match_array([@active_vm])
     end
 
     it "#allocated_memory" do
-      @miq_group.allocated_memory.should == @ram_size.megabyte
+      expect(@miq_group.allocated_memory).to eq(@ram_size.megabyte)
     end
 
     it "#allocated_vcpu" do
-      @miq_group.allocated_vcpu.should == @num_cpu
+      expect(@miq_group.allocated_vcpu).to eq(@num_cpu)
     end
 
     it "#allocated_storage" do
-      @miq_group.allocated_storage.should == @disk_size
+      expect(@miq_group.allocated_storage).to eq(@disk_size)
     end
 
     it "#provisioned_storage" do
-      @miq_group.provisioned_storage.should == @ram_size.megabyte + @disk_size
+      expect(@miq_group.provisioned_storage).to eq(@ram_size.megabyte + @disk_size)
     end
 
     %w(allocated_memory allocated_vcpu allocated_storage provisioned_storage).each do |vcol|
       it "should have virtual column #{vcol} " do
-        described_class.should have_virtual_column "#{vcol}", :integer
+        expect(described_class).to have_virtual_column "#{vcol}", :integer
       end
     end
 
@@ -234,7 +234,7 @@ describe MiqGroup do
                          :ems_id       => @ems.id,
                          :storage_id   => @storage.id,
                          :hardware     => hw)
-      @miq_group.allocated_storage.should == @disk_size
+      expect(@miq_group.allocated_storage).to eq(@disk_size)
     end
   end
 

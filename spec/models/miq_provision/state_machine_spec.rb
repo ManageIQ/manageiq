@@ -21,13 +21,13 @@ describe MiqProvision do
 
     context "#prepare_provision" do
       before do
-        task.stub(:update_and_notify_parent)
+        allow(task).to receive(:update_and_notify_parent)
         task.stub(:instance_type => flavor)
       end
 
       it "sets default :clone_options" do
-        task.should_receive(:signal).with(:prepare_provision).and_call_original
-        task.should_receive(:signal).with(:start_clone_task)
+        expect(task).to receive(:signal).with(:prepare_provision).and_call_original
+        expect(task).to receive(:signal).with(:start_clone_task)
 
         task.signal(:prepare_provision)
 
@@ -43,8 +43,8 @@ describe MiqProvision do
         options[:clone_options] = {:security_groups => ["test_sg"], :test_key => "test_value"}
         task.update_attributes(:options => options)
 
-        task.should_receive(:signal).with(:prepare_provision).and_call_original
-        task.should_receive(:signal).with(:start_clone_task)
+        expect(task).to receive(:signal).with(:prepare_provision).and_call_original
+        expect(task).to receive(:signal).with(:start_clone_task)
 
         task.signal(:prepare_provision)
 
@@ -61,8 +61,8 @@ describe MiqProvision do
         options[:clone_options] = {:image_ref => nil, :test_key => "test_value"}
         task.update_attributes(:options => options)
 
-        task.should_receive(:signal).with(:prepare_provision).and_call_original
-        task.should_receive(:signal).with(:start_clone_task)
+        expect(task).to receive(:signal).with(:prepare_provision).and_call_original
+        expect(task).to receive(:signal).with(:start_clone_task)
 
         task.signal(:prepare_provision)
 
@@ -82,7 +82,7 @@ describe MiqProvision do
         options[:vm_description] = description = "foo bar"
         task.update_attributes(:options => options)
 
-        task.should_receive(:mark_as_completed)
+        expect(task).to receive(:mark_as_completed)
 
         task.signal(:post_create_destination)
 
@@ -98,7 +98,7 @@ describe MiqProvision do
         options[:owner_group] = group_owner.description
         task.update_attributes(:options => options)
 
-        task.should_receive(:mark_as_completed)
+        expect(task).to receive(:mark_as_completed)
 
         task.signal(:post_create_destination)
 
@@ -114,14 +114,14 @@ describe MiqProvision do
           retires_on           = (Time.now.utc + retirement).to_date
           task.update_attributes(:options => options)
 
-          task.should_receive(:mark_as_completed)
+          expect(task).to receive(:mark_as_completed)
 
           task.signal(:post_create_destination)
 
           expect(task.destination.retires_on).to eq(retires_on)
           expect(vm.reload.retires_on).to        eq(retires_on)
           expect(vm.retirement_warn).to          eq(0)
-          expect(vm.retired).to                  be_false
+          expect(vm.retired).to                  be_falsey
         end
 
         it "with :retirement_time option" do
@@ -132,19 +132,19 @@ describe MiqProvision do
           retires_on                = retirement_time.to_date
           task.update_attributes(:options => options)
 
-          task.should_receive(:mark_as_completed)
+          expect(task).to receive(:mark_as_completed)
 
           task.signal(:post_create_destination)
 
           expect(task.destination.retires_on).to eq(retires_on)
           expect(vm.reload.retires_on).to        eq(retires_on)
           expect(vm.retirement_warn).to          eq(retirement_warn_days)
-          expect(vm.retired).to                  be_false
+          expect(vm.retired).to                  be_falsey
         end
       end
 
       it "sets genealogy" do
-        task.should_receive(:mark_as_completed)
+        expect(task).to receive(:mark_as_completed)
 
         task.signal(:post_create_destination)
 

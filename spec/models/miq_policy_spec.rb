@@ -14,8 +14,8 @@ describe MiqPolicy do
     end
 
     it "should return the correct conditions" do
-      @ps.miq_policies.first.conditions.should == []
-      @p.conditions.should == []
+      expect(@ps.miq_policies.first.conditions).to eq([])
+      expect(@p.conditions).to eq([])
     end
   end
 
@@ -24,18 +24,18 @@ describe MiqPolicy do
 
     it "should keep the description < 255" do
       @description = "a" * 30
-      subject.description.length.should == 30
+      expect(subject.description.length).to eq(30)
     end
 
     it "should raise an error with empty description" do
       @description = nil
-      -> { subject.description }.should raise_error(ActiveRecord::RecordInvalid, "Validation failed: Description can't be blank")
+      expect { subject.description }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Description can't be blank")
     end
 
     it "should raise an error when description is reset to empty" do
       @description = "a" * 30
       subject.description = nil
-      -> { subject.save! }.should raise_error(ActiveRecord::RecordInvalid, "Validation failed: Description can't be blank")
+      expect { subject.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Description can't be blank")
     end
   end
 

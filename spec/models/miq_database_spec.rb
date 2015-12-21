@@ -67,20 +67,20 @@ describe MiqDatabase do
       MiqDatabase.seed
       EvmSpecHelper.create_guid_miq_server_zone
 
-      MiqTask.should_receive(:wait_for_taskid).and_return(FactoryGirl.create(:miq_task, :state => "Finished"))
+      expect(MiqTask).to receive(:wait_for_taskid).and_return(FactoryGirl.create(:miq_task, :state => "Finished"))
 
       MiqDatabase.first.verify_credentials(:registration)
     end
   end
 
-  pending("New model-based-rewrite") do
+  skip("New model-based-rewrite") do
     context "#vmdb_tables" do
       before(:each) do
         MiqDatabase.seed
         @db = MiqDatabase.first
 
         @expected_tables = %w(schema_migrations vms miq_databases)
-        VmdbTable.stub(:vmdb_table_names).and_return(@expected_tables)
+        allow(VmdbTable).to receive(:vmdb_table_names).and_return(@expected_tables)
       end
 
       after(:each) do
@@ -89,12 +89,12 @@ describe MiqDatabase do
 
       it "will fetch initial tables" do
         tables = @db.vmdb_tables
-        tables.collect(&:name).should match_array @expected_tables
+        expect(tables.collect(&:name)).to match_array @expected_tables
       end
 
       it "will create tables once" do
         @db.vmdb_tables
-        VmdbTable.should_receive(:new).never
+        expect(VmdbTable).to receive(:new).never
         @db.vmdb_tables
       end
     end

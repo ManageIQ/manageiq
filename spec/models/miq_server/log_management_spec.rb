@@ -1,10 +1,10 @@
 require "spec_helper"
 
 def stub_vmdb_util_methods_for_collection_log
-  VMDB::Util.stub(:zip_logs)
-  VMDB::Util.stub(:compressed_log_patterns).and_return(["log/evm.1122.gz"])
-  VMDB::Util.stub(:get_evm_log_for_date).and_return("20151209_141429_20151217_140845")
-  VMDB::Util.stub(:get_log_start_end_times).and_return([Time.zone.now, Time.zone.now])
+  allow(VMDB::Util).to receive(:zip_logs)
+  allow(VMDB::Util).to receive(:compressed_log_patterns).and_return(["log/evm.1122.gz"])
+  allow(VMDB::Util).to receive(:get_evm_log_for_date).and_return("20151209_141429_20151217_140845")
+  allow(VMDB::Util).to receive(:get_log_start_end_times).and_return([Time.zone.now, Time.zone.now])
 end
 
 shared_examples "post_[type_of_log]_logs" do |type, type_of_log|
