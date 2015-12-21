@@ -1314,13 +1314,12 @@ describe Metric do
 
   def assert_queued_rollup(q_item, instance_id, class_name, args, deliver_on, method = "perf_rollup")
     deliver_on = Time.parse(deliver_on).utc if deliver_on.kind_of?(String)
-    expected_deliver_on = expect(q_item.deliver_on.utc).to unless deliver_on.nil?
 
     expect(q_item.method_name).to eq(method)
     expect(q_item.instance_id).to eq(instance_id)
     expect(q_item.class_name).to eq(class_name)
     expect(q_item.args).to eq(args)
-    expected_deliver_on == deliver_on
+    expect(q_item.deliver_on.utc).to eq(deliver_on) unless deliver_on.nil?
   end
 
   def assert_queue_items_are_hourly_rollups(q_items, first_time, instance_id, class_name)
