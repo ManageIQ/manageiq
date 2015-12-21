@@ -10,7 +10,7 @@ describe "ops/_analytics_details_tab.html.haml" do
       render :partial => "ops/all_tabs",
              :locals  => {:x_active_tree => :analytics_tree,
                           :get_vmdb_config => {:product => {:analytics => true}}}
-      response.should render_template(:partial => "ops/_analytics_details_tab")
+      expect(response).to render_template(:partial => "ops/_analytics_details_tab")
     end
   end
 end

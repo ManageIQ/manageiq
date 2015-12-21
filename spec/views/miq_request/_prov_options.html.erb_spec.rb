@@ -43,7 +43,7 @@ describe 'miq_request/_prov_options.html.haml' do
       login_as @admin
       render
       @users.each do |u|
-        rendered.should have_selector('select#user_choice option', :text => u.name)
+        expect(rendered).to have_selector('select#user_choice option', :text => u.name)
       end
     end
 
@@ -51,7 +51,7 @@ describe 'miq_request/_prov_options.html.haml' do
       login_as @approver
       render
       @users.each do |u|
-        rendered.should have_selector('select#user_choice option', :text => u.name)
+        expect(rendered).to have_selector('select#user_choice option', :text => u.name)
       end
     end
   end
@@ -59,7 +59,7 @@ describe 'miq_request/_prov_options.html.haml' do
   context 'requester dropdown select box is not visible' do
     before(:each) do
       EvmSpecHelper.create_guid_miq_server_zone
-      view.stub(:get_vmdb_config).and_return(:server => {}, :session => {})
+      allow(view).to receive(:get_vmdb_config).and_return(:server => {}, :session => {})
     end
 
     it 'for desktop' do
@@ -82,8 +82,8 @@ describe 'miq_request/_prov_options.html.haml' do
 
       login_as desktop
       render
-      rendered.should have_selector('.requester', :text => desktop.name)
-      rendered.should_not have_selector('select#user_choice option')
+      expect(rendered).to have_selector('.requester', :text => desktop.name)
+      expect(rendered).not_to have_selector('select#user_choice option')
     end
 
     it 'for vm_user' do
@@ -107,8 +107,8 @@ describe 'miq_request/_prov_options.html.haml' do
 
       login_as vm_user
       render
-      rendered.should have_selector('.requester', :text => vm_user.name)
-      rendered.should_not have_selector('select#user_choice option')
+      expect(rendered).to have_selector('.requester', :text => vm_user.name)
+      expect(rendered).not_to have_selector('select#user_choice option')
     end
   end
 end

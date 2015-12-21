@@ -9,23 +9,23 @@ describe "dashboard/login.html.haml" do
     end
 
     it "when authentication is 'database'" do
-      view.stub(:current_tenant).and_return(Tenant.seed)
-      User.stub(:mode).and_return("database")
+      allow(view).to receive(:current_tenant).and_return(Tenant.seed)
+      allow(User).to receive(:mode).and_return("database")
       render
-      response.should have_selector("div#login_div:has(input#browser_name)")
-      response.should have_selector("div#login_div:has(input#browser_version)")
-      response.should have_selector("div#login_div:has(input#browser_os)")
-      response.should have_selector("div#login_div:has(input#user_TZO)")
+      expect(response).to have_selector("div#login_div:has(input#browser_name)")
+      expect(response).to have_selector("div#login_div:has(input#browser_version)")
+      expect(response).to have_selector("div#login_div:has(input#browser_os)")
+      expect(response).to have_selector("div#login_div:has(input#user_TZO)")
     end
 
     it "when authentication is not 'database'" do
-      view.stub(:current_tenant).and_return(Tenant.seed)
-      User.stub(:mode).and_return("ldap")
+      allow(view).to receive(:current_tenant).and_return(Tenant.seed)
+      allow(User).to receive(:mode).and_return("ldap")
       render
-      response.should have_selector("div#login_div:has(input#browser_name)")
-      response.should have_selector("div#login_div:has(input#browser_version)")
-      response.should have_selector("div#login_div:has(input#browser_os)")
-      response.should have_selector("div#login_div:has(input#user_TZO)")
+      expect(response).to have_selector("div#login_div:has(input#browser_name)")
+      expect(response).to have_selector("div#login_div:has(input#browser_version)")
+      expect(response).to have_selector("div#login_div:has(input#browser_os)")
+      expect(response).to have_selector("div#login_div:has(input#user_TZO)")
     end
   end
 
@@ -37,22 +37,22 @@ describe "dashboard/login.html.haml" do
     end
 
     it "show" do
-      view.stub(:current_tenant).and_return(Tenant.seed)
-      view.stub(:get_vmdb_config).and_return(:server => {},
+      allow(view).to receive(:current_tenant).and_return(Tenant.seed)
+      allow(view).to receive(:get_vmdb_config).and_return(:server => {},
         :session => {:show_login_info => true}, :authentication => {})
       render
       labels.each do |label|
-        response.should have_selector('p', :text => label)
+        expect(response).to have_selector('p', :text => label)
       end
     end
 
     it "hide" do
-      view.stub(:current_tenant).and_return(Tenant.seed)
-      view.stub(:get_vmdb_config).and_return(:server => {},
+      allow(view).to receive(:current_tenant).and_return(Tenant.seed)
+      allow(view).to receive(:get_vmdb_config).and_return(:server => {},
         :session => {:show_login_info => false}, :authentication => {})
       render
       labels.each do |label|
-        response.should_not have_selector('p', :text => label)
+        expect(response).not_to have_selector('p', :text => label)
       end
     end
   end

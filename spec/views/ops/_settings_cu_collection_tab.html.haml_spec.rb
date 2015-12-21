@@ -15,7 +15,7 @@ describe "ops/_settings_cu_collection_tab.html.haml" do
     # creating simple tree for the view to render
     assign(:clhosts_tree, {"id" => 0, "item" => {}}.to_json)
     render
-    response.should have_selector("input#cl_toggle")
+    expect(response).to have_selector("input#cl_toggle")
   end
 
   it "Check All checkbox have unique id for Storage trees" do
@@ -28,6 +28,6 @@ describe "ops/_settings_cu_collection_tab.html.haml" do
     # creating simple tree for the view to render
     assign(:cu_datastore_tree, {"id" => 0, "item" => {}}.to_json)
     render
-    response.should have_selector("input#ds_toggle")
+    expect(response).to have_selector("input#ds_toggle")
   end
 end

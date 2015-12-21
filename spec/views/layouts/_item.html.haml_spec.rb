@@ -9,14 +9,14 @@ describe "layouts/_item.html.haml" do
     assign(:lastaction, 'filesystems')
     render
 
-    response.should have_selector('label', :text => 'Name')
-    response.should have_selector('label', :text => 'File Name')
-    response.should have_selector('label', :text => 'File Version')
-    response.should have_selector('label', :text => 'Size')
-    response.should have_selector('label', :text => 'Contents Available')
-    response.should have_selector('label', :text => 'Permissions')
-    response.should have_selector('label', :text => 'Collected On')
-    response.should have_selector('label', :text => 'Contents')
-    response.should have_selector('a', :text => 'Download')
+    expect(response).to have_selector('label', :text => 'Name')
+    expect(response).to have_selector('label', :text => 'File Name')
+    expect(response).to have_selector('label', :text => 'File Version')
+    expect(response).to have_selector('label', :text => 'Size')
+    expect(response).to have_selector('label', :text => 'Contents Available')
+    expect(response).to have_selector('label', :text => 'Permissions')
+    expect(response).to have_selector('label', :text => 'Collected On')
+    expect(response).to have_selector('label', :text => 'Contents')
+    expect(response).to have_selector('a', :text => 'Download')
   end
 end

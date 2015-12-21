@@ -19,10 +19,10 @@ describe "miq_capacity/_utilization_options.html.haml" do
            :locals  => {:cap_type => nil}
   end
   it "check if correct fields are being displayed if cap_type is set" do
-    response.should_not have_selector('label', :text => 'Selected Day')
+    expect(response).not_to have_selector('label', :text => 'Selected Day')
     # render with cap_type variable set
     render :partial => "miq_capacity/utilization_options",
            :locals  => {:cap_type => "summ"}
-    response.should have_selector('label', :text => 'Selected Day')
+    expect(response).to have_selector('label', :text => 'Selected Day')
   end
 end

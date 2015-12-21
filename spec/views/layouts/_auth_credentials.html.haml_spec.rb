@@ -7,14 +7,14 @@ describe "layouts/_auth_credentials.html.haml" do
     render :partial => "layouts/auth_credentials",
            :locals  => {:uid_label => "Access Key ID",
                         :pwd_label => "Secret Access Key"}
-    response.should have_selector('label', :text => 'Access Key ID')
-    response.should have_selector('label', :text => 'Secret Access Key')
-    response.should have_selector('label', :text => 'Confirm Secret Access Key')
+    expect(response).to have_selector('label', :text => 'Access Key ID')
+    expect(response).to have_selector('label', :text => 'Secret Access Key')
+    expect(response).to have_selector('label', :text => 'Confirm Secret Access Key')
 
     render
     # showing default labels
-    response.should have_selector('label', :text => 'Username')
-    response.should have_selector('label', :text => 'Password')
-    response.should have_selector('label', :text => 'Confirm Password')
+    expect(response).to have_selector('label', :text => 'Username')
+    expect(response).to have_selector('label', :text => 'Password')
+    expect(response).to have_selector('label', :text => 'Confirm Password')
   end
 end
