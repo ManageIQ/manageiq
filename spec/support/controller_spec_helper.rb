@@ -9,12 +9,12 @@ module ControllerSpecHelper
 
   def set_user_privileges(user = FactoryGirl.create(:user_with_group))
     allow(User).to receive(:server_timezone).and_return("UTC")
-    described_class.any_instance.stub(:set_user_time_zone)
+    allow_any_instance_of(described_class).to receive(:set_user_time_zone)
 
     # TODO: remove these stubs
-    controller.stub(:check_privileges).and_return(true)
+    allow(controller).to receive(:check_privileges).and_return(true)
     login_as user
-    User.any_instance.stub(:role_allows?).and_return(true)
+    allow_any_instance_of(User).to receive(:role_allows?).and_return(true)
   end
 
   shared_context "valid session" do
@@ -22,9 +22,9 @@ module ControllerSpecHelper
     let(:request_referer_service)   { auto_loaded_instance_double("RequestRefererService",   :allowed_access? => true) }
 
     before do
-      controller.stub(:set_user_time_zone)
-      PrivilegeCheckerService.stub(:new).and_return(privilege_checker_service)
-      RequestRefererService.stub(:new).and_return(request_referer_service)
+      allow(controller).to receive(:set_user_time_zone)
+      allow(PrivilegeCheckerService).to receive(:new).and_return(privilege_checker_service)
+      allow(RequestRefererService).to receive(:new).and_return(request_referer_service)
     end
   end
 

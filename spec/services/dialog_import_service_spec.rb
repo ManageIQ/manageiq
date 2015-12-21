@@ -29,7 +29,7 @@ describe DialogImportService do
 
     before do
       built_dialog_field = DialogField.create(:name => "dialog_field")
-      dialog_field_importer.stub(:import_field).and_return(built_dialog_field)
+      allow(dialog_field_importer).to receive(:import_field).and_return(built_dialog_field)
     end
   end
 
@@ -38,19 +38,19 @@ describe DialogImportService do
     let(:miq_queue) { active_record_instance_double("MiqQueue") }
 
     before do
-      ImportFileUpload.stub(:find).with("123").and_return(import_file_upload)
-      import_file_upload.stub(:destroy)
+      allow(ImportFileUpload).to receive(:find).with("123").and_return(import_file_upload)
+      allow(import_file_upload).to receive(:destroy)
 
-      MiqQueue.stub(:unqueue)
+      allow(MiqQueue).to receive(:unqueue)
     end
 
     it "destroys the import file upload" do
-      import_file_upload.should_receive(:destroy)
+      expect(import_file_upload).to receive(:destroy)
       dialog_import_service.cancel_import("123")
     end
 
     it "destroys the queued deletion" do
-      MiqQueue.should_receive(:unqueue).with(
+      expect(MiqQueue).to receive(:unqueue).with(
         :class_name  => "ImportFileUpload",
         :instance_id => 123,
         :method_name => "destroy"
@@ -66,7 +66,7 @@ describe DialogImportService do
 
     context "when the loaded yaml returns dialogs" do
       before do
-        YAML.stub(:load_file).with(filename).and_return(dialogs)
+        allow(YAML).to receive(:load_file).with(filename).and_return(dialogs)
       end
 
       context "when there is an existing dialog" do
@@ -76,7 +76,7 @@ describe DialogImportService do
 
         it "does not create a third dialog" do
           dialog_import_service.import_from_file(filename)
-          Dialog.count.should == 2
+          expect(Dialog.count).to eq(2)
         end
 
         it "yields the given block" do
@@ -85,30 +85,30 @@ describe DialogImportService do
             block_called = true
           end
 
-          block_called.should be_true
+          expect(block_called).to be_truthy
         end
       end
 
       context "when there is not an existing dialog" do
         it "builds a new dialog" do
           dialog_import_service.import_from_file(filename)
-          Dialog.first.should_not be_nil
+          expect(Dialog.first).not_to be_nil
         end
 
         it "builds a dialog tab associated to the dialog" do
           dialog_import_service.import_from_file(filename)
           dialog = Dialog.first
-          DialogTab.first.dialog.should == dialog
+          expect(DialogTab.first.dialog).to eq(dialog)
         end
 
         it "builds a dialog group associated to the dialog tab" do
           dialog_import_service.import_from_file(filename)
           dialog_tab = DialogTab.first
-          DialogGroup.first.dialog_tab.should == dialog_tab
+          expect(DialogGroup.first.dialog_tab).to eq(dialog_tab)
         end
 
         it "imports the dialog fields" do
-          dialog_field_importer.should_receive(:import_field).with(dialog_fields[0])
+          expect(dialog_field_importer).to receive(:import_field).with(dialog_fields[0])
           dialog_import_service.import_from_file(filename)
         end
       end
@@ -116,8 +116,8 @@ describe DialogImportService do
 
     context "when the dialog_field_importer raises an InvalidDialogFieldTypeError" do
       before do
-        YAML.stub(:load_file).with(filename).and_return(dialogs)
-        dialog_field_importer.stub(:import_field).and_raise(
+        allow(YAML).to receive(:load_file).with(filename).and_return(dialogs)
+        allow(dialog_field_importer).to receive(:import_field).and_raise(
           DialogFieldImporter::InvalidDialogFieldTypeError.new("Custom Message")
         )
       end
@@ -131,7 +131,7 @@ describe DialogImportService do
 
     context "when the loaded yaml does not return dialogs" do
       before do
-        YAML.stub(:load_file).with(filename).and_return(not_dialogs)
+        allow(YAML).to receive(:load_file).with(filename).and_return(not_dialogs)
       end
 
       it "raises a ParsedNonDialogYamlError" do
@@ -146,7 +146,7 @@ describe DialogImportService do
     include_context "DialogImportService dialog setup"
 
     before do
-      YAML.stub(:load_file).with("filename").and_return(dialogs)
+      allow(YAML).to receive(:load_file).with("filename").and_return(dialogs)
     end
 
     context "when there is already an existing dialog" do
@@ -156,30 +156,30 @@ describe DialogImportService do
 
       it "overwrites the existing dialog" do
         dialog_import_service.import_all_service_dialogs_from_yaml_file("filename")
-        Dialog.where(:label => "Test2").first.description.should == "potato"
+        expect(Dialog.where(:label => "Test2").first.description).to eq("potato")
       end
     end
 
     context "when there are no existing dialogs" do
       it "builds a new dialog" do
         dialog_import_service.import_all_service_dialogs_from_yaml_file("filename")
-        Dialog.first.should_not be_nil
+        expect(Dialog.first).not_to be_nil
       end
 
       it "builds a dialog tab associated to the dialog" do
         dialog_import_service.import_all_service_dialogs_from_yaml_file("filename")
         dialog = Dialog.first
-        DialogTab.first.dialog.should == dialog
+        expect(DialogTab.first.dialog).to eq(dialog)
       end
 
       it "builds a dialog group associated to the dialog tab" do
         dialog_import_service.import_all_service_dialogs_from_yaml_file("filename")
         dialog_tab = DialogTab.first
-        DialogGroup.first.dialog_tab.should == dialog_tab
+        expect(DialogGroup.first.dialog_tab).to eq(dialog_tab)
       end
 
       it "imports the dialog fields" do
-        dialog_field_importer.should_receive(:import_field).with(dialog_fields[0])
+        expect(dialog_field_importer).to receive(:import_field).with(dialog_fields[0])
         dialog_import_service.import_all_service_dialogs_from_yaml_file("filename")
       end
     end
@@ -196,18 +196,18 @@ describe DialogImportService do
     let(:dialogs_to_import) { %w(Test Test2) }
 
     before do
-      import_file_upload.stub(:destroy)
-      MiqQueue.stub(:unqueue)
+      allow(import_file_upload).to receive(:destroy)
+      allow(MiqQueue).to receive(:unqueue)
     end
 
     shared_examples_for "DialogImportService#import_service_dialogs that destroys temporary data" do
       it "destroys the import file upload" do
-        import_file_upload.should_receive(:destroy)
+        expect(import_file_upload).to receive(:destroy)
         dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import)
       end
 
       it "unqueues the miq_queue item" do
-        MiqQueue.should_receive(:unqueue).with(
+        expect(MiqQueue).to receive(:unqueue).with(
           :class_name  => "ImportFileUpload",
           :instance_id => 123,
           :method_name => "destroy"
@@ -218,7 +218,7 @@ describe DialogImportService do
 
     context "when the YAML loaded is dialogs" do
       before do
-        YAML.stub(:load).with(yaml_data).and_return(dialogs)
+        allow(YAML).to receive(:load).with(yaml_data).and_return(dialogs)
       end
 
       context "when the list of dialogs to import from the yaml includes an existing dialog" do
@@ -230,7 +230,7 @@ describe DialogImportService do
 
         it "overwrites the existing dialog" do
           dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import)
-          Dialog.where(:label => "Test2").first.description.should == "potato"
+          expect(Dialog.where(:label => "Test2").first.description).to eq("potato")
         end
       end
 
@@ -239,23 +239,23 @@ describe DialogImportService do
 
         it "builds a new dialog" do
           dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import)
-          Dialog.first.should_not be_nil
+          expect(Dialog.first).not_to be_nil
         end
 
         it "builds a dialog tab associated to the dialog" do
           dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import)
           dialog = Dialog.first
-          DialogTab.first.dialog.should == dialog
+          expect(DialogTab.first.dialog).to eq(dialog)
         end
 
         it "builds a dialog group associated to the dialog tab" do
           dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import)
           dialog_tab = DialogTab.first
-          DialogGroup.first.dialog_tab.should == dialog_tab
+          expect(DialogGroup.first.dialog_tab).to eq(dialog_tab)
         end
 
         it "imports the dialog fields" do
-          dialog_field_importer.should_receive(:import_field).with(dialog_fields[0])
+          expect(dialog_field_importer).to receive(:import_field).with(dialog_fields[0])
           dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import)
         end
       end
@@ -275,7 +275,7 @@ describe DialogImportService do
 
     context "when the YAML loaded is not dialog format" do
       before do
-        YAML.stub(:load).with(yaml_data).and_return(not_dialogs)
+        allow(YAML).to receive(:load).with(yaml_data).and_return(not_dialogs)
       end
 
       it "raises a ParsedNonDialogYamlError" do
@@ -290,28 +290,28 @@ describe DialogImportService do
     let(:import_file_upload) { active_record_instance_double("ImportFileUpload", :id => 123).as_null_object }
 
     before do
-      MiqQueue.stub(:put)
-      ImportFileUpload.stub(:create).and_return(import_file_upload)
-      import_file_upload.stub(:store_binary_data_as_yml)
+      allow(MiqQueue).to receive(:put)
+      allow(ImportFileUpload).to receive(:create).and_return(import_file_upload)
+      allow(import_file_upload).to receive(:store_binary_data_as_yml)
     end
 
     context "when the imported file does not raise any errors while determining validity" do
       before do
-        dialog_import_validator.stub(:determine_validity).with(import_file_upload).and_return(nil)
+        allow(dialog_import_validator).to receive(:determine_validity).with(import_file_upload).and_return(nil)
       end
 
       it "stores the data" do
-        import_file_upload.should_receive(:store_binary_data_as_yml).with("the data", "Service dialog import")
+        expect(import_file_upload).to receive(:store_binary_data_as_yml).with("the data", "Service dialog import")
         dialog_import_service.store_for_import("the data")
       end
 
       it "returns the imported file upload" do
-        dialog_import_service.store_for_import("the data").should == import_file_upload
+        expect(dialog_import_service.store_for_import("the data")).to eq(import_file_upload)
       end
 
       it "queues a deletion" do
         Timecop.freeze(2014, 3, 5) do
-          MiqQueue.should_receive(:put).with(
+          expect(MiqQueue).to receive(:put).with(
             :class_name  => "ImportFileUpload",
             :instance_id => 123,
             :deliver_on  => 1.day.from_now,
@@ -326,7 +326,7 @@ describe DialogImportService do
     context "when the imported file raises an error while determining validity" do
       before do
         error_to_be_raised = DialogImportValidator::InvalidDialogFieldTypeError.new("Test message")
-        dialog_import_validator.stub(:determine_validity).with(import_file_upload).and_raise(error_to_be_raised)
+        allow(dialog_import_validator).to receive(:determine_validity).with(import_file_upload).and_raise(error_to_be_raised)
       end
 
       it "reraises with the original error" do
@@ -337,7 +337,7 @@ describe DialogImportService do
 
       it "queues a deletion" do
         Timecop.freeze(2014, 3, 5) do
-          MiqQueue.should_receive(:put).with(
+          expect(MiqQueue).to receive(:put).with(
             :class_name  => "ImportFileUpload",
             :instance_id => 123,
             :deliver_on  => 1.day.from_now,

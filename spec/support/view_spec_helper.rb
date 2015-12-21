@@ -23,10 +23,10 @@ module ViewSpecHelper
   end
 
   def set_controller_for_view_to_be_restful
-    controller.stub(:restful?).and_return(true)
+    allow(controller).to receive(:restful?).and_return(true)
   end
 
   def set_controller_for_view_to_be_nonrestful
-    controller.stub(:restful?).and_return(false)
+    allow(controller).to receive(:restful?).and_return(false)
   end
 end

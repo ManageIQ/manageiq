@@ -64,10 +64,10 @@ module ServiceTemplateHelper
   end
 
   def request_stubs
-    @request.stub(:approved?).and_return(true)
-    MiqRequestTask.any_instance.stub(:approved?).and_return(true)
-    MiqProvision.any_instance.stub(:get_next_vm_name).and_return("fred")
-    @request.stub(:automate_event_failed?).and_return(false)
+    allow(@request).to receive(:approved?).and_return(true)
+    allow_any_instance_of(MiqRequestTask).to receive(:approved?).and_return(true)
+    allow_any_instance_of(MiqProvision).to receive(:get_next_vm_name).and_return("fred")
+    allow(@request).to receive(:automate_event_failed?).and_return(false)
   end
 
   def build_small_environment
@@ -80,13 +80,13 @@ module ServiceTemplateHelper
   end
 
   def service_template_stubs
-    ServiceTemplate.stub(:automate_result_include_service_template?) do |_uri, _user, name|
+    allow(ServiceTemplate).to receive(:automate_result_include_service_template?) do |_uri, _user, name|
       @allowed_service_templates.include?(name)
     end
   end
 
   def user_helper
-    User.any_instance.stub(:role).and_return("admin")
+    allow_any_instance_of(User).to receive(:role).and_return("admin")
     @user = FactoryGirl.create(:user_with_group, :name => 'Wilma', :userid => 'wilma')
   end
 end

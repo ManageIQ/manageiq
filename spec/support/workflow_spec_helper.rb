@@ -27,7 +27,7 @@ module WorkflowSpecHelper
   def assert_automate_vm_name_lookup(user, vm_name = 'vm_name')
     stub_automate_workspace("get_vmname_url", user, vm_name)
 
-    MiqAeEngine.should_receive(:create_automation_object).with(
+    expect(MiqAeEngine).to receive(:create_automation_object).with(
       "REQUEST",
       hash_including(
         'request'    => 'UI_PROVISION_INFO',

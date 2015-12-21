@@ -10,13 +10,13 @@ describe OrchestrationTemplateDialogService do
     it "creates a dialog from hot template with stack basic info and parameters" do
       dialog = dialog_service.create_dialog("test", template_hot)
 
-      dialog.should have_attributes(
+      expect(dialog).to have_attributes(
         :label   => "test",
         :buttons => "submit,cancel"
       )
 
       tabs = dialog.dialog_tabs
-      tabs.size.should == 1
+      expect(tabs.size).to eq(1)
       assert_stack_tab(tabs[0])
     end
 
@@ -41,7 +41,7 @@ describe OrchestrationTemplateDialogService do
     assert_tab_attributes(tab)
 
     groups = tab.dialog_groups
-    groups.size.should == 3
+    expect(groups.size).to eq(3)
 
     assert_aws_openstack_stack_group(groups[0])
     assert_parameter_group1(groups[1])
@@ -49,22 +49,22 @@ describe OrchestrationTemplateDialogService do
   end
 
   def assert_tab_attributes(tab)
-    tab.should have_attributes(
+    expect(tab).to have_attributes(
       :label   => "Basic Information",
       :display => "edit"
     )
   end
 
   def assert_aws_openstack_stack_group(group)
-    group.should have_attributes(
+    expect(group).to have_attributes(
       :label   => "Options",
       :display => "edit",
     )
 
     fields = group.dialog_fields
-    fields.size.should == 4
+    expect(fields.size).to eq(4)
 
-    fields[0].resource_action.fqname.should == "/Cloud/Orchestration/Operations/Methods/Available_Tenants"
+    expect(fields[0].resource_action.fqname).to eq("/Cloud/Orchestration/Operations/Methods/Available_Tenants")
     assert_field(fields[0], DialogFieldDropDownList, :name => "tenant_name",     :dynamic => true)
     assert_field(fields[1], DialogFieldTextBox,      :name => "stack_name",      :validator_rule => '^[A-Za-z][A-Za-z0-9\-]*$')
     assert_field(fields[2], DialogFieldDropDownList, :name => "stack_onfailure", :values => [%w(DO_NOTHING Do\ nothing), %w(ROLLBACK Rollback)])
@@ -72,15 +72,15 @@ describe OrchestrationTemplateDialogService do
   end
 
   def assert_azure_stack_group(group)
-    group.should have_attributes(
+    expect(group).to have_attributes(
       :label   => "Options",
       :display => "edit",
     )
 
     fields = group.dialog_fields
-    fields.size.should == 5
+    expect(fields.size).to eq(5)
 
-    fields[0].resource_action.fqname.should == "/Cloud/Orchestration/Operations/Methods/Available_Tenants"
+    expect(fields[0].resource_action.fqname).to eq("/Cloud/Orchestration/Operations/Methods/Available_Tenants")
     assert_field(fields[0], DialogFieldDropDownList, :name => "tenant_name",        :dynamic => true)
     assert_field(fields[1], DialogFieldTextBox,      :name => "stack_name",         :validator_rule => '^[A-Za-z][A-Za-z0-9\-]*$')
     assert_field(fields[2], DialogFieldDropDownList, :name => "resource_group",     :dynamic => true)
@@ -89,18 +89,18 @@ describe OrchestrationTemplateDialogService do
   end
 
   def assert_field(field, clss, attributes)
-    field.should be_kind_of clss
-    field.should have_attributes(attributes)
+    expect(field).to be_kind_of clss
+    expect(field).to have_attributes(attributes)
   end
 
   def assert_parameter_group1(group)
-    group.should have_attributes(
+    expect(group).to have_attributes(
       :label   => "General parameters",
       :display => "edit",
     )
 
     fields = group.dialog_fields
-    fields.size.should == 3
+    expect(fields.size).to eq(3)
 
     assert_field(fields[0], DialogFieldTextBox,      :name => "param_flavor",     :default_value => "m1.small")
     assert_field(fields[1], DialogFieldDropDownList, :name => "param_image_id",   :default_value => "F18-x86_64-cfntools", :values => [%w(F18-i386-cfntools F18-i386-cfntools), %w(F18-x86_64-cfntools F18-x86_64-cfntools)])
@@ -108,13 +108,13 @@ describe OrchestrationTemplateDialogService do
   end
 
   def assert_parameter_group2(group)
-    group.should have_attributes(
+    expect(group).to have_attributes(
       :label   => "DB parameters",
       :display => "edit",
     )
 
     fields = group.dialog_fields
-    fields.size.should == 3
+    expect(fields.size).to eq(3)
 
     assert_field(fields[0], DialogFieldTextBox,     :name => "param_admin_pass", :validator_rule => '[a-zA-Z0-9]+')
     assert_field(fields[1], DialogFieldTextBox,     :name => "param_db_port",    :label => 'Port Number')

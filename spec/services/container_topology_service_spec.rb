@@ -11,7 +11,7 @@ describe ContainerTopologyService do
 
   describe "#build_kinds" do
     it "creates the expected number of entity types" do
-      container_topology_service.stub(:retrieve_providers).and_return([FactoryGirl.create(:ems_kubernetes)])
+      allow(container_topology_service).to receive(:retrieve_providers).and_return([FactoryGirl.create(:ems_kubernetes)])
       expect(container_topology_service.build_kinds.keys).to match_array([:Container, :Host, :Kubernetes, :Node, :Pod, :Replicator, :Route, :Service, :VM])
     end
   end
@@ -46,7 +46,7 @@ describe ContainerTopologyService do
                                 :hardware => hardware)
       vm_rhev.update_attributes(:host => host, :raw_power_state => "up")
 
-      container_topology_service.stub(:retrieve_providers).and_return([ems_kube])
+      allow(container_topology_service).to receive(:retrieve_providers).and_return([ems_kube])
       container_replicator = ContainerReplicator.create(:ext_management_system => ems_kube,
                                                         :ems_ref => "8f8ca74c-3a41-11e5-a79a-001a4a231290",
                                                         :name => "replicator1")
@@ -141,7 +141,7 @@ describe ContainerTopologyService do
     it "topology contains the expected structure when vm is off" do
       # vm and host test cross provider correlation to infra provider
       vm_rhev.update_attributes(:raw_power_state => "down")
-      container_topology_service.stub(:retrieve_providers).and_return([ems_kube])
+      allow(container_topology_service).to receive(:retrieve_providers).and_return([ems_kube])
 
       container_group = ContainerGroup.create(:ext_management_system => ems_kube, :container_node => container_node,
                                               :name => "myPod", :ems_ref => "96c35ccd-3e00-11e5-a0d2-18037327aaeb",
@@ -149,7 +149,7 @@ describe ContainerTopologyService do
       container_service = ContainerService.create(:ext_management_system => ems_kube, :container_groups => [container_group],
                                                   :ems_ref => "95e49048-3e00-11e5-a0d2-18037327aaeb",
                                                   :name => "service1")
-      container_topology_service.stub(:entities).and_return([[container_node], [container_service]])
+      allow(container_topology_service).to receive(:entities).and_return([[container_node], [container_service]])
 
       expect(subject[:items]).to eq(
         "905c90ba-3e00-11e5-a0d2-18037327aaeb" => {:id       => container_node.ems_ref,
