@@ -30,27 +30,27 @@ describe VmScan do
     end
 
     it "should start in a state of waiting_to_start" do
-      @job.state.should == "waiting_to_start"
+      expect(@job.state).to eq("waiting_to_start")
     end
 
     it "should start in a dispatch_status of pending" do
-      @job.dispatch_status.should == "pending"
+      expect(@job.dispatch_status).to eq("pending")
     end
 
     it "should respond properly to proxies4job" do
-      @vm.proxies4job[:message].should == "Perform SmartState Analysis on this VM"
+      expect(@vm.proxies4job[:message]).to eq("Perform SmartState Analysis on this VM")
     end
 
     it "should respond properly to storage2hosts" do
-      @vm.storage2hosts.should == [@host]
+      expect(@vm.storage2hosts).to eq([@host])
     end
 
     context "without MiqVimBrokerWorker record," do
       it "should not be dispatched" do
         JobProxyDispatcher.dispatch
         @job.reload
-        @job.state.should == "waiting_to_start"
-        @job.dispatch_status.should == "pending"
+        expect(@job.state).to eq("waiting_to_start")
+        expect(@job.dispatch_status).to eq("pending")
       end
     end
 
@@ -67,8 +67,8 @@ describe VmScan do
         it "should not be dispatched" do
           JobProxyDispatcher.dispatch
           @job.reload
-          @job.state.should == "waiting_to_start"
-          @job.dispatch_status.should == "pending"
+          expect(@job.state).to eq("waiting_to_start")
+          expect(@job.dispatch_status).to eq("pending")
         end
       end
 
@@ -80,8 +80,8 @@ describe VmScan do
         it "should not be dispatched" do
           JobProxyDispatcher.dispatch
           @job.reload
-          @job.state.should == "waiting_to_start"
-          @job.dispatch_status.should == "pending"
+          expect(@job.state).to eq("waiting_to_start")
+          expect(@job.dispatch_status).to eq("pending")
         end
       end
 
@@ -93,8 +93,8 @@ describe VmScan do
         it "should not be dispatched" do
           JobProxyDispatcher.dispatch
           @job.reload
-          @job.state.should == "waiting_to_start"
-          @job.dispatch_status.should == "pending"
+          expect(@job.state).to eq("waiting_to_start")
+          expect(@job.dispatch_status).to eq("pending")
         end
       end
 
@@ -106,8 +106,8 @@ describe VmScan do
         end
 
         it "should get dispatched" do
-          @job.state.should == "waiting_to_start"
-          @job.dispatch_status.should == "active"
+          expect(@job.state).to eq("waiting_to_start")
+          expect(@job.dispatch_status).to eq("active")
         end
 
         context "when signaled with 'start'" do
@@ -118,13 +118,13 @@ describe VmScan do
           end
 
           it "should go to state of 'wait_for_policy'" do
-            @job.state.should == 'wait_for_policy'
-            MiqQueue.where(:class_name => "MiqAeEngine", :method_name => "deliver").count.should eq(1)
+            expect(@job.state).to eq('wait_for_policy')
+            expect(MiqQueue.where(:class_name => "MiqAeEngine", :method_name => "deliver").count).to eq(1)
           end
 
           it "should call callback when message is delivered" do
             VmScan.any_instance.stub(:signal => true)
-            VmScan.any_instance.should_receive(:check_policy_complete)
+            expect_any_instance_of(VmScan).to receive(:check_policy_complete)
             q = MiqQueue.where(:class_name => "MiqAeEngine", :method_name => "deliver").first
             q.delivered(*q.deliver)
           end
@@ -134,39 +134,39 @@ describe VmScan do
 
     context "#start_user_event_message" do
       it "without send" do
-        @vm.ext_management_system.should_receive(:vm_log_user_event)
+        expect(@vm.ext_management_system).to receive(:vm_log_user_event)
         @job.start_user_event_message(@vm)
       end
 
       it "with send = true" do
-        @vm.ext_management_system.should_receive(:vm_log_user_event)
+        expect(@vm.ext_management_system).to receive(:vm_log_user_event)
         @job.start_user_event_message(@vm, true)
       end
 
       it "with send = false" do
-        @vm.ext_management_system.should_not_receive(:vm_log_user_event)
+        expect(@vm.ext_management_system).not_to receive(:vm_log_user_event)
         @job.start_user_event_message(@vm, false)
       end
     end
 
     context "#end_user_event_message" do
       it "without send" do
-        @vm.ext_management_system.should_receive(:vm_log_user_event)
+        expect(@vm.ext_management_system).to receive(:vm_log_user_event)
         @job.end_user_event_message(@vm)
       end
 
       it "with send = true" do
-        @vm.ext_management_system.should_receive(:vm_log_user_event)
+        expect(@vm.ext_management_system).to receive(:vm_log_user_event)
         @job.end_user_event_message(@vm, true)
       end
 
       it "with send = false" do
-        @vm.ext_management_system.should_not_receive(:vm_log_user_event)
+        expect(@vm.ext_management_system).not_to receive(:vm_log_user_event)
         @job.end_user_event_message(@vm, false)
       end
 
       it "should not send the end message twice" do
-        @vm.ext_management_system.should_receive(:vm_log_user_event).once
+        expect(@vm.ext_management_system).to receive(:vm_log_user_event).once
         @job.end_user_event_message(@vm)
         @job.end_user_event_message(@vm)
       end
@@ -175,14 +175,14 @@ describe VmScan do
     context "#create_scan_args" do
       it "should have no vmScanProfiles by default" do
         args = @job.create_scan_args(@vm)
-        args["vmScanProfiles"].should eq []
+        expect(args["vmScanProfiles"]).to eq []
       end
 
       it "should have vmScanProfiles from scan_profiles option" do
         profiles = [ScanItemSet.any_instance.stub(:name => 'default')]
         @job.options[:scan_profiles] = profiles
         args = @job.create_scan_args(@vm)
-        args["vmScanProfiles"].should eq profiles
+        expect(args["vmScanProfiles"]).to eq profiles
       end
     end
 

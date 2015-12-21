@@ -4,8 +4,8 @@ describe VmdbTableEvm do
   it "#seed" do
     db = VmdbDatabase.seed_self
     evm_table = FactoryGirl.create(:vmdb_table_evm, :vmdb_database => @db, :name => 'foo')
-    evm_table.should_receive(:seed_texts).once
-    evm_table.should_receive(:seed_indexes).once
+    expect(evm_table).to receive(:seed_texts).once
+    expect(evm_table).to receive(:seed_indexes).once
     evm_table.seed
   end
 
@@ -17,31 +17,31 @@ describe VmdbTableEvm do
 
     it "adds new tables" do
       table_names = ['flintstones']
-      described_class.connection.stub(:text_tables).and_return(table_names)
+      allow(described_class.connection).to receive(:text_tables).and_return(table_names)
       @evm_table.seed_texts
-      @evm_table.text_tables.collect(&:name).should == table_names
-      @evm_table.text_tables.each { |t| t.vmdb_database.should == @db }
+      expect(@evm_table.text_tables.collect(&:name)).to eq(table_names)
+      @evm_table.text_tables.each { |t| expect(t.vmdb_database).to eq(@db) }
     end
 
     it "removes deleted tables" do
       table_names = ['flintstones']
       table_names.each { |t| FactoryGirl.create(:vmdb_table_text, :vmdb_database => @db, :evm_table => @evm_table, :name => t) }
       @evm_table.reload
-      @evm_table.text_tables.collect(&:name).should == table_names
+      expect(@evm_table.text_tables.collect(&:name)).to eq(table_names)
 
-      described_class.connection.stub(:text_tables).and_return([])
+      allow(described_class.connection).to receive(:text_tables).and_return([])
       @evm_table.seed_texts
       @evm_table.reload
-      @evm_table.text_tables.collect(&:name).should == []
+      expect(@evm_table.text_tables.collect(&:name)).to eq([])
     end
 
     it "finds existing tables" do
       table_names = ['flintstones']
       table_names.each { |t| FactoryGirl.create(:vmdb_table_text, :vmdb_database => @db, :evm_table => @evm_table, :name => t) }
-      described_class.connection.stub(:text_tables).and_return(table_names)
+      allow(described_class.connection).to receive(:text_tables).and_return(table_names)
       @evm_table.seed_texts
       @evm_table.reload
-      @evm_table.text_tables.collect(&:name).should == table_names
+      expect(@evm_table.text_tables.collect(&:name)).to eq(table_names)
     end
   end
 
@@ -151,17 +151,17 @@ describe VmdbTableEvm do
       rollup_record = @evm_table.vmdb_metrics.where(:capture_interval_name => 'daily').first
       # rollup_record = Metrics::Finders.find_all_by_range(@evm_table, Time.gm(2012, 8, 14, 00, 00, 01), Time.gm(2012, 8, 14, 23, 59, 59), interval_name)
 
-      rollup_record.should_not be_nil
-      rollup_record.rows.should == 227
-      rollup_record.size.should == 2270
-      rollup_record.wasted_bytes.should   be_within(0.01).of(33.83)
-      rollup_record.percent_bloat.should  be_within(0.01).of(22.54)
+      expect(rollup_record).not_to be_nil
+      expect(rollup_record.rows).to eq(227)
+      expect(rollup_record.size).to eq(2270)
+      expect(rollup_record.wasted_bytes).to   be_within(0.01).of(33.83)
+      expect(rollup_record.percent_bloat).to  be_within(0.01).of(22.54)
     end
 
     it "verifies daily metric rollup execution" do
       ts  = Time.now.utc
       day = ts.beginning_of_day
-      described_class.any_instance.should_receive(:rollup_metrics).with('daily', day)
+      expect_any_instance_of(described_class).to receive(:rollup_metrics).with('daily', day)
       VmdbDatabase.my_database.rollup_metrics(ts)
     end
   end
