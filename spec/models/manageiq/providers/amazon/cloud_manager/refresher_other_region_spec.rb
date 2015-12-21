@@ -33,7 +33,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
   def assert_table_counts
     ExtManagementSystem.count.should == 1
-    Flavor.count.should == 54
+    Flavor.count.should == 55
     AvailabilityZone.count.should == 3
     FloatingIp.count.should == 1
     AuthPrivateKey.count.should == 2
@@ -62,7 +62,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       :uid_ems     => nil
     )
 
-    @ems.flavors.size.should == 54
+    @ems.flavors.size.should == 55
     @ems.availability_zones.size.should == 3
     @ems.floating_ips.size.should == 1
     @ems.key_pairs.size.should == 2
