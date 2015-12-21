@@ -108,9 +108,9 @@ describe MiqAeCustomizationController do
         }
         controller.instance_variable_set(:@lastaction, "replace_right_cell")
         assigns(:edit)[:new] = new_hash
-        controller.stub(:get_node_info)
-        controller.stub(:replace_right_cell)
-        controller.stub(:render_flash)
+        allow(controller).to receive(:get_node_info)
+        allow(controller).to receive(:replace_right_cell)
+        allow(controller).to receive(:render_flash)
         controller.instance_variable_set(:@_params, :button => "add")
         controller.send(:dialog_edit)
         expect(assigns(:flash_array).first[:message]).to include("Validation failed:"\
@@ -152,9 +152,9 @@ describe MiqAeCustomizationController do
         }
         controller.instance_variable_set(:@lastaction, "replace_right_cell")
         assigns(:edit)[:new] = new_hash
-        controller.stub(:get_node_info)
-        controller.stub(:replace_right_cell)
-        controller.stub(:render_flash)
+        allow(controller).to receive(:get_node_info)
+        allow(controller).to receive(:replace_right_cell)
+        allow(controller).to receive(:render_flash)
         controller.instance_variable_set(:@_params, :button => "add")
         controller.send(:dialog_edit)
         expect(assigns(:flash_array).first[:message]).to include("Validation failed:"\

@@ -40,7 +40,7 @@ describe ApiController do
   def expect_result_to_have_provision_dialog
     expect_result_to_have_keys(%w(id href provision_dialog))
     provision_dialog = @result["provision_dialog"]
-    provision_dialog.should be_kind_of(Hash)
+    expect(provision_dialog).to be_kind_of(Hash)
     expect(provision_dialog).to have_key("label")
     expect(provision_dialog).to have_key("dialog_tabs")
     expect(provision_dialog["label"]).to eq(provision_dialog1.label)

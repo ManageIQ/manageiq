@@ -528,7 +528,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
 
   describe "parse_node" do
     it "handles node without capacity" do
-      parser.send(
+      expect(parser.send(
         :parse_node,
         RecursiveOpenStruct.new(
           :metadata => {
@@ -547,7 +547,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
             }
           }
         )
-      ).should == {
+      )).to eq({
         :name                       => 'test-node',
         :ems_ref                    => 'f0c1fe7e-9c09-11e5-bb22-28d2447dcefe',
         :creation_timestamp         => '2015-12-06T11:10:21Z',
@@ -575,11 +575,11 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         :namespace                  => nil,
         :resource_version           => '369104',
         :type                       => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode'
-      }
+      })
     end
 
     it "handles node without memory, cpu and pods" do
-      parser.send(
+      expect(parser.send(
         :parse_node,
         RecursiveOpenStruct.new(
           :metadata => {
@@ -599,7 +599,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
             :capacity => {}
           }
         )
-      ).should == {
+      )).to eq({
         :name                       => 'test-node',
         :ems_ref                    => 'f0c1fe7e-9c09-11e5-bb22-28d2447dcefe',
         :creation_timestamp         => '2015-12-06T11:10:21Z',
@@ -627,7 +627,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         :namespace                  => nil,
         :resource_version           => '3691041',
         :type                       => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode'
-      }
+      })
     end
   end
 end

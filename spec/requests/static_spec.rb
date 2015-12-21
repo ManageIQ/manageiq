@@ -3,7 +3,7 @@ require "spec_helper"
 describe "/static/*" do
   context "foo" do
     before :each do
-      ApplicationController.any_instance.stub(:set_user_time_zone)
+      allow_any_instance_of(ApplicationController).to receive(:set_user_time_zone)
     end
 
     it "returns test template" do

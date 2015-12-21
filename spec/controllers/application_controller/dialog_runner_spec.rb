@@ -149,13 +149,13 @@ describe CatalogController do
 
     it "redirects to requests show list after dialog is submitted" do
       controller.instance_variable_set(:@_params, :button => 'submit', :id => 'foo')
-      controller.stub(:role_allows).and_return(true)
-      wf.stub(:submit_request).and_return({})
-      page = mock('page')
-      page.should_receive(:redirect_to).with(:controller => "miq_request",
+      allow(controller).to receive(:role_allows).and_return(true)
+      allow(wf).to receive(:submit_request).and_return({})
+      page = double('page')
+      expect(page).to receive(:redirect_to).with(:controller => "miq_request",
                                              :action     => "show_list",
                                              :flash_msg  => "Order Request was Submitted")
-      controller.should_receive(:render).with(:update).and_yield(page)
+      expect(controller).to receive(:render).with(:update).and_yield(page)
       controller.send(:dialog_form_button_pressed)
     end
   end

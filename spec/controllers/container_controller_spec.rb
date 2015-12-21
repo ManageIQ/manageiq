@@ -81,7 +81,7 @@ describe ContainerController do
                                :name            => "container-01",
                                :container_group => container_group
                               )
-      controller.stub(:x_node).and_return("cnt_#{controller.to_cid(@ct.id)}")
+      allow(controller).to receive(:x_node).and_return("cnt_#{controller.to_cid(@ct.id)}")
       controller.instance_variable_set(:@record, @ct)
       FactoryGirl.create(:ems_event, :container_id => @ct.id)
     end
@@ -95,8 +95,8 @@ describe ContainerController do
            :pressed => "container_timeline",
            :id      => @ct.id,
            :display => 'timeline'
-      response.should render_template('layouts/_tl_show')
-      response.should render_template('layouts/_tl_detail')
+      expect(response).to render_template('layouts/_tl_show')
+      expect(response).to render_template('layouts/_tl_detail')
     end
 
     it "renders utilization views" do
@@ -104,8 +104,8 @@ describe ContainerController do
            :pressed => "container_perf",
            :id      => @ct.id,
            :display => 'performance'
-      response.should render_template('layouts/_perf_options')
-      response.should render_template('layouts/_perf_charts')
+      expect(response).to render_template('layouts/_perf_options')
+      expect(response).to render_template('layouts/_perf_charts')
     end
   end
 end

@@ -10,7 +10,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     @ems.update_attributes(:project => "civil-tube-113314")
 
     # A true thread may fail the test with VCR
-    Thread.stub(:new) do |*args, &block|
+    allow(Thread).to receive(:new) do |*args, &block|
       block.call(*args)
       Class.new do
         def join; end
@@ -38,32 +38,32 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
   end
 
   def assert_table_counts
-    ExtManagementSystem.count.should eql(1)
-    Flavor.count.should              eql(18)
-    AvailabilityZone.count.should    eql(13)
-    VmOrTemplate.count.should        eql(347)
-    Vm.count.should                  eql(2)
-    MiqTemplate.count.should         eql(345)
-    Disk.count.should                eql(0)
-    GuestDevice.count.should         eql(0)
-    Hardware.count.should            eql(2)
-    Network.count.should             eql(0)
-    OperatingSystem.count.should     eql(345)
-    Relationship.count.should        eql(0)
-    MiqQueue.count.should            eql(347)
+    expect(ExtManagementSystem.count).to eql(1)
+    expect(Flavor.count).to              eql(18)
+    expect(AvailabilityZone.count).to    eql(13)
+    expect(VmOrTemplate.count).to        eql(347)
+    expect(Vm.count).to                  eql(2)
+    expect(MiqTemplate.count).to         eql(345)
+    expect(Disk.count).to                eql(0)
+    expect(GuestDevice.count).to         eql(0)
+    expect(Hardware.count).to            eql(2)
+    expect(Network.count).to             eql(0)
+    expect(OperatingSystem.count).to     eql(345)
+    expect(Relationship.count).to        eql(0)
+    expect(MiqQueue.count).to            eql(347)
   end
 
   def assert_ems
-    @ems.flavors.size.should            eql(18)
-    @ems.availability_zones.size.should eql(13)
-    @ems.vms_and_templates.size.should  eql(347)
-    @ems.vms.size.should                eql(2)
-    @ems.miq_templates.size.should      eq(345)
+    expect(@ems.flavors.size).to            eql(18)
+    expect(@ems.availability_zones.size).to eql(13)
+    expect(@ems.vms_and_templates.size).to  eql(347)
+    expect(@ems.vms.size).to                eql(2)
+    expect(@ems.miq_templates.size).to      eq(345)
   end
 
   def assert_specific_zone
     @zone = ManageIQ::Providers::Google::CloudManager::AvailabilityZone.find_by_ems_ref("us-east1-b")
-    @zone.should have_attributes(
+    expect(@zone).to have_attributes(
       :name   => "us-east1-b",
       :ems_id => @ems.id
     )
@@ -71,7 +71,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
 
   def assert_specific_cloud_network
     @cn = CloudNetwork.where(:name => "default").first
-    @cn.should have_attributes(
+    expect(@cn).to have_attributes(
       :name    => "default",
       :ems_ref => "183954628405178359",
       :cidr    => "10.240.0.0/16",
@@ -82,7 +82,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
 
   def assert_specific_flavor
     @flavor = ManageIQ::Providers::Google::CloudManager::Flavor.where(:name => "f1-micro").first
-    @flavor.should have_attributes(
+    expect(@flavor).to have_attributes(
       :name        => "f1-micro",
       :ems_ref     => "f1-micro",
       :description => "1 vCPU (shared physical core) and 0.6 GB RAM",
@@ -92,12 +92,12 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :memory      => 643825664,
     )
 
-    @flavor.ext_management_system.should == @ems
+    expect(@flavor.ext_management_system).to eq(@ems)
   end
 
   def assert_specific_vm_powered_on
     v = ManageIQ::Providers::Google::CloudManager::Vm.where(:name => "rhel7", :raw_power_state => "RUNNING").first
-    v.should have_attributes(
+    expect(v).to have_attributes(
       :template              => false,
       :ems_ref               => "5220078748954475260",
       :ems_ref_obj           => nil,
@@ -122,18 +122,18 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :cpu_shares_level      => nil
     )
 
-    v.ext_management_system.should eql(@ems)
-    v.availability_zone.should eql(@zone)
+    expect(v.ext_management_system).to eql(@ems)
+    expect(v.availability_zone).to eql(@zone)
     #TODO parse instance flavor v.flavor.should eql(@flavor)
     #TODO parse instance OS v.operating_system.product_name.should eql("Red Hat Enterprise Linux")
-    v.custom_attributes.size.should eql(0)
-    v.snapshots.size.should         eql(0)
+    expect(v.custom_attributes.size).to eql(0)
+    expect(v.snapshots.size).to         eql(0)
 
     assert_specific_vm_powered_on_hardware(v)
   end
 
   def assert_specific_vm_powered_on_hardware(v)
-    v.hardware.should have_attributes(
+    expect(v.hardware).to have_attributes(
       :guest_os            => nil,
       :guest_os_full_name  => nil,
       :bios                => nil,
@@ -144,15 +144,15 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :virtualization_type => nil
     )
 
-    v.hardware.disks.size.should         eql(0) # TODO: Change to a flavor that has disks
-    v.hardware.guest_devices.size.should eql(0)
-    v.hardware.nics.size.should          eql(0)
+    expect(v.hardware.disks.size).to         eql(0) # TODO: Change to a flavor that has disks
+    expect(v.hardware.guest_devices.size).to eql(0)
+    expect(v.hardware.nics.size).to          eql(0)
 
     assert_specific_vm_powered_on_hardware_networks(v)
   end
 
   def assert_specific_vm_powered_on_hardware_networks(v)
-    v.hardware.networks.size.should eql(0)
+    expect(v.hardware.networks.size).to eql(0)
     # TODO inventory network hardware
   end
 
@@ -165,20 +165,20 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
 
     assert_specific_vm_powered_off_attributes(v)
 
-    v.ext_management_system.should  eql(@ems)
-    v.availability_zone.should      eql(zone1)
-    v.floating_ip.should            be_nil
-    v.cloud_network.should          be_nil
-    v.cloud_subnet.should           be_nil
+    expect(v.ext_management_system).to  eql(@ems)
+    expect(v.availability_zone).to      eql(zone1)
+    expect(v.floating_ip).to            be_nil
+    expect(v.cloud_network).to          be_nil
+    expect(v.cloud_subnet).to           be_nil
     #TODO parse instance OS v.operating_system.product_name.should eql("Debian")
-    v.custom_attributes.size.should eql(0)
-    v.snapshots.size.should         eql(0)
+    expect(v.custom_attributes.size).to eql(0)
+    expect(v.snapshots.size).to         eql(0)
 
     assert_specific_vm_powered_off_hardware(v)
   end
 
   def assert_specific_vm_powered_off_attributes(v)
-    v.should have_attributes(
+    expect(v).to have_attributes(
       :template              => false,
       :ems_ref               => "17122958274615180727",
       :ems_ref_obj           => nil,
@@ -205,7 +205,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
   end
 
   def assert_specific_vm_powered_off_hardware(v)
-    v.hardware.should have_attributes(
+    expect(v.hardware).to have_attributes(
       :guest_os           => nil,
       :guest_os_full_name => nil,
       :bios               => nil,
@@ -215,16 +215,16 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :bitness            => nil
     )
 
-    v.hardware.disks.size.should         eql(0)
-    v.hardware.guest_devices.size.should eql(0)
-    v.hardware.nics.size.should          eql(0)
-    v.hardware.networks.size.should      eql(0)
+    expect(v.hardware.disks.size).to         eql(0)
+    expect(v.hardware.guest_devices.size).to eql(0)
+    expect(v.hardware.nics.size).to          eql(0)
+    expect(v.hardware.networks.size).to      eql(0)
   end
 
   def assert_specific_template
     name      = "rhel-7-v20151104"
     @template = ManageIQ::Providers::Google::CloudManager::Template.where(:name => name).first
-    @template.should have_attributes(
+    expect(@template).to have_attributes(
       :template              => true,
       :ems_ref               => "5670907071397924697",
       :ems_ref_obj           => nil,
@@ -249,9 +249,9 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :cpu_shares_level      => nil
     )
 
-    @template.ext_management_system.should         eq(@ems)
-    @template.operating_system.product_name.should eq("linux_redhat")
-    @template.custom_attributes.size.should        eq(0)
-    @template.snapshots.size.should                eq(0)
+    expect(@template.ext_management_system).to         eq(@ems)
+    expect(@template.operating_system.product_name).to eq("linux_redhat")
+    expect(@template.custom_attributes.size).to        eq(0)
+    expect(@template.snapshots.size).to                eq(0)
   end
 end

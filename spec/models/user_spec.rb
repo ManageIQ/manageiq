@@ -98,7 +98,7 @@ describe User do
       password    = @user.password
       newpassword = "newpassword"
       @user.change_password(password, newpassword)
-      @user.password.should == newpassword
+      expect(@user.password).to eq(newpassword)
     end
 
     it "should raise an error when asked to change user password" do
