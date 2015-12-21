@@ -22,8 +22,8 @@ describe "LogCollection" do
     it { expect(@zone).to       be_log_collection_active_recently }
 
     context "21 minutes ago" do
-      it { expect(@miq_server.log_collection_active_recently?(21.minutes.ago.utc)).to be_true }
-      it { expect(@zone.log_collection_active_recently?(21.minutes.ago.utc)).to       be_true }
+      it { expect(@miq_server.log_collection_active_recently?(21.minutes.ago.utc)).to be_truthy }
+      it { expect(@zone.log_collection_active_recently?(21.minutes.ago.utc)).to       be_truthy }
     end
 
     context "jumping ahead in time 20 minutes" do
@@ -48,7 +48,7 @@ describe "LogCollection" do
       @region            = FactoryGirl.create(:miq_region)
       @timestamp         = "2010"
       @fname             = "/test.zip"
-      LogFile.any_instance.stub(:format_log_time).and_return(@timestamp)
+      allow_any_instance_of(LogFile).to receive(:format_log_time).and_return(@timestamp)
     end
 
     context "with a nil region column" do
@@ -64,7 +64,7 @@ describe "LogCollection" do
 
     context "with my_region nil" do
       before do
-        MiqRegion.stub(:my_region).and_return(nil)
+        allow(MiqRegion).to receive(:my_region).and_return(nil)
       end
 
       it "using a historical log file should raise no errors with a nil region association" do
@@ -75,7 +75,7 @@ describe "LogCollection" do
 
     context "using a historical log file" do
       before do
-        MiqRegion.stub(:my_region).and_return(@region)
+        allow(MiqRegion).to receive(:my_region).and_return(@region)
         @log_file.update_attributes(:historical => true)
       end
 
@@ -94,7 +94,7 @@ describe "LogCollection" do
 
     context "using a current log file" do
       before do
-        MiqRegion.stub(:my_region).and_return(@region)
+        allow(MiqRegion).to receive(:my_region).and_return(@region)
         @log_file.update_attributes(:historical => false)
       end
 
@@ -115,7 +115,7 @@ describe "LogCollection" do
   context "queue item and task item creation are atomic" do
     context "with error creating task" do
       before do
-        MiqTask.stub(:new).and_raise("some error message")
+        allow(MiqTask).to receive(:new).and_raise("some error message")
         LogFile.logs_from_server(@miq_server.id) rescue nil
       end
 
@@ -125,7 +125,7 @@ describe "LogCollection" do
 
     context "with error creating queue message" do
       before do
-        MiqQueue.stub(:put).and_raise("some error message")
+        allow(MiqQueue).to receive(:put).and_raise("some error message")
         LogFile.logs_from_server(@miq_server.id) rescue nil
       end
 

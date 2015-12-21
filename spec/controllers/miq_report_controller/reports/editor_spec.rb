@@ -105,16 +105,16 @@ describe ReportController do
         allow(User).to receive(:server_timezone).and_return("UTC")
 
         login_as user
-        User.any_instance.stub(:role_allows?).and_return(true)
+        allow_any_instance_of(User).to receive(:role_allows?).and_return(true)
 
-        controller.stub(:check_privileges).and_return(true)
-        controller.stub(:load_edit).and_return(true)
+        allow(controller).to receive(:check_privileges).and_return(true)
+        allow(controller).to receive(:load_edit).and_return(true)
 
-        controller.stub(:replace_right_cell)
+        allow(controller).to receive(:replace_right_cell)
 
         post :miq_report_edit, :id => rep.id, :button => 'reset'
-        assigns(:sb)[:miq_tab].should eq("edit_1")
-        assigns(:tabs).should include(["edit_1", ""])
+        expect(assigns(:sb)[:miq_tab]).to eq("edit_1")
+        expect(assigns(:tabs)).to include(["edit_1", ""])
       end
     end
   end
