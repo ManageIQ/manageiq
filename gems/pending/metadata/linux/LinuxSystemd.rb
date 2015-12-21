@@ -7,9 +7,10 @@ module MiqLinux
   class Systemd
     SYSTEM_DIRS = ['/etc/systemd/system', '/usr/lib/systemd/system']
     USER_DIRS   = ['/etc/systemd/user',   '/usr/lib/systemd/user']
+    ALL_DIRS    = SYSTEM_DIRS + USER_DIRS
 
     def self.detected?(fs)
-      (SYSTEM_DIRS + USER_DIRS).any? { |dir| fs.fileExists?(dir) }
+      ALL_DIRS.any? { |dir| fs.fileExists?(dir) }
     end
 
     def initialize(fs)
@@ -32,13 +33,17 @@ module MiqLinux
     end
 
     def files(unit_extension)
-      (SYSTEM_DIRS + USER_DIRS).flat_map do |dir|
+      existing_dirs.flat_map do |dir|
         dir_files = []
         @fs.dirForeach(dir) do |unit|
           dir_files << File.join(dir, unit) if @fs.fileExtname(unit) == unit_extension
         end
         dir_files
       end
+    end
+
+    def existing_dirs
+      ALL_DIRS.select { |dir| @fs.fileExists?(dir) }
     end
 
     def ini(file)
