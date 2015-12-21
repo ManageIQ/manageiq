@@ -1,14 +1,44 @@
 module EmsRefresh::SaveInventoryHelper
+  class TypedIndex
+    attr_accessor :record_index, :record_index_columns
+    attr_accessor :find_key
+    def initialize(records, find_key)
+      # Save the columns associated with the find keys, so we can coerce the hash values during fetch
+      columns_hash = records.first.try(:class).try(:columns_hash_with_virtual)
+      @record_index_columns = columns_hash.nil? ? [] : find_key.collect { |k| columns_hash[k.to_s] }
+
+      # Index the records by the values from the find_key
+      @record_index = records.each_with_object({}) do |r, h|
+        h.store_path(find_key.collect { |k| r.send(k) }, r)
+      end
+
+      @find_key = find_key
+    end
+
+    def fetch(hash)
+      return nil if record_index.blank?
+
+      hash_values = find_key.collect { |k| hash[k] }
+
+      # Coerce each hash value into the db column type for valid lookup during fetch_path
+      coerced_hash_values = hash_values.zip(record_index_columns).collect do |value, column|
+        column.type_cast_from_user(value)
+      end
+
+      record_index.fetch_path(coerced_hash_values)
+    end
+  end
+
   def save_inventory_multi(type, parent, hashes, deletes, find_key, child_keys = [], extra_keys = [])
     deletes = deletes.to_a # make sure to load the association if it's an association
     child_keys = Array.wrap(child_keys)
     remove_keys = Array.wrap(extra_keys) + child_keys
 
-    record_index, record_index_columns = save_inventory_prep_record_index(parent.send(type), find_key)
+    record_index = TypedIndex.new(parent.send(type), find_key)
 
     new_records = []
     hashes.each do |h|
-      found = save_inventory_with_findkey(type, parent, h.except(*remove_keys), deletes, new_records, record_index, record_index_columns, find_key)
+      found = save_inventory_with_findkey(type, parent, h.except(*remove_keys), deletes, new_records, record_index)
       save_child_inventory(found, h, child_keys)
     end
 
@@ -44,9 +74,9 @@ module EmsRefresh::SaveInventoryHelper
     found
   end
 
-  def save_inventory_with_findkey(type, parent, hash, deletes, new_records, record_index, record_index_columns, find_key)
+  def save_inventory_with_findkey(type, parent, hash, deletes, new_records, record_index)
     # Find the record, and update if found, else create it
-    found = save_inventory_record_index_fetch(record_index, record_index_columns, hash, find_key)
+    found = record_index.fetch(hash)
     if found.nil?
       found = parent.send(type).build(hash.except(:id))
       new_records << found
@@ -55,33 +85,6 @@ module EmsRefresh::SaveInventoryHelper
       deletes.delete(found) unless deletes.blank?
     end
     found
-  end
-
-  def save_inventory_prep_record_index(records, find_key)
-    # Save the columns associated with the find keys, so we can coerce the
-    #   hash values during save_inventory_record_index_fetch
-    columns_hash = records.first.try(:class).try(:columns_hash_with_virtual)
-    record_index_columns = columns_hash.nil? ? [] : find_key.collect { |k| columns_hash[k.to_s] }
-
-    # Index the records by the values from the find_key
-    record_index = records.each_with_object({}) do |r, h|
-      h.store_path(find_key.collect { |k| r.send(k) }, r)
-    end
-
-    return record_index, record_index_columns
-  end
-
-  def save_inventory_record_index_fetch(record_index, record_index_columns, hash, find_key)
-    return nil if record_index.blank?
-
-    hash_values = find_key.collect { |k| hash[k] }
-
-    # Coerce each hash value into the db column type for valid lookup during fetch_path
-    coerced_hash_values = hash_values.zip(record_index_columns).collect do |value, column|
-      column.type_cast_from_user(value)
-    end
-
-    record_index.fetch_path(coerced_hash_values)
   end
 
   def backup_keys(hash, keys)
