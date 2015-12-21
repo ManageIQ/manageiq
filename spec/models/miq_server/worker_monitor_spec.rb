@@ -13,7 +13,7 @@ describe "MiqWorker Monitor" do
 
     context "A worker" do
       before(:each) do
-        @worker = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id, :pid => rand(20))
+        @worker = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id)
       end
 
       it "MiqServer#clean_worker_records" do
@@ -41,6 +41,31 @@ describe "MiqWorker Monitor" do
         ids = @miq_server.check_not_responding
         @miq_server.miq_workers.length.should == 1
         ids.should == [@worker.id]
+      end
+
+      describe "#do_system_limit_exceeded" do
+        before do
+          @worker_to_keep = FactoryGirl.create(:miq_ems_metrics_processor_worker,
+            :miq_server   => @miq_server,
+            :memory_usage => 1.gigabytes
+          )
+          @worker_to_kill = FactoryGirl.create(:miq_ems_metrics_processor_worker,
+            :miq_server   => @miq_server,
+            :memory_usage => 2.gigabytes
+          )
+        end
+
+        it "will kill the worker with the highest memory" do
+          expect(@miq_server).to receive(:restart_worker).with(@worker_to_kill, :memory_exceeded)
+          @miq_server.do_system_limit_exceeded
+        end
+
+        it "will handle workers with nil memory_usage" do
+          @worker_to_keep.update_attributes!(:memory_usage => nil)
+
+          expect(@miq_server).to receive(:restart_worker).with(@worker_to_kill, :memory_exceeded)
+          @miq_server.do_system_limit_exceeded
+        end
       end
 
       context "with no messages" do
