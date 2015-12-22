@@ -94,5 +94,20 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
                                " failed: HTTP status code #{CODE}, #{CLIENT_MESSAGE}"
       end
     end
+
+    context 'when given a non docker image' do
+      before(:each) do
+        allow_any_instance_of(@image.class).to receive(:image_ref) do
+          'rocket://3629a651e6c11d7435937bdf41da11cf87863c03f2587fa788cf5cbfe8a11b9a'
+        end
+      end
+
+      it 'should fail' do
+        @job.signal(:start)
+        expect(@job.state).to eq 'finished'
+        expect(@job.status).to eq 'error'
+        expect(@job.message).to eq "cannont analyze non-docker images"
+      end
+    end
   end
 end
