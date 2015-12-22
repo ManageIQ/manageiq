@@ -165,6 +165,7 @@ describe ApplicationController do
       vm2 = FactoryGirl.create(:vm_microsoft)
       controller.instance_variable_set(:@_params, :pressed         => "vm_migrate",
                                                   :miq_grid_checks => "#{vm1.id},#{vm2.id}")
+      controller.set_response!(response)
       controller.send(:prov_redirect, "migrate")
       expect(assigns(:flash_array).first[:message]).to include("does not apply to at least one of the selected")
     end
@@ -177,6 +178,7 @@ describe ApplicationController do
       vm2 = FactoryGirl.create(:vm_vmware, :storage => storage, :ext_management_system => ems)
       controller.instance_variable_set(:@_params, :pressed         => "vm_migrate",
                                                   :miq_grid_checks => "#{vm1.id},#{vm2.id}")
+      controller.set_response!(response)
       controller.send(:prov_redirect, "migrate")
       expect(controller.send(:flash_errors?)).to be_falsey
       expect(assigns(:org_controller)).to eq("vm")
