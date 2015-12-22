@@ -2035,6 +2035,7 @@ Vmdb::Application.routes.draw do
         sort_ds_grid
         sort_host_grid
         sort_iso_img_grid
+        sort_vc_grid
         squash_toggle
         tagging_edit
         tag_edit_form_field_changed
