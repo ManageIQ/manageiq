@@ -105,12 +105,8 @@ describe User do
       password    = "wrongpwd"
       newpassword = "newpassword"
 
-      lambda do
-        @user.change_password(password, newpassword)
-      end.should
-      raise_error(MiqException::MiqEVMLoginError,
-                  "old password does not match current password"
-                 )
+      expect { @user.change_password(password, newpassword) }
+        .to raise_error(MiqException::MiqEVMLoginError)
     end
 
     it "should check for and get Managed and Belongs-to filters" do
