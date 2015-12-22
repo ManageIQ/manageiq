@@ -31,7 +31,7 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
   end
 
   # TODO(lwander) determine if user wants to use OAUTH or a service account
-  def missing_credentials?(_type)
+  def missing_credentials?(_type = {})
     false
   end
 
@@ -89,5 +89,22 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
 
   def gce
     @gce ||= connect(:service => "GCE")
+  end
+
+  # Operations
+
+  def vm_start(vm, _options = {})
+    vm.provider_object.start
+    vm.update_attributes!(:raw_power_state => "VM starting")
+  end
+
+  def vm_stop(vm, _options = {})
+    vm.provider_object.stop
+    vm.update_attributes!(:raw_power_state => "VM stopping")
+  end
+
+  def vm_restart(vm, _options = {})
+    vm.provider_object.restart
+    vm.update_attributes!(:raw_power_state => "VM starting")
   end
 end

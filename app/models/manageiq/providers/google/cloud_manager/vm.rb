@@ -1,7 +1,9 @@
 class ManageIQ::Providers::Google::CloudManager::Vm < ManageIQ::Providers::CloudManager::Vm
+  include_concern 'Operations'
+
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect
-    connection.instances[ems_ref]
+    connection.servers.get(name, availability_zone.name)
   end
 
   #
@@ -26,9 +28,9 @@ class ManageIQ::Providers::Google::CloudManager::Vm < ManageIQ::Providers::Cloud
 
   def self.calculate_power_state(raw_power_state)
     case raw_power_state.downcase
-    when "running"
+    when /running/, /starting/
       "on"
-    when "terminated"
+    when /terminated/, /stopping/
       "off"
     else
       "unknown"
