@@ -7,4 +7,7 @@ FactoryGirl.define do
 
   factory :flavor_openstack, :parent => :flavor, :class => "ManageIQ::Providers::Openstack::CloudManager::Flavor" do
   end
+
+  factory :flavor_google, :parent => :flavor, :class => "ManageIQ::Providers::Google::CloudManager::Flavor" do
+  end
 end
