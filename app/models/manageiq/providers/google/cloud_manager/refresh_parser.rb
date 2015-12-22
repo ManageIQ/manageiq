@@ -252,7 +252,15 @@ module ManageIQ::Providers
         ssh_keys = []
         if instance.metadata["items"]
           instance.metadata["items"].select { |x| x["key"] == "sshKeys" }.each do |ssh_key|
-            ssh_keys |= ssh_key["value"].split("\n")
+            ssh_key["value"].split("\n").each do |key|
+              # Google returns the public key in the form username:public_key
+              # so split on the first colon for the username and handle any
+              # colons that might be in the description by joining all
+              # following
+              name = key.split(":")[0]
+              public_key = key.split(":")[1..-1].join(":")
+              ssh_keys << {:name => name, :fingerprint => SSHKey.sha256_fingerprint(public_key)}
+            end
           end
         end
         ssh_keys
