@@ -98,6 +98,18 @@ module Metric::CiMixin::Capture
     end
   end
 
+  def perf_capture_realtime(*args)
+    perf_capture('realtime', *args)
+  end
+
+  def perf_capture_hourly(*args)
+    perf_capture('hourly', *args)
+  end
+
+  def perf_capture_historical(*args)
+    perf_capture('historical', *args)
+  end
+
   def perf_capture(interval_name, start_time = nil, end_time = nil)
     raise ArgumentError, "invalid interval_name '#{interval_name}'" unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
     raise ArgumentError, "end_time cannot be specified if start_time is nil" if start_time.nil? && !end_time.nil?
