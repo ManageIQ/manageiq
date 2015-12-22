@@ -43,7 +43,7 @@
 
         if ('login' !== $state.current.name) {
           // a bit of a hack to prevent multiple instances of the same notification - cleared on login submit
-          if (! Notifications.session_timed_out) {
+          if (!Notifications.session_timed_out) {
             Notifications.message('danger', '', 'Your session has timed out.', true);
             Notifications.session_timed_out = true;
           }
