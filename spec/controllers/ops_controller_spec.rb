@@ -204,7 +204,7 @@ describe OpsController do
          :timer_typ   => "Once",
          :timer_value => ""
 
-    expect(response.status).to eq(200)
+    expect(response).to be_success
 
     audit_event = AuditEvent.where(:target_id => schedule.id).first
     expect(audit_event.attributes['message']).to include("description changed to new_description")
