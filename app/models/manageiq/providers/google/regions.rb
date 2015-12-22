@@ -3,6 +3,11 @@ module ManageIQ
     module Regions
       # From https://cloud.google.com/compute/docs/zones
       REGIONS = {
+        "us-east1"     => {
+          :name        => "us-east1",
+          :hostname    => "us-east1",
+          :description => "Eastern US",
+        },
         "us-central1"  => {
           :name        => "us-central1",
           :hostname    => "us-central1",
