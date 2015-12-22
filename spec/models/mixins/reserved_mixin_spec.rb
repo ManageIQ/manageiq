@@ -3,7 +3,7 @@ describe ReservedMixin do
     class TestClass < ActiveRecord::Base
       self.table_name = "vms"
       include ReservedMixin
-      attr_via_reserved :some_field
+      reserve_attribute :some_field, :string
     end
   end
 
@@ -11,7 +11,7 @@ describe ReservedMixin do
     Object.send(:remove_const, :TestClass)
   end
 
-  context ".attr_via_reserved" do
+  context ".reserve_attribute" do
     it "normal case" do
       t = TestClass.new
       expect(t).to respond_to(:some_field)
@@ -29,7 +29,8 @@ describe ReservedMixin do
 
     it "with multiple fields" do
       class TestClass
-        attr_via_reserved :another_field, :a_third_field
+        reserve_attribute :another_field, :string
+        reserve_attribute :a_third_field, :string
       end
 
       t = TestClass.new

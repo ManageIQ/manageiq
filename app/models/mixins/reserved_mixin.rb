@@ -1,30 +1,23 @@
 module ReservedMixin
   extend ActiveSupport::Concern
   included do
-    has_one :reserved_rec, :class_name => "::Reserve", :as => :resource, :dependent => :delete
+    has_one :reserved_rec, :class_name => "::Reserve", :as => :resource,
+      :autosave => true, :dependent => :delete
+  end
 
-    # Override the method used by save and save!
-    def create_or_update_with_reserved
-      # Touch the current record, but don't save it yet
-      current_time = current_time_from_proper_timezone
-      write_attribute('updated_at', current_time) if respond_to?(:updated_at)
-      write_attribute('updated_on', current_time) if respond_to?(:updated_on)
-
-      ret = create_or_update_without_reserved
-      res = reserved_rec
-      res.save! if res
-      ret
-    end
-    alias_method_chain :create_or_update, :reserved
-
+  module ClassMethods
     # Dynamically creates a getter, setter, and ? method that uses the
     #   reserved column as a Hash to store the value.
-    def self.attr_via_reserved(*attributes)
-      attributes.each do |attribute|
-        attribute = attribute.to_sym
-        define_method(attribute)       { reserved_hash_get(attribute) }
-        define_method("#{attribute}?") { !!reserved_hash_get(attribute) }
-        define_method("#{attribute}=") { |val| reserved_hash_set(attribute, val) }
+    def reserve_attribute(name, type)
+      name = name.to_sym
+
+      attribute name, type
+
+      define_method(name)       { reserved_hash_get(name) }
+      define_method("#{name}?") { !!reserved_hash_get(name) }
+      define_method("#{name}=") do |val|
+        send("#{name}_will_change!")
+        reserved_hash_set(name, val)
       end
     end
   end
