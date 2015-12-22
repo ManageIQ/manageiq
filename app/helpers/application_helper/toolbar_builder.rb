@@ -47,7 +47,8 @@ class ApplicationHelper::ToolbarBuilder
 
   def build_select_button(bgi, index)
     bs_children = false
-    props = ApplicationHelper::ToolbarButtons.button(@view_context, @view_binding, @instance_data,
+    props = ApplicationHelper::ToolbarButtons.button(
+      @view_context, @view_binding, @instance_data,
       "id"     => bgi[:buttonSelect],
       "type"   => "buttonSelect",
       "img"    => img = "#{bgi[:image] ? bgi[:image] : bgi[:buttonSelect]}.png",
@@ -64,9 +65,10 @@ class ApplicationHelper::ToolbarBuilder
       if bsi.key?(:separator)
         props = ApplicationHelper::Button::Separator.new("id" => "sep_#{index}_#{bsi_idx}", :hidden => !any_visible)
       else
-        next if build_toolbar_hide_button(bsi[:pressed] || bsi[:button])  # Use pressed, else button name
+        next if build_toolbar_hide_button(bsi[:pressed] || bsi[:button]) # Use pressed, else button name
         bs_children = true
-        props = ApplicationHelper::ToolbarButtons.button(@view_context, @view_binding, @instance_data,
+        props = ApplicationHelper::ToolbarButtons.button(
+          @view_context, @view_binding, @instance_data,
           "child_id" => bsi[:button],
           "id"       => bgi[:buttonSelect] + "__" + bsi[:button],
           "type"     => "button",
@@ -112,7 +114,7 @@ class ApplicationHelper::ToolbarBuilder
     dis_title = build_toolbar_disable_button(button['id'])
     if dis_title
       button["enabled"] = "false"
-      button["title"]    = dis_title
+      button["title"]   = dis_title
     end
     button
   end
@@ -126,7 +128,8 @@ class ApplicationHelper::ToolbarBuilder
     end
 
     @sep_needed = true unless button_hide
-    props = ApplicationHelper::ToolbarButtons.button(@view_context, @view_binding, @instance_data,
+    props = ApplicationHelper::ToolbarButtons.button(
+      @view_context, @view_binding, @instance_data,
       "id"     => bgi[:button],
       "type"   => "button",
       "img"    => "#{get_image(bgi[:image], bgi[:button]) ? get_image(bgi[:image], bgi[:button]) : bgi[:button]}.png",
@@ -150,13 +153,14 @@ class ApplicationHelper::ToolbarBuilder
         @sep_added = true
       end
     end
-    @sep_needed = true                                         # Button was added, need separators from now on
+    @sep_needed = true # Button was added, need separators from now on
   end
 
   def build_twostate_button(bgi, index)
     return nil if build_toolbar_hide_button(bgi[:buttonTwoState])
 
-    props = ApplicationHelper::ToolbarButtons.button(@view_context, @view_binding, @instance_data,
+    props = ApplicationHelper::ToolbarButtons.button(
+      @view_context, @view_binding, @instance_data,
       "id"     => bgi[:buttonTwoState],
       "type"   => "buttonTwoState",
       "img"    => img = "#{bgi[:image] ? bgi[:image] : bgi[:buttonTwoState]}.png",

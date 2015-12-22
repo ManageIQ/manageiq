@@ -30,4 +30,3 @@ class ApplicationHelper::ToolbarButtons
     button
   end
 end
-

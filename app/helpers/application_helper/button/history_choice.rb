@@ -7,4 +7,3 @@ class ApplicationHelper::Button::HistoryChoice < ApplicationHelper::Button::Basi
     end
   end
 end
-
