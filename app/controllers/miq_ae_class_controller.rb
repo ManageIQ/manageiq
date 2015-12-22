@@ -2247,12 +2247,14 @@ class MiqAeClassController < ApplicationController
   # Set record variables to new values
   def set_field_vars(parent = nil)
     fields = parent_fields(parent)
+    highest_priority = fields.count
     @edit[:new][:fields].each_with_index do |fld, i|
       if fld['id'].nil?
         new_field = MiqAeField.new
+        highest_priority += 1
+        new_field.priority  = highest_priority
         if @ae_method
           new_field.method_id = @ae_method.id
-          new_field.priority  = i + 1
         else
           new_field.class_id = @ae_class.id
         end
