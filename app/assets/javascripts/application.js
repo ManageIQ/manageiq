@@ -76,6 +76,8 @@
 //= require bootstrap-filestyle
 //= require bootstrap-select
 //= require bootstrap-hover-dropdown
+//= require bootstrap-switch
+//= require angular-bootstrap-switch
 //= require patternfly
 //= require jquery.observe_field
 //= require miq_jquery_ujs_rails3

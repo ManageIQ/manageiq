@@ -21,9 +21,10 @@
         %tbody
           %tr{"ng-repeat" => "(quota_name, quota_obj) in tenantQuotaModel.quotas", "ng-form" => "rowForm", "ng-class" => "{'has-error': rowForm.value.$invalid}"}
             %td.narrow
-              %input{"type"        => "checkbox",
+              %input{"bs-switch"  => "",
+                    "type"        => "checkbox",
                     "name"        => "enforced",
-                    "ng-click"    => "enforcedChanged(quota_name)",
+                    "ng-change"   => "enforcedChanged(quota_name)",
                     "ng-model"    => "quota_obj.enforced"}
             %td {{quota_obj.description}}
             %td
