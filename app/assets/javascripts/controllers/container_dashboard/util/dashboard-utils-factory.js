@@ -1,4 +1,4 @@
-angular.module('miq.util').factory('miq.util', [function dashboardUtilsFactory () {
+angular.module('miq.util').factory('dashboardUtilsFactory', [function dashboardUtilsFactory () {
   var createProvidersStatus = function() {
     return {
       title: "Providers",
