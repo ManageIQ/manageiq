@@ -11,11 +11,11 @@ describe ApplicationController do
     context "with a resource_action dialog" do
       it "Vm button" do
         controller.instance_variable_set(:@_params, :id => vm.id, :button_id => button.id)
-        expect(controller).to receive(:dialog_initialize).with { |action, options|
+        expect(controller).to receive(:dialog_initialize) do |action, options|
           expect(action).to eq(resource_action)
           expect(options[:target_id]).to eq(vm.id)
           expect(options[:target_kls]).to eq(vm.class.name)
-        }
+        end
 
         controller.send(:custom_buttons)
         expect(assigns(:right_cell_text)).to include(vm.name)
@@ -26,11 +26,11 @@ describe ApplicationController do
         button.update_attributes(:applies_to_class => "MiqTemplate")
         controller.instance_variable_set(:@_params, :id => template.id, :button_id => button.id)
 
-        expect(controller).to receive(:dialog_initialize).with { |action, options|
+        expect(controller).to receive(:dialog_initialize) do |action, options|
           expect(action).to eq(resource_action)
           expect(options[:target_id]).to eq(template.id)
           expect(options[:target_kls]).to eq(template.class.name)
-        }
+        end
 
         controller.send(:custom_buttons)
         expect(assigns(:right_cell_text)).to include(template.name)

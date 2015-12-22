@@ -12,9 +12,9 @@ describe MiqProvision do
     let(:prov) { FactoryGirl.build(:miq_provision, :tenant => t1) }
 
     def stub_method
-      expect(MiqAeEngine).to receive(:resolve_automation_object).with { |uri, _, _, _|
-        expect(uri).to eq('REQUEST')
-      }.and_return(workspace)
+      expect(MiqAeEngine)
+        .to receive(:resolve_automation_object) { |uri, _, _, _| expect(uri).to eq('REQUEST') }
+        .and_return(workspace)
     end
 
     context "with password" do

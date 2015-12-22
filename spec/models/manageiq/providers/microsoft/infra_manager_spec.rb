@@ -20,23 +20,23 @@ describe ManageIQ::Providers::Microsoft::InfraManager do
     end
 
     it "defaults" do
-      expect(described_class).to receive(:raw_connect).with { |url, protocol, creds|
+      expect(described_class).to receive(:raw_connect) do |url, protocol, creds|
         expect(url).to match(/host/)
         expect(protocol).to eq("ssl")
         expect(creds[:user]).to eq("user")
         expect(creds[:pass]).to eq("pass")
-      }
+      end
 
       @e.connect
     end
 
     it "accepts overrides" do
-      expect(described_class).to receive(:raw_connect).with { |url, protocol, creds|
+      expect(described_class).to receive(:raw_connect) do |url, protocol, creds|
         expect(url).to match(/host2/)
         expect(protocol).to eq("ssl")
         expect(creds[:user]).to eq("user2")
         expect(creds[:pass]).to eq("pass2")
-      }
+      end
 
       @e.connect(:user => "user2", :pass => "pass2", :hostname => "host2")
     end
@@ -49,25 +49,25 @@ describe ManageIQ::Providers::Microsoft::InfraManager do
     end
 
     it "defaults" do
-      expect(described_class).to receive(:raw_connect).with { |url, protocol, creds|
+      expect(described_class).to receive(:raw_connect) do |url, protocol, creds|
         expect(url).to match(/host/)
         expect(protocol).to eq("kerberos")
         expect(creds[:user]).to eq("user")
         expect(creds[:pass]).to eq("pass")
         expect(creds[:realm]).to eq("pretendrealm")
-      }
+      end
 
       @e.connect
     end
 
     it "accepts overrides" do
-      expect(described_class).to receive(:raw_connect).with { |url, protocol, creds|
+      expect(described_class).to receive(:raw_connect) do |url, protocol, creds|
         expect(url).to match(/host2/)
         expect(protocol).to eq("kerberos")
         expect(creds[:user]).to eq("user2")
         expect(creds[:pass]).to eq("pass2")
         expect(creds[:realm]).to eq("pretendrealm")
-      }
+      end
 
       @e.connect(:user => "user2", :pass => "pass2", :hostname => "host2")
     end
