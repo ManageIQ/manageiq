@@ -33,9 +33,22 @@ describe ContainerTopologyService do
     let(:container_condition) { ContainerCondition.create(:name => 'Ready', :status => 'True') }
     let(:container_def) { ContainerDefinition.create(:name => "ruby-example", :ems_ref => 'b6976f84-5184-11e5-950e-001a4a231290_ruby-helloworld_172.30.194.30:5000/test/origin-ruby-sample@sha256:0cd076c9beedb3b1f5cf3ba43da6b749038ae03f5886b10438556e36ec2a0dd9', :container => container) }
     let(:container_node) { ContainerNode.create(:ext_management_system => ems_kube, :name => "127.0.0.1", :ems_ref => "905c90ba-3e00-11e5-a0d2-18037327aaeb", :container_conditions => [container_condition], :lives_on => vm_rhev) }
-    let(:ems_kube) { FactoryGirl.create(:ems_kubernetes) }
+    let(:ems_kube) { FactoryGirl.create(:ems_kubernetes_with_authentication_err) }
+    let(:ems_openshift) { FactoryGirl.create(:ems_openshift) }
     let(:ems_rhev) { FactoryGirl.create(:ems_redhat) }
     let(:vm_rhev) { FactoryGirl.create(:vm_redhat, :uid_ems => "558d9a08-7b13-11e5-8546-129aa6621998", :ext_management_system => ems_rhev) }
+
+    it "provider has unknown status when no authentication exists" do
+      container_topology_service.stub(:retrieve_providers).and_return([ems_openshift])
+      expect(subject[:items]).to eq(
+        ems_openshift.id.to_s         => {:id       => ems_openshift.id.to_s,
+                                          :name     => ems_openshift.name,
+                                          :status   => "Unknown",
+                                          :kind     => "Openshift",
+                                          :miq_id   => ems_openshift.id,
+                                          :icon     => icon('vendor-openshift')})
+
+    end
 
     it "topology contains the expected structure and content" do
       # vm and host test cross provider correlation to infra provider
@@ -63,7 +76,7 @@ describe ContainerTopologyService do
       expect(subject[:items]).to eq(
         ems_kube.id.to_s                       => {:id       => ems_kube.id.to_s,
                                                    :name     => ems_kube.name,
-                                                   :status   => "Unknown",
+                                                   :status   => "Error",
                                                    :kind     => "Kubernetes",
                                                    :miq_id   => ems_kube.id,
                                                    :icon     => icon('vendor-kubernetes')},
@@ -190,7 +203,7 @@ describe ContainerTopologyService do
 
         ems_kube.id.to_s                       => {:id       => ems_kube.id.to_s,
                                                    :name     => ems_kube.name,
-                                                   :status   => "Unknown",
+                                                   :status   => "Error",
                                                    :kind     => "Kubernetes",
                                                    :miq_id   => ems_kube.id,
                                                    :icon     => icon('vendor-kubernetes')}
