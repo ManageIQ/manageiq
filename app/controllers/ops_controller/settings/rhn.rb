@@ -11,7 +11,6 @@ module OpsController::Settings::RHN
 
   SUBSCRIPTION_TYPES =
     [['Red Hat Subscription Management', 'sm_hosted'],
-     ['Red Hat Satellite 5',             'rhn_satellite'],
      ['Red Hat Satellite 6',             'rhn_satellite6']]
 
   def rhn_subscription_types
@@ -41,9 +40,6 @@ module OpsController::Settings::RHN
     helper_method(:rhn_account_info_string)
     hide_action(:rhn_account_info_string)
 
-    helper_method(:rhn_validate_enabled)
-    hide_action(:rhn_validate_enabled)
-
     helper_method(:rhn_default_enabled)
     hide_action(:rhn_default_enabled)
   end
@@ -56,10 +52,6 @@ module OpsController::Settings::RHN
 
   def rhn_account_info_string
     "Enter your Red Hat#{@edit[:new][:register_to] == "sm_hosted" ? "" : " Network Satellite"} account information"
-  end
-
-  def rhn_validate_enabled
-    @edit[:new][:register_to] != 'rhn_satellite'
   end
 
   def rhn_default_enabled
@@ -350,6 +342,6 @@ module OpsController::Settings::RHN
   private
 
   def reset_repo_name_from_default
-    MiqDatabase.registration_default_value_for_update_repo_name(@edit[:new][:register_to])
+    MiqDatabase.registration_default_value_for_update_repo_name
   end
 end
