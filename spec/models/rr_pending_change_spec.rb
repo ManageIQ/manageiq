@@ -32,6 +32,9 @@ describe RrPendingChange do
   end
 
   describe ".backlog_details" do
+    require 'active_support/testing/stream'
+    include ActiveSupport::Testing::Stream
+
     it "returns the correct counts" do
       MiqRegion.seed
       region = MiqRegion.my_region_number
