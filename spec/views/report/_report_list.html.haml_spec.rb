@@ -1,5 +1,4 @@
 require "spec_helper"
-include ApplicationHelper
 
 describe "report/_report_list.html.haml" do
   before do

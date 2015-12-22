@@ -4,7 +4,9 @@ module ApplicationHelper
   include_concern 'FormTags'
   include Sandbox
   include CompressedIds
+  include JsHelper
   include StiRoutingHelper
+  include ToolbarHelper
   include TextualSummaryHelper
 
   # Create a collapsed panel based on a condition

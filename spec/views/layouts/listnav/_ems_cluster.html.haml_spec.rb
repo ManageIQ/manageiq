@@ -1,12 +1,11 @@
 require "spec_helper"
-include ApplicationHelper
 
 describe "layouts/listnav/_ems_cluster.html.haml" do
   before :each do
     set_controller_for_view("ems_cluster")
     assign(:panels, "ems_cluster_prop" => true, "ems_cluster_rel" => true)
     allow(view).to receive(:truncate_length).and_return(23)
-    allow_any_instance_of(ActionView::Base).to receive(:role_allows).and_return(true)
+    allow(view).to receive(:role_allows).and_return(true)
   end
 
   it "both timeline links pass display=timeline" do

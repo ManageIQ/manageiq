@@ -1,5 +1,4 @@
 require "spec_helper"
-include ApplicationHelper
 
 describe "rendering fields in host new/edit form" do
   before(:each) do

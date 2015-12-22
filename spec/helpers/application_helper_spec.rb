@@ -1,19 +1,15 @@
 require "spec_helper"
-include ActionView::Helpers::JqueryHelper
-include JsHelper
-include ToolbarHelper
 
 describe ApplicationHelper do
   before do
     login_as @user = FactoryGirl.create(:user)
     allow(@user).to receive(:role_allows?).and_return(true)
+    allow(@user).to receive(:role_allows_any?).and_return(true)
   end
 
   context "build_toolbar" do
     it 'should substitute dynamic function values' do
       req        = ActionDispatch::Request.new Rack::MockRequest.env_for '/?controller=foo'
-      allow(controller).to receive(:role_allows).and_return(true)
-      allow(controller).to receive(:request).and_return(req)
       menu_info  = helper.build_toolbar 'storages_center_tb'
       title_text = ui_lookup(:tables => "storages")
 
@@ -28,8 +24,6 @@ describe ApplicationHelper do
 
     it 'should substitute dynamic ivar values' do
       req = ActionDispatch::Request.new Rack::MockRequest.env_for '/?controller=foo'
-      allow(controller).to receive(:role_allows).and_return(true)
-      allow(controller).to receive(:request).and_return(req)
       controller.instance_variable_set(:@sb,
                                        :active_tree => :cb_reports_tree,
                                        :nodeid      => 'storages',
@@ -86,23 +80,23 @@ describe ApplicationHelper do
     context "when with :feature" do
       context "and :any" do
         it "and entitled" do
-          expect(role_allows(:feature => "miq_report", :any => true)).to be_truthy
+          expect(helper.role_allows(:feature => "miq_report", :any => true)).to be_truthy
         end
 
         it "and not entitled" do
           @user.stub(:role_allows_any? => false)
-          expect(role_allows(:feature => "miq_report", :any => true)).to be_falsey
+          expect(helper.role_allows(:feature => "miq_report", :any => true)).to be_falsey
         end
       end
 
       context "and no :any" do
         it "and entitled" do
-          expect(role_allows(:feature => "miq_report")).to be_truthy
+          expect(helper.role_allows(:feature => "miq_report")).to be_truthy
         end
 
         it "and not entitled" do
           @user.stub(:role_allows? => false)
-          expect(role_allows(:feature => "miq_report")).to be_falsey
+          expect(helper.role_allows(:feature => "miq_report")).to be_falsey
         end
       end
     end
@@ -120,12 +114,12 @@ describe ApplicationHelper do
     end
 
     it "when not with :feature or :main_tab_id" do
-      expect(role_allows).to be_falsey
+      expect(helper.role_allows).to be_falsey
     end
   end
 
   describe "#model_to_controller" do
-    subject { model_to_controller(@record) }
+    subject { helper.model_to_controller(@record) }
 
     it "when with any record" do
       @record = FactoryGirl.create(:vm_vmware)
@@ -133,7 +127,7 @@ describe ApplicationHelper do
     end
 
     it "when record is nil" do
-      expect { model_to_controller(nil) }.to raise_error(NoMethodError)
+      expect { helper.model_to_controller(nil) }.to raise_error(NoMethodError)
     end
   end
 
@@ -154,47 +148,47 @@ describe ApplicationHelper do
 
       it "with one Instance" do
         record_ids = [@record_1.id]
-        expect(object_types_for_flash_message(@klass, record_ids)).to eq("Instance")
+        expect(helper.object_types_for_flash_message(@klass, record_ids)).to eq("Instance")
       end
 
       it "with multiple Instances" do
         record_ids = [@record_1.id, @record_2.id]
-        expect(object_types_for_flash_message(@klass, record_ids)).to eq("Instances")
+        expect(helper.object_types_for_flash_message(@klass, record_ids)).to eq("Instances")
       end
 
       it "with one Instance and one Image" do
         record_ids = [@record_1.id, @record_3.id]
-        expect(object_types_for_flash_message(@klass, record_ids)).to eq("Image and Instance")
+        expect(helper.object_types_for_flash_message(@klass, record_ids)).to eq("Image and Instance")
       end
 
       it "with one Instance and multiple Images" do
         record_ids = [@record_1.id, @record_3.id, @record_4.id]
-        expect(object_types_for_flash_message(@klass, record_ids)).to eq("Images and Instance")
+        expect(helper.object_types_for_flash_message(@klass, record_ids)).to eq("Images and Instance")
       end
 
       it "with multiple Instances and multiple Images" do
         record_ids = [@record_1.id, @record_2.id, @record_3.id, @record_4.id]
-        expect(object_types_for_flash_message(@klass, record_ids)).to eq("Images and Instances")
+        expect(helper.object_types_for_flash_message(@klass, record_ids)).to eq("Images and Instances")
       end
 
       it "with multiple Instances and one Virtual Machine" do
         record_ids = [@record_1.id, @record_2.id, @record_5.id]
-        expect(object_types_for_flash_message(@klass, record_ids)).to eq("Instances and Virtual Machine")
+        expect(helper.object_types_for_flash_message(@klass, record_ids)).to eq("Instances and Virtual Machine")
       end
 
       it "with multiple Instances and multiple Virtual Machines" do
         record_ids = [@record_1.id, @record_2.id, @record_5.id, @record_6.id]
-        expect(object_types_for_flash_message(@klass, record_ids)).to eq("Instances and Virtual Machines")
+        expect(helper.object_types_for_flash_message(@klass, record_ids)).to eq("Instances and Virtual Machines")
       end
 
       it "with multiple Instances, one Image and multiple Virtual Machines" do
         record_ids = [@record_5.id, @record_6.id, @record_1.id, @record_2.id, @record_4.id]
-        expect(object_types_for_flash_message(@klass, record_ids)).to eq("Image, Instances, and Virtual Machines")
+        expect(helper.object_types_for_flash_message(@klass, record_ids)).to eq("Image, Instances, and Virtual Machines")
       end
 
       it "with multiple Instances, multiple Images and multiple Virtual Machines" do
         record_ids = [@record_5.id, @record_6.id, @record_1.id, @record_2.id, @record_3.id, @record_4.id]
-        expect(object_types_for_flash_message(@klass, record_ids)).to eq("Images, Instances, and Virtual Machines")
+        expect(helper.object_types_for_flash_message(@klass, record_ids)).to eq("Images, Instances, and Virtual Machines")
       end
     end
 
@@ -205,27 +199,27 @@ describe ApplicationHelper do
 
       it "with one Service" do
         record_ids = [@record_1.id]
-        expect(object_types_for_flash_message(@klass, record_ids)).to eq("Service")
+        expect(helper.object_types_for_flash_message(@klass, record_ids)).to eq("Service")
       end
 
       it "with multiple Services" do
         record_ids = [@record_1.id, @record_2.id]
-        expect(object_types_for_flash_message(@klass, record_ids)).to eq("Services")
+        expect(helper.object_types_for_flash_message(@klass, record_ids)).to eq("Services")
       end
     end
   end
 
   describe "#url_for_record" do
-    subject { url_for_record(@record, @action = "show") }
+    subject { helper.url_for_record(@record, @action = "show") }
 
     it "when record is VmOrTemplate" do
       @record = Vm.new
-      expect(subject).to eq(url_for_db(controller_for_vm(model_for_vm(@record)), @action))
+      expect(subject).to eq(helper.url_for_db(helper.controller_for_vm(helper.model_for_vm(@record)), @action))
     end
 
     it "when record is not VmOrTemplate" do
       @record = FactoryGirl.create(:host)
-      expect(subject).to eq(url_for_db(@record.class.base_class.to_s, @action))
+      expect(subject).to eq(helper.url_for_db(@record.class.base_class.to_s, @action))
     end
   end
 
@@ -244,17 +238,17 @@ describe ApplicationHelper do
         it "and db = #{d}" do
           db = d
           @last_action = (d == "Account" ? "users" : d.tableize)
-          expect(url_for_db(db, @action)).to eq(url_for(:controller => "vm_or_template",
-                                                        :action     => @lastaction,
-                                                        :id         => @vm,
-                                                        :show       => @id))
+          expect(helper.url_for_db(db, @action)).to eq(helper.url_for(:controller => "vm_or_template",
+                                                                      :action     => @lastaction,
+                                                                      :id         => @vm,
+                                                                      :show       => @id))
         end
       end
 
       it "otherwise" do
         db = "vm"
-        c, a = db_to_controller(db, @action)
-        expect(url_for_db(db, @action)).to eq(url_for(:controller => c, :action => a, :id => @id))
+        c, a = helper.db_to_controller(db, @action)
+        expect(helper.url_for_db(db, @action)).to eq(helper.url_for(:controller => c, :action => a, :id => @id))
       end
     end
 
@@ -267,26 +261,26 @@ describe ApplicationHelper do
       ["Patch", "GuestApplication"].each do |d|
         it "and db = #{d}" do
           db = d
-          expect(url_for_db(db, @action))
-            .to eq(url_for(:controller => "host", :action => @lastaction, :id => @host, :show => @id))
+          expect(helper.url_for_db(db, @action))
+            .to eq(helper.url_for(:controller => "host", :action => @lastaction, :id => @host, :show => @id))
         end
       end
 
       it "otherwise" do
         db = "vm"
-        c, a = db_to_controller(db, @action)
-        expect(url_for_db(db, @action)).to eq(url_for(:controller => c, :action => a, :id => @id))
+        c, a = helper.db_to_controller(db, @action)
+        expect(helper.url_for_db(db, @action)).to eq(helper.url_for(:controller => c, :action => a, :id => @id))
       end
     end
 
     it "when with no @vm, no @host, and no @db" do
       db = 'Vm'
-      expect(url_for_db(db, @action)).to eq("/vm/#{@action}/#{@id}")
+      expect(helper.url_for_db(db, @action)).to eq("/vm/#{@action}/#{@id}")
     end
   end
 
   describe "#db_to_controller" do
-    subject { db_to_controller(@db) }
+    subject { helper.db_to_controller(@db) }
 
     context "when with ActionSet" do
       before { @db = "ActionSet" }
@@ -504,7 +498,7 @@ describe ApplicationHelper do
   end
 
   describe "#field_to_col" do
-    subject { field_to_col(field) }
+    subject { helper.field_to_col(field) }
     context "when field likes 'Vm.hardware.disks-size'" do
       let(:field) { "Vm.hardware.disks-size" }
       it { is_expected.to eq("disks.size") }
@@ -528,25 +522,25 @@ describe ApplicationHelper do
 
   context "#get_vmdb_config" do
     it "Replaces calls to VMDB::Config.new in the views/controllers" do
-      expect(get_vmdb_config).to equal(@vmdb_config)
+      expect(helper.get_vmdb_config).to eq(VMDB::Config.new("vmdb").config)
     end
   end
 
   context "#to_cid" "(id)" do
     it "converts record id to compressed id" do
-      expect(to_cid(12_000_000_000_056)).to eq('12r56')
+      expect(helper.to_cid(12_000_000_000_056)).to eq('12r56')
     end
   end
 
   context "#from_cid" "(cid)" do
     it "converts compressed id to record id" do
-      expect(from_cid("12r56")).to eq(12_000_000_000_056)
+      expect(helper.from_cid("12r56")).to eq(12_000_000_000_056)
     end
   end
 
   context "#title_from_layout" do
     let(:title) { I18n.t('product.name') }
-    subject { title_from_layout(@layout) }
+    subject { helper.title_from_layout(@layout) }
 
     it "when layout is blank" do
       @layout = ""
@@ -641,8 +635,8 @@ describe ApplicationHelper do
 
   context "#controller_model_name" do
     it "returns the model's title" do
-      expect(controller_model_name("OntapFileShare")).to eq("Storage - File Share")
-      expect(controller_model_name("CimStorageExtent")).to eq("Storage - Extent")
+      expect(helper.controller_model_name("OntapFileShare")).to eq("Storage - File Share")
+      expect(helper.controller_model_name("CimStorageExtent")).to eq("Storage - Extent")
     end
   end
 
@@ -652,7 +646,7 @@ describe ApplicationHelper do
         .to receive(:fetch_path).with(:browser, :name).and_return('explorer')
       allow_any_instance_of(ActionController::TestSession)
         .to receive(:fetch_path).with(:browser, :version).and_return('7.10')
-      expect(is_browser_ie7?).to be_truthy
+      expect(helper.is_browser_ie7?).to be_truthy
     end
 
     it "when browser's NOT explorer version 7.x" do
@@ -660,7 +654,7 @@ describe ApplicationHelper do
         .to receive(:fetch_path).with(:browser, :name).and_return('explorer')
       allow_any_instance_of(ActionController::TestSession)
         .to receive(:fetch_path).with(:browser, :version).and_return('6.10')
-      expect(is_browser_ie7?).to be_falsey
+      expect(helper.is_browser_ie7?).to be_falsey
     end
   end
 
@@ -668,13 +662,13 @@ describe ApplicationHelper do
     it "when browser's explorer" do
       allow_any_instance_of(ActionController::TestSession)
         .to receive(:fetch_path).with(:browser, :name).and_return('explorer')
-      expect(is_browser_ie?).to be_truthy
+      expect(helper.is_browser_ie?).to be_truthy
     end
 
     it "when browser's NOT explorer" do
       allow_any_instance_of(ActionController::TestSession)
         .to receive(:fetch_path).with(:browser, :name).and_return('safari')
-      expect(is_browser_ie?).to be_falsey
+      expect(helper.is_browser_ie?).to be_falsey
     end
   end
 
@@ -682,13 +676,13 @@ describe ApplicationHelper do
     it "when browser's name is in the list" do
       allow_any_instance_of(ActionController::TestSession)
         .to receive(:fetch_path).with(:browser, :name).and_return('safari')
-      expect(is_browser?(%w(firefox opera safari))).to be_truthy
+      expect(helper.is_browser?(%w(firefox opera safari))).to be_truthy
     end
 
     it "when browser's name is NOT in the list" do
       allow_any_instance_of(ActionController::TestSession)
         .to receive(:fetch_path).with(:browser, :name).and_return('explorer')
-      expect(is_browser?(%w(firefox opera safari))).to be_falsey
+      expect(helper.is_browser?(%w(firefox opera safari))).to be_falsey
     end
   end
 
@@ -696,13 +690,13 @@ describe ApplicationHelper do
     it "when browser's OS is in the list" do
       allow_any_instance_of(ActionController::TestSession)
         .to receive(:fetch_path).with(:browser, :os).and_return('windows')
-      expect(is_browser_os?(%w(windows linux))).to be_truthy
+      expect(helper.is_browser_os?(%w(windows linux))).to be_truthy
     end
 
     it "when browser's OS is NOT in the list" do
       allow_any_instance_of(ActionController::TestSession)
         .to receive(:fetch_path).with(:browser, :os).and_return('macos')
-      expect(is_browser_os?(%w(windows linux))).to be_falsey
+      expect(helper.is_browser_os?(%w(windows linux))).to be_falsey
     end
   end
 
@@ -711,12 +705,12 @@ describe ApplicationHelper do
       type = :a_type
       allow_any_instance_of(ActionController::TestSession)
         .to receive(:fetch_path).with(:browser, type).and_return('checked_by_A_TYPE')
-      expect(browser_info(type)).to eq('checked_by_A_TYPE')
+      expect(helper.browser_info(type)).to eq('checked_by_A_TYPE')
     end
   end
 
   describe "#javascript_for_timer_type" do
-    subject { javascript_for_timer_type(timer_type) }
+    subject { helper.javascript_for_timer_type(timer_type) }
 
     context "when timer_type == nil" do
       let(:timer_type) { nil }
@@ -765,7 +759,7 @@ describe ApplicationHelper do
   end
 
   describe "#javascript_for_miq_button_visibility" do
-    subject { javascript_for_miq_button_visibility(display) }
+    subject { helper.javascript_for_miq_button_visibility(display) }
     context "when display == true" do
       let(:display) { true }
       it { is_expected.to eq("miqButtons('show');") }
@@ -779,10 +773,10 @@ describe ApplicationHelper do
 
   context "#javascript_pf_toolbar_reload" do
     let(:test_tab) { "some_center_tb" }
-    subject { javascript_pf_toolbar_reload(test_tab, 'foobar') }
+    subject { helper.javascript_pf_toolbar_reload(test_tab, 'foobar') }
 
     it "returns javascript to reload toolbar" do
-      expect(self).to receive(:buttons_to_html).and_return('foobar')
+      expect(helper).to receive(:buttons_to_html).and_return('foobar')
       is_expected.to include("$('##{test_tab}').html('foobar');")
       is_expected.to include("miqInitToolbars();")
     end
@@ -803,7 +797,7 @@ describe ApplicationHelper do
     describe "when schedule.run_at == nil" do
       it "sets defaults" do
         schedule = double(:run_at => nil)
-        set_edit_timer_from_schedule schedule
+        helper.set_edit_timer_from_schedule schedule
         expect(@edit[:new]).to include(
           :timer_typ  => "Once",
           :start_hour => "00",
@@ -815,7 +809,7 @@ describe ApplicationHelper do
     describe "when schedule.run_at != nil" do
       it "sets values as monthly" do
         @run_at[:interval][:unit] = 'monthly'
-        set_edit_timer_from_schedule @schedule
+        helper.set_edit_timer_from_schedule @schedule
         expect(@edit[:new]).to include(
           :timer_typ    => 'Monthly',
           :timer_months => @interval,
@@ -828,7 +822,7 @@ describe ApplicationHelper do
 
       it "sets values as weekly" do
         @run_at[:interval][:unit] = 'weekly'
-        set_edit_timer_from_schedule @schedule
+        helper.set_edit_timer_from_schedule @schedule
         expect(@edit[:new]).to include(
           :timer_typ   => 'Weekly',
           :timer_weeks => @interval,
@@ -841,7 +835,7 @@ describe ApplicationHelper do
 
       it "sets values as daily" do
         @run_at[:interval][:unit] = 'daily'
-        set_edit_timer_from_schedule @schedule
+        helper.set_edit_timer_from_schedule @schedule
         expect(@edit[:new]).to include(
           :timer_typ  => 'Daily',
           :timer_days => @interval,
@@ -854,7 +848,7 @@ describe ApplicationHelper do
 
       it "sets values as hourly" do
         @run_at[:interval][:unit] = 'hourly'
-        set_edit_timer_from_schedule @schedule
+        helper.set_edit_timer_from_schedule @schedule
         expect(@edit[:new]).to include(
           :timer_typ   => 'Hourly',
           :timer_hours => @interval,
@@ -870,73 +864,73 @@ describe ApplicationHelper do
   context "#perf_parent?" do
     it "when model != 'VmOrTemplate'" do
       @perf_options = {:model => 'OntapVolumeDerivedMetric'}
-      expect(perf_parent?).to be_falsey
+      expect(helper.perf_parent?).to be_falsey
     end
 
     it "when model == 'VmOrTemplate' and typ == 'realtime'" do
       @perf_options = {:model => 'VmOrTemplate', :typ => 'realtime'}
-      expect(perf_parent?).to be_falsey
+      expect(helper.perf_parent?).to be_falsey
     end
 
     it "when model == 'VmOrTemplate', typ != 'realtime' and parent is 'Host'" do
       @perf_options = {:model => 'VmOrTemplate', :typ => 'Hourly', :parent => 'Host'}
-      expect(perf_parent?).to be_truthy
+      expect(helper.perf_parent?).to be_truthy
     end
 
     it "when model == 'VmOrTemplate', typ != 'realtime' and parent is 'EmsCluster'" do
       @perf_options = {:model => 'VmOrTemplate', :typ => 'Hourly', :parent => 'EmsCluster'}
-      expect(perf_parent?).to be_truthy
+      expect(helper.perf_parent?).to be_truthy
     end
 
     it "when model == 'VmOrTemplate', typ != 'realtime' and parent is 'invalid parent'" do
       @perf_options = {:model => 'VmOrTemplate', :typ => 'Hourly', :parent => 'invalid parent'}
-      expect(perf_parent?).to be_falsey
+      expect(helper.perf_parent?).to be_falsey
     end
 
     it "when model == 'VmOrTemplate', typ != 'realtime' and parent == nil" do
       @perf_options = {:model => 'VmOrTemplate', :typ => 'Hourly', :parent => nil}
-      expect(perf_parent?).to be_falsey
+      expect(helper.perf_parent?).to be_falsey
     end
   end
 
   context "#perf_compare_vm?" do
     it "when model != 'OntapLogicalDisk'" do
       @perf_options = {:model => 'OntapVolumeDerivedMetric'}
-      expect(perf_compare_vm?).to be_falsey
+      expect(helper.perf_compare_vm?).to be_falsey
     end
 
     it "when model == 'OntapLogicalDisk' and typ == 'realtime'" do
       @perf_options = {:model => 'OntapLogicalDisk', :typ => 'realtime'}
-      expect(perf_compare_vm?).to be_falsey
+      expect(helper.perf_compare_vm?).to be_falsey
     end
 
     it "when model == 'OntapLogicalDisk', typ != 'realtime' and compare_vm == nil" do
       @perf_options = {:model => 'OntapLogicalDisk', :typ => 'Daily', :compare_vm => nil}
-      expect(perf_compare_vm?).to be_falsey
+      expect(helper.perf_compare_vm?).to be_falsey
     end
 
     it "when model == 'OntapLogicalDisk', typ != 'realtime' and compare_vm != nil" do
       @perf_options = {:model => 'OntapLogicalDisk', :typ => 'Daily', :compare_vm => 'something'}
-      expect(perf_compare_vm?).to be_truthy
+      expect(helper.perf_compare_vm?).to be_truthy
     end
   end
 
   context "#model_report_type" do
     it "when model == nil" do
-      expect(model_report_type(nil)).to be_falsey
+      expect(helper.model_report_type(nil)).to be_falsey
     end
 
     it "when model likes '...Performance' or '...MetricsRollup'" do
-      expect(model_report_type("VmPerformance")).to eq(:performance)
-      expect(model_report_type("OntapVolumeMetricsRollup")).to eq(:performance)
+      expect(helper.model_report_type("VmPerformance")).to eq(:performance)
+      expect(helper.model_report_type("OntapVolumeMetricsRollup")).to eq(:performance)
     end
 
     it "when model == VimPerformanceTrend" do
-      expect(model_report_type("VimPerformanceTrend")).to eq(:trend)
+      expect(helper.model_report_type("VimPerformanceTrend")).to eq(:trend)
     end
 
     it "when model == Chargeback" do
-      expect(model_report_type("Chargeback")).to eq(:chargeback)
+      expect(helper.model_report_type("Chargeback")).to eq(:chargeback)
     end
   end
 
@@ -950,15 +944,15 @@ describe ApplicationHelper do
       @sb[:trees][:svcs_tree]      = {:active_node => 'root'}
       @sb[:trees][:vm_filter_tree] = {:active_node => 'abc'}
 
-      x_node_set('def', :vm_filter_tree)
+      helper.x_node_set('def', :vm_filter_tree)
       expect(@sb[:trees][:svcs_tree][:active_node]).to eq('root')
       expect(@sb[:trees][:vm_filter_tree][:active_node]).to eq('def')
 
-      x_node_set(nil, :vm_filter_tree)
+      helper.x_node_set(nil, :vm_filter_tree)
       expect(@sb[:trees][:svcs_tree][:active_node]).to eq('root')
       expect(@sb[:trees][:vm_filter_tree][:active_node]).to be_nil
 
-      x_node_set('', :vm_filter_tree)
+      helper.x_node_set('', :vm_filter_tree)
       expect(@sb[:trees][:svcs_tree][:active_node]).to eq('root')
       expect(@sb[:trees][:vm_filter_tree][:active_node]).to eq('')
     end
@@ -977,21 +971,21 @@ describe ApplicationHelper do
     context "#x_node" do
       it "without tree param" do
         @sb[:trees][:svcs_tree] = {:active_node => 'root'}
-        expect(x_node).to eq('root')
+        expect(helper.x_node).to eq('root')
 
         @sb[:trees][:svcs_tree] = {:active_node => nil}
-        expect(x_node).to be_nil
+        expect(helper.x_node).to be_nil
 
         @sb[:trees][:svcs_tree] = {:active_node => ''}
-        expect(x_node).to eq('')
+        expect(helper.x_node).to eq('')
       end
 
       it "with tree param" do
         @sb[:trees][:svcs_tree]      = {:active_node => 'root'}
         @sb[:trees][:vm_filter_tree] = {:active_node => 'abc'}
 
-        expect(x_node(:svcs_tree)).to eq("root")
-        expect(x_node(:vm_filter_tree)).to eq("abc")
+        expect(helper.x_node(:svcs_tree)).to eq("root")
+        expect(helper.x_node(:vm_filter_tree)).to eq("abc")
       end
     end
 
@@ -999,17 +993,17 @@ describe ApplicationHelper do
       it "without tree param" do
         @sb[:trees][:vm_filter_tree] = {:tree => :vm_filter_tree}
 
-        expect(x_tree).to eq(@sb[:trees][:svcs_tree])
+        expect(helper.x_tree).to eq(@sb[:trees][:svcs_tree])
         @sb[:active_tree] = :vm_filter_tree
-        expect(x_tree).to eq(@sb[:trees][:vm_filter_tree])
+        expect(helper.x_tree).to eq(@sb[:trees][:vm_filter_tree])
       end
 
       it "with tree param" do
         @sb[:trees][:vm_filter_tree] = {:tree => :vm_filter_tree}
         @sb[:trees][:svcs_tree]      = {:tree => :svcs_tree}
 
-        expect(x_tree(:svcs_tree)).to eq(@sb[:trees][:svcs_tree])
-        expect(x_tree(:vm_filter_tree)).to eq(@sb[:trees][:vm_filter_tree])
+        expect(helper.x_tree(:svcs_tree)).to eq(@sb[:trees][:svcs_tree])
+        expect(helper.x_tree(:vm_filter_tree)).to eq(@sb[:trees][:vm_filter_tree])
       end
     end
 
@@ -1022,20 +1016,20 @@ describe ApplicationHelper do
     end
 
     it "#x_active_tree" do
-      expect(x_active_tree).to eq(:svcs_tree)
+      expect(helper.x_active_tree).to eq(:svcs_tree)
       @sb[:active_tree] = :vm_filter_tree
-      expect(x_active_tree).to eq(:vm_filter_tree)
+      expect(helper.x_active_tree).to eq(:vm_filter_tree)
     end
 
     context "#x_tree_init" do
       it "does not replace existing trees" do
-        x_tree_init(:svcs_tree, :xxx, "XXX")
+        helper.x_tree_init(:svcs_tree, :xxx, "XXX")
 
         expect(@sb[:trees][:svcs_tree]).to eq(:tree => :svcs_tree)
       end
 
       it "has default values" do
-        x_tree_init(:vm_filter_tree, :vm_filter, "Vm")
+        helper.x_tree_init(:vm_filter_tree, :vm_filter, "Vm")
 
         expect(@sb[:trees][:vm_filter_tree]).to eq(:tree       => :vm_filter_tree,
                                                    :type       => :vm_filter,
@@ -1045,12 +1039,12 @@ describe ApplicationHelper do
       end
 
       it "can override default values" do
-        x_tree_init(:vm_filter_tree, :vm_filter, "Vm",
-                    :add_root   => false,
-                    :open_nodes => [:a],
-                    :open_all   => true,
-                    :full_ids   => true
-                   )
+        helper.x_tree_init(:vm_filter_tree, :vm_filter, "Vm",
+                           :add_root   => false,
+                           :open_nodes => [:a],
+                           :open_all   => true,
+                           :full_ids   => true
+                          )
 
         expect(@sb[:trees][:vm_filter_tree]).to eq(:tree       => :vm_filter_tree,
                                                    :type       => :vm_filter,
@@ -1065,7 +1059,7 @@ describe ApplicationHelper do
     it "#x_tree_history" do
       @sb = {:history     => {:svcs_tree => %w(service1 service2 service3)},
              :active_tree => :svcs_tree}
-      expect(x_tree_history).to eq(%w(service1 service2 service3))
+      expect(helper.x_tree_history).to eq(%w(service1 service2 service3))
     end
   end
 
@@ -1077,22 +1071,22 @@ describe ApplicationHelper do
         end
 
         it "when value is nil" do
-          text = truncate_for_quad(nil)
+          text = helper.truncate_for_quad(nil)
           expect(text).to be_nil
         end
 
         it "when value is < 13 long" do
-          text = truncate_for_quad("Test")
+          text = helper.truncate_for_quad("Test")
           expect(text).to eq("Test")
         end
 
         it "when value is 12 long" do
-          text = truncate_for_quad("ABCDEFGHIJKL")
+          text = helper.truncate_for_quad("ABCDEFGHIJKL")
           expect(text).to eq("ABCDEFGHIJKL")
         end
 
         it "when value is 13 long" do
-          text = truncate_for_quad("ABCDEooo12345")
+          text = helper.truncate_for_quad("ABCDEooo12345")
           expect(text).to eq(case trunc[0]
                              when "f" then "...DEooo12345"
                              when "m" then "ABCDE...12345"
@@ -1101,7 +1095,7 @@ describe ApplicationHelper do
         end
 
         it "when value is 25 long" do
-          text = truncate_for_quad("ABCDEooooooooooooooo12345")
+          text = helper.truncate_for_quad("ABCDEooooooooooooooo12345")
           expect(text).to eq(case trunc[0]
                              when "f" then "...ooooo12345"
                              when "m" then "ABCDE...12345"
@@ -1123,7 +1117,7 @@ describe ApplicationHelper do
         it "for table #{table}" do
           @layout = table
           @display = "main"
-          text = custom_toolbar_filename
+          text = helper.custom_toolbar_filename
           expect(text).to eq("custom_buttons_tb")
         end
       end
@@ -1132,7 +1126,7 @@ describe ApplicationHelper do
       ["ems_events", "storage_managers"].each do |table|
         it "for table #{table}" do
           @layout = table
-          text = custom_toolbar_filename
+          text = helper.custom_toolbar_filename
           expect(text).to be_nil
         end
       end
@@ -1148,7 +1142,7 @@ describe ApplicationHelper do
         it "for table #{table}" do
           @layout = table
           @display = "not_main"
-          text = custom_toolbar_filename
+          text = helper.custom_toolbar_filename
           expect(text).to be_nil
         end
       end
@@ -1163,7 +1157,7 @@ describe ApplicationHelper do
       ["miq_template", "ems_cluster", "host", "storage", "management_system"].each do |table|
         it "for table #{table}" do
           @layout = table
-          text = custom_toolbar_filename
+          text = helper.custom_toolbar_filename
           expect(text).to be_nil
         end
       end
@@ -1172,7 +1166,7 @@ describe ApplicationHelper do
       ["ems_events", "storage_managers"].each do |table|
         it "for table #{table}" do
           @layout = table
-          text = custom_toolbar_filename
+          text = helper.custom_toolbar_filename
           expect(text).to be_nil
         end
       end
@@ -1226,13 +1220,13 @@ describe ApplicationHelper do
         max = 627
         min = 200
         height = @winH < max ? min : @winH - (max - min)
-        res = center_div_height
+        res = helper.center_div_height
         expect(res).to eq(height)
 
         max = 757
         min = 400
         height = @winH < max ? min : @winH - (max - min)
-        res = center_div_height(false, 400)
+        res = helper.center_div_height(false, 400)
         expect(res).to eq(height)
       end
     end
@@ -1262,7 +1256,7 @@ describe ApplicationHelper do
       end
 
       it "updates the query string with the given hash value and returns the full url path" do
-        expect(update_paging_url_parms("show_list", :page => 1)).to eq("/vm/show_list/100?bc=VMs+running+on+2014-08-25"\
+        expect(helper.update_paging_url_parms("show_list", :page => 1)).to eq("/vm/show_list/100?bc=VMs+running+on+2014-08-25"\
           "&menu_click=Display-VMs-on_2-6-5&page=1&sb_controller=host")
       end
     end
@@ -1276,7 +1270,7 @@ describe ApplicationHelper do
       end
 
       it "uses restful paths for pages" do
-        expect(update_paging_url_parms("show", :page => 2)).to eq("/ems_cloud/#{@record.id}?display=images&page=2")
+        expect(helper.update_paging_url_parms("show", :page => 2)).to eq("/ems_cloud/#{@record.id}?display=images&page=2")
       end
     end
   end
@@ -1291,21 +1285,21 @@ describe ApplicationHelper do
       FactoryGirl.create(:ems_cluster, :ems_id => @ems1.id)
       FactoryGirl.create(:ems_cluster, :ems_id => @ems2.id)
 
-      result = title_for_clusters
+      result = helper.title_for_clusters
       expect(result).to eq("Clusters / Deployment Roles")
     end
 
     it "returns 'Clusters' when there are only non-openstack clusters" do
       FactoryGirl.create(:ems_cluster, :ems_id => @ems1.id)
 
-      result = title_for_clusters
+      result = helper.title_for_clusters
       expect(result).to eq("Clusters")
     end
 
     it "returns 'Deployment Roles' when there are only openstack clusters" do
       FactoryGirl.create(:ems_cluster, :ems_id => @ems2.id)
 
-      result = title_for_clusters
+      result = helper.title_for_clusters
       expect(result).to eq("Deployment Roles")
     end
   end
@@ -1319,14 +1313,14 @@ describe ApplicationHelper do
     it "returns 'Cluster' for non-openstack cluster" do
       FactoryGirl.create(:ems_cluster, :ems_id => @ems1.id)
 
-      result = title_for_cluster
+      result = helper.title_for_cluster
       expect(result).to eq("Cluster")
     end
 
     it "returns 'Deployment Role' for openstack cluster" do
       FactoryGirl.create(:ems_cluster, :ems_id => @ems2.id)
 
-      result = title_for_cluster
+      result = helper.title_for_cluster
       expect(result).to eq("Deployment Role")
     end
   end
@@ -1340,14 +1334,14 @@ describe ApplicationHelper do
     it "returns 'Cluster' for non-openstack host" do
       cluster = FactoryGirl.create(:ems_cluster, :ems_id => @ems1.id)
 
-      result = title_for_cluster_record(cluster)
+      result = helper.title_for_cluster_record(cluster)
       expect(result).to eq("Cluster")
     end
 
     it "returns 'Deployment Role' for openstack host" do
       cluster = FactoryGirl.create(:ems_cluster, :ems_id => @ems2.id)
 
-      result = title_for_cluster_record(cluster)
+      result = helper.title_for_cluster_record(cluster)
       expect(result).to eq("Deployment Role")
     end
   end
@@ -1362,21 +1356,21 @@ describe ApplicationHelper do
       FactoryGirl.create(:host_vmware_esx, :ems_id => @ems1.id)
       FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
 
-      result = title_for_hosts
+      result = helper.title_for_hosts
       expect(result).to eq("Hosts / Nodes")
     end
 
     it "returns 'Hosts' when there are only non-openstack hosts" do
       FactoryGirl.create(:host_vmware_esx, :ems_id => @ems1.id)
 
-      result = title_for_hosts
+      result = helper.title_for_hosts
       expect(result).to eq("Hosts")
     end
 
     it "returns 'Nodes' when there are only openstack hosts" do
       FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
 
-      result = title_for_hosts
+      result = helper.title_for_hosts
       expect(result).to eq("Nodes")
     end
   end
@@ -1390,14 +1384,14 @@ describe ApplicationHelper do
     it "returns 'Host' for non-openstack host" do
       FactoryGirl.create(:host_vmware, :ems_id => @ems1.id)
 
-      result = title_for_host
+      result = helper.title_for_host
       expect(result).to eq("Host")
     end
 
     it "returns 'Node' for openstack host" do
       FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
 
-      result = title_for_host
+      result = helper.title_for_host
       expect(result).to eq("Node")
     end
   end
@@ -1411,51 +1405,43 @@ describe ApplicationHelper do
     it "returns 'Host' for non-openstack host" do
       host = FactoryGirl.create(:host_vmware, :ems_id => @ems1.id)
 
-      result = title_for_host_record(host)
+      result = helper.title_for_host_record(host)
       expect(result).to eq("Host")
     end
 
     it "returns 'Node' for openstack host" do
       host = FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
 
-      result = title_for_host_record(host)
+      result = helper.title_for_host_record(host)
       expect(result).to eq("Node")
     end
   end
 
   context "#start_page_allowed?" do
-    def role_allows(_)
-      true
-    end
-
     it "should return true for storage start pages when product flag is set" do
-      cfg = VMDB::Config.new("vmdb")
-      cfg.config.store_path(:product, :storage, true)
-      allow(VMDB::Config).to receive(:new).and_return(cfg)
-      result = start_page_allowed?("cim_storage_extent_show_list")
+      allow(helper).to receive(:get_vmdb_config).and_return(:product => { :storage => true })
+      result = helper.start_page_allowed?("cim_storage_extent_show_list")
       expect(result).to be_truthy
     end
 
     it "should return false for storage start pages when product flag is not set" do
-      result = start_page_allowed?("cim_storage_extent_show_list")
+      result = helper.start_page_allowed?("cim_storage_extent_show_list")
       expect(result).to be_falsey
     end
 
     it "should return true for containers start pages when product flag is set" do
-      cfg = VMDB::Config.new("vmdb")
-      cfg.config.store_path(:product, :containers, true)
-      allow(VMDB::Config).to receive(:new).and_return(cfg)
-      result = start_page_allowed?("ems_container_show_list")
+      allow(helper).to receive(:get_vmdb_config).and_return(:product => { :containers => true })
+      result = helper.start_page_allowed?("ems_container_show_list")
       expect(result).to be_truthy
     end
 
     it "should return false for containers start pages when product flag is not set" do
-      result = start_page_allowed?("ems_container_show_list")
+      result = helper.start_page_allowed?("ems_container_show_list")
       expect(result).to be_falsey
     end
 
     it "should return true for host start page" do
-      result = start_page_allowed?("host_show_list")
+      result = helper.start_page_allowed?("host_show_list")
       expect(result).to be_truthy
     end
   end
@@ -1562,7 +1548,7 @@ describe ApplicationHelper do
   context "#listicon_image_tag" do
     it "returns correct image for job record based upon it's status" do
       job_attrs = {"state" => "running", "status" => "ok"}
-      image = listicon_image_tag("Job", job_attrs)
+      image = helper.listicon_image_tag("Job", job_attrs)
       expect(image).to eq("<img valign=\"middle\" width=\"16\" height=\"16\" title=\"Status = Running\"" \
                           " src=\"/images/icons/new/job-running.png\" />")
     end
@@ -1570,25 +1556,25 @@ describe ApplicationHelper do
 
   context '#skip_days_from_time_profile' do
     it 'should return empty array for whole week' do
-      expect(skip_days_from_time_profile((0..6).to_a)).to eq([])
+      expect(helper.skip_days_from_time_profile((0..6).to_a)).to eq([])
     end
 
     it 'should return whole week for empty array' do
-      expect(skip_days_from_time_profile([])).to eq((1..7).to_a)
+      expect(helper.skip_days_from_time_profile([])).to eq((1..7).to_a)
     end
 
     it 'should handle Sundays' do
-      expect(skip_days_from_time_profile((1..6).to_a)).to eq([7])
+      expect(helper.skip_days_from_time_profile((1..6).to_a)).to eq([7])
     end
   end
 
   it 'output of remote_function should not be html_safe' do
-    expect(remote_function(:url => {:controller => 'vm_infra', :action => 'explorer'}).html_safe?).to be_falsey
+    expect(helper.remote_function(:url => {:controller => 'vm_infra', :action => 'explorer'}).html_safe?).to be_falsey
   end
 
   describe '#miq_accordion_panel' do
     subject do
-      miq_accordion_panel('title', active, 'identifier') do
+      helper.miq_accordion_panel('title', active, 'identifier') do
         "content"
       end
     end
