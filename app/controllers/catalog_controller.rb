@@ -136,6 +136,7 @@ class CatalogController < ApplicationController
       "amazon"                => "Amazon",
       "generic"               => "Generic",
       "generic_orchestration" => "Orchestration",
+      "google"                => "Google",
       "microsoft"             => "SCVMM",
       "openstack"             => "OpenStack",
       "redhat"                => "RHEV",

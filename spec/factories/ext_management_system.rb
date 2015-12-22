@@ -103,6 +103,12 @@ FactoryGirl.define do
     provider_region "us-central1"
   end
 
+  factory :ems_google_with_authentication, :parent => :ems_google do
+    after(:create) do |x|
+      x.authentications << FactoryGirl.create(:authentication, :userid => "0123456789ABCDEFGHIJ", :password => "ABCDEFGHIJKLMNO1234567890abcdefghijklmno")
+    end
+  end
+
   # Leaf classes for ems_container
 
   factory :ems_kubernetes, :aliases => ["manageiq/providers/kubernetes/container_manager"], :class => "ManageIQ::Providers::Kubernetes::ContainerManager", :parent => :ems_container do

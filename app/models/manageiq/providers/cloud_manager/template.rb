@@ -3,7 +3,8 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
 
   def self.eligible_for_provisioning
     super.where(:type => %w(ManageIQ::Providers::Amazon::CloudManager::Template
-                            ManageIQ::Providers::Openstack::CloudManager::Template))
+                            ManageIQ::Providers::Openstack::CloudManager::Template
+                            ManageIQ::Providers::Google::CloudManager::Template))
   end
 
   private
