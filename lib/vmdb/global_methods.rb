@@ -78,8 +78,6 @@ module Vmdb
         ui_lookup_for_model(options[:model]).singularize
       elsif options[:models]
         ui_lookup_for_model(options[:models]).pluralize
-      elsif options[:host_types]
-        ui_lookup_for_host_types(options[:host_types])
       elsif options[:ems_cluster_types]
         ui_lookup_for_ems_cluster_types(options[:ems_cluster_types])
       elsif options[:ui_title]
@@ -96,10 +94,6 @@ module Vmdb
 
     def ui_lookup_for_model(text)
       Dictionary.gettext(text, :type => :model, :notfound => :titleize)
-    end
-
-    def ui_lookup_for_host_types(text)
-      Dictionary.gettext(text, :type => :host_types, :notfound => :titleize)
     end
 
     def ui_lookup_for_ems_cluster_types(text)
