@@ -5,26 +5,33 @@ describe('containerTopologyController', function() {
     beforeEach(module('topologyApp'));
 
     beforeEach(inject(function(_$httpBackend_, $rootScope, _$controller_, $location) {
-        spyOn($location, 'absUrl').and.returnValue('/container_topology/show');
-        $scope = $rootScope.$new();
+      spyOn($location, 'absUrl').and.returnValue('/container_topology/show');
+      $scope = $rootScope.$new();
 
-        $httpBackend = _$httpBackend_;
-        $httpBackend.when('GET','/container_topology/data').respond(mock_data);
-        $controller = _$controller_('containerTopologyController',
-            {$scope: $scope});
-        $httpBackend.flush();
+      $httpBackend = _$httpBackend_;
+      $httpBackend.when('GET','/container_topology/data').respond(mock_data);
+      $controller = _$controller_('containerTopologyController',
+          {$scope: $scope});
+      $httpBackend.flush();
     }));
 
     afterEach(function() {
-        $httpBackend.verifyNoOutstandingExpectation();
-        $httpBackend.verifyNoOutstandingRequest();
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
     });
 
     describe('data loads successfully', function() {
-        it('in all main objects', function() {
-            expect($scope.items).not.toBe(undefined);
-            expect($scope.relations).not.toBe(undefined);
-            expect($scope.kinds).not.toBe(undefined);
-        });
+      it('in all main objects', function() {
+        expect($scope.items).not.toBe(undefined);
+        expect($scope.relations).not.toBe(undefined);
+        expect($scope.kinds).not.toBe(undefined);
+      });
+    });
+
+    describe('kinds contain all expected kinds', function() {
+      it('in all main objects', function() {
+        expect(Object.keys($scope.kinds).length).toBeGreaterThan(7);
+        expect($scope.kinds["Container"]).toBeDefined();
+      });
     });
 });
