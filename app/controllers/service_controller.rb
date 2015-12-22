@@ -32,6 +32,7 @@ class ServiceController < ApplicationController
     end
     send_action
   end
+  private :whitelisted_action
 
   def x_button
     @explorer = true

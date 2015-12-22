@@ -104,6 +104,7 @@ class ApplicationController < ActionController::Base
 
     render_exception(msg)
   end
+  private :error_handler
 
   def render_exception(msg)
     respond_to do |format|
@@ -122,6 +123,7 @@ class ApplicationController < ActionController::Base
       format.any { render :nothing => true, :status => 404 }  # Anything else, just send 404
     end
   end
+  private :render_exception
 
   def change_tab
     redirect_to(:action => params[:tab], :id => params[:id])

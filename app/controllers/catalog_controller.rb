@@ -532,6 +532,7 @@ class CatalogController < ApplicationController
     when 'reconfigure' then :reconfigure_fqname
     end
   end
+  private :get_ae_tree_edit_key
 
   def ae_tree_select_toggle
     @edit = session[:edit]
@@ -678,6 +679,7 @@ class CatalogController < ApplicationController
       end
     end
   end
+  private :process_sts
 
   def template_to_node_name(object)
     ORCHESTRATION_TEMPLATES_NODES[object.class.name]

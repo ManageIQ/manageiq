@@ -1,6 +1,10 @@
 module ApplicationController::CiProcessing
   extend ActiveSupport::Concern
 
+  included do
+    private(:process_elements)
+  end
+
   # Set Ownership selected db records
   def set_ownership(klass = "VmOrTemplate")
     assert_privileges(params[:pressed])

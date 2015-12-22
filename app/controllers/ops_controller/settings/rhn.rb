@@ -22,10 +22,26 @@ module OpsController::Settings::RHN
   end
 
   included do
+    private(:rhn_subscription_map)
+    private(:rhn_update_information)
+    private(:rhn_subscription)
+    private(:rhn_save_subscription)
+    private(:rhn_credentials_from_edit)
+    private(:rhn_fire_available_organizations)
+    private(:rhn_load_session)
+    private(:rhn_gather_checks)
+
     helper_method(:rhn_subscription_types)
+    private(:rhn_subscription_types)
+
     helper_method(:rhn_address_string)
+    private(:rhn_address_string)
+
     helper_method(:rhn_account_info_string)
+    private(:rhn_account_info_string)
+
     helper_method(:rhn_default_enabled)
+    private(:rhn_default_enabled)
   end
 
   def rhn_address_string
