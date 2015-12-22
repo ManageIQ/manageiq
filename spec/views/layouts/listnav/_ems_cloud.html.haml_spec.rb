@@ -1,5 +1,4 @@
 require "spec_helper"
-include ApplicationHelper
 
 describe "layouts/listnav/_ems_cloud.html.haml" do
   before :each do
@@ -7,7 +6,7 @@ describe "layouts/listnav/_ems_cloud.html.haml" do
     assign(:panels, "ems_cloud_prop" => true, "ems_cloud_rel" => true)
     @settings = {:quadicons => {:ems => true}}
     allow(view).to receive(:truncate_length).and_return(23)
-    allow_any_instance_of(ActionView::Base).to receive(:role_allows).and_return(true)
+    allow(view).to receive(:role_allows).and_return(true)
   end
 
   it "Flavors link for Openstack cloud manager uses restful path" do

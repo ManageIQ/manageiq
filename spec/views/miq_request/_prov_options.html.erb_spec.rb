@@ -1,5 +1,4 @@
 require "spec_helper"
-include ApplicationHelper
 
 describe 'miq_request/_prov_options.html.haml' do
   context 'requester dropdown select box is visible' do

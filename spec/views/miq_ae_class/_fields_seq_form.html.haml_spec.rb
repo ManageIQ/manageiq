@@ -1,5 +1,4 @@
 require "spec_helper"
-include ApplicationHelper
 
 describe "miq_ae_class/_fields_seq_form.html.haml" do
   before do

@@ -1,5 +1,4 @@
 require "spec_helper"
-include ApplicationHelper
 
 describe "miq_capacity/_utilization_options.html.haml" do
   before :each do
