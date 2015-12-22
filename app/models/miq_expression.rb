@@ -1292,16 +1292,15 @@ class MiqExpression
   end
 
   def self.value2tag(tag, val = nil)
-    v_arr = tag.to_s.gsub(/[\.-]/, "/").split("/") # replace model path ".", column name "-" with "/"
+    model, *v_arr = tag.to_s.gsub(/[\.-]/, "/").split("/") # replace model path ".", column name "-" with "/"
 
     unless val.nil?
       v_arr << val.to_s.gsub(/\//, "%2f") # encode embedded / characters in values since / is used as a tag seperator
     end
 
-    ref = v_arr.shift # strip off model (eg. VM)
     v_arr[0] = "user" if v_arr.first == "user_tag"
     v_arr.unshift("virtual") unless v_arr.first == "managed" || v_arr.first == "user" # add in tag designation
-    [ref.downcase, "/" + v_arr.join("/")]
+    [model.downcase, "/" + v_arr.join("/")]
   end
 
   def self.normalize_ruby_operator(str)
