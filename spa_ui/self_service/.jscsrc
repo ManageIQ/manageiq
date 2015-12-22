@@ -48,7 +48,7 @@
     "beforeOpeningRoundBrace": true
   },
   "maximumLineLength": {
-    "value": 120,
+    "value": 140,
     "allExcept": [
       "regex",
       "comments",
