@@ -26,7 +26,7 @@ describe CatalogController do
 
     it 'exception is raised for unknown action' do
       get :x_button, :pressed => 'random_dude', :format => :html
-      expect { response }.to render_template('layouts/exception')
+      expect(response).to render_template('layouts/exception')
     end
   end
 
