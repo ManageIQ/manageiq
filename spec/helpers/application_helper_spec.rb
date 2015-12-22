@@ -1245,6 +1245,10 @@ describe ApplicationHelper do
   end
 
   describe "update_paging_url_parms", :type => :request do
+    before do
+      MiqServer.seed
+    end
+
     context "when the given parameter is a hash" do
       before do
         get("/vm/show_list/100", "bc=VMs+running+on+2014-08-25&menu_click=Display-VMs-on_2-6-5"\
