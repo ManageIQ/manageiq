@@ -38,6 +38,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       assert_specific_az
       assert_specific_cloud_network
       assert_specific_flavor
+      assert_specific_disk
       assert_specific_vm_powered_on
       assert_specific_vm_powered_off
       assert_specific_template
@@ -188,14 +189,13 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       :virtualization_type => nil
     )
 
-    expect(v.hardware.disks.size).to eql(1) # TODO: Change to a flavor that has disks
     expect(v.hardware.guest_devices.size).to eql(0)
     expect(v.hardware.nics.size).to eql(0)
 
-    assert_specific_vm_powered_on_hardware_networks(v)
+    assert_specific_hardware_networks(v)
   end
 
-  def assert_specific_vm_powered_on_hardware_networks(v)
+  def assert_specific_hardware_networks(v)
     expect(v.hardware.networks.size).to eql(2)
     network = v.hardware.networks.where(:description => "public").first
     expect(network).to have_attributes(
@@ -208,6 +208,14 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       :description => "private",
       :ipaddress   => "10.2.0.4",
       :hostname    => "ipconfig1"
+    )
+  end
+
+  def assert_specific_disk
+    disk = ManageIQ::Providers::Azure::CloudManager::Disk.where(:device_name => "Chef-Prod").first
+    expect(disk).to have_attributes(
+      :location    => "http://chefprod5120.blob.core.windows.net/vhds/Chef-Prod.vhd",
+      :size        => 1023.megabyte
     )
   end
 
