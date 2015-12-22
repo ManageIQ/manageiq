@@ -50,9 +50,12 @@
   "disallowTrailingComma": true,
   "maximumLineLength": {
     "value": 120,
-    "allowComments": true,
-    "allowUrlComments": true,
-    "allowRegex": false
+    "allExcept": [
+      "regex",
+      "comments",
+      "urlComments",
+      "functionSignature"
+    ]
   },
   "requireBlocksOnNewline": true,
   "requireCamelCaseOrUpperCaseIdentifiers": "ignoreProperties",
