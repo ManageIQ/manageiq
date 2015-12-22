@@ -314,7 +314,7 @@ describe Metric do
         context "capturing vm realtime data" do
           before(:each) do
             @alarm_event = "vm_perf_complete"
-            @vm.perf_capture('realtime')
+            @vm.perf_capture_realtime
           end
 
           it "should have collected performances" do
