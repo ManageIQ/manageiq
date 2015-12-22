@@ -22,6 +22,48 @@ describe MiqExpression do
     end
   end
 
+  context "value2tag" do
+    it "virtual default" do
+      expect(described_class.value2tag("env")).to eq ["env", "/virtual"]
+    end
+
+    it "dotted notation" do
+      expect(described_class.value2tag("env.prod.ny")).to eq ["env", "/virtual/prod/ny"]
+    end
+
+    it "with value" do
+      expect(described_class.value2tag("env", "thing1")).to eq ["env", "/virtual/thing1"]
+    end
+
+    it "dotted notation with value" do
+      expect(described_class.value2tag("env.prod.ny", "thing1")).to eq ["env", "/virtual/prod/ny/thing1"]
+    end
+
+    it "value with escaped slash" do
+      expect(described_class.value2tag("env.prod.ny", "thing1/thing2")).to eq ["env", "/virtual/prod/ny/thing1%2fthing2"]
+    end
+
+    it "user_tag" do
+      expect(described_class.value2tag("env.user_tag.ny", "thing1")).to eq ["env", "/user/ny/thing1"]
+    end
+
+    it "model and column" do
+      expect(described_class.value2tag("env.vm-name", "thing1")).to eq ["env", "/virtual/vm/name/thing1"]
+    end
+
+    it "managed" do
+      expect(described_class.value2tag("env.managed.host", "thing1")).to eq ["env", "/managed/host/thing1"]
+    end
+
+    it "managed" do
+      expect(described_class.value2tag("env.managed.host")).to eq ["env", "/managed/host"]
+    end
+
+    it "false value" do
+      expect(described_class.value2tag("MiqGroup.vms-disconnected", false)).to eq ["miqgroup", "/virtual/vms/disconnected/false"]
+    end
+  end
+
   it "supports yaml" do
     exp = YAML.load '--- !ruby/object:MiqExpression
     exp:
