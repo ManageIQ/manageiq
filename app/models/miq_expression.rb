@@ -1300,7 +1300,7 @@ class MiqExpression
 
     v_arr[0] = "user" if v_arr.first == "user_tag"
     v_arr.unshift("virtual") unless v_arr.first == "managed" || v_arr.first == "user" # add in tag designation
-    [model.downcase, "/" + v_arr.join("/")]
+    [model.downcase, "/#{v_arr.join('/')}"]
   end
 
   def self.normalize_ruby_operator(str)
