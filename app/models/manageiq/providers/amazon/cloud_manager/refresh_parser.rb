@@ -280,7 +280,6 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :orchestration_stack => @data_index.fetch_path(:orchestration_stacks,
                                                      get_from_tags(sg, "aws:cloudformation:stack-id")),
     }
-
     return uid, new_result
   end
 
@@ -472,7 +471,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   end
 
   def find_stack_parameters(stack)
-    raw_parameters = stack.parameters
+    raw_parameters = stack.parameters.each_with_object({}) { |sp, hash| hash[sp.parameter_key] = sp.parameter_value }
     get_stack_parameters(stack.stack_id, raw_parameters)
     raw_parameters.collect do |parameter|
       @data_index.fetch_path(:orchestration_stack_parameters, compose_ems_ref(stack.stack_id, parameter[0]))
