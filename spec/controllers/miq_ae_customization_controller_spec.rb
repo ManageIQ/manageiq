@@ -245,7 +245,7 @@ describe MiqAeCustomizationController do
 
     context "when an upload file is given" do
       let(:filename) { "filename" }
-      let(:file) { fixture_file_upload(Rails.root.join("spec/fixtures/files/import_service_dialog.yml"), "text/yml") }
+      let(:file) { fixture_file_upload(Rails.root.join("spec/fixtures/files/dummy_file.yml"), "text/yml") }
       let(:params) { {:upload => {:file => file}} }
 
       before do
@@ -254,8 +254,7 @@ describe MiqAeCustomizationController do
 
       context "when the dialog importer does not raise an error" do
         before do
-          allow(dialog_import_service).to receive(:store_for_import).with("the yaml data").and_return(123)
-          allow(file).to receive(:read).and_return("the yaml data")
+          allow(dialog_import_service).to receive(:store_for_import).with("the yaml data\n").and_return(123)
         end
 
         it "redirects to review_import with an import file upload id" do
@@ -268,7 +267,7 @@ describe MiqAeCustomizationController do
         end
 
         it "imports the dialogs" do
-          expect(dialog_import_service).to receive(:store_for_import).with("the yaml data")
+          expect(dialog_import_service).to receive(:store_for_import).with("the yaml data\n")
           xhr :post, :upload_import_file, params
         end
       end

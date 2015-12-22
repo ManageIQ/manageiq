@@ -952,7 +952,7 @@ describe ReportController do
 
     context "when an upload file is given" do
       let(:filename) { "filename" }
-      let(:file) { fixture_file_upload(Rails.root.join("spec/fixtures/files/import_widgets.yml"), "text/yml") }
+      let(:file) { fixture_file_upload(Rails.root.join("spec/fixtures/files/dummy_file.yml"), "text/yml") }
       let(:params) { {:upload => {:file => file}} }
 
       before do
@@ -964,8 +964,7 @@ describe ReportController do
 
         before do
           allow(ret).to receive(:widget_list).and_return([])
-          allow(widget_import_service).to receive(:store_for_import).with("the yaml data").and_return(ret)
-          allow(file).to receive(:read).and_return("the yaml data")
+          allow(widget_import_service).to receive(:store_for_import).with("the yaml data\n").and_return(ret)
         end
 
         it "returns with an import file upload id" do
@@ -976,7 +975,7 @@ describe ReportController do
         end
 
         it "imports the widgets" do
-          expect(widget_import_service).to receive(:store_for_import).with("the yaml data")
+          expect(widget_import_service).to receive(:store_for_import).with("the yaml data\n")
           xhr :post, :upload_widget_import_file, params
         end
       end

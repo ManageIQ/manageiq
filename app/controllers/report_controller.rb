@@ -212,7 +212,7 @@ class ReportController < ApplicationController
   end
 
   def export_widgets
-    if params[:widgets]
+    if params[:widgets].present?
       widgets = MiqWidget.where(:id => params[:widgets])
       widget_yaml = MiqWidget.export_to_yaml(widgets, MiqWidget)
       timestamp = format_timezone(Time.current, Time.zone, "export_filename")
@@ -227,7 +227,7 @@ class ReportController < ApplicationController
   def upload_widget_import_file
     upload_file = params.fetch_path(:upload, :file)
 
-    if upload_file.nil?
+    if upload_file.blank?
       add_flash("Use the browse button to locate an import file", :warning)
     else
       begin
