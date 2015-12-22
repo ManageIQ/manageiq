@@ -9,18 +9,18 @@ module ServiceOrchestrationMixin
   end
 
   def orchestration_template
-    orchestration_templates.try(:at, 0)
+    orchestration_templates.take
   end
 
   def orchestration_template=(template)
-    orchestration_templates.replace([template].compact)
+    self.orchestration_templates = [template].compact
   end
 
   def orchestration_manager
-    orchestration_managers.try(:at, 0)
+    orchestration_managers.take
   end
 
   def orchestration_manager=(manager)
-    orchestration_managers.replace([manager].compact)
+    self.orchestration_managers = [manager].compact
   end
 end
