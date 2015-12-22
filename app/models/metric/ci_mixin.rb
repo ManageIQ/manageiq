@@ -117,6 +117,7 @@ module Metric::CiMixin
                     .where(["timestamp >= ? and timestamp < ?", window_starting_on, now])
                     .order("timestamp DESC")
 
+    total_records = total_records.to_a
     return false if total_records.empty?
 
     # Find the record at or near the starting_on timestamp to determine if we need to handle overlap
