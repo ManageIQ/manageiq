@@ -1294,12 +1294,13 @@ class MiqExpression
   def self.value2tag(tag, val = nil)
     model, *v_arr = tag.to_s.gsub(/[\.-]/, "/").split("/") # replace model path ".", column name "-" with "/"
 
+    v_arr[0] = "user" if v_arr.first == "user_tag"
+    v_arr.unshift("virtual") unless v_arr.first == "managed" || v_arr.first == "user" # add in tag designation
+
     unless val.nil?
       v_arr << val.to_s.gsub(/\//, "%2f") # encode embedded / characters in values since / is used as a tag seperator
     end
 
-    v_arr[0] = "user" if v_arr.first == "user_tag"
-    v_arr.unshift("virtual") unless v_arr.first == "managed" || v_arr.first == "user" # add in tag designation
     [model.downcase, "/#{v_arr.join('/')}"]
   end
 
