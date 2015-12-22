@@ -42,10 +42,10 @@
         var Session = $injector.get('Session');
 
         if ('login' !== $state.current.name) {
-          // a bit of a hack to prevent multiple instances of the same notification - cleared on login submit
-          if (!Notifications.session_timed_out) {
+          // prevent multiple instances of the same notification - cleared on login submit
+          if (!Session.timeout_notified) {
             Notifications.message('danger', '', 'Your session has timed out.', true);
-            Notifications.session_timed_out = true;
+            Session.timeout_notified = true;
           }
 
           Session.destroy();

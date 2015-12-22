@@ -26,7 +26,7 @@
   }
 
   /** @ngInject */
-  function StateController($state, Text, API_LOGIN, API_PASSWORD, AuthenticationApi, CollectionsApi, Session, Notifications) {
+  function StateController($state, Text, API_LOGIN, API_PASSWORD, AuthenticationApi, CollectionsApi, Session) {
     var vm = this;
 
     vm.title = 'Login';
@@ -41,7 +41,7 @@
 
     function onSubmit() {
       // clearing a flag that *could* have been set before redirect to /login
-      Notifications.session_timed_out = false;
+      Session.timeout_notified = false;
 
       return AuthenticationApi.login(vm.credentials.login, vm.credentials.password)
         .then(Session.loadUser)
