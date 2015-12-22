@@ -370,8 +370,7 @@ class CatalogController < ApplicationController
       if @edit[:new][:selected_resources].empty?
         add_flash(_("%s must be selected") % "Resource", :error)
       end
-      add_flash(_("%s is required") % "Provisioning Entry Point", :error) if @edit[:new][:display] &&
-                                                                             @edit[:new][:fqname].blank?
+      add_flash(_("%s is required") % "Provisioning Entry Point", :error) if @edit[:new][:fqname].blank?
       dialog_catalog_check
 
       if @flash_array
@@ -860,8 +859,7 @@ class CatalogController < ApplicationController
       # check for service template required fields before creating a request
       add_flash(_("%s is required") % "Name", :error)
     end
-    add_flash(_("%s is required") % "Provisioning Entry Point", :error) if @edit[:new][:display] &&
-                                                                           @edit[:new][:fqname].blank?
+    add_flash(_("%s is required") % "Provisioning Entry Point", :error) if @edit[:new][:fqname].blank?
 
     # Check for a Dialog if Display in Catalog is selected
     dialog_catalog_check
@@ -910,12 +908,8 @@ class CatalogController < ApplicationController
     st.long_description = @edit[:new][:display] ? @edit[:new][:long_description] : nil
     st.provision_cost = @edit[:new][:provision_cost]
     st.display = @edit[:new][:display]
-    if @edit[:new][:display]
-      stc = @edit[:new][:catalog_id].nil? ? nil : ServiceTemplateCatalog.find_by_id(@edit[:new][:catalog_id])
-      st.service_template_catalog = stc
-    else
-      st.service_template_catalog = nil
-    end
+    stc = @edit[:new][:catalog_id].nil? ? nil : ServiceTemplateCatalog.find_by_id(@edit[:new][:catalog_id])
+    st.service_template_catalog = stc
     add_orchestration_template_vars(st) if st.kind_of?(ServiceTemplateOrchestration)
     st.service_type = "atomic"
     st.prov_type = @edit[:new][:st_prov_type]
