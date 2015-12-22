@@ -129,7 +129,7 @@ class MiqAeToolsController < ApplicationController
   end
 
   def import_automate_datastore
-    if params[:selected_namespaces]
+    if params[:selected_namespaces].present?
       selected_namespaces = determine_all_included_namespaces(params[:selected_namespaces])
       import_file_upload = ImportFileUpload.where(:id => params[:import_file_upload_id]).first
 
@@ -165,7 +165,7 @@ Methods updated/added: %{method_stats}") % stat_options, :success)
 
     upload_file = params.fetch_path(:upload, :file)
 
-    if upload_file.nil?
+    if upload_file.blank?
       add_flash("Use the browse button to locate an import file", :warning)
     else
       import_file_upload_id = automate_import_service.store_for_import(upload_file.read)

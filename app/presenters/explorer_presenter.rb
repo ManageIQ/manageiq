@@ -192,7 +192,7 @@ class ExplorerPresenter
     [:record_id, :parent_id, :parent_class].each { |variable| @out << set_or_undef(variable.to_s) }
 
     # Open, select, and focus node in current tree
-    @out << "miqDynatreeActivateNodeSilently('#{@options[:active_tree]}', '#{@options[:osf_node]}');" unless @options[:osf_node].empty?
+    @out << "miqDynatreeActivateNodeSilently('#{@options[:active_tree]}', '#{@options[:osf_node]}');" unless @options[:osf_node].blank?
 
     @options[:lock_unlock_trees].each { |tree, lock| @out << tree_lock(tree, lock) }
 

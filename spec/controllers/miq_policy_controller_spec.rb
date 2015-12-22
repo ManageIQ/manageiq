@@ -74,14 +74,13 @@ describe MiqPolicyController do
       context "when there is a file upload parameter" do
         context "when the file upload parameter responds to read" do
           let(:file_contents) do
-            fixture_file_upload(Rails.root.join("spec/fixtures/files/import_policies.yml"), "text/yml")
+            fixture_file_upload(Rails.root.join("spec/fixtures/files/dummy_file.yml"), "text/yml")
           end
 
           let(:miq_policy_import_service) { double("MiqPolicyImportService") }
 
           before do
             allow(MiqPolicyImportService).to receive(:new).and_return(miq_policy_import_service)
-            allow(file_contents).to receive(:read).and_return("file")
           end
 
           context "when there is not an error while importing" do
@@ -97,7 +96,7 @@ describe MiqPolicyController do
             end
 
             it "imports a policy" do
-              expect(miq_policy_import_service).to receive(:store_for_import).with(file_contents)
+              expect(miq_policy_import_service).to receive(:store_for_import).with(an_instance_of(ActionDispatch::Http::UploadedFile))
               post :upload, params
             end
 
@@ -110,7 +109,7 @@ describe MiqPolicyController do
           context "when there is an error while importing" do
             before do
               allow(miq_policy_import_service).to receive(:store_for_import)
-                .with(file_contents).and_raise(StandardError.new("message"))
+                .with(an_instance_of(ActionDispatch::Http::UploadedFile)).and_raise(StandardError.new("message"))
             end
 
             it "redirects to export with an error message" do

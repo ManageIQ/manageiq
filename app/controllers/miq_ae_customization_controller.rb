@@ -46,7 +46,7 @@ class MiqAeCustomizationController < ApplicationController
   def upload_import_file
     redirect_options = {:action => :review_import}
 
-    if params[:upload].nil? || params[:upload][:file].nil?
+    if params[:upload].nil? || params[:upload][:file].blank?
       add_flash("Use the browse button to locate an import file", :warning)
     else
       begin
@@ -113,7 +113,7 @@ class MiqAeCustomizationController < ApplicationController
   end
 
   def export_service_dialogs
-    if params[:service_dialogs]
+    if params[:service_dialogs].present?
       dialogs = Dialog.where(:id => params[:service_dialogs])
       dialog_yaml = DialogYamlSerializer.new.serialize(dialogs)
       timestamp = format_timezone(Time.current, Time.zone, "export_filename")

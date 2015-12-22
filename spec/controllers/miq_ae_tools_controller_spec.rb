@@ -242,16 +242,15 @@ Methods updated/added: 10
     context "when an upload file is given" do
       let(:automate_import_service) { double("AutomateImportService") }
       let(:params) { {:upload => {:file => upload_file}} }
-      let(:upload_file) { fixture_file_upload(Rails.root.join("spec/fixtures/files/import_automate.yml"), "text/yml") }
+      let(:upload_file) { fixture_file_upload(Rails.root.join("spec/fixtures/files/dummy_file.yml"), "text/yml") }
 
       before do
         allow(AutomateImportService).to receive(:new).and_return(automate_import_service)
-        allow(automate_import_service).to receive(:store_for_import).with("the yaml data").and_return(123)
-        allow(upload_file).to receive(:read).and_return("the yaml data")
+        allow(automate_import_service).to receive(:store_for_import).with("the yaml data\n").and_return(123)
       end
 
       it "stores the file for import" do
-        expect(automate_import_service).to receive(:store_for_import).with("the yaml data")
+        expect(automate_import_service).to receive(:store_for_import).with("the yaml data\n")
         xhr :post, :upload_import_file, params
       end
 
