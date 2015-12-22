@@ -63,11 +63,7 @@ class ContainerTopologyService
   end
 
   def entity_type(entity)
-    if entity.kind_of?(ManageIQ::Providers::ContainerManager)
-      entity.type.split('::')[2]
-    else
       entity.class.name.demodulize
-    end
   end
 
   def entity_display_type(entity)
@@ -95,11 +91,12 @@ class ContainerTopologyService
 
   def build_entity_data(entity)
     type = entity_type(entity)
+    display_type = entity_display_type(entity)
     status = entity_status(entity, type)
 
     if entity.kind_of?(ManageIQ::Providers::ContainerManager)
       id = entity.id.to_s
-      icon = "vendor-#{type.underscore}"
+      icon = "vendor-#{display_type.underscore}"
     else
       id = case type
            when 'Vm', 'Host'
@@ -146,7 +143,7 @@ class ContainerTopologyService
       else
         'Warning'
       end
-    when 'Kubernetes', 'Openshift', 'Atomic', 'OpenshiftEnterprise', 'AtomicEnterprise'
+    when 'ContainerManager'
       if entity.authentications.empty?
         'Unknown'
       else
@@ -173,11 +170,9 @@ class ContainerTopologyService
     kinds = [:ContainerReplicator, :ContainerGroup, :Container, :ContainerNode,
              :ContainerService, :Host, :Vm, :ContainerRoute]
 
-    provider_types = ManageIQ::Providers::ContainerManager.group(:type).pluck(:type)
-    provider_types.each do |provider_type|
-      kinds << provider_type.split("::")[2].to_sym
+    if @providers.size > 0
+      kinds << :ContainerManager
     end
-
     kinds.each_with_object({}) { |kind, h| h[kind] = true }
   end
 end

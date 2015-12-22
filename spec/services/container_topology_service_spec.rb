@@ -12,7 +12,7 @@ describe ContainerTopologyService do
   describe "#build_kinds" do
     it "creates the expected number of entity types" do
       allow(container_topology_service).to receive(:retrieve_providers).and_return([FactoryGirl.create(:ems_kubernetes)])
-      expect(container_topology_service.build_kinds.keys).to match_array([:Container, :Host, :Kubernetes, :ContainerNode, :ContainerGroup, :ContainerReplicator, :ContainerRoute, :ContainerService, :Vm])
+      expect(container_topology_service.build_kinds.keys).to match_array([:Container, :Host, :ContainerManager, :ContainerNode, :ContainerGroup, :ContainerReplicator, :ContainerRoute, :ContainerService, :Vm])
     end
   end
 
@@ -44,7 +44,7 @@ describe ContainerTopologyService do
         ems_openshift.id.to_s         => {:id           => ems_openshift.id.to_s,
                                           :name         => ems_openshift.name,
                                           :status       => "Unknown",
-                                          :kind         => "Openshift",
+                                          :kind         => "ContainerManager",
                                           :display_kind => "Openshift",
                                           :miq_id       => ems_openshift.id,
                                           :icon         => icon('vendor-openshift')})
@@ -78,7 +78,7 @@ describe ContainerTopologyService do
         ems_kube.id.to_s                       => {:id           => ems_kube.id.to_s,
                                                    :name         => ems_kube.name,
                                                    :status       => "Error",
-                                                   :kind         => "Kubernetes",
+                                                   :kind         => "ContainerManager",
                                                    :display_kind => "Kubernetes",
                                                    :miq_id       => ems_kube.id,
                                                    :icon         => icon('vendor-kubernetes')},
@@ -219,7 +219,7 @@ describe ContainerTopologyService do
         ems_kube.id.to_s                       => {:id           => ems_kube.id.to_s,
                                                    :name         => ems_kube.name,
                                                    :status       => "Error",
-                                                   :kind         => "Kubernetes",
+                                                   :kind         => "ContainerManager",
                                                    :display_kind => "Kubernetes",
                                                    :miq_id       => ems_kube.id,
                                                    :icon         => icon('vendor-kubernetes')}
