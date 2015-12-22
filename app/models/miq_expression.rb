@@ -1292,8 +1292,7 @@ class MiqExpression
   end
 
   def self.value2tag(tag, val = nil)
-    v = tag.to_s.split(".").compact.join("/") # split model path and join with "/"
-    v = v.to_s.split("-").join("/") # split out column name and join with "/"
+    v = tag.to_s.gsub(/[\.-]/, "/") # replace model path ".", column name "-" with "/"
 
     unless val.nil?
       val = val.to_s.gsub(/\//, "%2f")  # encode embedded / characters in values since / is used as a tag seperator
