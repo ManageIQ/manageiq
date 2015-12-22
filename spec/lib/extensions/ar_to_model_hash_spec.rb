@@ -7,6 +7,9 @@ describe ToModelHash do
     let(:fixed_options)       { test_vm_class.send(:to_model_hash_options_fixup, @test_to_model_hash_options) }
     let(:mocked_preloader)    { double }
 
+    require 'active_support/testing/stream'
+    include ActiveSupport::Testing::Stream
+
     before do
       silence_stream($stdout) do
         ActiveRecord::Schema.define do
