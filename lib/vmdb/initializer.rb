@@ -3,6 +3,8 @@ module Vmdb
     def self.init
       _log.info "- Program Name: #{$PROGRAM_NAME}, PID: #{Process.pid}, ENV['MIQ_GUID']: #{ENV['MIQ_GUID']}, ENV['EVMSERVER']: #{ENV['EVMSERVER']}"
 
+      Vmdb::Loggers.apply_config
+
       if MiqEnvironment::Process.is_web_server_worker?
         require 'hamlit-rails'
 

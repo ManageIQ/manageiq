@@ -15,7 +15,6 @@ module Vmdb
   module Loggers
     DEFAULT_LOG_LEVEL = "INFO"
     DEFAULT_LOG_PATH  = Rails.root.join("log", "#{Rails.env}.log")
-    DEFAULT_LOG_DIR   = File.dirname(DEFAULT_LOG_PATH)
 
     LEVEL_CONFIG_KEYS = [
       :level,
@@ -39,14 +38,12 @@ module Vmdb
     def self.init
       return if @initialized
       create_loggers
-      apply_config
       @initialized = true
     end
 
     def self.apply_config(config = nil)
       config ||= get_config
-      valid,   = validate_level(config)
-      raise "configuration settings are invalid" unless valid
+      config = config[:log] if config.key?(:log)
 
       apply_config_value(config, $log,       :level)
       apply_config_value(config, $rails_log, :level_rails)
@@ -59,19 +56,6 @@ module Vmdb
       apply_config_value(config, $fog_log,   :level_fog,   :level_fog_in_evm)
     end
 
-    def self.validate_config(config)
-      valid = true
-      errors = []
-
-      [:level, :path].each do |section|
-        section_valid, section_errors = send("validate_#{section}", config)
-        valid &&= section_valid
-        errors += section_errors
-      end
-
-      return valid, errors
-    end
-
     private
 
     def self.get_config
@@ -79,10 +63,7 @@ module Vmdb
     end
 
     def self.create_loggers
-      config = get_config
-      valid, = validate_path(config)
-      raise "configuration settings are invalid" unless valid
-
+      config   = get_config
       path     = config[:path] || DEFAULT_LOG_PATH
       path_dir = File.dirname(path)
 
@@ -123,54 +104,12 @@ module Vmdb
 
     def self.apply_config_value_logged(config, logger, level_method, key)
       old_level = logger.send(level_method)
-      new_level, new_level_name = level_and_name_for(config, key)
+      new_level_name = (config[key] || DEFAULT_LOG_LEVEL).to_s.upcase
+      new_level = VMDBLogger.const_get(new_level_name)
       if old_level != new_level
         $log.info("MIQ(#{name}.apply_config) Log level for #{File.basename(logger.filename)} has been changed to [#{new_level_name}]")
         logger.send("#{level_method}=", new_level)
       end
-    end
-
-    def self.level_and_name_for(config, key)
-      name = (config[key] || DEFAULT_LOG_LEVEL).to_s.upcase
-      level = VMDBLogger.const_get(name)
-      return level, name
-    end
-
-    def self.validate_level(config)
-      valid = true
-      errors = []
-
-      LEVEL_CONFIG_KEYS.each do |key|
-        config[key] = config[key].upcase unless config[key].nil?
-
-        level = config[key]
-        if level && !VMDBLogger::Severity.constants.collect(&:to_s).include?(level)
-          valid = false
-          errors << [key, "#{key}, \"#{level}\", is invalid. Should be one of: #{VMDBLogger::Severity.constants.join(", ")}"]
-        end
-      end
-
-      return valid, errors
-    end
-
-    def self.validate_path(config)
-      valid = true
-      errors = []
-
-      path = config[:path].to_s
-      unless path.blank?
-        unless File.exist?(File.dirname(path))
-          valid = false
-          errors << [:path, "path, \"#{path}\", is invalid, directory does not exist"]
-        end
-
-        if File.extname(path).downcase != ".log"
-          valid = false
-          errors << [:path, "path, \"#{path}\", is invalid, must be in the form of <directory path>/<log file name>.log"]
-        end
-      end
-
-      return valid, errors
     end
   end
 end
