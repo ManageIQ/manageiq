@@ -191,7 +191,7 @@ module ToolbarHelper
   # attributes in html
   #
   def data_hash_keys(props)
-    hsh = %i(pressed popup console_url prompt explorer onwhen url_parms url).each_with_object({}) do |key, h|
+    hsh = %i(pressed popup window_url prompt explorer onwhen url_parms url).each_with_object({}) do |key, h|
       h["data-#{key}"] = props[key] if props.key?(key)
     end
     hsh
