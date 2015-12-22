@@ -4,7 +4,7 @@ if defined?(RSpec) && defined?(RSpec::Core::RakeTask)
 namespace :test do
   namespace :vmdb do
     desc "Setup environment for vmdb specs"
-    task :setup => [:verify_no_db_access_loading_rails_environment, :setup_db]
+    task :setup => [:initialize, :verify_no_db_access_loading_rails_environment, :setup_db]
   end
 
   desc "Run all core specs (excludes automation, migrations, replication, etc)"
