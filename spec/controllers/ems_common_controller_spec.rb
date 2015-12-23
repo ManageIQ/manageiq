@@ -93,7 +93,7 @@ describe EmsCloudController do
 
     context "#update_button_validate" do
       context "when authentication_check" do
-        let(:mocked_ems_cloud) { mock_model(EmsCloud) }
+        let(:mocked_ems_cloud) { double(EmsCloud) }
         before(:each) do
           controller.instance_variable_set(:@_params, :id => "42", :type => "amqp")
           expect(controller).to receive(:find_by_id_filtered).with(EmsCloud, "42").and_return(mocked_ems_cloud)
@@ -235,7 +235,7 @@ end
 
 describe EmsInfraController do
   context "#show_link" do
-    let(:ems) { mock_model(EmsInfra) }
+    let(:ems) { double(EmsInfra, id: 1) }
     it "sets relative url" do
       controller.instance_variable_set(:@table_name, "ems_infra")
       link = controller.send(:show_link, ems, :display => "vms")

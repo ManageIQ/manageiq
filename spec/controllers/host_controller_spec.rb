@@ -174,7 +174,7 @@ describe HostController do
   end
 
   context "#set_credentials" do
-    let(:mocked_host) { mock_model(Host) }
+    let(:mocked_host) { double(Host) }
     it "uses params[:default_password] for validation if one exists" do
       controller.instance_variable_set(:@_params,
                                        :default_userid   => "default_userid",

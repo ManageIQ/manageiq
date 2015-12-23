@@ -217,7 +217,7 @@ describe EmsCloudController do
   end
 
   context "#build_credentials only contains credentials that it supports and has a username for in params" do
-    let(:mocked_ems)    { mock_model(ManageIQ::Providers::Openstack::CloudManager) }
+    let(:mocked_ems)    { double(ManageIQ::Providers::Openstack::CloudManager) }
     let(:default_creds) { {:userid => "default_userid", :password => "default_password"} }
     let(:amqp_creds)    { {:userid => "amqp_userid",    :password => "amqp_password"} }
 
@@ -247,7 +247,7 @@ describe EmsCloudController do
   end
 
   context "#update_ems_button_validate" do
-    let(:mocked_ems) { mock_model(ManageIQ::Providers::Openstack::CloudManager) }
+    let(:mocked_ems) { double(ManageIQ::Providers::Openstack::CloudManager, id: 1) }
     it "calls authentication_check with save = true if validation is done for an existing record" do
       allow(controller).to receive(:set_ems_record_vars)
       allow(controller).to receive(:render)
