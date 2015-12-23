@@ -91,16 +91,24 @@ kubernetes-topology-icon svg {
   stroke-width: 2px;
 }
 
-.kube-topology g.Pod text, .kube-topology g.Container text  {
-    fill: #1186C1;
-    font-family: FontAwesome;
+g.EntityLegend {
+    transform: translate(21px,21px);
 }
 
-.kube-topology g.Replicator text, .kube-topology g.Node text,
-.kube-topology g.Service text, .kube-topology g.Route text {
-    fill: #1186C1;
-}
-
-.kube-topology g.VM text, .kube-topology g.Host text {
+.kube-topology g.EntityLegend.Infra text {
     fill: #636363;
 }
+
+.kube-topology g.EntityLegend.Containers text{
+    fill: #1186C1;
+    font-size: 22px;
+}
+
+.kube-topology g.EntityLegend.Containers.Pod text, .kube-topology g.EntityLegend.Containers.Container text  {
+    font-family: FontAwesome;
+    font-size: 19px;
+}
+
+
+
+
