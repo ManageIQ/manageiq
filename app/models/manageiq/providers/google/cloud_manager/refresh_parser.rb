@@ -162,6 +162,42 @@ module ManageIQ::Providers
         }
       end
 
+      def parse_ssh_keys(instance)
+        require 'sshkey'
+
+        ssh_keys = []
+        @data[:key_pairs] ||= []
+
+        if instance.metadata["items"]
+          instance.metadata["items"].select { |x| x["key"] == "sshKeys" }.each do |ssh_key|
+            ssh_key["value"].split("\n").each do |key|
+              # Google returns the public key in the form username:public_key
+              # so split on the first colon for the username and handle any
+              # colons that might be in the description by joining all
+              # following
+              name = key.split(":")[0]
+              public_key = key.split(":")[1..-1].join(":")
+              fingerprint = SSHKey.sha1_fingerprint(public_key)
+
+              type = ManageIQ::Providers::Google::CloudManager::AuthKeyPair.name
+              key_pair = {
+                :type        => type,
+                :name        => name,
+                :fingerprint => fingerprint,
+              }
+
+              ssh_keys << key_pair
+
+              unless @data[:key_pairs].include?(key_pair)
+                @data[:key_pairs] << key_pair
+                @data_index.store_path(:key_pairs, fingerprint, key_pair)
+              end
+            end
+          end
+        end
+        ssh_keys
+      end
+
       def parse_instance(instance)
         uid    = instance.id
         name   = instance.name
@@ -200,7 +236,8 @@ module ManageIQ::Providers
             :memory_mb            => flavor[:memory] / 1.megabyte,
             :disks                => [],
             :networks             => [],
-          }
+          },
+          :key_pairs         => ssh_keys,
         }
 
         populate_hardware_hash_with_disks(new_result[:hardware][:disks], instance)
@@ -246,24 +283,6 @@ module ManageIQ::Providers
         # returns the last component of the url
         uid = url.split('/')[-1]
         uid
-      end
-
-      def parse_ssh_keys(instance)
-        ssh_keys = []
-        if instance.metadata["items"]
-          instance.metadata["items"].select { |x| x["key"] == "sshKeys" }.each do |ssh_key|
-            ssh_key["value"].split("\n").each do |key|
-              # Google returns the public key in the form username:public_key
-              # so split on the first colon for the username and handle any
-              # colons that might be in the description by joining all
-              # following
-              name = key.split(":")[0]
-              public_key = key.split(":")[1..-1].join(":")
-              ssh_keys << {:name => name, :fingerprint => SSHKey.sha256_fingerprint(public_key)}
-            end
-          end
-        end
-        ssh_keys
       end
     end
   end
