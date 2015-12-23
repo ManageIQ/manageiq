@@ -720,14 +720,6 @@ en:
       linux_generic:   Linux
       windows_generic: Windows
 
-    host_types:
-      host:            Host / Node
-      hosts:           Hosts / Nodes
-      host_infra:      Host
-      host_infras:     Hosts
-      host_openstack:  Node
-      host_openstacks: Nodes
-
     model:
       AuditEvent:               EVM Audit Event
       AvailabilityZone:         Availability Zone

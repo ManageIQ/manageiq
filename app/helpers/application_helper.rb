@@ -1181,15 +1181,14 @@ module ApplicationHelper
   end
 
   def title_for_host(plural = false)
-    key = case Host.node_types
-          when :non_openstack
-            "host_infra"
-          when :openstack
-            "host_openstack"
-          else
-            "host"
-          end
-    ui_lookup(:host_types => plural ? key.pluralize : key)
+    case Host.node_types
+    when :non_openstack
+      plural ? _("Hosts") : _("Host")
+    when :openstack
+      plural ? _("Nodes") : _("Node")
+    else
+      plural ? _("Hosts / Nodes") : _("Host / Node")
+    end
   end
 
   def title_for_clusters
@@ -1209,7 +1208,7 @@ module ApplicationHelper
   end
 
   def title_for_host_record(record)
-    record.openstack_host? ? ui_lookup(:host_types => 'host_openstack') : ui_lookup(:host_types => 'host_infra')
+    record.openstack_host? ? _("Node") : _("Host")
   end
 
   def title_for_cluster_record(record)

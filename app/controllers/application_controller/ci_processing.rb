@@ -877,7 +877,7 @@ module ApplicationController::CiProcessing
 
   def set_discover_title(type, controller)
     if type == "hosts"
-      return ui_lookup(:host_types => "hosts")
+      return _("Hosts / Nodes")
     else
       return ui_lookup(:tables => controller)
     end

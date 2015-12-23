@@ -112,7 +112,7 @@ module MiqAeCustomizationController::CustomButtons
         # selected button is under assigned folder
         kls = case @nodetype[1]
               when "Host"
-                ui_lookup(:host_types => "host")
+                _("Host / Node")
               when "EmsCluster"
                 ui_lookup(:ems_cluster_types => "cluster")
               else
