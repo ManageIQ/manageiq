@@ -18,18 +18,18 @@ describe ManageIQ::Providers::Azure::CloudManager do
 
     context "#connect " do
       it "defaults" do
-        expect(described_class).to receive(:raw_connect).with { |clientid, clientkey|
+        expect(described_class).to receive(:raw_connect) do |clientid, clientkey|
           expect(clientid).to eq("klmnopqrst")
           expect(clientkey).to eq("1234567890")
-        }
+        end
         @e.connect
       end
 
       it "accepts overrides" do
-        expect(described_class).to receive(:raw_connect).with { |clientid, clientkey|
+        expect(described_class).to receive(:raw_connect) do |clientid, clientkey|
           expect(clientid).to eq("user")
           expect(clientkey).to eq("pass")
-        }
+        end
         @e.connect(:user => "user", :pass => "pass")
       end
     end

@@ -149,7 +149,7 @@ describe MiqProvision do
 
       expect(prov).to receive(:eligible_resource_lookup).and_return(host)
 
-      expect(prov).to receive(:workflow).with { |options, flags|
+      expect(prov).to receive(:workflow) { |options, flags|
         expect(options[:placement_auto]).to eq([false, 0])
         expect(flags[:skip_dialog_load]).to be_truthy
       }.and_return(workflow)

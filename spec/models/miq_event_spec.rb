@@ -5,13 +5,17 @@ describe MiqEvent do
     context ".raise_evm_job_event" do
       it "vm" do
         obj = FactoryGirl.create(:vm_redhat)
-        expect(MiqEvent).to receive(:raise_evm_event).with { |target, raw_event, _inputs| target == obj && raw_event == "vm_scan_complete" }
+        expect(MiqEvent).to receive(:raise_evm_event) do |target, raw_event, _inputs|
+          target == obj && raw_event == "vm_scan_complete"
+        end
         MiqEvent.raise_evm_job_event(obj, {:type => "scan", :suffix => "complete"}, {})
       end
 
       it "host" do
         obj = FactoryGirl.create(:host_vmware)
-        expect(MiqEvent).to receive(:raise_evm_event).with { |target, raw_event, _inputs| target == obj && raw_event == "host_scan_complete" }
+        expect(MiqEvent).to receive(:raise_evm_event) do |target, raw_event, _inputs|
+          target == obj && raw_event == "host_scan_complete"
+        end
         MiqEvent.raise_evm_job_event(obj, {:type => "scan", :suffix => "complete"}, {})
       end
     end
@@ -125,7 +129,9 @@ describe MiqEvent do
       it "uses base_model to build event name" do
         host = FactoryGirl.create(:host_vmware_esx)
         vm = FactoryGirl.create(:vm_vmware, :host => host)
-        expect(MiqEvent).to receive(:raise_evm_event_queue).with { |target, child_event, _inputs| target == vm && child_event == "assigned_company_tag_parent_host" }
+        expect(MiqEvent).to receive(:raise_evm_event_queue) do |target, child_event, _inputs|
+          target == vm && child_event == "assigned_company_tag_parent_host"
+        end
         MiqEvent.raise_event_for_children(host, "assigned_company_tag")
       end
     end

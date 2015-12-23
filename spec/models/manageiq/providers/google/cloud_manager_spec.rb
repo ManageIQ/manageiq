@@ -20,10 +20,10 @@ describe ManageIQ::Providers::Google::CloudManager do
 
     context "#connect " do
       it "defaults" do
-        expect(described_class).to receive(:raw_connect).with { |project, auth_key|
+        expect(described_class).to receive(:raw_connect) do |project, auth_key|
           expect(project).to eq(@google_project)
           expect(auth_key).to eq(@google_json_key)
-        }
+        end
         @e.connect
       end
     end
