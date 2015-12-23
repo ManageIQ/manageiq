@@ -12,3 +12,5 @@ object:
       value: openstack_pre_retirement
   - amazon_meth1:
       value: amazon_pre_retirement
+  - azure_meth1:
+      value: azure_pre_retirement
