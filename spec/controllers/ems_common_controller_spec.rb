@@ -94,15 +94,30 @@ describe EmsCloudController do
     context "#update_button_validate" do
       context "when authentication_check" do
         let(:mocked_ems_cloud) { mock_model(EmsCloud) }
+        let(:mocked_miq_task) { mock_model(MiqTask) }
         before(:each) do
+          controller.instance_variable_set(:@edit, :new => {:name     => 'EMS 1',
+                                                            :emstype  => @type,
+                                                            :hostname => '10.10.10.10',
+                                                            :port     => '5000'},
+                                                   :key => 'ems_edit__new')
           controller.instance_variable_set(:@_params, :id => "42", :type => "amqp")
           expect(controller).to receive(:find_by_id_filtered).with(EmsCloud, "42").and_return(mocked_ems_cloud)
           expect(controller).to receive(:set_record_vars).with(mocked_ems_cloud, :validate).and_return(mocked_ems_cloud)
+          expect(controller).to receive(:set_record_creds).with(
+            mocked_ems_cloud,
+            controller.instance_variable_get(:@edit)[:new],
+            :encrypt_password => true).and_return(mocked_ems_cloud)
+          expect(mocked_ems_cloud).to receive(:zone).and_return(Zone.seed)
+          expect(MiqTask).to receive(:generic_action_with_callback).and_return(mocked_miq_task.id)
+          expect(MiqTask).to receive(:wait_for_taskid).with(
+            mocked_miq_task.id,
+            :timeout => 30).and_return(mocked_miq_task)
         end
 
         it "successful flash message (unchanged)" do
           controller.stub(:edit_changed? => false)
-          expect(mocked_ems_cloud).to receive(:authentication_check).with("amqp", :save => true).and_return([true, ""])
+          mocked_miq_task.stub(:status => "Success")
           expect(controller).to receive(:add_flash).with(_("Credential validation was successful"))
           expect(controller).to receive(:render_flash)
           controller.send(:update_button_validate)
@@ -110,10 +125,10 @@ describe EmsCloudController do
 
         it "unsuccessful flash message (changed)" do
           controller.stub(:edit_changed? => true)
-          expect(mocked_ems_cloud).to receive(:authentication_check)
-            .with("amqp", :save => false).and_return([false, "Invalid"])
           expect(controller).to receive(:add_flash).with(_("Credential validation was not successful: Invalid"), :error)
           expect(controller).to receive(:render_flash)
+          mocked_miq_task.stub(:status => "Error")
+          mocked_miq_task.stub(:message => "Invalid")
           controller.send(:update_button_validate)
         end
       end
@@ -229,6 +244,101 @@ describe EmsContainerController do
           expect(pdf_options[:title]).to eq('Container Provider (Kubernetes) "test"')
         end
       end
+    end
+  end
+
+  context "#set_record_creds" do
+    let(:ems) { mock_model(EmsInfra) }
+    it "test setting default creds" do
+      edit_new = {:default_userid => 'root', :default_password => 'password'}
+      ems.stub(:supports_authentication?).and_return(true)
+      creds = controller.send(:set_record_creds, ems, edit_new)
+
+      expected_creds = {
+        :default => {
+          :userid   => edit_new[:default_userid],
+          :password => edit_new[:default_password]
+        }
+      }
+
+      creds.should == expected_creds
+    end
+
+    it "test setting default encrypted creds" do
+      edit_new = {:default_userid => 'root', :default_password => 'password'}
+      options = {:encrypt_password => true}
+
+      ems.stub(:supports_authentication?).and_return(true)
+      creds = controller.send(:set_record_creds, ems, edit_new, options)
+
+      expected_creds = {
+        :default => {
+          :userid   => edit_new[:default_userid],
+          :password => MiqPassword.encrypt(edit_new[:default_password])
+        }
+      }
+
+      creds.should == expected_creds
+    end
+
+    it "test setting metrics creds" do
+      edit_new = {:metrics_userid => 'root', :metrics_password => 'password'}
+      ems.stub(:supports_authentication?).and_return(true)
+      creds = controller.send(:set_record_creds, ems, edit_new)
+
+      expected_creds = {
+        :metrics => {
+          :userid   => edit_new[:metrics_userid],
+          :password => edit_new[:metrics_password],
+        }
+      }
+
+      creds.should == expected_creds
+    end
+
+    it "test setting amqp creds" do
+      edit_new = {:amqp_userid => 'root', :amqp_password => 'password'}
+      ems.stub(:supports_authentication?).and_return(true)
+      creds = controller.send(:set_record_creds, ems, edit_new)
+
+      expected_creds = {
+        :amqp => {
+          :userid   => edit_new[:amqp_userid],
+          :password => edit_new[:amqp_password],
+        }
+      }
+
+      creds.should == expected_creds
+    end
+
+    it "test setting ssh creds" do
+      edit_new = {:ssh_keypair_userid => 'root', :ssh_keypair_password => 'password'}
+      ems.stub(:supports_authentication?).and_return(true)
+      creds = controller.send(:set_record_creds, ems, edit_new)
+
+      expected_creds = {
+        :ssh_keypair => {
+          :userid   => edit_new[:ssh_keypair_userid],
+          :auth_key => edit_new[:ssh_keypair_password],
+        }
+      }
+
+      creds.should == expected_creds
+    end
+
+    it "test setting bearer creds" do
+      edit_new = {:bearer_token => 'abcdefg'}
+      ems.stub(:supports_authentication?).and_return(true)
+      creds = controller.send(:set_record_creds, ems, edit_new)
+
+      expected_creds = {
+        :bearer => {
+          :auth_key => edit_new[:bearer_token],
+          :userid   => "_",
+        }
+      }
+
+      creds.should == expected_creds
     end
   end
 end
