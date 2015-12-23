@@ -84,26 +84,33 @@ module Vmdb
     # Defaults to every folder in the app directory of the application.
     config.eager_load_paths = []
 
-    require_relative 'environments/patches/database_configuration'
+    # This must be done outside of initialization blocks
+    #   as Vmdb::Logging is needed very early
+    require 'vmdb/logging'
+
+    config.before_initialize do
+      require_relative 'environments/patches/database_configuration'
+
+      Vmdb::Loggers.init
+      config.logger = Vmdb.rails_logger
+      config.colorize_logging = false
+
+      # To evaluate ERB from database.yml containing encrypted passwords
+      require 'miq-password'
+      MiqPassword.key_root = Rails.root.join("certs")
+
+      require 'vmdb_helper'
+    end
+
+    config.after_initialize do
+      Vmdb::Initializer.init
+      ActiveRecord::Base.connection_pool.release_connection
+    end
 
     console do
       Rails::ConsoleMethods.class_eval do
         include Vmdb::ConsoleMethods
       end
-    end
-
-    # logging requires configuration which requires encryption
-    require 'miq-password'
-    MiqPassword.key_root = Rails.root.join("certs")
-
-    require 'vmdb/logging'
-    Vmdb::Loggers.init
-    config.logger = Vmdb.rails_logger
-    config.colorize_logging = false
-
-    config.after_initialize do
-      Vmdb::Initializer.init
-      ActiveRecord::Base.connection_pool.release_connection
     end
   end
 end

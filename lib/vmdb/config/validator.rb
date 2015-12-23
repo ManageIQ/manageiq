@@ -81,8 +81,19 @@ module VMDB
       end
 
       def log(data)
-        data = data.instance_variable_get(:@table) if data.kind_of?(OpenStruct)
-        Vmdb::Loggers.validate_config(data)
+        valid, errors = true, []
+
+        # validate level
+        data.each_pair do |key, value|
+          next unless key.to_s.start_with?("level")
+
+          level = value.to_s.upcase.to_sym
+          unless VMDBLogger::Severity.constants.include?(level)
+            valid = false; errors << [key, "#{key}, \"#{level}\", is invalid. Should be one of: #{VMDBLogger::Severity.constants.join(", ")}"]
+          end
+        end
+
+        return valid, errors
       end
 
       def session(data)

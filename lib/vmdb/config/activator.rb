@@ -18,8 +18,8 @@ module VMDB
 
       private
 
-      def log(_data)
-        Vmdb::Loggers.init
+      def log(data)
+        Vmdb::Loggers.apply_config(data)
       end
 
       def session(data)

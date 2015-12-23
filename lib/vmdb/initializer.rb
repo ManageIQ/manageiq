@@ -3,6 +3,8 @@ module Vmdb
     def self.init
       _log.info "- Program Name: #{$PROGRAM_NAME}, PID: #{Process.pid}, ENV['MIQ_GUID']: #{ENV['MIQ_GUID']}, ENV['EVMSERVER']: #{ENV['EVMSERVER']}"
 
+      Vmdb::Loggers.apply_config
+
       if MiqEnvironment::Process.is_web_server_worker?
         require 'hamlit-rails'
 
@@ -24,7 +26,6 @@ module Vmdb
       #
       ####################################################
       if MiqEnvironment::Process.is_ui_worker_via_command_line?
-        Vmdb::Loggers.apply_config
         EvmDatabase.seed_primordial
         MiqServer.my_server.starting_server_record
         MiqServer.my_server.update_attributes(:status => "started")
