@@ -101,6 +101,8 @@ module Vmdb
     config.logger = Vmdb.rails_logger
     config.colorize_logging = false
 
+    require 'vmdb_helper'
+
     config.after_initialize do
       Vmdb::Initializer.init
       ActiveRecord::Base.connection_pool.release_connection

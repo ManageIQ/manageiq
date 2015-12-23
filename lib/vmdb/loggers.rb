@@ -1,5 +1,4 @@
 require 'vmdb-logger'
-require 'vmdb_helper'  # TODO: eventually replace this with requiring Vmdb::Config directly
 
 Dir.glob(File.join(File.dirname(__FILE__), "loggers", "*")).each { |f| require f }
 
@@ -13,8 +12,6 @@ module Vmdb
   end
 
   module Loggers
-    DEFAULT_LOG_LEVEL = "INFO"
-
     def self.init
       return if @initialized
       create_loggers
@@ -22,7 +19,7 @@ module Vmdb
     end
 
     def self.apply_config(config = nil)
-      config ||= get_config
+      config ||= VMDB::Config.new("vmdb").config
       config = config[:log] if config.key?(:log)
 
       apply_config_value(config, $log,       :level)
@@ -37,10 +34,6 @@ module Vmdb
     end
 
     private
-
-    def self.get_config
-      VMDB::Config.new("vmdb").config[:log]
-    end
 
     def self.create_loggers
       if ENV.key?("CI")
@@ -82,7 +75,7 @@ module Vmdb
 
     def self.apply_config_value_logged(config, logger, level_method, key)
       old_level = logger.send(level_method)
-      new_level_name = (config[key] || DEFAULT_LOG_LEVEL).to_s.upcase
+      new_level_name = (config[key] || "INFO").to_s.upcase
       new_level = VMDBLogger.const_get(new_level_name)
       if old_level != new_level
         $log.info("MIQ(#{name}.apply_config) Log level for #{File.basename(logger.filename)} has been changed to [#{new_level_name}]")
