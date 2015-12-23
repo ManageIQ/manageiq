@@ -84,10 +84,10 @@ module VMDB
         valid, errors = true, []
 
         # validate level
-        data.keys.each do |key|
+        data.each_pair do |key, value|
           next unless key.to_s.start_with?("level")
 
-          level = data[key].to_s.upcase.to_sym
+          level = value.to_s.upcase.to_sym
           unless VMDBLogger::Severity.constants.include?(level)
             valid = false; errors << [key, "#{key}, \"#{level}\", is invalid. Should be one of: #{VMDBLogger::Severity.constants.join(", ")}"]
           end

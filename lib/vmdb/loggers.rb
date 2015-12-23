@@ -20,7 +20,7 @@ module Vmdb
 
     def self.apply_config(config = nil)
       config ||= VMDB::Config.new("vmdb").config
-      config = config[:log] if config.key?(:log)
+      config = config[:log] if config[:log]
 
       apply_config_value(config, $log,       :level)
       apply_config_value(config, $rails_log, :level_rails)
