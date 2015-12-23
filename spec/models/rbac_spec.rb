@@ -34,12 +34,12 @@ describe Rbac do
         end
 
         it ".search with :userid, finds user's tenant #{klass}" do
-          results, = Rbac.search(:class => klass, :results_format => :objects, :userid => @owner_user.userid)
+          results = Rbac.search(:class => klass, :results_format => :objects, :userid => @owner_user.userid).first
           expect(results).to eq [@owned_vm]
         end
 
         it ".search with :userid filters out other tenants" do
-          results, = Rbac.search(:class => klass, :results_format => :objects, :userid => @other_user.userid)
+          results = Rbac.search(:class => klass, :results_format => :objects, :userid => @other_user.userid).first
           expect(results).to eq []
         end
       end
@@ -52,25 +52,25 @@ describe Rbac do
 
       it ".search with User.with_user finds user's tenant object" do
         User.with_user(@owner_user) do
-          results, = Rbac.search(:class => "Vm", :results_format => :objects)
+          results = Rbac.search(:class => "Vm", :results_format => :objects).first
           expect(results).to eq [@owned_vm]
         end
       end
 
       it ".search with User.with_user filters out other tenants" do
         User.with_user(@other_user) do
-          results, = Rbac.search(:class => "Vm", :results_format => :objects)
+          results = Rbac.search(:class => "Vm", :results_format => :objects).first
           expect(results).to eq []
         end
       end
 
       it ".search with :miq_group_id, finds user's tenant object" do
-        results, = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @owner_group.id)
+        results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @owner_group.id).first
         expect(results).to eq [@owned_vm]
       end
 
       it ".search with :miq_group_id filters out other tenants" do
-        results, = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @other_group.id)
+        results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @other_group.id).first
         expect(results).to eq []
       end
 
@@ -78,7 +78,7 @@ describe Rbac do
         User.with_user(@owner_user) do
           @owner_user.miq_groups = [@other_group]
           @owner_user.save
-          results, = Rbac.search(:class => "Vm", :results_format => :objects)
+          results = Rbac.search(:class => "Vm", :results_format => :objects).first
           expect(results).to eq []
         end
       end
@@ -87,7 +87,7 @@ describe Rbac do
         User.with_user(@other_user) do
           @other_user.miq_groups = [@owner_group]
           @other_user.save
-          results, = Rbac.search(:class => "Vm", :results_format => :objects)
+          results = Rbac.search(:class => "Vm", :results_format => :objects).first
           expect(results).to eq [@owned_vm]
         end
       end
@@ -96,7 +96,7 @@ describe Rbac do
         it "can't see parent tenant's Vm" do
           child_tenant        = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
           child_group         = FactoryGirl.create(:miq_group, :tenant => child_tenant)
-          results,            = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => child_group.id)
+          results             = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => child_group.id).first
           expect(results).to eq []
         end
 
@@ -106,7 +106,7 @@ describe Rbac do
           @owned_vm.update_attributes(:tenant_id => child_tenant.id, :miq_group_id => child_group.id)
           expect(@owned_vm.tenant).to eq child_tenant
 
-          results, = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @owner_group.id)
+          results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @owner_group.id).first
           expect(results).to eq [@owned_vm]
         end
 
@@ -116,7 +116,7 @@ describe Rbac do
           owned_openstack_vm   = FactoryGirl.create(:vm_openstack, :tenant => child_tenant, :miq_group => child_tenant_group)
           expect(owned_openstack_vm.tenant).to eq child_tenant
 
-          results, = Rbac.search(:class => "ManageIQ::Providers::Openstack::CloudManager::Vm", :results_format => :objects, :miq_group_id => @owner_group.id)
+          results = Rbac.search(:class => "ManageIQ::Providers::Openstack::CloudManager::Vm", :results_format => :objects, :miq_group_id => @owner_group.id).first
           expect(results).to eq [owned_openstack_vm]
         end
       end
@@ -129,7 +129,7 @@ describe Rbac do
         it "can see parent tenant's EMS" do
           child_tenant        = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
           child_group         = FactoryGirl.create(:miq_group, :tenant => child_tenant)
-          results,            = Rbac.search(:class => "ExtManagementSystem", :results_format => :objects, :miq_group_id => child_group.id)
+          results             = Rbac.search(:class => "ExtManagementSystem", :results_format => :objects, :miq_group_id => child_group.id).first
           expect(results).to eq [@owned_ems]
         end
 
@@ -137,7 +137,7 @@ describe Rbac do
           child_tenant         = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
           @owned_ems.tenant    = child_tenant
           @owned_ems.save
-          results, = Rbac.search(:class => "ExtManagementSystem", :results_format => :objects, :miq_group_id => @owner_group.id)
+          results = Rbac.search(:class => "ExtManagementSystem", :results_format => :objects, :miq_group_id => @owner_group.id).first
           expect(results).to eq []
         end
       end
@@ -148,14 +148,14 @@ describe Rbac do
         end
 
         it "can see tenant's request task" do
-          results, = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => @owner_group.id)
+          results = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => @owner_group.id).first
           expect(results).to eq [@owned_request_task]
         end
 
         it "can't see parent tenant's request task" do
           child_tenant        = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
           child_group         = FactoryGirl.create(:miq_group, :tenant => child_tenant)
-          results,            = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => child_group.id)
+          results             = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => child_group.id).first
           expect(results).to eq []
         end
 
@@ -163,7 +163,7 @@ describe Rbac do
           child_tenant               = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
           @owned_request_task.tenant = child_tenant
           @owned_request_task.save
-          results, = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => @owner_group.id)
+          results = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => @owner_group.id).first
           expect(results).to eq []
         end
       end
@@ -172,7 +172,7 @@ describe Rbac do
         it "can see requests owned by any tenants" do
           request_task = FactoryGirl.create(:miq_request_task, :tenant => @owner_tenant)
           t0_group   = FactoryGirl.create(:miq_group, :tenant => @default_tenant)
-          results, = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => t0_group)
+          results = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => t0_group).first
           expect(results).to eq [request_task]
         end
       end
@@ -555,7 +555,7 @@ describe Rbac do
         it "self-service group" do
           MiqGroup.any_instance.stub(:self_service? => true)
 
-          results, attrs = Rbac.search(:class => "Service", :results_format => :objects, :miq_group_id => @user.current_group.id)
+          results = Rbac.search(:class => "Service", :results_format => :objects, :miq_group_id => @user.current_group.id).first
           expect(results.to_a).to match_array([@service4, @service5])
         end
 
@@ -566,7 +566,7 @@ describe Rbac do
 
           it "works when targets are empty" do
             User.with_user(@user) do
-              results, attrs = Rbac.search(:class => "Service", :results_format => :objects)
+              results = Rbac.search(:class => "Service", :results_format => :objects).first
               expect(results.to_a).to match_array([@service3, @service4, @service5])
             end
           end
@@ -576,7 +576,7 @@ describe Rbac do
           MiqGroup.any_instance.stub(:self_service? => true)
           MiqGroup.any_instance.stub(:limited_self_service? => true)
 
-          results, attrs = Rbac.search(:class => "Service", :results_format => :objects, :miq_group_id => @user.current_group.id)
+          results = Rbac.search(:class => "Service", :results_format => :objects, :miq_group_id => @user.current_group.id).first
           expect(results.to_a).to match_array([@service4, @service5])
         end
 
@@ -588,24 +588,24 @@ describe Rbac do
 
           it "works when targets are empty" do
             User.with_user(@user) do
-              results, attrs = Rbac.search(:class => "Service", :results_format => :objects)
+              results = Rbac.search(:class => "Service", :results_format => :objects).first
               expect(results.to_a).to match_array([@service3, @service5])
             end
           end
         end
 
         it "works when targets are a list of ids" do
-          results, attrs = Rbac.search(:targets => Service.all.collect(&:id), :class => "Service", :results_format => :objects)
+          results = Rbac.search(:targets => Service.all.collect(&:id), :class => "Service", :results_format => :objects).first
           expect(results.length).to eq(5)
           expect(results.first).to be_kind_of(Service)
 
-          results, attrs = Rbac.search(:targets => Service.all.collect(&:id), :class => "Service", :results_format => :ids)
+          results = Rbac.search(:targets => Service.all.collect(&:id), :class => "Service", :results_format => :ids).first
           expect(results.length).to eq(5)
           expect(results.first).to be_kind_of(Integer)
         end
 
         it "works when targets are empty" do
-          results, attrs = Rbac.search(:class => "Service", :results_format => :objects)
+          results = Rbac.search(:class => "Service", :results_format => :objects).first
           expect(results.length).to eq(5)
         end
       end
@@ -641,7 +641,7 @@ describe Rbac do
         it "self-service group" do
           MiqGroup.any_instance.stub(:self_service? => true)
 
-          results, attrs = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @user.current_group.id)
+          results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @user.current_group.id).first
           expect(results.length).to eq(2)
         end
 
@@ -652,14 +652,14 @@ describe Rbac do
 
           it "works when targets are empty" do
             User.with_user(@user) do
-              results, attrs = Rbac.search(:class => "Vm", :results_format => :objects)
+              results = Rbac.search(:class => "Vm", :results_format => :objects).first
               expect(results.length).to eq(4)
             end
           end
 
           it "works when passing a named_scope" do
             User.with_user(@user) do
-              results, attrs = Rbac.search(:class => "Vm", :results_format => :objects, :named_scope => [:group_scope, 1])
+              results = Rbac.search(:class => "Vm", :results_format => :objects, :named_scope => [:group_scope, 1]).first
               expect(results.length).to eq(1)
             end
           end
@@ -669,7 +669,7 @@ describe Rbac do
           MiqGroup.any_instance.stub(:self_service? => true)
           MiqGroup.any_instance.stub(:limited_self_service? => true)
 
-          results, attrs = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @user.current_group.id)
+          results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @user.current_group.id).first
           expect(results.length).to eq(2)
         end
 
@@ -681,39 +681,39 @@ describe Rbac do
 
           it "works when targets are empty" do
             User.with_user(@user) do
-              results, attrs = Rbac.search(:class => "Vm", :results_format => :objects)
+              results = Rbac.search(:class => "Vm", :results_format => :objects).first
               expect(results.length).to eq(2)
             end
           end
 
           it "works when passing a named_scope" do
             User.with_user(@user) do
-              results, attrs = Rbac.search(:class => "Vm", :results_format => :objects, :named_scope => [:group_scope, 1])
+              results = Rbac.search(:class => "Vm", :results_format => :objects, :named_scope => [:group_scope, 1]).first
               expect(results.length).to eq(1)
 
-              results, attrs = Rbac.search(:class => "Vm", :results_format => :objects, :named_scope => [:group_scope, 2])
+              results = Rbac.search(:class => "Vm", :results_format => :objects, :named_scope => [:group_scope, 2]).first
               expect(results.length).to eq(0)
             end
           end
         end
 
         it "works when targets are a list of ids" do
-          results, attrs = Rbac.search(:targets => Vm.all.collect(&:id), :class => "Vm", :results_format => :objects)
+          results = Rbac.search(:targets => Vm.all.collect(&:id), :class => "Vm", :results_format => :objects).first
           expect(results.length).to eq(4)
           expect(results.first).to be_kind_of(Vm)
 
-          results, attrs = Rbac.search(:targets => Vm.all.collect(&:id), :class => "Vm", :results_format => :ids)
+          results = Rbac.search(:targets => Vm.all.collect(&:id), :class => "Vm", :results_format => :ids).first
           expect(results.length).to eq(4)
           expect(results.first).to be_kind_of(Integer)
         end
 
         it "works when targets are empty" do
-          results, attrs = Rbac.search(:class => "Vm", :results_format => :objects)
+          results = Rbac.search(:class => "Vm", :results_format => :objects).first
           expect(results.length).to eq(4)
         end
 
         it "works when passing a named_scope" do
-          results, attrs = Rbac.search(:class => "Vm", :results_format => :objects, :named_scope => [:group_scope, 4])
+          results = Rbac.search(:class => "Vm", :results_format => :objects, :named_scope => [:group_scope, 4]).first
           expect(results.length).to eq(1)
         end
 
@@ -728,7 +728,7 @@ describe Rbac do
                 value: Host2
                 field: Vm-host_name
           '
-          results, attrs = Rbac.search(:class => "Vm", :filter => YAML.load(filter), :results_format => :objects)
+          results = Rbac.search(:class => "Vm", :filter => YAML.load(filter), :results_format => :objects).first
           expect(results.length).to eq(2)
         end
       end
@@ -749,7 +749,7 @@ describe Rbac do
                   field: Vm-name
             ")
             results = nil
-            expect { results, attrs = Rbac.search(:class => "Vm", :filter => exp, :userid => @user.userid, :results_format => :objects, :order => "vms.name desc") }.not_to raise_error
+            expect { Rbac.search(:class => "Vm", :filter => exp, :userid => @user.userid, :results_format => :objects, :order => "vms.name desc") }.not_to raise_error
           end
 
           it "works when limit, offset and user filters are passed and search expression contains columns in a sub-table" do
@@ -840,116 +840,112 @@ describe Rbac do
         # Vm.all(:order => "last_scan_on").each {|v| puts " #{v.last_scan_on ? v.last_scan_on.iso8601 : "nil"} => #{v.name} -> #{v.host_id}"}
 
         # Test >, <, >=, <=
-        result, attrs = Rbac.search(:class => "Vm", :filter => MiqExpression.new({"AFTER" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11 9:00"}}))
+        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("AFTER" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11 9:00"})).first
         expect(result.length).to eq(13)
 
-        result, attrs = Rbac.search(:class => "Vm", :filter => MiqExpression.new({">" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11 9:00"}}))
+        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new(">" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11 9:00"})).first
         expect(result.length).to eq(13)
 
         # Test IS EMPTY and IS NOT EMPTY
-        result, attrs = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS EMPTY" => {"field" => "Vm-last_scan_on"}))
+        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS EMPTY" => {"field" => "Vm-last_scan_on"})).first
         expect(result.length).to eq(2)
 
-        result, attrs = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS EMPTY" => {"field" => "Vm-retires_on"}))
+        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS EMPTY" => {"field" => "Vm-retires_on"})).first
         expect(result.length).to eq(2)
 
-        result, attrs = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS NOT EMPTY" => {"field" => "Vm-last_scan_on"}))
+        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS NOT EMPTY" => {"field" => "Vm-last_scan_on"})).first
         expect(result.length).to eq(60)
 
-        result, attrs = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS NOT EMPTY" => {"field" => "Vm-retires_on"}))
+        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS NOT EMPTY" => {"field" => "Vm-retires_on"})).first
         expect(result.length).to eq(60)
 
         # Test IS
-        result, attrs = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "2011-01-10"}))
+        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})).first
         expect(result.length).to eq(3)
 
-        result, attrs = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11"}))
+        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11"})).first
         expect(result.length).to eq(22)
 
-        result, attrs = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "Today"}))
+        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "Today"})).first
         expect(result.length).to eq(22)
 
-        result, attrs = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "3 Hours Ago"}))
+        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "3 Hours Ago"})).first
         expect(result.length).to eq(1)
 
-        result, attrs = Rbac.search(:class => "Vm", :filter => MiqExpression.new({"IS" => {"field" => "Vm-retires_on", "value" => "3 Hours Ago"}}))
+        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "3 Hours Ago"})).first
         expect(result.length).to eq(22)
 
-        result, attrs = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "Last Month"}))
+        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "Last Month"})).first
         expect(result.length).to eq(9)
 
         # Test FROM
-        result, attrs = Rbac.search(:class  => "Vm",
-                                    :filter => MiqExpression.new(
-                                      "FROM" => {"field" => "Vm-last_scan_on", "value" => ["2010-07-11", "2010-12-31"]}
-                                    )
-                                   )
+        result = Rbac.search(:class  => "Vm",
+                             :filter => MiqExpression.new(
+                               "FROM" => {"field" => "Vm-last_scan_on", "value" => ["2010-07-11", "2010-12-31"]}
+                             )).first
         expect(result.length).to eq(20)
 
-        result, attrs = Rbac.search(:class  => "Vm",
-                                    :filter => MiqExpression.new(
-                                      "FROM" => {"field" => "Vm-retires_on", "value" => ["2010-07-11", "2010-12-31"]}
-                                    )
-                                   )
+        result = Rbac.search(:class  => "Vm",
+                             :filter => MiqExpression.new(
+                               "FROM" => {"field" => "Vm-retires_on", "value" => ["2010-07-11", "2010-12-31"]}
+                             )).first
         expect(result.length).to eq(20)
 
-        result, attrs = Rbac.search(:class  => "Vm",
-                                    :filter => MiqExpression.new(
-                                      "FROM" => {"field" => "Vm-last_scan_on", "value" => ["2011-01-09 17:00", "2011-01-10 23:30:59"]}
-                                    )
-                                   )
+        result = Rbac.search(:class  => "Vm",
+                             :filter => MiqExpression.new(
+                               "FROM" => {"field" => "Vm-last_scan_on", "value" => ["2011-01-09 17:00", "2011-01-10 23:30:59"]}
+                             )).first
         expect(result.length).to eq(4)
 
-        result, attrs = Rbac.search(:class => "Vm", :filter => MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["Last Week", "Last Week"]}))
+        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["Last Week", "Last Week"]})).first
         expect(result.length).to eq(8)
 
-        result, attrs = Rbac.search(:class => "Vm", :filter => MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Week", "Last Week"]}))
+        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Week", "Last Week"]})).first
         expect(result.length).to eq(8)
 
-        result, attrs = Rbac.search(:class => "Vm", :filter => MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Week", "This Week"]}))
+        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Week", "This Week"]})).first
         expect(result.length).to eq(33)
 
-        result, attrs = Rbac.search(:class => "Vm", :filter => MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2 Months Ago", "1 Month Ago"]}))
+        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2 Months Ago", "1 Month Ago"]})).first
         expect(result.length).to eq(14)
 
-        result, attrs = Rbac.search(:class => "Vm", :filter => MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Month", "Last Month"]}))
+        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Month", "Last Month"]})).first
         expect(result.length).to eq(9)
 
         # Inside a find/check expression
-        result, attrs = Rbac.search(:class => "Host", :filter => MiqExpression.new(
+        result = Rbac.search(:class => "Host", :filter => MiqExpression.new(
           "FIND" => {
             "checkany" => {"FROM" => {"field" => "Host.vms-last_scan_on", "value" => ["2011-01-08 17:00", "2011-01-09 23:30:59"]}},
             "search"   => {"IS NOT NULL" => {"field" => "Host.vms-name"}}}
-        ))
+        )).first
         expect(result.length).to eq(1)
 
-        result, attrs = Rbac.search(:class => "Host", :filter => MiqExpression.new(
+        result = Rbac.search(:class => "Host", :filter => MiqExpression.new(
           "FIND" => {
             "search"   => {"FROM" => {"field" => "Host.vms-last_scan_on", "value" => ["2011-01-08 17:00", "2011-01-09 23:30:59"]}},
             "checkall" => {"IS NOT NULL" => {"field" => "Host.vms-name"}}}
-        ))
+        )).first
         expect(result.length).to eq(1)
 
         # Test FROM with time zone
-        result, attrs = Rbac.search(:class  => "Vm",
-                                    :userid => @user.userid,
-                                    :filter => MiqExpression.new(
-                                      "FROM" => {"field" => "Vm-last_scan_on", "value" => ["2011-01-09 17:00", "2011-01-10 23:30:59"]}
-                                    )
-                                   )
+        result = Rbac.search(:class  => "Vm",
+                             :userid => @user.userid,
+                             :filter => MiqExpression.new(
+                               "FROM" => {"field" => "Vm-last_scan_on", "value" => ["2011-01-09 17:00", "2011-01-10 23:30:59"]}
+                             )).first
         expect(result.length).to eq(8)
 
         # Test IS with time zone
-        result, attrs = Rbac.search(:class  => "Vm",
-                                    :userid => @user.userid,
-                                    :filter => MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-                                   )
+        result = Rbac.search(:class  => "Vm",
+                             :userid => @user.userid,
+                             :filter => MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
+                            ).first
         expect(result.length).to eq(3)
 
-        result, attrs = Rbac.search(:class  => "Vm",
-                                    :userid => @user.userid,
-                                    :filter => MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11"})
-                                   )
+        result = Rbac.search(:class  => "Vm",
+                             :userid => @user.userid,
+                             :filter => MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11"})
+                            ).first
         expect(result.length).to eq(17)
 
         # TODO: More tests with time zone
@@ -1010,21 +1006,21 @@ describe Rbac do
 
     context "database configuration" do
       it "expect all database setting values returned" do
-        results, attrs = Rbac.search(:class               => "VmdbDatabaseSetting",
-                                     :userid              => "admin",
-                                     :parent              => nil,
-                                     :parent_method       => nil,
-                                     :targets_hash        => true,
-                                     :association         => nil,
-                                     :filter              => nil,
-                                     :sub_filter          => nil,
-                                     :where_clause        => nil,
-                                     :named_scope         => nil,
-                                     :display_filter_hash => nil,
-                                     :conditions          => nil,
-                                     :results_format      => :objects,
-                                     :include_for_find    => {:description => {}, :minimum_value => {}, :maximum_value => {}}
-                                    )
+        results = Rbac.search(:class               => "VmdbDatabaseSetting",
+                              :userid              => "admin",
+                              :parent              => nil,
+                              :parent_method       => nil,
+                              :targets_hash        => true,
+                              :association         => nil,
+                              :filter              => nil,
+                              :sub_filter          => nil,
+                              :where_clause        => nil,
+                              :named_scope         => nil,
+                              :display_filter_hash => nil,
+                              :conditions          => nil,
+                              :results_format      => :objects,
+                              :include_for_find    => {:description => {}, :minimum_value => {}, :maximum_value => {}}
+                             ).first
 
         expect(results.length).to eq(VmdbDatabaseSetting.all.length)
       end
