@@ -75,5 +75,3 @@ module Vmdb
 
   ::Module.send :include, ClassLogging
 end
-
-require 'vmdb/loggers'
