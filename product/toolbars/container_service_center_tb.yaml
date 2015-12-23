@@ -29,6 +29,12 @@
     :title: Monitoring
     :text: Monitoring
     :items:
+    - :button: container_service_timeline
+      :image: timeline
+      :text: "Timelines"
+      :title: "Show Timelines for this Service"
+      :url: '/show'
+      :url_parms: '?display=timeline'
     - :button: container_service_perf
       :icon: product product-monitoring fa-lg
       :text: "Utilization"
