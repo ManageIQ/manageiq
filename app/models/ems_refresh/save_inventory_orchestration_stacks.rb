@@ -25,8 +25,7 @@ module EmsRefresh
         h[:cloud_tenant_id]           = h.fetch_path(:cloud_tenant, :id)
       end
 
-      stacks = save_inventory_multi(:orchestration_stacks,
-                                    ems,
+      stacks = save_inventory_multi(ems.orchestration_stacks,
                                     hashes,
                                     deletes,
                                     [:ems_ref],
@@ -48,8 +47,7 @@ module EmsRefresh
     def save_parameters_inventory(orchestration_stack, hashes)
       deletes = orchestration_stack.parameters(true).dup
 
-      save_inventory_multi(:parameters,
-                           orchestration_stack,
+      save_inventory_multi(orchestration_stack.parameters,
                            hashes,
                            deletes,
                            [:ems_ref])
@@ -58,8 +56,7 @@ module EmsRefresh
     def save_outputs_inventory(orchestration_stack, hashes)
       deletes = orchestration_stack.outputs(true).dup
 
-      save_inventory_multi(:outputs,
-                           orchestration_stack,
+      save_inventory_multi(orchestration_stack.outputs,
                            hashes,
                            deletes,
                            [:ems_ref])
@@ -68,8 +65,7 @@ module EmsRefresh
     def save_resources_inventory(orchestration_stack, hashes)
       deletes = orchestration_stack.resources(true).dup
 
-      save_inventory_multi(:resources,
-                           orchestration_stack,
+      save_inventory_multi(orchestration_stack.resources,
                            hashes,
                            deletes,
                            [:ems_ref])

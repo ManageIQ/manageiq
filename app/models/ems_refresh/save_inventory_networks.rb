@@ -25,8 +25,7 @@ module EmsRefresh
         h[:orchestration_stack_id] = h.fetch_path(:orchestration_stack, :id)
       end
 
-      save_inventory_multi(:cloud_networks,
-                           ems,
+      save_inventory_multi(ems.cloud_networks,
                            hashes,
                            deletes,
                            [:ems_ref],
@@ -42,7 +41,7 @@ module EmsRefresh
         h[:availability_zone_id] = h.fetch_path(:availability_zone, :id)
       end
 
-      save_inventory_multi(:cloud_subnets, cloud_network, hashes, deletes, [:ems_ref], nil, :availability_zone)
+      save_inventory_multi(cloud_network.cloud_subnets, hashes, deletes, [:ems_ref], nil, :availability_zone)
 
       cloud_network.save!
       store_ids_for_new_records(cloud_network.cloud_subnets, hashes, :ems_ref)
@@ -64,8 +63,7 @@ module EmsRefresh
         h[:orchestration_stack_id] = h.fetch_path(:orchestration_stack, :id)
       end
 
-      save_inventory_multi(:security_groups,
-                           ems, hashes,
+      save_inventory_multi(ems.security_groups, hashes,
                            deletes,
                            [:ems_ref],
                            :firewall_rules,
@@ -99,7 +97,7 @@ module EmsRefresh
         end
       end
 
-      save_inventory_multi(:floating_ips, ems, hashes, deletes, [:ems_ref], nil, [:network_port])
+      save_inventory_multi(ems.floating_ips, hashes, deletes, [:ems_ref], nil, [:network_port])
       store_ids_for_new_records(ems.floating_ips, hashes, :ems_ref)
     end
 
@@ -122,7 +120,7 @@ module EmsRefresh
         end
 
       deletes = parent.firewall_rules(true).dup
-      save_inventory_multi(:firewall_rules, parent, hashes, deletes, find_key, nil, [:source_security_group])
+      save_inventory_multi(parent.firewall_rules, hashes, deletes, find_key, nil, [:source_security_group])
 
       parent.save!
       store_ids_for_new_records(parent.firewall_rules, hashes, find_key)
@@ -143,8 +141,7 @@ module EmsRefresh
         h[:cloud_network_id] = h.fetch_path(:cloud_network, :id)
       end
 
-      save_inventory_multi(:network_routers,
-                           ems,
+      save_inventory_multi(ems.network_routers,
                            hashes,
                            deletes,
                            [:ems_ref],
@@ -171,7 +168,7 @@ module EmsRefresh
         h[:security_groups] = h.fetch_path(:security_groups).map { |x| x[:_object] }
       end
 
-      save_inventory_multi(:network_ports, ems, hashes, deletes, [:ems_ref], nil, [])
+      save_inventory_multi(ems.network_ports, hashes, deletes, [:ems_ref], nil, [])
 
       store_ids_for_new_records(ems.network_ports, hashes, :ems_ref)
     end
