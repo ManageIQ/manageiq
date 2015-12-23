@@ -12,10 +12,11 @@ describe Rbac do
   let(:other_tenant) { FactoryGirl.create(:tenant) }
   let(:other_group)  { FactoryGirl.create(:miq_group, :tenant => other_tenant) }
   let(:other_user)   { FactoryGirl.create(:user, :userid => 'bar', :miq_groups => [other_group]) }
+  let(:other_vm)     { FactoryGirl.create(:vm_vmware, :tenant => other_tenant) }
 
   let(:child_tenant) { FactoryGirl.create(:tenant, :divisible => false, :parent => owner_tenant) }
   let(:child_group)  { FactoryGirl.create(:miq_group, :tenant => child_tenant) }
-  let(:owned_openstack_vm) { FactoryGirl.create(:vm_openstack, :tenant => child_tenant, :miq_group => child_group) }
+  let(:child_openstack_vm) { FactoryGirl.create(:vm_openstack, :tenant => child_tenant, :miq_group => child_group) }
 
   describe ".search" do
     describe "with find_options_for_tenant filtering (basic) all resources" do
@@ -39,47 +40,39 @@ describe Rbac do
       end
     end
 
-    context "Advanced filtering" do
-      before { owned_vm }
-      it ".search with User.with_user finds user's tenant object" do
+    describe "with find_options_for_tenant filtering" do
+      before do
+        owned_vm # happy path
+        other_vm # sad path
+      end
+
+      it "with User.with_user finds Vm" do
         User.with_user(owner_user) do
           results = Rbac.search(:class => "Vm", :results_format => :objects).first
           expect(results).to eq [owned_vm]
         end
       end
 
-      it ".search with User.with_user filters out other tenants" do
-        User.with_user(other_user) do
-          results = Rbac.search(:class => "Vm", :results_format => :objects).first
-          expect(results).to eq []
-        end
+      it "with :userid finds Vm" do
+        results = Rbac.search(:class => "Vm", :results_format => :objects, :userid => owner_user.userid).first
+        expect(results).to eq [owned_vm]
       end
 
-      it ".search with :miq_group_id, finds user's tenant object" do
+      it "with :miq_group, finds Vm" do
+        results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group => owner_group).first
+        expect(results).to eq [owned_vm]
+      end
+
+      it "with :miq_group_id finds Vm" do
         results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => owner_group.id).first
         expect(results).to eq [owned_vm]
       end
 
-      it ".search with :miq_group_id filters out other tenants" do
-        results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => other_group.id).first
-        expect(results).to eq []
-      end
-
-      it ".search with User.with_user leaving tenant" do
+      it "leaving tenant doesnt find Vm" do
+        owner_user.update_attributes(:miq_groups => [other_user.current_group])
         User.with_user(owner_user) do
-          owner_user.miq_groups = [other_group]
-          owner_user.save
           results = Rbac.search(:class => "Vm", :results_format => :objects).first
-          expect(results).to eq []
-        end
-      end
-
-      it ".search with User.with_user joining tenant" do
-        User.with_user(other_user) do
-          other_user.miq_groups = [owner_group]
-          other_user.save
-          results = Rbac.search(:class => "Vm", :results_format => :objects).first
-          expect(results).to eq [owned_vm]
+          expect(results).to eq [other_vm]
         end
       end
 
@@ -98,10 +91,10 @@ describe Rbac do
         end
 
         it "can see descendant tenant's Openstack Vm" do
-          owned_openstack_vm
+          child_openstack_vm
 
-          results = Rbac.search(:class => "ManageIQ::Providers::Openstack::CloudManager::Vm", :results_format => :objects, :miq_group_id => owner_group.id).first
-          expect(results).to eq [owned_openstack_vm]
+          results = Rbac.search(:class => "ManageIQ::Providers::Openstack::CloudManager::Vm", :results_format => :objects, :miq_group => owner_group).first
+          expect(results).to eq [child_openstack_vm]
         end
       end
 
