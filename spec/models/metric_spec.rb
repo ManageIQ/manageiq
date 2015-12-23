@@ -83,7 +83,9 @@ describe Metric do
               expect(task.context_data[:targets]).to match_array(cluster.hosts.collect { |h| "Host:#{h.id}" })
 
               expected_hosts.each do |host|
-                messages = MiqQueue.where(:class_name => "Host", :instance_id => host.id).select { |m| m.args.first == "realtime" }
+                messages = MiqQueue.where(:class_name  => "Host",
+                                          :instance_id => host.id,
+                                          :method_name => "perf_capture_realtime")
                 expect(messages.size).to eq(1)
                 messages.each do |m|
                   expect(m.miq_callback).not_to be_nil
@@ -118,7 +120,9 @@ describe Metric do
               task_ids = tasks.collect(&:id)
 
               expected_hosts.each do |host|
-                messages = MiqQueue.where(:class_name => "Host", :instance_id => host.id).select { |m| m.args.first == "realtime" }
+                messages = MiqQueue.where(:class_name  => "Host",
+                                          :instance_id => host.id,
+                                          :method_name => "perf_capture_realtime")
                 expect(messages.size).to eq(1)
                 host.update_attribute(:last_perf_capture_on, 1.minute.from_now.utc)
                 messages.each do |m|
@@ -141,12 +145,12 @@ describe Metric do
           end
 
           it "calling perf_capture_timer when existing capture messages are on the queue in dequeue state should NOT merge" do
-            messages = MiqQueue.where(:class_name => "Host").select { |m| m.args.first == "realtime" }
+            messages = MiqQueue.where(:class_name => "Host", :method_name => 'capture_metrics_realtime')
             messages.each { |m| m.update_attribute(:state, "dequeue") }
 
             Metric::Capture.perf_capture_timer
 
-            messages = MiqQueue.where(:class_name => "Host").select { |m| m.args.first == "realtime" }
+            messages = MiqQueue.where(:class_name => "Host", :method_name => 'capture_metrics_realtime')
             messages.each { |m| expect(m.lock_version).to eq(1) }
           end
 
@@ -1381,13 +1385,15 @@ describe Metric do
       # Non-storage historical is expecting 7 days back, plus partial day = 8
       t.kind_of?(Storage) ? [[t, "hourly"]] : [[t, "realtime"]] + [[t, "historical"]] * 8
     end
-    selected = queue_intervals(MiqQueue.where(:method_name => "perf_capture"))
+    selected = queue_intervals(
+      MiqQueue.where(:method_name => %w(perf_capture_hourly perf_capture_realtime perf_capture_historical)))
+
     expect(selected).to match_array(expected)
   end
 
   def queue_intervals(items)
     items.map do |q|
-      interval_name = q.args.first
+      interval_name = q.method_name.sub("perf_capture_", "")
       [Object.const_get(q.class_name).find(q.instance_id), interval_name]
     end
   end
