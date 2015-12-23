@@ -9,7 +9,7 @@ describe PictureController do
 
     EvmSpecHelper.create_guid_miq_server_zone
 
-    picture.content = picture_content
+    picture.content = picture_content.dup # dup because destructive operation
     picture.save
   end
 
