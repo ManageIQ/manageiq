@@ -81,7 +81,7 @@ describe OpsController do
     end
   end
   context "#build_uri_settings" do
-    let(:mocked_filedepot) { mock_model(FileDepotSmb) }
+    let(:mocked_filedepot) { double(FileDepotSmb) }
     it "uses params[:log_password] for validation if one exists" do
       controller.instance_variable_set(:@_params,
                                        :log_userid   => "userid",

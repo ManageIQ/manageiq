@@ -50,7 +50,7 @@ describe StorageManagerController do
   end
 
   context "Validate" do
-    let(:mocked_sm) { mock_model(StorageManager) }
+    let(:mocked_sm) { double(StorageManager) }
 
     it "uses @edit password value for validation" do
       Zone.create(:name => "default", :description => "default")
