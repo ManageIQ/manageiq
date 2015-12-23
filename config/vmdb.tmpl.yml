@@ -134,7 +134,6 @@ log:
   level_scvmm_in_evm: error
   level_vim: warn
   level_vim_in_evm: error
-  path:
 log_depot:
   password:
   uri:

@@ -93,18 +93,6 @@ module VMDB
           end
         end
 
-        # validate path
-        path = data.path.to_s
-        unless path.blank?
-          unless File.exist?(File.dirname(path))
-            valid = false; errors << [:path, "path, \"#{path}\", is invalid, directory does not exist"]
-          end
-
-          if File.extname(path).downcase != ".log"
-            valid = false; errors << [:path, "path, \"#{path}\", is invalid, must be in the form of <directory path>/<log file name>.log"]
-          end
-        end
-
         return valid, errors
       end
 

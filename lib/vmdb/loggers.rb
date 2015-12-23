@@ -14,7 +14,6 @@ module Vmdb
 
   module Loggers
     DEFAULT_LOG_LEVEL = "INFO"
-    DEFAULT_LOG_PATH  = Rails.root.join("log", "#{Rails.env}.log")
 
     def self.init
       return if @initialized
@@ -44,27 +43,25 @@ module Vmdb
     end
 
     def self.create_loggers
-      config   = get_config
-      path     = config[:path] || DEFAULT_LOG_PATH
-      path_dir = File.dirname(path)
-
       if ENV.key?("CI")
         $log = $rails_log = $audit_log = $fog_log = $policy_log = $vim_log =
           $rhevm_log = $aws_log = $kube_log = $scvmm_log = $api_log =
           $miq_ae_logger = LogProxy.null_logger
       else
-        $log           = VMDBLogger.new(File.join(path_dir, "evm.log"))
-        $rails_log     = VMDBLogger.new(path)
-        $audit_log     = AuditLogger.new(File.join(path_dir, "audit.log"))
-        $fog_log       = FogLogger.new(File.join(path_dir, "fog.log"))
-        $policy_log    = MirroredLogger.new(File.join(path_dir, "policy.log"),     "<PolicyEngine> ")
-        $vim_log       = MirroredLogger.new(File.join(path_dir, "vim.log"),        "<VIM> ")
-        $rhevm_log     = MirroredLogger.new(File.join(path_dir, "rhevm.log"),      "<RHEVM> ")
-        $aws_log       = MirroredLogger.new(File.join(path_dir, "aws.log"),        "<AWS> ")
-        $kube_log      = MirroredLogger.new(File.join(path_dir, "kubernetes.log"), "<KUBERNETES> ")
-        $scvmm_log     = MirroredLogger.new(File.join(path_dir, "scvmm.log"),      "<SCVMM> ")
-        $api_log       = MirroredLogger.new(File.join(path_dir, "api.log"),        "<API> ")
-        $miq_ae_logger = MirroredLogger.new(File.join(path_dir, "automation.log"), "<AutomationEngine> ")
+        path_dir = Rails.root.join("log")
+
+        $log           = VMDBLogger.new(path_dir.join("evm.log"))
+        $rails_log     = VMDBLogger.new(path_dir.join("#{Rails.env}.log"))
+        $audit_log     = AuditLogger.new(path_dir.join("audit.log"))
+        $fog_log       = FogLogger.new(path_dir.join("fog.log"))
+        $policy_log    = MirroredLogger.new(path_dir.join("policy.log"),     "<PolicyEngine> ")
+        $vim_log       = MirroredLogger.new(path_dir.join("vim.log"),        "<VIM> ")
+        $rhevm_log     = MirroredLogger.new(path_dir.join("rhevm.log"),      "<RHEVM> ")
+        $aws_log       = MirroredLogger.new(path_dir.join("aws.log"),        "<AWS> ")
+        $kube_log      = MirroredLogger.new(path_dir.join("kubernetes.log"), "<KUBERNETES> ")
+        $scvmm_log     = MirroredLogger.new(path_dir.join("scvmm.log"),      "<SCVMM> ")
+        $api_log       = MirroredLogger.new(path_dir.join("api.log"),        "<API> ")
+        $miq_ae_logger = MirroredLogger.new(path_dir.join("automation.log"), "<AutomationEngine> ")
         $miq_ae_logger.mirror_level = VMDBLogger::INFO
       end
 
