@@ -65,19 +65,7 @@ describe Metric do
 
         it "should queue up enabled targets" do
           expect(MiqQueue.count).to eq(47)
-
-          expected_targets = Metric::Targets.capture_targets
-          expected = expected_targets.flat_map do |t|
-            # Storage is hourly only
-            # Non-storage historical is expecting 7 days back, plus partial day = 8
-            t.kind_of?(Storage) ? [[t, "hourly"]] : [[t, "realtime"]] + [[t, "historical"]] * 8
-          end
-
-          selected = MiqQueue.where(:method_name => "perf_capture").map do |q|
-            [Object.const_get(q.class_name).find(q.instance_id), q.args.first]
-          end
-
-          expect(selected).to match_array(expected)
+          assert_metric_targets
         end
 
         context "executing capture_targets for realtime targets with parent objects" do
@@ -96,6 +84,7 @@ describe Metric do
 
               expected_hosts.each do |host|
                 messages = MiqQueue.where(:class_name => "Host", :instance_id => host.id).select { |m| m.args.first == "realtime" }
+                expect(messages.size).to eq(1)
                 messages.each do |m|
                   expect(m.miq_callback).not_to be_nil
                   expect(m.miq_callback[:method_name]).to eq(:perf_capture_callback)
@@ -130,6 +119,7 @@ describe Metric do
 
               expected_hosts.each do |host|
                 messages = MiqQueue.where(:class_name => "Host", :instance_id => host.id).select { |m| m.args.first == "realtime" }
+                expect(messages.size).to eq(1)
                 host.update_attribute(:last_perf_capture_on, 1.minute.from_now.utc)
                 messages.each do |m|
                   next if m.miq_callback[:args].blank?
@@ -189,9 +179,7 @@ describe Metric do
           expected_targets = Metric::Targets.capture_targets(nil, :exclude_storages => true)
           expected = expected_targets.flat_map { |t| [[t, "historical"]] * 2 } # Vm, Host, Host, Vm, Host
 
-          selected = MiqQueue.all.map do |q|
-            [Object.const_get(q.class_name).find(q.instance_id), q.args.first]
-          end
+          selected = queue_intervals(MiqQueue.all)
 
           expect(selected).to match_array(expected)
         end
@@ -1142,21 +1130,10 @@ describe Metric do
 
         it "should queue up enabled targets" do
           expected_targets = Metric::Targets.capture_targets
-          expected_queue_count = expected_targets.size * 9  # 1 realtime, 8 historical
+          expected_queue_count = expected_targets.count * 9 # 1 realtime, 8 historical
           expected_queue_count += 1                         # cleanup task
           expect(MiqQueue.count).to eq(expected_queue_count)
-
-          expected = expected_targets.flat_map do |t|
-            # Storage is hourly only
-            # Non-storage historical is expecting 7 days back, plus partial day = 8
-            t.kind_of?(Storage) ? [[t, "hourly"]] : [[t, "realtime"]] + [[t, "historical"]] * 8
-          end
-
-          selected = MiqQueue.where(:method_name => "perf_capture").map do |q|
-            [Object.const_get(q.class_name).find(q.instance_id), q.args.first]
-          end
-
-          expect(selected).to match_array(expected)
+          assert_metric_targets(expected_targets)
         end
       end
     end
@@ -1395,6 +1372,23 @@ describe Metric do
 
       target.update_attribute(:last_perf_capture_on, Time.now.utc - 1.minutes)
       expect(target.perf_capture_now?).not_to be_truthy
+    end
+  end
+
+  def assert_metric_targets(expected_targets = Metric::Targets.capture_targets)
+    expected = expected_targets.flat_map do |t|
+      # Storage is hourly only
+      # Non-storage historical is expecting 7 days back, plus partial day = 8
+      t.kind_of?(Storage) ? [[t, "hourly"]] : [[t, "realtime"]] + [[t, "historical"]] * 8
+    end
+    selected = queue_intervals(MiqQueue.where(:method_name => "perf_capture"))
+    expect(selected).to match_array(expected)
+  end
+
+  def queue_intervals(items)
+    items.map do |q|
+      interval_name = q.args.first
+      [Object.const_get(q.class_name).find(q.instance_id), interval_name]
     end
   end
 end
