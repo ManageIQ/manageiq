@@ -16,25 +16,6 @@ module Vmdb
     DEFAULT_LOG_LEVEL = "INFO"
     DEFAULT_LOG_PATH  = Rails.root.join("log", "#{Rails.env}.log")
 
-    LEVEL_CONFIG_KEYS = [
-      :level,
-      :level_rails,
-      :level_vim,
-      :level_vim_in_evm,
-      :level_rhevm,
-      :level_rhevm_in_evm,
-      :level_aws,
-      :level_aws_in_evm,
-      :level_kube,
-      :level_kube_in_evm,
-      :level_scvmm,
-      :level_scvmm_in_evm,
-      :level_api,
-      :level_api_in_evm,
-      :level_fog,
-      :level_fog_in_evm,
-    ]
-
     def self.init
       return if @initialized
       create_loggers
