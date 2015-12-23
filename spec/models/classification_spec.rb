@@ -155,7 +155,7 @@ describe Classification do
         cat = Classification.new(:name => name, :parent_id => 0)
 
         expect(cat).to_not be_valid
-        expect(cat).to     have(1).error_on(:name)
+        expect(cat.errors[:name].size).to eq(1)
       end
     end
 
