@@ -574,25 +574,21 @@ module ApplicationController::Filter
     @edit[@expkey][:expression] = []                           # Store exps in an array
     @edit[:new] = {}
     @edit[:new][@expkey] = @edit[@expkey][:expression]                # Copy to new exp
-    if id == 0 || !MiqSearch.exists?(id)
+    s = !id.zero? && MiqSearch.find(id)
+    if s.nil? || s.search_key == "_hidden_" # search not found || admin changed default search to be hidden
       clear_default_search
     else
-      s = MiqSearch.find(id)
-      if s.search_key == "_hidden_"           # if admin has changed default search to be hidden
-        clear_default_search
-      else
-        @edit[:new][@expkey] = s.filter.exp
-        @edit[@expkey][:selected] = {:id => s.id, :name => s.name, :description => s.description, :typ => s.search_type}        # Save the last search loaded
-        @edit[:new_search_name] = @edit[:adv_search_name] = @edit[@expkey][:selected].nil? ? nil : @edit[@expkey][:selected][:description]
-        @edit[@expkey][:expression] = copy_hash(@edit[:new][@expkey])
-        @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression])       # Build the expression table
-        exp_array(:init, @edit[@expkey][:expression])
-        @edit[@expkey][:exp_token] = nil                                        # Clear the current selected token
-        @edit[:adv_search_applied] = {}
-        adv_search_set_text # Set search text filter suffix
-        @edit[:adv_search_applied][:exp] = copy_hash(@edit[:new][@expkey])    # Save the expression to be applied
-        @edit[@expkey].delete(:exp_token)                             # Remove any existing atom being edited
-      end
+      @edit[:new][@expkey] = s.filter.exp
+      @edit[@expkey][:selected] = {:id => s.id, :name => s.name, :description => s.description, :typ => s.search_type}        # Save the last search loaded
+      @edit[:new_search_name] = @edit[:adv_search_name] = @edit[@expkey][:selected].nil? ? nil : @edit[@expkey][:selected][:description]
+      @edit[@expkey][:expression] = copy_hash(@edit[:new][@expkey])
+      @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression])       # Build the expression table
+      exp_array(:init, @edit[@expkey][:expression])
+      @edit[@expkey][:exp_token] = nil                                        # Clear the current selected token
+      @edit[:adv_search_applied] = {}
+      adv_search_set_text # Set search text filter suffix
+      @edit[:adv_search_applied][:exp] = copy_hash(@edit[:new][@expkey])    # Save the expression to be applied
+      @edit[@expkey].delete(:exp_token)                             # Remove any existing atom being edited
     end
     @edit[:adv_search_open] = false                               # Close the adv search box
   end
@@ -890,7 +886,7 @@ module ApplicationController::Filter
     cols_key = @view.scoped_association.nil? ? @view.db.to_sym : (@view.db + "-" + @view.scoped_association).to_sym
     if params[:id]
       if params[:id] != "0"
-        s = MiqSearch.find_by_id(params[:id])
+        s = MiqSearch.find_by(:id => params[:id])
         if s.nil?
           add_flash(_("The selected Filter record was not found"), :error)
         elsif MiqExpression.quick_search?(s.filter)
