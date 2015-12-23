@@ -41,24 +41,24 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(ExtManagementSystem.count).to eql(1)
     expect(Flavor.count).to              eql(18)
     expect(AvailabilityZone.count).to    eql(13)
-    expect(VmOrTemplate.count).to        eql(347)
+    expect(VmOrTemplate.count).to        eql(348)
     expect(Vm.count).to                  eql(2)
-    expect(MiqTemplate.count).to         eql(345)
-    expect(Disk.count).to                eql(0)
+    expect(MiqTemplate.count).to         eql(346)
+    expect(Disk.count).to                eql(2)
     expect(GuestDevice.count).to         eql(0)
     expect(Hardware.count).to            eql(2)
     expect(Network.count).to             eql(0)
-    expect(OperatingSystem.count).to     eql(345)
-    expect(Relationship.count).to        eql(0)
-    expect(MiqQueue.count).to            eql(347)
+    expect(OperatingSystem.count).to     eql(348)
+    expect(Relationship.count).to        eql(4)
+    expect(MiqQueue.count).to            eql(348)
   end
 
   def assert_ems
     expect(@ems.flavors.size).to            eql(18)
     expect(@ems.availability_zones.size).to eql(13)
-    expect(@ems.vms_and_templates.size).to  eql(347)
+    expect(@ems.vms_and_templates.size).to  eql(348)
     expect(@ems.vms.size).to                eql(2)
-    expect(@ems.miq_templates.size).to      eq(345)
+    expect(@ems.miq_templates.size).to      eq(346)
   end
 
   def assert_specific_zone
@@ -144,16 +144,28 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :virtualization_type => nil
     )
 
-    expect(v.hardware.disks.size).to         eql(0) # TODO: Change to a flavor that has disks
+    expect(v.hardware.disks.size).to         eql(1) # TODO: Change to a flavor that has disks
     expect(v.hardware.guest_devices.size).to eql(0)
     expect(v.hardware.nics.size).to          eql(0)
 
     assert_specific_vm_powered_on_hardware_networks(v)
+    assert_specific_vm_powered_on_hardware_disks(v)
   end
 
   def assert_specific_vm_powered_on_hardware_networks(v)
     expect(v.hardware.networks.size).to eql(0)
     # TODO inventory network hardware
+  end
+
+  def assert_specific_vm_powered_on_hardware_disks(v)
+    disk = v.hardware.disks.first
+    expect(disk).to have_attributes(
+      :device_name     => "rhel7",
+      :device_type     => "disk",
+      :location        => "0",
+      :controller_type => "google",
+      :size            => 10 * 1.gigabyte,
+    )
   end
 
   def assert_specific_vm_powered_off
@@ -215,7 +227,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :bitness            => nil
     )
 
-    expect(v.hardware.disks.size).to         eql(0)
+    expect(v.hardware.disks.size).to         eql(1)
     expect(v.hardware.guest_devices.size).to eql(0)
     expect(v.hardware.nics.size).to          eql(0)
     expect(v.hardware.networks.size).to      eql(0)
