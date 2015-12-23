@@ -17,33 +17,24 @@ describe Rbac do
   let(:child_group)  { FactoryGirl.create(:miq_group, :tenant => child_tenant) }
   let(:owned_openstack_vm) { FactoryGirl.create(:vm_openstack, :tenant => child_tenant, :miq_group => child_group) }
 
-  context "tenant scoping" do
-    klass_factory_names = [
-      "ExtManagementSystem", :ems_vmware,
-      "MiqAeDomain", :miq_ae_domain,
-      # "MiqRequest", :miq_request,  # MiqRequest is an abstract class that can't be instantiated currently
-      "MiqRequestTask", :miq_request_task,
-      "Provider", :provider,
-      "Service", :service,
-      "ServiceTemplate", :service_template,
-      "ServiceTemplateCatalog", :service_template_catalog,
-      "Vm", :vm_vmware
-    ]
-
-    klass_factory_names.each_slice(2) do |klass, factory_name|
-      context "#{klass} basic filtering" do
-        let(:owned_resource) { FactoryGirl.create(factory_name, :tenant => owner_tenant) }
-
-        before { owned_resource }
-
-        it ".search with :userid, finds user's tenant #{klass}" do
-          results = Rbac.search(:class => klass, :results_format => :objects, :userid => owner_user.userid).first
+  describe ".search" do
+    describe "with find_options_for_tenant filtering (basic) all resources" do
+      {
+        "ExtManagementSystem"    => :ems_vmware,
+        "MiqAeDomain"            => :miq_ae_domain,
+        # "MiqRequest"           => :miq_request,  # MiqRequest can't be instantuated, it is an abstract class
+        "MiqRequestTask"         => :miq_request_task,
+        "Provider"               => :provider,
+        "Service"                => :service,
+        "ServiceTemplate"        => :service_template,
+        "ServiceTemplateCatalog" => :service_template_catalog,
+        "Vm"                     => :vm_vmware
+      }.each do |klass, factory_name|
+        it "with :user finds #{klass}" do
+          owned_resource = FactoryGirl.create(factory_name, :tenant => owner_tenant)
+          _other_resource = FactoryGirl.create(factory_name, :tenant => other_tenant)
+          results = Rbac.search(:class => klass, :results_format => :objects, :user => owner_user).first
           expect(results).to eq [owned_resource]
-        end
-
-        it ".search with :userid filters out other tenants" do
-          results = Rbac.search(:class => klass, :results_format => :objects, :userid => other_user.userid).first
-          expect(results).to eq []
         end
       end
     end
