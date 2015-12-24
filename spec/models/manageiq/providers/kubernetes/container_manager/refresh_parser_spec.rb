@@ -1,5 +1,4 @@
 require "spec_helper"
-require 'recursive-open-struct'
 
 describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
   let(:parser)  { described_class.new }
