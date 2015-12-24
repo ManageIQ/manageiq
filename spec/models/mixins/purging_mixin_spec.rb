@@ -17,7 +17,6 @@ describe PurgingMixin do
       end
     end
     let(:all_ids) { events.collect(&:id) }
-    let(:unpurged_ids) { all_ids[-2, 2] }
 
     it "with no records" do
       expect(example_class.purge(purge_date)).to eq(0)
@@ -39,33 +38,33 @@ describe PurgingMixin do
     it "with a date within range" do
       events # create events
       expect(example_class.purge(purge_date + 1.second)).to eq(3)
-      expect(example_class.pluck(:id)).to match_array unpurged_ids
+      expect(example_class.pluck(:id)).to match_array all_ids.last(2)
     end
 
     it "with a date within range from configuration" do
       events # create events
       allow(example_class).to receive(:purge_date).and_return(purge_date + 1.second)
       expect(example_class.purge).to eq(3)
-      expect(example_class.pluck(:id)).to match_array unpurged_ids
+      expect(example_class.pluck(:id)).to match_array all_ids.last(2)
     end
 
     it "with a date covering the whole range" do
       events # create events
-      expect(example_class.purge(Time.now)).to eq(5)
+      expect(example_class.purge(Time.now.utc)).to eq(5)
       expect(example_class.pluck(:id)).to match_array []
     end
 
     it "with a date covering the whole range from configuration" do
       events # create events
       allow(example_class).to receive(:purge_date).and_return(Time.now)
-      expect(example_class.purge(Time.now)).to eq(5)
+      expect(example_class.purge(Time.now.utc)).to eq(5)
       expect(example_class.pluck(:id)).to match_array []
     end
 
     it "with a date and a window" do
       events # create events
       expect(example_class.purge(purge_date + 1.second, 2)).to eq(3)
-      expect(example_class.pluck(:id)).to match_array all_ids[-2, 2]
+      expect(example_class.pluck(:id)).to match_array all_ids.last(2)
     end
 
     it "with a date and a window from configuration" do
@@ -73,7 +72,7 @@ describe PurgingMixin do
       allow(example_class).to receive(:purge_date).and_return(purge_date + 1.second)
       allow(example_class).to receive(:purge_window_size).and_return(2)
       expect(example_class.purge).to eq(3)
-      expect(example_class.pluck(:id)).to match_array all_ids[-2, 2]
+      expect(example_class.pluck(:id)).to match_array all_ids.last(2)
     end
   end
 end
