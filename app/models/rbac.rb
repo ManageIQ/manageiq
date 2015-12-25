@@ -315,6 +315,7 @@ module Rbac
     if user && miq_group
       user.current_group = miq_group if user.miq_groups.include?(miq_group)
     end
+    miq_group ||= user.try(:current_group)
     # for reports, user is currently nil, so use the group filter
     user_filters = user.try(:get_filters) || miq_group.try(:get_filters) || {}
     user_filters["managed"] ||= []
