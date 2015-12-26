@@ -69,7 +69,7 @@ gem "gettext_i18n_rails",             "~>1.3.1"
 gem "gettext_i18n_rails_js",          "~>1.0.3"
 gem "jbuilder",                       "~>2.3.1"
 gem "paperclip",                      "~>4.3.0"
-gem "rails-i18n",                                                     :git => "git://github.com/svenfuchs/rails-i18n.git", :branch => "master"
+gem "rails-i18n",                     "~>4.0.8"
 
 # Needed by External Auth
 gem "ruby-dbus"
