@@ -175,6 +175,7 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
 
   function dblclick(d) {
     var entity_url = "";
+    var action = '/show/' + d.item.miq_id;
     switch (d.item.kind) {
       case "Kubernetes":
       case "Openshift":
@@ -183,11 +184,14 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
       case "AtomicEnterprise":
         entity_url = "ems_container";
         break;
+      case "Container":
+        entity_url = class_name(d);
+        action = '/explorer';
       default :
         entity_url = class_name(d);
     }
 
-    var url = '/' + entity_url + '/show/' + d.item.miq_id;
+    var url = '/' + entity_url + action;
     window.location.assign(url);
   }
 
