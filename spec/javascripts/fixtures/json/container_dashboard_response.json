@@ -85,6 +85,28 @@
           12
         ]
       }
+    },
+    "daily_network_metrics" : {
+      "xData": [
+        "date",
+        "2015-12-07",
+        "2015-12-08"
+      ],
+      "yData": [
+        "used",
+        2420,
+        2431
+      ]
+    },
+    "hourly_network_metrics" : {
+      "xData": [
+        "dates",
+        "2015-12-21T11:00:00.000Z"
+      ],
+      "yData": [
+        "used",
+        1599
+      ]
     }
   }
 }

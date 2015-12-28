@@ -59,6 +59,9 @@ angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.
       $scope.nodeCpuUsage.loadingDone = false;
       $scope.nodeMemoryUsage.loadingDone = false;
 
+      // Network
+      $scope.networkUtilizationLoadingDone = false;
+
       $scope.refresh = function() {
         var id;
         if ($location.absUrl().match("show/$") || $location.absUrl().match("show$")) {
@@ -83,8 +86,8 @@ angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.
             providers.forEach(function (item) {
               $scope.objectStatus.providers.count += item.count;
               $scope.objectStatus.providers.notifications.push({
-                  iconClass: item.iconClass,
-                  count: item.count
+                iconClass: item.iconClass,
+                count: item.count
               })
             });
 
@@ -112,12 +115,32 @@ angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.
           $scope.nodeCpuUsage.loadingDone = true;
           $scope.nodeMemoryUsage.data = data.heatmaps.nodeMemoryUsage.sort(dashboardUtilsFactory.heatmapSort);
           $scope.nodeMemoryUsage.loadingDone = true;
+
+          // Network metrics
+          $scope.networkUtilizationHourlyConfig = chartsMixin.chartConfig.hourlyNetworkUsageConfig;
+          $scope.networkUtilizationDailyConfig = chartsMixin.chartConfig.dailyNetworkUsageConfig;
+
+
+          if (data.hourly_network_metrics != undefined) {
+            var hourlyxdata = [];
+
+            data.hourly_network_metrics.xData.forEach(function (date) {
+              hourlyxdata.push(dashboardUtilsFactory.parseDate(date))
+            })
+            $scope.hourlyNetworkUtilization = {
+              'yData': data.hourly_network_metrics.yData,
+              'xData': hourlyxdata
+            };
+          }
+
+          $scope.dailyNetworkUtilization = data.daily_network_metrics;
+          $scope.networkUtilizationLoadingDone = true;
         });
       };
       $scope.refresh();
       var promise = $interval($scope.refresh, 1000*60*3);
 
       $scope.$on('$destroy', function() {
-        $interval.cancel(promise);
+          $interval.cancel(promise);
       });
     }]);

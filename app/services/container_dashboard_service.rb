@@ -7,12 +7,14 @@ class ContainerDashboardService
 
   def all_data
     {
-      :providers_link  => get_url_to_entity(:ems_container),
-      :status          => status,
-      :providers       => providers,
-      :heatmaps        => heatmaps,
-      :ems_utilization => ems_utilization
-    }
+      :providers_link         => get_url_to_entity(:ems_container),
+      :status                 => status,
+      :providers              => providers,
+      :heatmaps               => heatmaps,
+      :ems_utilization        => ems_utilization,
+      :hourly_network_metrics => hourly_network_metrics,
+      :daily_network_metrics  => daily_network_metrics
+    }.compact
   end
 
   def status
@@ -120,39 +122,35 @@ class ContainerDashboardService
     node_ids = @ems.container_nodes if @ems
     metrics = MetricRollup.latest_rollups(ContainerNode.name, node_ids)
 
-    {
-      :nodeCpuUsage => metrics.collect { |m|
-        avg_cpu = m.cpu_usage_rate_average.round(2)
-        {
-          :id      => m.resource_id,
-          :tooltip => "#{m.resource.name} - #{avg_cpu}%",
-          :value   => avg_cpu / 100.0 # 1% should be 0.01
-        }
-      },
-      :nodeMemoryUsage => metrics.collect { |m|
-        avg_mem = m.mem_usage_absolute_average.round(2)
-        {
-          :id      => m.resource_id,
-          :tooltip => "#{m.resource.name} - #{avg_mem}%",
-          :value   => avg_mem / 100.0 # 1% should be 0.01
+    if metrics.any?
+      {
+        :nodeCpuUsage => metrics.collect { |m|
+          avg_cpu = m.cpu_usage_rate_average.round(2)
+          {
+            :id      => m.resource_id,
+            :tooltip => "#{m.resource.name} - #{avg_cpu}%",
+            :value   => avg_cpu / 100.0 # 1% should be 0.01
+          }
+        },
+        :nodeMemoryUsage => metrics.collect { |m|
+          avg_mem = m.mem_usage_absolute_average.round(2)
+          {
+            :id      => m.resource_id,
+            :tooltip => "#{m.resource.name} - #{avg_mem}%",
+            :value   => avg_mem / 100.0 # 1% should be 0.01
+          }
         }
       }
-    }
+    end
   end
 
   def ems_utilization
-    resource_ids = @ems.present? ? [@ems.id] : ManageIQ::Providers::ContainerManager.all.pluck(:id)
-    metrics = VimPerformanceDaily.find_entries(:tz => @controller.current_user.get_timezone)
-    metrics = metrics.where('resource_type = :type and resource_id in (:resource_ids) and timestamp > :min_time',
-                            :type => 'ExtManagementSystem', :resource_ids => resource_ids, :min_time => 30.days.ago)
-    metrics = metrics.order("timestamp")
-
     used_cpu = Hash.new(0)
     used_mem = Hash.new(0)
     total_cpu = Hash.new(0)
     total_mem = Hash.new(0)
 
-    metrics.each do |metric|
+    daily_provider_metrics.each do |metric|
       date = metric.timestamp.strftime("%Y-%m-%d")
       used_cpu[date] += metric.v_derived_cpu_total_cores_used
       used_mem[date] += metric.derived_memory_used
@@ -160,7 +158,7 @@ class ContainerDashboardService
       total_mem[date] += metric.derived_memory_available
     end
 
-    if metrics.any?
+    if daily_provider_metrics.any?
       {
         :cpu => {
           :used  => used_cpu.values.last.round,
@@ -175,8 +173,54 @@ class ContainerDashboardService
           :yData => ["used"] + used_mem.values.map { |m| (m / 1024.0).round }
         }
       }
-    else
-      {}
     end
+  end
+
+  def hourly_network_metrics
+    resource_ids = @ems.present? ? [@ems.id] : ManageIQ::Providers::ContainerManager.select(:id)
+    hourly_network_trend = Hash.new(0)
+    hourly_metrics =
+      MetricRollup.find_all_by_interval_and_time_range("hourly", 1.day.ago.beginning_of_hour.utc, Time.now.utc)
+    hourly_metrics =
+      hourly_metrics.where('resource_type = ? AND resource_id in (?)', 'ExtManagementSystem', resource_ids)
+
+    hourly_metrics.each do |m|
+      hour = m.timestamp.beginning_of_hour.utc
+      hourly_network_trend[hour] += m.net_usage_rate_average
+    end
+
+    if hourly_metrics.any?
+      {
+        :xData => ["date"] + hourly_network_trend.keys,
+        :yData => ["used"] + hourly_network_trend.values.map(&:round)
+      }
+    end
+  end
+
+  def daily_network_metrics
+    daily_network_metrics = Hash.new(0)
+    daily_provider_metrics.each do |m|
+      day = m.timestamp.strftime("%Y-%m-%d")
+      daily_network_metrics[day] += m.net_usage_rate_average
+    end
+
+    if daily_provider_metrics.any?
+      {
+        :xData => ["date"] + daily_network_metrics  .keys,
+        :yData => ["used"] + daily_network_metrics.values.map(&:round)
+      }
+    end
+  end
+
+  def daily_provider_metrics
+    if @daily_metrics.blank?
+      resource_ids = @ems.present? ? [@ems.id] : ManageIQ::Providers::ContainerManager.select(:id)
+      @daily_metrics = VimPerformanceDaily.find_entries(:tz => @controller.current_user.get_timezone)
+      @daily_metrics =
+        @daily_metrics.where('resource_type = :type and resource_id in (:resource_ids) and timestamp > :min_time',
+                             :type => 'ExtManagementSystem', :resource_ids => resource_ids, :min_time => 30.days.ago)
+      @daily_metrics = @daily_metrics.order("timestamp")
+    end
+    @daily_metrics
   end
 end

@@ -59,4 +59,22 @@
             </div>
         </div>
     </div><!-- /row -->
+    <div class="row row-tile-pf row-tile-pf-last">
+        <div class="col-md-6">
+            <div pf-card head-title="{{networkUtilizationHourlyConfig.headTitle}}">
+                <div pf-trends-chart config="networkUtilizationHourlyConfig" chart-data="hourlyNetworkUtilization"
+                     ng-if="networkUtilizationLoadingDone" chart-height="chartHeight">
+                </div>
+                <div ng-if="!networkUtilizationLoadingDone" class="spinner spinner-lg loading"></div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div pf-card head-title="{{networkUtilizationDailyConfig.headTitle}}">
+                <div pf-trends-chart config="networkUtilizationDailyConfig" chart-data="dailyNetworkUtilization"
+                     ng-if="networkUtilizationLoadingDone" chart-height="chartHeight">
+                </div>
+                <div ng-if="!networkUtilizationLoadingDone" class="spinner spinner-lg loading"></div>
+            </div>
+        </div>
+    </div>
 </div>

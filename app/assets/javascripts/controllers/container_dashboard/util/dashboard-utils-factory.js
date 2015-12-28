@@ -95,9 +95,14 @@ angular.module('miq.util').factory('dashboardUtilsFactory', function() {
     }
   };
   var heatmapSort = function(a, b) {return b.value - a.value};
+  var parseDate = function(date) {
+    myDate = Date.parse(date);
+    return isNaN(myDate) ? date : myDate
+  }
 
   return {
     heatmapSort: heatmapSort,
+    parseDate: parseDate,
     createProvidersStatus: createProvidersStatus,
     createNodesStatus: createNodesStatus,
     createContainersStatus: createContainersStatus,
