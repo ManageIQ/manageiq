@@ -498,6 +498,12 @@
       :post:
       - :name: create
         :identifier: vm_miq_request_new
+    :resource_actions:
+      :post:
+      - :name: approve
+        :identifier: vm_miq_request_approve
+      - :name: deny
+        :identifier: vm_miq_request_deny
   :rates:
     :description: Chargeback Rates
     :options:
