@@ -101,11 +101,11 @@ class BottleneckEvent < ActiveRecord::Base
     result
   end
 
-  def self.event_where_clause(obj)
+  def self.event_where_clause(scope, obj)
     ids_hash = child_types_and_ids(obj)
-    result = ["(resource_type = '#{obj.class.base_class.name}' AND resource_id = #{obj.id})"]
-    ids_hash.each { |k, v| result.push("(resource_type = '#{k}' AND resource_id in (#{v.join(",")}))") }
-    result.join(" OR ")
+    result = ids_hash.map { |k, v| "(resource_type = '#{k}' AND resource_id in (#{v.join(",")}))" }
+    result << "(resource_type = '#{obj.class.base_class.name}' AND resource_id = #{obj.id})"
+    scope.where(result.join(" OR "))
   end
 
   def self.child_types_and_ids(obj)

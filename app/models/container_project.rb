@@ -54,14 +54,17 @@ class ContainerProject < ActiveRecord::Base
 
   acts_as_miq_taggable
 
-  def event_where_clause(assoc = :ems_events)
+  def event_where_clause(scope, assoc = :ems_events)
     case assoc.to_sym
     when :ems_events
       # TODO: improve relationship using the id
-      ["container_namespace = ? AND #{events_table_name(assoc)}.ems_id = ?", name, ems_id]
+      scope.where(:container_namespace     => name,
+                  events_table_name(assoc) => {:ems_id => ems_id})
     when :policy_events
       # TODO: implement policy events and its relationship
-      ["ems_id = ?", ems_id]
+      scope.where("ems_id" => ems_id)
+    else
+      scope
     end
   end
 

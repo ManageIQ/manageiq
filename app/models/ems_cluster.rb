@@ -247,7 +247,7 @@ class EmsCluster < ActiveRecord::Base
   end
 
   def event_where_clause(assoc = :ems_events)
-    return ["ems_cluster_id = ?", id] if assoc.to_sym == :policy_events
+    return scope.where("ems_cluster_id" => id) if assoc.to_sym == :policy_events
 
     cond = ["ems_cluster_id = ?"]
     cond_params = [id]
@@ -264,14 +264,11 @@ class EmsCluster < ActiveRecord::Base
       cond_params += [ids, ids]
     end
 
-    cond_params.unshift(cond.join(" OR ")) unless cond.empty?
-    cond_params
+    scope.where(cond.join(" OR "), cond_params)
   end
 
   def ems_events
-    ewc = event_where_clause
-    return [] if ewc.blank?
-    EmsEvent.where(ewc).order("timestamp").to_a
+    event_where_clause(self.class).order("timestamp").to_a
   end
 
   def scan

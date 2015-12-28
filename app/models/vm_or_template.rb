@@ -1421,12 +1421,14 @@ class VmOrTemplate < ActiveRecord::Base
     ent
   end
 
-  def event_where_clause(assoc = :ems_events)
+  def event_where_clause(scope, assoc = :ems_events)
     case assoc.to_sym
     when :ems_events
-      return ["vm_or_template_id = ? OR dest_vm_or_template_id = ? ", id, id]
+      scope.where("vm_or_template_id = ? OR dest_vm_or_template_id = ? ", id, id)
     when :policy_events
-      return ["target_id = ? and target_class = ? ", id, self.class.base_class.name]
+      scope.where("target_id" => id, "target_class" => self.class.base_class.name)
+    else
+      scope
     end
   end
 

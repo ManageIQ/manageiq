@@ -1632,12 +1632,14 @@ class Host < ActiveRecord::Base
     !(vmm_vendor == VENDOR_TYPES["vmware"] && vmm_product == "Workstation")
   end
 
-  def event_where_clause(assoc = :ems_events)
+  def event_where_clause(scope, assoc = :ems_events)
     case assoc.to_sym
     when :ems_events
-      ["host_id = ? OR dest_host_id = ?", id, id]
+      scope.where("host_id = ? OR dest_host_id = ?", id, id)
     when :policy_events
-      ["host_id = ?", id]
+      scope.where("host_id" => id)
+    else
+      scope
     end
   end
 
