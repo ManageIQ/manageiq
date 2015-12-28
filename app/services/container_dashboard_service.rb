@@ -1,4 +1,6 @@
 class ContainerDashboardService
+  CPU_USAGE_PRECISION = 2 # 2 decimal points
+
   def initialize(provider_id, controller)
     @provider_id = provider_id
     @ems = ManageIQ::Providers::ContainerManager.find(@provider_id) unless @provider_id.blank?
@@ -119,29 +121,44 @@ class ContainerDashboardService
 
   def heatmaps
     # Get latest hourly rollup for each node.
-    node_ids = @ems.container_nodes if @ems
+    node_ids = @ems.container_nodes if @ems.present?
     metrics = MetricRollup.latest_rollups(ContainerNode.name, node_ids)
+    metrics = metrics.includes(:resource => [:ext_management_system]) unless @ems.present?
+
+    node_cpu_usage = nil
+    node_memory_usage = nil
 
     if metrics.any?
-      {
-        :nodeCpuUsage => metrics.collect { |m|
-          avg_cpu = m.cpu_usage_rate_average.round(2)
-          {
-            :id      => m.resource_id,
-            :tooltip => "#{m.resource.name} - #{avg_cpu}%",
-            :value   => avg_cpu / 100.0 # 1% should be 0.01
-          }
-        },
-        :nodeMemoryUsage => metrics.collect { |m|
-          avg_mem = m.mem_usage_absolute_average.round(2)
-          {
-            :id      => m.resource_id,
-            :tooltip => "#{m.resource.name} - #{avg_mem}%",
-            :value   => avg_mem / 100.0 # 1% should be 0.01
-          }
+      node_cpu_usage = []
+      node_memory_usage = []
+
+      metrics.each do |m|
+        node_cpu_usage << {
+          :id    => m.resource_id,
+          :info  => {
+            :node     => m.resource.name,
+            :provider => @ems.present? ? @ems.ext_management_system.name : m.resource.ext_management_system.name,
+            :total    => m.derived_vm_numvcpus
+          },
+          :value => (m.cpu_usage_rate_average / 100.0).round(CPU_USAGE_PRECISION) # pf accepts fractions 90% = 0.90
         }
-      }
+
+        node_memory_usage << {
+          :id    => m.resource_id,
+          :info  => {
+            :node     => m.resource.name,
+            :provider => m.resource.ext_management_system.name,
+            :total    => m.derived_memory_available
+          },
+          :value => (m.mem_usage_absolute_average / 100.0).round(CPU_USAGE_PRECISION) # pf accepts fractions 90% = 0.90
+        }
+      end
     end
+
+    {
+      :nodeCpuUsage    => node_cpu_usage,
+      :nodeMemoryUsage => node_memory_usage
+    }
   end
 
   def ems_utilization
