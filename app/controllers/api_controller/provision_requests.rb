@@ -18,5 +18,21 @@ class ApiController
       MiqProvisionVirtWorkflow.from_ws(version_str, @auth_user_obj, template_fields, vm_fields, requester, tags,
                                        additional_values, ems_custom_attrs, miq_custom_attrs)
     end
+
+    def deny_resource_provision_requests(type, id, data)
+      provreq = resource_search(id, type, collection_class(:provision_requests))
+      raise BadRequestError, "A reason is required for this action" if data['reason'].nil?
+      reason = data['reason']
+      provreq.deny(@auth_user_obj.userid, reason)
+      provreq
+    end
+
+    def approve_resource_provision_requests(type, id, data)
+      provreq = resource_search(id, type, collection_class(:provision_requests))
+      raise BadRequestError, "A reason is required for this action" if data['reason'].nil?
+      reason = data['reason']
+      provreq.approve(@auth_user_obj.userid, reason)
+      provreq
+    end
   end
 end
