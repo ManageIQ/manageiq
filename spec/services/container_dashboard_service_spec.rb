@@ -13,17 +13,17 @@ describe ContainerDashboardService do
 
       # Kubernetes should not appear
       expect(providers_data).to eq([{
-                                      :iconClass    => "pficon pficon-openshift",
-                                      :count        => 2,
-                                      :id           => :openshift,
-                                      :providerType => :Openshift
-                                    },
-                                    {
-                                      :iconClass    => "pficon pficon-atomic",
-                                      :count        => 2,
-                                      :id           => :atomic,
-                                      :providerType => :Atomic
-                                    }])
+        :iconClass    => "pficon pficon-openshift",
+        :count        => 2,
+        :id           => :openshift,
+        :providerType => :Openshift
+      },
+      {
+        :iconClass    => "pficon pficon-atomic",
+        :count        => 2,
+        :id           => :atomic,
+        :providerType => :Atomic
+      }])
     end
   end
 
