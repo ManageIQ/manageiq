@@ -27,7 +27,7 @@ module ApplicationController::Filter
             exp.delete("not")                               # Delete the NOT key
           end
         else
-          exp.each_key { |key| exp.delete(key) }              # Remove all existing keys
+          exp.clear                                         # Remove all existing keys
           exp["???"] = "???"                                # Set new exp key
           @edit[:edit_exp] = copy_hash(exp)
           exp_set_fields(@edit[:edit_exp])
