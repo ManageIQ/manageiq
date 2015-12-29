@@ -75,11 +75,12 @@ module PxeController::PxeCustomizationTemplates
     end
     @ct = @record = identify_record(params[:id], CustomizationTemplate) if params[:id]
     if params[:typ] && params[:typ] == "copy"
-      options = {}
-      options[:name] = "Copy of #{@record.name}"
-      options[:description] = @record.description
-      options[:script] = @record.script
-      options[:type] = @record.type
+      options = {
+        :name        => "Copy of #{@record.name}",
+        :description => @record.description,
+        :script      => @record.script,
+        :type        => @record.type
+      }
       options[:pxe_image_type_id] = @record.pxe_image_type_id.to_s if @record.pxe_image_type_id
       @ct = CustomizationTemplate.new(options)
     end
