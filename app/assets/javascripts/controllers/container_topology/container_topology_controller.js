@@ -36,10 +36,10 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
      var vertices = $scope.vs;
 
      if ($scope.checkboxModel.value) {
-       vertices.selectAll("text")
+       vertices.selectAll("text.attached-label")
          .style("display", "block");
      } else {
-       vertices.selectAll("text")
+       vertices.selectAll("text.attached-label")
          .style("display", "none");
      }
   };
@@ -119,12 +119,7 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
       .text(function(d) {
         return d.item.name;
       })
-      .style("font-size", function(d) {
-        return "12px";
-      })
-      .style("fill", function(d) {
-        return "black";
-      })
+      .attr('class', 'attached-label')
       .style("display", function(d) {
         if ($scope.checkboxModel.value) {
           return "block";
