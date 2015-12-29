@@ -12,13 +12,11 @@ module Authenticator
     private
 
     def ldap
-      @ldap ||= ldap_bind(config[:bind_dn], config[:bind_pwd])
+      @ldap = MiqLdap.new(:auth => config)
     end
 
     def ldap_bind(username, password)
-      ldap = MiqLdap.new(:auth => config)
       ldap if ldap.bind(username, password)
-      return ldap
     end
 
     def find_or_create_by_ldap(username)
