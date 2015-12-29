@@ -18,6 +18,7 @@ module Authenticator
     def ldap_bind(username, password)
       ldap = MiqLdap.new(:auth => config)
       ldap if ldap.bind(username, password)
+      return ldap
     end
 
     def find_or_create_by_ldap(username)
