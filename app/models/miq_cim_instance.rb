@@ -206,7 +206,7 @@ class MiqCimInstance < ActiveRecord::Base
   #
   def getAssociators(association)
     results = []
-    query = miq_cim_associations.scoped.includes(:result_instance).select(:result_instance_id, :id)
+    query = miq_cim_associations.includes(:result_instance).select(:result_instance_id, :id)
     query = query.where_association(association)
     query.find_each { |a| results << a.result_instance }
     results.uniq
@@ -214,7 +214,7 @@ class MiqCimInstance < ActiveRecord::Base
 
   def getAssociatedVmdbObjs(association)
     results = []
-    query = miq_cim_associations.scoped.includes(:result_instance => :vmdb_obj).select(:result_instance_id, :id)
+    query = miq_cim_associations.includes(:result_instance => :vmdb_obj).select(:result_instance_id, :id)
     query = query.where_association(association)
     query.find_each { |a| results << a.result_instance.vmdb_obj }
     results.uniq
@@ -224,14 +224,14 @@ class MiqCimInstance < ActiveRecord::Base
   # Get the associations from this node that match the given association.
   #
   def getAssociations(association)
-    miq_cim_associations.scoped.where_association(association)
+    miq_cim_associations.where_association(association)
   end
 
   #
   # Return the number of associations from this node that match the given association.
   #
   def getAssociationSize(association)
-    miq_cim_associations.scoped.where_association(association).size
+    miq_cim_associations.where_association(association).size
   end
 
   def mark_associations_stale
