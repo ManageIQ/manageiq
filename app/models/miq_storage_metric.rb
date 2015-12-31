@@ -84,24 +84,19 @@ class MiqStorageMetric < ActiveRecord::Base
   end
 
   def derived_metrics_in_range(start_time, end_time)
-    cond = ["statistic_time >= ? AND statistic_time < ?", start_time, end_time]
-    miq_derived_metrics.where(cond).to_a
+    miq_derived_metrics.where(:statistic_time => start_time...end_time).to_a
   end
 
-  def metrics_rollups_in_range(rollupType, start_time, end_time)
-    cond = ["rollup_type = ? AND statistic_time >= ? AND statistic_time < ?",
-            rollupType, start_time, end_time]
-    miq_metrics_rollups.where(cond).to_a
+  def metrics_rollups_in_range(rollup_type, start_time, end_time)
+    where(:rollup_type => rollup_type, :statistic_time => start_time...end_time).to_a
   end
 
-  def metrics_rollups_by_statistic_time(rollupType, statistic_time)
-    cond = ["rollup_type = ? AND statistic_time = ?", rollupType, statistic_time]
-    miq_metrics_rollups.where(cond).to_a
+  def metrics_rollups_by_statistic_time(rollup_type, statistic_time)
+    miq_metrics_rollups.where(:rollup_type => rollup_type, :statistic_time => statistic_time).to_a
   end
 
-  def metrics_rollups_by_rollup_type(rollupType)
-    cond = ["rollup_type = ?", rollupType]
-    miq_metrics_rollups.where(cond).to_a
+  def metrics_rollups_by_rollup_type(rollup_type)
+    miq_metrics_rollups.where(rollup_type => rollup_type).to_a
   end
 
   def addDerivedMetric(derivedMetrics)
@@ -205,7 +200,7 @@ class MiqStorageMetric < ActiveRecord::Base
   # Called directly from MiqStorageMetric.
   #
   def self.sub_class_names
-    select('DISTINCT type').collect(&:type)
+    distinct.pluck(:type)
   end
 
   #
