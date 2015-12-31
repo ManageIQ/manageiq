@@ -51,6 +51,14 @@ module ContainerSummaryHelper
     textual_link(@record.container_node)
   end
 
+  def textual_container_builds
+    textual_link(@record.container_builds)
+  end
+
+  def textual_container_build
+    textual_link(@record.container_build)
+  end
+
   def textual_group_container_labels
     textual_key_value_group(@record.labels.to_a)
   end

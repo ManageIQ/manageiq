@@ -29,5 +29,5 @@
     = miq_accordion_panel(_("Relationships"), false, "ems_container_rel") do
       %ul.nav.nav-pills.nav-stacked
         - %w(container_project container_route container_service container_replicator container_group ,
-             container container_node container_image_registry container_image persistent_volume).each do |ent|
+             container container_node container_image_registry container_image persistent_volume container_build).each do |ent|
           = multiple_relationship_link(@record, ent)

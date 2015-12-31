@@ -844,6 +844,8 @@ en:
       container_projects:          Projects
       persistent_volume:           Volume
       persistent_volumes:          Volumes
+      container_build:             Build
+      container_builds:            Builds
       custom_button:               Button
       custom_button_set:           Buttons Group
       ems_cloud:                   Cloud Provider

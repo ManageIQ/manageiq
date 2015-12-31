@@ -39,7 +39,7 @@
                     #{view_name}
                   .col-md-8
                     %ul.list-inline= render_view_buttons(resource, @edit[:new][:views][resource])
-        - if has_any_role?(%w(ems_container_show_list container_group_show_list container_node_show_list container_route_show_list container_project_show_list container_replicator_show_list container_image_show_list container_image_registry_show_list container_service_accord containers_filter_accord containers_accord persistent_volume))
+        - if has_any_role?(%w(ems_container_show_list container_group_show_list container_node_show_list container_route_show_list container_project_show_list container_replicator_show_list container_image_show_list container_image_registry_show_list container_service_accord containers_filter_accord containers_accord persistent_volume container_build_show_list))
           %fieldset
             %h3
               = _('Containers')
@@ -53,6 +53,7 @@
                       :containerimage         => "container_image",
                       :containerimageregistry => "container_image_registry",
                       :container              => "container",
+                      :containerbuild         => "container_build",
                       :persistentvolume       => "persistent_volume"}
             - keys.each do |resource, table_view_name|
               .form-group
