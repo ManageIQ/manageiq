@@ -213,7 +213,7 @@ class MiqStorageMetric < ActiveRecord::Base
   # Called directly from MiqStorageMetric.
   #
   def self.sub_classes
-    select('DISTINCT type').collect { |c| c.type.constantize }
+    sub_class_names.map(&:constantize)
   end
 
   #
@@ -221,7 +221,7 @@ class MiqStorageMetric < ActiveRecord::Base
   # Called directly from MiqStorageMetric.
   #
   def self.derived_metrics_class_names
-    select('DISTINCT type').collect { |c| c.type.constantize.derived_metrics_class_name }
+    sub_classes.map(&:derived_metrics_class_name)
   end
 
   #
@@ -229,7 +229,7 @@ class MiqStorageMetric < ActiveRecord::Base
   # Called directly from MiqStorageMetric.
   #
   def self.derived_metrics_classes
-    select('DISTINCT type').collect { |c| c.type.constantize.derived_metrics_class_name.constantize }
+    derived_metrics_class_names.map(&:constantize)
   end
 
   #
@@ -237,7 +237,7 @@ class MiqStorageMetric < ActiveRecord::Base
   # Called directly from MiqStorageMetric.
   #
   def self.metrics_rollup_class_names
-    select('DISTINCT type').collect { |c| c.type.constantize.metrics_rollup_class_name }
+    subclasses.map(&:metrics_rollup_class_name)
   end
 
   #
@@ -245,7 +245,7 @@ class MiqStorageMetric < ActiveRecord::Base
   # Called directly from MiqStorageMetric.
   #
   def self.metrics_rollup_classes
-    select('DISTINCT type').collect { |c| c.type.constantize.metrics_rollup_class_name.constantize }
+    metrics_rollup_class_names.map(&:constantize)
   end
 
   #
@@ -254,8 +254,7 @@ class MiqStorageMetric < ActiveRecord::Base
   # Constant defined in subclass.
   #
   def self.derived_metrics_class_name
-    return nil unless self.const_defined?(:DERIVED_METRICS_CLASS_NAME)
-    self::DERIVED_METRICS_CLASS_NAME
+    self::DERIVED_METRICS_CLASS_NAME unless self.const_defined?(:DERIVED_METRICS_CLASS_NAME)
   end
 
   #
@@ -263,8 +262,7 @@ class MiqStorageMetric < ActiveRecord::Base
   # Called from subclass of MiqStorageMetric.
   #
   def self.derived_metrics_class
-    return nil if derived_metrics_class_name.nil?
-    derived_metrics_class_name.constantize
+    derived_metrics_class_name.try!(:constantize)
   end
 
   #
@@ -279,8 +277,7 @@ class MiqStorageMetric < ActiveRecord::Base
   # Constant defined in subclass.
   #
   def self.metrics_rollup_class_name
-    return nil unless self.const_defined?(:METRICS_ROLLUP_CLASS_NAME)
-    self::METRICS_ROLLUP_CLASS_NAME
+    self::METRICS_ROLLUP_CLASS_NAME if self.const_defined?(:METRICS_ROLLUP_CLASS_NAME)
   end
 
   #
@@ -288,8 +285,7 @@ class MiqStorageMetric < ActiveRecord::Base
   # Called from subclass of MiqStorageMetric.
   #
   def self.metrics_rollup_class
-    return nil if metrics_rollup_class_name.nil?
-    metrics_rollup_class_name.constantize
+    metrics_rollup_class_name.try!(:constantize)
   end
 
   #
