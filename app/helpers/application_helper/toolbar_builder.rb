@@ -72,7 +72,7 @@ class ApplicationHelper::ToolbarBuilder
           "child_id" => bsi[:button],
           "id"       => bgi[:buttonSelect] + "__" + bsi[:button],
           "type"     => "button",
-          "img"      => img = "#{bsi[:image] ? bsi[:image] : bsi[:button]}.png",
+          "img"      => img = "#{bsi[:image] || bsi[:button]}.png",
           "imgdis"   => img,
           :icon      => bsi[:icon]
         )
@@ -138,7 +138,7 @@ class ApplicationHelper::ToolbarBuilder
       "id"     => bgi[:button],
       "type"   => "button",
       "img"    => "#{get_image(bgi[:image], bgi[:button]) ? get_image(bgi[:image], bgi[:button]) : bgi[:button]}.png",
-      "imgdis" => "#{bgi[:image] ? bgi[:image] : bgi[:button]}.png",
+      "imgdis" => "#{bgi[:image] || bgi[:button]}.png",
       :icon    => bgi[:icon]
     )
     apply_common_props(props, bgi)
