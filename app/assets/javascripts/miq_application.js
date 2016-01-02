@@ -1419,3 +1419,29 @@ function miqHideSearchClearButton() {
     $(this).hide();
   });
 }
+
+function toggle_expansion(link) {
+    var link = $(link);
+    link.find("i").toggleClass("fa-angle-right fa-angle-down");
+    link.closest('td').children(0).toggleClass("expanded");
+}
+
+function check_for_ellipsis(){
+    var $element = $('.expand');
+    $.each($element, function( i, value ) {
+        $val = $(value)
+        var $c = $val.clone().css('overflow', 'initial').appendTo('body');
+        if( $c.width() > $val.width() && $val.parent().find('i.fa-angle-right').length == 0) {
+            add_expanding_icon($val.parent())
+        }
+        $c.remove();
+    });
+};
+
+function add_expanding_icon(element){
+    element.find('.pull-right').append( "<a onclick='toggle_expansion(this)'> <i class='fa fa-angle-right'></i>" );
+}
+
+$( document ).ready(function() {
+    check_for_ellipsis();
+});

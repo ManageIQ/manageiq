@@ -91,3 +91,27 @@
 .single-provider-containers-dashboard .card-pf.card-pf-aggregate-status-mini {
     height: 62px;
 }
+
+.table-fixed td{
+    overflow: hidden;
+    overflow-wrap: break-word;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.table-fixed td div:first-child {
+    width: 90%;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 350px;
+}
+
+.table-fixed td div:nth-child(2) {
+    width: 5%;
+}
+
+div.expanded {
+    white-space: normal !important;
+}

@@ -1,5 +1,5 @@
 - if items && items[:values].present?
-  %table.table.table-bordered.table-striped
+  %table.table.table-bordered.table-striped{:class => items[:additional_table_class] || ""}
     %thead
       %tr
         %th{:colspan => items[:labels].count, :align => "left"}
@@ -12,4 +12,9 @@
       %tr
         - item.each do |value|
           %td
-            = value
+            - if (value.kind_of? Hash) && value[:expandable]
+              .pull-left.expand
+                = value[:value]
+              .pull-right
+            - else
+              = value

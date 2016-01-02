@@ -818,6 +818,8 @@ DynaTreeNode.prototype = {
 			return; // Callback returned false
 		}
 		if( flag ) {
+                       //this is added so expanded table cells will be rendered when moving screens
+                       check_for_ellipsis();
 			// Activate
 			if( this.tree.activeNode ) {
 				if( this.tree.activeNode === this ){
