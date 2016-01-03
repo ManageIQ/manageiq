@@ -7,7 +7,17 @@
         %input#box{'ng-change' => "show_hide_names(checkboxModel.value)",  'ng-model' => "checkboxModel.value", :type => "checkbox", 'ng-true-value' => 'true', 'ng-false-value' => 'false'}
         Display Names
       %i{'ng-click' => "refresh()", :class => "btn btn-default fa fa-refresh refresh-topology"}
-
+    .search-topology
+      %form.search-pf.has-button{:role => "form"}
+        .form-group.has-clear
+          .search-pf-input-group
+            %label.sr-only{:for => "search"} Search
+            %input#search.form-control{'placeholder' => "Search", 'type' => "search", "ng-model" => "search.query"}
+              %button.clear{"aria-hidden" => "true", :type => "button", "ng-click" => "resetSearch()"}
+                %span.pficon.pficon-close
+        .form-group
+          %button.btn.btn-default.search-topology-button{:type => "button",  "ng-click" => "searchNode()"}
+            %span.fa.fa-search
     .legend
       %label#selected
       %div{'ng-if' => "kinds"}

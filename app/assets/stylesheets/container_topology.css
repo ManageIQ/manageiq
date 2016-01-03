@@ -46,6 +46,16 @@ kubernetes-topology-graph {
     position: relative;
 }
 
+.search-topology {
+    vertical-align: middle;
+    float: right;
+    margin-right: 15px;
+    text-align: center;
+}
+
+.search-topology .form-control {
+    font-size: 20px;
+}
 
 #selected {
     float: right;
