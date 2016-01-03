@@ -1,3 +1,4 @@
+require 'image-inspector-client'
 require 'kubeclient'
 
 class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
@@ -34,6 +35,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   def start
     image = target_entity
     return queue_signal(:abort_job, "no image found", "error") unless image
+    return queue_signal(:abort_job, "cannont analyze non-docker images", "error") unless image.docker_id
 
     ems_configs = VMDB::Config.new('vmdb').config[:ems]
 
@@ -114,7 +116,14 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
       :guest_os      => IMAGES_GUEST_OS
     }
 
-    # TODO: check that the image id is correct
+    actual = image_inspector_client.fetch_metadata.Id
+    if actual != options[:docker_image_id]
+      msg = "cannot analyze image %s with id %s: detected id was %s"
+      _log.error(msg % [options[:image_full_name], options[:docker_image_id], actual])
+      return queue_signal(:abort_job,
+                          msg % [options[:image_full_name], options[:docker_image_id][0..11], actual[0..11]],
+                          'error')
+    end
     image.scan_metadata(SCAN_CATEGORIES,
                         "taskid" => jobid,
                         "host"   => MiqServer.my_server,
@@ -196,6 +205,17 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
 
   def kubernetes_client
     ext_management_system.connect(:service => PROVIDER_CLASS.ems_type)
+  end
+
+  def image_inspector_client
+    kubeclient = kubernetes_client
+
+    ImageInspectorClient::Client.new(
+      pod_proxy_url(kubeclient, ''),
+      'v1',
+      :ssl_options  => kubeclient.ssl_options,
+      :auth_options => kubeclient.auth_options
+    )
   end
 
   def queue_signal(*args)

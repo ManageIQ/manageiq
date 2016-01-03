@@ -1,6 +1,6 @@
 require "spec_helper"
 
-class MockClient
+class MockKubeClient
   def create_pod(*_args)
     nil
   end
@@ -22,14 +22,35 @@ class MockClient
       }
     )
   end
+
+  def ssl_options(*_args)
+    {}
+  end
+
+  def auth_options(*_args)
+    {}
+  end
+end
+
+class MockImageInspectorClient
+  def initialize(for_id)
+    @for_id = for_id
+  end
+
+  def fetch_metadata(*_args)
+    OpenStruct.new('Id' => @for_id)
+  end
 end
 
 describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
   context "A single Container Scan Job," do
+    IMAGE_ID = '3629a651e6c11d7435937bdf41da11cf87863c03f2587fa788cf5cbfe8a11b9a'
+    IMAGE_NAME = 'test'
     before(:each) do
       @server = EvmSpecHelper.local_miq_server
 
-      described_class.any_instance.stub(:kubernetes_client => MockClient.new)
+      described_class.any_instance.stub(:kubernetes_client => MockKubeClient.new)
+      described_class.any_instance.stub(:image_inspector_client => MockImageInspectorClient.new(IMAGE_ID))
 
       @ems = FactoryGirl.create(
         :ems_kubernetes, :hostname => "test.com", :zone => @server.zone, :port => 8443,
@@ -37,8 +58,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
       )
 
       @image = FactoryGirl.create(
-        :container_image, :ext_management_system => @ems, :name => 'test',
-        :image_ref => 'docker://3629a651e6c11d7435937bdf41da11cf87863c03f2587fa788cf5cbfe8a11b9a'
+        :container_image, :ext_management_system => @ems, :name => IMAGE_NAME,
+        :image_ref => "docker://#{IMAGE_ID}"
       )
 
       allow_any_instance_of(@image.class).to receive(:scan_metadata) do |_instance, _args|
@@ -81,7 +102,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
       CODE = 0
       CLIENT_MESSAGE = 'error'
       before(:each) do
-        allow_any_instance_of(MockClient).to receive(:create_pod) do |_instance, *_args|
+        allow_any_instance_of(MockKubeClient).to receive(:create_pod) do |_instance, *_args|
           raise KubeException.new(CODE, CLIENT_MESSAGE, nil)
         end
       end
@@ -92,6 +113,40 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
         expect(@job.status).to eq 'error'
         expect(@job.message).to eq "pod creation for management-infra/manageiq-img-scan-3629a651e6c1" \
                                " failed: HTTP status code #{CODE}, #{CLIENT_MESSAGE}"
+      end
+    end
+
+    context 'when given a non docker image' do
+      before(:each) do
+        allow_any_instance_of(@image.class).to receive(:image_ref) do
+          'rocket://3629a651e6c11d7435937bdf41da11cf87863c03f2587fa788cf5cbfe8a11b9a'
+        end
+      end
+
+      it 'should fail' do
+        @job.signal(:start)
+        expect(@job.state).to eq 'finished'
+        expect(@job.status).to eq 'error'
+        expect(@job.message).to eq "cannont analyze non-docker images"
+      end
+    end
+
+    context 'when the image tag points to a different image' do
+      before(:each) do
+        MODIFIED_IMAGE_ID = '0d071bb732e1e3eb1e01629600c9b6c23f2b26b863b5321335f564c8f018c452'
+        described_class.any_instance.stub(
+          :image_inspector_client => MockImageInspectorClient.new(MODIFIED_IMAGE_ID)
+        )
+      end
+
+      it 'should report the error' do
+        VCR.use_cassette(described_class.name.underscore, :record => :none) do # needed for health check
+          @job.signal(:start)
+          expect(@job.state).to eq 'finished'
+          expect(@job.status).to eq 'error'
+          expect(@job.message).to eq "cannot analyze image #{IMAGE_NAME} with id #{IMAGE_ID[0..11]}:"\
+                                     " detected id was #{MODIFIED_IMAGE_ID[0..11]}"
+        end
       end
     end
   end
