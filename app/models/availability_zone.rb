@@ -40,7 +40,7 @@ class AvailabilityZone < ActiveRecord::Base
     ems ? ems.my_zone : MiqServer.my_zone
   end
 
-  def event_where_clause(assoc = :ems_events)
-    ["#{events_table_name(assoc)}.availability_zone_id = ?", id]
+  def event_where_clause(scope, assoc = :ems_events)
+    scope.where(events_table_name(assoc) => {:availability_zone_id => id})
   end
 end
