@@ -116,7 +116,7 @@ module.exports = (function() {
   // task jscs: Runs JsCs on client code
   config.jscs = {
     src: getClientJsFiles(),
-    rcfile: './.jscsrc'
+    rcFile: './.jscsrc'
   };
 
   // task plato: Analyze client code with Plato
