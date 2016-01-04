@@ -63,17 +63,13 @@ module MiqReport::Search
     return apply_sortby_in_search, order
   end
 
-  def get_parent_targets(options)
-    options = options.dup
-
+  def get_parent_targets(parent, assoc)
     # Pre-build search target id list from association
-    parent = options.delete(:parent)
     if parent.kind_of?(Hash)
       klass  = parent[:class].constantize
       id     = parent[:id]
       parent = klass.find(id)
     end
-    assoc = options.delete(:association) || options.delete(:parent_method)
     assoc ||= db_class.base_model.to_s.pluralize.underscore  # Derive association from base model
     ref = parent.class.reflection_with_virtual(assoc.to_sym)
     if ref.nil? || parent.class.virtual_reflection?(assoc)
@@ -103,7 +99,7 @@ module MiqReport::Search
     search_options.merge!(:limit => limit, :offset => offset, :order => order) if apply_sortby_in_search
 
     if options[:parent]
-      targets = get_parent_targets(options)
+      targets = get_parent_targets(options[:parent], options[:association] || options[:parent_method])
       if targets.empty?
         search_results, attrs = [targets, {:auth_count => 0, :total_count => 0}]
       else

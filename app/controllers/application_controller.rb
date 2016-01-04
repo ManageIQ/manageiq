@@ -1767,11 +1767,11 @@ class ApplicationController < ActionController::Base
       :parent_method         => options[:parent_method],
       :targets_hash          => true,
       :association           => association,
-      :filter                => get_view_filter(options),
+      :filter                => get_view_filter(options[:filter]),
       :sub_filter            => get_view_process_search_text(view),
       :page                  => options[:all_pages] ? 1 : @current_page,
       :per_page              => options[:all_pages] ? ONE_MILLION : @items_per_page,
-      :where_clause          => get_view_where_clause(options),
+      :where_clause          => get_view_where_clause(options[:where_clause]),
       :named_scope           => options[:named_scope],
       :display_filter_hash   => options[:display_filter_hash],
       :userid                => session[:userid],
@@ -1796,7 +1796,7 @@ class ApplicationController < ActionController::Base
     [view, get_view_pages(dbname, view)]
   end
 
-  def get_view_where_clause(options)
+  def get_view_where_clause(default_where_clause)
     # If doing charts, limit the records to ones showing in the chart
     if session[:menu_click] && session[:sandboxes][params[:sb_controller]][:chart_reports]
       menu_click_parts = session[:menu_click].split('_')
@@ -1817,13 +1817,13 @@ class ApplicationController < ActionController::Base
         ["\"#{model.downcase.pluralize}\".id IN (?)",
          data_row["assoc_ids"][model.downcase.to_sym][typ.to_sym]]
       end
-    elsif options[:where_clause]
-      options[:where_clause]
+    else
+      default_where_clause
     end
   end
   private :get_view_where_clause
 
-  def get_view_filter(options)
+  def get_view_filter(default_filter)
     # Get the advanced search filter
     filter = nil
     if @edit && @edit[:adv_search_applied] && !session[:menu_click]
@@ -1832,8 +1832,7 @@ class ApplicationController < ActionController::Base
 
     # workaround to pass MiqExpression as a filter to paged_view_search for MiqRequest
     # show_list, can't be used with advanced search or other list view screens
-    filter ||= options[:filter]
-    filter
+    filter || default_filter
   end
   private :get_view_filter
 
