@@ -1221,26 +1221,22 @@ function miqToolbarOnClick(e) {
     return;
   }
 
-  if (button.data("confirm") && !button.data("popup")) {
-    if (!confirm(button.data('confirm'))) {
+  if (button.data("confirm-tb") && !button.data("popup")) {
+    if (!confirm(button.data('confirm-tb'))) {
       return;
     }
-  } else if (button.data("confirm") && button.data("popup")) {
+  } else if (button.data("confirm-tb") && button.data("popup")) {
     // to open console in a new window
-    if (confirm(button.data('confirm'))) {
-      if (button.data('popup') != "undefined" && button.data('popup')) {
-        if (button.data("window_url")) {
-          window.open(button.data('window_url'));
-        }
-      }
-    }
-    return;
-  } else if (!button.data("confirm") && button.data("popup")) {
-    // to open readonly report in a new window, doesnt have confirm message
-    if (button.data('popup')) {
+    if (confirm(button.data('confirm-tb'))) {
       if (button.data("window_url")) {
         window.open(button.data('window_url'));
       }
+    }
+    return;
+  } else if (!button.data("confirm-tb") && button.data("popup")) {
+    // to open readonly report in a new window, doesnt have confirm message
+    if (button.data("window_url")) {
+      window.open(button.data('window_url'));
     }
     return;
   }

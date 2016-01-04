@@ -9,20 +9,20 @@ describe('miq_toolbar.js', function () {
                 '    </button>' +
                 '    <ul class="dropdown-menu">' +
                 '      <li class="">' +
-                '        <a id="button1" data-explorer="true" data-confirm="Shutdown the Guest OS on this VM?" name="vm_power_choice__vm_guest_shutdown" title="Shutdown the Guest OS on this VM" data-click="vm_power_choice__vm_guest_shutdown" href="#">' +
+                '        <a id="button1" data-explorer="true" data-confirm-tb="Shutdown the Guest OS on this VM?" name="vm_power_choice__vm_guest_shutdown" title="Shutdown the Guest OS on this VM" data-click="vm_power_choice__vm_guest_shutdown" href="#">' +
                 '          Shutdown Guest' +
                 '        </a>' +
                 '      </li>' +
                 '      <div class="divider" role="presentation">' +
                 '      </div>' +
                 '      <li class="">' +
-                '        <a id="button2" data-explorer="true" data-confirm="Power Off this VM?" name="vm_power_choice__vm_stop" title="Power Off this VM" data-click="vm_power_choice__vm_stop" href="#">' +
+                '        <a id="button2" data-explorer="true" data-confirm-tb="Power Off this VM?" name="vm_power_choice__vm_stop" title="Power Off this VM" data-click="vm_power_choice__vm_stop" href="#">' +
                 '          Power Off' +
                 '        </a>' +
                 '      </li>' +
                 '    </ul>' +
                 '  </div>' +
-                '  <button id="button3" data-confirm="Opening a web-based VM VNC or SPICE console requires that the Provider is pre-configured to allow VNC connections.  Are you sure?" data-url="html5_console" name="vm_vnc_console" title="Open a web-based VNC or SPICE console for this VM" data-click="vm_vnc_console" type="button" class="btn btn-default">' +
+                '  <button id="button3" data-confirm-tb="Opening a web-based VM VNC or SPICE console requires that the Provider is pre-configured to allow VNC connections.  Are you sure?" data-url="html5_console" name="vm_vnc_console" title="Open a web-based VNC or SPICE console for this VM" data-click="vm_vnc_console" type="button" class="btn btn-default">' +
                 '    [&nbsp;]' +
                 '  </button>' +
                 '</div>');
