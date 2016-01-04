@@ -74,17 +74,19 @@ RSpec.configure do |config|
   # end
 
   # Preconfigure and auto-tag specs in the automation subdirectory a la rspec-rails
-  config.include AutomationExampleGroup, :type => :automation, :example_group => {
-    :file_path => config.escaped_path(%w(spec automation))
-  }
+  config.include AutomationExampleGroup, :type => :automation
+  config.define_derived_metadata(:file_path => /spec\/automation/) do |metadata|
+    metadata[:type] ||= :automation
+  end
 
   config.extend  MigrationSpecHelper::DSL
   config.include MigrationSpecHelper, :migrations => :up
   config.include MigrationSpecHelper, :migrations => :down
 
-  config.include ApiSpecHelper,                :type => :request, :rest_api => true, :example_group => {
-    :file_path => config.escaped_path(%w(spec requests api))
-  }
+  config.include ApiSpecHelper, :type => :request, :rest_api => true
+  config.define_derived_metadata(:file_path => /spec\/requests\/api/) do |metadata|
+    metadata[:type] ||= :request
+  end
 
   config.include ControllerSpecHelper, :type => :controller
   config.include ViewSpecHelper, :type => :view
@@ -97,9 +99,10 @@ RSpec.configure do |config|
   config.include VMDBConfigurationHelper
 
   config.include AutomationSpecHelper, :type => :automation
-  config.include PresenterSpecHelper, :type => :presenter, :example_group => {
-    :file_path => config.escaped_path(%w(spec presenters))
-  }
+  config.include PresenterSpecHelper, :type => :presenter
+  config.define_derived_metadata(:file_path => /spec\/presenters/) do |metadata|
+    metadata[:type] ||= :presenter
+  end
   config.include RakeTaskExampleGroup, :type => :rake_task
 
   config.before(:each) do
