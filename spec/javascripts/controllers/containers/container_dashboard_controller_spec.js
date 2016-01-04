@@ -35,5 +35,10 @@ describe('containerDashboardController', function() {
       expect($scope.cpuUsageData).not.toEqual(undefined);
       expect($scope.memoryUsageData).not.toEqual(undefined);
     });
+
+    it('in network metrics', function() {
+      expect($scope.dailyNetworkUtilization).not.toEqual(undefined);
+      expect($scope.hourlyNetworkUtilization).not.toEqual(undefined);
+    });
   });
 });

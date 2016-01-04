@@ -21,6 +21,21 @@ angular.module('miq.util').factory('chartsMixin', function() {
       legendRightText: '',
       tooltipType: 'valuePerDay',
       numDays: 30
+    },
+    hourlyNetworkUsageConfig: {
+      chartId    : 'networkUsageCurrentChart',
+      headTitle  : 'Hourly Network Utilization',
+      timeFrame  : 'Last 24 hours',
+      units      : 'KBps',
+      dataName   : 'KBps'
+    },
+    dailyNetworkUsageConfig: {
+      chartId  : 'networkUsageDailyChart',
+      headTitle: 'Network Utilization Trends',
+      timeFrame: 'Last 30 Days',
+      units    : 'KBps',
+      dataName: 'KBps',
+      tooltipType: 'valuePerDay'
     }
   };
 

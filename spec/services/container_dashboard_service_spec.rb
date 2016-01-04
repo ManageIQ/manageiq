@@ -2,6 +2,14 @@ require "spec_helper"
 require 'recursive-open-struct'
 
 describe ContainerDashboardService do
+  let(:controller) { RecursiveOpenStruct.new(:current_user => {:get_timezone => "UTC"}) }
+  let(:time_profile) { FactoryGirl.create(:time_profile_utc) }
+
+  before(:each) do
+    MiqRegion.seed
+    @zone = EvmSpecHelper.create_guid_miq_server_zone[2]
+  end
+
   context "providers" do
     it "filters containers providers with zero entity count and sorts providers by type correctly" do
       FactoryGirl.create(:ems_openshift, :hostname => "test2.com")
@@ -28,10 +36,7 @@ describe ContainerDashboardService do
   end
 
   context "node_utilization" do
-    it "show aggregated metrics from last 30 days only" do
-      MiqRegion.seed
-      @zone = EvmSpecHelper.create_guid_miq_server_zone[2]
-      @time_profile = FactoryGirl.create(:time_profile_utc)
+    it "shows aggregated metrics from last 30 days only" do
       ems_openshift = FactoryGirl.create(:ems_openshift, :zone => @zone)
       ems_kubernetes = FactoryGirl.create(:ems_kubernetes, :zone => @zone)
 
@@ -45,7 +50,7 @@ describe ContainerDashboardService do
         :derived_vm_numvcpus      => 2,
         :derived_memory_available => 2048,
         :cpu_usage_rate_average   => 100,
-        :time_profile             => @time_profile)
+        :time_profile             => time_profile)
 
       current_metric_kubernetes = FactoryGirl.create(
         :metric_rollup_cm_daily,
@@ -54,7 +59,7 @@ describe ContainerDashboardService do
         :derived_vm_numvcpus      => 1,
         :derived_memory_available => 1024,
         :cpu_usage_rate_average   => 100,
-        :time_profile             => @time_profile)
+        :time_profile             => time_profile)
 
       old_metric = FactoryGirl.create(
         :metric_rollup_cm_daily,
@@ -63,16 +68,15 @@ describe ContainerDashboardService do
         :derived_vm_numvcpus      => 2,
         :derived_memory_available => 2048,
         :cpu_usage_rate_average   => 100,
-        :time_profile             => @time_profile)
+        :time_profile             => time_profile)
 
       ems_openshift.metric_rollups << current_metric_openshift
       ems_openshift.metric_rollups << old_metric
       ems_kubernetes.metric_rollups << current_metric_kubernetes
       ems_kubernetes.metric_rollups << old_metric.dup
 
-      controller = RecursiveOpenStruct.new(:current_user => {:get_timezone => "UTC"})
-      node_utilization_all_providers = ContainerDashboardService.new(nil, controller).ems_utilization
-      node_utilization_single_provider = ContainerDashboardService.new(ems_openshift.id, controller).ems_utilization
+      node_utilization_all_providers = described_class.new(nil, controller).ems_utilization
+      node_utilization_single_provider = described_class.new(ems_openshift.id, controller).ems_utilization
 
       expect(node_utilization_single_provider).to eq(
         :cpu => {
@@ -102,6 +106,96 @@ describe ContainerDashboardService do
           :xData => ["date", current_date.strftime("%Y-%m-%d")],
           :yData => ["used", 2]
         }
+      )
+    end
+  end
+
+  context "network trends" do
+    it "shows daily network trends from last 30 days only" do
+      ems_openshift = FactoryGirl.create(:ems_openshift, :zone => @zone)
+      ems_kubernetes = FactoryGirl.create(:ems_kubernetes, :zone => @zone)
+
+      current_date = 7.days.ago
+      old_date = 35.days.ago
+
+      current_metric_openshift = FactoryGirl.create(
+        :metric_rollup_cm_daily,
+        :timestamp              => current_date,
+        :net_usage_rate_average => 1000,
+        :time_profile           => time_profile)
+
+      current_metric_kubernetes = FactoryGirl.create(
+        :metric_rollup_cm_daily,
+        :timestamp              => current_date,
+        :net_usage_rate_average => 1500,
+        :time_profile           => time_profile)
+
+      old_metric = FactoryGirl.create(
+        :metric_rollup_cm_daily,
+        :timestamp              => old_date,
+        :net_usage_rate_average => 1500,
+        :time_profile           => time_profile)
+
+      ems_openshift.metric_rollups << current_metric_openshift
+      ems_openshift.metric_rollups << old_metric
+      ems_kubernetes.metric_rollups << current_metric_kubernetes
+      ems_kubernetes.metric_rollups << old_metric.dup
+
+      daily_network_trends = described_class.new(nil, controller).daily_network_metrics
+      daily_network_trends_single_provider = described_class.new(ems_openshift.id, controller).daily_network_metrics
+
+      expect(daily_network_trends_single_provider).to eq(
+        :xData => ["date", current_date.strftime("%Y-%m-%d")],
+        :yData => ["used", 1000]
+      )
+
+      expect(daily_network_trends).to eq(
+        :xData => ["date", current_date.strftime("%Y-%m-%d")],
+        :yData => ["used", 2500]
+      )
+    end
+
+    it "show daily hourly network trends from last 24 hours only" do
+      ems_openshift = FactoryGirl.create(:ems_openshift, :zone => @zone)
+      ems_kubernetes = FactoryGirl.create(:ems_kubernetes, :zone => @zone)
+
+      current_date = 2.hours.ago
+      old_date = 2.days.ago
+
+      current_metric_openshift = FactoryGirl.create(
+        :metric_rollup_cm_hr,
+        :timestamp              => current_date,
+        :net_usage_rate_average => 1000,
+        :time_profile           => time_profile)
+
+      current_metric_kubernetes = FactoryGirl.create(
+        :metric_rollup_cm_hr,
+        :timestamp              => current_date,
+        :net_usage_rate_average => 1500,
+        :time_profile           => time_profile)
+
+      old_metric = FactoryGirl.create(
+        :metric_rollup_cm_hr,
+        :timestamp              => old_date,
+        :net_usage_rate_average => 1500,
+        :time_profile           => time_profile)
+
+      ems_openshift.metric_rollups << current_metric_openshift
+      ems_openshift.metric_rollups << old_metric
+      ems_kubernetes.metric_rollups << current_metric_kubernetes
+      ems_kubernetes.metric_rollups << old_metric.dup
+
+      hourly_network_trends = described_class.new(nil, controller).hourly_network_metrics
+      hourly_network_trends_single_provider = described_class.new(ems_openshift.id, controller).hourly_network_metrics
+
+      expect(hourly_network_trends_single_provider).to eq(
+        :xData => ["date", current_date.beginning_of_hour.utc],
+        :yData => ["used", 1000]
+      )
+
+      expect(hourly_network_trends).to eq(
+        :xData => ["date", current_date.beginning_of_hour.utc],
+        :yData => ["used", 2500]
       )
     end
   end
