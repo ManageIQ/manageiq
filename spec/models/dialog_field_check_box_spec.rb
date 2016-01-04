@@ -131,8 +131,8 @@ describe DialogFieldCheckBox do
                           :required => required,
                           :value    => value)
     end
-    let(:dialog_tab)   { active_record_instance_double('DialogTab',   :label => 'tab') }
-    let(:dialog_group) { active_record_instance_double('DialogGroup', :label => 'group') }
+    let(:dialog_tab)   { double('DialogTab',   :label => 'tab') }
+    let(:dialog_group) { double('DialogGroup', :label => 'group') }
 
     shared_examples_for "DialogFieldCheckBox#validate_field_data that returns nil" do
       it "returns nil" do

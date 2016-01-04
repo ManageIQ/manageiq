@@ -6,7 +6,7 @@ describe DynamicDialogFieldValueProcessor do
 
   describe "#values_from_automate" do
     let(:dialog) do
-      active_record_instance_double(
+      double(
         "Dialog",
         :automate_values_hash => "automate_values_hash",
         :target_resource      => "target_resource"
@@ -14,13 +14,13 @@ describe DynamicDialogFieldValueProcessor do
     end
 
     let(:dialog_field) do
-      active_record_instance_double(
+      double(
         "DialogFieldRadioButton",
         :initial_values      => "initial_values",
         :script_error_values => "script error values"
       )
     end
-    let(:resource_action) { active_record_instance_double("ResourceAction") }
+    let(:resource_action) { double("ResourceAction") }
 
     before do
       allow(dialog_field).to receive(:dialog).and_return(dialog)
@@ -28,7 +28,7 @@ describe DynamicDialogFieldValueProcessor do
     end
 
     context "when there is no error delivering to automate from dialog field" do
-      let(:workspace) { auto_loaded_instance_double("MiqAeEngine::MiqAeWorkspaceRuntime") }
+      let(:workspace) { double("MiqAeEngine::MiqAeWorkspaceRuntime") }
       let(:workspace_attributes) do
         double(
           :attributes => {

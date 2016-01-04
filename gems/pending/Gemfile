@@ -87,7 +87,6 @@ unless ENV['APPLIANCE']
     gem "camcorder",                    :require => false
     gem "jasmine",                      :require => false, :git => "git://github.com/jasmine/jasmine-gem.git", :ref => "c726fe1"
     gem "rspec",         "~>3.0",       :require => false
-    gem "rspec-fire",    "~>1.3.0",     :require => false
     gem "timecop",       "~>0.7.3",     :require => false
     gem "xml-simple",    "=1.0.12",     :require => false  # Used by test/xml/tc_xmlhash_methods.rb
   end
