@@ -6,144 +6,132 @@ describe Rbac do
 
   let(:owner_tenant) { FactoryGirl.create(:tenant) }
   let(:owner_group)  { FactoryGirl.create(:miq_group, :tenant => owner_tenant) }
-  let(:owner_user)   { FactoryGirl.create(:user, :userid => 'foo', :miq_groups => [owner_group]) }
+  let(:owner_user)   { FactoryGirl.create(:user, :miq_groups => [owner_group]) }
   let(:owned_vm)     { FactoryGirl.create(:vm_vmware, :tenant => owner_tenant) }
 
   let(:other_tenant) { FactoryGirl.create(:tenant) }
   let(:other_group)  { FactoryGirl.create(:miq_group, :tenant => other_tenant) }
-  let(:other_user)   { FactoryGirl.create(:user, :userid => 'bar', :miq_groups => [other_group]) }
+  let(:other_user)   { FactoryGirl.create(:user, :miq_groups => [other_group]) }
+  let(:other_vm)     { FactoryGirl.create(:vm_vmware, :tenant => other_tenant) }
 
   let(:child_tenant) { FactoryGirl.create(:tenant, :divisible => false, :parent => owner_tenant) }
   let(:child_group)  { FactoryGirl.create(:miq_group, :tenant => child_tenant) }
-  let(:owned_openstack_vm) { FactoryGirl.create(:vm_openstack, :tenant => child_tenant, :miq_group => child_group) }
+  let(:child_openstack_vm) { FactoryGirl.create(:vm_openstack, :tenant => child_tenant, :miq_group => child_group) }
 
-  context "tenant scoping" do
-    klass_factory_names = [
-      "ExtManagementSystem", :ems_vmware,
-      "MiqAeDomain", :miq_ae_domain,
-      # "MiqRequest", :miq_request,  # MiqRequest is an abstract class that can't be instantiated currently
-      "MiqRequestTask", :miq_request_task,
-      "Provider", :provider,
-      "Service", :service,
-      "ServiceTemplate", :service_template,
-      "ServiceTemplateCatalog", :service_template_catalog,
-      "Vm", :vm_vmware
-    ]
-
-    klass_factory_names.each_slice(2) do |klass, factory_name|
-      context "#{klass} basic filtering" do
-        let(:owned_resource) { FactoryGirl.create(factory_name, :tenant => owner_tenant) }
-
-        before { owned_resource }
-
-        it ".search with :userid, finds user's tenant #{klass}" do
-          results = Rbac.search(:class => klass, :results_format => :objects, :userid => owner_user.userid).first
+  describe ".search" do
+    describe "with find_options_for_tenant filtering (basic) all resources" do
+      {
+        "ExtManagementSystem"    => :ems_vmware,
+        "MiqAeDomain"            => :miq_ae_domain,
+        # "MiqRequest"           => :miq_request,  # MiqRequest can't be instantuated, it is an abstract class
+        "MiqRequestTask"         => :miq_request_task,
+        "Provider"               => :provider,
+        "Service"                => :service,
+        "ServiceTemplate"        => :service_template,
+        "ServiceTemplateCatalog" => :service_template_catalog,
+        "Vm"                     => :vm_vmware
+      }.each do |klass, factory_name|
+        it "with :user finds #{klass}" do
+          owned_resource = FactoryGirl.create(factory_name, :tenant => owner_tenant)
+          _other_resource = FactoryGirl.create(factory_name, :tenant => other_tenant)
+          results = Rbac.search(:class => klass, :results_format => :objects, :user => owner_user).first
           expect(results).to eq [owned_resource]
-        end
-
-        it ".search with :userid filters out other tenants" do
-          results = Rbac.search(:class => klass, :results_format => :objects, :userid => other_user.userid).first
-          expect(results).to eq []
         end
       end
     end
 
-    context "Advanced filtering" do
-      before { owned_vm }
-      it ".search with User.with_user finds user's tenant object" do
+    describe "with find_options_for_tenant filtering" do
+      before do
+        owned_vm # happy path
+        other_vm # sad path
+      end
+
+      it "with User.with_user finds Vm" do
         User.with_user(owner_user) do
           results = Rbac.search(:class => "Vm", :results_format => :objects).first
           expect(results).to eq [owned_vm]
         end
       end
 
-      it ".search with User.with_user filters out other tenants" do
-        User.with_user(other_user) do
-          results = Rbac.search(:class => "Vm", :results_format => :objects).first
-          expect(results).to eq []
-        end
+      it "with :user finds Vm" do
+        results = Rbac.search(:class => "Vm", :results_format => :objects, :user => owner_user).first
+        expect(results).to eq [owned_vm]
       end
 
-      it ".search with :miq_group_id, finds user's tenant object" do
+      it "with :userid finds Vm" do
+        results = Rbac.search(:class => "Vm", :results_format => :objects, :userid => owner_user.userid).first
+        expect(results).to eq [owned_vm]
+      end
+
+      it "with :miq_group, finds Vm" do
+        results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group => owner_group).first
+        expect(results).to eq [owned_vm]
+      end
+
+      it "with :miq_group_id finds Vm" do
         results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => owner_group.id).first
         expect(results).to eq [owned_vm]
       end
 
-      it ".search with :miq_group_id filters out other tenants" do
-        results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => other_group.id).first
-        expect(results).to eq []
-      end
-
-      it ".search with User.with_user leaving tenant" do
+      it "leaving tenant doesnt find Vm" do
+        owner_user.update_attributes(:miq_groups => [other_user.current_group])
         User.with_user(owner_user) do
-          owner_user.miq_groups = [other_group]
-          owner_user.save
           results = Rbac.search(:class => "Vm", :results_format => :objects).first
-          expect(results).to eq []
+          expect(results).to eq [other_vm]
         end
       end
 
-      it ".search with User.with_user joining tenant" do
-        User.with_user(other_user) do
-          other_user.miq_groups = [owner_group]
-          other_user.save
-          results = Rbac.search(:class => "Vm", :results_format => :objects).first
-          expect(results).to eq [owned_vm]
-        end
-      end
-
-      context "tenant access strategy of descendant_ids (children)" do
+      describe "with accessible_tenant_ids filtering (strategy = :descendants_id)" do
         it "can't see parent tenant's Vm" do
-          results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => child_group.id).first
+          results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group => child_group).first
           expect(results).to eq []
         end
 
         it "can see descendant tenant's Vms" do
-          owned_vm.update_attributes(:tenant_id => child_tenant.id, :miq_group_id => child_group.id)
-          expect(owned_vm.tenant).to eq child_tenant
+          child_vm = FactoryGirl.create(:vm_vmware, :tenant => child_tenant)
 
-          results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => owner_group.id).first
-          expect(results).to eq [owned_vm]
+          results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group => owner_group).first
+          expect(results).to match_array [owned_vm, child_vm]
         end
 
         it "can see descendant tenant's Openstack Vm" do
-          owned_openstack_vm
+          child_openstack_vm
 
-          results = Rbac.search(:class => "ManageIQ::Providers::Openstack::CloudManager::Vm", :results_format => :objects, :miq_group_id => owner_group.id).first
-          expect(results).to eq [owned_openstack_vm]
+          results = Rbac.search(:class => "ManageIQ::Providers::Openstack::CloudManager::Vm", :results_format => :objects, :miq_group => owner_group).first
+          expect(results).to eq [child_openstack_vm]
         end
       end
 
-      context "tenant access strategy of ancestor_ids (parents)" do
+      context "with accessible_tenant_ids filtering (strategy = :parent_ids)" do
         it "can see parent tenant's EMS" do
           ems = FactoryGirl.create(:ems_vmware, :tenant => owner_tenant)
-          results = Rbac.search(:class => "ExtManagementSystem", :results_format => :objects, :miq_group_id => child_group.id).first
+          results = Rbac.search(:class => "ExtManagementSystem", :results_format => :objects, :miq_group => child_group).first
           expect(results).to eq [ems]
         end
 
         it "can't see descendant tenant's EMS" do
           _ems = FactoryGirl.create(:ems_vmware, :tenant => child_tenant)
-          results = Rbac.search(:class => "ExtManagementSystem", :results_format => :objects, :miq_group_id => owner_group.id).first
+          results = Rbac.search(:class => "ExtManagementSystem", :results_format => :objects, :miq_group => owner_group).first
           expect(results).to eq []
         end
       end
 
-      context "tenant access strategy of nil (tenant only)" do
+      context "with accessible_tenant_ids filtering (strategy = nil aka tenant only)" do
         it "can see tenant's request task" do
           task = FactoryGirl.create(:miq_request_task, :tenant => owner_tenant)
-          results = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => owner_group.id).first
+          results = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group => owner_group).first
           expect(results).to eq [task]
         end
 
         it "can't see parent tenant's request task" do
           _task = FactoryGirl.create(:miq_request_task, :tenant => owner_tenant)
-          results = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => child_group.id).first
+          results = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group => child_group).first
           expect(results).to eq []
         end
 
         it "can't see descendant tenant's request task" do
           _task = FactoryGirl.create(:miq_request_task, :tenant => child_tenant)
-          results = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => owner_group.id).first
+          results = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group => owner_group).first
           expect(results).to eq []
         end
       end
@@ -152,7 +140,7 @@ describe Rbac do
         it "can see requests owned by any tenants" do
           request_task = FactoryGirl.create(:miq_request_task, :tenant => owner_tenant)
           t0_group = FactoryGirl.create(:miq_group, :tenant => default_tenant)
-          results = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => t0_group).first
+          results = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group => t0_group).first
           expect(results).to eq [request_task]
         end
       end
@@ -212,7 +200,7 @@ describe Rbac do
 
           it ".search finds the right HostPerformance rows" do
             @host1.tag_with(@tags.join(' '), :ns => '*')
-            results, attrs = Rbac.search(:class => "HostPerformance", :userid => user.userid, :results_format => :objects)
+            results, attrs = Rbac.search(:class => "HostPerformance", :user => user, :results_format => :objects)
             expect(attrs[:user_filters]).to eq(group.filters)
             expect(attrs[:total_count]).to eq(@timestamps.length * hosts.length)
             expect(attrs[:auth_count]).to eq(@timestamps.length)
@@ -223,14 +211,14 @@ describe Rbac do
           it ".search filters out the wrong HostPerformance rows with :match_via_descendants option" do
             @vm = FactoryGirl.create(:vm_vmware, :name => "VM1", :host => @host2)
             @vm.tag_with(@tags.join(' '), :ns => '*')
-            results, attrs = Rbac.search(:targets => HostPerformance.all, :class => "HostPerformance", :userid => user.userid, :results_format => :objects, :match_via_descendants => {"VmOrTemplate" => :host})
+            results, attrs = Rbac.search(:targets => HostPerformance.all, :class => "HostPerformance", :user => user, :results_format => :objects, :match_via_descendants => {"VmOrTemplate" => :host})
             expect(attrs[:user_filters]).to eq(group.filters)
             expect(attrs[:total_count]).to eq(@timestamps.length * hosts.length)
             expect(attrs[:auth_count]).to eq(@timestamps.length)
             expect(results.length).to eq(@timestamps.length)
             results.each { |vp| expect(vp.resource).to eq(@host2) }
 
-            results, attrs = Rbac.search(:targets => HostPerformance.all, :class => "HostPerformance", :userid => user.userid, :results_format => :objects, :match_via_descendants => "Vm")
+            results, attrs = Rbac.search(:targets => HostPerformance.all, :class => "HostPerformance", :user => user, :results_format => :objects, :match_via_descendants => "Vm")
             expect(attrs[:user_filters]).to eq(group.filters)
             expect(attrs[:total_count]).to eq(@timestamps.length * hosts.length)
             expect(attrs[:auth_count]).to eq(@timestamps.length)
@@ -240,7 +228,7 @@ describe Rbac do
 
           it ".search filters out the wrong HostPerformance rows" do
             @host1.tag_with(@tags.join(' '), :ns => '*')
-            results, attrs = Rbac.search(:targets => HostPerformance.all, :class => "HostPerformance", :userid => user.userid, :results_format => :objects)
+            results, attrs = Rbac.search(:targets => HostPerformance.all, :class => "HostPerformance", :user => user, :results_format => :objects)
             expect(attrs[:user_filters]).to eq(group.filters)
             expect(attrs[:total_count]).to eq(@timestamps.length * hosts.length)
             expect(attrs[:auth_count]).to eq(@timestamps.length)
@@ -267,7 +255,7 @@ describe Rbac do
           end
 
           it ".search finds the right HostPerformance rows" do
-            results, attrs = Rbac.search(:class => "HostPerformance", :userid => user.userid, :results_format => :objects)
+            results, attrs = Rbac.search(:class => "HostPerformance", :user => user, :results_format => :objects)
             expect(attrs[:user_filters]).to eq(group.filters)
             expect(attrs[:total_count]).to eq(@timestamps.length * hosts.length)
             expect(attrs[:auth_count]).to eq(@timestamps.length)
@@ -276,7 +264,7 @@ describe Rbac do
           end
 
           it ".search filters out the wrong HostPerformance rows" do
-            results, attrs = Rbac.search(:targets => HostPerformance.all, :class => "HostPerformance", :userid => user.userid, :results_format => :objects)
+            results, attrs = Rbac.search(:targets => HostPerformance.all, :class => "HostPerformance", :user => user, :results_format => :objects)
             expect(attrs[:user_filters]).to eq(group.filters)
             expect(attrs[:total_count]).to eq(@timestamps.length * hosts.length)
             expect(attrs[:auth_count]).to eq(@timestamps.length)
@@ -329,21 +317,21 @@ describe Rbac do
 
             targets = [@ems2, @ems4, @ems3, @ems]
 
-            results = Rbac.search(:targets => targets, :results_format => :objects, :userid => user.userid)
+            results = Rbac.search(:targets => targets, :results_format => :objects, :user => user)
             objects = results.first
             expect(objects.length).to eq(4)
             expect(objects).to eq(targets)
           end
 
           it "finds both EMSes without belongsto filters" do
-            results = Rbac.search(:class => "ExtManagementSystem", :results_format => :objects, :userid => user.userid)
+            results = Rbac.search(:class => "ExtManagementSystem", :results_format => :objects, :user => user)
             objects = results.first
             expect(objects.length).to eq(2)
           end
 
           it "finds one EMS with belongsto filters" do
             group.update_attributes(:filters => {"managed" => [], "belongsto" => [@vm_folder_path]})
-            results = Rbac.search(:class => "ExtManagementSystem", :results_format => :objects, :userid => user.userid)
+            results = Rbac.search(:class => "ExtManagementSystem", :results_format => :objects, :user => user)
             objects = results.first
             expect(objects).to eq([@ems])
           end
@@ -365,7 +353,7 @@ describe Rbac do
           expect(objects).to match_array([@vm, @template])
 
           group.update_attributes(:filters => {"managed" => [], "belongsto" => [@vm_folder_path]})
-          results = Rbac.search(:class => "VmOrTemplate", :results_format => :objects, :userid => user.userid)
+          results = Rbac.search(:class => "VmOrTemplate", :results_format => :objects, :user => user)
           objects = results.first
           expect(objects.length).to eq(0)
 
@@ -375,7 +363,7 @@ describe Rbac do
           end
 
           group.update_attributes(:filters => {"managed" => [], "belongsto" => [@vm_folder_path]})
-          results = Rbac.search(:class => "VmOrTemplate", :results_format => :objects, :userid => user.userid)
+          results = Rbac.search(:class => "VmOrTemplate", :results_format => :objects, :user => user)
           objects = results.first
           expect(objects.length).to eq(2)
           expect(objects).to match_array([@vm, @template])
@@ -389,7 +377,7 @@ describe Rbac do
 
           group.update_attributes(:filters => {"managed" => [], "belongsto" => [@vm_folder_path]})
 
-          results = Rbac.search(:class => "Vm", :results_format => :objects, :userid => user.userid)
+          results = Rbac.search(:class => "Vm", :results_format => :objects, :user => user)
           objects = results.first
           expect(objects.length).to eq(0)
 
@@ -399,7 +387,7 @@ describe Rbac do
           end
 
           group.update_attributes(:filters => {"managed" => [], "belongsto" => [@vm_folder_path]})
-          results = Rbac.search(:class => "Vm", :results_format => :objects, :userid => user.userid)
+          results = Rbac.search(:class => "Vm", :results_format => :objects, :user => user)
           objects = results.first
           expect(objects.length).to eq(1)
           expect(objects).to match_array([@vm])
@@ -413,7 +401,7 @@ describe Rbac do
 
           group.update_attributes(:filters => {"managed" => [], "belongsto" => [@vm_folder_path]})
 
-          results = Rbac.search(:class => "MiqTemplate", :results_format => :objects, :userid => user.userid)
+          results = Rbac.search(:class => "MiqTemplate", :results_format => :objects, :user => user)
           objects = results.first
           expect(objects.length).to eq(0)
 
@@ -423,7 +411,7 @@ describe Rbac do
           end
 
           group.update_attributes(:filters => {"managed" => [], "belongsto" => [@vm_folder_path]})
-          results = Rbac.search(:class => "MiqTemplate", :results_format => :objects, :userid => user.userid)
+          results = Rbac.search(:class => "MiqTemplate", :results_format => :objects, :user => user)
           objects = results.first
           expect(objects.length).to eq(1)
           expect(objects).to match_array([@template])
@@ -461,22 +449,22 @@ describe Rbac do
         end
 
         it "get all the descendants without belongsto filter" do
-          results, attrs = Rbac.search(:class => "Host", :userid => user.userid, :results_format => :objects)
+          results, attrs = Rbac.search(:class => "Host", :user => user, :results_format => :objects)
           expect(results.length).to eq(4)
           expect(attrs[:total_count]).to eq(4)
           expect(attrs[:auth_count]).to eq(4)
           expect(attrs[:user_filters]).to eq({"managed" => [], "belongsto" => []})
 
-          results2 = Rbac.search(:class => "Vm", :userid => user.userid, :results_format => :objects).first
+          results2 = Rbac.search(:class => "Vm", :user => user, :results_format => :objects).first
           expect(results2.length).to eq(2)
 
-          results3 = Rbac.search(:class => "VmOrTemplate", :userid => user.userid, :results_format => :objects).first
+          results3 = Rbac.search(:class => "VmOrTemplate", :user => user, :results_format => :objects).first
           expect(results3.length).to eq(4)
         end
 
         it "get all the vm or templates with belongsto filter" do
           group.update_attributes(:filters => {"managed" => [], "belongsto" => [@cluster_folder_path]})
-          results, attrs = Rbac.search(:class => "VmOrTemplate", :userid => user.userid, :results_format => :objects)
+          results, attrs = Rbac.search(:class => "VmOrTemplate", :user => user, :results_format => :objects)
           expect(results.length).to eq(0)
           expect(attrs[:total_count]).to eq(4)
           expect(attrs[:auth_count]).to eq(0)
@@ -487,7 +475,7 @@ describe Rbac do
           end
           group.update_attributes(:filters => {"managed" => [], "belongsto" => [@cluster_folder_path]})
 
-          results2, attrs = Rbac.search(:class => "VmOrTemplate", :userid => user.userid, :results_format => :objects)
+          results2, attrs = Rbac.search(:class => "VmOrTemplate", :user => user, :results_format => :objects)
           expect(attrs[:user_filters]).to eq({"managed" => [], "belongsto" => [@cluster_folder_path]})
           expect(attrs[:total_count]).to eq(4)
           expect(attrs[:auth_count]).to eq(2)
@@ -496,21 +484,21 @@ describe Rbac do
 
         it "get all the hosts with belongsto filter" do
           group.update_attributes(:filters => {"managed" => [], "belongsto" => [@cluster_folder_path]})
-          results, attrs = Rbac.search(:class => "Host", :userid => user.userid, :results_format => :objects)
+          results, attrs = Rbac.search(:class => "Host", :user => user, :results_format => :objects)
           expect(attrs[:user_filters]).to eq({"managed" => [], "belongsto" => [@cluster_folder_path]})
           expect(attrs[:total_count]).to eq(4)
           expect(attrs[:auth_count]).to eq(1)
           expect(results.length).to eq(1)
 
           group.update_attributes(:filters => {"managed" => [], "belongsto" => [@mtc_folder_path]})
-          results2, attrs = Rbac.search(:class => "Host", :userid => user.userid, :results_format => :objects)
+          results2, attrs = Rbac.search(:class => "Host", :user => user, :results_format => :objects)
           expect(attrs[:user_filters]).to eq({"managed" => [], "belongsto" => [@mtc_folder_path]})
           expect(attrs[:total_count]).to eq(4)
           expect(attrs[:auth_count]).to eq(1)
           expect(results2.length).to eq(1)
 
           group.update_attributes(:filters => {"managed" => [], "belongsto" => [@ems_folder_path]})
-          results3, attrs = Rbac.search(:class => "Host", :userid => user.userid, :results_format => :objects)
+          results3, attrs = Rbac.search(:class => "Host", :user => user, :results_format => :objects)
           expect(attrs[:user_filters]).to eq({"managed" => [], "belongsto" => [@ems_folder_path]})
           expect(attrs[:total_count]).to eq(4)
           expect(attrs[:auth_count]).to eq(1)
@@ -532,7 +520,7 @@ describe Rbac do
         it "self-service group" do
           MiqGroup.any_instance.stub(:self_service? => true)
 
-          results = Rbac.search(:class => "Service", :results_format => :objects, :miq_group_id => user.current_group.id).first
+          results = Rbac.search(:class => "Service", :results_format => :objects, :miq_group => user.current_group).first
           expect(results.to_a).to match_array([@service4, @service5])
         end
 
@@ -553,7 +541,7 @@ describe Rbac do
           MiqGroup.any_instance.stub(:self_service? => true)
           MiqGroup.any_instance.stub(:limited_self_service? => true)
 
-          results = Rbac.search(:class => "Service", :results_format => :objects, :miq_group_id => user.current_group.id).first
+          results = Rbac.search(:class => "Service", :results_format => :objects, :miq_group => user.current_group).first
           expect(results.to_a).to match_array([@service4, @service5])
         end
 
@@ -614,7 +602,7 @@ describe Rbac do
         it "self-service group" do
           MiqGroup.any_instance.stub(:self_service? => true)
 
-          results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => user.current_group.id).first
+          results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group => user.current_group).first
           expect(results.length).to eq(2)
         end
 
@@ -642,7 +630,7 @@ describe Rbac do
           MiqGroup.any_instance.stub(:self_service? => true)
           MiqGroup.any_instance.stub(:limited_self_service? => true)
 
-          results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => user.current_group.id).first
+          results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group => user.current_group).first
           expect(results.length).to eq(2)
         end
 
@@ -721,7 +709,7 @@ describe Rbac do
               - IS NOT EMPTY:
                   field: Vm-name
             ")
-            expect { Rbac.search(:class => "Vm", :filter => exp, :userid => user.userid, :results_format => :objects, :order => "vms.name desc") }.not_to raise_error
+            expect { Rbac.search(:class => "Vm", :filter => exp, :user => user, :results_format => :objects, :order => "vms.name desc") }.not_to raise_error
           end
 
           it "works when limit, offset and user filters are passed and search expression contains columns in a sub-table" do
@@ -733,7 +721,7 @@ describe Rbac do
               - IS NOT EMPTY:
                   field: Vm-name
             ")
-            results, attrs = Rbac.search(:class => "Vm", :filter => exp, :userid => user.userid, :results_format => :objects, :limit => 2, :offset => 2, :order => "vms.name desc")
+            results, attrs = Rbac.search(:class => "Vm", :filter => exp, :user => user, :results_format => :objects, :limit => 2, :offset => 2, :order => "vms.name desc")
             expect(results.length).to eq(1)
             expect(results.first.name).to eq("Test Group 2 VM 1")
             expect(attrs[:auth_count]).to eq(3)
@@ -753,7 +741,7 @@ describe Rbac do
                 value: Today
             '
 
-            results, attrs = Rbac.search(:class => "EmsEvent", :filter => exp, :userid => user.userid, :results_format => :objects)
+            results, attrs = Rbac.search(:class => "EmsEvent", :filter => exp, :user => user, :results_format => :objects)
 
             expect(results.length).to eq(2)
             expect(attrs[:auth_count]).to eq(2)
@@ -901,7 +889,7 @@ describe Rbac do
 
         # Test FROM with time zone
         result = Rbac.search(:class  => "Vm",
-                             :userid => user.userid,
+                             :user   => user,
                              :filter => MiqExpression.new(
                                "FROM" => {"field" => "Vm-last_scan_on", "value" => ["2011-01-09 17:00", "2011-01-10 23:30:59"]}
                              )).first
@@ -909,13 +897,13 @@ describe Rbac do
 
         # Test IS with time zone
         result = Rbac.search(:class  => "Vm",
-                             :userid => user.userid,
+                             :user   => user,
                              :filter => MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
                             ).first
         expect(result.length).to eq(3)
 
         result = Rbac.search(:class  => "Vm",
-                             :userid => user.userid,
+                             :user   => user,
                              :filter => MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11"})
                             ).first
         expect(result.length).to eq(17)
@@ -926,24 +914,12 @@ describe Rbac do
 
     context "with group's VMs" do
       before(:each) do
-        role2 = FactoryGirl.create(:miq_user_role, :name => 'support')
-        group2 = FactoryGirl.create(:miq_group, :description => "Support Group", :miq_user_role => role2)
+        group2 = FactoryGirl.create(:miq_group, :role => 'support')
         4.times do |i|
-          case i
-          when 0
-            group_id = group.id
-            state = 'connected'
-          when 1
-            group_id = group2.id
-            state = 'connected'
-          when 2
-            group_id = group.id
-            state = 'disconnected'
-          when 3
-            group_id = group2.id
-            state = 'disconnected'
-          end
-          vm = FactoryGirl.create(:vm_vmware, :name => "Test VM #{i}", :connection_state => state, :miq_group_id => group_id)
+          FactoryGirl.create(:vm_vmware,
+                             :name             => "Test VM #{i}",
+                             :connection_state => i < 2 ? 'connected' : 'disconnected',
+                             :miq_group        => i.even? ? group : group2)
         end
       end
 
@@ -969,7 +945,7 @@ describe Rbac do
             value: false
             field: MiqGroup.vms-disconnected
         '
-        results, attrs = described_class.search(:class => "MiqGroup", :userid => "admin", :filter => filter, :results_format => :objects)
+        results, attrs = described_class.search(:class => "MiqGroup", :filter => filter, :results_format => :objects)
 
         expect(results.length).to eq(2)
         expect(attrs[:total_count]).to eq(2)

@@ -314,8 +314,10 @@ module Rbac
     if user && miq_group
       user.current_group = miq_group if user.miq_groups.include?(miq_group)
     end
+    miq_group ||= user.try(:current_group)
     # for reports, user is currently nil, so use the group filter
     user_filters = user.try(:get_filters) || miq_group.try(:get_filters) || {}
+    user_filters = user_filters.dup
     user_filters["managed"] ||= []
 
     [user, miq_group, user_filters]
@@ -428,6 +430,7 @@ module Rbac
   # @option attrs target_ids_for_paging
 
   def self.search(options = {})
+    options = options.dup
     # => empty inputs - normal find with optional where_clause
     # => list if ids - :class is required for this format.
     # => list of objects
