@@ -578,25 +578,17 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def source_vm_rbac_filter(vms, condition = nil)
     filter_id = get_value(@values[:vm_filter]).to_i
-    search_options = {:user => @requester}
+    search_options = {:user => @requester, :results_format => :objects}
     search_options[:conditions] = condition unless condition.blank?
     template_msg =  "User: <#{@requester.userid}>"
     template_msg += " Role: <#{@requester.current_group.nil? ? "none" : @requester.current_group.miq_user_role.name}>  Group: <#{@requester.current_group.nil? ? "none" : @requester.current_group.description}>"
     template_msg += "  VM Filter: <#{@values[:vm_filter].inspect}>"
     template_msg += "  Passing inital template IDs: <#{vms.collect(&:id).inspect}>" unless vms.blank?
     _log.info "Checking for allowed templates for #{template_msg}"
-    if filter_id.zero?
-      if vms.empty?
-        Rbac.search(search_options.merge(:class => VmOrTemplate, :results_format => :objects)).first
-      else
-        Rbac.filtered(vms, search_options.merge(:class => VmOrTemplate))
-      end
+    if vms.empty?
+      MiqSearch.search(filter_id, VmOrTemplate, search_options).first
     else
-      if vms.empty?
-        MiqSearch.find(filter_id).search([], search_options.merge(:results_format => :objects)).first
-      else
-        MiqSearch.find(filter_id).filtered(vms, search_options)
-      end
+      MiqSearch.filtered(filter_id, VmOrTemplate, vms, search_options)
     end
   end
 

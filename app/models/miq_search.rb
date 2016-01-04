@@ -16,14 +16,30 @@ class MiqSearch < ActiveRecord::Base
     read_attribute(:search_type) || "default"
   end
 
-  def search(targets = [], opts = {})
+  def search(opts = {})
     self.options ||= {}
-    Rbac.search(options.merge(:targets => targets, :class => db, :filter => filter).merge(opts))
+    Rbac.search(options.merge(:class => db, :filter => filter).merge(opts))
   end
 
   def filtered(targets, opts = {})
     self.options ||= {}
     Rbac.filtered(targets, options.merge(:class => db, :filter => filter).merge(opts))
+  end
+
+  def self.search(filter_id, klass, opts = {})
+    if filter_id.nil? || filter_id.zero?
+      Rbac.search(opts.merge(:class => klass))
+    else
+      find(filter_id).search(opts)
+    end
+  end
+
+  def self.filtered(filter_id, klass, targets, opts = {})
+    if filter_id.nil? || filter_id.zero?
+      Rbac.filtered(targets, opts.merge(:class => klass))
+    else
+      find(filter_id).filtered(targets, opts)
+    end
   end
 
   def self.visible_to_all
