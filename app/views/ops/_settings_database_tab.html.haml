@@ -37,7 +37,6 @@
                                   :maxlength         => 50,
                                   :class => "form-control",
                                   :placeholder1       => placeholder_if_present(@edit[:new][option[:name]]),
-                                  :class => "form-control",
                                   :disabled => username.blank? ? false : true,
                                   "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
           - unless username.blank?
