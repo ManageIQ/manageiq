@@ -129,7 +129,7 @@ source "https://rails-assets.org" do
   gem "rails-assets-angular",                         "~>1.4.3"
   gem "rails-assets-angular-animate",                 "~>1.4.3"
   gem "rails-assets-angular-mocks",                   "~>1.4.3"
-  gem "rails-assets-angular-patternfly",              "~>2.6.0"
+  gem "rails-assets-angular-patternfly",              "~>2.8.0"
   gem "rails-assets-angular-sanitize",                "~>1.4.3"
   gem "rails-assets-bootstrap-datepicker",            "~>1.4.0"
   gem "rails-assets-bootstrap-filestyle",             "~>1.2.1"
