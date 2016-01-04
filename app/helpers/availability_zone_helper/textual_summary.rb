@@ -35,7 +35,7 @@ module AvailabilityZoneHelper::TextualSummary
   end
 
   def textual_block_storage_disk_capacity
-    return nil unless @record.respond_to?(:block_storage_disk_capacity)
+    return nil unless @record.respond_to?(:block_storage_disk_capacity) && !@record.ext_management_system.provider.nil?
     {:value => number_to_human_size(@record.block_storage_disk_capacity.gigabytes, :precision => 2)}
   end
 
