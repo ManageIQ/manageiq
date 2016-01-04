@@ -1,4 +1,4 @@
-angular.module('miq.util').factory('chartsMixin', [function chartMixinFactory () {
+angular.module('miq.util').factory('chartsMixin', function() {
   'use strict';
 
   var chartConfig = {
@@ -29,4 +29,4 @@ angular.module('miq.util').factory('chartsMixin', [function chartMixinFactory ()
     nodeHeatMapUsageLegendLabels:   ['< 70%', '70-80%' ,'80-90%', '> 90%'],
     chartConfig: chartConfig
   };
-}]);
+});
