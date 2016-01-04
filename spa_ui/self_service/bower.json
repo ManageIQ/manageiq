@@ -18,23 +18,24 @@
     "sinon": "http://sinonjs.org/releases/sinon-1.15.4.js"
   },
   "dependencies": {
+    "angular": "~1.4.6",
+    "angular-animate": "~1.4.6",
+    "angular-base64": "~2.0.5",
+    "angular-bootstrap": "~0.13.0",
+    "angular-messages": "~1.4.6",
+    "angular-mocks": "~1.4.6",
+    "angular-patternfly": "~2.3.2",
+    "angular-resource": "~1.4.6",
+    "angular-sanitize": "~1.4.6",
+    "angular-ui-router": "~0.2.15",
+    "font-awesome": "~4.4.0",
+    "jquery": "~2.1.0",
     "lodash": "~3.9.0",
     "moment": "~2.10.0",
-    "jquery": "~2.1.0",
-    "toastr": "~2.1.1",
-    "font-awesome": "~4.4.0",
-    "angular": "~1.4.6",
-    "angular-resource": "~1.4.6",
-    "angular-animate": "~1.4.6",
-    "angular-sanitize": "~1.4.6",
-    "angular-messages": "~1.4.6",
-    "angular-ui-router": "~0.2.15",
-    "angular-mocks": "~1.4.6",
+    "ngprogress": "~1.1.2",
+    "ngstorage": "~0.3.10",
     "patternfly": "~2.3.0",
-    "angular-patternfly": "~2.3.2",
-    "angular-bootstrap": "~0.13.0",
-    "angular-base64": "~2.0.5",
-    "ngprogress": "~1.1.2"
+    "toastr": "~2.1.1"
   },
   "overrides": {
     "patternfly": {

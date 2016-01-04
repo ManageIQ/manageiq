@@ -7,7 +7,7 @@
       <span class="icon-bar"></span>
     </button>
     <a ui-sref="dashboard" class="navbar-brand">
-      <img class="navbar-brand-name" src="images/brand.svg" alt="{{ :: vm.text.name }}"/>
+      <img class="navbar-brand-name" src="images/brand.svg" alt="{{ ::vm.text.name }}"/>
     </a>
   </div>
 
@@ -22,8 +22,9 @@
     </ul>
     <ul class="nav navbar-nav navbar-right navbar-iconic">
       <li dropdown>
-        <a dropdown-toggle class="nav-item-iconic">
-          <i title="{{ ::vm.user().name }}" class="fa pficon-user"></i>
+        <a dropdown-toggle class="nav-item-iconic" title="{{ ::vm.user().userid }}">
+          <i class="fa pficon-user"></i>
+          <p class="navbar__user-name">{{ ::vm.user().name }}</p>
           <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">

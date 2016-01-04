@@ -13,7 +13,6 @@ describe('Dashboard', function() {
 
     Session.create({
       auth_token: 'b10ee568ac7b5d4efbc09a6b62cb99b8',
-      expires_on: d + 'Z'
     });
     $httpBackend.whenGET('').respond(200);
   });

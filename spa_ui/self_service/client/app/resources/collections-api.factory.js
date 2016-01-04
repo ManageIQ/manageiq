@@ -17,7 +17,8 @@
     function query(collection, options) {
       var url = API_BASE + '/api/' + collection;
 
-      return $http.get(url + buildQuery(options)).then(handleSuccess);
+      return $http.get(url + buildQuery(options), buildConfig(options))
+        .then(handleSuccess);
 
       function handleSuccess(response) {
         return response.data;
@@ -27,7 +28,8 @@
     function get(collection, id, options) {
       var url = API_BASE + '/api/' + collection + '/' + id;
 
-      return $http.get(url + buildQuery(options)).then(handleSuccess);
+      return $http.get(url + buildQuery(options), buildConfig(options))
+        .then(handleSuccess);
 
       function handleSuccess(response) {
         return response.data;
@@ -37,7 +39,8 @@
     function post(collection, id, options, data) {
       var url = API_BASE + '/api/' + collection + '/' + id + buildQuery(options);
 
-      return $http.post(url, data).then(handleSuccess);
+      return $http.post(url, data, buildConfig(options))
+        .then(handleSuccess);
 
       function handleSuccess(response) {
         return response.data;
@@ -48,7 +51,6 @@
 
     function buildQuery(options) {
       var params = [];
-
       options = options || {};
 
       if (options.expand) {
@@ -76,11 +78,24 @@
         params.push('sort_options=' + options.sort_options);
       }
 
-      if (0 < params.length) {
+      if (params.length) {
         return '?' + params.join('&');
       }
 
       return '';
+    }
+
+    function buildConfig(options) {
+      var config = {};
+      options = options || {};
+
+      if (options.auto_refresh) {
+        config.headers = {
+          'X-Auth-Skip-Token-Renewal': 'true',
+        };
+      }
+
+      return config;
     }
   }
 })();

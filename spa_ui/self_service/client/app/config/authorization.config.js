@@ -38,10 +38,17 @@
 
       function endSession() {
         var $state = $injector.get('$state');
+        var Notifications = $injector.get('Notifications');
+        var Session = $injector.get('Session');
 
         if ('login' !== $state.current.name) {
-          $injector.get('Notifications').message('danger', '', 'Your session has timed out.', true);
-          $injector.get('Session').destroy();
+          // prevent multiple instances of the same notification - cleared on login submit
+          if (!Session.timeout_notified) {
+            Notifications.message('danger', '', 'Your session has timed out.', true);
+            Session.timeout_notified = true;
+          }
+
+          Session.destroy();
           $state.go('login');
         }
       }
@@ -49,7 +56,7 @@
   }
 
   /** @ngInject */
-  function init($rootScope, $state, Session, jQuery) {
+  function init($rootScope, $state, Session, jQuery, $sessionStorage) {
     $rootScope.$on('$stateChangeStart', changeStart);
     $rootScope.$on('$stateChangeError', changeError);
     $rootScope.$on('$stateChangeSuccess', changeSuccess);
@@ -59,10 +66,19 @@
         return;
       }
 
-      if (!Session.active()) {
-        event.preventDefault();
-        $state.transitionTo('login');
+      if (Session.active()) {
+        return;
       }
+
+      $sessionStorage.$sync();  // needed when called right on reload
+      if ($sessionStorage.token) {
+        Session.create({ auth_token: $sessionStorage.token });
+
+        return Session.loadUser();
+      }
+
+      event.preventDefault();
+      $state.transitionTo('login');
     }
 
     function changeError(event, toState, toParams, fromState, fromParams, error) {
