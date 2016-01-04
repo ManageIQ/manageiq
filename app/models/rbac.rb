@@ -304,9 +304,8 @@ module Rbac
   end
 
   def self.minimum_columns_for(klass)
-    columns = ['id']
-    columns << 'type' if klass.column_names.include?('type') # STI classes will instantiate calling class without type column
-    columns.join(', ')
+    # STI classes will instantiate calling class without type column
+    klass.column_names.include?('type') ? %w(id type) : %w(id)
   end
 
   def self.get_user_info(user, userid, miq_group, miq_group_id)
