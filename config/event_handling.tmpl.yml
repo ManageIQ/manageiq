@@ -65,6 +65,9 @@ event_groups:
     - orchestration.stack.create.end
     - orchestration.stack.create.error
     - servergroup.create
+    - REPLICATOR_SUCCESSFULCREATE
+    - REPLICATOR_FAILEDCREATE
+    - CONTAINER_CREATED
     :detail:
     - CloneVM_Task
     - CloneVM_Task_Complete
@@ -317,7 +320,6 @@ event_groups:
     - VM_WAS_SET_DOWN_DUE_TO_HOST_REBOOT_OR_MANUAL_FENCE
     - VM_RENAMED
     - hardware.ipmi.metrics.update
-    - POD_NODESELECTORMISMATCHING
     :detail: []
     :name: General Activity
   import_export:
@@ -532,14 +534,6 @@ event_groups:
     - NODE_REBOOT
     - NODE_NODESCHEDULABLE
     - NODE_NODENOTSCHEDULABLE
-    - POD_SCHEDULED
-    - POD_FAILEDSCHEDULING
-    - REPLICATOR_SUCCESSFULCREATE
-    - REPLICATOR_FAILEDCREATE
-    - CONTAINER_CREATED
-    - CONTAINER_KILLING
-    - CONTAINER_STARTED
-    - CONTAINER_STOPPED
     :detail:
     - PowerOffVM_Task
     - PowerOffVM_Task_Complete
@@ -619,13 +613,17 @@ event_groups:
     - VmConfigMissingEvent
     - NODE_NODEREADY
     - NODE_NODENOTREADY
-    - NODE_FAILEDMOUNT
-    - NODE_INVALIDDISKCAPACITY
     - POD_FAILEDVALIDATION
     - POD_DEADLINEEXCEEDED
     - POD_FAILEDSYNC
     - POD_INSUFFICIENTFREECPU
     - CONTAINER_UNHEALTHY
+    - POD_NODESELECTORMISMATCHING
+    - CONTAINER_KILLING
+    - CONTAINER_STARTED
+    - CONTAINER_STOPPED
+    - POD_SCHEDULED
+    - POD_FAILEDSCHEDULING
     :detail:
     - DatacenterRenamedEvent
     - GeneralUserEvent
@@ -685,6 +683,8 @@ event_groups:
     - volume.delete.end
     - POD_OUTOFDISK
     - POD_INSUFFICIENTFREEMEMORY
+    - NODE_FAILEDMOUNT
+    - NODE_INVALIDDISKCAPACITY
     :detail: []
     :name: Storage
 
