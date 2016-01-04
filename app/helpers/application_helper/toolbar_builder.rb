@@ -72,7 +72,7 @@ class ApplicationHelper::ToolbarBuilder
           "child_id" => bsi[:button],
           "id"       => bgi[:buttonSelect] + "__" + bsi[:button],
           "type"     => "button",
-          "img"      => img = "#{bsi[:image] ? bsi[:image] : bsi[:button]}.png",
+          "img"      => img = "#{bsi[:image] || bsi[:button]}.png",
           "imgdis"   => img,
           :icon      => bsi[:icon]
         )
@@ -111,6 +111,11 @@ class ApplicationHelper::ToolbarBuilder
     button[:confirm]   = safer_eval(input[:confirm]) unless input[:confirm].blank?
     button[:url_parms] = update_url_parms(safer_eval(input[:url_parms])) unless input[:url_parms].blank?
 
+    if input[:popup] # special behavior: button opens window_url in a new window
+      button[:popup] = true
+      button[:window_url] = "/#{request.parameters["controller"]}#{input[:url]}"
+    end
+
     dis_title = build_toolbar_disable_button(button['id'])
     if dis_title
       button["enabled"] = "false"
@@ -133,7 +138,7 @@ class ApplicationHelper::ToolbarBuilder
       "id"     => bgi[:button],
       "type"   => "button",
       "img"    => "#{get_image(bgi[:image], bgi[:button]) ? get_image(bgi[:image], bgi[:button]) : bgi[:button]}.png",
-      "imgdis" => "#{bgi[:image] ? bgi[:image] : bgi[:button]}.png",
+      "imgdis" => "#{bgi[:image] || bgi[:button]}.png",
       :icon    => bgi[:icon]
     )
     apply_common_props(props, bgi)
@@ -1368,21 +1373,6 @@ class ApplicationHelper::ToolbarBuilder
   def build_toolbar_save_button(item, props)
     props[:url] = url_for_save_button(props['id'], item[:url], controller_restful?) if item[:url]
     props[:explorer] = true if @explorer && !item[:url] # Add explorer = true if ajax button
-
-    if item[:popup] # FIXME: move this code to button classes
-      props[:popup] = item[:popup]
-      if item[:url_parms] == "popup_only" # For readonly reports, they don't have confirm message
-        props[:console_url] = "/#{request.parameters["controller"]}#{item[:url]}"
-      else # Assuming at this point this is a console button
-        props[:console_url] =
-          if item[:url] == "vnc_console" # This is a VNC console button
-            "http://#{@record.ipaddresses[0]}:#{get_vmdb_config[:server][:vnc_port]}"
-          else # This is an MKS or VMRC VMware console button
-            "/#{request.parameters["controller"]}#{item[:url]}/#{@record.id}"
-          end
-      end
-    end
-
     props
   end
 

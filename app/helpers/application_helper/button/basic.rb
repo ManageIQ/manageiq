@@ -3,7 +3,7 @@ class ApplicationHelper::Button::Basic < Hash
     @view_context  = view_context
     @view_binding  = view_binding
 
-    props.each { |k, v| self[k] = v }
+    merge!(props)
 
     instance_data.each do |name, value|
       instance_variable_set(:"@#{name}", value)

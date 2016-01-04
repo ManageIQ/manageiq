@@ -1225,8 +1225,8 @@ function miqToolbarOnClick(e) {
     // to open console in a new window
     if (confirm(button.data('confirm'))) {
       if (button.data('popup') != "undefined" && button.data('popup')) {
-        if (button.data("console_url")) {
-          window.open(button.data('console_url'));
+        if (button.data("window_url")) {
+          window.open(button.data('window_url'));
         }
       }
     }
@@ -1234,8 +1234,8 @@ function miqToolbarOnClick(e) {
   } else if (!button.data("confirm") && button.data("popup")) {
     // to open readonly report in a new window, doesnt have confirm message
     if (button.data('popup')) {
-      if (button.data("console_url")) {
-        window.open(button.data('console_url'));
+      if (button.data("window_url")) {
+        window.open(button.data('window_url'));
       }
     }
     return;

@@ -28,8 +28,6 @@
   - :button: chargeback_report_only
     :image: reportonly
     :url: '/report_only'
-    #:url_parms: '?type=#{@ght_type}'
-    :url_parms: 'popup_only'
     :popup: true
     :title: "Show full screen report"
     :confirm: "This will show the entire report (all rows) in your browser.  Do you want to proceed?"
