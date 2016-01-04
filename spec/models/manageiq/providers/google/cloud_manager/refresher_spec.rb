@@ -29,6 +29,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       assert_table_counts
       assert_ems
       assert_specific_zone
+      assert_specific_key_pair
       assert_specific_cloud_network
       assert_specific_flavor
       assert_specific_vm_powered_on
@@ -41,24 +42,26 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(ExtManagementSystem.count).to eql(1)
     expect(Flavor.count).to              eql(18)
     expect(AvailabilityZone.count).to    eql(13)
-    expect(VmOrTemplate.count).to        eql(348)
+    expect(AuthPrivateKey.count).to      eq(2)
+    expect(VmOrTemplate.count).to        eql(349)
     expect(Vm.count).to                  eql(2)
-    expect(MiqTemplate.count).to         eql(346)
+    expect(MiqTemplate.count).to         eql(347)
     expect(Disk.count).to                eql(2)
     expect(GuestDevice.count).to         eql(0)
     expect(Hardware.count).to            eql(2)
     expect(Network.count).to             eql(0)
-    expect(OperatingSystem.count).to     eql(348)
+    expect(OperatingSystem.count).to     eql(349)
     expect(Relationship.count).to        eql(4)
-    expect(MiqQueue.count).to            eql(348)
+    expect(MiqQueue.count).to            eql(349)
   end
 
   def assert_ems
     expect(@ems.flavors.size).to            eql(18)
+    expect(@ems.key_pairs.size).to          eql(2)
     expect(@ems.availability_zones.size).to eql(13)
-    expect(@ems.vms_and_templates.size).to  eql(348)
+    expect(@ems.vms_and_templates.size).to  eql(349)
     expect(@ems.vms.size).to                eql(2)
-    expect(@ems.miq_templates.size).to      eq(346)
+    expect(@ems.miq_templates.size).to      eq(347)
   end
 
   def assert_specific_zone
@@ -66,6 +69,14 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(@zone).to have_attributes(
       :name   => "us-east1-b",
       :ems_id => @ems.id
+    )
+  end
+
+  def assert_specific_key_pair
+    @kp = ManageIQ::Providers::Google::CloudManager::AuthKeyPair.where(:name => "root").first
+    expect(@kp).to have_attributes(
+      :name        => "root",
+      :fingerprint => "97:c9:58:c8:42:32:3d:e1:47:a9:e6:66:93:51:6a:ae:a9:cb:ee:4a"
     )
   end
 
@@ -183,6 +194,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(v.cloud_network).to          be_nil
     expect(v.cloud_subnet).to           be_nil
     #TODO parse instance OS v.operating_system.product_name.should eql("Debian")
+    expect(v.key_pairs.to_a).to         eql([@kp])
     expect(v.custom_attributes.size).to eql(0)
     expect(v.snapshots.size).to         eql(0)
 
