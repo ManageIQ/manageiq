@@ -75,23 +75,6 @@ module EmsRefresh
           _log.info "#{log_ems_target} Performing post-refresh operations for #{klass} instances...Complete"
         end
       end
-
-      def fetch_entities(client, entities)
-        h = {}
-        entities.each do |entity|
-          begin
-            h[entity[:name].singularize] = client.send("get_" << entity[:name])
-          rescue KubeException => e
-            if entity[:default].nil?
-              throw e
-            else
-              $log.error("Unexpected Exception during refresh: #{e}")
-              h[entity[:name].singularize] = entity[:default]
-            end
-          end
-        end
-        h
-      end
     end
   end
 end
