@@ -10,6 +10,8 @@ $log.level = env_level
 Rails.logger.level = env_level
 
 module EvmSpecHelper
+  extend RSpec::Mocks::ExampleMethods
+
   # Clear all EVM caches
   def self.clear_caches
     Module.clear_all_cache_with_timeout if Module.respond_to?(:clear_all_cache_with_timeout)
@@ -40,7 +42,7 @@ module EvmSpecHelper
 
   def self.local_miq_server(attrs = {})
     remote_miq_server(attrs).tap do |server|
-      MiqServer.stub(:my_guid).and_return(server.guid)
+      allow(MiqServer).to receive(:my_guid).and_return(server.guid)
       MiqServer.my_server_clear_cache
     end
   end
@@ -104,8 +106,8 @@ module EvmSpecHelper
 
   def self.stub_amqp_support
     require 'openstack/amqp/openstack_rabbit_event_monitor'
-    OpenstackRabbitEventMonitor.stub(:available?).and_return(true)
-    OpenstackRabbitEventMonitor.stub(:test_connection).and_return(true)
+    allow(OpenstackRabbitEventMonitor).to receive(:available?).and_return(true)
+    allow(OpenstackRabbitEventMonitor).to receive(:test_connection).and_return(true)
   end
 
   def self.import_yaml_model(dirname, domain, attrs = {})
