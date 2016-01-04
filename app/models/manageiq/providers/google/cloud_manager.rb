@@ -103,6 +103,12 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
     vm.update_attributes!(:raw_power_state => "VM stopping")
   end
 
+  def vm_destroy(vm, _options = {})
+    vm.vm_destroy
+  rescue => err
+    _log.error "vm=[#{vm.name}], error: #{err}"
+  end
+
   def vm_restart(vm, _options = {})
     vm.provider_object.restart
     vm.update_attributes!(:raw_power_state => "VM starting")
