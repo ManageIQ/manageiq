@@ -1,4 +1,4 @@
-class ApplicationHelper::Button::OrchestrationOldDialogsEditDelete < ApplicationHelper::Button::Basic
+class ApplicationHelper::Button::OldDialogsEditDelete < ApplicationHelper::Button::Basic
   def calculate_properties
     super
     if @view_context.x_active_tree == :old_dialogs_tree && @record && @record[:default]
