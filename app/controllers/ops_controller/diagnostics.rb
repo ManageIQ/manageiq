@@ -752,7 +752,7 @@ module OpsController::Diagnostics
   # Reload the selected node and redraw the screen via ajax
   def refresh_screen
     @explorer = true
-    if params[:pressed] == "delete_server"
+    if params[:pressed] == "delete_server" || params[:pressed] == "zone_delete_server"
       @sb[:diag_selected_id] = nil
       settings_build_tree
       diagnostics_build_tree

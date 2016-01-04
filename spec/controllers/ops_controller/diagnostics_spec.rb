@@ -129,8 +129,12 @@ describe OpsController do
     let(:user) { FactoryGirl.create(:user) }
     before do
       set_user_privileges user
+      EvmSpecHelper.local_miq_server
       MiqRegion.seed
       _guid, @miq_server, @zone = EvmSpecHelper.remote_guid_miq_server_zone
+      @miq_server_to_delete = FactoryGirl.create(:miq_server)
+      @miq_server_to_delete.last_heartbeat -= 20.minutes
+      @miq_server_to_delete.save
     end
 
     it "#restart_server returns successful message" do
@@ -165,6 +169,29 @@ describe OpsController do
     end
 
     describe '#delete_server' do
+      context "server does exist" do
+        it 'deletes server and refreshes screen' do
+          sb_hash = {
+            :trees            => {:diagnostics_tree => {:active_node => "z-#{@zone.id}"}},
+            :active_tree      => :diagnostics_tree,
+            :diag_selected_id => @miq_server_to_delete.id,
+            :active_tab       => "diagnostics_roles_servers"
+          }
+          controller.instance_variable_set(:@sb, sb_hash)
+          controller.instance_variable_set(:@_params, :pressed => "zone_delete_server")
+          expect(controller).to receive :render
+
+          controller.send(:delete_server)
+
+          flash_array = assigns(:flash_array)
+
+          diag_selected_id = controller.instance_variable_get(:@sb)[:diag_selected_id]
+          expect(diag_selected_id).to eq(nil)
+          expect(flash_array.size).to eq 1
+          expect(flash_array.first[:message]).to match(/Server .*: Delete successful/)
+        end
+      end
+
       context ':diag_selected_id is not set' do
         it 'should set the flash saying that server no longer exists' do
           controller.instance_variable_set(:@sb, {})
