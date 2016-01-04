@@ -20,9 +20,9 @@ elsif MiqEnvironment::Process.is_web_server_worker?
                 when "sql" then     :active_record_store
                 when "memory" then  :memory_store
                 when "cache" then   :dalli_store
-                else
-                  raise "session_store, '#{evm_store}', invalid. Should be one of 'sql', 'memory', 'cache'"
                 end
+  rails_store ||= :memory_store if Rails.env.development?
+  raise "session_store, '#{evm_store}', invalid. Should be one of 'sql', 'memory', 'cache'" if rails_store.nil?
 
   if rails_store == :dalli_store
     require "action_dispatch/middleware/session/dalli_store"
