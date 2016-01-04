@@ -109,8 +109,9 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
     _log.error "vm=[#{vm.name}], error: #{err}"
   end
 
-  def vm_restart(vm, _options = {})
-    vm.provider_object.restart
-    vm.update_attributes!(:raw_power_state => "VM starting")
+  def vm_reboot_guest(vm, _options = {})
+    vm.reboot_guest
+  rescue => err
+    _log.error "vm=[#{vm.name}], error: #{err}"
   end
 end

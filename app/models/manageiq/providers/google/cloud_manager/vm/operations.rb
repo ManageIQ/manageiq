@@ -1,4 +1,5 @@
 module ManageIQ::Providers::Google::CloudManager::Vm::Operations
+  include_concern 'Guest'
   include_concern 'Power'
 
   def raw_destroy
