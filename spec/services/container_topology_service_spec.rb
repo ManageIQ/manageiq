@@ -39,7 +39,7 @@ describe ContainerTopologyService do
     let(:vm_rhev) { FactoryGirl.create(:vm_redhat, :uid_ems => "558d9a08-7b13-11e5-8546-129aa6621998", :ext_management_system => ems_rhev) }
 
     it "provider has unknown status when no authentication exists" do
-      container_topology_service.stub(:retrieve_providers).and_return([ems_openshift])
+      allow(container_topology_service).to receive(:retrieve_providers).and_return([ems_openshift])
       expect(subject[:items]).to eq(
         ems_openshift.id.to_s         => {:id       => ems_openshift.id.to_s,
                                           :name     => ems_openshift.name,
