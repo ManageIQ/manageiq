@@ -79,8 +79,7 @@ angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.
 
           // Obj-status (entity count row)
           var providers = data.providers;
-          if (providers)
-          {
+          if (providers) {
             $scope.objectStatus.providers.count = 0;
             $scope.objectStatus.providers.notifications = [];
             providers.forEach(function (item) {
@@ -91,36 +90,52 @@ angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.
               })
             });
 
-            if ($scope.objectStatus.providers.count > 0){
+            if ($scope.objectStatus.providers.count > 0) {
               $scope.objectStatus.providers.href = data.providers_link
             }
           }
 
-          dashboardUtilsFactory.updateStatus($scope.objectStatus.nodes,      data.status.nodes);
+          dashboardUtilsFactory.updateStatus($scope.objectStatus.nodes, data.status.nodes);
           dashboardUtilsFactory.updateStatus($scope.objectStatus.containers, data.status.containers);
           dashboardUtilsFactory.updateStatus($scope.objectStatus.registries, data.status.registries);
-          dashboardUtilsFactory.updateStatus($scope.objectStatus.projects,   data.status.projects);
-          dashboardUtilsFactory.updateStatus($scope.objectStatus.pods,       data.status.pods);
-          dashboardUtilsFactory.updateStatus($scope.objectStatus.services,   data.status.services);
-          dashboardUtilsFactory.updateStatus($scope.objectStatus.images,     data.status.images);
-          dashboardUtilsFactory.updateStatus($scope.objectStatus.routes,     data.status.routes);
+          dashboardUtilsFactory.updateStatus($scope.objectStatus.projects, data.status.projects);
+          dashboardUtilsFactory.updateStatus($scope.objectStatus.pods, data.status.pods);
+          dashboardUtilsFactory.updateStatus($scope.objectStatus.services, data.status.services);
+          dashboardUtilsFactory.updateStatus($scope.objectStatus.images, data.status.images);
+          dashboardUtilsFactory.updateStatus($scope.objectStatus.routes, data.status.routes);
 
           // Node utilization donut
           $scope.cpuUsageData = data.ems_utilization.cpu;
+          if (!$scope.cpuUsageData) {
+            $scope.cpuUsageData = { dataAvailable: false }
+          }
+
           $scope.memoryUsageData = data.ems_utilization.mem;
+          if (!$scope.memoryUsageData) {
+            $scope.memoryUsageData = { dataAvailable: false }
+          }
           $scope.utilizationLoadingDone = true;
 
           // Heatmaps
           $scope.nodeCpuUsage.data = chartsMixin.processHeatmapData(data.heatmaps.nodeCpuUsage);
+          if (!$scope.nodeCpuUsage.data) {
+            $scope.nodeCpuUsage.dataAvailable = false;
+            $scope.nodeCpuUsage.data = [{id: 0, tooltip: '', value: 0}]; // pf-2.8.0 bug, accesses daa when no data
+          }
           $scope.nodeCpuUsage.loadingDone = true;
+
           $scope.nodeMemoryUsage.data = chartsMixin.processHeatmapData(data.heatmaps.nodeMemoryUsage);
+          if (!$scope.nodeMemoryUsage.data) {
+            $scope.nodeMemoryUsage.dataAvailable = false;
+            $scope.nodeMemoryUsage.data = [{id: 0, tooltip: '', value: 0}]; // pf-2.8.0 bug, accesses data when no data
+          }
           $scope.nodeMemoryUsage.loadingDone = true;
 
           // Network metrics
           $scope.networkUtilizationHourlyConfig = chartsMixin.chartConfig.hourlyNetworkUsageConfig;
           $scope.networkUtilizationDailyConfig = chartsMixin.chartConfig.dailyNetworkUsageConfig;
 
-
+          // Workaround for pf-2.8.0 not accepting dates with hours without parsing them beforehand
           if (data.hourly_network_metrics != undefined) {
             var hourlyxdata = [];
 
@@ -130,10 +145,24 @@ angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.
             $scope.hourlyNetworkUtilization = {
               'yData': data.hourly_network_metrics.yData,
               'xData': hourlyxdata
-            };
+            }
+          } else {
+            $scope.hourlyNetworkUtilization = {
+              dataAvailable: false,
+              yData: ["used"], // pf-2.8.0 bug, accesses data when no data
+              xData: ["date"] // pf-2.8.0 bug, accesses data when no data
+            }
           }
 
           $scope.dailyNetworkUtilization = data.daily_network_metrics;
+          if ($scope.dailyNetworkUtilization == undefined) {
+            $scope.dailyNetworkUtilization = {
+                dataAvailable: false,
+                yData: ["used"], // pf-2.8.0 bug, accesses data when no data
+                xData: ["date"] // pf-2.8.0 bug, accesses data when no data
+              }
+
+          }
           $scope.networkUtilizationLoadingDone = true;
         });
       };

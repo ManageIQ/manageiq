@@ -190,6 +190,11 @@ class ContainerDashboardService
           :yData => ["used"] + used_mem.values.map { |m| (m / 1024.0).round }
         }
       }
+    else
+      {
+        :cpu => nil,
+        :mem => nil
+      }
     end
   end
 
@@ -223,7 +228,7 @@ class ContainerDashboardService
 
     if daily_provider_metrics.any?
       {
-        :xData => ["date"] + daily_network_metrics  .keys,
+        :xData => ["date"] + daily_network_metrics.keys,
         :yData => ["used"] + daily_network_metrics.values.map(&:round)
       }
     end
