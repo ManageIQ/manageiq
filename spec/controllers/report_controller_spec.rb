@@ -887,7 +887,7 @@ describe ReportController do
     context "when there are widget parameters" do
       let(:widget_list) { %w(1 2 3) }
       let(:widget_yaml) { "the widget yaml" }
-      let(:widgets) { [active_record_instance_double("MiqWidget")] }
+      let(:widgets) { [double("MiqWidget")] }
 
       before do
         records = widgets
@@ -935,7 +935,7 @@ describe ReportController do
   describe "#upload_widget_import_file" do
     include_context "valid session"
 
-    let(:widget_import_service) { auto_loaded_instance_double("WidgetImportService") }
+    let(:widget_import_service) { double("WidgetImportService") }
 
     before do
       bypass_rescue
@@ -1034,7 +1034,7 @@ describe ReportController do
     include_context "valid session"
 
     let(:params) { {:import_file_upload_id => "123"} }
-    let(:import_file_upload) { active_record_instance_double("ImportFileUpload") }
+    let(:import_file_upload) { double("ImportFileUpload") }
 
     before do
       bypass_rescue
@@ -1072,7 +1072,7 @@ describe ReportController do
     include_context "valid session"
 
     let(:params) { {:import_file_upload_id => "123"} }
-    let(:widget_import_service) { auto_loaded_instance_double("WidgetImportService") }
+    let(:widget_import_service) { double("WidgetImportService") }
 
     before do
       bypass_rescue
@@ -1099,7 +1099,7 @@ describe ReportController do
   describe "#import_widgets" do
     include_context "valid session"
 
-    let(:widget_import_service) { auto_loaded_instance_double("WidgetImportService") }
+    let(:widget_import_service) { double("WidgetImportService") }
     let(:params) { {:import_file_upload_id => "123", :widgets_to_import => ["potato"]} }
 
     before do
@@ -1116,7 +1116,7 @@ describe ReportController do
     end
 
     context "when the import file upload exists" do
-      let(:import_file_upload) { active_record_instance_double("ImportFileUpload") }
+      let(:import_file_upload) { double("ImportFileUpload") }
 
       before do
         allow(widget_import_service).to receive(:import_widgets)
@@ -1160,11 +1160,11 @@ describe ReportController do
                                          :subfilter => "Hosts"
                                        }
                                       )
-      report1 = active_record_instance_double("MiqReport",
+      report1 = double("MiqReport",
                                               :name => 'Report 1',
                                               :id   => 1,
                                               :db   => 'VimPerformanceTrend')
-      report2 = active_record_instance_double("MiqReport",
+      report2 = double("MiqReport",
                                               :name => 'Report 2',
                                               :id   => 2,
                                               :db   => 'VimPerformanceTrend')

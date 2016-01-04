@@ -4,7 +4,7 @@ describe AutomateImportService do
   let(:automate_import_service) { described_class.new }
 
   describe "#cancel_import" do
-    let(:import_file_upload) { active_record_instance_double("ImportFileUpload", :id => 42) }
+    let(:import_file_upload) { double("ImportFileUpload", :id => 42) }
 
     before do
       allow(ImportFileUpload).to receive(:find).with("42").and_return(import_file_upload)
@@ -29,9 +29,9 @@ describe AutomateImportService do
   end
 
   describe "#import_datastore" do
-    let(:import_file_upload) { active_record_instance_double("ImportFileUpload", :binary_blob => binary_blob) }
-    let(:binary_blob) { active_record_instance_double("BinaryBlob", :binary => "binary") }
-    let(:miq_ae_import) { auto_loaded_instance_double("MiqAeYamlImportZipfs", :import_stats => "import stats") }
+    let(:import_file_upload) { double("ImportFileUpload", :binary_blob => binary_blob) }
+    let(:binary_blob) { double("BinaryBlob", :binary => "binary") }
+    let(:miq_ae_import) { double("MiqAeYamlImportZipfs", :import_stats => "import stats") }
     let(:removable_entry) { double(:name => "carrot/something_else/namespace.yaml") }
     let(:removable_class_entry) { double(:name => "carrot/something_else.class/class.yaml") }
 
@@ -101,7 +101,7 @@ describe AutomateImportService do
   end
 
   describe "#store_for_import" do
-    let(:import_file_upload) { active_record_instance_double("ImportFileUpload", :id => 42).as_null_object }
+    let(:import_file_upload) { double("ImportFileUpload", :id => 42).as_null_object }
 
     before do
       allow(ImportFileUpload).to receive(:create).and_return(import_file_upload)

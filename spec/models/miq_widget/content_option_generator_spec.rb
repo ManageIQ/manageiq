@@ -4,11 +4,11 @@ describe MiqWidget::ContentOptionGenerator do
   let(:content_option_generator) { described_class.new }
 
   describe "#generate" do
-    let(:group) { active_record_instance_double("MiqGroup", :description => "description") }
+    let(:group) { double("MiqGroup", :description => "description") }
     let(:users) { [user, user2, user3, user4] }
-    let(:user) { active_record_instance_double("User", :userid => 1, :get_timezone => "UTC") }
-    let(:user2) { active_record_instance_double("User", :userid => 2, :get_timezone => "UTC") }
-    let(:user3) { active_record_instance_double("User", :userid => 3, :get_timezone => "PST") }
+    let(:user) { double("User", :userid => 1, :get_timezone => "UTC") }
+    let(:user2) { double("User", :userid => 2, :get_timezone => "UTC") }
+    let(:user3) { double("User", :userid => 3, :get_timezone => "PST") }
     let(:user4) { 4 }
 
     before do

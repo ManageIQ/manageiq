@@ -202,11 +202,11 @@ describe MiqAeClassController do
   end
 
   context "get selected Class/Instance/Method record back" do
-    let(:miq_ae_domain) { active_record_instance_double("MiqAeDomain", :name => "yet_another_fqname", :id => 1) }
-    let(:miq_ae_domain2) { active_record_instance_double("MiqAeDomain", :name => "yet_another_fqname2", :id => 2) }
+    let(:miq_ae_domain) { double("MiqAeDomain", :name => "yet_another_fqname", :id => 1) }
+    let(:miq_ae_domain2) { double("MiqAeDomain", :name => "yet_another_fqname2", :id => 2) }
 
     let(:miq_ae_class) do
-      active_record_instance_double("MiqAeClass",
+      double("MiqAeClass",
                                     :id           => 1,
                                     :fqname       => "cls_fqname",
                                     :display_name => "FOO",
@@ -219,7 +219,7 @@ describe MiqAeClassController do
     end
 
     let(:miq_ae_instance) do
-      active_record_instance_double("MiqAeInstance",
+      double("MiqAeInstance",
                                     :id           => 123,
                                     :display_name => "some name",
                                     :name         => "some_name",
@@ -231,7 +231,7 @@ describe MiqAeClassController do
     end
 
     let(:miq_ae_method) do
-      active_record_instance_double("MiqAeMethod",
+      double("MiqAeMethod",
                                     :id           => 123,
                                     :display_name => "some name",
                                     :inputs       => [],
@@ -244,14 +244,14 @@ describe MiqAeClassController do
     end
 
     let(:override) do
-      active_record_instance_double("MiqAeClass",
+      double("MiqAeClass",
                                     :fqname => "another_fqname/fqname",
                                     :id     => 1,
                                     :domain => miq_ae_domain
                                    )
     end
     let(:override2) do
-      active_record_instance_double("MiqAeClass",
+      double("MiqAeClass",
                                     :fqname => "another_fqname2/fqname",
                                     :id     => 2,
                                     :domain => miq_ae_domain2

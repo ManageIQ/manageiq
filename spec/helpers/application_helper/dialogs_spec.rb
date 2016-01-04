@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe ApplicationHelper::Dialogs do
   let(:dialog_field) do
-    active_record_instance_double(
+    double(
       "DialogField",
       :id                   => "100",
       :read_only            => read_only,
@@ -308,7 +308,7 @@ describe ApplicationHelper::Dialogs do
 
   describe "#radio_options" do
     let(:dialog_field) do
-      active_record_instance_double(
+      double(
         "DialogField",
         :default_value        => "some_value",
         :name                 => "field_name",

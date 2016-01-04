@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe DialogSerializer do
-  let(:dialog_tab_serializer) { auto_loaded_instance_double("DialogTabSerializer") }
+  let(:dialog_tab_serializer) { double("DialogTabSerializer") }
   let(:dialog_serializer) { described_class.new(dialog_tab_serializer) }
 
   describe "#serialize" do

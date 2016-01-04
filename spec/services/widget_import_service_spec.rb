@@ -2,15 +2,15 @@ require "spec_helper"
 
 describe WidgetImportService do
   let(:widget_import_service) { described_class.new(widget_import_validator) }
-  let(:widget_import_validator) { auto_loaded_instance_double("WidgetImportValidator") }
+  let(:widget_import_validator) { double("WidgetImportValidator") }
 
   before do
-    allow(MiqServer).to receive(:my_server).and_return(active_record_instance_double("MiqServer", :zone_id => 1))
+    allow(MiqServer).to receive(:my_server).and_return(double("MiqServer", :zone_id => 1))
   end
 
   describe "#cancel_import" do
-    let(:import_file_upload) { active_record_instance_double("ImportFileUpload", :id => 42) }
-    let(:miq_queue) { active_record_instance_double("MiqQueue") }
+    let(:import_file_upload) { double("ImportFileUpload", :id => 42) }
+    let(:miq_queue) { double("MiqQueue") }
 
     before do
       allow(ImportFileUpload).to receive(:find).with("42").and_return(import_file_upload)
@@ -35,10 +35,10 @@ describe WidgetImportService do
   end
 
   describe "#import_widgets" do
-    let(:miq_queue) { active_record_instance_double("MiqQueue") }
+    let(:miq_queue) { double("MiqQueue") }
     let(:yaml_data) { "the yaml" }
     let(:import_file_upload) do
-      active_record_instance_double("ImportFileUpload", :id => 42, :uploaded_content => yaml_data)
+      double("ImportFileUpload", :id => 42, :uploaded_content => yaml_data)
     end
     let(:widgets_to_import) { %w(potato not_potato) }
 
@@ -293,7 +293,7 @@ describe WidgetImportService do
   end
 
   describe "#store_for_import" do
-    let(:import_file_upload) { active_record_instance_double("ImportFileUpload", :id => 42).as_null_object }
+    let(:import_file_upload) { double("ImportFileUpload", :id => 42).as_null_object }
 
     before do
       allow(ImportFileUpload).to receive(:create).and_return(import_file_upload)

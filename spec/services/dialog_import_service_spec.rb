@@ -4,8 +4,8 @@ require "dialog_import_validator"
 
 describe DialogImportService do
   let(:dialog_import_service) { described_class.new(dialog_field_importer, dialog_import_validator) }
-  let(:dialog_field_importer) { auto_loaded_instance_double("DialogFieldImporter") }
-  let(:dialog_import_validator) { auto_loaded_instance_double("DialogImportValidator") }
+  let(:dialog_field_importer) { double("DialogFieldImporter") }
+  let(:dialog_import_validator) { double("DialogImportValidator") }
 
   shared_context "DialogImportService dialog setup" do
     let(:dialog_fields) do
@@ -34,8 +34,8 @@ describe DialogImportService do
   end
 
   describe "#cancel_import" do
-    let(:import_file_upload) { active_record_instance_double("ImportFileUpload", :id => 123) }
-    let(:miq_queue) { active_record_instance_double("MiqQueue") }
+    let(:import_file_upload) { double("ImportFileUpload", :id => 123) }
+    let(:miq_queue) { double("MiqQueue") }
 
     before do
       allow(ImportFileUpload).to receive(:find).with("123").and_return(import_file_upload)
@@ -188,10 +188,10 @@ describe DialogImportService do
   describe "#import_service_dialogs" do
     include_context "DialogImportService dialog setup"
 
-    let(:miq_queue) { active_record_instance_double("MiqQueue") }
+    let(:miq_queue) { double("MiqQueue") }
     let(:yaml_data) { "the yaml" }
     let(:import_file_upload) do
-      active_record_instance_double("ImportFileUpload", :id => 123, :uploaded_content => yaml_data)
+      double("ImportFileUpload", :id => 123, :uploaded_content => yaml_data)
     end
     let(:dialogs_to_import) { %w(Test Test2) }
 
@@ -287,7 +287,7 @@ describe DialogImportService do
   end
 
   describe "#store_for_import" do
-    let(:import_file_upload) { active_record_instance_double("ImportFileUpload", :id => 123).as_null_object }
+    let(:import_file_upload) { double("ImportFileUpload", :id => 123).as_null_object }
 
     before do
       allow(MiqQueue).to receive(:put)

@@ -3,8 +3,8 @@ include UiConstants
 
 shared_examples "logs_collect" do |type|
   let(:klass) { type.classify.constantize }
-  let(:zone) { active_record_instance_double("Zone", :name => "foo") }
-  let(:server) { active_record_instance_double("MiqServer", :logon_status => :ready, :id => 1, :my_zone => zone) }
+  let(:zone) { double("Zone", :name => "foo") }
+  let(:server) { double("MiqServer", :logon_status => :ready, :id => 1, :my_zone => zone) }
   before do
     sb_hash = {
       :trees            => {:diagnostics_tree => {:active_node => active_node}},

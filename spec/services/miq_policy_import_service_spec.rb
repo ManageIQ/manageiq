@@ -2,8 +2,8 @@ require "spec_helper"
 
 describe MiqPolicyImportService do
   let(:miq_policy_import_service) { described_class.new }
-  let(:import_file_upload) { active_record_instance_double("ImportFileUpload") }
-  let(:miq_queue) { active_record_instance_double("MiqQueue") }
+  let(:import_file_upload) { double("ImportFileUpload") }
+  let(:miq_queue) { double("MiqQueue") }
 
   describe "#cancel_import" do
     before do
@@ -65,7 +65,7 @@ describe MiqPolicyImportService do
 
   describe "#store_for_import" do
     let(:file_contents) { "file contents" }
-    let(:import_file_upload) { active_record_instance_double("ImportFileUpload", :id => 1).as_null_object }
+    let(:import_file_upload) { double("ImportFileUpload", :id => 1).as_null_object }
 
     context "when the import does not raise an error" do
       before do

@@ -11,7 +11,6 @@ require 'application_helper'
 
 require 'rspec/autorun'
 require 'rspec/rails'
-require 'rspec/fire'
 require 'vcr'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
@@ -78,7 +77,6 @@ RSpec.configure do |config|
   config.include AutomationExampleGroup, :type => :automation, :example_group => {
     :file_path => config.escaped_path(%w(spec automation))
   }
-  config.include RSpec::Fire
 
   config.extend  MigrationSpecHelper::DSL
   config.include MigrationSpecHelper, :migrations => :up
