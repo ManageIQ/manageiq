@@ -33,6 +33,99 @@ describe MiqStorageMetric do
     end
   end
 
+  describe '.sub_class_names' do
+    it "works" do
+      OntapAggregateMetric.create
+      expect(MiqStorageMetric.sub_class_names).to eq(%w(OntapAggregateMetric))
+    end
+  end
+
+  describe '.sub_classes' do
+    it "works" do
+      OntapAggregateMetric.create
+      expect(MiqStorageMetric.sub_classes).to eq([OntapAggregateMetric])
+    end
+  end
+
+  describe '.derived_metrics_class_names' do
+    it "works" do
+      OntapAggregateMetric.create
+      expect(MiqStorageMetric.derived_metrics_class_names).to eq(%w(OntapAggregateDerivedMetric))
+    end
+  end
+
+  describe '.derived_metrics_classes' do
+    it "works" do
+      OntapAggregateMetric.create
+      expect(MiqStorageMetric.derived_metrics_classes).to eq([OntapAggregateDerivedMetric])
+    end
+  end
+
+  describe '.metrics_rollup_class_names' do
+    it "works" do
+      OntapAggregateMetric.create
+      expect(MiqStorageMetric.metrics_rollup_class_names).to match_array(
+        %w(OntapAggregateMetricsRollup OntapDiskMetricsRollup OntapLunMetricsRollup
+           OntapSystemMetricsRollup OntapVolumeMetricsRollup))
+    end
+  end
+
+  describe '.metrics_rollup_classes' do
+    it "works" do
+      OntapAggregateMetric.create
+      expect(MiqStorageMetric.metrics_rollup_classes).to match_array([
+        OntapAggregateMetricsRollup, OntapDiskMetricsRollup, OntapLunMetricsRollup,
+        OntapSystemMetricsRollup, OntapVolumeMetricsRollup])
+    end
+  end
+
+  describe '.derived_metrics_class_name' do
+    it "detects own classes" do
+      OntapAggregateMetric.create
+      expect(OntapAggregateMetric.derived_metrics_class_name).to eq("OntapAggregateDerivedMetric")
+    end
+
+    it "doesnt return other classes" do
+      OntapAggregateMetric.create
+      expect(MiqStorageMetric.derived_metrics_class_name).to be_nil
+    end
+  end
+
+  describe '.derived_metrics_class' do
+    it "works" do
+      OntapAggregateMetric.create
+      expect(OntapAggregateMetric.derived_metrics_class).to eq(OntapAggregateDerivedMetric)
+    end
+  end
+
+  describe '#derived_metrics_class' do
+    it "works" do
+      OntapAggregateMetric.create
+      expect(OntapAggregateMetric.new.derived_metrics_class).to eq(OntapAggregateDerivedMetric)
+    end
+  end
+
+  describe '.metrics_rollup_class_name' do
+    it "works" do
+      OntapAggregateMetric.create
+      expect(OntapAggregateMetric.metrics_rollup_class_name).to eq("OntapAggregateMetricsRollup")
+    end
+  end
+
+  describe '.metrics_rollup_class' do
+    it "works" do
+      OntapAggregateMetric.create
+      expect(OntapAggregateMetric.metrics_rollup_class).to eq(OntapAggregateMetricsRollup)
+    end
+  end
+
+  describe '#metrics_rollup_class' do
+    it "works" do
+      OntapAggregateMetric.create
+      expect(OntapAggregateMetric.new.metrics_rollup_class).to eq(OntapAggregateMetricsRollup)
+    end
+  end
+
   describe '.purge_all_timer' do
     it "works" do
       # just use default of derived: 4.hours, hourly: 6.months, daily: 6.months

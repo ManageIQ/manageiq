@@ -222,7 +222,7 @@ class MiqStorageMetric < ActiveRecord::Base
   # Called directly from MiqStorageMetric.
   #
   def self.metrics_rollup_class_names
-    subclasses.map(&:metrics_rollup_class_name)
+    subclasses.map(&:metrics_rollup_class_name).compact
   end
 
   #
@@ -239,7 +239,7 @@ class MiqStorageMetric < ActiveRecord::Base
   # Constant defined in subclass.
   #
   def self.derived_metrics_class_name
-    self::DERIVED_METRICS_CLASS_NAME unless self.const_defined?(:DERIVED_METRICS_CLASS_NAME)
+    self::DERIVED_METRICS_CLASS_NAME if self.const_defined?(:DERIVED_METRICS_CLASS_NAME)
   end
 
   #
