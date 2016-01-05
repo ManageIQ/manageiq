@@ -177,6 +177,8 @@ module ManageIQ::Providers
               # following
               name = key.split(":")[0]
               public_key = key.split(":")[1..-1].join(":")
+
+              # Calculate the sha1 fingerprint from the public key data
               fingerprint = SSHKey.sha1_fingerprint(public_key)
 
               type = ManageIQ::Providers::Google::CloudManager::AuthKeyPair.name
@@ -186,12 +188,18 @@ module ManageIQ::Providers
                 :fingerprint => fingerprint,
               }
 
-              ssh_keys << key_pair
+              # Use user+ssh_fingerprint as a unique id
+              key_uid = "#{name}:#{fingerprint}"
 
-              unless @data[:key_pairs].include?(key_pair)
+              # Only add unique ssh keys to @data
+              key = @data_index.fetch_path(:key_pairs, key_uid)
+              if key.nil?
                 @data[:key_pairs] << key_pair
-                @data_index.store_path(:key_pairs, fingerprint, key_pair)
+                @data_index.store_path(:key_pairs, key_uid, key_pair)
+                key = key_pair
               end
+
+              ssh_keys << key
             end
           end
         end
