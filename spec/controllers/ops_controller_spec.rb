@@ -282,4 +282,35 @@ describe OpsController do
       expect(response.status).to eq(200)
     end
   end
+
+  context "Toolbar buttons render" do
+    before do
+      _guid, @miq_server, @zone = EvmSpecHelper.remote_guid_miq_server_zone
+      allow(controller).to receive(:check_privileges).and_return(true)
+      allow(controller).to receive(:assert_privileges).and_return(true)
+      allow(controller).to receive(:x_active_tree).and_return(:diagnostics_tree)
+      allow(controller).to receive(:x_node).and_return("z-#{ActiveRecord::Base.compress_id(@zone.id)}")
+      post :change_tab, :tab_id => "diagnostics_collect_logs"
+      allow(controller).to receive(:x_node).and_return("svr-#{ActiveRecord::Base.compress_id(@miq_server.id)}")
+    end
+    it "does not render toolbar buttons when edit is clicked" do
+      post :x_button, :id => @miq_server.id, :pressed => 'log_depot_edit', :format => :js
+      expect(response.status).to eq(200)
+      expect(response.body).to include("if (miqDomElementExists('toolbar')) $('#toolbar').hide();")
+    end
+
+    it "renders toolbar buttons when cancel is clicked" do
+      allow(controller).to receive(:diagnostics_set_form_vars)
+      post :x_button, :id => @miq_server.id, :pressed => 'log_depot_edit', :button => "cancel", :format => :js
+      expect(response.status).to eq(200)
+      expect(response.body).to include("if (miqDomElementExists('toolbar')) $('#toolbar').show();")
+    end
+
+    it "renders toolbar buttons when save is clicked" do
+      allow(controller).to receive(:diagnostics_set_form_vars)
+      post :x_button, :id => @miq_server.id, :pressed => 'log_depot_edit', :button => "save", :format => :js
+      expect(response.status).to eq(200)
+      expect(response.body).to include("if (miqDomElementExists('toolbar')) $('#toolbar').show();")
+    end
+  end
 end

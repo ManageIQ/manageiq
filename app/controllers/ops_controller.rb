@@ -485,7 +485,7 @@ class OpsController < ApplicationController
 
     replace_explorer_trees(replace_trees, presenter, r)
     rebuild_toolbars(presenter)
-    handle_bottom_cell(presenter, r, locals)
+    handle_bottom_cell(nodetype, presenter, r, locals)
     x_active_tree_replace_cell(nodetype, presenter, r)
     extra_js_commands(presenter)
     # Render the JS responses to update the explorer screen
@@ -727,9 +727,12 @@ class OpsController < ApplicationController
     end
   end
 
-  def handle_bottom_cell(presenter, r, locals)
+  def handle_bottom_cell(nodetype, presenter, r, locals)
     # Handle bottom cell
-    if @pages || @in_a_form
+    if nodetype == "log_depot_edit"
+      presenter[:set_visible_elements][:form_buttons_div] = false
+      presenter[:set_visible_elements][:pc_div_1] = false
+    elsif @pages || @in_a_form
       if @pages
         presenter[:set_visible_elements][:form_buttons_div] = false
         presenter[:set_visible_elements][:pc_div_1] = true
