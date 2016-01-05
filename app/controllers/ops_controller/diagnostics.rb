@@ -90,6 +90,7 @@ module OpsController::Diagnostics
     # @schedule = nil # setting to nil, since we are using same view for both db_back and log_depot edit
     case params[:button]
     when "cancel"
+      @in_a_form = false
       @edit = session[:edit] = nil
       add_flash(_("Edit Log Depot settings was cancelled by the user"))
       @record = nil
@@ -154,6 +155,7 @@ module OpsController::Diagnostics
         page.replace("flash_msg_div", :partial => "layouts/flash_msg", :locals => {:div_num => ""})
       end
     when nil # Reset or first time in
+      @in_a_form = true
       replace_right_cell("log_depot_edit")
     end
   end
