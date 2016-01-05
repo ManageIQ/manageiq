@@ -109,6 +109,12 @@ g.EntityLegend {
     font-size: 19px;
 }
 
+.kube-topology g.VM text, .kube-topology g.Host text {
+    fill: #636363;
+}
 
-
+.kube-topology g text.attached-label {
+    font-size: 12px;
+    fill: black;
+}
 
