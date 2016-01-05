@@ -96,21 +96,23 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
       return dblclick(d);
     });
 
-    added.append("image")
-      .attr("xlink:href", function(d) {
-        return d.item.icon;
-      })
+    added.append("text")
+        .text(function(d) {
+          return getIcon(d);
+        })
+      .attr('class', function(d) {
+          switch(d.item.kind) {
+            case 'ContainerManager':
+              return 'icon '+ d.item.display_kind;
+            default:
+              return 'icon';
+          }
+        })
       .attr("y", function(d) {
         return getDimensions(d).y;
       })
       .attr("x", function(d) {
         return getDimensions(d).x;
-      })
-      .attr("height", function(d) {
-        return getDimensions(d).height;
-      })
-      .attr("width", function(d) {
-        return getDimensions(d).width;
       });
 
     added.append("text")
@@ -187,18 +189,53 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
     window.location.assign(url);
   }
 
+  function getIcon(d) {
+    switch (d.item.kind) {
+      case 'Container':
+        return '\uF1B2'; // fa-cube
+      case "ContainerNode":
+        return '\uE621';  // pficon-container-node
+      case "ContainerRoute":
+        return '\uE625'; // pficon-route
+      case "ContainerService":
+        return '\uE61E'; // pficon-service
+      case "Vm":
+        return '\uE600'; // pficon-screen
+      case "Host":
+        return '\uE620'; // pficon-cluster
+      case "ContainerGroup":
+        return '\uF1B3'; // fa-cubes
+      case "ContainerReplicator":
+        return '\uE624'; // pficon-replicator
+      case "ContainerManager":
+        switch (d.item.display_kind) {
+          case "Kubernetes":
+            return '\uE627'; // pficon-kubernetes
+          case "Openshift":
+          case "OpenshiftEnterprise":
+            return '\uE626';  // pficon-openshift
+          case "Atomic":
+            return '\uE62c'; // vendor-atomic
+          case "AtomicEnterprise":
+            return '\uE62d'; //vendor-atomic-enterprise
+        }
+    }
+  }
+
   function getDimensions(d) {
     switch (d.item.kind) {
       case "ContainerManager":
-        return { x: -20, y: -20, height: 40, width: 40, r: 28 };
+        return { x: 0, y: 16, r: 28 };
       case "Container":
-        return { x: -7, y: -7, height: 14, width: 14, r: 13 };
+        return { x: 1, y: 5, r: 13 };
+      case "ContainerGroup":
+        return { x: 0, y: 6, r: 17 };
       case "ContainerNode":
       case "Vm":
       case "Host":
-        return { x: -12, y: -12, height: 23, width: 23, r: 19 };
+        return { x: 0, y: 9, r: 21 };
       default:
-        return { x: -9, y: -9, height: 18, width: 18, r: 17 };
+        return { x: 0, y: 9, r: 17 };
     }
   }
 

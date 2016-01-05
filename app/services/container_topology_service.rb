@@ -61,7 +61,7 @@ class ContainerTopologyService
     topology[:kinds] = build_kinds
     topology
   end
-
+  
   def entity_type(entity)
       entity.class.name.demodulize
   end
@@ -104,7 +104,6 @@ class ContainerTopologyService
            else
              entity.ems_ref
            end
-      icon = type.underscore.downcase
     end
 
     data = {:id           => id,
@@ -112,8 +111,7 @@ class ContainerTopologyService
             :status       => status,
             :kind         => type,
             :display_kind => entity_display_type(entity),
-            :miq_id       => entity.id,
-            :icon         => image_path("icons/new/#{icon}.png")}
+            :miq_id       => entity.id}
 
     if %w(Vm Host).include? type
       data.merge!(:provider => entity.ext_management_system.name)
