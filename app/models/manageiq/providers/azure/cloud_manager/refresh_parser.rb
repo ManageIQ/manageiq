@@ -6,6 +6,10 @@ module ManageIQ::Providers
       VALID_LOCATION = /\w+/
       TYPE_DEPLOYMENT = "microsoft.resources/deployments"
 
+      def self.security_group_type
+        ManageIQ::Providers::Azure::CloudManager::SecurityGroup.name
+      end
+
       def self.ems_inv_to_hashes(ems, options = nil)
         new(ems, options).ems_inv_to_hashes
       end
@@ -20,6 +24,7 @@ module ManageIQ::Providers
         @vns               = ::Azure::Armrest::Network::VirtualNetworkService.new(@config)
         @ips               = ::Azure::Armrest::Network::IpAddressService.new(@config)
         @nis               = ::Azure::Armrest::Network::NetworkInterfaceService.new(@config)
+        @nsg               = ::Azure::Armrest::Network::NetworkSecurityGroupService.new(@config)
         @rgs               = ::Azure::Armrest::ResourceGroupService.new(@config)
         @sas               = ::Azure::Armrest::StorageAccountService.new(@config)
         @options           = options || {}
@@ -133,6 +138,15 @@ module ManageIQ::Providers
         end
       end
 
+      def get_nic_security_group(nic)
+        security_group = nic.properties.try(:network_security_group)
+        return unless security_group
+
+        resource_group = security_group.id[%r{resourceGroups/(.*?)/}, 1]
+        security_group_name = File.basename(security_group.id)
+        @nsg.get(security_group_name, resource_group)
+      end
+
       def process_collection(collection, key)
         @data[key] ||= []
 
@@ -151,6 +165,39 @@ module ManageIQ::Providers
           results << arm_service.send(method, resource_group[:name])
         end
         results.flatten
+      end
+
+      def parse_security_group(security_group)
+        uid = security_group.id
+
+        description = [
+          security_group.name,
+          security_group.resource_group,
+          security_group.location
+        ].join(' - ')
+
+        new_result = {
+          :type           => self.class.security_group_type,
+          :ems_ref        => uid,
+          :name           => security_group.name,
+          :description    => description,
+          :firewall_rules => parse_firewall_rules(security_group)
+        }
+
+        return uid, new_result
+      end
+
+      def parse_firewall_rules(sg)
+        sg.properties.security_rules.map do |rule|
+          {
+            :name            => rule.name,
+            :host_protocol   => rule.properties.protocol.upcase,
+            :port            => rule.properties.destination_port_range.split('-').first,
+            :end_port        => rule.properties.destination_port_range.split('-').last,
+            :direction       => rule.properties.direction,
+            :source_ip_range => rule.properties.source_address_prefix
+          }
+        end
       end
 
       def parse_resource_group(resource_group)
@@ -231,6 +278,10 @@ module ManageIQ::Providers
 
         hardware_network_info = get_hardware_network_info(instance)
 
+        security_groups = get_security_groups(hardware_network_info).collect do |sg|
+          @data_index.fetch_path(:security_groups, sg.id)
+        end
+
         new_result = {
           :type                => 'ManageIQ::Providers::Azure::CloudManager::Vm',
           :uid_ems             => uid,
@@ -243,6 +294,7 @@ module ManageIQ::Providers
           :location            => uid,
           :orchestration_stack => @data_index.fetch_path(:orchestration_stacks, @resource_to_stack[uid]),
           :availability_zone   => @data_index.fetch_path(:availability_zones, 'default'),
+          :security_groups     => security_groups,
           :hardware            => {
             :disks    => [], # Filled in later conditionally on flavor
             :networks => hardware_network_info
@@ -288,10 +340,20 @@ module ManageIQ::Providers
         super(disks, size, location, name, "azure")
       end
 
+      def get_security_groups(hardware_network_info)
+        security_group_array = hardware_network_info.collect { |info| info.delete(:security_group) }.compact
+        hardware_network_info.delete_if { |e| e.kind_of?(Hash) && e.empty? }
+
+        process_collection(security_group_array, :security_groups) do |sg|
+          parse_security_group(sg)
+        end
+      end
+
       def get_hardware_network_info(instance)
         networks_array = []
 
         get_vm_nics(instance).each do |nic_profile|
+          networks_array << {:security_group => get_nic_security_group(nic_profile)}
           nic_profile.properties.ip_configurations.each do |ipconfig|
             hostname = ipconfig.name
             private_ip_addr = ipconfig.properties.try(:private_ip_address)
