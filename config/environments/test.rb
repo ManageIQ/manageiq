@@ -8,6 +8,10 @@ Vmdb::Application.configure do
   config.cache_classes = true
   config.eager_load = false
 
+  # Print deprecation notices to the stderr
+  #ActiveSupport::Deprecation.behavior = :stderr
+  ActiveSupport::Deprecation.behavior = :silence
+
   # Configure static asset server for tests with Cache-Control for performance
   config.serve_static_files = true
   config.static_cache_control = "public, max-age=3600"
@@ -34,9 +38,6 @@ Vmdb::Application.configure do
   # TODO: Fix our code to abide by Rails mass_assignment protection:
   # http://jonathanleighton.com/articles/2011/mass-assignment-security-shouldnt-happen-in-the-model/
   # config.active_record.mass_assignment_sanitizer = :strict
-
-  # Print deprecation notices to the stderr
-  ActiveSupport::Deprecation.behavior = :stderr
 
   # Any exception that gets past our ApplicationController's rescue_from
   # should just be raised intact
