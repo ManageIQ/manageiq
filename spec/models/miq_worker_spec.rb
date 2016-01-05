@@ -37,7 +37,6 @@ describe MiqWorker do
 
     context "clean_active_messages" do
       before do
-        allow_any_instance_of(MiqWorker).to receive(:set_command_line)
         @worker = FactoryGirl.create(:miq_worker, :miq_server => @server)
         @message = FactoryGirl.create(:miq_queue, :handler => @worker, :state => 'dequeue')
       end

@@ -4,8 +4,6 @@ class MiqWorker < ActiveRecord::Base
   include UuidMixin
   include ReportableMixin
 
-  before_validation :set_command_line, :on => :create
-
   before_destroy :log_destroy_of_worker_messages
 
   belongs_to :miq_server
@@ -522,9 +520,5 @@ class MiqWorker < ActiveRecord::Base
 
   def worker_options
     {:guid => guid}
-  end
-
-  def set_command_line
-    self.command_line = self.class.build_command_line(worker_options)
   end
 end
