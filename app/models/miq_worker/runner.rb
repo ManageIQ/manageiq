@@ -465,7 +465,7 @@ class MiqWorker::Runner
 
   def set_process_title
     type   = @worker.type.sub(/^ManageIQ::Providers::/, "")
-    title  = "#{type} id: #{@worker.id}"
+    title  = "#{MiqWorker::PROCESS_TITLE_PREFIX} #{type} id: #{@worker.id}"
     title << ", queue: #{@worker.queue_name}" if @worker.queue_name
     title << ", uri: #{@worker.uri}" if @worker.uri
 

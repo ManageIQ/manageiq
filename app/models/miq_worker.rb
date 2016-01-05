@@ -32,6 +32,7 @@ class MiqWorker < ActiveRecord::Base
   STATUSES_ALIVE    = STATUSES_CURRENT_OR_STARTING + [STATUS_STOPPING]
   PROCESS_INFO_FIELDS = %i(priority memory_usage percent_memory percent_cpu memory_size cpu_time proportional_set_size)
 
+  PROCESS_TITLE_PREFIX = "MIQ:".freeze
   def self.atStartup
     # Delete and Kill all workers that were running previously
     clean_all_workers
