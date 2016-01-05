@@ -60,16 +60,6 @@ describe "JobProxyDispatcherVmMiqServerProxies" do
         end
       end
 
-      context "with a non-vmware vm, " do
-        before(:each) do
-          @vm.vendor = "Microsoft"
-          @vm.save
-        end
-        it "should return no servers" do
-          expect(@vm.miq_server_proxies).to be_empty
-        end
-      end
-
       context "with repository vm(a vm without a host), " do
         before(:each) do
           @vm.host = nil

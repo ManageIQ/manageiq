@@ -26,7 +26,7 @@ module VmOrTemplate::Scanning
       :target_class => self.class.base_class.name,
       :name         => "Scan from Vm #{name}",
       :userid       => userid,
-      :sync_key     => guid
+      :sync_key     => guid,
     }.merge(options)
     options[:zone] = ext_management_system.my_zone unless ext_management_system.nil?
     # options = {:agent_id => myhost.id, :agent_class => myhost.class.to_s}.merge!(options) unless myhost.nil?

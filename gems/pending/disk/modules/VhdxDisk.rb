@@ -615,13 +615,12 @@ module VhdxDisk
   end
 
   def connect_to_hyperv(hyperv_connection)
-    raise "Connection to HyperV Server Not Supported Yet"
-    # connection  = @hyperv_connection = hyperv_connection
-    # hyperv_disk = MiqHyperVDisk.new(connection[:host],
-    #                                 connection[:user],
-    #                                 connection[:password],
-    #                                 connection[:port])
-    # hyperv_disk.open(@file_name)
-    # hyperv_disk
+    connection  = @hyperv_connection = hyperv_connection
+    hyperv_disk = MiqHyperVDisk.new(connection[:host],
+                                    connection[:user],
+                                    connection[:password],
+                                    connection[:port])
+    hyperv_disk.open(@file_name)
+    hyperv_disk
   end
 end

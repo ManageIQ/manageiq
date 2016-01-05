@@ -48,6 +48,11 @@ class MiqVm
       @vmConfig = VmConfig.new(getCfg(@ost.snapId))
       $log.debug "MiqVm::initialize: @vmConfig.getHash = #{@vmConfig.getHash.inspect}"
       $log.debug "MiqVm::initialize: @vmConfig.getDiskFileHash = #{@vmConfig.getDiskFileHash.inspect}"
+    # TODO: move this to miq_scvmm_vm
+    elsif (@scvmm = @ost.miq_scvmm)
+      $log.debug "MiqVm::initialize: accessing VM through HyperV server" if $log.debug?
+      @vmConfig = VmConfig.new(getCfg(@ost.snapId))
+      $log.debug "MiqVm::initialize: setting @ost.miq_scvmm_vm = #{@scvmm_vm.class}" if $log.debug?
     else
       @vimVm = nil
       @vmConfig = VmConfig.new(vmCfg)
@@ -76,23 +81,25 @@ class MiqVm
       dInfo = OpenStruct.new
 
       if @ost.miqVim
-        dInfo.vixDiskInfo = Hash.new
-        dInfo.vixDiskInfo[:fileName]    = @ost.miqVim.datastorePath(df)
+        dInfo.vixDiskInfo            = {}
+        dInfo.vixDiskInfo[:fileName] = @ost.miqVim.datastorePath(df)
         if @ost.miqVimVm && @ost.miqVim.isVirtualCenter?
           thumb_print    = VcenterThumbPrint.new(@ost.miqVimVm.invObj.server)
           @vdlConnection = @ost.miqVimVm.vdlVcConnection(thumb_print) unless @vdlConnection
           $log.debug "openDisks (VC): using disk file path: #{dInfo.vixDiskInfo[:fileName]}"
         elsif @ost.miqVimVm
-          esx_host         = @ost.miqVimVm.invObj.server
-          esx_username     = @ost.miqVimVm.invObj.username
-          esx_password     = @ost.miqVimVm.invObj.password
-          thumb_print      = ESXThumbPrint.new(esx_host, esx_username, esx_password)
-          @vdlConnection   = @ost.miqVimVm.vdlVcConnection(thumb_print) unless @vdlConnection
+          esx_host       = @ost.miqVimVm.invObj.server
+          esx_username   = @ost.miqVimVm.invObj.username
+          esx_password   = @ost.miqVimVm.invObj.password
+          thumb_print    = ESXThumbPrint.new(esx_host, esx_username, esx_password)
+          @vdlConnection = @ost.miqVimVm.vdlVcConnection(thumb_print) unless @vdlConnection
         else
           @vdlConnection = @ost.miqVim.vdlConnection unless @vdlConnection
           $log.debug "openDisks (ESX): using disk file path: #{dInfo.vixDiskInfo[:fileName]}"
         end
         dInfo.vixDiskInfo[:connection]  = @vdlConnection
+      elsif @ost.miq_hyperv
+        init_disk_info(dInfo, df)
       else
         dInfo.fileName = df
         disk_format = @vmConfig.getHash["#{dtag}.format"]  # Set by rhevm for iscsi and fcp disks
@@ -105,7 +112,6 @@ class MiqVm
       dInfo.baseOnly = @ost.openParent unless mode && mode["independent"]
       dInfo.rawDisk = @ost.rawDisk
       $log.debug "MiqVm::openDisks: dInfo.baseOnly = #{dInfo.baseOnly}"
-      $log.debug "MiqVolumeManager::openDisks: dInfo.rawDisk = #{dInfo.rawDisk}"
 
       begin
         d = applianceVolumeManager && applianceVolumeManager.lvHash[dInfo.fileName] if @rhevm
@@ -327,15 +333,15 @@ if __FILE__ == $0
         end
       end
 
-    # lf = rt.fileOpen("/etc/rc0.d/S01halt")
-    # puts "\n*** Contents of /etc/rc0.d/S01halt:"
-    # puts lf.read
-    # puts "*** END"
-    # lf.close
-    #
-    # lfn = "/etc/rc0.d/S01halt"
-    # puts "Is #{lfn} a symbolic link? #{rt.fileSymLink?(lfn)}"
-    # puts "#{lfn} => #{rt.getLinkPath(lfn)}"
+      # lf = rt.fileOpen("/etc/rc0.d/S01halt")
+      # puts "\n*** Contents of /etc/rc0.d/S01halt:"
+      # puts lf.read
+      # puts "*** END"
+      # lf.close
+      #
+      # lfn = "/etc/rc0.d/S01halt"
+      # puts "Is #{lfn} a symbolic link? #{rt.fileSymLink?(lfn)}"
+      # puts "#{lfn} => #{rt.getLinkPath(lfn)}"
     else  # Windows
       tdirArr = ["c:/", "e:/", "e:/testE2", "f:/"]
 

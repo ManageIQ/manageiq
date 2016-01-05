@@ -86,6 +86,9 @@ module MiqServer::ServerSmartProxy
         if target.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm) ||
            target.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
           timeout_adj = 4
+        elsif target.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm) ||
+              target.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Template)
+          timeout_adj = 8
         end
       end
       $log.debug "#{log_prefix}: queuing call to #{self.class.name}##{ost.method_name}"

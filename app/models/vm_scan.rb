@@ -7,8 +7,9 @@ class VmScan < Job
   #
   DEFAULT_TIMEOUT = defined?(RSpec) ? 300 : 3000
 
-  def self.current_job_timeout
-    DEFAULT_TIMEOUT
+  def self.current_job_timeout(timeout_adjustment = 1)
+    timeout_adjustment = 1 if defined?(RSpec)
+    DEFAULT_TIMEOUT * timeout_adjustment
   end
 
   def load_transitions
@@ -95,7 +96,8 @@ class VmScan < Job
 
       # TODO: should this logic be moved to a VM subclass implementation?
       #       or, make type-specific Job classes.
-      if vm.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm)
+      if vm.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm) ||
+         vm.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm)
         if vm.ext_management_system
           sn_description = snapshotDescription
           _log.info("Creating snapshot, description: [#{sn_description}]")
@@ -280,6 +282,8 @@ class VmScan < Job
           #       or, make type-specific Job classes.
           if vm.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm)
             vm.ext_management_system.vm_delete_evm_snapshot(vm, mor)
+          elsif vm.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm)
+            vm.ext_management_system.vm_delete_evm_snapshot(vm, :snMor => mor)
           else
             delete_snapshot(mor)
           end
@@ -532,6 +536,8 @@ class VmScan < Job
         set_status("Deleting snapshot before aborting job")
         if vm.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm)
           vm.ext_management_system.vm_delete_evm_snapshot(vm, mor)
+        elsif vm.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm)
+          vm.ext_management_system.vm_delete_evm_snapshot(vm, :snMor => mor)
         else
           delete_snapshot(mor)
         end

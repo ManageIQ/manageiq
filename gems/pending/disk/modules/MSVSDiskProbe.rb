@@ -1,4 +1,6 @@
 # encoding: US-ASCII
+
+require 'Scvmm/miq_hyperv_disk'
 require 'disk/modules/MiqLargeFile'
 require 'disk/modules/MSCommon'
 
@@ -20,11 +22,14 @@ module MSVSDiskProbe
     ext = File.extname(ostruct.fileName).downcase
     return nil if ext != ".vhd" && ext != ".avhd" && ext != ".miq"
 
-    # Get (assumed) footer.
-    msDisk_file = MiqLargeFile.open(ostruct.fileName, "rb")
-    footer = MSCommon.getFooter(msDisk_file, true)
-    msDisk_file.close
-    msDisk_file = nil
+    if ostruct.hyperv_connection
+      ms_disk_file = connect_to_hyperv(ostruct)
+    else
+      # Get (assumed) footer.
+      ms_disk_file = MiqLargeFile.open(ostruct.fileName, "rb")
+    end
+    footer = MSCommon.getFooter(ms_disk_file, true)
+    ms_disk_file.close
 
     # Check for MS disk.
     return nil if footer['cookie'] != MS_MAGIC
@@ -40,5 +45,12 @@ module MSVSDiskProbe
     else
       raise "Unsupported MS disk: #{footer['disk_type']}"
     end
+  end
+
+  def self.connect_to_hyperv(ostruct)
+    connection  = ostruct.hyperv_connection
+    hyperv_disk = MiqHyperVDisk.new(connection[:host], connection[:user], connection[:password], connection[:port])
+    hyperv_disk.open(ostruct.fileName)
+    hyperv_disk
   end
 end

@@ -287,8 +287,8 @@ class JobProxyDispatcher
         return []
       end
     else
-      unless ["VSAN", "VMFS", "NAS", "NFS", "ISCSI", "DIR", "FCP"].include?(@vm.storage.store_type)
-        msg = "Vm storage type [#{@vm.storage.store_type}] not supported [#{job.target_id}], aborting job [#{job.guid}]."
+      unless %w(VSAN VMFS NAS NFS ISCSI DIR FCP CSVFS NTFS).include?(@vm.storage.store_type)
+        msg = "Vm storage type [#{@vm.storage.store_type}] unsupported [#{job.target_id}], aborting job [#{job.guid}]."
         queue_signal(job, {:args => [:abort, msg, "error"]})
         return []
       end
