@@ -16,29 +16,8 @@ module Vmdb
       Rails.application.config.assets.paths.unshift(*paths)
     end
 
-    # Override Rails' default precompilation of assets, which excludes all .js
-    #   and .css files except application.js and application.css, to also
-    #   process productization.js and productization.css if available.  In
-    #   addition, include printing of resolved assets.
-    #
-    #   The original value is located at:
-    #     https://github.com/rails/rails/blob/v3.2.15/railties/lib/rails/application/configuration.rb#L48-L49
     def prepare_asset_precompilation
-      Rails.application.config.assets.precompile = [
-        proc do |path|
-          file =
-            !File.extname(path).in?(['.js', '.css', '']) ||
-            path =~ /(?:\/|\\|\A)(application|productization)\.(css|js)$/
-
-          if ENV["DEBUG_PRECOMPILE"]
-            resolved = Pathname.new(Rails.application.assets.resolve(path))
-            resolved = resolved.relative_path_from(Rails.root) if resolved.to_s.start_with?(Rails.root.to_s)
-            puts " #{file ? "+" : "-"} #{resolved}"
-          end
-
-          file
-        end
-      ]
+      Rails.application.config.assets.precompile += %w(productization.css productization.js)
     end
 
     # Replace the default Sprockets::DirectiveProcessor with our overriden one
