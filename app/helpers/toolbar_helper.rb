@@ -192,18 +192,16 @@ module ToolbarHelper
   #
   def data_hash_keys(props)
     %i(pressed popup window_url prompt explorer onwhen url_parms url).each_with_object({}) do |key, h|
-      h[key] = props[key] if props[key].present?
+      h["data-#{key}"] = props[key] if props[key].present?
     end
   end
 
   # Calculate common html tag keys and values from toolbar button definition
   #
   def prepare_tag_keys(props)
-    h = {
-      'data'       => data_hash_keys(props),
-      'title'      => _(props['title']),
-      'data-click' => props['id']
-    }
+    h = data_hash_keys(props)
+    h.update('title'      => _(props['title']),
+             'data-click' => props['id'])
     h['name']         = props[:name] if props.key?(:name)
     h['data-confirm'] = _("#{props[:confirm]}") if props.key?(:confirm)
     h
