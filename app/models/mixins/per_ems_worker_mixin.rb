@@ -120,7 +120,7 @@ module PerEmsWorkerMixin
     self.class.ems_from_queue_name(queue_name)
   end
 
-  def command_line_params
+  def worker_options
     super.merge(:ems_id => ems_id)
   end
 end

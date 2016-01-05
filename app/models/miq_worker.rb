@@ -333,7 +333,7 @@ class MiqWorker < ActiveRecord::Base
     self.class.before_fork
     pid = fork do
       self.class.after_fork
-      self.class::Runner.start_worker(command_line_params)
+      self.class::Runner.start_worker(worker_options)
       exit!
     end
 
@@ -520,11 +520,11 @@ class MiqWorker < ActiveRecord::Base
     params.first || {}
   end
 
-  def command_line_params
+  def worker_options
     {:guid => guid}
   end
 
   def set_command_line
-    self.command_line = self.class.build_command_line(command_line_params)
+    self.command_line = self.class.build_command_line(worker_options)
   end
 end

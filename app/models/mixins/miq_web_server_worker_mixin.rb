@@ -194,7 +194,7 @@ module MiqWebServerWorkerMixin
       end
     end
 
-    def command_line_params
+    def worker_options
       params = super
       params[:Port] = port if port.kind_of?(Numeric)
       params
