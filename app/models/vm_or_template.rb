@@ -1877,8 +1877,14 @@ class VmOrTemplate < ActiveRecord::Base
 
   def self.cloneable?(ids)
     vms = VmOrTemplate.where(:id => ids)
-    return false if vms.blank?
+    return false if vms.blank? || vms.any? {|vm| vm.orphaned? || vm.archived? }
     vms.all?(&:cloneable?)
+  end
+
+  def self.publishable?(ids)
+    vms = VmOrTemplate.where(:id => ids)
+    return false if vms.blank? || vms.any? {|vm| vm.orphaned? || vm.archived? }
+    vms.all?(&:publishable?)
   end
 
   def cloneable?

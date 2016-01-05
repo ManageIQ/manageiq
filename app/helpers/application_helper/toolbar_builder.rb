@@ -1170,6 +1170,8 @@ class ApplicationHelper::ToolbarBuilder
       when "instance_check_compliance", "vm_check_compliance"
         model = model_for_vm(@record).to_s
         return "No Compliance Policies assigned to this #{model == "ManageIQ::Providers::InfraManager::Vm" ? "VM" : ui_lookup(:model => model)}" unless @record.has_compliance_policies?
+      when "vm_clone", "vm_publish", "vm_migrate"
+        return "%{task} does not apply to archived or orphaned VMs" % {:task => id.split('_').last.capitalize}
       when "vm_collect_running_processes"
         return @record.is_available_now_error_message(:collect_running_processes) if @record.is_available_now_error_message(:collect_running_processes)
       when "vm_console", "vm_vmrc_console"
@@ -1257,6 +1259,12 @@ class ApplicationHelper::ToolbarBuilder
       end
     when nil, "NilClass"
       case id
+      when "vm_clone", "vm_publish", "vm_migrate"
+        if @sb[:trees][:vandt_tree].present? &&
+           (@sb[:trees][:vandt_tree][:active_node] == "xx-arch" ||
+            @sb[:trees][:vandt_tree][:active_node] == "xx-orph")
+          return "%{task} does not apply to archived or orphaned VMs" % {:task => id.split('_').last.capitalize}
+        end
       when "ab_group_edit"
         return "Selected Custom Button Group cannot be edited" if x_node.split('-')[1] == "ub"
       when "ab_group_delete"
