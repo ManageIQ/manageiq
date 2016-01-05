@@ -308,11 +308,11 @@ describe Tenant do
 
     it "has a default login image" do
       tenant.save!
-      expect(tenant.login_logo.url).to match(/login-screen-logo.png/)
+      expect(tenant.login_logo.url).to match(/login-screen-logo.*\.png/)
     end
 
     it "has a default login image for root_tenant" do
-      expect(root_tenant.login_logo.url).to match(/login-screen-logo.png/)
+      expect(root_tenant.login_logo.url).to match(/login-screen-logo.*\.png/)
     end
 
     it "has custom login logo" do
