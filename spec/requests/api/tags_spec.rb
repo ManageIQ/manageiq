@@ -162,6 +162,28 @@ describe ApiController do
         expect_request_success_with_no_content
       end
 
+      it "will respond with 404 not found when deleting a non-existent tag through DELETE" do
+        api_basic_authorize action_identifier(:tags, :delete)
+        classification = FactoryGirl.create(:classification_tag)
+        tag_id = classification.tag.id
+        classification.destroy!
+
+        run_delete tags_url(tag_id)
+
+        expect_resource_not_found
+      end
+
+      it "will respond with 404 not found when deleting a non-existent tag through POST" do
+        api_basic_authorize action_identifier(:tags, :delete)
+        classification = FactoryGirl.create(:classification_tag)
+        tag_id = classification.tag.id
+        classification.destroy!
+
+        run_post tags_url(tag_id), :action => :delete
+
+        expect_resource_not_found
+      end
+
       it "can delete multiple tags within a category by id" do
         api_basic_authorize action_identifier(:tags, :delete)
         classification1 = FactoryGirl.create(:classification_tag)
