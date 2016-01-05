@@ -14,7 +14,7 @@ describe VmCloudController do
   # So we need a test for each possible value of 'presses' until all this is
   # converted into proper routes and test is changed to test the new routes.
   describe 'x_button' do
-    describe 'corresponding methods are called for allowed actions' do
+    context 'for allowed actions' do
       ApplicationController::Explorer::X_BUTTON_ALLOWED_ACTIONS.each_pair do |action_name, method|
         prefixes = ["image", "instance"]
         prefixes.each do |prefix|
@@ -29,13 +29,15 @@ describe VmCloudController do
       end
     end
 
-    render_views
+    context 'for an unknown action' do
+      render_views
 
-    it 'exception is raised for unknown action' do
-      EvmSpecHelper.create_guid_miq_server_zone
-      get :x_button, :id => nil, :pressed => 'random_dude', :format => :html
-      expect(response).to render_template('layouts/exception')
-      expect(response.body).to include('Action not implemented')
+      it 'exception is raised for unknown action' do
+        EvmSpecHelper.create_guid_miq_server_zone
+        get :x_button, :id => nil, :pressed => 'random_dude', :format => :html
+        expect(response).to render_template('layouts/exception')
+        expect(response.body).to include('Action not implemented')
+      end
     end
   end
 
