@@ -111,9 +111,9 @@ angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.
           $scope.utilizationLoadingDone = true;
 
           // Heatmaps
-          $scope.nodeCpuUsage.data = data.heatmaps.nodeCpuUsage.sort(dashboardUtilsFactory.heatmapSort);
+          $scope.nodeCpuUsage.data = chartsMixin.processHeatmapData(data.heatmaps.nodeCpuUsage);
           $scope.nodeCpuUsage.loadingDone = true;
-          $scope.nodeMemoryUsage.data = data.heatmaps.nodeMemoryUsage.sort(dashboardUtilsFactory.heatmapSort);
+          $scope.nodeMemoryUsage.data = chartsMixin.processHeatmapData(data.heatmaps.nodeMemoryUsage);
           $scope.nodeMemoryUsage.loadingDone = true;
 
           // Network metrics
