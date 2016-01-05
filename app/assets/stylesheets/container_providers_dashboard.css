@@ -51,9 +51,17 @@
     content: url(/images/icons/new/vendor-atomic_dashboard.png);
 }
 
+.atomic-large:before {
+    max-height: 220px;
+    display: inline-block;
+    width: auto; /* you can use % */
+}
+
+
 /* line 44, scss/main.scss */
 .provider-card {
     min-height: 140px;
+    padding-left: 0px;
 }
 /* line 47, scss/main.scss */
 .provider-card .providers {
