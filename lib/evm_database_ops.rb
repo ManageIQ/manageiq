@@ -1,5 +1,3 @@
-require 'vmdb-logger'
-
 $LOAD_PATH << File.expand_path(__dir__)
 require 'util/postgres_admin'
 
@@ -11,9 +9,6 @@ class EvmDatabaseOps
   BACKUP_TMP_FILE = "/tmp/miq_backup"
 
   DEFAULT_OPTS = {:dbname => 'vmdb_production'}
-
-  LOGFILE = File.expand_path(File.join(__dir__, "../log/evm.log"))
-  $log ||= VMDBLogger.new(LOGFILE)
 
   def self.backup_destination_free_space(file_location)
     require 'fileutils'
