@@ -31,7 +31,7 @@ module Vmdb
             path =~ /(?:\/|\\|\A)(application|productization)\.(css|js)$/
 
           if ENV["DEBUG_PRECOMPILE"]
-            resolved = Rails.application.assets.resolve(path)
+            resolved = Pathname.new(Rails.application.assets.resolve(path))
             resolved = resolved.relative_path_from(Rails.root) if resolved.to_s.start_with?(Rails.root.to_s)
             puts " #{file ? "+" : "-"} #{resolved}"
           end
