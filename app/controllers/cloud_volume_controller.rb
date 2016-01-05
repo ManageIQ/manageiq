@@ -14,7 +14,6 @@ class CloudVolumeController < ApplicationController
     params[:display] = @display if %w(vms instances images).include?(@display)
     params[:page] = @current_page unless @current_page.nil? # Save current page for list refresh
     return tag("CloudVolume") if params[:pressed] == 'cloud_volume_tag'
-    render_button_partial(pfx)
   end
 
   def show
@@ -47,23 +46,6 @@ class CloudVolumeController < ApplicationController
   end
 
   private
-
-  def render_button_partial(pfx)
-    if @flash_array && params[:pressed] == "#{@table_name}_delete" && @single_delete
-      render :update do |page|
-        page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]
-      end
-    elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
-                                                   "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
-      render_or_redirect_partial(pfx)
-    else
-      if @refresh_div == "main_div" && @lastaction == "show_list"
-        replace_gtl_main_div
-      else
-        render_flash
-      end
-    end
-  end
 
   def get_session_data
     @title      = "Cloud Volume"
