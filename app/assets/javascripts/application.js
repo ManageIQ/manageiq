@@ -45,7 +45,6 @@
 //= require controllers/container_dashboard/util/dashboard-utils-factory
 //= require controllers/container_dashboard/util/charts-mixin
 //= require controllers/container_dashboard/container_dashboard_controller
-//= require controllers/ems_common/single_provider_dashboard_controller
 //= require controllers/container_dashboard/card/card-module
 //= require controllers/container_dashboard/card/heatmaps/heatmaps-card-directive
 //= require controllers/container_topology/container_topology_controller

@@ -68,7 +68,7 @@ angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.
           id = '';
         }
         else {
-          id = '/'+ (/container_dashboard\/show\/(\d+)/.exec($location.absUrl())[1]);
+          id = '/'+ (/ems_container\/show\/(\d+)/.exec($location.absUrl())[1]);
         }
 
         var url = '/container_dashboard/data'+id;
@@ -80,15 +80,24 @@ angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.
           // Obj-status (entity count row)
           var providers = data.providers;
           if (providers) {
-            $scope.objectStatus.providers.count = 0;
-            $scope.objectStatus.providers.notifications = [];
-            providers.forEach(function (item) {
-              $scope.objectStatus.providers.count += item.count;
-              $scope.objectStatus.providers.notifications.push({
-                iconClass: item.iconClass,
-                count: item.count
-              })
-            });
+            if (id) {
+              $scope.providerTypeIconClass = data.providers[0].iconClass;
+
+              if ($scope.providerTypeIconClass == "pficon pficon-atomic") {
+                $scope.isAtomic=true;
+                $scope.providerTypeIconClass = 'pficon pficon-atomic-large'
+              }
+            } else {
+              $scope.objectStatus.providers.count = 0;
+              $scope.objectStatus.providers.notifications = [];
+              providers.forEach(function (item) {
+                $scope.objectStatus.providers.count += item.count;
+                $scope.objectStatus.providers.notifications.push({
+                  iconClass: item.iconClass,
+                  count: item.count
+                })
+              });
+            }
 
             if ($scope.objectStatus.providers.count > 0) {
               $scope.objectStatus.providers.href = data.providers_link
