@@ -466,7 +466,7 @@ module ManageIQ::Providers::Kubernetes
       attributes.to_h.each do |key, value|
         custom_attr = {
           :section => section,
-          :name    => key,
+          :name    => key.to_s,
           :value   => value,
           :source  => "kubernetes"
         }
