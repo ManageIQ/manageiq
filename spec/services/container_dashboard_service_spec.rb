@@ -108,6 +108,24 @@ describe ContainerDashboardService do
         }
       )
     end
+
+    it "returns hash with nil values when no metrics available" do
+      ems_openshift = FactoryGirl.create(:ems_openshift, :zone => @zone)
+      node_utilization_all_providers = described_class.new(nil, controller).ems_utilization
+      node_utilization_single_provider = described_class.new(ems_openshift.id, controller).ems_utilization
+      expect(node_utilization_all_providers).to eq(:cpu => nil, :mem => nil)
+      expect(node_utilization_single_provider).to eq(:cpu => nil, :mem => nil)
+    end
+  end
+
+  context "heatmaps" do
+    it "returns hash with nil values when no metrics available" do
+      ems_openshift = FactoryGirl.create(:ems_openshift, :zone => @zone)
+      heatmaps_all_providers = described_class.new(nil, controller).heatmaps
+      heatmaps_single_provider = described_class.new(ems_openshift.id, controller).heatmaps
+      expect(heatmaps_all_providers).to eq(:nodeCpuUsage => nil, :nodeMemoryUsage => nil)
+      expect(heatmaps_single_provider).to eq(:nodeCpuUsage => nil, :nodeMemoryUsage => nil)
+    end
   end
 
   context "network trends" do
@@ -197,6 +215,20 @@ describe ContainerDashboardService do
         :xData => ["date", current_date.beginning_of_hour.utc],
         :yData => ["used", 2500]
       )
+    end
+
+    it "returns hash with nil values when no metrics available" do
+      ems_openshift = FactoryGirl.create(:ems_openshift, :zone => @zone)
+      hourly_network_trends = described_class.new(nil, controller).hourly_network_metrics
+      hourly_network_trends_single_provider = described_class.new(ems_openshift.id, controller).hourly_network_metrics
+
+      daily_network_trends = described_class.new(nil, controller).daily_network_metrics
+      daily_network_trends_single_provider = described_class.new(ems_openshift.id, controller).daily_network_metrics
+
+      expect(hourly_network_trends).to eq(nil)
+      expect(hourly_network_trends_single_provider).to eq(nil)
+      expect(daily_network_trends).to eq(nil)
+      expect(daily_network_trends_single_provider).to eq(nil)
     end
   end
 end
