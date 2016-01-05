@@ -22,7 +22,6 @@ describe VmCloudController do
           actual_method = [:s1, :s2].include?(method) ? actual_action : method.to_s
 
           it "calls the appropriate method: '#{actual_method}' for action '#{actual_action}'" do
-            allow(controller).to receive(:x_button_response)
             expect(controller).to receive(actual_method)
             get :x_button, :id => nil, :pressed => actual_action
           end
