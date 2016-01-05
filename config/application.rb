@@ -85,14 +85,15 @@ module Vmdb
     config.eager_load_paths = []
 
     # This must be done outside of initialization blocks
-    #   as Vmdb::Logging is needed very early
+    #   as the Vmdb::Logging constant is needed very early
     require 'vmdb/logging'
 
-    initializer :initialize_vmdb_logger, :before => :initialize_logger do
-      Vmdb::Loggers.init
-      config.logger = Vmdb.rails_logger
-      config.colorize_logging = false
-    end
+    # This must be done outside of initialization blocks
+    #   as rake tasks that do not use the environment still need to log
+    require 'vmdb/loggers'
+    Vmdb::Loggers.init
+    config.logger = Vmdb.rails_logger
+    config.colorize_logging = false
 
     config.before_initialize do
       require_relative 'environments/patches/database_configuration'

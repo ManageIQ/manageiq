@@ -1,3 +1,5 @@
+require 'vmdb/loggers'
+
 module Vmdb
   class LogProxy < Struct.new(:klass, :separator)
     class NullLogger < Logger
