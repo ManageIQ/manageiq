@@ -464,8 +464,6 @@ class MiqWorker::Runner
   end
 
   def set_process_title
-    return unless Process.respond_to?(:setproctitle)
-
     type   = @worker.type.sub(/^ManageIQ::Providers::/, "")
     title  = "#{type} id: #{@worker.id}"
     title << ", queue: #{@worker.queue_name}" if @worker.queue_name
