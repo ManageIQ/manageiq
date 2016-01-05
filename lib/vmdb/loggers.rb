@@ -7,6 +7,10 @@ module Vmdb
     $log
   end
 
+  def self.null_logger
+    @null_logger ||= Loggers::NullLogger.new
+  end
+
   def self.rails_logger
     $rails_log
   end
@@ -39,7 +43,7 @@ module Vmdb
       if ENV.key?("CI")
         $log = $rails_log = $audit_log = $fog_log = $policy_log = $vim_log =
           $rhevm_log = $aws_log = $kube_log = $scvmm_log = $api_log =
-          $miq_ae_logger = LogProxy.null_logger
+          $miq_ae_logger = Vmdb.null_logger
       else
         path_dir = Rails.root.join("log")
 
@@ -68,7 +72,7 @@ module Vmdb
     private_class_method :configure_external_loggers
 
     def self.apply_config_value(config, logger, key, mirror_key = nil)
-      return if logger == LogProxy.null_logger
+      return if logger == Vmdb.null_logger
       apply_config_value_logged(config, logger, :level, key)
       apply_config_value_logged(config, logger, :mirror_level, mirror_key) if mirror_key
     end
