@@ -169,4 +169,12 @@ describe ToolbarHelper do
       expect(subject).to have_selector('li a i.fa.fa-th')
     end
   end
+
+  describe "#data_hash_keys" do
+    it "returns hash without elements with nil value" do
+      output_hash = data_hash_keys(:pressed => nil, :explorer => true)
+      expect(output_hash[:explorer]).to be_truthy
+      expect(output_hash).not_to have_key(:pressed)
+    end
+  end
 end
