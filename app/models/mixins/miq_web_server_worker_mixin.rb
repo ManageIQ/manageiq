@@ -145,6 +145,9 @@ module MiqWebServerWorkerMixin
     end
 
     def rails_server_options
+      # See Rack::Server options which is what Rails::Server uses:
+      # https://github.com/rack/rack/blob/1.6.4/lib/rack/server.rb#L152-L183
+
       params = {
         :Host        => self.class.binding_address,
         :environment => Rails.env.to_s,
@@ -154,40 +157,6 @@ module MiqWebServerWorkerMixin
       params[:Port] = port.kind_of?(Numeric) ? port : 3000
       params[:pid]  = self.class.pid_file(params[:Port]).to_s
 
-      # Rack::Server options:
-
-      # Options may include:
-      # * :app
-      #     a rack application to run (overrides :config)
-      # * :config
-      #     a rackup configuration file path to load (.ru)
-      # * :environment
-      #     this selects the middleware that will be wrapped around
-      #     your application. Default options available are:
-      #       - development: CommonLogger, ShowExceptions, and Lint
-      #       - deployment: CommonLogger
-      #       - none: no extra middleware
-      #     note: when the server is a cgi server, CommonLogger is not included.
-      # * :server
-      #     choose a specific Rack::Handler, e.g. cgi, fcgi, webrick
-      # * :daemonize
-      #     if true, the server will daemonize itself (fork, detach, etc)
-      # * :pid
-      #     path to write a pid file after daemonize
-      # * :Host
-      #     the host address to bind to (used by supporting Rack::Handler)
-      # * :Port
-      #     the port to bind to (used by supporting Rack::Handler)
-      # * :AccessLog
-      #     webrick access log options (or supporting Rack::Handler)
-      # * :debug
-      #     turn on debug output ($DEBUG = true)
-      # * :warn
-      #     turn on warnings ($-w = true)
-      # * :include
-      #     add given paths to $LOAD_PATH
-      # * :require
-      #     require the given libraries
       params
     end
 
