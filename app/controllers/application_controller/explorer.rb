@@ -127,16 +127,13 @@ module ApplicationController::Explorer
     return if performed?
     # no need to render anything, method will render flash message when async task is completed
 
-    x_button_response(model, action)
-  end
-
-  def x_button_response(model, action)
     if @refresh_partial == "layouts/flash_msg"
       render :update do |page|
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     elsif @refresh_partial
-      replace_right_cell unless action == 'download_pdf' # no need to render anything when download_pdf button is pressed on summary screen
+      # no need to render anything when download_pdf button is pressed on summary screen
+      replace_right_cell unless action == 'download_pdf'
     else
       add_flash(_("Button not yet implemented") + " #{model}:#{action}", :error) unless @flash_array
       render :update do |page|
