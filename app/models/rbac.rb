@@ -62,6 +62,7 @@ module Rbac
     'MiqAeNamespace'         => :ancestor_ids,
     'MiqRequest'             => nil, # tenant only
     'MiqRequestTask'         => nil, # tenant only
+    'MiqTemplate'            => :ancestor_ids,
     'Provider'               => :ancestor_ids,
     'ServiceTemplateCatalog' => :ancestor_ids,
     'ServiceTemplate'        => :ancestor_ids,
@@ -275,11 +276,9 @@ module Rbac
   end
 
   def self.find_options_for_tenant(klass, user_or_group, find_options = {})
-    tenant_ids = klass.accessible_tenant_ids(user_or_group, accessible_tenant_ids_strategy(klass))
-    return find_options if tenant_ids.empty?
+    tenant_id_clause = klass.tenant_id_clause(user_or_group)
 
-    tenant_id_clause = {klass.table_name => {:tenant_id => tenant_ids}}
-    find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], tenant_id_clause)
+    find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], tenant_id_clause) if tenant_id_clause
     find_options
   end
 
