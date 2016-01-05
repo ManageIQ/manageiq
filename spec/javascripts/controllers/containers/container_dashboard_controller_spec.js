@@ -30,15 +30,15 @@ describe('containerDashboardController gets data and', function() {
     });
 
     it('in heatmaps and donut', function() {
-      expect($scope.nodeMemoryUsage.data).not.toEqual(undefined);
-      expect($scope.nodeCpuUsage.data).not.toEqual(undefined);
-      expect($scope.cpuUsageData).not.toEqual(undefined);
-      expect($scope.memoryUsageData).not.toEqual(undefined);
+      expect($scope.nodeMemoryUsage.data).toBeDefined();
+      expect($scope.nodeCpuUsage.data).toBeDefined();
+      expect($scope.cpuUsageData).toBeDefined();
+      expect($scope.memoryUsageData).toBeDefined();
     });
 
     it('in network metrics', function() {
-      expect($scope.dailyNetworkUtilization).not.toEqual(undefined);
-      expect($scope.hourlyNetworkUtilization).not.toEqual(undefined);
+      expect($scope.dailyNetworkUtilization).toBeDefined();
+      expect($scope.hourlyNetworkUtilization).toBeDefined();
     });
   });
 });
@@ -75,15 +75,15 @@ describe('containerDashboardController gets no data and', function() {
     });
 
     it('in heatmaps and donut', function() {
-      expect($scope.nodeMemoryUsage.data).not.toEqual(undefined);
-      expect($scope.nodeCpuUsage.data).not.toEqual(undefined);
-      expect($scope.cpuUsageData).not.toEqual(undefined);
-      expect($scope.memoryUsageData).not.toEqual(undefined);
+      expect($scope.nodeMemoryUsage.data).toBeDefined();
+      expect($scope.nodeCpuUsage.data).toBeDefined();
+      expect($scope.cpuUsageData).toBeDefined();
+      expect($scope.memoryUsageData).toBeDefined();
     });
 
     it('in network metrics', function() {
-      expect($scope.dailyNetworkUtilization).not.toEqual(undefined);
-      expect($scope.hourlyNetworkUtilization).not.toEqual(undefined);
+      expect($scope.dailyNetworkUtilization).toBeDefined();
+      expect($scope.hourlyNetworkUtilization).toBeDefined();
     });
   });
 });
