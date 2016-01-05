@@ -213,6 +213,10 @@ class Tenant < ActiveRecord::Base
     ae_domains.where(:system => false).order('priority DESC')
   end
 
+  def any_editable_domains?
+    ae_domains.where(:system => false).count > 0
+  end
+
   # The default tenant is the tenant to be used when
   # the url does not map to a known domain or subdomain
   #
