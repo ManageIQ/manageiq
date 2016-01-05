@@ -93,7 +93,7 @@ class ContainerController < ApplicationController
   def explorer
     @explorer   = true
     @lastaction = "explorer"
-
+    @timeline = @timeline_filter = true    # need to set these to load timelines on container show screen
 
     # if AJAX request, replace right cell, and return
     if request.xml_http_request?
