@@ -4,6 +4,7 @@ class CloudVolume < ApplicationRecord
   include NewWithTypeStiMixin
   include ReportableMixin
   include ProviderObjectMixin
+  include AsyncDeleteMixin
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::CloudManager"
   belongs_to :availability_zone
@@ -11,6 +12,10 @@ class CloudVolume < ApplicationRecord
   belongs_to :base_snapshot, :class_name => 'CloudVolumeSnapshot', :foreign_key => :cloud_volume_snapshot_id
   has_many   :cloud_volume_snapshots
   has_many   :attachments, :class_name => 'Disk', :as => :backing
+
+  def vms
+    attachments.map { |disk| disk.hardware.vm }
+  end
 
   acts_as_miq_taggable
 
