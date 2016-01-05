@@ -494,6 +494,10 @@ class MiqWorker < ActiveRecord::Base
     end
   end
 
+  def worker_options
+    {:guid => guid}
+  end
+
   protected
 
   def self.normalized_type
@@ -516,9 +520,5 @@ class MiqWorker < ActiveRecord::Base
   # TODO: Rename this!!!
   def self.build_command_line(*params)
     params.first || {}
-  end
-
-  def worker_options
-    {:guid => guid}
   end
 end

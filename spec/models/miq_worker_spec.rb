@@ -253,6 +253,10 @@ describe MiqWorker do
       @worker = FactoryGirl.create(:miq_worker)
     end
 
+    it "#worker_options" do
+      expect(@worker.worker_options).to eq(:guid => @worker.guid)
+    end
+
     it "is_current? false when starting" do
       @worker.update_attribute(:status, described_class::STATUS_STARTING)
       expect(@worker.is_current?).not_to be_truthy

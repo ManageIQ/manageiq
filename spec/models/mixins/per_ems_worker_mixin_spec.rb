@@ -17,8 +17,8 @@ describe PerEmsWorkerMixin do
     expect(@worker_class.queue_name_for_ems(@ems)).to eq(@ems_queue_name)
   end
 
-  it ".worker_options" do
-    expect(@worker_record.send(:worker_options)).to eq(:guid => @worker_record.guid, :ems_id => @ems.id)
+  it "#worker_options" do
+    expect(@worker_record.worker_options).to eq(:guid => @worker_record.guid, :ems_id => @ems.id)
   end
 
   context ".start_worker_for_ems" do
