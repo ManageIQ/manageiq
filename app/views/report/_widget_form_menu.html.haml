@@ -17,7 +17,7 @@
     - @edit[:new][:shortcuts].each do |s_id, s_desc|
       -# :shortcuts is a hash of s.id => s.miq_widget_shortcut.description
       %div{:id => "s_#{s_id}", :title => _("Drag this Shortcut to a new location")}
-        .panel.panel-default#test
+        .panel.panel-default
           .panel-header
             %h3.panel-title{:style => @edit ? "cursor: move;" : ""}
               %a{:class => "#{@widget.content_type}box"}
