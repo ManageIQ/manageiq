@@ -137,56 +137,52 @@ describe Rbac do
       end
 
       context "tenant access strategy VMs and Templates" do
-        before do
-          @owned_template = FactoryGirl.create(:template_vmware, :tenant => @owner_tenant)
-          @child_tenant = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
-          @child_group  = FactoryGirl.create(:miq_group, :tenant => @child_tenant)
-        end
+        let(:owned_template) { FactoryGirl.create(:template_vmware, :tenant => owner_tenant) }
+        let(:child_tenant)   { FactoryGirl.create(:tenant, :divisible => false, :parent => owner_tenant) }
+        let(:child_group)    { FactoryGirl.create(:miq_group, :tenant => child_tenant) }
 
         context "searching MiqTemplate" do
           it "can't see descendant tenant's templates" do
-            @owned_template.update_attributes(:tenant_id => @child_tenant.id, :miq_group_id => @child_group.id)
-            results, = Rbac.search(:class => "MiqTemplate", :results_format => :objects, :miq_group_id => @owner_group.id)
+            owned_template.update_attributes!(:tenant_id => child_tenant.id, :miq_group_id => child_group.id)
+            results, = Rbac.search(:class => "MiqTemplate", :results_format => :objects, :miq_group_id => owner_group.id)
             expect(results).to eq []
           end
 
           it "can see ancestor tenant's templates" do
-            @owned_template.update_attributes(:tenant_id => @owner_tenant.id, :miq_group_id => @owner_tenant.id)
-            results, = Rbac.search(:class => "MiqTemplate", :results_format => :objects, :miq_group_id => @child_group.id)
-            expect(results).to eq [@owned_template]
+            owned_template.update_attributes!(:tenant_id => owner_tenant.id, :miq_group_id => owner_tenant.id)
+            results, = Rbac.search(:class => "MiqTemplate", :results_format => :objects, :miq_group_id => child_group.id)
+            expect(results).to eq [owned_template]
           end
         end
 
         context "searching VmOrTemplate" do
-          before do
-            @child_child_tenant = FactoryGirl.create(:tenant, :divisible => false, :parent => @child_tenant)
-            @child_child_group  = FactoryGirl.create(:miq_group, :tenant => @child_child_tenant)
-          end
+          let(:child_child_tenant) { FactoryGirl.create(:tenant, :divisible => false, :parent => child_tenant) }
+          let(:child_child_group)  { FactoryGirl.create(:miq_group, :tenant => child_child_tenant) }
 
           it "can't see descendant tenant's templates but can see descendant tenant's VMs" do
-            @owned_template.update_attributes(:tenant_id => @child_child_tenant.id, :miq_group_id => @child_child_group.id)
-            @owned_vm.update_attributes(:tenant_id => @child_child_tenant.id, :miq_group_id => @child_child_group.id)
-            results, = Rbac.search(:class => "VmOrTemplate", :results_format => :objects, :miq_group_id => @child_group.id)
-            expect(results).to eq [@owned_vm]
+            owned_template.update_attributes!(:tenant_id => child_child_tenant.id, :miq_group_id => child_child_group.id)
+            owned_vm.update_attributes(:tenant_id => child_child_tenant.id, :miq_group_id => child_child_group.id)
+            results, = Rbac.search(:class => "VmOrTemplate", :results_format => :objects, :miq_group_id => child_group.id)
+            expect(results).to eq [owned_vm]
           end
 
           it "can see ancestor tenant's templates but can't see ancestor tenant's VMs" do
-            @owned_template.update_attributes(:tenant_id => @owner_tenant.id, :miq_group_id => @owner_group.id)
-            results, = Rbac.search(:class => "VmOrTemplate", :results_format => :objects, :miq_group_id => @child_group.id)
-            expect(results).to eq [@owned_template]
+            owned_template.update_attributes!(:tenant_id => owner_tenant.id, :miq_group_id => owner_group.id)
+            results, = Rbac.search(:class => "VmOrTemplate", :results_format => :objects, :miq_group_id => child_group.id)
+            expect(results).to eq [owned_template]
           end
 
           it "can see ancestor tenant's templates and descendant tenant's VMs" do
-            @owned_template.update_attributes(:tenant_id => @owner_tenant.id, :miq_group_id => @owner_group.id)
-            @owned_vm.update_attributes(:tenant_id => @child_child_tenant.id, :miq_group_id => @child_child_group.id)
-            results, = Rbac.search(:class => "VmOrTemplate", :results_format => :objects, :miq_group_id => @child_group.id)
-            expect(results).to eq [@owned_template, @owned_vm]
+            owned_template.update_attributes!(:tenant_id => owner_tenant.id, :miq_group_id => owner_group.id)
+            owned_vm.update_attributes(:tenant_id => child_child_tenant.id, :miq_group_id => child_child_group.id)
+            results, = Rbac.search(:class => "VmOrTemplate", :results_format => :objects, :miq_group_id => child_group.id)
+            expect(results).to eq [owned_template, owned_vm]
           end
 
           it "can't see descendant tenant's templates nor ancestor tenant's VMs" do
-            @owned_template.update_attributes(:tenant_id => @child_child_tenant.id, :miq_group_id => @child_child_group.id)
-            @owned_vm.update_attributes(:tenant_id => @owner_tenant.id, :miq_group_id => @owner_group.id)
-            results, = Rbac.search(:class => "VmOrTemplate", :results_format => :objects, :miq_group_id => @child_group.id)
+            owned_template.update_attributes!(:tenant_id => child_child_tenant.id, :miq_group_id => child_child_group.id)
+            owned_vm.update_attributes(:tenant_id => owner_tenant.id, :miq_group_id => owner_group.id)
+            results, = Rbac.search(:class => "VmOrTemplate", :results_format => :objects, :miq_group_id => child_group.id)
             expect(results).to eq []
           end
         end
