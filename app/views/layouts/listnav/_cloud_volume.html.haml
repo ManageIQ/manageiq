@@ -14,12 +14,17 @@
           %li
             = link_to("#{ui_lookup(:table => "ext_management_system")}: #{@record.ext_management_system.name}",
               ems_cloud_path(@record.ext_management_system.id),
-              :title => _("Show this #{ui_lookup(:table => 'cloud_object_store')}'s parent %s") % ui_lookup(:table => "ems_cloud"))
+              :title => _("Show this Cloud Volume's parent %{parent}") % {:parent => ui_lookup(:table => "ems_cloud")})
+        - if role_allows(:feature => "availability_zone_show") && @record.availability_zone
+          %li
+            = link_to("#{ui_lookup(:table => "availability_zone")}: #{@record.availability_zone.name}",
+              {:action => 'show', :id => @record.availability_zone.id, :controller => 'availability_zone'},
+              :title => _("Show this Cloud Volume's parent %{parent}") % {:parent => ui_lookup(:table => "availability_zone")})
         - if role_allows(:feature => "cloud_tenant_show") && @record.cloud_tenant
           %li
             = link_to("#{ui_lookup(:table => "cloud_tenant")}: #{@record.cloud_tenant.name}",
               {:action => 'show', :id => @record.cloud_tenant.id, :controller => 'cloud_tenant'},
-              :title => _("Show this Cloud Volumes's parent %s") % ui_lookup(:table => "cloud_tenant"))
+              :title => _("Show this Cloud Volume's parent %{parent}") % {:parent => ui_lookup(:table => "cloud_tenant")})
         - if role_allows(:feature => "cloud_volume_snapshot_show") && @record.base_snapshot
           %li
             = link_to("#{ui_lookup(:table => "base_snapshot")}: #{@record.base_snapshot.name}",

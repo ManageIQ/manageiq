@@ -19,4 +19,58 @@ class ApplicationHelper::Toolbar::CloudVolumesCenter < ApplicationHelper::Toolba
       ]
     ),
   ])
+  button_group('cloud_volume_vmdb', [
+    select(
+      :cloud_volume_vmdb_choice,
+      'fa fa-cog fa-lg',
+      t = N_('Configuration'),
+      t,
+      :items => [
+        button(
+          :cloud_volume_new,
+          'pficon pficon-add-circle-o fa-lg',
+          t = N_('Add a new Cloud Volume'),
+          t,
+        ),
+        separator,
+        button(
+          :cloud_volume_attach,
+          'pficon pficon-volume fa-lg',
+          t = N_('Attach selected Cloud Volume to an Instance'),
+          t,
+          :url_parms => 'main_div',
+          :enabled   => 'false',
+          :onwhen    => '1'
+        ),
+        button(
+          :cloud_volume_detach,
+          'pficon pficon-volume fa-lg',
+          t = N_('Detach selected Cloud Volume from an Instance'),
+          t,
+          :url_parms => 'main_div',
+          :enabled   => 'false',
+          :onwhen    => '1'
+        ),
+        button(
+          :cloud_volume_edit,
+          'pficon pficon-edit fa-lg',
+          t = N_('Edit selected Cloud Volume'),
+          t,
+          :url_parms => 'main_div',
+          :enabled   => 'false',
+          :onwhen    => '1'
+        ),
+        button(
+          :cloud_volume_delete,
+          'pficon pficon-delete fa-lg',
+          t = N_('Delete selected Cloud Volumes'),
+          t,
+          :url_parms => '&refresh=y',
+          :confirm   => 'Warning: The selected Cloud Volume and ALL of their components will be removed. Are you sure you want to remove these Cloud Volumes?',
+          :enabled   => 'false',
+          :onwhen    => '1+'
+        ),
+      ]
+    )
+  ])
 end

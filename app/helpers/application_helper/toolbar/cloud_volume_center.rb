@@ -14,4 +14,43 @@ class ApplicationHelper::Toolbar::CloudVolumeCenter < ApplicationHelper::Toolbar
       ]
     ),
   ])
+  button_group('cloud_volume_vmdb', [
+    select(
+      :cloud_volume_vmdb_choice,
+      'fa fa-cog fa-lg',
+      t = N_('Configuration'),
+      t,
+      :items => [
+        button(
+          :cloud_volume_attach,
+          'pficon pficon-volume fa-lg',
+          t = N_('Attach this Cloud Volume to an Instance'),
+          t,
+          :url_parms => 'main_div',
+        ),
+        button(
+          :cloud_volume_detach,
+          'pficon pficon-volume fa-lg',
+          t = N_('Detach this Cloud Volume from an Instance'),
+          t,
+          :url_parms => 'main_div',
+        ),
+        button(
+          :cloud_volume_edit,
+          'pficon pficon-edit fa-lg',
+          t = N_('Edit this Cloud Volume'),
+          t,
+          :url_parms => 'main_div'
+        ),
+        button(
+          :cloud_volume_delete,
+          'pficon pficon-delete fa-lg',
+          t = N_('Delete this Cloud Volume'),
+          t,
+          :url_parms => '&refresh=y',
+          :confirm   => 'Warning: This Cloud Volume and ALL of its components will be removed. Are you sure you want to remove this Cloud Volume?'
+        ),
+      ]
+    )
+  ])
 end
