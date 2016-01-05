@@ -1,5 +1,5 @@
 = render :partial => "layouts/flash_msg"
-= form_tag('/ems_infra/scaling')
+= form_tag('/ems_infra/scaling', :method => :post)
 = hidden_field_tag('id', @infra.id)
 - unless @stack.nil?
   .form-horizontal

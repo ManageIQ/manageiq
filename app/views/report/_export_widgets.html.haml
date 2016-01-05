@@ -34,7 +34,9 @@
         = _('Available Widgets:')
       .col-md-8
         .export-choices
-          = form_tag({:action => "export_widgets"}, :id => "export-widgets-form", :method => :get) do
+          = form_tag({:action => "export_widgets"},
+                     {:id => "export-widgets-form",
+                      :method => :get}) do
             = select_tag("widgets[]",
               options_for_select(@widget_exports),
               :class    => "widget-export",

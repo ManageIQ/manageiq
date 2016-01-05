@@ -23,7 +23,8 @@
 
   %hr
   %h3= _('Export')
-  = form_tag({:action => "export_service_dialogs"}, :method => :get) do
+  = form_tag({:action => "export_service_dialogs"},
+             {:method => :get}) do
     = select_tag("service_dialogs[]",
       options_for_select(@dialog_exports),
       :class    => "service-dialog-export",

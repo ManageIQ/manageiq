@@ -23,7 +23,8 @@
   %hr
   %h3
     = _('Export')
-  = form_tag({:action => "export_datastore"}, :method => :get) do
+  = form_tag({:action => "export_datastore"},
+             {:method => :get}) do
     = image_submit_tag("/images/toolbars/export.png",
                        :alt   => t = _("Export all classes and instances"),
                        :title => t)

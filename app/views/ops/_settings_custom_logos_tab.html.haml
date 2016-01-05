@@ -44,8 +44,10 @@
     %br/
   - else
     = render :partial => 'layouts/info_msg', :locals => {:message => "No custom login image has been uploaded yet."}
-  = form_tag({:action    => "upload_login_logo"}, :class => "form-horizontal",
-    :multipart => true) do
+  = form_tag({:action    => "upload_login_logo"},
+             {:class     => "form-horizontal",
+              :multipart => true,
+              :method    => :post}) do
     .form-group
       .col-md-4
         = file_field("login", "logo",

@@ -89,7 +89,8 @@
         .form-group
           = form_tag({:action    => "st_upload_image",
                       :id        => @record.id},
-                      :multipart => true) do
+                     {:multipart => true,
+                      :method    => :post}) do
             .col-md-4
               = file_field("upload", "image", :class => "filestyle", "data-buttonName" => "btn-default")
               :javascript
