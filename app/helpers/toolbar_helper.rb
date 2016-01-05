@@ -192,7 +192,7 @@ module ToolbarHelper
   #
   def data_hash_keys(props)
     %i(pressed popup window_url prompt explorer onwhen url_parms url).each_with_object({}) do |key, h|
-      h[key] = props[key] if props.key?(key)
+      h[key] = props[key] if props[key].present?
     end
   end
 
