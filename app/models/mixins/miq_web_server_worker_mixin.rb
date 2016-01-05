@@ -20,6 +20,8 @@ module MiqWebServerWorkerMixin
 
       # Make these constants globally available
       ::UiConstants
+
+      Vmdb::Application.config.secret_token = MiqDatabase.first.session_secret_token
     end
 
     def self.rails_server

@@ -26,9 +26,6 @@ module Vmdb
         MiqServer.my_server.starting_server_record
         MiqServer.my_server.update_attributes(:status => "started")
       end
-
-      MiqDatabase.seed
-      Vmdb::Application.config.secret_token = MiqDatabase.first.session_secret_token
     end
   end
 end
