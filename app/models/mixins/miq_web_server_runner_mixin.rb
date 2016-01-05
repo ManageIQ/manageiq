@@ -17,17 +17,17 @@ module MiqWebServerRunnerMixin
 
   module ClassMethods
     def start_worker(*args)
-      worker = self.new(*args)
-      _log.info("URI: #{worker.worker.uri}")
+      runner = self.new(*args)
+      _log.info("URI: #{runner.worker.uri}")
 
       # Do all the SQL worker preparation in the main thread
-      worker.prepare
+      runner.prepare
 
       # TODO: Need to rename build_command_line to options_hash or something
       options = corresponding_model.build_command_line(:Port => args.first[:Port])
 
       # The heartbeating will be done in a separate thread
-      Thread.new { worker.run }
+      Thread.new { runner.run }
 
       start_rails_server(options)
     end
