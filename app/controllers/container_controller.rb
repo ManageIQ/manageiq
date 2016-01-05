@@ -284,7 +284,7 @@ class ContainerController < ApplicationController
         partial = "layouts/x_gtl"
       end
       presenter[:parent_id]    = @record.id           # Set parent rec id for JS function miqGridSort to build URL
-      presenter[:parent_class] = request[:controller] # Set parent class for URL also
+      presenter[:parent_class] = params[:controller] # Set parent class for URL also
       presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])
     elsif record_showing
       presenter.update(:main_div, r[:partial => "container/container_show", :locals => {:controller => "container"}])
