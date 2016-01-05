@@ -914,9 +914,20 @@ class MiqExpression
     [merge_where_clauses(*where_clauses), merge_includes(*includes)]
   end
 
+  def self.expand_conditional_clause(klass, cond)
+    return klass.send(:sanitize_sql_for_conditions, cond) unless cond.is_a?(Hash)
+
+    cond = klass.predicate_builder.resolve_column_aliases(cond)
+    cond = klass.send(:expand_hash_conditions_for_aggregates, cond)
+
+    klass.predicate_builder.build_from_hash(cond).map { |b|
+      klass.connection.visitor.compile b
+    }.join(' AND ')
+  end
+
   def self.merge_where_clauses(*list)
     list = list.compact.collect do |s|
-      s = ActiveSupport::Deprecation.silence { MiqReport.send(:sanitize_sql_for_conditions, s) }
+      expand_conditional_clause(MiqReport, s)
     end.compact
 
     if list.size == 0
