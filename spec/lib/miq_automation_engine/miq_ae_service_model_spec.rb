@@ -94,4 +94,12 @@ module MiqAeServiceModelSpec
       end
     end
   end
+
+  describe MiqAeMethodService::MiqAeServiceVmOrTemplate do
+    it '#where' do
+      vm = FactoryGirl.create(:vm_vmware, :name => 'fred')
+      svc_vm = MiqAeMethodService::MiqAeServiceVmOrTemplate.where(:name => 'fred').first
+      expect(svc_vm.id).to eq(vm.id)
+    end
+  end
 end

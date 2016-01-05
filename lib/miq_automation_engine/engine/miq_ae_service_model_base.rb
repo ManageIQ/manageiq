@@ -29,7 +29,7 @@ module MiqAeMethodService
 
     # Expose the ActiveRecord find, all, count, and first
     def self.class_method_exposed?(m)
-      m.to_s.starts_with?('find_') || [:find, :all, :count, :first].include?(m)
+      m.to_s.starts_with?('find_') || [:where, :find, :all, :count, :first].include?(m)
     end
     private_class_method :class_method_exposed?
 
