@@ -516,9 +516,4 @@ class MiqWorker < ActiveRecord::Base
     delta = worker_settings[:nice_delta]
     delta.kind_of?(Integer) ? delta.to_s : "+10"
   end
-
-  # TODO: Rename this!!!
-  def self.build_command_line(*params)
-    params.first || {}
-  end
 end
