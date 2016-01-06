@@ -874,13 +874,7 @@ module ApplicationController::Performance
     )
     options.merge!(:width => 1000, :height => 700) if idx.nil?
 
-    if chart[:trends] && rpt.extras && rpt.extras[:trend]
-      trendcol = perf_get_chart_trendcol(chart)
-      options[:trendtip] = chart[:trends].collect do|t|
-        t.split(":").last + ": " +
-        rpt.extras[:trend][trendcol + "|" + t.split(":").first]
-      end.join("\r") unless trendcol.nil?
-    end
+    process_chart_trends(chart, rpt, options)
 
     @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
     @charts.push(chart)
