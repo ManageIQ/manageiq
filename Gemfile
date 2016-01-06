@@ -56,7 +56,7 @@ gem "novnc-rails",                    "~>0.2"
 gem "outfielding-jqplot-rails",       "= 1.0.8"
 gem "puma",                           "~>2.13"
 gem "responders",                     "~>2.0"
-gem "secure_headers"
+gem "secure_headers",                 "~>2.4.4"
 gem "spice-html5-rails"
 gem "thin",                           "~>1.6.0"  # Used by rails server through rack
 
