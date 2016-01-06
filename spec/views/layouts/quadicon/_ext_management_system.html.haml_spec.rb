@@ -1,5 +1,4 @@
 require "spec_helper"
-include ApplicationHelper
 
 describe "rendering quadicons of ext_management_system" do
   before(:each) do
