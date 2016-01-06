@@ -864,65 +864,55 @@ module ApplicationController::Performance
     chart[:title] = rpt.title
   end
 
+  def gen_perf_chart(chart, rpt, cat_desc, idx, options)
+    prepare_perf_chart(chart, rpt, cat_desc)
+
+    options = chart.merge(
+      :zoom_url      => perf_zoom_url("perf_chart_chooser", idx.nil? ? 'clear' : idx.to_s),
+      :link_data_url => "javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
+      :axis_skip     => 3
+    )
+    options.merge!(:width => 1000, :height => 700) if idx.nil?
+
+    if chart[:trends] && rpt.extras && rpt.extras[:trend]
+      trendcol = perf_get_chart_trendcol(chart)
+      options[:trendtip] = chart[:trends].collect do|t|
+        t.split(":").last + ": " +
+        rpt.extras[:trend][trendcol + "|" + t.split(":").first]
+      end.join("\r") unless trendcol.nil?
+    end
+
+    @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
+    @charts.push(chart)
+  end
+
   # Generate performance data by tag - generate charts from report task results
   def perf_gen_tag_data_after_wait
-    miq_task = MiqTask.find(params[:task_id])     # Not first time, read the task record
+    miq_task = MiqTask.find(params[:task_id])       # Not first time, read the task record
     rpt = miq_task.miq_report_result.report_results # Grab the report object from the blob
-    miq_task.destroy                              # Get rid of the task and results
+    miq_task.destroy                                # Get rid of the task and results
 
     @charts = []
     @chart_data = []
     cat_desc = Classification.find_by_name(@perf_options[:cat]).description
-    case @perf_options[:typ]
-    when "Hourly"
-      chart_layout = perf_get_chart_layout("hourly_tag_charts", @perf_options[:model])
-      unless @perf_options[:index]            # Gen all charts if no index present
-        chart_layout.each_with_index do |chart, idx|
-          prepare_perf_chart(chart, rpt, cat_desc)
 
-          options = chart.merge(:zoom_url      => perf_zoom_url("perf_chart_chooser", idx.to_s),
-                                :link_data_url => "javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
-                                :axis_skip     => 3)
-          @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
-          @charts.push(chart)
-        end
-      else                                    # Gen chart based on index
-        chart = chart_layout[@perf_options[:index].to_i]
-        prepare_perf_chart(chart, rpt, cat_desc)
-        options = chart.merge(:zoom_url => perf_zoom_url("perf_chart_chooser", "clear"),
-                              :link_data_url => "javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
-                              :axis_skip => 3,
-                              :width => 1000, :height => 700)
-        @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
-        @charts.push(chart)
-      end
-    when "Daily"
-      chart_layout = perf_get_chart_layout("daily_tag_charts", @perf_options[:model])
-      unless @perf_options[:index]
-        chart_layout.each_with_index do |chart, idx|
-          prepare_perf_chart(chart, rpt, cat_desc)
-          options = chart.merge(:zoom_url      => perf_zoom_url("perf_chart_chooser", idx.to_s),
-                                :link_data_url => "javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
-                                :axis_skip     => 3)
-          process_chart_trends(chart, rpt, options)
-          @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
-          @charts.push(chart)
-        end
-      else
-        chart = chart_layout[@perf_options[:index].to_i]
-        prepare_perf_chart(chart, rpt, cat_desc)
-        options = chart.merge(:zoom_url => perf_zoom_url("perf_chart_chooser", "clear"),
-                              :link_data_url => "javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
-                              :axis_skip => 3,
-                              :width => 1000, :height => 700)
-        process_chart_trends(chart, rpt, options)
-        @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
-        @charts.push(chart)
+    layout_name = case @perf_options[:typ]
+                  when "Hourly" then 'hourly_tag_charts'
+                  when "Daily"  then 'daily_tag_charts'
+                  end
+
+    chart_layout = perf_get_chart_layout(layout_name, @perf_options[:model])
+
+    if @perf_options[:index]
+      chart_index = @perf_options[:index]
+      gen_perf_chart(chart_layout[chart_index], rpt, cat_desc, idx, options)
+    else
+      chart_layout.each_with_index do |chart, idx|
+        gen_perf_chart(chart, rpt, cat_desc, idx, options)
       end
     end
-    @sb[:chart_reports] = rpt           # Hang on to the report data for these charts
-    @charts = @charts
-    @chart_data = @chart_data
+
+    @sb[:chart_reports] = rpt # Hang on to the report data for these charts
     @html = perf_report_to_html
   end
 
