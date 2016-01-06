@@ -95,8 +95,8 @@ describe DuplicateBlocker do
 
   it 'should accept user provided key and description' do
     # redefine the key; every call is considered as duplicate
-    @dedup_handler.key_generator = ->(_meth, *_args){ "same_key" }
-    @dedup_handler.descriptor = ->(_meth, *_args){ "call with redefined user key" }
+    @dedup_handler.key_generator = ->(_meth, *_args) { "same_key" }
+    @dedup_handler.descriptor = ->(_meth, *_args) { "call with redefined user key" }
     assert_safe_calls(:instance, 1, @base_time, short_time, 'arg1', 'arg2')
     assert_safe_calls(:class, 1, @base_time + short_time, short_time, 'arg3')
     assert_safe_calls(:instance, threshold - 2, @base_time + 2 * short_time, short_time)
