@@ -12,8 +12,16 @@ module Vmdb
       ActiveRecord::Base.logger.level == 0 ? disable_console_sql_logging : enable_console_sql_logging
     end
 
+    def colorize_console_sql_logging
+      Vmdb::Application.configure do
+        config.colorize_logging = true
+      end
+    end
+
     # Development helper method for Rails console for simulating queue workers.
     def simulate_queue_worker(break_on_complete = false)
+      enable_console_sql_logging
+      colorize_console_sql_logging
       raise NotImplementedError, "not implemented in production mode" if Rails.env.production?
       loop do
         q = MiqQueue.where(MiqQueue.arel_table[:queue_name].not_eq("miq_server")).order(:id).first
