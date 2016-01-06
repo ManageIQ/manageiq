@@ -174,7 +174,7 @@ describe ContainerTopologyService do
                                                   :name => "service1")
       allow(container_topology_service).to receive(:entities).and_return([[container_node], [container_service]])
 
-      expect(subject[:items]).should be_eql(
+      expect(subject[:items]).to eq(
         "905c90ba-3e00-11e5-a0d2-18037327aaeb" => {:id           => container_node.ems_ref,
                                                    :name         => container_node.name,
                                                    :status       => "Ready",
