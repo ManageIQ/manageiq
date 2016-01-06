@@ -399,7 +399,7 @@ class MiqPolicyController < ApplicationController
            when :conflict then "x"
            end
 
-    "/images/icons/16/#{icon}.png"
+    "/images/16/#{icon}.png"
   end
 
   def miq_policy_import_service

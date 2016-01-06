@@ -10,7 +10,7 @@
             %label.control-label.col-md-2= _("Description")
             .col-md-10
               %p.form-control-static
-                %img{:src => "/images/icons/new/event-#{h(@event.name)}.png"}
+                %img{:src => "/images/100/event-#{h(@event.name)}.png"}
                 = h(@event.description)
         .form-group
           %label.control-label.col-md-2= _("Event Group")
@@ -35,7 +35,7 @@
                 %tr{:title => _("Click to view Policy"),
                   :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=policy")}
                   %td.narrow
-                    %img{:src => "/images/icons/new/miq_policy_#{p.towhat.downcase}#{p.active ? '' : '_inactive'}.png"}
+                    %img{:src => "/images/100/miq_policy_#{p.towhat.downcase}#{p.active ? '' : '_inactive'}.png"}
                   %td
                     = p.description
           %hr
@@ -153,7 +153,7 @@
                   %tr{:title => _("View this Event Action"),
                     :onclick => (x_active_tree == :action_tree) ? t : f}
                     %td.narrow
-                      %img{:src => "/images/icons/new/check.png"}
+                      %img{:src => "/images/100/check.png"}
                     %td
                       = a.description
                     %td
@@ -280,7 +280,7 @@
                   %tr{:title => _("View this Event Action"),
                      :onclick => (x_active_tree == :action_tree) ? t : f}
                     %td.narrow
-                      %img{:src => "/images/icons/new/x.png"}
+                      %img{:src => "/images/100/x.png"}
                     %td
                       = a.description
                     %td

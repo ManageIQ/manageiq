@@ -2,7 +2,7 @@
 
 var renderServiceDialogJson = function(rows_json, importFileUploadId) {
   var statusFormatter = function(row, cell, value, columnDef, dataContext) {
-    var status_img = "<img src=/images/icons/16/" + dataContext.status_icon + ".png >";
+    var status_img = "<img src=/images/16/" + dataContext.status_icon + ".png >";
 
     return status_img + dataContext.status;
   };

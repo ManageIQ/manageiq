@@ -1140,8 +1140,8 @@ class ApplicationController < ActionController::Base
              klass.find(id)    # Read the record from the db
            end
 
-    p  = "/images/icons/"
-    pn = "#{p}new/"
+    p  = "/images/"
+    pn = "#{p}100/"
 
     image = case item
             when ExtManagementSystem   then "#{pn}/vendor-#{item.image_name}.png"

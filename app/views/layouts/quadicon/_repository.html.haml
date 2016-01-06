@@ -1,14 +1,14 @@
 .flobj
-  %img{:src => "/images/icons/#{size}/base-single.png", :border => 0, :width => size, :height => size}
+  %img{:src => "/images/#{size}/base-single.png", :border => 0, :width => size, :height => size}
 
 .flobj{:class => "e#{size}"}
-  %img{:src => "/images/icons/new/repository.png", :width => width * 1.8, :height => width * 1.8}
+  %img{:src => "/images/100/repository.png", :width => width * 1.8, :height => width * 1.8}
 - if item.get_policies.length > 0
   .flobj{:class => "g#{size}"}
-    %img{:src => "/images/icons/new/shield.png"}
+    %img{:src => "/images/100/shield.png"}
 
 .flobj
-  %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
+  %img{:src => "/images/#{size}/reflection.png", :width => size, :height => size}
 - unless typ == :listnav
   -# Listnav, no clear image needed
   .flobj

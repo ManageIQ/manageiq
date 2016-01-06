@@ -35,9 +35,9 @@
         %td
           %nobr
             - if @edit[:field_values].length < 2 || idx == 0
-              = image_tag("/images/icons/16/sort_up.png", :class => "dimmed", :border => "0")
+              = image_tag("/images/16/sort_up.png", :class => "dimmed", :border => "0")
             - else
-              = link_to(image_tag("/images/icons/16/sort_up.png", :border => "0", :alt => (t = _("Move selected field up"))),
+              = link_to(image_tag("/images/16/sort_up.png", :border => "0", :alt => (t = _("Move selected field up"))),
                 {:action   => 'dialog_form_field_changed',
                  :button   => 'up',
                  :id       => @record.id || 'new',
@@ -46,10 +46,11 @@
                 'data-method' => :post,
                 :title        => t)
 
+
             - if @edit[:field_values].length < 2 || idx == @edit[:field_values].length - 1
-              = image_tag("/images/icons/16/sort_down.png", :class => "dimmed", :border => "0")
+              = image_tag("/images/16/sort_down.png", :class => "dimmed", :border => "0")
             - else
-              = link_to(image_tag("/images/icons/16/sort_down.png", :border => "0", :alt => (t = _("Move selected field down"))),
+              = link_to(image_tag("/images/16/sort_down.png", :border => "0", :alt => (t = _("Move selected field down"))),
                 {:action   => 'dialog_form_field_changed',
                  :button   => 'down',
                  :id       => @record.id || 'new',

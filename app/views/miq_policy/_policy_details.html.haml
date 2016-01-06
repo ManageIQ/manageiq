@@ -196,7 +196,7 @@
                 %tr
                   %td.narrow{:title => _("View this Policy Event"),
                     :onclick => "miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}');"}
-                    %img{:src => "/images/icons/new/event-#{e.name}.png"}
+                    %img{:src => "/images/100/event-#{e.name}.png"}
                   %td{:title => _("View this Policy Event"),
                     :onclick => "miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}');"}
                     = h(e.description)
@@ -262,7 +262,7 @@
                   %tr{:title => _("View this Profile"),
                     :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=policy_profile")}
                     %td.narrow
-                      %img{:src => "/images/icons/new/policy_profile#{pp.active? ? '' : '_inactive'}.png"}
+                      %img{:src => "/images/100/policy_profile#{pp.active? ? '' : '_inactive'}.png"}
                     %td
                       = pp.description
   %br

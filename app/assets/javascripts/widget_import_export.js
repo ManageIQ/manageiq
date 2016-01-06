@@ -5,7 +5,7 @@ var getAndRenderWidgetJson = function(importFileUploadId, message) {
 
   $.getJSON("widget_json?import_file_upload_id=" + importFileUploadId, function(rows_json) {
     var statusFormatter = function(row, cell, value, columnDef, dataContext) {
-      var status_img = "<img src=/images/icons/16/" + dataContext.status_icon + ".png >";
+      var status_img = "<img src=/images/16/" + dataContext.status_icon + ".png >";
 
       return status_img + dataContext.status;
     };

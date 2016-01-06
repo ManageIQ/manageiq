@@ -1452,7 +1452,7 @@ module ApplicationController::Compare
   end
 
   def drift_add_image_col(idx, img_src, img_bkg, val)
-    col = "<img src='/images/icons/#{img_src}' width='20' height='20' border='0'
+    col = "<img src='/images/#{img_src}' width='20' height='20' border='0'
               align='middle' alt='#{val}' title='#{val}'>"
     html_text = "<div class='#{img_bkg}'>#{col}</div>"
     {"col#{idx + 1}".to_sym => html_text}
@@ -1554,14 +1554,14 @@ module ApplicationController::Compare
     html_text = ""
     if %w(Vm VmOrTemplate).include?(@sb[:compare_db])
       html_text << "<a  title='#{h[:name]}'
-        href='/#{controller_name}/show/#{h[:id]}'><img src='/images/icons/new/vendor-#{h[:vendor].downcase}.png'
+        href='/#{controller_name}/show/#{h[:id]}'><img src='/images/100/vendor-#{h[:vendor].downcase}.png'
         align='middle' border='0' width='20' height='20'/></a>"
     elsif @sb[:compare_db] == "Host"
-      html_text << "<a href='/host/show/#{h[:id]}'><img src='/images/icons/new/vendor-#{h[:vmm_vendor].downcase}.png'
+      html_text << "<a href='/host/show/#{h[:id]}'><img src='/images/100/vendor-#{h[:vmm_vendor].downcase}.png'
         align='middle' border='0' width='20' height='20' /></a>"
     else
       html_text <<
-        "<a href='/ems_cluster/show/#{h[:id]}'><img src='/images/icons/new/#{@sb[:compare_db].downcase}.png'
+        "<a href='/ems_cluster/show/#{h[:id]}'><img src='/images/100/#{@sb[:compare_db].downcase}.png'
         align='middle' border='0' width='20' height='20'/></a>"
     end
     if i == 0
@@ -1640,7 +1640,7 @@ module ApplicationController::Compare
     height = 25
     width = height = 24 if @compressed
     img_src = "new/piecharts/compare/#{image}.png"
-    col = "<img src='/images/icons/#{img_src}' width='#{width}' height='#{height}' border='0'
+    col = "<img src='/images/#{img_src}' width='#{width}' height='#{height}' border='0'
               align='middle' alt='#{val}' title='#{val}'>"
     html_text = "<div class='#{img_bkg}'>#{col}</div>"
     {"col#{idx + 1}".to_sym => html_text}
