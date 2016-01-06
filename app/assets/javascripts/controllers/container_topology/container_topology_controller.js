@@ -131,8 +131,8 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
     added.selectAll("title").text(function(d) {
       var status = [
         "Name: " + d.item.name,
-        "Type: " + d.item.kind,
-        "Status: " + d.item.status,
+        "Type: " + d.item.display_kind,
+        "Status: " + d.item.status
       ];
 
       if (d.item.kind == 'Host' || d.item.kind == 'VM') {
@@ -150,13 +150,13 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
 
   function class_name(d) {
     switch (d.item.kind) {
-      case "Service":
-      case "Route":
-      case "Node":
-      case "Replicator":
-        return "container_" + d.item.kind.toLowerCase();
+      case "ContainerService":
+      case "ContainerRoute":
+      case "ContainerNode":
+      case "ContainerReplicator":
+        return "container_" + d.item.display_kind.toLowerCase();
 
-      case "VM":
+      case "Vm":
       case "Host":
       case "Container":
         return d.item.kind.toLowerCase();
@@ -205,8 +205,8 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
         return { x: -20, y: -20, height: 40, width: 40, r: 28 };
       case "Container":
         return { x: -7, y: -7, height: 14, width: 14, r: 13 };
-      case "Node":
-      case "VM":
+      case "ContainerNode":
+      case "Vm":
       case "Host":
         return { x: -12, y: -12, height: 23, width: 23, r: 19 };
       default:
