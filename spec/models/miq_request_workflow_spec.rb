@@ -18,7 +18,6 @@ describe MiqRequestWorkflow do
       it "calls the validation_method if defined" do
         dialog.store_path(:dialogs, :customize, :fields, :root_password, :validation_method, :some_validation_method)
 
-        expect(workflow).to receive(:respond_to?).with(:some_validation_method).and_return(true)
         expect(workflow).to receive(:some_validation_method).once
         expect(workflow.validate({})).to be true
       end
@@ -26,7 +25,6 @@ describe MiqRequestWorkflow do
       it "returns false when validation fails" do
         dialog.store_path(:dialogs, :customize, :fields, :root_password, :validation_method, :some_validation_method)
 
-        expect(workflow).to receive(:respond_to?).with(:some_validation_method).and_return(true)
         expect(workflow).to receive(:some_validation_method).and_return("Some Error")
         expect(workflow.validate({})).to be false
       end
