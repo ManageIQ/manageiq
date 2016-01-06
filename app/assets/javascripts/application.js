@@ -51,6 +51,7 @@
 //= require d3/d3
 //= require c3/c3
 //= require kubernetes-topology-graph/topology-graph
+//= require miq_browser_detect
 //= require miq_application
 //= require miq_change_stored_password
 //= require miq_dynatree_replacement
@@ -103,3 +104,4 @@
 //= require miq_toolbar
 //= require resizable_sidebar
 //= require i18n
+//= require xml_display
