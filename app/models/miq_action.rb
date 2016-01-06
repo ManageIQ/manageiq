@@ -873,15 +873,36 @@ class MiqAction < ActiveRecord::Base
     vim.cancelTask(task_mor)
   end
 
+  def automate_user_ids(target)
+    case target
+    when VmOrTemplate
+      group  = target.miq_group
+      user   = target.evm_owner
+      user   = User.super_admin if user.nil? || !user.miq_groups.include?(group)
+      tenant = target.tenant
+    when Host
+      user   = User.super_admin
+      tenant = target.ext_management_system.tenant
+      group  = tenant.default_miq_group
+    end
+
+    raise "A group is needed to raise an event. [#{target.class.name}] id:[#{target.id}]" unless group
+    [user.id, group.id, tenant.id]
+  end
+
   def action_custom_automation(action, rec, inputs)
     ae_hash = action.options[:ae_hash] || {}
     automate_attrs = ae_hash.reject { |key, _value| MiqAeEngine::DEFAULT_ATTRIBUTES.include?(key) }
     automate_attrs[:request] = action.options[:ae_request]
     MiqAeEngine.set_automation_attributes_from_objects([inputs[:policy], inputs[:ems_event]], automate_attrs)
+    user_id, group_id, tenant_id = automate_user_ids(rec)
 
     args = {
       :object_type      => rec.class.base_class.name,
       :object_id        => rec.id,
+      :user_id          => user_id,
+      :miq_group_id     => group_id,
+      :tenant_id        => tenant_id,
       :attrs            => automate_attrs,
       :instance_name    => "REQUEST",
       :automate_message => action.options[:ae_message] || "create",
