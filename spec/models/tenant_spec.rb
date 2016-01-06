@@ -379,6 +379,14 @@ describe Tenant do
     end
   end
 
+  context "#ensure_can_be_destroyed" do
+    it "wouldn't delete tenant with groups associated" do
+      tenant = FactoryGirl.create(:tenant)
+      FactoryGirl.create(:miq_group, :tenant => tenant)
+      expect { tenant.destroy! }.to raise_error
+    end
+  end
+
   describe "#description" do
     it "has description" do
       tenant.update_attributes(:description => 'very important vm')

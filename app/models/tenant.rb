@@ -64,6 +64,7 @@ class Tenant < ActiveRecord::Base
 
   before_save :nil_blanks
   after_create :create_tenant_group
+  before_destroy :ensure_can_be_destroyed
 
   def all_subtenants
     self.class.descendants_of(self).where(:divisible => true)
@@ -278,6 +279,10 @@ class Tenant < ActiveRecord::Base
   def create_tenant_group
     update_attributes!(:default_miq_group => MiqGroup.create_tenant_group(self)) unless default_miq_group_id
     self
+  end
+
+  def ensure_can_be_destroyed
+    raise "A tenant with groups associated cannot be deleted." if miq_groups.non_tenant_groups.exists?
   end
 
   def validate_default_tenant
