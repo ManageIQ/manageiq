@@ -59,8 +59,24 @@ module ManageIQ::Providers
         process_collection(images, :vms) { |image| parse_image(image) }
       end
 
+      def get_key_pairs(instances)
+        ssh_keys = []
+
+        instances.each do |instance|
+          ssh_keys |= instance_ssh_keys(instance)
+        end
+
+        process_collection(ssh_keys, :key_pairs) { |ssh_key| parse_ssh_key(ssh_key) }
+      end
+
       def get_instances
         instances = @connection.servers.all
+
+        # Since SSH keys are stored with the instances this is
+        # the only place we can get a complete and unique list
+        # of key-pairs
+        get_key_pairs(instances)
+
         process_collection(instances, :vms) { |instance| parse_instance(instance) }
       end
 
@@ -160,48 +176,17 @@ module ManageIQ::Providers
         }
       end
 
-      def parse_ssh_keys(instance)
-        require 'sshkey'
+      def parse_ssh_key(ssh_key)
+        uid = "#{ssh_key[:name]}:#{ssh_key[:fingerprint]}"
 
-        ssh_keys = []
-        @data[:key_pairs] ||= []
+        type = ManageIQ::Providers::Google::CloudManager::AuthKeyPair.name
+        new_result = {
+          :type        => type,
+          :name        => ssh_key[:name],
+          :fingerprint => ssh_key[:fingerprint],
+        }
 
-        if instance.metadata["items"]
-          instance.metadata["items"].select { |x| x["key"] == "sshKeys" }.each do |ssh_key|
-            ssh_key["value"].split("\n").each do |key|
-              # Google returns the public key in the form username:public_key
-              # so split on the first colon for the username and handle any
-              # colons that might be in the description by joining all
-              # following
-              name = key.split(":")[0]
-              public_key = key.split(":")[1..-1].join(":")
-
-              # Calculate the sha1 fingerprint from the public key data
-              fingerprint = SSHKey.sha1_fingerprint(public_key)
-
-              type = ManageIQ::Providers::Google::CloudManager::AuthKeyPair.name
-              key_pair = {
-                :type        => type,
-                :name        => name,
-                :fingerprint => fingerprint,
-              }
-
-              # Use user+ssh_fingerprint as a unique id
-              key_uid = "#{name}:#{fingerprint}"
-
-              # Only add unique ssh keys to @data
-              key = @data_index.fetch_path(:key_pairs, key_uid)
-              if key.nil?
-                @data[:key_pairs] << key_pair
-                @data_index.store_path(:key_pairs, key_uid, key_pair)
-                key = key_pair
-              end
-
-              ssh_keys << key
-            end
-          end
-        end
-        ssh_keys
+        return uid, new_result
       end
 
       def parse_instance(instance)
@@ -220,8 +205,6 @@ module ManageIQ::Providers
 
         operating_system = parent_image[:operating_system] unless parent_image.nil?
 
-        ssh_keys   = parse_ssh_keys(instance)
-
         type = ManageIQ::Providers::Google::CloudManager::Vm.name
         new_result = {
           :type              => type,
@@ -235,6 +218,7 @@ module ManageIQ::Providers
           :availability_zone => zone,
           :parent_vm         => parent_image,
           :operating_system  => operating_system,
+          :key_pairs         => [],
           :hardware          => {
             :cpu_sockets          => flavor[:cpus],
             :cpu_total_cores      => flavor[:cpu_cores],
@@ -243,10 +227,10 @@ module ManageIQ::Providers
             :disks                => [],
             :networks             => [],
           },
-          :key_pairs         => ssh_keys,
         }
 
         populate_hardware_hash_with_disks(new_result[:hardware][:disks], instance)
+        populate_key_pairs_with_ssh_keys(new_result[:key_pairs], instance)
 
         return uid, new_result
       end
@@ -281,6 +265,34 @@ module ManageIQ::Providers
         end
 
         parent_image_uid
+      end
+
+      def populate_key_pairs_with_ssh_keys(result_key_pairs, instance)
+        instance_ssh_keys(instance).each do |ssh_key|
+          key_uid = "#{ssh_key[:name]}:#{ssh_key[:fingerprint]}"
+          kp = @data_index.fetch_path(:key_pairs, key_uid)
+          result_key_pairs << kp unless kp.nil?
+        end
+      end
+
+      def instance_ssh_keys(instance)
+        require 'sshkey'
+
+        ssh_keys = []
+
+        metadata_items = instance.metadata["items"].to_a
+        metadata_ssh_keys = metadata_items.collect { |x| x["value"] if x["key"] == "sshKeys" }.first
+
+        metadata_ssh_keys.to_s.split("\n").each do |ssh_key|
+          name, public_key = ssh_key.split(":", 2)
+          ssh_keys << {
+            :name        => name,
+            :public_key  => public_key,
+            :fingerprint => SSHKey.sha1_fingerprint(public_key)
+          }
+        end
+
+        ssh_keys
       end
 
       def parse_uid_from_url(url)
