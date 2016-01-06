@@ -1146,7 +1146,7 @@ class CatalogController < ApplicationController
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     else
-      add_flash(_("Service Dialog \"%s\" was successfully created") % @edit[:new][:dialog_name], :info)
+      add_flash(_("Service Dialog \"%s\" was successfully created") % @edit[:new][:dialog_name], :success)
       @in_a_form = false
       @edit = @record = nil
       replace_right_cell

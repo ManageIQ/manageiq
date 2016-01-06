@@ -166,7 +166,7 @@ Classes updated/added: 6
 Instances updated/added: 0
 Methods updated/added: 10
           MESSAGE
-          expect(response.body).to eq([{:message => expected_message.chomp, :level => :info}].to_json)
+          expect(response.body).to eq([{:message => expected_message.chomp, :level => :success}].to_json)
         end
       end
 
@@ -262,7 +262,7 @@ Methods updated/added: 10
         expect(response).to redirect_to(
           :action                => :review_import,
           :import_file_upload_id => 123,
-          :message               => {:message => "Import file was uploaded successfully", :level => :info}.to_json
+          :message               => {:message => "Import file was uploaded successfully", :level => :success}.to_json
         )
       end
     end

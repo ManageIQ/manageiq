@@ -51,7 +51,7 @@ class MiqAeCustomizationController < ApplicationController
     else
       begin
         import_file_upload_id = dialog_import_service.store_for_import(params[:upload][:file].read)
-        add_flash(_("Import file was uploaded successfully"), :info)
+        add_flash(_("Import file was uploaded successfully"), :success)
         redirect_options[:import_file_upload_id] = import_file_upload_id
       rescue DialogImportValidator::ImportNonYamlError
         add_flash(_("Error: the file uploaded is not of the supported format"), :error)
@@ -72,7 +72,7 @@ class MiqAeCustomizationController < ApplicationController
 
     if import_file_upload
       dialog_import_service.import_service_dialogs(import_file_upload, params[:dialogs_to_import])
-      add_flash(_("Service dialogs imported successfully"), :info)
+      add_flash(_("Service dialogs imported successfully"), :success)
     else
       add_flash(_("Error: ImportFileUpload expired"), :error)
     end
@@ -97,7 +97,7 @@ class MiqAeCustomizationController < ApplicationController
 
   def cancel_import
     dialog_import_service.cancel_import(params[:import_file_upload_id])
-    add_flash(_("Service dialog import cancelled"), :info)
+    add_flash(_("Service dialog import cancelled"), :success)
 
     respond_to do |format|
       format.js { render :json => @flash_array.to_json, :status => 200 }
