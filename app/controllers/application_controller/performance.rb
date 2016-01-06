@@ -851,6 +851,19 @@ module ApplicationController::Performance
                           )
   end
 
+  def prepare_perf_chart(chart, rpt, cat_desc)
+    # Remove opposite menu items
+    chart[:menu].delete_if { |m| m.include?(@perf_options[:cat_model] == "Host" ? "VMs for" : "Hosts for") }
+    # Substitue category description + ':<series>' into menus
+    chart[:menu].each { |m| m.gsub!(/<cat>/, cat_desc + " <series>") }
+    # Grab the first (and should be only) chart column
+    col = chart[:columns].first
+    # Create the new chart columns for each tag
+    chart[:columns] = rpt.extras[:group_by_tags].collect { |t| col + "_" + t }
+    # Grab title from chart in case formatting added units
+    chart[:title] = rpt.title
+  end
+
   # Generate performance data by tag - generate charts from report task results
   def perf_gen_tag_data_after_wait
     miq_task = MiqTask.find(params[:task_id])     # Not first time, read the task record
@@ -865,60 +878,45 @@ module ApplicationController::Performance
       chart_layout = perf_get_chart_layout("hourly_tag_charts", @perf_options[:model])
       unless @perf_options[:index]            # Gen all charts if no index present
         chart_layout.each_with_index do |chart, idx|
-          chart[:menu].delete_if { |m| m.include?(@perf_options[:cat_model] == "Host" ? "VMs for" : "Hosts for") } # Remove opposite menu items
-          chart[:menu].each { |m| m.gsub!(/<cat>/, cat_desc + " <series>") }           # Substitue category description + ':<series>' into menus
-          col = chart[:columns].first                                               # Grab the first (and should be only) chart column
-          chart[:columns] = rpt.extras[:group_by_tags].collect { |t| col + "_" + t }   # Create the new chart columns for each tag
+          prepare_perf_chart(chart, rpt, cat_desc)
+
           options = chart.merge(:zoom_url      => perf_zoom_url("perf_chart_chooser", idx.to_s),
                                 :link_data_url => "javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
                                 :axis_skip     => 3)
           @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
-          chart[:title] = rpt.title           # Grab title from chart in case formatting added units
           @charts.push(chart)
         end
       else                                    # Gen chart based on index
         chart = chart_layout[@perf_options[:index].to_i]
-        chart[:menu].delete_if { |m| m.include?(@perf_options[:cat_model] == "Host" ? "VMs for" : "Hosts for") } # Remove opposite menu items
-        chart[:menu].each { |m| m.gsub!(/<cat>/, cat_desc + " <series>") }           # Substitue category description + ':<series>' into menus
-        col = chart[:columns].first                                               # Grab the first (and should be only) chart column
-        chart[:columns] = rpt.extras[:group_by_tags].collect { |t| col + "_" + t }   # Create the new chart columns for each tag
+        prepare_perf_chart(chart, rpt, cat_desc)
         options = chart.merge(:zoom_url => perf_zoom_url("perf_chart_chooser", "clear"),
                               :link_data_url => "javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
                               :axis_skip => 3,
                               :width => 1000, :height => 700)
         @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
-        chart[:title] = rpt.title           # Grab title from chart in case formatting added units
         @charts.push(chart)
       end
     when "Daily"
       chart_layout = perf_get_chart_layout("daily_tag_charts", @perf_options[:model])
       unless @perf_options[:index]
         chart_layout.each_with_index do |chart, idx|
-          chart[:menu].delete_if { |m| m.include?(@perf_options[:cat_model] == "Host" ? "VMs for" : "Hosts for") } # Remove opposite menu items
-          chart[:menu].each { |m| m.gsub!(/<cat>/, cat_desc + " <series>") }           # Substitue category description + ':<series>' into menus
-          col = chart[:columns].first                                               # Grab the first (and should be only) chart column
-          chart[:columns] = rpt.extras[:group_by_tags].collect { |t| col + "_" + t }   # Create the new chart columns for each tag
+          prepare_perf_chart(chart, rpt, cat_desc)
           options = chart.merge(:zoom_url      => perf_zoom_url("perf_chart_chooser", idx.to_s),
                                 :link_data_url => "javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
                                 :axis_skip     => 3)
           process_chart_trends(chart, rpt, options)
           @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
-          chart[:title] = rpt.title           # Grab title from chart in case formatting added units
           @charts.push(chart)
         end
       else
         chart = chart_layout[@perf_options[:index].to_i]
-        chart[:menu].delete_if { |m| m.include?(@perf_options[:cat_model] == "Host" ? "VMs for" : "Hosts for") } # Remove opposite menu items
-        chart[:menu].each { |m| m.gsub!(/<cat>/, cat_desc + " <series>") }           # Substitue category description + ':<series>' into menus
-        col = chart[:columns].first                                               # Grab the first (and should be only) chart column
-        chart[:columns] = rpt.extras[:group_by_tags].collect { |t| col + "_" + t }   # Create the new chart columns for each tag
+        prepare_perf_chart(chart, rpt, cat_desc)
         options = chart.merge(:zoom_url => perf_zoom_url("perf_chart_chooser", "clear"),
                               :link_data_url => "javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
                               :axis_skip => 3,
                               :width => 1000, :height => 700)
         process_chart_trends(chart, rpt, options)
         @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
-        chart[:title] = rpt.title           # Grab title from chart in case formatting added units
         @charts.push(chart)
       end
     end
