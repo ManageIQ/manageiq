@@ -59,7 +59,7 @@ describe "Service Filter" do
       end
     end
 
-    let(:workspace) { instance_double("MiqAeEngine::MiqAeWorkspace", :root => options) }
+    let(:workspace) { double("MiqAeEngine::MiqAeWorkspaceRuntime", :root => options) }
 
     context "allow" do
       let(:options) { {'include_service' => true} }

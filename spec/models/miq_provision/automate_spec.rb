@@ -8,7 +8,7 @@ describe MiqProvision do
     let(:t1) { u1.current_tenant }
     let(:u1) { FactoryGirl.create(:user_with_group) }
     let(:options) { {'domains' => [{:name => domain, :bind_password => enc_password}]} }
-    let(:workspace) { instance_double("MiqAeEngine::MiqAeWorkspace", :root => options) }
+    let(:workspace) { double("MiqAeEngine::MiqAeWorkspaceRuntime", :root => options) }
     let(:prov) { FactoryGirl.build(:miq_provision, :tenant => t1) }
 
     def stub_method
