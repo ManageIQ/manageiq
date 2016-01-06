@@ -1127,17 +1127,7 @@ module ApplicationController::Performance
           chart_data.push(nil)              # Push a placeholder onto the chart data array
         else
           perf_remove_chart_cols(chart)
-          #           options = chart.merge({:zoom_url=>perf_zoom_url("capacity_chart_chooser", idx.to_s),
-          #                                 :link_data_url=>"javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )"
-          #                                 })
-          #           options = chart.merge({:link_data_url=>"javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )"
-          #                                 })
           options = chart.merge(:axis_skip => 3)
-          if chart[:trends]
-            trendcol = perf_get_chart_trendcol(chart)
-            #             options[:trendtip] = chart[:trends].collect{|t| t.split(":").last + ": " +
-            #                                   rpt.extras[:trend][trendcol + "|" + t.split(":").first]}.join("\r") unless trendcol.nil?
-          end
           options[:chart_type] = chart[:chart_type].to_sym if chart[:chart_type]  # Override :summary chart type if specified in chart definition
           options[:chart_date] = @sb[:util][:options][:chart_date]
           chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
@@ -1148,19 +1138,7 @@ module ApplicationController::Performance
     else
       chart = chart_layouts[@sb[:util][:options][:model].to_sym][@sb[:util][:options][:index].to_i]
       perf_remove_chart_cols(chart)
-      #       options = chart.merge({:zoom_url=>perf_zoom_url("capacity_chart_chooser", "clear"),
-      #                             :link_data_url=>"javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
-      #                             :width=>1000, :height=>700
-      #                             })
-      #       options = chart.merge({:link_data_url=>"javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
-      #                             :width=>1000, :height=>700
-      #                             })
       options = chart.merge(:axis_skip => 3)
-      if chart[:trends]
-        trendcol = perf_get_chart_trendcol(chart)
-        #         options[:trendtip] = chart[:trends].collect{|t| t.split(":").last + ": " +
-        #                               rpt.extras[:trend][trendcol + "|" + t.split(":").first]}.join("\r") unless trendcol.nil?
-      end
       options[:chart_type] = chart[:chart_type].to_sym if chart[:chart_type]  # Override :summary chart type if specified in chart definition
       options[:chart_date] = @sb[:util][:options][:chart_date]
       chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
@@ -1312,12 +1290,6 @@ module ApplicationController::Performance
            (@sb[:planning][:options][:tag] && chart[:allowed_child_tag] && !@sb[:planning][:options][:tag].starts_with?(chart[:allowed_child_tag]))  # Tag not allowed
           chart_data.push(nil)              # Push a placeholder onto the chart data array
         else
-          #         perf_remove_chart_cols(chart)
-          #           options = chart.merge({:zoom_url=>perf_zoom_url("capacity_chart_chooser", idx.to_s),
-          #                                 :link_data_url=>"javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )"
-          #                                 })
-          #           options = chart.merge({:link_data_url=>"javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )"
-          #                                 })
           options = chart
           if chart[:trends]
             trendcol = perf_get_chart_trendcol(chart)
@@ -1332,13 +1304,6 @@ module ApplicationController::Performance
     else
       chart = chart_layouts[@sb[:planning][:options][:model].to_sym][@sb[:planning][:options][:index].to_i]
       perf_remove_chart_cols(chart)
-      #       options = chart.merge({:zoom_url=>perf_zoom_url("capacity_chart_chooser", "clear"),
-      #                             :link_data_url=>"javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
-      #                             :width=>1000, :height=>700
-      #                             })
-      #       options = chart.merge({:link_data_url=>"javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
-      #                             :width=>1000, :height=>700
-      #                             })
       options = chart.merge(:width => 1000, :height => 700)
       if chart[:trends]
         trendcol = perf_get_chart_trendcol(chart)
