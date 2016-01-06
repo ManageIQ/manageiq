@@ -5,7 +5,7 @@
     %title
       = _('SPICE Console')
     = favicon_link_tag
-    = split_stylesheet_link_tag 'application'
+    = stylesheet_link_tag 'application'
     = javascript_include_tag 'application', 'spiceHTML5/spicearraybuffer', 'spice-html5'
     - if Rails.env.development?
       = javascript_include_tag 'miq_debug'
