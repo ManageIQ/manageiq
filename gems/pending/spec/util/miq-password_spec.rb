@@ -213,7 +213,7 @@ describe MiqPassword do
   end
 
   it ".sanitize_string" do
-    MiqPassword.sanitize_string!("some :password: v1:{XAWlcAlViNwB} and another :password: v2:{egr+hObB}").should eq(
+    expect(MiqPassword.sanitize_string!("some :password: v1:{XAWlcAlViNwB} and another :password: v2:{egr+hObB}")).to eq(
       "some :password: ******** and another :password: ********")
   end
 

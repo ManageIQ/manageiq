@@ -128,7 +128,7 @@ describe DuplicateBlocker do
 
   def assert_safe_calls(meth, n, time, interval, *args)
     n.times do
-      make_a_call(meth, time) { |func| func.call(*args).should eq args }
+      make_a_call(meth, time) { |func| expect(func.call(*args)).to eq args }
       time += interval
     end
   end
