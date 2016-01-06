@@ -851,7 +851,7 @@ module ApplicationController::Performance
                           )
   end
 
-  def prepare_perf_chart(chart, rpt, cat_desc)
+  def prepare_perf_tag_chart(chart, rpt, cat_desc)
     # Remove opposite menu items
     chart[:menu].delete_if { |m| m.include?(@perf_options[:cat_model] == "Host" ? "VMs for" : "Hosts for") }
     # Substitue category description + ':<series>' into menus
@@ -860,15 +860,11 @@ module ApplicationController::Performance
     col = chart[:columns].first
     # Create the new chart columns for each tag
     chart[:columns] = rpt.extras[:group_by_tags].collect { |t| col + "_" + t }
-    # Grab title from chart in case formatting added units
-    chart[:title] = rpt.title
   end
 
-  def gen_perf_chart(chart, rpt, cat_desc, idx, options)
-    prepare_perf_chart(chart, rpt, cat_desc)
-
+  def gen_perf_chart(chart, rpt, idx, zoom_action)
     options = chart.merge(
-      :zoom_url      => perf_zoom_url("perf_chart_chooser", idx.nil? ? 'clear' : idx.to_s),
+      :zoom_url      => perf_zoom_url(zoom_action, idx.nil? ? 'clear' : idx.to_s),
       :link_data_url => "javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
       :axis_skip     => 3
     )
@@ -876,8 +872,12 @@ module ApplicationController::Performance
 
     process_chart_trends(chart, rpt, options)
 
-    @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
-    @charts.push(chart)
+    generated_chart = perf_gen_chart(rpt, options).merge(:menu => chart[:menu])
+
+    # Grab title from chart in case formatting added units
+    chart[:title] = rpt.title
+
+    generated_chart
   end
 
   # Generate performance data by tag - generate charts from report task results
@@ -886,8 +886,8 @@ module ApplicationController::Performance
     rpt = miq_task.miq_report_result.report_results # Grab the report object from the blob
     miq_task.destroy                                # Get rid of the task and results
 
-    @charts = []
-    @chart_data = []
+    charts = []
+    chart_data = []
     cat_desc = Classification.find_by_name(@perf_options[:cat]).description
 
     layout_name = case @perf_options[:typ]
@@ -899,15 +899,21 @@ module ApplicationController::Performance
 
     if @perf_options[:index]
       chart_index = @perf_options[:index]
-      gen_perf_chart(chart_layout[chart_index], rpt, cat_desc, idx, options)
+      prepare_perf_tag_chart(chart, rpt, cat_desc)
+      chart_data.push(gen_perf_chart(chart_layout[chart_index], rpt, nil, 'perf_chart_chooser'))
+      charts.push(chart)
     else
       chart_layout.each_with_index do |chart, idx|
-        gen_perf_chart(chart, rpt, cat_desc, idx, options)
+        prepare_perf_tag_chart(chart, rpt, cat_desc)
+        chart_data.push(gen_perf_chart(chart, rpt, idx, 'perf_chart_chooser'))
+        charts.push(chart)
       end
     end
 
     @sb[:chart_reports] = rpt # Hang on to the report data for these charts
-    @html = perf_report_to_html
+    @chart_data = chart_data
+    @charts     = charts
+    @html       = perf_report_to_html
   end
 
   # Generate top 10 chart data
@@ -1011,55 +1017,30 @@ module ApplicationController::Performance
     @perf_options[:ght_type] ||= "hybrid"
     @perf_options[:chart_type] = :performance
     cont_plus_model = request.parameters["controller"] + "-" + @perf_options[:top_model]
-    case @perf_options[:top_type]
-    when "topday"
-      chart_layouts = perf_get_chart_layout("day_top_charts", cont_plus_model)
-      unless @perf_options[:index]            # Gen all charts if no index present
-        chart_layouts.each_with_index do |chart, idx|
-          next if chart.nil?
-          options = chart.merge(:zoom_url      => perf_zoom_url("perf_top_chart", idx.to_s),
-                                :link_data_url => "javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )")
-          rpt = rpts.pop                      # Get the next report object from the array
-          @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
-          chart[:title] = rpt.title           # Grab title from chart in case formatting added units
-          @chart_reports.push(rpt)
-          @charts.push(chart)
-        end
-      else                                    # Gen chart based on index
-        chart = chart_layouts[@perf_options[:index].to_i]
-        options = chart.merge(:zoom_url => perf_zoom_url("perf_top_chart", "clear"),
-                              :link_data_url => "javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
-                              :width => 1000, :height => 700)
-        @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
-        chart[:title] = rpt.title           # Grab title from chart in case formatting added units
-        @chart_reports.push(rpt)
-        @charts.push(chart)
-      end
-    when "tophour"
-      chart_layouts = perf_get_chart_layout("hour_top_charts", cont_plus_model)
-      unless @perf_options[:index]            # Gen all charts if no index present
-        chart_layouts.each_with_index do |chart, idx|
-          next if chart.nil?
-          options = chart.merge(:zoom_url      => perf_zoom_url("perf_top_chart", idx.to_s),
-                                :link_data_url => "javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )")
-          rpt = rpts.pop                      # Get the next report object from the array
-          @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
-          chart[:title] = rpt.title           # Grab title from chart in case formatting added units
-          @chart_reports.push(rpt)
-          @charts.push(chart)
-        end
-      else                                    # Gen chart based on index
-        chart = chart_layouts[@perf_options[:index].to_i]
-        options = chart.merge(:zoom_url => perf_zoom_url("perf_top_chart", "clear"),
-                              :link_data_url => "javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
-                              :width => 1000, :height => 700)
-        @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
-        chart[:title] = rpt.title           # Grab title from chart in case formatting added units
+
+    layout_name = case @perf_options[:top_type]
+                  when 'topday'  then 'day_top_charts'
+                  when 'tophour' then 'hour_top_charts'
+                  end
+    chart_layouts = perf_get_chart_layout(layout_name, cont_plus_model)
+
+    if @perf_options[:index]
+      chart_index = @perf_options[:index]
+      chart = chart_layouts[chart_index]
+      @chart_data.push(gen_perf_chart(chart, rpt, nil, 'perf_top_chart'))
+      @chart_reports.push(rpt)
+      @charts.push(chart)
+    else
+      chart_layouts.each_with_index do |chart, idx|
+        next if chart.nil?
+        rpt = rpts.pop # Get the next report object from the array
+        @chart_data.push(gen_perf_chart(chart, rpt, idx, 'perf_top_chart'))
         @chart_reports.push(rpt)
         @charts.push(chart)
       end
     end
-    @sb[:chart_reports] = @chart_reports                    # Hang on to the reports for these charts
+
+    @sb[:chart_reports] = @chart_reports # Hang on to the reports for these charts
     @charts = @charts
     @chart_data = @chart_data
     @top_chart = true
