@@ -2,7 +2,8 @@ class ChargebackRateDetail < ActiveRecord::Base
   belongs_to :chargeback_rate
   belongs_to :detail_measure, :class_name => "ChargebackRateDetailMeasure", :foreign_key => :chargeback_rate_detail_measure_id
 
-  validates_numericality_of :rate
+  validates :rate, :numericality => true
+  validates :group, :source, :presence => true
 
   def cost(value)
     return 0.0 unless self.enabled?
