@@ -215,6 +215,12 @@
 .product-view_expanded:before {
   content: "\e62b";
 }
+.product-vendor-atomic:before {
+  content: "\e62c";
+}
+.product-vendor-atomic-enterprise:before {
+  content: "\e62d";
+}
 
 /* define  colors */
 .product-custom-1:before {
@@ -253,4 +259,8 @@
 .product-miq_condition:before {
   color: #0099cc;
 }
+.product-vendor-atomic-enterprise:before {
+  color: #0088ce;
+}
+
 /*end icon customizations*/
