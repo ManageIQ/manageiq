@@ -1,30 +1,7 @@
+require 'vmdb/loggers'
+
 module Vmdb
   class LogProxy < Struct.new(:klass, :separator)
-    class NullLogger < Logger
-      def initialize(*)
-        super('/dev/null')
-        self.level = Logger::UNKNOWN
-      end
-
-      def filename(*); end
-
-      def log_backtrace(*); end
-
-      def log_hashes(*); end
-
-      def success(*); end
-
-      def failure(*); end
-
-      def instrument(*)
-        yield if block_given?
-      end
-    end
-
-    def self.null_logger
-      @null_logger ||= NullLogger.new
-    end
-
     LEVELS = [:debug, :info, :warn, :error]
 
     delegate *LEVELS.map { |level| :"#{level}?" },
@@ -53,7 +30,7 @@ module Vmdb
     private
 
     def logger
-      Vmdb.logger || $log || LogProxy.null_logger
+      Vmdb.logger || Vmdb.null_logger
     end
   end
 
