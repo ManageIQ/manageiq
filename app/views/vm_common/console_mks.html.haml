@@ -3,6 +3,7 @@
     %head
       %title
         = _("VM %s Remote Console") % @record.name
+      = favicon_link_tag
       :javascript
         function connect() {
           mks.Connect("#{host}", 902, "#{cfgFile}", "#{ticket}", "#{ticket}");

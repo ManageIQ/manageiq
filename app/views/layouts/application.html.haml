@@ -3,6 +3,7 @@
   %html{:lang => I18n.locale.to_s.sub('-', '_')}
     %head
       %title CloudForms Management Engine: #{@layout.titleize}
+      = favicon_link_tag
       = split_stylesheet_link_tag 'application'
       = javascript_include_tag 'application'
       - if Rails.env.development?
@@ -21,7 +22,7 @@
       %meta{"http-equiv" => "Pragma", :content => "must-revalidate"}
       %meta{"http-equiv" => "cache-control", :content => "no-cache, no-store"}
 
-      = tag :link, :rel => "shortcut icon", :href => image_path("favicon.ico")
+      = favicon_link_tag
       = split_stylesheet_link_tag 'application'
       = render :partial => "stylesheets/template50"
       = javascript_include_tag 'application'
