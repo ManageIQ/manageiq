@@ -89,9 +89,9 @@ describe MiqPassword do
       it("#decrypt v1 erb") { expect(MiqPassword.new.decrypt(erberize(enc_v1))).to be_decrypted(pass) }
       it("#decrypt erb")    { expect(MiqPassword.new.decrypt(erberize(enc_v0))).to be_decrypted(pass) }
 
-      it(".encrypt(.decrypt)") { MiqPassword.decrypt(MiqPassword.encrypt(pass)).should         be_decrypted(pass) }
-      it(".encStr/.decrypt")   { MiqPassword.decrypt(MiqPassword.new(pass).encStr).should      be_decrypted(pass) }
-      it("#encrypt(#decrypt)") { MiqPassword.new.decrypt(MiqPassword.new.encrypt(pass)).should be_decrypted(pass) }
+      it(".encrypt(.decrypt)") { expect(MiqPassword.decrypt(MiqPassword.encrypt(pass))).to         be_decrypted(pass) }
+      it(".encStr/.decrypt")   { expect(MiqPassword.decrypt(MiqPassword.new(pass).encStr)).to      be_decrypted(pass) }
+      it("#encrypt(#decrypt)") { expect(MiqPassword.new.decrypt(MiqPassword.new.encrypt(pass))).to be_decrypted(pass) }
 
       it("#try_encrypt (non-encrypted)") { expect(MiqPassword.try_encrypt(pass)).to   be_encrypted(pass) }
       it("#try_encrypt erb")             { expect(MiqPassword.try_encrypt(erberize(enc_v0))).to eq(erberize(enc_v0)) }
@@ -128,14 +128,14 @@ describe MiqPassword do
       "abcdefghijklmnopqrstuvwxyz123456", # 32 character password will not end in a "=" after Base64 encoding
     ].each do |pass|
       it "with #{pass.inspect}" do
-        MiqPassword.encrypted?(pass).should                      be_false
-        MiqPassword.encrypted?(MiqPassword.encrypt(pass)).should be_true
+        expect(MiqPassword.encrypted?(pass)).to                      be_falsey
+        expect(MiqPassword.encrypted?(MiqPassword.encrypt(pass))).to be_truthy
       end
     end
 
     it "should handle blanks" do
-      expect(MiqPassword.encrypted?(nil)).to be_false
-      expect(MiqPassword.encrypted?("")).to  be_false
+      expect(MiqPassword.encrypted?(nil)).to be_falsey
+      expect(MiqPassword.encrypted?("")).to  be_falsey
     end
   end
 

@@ -5,7 +5,7 @@ require "#{__dir__}/test_files"
 
 describe MiqBerkeleyDB::MiqBdb do
   it "#new" do
-    -> { described_class.new(MiqBdb::TestFiles::RPM_PROVIDE_VERSION).close }.should_not raise_error
+    expect { described_class.new(MiqBdb::TestFiles::RPM_PROVIDE_VERSION).close }.not_to raise_error
   end
 
   it "#pages" do
@@ -19,7 +19,7 @@ describe MiqBerkeleyDB::MiqBdb do
       end
     end
 
-    nkeys.should == 657
+    expect(nkeys).to eq(657)
 
     bdb.close
   end
@@ -27,10 +27,10 @@ describe MiqBerkeleyDB::MiqBdb do
   context "Hash Database" do
     it "validates" do
       bdb = described_class.new(MiqBdb::TestFiles::RPM_PACKAGES)
-      bdb.db.should be_kind_of(MiqBerkeleyDB::MiqBdbHashDatabase)
+      expect(bdb.db).to be_kind_of(MiqBerkeleyDB::MiqBdbHashDatabase)
 
       # Assert that the number of keys in header is what was extracted
-      bdb.db.nkeys.should == bdb.size
+      expect(bdb.db.nkeys).to eq(bdb.size)
 
       bdb.close
     end

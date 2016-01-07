@@ -14,8 +14,8 @@ describe YAML do
 :b: 2
 __iv__@val: 3
 eoyml
-    hash[:a].should == 1
-    hash[:b].should == 2
-    hash.val.should == 3
+    expect(hash[:a]).to eq(1)
+    expect(hash[:b]).to eq(2)
+    expect(hash.val).to eq(3)
   end
 end

@@ -49,13 +49,13 @@ describe ApplianceConsole::CertificateAuthority do
       ipa_configured(true)
       expect_run(/getcert/, anything, response) # getcert returns: the certificate already exist
 
-      ApplianceConsole::InternalDatabaseConfiguration.should_receive(:new)
+      expect(ApplianceConsole::InternalDatabaseConfiguration).to receive(:new)
         .and_return(double("config", :activate => true, :configure_postgres => true))
       PostgresAdmin.stub(:service_name => "postgresql")
-      LinuxAdmin::Service.should_receive(:new).and_return(double("Service", :restart => true))
-      FileUtils.should_receive(:chmod).with(0644, anything)
+      expect(LinuxAdmin::Service).to receive(:new).and_return(double("Service", :restart => true))
+      expect(FileUtils).to receive(:chmod).with(0644, anything)
 
-      subject.should_receive(:say)
+      expect(subject).to receive(:say)
       subject.activate
       expect(subject.pgserver).to eq(:complete)
       expect(subject.status_string).to eq("pgserver: complete")
@@ -66,8 +66,8 @@ describe ApplianceConsole::CertificateAuthority do
       ipa_configured(true)
       expect_run(/getcert/, anything, response(3)) # getcert returns: waiting on the CA
 
-      ApplianceConsole::InternalDatabaseConfiguration.should_not_receive(:new)
-      LinuxAdmin::Service.should_not_receive(:new)
+      expect(ApplianceConsole::InternalDatabaseConfiguration).not_to receive(:new)
+      expect(LinuxAdmin::Service).not_to receive(:new)
       subject.activate
       expect(subject.pgserver).to eq(:waiting)
       expect(subject.status_string).to eq("pgserver: waiting")

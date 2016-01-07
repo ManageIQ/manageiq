@@ -13,7 +13,7 @@ describe WimParser do
 
   context "#header" do
     it "with a WIM file" do
-      @wim_parser.header.should == {
+      expect(@wim_parser.header).to eq({
         "image_tag"                   => "MSWIM\0\0\0",
         "size"                        => 208,
         "version"                     => 68864,
@@ -41,17 +41,17 @@ describe WimParser do
         "integrity_offset"            => 0,
         "integrity_original_size"     => 0,
         "unused"                      => ("\0" * 60),
-      }
+      })
     end
 
     it "with a non-WIM file" do
       w = WimParser.new(__FILE__)
-      lambda { w.header }.should raise_error
+      expect { w.header }.to raise_error
     end
   end
 
   it "#xml_data" do
-    @wim_parser.xml_data.should == {
+    expect(@wim_parser.xml_data).to eq({
       "total_bytes" => 2404,
       "images"      => [
         {
@@ -77,6 +77,6 @@ describe WimParser do
           "last_modification_time" => Time.parse("2012-09-01 04:08:59 UTC"),
         },
       ]
-    }
+    })
   end
 end

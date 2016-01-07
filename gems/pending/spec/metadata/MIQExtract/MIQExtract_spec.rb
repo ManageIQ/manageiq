@@ -49,8 +49,8 @@ describe MIQExtract do
       ost = OpenStruct.new
       ost.scanData = test_data_with_pw
 
-      $log.should_receive(:info).with(/ems/)
-      $log.should_not_receive(:info).with(/#{@test_password}/)
+      expect($log).to receive(:info).with(/ems/)
+      expect($log).not_to receive(:info).with(/#{@test_password}/)
       expect { MIQExtract.new("/bad/file/path", ost) }.to raise_exception
     end
 
@@ -87,8 +87,8 @@ describe MIQExtract do
       ost = OpenStruct.new
       ost.scanData = test_data_no_pw
 
-      $log.should_receive(:info).with(/ems/)
-      $log.should_not_receive(:info).with(/#{@test_password}/)
+      expect($log).to receive(:info).with(/ems/)
+      expect($log).not_to receive(:info).with(/#{@test_password}/)
       expect { MIQExtract.new("/bad/file/path", ost) }.to raise_exception
     end
 
@@ -126,8 +126,8 @@ describe MIQExtract do
       ost = OpenStruct.new
       ost.scanData = test_data_connect_type_pw
 
-      $log.should_receive(:info).with(/ems/)
-      $log.should_not_receive(:info).with(/#{@test_password}/)
+      expect($log).to receive(:info).with(/ems/)
+      expect($log).not_to receive(:info).with(/#{@test_password}/)
       expect { MIQExtract.new("/bad/file/path", ost) }.to raise_exception
     end
   end

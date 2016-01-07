@@ -18,14 +18,14 @@ describe OpenstackHandle::Handle do
       @openstack_project = double('project')
 
       @handle = OpenstackHandle::Handle.new("dummy", "dummy", "dummy")
-      @handle.stub(:service_for_each_accessible_tenant).and_yield(@openstack_svc, @openstack_project)
+      allow(@handle).to receive(:service_for_each_accessible_tenant).and_yield(@openstack_svc, @openstack_project)
     end
 
     it "ignores 404 errors from services" do
       expect(@openstack_svc).to receive(:security_groups).and_raise(Fog::Network::OpenStack::NotFound)
 
       data = @handle.accessor_for_accessible_tenants("Network", :security_groups, :id)
-      data.should be_empty
+      expect(data).to be_empty
     end
 
     it "ignores 404 errors from services returning arrays" do
@@ -35,7 +35,7 @@ describe OpenstackHandle::Handle do
       expect(@openstack_svc).to receive(:security_groups).and_return(security_groups)
 
       data = @handle.accessor_for_accessible_tenants("Network", :security_groups, :id)
-      data.should be_empty
+      expect(data).to be_empty
     end
   end
 
@@ -45,11 +45,11 @@ describe OpenstackHandle::Handle do
       handle   = OpenstackHandle::Handle.new("dummy", "dummy", "address")
       auth_url = OpenstackHandle::Handle.auth_url("address", 5000, "https")
 
-      OpenstackHandle::Handle.should_receive(:raw_connect).once do |_, _, address|
-        address.should == auth_url
+      expect(OpenstackHandle::Handle).to receive(:raw_connect).once do |_, _, address|
+        expect(address).to eq(auth_url)
         fog
       end
-      handle.connect(:tenant_name => "admin").should == fog
+      expect(handle.connect(:tenant_name => "admin")).to eq(fog)
     end
 
     it "handles ssl connections just fine, too" do
@@ -61,19 +61,19 @@ describe OpenstackHandle::Handle do
       # setup the socket error for the initial ssl failure
       socket_error = double('socket_error')
       allow(socket_error).to receive(:message).and_return("unknown protocol (OpenSSL::SSL::SSLError)")
-      socket_error.should_receive(:class).and_return(Object)
-      socket_error.should_receive(:backtrace)
+      expect(socket_error).to receive(:class).and_return(Object)
+      expect(socket_error).to receive(:backtrace)
 
-      OpenstackHandle::Handle.should_receive(:raw_connect) do |_, _, address|
-        address.should == auth_url_ssl
+      expect(OpenstackHandle::Handle).to receive(:raw_connect) do |_, _, address|
+        expect(address).to eq(auth_url_ssl)
         raise Excon::Errors::SocketError.new(socket_error)
       end
-      OpenstackHandle::Handle.should_receive(:raw_connect) do |_, _, address|
-        address.should == auth_url_nossl
+      expect(OpenstackHandle::Handle).to receive(:raw_connect) do |_, _, address|
+        expect(address).to eq(auth_url_nossl)
         fog
       end
 
-      handle.connect(:tenant_name => "admin").should == fog
+      expect(handle.connect(:tenant_name => "admin")).to eq(fog)
     end
   end
 end

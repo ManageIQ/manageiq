@@ -18,18 +18,18 @@ describe MiqUUID do
   ]
 
   MIQ_UUID_CASES.each_slice(3) do |title, value, expected|
-    it(".clean_guid with #{title}") { MiqUUID.clean_guid(value).should == expected }
+    it(".clean_guid with #{title}") { expect(MiqUUID.clean_guid(value)).to eq(expected) }
   end
 
   it ".new_guid" do
     guid = MiqUUID.new_guid
-    guid.should be_kind_of String
-    guid.should match MiqUUID::REGEX_FORMAT
+    expect(guid).to be_kind_of String
+    expect(guid).to match MiqUUID::REGEX_FORMAT
   end
 
   it ".parse_raw" do
     guid = MiqUUID.parse_raw("\001#Eg\211\253\315\357\253\315\357\001#Eg\211")
-    guid.should be_kind_of UUIDTools::UUID
-    guid.to_s.should == '01234567-89ab-cdef-abcd-ef0123456789'
+    expect(guid).to be_kind_of UUIDTools::UUID
+    expect(guid.to_s).to eq('01234567-89ab-cdef-abcd-ef0123456789')
   end
 end
