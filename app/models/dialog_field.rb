@@ -104,6 +104,10 @@ class DialogField < ActiveRecord::Base
     self
   end
 
+  def update_and_serialize_values
+    DialogFieldSerializer.serialize(self)
+  end
+
   private
 
   def default_resource_action
@@ -124,5 +128,9 @@ class DialogField < ActiveRecord::Base
 
   def get_default_value
     default_value
+  end
+
+  def values_from_automate
+    DynamicDialogFieldValueProcessor.values_from_automate(self)
   end
 end

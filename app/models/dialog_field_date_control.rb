@@ -45,13 +45,13 @@ class DialogFieldDateControl < DialogField
     {:date => Date.parse(@value).strftime("%m/%d/%Y")}
   end
 
+  def trigger_automate_value_updates
+    values_from_automate
+  end
+
   private
 
   def default_time
     with_current_user_timezone { Time.zone.now + 1.day }.strftime("%m/%d/%Y")
-  end
-
-  def values_from_automate
-    DynamicDialogFieldValueProcessor.values_from_automate(self)
   end
 end

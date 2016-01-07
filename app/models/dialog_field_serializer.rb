@@ -1,6 +1,10 @@
 class DialogFieldSerializer < Serializer
   EXCLUDED_ATTRIBUTES = ["created_at", "dialog_group_id", "id", "updated_at"]
 
+  def self.serialize(dialog_field)
+    new.serialize(dialog_field)
+  end
+
   def initialize(resource_action_serializer = ResourceActionSerializer.new)
     @resource_action_serializer = resource_action_serializer
   end
@@ -8,6 +12,15 @@ class DialogFieldSerializer < Serializer
   def serialize(dialog_field)
     serialized_resource_action = @resource_action_serializer.serialize(dialog_field.resource_action)
 
-    included_attributes(dialog_field.attributes).merge("resource_action" => serialized_resource_action)
+    extra_attributes = {
+      "resource_action" => serialized_resource_action
+    }
+
+    if dialog_field.dynamic?
+      dynamic_values = dialog_field.trigger_automate_value_updates
+      extra_attributes.merge!("values" => dynamic_values)
+    end
+
+    included_attributes(dialog_field.attributes).merge(extra_attributes)
   end
 end

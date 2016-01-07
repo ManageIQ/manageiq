@@ -33,13 +33,13 @@ class DialogFieldCheckBox < DialogField
     {:checked => checked?}
   end
 
+  def trigger_automate_value_updates
+    values_from_automate
+  end
+
   private
 
   def required_value_error?
     value != "t"
-  end
-
-  def values_from_automate
-    DynamicDialogFieldValueProcessor.values_from_automate(self)
   end
 end

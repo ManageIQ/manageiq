@@ -49,6 +49,10 @@ class DialogFieldSortedItem < DialogField
     result.blank? ? initial_values : result
   end
 
+  def trigger_automate_value_updates
+    set_raw_values
+  end
+
   private
 
   def sort_data(data_to_sort)
