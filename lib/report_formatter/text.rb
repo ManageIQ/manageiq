@@ -237,7 +237,9 @@ module ReportFormatter
       end
 
       output << @hr
-      cr = format_timezone(Time.now, tz).to_s # Label footer with current time in selected time zone
+      # Label footer with last run on time of selected report or current time for other downloads
+      last_run_on = mri.rpt_options && mri.rpt_options[:last_run_on] || Time.zone.now
+      cr = format_timezone(last_run_on, tz).to_s
       f = cr.center(@line_len - 2)
       output << fit_to_width("|#{f}|" + CRLF)
       output << @hr
