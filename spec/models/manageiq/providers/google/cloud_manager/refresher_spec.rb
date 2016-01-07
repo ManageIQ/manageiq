@@ -42,7 +42,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(ExtManagementSystem.count).to eql(1)
     expect(Flavor.count).to              eql(18)
     expect(AvailabilityZone.count).to    eql(13)
-    expect(AuthPrivateKey.count).to      eq(2)
+    expect(AuthPrivateKey.count).to      eq(3)
     expect(VmOrTemplate.count).to        eql(349)
     expect(Vm.count).to                  eql(2)
     expect(MiqTemplate.count).to         eql(347)
@@ -57,7 +57,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
 
   def assert_ems
     expect(@ems.flavors.size).to            eql(18)
-    expect(@ems.key_pairs.size).to          eql(2)
+    expect(@ems.key_pairs.size).to          eql(3)
     expect(@ems.availability_zones.size).to eql(13)
     expect(@ems.vms_and_templates.size).to  eql(349)
     expect(@ems.vms.size).to                eql(2)
@@ -73,10 +73,18 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
   end
 
   def assert_specific_key_pair
+    # Find an ssh key added to a single vm
     @kp = ManageIQ::Providers::Google::CloudManager::AuthKeyPair.where(:name => "root").first
     expect(@kp).to have_attributes(
       :name        => "root",
       :fingerprint => "97:c9:58:c8:42:32:3d:e1:47:a9:e6:66:93:51:6a:ae:a9:cb:ee:4a"
+    )
+
+    # Find an ssh key added to the whole project
+    @project_kp = ManageIQ::Providers::Google::CloudManager::AuthKeyPair.where(:name => "user2").first
+    expect(@project_kp).to have_attributes(
+      :name        => "user2",
+      :fingerprint => "db:46:06:c9:4b:af:d7:18:b4:1d:d0:af:bc:d6:2e:26:48:bc:7d:17"
     )
   end
 
@@ -194,7 +202,10 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(v.cloud_network).to          be_nil
     expect(v.cloud_subnet).to           be_nil
     #TODO parse instance OS v.operating_system.product_name.should eql("Debian")
-    expect(v.key_pairs.to_a).to         eql([@kp])
+
+    # This should have keys added on just this vm (@kp) as well as
+    # on the whole project (@project_kp)
+    expect(v.key_pairs.to_a).to         eql([@kp, @project_kp])
     expect(v.custom_attributes.size).to eql(0)
     expect(v.snapshots.size).to         eql(0)
 

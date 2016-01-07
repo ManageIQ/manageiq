@@ -15,6 +15,7 @@ module ManageIQ::Providers
         @options           = options || {}
         @data              = {}
         @data_index        = {}
+        @project_key_pairs = Set.new
       end
 
       def ems_inv_to_hashes
@@ -64,9 +65,16 @@ module ManageIQ::Providers
       def get_key_pairs(instances)
         ssh_keys = []
 
+        # Find all key pairs added directly to GCE instances
         instances.each do |instance|
           ssh_keys |= parse_compute_metadata_ssh_keys(instance.metadata)
         end
+
+        # Add ssh keys that are common to all instances in the project
+        project_common_metadata = @connection.projects.get(@ems.project).common_instance_metadata
+        @project_key_pairs      = parse_compute_metadata_ssh_keys(project_common_metadata)
+
+        ssh_keys |= @project_key_pairs
 
         process_collection(ssh_keys, :key_pairs) { |ssh_key| parse_ssh_key(ssh_key) }
       end
@@ -270,7 +278,10 @@ module ManageIQ::Providers
       end
 
       def populate_key_pairs_with_ssh_keys(result_key_pairs, instance)
-        parse_compute_metadata_ssh_keys(instance.metadata).each do |ssh_key|
+        # Add project common ssh-keys with keys specific to this instance
+        instance_ssh_keys = parse_compute_metadata_ssh_keys(instance.metadata) | @project_key_pairs
+
+        instance_ssh_keys.each do |ssh_key|
           key_uid = "#{ssh_key[:name]}:#{ssh_key[:fingerprint]}"
           kp = @data_index.fetch_path(:key_pairs, key_uid)
           result_key_pairs << kp unless kp.nil?
@@ -278,7 +289,7 @@ module ManageIQ::Providers
       end
 
       def parse_compute_metadata(metadata, key)
-        metadata_item = metadata["items"].to_a.select { |x| x["key"] == key }.first
+        metadata_item = metadata["items"].to_a.detect { |x| x["key"] == key }
         metadata_item.to_h["value"]
       end
 
