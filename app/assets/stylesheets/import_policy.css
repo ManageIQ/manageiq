@@ -2,24 +2,21 @@
   height: 500px;
   width: 1000px;
 }
-.cell-title {
-
-}
-.cell-effort-driven {
+#import_grid .cell-effort-driven {
   text-align: center;
 }
-.toggle {
+#import_grid .toggle {
   height: 14px;
   width: 18px;
   display: inline-block;
 }
-.toggle.expand {
+#import_grid .toggle.expand {
   background: url(/images/layout/plus.gif) no-repeat center center;
 }
-.toggle.collapse {
+#import_grid .toggle.collapse {
   background: url(/images/layout/minus.gif) no-repeat center center;
 }
-.slick-row {
+#import_grid .slick-row {
   margin-left: 0px;
 }
-.odd {background: #f5f5f5}
+#import_grid .odd {background: #f5f5f5}
