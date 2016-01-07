@@ -251,6 +251,10 @@ class MiqReportResult < ActiveRecord::Base
 
       new_res = build_new_result(options.merge(:userid => userid))
 
+      # temporarily stick last_run_on time into report object
+      # to be used by report_formatter while generating downloadable text report
+      rpt.rpt_options.merge!(:last_run_on => last_run_on) if result_type.to_sym == :txt
+
       new_res.report_results = user.with_my_timezone do
         case result_type.to_sym
         when :csv then rpt.to_csv
