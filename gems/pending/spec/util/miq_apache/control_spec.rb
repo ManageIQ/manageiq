@@ -58,7 +58,7 @@ describe MiqApache::Control do
 
   it "should runcmd with killall -9 httpd when running kill_all and cleanup file descriptors" do
     expect(MiqUtil).to receive(:runcmd).with("killall -9 httpd")
-    expect(MiqUtil).to receive(:runcmd).with { |arg| arg =~ /^for i in/ }
+    expect(MiqUtil).to receive(:runcmd).with(start_with "for i in")
     MiqApache::Control.kill_all
   end
 
@@ -104,7 +104,7 @@ describe MiqApache::Control do
   end
 
   it "should runcmd with rpm -qa... when calling version" do
-    expect(MiqUtil).to receive(:runcmd).with { |arg| arg == "rpm -qa --queryformat '%{VERSION}' httpd" }
+    expect(MiqUtil).to receive(:runcmd).with("rpm -qa --queryformat '%{VERSION}' httpd")
     MiqApache::Control.version
   end
 

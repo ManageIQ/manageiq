@@ -63,7 +63,7 @@ EOF
     end
 
     it "#run_command" do
-      expect(MiqUtil).to receive(:runcmd).with { |cmd| expect(cmd).to include("-I lan") }
+      expect(MiqUtil).to receive(:runcmd).with(a_string_including "-I lan")
       subject.run_command("chassis power status")
     end
   end
@@ -161,7 +161,7 @@ EOR
     end
 
     it "#run_command" do
-      expect(MiqUtil).to receive(:runcmd).with { |cmd| expect(cmd).to include("-I lanplus") }
+      expect(MiqUtil).to receive(:runcmd).with(a_string_including "-I lanplus")
       subject.run_command("chassis power status")
     end
   end
