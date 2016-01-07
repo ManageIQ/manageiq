@@ -4,6 +4,7 @@ describe "Orchestration check_provisioned Method Validation" do
   let(:deploy_result)           { "deploy result" }
   let(:ems_amazon)              { FactoryGirl.create(:ems_amazon, :last_refresh_date => Time.now - 100) }
   let(:failure_msg)             { "failure message" }
+  let(:long_failure_msg)        { "t" * 300 }
   let(:miq_request_task)        { FactoryGirl.create(:miq_request_task, :destination => service_orchestration, :miq_request => request) }
   let(:request)                 { FactoryGirl.create(:service_template_provision_request, :requester => user) }
   let(:service_orchestration)   { FactoryGirl.create(:service_orchestration, :orchestration_manager => ems_amazon) }
@@ -20,18 +21,17 @@ describe "Orchestration check_provisioned Method Validation" do
 
   it "catches the error during stack deployment" do
     allow_any_instance_of(ServiceOrchestration)
-      .to receive(:orchestration_stack_status) { ['CREATE_FAILED', failure_msg] }
+      .to receive(:orchestration_stack_status).and_return(['CREATE_FAILED', failure_msg])
     expect(ws.root['ae_result']).to eq('error')
     expect(ws.root['ae_reason']).to eq(failure_msg)
     expect(request.reload.message).to eq(failure_msg)
   end
 
   it "truncates the error message that exceeds 255 characters" do
-    long_error = 't' * 300
     allow_any_instance_of(ServiceOrchestration)
-      .to receive(:orchestration_stack_status) { ['CREATE_FAILED', long_error] }
+      .to receive(:orchestration_stack_status).and_return(['CREATE_FAILED', long_failure_msg])
     expect(ws.root['ae_result']).to eq('error')
-    expect(ws.root['ae_reason']).to eq(long_error)
+    expect(ws.root['ae_reason']).to eq(long_failure_msg)
     expect(request.reload.message).to eq('t' * 252 + '...')
   end
 
