@@ -272,15 +272,12 @@ module ApiSpecHelper
   end
 
   def expect_result_to_match_hash(result, attr_hash)
-    fetch_value(attr_hash).each do |key, value|
-      expect(result).to have_key(key)
+    attr_hash = fetch_value(attr_hash)
+    attr_hash.each do |key, value|
       value = fetch_value(value)
-      if key == "href" || key.ends_with?("_href") || value.kind_of?(Regexp)
-        expect(result[key]).to match(value)
-      else
-        expect(result[key]).to eq(value)
-      end
+      attr_hash[key] = (key == "href" || key.ends_with?("_href")) ? a_string_matching(value) : value
     end
+    expect(result).to include(attr_hash)
   end
 
   def expect_results_to_match_hash(collection, result_hash)
