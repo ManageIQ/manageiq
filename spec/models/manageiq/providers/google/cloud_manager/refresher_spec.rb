@@ -122,12 +122,12 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :cpu_shares_level      => nil
     )
 
-    expect(v.ext_management_system).to eql(@ems)
-    expect(v.availability_zone).to eql(@zone)
-    #TODO parse instance flavor v.flavor.should eql(@flavor)
-    #TODO parse instance OS v.operating_system.product_name.should eql("Red Hat Enterprise Linux")
-    expect(v.custom_attributes.size).to eql(0)
-    expect(v.snapshots.size).to         eql(0)
+    expect(v.ext_management_system).to         eql(@ems)
+    expect(v.availability_zone).to             eql(@zone)
+    expect(v.flavor).to                        eql(@flavor)
+    expect(v.operating_system.product_name).to eql("linux_redhat")
+    expect(v.custom_attributes.size).to        eql(0)
+    expect(v.snapshots.size).to                eql(0)
 
     assert_specific_vm_powered_on_hardware(v)
   end
@@ -144,7 +144,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :virtualization_type => nil
     )
 
-    expect(v.hardware.disks.size).to         eql(1) # TODO: Change to a flavor that has disks
+    expect(v.hardware.disks.size).to         eql(1)
     expect(v.hardware.guest_devices.size).to eql(0)
     expect(v.hardware.nics.size).to          eql(0)
 
