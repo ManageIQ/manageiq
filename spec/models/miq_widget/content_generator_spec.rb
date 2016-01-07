@@ -4,14 +4,14 @@ describe MiqWidget::ContentGenerator do
   let(:content_generator) { described_class.new }
 
   describe "#generate" do
-    let(:widget) { active_record_instance_double("MiqWidget", :id => 123, :title => "title", :log_prefix => "") }
+    let(:widget) { double("MiqWidget", :id => 123, :title => "title", :log_prefix => "") }
 
     context "when the class is MiqGroup" do
       let(:klass) { "MiqGroup" }
       let(:userids) { [1, 2] }
       let(:timezones) { ["PST", "UTC"] }
-      let(:user1) { active_record_instance_double("User", :get_timezone => "PST") }
-      let(:user2) { active_record_instance_double("User", :get_timezone => "UTC") }
+      let(:user1) { double("User", :get_timezone => "PST") }
+      let(:user2) { double("User", :get_timezone => "UTC") }
       let(:group_description) { "description" }
 
       before do
@@ -22,7 +22,7 @@ describe MiqWidget::ContentGenerator do
       end
 
       context "when the group exists" do
-        let(:group) { active_record_instance_double("MiqGroup") }
+        let(:group) { double("MiqGroup") }
 
         context "when the resulting length is equal to the expected count" do
           before do
@@ -62,7 +62,7 @@ describe MiqWidget::ContentGenerator do
       let(:klass) { "User" }
       let(:userids) { [1, 2] }
       let(:group_description) { "EvmGroup-administrator" }
-      let(:group) { active_record_instance_double("MiqGroup") }
+      let(:group) { double("MiqGroup") }
 
       before do
         record = group

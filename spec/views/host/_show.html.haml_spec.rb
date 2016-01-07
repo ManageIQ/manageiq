@@ -9,7 +9,6 @@ describe "host/show.html.haml" do
     end
   end
 
-  # TODO: For speed, replace next line with active_record_instance_double when available
   let(:host) { FactoryGirl.create(:host_vmware, :name => 'My Host') }
   let(:action) { 'index' }
 

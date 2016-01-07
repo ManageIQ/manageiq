@@ -2540,7 +2540,7 @@ describe ApplicationHelper do
     end
 
     context "and id = miq_request_delete" do
-      let(:server) { active_record_instance_double("MiqServer", :logon_status => :ready) }
+      let(:server) { double("MiqServer", :logon_status => :ready) }
       let(:user)   { FactoryGirl.create(:user_admin) }
       before do
         allow(MiqServer).to receive(:my_server).with(true).and_return(server)

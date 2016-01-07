@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe ApplicationController  do
   describe "#get_tagdata" do
-    let(:record) { active_record_instance_double("Host") }
+    let(:record) { double("Host") }
     let(:user) { FactoryGirl.create(:user, :userid => "testuser") }
 
     before do

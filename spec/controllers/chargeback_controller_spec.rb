@@ -74,12 +74,14 @@ describe ChargebackController do
     end
   end
 
-  render_views
+  context "#explorer" do
+    render_views
 
-  it "#explorer can be rendered" do
-    EvmSpecHelper.create_guid_miq_server_zone
-    get :explorer
-    expect(response.status).to eq(200)
-    expect(response.body).to_not be_empty
+    it "can be rendered" do
+      EvmSpecHelper.create_guid_miq_server_zone
+      get :explorer
+      expect(response.status).to eq(200)
+      expect(response.body).to_not be_empty
+    end
   end
 end

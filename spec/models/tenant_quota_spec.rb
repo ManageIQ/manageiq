@@ -98,11 +98,11 @@ describe TenantQuota do
 
       it "can give quota that the parent has available to allocate when parent used and allocated is less than the total quota of the parent" do
         described_class.create!(:tenant => child_tenant, :name => "cpu_allocated", :value => 10)
-        described_class.create(:tenant => grandchild_tenant1, :name => "cpu_allocated", :value => 3)
+        described_class.create!(:tenant => grandchild_tenant1, :name => "cpu_allocated", :value => 3)
+        allow_any_instance_of(described_class).to receive(:used).and_return(6)
 
         nq = described_class.new(:tenant => grandchild_tenant2, :name => "cpu_allocated", :value => 1)
-        nq.stub(:used => 0)
-        described_class.any_instance.stub(:used => 6)
+        allow(nq).to receive(:used).and_return(0)
         expect(nq).to be_valid
       end
     end

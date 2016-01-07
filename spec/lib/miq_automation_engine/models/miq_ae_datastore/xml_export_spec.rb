@@ -2,10 +2,10 @@ require "spec_helper"
 
 describe MiqAeDatastore::XmlExport do
   describe ".to_xml" do
-    let(:custom_button) { active_record_instance_double("CustomButton") }
+    let(:custom_button) { double("CustomButton") }
     let(:custom_buttons) { [custom_button] }
-    let(:miq_ae_class1) { active_record_instance_double("MiqAeClass", :fqname => "z") }
-    let(:miq_ae_class2) { active_record_instance_double("MiqAeClass", :fqname => "a") }
+    let(:miq_ae_class1) { double("MiqAeClass", :fqname => "z") }
+    let(:miq_ae_class2) { double("MiqAeClass", :fqname => "a") }
     let(:miq_ae_classes) { [miq_ae_class1, miq_ae_class2] }
 
     let(:expected_xml) do

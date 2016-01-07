@@ -81,8 +81,8 @@ describe DialogFieldTextBox do
     let(:df) { FactoryGirl.build(:dialog_field_text_box, :label => 'test field', :name => 'test field') }
 
     context "#validate_field_data" do
-      let(:dt) { active_record_instance_double('DialogTab', :label => 'tab') }
-      let(:dg) { active_record_instance_double('DialogGroup', :label => 'group') }
+      let(:dt) { double('DialogTab', :label => 'tab') }
+      let(:dg) { double('DialogGroup', :label => 'group') }
 
       before do
         df.validator_type = 'regex'

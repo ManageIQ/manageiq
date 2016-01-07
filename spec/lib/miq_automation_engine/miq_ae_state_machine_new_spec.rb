@@ -15,7 +15,7 @@ describe "MiqAeStateMachine" do
     Object.send(:remove_const, :TestClass)
   end
 
-  let(:workspace) { instance_double("MiqAeEngine::MiqAeWorkspace", :root => options) }
+  let(:workspace) { double("MiqAeEngine::MiqAeWorkspaceRuntime", :root => options) }
   let(:test_class) { TestClass.new(workspace) }
 
   describe "#enforce_max_retries" do

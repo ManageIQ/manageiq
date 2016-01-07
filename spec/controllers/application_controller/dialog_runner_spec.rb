@@ -5,10 +5,10 @@ describe CatalogController do
   describe "#dialog_field_changed" do
     include_context "valid session"
 
-    let(:dialog) { active_record_instance_double("Dialog") }
+    let(:dialog) { double("Dialog") }
     let(:wf) { double(:dialog => dialog) }
     let(:dialog_field) do
-      active_record_instance_double("DialogFieldTextBox", :name => "test", :value => nil, :type => "TextBox")
+      double("DialogFieldTextBox", :name => "test", :value => nil, :type => "TextBox")
     end
     let(:params) { {:test => "new value", :id => 123} }
     let(:session) { {:edit => {:rec_id => 123, :wf => wf, :key => "dialog_edit__123"}} }
@@ -39,9 +39,9 @@ describe CatalogController do
   describe "#dynamic_text_box_refresh" do
     include_context "valid session"
 
-    let(:dialog) { active_record_instance_double("Dialog") }
+    let(:dialog) { double("Dialog") }
     let(:wf) { double(:dialog => dialog) }
-    let(:dialog_field) { active_record_instance_double("DialogFieldTextBox", :refresh_json_value => "lol") }
+    let(:dialog_field) { double("DialogFieldTextBox", :refresh_json_value => "lol") }
 
     let(:params)  { {:name => "name"} }
     let(:session) { {:edit => {:wf => wf}} }
@@ -59,9 +59,9 @@ describe CatalogController do
   describe "#dynamic_checkbox_refresh" do
     include_context "valid session"
 
-    let(:dialog) { active_record_instance_double("Dialog") }
+    let(:dialog) { double("Dialog") }
     let(:wf) { double(:dialog => dialog) }
-    let(:dialog_field) { active_record_instance_double("DialogFieldCheckBox", :refresh_json_value => "true") }
+    let(:dialog_field) { double("DialogFieldCheckBox", :refresh_json_value => "true") }
 
     let(:params)  { {:name => "name"} }
     let(:session) { {:edit => {:wf => wf}} }
@@ -79,9 +79,9 @@ describe CatalogController do
   describe "#dynamic_date_refresh" do
     include_context "valid session"
 
-    let(:dialog) { active_record_instance_double("Dialog") }
+    let(:dialog) { double("Dialog") }
     let(:wf) { double(:dialog => dialog) }
-    let(:dialog_field) { active_record_instance_double("DialogFieldDateControl", :refresh_json_value => "01/02/2015") }
+    let(:dialog_field) { double("DialogFieldDateControl", :refresh_json_value => "01/02/2015") }
 
     let(:params) { {:name => "name"} }
     let(:session) { {:edit => {:wf => wf}} }
@@ -99,7 +99,7 @@ describe CatalogController do
   describe "#dialog_get_form_vars" do
     include_context "valid session"
 
-    let(:dialog) { active_record_instance_double("Dialog") }
+    let(:dialog) { double("Dialog") }
     let(:wf) { double(:dialog => dialog) }
     let(:dialog_field) { DialogFieldDateTimeControl.new }
 
@@ -137,7 +137,7 @@ describe CatalogController do
   end
 
   describe "#dialog_form_button_pressed" do
-    let(:dialog) { active_record_instance_double("Dialog") }
+    let(:dialog) { double("Dialog") }
     let(:wf) { double(:dialog => dialog) }
 
     before do

@@ -23,10 +23,10 @@ describe MiqAeToolsController do
   describe "#import_export" do
     include_context "valid session"
 
-    let(:fake_domain) { active_record_instance_double("MiqAeDomain", :name => "test_domain") }
-    let(:fake_domain2) { active_record_instance_double("MiqAeDomain", :name => "uneditable") }
+    let(:fake_domain) { double("MiqAeDomain", :name => "test_domain") }
+    let(:fake_domain2) { double("MiqAeDomain", :name => "uneditable") }
     let(:tenant) do
-      active_record_instance_double(
+      double(
         "Tenant",
         :editable_domains => [double(:name => "test_domain")]
       )
@@ -52,7 +52,7 @@ describe MiqAeToolsController do
     include_context "valid session"
 
     let(:params) { {:import_file_upload_id => "123"} }
-    let(:automate_import_service) { auto_loaded_instance_double("AutomateImportService") }
+    let(:automate_import_service) { double("AutomateImportService") }
 
     before do
       bypass_rescue
@@ -79,8 +79,8 @@ describe MiqAeToolsController do
   describe "#automate_json" do
     include_context "valid session"
 
-    let(:automate_import_json_serializer) { auto_loaded_instance_double("AutomateImportJsonSerializer") }
-    let(:import_file_upload) { active_record_instance_double("ImportFileUpload") }
+    let(:automate_import_json_serializer) { double("AutomateImportJsonSerializer") }
+    let(:import_file_upload) { double("ImportFileUpload") }
     let(:params) { {:import_file_upload_id => "123"} }
 
     before do
@@ -119,7 +119,7 @@ describe MiqAeToolsController do
     end
 
     context "when the selected namespaces is not nil" do
-      let(:automate_import_service) { auto_loaded_instance_double("AutomateImportService") }
+      let(:automate_import_service) { double("AutomateImportService") }
       let(:selected_namespaces) { ["datastore/namespace", "datastore/namespace/test"] }
 
       before do
@@ -128,7 +128,7 @@ describe MiqAeToolsController do
       end
 
       context "when the import file exists" do
-        let(:import_file_upload) { active_record_instance_double("ImportFileUpload") }
+        let(:import_file_upload) { double("ImportFileUpload") }
         let(:import_stats) do
           {
             :namespace => {:test => 2, :test2 => 2},
@@ -242,7 +242,7 @@ Methods updated/added: 10
     end
 
     context "when an upload file is given" do
-      let(:automate_import_service) { auto_loaded_instance_double("AutomateImportService") }
+      let(:automate_import_service) { double("AutomateImportService") }
       let(:params) { {:upload => {:file => upload_file}} }
       let(:upload_file) { fixture_file_upload(Rails.root.join("spec/fixtures/files/import_automate.yml"), "text/yml") }
 

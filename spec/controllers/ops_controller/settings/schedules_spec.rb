@@ -13,7 +13,7 @@ describe OpsController do
     end
 
     context "when the filter_type is 'vm'" do
-      let(:vm) { active_record_instance_double("Vm", :name => "vmtest") }
+      let(:vm) { double("Vm", :name => "vmtest") }
       let(:filter_type) { "vm" }
 
       before do
@@ -28,7 +28,7 @@ describe OpsController do
     end
 
     context "when the filter_type is 'ems'" do
-      let(:ext_management_system) { active_record_instance_double("ExtManagementSystem", :name => "emstest") }
+      let(:ext_management_system) { double("ExtManagementSystem", :name => "emstest") }
       let(:filter_type) { "ems" }
 
       before do
@@ -44,7 +44,7 @@ describe OpsController do
 
     context "when the filter_type is 'cluster'" do
       let(:cluster) do
-        active_record_instance_double(
+        double(
           "EmsCluster",
           :name                => "clustertest",
           :v_parent_datacenter => "datacenter",
@@ -66,7 +66,7 @@ describe OpsController do
     end
 
     context "when the filter_type is 'host'" do
-      let(:host) { active_record_instance_double("Host", :name => "hosttest") }
+      let(:host) { double("Host", :name => "hosttest") }
       let(:filter_type) { "host" }
 
       before do

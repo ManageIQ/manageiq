@@ -26,7 +26,7 @@ describe EvmWatchdog do
 
     it "Empty Pid File." do
       described_class.stub(:read_pid_file => "", :get_ps_pids => nil)
-      expect(described_class).to receive(:log_info).with { |msg| msg.include?("empty PID file") }
+      expect(described_class).to receive(:log_info).with(a_string_including "empty PID file")
       described_class.check_evm
     end
 
@@ -37,14 +37,14 @@ describe EvmWatchdog do
 
     it "Pid File Includes 'no_db' and db is up." do
       described_class.stub(:read_pid_file => "no_db", :get_ps_pids => nil, :get_db_state => "something")
-      expect(described_class).to receive(:log_info).with { |msg| msg.include?("database is now available") }
+      expect(described_class).to receive(:log_info).with(a_string_including "database is now available")
       expect(described_class).to receive(:start_evm).once
       described_class.check_evm
     end
 
     it "Pid File Includes unexpected text." do
       described_class.stub(:read_pid_file => "oranges", :get_ps_pids => nil)
-      expect(described_class).to receive(:log_info).with { |msg| msg.include?("non-numeric PID file") }
+      expect(described_class).to receive(:log_info).with(a_string_including "non-numeric PID file")
       described_class.check_evm
     end
 
@@ -55,14 +55,14 @@ describe EvmWatchdog do
 
     it "Pid not running, DB down." do
       described_class.stub(:read_pid_file => "12345", :get_ps_pids => [42, 9876], :get_db_state => "")
-      expect(described_class).to receive(:log_info).with { |msg| msg.include?("database is down") }
+      expect(described_class).to receive(:log_info).with(a_string_including "database is down")
       described_class.check_evm
     end
 
     ['started', 'starting'].each do |state|
       it "Pid not running, DB up, state '#{state}'." do
         described_class.stub(:read_pid_file => "12345", :get_ps_pids => [42, 9876], :get_db_state => state)
-        expect(described_class).to receive(:log_info).with { |msg| msg.include?("is no longer running") }
+        expect(described_class).to receive(:log_info).with(a_string_including "is no longer running")
         expect(described_class).to receive(:start_evm).once
         described_class.check_evm
       end
@@ -70,7 +70,7 @@ describe EvmWatchdog do
 
     it "Pid not running, DB up, any other state." do
       described_class.stub(:read_pid_file => "12345", :get_ps_pids => [42, 9876], :get_db_state => "killed")
-      expect(described_class).to receive(:log_info).with { |msg| msg.include?("server state should be") }
+      expect(described_class).to receive(:log_info).with(a_string_including "server state should be")
       described_class.check_evm
     end
   end
