@@ -14,27 +14,27 @@ describe OpenstackEventMonitor do
 
   it "selects null event monitor when nothing is available" do
     opts = @options.merge(@bad_host)
-    OpenstackRabbitEventMonitor.stub(:test_connection).with(opts).and_return(false)
+    allow(OpenstackRabbitEventMonitor).to receive(:test_connection).with(opts).and_return(false)
 
-    OpenstackEventMonitor.new(opts).class.should eq OpenstackNullEventMonitor
+    expect(OpenstackEventMonitor.new(opts).class).to eq OpenstackNullEventMonitor
   end
 
   it "caches multiple event monitors for different keys" do
     rabbit_options = @options.merge(@rabbit_host)
-    OpenstackRabbitEventMonitor.stub(:test_connection).with(rabbit_options).and_return(true)
+    allow(OpenstackRabbitEventMonitor).to receive(:test_connection).with(rabbit_options).and_return(true)
     rabbit_instance = OpenstackEventMonitor.new(rabbit_options)
-    rabbit_instance.class.should eq OpenstackRabbitEventMonitor
+    expect(rabbit_instance.class).to eq OpenstackRabbitEventMonitor
 
     # additionally, we should be able to access the event_monitor instance
     # directly from the parent event_monitor
     instance = OpenstackEventMonitor.new(rabbit_options)
-    instance.should eq rabbit_instance
+    expect(instance).to eq rabbit_instance
   end
 
   it "orders the event monitor plugins correctly" do
     plugins = OpenstackEventMonitor.subclasses
 
-    plugins.first.should eq OpenstackRabbitEventMonitor
-    plugins.last.should eq OpenstackNullEventMonitor
+    expect(plugins.first).to eq OpenstackRabbitEventMonitor
+    expect(plugins.last).to eq OpenstackNullEventMonitor
   end
 end

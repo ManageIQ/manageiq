@@ -11,7 +11,7 @@ describe ApplianceConsole::KeyConfiguration do
         v2_exists(false)
         expect(subject).to receive(:ask_with_menu).with(/key/i, anything, :create, false).and_return(:create)
         expect(subject).not_to receive(:just_ask)
-        expect(subject.ask_questions).to be_true
+        expect(subject.ask_questions).to be_truthy
       end
 
       it "defaults to action" do
@@ -19,7 +19,7 @@ describe ApplianceConsole::KeyConfiguration do
         subject.action = :fetch
         expect(subject).to receive(:ask_with_menu).with(/key/i, anything, :fetch, false).and_return(:create)
         expect(subject).not_to receive(:just_ask)
-        expect(subject.ask_questions).to be_true
+        expect(subject.ask_questions).to be_truthy
       end
     end
 
@@ -32,7 +32,7 @@ describe ApplianceConsole::KeyConfiguration do
         expect(subject).to receive(:just_ask).with(/login/i, "root").and_return("root")
         expect(subject).to receive(:just_ask).with(/password/i, nil).and_return("password")
         expect(subject).to receive(:just_ask).with(/path/i, /v2_key$/).and_return("/remote/path/v2_key")
-        expect(subject.ask_questions).to be_true
+        expect(subject.ask_questions).to be_truthy
       end
     end
 
@@ -41,15 +41,15 @@ describe ApplianceConsole::KeyConfiguration do
         v2_exists
         expect(subject).to receive(:agree).with(/overwrite/i).and_return(false)
         expect(subject).not_to receive(:ask_with_menu)
-        expect(subject.ask_questions).not_to be_true
+        expect(subject.ask_questions).not_to be_truthy
       end
 
       it "succeeds if overwrite" do
         v2_exists
         expect(subject).to receive(:agree).with(/overwrite/i).and_return(true)
         expect(subject).to receive(:ask_with_menu).and_return(:create)
-        expect(subject.ask_questions).to be_true
-        expect(subject.force).to be_true
+        expect(subject.ask_questions).to be_truthy
+        expect(subject.force).to be_truthy
       end
     end
   end
@@ -65,14 +65,14 @@ describe ApplianceConsole::KeyConfiguration do
           v2_exists(false) # before download
           v2_exists(true)  # after downloaded
           expect(Net::SCP).to receive(:start).with(host, "root", :password => password)
-          expect(subject.activate).to be_true
+          expect(subject.activate).to be_truthy
         end
 
         it "creates key" do
           subject.action = :create
           v2_exists(false)
           expect(MiqPassword).to receive(:generate_symmetric).and_return(154)
-          expect(subject.activate).to be_true
+          expect(subject.activate).to be_truthy
         end
       end
 
@@ -85,7 +85,7 @@ describe ApplianceConsole::KeyConfiguration do
           scp = double('scp')
           expect(scp).to receive(:download!).with(subject.key_path, /v2_key/).and_return(:result)
           expect(Net::SCP).to receive(:start).with(host, "root", :password => password).and_yield(scp).and_return(true)
-          expect(subject.activate).to be_true
+          expect(subject.activate).to be_truthy
         end
 
         it "fails if key exists (no force)" do
@@ -94,7 +94,7 @@ describe ApplianceConsole::KeyConfiguration do
           v2_exists(true)
           expect(FileUtils).not_to receive(:rm)
           expect(Net::SCP).not_to receive(:start)
-          expect(subject.activate).to be_false
+          expect(subject.activate).to be_falsey
         end
       end
     end

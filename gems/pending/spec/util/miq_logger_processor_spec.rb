@@ -71,62 +71,62 @@ describe MiqLoggerProcessor do
     before(:each) { @lines = @lp.to_a }
 
     it "will read the correct number of lines" do
-      @lines.length.should == EXPECTED_RAW_LINES.length
+      expect(@lines.length).to eq(EXPECTED_RAW_LINES.length)
     end
 
     it "will read the correct number of lines when called twice" do
       @lines = @lp.to_a
-      @lines.length.should == EXPECTED_RAW_LINES.length
+      expect(@lines.length).to eq(EXPECTED_RAW_LINES.length)
     end
 
     it "will read regular lines correctly" do
-      @lines[0].should == EXPECTED_RAW_LINES[0]
+      expect(@lines[0]).to eq(EXPECTED_RAW_LINES[0])
     end
 
     it "will read lines with shortened pid/tid correctly" do
-      @lines[1].should == EXPECTED_RAW_LINES[1]
+      expect(@lines[1]).to eq(EXPECTED_RAW_LINES[1])
     end
 
     it "will read multi-line lines correctly" do
-      @lines[2].should == EXPECTED_RAW_LINES[2]
+      expect(@lines[2]).to eq(EXPECTED_RAW_LINES[2])
     end
 
     it "will read Q-task_id lines correctly" do
-      @lines[3].should == EXPECTED_RAW_LINES[3]
+      expect(@lines[3]).to eq(EXPECTED_RAW_LINES[3])
     end
 
     it "will read Q-task_id lines that do not have GUIDs correctly" do
-      @lines[4].should == EXPECTED_RAW_LINES[4]
+      expect(@lines[4]).to eq(EXPECTED_RAW_LINES[4])
     end
 
     it "will read lines with a numeric starting message correctly" do
-      @lines[5].should == EXPECTED_RAW_LINES[5]
+      expect(@lines[5]).to eq(EXPECTED_RAW_LINES[5])
     end
   end
 
   shared_examples_for "all line processors" do
     it "will read regular lines correctly" do
-      @lines[0].should == EXPECTED_LINE_PARTS[0]
+      expect(@lines[0]).to eq(EXPECTED_LINE_PARTS[0])
     end
 
     it "will read lines with shortened pid/tid correctly" do
-      @lines[1].should == EXPECTED_LINE_PARTS[1]
+      expect(@lines[1]).to eq(EXPECTED_LINE_PARTS[1])
     end
 
     it "will read multi-line lines correctly" do
-      @lines[2].should == EXPECTED_LINE_PARTS[2]
+      expect(@lines[2]).to eq(EXPECTED_LINE_PARTS[2])
     end
 
     it "will read Q-task_id lines correctly" do
-      @lines[3].should == EXPECTED_LINE_PARTS[3]
+      expect(@lines[3]).to eq(EXPECTED_LINE_PARTS[3])
     end
 
     it "will read Q-task_id lines that do not have GUIDs correctly" do
-      @lines[4].should == EXPECTED_LINE_PARTS[4]
+      expect(@lines[4]).to eq(EXPECTED_LINE_PARTS[4])
     end
 
     it "will read lines with a numeric starting message correctly" do
-      @lines[5].should == EXPECTED_LINE_PARTS[5]
+      expect(@lines[5]).to eq(EXPECTED_LINE_PARTS[5])
     end
   end
 

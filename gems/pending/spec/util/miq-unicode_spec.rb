@@ -13,26 +13,26 @@ describe 'miq-unicode' do
 
     it '.UnicodeToUtf8' do
       converted_utf8 = @unicode_str.UnicodeToUtf8
-      converted_utf8.object_id.should_not == @unicode_str.object_id
-      converted_utf8.should == @utf8_str
+      expect(converted_utf8.object_id).not_to eq(@unicode_str.object_id)
+      expect(converted_utf8).to eq(@utf8_str)
     end
 
     it '.UnicodeToUtf8!' do
       converted_utf8 = @unicode_str.UnicodeToUtf8!
-      converted_utf8.object_id.should == @unicode_str.object_id
-      converted_utf8.should == @utf8_str
+      expect(converted_utf8.object_id).to eq(@unicode_str.object_id)
+      expect(converted_utf8).to eq(@utf8_str)
     end
 
     it '.Utf8ToUnicode' do
       converted_unicode = @utf8_str.Utf8ToUnicode
-      converted_unicode.object_id.should_not == @utf8_str.object_id
-      converted_unicode.should == @unicode_str
+      expect(converted_unicode.object_id).not_to eq(@utf8_str.object_id)
+      expect(converted_unicode).to eq(@unicode_str)
     end
 
     it '.Utf8ToUnicode!' do
       converted_unicode = @utf8_str.Utf8ToUnicode!
-      converted_unicode.object_id.should == @utf8_str.object_id
-      converted_unicode.should == @unicode_str
+      expect(converted_unicode.object_id).to eq(@utf8_str.object_id)
+      expect(converted_unicode).to eq(@unicode_str)
     end
   end
 
@@ -47,26 +47,26 @@ describe 'miq-unicode' do
 
     it '.AsciiToUtf8' do
       converted_utf8 = @ascii_str.AsciiToUtf8
-      converted_utf8.object_id.should_not == @ascii_str.object_id
-      converted_utf8.should == @utf8_str
+      expect(converted_utf8.object_id).not_to eq(@ascii_str.object_id)
+      expect(converted_utf8).to eq(@utf8_str)
     end
 
     it '.AsciiToUtf8!' do
       converted_utf8 = @ascii_str.AsciiToUtf8!
-      converted_utf8.object_id.should == @ascii_str.object_id
-      converted_utf8.should == @utf8_str
+      expect(converted_utf8.object_id).to eq(@ascii_str.object_id)
+      expect(converted_utf8).to eq(@utf8_str)
     end
 
     it '.Utf8ToAscii' do
       converted_ascii = @utf8_str.Utf8ToAscii
-      converted_ascii.object_id.should_not == @utf8_str.object_id
-      converted_ascii.should == @ascii_str
+      expect(converted_ascii.object_id).not_to eq(@utf8_str.object_id)
+      expect(converted_ascii).to eq(@ascii_str)
     end
 
     it '.Utf8ToAscii!' do
       converted_ascii = @utf8_str.Utf8ToAscii!
-      converted_ascii.object_id.should == @utf8_str.object_id
-      converted_ascii.should == @ascii_str
+      expect(converted_ascii.object_id).to eq(@utf8_str.object_id)
+      expect(converted_ascii).to eq(@ascii_str)
     end
   end
 
@@ -81,14 +81,14 @@ describe 'miq-unicode' do
 
     it '.Ucs2ToAscii' do
       converted_ascii = @ucs2_str.Ucs2ToAscii
-      converted_ascii.object_id.should_not == @ucs2_str.object_id
-      converted_ascii.should == @ascii_str
+      expect(converted_ascii.object_id).not_to eq(@ucs2_str.object_id)
+      expect(converted_ascii).to eq(@ascii_str)
     end
 
     it '.Ucs2ToAscii!' do
       converted_ascii = @ucs2_str.Ucs2ToAscii!
-      converted_ascii.object_id.should == @ucs2_str.object_id
-      converted_ascii.should == @ascii_str
+      expect(converted_ascii.object_id).to eq(@ucs2_str.object_id)
+      expect(converted_ascii).to eq(@ascii_str)
     end
   end
 end

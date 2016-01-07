@@ -15,33 +15,33 @@ describe ESXThumbPrint do
   end
 
   it ".new" do
-    @tp.user.should == USER
-    @tp.host.should == HOST
-    @tp.password.should == PASSWORD
-    @tp.should be_kind_of(ESXThumbPrint)
-    @tp.should_not be_kind_of(VcenterThumbPrint)
-    @tp.should be_kind_of(ThumbPrint)
+    expect(@tp.user).to eq(USER)
+    expect(@tp.host).to eq(HOST)
+    expect(@tp.password).to eq(PASSWORD)
+    expect(@tp).to be_kind_of(ESXThumbPrint)
+    expect(@tp).not_to be_kind_of(VcenterThumbPrint)
+    expect(@tp).to be_kind_of(ThumbPrint)
   end
 
   it ".new_http_request" do
     req = @tp.http_request
-    req.should be_kind_of(Net::HTTP::Get)
-    @tp.http.verify_mode.should == OpenSSL::SSL::VERIFY_NONE
+    expect(req).to be_kind_of(Net::HTTP::Get)
+    expect(@tp.http.verify_mode).to eq(OpenSSL::SSL::VERIFY_NONE)
   end
 
   it ".new_uri" do
     uri = @tp.uri
-    uri.should be_kind_of(URI::HTTPS)
-    uri.host.should be_kind_of(String)
-    uri.host.should == HOST
-    uri.port.should be_kind_of(Integer)
-    uri.port.should == 443
+    expect(uri).to be_kind_of(URI::HTTPS)
+    expect(uri.host).to be_kind_of(String)
+    expect(uri.host).to eq(HOST)
+    expect(uri.port).to be_kind_of(Integer)
+    expect(uri.port).to eq(443)
   end
 
   it ".generates_a_sha1" do
     @tp.cert = CERT
     sha1 = @tp.to_sha1
-    sha1.should be_kind_of(String)
-    sha1.should == SHA1
+    expect(sha1).to be_kind_of(String)
+    expect(sha1).to eq(SHA1)
   end
 end

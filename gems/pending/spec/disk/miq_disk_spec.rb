@@ -13,12 +13,12 @@ describe MiqDisk do
       disk_info.fileName = ""
 
       disk = Object.new
-      MiqDisk.should_receive(:new).with(RawDisk, disk_info, 0).and_return(disk)
+      expect(MiqDisk).to receive(:new).with(RawDisk, disk_info, 0).and_return(disk)
 
-      QcowDiskProbe.should_receive(:probe).with(disk_info).and_return(nil)
-      RawDiskProbe.should_receive(:probe).with(disk_info).and_return("RawDisk")
+      expect(QcowDiskProbe).to receive(:probe).with(disk_info).and_return(nil)
+      expect(RawDiskProbe).to receive(:probe).with(disk_info).and_return("RawDisk")
 
-      MiqDisk.getDisk(disk_info, %w(QcowDiskProbe RawDiskProbe)).should == disk
+      expect(MiqDisk.getDisk(disk_info, %w(QcowDiskProbe RawDiskProbe))).to eq(disk)
     end
   end
 
@@ -30,7 +30,7 @@ describe MiqDisk do
 
         disk_info = OpenStruct.new(:fileName => image_path('dos2.img'))
         disk      = MiqDisk.getDisk(disk_info, "RawDiskProbe")
-        disk.getPartitions.size.should == 5
+        expect(disk.getPartitions.size).to eq(5)
       end
     end
 
@@ -41,7 +41,7 @@ describe MiqDisk do
 
         disk_info = OpenStruct.new(:fileName => image_path('basic.img'))
         disk      = MiqDisk.getDisk(disk_info, "RawDiskProbe")
-        disk.getPartitions.should be_empty
+        expect(disk.getPartitions).to be_empty
       end
     end
   end

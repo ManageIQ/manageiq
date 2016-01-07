@@ -15,16 +15,16 @@ describe Kernel do
     end
 
     it 'will add the path if it is not already there' do
-      $LOAD_PATH.should == @expected
+      expect($LOAD_PATH).to eq(@expected)
     end
 
     it 'will ignore the path if it is already there' do
       add_to_load_path @new_path
-      $LOAD_PATH.should == @expected
+      expect($LOAD_PATH).to eq(@expected)
     end
   end
 
   it ".require_relative" do
-    Kernel.respond_to?(:require_relative).should be_true
+    expect(Kernel.respond_to?(:require_relative)).to be_truthy
   end
 end

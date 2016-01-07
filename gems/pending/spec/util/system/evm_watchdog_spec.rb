@@ -5,17 +5,17 @@ require 'util/system/evm_watchdog'
 
 describe EvmWatchdog do
   before(:each) do
-    EvmWatchdog.stub(:`).and_raise("Shell access via backtick is unavailable in unit tests.")
+    allow(EvmWatchdog).to receive(:`).and_raise("Shell access via backtick is unavailable in unit tests.")
   end
 
   it ".read_pid_file" do
     pid_contents = StringIO.new("10041")
-    described_class.read_pid_file(pid_contents).should == "10041"
+    expect(described_class.read_pid_file(pid_contents)).to eq("10041")
   end
 
   it ".get_ps_pids" do
     described_class.stub(:ps_for_process => "10041\n26726\n26729\n")
-    described_class.get_ps_pids("some_running_process").should == [10041, 26726, 26729]
+    expect(described_class.get_ps_pids("some_running_process")).to eq([10041, 26726, 26729])
   end
 
   context ".check_evm" do
@@ -26,7 +26,7 @@ describe EvmWatchdog do
 
     it "Empty Pid File." do
       described_class.stub(:read_pid_file => "", :get_ps_pids => nil)
-      described_class.should_receive(:log_info).with { |msg| msg.include?("empty PID file") }
+      expect(described_class).to receive(:log_info).with { |msg| msg.include?("empty PID file") }
       described_class.check_evm
     end
 
@@ -37,14 +37,14 @@ describe EvmWatchdog do
 
     it "Pid File Includes 'no_db' and db is up." do
       described_class.stub(:read_pid_file => "no_db", :get_ps_pids => nil, :get_db_state => "something")
-      described_class.should_receive(:log_info).with { |msg| msg.include?("database is now available") }
-      described_class.should_receive(:start_evm).once
+      expect(described_class).to receive(:log_info).with { |msg| msg.include?("database is now available") }
+      expect(described_class).to receive(:start_evm).once
       described_class.check_evm
     end
 
     it "Pid File Includes unexpected text." do
       described_class.stub(:read_pid_file => "oranges", :get_ps_pids => nil)
-      described_class.should_receive(:log_info).with { |msg| msg.include?("non-numeric PID file") }
+      expect(described_class).to receive(:log_info).with { |msg| msg.include?("non-numeric PID file") }
       described_class.check_evm
     end
 
@@ -55,22 +55,22 @@ describe EvmWatchdog do
 
     it "Pid not running, DB down." do
       described_class.stub(:read_pid_file => "12345", :get_ps_pids => [42, 9876], :get_db_state => "")
-      described_class.should_receive(:log_info).with { |msg| msg.include?("database is down") }
+      expect(described_class).to receive(:log_info).with { |msg| msg.include?("database is down") }
       described_class.check_evm
     end
 
     ['started', 'starting'].each do |state|
       it "Pid not running, DB up, state '#{state}'." do
         described_class.stub(:read_pid_file => "12345", :get_ps_pids => [42, 9876], :get_db_state => state)
-        described_class.should_receive(:log_info).with { |msg| msg.include?("is no longer running") }
-        described_class.should_receive(:start_evm).once
+        expect(described_class).to receive(:log_info).with { |msg| msg.include?("is no longer running") }
+        expect(described_class).to receive(:start_evm).once
         described_class.check_evm
       end
     end
 
     it "Pid not running, DB up, any other state." do
       described_class.stub(:read_pid_file => "12345", :get_ps_pids => [42, 9876], :get_db_state => "killed")
-      described_class.should_receive(:log_info).with { |msg| msg.include?("server state should be") }
+      expect(described_class).to receive(:log_info).with { |msg| msg.include?("server state should be") }
       described_class.check_evm
     end
   end

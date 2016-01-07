@@ -17,7 +17,7 @@ describe OpenstackRabbitEventMonitor do
     @options = @receiver_options.merge(:topics => @topics, :client_ip => "10.11.12.13")
 
     @rabbit_connection = double
-    OpenstackRabbitEventMonitor.stub(:connect).and_return(@rabbit_connection)
+    allow(OpenstackRabbitEventMonitor).to receive(:connect).and_return(@rabbit_connection)
   end
 
   after do
@@ -26,15 +26,15 @@ describe OpenstackRabbitEventMonitor do
 
   context "testing a connection" do
     it "returns true on a successful test" do
-      @rabbit_connection.should_receive(:start)
-      @rabbit_connection.should_receive(:close)
+      expect(@rabbit_connection).to receive(:start)
+      expect(@rabbit_connection).to receive(:close)
 
-      OpenstackRabbitEventMonitor.test_connection(@options).should be_true
+      expect(OpenstackRabbitEventMonitor.test_connection(@options)).to be_truthy
     end
 
     it "returns false on an unsuccessful test" do
-      @rabbit_connection.should_receive(:start).and_raise("Cannot connect to rabbit amqp")
-      OpenstackRabbitEventMonitor.test_connection(@options).should be_false
+      expect(@rabbit_connection).to receive(:start).and_raise("Cannot connect to rabbit amqp")
+      expect(OpenstackRabbitEventMonitor.test_connection(@options)).to be_falsey
     end
   end
 
@@ -48,14 +48,14 @@ describe OpenstackRabbitEventMonitor do
 
   it "#remove_legacy_queues (private)" do
     @rabbit_channel = double
-    @rabbit_connection.stub(:create_channel).and_return(@rabbit_channel)
-    @rabbit_channel.stub(:close).and_return(nil)
+    allow(@rabbit_connection).to receive(:create_channel).and_return(@rabbit_channel)
+    allow(@rabbit_channel).to receive(:close).and_return(nil)
 
-    @rabbit_connection.should_receive(:queue_exists?).at_least(2).times.with(/^miq-/).and_return(true)
-    @rabbit_channel.should_receive(:queue_delete).at_least(2).times.with(/^miq-/).and_return(nil)
+    expect(@rabbit_connection).to receive(:queue_exists?).at_least(2).times.with(/^miq-/).and_return(true)
+    expect(@rabbit_channel).to receive(:queue_delete).at_least(2).times.with(/^miq-/).and_return(nil)
 
-    @rabbit_connection.should_receive(:queue_exists?).once.with("notifications.*").and_return(true)
-    @rabbit_channel.should_receive(:queue_delete).once.with("notifications.*").and_return(nil)
+    expect(@rabbit_connection).to receive(:queue_exists?).once.with("notifications.*").and_return(true)
+    expect(@rabbit_channel).to receive(:queue_delete).once.with("notifications.*").and_return(nil)
 
     @event_monitor = OpenstackRabbitEventMonitor.new(@options)
 

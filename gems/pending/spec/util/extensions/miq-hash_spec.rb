@@ -15,8 +15,8 @@ describe Hash do
     h[s] = "test"
     s2 = h.keys.first
 
-    s2.should == s
-    s2.sub_str.should == s.sub_str
+    expect(s2).to eq(s)
+    expect(s2.sub_str).to eq(s.sub_str)
   end
 
   it "#sort!" do
@@ -25,8 +25,8 @@ describe Hash do
 
     h.sort!
 
-    h.keys.should == [:a, :b, :x, :y]
-    h.object_id.should == h_id
+    expect(h.keys).to eq([:a, :b, :x, :y])
+    expect(h.object_id).to eq(h_id)
   end
 
   it "#sort_by!" do
@@ -35,7 +35,7 @@ describe Hash do
 
     h.sort_by! { |k, _v| k }
 
-    h.keys.should == [:a, :b, :x, :y]
-    h.object_id.should == h_id
+    expect(h.keys).to eq([:a, :b, :x, :y])
+    expect(h.object_id).to eq(h_id)
   end
 end
