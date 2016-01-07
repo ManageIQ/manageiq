@@ -20,7 +20,7 @@
       %tbody
         - unless [:clone_to_template, :clone_to_vm].include?(@edit[:wf].request_type)
           - cls = @edit[:new][:src_vm_id] && @edit[:new][:src_vm_id][0].nil? ? "selected" : ""
-          %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=__VM__NONE__&id=#{@id}');"}
+          %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=__VM__NONE__&id=#{id}');"}
             %td
               = "<#{_('None')}>"
             %td
