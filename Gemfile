@@ -30,7 +30,7 @@ gem "ruport",                         "=1.7.0",                       :git => "g
 
 # Vendored but not required
 gem "net-ldap",                       "~>0.7.0",   :require => false
-gem "rubyrep",                        "=1.2.0",    :require => false, :git => "git://github.com/ManageIQ/rubyrep.git", :tag => "v1.2.0-7"
+gem "rubyrep",                        "=1.2.0",    :require => false, :git => "git://github.com/matthewd/rubyrep.git", :branch => "rails5"
 gem "simple-rss",                     "~>1.3.1",   :require => false
 gem "winrm",                          "~>1.5.0",   :require => false
 gem "ziya",                           "=2.3.0",    :require => false, :git => "git://github.com/ManageIQ/ziya.git", :tag => "v2.3.0-2"
