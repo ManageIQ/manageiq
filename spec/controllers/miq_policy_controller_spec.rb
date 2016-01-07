@@ -74,7 +74,7 @@ describe MiqPolicyController do
       context "when there is a file upload parameter" do
         context "when the file upload parameter responds to read" do
           let(:file_contents) do
-            fixture_file_upload(Rails.root.join("spec/fixtures/files/dummy_file.yml"), "text/yml")
+            fixture_file_upload("files/dummy_file.yml", "text/yml")
           end
 
           let(:miq_policy_import_service) { double("MiqPolicyImportService") }

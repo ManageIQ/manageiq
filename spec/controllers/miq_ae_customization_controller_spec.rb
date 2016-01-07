@@ -245,7 +245,7 @@ describe MiqAeCustomizationController do
 
     context "when an upload file is given" do
       let(:filename) { "filename" }
-      let(:file) { fixture_file_upload(Rails.root.join("spec/fixtures/files/dummy_file.yml"), "text/yml") }
+      let(:file) { fixture_file_upload("files/dummy_file.yml", "text/yml") }
       let(:params) { {:upload => {:file => file}} }
 
       before do
