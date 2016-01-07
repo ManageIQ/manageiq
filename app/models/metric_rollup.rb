@@ -47,7 +47,6 @@ class MetricRollup < ActiveRecord::Base
     metrics = where(:resource_type => resource_type, :capture_interval_name => capture_interval_name)
     metrics = metrics.where(:resource_id => resource_ids) if resource_ids
     metrics = metrics.order(:resource_id, :timestamp => :desc)
-    metrics = metrics.select('DISTINCT ON (metric_rollups.resource_id) metric_rollups.*')
-    metrics.includes(:resource)
+    metrics.select('DISTINCT ON (metric_rollups.resource_id) metric_rollups.*')
   end
 end
