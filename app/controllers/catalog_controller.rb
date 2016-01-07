@@ -466,7 +466,7 @@ class CatalogController < ApplicationController
       msg = _("Use the Browse button to locate a %s image file") % ".png or .jpg"
       err = true
     end
-    params[:id] = x_build_node_id(@record, nil, x_tree(x_active_tree))  # Get the tree node id
+    params[:id] = x_build_node_id(@record)  # Get the tree node id
     add_flash(msg, err == true ? :error : nil)
     respond_to do |format|
       format.js { replace_right_cell }
