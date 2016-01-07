@@ -10,11 +10,10 @@
       .col-md-10
         = select_tag("#{cap_type}_days",
           options_for_select(WEEK_CHOICES.invert.sort_by(&:last), @sb[:util][:options][:days].to_i),
-          "class"               => "selectpicker",
-          "data-miq_sparkle_on" => true)
+          "class"               => "selectpicker")
         :javascript
           miqInitSelectPicker();
-          miqSelectPickerEvent("#{cap_type}_days", "#{url}");
+          miqSelectPickerEvent("#{cap_type}_days", "#{url}", {beforeSend: true});
 
   .form-horizontal
     .form-group
@@ -24,11 +23,10 @@
         - options = [["<#{_('None')}>", "<None>"]] + (@sb[:util][:tags] ? @sb[:util][:tags].invert.sort : [])
         = select_tag("#{cap_type}_tag",
           options_for_select(options, @sb[:util][:options][:tag]),
-          "class"               => "selectpicker",
-          "data-miq_sparkle_on" => true)
+          "class"               => "selectpicker")
         :javascript
           miqInitSelectPicker();
-          miqSelectPickerEvent("#{cap_type}_tag", "#{url}");
+          miqSelectPickerEvent("#{cap_type}_tag", "#{url}", {beforeSend: true});
 
   .form-horizontal
     .form-group
@@ -44,11 +42,10 @@
           = select_tag("#{cap_type}_time_profile",
             options_for_select(Array(session[:time_profiles].invert).sort_by(&:first),
             @sb[:util][:options][:time_profile]),
-            "class"               => "selectpicker",
-            "data-miq_sparkle_on" => true)
+            "class"               => "selectpicker")
           :javascript
             miqInitSelectPicker();
-            miqSelectPickerEvent("#{cap_type}_time_profile", "#{url}");
+            miqSelectPickerEvent("#{cap_type}_time_profile", "#{url}", {beforeSend: true});
     - if %w(summ report).include?(cap_type)
       - date_id = cap_type == "summ" ? "1" : "2"
       .form-group
