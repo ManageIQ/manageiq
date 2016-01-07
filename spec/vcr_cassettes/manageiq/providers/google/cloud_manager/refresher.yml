@@ -4,8 +4,8 @@ http_interactions:
     method: post
     uri: https://accounts.google.com/o/oauth2/token
     body:
-      encoding: UTF-8
-      string: assertion=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzZXJ2aWNlLWFjY291bnQtMUBjaXZpbC10dWJlLTExMzMxNC5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsImF1ZCI6Imh0dHBzOi8vYWNjb3VudHMuZ29vZ2xlLmNvbS9vL29hdXRoMi90b2tlbiIsImV4cCI6MTQ1MDI5ODExMCwiaWF0IjoxNDUwMjk3OTkwLCJzY29wZSI6Imh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL2F1dGgvY29tcHV0ZSBodHRwczovL3d3dy5nb29nbGVhcGlzLmNvbS9hdXRoL2RldnN0b3JhZ2UucmVhZF93cml0ZSBodHRwczovL3d3dy5nb29nbGVhcGlzLmNvbS9hdXRoL25kZXYuY2xvdWRtYW4gaHR0cHM6Ly93d3cuZ29vZ2xlYXBpcy5jb20vYXV0aC9jbG91ZC1wbGF0Zm9ybSJ9.OMtVmpXSw0Lj0wC_kbGmGyzXSBQshxOmzG7zGqwefYGwUMbero7XMrpB3yFw8L-PxtBHzxXbZ0efL5XULD9YghUvbG2mTjhoNXWvHxGZehdyzNr-vFBpjm06yJuF20K87NLxcvGXf3El0YRuLFoOCjgQfd5nxqd5dpGOG55LqwUKF4khsT2s1LSMWxvcvAi65owlwOKIsySBAKm_KI6fFS8-fI1RwnPr0dLlAhuh2TiA2eUwBzO0Iyl0A7IHVgIDXqTJ6LHusInCG4VW6oJscHYl9VVjx82o9s9OQw4R3geXFRIGZSx5ByPdFmvaK4WJxRfEiyMGhMkmUwWHpOaP3A&grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer
+      encoding: ASCII-8BIT
+      string: grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzZXJ2aWNlLWFjY291bnQtMUBjaXZpbC10dWJlLTExMzMxNC5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsImF1ZCI6Imh0dHBzOi8vYWNjb3VudHMuZ29vZ2xlLmNvbS9vL29hdXRoMi90b2tlbiIsImV4cCI6MTQ1MTk0MjU4NywiaWF0IjoxNDUxOTQyNDY3LCJzY29wZSI6Imh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL2F1dGgvY29tcHV0ZSBodHRwczovL3d3dy5nb29nbGVhcGlzLmNvbS9hdXRoL2RldnN0b3JhZ2UucmVhZF93cml0ZSBodHRwczovL3d3dy5nb29nbGVhcGlzLmNvbS9hdXRoL25kZXYuY2xvdWRtYW4gaHR0cHM6Ly93d3cuZ29vZ2xlYXBpcy5jb20vYXV0aC9jbG91ZC1wbGF0Zm9ybSJ9.o0oV3lLXsJg0hAySDyT5fUpSvkRLmqnq6TbHTOkxsM8KvkghiBZrVI0C-IlCjeDCg1mrjc6NUMSAvm2YRqui9OqIJinMtTkOcLaaNAhbe9gdJJHu8LoesgC7U3R1xyJnGD_TqocIhdGTWi-D5_-jfRuz7_R406KhJI62U9pIK9h7ye4uyk0sfW9QIz0MQ1cu64_nWxE8mL8BfGXEHf0smzvbXt0wtd3TArA0j46_--ugCgj-mEehSbIt-h7TLvtZkEfdf3_W2PwX6h-bBORwIevmshYnlAYS4XaG87z3TJPD4xXbpfBhq-Pg22DdB-BcGmE5eG24ox38YF_rm2J9jg
     headers:
       User-Agent:
       - Faraday v0.9.2
@@ -31,7 +31,7 @@ http_interactions:
       Expires:
       - Fri, 01 Jan 1990 00:00:00 GMT
       Date:
-      - Wed, 16 Dec 2015 20:34:11 GMT
+      - Mon, 04 Jan 2016 21:22:07 GMT
       Content-Disposition:
       - attachment; filename="json.txt"; filename*=UTF-8''json.txt
       P3p:
@@ -44,8 +44,8 @@ http_interactions:
       Server:
       - GSE
       Set-Cookie:
-      - NID=74=BDGSr3L3JFDB8ZjNQVck5mbkaoooq0G72WTKhGGaczZYx_Vc3OgOA8FWCr3WplM4gPlN_4awB3sPoXll6Bf1FuXxPGFAMr9JIsePzZOLo7FplvbJtw91qeCDVuPwdkTF;Domain=.google.com;Path=/;Expires=Thu,
-        16-Jun-2016 20:34:11 GMT;HttpOnly
+      - NID=75=q8__JCuD5f_yhd_v8ARtRXQUFFHwPRuZjf5VguSnMv2cPTxNlJ3xedkjduPwefJE419lVSGhD2oCNvDsgHzrOLmDnzv9hj_ijlzGMLStV0o9IF2lfL09suzLY8AHzXOP;Domain=.google.com;Path=/;Expires=Tue,
+        05-Jul-2016 21:22:07 GMT;HttpOnly
       Alternate-Protocol:
       - 443:quic,p=1
       Alt-Svc:
@@ -56,12 +56,12 @@ http_interactions:
       encoding: ASCII-8BIT
       string: |-
         {
-          "access_token" : "ya29.TAI34vXOqzR-xqdIXaocnIVAePfE15B8pFcxnI6SgRUNbZt3-EIK_I3cIxUVOLCsdyr0xA",
+          "access_token" : "ya29.XwLRFAvHXovlOXTYcWJsSwrDLWXKb4wMC3xejj5l8E1uhMKLCUsa2jVmqsLSnTQW7rFISg",
           "token_type" : "Bearer",
           "expires_in" : 3600
         }
     http_version: 
-  recorded_at: Wed, 16 Dec 2015 20:34:11 GMT
+  recorded_at: Mon, 04 Jan 2016 21:22:07 GMT
 - request:
     method: get
     uri: https://www.googleapis.com/discovery/v1/apis/compute/v1/rest
@@ -71,7 +71,7 @@ http_interactions:
     headers:
       User-Agent:
       - |-
-        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.2.6-301.fc23.x86_64
+        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.3.0-1-amd64
          (gzip)
       Accept-Encoding:
       - gzip
@@ -85,9 +85,9 @@ http_interactions:
       message: OK
     headers:
       Expires:
-      - Wed, 16 Dec 2015 20:39:11 GMT
+      - Mon, 04 Jan 2016 21:24:24 GMT
       Date:
-      - Wed, 16 Dec 2015 20:34:11 GMT
+      - Mon, 04 Jan 2016 21:19:24 GMT
       Etag:
       - '"ye6orv2F-1npMW3u9suM3a7C5Bo/nyxAZHxFLt8oJVpLaKjE9TIYD_A"'
       Vary:
@@ -107,10 +107,10 @@ http_interactions:
       - GSE
       Content-Length:
       - '40530'
+      Age:
+      - '163'
       Cache-Control:
       - public, max-age=300, must-revalidate, no-transform
-      Age:
-      - '0'
       Alternate-Protocol:
       - 443:quic,p=1
       Alt-Svc:
@@ -1020,7 +1020,7 @@ http_interactions:
         xlgxE27s9ZDif8vr3QcIU/LDjPOYiuGoLCxswQ1uA9wGuA1wG+A2qkEMuA1w
         G+A2fM5XrKN6yzjez2T/jP3v59n/A2Q0y12DjggA
     http_version: 
-  recorded_at: Wed, 16 Dec 2015 20:34:11 GMT
+  recorded_at: Mon, 04 Jan 2016 21:22:08 GMT
 - request:
     method: get
     uri: https://www.googleapis.com/discovery/v1/apis/resourceviews/v1beta1/rest
@@ -1030,7 +1030,7 @@ http_interactions:
     headers:
       User-Agent:
       - |-
-        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.2.6-301.fc23.x86_64
+        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.3.0-1-amd64
          (gzip)
       Accept-Encoding:
       - gzip
@@ -1044,11 +1044,9 @@ http_interactions:
       message: OK
     headers:
       Expires:
-      - Wed, 16 Dec 2015 20:39:12 GMT
+      - Mon, 04 Jan 2016 21:22:56 GMT
       Date:
-      - Wed, 16 Dec 2015 20:34:12 GMT
-      Cache-Control:
-      - public, max-age=300, must-revalidate, no-transform
+      - Mon, 04 Jan 2016 21:17:56 GMT
       Etag:
       - '"ye6orv2F-1npMW3u9suM3a7C5Bo/zGXHhFNf_BjX91GfOIqcxzMz9hQ"'
       Vary:
@@ -1068,6 +1066,10 @@ http_interactions:
       - '2789'
       Server:
       - GSE
+      Age:
+      - '252'
+      Cache-Control:
+      - public, max-age=300, must-revalidate, no-transform
       Alternate-Protocol:
       - 443:quic,p=1
       Alt-Svc:
@@ -1138,7 +1140,7 @@ http_interactions:
         3MP0r00XTjnE3M5d+4b7b1Y6Tx+d+uj000an/lrlHoTRjVyrrPlvX/pI24Ty
         vjXg5LG2XftN22jbt96s8fIeMB8oYK5/4f4pWm624M/N1v8BqhiLGD1qAAA=
     http_version: 
-  recorded_at: Wed, 16 Dec 2015 20:34:12 GMT
+  recorded_at: Mon, 04 Jan 2016 21:22:08 GMT
 - request:
     method: get
     uri: https://www.googleapis.com/compute/v1/projects/civil-tube-113314/zones
@@ -1148,14 +1150,14 @@ http_interactions:
     headers:
       User-Agent:
       - |-
-        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.2.6-301.fc23.x86_64
+        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.3.0-1-amd64
          (gzip)
       Accept-Encoding:
       - gzip
       Content-Type:
       - ''
       Authorization:
-      - Bearer ya29.TAI34vXOqzR-xqdIXaocnIVAePfE15B8pFcxnI6SgRUNbZt3-EIK_I3cIxUVOLCsdyr0xA
+      - Bearer ya29.XwLRFAvHXovlOXTYcWJsSwrDLWXKb4wMC3xejj5l8E1uhMKLCUsa2jVmqsLSnTQW7rFISg
       Cache-Control:
       - no-store
       Accept:
@@ -1166,9 +1168,9 @@ http_interactions:
       message: OK
     headers:
       Expires:
-      - Wed, 16 Dec 2015 20:34:12 GMT
+      - Mon, 04 Jan 2016 21:22:08 GMT
       Date:
-      - Wed, 16 Dec 2015 20:34:12 GMT
+      - Mon, 04 Jan 2016 21:22:08 GMT
       Cache-Control:
       - private, max-age=0, must-revalidate, no-transform
       Etag:
@@ -1211,7 +1213,7 @@ http_interactions:
         h7N3i3fjVyNw+3vF69lL3f22On1wPxm7puGB2CfE4v6ZBvbd+Brdr3/iILYs
         9Prvj1gYjwUhptF598+noFt83njjfsf94bw4fwC8FspknBQAAA==
     http_version: 
-  recorded_at: Wed, 16 Dec 2015 20:34:12 GMT
+  recorded_at: Mon, 04 Jan 2016 21:22:08 GMT
 - request:
     method: get
     uri: https://www.googleapis.com/compute/v1/projects/civil-tube-113314/aggregated/machineTypes
@@ -1221,14 +1223,14 @@ http_interactions:
     headers:
       User-Agent:
       - |-
-        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.2.6-301.fc23.x86_64
+        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.3.0-1-amd64
          (gzip)
       Accept-Encoding:
       - gzip
       Content-Type:
       - ''
       Authorization:
-      - Bearer ya29.TAI34vXOqzR-xqdIXaocnIVAePfE15B8pFcxnI6SgRUNbZt3-EIK_I3cIxUVOLCsdyr0xA
+      - Bearer ya29.XwLRFAvHXovlOXTYcWJsSwrDLWXKb4wMC3xejj5l8E1uhMKLCUsa2jVmqsLSnTQW7rFISg
       Cache-Control:
       - no-store
       Accept:
@@ -1239,13 +1241,13 @@ http_interactions:
       message: OK
     headers:
       Expires:
-      - Wed, 16 Dec 2015 20:34:12 GMT
+      - Mon, 04 Jan 2016 21:22:09 GMT
       Date:
-      - Wed, 16 Dec 2015 20:34:12 GMT
+      - Mon, 04 Jan 2016 21:22:09 GMT
       Cache-Control:
       - private, max-age=0, must-revalidate, no-transform
       Etag:
-      - '"_NtyuYjXw-nIFN9XT1d4nY6fkIA/Owy2KH3XYi3MBz3dARjsDhasQKI"'
+      - '"_NtyuYjXw-nIFN9XT1d4nY6fkIA/lJh-cdNjKKZsKIJRxxvhg0d9RO8"'
       Vary:
       - Origin
       - X-Origin
@@ -1270,54 +1272,56 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        H4sIAAAAAAAAAO3dzW/iRhzG8Xv+CoteWmkNHtsYk9t2K+1lV1q16anqwTEO
-        ccObMCTNrvZ/L6YJgdSxDcYe9/c8UtUDbwY+Y2Y28yX5dmF07uLZqHNpdML5
-        dLFeRT9Mg/A2nkVXj4vo/Xi8jMbBKhp9ipNV593m1kk0ufkUz+7Se9yuVovk
-        std7eHjojufz8SQKFnHS3TxQ7+nBeveqt1jO/4rCVdIL4/t4Yq7W15GplOMo
-        txfsHr+3d9Rke6B4FU2TzVG+XRhG5+t8FiW9dWKG0Wy1DCbKDJ6uMjoH97w0
-        /kgv/PcqI/fFpUfZ3ibe3kJZlrW7KFxGwSqez67iaZSsgukivYVtqb5pKVN5
-        V9bw0u5fuk7XUZ5p+Zd7d50F0yi99Y0yp3G4nO+uGEVJuIwX6cNuj2fcf/jy
-        u/Fjchsso5GxuH1M4jCYGOF8Gf1kBLORYXU94+PPxq/vP+8eY7zePJ0Pi3X6
-        QtXzhdNoOl8+fr7eXOYpd3dp8Hc8XU+/RMtkY7d5236Jk7v0fgW3+C3+Gn1M
-        H6vjWAN7d+RUIL3w0OD52rOOigzsg+HR272126N/f3eiuH2ieP8N8bEyk2kw
-        mZwurrqDY8XVwLUAyHfvbTVy11LeOU/ymTJv4/FtuFibew/82t3bwifvDOV2
-        3VxgL0vYHbheIbEquMmLsbJs12ol8uG7WVXass95cu89N/staHvn3PXzmO0s
-        Zd910JDt6sZuTcbuW8bus7GTPzu7GcaO58OdyG51Y78mY/8tY//ZeNC184z9
-        DOOBM4A7j/2Kxv0TZ2U333ijUm5Wtk6YlC3PHUKdzE/vZlXpWmbl9LmVmJWd
-        oyflzTtkoyFXnZX7J87KBWvs9KkVz8r20ZOy7Xl28T+ahRlXnZX79czK6VMr
-        npX7R0/Kfcd2fTTjqrOyY1nqzLPy5p6zUbAcmerNWXmLnK6uB/1jfxTi+CV+
-        FCIEee+drKp89p+IvDy3Eosvzzp67eUpFxG66trLOXHtVUa6ePE16Oaez1mr
-        r4Hn4zFXXX05J66+ynxqFy+/VC5y1vJL9R0PT7nq+ss5cf1V5lwuXoA5uZ/Z
-        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
+        H4sIAAAAAAAAAO3dTW/iVhiG4X1+hUU3rTQGH9sYJ7vpVJrNjDRq01XVhWMc
+        4oYvYUiaGc1/r00TAqljOxj7uO/zSFUXBDDhMpx3cm6Sb2dG7zaej3sXRi9c
+        zJabdfTDLAhv4nl0+bCM3k8mq2gSrKPxpzhZ996l106i6fWneH6b3eJmvV4m
+        F4PB/f19f7JYTKZRsIyTfnpHg8c7G9ypwXK1+CsK18kgjO/iqbneXEWmUo6j
+        3EGwu//B3lGT7YHidTRL0qN8OzOM3tfFPEoGm8QMo/l6FUyVGTx+yegd3PLC
+        +CO78N8vGYXfXHaU7XXi7TWUZVm7i8JVFKzjxfwynkXJOpgts2vYlhqaljKV
+        d2mdX9jDC9fpO8ozLf9i76bzYBZl175W5iwOV4vdF8ZREq7iZXa32+MZdx++
+        /G78mNwEq2hsLG8ekjgMpka4WEU/GcF8bFh9z/j4s/Hr+8+7+5hs0ofzYbnJ
+        vlH1dOEsmi1WD5+v0ss85e4uDf6OZ5vZl2iVpHbp0/ZLnNxmtyu5xm/x1+hj
+        dl89xxrZuyNnAtmFhwZPXz3pWZGDfXB6DHZP7fbo398dKW4fKT58RXyizGQW
+        TKfHi6v+6K3iauRaAOS757YeuWsp75Qv8rkyb+LJTbjcmHt3/NLd28In7wzl
+        9t1CYC9P2B25XimxKrnKs7GybNfqJPLhs1lX2rJP+eLee2z2a9D2zrnvFzHb
+        ecq+66Ah2/WN3YaM3deM3Sdjp3h1dnOMHc+HeyG79Y39hoz914z9J+NR3y4y
+        9nOMR84I7nXs1zQeHrkqu8XGqUq1Vdk6YlG2PPf8lC9mbzh0vC5DPz6bdaUb
+        WZWzx1ZhVXbevCinz5CNhlx3VR4euSqXzNjZQytfle03L8q259nl/2gWZlx3
+        VR42sypnD618VR6+eVEeOrbroxnXXZUdy1InXpXTW87HwWpsqldX5S1yNl2P
+        hm/9UYjjV/hRiJDRa++ZrKt88p+IPD+2CsOXZ7159vKUiwhdd/Zyjpy9qkiX
+        D1+jfuHrOW/6Gnk+HnPd6cs5cvqq8q5dPn6pQuS88UulKymect35yzly/qry
+        Wi4fwJzC9+y8ASzbV8BTfprAsv//efbInbOXmX1L3Mt8ec60u5d51db5csW9
+        zI7sZeoi515mi+uALmTuZWIh19/LdJoydl5FdnbKtl/M7OQ52+fuuUKDdrhr
+        LR+Zu9byjblr3cZGiGZo7lqDINfftT5u/qrwaq40f1lHjF/KPj+Hg649f7FP
+        6D4y+wT5xuwTBA/Z7BPgoNknIDDX7xNOPmfvHluVQVvZhS/o3EFb2bYPSF17
+        0maL8n9gZouCoFy1RQl7bFFyR7rSM+Z0YULY1vkSskXpSIuii5wtSovrgC5k
+        tihYyGxRQKDZogAgs0WRb8wWpY1NL83QbFFAkNmigECzRQFAZosi35gtiuAh
+        my0KHDRbFARmtigw1GxRIJjZoiAoV21RrntsUXJHutIz5nRhwnVb58s1W5SO
+        tCi6yNmitLgO6EJmi4KFzBYFBJotCgAyWxT5xmxR2tj00gzNFgUEmS0KCDRb
+        FABktijyjdmiCB6y2aLAQbNFQWBmiwJDzRYFgpktCoJyUYsSbVaLZWTep88b
+        /0iPrhjlBUKDZ8zhkZijaMxRuoHOIKXhxaAbzExS0JiZKiAoM1ZAUGau0NS+
+        SKeoGSzAMHMjG0GZW9kIytzMFj2EcTsbkJob2hjQ3ObEcOZGJ4Zz5a1O/g2I
+        Dmx1NvqLGg6PxK3Ormx1akPnVmeby4E2Zm51ojHz8/cw1PwEPgQzt7URlLmt
+        3coeiW5qbmvDMPOT+DDU/Cw+BDMTBgRlJgyiB24mDIDUTBgwoPmpfCBsfi4f
+        BJrBCoZz5WAlU2Ww8vK0aTlYGbd2yowZrHQlWNGGzmClzeVAGzODFTRmBisw
+        1AxWIJgZrCAoM1hpZUdMNzWDFRhmBisw1AxWIJgZrCAoM1gRPXAzWAGkZrCC
+        Ac1gBQibwQoINIMVDOeiYCVI4sCMguwegh5zldzZrvSUqVcuHBA0eLrsH4ep
+        isZURT84M5WGFwH9xExUkIiZp0AwM00RT8wsRbowk5Sm9rw6w8wcBYKYKQoE
+        MzMU8cRMUKQLMz8RO1gzPQFjZnYiH5nJCQg0cxMAZKYm8o0rZibZ98PM5OUJ
+        02pm0ujffdo/DjOTbmQmmsCZmbS3AGgiZmaCRMzMBIKZmYl4YmYm0oWZmbSw
+        r6WXmZkJBDEzEwhmZibiiZmZSBdmZiJ2sGZmAsbMzEQ+MjMTEGhmJgDIzEzk
+        G1fMTMIeM5PcOa70dDlZddDoX2vaPw4zk25kJprAmZm0twBoImZmgkTMzASC
+        mZmJeGJmJtKFmZm0sK+ll5mZCQQxMxMIZmYm4omZmUgXZmYidrBmZgLGzMxE
+        PjIzExBoZiYAyMxM5BsXZSabhL/LRGtksgfQ4InyfBQGJhoDE73YjEsaftvX
+        y8uwBIWXUYl4YgYlonkZk0jWZUjS1M5VJ4gZkYjnZUAinpjxiGhehiOSdRmN
+        iBygGYwAETMWkQ3MUAQAmZGIcGAGIrJ9K8Uh/A0kmuOQRiui56MwDulCHKIF
+        m3FIW2/5WngZh6DwMg4RT8w4RDQv4xDJuoxDGt+d0knMOEQ8L+MQ8cSMQ0Tz
+        Mg6RrMs4ROQAzTgEiJhxiGxgxiEAyIxDhAMzDpHtWykOySQZh7w8VVqMQ8at
+        nCZjxiFdiEO0YDMOaestXwsv4xAUXsYh4okZh4jmZRwiWZdxSOO7UzqJGYeI
+        52UcIp6YcYhoXsYhknUZh4gcoBmHABEzDpENzDgEAJlxiHBgxiGyff8Th5yl
+        /30/+wf4X5go8rQBAA==
     http_version: 
-  recorded_at: Wed, 16 Dec 2015 20:34:12 GMT
+  recorded_at: Mon, 04 Jan 2016 21:22:09 GMT
 - request:
     method: get
     uri: https://www.googleapis.com/compute/v1/projects/civil-tube-113314/global/networks
@@ -1327,14 +1331,14 @@ http_interactions:
     headers:
       User-Agent:
       - |-
-        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.2.6-301.fc23.x86_64
+        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.3.0-1-amd64
          (gzip)
       Accept-Encoding:
       - gzip
       Content-Type:
       - ''
       Authorization:
-      - Bearer ya29.TAI34vXOqzR-xqdIXaocnIVAePfE15B8pFcxnI6SgRUNbZt3-EIK_I3cIxUVOLCsdyr0xA
+      - Bearer ya29.XwLRFAvHXovlOXTYcWJsSwrDLWXKb4wMC3xejj5l8E1uhMKLCUsa2jVmqsLSnTQW7rFISg
       Cache-Control:
       - no-store
       Accept:
@@ -1345,9 +1349,9 @@ http_interactions:
       message: OK
     headers:
       Expires:
-      - Wed, 16 Dec 2015 20:34:13 GMT
+      - Mon, 04 Jan 2016 21:22:09 GMT
       Date:
-      - Wed, 16 Dec 2015 20:34:13 GMT
+      - Mon, 04 Jan 2016 21:22:09 GMT
       Cache-Control:
       - private, max-age=0, must-revalidate, no-transform
       Etag:
@@ -1384,7 +1388,7 @@ http_interactions:
         tjOYepKjS3Tiy10k/jbS6IngBYhf402vb0v2LoZ2y+MsTjIW20d54YFWIKzi
         23EPCA+tfAvIZ3ALfgCLrEXvPQIAAA==
     http_version: 
-  recorded_at: Wed, 16 Dec 2015 20:34:13 GMT
+  recorded_at: Mon, 04 Jan 2016 21:22:09 GMT
 - request:
     method: get
     uri: https://www.googleapis.com/compute/v1/projects/civil-tube-113314/aggregated/disks
@@ -1394,14 +1398,14 @@ http_interactions:
     headers:
       User-Agent:
       - |-
-        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.2.6-301.fc23.x86_64
+        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.3.0-1-amd64
          (gzip)
       Accept-Encoding:
       - gzip
       Content-Type:
       - ''
       Authorization:
-      - Bearer ya29.TAI34vXOqzR-xqdIXaocnIVAePfE15B8pFcxnI6SgRUNbZt3-EIK_I3cIxUVOLCsdyr0xA
+      - Bearer ya29.XwLRFAvHXovlOXTYcWJsSwrDLWXKb4wMC3xejj5l8E1uhMKLCUsa2jVmqsLSnTQW7rFISg
       Cache-Control:
       - no-store
       Accept:
@@ -1412,9 +1416,9 @@ http_interactions:
       message: OK
     headers:
       Expires:
-      - Wed, 16 Dec 2015 20:34:14 GMT
+      - Mon, 04 Jan 2016 21:22:09 GMT
       Date:
-      - Wed, 16 Dec 2015 20:34:14 GMT
+      - Mon, 04 Jan 2016 21:22:09 GMT
       Cache-Control:
       - private, max-age=0, must-revalidate, no-transform
       Etag:
@@ -1465,7 +1469,7 @@ http_interactions:
         yAUB8EzHdV/nTu98H+ReYK8P+jLo+Q01as+NDud5iVNzCzuM1ep/Yp53lt7C
         Drn+v83QI/nzNPoNProVkAIYAAA=
     http_version: 
-  recorded_at: Wed, 16 Dec 2015 20:34:14 GMT
+  recorded_at: Mon, 04 Jan 2016 21:22:10 GMT
 - request:
     method: get
     uri: https://www.googleapis.com/compute/v1/projects/civil-tube-113314/global/images
@@ -1475,14 +1479,14 @@ http_interactions:
     headers:
       User-Agent:
       - |-
-        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.2.6-301.fc23.x86_64
+        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.3.0-1-amd64
          (gzip)
       Accept-Encoding:
       - gzip
       Content-Type:
       - ''
       Authorization:
-      - Bearer ya29.TAI34vXOqzR-xqdIXaocnIVAePfE15B8pFcxnI6SgRUNbZt3-EIK_I3cIxUVOLCsdyr0xA
+      - Bearer ya29.XwLRFAvHXovlOXTYcWJsSwrDLWXKb4wMC3xejj5l8E1uhMKLCUsa2jVmqsLSnTQW7rFISg
       Cache-Control:
       - no-store
       Accept:
@@ -1493,9 +1497,9 @@ http_interactions:
       message: OK
     headers:
       Expires:
-      - Wed, 16 Dec 2015 20:34:14 GMT
+      - Mon, 04 Jan 2016 21:22:10 GMT
       Date:
-      - Wed, 16 Dec 2015 20:34:14 GMT
+      - Mon, 04 Jan 2016 21:22:10 GMT
       Cache-Control:
       - private, max-age=0, must-revalidate, no-transform
       Etag:
@@ -1529,7 +1533,7 @@ http_interactions:
         dAcIPxh2B/mZHhhUINBO3Oo2Yetc37sLRE6TZ6gFqXqq6b8R8zYfiJrFybMA
         AAA=
     http_version: 
-  recorded_at: Wed, 16 Dec 2015 20:34:14 GMT
+  recorded_at: Mon, 04 Jan 2016 21:22:10 GMT
 - request:
     method: get
     uri: https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images
@@ -1539,14 +1543,14 @@ http_interactions:
     headers:
       User-Agent:
       - |-
-        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.2.6-301.fc23.x86_64
+        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.3.0-1-amd64
          (gzip)
       Accept-Encoding:
       - gzip
       Content-Type:
       - ''
       Authorization:
-      - Bearer ya29.TAI34vXOqzR-xqdIXaocnIVAePfE15B8pFcxnI6SgRUNbZt3-EIK_I3cIxUVOLCsdyr0xA
+      - Bearer ya29.XwLRFAvHXovlOXTYcWJsSwrDLWXKb4wMC3xejj5l8E1uhMKLCUsa2jVmqsLSnTQW7rFISg
       Cache-Control:
       - no-store
       Accept:
@@ -1557,9 +1561,9 @@ http_interactions:
       message: OK
     headers:
       Expires:
-      - Wed, 16 Dec 2015 20:34:15 GMT
+      - Mon, 04 Jan 2016 21:22:10 GMT
       Date:
-      - Wed, 16 Dec 2015 20:34:15 GMT
+      - Mon, 04 Jan 2016 21:22:10 GMT
       Cache-Control:
       - private, max-age=0, must-revalidate, no-transform
       Etag:
@@ -1655,7 +1659,7 @@ http_interactions:
         UGimzxeaoYKvnS9estsd6VacajmLisjBFNU/cgVHF7ZCs2j5GBnjgq35E4Rm
         PaS+QLUZCQfF41n1q9nfX/3y6n+dvNxHZ4IAAA==
     http_version: 
-  recorded_at: Wed, 16 Dec 2015 20:34:15 GMT
+  recorded_at: Mon, 04 Jan 2016 21:22:11 GMT
 - request:
     method: get
     uri: https://www.googleapis.com/compute/v1/projects/coreos-cloud/global/images
@@ -1665,14 +1669,14 @@ http_interactions:
     headers:
       User-Agent:
       - |-
-        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.2.6-301.fc23.x86_64
+        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.3.0-1-amd64
          (gzip)
       Accept-Encoding:
       - gzip
       Content-Type:
       - ''
       Authorization:
-      - Bearer ya29.TAI34vXOqzR-xqdIXaocnIVAePfE15B8pFcxnI6SgRUNbZt3-EIK_I3cIxUVOLCsdyr0xA
+      - Bearer ya29.XwLRFAvHXovlOXTYcWJsSwrDLWXKb4wMC3xejj5l8E1uhMKLCUsa2jVmqsLSnTQW7rFISg
       Cache-Control:
       - no-store
       Accept:
@@ -1683,13 +1687,13 @@ http_interactions:
       message: OK
     headers:
       Expires:
-      - Wed, 16 Dec 2015 20:34:15 GMT
+      - Mon, 04 Jan 2016 21:22:11 GMT
       Date:
-      - Wed, 16 Dec 2015 20:34:15 GMT
+      - Mon, 04 Jan 2016 21:22:11 GMT
       Cache-Control:
       - private, max-age=0, must-revalidate, no-transform
       Etag:
-      - '"_NtyuYjXw-nIFN9XT1d4nY6fkIA/dugFKudlZ6C71RitUQ-99EzLvPw"'
+      - '"_NtyuYjXw-nIFN9XT1d4nY6fkIA/ROU985GEtLYO1Uihv4ayz40VPBg"'
       Vary:
       - Origin
       - X-Origin
@@ -1714,132 +1718,134 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        H4sIAAAAAAAAAO2dW28kV26A3/0rBOfVqiF5eDmn35y1kZcFEngFLIIgD/JY
-        sZWdG0ayjc1i/3vIal2qWqpqWt1rqLbL0owx6q4ST+kTD8nDy9++OPvyL9cf
-        fvhyc/bl24/vP/18e/Uv1+8vf7z64/XN7Zdf+as3V+/+54/XH/4S7/jp9vbT
-        zebNm19//bX78ePHH99dXX66vun8wjd3F7/5Bd98+vzxf6/e3t741z5ffbw5
-        f/vu488/vPnx3cfvL9+96W9+09/5uv+u6XffXr2/8Qv+64uzs7/5nwm5471n
-        /yCp71+6fPfpp8tzYTiPj18IkJGo3H3r7bJIq9bCBibUKqvUevf6289Xl7fX
-        Hz9cXL+/urm9fP+pf7vf4xzpnMoFlg3CRmonYOdQNwB3F364fH+1XW9Cih+u
-        bt5+vv4U3yiu+YNf8+9/OuuvOfNrOv+4f1Qff/789urir5/6m3/39Z/vvv75
-        8tdvrm/iCfaP+/6N8abtO0KSD7eX1x+uPt9fffH1d1/GS3+/F+LT56u3l7dX
-        Pwzucuv/jvd+8+1/fPftH76++Pab+9t9vvr07vLt1furD7f/wJ9brfzwxAQJ
-        ylDikO7nm/5BfPv1N/959yguP7/96fqXqz9d/9/Vv/719qp/HdmKNSC+f+D+
-        rOIN//Z9vNripv09XwmrNqSk4IjVVrEiWRWDhk1BzDKsFrxA2lDdFOsqcIbV
-        56WYZ9VWVg9mVYi1QCnLYLU9rhkQaMSqkwqtNhFRbgAl3rQHVjkH9M8L1I2I
-        I9qZlAysz4sxD2tbYT0CrK01BlwErAJzsPr+j5WKSkNVQ6moSViJNs4raycl
-        o1knxJiFVVYr4Cia1bVQWwisPKLExrAqkbVWtUFx09WNgJJiVS/QNtjCCpCW
-        UawTUsyzyiurx2C1gd9sGazaiJI2ZtVVacVCKkKKjdg/UrC2cK/ANqV0bkJk
-        YH1ejHlYV5P1OIq1MC1DsSoOKUEewWqxRVADN1rZF2SmKcWKfIGywbpxD4i1
-        JlidkGKWVcWV1cNZRXdFxJahWG1EyU7YqimVWkDYzU7h6htGy7AaYStyPDdF
-        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
+        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
+        8OPXm4uv3358/+mX+5t/un1//dPN72/v7r/+xl+9u3n337+//fCneMfP9/ef
+        7jZv3vz666/dTx8//vTu5vrT7V3nF755uPjNn/HNp88f/+fm7f2df+3zzce7
+        y7fvPv7y45uf3n384frdm/7md/2db/vvmn73/c37O7/gP7+6uPir/5mQO957
+        8Q+S+vGl63effr6+FIbL+PgzATISlYdvvV0WadVa2MCEWmWVWh9ef/v55vr+
+        9uOHq9v3N3f31+8/9W/3e1wiXVK5wrJB2EjtBOwS6gbg4cIP1+9vtutNSPHj
+        zd3bz7ef4hvFNb/za/71jxf9NRd+Tecfj4/q4y+f395c/eVTf/M/fPvvD1//
+        fP3rd7d38QT7x/34xnjT9h0hyYf769sPN58fr7769g9fx0t/exTi0+ebt9f3
+        Nz8O7nLv/473fvf9v/3h+999e/X9d4+3+3zz6d3125v3Nx/u/4E/t1r56YkJ
+        EpShxCHdL3f9g/j+2+/+4+FRXH9++/Ptn2/+ePu/N//8l/ub/nVkK9aA+PGB
+        +7OKN/zLD/Fqi5v29zwRVm1IScERq61iRbIqBg2bgphlWC14hbShuinWVeAM
+        qy9LMc+qrawezKoQa4FSlsFqe14zINCIVScVWm0iotwASrxpD6xyCeifV6gb
+        EUe0MykZWF8WYx7WtsJ6BFhbawy4CFgF5mD1/R8rFZWGqoZSUZOwEm2cV9ZO
+        SkazTogxC6usVsBRNKtrobYQWHlEiY1hVSJrrWqD4qarGwElxapeoW2whRUg
+        LaNYJ6SYZ5VXVo/BagO/2TJYtRElbcyqq9KKhVSEFBuxf6RgbeFegW1K6dyE
+        yMD6shjzsK4m63EUa2FahmJVHFKCPILVYougBm60si/ITFOKFfkKZYN14x4Q
+        a02wOiHFLKuKK6uHs4ruiogtQ7HaiJKdsFVTKrWAsJudwtU3jJZhNcJW5Hhu
+        inauJBOsTkgxy6qtrB6F1UqwEO/KZERJHevVGtajAUv1zQJrpX1hqy2rFgYr
+        tw1op6YZVl+WYp5VWVk9nFXfN00WYgMM1wwEMmJVWiugbEAktWGBmoha0SXI
+        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
+        zmSHhFQr1wdxLYTuMy6juZTVOiJqp7kUY+NChf0FA21sOa777JDCkaXfaibK
+        NyFFjutac1yv2SGHcq3R9GMZ5nUda8qdUxkiKq21UpBjbmTRRHMfJ6hFcx+S
+        DbYOU1G+CSmSXCf19XoqcyjX3FRpGfq6DS3bBmO3sVicxbi9S62Z442SiF47
+        ov2MYNB+lCVkonwTUuS4bhn7OqRauT5YXxvhIk4bKwzrSRqO7WuMzhZVfS21
+        GPkepAk7pF3i1r6WsK8RE5WtU1KkuPaLU1zjal8fyDVXriCLaC5QoY6I2pmQ
+        iRYlvYYtRig1KpmqAieoD1+zRfa1lET4ekqKJNcZ+zqkWrk+iGstFVpdxmlj
+        xWEeXaNxmK/vnAktGhEZSItmIBmuiYProsG1YSLONyVFjmvMZPOFVCvXh3HN
+        DaTCIqoKKg08NoSdbL7oWAQU5cJMxtVN7f12CMLDkNiIX0vXoi/hXq4npMhx
+        TQm/sZdq5fogro1M2HgR8etaypConePGfjAX+kZPgqUVaonG3E4Q0hW2DdUY
+        eGAtEeebkiLHdUlUy4RUq994KNfS3M1ahh0yzOd3osZVYKhQtIlANWtS48Ax
+        xXXfcL70XWZKpsJ8Sook1wk7pJdq5fpArt0OAVpE1lMQhQOidgbUFAE3qrDU
+        wNoqJ87RgyC9grqh/hwdIaWvX5YizfXe9JBeqpXrQ+0QN7GX0RWs8khT7lbt
+        uumBcU4SmdduXLuBneHa/UaiDbm+lu3wxb1cT0iR45pz+nqt2j2U61J895Vl
+        cG3w3GcOcSc/JJJCtjm3pYKUoonOjIh9fghtSnx2Fl1E9w0TmZIix7VBtL3b
+        wzWu+SEHx0Nqo4JCS+G6DIjaHUCqLBVB3SBxYwTUEvY1hr5GjEF5biHULNcv
+        SZHmumS4XuN8h8b5pNWl2NdmA8sWd7osIAtZdbDBn4dxzAtOca1XaJso3G1d
+        w8RQvSkpklxbwr7GtcvCEeIhEqO5FsH1F2sencuwohhgJaDGoCWjrymGRBBu
+        wnUsXTTU3c/1hBQ5rmsiPySkOts4X8Ph00V8tX0tyLSM/Osv1zzkWgoRtOKG
+        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
+        FKMSAQA=
     http_version: 
-  recorded_at: Wed, 16 Dec 2015 20:34:15 GMT
+  recorded_at: Mon, 04 Jan 2016 21:22:11 GMT
 - request:
     method: get
     uri: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images
@@ -1849,14 +1855,14 @@ http_interactions:
     headers:
       User-Agent:
       - |-
-        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.2.6-301.fc23.x86_64
+        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.3.0-1-amd64
          (gzip)
       Accept-Encoding:
       - gzip
       Content-Type:
       - ''
       Authorization:
-      - Bearer ya29.TAI34vXOqzR-xqdIXaocnIVAePfE15B8pFcxnI6SgRUNbZt3-EIK_I3cIxUVOLCsdyr0xA
+      - Bearer ya29.XwLRFAvHXovlOXTYcWJsSwrDLWXKb4wMC3xejj5l8E1uhMKLCUsa2jVmqsLSnTQW7rFISg
       Cache-Control:
       - no-store
       Accept:
@@ -1867,9 +1873,9 @@ http_interactions:
       message: OK
     headers:
       Expires:
-      - Wed, 16 Dec 2015 20:34:16 GMT
+      - Mon, 04 Jan 2016 21:22:12 GMT
       Date:
-      - Wed, 16 Dec 2015 20:34:16 GMT
+      - Mon, 04 Jan 2016 21:22:12 GMT
       Cache-Control:
       - private, max-age=0, must-revalidate, no-transform
       Etag:
@@ -2002,7 +2008,7 @@ http_interactions:
         AbBbzINS5RfeVEFSyujmBVo2waw9IgMzb8rGwo3ZFzPVNwqwhS5Thy4fnjdl
         ScVPbf5iysA3o//95u/f/APNGQq8UuQAAA==
     http_version: 
-  recorded_at: Wed, 16 Dec 2015 20:34:16 GMT
+  recorded_at: Mon, 04 Jan 2016 21:22:12 GMT
 - request:
     method: get
     uri: https://www.googleapis.com/compute/v1/projects/google-containers/global/images
@@ -2012,14 +2018,14 @@ http_interactions:
     headers:
       User-Agent:
       - |-
-        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.2.6-301.fc23.x86_64
+        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.3.0-1-amd64
          (gzip)
       Accept-Encoding:
       - gzip
       Content-Type:
       - ''
       Authorization:
-      - Bearer ya29.TAI34vXOqzR-xqdIXaocnIVAePfE15B8pFcxnI6SgRUNbZt3-EIK_I3cIxUVOLCsdyr0xA
+      - Bearer ya29.XwLRFAvHXovlOXTYcWJsSwrDLWXKb4wMC3xejj5l8E1uhMKLCUsa2jVmqsLSnTQW7rFISg
       Cache-Control:
       - no-store
       Accept:
@@ -2030,9 +2036,9 @@ http_interactions:
       message: OK
     headers:
       Expires:
-      - Wed, 16 Dec 2015 20:34:16 GMT
+      - Mon, 04 Jan 2016 21:22:12 GMT
       Date:
-      - Wed, 16 Dec 2015 20:34:16 GMT
+      - Mon, 04 Jan 2016 21:22:12 GMT
       Cache-Control:
       - private, max-age=0, must-revalidate, no-transform
       Etag:
@@ -2094,7 +2100,7 @@ http_interactions:
         hf1nMEhRjCBmglmsx0ndQuCO8UODNqbmv6O6ASZM8UA5fLawdpT8dvTp6E/8
         39OeZDQAAA==
     http_version: 
-  recorded_at: Wed, 16 Dec 2015 20:34:17 GMT
+  recorded_at: Mon, 04 Jan 2016 21:22:12 GMT
 - request:
     method: get
     uri: https://www.googleapis.com/compute/v1/projects/opensuse-cloud/global/images
@@ -2104,14 +2110,14 @@ http_interactions:
     headers:
       User-Agent:
       - |-
-        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.2.6-301.fc23.x86_64
+        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.3.0-1-amd64
          (gzip)
       Accept-Encoding:
       - gzip
       Content-Type:
       - ''
       Authorization:
-      - Bearer ya29.TAI34vXOqzR-xqdIXaocnIVAePfE15B8pFcxnI6SgRUNbZt3-EIK_I3cIxUVOLCsdyr0xA
+      - Bearer ya29.XwLRFAvHXovlOXTYcWJsSwrDLWXKb4wMC3xejj5l8E1uhMKLCUsa2jVmqsLSnTQW7rFISg
       Cache-Control:
       - no-store
       Accept:
@@ -2122,9 +2128,9 @@ http_interactions:
       message: OK
     headers:
       Expires:
-      - Wed, 16 Dec 2015 20:34:17 GMT
+      - Mon, 04 Jan 2016 21:22:13 GMT
       Date:
-      - Wed, 16 Dec 2015 20:34:17 GMT
+      - Mon, 04 Jan 2016 21:22:13 GMT
       Cache-Control:
       - private, max-age=0, must-revalidate, no-transform
       Etag:
@@ -2175,7 +2181,7 @@ http_interactions:
         tpGYNoI0bP7Je5wJ16aT67YgJtdw8ciV7t3p6/E1jIIRnLq5Aaeh7Tq6R0e7
         mOdEB6F0LTiXnO2gYxK8mXye/A2bz31p/hYAAA==
     http_version: 
-  recorded_at: Wed, 16 Dec 2015 20:34:17 GMT
+  recorded_at: Mon, 04 Jan 2016 21:22:13 GMT
 - request:
     method: get
     uri: https://www.googleapis.com/compute/v1/projects/rhel-cloud/global/images
@@ -2185,14 +2191,14 @@ http_interactions:
     headers:
       User-Agent:
       - |-
-        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.2.6-301.fc23.x86_64
+        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.3.0-1-amd64
          (gzip)
       Accept-Encoding:
       - gzip
       Content-Type:
       - ''
       Authorization:
-      - Bearer ya29.TAI34vXOqzR-xqdIXaocnIVAePfE15B8pFcxnI6SgRUNbZt3-EIK_I3cIxUVOLCsdyr0xA
+      - Bearer ya29.XwLRFAvHXovlOXTYcWJsSwrDLWXKb4wMC3xejj5l8E1uhMKLCUsa2jVmqsLSnTQW7rFISg
       Cache-Control:
       - no-store
       Accept:
@@ -2203,9 +2209,9 @@ http_interactions:
       message: OK
     headers:
       Expires:
-      - Wed, 16 Dec 2015 20:34:18 GMT
+      - Mon, 04 Jan 2016 21:22:14 GMT
       Date:
-      - Wed, 16 Dec 2015 20:34:18 GMT
+      - Mon, 04 Jan 2016 21:22:14 GMT
       Cache-Control:
       - private, max-age=0, must-revalidate, no-transform
       Etag:
@@ -2300,7 +2306,7 @@ http_interactions:
         Oaq+nzC7FZGRCbNtb2G2cf6udprWfNtcu9ULCQYJzGsFTpa/gzJ11yL3wmwq
         iQrjzunc/YTZuxE5PmG2+d2m3mvr6C7AF/7Pry9+A4vUiKiqlAAA
     http_version: 
-  recorded_at: Wed, 16 Dec 2015 20:34:18 GMT
+  recorded_at: Mon, 04 Jan 2016 21:22:14 GMT
 - request:
     method: get
     uri: https://www.googleapis.com/compute/v1/projects/suse-cloud/global/images
@@ -2310,14 +2316,14 @@ http_interactions:
     headers:
       User-Agent:
       - |-
-        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.2.6-301.fc23.x86_64
+        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.3.0-1-amd64
          (gzip)
       Accept-Encoding:
       - gzip
       Content-Type:
       - ''
       Authorization:
-      - Bearer ya29.TAI34vXOqzR-xqdIXaocnIVAePfE15B8pFcxnI6SgRUNbZt3-EIK_I3cIxUVOLCsdyr0xA
+      - Bearer ya29.XwLRFAvHXovlOXTYcWJsSwrDLWXKb4wMC3xejj5l8E1uhMKLCUsa2jVmqsLSnTQW7rFISg
       Cache-Control:
       - no-store
       Accept:
@@ -2328,9 +2334,9 @@ http_interactions:
       message: OK
     headers:
       Expires:
-      - Wed, 16 Dec 2015 20:34:18 GMT
+      - Mon, 04 Jan 2016 21:22:14 GMT
       Date:
-      - Wed, 16 Dec 2015 20:34:18 GMT
+      - Mon, 04 Jan 2016 21:22:14 GMT
       Cache-Control:
       - private, max-age=0, must-revalidate, no-transform
       Etag:
@@ -2375,7 +2381,7 @@ http_interactions:
         lmR49+QgjDLMx+fMFyGLouCvdx8zOUSxH01ZcN/kcDvxc6YG9j4x7LpQnmcR
         bu4axj14QxYZmZ/z0QXn17EAFQwAAA==
     http_version: 
-  recorded_at: Wed, 16 Dec 2015 20:34:18 GMT
+  recorded_at: Mon, 04 Jan 2016 21:22:14 GMT
 - request:
     method: get
     uri: https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images
@@ -2385,14 +2391,14 @@ http_interactions:
     headers:
       User-Agent:
       - |-
-        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.2.6-301.fc23.x86_64
+        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.3.0-1-amd64
          (gzip)
       Accept-Encoding:
       - gzip
       Content-Type:
       - ''
       Authorization:
-      - Bearer ya29.TAI34vXOqzR-xqdIXaocnIVAePfE15B8pFcxnI6SgRUNbZt3-EIK_I3cIxUVOLCsdyr0xA
+      - Bearer ya29.XwLRFAvHXovlOXTYcWJsSwrDLWXKb4wMC3xejj5l8E1uhMKLCUsa2jVmqsLSnTQW7rFISg
       Cache-Control:
       - no-store
       Accept:
@@ -2403,9 +2409,9 @@ http_interactions:
       message: OK
     headers:
       Expires:
-      - Wed, 16 Dec 2015 20:34:18 GMT
+      - Mon, 04 Jan 2016 21:22:14 GMT
       Date:
-      - Wed, 16 Dec 2015 20:34:18 GMT
+      - Mon, 04 Jan 2016 21:22:14 GMT
       Cache-Control:
       - private, max-age=0, must-revalidate, no-transform
       Etag:
@@ -2490,7 +2496,7 @@ http_interactions:
         IOnIUZCEq+fMywemAEpqWUjamlTAo9Q/MH1apuaT5Btr5HNbLWgNJbPHvT5K
         TTwzBAGM8WBipuUtePLON/bjjzf/BX9MCsBeewAA
     http_version: 
-  recorded_at: Wed, 16 Dec 2015 20:34:18 GMT
+  recorded_at: Mon, 04 Jan 2016 21:22:15 GMT
 - request:
     method: get
     uri: https://www.googleapis.com/compute/v1/projects/civil-tube-113314/aggregated/instances
@@ -2500,14 +2506,14 @@ http_interactions:
     headers:
       User-Agent:
       - |-
-        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.2.6-301.fc23.x86_64
+        fog/0.1.1 google-api-ruby-client/0.8.2 Linux/4.3.0-1-amd64
          (gzip)
       Accept-Encoding:
       - gzip
       Content-Type:
       - ''
       Authorization:
-      - Bearer ya29.TAI34vXOqzR-xqdIXaocnIVAePfE15B8pFcxnI6SgRUNbZt3-EIK_I3cIxUVOLCsdyr0xA
+      - Bearer ya29.XwLRFAvHXovlOXTYcWJsSwrDLWXKb4wMC3xejj5l8E1uhMKLCUsa2jVmqsLSnTQW7rFISg
       Cache-Control:
       - no-store
       Accept:
@@ -2518,13 +2524,13 @@ http_interactions:
       message: OK
     headers:
       Expires:
-      - Wed, 16 Dec 2015 20:34:19 GMT
+      - Mon, 04 Jan 2016 21:22:15 GMT
       Date:
-      - Wed, 16 Dec 2015 20:34:19 GMT
+      - Mon, 04 Jan 2016 21:22:15 GMT
       Cache-Control:
       - private, max-age=0, must-revalidate, no-transform
       Etag:
-      - '"_NtyuYjXw-nIFN9XT1d4nY6fkIA/670OTPmBthkx-1DPbIAWyC4xs2g"'
+      - '"_NtyuYjXw-nIFN9XT1d4nY6fkIA/9grVsOtJUJWLPS6BS4lCu2I7QlQ"'
       Vary:
       - Origin
       - X-Origin
@@ -2549,34 +2555,49 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        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
+        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
     http_version: 
-  recorded_at: Wed, 16 Dec 2015 20:34:19 GMT
+  recorded_at: Mon, 04 Jan 2016 21:22:16 GMT
 recorded_with: VCR 2.9.3
