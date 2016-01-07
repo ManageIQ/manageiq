@@ -4,7 +4,7 @@
     %head
       %title CloudForms Management Engine: #{@layout.titleize}
       = favicon_link_tag
-      = split_stylesheet_link_tag 'application'
+      = stylesheet_link_tag 'application'
       = javascript_include_tag 'application'
       - if Rails.env.development?
         = javascript_include_tag 'miq_debug'
@@ -23,7 +23,7 @@
       %meta{"http-equiv" => "cache-control", :content => "no-cache, no-store"}
 
       = favicon_link_tag
-      = split_stylesheet_link_tag 'application'
+      = stylesheet_link_tag 'application'
       = render :partial => "stylesheets/template50"
       = javascript_include_tag 'application'
       - if Rails.env.development?
