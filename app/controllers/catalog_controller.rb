@@ -449,26 +449,24 @@ class CatalogController < ApplicationController
       msg = _("Custom Image successfully removed")
     elsif params[:upload] && params[:upload][:image] &&
           params[:upload][:image].respond_to?(:read)
+      identify_catalog(params[:id])
       ext = params[:upload][:image].original_filename.split(".").last.downcase
       if !["png", "jpg"].include?(ext)
         msg = _("Custom Image must be a %s file") % ".png or .jpg"
         err = true
       else
-        identify_catalog(params[:id])
         @record.picture ||= Picture.new
         @record.picture.content = params[:upload][:image].read
         @record.picture.extension = ext
         @record.save
         msg = _("Custom Image file \"%s\" successfully uploaded") % params[:upload][:image].original_filename
-
-        #identify_catalog(from_cid(params[:id]))
-        #@record = ServiceTemplateCatalog.find_by_id(from_cid(params[:id])) if @record.nil?
-        params[:id] = x_build_node_id(@record, nil, x_tree(x_active_tree))  # Get the tree node id
       end
     else
+      identify_catalog(params[:id])
       msg = _("Use the Browse button to locate a %s image file") % ".png or .jpg"
       err = true
     end
+    params[:id] = x_build_node_id(@record, nil, x_tree(x_active_tree))  # Get the tree node id
     add_flash(msg, err == true ? :error : nil)
     respond_to do |format|
       format.js { replace_right_cell }

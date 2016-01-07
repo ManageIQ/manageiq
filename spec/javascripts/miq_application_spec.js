@@ -103,4 +103,14 @@ describe('miq_application.js', function() {
     })
   });
 
+  describe('miqShowAE_Tree', function () {
+    it('uses url with the current controller', function() {
+      ManageIQ.controller = 'catalog';
+      spyOn(window, 'miqJqueryRequest');
+      ae_url = "/" + ManageIQ.controller + "/ae_tree_select_toggle";
+      miqShowAE_Tree('field_entry_point');
+      expect(miqJqueryRequest).toHaveBeenCalledWith('/catalog/ae_tree_select_toggle?typ=field_entry_point');
+    });
+  });
+
 });

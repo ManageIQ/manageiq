@@ -122,6 +122,70 @@ describe CatalogController do
     end
   end
 
+  context "#st_upload_image" do
+    before do
+      controller.instance_variable_set(:@sb, {})
+      controller.instance_variable_set(:@_params, :button => "save")
+      @st = FactoryGirl.create(:service_template)
+      3.times.each_with_index do |i|
+        ns = FactoryGirl.create(:miq_ae_namespace, :name => "ns#{i}")
+        cls = FactoryGirl.create(:miq_ae_class, :namespace_id => ns.id, :name => "cls#{i}")
+        FactoryGirl.create(:miq_ae_instance, :class_id => cls.id, :name => "inst#{i}")
+      end
+      retire_fqname    = 'ns0/cls0/inst0'
+      provision_fqname = 'ns1/cls1/inst1'
+      recon_fqname     = 'ns2/cls2/inst2'
+      edit = {
+        :new          => {
+          :name               => "New Name",
+          :description        => "New Description",
+          :reconfigure_fqname => recon_fqname,
+          :retire_fqname      => retire_fqname,
+          :fqname             => provision_fqname},
+        :key          => "prov_edit__new",
+        :rec_id       => @st.id,
+        :st_prov_type => "generic"
+      }
+      controller.instance_variable_set(:@edit, edit)
+      session[:edit] = edit
+    end
+
+    it "uploads a selected png file " do
+      upload_image = File.new(Rails.root + 'spec/fixtures/files/upload_image.png')
+      @image = ActionDispatch::Http::UploadedFile.new(tempfile: upload_image, filename: File.basename(upload_image), type: "image/png")
+      @upload =  {:image => @image}
+      @params =  {:commit => 'Upload', :controller => 'catalog', :action => 'st_upload_image', :id => @st.id,
+                  :upload => @upload}
+      controller.instance_variable_set(:@_params, @params)
+      @sb = {:active_tree => :sandt_tree}
+      allow_any_instance_of(TreeNodeBuilder).to receive(:format_parent_id).and_return('')
+      post :st_upload_image, :format => :js, :id => @st.id, :upload => @upload
+      expect(assigns(:flash_array).first[:message]).to include('Custom Image file "upload_image.png" successfully uploaded')
+    end
+
+    it "displays an error when the selected fileis not a png file or .jpg " do
+      upload_image = File.new(Rails.root + 'spec/fixtures/files/upload_image.txt')
+      @image = ActionDispatch::Http::UploadedFile.new(tempfile: upload_image, filename: File.basename(upload_image), type: "image/png")
+      @upload =  {:image => @image}
+      @params =  {:commit => 'Upload', :controller => 'catalog', :action => 'st_upload_image', :id => @st.id,
+                  :upload => @upload}
+      controller.instance_variable_set(:@_params,@params)
+      @sb = {:active_tree => :sandt_tree}
+      allow_any_instance_of(TreeNodeBuilder).to receive(:format_parent_id).and_return('')
+      post :st_upload_image, :format => :js, :id => @st.id, :upload => @upload
+      expect(assigns(:flash_array).first[:message]).to include("Custom Image must be a .png or .jpg file")
+    end
+
+    it "displays a message when an image file is not selected " do
+      @params = {:commit => 'Upload', :controller => 'catalog', :action => 'st_upload_image', :id => @st.id}
+      controller.instance_variable_set(:@_params, @params)
+      @sb = {:active_tree => :sandt_tree}
+      allow_any_instance_of(TreeNodeBuilder).to receive(:format_parent_id).and_return('')
+      post :st_upload_image, :format => :js, :id => @st.id, :params => @params
+      expect(assigns(:flash_array).first[:message]).to include("Use the Browse button to locate a .png or .jpg image file")
+    end
+  end
+
   context "#ot_edit" do
     before(:each) do
       controller.instance_variable_set(:@sb, {})
