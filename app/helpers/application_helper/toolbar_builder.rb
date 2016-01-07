@@ -516,10 +516,6 @@ class ApplicationHelper::ToolbarBuilder
     return true if %w(host_standby host_shutdown host_reboot host_start host_stop host_reset).include?(id) &&
                    @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
 
-    # only hide gtl button if they are not in @gtl_buttons
-    return @gtl_buttons.include?(id) ? false : true if @gtl_buttons &&
-                                                       ["view_grid", "view_tile", "view_list"].include?(id)
-
     # hide compliance check and comparison buttons rendered for orchestration stack instances
     return true if @record.kind_of?(OrchestrationStack) && @display == "instances" &&
                    %w(instance_check_compliance instance_compare).include?(id)
@@ -543,14 +539,6 @@ class ApplicationHelper::ToolbarBuilder
          !["details", "item"].include?(@showtype)) || #       not showing list or single sub screen item i.e VM/Users
          @lastaction == "show_list") ? # or 2) selected node shows a list of records
         false : true
-    end
-
-    if id.starts_with?("history_")
-      if x_tree_history[id.split("_").last.to_i] || id.ends_with?("_1")
-        return false
-      else
-        return true
-      end
     end
 
     # user can see the buttons if they can get to Policy RSOP/Automate Simulate screen
@@ -612,8 +600,10 @@ class ApplicationHelper::ToolbarBuilder
     # don't check for feature RBAC if id is miq_request_approve/deny
     unless %w(miq_policy catalogs).include?(@layout)
       return true if !role_allows(:feature => id) && !["miq_request_approve", "miq_request_deny"].include?(id) &&
+                     id !~ /^history_\d*/ &&
                      !id.starts_with?("dialog_") && !id.starts_with?("miq_task_")
     end
+
     # Check buttons with other restriction logic
     case id
     when "dialog_add_box", "dialog_add_element", "dialog_add_tab", "dialog_res_discard", "dialog_resource_remove"
