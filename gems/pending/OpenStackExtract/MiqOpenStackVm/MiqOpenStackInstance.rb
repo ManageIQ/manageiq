@@ -74,7 +74,7 @@ class MiqOpenStackInstance
     miq_snapshot = Fog::Image::OpenStack::Image.new(rv.body['image'])
     miq_snapshot.collection = image_service.images
 
-    until miq_snapshot.status == "active"
+    until miq_snapshot.status.upcase == "ACTIVE"
       $log.debug "#{log_prefix}: #{miq_snapshot.status}"
       sleep 1
       miq_snapshot.reload
