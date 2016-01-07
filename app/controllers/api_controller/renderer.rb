@@ -182,11 +182,12 @@ class ApiController
         else
           klass.all
         end
-      filter_options = filter_param(klass)
-      res = res.where(filter_options)             if filter_options.present? && res.respond_to?(:where)
+      sql_filter, ruby_filters = filter_param(klass)
+      res = res.where(sql_filter)                                     if sql_filter.present? && res.respond_to?(:where)
+      ruby_filters.each { |ruby_filter| res = ruby_filter.call(res) } if ruby_filters.present?
 
-      sort_options = sort_params(klass)           if res.respond_to?(:reorder)
-      res = res.reorder(sort_options)             if sort_options.present?
+      sort_options = sort_params(klass)                               if res.respond_to?(:reorder)
+      res = res.reorder(sort_options)                                 if sort_options.present?
 
       options = {
         :user => @auth_user_obj,

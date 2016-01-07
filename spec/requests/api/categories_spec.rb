@@ -22,6 +22,27 @@ RSpec.describe "categories API" do
     expect_request_success
   end
 
+  it "can filter the list of categories by name" do
+    category_1 = FactoryGirl.create(:category, :name => "foo")
+    _category_2 = FactoryGirl.create(:category, :name => "bar")
+    api_basic_authorize
+
+    run_get categories_url, :filter => ["name=foo"]
+
+    expect_query_result(:categories, 1, 2)
+    expect_result_resources_to_include_hrefs("resources", [categories_url(category_1.id)])
+    expect_request_success
+  end
+
+  it "will return a bad request error if the filter name is invalid" do
+    FactoryGirl.create(:category)
+    api_basic_authorize
+
+    run_get categories_url, :filter => ["not_an_attribute=foo"]
+
+    expect_bad_request(/attribute not_an_attribute does not exist/)
+  end
+
   it "can read a category" do
     category = FactoryGirl.create(:category)
     api_basic_authorize
