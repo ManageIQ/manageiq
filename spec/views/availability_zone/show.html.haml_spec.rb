@@ -9,9 +9,7 @@ describe "availability_zone/show.html.haml" do
     end
   end
 
-  # TODO: For speed, replace next line with double when available
-  let(:availability_zone) { FactoryGirl.create(:availability_zone, :name => 'My AZ') }
-  # let(:az) { double("AvailabilityZone", :name => 'My AZ', :id => 1) }
+  let(:availability_zone) { double("AvailabilityZone", :name => 'My AZ', :id => 1) }
   let(:action) { 'index' }
 
   before do
