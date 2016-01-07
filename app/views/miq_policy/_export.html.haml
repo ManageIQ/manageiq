@@ -71,23 +71,22 @@
       .form-group
         %label.col-md-2.control-label
           = _("Available %{title}:") % {:title => title}
-        .col-md-8
-          %div{:style => "overflow: auto; width: 400px; border: 1px solid #999999;"}
-            = select_tag('choices_chosen[]',
-              options_for_select(@sb[:new][:choices].sort),
-              :style             => "width:auto; min-width:375px; background-color:#fff; border: 0px;",
-              :size              => 15,
-              :style             => "width: 400px",
-              :multiple          => true,
-              "data-miq_observe" => observe)
-    %table{:width => "100%"}
-      %tr
-        %td{:align => "right"}
+        .col-md-4
+          = select_tag('choices_chosen[]',
+            options_for_select(@sb[:new][:choices].sort),
+              :class    => "widget-export form-control",
+              :style    => "min-height: 200px",
+            :multiple          => true,
+            :onchange              => "miqExportButtonEnable();",
+            "data-miq_observe" => observe)
+      .form-group
+        .col-md-6
           #buttons
             - t = _("Export Selected %s") % title
             = link_to(_('Export'),
               {:action => "export", :button => "export"},
-              :class                 => "btn btn-primary",
+              :class                 => "btn btn-primary btn-disabled pull-right",
+              :id                    => "export_button",
               :alt                   => t,
               "data-miq_sparkle_on"  => true,
               "data-miq_sparkle_off" => true,

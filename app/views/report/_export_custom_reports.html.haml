@@ -29,15 +29,21 @@
   .form-group
     %label.control-label.col-md-2
       = _('Available Custom Reports:')
-    .col-md-8
-      %div{:style => "overflow: auto; width: 400px; border: 1px solid #999999;"}
-        = select_tag('choices_chosen',
-          options_for_select(@export_reports.sort),
-          :size              => 15,
-          :style             => "width:400px; min-width:375px; background-color:#fff; border: 0px;",
-          :multiple          => true,
-          :onchange          => "toggleConvertButtonToLink($('#export_button'),
-                                  'download_report', $('#choices_chosen').val() != null);")
-        :javascript
-          miqInitSelectPicker();
-          miqSelectPickerEvent("choices_chosen", "#{url}");
+    .col-md-4
+      = select_tag('choices_chosen',
+        options_for_select(@export_reports.sort),
+        :style             => "min-height:200px",
+        :class             => "report-export form-control",
+        :multiple          => true,
+        :onchange          => "miqExportButtonEnable(); toggleConvertButtonToLink($('#export_button'),
+                                'download_report', $('#choices_chosen').val() != null);")
+      :javascript
+        miqInitSelectPicker();
+        miqSelectPickerEvent("choices_chosen", "#{url}");
+  .form-group
+    .col-md-6
+      = button_tag(_("Export"),
+          :class  => "btn btn-primary pull-right btn-disabled",
+          :type   => "application/txt",
+          :id     => "export_button",
+          :alt    => _("Download Report to YAML"))
