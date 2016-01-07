@@ -1,6 +1,8 @@
 = render :partial => "layouts/flash_msg"
 #tab_div
-  = form_tag({:action => 'update'}, :id => "config_form") do
+  = form_tag({:action => 'update'},
+             {:id     => "config_form",
+              :method => :post}) do
     %h3
       = _('Filters')
     = _('(Checked default filters will be visible.)')

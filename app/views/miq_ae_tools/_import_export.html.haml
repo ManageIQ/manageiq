@@ -11,7 +11,10 @@
 .import-or-export
   %h3
     = _('Import Datastore classes (*.zip)')
-  = form_tag({:action => "upload_import_file"}, :target => "upload_target", :multipart => true) do
+  = form_tag({:action    => "upload_import_file"},
+             {:target    => "upload_target",
+              :multipart => true,
+              :method    => :post}) do
     .form-horizontal
       .form-group
         .col-md-4

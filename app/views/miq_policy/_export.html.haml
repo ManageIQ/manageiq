@@ -33,7 +33,12 @@
               :title                 => _("Cancel Import"))
   - else
     #import_div
-      = form_tag({:action => "upload", :type => "import", :dbtype => @sb[:dbtype]}, :class => "form-horizontal", :multipart => true) do
+      = form_tag({:action    => "upload",
+                  :type      => "import",
+                  :dbtype    => @sb[:dbtype]},
+                 {:class     => "form-horizontal",
+                  :multipart => true,
+                  :method    => :post}) do
         .form-group
           .col-md-4
             = file_field("upload", "file",
