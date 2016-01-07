@@ -24,11 +24,14 @@ class VmConfig
       if filename.index("\n")
         f = filename
       else
-        # raise "Cannot open config file: [#{filename}]" if not File.file?(filename)
         set_vmconfig_path(filename)
 
-        configType = File.extname(filename).delete(".").downcase
-        require "metadata/VmConfig/#{configType}Config"
+        begin
+          configType = File.extname(filename).delete(".").downcase
+          require "metadata/VmConfig/#{configType}Config"
+        rescue LoadError => e
+          raise e, "Filetype unrecognized for file #{filename}"
+        end
         extend Kernel.const_get(configType.capitalize + "Config")
         f = convert(filename)
       end
