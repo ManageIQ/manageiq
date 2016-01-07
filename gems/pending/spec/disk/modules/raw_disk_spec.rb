@@ -12,7 +12,7 @@ describe RawDisk do
 
       disk_info = OpenStruct.new(:fileName => image_path('basic.img'))
       disk      = MiqDisk.getDisk(disk_info, "RawDiskProbe")
-      disk.read(10).should == "\0\0\0\0\0\0\0\0\0\0"
+      expect(disk.read(10)).to eq("\0\0\0\0\0\0\0\0\0\0")
     end
   end
 
@@ -25,7 +25,7 @@ describe RawDisk do
                                  :mountMode => 'rw')
       disk      = MiqDisk.getDisk(disk_info, "RawDiskProbe")
       data      = Array.new(10) { 0 }
-      disk.write(data, 10).should == 30
+      expect(disk.write(data, 10)).to eq(30)
     end
   end
 end

@@ -14,9 +14,9 @@ describe ApplianceConsole::InternalDatabaseConfiguration do
 
   context ".new" do
     it "set defaults automatically" do
-      @config.host.should == "127.0.0.1"
-      @config.username.should == "root"
-      @config.database.should == "vmdb_production"
+      expect(@config.host).to eq("127.0.0.1")
+      expect(@config.username).to eq("root")
+      expect(@config.database).to eq("vmdb_production")
     end
   end
 
@@ -24,13 +24,13 @@ describe ApplianceConsole::InternalDatabaseConfiguration do
     it "#start_postgres (private)" do
       allow(LinuxAdmin::Service).to receive(:new).and_return(double(:service).as_null_object)
       PostgresAdmin.stub(:service_name => 'postgresql')
-      @config.should_receive(:block_until_postgres_accepts_connections)
+      expect(@config).to receive(:block_until_postgres_accepts_connections)
       @config.send(:start_postgres)
     end
   end
 
   it "#choose_disk" do
-    @config.should_receive(:ask_for_disk)
+    expect(@config).to receive(:ask_for_disk)
     @config.choose_disk
   end
 
@@ -43,13 +43,13 @@ describe ApplianceConsole::InternalDatabaseConfiguration do
 
   it "#create_partition_to_fill_disk (private)" do
     disk_double = double(:path => "/dev/vdb")
-    disk_double.should_receive(:create_partition_table)
-    disk_double.should_receive(:partitions).and_return(["fake partition"])
-    LinuxAdmin.should_receive(:run!).with("parted -s /dev/vdb mkpart primary 0% 100%")
-    LinuxAdmin::Disk.should_receive(:local).and_return([disk_double])
+    expect(disk_double).to receive(:create_partition_table)
+    expect(disk_double).to receive(:partitions).and_return(["fake partition"])
+    expect(LinuxAdmin).to receive(:run!).with("parted -s /dev/vdb mkpart primary 0% 100%")
+    expect(LinuxAdmin::Disk).to receive(:local).and_return([disk_double])
 
     @config.instance_variable_set(:@disk, disk_double)
-    @config.send(:create_partition_to_fill_disk).should == "fake partition"
+    expect(@config.send(:create_partition_to_fill_disk)).to eq("fake partition")
   end
 
   it ".postgresql_template" do
@@ -66,25 +66,25 @@ describe ApplianceConsole::InternalDatabaseConfiguration do
     it "adds database disk entry" do
       fstab = double
       fstab.stub(:entries => [])
-      fstab.should_receive(:write!)
+      expect(fstab).to receive(:write!)
       LinuxAdmin::FSTab.stub(:instance => fstab)
       @config.instance_variable_set(:@logical_volume, double(:path => "/dev/vg/lv"))
-      fstab.entries.count.should == 0
+      expect(fstab.entries.count).to eq(0)
 
       @config.send(:update_fstab)
-      fstab.entries.count.should == 1
-      fstab.entries.first.device.should == "/dev/vg/lv"
+      expect(fstab.entries.count).to eq(1)
+      expect(fstab.entries.first.device).to eq("/dev/vg/lv")
     end
 
     it "skips update if mount point is in fstab" do
       fstab = double
       fstab.stub(:entries => [double(:mount_point => PostgresAdmin.data_directory)])
-      fstab.should_receive(:write!).never
+      expect(fstab).to receive(:write!).never
       LinuxAdmin::FSTab.stub(:instance => fstab)
-      fstab.entries.count.should == 1
+      expect(fstab.entries.count).to eq(1)
 
       @config.send(:update_fstab)
-      fstab.entries.count.should == 1
+      expect(fstab.entries.count).to eq(1)
     end
   end
 end

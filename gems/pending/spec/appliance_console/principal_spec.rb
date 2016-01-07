@@ -2,7 +2,7 @@ require "spec_helper"
 require "appliance_console/principal"
 
 describe ApplianceConsole::Principal do
-  before { Open3.should_not_receive(:capture3) }
+  before { expect(Open3).not_to receive(:capture3) }
   let(:hostname) { "machine.network.com" }
   let(:realm)    { "NETWORK.COM" }
   let(:service)  { "postgres" }
@@ -39,7 +39,7 @@ describe ApplianceConsole::Principal do
   private
 
   def expect_run(cmd, params, *responses)
-    AwesomeSpawn.should_receive(:run).with(cmd, :params => params)
+    expect(AwesomeSpawn).to receive(:run).with(cmd, :params => params)
       .and_return(*(responses.empty? ? response : responses))
   end
 

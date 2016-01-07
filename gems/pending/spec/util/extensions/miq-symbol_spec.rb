@@ -3,10 +3,10 @@ require 'util/extensions/miq-symbol'
 
 describe Symbol do
   it "#to_i" do
-    :"1".to_i.should == 1
-    :"-1".to_i.should == -1
-    :test.to_i.should == 0
-    :test1.to_i.should == 0
-    :"1test".to_i.should == 1
+    expect(:"1".to_i).to eq(1)
+    expect(:"-1".to_i).to eq(-1)
+    expect(:test.to_i).to eq(0)
+    expect(:test1.to_i).to eq(0)
+    expect(:"1test".to_i).to eq(1)
   end
 end

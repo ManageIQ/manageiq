@@ -19,7 +19,7 @@ describe ApplianceConsole::Logging do
 
   it "should not have default logger when setting" do
     subject.logger = double(:info => true)
-    expect(subject.logger.info).to be_true
+    expect(subject.logger.info).to be_truthy
   end
 
   it "should use default_logger if not set" do
@@ -33,17 +33,17 @@ describe ApplianceConsole::Logging do
 
   context "log_and_feedback" do
     it "should log_and_feedback when successful" do
-      subject.should_receive(:say).with("Method starting")
-      subject.should_receive(:say).with("Method complete")
+      expect(subject).to receive(:say).with("Method starting")
+      expect(subject).to receive(:say).with("Method complete")
       expect(subject.log_and_feedback("method") do
         55
       end).to eq(55)
     end
 
     it "should log_and_feedback when failing" do
-      subject.should_receive(:say).with("Test starting")
-      subject.should_receive(:say).with(/Test.*error.*Issue/)
-      subject.should_receive(:press_any_key)
+      expect(subject).to receive(:say).with("Test starting")
+      expect(subject).to receive(:say).with(/Test.*error.*Issue/)
+      expect(subject).to receive(:press_any_key)
 
       expect { subject.log_and_feedback("test") { raise "Issue" } }.to raise_error(MiqSignalError)
     end
@@ -76,12 +76,12 @@ describe ApplianceConsole::Logging do
         exception = AwesomeSpawn::CommandResultError.new(message, result)
         exception.set_backtrace(@backtrace)
 
-        subject.logger.should_receive(:info)
-        subject.logger.should_receive(:error)
+        expect(subject.logger).to receive(:info)
+        expect(subject.logger).to receive(:error)
           .with("MIQ(#some_method)  Command failed: #{message}. Error: stderr. Output: stdout. At: #{@backtrace.last}")
-        subject.should_receive(:say).with("Some method starting")
-        subject.should_receive(:say).with(/Some method.*error.*some error/)
-        subject.should_receive(:press_any_key)
+        expect(subject).to receive(:say).with("Some method starting")
+        expect(subject).to receive(:say).with(/Some method.*error.*some error/)
+        expect(subject).to receive(:press_any_key)
 
         expect { subject.log_and_feedback(:some_method) { raise exception } }.to raise_error(MiqSignalError)
       end
@@ -92,13 +92,13 @@ describe ApplianceConsole::Logging do
         exception.set_backtrace(@backtrace)
         debugging = "Error: ArgumentError with message: #{message}"
 
-        subject.logger.should_receive(:info)
-        subject.logger.should_receive(:error)
+        expect(subject.logger).to receive(:info)
+        expect(subject.logger).to receive(:error)
           .with("MIQ(#some_method)  #{debugging}. Failed at: #{@backtrace.first}")
 
-        subject.should_receive(:say).with("Some method starting")
-        subject.should_receive(:say).with(/Some method.*error.*#{debugging}/)
-        subject.should_receive(:press_any_key)
+        expect(subject).to receive(:say).with("Some method starting")
+        expect(subject).to receive(:say).with(/Some method.*error.*#{debugging}/)
+        expect(subject).to receive(:press_any_key)
         expect { subject.log_and_feedback(:some_method) { raise exception } }.to raise_error(MiqSignalError)
       end
     end

@@ -20,14 +20,14 @@ describe ApplianceConsole::DatabaseConfiguration do
   context ".initialize" do
     it "accepts hash attributes" do
       config = described_class.new(:adapter => "test", :port => 5433)
-      config.adapter.should == "test"
-      config.port.should == 5433
+      expect(config.adapter).to eq("test")
+      expect(config.port).to eq(5433)
     end
 
     it "default attributes" do
       config = described_class.new
-      config.adapter.should == "postgresql"
-      config.port.should be_nil
+      expect(config.adapter).to eq("postgresql")
+      expect(config.port).to be_nil
     end
 
     it "interactive => false" do
@@ -41,31 +41,31 @@ describe ApplianceConsole::DatabaseConfiguration do
     end
 
     it "raises ArgumentError on unknown attributes" do
-      -> { described_class.new(:unknown => "test") }.should raise_error(ArgumentError)
+      expect { described_class.new(:unknown => "test") }.to raise_error(ArgumentError)
     end
   end
 
   context "#friendly_inspect" do
     it "normal case" do
       config = described_class.new(:host => "abc", :username => "abc", :database => "abc", :region => 1)
-      config.friendly_inspect.should == "Host:     abc\nUsername: abc\nDatabase: abc\nRegion:   1\n"
+      expect(config.friendly_inspect).to eq("Host:     abc\nUsername: abc\nDatabase: abc\nRegion:   1\n")
     end
 
     it "without region" do
       config = described_class.new(:host => "abc", :username => "abc", :database => "abc")
-      config.friendly_inspect.should == "Host:     abc\nUsername: abc\nDatabase: abc\n"
+      expect(config.friendly_inspect).to eq("Host:     abc\nUsername: abc\nDatabase: abc\n")
     end
   end
 
   context "#password=" do
     it "decrypts encrypted value" do
       @config.password = MiqPassword.encrypt("test")
-      @config.password.should == "test"
+      expect(@config.password).to eq("test")
     end
 
     it "clear text" do
       @config.password = "test"
-      @config.password.should == "test"
+      expect(@config.password).to eq("test")
     end
   end
 
@@ -78,26 +78,26 @@ describe ApplianceConsole::DatabaseConfiguration do
 
     it "encrypts once" do
       hash = {"production" => {"password" => "v1:{KSOqhNiOWJbR0lz7v6PTJg==}"}}
-      described_class.encrypt_password(hash)["production"]["password"].should == "v1:{KSOqhNiOWJbR0lz7v6PTJg==}"
+      expect(described_class.encrypt_password(hash)["production"]["password"]).to eq("v1:{KSOqhNiOWJbR0lz7v6PTJg==}")
     end
 
     it "doesn't modify the receiver" do
       hash = {"production" => {"password" => "test"}}
       described_class.encrypt_password(hash)
-      hash["production"]["password"].should == "test"
+      expect(hash["production"]["password"]).to eq("test")
     end
 
     it "retains other environments" do
       hash = {"production" => {"password" => "test"}, "development" => {"password" => "test2"}}
       settings = described_class.encrypt_password(hash)
-      settings["development"]["password"].should == "test2"
+      expect(settings["development"]["password"]).to eq("test2")
     end
   end
 
   context ".decrypt_password" do
     it "decrypt" do
       hash = {"production" => {"password" => MiqPassword.encrypt("test")}}
-      described_class.decrypt_password(hash)["production"]["password"].should == "test"
+      expect(described_class.decrypt_password(hash)["production"]["password"]).to eq("test")
     end
 
     it "shouldn't introduce password field if not present" do
@@ -109,26 +109,26 @@ describe ApplianceConsole::DatabaseConfiguration do
   context "#validated" do
     it "normal case" do
       @config.stub(:validate! => "truthy_object")
-      @config.validated.should be_true
+      expect(@config.validated).to be_truthy
     end
 
     it "failure" do
       expected_message = "FATAL: database 'bad_db' does not exist"
-      @config.stub(:validate!).and_raise(expected_message)
-      @config.should_receive(:say_error).with(:validated, expected_message)
-      @config.validated.should be_false
+      allow(@config).to receive(:validate!).and_raise(expected_message)
+      expect(@config).to receive(:say_error).with(:validated, expected_message)
+      expect(@config.validated).to be_falsey
     end
   end
 
   context "#create_region" do
     it "normal case" do
       @config.stub(:log_and_feedback => :some_object)
-      @config.create_region.should be_true
+      expect(@config.create_region).to be_truthy
     end
 
     it "failure" do
       @config.stub(:log_and_feedback => nil)
-      @config.create_region.should be_false
+      expect(@config.create_region).to be_falsey
     end
   end
 
@@ -144,10 +144,10 @@ describe ApplianceConsole::DatabaseConfiguration do
       subject.username = "defaultuser"
       subject.password = nil
 
-      subject.should_receive(:just_ask).with(/hostname/i, "defaulthost", anything, anything).and_return("newhost")
-      subject.should_receive(:just_ask).with(/the database/i, "defaultdb").and_return("x")
-      subject.should_receive(:just_ask).with(/user/i, "defaultuser").and_return("x")
-      subject.should_receive(:just_ask).with(/password/i, nil).twice.and_return("x")
+      expect(subject).to receive(:just_ask).with(/hostname/i, "defaulthost", anything, anything).and_return("newhost")
+      expect(subject).to receive(:just_ask).with(/the database/i, "defaultdb").and_return("x")
+      expect(subject).to receive(:just_ask).with(/user/i, "defaultuser").and_return("x")
+      expect(subject).to receive(:just_ask).with(/password/i, nil).twice.and_return("x")
 
       subject.ask_for_database_credentials
     end
@@ -155,26 +155,26 @@ describe ApplianceConsole::DatabaseConfiguration do
     it "should default password prompt with stars (choosing default doesnt confirm password)" do
       subject.password = "defaultpass"
 
-      subject.should_receive(:just_ask).with(/hostname/i, anything, anything, anything).and_return("x")
-      subject.should_receive(:just_ask).with(/the database/i, anything).and_return("x")
-      subject.should_receive(:just_ask).with(/user/i,     anything).and_return("x")
-      subject.should_receive(:just_ask).with(/password/i, "********").and_return("********")
+      expect(subject).to receive(:just_ask).with(/hostname/i, anything, anything, anything).and_return("x")
+      expect(subject).to receive(:just_ask).with(/the database/i, anything).and_return("x")
+      expect(subject).to receive(:just_ask).with(/user/i,     anything).and_return("x")
+      expect(subject).to receive(:just_ask).with(/password/i, "********").and_return("********")
 
       subject.ask_for_database_credentials
     end
 
     it "should ask for user/password (with confirm) if not local" do
-      subject.should_receive(:just_ask).with(/hostname/i, anything, anything, anything).and_return("host")
-      subject.should_receive(:just_ask).with(/the database/i, anything).and_return("x")
-      subject.should_receive(:just_ask).with(/user/i,     anything).and_return("x")
-      subject.should_receive(:just_ask).with(/password/i, anything).twice.and_return("the password")
+      expect(subject).to receive(:just_ask).with(/hostname/i, anything, anything, anything).and_return("host")
+      expect(subject).to receive(:just_ask).with(/the database/i, anything).and_return("x")
+      expect(subject).to receive(:just_ask).with(/user/i,     anything).and_return("x")
+      expect(subject).to receive(:just_ask).with(/password/i, anything).twice.and_return("the password")
 
       subject.ask_for_database_credentials
     end
 
     it "should only ask for password (with confirm) if local" do
-      subject.should_receive(:just_ask).with(/hostname/i, anything, anything, anything).and_return("localhost")
-      subject.should_receive(:just_ask).with(/password/i, anything).twice.and_return("the password")
+      expect(subject).to receive(:just_ask).with(/hostname/i, anything, anything, anything).and_return("localhost")
+      expect(subject).to receive(:just_ask).with(/password/i, anything).twice.and_return("the password")
 
       subject.ask_for_database_credentials
     end
@@ -192,20 +192,20 @@ describe ApplianceConsole::DatabaseConfiguration do
     end
 
     it "should ask for password (with confirm) if local" do
-      subject.should_receive(:just_ask).with(/password/i, anything).twice.and_return("the password")
+      expect(subject).to receive(:just_ask).with(/password/i, anything).twice.and_return("the password")
 
       subject.ask_for_database_credentials
     end
 
     it "should prompt again if passwords do not match" do
-      subject.should_receive(:just_ask).with(/password/i, anything).twice.and_return(*%w(pass1 pass2 pass3 pass3))
+      expect(subject).to receive(:just_ask).with(/password/i, anything).twice.and_return(*%w(pass1 pass2 pass3 pass3))
 
       subject.ask_for_database_credentials
       expect(subject.password).to eq("pass3")
     end
 
     it "should raise an error if passwords do not match twice" do
-      subject.should_receive(:just_ask).with(/password/i, anything).twice.and_return(*%w(pass1 pass2 pass3 pass4))
+      expect(subject).to receive(:just_ask).with(/password/i, anything).twice.and_return(*%w(pass1 pass2 pass3 pass4))
 
       expect { subject.ask_for_database_credentials }.to raise_error(ArgumentError, "passwords did not match")
     end
@@ -214,12 +214,12 @@ describe ApplianceConsole::DatabaseConfiguration do
   context "#create_or_join_region" do
     it "creates if region" do
       @config.region = 1
-      @config.should_receive(:create_region)
+      expect(@config).to receive(:create_region)
       @config.create_or_join_region
     end
 
     it "joins without a region" do
-      @config.should_receive(:join_region)
+      expect(@config).to receive(:join_region)
       @config.create_or_join_region
     end
   end
@@ -227,15 +227,15 @@ describe ApplianceConsole::DatabaseConfiguration do
   it "#say_error" do
     error = "NoMethodError: undefined method `[]' for NilClass"
     expected_message = "Create region failed with error - #{error}."
-    @config.should_receive(:say).with(expected_message)
+    expect(@config).to receive(:say).with(expected_message)
     @config.interactive = true
-    @config.should_receive(:press_any_key)
-    -> { @config.say_error(:create_region, error) }.should raise_error MiqSignalError
+    expect(@config).to receive(:press_any_key)
+    expect { @config.say_error(:create_region, error) }.to raise_error MiqSignalError
   end
 
   it "#say_error interactive=> false" do
     config = described_class.new(:interactive => false)
-    config.should_receive(:say).never
+    expect(config).to receive(:say).never
     config.say_error(:create_region, "Error message")
   end
 
@@ -250,22 +250,22 @@ describe ApplianceConsole::DatabaseConfiguration do
 
     it "raises ArgumentError with no block_given" do
       @config.logger = nil
-      -> { @config.log_and_feedback(:some_method) }.should raise_error(ArgumentError)
+      expect { @config.log_and_feedback(:some_method) }.to raise_error(ArgumentError)
     end
 
     it "normal case" do
       expected_logging = double
-      expected_logging.should_receive(:info).twice
+      expect(expected_logging).to receive(:info).twice
       @config.logger = expected_logging
-      @config.should_receive(:say_info).with(:some_method, "starting")
-      @config.should_receive(:say_info).with(:some_method, "complete")
-      @config.log_and_feedback(:some_method) { :result }.should == :result
+      expect(@config).to receive(:say_info).with(:some_method, "starting")
+      expect(@config).to receive(:say_info).with(:some_method, "complete")
+      expect(@config.log_and_feedback(:some_method) { :result }).to eq(:result)
     end
 
     context "raising exception:" do
       before do
         expected_logging = double
-        expected_logging.should_receive(:info).once
+        expect(expected_logging).to receive(:info).once
         @config.logger = expected_logging
         @backtrace = [
           "gems/linux_admin-0.4.0/lib/linux_admin/common.rb:40:in `run!'",
@@ -280,10 +280,10 @@ describe ApplianceConsole::DatabaseConfiguration do
         exception = AwesomeSpawn::CommandResultError.new(message, result)
         exception.set_backtrace(@backtrace)
 
-        @config.should_receive(:say_info).with(:some_method, "starting")
-        @config.should_receive(:say_error).with(:some_method, message)
-        @config.should_receive(:log_error).with(:some_method, "Command failed: #{message}. Error: stderr. Output: stdout. At: #{@backtrace.last}")
-        @config.log_and_feedback(:some_method) { raise exception }.should be_nil
+        expect(@config).to receive(:say_info).with(:some_method, "starting")
+        expect(@config).to receive(:say_error).with(:some_method, message)
+        expect(@config).to receive(:log_error).with(:some_method, "Command failed: #{message}. Error: stderr. Output: stdout. At: #{@backtrace.last}")
+        expect(@config.log_and_feedback(:some_method) { raise exception }).to be_nil
       end
 
       it "ArgumentError" do
@@ -291,11 +291,11 @@ describe ApplianceConsole::DatabaseConfiguration do
         exception = ArgumentError.new(message)
         exception.set_backtrace(@backtrace)
 
-        @config.should_receive(:say_info).with(:some_method, "starting")
+        expect(@config).to receive(:say_info).with(:some_method, "starting")
         debugging = "Error: ArgumentError with message: #{message}"
-        @config.should_receive(:say_error).with(:some_method, debugging)
-        @config.should_receive(:log_error).with(:some_method, "#{debugging}. Failed at: #{@backtrace.first}")
-        @config.log_and_feedback(:some_method) { raise exception }.should be_nil
+        expect(@config).to receive(:say_error).with(:some_method, debugging)
+        expect(@config).to receive(:log_error).with(:some_method, "#{debugging}. Failed at: #{@backtrace.first}")
+        expect(@config.log_and_feedback(:some_method) { raise exception }).to be_nil
       end
     end
   end
@@ -337,17 +337,17 @@ describe ApplianceConsole::DatabaseConfiguration do
     context "#activate" do
       it "normal case" do
         @config.stub(:validated => true)
-        @config.should_receive(:create_or_join_region).and_return(true)
+        expect(@config).to receive(:create_or_join_region).and_return(true)
 
         @config.stub(:merged_settings => @settings)
-        @config.should_receive(:do_save).with(@settings)
-        @config.activate.should be_true
+        expect(@config).to receive(:do_save).with(@settings)
+        expect(@config.activate).to be_truthy
       end
 
       it "doesn't save invalid settings" do
         @config.stub(:validated => false)
-        @config.should_receive(:do_save).never
-        @config.activate.should be_false
+        expect(@config).to receive(:do_save).never
+        expect(@config.activate).to be_falsey
       end
 
       context "reverts on region failure" do
@@ -358,17 +358,17 @@ describe ApplianceConsole::DatabaseConfiguration do
           new_settings = {"production" => @settings["production"].dup}
           new_settings["production"]["host"] = "new_host"
           @config.stub(:merged_settings => new_settings)
-          @config.should_receive(:do_save).with("production" => hash_including(new_settings["production"].except("password")))
-          @config.should_receive(:do_save).with("production" => hash_including(@settings["production"].except("password")))
+          expect(@config).to receive(:do_save).with("production" => hash_including(new_settings["production"].except("password")))
+          expect(@config).to receive(:do_save).with("production" => hash_including(@settings["production"].except("password")))
         end
 
         it "where no exception is raised" do
-          @config.activate.should be_false
+          expect(@config.activate).to be_falsey
         end
 
         it "where an exception is raised" do
-          @config.stub(:create_or_join_region).and_raise
-          @config.activate.should be_false
+          allow(@config).to receive(:create_or_join_region).and_raise
+          expect(@config.activate).to be_falsey
         end
       end
     end

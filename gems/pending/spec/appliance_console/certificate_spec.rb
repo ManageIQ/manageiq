@@ -3,7 +3,7 @@ require "fileutils"
 require "appliance_console/certificate"
 
 describe ApplianceConsole::Certificate do
-  before { Open3.should_not_receive(:capture) }
+  before { expect(Open3).not_to receive(:capture) }
   let(:host)  { "client.network.com" }
   let(:realm) { "NETWORK.COM" }
   let(:service) { "postgres" }
@@ -76,7 +76,7 @@ describe ApplianceConsole::Certificate do
   private
 
   def expect_run(cmd, params, *responses)
-    AwesomeSpawn.should_receive(:run).with(cmd, :params => params)
+    expect(AwesomeSpawn).to receive(:run).with(cmd, :params => params)
       .and_return(*(responses.empty? ? response : responses))
   end
 
@@ -97,11 +97,11 @@ describe ApplianceConsole::Certificate do
   end
 
   def expect_chmod(files)
-    FileUtils.should_receive(:chmod).with(0644, files)
+    expect(FileUtils).to receive(:chmod).with(0644, files)
   end
 
   def expect_chown
-    FileUtils.should_receive(:chown).with("user", "group", key_filename)
+    expect(FileUtils).to receive(:chown).with("user", "group", key_filename)
   end
 
   def response(ret_code = 0)

@@ -17,10 +17,10 @@ describe Benchmark do
       end
       "test"
     end
-    result.should == "test"
-    timings[:test1].should be_within(0.5).of(1500)
-    timings[:test2].should be_within(0.5).of(1000)
-    timings[:test3].should be_within(0.5).of(500)
+    expect(result).to eq("test")
+    expect(timings[:test1]).to be_within(0.5).of(1500)
+    expect(timings[:test2]).to be_within(0.5).of(1000)
+    expect(timings[:test3]).to be_within(0.5).of(500)
   end
 
   it '.realtime_store with an Exception' do
@@ -31,7 +31,7 @@ describe Benchmark do
         raise Exception
       end
     rescue Exception
-      timings[:test1].should be_within(0.5).of(500)
+      expect(timings[:test1]).to be_within(0.5).of(500)
     end
   end
 
@@ -46,17 +46,17 @@ describe Benchmark do
       end
       "test"
     end
-    result.should == "test"
-    timings[:test1].should be_within(0.5).of(1500)
-    timings[:test2].should be_within(0.5).of(1000)
-    timings[:test3].should be_within(0.5).of(500)
+    expect(result).to eq("test")
+    expect(timings[:test1]).to be_within(0.5).of(1500)
+    expect(timings[:test2]).to be_within(0.5).of(1000)
+    expect(timings[:test3]).to be_within(0.5).of(500)
   end
 
   it '.in_realtime_block?' do
-    Benchmark.in_realtime_block?.should be_false
+    expect(Benchmark.in_realtime_block?).to be_falsey
     Benchmark.realtime_block(:test1) do
-      Benchmark.in_realtime_block?.should be_true
+      expect(Benchmark.in_realtime_block?).to be_truthy
     end
-    Benchmark.in_realtime_block?.should be_false
+    expect(Benchmark.in_realtime_block?).to be_falsey
   end
 end

@@ -10,11 +10,11 @@ describe Module do
     before(:each) do
       @settings = 60
 
-      -> { TestClass.cache_with_timeout(:default) { rand } }.should_not raise_error
-      -> { TestClass.cache_with_timeout(:override, 60) { rand } }.should_not raise_error
-      -> { TestClass.cache_with_timeout(:override_proc, -> { @settings }) { rand } }.should_not raise_error
+      expect { TestClass.cache_with_timeout(:default) { rand } }.not_to raise_error
+      expect { TestClass.cache_with_timeout(:override, 60) { rand } }.not_to raise_error
+      expect { TestClass.cache_with_timeout(:override_proc, -> { @settings }) { rand } }.not_to raise_error
 
-      -> { TestModule.cache_with_timeout(:default) { rand } }.should_not raise_error
+      expect { TestModule.cache_with_timeout(:default) { rand } }.not_to raise_error
     end
 
     after(:each) do
@@ -22,62 +22,62 @@ describe Module do
     end
 
     it 'will create the class method on that class/module only' do
-      TestClass.should  respond_to(:default)
-      TestClass.new.should_not respond_to(:default)
-      Object.should_not respond_to(:default)
-      Class.should_not  respond_to(:default)
-      Module.should_not respond_to(:default)
+      expect(TestClass).to  respond_to(:default)
+      expect(TestClass.new).not_to respond_to(:default)
+      expect(Object).not_to respond_to(:default)
+      expect(Class).not_to  respond_to(:default)
+      expect(Module).not_to respond_to(:default)
 
-      TestModule.should respond_to(:default)
-      Object.should_not respond_to(:default)
-      Class.should_not  respond_to(:default)
-      Module.should_not respond_to(:default)
+      expect(TestModule).to respond_to(:default)
+      expect(Object).not_to respond_to(:default)
+      expect(Class).not_to  respond_to(:default)
+      expect(Module).not_to respond_to(:default)
     end
 
     it 'will return the cached value' do
       value = TestClass.default(true)
-      TestClass.default.should == value
+      expect(TestClass.default).to eq(value)
 
       value = TestModule.default(true)
-      TestModule.default.should == value
+      expect(TestModule.default).to eq(value)
     end
 
     it 'will not return the cached value when passed force_reload = true' do
       value = TestClass.default(true)
-      TestClass.default(true).should_not == value
+      expect(TestClass.default(true)).not_to eq(value)
 
       value = TestModule.default(true)
-      TestModule.default(true).should_not == value
+      expect(TestModule.default(true)).not_to eq(value)
     end
 
     it 'will return the cached value if the default timeout has not passed' do
       value = TestClass.default(true)
-      Timecop.travel(60) { TestClass.default.should == value }
+      Timecop.travel(60) { expect(TestClass.default).to eq(value) }
     end
 
     it 'will not return the cached value if the default timeout has passed' do
       value = TestClass.default(true)
-      Timecop.travel(600) { TestClass.default.should_not == value }
+      Timecop.travel(600) { expect(TestClass.default).not_to eq(value) }
     end
 
     it 'will return the cached value if the overridden timeout has not passed' do
       value = TestClass.override(true)
-      Timecop.travel(30) { TestClass.override.should == value }
+      Timecop.travel(30) { expect(TestClass.override).to eq(value) }
     end
 
     it 'will not return the cached value if the overridden timeout has passed' do
       value = TestClass.override(true)
-      Timecop.travel(120) { TestClass.override.should_not == value }
+      Timecop.travel(120) { expect(TestClass.override).not_to eq(value) }
     end
 
     it 'will return the cached value if the overridden timeout (via a proc) has not passed' do
       value = TestClass.override_proc(true)
-      Timecop.travel(30) { TestClass.override_proc.should == value }
+      Timecop.travel(30) { expect(TestClass.override_proc).to eq(value) }
     end
 
     it 'will not return the cached value if the overridden timeout (via a proc) has passed' do
       value = TestClass.override_proc(true)
-      Timecop.travel(120) { TestClass.override_proc.should_not == value }
+      Timecop.travel(120) { expect(TestClass.override_proc).not_to eq(value) }
     end
 
     it 'will return the cached value if the overridden timeout (via a proc) was changed but has not passed' do
@@ -85,7 +85,7 @@ describe Module do
       # prove that the new value is working
       @settings = 300 # 5 minutes
       value = TestClass.override_proc(true)
-      Timecop.travel(120) { TestClass.override_proc.should == value }
+      Timecop.travel(120) { expect(TestClass.override_proc).to eq(value) }
       @settings = 60 # reset back to 1 minute
     end
 
@@ -94,7 +94,7 @@ describe Module do
       # prove that the new value is working
       @settings = 300 # 5 minutes
       value = TestClass.override_proc(true)
-      Timecop.travel(600) { TestClass.override_proc.should_not == value }
+      Timecop.travel(600) { expect(TestClass.override_proc).not_to eq(value) }
       @settings = 60 # reset back to 1 minute
     end
 
@@ -109,27 +109,27 @@ describe Module do
       TestClass.override_proc_clear_cache
       TestModule.default_clear_cache
 
-      TestClass.default_cached?.should be_false
-      TestClass.override_cached?.should be_false
-      TestClass.override_proc_cached?.should be_false
-      TestModule.default_cached?.should be_false
+      expect(TestClass.default_cached?).to be_falsey
+      expect(TestClass.override_cached?).to be_falsey
+      expect(TestClass.override_proc_cached?).to be_falsey
+      expect(TestModule.default_cached?).to be_falsey
     end
 
     it 'generated .*_cached?' do
-      TestClass.default_cached?.should be_false
-      TestClass.override_cached?.should be_false
-      TestClass.override_proc_cached?.should be_false
-      TestModule.default_cached?.should be_false
+      expect(TestClass.default_cached?).to be_falsey
+      expect(TestClass.override_cached?).to be_falsey
+      expect(TestClass.override_proc_cached?).to be_falsey
+      expect(TestModule.default_cached?).to be_falsey
 
       TestClass.default
       TestClass.override
       TestClass.override_proc
       TestModule.default
 
-      TestClass.default_cached?.should be_true
-      TestClass.override_cached?.should be_true
-      TestClass.override_proc_cached?.should be_true
-      TestModule.default_cached?.should be_true
+      expect(TestClass.default_cached?).to be_truthy
+      expect(TestClass.override_cached?).to be_truthy
+      expect(TestClass.override_proc_cached?).to be_truthy
+      expect(TestModule.default_cached?).to be_truthy
     end
 
     it 'will cache with thread safety' do
@@ -145,7 +145,7 @@ describe Module do
       end
 
       10000.times do
-        TestClass.thread_safety.should == 2
+        expect(TestClass.thread_safety).to eq(2)
       end
     end
   end

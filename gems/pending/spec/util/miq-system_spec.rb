@@ -13,13 +13,13 @@ describe MiqSystem do
 
     it "file exists" do
       file = "/dev/null"
-      File.stub(:exist?).with(file).and_return(true)
+      allow(File).to receive(:exist?).with(file).and_return(true)
       expect(described_class.normalize_df_file_argument(file)).to eq(file)
     end
 
     it "file missing" do
       file = "/dev/null"
-      File.stub(:exist?).with(file).and_return(false)
+      allow(File).to receive(:exist?).with(file).and_return(false)
       expect { described_class.normalize_df_file_argument(file) }.to raise_error(RuntimeError, "file /dev/null does not exist")
     end
   end
@@ -138,8 +138,8 @@ EOF
       ]
 
       stub_const("Sys::Platform::IMPL", :linux)
-      AwesomeSpawn.should_receive(:launch).with("df -T -P -l", {}).and_return([linux_df_output_bytes, "", 0])
-      AwesomeSpawn.should_receive(:launch).with("df -T -P -i -l", {}).and_return([linux_df_output_inodes, "", 0])
+      expect(AwesomeSpawn).to receive(:launch).with("df -T -P -l", {}).and_return([linux_df_output_bytes, "", 0])
+      expect(AwesomeSpawn).to receive(:launch).with("df -T -P -i -l", {}).and_return([linux_df_output_inodes, "", 0])
 
       expect(described_class.disk_usage).to eq(expected)
     end
@@ -205,7 +205,7 @@ EOF
       ]
 
       stub_const("Sys::Platform::IMPL", :macosx)
-      AwesomeSpawn.should_receive(:launch).and_return([mac_df_output, "", 0])
+      expect(AwesomeSpawn).to receive(:launch).and_return([mac_df_output, "", 0])
 
       expect(described_class.disk_usage).to eq(expected)
     end

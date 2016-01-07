@@ -4,58 +4,58 @@ require 'util/extensions/miq-object'
 describe Object do
   context "#deep_send" do
     it "with string" do
-      10.deep_send("to_s").should == "10"
-      10.deep_send("to_s.length").should == 2
-      10.deep_send("to_s.length.to_s").should == "2"
-      [].deep_send("first.length").should be_nil
+      expect(10.deep_send("to_s")).to eq("10")
+      expect(10.deep_send("to_s.length")).to eq(2)
+      expect(10.deep_send("to_s.length.to_s")).to eq("2")
+      expect([].deep_send("first.length")).to be_nil
     end
 
     it "with array of strings" do
-      10.deep_send(["to_s"]).should == "10"
-      10.deep_send(["to_s", "length"]).should == 2
-      10.deep_send(["to_s", "length", "to_s"]).should == "2"
-      10.deep_send(["to_s", "length.to_s"]).should == "2"
-      10.deep_send(["to_s.length", "to_s.length"]).should == 1
-      [].deep_send(["first", "length"]).should be_nil
+      expect(10.deep_send(["to_s"])).to eq("10")
+      expect(10.deep_send(["to_s", "length"])).to eq(2)
+      expect(10.deep_send(["to_s", "length", "to_s"])).to eq("2")
+      expect(10.deep_send(["to_s", "length.to_s"])).to eq("2")
+      expect(10.deep_send(["to_s.length", "to_s.length"])).to eq(1)
+      expect([].deep_send(["first", "length"])).to be_nil
     end
 
     it "with direct strings" do
-      10.deep_send("to_s").should == "10"
-      10.deep_send("to_s", "length").should == 2
-      10.deep_send("to_s", "length", "to_s").should == "2"
-      10.deep_send("to_s", "length.to_s").should == "2"
-      10.deep_send("to_s.length", "to_s.length").should == 1
-      [].deep_send("first", "length").should be_nil
+      expect(10.deep_send("to_s")).to eq("10")
+      expect(10.deep_send("to_s", "length")).to eq(2)
+      expect(10.deep_send("to_s", "length", "to_s")).to eq("2")
+      expect(10.deep_send("to_s", "length.to_s")).to eq("2")
+      expect(10.deep_send("to_s.length", "to_s.length")).to eq(1)
+      expect([].deep_send("first", "length")).to be_nil
     end
 
     it "with array of symbols" do
-      10.deep_send([:to_s]).should == "10"
-      10.deep_send([:to_s, :length]).should == 2
-      10.deep_send([:to_s, :length, "to_s"]).should == "2"
-      [].deep_send([:first, :length]).should be_nil
+      expect(10.deep_send([:to_s])).to eq("10")
+      expect(10.deep_send([:to_s, :length])).to eq(2)
+      expect(10.deep_send([:to_s, :length, "to_s"])).to eq("2")
+      expect([].deep_send([:first, :length])).to be_nil
     end
 
     it "with direct symbols" do
-      10.deep_send(:to_s).should == "10"
-      10.deep_send(:to_s, :length).should == 2
-      10.deep_send(:to_s, :length, "to_s").should == "2"
-      [].deep_send(:first, :length).should be_nil
+      expect(10.deep_send(:to_s)).to eq("10")
+      expect(10.deep_send(:to_s, :length)).to eq(2)
+      expect(10.deep_send(:to_s, :length, "to_s")).to eq("2")
+      expect([].deep_send(:first, :length)).to be_nil
     end
 
     it "with invalid" do
-      -> { 10.deep_send }.should raise_error(ArgumentError)
-      -> { 10.deep_send(nil) }.should raise_error(ArgumentError)
-      -> { 10.deep_send("") }.should raise_error(ArgumentError)
+      expect { 10.deep_send }.to raise_error(ArgumentError)
+      expect { 10.deep_send(nil) }.to raise_error(ArgumentError)
+      expect { 10.deep_send("") }.to raise_error(ArgumentError)
     end
 
     it "does not damage args" do
       args = ["to_s", "length", "to_s"]
       10.deep_send(args)
-      args.should == ["to_s", "length", "to_s"]
+      expect(args).to eq(["to_s", "length", "to_s"])
 
       args = ["to_s", "length", "to_s"]
       10.deep_send(*args)
-      args.should == ["to_s", "length", "to_s"]
+      expect(args).to eq(["to_s", "length", "to_s"])
     end
   end
 end

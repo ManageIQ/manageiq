@@ -3,7 +3,7 @@ require "util/mount/miq_generic_mount_session"
 
 describe MiqGenericMountSession do
   it "#connect returns a string pointing to the mount point" do
-    described_class.stub(:raw_disconnect)
+    allow(described_class).to receive(:raw_disconnect)
     s = described_class.new(:uri => '/tmp/abc')
     s.logger = Logger.new("/dev/null")
 
