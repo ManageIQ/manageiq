@@ -27,6 +27,7 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
+  config.fixture_path = "#{::Rails.root}/spec/fixtures"
   config.use_transactional_fixtures = true
   config.use_instantiated_fixtures  = false
 

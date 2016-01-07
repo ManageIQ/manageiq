@@ -242,7 +242,7 @@ Methods updated/added: 10
     context "when an upload file is given" do
       let(:automate_import_service) { double("AutomateImportService") }
       let(:params) { {:upload => {:file => upload_file}} }
-      let(:upload_file) { fixture_file_upload(Rails.root.join("spec/fixtures/files/dummy_file.yml"), "text/yml") }
+      let(:upload_file) { fixture_file_upload("files/dummy_file.yml", "text/yml") }
 
       before do
         allow(AutomateImportService).to receive(:new).and_return(automate_import_service)
