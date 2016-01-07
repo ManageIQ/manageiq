@@ -30,6 +30,8 @@ module ActionView
           s[-3..-1] = ".gigabytes"
         when size.ends_with?(" TB")
           s[-3..-1] = ".terabytes"
+        when size.ends_with?(" PB")
+          s[-3..-1] = ".petabytes"
         end
         return s
       rescue
