@@ -74,10 +74,10 @@ describe ApplicationController do
 
     it "should raise for less than 2 entries" do
       controller.instance_variable_set(:@breadcrumbs, [{}])
-      expect { controller.send(:previous_breadcrumb_url) }.to raise_error
+      expect { controller.send(:previous_breadcrumb_url) }.to raise_error(NoMethodError)
 
       controller.instance_variable_set(:@breadcrumbs, [])
-      expect { controller.send(:previous_breadcrumb_url) }.to raise_error
+      expect { controller.send(:previous_breadcrumb_url) }.to raise_error(NoMethodError)
     end
   end
 

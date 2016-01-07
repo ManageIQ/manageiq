@@ -23,7 +23,8 @@ describe "MiqAeStateMachine" do
       let(:options) { {'ae_state_retries' => 3} }
 
       it "should raise error" do
-        expect { test_class.enforce_max_retries('max_retries' => 2) }.to raise_error
+        expect { test_class.enforce_max_retries('max_retries' => 2) }
+          .to raise_error(RuntimeError, /number of retries.*exceeded maximum/)
       end
     end
 
@@ -52,7 +53,8 @@ describe "MiqAeStateMachine" do
         Timecop.freeze do
           obj = test_class
           Timecop.travel(5) do
-            expect { obj.enforce_max_time('max_time' => 2) }.to raise_error
+            expect { obj.enforce_max_time('max_time' => 2) }
+              .to raise_error(RuntimeError, /time in state.*exceeded maximum/)
           end
         end
       end

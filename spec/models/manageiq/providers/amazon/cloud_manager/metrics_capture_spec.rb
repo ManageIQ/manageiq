@@ -10,12 +10,12 @@ describe ManageIQ::Providers::Amazon::CloudManager::MetricsCapture do
   context "#perf_collect_metrics" do
     it "raises an error when no EMS is defined" do
       @vm = FactoryGirl.build(:vm_perf_amazon, :ext_management_system => nil)
-      expect { @vm.perf_collect_metrics('interval_name') }.to raise_error
+      expect { @vm.perf_collect_metrics('interval_name') }.to raise_error(RuntimeError, /No EMS defined/)
     end
 
     it "raises an error with no EMS credentials defined" do
       @vm = FactoryGirl.build(:vm_perf_amazon, :ext_management_system => @ems_amazon)
-      expect { @vm.perf_collect_metrics('interval_name') }.to raise_error
+      expect { @vm.perf_collect_metrics('interval_name') }.to raise_error(RuntimeError, /no credentials defined/)
     end
 
     it "handles when nothing is collected" do

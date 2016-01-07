@@ -10,7 +10,7 @@ describe RrPendingChange do
   end
 
   it ".last_id" do
-    expect { described_class.last_id }.to raise_error
+    expect { described_class.last_id }.to raise_error(ActiveRecord::StatementInvalid)
   end
 
   context ".for_region_number" do
@@ -28,7 +28,7 @@ describe RrPendingChange do
 
     it ".last_id" do
       described_class.for_region_number(1000) do
-        expect { described_class.last_id }.to raise_error
+        expect { described_class.last_id }.to raise_error(ActiveRecord::StatementInvalid)
       end
     end
   end

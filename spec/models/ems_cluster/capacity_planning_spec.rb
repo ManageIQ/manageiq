@@ -40,15 +40,15 @@ describe EmsCluster::CapacityPlanning do
   context "#capacity_profile_method" do
     it "with invalid values" do
       EmsCluster.capacity_settings.delete_path(:profile, :"1", :vcpu_method)
-      expect { @cluster.capacity_profile_method(1, :vcpu) }.to raise_error
+      expect { @cluster.capacity_profile_method(1, :vcpu) }.to raise_error(RuntimeError, /Invalid vcpu_method/)
       EmsCluster.capacity_settings.store_path(:profile, :"1", :vcpu_method, "")
-      expect { @cluster.capacity_profile_method(1, :vcpu) }.to raise_error
+      expect { @cluster.capacity_profile_method(1, :vcpu) }.to raise_error(RuntimeError, /Invalid vcpu_method/)
       EmsCluster.capacity_settings.store_path(:profile, :"1", :vcpu_method, "invalidresource_average")
-      expect { @cluster.capacity_profile_method(1, :vcpu) }.to raise_error
+      expect { @cluster.capacity_profile_method(1, :vcpu) }.to raise_error(RuntimeError, /Invalid vcpu_method/)
       EmsCluster.capacity_settings.store_path(:profile, :"1", :vcpu_method, "vcpu_invalidalgorithm")
-      expect { @cluster.capacity_profile_method(1, :vcpu) }.to raise_error
+      expect { @cluster.capacity_profile_method(1, :vcpu) }.to raise_error(RuntimeError, /Invalid vcpu_method/)
       EmsCluster.capacity_settings.store_path(:profile, :"1", :vcpu_method, "mem_average") # resource does not match profile key
-      expect { @cluster.capacity_profile_method(1, :vcpu) }.to raise_error
+      expect { @cluster.capacity_profile_method(1, :vcpu) }.to raise_error(RuntimeError, /Invalid vcpu_method/)
     end
 
     it "with valid values" do

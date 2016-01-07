@@ -280,7 +280,8 @@ describe Classification do
       it "with some errors" do
         allow(MiqEvent).to receive(:raise_evm_event).and_raise
 
-        expect { Classification.bulk_reassignment(@options) }.to raise_error
+        expect { Classification.bulk_reassignment(@options) }
+          .to raise_error(RuntimeError, /Failures occurred during bulk reassignment/)
 
         @dels.each { |d| expect(any_tagged_with(Host, d.name, d.parent.name)).to_not be_empty }
         @adds.each { |a| expect(all_tagged_with(Host, a.name, a.parent.name)).to     be_empty }

@@ -5,7 +5,8 @@ describe DialogGroup do
     let(:dialog_group) { FactoryGirl.build(:dialog_group, :label => 'group') }
 
     it "fails without element" do
-      expect { dialog_group.save! }.to raise_error
+      expect { dialog_group.save! }
+        .to raise_error(ActiveRecord::RecordInvalid, /Box group must have at least one Element/)
     end
 
     it "validates with at least one element" do

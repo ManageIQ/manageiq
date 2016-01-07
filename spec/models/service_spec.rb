@@ -137,7 +137,7 @@ describe Service do
     end
 
     it "should not allow service to connect to itself" do
-      expect { @service << @service }.to raise_error
+      expect { @service << @service }.to raise_error(MiqException::MiqServiceCircularReferenceError)
     end
 
     it "should set the group index when adding a resource" do

@@ -155,9 +155,8 @@ describe Tenant do
 
     it "is unique per parent tenant" do
       FactoryGirl.create(:tenant, :name => "common", :parent => root_tenant)
-      expect do
-        FactoryGirl.create(:tenant, :name => "common", :parent => root_tenant)
-      end.to raise_error
+      expect { FactoryGirl.create(:tenant, :name => "common", :parent => root_tenant) }
+        .to raise_error(ActiveRecord::RecordInvalid, /Name should be unique per parent/)
     end
 
     it "can be the same for different parents" do
@@ -358,9 +357,7 @@ describe Tenant do
       described_class.destroy_all
       root_tenant # create a root tenant
 
-      expect do
-        described_class.create!
-      end.to raise_error
+      expect { described_class.create! }.to raise_error(ActiveRecord::RecordInvalid, /Parent required/)
     end
   end
 
@@ -369,13 +366,15 @@ describe Tenant do
       tenant1 = FactoryGirl.create(:tenant)
       tenant2 = FactoryGirl.create(:tenant)
       g = FactoryGirl.create(:miq_group, :tenant => tenant1)
-      expect { tenant2.update_attributes!(:default_miq_group => g) }.to raise_error
+      expect { tenant2.update_attributes!(:default_miq_group => g) }
+        .to raise_error(ActiveRecord::RecordInvalid, /default group must be a default group for this tenant/)
     end
 
     # we may want to change this in the future
     it "prevents changing default_miq_group" do
       g = FactoryGirl.create(:miq_group, :tenant => tenant)
-      expect { tenant.update_attributes!(:default_miq_group => g) }.to raise_error
+      expect { tenant.update_attributes!(:default_miq_group => g) }
+        .to raise_error(ActiveRecord::RecordInvalid, /default group must be a default group for this tenant/)
     end
   end
 
@@ -383,7 +382,7 @@ describe Tenant do
     it "wouldn't delete tenant with groups associated" do
       tenant = FactoryGirl.create(:tenant)
       FactoryGirl.create(:miq_group, :tenant => tenant)
-      expect { tenant.destroy! }.to raise_error
+      expect { tenant.destroy! }.to raise_error(RuntimeError, /A tenant with groups.*cannot be deleted/)
     end
   end
 

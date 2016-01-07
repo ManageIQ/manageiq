@@ -25,19 +25,30 @@ describe NewWithTypeStiMixin do
 
     context "with invalid type" do
       it "that doesn't exist" do
-        expect { Host.new(:type  => "Xxx") }.to raise_error
-        expect { Host.new("type" => "Xxx") }.to raise_error
+        expect { Host.new(:type  => "Xxx") }.to raise_error(NameError)
+        expect { Host.new("type" => "Xxx") }.to raise_error(NameError)
       end
 
       it "that isn't a subclass" do
-        expect { Host.new(:type  => "ManageIQ::Providers::Vmware::InfraManager::Vm") }.to raise_error
-        expect { Host.new("type" => "ManageIQ::Providers::Vmware::InfraManager::Vm") }.to raise_error
+        expect { Host.new(:type  => "ManageIQ::Providers::Vmware::InfraManager::Vm") }
+          .to raise_error(RuntimeError, /Vm is not a subclass of Host/)
+        expect { Host.new("type" => "ManageIQ::Providers::Vmware::InfraManager::Vm") }
+          .to raise_error(RuntimeError, /Vm is not a subclass of Host/)
 
-        expect { ManageIQ::Providers::Vmware::InfraManager::Host.new(:type  => "Host") }.to raise_error
-        expect { ManageIQ::Providers::Vmware::InfraManager::Host.new("type" => "Host") }.to raise_error
+        expect { ManageIQ::Providers::Vmware::InfraManager::Host.new(:type  => "Host") }
+          .to raise_error(RuntimeError, /Host is not a subclass of ManageIQ::Providers::.*/)
+        expect { ManageIQ::Providers::Vmware::InfraManager::Host.new("type" => "Host") }
+          .to raise_error(RuntimeError, /Host is not a subclass of ManageIQ::Providers::.*/)
 
-        expect { ManageIQ::Providers::Vmware::InfraManager::Host.new(:type  => "ManageIQ::Providers::Redhat::InfraManager::Host") }.to raise_error
-        expect { ManageIQ::Providers::Vmware::InfraManager::Host.new("type" => "ManageIQ::Providers::Redhat::InfraManager::Host") }.to raise_error
+        expect do
+          ManageIQ::Providers::Vmware::InfraManager::Host
+            .new(:type => "ManageIQ::Providers::Redhat::InfraManager::Host")
+        end.to raise_error(RuntimeError, /ManageIQ.*Redhat.*is not a subclass of ManageIQ.*Vmware.*/)
+
+        expect do
+          ManageIQ::Providers::Vmware::InfraManager::Host
+            .new("type" => "ManageIQ::Providers::Redhat::InfraManager::Host")
+        end.to raise_error(RuntimeError, /ManageIQ.*Redhat.*is not a subclass of ManageIQ.*Vmware.*/)
       end
     end
   end

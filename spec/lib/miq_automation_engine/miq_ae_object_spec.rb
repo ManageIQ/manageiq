@@ -109,7 +109,8 @@ module MiqAeObjectSpec
       it "should raise an exception after exceeding max_time" do
         Timecop.freeze(Time.parse('2013-01-01 01:00:00 UTC')) do
           @ws.root['ae_state_started'] = '2013-01-01 00:00:00 UTC'
-          expect { @miq_obj.enforce_state_maxima({'max_time' => '1.hour'}) }.to raise_error
+          expect { @miq_obj.enforce_state_maxima('max_time' => '1.hour') }
+            .to raise_error(RuntimeError, /exceeded maximum/)
         end
       end
     end
