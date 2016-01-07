@@ -3,6 +3,7 @@
   %head
     %title
       = _('VNC Console')
+    = favicon_link_tag
     = split_stylesheet_link_tag 'application'
     = javascript_include_tag 'application', 'novnc-rails', 'miq_novnc'
     - if Rails.env.development?
