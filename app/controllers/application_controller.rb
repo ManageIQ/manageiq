@@ -290,7 +290,7 @@ class ApplicationController < ActionController::Base
   def send_report_data
     if @sb[:render_rr_id]
       rr = MiqReportResult.find(@sb[:render_rr_id])
-      filename = rr.report.title + "_" + format_timezone(Time.now, Time.zone, "fname")
+      filename = rr.report.title + "_" + format_timezone(Time.zone.now, Time.zone, "export_filename")
       disable_client_cache
       generated_result = rr.get_generated_result(@sb[:render_type])
       rr.destroy
