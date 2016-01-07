@@ -7,7 +7,8 @@
                  "form-fields-url" => "/#{controller_name}/host_form_fields/",
                  "create-url"      => "/#{controller_name}/create/",
                  "update-url"      => "/#{controller_name}/update/",
-                 "novalidate"      => true}
+                 "novalidate"      => true,
+                 "start-form-div"  => "start_form_div"}
     = render :partial => "layouts/flash_msg"
     - if session[:host_items].nil?
       %div
@@ -23,8 +24,7 @@
                                   "maxlength"      => "#{MAX_NAME_LEN}",
                                   "miqrequired"    => "",
                                   "checkchange"    => "",
-                                  "auto-focus"     => "",
-                                  "start-form-div" => "start_form_div"}
+                                  "auto-focus"     => ""}
               %span.help-block{"ng-show" => "angularForm.name.$error.miqrequired"}
                 = _("Required")
           .form-group{"ng-class" => "{'has-error': angularForm.hostname.$invalid}"}
