@@ -40,7 +40,9 @@ module ManageIQ::Providers
       end
 
       def get_flavors
-        flavors = @connection.flavors.all
+        # connection.flavors returns a duplicate flavor for every zone
+        # so build a unique list of flavors using the flavor id
+        flavors = @connection.flavors.to_a.uniq(&:id)
         process_collection(flavors, :flavors) { |flavor| parse_flavor(flavor) }
       end
 
@@ -71,7 +73,7 @@ module ManageIQ::Providers
           uid, new_result = yield(item)
           next if uid.nil?
 
-          @data[key] |= [new_result]
+          @data[key] << new_result
           @data_index.store_path(key, uid, new_result)
         end
       end
