@@ -64,7 +64,13 @@ describe "evm:dbsync" do
       # Skip tables with data already in them from seeding
       next if row_count(@slave_connection, t) > 0
 
-      arel_table = Arel::Table.new(t)
+      conn = @slave_connection
+      klass = Class.new(ActiveRecord::Base) do
+        self.table_name = t
+        singleton_class.send(:define_method, :connection) { conn }
+      end
+      arel_table = klass.arel_table
+
       2.times do |n|
         fields = []
         fields << [arel_table[:name],        "#{t}_#{n}"]  if @slave_connection.column_exists?(t, "name")
@@ -74,10 +80,7 @@ describe "evm:dbsync" do
         fields << [arel_table[:updated_at],  Time.now.utc] if @slave_connection.column_exists?(t, "updated_at")
         next if fields.empty?
 
-        manager = Arel::InsertManager.new(Arel::Table.engine)
-        manager.into(arel_table)
-        manager.insert(fields)
-        @slave_connection.execute(manager.to_sql)
+        klass.all.insert(fields)
       end
     end
   end
