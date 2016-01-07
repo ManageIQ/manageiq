@@ -1,4 +1,6 @@
 ---
+:rails3: true
+:rails4: true
 :safe_methods:
 - :j
 - :escape_javascript
