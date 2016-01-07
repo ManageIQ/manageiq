@@ -79,6 +79,8 @@ class ApiController
     def delete_resource_tags(_type, id, _data = {})
       destroy_tag_and_classification(id)
       action_result(true, "tags id: #{id} deleting")
+    rescue ActiveRecord::RecordNotFound
+      raise
     rescue => err
       action_result(false, err.to_s)
     end
@@ -94,13 +96,8 @@ class ApiController
     end
 
     def destroy_tag_and_classification(tag_id)
-      entry = Classification.find_by_tag_id(tag_id)
-      if entry
-        entry.destroy!
-      else
-        tag = Tag.find_by_id(tag_id)
-        tag.destroy! if tag
-      end
+      entry_or_tag = Classification.find_by_tag_id(tag_id) || Tag.find(tag_id)
+      entry_or_tag.destroy!
     end
 
     def tag_ident(tag_spec)
