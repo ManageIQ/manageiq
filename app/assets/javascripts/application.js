@@ -26,6 +26,7 @@
 //= require directives/verifypasswd
 //= require directives/required_depends_on
 //= require directives/selectpickerForSelectTag
+//= require directives/start_form_div
 //= require directives/repository/valid_unc_path
 //= require services/miq_service
 //= require services/timer_option_service
