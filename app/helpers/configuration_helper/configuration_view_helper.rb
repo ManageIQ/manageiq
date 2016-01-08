@@ -28,12 +28,13 @@ module ConfigurationHelper
     def inactive_icon(image, text, resource, view)
       content_tag(:li) do
         link_to(content_tag(:i, nil, :class => image,
-                          :alt    => text),
+                                     :alt   => text),
                 {:action   => "view_selected",
                  :resource => resource,
                  :view     => view},
-                :remote => true,
-                :title  => text)
+                :remote       => true,
+                'data-method' => :post,
+                :title        => text)
       end
     end
 
