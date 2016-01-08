@@ -70,7 +70,7 @@ describe VmdbDatabaseSetting do
   ].each do |field|
     it "has a #{field}" do
       setting = VmdbDatabaseSetting.all.first
-      expect(setting.send(field)).to be
+      expect(setting.send(field)).to be_truthy
     end
   end
 end

@@ -1062,17 +1062,17 @@ describe Rbac do
 
   # determine what to run
   it ".apply_rbac_to_class?" do
-    expect(Rbac.apply_rbac_to_class?(Vm)).to be
+    expect(Rbac.apply_rbac_to_class?(Vm)).to be_truthy
     expect(Rbac.apply_rbac_to_class?(Rbac)).not_to be
   end
 
   it ".apply_rbac_to_associated_class?" do
-    expect(Rbac.apply_rbac_to_associated_class?(HostMetric)).to be
+    expect(Rbac.apply_rbac_to_associated_class?(HostMetric)).to be_truthy
     expect(Rbac.apply_rbac_to_associated_class?(Vm)).not_to be
   end
 
   it ".apply_user_group_rbac_to_class?" do
-    expect(Rbac.apply_user_group_rbac_to_class?(User)).to be
+    expect(Rbac.apply_user_group_rbac_to_class?(User)).to be_truthy
     expect(Rbac.apply_user_group_rbac_to_class?(Vm)).not_to be
   end
 

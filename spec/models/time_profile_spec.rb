@@ -196,12 +196,12 @@ describe TimeProfile do
   describe ".profile_for_user_tz" do
     it "finds global profiles" do
       FactoryGirl.create(:time_profile_with_rollup, :tz => "good", :profile_type => "global")
-      expect(TimeProfile.profile_for_user_tz(1, "good")).to be
+      expect(TimeProfile.profile_for_user_tz(1, "good")).to be_truthy
     end
 
     it "finds user profiles" do
       FactoryGirl.create(:time_profile_with_rollup, :tz => "good", :profile_type => "user", :profile_key => 1)
-      expect(TimeProfile.profile_for_user_tz(1, "good")).to be
+      expect(TimeProfile.profile_for_user_tz(1, "good")).to be_truthy
     end
 
     it "skips invalid records" do

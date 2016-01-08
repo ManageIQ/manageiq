@@ -21,14 +21,14 @@ describe Tenant do
 
   describe "#default_tenant" do
     it "has a default tenant" do
-      expect(default_tenant).to be
+      expect(default_tenant).to be_truthy
     end
   end
 
   describe "#root_tenant" do
     it "has a root tenant" do
       Tenant.seed
-      expect(Tenant.root_tenant).to be
+      expect(Tenant.root_tenant).to be_truthy
     end
 
     it "can update the root_tenant" do

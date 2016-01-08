@@ -135,7 +135,7 @@ describe MiqProductFeature do
   describe "#feature_details" do
     it "returns data for visible features" do
       EvmSpecHelper.seed_specific_product_features("container_dashboard")
-      expect(MiqProductFeature.feature_details("container_dashboard")).to be
+      expect(MiqProductFeature.feature_details("container_dashboard")).to be_truthy
     end
 
     it "eats hidden features" do
@@ -152,7 +152,7 @@ describe MiqProductFeature do
 
     it "detects hidden features" do
       EvmSpecHelper.seed_specific_product_features("widget_refresh")
-      expect(MiqProductFeature.feature_hidden("widget_refresh")).to be
+      expect(MiqProductFeature.feature_hidden("widget_refresh")).to be_truthy
     end
   end
 end

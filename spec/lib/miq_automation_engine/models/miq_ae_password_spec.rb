@@ -43,7 +43,7 @@ describe MiqAePassword do
 
   describe ".key_root" do
     it "has key_root set" do
-      expect(MiqAePassword.key_root).to be
+      expect(MiqAePassword.key_root).to be_truthy
     end
   end
 end

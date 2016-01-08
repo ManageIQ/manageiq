@@ -22,7 +22,7 @@ describe Condition do
 
       it "valid expression" do
         expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> >= 2</check></find>"
-        expect(Condition.subst(expr, @cluster, nil)).to be
+        expect(Condition.subst(expr, @cluster, nil)).to be_truthy
       end
 
       it "invalid expression should not raise security error because it is now parsed and not evaluated" do

@@ -292,7 +292,7 @@ describe MiqGroup do
       expect(tenant.reload.default_miq_group.miq_user_role).not_to be
       MiqUserRole.seed
       MiqGroup.seed
-      expect(tenant.reload.default_miq_group.miq_user_role).to be
+      expect(tenant.reload.default_miq_group.miq_user_role).to be_truthy
     end
   end
 
@@ -456,7 +456,7 @@ describe MiqGroup do
       g1 = MiqGroup.create(:description => "one")
       g2 = MiqGroup.create(:description => "two")
 
-      expect(g1.sequence).to be
+      expect(g1.sequence).to be_truthy
       expect(g2.sequence).to eq(g1.sequence + 1)
     end
 

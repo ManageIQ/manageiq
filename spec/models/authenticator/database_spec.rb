@@ -12,7 +12,7 @@ describe Authenticator::Database do
 
   describe '#lookup_by_identity' do
     it "finds existing users" do
-      expect(subject.lookup_by_identity('alice')).to be
+      expect(subject.lookup_by_identity('alice')).to be_truthy
     end
 
     it "doesn't create new users" do

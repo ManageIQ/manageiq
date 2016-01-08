@@ -83,7 +83,7 @@ describe ServiceReconfigureTask do
           :miq_group_id     => user.current_group_id,
           :tenant_id        => user.current_tenant.id,
         }
-        expect(user.current_tenant).to be
+        expect(user.current_tenant).to be_truthy
         expect(MiqQueue).to receive(:put).with(
           :class_name  => 'MiqAeEngine',
           :method_name => 'deliver',

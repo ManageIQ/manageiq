@@ -12,7 +12,7 @@ describe Menu::Manager do
   context "initialize" do
     it "loads default menu items" do
       section = Menu::Manager.section(:vi)
-      expect(section).to be
+      expect(section).to be_truthy
       expect(section.items[0].id).to eq('dashboard')
     end
 
@@ -33,8 +33,8 @@ describe Menu::Manager do
         Menu::Manager.menu do |a_section|
           section = a_section if a_section.name == 'Red Hat'
         end
-        expect(section).to be
-        expect(section.items.first).to be
+        expect(section).to be_truthy
+        expect(section.items.first).to be_truthy
       ensure
         temp_file.unlink
         temp_file2.unlink
