@@ -46,7 +46,7 @@ describe WimParser do
 
     it "with a non-WIM file" do
       w = WimParser.new(__FILE__)
-      expect { w.header }.to raise_error
+      expect { w.header }.to raise_error(RuntimeError, /is not a WIM file/)
     end
   end
 

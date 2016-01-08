@@ -31,6 +31,7 @@ describe MiqLdap do
     if @userid
       wrong_ip = 'bugz.mycompany.com'
 
+      # TODO: A specific error should be expected here, not just any
       expect { ldap_wrong = MiqLdap.new(:host => wrong_ip) }.to raise_error
       ldap_right = MiqLdap.new(:host => @host)
 

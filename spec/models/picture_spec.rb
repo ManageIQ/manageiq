@@ -58,7 +58,7 @@ describe Picture do
 
   context "#basename" do
     it "fails when record is new" do
-      expect { subject.filename }.to raise_error
+      expect { subject.filename }.to raise_error(RuntimeError, /must have a numeric id/)
     end
 
     context "works when record is saved" do

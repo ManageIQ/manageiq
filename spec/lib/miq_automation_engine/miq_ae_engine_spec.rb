@@ -414,7 +414,8 @@ module MiqAeEngineSpec
 
       it "raise error if the object is already in the hash" do
         hash = {:a => 'A', "VmOrTemplate::vm" => Vm.first.id}
-        expect { MiqAeEngine.set_automation_attributes_from_objects([Vm.first], hash) }.to raise_error
+        expect { MiqAeEngine.set_automation_attributes_from_objects([Vm.first], hash) }
+          .to raise_error(RuntimeError, /vm already exists in hash/)
       end
     end
 

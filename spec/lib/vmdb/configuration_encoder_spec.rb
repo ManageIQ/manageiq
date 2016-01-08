@@ -191,7 +191,7 @@ describe Vmdb::ConfigurationEncoder do
 
     it "invalid" do
       @hash = {"a" => "b"}
-      expect { subject }.to raise_error
+      expect { subject }.to raise_error(NoMethodError)
     end
   end
 

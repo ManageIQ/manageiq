@@ -115,7 +115,7 @@ describe ServiceTemplate do
     end
 
     it "should not allow service templates to be connected to itself" do
-      expect { add_and_save_service(@svc_a, @svc_a) }.to raise_error
+      expect { add_and_save_service(@svc_a, @svc_a) }.to raise_error(MiqException::MiqServiceCircularReferenceError)
     end
 
     it "should not allow service templates to be connected in a circular reference" do
@@ -125,9 +125,9 @@ describe ServiceTemplate do
       expect { add_and_save_service(@svc_c, @svc_d) }.not_to raise_error
       expect { add_and_save_service(@svc_a, @svc_e) }.not_to raise_error
 
-      expect { add_and_save_service(@svc_c, @svc_a) }.to raise_error
-      expect { add_and_save_service(@svc_d, @svc_a) }.to raise_error
-      expect { add_and_save_service(@svc_c, @svc_b) }.to raise_error
+      expect { add_and_save_service(@svc_c, @svc_a) }.to raise_error(MiqException::MiqServiceCircularReferenceError)
+      expect { add_and_save_service(@svc_d, @svc_a) }.to raise_error(MiqException::MiqServiceCircularReferenceError)
+      expect { add_and_save_service(@svc_c, @svc_b) }.to raise_error(MiqException::MiqServiceCircularReferenceError)
 
       # Print tree-view of services
       # puts "\n#{svc_a.name}"
@@ -141,11 +141,11 @@ describe ServiceTemplate do
       expect { add_and_save_service(@svc_d, @svc_e) }.not_to raise_error
       expect { add_and_save_service(@svc_e, @svc_a) }.not_to raise_error
 
-      expect { add_and_save_service(@svc_c, @svc_d) }.to raise_error
+      expect { add_and_save_service(@svc_c, @svc_d) }.to raise_error(MiqException::MiqServiceCircularReferenceError)
     end
 
     it "should not allow service template to connect to self" do
-      expect { @svc_a << @svc_a }.to raise_error
+      expect { @svc_a << @svc_a }.to raise_error(MiqException::MiqServiceCircularReferenceError)
     end
 
     it "should allow service template to connect to a service with the same id" do
@@ -158,8 +158,8 @@ describe ServiceTemplate do
       add_and_save_service(@svc_a, @svc_b)
       add_and_save_service(@svc_b, @svc_c)
 
-      expect { @svc_b.destroy }.to raise_error
-      expect { @svc_c.destroy }.to raise_error
+      expect { @svc_b.destroy }.to raise_error(MiqException::MiqServiceError, /Cannot delete.*child of another service/)
+      expect { @svc_c.destroy }.to raise_error(MiqException::MiqServiceError, /Cannot delete.*child of another service/)
 
       expect { @svc_a.destroy }.not_to raise_error
       expect { @svc_b.destroy }.not_to raise_error

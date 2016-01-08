@@ -50,7 +50,8 @@ describe Dialog do
   context "validate label uniqueness" do
     it "with same label" do
       expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog') }.to_not raise_error
-      expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog') }.to raise_error
+      expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog') }
+        .to raise_error(ActiveRecord::RecordInvalid, /Label has already been taken/)
     end
 
     it "with different labels" do
@@ -61,13 +62,13 @@ describe Dialog do
 
   context "#create" do
     it "validates_presence_of name" do
-      expect { FactoryGirl.create(:dialog) }.to raise_error
+      expect { FactoryGirl.create(:dialog) }.to raise_error(ActiveRecord::RecordInvalid, /Label can't be blank/)
       expect { FactoryGirl.create(:dialog, :label => 'dialog') }.not_to raise_error
 
-      expect { FactoryGirl.create(:dialog_tab) }.to raise_error
+      expect { FactoryGirl.create(:dialog_tab) }.to raise_error(ActiveRecord::RecordInvalid, /Label can't be blank/)
       expect { FactoryGirl.create(:dialog_tab, :label => 'tab') }.not_to raise_error
 
-      expect { FactoryGirl.create(:dialog_group) }.to raise_error
+      expect { FactoryGirl.create(:dialog_group) }.to raise_error(ActiveRecord::RecordInvalid, /Label can't be blank/)
       expect { FactoryGirl.create(:dialog_group, :label => 'group') }.not_to raise_error
     end
   end
@@ -84,7 +85,8 @@ describe Dialog do
 
     it "destroy with resource_action association" do
       resource_action = FactoryGirl.create(:resource_action, :action => "Provision", :dialog => @dialog)
-      expect { @dialog.destroy }.to raise_error
+      expect { @dialog.destroy }
+        .to raise_error(RuntimeError, /Dialog cannot be deleted.*connected to other components/)
       expect(Dialog.count).to eq(1)
     end
   end

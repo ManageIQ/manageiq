@@ -5,7 +5,8 @@ describe DialogTab do
     let(:dialog_tab) { FactoryGirl.build(:dialog_tab, :label => 'tab') }
 
     it "fails without box" do
-      expect { dialog_tab.save! }.to raise_error
+      expect { dialog_tab.save! }
+        .to raise_error(ActiveRecord::RecordInvalid, /tab must have at least one Box/)
     end
 
     it "validates with box" do

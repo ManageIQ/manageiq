@@ -56,11 +56,12 @@ describe Job::StateMachine do
 
   it "should raise an error if the transition is not allowed" do
     @obj.state = 'working'
-    expect { @obj.signal(:initializing) }.to raise_error
+    expect { @obj.signal(:initializing) }
+      .to raise_error(RuntimeError, /initializing is not permitted at state working/)
   end
 
   it "should raise an error if the signal is not defined" do
     @obj.state = 'working'
-    expect { @obj.signal(:wrong) }.to raise_error
+    expect { @obj.signal(:wrong) }.to raise_error(RuntimeError, /wrong is not permitted at state working/)
   end
 end

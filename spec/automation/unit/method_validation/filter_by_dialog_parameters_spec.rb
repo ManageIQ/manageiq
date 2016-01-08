@@ -65,7 +65,8 @@ describe "FilterByDialogParameters Automate Method" do
       st = ServiceTemplate.find_by_name('vm_service')
       svc = FactoryGirl.create(:service)
 
-      expect { run_automate_method(st, root_service_template_task, svc) }.to raise_exception
+      expect { run_automate_method(st, root_service_template_task, svc) }
+        .to raise_error(MiqAeException::UnknownMethodRc)
     end
 
     it "with an invalid vm_service" do

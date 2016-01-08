@@ -26,6 +26,6 @@ describe "unregister_from_provider Method Validation" do
   it "errors for a vm equal to nil" do
     @vm_id = nil
 
-    expect { ws }.to raise_error
+    expect { ws }.to raise_error(MiqAeException::UnknownMethodRc)
   end
 end

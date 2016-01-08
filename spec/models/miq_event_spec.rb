@@ -51,11 +51,13 @@ describe MiqEvent do
       end
 
       it "will raise an error for missing target" do
-        expect { MiqEvent.raise_evm_event([:MiqServer, 30000], "some_event") }.to raise_error
+        expect { MiqEvent.raise_evm_event([:MiqServer, 30_000], "some_event") }
+          .to raise_error(RuntimeError, /Unable to find object for target/)
       end
 
       it "will raise an error for nil target" do
-        expect { MiqEvent.raise_evm_event(nil, "some_event") }.to raise_error
+        expect { MiqEvent.raise_evm_event(nil, "some_event") }
+          .to raise_error(RuntimeError, /Unable to find object for target/)
       end
 
       it "will raise the event to automate given target directly" do

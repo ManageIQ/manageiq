@@ -249,7 +249,7 @@ describe MiqGroup do
       FactoryGirl.create(:user, :miq_groups => [group])
 
       expect {
-        expect { group.destroy }.to raise_error
+        expect { group.destroy }.to raise_error(RuntimeError, /Still has users assigned/)
       }.to_not change { MiqGroup.count }
     end
 
@@ -258,12 +258,13 @@ describe MiqGroup do
       FactoryGirl.create(:user, :miq_groups => [group, group2], :current_group => group2)
 
       expect {
-        expect { group.destroy }.to raise_error
+        expect { group.destroy }.to raise_error(RuntimeError, /Still has users assigned/)
       }.to_not change { MiqGroup.count }
     end
 
     it "fails if referenced by a tenant#default_miq_group" do
-      expect { FactoryGirl.create(:tenant).default_miq_group.reload.destroy }.to raise_error
+      expect { FactoryGirl.create(:tenant).default_miq_group.reload.destroy }
+        .to raise_error(RuntimeError, /A tenant default group can not be deleted/)
     end
   end
 
@@ -405,9 +406,8 @@ describe MiqGroup do
     it "fails for default groups" do
       tenant = FactoryGirl.create(:tenant)
       g = FactoryGirl.create(:tenant).default_miq_group
-      expect do
-        g.update_attributes!(:tenant => tenant)
-      end.to raise_error
+      expect { g.update_attributes!(:tenant => tenant) }
+        .to raise_error(ActiveRecord::RecordInvalid, /Tenant cant change the tenant of a default group/)
     end
   end
 

@@ -15,7 +15,8 @@ module MiqAeServiceOrchestrationStackSpec
       end
 
       it "raises an error when adding a stack to an invalid service" do
-        expect { service_stack.add_to_service('wrong type') }.to raise_error
+        expect { service_stack.add_to_service('wrong type') }
+          .to raise_error(ArgumentError, /service must be a MiqAeServiceService/)
       end
     end
 

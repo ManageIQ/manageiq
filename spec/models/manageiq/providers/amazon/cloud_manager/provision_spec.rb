@@ -28,19 +28,21 @@ describe ManageIQ::Providers::Amazon::CloudManager::Provision do
       expect { subject.validate_dest_name }.to_not raise_error
     end
 
-    it "with a black name" do
+    it "with a blank name" do
       allow(subject).to receive(:dest_name).and_return("")
-      expect { subject.validate_dest_name }.to raise_error
+      expect { subject.validate_dest_name }
+        .to raise_error(MiqException::MiqProvisionError, /Destination Name cannot be blank/)
     end
 
     it "with a nil name" do
       allow(subject).to receive(:dest_name).and_return(nil)
-      expect { subject.validate_dest_name }.to raise_error
+      expect { subject.validate_dest_name }
+        .to raise_error(MiqException::MiqProvisionError, /Destination Name cannot be blank/)
     end
 
     it "with a duplicate name" do
       allow(subject).to receive(:dest_name).and_return(vm.name)
-      expect { subject.validate_dest_name }.to raise_error
+      expect { subject.validate_dest_name }.to raise_error(MiqException::MiqProvisionError, /already exists/)
     end
   end
 

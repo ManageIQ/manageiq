@@ -88,15 +88,12 @@ describe ProviderForemanController do
     end
 
     it "should not raise an error for feature that user has access to" do
-      expect do
-        controller.send(:assert_privileges, "configured_system_provision")
-      end.not_to raise_error
+      expect { controller.send(:assert_privileges, "configured_system_provision") }.not_to raise_error
     end
 
     it "should raise an error for feature that user has access to" do
-      expect do
-        controller.send(:assert_privileges, "provider_foreman_add_provider")
-      end.to raise_error
+      expect { controller.send(:assert_privileges, "provider_foreman_add_provider") }
+        .to raise_error(MiqException::RbacPrivilegeException)
     end
   end
 
