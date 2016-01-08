@@ -11,6 +11,7 @@ require 'application_helper'
 
 require 'rspec/autorun'
 require 'rspec/rails'
+require 'shoulda-matchers'
 require 'vcr'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
@@ -73,7 +74,21 @@ RSpec.configure do |config|
   #   EvmSpecHelper.log_ruby_object_usage
   # end
 
-  # Preconfigure and auto-tag specs in the automation subdirectory a la rspec-rails
+  config.include VMDBConfigurationHelper
+
+  config.define_derived_metadata(:file_path => /spec\/lib\/miq_automation_engine\/models/) do |metadata|
+    metadata[:type] ||= :model
+  end
+
+  config.include AuthHelper,     :type => :view
+  config.include ViewSpecHelper, :type => :view
+  config.include UiConstants,    :type => :view
+
+  config.include ControllerSpecHelper, :type => :controller
+  config.include UiConstants,          :type => :controller
+  config.include AuthHelper,           :type => :controller
+
+  config.include AutomationSpecHelper,   :type => :automation
   config.include AutomationExampleGroup, :type => :automation
   config.define_derived_metadata(:file_path => /spec\/automation/) do |metadata|
     metadata[:type] ||= :automation
@@ -83,26 +98,19 @@ RSpec.configure do |config|
   config.include MigrationSpecHelper, :migrations => :up
   config.include MigrationSpecHelper, :migrations => :down
 
-  config.include ApiSpecHelper, :type => :request, :rest_api => true
+  config.include ApiSpecHelper,     :type => :request, :rest_api => true
+  config.include AuthRequestHelper, :type => :request
   config.define_derived_metadata(:file_path => /spec\/requests\/api/) do |metadata|
     metadata[:type] ||= :request
   end
 
-  config.include ControllerSpecHelper, :type => :controller
-  config.include ViewSpecHelper, :type => :view
-  config.include UiConstants, :type => :controller
-  config.include AuthHelper,  :type => :controller
-  config.include AuthHelper,  :type => :view
   config.include AuthHelper,  :type => :helper
-  config.include AuthRequestHelper, :type => :request
-  config.include UiConstants, :type => :view
-  config.include VMDBConfigurationHelper
 
-  config.include AutomationSpecHelper, :type => :automation
   config.include PresenterSpecHelper, :type => :presenter
   config.define_derived_metadata(:file_path => /spec\/presenters/) do |metadata|
     metadata[:type] ||= :presenter
   end
+
   config.include RakeTaskExampleGroup, :type => :rake_task
 
   config.before(:each) do

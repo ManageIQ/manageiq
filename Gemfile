@@ -110,7 +110,7 @@ unless ENV['APPLIANCE']
     gem "brakeman",         "~>3.1.0",  :require => false
     gem "capybara",         "~>2.2.0",  :require => false
     gem "factory_girl",     "~>4.5.0",  :require => false
-    gem "shoulda-matchers", "~>1.0.0",  :require => false
+    gem "shoulda-matchers", "~>3.0.0",  :require => false
     gem "vcr",              "~>2.6",    :require => false
     gem "webmock",          "~>1.12",   :require => false
   end
