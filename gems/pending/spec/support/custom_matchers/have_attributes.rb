@@ -14,9 +14,11 @@ RSpec::Matchers.define :have_attributes do |attrs|
             RuntimeError.new("Unknown attribute '#{attr}'")
           end
 
-        comparing_times = actual.respond_to?(:acts_like_time?) && expected.respond_to?(:acts_like_time?)
-        matcher = comparing_times ? BeSameTimeAs : RSpec::Matchers::BuiltIn::Eq
-        matcher = matcher.new(expected)
+        matcher = if actual.respond_to?(:acts_like_time?) && expected.respond_to?(:acts_like_time?)
+                    be_same_time_as(expected)
+                  else
+                    eq(expected)
+                  end
 
         unless matcher.matches?(actual)
           name_key = [:name, :id, :object_id].detect { |k| obj.respond_to?(k) }

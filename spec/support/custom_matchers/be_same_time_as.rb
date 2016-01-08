@@ -1,25 +1,20 @@
-class BeSameTimeAs
-  attr_reader :actual, :expected
-
-  def initialize(expected)
-    @expected = expected
+RSpec::Matchers.define :be_same_time_as do |expected|
+  match do |actual|
+    actual.round(precision) == expected.round(precision)
   end
 
-  def matches?(actual)
-    @actual = actual
-    @actual.round(precision) == @expected.round(precision)
+  failure_message do |actual|
+    "\nexpected: #{format_time(expected)},\n     " \
+      "got: #{format_time(actual)}\n\n(compared using be_same_time_as with precision of #{precision})"
   end
 
-  def failure_message_for_should
-    "\nexpected: #{format_time(@expected)},\n     got: #{format_time(@actual)}\n\n(compared using be_same_time_as with precision of #{precision})"
+  failure_message_when_negated do
+    "\nexpected different time from #{format_time(expected)}\n\n" \
+      "(compared using be_same_time_as with precision of #{precision})"
   end
 
-  def failure_message_for_should_not
-    "\nexpected different time from #{format_time(@expected)}\n\n(compared using be_same_time_as with precision of #{precision})"
-  end
-
-  def description
-    "be the same time as #{format_time(@expected)} to #{precision} digits of precision"
+  description do
+    "be the same time as #{format_time(expected)} to #{precision} digits of precision"
   end
 
   def with_precision(p)
@@ -36,8 +31,4 @@ class BeSameTimeAs
   def format_time(t)
     "#<#{t.class} #{t.iso8601(10)}>"
   end
-end
-
-def be_same_time_as(expected)
-  BeSameTimeAs.new(expected)
 end
