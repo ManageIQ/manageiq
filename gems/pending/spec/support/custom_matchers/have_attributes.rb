@@ -23,18 +23,18 @@ RSpec::Matchers.define :have_attributes do |attrs|
         unless matcher.matches?(actual)
           name_key = [:name, :id, :object_id].detect { |k| obj.respond_to?(k) }
           @err_msg ||= "with #{obj.class.name} #{name_key}:#{obj.send(name_key).inspect}\n\n"
-          @err_msg << "testing attribute: \"#{attr}\"\n#{matcher.failure_message_for_should}\n\n"
+          @err_msg << "testing attribute: \"#{attr}\"\n#{matcher.failure_message}\n\n"
         end
       end
     end
     @err_msg.nil?
   end
 
-  failure_message_for_should do |_obj|
+  failure_message do |_obj|
     @err_msg
   end
 
-  failure_message_for_should_not do |_obj|
+  failure_message_when_negated do |_obj|
     @err_msg
   end
 

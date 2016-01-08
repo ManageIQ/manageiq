@@ -6,11 +6,11 @@ RSpec::Matchers.define :have_virtual_column do |name, type|
     klass.instance_methods.include?(name.to_sym)
   end
 
-  failure_message_for_should do |klass|
+  failure_message do |klass|
     "expected #{klass.name} to have virtual column #{name.inspect} with type #{type.inspect}"
   end
 
-  failure_message_for_should_not do |klass|
+  failure_message_when_negated do |klass|
     "expected #{klass.name} to not have virtual column #{name.inspect} with type #{type.inspect}"
   end
 

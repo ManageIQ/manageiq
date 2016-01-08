@@ -17,11 +17,11 @@ RSpec::Matchers.define :match_relationship_tree do |expected_tree|
     end
   end
 
-  failure_message_for_should do |actual_tree|
+  failure_message do |actual_tree|
     "expected actual tree\n#{pretty_tree(actual_tree)}\nto match expected tree\n#{pretty_tree(expected_tree)}"
   end
 
-  failure_message_for_should_not do |actual_tree|
+  failure_message_when_negated do |actual_tree|
     "expected actual tree\n#{pretty_tree(actual_tree)}\nto not match expected tree\n#{pretty_tree(expected_tree)}"
   end
 

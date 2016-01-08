@@ -6,11 +6,11 @@ RSpec::Matchers.define :be_decrypted do |expected|
     actual == expected
   end
 
-  failure_message_for_should do |actual|
+  failure_message do |actual|
     "expected: #{actual.inspect} to be decrypted to #{expected}"
   end
 
-  failure_message_for_should_not do |actual|
+  failure_message_when_negated do |actual|
     "expected: #{actual.inspect} to not equal #{expected}"
   end
 
