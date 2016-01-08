@@ -6,6 +6,15 @@ describe ApplicationController, "::Filter" do
     controller.instance_variable_set(:@sb, {})
   end
 
+  describe "#load_default_search" do
+    it "calls load_default_search when filter is ALL(id=0)" do
+      expect(controller).to receive(:clear_default_search)
+      expect do
+        controller.load_default_search(0) # id = 0
+      end.not_to raise_error
+    end
+  end
+
   context "Verify removal of tokens from expressions" do
     it "removes tokens if present" do
       e = MiqExpression.new({"=" => {:field => "Vm.name", :value => "Test"}, :token => 1})
