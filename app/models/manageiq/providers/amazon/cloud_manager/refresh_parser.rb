@@ -334,7 +334,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
 
       :hardware           => {
         :guest_os            => guest_os,
-        :bitness             => ARCHITECTURE_TO_BITNESS[image.architecture],
+        :bitness             => architecture_to_bitness(image.architecture),
         :virtualization_type => image.virtualization_type,
         :root_device_type    => image.root_device_type,
       },
@@ -381,7 +381,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :raw_power_state     => status,
 
       :hardware            => {
-        :bitness              => ARCHITECTURE_TO_BITNESS[instance.architecture],
+        :bitness              => architecture_to_bitness(instance.architecture),
         :virtualization_type  => virtualization_type,
         :root_device_type     => root_device_type,
         :cpu_sockets          => flavor[:cpus],
@@ -555,11 +555,14 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   #
   # Helper methods
   #
-
   ARCHITECTURE_TO_BITNESS = {
     :i386   => 32,
     :x86_64 => 64,
   }.freeze
+
+  def architecture_to_bitness(arch)
+    ARCHITECTURE_TO_BITNESS[arch.to_sym]
+  end
 
   # Remap from children to parent
   def update_nested_stack_relations
