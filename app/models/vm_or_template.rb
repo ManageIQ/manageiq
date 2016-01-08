@@ -1913,7 +1913,8 @@ class VmOrTemplate < ActiveRecord::Base
     vm_tenant_ids       = Vm.accessible_tenant_ids(user_or_group, Rbac.accessible_tenant_ids_strategy(Vm))
     return if template_tenant_ids.empty? && vm_tenant_ids.empty?
 
-    ["(template = true AND tenant_id IN (?)) OR (template = false AND tenant_id IN (?))", template_tenant_ids, vm_tenant_ids]
+    ["(vms.template = true AND vms.tenant_id IN (?)) OR (vms.template = false AND vms.tenant_id IN (?))",
+     template_tenant_ids, vm_tenant_ids]
   end
 
   private
