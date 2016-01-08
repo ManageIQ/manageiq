@@ -117,11 +117,12 @@
               - caption = _("Run Database Garbage Collection Now")
               - submit = button_tag(_("Submit"), :class => "btn btn-primary", :alt => caption)
 
-              = link_to(submit, {:action => 'db_gc_collection'},                                             |
-                "data-miq_sparkle_on" => true,                                                               |
-                :confirm              => _("Are you sure you want to Run Database Garbage Collection Now?"), |
-                :remote               => true,                                                               |
-                :title                => caption)                                                            |
+              = link_to(submit, {:action => 'db_gc_collection'},
+                "data-miq_sparkle_on" => true,
+                :confirm              => _("Are you sure you want to Run Database Garbage Collection Now?"),
+                :remote               => true,
+                'data-method'         => :post,
+                :title                => caption)
 
 :javascript
   angular.bootstrap(jQuery('#form_div'), ['ManageIQ.angularApplication'], { strictDi: true });
