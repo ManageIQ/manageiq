@@ -54,7 +54,6 @@ Vmdb::Application.configure do
 end
 
 require "minitest"
-require "shoulda-matchers"
 require "factory_girl"
 require "timecop"
 require "vcr"
