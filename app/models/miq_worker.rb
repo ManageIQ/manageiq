@@ -32,6 +32,7 @@ class MiqWorker < ActiveRecord::Base
   STATUSES_STOPPED  = [STATUS_STOPPED, STATUS_KILLED, STATUS_ABORTED]
   STATUSES_CURRENT_OR_STARTING = STATUSES_CURRENT + STATUSES_STARTING
   STATUSES_ALIVE    = STATUSES_CURRENT_OR_STARTING + [STATUS_STOPPING]
+  PROCESS_INFO_FIELDS = %i(priority memory_usage percent_memory percent_cpu memory_size cpu_time)
 
   def self.atStartup
     # Delete and Kill all workers that were running previously
@@ -410,7 +411,7 @@ class MiqWorker < ActiveRecord::Base
     end
 
     # Ensure the hash only contains the values we want to store in the table
-    pinfo.delete_if { |k, _v| ![:priority, :memory_usage, :percent_memory, :percent_cpu, :memory_size, :cpu_time].include?(k) }
+    pinfo.delete_if { |k, _v| !self.class::PROCESS_INFO_FIELDS.include?(k) }
     pinfo[:os_priority] = pinfo.delete(:priority)
     update_attributes(pinfo)
   end

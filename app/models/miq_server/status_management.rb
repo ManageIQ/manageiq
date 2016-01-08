@@ -8,7 +8,7 @@ module MiqServer::StatusManagement
       require 'miq-process'
       pinfo = MiqProcess.processInfo
       # Ensure the hash only contains the values we want to store in the table
-      pinfo.delete_if { |k, _v| ![:priority, :memory_usage, :percent_memory, :percent_cpu, :memory_size, :cpu_time].include?(k) }
+      pinfo.delete_if { |k, _v| !MiqWorker::PROCESS_INFO_FIELDS.include?(k) }
       pinfo[:os_priority] = pinfo.delete(:priority)
       my_server.update_attributes(pinfo)
     end
