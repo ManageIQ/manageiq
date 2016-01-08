@@ -11,7 +11,6 @@ require 'application_helper'
 
 require 'rspec/autorun'
 require 'rspec/rails'
-require 'shoulda-matchers'
 require 'vcr'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
