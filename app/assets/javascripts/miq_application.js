@@ -89,18 +89,6 @@ function miqCalendarDateConversion(server_offset) {
   return moment().utcOffset(Number(server_offset) / 60);
 }
 
-// Prefill text entry field when blank
-function miqLoginPrefill() {
-  miqPrefill($('#user_name'));
-  miqPrefill($('#user_password'));
-  miqPrefill($('#user_new_password'));
-  miqPrefill($('#user_verify_password'));
-  if ($('#user_name').length) {
-    // Retry in .2 seconds, if user name field is present
-    setTimeout(miqLoginPrefill, 200);
-  }
-}
-
 // Prefill expression value text entry fields when blank
 function miqExpressionPrefill(expEditor, noPrefillCount) {
   var title;
