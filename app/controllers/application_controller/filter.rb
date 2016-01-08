@@ -574,7 +574,7 @@ module ApplicationController::Filter
     @edit[@expkey][:expression] = []                           # Store exps in an array
     @edit[:new] = {}
     @edit[:new][@expkey] = @edit[@expkey][:expression]                # Copy to new exp
-    s = !id.zero? && MiqSearch.find(id)
+    s = MiqSearch.find(id) unless id.zero?
     if s.nil? || s.search_key == "_hidden_" # search not found || admin changed default search to be hidden
       clear_default_search
     else
