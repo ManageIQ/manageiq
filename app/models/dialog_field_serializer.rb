@@ -18,7 +18,7 @@ class DialogFieldSerializer < Serializer
 
     if dialog_field.dynamic?
       dynamic_values = dialog_field.trigger_automate_value_updates
-      extra_attributes.merge!("values" => dynamic_values)
+      extra_attributes["values"] = dynamic_values
     end
 
     included_attributes(dialog_field.attributes).merge(extra_attributes)

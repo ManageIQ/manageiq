@@ -1,7 +1,7 @@
 class DialogFieldRadioButton < DialogFieldSortedItem
   def initialize_with_values(dialog_values)
     if load_values_on_init?
-      set_raw_values
+      raw_values
       @value = value_from_dialog_fields(dialog_values) || default_value
     else
       @raw_values = initial_values
@@ -37,7 +37,7 @@ class DialogFieldRadioButton < DialogFieldSortedItem
     load_values_on_init
   end
 
-  def set_raw_values
+  def raw_values
     if dynamic
       @raw_values = values_from_automate
     else
