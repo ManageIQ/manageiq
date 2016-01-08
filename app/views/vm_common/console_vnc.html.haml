@@ -6,8 +6,6 @@
     = favicon_link_tag
     = stylesheet_link_tag 'application'
     = javascript_include_tag 'application', 'novnc-rails', 'miq_novnc'
-    - if Rails.env.development?
-      = javascript_include_tag 'miq_debug'
 
   %body{:style => 'margin: 0px; padding-top: 0px !important;'}
     = link_to('Ctrl-Alt-Del', '#', :id => 'sendCtrlAltDelButton', :class => 'btn btn-default')
