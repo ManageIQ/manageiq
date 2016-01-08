@@ -1,14 +1,39 @@
 require "rails_helper"
 
 describe MiqAeNamespace do
-  it { is_expected.to validate_presence_of(:name) }
+  describe "name attribute validation" do
+    subject { described_class.new }
 
-  it { is_expected.to allow_value("name.space1").for(:name) }
-  it { is_expected.to allow_value("name-space1").for(:name) }
-  it { is_expected.to allow_value("name$space1").for(:name) }
+    example "with no name" do
+      subject.name = nil
+      subject.valid?
+      expect(subject.errors[:name]).to be_present
+    end
 
-  it { is_expected.not_to allow_value("name space1").for(:name) }
-  it { is_expected.not_to allow_value("name:space1").for(:name) }
+    example "with a valid name" do
+      subject.name = "name.space1"
+      subject.valid?
+      expect(subject.errors[:name]).to be_blank
+
+      subject.name = "name-space1"
+      subject.valid?
+      expect(subject.errors[:name]).to be_blank
+
+      subject.name = "name$space1"
+      subject.valid?
+      expect(subject.errors[:name]).to be_blank
+    end
+
+    example "with an invalid name" do
+      subject.name = "name space1"
+      subject.valid?
+      expect(subject.errors[:name]).to be_present
+
+      subject.name = "name:space1"
+      subject.valid?
+      expect(subject.errors[:name]).to be_present
+    end
+  end
 
   it "should find or create namespaces by fqname" do
     n1 = MiqAeNamespace.find_or_create_by_fqname("System/TEST")

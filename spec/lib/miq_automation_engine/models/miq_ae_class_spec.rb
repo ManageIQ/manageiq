@@ -2,14 +2,41 @@ require "rails_helper"
 
 include AutomationSpecHelper
 describe MiqAeClass do
-  it { is_expected.to validate_presence_of(:name) }
-  it { is_expected.to validate_presence_of(:namespace_id) }
+  describe "name attribute validation" do
+    subject { described_class.new }
 
-  it { is_expected.to allow_value("cla.ss1").for(:name) }
-  it { is_expected.to allow_value("cla-ss1").for(:name) }
+    example "with no name" do
+      subject.name = nil
+      subject.valid?
+      expect(subject.errors[:name]).to be_present
+    end
 
-  it { is_expected.not_to allow_value("cla ss1").for(:name) }
-  it { is_expected.not_to allow_value("cla:ss1").for(:name) }
+    example "with no namespace_id" do
+      subject.namespace_id = nil
+      subject.valid?
+      expect(subject.errors[:namespace_id]).to be_present
+    end
+
+    example "with a valid name" do
+      subject.name = "cla.ss1"
+      subject.valid?
+      expect(subject.errors[:name]).to be_blank
+
+      subject.name = "cla-ss1"
+      subject.valid?
+      expect(subject.errors[:name]).to be_blank
+    end
+
+    example "with an invalid name" do
+      subject.name = "cla ss1"
+      subject.valid?
+      expect(subject.errors[:name]).to be_present
+
+      subject.name = "cla:ss1"
+      subject.valid?
+      expect(subject.errors[:name]).to be_present
+    end
+  end
 
   it "should not create class without namespace" do
     expect { MiqAeClass.new(:name => "TEST").save! }.to raise_error(ActiveRecord::RecordInvalid)
