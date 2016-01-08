@@ -71,4 +71,15 @@ describe VMDB::Config do
       expect(error[1]).to match(/\AFile contents are malformed/)
     end
   end
+
+  describe "set_worker_setting!" do
+    it "stores path" do
+      config = VMDB::Config.new("vmdb")
+      config.set_worker_setting!(:MiqEmsMetricsCollectorWorker, :memory_threshold, "250.megabytes")
+
+      fq_keys = [:workers, :worker_base, :queue_worker_base, :ems_metrics_collector_worker] + [:memory_threshold]
+      v = config.config.fetch_path(fq_keys).to_i_with_method
+      expect(v).to eq(250.megabytes)
+    end
+  end
 end
