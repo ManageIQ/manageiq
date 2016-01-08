@@ -46,6 +46,22 @@ class AvailabilityZoneController < ApplicationController
         @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") + " on this " + ui_lookup(:tables => "availability_zone")
       end
 
+    when "cloud_volumes"
+      title = ui_lookup(:tables => "cloud_volumes")
+      drop_breadcrumb(
+        :name => @availability_zone.name + " (All #{title})",
+        :url  => "/availability_zone/show/#{@availability_zone.id}?display=#{@display}"
+      )
+      # Get the records (into a view) and the paginator
+      @view, @pages = get_view(CloudVolume, :parent => @availability_zone)
+      @showtype = @display
+      if @view.extras[:total_count] && @view.extras[:auth_count] &&
+         @view.extras[:total_count] > @view.extras[:auth_count]
+        @bottom_msg = "* You are not authorized to view " +
+                      pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") +
+                      " on this " + ui_lookup(:tables => "availability_zone")
+      end
+
     when "timeline"
       @showtype = "timeline"
       session[:tl_record_id] = params[:id] if params[:id]

@@ -455,6 +455,35 @@
       :feature_type: control
       :identifier: cloud_tenant_tag
 
+# CloudVolume
+- :name: Cloud Volumes
+  :description: Everything under Cloud Volumes
+  :feature_type: node
+  :identifier: cloud_volume
+  :children:
+  - :name: View
+    :description: View Volumes
+    :feature_type: view
+    :identifier: cloud_volume_view
+    :children:
+    - :name: List
+      :description: Display Lists of Volumes
+      :feature_type: view
+      :identifier: cloud_volume_show_list
+    - :name: Show
+      :description: Display Individual Volumes
+      :feature_type: view
+      :identifier: cloud_volume_show
+  - :name: Operate
+    :description: Perform Operations on Volumes
+    :feature_type: control
+    :identifier: cloud_volume_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Volumes
+      :feature_type: control
+      :identifier: cloud_volume_tag
+
 # Security Group
 - :name: Security Groups
   :description: Everything under Security Groups
@@ -4136,4 +4165,3 @@
     :description: View Containers Dashboard
     :feature_type: view
     :identifier: container_dashboard_view
-
