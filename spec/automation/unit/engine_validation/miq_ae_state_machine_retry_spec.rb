@@ -205,12 +205,12 @@ describe "MiqAeStateMachineRetry" do
 
     status, _message, ws = deliver_ae_request_from_queue
     expect(status).not_to eq(MiqQueue::STATUS_ERROR)
-    expect(ws).to be
+    expect(ws).to be_truthy
 
     Timecop.travel(@max_time + 1) do
       status, _message, ws = deliver_ae_request_from_queue
       expect(status).not_to eq(MiqQueue::STATUS_ERROR)
-      expect(ws).to be
+      expect(ws).to be_truthy
     end
 
     Timecop.travel(@max_time * 2 + 2) do

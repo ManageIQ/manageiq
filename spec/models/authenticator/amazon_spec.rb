@@ -149,7 +149,7 @@ describe Authenticator::Amazon do
     context "with valid details" do
       it "succeeds" do
         result, errors = described_class.validate_connection(:authentication => config)
-        expect(result).to be
+        expect(result).to be_truthy
         expect(errors).to eq({})
       end
     end

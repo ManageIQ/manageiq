@@ -35,7 +35,7 @@ describe MiqDbConfig do
 
       expect(rows.length).to be > 0
       rows.each do |row|
-        expect(row.first).to be
+        expect(row.first).to be_truthy
       end
     end
 

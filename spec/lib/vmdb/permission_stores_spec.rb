@@ -48,7 +48,7 @@ describe Vmdb::PermissionStores do
         config.backend = 'yaml'
         config.options[:filename] = f.path
         config.load
-        expect(config.create).to be
+        expect(config.create).to be_truthy
       end
     end
   end

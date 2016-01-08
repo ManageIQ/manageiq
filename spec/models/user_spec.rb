@@ -588,7 +588,7 @@ describe User do
 
     it "sets the tenant" do
       User.with_user(user1) do
-        expect(User.current_tenant).to be
+        expect(User.current_tenant).to be_truthy
         expect(User.current_tenant).to eq(user1.current_tenant)
       end
     end
