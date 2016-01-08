@@ -109,7 +109,7 @@ class ApiController
       dialog = define_service_template_dialog(st, dialog_fields)
       return action_result(false, "Service Template has no provision dialog defined") unless dialog
 
-      refresh_dialog_fields_action(st, dialog, dialog_fields, refresh_fields)
+      refresh_dialog_fields_action(st, dialog, refresh_fields)
     rescue => err
       action_result(false, err)
     end
@@ -121,20 +121,15 @@ class ApiController
       workflow.dialog
     end
 
-    def refresh_dialog_fields_action(st, dialog, dialog_fields, refresh_fields)
+    def refresh_dialog_fields_action(st, dialog, refresh_fields)
       result = {}
       refresh_fields.each do |field|
         dynamic_field = dialog.field(field)
         return action_result(false, "Unknown dialog field #{field} specified") unless dynamic_field
-        unless dynamic_field.respond_to?(:refresh_json_value)
+        unless dynamic_field.respond_to?(:update_and_serialize_values)
           return action_result(false, "Dialog field #{field} specified cannot be refreshed")
         end
-        result[field] =
-          if dynamic_field.method(:refresh_json_value).arity == 1
-            dynamic_field.refresh_json_value(dialog_fields[field] || "")
-          else
-            dynamic_field.refresh_json_value
-          end
+        result[field] = dynamic_field.update_and_serialize_values
       end
       action_result(true, "Refreshing dialog fields for #{service_template_ident(st)}", :result => result)
     end
