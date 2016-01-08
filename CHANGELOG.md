@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 
 
+## Unreleased - as of Sprint 34 end 2016-01-04
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+34+Ending+Jan+4%2C+2016%22+label%3Aenhancement)
+
+- Providers
+  - Containers: Network Trends, Heat Maps, Donuts
+  - OpenStack: Memory metrics, image details, API over SSL
+  - Google Cloud Engine: Power Operations
+- REST API
+  - Support for Case insensitive sorting
+  - Adding new VM actions
+  - Authentication: Option to not extend a token’s TTL
+- External Authentication with IPA: Added support for top level domains needed in test environments
+- User Interface
+  - I18n for toolbars
+  - Topology Status Colors
+- Automate
+  - Azure VM retirement modeling added
+  - Switchboard events for OpenStack
+    - New: compute.instance.reboot.end, compute.instance.reset.end, compute.instance.snapshot.start
+    - Policy event updates: compute.instance.snapshot.end, compute.instance.suspend
+- Service Model: Added “networks” relationship to Hardware model
+-  Services
+  -  Added instances/methods to generate emails for consolidated quota (Denied, Pending, Warning)
+  - Enhanced Dialogs validation at build time to check tabs, and boxes in addition to fields. 
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+34+Ending+Jan+4%2C+2016%22+label%3Aenhancement)
+
+- Appliance OS updated to CentOS 7.2 build 1511
+- Log Collection behavior updated
+  - Zone depot used if requested on zone and defined. Else, collection disabled
+  - Appliance depot used if requested on appliance and defined. Else, collection disabled
+- User Interface: Bootstrap switches to replace checkboxes
+
+
+
 # Capablanca Release
 
 ## Added Features
@@ -38,7 +74,10 @@ All notable changes to this project will be documented in this file.
   - Ability to report on Performance
   - Host Socket and Total VMs metrics
   - Watermark reports available out-of-the-box
-  
+- Google Cloud Engine
+  - New Provider
+  - Ability to validate authentication
+
 
 ### Provisioning
 - Filter Service Catalog Items during deployment
@@ -75,9 +114,9 @@ All notable changes to this project will be documented in this file.
   - New events must be added to automate model
   - Built-in event handlers added for performance
   - Requires update of the ManageIQ automate domain
- 
+
 ### Tenancy
-- Model 
+- Model
   - new Tenant model associations
   - Automate domains
   - Service Catalogs
@@ -97,7 +136,7 @@ All notable changes to this project will be documented in this file.
 - Update of VM tenant when owning group changes
 - Tagging support
 - Automate Tenant Quotas
-  - Customizable Automate State Machine for validating quotas for Service, Infrastructure, and Cloud 
+  - Customizable Automate State Machine for validating quotas for Service, Infrastructure, and Cloud
   - Default Setting based on Tenant Quota Model
   - Can be enforced per tenant and subtenants in the UI
   - Selection of multiple constraints (cpu, memory, storage)
@@ -129,7 +168,7 @@ All notable changes to this project will be documented in this file.
 - Report results collection
 - Access to image_hrefs for Services and Service Templates
 - Support for custom action buttons and dialogs
-- Categories and tags CRUD 
+- Categories and tags CRUD
 - Support password updates
 - Enhancements for Self-Service UI
 - Enhancements for Tenancy
