@@ -76,6 +76,10 @@ RSpec.configure do |config|
 
   config.include VMDBConfigurationHelper
 
+  config.define_derived_metadata(:file_path => /spec\/lib\/miq_automation_engine\/models/) do |metadata|
+    metadata[:type] ||= :model
+  end
+
   config.include AuthHelper,     :type => :view
   config.include ViewSpecHelper, :type => :view
   config.include UiConstants,    :type => :view
