@@ -143,6 +143,16 @@ module EmsRefresh::SaveInventory
     unless disconnects.empty?
       if invalids_found
         _log.warn("#{log_header} Since failures occurred, not disconnecting for Vms #{log_format_deletes(disconnects)}")
+      elsif target.kind_of?(Host)
+        # The disconnected VMs may actually just be moved to another Host.  We
+        # don't have enough information to fully disconnect from the EMS, so
+        # queue up a targeted refresh on that VM.
+        $log.warn("#{log_header} Queueing targeted refresh, since we do not have enough " \
+                  "information to fully disconnect Vms #{log_format_deletes(disconnects)}")
+        EmsRefresh.queue_refresh(disconnects)
+
+        $log.info("#{log_header} Partially disconnecting Vms #{log_format_deletes(disconnects)}")
+        disconnects.each(&:disconnect_host)
       else
         _log.info("#{log_header} Disconnecting Vms #{log_format_deletes(disconnects)}")
         disconnects.each(&:disconnect_inv)
