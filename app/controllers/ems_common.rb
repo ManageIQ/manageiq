@@ -50,6 +50,10 @@ module EmsCommon
       @showtype = "dashboard"
       @lastaction = "show_dashboard"
       drop_breadcrumb(:name => @ems.name + _(" (Dashboard)"), :url => show_link(@ems))
+    elsif @display == "topology"
+      @showtype = "topology"
+      @lastaction = "show_topology"
+      drop_breadcrumb(:name => @ems.name + _(" (Topology)"), :url => show_link(@ems))
     elsif @display == "performance"
       @showtype = "performance"
       drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @record.name},

@@ -53,3 +53,12 @@
 .kube-topology g.ContainerManager text.glyph {
     font-size: 38px;
 }
+
+.topology-search {
+    width: auto;
+    display: inline;
+}
+
+.topology-checkbox {
+    padding-left: 26px;
+}

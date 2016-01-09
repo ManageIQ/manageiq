@@ -42,6 +42,8 @@ module ApplicationHelper::PageLayouts
 
     return false if @showtype == "consumption"
 
+    return false if @showtype == "topology"
+
     return false if controller.action_name.end_with?("tagging_edit")
 
     true
@@ -64,7 +66,7 @@ module ApplicationHelper::PageLayouts
        (@layout == 'vm' && controller.action_name == 'edit') ||
        (@layout == "report" && ["new", "create", "edit", "copy", "update", "explorer"].include?(controller.action_name))
       return false
-    elsif @layout == "dashboard" || @layout == "container_dashboard" || @showtype == 'dashboard' # Dashboard tabs are located in taskbar because they are otherwise hidden behind the taskbar regardless of z-index -->
+    elsif @layout == "dashboard" || @layout == "container_dashboard" || @showtype == 'dashboard' || @showtype == 'topology' # Dashboard tabs are located in taskbar because they are otherwise hidden behind the taskbar regardless of z-index -->
       return false
     end
     true
