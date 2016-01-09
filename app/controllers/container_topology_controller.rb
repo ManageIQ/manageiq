@@ -10,14 +10,12 @@ class ContainerTopologyController < ApplicationController
     # any other page in the application.
     @breadcrumbs.clear if params[:id].nil?
     drop_breadcrumb(:name => _('Topology'), :url => '')
+    @lastaction = 'show'
+    @display = @showtype = 'topology'
   end
 
   def index
     redirect_to :action => 'show'
-  end
-
-  def data
-    render :json => {:data => generate_topology(params[:id])}
   end
 
   private
@@ -28,9 +26,5 @@ class ContainerTopologyController < ApplicationController
 
   def set_session_data
     session[:layout] = @layout
-  end
-
-  def generate_topology(provider_id)
-    ContainerTopologyService.new(provider_id).build_topology
   end
 end

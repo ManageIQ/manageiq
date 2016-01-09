@@ -37,6 +37,10 @@ class EmsContainerController < ApplicationController
     @ems_types -= [["Atomic", "atomic"], ["Atomic Enterprise", "atomic_enterprise"]]
   end
 
+  def topology_data
+    render :json => {:data => generate_topology(params[:id])}
+  end
+
   private
 
   ############################
@@ -49,4 +53,8 @@ class EmsContainerController < ApplicationController
     true
   end
   public :restful?
+
+  def generate_topology(provider_id)
+    ContainerTopologyService.new(provider_id).build_topology
+  end
 end

@@ -457,6 +457,8 @@ class ApplicationHelper::ToolbarChooser
         return "#{@explorer ? "x_" : ""}vm_performance_tb"
       elsif @display == "dashboard"
         return "#{@layout}_center_tb"
+      elsif @display == "topology"
+        return "topology_center"
       end
     elsif @lastaction == "compare_miq" || @lastaction == "compare_compress"
       return "compare_center_tb"
