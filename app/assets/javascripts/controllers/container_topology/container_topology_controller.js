@@ -3,24 +3,31 @@
 miqHttpInject(angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap', 'ManageIQ']))
 .controller('containerTopologyController', ContainerTopologyCtrl);
 
-ContainerTopologyCtrl.$inject = ['$scope', '$http', '$interval', '$location', 'topologyService'];
+ContainerTopologyCtrl.$inject = ['$scope', '$http', '$interval', '$location', 'topologyService', '$window'];
 
-function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyService) {
+function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyService, $window) {
+  ManageIQ.angular.scope = $scope;
+  miqHideSearchClearButton();
   var self = this;
   $scope.vs = null;
   var icons = null;
 
   var d3 = window.d3;
+  $scope.d3 = d3;
+
   $scope.refresh = function() {
     var id;
-    if ($location.absUrl().match("show/$") || $location.absUrl().match("show$")) {
+    var pathname = $window.location.pathname.replace(/\/$/, '');
+    if (pathname.match(/show$/)) {
       id = '';
     } else {
-      id = '/' + (/container_topology\/show\/(\d+)/.exec($location.absUrl())[1]);
+      // search for pattern ^/<controler>/<id>$ in the pathname
+      id = '/' + (/^\/[^\/]+\/(\d+)$/.exec(pathname)[1]);
     }
 
+    var url = '/ems_container/topology_data' + id;
+
     var currentSelectedKinds = $scope.kinds;
-    var url = '/container_topology/data' + id;
 
     $http.get(url).success(function(data) {
       $scope.items = data.data.items;
@@ -41,17 +48,19 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
   $scope.legendTooltip = __("Click here to show/hide entities of this type");
 
   $scope.show_hide_names = function() {
-     var vertices = $scope.vs;
+    $scope.checkboxModel.value = $('input#box_display_names')[0].checked
+    var vertices = $scope.vs;
 
-     if ($scope.checkboxModel.value) {
-       vertices.selectAll("text.attached-label")
-         .classed("visible", true);
-     } else {
-       vertices.selectAll("text.attached-label")
-         .classed("visible", false);
-     }
+    if ($scope.checkboxModel.value) {
+      vertices.selectAll("text.attached-label")
+        .classed("visible", true);
+    } else {
+      vertices.selectAll("text.attached-label")
+        .classed("visible", false);
+    }
   };
 
+  $('input#box_display_names').click($scope.show_hide_names)
   $scope.refresh();
   var promise = $interval($scope.refresh, 1000 * 60 * 3);
 
@@ -262,16 +271,16 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
   };
 
   $scope.searchNode = function() {
-    var svg = topologyService.getSVG(d3);
-    var query = $scope.search.query;
+    var svg = topologyService.getSVG($scope.d3);
+    var query = $('input#search_topology')[0].value;
 
-   topologyService.searchNode(svg, query);
+    topologyService.searchNode(svg, query);
   };
 
   $scope.resetSearch = function() {
-    topologyService.resetSearch(d3);
+    topologyService.resetSearch($scope.d3);
 
     // Reset the search term in search input
-    $scope.search.query = "";
+    $('input#search_topology')[0].value = "";
   };
 }
