@@ -528,8 +528,8 @@ class ApplicationHelper::ToolbarBuilder
                    %w(instance_check_compliance instance_compare).include?(id)
 
     # don't hide view buttons in toolbar
-    return false if %( view_grid view_tile view_list view_dashboard view_summary refresh_log fetch_log common_drift
-      download_text download_csv download_pdf download_view vm_download_pdf
+    return false if %( view_grid view_tile view_list view_dashboard view_summary view_topology
+      refresh_log fetch_log common_drift download_text download_csv download_pdf download_view vm_download_pdf
       tree_large tree_small).include?(id) && !%w(miq_policy_rsop ops).include?(@layout)
 
     # dont hide back to summary button button when not in explorer
@@ -932,8 +932,9 @@ class ApplicationHelper::ToolbarBuilder
     return true if id.starts_with?("view_") && id.ends_with?("textual")  # Summary view buttons
     return true if @gtl_type && id.starts_with?("view_") && id.ends_with?(@gtl_type)  # GTL view buttons
     return true if id == "history_1" && x_tree_history.length < 2 # Need 1 child button to show parent
-    return true if id == "view_dashboard" && (@showtype == "dashboard")
-    return true if id == "view_summary" && (@showtype != "dashboard")
+    return N_("Currently on Dashboard View") if id == "view_dashboard" && (@showtype == "dashboard")
+    return N_("Currently on Summary View") if id == "view_summary" && (@display == "main")
+    return N_("Currently on Topology View") if id == "view_topology" && (@showtype == "topology")
 
     # Form buttons check if anything on form has changed
     return true if ["button_add", "button_save", "button_reset"].include?(id) && !@changed

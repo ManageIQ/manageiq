@@ -10,15 +10,13 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
 
   var d3 = window.d3;
   $scope.refresh = function() {
-    var id;
-    if ($location.absUrl().match("show/$") || $location.absUrl().match("show$")) {
-      id = '';
-    } else {
-      id = '/'+ (/container_topology\/show\/(\d+)/.exec($location.absUrl())[1]);
+    result = (/\/([^\/]*)\/show(\/(\d+))?/.exec($location.absUrl()));
+    url = '/container_topology/data';
+    if (result[3] != undefined) {
+      url += '/' + result[3];
     }
 
     var currentSelectedKinds = $scope.kinds;
-    var url = '/container_topology/data'+id;
 
     $http.get(url).success(function(data) {
       $scope.items = data.data.items;
