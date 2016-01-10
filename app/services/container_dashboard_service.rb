@@ -123,6 +123,7 @@ class ContainerDashboardService
     # Get latest hourly rollup for each node.
     node_ids = @ems.container_nodes if @ems.present?
     metrics = MetricRollup.latest_rollups(ContainerNode.name, node_ids)
+    metrics = metrics.where('timestamp > ?', 1.day.ago.utc).includes(:resource)
     metrics = metrics.includes(:resource => [:ext_management_system]) unless @ems.present?
 
     node_cpu_usage = nil
@@ -133,6 +134,7 @@ class ContainerDashboardService
       node_memory_usage = []
 
       metrics.each do |m|
+        next if m.resource.nil? # Metrics are purged asynchronously and might be missing their node
         node_cpu_usage << {
           :id    => m.resource_id,
           :info  => {
