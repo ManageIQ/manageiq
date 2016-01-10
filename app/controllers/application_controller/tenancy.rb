@@ -14,10 +14,4 @@ module ApplicationController::Tenancy
       #  Tenant.where(:domain => request.domain).first ||
       current_user.try(:current_tenant) || Tenant.default_tenant
   end
-
-  # NOTE: remove when these session vars are removed
-  def set_session_tenant(tenant = current_tenant)
-    session[:customer_name] = tenant.try(:name)
-    tenant
-  end
 end

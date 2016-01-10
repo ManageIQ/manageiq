@@ -40,7 +40,7 @@ module TextualSummaryHelper
   end
 
   def textual_tags
-    label = "#{session[:customer_name]} Tags"
+    label = "#{current_tenant.name} Tags"
     h = {:label => label}
     tags = session[:assigned_filters]
     if tags.blank?

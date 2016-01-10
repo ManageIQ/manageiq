@@ -2,8 +2,8 @@
   - url = url_for(:action => 'settings_form_field_changed', :id => "#{@sb[:active_tab].split('_')[1]}_#{@sb[:active_tab].split('_').last}")
   = render :partial => "layouts/flash_msg"
   %h3= _("Custom Logo Image (Shown on top right of all screens)")
-  - if File.exist?(@logo_file)
-    = image_tag("/upload/custom_logo.png?#{rand(99_999_999)}")
+  - if current_tenant.logo?
+    = image_tag("#{current_tenant.logo.url}?#{rand(99_999_999).to_s}")
   - else
     = render :partial => 'layouts/info_msg', :locals => {:message => "No custom logo image has been uploaded yet."}
   = form_tag({:action => "upload_logo"}, :class => "form-horizontal", :multipart => true) do
@@ -21,7 +21,7 @@
                     :id    => "upload",
                     :class => "btn btn-default")
         = _("* Requirements: File-type - PNG; Dimensions - 350x70.")
-  - if File.exist?(@logo_file)
+  - if current_tenant.logo?
     %br/
     %form.form-horizontal
       .form-group
@@ -32,8 +32,8 @@
                           "data-miq_observe_checkbox" => {:url => url}.to_json)
   %hr/
   %h3= _("Custom Login Background Image")
-  - if File.exist?(@login_logo_file)
-    = image_tag("/upload/custom_login_logo.png?#{rand(99_999_999)}",
+  - if current_tenant.login_logo?
+    = image_tag("#{current_tenant.login_logo.url}?#{rand(99_999_999)}",
                 :height => 400,
                 :width  => 675)
     %br/
@@ -60,7 +60,7 @@
                     :class => "btn btn-default")
         = _("* Requirements: File-type - PNG; Dimensions - 1280x1000.")
 
-  - if File.exist?(@login_logo_file)
+  - if current_tenant.login_logo?
     %br/
     %form.form-horizontal
       .form-group

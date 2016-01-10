@@ -1,10 +1,6 @@
 module OpsController::Settings::Upload
   extend ActiveSupport::Concern
 
-  logo_dir = File.expand_path(File.join(Rails.root, "public/upload"))
-  Dir.mkdir logo_dir unless File.exist?(logo_dir)
-  @@logo_file = File.join(logo_dir, "custom_logo.png")
-  @@login_logo_file = File.join(logo_dir, "custom_login_logo.png")
   def upload_logo
     upload_logos("custom")
   end
@@ -14,23 +10,24 @@ module OpsController::Settings::Upload
   end
 
   def upload_logos(typ)
-    fld = typ == "custom" ? "upload" : "login"
-    if params["#{fld}".to_sym] && params["#{fld}".to_sym][:logo] &&
-       params["#{fld}".to_sym][:logo].respond_to?(:read)
-      if params["#{fld}".to_sym][:logo].original_filename.split(".").last.downcase != "png"
+    fld = typ == "custom" ? :upload : :login
+    logo = params[fld] && params[fld][:logo]
+    if logo && logo.respond_to?(:read)
+      if logo.original_filename.split(".").last.downcase != "png"
+      # FUTURE: this check is handled by current_tenant.update_attributes
         msg = if typ == "custom"
                 _("Custom logo image must be a .png file")
               else
                 _("Custom login image must be a .png file")
               end
         err = true
+      elsif typ == "custom"
+        current_tenant.update_attributes(:logo => logo)
+        msg = _('Custom Logo file "%s" uploaded') % logo.original_filename
+        err = false
       else
-        File.open(typ == "custom" ? @@logo_file : @@login_logo_file, "wb") { |f| f.write(params["#{fld}".to_sym][:logo].read) }
-        msg = if typ == "custom"
-                _('Custom Logo file "%s" uploaded') % params[fld.to_sym][:logo].original_filename
-              else
-                _('Custom login file "%s" uploaded') % params[fld.to_sym][:logo].original_filename
-              end
+        current_tenant.update_attributes(:login_logo => logo)
+        msg = _('Custom login file "%s" uploaded') % logo.original_filename
         err = false
       end
     else

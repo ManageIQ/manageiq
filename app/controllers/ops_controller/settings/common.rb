@@ -1,11 +1,6 @@
 module OpsController::Settings::Common
   extend ActiveSupport::Concern
 
-  logo_dir = File.expand_path(File.join(Rails.root, "public/upload"))
-  Dir.mkdir logo_dir unless File.exist?(logo_dir)
-  @@logo_file = File.join(logo_dir, "custom_logo.png")
-  @@login_logo_file = File.join(logo_dir, "custom_login_logo.png")
-
   # AJAX driven routine to check for changes in ANY field on the form
   def settings_form_field_changed
     tab = params[:id] ? "settings_#{params[:id]}" : nil # workaround to prevent an error that happens when IE sends a transaction when tab is changed when there is text_area in the form, checking for tab id
@@ -422,8 +417,13 @@ module OpsController::Settings::Common
           add_flash(_("Configuration settings saved"))
         end
         if @sb[:active_tab] == "settings_server" && @sb[:selected_server_id] == MiqServer.my_server.id  # Reset session variables for names fields, if editing current server config
-          session[:customer_name] = @update.config[:server][:company]
-          session[:vmdb_name] = @update.config[:server][:name]
+          current_tenant.update_attributes(
+            :name => @update.config[:server][:company],
+          )
+        elsif @sb[:active_tab] == "settings_custom_logos"                           # Reset session variable for logo field
+          current_tenant.update_attributes(
+            :custom_logo => @update.config[:server][:custom_logo]
+          )
         end
         set_user_time_zone if @sb[:active_tab] == "settings_server"
         # settings_set_form_vars
@@ -471,8 +471,9 @@ module OpsController::Settings::Common
         add_flash(_("%{typ} settings saved for CFME Server \"%{name} [%{server_id}]\" in Zone \"%{zone}\"") % {:typ => "Configuration", :name => server.name, :server_id => @sb[:selected_server_id], :zone => server.my_zone})
 
         if @sb[:active_tab] == "settings_workers" && @sb[:selected_server_id] == MiqServer.my_server.id  # Reset session variables for names fields, if editing current server config
-          session[:customer_name] = @update.config[:server][:company]
-          session[:vmdb_name] = @update.config[:server][:name]
+          current_tenant.update_attributes(
+            :name => @update.config[:server][:company],
+          )
         end
         @changed = false
         get_node_info(x_node)
@@ -1025,8 +1026,6 @@ module OpsController::Settings::Common
       if @edit[:current].config[:server][:custom_logo].nil?
         @edit[:current].config[:server][:custom_logo] = false # Set default custom_logo flag
       end
-      @logo_file = @@logo_file
-      @login_logo_file = @@login_logo_file
       @in_a_form = true
     when "settings_advanced"                                  # Advanced yaml editor
       session[:config_file_name] ||= AVAILABLE_CONFIG_NAMES_FOR_SELECT.first.last # Start with first config file name

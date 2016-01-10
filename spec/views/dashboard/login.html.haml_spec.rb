@@ -6,6 +6,7 @@ describe "dashboard/login.html.haml" do
     before(:each) do
       EvmSpecHelper.create_guid_miq_server_zone
       stub_server_configuration(:server => {}, :session => {}, :authentication => {})
+      view.stub(:current_tenant).and_return(Tenant.seed)
     end
 
     it "when authentication is 'database'" do
