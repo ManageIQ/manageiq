@@ -44,12 +44,6 @@ RSpec.configure do |config|
   # TODO: These config options should be reevaluated after RSpec 3 conversion.
 
   config.mock_with :rspec do |mocks|
-    # In RSpec 3, `any_instance` implementation blocks will be yielded the receiving
-    # instance as the first block argument to allow the implementation block to use
-    # the state of the receiver. This opts-in to the behavior now and can be removed
-    # once the upgrade is complete.
-    mocks.yield_receiver_to_any_instance_implementation_blocks = true
-
     # Monkey-patch Marshal.dump to enable dumping of mocked or stubbed objects. By
     # default this will not work since RSpec mocks works by adding singleton methods
     # that cannot be serialized. This patch removes these singleton methods before
