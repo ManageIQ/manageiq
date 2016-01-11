@@ -91,6 +91,7 @@ module MiqWebServerWorkerMixin
             result[:adds] << w.pid
           end
         elsif desired < current
+          workers = workers.to_a
           (current - desired).times do
             w = workers.pop
             port = w.port
