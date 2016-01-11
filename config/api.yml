@@ -498,6 +498,10 @@
       :post:
       - :name: create
         :identifier: vm_miq_request_new
+      - :name: approve
+        :identifier: vm_miq_request_approve
+      - :name: deny
+        :identifier: vm_miq_request_deny
     :resource_actions:
       :post:
       - :name: approve
