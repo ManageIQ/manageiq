@@ -34,6 +34,9 @@ include:
   service_template_catalog:
     columns:
     - name
+  tenant:
+    columns:
+    - name
 
 # Included tables and columns for query performance
 include_for_find:
@@ -43,6 +46,7 @@ include_for_find:
 col_order:
 - name
 - description
+- tenant.name
 - type_display
 - display
 - service_template_catalog.name
@@ -53,6 +57,7 @@ col_order:
 headers:
 - Name
 - Description
+- Tenant
 - Type
 - Display in Catalog
 - Catalog
