@@ -1,6 +1,8 @@
 FactoryGirl.define do
   factory :chargeback_rate_detail do
     rate    0
+    group   "unknown"
+    source  "unknown"
   end
 
   factory :chargeback_rate_detail_cpu_used, :parent => :chargeback_rate_detail do

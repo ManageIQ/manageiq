@@ -76,11 +76,27 @@ RSpec.describe "chargebacks API" do
     it "can create a new chargeback rate detail" do
       api_basic_authorize action_identifier(:rates, :create, :collection_actions)
 
-      expect { run_post rates_url, :rate => "0", :enabled => true }.to change(ChargebackRateDetail, :count).by(1)
-      actual = @result["results"].first
-      expect(actual["rate"]).to eq("0")
-      expect(actual["enabled"]).to be_truthy
+      expect do
+        run_post rates_url,
+                 :rate    => "0",
+                 :group   => "fixed",
+                 :source  => "used",
+                 :enabled => true
+      end.to change(ChargebackRateDetail, :count).by(1)
+      expect_result_to_match_hash(@result["results"].first, "rate" => "0", "enabled" => true)
       expect_request_success
+    end
+
+    it "returns bad request for incomplete chargeback rate detail" do
+      api_basic_authorize action_identifier(:rates, :create, :collection_actions)
+
+      expect do
+        run_post rates_url,
+                 :rate    => "0",
+                 :enabled => true
+      end.not_to change(ChargebackRateDetail, :count)
+      expect_bad_request(/group can't be blank/i)
+      expect_bad_request(/source can't be blank/i)
     end
 
     it "can edit a chargeback rate detail through POST" do
