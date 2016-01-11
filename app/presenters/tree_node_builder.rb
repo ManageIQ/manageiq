@@ -142,13 +142,13 @@ class TreeNodeBuilder
   def tooltip(tip)
     unless tip.blank?
       tip = tip.kind_of?(Proc) ? tip.call : _(tip)
-      tip = ERB::Util.html_escape(tip) unless tip.html_safe?
+      tip = ERB::Util.html_escape(URI.unescape(tip)) unless tip.html_safe?
       @node[:tooltip] = tip
     end
   end
 
   def generic_node(text, image, tip = nil)
-    text = ERB::Util.html_escape(text) unless text.html_safe?
+    text = ERB::Util.html_escape(URI.unescape(text)) unless text.html_safe?
     @node = {
       :key   => build_object_id,
       :title => text,

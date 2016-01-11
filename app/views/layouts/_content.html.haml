@@ -21,7 +21,7 @@
             .row
               .col-md-7#explorer
                 %h1#explorer_title
-                  = @right_cell_text
+                  = URI.unescape(@right_cell_text)
                   -# Link to clear the current applied filter, will be moved via JS to the right cell header
                   %span#clear_search{:style => "display:none"}
                     - if route_exists?(:action => 'adv_search_clear')
