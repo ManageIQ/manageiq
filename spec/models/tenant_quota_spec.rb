@@ -58,7 +58,7 @@ describe TenantQuota do
 
       it "cannot have less quota than the amount that has already been used" do
         nq = described_class.new(:tenant => grandchild_tenant2, :name => "cpu_allocated", :value => 1)
-        nq.stub(:used => 2)
+        allow(nq).to receive_messages(:used => 2)
         expect(nq).not_to be_valid
       end
     end
@@ -78,7 +78,7 @@ describe TenantQuota do
       it "cannot have more quota than the parent has available to allocate when parent has used up its available" do
         described_class.create!(:tenant => child_tenant, :name => "cpu_allocated", :value => 5)
 
-        described_class.any_instance.stub(:used => 5)
+        allow_any_instance_of(described_class).to receive_messages(:used => 5)
         expect(described_class.new(:tenant => grandchild_tenant1, :name => "cpu_allocated", :value => 1)).not_to be_valid
       end
 
@@ -92,7 +92,7 @@ describe TenantQuota do
         described_class.create!(:tenant => child_tenant, :name => "cpu_allocated", :value => 5)
         described_class.create!(:tenant => grandchild_tenant1, :name => "cpu_allocated", :value => 3)
 
-        described_class.any_instance.stub(:used => 2)
+        allow_any_instance_of(described_class).to receive_messages(:used => 2)
         expect(described_class.new(:tenant => grandchild_tenant2, :name => "cpu_allocated", :value => 1)).not_to be_valid
       end
 

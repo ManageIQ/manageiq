@@ -18,9 +18,9 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Provision do
         :status      => 'Ok',
         :options     => options)
 
-      @task.stub(:miq_request => double("MiqRequest").as_null_object)
-      @task.stub(:dest_host => @host)
-      @task.stub(:dest_storage => @storage)
+      allow(@task).to receive_messages(:miq_request => double("MiqRequest").as_null_object)
+      allow(@task).to receive_messages(:dest_host => @host)
+      allow(@task).to receive_messages(:dest_storage => @storage)
     end
 
     it "#create_destination" do

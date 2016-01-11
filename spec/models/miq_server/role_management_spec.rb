@@ -34,17 +34,17 @@ describe "Server Role Management" do
 
     context "#apache_needed?" do
       it "false with neither webservices or user_interface active" do
-        @miq_server.stub(:active_role_names => ["reporting"])
+        allow(@miq_server).to receive_messages(:active_role_names => ["reporting"])
         expect(@miq_server.apache_needed?).to be_falsey
       end
 
       it "true with web_services active" do
-        @miq_server.stub(:active_role_names => ["web_services"])
+        allow(@miq_server).to receive_messages(:active_role_names => ["web_services"])
         expect(@miq_server.apache_needed?).to be_truthy
       end
 
       it "true with both web_services and user_interface active" do
-        @miq_server.stub(:active_role_names => ["web_services", "user_interface"])
+        allow(@miq_server).to receive_messages(:active_role_names => ["web_services", "user_interface"])
         expect(@miq_server.apache_needed?).to be_truthy
       end
     end

@@ -552,7 +552,7 @@ describe MiqQueue do
   # this is a private method, but there are too many permutations to properly test get/put
   context "#default_get_options" do
     before do
-      Zone.stub(:determine_queue_zone => "defaultzone")
+      allow(Zone).to receive_messages(:determine_queue_zone => "defaultzone")
     end
 
     it "should default the queue name" do

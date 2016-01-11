@@ -135,7 +135,7 @@ describe Vmdb::ConfigurationEncoder do
   context ".load" do
     context "in production" do
       before do
-        Rails.stub(:env => ActiveSupport::StringInquirer.new("production"))
+        allow(Rails).to receive_messages(:env => ActiveSupport::StringInquirer.new("production"))
       end
 
       it "will not evaluate ERB" do

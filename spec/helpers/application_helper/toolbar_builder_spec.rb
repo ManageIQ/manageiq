@@ -628,7 +628,7 @@ describe ApplicationHelper do
       before do
         @id = "vm_console"
         allow(user).to receive(:role_allows?).and_return(true)
-        @record.stub(:console_supported? => false)
+        allow(@record).to receive_messages(:console_supported? => false)
       end
 
       it "and record is not console supported" do
@@ -646,7 +646,7 @@ describe ApplicationHelper do
       end
 
       it "and record is console supported and server's remote_console_type is MKS" do
-        @record.stub(:console_supported? => true)
+        allow(@record).to receive_messages(:console_supported? => true)
         @vmdb_config = {:server => {:remote_console_type => "MKS"}}
         expect(subject).to be_falsey
       end
@@ -656,7 +656,7 @@ describe ApplicationHelper do
       before do
         @id = "vm_vnc_console"
         allow(user).to receive(:role_allows?).and_return(true)
-        @record.stub(:console_supported? => false)
+        allow(@record).to receive_messages(:console_supported? => false)
       end
 
       it "and record is not console supported" do
@@ -674,7 +674,7 @@ describe ApplicationHelper do
       end
 
       it "and record is console supported and server's remote_console_type is VNC" do
-        @record.stub(:console_supported? => true)
+        allow(@record).to receive_messages(:console_supported? => true)
         @vmdb_config = {:server => {:remote_console_type => "VNC"}}
         expect(subject).to be_falsey
       end
@@ -684,7 +684,7 @@ describe ApplicationHelper do
       before do
         @id = "vm_vmrc_console"
         allow(user).to receive(:role_allows?).and_return(true)
-        @record.stub(:console_supported? => false)
+        allow(@record).to receive_messages(:console_supported? => false)
       end
 
       it "and record is not console supported" do
@@ -702,7 +702,7 @@ describe ApplicationHelper do
       end
 
       it "and record is console supported and server's remote_console_type is VMRC" do
-        @record.stub(:console_supported? => true)
+        allow(@record).to receive_messages(:console_supported? => true)
         @vmdb_config = {:server => {:remote_console_type => "VMRC"}}
         expect(subject).to be_falsey
       end
@@ -787,7 +787,7 @@ describe ApplicationHelper do
       context "and id = host_protect" do
         before do
           @id = 'host_protect'
-          @record.stub(:smart? => false)
+          allow(@record).to receive_messages(:smart? => false)
         end
 
         it "and record is not smart" do
@@ -795,7 +795,7 @@ describe ApplicationHelper do
         end
 
         it "and record is smart" do
-          @record.stub(:smart? => true)
+          allow(@record).to receive_messages(:smart? => true)
           expect(subject).to be_falsey
         end
       end
@@ -803,7 +803,7 @@ describe ApplicationHelper do
       context "and id = host_refresh" do
         before do
           @id = 'host_refresh'
-          @record.stub(:is_refreshable? => false)
+          allow(@record).to receive_messages(:is_refreshable? => false)
         end
 
         it "and record is not refreshable" do
@@ -811,7 +811,7 @@ describe ApplicationHelper do
         end
 
         it "and record is refreshable" do
-          @record.stub(:is_refreshable? => true)
+          allow(@record).to receive_messages(:is_refreshable? => true)
           expect(subject).to be_falsey
         end
       end
@@ -820,12 +820,12 @@ describe ApplicationHelper do
         before { @id = 'host_scan' }
 
         it "and record is not scannable" do
-          @record.stub(:is_scannable? => false)
+          allow(@record).to receive_messages(:is_scannable? => false)
           expect(subject).to be_truthy
         end
 
         it "and record is scannable" do
-          @record.stub(:is_scannable? => true)
+          allow(@record).to receive_messages(:is_scannable? => true)
           expect(subject).to be_falsey
         end
       end
@@ -834,7 +834,7 @@ describe ApplicationHelper do
         context "and id = #{id}" do
           before do
             @id = id
-            @record.stub(:is_available? => false)
+            allow(@record).to receive_messages(:is_available? => false)
           end
 
           it "and record is not available" do
@@ -842,7 +842,7 @@ describe ApplicationHelper do
           end
 
           it "and record is available" do
-            @record.stub(:is_available? => true)
+            allow(@record).to receive_messages(:is_available? => true)
             expect(subject).to be_falsey
           end
         end
@@ -877,16 +877,16 @@ describe ApplicationHelper do
         context "and id = miq_request_approve" do
           before do
             @id = "miq_request_approve"
-            @record.stub(:resource_type => "something", :approval_state => "xx")
+            allow(@record).to receive_messages(:resource_type => "something", :approval_state => "xx")
           end
 
           it "and resource_type = AutomationRequest" do
-            @record.stub(:resource_type => "AutomationRequest")
+            allow(@record).to receive_messages(:resource_type => "AutomationRequest")
             expect(subject).to be_falsey
           end
 
           it "and approval_state = approved" do
-            @record.stub(:approval_state => "approved")
+            allow(@record).to receive_messages(:approval_state => "approved")
             expect(subject).to be_truthy
           end
 
@@ -903,21 +903,21 @@ describe ApplicationHelper do
         context "and id = miq_request_deny" do
           before do
             @id = "miq_request_deny"
-            @record.stub(:resource_type => "something", :approval_state => "xx")
+            allow(@record).to receive_messages(:resource_type => "something", :approval_state => "xx")
           end
 
           it "and resource_type = AutomationRequest" do
-            @record.stub(:resource_type => "AutomationRequest")
+            allow(@record).to receive_messages(:resource_type => "AutomationRequest")
             expect(subject).to be_falsey
           end
 
           it "and approval_state = approved" do
-            @record.stub(:approval_state => "approved")
+            allow(@record).to receive_messages(:approval_state => "approved")
             expect(subject).to be_truthy
           end
 
           it "and approval_state = denied" do
-            @record.stub(:approval_state => "denied")
+            allow(@record).to receive_messages(:approval_state => "denied")
             expect(subject).to be_truthy
           end
 
@@ -934,27 +934,27 @@ describe ApplicationHelper do
         context "and id = miq_request_delete" do
           before do
             @id = "miq_request_delete"
-            @record.stub(:resource_type => "something", :approval_state => "xx", :requester_name => user.name)
+            allow(@record).to receive_messages(:resource_type => "something", :approval_state => "xx", :requester_name => user.name)
             allow(User).to receive(:find_by_userid).and_return(user)
           end
 
           it "and resource_type = AutomationRequest" do
-            @record.stub(:resource_type => "AutomationRequest")
+            allow(@record).to receive_messages(:resource_type => "AutomationRequest")
             expect(subject).to be_falsey
           end
 
           it "and requester.name != @record.requester_name" do
-            @record.stub(:requester_name => 'admin')
+            allow(@record).to receive_messages(:requester_name => 'admin')
             expect(subject).to be_falsey
           end
 
           it "and approval_state = approved" do
-            @record.stub(:approval_state => "approved")
+            allow(@record).to receive_messages(:approval_state => "approved")
             expect(subject).to be_falsey
           end
 
           it "and approval_state = denied" do
-            @record.stub(:approval_state => "denied")
+            allow(@record).to receive_messages(:approval_state => "denied")
             expect(subject).to be_falsey
           end
 
@@ -966,27 +966,27 @@ describe ApplicationHelper do
         context "and id = miq_request_edit" do
           before do
             @id = "miq_request_edit"
-            @record.stub(:resource_type => "something", :approval_state => "xx", :requester_name => user.name)
+            allow(@record).to receive_messages(:resource_type => "something", :approval_state => "xx", :requester_name => user.name)
             allow(User).to receive(:find_by_userid).and_return(user)
           end
 
           it "and resource_type = AutomationRequest" do
-            @record.stub(:resource_type => "AutomationRequest")
+            allow(@record).to receive_messages(:resource_type => "AutomationRequest")
             expect(subject).to be_truthy
           end
 
           it "and requester.name != @record.requester_name" do
-            @record.stub(:requester_name => 'admin')
+            allow(@record).to receive_messages(:requester_name => 'admin')
             expect(subject).to be_truthy
           end
 
           it "and approval_state = approved" do
-            @record.stub(:approval_state => "approved")
+            allow(@record).to receive_messages(:approval_state => "approved")
             expect(subject).to be_truthy
           end
 
           it "and approval_state = denied" do
-            @record.stub(:approval_state => "denied")
+            allow(@record).to receive_messages(:approval_state => "denied")
             expect(subject).to be_truthy
           end
 
@@ -998,37 +998,37 @@ describe ApplicationHelper do
         context "and id = miq_request_copy" do
           before do
             @id = "miq_request_copy"
-            @record.stub(:resource_type  => "MiqProvisionRequest",
+            allow(@record).to receive_messages(:resource_type  => "MiqProvisionRequest",
                          :approval_state => "pending_approval",
                          :requester_name => user.name)
             allow(User).to receive(:find_by_userid).and_return(user)
           end
 
           it "and resource_type = AutomationRequest" do
-            @record.stub(:resource_type => "AutomationRequest")
+            allow(@record).to receive_messages(:resource_type => "AutomationRequest")
             expect(subject).to be_truthy
           end
 
           it "and resource_type != MiqProvisionRequest" do
-            @record.stub(:resource_type => "SomeRequest")
+            allow(@record).to receive_messages(:resource_type => "SomeRequest")
             expect(subject).to be_truthy
           end
 
           it "and requester.name != @record.requester_name & showtype = miq_provisions" do
             @showtype = "miq_provisions"
-            @record.stub(:requester_name => 'admin')
+            allow(@record).to receive_messages(:requester_name => 'admin')
             expect(subject).to be_truthy
           end
 
           it "and approval_state = approved & showtype = miq_provisions" do
             @showtype = "miq_provisions"
-            @record.stub(:approval_state => "approved")
+            allow(@record).to receive_messages(:approval_state => "approved")
             expect(subject).to be_truthy
           end
 
           it "and approval_state = denied & showtype = miq_provisions" do
             @showtype = "miq_provisions"
-            @record.stub(:approval_state => "denied")
+            allow(@record).to receive_messages(:approval_state => "denied")
             expect(subject).to be_truthy
           end
 
@@ -1038,7 +1038,7 @@ describe ApplicationHelper do
           end
 
           it "and resource_type = MiqProvisionRequest & showtype != miq_provisions" do
-            @record.stub(:requester_name => 'admin')
+            allow(@record).to receive_messages(:requester_name => 'admin')
             expect(subject).to be_falsey
           end
         end
@@ -1094,11 +1094,11 @@ describe ApplicationHelper do
         context "and id = #{id}" do
           before do
             @id = id
-            @record.stub(:read_only => false)
+            allow(@record).to receive_messages(:read_only => false)
           end
 
           it "and record read only" do
-            @record.stub(:read_only => true)
+            allow(@record).to receive_messages(:read_only => true)
             expect(subject).to be_truthy
           end
 
@@ -1183,19 +1183,19 @@ describe ApplicationHelper do
       context "and id = vm_collect_running_processes" do
         before do
           @id = "vm_collect_running_processes"
-          @record.stub(:retired => false, :current_state => "new")
+          allow(@record).to receive_messages(:retired => false, :current_state => "new")
           allow(@record).to receive(:is_available?).with(:collect_running_processes).and_return(true)
         end
 
         it "and @record.retired & !@record.is_available?(:collect_running_processes)" do
-          @record.stub(:retired => true)
+          allow(@record).to receive_messages(:retired => true)
           allow(@record).to receive(:is_available?).with(:collect_running_processes).and_return(false)
           expect(subject).to be_truthy
         end
 
         it "and @record.current_state = never & !@record.is_available?(:collect_running_processes)" do
           allow(@record).to receive(:is_available?).with(:collect_running_processes).and_return(false)
-          @record.stub(:current_state => "never")
+          allow(@record).to receive_messages(:current_state => "never")
           expect(subject).to be_truthy
         end
 
@@ -1338,11 +1338,11 @@ describe ApplicationHelper do
         context "and id = #{id}" do
           before do
             @id = id
-            @record.stub(:host => double(:vmm_product => "Server"))
+            allow(@record).to receive_messages(:host => double(:vmm_product => "Server"))
           end
 
           it "and @record.host.vmm_product = workstation" do
-            @record.stub(:host => double(:vmm_product => "Workstation"))
+            allow(@record).to receive_messages(:host => double(:vmm_product => "Workstation"))
             expect(subject).to be_truthy
           end
 
@@ -1351,7 +1351,7 @@ describe ApplicationHelper do
           end
 
           it "and @record.host does exist" do
-            @record.stub(:host => nil)
+            allow(@record).to receive_messages(:host => nil)
             expect(subject).to be_falsey
           end
         end
@@ -1360,11 +1360,11 @@ describe ApplicationHelper do
       context "and id = vm_refresh" do
         before do
           @id = "vm_refresh"
-          @record.stub(:host => double(:vmm_product => "Workstation"), :ext_management_system => true)
+          allow(@record).to receive_messages(:host => double(:vmm_product => "Workstation"), :ext_management_system => true)
         end
 
         it "and !@record.ext_management_system & @record.host.vmm_product.downcase != workstation" do
-          @record.stub(:host => double(:vmm_product => "Server"), :ext_management_system => false)
+          allow(@record).to receive_messages(:host => double(:vmm_product => "Server"), :ext_management_system => false)
           expect(subject).to be_truthy
         end
 
@@ -1382,8 +1382,8 @@ describe ApplicationHelper do
           @id = "vm_scan"
           @record = FactoryGirl.create(:vm_vmware)
           allow(@record).to receive(:has_proxy?).and_return(true)
-          @record.stub(:archived? => false)
-          @record.stub(:orphaned? => false)
+          allow(@record).to receive_messages(:archived? => false)
+          allow(@record).to receive_messages(:orphaned? => false)
         end
 
         it "and !@record.has_proxy?" do
@@ -1396,7 +1396,7 @@ describe ApplicationHelper do
         end
 
         it "and @record.has_proxy? and is archived" do
-          @record.stub(:archived? => true)
+          allow(@record).to receive_messages(:archived? => true)
           expect(subject).to eq(true)
         end
       end
@@ -1452,16 +1452,16 @@ describe ApplicationHelper do
         context "and id = #{id}" do
           before do
             @id = id
-            @record.stub(:host => double(:vmm_product => "Server"))
+            allow(@record).to receive_messages(:host => double(:vmm_product => "Server"))
           end
 
           it "and @record.host.vmm_product = workstation" do
-            @record.stub(:host => double(:vmm_product => "Workstation"))
+            allow(@record).to receive_messages(:host => double(:vmm_product => "Workstation"))
             expect(subject).to be_truthy
           end
 
           it "and !@record.host" do
-            @record.stub(:host => nil)
+            allow(@record).to receive_messages(:host => nil)
             expect(subject).to be_falsey
           end
 
@@ -1474,11 +1474,11 @@ describe ApplicationHelper do
       context "and id = miq_template_refresh" do
         before do
           @id = "miq_template_refresh"
-          @record.stub(:host => double(:vmm_product => "Workstation"), :ext_management_system => true)
+          allow(@record).to receive_messages(:host => double(:vmm_product => "Workstation"), :ext_management_system => true)
         end
 
         it "and !@record.ext_management_system & @record.host.vmm_product != workstation" do
-          @record.stub(:host => double(:vmm_product => "Server"), :ext_management_system => false)
+          allow(@record).to receive_messages(:host => double(:vmm_product => "Server"), :ext_management_system => false)
           expect(subject).to be_truthy
         end
 
@@ -1499,7 +1499,7 @@ describe ApplicationHelper do
         end
 
         it "and @record.has_proxy?" do
-          @record.stub(:has_proxy? => true)
+          allow(@record).to receive_messages(:has_proxy? => true)
           expect(subject).to be_falsey
         end
       end
@@ -1752,17 +1752,17 @@ describe ApplicationHelper do
           @message = "This Role is already active on this Server"
           @id = "role_start"
 
-          @record.stub(:miq_server => double(:started? => true), :active => true, :server_role => @server_role)
+          allow(@record).to receive_messages(:miq_server => double(:started? => true), :active => true, :server_role => @server_role)
         end
 
         it "when miq server not started" do
-          @record.stub(:miq_server => double(:started? => false))
+          allow(@record).to receive_messages(:miq_server => double(:started? => false))
           expect(subject).to eq(@message)
         end
 
         it "when miq server started but not active" do
-          @record.stub(:active => false)
-          @record.stub(:miq_server => double(:started? => false))
+          allow(@record).to receive_messages(:active => false)
+          allow(@record).to receive_messages(:miq_server => double(:started? => false))
           expect(subject).to eq("Only available Roles on active Servers can be started")
         end
 
@@ -1773,22 +1773,22 @@ describe ApplicationHelper do
         before do
           @id = "role_suspend"
           @miq_server = MiqServer.new(:name => "xx miq server", :id => "xx server id")
-          @miq_server.stub(:started? => true)
-          @record.stub(:miq_server => @miq_server, :active => true,
+          allow(@miq_server).to receive_messages(:started? => true)
+          allow(@record).to receive_messages(:miq_server => @miq_server, :active => true,
                           :server_role => @server_role)
           @server_role.max_concurrent = 1
         end
 
         context "when miq server started and active" do
           it "and server_role.max_concurrent == 1" do
-            @record.stub(:miq_server => @miq_server)
+            allow(@record).to receive_messages(:miq_server => @miq_server)
             expect(subject).to eq("Activate the #{@record.server_role.description} Role on another Server to suspend it on #{@record.miq_server.name} [#{@record.miq_server.id}]")
           end
           it_behaves_like 'default true_case'
         end
 
         it "when miq_server not started or not active" do
-          @record.stub(:miq_server => double(:started? => false), :active => false)
+          allow(@record).to receive_messages(:miq_server => double(:started? => false), :active => false)
           expect(subject).to eq("Only active Roles on active Servers can be suspended")
         end
       end
@@ -1797,7 +1797,7 @@ describe ApplicationHelper do
     context "when record class = OntapStorageSystem" do
       before do
         @record = OntapStorageSystem.new
-        @record.stub(:latest_derived_metrics => true)
+        allow(@record).to receive_messages(:latest_derived_metrics => true)
       end
 
       context "and id = ontap_storage_system_statistics" do
@@ -1813,7 +1813,7 @@ describe ApplicationHelper do
       context "and id = ontap_logical_disk_perf" do
         before do
           @id = "ontap_logical_disk_perf"
-          @record.stub(:has_perf_data? => true)
+          allow(@record).to receive_messages(:has_perf_data? => true)
         end
         it_behaves_like 'record without perf data', "No Capacity & Utilization data has been collected for this Logical Disk"
         it_behaves_like 'default case'
@@ -1822,7 +1822,7 @@ describe ApplicationHelper do
       context "and id = ontap_logical_disk_statistics" do
         before do
           @id = "ontap_logical_disk_statistics"
-          @record.stub(:latest_derived_metrics => true)
+          allow(@record).to receive_messages(:latest_derived_metrics => true)
         end
         it_behaves_like 'record without latest derived metrics', "No Statistics collected for this Logical Disk"
         it_behaves_like 'default case'
@@ -1832,7 +1832,7 @@ describe ApplicationHelper do
     context "when record class = CimBaseStorageExtent" do
       before do
         @record = CimBaseStorageExtent.new
-        @record.stub(:latest_derived_metrics => true)
+        allow(@record).to receive_messages(:latest_derived_metrics => true)
       end
 
       context "and id = cim_base_storage_extent_statistics" do
@@ -1845,7 +1845,7 @@ describe ApplicationHelper do
     context "when record class = OntapStorageVolume" do
       before do
         @record = OntapStorageVolume.new
-        @record.stub(:latest_derived_metrics => true)
+        allow(@record).to receive_messages(:latest_derived_metrics => true)
       end
 
       context "and id = ontap_storage_volume_statistics" do
@@ -1858,7 +1858,7 @@ describe ApplicationHelper do
     context "when record class = OntapFileShare" do
       before do
         @record = OntapFileShare.new
-        @record.stub(:latest_derived_metrics => true)
+        allow(@record).to receive_messages(:latest_derived_metrics => true)
       end
       context "and id = ontap_file_share_statistics" do
         before { @id = "ontap_file_share_statistics" }
@@ -1870,7 +1870,7 @@ describe ApplicationHelper do
     context "when record class = SniaLocalFileSystem" do
       before do
         @record = SniaLocalFileSystem.new
-        @record.stub(:latest_derived_metrics => true)
+        allow(@record).to receive_messages(:latest_derived_metrics => true)
       end
       context "and id = snia_local_file_system_statistics" do
         before { @id = "snia_local_file_system_statistics" }
@@ -1882,7 +1882,7 @@ describe ApplicationHelper do
     context "when record class = EmsCluster" do
       before do
         @record = EmsCluster.new
-        @record.stub(:has_perf_data? => true, :has_events? => true)
+        allow(@record).to receive_messages(:has_perf_data? => true, :has_events? => true)
       end
 
       context "and id = ems_cluster_perf" do
@@ -1901,7 +1901,7 @@ describe ApplicationHelper do
     context "when record class = ContainerProject" do
       before do
         @record = ContainerProject.new
-        @record.stub(:has_perf_data? => true, :has_events? => true)
+        allow(@record).to receive_messages(:has_perf_data? => true, :has_events? => true)
       end
 
       context "and id = container_project_timeline" do
@@ -1914,7 +1914,7 @@ describe ApplicationHelper do
     context "when record class = ContainerGroup" do
       before do
         @record = ContainerGroup.new
-        @record.stub(:has_perf_data? => true, :has_events? => true)
+        allow(@record).to receive_messages(:has_perf_data? => true, :has_events? => true)
       end
 
       context "and id = container_group_timeline" do
@@ -1927,7 +1927,7 @@ describe ApplicationHelper do
     context "when record class = ContainerNode" do
       before do
         @record = ContainerNode.new
-        @record.stub(:has_perf_data? => true, :has_events? => true)
+        allow(@record).to receive_messages(:has_perf_data? => true, :has_events? => true)
       end
 
       context "and id = container_node_timeline" do
@@ -1940,7 +1940,7 @@ describe ApplicationHelper do
     context "when record class = ContainerReplicator" do
       before do
         @record = ContainerReplicator.new
-        @record.stub(:has_perf_data? => true, :has_events? => true)
+        allow(@record).to receive_messages(:has_perf_data? => true, :has_events? => true)
       end
 
       context "and id = container_replicator_timeline" do
@@ -1953,7 +1953,7 @@ describe ApplicationHelper do
     context "when record class = Host" do
       before do
         @record = Host.new
-        @record.stub(:has_perf_data? => true)
+        allow(@record).to receive_messages(:has_perf_data? => true)
       end
 
       context "and id = host_perf" do
@@ -1984,11 +1984,11 @@ describe ApplicationHelper do
       context "and id = host_refresh" do
         before do
           @id = "host_refresh"
-          @record.stub(:is_refreshable_now? => true)
+          allow(@record).to receive_messages(:is_refreshable_now? => true)
         end
         it "when not configured for refresh" do
           message = "Host not configured for refresh"
-          @record.stub(:is_refreshable_now_error_message => message, :is_refreshable_now? => false)
+          allow(@record).to receive_messages(:is_refreshable_now_error_message => message, :is_refreshable_now? => false)
           expect(subject).to eq(message)
         end
 
@@ -1998,12 +1998,12 @@ describe ApplicationHelper do
       context "and id = host_scan" do
         before do
           @id = "host_scan"
-          @record.stub(:is_scannable_now? => true)
+          allow(@record).to receive_messages(:is_scannable_now? => true)
         end
 
         it "when not scannable now" do
           message = "Provide credentials for IPMI"
-          @record.stub(:is_scannable_now? => false, :is_scannable_now_error_message => message)
+          allow(@record).to receive_messages(:is_scannable_now? => false, :is_scannable_now_error_message => message)
           expect(subject).to eq(message)
         end
 
@@ -2023,7 +2023,7 @@ describe ApplicationHelper do
       context "and id = host_shutdown" do
         before do
           @id = "host_shutdown"
-          @record.stub(:is_available_now_error_message => false)
+          allow(@record).to receive_messages(:is_available_now_error_message => false)
         end
         it_behaves_like 'record with error message', 'shutdown'
         it_behaves_like 'default case'
@@ -2032,7 +2032,7 @@ describe ApplicationHelper do
       context "and id = host_restart" do
         before do
           @id = "host_restart"
-          @record.stub(:is_available_now_error_message => false)
+          allow(@record).to receive_messages(:is_available_now_error_message => false)
         end
 
         it_behaves_like 'record with error message', 'reboot'
@@ -2196,8 +2196,8 @@ describe ApplicationHelper do
         end
 
         it "when a provision dialog is available" do
-          @record.stub(:resource_actions => [double(:action => 'Provision', :dialog_id => '10')])
-          Dialog.stub(:find_by_id => 'some thing')
+          allow(@record).to receive_messages(:resource_actions => [double(:action => 'Provision', :dialog_id => '10')])
+          allow(Dialog).to receive_messages(:find_by_id => 'some thing')
           expect(subject).to be_falsey
         end
       end
@@ -2209,7 +2209,7 @@ describe ApplicationHelper do
       context "and id = storage_perf" do
         before do
           @id = "storage_perf"
-          @record.stub(:has_perf_data? => true)
+          allow(@record).to receive_messages(:has_perf_data? => true)
         end
         it_behaves_like 'record without perf data', "No Capacity & Utilization data has been collected for this Datastore"
         it_behaves_like 'default case'
@@ -2221,7 +2221,7 @@ describe ApplicationHelper do
           allow(@record).to receive(:hosts).and_return(%w(h1 h2))
           expect(subject).to eq("Only Datastore without VMs and Hosts can be removed")
 
-          @record.stub(:hosts => [], :vms_and_templates => ['v1'])
+          allow(@record).to receive_messages(:hosts => [], :vms_and_templates => ['v1'])
           expect(subject).to eq("Only Datastore without VMs and Hosts can be removed")
         end
         it_behaves_like 'default case'
@@ -2234,7 +2234,7 @@ describe ApplicationHelper do
       context "and id = vm_perf" do
         before do
           @id = "vm_perf"
-          @record.stub(:has_perf_data? => true)
+          allow(@record).to receive_messages(:has_perf_data? => true)
         end
         it_behaves_like 'record without perf data', "No Capacity & Utilization data has been collected for this VM"
         it_behaves_like 'default case'
@@ -2252,7 +2252,7 @@ describe ApplicationHelper do
       context "and id = vm_console" do
         before do
           @id = "vm_console"
-          @record.stub(:current_state => 'on')
+          allow(@record).to receive_messages(:current_state => 'on')
           setup_firefox_with_linux
         end
 
@@ -2263,7 +2263,7 @@ describe ApplicationHelper do
       context "and id = vm_vnc_console" do
         before do
           @id = "vm_vnc_console"
-          @record.stub(:current_state => 'on', :ipaddresses => '192.168.1.1')
+          allow(@record).to receive_messages(:current_state => 'on', :ipaddresses => '192.168.1.1')
         end
 
         it_behaves_like 'vm not powered on', "The web-based VNC console is not available because the VM is not powered on"
@@ -2273,7 +2273,7 @@ describe ApplicationHelper do
       context "and id = vm_vmrc_console" do
         before do
           @id = "vm_vmrc_console"
-          @record.stub(:current_state => 'on', :validate_remote_console_vmrc_support => true)
+          allow(@record).to receive_messages(:current_state => 'on', :validate_remote_console_vmrc_support => true)
           setup_firefox_with_linux
         end
 
@@ -2362,7 +2362,7 @@ describe ApplicationHelper do
         context "and id = #{button_id}" do
           before { @id = button_id }
           it "when VM is already retired" do
-            @record.stub(:retired => true)
+            allow(@record).to receive_messages(:retired => true)
             expect(subject).to eq("VM is already retired")
           end
           it_behaves_like 'default case'
@@ -2373,12 +2373,12 @@ describe ApplicationHelper do
         before do
           @id = "vm_scan"
           @record = FactoryGirl.create(:vm_vmware, :vendor => "vmware")
-          @record.stub(:archived? => false)
-          @record.stub(:orphaned? => false)
-          @record.stub(:has_active_proxy? => true)
+          allow(@record).to receive_messages(:archived? => false)
+          allow(@record).to receive_messages(:orphaned? => false)
+          allow(@record).to receive_messages(:has_active_proxy? => true)
         end
         it "when no active proxy" do
-          @record.stub(:has_active_proxy? => false)
+          allow(@record).to receive_messages(:has_active_proxy? => false)
           expect(subject).to eq("No active SmartProxies found to analyze this VM")
         end
         it_behaves_like 'default case'
@@ -2388,7 +2388,7 @@ describe ApplicationHelper do
         before do
           @id = "instance_scan"
           @record = FactoryGirl.create(:vm_amazon, :vendor => "amazon")
-          @record.stub(:has_active_proxy? => true)
+          allow(@record).to receive_messages(:has_active_proxy? => true)
         end
         before { allow(@record).to receive(:is_available?).with(:smartstate_analysis).and_return(false) }
         it_behaves_like 'record with error message', 'smartstate_analysis'
@@ -2468,11 +2468,11 @@ describe ApplicationHelper do
             it_behaves_like 'record with error message', 'remove_snapshot'
           end
           context "when without snapshots" do
-            before { @record.stub_chain(:snapshots, :size).and_return(0) }
+            before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(0) }
             it_behaves_like 'record with error message', 'remove_snapshot'
           end
           context "when with snapshots" do
-            before { @record.stub_chain(:snapshots, :size).and_return(2) }
+            before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(2) }
             it_behaves_like 'default case'
           end
         end
@@ -2484,11 +2484,11 @@ describe ApplicationHelper do
             it_behaves_like 'record with error message', 'remove_all_snapshots'
           end
           context "when without snapshots" do
-            before { @record.stub_chain(:snapshots, :size).and_return(0) }
+            before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(0) }
             it_behaves_like 'record with error message', 'remove_all_snapshots'
           end
           context "when with snapshots" do
-            before { @record.stub_chain(:snapshots, :size).and_return(2) }
+            before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(2) }
             it_behaves_like 'default case'
           end
         end
@@ -2500,11 +2500,11 @@ describe ApplicationHelper do
             it_behaves_like 'record with error message', 'revert_to_snapshot'
           end
           context "when without snapshots" do
-            before { @record.stub_chain(:snapshots, :size).and_return(0) }
+            before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(0) }
             it_behaves_like 'record with error message', 'revert_to_snapshot'
           end
           context "when with snapshots" do
-            before { @record.stub_chain(:snapshots, :size).and_return(2) }
+            before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(2) }
             it_behaves_like 'default case'
           end
         end
@@ -2548,16 +2548,16 @@ describe ApplicationHelper do
         @id = "miq_request_delete"
         login_as user
         @record = MiqProvisionRequest.new
-        @record.stub(:resource_type => "something", :approval_state => "xx", :requester_name => user.name)
+        allow(@record).to receive_messages(:resource_type => "something", :approval_state => "xx", :requester_name => user.name)
       end
 
       it "and requester.name != @record.requester_name" do
-        @record.stub(:requester_name => 'admin')
+        allow(@record).to receive_messages(:requester_name => 'admin')
         expect(build_toolbar_disable_button("miq_request_delete")).to be_falsey
       end
 
       it "and approval_state = approved" do
-        @record.stub(:approval_state => "approved")
+        allow(@record).to receive_messages(:approval_state => "approved")
         expect(subject).to be_falsey
       end
 
@@ -2966,13 +2966,13 @@ describe ApplicationHelper do
     end
 
     it "Hides PDF button when PdfGenerator is not available" do
-      PdfGenerator.stub(:available? => false)
+      allow(PdfGenerator).to receive_messages(:available? => false)
       buttons = helper.build_toolbar('gtl_view_tb').collect { |button| button[:items] if button['id'] == "download_choice" }.compact.flatten
       expect(buttons).not_to include(@pdf_button)
     end
 
     it "Displays PDF button when PdfGenerator is available" do
-      PdfGenerator.stub(:available? => true)
+      allow(PdfGenerator).to receive_messages(:available? => true)
       buttons = helper.build_toolbar('gtl_view_tb').collect { |button| button[:items] if button['id'] == "download_choice" }.compact.flatten
       expect(buttons).to include(@pdf_button)
     end

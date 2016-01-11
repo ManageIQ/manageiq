@@ -137,7 +137,7 @@ describe MiqReport do
 
       group = FactoryGirl.create(:miq_group)
       user  = FactoryGirl.create(:user, :miq_groups => [group])
-      User.stub(:server_timezone => "UTC")
+      allow(User).to receive_messages(:server_timezone => "UTC")
       group.update_attributes(:filters => {"managed" => [["/managed/environment/prod"]], "belongsto" => []})
 
       report = MiqReport.new(:db => "Vm")
@@ -166,7 +166,7 @@ describe MiqReport do
       vm1.tag_with(tag, :ns => "*")
       vm2.tag_with(tag, :ns => "*")
 
-      User.stub(:server_timezone => "UTC")
+      allow(User).to receive_messages(:server_timezone => "UTC")
       report = MiqReport.new(:db => "Vm", :sortby => %w(storage.name name), :order => "Ascending", :include => {"storage" => {"columns" => ["name"]}})
       options = {
         :only   => ["name", "storage.name"],
@@ -235,7 +235,7 @@ describe MiqReport do
       vm2.tag_with(tag, :ns => "*")
       vm3.tag_with(tag, :ns => "*")
 
-      User.stub(:server_timezone => "UTC")
+      allow(User).to receive_messages(:server_timezone => "UTC")
 
       report = MiqReport.new(:db => "Vm")
 

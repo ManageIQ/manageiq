@@ -6,7 +6,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::EventCatcher::Runner do
     let(:catcher) { described_class.new(:ems_id => ems.id) }
 
     before do
-      ManageIQ::Providers::Redhat::InfraManager.any_instance.stub(:authentication_check => [true, ""])
+      allow_any_instance_of(ManageIQ::Providers::Redhat::InfraManager).to receive_messages(:authentication_check => [true, ""])
       allow_any_instance_of(MiqWorker::Runner).to receive(:worker_initialization)
     end
 

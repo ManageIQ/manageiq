@@ -45,7 +45,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::Provision do
   context "#prepare_for_clone_task" do
     let(:flavor)  { FactoryGirl.create(:flavor_openstack) }
 
-    before { subject.stub(:instance_type => flavor, :validate_dest_name => nil) }
+    before { allow(subject).to receive_messages(:instance_type => flavor, :validate_dest_name => nil) }
 
     context "availability zone" do
       let(:az)      { FactoryGirl.create(:availability_zone_openstack,      :ems_ref => "64890ac2-6c34-11e4-b72d-56847afe9799") }

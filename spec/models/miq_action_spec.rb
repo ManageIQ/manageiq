@@ -144,7 +144,7 @@ describe MiqAction do
     it "asynchronous" do
       input = {:synchronous => false}
       zone  = 'Test Zone'
-      @vm.stub(:my_zone => zone)
+      allow(@vm).to receive_messages(:my_zone => zone)
 
       Timecop.freeze do
         date   = Time.now.utc - 1.day

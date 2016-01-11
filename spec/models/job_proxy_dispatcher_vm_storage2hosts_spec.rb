@@ -7,7 +7,7 @@ describe "JobProxyDispatcherVmStorage2Hosts" do
     before(:each) do
       @server1 = EvmSpecHelper.local_miq_server(:is_master => true)
       @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone)
-      MiqServer.any_instance.stub(:is_vix_disk? => true)
+      allow_any_instance_of(MiqServer).to receive_messages(:is_vix_disk? => true)
     end
 
     context "with hosts with a miq_proxy, vmware vms on storages" do
@@ -19,7 +19,7 @@ describe "JobProxyDispatcherVmStorage2Hosts" do
       context "with vm's repository host as the last host, " do
         before(:each) do
           @repo_host = @hosts.last
-          @vm.stub(:myhost => @repo_host)
+          allow(@vm).to receive_messages(:myhost => @repo_host)
         end
 
         context "with a host-less vm and it's storage having hosts, " do

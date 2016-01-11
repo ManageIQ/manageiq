@@ -68,7 +68,7 @@ describe ApplicationHelper do
             expect(Menu::DefaultMenu.services_menu_section.visible?).to be_truthy
             expect(Menu::DefaultMenu.cloud_inteligence_menu_section.visible?).to be_falsey
 
-            User.stub_chain(:current_user, :role_allows?).and_return(true)
+            allow(User).to receive_message_chain(:current_user, :role_allows?).and_return(true)
             expect(Menu::DefaultMenu.cloud_inteligence_menu_section.visible?).to be_falsey
           end
         ensure
@@ -84,7 +84,7 @@ describe ApplicationHelper do
         end
 
         it "and not entitled" do
-          @user.stub(:role_allows_any? => false)
+          allow(@user).to receive_messages(:role_allows_any? => false)
           expect(helper.role_allows(:feature => "miq_report", :any => true)).to be_falsey
         end
       end
@@ -95,7 +95,7 @@ describe ApplicationHelper do
         end
 
         it "and not entitled" do
-          @user.stub(:role_allows? => false)
+          allow(@user).to receive_messages(:role_allows? => false)
           expect(helper.role_allows(:feature => "miq_report")).to be_falsey
         end
       end
@@ -108,7 +108,7 @@ describe ApplicationHelper do
       end
 
       it "and not entitled" do
-        @user.stub(:role_allows_any? => false)
+        allow(@user).to receive_messages(:role_allows_any? => false)
         expect(Menu::DefaultMenu.services_menu_section.visible?).to be_falsey
       end
     end

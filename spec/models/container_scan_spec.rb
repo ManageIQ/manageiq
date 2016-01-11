@@ -49,8 +49,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
     before(:each) do
       @server = EvmSpecHelper.local_miq_server
 
-      described_class.any_instance.stub(:kubernetes_client => MockKubeClient.new)
-      described_class.any_instance.stub(:image_inspector_client => MockImageInspectorClient.new(IMAGE_ID))
+      allow_any_instance_of(described_class).to receive_messages(:kubernetes_client => MockKubeClient.new)
+      allow_any_instance_of(described_class).to receive_messages(:image_inspector_client => MockImageInspectorClient.new(IMAGE_ID))
 
       @ems = FactoryGirl.create(
         :ems_kubernetes, :hostname => "test.com", :zone => @server.zone, :port => 8443,
@@ -134,7 +134,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
     context 'when the image tag points to a different image' do
       before(:each) do
         MODIFIED_IMAGE_ID = '0d071bb732e1e3eb1e01629600c9b6c23f2b26b863b5321335f564c8f018c452'
-        described_class.any_instance.stub(
+        allow_any_instance_of(described_class).to receive_messages(
           :image_inspector_client => MockImageInspectorClient.new(MODIFIED_IMAGE_ID)
         )
       end

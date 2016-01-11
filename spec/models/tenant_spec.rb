@@ -748,7 +748,7 @@ describe Tenant do
         :templates_allocated => {:value => 4}
       )
 
-      TenantQuota.any_instance.stub(:used => 2)
+      allow_any_instance_of(TenantQuota).to receive_messages(:used => 2)
     end
 
     it "calculates quotas allocated to child tenants" do

@@ -25,25 +25,25 @@ describe AuthenticationMixin do
 
       it "no authentication" do
         t = TestClass.new
-        t.stub(:authentication_best_fit => nil)
+        allow(t).to receive_messages(:authentication_best_fit => nil)
         expect(t.send(method)).to eq(expected)
       end
 
       it "no #{required_field}" do
         t = TestClass.new
-        t.stub(:authentication_best_fit => double(required_field => nil))
+        allow(t).to receive_messages(:authentication_best_fit => double(required_field => nil))
         expect(t.send(method)).to eq(expected)
       end
 
       it "blank #{required_field}" do
         t = TestClass.new
-        t.stub(:authentication_best_fit => double(required_field => ""))
+        allow(t).to receive_messages(:authentication_best_fit => double(required_field => ""))
         expect(t.send(method)).to eq(expected)
       end
 
       it "normal case" do
         t = TestClass.new
-        t.stub(:authentication_best_fit => double(required_field => "test"))
+        allow(t).to receive_messages(:authentication_best_fit => double(required_field => "test"))
 
         expected = case method
                    when :has_credentials?

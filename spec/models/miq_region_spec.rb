@@ -41,7 +41,7 @@ describe MiqRegion do
   context ".seed" do
     before do
       @region_number = 99
-      MiqRegion.stub(:my_region_number => @region_number)
+      allow(MiqRegion).to receive_messages(:my_region_number => @region_number)
       MiqRegion.seed
     end
 
@@ -60,7 +60,7 @@ describe MiqRegion do
 
     it "raises Exception if db region_id doesn't match my_region_number" do
       @db = FactoryGirl.create(:miq_database)
-      MiqRegion.stub(:my_region_number => @region_number + 1)
+      allow(MiqRegion).to receive_messages(:my_region_number => @region_number + 1)
       expect { MiqRegion.seed }.to raise_error(Exception)
     end
   end

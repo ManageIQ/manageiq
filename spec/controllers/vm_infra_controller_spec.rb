@@ -135,7 +135,7 @@ describe VmInfraController do
     end
 
     context "clear or retain existing breadcrumb path" do
-      before { controller.stub(:render => nil, :build_toolbar => nil) }
+      before { allow(controller).to receive_messages(:render => nil, :build_toolbar => nil) }
 
       it 'it clears the existing breadcrumb path and assigns the new explorer path when controllers are switched' do
         session[:breadcrumbs] = [{:name => "Instances", :url => "/vm_cloud/explorer"}]

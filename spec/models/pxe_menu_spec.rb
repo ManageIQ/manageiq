@@ -134,7 +134,7 @@ PXEMENU
   context "#synchronize" do
     before(:each) do
       @pxe_server = FactoryGirl.create(:pxe_server)
-      @pxe_server.stub(:read_file => @contents_ipxe)
+      allow(@pxe_server).to receive_messages(:read_file => @contents_ipxe)
     end
 
     it "on typed menu" do

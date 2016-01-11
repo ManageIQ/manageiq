@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Rbac do
-  before { User.stub(:server_timezone => "UTC") }
+  before { allow(User).to receive_messages(:server_timezone => "UTC") }
   let(:default_tenant) { Tenant.seed }
 
   let(:owner_tenant) { FactoryGirl.create(:tenant) }
@@ -390,7 +390,7 @@ describe Rbac do
         end
 
         it "search on VMs and Templates should return no objects if self-service user" do
-          User.any_instance.stub(:self_service? => true)
+          allow_any_instance_of(User).to receive_messages(:self_service? => true)
           User.with_user(user) do
             results = Rbac.search(:class => "VmOrTemplate", :results_format => :objects)
             objects = results.first
@@ -570,7 +570,7 @@ describe Rbac do
 
       context ".search" do
         it "self-service group" do
-          MiqGroup.any_instance.stub(:self_service? => true)
+          allow_any_instance_of(MiqGroup).to receive_messages(:self_service? => true)
 
           results = Rbac.search(:class => "Service", :results_format => :objects, :miq_group => user.current_group).first
           expect(results.to_a).to match_array([@service4, @service5])
@@ -578,7 +578,7 @@ describe Rbac do
 
         context "with self-service user" do
           before(:each) do
-            User.any_instance.stub(:self_service? => true)
+            allow_any_instance_of(User).to receive_messages(:self_service? => true)
           end
 
           it "works when targets are empty" do
@@ -590,8 +590,8 @@ describe Rbac do
         end
 
         it "limited self-service group" do
-          MiqGroup.any_instance.stub(:self_service? => true)
-          MiqGroup.any_instance.stub(:limited_self_service? => true)
+          allow_any_instance_of(MiqGroup).to receive_messages(:self_service? => true)
+          allow_any_instance_of(MiqGroup).to receive_messages(:limited_self_service? => true)
 
           results = Rbac.search(:class => "Service", :results_format => :objects, :miq_group => user.current_group).first
           expect(results.to_a).to match_array([@service4, @service5])
@@ -599,8 +599,8 @@ describe Rbac do
 
         context "with limited self-service user" do
           before(:each) do
-            User.any_instance.stub(:self_service? => true)
-            User.any_instance.stub(:limited_self_service? => true)
+            allow_any_instance_of(User).to receive_messages(:self_service? => true)
+            allow_any_instance_of(User).to receive_messages(:limited_self_service? => true)
           end
 
           it "works when targets are empty" do
@@ -652,7 +652,7 @@ describe Rbac do
 
       context ".search" do
         it "self-service group" do
-          MiqGroup.any_instance.stub(:self_service? => true)
+          allow_any_instance_of(MiqGroup).to receive_messages(:self_service? => true)
 
           results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group => user.current_group).first
           expect(results.length).to eq(2)
@@ -660,7 +660,7 @@ describe Rbac do
 
         context "with self-service user" do
           before(:each) do
-            User.any_instance.stub(:self_service? => true)
+            allow_any_instance_of(User).to receive_messages(:self_service? => true)
           end
 
           it "works when targets are empty" do
@@ -679,8 +679,8 @@ describe Rbac do
         end
 
         it "limited self-service group" do
-          MiqGroup.any_instance.stub(:self_service? => true)
-          MiqGroup.any_instance.stub(:limited_self_service? => true)
+          allow_any_instance_of(MiqGroup).to receive_messages(:self_service? => true)
+          allow_any_instance_of(MiqGroup).to receive_messages(:limited_self_service? => true)
 
           results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group => user.current_group).first
           expect(results.length).to eq(2)
@@ -688,8 +688,8 @@ describe Rbac do
 
         context "with limited self-service user" do
           before(:each) do
-            User.any_instance.stub(:self_service? => true)
-            User.any_instance.stub(:limited_self_service? => true)
+            allow_any_instance_of(User).to receive_messages(:self_service? => true)
+            allow_any_instance_of(User).to receive_messages(:limited_self_service? => true)
           end
 
           it "works when targets are empty" do

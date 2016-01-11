@@ -29,11 +29,11 @@ module JobProxyDispatcherSpec
         end
 
         # TODO: We should be able to set values so we don't need to stub behavior
-        MiqServer.any_instance.stub(:is_vix_disk? => true)
-        MiqServer.any_instance.stub(:is_a_proxy? => true)
-        MiqServer.any_instance.stub(:has_active_role? => true)
-        ManageIQ::Providers::Vmware::InfraManager.any_instance.stub(:missing_credentials? => false)
-        Host.any_instance.stub(:missing_credentials? => false)
+        allow_any_instance_of(MiqServer).to receive_messages(:is_vix_disk? => true)
+        allow_any_instance_of(MiqServer).to receive_messages(:is_a_proxy? => true)
+        allow_any_instance_of(MiqServer).to receive_messages(:has_active_role? => true)
+        allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive_messages(:missing_credentials? => false)
+        allow_any_instance_of(Host).to receive_messages(:missing_credentials? => false)
 
         @hosts, @proxies, @storages, @vms, @repo_vms = build_hosts_proxies_storages_vms(:hosts => NUM_HOSTS, :storages => NUM_STORAGES, :vms => NUM_VMS, :repo_vms => NUM_REPO_VMS)
       end

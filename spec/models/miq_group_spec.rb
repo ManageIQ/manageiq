@@ -142,7 +142,7 @@ describe MiqGroup do
     end
 
     it "should issue an error message when user name could not be bound to LDAP" do
-      MiqLdap.new.stub(:bind => false)
+      allow(MiqLdap.new).to receive_messages(:bind => false)
       # darn, wanted a MiqException::MiqEVMLoginError
       expect do
         MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password')
@@ -150,7 +150,7 @@ describe MiqGroup do
     end
 
     it "should issue an error message when user name does not exist in LDAP directory" do
-      MiqLdap.new.stub(:get_user_object => nil)
+      allow(MiqLdap.new).to receive_messages(:get_user_object => nil)
 
       # darn, wanted a MiqException::MiqEVMLoginError
       expect do

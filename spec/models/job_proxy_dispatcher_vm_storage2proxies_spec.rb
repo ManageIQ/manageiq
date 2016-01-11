@@ -8,7 +8,7 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
     before(:each) do
       @server1 = EvmSpecHelper.local_miq_server(:is_master => true)
       @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone)
-      MiqServer.any_instance.stub(:is_vix_disk? => true)
+      allow_any_instance_of(MiqServer).to receive_messages(:is_vix_disk? => true)
     end
 
     context "hosts with proxy and vmware vms," do
@@ -20,7 +20,7 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
       context "the vm having a repository host," do
         before(:each) do
           @repo_host = @hosts.last
-          @vm.stub(:myhost => @repo_host)
+          allow(@vm).to receive_messages(:myhost => @repo_host)
         end
 
         context "removing proxy from a host" do
@@ -32,7 +32,7 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
             @vm.host = @host
             @vm.vendor = "RedHat"
             @vm.save
-            @vm.stub(:miq_server_proxies => [])
+            allow(@vm).to receive_messages(:miq_server_proxies => [])
           end
 
           it "Vm#storage2proxies will exclude proxy-less hosts" do
@@ -64,7 +64,7 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
 
               @server1.deactivate_all_roles
               @server1.role    = 'smartproxy'
-              Host.any_instance.stub(:missing_credentials? => false)
+              allow_any_instance_of(Host).to receive_messages(:missing_credentials? => false)
             end
 
             it "will have no roles active" do
@@ -87,14 +87,14 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
 
           context "with server proxies active," do
             before(:each) do
-              MiqServer.any_instance.stub(:is_proxy_active? => true)
+              allow_any_instance_of(MiqServer).to receive_messages(:is_proxy_active? => true)
               allow(@vm).to receive(:my_zone).and_return(@server1.zone.name)
             end
 
             context "a vm template and invalid VC authentication" do
               before(:each) do
-                ManageIQ::Providers::Vmware::InfraManager.any_instance.stub(:missing_credentials? => true)
-                @vm.stub(:template? => true)
+                allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive_messages(:missing_credentials? => true)
+                allow(@vm).to receive_messages(:template? => true)
                 @ems1 = FactoryGirl.create(:ems_vmware, :name => "Ems1")
                 @vm.ext_management_system = @ems1
                 @vm.save
@@ -106,8 +106,8 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
 
             context "a vm and invalid host authentication" do
               before(:each) do
-                Host.any_instance.stub(:missing_credentials? => true)
-                @vm.stub(:template? => false)
+                allow_any_instance_of(Host).to receive_messages(:missing_credentials? => true)
+                allow(@vm).to receive_messages(:template? => false)
               end
               it "Vm#storage2active_proxies will return an empty list" do
                 expect(@vm.storage2active_proxies).to be_empty

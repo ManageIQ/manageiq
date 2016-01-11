@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe "DatabaseConfiguration patch" do
   before(:each) do
-    Rails.stub(:env => ActiveSupport::StringInquirer.new("production"))
+    allow(Rails).to receive_messages(:env => ActiveSupport::StringInquirer.new("production"))
 
     @app = Vmdb::Application.new
     @app.config.paths["config/database"] = "does/not/exist" # ignore real database.yml

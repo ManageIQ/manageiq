@@ -5,7 +5,7 @@ describe VMDB::Config do
   let(:enc_pass) { MiqPassword.encrypt(password) }
 
   it ".load_config_file" do
-    IO.stub(:read => "---\r\nsmtp:\r\n  password: #{enc_pass}\r\n")
+    allow(IO).to receive_messages(:read => "---\r\nsmtp:\r\n  password: #{enc_pass}\r\n")
     allow(File).to receive(:exist?).with("test.yml").and_return(true)
     expect(described_class.load_config_file("test.yml")).to eq({:smtp => {:password => password}})
   end

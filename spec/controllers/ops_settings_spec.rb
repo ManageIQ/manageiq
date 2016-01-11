@@ -34,7 +34,7 @@ describe OpsController do
     context "normal case" do
       before do
         server = double
-        server.stub(:zone_id => 1)
+        allow(server).to receive_messages(:zone_id => 1)
         allow(MiqServer).to receive(:my_server).and_return(server)
 
         @sch = FactoryGirl.create(:miq_schedule)

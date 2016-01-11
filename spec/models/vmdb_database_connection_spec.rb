@@ -96,7 +96,7 @@ describe VmdbDatabaseConnection do
 
   it 'wait_time_ms defaults to 0 on nil query_start' do
     conn = VmdbDatabaseConnection.first
-    conn.stub(:query_start => nil)
+    allow(conn).to receive_messages(:query_start => nil)
     expect(conn.wait_time_ms).to eq 0
   end
 

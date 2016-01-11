@@ -252,8 +252,8 @@ describe MiqRequest do
     end
 
     it "#deny" do
-      MiqApproval.any_instance.stub(:authorized? => true)
-      MiqServer.stub(:my_zone => "default")
+      allow_any_instance_of(MiqApproval).to receive_messages(:authorized? => true)
+      allow(MiqServer).to receive_messages(:my_zone => "default")
 
       provision_request = FactoryGirl.create(:miq_provision_request, :requester => fred, :src_vm_id => template.id)
 

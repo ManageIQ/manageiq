@@ -5,7 +5,7 @@ describe MiqTaskController do
     let(:user) { FactoryGirl.create(:user) }
     subject { controller.send(:tasks_condition, @opts) }
     before do
-      controller.stub(:session => user)
+      allow(controller).to receive_messages(:session => user)
     end
 
     describe "My VM Analysis Tasks" do

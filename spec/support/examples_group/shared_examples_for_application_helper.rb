@@ -1,14 +1,14 @@
 
 shared_examples_for 'record without latest derived metrics' do |message|
   it "#{message}" do
-    @record.stub(:latest_derived_metrics => false)
+    allow(@record).to receive_messages(:latest_derived_metrics => false)
     expect(subject).to eq(message)
   end
 end
 
 shared_examples_for 'record without perf data' do |message|
   it "#{message}" do
-    @record.stub(:has_perf_data? => false)
+    allow(@record).to receive_messages(:has_perf_data? => false)
     expect(subject).to eq(message)
   end
 end
@@ -38,7 +38,7 @@ end
 
 shared_examples_for 'vm not powered on' do |message|
   it "#{message}" do
-    @record.stub(:current_state => 'off')
+    allow(@record).to receive_messages(:current_state => 'off')
     expect(subject).to eq(message)
   end
 end

@@ -96,7 +96,7 @@ describe "Server Environment Management" do
   context "#check_disk_usage" do
     before do
       _, @miq_server, = EvmSpecHelper.create_guid_miq_server_zone
-      @miq_server.stub(:disk_usage_threshold => 70)
+      allow(@miq_server).to receive_messages(:disk_usage_threshold => 70)
     end
 
     it "normal usage" do

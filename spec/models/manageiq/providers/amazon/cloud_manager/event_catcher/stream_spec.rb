@@ -14,7 +14,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream do
   context "#each_batch" do
     it "raises ProviderUnreachable on non existing queue" do
       expect(@ems_stream).to receive(:sqs).and_raise(AWS::SQS::Errors::NonExistentQueue)
-      @ems_stream.stub(:sns => double(:topics => double(:detect => nil)))
+      allow(@ems_stream).to receive_messages(:sns => double(:topics => double(:detect => nil)))
 
       @ems_stream.start
       expect do

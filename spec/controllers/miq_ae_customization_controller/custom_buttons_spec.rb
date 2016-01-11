@@ -20,7 +20,7 @@ describe MiqAeCustomizationController do
   render_views
   describe "#ab_form" do
     it "displays the layout" do
-      MiqAeClass.stub(:find_distinct_instances_across_domains => [double(:name => "foo")])
+      allow(MiqAeClass).to receive_messages(:find_distinct_instances_across_domains => [double(:name => "foo")])
       @sb = {:active_tree => :ab_tree,
              :trees       => {:ab_tree => {:tree => :ab_tree}},
              :params      => {:instance_name => 'CustomButton_1'}
