@@ -1,31 +1,156 @@
-.timeline-ether-marker-bottom {width:5em; height:1.5em; border-left:1px solid #000; padding-left:2px; color:#000;opacity:10;}
-.timeline-default {font-family: Trebuchet MS, Helvetica, Arial, sans serif;font-size: 8pt;border: 1px solid #aaa;background-color: #000;}
-.timeline-ether-marker-bottom-emphasized {width:5em; height:2em; border-left:1px solid #aaa; padding-left:2px; color:black;}
-.timeline-ether-marker-top {width:5em; height:1.5em; border-left:1px solid #aaa; padding-left:2px; color:#aaa;}
-.timeline-ether-marker-top-emphasized {width:5em; height:2em; border-left:1px solid #aaa; padding-left:2px; color:black;}
-.timeline-ether-marker-right {width:5em;height:1.5em;border-top:1px solid #aaa;padding-top:2px; color:#aaa;}
-.timeline-ether-marker-right-emphasized {width:7em; height:1.5em; border-top:1px solid #aaa; padding-top:2px; color:black;}
-.timeline-ether-marker-left {width:5em; height:1.5em; border-top:1px solid #aaa; padding-top:2px; color:#aaa;}
-.timeline-ether-marker-left-emphasized {width:7em; height:1.5em; border-top:1px solid #aaa; padding-top:2px; color:black;}
-.timeline-duration-event {position: absolute;overflow: hidden;border: 1px solid blue;}
-.timeline-instant-event2 {position: absolute;overflow: hidden;border-left: 1px solid blue;padding-left: 2px;}
-.timeline-instant-event {position: absolute;overflow: hidden;}
-.timeline-event-bubble-title {font-weight: bold;border-bottom: 1px solid #888;margin-bottom: 0.5em;}
-.timeline-event-bubble-body {}
-.timeline-event-bubble-wiki {margin: 0.5em;text-align: right;color: #A0A040;}
-.timeline-event-bubble-wiki a {color:#A0A040;}
-.timeline-event-bubble-time {color:#aaa;}
-.timeline-event-bubble-image {float: right;padding-left: 5px;padding-bottom: 5px;}
-.timeline-container {position: relative;overflow: hidden;}
-.timeline-copyright {position: absolute;bottom: 0px;left: 0px;z-index: 1000;cursor: pointer;}
-.timeline-message-container {position:absolute;top:30%;left:35%;right:35%;z-index: 1000;display: none;}
-.timeline-message {font-size:120%;font-weight:bold;text-align:center;}
-.timeline-message img {vertical-align: middle;}
-.timeline-band {position: absolute;background: #eee;z-index: 10;}
-.timeline-band-inner {position: relative;width: 100%;height: 100%;}
-.timeline-band-input {position:absolute;width: 1em;height:1em;overflow:hidden;z-index:0;}
-.timeline-band-input input{width:0;}
-.timeline-band-layer {position:absolute;width: 100%;height: 100%;}
-.timeline-band-layer-inner {position: relative;width: 100%;height: 100%;}
-
-
+.timeline-ether-marker-bottom {
+    width: 5em !important;
+    height: 1.5em !important;
+    border-left: 1px solid #000 !important;
+    padding-left: 2px !important;
+    color: #000 !important;
+    opacity: 10 !important;
+}
+.timeline-default {
+    font-family: Trebuchet MS, Helvetica, Arial, sans serif !important;
+    font-size: 8pt !important;
+    border: 1px solid #aaa !important;
+    background-color: #000 !important;
+}
+.timeline-ether-marker-bottom-emphasized {
+    width: 5em !important;
+    height: 2em !important;
+    border-left: 1px solid #aaa !important;
+    padding-left: 2px !important;
+    color: black !important;
+}
+.timeline-ether-marker-top {
+    width: 5em !important;
+    height: 1.5em !important;
+    border-left: 1px solid #aaa !important;
+    padding-left: 2px !important;
+    color: #aaa !important;
+}
+.timeline-ether-marker-top-emphasized {
+    width: 5em !important;
+    height: 2em !important;
+    border-left: 1px solid #aaa !important;
+    padding-left: 2px !important;
+    color: black !important;
+}
+.timeline-ether-marker-right {
+    width: 5em !important;
+    height: 1.5em !important;
+    border-top: 1px solid #aaa !important;
+    padding-top: 2px !important;
+    color: #aaa !important;
+}
+.timeline-ether-marker-right-emphasized {
+    width: 7em !important;
+    height: 1.5em !important;
+    border-top: 1px solid #aaa !important;
+    padding-top: 2px !important;
+    color: black !important;
+}
+.timeline-ether-marker-left {
+    width: 5em !important;
+    height: 1.5em !important;
+    border-top: 1px solid #aaa !important;
+    padding-top: 2px !important;
+    color: #aaa !important;
+}
+.timeline-ether-marker-left-emphasized {
+    width: 7em !important;
+    height: 1.5em !important;
+    border-top: 1px solid #aaa !important;
+    padding-top: 2px !important;
+    color: black !important;
+}
+.timeline-duration-event {
+    position: absolute !important;
+    overflow: hidden !important;
+    border: 1px solid blue !important;
+}
+.timeline-instant-event2 {
+    position: absolute !important;
+    overflow: hidden !important;
+    border-left: 1px solid blue !important;
+    padding-left: 2px !important;
+}
+.timeline-instant-event {
+    position: absolute !important;
+    overflow: hidden !important;
+}
+.timeline-event-bubble-title {
+    font-weight: bold !important;
+    border-bottom: 1px solid #888 !important;
+    margin-bottom: 0.5em !important;
+}
+.timeline-event-bubble-body {} .timeline-event-bubble-wiki {
+    margin: 0.5em !important;
+    text-align: right !important;
+    color: #A0A040 !important;
+}
+.timeline-event-bubble-wiki a {
+    color: #A0A040 !important;
+}
+.timeline-event-bubble-time {
+    color: #aaa !important;
+}
+.timeline-event-bubble-image {
+    float: right !important;
+    padding-left: 5px !important;
+    padding-bottom: 5px !important;
+}
+.timeline-container {
+    position: relative !important;
+    overflow: hidden !important;
+}
+.timeline-copyright {
+    position: absolute !important;
+    bottom: 0px !important;
+    left: 0px !important;
+    z-index: 1000 !important;
+    cursor: pointer !important;
+}
+.timeline-message-container {
+    position: absolute !important;
+    top: 30% !important;
+    left: 35% !important;
+    right: 35% !important;
+    z-index: 1000 !important;
+    display: none !important;
+}
+.timeline-message {
+    font-size: 120% !important;
+    font-weight: bold !important;
+    text-align: center !important;
+}
+.timeline-message img {
+    vertical-align: middle !important;
+}
+.timeline-band {
+    position: absolute !important;
+    background: #eee !important;
+    z-index: 10 !important;
+}
+.timeline-band-inner {
+    position: relative !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+.timeline-band-input {
+    position: absolute !important;
+    width: 1em !important;
+    height: 1em !important;
+    overflow: hidden !important;
+    z-index: 0 !important;
+}
+.timeline-band-input input {
+    width: 0 !important;
+}
+.timeline-band-layer {
+    position: absolute !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+.timeline-band-layer-inner {
+    position: relative !important;
+    width: 100% !important;
+    height: 100% !important;
+}
