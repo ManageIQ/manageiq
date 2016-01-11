@@ -190,11 +190,6 @@ describe ApplicationHelper do
       }
     end
 
-    def setup_x_tree_history
-      @sb = {:history     => {:testing => %w(some thing to test with)},
-             :active_tree => :testing}
-    end
-
     %w(
       view_grid
       view_tile
@@ -222,26 +217,6 @@ describe ApplicationHelper do
     it "when with show_summary and explorer" do
       @id = "show_summary"
       @explorer = true
-      expect(subject).to be_truthy
-    end
-
-    it "when with history_1" do
-      setup_x_tree_history
-      @id = "history_1"
-      expect(subject).to be_falsey
-    end
-
-    %w(0 1 2 3 4).each do |n|
-      it "when with existing history_#{n}" do
-        setup_x_tree_history
-        @id = "history_#{n}"
-        expect(subject).to be_falsey
-      end
-    end
-
-    it "when not history_1 and the tree history not exist" do
-      setup_x_tree_history
-      @id = "history_10"
       expect(subject).to be_truthy
     end
 
@@ -1722,13 +1697,6 @@ describe ApplicationHelper do
         @gtl_type = g
         expect(build_toolbar_disable_button("view_#{g}")).to be_truthy
       end
-    end
-
-    it "when with 'history_1' and x_tree_history.length < 2" do
-      # setup for x_tree_history
-      @sb = {:history     => {:testing => %w(something)},
-             :active_tree => :testing}
-      expect(build_toolbar_disable_button('history_1')).to be_truthy
     end
 
     ['button_add', 'button_save', 'button_reset'].each do |b|
