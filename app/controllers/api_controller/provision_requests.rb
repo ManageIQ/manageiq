@@ -21,17 +21,13 @@ class ApiController
 
     def deny_resource_provision_requests(type, id, data)
       provreq = resource_search(id, type, collection_class(:provision_requests))
-      raise BadRequestError, "A reason is required for this action" if data['reason'].nil?
-      reason = data['reason']
-      provreq.deny(@auth_user_obj.userid, reason)
+      provreq.deny(@auth_user, data['reason'])
       provreq
     end
 
     def approve_resource_provision_requests(type, id, data)
       provreq = resource_search(id, type, collection_class(:provision_requests))
-      raise BadRequestError, "A reason is required for this action" if data['reason'].nil?
-      reason = data['reason']
-      provreq.approve(@auth_user_obj.userid, reason)
+      provreq.approve(@auth_user, data['reason'])
       provreq
     end
   end
