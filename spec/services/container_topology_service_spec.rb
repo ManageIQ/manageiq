@@ -5,10 +5,6 @@ describe ContainerTopologyService do
   let(:container_topology_service) { described_class.new(nil) }
   let(:long_id) { "3572afee-3a41-11e5-a79a-001a4a231290_ruby-helloworld-database_openshift\n/mysql-55-centos7:latest" }
 
-  def icon(f)
-    "/images/icons/new/#{f}.png"
-  end
-
   describe "#build_kinds" do
     it "creates the expected number of entity types" do
       allow(container_topology_service).to receive(:retrieve_providers).and_return([FactoryGirl.create(:ems_kubernetes)])
@@ -46,8 +42,7 @@ describe ContainerTopologyService do
                                           :status       => "Unknown",
                                           :kind         => "ContainerManager",
                                           :display_kind => "Openshift",
-                                          :miq_id       => ems_openshift.id,
-                                          :icon         => icon('vendor-openshift')})
+                                          :miq_id       => ems_openshift.id})
 
     end
 
@@ -80,56 +75,49 @@ describe ContainerTopologyService do
                                                    :status       => "Error",
                                                    :kind         => "ContainerManager",
                                                    :display_kind => "Kubernetes",
-                                                   :miq_id       => ems_kube.id,
-                                                   :icon         => icon('vendor-kubernetes')},
+                                                   :miq_id       => ems_kube.id},
 
         "905c90ba-3e00-11e5-a0d2-18037327aaeb" => {:id           => container_node.ems_ref,
                                                    :name         => container_node.name,
                                                    :status       => "Ready",
                                                    :kind         => "ContainerNode",
                                                    :display_kind => "Node",
-                                                   :miq_id       => container_node.id,
-                                                   :icon         => icon('container_node')},
+                                                   :miq_id       => container_node.id},
 
         "8f8ca74c-3a41-11e5-a79a-001a4a231290" => {:id           => container_replicator.ems_ref,
                                                    :name         => container_replicator.name,
                                                    :status       => "OK",
                                                    :kind         => "ContainerReplicator",
                                                    :display_kind => "Replicator",
-                                                   :miq_id       => container_replicator.id,
-                                                   :icon         => icon('container_replicator')},
+                                                   :miq_id       => container_replicator.id},
 
         "95e49048-3e00-11e5-a0d2-18037327aaeb" => {:id           => container_service.ems_ref,
                                                    :name         => container_service.name,
                                                    :status       => "Unknown",
                                                    :kind         => "ContainerService",
                                                    :display_kind => "Service",
-                                                   :miq_id       => container_service.id,
-                                                   :icon         => icon('container_service')},
+                                                   :miq_id       => container_service.id},
 
         "96c35ccd-3e00-11e5-a0d2-18037327aaeb" => {:id           => container_group.ems_ref,
                                                    :name         => container_group.name,
                                                    :status       => "Running",
                                                    :kind         => "ContainerGroup",
                                                    :display_kind => "Pod",
-                                                   :miq_id       => container_group.id,
-                                                   :icon         => icon('container_group')},
+                                                   :miq_id       => container_group.id},
 
         "ab5za74c-3a41-11e5-a79a-001a4a231290" => {:id           => container_route.ems_ref,
                                                    :name         => container_route.name,
                                                    :status       => "Unknown",
                                                    :kind         => "ContainerRoute",
                                                    :display_kind => "Route",
-                                                   :miq_id       => container_route.id,
-                                                   :icon         => icon('container_route')},
+                                                   :miq_id       => container_route.id},
 
         long_id                                => {:id           => container.ems_ref,
                                                    :name         => container.name,
                                                    :status       => "Running",
                                                    :kind         => "Container",
                                                    :display_kind => "Container",
-                                                   :miq_id       => container.id,
-                                                   :icon         => icon('container')},
+                                                   :miq_id       => container.id},
 
         "558d9a08-7b13-11e5-8546-129aa6621998" => {:id           => vm_rhev.uid_ems,
                                                    :name         => vm_rhev.name,
@@ -137,7 +125,6 @@ describe ContainerTopologyService do
                                                    :kind         => "Vm",
                                                    :display_kind => "VM",
                                                    :miq_id       => vm_rhev.id,
-                                                   :icon         => icon('vm'),
                                                    :provider     => ems_rhev.name},
 
         "abcd9a08-7b13-11e5-8546-129aa6621999" => {:id           => host.uid_ems,
@@ -146,7 +133,6 @@ describe ContainerTopologyService do
                                                    :kind         => "Host",
                                                    :display_kind => "Host",
                                                    :miq_id       => host.id,
-                                                   :icon         => icon('host'),
                                                    :provider     => ems_rhev.name}
       )
 
@@ -180,32 +166,28 @@ describe ContainerTopologyService do
                                                    :status       => "Ready",
                                                    :kind         => "ContainerNode",
                                                    :display_kind => "Node",
-                                                   :miq_id       => container_node.id,
-                                                   :icon         => icon('container_node')},
+                                                   :miq_id       => container_node.id},
 
         "95e49048-3e00-11e5-a0d2-18037327aaeb" => {:id           => container_service.ems_ref,
                                                    :name         => container_service.name,
                                                    :status       => "Unknown",
                                                    :kind         => "ContainerService",
                                                    :display_kind => "Service",
-                                                   :miq_id       => container_service.id,
-                                                   :icon         => icon('container_service')},
+                                                   :miq_id       => container_service.id},
 
         "96c35ccd-3e00-11e5-a0d2-18037327aaeb" => {:id           => container_group.ems_ref,
                                                    :name         => container_group.name,
                                                    :status       => "Running",
                                                    :kind         => "ContainerGroup",
                                                    :display_kind => "Pod",
-                                                   :miq_id       => container_group.id,
-                                                   :icon         => icon('container_group')},
+                                                   :miq_id       => container_group.id},
 
         long_id                                => {:id           => container.ems_ref,
                                                    :name         => container.name,
                                                    :status       => "Running",
                                                    :kind         => "Container",
                                                    :display_kind => "Container",
-                                                   :miq_id       => container.id,
-                                                   :icon         => icon('container')},
+                                                   :miq_id       => container.id},
 
         "558d9a08-7b13-11e5-8546-129aa6621998" => {:id           => vm_rhev.uid_ems,
                                                    :name         => vm_rhev.name,
@@ -213,7 +195,6 @@ describe ContainerTopologyService do
                                                    :kind         => "Vm",
                                                    :display_kind => "VM",
                                                    :miq_id       => vm_rhev.id,
-                                                   :icon         => icon('vm'),
                                                    :provider     => ems_rhev.name},
 
         ems_kube.id.to_s                       => {:id           => ems_kube.id.to_s,
@@ -221,8 +202,7 @@ describe ContainerTopologyService do
                                                    :status       => "Error",
                                                    :kind         => "ContainerManager",
                                                    :display_kind => "Kubernetes",
-                                                   :miq_id       => ems_kube.id,
-                                                   :icon         => icon('vendor-kubernetes')}
+                                                   :miq_id       => ems_kube.id}
       )
 
       expect(subject[:relations].size).to eq(5)
