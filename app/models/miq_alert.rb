@@ -249,12 +249,25 @@ class MiqAlert < ActiveRecord::Base
   end
 
   def invoke_automate(target, inputs)
-    inputs = {:miq_alert_description => description, :miq_alert_id => id, :alert_guid => guid}
     event  = options.fetch_path(:notifications, :automate, :event_name)
+    event_obj = CustomEvent.create(
+      :event_type => event,
+      :target     => target,
+      :source     => 'Alert'
+    )
+
+    inputs = {
+      :miq_alert_description      => description,
+      :miq_alert_id               => id,
+      :alert_guid                 => guid,
+      'EventStream::event_stream' => event_obj.id,
+      :event_stream_id            => event_obj.id
+    }
+
     MiqQueue.put(
-      :class_name  => "MiqEvent",
+      :class_name  => "MiqAeEvent",
       :method_name => "raise_evm_event",
-      :args        => [[target.class.name, target.id], event, inputs],
+      :args        => [event, [target.class.name, target.id], inputs],
       :role        => 'automate',
       :priority    => MiqQueue::HIGH_PRIORITY,
       :zone        => target.respond_to?(:my_zone) ? target.my_zone : MiqServer.my_zone
