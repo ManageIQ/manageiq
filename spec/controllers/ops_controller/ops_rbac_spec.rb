@@ -29,6 +29,18 @@ describe OpsController do
         expect(response).to render_template('ops/_rbac_details_tab')
         expect(response.status).to eq(200)
       end
+
+      it "does not display tenant groups in the details paged" do
+        tenant = FactoryGirl.create(:tenant, :parent => Tenant.root_tenant)
+
+        session[:sandboxes] = {"ops" => {:active_tree => :rbac_tree}}
+        post :tree_select, :id => "tn-#{controller.to_cid(tenant.id)}", :format => :js
+
+        expect(response).to render_template('ops/_rbac_details_tab')
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include('View this Group')
+      end
+
       it "renders quota usage table for tenant" do
         tenant = FactoryGirl.create(:tenant, :parent => Tenant.root_tenant)
         tenant.set_quotas(:cpu_allocated => {:value => 1024},
