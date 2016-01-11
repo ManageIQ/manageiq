@@ -31,6 +31,8 @@ class MiqEvent < EventStream
     event = normalize_event(raw_event.to_s)
     if event == 'unknown' && target.class.base_class.in?(SUPPORTED_POLICY_AND_ALERT_CLASSES)
       _log.warn("Event #{raw_event} for class [#{target.class.name}] id [#{target.id}] was not raised: #{raw_event} is not defined in MiqEventDefinition")
+      _log.info("Alert for Event [#{raw_event}]")
+      MiqAlert.evaluate_alerts(target, raw_event, inputs) if MiqAlert.event_alertable?(raw_event)
       return
     end
 
