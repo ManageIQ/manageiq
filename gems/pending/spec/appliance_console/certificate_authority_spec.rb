@@ -51,7 +51,7 @@ describe ApplianceConsole::CertificateAuthority do
 
       expect(ApplianceConsole::InternalDatabaseConfiguration).to receive(:new)
         .and_return(double("config", :activate => true, :configure_postgres => true))
-      PostgresAdmin.stub(:service_name => "postgresql")
+      allow(PostgresAdmin).to receive_messages(:service_name => "postgresql")
       expect(LinuxAdmin::Service).to receive(:new).and_return(double("Service", :restart => true))
       expect(FileUtils).to receive(:chmod).with(0644, anything)
 

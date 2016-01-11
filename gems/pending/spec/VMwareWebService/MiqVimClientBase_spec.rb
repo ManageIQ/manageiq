@@ -5,7 +5,7 @@ describe MiqVimClientBase do
   before do
     @logger  = $vim_log
     $vim_log = double.as_null_object
-    described_class.any_instance.stub(:retrieveServiceContent => double.as_null_object)
+    allow_any_instance_of(described_class).to receive_messages(:retrieveServiceContent => double.as_null_object)
   end
 
   after do

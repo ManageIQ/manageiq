@@ -108,7 +108,7 @@ describe ApplianceConsole::DatabaseConfiguration do
 
   context "#validated" do
     it "normal case" do
-      @config.stub(:validate! => "truthy_object")
+      allow(@config).to receive_messages(:validate! => "truthy_object")
       expect(@config.validated).to be_truthy
     end
 
@@ -122,12 +122,12 @@ describe ApplianceConsole::DatabaseConfiguration do
 
   context "#create_region" do
     it "normal case" do
-      @config.stub(:log_and_feedback => :some_object)
+      allow(@config).to receive_messages(:log_and_feedback => :some_object)
       expect(@config.create_region).to be_truthy
     end
 
     it "failure" do
-      @config.stub(:log_and_feedback => nil)
+      allow(@config).to receive_messages(:log_and_feedback => nil)
       expect(@config.create_region).to be_falsey
     end
   end
@@ -312,7 +312,7 @@ describe ApplianceConsole::DatabaseConfiguration do
           "pools"    => "5",
         }
       }
-      described_class.stub(:load_current => @settings)
+      allow(described_class).to receive_messages(:load_current => @settings)
     end
 
     context "#merged_settings" do
@@ -336,28 +336,28 @@ describe ApplianceConsole::DatabaseConfiguration do
 
     context "#activate" do
       it "normal case" do
-        @config.stub(:validated => true)
+        allow(@config).to receive_messages(:validated => true)
         expect(@config).to receive(:create_or_join_region).and_return(true)
 
-        @config.stub(:merged_settings => @settings)
+        allow(@config).to receive_messages(:merged_settings => @settings)
         expect(@config).to receive(:do_save).with(@settings)
         expect(@config.activate).to be_truthy
       end
 
       it "doesn't save invalid settings" do
-        @config.stub(:validated => false)
+        allow(@config).to receive_messages(:validated => false)
         expect(@config).to receive(:do_save).never
         expect(@config.activate).to be_falsey
       end
 
       context "reverts on region failure" do
         before do
-          @config.stub(:validated => true)
-          @config.stub(:create_or_join_region => false)
+          allow(@config).to receive_messages(:validated => true)
+          allow(@config).to receive_messages(:create_or_join_region => false)
 
           new_settings = {"production" => @settings["production"].dup}
           new_settings["production"]["host"] = "new_host"
-          @config.stub(:merged_settings => new_settings)
+          allow(@config).to receive_messages(:merged_settings => new_settings)
           expect(@config).to receive(:do_save).with("production" => hash_including(new_settings["production"].except("password")))
           expect(@config).to receive(:do_save).with("production" => hash_including(@settings["production"].except("password")))
         end

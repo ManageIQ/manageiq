@@ -23,7 +23,7 @@ describe ApplianceConsole::InternalDatabaseConfiguration do
   context "postgresql service" do
     it "#start_postgres (private)" do
       allow(LinuxAdmin::Service).to receive(:new).and_return(double(:service).as_null_object)
-      PostgresAdmin.stub(:service_name => 'postgresql')
+      allow(PostgresAdmin).to receive_messages(:service_name => 'postgresql')
       expect(@config).to receive(:block_until_postgres_accepts_connections)
       @config.send(:start_postgres)
     end
@@ -53,21 +53,21 @@ describe ApplianceConsole::InternalDatabaseConfiguration do
   end
 
   it ".postgresql_template" do
-    PostgresAdmin.stub(:data_directory     => Pathname.new("/var/lib/pgsql/data"))
-    PostgresAdmin.stub(:template_directory => Pathname.new("/opt/manageiq/manageiq-appliance/TEMPLATE"))
+    allow(PostgresAdmin).to receive_messages(:data_directory     => Pathname.new("/var/lib/pgsql/data"))
+    allow(PostgresAdmin).to receive_messages(:template_directory => Pathname.new("/opt/manageiq/manageiq-appliance/TEMPLATE"))
     expect(described_class.postgresql_template.to_s).to end_with("TEMPLATE/var/lib/pgsql/data")
   end
 
   context "#update_fstab (private)" do
     before do
-      PostgresAdmin.stub(:data_directory => "/var/lib/pgsql")
+      allow(PostgresAdmin).to receive_messages(:data_directory => "/var/lib/pgsql")
     end
 
     it "adds database disk entry" do
       fstab = double
-      fstab.stub(:entries => [])
+      allow(fstab).to receive_messages(:entries => [])
       expect(fstab).to receive(:write!)
-      LinuxAdmin::FSTab.stub(:instance => fstab)
+      allow(LinuxAdmin::FSTab).to receive_messages(:instance => fstab)
       @config.instance_variable_set(:@logical_volume, double(:path => "/dev/vg/lv"))
       expect(fstab.entries.count).to eq(0)
 
@@ -78,9 +78,9 @@ describe ApplianceConsole::InternalDatabaseConfiguration do
 
     it "skips update if mount point is in fstab" do
       fstab = double
-      fstab.stub(:entries => [double(:mount_point => PostgresAdmin.data_directory)])
+      allow(fstab).to receive_messages(:entries => [double(:mount_point => PostgresAdmin.data_directory)])
       expect(fstab).to receive(:write!).never
-      LinuxAdmin::FSTab.stub(:instance => fstab)
+      allow(LinuxAdmin::FSTab).to receive_messages(:instance => fstab)
       expect(fstab.entries.count).to eq(1)
 
       @config.send(:update_fstab)

@@ -368,7 +368,7 @@ describe ApplianceConsole::Cli do
 
   context "#disk_from_string" do
     before do
-      LinuxAdmin::Disk.stub(:local => [
+      allow(LinuxAdmin::Disk).to receive_messages(:local => [
         double(:path => "/dev/a", :partitions => %w(currently used)),
         double(:path => "/dev/b", :partitions => %w())
       ])

@@ -153,7 +153,7 @@ describe MiqApache::Conf do
 
   context ".create_conf_file" do
     it "with existing file should raise error" do
-      File.stub(:exist? => true)
+      allow(File).to receive_messages(:exist? => true)
       expect { described_class.create_conf_file("xxx", []) }.to raise_error(MiqApache::ConfFileAlreadyExists)
     end
 
@@ -206,13 +206,13 @@ My test
 
 </VirtualHost>
 EOF
-      File.stub(:exist? => false)
+      allow(File).to receive_messages(:exist? => false)
       allow(FileUtils).to receive(:touch)
-      File.stub(:file? => true)
-      File.stub(:read => "")
+      allow(File).to receive_messages(:file? => true)
+      allow(File).to receive_messages(:read => "")
       allow(FileUtils).to receive(:cp)
       expect(File).to receive(:write).with(conf_file, expected_output)
-      MiqApache::Control.stub(:config_ok? => true)
+      allow(MiqApache::Control).to receive_messages(:config_ok? => true)
       expect(described_class.create_conf_file(conf_file, content_in)).to be_truthy
     end
 
@@ -226,10 +226,10 @@ EOF
         },
       ]
 
-      File.stub(:exist? => false)
+      allow(File).to receive_messages(:exist? => false)
       allow(FileUtils).to receive(:touch)
-      File.stub(:file? => true)
-      File.stub(:read => "")
+      allow(File).to receive_messages(:file? => true)
+      allow(File).to receive_messages(:read => "")
       expect { described_class.create_conf_file(conf_file, content_in) }.to raise_error(ArgumentError, ":directive key is required")
     end
   end
