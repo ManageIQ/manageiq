@@ -59,7 +59,7 @@
               %i{:class => sorticon}
   %tbody
     - grid_hash[:rows].each do |row|
-      %tr{:onclick => "miqRowClick('#{j row[:id]}', #{raw row_url}, #{j row_url_ajax.to_s}); return false;"}
+      %tr{:onclick => "miqRowClick('#{j row[:id]}', #{row_url}, #{j row_url_ajax.to_s}); return false;"}
         - row[:cells].each do |cell|
           -# double {{}} to work around hamlit issue #28
           %td{{:onclick => (cell[:is_checkbox] || cell[:is_button]) ? "event.stopPropagation()" : false}}
