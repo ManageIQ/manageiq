@@ -22,13 +22,17 @@ class ApiController
     def deny_resource_provision_requests(type, id, data)
       provreq = resource_search(id, type, collection_class(:provision_requests))
       provreq.deny(@auth_user, data['reason'])
-      provreq
+      action_result(true, 'Provision request denied')
+    rescue => err
+      action_result(false, err.to_s)
     end
 
     def approve_resource_provision_requests(type, id, data)
       provreq = resource_search(id, type, collection_class(:provision_requests))
       provreq.approve(@auth_user, data['reason'])
-      provreq
+      action_result(true, 'Provision request approved')
+    rescue => err
+      action_result(false, err.to_s)
     end
   end
 end
