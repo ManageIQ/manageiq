@@ -106,6 +106,11 @@ module Vmdb
       require 'vmdb_helper'
     end
 
+    initializer :load_vmdb_settings, :before => :load_config_initializers do
+      require 'vmdb/settings'
+      Vmdb::Settings.init
+    end
+
     config.after_initialize do
       Vmdb::Initializer.init
       ActiveRecord::Base.connection_pool.release_connection
