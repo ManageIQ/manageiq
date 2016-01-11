@@ -1078,11 +1078,10 @@ module OpsController::OpsRbac
     end
 
     @edit[:projects_tenants] = []
-    all_tenants = Tenant.all_tenants
-    all_projects = Tenant.all_projects
+    all_tenants, all_projects = Tenant.tenant_and_project_names
     @edit[:projects_tenants].push(["", [["<Choose a Project/Tentant>", :selected => "<Choose a Project/Tentant>", :disabled => "<Choose a Project/Tentant>", :style => 'display:none']]])
-    @edit[:projects_tenants].push(["Projects", all_projects.sort_by(&:name).collect { |tenant| [tenant.name, tenant.id] }]) unless all_projects.blank?
-    @edit[:projects_tenants].push(["Tenants", all_tenants.sort_by(&:name).collect { |tenant| [tenant.name, tenant.id] }]) unless all_tenants.blank?
+    @edit[:projects_tenants].push(["Projects", all_projects]) unless all_projects.blank?
+    @edit[:projects_tenants].push(["Tenants", all_tenants]) unless all_tenants.blank?
     @edit[:new][:group_tenant] = @group.tenant_id
 
     @edit[:current] = copy_hash(@edit[:new])
