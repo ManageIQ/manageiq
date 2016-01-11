@@ -35,6 +35,7 @@
                        :class   => "btn btn-default",
                        :alt     => t = _("Order this Service"),
                        :title   => t,
+                       :disabled => !@record.template_valid,
                        :onclick => "miqAjaxButton('#{url_for(:action => "svc_catalog_provision",
                                                              :id     => @record.id,
                                                            :button => "order")}');")
