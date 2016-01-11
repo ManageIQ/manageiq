@@ -11,10 +11,11 @@ class BottleneckEvent < ActiveRecord::Base
   end
 
   def self.generate_future_events(obj)
-    _log.info("Generating future bottleneck events for: [#{obj.class} - #{obj.name}]...")
+    log_message_uniq_prefix = "Generating future bottleneck events for: [#{obj.class} - #{obj.name}]..."
+    _log.info(log_message_uniq_prefix)
     last = last_created_on(obj)
     if last && last >= 24.hours.ago.utc
-      _log.info("Generating future bottleneck events for: [#{obj.class} - #{obj.name}]... Skipped, last creation [#{last}] was less than 24 hours ago")
+      _log.info("#{log_message_uniq_prefix} Skipped, last creation [#{last}] was less than 24 hours ago")
       return
     end
     dels = delete_future_events_for_obj(obj)
@@ -31,11 +32,14 @@ class BottleneckEvent < ActiveRecord::Base
       event.timestamp     = result.delete(:timestamp)
       event.context_data  = e[:definition].merge(result)
       event.message       = event.substitute(event.message)
-      event.save
-      adds += 1
+      if event.save
+        adds += 1
+      else
+        _log.warn("#{log_message_uniq_prefix} failed with '#{event.errors.full_messages.join(', ')}'")
+      end
     end
 
-    _log.info("Generating future bottleneck events for: [#{obj.class} - #{obj.name}]... Complete - Added #{adds} / Deleted #{dels}")
+    _log.info("#{log_message_uniq_prefix} Complete - Added #{adds} / Deleted #{dels}")
   end
 
   def self.calculate_future_event(obj, options)
