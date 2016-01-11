@@ -180,7 +180,8 @@ Timeline.Platform = new Object();
          */
         if (bundle) {
             includeJavascriptFiles(Timeline.urlPrefix, [ "bundle.js" ]);
-            includeCssFiles(Timeline.urlPrefix, [ "../../../assets/miq_timeline.css" ]);
+            // Include this through the asset pipeline
+            // includeCssFiles(Timeline.urlPrefix, [ "../../../assets/miq_timeline.css" ]);
         } else {
             includeJavascriptFiles(Timeline.urlPrefix + "scripts/", javascriptFiles);
             includeCssFiles(Timeline.urlPrefix + "styles/", cssFiles);
