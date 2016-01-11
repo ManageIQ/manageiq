@@ -97,8 +97,26 @@ angular.module('miq.util').factory('dashboardUtilsFactory', function() {
   var parseDate = function(date) {
     myDate = Date.parse(date);
     return isNaN(myDate) ? date : myDate
-  }
+  };
+  var iconClassForProvider = function(provider) {
+    switch (provider) {
+      case "openshift":
+      case "openshift_enterprise":
+        iconClass = "pficon pficon-openshift";
+        break;
+      case "kubernetes":
+        iconClass = "pficon pficon-kubernetes";
+        break;
+      case "atomic":
+        iconClass = "product-vendor-atomic";
+        break;
+      case "atomic_enterprise":
+        iconClass = "product-vendor-atomic-enterprise";
+        break;
+    }
 
+    return iconClass;
+  };
   return {
     parseDate: parseDate,
     createProvidersStatus: createProvidersStatus,
@@ -110,6 +128,7 @@ angular.module('miq.util').factory('dashboardUtilsFactory', function() {
     createServicesStatus: createServicesStatus,
     createImagesStatus: createImagesStatus,
     createRoutesStatus: createRoutesStatus,
-    updateStatus: updateStatus
+    updateStatus: updateStatus,
+    iconClassForProvider: iconClassForProvider
   };
 });

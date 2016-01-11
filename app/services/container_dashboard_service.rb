@@ -96,9 +96,7 @@ class ContainerDashboardService
 
   def build_provider_status(ui_type)
     {
-      :iconClass    => "pficon pficon-#{ui_type}",
-      :id           => ui_type,
-      :providerType => ui_type.capitalize,
+      :providerType => ui_type,
       :count        => 0
     }
   end
