@@ -43,11 +43,6 @@ RSpec.configure do |config|
 
   # == RSPEC 3 UPGRADE ==
   # TODO: These config options should be reevaluated after RSpec 3 conversion.
-  #
-  # RSpec::Core::ExampleGroup#example is removed in RSpec 3
-  # Can't currently update the code at the call site (capybara),
-  # so we're temporarily adding the method for now
-  config.expose_current_running_example_as :example
 
   config.mock_with :rspec do |mocks|
     # In RSpec 3, `any_instance` implementation blocks will be yielded the receiving
