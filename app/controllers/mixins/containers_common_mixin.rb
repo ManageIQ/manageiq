@@ -6,6 +6,10 @@ module ContainersCommonMixin
   end
 
   def show
+    # fix breadcrumbs - remove displaying 'topology' when navigating to any container related entity summary page
+    if @breadcrumbs.present? && (@breadcrumbs.last[:name].eql? 'Topology')
+      @breadcrumbs.clear
+    end
     @display = params[:display] || "main" unless control_selected?
     @lastaction = "show"
     @showtype = "main"
