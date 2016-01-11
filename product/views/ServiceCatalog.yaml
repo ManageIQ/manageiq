@@ -28,6 +28,9 @@ include:
   picture:
     columns:
     - id
+  tenant:
+    columns:
+    - name
 
 # Included tables and columns for query performance
 include_for_find:
@@ -36,12 +39,14 @@ include_for_find:
 col_order:
 - name
 - description
+- tenant.name
 #- provision_cost
 
 # Column titles, in order
 headers:
 - Name
 - Description
+- Tenant
 #- Cost
 
 # Condition(s) string for the SQL query
