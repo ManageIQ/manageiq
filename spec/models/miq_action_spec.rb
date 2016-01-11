@@ -3,7 +3,10 @@ require "spec_helper"
 describe MiqAction do
   context "#action_custom_automation" do
     before(:each) do
-      @vm   = FactoryGirl.create(:vm_vmware)
+      tenant = FactoryGirl.create(:tenant)
+      group  = FactoryGirl.create(:miq_group, :tenant => tenant)
+      @user = FactoryGirl.create(:user, :userid => "test", :miq_groups => [group])
+      @vm   = FactoryGirl.create(:vm_vmware, :evm_owner => @user, :miq_group => group)
       FactoryGirl.create(:miq_action, :name => "custom_automation")
       @action = MiqAction.find_by_name("custom_automation")
       expect(@action).not_to be_nil
@@ -11,6 +14,9 @@ describe MiqAction do
       @args = {
         :object_type      => @vm.class.base_class.name,
         :object_id        => @vm.id,
+        :user_id          => @vm.evm_owner.id,
+        :miq_group_id     => @vm.miq_group.id,
+        :tenant_id        => @vm.tenant.id,
         :attrs            => {:request => "test_custom_automation"},
         :instance_name    => "REQUEST",
         :automate_message => "create"
