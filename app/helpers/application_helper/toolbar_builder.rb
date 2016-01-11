@@ -119,7 +119,7 @@ class ApplicationHelper::ToolbarBuilder
     dis_title = build_toolbar_disable_button(button['id'])
     if dis_title
       button["enabled"] = "false"
-      button["title"]   = dis_title
+      button["title"]   = dis_title if dis_title.kind_of? String
     end
     button
   end
