@@ -40,19 +40,6 @@ RSpec.configure do |config|
   # `post` methods in spec/controllers, without specifying type
   config.infer_spec_type_from_file_location!
 
-  # == RSPEC 3 UPGRADE ==
-  # TODO: These config options should be reevaluated after RSpec 3 conversion.
-
-  config.mock_with :rspec do |mocks|
-    # Monkey-patch Marshal.dump to enable dumping of mocked or stubbed objects. By
-    # default this will not work since RSpec mocks works by adding singleton methods
-    # that cannot be serialized. This patch removes these singleton methods before
-    # serialization. Potentially but unlikely to be removed post upgrade.
-    mocks.patch_marshal_to_support_partial_doubles = true
-  end
-
-  # =====================
-
   # config.before(:all) do
   #   EvmSpecHelper.log_ruby_object_usage
   # end
