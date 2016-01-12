@@ -10,7 +10,7 @@ module MiqServer::StatusManagement
       # Ensure the hash only contains the values we want to store in the table
       pinfo.keep_if { |k, _v| MiqWorker::PROCESS_INFO_FIELDS.include?(k) }
       pinfo[:os_priority] = pinfo.delete(:priority)
-      my_server.update_attributes(pinfo)
+      my_server.update_attributes!(pinfo)
     end
 
     def log_status
