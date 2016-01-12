@@ -32,12 +32,20 @@ describe DuplicateBlocker do
         handler.progress_threshold  = 3
       end
 
-      dedup_instance_method :target_method
-      dedup_class_method :target_class_method
+      dedup_instance_method :target_method, 'target_method'
+      dedup_class_method :target_class_method, 'target_class_method'
     end.new
 
     @dedup_handler = @test_object.class.dedup_handler
     @base_time = Time.now
+  end
+
+  it 'should register the same instance method only once' do
+    expect(@test_object.class.dedupped_instance_methods).to eq([:target_method])
+  end
+
+  it 'should register the same class method only once' do
+    expect(@test_object.class.dedupped_class_methods).to eq([:target_class_method])
   end
 
   it 'should allow the first few target method calls to pass even though they arrive with short intervals' do
