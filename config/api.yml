@@ -313,7 +313,7 @@
         :identifier: host_protect
   :instances:
     :description: Instances
-    :klass: Vm
+    :klass: ManageIQ::Providers::CloudManager::Vm
     :methods: *70174834085860
     :options:
     - :collection

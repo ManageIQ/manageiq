@@ -7,18 +7,32 @@ RSpec.describe "Instances API" do
     Vmdb::Application
   end
 
-  let(:instance) { FactoryGirl.create(:vm_openstack) }
-  let(:instance1) { FactoryGirl.create(:vm_openstack) }
-  let(:instance2) { FactoryGirl.create(:vm_openstack) }
-  let(:instance_url) { instances_url(instance.id) }
-  let(:instance1_url) { instances_url(instance1.id) }
-  let(:instance2_url) { instances_url(instance2.id) }
-  let(:invalid_instance_url) { instances_url(999_999) }
-  let(:instances_list) { [instance1_url, instance2_url] }
-
   before(:each) { init_api_spec_env }
 
+  context "Instance index" do
+    it "lists only the cloud instances (no infrastructure vms)" do
+      api_basic_authorize
+      instance = FactoryGirl.create(:vm_openstack)
+      _vm = FactoryGirl.create(:vm_vmware)
+
+      run_get(instances_url)
+
+      expect_query_result(:instances, 1, 1)
+      expect_result_resources_to_include_hrefs("resources", [instances_url(instance.id)])
+      expect_request_success
+    end
+  end
+
   context "Instance terminate action" do
+    let(:instance) { FactoryGirl.create(:vm_openstack) }
+    let(:instance1) { FactoryGirl.create(:vm_openstack) }
+    let(:instance2) { FactoryGirl.create(:vm_openstack) }
+    let(:instance_url) { instances_url(instance.id) }
+    let(:instance1_url) { instances_url(instance1.id) }
+    let(:instance2_url) { instances_url(instance2.id) }
+    let(:invalid_instance_url) { instances_url(999_999) }
+    let(:instances_list) { [instance1_url, instance2_url] }
+
     it "to an invalid instance" do
       api_basic_authorize action_identifier(:instances, :terminate)
 
