@@ -708,14 +708,6 @@ en:
       virtualcenter:   VMware vCenter
       vmwareserver:    VMware Server
 
-    ems_cluster_types:
-      cluster:            Cluster / Deployment Role
-      clusters:           Clusters / Deployment Roles
-      cluster_infra:      Cluster
-      cluster_infras:     Clusters
-      cluster_openstack:  Deployment Role
-      cluster_openstacks: Deployment Roles
-
     host_os_type:
       linux_generic:   Linux
       windows_generic: Windows
