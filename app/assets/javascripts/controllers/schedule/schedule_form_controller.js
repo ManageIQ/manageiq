@@ -147,20 +147,20 @@ ManageIQ.angularApplication.controller('scheduleFormController', ['$http', '$sco
     var type;
 
     if (isVmType()) {
-      type = 'VM';
+      type = __('VM Selection');
     } else if (isHostType()) {
-      type = 'Host';
+      type = __('Host Selection');
     } else if ($scope.scheduleModel.action_typ === 'miq_template') {
-      type = 'Template';
+      type = __('Template Selection');
     } else if ($scope.scheduleModel.action_typ === 'emscluster') {
-      type = 'Cluster';
+      type = __('Cluster Selection');
     } else if ($scope.scheduleModel.action_typ === 'storage') {
-      type = 'Datastore';
+      type = __('Datastore Selection');
     } else if ($scope.scheduleModel.action_typ === 'db_backup') {
-      type = 'Database Backup';
+      type = __('Database Backup Selection');
     }
 
-    return type + ' Selection';
+    return type;
   };
 
   $scope.determineActionType = function() {
@@ -267,7 +267,7 @@ ManageIQ.angularApplication.controller('scheduleFormController', ['$http', '$sco
     }
     $scope.angularForm.$setUntouched(true);
     $scope.angularForm.$setPristine(true);
-    miqService.miqFlash("warn", "All changes have been reset");
+    miqService.miqFlash("warn", __("All changes have been reset"));
   };
 
   $scope.saveClicked = function() {

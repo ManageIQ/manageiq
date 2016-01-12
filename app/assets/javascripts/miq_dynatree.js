@@ -445,7 +445,7 @@ function miqMenuChangeRow(action, elem) {
     case "edit":
       // quick and dirty edit - FIXME use a $modal when converted to angular
       var text = $(elem).text().trim();
-      text = prompt("New name?", text);
+      text = prompt(__("New name?"), text);
       if (text) // ! cancel
         $(elem).text(text);
       break;
@@ -469,7 +469,7 @@ function miqMenuChangeRow(action, elem) {
 
       elem = $('<li>').addClass('list-group-item');
       elem.attr('id', "folder" + count);
-      elem.text("New Folder");
+      elem.text(__("New Folder"));
       elem.on('click', function() {
         return miqMenuChangeRow('activate', this);
       });

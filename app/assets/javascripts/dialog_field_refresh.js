@@ -94,8 +94,9 @@ var dialogFieldRefresh = {
         }
 
         if (data.values.read_only === true) {
-          radio += 'title="This element is disabled because it is read only" ';
-          radio += 'disabled=true ';
+          radio += 'title="';
+          radio += __("This element is disabled because it is read only");
+          radio += '" disabled=true ';
         } else {
           radio += onClickString;
         }

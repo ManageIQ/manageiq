@@ -43,8 +43,8 @@ $.getJSON("get_json?import_file_upload_id=" + import_file_upload_id, function (r
   var dataview = new Slick.Data.DataView();
 
   var columns = [
-    {id: "title", name: "Details", field: "title", width: 300, formatter: PolicyNameFormatter},
-    {id: "msg", name: "Message", field: "msg", width: 300}
+    {id: "title", name: __("Details"), field: "title", width: 300, formatter: PolicyNameFormatter},
+    {id: "msg", name: __("Message"), field: "msg", width: 300}
   ];
 
   var options = {

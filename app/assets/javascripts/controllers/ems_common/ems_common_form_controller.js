@@ -171,7 +171,7 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
     $scope.$broadcast ('resetClicked');
     $scope.emsCommonModel = angular.copy( $scope.modelCopy );
     $scope.angularForm.$setPristine(true);
-    miqService.miqFlash("warn", "All changes have been reset");
+    miqService.miqFlash("warn", __("All changes have been reset"));
   };
 
   $scope.saveClicked = function($event, formSubmit) {

@@ -1349,11 +1349,11 @@ function miqToolbarOnClick(e) {
 }
 
 function miqSupportCasePrompt(tb_url) {
-  var support_case = prompt('Enter Support Case:', '');
+  var support_case = prompt(__('Enter Support Case:'), '');
   if (support_case === null) {
     return false;
   } else if (support_case.trim() == '') {
-    alert('Support Case must be provided to collect logs');
+    alert(__('Support Case must be provided to collect logs'));
     return false;
   } else {
     tb_url = tb_url + '&support_case=' + encodeURIComponent(support_case);
@@ -1365,7 +1365,7 @@ function miqSupportCasePrompt(tb_url) {
 function miqWidgetToolbarClick(e) {
   var itemId = $(this).data('click');
   if (itemId == "reset") {
-    if (confirm("Are you sure you want to reset this Dashboard's Widgets to the defaults?")) {
+    if (confirm(__("Are you sure you want to reset this Dashboard's Widgets to the defaults?"))) {
       miqAjax("/dashboard/reset_widgets");
     }
   } else if (itemId == "add_widget") {

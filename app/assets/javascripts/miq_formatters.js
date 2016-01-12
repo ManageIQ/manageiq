@@ -248,7 +248,7 @@
       options = options || {};
       val = ~~ val;
 
-      var names = ['Day', 'Hour', 'Minute', 'Second'];
+      var names = [__('Day'), __('Hour'), __('Minute'), __('Second')];
 
       var days    = ~~(val / 86400);
       var hours   = ~~((val / 3600) - (days * 24));

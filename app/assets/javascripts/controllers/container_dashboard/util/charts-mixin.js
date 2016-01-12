@@ -4,37 +4,37 @@ angular.module('miq.util').factory('chartsMixin', function() {
   var chartConfig = {
     cpuUsageConfig: {
       chartId: 'cpuUsageChart',
-      title: 'CPU',
-      units: 'Cores',
-      usageDataName: 'Used',
-      legendLeftText: 'Last 30 Days',
+      title: __('CPU'),
+      units: __('Cores'),
+      usageDataName: __('Used'),
+      legendLeftText: __('Last 30 Days'),
       legendRightText: '',
       tooltipType: 'valuePerDay',
       numDays: 30
     },
     memoryUsageConfig: {
       chartId: 'memoryUsageChart',
-      title: 'Memory',
-      units: 'GB',
-      usageDataName: 'Used',
-      legendLeftText: 'Last 30 Days',
+      title: __('Memory'),
+      units: __('GB'),
+      usageDataName: __('Used'),
+      legendLeftText: __('Last 30 Days'),
       legendRightText: '',
       tooltipType: 'valuePerDay',
       numDays: 30
     },
     hourlyNetworkUsageConfig: {
       chartId    : 'networkUsageCurrentChart',
-      headTitle  : 'Hourly Network Utilization',
-      timeFrame  : 'Last 24 hours',
-      units      : 'KBps',
-      dataName   : 'KBps'
+      headTitle  : __('Hourly Network Utilization'),
+      timeFrame  : __('Last 24 hours'),
+      units      : __('KBps'),
+      dataName   : __('KBps')
     },
     dailyNetworkUsageConfig: {
       chartId  : 'networkUsageDailyChart',
-      headTitle: 'Network Utilization Trends',
-      timeFrame: 'Last 30 Days',
-      units    : 'KBps',
-      dataName: 'KBps',
+      headTitle: __('Network Utilization Trends'),
+      timeFrame: __('Last 30 Days'),
+      units    : __('KBps'),
+      dataName : __('KBps'),
       tooltipType: 'valuePerDay'
     }
   };

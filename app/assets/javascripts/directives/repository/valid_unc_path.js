@@ -26,9 +26,9 @@ ManageIQ.angularApplication.directive('checkpath', ['miqService', function (miqS
         }
         else {
           if(scope.formId == "new") {
-            miqService.miqFlash("warn", "Need a valid UNC path");
+            miqService.miqFlash("warn", __("Need a valid UNC path"));
           } else {
-            miqService.miqFlash("error", "Incorrect UNC path");
+            miqService.miqFlash("error", __("Incorrect UNC path"));
           }
           return false;
         }
