@@ -438,6 +438,7 @@ workers:
           :database: vmdb_production
           :username: root
         :exclude_tables:
+        - ar_internal_metadata
         - assigned_server_roles
         - audit_events
         - binary_blobs
