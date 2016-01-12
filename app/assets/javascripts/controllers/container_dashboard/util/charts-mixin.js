@@ -52,17 +52,15 @@ angular.module('miq.util').factory('chartsMixin', function() {
 
   var processHeatmapData = function(heatmapsStruct, data) {
     if (data) {
-      heatmapsStruct.data = _.sortBy(data, 'value').map(function(d) {
-        var percent = d.value * 100;
-        var used = Math.floor(d.value * d.info.total);
-        var available = d.info.total - used;
-        var tooltip = d.info.node + " : " + d.info.provider + "<br>" + percent + "%: " + used + " used of " +
-          d.info.total + " total <br> " + available + " Available";
+      heatmapsStruct.data = _.sortBy(data, 'percent').map(function(d) {
+        var percent = d.percent * 100;
+        var tooltip = "Node: " + d.node + "<br> Provider: " + d.provider + "<br> Usage: " + percent + "% in use of " +
+          d.total + " total";
 
         return {
           "id": d.id,
           "tooltip": tooltip,
-          "value": d.value
+          "value": d.percent
         };
       }).reverse()
     } else  {
