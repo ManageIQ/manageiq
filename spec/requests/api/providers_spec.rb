@@ -120,7 +120,7 @@ describe ApiController do
       expect_results_to_match_hash("results", [sample_rhevm.except(*ENDPOINT_ATTRS)])
 
       provider_id = @result["results"].first["id"]
-      expect(ExtManagementSystem.exists?(provider_id)).to be_true
+      expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
       endpoint = ExtManagementSystem.find(provider_id).default_endpoint
       expect_result_to_match_hash(endpoint.attributes, sample_rhevm.slice(*ENDPOINT_ATTRS))
     end
