@@ -35,7 +35,7 @@ describe Rbac do
           owned_resource = FactoryGirl.create(factory_name, :tenant => owner_tenant)
           _other_resource = FactoryGirl.create(factory_name, :tenant => other_tenant)
           results = Rbac.search(:class => klass, :results_format => :objects, :user => owner_user).first
-          expect(results).to eq [owned_resource]
+          expect(results).to match_array [owned_resource]
         end
       end
     end
@@ -49,42 +49,42 @@ describe Rbac do
       it "with User.with_user finds Vm" do
         User.with_user(owner_user) do
           results = Rbac.search(:class => "Vm", :results_format => :objects).first
-          expect(results).to eq [owned_vm]
+          expect(results).to match_array [owned_vm]
         end
       end
 
       it "with :user finds Vm" do
         results = Rbac.search(:class => "Vm", :results_format => :objects, :user => owner_user).first
-        expect(results).to eq [owned_vm]
+        expect(results).to match_array [owned_vm]
       end
 
       it "with :userid finds Vm" do
         results = Rbac.search(:class => "Vm", :results_format => :objects, :userid => owner_user.userid).first
-        expect(results).to eq [owned_vm]
+        expect(results).to match_array [owned_vm]
       end
 
       it "with :miq_group, finds Vm" do
         results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group => owner_group).first
-        expect(results).to eq [owned_vm]
+        expect(results).to match_array [owned_vm]
       end
 
       it "with :miq_group_id finds Vm" do
         results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => owner_group.id).first
-        expect(results).to eq [owned_vm]
+        expect(results).to match_array [owned_vm]
       end
 
       it "leaving tenant doesnt find Vm" do
         owner_user.update_attributes(:miq_groups => [other_user.current_group])
         User.with_user(owner_user) do
           results = Rbac.search(:class => "Vm", :results_format => :objects).first
-          expect(results).to eq [other_vm]
+          expect(results).to match_array [other_vm]
         end
       end
 
       describe "with accessible_tenant_ids filtering (strategy = :descendants_id)" do
         it "can't see parent tenant's Vm" do
           results = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group => child_group).first
-          expect(results).to eq []
+          expect(results).to match_array []
         end
 
         it "can see descendant tenant's Vms" do
@@ -98,7 +98,7 @@ describe Rbac do
           child_openstack_vm
 
           results = Rbac.search(:class => "ManageIQ::Providers::Openstack::CloudManager::Vm", :results_format => :objects, :miq_group => owner_group).first
-          expect(results).to eq [child_openstack_vm]
+          expect(results).to match_array [child_openstack_vm]
         end
       end
 
@@ -106,13 +106,13 @@ describe Rbac do
         it "can see parent tenant's EMS" do
           ems = FactoryGirl.create(:ems_vmware, :tenant => owner_tenant)
           results = Rbac.search(:class => "ExtManagementSystem", :results_format => :objects, :miq_group => child_group).first
-          expect(results).to eq [ems]
+          expect(results).to match_array [ems]
         end
 
         it "can't see descendant tenant's EMS" do
           _ems = FactoryGirl.create(:ems_vmware, :tenant => child_tenant)
           results = Rbac.search(:class => "ExtManagementSystem", :results_format => :objects, :miq_group => owner_group).first
-          expect(results).to eq []
+          expect(results).to match_array []
         end
       end
 
@@ -120,19 +120,19 @@ describe Rbac do
         it "can see tenant's request task" do
           task = FactoryGirl.create(:miq_request_task, :tenant => owner_tenant)
           results = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group => owner_group).first
-          expect(results).to eq [task]
+          expect(results).to match_array [task]
         end
 
         it "can't see parent tenant's request task" do
           _task = FactoryGirl.create(:miq_request_task, :tenant => owner_tenant)
           results = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group => child_group).first
-          expect(results).to eq []
+          expect(results).to match_array []
         end
 
         it "can't see descendant tenant's request task" do
           _task = FactoryGirl.create(:miq_request_task, :tenant => child_tenant)
           results = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group => owner_group).first
-          expect(results).to eq []
+          expect(results).to match_array []
         end
       end
 
@@ -145,13 +145,13 @@ describe Rbac do
           it "can't see descendant tenant's templates" do
             owned_template.update_attributes!(:tenant_id => child_tenant.id, :miq_group_id => child_group.id)
             results, = Rbac.search(:class => "MiqTemplate", :results_format => :objects, :miq_group_id => owner_group.id)
-            expect(results).to eq []
+            expect(results).to match_array []
           end
 
           it "can see ancestor tenant's templates" do
             owned_template.update_attributes!(:tenant_id => owner_tenant.id, :miq_group_id => owner_tenant.id)
             results, = Rbac.search(:class => "MiqTemplate", :results_format => :objects, :miq_group_id => child_group.id)
-            expect(results).to eq [owned_template]
+            expect(results).to match_array [owned_template]
           end
         end
 
@@ -163,27 +163,27 @@ describe Rbac do
             owned_template.update_attributes!(:tenant_id => child_child_tenant.id, :miq_group_id => child_child_group.id)
             owned_vm.update_attributes(:tenant_id => child_child_tenant.id, :miq_group_id => child_child_group.id)
             results, = Rbac.search(:class => "VmOrTemplate", :results_format => :objects, :miq_group_id => child_group.id)
-            expect(results).to eq [owned_vm]
+            expect(results).to match_array [owned_vm]
           end
 
           it "can see ancestor tenant's templates but can't see ancestor tenant's VMs" do
             owned_template.update_attributes!(:tenant_id => owner_tenant.id, :miq_group_id => owner_group.id)
             results, = Rbac.search(:class => "VmOrTemplate", :results_format => :objects, :miq_group_id => child_group.id)
-            expect(results).to eq [owned_template]
+            expect(results).to match_array [owned_template]
           end
 
           it "can see ancestor tenant's templates and descendant tenant's VMs" do
             owned_template.update_attributes!(:tenant_id => owner_tenant.id, :miq_group_id => owner_group.id)
             owned_vm.update_attributes(:tenant_id => child_child_tenant.id, :miq_group_id => child_child_group.id)
             results, = Rbac.search(:class => "VmOrTemplate", :results_format => :objects, :miq_group_id => child_group.id)
-            expect(results).to eq [owned_template, owned_vm]
+            expect(results).to match_array [owned_template, owned_vm]
           end
 
           it "can't see descendant tenant's templates nor ancestor tenant's VMs" do
             owned_template.update_attributes!(:tenant_id => child_child_tenant.id, :miq_group_id => child_child_group.id)
             owned_vm.update_attributes(:tenant_id => owner_tenant.id, :miq_group_id => owner_group.id)
             results, = Rbac.search(:class => "VmOrTemplate", :results_format => :objects, :miq_group_id => child_group.id)
-            expect(results).to eq []
+            expect(results).to match_array []
           end
         end
       end
@@ -193,7 +193,7 @@ describe Rbac do
           request_task = FactoryGirl.create(:miq_request_task, :tenant => owner_tenant)
           t0_group = FactoryGirl.create(:miq_group, :tenant => default_tenant)
           results = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group => t0_group).first
-          expect(results).to eq [request_task]
+          expect(results).to match_array [request_task]
         end
       end
     end
