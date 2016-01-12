@@ -176,14 +176,14 @@ class ContainerDashboardService
         :cpu => {
           :used  => used_cpu.values.last.round,
           :total => total_cpu.values.last.round,
-          :xData => ["date"] + used_cpu.keys,
-          :yData => ["used"] + used_cpu.values.map(&:round)
+          :xData => used_cpu.keys,
+          :yData => used_cpu.values.map(&:round)
         },
         :mem => {
           :used  => (used_mem.values.last / 1024.0).round,
           :total => (total_mem.values.last / 1024.0).round,
-          :xData => ["date"] + used_mem.keys,
-          :yData => ["used"] + used_mem.values.map { |m| (m / 1024.0).round }
+          :xData => used_mem.keys,
+          :yData => used_mem.values.map { |m| (m / 1024.0).round }
         }
       }
     else
@@ -209,8 +209,8 @@ class ContainerDashboardService
 
     if hourly_metrics.any?
       {
-        :xData => ["date"] + hourly_network_trend.keys,
-        :yData => ["used"] + hourly_network_trend.values.map(&:round)
+        :xData => hourly_network_trend.keys,
+        :yData => hourly_network_trend.values.map(&:round)
       }
     end
   end
@@ -224,8 +224,8 @@ class ContainerDashboardService
 
     if daily_provider_metrics.any?
       {
-        :xData => ["date"] + daily_network_metrics.keys,
-        :yData => ["used"] + daily_network_metrics.values.map(&:round)
+        :xData => daily_network_metrics.keys,
+        :yData => daily_network_metrics.values.map(&:round)
       }
     end
   end

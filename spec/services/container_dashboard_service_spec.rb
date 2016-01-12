@@ -75,14 +75,14 @@ describe ContainerDashboardService do
         :cpu => {
           :used  => 2,
           :total => 2,
-          :xData => ["date", current_date.strftime("%Y-%m-%d")],
-          :yData => ["used", 2]
+          :xData => [current_date.strftime("%Y-%m-%d")],
+          :yData => [2]
         },
         :mem => {
           :used  => 1,
           :total => 2,
-          :xData => ["date", current_date.strftime("%Y-%m-%d")],
-          :yData => ["used", 1]
+          :xData => [current_date.strftime("%Y-%m-%d")],
+          :yData => [1]
         }
       )
 
@@ -90,14 +90,14 @@ describe ContainerDashboardService do
         :cpu => {
           :used  => 3,
           :total => 3,
-          :xData => ["date", current_date.strftime("%Y-%m-%d")],
-          :yData => ["used", 3]
+          :xData => [current_date.strftime("%Y-%m-%d")],
+          :yData => [3]
         },
         :mem => {
           :used  => 2,
           :total => 3,
-          :xData => ["date", current_date.strftime("%Y-%m-%d")],
-          :yData => ["used", 2]
+          :xData => [current_date.strftime("%Y-%m-%d")],
+          :yData => [2]
         }
       )
     end
@@ -156,13 +156,13 @@ describe ContainerDashboardService do
       daily_network_trends_single_provider = described_class.new(ems_openshift.id, controller).daily_network_metrics
 
       expect(daily_network_trends_single_provider).to eq(
-        :xData => ["date", current_date.strftime("%Y-%m-%d")],
-        :yData => ["used", 1000]
+        :xData => [current_date.strftime("%Y-%m-%d")],
+        :yData => [1000]
       )
 
       expect(daily_network_trends).to eq(
-        :xData => ["date", current_date.strftime("%Y-%m-%d")],
-        :yData => ["used", 2500]
+        :xData => [current_date.strftime("%Y-%m-%d")],
+        :yData => [2500]
       )
     end
 
@@ -200,13 +200,13 @@ describe ContainerDashboardService do
       hourly_network_trends_single_provider = described_class.new(ems_openshift.id, controller).hourly_network_metrics
 
       expect(hourly_network_trends_single_provider).to eq(
-        :xData => ["date", current_date.beginning_of_hour.utc],
-        :yData => ["used", 1000]
+        :xData => [current_date.beginning_of_hour.utc],
+        :yData => [1000]
       )
 
       expect(hourly_network_trends).to eq(
-        :xData => ["date", current_date.beginning_of_hour.utc],
-        :yData => ["used", 2500]
+        :xData => [current_date.beginning_of_hour.utc],
+        :yData => [2500]
       )
     end
 
