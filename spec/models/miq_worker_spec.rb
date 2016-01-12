@@ -226,5 +226,31 @@ describe MiqWorker do
       @worker.update_attribute(:status, described_class::STATUS_WORKING)
       expect(@worker.is_current?).to be_truthy
     end
+
+    it ".status_update" do
+      @worker.update_attribute(:pid, 123)
+
+      require 'miq-process'
+      allow(MiqProcess).to receive(:processInfo).with(123).and_return(
+        :pid                   => 123,
+        :memory_usage          => 246_824_960,
+        :memory_size           => 2_792_611_840,
+        :percent_memory        => "1.4",
+        :percent_cpu           => "1.0",
+        :cpu_time              => 660,
+        :priority              => "31",
+        :name                  => "ruby",
+        :proportional_set_size => 198_721_987
+      )
+
+      described_class.status_update
+      @worker.reload
+      expect(@worker.os_priority).to eq 31
+      expect(@worker.memory_usage).to eq 246_824_960
+      expect(@worker.percent_memory).to eq 1.4
+      expect(@worker.percent_cpu).to eq 1.0
+      expect(@worker.memory_size).to eq 2_792_611_840
+      expect(@worker.proportional_set_size).to eq 198_721_987
+    end
   end
 end

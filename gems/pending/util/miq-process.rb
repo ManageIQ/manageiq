@@ -1,6 +1,7 @@
 # encoding: US-ASCII
 
 require 'sys-uname'
+require 'sys/proctable'
 require 'util/runcmd'
 require 'util/win32/miq-wmi'
 require 'util/miq-system'
@@ -111,6 +112,7 @@ class MiqProcess
       cpu_total /= MiqSystem.num_cpus
       percent_cpu             = (1.0 * result[:cpu_time]) / cpu_total
       result[:percent_cpu]    = round_to(percent_cpu * 100.0, 2)
+      result[:proportional_set_size] = Sys::ProcTable.ps(pid).smaps.pss
     when :macosx
       h = nil
       begin
@@ -205,7 +207,6 @@ class MiqProcess
         end
       end
     when :macosx
-      require 'sys/proctable'
       Sys::ProcTable.ps.select do |p|
         if p.cmdline && cmd.match(p.cmdline.tr("\000", " ").strip)
           pids << p.pid
