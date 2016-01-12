@@ -6,9 +6,9 @@ describe VmScan do
       @server = EvmSpecHelper.local_miq_server
 
       # TODO: We should be able to set values so we don't need to stub behavior
-      MiqServer.any_instance.stub(:is_a_proxy? => true, :has_active_role? => true, :is_vix_disk? => true)
-      ManageIQ::Providers::Vmware::InfraManager.any_instance.stub(:authentication_status_ok? => true)
-      Vm.stub(:scan_via_ems? => true)
+      allow_any_instance_of(MiqServer).to receive_messages(:is_a_proxy? => true, :has_active_role? => true, :is_vix_disk? => true)
+      allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive_messages(:authentication_status_ok? => true)
+      allow(Vm).to receive_messages(:scan_via_ems? => true)
 
       @user      = FactoryGirl.create(:user_with_group, :userid => "tester")
       @ems       = FactoryGirl.create(:ems_vmware,       :name => "Test EMS", :zone => @server.zone, :tenant => FactoryGirl.create(:tenant))
@@ -24,7 +24,7 @@ describe VmScan do
                                      )
       @ems_auth  = FactoryGirl.create(:authentication, :resource => @ems)
 
-      MiqEventDefinition.stub(:find_by_name => true)
+      allow(MiqEventDefinition).to receive_messages(:find_by_name => true)
       @job = @vm.scan
       MiqQueue.delete_all # clear the queue items that are not related to Vm scan testing
     end
@@ -123,7 +123,7 @@ describe VmScan do
           end
 
           it "should call callback when message is delivered" do
-            VmScan.any_instance.stub(:signal => true)
+            allow_any_instance_of(VmScan).to receive_messages(:signal => true)
             expect_any_instance_of(VmScan).to receive(:check_policy_complete)
             q = MiqQueue.where(:class_name => "MiqAeEngine", :method_name => "deliver").first
             q.delivered(*q.deliver)
@@ -179,7 +179,7 @@ describe VmScan do
       end
 
       it "should have vmScanProfiles from scan_profiles option" do
-        profiles = [ScanItemSet.any_instance.stub(:name => 'default')]
+        profiles = [{:name => 'default'}]
         @job.options[:scan_profiles] = profiles
         args = @job.create_scan_args(@vm)
         expect(args["vmScanProfiles"]).to eq profiles

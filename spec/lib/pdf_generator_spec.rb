@@ -13,7 +13,7 @@ describe PdfGenerator do
 
   def stub_generator_instance
     generator = double("PdfGenerator subclass", :available? => true, :pdf_from_string => "pdf-data")
-    PdfGenerator.stub(:instance => generator)
+    allow(PdfGenerator).to receive_messages(:instance => generator)
     generator
   end
 
@@ -25,7 +25,7 @@ describe PdfGenerator do
 
     it "when not available" do
       generator = stub_generator_instance
-      generator.stub(:available? => false)
+      allow(generator).to receive_messages(:available? => false)
       expect(PdfGenerator).to_not be_available
     end
   end

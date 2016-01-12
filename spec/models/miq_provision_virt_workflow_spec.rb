@@ -7,8 +7,8 @@ describe MiqProvisionVirtWorkflow do
     let(:sdn) { 'SysprepDomainName' }
 
     before do
-      workflow.stub(:validate => true)
-      workflow.stub(:get_dialogs => {})
+      allow(workflow).to receive_messages(:validate => true)
+      allow(workflow).to receive_messages(:get_dialogs => {})
       workflow.instance_variable_set(:@values, :vm_tags => [], :src_vm_id => 123, :sysprep_enabled => 'fields',
                                      :sysprep_domain_name => sdn)
     end

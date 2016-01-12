@@ -262,7 +262,7 @@ describe ApplianceConsole::Prompts do
   context "#ask_for_disk" do
     context "with nodisks" do
       before do
-        LinuxAdmin::Disk.stub(:local => [double(:partitions => [:partition])])
+        allow(LinuxAdmin::Disk).to receive_messages(:local => [double(:partitions => [:partition])])
       end
 
       it "should be ok with not partitioning" do
@@ -295,7 +295,7 @@ describe ApplianceConsole::Prompts do
 
     context "with one disk" do
       before do
-        LinuxAdmin::Disk.stub(:local => double(:select => [first_disk]))
+        allow(LinuxAdmin::Disk).to receive_messages(:local => double(:select => [first_disk]))
       end
       let(:first_disk)  { double(:path => "/dev/a", :size => 10.megabyte) }
 
@@ -312,7 +312,7 @@ describe ApplianceConsole::Prompts do
 
     context "with disks" do
       before do
-        LinuxAdmin::Disk.stub(:local => double(:select => [first_disk, second_disk]))
+        allow(LinuxAdmin::Disk).to receive_messages(:local => double(:select => [first_disk, second_disk]))
       end
 
       let(:first_disk)  { double(:path => "/dev/a", :size => 10.megabyte) }

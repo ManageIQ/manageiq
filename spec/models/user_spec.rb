@@ -209,15 +209,15 @@ describe User do
           }
         stub_server_configuration(@auth_config)
         @miq_ldap = double('miq_ldap')
-        @miq_ldap.stub(:bind => false)
+        allow(@miq_ldap).to receive_messages(:bind => false)
       end
 
       it "will fail task if user object not found in ldap" do
-        @miq_ldap.stub(:get_user_object => nil)
+        allow(@miq_ldap).to receive_messages(:get_user_object => nil)
 
         expect(AuditEvent).to receive(:failure).once
         authenticate = Authenticator::Ldap.new(@auth_config[:authentication])
-        authenticate.stub(:ldap => @miq_ldap)
+        allow(authenticate).to receive_messages(:ldap => @miq_ldap)
 
         expect(authenticate.authorize(@task.id, @fq_user)).to be_nil
 
@@ -228,13 +228,13 @@ describe User do
       end
 
       it "will fail task if user group doesn't match an EVM role" do
-        @miq_ldap.stub(:get_user_object => "user object")
-        @miq_ldap.stub(:get_attr => nil)
-        @miq_ldap.stub(:normalize => "a-username")
+        allow(@miq_ldap).to receive_messages(:get_user_object => "user object")
+        allow(@miq_ldap).to receive_messages(:get_attr => nil)
+        allow(@miq_ldap).to receive_messages(:normalize => "a-username")
 
         authenticate = Authenticator::Ldap.new(@auth_config[:authentication])
-        authenticate.stub(:ldap => @miq_ldap)
-        authenticate.stub(:groups_for => [])
+        allow(authenticate).to receive_messages(:ldap => @miq_ldap)
+        allow(authenticate).to receive_messages(:groups_for => [])
 
         expect(AuditEvent).to receive(:failure).once
         expect(authenticate.authorize(@task.id, @fq_user)).to be_nil

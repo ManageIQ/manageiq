@@ -28,7 +28,7 @@ describe EmsRefresh do
     end
 
     it "with Storage" do
-      Storage.any_instance.stub(:ext_management_systems => [@ems])
+      allow_any_instance_of(Storage).to receive_messages(:ext_management_systems => [@ems])
       target = FactoryGirl.create(:storage_vmware)
       queue_refresh_and_assert_queue_item(target, [target])
     end

@@ -68,7 +68,7 @@ describe LogFile do
 
       context "with _request_logs queue message raising exception due to stopped server" do
         before do
-          MiqServer.any_instance.stub(:status => "stopped")
+          allow_any_instance_of(MiqServer).to receive_messages(:status => "stopped")
           @message.delivered(*@message.deliver)
         end
 

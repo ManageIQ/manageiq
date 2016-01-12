@@ -48,7 +48,7 @@ describe FixAuth::AuthModel do
     end
 
     it "should limit available_columns when not all columns are available" do
-      subject.stub(:column_names => %w(password id))
+      allow(subject).to receive_messages(:column_names => %w(password id))
       expect(subject.available_columns).to eq(%w(password))
     end
 

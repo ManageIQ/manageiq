@@ -212,7 +212,7 @@ describe VmOrTemplate do
                                  :storages => [@storage1, @storage2])
         @zone = FactoryGirl.create(:zone, :name => 'zone')
 
-        MiqServer.any_instance.stub(:is_vix_disk? => true)
+        allow_any_instance_of(MiqServer).to receive_messages(:is_vix_disk? => true)
         @svr1 = EvmSpecHelper.local_miq_server(:name => 'svr1')
         @svr2 = FactoryGirl.create(:miq_server, :name => 'svr2', :zone => @svr1.zone)
         @svr3 = FactoryGirl.create(:miq_server, :name => 'svr3', :zone => @svr1.zone)
@@ -432,8 +432,8 @@ describe VmOrTemplate do
   context "#is_available? for Smartstate Analysis" do
     it "returns true for VMware VM" do
       vm =  FactoryGirl.create(:vm_vmware)
-      vm.stub(:archived? => false)
-      vm.stub(:orphaned? => false)
+      allow(vm).to receive_messages(:archived? => false)
+      allow(vm).to receive_messages(:orphaned? => false)
       expect(vm.is_available?(:smartstate_analysis)).to eq(true)
     end
 

@@ -68,11 +68,11 @@ production:
   username: root
   password: <%= MiqPassword.decrypt(\"#{enc_pass}\")%>
 EOF
-      IO.stub(:read => yaml)
+      allow(IO).to receive_messages(:read => yaml)
     end
 
     it "production" do
-      Rails.stub(:env => ActiveSupport::StringInquirer.new("production"))
+      allow(Rails).to receive_messages(:env => ActiveSupport::StringInquirer.new("production"))
       expect(ERB).not_to receive(:new)
 
       expected = {"host" => "localhost", "username" => "root", "password" => "<%= MiqPassword.decrypt(\"#{enc_pass}\")%>"}
@@ -98,7 +98,7 @@ EOF
           :password => "password"
         }
       }
-      described_class.stub(:database_configuration => @db_config)
+      allow(described_class).to receive_messages(:database_configuration => @db_config)
     end
     subject { described_class.current }
 
@@ -172,7 +172,7 @@ EOF
           :password => "password"
         }
       }
-      described_class.stub(:database_configuration => @db_config)
+      allow(described_class).to receive_messages(:database_configuration => @db_config)
     end
     subject { described_class.current }
 

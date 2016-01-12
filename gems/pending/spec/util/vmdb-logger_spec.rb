@@ -3,15 +3,15 @@ require 'util/vmdb-logger'
 
 describe VMDBLogger do
   it ".contents with no log returns empty string" do
-    File.stub(:file? => false)
+    allow(File).to receive_messages(:file? => false)
     expect(VMDBLogger.contents("mylog.log")).to eq("")
   end
 
   it ".contents with empty log returns empty string" do
     require 'util/miq-system'
-    MiqSystem.stub(:tail => "")
+    allow(MiqSystem).to receive_messages(:tail => "")
 
-    File.stub(:file? => true)
+    allow(File).to receive_messages(:file? => true)
     expect(VMDBLogger.contents("mylog.log")).to eq("")
   end
 

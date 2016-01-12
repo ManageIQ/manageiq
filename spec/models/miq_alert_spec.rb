@@ -98,7 +98,7 @@ describe MiqAlert do
     context "with a single alert, evaluated to true" do
       before(:each) do
         @alert = MiqAlert.find_by_description("VM Unregistered")
-        @alert.stub(:eval_expression => true)
+        allow(@alert).to receive_messages(:eval_expression => true)
         @alert.evaluate([@vm.class.base_class.name, @vm.id])
       end
 
@@ -120,7 +120,7 @@ describe MiqAlert do
 
       context "with the alert now evaluated to false" do
         before(:each)  do
-          @alert.stub(:eval_expression => false)
+          allow(@alert).to receive_messages(:eval_expression => false)
           @alert.options.store_path(:notifications, :delay_next_evaluation, 0)
           @alert.evaluate([@vm.class.base_class.name, @vm.id])
         end
@@ -214,7 +214,7 @@ describe MiqAlert do
 
   context "With a VM assigned to a realtime C&U alert" do
     before(:each) do
-      MiqAlert.any_instance.stub(:validate => true)
+      allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
       @vm         = FactoryGirl.create(:vm_vmware)
       @alert      = FactoryGirl.create(:miq_alert, :enabled => true, :db => "Vm", :responds_to_events => "xxx|vm_perf_complete|zzz")
       @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Profile for Alert Id: #{@alert.id}", :mode => @vm.class.base_model.name)
@@ -229,7 +229,7 @@ describe MiqAlert do
 
   context "With a VM NOT assigned to a realtime C&U alert" do
     before(:each) do
-      MiqAlert.any_instance.stub(:validate => true)
+      allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
       @vm     = FactoryGirl.create(:vm_vmware)
     end
 
@@ -240,7 +240,7 @@ describe MiqAlert do
 
   context "With a Host assigned to a realtime C&U alert" do
     before(:each) do
-      MiqAlert.any_instance.stub(:validate => true)
+      allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
       @host     = FactoryGirl.create(:host)
       @alert    = FactoryGirl.create(:miq_alert, :enabled => true, :db => "Host", :responds_to_events => "xxx|host_perf_complete|zzz")
       @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Profile for Alert Id: #{@alert.id}", :mode => @host.class.base_model.name)
@@ -255,7 +255,7 @@ describe MiqAlert do
 
   context "With a Host NOT assigned to a realtime C&U alert" do
     before(:each) do
-      MiqAlert.any_instance.stub(:validate => true)
+      allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
       @host     = FactoryGirl.create(:host)
     end
 
@@ -266,7 +266,7 @@ describe MiqAlert do
 
   context "With a VM assigned to a v4-style realtime C&U alert" do
     before(:each) do
-      MiqAlert.any_instance.stub(:validate => true)
+      allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
       @vm         = FactoryGirl.create(:vm_vmware)
       @alert      = FactoryGirl.create(:miq_alert, :enabled => true, :db => "Vm", :responds_to_events => "xxx|vm_perf_complete|zzz")
       @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Profile for Alert Id: #{@alert.id}", :mode => @vm.class.base_model.name)
@@ -284,7 +284,7 @@ describe MiqAlert do
 
   context "With a Host assigned to a v4-style realtime C&U alert" do
     before(:each) do
-      MiqAlert.any_instance.stub(:validate => true)
+      allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
       @host     = FactoryGirl.create(:host)
       @alert    = FactoryGirl.create(:miq_alert, :enabled => true, :db => "Host", :responds_to_events => "xxx|host_perf_complete|zzz")
       @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Profile for Alert Id: #{@alert.id}", :mode => @host.class.base_model.name)
@@ -302,7 +302,7 @@ describe MiqAlert do
 
   context ".evaluate_hourly_timer" do
     before do
-      MiqAlert.any_instance.stub(:validate => true)
+      allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
       @miq_server = EvmSpecHelper.local_miq_server
       @ems        = FactoryGirl.create(:ems_vmware, :zone => @miq_server.zone)
       @ems_other  = FactoryGirl.create(:ems_vmware, :zone => FactoryGirl.create(:zone, :name => 'other'))

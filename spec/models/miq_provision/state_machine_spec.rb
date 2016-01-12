@@ -22,7 +22,7 @@ describe MiqProvision do
     context "#prepare_provision" do
       before do
         allow(task).to receive(:update_and_notify_parent)
-        task.stub(:instance_type => flavor)
+        allow(task).to receive_messages(:instance_type => flavor)
       end
 
       it "sets default :clone_options" do

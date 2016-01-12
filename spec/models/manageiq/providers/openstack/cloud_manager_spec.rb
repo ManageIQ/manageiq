@@ -53,7 +53,7 @@ describe ManageIQ::Providers::Openstack::CloudManager do
   end
 
   it "event_monitor_options" do
-    ManageIQ::Providers::Openstack::CloudManager::EventCatcher.stub(:worker_settings => {:amqp_port => 1234})
+    allow(ManageIQ::Providers::Openstack::CloudManager::EventCatcher).to receive_messages(:worker_settings => {:amqp_port => 1234})
     @ems = FactoryGirl.build(:ems_openstack, :hostname => "host", :ipaddress => "::1")
     require 'openstack/openstack_event_monitor'
 

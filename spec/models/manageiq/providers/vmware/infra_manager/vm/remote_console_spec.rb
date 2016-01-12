@@ -33,11 +33,11 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
   context "#remote_console_acquire_ticket_queue" do
     before(:each) do
       @vm = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems)
-      @vm.stub(:my_zone => nil)
+      allow(@vm).to receive_messages(:my_zone => nil)
 
       @server = double("MiqServer")
-      @server.stub(:my_zone => nil)
-      MiqServer.stub(:my_server => @server)
+      allow(@server).to receive_messages(:my_zone => nil)
+      allow(MiqServer).to receive_messages(:my_server => @server)
     end
 
     it "with :mks" do
@@ -157,7 +157,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
     context "with a proxy miq_server" do
       it "with no proxy configured" do
         server = double("MiqServer")
-        server.stub_chain(:get_config, :config => {:server => {:vnc_proxy_address => nil, :vnc_proxy_port => nil}})
+        allow(server).to receive_message_chain(:get_config, :config => {:server => {:vnc_proxy_address => nil, :vnc_proxy_port => nil}})
         expect(@vm).to receive(:with_provider_object)
 
         password, host_address, host_port, proxy_address, proxy_port = @vm.remote_console_vnc_acquire_ticket(server)
@@ -171,7 +171,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
 
       it "with a proxy configured" do
         server = double("MiqServer")
-        server.stub_chain(:get_config, :config => {:server => {:vnc_proxy_address => "1.2.3.4", :vnc_proxy_port => "5800"}}) # NOTE: Ports are actually stored as a String in the configuration
+        allow(server).to receive_message_chain(:get_config, :config => {:server => {:vnc_proxy_address => "1.2.3.4", :vnc_proxy_port => "5800"}}) # NOTE: Ports are actually stored as a String in the configuration
         expect(@vm).to receive(:with_provider_object)
 
         password, host_address, host_port, proxy_address, proxy_port = @vm.remote_console_vnc_acquire_ticket(server)

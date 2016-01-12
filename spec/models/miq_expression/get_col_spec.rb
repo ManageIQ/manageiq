@@ -26,7 +26,7 @@ describe MiqExpression do
 
     it "with valid model-in_field" do
       @field = "Vm-cpu_limit"
-      described_class.stub(:col_type => :some_type)
+      allow(described_class).to receive_messages(:col_type => :some_type)
       expect(subject).to eq(:some_type)
     end
 
@@ -37,7 +37,7 @@ describe MiqExpression do
 
     it "with valid model.association-in_field" do
       @field = "Vm.guest_applications-vendor"
-      described_class.stub(:col_type => :some_type)
+      allow(described_class).to receive_messages(:col_type => :some_type)
       expect(subject).to eq(:some_type)
     end
 

@@ -102,7 +102,7 @@ module MiqAeEngineSpec
           before(:each) do
             root = {'ae_result' => 'error'}
             @ws = double('ws')
-            @ws.stub(:root => root)
+            allow(@ws).to receive_messages(:root => root)
             allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(@ws)
           end
 
@@ -117,7 +117,7 @@ module MiqAeEngineSpec
           before(:each) do
             root = {'ae_result' => 'ok'}
             @ws = double('ws')
-            @ws.stub(:root => root)
+            allow(@ws).to receive_messages(:root => root)
             allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(@ws)
           end
 
@@ -142,9 +142,9 @@ module MiqAeEngineSpec
           before(:each) do
             root = {'ae_result' => 'retry'}
             @ws = double('ws')
-            @ws.stub(:root => root)
-            @ws.stub(:persist_state_hash => {})
-            @ws.stub(:current_state_info => {})
+            allow(@ws).to receive_messages(:root => root)
+            allow(@ws).to receive_messages(:persist_state_hash => {})
+            allow(@ws).to receive_messages(:current_state_info => {})
             allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(@ws)
           end
 

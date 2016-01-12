@@ -14,7 +14,7 @@ describe ReportController do
 
     before :each do
       @previous_count_of_widgets = MiqWidget.count
-      controller.stub(:load_edit => true)
+      allow(controller).to receive_messages(:load_edit => true)
       allow(controller).to receive(:widget_graph_menus)
       allow(controller).to receive(:replace_right_cell)
       allow(controller).to receive(:render)

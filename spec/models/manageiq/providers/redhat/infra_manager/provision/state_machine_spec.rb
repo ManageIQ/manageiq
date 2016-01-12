@@ -9,8 +9,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
       options  = {:src_vm_id => template.id}
 
       @task = FactoryGirl.create(:miq_provision_redhat, :source => template, :destination => vm, :state => 'pending', :status => 'Ok', :options => options)
-      @task.stub(:miq_request => double("MiqRequest").as_null_object)
-      @task.stub(:dest_cluster => FactoryGirl.create(:ems_cluster, :ext_management_system => ems))
+      allow(@task).to receive_messages(:miq_request => double("MiqRequest").as_null_object)
+      allow(@task).to receive_messages(:dest_cluster => FactoryGirl.create(:ems_cluster, :ext_management_system => ems))
     end
 
     it "#create_destination" do
@@ -113,7 +113,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
 
     context "#poll_destination_powered_on_in_provider" do
       it "requeues if the VM didn't start" do
-        ManageIQ::Providers::Redhat::InfraManager::Vm.any_instance.stub(:with_provider_object => {:state => "down"})
+        allow_any_instance_of(ManageIQ::Providers::Redhat::InfraManager::Vm).to receive_messages(:with_provider_object => {:state => "down"})
         expect(@task).to receive(:requeue_phase)
 
         @task.poll_destination_powered_on_in_provider
@@ -122,7 +122,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
       end
 
       it "moves on if the vm started" do
-        ManageIQ::Providers::Redhat::InfraManager::Vm.any_instance.stub(:with_provider_object => {:state => "up"})
+        allow_any_instance_of(ManageIQ::Providers::Redhat::InfraManager::Vm).to receive_messages(:with_provider_object => {:state => "up"})
         expect(@task).to receive(:poll_destination_powered_off_in_provider)
 
         @task.poll_destination_powered_on_in_provider

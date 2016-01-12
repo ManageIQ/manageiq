@@ -28,7 +28,7 @@ module MiqAeEventSpec
                              :vm_or_template_id => vm.id
                             )
         end
-        before { MiqServer.stub(:my_zone => "zone test") }
+        before { allow(MiqServer).to receive_messages(:my_zone => "zone test") }
 
         context "with user owned VM" do
           let(:vm_owner) { user }

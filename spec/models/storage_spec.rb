@@ -2,40 +2,40 @@ require "spec_helper"
 
 describe Storage do
   it "#scan_watchdog_interval" do
-    Storage.stub(:vmdb_storage_config => {})
+    allow(Storage).to receive_messages(:vmdb_storage_config => {})
     expect(Storage.scan_watchdog_interval).to eq(Storage::DEFAULT_WATCHDOG_INTERVAL)
 
-    Storage.stub(:vmdb_storage_config => {'watchdog_interval' => '5.minutes'})
+    allow(Storage).to receive_messages(:vmdb_storage_config => {'watchdog_interval' => '5.minutes'})
     expect(Storage.scan_watchdog_interval).to eq(5.minutes)
   end
 
   it "#max_parallel_storage_scans_per_host" do
-    Storage.stub(:vmdb_storage_config => {})
+    allow(Storage).to receive_messages(:vmdb_storage_config => {})
     expect(Storage.max_parallel_storage_scans_per_host).to eq(Storage::DEFAULT_MAX_PARALLEL_SCANS_PER_HOST)
 
-    Storage.stub(:vmdb_storage_config => {'max_parallel_scans_per_host' => 3})
+    allow(Storage).to receive_messages(:vmdb_storage_config => {'max_parallel_scans_per_host' => 3})
     expect(Storage.max_parallel_storage_scans_per_host).to eq(3)
   end
 
   it "#max_qitems_per_scan_request" do
-    Storage.stub(:vmdb_storage_config => {})
+    allow(Storage).to receive_messages(:vmdb_storage_config => {})
     expect(Storage.max_qitems_per_scan_request).to eq(Storage::DEFAULT_MAX_QITEMS_PER_SCAN_REQUEST)
 
-    Storage.stub(:vmdb_storage_config => {'max_qitems_per_scan_request' => 3})
+    allow(Storage).to receive_messages(:vmdb_storage_config => {'max_qitems_per_scan_request' => 3})
     expect(Storage.max_qitems_per_scan_request).to eq(3)
   end
 
   it "#scan_collection_timeout" do
-    Storage.stub(:vmdb_storage_config => {})
+    allow(Storage).to receive_messages(:vmdb_storage_config => {})
     expect(Storage.scan_collection_timeout).to be_nil
 
-    Storage.stub(:vmdb_storage_config => {:collection => {:timeout => 3}})
+    allow(Storage).to receive_messages(:vmdb_storage_config => {:collection => {:timeout => 3}})
     expect(Storage.scan_collection_timeout).to eq(3)
   end
 
   it "#scan_watchdog_deliver_on" do
     scan_watchdog_interval = 7.minutes
-    Storage.stub(:scan_watchdog_interval => scan_watchdog_interval)
+    allow(Storage).to receive_messages(:scan_watchdog_interval => scan_watchdog_interval)
     start = Time.parse("Sun March 10 01:00:00 UTC 2010")
     Timecop.travel(start) do
       expect(Storage.scan_watchdog_deliver_on - (start + scan_watchdog_interval)).to be_within(0.001).of(0.0)
@@ -113,7 +113,7 @@ describe Storage do
 
     it "#scan_queue_item" do
       scan_collection_timeout = 456
-      Storage.stub(:scan_collection_timeout => scan_collection_timeout)
+      allow(Storage).to receive_messages(:scan_collection_timeout => scan_collection_timeout)
 
       miq_task = FactoryGirl.create(:miq_task)
       qitem = @storage1.scan_queue_item(miq_task.id)
@@ -152,7 +152,7 @@ describe Storage do
     it "#scan_queue_watchdog" do
       miq_task = FactoryGirl.create(:miq_task)
       deliver_on = Time.now.utc + 1.hour
-      Storage.stub(:scan_watchdog_deliver_on => deliver_on)
+      allow(Storage).to receive_messages(:scan_watchdog_deliver_on => deliver_on)
       watchdog = Storage.scan_queue_watchdog(miq_task.id)
       expect(watchdog.class_name).to eq('Storage')
       expect(watchdog.method_name).to eq('scan_watchdog')
@@ -222,7 +222,7 @@ describe Storage do
 
       context "with performance capture disabled" do
         before(:each) do
-          Storage.any_instance.stub(:perf_capture_enabled? => false)
+          allow_any_instance_of(Storage).to receive_messages(:perf_capture_enabled? => false)
         end
 
         it "#scan_eligible_storages" do
@@ -243,7 +243,7 @@ describe Storage do
 
       context "with performance capture enabled" do
         before(:each) do
-          Storage.any_instance.stub(:perf_capture_enabled? => true)
+          allow_any_instance_of(Storage).to receive_messages(:perf_capture_enabled? => true)
           allow(MiqEvent).to receive(:raise_evm_job_event)
         end
 
@@ -255,7 +255,7 @@ describe Storage do
         end
 
         it "#scan_queue" do
-          Storage.stub(:max_parallel_storage_scans => 1)
+          allow(Storage).to receive_messages(:max_parallel_storage_scans => 1)
           bogus_id = @storage1.id - 1
           miq_task = FactoryGirl.create(:miq_task)
           miq_task.context_data = {:targets => [], :complete => [], :pending  => {}}
@@ -265,7 +265,7 @@ describe Storage do
           miq_task.save!
 
           qitem1  = FactoryGirl.create(:miq_queue)
-          Storage.any_instance.stub(:scan_queue_item => qitem1)
+          allow_any_instance_of(Storage).to receive_messages(:scan_queue_item => qitem1)
           Storage.scan_queue(miq_task)
           miq_task.reload
           expect(miq_task.context_data[:targets]).to eq([@storage1.id, @storage2.id, @storage3.id])
@@ -277,7 +277,7 @@ describe Storage do
           miq_task.context_data[:pending].delete(@storage1.id)
           miq_task.save!
           qitem2  = FactoryGirl.create(:miq_queue)
-          Storage.any_instance.stub(:scan_queue_item => qitem2)
+          allow_any_instance_of(Storage).to receive_messages(:scan_queue_item => qitem2)
           Storage.scan_queue(miq_task)
           miq_task.reload
           expect(miq_task.context_data[:targets]).to eq([@storage1.id, @storage2.id, @storage3.id])
@@ -298,7 +298,7 @@ describe Storage do
 
         it "#scan_watchdog" do
           max_qitems_per_scan_request = 1
-          Storage.stub(:max_qitems_per_scan_request => max_qitems_per_scan_request)
+          allow(Storage).to receive_messages(:max_qitems_per_scan_request => max_qitems_per_scan_request)
           miq_task = FactoryGirl.create(:miq_task)
           miq_task.context_data = {:targets => [], :complete => [], :pending  => {}}
           miq_task.context_data[:targets]  = [@storage1.id, @storage2.id, @storage3.id]

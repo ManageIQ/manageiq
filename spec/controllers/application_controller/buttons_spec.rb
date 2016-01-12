@@ -90,7 +90,7 @@ describe ApplicationController do
     it "check button_set_form_vars sets correct applies_to_class when editing a button" do
       # button_set_form_vars expects that the simulation screen will be built,
       #   which, in turn, needs *something* to come back from automate
-      MiqAeClass.stub(:find_distinct_instances_across_domains => [double(:name => "foo")])
+      allow(MiqAeClass).to receive_messages(:find_distinct_instances_across_domains => [double(:name => "foo")])
 
       custom_button = FactoryGirl.create(:custom_button, :applies_to_class => "Vm")
       custom_button.uri_path, custom_button.uri_attributes, custom_button.uri_message = CustomButton.parse_uri("/test/")

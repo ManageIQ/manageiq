@@ -26,12 +26,12 @@ describe MiqReplicationWorker::Runner do
 
   context "testing child process heartbeat" do
     it "should be alive if heartbeat within threshold" do
-      @worker.stub(:child_process_last_heartbeat => 1.second.ago.utc)
+      allow(@worker).to receive_messages(:child_process_last_heartbeat => 1.second.ago.utc)
       expect(@worker.child_process_recently_active?).to be_truthy
     end
 
     it "should not be alive if heartbeat beyond threshold" do
-      @worker.stub(:child_process_last_heartbeat => 6.minutes.ago.utc)
+      allow(@worker).to receive_messages(:child_process_last_heartbeat => 6.minutes.ago.utc)
       expect(@worker.child_process_recently_active?).to be_falsey
     end
   end

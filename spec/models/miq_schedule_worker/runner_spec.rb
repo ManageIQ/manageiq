@@ -507,7 +507,7 @@ describe MiqScheduleWorker::Runner do
 
             context "#do_work appliance_specific" do
               it "on an appliance" do
-                MiqEnvironment::Command.stub(:is_appliance? => true)
+                allow(MiqEnvironment::Command).to receive_messages(:is_appliance? => true)
                 expect_any_instance_of(MiqServer).to receive(:has_assigned_role?).with("rhn_mirror").and_return(true)
 
                 Timecop.freeze(@start_time) do
@@ -519,7 +519,7 @@ describe MiqScheduleWorker::Runner do
               end
 
               it "not an appliance" do
-                MiqEnvironment::Command.stub(:is_appliance? => false)
+                allow(MiqEnvironment::Command).to receive_messages(:is_appliance? => false)
 
                 Timecop.freeze(@start_time) do
                   @schedule_worker.schedules_for_all_roles

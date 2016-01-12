@@ -15,7 +15,7 @@ describe ProviderObjectMixin do
     @ems        = double("ems")
     @connection = double("connection")
     expect(@ems).to receive(:with_provider_connection).and_yield(@connection)
-    TestClass.any_instance.stub(:ext_management_system => @ems)
+    allow_any_instance_of(TestClass).to receive_messages(:ext_management_system => @ems)
   end
 
   it "#with_provider_connection" do
@@ -26,7 +26,7 @@ describe ProviderObjectMixin do
   context "when provider_object is written" do
     before do
       @provider_object = double("provider_object")
-      TestClass.any_instance.stub(:provider_object => @provider_object)
+      allow_any_instance_of(TestClass).to receive_messages(:provider_object => @provider_object)
     end
 
     it "#provider_object" do

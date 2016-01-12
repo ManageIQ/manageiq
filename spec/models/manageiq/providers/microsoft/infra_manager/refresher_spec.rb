@@ -22,7 +22,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
     output[:data].map{ |h| h.delete(:stdout) }
     output[:data][0][:stdout] = Base64.encode64(ActiveSupport::Gzip.compress(temp))
 
-    WinRM::WinRMWebService.any_instance.stub(:run_powershell_script => output)
+    allow_any_instance_of(WinRM::WinRMWebService).to receive_messages(:run_powershell_script => output)
   end
 
   it ".ems_type" do

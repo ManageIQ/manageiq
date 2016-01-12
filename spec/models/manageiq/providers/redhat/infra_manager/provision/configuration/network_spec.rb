@@ -22,13 +22,13 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Ne
                                :status      => 'Ok',
                                :options     => {:src_vm_id => template.id}
                               )
-    @task.stub(
+    allow(@task).to receive_messages(
       :dest_cluster             => ems_cluster,
       :get_provider_destination => rhevm_vm
     )
 
-    rhevm_vm.stub(:nics => [rhevm_nic1, rhevm_nic2])
-    Ovirt::Cluster.stub(:find_by_href => rhevm_cluster)
+    allow(rhevm_vm).to receive_messages(:nics => [rhevm_nic1, rhevm_nic2])
+    allow(Ovirt::Cluster).to receive_messages(:find_by_href => rhevm_cluster)
   end
 
   context "#configure_network_adapters" do

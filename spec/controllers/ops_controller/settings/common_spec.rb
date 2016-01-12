@@ -21,7 +21,7 @@ describe OpsController do
         @svr2.vm_scan_host_affinity = [@host2]
         @svr1.vm_scan_storage_affinity = [@storage1]
         @svr2.vm_scan_storage_affinity = [@storage2]
-        MiqServer.any_instance.stub(:is_a_proxy? => true)
+        allow_any_instance_of(MiqServer).to receive_messages(:is_a_proxy? => true)
 
         tree_hash = {
           :trees       => {

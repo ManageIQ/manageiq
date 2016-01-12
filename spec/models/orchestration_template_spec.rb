@@ -74,7 +74,7 @@ describe OrchestrationTemplate do
 
   describe "#eligible_managers" do
     before do
-      OrchestrationTemplate.stub(:eligible_manager_types => [ManageIQ::Providers::Amazon::CloudManager, ManageIQ::Providers::Openstack::CloudManager])
+      allow(OrchestrationTemplate).to receive_messages(:eligible_manager_types => [ManageIQ::Providers::Amazon::CloudManager, ManageIQ::Providers::Openstack::CloudManager])
       @template = FactoryGirl.create(:orchestration_template)
       @aws = FactoryGirl.create(:ems_amazon)
       @openstack = FactoryGirl.create(:ems_openstack)
@@ -89,7 +89,7 @@ describe OrchestrationTemplate do
     before do
       @template = FactoryGirl.create(:orchestration_template)
       @manager = FactoryGirl.create(:ems_amazon)
-      @manager.stub(:orchestration_template_validate => "Validation Message")
+      allow(@manager).to receive_messages(:orchestration_template_validate => "Validation Message")
     end
 
     it "uses caller provided manager to do validation" do
@@ -97,12 +97,12 @@ describe OrchestrationTemplate do
     end
 
     it "uses all eligible managers to do validation" do
-      @template.stub(:eligible_managers => [@manager])
+      allow(@template).to receive_messages(:eligible_managers => [@manager])
       expect(@template.validate_content).to eq("Validation Message")
     end
 
     it "gets an error message if no eligible managers" do
-      @template.stub(:eligible_managers => ["Invalid Object"])
+      allow(@template).to receive_messages(:eligible_managers => ["Invalid Object"])
       expect(@template.validate_content).to match(/No (.*) is capable to validate the template/)
     end
   end
@@ -174,7 +174,7 @@ describe OrchestrationTemplate do
 
     context "when format validation fails" do
       it "raises an error showing the failure reason" do
-        template.stub(:validate_format => "format is invalid")
+        allow(template).to receive_messages(:validate_format => "format is invalid")
         expect { template.save_with_format_validation! }
           .to raise_error(MiqException::MiqParsingError, "format is invalid")
       end
@@ -182,7 +182,7 @@ describe OrchestrationTemplate do
 
     context "when format validation passes" do
       it "saves the template" do
-        template.stub(:validate_format => nil)
+        allow(template).to receive_messages(:validate_format => nil)
         expect(template.save_with_format_validation!).to be_truthy
       end
     end
@@ -190,7 +190,7 @@ describe OrchestrationTemplate do
     context "when the template is draft" do
       it "always saves the template" do
         template.draft = true
-        template.stub(:validate_format => "format is invalid")
+        allow(template).to receive_messages(:validate_format => "format is invalid")
         expect(template.save_with_format_validation!).to be_truthy
       end
     end

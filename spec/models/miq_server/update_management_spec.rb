@@ -171,7 +171,7 @@ describe MiqServer do
   it "#check_updates" do
     expect(yum).to receive(:updates_available?).twice.and_return(true)
     expect(yum).to receive(:version_available).with("cfme-appliance").once.and_return({"cfme-appliance" => "3.1"})
-    MiqDatabase.stub(:postgres_package_name => "postgresql-server")
+    allow(MiqDatabase).to receive_messages(:postgres_package_name => "postgresql-server")
 
     @server.check_updates
 
@@ -180,7 +180,7 @@ describe MiqServer do
 
   context "#apply_updates" do
     before do
-      MiqDatabase.stub(:postgres_package_name => "postgresql-server")
+      allow(MiqDatabase).to receive_messages(:postgres_package_name => "postgresql-server")
     end
 
     it "will apply cfme updates only with local database" do
@@ -209,7 +209,7 @@ describe MiqServer do
     it "does not have updates to apply" do
       expect(yum).to receive(:updates_available?).twice.and_return(false)
       expect(yum).to receive(:version_available).once.and_return({})
-      MiqDatabase.stub(:postgres_package_name => "postgresql-server")
+      allow(MiqDatabase).to receive_messages(:postgres_package_name => "postgresql-server")
 
       @server.apply_updates
     end

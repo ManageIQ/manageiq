@@ -35,7 +35,7 @@ describe DatabaseBackup do
   context "region" do
     before(:each) do
       @region = FactoryGirl.create(:miq_region, :region => 3)
-      described_class.stub(:my_region_number => @region.region)
+      allow(described_class).to receive_messages(:my_region_number => @region.region)
     end
 
     it "should set region_name based on my_region_number if database backup has a region" do
@@ -45,7 +45,7 @@ describe DatabaseBackup do
 
     it "should set region_name to region_0 if region is unknown" do
       # my_region_number => 0 if REGION file is missing or empty
-      described_class.stub(:my_region_number => 0)
+      allow(described_class).to receive_messages(:my_region_number => 0)
       backup = FactoryGirl.create(:database_backup)
       expect(backup.region_name).to eq("region_0")
     end

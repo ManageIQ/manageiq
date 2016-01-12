@@ -8,7 +8,7 @@ describe "JobProxyDispatcherVmMiqServerProxies" do
     before(:each) do
       @server1 = EvmSpecHelper.local_miq_server
       @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone)
-      MiqServer.any_instance.stub(:is_vix_disk? => true)
+      allow_any_instance_of(MiqServer).to receive_messages(:is_vix_disk? => true)
     end
 
     context "with hosts with a miq_proxy, vmware vms on storages" do
@@ -41,7 +41,7 @@ describe "JobProxyDispatcherVmMiqServerProxies" do
 
       context "with no vix disk enabled servers, " do
         before(:each) do
-          MiqServer.any_instance.stub(:is_vix_disk? => false)
+          allow_any_instance_of(MiqServer).to receive_messages(:is_vix_disk? => false)
         end
         it "should return no servers" do
           expect(@vm.miq_server_proxies).to be_empty
@@ -53,7 +53,7 @@ describe "JobProxyDispatcherVmMiqServerProxies" do
           @vms_zone = FactoryGirl.create(:zone, :description => "Zone 1", :name => "zone1")
           @server2.zone = @vms_zone
           @server2.save
-          @vm.stub(:my_zone => @vms_zone.name)
+          allow(@vm).to receive_messages(:my_zone => @vms_zone.name)
         end
         it "should return only server2, in same zone" do
           expect(@vm.miq_server_proxies).to eq([@server2])

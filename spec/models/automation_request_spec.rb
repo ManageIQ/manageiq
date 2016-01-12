@@ -137,7 +137,7 @@ describe AutomationRequest do
       @ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, {})
       root = {'ae_result' => 'ok'}
       ws = double('ws')
-      ws.stub(:root => root)
+      allow(ws).to receive_messages(:root => root)
       allow_any_instance_of(AutomationRequest).to receive(:call_automate_event_sync).and_return(ws)
 
       @ar.create_request_tasks

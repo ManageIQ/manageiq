@@ -7,7 +7,7 @@ describe EvmServer do
     let(:server) { described_class.new }
 
     before do
-      MiqServer.stub(:running? => false)
+      allow(MiqServer).to receive_messages(:running? => false)
       allow(PidFile).to receive(:create)
     end
 

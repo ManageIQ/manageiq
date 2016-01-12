@@ -797,7 +797,7 @@ describe ReportController do
     context "normal case" do
       before do
         server = double
-        server.stub(:zone_id => 1)
+        allow(server).to receive_messages(:zone_id => 1)
         allow(MiqServer).to receive(:my_server).and_return(server)
 
         @sch = FactoryGirl.create(:miq_schedule, :enabled => true, :updated_at => 1.hour.ago.utc)
@@ -830,7 +830,7 @@ describe ReportController do
         controller.instance_variable_set(:@_params, :button => "add", :controller => "report",
                                                     :action => "schedule_edit")
         controller.miq_report_schedule_disable
-        controller.stub(:load_edit => true)
+        allow(controller).to receive_messages(:load_edit => true)
         allow(controller).to receive(:replace_right_cell)
         controller.instance_variable_set(:@edit,
                                          :sched_id => nil, :new => {:name => "test_1", :description => "test_1",

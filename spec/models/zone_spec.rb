@@ -91,7 +91,7 @@ describe Zone do
     subject           { described_class }
 
     before do
-      ServerRole.stub(:region_scoped_roles => [ServerRole.new(:name => "inregion")])
+      allow(ServerRole).to receive_messages(:region_scoped_roles => [ServerRole.new(:name => "inregion")])
       allow(MiqServer).to receive(:my_zone) { "myzone" }
     end
 

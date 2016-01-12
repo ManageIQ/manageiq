@@ -127,9 +127,9 @@ describe Host do
 
     context "#start" do
       before do
-        described_class.any_instance.stub(:validate_start   => {})
-        described_class.any_instance.stub(:validate_ipmi    => {:available => true, :message => nil})
-        described_class.any_instance.stub(:run_ipmi_command => "off")
+        allow_any_instance_of(described_class).to receive_messages(:validate_start   => {})
+        allow_any_instance_of(described_class).to receive_messages(:validate_ipmi    => {:available => true, :message => nil})
+        allow_any_instance_of(described_class).to receive_messages(:run_ipmi_command => "off")
         FactoryGirl.create(:miq_event_definition, :name => :request_host_start)
         # admin user is needed to process Events
         FactoryGirl.create(:user_with_group, :userid => "admin", :name => "Administrator")

@@ -3,10 +3,10 @@ require "spec_helper"
 def set_up_controller_for_show_method(controller, ems_id)
   controller.instance_variable_set(:@_params, {:display => "download_pdf", :id => ems_id})
   controller.instance_variable_set(:@settings, :views => {:vm_summary_cool => "summary"})
-  controller.stub(:record_no_longer_exists? => false)
+  allow(controller).to receive_messages(:record_no_longer_exists? => false)
   allow(controller).to receive(:drop_breadcrumb)
   allow(controller).to receive(:disable_client_cache)
-  controller.stub(:render_to_string => "")
+  allow(controller).to receive_messages(:render_to_string => "")
   allow(controller).to receive(:send_data)
   allow(PdfGenerator).to receive(:pdf_from_string).with('', 'pdf_summary').and_return("")
 end
@@ -101,7 +101,7 @@ describe EmsCloudController do
         end
 
         it "successful flash message (unchanged)" do
-          controller.stub(:edit_changed? => false)
+          allow(controller).to receive_messages(:edit_changed? => false)
           expect(mocked_ems_cloud).to receive(:authentication_check).with("amqp", :save => true).and_return([true, ""])
           expect(controller).to receive(:add_flash).with(_("Credential validation was successful"))
           expect(controller).to receive(:render_flash)
@@ -109,7 +109,7 @@ describe EmsCloudController do
         end
 
         it "unsuccessful flash message (changed)" do
-          controller.stub(:edit_changed? => true)
+          allow(controller).to receive_messages(:edit_changed? => true)
           expect(mocked_ems_cloud).to receive(:authentication_check)
             .with("amqp", :save => false).and_return([false, "Invalid"])
           expect(controller).to receive(:add_flash).with(_("Credential validation was not successful: Invalid"), :error)

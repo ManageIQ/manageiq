@@ -91,7 +91,7 @@ EOXML
         feed_link: "/alert/rss?feed=newest_hosts"
         EOF
 
-      File.stub(:mtime => Time.now.utc)
+      allow(File).to receive_messages(:mtime => Time.now.utc)
       allow(File).to receive(:read).and_return(NEW_YML_FILE)
 
       described_class.sync_from_yml_file(@name)

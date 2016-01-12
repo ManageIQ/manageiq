@@ -122,7 +122,7 @@ describe VMDB::Util do
 
   it ".get_evm_log_for_date" do
     log_files = ["log/rhevm.log", "log/evm.log"]
-    Dir.stub(:glob => log_files)
+    allow(Dir).to receive_messages(:glob => log_files)
 
     expect(described_class.get_evm_log_for_date("log/*.log")).to eq("log/evm.log")
   end
