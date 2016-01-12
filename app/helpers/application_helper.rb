@@ -9,6 +9,12 @@ module ApplicationHelper
   include ToolbarHelper
   include TextualSummaryHelper
 
+  def documentation_link(url = nil, documentation_subject = "")
+    if url
+      link_to(_("For more information, visit the %s documentation.") % documentation_subject, url, :rel => 'external',
+              :class => 'documentation-link', :target => '_blank')
+    end
+  end
   # Create a collapsed panel based on a condition
   def miq_accordion_panel(title, condition, id, &block)
     content_tag(:div, :class => "panel panel-default") do
