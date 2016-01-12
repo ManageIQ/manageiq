@@ -68,6 +68,9 @@ module DuplicateBlocker
       dedup_handler = self.dedup_handler
 
       methods.each do |meth|
+        meth = meth.to_sym
+        next if dedupped_instance_methods.include?(meth)
+        dedupped_instance_methods << meth
         m = instance_method meth
         define_method meth do |*args|
           dedup_handler.handle m.bind(self), *args
@@ -79,11 +82,28 @@ module DuplicateBlocker
       dedup_handler = self.dedup_handler
 
       methods.each do |meth|
+        meth = meth.to_sym
+        next if dedupped_class_methods.include?(meth)
+        dedupped_class_methods << meth
         m = method(meth).unbind
         define_singleton_method meth do |*args|
           dedup_handler.handle m.bind(self), *args
         end
       end
+    end
+
+    #
+    # Returns all registered instance methods that are subjected to be deduplicated
+    #
+    def dedupped_instance_methods
+      @dedupped_instance_methods ||= []
+    end
+
+    #
+    # Returns all registered class methods that are subjected to be deduplicated
+    #
+    def dedupped_class_methods
+      @dedupped_class_methods ||= []
     end
 
     #
