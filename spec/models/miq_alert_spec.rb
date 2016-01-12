@@ -357,4 +357,52 @@ describe MiqAlert do
       MiqAlert.evaluate_hourly_timer
     end
   end
+
+  describe 'Mangement Event' do
+    before do
+      @miq_server = EvmSpecHelper.local_miq_server
+      @vm         = FactoryGirl.create(:vm_vmware)
+      @alert      = FactoryGirl.create(
+        :miq_alert,
+        :enabled            => true,
+        :db                 => "Vm",
+        :options            => {:notifications => {:automate => {:event_name => 'test_event_alert'}}},
+        :expression         => {:eval_method => "nothing", :mode => "internal", :options => {}},
+        :responds_to_events => "request_vm_poweroff"
+      )
+      @alert_prof = FactoryGirl.create(
+        :miq_alert_set,
+        :description => "Alert Profile for Alert Id: #{@alert.id}",
+        :mode        => @vm.class.base_model.name
+      )
+      @alert_prof.add_member(@alert)
+      @alert_prof.assign_to_objects(@vm.id, "Vm")
+    end
+
+    it 'queues evaluation of alert' do
+      expect(MiqQueue).to receive(:put_unless_exists).with(
+        :class_name  => @alert.class.name,
+        :instance_id => @alert.id,
+        :method_name => "evaluate",
+        :args        => [[@vm.class.name, @vm.id], {}],
+        :zone        => MiqServer.my_zone
+      )
+      MiqAlert.evaluate_alerts(@vm, 'request_vm_poweroff')
+    end
+
+    it 'raises event to automate' do
+      MiqAlert.evaluate_alerts(@vm, 'request_vm_poweroff')
+      msg = MiqQueue.first
+      expect(MiqQueue).to receive(:put).with(
+        :class_name  => "MiqAeEvent",
+        :method_name => "raise_evm_event",
+        :args        => ['test_event_alert', [@vm.class.name, @vm.id], anything],
+        :role        => 'automate',
+        :priority    => MiqQueue::HIGH_PRIORITY,
+        :zone        => MiqServer.my_zone
+      )
+      status, message, result = msg.deliver
+      msg.delivered(status, message, result)
+    end
+  end
 end
