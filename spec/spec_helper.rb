@@ -19,34 +19,12 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 Dir[File.join(GEMS_PENDING_ROOT, "spec/support/custom_matchers/*.rb")].each { |f| require f }
 
 RSpec.configure do |config|
-  # == Mock Framework
-  #
-  # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:
-  #
-  # config.mock_with :mocha
-  # config.mock_with :flexmock
-  # config.mock_with :rr
-
-  # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  # config.fixture_path = "#{::Rails.root}/spec/fixtures"
-
-  # If you're not using ActiveRecord, or you'd prefer not to run each of your
-  # examples within a transaction, remove the following line or assign false
-  # instead of true.
   config.use_transactional_fixtures = true
   config.use_instantiated_fixtures  = false
 
   # From rspec-rails, infer what helpers to mix in, such as `get` and
   # `post` methods in spec/controllers, without specifying type
   config.infer_spec_type_from_file_location!
-
-  # config.before(:all) do
-  #   EvmSpecHelper.log_ruby_object_usage
-  # end
-  #
-  # config.after(:all) do
-  #   EvmSpecHelper.log_ruby_object_usage
-  # end
 
   config.include VMDBConfigurationHelper
 
@@ -87,12 +65,20 @@ RSpec.configure do |config|
 
   config.include RakeTaskExampleGroup, :type => :rake_task
 
+  # config.before(:all) do
+  #   EvmSpecHelper.log_ruby_object_usage
+  # end
+  # config.after(:all) do
+  #   EvmSpecHelper.log_ruby_object_usage
+  # end
+
   config.before(:each) do
     EmsRefresh.debug_failures = true
   end
   config.after(:each) do
     EvmSpecHelper.clear_caches
   end
+
   if ENV["TRAVIS"] && ENV["TEST_SUITE"] == "vmdb"
     config.after(:suite) do
       require Rails.root.join("spec/coverage_helper.rb")
