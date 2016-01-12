@@ -27,6 +27,49 @@ module Metric::Capture
     requests
   end
 
+  def self.perf_capture_timer(zone = nil)
+    _log.info "Queueing performance capture..."
+
+    zone ||= MiqServer.my_server.zone(true)
+    perf_capture_health_check(zone)
+    targets = Metric::Targets.capture_targets(zone)
+
+    targets_by_rollup_parent = calc_targets_by_rollup_parent(targets)
+    tasks_by_rollup_parent   = calc_tasks_by_rollup_parent(targets_by_rollup_parent)
+    queue_captures(targets, targets_by_rollup_parent, tasks_by_rollup_parent)
+
+    # Purge tasks older than 4 hours
+    MiqTask.delete_older(4.hours.ago.utc, "name LIKE 'Performance rollup for %'")
+
+    _log.info "Queueing performance capture...Complete"
+  end
+
+  def self.perf_capture_gap(start_time, end_time, zone = nil)
+    _log.info "Queueing performance capture for range: [#{start_time} - #{end_time}]..."
+
+    targets = Metric::Targets.capture_targets(zone, :exclude_storages => true)
+    targets.each { |target| target.perf_capture_queue('historical', :start_time => start_time, :end_time => end_time) }
+
+    _log.info "Queueing performance capture for range: [#{start_time} - #{end_time}]...Complete"
+  end
+
+  def self.perf_capture_gap_queue(start_time, end_time, zone = nil)
+    item = {
+      :class_name  => name,
+      :method_name => "perf_capture_gap",
+      :role        => "ems_metrics_coordinator",
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :args        => [start_time, end_time, zone]
+    }
+
+    zone = Zone.find(zone) if zone.kind_of?(Integer)
+    item[:zone] = zone.name if zone.kind_of?(Zone)
+
+    MiqQueue.put(item)
+  end
+
+  private
+
   def self.capture_threshold(target)
     key, default = MiqAlert.target_needs_realtime_capture?(target) ? [:capture_threshold_with_alerts, 1] : [:capture_threshold, 10]
 
@@ -56,7 +99,6 @@ module Metric::Capture
   end
 
   def self.calc_targets_by_rollup_parent(targets)
-
     # Collect realtime targets and group them by their rollup parent, e.g. {"EmsCluster:4"=>[Host:4], "EmsCluster:5"=>[Host:1, Host:2]}
     targets_by_rollup_parent = targets.inject({}) do |h, target|
       next(h) unless target.kind_of?(Host) && target.perf_capture_now?
@@ -134,52 +176,11 @@ module Metric::Capture
     end
   end
 
-  def self.perf_capture_timer(zone = nil)
-    _log.info "Queueing performance capture..."
-
-    zone ||= MiqServer.my_server.zone(true)
-    perf_capture_health_check(zone)
-    targets = Metric::Targets.capture_targets(zone)
-
-    targets_by_rollup_parent = calc_targets_by_rollup_parent(targets)
-    tasks_by_rollup_parent   = calc_tasks_by_rollup_parent(targets_by_rollup_parent)
-    queue_captures(targets, targets_by_rollup_parent, tasks_by_rollup_parent)
-
-    # Purge tasks older than 4 hours
-    MiqTask.delete_older(4.hours.ago.utc, "name LIKE 'Performance rollup for %'")
-
-    _log.info "Queueing performance capture...Complete"
-  end
-
   def self.perf_target_to_interval_name(target)
     case target
     when Host, VmOrTemplate then                       "realtime"
     when ContainerNode, Container, ContainerGroup then "realtime"
     when Storage then                                  "hourly"
     end
-  end
-
-  def self.perf_capture_gap(start_time, end_time, zone = nil)
-    _log.info "Queueing performance capture for range: [#{start_time} - #{end_time}]..."
-
-    targets = Metric::Targets.capture_targets(zone, :exclude_storages => true)
-    targets.each { |target| target.perf_capture_queue('historical', :start_time => start_time, :end_time => end_time) }
-
-    _log.info "Queueing performance capture for range: [#{start_time} - #{end_time}]...Complete"
-  end
-
-  def self.perf_capture_gap_queue(start_time, end_time, zone = nil)
-    item = {
-      :class_name  => name,
-      :method_name => "perf_capture_gap",
-      :role        => "ems_metrics_coordinator",
-      :priority    => MiqQueue::HIGH_PRIORITY,
-      :args        => [start_time, end_time, zone]
-    }
-
-    zone = Zone.find(zone) if zone.kind_of?(Integer)
-    item[:zone] = zone.name if zone.kind_of?(Zone)
-
-    MiqQueue.put(item)
   end
 end
