@@ -54,22 +54,11 @@ describe OpenstackHandle::Handle do
 
     it "handles ssl connections just fine, too" do
       fog            = double('fog')
-      handle         = OpenstackHandle::Handle.new("dummy", "dummy", "address")
-      auth_url_nossl = OpenstackHandle::Handle.auth_url("address")
+      handle         = OpenstackHandle::Handle.new("dummy", "dummy", "address", 5000, 'v2', 'ssl')
       auth_url_ssl   = OpenstackHandle::Handle.auth_url("address", 5000, "https")
-
-      # setup the socket error for the initial ssl failure
-      socket_error = double('socket_error')
-      allow(socket_error).to receive(:message).and_return("unknown protocol (OpenSSL::SSL::SSLError)")
-      expect(socket_error).to receive(:class).and_return(Object)
-      expect(socket_error).to receive(:backtrace)
 
       expect(OpenstackHandle::Handle).to receive(:raw_connect) do |_, _, address|
         expect(address).to eq(auth_url_ssl)
-        raise Excon::Errors::SocketError.new(socket_error)
-      end
-      expect(OpenstackHandle::Handle).to receive(:raw_connect) do |_, _, address|
-        expect(address).to eq(auth_url_nossl)
         fog
       end
 

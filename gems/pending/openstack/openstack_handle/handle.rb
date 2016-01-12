@@ -36,16 +36,6 @@ module OpenstackHandle
       else
         yield "http", {}
       end
-    rescue Excon::Errors::SocketError => err
-      # TODO(lsmola) keeping this for backwards compatibility, but it should go away, fallback to non ssl can be be
-      # unsafe. We should never send plain text credentials over wire, when SSL selected
-      # TODO: recognizing something in exception message is not very reliable. But somebody would need to go to excon gem
-      # and do proper exceptions like Excon::Errors::SocketError::UnknownProtocolSSL,
-      # Excon::Errors::SocketError::BadCertificate, etc. all of them inheriting from Excon::Errors::SocketError
-      raise unless err.message.include?("end of file reached (EOFError)") ||
-                   err.message.include?("unknown protocol (OpenSSL::SSL::SSLError)")
-      # attempt the same connection without SSL
-      yield "http", {}
     end
 
     def self.raw_connect_try_ssl(username, password, address, port, service = "Compute", opts = nil, api_version = nil,
