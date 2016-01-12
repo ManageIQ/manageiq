@@ -304,6 +304,28 @@ describe ProviderForemanController do
     expect(response.status).to eq(200)
   end
 
+  context "tree_select on provider foreman node" do
+    before do
+      login_as user_with_feature %w(provider_foreman_refresh_provider provider_foreman_edit_provider provider_foreman_delete_provider)
+
+      allow(controller).to receive(:check_privileges)
+      allow(controller).to receive(:process_show_list)
+      allow(controller).to receive(:add_unassigned_configuration_profile_record)
+      allow(controller).to receive(:replace_explorer_trees)
+      allow(controller).to receive(:build_listnav_search_list)
+      allow(controller).to receive(:replace_search_box)
+      allow(controller).to receive(:x_active_tree).and_return(:foreman_providers_tree)
+    end
+
+    it "does not hide Configuration button in the toolbar" do
+      controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
+      key = ems_key_for_provider(@provider)
+      post :tree_select, :id => key
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include('<div class=\"hidden btn-group dropdown\"><button data-explorer=\"true\" title=\"Configuration\"')
+    end
+  end
+
   context "fetches the list setting:Grid/Tile/List from settings" do
     before do
       allow(controller).to receive(:items_per_page).and_return(20)
