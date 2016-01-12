@@ -11,7 +11,7 @@ module Metric::Targets
   def self.capture_infra_targets(zone, options)
     # Preload all of the objects we are going to be inspecting.
     # TODO: Include hosts under clusters
-    includes = {:ext_management_systems => {:hosts => {:tags => {}}, :ems_clusters => :tags}}
+    includes = {:ext_management_systems => {:hosts => {:tags => {}}, :ems_clusters => [:tags, :hosts]}}
     includes[:ext_management_systems][:hosts][:storages] = :tags unless options[:exclude_storages]
     MiqPreloader.preload(zone, includes)
 
