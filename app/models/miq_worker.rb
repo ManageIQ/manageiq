@@ -411,7 +411,7 @@ class MiqWorker < ActiveRecord::Base
     end
 
     # Ensure the hash only contains the values we want to store in the table
-    pinfo.delete_if { |k, _v| !self.class::PROCESS_INFO_FIELDS.include?(k) }
+    pinfo.keep_if { |k, _v| self.class::PROCESS_INFO_FIELDS.include?(k) }
     pinfo[:os_priority] = pinfo.delete(:priority)
     update_attributes(pinfo)
   end
