@@ -35,7 +35,7 @@
       :title: "Select two or more items to compare"
       :url_parms: 'main_div'
       :enabled: 'false'
-      :onwhen: '2+'    
+      :onwhen: '2+'
     - :separator:
     - :button: instance_edit
       :image: edit
@@ -134,6 +134,80 @@
     :enabled: 'false'
     :onwhen: '1+'
     :items:
+    - :button: instance_stop
+      :image: guest_shutdown
+      :text: "Stop"
+      :title: "Stop the selected items"
+      :url_parms: 'main_div'
+      :confirm: "Stop the selected items?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: instance_start
+      :image: power_on
+      :text: "Start"
+      :title: "Start the selected items"
+      :url_parms: 'main_div'
+      :confirm: "Start the selected items?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: instance_pause
+      :image: power_pause
+      :text: "Pause"
+      :title: "Pause the selected items"
+      :url_parms: 'main_div'
+      :confirm: "Pause the selected items?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: instance_suspend
+      :image: suspend
+      :text: "Suspend"
+      :title: "Suspend the selected items"
+      :url_parms: 'main_div'
+      :confirm: "Suspend the selected items?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: instance_shelve
+      :image: power_shelve
+      :text: "Shelve"
+      :title: "Shelve the selected items"
+      :url_parms: 'main_div'
+      :url_parms: 'main_div'
+      :confirm: "Shelve the selected items?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: instance_shelve_offload
+      :image: power_shelve_offload
+      :text: "Shelve Offload"
+      :title: "Shelve Offload the selected items"
+      :url_parms: 'main_div'
+      :confirm: "Shelve Offload the selected items?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: instance_resume
+      :image: power_resume
+      :text: "Resume"
+      :title: "Resume the selected items"
+      :url_parms: 'main_div'
+      :confirm: "Resume the selected items?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :separator:
+    - :button: instance_guest_restart
+      :image: power_reset
+      :text: "Soft Reboot"
+      :title: "Soft Reboot the selected items"
+      :url_parms: 'main_div'
+      :confirm: "Soft Reboot the selected items?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: instance_reset
+      :image: guest_restart
+      :text: "Hard Reboot"
+      :title: "Hard Reboot the Guest OS on the selected items"
+      :url_parms: 'main_div'
+      :confirm: "Hard Reboot the Guest OS on the selected items?"
+      :enabled: 'false'
+      :onwhen: '1+'
     - :button: instance_terminate
       :image: power_off
       :text: "Terminate"
