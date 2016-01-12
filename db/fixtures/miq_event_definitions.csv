@@ -106,7 +106,7 @@ vm_provisioned,VM Provision Complete,Default,vm_process
 vm_start,VM Power On,Default,vm_operational
 request_vm_start,VM Power On Request,Default,vm_operational
 # vm_shutdown,VM Shutdown,Default,vm_operational
-# vm_resume,VM Resume,Default,vm_operational
+vm_resume,VM Resume,Default,vm_operational
 vm_migrate,VM Live Migration (VMOTION),Default,vm_operational
 # vm_relocate,VM Relocation to a New Host,Default,vm_operational
 vm_reset,VM Reset,Default,vm_operational
