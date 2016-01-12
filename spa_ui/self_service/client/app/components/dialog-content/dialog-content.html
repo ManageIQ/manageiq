@@ -1,12 +1,8 @@
 <div>
-  <div ng-if="!vm.supportedDialog">
-    <h2>Service Template Contains Unsupported Provision Dialog Types.</h2>
-    <p>To request this service, continue <a ng-href="{{ vm.API_BASE }}/catalog/explorer">to the Operations UI</a>.</p>
-  </div>
-  <div ng-if=" !vm.dialog.label && vm.supportedDialog ">
+  <div ng-if=" !vm.dialog.label">
     <h2>No Provisioning Dialog Available.</h2>
   </div>
-  <div ng-if=" vm.dialog.label && vm.supportedDialog ">
+  <div ng-if="vm.dialog.label">
     <div>
       <h2 class="text-capitalize no-wrap">{{ ::vm.dialog.label }}</h2>
       <p ng-if="vm.dialog.label != vm.dialog.description">{{ ::vm.dialog.description }}</p>
@@ -32,7 +28,9 @@
                     <input
                       ng-switch-when="DialogFieldTextBox"
                       ng-model="dialogField.default_value"
-                      ng-disabled="{{ ::dialogField.read_only || vm.inputDisabled }}"
+                      ng-disabled="dialogField.read_only || vm.inputDisabled"
+                      ng-change="dialogField.triggerAutoRefresh(dialogField)"
+                      ng-model-options="{debounce: {'default': 500}}"
                       class="form-control"
                       type="{{ dialogField.options.protected ? 'password' : 'text' }}"
                       title="{{ ::inputTitle }}"
@@ -41,7 +39,9 @@
                     <textarea
                       ng-switch-when="DialogFieldTextAreaBox"
                       ng-model="dialogField.default_value"
-                      ng-disabled="{{ ::dialogField.read_only || vm.inputDisabled }}"
+                      ng-disabled="dialogField.read_only || vm.inputDisabled"
+                      ng-change="dialogField.triggerAutoRefresh(dialogField)"
+                      ng-model-options="{debounce: {'default': 500}}"
                       class="form-control"
                       title="{{ ::inputTitle }}"
                       rows="4">{{ dialogField.default_value }}
@@ -51,7 +51,8 @@
                       ng-switch-when="DialogFieldCheckBox"
                       ng-model="dialogField.default_value"
                       ng-true-value="'t'"
-                      ng-disabled="{{ ::dialogField.read_only || vm.inputDisabled }}"
+                      ng-disabled="dialogField.read_only || vm.inputDisabled"
+                      ng-change="dialogField.triggerAutoRefresh(dialogField)"
                       class="form-control"
                       type="checkbox"
                       title="{{ ::inputTitle }}"
@@ -60,11 +61,12 @@
                     <select
                       ng-switch-when="DialogFieldDropDownList"
                       ng-model="dialogField.default_value"
-                      ng-disabled="{{ ::dialogField.read_only || vm.inputDisabled}}"
+                      ng-disabled="dialogField.read_only || vm.inputDisabled"
+                      ng-change="dialogField.triggerAutoRefresh(dialogField)"
                       class="form-control">
-                      <option ng-repeat="fieldValue in ::dialogField.values"
-                              value="{{ ::fieldValue[0] }}">
-                        {{ ::fieldValue[1] }}
+                      <option ng-repeat="fieldValue in dialogField.values"
+                              value="{{ fieldValue[0] }}">
+                        {{ fieldValue[1] }}
                       </option>
                     </select>
 
@@ -77,8 +79,9 @@
                         <input
                           type="radio"
                           ng-model="dialogField.default_value"
+                          ng-change="dialogField.triggerAutoRefresh(dialogField)"
+                          ng-disabled="dialogField.read_only || vm.inputDisabled"
                           name="{{ dialogField.name }}"
-                          ng-disabled="{{ ::dialogField.read_only || vm.inputDisabled }}"
                           value="{{ ::fieldValue[0] }}"/>
                         {{ ::fieldValue[1] }}
                       </label>
@@ -87,6 +90,7 @@
                     <input
                       ng-switch-when="DialogFieldDateControl"
                       ng-model="dialogField.default_value"
+                      ng-change="triggerAutoRefresh(dialogField)"
                       pf-datepicker options="vm.dateOptions"
                       date="dialogField.default_value">
 
@@ -94,6 +98,7 @@
                       <div class="col-sm-6 dateTimePadding">
                         <input
                           ng-model="dialogField.default_value"
+                          ng-change="dialogField.triggerAutoRefresh(dialogField)"
                           pf-datepicker options="vm.dateOptions"
                           date="dialogField.default_value">
                       </div>
@@ -103,6 +108,12 @@
                     </div>
 
                     <span ng-switch-default ng-hide="true"></span>
+                  </div>
+
+                  <div class="col-sm-1" ng-if="dialogField.dynamic && dialogField.show_refresh_button">
+                    <button type="button" class="btn" ng-click="dialogField.refreshSingleDialogField(dialogField)">
+                      Refresh
+                    </button>
                   </div>
                 </div>
               </form>
@@ -121,7 +132,7 @@
 
                     <input
                       ng-switch-when="DialogFieldTextBox"
-                      ng-disabled="{{ ::dialogField.read_only || vm.inputDisabled }}"
+                      ng-disabled="dialogField.read_only || vm.inputDisabled"
                       class="form-control"
                       type="{{ dialogField.options.protected ? 'password' : 'text' }}"
                       title="{{ ::inputTitle }}"
@@ -129,7 +140,7 @@
 
                     <textarea
                       ng-switch-when="DialogFieldTextAreaBox"
-                      ng-disabled="{{ ::dialogField.read_only || vm.inputDisabled }}"
+                      ng-disabled="dialogField.read_only || vm.inputDisabled"
                       class="form-control"
                       title="{{ ::inputTitle }}"
                       rows="4">{{ vm.parsedOptions[dialogField.name] }}
@@ -138,7 +149,7 @@
                     <input
                       ng-switch-when="DialogFieldCheckBox"
                       ng-true-value="'t'"
-                      ng-disabled="{{ ::dialogField.read_only || vm.inputDisabled }}"
+                      ng-disabled="dialogField.read_only || vm.inputDisabled"
                       class="form-control"
                       type="checkbox"
                       title="{{ ::inputTitle }}"
@@ -146,7 +157,7 @@
 
                     <select
                       ng-switch-when="DialogFieldDropDownList"
-                      ng-disabled="{{ ::dialogField.read_only || vm.inputDisabled}}"
+                      ng-disabled="dialogField.read_only || vm.inputDisabled"
                       class="form-control">
                       <option>{{vm.parsedOptions[dialogField.name]}}</option>
                     </select>
