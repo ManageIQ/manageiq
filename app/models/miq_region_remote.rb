@@ -12,7 +12,7 @@ class MiqRegionRemote < ApplicationRecord
     with_remote_connection(host, port, username, password, database, adapter) do |conn|
       _log.info "Clearing region [#{region}] from remote host [#{host}]..."
 
-      tables ||= conn.tables.reject { |t| t =~ /^schema_migrations|^rr/ }.sort
+      tables ||= conn.tables.reject { |t| t =~ /^schema_migrations|^ar_internal_metadata|^rr/ }.sort
       tables.each do |t|
         pk = conn.primary_key(t)
         if pk

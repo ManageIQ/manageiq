@@ -107,7 +107,7 @@ describe "evm:dbsync" do
 
     @slave_connection.tables.sort.each do |t|
       next if t =~ /^rr\d+_/
-      next if t == "schema_migrations"
+      next if t == "schema_migrations" || t == "ar_internal_metadata"
 
       expected = (t =~ excluded_tables_regex ? 0 : row_count(@slave_connection, t))
       got      = row_count(@master_connection, t)
