@@ -54,14 +54,14 @@ class VmOrTemplate < ActiveRecord::Base
 
   has_one                   :operating_system, :dependent => :destroy
   has_one                   :hardware, :dependent => :destroy
-  belongs_to                :host
-  belongs_to                :ems_cluster
+  belongs_to                :host, :inverse_of => :vms_and_templates
+  belongs_to                :ems_cluster, :inverse_of => :vms_and_templates
 
   belongs_to                :storage
   has_many                  :repositories, :through => :storage
   has_and_belongs_to_many   :storages, :join_table => 'storages_vms_and_templates'
 
-  belongs_to                :ext_management_system, :foreign_key => "ems_id"
+  belongs_to                :ext_management_system, :foreign_key => "ems_id", :inverse_of => :vms_and_templates
 
   has_one                   :miq_provision, :dependent => :nullify, :as => :destination
   has_many                  :miq_provisions_from_template, :class_name => "MiqProvision", :as => :source, :dependent => :nullify

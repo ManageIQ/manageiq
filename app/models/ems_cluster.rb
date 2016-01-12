@@ -7,10 +7,10 @@ class EmsCluster < ActiveRecord::Base
   acts_as_miq_taggable
 
   belongs_to  :ext_management_system, :foreign_key => "ems_id"
-  has_many    :hosts, :dependent => :nullify
-  has_many    :vms_and_templates
+  has_many    :hosts, :inverse_of => :ems_cluster, :dependent => :nullify
+  has_many    :vms_and_templates, :inverse_of => :ems_cluster
   has_many    :miq_templates
-  has_many    :vms
+  has_many    :vms, :inverse_of => :ems_cluster
 
   has_many    :metrics,                :as => :resource  # Destroy will be handled by purger
   has_many    :metric_rollups,         :as => :resource  # Destroy will be handled by purger

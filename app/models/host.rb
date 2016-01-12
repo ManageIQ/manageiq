@@ -40,11 +40,11 @@ class Host < ActiveRecord::Base
   validates_inclusion_of    :user_assigned_os, :in => ["linux_generic", "windows_generic", nil]
   validates_inclusion_of    :vmm_vendor, :in => VENDOR_TYPES.values
 
-  belongs_to                :ext_management_system, :foreign_key => "ems_id"
-  belongs_to                :ems_cluster
+  belongs_to                :ext_management_system, :foreign_key => "ems_id", :inverse_of => :hosts
+  belongs_to                :ems_cluster, :inverse_of => :hosts
   has_one                   :operating_system, :dependent => :destroy
   has_one                   :hardware, :dependent => :destroy
-  has_many                  :vms_and_templates, :dependent => :nullify
+  has_many                  :vms_and_templates, :dependent => :nullify, :inverse_of => :host
   has_many                  :vms
   has_many                  :miq_templates
   has_and_belongs_to_many   :storages, :join_table => :host_storages
