@@ -19,6 +19,13 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 Dir[File.join(GEMS_PENDING_ROOT, "spec/support/custom_matchers/*.rb")].each { |f| require f }
 
 RSpec.configure do |config|
+  config.expect_with :rspec do |c|
+    c.syntax = :expect
+  end
+  config.mock_with :rspec do |c|
+    c.syntax = :expect
+  end
+
   config.use_transactional_fixtures = true
   config.use_instantiated_fixtures  = false
 
