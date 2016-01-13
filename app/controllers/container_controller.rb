@@ -66,9 +66,10 @@ class ContainerController < ApplicationController
       @refresh_partial = "layouts/performance"
     end
 
-    redirect_to :action     => 'show',
+    node_type = TreeBuilder.get_prefix_for_model(@record.class.base_model)
+    redirect_to :action     => 'explorer',
                 :controller => @record.class.base_model.to_s.underscore,
-                :id         => @record.id unless @display == "performance"
+                :id         => "#{node_type}-#{@record.id}" unless @display == "performance"
   end
 
   def show_timeline
