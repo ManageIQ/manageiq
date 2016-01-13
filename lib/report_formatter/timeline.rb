@@ -87,7 +87,7 @@ module ReportFormatter
         when "BottleneckEvent"
           #         e_title = "#{ui_lookup(:model=>rec[:resource_type])}: #{rec[:resource_name]}"
           e_title = rec[:resource_name]
-          e_image = ActionController::Base.helpers.image_path("100/#{bubble_icon(rec[:resource_type])}.png")
+          e_image = ActionController::Base.helpers.image_path("100/#{bubble_icon(rec)}.png")
           e_icon = ActionController::Base.helpers.image_path("timeline/#{rec.event_type.downcase}_#{rec[:severity]}.png")
         #         e_text = e_title # Commented out since name is showing in the columns anyway
         when "Vm"
@@ -299,16 +299,20 @@ module ReportFormatter
       end
     end
 
-    def bubble_icon(typ)
-      case typ.downcase
+    def bubble_icon(rec)
+      case rec.resource_type.downcase
       when "emscluster"
         return "cluster"
       when "miqenterprise"
         return "enterprise"
       when "extmanagementsystem"
-        return "ems"
+        if rec.resource.kind_of?(ExtManagementSystem) && rec.resource.emstype == "rhevm"
+          return "vendor-redhat"
+        else
+          return "ems"
+        end
       else
-        return typ.downcase
+        return rec.resource_type.downcase
       end
     end
 
