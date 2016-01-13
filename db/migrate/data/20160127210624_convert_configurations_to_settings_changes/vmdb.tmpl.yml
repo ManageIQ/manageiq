@@ -332,6 +332,8 @@ workers:
         :amqp_heartbeat: 30
       :event_catcher_amazon:
         :poll: 15.seconds
+      :event_catcher_azure:
+        :poll: 15.seconds
       :event_catcher_kubernetes:
         :poll: 1.seconds
       :event_catcher_openshift:

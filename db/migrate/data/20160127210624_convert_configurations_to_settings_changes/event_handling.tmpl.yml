@@ -130,6 +130,7 @@ event_groups:
     - orchestration.autoscaling.error
     - servergroup.update
     - servergroup.addmemeber
+    - virtualMachines_write_EndRequest
     :detail:
     - EnterMaintenanceMode_Task
     - ExitMaintenanceMode_Task
@@ -177,6 +178,7 @@ event_groups:
     - orchestration.stack.delete.end
     - orchestration.stack.delete.error
     - servergroup.delete
+    - virtualMachines_delete_EndRequest
     :detail:
     - Destroy_Task
     - Destroy_Task_Complete
@@ -534,6 +536,9 @@ event_groups:
     - NODE_REBOOT
     - NODE_NODESCHEDULABLE
     - NODE_NODENOTSCHEDULABLE
+    - virtualMachines_deallocate_EndRequest
+    - virtualMachines_start_EndRequest
+    - virtualMachines_restart_EndRequest
     :detail:
     - PowerOffVM_Task
     - PowerOffVM_Task_Complete
