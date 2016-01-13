@@ -4,8 +4,8 @@
   = render :partial => "layouts/flash_msg"
   = form_tag({:action => 'create',
               :id     => "report_basic_form"},
-             {:class  => "form-horizontal",
-              :method => :post}) do
+             :class  => "form-horizontal",
+             :method => :post) do
     %h3
       = _('Basic Report Info')
     .form-group

@@ -5,8 +5,8 @@
   = render :partial => 'layouts/quick_search'
   #searchbox
     = form_tag({:action => 'show_list'},
-               {:class  => "search-pf has-button form-group pull-right",
-                :method => :post}) do
+               :class  => "search-pf has-button form-group pull-right",
+               :method => :post) do
       .form-group.has-clear
         .search-pf-input-group
           %label{"for" => "search_text", :class => "sr-only"}

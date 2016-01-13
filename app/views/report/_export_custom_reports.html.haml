@@ -9,9 +9,9 @@
   = form_tag({:action    => "upload",
               :typ       => "import",
               :dbtype    => @sb[:dbtype]},
-             {:class     => "form-horizontal",
-              :multipart => true,
-              :method    => :post}) do
+             :class     => "form-horizontal",
+             :multipart => true,
+             :method    => :post) do
     - overwrite = @sb[:overwrite] ? true : false
     .form-group
       .col-md-8

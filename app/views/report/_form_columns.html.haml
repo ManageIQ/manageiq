@@ -2,8 +2,8 @@
 #columns_div
   = form_tag({:action => 'create',
               :id     => "report_columns_form"},
-             {:class  => "form-horizontal",
-              :method => :post}) do
+             :class  => "form-horizontal",
+             :method => :post) do
     %h3
       = _('Configure Report Columns')
     .form-group

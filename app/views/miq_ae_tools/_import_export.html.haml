@@ -11,10 +11,10 @@
 .import-or-export
   %h3
     = _('Import Datastore classes (*.zip)')
-  = form_tag({:action    => "upload_import_file"},
-             {:target    => "upload_target",
-              :multipart => true,
-              :method    => :post}) do
+  = form_tag({:action => "upload_import_file"},
+             :target    => "upload_target",
+             :multipart => true,
+             :method    => :post) do
     .form-horizontal
       .form-group
         .col-md-4
@@ -27,7 +27,7 @@
   %h3
     = _('Export')
   = form_tag({:action => "export_datastore"},
-             {:method => :get}) do
+             :method => :get) do
     = image_submit_tag("/images/toolbars/export.png",
                        :alt   => t = _("Export all classes and instances"),
                        :title => t)

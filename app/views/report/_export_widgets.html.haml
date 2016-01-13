@@ -13,11 +13,11 @@
 
   %h3
     = _('Import')
-  = form_tag({:action    => "upload_widget_import_file"},
-             {:class     => "form-horizontal",
-              :target    => "upload_target",
-              :multipart => true,
-              :method    => :post}) do
+  = form_tag({:action => "upload_widget_import_file"},
+             :class     => "form-horizontal",
+             :target    => "upload_target",
+             :multipart => true,
+             :method    => :post) do
     .form-group
       .col-md-4
         = file_field("upload", "file",
@@ -39,8 +39,8 @@
       .col-md-8
         .export-choices
           = form_tag({:action => "export_widgets"},
-                     {:id     => "export-widgets-form",
-                      :method => :get}) do
+                     :id     => "export-widgets-form",
+                     :method => :get) do
             = select_tag("widgets[]",
               options_for_select(@widget_exports),
               :class    => "widget-export",
