@@ -241,6 +241,7 @@ module ManageIQ::Providers
 
         populate_hardware_hash_with_disks(new_result[:hardware][:disks], instance)
         populate_key_pairs_with_ssh_keys(new_result[:key_pairs], instance)
+        populate_hardware_hash_with_networks(new_result[:hardware][:networks], instance)
 
         return uid, new_result
       end
@@ -256,6 +257,24 @@ module ManageIQ::Providers
           disk_location = disk["index"]
 
           add_instance_disk(hardware_disks_array, disk_size, disk_name, disk_location)
+        end
+      end
+
+      def populate_hardware_hash_with_networks(hardware_networks_array, instance)
+        instance.network_interfaces.each do |nic|
+          network_uid = parse_uid_from_url(nic["network"])
+
+          hardware_networks_array << {
+            :description => "#{network_uid} private",
+            :ipaddress   => nic["networkIP"]
+          }
+
+          nic["accessConfigs"].to_a.each do |nic_access|
+            hardware_networks_array << {
+              :description => "#{network_uid} #{nic_access["name"]}",
+              :ipaddress   => nic_access["natIP"]
+            }
+          end
         end
       end
 
