@@ -543,8 +543,31 @@ module Rbac
     end
   end
 
+  # it skips filters which are substring in any other @filters
+  # @param filters string array with filters
+  # @return filtered array with only most specialized filters
+  # example:
+  # it converts:
+  # ["/belongsto/ExtManagementSystem|XX1/EmsFolder|Folder1/EmsFolder/YY1...",
+  # "/belongsto/ExtManagementSystem|XX1"
+  # "/belongsto/ExtManagementSystem|XX2"]
+  # to
+  # ["/belongsto/ExtManagementSystem|XX1/EmsFolder|Folder1/EmsFolder/YY1...",
+  # "/belongsto/ExtManagementSystem|XX2"]
+  def self.get_most_specialized_filters(filters)
+    include_substring_in_filters = lambda do |substr|
+      has_substr = filters.select do |x|
+        x.starts_with?(substr) && x != substr
+      end
+      has_substr.empty?
+    end
+
+    filters.select { |x| include_substring_in_filters.call(x) }
+  end
+
   def self.get_belongsto_matches(blist, klass)
     results = []
+    blist = get_most_specialized_filters(blist) if klass <= VmOrTemplate
     blist.each do |bfilter|
       vcmeta_list = MiqFilter.belongsto2object_list(bfilter)
       next if vcmeta_list.empty?
