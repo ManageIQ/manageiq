@@ -221,6 +221,18 @@
 .product-vendor-atomic-enterprise:before {
   content: "\e62d";
 }
+.product-compare:before {
+    content: "\e62e";
+}
+.product-compare_same:before {
+    content: "\e62e";
+}
+.product-compare_diff:before {
+    content: "\e62f";
+}
+.product-compare_all:before {
+    content: "\e630";
+}
 
 /* define  colors */
 .product-custom-1:before {
