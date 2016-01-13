@@ -38,11 +38,11 @@
 
 @font-face {
   font-family: 'icomoon';
-  src: url('#{$font-path}/../icomoon.eot?1i9inh');
-  src: url('#{$font-path}/../icomoon.eot?1i9inh#iefix') format('embedded-opentype'),
-       url('#{$font-path}/../icomoon.woff?1i9inh') format('woff'),
-       url('#{$font-path}/../icomoon.ttf?1i9inh') format('truetype'),
-       url('#{$font-path}/../icomoon.svg?1i9inh#icomoon') format('svg');
+  src: font-url('icomoon.eot?1i9inh');
+  src: font-url('icomoon.eot?1i9inh#iefix') format('embedded-opentype'),
+       font-url('icomoon.woff?1i9inh') format('woff'),
+       font-url('icomoon.ttf?1i9inh') format('truetype'),
+       font-url('icomoon.svg?1i9inh#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
