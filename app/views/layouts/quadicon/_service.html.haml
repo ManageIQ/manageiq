@@ -9,6 +9,7 @@
       {:action => 'x_show', :id => to_cid(item.id)},
       "data-miq_sparkle_on"  => true,
       "data-miq_sparkle_off" => true,
+      "data-method"          => :post,
       :remote                => true)
   - else
     %a{:title => h(item.name)}

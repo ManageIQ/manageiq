@@ -10,6 +10,7 @@
               {:action => "sort_template_grid", :sort_choice => h, :field_id => field_id, :id => id.to_s},
               "data-miq_sparkle_on"  => true,
               "data-miq_sparkle_off" => true,
+              "data-method"          => :post,
               :remote                => true)
             - if @edit[:template_columns][i] == @edit[:template_sortcol]
               %img{:src => "/images/icons/16/sort_#{@edit[:template_sortdir] == 'ASC' ? 'up' : 'down'}.png"}

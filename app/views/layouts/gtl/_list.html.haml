@@ -44,6 +44,7 @@
                   {:action => action_url, :sort_choice => h},
                   "data-miq_sparkle_on"  => true,
                   "data-miq_sparkle_off" => true,
+                  "data-method"          => :post,
                   :remote                => true)
             - else
               %th
@@ -51,6 +52,7 @@
                   {:action => action_url, :sort_choice => h},
                   "data-miq_sparkle_on"  => true,
                   "data-miq_sparkle_off" => true,
+                  "data-method"          => :post,
                   :remote                => true)
           - else
             -# Disable column sorting when embedded, for now

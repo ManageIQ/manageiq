@@ -34,7 +34,8 @@
               :id                    => "val",
               "data-miq_sparkle_on"  => true,
               "data-miq_sparkle_off" => true,
-              :remote                => true)
+              :remote                => true,
+              "data-method"          => :post)
 
 %div{:id => "#{valtype}_validate_buttons_off", :style => ("display:none" if @edit[statuskey])}
   = button_tag(_("Validate"),

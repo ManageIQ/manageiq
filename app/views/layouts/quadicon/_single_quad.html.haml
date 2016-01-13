@@ -25,6 +25,7 @@
             {:action => 'x_show', :id => controller.send(:list_row_id, item)},
             "data-miq_sparkle_on"  => true,
             "data-miq_sparkle_off" => true,
+            "data-method"          => :post,
             :remote                => true)
         - else
           %a{:href => url_for_record(item), :title => h(name)}
