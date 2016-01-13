@@ -154,7 +154,7 @@ class ApiController
 
       zone_id = parse_id(data[ZONE_ATTR], :zone)
       raise BadRequestError, "Missing zone href or id" if zone_id.nil?
-      resource_search(zone_id, :zone, Zone)   # Only support Rbac allowed zone
+      resource_search(zone_id, :zone, Zone) # Only support Rbac allowed zone
     end
   end
 end

@@ -30,12 +30,14 @@ class ExtManagementSystem < ActiveRecord::Base
 
   has_many :endpoints, :as => :resource, :dependent => :destroy, :autosave => true
 
-  has_many :hosts,  :foreign_key => "ems_id", :dependent => :nullify, :inverse_of => :ext_management_system
-  has_many :vms_and_templates, :foreign_key => "ems_id", :dependent => :nullify, :class_name => "VmOrTemplate", :inverse_of => :ext_management_system
+  has_many :hosts, :foreign_key => "ems_id", :dependent => :nullify, :inverse_of => :ext_management_system
+  has_many :vms_and_templates, :foreign_key => "ems_id", :dependent => :nullify,
+           :class_name => "VmOrTemplate", :inverse_of => :ext_management_system
   has_many :miq_templates,     :foreign_key => :ems_id, :inverse_of => :ext_management_system
   has_many :vms,               :foreign_key => :ems_id, :inverse_of => :ext_management_system
 
-  has_many :ems_events,     -> { order "timestamp" }, :class_name => "EmsEvent",    :foreign_key => "ems_id", :inverse_of => :ext_management_system
+  has_many :ems_events,     -> { order "timestamp" }, :class_name => "EmsEvent",    :foreign_key => "ems_id",
+                                                      :inverse_of => :ext_management_system
   has_many :policy_events,  -> { order "timestamp" }, :class_name => "PolicyEvent", :foreign_key => "ems_id"
 
   has_many :blacklisted_events, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
@@ -51,7 +53,7 @@ class ExtManagementSystem < ActiveRecord::Base
 
   has_many :metrics,        :as => :resource  # Destroy will be handled by purger
   has_many :metric_rollups, :as => :resource  # Destroy will be handled by purger
-  has_many :vim_performance_states, :as => :resource  # Destroy will be handled by purger
+  has_many :vim_performance_states, :as => :resource # Destroy will be handled by purger
   has_many :miq_events,             :as => :target, :dependent => :destroy
 
   validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_id]}
@@ -178,7 +180,8 @@ class ExtManagementSystem < ActiveRecord::Base
       )
 
       _log.info "#{ui_lookup(:table => "ext_management_systems")} #{ems.name} created"
-      AuditEvent.success(:event => "ems_created", :target_id => ems.id, :target_class => "ExtManagementSystem", :message => "#{ui_lookup(:table => "ext_management_systems")} #{ems.name} created")
+      AuditEvent.success(:event => "ems_created", :target_id => ems.id, :target_class => "ExtManagementSystem",
+                         :message => "#{ui_lookup(:table => "ext_management_systems")} #{ems.name} created")
     end
   end
 
@@ -353,7 +356,7 @@ class ExtManagementSystem < ActiveRecord::Base
   alias_method_chain :clear_association_cache, :storages
 
   alias_method :storages,               :all_storages
-  alias_method :datastores,             :all_storages  # Used by web-services to return datastores as the property name
+  alias_method :datastores,             :all_storages # Used by web-services to return datastores as the property name
 
   alias_method :all_hosts,              :hosts
   alias_method :all_host_ids,           :host_ids
