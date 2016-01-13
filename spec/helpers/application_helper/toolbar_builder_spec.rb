@@ -2785,6 +2785,19 @@ describe ApplicationHelper do
         expect(subject).to have_key(:onwhen)
       end
     end
+
+    context "parameters correctness" do
+      it "Ensures that build_toolbar_disable_button method is called with correct parameters" do
+        button = {'child_id' => "vm_scan",
+                  'id'       => "vm_vmdb_choice__vm_scan",
+                  'type'     => "button"}
+        input = {'button'    => "vm_scan",
+                 'url_parms' => "main_div"}
+        b = _toolbar_builder
+        expect(b).to receive(:build_toolbar_disable_button).with("vm_scan")
+        b.send(:apply_common_props, button, input)
+      end
+    end
   end
 
   describe "#build_toolbar_save_button" do
