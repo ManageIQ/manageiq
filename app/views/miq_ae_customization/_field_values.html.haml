@@ -1,6 +1,6 @@
 #field_values_div
   = form_tag({:action => 'field_value_accept',
-              :id     => @record.id.to_s || 'new'},
+              :id     => @record.id || 'new'},
              {:remote => true,
               :method => :post}) do
     %h3= _('Entries')
