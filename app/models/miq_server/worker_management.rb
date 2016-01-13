@@ -34,7 +34,7 @@ module MiqServer::WorkerManagement
     DRb.install_acl(acl)
 
     drb = DRb.start_service("druby://127.0.0.1:0", self)
-    update_attributes(:drb_uri => DRb.uri)
+    update_attributes(:drb_uri => drb.uri)
   end
 
   def worker_add(worker_pid)
