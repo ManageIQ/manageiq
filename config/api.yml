@@ -311,6 +311,20 @@
         :identifier: host_protect
       - :name: unassign
         :identifier: host_protect
+  :instances:
+    :description: Instances
+    :klass: ManageIQ::Providers::CloudManager::Vm
+    :methods: *70174834085860
+    :options:
+    - :collection
+    :collection_actions:
+      :post:
+      - :name: terminate
+        :identifier: instance_terminate
+    :resource_actions:
+      :post:
+      - :name: terminate
+        :identifier: instance_terminate
   :pictures:
     :description: Pictures
     :options:
