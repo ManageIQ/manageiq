@@ -99,7 +99,7 @@ module Vmdb
     config.before_initialize do
       require_relative 'environments/patches/database_configuration'
 
-      # To evaluate ERB from database.yml containing encrypted passwords
+      # To evaluate settings or database.yml with encrypted passwords
       require 'miq-password'
       MiqPassword.key_root = Rails.root.join("certs")
 

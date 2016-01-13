@@ -41,8 +41,6 @@ RSpec.configure do |config|
     config.example_status_persistence_file_path = "./tmp/rspec_example_store.txt"
   end
 
-  config.include VMDBConfigurationHelper
-
   config.define_derived_metadata(:file_path => /spec\/lib\/miq_automation_engine\/models/) do |metadata|
     metadata[:type] ||= :model
   end
