@@ -19,6 +19,8 @@ class EmsCluster < ActiveRecord::Base
   has_many    :policy_events, -> { order "timestamp" }
   has_many    :miq_events,             :as => :target,    :dependent => :destroy
 
+  delegate :tenant_identity, :to => :ext_management_system
+
   virtual_column :v_ram_vr_ratio,      :type => :float,   :uses => [:aggregate_memory, :aggregate_vm_memory]
   virtual_column :v_cpu_vr_ratio,      :type => :float,   :uses => [:aggregate_cpu_total_cores, :aggregate_vm_cpus]
   virtual_column :v_parent_datacenter, :type => :string,  :uses => :all_relationships

@@ -5,6 +5,8 @@ class ResourcePool < ActiveRecord::Base
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   has_many   :miq_events,            :as => :target, :dependent => :destroy
 
+  delegate :tenant_identity, :to => :ext_management_system
+
   include SerializedEmsRefObjMixin
   include FilterableMixin
 

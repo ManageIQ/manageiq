@@ -209,6 +209,10 @@ class EmsEvent < EventStream
     event.send(target_type)
   end
 
+  def tenant_identity
+    (vm_or_template || ext_management_system).tenant_identity
+  end
+
   private
 
   def self.create_event(event)
