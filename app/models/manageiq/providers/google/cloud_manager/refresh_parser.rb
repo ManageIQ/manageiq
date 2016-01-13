@@ -25,6 +25,7 @@ module ManageIQ::Providers
         get_zones
         get_flavors
         get_cloud_networks
+        get_security_groups
         get_disks
         get_images
         get_instances
@@ -50,6 +51,16 @@ module ManageIQ::Providers
       def get_cloud_networks
         networks = @connection.networks.all
         process_collection(networks, :cloud_networks) { |network| parse_cloud_network(network) }
+      end
+
+      def get_security_groups
+        networks = @data[:cloud_networks]
+        firewalls = @connection.firewalls.all
+
+        process_collection(networks, :security_groups) do |network|
+          sg_firewalls = firewalls.select { |fw| parse_uid_from_url(fw.network) == network[:name] }
+          parse_security_group(network, sg_firewalls)
+        end
       end
 
       def get_disks
@@ -134,7 +145,7 @@ module ManageIQ::Providers
       end
 
       def parse_cloud_network(network)
-        uid  = network.id
+        uid = network.id
 
         new_result = {
           :ems_ref => uid,
@@ -145,6 +156,57 @@ module ManageIQ::Providers
         }
 
         return uid, new_result
+      end
+
+      def self.security_group_type
+        ManageIQ::Providers::Google::CloudManager::SecurityGroup.name
+      end
+
+      def parse_security_group(network, firewalls)
+        uid            = network[:name]
+        firewall_rules = firewalls.collect { |fw| parse_firewall_rules(fw) }.flatten
+
+        new_result = {
+          :type           => self.class.security_group_type,
+          :ems_ref        => uid,
+          :name           => uid,
+          :cloud_network  => network,
+          :firewall_rules => firewall_rules,
+        }
+
+        return uid, new_result
+      end
+
+      def parse_firewall_rules(fw)
+        ret = []
+
+        name            = fw.name
+        source_ip_range = fw.source_ranges.first
+
+        fw.allowed.each do |fw_allowed|
+          protocol      = fw_allowed["IPProtocol"].upcase
+          allowed_ports = fw_allowed["ports"].to_a.first
+
+          unless allowed_ports.nil?
+            from_port, to_port = allowed_ports.split("-", 2)
+          else
+            # The ICMP protocol doesn't have ports so set to -1
+            from_port = to_port = -1
+          end
+
+          new_result = {
+            :name            => name,
+            :direction       => "inbound",
+            :host_protocol   => protocol,
+            :port            => from_port,
+            :end_port        => to_port,
+            :source_ip_range => source_ip_range
+          }
+
+          ret << new_result
+        end
+
+        ret
       end
 
       def parse_disk(disk)
