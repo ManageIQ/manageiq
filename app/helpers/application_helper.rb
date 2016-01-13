@@ -894,25 +894,9 @@ module ApplicationHelper
   #     :record_id    --- id of record
   #
   def li_link(args)
-    if args[:count]
-      args[:if] = args[:count] != 0
-    end
+    args[:if] = (args[:count] != 0) if args[:count]
+    link_text, title = build_link_text(args)
 
-    if args.key?(:tables)
-      entity_name = ui_lookup(:tables => args[:tables])
-      link_text   = args.key?(:link_text) ? "#{args[:link_text]} (#{args[:count]})" : "#{entity_name} (#{args[:count]})"
-      title       = "Show all #{entity_name}"
-    elsif args.key?(:text)
-      count = args[:count] ? "(#{args[:count]})" : ""
-      link_text = "#{args[:text]} #{count}"
-    elsif args.key?(:table)
-      entity_name = ui_lookup(:table  => args[:table])
-      link_text   = args.key?(:link_text) ? args[:link_text] : entity_name
-      link_text   = "#{link_text} (#{args[:count]})" if args.key?(:count)
-      title       = "Show #{entity_name}"
-    end
-
-    title = args[:title] if args.key?(:title)
     if args[:if]
       link_params = {
         :action  => args[:action].present? ? args[:action] : 'show',
@@ -933,9 +917,27 @@ module ApplicationHelper
       end
     else
       content_tag(:li, :class => "disabled") do
-        link_to(link_text,  "#")
+        link_to(link_text, "#")
       end
     end
+  end
+
+  def build_link_text(args)
+    if args.key?(:tables)
+      entity_name = ui_lookup(:tables => args[:tables])
+      link_text   = args.key?(:link_text) ? "#{args[:link_text]} (#{args[:count]})" : "#{entity_name} (#{args[:count]})"
+      title       = "Show all #{entity_name}"
+    elsif args.key?(:text)
+      count     = args[:count] ? "(#{args[:count]})" : ""
+      link_text = "#{args[:text]} #{count}"
+    elsif args.key?(:table)
+      entity_name = ui_lookup(:table => args[:table])
+      link_text   = args.key?(:link_text) ? args[:link_text] : entity_name
+      link_text   = "#{link_text} (#{args[:count]})" if args.key?(:count)
+      title       = "Show #{entity_name}"
+    end
+    title = args[:title] if args.key?(:title)
+    return link_text, title
   end
 
   # Function returns a HTML fragment that represents an image with certain
