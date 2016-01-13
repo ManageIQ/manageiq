@@ -1,5 +1,8 @@
 class ManageIQ::Providers::AnsibleTower::ConfigurationManager < ManageIQ::Providers::ConfigurationManager
   require_nested :ConfiguredSystem
+  require_nested :Refresher
+  require_nested :RefreshParser
+  require_nested :RefreshWorker
 
   include ProcessTasksMixin
   delegate :authentications,
