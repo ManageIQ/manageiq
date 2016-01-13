@@ -178,9 +178,6 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
       case "ContainerManager":
         entity_url = "ems_container";
         break;
-      case "Container":
-        entity_url = class_name(d);
-        action = '/explorer';
       default :
         entity_url = class_name(d);
     }
