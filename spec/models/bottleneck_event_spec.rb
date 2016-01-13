@@ -76,4 +76,18 @@ describe BottleneckEvent do
       expect(query).to match(/resource_type = 'EmsCluster'.*resource_type = 'Host'/)
     end
   end
+
+  describe ".last_created_on" do
+    it "returns the last created_on date for a host" do
+      host_redhat = FactoryGirl.create(:host_redhat)
+      bottleneck_event = BottleneckEvent.create!(:resource => host_redhat)
+      expect(described_class.last_created_on(host_redhat)).to eq(bottleneck_event.reload.created_on)
+    end
+
+    it "returns the last created_on date for a miq_region" do
+      miq_region = FactoryGirl.create(:miq_region)
+      bottleneck_event = BottleneckEvent.create!(:resource => miq_region)
+      expect(described_class.last_created_on(miq_region)).to eq(bottleneck_event.reload.created_on)
+    end
+  end
 end

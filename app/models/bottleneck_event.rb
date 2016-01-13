@@ -6,7 +6,8 @@ class BottleneckEvent < ActiveRecord::Base
   serialize :context_data
 
   def self.last_created_on(obj)
-    event = where("resource_type = ? AND resource_id = ?", obj.class.name, obj.id).order("created_on DESC").first
+    event = where("resource_type = ? AND resource_id = ?", obj.class.base_class.name, obj.id)
+            .order("created_on DESC").first
     event ? event.created_on : nil
   end
 
