@@ -74,7 +74,7 @@ module ActsAsTaggable
           next
         end
 
-        results.delete_if { |obj| !ret.include?(obj) }
+        results.to_a.delete_if { |obj| !ret.include?(obj) }
         break if results.empty?
       end
       if limit
