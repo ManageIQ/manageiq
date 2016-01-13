@@ -552,7 +552,7 @@ class MiqServer < ApplicationRecord
     cfg.save
   end
 
-  def config_updated(data, _mode = "activate")
+  def config_updated(data)
     # Check that the column exists in the table and we are passed data that does not match
     # the current vaule.  The first check allows this code to run if we migrate down then
     # back up again.

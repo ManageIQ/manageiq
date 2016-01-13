@@ -32,7 +32,7 @@ module VMDB
       end
 
       def server(data)
-        MiqServer.my_server.config_updated(data, mode) unless MiqServer.my_server.nil? rescue nil
+        MiqServer.my_server.config_updated(data) unless MiqServer.my_server.nil? rescue nil
       end
     end
   end
