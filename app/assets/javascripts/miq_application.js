@@ -89,110 +89,125 @@ function miqCalendarDateConversion(server_offset) {
   return moment().utcOffset(Number(server_offset) / 60);
 }
 
-// Prefill expression value text entry fields when blank
-function miqExpressionPrefill(expEditor, noPrefillCount) {
-  var title;
+// The expressions variable is used only in the following two functions
+// TODO: Remove this scope wrapper after the expressions were moved to Ruby
+(function () {
+  // TODO: This probably should be moved into the Ruby code
+  var expressions = {
+    'boolean':     __('true/false'),
+    'bytes':       __('Number (Bytes)'),
+    'date':        __('Date'),
+    'datetime':    __('Date/Time'),
+    'decimal':     __('Integer'),
+    'fixnum':      __('Integer'),
+    'float':       __('Number'),
+    'gigabytes':   __('Number (GB)'),
+    'integer':     __('Integer'),
+    'kbps':        __('KBps'),
+    'kilobytes':   __('Number (kB)'),
+    'megabytes':   __('Number (MB)'),
+    'mhz':         __('MHz'),
+    'mhz_avg':     __('MHz'),
+    'numeric_set': __('Number List'),
+    'percent':     __('Percent'),
+    'regex':       __('Text (REGEX)'),
+    'ruby':        __('Ruby Script'),
+    'string':      __('Text'),
+    'string_set':  __('String List'),
+    'text':        __('Text')
+  };
 
-  if ($('#chosen_value[type=text]').length) {
-    miqPrefill($('#chosen_value'), '/images/layout/expression/' + expEditor.first.type + '.png');
-    $('#chosen_value').prop('title', expEditor.first.title);
-    $('#chosen_value').prop('alt', expEditor.first.title);
-  }
-  if ($('#chosen_cvalue[type=text]').length) {
-    miqPrefill($('#chosen_cvalue'), '/images/layout/expression/' + expEditor.second.type + '.png');
-    $('#chosen_cvalue').prop('title', expEditor.second.title);
-    $('#chosen_cvalue').prop('alt', expEditor.second.title);
-  }
-  if ($('#chosen_regkey[type=text]').length) {
-    miqPrefill($('#chosen_regkey'), '/images/layout/expression/string.png');
-    title = "Registry Key";
-    $('#chosen_regkey').prop('title', title);
-    $('#chosen_regkey').prop('alt', title);
-  }
-  if ($('#chosen_regval[type=text]').length) {
-    miqPrefill($('#chosen_regval'), '/images/layout/expression/string.png');
-    title = "Registry Key Value";
-    $('#chosen_regval').prop('title', title);
-    $('#chosen_regval').prop('alt', title);
-  }
-  if ($('#miq_date_1_0[type=text]').length) {
-    miqPrefill($('#miq_date_1_0'), '/images/layout/expression/' + expEditor.first.type + '.png');
-    $('#miq_date_1_0').prop('title', expEditor.first.title);
-    $('#miq_date_1_0').prop('alt', expEditor.first.title);
-  }
-  if ($('#miq_date_1_1[type=text]').length) {
-    miqPrefill($('#miq_date_1_1'), '/images/layout/expression/' + expEditor.first.type + '.png');
-    $('#miq_date_1_1').prop('title', expEditor.first.title);
-    $('#miq_date_1_1').prop('alt', expEditor.first.title);
-  }
-  if ($('#miq_date_2_0[type=text]').length) {
-    miqPrefill($('#miq_date_2_0'), '/images/layout/expression/' + expEditor.second.type + '.png');
-    $('#miq_date_2_0').prop('title', expEditor.second.title);
-    $('#miq_date_2_0').prop('alt', expEditor.second.title);
-  }
-  if ($('#miq_date_2_1[type=text]').length) {
-    miqPrefill($('#miq_date_2_1'), '/images/layout/expression/' + expEditor.second.type + '.png');
-    $('#miq_date_2_1').prop('title', expEditor.second.title);
-    $('#miq_date_2_1').prop('alt', expEditor.second.title);
-  }
-  if (noPrefillCount) {
-    expEditor.prefillCount = 0;
-    setTimeout(function () {
-      miqExpressionPrefill(expEditor, false);
-    }, 200);
-  } else {
-    if (++expEditor.prefillCount > 100) {
+  // Prefill expression value text entry fields when blank
+  window.miqExpressionPrefill = function (expEditor, noPrefillCount) {
+    var title;
+
+
+    if ($('#chosen_value[type=text]').length) {
+      $('#chosen_value').prop('placeholder', expressions[expEditor.first.type])
+      $('#chosen_value').prop('title', expEditor.first.title);
+      $('#chosen_value').prop('alt', expEditor.first.title);
+    }
+    if ($('#chosen_cvalue[type=text]').length) {
+      $('#chosen_cvalue').prop('placeholder', expressions[expEditor.second.type])
+      $('#chosen_cvalue').prop('title', expEditor.second.title);
+      $('#chosen_cvalue').prop('alt', expEditor.second.title);
+    }
+    if ($('#chosen_regkey[type=text]').length) {
+      title = __("Registry Key");
+      $('#chosen_regkey').prop('placeholder', expressions['string']);
+      $('#chosen_regkey').prop('title', title);
+      $('#chosen_regkey').prop('alt', title);
+    }
+    if ($('#chosen_regval[type=text]').length) {
+      title = __("Registry Key Value");
+      $('#chosen_regval').prop('placeholder', expressions['string']);
+      $('#chosen_regval').prop('title', title);
+      $('#chosen_regval').prop('alt', title);
+    }
+    if ($('#miq_date_1_0[type=text]').length) {
+      $('#miq_date_1_0').prop('placeholder', expressions[expEditor.first.type]);
+      $('#miq_date_1_0').prop('title', expEditor.first.title);
+      $('#miq_date_1_0').prop('alt', expEditor.first.title);
+    }
+    if ($('#miq_date_1_1[type=text]').length) {
+      $('#miq_date_1_1').prop('placeholder', expressions[expEditor.first.type]);
+      $('#miq_date_1_1').prop('title', expEditor.first.title);
+      $('#miq_date_1_1').prop('alt', expEditor.first.title);
+    }
+    if ($('#miq_date_2_0[type=text]').length) {
+      $('#miq_date_2_0').prop('placeholder', expressions[expEditor.second.type]);
+      $('#miq_date_2_0').prop('title', expEditor.second.title);
+      $('#miq_date_2_0').prop('alt', expEditor.second.title);
+    }
+    if ($('#miq_date_2_1[type=text]').length) {
+      $('#miq_date_2_1').prop('placeholder', expressions[expEditor.second.type]);
+      $('#miq_date_2_1').prop('title', expEditor.second.title);
+      $('#miq_date_2_1').prop('alt', expEditor.second.title);
+    }
+    if (noPrefillCount) {
       expEditor.prefillCount = 0;
-    }
-    setTimeout(function () {
-      miqExpressionPrefill(expEditor, false);
-    }, 200);
-  }
-}
-
-// Prefill report editor style value text entry fields when blank
-// (written more generic for reuse, just have to build
-// the ManageIQ.reportEditor.valueStyles hash)
-function miqValueStylePrefill(count) {
-  var found = false;
-
-  for (var field in ManageIQ.reportEditor.valueStyles) {
-    if ($(field).length) {
-      miqPrefill($(field), '/images/layout/expression/' + ManageIQ.reportEditor.valueStyles[field] + '.png');
-      found = true;
-    }
-  }
-  if (found) {
-    if (typeof count == 'undefined') {
-      ManageIQ.reportEditor.prefillCount = 0;
       setTimeout(function () {
-        miqValueStylePrefill(ManageIQ.reportEditor.prefillCount);
+        miqExpressionPrefill(expEditor, false);
       }, 200);
-    } else if (count == ManageIQ.reportEditor.prefillCount) {
-      if (++ManageIQ.reportEditor.prefillCount > 100) {
-        ManageIQ.reportEditor.prefillCount = 0;
-      }
-      setTimeout(function () {
-        miqValueStylePrefill(ManageIQ.reportEditor.prefillCount);
-      }, 200);
-    }
-  }
-}
-
-// Prefill text entry field when blank
-function miqPrefill(element, image, blank_image) {
-  if (element.length) {
-    if ($(element).val()) {
-      if (blank_image === '') {
-        $(element).css('background-color', 'transparent');
-      } else {
-        $(element).css('background', 'url(' + blank_image + ') no-repeat transparent');
-      }
     } else {
-      $(element).css('background', 'url(' + image + ') no-repeat transparent');
+      if (++expEditor.prefillCount > 100) {
+        expEditor.prefillCount = 0;
+      }
+      setTimeout(function () {
+        miqExpressionPrefill(expEditor, false);
+      }, 200);
     }
   }
-}
+
+  // Prefill report editor style value text entry fields when blank
+  // (written more generic for reuse, just have to build
+  // the ManageIQ.reportEditor.valueStyles hash)
+  window.miqValueStylePrefill = function (count) {
+    var found = false;
+
+    for (var field in ManageIQ.reportEditor.valueStyles) {
+      if ($(field).length) {
+        $(field).prop('placeholder', expressions[ManageIQ.reportEditor.valueStyles[field]]);
+        found = true;
+      }
+    }
+    if (found) {
+      if (typeof count == 'undefined') {
+        ManageIQ.reportEditor.prefillCount = 0;
+        setTimeout(function () {
+          miqValueStylePrefill(ManageIQ.reportEditor.prefillCount);
+        }, 200);
+      } else if (count == ManageIQ.reportEditor.prefillCount) {
+        if (++ManageIQ.reportEditor.prefillCount > 100) {
+          ManageIQ.reportEditor.prefillCount = 0;
+        }
+        setTimeout(function () {
+          miqValueStylePrefill(ManageIQ.reportEditor.prefillCount);
+        }, 200);
+      }
+    }
+  }
+})();
 
 // Get user's time zone offset
 function miqGetTZO() {

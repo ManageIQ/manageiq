@@ -1,6 +1,7 @@
 //= require miq_global
 //= require jquery
 //= require jquery_overrides
+//= require i18n
 //= require patternfly
 //= require angular
 //= require angular-patternfly
@@ -104,5 +105,4 @@
 //= require miq_list_grid
 //= require miq_toolbar
 //= require resizable_sidebar
-//= require i18n
 //= require xml_display
