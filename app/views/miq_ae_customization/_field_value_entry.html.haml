@@ -65,8 +65,8 @@
                :entry_id => idx,
                :field    => "name"},
               "data-submit" => 'form_div',
-              'data-method' => :post,
               :remote       => true,
+              "data-method" => :post,
               :title        => t)
       - else
         %td{:onclick => remote_function(:url => {:action => 'field_value_delete', :id => "#{@record.id || 'new'}", :entry_id => idx}),

@@ -74,36 +74,40 @@
             :style => "width: 28px; height: 28px",
             :alt => (t = _("Move selected VMs to right"))),
           {:action => 'form_field_changed',
-            :button => 'right',
-            :id => "#{@record.id || "new"}"},
-          "data-submit" => 'main_div',
+           :button => 'right',
+           :id     => @record.id || "new"},
+          "data-submit"         => 'main_div',
           "data-miq_sparkle_on" => true,
-          :remote => true,
-          :title => t)
+          :remote               => true,
+          "data-method"         => :post,
+          :title                => t)
 
         = link_to(image_tag("/images/toolbars/allright.png",
             :class => "rollover small",
             :style => "width: 28px; height: 28px",
             :alt => (t = _("Move all VMs to right"))),
           {:action => 'form_field_changed',
-            :button => 'allright',
-            :id => "#{@record.id || "new"}"},
-          "data-submit" => 'main_div',
+           :button => 'allright',
+           :id     => @record.id || "new"},
+          "data-submit"         => 'main_div',
           "data-miq_sparkle_on" => true,
-          :remote => true,
-          :title => t)
+          :remote               => true,
+          "data-method"         => :post,
+          :title                => t)
 
         = link_to(image_tag("/images/toolbars/left.png",
             :class => "rollover small",
             :style => "width: 28px; height: 28px",
-            :alt => (t = _("Move selected VMs to left"))),
+            :alt   => (t = _("Move selected VMs to left"))),
           {:action => 'form_field_changed',
-            :button => 'left',
-            :id => "#{@record.id || "new"}"},
-          "data-submit" => 'main_div',
+           :button => 'left',
+           :id     => @record.id || "new"},
+          "data-submit"         => 'main_div',
           "data-miq_sparkle_on" => true,
-          :remote => true,
-          :title => t)
+          :remote               => true,
+          "data-method"         => :post,
+          :title                => t)
+
       %td{:align => "left", :valign => "top"}
         %div{:style => "overflow: auto; width: 400px; border: 1px solid #999999;"}
           = select_tag('choices_chosen[]',

@@ -18,6 +18,7 @@
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
                     :remote                => true,
+                    "data-method"          => :post,
                     :title                 => _('Undo the last change'))
       - else
         %li.dimmed
@@ -32,6 +33,7 @@
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
                     :remote                => true,
+                    "data-method"          => :post,
                     :title                 => _('Re-apply the previous change'))
       - else
         %li.dimmed
@@ -59,6 +61,7 @@
                         "data-miq_sparkle_on"  => true,
                         "data-miq_sparkle_off" => true,
                         :remote                => true,
+                        "data-method"          => :post,
                         :title                 => title)
 
       %span#exp_buttons_on{:style => "display: none"}
@@ -74,6 +77,7 @@
                       "data-miq_sparkle_on"  => true,
                       "data-miq_sparkle_off" => true,
                       :remote                => true,
+                      "data-method"          => :post,
                       :title                 => title)
 
     %div{:style => "padding: 10px"}
@@ -86,6 +90,7 @@
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
                     :remote                => true,
+                    "data-method"          => :post,
                     :id                    => "exp_#{token.last}")
         - elsif [token].flatten.first == "???"
           = link_to(token.first,
@@ -95,6 +100,7 @@
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
                     :remote                => true,
+                    "data-method"          => :post,
                     :id                    => "exp_#{token.last}")
         - else
           %font{:color => "red"}

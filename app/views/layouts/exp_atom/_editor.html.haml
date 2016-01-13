@@ -29,6 +29,7 @@
             "data-miq_sparkle_on"  => true,
             "data-miq_sparkle_off" => true,
             :remote                => true,
+            "data-method"          => :post,
             :title                 => t)
         %li
           - t = _("Discard expression element changes")
@@ -37,6 +38,7 @@
             "data-miq_sparkle_on"  => true,
             "data-miq_sparkle_off" => true,
             :remote                => true,
+            "data-method"          => :post,
             :title                 => t)
       %div{:style => "padding: 10px;"}
         - if @edit[@expkey][:exp_key] == "NOT"

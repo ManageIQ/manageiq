@@ -3,11 +3,12 @@
     tab     DialogTab object
 = link_to("",
   {:controller => "miq_ae_customization",
-    :action    => "dialog_res_remove",
-    :id        => @record.id || 'new',
-    :widget_id => "#{curr_pos}_#{obj[:id]}"},
+   :action     => "dialog_res_remove",
+   :id         => @record.id || 'new',
+   :widget_id  => "#{curr_pos}_#{obj[:id]}"},
   "data-miq_sparkle_on" => true,
   :remote               => true,
+  "data-method"         => :post,
   :id                   => "#{parent_id}_#{obj[:id]}_close",
   :title                => _("Remove this %s") % typ.capitalize.singularize,
   :class                => "fa fa-close pull-right")

@@ -15,8 +15,9 @@
   = link_to(link_image,
       {:action => 'squash_toggle',
        :id     => @record.id},
-      :remote => true,
-      :id => 'squash')
+      :remote       => true,
+      "data-method" => :post,
+      :id           => 'squash')
 
   %div{:id => "#{session[:tree_name]}box"}
 

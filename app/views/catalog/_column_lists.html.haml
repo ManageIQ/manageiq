@@ -25,6 +25,7 @@
                      :id     => "#{@edit[:rec_id] || "new"}"},
                     "data-submit" => "column_lists",
                     :remote       => true,
+                    "data-method" => :post,
                     :title        => _("Move Selected buttons right"))
         - if @edit[:new][:fields].length == 0
           = image_tag("/images/toolbars/left.png",
@@ -38,6 +39,7 @@
                      :id     => "#{@edit[:rec_id] || "new"}"},
                     "data-submit" => "column_lists",
                     :remote       => true,
+                    "data-method" => :post,
                     :title        => _("Move Selected buttons left"))
       %td{:align => "left", :valign => "top"}
         = select_tag("selected_fields[]",

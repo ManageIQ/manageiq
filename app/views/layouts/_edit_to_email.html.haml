@@ -22,11 +22,12 @@
               = link_to(e,
                         {:action                => action_url,
                          :remove_email          => e,
-                         :id                    => "#{record.id || "new"}"},
-                         "data-miq_sparkle_on"  => true,
-                         "data-miq_sparkle_off" => true,
-                         :remote                => true,
-                         :title                 => _("Remove %s") % e)
+                         :id                    => record.id || "new"},
+                        "data-miq_sparkle_on"  => true,
+                        "data-miq_sparkle_off" => true,
+                        :remote                => true,
+                        "data-method"          => :post,
+                        :title                 => _("Remove %s") % e)
       .form-group
         %label.control-label.col-md-2
           = _("Add a User")

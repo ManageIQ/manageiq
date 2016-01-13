@@ -45,11 +45,15 @@
               %tr
                 %td
                   = link_to(image_tag("/images/icons/16/notequal-red.png", :alt => _("Click to remove this Resource from the Catalog Item")),
-                    {:action => "resource_delete", :rec_id => sr[:id], :id => "#{@edit[:rec_id] || "new"}", :grp_id => i},
-                    "data-miq_sparkle_on" => true,
+                    {:action => "resource_delete",
+                     :rec_id => sr[:id],
+                     :id     => @edit[:rec_id] || "new",
+                     :grp_id => i},
+                    "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
-                    :remote => true,
-                    :title => _("Click to remove this Resource from the Catalog Item"))
+                    :remote                => true,
+                    "data-method"          => :post,
+                    :title                 => _("Click to remove this Resource from the Catalog Item"))
                 %td
                   = h(sr[:name])
                 %td

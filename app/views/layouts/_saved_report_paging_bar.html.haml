@@ -30,6 +30,7 @@
                           "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
                           :remote                => true,
+                          "data-method"          => :post,
                           :title                 => "")
                 = link_to(image_tag('/images/toolbars/previous.png', :border => "0", :class => "rollover small"),
                           {:action => action,
@@ -37,6 +38,7 @@
                           "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
                           :remote                => true,
+                          "data-method"          => :post,
                           :title                 => "")
               - else
                 = image_tag('/images/toolbars/first.png', :class => "dimmed small")
@@ -48,6 +50,7 @@
                           "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
                           :remote                => true,
+                          "data-method"          => :post,
                           :title                 => "")
                 = link_to(image_tag('/images/toolbars/last.png', :class => "rollover small"),
                           {:action  => action,
@@ -55,6 +58,7 @@
                           "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
                           :remote                => true,
+                          "data-method"          => :post,
                           :title                 => "")
               - else
                 = image_tag('/images/toolbars/next.png', :class => "dimmed small")

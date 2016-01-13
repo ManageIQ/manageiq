@@ -7,6 +7,7 @@
       :alt                  => t,
       "data-miq_sparkle_on" => true,
       :remote               => true,
+      "data-method"         => :post,
       :title                => t)
     = link_to(_("Reset"),
       {:action => "resolve", :button => "reset"},
@@ -15,6 +16,7 @@
       "data-miq_sparkle_on"  => true,
       "data-miq_sparkle_off" => true,
       :remote                => true,
+      "data-method"          => :post,
       :title                 => t)
     - if @resolve[:lastaction] == "simulate"
       - t = _("Cancel Simulation to go back to Button details")
@@ -35,6 +37,7 @@
       "data-miq_sparkle_on"  => true,
       "data-miq_sparkle_off" => true,
       :remote                => true,
+      "data-method"          => :post,
       :title                 => t)
     - if @resolve[:lastaction] == "simulate"
       - t = _("Cancel Simulation to go back to Button details")

@@ -52,6 +52,7 @@
                     "data-miq_sparkle_off" => true,
                     "data-submit"          => 'choices_chosen_div',
                     :remote                => true,
+                    "data-method"          => :post,
                     :title                 => t)
                   - t = _("Remove all Policies from this Profile")
                   = link_to(image_tag("/images/toolbars/allleft.png", :border => "0", :class  => "rollover small", :alt => t),
@@ -59,6 +60,7 @@
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
                     :remote                => true,
+                    "data-method"          => :post,
                     :title                 => t)
                   - t = _("Remove selected Policies from this Profile")
                   = link_to(image_tag("/images/toolbars/left.png", :border => "0", :class  => "rollover small", :alt => t),
@@ -67,6 +69,7 @@
                     "data-miq_sparkle_off" => true,
                     "data-submit"          => 'members_chosen_div',
                     :remote                => true,
+                    "data-method"          => :post,
                     :title                 => t)
                 %td{:align => "right", :valign => "top"}
                   %span#members_chosen_div
