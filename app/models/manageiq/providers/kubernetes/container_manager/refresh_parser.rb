@@ -279,7 +279,7 @@ module ManageIQ::Providers::Kubernetes
       new_result[:container_conditions] = parse_conditions(pod)
 
       new_result[:labels] = parse_labels(pod)
-      new_result[:node_selector_parts] = parse_node_selector_parts(pod)
+      new_result[:selector_parts] = parse_selector_parts(pod)
       new_result[:container_volumes] = parse_volumes(pod.spec.volumes)
       new_result
     end
@@ -454,10 +454,6 @@ module ManageIQ::Providers::Kubernetes
 
     def parse_selector_parts(entity)
       parse_identifying_attributes(entity.spec.selector, 'selectors')
-    end
-
-    def parse_node_selector_parts(entity)
-      parse_identifying_attributes(entity.spec.nodeSelector, 'node_selectors')
     end
 
     def parse_identifying_attributes(attributes, section)
