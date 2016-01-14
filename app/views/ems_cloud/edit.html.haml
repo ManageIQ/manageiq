@@ -1,6 +1,6 @@
 = form_for(@ems,
            :url    => ems_cloud_path(@ems),
-           :method => :post,
+           :method => :patch,
            :html   => {"ng-controller"   => "emsCommonFormController",
                        "name"            => "angularForm",
                        "ng-show"         => "afterGet",
