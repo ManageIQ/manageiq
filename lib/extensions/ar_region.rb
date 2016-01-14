@@ -37,6 +37,10 @@ module ArRegion
       @@rails_sequence_end ||= rails_sequence_start + rails_sequence_factor - 1
     end
 
+    def rails_sequence_range
+      rails_sequence_start..rails_sequence_end
+    end
+
     def clear_region_cache
       @@my_region_number = @@rails_sequence_start = @@rails_sequence_end = nil
     end
@@ -164,4 +168,4 @@ module ArRegion
   end
 end
 
-ActiveRecord::Base.include ArRegion
+ApplicationRecord.include ArRegion
