@@ -193,4 +193,16 @@ describe DialogFieldCheckBox do
       expect(dialog_field.value).to eq("f")
     end
   end
+
+  describe "#trigger_automate_value_updates" do
+    let(:dialog_field) { described_class.new }
+
+    before do
+      allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return("f")
+    end
+
+    it "returns the checked value in a hash" do
+      expect(dialog_field.trigger_automate_value_updates).to eq("f")
+    end
+  end
 end

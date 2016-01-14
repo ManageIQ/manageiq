@@ -44,8 +44,4 @@ class DialogFieldRadioButton < DialogFieldSortedItem
       @raw_values = super
     end
   end
-
-  def values_from_automate
-    DynamicDialogFieldValueProcessor.values_from_automate(self)
-  end
 end

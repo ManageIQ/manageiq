@@ -192,4 +192,18 @@ describe DialogFieldDateControl do
       expect(subject.show_past_dates).to be_falsey
     end
   end
+
+  describe "#trigger_automate_value_updates" do
+    let(:dialog_field) { described_class.new }
+
+    before do
+      allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return(
+        "2015-01-02"
+      )
+    end
+
+    it "returns the values from the value processor" do
+      expect(dialog_field.trigger_automate_value_updates).to eq("2015-01-02")
+    end
+  end
 end

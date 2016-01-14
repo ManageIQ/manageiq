@@ -66,9 +66,7 @@ class DialogFieldTextBox < DialogField
     {:text => @value}
   end
 
-  private
-
-  def values_from_automate
-    DynamicDialogFieldValueProcessor.values_from_automate(self)
+  def trigger_automate_value_updates
+    values_from_automate
   end
 end

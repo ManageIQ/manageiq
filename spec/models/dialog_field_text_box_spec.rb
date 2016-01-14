@@ -269,4 +269,18 @@ describe DialogFieldTextBox do
       expect(dialog_field.value).to eq("processor")
     end
   end
+
+  describe "#trigger_automate_value_updates" do
+    let(:dialog_field) { described_class.new }
+
+    before do
+      allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return(
+        "processed values"
+      )
+    end
+
+    it "returns the values from automate" do
+      expect(dialog_field.trigger_automate_value_updates).to eq("processed values")
+    end
+  end
 end

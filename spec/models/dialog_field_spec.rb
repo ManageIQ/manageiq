@@ -132,4 +132,17 @@ describe DialogField do
       end
     end
   end
+
+  describe "#update_and_serialize_values" do
+    let(:dialog_field) { described_class.new }
+
+    before do
+      allow(DialogFieldSerializer).to receive(:serialize).with(dialog_field)
+    end
+
+    it "serializes the dialog field" do
+      expect(DialogFieldSerializer).to receive(:serialize).with(dialog_field)
+      dialog_field.update_and_serialize_values
+    end
+  end
 end
