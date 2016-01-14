@@ -78,16 +78,35 @@ describe BottleneckEvent do
   end
 
   describe ".last_created_on" do
-    it "returns the last created_on date for a host" do
-      host_redhat = FactoryGirl.create(:host_redhat)
-      bottleneck_event = BottleneckEvent.create!(:resource => host_redhat)
-      expect(described_class.last_created_on(host_redhat)).to eq(bottleneck_event.reload.created_on)
-    end
+    context "returns the last created_on date" do
+      def expect_last_created_on_to_eq_resource_last_created_on(resource)
+        bottleneck_event = BottleneckEvent.create!(:resource => resource)
+        expect(described_class.last_created_on(resource)).to eq(bottleneck_event.reload.created_on)
+      end
 
-    it "returns the last created_on date for a miq_region" do
-      miq_region = FactoryGirl.create(:miq_region)
-      bottleneck_event = BottleneckEvent.create!(:resource => miq_region)
-      expect(described_class.last_created_on(miq_region)).to eq(bottleneck_event.reload.created_on)
+      specify "for a host_redhat resource" do
+        resource = FactoryGirl.create(:host_redhat)
+        expect_last_created_on_to_eq_resource_last_created_on(resource)
+      end
+
+      specify "for a host_vmware resource" do
+        resource = FactoryGirl.create(:host_vmware)
+        expect_last_created_on_to_eq_resource_last_created_on(resource)
+      end
+      specify "for a miq_enterprise resource" do
+        resource = FactoryGirl.create(:miq_enterprise)
+        expect_last_created_on_to_eq_resource_last_created_on(resource)
+      end
+
+      specify "for a ems_redhat resource" do
+        resource = FactoryGirl.create(:ems_redhat)
+        expect_last_created_on_to_eq_resource_last_created_on(resource)
+      end
+
+      specify "for a ems_cluster_openstack resource" do
+        resource = FactoryGirl.create(:ems_cluster_openstack)
+        expect_last_created_on_to_eq_resource_last_created_on(resource)
+      end
     end
   end
 end
