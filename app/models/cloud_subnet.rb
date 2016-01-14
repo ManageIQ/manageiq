@@ -1,4 +1,4 @@
-class CloudSubnet < ActiveRecord::Base
+class CloudSubnet < ApplicationRecord
   include NewWithTypeStiMixin
   include ReportableMixin
 

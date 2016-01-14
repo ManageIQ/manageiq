@@ -1,6 +1,6 @@
 require_relative 'miq_ae_state_info'
 module MiqAeEngine
-  class MiqAeWorkspace < ActiveRecord::Base
+  class MiqAeWorkspace < ApplicationRecord
     serialize :workspace
     serialize :setters
     include UuidMixin

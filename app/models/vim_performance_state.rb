@@ -1,4 +1,4 @@
-class VimPerformanceState < ActiveRecord::Base
+class VimPerformanceState < ApplicationRecord
   serialize :state_data
 
   belongs_to :resource, :polymorphic => true

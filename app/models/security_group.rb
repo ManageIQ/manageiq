@@ -1,4 +1,4 @@
-class SecurityGroup < ActiveRecord::Base
+class SecurityGroup < ApplicationRecord
   include NewWithTypeStiMixin
   include ReportableMixin
 

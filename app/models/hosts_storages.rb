@@ -1,3 +1,3 @@
-class HostsStorages < ActiveRecord::Base
+class HostsStorages < ApplicationRecord
   self.table_name = "host_storages"
 end

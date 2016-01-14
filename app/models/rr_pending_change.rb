@@ -1,4 +1,4 @@
-class RrPendingChange < ActiveRecord::Base
+class RrPendingChange < ApplicationRecord
   RR_TABLE_NAME_SUFFIX = "pending_changes"
   include RrModelCore
 

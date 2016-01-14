@@ -30,7 +30,7 @@ class FixHostStorageReplicationOnUpgrade < ActiveRecord::Migration
   def run_for_replication_source
     return unless RrSyncState.table_exists?
 
-    prefix = "rr#{ActiveRecord::Base.my_region_number}"
+    prefix = "rr#{ApplicationRecord.my_region_number}"
     old_name = "hosts_storages"
     new_name = "host_storages"
 

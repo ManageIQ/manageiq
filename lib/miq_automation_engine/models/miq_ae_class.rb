@@ -1,4 +1,4 @@
-class MiqAeClass < ActiveRecord::Base
+class MiqAeClass < ApplicationRecord
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
 

@@ -1,4 +1,4 @@
-class AvailabilityZone < ActiveRecord::Base
+class AvailabilityZone < ApplicationRecord
   include NewWithTypeStiMixin
   include ReportableMixin
   include Metric::CiMixin

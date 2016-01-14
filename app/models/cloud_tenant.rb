@@ -1,4 +1,4 @@
-class CloudTenant < ActiveRecord::Base
+class CloudTenant < ApplicationRecord
   include ReportableMixin
   include NewWithTypeStiMixin
 

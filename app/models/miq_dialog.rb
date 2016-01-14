@@ -1,4 +1,4 @@
-class MiqDialog < ActiveRecord::Base
+class MiqDialog < ApplicationRecord
   validates_presence_of   :name, :description
   validates_uniqueness_of :name, :scope => :dialog_type, :case_sensitive => false
 

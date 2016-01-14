@@ -17,4 +17,4 @@ module RequireNested
   end
 end
 
-Module.send(:include, RequireNested)
+Module.include RequireNested

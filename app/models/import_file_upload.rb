@@ -1,4 +1,4 @@
-class ImportFileUpload < ActiveRecord::Base
+class ImportFileUpload < ApplicationRecord
   has_one :binary_blob, :as => :resource, :dependent => :destroy
 
   def policy_import_data

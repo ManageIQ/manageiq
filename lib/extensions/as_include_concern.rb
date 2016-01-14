@@ -53,7 +53,7 @@ module ActiveSupport
           to_include = mod
           require_dependency to_include.underscore
         end
-        send(:include, to_include.constantize)
+        include to_include.constantize
       end
     end
   end

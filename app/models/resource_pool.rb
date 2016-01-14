@@ -1,4 +1,4 @@
-class ResourcePool < ActiveRecord::Base
+class ResourcePool < ApplicationRecord
   include ReportableMixin
   acts_as_miq_taggable
 

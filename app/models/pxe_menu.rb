@@ -1,4 +1,4 @@
-class PxeMenu < ActiveRecord::Base
+class PxeMenu < ApplicationRecord
   belongs_to :pxe_server
 
   def self.class_from_contents(contents)

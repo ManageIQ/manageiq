@@ -1,4 +1,4 @@
-class VmdbTable < ActiveRecord::Base
+class VmdbTable < ApplicationRecord
   belongs_to :vmdb_database
 
   has_many :vmdb_indexes,                            :dependent => :destroy

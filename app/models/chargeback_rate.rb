@@ -1,4 +1,4 @@
-class ChargebackRate < ActiveRecord::Base
+class ChargebackRate < ApplicationRecord
   include UuidMixin
   include ReportableMixin
 

@@ -1,4 +1,4 @@
-class IsoImage < ActiveRecord::Base
+class IsoImage < ApplicationRecord
   belongs_to :iso_datastore
   belongs_to :pxe_image_type
 

@@ -704,8 +704,8 @@ describe VirtualFields do
   end
 end
 
-describe "ActiveRecord::Base class" do
-  context "class immediately under ActiveRecord::Base" do
+describe "ApplicationRecord class" do
+  context "class immediately under ApplicationRecord" do
     it ".virtual_column_names" do
       result = Host.virtual_column_names
       expect(result.count("region_number")).to eq(1)
@@ -717,7 +717,7 @@ describe "ActiveRecord::Base class" do
     end
   end
 
-  context "class not immediately under ActiveRecord::Base" do
+  context "class not immediately under ApplicationRecord" do
     it ".virtual_column_names" do
       result = MiqTemplate.virtual_column_names
       expect(result.count("region_number")).to eq(1)

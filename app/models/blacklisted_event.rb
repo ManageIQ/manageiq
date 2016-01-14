@@ -1,4 +1,4 @@
-class BlacklistedEvent < ActiveRecord::Base
+class BlacklistedEvent < ApplicationRecord
   belongs_to        :ext_management_system, :foreign_key => "ems_id"
 
   default_value_for :enabled, true

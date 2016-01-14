@@ -1,4 +1,4 @@
-class BottleneckEvent < ActiveRecord::Base
+class BottleneckEvent < ApplicationRecord
   belongs_to :resource, :polymorphic => true
 
   include ReportableMixin

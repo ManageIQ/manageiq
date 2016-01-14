@@ -1,4 +1,4 @@
-class ServiceTemplateCatalog < ActiveRecord::Base
+class ServiceTemplateCatalog < ApplicationRecord
   include ReportableMixin
   include TenancyMixin
   validates_presence_of     :name

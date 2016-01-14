@@ -1,4 +1,4 @@
-class MiqRequest < ActiveRecord::Base
+class MiqRequest < ApplicationRecord
   ACTIVE_STATES = %w(active queued)
 
   belongs_to :source,            :polymorphic => true

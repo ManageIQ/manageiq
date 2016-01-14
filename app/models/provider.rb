@@ -1,4 +1,4 @@
-class Provider < ActiveRecord::Base
+class Provider < ApplicationRecord
   include NewWithTypeStiMixin
   include AuthenticationMixin
   include ReportableMixin

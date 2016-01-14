@@ -17,4 +17,4 @@ module ArNestedCountBy
   end
 end
 
-ActiveRecord::Base.send(:include, ArNestedCountBy)
+ApplicationRecord.include ArNestedCountBy

@@ -1,4 +1,4 @@
-class CustomButton < ActiveRecord::Base
+class CustomButton < ApplicationRecord
   has_one       :resource_action, :as => :resource, :dependent => :destroy, :autosave => true
 
   serialize :options

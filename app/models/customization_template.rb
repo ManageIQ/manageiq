@@ -1,4 +1,4 @@
-class CustomizationTemplate < ActiveRecord::Base
+class CustomizationTemplate < ApplicationRecord
   include NewWithTypeStiMixin
   include ReportableMixin
 

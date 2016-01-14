@@ -1,4 +1,4 @@
-class MiqReport < ActiveRecord::Base
+class MiqReport < ApplicationRecord
   include ActiveRecord::AttributeAccessorThatYamls
 
   include_concern 'Formatting'

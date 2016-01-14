@@ -2,7 +2,7 @@ require Rails.root.join("lib/rr_model_core")
 require_relative "../stub_cache_mixin"
 
 module MigrationHelper::SharedStubs
-  class RrPendingChange < ActiveRecord::Base
+  class RrPendingChange < ApplicationRecord
     extend MigrationHelper::StubCacheMixin
 
     RR_TABLE_NAME_SUFFIX = "pending_changes"

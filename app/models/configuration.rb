@@ -1,4 +1,4 @@
-class Configuration < ActiveRecord::Base
+class Configuration < ApplicationRecord
   belongs_to                :miq_server, :foreign_key => "miq_server_id"
   serialize                 :settings,   Vmdb::ConfigurationEncoder
 

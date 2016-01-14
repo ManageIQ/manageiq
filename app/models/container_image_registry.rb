@@ -1,4 +1,4 @@
-class ContainerImageRegistry < ActiveRecord::Base
+class ContainerImageRegistry < ApplicationRecord
   include ReportableMixin
 
   belongs_to :ext_management_system, :foreign_key => "ems_id"

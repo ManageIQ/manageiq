@@ -1,4 +1,4 @@
-class MiqGroup < ActiveRecord::Base
+class MiqGroup < ApplicationRecord
   USER_GROUP   = "user"
   SYSTEM_GROUP = "system"
   TENANT_GROUP = "tenant"

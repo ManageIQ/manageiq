@@ -1,4 +1,4 @@
-class MiqAeNamespace < ActiveRecord::Base
+class MiqAeNamespace < ApplicationRecord
   acts_as_tree
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin

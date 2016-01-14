@@ -135,7 +135,8 @@ module VirtualFields
   end
 
   def virtual_fields_base?
-    @virtual_fields_base
+    @virtual_fields_base ||
+      respond_to?(:abstract_class?) && abstract_class?
   end
 
   #

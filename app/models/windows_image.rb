@@ -1,4 +1,4 @@
-class WindowsImage < ActiveRecord::Base
+class WindowsImage < ApplicationRecord
   belongs_to :pxe_server
   belongs_to :pxe_image_type
 

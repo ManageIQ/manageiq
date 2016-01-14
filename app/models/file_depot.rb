@@ -1,4 +1,4 @@
-class FileDepot < ActiveRecord::Base
+class FileDepot < ApplicationRecord
   include NewWithTypeStiMixin
   include AuthenticationMixin
   has_many              :miq_schedules, :dependent => :nullify

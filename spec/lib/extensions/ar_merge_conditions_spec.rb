@@ -1,4 +1,4 @@
-describe ActiveRecord::Base do
+describe ApplicationRecord do
   context "calling apply_legacy_finder_options" do
     before(:each) do
       @vm = FactoryGirl.create(:vm_vmware)

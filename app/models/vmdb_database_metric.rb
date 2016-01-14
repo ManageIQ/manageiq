@@ -1,4 +1,4 @@
-class VmdbDatabaseMetric < ActiveRecord::Base
+class VmdbDatabaseMetric < ApplicationRecord
   belongs_to :vmdb_database
 
   VmdbMetric # Eager load VmdbMetric class to allow access to VmdbMetric::Purging

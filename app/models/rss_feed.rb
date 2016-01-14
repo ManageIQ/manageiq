@@ -1,5 +1,5 @@
 require 'resource_feeder/common'
-class RssFeed < ActiveRecord::Base
+class RssFeed < ApplicationRecord
   include ResourceFeeder
   validates_presence_of     :name
   validates_uniqueness_of   :name

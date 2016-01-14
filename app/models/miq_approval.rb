@@ -1,4 +1,4 @@
-class MiqApproval < ActiveRecord::Base
+class MiqApproval < ApplicationRecord
   belongs_to :approver, :polymorphic => true
   belongs_to :stamper,  :class_name => "User"
   belongs_to :miq_request

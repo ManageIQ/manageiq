@@ -26,4 +26,4 @@ module ArTableLock
   end
 end
 
-ActiveRecord::Base.send(:extend, ArTableLock)
+ApplicationRecord.extend ArTableLock

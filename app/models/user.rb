@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   include RelationshipMixin
   acts_as_miq_taggable
   include RegionMixin

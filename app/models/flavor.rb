@@ -1,4 +1,4 @@
-class Flavor < ActiveRecord::Base
+class Flavor < ApplicationRecord
   include NewWithTypeStiMixin
   include ReportableMixin
 

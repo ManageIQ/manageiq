@@ -1,4 +1,4 @@
-class Condition < ActiveRecord::Base
+class Condition < ApplicationRecord
   include UuidMixin
   before_validation :default_name_to_guid, :on => :create
 

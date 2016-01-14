@@ -1,4 +1,4 @@
-class ContainerReplicator < ActiveRecord::Base
+class ContainerReplicator < ApplicationRecord
   include CustomAttributeMixin
   include ReportableMixin
 

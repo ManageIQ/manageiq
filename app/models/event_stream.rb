@@ -1,4 +1,4 @@
-class EventStream < ActiveRecord::Base
+class EventStream < ApplicationRecord
   serialize :full_data
 
   belongs_to :target, :polymorphic => true

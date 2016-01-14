@@ -1,4 +1,4 @@
-class PolicyEvent < ActiveRecord::Base
+class PolicyEvent < ApplicationRecord
   module Purging
     extend ActiveSupport::Concern
     include PurgingMixin

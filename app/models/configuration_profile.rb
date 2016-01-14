@@ -1,4 +1,4 @@
-class ConfigurationProfile < ActiveRecord::Base
+class ConfigurationProfile < ApplicationRecord
   include NewWithTypeStiMixin
   include ReportableMixin
 

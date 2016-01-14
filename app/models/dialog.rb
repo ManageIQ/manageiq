@@ -1,4 +1,4 @@
-class Dialog < ActiveRecord::Base
+class Dialog < ApplicationRecord
   DIALOG_DIR = Rails.root.join("product/dialogs/service_dialogs")
 
   # The following gets around a glob symbolic link issue

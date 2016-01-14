@@ -1,4 +1,4 @@
-class RegistryItem < ActiveRecord::Base
+class RegistryItem < ApplicationRecord
   belongs_to :vm_or_template
   belongs_to :miq_set    # ScanItemSet
   belongs_to :scan_item

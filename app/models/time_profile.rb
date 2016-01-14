@@ -1,4 +1,4 @@
-class TimeProfile < ActiveRecord::Base
+class TimeProfile < ApplicationRecord
   ALL_DAYS  = (0...7).to_a.freeze
   ALL_HOURS = (0...24).to_a.freeze
   DEFAULT_TZ = "UTC"

@@ -1,6 +1,6 @@
 require 'ancestry'
 
-class Relationship < ActiveRecord::Base
+class Relationship < ApplicationRecord
   has_ancestry
 
   belongs_to :resource, :polymorphic => true

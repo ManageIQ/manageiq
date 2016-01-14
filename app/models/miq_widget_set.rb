@@ -1,4 +1,4 @@
-class MiqWidgetSet < ActiveRecord::Base
+class MiqWidgetSet < ApplicationRecord
   acts_as_miq_set
 
   before_destroy :destroy_user_versions

@@ -1,4 +1,4 @@
-class Disk < ActiveRecord::Base
+class Disk < ApplicationRecord
   belongs_to :hardware
   belongs_to :storage
   belongs_to :backing, :polymorphic => true

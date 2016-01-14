@@ -1,4 +1,4 @@
-class ChargebackRateDetail < ActiveRecord::Base
+class ChargebackRateDetail < ApplicationRecord
   belongs_to :chargeback_rate
   belongs_to :detail_measure, :class_name => "ChargebackRateDetailMeasure", :foreign_key => :chargeback_rate_detail_measure_id
 

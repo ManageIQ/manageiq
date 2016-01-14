@@ -1,4 +1,4 @@
-class DialogTab < ActiveRecord::Base
+class DialogTab < ApplicationRecord
   include DialogMixin
   has_many   :dialog_groups, -> { order(:position) }, :dependent => :destroy
   belongs_to :dialog

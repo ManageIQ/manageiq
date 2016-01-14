@@ -1,4 +1,4 @@
-class MiqRequestTask < ActiveRecord::Base
+class MiqRequestTask < ApplicationRecord
   include_concern 'Dumping'
   include_concern 'PostInstallCallback'
   include_concern 'StateMachine'

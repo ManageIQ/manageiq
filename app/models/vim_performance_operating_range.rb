@@ -1,4 +1,4 @@
-class VimPerformanceOperatingRange < ActiveRecord::Base
+class VimPerformanceOperatingRange < ApplicationRecord
   belongs_to  :resource, :polymorphic => true
   belongs_to  :time_profile
 

@@ -1,4 +1,4 @@
-class BinaryBlobPart < ActiveRecord::Base
+class BinaryBlobPart < ApplicationRecord
   def self.default_part_size
     @default_part_size ||= 1.megabyte
   end

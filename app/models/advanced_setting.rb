@@ -1,4 +1,4 @@
-class AdvancedSetting < ActiveRecord::Base
+class AdvancedSetting < ApplicationRecord
   belongs_to :resource, :polymorphic => true
 
   include ReportableMixin

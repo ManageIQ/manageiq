@@ -1,6 +1,6 @@
 require 'util/postgres_admin'
 
-class MiqDatabase < ActiveRecord::Base
+class MiqDatabase < ApplicationRecord
   REGISTRATION_DEFAULT_VALUES = {
     :registration_type   => "sm_hosted",
     :registration_server => "subscription.rhn.redhat.com"

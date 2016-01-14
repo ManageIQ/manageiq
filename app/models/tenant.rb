@@ -1,6 +1,6 @@
 require 'ancestry'
 
-class Tenant < ActiveRecord::Base
+class Tenant < ApplicationRecord
   HARDCODED_LOGO = "custom_logo.png"
   HARDCODED_LOGIN_LOGO = "custom_login_logo.png"
   DEFAULT_URL = nil

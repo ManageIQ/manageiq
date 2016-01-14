@@ -1,4 +1,4 @@
-class VmdbMetric < ActiveRecord::Base
+class VmdbMetric < ApplicationRecord
   belongs_to :resource, :polymorphic => true
 
   include_concern 'Purging'

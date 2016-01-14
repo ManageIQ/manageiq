@@ -1,2 +1,2 @@
-class ContainerGroupsContainerServices < ActiveRecord::Base
+class ContainerGroupsContainerServices < ApplicationRecord
 end

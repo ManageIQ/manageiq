@@ -1,4 +1,4 @@
-class Authentication < ActiveRecord::Base
+class Authentication < ApplicationRecord
   include NewWithTypeStiMixin
   def self.new(*args, &block)
     if self == Authentication

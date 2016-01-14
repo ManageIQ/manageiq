@@ -1,4 +1,4 @@
-class Switch < ActiveRecord::Base
+class Switch < ApplicationRecord
   belongs_to :host
 
   has_many :guest_devices

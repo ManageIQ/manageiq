@@ -11,7 +11,7 @@
       %tbody{'data-click-url' => '/miq_ae_class/tree_select/'}
         - @records.each do |record|
           - next if record.name == '$'
-          - cls_cid = "#{class_prefix(record.class)}-#{ActiveRecord::Base.compress_id(record.id)}"
+          - cls_cid = "#{class_prefix(record.class)}-#{ApplicationRecord.compress_id(record.id)}"
           %tr{'data-click-id' => cls_cid}
             %td.narrow.noclick
               %input{:type => 'checkbox', :value => cls_cid}

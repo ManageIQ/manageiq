@@ -1,4 +1,4 @@
-class VmdbDatabaseSetting < ActiveRecord::Base
+class VmdbDatabaseSetting < ApplicationRecord
   self.table_name = 'pg_settings'
   self.primary_key = nil
 

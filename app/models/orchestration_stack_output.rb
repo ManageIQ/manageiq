@@ -1,4 +1,4 @@
-class OrchestrationStackOutput < ActiveRecord::Base
+class OrchestrationStackOutput < ApplicationRecord
   include ReportableMixin
 
   belongs_to :stack, :class_name => "OrchestrationStack"

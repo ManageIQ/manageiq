@@ -283,8 +283,8 @@ class TreeNodeBuilder
         policy_id = parent_id.split('_')[2].split('-').last
         event_id  = parent_id.split('_').last.split('-').last
       end
-      p  = MiqPolicy.find_by_id(ActiveRecord::Base.uncompress_id(policy_id))
-      ev = MiqEventDefinition.find_by_id(ActiveRecord::Base.uncompress_id(event_id))
+      p  = MiqPolicy.find_by_id(ApplicationRecord.uncompress_id(policy_id))
+      ev = MiqEventDefinition.find_by_id(ApplicationRecord.uncompress_id(event_id))
       image = p.action_result_for_event(object, ev) ? "check" : "x"
     else
       image = object.action_type == "default" ? "miq_action" : "miq_action_#{object.action_type}"
@@ -343,7 +343,7 @@ class TreeNodeBuilder
       base_class = object.class.base_model.name           # i.e. Vm or MiqTemplate
       base_class = "Datacenter" if base_class == "EmsFolder" && object.is_datacenter
       prefix = TreeBuilder.get_prefix_for_model(base_class)
-      cid = ActiveRecord::Base.compress_id(object.id)
+      cid = ApplicationRecord.compress_id(object.id)
       "#{format_parent_id}#{prefix}-#{cid}"
     end
   end

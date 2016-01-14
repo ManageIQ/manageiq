@@ -1,4 +1,4 @@
-class AuditEvent < ActiveRecord::Base
+class AuditEvent < ApplicationRecord
   include ReportableMixin
 
   validates_presence_of     :event, :status, :message, :severity

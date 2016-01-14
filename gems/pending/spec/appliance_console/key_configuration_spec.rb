@@ -3,7 +3,7 @@ require "appliance_console/key_configuration"
 
 describe ApplianceConsole::KeyConfiguration do
   context "#ask_questions" do
-    subject { Class.new(described_class).tap { |c| c.send(:include, ApplianceConsole::Prompts) }.new }
+    subject { Class.new(described_class).tap { |c| c.include(ApplianceConsole::Prompts) }.new }
 
     context "creating" do
       it "asks for nothing else" do

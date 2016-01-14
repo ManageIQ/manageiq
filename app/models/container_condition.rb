@@ -1,4 +1,4 @@
-class ContainerCondition < ActiveRecord::Base
+class ContainerCondition < ApplicationRecord
   include ReportableMixin
   belongs_to :container_entity, :polymorphic => true
 end

@@ -1,3 +1,3 @@
-class ConditionSet < ActiveRecord::Base
+class ConditionSet < ApplicationRecord
   acts_as_miq_set
 end

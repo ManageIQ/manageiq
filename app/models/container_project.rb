@@ -1,4 +1,4 @@
-class ContainerProject < ActiveRecord::Base
+class ContainerProject < ApplicationRecord
   include CustomAttributeMixin
   include ReportableMixin
   belongs_to :ext_management_system, :foreign_key => "ems_id"

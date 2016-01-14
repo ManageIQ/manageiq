@@ -1,4 +1,4 @@
-class SchemaMigration < ActiveRecord::Base
+class SchemaMigration < ApplicationRecord
   def self.up_to_date?
     begin
       migrations = missing_db_migrations

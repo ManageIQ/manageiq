@@ -1,4 +1,4 @@
-class Session < ActiveRecord::Base
+class Session < ApplicationRecord
   @@timeout = 3600 # session time to live in seconds
   @@interval = 30 # how often to purge in seconds
   @@job ||= nil

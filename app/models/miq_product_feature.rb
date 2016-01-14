@@ -1,4 +1,4 @@
-class MiqProductFeature < ActiveRecord::Base
+class MiqProductFeature < ApplicationRecord
   acts_as_tree
 
   has_and_belongs_to_many :miq_user_roles, :join_table => :miq_roles_features

@@ -1,4 +1,4 @@
-class MiqRegionRemote < ActiveRecord::Base
+class MiqRegionRemote < ApplicationRecord
   def self.db_ping(host, port, username, password, database = nil, adapter = nil)
     database, adapter = prepare_default_fields(database, adapter)
     with_remote_connection(host, port, username, password, database, adapter) do |conn|

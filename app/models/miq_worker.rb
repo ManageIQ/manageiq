@@ -1,6 +1,6 @@
 require 'io/wait'
 
-class MiqWorker < ActiveRecord::Base
+class MiqWorker < ApplicationRecord
   include UuidMixin
   include ReportableMixin
 
@@ -182,7 +182,7 @@ class MiqWorker < ActiveRecord::Base
   # Grab all the classes in the hierarchy below ActiveRecord::Base
   def self.path_to_my_worker_settings
     @path_to_my_worker_settings ||=
-      ancestors.grep(Class).select { |c| c < ActiveRecord::Base }.reverse.collect(&:settings_name)
+      ancestors.grep(Class).select { |c| c <= MiqWorker }.reverse.collect(&:settings_name)
   end
 
   def self.fetch_worker_settings_from_server(miq_server, options = {})

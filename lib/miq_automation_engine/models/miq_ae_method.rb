@@ -1,6 +1,6 @@
 require 'miq-syntax-checker'
 
-class MiqAeMethod < ActiveRecord::Base
+class MiqAeMethod < ApplicationRecord
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
 

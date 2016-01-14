@@ -1,4 +1,4 @@
-class MiqAlertSet < ActiveRecord::Base
+class MiqAlertSet < ApplicationRecord
   acts_as_miq_set
 
   before_validation :default_name_to_guid, :on => :create

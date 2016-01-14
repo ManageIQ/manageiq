@@ -1,4 +1,4 @@
-class CloudVolumeSnapshot < ActiveRecord::Base
+class CloudVolumeSnapshot < ApplicationRecord
   include NewWithTypeStiMixin
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::CloudManager"

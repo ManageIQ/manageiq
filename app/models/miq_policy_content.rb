@@ -1,4 +1,4 @@
-class MiqPolicyContent < ActiveRecord::Base
+class MiqPolicyContent < ApplicationRecord
   belongs_to :miq_policy
   belongs_to :miq_event_definition
   belongs_to :miq_action

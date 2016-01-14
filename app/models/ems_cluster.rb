@@ -1,4 +1,4 @@
-class EmsCluster < ActiveRecord::Base
+class EmsCluster < ApplicationRecord
   include NewWithTypeStiMixin
   include_concern 'CapacityPlanning'
   include ReportableMixin

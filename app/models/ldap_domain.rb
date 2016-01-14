@@ -1,4 +1,4 @@
-class LdapDomain < ActiveRecord::Base
+class LdapDomain < ApplicationRecord
   belongs_to :ldap_region
 
   has_many :ldap_servers, :dependent => :destroy

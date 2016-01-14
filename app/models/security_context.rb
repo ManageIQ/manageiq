@@ -1,3 +1,3 @@
-class SecurityContext < ActiveRecord::Base
+class SecurityContext < ApplicationRecord
   belongs_to :resource, :polymorphic => true
 end

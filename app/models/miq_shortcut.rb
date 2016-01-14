@@ -1,4 +1,4 @@
-class MiqShortcut < ActiveRecord::Base
+class MiqShortcut < ApplicationRecord
   has_many :miq_widget_shortcuts, :dependent => :destroy
   has_many :miq_widgets, :through => :miq_widget_shortcuts
 

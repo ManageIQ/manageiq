@@ -1,4 +1,4 @@
-class ComplianceDetail < ActiveRecord::Base
+class ComplianceDetail < ApplicationRecord
   belongs_to  :compliance
   belongs_to  :condition
   belongs_to  :miq_policy
