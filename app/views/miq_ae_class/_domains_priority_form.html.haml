@@ -19,11 +19,11 @@
                   :opts_true          => {:class  => "dimmed small"},
                   :opts_false         => {:class  => "rollover small", :alt => t = _("Move selected fields up")},
                   :link               => {:action => 'priority_form_field_changed', :button => 'up', :id => "priority__edit"},
-                  :opts_link          => {:remote => true, "data-submit" => "domains_list", :title => t})
+                  :opts_link          => {:remote => true, 'data-method' => :post, "data-submit" => "domains_list", :title => t})
                 = link_image_if(:cond => (@edit[:new][:domain_order].length < 2),
                   :image                => "/images/toolbars/down.png",
                   :opts_true          => {:class => "dimmed small"},
                   :opts_false         => {:class => "rollover small", :alt => (t = _("Move selected fields down"))},
                   :link               => {:action => 'priority_form_field_changed', :button => 'down', :id => "priority__edit"},
-                  :opts_link          => {"data-submit" => "domains_list", :remote => true, :title => t})
+                  :opts_link          => {:remote => true, 'data-method' => :post, "data-submit" => "domains_list", :title => t})
           #div.note= _('* Select one or more consecutive groups to move up or down.')

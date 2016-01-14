@@ -22,9 +22,10 @@
             %li{:class => li_class}
               = link_to(search_name.html_safe,
                 {:action => 'listnav_search_selected', :id => search.id, :button => "apply"},
-                :remote  => true,
-                :title   => _("Apply this filter"),
-                :onclick => "return miqCheckForChanges()")
+                :remote       => true,
+                "data-method" => :post,
+                :title        => _("Apply this filter"),
+                :onclick      => "return miqCheckForChanges()")
 
     - unless @my_searches.blank?
       - if @panels["#{@view.db}_my_searches"].nil?
@@ -41,9 +42,10 @@
             %li{:class => "#{li_class}"}
               = link_to(search.description.html_safe,
                 {:action => 'listnav_search_selected', :id => search.id, :button => "apply"},
-                :remote  => true,
-                :title   => _("Apply this filter"),
-                :onclick => "return miqCheckForChanges()")
+                :remote       => true,
+                "data-method" => :post,
+                :title        => _("Apply this filter"),
+                :onclick      => "return miqCheckForChanges()")
 
 
   - if @edit && @edit[:expression] && @edit[:expression][:selected] && (!@settings[:default_search] || (@settings[:default_search] && @edit[:expression][:selected][:id].to_i != @settings[:default_search][@edit[@expkey][:exp_model].to_s.to_sym].to_i) || (!@settings[:default_search][@edit[@expkey][:exp_model].to_s.to_sym]))
@@ -54,6 +56,7 @@
       "data-miq_sparkle_off" => true,
       :class                 => "btn btn-default pull-right",
       :remote                => true,
+      "data-method"          => :post,
       :alt                   => t,
       :title                 => t)
   - else

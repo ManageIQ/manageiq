@@ -56,12 +56,15 @@
       %tr
         %th
           = link_to(image_tag("/images/toolbars/squashed-#{@sb[:squash_state]}.png",
-            :class => "rollover small",
-            :id    => "exp_collapse_img",
-            :style => "z-index:50",
-            :alt   => (t = (@sb[:squash_state] ? _("Show Input Parameters") : _("Hide Input Parameters"))),
-            :title => t),
-            {:action => 'expand_toggle', :id => "exp_collapse"}, :remote  => true)
+              :class => "rollover small",
+              :id    => "exp_collapse_img",
+              :style => "z-index:50",
+              :alt   => (t = (@sb[:squash_state] ? _("Show Input Parameters") : _("Hide Input Parameters"))),
+              :title => t),
+            {:action => 'expand_toggle',
+             :id     => "exp_collapse"},
+            'data-method' => :post,
+            :remote       => true)
 
   #inputs_div{:style => @sb[:squash_state] ? "display: none;" : ""}
     %table.table.table-striped.table-bordered.table-hover
@@ -80,6 +83,7 @@
                   {:action => "field_method_delete", :id => flds["id"].to_s, :arr_id => i},
                   "data-miq_sparkle_on"  => true,
                   "data-miq_sparkle_off" => true,
+                  'data-method'          => :post,
                   :remote                => true,
                   :confirm               => _('Are you sure you want to delete input field from method?'),
                   :title                 => _("Click to delete this input field from method"))
@@ -118,6 +122,7 @@
               {:action => "field_method_accept", :button => "accept"},
               "data-miq_sparkle_on"  => true,
               "data-miq_sparkle_off" => true,
+              'data-method'          => :post,
               :remote                => true,
               :title                 => _("Add this entry"))
             %td

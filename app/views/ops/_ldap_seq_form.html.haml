@@ -32,6 +32,7 @@
                            :id          => "seq"},
                           "data-submit" => "column_lists",
                           :remote       => true,
+                          "data-method" => :post,
                           :title        => _("Move selected fields up"))
                 = link_to(image_tag("/images/toolbars/down.png",
                                     :class => "rollover small",
@@ -41,6 +42,7 @@
                            :id     => "seq"},
                            "data-submit" => "column_lists",
                            :remote       => true,
+                           "data-method" => :post,
                            :title        => _("Move selected fields down"))
         .note
           *

@@ -1,7 +1,10 @@
 - url = url_for(:action => 'forest_form_field_changed', :id => "#{@sb[:active_tab].split('_').last}")
 #forest_entries_div
   %h3= _("Trusted Forest Settings")
-  = form_tag(url_for(:action => 'forest_accept', :id => "ldap_form"), :remote => true) do
+  = form_tag({:action => 'forest_accept',
+              :id     => "ldap_form"},
+             :remote => true,
+             :method => :post) do
     %table.table.table-striped.table-bordered.table-hover
       %thead
         %tr

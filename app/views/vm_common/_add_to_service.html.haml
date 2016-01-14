@@ -5,8 +5,10 @@
     %a.active
       = @title
 
-= form_tag(:action => 'add_vm_to_service', :id => @vm, :class => 'form-horizontal') do
-
+= form_tag({:action => 'add_vm_to_service',
+            :id     => @vm},
+           :class  => 'form-horizontal',
+           :method => :post) do
   %h3
     = _('Service Selection')
   .form-group

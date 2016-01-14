@@ -18,6 +18,7 @@
         "data-miq_sparkle_on"  => true,
         "data-miq_sparkle_off" => true,
         :remote                => true,
+        "data-method"          => :post,
         :title                 => _("Edit the Record Filter"))
       %br
       - if @edit[:record_filter][:expression].key?("???")
@@ -43,6 +44,7 @@
             "data-miq_sparkle_on"  => true,
             "data-miq_sparkle_off" => true,
             :remote                => true,
+            "data-method"          => :post,
             :title                 => "Edit the Display Filter")
           %br
           - if @edit[:display_filter][:expression].key?("???")

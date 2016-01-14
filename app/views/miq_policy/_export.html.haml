@@ -22,6 +22,7 @@
                 "data-miq_sparkle_on"  => true,
                 "data-miq_sparkle_off" => true,
                 :remote                => true,
+                "data-method"          => :post,
                 :title                 => t)
             = link_to(_('Cancel'),
               {:action => "export", :button => "cancel_import"},
@@ -30,10 +31,16 @@
               "data-miq_sparkle_on"  => true,
               "data-miq_sparkle_off" => true,
               :remote                => true,
+              "data-method"          => :post,
               :title                 => _("Cancel Import"))
   - else
     #import_div
-      = form_tag({:action => "upload", :type => "import", :dbtype => @sb[:dbtype]}, :class => "form-horizontal", :multipart => true) do
+      = form_tag({:action => "upload",
+                  :type   => "import",
+                  :dbtype => @sb[:dbtype]},
+                 :class     => "form-horizontal",
+                 :multipart => true,
+                 :method    => :post) do
         .form-group
           .col-md-4
             = file_field("upload", "file",
@@ -93,4 +100,5 @@
               "data-miq_sparkle_off" => true,
               "data-submit"          => "profile_export_div",
               :remote                => true,
+              "data-method"          => :post,
               :title                 => t)

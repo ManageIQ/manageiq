@@ -10,6 +10,7 @@
               {:action => "sort_vc_grid", :sort_choice => h, :field_id => field_id, :id => id.to_s},
               "data-miq_sparkle_on"  => true,
               "data-miq_sparkle_off" => true,
+              "data-method"          => :post,
               :remote                => true)
             - if @edit[:vc_columns][i] == @edit[:vc_sortcol]
               %img{:src => "/imgas/icons/16/sort_#{@edit[:vc_sortdir] == 'ASC' ? 'up' : 'down'}"}

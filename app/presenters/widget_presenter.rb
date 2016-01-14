@@ -54,6 +54,7 @@ class WidgetPresenter
                     :id                   => "w_#{@widget.id}_close",
                     :title                => _("Remove from Dashboard"),
                     :remote               => true,
+                    'data-method'         => :post,
                     :confirm              => _("Are you sure you want to remove '%s'" \
                                                "from the Dashboard?") % @widget.title,
                     'data-miq_sparkle_on' => true)
@@ -67,9 +68,10 @@ class WidgetPresenter
                   {:controller => "dashboard",
                    :action     => "widget_toggle_minmax",
                    :widget     => @widget.id},
-                  :id     => "w_#{@widget.id}_minmax",
-                  :title  => minimized ? _(" Maximize") : _(" Minimize"),
-                  :remote => true)
+                  :id           => "w_#{@widget.id}_minmax",
+                  :title        => minimized ? _(" Maximize") : _(" Minimize"),
+                  :remote       => true,
+                  'data-method' => :post)
   end
 
 
@@ -91,7 +93,8 @@ class WidgetPresenter
                   :id                   => "w_#{@widget.id}_zoom",
                   :title                => _("Zoom in on this chart"),
                   "data-miq_sparkle_on" => true,
-                  :remote               => true)
+                  :remote               => true,
+                  'data-method'         => :post)
   end
 
   def self.chart_data

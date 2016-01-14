@@ -26,6 +26,7 @@
                     {:action => 'db_form_field_changed', :button => 'up', :id => "seq"},
                     "data-submit" => "column_lists",
                     :remote       => true,
+                    "data-method" => :post,
                     :title        => t)
                 - if @edit[:new][:dashboard_order].length < 2
                   = image_tag("/images/toolbars/down.png", :class => "dimmed small")
@@ -35,6 +36,7 @@
                     {:action => 'db_form_field_changed', :button => 'down', :id => "seq"},
                     "data-submit" => "column_lists",
                     :remote       => true,
+                    "data-method" => :post,
                     :title        => t)
             .note
               = _('* Select one or more consecutive groups to move up or down.')

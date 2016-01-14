@@ -81,18 +81,18 @@
                         "data-miq_sparkle_on"  => true,
                         "data-miq_sparkle_off" => true,
                         :remote                => true,
-                        :method                => :post,
+                        "data-method"          => :post,
                         :id                    => "apply_button",
                         :title                 => t)
             = link_to(_('Cancel'),
                       {:action => "quick_search",
                        :button => "cancel"},
-                      :class  => "btn btn-default",
-                      :alt    => t = _('Cancel (Esc)'),
-                      :remote => true,
-                      :method => :post,
-                      :id     => "cancel_button",
-                      :title  => t)
+                      :class        => "btn btn-default",
+                      :alt          => t = _('Cancel (Esc)'),
+                      :remote       => true,
+                      "data-method" => :post,
+                      :id           => "cancel_button",
+                      :title        => t)
 :javascript
   $(function(){
     $('#quicksearchbox').on('shown.bs.modal', function () {

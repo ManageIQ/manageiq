@@ -133,6 +133,7 @@ source "https://rails-assets.org" do
   gem "rails-assets-c3",                              "~>0.4.10"
   gem "rails-assets-himdel--jquery.observe_field",    "~>0.1.0"
   gem "rails-assets-jquery-1.8",                      "~>1.8.3"
+  gem "rails-assets-jquery-ujs",                      "~>1.1.0"
   gem "rails-assets-jqueryui",                        "~>1.9.2"
   gem "rails-assets-bootstrap-switch",                "~>3.3.2"
   gem "rails-assets-angular-bootstrap-switch",        "~>0.4.1"

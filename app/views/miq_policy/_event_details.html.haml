@@ -69,6 +69,7 @@
                           "data-miq_sparkle_off" => true,
                           "data-submit"          => 'choices_chosen_true_div',
                           :remote                => true,
+                          "data-method"          => :post,
                           :title                 => t)
                         - t = _("Remove all Actions from this Event")
                         = link_to(image_tag("/images/toolbars/allleft.png", :class => "rollover small", :alt => t),
@@ -76,6 +77,7 @@
                           "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
                           :remote                => true,
+                          "data-method"          => :post,
                           :title                 => t)
                         - t = _("Remove selected Actions from this Event")
                         = link_to(image_tag("/images/toolbars/left.png", :class => "rollover small", :alt => t),
@@ -84,6 +86,7 @@
                           "data-miq_sparkle_off" => true,
                           "data-submit"          => 'members_chosen_true_div',
                           :remote                => true,
+                          "data-method"          => :post,
                           :title                 => t)
                       %td{:align => "right", :valign => "top"}
                         %span#members_chosen_true_div
@@ -101,6 +104,7 @@
                           "data-miq_sparkle_off" => true,
                           "data-submit"          => 'members_chosen_true_div',
                           :remote                => true,
+                          "data-method"          => :post,
                           :title                 => t)
                         - t = _("Move selected Action down")
                         = link_to(image_tag("/images/toolbars/down.png", :class => "rollover small", :alt => t),
@@ -109,6 +113,7 @@
                           "data-miq_sparkle_off" => true,
                           "data-submit"          => 'members_chosen_true_div',
                           :remote                => true,
+                          "data-method"          => :post,
                           :title                 => t)
                         - t = _("Set selected Actions to Synchronous")
                         = link_to(image_tag("/images/toolbars/syncr.png", :class => "rollover small", :alt => t),
@@ -117,6 +122,7 @@
                           "data-miq_sparkle_off" => true,
                           "data-submit"          => 'members_chosen_true_div',
                           :remote                => true,
+                          "data-method"          => :post,
                           :title                 => t)
                         - t = _("Set selected Actions to Asynchronous")
                         = link_to(image_tag("/images/toolbars/asyncr.png", :class => "rollover small", :alt => t),
@@ -125,6 +131,7 @@
                           "data-miq_sparkle_off" => true,
                           "data-submit"          => 'members_chosen_true_div',
                           :remote                => true,
+                          "data-method"          => :post,
                           :title                 => t)
           %hr
         - else
@@ -184,6 +191,7 @@
                           "data-miq_sparkle_off" => true,
                           "data-submit"          => 'choices_chosen_false_div',
                           :remote                => true,
+                          "data-method"          => :post,
                           :title                 => t)
 
                         - t = "Remove all Policies from this Profile"
@@ -192,6 +200,7 @@
                           "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
                           :remote                => true,
+                          "data-method"          => :post,
                           :title                 => t)
 
                         - t = "Remove selected Actions from this Event"
@@ -201,6 +210,7 @@
                           "data-miq_sparkle_off" => true,
                           "data-submit"          => 'members_chosen_false_div',
                           :remote                => true,
+                          "data-method"          => :post,
                           :title                 => t)
 
                       %td{:align => "right", :valign => "top"}
@@ -219,6 +229,7 @@
                         "data-miq_sparkle_off" => true,
                         "data-submit"          => 'members_chosen_false_div',
                         :remote                => true,
+                        "data-method"          => :post,
                         :title                 => t)
 
                         - t = "Move selected Action down"
@@ -228,6 +239,7 @@
                         "data-miq_sparkle_off" => true,
                         "data-submit"          => 'members_chosen_false_div',
                         :remote                => true,
+                        "data-method"          => :post,
                         :title                 => t)
 
                         - t = "Set selected Actions to Synchronous"
@@ -237,6 +249,7 @@
                         "data-miq_sparkle_off" => true,
                         "data-submit"          => 'members_chosen_false_div',
                         :remote                => true,
+                        "data-method"          => :post,
                         :title                 => t)
 
                         - t = "Set selected Actions to Asynchronous"
@@ -246,6 +259,7 @@
                         "data-miq_sparkle_off" => true,
                         "data-submit"          => 'members_chosen_false_div',
                         :remote                => true,
+                        "data-method"          => :post,
                         :title                 => t)
         - else
           - if @event_false_actions.empty?

@@ -1,6 +1,8 @@
 #menu_div2
   - if @selected && @selected[1] && (!@edit[:selected_reports].blank? || !@edit[:available_reports].blank?)
-    = form_tag(:action => 'menu_update', :id => "report_menu_form2") do
+    = form_tag({:action => 'menu_update',
+                :id     => "report_menu_form2"},
+               :method => :post) do
       %fieldset{:style => "height: 450px;"}
         %h3
           = _('Manage Reports')
@@ -29,6 +31,7 @@
                     {:action => 'menu_field_changed', :button => 'left'},
                     "data-submit" => "column_lists",
                     :remote       => true,
+                    "data-method" => :post,
                     :title        => t)
                 - if @edit[:selected_reports].length == 0
                   = image_tag("/images/toolbars/right.png", :class => "rollover small", :border => "0")
@@ -38,6 +41,7 @@
                     {:action => 'menu_field_changed', :button => 'right'},
                     "data-submit" => "column_lists",
                     :remote       => true,
+                    "data-method" => :post,
                     :title        => t)
                 - if @edit[:selected_reports].length < 2
                   = image_tag("/images/toolbars/top.png", :class => "rollover small", :border => "0")
@@ -47,6 +51,7 @@
                     {:action => 'menu_field_changed', :button => 'top'},
                     "data-submit" => "column_lists",
                     :remote       => true,
+                    "data-method" => :post,
                     :title        => t)
                 - if @edit[:selected_reports].length < 2
                   = image_tag("/images/toolbars/up.png", :class => "rollover small", :border => "0")
@@ -56,6 +61,7 @@
                     {:action => 'menu_field_changed', :button => 'up'},
                     "data-submit" => "column_lists",
                     :remote       => true,
+                    "data-method" => :post,
                     :title        => t)
                 - if @edit[:selected_reports].length < 2
                   = image_tag("/images/toolbars/down.png", :class => "rollover small", :border => "0")
@@ -65,6 +71,7 @@
                     {:action => 'menu_field_changed', :button => 'down'},
                     "data-submit" => "column_lists",
                     :remote       => true,
+                    "data-method" => :post,
                     :title        => t)
                 - if @edit[:selected_reports].length < 2
                   = image_tag("/images/toolbars/bottom.png", :class => "rollover small", :border => "0")
@@ -74,6 +81,7 @@
                     {:action => 'menu_field_changed', :button => 'bottom'},
                     "data-submit" => "column_lists",
                     :remote       => true,
+                    "data-method" => :post,
                     :title        => 'Move selected reports to bottom')
               %td{:align => "left"}
                 = select_tag('available_reports[]',
@@ -90,6 +98,7 @@
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
                     :remote                => true,
+                    "data-method"          => :post,
                     :title                 => t)
                   - t = _("Discard report management changes")
                   = link_to(image_tag('/images/toolbars/discard.png', :class => "rollover small", :alt => t),
@@ -97,6 +106,7 @@
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
                     :remote                => true,
+                    "data-method"          => :post,
                     :title                 => t)
       - unless @edit[:user_typ]
         = _('* Report is not owned by your group so it cannot be removed')

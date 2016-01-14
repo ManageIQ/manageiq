@@ -1,5 +1,8 @@
 #field_values_div
-  = form_tag(url_for(:action => 'field_value_accept', :id => "#{@record.id || 'new'}"), :remote => true) do
+  = form_tag({:action => 'field_value_accept',
+              :id     => @record.id || 'new'},
+             :remote => true,
+             :method => :post) do
     %h3= _('Entries')
     = render :partial => "layouts/flash_msg"
     %table.table.table-striped.table-bordered.table-hover

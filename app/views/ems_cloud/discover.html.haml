@@ -1,6 +1,9 @@
 - url = url_for :action => 'discover_field_changed'
 = render :partial => "layouts/flash_msg"
-= form_tag({:action => "discover"}, :id => 'discover_cloud_form', :class => "form-horizontal") do
+= form_tag({:action => "discover"},
+           :id     => 'discover_cloud_form',
+           :class  => "form-horizontal",
+           :method => :post) do
   .form-group
     %label.col-md-2.control-label
       = _('Discover Type')

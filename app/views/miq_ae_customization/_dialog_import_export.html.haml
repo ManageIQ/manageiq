@@ -10,7 +10,11 @@
 .import-or-export
   %h3
     = _('Import')
-  = form_tag({:action => "upload_import_file"}, :class => "form-horizontal", :target => "upload_target", :multipart => true) do
+  = form_tag({:action => "upload_import_file"},
+             :class     => "form-horizontal",
+             :target    => "upload_target",
+             :multipart => true,
+             :method    => :post) do
     .form-group
       .col-md-4
         = file_field("upload", "file",
@@ -23,7 +27,8 @@
 
   %hr
   %h3= _('Export')
-  = form_tag({:action => "export_service_dialogs"}, :method => :get) do
+  = form_tag({:action => "export_service_dialogs"},
+             :method => :get) do
     = select_tag("service_dialogs[]",
       options_for_select(@dialog_exports),
       :class    => "service-dialog-export",

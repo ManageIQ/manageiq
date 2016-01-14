@@ -24,6 +24,7 @@
                     "data-miq_sparkle_on"        => true,
                     "data-miq_sparkle_off"       => true,
                     "data-submit"                => 'column_lists',
+                    "data-method"                => :post,
                     :remote                      => true})
                 = link_image_if(:cond => (@edit[:new][:fields].length < 2),
                   :image              => "/images/toolbars/down.png",
@@ -34,6 +35,7 @@
                     "data-miq_sparkle_on"        => true,
                     "data-miq_sparkle_off"       => true,
                     "data-submit"                => 'column_lists',
+                    "data-method"                => :post,
                     :remote                      => true})
           .note= _('* Select one or more consecutive fields to move up or down.')
 :javascript

@@ -25,6 +25,7 @@
                 {:controller => "report", :action => "widget_shortcut_remove", :id => @widget.id || "new", :shortcut => s_id},
                 "data-miq_sparkle_on" => true,
                 :remote               => true,
+                "data-method"         => :post,
                 :id                   => "s_#{s_id}_close",
                 :title                => _("Remove this Shortcut"),
                 :class                => "fa fa-close pull-right")
@@ -32,6 +33,7 @@
                 {:controller => "report", :action => "widget_shortcut_reset", :id => @widget.id || "new", :shortcut => s_id},
                 "data-miq_sparkle_on" => true,
                 :remote               => true,
+                "data-method"         => :post,
                 :id                   => "s_#{s_id}_reset",
                 :title                => _("Reset this Shortcut's text"),
                 :class                => "resetbox")

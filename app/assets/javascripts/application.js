@@ -3,6 +3,7 @@
 //= require jquery_overrides
 //= require i18n
 //= require patternfly
+//= require jquery-ujs
 //= require angular
 //= require angular-patternfly
 //= require angular-ui-bootstrap
@@ -82,7 +83,6 @@
 //= require bootstrap-switch
 //= require angular-bootstrap-switch
 //= require jquery.observe_field
-//= require miq_jquery_ujs_rails3
 //= require miq_ujs_bindings
 //= require dynatree/jquery.dynatree
 //= require miq_dynatree

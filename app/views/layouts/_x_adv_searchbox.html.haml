@@ -26,8 +26,12 @@
         = javascript_tag(javascript_focus('search_text'))
     .form-group
       - url_options = {:action => "x_search_by_name", :button => "button", :method => :post}
-      = link_to(url_options, :class => "btn btn-default", "data-submit" => 'searchbox', :remote => true) do
+      = link_to(url_options, :class        => "btn btn-default",
+                             "data-submit" => 'searchbox',
+                             "data-method" => :post,
+                             :remote       => true) do
         %span.fa.fa-search
+
       - unless nameonly
         -# Button to toggle adv search box on/off
         - t = _("Advanced Search")

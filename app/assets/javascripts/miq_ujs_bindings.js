@@ -13,8 +13,21 @@ $(document).ready(function () {
 
   // Bind the MIQ spinning Q to configured links
   $(document).on('ajax:beforeSend', 'a[data-miq_sparkle_on]', function () {
-    miqSparkleOn(); // Call to miqSparkleOn since miqSparkle(true) checks XHR count, which is 0 before send
+    // Call to miqSparkleOn since miqSparkle(true) checks XHR count, which is 0 before send
+    miqSparkleOn();
   });
+  $(document).on('ajax:complete', 'a[data-miq_sparkle_off]', function () {
+    miqSparkle(false);
+  });
+
+  // Handle data-submit - triggered by handleRemote from jquery-ujs
+  $(document).on('ajax:before', 'a[data-submit]', function () {
+    var form_id = $(this).data('submit');
+    // because handleRemote will send the element's data-params as the POST body
+    $(this).data('params', miqSerializeForm(form_id));
+  });
+
+  // Handle 401 responses with javascript content on the login screen
   $(document).on('ajax:error', 'a[data-miq_login_error]', function (xhr, status, error) {
     var js_mimetypes = [ "text/javascript", "application/javascript" ];
     if (status.status == 401 &&
@@ -22,9 +35,6 @@ $(document).ready(function () {
         status.responseText.length > 0) {
       $.globalEval(status.responseText);
     }
-  });
-  $(document).on('ajax:complete', 'a[data-miq_sparkle_off]', function () {
-    miqSparkle(false);
   });
 
   // Bind in the observe support. If interval is configured, use the observe_field function

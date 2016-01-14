@@ -73,6 +73,7 @@
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
                     :remote                => true,
+                    "data-method"          => :post,
                     :confirm               => _('Are you sure you want to delete field from schema?'),
                     :title                 => t)
                 - %w(name aetype datatype default_value display_name description substitute collect message on_entry on_exit on_error max_retries max_time).each do |fname|
@@ -123,6 +124,7 @@
                   "data-miq_sparkle_on"  => true,
                   "data-miq_sparkle_off" => true,
                   :remote                => true,
+                  "data-method"          => :post,
                   :title                 => t)
               - %w(name aetype datatype default_value display_name description substitute collect message on_entry on_exit on_error max_retries max_time).each do |fname|
                 %td

@@ -528,7 +528,10 @@
         .col-md-8
           - path = Rails.application.routes.recognize_path request.referrer
           - if path[:controller] == "miq_request"
-            = form_tag({:action => "prov_edit", :req_id => "#{@edit[:req_id]}"}, :multipart => true) do
+            = form_tag({:action    => "prov_edit",
+                        :req_id    => @edit[:req_id].to_s},
+                       :multipart => true,
+                       :method    => :post) do
               .form-group
                 .col-md-4
                   = file_field("upload", "file", :class => "filestyle", "data-buttonName" => "btn-default")
@@ -537,7 +540,10 @@
                 .col-md-6
                   = submit_tag(_("Upload"), :class => "upload btn btn-default")
           - else
-            = form_tag({:controller => path[:controller], :action => "explorer"}, :multipart => true) do
+            = form_tag({:controller => path[:controller],
+                        :action     => "explorer"},
+                       :multipart  => true,
+                       :method     => :post) do
               .form-group
                 .col-md-4
                   = file_field("upload", "file", :class => "filestyle", "data-buttonName" => "btn-default")

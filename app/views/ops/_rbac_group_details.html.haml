@@ -107,13 +107,14 @@
               = link_to("Retrieve",
                         {:action => "rbac_group_user_lookup",
                          :button => "submit",
-                         :id     => "#{@edit[:group_id] || "new"}"},
-                         :class => "btn btn-primary",
-                         :alt   => _("LDAP Group Lookup"),
-                         "data-miq_sparkle_on"  => true,
-                         "data-miq_sparkle_off" => true,
-                         :remote                => true,
-                         :title                 => _("LDAP Group Lookup"))
+                         :id     => @edit[:group_id] || "new"},
+                        :class                 => "btn btn-primary",
+                        :alt                   => t = _("LDAP Group Lookup"),
+                        "data-miq_sparkle_on"  => true,
+                        "data-miq_sparkle_off" => true,
+                        :remote                => true,
+                        "data-method"          => :post,
+                        :title                 => t)
 
           .form-group#user_id_form_group
             %label.col-md-2.control-label
@@ -122,7 +123,7 @@
               = text_field_tag("user",
                                @edit[:new][:user],
                                :maxlength         => 255,
-                               :class => "form-control",
+                               :class             => "form-control",
                                "data-miq_observe" => {:interval => '.5',
                                                       :url      => url}.to_json)
 
@@ -133,7 +134,7 @@
               = text_field_tag("user_id",
                                @edit[:new][:user_id],
                                :maxlength         => 255,
-                               :class => "form-control",
+                               :class             => "form-control",
                                "data-miq_observe" => {:interval => '.5',
                                                       :url      => url}.to_json)
 
@@ -151,13 +152,14 @@
               = link_to("Retrieve",
                         {:action => "rbac_group_user_lookup",
                          :button => "submit",
-                         :id     => "#{@edit[:group_id] || "new"}"},
-                         :class => "btn btn-primary",
-                         :alt   => _("LDAP Group Lookup"),
-                         "data-miq_sparkle_on"  => true,
-                         "data-miq_sparkle_off" => true,
-                         :remote                => true,
-                         :title                 => _("LDAP Group Lookup"))
+                         :id     => @edit[:group_id] || "new"},
+                        :class                 => "btn btn-primary",
+                        :alt                   => t = _("LDAP Group Lookup"),
+                        "data-miq_sparkle_on"  => true,
+                        "data-miq_sparkle_off" => true,
+                        :remote                => true,
+                        "data-method"          => :post,
+                        :title                 => t)
 
   %hr
   %h3

@@ -11,7 +11,10 @@
 .import-or-export
   %h3
     = _('Import Datastore classes (*.zip)')
-  = form_tag({:action => "upload_import_file"}, :target => "upload_target", :multipart => true) do
+  = form_tag({:action => "upload_import_file"},
+             :target    => "upload_target",
+             :multipart => true,
+             :method    => :post) do
     .form-horizontal
       .form-group
         .col-md-4
@@ -23,7 +26,8 @@
   %hr
   %h3
     = _('Export')
-  = form_tag({:action => "export_datastore"}, :method => :get) do
+  = form_tag({:action => "export_datastore"},
+             :method => :get) do
     = image_submit_tag("/images/toolbars/export.png",
                        :alt   => t = _("Export all classes and instances"),
                        :title => t)
@@ -34,11 +38,12 @@
     = (t = _('Reset all Datastore custom classes and instances to default'))
   = link_to(image_tag("/images/toolbars/reset.png",
                       :alt => t),
-                      {:action               => 'reset_datastore'},
-                       "data-miq_sparkle_on" => true,
-                       :confirm              => _("All Datastore customizations will be lost. Are you sure you want to reset all classes and instances to default?"),
-                       :remote               => true,
-                       :title                => t)
+            {:action              => 'reset_datastore'},
+            "data-miq_sparkle_on" => true,
+            :confirm              => _("All Datastore customizations will be lost. Are you sure you want to reset all classes and instances to default?"),
+            :remote               => true,
+            "data-method"         => :post,
+            :title                => t)
 .import-data
   %form#import-form
     %h3

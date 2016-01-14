@@ -1,5 +1,7 @@
 #menu_div1
-  = form_tag(:action => 'menu_update', :id => "report_menu_form1") do
+  = form_tag({:action => 'menu_update',
+              :id     => "report_menu_form1"},
+             :method => :post) do
     %fieldset{:style => "width: 320px; height: 450px;"}
       %h3
         %span#menu1_legend
@@ -61,6 +63,7 @@
                 {:action => 'discard_changes', :pressed => 'discard_folders', :title => t},
                 "data-miq_sparkle_on"  => true,
                 "data-miq_sparkle_off" => true,
+                "data-method"          => :post,
                 :remote                => true)
             %td
 

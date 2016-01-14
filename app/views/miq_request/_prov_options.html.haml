@@ -71,6 +71,7 @@
             "data-miq_sparkle_on"  => true,
             "data-miq_sparkle_off" => true,
             :remote                => true,
+            "data-method"          => :post,
             :title                 => t)
         #buttons_on{:style => "display: none;"}
           = link_to(_("Apply"),
@@ -80,6 +81,7 @@
             "data-miq_sparkle_on"  => true,
             "data-miq_sparkle_off" => true,
             :remote                => true,
+            "data-method"          => :post,
             :title                 => t)
           = link_to(_("Reset"),
             {:action => "prov_button", :button => "reset"},
@@ -88,6 +90,7 @@
             "data-miq_sparkle_on"  => true,
             "data-miq_sparkle_off" => true,
             :remote                => true,
+            "data-method"          => :post,
             :title                 => t)
           = link_to(_("Default"),
             {:action => "prov_button", :button => "default"},
@@ -96,5 +99,6 @@
             "data-miq_sparkle_on"  => true,
             "data-miq_sparkle_off" => true,
             :remote                => true,
+            "data-method"          => :post,
             :title                 => t)
   %hr

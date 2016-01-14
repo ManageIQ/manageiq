@@ -1,7 +1,10 @@
 - url = url_for(:action => 'category_field_changed', :id => "#{@category && @category.id ? @category.id : "new"}")
 #main_div
   %h3= _("Category Information")
-  = form_tag( {:action => 'category_update'}, {:id => "category_form", :class => "form-horizontal"}) do
+  = form_tag({:action => 'category_update'},
+             :id     => "category_form",
+             :class  => "form-horizontal",
+             :method => :post) do
     = render :partial => "layouts/flash_msg"
     - if @category && @category.default == "t"
       .form-group

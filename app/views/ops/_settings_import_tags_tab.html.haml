@@ -9,7 +9,10 @@
     .form-horizontal.static
       .form-group
         .col-md-8
-          = form_tag({:action => "upload_csv", :typ => "tag"}, :multipart => true) do
+          = form_tag({:action => "upload_csv",
+                      :typ    => "tag"},
+                     :multipart => true,
+                     :method    => :post) do
             .form-group
               .col-md-4
                 = file_field("upload",

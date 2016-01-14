@@ -6,7 +6,12 @@
 %h3
   = _('Import')
 #import_div
-  = form_tag({:action => "upload", :typ => "import", :dbtype => @sb[:dbtype]}, :class => "form-horizontal", :multipart => true) do
+  = form_tag({:action    => "upload",
+              :typ       => "import",
+              :dbtype    => @sb[:dbtype]},
+             :class     => "form-horizontal",
+             :multipart => true,
+             :method    => :post) do
     - overwrite = @sb[:overwrite] ? true : false
     .form-group
       .col-md-8

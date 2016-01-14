@@ -4,7 +4,11 @@
   = render(:partial => "layouts/flash_msg", :locals => {:click_remove => false})
   %hr/
   %h3= _("Upload Custom Variable Values")
-  = form_tag({:action => "upload_csv", :typ => "asset_tag"}, :class => "form-horizontal", :multipart => true) do
+  = form_tag({:action => "upload_csv",
+              :typ    => "asset_tag"},
+             :class     => "form-horizontal",
+             :multipart => true,
+             :method    => :post) do
     .form-group
       %label.col-md-2.control-label
         = _("Type")

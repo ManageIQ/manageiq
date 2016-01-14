@@ -81,6 +81,7 @@
           "data-miq_sparkle_on"  => true,
           "data-miq_sparkle_off" => true,
           :remote                => true,
+          "data-method"          => :post,
           :title                 => t)
       #buttons_on.pull-right{:style => "display:none"}
         = link_to(_('Apply'),
@@ -90,6 +91,7 @@
           "data-miq_sparkle_on"  => true,
           "data-miq_sparkle_off" => true,
           :remote                => true,
+          "data-method"          => :post,
           :title                 => t)
         = link_to(_('Reset'),
           {:action => "tasks_button", :button => "reset"},
@@ -98,6 +100,7 @@
           "data-miq_sparkle_on"  => true,
           "data-miq_sparkle_off" => true,
           :remote                => true,
+          "data-method"          => :post,
           :title                 => t)
         = link_to(_('Default'),
           {:action => "tasks_button", :button => "default"},
@@ -106,5 +109,6 @@
           "data-miq_sparkle_on"  => true,
           "data-miq_sparkle_off" => true,
           :remote                => true,
+          "data-method"          => :post,
           :title                 => t)
   %hr

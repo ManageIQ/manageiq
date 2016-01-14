@@ -15,12 +15,13 @@
                         :name                 => "search_button",
                         :alt                  => t = _("Search by Name within results"),
                         :class                => nameonly ? "nameonly" : nil),
-                        {:action => "x_search_by_name",
-                         :button => "search_button"},
-                        "data-miq_sparkle_on" => true,
-                        "data-submit"         => "searchbox",
-                        :remote               => true,
-                        :title                => t)
+              {:action => "x_search_by_name",
+               :button => "search_button"},
+              "data-miq_sparkle_on" => true,
+              "data-submit"         => "searchbox",
+              :remote               => true,
+              "data-method"         => :post,
+              :title                => t)
   - unless nameonly
     - squash_state = (!(@edit && @edit[:adv_search_open] && @edit[:adv_search_open])).to_s
     = link_to(image_tag("/images/toolbars/squashed-#{squash_state}.png",
@@ -29,13 +30,15 @@
                         :alt   => t = _("Advanced Search"),
                         :title => t),
               {:action => 'adv_search_toggle'},
-              :remote  => true,
-              :id      => "adv_search")
+              :remote       => true,
+              "data-method" => :post,
+              :id           => "adv_search")
     %span#clear_search{:style => "display:none;"}
       = "(%s)" % link_to("clear",
                          {:action => "adv_search_clear"},
                          "data-miq_sparkle_on" => true,
                          :remote               => true,
+                         "data-method"         => :post,
                          :title                => _("Remove the current filter"),
                          :style                => "text-decoration: underline;")
     :javascript

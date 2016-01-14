@@ -1,6 +1,10 @@
 - url = url_for(:action => 'ldap_domain_form_field_changed', :id => @edit[:ldap_domain_id] || "new")
 #form_div
-  = form_tag(url_for(:action => 'ldap_domain_edit', :id => "#{@edit[:ldap_domain_id] || "new"}"), :class => "form-horizontal", :remote => true) do
+  = form_tag({:action => 'ldap_domain_edit',
+              :id     => @edit[:ldap_domain_id] || "new"},
+             :class  => "form-horizontal",
+             :remote => true,
+             :method => :post) do
     = render :partial => "layouts/flash_msg"
     %h3= _("Basic Information")
     .form-group
