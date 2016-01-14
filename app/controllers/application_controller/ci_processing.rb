@@ -255,7 +255,7 @@ module ApplicationController::CiProcessing
             OrchestrationStack
           when "service"
             Service
-          when "vm_infra", "vm_cloud", "vm"
+          when "vm_infra", "vm_cloud", "vm", "vm_or_template"
             Vm
           end
     if params[:button]
