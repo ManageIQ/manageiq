@@ -74,7 +74,7 @@ module ActsAsTaggable
           next
         end
 
-        results.reject { |obj| !ret.include?(obj) }
+        results = results.select { |obj| ret.include?(obj) }
         break if results.empty?
       end
       if limit
