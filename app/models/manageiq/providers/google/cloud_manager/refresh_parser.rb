@@ -272,8 +272,11 @@ module ManageIQ::Providers
         zone_uid         = parse_uid_from_url(instance.zone)
         zone             = @data_index.fetch_path(:availability_zones, zone_uid)
 
-        parent_image_uid = parse_parent_image(instance)
+        parent_image_uid = parse_instance_parent_image(instance)
         parent_image     = @data_index.fetch_path(:vms, parent_image_uid)
+
+        cloud_network    = parse_instance_cloud_network(instance)
+        security_groups  = parse_instance_security_groups(instance)
 
         operating_system = parent_image[:operating_system] unless parent_image.nil?
 
@@ -291,6 +294,8 @@ module ManageIQ::Providers
           :parent_vm         => parent_image,
           :operating_system  => operating_system,
           :key_pairs         => [],
+          :cloud_network     => cloud_network,
+          :security_groups   => security_groups,
           :hardware          => {
             :cpu_sockets          => flavor[:cpus],
             :cpu_total_cores      => flavor[:cpu_cores],
@@ -344,7 +349,27 @@ module ManageIQ::Providers
         super(disks, size, location, name, "google")
       end
 
-      def parse_parent_image(instance)
+      def parse_instance_networks(instance)
+        instance.network_interfaces.to_a.collect do |nic|
+          parse_uid_from_url(nic["network"])
+        end
+      end
+
+      def parse_instance_cloud_network(instance)
+        network_name = parse_instance_networks(instance).first
+
+        @data[:cloud_networks].to_a.detect do |net|
+          net[:name] == network_name
+        end
+      end
+
+      def parse_instance_security_groups(instance)
+        parse_instance_networks(instance).collect do |network_name|
+          @data_index.fetch_path(:security_groups, network_name)
+        end
+      end
+
+      def parse_instance_parent_image(instance)
         parent_image_uid = nil
 
         instance.disks.each do |disk|
