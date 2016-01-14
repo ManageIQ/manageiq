@@ -14,8 +14,6 @@ module MiqWebServerWorkerMixin
     end
 
     def self.preload
-      super
-
       require 'hamlit-rails'
 
       # Make these constants globally available

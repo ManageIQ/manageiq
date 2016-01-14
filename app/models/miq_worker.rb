@@ -317,11 +317,8 @@ class MiqWorker < ActiveRecord::Base
     )
   end
 
-  def self.preload
-  end
-
   def self.before_fork
-    preload
+    preload if respond_to?(:preload)
   end
 
   def self.after_fork
