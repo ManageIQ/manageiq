@@ -147,7 +147,7 @@ module MiqAeMethodService
     def drb_return(obj)
       # Save a reference to the object, so that we control when it gets deleted.  Otherwise, Ruby Garbage Collection may remove it prematurely.
       # If it is removed prematurely and then referenced by the method, we get a DRb recycled object error
-      @drb_server_references << obj
+      #@drb_server_references << obj
       obj
     end
 
