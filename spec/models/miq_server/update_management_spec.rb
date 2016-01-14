@@ -110,7 +110,6 @@ describe MiqServer do
     it "unregistered should use subscription-manager" do
       allow(reg_system).to receive(:registered?).once.and_return(false, true)
       expect(LinuxAdmin::SubscriptionManager).to receive(:register).once.with(default_params).and_return(true)
-      expect(File).to receive(:exist?).once.and_return(true)
       expect(reg_system).to receive(:registration_type).once
 
       @server.register
@@ -127,7 +126,6 @@ describe MiqServer do
 
       allow(reg_system).to receive(:registered?).once.and_return(false, true)
       expect(LinuxAdmin::SubscriptionManager).to receive(:register).once.with(expected_params).and_return(true)
-      expect(File).to receive(:exist?).once.and_return(true)
       expect(reg_system).to receive(:registration_type).once
 
       @server.register
