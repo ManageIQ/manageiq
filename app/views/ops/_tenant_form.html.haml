@@ -37,7 +37,8 @@
         %label.col-md-2.control-label
           = _("Use Configuration Settings")
         .col-md-10
-          %input#use_config{"type"        => "checkbox",
+          %input#use_config{"bs-switch"   => "",
+                            "type"        => "checkbox",
                             "name"        => "use_config_for_attributes",
                             "ng-model"    => "tenantModel.use_config_for_attributes",
                             "checkchange" => ""}

@@ -791,7 +791,7 @@ module OpsController::Settings::Common
     when "settings_custom_logos"                                            # Custom Logo tab
       new[:server][:custom_logo] = (params[:server_uselogo] == "1") if params[:server_uselogo]
       new[:server][:custom_login_logo] = (params[:server_useloginlogo] == "1") if params[:server_useloginlogo]
-      new[:server][:use_custom_login_text] = (params[:server_uselogintext] == "1") if params[:server_uselogintext]
+      new[:server][:use_custom_login_text] = (params[:server_uselogintext] == "true") if params[:server_uselogintext]
       if params[:login_text]
         new[:server][:custom_login_text] = params[:login_text]
         @login_text_changed = new[:server][:custom_login_text] != @edit[:current].config[:server][:custom_login_text].to_s
@@ -824,7 +824,7 @@ module OpsController::Settings::Common
       @edit[:current].config.each_key do |category|
         @edit[:current].config[category].symbolize_keys.each_key do |key|
           if category == :smtp && key == :enable_starttls_auto  # Checkbox is handled differently
-            new[category][key] = params["#{category}_#{key}"] == "1" if params.key?("#{category}_#{key}")
+            new[category][key] = params["#{category}_#{key}"] == "true" if params.key?("#{category}_#{key}")
           else
             new[category][key] = params["#{category}_#{key}"] if params["#{category}_#{key}"]
           end

@@ -288,13 +288,13 @@ module OpsController::Settings::Tags
     #   elsif params[:show] == "null"
     #     @edit[:new][:show] = false
     #   end
-    @edit[:new][:show] = (params[:show] == "1") if params[:show]
-    @edit[:new][:perf_by_tag] = (params[:perf_by_tag] == "1") if params[:perf_by_tag]
+    @edit[:new][:show] = (params[:show] == 'true') if params[:show]
+    @edit[:new][:perf_by_tag] = (params[:perf_by_tag] == "true") if params[:perf_by_tag]
     @edit[:new][:example_text] = params[:example_text] if params[:example_text]
     #   if !@edit[:new][:name].blank? && !Classification.find_by_name(@edit[:new][:name]) && params[:button] != "add" && params[:single_value]
     #     @edit[:new][:single_value] = (params[:single_value] == "1")
     #   end
-    @edit[:new][:single_value] = (params[:single_value] == "1") if params[:single_value]
+    @edit[:new][:single_value] = (params[:single_value] == "true") if params[:single_value]
   end
 
   def category_get_all
