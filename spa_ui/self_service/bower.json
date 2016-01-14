@@ -22,6 +22,7 @@
     "angular-animate": "~1.4.6",
     "angular-base64": "~2.0.5",
     "angular-bootstrap": "~0.13.0",
+    "angular-gettext": "~2.2.0",
     "angular-messages": "~1.4.6",
     "angular-mocks": "~1.4.6",
     "angular-patternfly": "~2.3.2",

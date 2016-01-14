@@ -26,6 +26,7 @@
     "express-http-proxy": "^0.6.0",
     "glob": "^5.0.3",
     "gulp": "^3.8.11",
+    "gulp-angular-gettext": "^2.1.0",
     "gulp-angular-templatecache": "^1.5.0",
     "gulp-autoprefixer": "^3.0.1",
     "gulp-bump": "^0.3.0",
