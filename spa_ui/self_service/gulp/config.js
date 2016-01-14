@@ -382,6 +382,25 @@ module.exports = (function() {
     }
   };
 
+  var poDir = 'client/gettext/po/';
+
+  config.gettextExtract = {
+    inputs: ['client/**/*.js', 'client/**/*.html'],
+    potFile: 'manageiq-ssui.pot',
+    extractorOptions: {
+      markerNames: ['__', 'N_'],
+    },
+    outputDir: poDir,
+  };
+
+  config.gettextCompile = {
+    inputs: poDir + '**/*.po',
+    compilerOptions: {
+      format: 'json',
+    },
+    outputDir: 'client/gettext/json/',
+  };
+
   // task bump: Revs the package and bower files
   config.bump = {
     packages: [

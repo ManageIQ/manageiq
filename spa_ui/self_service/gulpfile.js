@@ -44,6 +44,8 @@ gulp.task('dev-fonts', task('fonts', {key: 'devFonts'}));
 gulp.task('dev-images', task('images', {key: 'devImages'}));
 gulp.task('dev-skin-images', ['dev-images'], task('images', {key: 'devSkinImages'}));
 gulp.task('dev-imgs', task('images', {key: 'devImgs'}));
+gulp.task('gettext-extract', task('gettext-extract'));
+gulp.task('gettext-compile', task('gettext-compile'));
 
 /**
  * Build tasks
