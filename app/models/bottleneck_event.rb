@@ -13,7 +13,6 @@ class BottleneckEvent < ActiveRecord::Base
 
   def self.generate_future_events(obj)
     log_message_uniq_prefix = "Generating future bottleneck events for: [#{obj.class} - #{obj.name}]..."
-    _log.info(log_message_uniq_prefix)
     last = last_created_on(obj)
     if last && last >= 24.hours.ago.utc
       _log.info("#{log_message_uniq_prefix} Skipped, last creation [#{last}] was less than 24 hours ago")
