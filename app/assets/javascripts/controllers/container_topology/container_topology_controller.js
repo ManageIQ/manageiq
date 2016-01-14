@@ -2,7 +2,12 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
 .config(['$httpProvider', function($httpProvider) {
   $httpProvider.defaults.headers.common['X-CSRF-Token'] = jQuery('meta[name=csrf-token]').attr('content');
 }])
-.controller('containerTopologyController', ['$scope', '$http', '$interval', "$location", function($scope, $http, $interval, $location) {
+.controller('containerTopologyController',ContainerTopologyCtrl);
+
+ContainerTopologyCtrl.$inject = ['$scope', '$http', '$interval', '$location'];
+
+function ContainerTopologyCtrl($scope, $http, $interval, $location) {
+  var self = this;
   $scope.vs = null;
 
   $scope.refresh = function() {
@@ -64,7 +69,7 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
 
     added.append("circle")
       .attr("r", function(d) {
-        return getDimensions(d).r;
+        return self.getDimensions(d).r;
       })
       .style("stroke", function(d) {
         switch (d.item.status) {
@@ -93,12 +98,12 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
     added.append("title");
 
     added.on("dblclick", function(d) {
-      return dblclick(d);
+      return window.location.assign(self.dblclick(d));
     });
 
     added.append("text")
         .text(function(d) {
-          return getIcon(d);
+          return self.getIcon(d);
         })
       .attr('class', function(d) {
           switch(d.item.kind) {
@@ -109,10 +114,10 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
           }
         })
       .attr("y", function(d) {
-        return getDimensions(d).y;
+        return self.getDimensions(d).y;
       })
       .attr("x", function(d) {
-        return getDimensions(d).x;
+        return self.getDimensions(d).x;
       });
 
     added.append("text")
@@ -149,29 +154,8 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
     /* Don't do default rendering */
     ev.preventDefault();
   });
-
-  function class_name(d) {
-    switch (d.item.kind) {
-      case "ContainerService":
-      case "ContainerRoute":
-      case "ContainerNode":
-      case "ContainerReplicator":
-        return "container_" + d.item.display_kind.toLowerCase();
-
-      case "Vm":
-      case "Host":
-      case "Container":
-        return d.item.kind.toLowerCase();
-
-      case "Pod":
-        return "container_group";
-
-      case "ContainerManager":
-        return "vendor-" + _.snakeCase(d.item.display_kind);
-    }
-  }
-
-  function dblclick(d) {
+  
+  this.dblclick = function dblclick(d) {
     var entity_url = "";
     var action = '/show/' + d.item.miq_id;
     switch (d.item.kind) {
@@ -179,14 +163,14 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
         entity_url = "ems_container";
         break;
       default :
-        entity_url = class_name(d);
+        entity_url = _.snakeCase(d.item.kind);
     }
 
-    var url = '/' + entity_url + action;
-    window.location.assign(url);
+    return '/' + entity_url + action;
   }
 
-  function getIcon(d) {
+
+  this.getIcon = function getIcon(d) {
     switch (d.item.kind) {
       case 'Container':
         return '\uF1B2'; // fa-cube
@@ -219,14 +203,14 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
     }
   }
 
-  function getDimensions(d) {
+  this.getDimensions = function getDimensions(d) {
     switch (d.item.kind) {
       case "ContainerManager":
         return { x: 0, y: 16, r: 28 };
       case "Container":
         return { x: 1, y: 5, r: 13 };
       case "ContainerGroup":
-        return { x: 0, y: 6, r: 17 };
+        return { x: 1, y: 6, r: 17 };
       case "ContainerNode":
       case "Vm":
       case "Host":
@@ -269,4 +253,4 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
     $scope.search.query = "";
   };
 
-}]);
+}
