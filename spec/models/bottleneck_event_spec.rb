@@ -77,36 +77,34 @@ describe BottleneckEvent do
     end
   end
 
-  describe ".last_created_on" do
-    context "returns the last created_on date" do
-      def expect_last_created_on_to_eq_resource_last_created_on(resource)
-        bottleneck_event = BottleneckEvent.create!(:resource => resource)
-        expect(described_class.last_created_on(resource)).to be_same_time_as(bottleneck_event.created_on)
-      end
+  describe "#last_created_on" do
+    subject { described_class.last_created_on(resource) }
+    let(:resource) { FactoryGirl.create(resource_name) }
+    let!(:bottleneck_event) { BottleneckEvent.create!(:resource => resource) }
 
-      specify "for a host_redhat resource" do
-        resource = FactoryGirl.create(:host_redhat)
-        expect_last_created_on_to_eq_resource_last_created_on(resource)
-      end
+    context "for a host_redhat resource" do
+      let(:resource_name) { :host_redhat }
+      it { is_expected.to be_same_time_as(bottleneck_event.created_on) }
+    end
 
-      specify "for a host_vmware resource" do
-        resource = FactoryGirl.create(:host_vmware)
-        expect_last_created_on_to_eq_resource_last_created_on(resource)
-      end
-      specify "for a miq_enterprise resource" do
-        resource = FactoryGirl.create(:miq_enterprise)
-        expect_last_created_on_to_eq_resource_last_created_on(resource)
-      end
+    context "for a host_vmware resource" do
+      let(:resource_name) { :host_vmware }
+      it { is_expected.to be_same_time_as(bottleneck_event.created_on) }
+    end
 
-      specify "for a ems_redhat resource" do
-        resource = FactoryGirl.create(:ems_redhat)
-        expect_last_created_on_to_eq_resource_last_created_on(resource)
-      end
+    context "for a miq_enterprise resource" do
+      let(:resource_name) { :miq_enterprise }
+      it { is_expected.to be_same_time_as(bottleneck_event.created_on) }
+    end
 
-      specify "for a ems_cluster_openstack resource" do
-        resource = FactoryGirl.create(:ems_cluster_openstack)
-        expect_last_created_on_to_eq_resource_last_created_on(resource)
-      end
+    context "for a ems_redhat resource" do
+      let(:resource_name) { :ems_redhat }
+      it { is_expected.to be_same_time_as(bottleneck_event.created_on) }
+    end
+
+    context "for a ems_cluster_openstack resource" do
+      let(:resource_name) { :ems_cluster_openstack }
+      it { is_expected.to be_same_time_as(bottleneck_event.created_on) }
     end
   end
 end
