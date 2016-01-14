@@ -60,7 +60,7 @@ describe TreeNodeBuilder do
     end
 
     it 'DialogField node' do
-      field = FactoryGirl.build(:dialog_field, :name => 'random field name')
+      field = FactoryGirl.build(:dialog_field, :name => 'random field name', :label => 'foo')
       node = TreeNodeBuilder.build(field, nil, {})
       expect(node).not_to be_nil
     end
@@ -100,7 +100,7 @@ describe TreeNodeBuilder do
     end
 
     it 'IsoImage node' do
-      image = FactoryGirl.create(:iso_image)
+      image = FactoryGirl.create(:iso_image, :name => 'foo')
       node = TreeNodeBuilder.build(image, nil, {})
       expect(node).not_to be_nil
     end
@@ -115,6 +115,24 @@ describe TreeNodeBuilder do
       vm = FactoryGirl.build(:vm_amazon)
       node = TreeNodeBuilder.build(vm, nil, {})
       expect(node).not_to be_nil
+    end
+
+    it 'Vm node with /' do
+      vm = FactoryGirl.create(:vm_amazon, :name => 'foo / bar')
+      node = TreeNodeBuilder.build(vm, 'foo', {})
+      expect(node[:title]).to eq('foo / bar')
+    end
+
+    it 'Vm node with %2f' do
+      vm = FactoryGirl.create(:vm_amazon, :name => 'foo %2f bar')
+      node = TreeNodeBuilder.build(vm, nil, {})
+      expect(node[:title]).to eq('foo / bar')
+    end
+
+    it 'EmsFolder tooltip with %2f' do
+      ems_folder = FactoryGirl.create(:ems_folder, :name => 'foo %2f bar')
+      node = TreeNodeBuilder.build(ems_folder, nil, {})
+      expect(node[:tooltip]).to eq('Folder: foo / bar')
     end
 
     it 'MiqAeClass node' do
@@ -233,7 +251,7 @@ describe TreeNodeBuilder do
     end
 
     it 'PxeImageType node' do
-      image_type = FactoryGirl.create(:pxe_image_type)
+      image_type = FactoryGirl.create(:pxe_image_type, :name => 'foo')
       node = TreeNodeBuilder.build(image_type, nil, {})
       expect(node).not_to be_nil
     end
@@ -299,7 +317,7 @@ describe TreeNodeBuilder do
     end
 
     it 'MiqWidgetSet node' do
-      widget_set = FactoryGirl.build(:miq_widget_set)
+      widget_set = FactoryGirl.build(:miq_widget_set, :name => 'foo')
       node = TreeNodeBuilder.build(widget_set, nil, {})
       expect(node).not_to be_nil
     end
@@ -311,13 +329,13 @@ describe TreeNodeBuilder do
     end
 
     it 'VmdbIndex node' do
-      index = FactoryGirl.create(:vmdb_index)
+      index = FactoryGirl.create(:vmdb_index, :name => 'foo')
       node = TreeNodeBuilder.build(index, nil, {})
       expect(node).not_to be_nil
     end
 
     it 'Zone node' do
-      zone = FactoryGirl.build(:zone)
+      zone = FactoryGirl.build(:zone, :name => 'foo')
       node = TreeNodeBuilder.build(zone, nil, {})
       expect(node).not_to be_nil
     end

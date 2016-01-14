@@ -147,7 +147,7 @@ class ExplorerPresenter
     # Scroll to top of main div
     @out << "$('#main_div').scrollTop(0);"
 
-    @out << "$('h1#explorer_title').html('#{j ERB::Util.h(@options[:right_cell_text])}');" if @options[:right_cell_text]
+    @out << "$('h1#explorer_title').html('#{j ERB::Util.h(URI.unescape(@options[:right_cell_text]))}');" if @options[:right_cell_text]
 
     # Reload toolbars
     @options[:reload_toolbars].each_pair do |div_name, toolbar|
