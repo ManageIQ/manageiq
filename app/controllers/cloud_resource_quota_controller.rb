@@ -12,7 +12,11 @@ class CloudResourceQuotaController < ApplicationController
     @edit = session[:edit] # Restore @edit for adv search box
     params[:page] = @current_page unless @current_page.nil? # Save current page for list refresh
     return tag("CloudResourceQuota") if params[:pressed] == 'cloud_resource_quota_tag'
-    render_button_partial(pfx)
+    if @refresh_div == "main_div" && @lastaction == "show_list"
+      replace_gtl_main_div
+    else
+      render_flash
+    end
   end
 
   def show
@@ -34,7 +38,7 @@ class CloudResourceQuotaController < ApplicationController
       get_tagdata(@resource_quota)
       drop_breadcrumb(
         :name => @resource_quota.name + " (Summary)",
-        :url => "/cloud_resource_quota/show/#{@resource_quota.id}"
+        :url  => "/cloud_resource_quota/show/#{@resource_quota.id}"
       )
       @showtype = "main"
       set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
@@ -51,23 +55,6 @@ class CloudResourceQuotaController < ApplicationController
   end
 
   private
-
-  def render_button_partial(pfx)
-    if @flash_array && params[:pressed] == "#{@table_name}_delete" && @single_delete
-      render :update do |page|
-        page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]
-      end
-    elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
-                                                   "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
-      render_or_redirect_partial(pfx)
-    else
-      if @refresh_div == "main_div" && @lastaction == "show_list"
-        replace_gtl_main_div
-      else
-        render_flash
-      end
-    end
-  end
 
   def get_session_data
     @title      = "Cloud Resource Quota"
