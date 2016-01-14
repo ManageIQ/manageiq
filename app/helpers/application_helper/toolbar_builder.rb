@@ -230,7 +230,7 @@ class ApplicationHelper::ToolbarBuilder
     button_id          = input[:id]
     button_name        = input[:name].to_s
     button[:button]    = "custom__custom_#{button_id}"
-    button[:image]     = "custom-#{input[:image]}"
+    button[:icon]      = "product product-custom-#{input[:image]}"
     button[:text]      = button_name if input[:text_display]
     button[:title]     = input[:description].to_s
     button[:enabled]   = options[:enabled]
@@ -255,7 +255,7 @@ class ApplicationHelper::ToolbarBuilder
     get_custom_buttons(record).collect do |group|
       props = {}
       props[:buttonSelect] = "custom_#{group[:id]}"
-      props[:image]        = "custom-#{group[:image]}"
+      props[:icon]         = "product product-custom-#{group[:image]}"
       props[:title]        = group[:description]
       props[:text]         = group[:text] if group[:text_display]
       props[:enabled]      = "true"
