@@ -81,7 +81,7 @@ describe BottleneckEvent do
     context "returns the last created_on date" do
       def expect_last_created_on_to_eq_resource_last_created_on(resource)
         bottleneck_event = BottleneckEvent.create!(:resource => resource)
-        expect(described_class.last_created_on(resource)).to eq(bottleneck_event.reload.created_on)
+        expect(described_class.last_created_on(resource)).to be_same_time_as(bottleneck_event.created_on)
       end
 
       specify "for a host_redhat resource" do
