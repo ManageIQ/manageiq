@@ -68,13 +68,6 @@ module ArRegion
       where(:id => region_to_range(region_number)).scoping { yield }
     end
 
-    def conditions_for_my_region_default_scope
-      # NOTE: These conditions MUST NOT be specified in Hash format because they are used for defining default_scope in models
-      #       and would be applied for the creation of objects in addition to finds. Since :id is used in the condition this
-      #       would result in all instances getting the the same id .
-      ["#{quoted_table_name}.id >= ? AND #{quoted_table_name}.id <= ?", rails_sequence_start, rails_sequence_end]
-    end
-
     def id_in_current_region?(id)
       id_to_region(id) == my_region_number
     end
