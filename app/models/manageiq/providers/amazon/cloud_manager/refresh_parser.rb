@@ -357,13 +357,13 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
              @data_index.fetch_path(:flavors, "unknown")
 
     private_network = {
-      :ipaddress => instance.private_ip_address,
-      :hostname  => instance.private_dns_name
+      :ipaddress => instance.private_ip_address.presence,
+      :hostname  => instance.private_dns_name.presence
     }.delete_nils
 
     public_network = {
-      :ipaddress => instance.public_ip_address,
-      :hostname  => instance.public_dns_name
+      :ipaddress => instance.public_ip_address.presence,
+      :hostname  => instance.public_dns_name.presence
     }.delete_nils
 
     parent_image = @data_index.fetch_path(:vms, instance.image_id)
@@ -497,7 +497,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     child_stacks = []
     resources = raw_resources.collect do |resource|
       physical_id = resource.physical_resource_id
-      child_stacks << physical_id if resource.resource_type == "Aws::CloudFormation::Stack"
+      child_stacks << physical_id if resource.resource_type == "AWS::CloudFormation::Stack"
       @data_index.fetch_path(:orchestration_stack_resources, physical_id)
     end
 
