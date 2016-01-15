@@ -24,7 +24,7 @@
                                               :complete => "miqSparkle(false);",
                                               :confirm  => _("Are you sure you want to remove the '%{a_parent}[%{a}]' assignment from all of the items below?") % {:a_parent => a.parent.description, :a => a.description}),
                   :title => t = _("Click to remove this assignment")}
-                = image_tag("/images/toolbars/delete.png", :alt   => t)
+                = image_tag(image_path('toolbars/delete.png'), :alt   => t)
             - else
               %td
                 %ul.list

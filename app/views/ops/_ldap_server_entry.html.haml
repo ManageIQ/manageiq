@@ -54,7 +54,7 @@
   - if entry == "new"
     %tr#new_tr{:class => cycle('row0', 'row1'), :onclick => "#{remote_function(:url => {:action => 'ls_select', :id => "new", :domain_id => domain_id})}", :title => _("Click to add a new entry")}
       %td
-        = image_tag("/images/toolbars/new.png", :class => "rollover small")
+        = image_tag(image_path('toolbars/new.png'), :class => "rollover small")
       %td
         = h(_("<New LDAP Server>"))
       %td
@@ -66,7 +66,7 @@
     %tr{:id => "#{entry_idx}_tr", :class => cycle('row0', 'row1')}
       %td{:onclick => remote_function(:url => {:action => 'ls_delete', :id => entry_idx, :domain_id => domain_id}, :confirm => _("Deleting the '%s' LDAP Server, are you sure?")) % entry[:hostname],
           :title   => _("Click to delete this LDAP Server")}
-        = image_tag("/images/toolbars/delete.png", :class => "rollover small")
+        = image_tag(image_path('toolbars/delete.png'), :class => "rollover small")
       %td{:onclick => remote_function(:url => {:action => 'ls_select', :id => entry_idx, :field => "hostname", :domain_id => domain_id}), :title => t = _("Click to update this LDAP Server")}
         = entry[:hostname]
       %td{:onclick => remote_function(:url => {:action => 'ls_select', :id => entry_idx, :field => "mode", :domain_id => domain_id}), :title => t}

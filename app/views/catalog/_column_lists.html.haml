@@ -14,10 +14,9 @@
                      :id       => "available_fields")
       %td{:width => "30", :valign => "middle"}
         - if @edit[:new][:available_fields].length == 0
-          = image_tag("/images/toolbars/right.png",
-                      :class => "dimmed rollover small")
+          = image_tag(image_path('toolbars/right.png'), :class => "dimmed rollover small")
         - else
-          = link_to(image_tag("/images/toolbars/right.png",
+          = link_to(image_tag(image_path('toolbars/right.png'),
                               :class => "rollover small",
                               :alt   => _("Move Selected fields right")),
                     {:action => "st_catalog_form_field_changed",
@@ -28,10 +27,10 @@
                     "data-method" => :post,
                     :title        => _("Move Selected buttons right"))
         - if @edit[:new][:fields].length == 0
-          = image_tag("/images/toolbars/left.png",
+          = image_tag(image_path('toolbars/left.png'),
                       :class => "dimmed rollover small")
         - else
-          = link_to(image_tag("/images/toolbars/left.png",
+          = link_to(image_tag(image_path('toolbars/left.png'),
                               :class => "rollover small",
                               :alt   => _("Move Selected fields left")),
                     {:action => "st_catalog_form_field_changed",

@@ -4,7 +4,7 @@
   %head
     %title
       = h(title_from_layout(@layout))
-    = tag :link, :rel => "shortcut icon", :href => image_path("favicon.ico")
+    = favicon_link_tag
     = stylesheet_link_tag 'application'
     = javascript_include_tag 'application'
     - if Rails.env.development?

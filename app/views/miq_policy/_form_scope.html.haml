@@ -5,7 +5,7 @@
     %hr
   - else
     %h3= _('Scope (Press the "Edit" button to edit the scope)')
-    = link_to(image_tag("/images/toolbars/edit.png", :border => "0", :alt => (t = _("Edit this Scope"))),
+    = link_to(image_tag(image_path('toolbars/edit.png'), :border => "0", :alt => (t = _("Edit this Scope"))),
       {:action => 'condition_edit',
        :button => "applies_to_exp",
        :id => @condition.id || 'new'},

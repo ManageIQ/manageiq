@@ -18,14 +18,14 @@
       %td{:align => "center"}
         - t = _("Move selected fields down")
         = link_image_if(:cond => @edit[:new][:model].nil? || MiqExpression.reporting_available_fields(@edit[:new][:model], @edit[:new][:perf_interval]).length == 0,
-          :image              => "/images/toolbars/down.png",
+          :image              => image_path('toolbars/down.png'),
           :opts_true          => {:class  => "dimmed rollover small-nofloat"},
           :opts_false         => {:class  => "rollover small-nofloat", :style => "width: 28px; height: 28px", :alt => t},
           :link               => {:action => 'form_field_changed', :button => 'right', :id => "#{@edit[:rpt_id] || "new"}"},
           :opts_link          => {:remote => true, 'data-method' => :post, "data-submit" => 'column_lists', :title => t})
         - t = _("Move selected fields up")
         = link_image_if(:cond => @edit[:new][:fields].length == 0,
-          :image              => "/images/toolbars/up.png",
+          :image              => image_path('toolbars/up.png'),
           :opts_true          => {:class  => "dimmed rollover small-nofloat"},
           :opts_false         => {:class  => "rollover small-nofloat", :style => "width: 28px; height: 28px", :alt => t},
           :link               => {:action => 'form_field_changed', :button => 'left', :id => "#{@edit[:rpt_id] || "new"}"},
@@ -46,28 +46,28 @@
       %td{:width => "30", :valign => "middle"}
         - t = _("Move selected fields to top")
         = link_image_if(:cond => @edit[:new][:fields].length < 2,
-          :image              => "/images/toolbars/top.png",
+          :image              => image_path('toolbars/top.png'),
           :opts_true          => {:class  => "dimmed rollover small-nofloat"},
           :opts_false         => {:class  => "rollover small-nofloat", :style => "width: 28px; height: 28px", :alt => t},
           :link               => {:action => 'form_field_changed', :button => 'top', :id => "#{@edit[:rpt_id] || "new"}"},
           :opts_link          => {:remote => true, 'data-method' => :post, "data-submit" => 'column_lists', :title => t})
         - t = _("Move selected fields up")
         = link_image_if(:cond => @edit[:new][:fields].length < 2,
-          :image              => "/images/toolbars/up.png",
+          :image              => image_path('toolbars/up.png'),
           :opts_true          => {:class  => "dimmed rollover small-nofloat"},
           :opts_false         => {:class  => "rollover small-nofloat", :style => "width: 28px; height: 28px", :alt => t},
           :link               => {:action => 'form_field_changed', :button => 'up', :id => "#{@edit[:rpt_id] || "new"}"},
           :opts_link          => {:remote => true, 'data-method' => :post, "data-submit" => 'column_lists', :title => t})
         - t = _("Move selected fields down")
         = link_image_if(:cond => @edit[:new][:fields].length < 2,
-          :image              => "/images/toolbars/down.png",
+          :image              => image_path('toolbars/down.png'),
           :opts_true          => {:class  => "dimmed rollover small-nofloat"},
           :opts_false         => {:class  => "rollover small-nofloat", :style => "width: 28px; height: 28px", :alt => t},
           :link               => {:action => 'form_field_changed', :button => 'down', :id => "#{@edit[:rpt_id] || "new"}"},
           :opts_link          => {:remote => true, 'data-method' => :post, "data-submit" => 'column_lists', :title => t})
         - t = _("Move selected fields to bottom")
         = link_image_if(:cond => @edit[:new][:fields].length < 2,
-          :image              => "/images/toolbars/bottom.png",
+          :image              => image_path('toolbars/bottom.png'),
           :opts_true          => {:class  => "dimmed rollover small-nofloat"},
           :opts_false         => {:class  => "rollover small-nofloat", :style => "width: 28px; height: 28px", :alt => t},
           :link               => {:action => 'form_field_changed', :button => 'bottom', :id => "#{@edit[:rpt_id] || "new"}"},

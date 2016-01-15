@@ -167,7 +167,7 @@
                     :id       => "choices_chosen")
                 %p
               %td{:width => "20", :valign => "middle"}
-                = link_to(image_tag("/images/toolbars/right.png", :class => "rollover small", :alt => (t = _("Move selected Alerts into this Action"))),
+                = link_to(image_tag(image_path('toolbars/right.png'), :class => "rollover small", :alt => (t = _("Move selected Alerts into this Action"))),
                   {:action => 'action_edit',
                    :button => 'move_right',
                    :id => @action.id || 'new'},
@@ -177,7 +177,7 @@
                   :remote                => true,
                   "data-method"          => :post,
                   :title                 => t)
-                = link_to(image_tag("/images/toolbars/left.png", :class => "rollover small", :alt => (t = _("Remove selected Alerts from this Action"))),
+                = link_to(image_tag(image_path('toolbars/left.png'), :class => "rollover small", :alt => (t = _("Remove selected Alerts from this Action"))),
                   {:action => 'action_edit',
                    :button => 'move_left',
                    :id     => @action.id || 'new'},

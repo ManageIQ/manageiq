@@ -2,7 +2,7 @@
   - if entry == "new"
     %tr#new_tr{:class => cycle('row0', 'row1')}
       %td
-        = image_submit_tag("/images/toolbars/import.png",
+        = image_submit_tag(image_path('toolbars/import.png'),
           :class => "rollover small",
           :id => "accept", :name => "accept", :alt => _("Add this entry"), :title => _("Add this entry"))
       %td
@@ -12,7 +12,7 @@
   - else
     %tr{:class => cycle('row0', 'row1'), :id => "#{entry.id}_tr"}
       %td
-        = image_submit_tag("/images/toolbars/import.png",
+        = image_submit_tag(image_path('toolbars/import.png'),
           :class => "rollover small",
           :id => "accept", :name => "accept", :alt => _("Update this entry"), :title => _("Update this entry"))
       %td

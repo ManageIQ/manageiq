@@ -49,7 +49,7 @@
           %tr
             %td{:colspan => "2", :style => "float: right;"}
               - t = _('Commit expression element changes')
-              = image_tag('/images/toolbars/commit.png',
+              = image_tag(image_path('toolbars/commit.png'),
                 :border                => "0",
                 :class                 => "rollover small",
                 :alt                   => t,
@@ -59,7 +59,7 @@
                 "data-miq_sparkle_off" => true,
                 :onclick               => "return miqMenuChangeRow('serialize')")
               - t = _('Discard expression element changes')
-              = link_to(image_tag('/images/toolbars/discard.png', :id => "folder_discard", :class => "rollover small", :alt => t),
+              = link_to(image_tag(image_path('toolbars/discard.png'), :id => "folder_discard", :class => "rollover small", :alt => t),
                 {:action => 'discard_changes', :pressed => 'discard_folders', :title => t},
                 "data-miq_sparkle_on"  => true,
                 "data-miq_sparkle_off" => true,

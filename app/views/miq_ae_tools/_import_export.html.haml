@@ -28,7 +28,7 @@
     = _('Export')
   = form_tag({:action => "export_datastore"},
              :method => :get) do
-    = image_submit_tag("/images/toolbars/export.png",
+    = image_submit_tag(image_path('toolbars/export.png'),
                        :alt   => t = _("Export all classes and instances"),
                        :title => t)
     = _('Export all classes and instances to a file')
@@ -36,7 +36,7 @@
   %hr
   %h3
     = (t = _('Reset all Datastore custom classes and instances to default'))
-  = link_to(image_tag("/images/toolbars/reset.png",
+  = link_to(image_tag(image_path('toolbars/reset.png'),
                       :alt => t),
             {:action              => 'reset_datastore'},
             "data-miq_sparkle_on" => true,

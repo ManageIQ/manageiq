@@ -7,7 +7,7 @@
 
   - squash_state = session[:squash_open] ? "false" : "true"
   - squash_title = session[:squash_open] ? _("Collapse All") : _("Expand All")
-  - link_image = image_tag("/images/toolbars/squashed-all-#{squash_state}.png",
+  - link_image = image_tag(image_path("toolbars/squashed-all-#{squash_state}.png"),
       :id => 'squash_img',
       :class => "rollover small",
       :alt => "#{squash_title}",
