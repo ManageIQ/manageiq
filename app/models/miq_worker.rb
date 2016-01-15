@@ -322,7 +322,21 @@ class MiqWorker < ActiveRecord::Base
   end
 
   def self.after_fork
+    close_pg_sockets_inherited_from_parent
     DRb.stop_service
+  end
+
+  # When we fork, the children inherits the parent's file descriptors
+  # so we need to close any inherited raw pg sockets in the child.
+  def self.close_pg_sockets_inherited_from_parent
+    owner_to_pool = ActiveRecord::Base.connection_handler.instance_variable_get(:@owner_to_pool)
+    owner_to_pool[Process.ppid].values.compact.each do |pool|
+      pool.connections.each do |conn|
+        socket = conn.raw_connection.socket
+        _log.info "Closing socket: #{socket}"
+        IO.for_fd(socket).close
+      end
+    end
   end
 
   def start
