@@ -277,8 +277,6 @@ module VMDB
       update_cache_metadata
 
       activate
-
-      svr.reset if svr
     end
 
     def save_file(filename)
