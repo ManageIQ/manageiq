@@ -46,19 +46,9 @@ class MiqSystem
   end
 
   def self.num_cpus
-    if Sys::Platform::IMPL == :linux
-      @num_cpus ||= begin
-        filename = "/proc/cpuinfo"
-        count = 0
-        MiqSystem.readfile_async(filename).to_s.split("\n").each do |line|
-          next if line.strip.empty?
-          count += 1 if (line.split(":").first.strip == 'processor')
-        end
-        count
-      end
-    else
-      return nil
-    end
+    return unless Sys::Platform::IMPL == :linux
+    require 'linux_admin'
+    @num_cpus ||= LinuxAdmin::Hardware.new.total_cores
   end
 
   def self.memory
