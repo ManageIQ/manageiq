@@ -459,18 +459,9 @@ class MiqServer < ActiveRecord::Base
     end
   end
 
-  def reset
-    # TODO: Need to handle calling this during startup because it results in starting generic workers from the main process
-    # MiqGenericWorker.update_config
-    # XXX
-
-    # When the vmdb is reset, need to check the ntp settings, and apply them
-    ntp_reload_queue
-  end
-
   # Restart the local server
   def restart
-    raise "Server reset is only supported on Linux" unless MiqEnvironment::Command.is_linux?
+    raise "Server restart is only supported on Linux" unless MiqEnvironment::Command.is_linux?
 
     _log.info("Server restart initiating...")
     update_attribute(:status, "restarting")
