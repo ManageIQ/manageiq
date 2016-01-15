@@ -8,7 +8,7 @@ module ManageIQ::Providers
           manager.api_version = connection.version
           manager.save
 
-          raw_ems_data = {:hosts => connection.hosts}
+          raw_ems_data = {:hosts => connection.api.hosts.all}
           ConfigurationManager::RefreshParser.configuration_inv_to_hashes(raw_ems_data)
         end
       end
