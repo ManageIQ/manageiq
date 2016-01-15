@@ -110,25 +110,37 @@ describe MiqServer do
     end
 
     context "#ntp_reload_queue" do
-      before(:each) do
-        MiqQueue.destroy_all
-        @cond = {:method_name => 'ntp_reload', :class_name => 'MiqServer', :instance_id => @miq_server.id, :server_guid => @miq_server.guid, :zone => @miq_server.zone.name}
-        @miq_server.ntp_reload_queue
-        @message = MiqQueue.where(@cond).first
+      let(:queue_cond) { {:method_name => 'ntp_reload', :class_name => 'MiqServer', :instance_id => @miq_server.id, :server_guid => @miq_server.guid, :zone => @miq_server.zone.name} }
+      let(:message)    { MiqQueue.where(queue_cond).first }
+
+      before { MiqQueue.destroy_all }
+
+      context "when on an appliance" do
+        before do
+          allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
+          @miq_server.ntp_reload_queue
+        end
+
+        it "will queue up a message with high priority" do
+          expect(message.priority).to eq(MiqQueue::HIGH_PRIORITY)
+        end
+
+        it "will not requeue if one exists" do
+          expect(MiqQueue.where(queue_cond).count).to eq(1)
+          @miq_server.ntp_reload_queue
+          expect(MiqQueue.where(queue_cond).count).to eq(1)
+        end
       end
 
-      it "will queue up a message" do
-        expect(@message).not_to be_nil
-      end
+      context "when not on an appliance" do
+        before do
+          allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
+          @miq_server.ntp_reload_queue
+        end
 
-      it "message will be high priority" do
-        expect(@message.priority).to eq(MiqQueue::HIGH_PRIORITY)
-      end
-
-      it "will not requeue if one exists" do
-        expect(MiqQueue.where(@cond).count).to eq(1)
-        @miq_server.ntp_reload_queue
-        expect(MiqQueue.where(@cond).count).to eq(1)
+        it "will not queue up a message" do
+          expect(message).to be_nil
+        end
       end
     end
 
@@ -138,7 +150,7 @@ describe MiqServer do
       let(:zone_ntp)   { {:server => ["zone.pool.com"]} }
       let(:chrony)     { double }
 
-      context "on an appliance" do
+      context "when on an appliance" do
         before do
           allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
         end
@@ -177,7 +189,7 @@ describe MiqServer do
         end
       end
 
-      context "on a non-Linux platform" do
+      context "when not on an appliance" do
         before do
           allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
         end
