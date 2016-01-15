@@ -126,6 +126,7 @@ module ApplicationController::Automate
     @breadcrumbs = []
     drop_breadcrumb(:name => "Resolve", :url => "/miq_ae_tools/resolve")
     @lastaction = "resolve"
+    @right_cell_text = "Simulation"
 
     case params[:button]
     when "throw"    then resolve_button_throw
