@@ -206,6 +206,48 @@ describe MiqWorker do
     end
   end
 
+  describe ".config_settings_path" do
+    let(:capu_worker) do
+      ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker
+    end
+
+    it "include parent entries" do
+      expect(capu_worker.config_settings_path).to eq(
+        %i(workers worker_base queue_worker_base ems_metrics_collector_worker ems_metrics_collector_worker_amazon)
+      )
+    end
+
+    it "works for high level entries" do
+      expect(MiqEmsMetricsCollectorWorker.config_settings_path).to eq(
+        %i(workers worker_base queue_worker_base ems_metrics_collector_worker)
+      )
+    end
+  end
+
+  describe ".worker_settings" do
+    let(:capu_worker) do
+      ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker
+    end
+    let(:config) { @server.get_config }
+
+    before do
+      @server = EvmSpecHelper.local_miq_server
+    end
+
+    it "merges parent values" do
+      config.set_worker_setting!(:MiqEmsMetricsCollectorWorker, [:defaults, :memory_threshold], "250.megabytes")
+      config.save
+      expect(capu_worker.worker_settings[:memory_threshold]).to eq(250.megabytes)
+    end
+
+    it "reads child value" do
+      config.set_worker_setting!(:MiqEmsMetricsCollectorWorker, [:defaults, :memory_threshold], "250.megabytes")
+      config.set_worker_setting!(capu_worker, :memory_threshold, "200.megabytes")
+      config.save
+      expect(capu_worker.worker_settings[:memory_threshold]).to eq(200.megabytes)
+    end
+  end
+
   context "instance" do
     before(:each) do
       allow(described_class).to receive(:nice_increment).and_return("+10")
