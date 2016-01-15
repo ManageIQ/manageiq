@@ -352,7 +352,7 @@ class ChargebackController < ApplicationController
          end
          page << javascript_for_cb_button_add_metric_visibility(params[:metric] != "null")
        elsif !params[:group].nil?
-         rate_details_level = (params[:level] == 'Compute' || params[:level].nil? ) ? @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Compute"} :  @sb[:rate_details].select {|k| k.rate == "0" && k.rate_type=="Storage" }
+         rate_details_level = @edit[:new][:level] == 'Compute'? @sb[:rate_details].select { |k| k.rate == "0"
          @edit[:new][:metrics] = chargeback_details_metrics(rate_details_level, params[:group])
          @edit[:new][:group] = params[:group]
          page.replace_html("add_metric_fields", :partial => "cb_rate_add_metrics")
