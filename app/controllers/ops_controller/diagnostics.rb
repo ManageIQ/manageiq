@@ -959,7 +959,7 @@ module OpsController::Diagnostics
         else
           title = "#{Dictionary.gettext('MiqServer', :type => :model, :notfound => :titleize)}: #{s.name}(#{s.id}) (#{s.status})"
         end
-        server_node[:icon] = "evm_server.png"
+        server_node[:icon] = ActionController::Base.helpers.image_path("100/evm_server.png")
         server_node[:title] = s.started? ?
                                 "<b class='cfme-bold-node'>#{title}</b>".html_safe :
                                 title
@@ -1006,7 +1006,7 @@ module OpsController::Diagnostics
             end
           end
           role_node[:title] = "Role: #{r.description} (#{status})"
-          role_node[:icon] = "role-#{r.name}.png"
+          role_node[:icon] = ActionController::Base.helpers.image_path("100/role-#{r.name}.png")
           role_node[:expand] = true
           tree_kids.push(role_node)
 
@@ -1048,14 +1048,14 @@ module OpsController::Diagnostics
 
     node[:addClass] = "dynatree-title"
     if asr.active? && asr.miq_server.started?
-      node[:icon] = "on.png"
+      node[:icon] = ActionController::Base.helpers.image_path("100/on.png")
       node[:title] += " (#{priority}active, PID=#{asr.miq_server.pid})"
     else
       if asr.miq_server.started?
-        node[:icon] = "suspended.png"
+        node[:icon] = ActionController::Base.helpers.image_path("100/suspended.png")
         node[:title] += " (#{priority}available, PID=#{asr.miq_server.pid})"
       else
-        node[:icon] = "off.png"
+        node[:icon] = ActionController::Base.helpers.image_path("100/off.png")
         node[:title] += " (#{priority}unavailable)"
       end
       node[:addClass] = "cfme-red-node" if asr.priority == 1

@@ -46,24 +46,24 @@ describe OpsController do
           expect(tree).to eq([
             {
               :key      => @svr1.id.to_s,
-              :icon     => "evm_server.png",
+              :icon     => ActionController::Base.helpers.image_path('100/evm_server.png'),
               :title    => "Server: #{@svr1.name} [#{@svr1.id}]",
               :expand   => true,
               :children => [
                 {
                   :key      => "#{@svr1.id}__host",
-                  :icon     => "host.png",
+                  :icon     => ActionController::Base.helpers.image_path('100/host.png'),
                   :title    => "Host / Nodes",
                   :children => [
                     {
                       :key    => "#{@svr1.id}__host_#{@host1.id}",
-                      :icon   => "host.png",
+                      :icon   => ActionController::Base.helpers.image_path('100/host.png'),
                       :title  => @host1.name,
                       :select => true
                     },
                     {
                       :key    => "#{@svr1.id}__host_#{@host2.id}",
-                      :icon   => "host.png",
+                      :icon   => ActionController::Base.helpers.image_path('100/host.png'),
                       :title  => @host2.name,
                       :select => false
                     }
@@ -71,18 +71,18 @@ describe OpsController do
                 },
                 {
                   :key      => "#{@svr1.id}__storage",
-                  :icon     => "storage.png",
+                  :icon     => ActionController::Base.helpers.image_path('100/storage.png'),
                   :title    => "Datastores",
                   :children => [
                     {
                       :key    => "#{@svr1.id}__storage_#{@storage1.id}",
-                      :icon   => "storage.png",
+                      :icon   => ActionController::Base.helpers.image_path('100/storage.png'),
                       :title  => @storage1.name,
                       :select => true
                     },
                     {
                       :key    => "#{@svr1.id}__storage_#{@storage2.id}",
-                      :icon   => "storage.png",
+                      :icon   => ActionController::Base.helpers.image_path('100/storage.png'),
                       :title  => @storage2.name,
                       :select => false
                     }
@@ -92,24 +92,24 @@ describe OpsController do
             },
             {
               :key      => @svr2.id.to_s,
-              :icon     => "evm_server.png",
+              :icon     => ActionController::Base.helpers.image_path('100/evm_server.png'),
               :title    => "Server: #{@svr2.name} [#{@svr2.id}]",
               :expand   => true,
               :children => [
                 {
                   :key      => "#{@svr2.id}__host",
-                  :icon     => "host.png",
+                  :icon     => ActionController::Base.helpers.image_path('100/host.png'),
                   :title    => "Host / Nodes",
                   :children => [
                     {
                       :key    => "#{@svr2.id}__host_#{@host1.id}",
-                      :icon   => "host.png",
+                      :icon   => ActionController::Base.helpers.image_path('100/host.png'),
                       :title  => @host1.name,
                       :select => false
                     },
                     {
                       :key    => "#{@svr2.id}__host_#{@host2.id}",
-                      :icon   => "host.png",
+                      :icon   => ActionController::Base.helpers.image_path('100/host.png'),
                       :title  => @host2.name,
                       :select => true
                     }
@@ -117,18 +117,18 @@ describe OpsController do
                 },
                 {
                   :key      => "#{@svr2.id}__storage",
-                  :icon     => "storage.png",
+                  :icon     => ActionController::Base.helpers.image_path('100/storage.png'),
                   :title    => "Datastores",
                   :children => [
                     {
                       :key    => "#{@svr2.id}__storage_#{@storage1.id}",
-                      :icon   => "storage.png",
+                      :icon   => ActionController::Base.helpers.image_path('100/storage.png'),
                       :title  => @storage1.name,
                       :select => false
                     },
                     {
                       :key    => "#{@svr2.id}__storage_#{@storage2.id}",
-                      :icon   => "storage.png",
+                      :icon   => ActionController::Base.helpers.image_path('100/storage.png'),
                       :title  => @storage2.name,
                       :select => true
                     }

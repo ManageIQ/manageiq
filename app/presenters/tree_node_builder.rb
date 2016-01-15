@@ -8,7 +8,7 @@ class TreeNodeBuilder
     node = {
       :key   => key,
       :title => text,
-      :icon  => image,
+      :icon  => ActionController::Base.helpers.image_path("100/#{image}"),
     }
     node[:addClass]     = options[:style_class]      if options[:style_class]
     node[:cfmeNoClick]  = true                       if options[:cfme_no_click]
@@ -147,12 +147,16 @@ class TreeNodeBuilder
     end
   end
 
+  def node_icon(icon)
+    ActionController::Base.helpers.image_path("100/#{icon}")
+  end
+
   def generic_node(text, image, tip = nil)
     text = ERB::Util.html_escape(URI.unescape(text)) unless text.html_safe?
     @node = {
       :key   => build_object_id,
       :title => text,
-      :icon  => image
+      :icon  => node_icon(image)
     }
     # Start with all nodes open unless expand is explicitly set to false
     @node[:expand] = true if options[:open_all] && options[:expand] != false
@@ -171,7 +175,7 @@ class TreeNodeBuilder
     # FIXME: expansion
     @node = {
       :key   => build_hash_id,
-      :icon  => "#{object[:image] || text}.png",
+      :icon  => node_icon("#{object[:image] || text}.png"),
       :title => ERB::Util.html_escape(text),
     }
     # Start with all nodes open unless expand is explicitly set to false
@@ -207,7 +211,7 @@ class TreeNodeBuilder
     @node = {
       :key   => build_object_id,
       :title => text,
-      :icon  => image
+      :icon  => node_icon(image)
     }
     @node[:addClass] = "product-strikethru-node" unless enabled
     @node[:expand] = true if options[:open_all]  # Start with all nodes open
@@ -220,7 +224,7 @@ class TreeNodeBuilder
     @node = {
       :key   => build_object_id,
       :title => title,
-      :icon  => title == _("Unassigned Profiles Group") ? "folder.png" : image
+      :icon  => node_icon(title == _("Unassigned Profiles Group") ? "folder.png" : image)
     }
     @node[:expand] = true if options[:open_all]  # Start with all nodes open
     tooltip(tip)

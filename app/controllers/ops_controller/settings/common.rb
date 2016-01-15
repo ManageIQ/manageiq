@@ -1182,12 +1182,12 @@ module OpsController::Settings::Common
     affinities = server.send("vm_scan_#{node_type}_affinity").collect(&:id)
     {
       :key      => "#{server.id}__#{node_type}",
-      :icon     => "#{node_type}.png",
+      :icon     => ActionController::Base.helpers.image_path("100/#{node_type}.png"),
       :title    => Dictionary.gettext(node_type.camelcase, :type => :model, :notfound => :titleize).pluralize,
       :children => zone.send(node_type.pluralize).sort_by(&:name).collect do |node|
         {
           :key    => "#{server.id}__#{node_type}_#{node.id}",
-          :icon   => "#{node_type}.png",
+          :icon   => ActionController::Base.helpers.image_path("100/#{node_type}.png"),
           :title  => node.name,
           :select => affinities.include?(node.id)
         }
@@ -1201,7 +1201,7 @@ module OpsController::Settings::Common
       title = "<b class='cfme-bold-node'>#{title} (current)</title>".html_safe if @sb[:my_server_id] == s.id
       {
         :key      => s.id.to_s,
-        :icon     => 'evm_server.png',
+        :icon     => ActionController::Base.helpers.image_path('100/evm_server.png'),
         :title    => title,
         :expand   => true,
         :children => [build_smartproxy_affinity_node(zone, s, 'host'),

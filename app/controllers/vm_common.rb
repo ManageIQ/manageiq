@@ -655,7 +655,7 @@ module VmCommon
       profile_node = TreeNodeBuilder.generic_tree_node(
         "policy_profile_#{profile['id']}",
         profile['description'],
-        icon,
+        ActionController::Base.helpers.image_path("100/#{icon}"),
         nil,
         :style_class => "cfme-no-cursor-node"
       )
@@ -696,7 +696,7 @@ module VmCommon
       policy_node = TreeNodeBuilder.generic_tree_node(
         "policy_#{policy["id"]}",
         policy['description'],
-        icon,
+        ActionController::Base.helpers.image_path("100/#{icon}"),
         nil,
         :style_class => "cfme-no-cursor-node"
       )
@@ -736,7 +736,7 @@ module VmCommon
       condition_node = TreeNodeBuilder.generic_tree_node(
         "condition_#{condition["id"]}_#{condition["name"]}_#{policy["name"]}",
         condition["description"],
-        icon,
+        ActionController::Base.helpers.image_path("100/#{icon}"),
         nil,
         :style_class => "cfme-no-cursor-node"
       )
@@ -764,7 +764,7 @@ module VmCommon
     node = TreeNodeBuilder.generic_tree_node(
       node_key,
       exp_string.html_safe,
-      icon,
+      ActionController::Base.helpers.image_path("100/#{icon}"),
       exp_tooltip.html_safe,
       :style_class => "cfme-no-cursor-node"
     )
@@ -949,11 +949,11 @@ module VmCommon
         if @catinfo[cat]
           @catinfo[cat] = false
           page << javascript_show("cat_#{policy_escaped}_div")
-          page << "$('#cat_#{policy_escaped}_icon').prop('src', '/images/tree/compress.png');"
+          page << "$('#cat_#{policy_escaped}_icon').prop('src', '#{ActionController::Base.helpers.image_path('tree/compress.png')}');"
         else
           @catinfo[cat] = true # Set squashed = true
           page << javascript_hide("cat_#{policy_escaped}_div")
-          page << "$('#cat_#{policy_escaped}_icon').prop('src', '/images/tree/expand.png');"
+          page << "$('#cat_#{policy_escaped}_icon').prop('src', '#{ActionController::Base.helpers.image_path('tree/expand.png')}');"
         end
       end
     else

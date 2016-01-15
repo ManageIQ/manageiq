@@ -14,7 +14,7 @@ class ImportFileUpload < ActiveRecord::Base
       {
         :id          => index,
         :name        => dialog["label"],
-        :status_icon => status_icon,
+        :status_icon => ActionController::Base.helpers.image_path("16/#{status_icon}.png"),
         :status      => status
       }
     end
@@ -34,7 +34,7 @@ class ImportFileUpload < ActiveRecord::Base
       {
         :id          => index,
         :name        => widget["MiqWidget"]["title"],
-        :status_icon => status_icon,
+        :status_icon => ActionController::Base.helpers.image_path("16/#{status_icon}.png"),
         :status      => status
       }
     end

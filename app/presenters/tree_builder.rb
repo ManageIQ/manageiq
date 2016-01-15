@@ -220,7 +220,7 @@ class TreeBuilder
   def add_root_node(nodes)
     root = nodes.first
     root[:title], root[:tooltip], icon = root_options
-    root[:icon] = "#{icon || 'folder'}.png"
+    root[:icon] = ActionController::Base.helpers.image_path("100/#{icon || 'folder'}.png")
   end
 
   def set_locals_for_render

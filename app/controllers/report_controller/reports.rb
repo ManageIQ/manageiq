@@ -209,7 +209,7 @@ module ReportController::Reports
                                 #                                       "isDuration" => "true",
                                 "title" => tl_text,
                                 #         "icon"=>"/images/16/16-event-vm_snapshot.png",
-                                "icon"  => "/images/16/blue-circle.png",
+                                "icon"  => ActionController::Base.helpers.image_path("16/blue-circle.png"),
                                 #         "image"=>"/images/64/64-snapshot.png",
                                 "color" => tl_color
                                # "image"=>"/images/64/64-vendor-#{vm.vendor.downcase}.png"

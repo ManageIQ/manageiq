@@ -28,12 +28,12 @@ describe ImportFileUpload do
         expected_json = [{
           :id          => 0,
           :name        => "dialog",
-          :status_icon => "checkmark",
+          :status_icon => ActionController::Base.helpers.image_path('16/checkmark.png'),
           :status      => "This object already exists in the database with the same name"
         }, {
           :id          => 1,
           :name        => "Dialog2",
-          :status_icon => "checkmark",
+          :status_icon => ActionController::Base.helpers.image_path('16/checkmark.png'),
           :status      => "This object already exists in the database with the same name"
         }].to_json
 
@@ -48,12 +48,12 @@ describe ImportFileUpload do
         expected_json = [{
           :id          => 0,
           :name        => "dialog",
-          :status_icon => "equal-green",
+          :status_icon => ActionController::Base.helpers.image_path('16/equal-green.png'),
           :status      => "New object"
         }, {
           :id          => 1,
           :name        => "Dialog2",
-          :status_icon => "equal-green",
+          :status_icon => ActionController::Base.helpers.image_path('16/equal-green.png'),
           :status      => "New object"
         }].to_json
 
@@ -85,12 +85,12 @@ describe ImportFileUpload do
         expected_json = [{
           :id          => 0,
           :name        => "widget",
-          :status_icon => "checkmark",
+          :status_icon => ActionController::Base.helpers.image_path('16/checkmark.png'),
           :status      => "This object already exists in the database with the same name"
         }, {
           :id          => 1,
           :name        => "Widget1",
-          :status_icon => "checkmark",
+          :status_icon => ActionController::Base.helpers.image_path('16/checkmark.png'),
           :status      => "This object already exists in the database with the same name"
         }].to_json
 
@@ -105,12 +105,12 @@ describe ImportFileUpload do
         expected_json = [{
           :id          => 0,
           :name        => "widget",
-          :status_icon => "equal-green",
+          :status_icon => ActionController::Base.helpers.image_path('16/equal-green.png'),
           :status      => "New object"
         }, {
           :id          => 1,
           :name        => "Widget1",
-          :status_icon => "equal-green",
+          :status_icon => ActionController::Base.helpers.image_path('16/equal-green.png'),
           :status      => "New object"
         }].to_json
 

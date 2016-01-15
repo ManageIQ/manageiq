@@ -31,19 +31,19 @@ describe TreeBuilder do
       tree = TreeBuilderChargebackRates.new("cb_rates_tree", "cb_rates", {})
       nodes = [{:key      => "root",
                 :children => [{:key     => "xx-Compute",
-                               :icon    => "hardware-processor.png",
+                               :icon    => ActionController::Base.helpers.image_path('100/hardware-processor.png'),
                                :title   => "Compute",
                                :expand  => true,
                                :tooltip => "Compute"},
                               {:key     => "xx-Storage",
-                               :icon    => "hardware-disk.png",
+                               :icon    => ActionController::Base.helpers.image_path('100/hardware-disk.png'),
                                :title   => "Storage",
                                :expand  => true,
                                :tooltip => "Storage"}],
                 :expand   => true,
                 :title    => "Rates",
                 :tooltip  => "Rates",
-                :icon     => "folder.png"
+                :icon     => ActionController::Base.helpers.image_path('100/folder.png')
               }]
       tree.locals_for_render.key?(:json_tree)
       expect(tree.locals_for_render[:json_tree]).to eq(nodes.to_json)
