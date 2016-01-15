@@ -16,12 +16,6 @@ module ManageIQ::Providers
       def save_inventory(manager, targets, hashes)
         EmsRefresh.save_configuration_manager_inventory(manager, hashes, targets[0])
       end
-
-      private
-
-      def manager_ref_hash(records)
-        Hash[records.collect { |r| [r.manager_ref, r.id] }]
-      end
     end
   end
 end
