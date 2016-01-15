@@ -20,8 +20,10 @@ module MiqServer::WorkerManagement::Monitor::Validation
 
     return true unless worker_get_monitor_status(w.pid).nil?
 
-    if MiqWorker::STATUSES_CURRENT.include?(w.status) && usage_exceeds_threshold?(w.memory_usage, memory_threshold)
-      msg = "#{w.format_full_log_msg} process memory usage [#{w.memory_usage}] exceeded limit [#{memory_threshold}], requesting worker to exit"
+    # Proportional set size is only implemented on linux
+    usage = w.proportional_set_size || w.memory_usage
+    if MiqWorker::STATUSES_CURRENT.include?(w.status) && usage_exceeds_threshold?(usage, memory_threshold)
+      msg = "#{w.format_full_log_msg} process memory usage [#{usage}] exceeded limit [#{memory_threshold}], requesting worker to exit"
       _log.warn(msg)
       MiqEvent.raise_evm_event_queue(w.miq_server, "evm_worker_memory_exceeded", :event_details => msg, :type => w.class.name)
       restart_worker(w)
