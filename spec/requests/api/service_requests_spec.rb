@@ -91,4 +91,14 @@ describe ApiController do
       expect_result_to_have_user_email(@user.email)
     end
   end
+
+  context "authorization" do
+    it "is forbidden for a user without appropriate role" do
+      api_basic_authorize
+
+      run_get service_requests_url
+
+      expect_request_forbidden
+    end
+  end
 end
