@@ -213,7 +213,7 @@ class MiqAlert < ActiveRecord::Base
   end
 
   def add_status_post_evaluate(target, result)
-    existing = miq_alert_statuses.find_by(:resource_type => target.class.base_class.name, :resource_id => target.id)
+    existing = miq_alert_statuses.find_by(:resource => target)
     status = existing.nil? ? MiqAlertStatus.new : existing
     status.result = result
     status.evaluated_on = Time.now.utc
@@ -653,7 +653,7 @@ class MiqAlert < ActiveRecord::Base
       return false
     end
 
-    status = miq_alert_statuses.find_by(:resource_type => target.class.base_class.name, :resource_id => target.id)
+    status = miq_alert_statuses.find_by(:resource => target)
     if status
       since_last_eval = (Time.now.utc - status.evaluated_on)
       eval_options[:starting_on] = if (since_last_eval >= eval_options[:duration])

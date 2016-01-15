@@ -483,7 +483,7 @@ module VimPerformanceAnalysis
 
     rel
       .where("timestamp > ? and timestamp <= ?", start_time.utc, end_time.utc)
-      .where(:resource_type => obj.class.base_class.name, :resource_id => obj.id)
+      .where(:resource => obj)
       .order("timestamp")
       .select(options[:select])
       .to_a
