@@ -6,8 +6,7 @@ class BottleneckEvent < ActiveRecord::Base
   serialize :context_data
 
   def self.last_created_on(obj)
-    event = where("resource_type = ? AND resource_id = ?", obj.class.base_class.name, obj.id)
-            .order("created_on DESC").first
+    event = where(:resource => obj).order("created_on DESC").first
     event ? event.created_on : nil
   end
 
@@ -59,7 +58,7 @@ class BottleneckEvent < ActiveRecord::Base
   end
 
   def self.delete_future_events_for_obj(obj)
-    delete_all(:resource_type => obj.class.name, :resource_id => obj.id, :future => true)
+    delete_all(:resource => obj, :future => true)
   end
 
   def context
