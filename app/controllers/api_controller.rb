@@ -71,6 +71,7 @@ class ApiController < ApplicationController
   include_concern 'ProvisionRequests'
   include_concern "Rates"
   include_concern "Reports"
+  include_concern 'Requests'
   include_concern 'RequestTasks'
   include_concern 'ResourceActions'
   include_concern 'Roles'

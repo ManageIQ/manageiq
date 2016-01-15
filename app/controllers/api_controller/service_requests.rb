@@ -29,6 +29,17 @@ class ApiController
       end
     end
 
+    def find_service_requests(id)
+      klass = collection_class(:service_requests)
+      return klass.find(id) if @auth_user_obj.admin?
+      klass.find_by!(:requester => @auth_user_obj, :id => id)
+    end
+
+    def service_requests_search_conditions
+      return {} if @auth_user_obj.admin?
+      {:requester => @auth_user_obj}
+    end
+
     private
 
     def service_request_ident(service_request)
