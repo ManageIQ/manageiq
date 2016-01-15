@@ -1,6 +1,95 @@
 require "spec_helper"
 
+shared_examples "custom_report_with_custom_attributes" do |base_report, custom_attribute_field|
+  let(:options) { {:targets_hash => true, :userid => "admin"} }
+  let(:base_report_downcase) { base_report.downcase }
+  let(:miq_ae_uri) { "/EVM/AUTOMATE/test1?#{base_report}::#{base_report_downcase}=#{@resource.id}" }
+  let(:custom_attributes_field) { custom_attribute_field.to_s.pluralize }
+
+  def invoke_ae
+    MiqAeEngine.instantiate(miq_ae_uri, @user)
+  end
+
+  before do
+    EvmSpecHelper.local_miq_server
+    MiqAutomateHelper.create_service_model_method('SPEC_DOMAIN', 'EVM',
+                                                  'AUTOMATE', 'test1', 'test')
+    @ae_method = ::MiqAeMethod.first
+    ae_result_key = 'foo'
+    @user = FactoryGirl.create(:user_with_group)
+
+    if base_report == "Host"
+      type_of_resource = :host
+    else
+      type_of_resource = :vm_vmware
+    end
+
+    # create custom attributes
+    @key    = 'key1'
+    @value  = 'value1'
+
+    @resource = FactoryGirl.create(type_of_resource)
+    FactoryGirl.create(custom_attribute_field, :resource => @resource, :name => @key, :value => @value)
+
+    if custom_attribute_field == :ems_custom_attribute
+      custom_get_method = "ems_custom_get"
+    else
+      custom_get_method = "custom_get"
+    end
+
+    method = "$evm.root['#{ae_result_key}'] = $evm.root['#{base_report_downcase}'].#{custom_get_method}('#{@key}')"
+    @ae_method.update_attributes(:data => method)
+    @ae_object = invoke_ae.root(ae_result_key)
+
+    if base_report == "Host"
+      db = "Host"
+    else
+      db = "ManageIQ::Providers::InfraManager::Vm"
+    end
+
+    # create report
+    @report = MiqReport.new(
+      :name      => "Custom VM report",
+      :title     => "Custom VM report",
+      :rpt_group => "Custom",
+      :rpt_type  => "Custom",
+      :db        => db,
+      :cols      => %w(name),
+      :include   => {"#{custom_attributes_field}" => {"columns" => %w(name value)}},
+      :col_order => %w(miq_custom_attributes.name miq_custom_attributes.value name),
+      :headers   => ["EVM Custom Attribute Name", "EVM Custom Attribute Value", "Name"],
+      :order     => "Ascending",
+      :sortby    => ["miq_custom_attributes.name"]
+    )
+  end
+
+  it "creates custom report based on #{base_report} with #{custom_attribute_field} field of custom attributes" do
+    expect { @results, _attrs = @report.paged_view_search(options) }.not_to raise_error
+
+    custom_attributes_name = "#{custom_attributes_field}.name"
+    custom_attributes_value = "#{custom_attributes_field}.value"
+    expect(@results.data.first[custom_attributes_name]).to eq(@key)
+    expect(@results.data.first[custom_attributes_value]).to eq(@value)
+  end
+end
+
 describe MiqReport do
+  context "Host and MiqCustomAttributes" do
+    include_examples "custom_report_with_custom_attributes", "Host", :miq_custom_attribute
+  end
+
+  context "Vm and MiqCustomAttributes" do
+    include_examples "custom_report_with_custom_attributes", "Vm", :miq_custom_attribute
+  end
+
+  context "Host and EmsCustomAttributes" do
+    include_examples "custom_report_with_custom_attributes", "Host", :ems_custom_attribute
+  end
+
+  context "Vm and EmsCustomAttributes" do
+    include_examples "custom_report_with_custom_attributes", "Vm", :ems_custom_attribute
+  end
+
   it "attr_accessors are serializable via yaml" do
     result = [{"id" => 5, "vmm_vendor" => "VMware", "vmm_product" => "ESXi", "ipaddress" => "192.168.252.13", "vmm_buildnumber" => "260247", "vmm_version" => "4.1.0", "name" => "VI4ESXM1.manageiq.com"}, {"id" => 3, "vmm_vendor" => "VMware", "vmm_product" => "ESXi", "ipaddress" => "192.168.252.9", "vmm_buildnumber" => "348481", "vmm_version" => "4.1.0", "name" => "vi4esxm2.manageiq.com"}, {"id" => 4, "vmm_vendor" => "VMware", "vmm_product" => "ESX", "ipaddress" => "192.168.252.10", "vmm_buildnumber" => "502767", "vmm_version" => "4.1.0", "name" => "vi4esxm3.manageiq.com"}, {"id" => 1, "vmm_vendor" => "VMware", "vmm_product" => "ESXi", "ipaddress" => "192.168.252.4", "vmm_buildnumber" => "504850", "vmm_version" => "4.0.0", "name" => "per410a-t5.manageiq.com"}]
     column_names = ["name", "ipaddress", "vmm_vendor", "vmm_product", "vmm_version", "vmm_buildnumber", "id"]
