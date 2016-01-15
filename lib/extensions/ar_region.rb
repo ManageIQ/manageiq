@@ -68,10 +68,6 @@ module ArRegion
       where(:id => region_to_range(region_number)).scoping { yield }
     end
 
-    def without_scope(&blk)
-      with_exclusive_scope(&blk)
-    end
-
     def conditions_for_my_region_default_scope
       # NOTE: These conditions MUST NOT be specified in Hash format because they are used for defining default_scope in models
       #       and would be applied for the creation of objects in addition to finds. Since :id is used in the condition this
