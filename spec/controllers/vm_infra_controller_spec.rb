@@ -1,4 +1,5 @@
 require "spec_helper"
+include CompressedIds
 
 describe VmInfraController do
   let(:host_1x1)  { FactoryGirl.create(:host_vmware_esx, :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB)) }
@@ -70,8 +71,254 @@ describe VmInfraController do
     expect(response.status).to eq(200)
   end
 
+  it 'can open VM edit tab' do
+    post :explorer
+    expect(response.status).to eq(200)
+
+    post :x_button, :pressed => 'vm_protect', :id => vm_vmware.id
+    expect(response.status).to eq(200)
+
+    allow(controller).to receive(:x_node).and_return("v-#{vm_vmware.compressed_id}")
+
+    post :x_button, :pressed => 'vm_edit', :id => vm_vmware.id
+    expect(response.status).to eq(200)
+    expect(response).to render_template(:partial => 'vm_common/_form')
+  end
+
+  it 'can open VM Ownership tab' do
+    post :explorer
+    expect(response.status).to eq(200)
+
+    post :x_button, :pressed => 'vm_protect', :id => vm_vmware.id
+    expect(response.status).to eq(200)
+
+    allow(controller).to receive(:x_node).and_return("v-#{vm_vmware.compressed_id}")
+
+    post :x_button, :pressed => 'vm_ownership', :id => vm_vmware.id
+    expect(response.status).to eq(200)
+    expect(response).to render_template(:partial => 'shared/views/_ownership')
+  end
+
+  it 'can Extract Running Processes form VM' do
+    post :x_button, :pressed => 'vm_collect_running_processes', :id => vm_vmware.id
+    expect(response.status).to eq(200)
+  end
+
+  it 'can open VM Compare tab' do
+    vm = FactoryGirl.create(:vm_vmware,
+                            :host     => host_1x1,
+                            :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => '04'))
+    vm2 = FactoryGirl.create(:vm_vmware,
+                             :host     => host_1x1,
+                             :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => '05'))
+    FactoryGirl.create(:miq_report, :filename      => 'vms.yaml',
+                                    :template_type => 'compare',
+                                    :name          => "Test Report",
+                                    :rpt_type      => "Custom",
+                                    :tz            => "Eastern Time (US & canada)",
+                                    :headers       => ["Name", "Boot time", "Disks aligned"],
+                                    :col_order     => ["name", "boot_time", "disks_aligned"],
+                                    :cols          => ["name", "boot_time", "disks_aligned"])
+
+    allow(controller).to receive(:x_node).and_return("v-#{vm.compressed_id}")
+
+    get :show, :id => vm_vmware.id
+    expect(response).to redirect_to(:action => 'explorer')
+    post :explorer
+    expect(response.status).to eq(200)
+
+    controller.instance_variable_set(:@settings, :views => {:compare => "compressed"})
+    controller.instance_variable_set(:@export_reports, [])
+    post :x_button, :pressed => 'vm_compare', "check_#{to_cid(vm.id)}" => "1",
+                                              "check_#{to_cid(vm2.id)}" => "1", "type" => "compressed"
+    expect(response.status).to eq(200)
+    expect(response).to render_template(:partial => 'layouts/_compare')
+  end
+
+  it 'can Perform VM Smart State Analysis' do
+    post :x_button, :pressed => 'vm_scan', :id => vm_vmware.id
+    expect(response.status).to eq(200)
+  end
+
+  it 'can Refresh Relationships and Power Status VM Smart State Analysis' do
+    post :x_button, :pressed => 'vm_refresh', :id => vm_vmware.id
+    expect(response.status).to eq(200)
+  end
+
+  it 'can open Manage Policies' do
+    post :explorer
+    expect(response.status).to eq(200)
+
+    post :x_button, :pressed => 'vm_protect', :id => vm_vmware.id
+    expect(response.status).to eq(200)
+  end
+
+  it 'can open Policies Simulation' do
+    vm = FactoryGirl.create(:vm_vmware,
+                            :host     => host_1x1,
+                            :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => '04'))
+    allow(controller).to receive(:x_node).and_return("v-#{vm.compressed_id}")
+
+    get :show, :id => vm_vmware.id
+    expect(response).to redirect_to(:action => 'explorer')
+
+    post :explorer
+    expect(response.status).to eq(200)
+
+    post :x_button, :pressed => 'vm_policy_sim', :id => vm.id
+    expect(response.status).to eq(200)
+    expect(response).to render_template(:partial => 'layouts/_policy_sim')
+  end
+
+  it 'can open Edit Tags' do
+    classification = FactoryGirl.create(:classification, :name => "department", :description => "D    epartment")
+    @tag1 = FactoryGirl.create(:classification_tag,
+                               :name   => "tag1",
+                               :parent => classification)
+    @tag2 = FactoryGirl.create(:classification_tag,
+                               :name   => "tag2",
+                               :parent => classification)
+    get :show, :id => vm_vmware.id
+    expect(response).to redirect_to(:action => 'explorer')
+
+    post :explorer
+    expect(response.status).to eq(200)
+
+    post :x_button, :pressed => 'vm_tag', :id => vm_vmware.id
+    expect(response.status).to eq(200)
+    expect(response).to render_template(:partial => 'layouts/_tagging')
+  end
+
+  it 'can Check VM Compliance' do
+    get :show, :id => vm_vmware.id
+    expect(response).to redirect_to(:action => 'explorer')
+
+    post :explorer
+    expect(response.status).to eq(200)
+
+    post :x_button, :pressed => 'vm_check_compliance', :id => vm_vmware.id
+    expect(response.status).to eq(200)
+  end
+
+  it 'can provision VMs' do
+    get :show, :id => vm_vmware.id
+    expect(response).to redirect_to(:action => 'explorer')
+
+    post :explorer
+    expect(response.status).to eq(200)
+
+    post :x_button, :pressed => 'vm_miq_request_new', :id => vm_vmware.id
+    expect(response.status).to eq(200)
+    expect(response).to render_template(:partial => 'miq_request/_pre_prov')
+  end
+
+  it 'can set retirement date' do
+    get :show, :id => vm_vmware.id
+    expect(response).to redirect_to(:action => 'explorer')
+
+    post :explorer
+    expect(response.status).to eq(200)
+
+    post :x_button, :pressed => 'vm_retire', :id => vm_vmware.id
+    expect(response.status).to eq(200)
+    expect(response).to render_template(:partial => 'shared/views/_retire')
+  end
+
+  it 'can retire selected items' do
+    get :show, :id => vm_vmware.id
+    expect(response).to redirect_to(:action => 'explorer')
+
+    post :explorer
+    expect(response.status).to eq(200)
+
+    post :x_button, :pressed => 'vm_retire_now', :id => vm_vmware.id
+    expect(response.status).to eq(200)
+  end
+
+  it 'can migrate selected items' do
+    get :show, :id => vm_vmware.id
+    expect(response).to redirect_to(:action => 'explorer')
+
+    post :explorer
+    expect(response.status).to eq(200)
+
+    post :x_button, :pressed => 'vm_migrate', :id => vm_vmware.id
+    expect(response.status).to eq(200)
+  end
+
+  it 'can Publish selected VM' do
+    vm = FactoryGirl.create(:vm_vmware,
+                            :host     => host_1x1,
+                            :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => '04'))
+    allow(controller).to receive(:x_node).and_return("v-#{vm.compressed_id}")
+
+    get :show, :id => vm_vmware.id
+    expect(response).to redirect_to(:action => 'explorer')
+
+    post :explorer
+    expect(response.status).to eq(200)
+
+    post :x_button, :pressed => 'vm_publish', :id => vm.id
+    expect(response.status).to eq(200)
+  end
+
+  it 'can clone selected VM' do
+    get :show, :id => vm_vmware.id
+    expect(response).to redirect_to(:action => 'explorer')
+
+    post :explorer
+    expect(response.status).to eq(200)
+
+    post :x_button, :pressed => 'vm_clone', :id => vm_vmware.id
+    expect(response.status).to eq(200)
+  end
+
+  it 'can Shutdown Guest' do
+    post :x_button, :pressed => 'vm_guest_shutdown', :id => vm_vmware.id
+    expect(response.status).to eq(200)
+
+    expect(response.body).to include('Shutdown Guest initiated for 1 VM and Instance from the CFME Database')
+  end
+
+  it 'can Restart Guest' do
+    post :x_button, :pressed => 'vm_guest_restart', :id => vm_vmware.id
+    expect(response.status).to eq(200)
+
+    expect(response.body).to include('Restart Guest initiated for 1 VM and Instance from the CFME Database')
+  end
+
+  it 'can Power On VM' do
+    post :x_button, :pressed => 'vm_start', :id => vm_vmware.id
+    expect(response.status).to eq(200)
+
+    expect(response.body).to include('Start initiated for 1 VM and Instance from the CFME Database')
+  end
+
+  it 'can Power Off VM' do
+    post :x_button, :pressed => 'vm_stop', :id => vm_vmware.id
+    expect(response.status).to eq(200)
+
+    expect(response.body).to include('Stop initiated for 1 VM and Instance from the CFME Database')
+  end
+
+  it 'can Suspend VM' do
+    post :x_button, :pressed => 'vm_suspend', :id => vm_vmware.id
+    expect(response.status).to eq(200)
+
+    expect(response.body).to include('Suspend initiated for 1 VM and Instance from the CFME Database')
+  end
+
+  it 'can Reset VM' do
+    post :x_button, :pressed => 'vm_reset', :id => vm_vmware.id
+    expect(response.status).to eq(200)
+
+    expect(response.body).to include('Reset initiated for 1 VM and Instance from the CFME Database')
+  end
+
   it 'the reconfigure tab for a vm with max_cpu_cores_per_socket <= 1 should not display the cpu_cores_per_socket dropdown' do
-    vm = FactoryGirl.create(:vm_vmware, :host => host_1x1, :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => '04'))
+    vm = FactoryGirl.create(:vm_vmware,
+                            :host     => host_1x1,
+                            :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => '04'))
     allow(controller).to receive(:x_node).and_return("v-#{vm.compressed_id}")
 
     get :show, :id => vm.id
@@ -86,7 +333,9 @@ describe VmInfraController do
   end
 
   it 'the reconfigure tab for a vm with max_cpu_cores_per_socket > 1 should display the cpu_cores_per_socket dropdown' do
-    vm = FactoryGirl.create(:vm_vmware, :host => host_2x2, :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => "07"))
+    vm = FactoryGirl.create(:vm_vmware,
+                            :host     => host_2x2,
+                            :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => "07"))
     allow(controller).to receive(:x_node).and_return("v-#{vm.compressed_id}")
 
     get :show, :id => vm.id
@@ -101,7 +350,9 @@ describe VmInfraController do
   end
 
   it 'the reconfigure tab displays the submit and cancel buttons' do
-    vm = FactoryGirl.create(:vm_vmware, :host => host_2x2, :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => "07"))
+    vm = FactoryGirl.create(:vm_vmware,
+                            :host     => host_2x2,
+                            :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => "07"))
     allow(controller).to receive(:x_node).and_return("v-#{vm.compressed_id}")
 
     get :show, :id => vm.id
