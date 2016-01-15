@@ -132,7 +132,7 @@ ManageIQ.dynatreeReplacement = {
       cookie: {path: "/"},
       generateIds: true,
       idPrefix: options.id_prefix,
-      imagePath: '/images/100/',
+      imagePath: '',
       minExpandLevel: options.min_expand_level,
       onActivate: onActivateFunction,
       onClick: onClickFunction,

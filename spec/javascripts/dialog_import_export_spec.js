@@ -57,7 +57,7 @@ describe('dialog_import_export.js', function() {
         spyOn(grid, 'setSelectionModel');
         spyOn(grid, 'registerPlugin');
         spyOn(grid.getData(), 'getItems').and.callFake(function() {
-          return [{id: 321, status_icon: 'equal-green'}, {id: 322, status_icon: 'not-equal-green'}];
+          return [{id: 321, status_icon: '/equal-green'}, {id: 322, status_icon: '/not-equal-green'}];
         });
         spyOn(grid, 'setSelectedRows');
         spyOn(grid, 'invalidate');
