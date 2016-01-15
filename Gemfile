@@ -72,6 +72,7 @@ gem "ruby-dbus"
 
 # Not vendored and not required
 gem "ancestry",                       "~>2.1.0",   :require => false
+gem "ansible_tower_client",           "~>0.0.1",   :require => false, :git => "git://github.com/ManageIQ/ansible_tower_client.git", :branch => "master"
 gem "aws-sdk",                        "~>1.56.0",  :require => false
 gem "dalli",                          "~>2.7.4",   :require => false
 gem "elif",                           "=0.1.0",    :require => false

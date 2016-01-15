@@ -25,6 +25,7 @@ describe ExtManagementSystem do
       scvmm
       vmwarews
       azure
+      ansible_tower_configuration
     )
   end
 
