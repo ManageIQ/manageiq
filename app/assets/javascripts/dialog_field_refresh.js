@@ -12,7 +12,7 @@ var dialogFieldRefresh = {
     $('.selectpicker').selectpicker('val', selectedValue);
     miqSelectPickerEvent(fieldName, url);
     $('#' + fieldName).on('change', function(){
-      dialogFieldRefresh.triggerAutoRefresh(fieldName, "true");
+      dialogFieldRefresh.triggerAutoRefresh(fieldId, "true");
       return true;
     });
   },

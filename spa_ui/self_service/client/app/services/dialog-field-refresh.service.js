@@ -31,7 +31,7 @@
         var resultObj = result.result[dialogField.name];
 
         updateAttributesForDialogField(dialogField, resultObj);
-        dialogField.triggerAutoRefresh(dialogField);
+        triggerAutoRefresh(dialogField);
       }
 
       function refreshFailure(result) {
@@ -69,18 +69,18 @@
     function updateAttributesForDialogField(dialogField, newDialogField) {
       copyDynamicAttributes(dialogField, newDialogField);
 
-      if (typeof(newDialogField.values) === 'object') {
+      if (typeof (newDialogField.values) === 'object') {
         dialogField.values = newDialogField.values;
         dialogField.default_value = newDialogField.default_value;
       } else {
         dialogField.default_value = newDialogField.values;
       }
 
-      function copyDynamicAttributes(current_dialog_field, new_dialog_field) {
-        current_dialog_field.data_type = new_dialog_field.data_type;
-        current_dialog_field.options   = new_dialog_field.options;
-        current_dialog_field.read_only = new_dialog_field.read_only;
-        current_dialog_field.required  = new_dialog_field.required;
+      function copyDynamicAttributes(currentDialogField, newDialogField) {
+        currentDialogField.data_type = newDialogField.data_type;
+        currentDialogField.options   = newDialogField.options;
+        currentDialogField.read_only = newDialogField.read_only;
+        currentDialogField.required  = newDialogField.required;
       }
     }
 

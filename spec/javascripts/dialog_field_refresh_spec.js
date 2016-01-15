@@ -114,7 +114,7 @@ describe('dialogFieldRefresh', function() {
     it('triggers the auto refresh when the drop down changes', function() {
       dialogFieldRefresh.initializeDialogSelectPicker(fieldName, fieldId, selectedValue, url);
       $("#"+fieldName).trigger('change');
-      expect(dialogFieldRefresh.triggerAutoRefresh).toHaveBeenCalledWith(fieldName, 'true');
+      expect(dialogFieldRefresh.triggerAutoRefresh).toHaveBeenCalledWith(fieldId, 'true');
     });
   });
 });
