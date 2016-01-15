@@ -30,6 +30,7 @@ private_test
 REGION
 SyntaxCheck
 xfer_*.xml
+Thumbs.db
 
 # app/controllers/
 app/controllers/new_module.rb
@@ -80,24 +81,6 @@ public/pictures/
 
 # public/dhtmlx/
 public/dhtmlx/dhtmlxtoolbar.js.orig
-
-# public/images/
-public/images/Thumbs.db
-
-# public/images/icons/new/
-public/images/icons/new/Thumbs.db
-
-# public/images/layout/
-public/images/layout/Thumbs.db
-
-# public/images/layout/expression/
-public/images/layout/expression/Thumbs.db
-
-# public/images/layout/login/
-public/images/layout/login/Thumbs.db
-
-# public/images/toolbars/
-public/images/toolbars/Thumbs.db
 
 # public/javascripts/
 public/javascripts/jmaki.js
