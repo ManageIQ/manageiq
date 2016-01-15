@@ -77,7 +77,7 @@ describe BottleneckEvent do
     end
   end
 
-  describe "#last_created_on" do
+  describe ".last_created_on" do
     subject { described_class.last_created_on(resource) }
     let(:resource) { FactoryGirl.create(resource_name) }
     let!(:bottleneck_event) { BottleneckEvent.create!(:resource => resource) }
