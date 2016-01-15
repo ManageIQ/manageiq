@@ -98,7 +98,7 @@ module ApplianceConsole
   ip = eth0.address
   # Because it takes a few seconds, get the database information once in the outside loop
   configured = ApplianceConsole::DatabaseConfiguration.configured?
-  dbhost, dbtype, database = ApplianceConsole::Utilities.db_host_type_database if configured
+  dbhost, database = ApplianceConsole::Utilities.db_host_type_database if configured
 
   clear_screen
 
@@ -138,7 +138,7 @@ module ApplianceConsole
         "MAC Address:", mac,
         "Timezone:", timezone,
         "Local Database:", ApplianceConsole::Utilities.pg_status,
-        "#{I18n.t("product.name")} Database:", configured ? "#{dbtype} @ #{dbhost}" : "not configured",
+        "#{I18n.t("product.name")} Database:", configured ? "postgres @ #{dbhost}" : "not configured",
         "Database/Region:", configured ? "#{database} / #{region || 0}" : "not configured",
         "External Auth:", ExternalHttpdAuthentication.config_status,
         "#{I18n.t("product.name")} Version:", version,
@@ -481,7 +481,7 @@ Date and Time Configuration
         if database_configuration.activate
           database_configuration.post_activation
           say("\nConfiguration activated successfully.\n")
-          dbhost, dbtype, database = ApplianceConsole::Utilities.db_host_type_database
+          dbhost, database = ApplianceConsole::Utilities.db_host_type_database
           press_any_key
         else
           say("\nConfiguration activation failed!\n")
