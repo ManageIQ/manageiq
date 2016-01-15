@@ -12,7 +12,7 @@ module Vmdb
       #   * command line(rails server)
       #   * debugger
       if MiqEnvironment::Process.is_ui_worker_via_command_line?
-        MiqUiWorker.preload
+        MiqUiWorker.preload_for_worker_role
         EvmDatabase.seed_primordial
         MiqServer.my_server.starting_server_record
         MiqServer.my_server.update_attributes(:status => "started")

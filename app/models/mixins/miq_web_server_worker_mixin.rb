@@ -13,7 +13,7 @@ module MiqWebServerWorkerMixin
       BINDING_ADDRESS
     end
 
-    def self.preload
+    def self.preload_for_worker_role
       require 'hamlit-rails'
 
       # Make these constants globally available

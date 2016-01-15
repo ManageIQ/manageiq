@@ -318,7 +318,7 @@ class MiqWorker < ActiveRecord::Base
   end
 
   def self.before_fork
-    preload if respond_to?(:preload)
+    preload_for_worker_role if respond_to?(:preload_for_worker_role)
   end
 
   def self.after_fork
