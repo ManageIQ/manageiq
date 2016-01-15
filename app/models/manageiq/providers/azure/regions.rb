@@ -36,11 +36,11 @@ module ManageIQ
         },
         "northeurope" => {
           :name        => "northeurope",
-          :description => "North Eurpoe",
+          :description => "North Europe",
         },
         "westeurope" => {
           :name        => "westeurope",
-          :description => "West Eurpoe",
+          :description => "West Europe",
         },
         "eastasia" => {
           :name        => "eastasia",
