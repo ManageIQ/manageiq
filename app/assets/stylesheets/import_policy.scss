@@ -11,10 +11,10 @@
   display: inline-block;
 }
 #import_grid .toggle.expand {
-  background: url(/images/layout/plus.gif) no-repeat center center;
+  background: image-url('layout/plus.gif') no-repeat center center;
 }
 #import_grid .toggle.collapse {
-  background: url(/images/layout/minus.gif) no-repeat center center;
+  background: image-url('layout/minus.gif') no-repeat center center;
 }
 #import_grid .slick-row {
   margin-left: 0px;

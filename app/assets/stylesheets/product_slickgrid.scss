@@ -142,11 +142,11 @@
 }
 
 .toggle.expand {
-    background: url(/images/layout/plus.gif) no-repeat center center;
+    background: image-url('layout/plus.gif') no-repeat center center;
 }
 
 .toggle.collapse {
-    background: url(/images/layout/minus.gif) no-repeat center center;
+    background: image-url('layout/minus.gif') no-repeat center center;
 }
 
 .quadicon_grid { position:relative;float:left;padding: 0 1px 1px 0;width: 72px; height: 80px;color: #e3e4e4;text-transform: none;
