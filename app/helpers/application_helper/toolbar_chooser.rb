@@ -441,8 +441,8 @@ class ApplicationHelper::ToolbarChooser
     else
       # show_list and show screens
       unless @in_a_form
-        if %w(auth_key_pair_cloud availability_zone cloud_tenant cloud_volume cloud_volume_snapshot container_group
-              container_node container_service ems_cloud ems_cluster
+        if %w(auth_key_pair_cloud availability_zone cloud_object_store_object cloud_object_store_container cloud_tenant
+              cloud_volume cloud_volume_snapshot container_group container_node container_service ems_cloud ems_cluster
               ems_container ems_middleware container_project container_route container_replicator container_image
               container_image_registry ems_infra flavor host container_build
               ontap_file_share ontap_logical_disk container_topology middleware_topology

@@ -9,7 +9,7 @@ module EmsCloudHelper::TextualSummary
 
   def textual_group_relationships
     %i(ems_infra availability_zones cloud_tenants flavors security_groups
-       instances images orchestration_stacks cloud_volumes)
+       instances images orchestration_stacks cloud_volumes cloud_object_store_containers)
   end
 
   def textual_group_status
@@ -85,6 +85,10 @@ module EmsCloudHelper::TextualSummary
 
   def textual_cloud_volumes
     @record.cloud_volumes
+  end
+
+  def textual_cloud_object_store_containers
+    @record.cloud_object_store_containers
   end
 
   def textual_orchestration_stacks

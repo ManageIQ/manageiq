@@ -45,3 +45,9 @@
             :record_id     => @record.id,
             :display       => 'cloud_volume_snapshots',
             :title         => _("Show all Volume Snapshots"))
+        - if role_allows(:feature => "cloud_object_store_container_show_list")
+          = li_link(:count => @record.number_of(:cloud_object_store_containers),
+            :text          => _("Object Store Containers"),
+            :record_id     => @record.id,
+            :display       => 'images',
+            :title         => _("Show all Object Store Containers"))

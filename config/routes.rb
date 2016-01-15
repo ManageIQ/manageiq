@@ -272,8 +272,31 @@ Vmdb::Application.routes.draw do
       )
     },
 
+    :cloud_object_store_container => {
+      :get => %w(
+        download_data
+        index
+        show
+        show_list
+        tagging_edit
+        tag_edit_form_field_changed
+      ) + compare_get,
+      :post => %w(
+        button
+        dynamic_checkbox_refresh
+        form_field_changed
+        listnav_search_selected
+        panel_control
+        quick_search
+        show
+        show_list
+        tagging_edit
+        tag_edit_form_field_changed
+      ) + compare_post + adv_search_post + exp_post + save_post
+    },
+
     :cloud_tenant             => {
-      :get  => %w(
+      :get => %w(
         download_data
         edit
         index
@@ -295,6 +318,33 @@ Vmdb::Application.routes.draw do
         panel_control
       ) +
                compare_post
+    },
+
+    :cloud_object_store_object => {
+      :get => %w(
+        download_data
+        edit
+        index
+        new
+        show
+        show_list
+        tagging_edit
+        tag_edit_form_field_changed
+      ) + compare_get,
+      :post => %w(
+        button
+        create
+        dynamic_checkbox_refresh
+        form_field_changed
+        listnav_search_selected
+        panel_control
+        quick_search
+        show
+        show_list
+        tagging_edit
+        tag_edit_form_field_changed
+        update
+      ) + compare_post + adv_search_post + exp_post + save_post
     },
 
     :cloud_volume             => {

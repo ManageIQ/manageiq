@@ -1079,7 +1079,8 @@ module ApplicationHelper
     "#{@options[:page_size] || "US-Legal"} #{@options[:page_layout]}"
   end
 
-  GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_tenant cloud_volume cloud_volume_snapshot
+  GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_object_store_container
+                        cloud_object_store_object cloud_tenant cloud_volume cloud_volume_snapshot
                         condition container_group container_route container_project
                         container_replicator container_image container_image_registry
                         container_topology container_dashboard middleware_topology persistent_volume container_build
@@ -1121,8 +1122,9 @@ module ApplicationHelper
 
   def render_listnav_filename
     if @lastaction == "show_list" && !session[:menu_click] &&
-       %w(auth_key_pair_cloud cloud_volume cloud_volume_snapshot container_node container_service ems_container container_group ems_cloud
-          ems_cluster container_route container_project container_replicator container_image container_image_registry container_build
+       %w(auth_key_pair_cloud cloud_object_store_container cloud_object_store_object cloud_volume cloud_volume_snapshot
+          container_node container_service ems_container container_group ems_cloud ems_cluster container_route
+          container_project container_replicator container_image container_image_registry container_build
           ems_infra host miq_template offline orchestration_stack persistent_volume repository ems_middleware
           middleware_server middleware_deployment
           resource_pool retired service storage templates vm).include?(@layout) && !@in_a_form
@@ -1133,7 +1135,8 @@ module ApplicationHelper
       "explorer"
     elsif %w(offline retired templates vm vm_cloud vm_or_template).include?(@layout)
       "vm"
-    elsif %w(action auth_key_pair_cloud availability_zone cim_base_storage_extent cloud_tenant cloud_volume cloud_volume_snapshot condition container_group
+    elsif %w(action auth_key_pair_cloud availability_zone cim_base_storage_extent cloud_object_store_container
+             cloud_object_store_object cloud_tenant cloud_volume cloud_volume_snapshot condition container_group
              container_route container_project container_replicator container_image container_image_registry
              container_build container_node container_service persistent_volume ems_cloud ems_container ems_cluster ems_infra
              ems_middleware middleware_server middleware_deployment flavor

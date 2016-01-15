@@ -98,6 +98,17 @@ class CloudTenantController < ApplicationController
       @view, @pages = get_view(kls, :parent => @cloud_tenant)  # Get the records (into a view) and the paginator
       @showtype = @display
       notify_about_unauthorized_items(title, ui_lookup(:tables => "cloud_tenant"))
+    when "cloud_object_store_containers"
+      table = "cloud_object_store_containers"
+      title = ui_lookup(:tables => table)
+      kls   = CloudObjectStoreContainer
+      drop_breadcrumb(
+        :name => @cloud_tenant.name + " (All #{title})",
+        :url  => "/cloud_tenant/show/#{@cloud_tenant.id}?display=#{@display}"
+      )
+      @view, @pages = get_view(kls, :parent => @cloud_tenant)  # Get the records (into a view) and the paginator
+      @showtype = @display
+      notify_about_unauthorized_items(title, ui_lookup(:tables => "cloud_tenant"))
     end
 
     # Came in from outside show_list partial
