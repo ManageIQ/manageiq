@@ -138,7 +138,7 @@ module ApplianceConsole
         "MAC Address:", mac,
         "Timezone:", timezone,
         "Local Database:", ApplianceConsole::Utilities.pg_status,
-        "#{I18n.t("product.name")} Database:", configured ? "postgres @ #{dbhost}" : "not configured",
+        "#{I18n.t("product.name")} Database:", configured ? "postgres @ #{dbhost || "localhost"}" : "not configured",
         "Database/Region:", configured ? "#{database} / #{region || 0}" : "not configured",
         "External Auth:", ExternalHttpdAuthentication.config_status,
         "#{I18n.t("product.name")} Version:", version,

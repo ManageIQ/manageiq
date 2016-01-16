@@ -36,7 +36,6 @@ module ApplianceConsole
                                )
 
       host, database = result.output.split("\n").last(2)
-      host = "localhost" if host.blank?
 
       if database.blank?
         logger = ApplianceConsole::Logging.logger
@@ -45,7 +44,7 @@ module ApplianceConsole
         logger.error "Error:  #{result.error.inspect}"  unless result.error.blank?
       end
 
-      return host, database
+      return host.presence, database
     end
 
     def self.pg_status
