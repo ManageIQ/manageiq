@@ -5,13 +5,15 @@
 # Simulate rubygems adding the top level appliance_console.rb's directory to the path.
 $LOAD_PATH.push(File.dirname(__FILE__))
 
-ROOT = [
-  "/var/www/miq",
-  File.expand_path(File.join(File.dirname(__FILE__), "../.."))
+require 'pathname'
+
+RAILS_ROOT = [
+  Pathname.new("/var/www/miq/vmdb"),
+  Pathname.new(File.expand_path(File.join(__dir__, "../..")))
 ].detect { |f| File.exist?(f) }
 
 # Set up Environment
-ENV['BUNDLE_GEMFILE'] ||= "#{ROOT}/Gemfile"
+ENV['BUNDLE_GEMFILE'] ||= RAILS_ROOT.join("Gemfile").to_s
 require 'bundler'
 Bundler.setup
 
@@ -21,7 +23,6 @@ require 'highline/system_extensions'
 require 'rubygems'
 require 'bcrypt'
 require 'linux_admin'
-require 'pathname'
 require 'util/vmdb-logger'
 include HighLine::SystemExtensions
 
@@ -38,12 +39,11 @@ require 'appliance_console/errors'
 
 [:INT, :TERM, :ABRT, :TSTP].each { |s| trap(s) { raise MiqSignalError } }
 
-RAILS_ROOT    = Pathname.new("#{ROOT}/vmdb")
 EVM_PID_FILE  = RAILS_ROOT.join("tmp/pids/evm.pid")
 REGION_FILE   = RAILS_ROOT.join("REGION")
 VERSION_FILE  = RAILS_ROOT.join("VERSION")
 BUILD_FILE    = RAILS_ROOT.join("BUILD")
-LOGFILE       = File.join(RAILS_ROOT, "log", "appliance_console.log")
+LOGFILE       = RAILS_ROOT.join("log", "appliance_console.log")
 DB_RESTORE_FILE = "/tmp/evm_db.backup"
 
 AS_OPTIONS = I18n.t("advanced_settings.menu_order").collect do |item|
