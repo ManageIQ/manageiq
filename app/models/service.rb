@@ -205,8 +205,7 @@ class Service < ActiveRecord::Base
   def v_total_vms
     vms.size
   end
-    private
-
+ 
   def set_tenant_from_group
     self.tenant_id = miq_group.tenant_id if miq_group
   end
