@@ -225,7 +225,7 @@
       .col-md-8
         = check_box_tag("smtp_enable_starttls_auto",
                         GenericMailer.default_for_enable_starttls_auto,
-                        @edit[:new][:smtp][:enable_starttls_auto])
+                        @edit[:new][:smtp][:enable_starttls_auto], :data => {:on_text => 'Yes', :off_text => 'No'})
       :javascript
         miqInitBootstrapSwitch('smtp_enable_starttls_auto', "#{url}")
 
