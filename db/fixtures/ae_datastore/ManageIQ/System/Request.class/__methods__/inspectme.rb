@@ -22,7 +22,6 @@ def dump_ar_object(key, object)
   dump_attributes(object)
   dump_associations(object)
   dump_tags(object)
-  dump_virtual_columns(object)
 end
 
 def dump_attributes(object)
@@ -48,13 +47,6 @@ def dump_tags(object)
     $evm.log("info", "    Category:<#{tag_text.first.inspect}> Tag:<#{tag_text.last.inspect}>")
   end
   $evm.log("info", "  End Tags [object.tags]")
-  $evm.log("info", "")
-end
-
-def dump_virtual_columns(object)
-  $evm.log("info", "  Begin Virtual Columns [object.virtual_column_names]")
-  object.virtual_column_names.sort.each { |vcn| $evm.log("info", "    Virtual Columns - #{vcn}: #{object.send(vcn).inspect}") }
-  $evm.log("info", "  End Virtual Columns [object.virtual_column_names]")
   $evm.log("info", "")
 end
 

@@ -35,7 +35,7 @@ module MiqAeMethodService
 
     def self.inherited(subclass)
       subclass.class_eval do
-        model.column_names_with_virtual.each do |attr|
+        model.attribute_names.each do |attr|
           next if EXPOSED_ATTR_BLACK_LIST.any? { |rexp| attr =~ rexp }
           next if subclass.base_class != self && method_defined?(attr)
           expose attr
@@ -184,12 +184,12 @@ module MiqAeMethodService
     end
 
     def virtual_columns_inspect
-      arr = @object.class.virtual_column_names.sort.collect { |vc| "#{vc}: #{@object.send(vc).inspect}" }
+      arr = @object.class.virtual_attribute_names.sort.collect { |vc| "#{vc}: #{@object.send(vc).inspect}" }
       "<#{arr.join(', ')}>"
     end
 
     def virtual_column_names
-      @object.class.virtual_column_names.sort
+      @object.class.virtual_attribute_names.sort
     end
 
     def inspect

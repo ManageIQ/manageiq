@@ -1,5 +1,28 @@
-class VirtualColumn < ActiveRecord::ConnectionAdapters::Column
-  attr_reader :options
+module VirtualIncludes
+  extend ActiveSupport::Concern
+
+  included do
+    class_attribute :_virtual_includes, :instance_accessor => false
+    self._virtual_includes = {}
+  end
+
+  module ClassMethods
+    def virtual_includes(name)
+      load_schema
+      _virtual_includes[name.to_s]
+    end
+
+    private
+
+    def define_virtual_include(name, uses)
+      self._virtual_includes = _virtual_includes.merge(name => uses)
+    end
+  end
+end
+
+module VirtualAttributes
+  extend ActiveSupport::Concern
+  include VirtualIncludes
 
   module Type
     # TODO: do we actually need symbol types?
@@ -16,298 +39,202 @@ class VirtualColumn < ActiveRecord::ConnectionAdapters::Column
     end
   end
 
-  TYPE_MAP = {
-    :boolean     => ActiveRecord::Type::Boolean.new,
-    :datetime    => ActiveRecord::Type::Time.new,
-    :float       => ActiveRecord::Type::Float.new,
-    :integer     => ActiveRecord::Type::Integer.new, # TODO: does a virtual_column :integer care if it's a Integer or BigInteger
-    :numeric_set => Type::NumericSet.new,
-    :string      => ActiveRecord::Type::String.new,
-    :string_set  => Type::StringSet.new,
-    :symbol      => Type::Symbol.new,                # TODO: is this correct?
-    :time        => ActiveRecord::Type::Time.new,
-  }
+  ActiveRecord::Type.register(:datetime, ActiveRecord::Type::DateTime) # Correct spelling is ":date_time"
+  ActiveRecord::Type.register(:numeric_set, Type::NumericSet)
+  ActiveRecord::Type.register(:string_set, Type::StringSet)
+  ActiveRecord::Type.register(:symbol, Type::Symbol)
 
-  def initialize(name, options)
-    @options = options
+  included do
+    class_attribute :virtual_attributes_to_define, :instance_accessor => false
+    self.virtual_attributes_to_define = {}
+  end
 
-    type = options[:type]
+  module ClassMethods
 
-    if type.nil? && options.key?(:typ)
-      unless Rails.env.production?
-        msg = "[DEPRECATION] :typ option is deprecated.  Please use :type instead.  At #{caller[1]}"
-        $log.warn msg
-        warn msg
+    #
+    # Definition
+    #
+
+    # Compatibility method: `virtual_attribute` is a more accurate name
+    def virtual_column(name, type_or_options, **options)
+      if type_or_options.kind_of?(Hash)
+        options = options.merge(type_or_options)
+        type = options.delete(:type)
+      else
+        type = type_or_options
       end
 
-      type = options[:typ]
-      options[:type] = type
+      virtual_attribute(name, type, **options)
     end
 
-    type = TYPE_MAP.fetch(type) unless type.kind_of?(ActiveRecord::Type::Value)
+    def virtual_attribute(name, type, **options)
+      name = name.to_s
+      reload_schema_from_cache
 
-    raise ArgumentError, "type must be specified" if type.nil?
-
-    super(name.to_s, options[:default], type)
-  end
-
-  def simplified_type(field_type)
-    case field_type
-    when /_set/
-      field_type.to_sym
-    else
-      super || field_type.to_sym
-    end
-  end
-
-  def klass
-    super || type.to_s.camelize.constantize rescue nil
-  end
-
-  def typ
-    unless Rails.env.production?
-      msg = "[DEPRECATION] typ is deprecated.  Please use type instead.  At #{caller[1]}"
-      $log.warn msg
-      warn msg
+      self.virtual_attributes_to_define =
+        virtual_attributes_to_define.merge(name => [type, options])
     end
 
-    type
-  end
+    #
+    # Introspection
+    #
 
-  alias_method :to_s, :inspect # Changes to_s to include all of the instance variables
-
-  def uses
-    options[:uses]
-  end
-
-  def uses=(val)
-    options[:uses] = val
-  end
-
-  #
-  # Deprecated backwards compatibility methods
-  #
-
-  def [](key)
-    unless Rails.env.production?
-      msg = "[DEPRECATION] [] access is deprecated.  Please use method call directly instead.  At #{caller[1]}"
-      $log.warn msg
-      warn msg
+    def virtual_attribute?(name)
+      load_schema
+      has_attribute?(name) && (
+        !respond_to?(:column_for_attribute) ||
+        column_for_attribute(name).kind_of?(ActiveRecord::ConnectionAdapters::NullColumn)
+      )
     end
 
-    send(key)
-  end
-
-  def []=(key, val)
-    unless Rails.env.production?
-      msg = "[DEPRECATION] []= access is deprecated.  Please use method call directly instead.  At #{caller[1]}"
-      $log.warn msg
-      warn msg
+    def virtual_attribute_names
+      if respond_to?(:column_names)
+        attribute_names - column_names
+      else
+        attribute_names
+      end
     end
 
-    send("#{key}=", val)
+    private
+
+    def load_schema!
+      super
+
+      virtual_attributes_to_define.each do |name, (type, options)|
+        if type.is_a?(Symbol)
+          type = ActiveRecord::Type.lookup(type, **options.except(:uses))
+        end
+
+        define_virtual_attribute(name, type, **options.slice(:uses))
+      end
+    end
+
+    def define_virtual_attribute(name, cast_type, uses: nil)
+      attribute_types[name] = cast_type
+      define_virtual_include name, uses
+    end
   end
 end
 
-class VirtualReflection < SimpleDelegator
-  attr_accessor :uses
+module VirtualReflections
+  extend ActiveSupport::Concern
+  include VirtualIncludes
 
-  def initialize(reflection, uses)
-    super(reflection)
-    @uses = uses
+  module ClassMethods
+
+    #
+    # Definition
+    #
+
+    def virtual_has_one(name, options = {})
+      uses = options.delete :uses
+      reflection = ActiveRecord::Associations::Builder::HasOne.build(self, name, nil, options)
+      add_virtual_reflection(reflection, name, uses, options)
+    end
+
+    def virtual_has_many(name, options = {})
+      define_method("#{name.to_s.singularize}_ids") do
+        records = send(name)
+        records.respond_to?(:ids) ? records.ids : records.collect(&:id)
+      end
+      uses = options.delete :uses
+      reflection = ActiveRecord::Associations::Builder::HasMany.build(self, name, nil, options)
+      add_virtual_reflection(reflection, name, uses, options)
+    end
+
+    def virtual_belongs_to(name, options = {})
+      uses = options.delete :uses
+      reflection = ActiveRecord::Associations::Builder::BelongsTo.build(self, name, nil, options)
+      add_virtual_reflection(reflection, name, uses, options)
+    end
+
+    def virtual_reflection?(name)
+      virtual_reflections.key?(name.to_sym)
+    end
+
+    def virtual_reflection(name)
+      virtual_reflections[name.to_sym]
+    end
+
+    #
+    # Introspection
+    #
+
+    def virtual_reflections
+      (virtual_fields_base? ? {} : superclass.virtual_reflections).merge _virtual_reflections
+    end
+
+    def reflections_with_virtual
+      reflections.symbolize_keys.merge(virtual_reflections)
+    end
+
+    def reflection_with_virtual(association)
+      virtual_reflection(association) || reflect_on_association(association)
+    end
+
+    private
+
+    def add_virtual_reflection(reflection, name, uses, _options)
+      raise ArgumentError, "macro must be specified" unless reflection
+      reset_virtual_reflection_information
+      _virtual_reflections[name.to_sym] = reflection
+      define_virtual_include(name.to_s, uses)
+    end
+
+    def reset_virtual_reflection_information
+    end
+
+    def _virtual_reflections
+      @virtual_reflections ||= {}
+    end
   end
 end
 
 module VirtualFields
+  extend ActiveSupport::Concern
+  include VirtualAttributes
+  include VirtualReflections
+
   module NonARModels
     def dangerous_attribute_method?(_); false; end
 
     def generated_association_methods; self; end
 
     def add_autosave_association_callbacks(*_args); self; end
+
+    def belongs_to_required_by_default; false; end
   end
 
-  def self.extended(other)
-    unless other.respond_to?(:dangerous_attribute_method?)
-      other.extend NonARModels
-    end
-    other.class_eval { @virtual_fields_base = true }
-  end
-
-  def virtual_fields_base?
-    @virtual_fields_base ||
-      respond_to?(:abstract_class?) && abstract_class?
-  end
-
-  #
-  # Virtual Columns
-  #
-
-  def virtual_column(name, options = {})
-    add_virtual_column(name, options)
-  end
-
-  def virtual_column?(name)
-    virtual_columns_hash.key?(name.to_s)
-  end
-
-  #
-  # Virtual Reflections
-  #
-
-  def virtual_has_one(name, options = {})
-    uses = options.delete :uses
-    reflection = ActiveRecord::Associations::Builder::HasOne.build(self, name, nil, options)
-    add_virtual_reflection(reflection, name, uses, options)
-  end
-
-  def virtual_has_many(name, options = {})
-    define_method("#{name.to_s.singularize}_ids") do
-      records = send(name)
-      records.respond_to?(:ids) ? records.ids : records.collect(&:id)
-    end
-    uses = options.delete :uses
-    reflection = ActiveRecord::Associations::Builder::HasMany.build(self, name, nil, options)
-    add_virtual_reflection(reflection, name, uses, options)
-  end
-
-  def virtual_belongs_to(name, options = {})
-    uses = options.delete :uses
-    reflection = ActiveRecord::Associations::Builder::BelongsTo.build(self, name, nil, options)
-    add_virtual_reflection(reflection, name, uses, options)
-  end
-
-  def virtual_reflection?(name)
-    virtual_reflections.key?(name.to_sym)
-  end
-
-  def virtual_reflection(name)
-    virtual_reflections[name.to_sym]
-  end
-
-  #
-  # Accessors for fields, with inheritance
-  #
-
-  %w(columns_hash columns column_names column_names_symbols reflections).each do |m|
-    define_method("virtual_#{m}") do
-      inherited = send("inherited_virtual_#{m}")
-      op = inherited.kind_of?(Hash) ? :merge : :"|"
-      inherited.send(op, send("_virtual_#{m}"))
+  included do
+    unless respond_to?(:dangerous_attribute_method?)
+      extend NonARModels
     end
   end
 
-  %w(columns_hash columns column_names column_names_symbols).each do |m|
-    define_method("#{m}_with_virtual") do
-      inherited = send("inherited_#{m}_with_virtual")
-      op = inherited.kind_of?(Hash) ? :merge : :"|"
-      inherited.send(op, send("_virtual_#{m}"))
+  module ClassMethods
+    def virtual_fields_base?
+      !(superclass < VirtualFields)
     end
-  end
 
-  def reflections_with_virtual
-    reflections.symbolize_keys.merge(virtual_reflections)
-  end
+    def virtual_field?(name)
+      virtual_attribute?(name) || virtual_reflection?(name)
+    end
 
-  def reflection_with_virtual(association)
-    virtual_reflection(association) || reflect_on_association(association)
-  end
-
-  #
-  # Common methods for Virtual Fields
-  #
-
-  def virtual_field?(name)
-    virtual_column?(name) || virtual_reflection?(name)
-  end
-
-  def virtual_field(name)
-    virtual_columns_hash[name.to_s] || virtual_reflections[name.to_sym]
-  end
-
-  def remove_virtual_fields(associations)
-    case associations
-    when String, Symbol
-      virtual_field?(associations) ? nil : associations
-    when Array
-      associations.collect { |association| remove_virtual_fields(association) }.compact
-    when Hash
-      associations.each_with_object({}) do |(parent, child), h|
-        next if virtual_field?(parent)
-        reflection = reflect_on_association(parent.to_sym)
-        h[parent] = reflection.options[:polymorphic] ? nil : reflection.klass.remove_virtual_fields(child) if reflection
+    def remove_virtual_fields(associations)
+      case associations
+      when String, Symbol
+        virtual_field?(associations) ? nil : associations
+      when Array
+        associations.collect { |association| remove_virtual_fields(association) }.compact
+      when Hash
+        associations.each_with_object({}) do |(parent, child), h|
+          next if virtual_field?(parent)
+          reflection = reflect_on_association(parent.to_sym)
+          h[parent] = reflection.options[:polymorphic] ? nil : reflection.klass.remove_virtual_fields(child) if reflection
+        end
+      else
+        associations
       end
-    else
-      associations
-    end
-  end
-
-  private
-
-  def add_virtual_column(name, options)
-    reset_virtual_column_information
-    options[:type] = VirtualColumn::TYPE_MAP.fetch(options[:type]) do
-      raise ArgumentError, "unknown type #{options[:type]}"
-    end
-    _virtual_columns_hash[name.to_s] = VirtualColumn.new(name, options)
-  end
-
-  def reset_virtual_column_information
-    @virtual_columns = @virtual_column_names = @virtual_column_names_symbols = nil
-  end
-
-  def add_virtual_reflection(reflection, name, uses, _options)
-    raise ArgumentError, "macro must be specified" unless reflection
-    reset_virtual_reflection_information
-    _virtual_reflections[name.to_sym] = VirtualReflection.new(reflection, uses)
-  end
-
-  def reset_virtual_reflection_information
-  end
-
-  #
-  # Accessors for non-inherited fields
-  #
-
-  def _virtual_columns_hash
-    @virtual_columns_hash ||= {}
-  end
-
-  def _virtual_columns
-    @virtual_columns ||= _virtual_columns_hash.values
-  end
-
-  def _virtual_column_names
-    @virtual_column_names ||= _virtual_columns_hash.keys
-  end
-
-  def _virtual_column_names_symbols
-    @virtual_column_names_symbols ||= _virtual_column_names.collect(&:to_sym)
-  end
-
-  def _virtual_reflections
-    @virtual_reflections ||= {}
-  end
-
-  #
-  # Accessors for inherited fields
-  #
-
-  %w(columns_hash reflections).each do |m|
-    define_method("inherited_virtual_#{m}") do
-      superclass.virtual_fields_base? ? {} : superclass.send("virtual_#{m}")
-    end
-  end
-
-  %w(columns column_names column_names_symbols).each do |m|
-    define_method("inherited_virtual_#{m}") do
-      superclass.virtual_fields_base? ? [] : superclass.send("virtual_#{m}")
-    end
-  end
-
-  %w(columns column_names column_names_symbols columns_hash reflections).each do |m|
-    define_method("inherited_#{m}_with_virtual") do
-      superclass.virtual_fields_base? ? send(m) : superclass.send("#{m}_with_virtual")
     end
   end
 end
@@ -318,7 +245,7 @@ end
 
 module ActiveRecord
   class Base
-    extend VirtualFields
+    include VirtualFields
   end
 
   module Associations
@@ -337,18 +264,18 @@ module ActiveRecord
           association = Hash[association]
 
           virtual_association.each do |parent, child|
-            field = records_model.virtual_field(parent)
-            Array.wrap(field.uses).each { |f| preload(records, f) }
+            Array.wrap(records_model.virtual_includes(parent)).each { |f| preload(records, f) }
 
-            raise "child must be blank if parent is a virtual column" if field.kind_of?(VirtualColumn) && !child.blank?
-            next unless field.kind_of?(VirtualReflection)
+            if records_model.virtual_attribute?(parent)
+              raise "child must be blank if parent is a virtual attribute" if !child.blank?
+              next
+            end
 
-            parents = records.map { |record| record.send(field.name) }.flatten.compact
+            parents = records.map { |record| record.send(parent) }.flatten.compact
             MiqPreloader.preload(parents, child) unless parents.empty?
           end
         when String, Symbol
-          field = records_model.virtual_field(association)
-          return Array.wrap(field.uses).each { |f| preload(records, f) } if field
+          return Array.wrap(records_model.virtual_includes(association)).each { |f| preload(records, f) }
         end
 
         preloaders_on_without_virtual(association, records, preload_scope)
@@ -384,8 +311,8 @@ module ActiveRecord
   end
 
   module Calculations
-    def calculate_with_virtual(operation, column_name)
-      without_virtual_includes.send(:calculate_without_virtual, operation, column_name)
+    def calculate_with_virtual(operation, attribute_name)
+      without_virtual_includes.send(:calculate_without_virtual, operation, attribute_name)
     end
     alias_method_chain :calculate, :virtual
   end

@@ -16,17 +16,17 @@ module AggregationMixin
     def self.override_aggregation_mixin_virtual_columns_uses(type, new_uses)
       case type
       when :all_hosts
-        virtual_columns_hash["aggregate_cpu_speed"].uses       = new_uses
-        virtual_columns_hash["aggregate_cpu_total_cores"].uses = new_uses
-        virtual_columns_hash["aggregate_physical_cpus"].uses   = new_uses
-        virtual_columns_hash["aggregate_memory"].uses          = new_uses
-        virtual_columns_hash["aggregate_disk_capacity"].uses   = new_uses
+        define_virtual_include "aggregate_cpu_speed",       new_uses
+        define_virtual_include "aggregate_cpu_total_cores", new_uses
+        define_virtual_include "aggregate_physical_cpus",   new_uses
+        define_virtual_include "aggregate_memory",          new_uses
+        define_virtual_include "aggregate_disk_capacity",   new_uses
 
-        virtual_columns_hash["aggregate_logical_cpus"].uses = new_uses # Deprecated
+        define_virtual_include "aggregate_logical_cpus", new_uses # Deprecated
 
       when :all_vms_and_templates
-        virtual_columns_hash["aggregate_vm_cpus"].uses       = new_uses
-        virtual_columns_hash["aggregate_vm_memory"].uses     = new_uses
+        define_virtual_include "aggregate_vm_cpus",   new_uses
+        define_virtual_include "aggregate_vm_memory", new_uses
       end
     end
   end

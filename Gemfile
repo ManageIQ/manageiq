@@ -110,6 +110,8 @@ unless ENV['APPLIANCE']
   end
 
   group :test do
+    gem "sqlite3",                      :require => false
+
     gem "brakeman",         "~>3.1.0",  :require => false
     gem "capybara",         "~>2.5.0",  :require => false
     gem "factory_girl",     "~>4.5.0",  :require => false

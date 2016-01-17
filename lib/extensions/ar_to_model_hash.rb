@@ -110,7 +110,7 @@ module ToModelHash
     columns  = ((options && options[:columns]) || [])
     includes = ((options && options[:include]) || {})
 
-    result = columns.select { |c| parent_class.virtual_column?(c) }
+    result = columns.select { |c| parent_class.virtual_attribute?(c) }
 
     result += includes.collect do |k, v|
       association_class = parent_class.reflections_with_virtual[k.to_sym].klass
@@ -120,8 +120,4 @@ module ToModelHash
   end
 end
 
-module ActiveRecord
-  class Base
-    include ToModelHash
-  end
-end
+ApplicationRecord.include ToModelHash
