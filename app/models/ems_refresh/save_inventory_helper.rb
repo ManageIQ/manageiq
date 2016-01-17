@@ -1,11 +1,15 @@
 module EmsRefresh::SaveInventoryHelper
   class TypedIndex
-    attr_accessor :record_index, :record_index_columns
+    attr_accessor :record_index, :key_attribute_types
     attr_accessor :find_key
     def initialize(records, find_key)
       # Save the columns associated with the find keys, so we can coerce the hash values during fetch
-      columns_hash = records.first.try(:class).try(:columns_hash_with_virtual)
-      @record_index_columns = columns_hash.nil? ? [] : find_key.collect { |k| columns_hash[k.to_s] }
+      if records.first
+        model = records.first.class
+        @key_attribute_types = find_key.map { |k| model.type_for_attribute(k) }
+      else
+        @key_attribute_types = []
+      end
 
       # Index the records by the values from the find_key
       @record_index = records.each_with_object({}) do |r, h|
@@ -21,8 +25,8 @@ module EmsRefresh::SaveInventoryHelper
       hash_values = find_key.collect { |k| hash[k] }
 
       # Coerce each hash value into the db column type for valid lookup during fetch_path
-      coerced_hash_values = hash_values.zip(record_index_columns).collect do |value, column|
-        ExtManagementSystem.connection.type_cast_from_column(column, value)
+      coerced_hash_values = hash_values.zip(key_attribute_types).collect do |value, type|
+        type.cast(value)
       end
 
       record_index.fetch_path(coerced_hash_values)

@@ -89,7 +89,7 @@ module MiqReport::Generator
     if klass.nil?
       klass = db_class
       result = {}
-      cols.each { |c| result.merge!(c.to_sym => {}) if klass.virtual_column?(c) } if cols
+      cols.each { |c| result.merge!(c.to_sym => {}) if klass.virtual_attribute?(c) } if cols
     end
 
     if includes.kind_of?(Hash)
@@ -108,7 +108,7 @@ module MiqReport::Generator
             result.merge!(k => get_include_for_find(v["include"], assoc_klass)) if assoc_klass
           end
 
-          v["columns"].each { |c| result[k].merge!(c.to_sym => {}) if assoc_klass.virtual_column?(c) } if assoc_klass && assoc_klass.respond_to?(:virtual_column?) && v["columns"]
+          v["columns"].each { |c| result[k].merge!(c.to_sym => {}) if assoc_klass.virtual_attribute?(c) } if assoc_klass && assoc_klass.respond_to?(:virtual_attribute?) && v["columns"]
         end
       end
     elsif includes.kind_of?(Array)
