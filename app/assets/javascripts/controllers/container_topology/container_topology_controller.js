@@ -75,15 +75,18 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
           case "Succeeded":
           case "Valid":
             return "#3F9C35";
+            break;
           case "NotReady":
           case "Failed":
           case "Error":
           case "Unreachable":
             return "#CC0000";
+            break;
           case 'Warning':
           case 'Waiting':
           case 'Pending':
             return "#EC7A08";
+            break;
           case 'Unknown':
           case 'Terminated':
             return "#bbb";
@@ -104,6 +107,7 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
           switch(d.item.kind) {
             case 'ContainerManager':
               return 'icon '+ d.item.display_kind;
+              break;
             default:
               return 'icon';
           }
@@ -157,15 +161,16 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
       case "ContainerNode":
       case "ContainerReplicator":
         return "container_" + d.item.display_kind.toLowerCase();
+        break;
 
       case "Vm":
       case "Host":
       case "Container":
         return d.item.kind.toLowerCase();
-
+        break;
       case "Pod":
         return "container_group";
-
+        break;
       case "ContainerManager":
         return "vendor-" + _.snakeCase(d.item.display_kind);
     }
@@ -193,29 +198,40 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
     switch (d.item.kind) {
       case 'Container':
         return '\uF1B2'; // fa-cube
+        break;
       case "ContainerNode":
         return '\uE621';  // pficon-container-node
+        break;
       case "ContainerRoute":
         return '\uE625'; // pficon-route
+        break;
       case "ContainerService":
         return '\uE61E'; // pficon-service
+        break;
       case "Vm":
         return '\uE600'; // pficon-screen
+        break;
       case "Host":
         return '\uE620'; // pficon-cluster
+        break;
       case "ContainerGroup":
         return '\uF1B3'; // fa-cubes
+        break;
       case "ContainerReplicator":
         return '\uE624'; // pficon-replicator
+        break;
       case "ContainerManager":
         switch (d.item.display_kind) {
           case "Kubernetes":
             return '\uE627'; // pficon-kubernetes
+            break;
           case "Openshift":
           case "OpenshiftEnterprise":
             return '\uE626';  // pficon-openshift
+            break;
           case "Atomic":
             return '\uE62c'; // vendor-atomic
+            break;
           case "AtomicEnterprise":
             return '\uE62d'; //vendor-atomic-enterprise
         }
@@ -226,14 +242,18 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
     switch (d.item.kind) {
       case "ContainerManager":
         return { x: 0, y: 16, r: 28 };
+        break;
       case "Container":
         return { x: 1, y: 5, r: 13 };
+        break;
       case "ContainerGroup":
         return { x: 0, y: 6, r: 17 };
+        break;
       case "ContainerNode":
       case "Vm":
       case "Host":
         return { x: 0, y: 9, r: 21 };
+        break;
       default:
         return { x: 0, y: 9, r: 17 };
     }
