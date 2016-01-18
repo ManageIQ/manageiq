@@ -100,11 +100,11 @@ describe('app.services.DialogFieldRefresh', function() {
           successResponse = {
             result: {
               dialog1: {
-                data_type: 'string',
+                data_type: 'integer',
                 options: 'options',
                 read_only: false,
                 required: false,
-                values: [['1', 'One'], ['2', 'Two']]
+                values: [[1, 'One'], [2, 'Two']]
               }
             }
           };
@@ -113,12 +113,12 @@ describe('app.services.DialogFieldRefresh', function() {
         it('updates the attributes for the dialog field with the first value being default', function(done) {
           DialogFieldRefresh.refreshSingleDialogField(allDialogFields, dialog1, 'the_url', 123);
           done();
-          expect(dialog1.data_type).to.eq('string');
+          expect(dialog1.data_type).to.eq('integer');
           expect(dialog1.options).to.eq('options');
           expect(dialog1.read_only).to.be.false;
           expect(dialog1.required).to.be.false;
           var dialog1Values = JSON.stringify(dialog1.values);
-          var dialog1ExpectedValues = JSON.stringify([['1', 'One'], ['2', 'Two']]);
+          var dialog1ExpectedValues = JSON.stringify([[1, 'One'], [2, 'Two']]);
           expect(dialog1Values).to.eq(dialog1ExpectedValues);
           expect(dialog1.default_value).to.eq('1');
         });

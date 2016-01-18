@@ -64,6 +64,10 @@
               dialogField.default_value = dialogField.values;
             }
 
+            if (typeof (dialogField.values) === 'object' && dialogField.default_value === undefined) {
+              dialogField.default_value = String(dialogField.values[0][0]);
+            }
+
             dialogField.triggerAutoRefresh = function() {
               DialogFieldRefresh.triggerAutoRefresh(dialogField);
             };

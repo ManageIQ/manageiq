@@ -74,7 +74,7 @@
         if (newDialogField.default_value !== undefined && newDialogField.default_value !== null) {
           dialogField.default_value = newDialogField.default_value;
         } else {
-          dialogField.default_value = newDialogField.values[0][0];
+          dialogField.default_value = String(newDialogField.values[0][0]);
         }
       } else {
         dialogField.default_value = newDialogField.values;
