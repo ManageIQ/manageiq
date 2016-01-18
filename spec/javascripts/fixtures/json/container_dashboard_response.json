@@ -69,15 +69,11 @@
     "providers": [
       {
         "count": 2,
-        "providerType": "OpenShift",
-        "id": "openshift",
-        "iconClass": "pficon pficon-openshift"
+        "providerType": "openshift"
       },
       {
-        "iconClass": "pficon pficon-kubernetes",
-        "id": "kubernetes",
         "count": 1,
-        "providerType": "Kubernetes"
+        "providerType": "kubernetes"
       }
     ],
     "ems_utilization": {

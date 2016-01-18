@@ -79,13 +79,9 @@ class ContainerDashboardService
   end
 
   def providers
-    provider_classes_to_ui_types = {
-      "ManageIQ::Providers::Openshift::ContainerManager"           => :openshift,
-      "ManageIQ::Providers::OpenshiftEnterprise::ContainerManager" => :openshift,
-      "ManageIQ::Providers::Kubernetes::ContainerManager"          => :kubernetes,
-      "ManageIQ::Providers::Atomic::ContainerManager"              => :atomic,
-      "ManageIQ::Providers::AtomicEnterprise::ContainerManager"    => :atomic
-    }
+    provider_classes_to_ui_types = ManageIQ::Providers::ContainerManager.subclasses.each_with_object({}) { |subclass, h|
+      name = subclass.name.split('::')[2]
+      h[subclass.name] = name.underscore.downcase.to_sym }
 
     providers = @ems.present? ? {@ems.type => 1} : ManageIQ::Providers::ContainerManager.group(:type).count
 
@@ -100,9 +96,7 @@ class ContainerDashboardService
 
   def build_provider_status(ui_type)
     {
-      :iconClass    => "pficon pficon-#{ui_type}",
-      :id           => ui_type,
-      :providerType => ui_type.capitalize,
+      :providerType => ui_type,
       :count        => 0
     }
   end

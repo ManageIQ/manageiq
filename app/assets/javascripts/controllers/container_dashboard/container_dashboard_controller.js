@@ -81,19 +81,14 @@ angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.
           var providers = data.providers;
           if (providers) {
             if (id) {
-              $scope.providerTypeIconClass = data.providers[0].iconClass;
-
-              if ($scope.providerTypeIconClass == "pficon pficon-atomic") {
-                $scope.isAtomic=true;
-                $scope.providerTypeIconClass = 'pficon pficon-atomic-large'
-              }
+              $scope.providerTypeIconClass = dashboardUtilsFactory.iconClassForProvider(data.providers[0].providerType);
             } else {
               $scope.objectStatus.providers.count = 0;
               $scope.objectStatus.providers.notifications = [];
               providers.forEach(function (item) {
                 $scope.objectStatus.providers.count += item.count;
                 $scope.objectStatus.providers.notifications.push({
-                  iconClass: item.iconClass,
+                  iconClass: dashboardUtilsFactory.iconClassForProvider(item.providerType),
                   count: item.count
                 })
               });
