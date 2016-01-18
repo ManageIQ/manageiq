@@ -133,6 +133,7 @@ class Host < ActiveRecord::Base
   virtual_column :enabled_run_level_6_services, :type => :string_set,  :uses => :host_services
   virtual_column :last_scan_on,                 :type => :time,        :uses => :last_drift_state_timestamp
   virtual_column :v_annotation,                 :type => :string,      :uses => :hardware
+  virtual_column :vmm_vendor,                   :type => :string
   virtual_column :ipmi_enabled,                 :type => :boolean
 
   virtual_has_many   :resource_pools,                               :uses => :all_relationships
