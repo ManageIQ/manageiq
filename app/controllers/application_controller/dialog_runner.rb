@@ -97,11 +97,6 @@ module ApplicationController::DialogRunner
             params.each do |p|
               if p[0] == field.name
                 url = url_for(:action => 'dialog_field_changed', :id => "#{@edit[:rec_id] || "new"}")
-
-                if field.type.include?("TagControl") && field.single_value? && field.required
-                  category_tags = DialogFieldTagControl.category_tags(field.category).map { |cat| [cat[:description], cat[:id]] }
-                  page.replace("#{field.name}", :text => "#{select_tag(field.name, options_for_select(category_tags, p[1]), 'data-miq_sparkle_on' => true, 'data-miq_sparkle_off' => true, 'data-miq_observe' => {:url => url}.to_json)}")
-                end
               end
             end
           end

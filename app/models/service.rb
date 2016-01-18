@@ -24,6 +24,8 @@ class Service < ActiveRecord::Base
   virtual_has_one    :provision_dialog
   virtual_has_one    :user
 
+  before_validation :set_tenant_from_group
+
   delegate :custom_actions, :custom_action_buttons, :to => :service_template, :allow_nil => true
   delegate :provision_dialog, :to => :miq_request, :allow_nil => true
   delegate :user, :to => :miq_request, :allow_nil => true
@@ -203,4 +205,9 @@ class Service < ActiveRecord::Base
   def v_total_vms
     vms.size
   end
+ 
+  def set_tenant_from_group
+    self.tenant_id = miq_group.tenant_id if miq_group
+  end
+
 end
