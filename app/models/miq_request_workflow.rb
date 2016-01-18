@@ -827,8 +827,6 @@ class MiqRequestWorkflow
   # Run the relationship methods and perform set intersections on the returned values.
   # Optional starting set of results maybe passed in.
   def allowed_ci(ci, relats, sources, filtered_ids = nil)
-    return [] if @ems_xml_nodes.nil?
-
     result = nil
     relats.each do |rsc_type|
       rails_logger("allowed_ci - #{rsc_type}_to_#{ci}", 0)
@@ -876,6 +874,7 @@ class MiqRequestWorkflow
   end
 
   def load_ems_node(item, log_header)
+    @ems_xml_nodes ||= {}
     klass_name = item.kind_of?(MiqHashStruct) ? item.evm_object_class : item.class.base_class.name
     node = @ems_xml_nodes["#{klass_name}_#{item.id}"]
     $log.error "#{log_header} Resource <#{klass_name}_#{item.id} - #{item.name}> not found in cached resource tree." if node.nil?
