@@ -1,6 +1,4 @@
 class Condition < ActiveRecord::Base
-  default_scope { where conditions_for_my_region_default_scope }
-
   include UuidMixin
   before_validation :default_name_to_guid, :on => :create
 

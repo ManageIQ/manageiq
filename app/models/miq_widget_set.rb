@@ -1,8 +1,6 @@
 class MiqWidgetSet < ActiveRecord::Base
   acts_as_miq_set
 
-  default_scope { where conditions_for_my_region_default_scope }
-
   before_destroy :destroy_user_versions
 
   WIDGET_DIR =  File.expand_path(File.join(Rails.root, "product/dashboard/dashboards"))

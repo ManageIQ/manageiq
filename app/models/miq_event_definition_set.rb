@@ -1,8 +1,6 @@
 class MiqEventDefinitionSet < ActiveRecord::Base
   acts_as_miq_set
 
-  default_scope { where conditions_for_my_region_default_scope }
-
   def self.seed
     CSV.foreach(fixture_path, :headers => true, :skip_lines => /^#/) do |csv_row|
       set = csv_row.to_hash

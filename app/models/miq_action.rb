@@ -1,8 +1,6 @@
 require 'awesome_spawn'
 
 class MiqAction < ActiveRecord::Base
-  default_scope { where conditions_for_my_region_default_scope }
-
   include UuidMixin
   before_validation :default_name_to_guid, :on => :create
   before_destroy    :check_policy_contents_empty_on_destroy

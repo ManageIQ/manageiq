@@ -3,8 +3,6 @@ class MiqGroup < ActiveRecord::Base
   SYSTEM_GROUP = "system"
   TENANT_GROUP = "tenant"
 
-  default_scope { where(conditions_for_my_region_default_scope) }
-
   belongs_to :tenant
   belongs_to :miq_user_role
   belongs_to :resource, :polymorphic => true

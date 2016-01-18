@@ -1,6 +1,4 @@
 class MiqAlert < ActiveRecord::Base
-  default_scope { where conditions_for_my_region_default_scope }
-
   include UuidMixin
 
   serialize :expression

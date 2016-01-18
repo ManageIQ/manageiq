@@ -1,8 +1,6 @@
 # TODO: Import/Export support
 
 class MiqPolicy < ActiveRecord::Base
-  default_scope { where conditions_for_my_region_default_scope }
-
   acts_as_miq_taggable
   acts_as_miq_set_member
   include_concern 'ImportExport'

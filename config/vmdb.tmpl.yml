@@ -491,10 +491,9 @@ workers:
         - miq_alerts
         - miq_databases
         - miq_enterprises
-        - miq_events
+        - miq_event_definitions
         - miq_globals
         - miq_groups
-        - miq_license_contents
         - miq_policies
         - miq_policy_contents
         - miq_product_features
@@ -514,10 +513,10 @@ workers:
         - miq_widget_contents
         - miq_workers
         - rss_feeds
+        - scan_items
         - schema_migrations
         - server_roles
         - sessions
-        - vim_performances
         - vim_performance_states
         - vim_performance_tag_values
         - vmdb_database_metrics

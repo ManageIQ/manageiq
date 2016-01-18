@@ -1,8 +1,6 @@
 class CustomButtonSet < ActiveRecord::Base
   acts_as_miq_set
 
-  default_scope  { where conditions_for_my_region_default_scope }
-
   def self.find_all_by_class_name(class_name, class_id = nil)
     ordering = ->(o) { [o.set_data[:group_index].to_s, o.name] }
 

@@ -1,6 +1,4 @@
 class MiqEventDefinition < ActiveRecord::Base
-  default_scope { where conditions_for_my_region_default_scope }
-
   include UuidMixin
 
   validates_presence_of     :name
