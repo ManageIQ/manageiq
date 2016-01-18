@@ -7,6 +7,10 @@ class MigrateProviderAttributesToEndpoints < ActiveRecord::Migration
     self.inheritance_column = :_type_disabled # disable STI
   end
 
+  class ExtManagementSystem < ActiveRecord::Base
+    self.inheritance_column = :_type_disabled # disable STI
+  end
+
   def up
     say_with_time("Migrating Provider attributes to Endpoints") do
       ExtManagementSystem.all.each do |ems|
@@ -31,7 +35,8 @@ class MigrateProviderAttributesToEndpoints < ActiveRecord::Migration
       endpoints.each do |endpoint|
         next if endpoint.verify_ssl.nil?
         ems = ExtManagementSystem.where(:id => endpoint.resource_id).first
-        ems.provider.update_attributes!(
+        provider = Provider.where(:id => ems.provider_id).first
+        provider.update_attributes!(
           :verify_ssl => endpoint.verify_ssl)
       end
 

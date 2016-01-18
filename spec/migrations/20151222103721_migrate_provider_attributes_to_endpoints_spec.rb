@@ -4,11 +4,15 @@ require_migration
 describe MigrateProviderAttributesToEndpoints do
   let(:provider_stub) { migration_stub(:Provider) }
   let(:endpoint_stub) { migration_stub(:Endpoint) }
+  let(:ems_stub)      { migration_stub(:ExtManagementSystem) }
 
   migration_context :up do
     it 'migrates Provider attributes to Endpoints' do
-      provider_stub.create!(
+      provider = provider_stub.create!(
         :verify_ssl => OpenSSL::SSL::VERIFY_NONE
+      )
+      ems_stub.create!(
+        :provider_id => provider.id
       )
 
       migrate
@@ -20,8 +24,11 @@ describe MigrateProviderAttributesToEndpoints do
     end
 
     it 'handles nil port value properly' do
-      provider_stub.create!(
+      provider = provider_stub.create!(
         :verify_ssl => nil
+      )
+      ems_stub.create!(
+        :provider_id => provider.id
       )
 
       migrate
@@ -35,8 +42,14 @@ describe MigrateProviderAttributesToEndpoints do
   migration_context :down do
     it 'migrates Endpoints to Provider attributes' do
       provider = provider_stub.create!
+      ems      = ems_stub.create!(
+        :provider_id => provider.id
+      )
       endpoint_stub.create!(
-        :verify_ssl => OpenSSL::SSL::VERIFY_NONE
+        :resource_type => "ExtManagementSystem",
+        :resource_id   => ems.id,
+        :role          => "default",
+        :verify_ssl    => OpenSSL::SSL::VERIFY_NONE
       )
 
       migrate
