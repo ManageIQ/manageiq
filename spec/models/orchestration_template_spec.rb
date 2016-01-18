@@ -70,6 +70,13 @@ describe OrchestrationTemplate do
         expect(alone_templates[0]).to eq(@template_alone)
       end
     end
+
+    describe ".destroy" do
+      it "allows only stand alone template to be destroyed" do
+        expect(@template_alone.destroy).to      be_truthy
+        expect(@template_with_stack.destroy).to be_falsey
+      end
+    end
   end
 
   describe "#eligible_managers" do

@@ -16,6 +16,8 @@ class OrchestrationTemplate < ActiveRecord::Base
             :unless     => :draft?
   validates_presence_of :name
 
+  before_destroy :check_not_in_use
+
   # Try to create the template if the name is not found in table
   def self.seed
     Dir.glob(TEMPLATE_DIR.join('*.yml')).each do |file|
@@ -133,5 +135,11 @@ class OrchestrationTemplate < ActiveRecord::Base
 
   def with_universal_newline(text)
     self.class.with_universal_newline(text)
+  end
+
+  def check_not_in_use
+    return true unless in_use?
+    errors[:base] << "Cannot delete the template while it is used by some orchestration stacks"
+    false
   end
 end
