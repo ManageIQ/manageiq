@@ -34,7 +34,7 @@ ManageIQ.angularApplication.controller('scheduleFormController', ['$http', '$sco
       $scope.scheduleModel.filter_typ = 'all';
       $scope.scheduleModel.enabled    = true;
       $scope.filterValuesEmpty        = true;
-      $scope.scheduleModel.start_date = moment(moment.utc().add(1, 'days').toDate()).format('MM/DD/YYYY');
+      $scope.scheduleModel.start_date = moment(moment.utc().toDate()).format('MM/DD/YYYY');
       $scope.scheduleModel.timer_typ  = 'Once';
       $scope.scheduleModel.time_zone  = 'UTC';
       $scope.scheduleModel.start_hour = '0';
