@@ -39,10 +39,8 @@ require 'appliance_console/errors'
 
 [:INT, :TERM, :ABRT, :TSTP].each { |s| trap(s) { raise MiqSignalError } }
 
-EVM_PID_FILE  = RAILS_ROOT.join("tmp/pids/evm.pid")
 REGION_FILE   = RAILS_ROOT.join("REGION")
 VERSION_FILE  = RAILS_ROOT.join("VERSION")
-BUILD_FILE    = RAILS_ROOT.join("BUILD")
 LOGFILE       = RAILS_ROOT.join("log", "appliance_console.log")
 DB_RESTORE_FILE = "/tmp/evm_db.backup"
 
