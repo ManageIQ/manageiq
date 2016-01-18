@@ -1105,7 +1105,9 @@ $(document).ajaxSend(function (event, request, settings) {
 
 function miqJqueryRequest(url, options) {
   options = options || {};
-  var ajax_options = {};
+  var ajax_options = {
+    type: 'POST',
+  };
 
   if (options.dataType === undefined) {
     ajax_options.accepts = {script: '*/*;q=0.5, ' + $.ajaxSettings.accepts.script};
@@ -1115,16 +1117,19 @@ function miqJqueryRequest(url, options) {
   if (options.data) {
     ajax_options.data = options.data;
   }
+
   if (options.beforeSend) {
     ajax_options.beforeSend = function (request) {
       miqSparkle(true);
     };
   }
+
   if (options.complete) {
     ajax_options.complete = function (request) {
       miqSparkle(false);
     };
   }
+
   $.ajax(options.no_encoding ? url : encodeURI(url), ajax_options);
 }
 
