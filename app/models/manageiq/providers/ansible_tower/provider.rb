@@ -5,6 +5,8 @@ class ManageIQ::Providers::AnsibleTower::Provider < ::Provider
           :dependent   => :destroy,
           :autosave    => true
 
+  has_many :endpoints, :as => :resource, :dependent => :destroy, :autosave => true
+
   before_validation :ensure_managers
 
   validates :name, :presence => true, :uniqueness => true
