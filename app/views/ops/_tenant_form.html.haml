@@ -37,9 +37,12 @@
         %label.col-md-2.control-label
           = _("Use Configuration Settings")
         .col-md-10
-          %input#use_config{"type"        => "checkbox",
-                            "name"        => "use_config_for_attributes",
-                            "ng-model"    => "tenantModel.use_config_for_attributes",
+          %input#use_config{"bs-switch"       => "",
+                            "type"            => "checkbox",
+                            "name"            => "use_config_for_attributes",
+                            "ng-model"        => "tenantModel.use_config_for_attributes",
+                            "switch-on-text"  => "Yes",
+                            "switch-off-text" => "No",
                             "checkchange" => ""}
       %input{"type" => "hidden", "name" => "divisible", "value" => "{{tenantModel.divisible}}"}
   = render :partial => "layouts/angular/x_edit_buttons_angular"

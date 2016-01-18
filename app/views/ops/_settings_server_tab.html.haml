@@ -224,9 +224,11 @@
         = _("Start TLS Automatically")
       .col-md-8
         = check_box_tag("smtp_enable_starttls_auto",
-                        GenericMailer.default_for_enable_starttls_auto ? "1" : "0",
-                        @edit[:new][:smtp][:enable_starttls_auto],
-                        "data-miq_observe_checkbox" => {:url => url}.to_json)
+                        GenericMailer.default_for_enable_starttls_auto,
+                        @edit[:new][:smtp][:enable_starttls_auto], :data => {:on_text => 'Yes', :off_text => 'No'})
+      :javascript
+        miqInitBootstrapSwitch('smtp_enable_starttls_auto', "#{url}")
+
     .form-group
       %label.col-md-2.control-label
         = _("SSL Verify Mode")

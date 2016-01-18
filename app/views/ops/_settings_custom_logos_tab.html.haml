@@ -93,5 +93,6 @@
       %label.col-md-2.control-label
         = _("Use Custom Login Text")
       .col-md-8
-        = check_box_tag("server_uselogintext", "1", @edit[:new][:server][:use_custom_login_text],
-                        "data-miq_observe_checkbox" => {:url => url}.to_json)
+        = check_box_tag("server_uselogintext", true, @edit[:new][:server][:use_custom_login_text], :data => {:on_text => 'Yes', :off_text => 'No'})
+      :javascript
+        miqInitBootstrapSwitch('server_uselogintext', "#{url}")

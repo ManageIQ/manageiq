@@ -27,7 +27,7 @@
           = _("Show in Console")
         .col-md-8
           - checked = !!@edit[:new][:show]
-          = check_box_tag("show", 1, checked,
+          = check_box_tag("show", true, checked,
                           "data-miq_observe_checkbox" => {:url => url}.to_json)
       .form-group
         %label.col-md-2.control-label
@@ -35,16 +35,18 @@
         .col-md-8
           - checked = !!@edit[:new][:single_value]
           - disabled = true
-          = check_box_tag("single_value", 1, checked,
-                          :disabled                   => disabled,
-                          "data-miq_observe_checkbox" => {:url => url}.to_json)
+          = check_box_tag("single_value", 'true', checked,
+                          :disabled                   => disabled, :data => {:on_text => 'Yes', :off_text => 'No'})
+        :javascript
+          miqInitBootstrapSwitch('single_value', "#{url}")
       .form-group
         %label.col-md-2.control-label
           = _("Capture C & U Data by Tag")
         .col-md-8
           - checked = !!@edit[:new][:perf_by_tag]
-          = check_box_tag("perf_by_tag", 1, checked,
-                          "data-miq_observe_checkbox" =>  {:url => url}.to_json)
+          = check_box_tag("perf_by_tag", true, checked, :data => {:on_text => 'Yes', :off_text => 'No'})
+        :javascript
+          miqInitBootstrapSwitch('perf_by_tag', "#{url}")
       .form-group
         %label.col-md-2.control-label
         .col-md-8
@@ -87,22 +89,25 @@
           = _("Show in Console")
         .col-md-8
           - checked = !!@edit[:new][:show]
-          = check_box_tag("show", 1, checked,
-                          "data-miq_observe_checkbox" => {:url => url}.to_json)
+          = check_box_tag("show", true, checked, :data => {:on_text => 'Yes', :off_text => 'No'})
+        :javascript
+          miqInitBootstrapSwitch('show', "#{url}")
       .form-group
         %label.col-md-2.control-label
           = _("Single Value")
         .col-md-8
           - checked = !!@edit[:new][:single_value]
-          = check_box_tag("single_value", 1, checked,
-                          :disabled                   => disabled,
-                          "data-miq_observe_checkbox" => {:url => url}.to_json)
+          = check_box_tag("single_value", true, checked,
+                          :disabled                   => disabled, :data => {:on_text => 'Yes', :off_text => 'No'})
+        :javascript
+          miqInitBootstrapSwitch('single_value', "#{url}")
       .form-group
         %label.col-md-2.control-label
           = _("Capture C & U Data by Tag")
         .col-md-8
           - checked = !!@edit[:new][:perf_by_tag]
-          = check_box_tag("perf_by_tag", 1, checked,
-                          "data-miq_observe_checkbox" => {:url => url}.to_json)
+          = check_box_tag("perf_by_tag", true, checked, :data => {:on_text => 'Yes', :off_text => 'No'})
+        :javascript
+          miqInitBootstrapSwitch('perf_by_tag', "#{url}")
 
   = _("* 'Name' and 'Single Value' fields cannot be edited after adding a category.")

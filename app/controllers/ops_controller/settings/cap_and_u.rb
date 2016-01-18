@@ -66,8 +66,8 @@ module OpsController::Settings::CapAndU
     # need to create an array of items, if their or their children's capture has been changed then make the changed one blue.
     render :update do |page|                    # Use JS to update the display
       page.replace_html(@refresh_div, :partial => @refresh_partial) if @refresh_div
-      page << "$('#clusters_div').#{params[:all_clusters] == "1" ? "hide" : "show"}()" if params[:all_clusters]
-      page << "$('#storages_div').#{params[:all_storages] == "1" ? "hide" : "show"}()" if params[:all_storages]
+      page << "$('#clusters_div').#{params[:all_clusters] == 'true' ? "hide" : "show"}()" if params[:all_clusters]
+      page << "$('#storages_div').#{params[:all_storages] == 'true' ? "hide" : "show"}()" if params[:all_storages]
       if params[:id] || params[:check_all] # || (params[:tree_name] == "cu_datastore_tree" && params[:check_all])
         if (params[:id] && params[:id].split('_')[0] == "Datastore") || (params[:tree_name] == "cu_datastore_tree" && params[:check_all])
           # change nodes to blue if they were changed during current edit session
@@ -214,8 +214,8 @@ module OpsController::Settings::CapAndU
       nodetype = params[:id].split(':')
       node_type = nodetype.length >= 2 ? nodetype[1].split('_') : nodetype[0].split('_')
     end
-    @edit[:new][:all_clusters] = params[:all_clusters] == "1" if params[:all_clusters]
-    @edit[:new][:all_storages] = params[:all_storages] == "1" if params[:all_storages]
+    @edit[:new][:all_clusters] = params[:all_clusters] == 'true' if params[:all_clusters]
+    @edit[:new][:all_storages] = params[:all_storages] == 'true' if params[:all_storages]
     if params[:tree_name] == "clhosts_tree"     # User checked/unchecked a cluster tree node
       if params[:check_all]                         # to handle check/uncheck cluster all checkbox
         @edit[:new][:clusters].each do |c|                                  # Check each clustered host

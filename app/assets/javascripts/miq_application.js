@@ -1179,6 +1179,18 @@ function miqAccordSelect(e) {
   }
 }
 
+function miqInitBootstrapSwitch(element, url, options){
+  $("[name="+element+"]").bootstrapSwitch();
+
+  $('#' + element).on('switchChange.bootstrapSwitch', function(event, state){
+    options =  typeof options !== 'undefined' ? options : {}
+    options['no_encoding'] = true;
+
+    var firstarg = ! _.contains(url, '?');
+    miqJqueryRequest(url + (firstarg ? '?' : '&') + element + '=' + state, options);
+    return true;
+  });
+}
 // Function to expand/collapse a pair of accordions
 function miqAccordionSwap(collapse, expand) {
   /*

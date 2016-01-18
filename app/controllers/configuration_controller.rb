@@ -729,15 +729,15 @@ class ConfigurationController < ApplicationController
     @edit = session[:edit]
     case @tabform
     when "ui_1"                                               # Visual Settings tab
-      @edit[:new][:quadicons][:ems] = params[:quadicons_ems] == "1" if params[:quadicons_ems]
-      @edit[:new][:quadicons][:ems_cloud] = params[:quadicons_ems_cloud] == "1" if params[:quadicons_ems_cloud]
-      @edit[:new][:quadicons][:host] = params[:quadicons_host] == "1" if params[:quadicons_host]
-      @edit[:new][:quadicons][:vm] = params[:quadicons_vm] == "1" if params[:quadicons_vm]
-      @edit[:new][:quadicons][:miq_template] = params[:quadicons_miq_template] == "1" if params[:quadicons_miq_template]
+      @edit[:new][:quadicons][:ems] = params[:quadicons_ems] == "true" if params[:quadicons_ems]
+      @edit[:new][:quadicons][:ems_cloud] = params[:quadicons_ems_cloud] == "true" if params[:quadicons_ems_cloud]
+      @edit[:new][:quadicons][:host] = params[:quadicons_host] == "true" if params[:quadicons_host]
+      @edit[:new][:quadicons][:vm] = params[:quadicons_vm] == "true" if params[:quadicons_vm]
+      @edit[:new][:quadicons][:miq_template] = params[:quadicons_miq_template] == "true" if params[:quadicons_miq_template]
       if get_vmdb_config[:product][:proto] # Hide behind proto setting - Sprint 34
-        @edit[:new][:quadicons][:service] = params[:quadicons_service] == "1" if params[:quadicons_service]
+        @edit[:new][:quadicons][:service] = params[:quadicons_service] == "true" if params[:quadicons_service]
       end
-      @edit[:new][:quadicons][:storage] = params[:quadicons_storage] == "1" if params[:quadicons_storage]
+      @edit[:new][:quadicons][:storage] = params[:quadicons_storage] == "true" if params[:quadicons_storage]
       @edit[:new][:perpage][:grid] = params[:perpage_grid].to_i if params[:perpage_grid]
       @edit[:new][:perpage][:tile] = params[:perpage_tile].to_i if params[:perpage_tile]
       @edit[:new][:perpage][:list] = params[:perpage_list].to_i if params[:perpage_list]
