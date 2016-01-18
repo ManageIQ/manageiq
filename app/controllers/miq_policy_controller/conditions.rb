@@ -157,7 +157,7 @@ module MiqPolicyController::Conditions
 
     if params[:copy]  # If copying, create a new condition based on the original
       c = Condition.find(params[:id])
-      @condition = Condition.new(c.attributes.merge(:name => nil))
+      @condition = Condition.new(c.attributes.merge(:name => nil, :id => nil))
     else
       @condition = params[:id] && params[:typ] != "new" ? Condition.find(params[:id]) : Condition.new     # Get existing or new record
     end
