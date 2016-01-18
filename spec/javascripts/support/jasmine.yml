@@ -11,6 +11,7 @@
 #   - dist/**/*.js
 #
 src_files:
+  - __spec__/helpers/i18n-test.js
   - assets/application
   - assets/jasmine-jquery
   - assets/angular-mocks
