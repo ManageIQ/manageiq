@@ -109,12 +109,12 @@ module MiqAeMethodService
         if results.nil?
           ret = nil
         elsif results.kind_of?(Array)
-          ret = drb_return(results.collect { |r| wrap_results(r) })
+          ret = results.collect { |r| wrap_results(r) }
         elsif results.kind_of?(ActiveRecord::Relation)
-          ret = drb_return(results.collect { |r| wrap_results(r) })
+          ret = results.collect { |r| wrap_results(r) }
         elsif results.kind_of?(ActiveRecord::Base)
           klass = MiqAeMethodService.const_get("MiqAeService#{results.class.name.gsub(/::/, '_')}")
-          ret = drb_return(klass.new(results))
+          ret = klass.new(results)
         else
           ret = results
         end
@@ -124,14 +124,6 @@ module MiqAeMethodService
 
     def wrap_results(results)
       self.class.wrap_results(results)
-    end
-
-    def self.drb_return(obj)
-      MiqAeService.current ? MiqAeService.current.drb_return(obj) : obj
-    end
-
-    def drb_return(obj)
-      self.class.drb_return(obj)
     end
 
     #
