@@ -70,6 +70,11 @@ class ApiController
         :role       => group.miq_user_role_name,
         :tenant     => group.tenant.name,
         :groups     => user.miq_groups.pluck(:description),
+      }
+    end
+
+    def user_settings
+      {
         :locale     => I18n.locale.to_s.sub('-', '_'),
       }
     end

@@ -11,6 +11,7 @@ class ApiController
         :version     => @version,
         :versions    => entrypoint_versions,
         :identity    => auth_identity,
+        :settings    => user_settings,
         :collections => entrypoint_collections
       }
       render_resource :entrypoint, res
