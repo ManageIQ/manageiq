@@ -140,12 +140,9 @@ class MiqStorageMetric < ActiveRecord::Base
   end
 
   def self.metrics_count_by_date(older_than, metrics_classes)
-    count = 0
-    metrics_classes.each do |mc|
-      conditions = mc.arel_table[:statistic_time].lt(older_than)
-      count += mc.where(conditions).count
-    end
-    count
+    metrics_classes.collect do |mc|
+      mc.where(mc.arel_table[:statistic_time].lt(older_than)).count
+    end.sum
   end
   private_class_method :metrics_count_by_date
 
@@ -178,20 +175,13 @@ class MiqStorageMetric < ActiveRecord::Base
 
   def self.purge(older_than, rollup_type, window, metrics_classes)
     window ||= purge_window_size
-    gtotal = 0
-    metrics_classes.each do |mc|
-      conditions = mc.arel_table[:statistic_time].lt(older_than)
-      query = mc.select(:id).where(conditions)
+    metrics_classes.map do |mc|
+      query = mc.where(mc.arel_table[:statistic_time].lt(older_than))
       query = query.where(:rollup_type => rollup_type) unless rollup_type.nil?
-      total = 0
-      query.find_in_batches(:batch_size => window) do |ma|
-        ids = ma.collect(&:id)
-        total += mc.delete_all(:id => ids)
+      query.delete_in_batches(window).tap do |total|
+        _log.info "Purged #{total} records from #{mc.name} table."
       end
-      gtotal += total
-      _log.info "Purged #{total} records from #{mc.name} table."
-    end
-    gtotal
+    end.sum
   end
   private_class_method :purge
 
@@ -232,7 +222,7 @@ class MiqStorageMetric < ActiveRecord::Base
   # Called directly from MiqStorageMetric.
   #
   def self.metrics_rollup_class_names
-    subclasses.map(&:metrics_rollup_class_name)
+    subclasses.map(&:metrics_rollup_class_name).compact
   end
 
   #
@@ -249,7 +239,7 @@ class MiqStorageMetric < ActiveRecord::Base
   # Constant defined in subclass.
   #
   def self.derived_metrics_class_name
-    self::DERIVED_METRICS_CLASS_NAME unless self.const_defined?(:DERIVED_METRICS_CLASS_NAME)
+    self::DERIVED_METRICS_CLASS_NAME if self.const_defined?(:DERIVED_METRICS_CLASS_NAME)
   end
 
   #

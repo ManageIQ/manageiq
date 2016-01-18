@@ -237,52 +237,33 @@ describe EmsEvent do
         @new_event        = FactoryGirl.create(:ems_event, :timestamp => purge_date + 1.day)
       end
 
-      def assert_delete_calls_and_unpurged_ids(options)
-        expect(described_class).to receive(:delete_all).public_send(options[:delete_calls]).and_call_original
-        described_class.purge(purge_date, options[:window], options[:limit])
-        expect(described_class.order(:id).pluck(:id)).to eq(Array(options[:unpurged_ids]).sort)
+      def assert_unpurged_ids(unpurged_ids)
+        expect(described_class.order(:id).pluck(:id)).to eq(Array(unpurged_ids).sort)
       end
 
       it "purge_date and older" do
-        assert_delete_calls_and_unpurged_ids(
-          :delete_calls => :once,
-          :unpurged_ids => @new_event.id
-        )
+        described_class.purge(purge_date)
+        assert_unpurged_ids(@new_event.id)
       end
 
       it "with a window" do
-        assert_delete_calls_and_unpurged_ids(
-          :delete_calls => :twice,
-          :unpurged_ids => @new_event.id,
-          :window       => 1
-        )
+        described_class.purge(purge_date, 1)
+        assert_unpurged_ids(@new_event.id)
       end
 
       it "with a limit" do
-        assert_delete_calls_and_unpurged_ids(
-          :delete_calls => :once,
-          :unpurged_ids => [@purge_date_event.id, @new_event.id],
-          :window       => nil,
-          :limit        => 1
-        )
+        described_class.purge(purge_date, nil, 1)
+        assert_unpurged_ids([@purge_date_event.id, @new_event.id])
       end
 
       it "with window > limit" do
-        assert_delete_calls_and_unpurged_ids(
-          :delete_calls => :once,
-          :unpurged_ids => [@purge_date_event.id, @new_event.id],
-          :window       => 2,
-          :limit        => 1
-        )
+        described_class.purge(purge_date, 2, 1)
+        assert_unpurged_ids([@purge_date_event.id, @new_event.id])
       end
 
       it "with limit > window" do
-        assert_delete_calls_and_unpurged_ids(
-          :delete_calls => :twice,
-          :unpurged_ids => @new_event.id,
-          :window       => 1,
-          :limit        => 2
-        )
+        described_class.purge(purge_date, 1, 2)
+        assert_unpurged_ids(@new_event.id)
       end
     end
   end
