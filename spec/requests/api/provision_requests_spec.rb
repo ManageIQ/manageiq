@@ -104,4 +104,64 @@ describe ApiController do
       expect(MiqProvisionRequest.exists?(task_id2)).to be_truthy
     end
   end
+
+  context "Provision requests approval" do
+    let(:user)      { FactoryGirl.create(:user) }
+    let(:template)  { FactoryGirl.create(:template_amazon) }
+    let(:provreq1)  { FactoryGirl.create(:miq_provision_request,
+                                         :requester   => user,
+                                         :source_type => 'VmOrTemplate',
+                                         :source_id   => template.id) }
+    let(:provreq2)  { FactoryGirl.create(:miq_provision_request,
+                                         :requester   => user,
+                                         :source_type => 'VmOrTemplate',
+                                         :source_id   => template.id) }
+    let(:provreq1_url)  { provision_requests_url(provreq1.id) }
+    let(:provreq2_url)  { provision_requests_url(provreq2.id) }
+    let(:provreqs_list) { [provreq1_url, provreq2_url] }
+
+    it "supports approving a request" do
+      api_basic_authorize collection_action_identifier(:provision_requests, :approve)
+
+      run_post(provreq1_url, gen_request(:approve))
+
+      expect_single_action_result(:success => true, :message => "Provision request #{provreq1.id} approved", :href => :provreq1_url)
+    end
+
+    it "supports denying a request" do
+      api_basic_authorize collection_action_identifier(:provision_requests, :approve)
+
+      run_post(provreq2_url, gen_request(:deny))
+
+      expect_single_action_result(:success => true, :message => "Provision request #{provreq2.id} denied", :href => :provreq2_url)
+    end
+
+    it "supports approving multiple requests" do
+      api_basic_authorize collection_action_identifier(:provision_requests, :approve)
+
+      run_post(provision_requests_url, gen_request(:approve, [{"href" => provreq1_url}, {"href" => provreq2_url}]))
+
+      expect_multiple_action_result(2)
+      expect_result_resources_to_include_hrefs("results", :provreqs_list)
+      expect_result_resources_to_match_key_data(
+        "results",
+        "message",
+        [/Provision request #{provreq1.id} approved/i, /Provision request #{provreq2.id} approved/i]
+      )
+    end
+
+    it "supports denying multiple requests" do
+      api_basic_authorize collection_action_identifier(:provision_requests, :approve)
+
+      run_post(provision_requests_url, gen_request(:deny, [{"href" => provreq1_url}, {"href" => provreq2_url}]))
+
+      expect_multiple_action_result(2)
+      expect_result_resources_to_include_hrefs("results", :provreqs_list)
+      expect_result_resources_to_match_key_data(
+        "results",
+        "message",
+        [/Provision request #{provreq1.id} denied/i, /Provision request #{provreq2.id} denied/i]
+      )
+    end
+  end
 end
