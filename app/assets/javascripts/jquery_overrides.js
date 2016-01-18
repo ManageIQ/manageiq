@@ -13,7 +13,6 @@ jQuery.evalLog = function (text) {
 };
 
 $.ajaxSetup({
-  type: "POST", // Set default request method for jQuery
   converters: { // Log exceptions when evaling javascripts
     "text script": function( text ) {
       jQuery.evalLog.call(this, text);

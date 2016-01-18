@@ -3183,7 +3183,8 @@ $.ui.dynatree.prototype.options = {
 	ajaxDefaults: { // Used by initAjax option
 		cache: false, // false: Append random '_' argument to the request url to prevent caching.
 		timeout: 0, // >0: Make sure we get an ajax error for invalid URLs
-		dataType: "json" // Expect json format and pass json object to callbacks.
+		dataType: "json", // Expect json format and pass json object to callbacks.
+		type: "POST"
 	},
 	strings: {
 		loading: "Loading&#8230;",

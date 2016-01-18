@@ -133,6 +133,7 @@ source "https://rails-assets.org" do
   gem "rails-assets-bootstrap-select",                "~>1.7.3"
   gem "rails-assets-c3",                              "~>0.4.10"
   gem "rails-assets-himdel--jquery.observe_field",    "~>0.1.0"
+  gem "rails-assets-jasmine-jquery",                  "~>2.1.1"
   gem "rails-assets-jquery-1.8",                      "~>1.8.3"
   gem "rails-assets-jquery-ujs",                      "~>1.1.0"
   gem "rails-assets-jqueryui",                        "~>1.9.2"
