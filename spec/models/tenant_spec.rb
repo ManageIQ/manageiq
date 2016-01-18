@@ -808,4 +808,54 @@ describe Tenant do
       expect(combined[:templates_allocated][:used]).to        eql 2
     end
   end
+
+  describe ".tenant_and_project_names" do
+    let(:config) { {:server => {:company => "root"}} }
+
+    # root
+    #   ten1
+    #     ten2
+    it "builds names with dots" do
+      ten1 = FactoryGirl.create(:tenant, :name => "ten1", :parent => root_tenant)
+      ten2 = FactoryGirl.create(:tenant, :name => "ten2", :parent => ten1)
+
+      tenants, projects = Tenant.tenant_and_project_names
+      expect(tenants).to eq([["root", root_tenant.id], ["root.ten1", ten1.id], ["root.ten1.ten2", ten2.id]])
+      expect(projects).to be_empty
+    end
+
+    # root
+    #   proj1
+    #   proj2
+    it "separates projects" do
+      proj2 = FactoryGirl.create(:tenant, :name => "proj2", :divisible => false, :parent => root_tenant)
+      proj1 = FactoryGirl.create(:tenant, :name => "proj1", :divisible => false, :parent => root_tenant)
+
+      tenants, projects = Tenant.tenant_and_project_names
+      expect(tenants).to eq([["root", root_tenant.id]])
+      expect(projects).to eq([["root.proj1", proj1.id], ["root.proj2", proj2.id]])
+    end
+
+    # root
+    #   proj3
+    #   ten1
+    #     proj1
+    #   ten2
+    #     proj2
+    #   ten3
+    it "separates tenants from projects" do
+      FactoryGirl.create(:tenant, :name => "ten3", :parent => root_tenant)
+      ten1 = FactoryGirl.create(:tenant, :name => "ten1", :parent => root_tenant)
+      ten2 = FactoryGirl.create(:tenant, :name => "ten2", :parent => root_tenant)
+      FactoryGirl.create(:tenant, :name => "proj2", :divisible => false, :parent => ten2)
+      FactoryGirl.create(:tenant, :name => "proj1", :divisible => false, :parent => ten1)
+      FactoryGirl.create(:tenant, :name => "proj3", :divisible => false, :parent => root_tenant)
+
+      tenants, projects = Tenant.tenant_and_project_names
+      expect(tenants.map(&:first)).to eq(%w(root root.ten1 root.ten2 root.ten3))
+      expect(tenants.first.last).to eq(root_tenant.id)
+
+      expect(projects.map(&:first)).to eq(%w(root.proj3 root.ten1.proj1 root.ten2.proj2))
+    end
+  end
 end

@@ -242,6 +242,29 @@ class Tenant < ActiveRecord::Base
     end
   end
 
+  # tenant
+  #   tenant2
+  #     project4 (!divisible)
+  #   tenant3
+  # @return [Array(Array<Array(String, Numeric)>, Array<Array(String, Numeric)>) ] tenants and projects
+  #   e.g.:
+  #   [
+  #     [["tenant", 1], ["tenant/tenant2", 2]], ["tenant/tenant3", 3]]
+  #     [["tenant/tenant2/project4", 4]]
+  #   ]
+  def self.tenant_and_project_names
+    tenants_and_projects = Tenant.select(:id, :ancestry, :divisible, :use_config_for_attributes, :name)
+                           .to_a.sort_by { |t| [t.ancestry || "", t.name] }
+    tenants_by_id = tenants_and_projects.index_by(&:id)
+
+    tenants_and_projects.partition(&:divisible?).map do |tenants|
+      tenants.map do |t|
+        all_names = (t.ancestor_ids + [t.id]).map { |tid| tenants_by_id[tid] }.map(&:name)
+        [all_names.join("."), t.id]
+      end.sort_by(&:first)
+    end
+  end
+
   private
 
   # when a root tenant has an attribute with a nil value,
