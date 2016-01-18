@@ -19,6 +19,8 @@ class ApplicationHelper::ToolbarButtons
       ApplicationHelper::Button::OldDialogsEditDelete
     when 'collect_logs', 'collect_current_logs', 'zone_collect_logs', 'zone_collect_current_logs'
       ApplicationHelper::Button::CollectLogs
+    when 'view_grid', 'view_tile', 'view_list'
+      ApplicationHelper::Button::View
     else
       ApplicationHelper::Button::Basic
     end
