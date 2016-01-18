@@ -162,11 +162,21 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
         described_class.new({:src_vm_id => template.id}, admin.userid)
       end
 
-      context "with empty relationships" do
-        it "#allowed_instance_types" do
-          expect(workflow.allowed_instance_types).to eq({})
-        end
+      context "#allowed_instance_types" do
+        let(:hardware) { FactoryGirl.create(:hardware, :size_on_disk => 1.gigabyte, :memory_mb_minimum => 512) }
+        let(:template) { FactoryGirl.create(:template_openstack, :hardware => hardware, :ext_management_system => provider) }
 
+        it "filters flavors too small" do
+          flavor = FactoryGirl.create(:flavor_openstack, :memory => 1.gigabyte, :root_disk_size => 1.terabyte)
+          provider.flavors << flavor
+          provider.flavors << FactoryGirl.create(:flavor_openstack, :memory => 1.gigabyte, :root_disk_size => 1.megabyte) # Disk too small
+          provider.flavors << FactoryGirl.create(:flavor_openstack, :memory => 1.megabyte, :root_disk_size => 1.terabyte) # Memory too small
+
+          expect(workflow.allowed_instance_types).to eq(flavor.id => flavor.name)
+        end
+      end
+
+      context "with empty relationships" do
         it "#allowed_availability_zones" do
           expect(workflow.allowed_availability_zones).to eq({})
         end
@@ -181,12 +191,6 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
       end
 
       context "with valid relationships" do
-        it "#allowed_instance_types" do
-          flavor = FactoryGirl.create(:flavor, :name => "flavor_1")
-          provider.flavors << flavor
-          expect(workflow.allowed_instance_types).to eq(flavor.id => flavor.name)
-        end
-
         it "#allowed_availability_zones" do
           az = FactoryGirl.create(:availability_zone_openstack)
           provider.availability_zones << az
