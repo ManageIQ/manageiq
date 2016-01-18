@@ -8,8 +8,13 @@
     = render_toolbars
 
     - if @record
+      - # Temporal solution. Only for Chargeback because @record is a array with compute and Storage rate
+      - if @record[0].nil?
+        - id = @record.id
+      - else
+        - id = @record[0].id
       :javascript
-        ManageIQ.record.recordId = '#{@record.id}';
+        ManageIQ.record.recordId = '#{id}';
     - else
       :javascript
         ManageIQ.record.recordId = null;
