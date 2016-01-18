@@ -51,6 +51,5 @@
       :url: 'x_history?item=10'
   - :button: summary_reload
     :icon: fa fa-repeat fa-lg
-    :image: reload
     :title: "Reload current display"
     :url: 'reload'

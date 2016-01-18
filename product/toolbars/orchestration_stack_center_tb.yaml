@@ -7,17 +7,17 @@
 - :name: orchestration_stack_vmdb
   :items:
   - :buttonSelect: orchestration_stack_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
 #    - :button: orchestration_stack_edit
-#      :image: edit
+#      :icon: pficon pficon-edit fa-lg
 #      :text: 'Edit this #{ui_lookup(:table=>"orchestration_stack")}'
 #      :title: 'Edit this #{ui_lookup(:table=>"orchestration_stack")}'
 #      :url: '/edit'
     - :button: orchestration_stack_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: 'Remove this #{ui_lookup(:table=>"orchestration_stack")} from the VMDB'
       :title: 'Remove this #{ui_lookup(:table=>"orchestration_stack")} from the VMDB'
       :url_parms: '&refresh=y'
@@ -25,27 +25,27 @@
 - :name: orchestration_stack_policy
   :items:
   - :buttonSelect: orchestration_stack_policy_choice
-    :image: policy
+    :icon: fa fa-shield fa-lg
     :title: Policy
     :text: Policy
     :items:
     - :button: orchestration_stack_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: 'Edit Tags for this #{ui_lookup(:tables=>"orchestration_stack")}'
 - :name: orchestration_stack_lifecycle
   :items:
   - :buttonSelect: orchestration_stack_lifecycle_choice
-    :image: lifecycle
+    :icon: fa fa-recycle fa-lg
     :title: Lifecycle
     :text: Lifecycle
     :items:
     - :button: orchestration_stack_retire
-      :image: retire
+      :icon: fa fa-clock-o fa-lg
       :text: "Set Retirement Date"
       :title: "Set Retirement Dates for this Orchestration Stack"
     - :button: orchestration_stack_retire_now
-      :image: retire_now
+      :icon: fa fa-clock-o fa-lg
       :text: "Retire this Orchestration Stack"
       :title: "Retire this Orchestration Stack"
       :confirm: "Retire this Orchestration Stack"

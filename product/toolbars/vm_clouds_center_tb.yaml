@@ -7,14 +7,14 @@
 - :name: instance_vmdb
   :items:
   - :buttonSelect: instance_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :enabled: 'false'
     :onwhen: '1+'
     :items:
     - :button: instance_refresh
-      :image: refresh
+      :icon: fa fa-refresh fa-lg
       :text: "Refresh Relationships and Power States"
       :title: "Refresh relationships and power states for all items related to the selected items"
       :url_parms: 'main_div'
@@ -22,7 +22,7 @@
       :enabled: 'false'
       :onwhen: '1+'
     - :button: instance_scan
-      :image: scan
+      :icon: fa fa-search fa-lg
       :text: "Perform SmartState Analysis"
       :title: "Perform SmartState Analysis on the selected items"
       :url_parms: 'main_div'
@@ -30,7 +30,7 @@
       :enabled: 'false'
       :onwhen: '1+'
     - :button: instance_compare
-      :image: compare
+      :icon: product product-compare fa-lg
       :text: "Compare Selected items"
       :title: "Select two or more items to compare"
       :url_parms: 'main_div'
@@ -38,21 +38,21 @@
       :onwhen: '2+'
     - :separator:
     - :button: instance_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: Edit Selected item
       :title: Select a single item to edit
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
     - :button: instance_ownership
-      :image: ownership
+      :icon: pficon pficon-user fa-lg
       :text: "Set Ownership"
       :title: "Set Ownership for the selected items"
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1+'
     - :button: instance_delete
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: Remove selected items from the VMDB
       :title: Remove selected items from the VMDB
       :url_parms: 'main_div'
@@ -63,35 +63,35 @@
 - :name: instance_policy
   :items:
   - :buttonSelect: instance_policy_choice
-    :image: policy
+    :icon: fa fa-shield fa-lg
     :title: Policy
     :text: Policy
     :enabled: 'false'
     :onwhen: '1+'
     :items:
     - :button: instance_protect
-      :image: protect
+      :icon: pficon pficon-edit fa-lg
       :text: "Manage Policies"
       :title: "Manage Policies for the selected items"
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1+'
     - :button: instance_policy_sim
-      :image: vm_policy_sim
+      :icon: fa fa-play-circle-o fa-lg
       :text: "Policy Simulation"
       :title: "View Policy Simulation for the selected items"
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1+'
     - :button: instance_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: "Edit tags for the selected items"
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1+'
     - :button: instance_check_compliance
-      :image: compliance
+      :icon: fa fa-search fa-lg
       :text: "Check Compliance of Last Known Configuration"
       :title: "Check Compliance of the last known configuration for the selected items"
       :url_parms: 'main_div'
@@ -101,24 +101,24 @@
 - :name: instance_lifecycle
   :items:
   - :buttonSelect: instance_lifecycle_choice
-    :image: lifecycle
+    :icon: fa fa-recycle fa-lg
     :title: Lifecycle
     :text: Lifecycle
     :items:
     - :button: instance_miq_request_new
-      :image: new
+      :icon: pficon pficon-add-circle-o fa-lg
       :url_parms: 'main_div'
       :text: "Provision Instances"
       :title: "Request to Provision Instances"
     - :button: instance_retire
-      :image: retire
+      :icon: fa fa-clock-o fa-lg
       :text: "Set Retirement Dates"
       :title: "Set Retirement Dates for the selected items"
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1+'
     - :button: instance_retire_now
-      :image: retire_now
+      :icon: fa fa-clock-o fa-lg
       :text: "Retire selected items"
       :title: "Retire the selected items"
       :url_parms: 'main_div'
@@ -128,7 +128,7 @@
 - :name: instance_operations
   :items:
   - :buttonSelect: instance_power_choice
-    :image: power_choice
+    :icon: fa fa-power-off fa-lg
     :title: Power Operations
     :text: Power
     :enabled: 'false'

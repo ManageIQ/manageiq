@@ -7,22 +7,22 @@
 - :name: miq_alert_profile_vmdb
   :items:
   - :buttonSelect: miq_alert_profile_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: alert_profile_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit this Alert Profile'
       :title: 'Edit this Alert Profile'
       :url_parms: 'main_div'
     - :button: alert_profile_assign
-      :image: edit-assign
+      :icon: pficon pficon-edit fa-lg-assign
       :text: 'Edit assignments for this Alert Profile'
       :title: 'Edit assignments for this Alert Profile'
       :url_parms: 'main_div'
     - :button: alert_profile_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: 'Delete this Alert Profile'
       :title: 'Delete this Alert Profile'
       :url_parms: 'main_div'

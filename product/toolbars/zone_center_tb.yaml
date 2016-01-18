@@ -7,16 +7,16 @@
 - :name: zone_vmdb
   :items:
   - :buttonSelect: zone_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: zone_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit this Zone"
       :title: "Edit this Zone"
     - :button: zone_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: "Delete this Zone"
       :title: "Delete this Zone"
       :url_parms: '&refresh=y'

@@ -7,26 +7,26 @@
 - :name: record_summary
   :items:
   - :buttonSelect: provider_foreman_lifecycle_choice
-    :image: lifecycle
+    :icon: fa fa-recycle fa-lg
     :title: Lifecycle
     :text: Lifecycle
     :enabled: 'true'
     :items:
     - :button: configured_system_provision
-      :image: new
+      :icon: pficon pficon-add-circle-o fa-lg
       :text: "Provision Configured System"
       :title: "Provision Configured System"
       :url: provision
       :url_parms: 'main_div'
       :enabled: 'true'
   - :buttonSelect: provider_foreman_policy_choice
-    :image: policy
+    :icon: fa fa-shield fa-lg
     :title: Policy
     :text: Policy
     :enabled: 'true'
     :items:
     - :button: configured_system_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: "Edit Tags for this Configured System"
       :url: tagging

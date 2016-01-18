@@ -222,16 +222,31 @@
   content: "\e62d";
 }
 .product-compare:before {
-    content: "\e62e";
+  content: "\e62e";
 }
 .product-compare_same:before {
-    content: "\e62e";
+  content: "\e62e";
 }
 .product-compare_diff:before {
-    content: "\e62f";
+  content: "\e62f";
 }
 .product-compare_all:before {
-    content: "\e630";
+  content: "\e630";
+}
+.product-clone:before { //replace with fa-clone when font awesome v4.4 is available in Patternfly
+  content: "\e631";
+}
+.product-migrate:before {
+  content: "\e632";
+}
+.product-monitoring:before {
+  content: "\e633";
+}
+.product-timeline:before {
+  content: "\e634";
+}
+.product-drift:before {
+  content: "\e635";
 }
 
 /* define  colors */

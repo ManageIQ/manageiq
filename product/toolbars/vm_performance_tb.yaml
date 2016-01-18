@@ -6,7 +6,7 @@
 - :name: perf_tasks
   :items:
   - :button: perf_refresh
-    :image: refresh
+    :icon: fa fa-refresh fa-lg
     :title: "Initiate refresh of recent C&U data"
     :confirm: "Initiate refresh of recent C&U data?"
   - :button: perf_reload

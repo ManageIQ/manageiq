@@ -68,7 +68,7 @@ describe ApplicationHelper do
         escaped_button1_text = CGI.escapeHTML(@button1.name.to_s)
         button1 = {
           :button    => "custom__custom_#{@button1.id}",
-          :icon      => "product product-custom-#{@button1.options[:button_image]}",
+          :icon      => "product product-custom-#{@button1.options[:button_image]} fa-lg",
           :title     => CGI.escapeHTML(@button1.description.to_s),
           :text      => escaped_button1_text,
           :enabled   => "true",
@@ -78,7 +78,7 @@ describe ApplicationHelper do
         button_set_item1_items = [button1]
         button_set_item1 = {
           :buttonSelect => "custom_#{@button_set.id}",
-          :icon         => "product product-custom-#{@button_set.set_data[:button_image]}",
+          :icon         => "product product-custom-#{@button_set.set_data[:button_image]} fa-lg",
           :title        => @button_set.description,
           :text         => @button_set.name,
           :enabled      => "true",
@@ -93,7 +93,7 @@ describe ApplicationHelper do
         escaped_button1_text = CGI.escapeHTML(@button1.name.to_s)
         button1 = {
           :button    => "custom__custom_#{@button1.id}",
-          :icon      => "product product-custom-#{@button1.options[:button_image]}",
+          :icon      => "product product-custom-#{@button1.options[:button_image]} fa-lg",
           :title     => CGI.escapeHTML(@button1.description.to_s),
           :text      => escaped_button1_text,
           :enabled   => "true",
@@ -103,7 +103,7 @@ describe ApplicationHelper do
         button_set_item1_items = [button1]
         button_set_item1 = {
           :buttonSelect => "custom_#{@button_set.id}",
-          :icon         => "product product-custom-#{@button_set.set_data[:button_image]}",
+          :icon         => "product product-custom-#{@button_set.set_data[:button_image]} fa-lg",
           :title        => @button_set.description,
           :text         => @button_set.name,
           :enabled      => "true",

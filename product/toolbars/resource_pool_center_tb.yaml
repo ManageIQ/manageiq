@@ -7,12 +7,12 @@
 - :name: resource_pool_vmdb
   :items:
   - :buttonSelect: resource_pool_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: resource_pool_delete
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: "Remove from the VMDB"
       :title: "Remove this Resource Pool from the VMDB"
       :url_parms: '&refresh=y'
@@ -20,16 +20,15 @@
 - :name: resource_pool_policy
   :items:
   - :buttonSelect: resource_pool_policy_choice
-    :image: policy
+    :icon: fa fa-shield fa-lg
     :title: Policy
     :text: Policy
     :items:
     - :button: resource_pool_protect
-      :image: protect
+      :icon: pficon pficon-edit fa-lg
       :text: "Manage Policies"
       :title: "Manage Policies for this Resource Pool"
     - :button: resource_pool_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: "Edit Tags for this Resource Pool"
-  

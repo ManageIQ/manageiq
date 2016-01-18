@@ -42,36 +42,36 @@
   :items:
   # collect logs tab
   - :buttonSelect: support_vmdb_choice
-    :image: collect_current
+    :icon: fa fa-filter fa-lg
     :title: 'Collect Logs'
     :text: Collect
     :items:
     - :button: collect_current_logs
-      :image: collect_current
+      :icon: fa fa-filter fa-lg
       :text: 'Collect current logs'
       :title: 'Collect the current logs from the selected #{ui_lookup(:table=>"miq_servers")}'
     - :button: collect_logs
-      :image: collect_all
+      :icon: fa fa-filter fa-lg
       :text: 'Collect all logs'
       :title: 'Collect all logs from the selected #{ui_lookup(:table=>"miq_servers")}'
   - :button: log_depot_edit
-    :image: edit
+    :icon: pficon pficon-edit fa-lg
     :text: 'Edit'
     :title: 'Edit the Log Depot settings for the selected #{ui_lookup(:table=>"miq_servers")}'
   - :buttonSelect: support_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     # Summary tab
     - :button: restart_server
-      :image: restart
+      :icon: pficon pficon-restart
       :text: 'Restart server'
       :title: 'Restart server'
       :confirm: 'Warning: Server will be restarted, do you want to continue?'
     # workers tab
     - :button: restart_workers
-      :image: restart
+      :icon: pficon pficon-restart
       :text: 'Restart selected worker'
       :title: 'Select a worker to restart'
       :confirm: 'Warning: Selected node will be restarted, do you want to continue?'
