@@ -535,7 +535,7 @@ module ApplicationHelper
       "$('.cb_add_metric_off').show();$('.cb_add_metric_on').hide();".html_safe
     end
   end
-  
+
   def javascript_for_miq_button_visibility_changed(changed)
     return "" if changed == session[:changed]
     session[:changed] = changed
