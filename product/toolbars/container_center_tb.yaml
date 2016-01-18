@@ -7,17 +7,17 @@
 - :name: container_vmdb
   :items:
   - :buttonSelect: container_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: container_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit this #{ui_lookup(:table=>"container")}'
       :title: 'Edit this #{ui_lookup(:table=>"container")}'
       :url: '/edit'
     - :button: container_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: 'Remove this #{ui_lookup(:table=>"container")} from the VMDB'
       :title: 'Remove this #{ui_lookup(:table=>"container")} from the VMDB'
       :url_parms: '&refresh=y'
@@ -25,29 +25,29 @@
 - :name: container_policy
   :items:
   - :buttonSelect: container_policy_choice
-    :image: policy
+    :icon: fa fa-shield fa-lg
     :title: Policy
     :text: Policy
     :items:
     - :button: container_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :url_parms: 'main_div'
       :text: 'Edit Tags'
       :title: 'Edit Tags for this #{ui_lookup(:table=>"container")}'
 - :name: container_monitoring
   :items:
   - :buttonSelect: container_monitoring_choice
-    :image: monitoring
+    :icon: product product-monitoring fa-lg
     :title: Monitoring
     :text: Monitoring
     :items:
     - :button: container_timeline
-      :image: timeline
+      :icon: product product-timeline fa-lg
       :text: "Timelines"
       :title: "Show Timelines for this Container"
       :url_parms: '?display=timeline'
     - :button: container_perf
-      :image: capacity
+      :icon: product product-monitoring fa-lg
       :text: "Utilization"
       :title: "Show Capacity & Utilization data for this Container"
       :url_parms: '?display=performance'

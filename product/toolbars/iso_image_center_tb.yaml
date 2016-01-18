@@ -7,11 +7,11 @@
 - :name: iso_image_vmdb
   :items:
   - :buttonSelect: iso_image_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: iso_image_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit this ISO Image'
       :title: 'Edit this ISO Image'

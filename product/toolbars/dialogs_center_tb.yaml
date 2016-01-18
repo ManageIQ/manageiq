@@ -7,30 +7,30 @@
 - :name: dialog_vmdb
   :items:
   - :buttonSelect: dialog_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: dialog_new
-      :image: new
+      :icon: pficon pficon-add-circle-o fa-lg
       :text: "Add a new Dialog"
       :title: "Add a new Dialog"
     - :button: dialog_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: Edit the selected Dialog
       :title: Edit the selected Dialog
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
     - :button: dialog_copy
-      :image: copy
+      :icon: fa fa-files-o fa-lg
       :title: "Copy the selected Dialog to a new Dialog"
       :text: "Copy the selected Dialog to a new Dialog"
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
     - :button: dialog_delete
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: Remove selected Dialogs from the VMDB
       :title: Remove selected Dialogs from the VMDB
       :url_parms: 'main_div'

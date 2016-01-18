@@ -6,17 +6,17 @@
 - :name: ght_main
   :items:
   - :buttonTwoState: view_graph
-    :image: view-graph
+    :icon: product product-chart
     :title: "Graph View"
     :url: 'explorer'
     :url_parms: '?type=graph'
   - :buttonTwoState: view_hybrid
-    :image: view-hybrid
+    :icon: fa fa fa-th-list
     :title: "Hybrid View"
     :url: 'explorer'
     :url_parms: '?type=hybrid'
   - :buttonTwoState: view_tabular
-    :image: view_list
+    :icon: product product-report
     :title: "Tabular View"
     :url: 'explorer'
     :url_parms: '?type=tabular'

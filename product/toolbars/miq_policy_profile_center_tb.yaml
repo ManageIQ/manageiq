@@ -7,17 +7,17 @@
 - :name: policy_profile_vmdb
   :items:
   - :buttonSelect: policy_profile_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: profile_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit this Policy Profile'
       :title: 'Edit this Policy Profile'
       :url_parms: 'main_div'
     - :button: profile_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: 'Remove this Policy Profile'
       :title: 'Remove this Policy Profile'
       :url_parms: 'main_div'

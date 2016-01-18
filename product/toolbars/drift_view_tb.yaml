@@ -6,11 +6,11 @@
 - :name: compare_view
   :items:
   - :buttonTwoState: drift_expanded
-    :image: view_expanded
+    :icon: product product-view_expanded fa-lg
     :title: "Expanded View"
     :url: 'drift_compress'
   - :buttonTwoState: drift_compressed
-    :image: view_compressed
+    :icon: fa fa-bars fa-rotate-90 fa-lg
     :title: "Compressed View"
     :url: 'drift_compress'
 - :name: drift_downloading

@@ -7,23 +7,23 @@
 - :name: ontap_storage_volume_policy
   :items:
   - :buttonSelect: ontap_storage_volume_policy_choice
-    :image: policy
+    :icon: fa fa-shield fa-lg
     :title: Policy
     :text: Policy
     :items:
     - :button: ontap_storage_volume_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: "Edit Tags for this Volume"
 - :name: ontap_storage_volume_monitoring
   :items:
   - :buttonSelect: ontap_storage_volume_monitoring_choice
-    :image: monitoring
+    :icon: product product-monitoring fa-lg
     :title: Monitoring
     :text: Monitoring
     :items:
     - :button: ontap_storage_volume_statistics
-      :image: statistics
+      :icon: product product-monitoring fa-lg
       :text: "Utilization"
       :title: "Show Utilization for this Storage System"
       :url: '/show_statistics'

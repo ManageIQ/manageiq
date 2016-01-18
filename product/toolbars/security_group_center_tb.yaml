@@ -7,11 +7,11 @@
 - :name: security_group_policy
   :items:
   - :buttonSelect: security_group_policy_choice
-    :image: policy
+    :icon: fa fa-shield fa-lg
     :title: Policy
     :text: Policy
     :items:
     - :button: security_group_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: "Edit Tags for this Security Group"

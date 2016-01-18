@@ -7,21 +7,21 @@
 - :name: miq_dialog_vmdb
   :items:
   - :buttonSelect: host_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: old_dialogs_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit this Dialog"
       :title: "Edit this Dialog"
     - :button: old_dialogs_copy
-      :image: copy
+      :icon: fa fa-files-o fa-lg
       :title: "Copy this Dialog"
       :text: "Copy this Dialog"
       :url_parms: 'main_div'
     - :button: old_dialogs_delete
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: "Remove from the VMDB"
       :title: "Remove this Dialog from the VMDB"
       :url_parms: 'main_div'

@@ -6,25 +6,25 @@
 - :name: form_buttons
   :items:
   - :button: button_add
-    :image: add
+    :icon: pficon pficon-add-circle-o fa-lg
     :title: "Add"
     :text: Add
     :url: '#{@edit[:url]}'
     :url_parms: '?button=add'
   - :button: button_save
-    :image: save
+    :icon: fa fa-floppy-o fa-lg
     :title: "Save Changes"
     :text: Save
     :url: '#{@edit[:url]}'
     :url_parms: '?button=save'
   - :button: button_reset
-    :image: reset
+    :icon: fa fa-reply fa-lg
     :title: "Reset"
     :text: Reset
     :url: '#{@edit[:url]}'
     :url_parms: '?button=reset'
   - :button: button_cancel
-    :image: cancel
+    :icon: fa fa-ban fa-lg
     :title: "Cancel Changes"
     :text: Cancel
     :url: '#{@edit[:url]}'

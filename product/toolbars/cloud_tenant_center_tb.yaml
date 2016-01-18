@@ -4,11 +4,11 @@
 - :name: cloud_tenant_policy
   :items:
   - :buttonSelect: cloud_tenant_policy_choice
-    :image: policy
+    :icon: fa fa-shield fa-lg
     :title: Policy
     :text: Policy
     :items:
     - :button: cloud_tenant_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: 'Edit tags for this Cloud Tenant'

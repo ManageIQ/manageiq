@@ -7,17 +7,17 @@
 - :name: container_project_vmdb
   :items:
   - :buttonSelect: container_project_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: container_project_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit this #{ui_lookup(:table=>"container_project")}'
       :title: 'Edit this #{ui_lookup(:table=>"container_project")}'
       :url: '/edit'
     - :button: container_project_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: 'Remove this #{ui_lookup(:table=>"container_project")} from the VMDB'
       :title: 'Remove this #{ui_lookup(:table=>"container_project")} from the VMDB'
       :url_parms: '&refresh=y'
@@ -25,18 +25,18 @@
 - :name: container_project_monitoring
   :items:
   - :buttonSelect: container_project_monitoring_choice
-    :image: monitoring
+    :icon: product product-monitoring fa-lg
     :title: Monitoring
     :text: Monitoring
     :items:
     - :button: container_project_timeline
-      :image: timeline
+      :icon: product product-timeline fa-lg
       :text: "Timelines"
       :title: "Show Timelines for this Project"
       :url: '/show'
       :url_parms: '?display=timeline'
     - :button: container_project_perf
-      :image: capacity
+      :icon: product product-monitoring fa-lg
       :text: "Utilization"
       :title: "Show Capacity & Utilization data for this Project"
       :url: '/show'
@@ -44,11 +44,11 @@
 - :name: container_project_policy
   :items:
   - :buttonSelect: container_project_policy_choice
-    :image: policy
+    :icon: fa fa-shield fa-lg
     :title: Policy
     :text: Policy
     :items:
     - :button: container_project_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit Tags'
       :title: 'Edit Tags for this #{ui_lookup(:table=>"container_project")}'

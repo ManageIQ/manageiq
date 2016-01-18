@@ -2,7 +2,7 @@
   .btn-group.dropdown
     - if @widgets_menu[:blank]
       %button.disabled.btn.btn-default.dropdown-toggle{'data-toggle' => 'dropdown', :title => _('No Widgets available to add'), 'data-click' => 'add_widget'}
-        %img{:src => '/images/dashboard/add_widget.png'}
+        %i.fa.fa-reply.fa-lg
         %span.caret
     - else
       - if @widgets_menu[:allow_add]
@@ -14,7 +14,7 @@
           - enabled = true
         - cls = enabled ? '' : 'disabled '
         %button{'data-toggle' => 'dropdown', :class => "#{cls}btn btn-default dropdown-toggle", :title => title}
-          %img{:src => '/images/dashboard/add_widget.png'}
+          %i.fa.fa-plus.fa-lg
           %span.caret
 
         %ul.dropdown-menu
@@ -29,4 +29,4 @@
 
   - if @widgets_menu[:allow_reset]
     %button.btn.btn-default{:title => _('Reset Dashboard Widgets to the defaults'), 'data-click' => 'reset'}
-      %img{:src => '/images/dashboard/reset_widgets.png'}
+      %i.fa.fa-reply.fa-lg

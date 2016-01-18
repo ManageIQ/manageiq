@@ -7,16 +7,16 @@
 - :name: iso_datastore_vmdb
   :items:
   - :buttonSelect: iso_datastore_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: iso_datastore_new
-      :image: new
+      :icon: pficon pficon-add-circle-o fa-lg
       :text: 'Add a New ISO Datastore'
       :title: 'Add a New ISO Datastore'
     - :button: iso_datastore_delete
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: 'Remove ISO Datastores from the VMDB'
       :title: 'Remove selected ISO Datastores from the VMDB'
       :url_parms: 'main_div'
@@ -25,7 +25,7 @@
       :onwhen: '1+'
     - :separator:
     - :button: iso_datastore_refresh
-      :image: refresh
+      :icon: fa fa-refresh fa-lg
       :text: 'Refresh Relationships'
       :title: 'Refresh Relationships for selected ISO Datastores'
       :url_parms: 'main_div'
