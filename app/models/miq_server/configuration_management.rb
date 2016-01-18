@@ -19,9 +19,7 @@ module MiqServer::ConfigurationManagement
     end
   end
 
-  def get_config(typ = "vmdb", force_reload = false)
-    VMDB::Config.invalidate(typ) if force_reload
-
+  def get_config(typ = "vmdb")
     config = nil
 
     if self.is_remote?
