@@ -191,7 +191,7 @@ module Authenticator
     end
 
     def authorize_queue?
-      !MiqEnvironment::Process.is_ui_worker_via_command_line?
+      !defined?(Rails::Server)
     end
 
     def authorize_queue(username, _request, *args)

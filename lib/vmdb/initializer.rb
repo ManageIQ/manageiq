@@ -11,7 +11,7 @@ module Vmdb
       # UiWorker called in Development Mode
       #   * command line(rails server)
       #   * debugger
-      if MiqEnvironment::Process.is_ui_worker_via_command_line?
+      if defined?(Rails::Server)
         MiqUiWorker.preload_for_worker_role
         EvmDatabase.seed_primordial
         MiqServer.my_server.starting_server_record

@@ -57,7 +57,7 @@ module EmsRefresh
   end
 
   def self.refresh(target, id = nil)
-    EmsRefresh.init_console if MiqEnvironment::Process.is_rails_console?
+    EmsRefresh.init_console if defined?(Rails::Console)
 
     # Handle targets passed as a single class/id pair, an array of class/id pairs, or an array of references
     targets = get_ar_objects(target, id)

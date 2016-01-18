@@ -1,5 +1,5 @@
-require "workers/evm_server"
-if MiqEnvironment::Process.is_rails_runner?
+if defined?(Vmdb::Application) && Vmdb::Application.initialized?
+  require "workers/evm_server"
   EvmServer.start(*ARGV)
 else
   puts "run with rails runner evm_server.rb"
