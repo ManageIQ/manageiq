@@ -33,6 +33,7 @@ module ManageIQ::Providers
 
         _log.info("#{log_header}...")
         get_resource_groups
+        get_network_interfaces
         get_series
         get_availability_zones
         get_stacks
@@ -45,6 +46,10 @@ module ManageIQ::Providers
       end
 
       private
+
+      def get_network_interfaces
+        @data[:network_interfaces] = gather_data_for_this_region(@nis)
+      end
 
       def get_resource_groups
         resource_groups = @rgs.list.select do |resource_group|
@@ -126,11 +131,8 @@ module ManageIQ::Providers
       end
 
       def get_vm_nics(instance)
-        instance.properties.network_profile.network_interfaces.collect do |nic|
-          group = nic.id[%r{resourceGroups/(.*?)/}, 1]
-          nic_name = File.basename(nic.id)
-          @nis.get(nic_name, group)
-        end
+        nic_ids = instance.properties.network_profile.network_interfaces.collect(&:id)
+        @data[:network_interfaces].find_all{ |nic| nic_ids.include?(nic.id) }
       end
 
       def process_collection(collection, key)
