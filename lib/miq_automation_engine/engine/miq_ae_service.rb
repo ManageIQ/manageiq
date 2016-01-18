@@ -139,22 +139,15 @@ module MiqAeMethodService
     def instantiate(uri)
       obj = @workspace.instantiate(uri, @workspace.ae_user, @workspace.current_object)
       return nil if obj.nil?
-      drb_return(MiqAeServiceObject.new(obj, self))
+      MiqAeServiceObject.new(obj, self)
     rescue => e
       return nil
-    end
-
-    def drb_return(obj)
-      # Save a reference to the object, so that we control when it gets deleted.  Otherwise, Ruby Garbage Collection may remove it prematurely.
-      # If it is removed prematurely and then referenced by the method, we get a DRb recycled object error
-      #@drb_server_references << obj
-      obj
     end
 
     def object(path = nil)
       obj = @workspace.get_obj_from_path(path)
       return nil if obj.nil?
-      drb_return MiqAeServiceObject.new(obj, self)
+      MiqAeServiceObject.new(obj, self)
     end
 
     def hash_to_query(hash)
@@ -182,7 +175,7 @@ module MiqAeMethodService
     end
 
     def current_object
-      @current_object ||= drb_return(MiqAeServiceObject.new(@workspace.current_object, self))
+      @current_object ||= MiqAeServiceObject.new(@workspace.current_object, self)
     end
 
     def current_method
@@ -203,7 +196,7 @@ module MiqAeMethodService
 
     def objects(aobj)
       aobj.collect do |obj|
-        obj = drb_return(MiqAeServiceObject.new(obj, self)) unless obj.kind_of?(MiqAeServiceObject)
+        obj = MiqAeServiceObject.new(obj, self) unless obj.kind_of?(MiqAeServiceObject)
         obj
       end
     end
@@ -215,7 +208,7 @@ module MiqAeMethodService
     end
 
     def execute(m, *args)
-      drb_return MiqAeServiceMethods.send(m, *args)
+      MiqAeServiceMethods.send(m, *args)
     rescue NoMethodError => err
       raise MiqAeException::MethodNotFound, err.message
     end
