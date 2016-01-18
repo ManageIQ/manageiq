@@ -547,28 +547,6 @@ class MiqServer < ApplicationRecord
     result.merge(:message => message)
   end
 
-  def self.config_updated
-    cfg = VMDB::Config.new("vmdb")
-    cfg.save
-  end
-
-  def config_updated(data)
-    # Check that the column exists in the table and we are passed data that does not match
-    # the current vaule.  The first check allows this code to run if we migrate down then
-    # back up again.
-    if self.respond_to?(:name) && data.name && name != data.name
-      self.name = data.name
-    end
-
-    unless data.zone.nil?
-      self.zone = Zone.find_by(:name => data.zone)
-      save
-    end
-    update_capabilities
-
-    save
-  end
-
   #
   # Zone and Role methods
   #
