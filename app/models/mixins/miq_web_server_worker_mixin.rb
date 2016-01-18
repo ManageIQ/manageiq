@@ -19,7 +19,16 @@ module MiqWebServerWorkerMixin
       # Make these constants globally available
       ::UiConstants
 
+      configure_secret_token
+    end
+
+    def self.configure_secret_token
       Vmdb::Application.config.secret_token = MiqDatabase.first.session_secret_token
+
+      # To set a secret token after the Vmdb::Application is initialized?,
+      # we need to reset the secrets since they are cached:
+      # https://github.com/rails/rails/blob/4-2-stable/railties/lib/rails/application.rb#L386-L401
+      Vmdb::Application.secrets = nil if Vmdb::Application.initialized?
     end
 
     def self.rails_server
@@ -147,7 +156,6 @@ module MiqWebServerWorkerMixin
     def rails_server_options
       # See Rack::Server options which is what Rails::Server uses:
       # https://github.com/rack/rack/blob/1.6.4/lib/rack/server.rb#L152-L183
-
       params = {
         :Host        => self.class.binding_address,
         :environment => Rails.env.to_s,

@@ -26,6 +26,7 @@ module MiqWebServerRunnerMixin
       # The heartbeating will be done in a separate thread
       Thread.new { runner.run }
 
+      runner.worker.class.configure_secret_token
       start_rails_server(runner.worker.rails_server_options)
     end
 
