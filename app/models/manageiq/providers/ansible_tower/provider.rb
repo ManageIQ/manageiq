@@ -27,7 +27,7 @@ class ManageIQ::Providers::AnsibleTower::Provider < ::Provider
     auth_type = options[:auth_type]
     raise "no credentials defined" if self.missing_credentials?(auth_type) && (options[:username].nil? || options[:password].nil?)
 
-    verify_ssl = resolve_verify_ssl_value(options[:verify_ssl]) || self.verify_ssl
+    verify_ssl = options[:verify_ssl] || self.verify_ssl
     base_url   = options[:base_url] || url
     username   = options[:username] || authentication_userid(auth_type)
     password   = options[:password] || authentication_password(auth_type)
