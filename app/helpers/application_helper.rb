@@ -542,7 +542,8 @@ module ApplicationHelper
       key = params[:tree_typ] == 'myco' ? :filters : :belongsto
       future  = @edit[:new][key][params[:id].split('___').last]
       current = @edit[:current][key][params[:id].split('___').last]
-      css_class = future == current ? 'dynatree-title' : 'cfme-blue-bold-node'
+      title_class = params[:tree_typ] == "vat" || params[:tree_typ] == "hac" ? 'cfme-no-cursor-node' : 'dynatree-title'
+      css_class = future == current ? title_class : 'cfme-blue-bold-node'
       js_array << "$('##{tree_name_escaped}box').dynatree('getTree').getNodeByKey('#{params[:id].split('___').last}').data.addClass = '#{css_class}';"
     end
     # need to redraw the tree to change node colors

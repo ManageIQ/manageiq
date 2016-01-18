@@ -671,7 +671,7 @@ module ApplicationController::TreeSupport
     # Handle Hosts
     elsif folder.kind_of?(Host) && folder.authorized_for_user?(session[:userid])
       if !@rp_only || (@rp_only && folder.resource_pools.count > 0)
-        node[:tooltip] = "Host: #{folder.name} (Click to view)"
+        node[:tooltip] = "Host: #{folder.name}"
         node[:addClass] = "cfme-no-cursor-node"          # No cursor pointer
         if @edit && @edit[:new][:belongsto][node[:key]] != @edit[:current][:belongsto][node[:key]]  # Check new vs current
           node[:addClass] = "cfme-blue-bold-node"  # Show node as different
