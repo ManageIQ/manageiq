@@ -9,12 +9,13 @@
         = _('Description')
       .col-md-8
         %p.form-control-static
-          = h(@record.description)
+          = h(@record.first.description)
   %hr
   %h3= _('Rate Details')
   %table.table.table-bordered
     %thead
       %tr
+        %th= _('Level')
         %th= _('Group')
         %th= _('Description')
         %th= _('Rate')
@@ -28,6 +29,12 @@
           %tr
             %td.active{:colspan => "6"} &nbsp;
         %tr
+          %td
+            - if r.rate_type == "Compute"
+              = image_tag "icons/new/hardware-processor.png"
+            - else
+              = image_tag "icons/new/hardware-disk.png"
+            = r.rate_type
           %td
             = h(Dictionary.gettext(r[:group], :type => :rate_detail_group, :notfound => :titleize))
           %td
