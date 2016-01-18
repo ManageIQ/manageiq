@@ -499,15 +499,15 @@
       - :name: create
         :identifier: vm_miq_request_new
       - :name: approve
-        :identifier: vm_miq_request_approve
+        :identifier: miq_request_approval
       - :name: deny
-        :identifier: vm_miq_request_deny
+        :identifier: miq_request_approval
     :resource_actions:
       :post:
       - :name: approve
-        :identifier: vm_miq_request_approve
+        :identifier: miq_request_approval
       - :name: deny
-        :identifier: vm_miq_request_deny
+        :identifier: miq_request_approval
   :rates:
     :description: Chargeback Rates
     :options:
