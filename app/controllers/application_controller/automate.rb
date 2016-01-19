@@ -131,7 +131,7 @@ module ApplicationController::Automate
     @right_cell_text = "Simulation"
 
     case params[:button]
-    when "throw","retry"    then resolve_button_throw
+    when "throw", "retry" then resolve_button_throw
     when "copy"     then resolve_button_copy
     when "paste"    then resolve_button_paste
     when "simulate" then resolve_button_simulate
@@ -162,7 +162,7 @@ module ApplicationController::Automate
 
   def state_attributes(ws)
     state_attrs = {'ae_state_retries' => ws.root['ae_state_retries'],
-                   'ae_state'         => ws.root['ae_state'] }
+                   'ae_state'         => ws.root['ae_state']}
     state_attrs['ae_state_data'] = ws.persist_state_hash.to_yaml unless ws.persist_state_hash.empty?
     state_attrs['ae_state_previous'] = ws.current_state_info unless ws.current_state_info.empty?
     state_attrs
