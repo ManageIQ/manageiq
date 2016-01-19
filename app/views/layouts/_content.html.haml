@@ -90,8 +90,8 @@
               = render(:partial => 'layouts/pagingcontrols',
                        :locals  => {:pages      => @pages,
                                     :action_url => action_url_for_views,
-                                    :db         => @view.db,
-                                    :headers    => @view.headers,
+                                    :db         => @view.try(:db),
+                                    :headers    => @view.try(:headers),
                                     :button_div => 'center_tb'})
 
         .col-md-2.col-md-pull-10.sidebar-pf.sidebar-pf-left
@@ -139,8 +139,8 @@
               = render(:partial => 'layouts/pagingcontrols',
                        :locals  => {:pages      => @pages,
                                     :action_url => action_url_for_views,
-                                    :db         => @view.db,
-                                    :headers    => @view.headers,
+                                    :db         => @view.try(:db),
+                                    :headers    => @view.try(:headers),
                                     :button_div => 'center_tb'})
 
 - if show_advanced_search?
