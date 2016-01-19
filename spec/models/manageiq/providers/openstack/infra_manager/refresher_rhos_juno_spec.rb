@@ -2,7 +2,8 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
   before(:each) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_openstack_infra, :zone => zone, :hostname => "192.0.2.1",
-                              :ipaddress => "192.0.2.1", :port => 5000)
+                              :ipaddress => "192.0.2.1", :port => 5000, :api_version => 'v2',
+                              :security_protocol => 'no-ssl')
     @ems.update_authentication(
       :default => {:userid => "admin", :password => "6022c3e7c3243d49609523d0911467df578b0f97"})
   end
@@ -68,8 +69,9 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
 
   def assert_ems
     expect(@ems).to have_attributes(
-      :api_version => nil,
-      :uid_ems     => nil
+      :api_version       => 'v2',
+      :security_protocol => 'no-ssl',
+      :uid_ems           => nil
     )
 
     expect(@ems.ems_clusters.size).to                be > 0
