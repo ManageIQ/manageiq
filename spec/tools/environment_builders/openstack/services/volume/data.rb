@@ -8,6 +8,10 @@ module Openstack
           "EmsRefreshSpec-VolumeType"
         end
 
+        def volume_type_name_2
+          "iscsi"
+        end
+
         def volume_name_1
           "EmsRefreshSpec-Volume"
         end
@@ -17,12 +21,12 @@ module Openstack
         end
 
         def volume_types
-          [{:name => volume_type_name_1}]
+          [{:name => volume_type_name_1}, {:name => volume_type_name_2}]
         end
 
         def volumes(volume_type_name = nil)
           volumes = {
-            volume_type_name_1 => [{
+            volume_type_name_2   => [{
               :display_name        => volume_name_1,
               :display_description => "EmsRefreshSpec-Volume description",
               :size                => 1}]}
