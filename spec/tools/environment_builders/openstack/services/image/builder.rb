@@ -26,6 +26,7 @@ module Openstack
         end
 
         def build_snapshots_from_servers(servers)
+          snapshots = []
           servers.each do |server|
             next if (servers_snapshots = @data.servers_snapshots(server.name)).blank?
 
@@ -37,28 +38,48 @@ module Openstack
                 # Find created image, so it's initialized as Image object
                 image = find(@service.images, server_snapshot)
               end
+              snapshots << image
               @images << image
             end
           end
+
+          wait_for_images(snapshots)
         end
 
         private
 
         def find_or_create_images
           @data.images.each do |image|
-            @images << find_or_create_image(@service.images, image)
+            # Uploading cirros images with redefined attributes
+            @images << find_or_create(@service.images, cirros_image_data.merge(image))
           end
         end
 
-        def find_or_create_image(collection, attributes)
-          obj = find(collection, attributes)
-          obj || begin
-            @image_name = attributes[:name]
-            import_image
+        def wait_for_images(images)
+          images.each { |image| wait_for_image(image) }
+        end
+
+        def wait_for_image(image)
+          print "Waiting for image #{image.name} to get in an 'active' state..."
+
+          loop do
+            case image.reload.status
+            when "active"
+              break
+            when "error"
+              puts "Error creating image"
+              exit 1
+            else
+              print "."
+              sleep 1
+            end
           end
+          puts "Finished"
         end
 
         def import_image
+          # TODO(lsmola) do we need this? It deploys VM with blank root disk, so we can't even ssh in. So it requires
+          # volume with OS
           # Based on https://github.com/fog/fog/blob/master/lib/fog/openstack/examples/image/upload-test-image.rb
           # Download CirrOS 0.3.0 image from launchpad (~6.5MB) to /tmp and upload it to Glance.
           download_image
@@ -67,6 +88,23 @@ module Openstack
           upload_aki
           upload_ari
           upload_ami
+        end
+
+        def cirros_image_data
+          return @cirros_image_data unless @cirros_image_data.blank?
+
+          image_url = "http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img"
+          puts "Downloading Cirros image cirros-0.3.4-x86_64-disk.img..."
+          require 'linux_admin'
+          cirros_image_path = "/tmp/cirros-0.3.4-x86_64-disk#{SecureRandom.hex}.img"
+          AwesomeSpawn.run!("wget -O #{cirros_image_path} #{image_url}")
+
+          @cirros_image_data = {
+            :size             => File.size(cirros_image_path),
+            :disk_format      => 'qcow2',
+            :container_format => 'bare',
+            :location         => cirros_image_path
+          }
         end
 
         def download_image
