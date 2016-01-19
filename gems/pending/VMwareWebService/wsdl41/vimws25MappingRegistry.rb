@@ -1688,6 +1688,17 @@
     ]
   )
 
+  # StoragePod added from VIM 5.5
+  EncodedRegistry.register(
+    :class => VimWs25::CreateStoragePodRequestType,
+    :schema_ns => "urn:vim25",
+    :schema_type => "CreateStoragePodRequestType",
+    :schema_element => [
+      ["v__this", ["VimWs25::ManagedObjectReference", XSD::QName.new("urn:vim25", "_this")]],
+      ["name", "SOAP::SOAPString"]
+    ]
+  )
+
   EncodedRegistry.register(
     :class => VimWs25::SetCollectorPageSizeRequestType,
     :schema_ns => "urn:vim25",
@@ -7971,6 +7982,21 @@
       ["dynamicProperty", "VimWs25::DynamicProperty[]", [0, nil]],
       ["sharesOption", "VimWs25::IntOption"],
       ["defaultLevel", "SOAP::SOAPString"]
+    ]
+  )
+
+  # StoragePod added from VIM 5.5
+  EncodedRegistry.register(
+    :class => VimWs25::StoragePodSummary,
+    :schema_ns => "urn:vim25",
+    :schema_type => "StoragePodSummary",
+    :schema_basetype => XSD::QName.new("urn:vim25", "DynamicData"),
+    :schema_element => [
+      ["dynamicType", "SOAP::SOAPString", [0, 1]],
+      ["dynamicProperty", "VimWs25::DynamicProperty[]", [0, nil]],
+      ["name", "SOAP::SOAPString"],
+      ["capacity", "SOAP::SOAPLong"],
+      ["freeSpace", "SOAP::SOAPLong"]
     ]
   )
 
@@ -41803,6 +41829,17 @@
     ]
   )
 
+  # StoragePod added from VIM 5.5
+  LiteralRegistry.register(
+    :class => VimWs25::CreateStoragePodRequestType,
+    :schema_ns => "urn:vim25",
+    :schema_type => "CreateStoragePodRequestType",
+    :schema_element => [
+      ["v__this", ["VimWs25::ManagedObjectReference", XSD::QName.new("urn:vim25", "_this")]],
+      ["name", "SOAP::SOAPString"]
+    ]
+  )
+
   LiteralRegistry.register(
     :class => VimWs25::SetCollectorPageSizeRequestType,
     :schema_ns => "urn:vim25",
@@ -48711,6 +48748,21 @@
       ["dynamicProperty", "VimWs25::DynamicProperty[]", [0, nil]],
       ["sharesOption", "VimWs25::IntOption"],
       ["defaultLevel", "SOAP::SOAPString"]
+    ]
+  )
+
+  # StoragePod added from VIM 5.5
+  LiteralRegistry.register(
+    :class => VimWs25::StoragePodSummary,
+    :schema_ns => "urn:vim25",
+    :schema_type => "StoragePodSummary",
+    :schema_basetype => XSD::QName.new("urn:vim25", "DynamicData"),
+    :schema_element => [
+      ["dynamicType", "SOAP::SOAPString", [0, 1]],
+      ["dynamicProperty", "VimWs25::DynamicProperty[]", [0, nil]],
+      ["name", "SOAP::SOAPString"],
+      ["capacity", "SOAP::SOAPLong"],
+      ["freeSpace", "SOAP::SOAPLong"]
     ]
   )
 
@@ -84698,6 +84750,27 @@
     :schema_ns => "urn:vim25",
     :schema_name => "CreateDVS_TaskResponse",
     :schema_qualified => true,
+    :schema_element => [
+      ["returnval", "VimWs25::ManagedObjectReference"]
+    ]
+  )
+
+  # StoragePod added from VIM 5.5
+  LiteralRegistry.register(
+    :class => VimWs25::CreateStoragePodRequestType,
+    :schema_ns => "urn:vim25",
+    :schema_name => "CreateStoragePod",
+    :schema_element => [
+      ["v__this", ["VimWs25::ManagedObjectReference", XSD::QName.new("urn:vim25", "_this")]],
+      ["name", "SOAP::SOAPString"]
+    ]
+  )
+
+  # StoragePod added from VIM 5.5
+  LiteralRegistry.register(
+    :class => VimWs25::CreateStoragePodResponse,
+    :schema_ns => "urn:vim25",
+    :schema_name => "CreateStoragePodResponse",
     :schema_element => [
       ["returnval", "VimWs25::ManagedObjectReference"]
     ]
