@@ -38,10 +38,14 @@ module EmsRefresh
       deletes = cloud_network.cloud_subnets(true).dup
 
       hashes.each do |h|
-        h[:availability_zone_id] = h.fetch_path(:availability_zone, :id)
+        %i(availability_zone).each do |relation|
+          h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
+        end
+
+        h[:ems_id] = cloud_network.ems_id
       end
 
-      save_inventory_multi(cloud_network.cloud_subnets, hashes, deletes, [:ems_ref], nil, :availability_zone)
+      save_inventory_multi(cloud_network.cloud_subnets, hashes, deletes, [:ems_ref], nil, [:network_router])
 
       cloud_network.save!
       store_ids_for_new_records(cloud_network.cloud_subnets, hashes, :ems_ref)
@@ -92,7 +96,7 @@ module EmsRefresh
                 end
 
       hashes.each do |h|
-        %i(vm cloud_tenant cloud_network network_router).each do |relation|
+        %i(vm cloud_tenant cloud_network).each do |relation|
           h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
         end
       end
@@ -160,8 +164,11 @@ module EmsRefresh
                   []
                 end
 
+      # Remove non valid ports stored as nil
+      hashes.compact!
+
       hashes.each do |h|
-        %i(cloud_tenant device cloud_network cloud_subnet).each do |relation|
+        %i(cloud_tenant device cloud_subnet).each do |relation|
           h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
         end
 
@@ -174,7 +181,7 @@ module EmsRefresh
     end
 
     def link_floating_ips_to_network_ports(hashes)
-      # Association of floating_ip to network_port. For backwards compatibilty, we are keeping relation to Vm, even
+      # Association of floating_ip to network_port. For backwards compatibility, we are keeping relation to Vm, even
       # when it's redundant, since we can get vm through network_port.
       hashes.each do |hash|
         network_port = hash.fetch_path(:network_port, :_object)
@@ -185,6 +192,13 @@ module EmsRefresh
         next unless hash.key?(:cloud_network) # only neutron has cloud_network associated
 
         hash[:_object].update_attributes(:network_port => network_port, :vm => network_port.try(:device))
+      end
+    end
+
+    def link_cloud_subnets_to_network_routers(hashes)
+      hashes.each do |hash|
+        network_router = hash.fetch_path(:network_router, :_object)
+        hash[:_object].update_attributes(:network_router => network_router)
       end
     end
   end

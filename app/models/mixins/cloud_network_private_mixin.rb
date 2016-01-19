@@ -3,7 +3,7 @@ module CloudNetworkPrivateMixin
 
   included do
     has_many :vms, :through => :network_ports, :source => :device, :source_type => 'VmOrTemplate'
-    has_many :network_routers, :through => :network_ports, :source => :device, :source_type => 'NetworkRouter'
-    has_many :public_networks, :through => :network_routers, :source => :cloud_network
+    has_many :network_routers, :through => :cloud_subnets
+    has_many :public_networks, :through => :cloud_subnets
   end
 end

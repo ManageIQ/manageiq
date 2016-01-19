@@ -5,8 +5,10 @@ class CloudSubnet < ApplicationRecord
   belongs_to :cloud_network
   belongs_to :cloud_tenant
   belongs_to :availability_zone
-  has_many   :network_ports
-  has_many   :vms, :through => :network_ports, :source => :device, :source_type => 'VmOrTemplate'
+  belongs_to :network_router
+
+  has_many :network_ports, :dependent => :destroy
+  has_many :vms, :through => :network_ports, :source => :device, :source_type => 'VmOrTemplate'
 
   # Use for virtual columns, mainly for modeling array and hash types, we get from the API
   serialize :extra_attributes

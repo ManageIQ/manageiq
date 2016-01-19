@@ -58,6 +58,9 @@ module EmsRefresh::SaveInventoryInfra
     # Save and link other subsections
     save_child_inventory(ems, hashes, child_keys, target)
 
+    link_floating_ips_to_network_ports(hashes[:floating_ips]) if hashes.key?(:floating_ips)
+    link_cloud_subnets_to_network_routers(hashes[:cloud_subnets]) if hashes.key?(:cloud_subnets)
+
     ems.save!
     hashes[:id] = ems.id
 

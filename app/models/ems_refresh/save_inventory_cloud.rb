@@ -57,8 +57,8 @@ module EmsRefresh::SaveInventoryCloud
       :cloud_volume_snapshots,
       :vms,
       :network_routers,
-      :floating_ips,
       :network_ports,
+      :floating_ips,
       :cloud_resource_quotas,
       :cloud_object_store_containers,
       :cloud_object_store_objects,
@@ -70,6 +70,7 @@ module EmsRefresh::SaveInventoryCloud
 
     link_volumes_to_base_snapshots(hashes[:cloud_volumes]) if hashes.key?(:cloud_volumes)
     link_floating_ips_to_network_ports(hashes[:floating_ips]) if hashes.key?(:floating_ips)
+    link_cloud_subnets_to_network_routers(hashes[:cloud_subnets]) if hashes.key?(:cloud_subnets)
 
     ems.save!
     hashes[:id] = ems.id

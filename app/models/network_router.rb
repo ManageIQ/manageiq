@@ -4,15 +4,10 @@ class NetworkRouter < ApplicationRecord
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::CloudManager"
   belongs_to :cloud_tenant
-  belongs_to :cloud_network
-  alias_method :public_network, :cloud_network
 
-  has_many :floating_ips
-  has_many :network_ports, :as => :device
-  has_many :cloud_networks, :through => :network_ports
-  alias_method :private_networks, :cloud_networks
-  has_many :vms_network_ports, :through => :cloud_networks, :source => :network_ports
-  has_many :vms, :through => :vms_network_ports, :source => :device, :source_type => 'VmOrTemplate'
+  has_many :cloud_subnets
+  has_many :network_ports, :through => :cloud_subnets
+  has_many :vms, :through => :network_ports, :source => :device, :source_type => 'VmOrTemplate'
 
   # Use for virtual columns, mainly for modeling array and hash types, we get from the API
   serialize :extra_attributes

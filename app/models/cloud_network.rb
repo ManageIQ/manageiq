@@ -7,12 +7,12 @@ class CloudNetwork < ApplicationRecord
   belongs_to :orchestration_stack
 
   has_many   :cloud_subnets, :dependent => :destroy
-  has_many   :network_ports, :dependent => :destroy
+  has_many   :network_ports, :through => :cloud_subnets
   has_many   :floating_ips,  :dependent => :destroy
 
   # TODO(lsmola) Defaulting CloudNetwork for Private network behaviour, otherwise I am unable to model
-  # vm.public_networks. Not specifying it here causes missing method, ans specifying CloudNetwrok::Private
-  # causes filtering networks by Provate, while I want to filter Public.
+  # vm.public_networks. Not specifying it here causes missing method, ans specifying CloudNetwork::Private
+  # causes filtering networks by Private, while I want to filter Public.
   include CloudNetworkPrivateMixin
 
   # TODO(lsmola) figure out what this means, like security groups used by VMs in the network? It's not being

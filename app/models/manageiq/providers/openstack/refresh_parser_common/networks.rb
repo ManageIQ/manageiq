@@ -48,13 +48,17 @@ module ManageIQ::Providers
 
         def get_subnets
           return unless @network_service.name == :neutron
+          @data[:cloud_subnets] = []
 
           networks.each do |n|
             new_net = @data_index.fetch_path(:cloud_networks, n.id)
             new_net[:cloud_subnets] = n.subnets.collect { |s| parse_subnet(s) }
 
             # Lets store also subnets into indexed data, so we can reference them elsewhere
-            new_net[:cloud_subnets].each { |x| @data_index.store_path(:cloud_subnets, x[:ems_ref], x) }
+            new_net[:cloud_subnets].each do |x|
+              @data_index.store_path(:cloud_subnets, x[:ems_ref], x)
+              @data[:cloud_subnets] << x
+            end
           end
         end
 
@@ -115,27 +119,31 @@ module ManageIQ::Providers
           return uid, new_result
         end
 
-        def find_device_object(network_port)
+        def find_device_object(network_port, subnet_id)
           case network_port.device_owner
           when /^compute\:.*?$/
             # Owner is in format compute:<availability_zone> or compute:None
-            find_device_connected_to_network_port(network_port.device_id)
+            return find_device_connected_to_network_port(network_port.device_id)
           when "network:router_gateway"
-            # TODO(lsmola) we need to represent gateway as object
+            # TODO(lsmola) the gateway here is public network, we model it directly now, that will probably change
           when "network:dhcp"
             # TODO(lsmola) we need to represent dhcp as object
           when "network:floatingip"
-            @data_index.fetch_path(:floating_ips, network_port.device_id)
+            # We don't need this association, floating ip has a direct link to subnet and network in it
           when "network:router_interface"
-            @data_index.fetch_path(:network_routers, network_port.device_id)
+            network_router          = @data_index.fetch_path(:network_routers, network_port.device_id)
+            subnet                  = @data_index.fetch_path(:cloud_subnets, subnet_id)
+            subnet[:network_router] = network_router
           end
+          # Returning nil for non VM port, we don't want to store those as ports
+          nil
         end
 
         def parse_network_port(network_port)
           uid             = network_port.id
           # There can be multiple fixed_ips on the port, but only under one subnet
           subnet_id       = network_port.fixed_ips.try(:first).try(:[], "subnet_id")
-          device          = find_device_object(network_port)
+          device          = find_device_object(network_port, subnet_id)
           security_groups = network_port.security_groups.blank? ? [] :network_port.security_groups.map do |x|
             @data_index.fetch_path(:security_groups, x)
           end
@@ -146,7 +154,6 @@ module ManageIQ::Providers
             :ems_ref                           => uid,
             :status                            => network_port.status,
             :admin_state_up                    => network_port.admin_state_up,
-            :cloud_network                     => @data_index.fetch_path(:cloud_networks, network_port.network_id),
             :cloud_subnet                      => @data_index.fetch_path(:cloud_subnets, subnet_id),
             :mac_address                       => network_port.attributes[:mac_address],
             :device_owner                      => network_port.device_owner,
@@ -168,8 +175,8 @@ module ManageIQ::Providers
         end
 
         def parse_network_router(network_router)
-          uid             = network_router.id
-          network_id      = network_router.try(:external_gateway_info).try(:fetch_path, "network_id")
+          uid        = network_router.id
+          network_id = network_router.try(:external_gateway_info).try(:fetch_path, "network_id")
           new_result = {
             :type                  => self.class.network_router_type,
             :name                  => network_router.name,
@@ -251,10 +258,7 @@ module ManageIQ::Providers
             :vm                   => associated_vm,
             :cloud_tenant         => @data_index.fetch_path(:cloud_tenants, ip.tenant_id),
             :cloud_network        => @data_index.fetch_path(:cloud_networks, ip.floating_network_id),
-            # TODO(lsmola) expose attributes in FOG
-            :network_router       => @data_index.fetch_path(:network_routers, ip.attributes['router_id']),
             :status               => ip.attributes['status'],
-            # Filling up object later when network_ports are loaded
             :network_port_ems_ref => ip.port_id
           }
 
@@ -279,7 +283,7 @@ module ManageIQ::Providers
           return uid, new_result
         end
 
-        def link_network_ports_association
+        def link_network_ports_associations
           return unless @network_service.name == :neutron
           # link network ports to floating ips
           return unless (floating_ips = @data.fetch_path(:floating_ips))
@@ -294,6 +298,7 @@ module ManageIQ::Providers
         #
 
         def find_vm_associated_with_floating_ip(ip_address)
+          # TODO(lsmola) delete the when we are not supporting nova network and grizzly
           # Old way of associating floating_ip, neutron uses network_port_association
           return unless @network_service.name == :nova
           @data[:vms].detect do |v|
