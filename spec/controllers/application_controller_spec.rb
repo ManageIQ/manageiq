@@ -155,4 +155,45 @@ describe ApplicationController do
       expect(assigns(:org_controller)).to eq("vm")
     end
   end
+
+  context "#determine_record_id_for_presenter" do
+    context "when in a form" do
+      before do
+        controller.instance_variable_set(:@in_a_form, true)
+      end
+
+      it "return nil when @edit is nil" do
+        controller.instance_variable_set(:@edit, nil)
+        expect(controller.send(:determine_record_id_for_presenter)).to be_nil
+      end
+
+      it "returns @edit[:rec_id] when @edit is not nil" do
+        [nil, 42].each do |id|
+          edit = {:rec_id => id}
+          controller.instance_variable_set(:@edit, edit)
+          expect(controller.send(:determine_record_id_for_presenter)).to eq(id)
+        end
+      end
+    end
+
+    context "when not in a form" do
+      before do
+        controller.instance_variable_set(:@in_a_form, false)
+      end
+
+      it "returns nil when @record is nil" do
+        controller.instance_variable_set(:@record, nil)
+        expect(controller.send(:determine_record_id_for_presenter)).to be_nil
+      end
+
+      it "returns @record.id when @record is not nil" do
+        [nil, 42].each do |id|
+          record = double("Record")
+          allow(record).to receive(:id).and_return(id)
+          controller.instance_variable_set(:@record, record)
+          expect(controller.send(:determine_record_id_for_presenter)).to eq(id)
+        end
+      end
+    end
+  end
 end
