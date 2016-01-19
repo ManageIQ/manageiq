@@ -109,6 +109,7 @@ module Vmdb
     initializer :load_vmdb_settings, :before => :load_config_initializers do
       require 'vmdb/settings'
       Vmdb::Settings.init
+      Vmdb::Loggers.apply_config(::Settings.log)
     end
 
     config.after_initialize do
