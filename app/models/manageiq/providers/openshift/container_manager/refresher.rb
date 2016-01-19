@@ -7,7 +7,8 @@ module ManageIQ::Providers
       KUBERNETES_EMS_TYPE = ManageIQ::Providers::Kubernetes::ContainerManager.ems_type
 
       OPENSHIFT_ENTITIES = [
-        {:name => 'routes'}, {:name => 'projects'}
+        {:name => 'routes'}, {:name => 'projects'},
+        {:name => 'build_configs'}, {:name => 'builds'}
       ]
 
       def parse_inventory(ems, _targets = nil)

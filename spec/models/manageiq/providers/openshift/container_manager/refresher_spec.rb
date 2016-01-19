@@ -13,7 +13,8 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
   it "will perform a full refresh on openshift" do
     2.times do
       @ems.reload
-      VCR.use_cassette("#{described_class.name.underscore}") do # , :record => :new_episodes) do
+      VCR.use_cassette("#{described_class.name.underscore}",
+                       :match_requests_on => [:path,]) do # , :record => :new_episodes) do
         EmsRefresh.refresh(@ems)
       end
       @ems.reload
@@ -26,6 +27,8 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
       assert_specific_container_service
       assert_specific_container_project
       assert_specific_container_route
+      assert_specific_container_build
+      assert_specific_container_build_pod
     end
   end
 
@@ -38,6 +41,8 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     expect(ContainerDefinition.count).to eq(5)
     expect(ContainerRoute.count).to eq(1)
     expect(ContainerProject.count).to eq(4)
+    expect(ContainerBuild.count).to eq(1)
+    expect(ContainerBuildPod.count).to eq(1)
   end
 
   def assert_ems
@@ -137,5 +142,30 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     )
 
     expect(@container_route.ext_management_system).to eq(@ems)
+  end
+
+  def assert_specific_container_build
+    @container_build = ContainerBuild.find_by_name("ruby-sample-build")
+    expect(@container_build).to have_attributes(
+      :name              => "ruby-sample-build",
+      :build_source_type => "Git",
+      :source_git        => "https://github.com/openshift/ruby-hello-world.git",
+      :output_name       => "origin-ruby-sample:latest",
+    )
+
+    expect(@container_build.container_project).to eq(ContainerProject.find_by(:name => "default"))
+  end
+
+  def assert_specific_container_build_pod
+    @container_build_pod = ContainerBuildPod.find_by_name("ruby-sample-build-1")
+    expect(@container_build_pod).to have_attributes(
+      :name                          => "ruby-sample-build-1",
+      :phase                         => "Failed",
+      :reason                        => "ExceededRetryTimeout",
+      :output_docker_image_reference => nil,
+    )
+
+    expect(@container_build_pod.container_build).to eq(
+      ContainerBuild.find_by(:name => "ruby-sample-build"))
   end
 end

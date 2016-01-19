@@ -425,8 +425,77 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"kind":"ComponentStatusList","apiVersion":"v1","metadata":{"selfLink":"/api/v1/componentstatuses"},"items":[{"metadata":{"name":"controller-manager","selfLink":"/api/v1/namespaces/componentstatuses/controller-manager","creationTimestamp":null},"conditions":[{"type":"Healthy","status":"Unknown","error":"Get
-              http://127.0.0.1:10252/healthz: dial tcp 127.0.0.1:10252: connection refused"}]},{"metadata":{"name":"scheduler","selfLink":"/api/v1/namespaces/componentstatuses/scheduler","creationTimestamp":null},"conditions":[{"type":"Healthy","status":"Unknown","error":"Get
-              http://127.0.0.1:10251/healthz: dial tcp 127.0.0.1:10251: connection refused"}]},{"metadata":{"name":"etcd-0","selfLink":"/api/v1/namespaces/componentstatuses/etcd-0","creationTimestamp":null},"conditions":[{"type":"Healthy","status":"True","message":{"health":"true"},"error":"nil"}]}]}'
-    http_version:
+        http://127.0.0.1:10252/healthz: dial tcp 127.0.0.1:10252: connection refused"}]},{"metadata":{"name":"scheduler","selfLink":"/api/v1/namespaces/componentstatuses/scheduler","creationTimestamp":null},"conditions":[{"type":"Healthy","status":"Unknown","error":"Get
+        http://127.0.0.1:10251/healthz: dial tcp 127.0.0.1:10251: connection refused"}]},{"metadata":{"name":"etcd-0","selfLink":"/api/v1/namespaces/componentstatuses/etcd-0","creationTimestamp":null},"conditions":[{"type":"Healthy","status":"True","message":{"health":"true"},"error":"nil"}]}]}'
+    http_version: 
   recorded_at: Tue, 13 Oct 2015 13:03:20 GMT
+- request:
+    method: get
+    uri: https://10.35.0.174:8443/oapi/v1/buildconfigs
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.1p85
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Wed, 23 Dec 2015 09:54:57 GMT
+      Content-Length:
+      - '1174'
+    body:
+      encoding: UTF-8
+      string: '{"kind":"BuildConfigList","apiVersion":"v1","metadata":{"selfLink":"/oapi/v1/buildconfigs","resourceVersion":"9585"},"items":[{"metadata":{"name":"ruby-sample-build","namespace":"default","selfLink":"/oapi/v1/namespaces/default/buildconfigs/ruby-sample-build","uid":"ab7ae83c-a8a0-11e5-b754-52540041e75d","resourceVersion":"496","creationTimestamp":"2015-12-22T11:39:32Z","labels":{"app":"ruby-sample-build","name":"ruby-sample-build","template":"application-template-stibuild"},"annotations":{"openshift.io/generated-by":"OpenShiftNewApp"}},"spec":{"triggers":[{"type":"GitHub","github":{"secret":"secret101"}},{"type":"Generic","generic":{"secret":"secret101"}},{"type":"ImageChange","imageChange":{"lastTriggeredImageID":"centos/ruby-22-centos7@sha256:f77da83d7337b4fbf84c04a47c65f377e7f9009433362a4019e15eb4e9cd23ed"}},{"type":"ConfigChange"}],"source":{"type":"Git","git":{"uri":"https://github.com/openshift/ruby-hello-world.git"}},"strategy":{"type":"Source","sourceStrategy":{"from":{"kind":"ImageStreamTag","name":"ruby-22-centos7:latest"}}},"output":{"to":{"kind":"ImageStreamTag","name":"origin-ruby-sample:latest"}},"resources":{}},"status":{"lastVersion":1}}]}
+
+'
+    http_version: 
+  recorded_at: Wed, 23 Dec 2015 09:54:58 GMT
+- request:
+    method: get
+    uri: https://10.35.0.174:8443/oapi/v1/builds
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.1p85
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 04 Jan 2016 14:34:28 GMT
+      Content-Length:
+      - '1416'
+    body:
+      encoding: UTF-8
+      string: '{"kind":"BuildList","apiVersion":"v1","metadata":{"selfLink":"/oapi/v1/builds","resourceVersion":"4414"},"items":[{"metadata":{"name":"ruby-sample-build-1","namespace":"default","selfLink":"/oapi/v1/namespaces/default/builds/ruby-sample-build-1","uid":"b13f0d94-b2da-11e5-af94-52540043696b","resourceVersion":"2787","creationTimestamp":"2016-01-04T12:00:05Z","labels":{"app":"ruby-sample-build","buildconfig":"ruby-sample-build","name":"ruby-sample-build","openshift.io/build-config.name":"ruby-sample-build","template":"application-template-stibuild"},"annotations":{"openshift.io/build.number":"1"}},"spec":{"serviceAccount":"builder","source":{"type":"Git","git":{"uri":"https://github.com/openshift/ruby-hello-world.git"}},"strategy":{"type":"Source","sourceStrategy":{"from":{"kind":"DockerImage","name":"centos/ruby-22-centos7@sha256:72bc0354eca9ad377bd9d36ec7feabf8aaa1b76d38dfce10db08d7671e581429"}}},"output":{"to":{"kind":"ImageStreamTag","name":"origin-ruby-sample:latest"}},"resources":{}},"status":{"phase":"Failed","reason":"ExceededRetryTimeout","message":"The
+        image stream default/origin-ruby-sample:latest cannot be used as the output
+        for build default/ruby-sample-build-1 because the integrated Docker registry
+        is not configured and no external registry was defined.","completionTimestamp":"2016-01-04T12:30:05Z","config":{"kind":"BuildConfig","namespace":"default","name":"ruby-sample-build"}}}]}
+
+'
+    http_version: 
+  recorded_at: Mon, 04 Jan 2016 14:34:29 GMT
 recorded_with: VCR 2.9.3
