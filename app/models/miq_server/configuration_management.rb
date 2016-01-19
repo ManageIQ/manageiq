@@ -69,7 +69,9 @@ module MiqServer::ConfigurationManagement
     end
   end
 
-  def config_updated(data)
+  # Callback from VMDB::Config::Activator#activate when the configuration has
+  #   changed for this server
+  def config_activated(data)
     # Check that the column exists in the table and we are passed data that does not match
     # the current vaule.  The first check allows this code to run if we migrate down then
     # back up again.
