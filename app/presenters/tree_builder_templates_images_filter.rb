@@ -1,6 +1,6 @@
 class TreeBuilderTemplatesImagesFilter < TreeBuilderVmsFilter
   def tree_init_options(_tree_name)
-    super.update(:leaf => 'Template')
+    super.update(:leaf => 'ManageIQ::Providers::InfraManager::Template')
   end
 
   def set_locals_for_render
