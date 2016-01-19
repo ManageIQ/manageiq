@@ -125,4 +125,58 @@ describe "AR Regions extension" do
       expect(ManageIQ::Providers::Vmware::InfraManager::Vm.new.split_id).to eq([ManageIQ::Providers::Vmware::InfraManager::Vm.my_region_number, nil])
     end
   end
+
+  describe ".my_region_number" do
+    it "reads region from the environment" do
+      reject_db_sequence_lookup
+      allow(ENV).to receive(:fetch).with("REGION", nil).and_return("23")
+      allow(File).to receive(:exist?).with(/REGION/).and_return(false)
+      allow(File).to receive(:read).and_raise(Errno::ENOENT)
+      expect(VmOrTemplate.my_region_number).to eq(23)
+    end
+
+    it "reads region from the REGION file" do
+      reject_db_sequence_lookup
+      allow(ENV).to receive(:fetch).with("REGION", nil).and_return(nil)
+      expect(File).to receive(:exist?).with(/REGION/).and_return(true)
+      expect(File).to receive(:read).with(/REGION/).and_return("33")
+      expect(VmOrTemplate.my_region_number).to eq(33)
+    end
+
+    it "reads region from the database" do
+      db_sequence_lookup(44)
+      allow(ENV).to receive(:fetch).with("REGION", nil).and_return(nil)
+      allow(File).to receive(:exist?).with(/REGION/).and_return(false)
+      allow(File).to receive(:read).and_raise(Errno::ENOENT)
+      expect(VmOrTemplate.my_region_number).to eq(44)
+    end
+
+    it "falls back to region 0" do
+      reject_db_sequence_lookup
+      allow(ENV).to receive(:fetch).with("REGION", nil).and_return(nil)
+      allow(File).to receive(:exist?).with(/REGION/).and_return(false)
+      allow(File).to receive(:read).and_raise(Errno::ENOENT)
+      expect(VmOrTemplate.my_region_number).to eq(0)
+    end
+
+    it "Uses REGION file over all others" do
+      db_sequence_lookup(44)
+      allow(ENV).to receive(:fetch).with("REGION", nil).and_return("23")
+      allow(File).to receive(:exist?).with(/REGION/).and_return(true)
+      allow(File).to receive(:read).with(/REGION/).and_return("33")
+      expect(VmOrTemplate.my_region_number).to eq(33)
+    end
+
+    def reject_db_sequence_lookup
+      allow(VmOrTemplate.connection).to receive(:select_value)
+        .at_least(:once).with("select last_value from miq_databases_id_seq")
+        .and_raise(ActiveRecord::StatementInvalid, "not defined yet", nil)
+    end
+
+    def db_sequence_lookup(sequence = nil)
+      allow(VmOrTemplate.connection).to receive(:select_value)
+        .at_least(:once).with("select last_value from miq_databases_id_seq")
+        .and_return(ArRegion::DEFAULT_RAILS_SEQUENCE_FACTOR * sequence + 1)
+    end
+  end
 end

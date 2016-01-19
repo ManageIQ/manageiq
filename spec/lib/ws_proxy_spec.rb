@@ -4,7 +4,7 @@ describe WsProxy do
       :server => {
         :websocket => {
           :cert => 'non-existent-foo-bar',
-          :key  => 'REGION' # file existing under Rails root
+          :key  => 'Gemfile' # file existing under Rails root
         }
       }
     )
@@ -22,7 +22,7 @@ describe WsProxy do
           :idle_timeout= => 120,
           :timeout=      => 120,
           :cert          => WsProxy::DEFAULT_CERT_FILE,
-          :key           => 'REGION',
+          :key           => 'Gemfile',
           nil            => [port, "0.0.0.0:5900"],
         }
       )
