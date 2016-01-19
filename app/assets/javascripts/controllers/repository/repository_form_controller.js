@@ -8,9 +8,11 @@ ManageIQ.angular.app.controller('repositoryFormController', ['$http', '$scope', 
   ManageIQ.angular.scope = $scope;
 
   if (repositoryFormId == 'new') {
+    $scope.newRecord = true;
     $scope.repoModel.repo_name = "";
     $scope.repoModel.repo_path = "";
   } else {
+    $scope.newRecord = false;
       miqService.sparkleOn();
 
       $http.get('/repository/repository_form_fields/' + repositoryFormId).success(function(data) {
@@ -24,7 +26,8 @@ ManageIQ.angular.app.controller('repositoryFormController', ['$http', '$scope', 
    }
 
   $scope.$watch("repoModel.repo_name", function() {
-    $scope.form = $scope.repositoryForm;
+    $scope.form = $scope.angularForm;
+    $scope.model = "repoModel";
   });
 
   $scope.addClicked = function() {
@@ -52,7 +55,7 @@ ManageIQ.angular.app.controller('repositoryFormController', ['$http', '$scope', 
 
   $scope.resetClicked = function() {
     $scope.repoModel = angular.copy( $scope.modelCopy );
-    $scope.repositoryForm.$setPristine(true);
+    $scope.angularForm.$setPristine(true);
     miqService.miqFlash("warn", __("All changes have been reset"));
   };
 }]);
