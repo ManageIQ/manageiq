@@ -106,16 +106,11 @@ describe ApiController do
   end
 
   context "Provision requests approval" do
-    let(:user)      { FactoryGirl.create(:user) }
-    let(:template)  { FactoryGirl.create(:template_amazon) }
-    let(:provreq1)  { FactoryGirl.create(:miq_provision_request,
-                                         :requester   => user,
-                                         :source_type => 'VmOrTemplate',
-                                         :source_id   => template.id) }
-    let(:provreq2)  { FactoryGirl.create(:miq_provision_request,
-                                         :requester   => user,
-                                         :source_type => 'VmOrTemplate',
-                                         :source_id   => template.id) }
+    let(:user)          { FactoryGirl.create(:user) }
+    let(:template)      { FactoryGirl.create(:template_amazon) }
+    let(:provreqbody)   { {:requester => user, :source_type => 'VmOrTemplate', :source_id => template.id} }
+    let(:provreq1)      { FactoryGirl.create(:miq_provision_request, provreqbody) }
+    let(:provreq2)      { FactoryGirl.create(:miq_provision_request, provreqbody) }
     let(:provreq1_url)  { provision_requests_url(provreq1.id) }
     let(:provreq2_url)  { provision_requests_url(provreq2.id) }
     let(:provreqs_list) { [provreq1_url, provreq2_url] }
@@ -125,7 +120,8 @@ describe ApiController do
 
       run_post(provreq1_url, gen_request(:approve))
 
-      expect_single_action_result(:success => true, :message => "Provision request #{provreq1.id} approved", :href => :provreq1_url)
+      expected_msg = "Provision request #{provreq1.id} approved"
+      expect_single_action_result(:success => true, :message => expected_msg, :href => :provreq1_url)
     end
 
     it "supports denying a request" do
@@ -133,7 +129,8 @@ describe ApiController do
 
       run_post(provreq2_url, gen_request(:deny))
 
-      expect_single_action_result(:success => true, :message => "Provision request #{provreq2.id} denied", :href => :provreq2_url)
+      expected_msg = "Provision request #{provreq2.id} denied"
+      expect_single_action_result(:success => true, :message => expected_msg, :href => :provreq2_url)
     end
 
     it "supports approving multiple requests" do
