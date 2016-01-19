@@ -14,7 +14,7 @@ class RemoveReplicatedRowsFromNewlyExcludedTables < ActiveRecord::Migration
 
   def up
     say_with_time("Removing rows from newly excluded tables") do
-      region_cond = ActiveRecord::Base.region_to_conditions(Rails.root.join("REGION").read.to_i)
+      region_cond = ActiveRecord::Base.region_to_conditions(ActiveRecord::Base.my_region_number)
       MiqEventDefinition.where.not(region_cond).delete_all
       ScanItem.where.not(region_cond).delete_all
     end
