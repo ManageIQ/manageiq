@@ -56,22 +56,36 @@ module Openstack
         def find_or_create_servers(volumes, networks, security_groups, images, networking, data_method = :servers)
           servers = []
           @data.send(data_method).each do |server|
-            if (volume_name = server.delete(:__block_device_name))
-              volume = volumes.detect { |x| x.display_name == volume_name }
-              server.merge!(:block_device_mapping => {
-                              :volume_id   => volume.id,
-                              :device_name => "vda"
-                            }) if volume
-            end
-
-            if (network_name = server.delete(:__network_name))
-              network = networks.detect { |x| x.name == network_name }
-              server.merge!(:nics => [{"net_id" => network.id}]) if network
-            end
-
+            image = nil
             if (image_name = server.delete(:__image_name))
               image = images.detect { |x| x.name == image_name }
               server.merge!(:image_ref => image.id) if image
+            end
+
+            if (volume_name = server.delete(:__block_device_name))
+              volume = volumes.detect { |x| x.display_name == volume_name }
+              server.merge!(
+                :block_device_mapping_v2 => [{
+                                               :source_type           => "image",
+                                               :destination_type      => "local",
+                                               :boot_index            => 0,
+                                               :delete_on_termination => true,
+                                               :uuid                  => image.id
+                                             }, {
+                                               :source_type           => "volume",
+                                               :uuid                  => volume.id,
+                                               :destination_type      => 'volume',
+                                               :delete_on_termination => "preserve",
+                                             }]) if volume
+            end
+
+            if (network_names = server.delete(:__network_names))
+              nics = []
+              network_names.each do |network_name|
+                network = networks.detect { |x| x.name == network_name }
+                nics << {"net_id" => network.id} if network
+              end
+              server.merge!(:nics => nics) if nics
             end
 
             if (flavor_name = server.delete(:__flavor_name))
