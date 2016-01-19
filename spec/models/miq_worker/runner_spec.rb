@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqWorker::Runner do
   context "#start" do
     before do

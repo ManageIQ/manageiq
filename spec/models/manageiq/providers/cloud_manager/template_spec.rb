@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe TemplateCloud do
   it "#post_create_actions" do
     expect(subject).to receive(:reconnect_events)

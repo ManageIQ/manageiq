@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "MiqAlert Evaluation Internal" do
   context "With VM as a target," do
     before(:each) do

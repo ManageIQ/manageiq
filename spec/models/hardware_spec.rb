@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Hardware do
   before(:each) do
     @vm_hw = FactoryGirl.create(:hardware)

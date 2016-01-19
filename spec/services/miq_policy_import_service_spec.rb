@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqPolicyImportService do
   let(:miq_policy_import_service) { described_class.new }
   let(:import_file_upload) { double("ImportFileUpload") }

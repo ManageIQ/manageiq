@@ -13,8 +13,6 @@
 # - Refresh a provider                    /api/providers/:id                    action "refresh"
 # - Refresh multiple providers            /api/providers                        action "refresh"
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
 

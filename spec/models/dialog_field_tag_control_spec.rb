@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe DialogFieldTagControl do
   def add_entry(cat, options)
     raise "entries can only be added to classifications" unless cat.category?

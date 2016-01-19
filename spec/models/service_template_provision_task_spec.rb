@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ServiceTemplateProvisionTask do
   context "with multiple tasks" do
     before(:each) do

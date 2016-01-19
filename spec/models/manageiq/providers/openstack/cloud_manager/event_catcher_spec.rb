@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Openstack::CloudManager::EventCatcher do
   before do
     @ems = FactoryGirl.create(:ems_openstack)

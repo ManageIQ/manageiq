@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe DialogFieldDateControl do
   describe "#value" do
     let(:dialog_field) { described_class.new(:dynamic => dynamic, :value => value) }

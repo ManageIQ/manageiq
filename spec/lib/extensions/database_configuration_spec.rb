@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "DatabaseConfiguration patch" do
   before(:each) do
     allow(Rails).to receive_messages(:env => ActiveSupport::StringInquirer.new("production"))

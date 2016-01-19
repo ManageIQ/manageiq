@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe QueryCounter do
   it "counts named queries" do
     expect(QueryCounter.count { Host.first }).to eq(1)

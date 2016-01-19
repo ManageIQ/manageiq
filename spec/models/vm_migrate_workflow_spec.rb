@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe VmMigrateWorkflow do
   include WorkflowSpecHelper
   let(:admin) { FactoryGirl.create(:user_with_group) }

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Vmware::InfraManager::Host do
   before(:each) do
     @host = FactoryGirl.create(:host_vmware)

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe GuestDevice do
   before(:each) do
     @vm_gd = FactoryGirl.create(:guest_device_nic)

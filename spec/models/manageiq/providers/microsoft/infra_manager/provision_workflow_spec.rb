@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Microsoft::InfraManager::ProvisionWorkflow do
   include WorkflowSpecHelper
 

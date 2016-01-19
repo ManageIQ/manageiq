@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Zone do
   include_examples ".seed called multiple times"
 

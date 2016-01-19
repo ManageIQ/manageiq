@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ChargebackRateDetail do
   it "#cost" do
     cvalue   = 42.0

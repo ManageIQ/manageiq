@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Redhat::InfraManager::ProvisionViaPxe do
   context "A new provision request," do
     before(:each) do

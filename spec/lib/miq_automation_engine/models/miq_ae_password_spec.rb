@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqAePassword do
   let(:plaintext) { "Pl$1nTeXt" }
 

@@ -5,8 +5,6 @@
 # - Create single provision request    /api/provision_requests    action "create"
 # - Create multiple provision requests /api/provision_requests    action "create"
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
 

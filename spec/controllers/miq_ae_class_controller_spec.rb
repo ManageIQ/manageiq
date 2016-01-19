@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqAeClassController do
   context "#set_record_vars" do
     it "Namespace remains unchanged when a class is edited" do

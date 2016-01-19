@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe RelationshipMixin do
   TEST_REL_TYPE = "testing"
 

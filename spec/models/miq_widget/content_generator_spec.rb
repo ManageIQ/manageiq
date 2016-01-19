@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqWidget::ContentGenerator do
   let(:content_generator) { described_class.new }
 

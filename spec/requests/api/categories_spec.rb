@@ -1,5 +1,3 @@
-require "spec_helper"
-
 RSpec.describe "categories API" do
   include Rack::Test::Methods
 

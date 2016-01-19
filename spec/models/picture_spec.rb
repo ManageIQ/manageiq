@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Picture do
   subject { FactoryGirl.build :picture }
 

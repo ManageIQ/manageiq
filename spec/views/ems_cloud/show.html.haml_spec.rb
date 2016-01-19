@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "ems_cloud/show.html.haml" do
   let(:zone) { FactoryGirl.create(:zone) }
   let(:ems_cloud) { FactoryGirl.create(:ems_openstack, :hostname => '1.1.1.1', :zone => zone) }

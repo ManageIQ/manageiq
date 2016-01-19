@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::AnsibleTower::ConfigurationManager do
   let(:provider)              { FactoryGirl.build(:provider_ansible_tower) }
   let(:configuration_manager) { FactoryGirl.build(:configuration_manager_ansible_tower, :provider => provider) }

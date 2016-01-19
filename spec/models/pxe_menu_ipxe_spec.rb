@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe PxeMenuIpxe do
   before(:each) do
     @contents = <<-PXEMENU

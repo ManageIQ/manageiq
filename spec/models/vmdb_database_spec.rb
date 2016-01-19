@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe VmdbDatabase do
   before :each do
     @db    = FactoryGirl.create(:vmdb_database)

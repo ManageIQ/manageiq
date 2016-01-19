@@ -1,5 +1,3 @@
-require "spec_helper"
-
 class MockKubeClient
   def create_pod(*_args)
     nil

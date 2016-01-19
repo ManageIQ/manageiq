@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqAeCustomizationController do
   before(:each) do
     set_user_privileges

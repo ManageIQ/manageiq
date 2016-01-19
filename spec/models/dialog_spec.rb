@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Dialog do
   describe ".seed" do
     let(:dialog_import_service) { double("DialogImportService") }

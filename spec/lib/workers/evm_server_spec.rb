@@ -1,5 +1,3 @@
-require "spec_helper"
-
 require 'workers/evm_server'
 
 describe EvmServer do

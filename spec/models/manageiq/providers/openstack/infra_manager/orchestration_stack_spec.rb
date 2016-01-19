@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack do
   let(:ems) { FactoryGirl.create(:ems_openstack_infra) }
   let(:template) { FactoryGirl.create(:orchestration_template) }

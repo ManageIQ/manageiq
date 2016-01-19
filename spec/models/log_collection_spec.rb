@@ -1,4 +1,3 @@
-require "spec_helper"
 require "models/shared_examples/log_collection"
 
 describe "LogCollection" do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Host do
   it "groups and users joins" do
     user1  = FactoryGirl.create(:account_user)

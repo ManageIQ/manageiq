@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "AR Nested Count By extension" do
   context "miq_queue with messages" do
     before(:each) do

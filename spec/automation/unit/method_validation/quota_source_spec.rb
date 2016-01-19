@@ -1,4 +1,3 @@
-require "spec_helper"
 include QuotaHelper
 
 describe "Quota Validation" do

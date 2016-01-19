@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe MiqAeMethodService::MiqAeServiceEmsEvent do
   before(:each) do
     @ems           = FactoryGirl.create(:ems_vmware_with_authentication,

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "JobProxyDispatcherVmProxies4Job" do
   require File.expand_path(File.join(File.dirname(__FILE__), 'job_proxy_dispatcher/job_proxy_dispatcher_helper'))
   include JobProxyDispatcherHelper

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe PxeController do
   describe "#accordion_select" do
     it "routes with POST" do

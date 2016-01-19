@@ -1,4 +1,3 @@
-require "spec_helper"
 require_migration
 
 RSpec.describe CorrectUserCreatedRoleFeatureSets do

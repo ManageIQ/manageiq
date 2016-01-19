@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe AutomateImportService do
   let(:automate_import_service) { described_class.new }
 

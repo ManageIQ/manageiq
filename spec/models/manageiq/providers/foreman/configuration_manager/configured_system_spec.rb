@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem do
   subject { described_class.new }
 

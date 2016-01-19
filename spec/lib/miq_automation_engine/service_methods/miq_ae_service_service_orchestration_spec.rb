@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceServiceOrchestrationSpec
   describe MiqAeMethodService::MiqAeServiceServiceOrchestration do
     let(:orch_template)    { FactoryGirl.create(:orchestration_template) }

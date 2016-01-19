@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqExpression do
   describe ".get_col_type" do
     subject { described_class.get_col_type(@field) }

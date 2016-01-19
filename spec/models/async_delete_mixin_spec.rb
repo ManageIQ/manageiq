@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe AsyncDeleteMixin do
   def common_setup(klass)
     objects = []

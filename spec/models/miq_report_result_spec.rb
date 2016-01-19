@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqReportResult do
   context "persisting generated report results" do
     before(:each) do

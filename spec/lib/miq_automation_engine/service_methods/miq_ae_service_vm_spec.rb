@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceVmSpec
   describe MiqAeMethodService::MiqAeServiceVm do
     let(:vm)         { FactoryGirl.create(:vm_vmware, :name => "template1", :location => "abc/abc.vmx") }

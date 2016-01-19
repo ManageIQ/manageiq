@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceSpec
   include MiqAeMethodService
 

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe FileDepot do
   it ".depot_description_to_class" do
     expect(described_class.depot_description_to_class("FTP")).to eq(FileDepotFtp)

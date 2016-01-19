@@ -1,4 +1,3 @@
-require "spec_helper"
 include UiConstants
 
 describe MiqAeCustomizationController do

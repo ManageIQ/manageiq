@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "miq_ae_customization/_dialog_res_remove.html.haml" do
   before do
     dt = FactoryGirl.create(:dialog_tab, :label => "tab01")

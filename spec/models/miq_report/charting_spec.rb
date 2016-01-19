@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqReport do
   before(:each) do
     EvmSpecHelper.local_miq_server

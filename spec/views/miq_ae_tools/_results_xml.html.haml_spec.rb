@@ -1,4 +1,3 @@
-require "spec_helper"
 include JsHelper
 
 describe "miq_ae_tools/_results_xml.html.haml" do

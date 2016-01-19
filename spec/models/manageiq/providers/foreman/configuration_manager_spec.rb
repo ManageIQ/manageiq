@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Foreman::ConfigurationManager do
   let(:provider) { FactoryGirl.build(:provider_foreman) }
   let(:configuration_manager) do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ServiceReconfigureRequest do
   let(:request) do
     described_class.new(:options => {:src_id => 123})

@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'util/extensions/miq-erb_for_yaml'
 
 describe MiqERBForYAML do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Metric::Purging do
   context "::Purging" do
     it "#purge_all_timer" do

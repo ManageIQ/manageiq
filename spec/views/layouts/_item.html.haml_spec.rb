@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "layouts/_item.html.haml" do
   it "check if correct items are being rendered for filesystem" do
     set_controller_for_view("ems_infra")

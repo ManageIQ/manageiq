@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe FloatingIp do
   it ".available" do
     vm = FactoryGirl.create(:vm_amazon)

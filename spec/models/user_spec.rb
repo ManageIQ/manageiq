@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe User do
   context "id set as Administrator" do
     before(:each) do

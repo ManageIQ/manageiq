@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe MiqScheduleWorker::Jobs do
   context "#ems_refresh_timer" do
     it "with no EMSes" do

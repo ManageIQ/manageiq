@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceSecurityGroupSpec
   describe MiqAeMethodService::MiqAeServiceSecurityGroup do
     it "#ext_management_system" do

@@ -1,4 +1,3 @@
-require "spec_helper"
 require "appliance_console/internal_database_configuration"
 
 describe ApplianceConsole::InternalDatabaseConfiguration do

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "Available_Os_Types Method Validation" do
   let(:user) { FactoryGirl.create(:user_with_group) }
   os_list = {'unknown' => '<Unknown>', 'linux' => 'Linux', 'windows' => 'Windows'}

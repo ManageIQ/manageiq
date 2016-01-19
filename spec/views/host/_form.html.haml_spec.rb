@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "rendering fields in host new/edit form" do
   before(:each) do
     set_controller_for_view("host")

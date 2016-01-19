@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe DialogImportValidator do
   let(:dialog_import_validator) { described_class.new }
 

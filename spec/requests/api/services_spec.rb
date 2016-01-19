@@ -13,8 +13,6 @@
 # - Retire service future       /api/services/:id     action "retire"
 # - Retire multiple services    /api/services         action "retire"
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
 

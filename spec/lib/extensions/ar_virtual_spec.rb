@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe VirtualColumn do
   context ".new" do
     it("with invalid parameters") { expect { VirtualColumn.new :vcol1 }.to raise_error(ArgumentError) }

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/replication/support/ and its subdirectories.
 Dir[Rails.root.join("spec/replication/support/**/*.rb")].each { |f| require f }

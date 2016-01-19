@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe PictureController do
   let(:picture_content) { "BINARY IMAGE CONTENT" }
   let(:picture) { FactoryGirl.create(:picture, :id => 10_000_000_000_005, :extension => "jpg") }

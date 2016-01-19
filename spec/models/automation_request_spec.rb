@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe AutomationRequest do
   let(:admin) { FactoryGirl.create(:user, :role => "admin") }
   before(:each) do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 # @record.operating_system && @record.operating_system.processes.maximum(:updated_on)
 
 describe VmHelper do

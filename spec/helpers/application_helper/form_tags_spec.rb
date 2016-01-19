@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ApplicationHelper::FormTags do
   it "#datepicker_input_tag sets correct date / time, data-provide, autoclose, date-format, date-language" do
     input = helper.datepicker_input_tag('id01', Time.at(117_036_184_5).utc)

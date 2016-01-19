@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqProvisionVirtWorkflow do
   let(:workflow) { FactoryGirl.create(:miq_provision_virt_workflow) }
 

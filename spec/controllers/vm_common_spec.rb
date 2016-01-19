@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe VmOrTemplateController do
   context "#snap_pressed" do
     before :each do

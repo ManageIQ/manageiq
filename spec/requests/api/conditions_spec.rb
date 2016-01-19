@@ -7,8 +7,6 @@
 # Condition subcollection:
 #   /api/policies/:id/conditions
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
 

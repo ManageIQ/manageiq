@@ -5,8 +5,6 @@
 # - Create single automation request    /api/automation_requests    action "create"
 # - Create multiple automation requests /api/automation_requests    action "create"
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
 

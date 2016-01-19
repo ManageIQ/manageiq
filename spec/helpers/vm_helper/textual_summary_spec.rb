@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe VmHelper::TextualSummary do
   it "#textual_server" do
     server  = FactoryGirl.build(:miq_server, :id => 99999)

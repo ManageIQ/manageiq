@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqAeClassController do
   describe "#change_tab" do
     it "routes with POST" do

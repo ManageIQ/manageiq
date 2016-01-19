@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Openstack::InfraManager::Host do
   describe "#refresh_openstack_services" do
     let(:openstack_status_text) do

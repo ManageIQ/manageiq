@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "/static/*" do
   context "foo" do
     before :each do

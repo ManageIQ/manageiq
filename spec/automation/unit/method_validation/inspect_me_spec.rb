@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "InspectMe Automate Method" do
   before do
     @miq_server = EvmSpecHelper.local_miq_server

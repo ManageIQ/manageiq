@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe OrchestrationTemplate do
   describe ".find_or_create_by_contents" do
     context "when the template does not exist" do

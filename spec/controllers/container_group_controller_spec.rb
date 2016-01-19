@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ContainerGroupController do
   render_views
   before(:each) do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqRequestTask do
   before do
     MiqRegion.seed

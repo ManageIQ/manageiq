@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqRequestWorkflow do
   let(:workflow) { FactoryGirl.build(:miq_provision_workflow) }
   let(:ems) { FactoryGirl.create(:ext_management_system) }

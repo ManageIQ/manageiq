@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "report/_report_list.html.haml" do
   before do
     rep_details = {

@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'kubeclient'
 
 describe ManageIQ::Providers::Kubernetes::ContainerManager::RefresherMixin do

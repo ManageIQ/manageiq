@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Chargeback do
   before do
     MiqRegion.seed

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "openstack_pre_retirement Method Validation" do
   before(:each) do
     @user = FactoryGirl.create(:user_with_group)

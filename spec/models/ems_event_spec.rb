@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe EmsEvent do
   context ".add_vc" do
     DATA_DIR = Rails.root.join("spec/models/manageiq/providers/vmware/infra_manager/event_data")

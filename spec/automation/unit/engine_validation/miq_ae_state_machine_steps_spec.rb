@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "MiqAeStateMachineSteps" do
   before do
     @user                = FactoryGirl.create(:user_with_group)

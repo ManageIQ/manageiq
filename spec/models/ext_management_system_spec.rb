@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ExtManagementSystem do
   it ".model_name_from_emstype" do
     described_class.leaf_subclasses.each do |klass|

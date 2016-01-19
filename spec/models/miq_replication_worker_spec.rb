@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqReplicationWorker do
   context "#check_status" do
     def should_handle_check_status(rr_pending_count, rr_pending_last_id, expected_status)

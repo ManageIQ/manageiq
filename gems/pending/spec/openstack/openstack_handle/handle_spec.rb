@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'openstack/openstack_handle/handle'
 require 'fog/openstack'
 

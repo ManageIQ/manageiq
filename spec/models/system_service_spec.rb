@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe SystemService do
   describe ".svc_type" do
     it "has nice names" do

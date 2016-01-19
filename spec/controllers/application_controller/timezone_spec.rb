@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ApplicationController, "#Timezone" do
   before do
     _, @server, = EvmSpecHelper.create_guid_miq_server_zone

@@ -1,4 +1,3 @@
-require 'spec_helper'
 include ReportsSpecHelper
 
 describe ReportFormatter::JqplotFormatter do

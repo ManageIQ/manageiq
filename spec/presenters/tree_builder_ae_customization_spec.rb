@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe TreeBuilderAeCustomization  do
   let(:sandbox) { {} }
 

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe EmsContainerController do
   before(:each) do
     session[:settings] = {:views => {}}

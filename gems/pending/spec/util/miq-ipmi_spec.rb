@@ -1,4 +1,3 @@
-require "spec_helper"
 require "util/miq-ipmi"
 
 describe MiqIPMI do

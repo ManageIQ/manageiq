@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "report/_db_widget_remove.html.haml" do
   before do
     ws = FactoryGirl.create(:miq_widget_set)

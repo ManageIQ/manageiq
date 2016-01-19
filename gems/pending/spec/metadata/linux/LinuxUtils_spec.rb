@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'metadata/linux/LinuxUtils'
 
 describe MiqLinux::Utils do

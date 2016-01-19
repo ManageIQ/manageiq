@@ -1,5 +1,3 @@
-require "spec_helper"
-
 require "active_support/all"
 require "appliance_console/external_httpd_authentication"
 require "appliance_console/prompts"

@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require "spec_helper"
-
 describe BinaryBlobPart do
   context "#data= and #data" do
     before(:each) do

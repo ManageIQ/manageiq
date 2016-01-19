@@ -1,6 +1,4 @@
 
-require "spec_helper"
-
 describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
   before(:each) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone

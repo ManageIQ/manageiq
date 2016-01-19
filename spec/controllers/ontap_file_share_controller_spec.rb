@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe OntapFileShareController do
   context "#process_button" do
     before(:each) do

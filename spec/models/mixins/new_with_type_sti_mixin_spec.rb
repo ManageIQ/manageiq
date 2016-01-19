@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe NewWithTypeStiMixin do
   context ".new" do
     it "without type" do

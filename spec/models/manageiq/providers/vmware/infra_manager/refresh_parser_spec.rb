@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Vmware::InfraManager::RefreshParser do
   context ".vm_inv_to_hardware_hash" do
     context "properly calculates cores and sockets" do

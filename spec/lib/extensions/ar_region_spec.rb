@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "AR Regions extension" do
   before(:each) do
     allow(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:rails_sequence_factor).and_return(10)

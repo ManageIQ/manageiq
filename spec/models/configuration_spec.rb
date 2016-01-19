@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Configuration do
   context ".create_or_update" do
     context "multiple calls do not create multiple records" do

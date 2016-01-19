@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe MiqAeMethodService::MiqAeServiceClassification do
   before do
     FactoryGirl.create(:classification_department_with_tags)

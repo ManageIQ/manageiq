@@ -1,4 +1,3 @@
-require "spec_helper"
 describe ConfigurationHelper do
   [[:compare, "compressed", 1],
    [:compare, "expanded", 1],

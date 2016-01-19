@@ -1,5 +1,3 @@
-require "spec_helper"
-
 require "manageiq_foreman"
 
 describe ManageIQ::Providers::Foreman::Provider do

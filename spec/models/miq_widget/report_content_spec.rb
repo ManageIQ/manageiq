@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqWidget, "::ReportContent" do
   let(:vm_count) { 2 }
   let(:widget) do

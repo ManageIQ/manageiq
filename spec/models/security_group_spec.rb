@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe SecurityGroup do
   before do
     provider = FactoryGirl.create(:ems_amazon)

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceMethodsSpec
   describe MiqAeMethodService::MiqAeServiceMethods do
     before(:each) do

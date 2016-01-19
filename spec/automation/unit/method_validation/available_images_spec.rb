@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "Available_Images Method Validation" do
   let(:user) { FactoryGirl.create(:user_with_group) }
   let(:default_desc) { "<None>" }

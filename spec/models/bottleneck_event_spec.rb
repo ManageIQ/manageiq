@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe BottleneckEvent do
   describe ".future_event_definitions_for_obj" do
     it "contains things" do

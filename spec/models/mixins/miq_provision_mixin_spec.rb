@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqProvisionMixin do
   describe "#get_owner" do
     let(:owner) { FactoryGirl.create(:user_with_email) }

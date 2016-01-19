@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "ar_base_model extension" do
   context "with a test class" do
     before(:each) { class ::TestClass < ActiveRecord::Base; end }

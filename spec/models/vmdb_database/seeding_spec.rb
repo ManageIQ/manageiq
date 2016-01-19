@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe VmdbDatabase do
   context "::Seeding" do
     include_examples(".seed called multiple times")

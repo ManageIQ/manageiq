@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Vmdb::Gettext::Debug do
   before { Vmdb::FastGettextHelper.register_locales }
 

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeEngineSpec
   include MiqAeEngine
   describe MiqAeEngine do

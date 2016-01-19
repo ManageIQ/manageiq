@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe AvailabilityZone do
   it ".available" do
     FactoryGirl.create(:availability_zone_amazon)

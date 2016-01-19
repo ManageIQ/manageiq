@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Redhat::InfraManager::RefreshParser do
   context "#vm_inv_to_disk_hashes" do
     it "should assign location by boot order and name" do

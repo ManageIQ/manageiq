@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ServiceReconfigureTask do
   let(:user)     { FactoryGirl.create(:user_with_group) }
   let(:template) { FactoryGirl.create(:service_template, :name => 'Test Template') }

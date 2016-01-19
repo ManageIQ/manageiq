@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Condition do
   describe ".subst" do
     context "expression with <find>" do

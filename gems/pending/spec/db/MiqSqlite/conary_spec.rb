@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'db/MiqSqlite/MiqSqlite3'
 
 describe MiqSqlite3DB::MiqSqlite3 do

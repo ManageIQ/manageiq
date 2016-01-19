@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqStorageMetric do
   let(:time) { Time.utc(2013, 4, 22, 8, 31) }
 

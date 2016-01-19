@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeUriSpec
   include MiqAeEngine
   describe MiqAeUri do

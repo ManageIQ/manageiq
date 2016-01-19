@@ -7,8 +7,6 @@
 # Policy Action subcollection:
 #   /api/policies/:id/policy_actions
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
 

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe TextualSummaryHelper do
   before do
     login_as @user = FactoryGirl.create(:user)

@@ -1,4 +1,3 @@
-require "spec_helper"
 require File.expand_path("../app/controllers/application_controller/", "feature.rb")
 
 describe ApplicationController do

@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'util/extensions/miq-hash'
 
 # Subclass of String to test []= substring complex key patch

@@ -1,6 +1,4 @@
 
-require "spec_helper"
-
 module MiqAeServiceFlavorSpec
   include MiqAeEngine
   describe MiqAeMethodService::MiqAeServiceFlavor do

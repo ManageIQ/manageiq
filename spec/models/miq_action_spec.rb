@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqAction do
   context "#action_custom_automation" do
     before(:each) do

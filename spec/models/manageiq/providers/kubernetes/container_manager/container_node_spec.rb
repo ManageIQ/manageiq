@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ContainerNode do
   it "has distinct routes" do
     service = FactoryGirl.create(

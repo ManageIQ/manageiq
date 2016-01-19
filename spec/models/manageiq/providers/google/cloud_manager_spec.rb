@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Google::CloudManager do
   it ".ems_type" do
     expect(described_class.ems_type).to eq('gce')

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe EvmDatabaseOps do
   context "#backup" do
     before(:each) do

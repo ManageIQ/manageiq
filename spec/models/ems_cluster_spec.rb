@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe EmsCluster do
   context("VMware") do
     before(:each) do

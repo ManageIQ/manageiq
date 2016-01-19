@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe VmInfraController do
   describe "ApplicationController::Explorer concern" do
     context "#valid_active_node" do

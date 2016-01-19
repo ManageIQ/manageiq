@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe DialogFieldSortedItem do
   let(:df) { FactoryGirl.build(:dialog_field_sorted_item, :label => 'dialog_field', :name => 'dialog_field') }
 

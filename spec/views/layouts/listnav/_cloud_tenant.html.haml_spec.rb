@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "layouts/listnav/_cloud_tenant.html.haml" do
   before :each do
     set_controller_for_view("cloud_tenant")

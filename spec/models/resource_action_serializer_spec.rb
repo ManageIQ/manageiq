@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ResourceActionSerializer do
   let(:resource_action_serializer) { described_class.new }
 

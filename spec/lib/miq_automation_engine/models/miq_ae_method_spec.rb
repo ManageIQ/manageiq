@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqAeMethod do
   it "should return editable as false if the parent namespace/class is not editable" do
     n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :priority => 10, :system => true)

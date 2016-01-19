@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe VmOrTemplateController do
   let(:template_vmware) { FactoryGirl.create(:template_vmware, :name => 'template_vmware Name') }
   let(:vm_vmware)       { FactoryGirl.create(:vm_vmware, :name => "vm_vmware Name") }

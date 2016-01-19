@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "host/show.html.haml" do
   shared_examples_for "miq_before_onload JS is needed" do
     it "renders proper JS" do

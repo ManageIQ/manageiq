@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe AggregationMixin do
   it "aggregate host attributes" do
     cluster = FactoryGirl.create(:ems_cluster, :hosts =>

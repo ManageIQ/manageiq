@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqDbConfig do
   CSV_HEADER = %w( session_id
                    xact_start

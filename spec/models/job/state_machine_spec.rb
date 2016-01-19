@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Job::StateMachine do
   before do
     module TestStateMachine

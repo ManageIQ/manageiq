@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqAeToolsController do
   describe "#resolve" do
     it "routes with GET" do

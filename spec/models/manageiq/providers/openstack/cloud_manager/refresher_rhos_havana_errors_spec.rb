@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
   before(:each) do
     EmsRefresh.debug_failures = false

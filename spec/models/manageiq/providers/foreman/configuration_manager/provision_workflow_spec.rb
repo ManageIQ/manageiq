@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow do
   include WorkflowSpecHelper
 

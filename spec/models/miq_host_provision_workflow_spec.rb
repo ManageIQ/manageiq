@@ -1,5 +1,3 @@
-require "spec_helper"
-
 silence_warnings { MiqHostProvisionWorkflow.const_set("DIALOGS_VIA_AUTOMATE", false) }
 
 describe MiqHostProvisionWorkflow do

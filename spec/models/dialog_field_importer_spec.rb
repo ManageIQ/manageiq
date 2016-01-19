@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe DialogFieldImporter do
   let(:dialog_field_importer) { described_class.new }
 

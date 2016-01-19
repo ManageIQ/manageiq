@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe VmScan do
   context "A single VM Scan Job," do
     before(:each) do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ServiceTemplateOrchestration do
   let(:service_template) { FactoryGirl.create(:service_template_orchestration) }
 

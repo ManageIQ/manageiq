@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "amazon_pre_retirement Method Validation" do
   before(:each) do
     @user = FactoryGirl.create(:user_with_group)

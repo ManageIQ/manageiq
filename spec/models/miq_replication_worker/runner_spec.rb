@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqReplicationWorker::Runner do
   before do
     allow_any_instance_of(MiqReplicationWorker::Runner).to receive(:worker_initialization)

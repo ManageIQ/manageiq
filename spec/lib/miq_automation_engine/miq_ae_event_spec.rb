@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module MiqAeEventSpec
   describe MiqAeEvent do
     let(:tenant)   { FactoryGirl.create(:tenant) }

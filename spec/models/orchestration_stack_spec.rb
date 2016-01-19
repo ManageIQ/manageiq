@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe OrchestrationStack do
   describe 'direct_<resource> methods' do
     let(:root_stack) do

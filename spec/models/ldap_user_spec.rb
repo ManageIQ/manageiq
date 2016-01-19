@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe LdapUser do
   context "with a small envs" do
     before(:each) do

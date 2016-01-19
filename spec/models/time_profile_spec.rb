@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe TimeProfile do
   before(:each) do
     @server = EvmSpecHelper.local_miq_server

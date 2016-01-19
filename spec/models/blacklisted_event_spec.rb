@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'workers/event_catcher'
 
 describe BlacklistedEvent do

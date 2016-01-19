@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Metric::Processing do
   context ".process_derived_columns" do
     context "on :derived_host_sockets" do

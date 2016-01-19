@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe VmdbIndex do
   context "#capture_metrics" do
     let(:index) { FactoryGirl.create(:vmdb_index, :name => "accounts_pkey") }

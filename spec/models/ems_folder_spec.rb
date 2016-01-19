@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe EmsFolder do
   context "#hidden?" do
     it "when not VMware" do

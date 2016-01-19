@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "Server Environment Management" do
   context ".spartan_mode" do
     before(:each) { MiqServer.class_eval { instance_variable_set :@spartan_mode, nil } }

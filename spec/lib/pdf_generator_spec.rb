@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe PdfGenerator do
   context ".new" do
     it "will return the detected subclass" do

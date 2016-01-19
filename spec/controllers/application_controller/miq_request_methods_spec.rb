@@ -1,4 +1,3 @@
-require "spec_helper"
 require "support/controller_spec_helper"
 
 describe MiqRequestController do

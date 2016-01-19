@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe CustomAttributeMixin do
   before do
     class TestClass < ActiveRecord::Base

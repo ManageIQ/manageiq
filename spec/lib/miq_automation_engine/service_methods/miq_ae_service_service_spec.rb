@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceServiceSpec
   describe MiqAeMethodService::MiqAeServiceService do
     let(:service)         { FactoryGirl.create(:service, :name => "test_service", :description => "test_description") }

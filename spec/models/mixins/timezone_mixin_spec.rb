@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe TimezoneMixin do
   let(:test_class) do
     Class.new do

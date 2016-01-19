@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Vmdb::ConfigurationEncoder do
   let(:password) { "pa$$word" }
   let(:enc_pass) { MiqPassword.encrypt("pa$$word") }

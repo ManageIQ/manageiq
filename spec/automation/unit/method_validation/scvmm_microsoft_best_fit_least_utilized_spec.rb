@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "SCVMM microsoft_best_fit_least_utilized" do
   let(:user) { FactoryGirl.create(:user_with_group) }
   let(:ws) do

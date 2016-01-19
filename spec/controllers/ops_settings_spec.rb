@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe OpsController do
   context "OpsSettings::Schedules" do
     let(:user) { FactoryGirl.create(:user, :features => %w(schedule_enable schedule_disable)) }

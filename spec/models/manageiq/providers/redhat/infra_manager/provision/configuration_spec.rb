@@ -1,4 +1,3 @@
-require "spec_helper"
 require "ovirt"
 
 describe ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration do

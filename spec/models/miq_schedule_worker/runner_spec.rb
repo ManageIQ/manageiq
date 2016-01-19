@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqScheduleWorker::Runner do
   context ".new" do
     before(:each) do

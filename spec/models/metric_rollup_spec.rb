@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MetricRollup do
   context "test" do
     it "should not raise an error when a polymorphic reflection is included and references are specified in a query" do

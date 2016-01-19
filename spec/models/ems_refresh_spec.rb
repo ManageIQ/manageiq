@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe EmsRefresh do
   context ".queue_refresh" do
     before(:each) do

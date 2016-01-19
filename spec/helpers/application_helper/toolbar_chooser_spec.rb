@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ApplicationHelper, "ToolbarChooser" do
   describe "generate explorer toolbar file names" do
     context "#center_toolbar_filename_classic (private)" do

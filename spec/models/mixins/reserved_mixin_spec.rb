@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ReservedMixin do
   before(:each) do
     class TestClass < ActiveRecord::Base

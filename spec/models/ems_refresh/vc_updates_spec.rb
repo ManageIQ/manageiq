@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe EmsRefresh::VcUpdates do
   context "handling Vm updates" do
     before(:each) do

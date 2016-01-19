@@ -1,4 +1,3 @@
-require "spec_helper"
 require "appliance_console/internal_database_configuration"
 require "appliance_console/external_httpd_authentication"
 require 'appliance_console/principal'

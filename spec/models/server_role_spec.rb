@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ServerRole do
   context "Without Seeding" do
     before(:each) do

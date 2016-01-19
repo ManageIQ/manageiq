@@ -1,5 +1,3 @@
-require "spec_helper"
-
 # this is basically copied from miq_report_result/purging.rb
 describe DriftState do
   context "::Purging" do

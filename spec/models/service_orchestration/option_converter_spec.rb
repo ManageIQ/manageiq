@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ServiceOrchestration::OptionConverter do
   let(:dialog_options) do
     {

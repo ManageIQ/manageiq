@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Repository do
   it "is not valid with empty attributes" do
     repo = Repository.new

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe RequestRefererService do
   let(:request_referer_service) { described_class.new }
 

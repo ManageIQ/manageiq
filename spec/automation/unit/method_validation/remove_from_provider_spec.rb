@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "remove_from_provider Method Validation" do
   before(:each) do
     @zone       = FactoryGirl.create(:zone)

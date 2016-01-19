@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'util/extensions/miq-string'
 require 'util/extensions/miq-array'
 

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module MiqAeServiceManageIQ_Providers_Vmware_InfraManager_ProvisionSpec
   describe MiqAeMethodService::MiqAeServiceManageIQ_Providers_Vmware_InfraManager_Provision do
     before(:each) do

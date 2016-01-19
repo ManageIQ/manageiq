@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ResourcePool do
   context "Testing VM count virtual columns" do
     before(:each) do

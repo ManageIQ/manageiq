@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ChargebackRate do
   context "#validate_rate_type" do
     it "handles valid types" do

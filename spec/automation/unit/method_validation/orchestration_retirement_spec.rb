@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "Orchestration retirement state machine Methods Validation" do
   let(:user) { FactoryGirl.create(:user_with_group) }
   let(:ws) do

@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'util/extensions/miq-deep'
 
 describe 'miq-deep' do

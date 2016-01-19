@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe TreeBuilderChargebackRates do
   context "#x_get_tree_roots" do
     it "correctly renders storage and compute nodes when no rates are available" do

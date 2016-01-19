@@ -1,7 +1,5 @@
 require_relative '../interaction_methods'
 
-require "spec_helper"
-
 $LOAD_PATH << Rails.root.join("tools")
 
 describe Openstack::InteractionMethods do

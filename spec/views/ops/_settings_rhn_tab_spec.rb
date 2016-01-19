@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe 'ops/_settings_rhn_tab' do
   before { assign(:sb, :active_tab => 'settings_rhn') }
   before { assign(:customer, MiqHashStruct.new(:registered => registered)) }

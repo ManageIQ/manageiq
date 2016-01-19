@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "report/_widget_form_menu.html.haml" do
   before do
     w = FactoryGirl.create(:miq_widget)

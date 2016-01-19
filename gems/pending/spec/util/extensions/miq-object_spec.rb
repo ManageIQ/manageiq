@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'util/extensions/miq-object'
 
 describe Object do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqProvisionRequestTemplate do
   let(:user)             { FactoryGirl.create(:user) }
   let(:template)         do

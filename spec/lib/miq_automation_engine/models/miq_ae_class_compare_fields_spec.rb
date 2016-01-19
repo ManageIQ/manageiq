@@ -1,4 +1,3 @@
-require "spec_helper"
 include MiqAeYamlImportExportMixin
 describe MiqAeClassCompareFields do
   before do

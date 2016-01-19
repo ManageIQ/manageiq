@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqWorker do
   context "::Runner" do
     def all_workers

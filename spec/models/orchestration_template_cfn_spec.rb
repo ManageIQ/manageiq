@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe OrchestrationTemplateCfn do
   describe ".eligible_manager_types" do
     it "lists the classes of eligible managers" do

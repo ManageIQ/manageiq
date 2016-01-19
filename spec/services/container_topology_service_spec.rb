@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ContainerTopologyService do
 
   let(:container_topology_service) { described_class.new(nil) }

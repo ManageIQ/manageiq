@@ -1,4 +1,3 @@
-require "spec_helper"
 require "aws-sdk"
 
 describe ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream do

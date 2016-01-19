@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "check_powered_off Method Validation" do
   before(:each) { @vm = FactoryGirl.create(:vm_vmware) }
   after(:each) { @vm.destroy }

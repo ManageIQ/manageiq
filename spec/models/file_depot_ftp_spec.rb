@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe FileDepotFtp do
   before do
     _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone

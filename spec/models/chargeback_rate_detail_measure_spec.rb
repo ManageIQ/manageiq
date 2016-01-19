@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ChargebackRateDetailMeasure do
   it "has a valid factory" do
     expect(FactoryGirl.create(:chargeback_rate_detail_measure_bytes)).to be_valid

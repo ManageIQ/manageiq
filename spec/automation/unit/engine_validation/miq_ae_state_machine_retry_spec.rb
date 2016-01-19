@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "MiqAeStateMachineRetry" do
   before do
     @method_name     = 'MY_RETRY_METHOD'

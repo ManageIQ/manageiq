@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Tag do
   context ".filter_ns" do
     it "normal case" do

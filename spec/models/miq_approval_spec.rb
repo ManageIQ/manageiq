@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqApproval do
   it "#approver= also sets approver_name" do
     approval = FactoryGirl.build(:miq_approval)

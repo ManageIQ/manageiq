@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'metadata/MIQExtract/MIQExtract'
 
 describe MIQExtract do

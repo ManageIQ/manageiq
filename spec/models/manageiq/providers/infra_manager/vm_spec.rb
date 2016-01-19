@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe VmInfra do
   context "#post_create_actions" do
     it "without a host relationship" do

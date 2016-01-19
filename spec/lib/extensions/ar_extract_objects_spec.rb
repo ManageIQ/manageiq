@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "ArExtractObjects" do
   context "ArExtractObjectsTest" do
     before(:each) do

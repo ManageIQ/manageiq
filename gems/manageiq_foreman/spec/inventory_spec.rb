@@ -1,5 +1,3 @@
-require_relative 'spec_helper'
-
 describe ManageiqForeman::Inventory do
   describe "#refresh_configuration" do
     it "fetches location details" do

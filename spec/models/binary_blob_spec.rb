@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require "spec_helper"
-
 describe BinaryBlob do
   context "#binary= and #binary" do
     before { @blob = FactoryGirl.build(:binary_blob, :name => "test") }

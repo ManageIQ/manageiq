@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ActiveRecord::Base do
   context "calling apply_legacy_finder_options" do
     before(:each) do

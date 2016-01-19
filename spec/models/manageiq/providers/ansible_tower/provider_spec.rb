@@ -1,4 +1,3 @@
-require "spec_helper"
 require "ansible_tower_client"
 
 describe ManageIQ::Providers::AnsibleTower::Provider do

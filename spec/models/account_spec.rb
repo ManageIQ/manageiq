@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Account do
   before(:each) do
     @user = FactoryGirl.create(:account_user)

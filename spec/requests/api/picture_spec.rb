@@ -5,8 +5,6 @@
 # - Query picture and image_href of services           /api/services/:id?attributes=picture,picture.image_href
 # - Query picture and image_href of service_requests   /api/service_requests/:id?attributes=picture,picture.image_href
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
 

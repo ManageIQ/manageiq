@@ -1,4 +1,3 @@
-require "spec_helper"
 require Rails.root.join('spec/tools/vim_data/vim_data_test_helper')
 
 describe ManageIQ::Providers::Vmware::InfraManager::Refresher do

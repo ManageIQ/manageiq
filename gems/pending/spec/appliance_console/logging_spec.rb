@@ -1,5 +1,3 @@
-require "spec_helper"
-
 require "appliance_console/logging"
 require "appliance_console/errors"
 

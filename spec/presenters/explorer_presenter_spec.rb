@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ExplorerPresenter do
   context "partial methods" do
     before :each do

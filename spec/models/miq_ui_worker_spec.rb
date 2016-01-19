@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqUiWorker do
   it ".build_command_line" do
     run1 = MiqUiWorker.build_command_line(:arg1 => true)

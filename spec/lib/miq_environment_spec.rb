@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqEnvironment do
   context "with linux platform" do
     before(:each) do

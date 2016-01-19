@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Openstack::CloudManager::Provision do
   let(:options)      { {:src_vm_id => [template.id, template.name]} }
   let(:provider)     { FactoryGirl.create(:ems_openstack_with_authentication) }

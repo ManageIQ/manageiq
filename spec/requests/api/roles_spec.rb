@@ -15,8 +15,6 @@
 # - Delete a role by action               /api/roles/:id                        action "delete"
 # - Delete multiple roles                 /api/roles                            action "delete"
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
 

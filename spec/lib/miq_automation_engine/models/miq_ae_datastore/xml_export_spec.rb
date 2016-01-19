@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqAeDatastore::XmlExport do
   describe ".to_xml" do
     let(:custom_button) { double("CustomButton") }

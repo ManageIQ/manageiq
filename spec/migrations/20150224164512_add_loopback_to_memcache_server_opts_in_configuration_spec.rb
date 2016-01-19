@@ -1,4 +1,3 @@
-require "spec_helper"
 require_migration
 
 describe AddLoopbackToMemcacheServerOptsInConfiguration do

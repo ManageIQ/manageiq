@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Partition do
   it "#partition_type_name" do
     partition = FactoryGirl.create(:partition)

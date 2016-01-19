@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe TreeBuilderOpsRbac do
   describe ".new" do
     before { MiqRegion.seed }

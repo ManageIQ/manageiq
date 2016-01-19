@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "check_removed_from_provider Method Validation" do
   before(:each) do
     @user = FactoryGirl.create(:user_with_group)

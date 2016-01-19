@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Azure::CloudManager::OrchestrationStack do
   let(:ems) { FactoryGirl.create(:ems_azure_with_authentication) }
   let(:template) { FactoryGirl.create(:orchestration_template_azure_with_content) }

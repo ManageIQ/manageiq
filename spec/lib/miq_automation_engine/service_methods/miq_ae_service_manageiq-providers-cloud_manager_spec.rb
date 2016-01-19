@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceEmsCloudSpec
   describe MiqAeMethodService::MiqAeServiceManageIQ_Providers_CloudManager do
     it "#availability_zones" do

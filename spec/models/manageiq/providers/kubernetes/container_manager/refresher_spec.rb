@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
   before(:each) do
     allow(MiqServer).to receive(:my_zone).and_return("default")

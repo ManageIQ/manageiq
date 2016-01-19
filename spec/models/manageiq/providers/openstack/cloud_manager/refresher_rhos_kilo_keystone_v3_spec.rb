@@ -1,4 +1,3 @@
-require "spec_helper"
 require_relative "refresh_spec_common"
 
 describe ManageIQ::Providers::Openstack::CloudManager::Refresher do

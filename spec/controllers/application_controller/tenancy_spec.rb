@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe DashboardController do
   before do
     Tenant.seed

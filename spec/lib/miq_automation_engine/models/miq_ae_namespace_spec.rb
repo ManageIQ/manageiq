@@ -1,5 +1,3 @@
-require "rails_helper"
-
 describe MiqAeNamespace do
   describe "name attribute validation" do
     subject { described_class.new }

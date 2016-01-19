@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "Server Role Management" do
   context "After Setup," do
     before(:each) do

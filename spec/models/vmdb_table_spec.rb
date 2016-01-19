@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe VmdbTable do
   context "#seed_indexes" do
     before(:each) do

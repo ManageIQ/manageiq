@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe 'miq_request/_prov_options.html.haml' do
   context 'requester dropdown select box is visible' do
     before(:each) do

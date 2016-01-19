@@ -1,4 +1,3 @@
-require "spec_helper"
 require Rails.root.join("lib", "tasks", "evm_application")
 
 describe EvmApplication do

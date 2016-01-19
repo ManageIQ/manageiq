@@ -7,8 +7,6 @@
 # - Query provision_dialog from services
 #     GET /api/services/:id?attributes=provision_dialog
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
 

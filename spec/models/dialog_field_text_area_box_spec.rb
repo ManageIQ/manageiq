@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe DialogFieldTextAreaBox do
   let(:dialog_field) { described_class.new }
 

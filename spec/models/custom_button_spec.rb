@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe CustomButton do
   context "with no buttons" do
     before(:each) do

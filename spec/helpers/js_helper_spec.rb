@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe JsHelper do
   context '#set_spinner_off' do
     it 'returns js to turn spinner off' do

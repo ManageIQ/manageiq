@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe VmCloudController do
   before(:each) do
     set_user_privileges

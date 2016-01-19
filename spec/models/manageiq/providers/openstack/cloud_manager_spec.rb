@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Openstack::CloudManager do
   context "Class Methods" do
     it("from mixin") { expect(described_class.methods).to include(:auth_url, :raw_connect) }
