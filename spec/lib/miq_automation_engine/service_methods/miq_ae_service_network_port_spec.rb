@@ -12,10 +12,6 @@ module MiqAeServiceCloudNetworkSpec
       expect(described_class.instance_methods).to include(:cloud_subnet)
     end
 
-    it "#cloud_network" do
-      expect(described_class.instance_methods).to include(:cloud_network)
-    end
-
     it "#device" do
       expect(described_class.instance_methods).to include(:device)
     end

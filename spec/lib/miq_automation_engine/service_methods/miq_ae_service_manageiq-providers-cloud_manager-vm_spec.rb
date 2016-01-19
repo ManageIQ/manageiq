@@ -19,17 +19,15 @@ module MiqAeServiceVmOpenstackSpec
           end
           case t
           when "openstack"
-            network = FactoryGirl.create(:cloud_network)
-            subnet  = FactoryGirl.create(:cloud_subnet, :cloud_network => network)
-            vm.network_ports << FactoryGirl.create(:network_port,
+            network = FactoryGirl.create("cloud_network_#{t}".to_sym)
+            subnet  = FactoryGirl.create("cloud_subnet_#{t}".to_sym, :cloud_network => network)
+            vm.network_ports << FactoryGirl.create("network_port_#{t}".to_sym,
                                                    :device        => vm,
-                                                   :cloud_network => network,
                                                    :cloud_subnet  => subnet)
           when "google"
             vm.cloud_network = FactoryGirl.create(:cloud_network)
           else
             # TODO(lsmola) when ready, all providers should act as openstack
-            vm.cloud_network = FactoryGirl.create(:cloud_network)
             vm.cloud_subnet  = FactoryGirl.create(:cloud_subnet)
           end
 
@@ -46,7 +44,12 @@ module MiqAeServiceVmOpenstackSpec
         end
 
         it "#cloud_network" do
-          expect(@vm.cloud_network).to be_kind_of(MiqAeMethodService::MiqAeServiceCloudNetwork)
+          case t
+          when "openstack"
+            expect(@vm.cloud_network).to be_kind_of(MiqAeMethodService::MiqAeServiceCloudNetwork)
+          else
+            expect(@vm.cloud_network).to be nil
+          end
         end
 
         if t != "google"
