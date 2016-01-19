@@ -40,19 +40,19 @@
               - if pages[:current] > 1
                 %span{:type    => "button",
                       :onclick => remote_function(:loading  => "miqSparkle(true);",
-                                                    :complete => "miqSparkle(false);",
-                                                    :url      => "#{action_url}?page=1&id=#{action_id}"),
-                        :class   => "fa fa-angle-double-left",
-                        :alt     => "First",
-                        :title   => "First"}
+                                                  :complete => "miqSparkle(false);",
+                                                  :url      => "#{action_url}?page=1&id=#{action_id}"),
+                      :class   => "fa fa-angle-double-left",
+                      :alt     => "First",
+                      :title   => "First"}
                 %li.prev
                   %span{:type    => "button",
                         :onclick => remote_function(:loading  => "miqSparkle(true);",
-                                                      :complete => "miqSparkle(false);",
-                                                      :url      => "#{action_url}?page=#{pages[:current] - 1}&id=#{action_id}"),
-                          :class   => "fa fa-angle-left",
-                          :alt     => "Previous",
-                          :title   => "Previous"}
+                                                    :complete => "miqSparkle(false);",
+                                                    :url      => "#{action_url}?page=#{pages[:current] - 1}&id=#{action_id}"),
+                        :class   => "fa fa-angle-left",
+                        :alt     => "Previous",
+                        :title   => "Previous"}
               - else
                 %li.first.disabled
                   %span{:class => "i fa fa-angle-double-left"}
@@ -75,20 +75,20 @@
               - if pages[:current] < pages[:total]
                 %li.next
                   %span{:type    => "button",
-                          :onclick => remote_function(:loading  => "miqSparkle(true);",
-                                                      :complete => "miqSparkle(false);",
-                                                      :url      => "#{action_url}?page=#{pages[:current] +1}&id=#{action_id}"),
-                          :class   => "i fa fa-angle-right",
-                          :alt     => "Next",
-                          :title   => "Next"}
+                        :onclick => remote_function(:loading  => "miqSparkle(true);",
+                                                    :complete => "miqSparkle(false);",
+                                                    :url      => "#{action_url}?page=#{pages[:current] +1}&id=#{action_id}"),
+                        :class   => "i fa fa-angle-right",
+                        :alt     => "Next",
+                        :title   => "Next"}
                 %li.last
                   %span{:type    => "button",
-                          :onclick => remote_function(:loading  => "miqSparkle(true);",
-                                                      :complete => "miqSparkle(false);",
-                                                      :url      => "#{action_url}?page=#{pages[:total]}&id=#{action_id}"),
-                          :class   => "i fa fa-angle-double-right",
-                          :alt     => "Last",
-                          :title   => "Last"}
+                        :onclick => remote_function(:loading  => "miqSparkle(true);",
+                                                    :complete => "miqSparkle(false);",
+                                                    :url      => "#{action_url}?page=#{pages[:total]}&id=#{action_id}"),
+                        :class   => "i fa fa-angle-double-right",
+                        :alt     => "Last",
+                        :title   => "Last"}
               - else
                 %li.next.disabled
                   %span{:class => "i fa fa-angle-right"}
