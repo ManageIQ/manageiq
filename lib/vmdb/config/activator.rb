@@ -1,8 +1,17 @@
 module VMDB
   class Config
     class Activator
+      include Vmdb::Logging
+
       def initialize(config)
-        @config = config.respond_to?(:config) ? config.config : config
+        @config =
+          if config.kind_of?(::Config::Options)
+            config.to_hash
+          elsif config.respond_to?(:config)
+            config.config
+          else
+            config
+          end
       end
 
       def activate
@@ -10,6 +19,7 @@ module VMDB
 
         @config.each_key do|k|
           if respond_to?(k.to_s, true)
+            _log.debug("Activating #{k}")
             ost = OpenStruct.new(@config[k].stringify_keys)
             send(k.to_s, ost)
           end
