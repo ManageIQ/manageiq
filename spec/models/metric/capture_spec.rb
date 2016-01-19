@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Metric::Capture do
   shared_examples "captures a threshold" do |capture_fixnum, capture|
     let(:threshold_default) { 10 }

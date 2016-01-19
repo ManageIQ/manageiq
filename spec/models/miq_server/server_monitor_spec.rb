@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "Server Monitor" do
   context "After Setup," do
     before(:each) do

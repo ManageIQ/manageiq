@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Service do
   it "#all_service_children" do
     service     = FactoryGirl.create(:service)

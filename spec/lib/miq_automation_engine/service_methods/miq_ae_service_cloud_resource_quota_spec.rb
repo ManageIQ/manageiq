@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceCloudResourceQuotaSpec
   describe MiqAeMethodService::MiqAeServiceCloudResourceQuota do
     it "#ext_management_system" do

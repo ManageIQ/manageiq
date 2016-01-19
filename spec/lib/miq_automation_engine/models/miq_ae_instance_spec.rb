@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqAeInstance do
   context "legacy tests" do
     before(:each) do

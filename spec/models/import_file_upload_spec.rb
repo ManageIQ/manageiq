@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ImportFileUpload do
   let(:import_file_upload) { described_class.new }
 

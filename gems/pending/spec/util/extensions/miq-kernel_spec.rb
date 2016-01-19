@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'util/extensions/miq-kernel'
 
 describe Kernel do

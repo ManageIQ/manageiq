@@ -9,8 +9,6 @@
 # - Delete a user by action              /api/users/:id                       action "delete"
 # - Delete multiple users                /api/users                           action "delete"
 #
-require "spec_helper"
-
 RSpec.describe "users API" do
   include Rack::Test::Methods
 

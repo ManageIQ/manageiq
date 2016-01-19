@@ -1,4 +1,3 @@
-require "spec_helper"
 include ServiceTemplateHelper
 
 describe "Service Filter" do

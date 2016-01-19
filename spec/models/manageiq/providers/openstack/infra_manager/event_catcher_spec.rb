@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Openstack::InfraManager::EventCatcher do
   before do
     @ems = FactoryGirl.create(:ems_openstack_infra)

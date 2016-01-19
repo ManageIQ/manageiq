@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqExpression do
   let(:exp) { {"=" => {"field" => "Vm-name", "value" => "test"}} }
   let(:qs_exp) { {"=" => {"field" => "Vm-name", "value" => :user_input}} }

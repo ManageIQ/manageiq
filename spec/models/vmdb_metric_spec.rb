@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe VmdbMetric do
   before(:each) do
     EvmSpecHelper.create_guid_miq_server_zone

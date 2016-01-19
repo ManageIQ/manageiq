@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ContainerSummaryHelper do
   REL_HASH_WITH_LINK = [:label, :image, :value, :link, :title]
   REL_HASH_WITHOUT_LINK = [:label, :image, :value]

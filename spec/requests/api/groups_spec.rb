@@ -10,8 +10,6 @@
 # - Delete a group by action              /api/groups/:id                       action "delete"
 # - Delete multiple groups                /api/groups                           action "delete"
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
 

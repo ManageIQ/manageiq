@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe PolicyEvent do
   context "::Purging" do
     context ".purge_queue" do

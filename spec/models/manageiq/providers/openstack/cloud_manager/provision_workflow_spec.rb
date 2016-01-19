@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
   include WorkflowSpecHelper
 

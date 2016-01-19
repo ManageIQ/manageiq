@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ApplicationHelper do
   before do
     login_as @user = FactoryGirl.create(:user)

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe AuditEvent do
   it "should be invalid with empty attributes" do
     event = AuditEvent.new

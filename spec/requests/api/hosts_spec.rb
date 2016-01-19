@@ -1,5 +1,3 @@
-require "spec_helper"
-
 RSpec.describe "hosts API" do
   include Rack::Test::Methods
 

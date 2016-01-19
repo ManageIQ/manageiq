@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'util/vmdb-logger'
 
 describe VMDBLogger do

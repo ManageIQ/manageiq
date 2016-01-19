@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Compliance do
   context "A small virtual infrastructure" do
     let(:ems_vmware) { FactoryGirl.create(:ems_vmware, :zone => zone) }

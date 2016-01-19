@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceCloudSubnetSpec
   describe MiqAeMethodService::MiqAeServiceCloudSubnet do
     it "#cloud_network" do

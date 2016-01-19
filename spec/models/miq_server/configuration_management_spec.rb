@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqServer do
   describe "ConfigurationManagement" do
     describe "#get_config" do

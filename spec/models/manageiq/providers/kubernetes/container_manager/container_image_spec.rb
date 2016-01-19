@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ContainerImage do
   it "has distinct nodes" do
     group = FactoryGirl.create(

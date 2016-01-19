@@ -1,5 +1,3 @@
-require "spec_helper"
-
 def stub_vmdb_util_methods_for_collection_log
   allow(VMDB::Util).to receive(:zip_logs)
   allow(VMDB::Util).to receive(:compressed_log_patterns).and_return(["log/evm.1122.gz"])

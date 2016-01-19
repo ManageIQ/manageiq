@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ApplicationHelper::Button::HistoryChoice do
   describe '#calculate_properties' do
     subject do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 RSpec.describe "tenants API" do
   include Rack::Test::Methods
 

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe RrPendingChange do
   it ".table_name" do
     expect(described_class.table_name).to eq("rr#{MiqRegion.my_region_number}_pending_changes")

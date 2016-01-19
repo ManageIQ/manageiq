@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Rbac do
   before { allow(User).to receive_messages(:server_timezone => "UTC") }
   let(:default_tenant) { Tenant.seed }

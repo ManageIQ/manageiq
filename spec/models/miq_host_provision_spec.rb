@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqHostProvision do
   it "#host_name" do
     host_name = "fred"

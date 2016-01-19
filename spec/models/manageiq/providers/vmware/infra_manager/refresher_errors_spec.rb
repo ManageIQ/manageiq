@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
   before(:each) do
     EmsRefresh.debug_failures = false

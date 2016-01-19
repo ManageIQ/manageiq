@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe EmsCluster::CapacityPlanning do
   before(:each) do
     config = VMDB::Config.new('capacity').config

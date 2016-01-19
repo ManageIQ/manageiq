@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe EmsCloudHelper::TextualSummary do
   context "#textual_instances and #textual_images" do
     before do

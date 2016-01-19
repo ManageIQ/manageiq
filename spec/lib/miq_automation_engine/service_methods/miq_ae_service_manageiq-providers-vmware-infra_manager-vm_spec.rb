@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module MiqAeServiceVmVmwareSpec
   describe MiqAeMethodService::MiqAeServiceUser do
     let(:vm)         { FactoryGirl.create(:vm_vmware) }

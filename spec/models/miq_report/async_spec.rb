@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqReport do
   context "Generator::Async" do
     context "._async_generate_tables" do

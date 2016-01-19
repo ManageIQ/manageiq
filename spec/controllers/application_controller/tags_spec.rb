@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ApplicationController  do
   describe "#get_tagdata" do
     let(:record) { double("Host") }

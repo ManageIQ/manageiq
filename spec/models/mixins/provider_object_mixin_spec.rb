@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ProviderObjectMixin do
   before do
     class TestClass

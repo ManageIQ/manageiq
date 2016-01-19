@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceHostSpec
   describe MiqAeMethodService::MiqAeServiceHost do
     before(:each) do

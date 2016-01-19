@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ActiveRecordQueryParts do
   context "glob to sql" do
     it "replaces '*'" do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe TreeNodeBuilder do
   context '.build' do
     it 'ExtManagementSystem node' do

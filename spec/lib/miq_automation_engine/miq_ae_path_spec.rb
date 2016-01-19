@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAePathSpec
   include MiqAeEngine
   describe MiqAePath do

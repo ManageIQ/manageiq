@@ -1,5 +1,3 @@
-require "spec_helper"
-
 RSpec.describe VimPerformanceState do
   describe ".capture_host_sockets" do
     it "returns the host sockets when given a host" do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "ar_column_names extension" do
   context "With an empty test class" do
     before(:each) { class ::SchemaMigration < ActiveRecord::Base; end }

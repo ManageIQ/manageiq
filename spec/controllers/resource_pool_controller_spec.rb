@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ResourcePoolController do
   context "#button" do
     before do

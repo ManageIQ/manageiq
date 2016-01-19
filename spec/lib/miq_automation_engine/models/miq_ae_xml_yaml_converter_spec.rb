@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeDatastoreConverter
   include MiqAeDatastore
   describe "XML2YAML Converter" do

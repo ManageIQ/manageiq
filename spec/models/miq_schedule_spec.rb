@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqSchedule do
   before { EvmSpecHelper.create_guid_miq_server_zone }
   context 'with schedule infrastructure and valid run_ats' do

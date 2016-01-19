@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "routes for ReportController" do
   describe "#db_widget_dd_done" do
     it "routes with GET" do

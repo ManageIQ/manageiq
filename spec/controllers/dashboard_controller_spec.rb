@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe DashboardController do
   context "POST authenticate" do
     before do

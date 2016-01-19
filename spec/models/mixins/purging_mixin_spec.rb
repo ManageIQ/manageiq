@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe PurgingMixin do
   describe ".purge" do
     let(:example_class) { PolicyEvent }

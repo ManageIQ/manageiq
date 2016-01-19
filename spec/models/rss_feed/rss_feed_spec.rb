@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe RssFeed do
   Y_DIR = File.expand_path(File.join(File.dirname(__FILE__), "data"))
 

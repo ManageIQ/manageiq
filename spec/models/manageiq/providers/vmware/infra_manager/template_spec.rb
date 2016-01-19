@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Vmware::InfraManager::Template do
   context "#cloneable?" do
     let(:template_vmware) { ManageIQ::Providers::Vmware::InfraManager::Template.new }

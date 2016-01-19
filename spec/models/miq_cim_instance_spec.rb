@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe MiqCimInstance do
   before do
     @instance1 = FactoryGirl.create(:miq_cim_instance)

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Classification do
   context ".hash_all_by_type_and_name" do
     it "with entries duped across categories should return both entries" do

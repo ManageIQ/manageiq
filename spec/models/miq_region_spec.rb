@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqRegion do
   context "after seeding" do
     before(:each) do

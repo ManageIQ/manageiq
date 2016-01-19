@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceMiqHostProvisionRequestSpec
   include MiqAeEngine
   describe MiqAeMethodService::MiqAeServiceMiqHostProvisionRequest do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack::Status do
   it 'parses CREATE_COMPLETE' do
     status = described_class.new('CREATE_COMPLETE', '')

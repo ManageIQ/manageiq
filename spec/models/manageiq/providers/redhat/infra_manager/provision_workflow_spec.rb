@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
   include WorkflowSpecHelper
 

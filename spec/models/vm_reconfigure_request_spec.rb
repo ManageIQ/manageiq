@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe VmReconfigureRequest do
   let(:admin)         { FactoryGirl.create(:user, :userid => "tester") }
   let(:ems_vmware)    { FactoryGirl.create(:ems_vmware, :zone => zone2) }

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "layouts/_list_grid.html.haml" do
   context "when showtype is 'performance'" do
     it "renders" do

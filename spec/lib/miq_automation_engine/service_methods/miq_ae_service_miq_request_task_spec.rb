@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceMiqRequestTaskSpec
   describe MiqAeMethodService::MiqAeServiceMiqRequestTask do
     before(:each) do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe StorageFile do
   context "#is_snapshot_disk_file" do
     it "false if NOT .vmdk extension" do

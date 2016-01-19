@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ResourceAction do
   context "#deliver_to_automate_from_dialog" do
     let(:user) { FactoryGirl.create(:user_with_group) }

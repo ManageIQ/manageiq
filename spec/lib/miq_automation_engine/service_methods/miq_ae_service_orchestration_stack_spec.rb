@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceOrchestrationStackSpec
   describe MiqAeMethodService::MiqAeServiceOrchestrationStack do
     let(:stack)           { FactoryGirl.create(:orchestration_stack) }

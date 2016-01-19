@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "RegistrationSystem" do
   before do
     EvmSpecHelper.create_guid_miq_server_zone

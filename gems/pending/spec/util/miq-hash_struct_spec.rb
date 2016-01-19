@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'util/miq-hash_struct'
 
 describe MiqHashStruct do

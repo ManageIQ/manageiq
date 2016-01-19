@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe DialogFieldTextBox do
   context "dialog field text box without options hash" do
     before do

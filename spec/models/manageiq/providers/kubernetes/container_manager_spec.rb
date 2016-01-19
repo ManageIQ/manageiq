@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'MiqContainerGroup/MiqContainerGroup'
 
 describe ManageIQ::Providers::Kubernetes::ContainerManager do

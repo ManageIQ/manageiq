@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe VMDB::Config do
   let(:password) { "password" }
   let(:enc_pass) { MiqPassword.encrypt(password) }

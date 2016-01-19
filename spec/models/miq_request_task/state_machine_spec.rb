@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqRequestTask do
   context "::StateMachine" do
     context "#signal" do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe StorageController do
   context "#button" do
     it "when VM Right Size Recommendations is pressed" do

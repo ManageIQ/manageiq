@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe OpsController::RbacTree do
   let(:role) do
     # Pick a small subset of the product features tree to allow the spec to

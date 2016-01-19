@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Tenant do
   include_examples ".seed called multiple times"
 

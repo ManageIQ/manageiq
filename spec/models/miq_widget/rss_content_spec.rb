@@ -1,6 +1,4 @@
 # encoding: UTF-8
-require "spec_helper"
-
 describe "Widget RSS Content" do
   CNN_XML = <<-EOF
   <?xml version="1.0" encoding="ISO-8859-1"?>

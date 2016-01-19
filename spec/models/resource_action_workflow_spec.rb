@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ResourceActionWorkflow do
   let(:admin) { FactoryGirl.create(:user_with_group) }
   context "#create" do

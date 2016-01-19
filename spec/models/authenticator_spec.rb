@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Authenticator do
   describe '.for' do
     it "instantiates the matching class" do

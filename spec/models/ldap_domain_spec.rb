@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe LdapDomain do
   before(:each) do
     @zone        = FactoryGirl.create(:zone)

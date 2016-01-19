@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqAeYamlImport do
   let(:domain) { "domain" }
   let(:options) { {} }

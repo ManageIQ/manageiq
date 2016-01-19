@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Vmdb::Loggers::FogLogger do
   before(:each) do
     @log_stream = StringIO.new

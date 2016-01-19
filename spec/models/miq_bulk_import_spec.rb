@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqBulkImport do
   context AssetTagImport do
     before do

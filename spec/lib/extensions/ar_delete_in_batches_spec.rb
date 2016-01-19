@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ArDeleteInBatches do
   it "deletes none" do
     expect(VmOrTemplate.delete_in_batches).to eq(0)

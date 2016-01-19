@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqWidget do
   context ".import_from_hash" do
     before do

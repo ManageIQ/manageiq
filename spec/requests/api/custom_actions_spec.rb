@@ -17,8 +17,6 @@
 #       POST /api/services/:id
 #          { "action" : "<custom_action_button_name>" }
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
 

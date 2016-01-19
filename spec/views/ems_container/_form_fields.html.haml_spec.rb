@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "rendering fields in ems_container new/edit form" do
   before(:each) do
     @edit = {:new => {:emstype => "kubernetes"}}

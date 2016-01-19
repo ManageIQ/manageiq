@@ -1,5 +1,3 @@
-require "spec_helper"
-
 def create_user_with_group(user_id, group_name, role)
   group = FactoryGirl.create(:miq_group, :miq_user_role => role, :description => group_name)
   FactoryGirl.create(:user, :userid => user_id, :miq_groups => [group])

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqHostProvisionRequest do
   it "validates userid" do
     expect { FactoryGirl.create(:miq_host_provision_request, :userid => 'barney') }.to raise_error(ActiveRecord::RecordInvalid)

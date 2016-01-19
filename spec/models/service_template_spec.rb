@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ServiceTemplate do
   context "#type_display" do
     before(:each) do

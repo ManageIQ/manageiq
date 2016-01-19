@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceMiqRequestSpec
   describe MiqAeMethodService::MiqAeServiceMiqRequest do
     def assert_ae_user_matches_ar_user(ae_user, ar_user)

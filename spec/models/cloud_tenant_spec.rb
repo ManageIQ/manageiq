@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe CloudTenant do
   it "#all_cloud_networks" do
     ems     = FactoryGirl.create(:ems_openstack)

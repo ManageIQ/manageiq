@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Openstack::CloudManager::Provision::Configuration do
   context "#configure_network_adapters" do
     before do

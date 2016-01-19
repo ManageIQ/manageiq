@@ -1,6 +1,4 @@
 
-require "spec_helper"
-
 module MiqAeServiceManageIQ_Providers_Amazon_CloudManagerSpec
   include MiqAeEngine
   describe MiqAeMethodService::MiqAeServiceManageIQ_Providers_Amazon_CloudManager do

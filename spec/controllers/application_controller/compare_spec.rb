@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ApplicationController do
   context "#drift_history" do
     it "resets @display to main" do

@@ -1,4 +1,3 @@
-require "spec_helper"
 require "logger"
 require "util/duplicate_blocker"
 require "timecop"

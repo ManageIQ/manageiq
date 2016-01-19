@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqReport do
   context "::Search" do
     before(:each) do

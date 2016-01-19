@@ -1,4 +1,3 @@
-require "spec_helper"
 include UiConstants
 
 shared_examples "logs_collect" do |type|

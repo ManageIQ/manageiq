@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Vmdb::Loggers::MirroredLogger do
   before(:each) do
     @mirror_stream = StringIO.new

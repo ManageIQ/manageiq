@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Authenticator::Database do
   subject { Authenticator::Database.new({}) }
   let!(:alice) { FactoryGirl.create(:user, :userid => 'alice', :password => 'secret') }

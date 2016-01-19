@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe AssignedServerRole do
   context "and Server Role seeded for 1 Region/Zone" do
     before(:each) do

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ReportController do
   render_views
   before :each do

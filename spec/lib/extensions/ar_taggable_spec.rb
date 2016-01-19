@@ -1,6 +1,4 @@
 
-require "spec_helper"
-
 describe ActsAsTaggable do
   before(:each) do
     @host1 = FactoryGirl.create(:host, :name => "HOST1")

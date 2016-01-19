@@ -1,5 +1,3 @@
-require "spec_helper"
-
 RSpec.describe MiqRegionRemote do
   describe ".validate_connection_settings" do
     it "returns a message about indicating the port is missing when blank" do

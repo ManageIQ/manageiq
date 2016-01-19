@@ -1,5 +1,3 @@
-require "spec_helper"
-
 def set_up_controller_for_show_method(controller, ems_id)
   controller.instance_variable_set(:@_params, {:display => "download_pdf", :id => ems_id})
   controller.instance_variable_set(:@settings, :views => {:vm_summary_cool => "summary"})

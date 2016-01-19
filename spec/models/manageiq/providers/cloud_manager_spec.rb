@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe EmsCloud do
   it ".types" do
     expected_types = [ManageIQ::Providers::Amazon::CloudManager,

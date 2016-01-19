@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Authenticator::Httpd do
   subject { Authenticator::Httpd.new(config) }
   let!(:alice) { FactoryGirl.create(:user, :userid => 'alice') }

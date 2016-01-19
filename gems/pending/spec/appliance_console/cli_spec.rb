@@ -1,4 +1,3 @@
-require "spec_helper"
 require "appliance_console/cli"
 
 describe ApplianceConsole::Cli do

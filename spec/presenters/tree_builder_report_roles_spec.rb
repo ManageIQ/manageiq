@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe TreeBuilderReportRoles do
   context "#x_get_tree_roots" do
     before do

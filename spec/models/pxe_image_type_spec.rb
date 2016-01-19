@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe PxeImageType do
   context "#esx?" do
     it "with a nil name" do

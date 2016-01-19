@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ServiceResource do
   context "default values" do
     before(:each) do

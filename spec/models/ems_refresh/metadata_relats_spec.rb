@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe EmsRefresh::MetadataRelats do
   context ".vmdb_relats" do
     before(:each) do

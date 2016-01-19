@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "PartitionAlignment" do
   context "Running test" do
     before(:each) do

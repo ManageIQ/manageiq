@@ -1,5 +1,3 @@
-require "spec_helper"
-
 require "appliance_console/prompts"
 require "appliance_console/database_configuration"
 require "appliance_console/external_database_configuration"

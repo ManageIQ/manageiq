@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe PxeController do
   before(:each) do
     set_user_privileges

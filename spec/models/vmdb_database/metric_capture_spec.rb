@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe VmdbDatabase do
   context "::MetricCapture" do
     context "#capture_database_metrics" do

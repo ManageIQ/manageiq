@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe VmdbTableEvm do
   it "#seed" do
     db = VmdbDatabase.seed_self

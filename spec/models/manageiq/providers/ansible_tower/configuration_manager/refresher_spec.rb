@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Refresher do
   let(:auth)                  { FactoryGirl.create(:authentication) }
   let(:configuration_manager) { provider.configuration_manager }

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'routes for DashboardController' do
   describe '#auth_error' do
     it 'routes with GET' do

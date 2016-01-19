@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe TenancyMixin do
   let(:root_tenant) do
     Tenant.seed

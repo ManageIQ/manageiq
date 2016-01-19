@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ChartsLayoutService do
   let(:host_openstack_infra) { FactoryGirl.create(:host_openstack_infra) }
   let(:host_redhat) { FactoryGirl.create(:host_redhat) }

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceServiceTemplateProvisionRequestSpec
   describe MiqAeMethodService::MiqAeServiceServiceTemplateProvisionRequest do
     let(:service_service_template_provision_request) do

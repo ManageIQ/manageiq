@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ToModelHash do
   context "#to_model_hash" do
     let(:test_disk_class)     { Class.new(ActiveRecord::Base) { self.table_name = "test_disks" } }

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe DialogFieldRadioButton do
   let(:dialog_field_radio_button) do
     DialogFieldRadioButton.new(

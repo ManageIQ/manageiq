@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe TreeBuilder do
   context "initialize" do
     it "initializes a tree" do

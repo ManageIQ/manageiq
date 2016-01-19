@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqWidget::ImportExport do
   before do
     MiqReport.seed_report("Vendor and Guest OS")

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe VimUsage do
   context "with a Vm" do
     let(:vm) { FactoryGirl.create(:vm_vmware) }

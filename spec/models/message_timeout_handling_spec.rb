@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "Message Timeout Handling" do
   before(:each) do
     @guid = MiqUUID.new_guid

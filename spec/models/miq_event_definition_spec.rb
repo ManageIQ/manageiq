@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe MiqEventDefinition do
   describe '.seed_default_events' do
     context 'there are 2 event definition sets' do

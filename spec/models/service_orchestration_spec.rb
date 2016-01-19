@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ServiceOrchestration do
   let(:manager_by_setter)  { FactoryGirl.create(:ems_amazon) }
   let(:template_by_setter) { FactoryGirl.create(:orchestration_template) }

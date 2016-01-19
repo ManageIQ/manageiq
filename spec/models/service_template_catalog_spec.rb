@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ServiceTemplateCatalog do
   let(:root_tenant) do
     Tenant.seed

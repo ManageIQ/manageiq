@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqDatabase do
   context ".seed" do
     include_examples ".seed called multiple times"

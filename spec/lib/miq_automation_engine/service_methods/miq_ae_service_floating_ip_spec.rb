@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceFloatingIpSpec
   describe MiqAeMethodService::MiqAeServiceFloatingIp do
     it "#ext_management_system" do

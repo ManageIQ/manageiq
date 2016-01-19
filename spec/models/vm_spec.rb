@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Vm do
   it "#corresponding_model" do
     expect(Vm.corresponding_model).to eq(MiqTemplate)

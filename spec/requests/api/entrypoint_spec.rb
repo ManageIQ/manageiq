@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe "API entrypoint" do
   include Rack::Test::Methods
 

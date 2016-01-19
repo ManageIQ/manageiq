@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe AutomateImportJsonSerializer do
   let(:automate_import_json_serializer) { described_class.new }
 

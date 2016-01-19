@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'metadata/VmConfig/VmConfig'
 
 describe VmConfig do

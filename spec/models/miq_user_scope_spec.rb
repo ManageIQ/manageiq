@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqUserScope do
   context "testing hash_to_scope method" do
     before(:each) do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqCapacityController do
   methods = ["util_get_node_info", "bottleneck_get_node_info"]
   methods.each do |method|

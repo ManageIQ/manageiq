@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe VmOrTemplate do
   context ".event_by_property" do
     context "should add an EMS event" do

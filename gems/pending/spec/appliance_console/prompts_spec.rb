@@ -1,4 +1,3 @@
-require "spec_helper"
 require "stringio"
 require "appliance_console/errors"
 require "appliance_console/prompts"

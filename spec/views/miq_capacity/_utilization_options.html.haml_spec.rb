@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "miq_capacity/_utilization_options.html.haml" do
   before :each do
     set_controller_for_view("miq_capacity")

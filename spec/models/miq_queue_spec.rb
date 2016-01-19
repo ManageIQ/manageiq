@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqQueue do
   specify { expect(FactoryGirl.build(:miq_queue)).to be_valid }
 

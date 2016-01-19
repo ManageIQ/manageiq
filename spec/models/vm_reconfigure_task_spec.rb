@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe VmReconfigureTask do
   context "#build_config_spec" do
     before do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Lan do
   before(:each) do
     @lan      = FactoryGirl.create(:lan)

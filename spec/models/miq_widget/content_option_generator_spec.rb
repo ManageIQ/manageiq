@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqWidget::ContentOptionGenerator do
   let(:content_option_generator) { described_class.new }
 

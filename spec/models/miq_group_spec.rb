@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqGroup do
   context "set as Super Administrator" do
     before(:each) do

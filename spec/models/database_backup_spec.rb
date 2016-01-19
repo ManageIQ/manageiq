@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe DatabaseBackup do
   context "with basic db settings" do
     before(:each) do

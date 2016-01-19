@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ContainerImage do
   it "#full_name" do
     image = ContainerImage.new(:name => "fedora")

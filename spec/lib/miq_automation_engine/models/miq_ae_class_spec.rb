@@ -1,5 +1,3 @@
-require "rails_helper"
-
 include AutomationSpecHelper
 describe MiqAeClass do
   describe "name attribute validation" do

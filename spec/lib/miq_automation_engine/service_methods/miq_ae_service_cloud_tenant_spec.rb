@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceCloudTenantSpec
   describe MiqAeMethodService::MiqAeServiceCloudTenant do
     it "#ext_management_system" do

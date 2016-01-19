@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Relationship do
   before(:each) do
     @rel = FactoryGirl.create(:relationship_vm_vmware)

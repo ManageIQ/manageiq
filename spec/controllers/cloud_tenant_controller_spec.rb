@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe CloudTenantController do
   context "#button" do
     before(:each) do

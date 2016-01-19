@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe EventMixin do
   context "Included in a test class with events" do
     before do

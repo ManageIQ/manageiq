@@ -1,5 +1,3 @@
-require "spec_helper"
-
 $LOAD_PATH << Rails.root.join("tools")
 
 require "fix_auth"

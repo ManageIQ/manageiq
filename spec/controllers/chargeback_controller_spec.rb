@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ChargebackController do
   before { set_user_privileges }
 

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqProvisionRequest do
   it ".request_task_class_from" do
     ems = FactoryGirl.create(:ems_vmware)

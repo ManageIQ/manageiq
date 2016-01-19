@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
   context "#remote_console_acquire_ticket" do
     before(:each) do

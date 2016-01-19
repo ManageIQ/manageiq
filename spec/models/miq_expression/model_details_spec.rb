@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqExpression do
   describe ".model_details" do
     before do

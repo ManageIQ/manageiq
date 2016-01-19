@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "miq_ae_class/_fields_seq_form.html.haml" do
   before do
     assign(:edit,       :new => {

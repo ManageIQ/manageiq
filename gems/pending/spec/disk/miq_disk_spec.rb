@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 require 'ostruct'
 require 'disk/MiqDisk'
 require 'disk/modules/RawDisk'

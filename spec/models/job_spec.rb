@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Job do
   context "With a single scan job," do
     before(:each) do

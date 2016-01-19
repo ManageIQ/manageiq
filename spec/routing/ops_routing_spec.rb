@@ -1,4 +1,3 @@
-require "spec_helper"
 require "routing/shared_examples"
 
 describe "routing for OpsController" do

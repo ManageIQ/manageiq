@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "Available_Tenants Method Validation" do
   let(:user) { FactoryGirl.create(:user_with_group) }
   before do

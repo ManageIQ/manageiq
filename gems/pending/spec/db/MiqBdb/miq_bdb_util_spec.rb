@@ -1,5 +1,3 @@
-require "spec_helper"
-
 require 'db/MiqBdb/MiqBdbUtil'
 require "#{__dir__}/test_files"
 

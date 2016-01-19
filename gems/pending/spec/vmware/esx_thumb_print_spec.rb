@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'vmware/esx_thumb_print'
 require 'vmware/vcenter_thumb_print'
 

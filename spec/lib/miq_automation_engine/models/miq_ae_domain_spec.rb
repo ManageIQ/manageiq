@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqAeDomain do
   before do
     EvmSpecHelper.local_guid_miq_server_zone

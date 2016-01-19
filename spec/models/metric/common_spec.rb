@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Metric::Common do
   before(:each) do
     host   = FactoryGirl.create(:host)

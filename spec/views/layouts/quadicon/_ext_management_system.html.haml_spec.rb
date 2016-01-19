@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "rendering quadicons of ext_management_system" do
   before(:each) do
     @settings = {:quadicons => {:ems => true}}

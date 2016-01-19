@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceServiceTemplateSpec
   describe MiqAeMethodService::MiqAeServiceServiceTemplate do
     context "through an automation method" do

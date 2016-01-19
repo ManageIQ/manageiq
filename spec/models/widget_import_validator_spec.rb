@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe WidgetImportValidator do
   let(:widget_import_validator) { described_class.new }
 

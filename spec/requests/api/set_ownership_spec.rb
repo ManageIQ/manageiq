@@ -6,8 +6,6 @@
 # - Vms                     /api/vms/:id
 # - Templates               /api/templates/:id
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
 

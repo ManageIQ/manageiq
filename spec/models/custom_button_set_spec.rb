@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe CustomButtonSet do
   context "find_all_by_class_name" do
     it "should return all Service and ServiceTemplate buttons only, when ServiceTemplate class is passed in" do

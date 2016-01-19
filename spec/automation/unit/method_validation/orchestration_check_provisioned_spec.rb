@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "Orchestration check_provisioned Method Validation" do
   let(:deploy_result)           { "deploy result" }
   let(:ems_amazon)              { FactoryGirl.create(:ems_amazon, :last_refresh_date => Time.now - 100) }

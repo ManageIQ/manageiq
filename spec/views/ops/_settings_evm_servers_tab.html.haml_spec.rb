@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "ops/_settings_evm_servers_tab.html.haml" do
   before do
     assign(:sb, :active_tab => "settings_evm_servers")

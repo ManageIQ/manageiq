@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ActsAsArModel do
   before { base_class }
 

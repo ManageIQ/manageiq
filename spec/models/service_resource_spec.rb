@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ServiceResource do
   it "default values" do
     expect(subject.group_idx).to eq(0)

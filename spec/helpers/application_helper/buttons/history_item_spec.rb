@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ApplicationHelper::Button::HistoryItem do
   describe '#skip?' do
     subject do

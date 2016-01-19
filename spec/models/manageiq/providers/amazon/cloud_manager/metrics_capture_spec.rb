@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Amazon::CloudManager::MetricsCapture do
   before do
     _guid, _server, @zone = EvmSpecHelper.create_guid_miq_server_zone

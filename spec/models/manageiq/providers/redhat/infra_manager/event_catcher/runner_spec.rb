@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Redhat::InfraManager::EventCatcher::Runner do
   context "#event_monitor_options" do
     let(:ems)     { FactoryGirl.create(:ems_redhat, :hostname => "hostname") }

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module MiqAeServiceManageIQ_Providers_CloudManager_ProvisionSpec
   describe MiqAeMethodService::MiqAeServiceMiqProvision do
     %w(amazon openstack).each  do |t|

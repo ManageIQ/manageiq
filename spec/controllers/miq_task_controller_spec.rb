@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqTaskController do
   context "#tasks_condition" do
     let(:user) { FactoryGirl.create(:user) }

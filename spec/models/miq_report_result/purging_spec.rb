@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqReportResult do
   context "::Purging" do
     before(:each) do

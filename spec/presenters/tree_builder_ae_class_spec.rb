@@ -1,4 +1,3 @@
-require "spec_helper"
 include AutomationSpecHelper
 
 describe TreeBuilderAeClass do

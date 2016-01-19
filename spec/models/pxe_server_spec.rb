@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe PxeServer do
   before(:each) do
     EvmSpecHelper.local_miq_server

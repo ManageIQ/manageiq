@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'azure-armrest'
 
 describe ManageIQ::Providers::Azure::CloudManager::Refresher do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Redhat::InfraManager do
   it ".ems_type" do
     expect(described_class.ems_type).to eq('rhevm')

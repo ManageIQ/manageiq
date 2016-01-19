@@ -1,8 +1,6 @@
 #
 # REST API Request Tests - /api/tags
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
 

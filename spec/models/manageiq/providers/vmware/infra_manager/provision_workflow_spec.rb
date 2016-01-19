@@ -1,5 +1,3 @@
-require "spec_helper"
-
 silence_warnings { ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.const_set("DIALOGS_VIA_AUTOMATE", false) }
 
 describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do

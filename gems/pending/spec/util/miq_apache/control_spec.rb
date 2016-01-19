@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqApache::Control do
   it "should run_apache_cmd with start when calling start" do
     expect(MiqApache::Control).to receive(:run_apache_cmd).with('start')

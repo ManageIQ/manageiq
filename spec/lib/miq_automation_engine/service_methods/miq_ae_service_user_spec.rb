@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module MiqAeServiceUserSpec
   describe MiqAeMethodService::MiqAeServiceUser do
     let(:user)         { FactoryGirl.create(:user_admin) }

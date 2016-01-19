@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqServer do
   include_examples ".seed called multiple times"
 

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 include AutomationSpecHelper
 module MiqAeServiceServiceReconfigureRequestSpec
   describe MiqAeMethodService::MiqAeServiceServiceReconfigureRequest do

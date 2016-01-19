@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Storage do
   it "#scan_watchdog_interval" do
     allow(Storage).to receive_messages(:vmdb_storage_config => {})

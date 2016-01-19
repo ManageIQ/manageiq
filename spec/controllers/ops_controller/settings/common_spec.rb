@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe OpsController do
   context "OpsController::Settings::Common" do
     context "SmartProxy Affinity" do

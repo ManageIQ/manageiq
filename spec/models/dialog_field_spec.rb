@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe DialogField do
   context "legacy tests" do
     before(:each) do

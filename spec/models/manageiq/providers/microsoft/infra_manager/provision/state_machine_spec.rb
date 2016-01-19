@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Microsoft::InfraManager::Provision do
   context "::StateMachine" do
     before do

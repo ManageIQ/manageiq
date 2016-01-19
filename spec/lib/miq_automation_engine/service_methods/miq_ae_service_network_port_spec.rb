@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceCloudNetworkSpec
   describe MiqAeMethodService::MiqAeServiceNetworkPort do
     it "#ext_management_system" do

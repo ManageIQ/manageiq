@@ -1,6 +1,5 @@
 # encoding: US-ASCII
 
-require "spec_helper"
 require 'util/win32/wim_parser'
 require 'time'
 

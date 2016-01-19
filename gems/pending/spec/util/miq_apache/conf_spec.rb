@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'util/miq_apache'
 
 describe MiqApache::Conf do

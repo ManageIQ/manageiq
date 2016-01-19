@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Category do
   describe "#tags" do
     it "works" do

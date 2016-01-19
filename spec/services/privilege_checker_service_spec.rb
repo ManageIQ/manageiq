@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe PrivilegeCheckerService do
   let(:vmdb_config) { {:session => {:timeout => 3600}} }
   let(:privilege_checker) { described_class.new(vmdb_config) }

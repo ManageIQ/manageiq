@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqEventDefinitionSet do
   describe ".seed" do
     context 'seeding from a csv file' do

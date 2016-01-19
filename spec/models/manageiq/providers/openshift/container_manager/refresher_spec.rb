@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
   before(:each) do
     allow(MiqServer).to receive(:my_zone).and_return("default")

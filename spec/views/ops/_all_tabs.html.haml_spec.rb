@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "ops/_analytics_details_tab.html.haml" do
   context "analytics tab selected" do
     before do

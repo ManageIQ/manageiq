@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
   let(:ems) { FactoryGirl.create(:ems_amazon) }
   let(:template) { FactoryGirl.create(:orchestration_template) }

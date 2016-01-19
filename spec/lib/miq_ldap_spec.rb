@@ -1,7 +1,5 @@
 # encoding: US-ASCII
 
-require "spec_helper"
-
 describe MiqLdap do
   before(:each) do
     @host     = 'mycompany.com'

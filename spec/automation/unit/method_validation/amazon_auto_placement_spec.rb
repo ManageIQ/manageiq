@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "AMAZON best fit" do
 
   let(:user) { FactoryGirl.create(:user_with_group) }

@@ -1,8 +1,6 @@
 #
 # REST API Request Tests - Tags subcollection specs for Non-Vm collections
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
 

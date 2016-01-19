@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'util/miq_logger_processor'
 
 describe MiqLoggerProcessor do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe CatalogController do
   let(:user) { FactoryGirl.create(:user_with_group) }
   before(:each) do

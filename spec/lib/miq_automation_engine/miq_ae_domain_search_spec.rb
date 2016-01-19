@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 include AutomationSpecHelper
 module MiqAeDomainSearchSpec
   include MiqAeEngine

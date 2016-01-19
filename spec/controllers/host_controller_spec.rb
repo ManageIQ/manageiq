@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe HostController do
   context "#button" do
     render_views

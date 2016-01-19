@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'vmdb/permission_stores'
 require 'tempfile'
 

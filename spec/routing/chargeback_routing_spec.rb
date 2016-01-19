@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'routes for ChargebackController' do
   let(:controller_name) { 'chargeback' }
 

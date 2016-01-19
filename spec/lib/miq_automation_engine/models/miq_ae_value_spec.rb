@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqAeValue do
   describe "#to_export_xml" do
     let(:miq_ae_value) do

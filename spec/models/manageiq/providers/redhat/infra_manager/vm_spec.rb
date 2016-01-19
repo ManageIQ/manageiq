@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Redhat::InfraManager::Vm do
   context "#is_available?" do
     let(:ems)  { FactoryGirl.create(:ems_redhat) }

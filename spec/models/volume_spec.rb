@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Volume do
   context "#volume_group" do
     it "nil when starts with '***physical_'," do

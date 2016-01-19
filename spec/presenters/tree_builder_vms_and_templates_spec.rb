@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe TreeBuilderVmsAndTemplates do
   before do
     ems     = FactoryGirl.create(:ems_vmware, :zone => FactoryGirl.create(:zone))

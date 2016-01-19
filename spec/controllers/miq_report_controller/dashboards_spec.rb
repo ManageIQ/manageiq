@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ReportController do
   context "::Dashboards" do
     context "#db_edit" do

@@ -1,4 +1,3 @@
-require "spec_helper"
 require "appliance_console/service_group"
 require "linux_admin"
 

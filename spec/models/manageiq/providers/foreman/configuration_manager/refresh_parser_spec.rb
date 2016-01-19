@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Foreman::ConfigurationManager::RefreshParser do
   let(:date1)   { "2014-11-07T20:41:21Z" }
   let(:parser)  { described_class.new }

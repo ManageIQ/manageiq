@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Metric do
   before(:each) do
     MiqRegion.seed

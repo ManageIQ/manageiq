@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ContainerRoute do
   it "has distinct nodes" do
     node = FactoryGirl.create(:container_node, :name => "n")

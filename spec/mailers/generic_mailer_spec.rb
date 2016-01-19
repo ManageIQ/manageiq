@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe GenericMailer do
   before(:each) do
     @miq_server = EvmSpecHelper.local_miq_server

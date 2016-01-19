@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ActiveRecord::AttributeAccessorThatYamls do
   Vm.class_eval do
     include ActiveRecord::AttributeAccessorThatYamls

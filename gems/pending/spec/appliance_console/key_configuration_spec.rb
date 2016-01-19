@@ -1,4 +1,3 @@
-require "spec_helper"
 require "appliance_console/prompts"
 require "appliance_console/key_configuration"
 

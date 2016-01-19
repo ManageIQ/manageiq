@@ -1,6 +1,4 @@
 
-require "spec_helper"
-
 module MiqAeServiceAvailabilityZoneSpec
   include MiqAeEngine
   describe MiqAeMethodService::MiqAeServiceAvailabilityZone do

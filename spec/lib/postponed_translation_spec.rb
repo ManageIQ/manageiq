@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe PostponedTranslation do
   context "translate" do
     it "calls Kernel#format" do

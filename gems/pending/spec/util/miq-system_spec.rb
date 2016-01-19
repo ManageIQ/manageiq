@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'util/miq-system'
 
 describe MiqSystem do

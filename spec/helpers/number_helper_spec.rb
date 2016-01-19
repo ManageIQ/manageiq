@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ActionView::Helpers::NumberHelper do
   context "#number_to_human_size" do
     # Positive cases taken from Rails helper tests for number_to_human_size to

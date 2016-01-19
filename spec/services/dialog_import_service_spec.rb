@@ -1,4 +1,3 @@
-require "spec_helper"
 require "dialog_field_importer"
 require "dialog_import_validator"
 

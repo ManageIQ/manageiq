@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqWidget do
   include_examples(".seed called multiple times", 9)
 

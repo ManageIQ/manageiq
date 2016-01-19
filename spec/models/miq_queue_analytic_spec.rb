@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqQueueAnalytic do
   # this before is copied from MiqQueue
   context "miq_queue with messages" do

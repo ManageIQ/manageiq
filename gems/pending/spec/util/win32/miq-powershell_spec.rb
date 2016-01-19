@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'util/win32/miq-powershell'
 require 'time'
 

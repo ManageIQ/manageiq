@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem do
   context "::Placement" do
     context "#available_configuration_profiles" do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe EvmDatabase do
   subject { described_class }
   context "#local?" do

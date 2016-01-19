@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ContainerImageRegistry do
   it "#full_name" do
     reg = ContainerImageRegistry.new(:name => "docker.io", :host => "docker.io")

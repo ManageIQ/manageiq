@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "Orchestration provision Method Validation" do
   let(:miq_request_task)      { FactoryGirl.create(:miq_request_task, :destination => service_orchestration, :miq_request => request) }
   let(:request)               { FactoryGirl.create(:service_template_provision_request, :requester => user) }

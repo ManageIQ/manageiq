@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqReport::ImportExport do
   before do
     @user       = FactoryGirl.create(:user_admin)

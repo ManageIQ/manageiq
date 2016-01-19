@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "openstack_check_pre_retirement Method Validation" do
   before(:each) do
     @zone = FactoryGirl.create(:zone)

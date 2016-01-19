@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe EmsRefresh::SaveInventory do
   context "save_vms_inventory handling duplicate uids" do
     before(:each) do

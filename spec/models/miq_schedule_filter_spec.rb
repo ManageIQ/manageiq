@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "MiqSchedule Filter" do
   context "Getting schedule targets" do
     before(:each) do

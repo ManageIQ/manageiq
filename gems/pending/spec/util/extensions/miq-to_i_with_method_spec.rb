@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'util/extensions/miq-to_i_with_method'
 require 'active_support/core_ext/numeric'
 

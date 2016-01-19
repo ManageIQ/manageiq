@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe DashboardController do
   let(:user) do
     FactoryGirl.create(:user_with_email, :password => "smartvm", :role => "super_administrator")

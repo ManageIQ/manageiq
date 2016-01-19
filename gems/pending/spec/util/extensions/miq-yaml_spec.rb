@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'util/extensions/miq-yaml'
 
 # Subclass of Hash to test instance variables support patch

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe VimPerformanceTag do
   before(:each) do
     @server = EvmSpecHelper.local_miq_server

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Authenticator::Ldap do
   subject { Authenticator::Ldap.new(config) }
   let!(:alice) { FactoryGirl.create(:user, :userid => 'alice') }

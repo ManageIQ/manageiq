@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ApplicationController do
   context "#perf_planning_gen_data" do
     it "should not get nil error when submitting up Manual Input data" do

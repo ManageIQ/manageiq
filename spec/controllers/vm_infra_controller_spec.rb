@@ -1,4 +1,3 @@
-require "spec_helper"
 include CompressedIds
 
 describe VmInfraController do

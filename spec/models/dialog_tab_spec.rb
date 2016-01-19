@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe DialogTab do
   context "#validate_children" do
     let(:dialog_tab) { FactoryGirl.build(:dialog_tab, :label => 'tab') }

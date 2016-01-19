@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe 'miq_request/_prov_vm_grid.html.haml' do
   context 'check for links' do
     before(:each) do

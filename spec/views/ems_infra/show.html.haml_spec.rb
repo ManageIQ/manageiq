@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "ems_infra/show.html.haml" do
   let(:zone) { FactoryGirl.create(:zone) }
   let(:ems_infra) { FactoryGirl.create(:ems_vmware, :hostname => '1.1.1.1', :zone => zone) }

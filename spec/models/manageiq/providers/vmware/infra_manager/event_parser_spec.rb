@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Vmware::InfraManager::EventParser do
   EPV_DATA_DIR = File.expand_path(File.join(File.dirname(__FILE__), "event_data"))
 

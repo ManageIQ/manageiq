@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe WsProxy do
   before(:each) do
     stub_server_configuration(

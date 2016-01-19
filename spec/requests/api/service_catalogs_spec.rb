@@ -18,8 +18,6 @@
 #
 # - Refresh dialog fields       /api/service_catalogs/:id/service_templates/:id action "refresh_dialog_fields"
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
 

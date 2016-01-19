@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqSearch do
   describe '#descriptions' do
     it "hashes" do

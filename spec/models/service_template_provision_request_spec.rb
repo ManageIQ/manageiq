@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ServiceTemplateProvisionRequest do
   let(:admin) { FactoryGirl.create(:user_admin) }
   context "with multiple tasks" do

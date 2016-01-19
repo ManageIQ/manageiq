@@ -1,4 +1,3 @@
-require "spec_helper"
 describe ToolbarHelper do
   describe "#buttons_to_html" do
     subject { buttons_to_html(buttons) }

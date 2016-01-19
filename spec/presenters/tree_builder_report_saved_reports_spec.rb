@@ -1,4 +1,3 @@
-require "spec_helper"
 require "helpers/report_helper_spec"
 
 describe TreeBuilderReportSavedReports do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe OrchestrationTemplateDialogService do
   let(:dialog_service) { described_class.new }
   let(:template_hot)   { FactoryGirl.create(:orchestration_template_hot_with_content) }

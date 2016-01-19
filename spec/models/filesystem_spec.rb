@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Filesystem do
   let(:filesystem_conf_file_ascii) do
     <<-EOT

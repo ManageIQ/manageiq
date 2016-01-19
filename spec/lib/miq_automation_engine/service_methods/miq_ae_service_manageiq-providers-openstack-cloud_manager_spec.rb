@@ -1,6 +1,4 @@
 
-require "spec_helper"
-
 module MiqAeServiceEmsOpenstackSpec
   include MiqAeEngine
   describe MiqAeMethodService::MiqAeServiceManageIQ_Providers_Openstack_CloudManager do

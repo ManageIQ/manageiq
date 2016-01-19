@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'routes for AlertController' do
   describe '#index' do
     it 'routes' do

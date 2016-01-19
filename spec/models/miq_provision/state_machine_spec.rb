@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqProvision do
   context "::StateMachine" do
     let(:req_user) { FactoryGirl.create(:user_with_group) }

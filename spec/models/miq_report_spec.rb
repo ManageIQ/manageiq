@@ -1,5 +1,3 @@
-require "spec_helper"
-
 shared_examples "custom_report_with_custom_attributes" do |base_report, custom_attribute_field|
   let(:options) { {:targets_hash => true, :userid => "admin"} }
   let(:base_report_downcase) { base_report.downcase }

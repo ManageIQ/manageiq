@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'openstack/openstack_event_monitor'
 require 'openstack/amqp/openstack_rabbit_event_monitor'
 

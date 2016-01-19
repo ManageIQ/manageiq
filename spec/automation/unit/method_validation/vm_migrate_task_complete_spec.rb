@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'vmmigratetask_complete method' do
   let(:miq_server)       { EvmSpecHelper.local_miq_server }
   let(:user)             { FactoryGirl.create(:user_with_email_and_group) }

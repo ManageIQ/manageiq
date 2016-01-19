@@ -15,8 +15,6 @@
 #       and
 #   /api/:collection/:id/policy_profiles
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
 

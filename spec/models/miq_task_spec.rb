@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqTask do
   context "when I add an MiqTask" do
     before(:each) do

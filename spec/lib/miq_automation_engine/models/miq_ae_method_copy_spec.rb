@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqAeMethodCopy do
   before do
     @src_domain     = 'SPEC_DOMAIN'

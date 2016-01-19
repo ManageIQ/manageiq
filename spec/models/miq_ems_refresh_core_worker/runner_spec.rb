@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqEmsRefreshCoreWorker::Runner do
   before(:each) do
     guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone

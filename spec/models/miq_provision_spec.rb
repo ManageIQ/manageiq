@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqProvision do
   context "A new provision request," do
     before(:each) do

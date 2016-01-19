@@ -1,4 +1,3 @@
-require "spec_helper"
 require "appliance_console/principal"
 
 describe ApplianceConsole::Principal do

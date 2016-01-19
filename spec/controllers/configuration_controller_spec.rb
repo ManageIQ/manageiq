@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ConfigurationController do
   [[0, "12AM-1AM"],
    [7, "7AM-8AM"],

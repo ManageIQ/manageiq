@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe CloudVolume do
   it ".available" do
     disk = FactoryGirl.create(:disk)

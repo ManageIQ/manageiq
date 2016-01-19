@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'routes for ConfigurationController' do
   describe '#change_tab' do
     it 'routes' do

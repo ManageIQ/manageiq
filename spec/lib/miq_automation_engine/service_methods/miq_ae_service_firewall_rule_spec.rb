@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceFirewallRuleSpec
   describe MiqAeMethodService::MiqAeServiceFirewallRule do
     it "#resource" do

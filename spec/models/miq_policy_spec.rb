@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqPolicy do
   context "Testing edge cases on conditions" do
     # The conditions reflection on MiqPolicy is affected when called through a

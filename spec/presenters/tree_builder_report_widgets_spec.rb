@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe TreeBuilderReportWidgets do
   subject { described_class.new("cb_rates_tree", "cb_rates", {}) }
 

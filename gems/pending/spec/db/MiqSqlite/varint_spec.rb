@@ -1,5 +1,4 @@
 # encoding: US-ASCII
-require "spec_helper"
 require 'db/MiqSqlite/MiqSqlite3'
 
 describe MiqSqlite3DB do

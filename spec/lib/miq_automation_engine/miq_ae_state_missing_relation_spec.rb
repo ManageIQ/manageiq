@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "MiqAeStateMachine" do
   before do
     MiqAeDatastore.reset_default_namespace

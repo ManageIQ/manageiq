@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'util/extensions/miq-benchmark'
 require 'timecop'
 

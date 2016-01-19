@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe PidFile do
   before(:each) do
     @fname = 'foo.bar'

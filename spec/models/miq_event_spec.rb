@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqEvent do
   context "seeded" do
     context ".raise_evm_job_event" do

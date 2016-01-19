@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe DialogGroupSerializer do
   let(:dialog_field_serializer) { double("DialogFieldSerializer") }
   let(:dialog_group_serializer) { described_class.new(dialog_field_serializer) }

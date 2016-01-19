@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshParser do
   let(:parser)  { described_class.new }
   let(:hosts)   { [double("host", "id" => 1, "name" => "h1"), double("host", "id" => 2, "name" => "h2")] }

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe FirewallRule do
   let(:firewall_rule) { FactoryGirl.create(:firewall_rule) }
 

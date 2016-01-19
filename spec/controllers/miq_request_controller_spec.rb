@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqRequestController do
   context "#post_install_callback should render nothing" do
     before do

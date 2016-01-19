@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "MiqServer" do
   context "RhnMirror" do
     before do

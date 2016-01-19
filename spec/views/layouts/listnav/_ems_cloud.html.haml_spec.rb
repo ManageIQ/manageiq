@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "layouts/listnav/_ems_cloud.html.haml" do
   before :each do
     set_controller_for_view("ems_cloud")

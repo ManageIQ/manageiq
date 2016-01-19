@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqCompare do
   context "Marshal.dump and Marshal.load" do
     it "with Vms" do

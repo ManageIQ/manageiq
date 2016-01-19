@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe TenantQuota do
   let(:tenant) { FactoryGirl.create(:tenant) }
 

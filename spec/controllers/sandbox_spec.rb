@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Sandbox do
   let(:sb) do
     Object.new.extend(Sandbox).tap { |sb| sb.instance_eval { @sb = {} } }

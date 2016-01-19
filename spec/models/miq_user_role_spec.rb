@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqUserRole do
   before do
     @expected_user_role_count = 14

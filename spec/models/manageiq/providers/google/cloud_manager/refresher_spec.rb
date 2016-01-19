@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'fog/google'
 
 describe ManageIQ::Providers::Google::CloudManager::Refresher do

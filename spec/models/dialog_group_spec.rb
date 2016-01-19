@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe DialogGroup do
   context "#validate_children" do
     let(:dialog_group) { FactoryGirl.build(:dialog_group, :label => 'group') }

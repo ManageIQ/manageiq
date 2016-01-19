@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceTenantSpec
   describe MiqAeMethodService::MiqAeServiceTenant do
     let(:settings) { {} }

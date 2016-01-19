@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "ems_infra/edit.html.haml" do
   let(:ems_infra) { FactoryGirl.create(:ems_infra) }
 

@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'recursive-open-struct'
 
 describe ContainerDashboardService do

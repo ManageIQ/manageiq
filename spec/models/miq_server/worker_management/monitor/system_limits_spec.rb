@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe MiqServer do
   context "WorkerManagement::Monitor::SystemLimits" do
     before do

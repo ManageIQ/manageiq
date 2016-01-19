@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe DialogFieldDateTimeControl do
   context "legacy tests" do
     let!(:user) do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Amazon::CloudManager::Provision do
   let(:provider) { FactoryGirl.create(:ems_amazon_with_authentication) }
   let(:template) { FactoryGirl.create(:template_amazon, :ext_management_system => provider) }

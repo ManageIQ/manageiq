@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ApplicationController do
   context "#find_by_id_filtered" do
     before do

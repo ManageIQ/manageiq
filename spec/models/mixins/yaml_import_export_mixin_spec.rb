@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe YAMLImportExportMixin do
   before do
     class TestClass

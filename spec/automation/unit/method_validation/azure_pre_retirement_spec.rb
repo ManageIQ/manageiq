@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "azure_pre_retirement Method Validation" do
   before do
     @user = FactoryGirl.create(:user_with_group)

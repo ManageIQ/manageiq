@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqAeField do
   describe "#to_export_xml" do
     let(:default_value) { nil }

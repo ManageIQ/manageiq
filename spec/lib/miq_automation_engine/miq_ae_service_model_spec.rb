@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceModelSpec
   include MiqAeEngine
   describe MiqAeMethodService::MiqAeServiceVm do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ContainerTopologyController do
   render_views
   before(:each) do

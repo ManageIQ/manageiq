@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe OrchestrationStackHelper::TextualSummary do
   before { @record = FactoryGirl.build(:orchestration_stack) }
 

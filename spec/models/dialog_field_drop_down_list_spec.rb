@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe DialogFieldDropDownList do
   context "dialog_field_drop_down_list" do
     before(:each) do

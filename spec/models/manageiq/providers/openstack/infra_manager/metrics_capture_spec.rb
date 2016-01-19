@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
   require File.expand_path(File.join(File.dirname(__FILE__),
                                      %w(.. .. .. .. .. tools openstack_data openstack_data_test_helper)))

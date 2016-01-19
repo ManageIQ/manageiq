@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Openstack::InfraManager::Host do
   #####################################################################
   ##### Variations of nice format  presetn in OpenStack's confs #######

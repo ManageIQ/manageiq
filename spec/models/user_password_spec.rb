@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'bcrypt'
 
 describe "User Password" do

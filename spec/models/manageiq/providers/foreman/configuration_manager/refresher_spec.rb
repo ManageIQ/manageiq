@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Foreman::ConfigurationManager::Refresher do
   before do
     unless provider.api_cached?
