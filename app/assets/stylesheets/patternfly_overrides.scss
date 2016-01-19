@@ -55,16 +55,11 @@
 
 /* Overrides patternfly style for disabled accordion items */
 
-.nav-stacked > li.disabled > a {
-  color: #ccc;
-}
-
 .nav-stacked > li.disabled:hover > a {
   background: transparent;
   border: transparent;
   margin-top: 1px;
   margin-bottom: 1px;
-  color: #ccc;
 }
 
 /* Style changes applied when customer logo is active */
