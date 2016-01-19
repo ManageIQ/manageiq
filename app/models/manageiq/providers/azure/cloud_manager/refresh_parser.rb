@@ -11,21 +11,22 @@ module ManageIQ::Providers
       end
 
       def initialize(ems, options = nil)
-        @ems               = ems
-        @config            = ems.connect
-        @subscription_id   = @config.subscription_id
-        @vmm               = ::Azure::Armrest::VirtualMachineService.new(@config)
-        @asm               = ::Azure::Armrest::AvailabilitySetService.new(@config)
-        @tds               = ::Azure::Armrest::TemplateDeploymentService.new(@config)
-        @vns               = ::Azure::Armrest::Network::VirtualNetworkService.new(@config)
-        @ips               = ::Azure::Armrest::Network::IpAddressService.new(@config)
-        @nis               = ::Azure::Armrest::Network::NetworkInterfaceService.new(@config)
-        @rgs               = ::Azure::Armrest::ResourceGroupService.new(@config)
-        @sas               = ::Azure::Armrest::StorageAccountService.new(@config)
-        @options           = options || {}
-        @data              = {}
-        @data_index        = {}
-        @resource_to_stack = {}
+        @ems                = ems
+        @config             = ems.connect
+        @subscription_id    = @config.subscription_id
+        @vmm                = ::Azure::Armrest::VirtualMachineService.new(@config)
+        @asm                = ::Azure::Armrest::AvailabilitySetService.new(@config)
+        @tds                = ::Azure::Armrest::TemplateDeploymentService.new(@config)
+        @vns                = ::Azure::Armrest::Network::VirtualNetworkService.new(@config)
+        @ips                = ::Azure::Armrest::Network::IpAddressService.new(@config)
+        @nis                = ::Azure::Armrest::Network::NetworkInterfaceService.new(@config)
+        @rgs                = ::Azure::Armrest::ResourceGroupService.new(@config)
+        @sas                = ::Azure::Armrest::StorageAccountService.new(@config)
+        @options            = options || {}
+        @data               = {}
+        @data_index         = {}
+        @resource_to_stack  = {}
+        @network_interfaces = []
       end
 
       def ems_inv_to_hashes
@@ -48,7 +49,7 @@ module ManageIQ::Providers
       private
 
       def get_network_interfaces
-        @data[:network_interfaces] = gather_data_for_this_region(@nis)
+        @network_interfaces = gather_data_for_this_region(@nis)
       end
 
       def get_resource_groups
@@ -132,7 +133,7 @@ module ManageIQ::Providers
 
       def get_vm_nics(instance)
         nic_ids = instance.properties.network_profile.network_interfaces.collect(&:id)
-        @data[:network_interfaces].find_all{ |nic| nic_ids.include?(nic.id) }
+        @network_interfaces.find_all { |nic| nic_ids.include?(nic.id) }
       end
 
       def process_collection(collection, key)
@@ -148,11 +149,9 @@ module ManageIQ::Providers
       end
 
       def gather_data_for_this_region(arm_service, method = "list")
-        results = []
-        @data[:resource_groups].each do |resource_group|
-          results << arm_service.send(method, resource_group[:name])
-        end
-        results.flatten
+        @data[:resource_groups].collect do |resource_group|
+          arm_service.send(method, resource_group[:name])
+        end.flatten
       end
 
       def parse_resource_group(resource_group)

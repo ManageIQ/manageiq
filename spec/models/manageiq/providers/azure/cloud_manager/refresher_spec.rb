@@ -49,19 +49,19 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
 
   def assert_table_counts
     expect(ExtManagementSystem.count).to eql(1)
-    expect(Flavor.count).to eql(33)
+    expect(Flavor.count).to eql(42)
     expect(AvailabilityZone.count).to eql(1)
-    expect(VmOrTemplate.count).to eql(13)
-    expect(Vm.count).to eql(9)
+    expect(VmOrTemplate.count).to eql(17)
+    expect(Vm.count).to eql(13)
     expect(MiqTemplate.count).to eql(4)
-    expect(Disk.count).to eql(11)
+    expect(Disk.count).to eql(15)
     expect(GuestDevice.count).to eql(0)
-    expect(Hardware.count).to eql(13)
-    expect(Network.count).to eql(15)
-    expect(OperatingSystem.count).to eql(9)
+    expect(Hardware.count).to eql(17)
+    expect(Network.count).to eql(23)
+    expect(OperatingSystem.count).to eql(13)
     expect(Relationship.count).to eql(0)
-    expect(MiqQueue.count).to eql(13)
-    expect(OrchestrationTemplate.count).to eql(3)
+    expect(MiqQueue.count).to eql(17)
+    expect(OrchestrationTemplate.count).to eql(2)
     expect(OrchestrationStack.count).to eql(7)
     expect(OrchestrationStackParameter.count).to eql(72)
     expect(OrchestrationStackOutput.count).to eql(5)
@@ -73,10 +73,10 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       :api_version => nil,
       :uid_ems     => "a50f9983-d1a2-4a8d-be7d-123456789012"
     )
-    expect(@ems.flavors.size).to eql(33)
+    expect(@ems.flavors.size).to eql(42)
     expect(@ems.availability_zones.size).to eql(1)
-    expect(@ems.vms_and_templates.size).to eql(13)
-    expect(@ems.vms.size).to eql(9)
+    expect(@ems.vms_and_templates.size).to eql(17)
+    expect(@ems.vms.size).to eql(13)
     expect(@ems.miq_templates.size).to eq(4)
 
     expect(@ems.orchestration_stacks.size).to eql(7)
@@ -84,9 +84,9 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   end
 
   def assert_specific_flavor
-    @flavor = ManageIQ::Providers::Azure::CloudManager::Flavor.where(:name => "Standard_A0").first
+    @flavor = ManageIQ::Providers::Azure::CloudManager::Flavor.where(:name => "Basic_A0").first
     expect(@flavor).to have_attributes(
-      :name                     => "Standard_A0",
+      :name                     => "Basic_A0",
       :description              => nil,
       :enabled                  => true,
       :cpus                     => 1,
@@ -200,7 +200,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     network = v.hardware.networks.where(:description => "public").first
     expect(network).to have_attributes(
       :description => "public",
-      :ipaddress   => "40.76.199.78",
+      :ipaddress   => "40.121.149.27",
       :hostname    => "ipconfig1"
     )
     network = v.hardware.networks.where(:description => "private").first
@@ -345,7 +345,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   def assert_specific_orchestration_template
     @orch_template = OrchestrationTemplateAzure.where(:name => "spec-deployment1-dont-delete").first
     expect(@orch_template).to have_attributes(
-      :md5 => "83c7f9914808a5ca7c000477a6daa7df"
+      :md5 => "b5711eee5c9e35a7108f19ff078b7ffa"
     )
     expect(@orch_template.description).to eql('contentVersion: 1.0.0.0')
     expect(@orch_template.content).to start_with("{\n  \"$schema\": \"http://schema.management.azure.com"\
