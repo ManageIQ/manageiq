@@ -1,7 +1,8 @@
-require "workers/evm_server"
-if MiqEnvironment::Process.is_rails_runner?
-  EvmServer.start(*ARGV)
-else
-  puts "run with rails runner evm_server.rb"
-  exit 1
+#!/usr/bin/env ruby
+
+if !defined?(MiqEnvironment) || !MiqEnvironment::Process.is_rails_runner?
+  require File.expand_path('../../../../config/environment', __FILE__)
 end
+
+require "workers/evm_server"
+EvmServer.start(*ARGV)
