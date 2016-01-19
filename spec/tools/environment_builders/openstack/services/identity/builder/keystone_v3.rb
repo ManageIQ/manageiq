@@ -8,7 +8,7 @@ module Openstack
           attr_reader :projects, :service
 
           def initialize(ems)
-            @service = ems.connect(:service => "Identity")
+            @service = ems.connect(:service => "Identity", :openstack_endpoint_type => 'adminURL')
             @data    = Data::KeystoneV3.new
 
             # Collected data
