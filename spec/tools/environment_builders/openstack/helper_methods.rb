@@ -22,12 +22,13 @@ module Openstack
 
     def create_or_update_ems(name, hostname, password, port, userid, version)
       puts "Finding EMS for environment #{hostname}"
-      attributes = {:name        => name + " " + hostname,
-                    :hostname    => hostname,
-                    :ipaddress   => hostname,
-                    :port        => port,
-                    :api_version => version,
-                    :zone        => Zone.first}
+      attributes = {:name              => name + " " + hostname,
+                    :hostname          => hostname,
+                    :ipaddress         => hostname,
+                    :port              => port,
+                    :api_version       => version,
+                    :zone              => Zone.first,
+                    :security_protocol => 'no_ssl'}
 
       @ems = ManageIQ::Providers::Openstack::CloudManager.where(:hostname => hostname).first
       puts "Creating EMS for environment #{hostname}" unless @ems
