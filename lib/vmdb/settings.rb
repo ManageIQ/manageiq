@@ -23,6 +23,18 @@ module Vmdb
       settings
     end
 
+    def self.activate
+      VMDB::Config::Activator.new(::Settings).activate
+    end
+
+    def self.validate
+      VMDB::Config::Validator.new(::Settings).validate
+    end
+
+    def self.valid?
+      validate.first
+    end
+
     def self.save!(miq_server, hash)
       raise "configuration invalid" unless VMDB::Config::Validator.new(hash).valid?
       changes = HashDiffer.changes(template_settings, hash).map { |h| h.values_at(:key, :value) }

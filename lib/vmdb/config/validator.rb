@@ -1,8 +1,17 @@
 module VMDB
   class Config
     class Validator
+      include Vmdb::Logging
+
       def initialize(config)
-        @config = config.respond_to?(:config) ? config.config : config
+        @config =
+          if config.kind_of?(::Config::Options)
+            config.to_hash
+          elsif config.respond_to?(:config)
+            config.config
+          else
+            config
+          end
       end
 
       def valid?
@@ -14,10 +23,12 @@ module VMDB
         valid = true
         @config.each_key do|k|
           if respond_to?(k.to_s, true)
+            _log.debug("Validating #{k}")
             ost = OpenStruct.new(@config[k].stringify_keys)
             section_valid, errors = send(k.to_s, ost)
 
             unless section_valid
+              _log.debug("  Invalid: #{errors}")
               errors.each do|e|
                 key, msg = e
                 @errors[[k, key].join("_")] = msg
