@@ -40,10 +40,13 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine
       _log.info("#{message} #{for_destination}")
       update_and_notify_parent(:message => message)
       configure_container
-      configure_cloud_init
-
-      signal :poll_destination_powered_off_in_provider
+      configure_destination
     end
+  end
+
+  def configure_destination
+    configure_cloud_init
+    signal :poll_destination_powered_off_in_provider
   end
 
   def poll_destination_powered_on_in_provider
