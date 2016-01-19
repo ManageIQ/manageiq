@@ -79,28 +79,28 @@ module Openstack
             :__flavor_name       => "m1.ems_refresh_spec",
             :__image_name        => "EmsRefreshSpec-Image",
             :__block_device_name => "EmsRefreshSpec-Volume",
-            :__network_name      => "EmsRefreshSpec-NetworkPrivate",
+            :__network_names     => ["EmsRefreshSpec-NetworkPrivate"],
             :key_name            => "EmsRefreshSpec-KeyPair",
             :security_groups     => ["EmsRefreshSpec-SecurityGroup", "EmsRefreshSpec-SecurityGroup2"]
           }, {
             :name            => "EmsRefreshSpec-Paused",
             :__flavor_name   => "m1.ems_refresh_spec",
             :__image_name    => "EmsRefreshSpec-Image",
-            :__network_name  => "EmsRefreshSpec-NetworkPrivate",
+            :__network_names => ["EmsRefreshSpec-NetworkPrivate"],
             :key_name        => "EmsRefreshSpec-KeyPair",
             :security_groups => "EmsRefreshSpec-SecurityGroup"
           }, {
             :name            => "EmsRefreshSpec-Suspended",
             :__flavor_name   => "m1.ems_refresh_spec",
             :__image_name    => "EmsRefreshSpec-Image",
-            :__network_name  => "EmsRefreshSpec-NetworkPrivate",
+            :__network_names => ["EmsRefreshSpec-NetworkPrivate"],
             :key_name        => "EmsRefreshSpec-KeyPair",
             :security_groups => "EmsRefreshSpec-SecurityGroup"
           }, {
             :name            => "EmsRefreshSpec-Shelved",
             :__flavor_name   => "m1.ems_refresh_spec",
             :__image_name    => "EmsRefreshSpec-Image",
-            :__network_name  => "EmsRefreshSpec-NetworkPrivate",
+            :__network_names => ["EmsRefreshSpec-NetworkPrivate"],
             :key_name        => "EmsRefreshSpec-KeyPair",
             :security_groups => "EmsRefreshSpec-SecurityGroup"}]
         end
@@ -110,7 +110,7 @@ module Openstack
             :name            => "EmsRefreshSpec-PoweredOn-FromSnapshot",
             :__flavor_name   => "m1.ems_refresh_spec",
             :__image_name    => "EmsRefreshSpec-PoweredOn-SnapShot",
-            :__network_name  => "EmsRefreshSpec-NetworkPrivate",
+            :__network_names => ["EmsRefreshSpec-NetworkPrivate"],
             :key_name        => "EmsRefreshSpec-KeyPair",
             :security_groups => ["EmsRefreshSpec-SecurityGroup", "EmsRefreshSpec-SecurityGroup2"]}]
         end
