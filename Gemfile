@@ -22,6 +22,8 @@ gem "jquery-rjs",                     "=0.1.1",                       :git => "h
 gem "lodash-rails",                   "~>3.10.0"
 gem "patternfly-sass",                "~>2.9.0"
 gem "sass-rails"
+gem "bower-rails",                    "~>0.10.0"
+gem "angular-rails4-templates"
 
 # Vendored and required
 gem "ruport",                         "=1.7.0",                       :git => "git://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-3"

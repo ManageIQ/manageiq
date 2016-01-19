@@ -9,6 +9,8 @@
 //= require angular-ui-bootstrap
 //= require angular-ui-bootstrap-tpls
 //= require angular-sanitize
+//= require angular-ui-router
+//= require angular-rails4-templates
 //= require moment
 //= require moment-strftime
 //= require moment-timezone
@@ -16,9 +18,12 @@
 //= require numeral
 //= require miq_api
 //= require miq_angular_application
-//= require_tree ./directives/
-//= require_tree ./services/
+//= require_tree ./components/
 //= require_tree ./controllers/
+//= require_tree ./directives/
+//= require_tree ./factories/
+//= require_tree ./services/
+//= require miq_angular_configuration
 //= require d3/d3
 //= require c3/c3
 //= require kubernetes-topology-graph/topology-graph
@@ -74,3 +79,4 @@
 //= require miq_toolbar
 //= require resizable_sidebar
 //= require xml_display
+//= require_tree ../templates
