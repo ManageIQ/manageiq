@@ -1,11 +1,4 @@
 describe MiqUiWorker do
-  it ".build_command_line" do
-    run1 = MiqUiWorker.build_command_line(:arg1 => true)
-    run2 = MiqUiWorker.build_command_line(:arg1 => true)
-    expect(run1).to eq(run2)         # same values
-    expect(run1).not_to equal run2  # different Objects
-  end
-
   context ".all_ports_in_use" do
     before do
       require 'util/miq-process'

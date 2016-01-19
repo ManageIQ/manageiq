@@ -5,8 +5,6 @@ module PerEmsWorkerMixin
     class_eval do
       self.check_for_minimal_role = false
       self.workers = -> { desired_queue_names.length }
-
-      alias_method_chain :command_line_params, :ems_id
     end
   end
 
@@ -122,7 +120,7 @@ module PerEmsWorkerMixin
     self.class.ems_from_queue_name(queue_name)
   end
 
-  def command_line_params_with_ems_id
-    command_line_params_without_ems_id.merge(:ems_id => ems_id)
+  def worker_options
+    super.merge(:ems_id => ems_id)
   end
 end

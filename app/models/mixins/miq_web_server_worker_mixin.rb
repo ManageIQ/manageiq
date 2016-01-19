@@ -13,48 +13,26 @@ module MiqWebServerWorkerMixin
       BINDING_ADDRESS
     end
 
+    def self.preload_for_worker_role
+      require 'hamlit-rails'
+
+      # Make these constants globally available
+      ::UiConstants
+
+      configure_secret_token
+    end
+
+    def self.configure_secret_token
+      Vmdb::Application.config.secret_token = MiqDatabase.first.session_secret_token
+
+      # To set a secret token after the Vmdb::Application is initialized?,
+      # we need to reset the secrets since they are cached:
+      # https://github.com/rails/rails/blob/4-2-stable/railties/lib/rails/application.rb#L386-L401
+      Vmdb::Application.secrets = nil if Vmdb::Application.initialized?
+    end
+
     def self.rails_server
       VMDB::Config.new("vmdb").config.fetch_path(:server, :rails_server) || "thin"
-    end
-
-    def self.rails_server_command_line
-      @rails_server_command_line ||= begin
-        "#{nice_prefix} #{Rails.root.join("bin", "rails")} server #{rails_server}".freeze
-      end
-    end
-
-    def self.build_command_line(*params)
-      params = params.first || {}
-
-      defaults = {
-        :port        => 3000,
-        :binding     => binding_address,
-        :environment => Rails.env.to_s,
-        :config      => Rails.root.join("config.ru")
-      }
-
-      params = defaults.merge(params)
-      params[:pid] = pid_file(params[:port])
-
-      # Usage: rails server [mongrel, thin, etc] [options]
-      #      -p, --port=port                  Runs Rails on the specified port.
-      #                                       Default: 3000
-      #      -b, --binding=ip                 Binds Rails to the specified ip.
-      #                                       Default: 0.0.0.0
-      #      -c, --config=file                Use custom rackup configuration file
-      #      -d, --daemon                     Make server run as a Daemon.
-      #      -u, --debugger                   Enable ruby-debugging for the server.
-      #      -e, --environment=name           Specifies the environment to run this server under (test/development/production).
-      #                                       Default: development
-      #      -P, --pid=pid                    Specifies the PID file.
-      #                                       Default: tmp/pids/server.pid
-      #
-      #      -h, --help                       Show this help message.
-      #
-      cl = rails_server_command_line.dup
-
-      params.each { |k, v| cl << " --#{k} \"#{v}\"" unless v.blank? }
-      cl
     end
 
     def self.all_ports_in_use
@@ -175,15 +153,25 @@ module MiqWebServerWorkerMixin
       end
     end
 
-    def command_line_params
-      params = {}
-      params[:port] = port if port.kind_of?(Numeric)
+    def rails_server_options
+      # See Rack::Server options which is what Rails::Server uses:
+      # https://github.com/rack/rack/blob/1.6.4/lib/rack/server.rb#L152-L183
+      params = {
+        :Host        => self.class.binding_address,
+        :environment => Rails.env.to_s,
+        :app         => Vmdb::Application
+      }
+
+      params[:Port] = port.kind_of?(Numeric) ? port : 3000
+      params[:pid]  = self.class.pid_file(params[:Port]).to_s
+
       params
     end
 
     def start
       delete_pid_file
       ENV['PORT'] = port.to_s
+      ENV['MIQ_GUID'] = guid
       super
     end
 

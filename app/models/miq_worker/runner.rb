@@ -18,15 +18,7 @@ class MiqWorker::Runner
   SAFE_SLEEP_SECONDS = 60
 
   def self.start_worker(*args)
-    cfg = {}
-    opts = OptionParser.new
-    self::OPTIONS_PARSER_SETTINGS.each do |key, desc, type|
-      opts.on("--#{key} VAL", desc, type) { |v| cfg[key] = v }
-    end
-    opts.parse(*args)
-
-    # Start the worker object
-    new(cfg).start
+    new(*args).start
   end
 
   def poll_method
@@ -472,10 +464,8 @@ class MiqWorker::Runner
   end
 
   def set_process_title
-    return unless Process.respond_to?(:setproctitle)
-
     type   = @worker.type.sub(/^ManageIQ::Providers::/, "")
-    title  = "#{type} id: #{@worker.id}"
+    title  = "#{MiqWorker::PROCESS_TITLE_PREFIX} #{type} id: #{@worker.id}"
     title << ", queue: #{@worker.queue_name}" if @worker.queue_name
     title << ", uri: #{@worker.uri}" if @worker.uri
 

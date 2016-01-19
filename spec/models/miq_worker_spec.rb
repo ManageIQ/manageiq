@@ -35,7 +35,6 @@ describe MiqWorker do
 
     context "clean_active_messages" do
       before do
-        allow_any_instance_of(MiqWorker).to receive(:set_command_line)
         @worker = FactoryGirl.create(:miq_worker, :miq_server => @server)
         @message = FactoryGirl.create(:miq_queue, :handler => @worker, :state => 'dequeue')
       end
@@ -250,6 +249,10 @@ describe MiqWorker do
     before(:each) do
       allow(described_class).to receive(:nice_increment).and_return("+10")
       @worker = FactoryGirl.create(:miq_worker)
+    end
+
+    it "#worker_options" do
+      expect(@worker.worker_options).to eq(:guid => @worker.guid)
     end
 
     it "is_current? false when starting" do

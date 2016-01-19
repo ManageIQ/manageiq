@@ -160,7 +160,7 @@ class MiqProcess
 
   def self.is_worker?(pid)
     command_line = self.command_line(pid)
-    command_line && command_line =~ /^ruby.+(runner|mongrel_rails)/
+    command_line.include?(MiqWorker::PROCESS_TITLE_PREFIX)
   end
 
   LINUX_STATES = {

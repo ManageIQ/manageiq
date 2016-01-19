@@ -4,8 +4,6 @@ class MiqWorker < ActiveRecord::Base
   include UuidMixin
   include ReportableMixin
 
-  before_validation :set_command_line, :on => :create
-
   before_destroy :log_destroy_of_worker_messages
 
   belongs_to :miq_server
@@ -34,6 +32,7 @@ class MiqWorker < ActiveRecord::Base
   STATUSES_ALIVE    = STATUSES_CURRENT_OR_STARTING + [STATUS_STOPPING]
   PROCESS_INFO_FIELDS = %i(priority memory_usage percent_memory percent_cpu memory_size cpu_time proportional_set_size)
 
+  PROCESS_TITLE_PREFIX = "MIQ:".freeze
   def self.atStartup
     # Delete and Kill all workers that were running previously
     clean_all_workers
@@ -318,16 +317,45 @@ class MiqWorker < ActiveRecord::Base
     )
   end
 
+  def self.before_fork
+    preload_for_worker_role if respond_to?(:preload_for_worker_role)
+  end
+
+  def self.after_fork
+    close_pg_sockets_inherited_from_parent
+    DRb.stop_service
+  end
+
+  # When we fork, the children inherits the parent's file descriptors
+  # so we need to close any inherited raw pg sockets in the child.
+  def self.close_pg_sockets_inherited_from_parent
+    owner_to_pool = ActiveRecord::Base.connection_handler.instance_variable_get(:@owner_to_pool)
+    owner_to_pool[Process.ppid].values.compact.each do |pool|
+      pool.connections.each do |conn|
+        socket = conn.raw_connection.socket
+        _log.info "Closing socket: #{socket}"
+        IO.for_fd(socket).close
+      end
+    end
+  end
+
   def start
+    self.class.before_fork
+    pid = fork do
+      self.class.after_fork
+      self.class::Runner.start_worker(worker_options)
+      exit!
+    end
+
+    Process.detach(pid)
+    self.pid = pid
+    save
+
     msg = "Worker started: ID [#{id}], PID [#{pid}], GUID [#{guid}]"
     MiqEvent.raise_evm_event_queue(miq_server, "evm_worker_start", :event_details => msg, :type => self.class.name)
 
-    ENV['MIQ_GUID'] = guid
-    self.pid = Kernel.spawn(command_line, :out => "/dev/null", :err => [Rails.root.join("log", "evm.log"), "a"])
-    Process.detach(pid)
-    save
-
-    _log.info("#{msg}")
+    _log.info(msg)
+    self
   end
 
   def stop
@@ -478,6 +506,10 @@ class MiqWorker < ActiveRecord::Base
     end
   end
 
+  def worker_options
+    {:guid => guid}
+  end
+
   protected
 
   def self.normalized_type
@@ -495,28 +527,5 @@ class MiqWorker < ActiveRecord::Base
   def self.nice_increment
     delta = worker_settings[:nice_delta]
     delta.kind_of?(Integer) ? delta.to_s : "+10"
-  end
-
-  def self.build_command_line(*params)
-    params = params.first || {}
-    raise ArgumentError, "params must contain :guid" unless params.key?(:guid)
-
-    rr = File.expand_path(Rails.root)
-
-    cl = "#{nice_prefix} #{Gem.ruby}"
-    cl << " " << File.join(rr, "bin/rails runner")
-    cl << " " << File.join(rr, "lib/workers/bin/worker.rb #{self::Runner}")
-    cl << " " << name
-    params.each { |k, v| cl << " --#{k} \"#{v}\"" unless v.blank? }
-
-    cl
-  end
-
-  def command_line_params
-    {:guid => guid}
-  end
-
-  def set_command_line
-    self.command_line = self.class.build_command_line(command_line_params)
   end
 end

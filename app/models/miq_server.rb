@@ -187,6 +187,7 @@ class MiqServer < ActiveRecord::Base
     wait_for_started_workers
 
     update_attributes(:status => "started")
+    _log.info("Server starting complete")
   end
 
   def self.seed
