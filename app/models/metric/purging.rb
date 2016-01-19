@@ -52,13 +52,13 @@ module Metric::Purging
     VMDB::Config.new("vmdb").config.fetch_path(:performance, :history, :purge_window_size) || 1000
   end
 
-  def self.purge_conditions(older_than, interval)
+  def self.purge_scope(older_than, interval)
     scope = interval == 'realtime' ? Metric : MetricRollup.where(:capture_interval_name => interval)
     scope.where(scope.arel_table[:timestamp].lteq(older_than))
   end
 
   def self.purge_count(older_than, interval)
-    purge_conditions(older_than, interval).count
+    purge_scope(older_than, interval).count
   end
 
   def self.purge_associated_records(metric_type, ids)
@@ -77,19 +77,19 @@ module Metric::Purging
   end
 
   def self.purge(older_than, interval, window = nil, total_limit = nil, &block)
-    conditions = purge_conditions(older_than, interval)
+    scope = purge_scope(older_than, interval)
     window ||= purge_window_size
     _log.info("Purging #{total_limit || "all"} #{interval} metrics older than [#{older_than}]...")
-    total, total_tag_values, timings = purge_in_batches(conditions, window, 0, total_limit, &block)
+    total, total_tag_values, timings = purge_in_batches(scope, window, 0, total_limit, &block)
     _log.info("Purging #{total_limit || "all"} #{interval} metrics older than [#{older_than}]...Complete - " +
               "Deleted #{total} records and #{total_tag_values} associated tag values - Timings: #{timings.inspect}")
 
     total
   end
 
-  def self.purge_in_batches(conditions, window, total = 0, total_limit = nil)
+  def self.purge_in_batches(scope, window, total = 0, total_limit = nil)
     total_tag_values = 0
-    query = conditions.select(:id).limit(window)
+    query = scope.select(:id).limit(window)
 
     _, timings = Benchmark.realtime_block(:total_time) do
       loop do
@@ -99,7 +99,7 @@ module Metric::Purging
           query = query.limit(current_window)
         end
 
-        if conditions.klass == MetricRollup
+        if scope.klass == MetricRollup
           batch_ids, _ = Benchmark.realtime_block(:query_batch) do
             query.pluck(:id)
           end
@@ -111,13 +111,13 @@ module Metric::Purging
 
         _log.info("Purging #{current_window} metrics.")
         count, = Benchmark.realtime_block(:purge_metrics) do
-          conditions.unscoped.delete_all(:id => batch_ids)
+          scope.unscoped.delete_all(:id => batch_ids)
         end
         break if count == 0
         total += count
 
-        if conditions.klass == MetricRollup
-          count_tag_values = purge_associated_records(conditions.name, batch_ids)
+        if scope.klass == MetricRollup
+          count_tag_values = purge_associated_records(scope.name, batch_ids)
           total_tag_values += count_tag_values
         end
 

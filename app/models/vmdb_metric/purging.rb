@@ -61,20 +61,20 @@ module VmdbMetric::Purging
     # By Date
     #
 
-    # darn - an extra parameter than typical purge_conditoins
-    def purge_conditions(older_than, interval)
+    # darn - an extra parameter than typical purge_scope
+    def purge_scope(older_than, interval)
       where(:capture_interval_name => interval).where(arel_table[:timestamp].lt(older_than))
     end
 
     def purge_count_by_date(older_than, interval)
-      purge_conditions(older_than, interval).count
+      purge_scope(older_than, interval).count
     end
 
     def purge_by_date(older_than, interval, window = nil, &block)
       _log.info("Purging #{interval} metrics older than [#{older_than}]...")
 
-      conditions = purge_conditions(older_than, interval)
-      total = purge_in_batches(conditions, window || purge_window_size, &block)
+      scope = purge_scope(older_than, interval)
+      total = purge_in_batches(scope, window || purge_window_size, &block)
 
       _log.info("Purging #{interval} metrics older than [#{older_than}]...Complete - Deleted #{total} records")
       total

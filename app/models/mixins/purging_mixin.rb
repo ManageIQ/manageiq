@@ -2,7 +2,7 @@
 #
 # It is expected that the mixee will provide the following methods:
 #
-#   purge_conditions(older_than): This method will receive a Time object and
+#   purge_scope(older_than): This method will receive a Time object and
 #     should construct an ActiveRecord::Relation representing the conditions
 #     for purging.  The conditions should only be made up of where clauses.
 #
@@ -36,12 +36,12 @@ module PurgingMixin
     private
 
     def purge_count_by_date(older_than)
-      purge_conditions(older_than).count
+      purge_scope(older_than).count
     end
 
     def purge_by_date(older_than, window = nil, &block)
       _log.info("Purging #{table_name.humanize} older than [#{older_than}]...")
-      total = purge_in_batches(purge_conditions(older_than), window || purge_window_size, &block)
+      total = purge_in_batches(purge_scope(older_than), window || purge_window_size, &block)
       _log.info("Purging #{table_name.humanize} older than [#{older_than}]...Complete - Deleted #{total} records")
       total
     end

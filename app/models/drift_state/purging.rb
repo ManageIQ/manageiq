@@ -51,8 +51,8 @@ module DriftState::Purging
       total = 0
       purge_ids_for_remaining(remaining).each do |resource, id|
         resource_type, resource_id = *resource
-        conditions = where(:resource_type => resource_type, :resource_id => resource_id).where(arel_table[:id].lt(id))
-        total += purge_in_batches(conditions, window, total, &block)
+        scope = where(:resource_type => resource_type, :resource_id => resource_id).where(arel_table[:id].lt(id))
+        total += purge_in_batches(scope, window, total, &block)
       end
 
       _log.info("Purging drift states older than last #{remaining} results...Complete - Deleted #{total} records")
@@ -77,7 +77,7 @@ module DriftState::Purging
     # By Date
     #
 
-    def purge_conditions(older_than)
+    def purge_scope(older_than)
       where(arel_table[:timestamp].lt(older_than))
     end
   end

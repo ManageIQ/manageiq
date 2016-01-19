@@ -60,8 +60,8 @@ module MiqReportResult::Purging
       window ||= purge_window_size
       total = 0
       purge_ids_for_remaining(remaining).each do |report_id, id|
-        conditions = purge_remaining_conditions(report_id, id)
-        total += purge_in_batches(conditions, window, total, &block)
+        scope = purge_remaining_conditions(report_id, id)
+        total += purge_in_batches(scope, window, total, &block)
       end
 
       _log.info("Purging report results older than last #{remaining} results...Complete - Deleted #{total} records")
@@ -88,7 +88,7 @@ module MiqReportResult::Purging
     #
     # By Date
     #
-    def purge_conditions(older_than)
+    def purge_scope(older_than)
       where(arel_table[:created_on].lt(older_than))
     end
   end
