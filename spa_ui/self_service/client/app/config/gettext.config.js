@@ -11,7 +11,10 @@
 
     gettextCatalog.loadAndSet = function(lang) {
       gettextCatalog.setCurrentLanguage(lang);
-      gettextCatalog.loadRemote("gettext/json/" + lang + ".json");
+
+      if (lang) {
+        gettextCatalog.loadRemote("gettext/json/" + lang + ".json");
+      }
     };
 
     window.N_ = gettext;

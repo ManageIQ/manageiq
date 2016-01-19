@@ -5,7 +5,7 @@
     .factory('Session', SessionFactory);
 
   /** @ngInject */
-  function SessionFactory($http, moment, $sessionStorage) {
+  function SessionFactory($http, moment, $sessionStorage, gettextCatalog) {
     var model = {
       token: null,
       user: {}
@@ -41,6 +41,9 @@
       return $http.get('/api')
         .then(function(response) {
           currentUser(response.data.identity);
+
+          var locale = response.data.settings && response.data.settings.locale;
+          gettextCatalog.loadAndSet(locale);
         });
     }
 
