@@ -41,12 +41,11 @@
               .col-md-12
                 = yield
         .row.toolbar-pf#paging_div
-          .col-md-12
-            .toolbar-pf-actions
-              - if saved_report_paging?
-                = render(:partial => 'layouts/saved_report_paging_bar', :locals => {:pages => @sb[:pages]})
-              - else
-                = render(:partial => 'layouts/x_pagingcontrols')
+          - if saved_report_paging?
+            = render(:partial => 'layouts/saved_report_paging_bar',
+                     :locals  => {:pages => @sb[:pages]})
+          - else
+            = render(:partial => 'layouts/x_pagingcontrols')
 
         - unless simulate
           .resizer.hidden-xs
@@ -88,16 +87,12 @@
                   = yield
           - unless @in_a_form
             .row.toolbar-pf#paging_div
-              .col-md-12
-                .toolbar-pf-actions
-                  - unless @embedded
-                    - if @pages && @items_per_page != ONE_MILLION
-                      = render(:partial => 'layouts/pagingcontrols',
-                              :locals => {:pages      => @pages,
-                                           :action_url => action_url_for_views,
-                                           :db         => @view.db,
-                                           :headers    => @view.headers,
-                                           :button_div => 'center_tb'})
+              = render(:partial => 'layouts/pagingcontrols',
+                       :locals  => {:pages      => @pages,
+                                    :action_url => action_url_for_views,
+                                    :db         => @view.db,
+                                    :headers    => @view.headers,
+                                    :button_div => 'center_tb'})
 
         .col-md-2.col-md-pull-10.sidebar-pf.sidebar-pf-left
           = render :partial => "layouts/listnav"
@@ -141,16 +136,12 @@
                   = yield
           - if layout_uses_paging? && !@in_a_form
             .row.toolbar-pf#paging_div
-              .col-md-12
-                .toolbar-pf-actions
-                  - unless @embedded
-                    - if @pages && @items_per_page != ONE_MILLION
-                      = render(:partial => 'layouts/pagingcontrols',
-                               :locals  => {:pages      => @pages,
-                                            :action_url => action_url_for_views,
-                                            :db         => @view.db,
-                                            :headers    => @view.headers,
-                                            :button_div => 'center_tb'})
+              = render(:partial => 'layouts/pagingcontrols',
+                       :locals  => {:pages      => @pages,
+                                    :action_url => action_url_for_views,
+                                    :db         => @view.db,
+                                    :headers    => @view.headers,
+                                    :button_div => 'center_tb'})
 
 - if show_advanced_search?
   :javascript
