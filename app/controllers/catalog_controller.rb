@@ -1943,11 +1943,7 @@ class CatalogController < ApplicationController
     presenter[:reload_toolbars][:view]    = v_tb
     presenter[:set_visible_elements][:toolbar] = h_tb.present? || c_tb.present? || v_tb.present?
 
-    if @record && !@in_a_form
-      presenter[:record_id] = @record.id
-    else
-      presenter[:record_id] = @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
-    end
+    presenter[:record_id] = determine_record_id_for_presenter
 
     presenter[:lock_unlock_trees][x_active_tree] = @edit && @edit[:current]
 

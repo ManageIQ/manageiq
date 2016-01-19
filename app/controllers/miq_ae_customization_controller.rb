@@ -378,12 +378,7 @@ class MiqAeCustomizationController < ApplicationController
   end
 
   def set_miq_record_id(presenter)
-    presenter[:record_id] = determine_miq_record_id
-  end
-
-  def determine_miq_record_id
-    return @record.id if @record && !@in_a_form
-    return @edit[:rec_id] if @edit && @edit[:rec_id] && @in_a_form
+    presenter[:record_id] = determine_record_id_for_presenter
   end
 
   def set_right_cell_text(presenter)
