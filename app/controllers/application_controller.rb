@@ -2617,10 +2617,10 @@ class ApplicationController < ActionController::Base
   public :restful?
 
   def determine_record_id_for_presenter
-    if @record && !@in_a_form
-      @record.id
+    if @in_a_form
+      @edit && @edit[:rec_id]
     else
-      @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
+      @record.try!(:id)
     end
   end
 end
