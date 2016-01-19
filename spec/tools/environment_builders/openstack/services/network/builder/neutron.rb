@@ -30,9 +30,23 @@ module Openstack
 
           private
 
+          def setup_quotas
+            quotas = {:network => 20, :subnet => 20}
+            puts "Updating network quotas to: #{quotas}"
+            @service.update_quota(@project.id, quotas)
+          end
+
           def find_or_create_networks
             @data.networks.each do |network|
-              network = find_or_create(@service.networks, network.merge(:tenant_id => @project.id))
+              begin
+                network = find_or_create(@service.networks, network.merge(:tenant_id => @project.id))
+              rescue => e
+                # Havana and below can't deal with the provider networks
+                network.delete("provider:physical_network")
+                network.delete("provider:network_type")
+                network = find_or_create(@service.networks, network.merge(:tenant_id => @project.id))
+              end
+
               find_or_create_subnets(network)
 
               @networks << network
@@ -67,8 +81,10 @@ module Openstack
 
             # Add private subnets as interface to network
             @subnets.each do |subnet|
-              @service.add_router_interface(router.id,
-                                            subnet.id) if subnet_interfaces.detect { |x| x[:name] == subnet.name }
+              if subnet_interfaces.detect { |x| x[:name] == subnet.name }
+                puts "Adding subnet interface: #{subnet.name} to router: #{router.name}"
+                @service.add_router_interface(router.id, subnet.id)
+              end
             end
           end
 

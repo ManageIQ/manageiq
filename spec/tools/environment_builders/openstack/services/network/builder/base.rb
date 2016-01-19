@@ -6,6 +6,8 @@ module Openstack
           attr_reader :projects, :networks, :service, :floating_ips, :security_groups
 
           def build_all
+            setup_quotas
+
             find_or_create_networks
             find_or_create_routers
             find_or_create_floating_ips
