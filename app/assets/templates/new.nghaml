@@ -1,4 +1,4 @@
-%form#form_div{:name => "angularForm"}
+%form#form_div{:name => "angularForm", :novalidate => ""}
   %h3
     = _('Basic Information')
   .form-horizontal
@@ -29,3 +29,4 @@
           = _("Required")
         %span.help-block{"ng-show" => "!angularForm.repo_path.$error.required && angularForm.repo_path.$error.checkpath"}
           = _("Invalid UNC Path")
+  %form-buttons
