@@ -50,7 +50,7 @@ class DialogFieldSortedItem < DialogField
   end
 
   def trigger_automate_value_updates
-    set_raw_values
+    raw_values
   end
 
   private

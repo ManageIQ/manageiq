@@ -30,10 +30,6 @@ class DialogFieldDropDownList < DialogFieldSortedItem
     {:refreshed_values => refreshed_values, :checked_value => @value}
   end
 
-  def trigger_automate_value_updates
-    raw_values
-  end
-
   private
 
   def load_values_on_init?
