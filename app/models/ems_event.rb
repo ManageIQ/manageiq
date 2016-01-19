@@ -99,6 +99,7 @@ class EmsEvent < EventStream
     process_host_in_event!(event_hash, :prefix => "dest_")
     process_availability_zone_in_event!(event_hash)
     process_cluster_in_event!(event_hash)
+    process_container_entities_in_event!(event_hash)
 
     # Write the event
     new_event = create_event(event_hash)
@@ -146,6 +147,13 @@ class EmsEvent < EventStream
 
   def self.process_host_in_event!(event, options = {})
     process_object_in_event!(Host, event, options)
+  end
+
+  def self.process_container_entities_in_event!(event, _options = {})
+    [ContainerNode, ContainerGroup, ContainerReplicator].each do |entity|
+      process_object_in_event!(entity, event, :ems_ref_key => :ems_ref)
+    end
+    event.except!(:ems_ref)
   end
 
   def self.process_availability_zone_in_event!(event, options = {})

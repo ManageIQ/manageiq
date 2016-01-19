@@ -102,6 +102,62 @@ describe EmsEvent do
     end
   end
 
+  context ".process_container_entities_in_event!" do
+    before :each do
+      @ems = FactoryGirl.create(:ems_kubernetes)
+      @container_project = FactoryGirl.create(:container_project, :ext_management_system => @ems)
+      EMS_REF = "test_ems_ref"
+      @event_hash = {
+        :ems_ref => EMS_REF,
+        :ems_id  => @ems.id
+      }
+    end
+
+    context "process node in events" do
+      before :each do
+        @container_node = FactoryGirl.create(:container_node,
+                                             :ext_management_system => @ems,
+                                             :name                  => "Test Node",
+                                             :ems_ref               => EMS_REF)
+      end
+
+      it "should link node id to event" do
+        EmsEvent.process_container_entities_in_event!(@event_hash)
+        expect(@event_hash[:container_node_id]).to eq @container_node.id
+      end
+    end
+
+    context "process pods in events" do
+      before :each do
+        @container_group = FactoryGirl.create(:container_group,
+                                              :ext_management_system => @ems,
+                                              :container_project     => @container_project,
+                                              :name                  => "Test Group",
+                                              :ems_ref               => EMS_REF)
+      end
+
+      it "should link pod id to event" do
+        EmsEvent.process_container_entities_in_event!(@event_hash)
+        expect(@event_hash[:container_group_id]).to eq @container_group.id
+      end
+    end
+
+    context "process replicator in events" do
+      before :each do
+        @container_replicator = FactoryGirl.create(:container_replicator,
+                                                   :ext_management_system => @ems,
+                                                   :container_project     => @container_project,
+                                                   :name                  => "Test Replicator",
+                                                   :ems_ref               => EMS_REF)
+      end
+
+      it "should link replicator id to event" do
+        EmsEvent.process_container_entities_in_event!(@event_hash)
+        expect(@event_hash[:container_replicator_id]).to eq @container_replicator.id
+      end
+    end
+  end
+
   context "with availability zones" do
     before :each do
       @zone = FactoryGirl.create(:small_environment)
