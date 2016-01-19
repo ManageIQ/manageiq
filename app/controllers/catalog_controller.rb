@@ -290,22 +290,19 @@ class CatalogController < ApplicationController
     if x_active_tree == :stcat_tree
       if params[:rec_id]
         # link to Catalog Item clicked on catalog summary screen
-        self.x_active_tree = 'sandt_tree'
+        self.x_active_tree = :sandt_tree
         self.x_active_accord = 'sandt'
         @record = ServiceTemplate.find_by_id(from_cid(params[:rec_id]))
-        params[:id] = x_build_node_id(@record, nil, x_tree(:sandt_tree))  # Get the tree node id
       else
         @record = ServiceTemplateCatalog.find_by_id(from_cid(params[:id]))
-        params[:id] = x_build_node_id(@record, nil, x_tree(:stcat_tree))  # Get the tree node id
       end
     elsif x_active_tree == :ot_tree
       @record ||= OrchestrationTemplate.find_by_id(from_cid(params[:id]))
-      params[:id] = x_build_node_id(@record, nil, x_tree(x_active_tree)) # Get the tree node id
     else
       identify_catalog(from_cid(params[:id]))
       @record ||= ServiceTemplateCatalog.find_by_id(from_cid(params[:id]))
-      params[:id] = x_build_node_id(@record, nil, x_tree(x_active_tree))  # Get the tree node id
     end
+    params[:id] = x_build_node_id(@record, nil, x_tree(x_active_tree))  # Get the tree node id
     tree_select
   end
 
