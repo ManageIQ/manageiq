@@ -26,7 +26,7 @@
             = current_group.try(:description)
       %li.divider
       %li
-        %a{:href => "/dashboard/logout", :onclick => 'return miqCheckForChanges()', :title => _("Click to Logout")}
+        %a{:href => "/dashboard/logout", :onclick => 'return miqCheckForChanges(this)', :title => _("Click to Logout")}
           = _('Logout')
 
 - else

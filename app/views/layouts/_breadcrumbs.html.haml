@@ -2,7 +2,7 @@
   %ol.breadcrumb
     - @breadcrumbs[0...-1].each do |breadcrumbs|
       %li
-        %a{:href => breadcrumbs[:url], :onclick => "return miqCheckForChanges()"}
+        %a{:href => breadcrumbs[:url], :onclick => "return miqCheckForChanges(this)"}
           = h(breadcrumbs[:name])
     %li.active
       = @title

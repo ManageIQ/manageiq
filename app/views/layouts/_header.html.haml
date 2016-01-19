@@ -21,7 +21,7 @@
               - menu_section.items.each do |menu_item|
                 - if menu_item.visible?
                   %li
-                    %a{:href => menu_item.url, :onclick => 'return miqCheckForChanges()'}= _(menu_item.name)
+                    %a{:href => menu_item.url, :onclick => 'return miqCheckForChanges(this)'}= _(menu_item.name)
 
       = render :partial => "layouts/user_options"
     = render :partial => "layouts/page_header_navbar"

@@ -44,7 +44,7 @@
                     :remote                      => true,
                     "data-method"                => :post)
               - else
-                = link_to(tab[1], {:action => 'change_tab', :tab => tab[0], :id => @tabs[0][1]}, :onclick => "return miqCheckForChanges()")
+                = link_to(tab[1], {:action => 'change_tab', :tab => tab[0], :id => @tabs[0][1]}, :onclick => "return miqCheckForChanges(this)")
   %br{:clear => "all"}/
 - if !@tabs && (@lastaction == "show_list" || !@edit && !session[:menu_click])
   - if @edit && @edit[:adv_search_applied] != nil && !session[:menu_click]
