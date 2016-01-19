@@ -5,7 +5,7 @@
     .run(init);
 
   /** @ngInject */
-  function init(gettextCatalog) {
+  function init(gettextCatalog, gettext) {
     // prepend [MISSING] to untranslated strings
     gettextCatalog.debug = false;
 
@@ -13,5 +13,8 @@
       gettextCatalog.setCurrentLanguage(lang);
       gettextCatalog.loadRemote("gettext/json/" + lang + ".json");
     };
+
+    window.N_ = gettext;
+    window.__ = gettextCatalog.getString.bind(gettextCatalog);
   };
 })();
