@@ -1,7 +1,7 @@
 Except where otherwise noted, all ManageIQ source files are covered by
 the following copyright and license notice:
 
-Copyright 2014-2015 ManageIQ Authors.
+Copyright 2014-2016 ManageIQ Authors.
 
 Licensed under the Apache License, version 2.0 or (at your option) the
 GNU General Public License, version 2 (GPLv2). See the files
