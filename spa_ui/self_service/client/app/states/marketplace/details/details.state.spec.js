@@ -1,7 +1,7 @@
 /* jshint -W117, -W030 */
 describe('Marketplace.details', function() {
   beforeEach(function() {
-    module('app.states', 'app.config', bard.fakeToastr);
+    module('app.states', 'app.config', 'gettext', bard.fakeToastr);
   });
 
   describe('#resolveDialogs', function() {
