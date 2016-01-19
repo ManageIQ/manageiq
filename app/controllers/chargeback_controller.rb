@@ -352,12 +352,12 @@ class ChargebackController < ApplicationController
         end
         page << javascript_for_cb_button_add_metric_visibility(params[:metric] != "null")
       elsif !params[:group].nil?
-        rate_details_level = (params[:level] == 'Compute' || params[:level].nil?) ? @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Compute"} : @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Storage" }
+        rate_details_level = (params[:level] == 'Compute' || params[:level].nil?) ? @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Compute" } : @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Storage" }
         @edit[:new][:metrics] = chargeback_details_metrics(rate_details_level, params[:group])
         @edit[:new][:group] = params[:group]
         page.replace_html("add_metric_fields", :partial => "cb_rate_add_metrics")
       elsif !params[:level].nil?
-        rate_details_level = (params[:level] == 'Compute') ? @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type =="Compute"} : @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Storage" }
+        rate_details_level = (params[:level] == 'Compute') ? @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Compute" } : @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Storage" }
         @edit[:new][:groups] = chargeback_details_groups(rate_details_level)
         @edit[:new][:level] = params[:level]
         # showing all the metrics of the selected group
@@ -381,7 +381,7 @@ class ChargebackController < ApplicationController
         @added_rds.push(rate_detail[0])
       end
     when "add_all"
-      @added_rds =  @sb[:rate_details].select { |k| k.rate == "0" }
+      @added_rds = @sb[:rate_details].select { |k| k.rate == "0" }
       @added_rds.each do |r|
         r.rate = 1.0
       end
@@ -403,7 +403,7 @@ class ChargebackController < ApplicationController
       selected_metrics = @edit[:selected_rd_remove]
       selected_metrics.each do |sm|
         # if the detail is not selectable by metric we select by description (for the Fixed rates datail)
-        rate_detail = @sb[:rate_details].select{ |k| k.id == sm.id }
+        rate_detail = @sb[:rate_details].select { |k| k.id == sm.id }
         rate_detail[0].rate = "0"
       end
     end
