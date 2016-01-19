@@ -27,7 +27,7 @@ module Openstack
       expect(CloudVolume.count).to eq 0
 
       # .. but other things are still present:
-      expect(Disk.count).to       eq disks_count
+      expect(Disk.count).to       eq disks_count(false)
       expect(FloatingIp.count).to eq network_data.floating_ips.sum
     end
 
@@ -41,7 +41,10 @@ module Openstack
       assert_specific_tenant
       assert_key_pairs
       assert_specific_security_groups
+      assert_networks
       assert_specific_networks
+      assert_subnets
+      assert_routers
       assert_specific_routers
       assert_specific_volumes
       assert_specific_volume_snapshots
@@ -75,18 +78,22 @@ module Openstack
     def volumes_count
       snapshots_with_volumes_names = snapshots_with_volumes.map { |x| x[:name] }
 
-      servers_created_by_snapshots_with_volumes = compute_data.servers_from_snapshot.select do |x|
-        snapshots_with_volumes_names.include?(x[:__image_name])
-      end
+      servers_created_by_snapshots_with_volumes = []
+      # TODO(lsmola) add server booted from volume to the env builder
+      # servers_created_by_snapshots_with_volumes = compute_data.servers_from_snapshot.select do |x|
+      #   snapshots_with_volumes_names.include?(x[:__image_name])
+      # end
 
-      # Volumes count + volumes created from snapshots + volumes created by snapshoting and recreating vm that had
-      # volume attached
+      # Volumes count + volumes created from snapshots + volumes created by snapshoting and recreating vm that was
+      # booted from volume
       (volume_data.volumes.count + volume_data.volumes_from_snapshots.count +
        servers_created_by_snapshots_with_volumes.count)
     end
 
     def volume_snapshots_count
-      # Snapshosts created manuall + snapshosts of servers that has attached volume
+      # Snapshosts created manually + snapshosts of servers that were booted from volume
+      # TODO(lsmola) add servers booted from volume that will be snapshoted
+      snapshots_with_volumes = []
       volume_data.volume_snapshots.count + snapshots_with_volumes.count
     end
 
@@ -104,10 +111,6 @@ module Openstack
       count = identity_data.projects.count
       # Neutron puts there one extra security group, that is not associated to any tenant
       count += 1 if neutron_networking?
-      # TODO(lsmola) For keystone v3 we get back also sec groups from another domains, we
-      # need to set correctly policies. In total for keystone v3 there are + 2 default
-      # sec groups for services and admin tenant, from default domain.
-      count += 1 if keystone_v3_identity?
       count
     end
 
@@ -117,8 +120,8 @@ module Openstack
     end
 
     def images_count
-      # Images + snaphosts + 2 AKI and ARI images not specified in data specs
-      image_data.images.count + image_data.servers_snapshots.count + 2
+      # Images + snaphosts
+      image_data.images.count + image_data.servers_snapshots.count
     end
 
     def expected_stack_parameters_count
@@ -154,17 +157,26 @@ module Openstack
       all_vms_and_stacks.count
     end
 
-    def disks_count
-      # There are 3 disks per each vm: Root disk, Ephemeral disk and Swap disk
-      # TODO(lsmola) env builder has broken image, so it doesn't really create root disk and others from flavor,
-      # otherwise this needs to contain also number of attached volumes.
+    def disks_count(with_volumes = true)
+      # There are possibly 3 disks per each vm: Root disk, Ephemeral disk and Swap disk, depends on flavor
       all_vms_and_stacks.sum do |vm_or_stack|
-        flavor = compute_data.flavors.detect do |x|
-          x[:name] == vm_or_stack[:__flavor_name] || x[:name] == vm_or_stack.fetch_path(:parameters, "instance_type")
-        end
-        # Count only disks that have size bigger that 0
-        (flavor[:disk] > 0 ? 1 : 0) + (flavor[:ephemeral] > 0 ? 1 : 0) + (flavor[:swap] > 0 ? 1 : 0)
+        disks_count_for_vm(vm_or_stack, with_volumes)
       end
+    end
+
+    def disks_count_for_vm(vm_or_stack, with_volumes = true)
+      flavor = compute_data.flavors.detect do |x|
+        x[:name] == vm_or_stack[:__flavor_name] || x[:name] == vm_or_stack.fetch_path(:parameters, "instance_type")
+      end
+      # Count only disks that have size bigger that 0
+      disks_count  = (flavor[:disk] > 0 ? 1 : 0) + (flavor[:ephemeral] > 0 ? 1 : 0) + (flavor[:swap] > 0 ? 1 : 0)
+
+      if with_volumes
+        # Count also volumes attached to the VM
+        disks_count += 1 unless vm_or_stack[:__block_device_name].blank?
+      end
+
+      disks_count
     end
 
     def availability_zones_count
@@ -355,11 +367,32 @@ module Openstack
                                  [:group])
     end
 
-    def assert_specific_networks
+    def network_vms(network)
+      (compute_data.servers + compute_data.servers_from_snapshot).select do |x|
+        x[:__network_names].include?(network.name)
+      end
+    end
+
+    def network_stacks(network)
+      orchestration_data.stacks.select do |x|
+         x[:parameters][:__network_name] == network.name
+      end
+    end
+
+    def assert_networks
+      return unless neutron_networking?
+
       networks = CloudNetwork.all
 
-      # Compare security groups to expected
-      assert_objects_with_hashes(networks, network_data.networks, network_data.network_translate_table)
+      blacklisted_attributes  = []
+      # Havana and below doesn;t support provider networks
+      blacklisted_attributes += ["provider:network_type", "provider:physical_network"] if environment_release_number < 5
+      # Compare networks to expected
+      assert_objects_with_hashes(networks,
+                                 network_data.networks,
+                                 network_data.network_translate_table,
+                                 {},
+                                 blacklisted_attributes)
 
       networks.each do |network|
         expect(network.ems_ref).to be_guid
@@ -369,46 +402,94 @@ module Openstack
                                    network_data.subnet_translate_table,
                                    {:ip_version => -> (x) { "ipv#{x}" }},
                                    [:allocation_pools]) # TODO(lsmola) model blacklisted attrs
-      end
 
-      networks.each do |network|
-        expect(network.cloud_tenant).to          be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudTenant)
-        expect(network.ext_management_system).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager)
+        if network.external_facing?
+          vms = network.private_networks.map { |x| (network_vms(x) + network_stacks(x)) }.flatten.uniq
+          expect(network.vms.count).to eq vms.count
 
-        if neutron_networking?
-          expect(network.network_ports.count).to   be > 0
-          expect(network.network_ports.first).to   be_kind_of(ManageIQ::Providers::Openstack::CloudManager::NetworkPort)
-          expect(network.cloud_subnets.count).to   be > 0
-          expect(network.cloud_subnets.first).to   be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudSubnet)
-          expect(network.vms.count).to             be > 0
-          expect(network.vms.first).to             be_kind_of(ManageIQ::Providers::Openstack::CloudManager::Vm)
-          expect(network.network_routers.count).to be > 0
-          expect(network.network_routers.first).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::NetworkRouter)
-          if network.external_facing?
-            # It's a public network
-            expect(network).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public)
-            expect(network.private_networks.count).to be > 0
-            expect(network.floating_ips.count).to     be > 0
-            expect(network.private_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private)
+          non_stack_vms          = network.vms.select { |x| x.orchestration_stack.blank? }
+          non_stack_expected_vms = network.private_networks.map { |x| (network_vms(x)) }.flatten.uniq
+          expect(non_stack_vms.map(&:name)).to match_array(non_stack_expected_vms.map { |x| x[:name] })
+        else
+          vms = network_vms(network) + network_stacks(network)
+          expect(network.vms.count).to eq vms.count
+          expect(network.vms.count).to eq network.cloud_subnets.to_a.sum { |x| x.vms.count }
 
-            assert_objects_with_hashes(network.network_routers, network_data.routers(network.name))
-          else
-            # It's a private network
-            expect(network).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private)
-            expect(network.public_networks.count).to be > 0
-            expect(network.public_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public)
-          end
+          non_stack_vms = network.vms.select { |x| x.orchestration_stack.blank? }
+          expect(non_stack_vms.map(&:name)).to match_array(network_vms(network).map { |x| x[:name] })
         end
       end
+    end
+
+    def assert_specific_networks
+      return unless neutron_networking?
+
+      networks = CloudNetwork.all
+
+      specific_networks = networks.select do |x|
+        [network_data.class::PUBLIC_NETWORK_NAME, network_data.class::PRIVATE_NETWORK_NAME].include? x.name
+      end
+
+      specific_networks.each do |network|
+        expect(network.cloud_tenant).to          be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudTenant)
+        expect(network.ext_management_system).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager)
+        expect(network.cloud_subnets.count).to   be > 0
+        expect(network.cloud_subnets.first).to   be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudSubnet)
+        expect(network.vms.count).to             be > 0
+        expect(network.vms.first).to             be_kind_of(ManageIQ::Providers::Openstack::CloudManager::Vm)
+        expect(network.network_routers.count).to be > 0
+        expect(network.network_routers.first).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::NetworkRouter)
+        if network.external_facing?
+          # It's a public network
+          expect(network).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public)
+          expect(network.private_networks.count).to be > 0
+          expect(network.floating_ips.count).to     be > 0
+          expect(network.private_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private)
+
+          assert_objects_with_hashes(network.network_routers, network_data.routers(network.name))
+        else
+          # It's a private network
+          expect(network).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private)
+          expect(network.public_networks.count).to be > 0
+          expect(network.public_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public)
+        end
+      end
+    end
+
+    def assert_subnets
+      return unless neutron_networking?
+
+      subnets = CloudSubnet.all
+
+      # Compare subnets to expected
+      assert_objects_with_hashes(subnets,
+                                 network_data.subnets,
+                                 network_data.subnet_translate_table,
+                                 {:ip_version      => -> (x) { "ipv#{x}" },
+                                  :dns_nameservers => -> (x) { x.nil? ? [] : x },
+                                  :enable_dhcp     => -> (x) { x.nil? ? true : x }},
+                                 [:allocation_pools]) # TODO(lsmola) model blacklisted attrs
+
+      subnets.each do |subnet|
+        expect(subnet.ems_ref).to be_guid
+      end
+    end
+
+    def assert_routers
+      return unless neutron_networking?
+
+      network_routers = NetworkRouter.all
+      assert_objects_with_hashes(network_routers, network_data.routers)
     end
 
     def assert_specific_routers
       return unless neutron_networking?
 
-      network_routers = NetworkRouter.all
-      assert_objects_with_hashes(network_routers, network_data.routers)
+      specific_routers = NetworkRouter.all.select do |x|
+        [network_data.class::ROUTER_NAME].include?(x.name)
+      end
 
-      network_routers.each do |network_router|
+      specific_routers.each do |network_router|
         expect(network_router.floating_ips.count).to   be > 0
         expect(network_router.floating_ips.first).to   be_kind_of(ManageIQ::Providers::Openstack::CloudManager::FloatingIp)
         expect(network_router.network_ports.count).to  be > 0
@@ -431,12 +512,13 @@ module Openstack
     def assert_specific_volume_snapshots
       volume_snapshots = CloudVolumeSnapshot.all
       defined_volume_snapshots = volume_data.volume_snapshots
-      if snapshots_with_volumes
-        # Volume snapshots created by snapshoting VM with volume have changed name and description
-        # of original volume, let's just compare changed name in all snapshots, otherwise we would
-        # have to obtain link to the original volume, for the description
-        defined_volume_snapshots += snapshots_with_volumes.map { |x| {:name => "snapshot for #{x[:name]}"} }
-      end
+      # TODO(lsmola) add server booted from volume to the env builder
+      # if snapshots_with_volumes
+      #   # Volume snapshots created by snapshoting VM with volume have changed name and description
+      #   # of original volume, let's just compare changed name in all snapshots, otherwise we would
+      #   # have to obtain link to the original volume, for the description
+      #   defined_volume_snapshots += snapshots_with_volumes.map { |x| {:name => "snapshot for #{x[:name]}"} }
+      # end
 
       assert_objects_with_hashes(volume_snapshots, defined_volume_snapshots, {}, {}, [:description])
     end
@@ -459,17 +541,22 @@ module Openstack
       end
     end
 
+    def assert_templates
+      templates = ManageIQ::Providers::Openstack::CloudManager::Template.all
+
+      assert_objects_with_hashes(templates,
+                                 image_data.images + image_data.servers_snapshots,
+                                 image_data.images_translate_table,
+                                 {:is_public => -> (x) { x.nil? ? false : x }})
+    end
+
     def assert_specific_templates
-      # TODO(lsmola) make aki and ari part of the Builder's data
-      without_aki_and_ari = ManageIQ::Providers::Openstack::CloudManager::Template.all.select do |x|
-        !(x.name =~ /(-aki|-ari)/)
+      specific_templates = ManageIQ::Providers::Openstack::CloudManager::Template.all.select do |x|
+        [image_data.class::IMAGE_NAME].include?(x.name)
       end
 
-      assert_objects_with_hashes(without_aki_and_ari,
-                                 image_data.images + image_data.servers_snapshots)
-
       # TODO(lsmola) expose below in Builder's data
-      without_aki_and_ari.each do |template|
+      specific_templates.each do |template|
         expect(template).to have_attributes(
           :template              => true,
           #:publicly_available    => is_public, # is not exposed now
@@ -595,7 +682,14 @@ module Openstack
         expect(vm.public_networks.count).to be > 0
         expect(vm.public_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public)
 
-        expect(vm.private_networks.map(&:name)).to match_array [vm_expected[:__network_name]]
+        expect(vm.private_networks.map(&:name)).to match_array vm_expected[:__network_names]
+        expect(vm.public_networks.first.floating_ips).to include vm.floating_ips.first
+        vm.network_ports.each do |network_port|
+          if network_port.public_network.floating_ips.count > 0
+            expect(network_port.public_network.floating_ips).to include network_port.floating_ip
+            expect(network_port.public_network.floating_ips).to include network_port.floating_ips.first
+          end
+        end
       end
 
       if vm_expected[:security_groups].kind_of?(Array)
@@ -610,8 +704,7 @@ module Openstack
         :disk_capacity => 2.5.gigabytes # TODO(lsmola) Where is this coming from?
       )
 
-      # Types hardcoded in flavor, I think there can't be different count
-      expect(vm.hardware.disks.size).to eq 3
+      expect(vm.hardware.disks.size).to eq disks_count_for_vm(vm_expected)
 
       # TODO(lsmola) the flavor disk data should be stored in Flavor model, getting it from test data now
       flavor_expected = compute_data.flavors.detect { |x| x[:name] == vm.flavor.name }
