@@ -20,11 +20,6 @@
   "nonbsp"        : true,     // true: Prohibit "non-breaking whitespace" characters.
   "nonew"         : false,    // true: Prohibit use of constructors for side-effects (without assignment)
   "plusplus"      : false,    // true: Prohibit use of `++` & `--`
-  "quotmark"      : "single", // Quotation mark consistency:
-  //   false    : do nothing (default)
-  //   true     : ensure whatever is used is consistent
-  //   "single" : require single quotes
-  //   "double" : require double quotes
   "undef"         : true,     // true: Require all non-global variables to be declared (prevents global leaks)
   "unused"        : false,    // true: Require all defined variables be used
   "strict"        : false,    // true: Requires all functions run in ES5 Strict Mode

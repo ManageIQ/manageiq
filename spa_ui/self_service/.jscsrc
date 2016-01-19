@@ -1,5 +1,4 @@
 {
-  "disallowDanglingUnderscores": true,
   "disallowImplicitTypeConversion": [
     "numeric",
     "binary",
@@ -148,9 +147,5 @@
   "safeContextKeyword": ["self", "vm"],
   "validateIndentation": 2,
   "validateLineBreaks": "LF",
-  "validateParameterSeparator": ", ",
-  "validateQuoteMarks": {
-    "mark": "'",
-    "escape": true
-  }
+  "validateParameterSeparator": ", "
 }

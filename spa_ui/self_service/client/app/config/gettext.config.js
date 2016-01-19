@@ -19,5 +19,5 @@
 
     window.N_ = gettext;
     window.__ = gettextCatalog.getString.bind(gettextCatalog);
-  };
+  }
 })();
