@@ -69,7 +69,13 @@ class ApiController
         :group_href => "#{@req[:api_prefix]}/groups/#{group.id}",
         :role       => group.miq_user_role_name,
         :tenant     => group.tenant.name,
-        :groups     => user.miq_groups.pluck(:description)
+        :groups     => user.miq_groups.pluck(:description),
+      }
+    end
+
+    def user_settings
+      {
+        :locale     => I18n.locale.to_s.sub('-', '_'),
       }
     end
 
