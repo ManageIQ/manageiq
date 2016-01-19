@@ -6,7 +6,7 @@
         miqInitSelectPicker();
         miqSelectPickerEvent('level', '#{url}')
   %td
-    = select_tag("group", options_for_select(@edit[:new][:groups], @edit[:new][:group]), :class => "selectpicker", :disabled => @edit[:new][:groups].empty? )
+    = select_tag("group", options_for_select(@edit[:new][:groups], @edit[:new][:group]), :class => "selectpicker", :disabled => @edit[:new][:groups].empty?)
     :javascript
         miqSelectPickerEvent('group', '#{url}')
   %td
@@ -19,7 +19,7 @@
                 :disabled => "disabled",
                 :class => "cb_add_metric_off btn btn-default")
 
-    = button_tag( "<span class=\"glyphicon glyphicon-plus\">#{_(title)}</span>".html_safe,
+    = button_tag("<span class=\"glyphicon glyphicon-plus\">#{_(title)}</span>".html_safe,
                  :style => "display: none;",
                  :class   => "cb_add_metric_on btn btn-primary",
                  :alt     => t = _(" Add new Metrics"),
@@ -27,7 +27,7 @@
                  :type    => "submit",
                  :onclick => "miqAjaxButton('#{url_for(:action => "cb_add_rd", :button => "add_single")}');")
   %td{:style => "padding-left: 20px;"}
-    = button_tag( "<span class=\"glyphicon pficon-add-circle-o\">#{_(" Add all Metrics")}</span>".html_safe,
+    = button_tag("<span class=\"glyphicon pficon-add-circle-o\">#{_(" Add all Metrics")}</span>".html_safe,
                  :class   => "cb_add_all_metric_on btn btn-primary btn-left",
                  :alt     => _(" Add all Metrics"),
                  :title   => t,

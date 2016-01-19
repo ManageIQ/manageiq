@@ -115,7 +115,8 @@ class ChargebackController < ApplicationController
     end
     @sortcol = session[:rates_sortcol].nil? ? 0 : session[:rates_sortcol].to_i
     @sortdir = session[:rates_sortdir].nil? ? "ASC" : session[:rates_sortdir]
-    @view, @pages = get_view(ChargebackRate, :conditions => ["rate_type=?", "Compute"])  # Get the records (into a view) and the paginator
+    # Get the records (into a view) and the paginator
+    @view, @pages = get_view(ChargebackRate, :conditions => ["rate_type=?", "Compute"])
     @current_page = @pages[:current] unless @pages.nil?  # save the current page number
     session[:rates_sortcol] = @sortcol
     session[:rates_sortdir] = @sortdir
@@ -150,8 +151,8 @@ class ChargebackController < ApplicationController
       @sb[:rate_storage].description = @edit[:new][:description]
       if params[:button] == "add"
         cb_rate_set_record_vars
-        @sb[:rate_compute].chargeback_rate_details.replace(@sb[:rate_details].select{ |k| k.rate_type == "Compute" })
-        @sb[:rate_storage].chargeback_rate_details.replace(@sb[:rate_details].select{ |k| k.rate_type == "Storage" })
+        @sb[:rate_compute].chargeback_rate_details.replace(@sb[:rate_details].select { |k| k.rate_type == "Compute" })
+        @sb[:rate_storage].chargeback_rate_details.replace(@sb[:rate_details].select { |k| k.rate_type == "Storage" })
         if @sb[:rate_compute].save && @sb[:rate_storage].save
           AuditEvent.success(build_saved_audit(@sb[:rate_compute], @edit))
           AuditEvent.success(build_saved_audit(@sb[:rate_storage], @edit))
@@ -301,7 +302,7 @@ class ChargebackController < ApplicationController
     @edit = session[:edit]
     unless params[:select_all].nil?
       if params[:select_all] != "null"
-        @edit[:selected_rd_remove] = @sb[:rate_details].select{ |k| k.rate != "0" }
+        @edit[:selected_rd_remove] = @sb[:rate_details].select { |k| k.rate != "0" }
         enable_button = true
       else
         @edit[:selected_rd_remove] = []
@@ -322,12 +323,12 @@ class ChargebackController < ApplicationController
       if params[:select] != "null"
         enable_button = true
         if @edit[:selected_rd_remove].nil?
-          @edit[:selected_rd_remove] = @sb[:rate_details].select{ |k| k.rate != "0" && k.id == params[:select].to_i }
+          @edit[:selected_rd_remove] = @sb[:rate_details].select { |k| k.rate != "0" && k.id == params[:select].to_i }
         else
-          @edit[:selected_rd_remove] = ((@sb[:rate_details].select{ |k| k.rate != "0" && k.id == params[:select].to_i }) + @edit[:selected_rd_remove]).uniq
+          @edit[:selected_rd_remove] = ((@sb[:rate_details].select { |k| k.rate != "0" && k.id == params[:select].to_i }) + @edit[:selected_rd_remove]).uniq
         end
       else
-        @edit[:selected_rd_remove] = (@sb[:rate_details].select{ |k| k.rate != "0" && k.id == params[:select].to_i }).delete(@edit[:selected_rd_remove] )
+        @edit[:selected_rd_remove] = (@sb[:rate_details].select { |k| k.rate != "0" && k.id == params[:select].to_i }).delete(@edit[:selected_rd_remove])
         @edit[:selected_rd_remove].nil? ? enable_button = false : enable_button = true
       end
       render :update do |page|
@@ -351,12 +352,12 @@ class ChargebackController < ApplicationController
         end
         page << javascript_for_cb_button_add_metric_visibility(params[:metric] != "null")
       elsif !params[:group].nil?
-        rate_details_level = (params[:level] == 'Compute' || params[:level].nil?) ? @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Compute"} : @sb[:rate_details].select{ |k| k.rate == "0" && k.rate_type=="Storage" }
+        rate_details_level = (params[:level] == 'Compute' || params[:level].nil?) ? @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Compute"} : @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Storage" }
         @edit[:new][:metrics] = chargeback_details_metrics(rate_details_level, params[:group])
         @edit[:new][:group] = params[:group]
         page.replace_html("add_metric_fields", :partial => "cb_rate_add_metrics")
       elsif !params[:level].nil?
-        rate_details_level = (params[:level] == 'Compute') ? @sb[:rate_details].select{ |k| k.rate == "0" && k.rate_type =="Compute"} : @sb[:rate_details].select{ |k| k.rate == "0" && k.rate_type=="Storage" }
+        rate_details_level = (params[:level] == 'Compute') ? @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type =="Compute"} : @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Storage" }
         @edit[:new][:groups] = chargeback_details_groups(rate_details_level)
         @edit[:new][:level] = params[:level]
         # showing all the metrics of the selected group
@@ -375,12 +376,12 @@ class ChargebackController < ApplicationController
       selected_metrics = @edit[:selected_metrics].split(',')
       selected_metrics.each do |sm|
         # if the detail is not selectable by metric we select by description (for the Fixed rates datail)
-        rate_detail = @sb[:rate_details].select{ |k| k.metric == sm || k.description == sm }
+        rate_detail = @sb[:rate_details].select { |k| k.metric == sm || k.description == sm }
         rate_detail[0].rate = 1.0
         @added_rds.push(rate_detail[0])
       end
     when "add_all"
-      @added_rds =   @sb[:rate_details].select{ |k| k.rate == "0" }
+      @added_rds =  @sb[:rate_details].select { |k| k.rate == "0" }
       @added_rds.each do |r|
         r.rate = 1.0
       end
@@ -396,7 +397,7 @@ class ChargebackController < ApplicationController
     case params[:button]
     when "remove_single"
       rd_id = params[:rd].to_i
-      rate_detail = @sb[:rate_details].select {|k| k.id == rd_id}
+      rate_detail = @sb[:rate_details].select { |k| k.id == rd_id }
       rate_detail[0].rate = "0"
     when "remove_selected"
       selected_metrics = @edit[:selected_rd_remove]
@@ -414,7 +415,7 @@ class ChargebackController < ApplicationController
 
   def cb_rate_show
     @display = "main"
-    @sb[:selected_rate_details] = (@record[0].chargeback_rate_details + @record[1].chargeback_rate_details).uniq.select{ |k| k.rate != "0" }
+    @sb[:selected_rate_details] = (@record[0].chargeback_rate_details + @record[1].chargeback_rate_details).uniq.select { |k| k.rate != "0" }
     @sb[:selected_rate_details].sort_by! { |rd| [rd[:group].downcase, rd[:description].downcase] }
     if @record.nil?
       redirect_to :action => "cb_rates_list", :flash_msg => _("Error: Record no longer exists in the database"), :flash_error => true
@@ -437,7 +438,7 @@ class ChargebackController < ApplicationController
       end
       process_cb_rates(rates_compute, "destroy") unless rates_compute.empty?
       # delete the storage rate (id_compute_rate + 1)
-      rates_storage = rates_compute.map { |v|; v + 1}
+      rates_storage = rates_compute.map { |v|; v + 1 }
       process_cb_rates(rates_storage, "destroy") unless rates_storage.empty?
 
       add_flash(_("The selected %s were deleted") % ui_lookup(:models => "ChargebackRate"), :info, true) unless flash_errors?
@@ -455,9 +456,9 @@ class ChargebackController < ApplicationController
       end
       cb_rate = ChargebackRate.find_by_id(params[:id])
       process_cb_rates(rates_compute, "destroy") unless rates_compute.empty?
-      rates_storage = rates_compute.map { |v|; v.to_i + 1} unless rates_compute.empty?
+      rates_storage = rates_compute.map { |v|; v.to_i + 1 } unless rates_compute.empty?
 
-      process_cb_rates(rates_storage, "destroy")  unless rates_storage.empty?
+      process_cb_rates(rates_storage, "destroy") unless rates_storage.empty?
 
       add_flash(_("The selected %s was deleted") % ui_lookup(:model => "ChargebackRate"), :info, true) unless flash_errors?
       self.x_node = "root"

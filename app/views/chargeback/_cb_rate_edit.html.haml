@@ -38,7 +38,7 @@
       = button_tag("<span class=\"pficon-delete\">#{t = _(" Remove selected rate details")}</span>".html_safe,
                    :class   => "btn btn-primary btn-sm",
                    :id      => "btm-remove_rd",
-                   :alt     => t ,
+                   :alt     => t,
                    :disabled => "disabled",
                    :type    => "submit",
                    :onclick => "miqAjaxButton('#{url_for(:action => "cb_remove_rd", :button => "remove_selected")}');")
@@ -55,7 +55,7 @@
           %th= _('Per Unit')
           %th= ''
       %tbody
-        - @sb[:rate_details].select{ |k| k.rate != "0" }.each_with_index do |r, i|
+        - @sb[:rate_details].select { |k| k.rate != "0" }.each_with_index do |r, i|
           - @cur_group = r[:group] if @cur_group.nil?
           - if @cur_group != r[:group]
             - @cur_group = r[:group]
