@@ -5,6 +5,11 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
 
   belongs_to :cloud_tenant
 
+  has_many :cloud_networks, :through => :cloud_subnets
+  alias_method :private_networks, :cloud_networks
+  has_many :cloud_subnets, :through => :network_ports, :class_name => "ManageIQ::Providers::Openstack::CloudManager::CloudSubnet"
+  has_many :public_networks, :through => :cloud_subnets
+
   def cloud_network
     # Backwards compatibility layer with simplified architecture where VM has only one network
     cloud_networks.first

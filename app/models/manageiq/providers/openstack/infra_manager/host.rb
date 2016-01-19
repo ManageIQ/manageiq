@@ -7,11 +7,12 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
     :class_name => 'ManageIQ::Providers::Openstack::InfraManager::HostServiceGroup'
 
   has_many :network_ports, :as => :device
-  has_many :cloud_networks, :through => :network_ports
+  has_many :network_routers, :through => :cloud_subnets
+  has_many :cloud_networks, :through => :cloud_subnets
   alias_method :private_networks, :cloud_networks
-  has_many :cloud_subnets, :through => :network_ports
-  has_many :network_routers, :through => :cloud_networks
-  has_many :public_networks, :through => :cloud_networks
+  has_many :cloud_subnets, :through => :network_ports, :class_name => "ManageIQ::Providers::Openstack::InfraManager::CloudSubnet"
+  has_many :public_networks, :through => :cloud_subnets
+
   has_many :floating_ips
 
   # TODO(lsmola) for some reason UI can't handle joined table cause there is hardcoded somewhere that it selects
