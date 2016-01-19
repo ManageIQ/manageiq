@@ -22,7 +22,7 @@ unless %w(--load --obfuscate --activate-paginations --deactivate-paginations).in
 end
 
 OBFUSCATED_PASSWORD = "password_2WpEraURh"
-OBFUSCATED_IP = "1.2.3.4"
+OBFUSCATED_IP = "11.22.33.44"
 
 def load_environments
   openstack_environments.each do |env|
