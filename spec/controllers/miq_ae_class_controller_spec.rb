@@ -533,4 +533,41 @@ describe MiqAeClassController do
       expect(priorities).to eq([1, 2, 3])
     end
   end
+
+  context "#fields_seq_field_changed" do
+    before do
+      ns = FactoryGirl.create(:miq_ae_namespace, :name => 'foo')
+      @cls = FactoryGirl.create(:miq_ae_class, :namespace_id => ns.id)
+      FactoryGirl.create(:miq_ae_field,
+                         :aetype   => "attribute",
+                         :datatype => "string",
+                         :name     => "name01",
+                         :class_id => @cls.id,
+                         :priority => 1)
+      FactoryGirl.create(:miq_ae_field,
+                         :aetype   => "attribute",
+                         :datatype => "string",
+                         :name     => "name02",
+                         :class_id => @cls.id,
+                         :priority => 2)
+    end
+
+    it "moves selected field down" do
+      controller.send(:fields_seq_edit_screen, @cls.id)
+      expect(assigns(:edit)[:new][:fields_list]).to match_array(["(name01)", "(name02)"])
+      controller.instance_variable_set(:@_params, :button => 'down', :id => 'seq', :seq_fields => "['(name01)']")
+      expect(controller).to receive(:render)
+      controller.fields_seq_field_changed
+      expect(assigns(:edit)[:new][:fields_list]).to match_array(["(name02)", "(name01)"])
+    end
+
+    it "moves selected field up" do
+      controller.send(:fields_seq_edit_screen, @cls.id)
+      expect(assigns(:edit)[:new][:fields_list]).to match_array(["(name01)", "(name02)"])
+      controller.instance_variable_set(:@_params, :button => 'up', :id => 'seq', :seq_fields => "['(name02)']")
+      expect(controller).to receive(:render)
+      controller.fields_seq_field_changed
+      expect(assigns(:edit)[:new][:fields_list]).to match_array(["(name02)", "(name01)"])
+    end
+  end
 end
