@@ -127,24 +127,7 @@ class MiqProcess
   end
 
   def self.command_line(pid)
-    case Sys::Platform::IMPL
-    when :mswin, :mingw
-      WMIHelper.connectServer { |wmi| wmi.run_query("select CommandLine from Win32_Process where Handle = '#{pid}'") { |p| return p.CommandLine } }
-    when :linux
-      filename = "/proc/#{pid}/cmdline"
-      cmdline = MiqSystem.readfile_async(filename)
-      return cmdline.tr("\000", " ").strip unless cmdline.nil?
-      rc = `ps --pid=#{pid} -o ucomm,command --no-headers`
-      return rc unless rc.strip.empty?
-    when :macosx
-      rc = `ps -p #{pid} -o ucomm,command`
-      rows = rc.split("\n")
-
-      # We always get the header back on Mac, so make sure there is more than just the header
-      return rows.last.strip if rows.length > 1
-    end
-
-    nil
+    Sys::ProcTable.ps(pid).cmdline
   end
 
   def self.alive?(pid)
@@ -160,7 +143,7 @@ class MiqProcess
 
   def self.is_worker?(pid)
     command_line = self.command_line(pid)
-    command_line.include?(MiqWorker::PROCESS_TITLE_PREFIX)
+    command_line.start_with?(MiqWorker::PROCESS_TITLE_PREFIX)
   end
 
   LINUX_STATES = {
