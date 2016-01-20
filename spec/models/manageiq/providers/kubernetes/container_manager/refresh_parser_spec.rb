@@ -361,7 +361,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         )
       )).to eq(:name                  => 'test-quota',
                :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
-               :creation_timestamp    => '2015-08-17T09:16:46Z',
+               :ems_created_on        => '2015-08-17T09:16:46Z',
                :resource_version      => '165339',
                :project               => nil,
                :container_quota_items => [
@@ -389,7 +389,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
                            :status   => {})))
         .to eq(:name                  => 'test-quota',
                :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
-               :creation_timestamp    => '2015-08-17T09:16:46Z',
+               :ems_created_on        => '2015-08-17T09:16:46Z',
                :resource_version      => '165339',
                :project               => nil,
                :container_quota_items => [])
@@ -411,7 +411,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
                            :status   => {})))
         .to eq(:name                  => 'test-quota',
                :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
-               :creation_timestamp    => '2015-08-17T09:16:46Z',
+               :ems_created_on        => '2015-08-17T09:16:46Z',
                :resource_version      => '165339',
                :project               => nil,
                :container_quota_items => [
@@ -446,7 +446,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       parsed = {
         :name                  => 'test-range',
         :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
-        :creation_timestamp    => '2015-08-17T09:16:46Z',
+        :ems_created_on        => '2015-08-17T09:16:46Z',
         :resource_version      => '2',
         :project               => nil,
         :container_limit_items => [
@@ -484,7 +484,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
                            })))
         .to eq(:name                  => 'test-range',
                :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
-               :creation_timestamp    => '2015-08-17T09:16:46Z',
+               :ems_created_on        => '2015-08-17T09:16:46Z',
                :resource_version      => '2',
                :project               => nil,
                :container_limit_items => [])
@@ -549,7 +549,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       )).to eq({
         :name                       => 'test-node',
         :ems_ref                    => 'f0c1fe7e-9c09-11e5-bb22-28d2447dcefe',
-        :creation_timestamp         => '2015-12-06T11:10:21Z',
+        :ems_created_on             => '2015-12-06T11:10:21Z',
         :container_conditions       => [],
         :container_runtime_version  => nil,
         :identity_infra             => '10.35.17.99',
@@ -601,7 +601,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       )).to eq({
         :name                       => 'test-node',
         :ems_ref                    => 'f0c1fe7e-9c09-11e5-bb22-28d2447dcefe',
-        :creation_timestamp         => '2015-12-06T11:10:21Z',
+        :ems_created_on             => '2015-12-06T11:10:21Z',
         :container_conditions       => [],
         :container_runtime_version  => nil,
         :identity_infra             => '10.35.17.99',
