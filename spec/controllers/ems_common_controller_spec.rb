@@ -200,9 +200,12 @@ describe EmsContainerController do
         expect(assigns(:flash_array).first[:message]).to include('does not apply')
       end
 
+      let(:ems)     { FactoryGirl.create(:ext_management_system) }
+      let(:storage) { FactoryGirl.create(:storage) }
+
       it "when VM Migrate is pressed for supported type" do
         allow(controller).to receive(:role_allows).and_return(true)
-        vm = FactoryGirl.create(:vm_vmware)
+        vm = FactoryGirl.create(:vm_vmware, :storage => storage, :ext_management_system => ems)
         post :button, :pressed => "vm_migrate", :format => :js, "check_#{vm.id}" => "1"
         expect(controller.send(:flash_errors?)).not_to be_truthy
       end

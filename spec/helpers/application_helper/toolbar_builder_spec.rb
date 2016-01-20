@@ -1115,6 +1115,7 @@ describe ApplicationHelper do
 
           it "and vendor is not redhat" do
             @record = FactoryGirl.create(:vm_vmware)
+            allow(@record).to receive(:archived?).and_return(false)
             expect(subject).to be_falsey
           end
         end
@@ -1145,7 +1146,8 @@ describe ApplicationHelper do
         end
 
         it "record is cloneable" do
-          @record = Vm.create(:type => "ManageIQ::Providers::Redhat::InfraManager::Vm", :name => "rh", :location => "l1", :vendor => "redhat")
+          @record = Vm.create(:type => "ManageIQ::Providers::Vmware::InfraManager::Vm", :name => "rh", :location => "l1", :vendor => "redhat")
+          allow(@record).to receive(:archived?).and_return(false)
           expect(subject).to be_falsey
         end
       end
@@ -1406,7 +1408,7 @@ describe ApplicationHelper do
                                         :name     => "rh",
                                         :location => "loc1",
                                         :vendor   => "redhat")
-          expect(subject).to be_truthy
+          expect(subject).to be_falsey
         end
 
         it "record is cloneable" do
@@ -1710,19 +1712,19 @@ describe ApplicationHelper do
       end
     end
 
-    it "disables Lifecycle options for archived VMs" do
+    it "hides Lifecycle options for archived VMs" do
       @record = FactoryGirl.create(:vm_microsoft)
       allow(@record).to receive(:archived?).and_return(true)
       %w(vm_clone vm_publish vm_migrate).each do |tb_button|
-        expect(build_toolbar_disable_button(tb_button)).to be_truthy
+        expect(build_toolbar_hide_button(tb_button)).to be_truthy
       end
     end
 
-    it "disables Lifecycle options for orphaned VMs" do
+    it "hides Lifecycle options for orphaned VMs" do
       @record = FactoryGirl.create(:vm_microsoft)
       allow(@record).to receive(:orphaned?).and_return(true)
       %w(vm_clone vm_publish vm_migrate).each do |tb_button|
-        expect(build_toolbar_disable_button(tb_button)).to be_truthy
+        expect(build_toolbar_hide_button(tb_button)).to be_truthy
       end
     end
 

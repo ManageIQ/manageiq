@@ -780,9 +780,7 @@ class ApplicationHelper::ToolbarBuilder
     when "Vm"
       case id
       when "vm_clone"
-        return true unless @record.cloneable?
-      when "vm_publish"
-        return true if %w(ManageIQ::Providers::Microsoft::InfraManager::Vm ManageIQ::Providers::Redhat::InfraManager::Vm).include?(@record.type)
+        return true unless @record.is_available?(:clone)
       when "vm_collect_running_processes"
         return true if (@record.retired || @record.current_state == "never") && !@record.is_available?(:collect_running_processes)
       when "vm_guest_startup", "vm_start", "instance_start", "instance_resume"
@@ -795,8 +793,14 @@ class ApplicationHelper::ToolbarBuilder
         return true unless @record.is_available?(:reboot_guest)
       when "vm_migrate"
         return true unless @record.is_available?(:migrate)
+      when "vm_publish"
+        return true unless @record.is_available?(:publish)
       when "vm_reconfigure"
         return true unless @record.reconfigurable?
+      when "vm_retire"
+        return true unless @record.is_available?(:retire)
+      when "vm_retire_now"
+        return true unless @record.is_available?(:retire_now)
       when "vm_stop", "instance_stop"
         return true unless @record.is_available?(:stop)
       when "vm_reset", "instance_reset"
@@ -822,7 +826,7 @@ class ApplicationHelper::ToolbarBuilder
     when "MiqTemplate"
       case id
       when "miq_template_clone"
-        return true unless @record.cloneable?
+        return true unless @record.is_available?(:clone)
       when "miq_template_policy_sim", "miq_template_protect"
         return true if @record.host && @record.host.vmm_product.downcase == "workstation"
       when "miq_template_refresh"
@@ -868,11 +872,11 @@ class ApplicationHelper::ToolbarBuilder
         return true unless @report
       when "timeline_txt"
         return true unless @report
-      when "vm_clone", "vm_publish", "vm_migrate"
+      when "vm_clone", "vm_publish", "vm_migrate", "vm_retire", "vm_retire_now"
         if @sb[:trees][:vandt_tree].present? &&
            (@sb[:trees][:vandt_tree][:active_node] == "xx-arch" ||
             @sb[:trees][:vandt_tree][:active_node] == "xx-orph")
-          return "%{task} does not apply to archived or orphaned VMs" % {:task => id.split('_').last.capitalize}
+          return true
         end
       else
         return !role_allows(:feature => id)
@@ -1166,10 +1170,6 @@ class ApplicationHelper::ToolbarBuilder
       when "instance_check_compliance", "vm_check_compliance"
         model = model_for_vm(@record).to_s
         return "No Compliance Policies assigned to this #{model == "ManageIQ::Providers::InfraManager::Vm" ? "VM" : ui_lookup(:model => model)}" unless @record.has_compliance_policies?
-      when "vm_clone", "vm_publish", "vm_migrate"
-        task = id.split('_').last
-        return "%{task} does not apply to archived or orphaned VMs" % {:task => task.capitalize} unless @record.is_available?(task)
-      when "wm_publish"
       when "vm_collect_running_processes"
         return @record.is_available_now_error_message(:collect_running_processes) if @record.is_available_now_error_message(:collect_running_processes)
       when "vm_console", "vm_vmrc_console"

@@ -418,6 +418,8 @@ describe VmOrTemplate do
   context "#is_available?" do
     it "returns true for SCVMM VM" do
       vm =  FactoryGirl.create(:vm_vmware)
+      allow(vm).to receive_messages(:archived? => false)
+      allow(vm).to receive_messages(:orphaned? => false)
       expect(vm.is_available?(:migrate)).to eq(true)
     end
 
@@ -442,6 +444,9 @@ describe VmOrTemplate do
   end
 
   context "#self.batch_operation_supported?" do
+    let(:ems)     { FactoryGirl.create(:ext_management_system) }
+    let(:storage) { FactoryGirl.create(:storage) }
+
     it "when the vm_or_template supports migrate,  returns false" do
       vm1 =  FactoryGirl.create(:vm_microsoft)
       vm2 =  FactoryGirl.create(:vm_vmware)
@@ -449,8 +454,8 @@ describe VmOrTemplate do
     end
 
     it "when the vm_or_template exists and can be migrated, returns true" do
-      vm1 =  FactoryGirl.create(:vm_vmware)
-      vm2 =  FactoryGirl.create(:vm_vmware)
+      vm1 =  FactoryGirl.create(:vm_vmware, :storage => storage, :ext_management_system => ems)
+      vm2 =  FactoryGirl.create(:vm_vmware, :storage => storage, :ext_management_system => ems)
       expect(VmOrTemplate.batch_operation_supported?(:migrate, [vm1.id, vm2.id])).to eq(true)
     end
   end
