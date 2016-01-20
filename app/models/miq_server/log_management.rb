@@ -111,14 +111,12 @@ module MiqServer::LogManagement
   end
 
   def last_log_sync_on
-    rec = LogFile.where(:resource => self).order("updated_on DESC").select("updated_on").first
-    rec.nil? ? nil : rec.updated_on
+    log_files.order(:updated_on => :desc).pluck(:updated_on).first
   end
 
   def last_log_sync_message
-    last_log = LogFile.where(:resource => self).order("updated_on DESC").first
-    return nil if last_log.nil? || last_log.miq_task.nil?
-    last_log.miq_task.message
+    last_log = log_files.order(:updated_on => :desc).first
+    last_log.try(:miq_task).try!(:message)
   end
 
   def post_logs(options)
@@ -208,7 +206,7 @@ module MiqServer::LogManagement
   end
 
   def delete_old_requested_logs
-    LogFile.destroy_all(:historical => false, :resource => self)
+    log_files.where(:historical => false).destroy_all
   end
 
   def delete_active_log_collections_queue
