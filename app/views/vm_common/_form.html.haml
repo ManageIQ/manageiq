@@ -43,7 +43,6 @@
         = select_tag("chosen_parent",
                       options_for_select(@edit[:pchoices].sort, @edit[:new][:parent]),
                       :multiple => false,
-                      :class => "widthed",
                       "data-miq_sparkle_on" => true,
                       "data-miq_sparkle_off" => true,
                       :class    => "selectpicker")
@@ -64,7 +63,6 @@
           = select_tag('kids_chosen[]',
             options_for_select(@edit[:new][:kids].sort),
             :multiple => true,
-            :style => "width:auto; min-width:375px; border: 0px;",
             :size => 15,
             :style => "width: 400px",
             :id => "kids_chosen")

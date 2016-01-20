@@ -21,7 +21,7 @@
           %td
             = image_submit_tag("/images/toolbars/import.png",
               :class => "rollover small",
-              :id => "accept", :name => "accept", :alt => _("Add this entry"), :title => _("Add this entry"), :item_type => "registry", :id => "#{@scan.id || "new"}")
+              :name => "accept", :alt => _("Add this entry"), :title => _("Add this entry"), :item_type => "registry", :id => "#{@scan.id || "new"}")
           %td
             = _("HKLM")
           %td
@@ -42,7 +42,7 @@
               %td
                 = image_submit_tag("/images/toolbars/import.png",
                   :class => "rollover small",
-                  :id => "accept", :name => "accept", :entry_id => i, :edit_entry => 'edit_registry', :alt => _("Update this entry"), :title => _("Update this entry"), :id => "#{@scan.id || "new"}")
+                  :name => "accept", :entry_id => i, :edit_entry => 'edit_registry', :alt => _("Update this entry"), :title => _("Update this entry"), :id => "#{@scan.id || "new"}")
               %td
                 = _("HKLM")
               %td

@@ -82,7 +82,6 @@
           %div{:style => "overflow: auto; width: 400px; border: 1px solid #999999;"}
             = select_tag('choices_chosen[]',
               options_for_select(@sb[:new][:choices].sort),
-              :style             => "width:auto; min-width:375px; background-color:#fff; border: 0px;",
               :size              => 15,
               :style             => "width: 400px",
               :multiple          => true,
