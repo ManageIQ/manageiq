@@ -71,7 +71,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
       .attr("r", function(d) {
         return self.getDimensions(d).r;
       })
-      .style("stroke", function(d) {
+      .attr('class' , function(d) {
         switch (d.item.status) {
           case "OK":
           case "On":
@@ -79,19 +79,19 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
           case "Running":
           case "Succeeded":
           case "Valid":
-            return "#3F9C35";
+            return "Success";
           case "NotReady":
           case "Failed":
           case "Error":
           case "Unreachable":
-            return "#CC0000";
+            return "Error";
           case 'Warning':
           case 'Waiting':
           case 'Pending':
-            return "#EC7A08";
+            return "Warning";
           case 'Unknown':
           case 'Terminated':
-            return "#bbb";
+            return "Unknown";
         }
       });
 
