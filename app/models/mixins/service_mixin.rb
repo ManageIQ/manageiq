@@ -129,7 +129,7 @@ module ServiceMixin
 
   def parent_services(svc = self)
     srs = ServiceResource.where(:resource => svc)
-    svc = srs.collect { |sr| service = sr.send(sr.resource_type.underscore) }.compact
+    srs.collect { |sr| sr.public_send(sr.resource_type.underscore) }.compact
   end
 
   def sub_services(options = {})
