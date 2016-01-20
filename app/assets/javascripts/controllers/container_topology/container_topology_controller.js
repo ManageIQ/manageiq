@@ -136,17 +136,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
       });
 
     added.selectAll("title").text(function(d) {
-      var status = [
-        "Name: " + d.item.name,
-        "Type: " + d.item.display_kind,
-        "Status: " + d.item.status
-      ];
-
-      if (d.item.kind == 'Host' || d.item.kind == 'VM') {
-        status.push("Provider: " + d.item.provider);
-      }
-
-      return status.join("\n");
+      return self.tooltip(d).join("\n");
     });
 
     $scope.vs = vertices;
@@ -154,6 +144,20 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
     /* Don't do default rendering */
     ev.preventDefault();
   });
+
+  this.tooltip = function tooltip(d) {
+    var status = [
+      "Name: " + d.item.name,
+      "Type: " + d.item.display_kind,
+      "Status: " + d.item.status
+    ];
+
+    if (d.item.kind == 'Host' || d.item.kind == 'Vm') {
+      status.push("Provider: " + d.item.provider);
+    }
+
+   return status;
+  };
   
   this.dblclick = function dblclick(d) {
     var entity_url = "";

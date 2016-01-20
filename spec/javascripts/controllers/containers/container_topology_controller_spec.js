@@ -67,5 +67,16 @@ describe('containerTopologyController', function() {
         expect($controller.getDimensions(d)).toEqual({ x: 0, y: 9, r: 21 });
       });
     });
+
+    describe('tooltips have correct content', function() {
+      it('of all objects', function() {
+        var d = { id:"2",  item:{display_kind:"Openshift", kind:"ContainerManager", id:"2", miq_id:"37", status: "Unreachable", name:"molecule"}};
+        expect($controller.tooltip(d)).toEqual([ 'Name: molecule', 'Type: Openshift', 'Status: Unreachable' ] );
+        d = { id:"3",  item:{display_kind:"Pod", kind:"ContainerGroup", id:"3", miq_id:"30", status: "Running", name:"mypod"}};
+        expect($controller.tooltip(d)).toEqual([ 'Name: mypod', 'Type: Pod', 'Status: Running' ] );
+        d = { id:"4",  item:{display_kind:"VM", kind:"Vm", id:"4", miq_id:"25", status: "On", name:"vm123", provider: "myrhevprovider"}};
+        expect($controller.tooltip(d)).toEqual([ 'Name: vm123', 'Type: VM', 'Status: On', 'Provider: myrhevprovider' ]);
+      });
+    });
     
 });
