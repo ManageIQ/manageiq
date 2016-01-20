@@ -26,10 +26,144 @@ class AuthKeyPairCloudController < ApplicationController
     @edit = session[:edit] # Restore @edit for adv search box
     params[:page] = @current_page unless @current_page.nil? # Save current page for list refresh
     return tag("ManageIQ::Providers::CloudManager::AuthKeyPair") if params[:pressed] == 'auth_key_pair_cloud_tag'
-    if @refresh_div == "main_div" && @lastaction == "show_list"
-      replace_gtl_main_div
+    delete_auth_key_pairs if params[:pressed] == 'auth_key_pair_cloud_delete'
+    new if params[:pressed] == 'auth_key_pair_cloud_new'
+
+    if !@flash_array.nil? && params[:pressed] == "auth_key_pair_cloud_delete" && @single_delete
+      render :update do |page|
+        # redirect to build the retire screen
+        page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]
+      end
+    elsif params[:pressed] == "auth_key_pair_cloud_new"
+      if @flash_array
+        show_list
+        replace_gtl_main_div
+      else
+        render :update do |page|
+          page.redirect_to :action => "new"
+        end
+      end
     else
-      render_flash
+      if @refresh_div == "main_div" && @lastaction == "show_list"
+        replace_gtl_main_div
+      else
+        render_flash
+      end
+    end
+  end
+
+  def get_form_vars
+    if !@edit[:auth_key_pair_cloud_id].nil?
+      @key_pair = ManageIQ::Providers::CloudManager::AuthKeyPair.find_by_id(@edit[:auth_key_pair_cloud_id])
+    else
+      @key_pair = ManageIQ::Providers::CloudManager::AuthKeyPair.new
+    end
+    @edit[:new][:name] = params[:name] if params[:name]
+    @edit[:new][:public_key] = params[:public_key] if params[:public_key]
+    @edit[:new][:ems_id] = params[:ems_id] if params[:ems_id]
+  end
+
+  def set_form_vars
+    @edit = {}
+    @edit[:auth_key_pair_cloud_id] = @key_pair.id
+    @edit[:key] = "auth_key_pair_cloud_edit__#{@key_pair.id || "new"}"
+    @edit[:new] = {}
+
+    @edit[:ems_choices] = {}
+    ManageIQ::Providers::CloudManager.all.each { |ems| @edit[:ems_choices][ems.name] = ems.id }
+    if @edit[:ems_choices].length > 0
+      @edit[:new][:ems_id] = @edit[:ems_choices].values[0]
+    end
+
+    @edit[:new][:name] = @key_pair.name
+    @edit[:current] = @edit[:new].dup
+    session[:edit] = @edit
+  end
+
+  def form_field_changed
+    return unless load_edit("auth_key_pair_cloud_edit__#{params[:id] || 'new'}")
+    get_form_vars
+    @changed = (@edit[:new] != @edit[:current])
+    render :update do |page|
+      page.replace(@refresh_div, :partial => @refresh_partial) if @refresh_div
+      page << javascript_for_miq_button_visibility(true)
+    end
+  end
+
+  def new
+    assert_privileges("auth_key_pair_cloud_new")
+    @key_pair = ManageIQ::Providers::CloudManager::AuthKeyPair.new
+    set_form_vars
+    @in_a_form = true
+    session[:changed] = nil
+    drop_breadcrumb(
+      :name => _("Add New %{model}") % {:model => ui_lookup(:table => 'auth_key_pair_cloud')},
+      :url  => "/auth_key_pair_cloud/new"
+    )
+  end
+
+  def create
+    assert_privileges("auth_key_pair_cloud_new")
+    kls = ManageIQ::Providers::CloudManager::AuthKeyPair
+    case params[:button]
+    when "cancel"
+      render :update do |page|
+        page.redirect_to :action    => 'show_list',
+                         :flash_msg => _("Add of new %{model} was cancelled by the user") % {
+                           :model => ui_lookup(:table => 'auth_key_pair_cloud')
+                         }
+      end
+
+    when "add"
+      return unless load_edit("auth_key_pair_cloud_edit__new")
+      get_form_vars
+
+      options = @edit[:new]
+      ext_management_system = find_by_id_filtered(ManageIQ::Providers::CloudManager, options[:ems_id])
+      valid_action, action_details = kls.validate_create_key_pair(ext_management_system, options)
+      if valid_action
+        begin
+          kls.create_key_pair(ext_management_system, options)
+          add_flash(_("Creating %{model} %{name}") % {
+            :model => ui_lookup(:table => 'auth_key_pair_cloud'),
+            :name  => options[:name]})
+        rescue => ex
+          add_flash(_("Unable to create %{model} %{name} %{error}") % {
+            :model => ui_lookup(:table => 'auth_key_pair_cloud'),
+            :name  => options[:name],
+            :error => ex}, :error)
+        end
+        @breadcrumbs.pop if @breadcrumbs
+        session[:edit] = nil
+        session[:flash_msgs] = @flash_array.dup if @flash_array
+        render :update do |page|
+          page.redirect_to :action => "show_list"
+        end
+      else
+        @in_a_form = true
+        add_flash(_(action_details), :error) unless action_details.nil?
+        drop_breadcrumb(
+          :name => _("Add New %{model}") % {:model => ui_lookup(:table => 'auth_key_pair_cloud')},
+          :url  => "/auth_key_pair_cloud/new"
+        )
+        render :update do |page|
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        end
+      end
+
+    when "validate"
+      @in_a_form = true
+      options = @edit[:new]
+      ext_management_system = find_by_id_filtered(options[:ems_id])
+      valid_action, action_details = kls.validate_create_key_pair(ext_management_system, options)
+      if valid_action
+        add_flash(_("Validation successful"))
+      else
+        add_flash(_(action_details), :error) unless details.nil?
+      end
+      render :update do |page|
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+      end
     end
   end
 
@@ -51,7 +185,7 @@ class AuthKeyPairCloudController < ApplicationController
     when "download_pdf", "main", "summary_only"
       get_tagdata(@auth_key_pair_cloud)
       drop_breadcrumb(
-        :name => @auth_key_pair_cloud.name + " (Summary)",
+        :name => _("%{name} (Summary)") % {:name => @auth_key_pair_cloud.name},
         :url  => "/auth_key_pair_cloud/show/#{@auth_key_pair_cloud.id}"
       )
       @showtype = "main"
@@ -76,6 +210,70 @@ class AuthKeyPairCloudController < ApplicationController
 
   def show_list
     process_show_list
+  end
+
+  # delete selected auth key pairs
+  def delete_auth_key_pairs
+    assert_privileges("auth_key_pair_cloud_delete")
+    key_pairs = []
+
+    if @lastaction == "show_list" || (@lastaction == "show" && @layout != "auth_key_pair_cloud")
+      key_pairs = find_checked_items
+    else
+      key_pairs = [params[:id]]
+    end
+
+    if key_pairs.empty?
+      add_flash(_("No #{ui_lookup(:tables => 'auth_key_pair_cloud')} were selected for deletion"), :error)
+    end
+
+    key_pairs_to_delete = []
+    key_pairs.each do |k|
+      key_pair = ManageIQ::Providers::CloudManager::AuthKeyPair.find_by_id(k)
+      if key_pair.nil?
+        add_flash(_("%{model} no longer exists.") % {:model => ui_lookup(:table => "auth_key_pair_cloud")}, :error)
+      else
+        valid_delete, delete_details = key_pair.validate_delete_key_pair
+        if valid_delete
+          key_pairs_to_delete.push(k)
+        else
+          add_flash(_("Couldn't initiate deletion of %{model} \"%{name}\": %{details}") % {
+            :model   => ui_lookup(:table => 'auth_key_pair_cloud'),
+            :name    => key_pair.name,
+            :details => delete_details
+          }, :error)
+        end
+      end
+    end
+    process_deletions(key_pairs_to_delete) unless key_pairs_to_delete.empty?
+
+    # refresh the list if applicable
+    if @lastaction == "show_list"
+      show_list
+      @refresh_partial = "layouts/gtl"
+    elsif @lastaction == "show" && @layout == "auth_key_pair_cloud"
+      @single_delete = true unless flash_errors?
+      add_flash(_("The selected %s was deleted") % ui_lookup(:table => "auth_key_pair_cloud")) if @flash_array.nil?
+    end
+  end
+
+  def process_deletions(key_pairs)
+    return if key_pairs.empty?
+
+    ManageIQ::Providers::CloudManager::AuthKeyPair.find_all_by_id(key_pairs, :order => "lower(name)").each do |kp|
+      audit = {
+        :event        => "auth_key_pair_cloud_record_delete_initiateed",
+        :message      => "[#{key_pair.name}] Record delete initiated",
+        :target_id    => kp.id,
+        :target_class => "ManageIQ::Providers::CloudManager::AuthKeyPair",
+        :userid       => session[:userid]
+      }
+      AuditEvent.success(audit)
+      kp.delete_auth_key_pair
+    end
+    add_flash(_("Delete initiated for %{models}") % {
+      :models => pluralize(valid_deletions, ui_lookup(:table => 'auth_key_pair_cloud'))
+    })
   end
 
   private
