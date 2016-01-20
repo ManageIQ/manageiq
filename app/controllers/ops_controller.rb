@@ -717,14 +717,7 @@ class OpsController < ApplicationController
     presenter[:reload_toolbars][:center] = c_tb
     presenter[:set_visible_elements][:toolbar] = c_tb.present?
     presenter[:set_visible_elements][:toolbar] = false if @sb[:center_tb_filename] == "blank_view_tb"
-
-    if (@record && !@in_a_form) || (@edit && @edit[:rec_id] && @in_a_form)
-      # Create ManageIQ.record.recordId JS var, if @record is present
-      presenter[:record_id] =  @record ? @record.id : @edit[:rec_id]
-    else
-      # reset this, otherwise it remembers previously selected id and sends up from list view when add button is pressed
-      presenter[:record_id] = nil
-    end
+    presenter[:record_id] = determine_record_id_for_presenter
   end
 
   def handle_bottom_cell(nodetype, presenter, r, locals)

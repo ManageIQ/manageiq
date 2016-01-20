@@ -386,11 +386,7 @@ class MiqAeClassController < ApplicationController
       presenter[:set_visible_elements][:toolbar] = false
     end
 
-    if @record && !@in_a_form
-      presenter[:record_id] = @record.id
-    else
-      presenter[:record_id] = @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
-    end
+    presenter[:record_id] = determine_record_id_for_presenter
 
     presenter[:osf_node] = x_node
 

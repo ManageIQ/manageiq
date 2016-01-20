@@ -285,11 +285,7 @@ class PxeController < ApplicationController
       presenter[:set_visible_elements][:pc_div_1] = true
     end
 
-    if @record && !@in_a_form
-      presenter[:record_id] = @record.id
-    else
-      presenter[:record_id] = @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
-    end
+    presenter[:record_id] = determine_record_id_for_presenter
 
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 

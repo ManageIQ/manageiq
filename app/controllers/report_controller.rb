@@ -954,13 +954,7 @@ class ReportController < ApplicationController
     presenter[:reload_toolbars][:center]  = c_tb
     presenter[:reload_toolbars][:view]    = v_tb
 
-    if @record && !@in_a_form
-      presenter[:record_id] = @record.id
-    elsif locals && locals[:record_id]
-      presenter[:record_id] = locals[:record_id]
-    else
-      presenter[:record_id] = @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
-    end
+    presenter[:record_id] = (locals && locals[:record_id]) || determine_record_id_for_presenter
 
     # Lock current tree if in edit or assign, else unlock all trees
     if @edit && @edit[:current]
