@@ -91,12 +91,10 @@ class ContainerTopologyService
 
   def build_entity_data(entity)
     type = entity_type(entity)
-    display_type = entity_display_type(entity)
     status = entity_status(entity, type)
 
     if entity.kind_of?(ManageIQ::Providers::ContainerManager)
       id = entity.id.to_s
-      icon = "vendor-#{display_type.underscore}"
     else
       id = case type
            when 'Vm', 'Host'
