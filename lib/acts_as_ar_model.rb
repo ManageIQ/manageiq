@@ -88,22 +88,6 @@ class ActsAsArModel
   # Acts As Reportable methods
   #
 
-  class << self
-    attr_reader :aar_options
-  end
-
-  class << self
-    attr_writer :aar_options
-  end
-
-  def self.aar_columns
-    @aar_columns ||= []
-  end
-
-  class << self
-    attr_writer :aar_columns
-  end
-
   #
   # Virtual columns and reflections
   #

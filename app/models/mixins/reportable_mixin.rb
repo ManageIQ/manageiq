@@ -1,9 +1,5 @@
 module ReportableMixin
   extend ActiveSupport::Concern
-  included do
-    cattr_accessor :aar_options, :aar_columns
-  end
-
   module ClassMethods
     def sortable?
       true
