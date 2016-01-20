@@ -1,107 +1,109 @@
-- if @pages && @items_per_page != ONE_MILLION && @pages[:items] > 0
-  - button_div ||= "center_tb"
-  - action_url ||= "explorer"
-  - pages = @pages
-  - if action_url.include?("/")
-    - action_method = action_url.split("/").first
-    - action_id = action_url.split("/").last
-  - url = action_id ? url_for(:action => action_method, :id => action_id) : url_for(:action => action_url)
-  - @pc_occ ||= 0
-  - @pc_occ += 1
-  %div{:id => "pc_div_#{@pc_occ}"}
-    - if @pc_occ == 1
-      .form-group
-        - if ! @no_checkall && ! @no_checkboxes
-          %input#masterToggle{:name    => "masterToggle",
-                              :onclick => "miqUpdateAllCheckboxes('#{button_div}', null);",
-                              :type    => "checkbox"}
-          (Check All)
-      .form-group{:style => "border-right: 0"}
-        = _('Sorted by: ')
-        - sort_text = "#{@view.headers[@sortcol]} (#{@sortdir == "ASC" ? "Asc." : "Desc."})"
-        - if @gtl_type != "list" && @view
-          = select_tag("sort_choice",
-                       options_for_select([sort_text] + @view.headers),
-                       :class => "selectpicker dropup")
-          :javascript
-            miqSelectPickerEvent("sort_choice", "#{url}", {beforeSend: true, complete: true})
-        - elsif @gtl_type == "list" && @view
-          = h(sort_text)
-    - else
-      - if @bottom_msg
-        = h(@bottom_msg)
+.col-md-12
+  .toolbar-pf-actions
+    - if @pages && @items_per_page != ONE_MILLION && @pages[:items] > 0
+      - button_div ||= "center_tb"
+      - action_url ||= "explorer"
+      - pages = @pages
+      - if action_url.include?("/")
+        - action_method = action_url.split("/").first
+        - action_id = action_url.split("/").last
+      - url = action_id ? url_for(:action => action_method, :id => action_id) : url_for(:action => action_url)
+      - @pc_occ ||= 0
+      - @pc_occ += 1
+      %div{:id => "pc_div_#{@pc_occ}"}
+        - if @pc_occ == 1
+          .form-group
+            - if ! @no_checkall && ! @no_checkboxes
+              %input#masterToggle{:name    => "masterToggle",
+                                  :onclick => "miqUpdateAllCheckboxes('#{button_div}', null);",
+                                  :type    => "checkbox"}
+              (Check All)
+          .form-group{:style => "border-right: 0"}
+            = _('Sorted by: ')
+            - sort_text = "#{@view.headers[@sortcol]} (#{@sortdir == "ASC" ? "Asc." : "Desc."})"
+            - if @gtl_type != "list" && @view
+              = select_tag("sort_choice",
+                          options_for_select([sort_text] + @view.headers),
+                          :class => "selectpicker dropup")
+              :javascript
+                miqSelectPickerEvent("sort_choice", "#{url}", {beforeSend: true, complete: true})
+            - elsif @gtl_type == "list" && @view
+              = h(sort_text)
+        - else
+          - if @bottom_msg
+            = h(@bottom_msg)
 
-    .form-group.pull-right{:style => "border-right: 0"}
-      %ul.pagination
-        %li.first
-          / first button
-          - if pages[:current] > 1
-            %span{:type    => "button",
-                  :onclick => remote_function(:loading  => "miqSparkle(true);",
-                                                :complete => "miqSparkle(false);",
-                                                :url      => "#{action_url}?page=1&id=#{action_id}"),
-                    :class   => "fa fa-angle-double-left",
-                    :alt     => "First",
-                    :title   => "First"}
-            %li.prev
-              %span{:type    => "button",
-                    :onclick => remote_function(:loading  => "miqSparkle(true);",
+        .form-group.pull-right{:style => "border-right: 0"}
+          %ul.pagination
+            %li.first
+              / first button
+              - if pages[:current] > 1
+                %span{:type    => "button",
+                      :onclick => remote_function(:loading  => "miqSparkle(true);",
                                                   :complete => "miqSparkle(false);",
-                                                  :url      => "#{action_url}?page=#{pages[:current] - 1}&id=#{action_id}"),
-                      :class   => "fa fa-angle-left",
-                      :alt     => "Previous",
-                      :title   => "Previous"}
-          - else
-            %li.first.disabled
-              %span{:class => "i fa fa-angle-double-left"}
-            %li.prev.disabled
-              %span{:class => "i fa fa-angle-left"}
-
-          %li
-            %span
-              - start_number = (pages[:perpage] * pages[:current]) - pages[:perpage] + 1
-              - end_number = pages[:perpage] * pages[:current]
-              - if start_number == pages[:items]
-                = "Showing #{start_number} of #{pages[:items]} items"
+                                                  :url      => "#{action_url}?page=1&id=#{action_id}"),
+                      :class   => "fa fa-angle-double-left",
+                      :alt     => "First",
+                      :title   => "First"}
+                %li.prev
+                  %span{:type    => "button",
+                        :onclick => remote_function(:loading  => "miqSparkle(true);",
+                                                    :complete => "miqSparkle(false);",
+                                                    :url      => "#{action_url}?page=#{pages[:current] - 1}&id=#{action_id}"),
+                        :class   => "fa fa-angle-left",
+                        :alt     => "Previous",
+                        :title   => "Previous"}
               - else
-                - if end_number > pages[:items]
-                  = "Showing #{start_number}-#{pages[:items]} of #{pages[:items]} items"
-                - else
-                  = "Showing #{start_number}-#{end_number} of #{pages[:items]} items"
-              %input{:name => "limitstart", :type => "hidden", :value => "0"}/
+                %li.first.disabled
+                  %span{:class => "i fa fa-angle-double-left"}
+                %li.prev.disabled
+                  %span{:class => "i fa fa-angle-left"}
 
-          - if pages[:current] < pages[:total]
-            %li.next
-              %span{:type    => "button",
-                      :onclick => remote_function(:loading  => "miqSparkle(true);",
-                                                  :complete => "miqSparkle(false);",
-                                                  :url      => "#{action_url}?page=#{pages[:current] +1}&id=#{action_id}"),
-                      :class   => "i fa fa-angle-right",
-                      :alt     => "Next",
-                      :title   => "Next"}
-            %li.last
-              %span{:type    => "button",
-                      :onclick => remote_function(:loading  => "miqSparkle(true);",
-                                                  :complete => "miqSparkle(false);",
-                                                  :url      => "#{action_url}?page=#{pages[:total]}&id=#{action_id}"),
-                      :class   => "i fa fa-angle-double-right",
-                      :alt     => "Last",
-                      :title   => "Last"}
-          - else
-            %li.next.disabled
-              %span{:class => "i fa fa-angle-right"}
-            %li.last.disabled
-              %span{:class => "i fa fa-angle-double-right"}
+              %li
+                %span
+                  - start_number = (pages[:perpage] * pages[:current]) - pages[:perpage] + 1
+                  - end_number = pages[:perpage] * pages[:current]
+                  - if start_number == pages[:items]
+                    = "Showing #{start_number} of #{pages[:items]} items"
+                  - else
+                    - if end_number > pages[:items]
+                      = "Showing #{start_number}-#{pages[:items]} of #{pages[:items]} items"
+                    - else
+                      = "Showing #{start_number}-#{end_number} of #{pages[:items]} items"
+                  %input{:name => "limitstart", :type => "hidden", :value => "0"}/
 
-    .form-group.pull-right
-      = _('Items per page:')
-      = select_tag("ppsetting",
-                   options_for_select(@pp_choices, pages[:perpage]),
-                   "data-width" => "auto",
-                   :class       => "selectpicker dropup")
-      :javascript
-        miqSelectPickerEvent("ppsetting", "#{url}", {beforeSend: true, complete: true})
+              - if pages[:current] < pages[:total]
+                %li.next
+                  %span{:type    => "button",
+                        :onclick => remote_function(:loading  => "miqSparkle(true);",
+                                                    :complete => "miqSparkle(false);",
+                                                    :url      => "#{action_url}?page=#{pages[:current] +1}&id=#{action_id}"),
+                        :class   => "i fa fa-angle-right",
+                        :alt     => "Next",
+                        :title   => "Next"}
+                %li.last
+                  %span{:type    => "button",
+                        :onclick => remote_function(:loading  => "miqSparkle(true);",
+                                                    :complete => "miqSparkle(false);",
+                                                    :url      => "#{action_url}?page=#{pages[:total]}&id=#{action_id}"),
+                        :class   => "i fa fa-angle-double-right",
+                        :alt     => "Last",
+                        :title   => "Last"}
+              - else
+                %li.next.disabled
+                  %span{:class => "i fa fa-angle-right"}
+                %li.last.disabled
+                  %span{:class => "i fa fa-angle-double-right"}
 
-= render(:partial => '/layouts/x_form_buttons')
-:javascript
-  miqInitSelectPicker();
+        .form-group.pull-right
+          = _('Items per page:')
+          = select_tag("ppsetting",
+                      options_for_select(@pp_choices, pages[:perpage]),
+                      "data-width" => "auto",
+                      :class       => "selectpicker dropup")
+          :javascript
+            miqSelectPickerEvent("ppsetting", "#{url}", {beforeSend: true, complete: true})
+
+    = render(:partial => '/layouts/x_form_buttons')
+    :javascript
+      miqInitSelectPicker();

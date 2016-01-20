@@ -1,149 +1,152 @@
-- button_div ||= "center_tb"
-- db ||= nil
-- action_id    = action_url.split("/").last if action_url.include?("/")
+.col-md-12
+  .toolbar-pf-actions
+    - if !@embedded && @pages && @items_per_page != ONE_MILLION
+      - button_div ||= "center_tb"
+      - db ||= nil
+      - action_id    = action_url.split("/").last if action_url.include?("/")
 
-- @pc_occ ||= 0
-- @pc_occ += 1
+      - @pc_occ ||= 0
+      - @pc_occ += 1
 
-%div{:id => "pc_div_#{@pc_occ}"}
-  - if @pc_occ == 1
-    .form-group
-      - if !@no_checkall && !@no_checkboxes
-        %input{:id => 'masterToggle', :type => 'checkbox', :name => 'masterToggle', :onclick => "miqUpdateAllCheckboxes('#{button_div}', null);"}
-        = _("(Check All)")
-  - if @gtl_type != "list" && @view
-    .form-group{:style => "border-right: 0"}
-      = _('Sorted by: ')
-      = select_tag("sort_choice",
-                       options_for_select(@view.headers),
-                       :class => "selectpicker dropup")
-      :javascript
-        miqSelectPickerEvent("sort_choice", "#{update_paging_url_parms(action_url, {}, true)}", {beforeSend: true, complete: true})
-  - else
-    - if @bottom_msg
-      = h(@bottom_msg)
-  - unless db.blank?
-    - if %w(EmsInfra EmsCloud EmsCluster ResourcePool OntapStorageSystem OntapLogicalDisk CimBaseStorageExtent OntapStorageVolume StorageManager OntapFileShare SniaLocalFileSystem).include?(db)
-      - @db = db.underscore
-  - if @pc_occ == 1
-    .form-group
-      - unless @embedded
-        - if @sortdir == "ASC"
-          = _("Asc. by:")
+      %div{:id => "pc_div_#{@pc_occ}"}
+        - if @pc_occ == 1
+          .form-group
+            - if !@no_checkall && !@no_checkboxes
+              %input{:id => 'masterToggle', :type => 'checkbox', :name => 'masterToggle', :onclick => "miqUpdateAllCheckboxes('#{button_div}', null);"}
+              = _("(Check All)")
+        - if @gtl_type != "list" && @view
+          .form-group{:style => "border-right: 0"}
+            = _('Sorted by: ')
+            = select_tag("sort_choice",
+                            options_for_select(@view.headers),
+                            :class => "selectpicker dropup")
+            :javascript
+              miqSelectPickerEvent("sort_choice", "#{update_paging_url_parms(action_url, {}, true)}", {beforeSend: true, complete: true})
         - else
-          = _("Desc. by:")
-      = @view.headers[@sortcol]
-
-    .form-group.pull-right{:style => "border-right: 0"}
-      %ul.pagination
-        - if pages[:current] > 1
-          - if @ajax_paging_buttons
-            %li.first
-              %span{:onclick => remote_function(:loading  => "miqSparkle(true);",
-                                                :complete => "miqSparkle(false);",
-                                                :url      => update_paging_url_parms(action_url, :page => 1)),
-                    :class   => "fa fa-angle-double-left",
-                    :alt     => "First",
-                    :title   => "First"}
-            %li.prev
-              %span{:onclick => remote_function(:loading  => "miqSparkle(true);",
-                                                :complete => "miqSparkle(false);",
-                                                :url      => update_paging_url_parms(action_url, :page => pages[:current] - 1)),
-                      :class   => "fa fa-angle-left",
-                      :alt     => "Previous",
-                      :title   => "Previous"}
-          - elsif action_id
-            %li.first
-              %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => 1, :id => action_id)}')",
-                    :class   => "fa fa-angle-double-left",
-                    :alt     => "First",
-                    :title   => "First"}
-            %li.prev
-              %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:current] - 1, :id => action_id)}')",
-                    :class   => "fa fa-angle-left",
-                    :alt     => "Previous",
-                    :title   => "Previous"}
-          - else
-            %li.first
-              %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => 1)}')",
-                    :class   => "fa fa-angle-double-left",
-                    :alt     => "First",
-                    :title   => "First"}
-            %li.prev
-              %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:current] - 1)}')",
-                    :class   => "fa fa-angle-left",
-                    :alt     => "Previous",
-                    :title   => "Previous"}
-        - else
-          %li.first.disabled
-            %span{:class => "fa fa-angle-double-left"}
-          %li.prev.disabled
-            %span{:class => "fa fa-angle-left"}
-
-        %li
-          %span
-            - start_number = (pages[:perpage] * pages[:current]) - pages[:perpage] + 1
-            - end_number = pages[:perpage] * pages[:current]
-            - if start_number == pages[:items]
-              = "(Item #{start_number} of #{pages[:items]})"
-            - else
-              - if end_number > pages[:items]
-                = "(Items #{start_number}-#{pages[:items]} of #{pages[:items]})"
+          - if @bottom_msg
+            = h(@bottom_msg)
+        - unless db.blank?
+          - if %w(EmsInfra EmsCloud EmsCluster ResourcePool OntapStorageSystem OntapLogicalDisk CimBaseStorageExtent OntapStorageVolume StorageManager OntapFileShare SniaLocalFileSystem).include?(db)
+            - @db = db.underscore
+        - if @pc_occ == 1
+          .form-group
+            - unless @embedded
+              - if @sortdir == "ASC"
+                = _("Asc. by:")
               - else
-                = "(Items #{start_number}-#{end_number} of #{pages[:items]})"
-            %input{:type => 'hidden', :name => 'limitstart', :value => '0'}
+                = _("Desc. by:")
+            = @view.headers[@sortcol]
 
-        - if pages[:current] < pages[:total]
-          - if @ajax_paging_buttons
-            %li.next
-              %span{:onclick => remote_function(:loading  => "miqSparkle(true);",
-                                                :complete => "miqSparkle(false);",
-                                                :url      => update_paging_url_parms(action_url, :page => pages[:current] + 1)),
-                    :class   => "fa fa-angle-right",
-                    :alt     => "Next",
-                    :title   => "Next"}
-            %li.last
-              %span{:onclick => remote_function(:loading  => "miqSparkle(true);",
-                                                :complete => "miqSparkle(false);",
-                                                :url      => update_paging_url_parms(action_url, :page => pages[:total])),
-                    :class   => "fa fa-angle-double-right",
-                    :alt     => "Last",
-                    :title   => "Last"}
-          - elsif action_id
-            %li.next
-              %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:current] + 1, :id => action_id)}')",
-                    :class   => "fa fa-angle-right",
-                    :alt     => "Next",
-                    :title   => "Next"}
-            %li.last
-              %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:total], :id => action_id)}')",
-                    :class   => "fa fa-angle-double-right",
-                    :alt     => "Last",
-                    :title   => "Last"}
-          - else
-            %li.next
-              %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:current] + 1)}')",
-                    :class   => "fa fa-angle-right",
-                    :alt     => "Next",
-                    :title   => "Next"}
-            %li.last
-              %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:total])}')",
-                    :class   => "fa fa-angle-double-right",
-                    :alt     => "Last",
-                    :title   => "Last"}
-        - else
-          %li.next.disabled
-            %span{:class => "fa fa-angle-right"}
-          %li.last.disabled
-            %span{:class => "fa fa-angle-double-right"}
+          .form-group.pull-right{:style => "border-right: 0"}
+            %ul.pagination
+              - if pages[:current] > 1
+                - if @ajax_paging_buttons
+                  %li.first
+                    %span{:onclick => remote_function(:loading  => "miqSparkle(true);",
+                                                      :complete => "miqSparkle(false);",
+                                                      :url      => update_paging_url_parms(action_url, :page => 1)),
+                          :class   => "fa fa-angle-double-left",
+                          :alt     => "First",
+                          :title   => "First"}
+                  %li.prev
+                    %span{:onclick => remote_function(:loading  => "miqSparkle(true);",
+                                                      :complete => "miqSparkle(false);",
+                                                      :url      => update_paging_url_parms(action_url, :page => pages[:current] - 1)),
+                          :class   => "fa fa-angle-left",
+                          :alt     => "Previous",
+                          :title   => "Previous"}
+                - elsif action_id
+                  %li.first
+                    %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => 1, :id => action_id)}')",
+                          :class   => "fa fa-angle-double-left",
+                          :alt     => "First",
+                          :title   => "First"}
+                  %li.prev
+                    %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:current] - 1, :id => action_id)}')",
+                          :class   => "fa fa-angle-left",
+                          :alt     => "Previous",
+                          :title   => "Previous"}
+                - else
+                  %li.first
+                    %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => 1)}')",
+                          :class   => "fa fa-angle-double-left",
+                          :alt     => "First",
+                          :title   => "First"}
+                  %li.prev
+                    %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:current] - 1)}')",
+                          :class   => "fa fa-angle-left",
+                          :alt     => "Previous",
+                          :title   => "Previous"}
+              - else
+                %li.first.disabled
+                  %span{:class => "fa fa-angle-double-left"}
+                %li.prev.disabled
+                  %span{:class => "fa fa-angle-left"}
 
-    .form-group.pull-right
-      = _('Items per page:')
-      = select_tag("ppsetting",
-                   options_for_select(@pp_choices, pages[:perpage]),
-                   "data-width" => "auto",
-                   :class       => "selectpicker dropup")
+              %li
+                %span
+                  - start_number = (pages[:perpage] * pages[:current]) - pages[:perpage] + 1
+                  - end_number = pages[:perpage] * pages[:current]
+                  - if start_number == pages[:items]
+                    = "(Item #{start_number} of #{pages[:items]})"
+                  - else
+                    - if end_number > pages[:items]
+                      = "(Items #{start_number}-#{pages[:items]} of #{pages[:items]})"
+                    - else
+                      = "(Items #{start_number}-#{end_number} of #{pages[:items]})"
+                  %input{:type => 'hidden', :name => 'limitstart', :value => '0'}
+
+              - if pages[:current] < pages[:total]
+                - if @ajax_paging_buttons
+                  %li.next
+                    %span{:onclick => remote_function(:loading  => "miqSparkle(true);",
+                                                      :complete => "miqSparkle(false);",
+                                                      :url      => update_paging_url_parms(action_url, :page => pages[:current] + 1)),
+                          :class   => "fa fa-angle-right",
+                          :alt     => "Next",
+                          :title   => "Next"}
+                  %li.last
+                    %span{:onclick => remote_function(:loading  => "miqSparkle(true);",
+                                                      :complete => "miqSparkle(false);",
+                                                      :url      => update_paging_url_parms(action_url, :page => pages[:total])),
+                          :class   => "fa fa-angle-double-right",
+                          :alt     => "Last",
+                          :title   => "Last"}
+                - elsif action_id
+                  %li.next
+                    %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:current] + 1, :id => action_id)}')",
+                          :class   => "fa fa-angle-right",
+                          :alt     => "Next",
+                          :title   => "Next"}
+                  %li.last
+                    %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:total], :id => action_id)}')",
+                          :class   => "fa fa-angle-double-right",
+                          :alt     => "Last",
+                          :title   => "Last"}
+                - else
+                  %li.next
+                    %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:current] + 1)}')",
+                          :class   => "fa fa-angle-right",
+                          :alt     => "Next",
+                          :title   => "Next"}
+                  %li.last
+                    %span{:onclick => "DoNav('#{update_paging_url_parms(action_url, :page => pages[:total])}')",
+                          :class   => "fa fa-angle-double-right",
+                          :alt     => "Last",
+                          :title   => "Last"}
+              - else
+                %li.next.disabled
+                  %span{:class => "fa fa-angle-right"}
+                %li.last.disabled
+                  %span{:class => "fa fa-angle-double-right"}
+
+          .form-group.pull-right
+            = _('Items per page:')
+            = select_tag("ppsetting",
+                        options_for_select(@pp_choices, pages[:perpage]),
+                        "data-width" => "auto",
+                        :class       => "selectpicker dropup")
+            :javascript
+              miqSelectPickerEvent("ppsetting", "#{update_paging_url_parms(action_url, {}, true)}", {beforeSend: true, complete: true})
       :javascript
-        miqSelectPickerEvent("ppsetting", "#{update_paging_url_parms(action_url, {}, true)}", {beforeSend: true, complete: true})
-:javascript
-  miqInitSelectPicker();
+        miqInitSelectPicker();

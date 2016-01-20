@@ -73,7 +73,11 @@ class MiqTaskController < ApplicationController
       get_jobs(tasks_condition(@tasks_options[@tabform]))
       render :update do |page|
         page.replace_html("gtl_div", :partial => "layouts/gtl", :locals => {:action_url => @lastaction})
-        page.replace("pc_div_1", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => @lastaction, :db => @view.db, :headers => @view.headers})
+        page.replace_html("paging_div", :partial => 'layouts/pagingcontrols',
+                                        :locals  => {:pages      => @pages,
+                                                     :action_url => @lastaction,
+                                                     :db         => @view.db,
+                                                     :headers    => @view.headers})
         page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
       end
     else                      # Came in from non-ajax, just get the jobs
@@ -273,7 +277,11 @@ class MiqTaskController < ApplicationController
         else
           page << "miqSetButtons(0, 'center_tb');"                             # Reset the center toolbar
           page.replace_html("main_div", :partial => @refresh_partial)
-          page.replace("pc_div_1", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => @lastaction, :db => @view.db, :headers => @view.headers})
+          page.replace_html("paging_div", :partial => 'layouts/pagingcontrols',
+                                          :locals  => {:pages      => @pages,
+                                                       :action_url => @lastaction,
+                                                       :db         => @view.db,
+                                                       :headers    => @view.headers})
         end
       end
     end
@@ -316,7 +324,11 @@ class MiqTaskController < ApplicationController
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << "miqSetButtons(0, 'center_tb');"                             # Reset the center toolbar
       page.replace("main_div", :partial => "layouts/tasks")
-      page.replace("pc_div_1", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => @lastaction, :db => @view.db, :headers => @view.headers})
+      page.replace_html("paging_div", :partial => 'layouts/pagingcontrols',
+                                      :locals  => {:pages      => @pages,
+                                                   :action_url => @lastaction,
+                                                   :db         => @view.db,
+                                                   :headers    => @view.headers})
       page << "miqSparkle(false);"
     end
   end

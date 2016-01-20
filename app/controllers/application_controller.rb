@@ -406,7 +406,8 @@ class ApplicationController < ActionController::Base
 
     render :update do |page|
       page.replace("report_html_div", :partial => "layouts/report_html")
-      page.replace_html("paging_div", :partial => 'layouts/saved_report_paging_bar', :locals => {:pages => @sb[:pages]})
+      page.replace_html("paging_div", :partial => 'layouts/saved_report_paging_bar',
+                                      :locals  => {:pages => @sb[:pages]})
       page << javascript_hide_if_exists("form_buttons_div")
       page << javascript_show_if_exists("rpb_div_1")
       page << "miqSparkle(false)"
@@ -1976,7 +1977,11 @@ class ApplicationController < ActionController::Base
         page.replace_html("main_div", :partial => "layouts/gtl")
         page << "$('#adv_div').slideUp(0.3);" if params[:entry]
       end
-      page.replace("pc_div_1", :partial => 'layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => action_url, :db => @view.db, :headers => @view.headers})
+      page.replace_html("paging_div", :partial => 'layouts/pagingcontrols',
+                                      :locals  => {:pages      => @pages,
+                                                   :action_url => action_url,
+                                                   :db         => @view.db,
+                                                   :headers    => @view.headers})
     end
   end
 
