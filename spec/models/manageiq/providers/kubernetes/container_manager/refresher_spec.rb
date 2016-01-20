@@ -287,7 +287,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
 
   def assert_specific_container_quota
     container_quota = ContainerQuota.find_by_name("quota")
-    container_quota.creation_timestamp.kind_of?(ActiveSupport::TimeWithZone)
+    container_quota.ems_created_on.kind_of?(ActiveSupport::TimeWithZone)
     expect(container_quota.container_quota_items.count).to eq(8)
     cpu_quota = container_quota.container_quota_items.select { |x| x[:resource] == 'cpu' }[0]
     expect(cpu_quota).to have_attributes(
@@ -300,7 +300,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
 
   def assert_specific_container_limit
     container_limit = ContainerLimit.find_by_name("limits")
-    container_limit.creation_timestamp.kind_of?(ActiveSupport::TimeWithZone)
+    container_limit.ems_created_on.kind_of?(ActiveSupport::TimeWithZone)
     expect(container_limit.container_limit_items.count).to eq(2)
     expect(container_limit.container_project.name).to eq("default")
     item = container_limit.container_limit_items.each { |x| x[:item_type] == 'Container' && x[:resource] == 'cpu' }[0]

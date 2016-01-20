@@ -80,7 +80,7 @@ module ContainerSummaryHelper
   end
 
   def textual_creation_timestamp
-    format_timezone(@record.creation_timestamp)
+    format_timezone(@record.ems_created_on)
   end
 
   def textual_guest_applications
