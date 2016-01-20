@@ -100,5 +100,27 @@ describe ApiController do
 
       expect_request_forbidden
     end
+
+    it "does not show another user's requests" do
+      other_user = FactoryGirl.create(:user)
+      FactoryGirl.create(:service_template_provision_request,
+                         :requester   => other_user,
+                         :source_id   => template.id,
+                         :source_type => template.class.name)
+      api_basic_authorize collection_action_identifier(:service_requests, :read, :get)
+
+      run_get service_requests_url
+      expect_query_result(:service_requests, 0, 0)
+    end
+
+    it "a user can see their own requests" do
+      service_request
+      api_basic_authorize collection_action_identifier(:service_requests, :read, :get)
+
+      run_get service_requests_url
+      expect_query_result(:service_requests, 1, 1)
+    end
+
+    it "an admin can see all the requests"
   end
 end

@@ -1,5 +1,11 @@
 class ApiController
   module ServiceRequests
+    def show_service_requests
+      params["filter"] ||= []
+      params["filter"] << "requester_id=#{@auth_user_obj.id}"
+      show_generic(:service_requests)
+    end
+
     #
     # Service Requests Subcollection Supporting Methods
     #
