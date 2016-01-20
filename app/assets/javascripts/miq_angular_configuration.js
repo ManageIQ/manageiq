@@ -7,7 +7,7 @@ ManageIQ.angularApplication.config([ '$httpProvider', '$stateProvider', '$urlRou
   $stateProvider
     .state('new', {
       url: '/repository/new',
-      templateUrl: 'new.html',
+      templateUrl: 'repository/form.html',
       controller: 'repositoryFormController',
       repositoryFormId: "new"
     });
