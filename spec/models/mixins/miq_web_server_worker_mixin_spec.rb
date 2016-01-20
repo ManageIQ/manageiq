@@ -14,7 +14,7 @@ describe MiqWebServerWorkerMixin do
       :Port        => 3000,
       :Host        => w.class.binding_address,
       :environment => Rails.env.to_s,
-      :app         => Vmdb::Application
+      :app         => Rails.application
     )
   end
 end
