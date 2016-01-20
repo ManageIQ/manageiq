@@ -152,8 +152,8 @@ namespace :evm do
       puts "Exporting tables for bulk sync..."
       t = Time.now
 
-      db_conf = VMDB::Config.new("database").config[Rails.env.to_sym]
-      adapter, database, username, password, host, port = db_conf.values_at(:adapter, :database, :username, :password, :host, :port)
+      db_conf = Rails.configuration.database_configuration[Rails.env]
+      adapter, database, username, password, host, port = db_conf.values_at("adapter", "database", "username", "password", "host", "port")
 
       tables = sync_tables
       puts "Exporting #{tables.join(", ")}..."

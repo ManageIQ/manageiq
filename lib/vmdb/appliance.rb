@@ -41,8 +41,7 @@ module Vmdb
       fh.info "---"
 
       fh.info "DATABASE settings:"
-      db_config = VMDB::Config.new("database").config[Rails.env.to_sym]
-      VMDBLogger.log_hashes(fh, db_config)
+      VMDBLogger.log_hashes(fh, Rails.configuration.database_configuration[Rails.env])
       fh.info "DATABASE settings END"
       fh.info "---"
     end
