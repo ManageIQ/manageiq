@@ -13,7 +13,7 @@
       = render :partial => 'layouts/exp_editor'
     - else
       -# FIXME: alt/title incosistency
-      = link_to(image_tag("/images/toolbars/edit.png", :class => "rollover small", :alt => _("Edit this Expression")),
+      = link_to(image_tag(image_path('toolbars/edit.png'), :class => "rollover small", :alt => _("Edit this Expression")),
         {:action => 'filter_change', :button => "record_filter", :id => "#{@edit[:rpt_id] || 'new'}"},
         "data-miq_sparkle_on"  => true,
         "data-miq_sparkle_off" => true,
@@ -39,7 +39,7 @@
         - if @expkey == :display_filter
           = render :partial => 'layouts/exp_editor'
         - else
-          = link_to(image_tag("/images/toolbars/edit.png", :class => "rollover small", :alt => _("Edit this Expression")),
+          = link_to(image_tag(image_path('toolbars/edit.png'), :class => "rollover small", :alt => _("Edit this Expression")),
             {:action => 'filter_change', :button => "display_filter", :id => "#{@edit[:rpt_id] || 'new'}"},
             "data-miq_sparkle_on"  => true,
             "data-miq_sparkle_off" => true,

@@ -87,18 +87,18 @@ module ReportFormatter
         when "BottleneckEvent"
           #         e_title = "#{ui_lookup(:model=>rec[:resource_type])}: #{rec[:resource_name]}"
           e_title = rec[:resource_name]
-          e_image = "/images/icons/new/#{bubble_icon(rec[:resource_type])}.png"
-          e_icon = "/images/icons/timeline/#{rec.event_type.downcase}_#{rec[:severity]}.png"
+          e_image = ActionController::Base.helpers.image_path("100/#{bubble_icon(rec[:resource_type])}.png")
+          e_icon = ActionController::Base.helpers.image_path("timeline/#{rec.event_type.downcase}_#{rec[:severity]}.png")
         #         e_text = e_title # Commented out since name is showing in the columns anyway
         when "Vm"
           e_title = rec[:name]
-          e_icon = "/images/icons/timeline/vendor-#{rec.vendor.downcase}.png"
-          e_image = "/images/icons/new/os-#{rec.os_image_name.downcase}.png"
+          e_icon = ActionController::Base.helpers.image_path("timeline/vendor-#{rec.vendor.downcase}.png")
+          e_image = ActionController::Base.helpers.image_path("100/os-#{rec.os_image_name.downcase}.png")
           e_text = "&lt;a href='/vm/show/#{rec.id}'&gt;#{e_title}&lt;/a&gt;"
         when "Host"
           e_title = rec[:name]
-          e_icon = "/images/icons/timeline/vendor-#{rec.vmm_vendor.downcase}.png"
-          e_image = "/images/icons/new/os-#{rec.os_image_name.downcase}.png"
+          e_icon = ActionController::Base.helpers.image_path("timeline/vendor-#{rec.vmm_vendor.downcase}.png")
+          e_image = ActionController::Base.helpers.image_path("100/os-#{rec.os_image_name.downcase}.png")
           e_text = "&lt;a href='/host/show/#{rec.id}'&gt;#{e_title}&lt;/a&gt;"
         when "EventStream"
           ems_cloud = false
@@ -129,17 +129,15 @@ module ReportFormatter
             e_title = "MS no longer exists"
           end
           e_title ||= "No VM, Host, or MS"
-          e_icon =  "/images/icons/timeline/" +
-                    timeline_icon("vm_event", rec.event_type.downcase) +
-                    ".png"
+          e_icon = ActionController::Base.helpers.image_path("timeline/#{timeline_icon("vm_event", rec.event_type.downcase)}.png")
           # See if this is EVM's special event
           if rec.event_type == "GeneralUserEvent"
             if rec.message.include?("EVM SmartState Analysis")
-              e_icon =  "/images/icons/timeline/evm_analysis.png"
+              e_icon =  ActionController::Base.helpers.image_path("timeline/evm_analysis.png")
             end
           end
           if rec[:vm_or_template_id] && Vm.exists?(rec[:vm_or_template_id])
-            e_image = "/images/icons/new/os-#{Vm.find(rec[:vm_or_template_id]).os_image_name.downcase}.png"
+            e_image = ActionController::Base.helpers.image_path("100/os-#{Vm.find(rec[:vm_or_template_id]).os_image_name.downcase}.png")
           end
           e_text = e_title
         when "PolicyEvent"
@@ -151,10 +149,8 @@ module ReportFormatter
             e_title = "Policy no longer exists"
           end
           e_title ||= "No Policy"
-          e_icon =  "/images/icons/new/event-" +
-                    rec.event_type.downcase +
-                    ".png"
-          # e_icon = "/images/icons/new/vendor-ec2.png"
+          e_icon = ActionController::Base.helpers.image_path("100/event-#{rec.event_type.downcase}.png")
+          # e_icon = "/images/100/vendor-ec2.png"
           e_text = e_title
           unless rec.target_id.nil?
             e_text += "<br/>&lt;a href='/#{Dictionary.gettext(rec.target_class, :type => :model, :notfound => :titleize).downcase}/show/#{to_cid(rec.target_id)}'&gt;<b> #{Dictionary.gettext(rec.target_class, :type => :model, :notfound => :titleize)}:</b> #{rec.target_name}&lt;/a&gt;"

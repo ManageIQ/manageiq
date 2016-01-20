@@ -11,6 +11,6 @@
             %tr{:title => ("View this Event"),
               :onclick => "miqDynatreeActivateNode('event_tree', 'ev-#{to_cid(e.id)}');"}
               %td.narrow
-                %img{:src => "/images/icons/new/event-#{e.name}.png"}
+                %img{:src => image_path("100/event-#{e.name}.png")}
               %td
                 = e.description

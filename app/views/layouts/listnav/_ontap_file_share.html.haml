@@ -26,7 +26,7 @@
             :table                     => 'snia_local_file_system',
             :controller                => 'snia_local_file_system',
             :action                    => 'show',
-            :image_path                => '/images/icons/16/link_external.gif',
+            :image_path                => image_path('16/link_external.gif'),
             :link_text                 => "#{ui_lookup(:table => "snia_local_file_system")}: #{@record.file_system.evm_display_name}")
 
         - if role_allows(:feature => "ontap_logical_disk_show")

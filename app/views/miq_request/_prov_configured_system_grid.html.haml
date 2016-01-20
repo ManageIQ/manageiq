@@ -17,7 +17,7 @@
               "data-method"          => :post,
               :remote                => true)
             - if name == options[:configured_system_sortcol]
-              %img{:src => "/images/icons/16/sort_#{@edit[:configured_system_sortdir] == 'ASC' ? 'up' : 'down'}.png"}
+              %img{:src => image_path("16/sort_#{@edit[:configured_system_sortdir] == 'ASC' ? 'up' : 'down'}.png")}
           - else
             = h(header)
     %tbody

@@ -104,10 +104,9 @@ module ToolbarHelper
     if props[:icon].present?
       content_tag(:i, '', :class => props[:icon], :style => props['text'].present? ? 'margin-right: 5px;' : '')
     else
-      tag(:img,
-          :src            => t = "/images/toolbars/#{props['img']}",
-          'data-enabled'  => t,
-          'data-disabled' => "/images/toolbars/#{props['imgdis']}")
+      img = ActionController::Base.helpers.image_path("toolbars/#{props['img']}")
+      imgdis = ActionController::Base.helpers.image_path("toolbars/#{props['imgdis']}")
+      tag(:img, :src => t = "#{img}", 'data-enabled' => t, 'data-disabled' => "#{imgdis}")
     end
   end
 

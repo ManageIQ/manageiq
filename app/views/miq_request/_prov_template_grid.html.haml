@@ -13,7 +13,7 @@
               "data-method"          => :post,
               :remote                => true)
             - if @edit[:template_columns][i] == @edit[:template_sortcol]
-              %img{:src => "/images/icons/16/sort_#{@edit[:template_sortdir] == 'ASC' ? 'up' : 'down'}.png"}
+              %img{:src => image_path("16/sort_#{@edit[:template_sortdir] == 'ASC' ? 'up' : 'down'}.png")}
     %tbody
       - cls = @edit[:new][:customization_template_id] && @edit[:new][:customization_template_id][0].nil? ? "selected" : ""
       %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=__TEMPLATE__NONE__&id=#{id}');"}

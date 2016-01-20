@@ -10,7 +10,7 @@
             %label.control-label.col-md-2= _("Description")
             .col-md-10
               %p.form-control-static
-                %img{:src => "/images/icons/new/event-#{h(@event.name)}.png"}
+                %img{:src => image_path("100/event-#{h(@event.name)}.png")}
                 = h(@event.description)
         .form-group
           %label.control-label.col-md-2= _("Event Group")
@@ -35,7 +35,7 @@
                 %tr{:title => _("Click to view Policy"),
                   :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=policy")}
                   %td.narrow
-                    %img{:src => "/images/icons/new/miq_policy_#{p.towhat.downcase}#{p.active ? '' : '_inactive'}.png"}
+                    %img{:src => image_path("100/miq_policy_#{p.towhat.downcase}#{p.active ? '' : '_inactive'}.png")}
                   %td
                     = p.description
           %hr
@@ -63,7 +63,7 @@
                         %p
                       %td{:width => "20", :valign => "middle"}
                         - t = _("Move selected Actions into this Event")
-                        = link_to(image_tag("/images/toolbars/right.png", :class => "rollover small", :alt => t),
+                        = link_to(image_tag(image_path('toolbars/right.png'), :class => "rollover small", :alt => t),
                           {:action => 'event_edit', :button => 'true_right', :id => @event},
                           "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
@@ -72,7 +72,7 @@
                           "data-method"          => :post,
                           :title                 => t)
                         - t = _("Remove all Actions from this Event")
-                        = link_to(image_tag("/images/toolbars/allleft.png", :class => "rollover small", :alt => t),
+                        = link_to(image_tag(image_path('toolbars/allleft.png'), :class => "rollover small", :alt => t),
                           {:action => 'event_edit', :button => 'true_allleft', :id => @event},
                           "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
@@ -80,7 +80,7 @@
                           "data-method"          => :post,
                           :title                 => t)
                         - t = _("Remove selected Actions from this Event")
-                        = link_to(image_tag("/images/toolbars/left.png", :class => "rollover small", :alt => t),
+                        = link_to(image_tag(image_path('toolbars/left.png'), :class => "rollover small", :alt => t),
                           {:action => 'event_edit', :button => 'true_left', :id => @event},
                           "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
@@ -98,7 +98,7 @@
                             :id       => "members_chosen_true")
                       %td{:width => "20", :valign => "middle"}
                         - t = _("Move selected Action up")
-                        = link_to(image_tag("/images/toolbars/up.png", :class => "rollover small", :alt => t),
+                        = link_to(image_tag(image_path('toolbars/up.png'), :class => "rollover small", :alt => t),
                           {:action => 'event_edit', :button  => 'true_up', :id => @event},
                           "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
@@ -107,7 +107,7 @@
                           "data-method"          => :post,
                           :title                 => t)
                         - t = _("Move selected Action down")
-                        = link_to(image_tag("/images/toolbars/down.png", :class => "rollover small", :alt => t),
+                        = link_to(image_tag(image_path('toolbars/down.png'), :class => "rollover small", :alt => t),
                           {:action => 'event_edit', :button => 'true_down', :id => @event},
                           "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
@@ -116,7 +116,7 @@
                           "data-method"          => :post,
                           :title                 => t)
                         - t = _("Set selected Actions to Synchronous")
-                        = link_to(image_tag("/images/toolbars/syncr.png", :class => "rollover small", :alt => t),
+                        = link_to(image_tag(image_path('toolbars/syncr.png'), :class => "rollover small", :alt => t),
                           {:action => 'event_edit', :button => 'true_sync', :id => @event},
                           "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
@@ -125,7 +125,7 @@
                           "data-method"          => :post,
                           :title                 => t)
                         - t = _("Set selected Actions to Asynchronous")
-                        = link_to(image_tag("/images/toolbars/asyncr.png", :class => "rollover small", :alt => t),
+                        = link_to(image_tag(image_path('toolbars/asyncr.png'), :class => "rollover small", :alt => t),
                           {:action => 'event_edit', :button => 'true_async', :id => @event},
                           "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
@@ -153,7 +153,7 @@
                   %tr{:title => _("View this Event Action"),
                     :onclick => (x_active_tree == :action_tree) ? t : f}
                     %td.narrow
-                      %img{:src => "/images/icons/new/check.png"}
+                      %img{:src => image_path('100/check.png')}
                     %td
                       = a.description
                     %td
@@ -185,7 +185,7 @@
                         %p
                       %td{:width => "20", :valign => "middle"}
                         - t = "Move selected Actions into this Event"
-                        = link_to(image_tag("/images/toolbars/right.png", :class => "rollover small", :alt => t),
+                        = link_to(image_tag(image_path('toolbars/right.png'), :class => "rollover small", :alt => t),
                           {:action => 'event_edit', :button => 'false_right', :id => @event},
                           "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
@@ -195,7 +195,7 @@
                           :title                 => t)
 
                         - t = "Remove all Policies from this Profile"
-                        = link_to(image_tag("/images/toolbars/allleft.png", :class => "rollover small", :alt => t),
+                        = link_to(image_tag(image_path('toolbars/allleft.png'), :class => "rollover small", :alt => t),
                           {:action => 'event_edit', :button => 'false_allleft', :id => @event},
                           "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
@@ -204,7 +204,7 @@
                           :title                 => t)
 
                         - t = "Remove selected Actions from this Event"
-                        = link_to(image_tag("/images/toolbars/left.png", :class => "rollover small", :alt => t),
+                        = link_to(image_tag(image_path('toolbars/left.png'), :class => "rollover small", :alt => t),
                           {:action => 'event_edit', :button => 'false_left', :id => @event},
                           "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
@@ -223,7 +223,7 @@
                             :id       => "members_chosen_false")
                       %td{:width => "20", :valign => "middle"}
                         - t = "Move selected Action up"
-                        = link_to(image_tag("/images/toolbars/up.png", :class => "rollover small", :alt => t),
+                        = link_to(image_tag(image_path('toolbars/up.png'), :class => "rollover small", :alt => t),
                         {:action => 'event_edit', :button => 'false_up', :id => @event},
                         "data-miq_sparkle_on"  => true,
                         "data-miq_sparkle_off" => true,
@@ -233,7 +233,7 @@
                         :title                 => t)
 
                         - t = "Move selected Action down"
-                        = link_to(image_tag("/images/toolbars/down.png", :class => "rollover small", :alt => t),
+                        = link_to(image_tag(image_path('toolbars/down.png'), :class => "rollover small", :alt => t),
                         {:action => 'event_edit', :button => 'false_down', :id => @event},
                         "data-miq_sparkle_on"  => true,
                         "data-miq_sparkle_off" => true,
@@ -243,7 +243,7 @@
                         :title                 => t)
 
                         - t = "Set selected Actions to Synchronous"
-                        = link_to(image_tag("/images/toolbars/syncr.png", :class => "rollover small", :alt => t),
+                        = link_to(image_tag(image_path('toolbars/syncr.png'), :class => "rollover small", :alt => t),
                         {:action => 'event_edit', :button => 'false_sync', :id => @event},
                         "data-miq_sparkle_on"  => true,
                         "data-miq_sparkle_off" => true,
@@ -253,7 +253,7 @@
                         :title                 => t)
 
                         - t = "Set selected Actions to Asynchronous"
-                        = link_to(image_tag("/images/toolbars/asyncr.png", :class => "rollover small",  :alt => t),
+                        = link_to(image_tag(image_path('toolbars/asyncr.png'), :class => "rollover small",  :alt => t),
                         {:action => 'event_edit', :button => 'false_async', :id => @event},
                         "data-miq_sparkle_on"  => true,
                         "data-miq_sparkle_off" => true,
@@ -280,7 +280,7 @@
                   %tr{:title => _("View this Event Action"),
                      :onclick => (x_active_tree == :action_tree) ? t : f}
                     %td.narrow
-                      %img{:src => "/images/icons/new/x.png"}
+                      %img{:src => image_path('100/x.png')}
                     %td
                       = a.description
                     %td

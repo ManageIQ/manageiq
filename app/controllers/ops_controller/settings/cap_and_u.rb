@@ -292,7 +292,7 @@ module OpsController::Settings::CapAndU
       cl_node[:title] = c[:name]
       cl_node[:tooltip] = c[:name]
       cl_node[:style] = "cursor:default"     # No cursor pointer
-      cl_node[:icon] = "cluster.png"
+      cl_node[:icon] = ActionController::Base.helpers.image_path("100/cluster.png")
       cl_kids = []
       cl_hash = @cl_hash[c[:id]]
       cluster = cl_hash[:cl_rec]
@@ -319,7 +319,7 @@ module OpsController::Settings::CapAndU
         temp[:title] = h.name
         temp[:tooltip] = "Host: #{h.name}"
         temp[:style] = "cursor:default"      # No cursor pointer
-        temp[:icon] = "host.png"
+        temp[:icon] = ActionController::Base.helpers.image_path("100/host.png")
         temp[:select] = enabled_host_ids.include?(h.id.to_i) ? true : false
         cl_kids.push(temp)
       end
@@ -345,7 +345,7 @@ module OpsController::Settings::CapAndU
       h_node[:title] = "Non-clustered Hosts"
       h_node[:tooltip] = "Non-clustered Hosts"
       h_node[:style] = "cursor:default"      # No cursor pointer
-      h_node[:icon] = "host.png"
+      h_node[:icon] = ActionController::Base.helpers.image_path("100/host.png")
       count = non_cl_host_capture_state
       if count.to_i == @edit[:current][:non_cl_hosts].length
         h_node[:select] = true
@@ -361,7 +361,7 @@ module OpsController::Settings::CapAndU
         temp[:title] = h[:name]
         temp[:tooltip] = "Host: #{h[:name]}"
         temp[:style] = "cursor:default"      # No cursor pointer
-        temp[:icon] = "host.png"
+        temp[:icon] = ActionController::Base.helpers.image_path("100/host.png")
         temp[:select] = h[:capture] ? true : false
         h_kids.push(temp)
       end
@@ -396,7 +396,7 @@ module OpsController::Settings::CapAndU
       ds_node[:title] = "<b>#{s[:name]}</b> [#{s[:location]}]"
       ds_node[:tooltip] = "#{s[:name]} [#{s[:location]}]"
       ds_node[:style] = "cursor:default"     # No cursor pointer
-      ds_node[:icon] = "storage.png"
+      ds_node[:icon] = ActionController::Base.helpers.image_path("100/storage.png")
       ds_node[:select] = s[:capture] == true
 
       children = []
@@ -419,7 +419,7 @@ module OpsController::Settings::CapAndU
         temp[:tooltip] = h[:name]
         temp[:style] = "cursor:default"      # No cursor pointer
         temp[:hideCheckbox] = true
-        temp[:icon] = "host.png"
+        temp[:icon] = ActionController::Base.helpers.image_path("100/host.png")
         children.push(temp)
       end
 

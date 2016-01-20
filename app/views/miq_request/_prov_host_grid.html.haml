@@ -17,7 +17,7 @@
                 "data-method"          => :post,
                 :remote                => true)
               - if options[:host_columns][i] == options[:host_sortcol]
-                %img{:src => "/images/icons/16/sort_#{@edit[:host_sortdir] == 'ASC' ? 'up' : 'down'}.png"}
+                %img{:src => image_path("16/sort_#{@edit[:host_sortdir] == 'ASC' ? 'up' : 'down'}.png")}
             - else
               = h(options[:host_headers][h])
     %tbody

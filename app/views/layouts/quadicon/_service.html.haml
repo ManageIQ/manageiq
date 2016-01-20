@@ -1,8 +1,8 @@
 .flobj
-  %img{:src => "/images/icons/#{size}/base-single.png"}
+  %img{:src => image_path("#{size}/base-single.png")}
 
 -# st = ServiceTemplate.find(item.service_template_id) %>
-- fname = item.picture ? item.picture.url_path : "/images/icons/new/service.png"
+- fname = item.picture ? item.picture.url_path : image_path('100/service.png')
 .flobj{:class => "e#{size}"}
   - if !@embedded || @showlinks
     = link_to(image_tag(fname, :width => size, :height => size, :title => h(item.name)),

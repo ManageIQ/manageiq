@@ -10,7 +10,7 @@
           - @zones.sort_by(&:description).each do |z|
             %tr{:onclick => "miqDynatreeActivateNode('settings_tree', 'z-#{to_cid(z.id)}');", :title => _("View this Zone's settings")}
               %td.narrow
-                %img{:src => "/images/icons/new/zone.png"}/
+                %img{:src => image_path('100/zone.png')}/
               %td
                 - if my_zone_name == z.name
                   %b

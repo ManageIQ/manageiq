@@ -113,7 +113,7 @@
             :record_id                 => @record.storage.id,
             :table                     => 'storages',
             :action                    => 'show',
-            :image_path                => '/images/icons/16/link_external.gif',
+            :image_path                => image_path('16/link_external.gif'),
             :controller                => 'storage',
             :title                     => _("Show this Vm's parent %s") % ui_lookup(:table => 'storages'),
             :link_text                 => "#{ui_lookup(:table => 'storages')}: #{@record.storage.name}")

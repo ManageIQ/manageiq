@@ -11,7 +11,7 @@ class AutomateImportJsonSerializer
       {
         :title    => File.dirname(domain),
         :key      => File.dirname(domain),
-        :icon     => "/images/icons/new/ae_domain.png",
+        :icon     => ActionController::Base.helpers.image_path('100/ae_domain.png'),
         :children => children(ae_import, File.dirname(domain))
       }
     end
@@ -31,7 +31,7 @@ class AutomateImportJsonSerializer
       {
         :title    => namespace_name.split("/").last,
         :key      => namespace_name.split("/")[1..-1].join("/"),
-        :icon     => "/images/icons/new/ae_namespace.png",
+        :icon     => ActionController::Base.helpers.image_path('100/ae_namespace.png'),
         :children => children(ae_import, namespace_name)
       }
     end
@@ -43,7 +43,7 @@ class AutomateImportJsonSerializer
       {
         :title => class_name.split("/").last,
         :key   => class_name.split("/")[1..-1].join("/"),
-        :icon  => "/images/icons/new/ae_class.png"
+        :icon  => ActionController::Base.helpers.image_path('100/ae_class.png')
       }
     end
   end

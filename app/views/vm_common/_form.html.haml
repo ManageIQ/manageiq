@@ -67,7 +67,7 @@
             :style => "width: 400px",
             :id => "kids_chosen")
       %td{:width => "20"}
-        = link_to(image_tag("/images/toolbars/right.png",
+        = link_to(image_tag(image_path('toolbars/right.png'),
             :class => "rollover small",
             :style => "width: 28px; height: 28px",
             :alt => (t = _("Move selected VMs to right"))),
@@ -80,7 +80,7 @@
           "data-method"         => :post,
           :title                => t)
 
-        = link_to(image_tag("/images/toolbars/allright.png",
+        = link_to(image_tag(image_path('toolbars/allright.png'),
             :class => "rollover small",
             :style => "width: 28px; height: 28px",
             :alt => (t = _("Move all VMs to right"))),
@@ -93,7 +93,7 @@
           "data-method"         => :post,
           :title                => t)
 
-        = link_to(image_tag("/images/toolbars/left.png",
+        = link_to(image_tag(image_path('toolbars/left.png'),
             :class => "rollover small",
             :style => "width: 28px; height: 28px",
             :alt   => (t = _("Move selected VMs to left"))),

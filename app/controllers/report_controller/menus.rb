@@ -350,7 +350,7 @@ module ReportController::Menus
     base_node = {
       :key    => "b__Report Menus for #{session[:role_choice]}",
       :title  => 'Top Level',
-      :icon   => 'folder.png',
+      :icon   => ActionController::Base.helpers.image_path('100/folder.png'),
       :expand => true,
       :style  => 'background: #fff;
                   padding: 2px 0 6px 2px;

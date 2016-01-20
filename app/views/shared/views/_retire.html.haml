@@ -19,7 +19,7 @@
         %a{'href'              => '#',
            'ng-click'          => 'retirementInfo.retirementDate = null; retirementInfo.retirementWarning = ""',
            'ng-hide'           => '!retirementInfo.retirementDate'}
-          = image_tag('/images/icons/16/clear.png', :border => "0", :alt => _("Set to blank"))
+          = image_tag(image_path('16/clear.png'), :border => "0", :alt => _("Set to blank"))
     .form-group
       %label.col-md-2.control-label
         = _('Retirement Warning')

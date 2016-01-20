@@ -76,7 +76,7 @@ describe TreeNodeBuilder do
 
       expect(node[:key]).to eq("c-#{MiqRegion.compress_id(cluster.id)}")
       expect(node[:title]).to eq(cluster.name)
-      expect(node[:icon]).to eq("cluster.png")
+      expect(node[:icon]).to eq(ActionController::Base.helpers.image_path('100/cluster.png'))
       expect(node[:tooltip]).to eq("Cluster / Deployment Role: #{cluster.name}")
     end
 
@@ -86,7 +86,7 @@ describe TreeNodeBuilder do
 
       expect(node[:key]).to eq("h-#{MiqRegion.compress_id(host.id)}")
       expect(node[:title]).to eq(host.name)
-      expect(node[:icon]).to eq("host.png")
+      expect(node[:icon]).to eq(ActionController::Base.helpers.image_path(('100/host.png')))
       expect(node[:tooltip]).to eq("Host / Node: #{host.name}")
     end
 
@@ -170,7 +170,7 @@ describe TreeNodeBuilder do
       report_result = FactoryGirl.create(:miq_report_result)
       node = TreeNodeBuilder.build(report_result, nil, {})
       expect(node).not_to be_nil
-      expect(node[:icon]).to eq("report_result.png")
+      expect(node[:icon]).to eq(ActionController::Base.helpers.image_path('100/report_result.png'))
     end
 
     it 'MiqSchedule node' do

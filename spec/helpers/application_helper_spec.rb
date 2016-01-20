@@ -1548,7 +1548,7 @@ describe ApplicationHelper do
       job_attrs = {"state" => "running", "status" => "ok"}
       image = helper.listicon_image_tag("Job", job_attrs)
       expect(image).to eq("<img valign=\"middle\" width=\"16\" height=\"16\" title=\"Status = Running\"" \
-                          " src=\"/images/icons/new/job-running.png\" />")
+                          " src=\"#{ActionController::Base.helpers.image_path('100/job-running.png')}\" />")
     end
   end
 

@@ -7,7 +7,7 @@
           %tr{:title => _("Open Folder"),
             :onclick => "miqDynatreeActivateNode('alert_profile_tree', 'xx-#{f.last}');"}
             %td.narrow
-              %img{:src => "/images/icons/new/#{f.last.underscore.downcase}.png"}
+              %img{:src => image_path("100/#{f.last.underscore.downcase}.png")}
             %td
               = f.first
               &nbsp;

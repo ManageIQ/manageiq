@@ -265,7 +265,7 @@
                       %tr{:title => _("View this Alert Profile"),
                           :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=alert_profile")}
                         %td
-                          %img{:src => "/images/icons/new/miq_alert_profile.png"}
+                          %img{:src => image_path('100/miq_alert_profile.png')}
                         %td
                           = ap.description
       -# Show any owning actions
@@ -285,9 +285,9 @@
                         :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=action")}
                         %td.narrow
                           - if oa.action_type == "default"
-                            %img{:src => "/images/icons/new/miq_action.png"}
+                            %img{:src => image_path('100/miq_action.png')}
                           - else
-                            %img{:src => "/images/icons/new/miq_action_#{oa.action_type}.png"}
+                            %img{:src => image_path("100/miq_action_#{oa.action_type}.png")}
                         %td.narrow
                           = oa.description
               %hr

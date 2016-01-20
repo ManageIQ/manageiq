@@ -37,7 +37,7 @@
     - norender = %w(cim_base_storage_extent cim_storage_extent ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume snia_local_file_system)
     - if norender.include?(partial_name)
       .flobj
-        %img{:src => "/images/icons/#{size}/#{partial_name}.png", :border => 0}
+        %img{:src => image_path("#{size}/#{partial_name}.png"), :border => 0}
     - else
       -# VMs and miq_templates use the same partial
       - partial_name = %w(miq_template vm).include?(partial_name) ? "vm_or_template" : partial_name

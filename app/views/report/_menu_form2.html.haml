@@ -24,60 +24,60 @@
                   :id       => "selected_reports")
               %td{:width => "20", :valign => "middle"}
                 - if @edit[:available_reports].length == 0
-                  = image_tag("/images/toolbars/left.png", :class => "rollover small", :border => "0")
+                  = image_tag(image_path('toolbars/left.png'), :class => "rollover small", :border => "0")
                 - else
                   - t = _("Move selected reports left")
-                  = link_to(image_tag("/images/toolbars/left.png", :border => "0", :class => "rollover small", :alt => t),
+                  = link_to(image_tag(image_path('toolbars/left.png'), :border => "0", :class => "rollover small", :alt => t),
                     {:action => 'menu_field_changed', :button => 'left'},
                     "data-submit" => "column_lists",
                     :remote       => true,
                     "data-method" => :post,
                     :title        => t)
                 - if @edit[:selected_reports].length == 0
-                  = image_tag("/images/toolbars/right.png", :class => "rollover small", :border => "0")
+                  = image_tag(image_path('toolbars/right.png'), :class => "rollover small", :border => "0")
                 - else
                   - t = _("Move selected reports right")
-                  = link_to(image_tag("/images/toolbars/right.png", :border => "0", :class => "rollover small", :alt => t),
+                  = link_to(image_tag(image_path('toolbars/right.png'), :border => "0", :class => "rollover small", :alt => t),
                     {:action => 'menu_field_changed', :button => 'right'},
                     "data-submit" => "column_lists",
                     :remote       => true,
                     "data-method" => :post,
                     :title        => t)
                 - if @edit[:selected_reports].length < 2
-                  = image_tag("/images/toolbars/top.png", :class => "rollover small", :border => "0")
+                  = image_tag(image_path('toolbars/top.png'), :class => "rollover small", :border => "0")
                 - else
                   - t = _("Move selected reports to top")
-                  = link_to(image_tag("/images/toolbars/top.png", :border => "0", :class => "rollover small", :alt => t),
+                  = link_to(image_tag(image_path('toolbars/top.png'), :border => "0", :class => "rollover small", :alt => t),
                     {:action => 'menu_field_changed', :button => 'top'},
                     "data-submit" => "column_lists",
                     :remote       => true,
                     "data-method" => :post,
                     :title        => t)
                 - if @edit[:selected_reports].length < 2
-                  = image_tag("/images/toolbars/up.png", :class => "rollover small", :border => "0")
+                  = image_tag(image_path('toolbars/up.png'), :class => "rollover small", :border => "0")
                 - else
                   - t = _("Move selected reports up")
-                  = link_to(image_tag("/images/toolbars/up.png", :border => "0", :class => "rollover small", :alt => t),
+                  = link_to(image_tag(image_path('toolbars/up.png'), :border => "0", :class => "rollover small", :alt => t),
                     {:action => 'menu_field_changed', :button => 'up'},
                     "data-submit" => "column_lists",
                     :remote       => true,
                     "data-method" => :post,
                     :title        => t)
                 - if @edit[:selected_reports].length < 2
-                  = image_tag("/images/toolbars/down.png", :class => "rollover small", :border => "0")
+                  = image_tag(image_path('toolbars/down.png'), :class => "rollover small", :border => "0")
                 - else
                   - t = _("Move selected reports down")
-                  = link_to(image_tag("/images/toolbars/down.png", :border => "0", :class => "rollover small", :alt => t),
+                  = link_to(image_tag(image_path('toolbars/down.png'), :border => "0", :class => "rollover small", :alt => t),
                     {:action => 'menu_field_changed', :button => 'down'},
                     "data-submit" => "column_lists",
                     :remote       => true,
                     "data-method" => :post,
                     :title        => t)
                 - if @edit[:selected_reports].length < 2
-                  = image_tag("/images/toolbars/bottom.png", :class => "rollover small", :border => "0")
+                  = image_tag(image_path('toolbars/bottom.png'), :class => "rollover small", :border => "0")
                 - else
                   - t = _("Move selected reports to bottom")
-                  = link_to(image_tag("/images/toolbars/bottom.png", :border => "0", :class => "rollover small", :alt => t),
+                  = link_to(image_tag(image_path('toolbars/bottom.png'), :border => "0", :class => "rollover small", :alt => t),
                     {:action => 'menu_field_changed', :button => 'bottom'},
                     "data-submit" => "column_lists",
                     :remote       => true,
@@ -93,7 +93,7 @@
               %td{:colspan => "3", :align => "right"}
                 %div{:style => "width: 67px; float: right; margin-bottom: 2px;"}
                   - t = _('Commit report management changes')
-                  = link_to(image_tag('/images/toolbars/commit.png', :class => "rollover small", :alt => t),
+                  = link_to(image_tag(image_path('toolbars/commit.png'), :class => "rollover small", :alt => t),
                     {:action => 'menu_field_changed', :pressed => 'commit'},
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
@@ -101,7 +101,7 @@
                     "data-method"          => :post,
                     :title                 => t)
                   - t = _("Discard report management changes")
-                  = link_to(image_tag('/images/toolbars/discard.png', :class => "rollover small", :alt => t),
+                  = link_to(image_tag(image_path('toolbars/discard.png'), :class => "rollover small", :alt => t),
                     {:action => 'discard_changes', :pressed => 'discard_reports'},
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,

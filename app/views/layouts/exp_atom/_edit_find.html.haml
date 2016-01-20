@@ -96,7 +96,7 @@
 
         - if @edit[@expkey][:val1][:date_format] == 's'
           - t = _('Click to change to a relative Date/Time format')
-          = link_to(image_tag('/images/toolbars/specific_date.png', :class => "rollover tiny", :alt => t),
+          = link_to(image_tag(image_path('toolbars/specific_date.png'), :class => "rollover tiny", :alt => t),
             {:action => 'exp_changed', :date_format_1 => 'r'},
             "data-miq_sparkle_on"  => true,
             "data-miq_sparkle_off" => true,
@@ -105,7 +105,7 @@
             :title                 => t)
         - else
           - t = _('Click to change to a specific Date/Time format')
-          = link_to(image_tag('/images/toolbars/relative_date.png', :class => "rollover tiny", :alt => t),
+          = link_to(image_tag(image_path('toolbars/relative_date.png'), :class => "rollover tiny", :alt => t),
             {:action => 'exp_changed', :date_format_1 => 's'},
             "data-miq_sparkle_on"  => true,
             "data-miq_sparkle_off" => true,
@@ -217,7 +217,7 @@
 
             - if @edit[@expkey][:val2][:date_format] == 's'
               - t = _('Click to change to a relative Date/Time format')
-              = link_to(image_tag('/images/toolbars/specific_date.png', :class => "rollover tiny", :alt => t),
+              = link_to(image_tag(image_path('toolbars/specific_date.png'), :class => "rollover tiny", :alt => t),
                 {:action => 'exp_changed', :date_format_2 => 'r'},
                 "data-miq_sparkle_on"  => true,
                 "data-miq_sparkle_off" => true,
@@ -226,7 +226,7 @@
                 :title                 => t)
             - else
               - t = _('Click to change to a specific Date/Time format')
-              = link_to(image_tag('/images/toolbars/relative_date.png', :class => "rollover tiny", :alt => t),
+              = link_to(image_tag(image_path('toolbars/relative_date.png'), :class => "rollover tiny", :alt => t),
                 {:action => 'exp_changed', :date_format_2 => 's'},
                 "data-miq_sparkle_on"  => true,
                 "data-miq_sparkle_off" => true,

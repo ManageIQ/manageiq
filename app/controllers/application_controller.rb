@@ -1140,32 +1140,29 @@ class ApplicationController < ActionController::Base
              klass.find(id)    # Read the record from the db
            end
 
-    p  = "/images/icons/"
-    pn = "#{p}new/"
-
     image = case item
-            when ExtManagementSystem   then "#{pn}/vendor-#{item.image_name}.png"
-            when Filesystem            then "#{p}ico/win/#{item.image_name.downcase}.ico"
-            when Host                  then "#{pn}vendor-#{item.vmm_vendor.downcase}.png"
-            when MiqEventDefinition    then "#{pn}event-#{item.name.downcase}.png"
+            when ExtManagementSystem   then "100/vendor-#{item.image_name}.png"
+            when Filesystem            then "ico/win/#{item.image_name.downcase}.ico"
+            when Host                  then "100/vendor-#{item.vmm_vendor.downcase}.png"
+            when MiqEventDefinition    then "100/event-#{item.name.downcase}.png"
             when MiqRequest
-              pn + case item.request_status.to_s.downcase
-                   when "ok"    then "checkmark.png"
-                   when "error" then "x.png"
-                   else              "#{@listicon.downcase}.png"
-                   end
-            when RegistryItem          then "#{pn}#{item.image_name.downcase}.png"
-            when ResourcePool          then "#{pn}#{item.vapp ? "vapp" : "resource_pool"}.png"
-            when VmOrTemplate          then "#{pn}vendor-#{item.vendor.downcase}.png"
-            when ServiceResource       then "#{pn}#{item.resource_type.to_s == "VmOrTemplate" ? "vm" : "service_template"}.png"
-            when Storage               then "#{pn}piecharts/datastore/#{calculate_pct_img(item.v_free_space_percent_of_total)}.png"
-            when OsProcess, EventLog   then "#{pn}#{@listicon.downcase}.png"
+              case item.request_status.to_s.downcase
+              when "ok"    then "100/checkmark.png"
+              when "error" then "100/x.png"
+              else              "100/#{@listicon.downcase}.png"
+              end
+            when RegistryItem          then "100/#{item.image_name.downcase}.png"
+            when ResourcePool          then "100/#{item.vapp ? "vapp" : "resource_pool"}.png"
+            when VmOrTemplate          then "100/vendor-#{item.vendor.downcase}.png"
+            when ServiceResource       then "100/#{item.resource_type.to_s == "VmOrTemplate" ? "vm" : "service_template"}.png"
+            when Storage               then "100/piecharts/datastore/#{calculate_pct_img(item.v_free_space_percent_of_total)}.png"
+            when OsProcess, EventLog   then "100/#{@listicon.downcase}.png"
             when Service, ServiceTemplate
               if item.try(:picture)
                 "/pictures/#{item.picture.basename}"
               end
             end
-    list_row_image(pn, image, (@listicon || view.db).underscore, item)
+    list_row_image("100/", image, (@listicon || view.db).underscore, item)
   end
 
   def get_host_for_vm(vm)
@@ -2573,7 +2570,7 @@ class ApplicationController < ActionController::Base
   end
 
   def list_row_image(image_path, image, model_image, _item)
-    image || "#{image_path}#{model_image}.png"
+    ActionController::Base.helpers.image_path(image || "#{image_path}#{model_image}.png")
   end
 
   def render_flash_not_applicable_to_model(type, model_type = "items")

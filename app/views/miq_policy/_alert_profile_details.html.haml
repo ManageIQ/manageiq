@@ -35,7 +35,7 @@
                 %tr{:title => _("View this Alert"),
                   :onclick => "miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}_al-#{to_cid(a.id)}');"}
                   %td.narrow
-                    %img{:src => "/images/icons/new/miq_alert.png"}
+                    %img{:src => image_path('100/miq_alert.png')}
                   %td
                     = h(a.description)
         %hr
@@ -55,7 +55,7 @@
                   :size     => 8,
                   :id       => "choices_chosen")
             %td{:width => "20", :valign => "middle"}
-              = link_to(image_tag("/images/toolbars/right.png", :border => "0", :class  => "rollover small", :alt => (t = _("Move selected Alerts into this Profile"))),
+              = link_to(image_tag(image_path('toolbars/right.png'), :border => "0", :class  => "rollover small", :alt => (t = _("Move selected Alerts into this Profile"))),
                 {:action => 'alert_profile_edit',
                  :button => 'move_right',
                  :id     => @alert_profile},
@@ -66,7 +66,7 @@
                 :remote                => true,
                 :title                 => t)
 
-              = link_to(image_tag("/images/toolbars/allleft.png", :border => "0", :class  => "rollover small", :alt => (t = _("Remove all Alerts from this Profile"))),
+              = link_to(image_tag(image_path('toolbars/allleft.png'), :border => "0", :class  => "rollover small", :alt => (t = _("Remove all Alerts from this Profile"))),
                 {:action => 'alert_profile_edit',
                  :button => 'move_allleft',
                  :id     => @alert_profile},
@@ -76,7 +76,7 @@
                 :remote                => true,
                 :title                 => t)
 
-              = link_to(image_tag("/images/toolbars/left.png", :border => "0", :class  => "rollover small", :alt => (t = _("Remove selected Alerts from this Profile"))),
+              = link_to(image_tag(image_path('toolbars/left.png'), :border => "0", :class  => "rollover small", :alt => (t = _("Remove selected Alerts from this Profile"))),
                 {:action => 'alert_profile_edit',
                  :button => 'move_left',
                  :id     => @alert_profile},

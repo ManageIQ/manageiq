@@ -6,12 +6,12 @@
         %tr{:title => _("View Examples (read only)' Folder"),
           :onclick => "miqDynatreeActivateNode('customization_templates_tree', 'xx-xx-system');"}
           %td.narrow
-            %img{:src => '/images/icons/new/folder.png'}
+            %img{:src => image_path('100/folder.png')}
           %td Examples (read only)
         - @folders.each do |f|
           %tr{:title => _("View '%s' Folder") % f.name,
             :onclick => "miqDynatreeActivateNode('customization_templates_tree', 'xx-xx-#{to_cid(f.id)}');"}
             %td.icon
-              %img{:src => '/images/icons/new/folder.png'}
+              %img{:src => image_path('100/folder.png')}
             %td
               = h(f.name)

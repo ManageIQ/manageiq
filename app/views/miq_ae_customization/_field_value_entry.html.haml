@@ -2,7 +2,7 @@
   - if entry == "new"
     %tr#new_tr
       %td
-        = image_submit_tag("/images/toolbars/import.png",
+        = image_submit_tag(image_path('toolbars/import.png'),
           :class => "rollover small",
           :id => "accept", :name => "accept", :alt => (t = _("Add this entry")), :title => t)
       %td
@@ -12,7 +12,7 @@
   - else
     %tr{:id => "#{idx}_tr"}
       %td
-        = image_submit_tag("/images/toolbars/import.png",
+        = image_submit_tag(image_path('toolbars/import.png'),
           :class => "rollover small",
           :id => "accept", :name => "accept", :alt => (t = _("Update this entry")), :title => t)
       %td
@@ -25,7 +25,7 @@
     %tr#new_tr{:title => _("Click to add a new entry"),
       :onclick => remote_function(:url => {:action => 'field_value_select', :id => "#{@record.id || 'new'}", :entry_id => 'new'})}
       %td
-        = image_tag("/images/toolbars/new.png", :class => "rollover small")
+        = image_tag(image_path('toolbars/new.png'), :class => "rollover small")
       %td
         = h("<#{_('New Entry')}>")
       %td= h("<#{_('Click on this row to create a new entry')}>")
@@ -35,9 +35,9 @@
         %td
           %nobr
             - if @edit[:field_values].length < 2 || idx == 0
-              = image_tag("/images/icons/16/sort_up.png", :class => "dimmed", :border => "0")
+              = image_tag(image_path('16/sort_up.png'), :class => "dimmed", :border => "0")
             - else
-              = link_to(image_tag("/images/icons/16/sort_up.png", :border => "0", :alt => (t = _("Move selected field up"))),
+              = link_to(image_tag(image_path('16/sort_up.png'), :border => "0", :alt => (t = _("Move selected field up"))),
                 {:action   => 'dialog_form_field_changed',
                  :button   => 'up',
                  :id       => @record.id || 'new',
@@ -46,10 +46,11 @@
                 'data-method' => :post,
                 :title        => t)
 
+
             - if @edit[:field_values].length < 2 || idx == @edit[:field_values].length - 1
-              = image_tag("/images/icons/16/sort_down.png", :class => "dimmed", :border => "0")
+              = image_tag(image_path('16/sort_down.png'), :class => "dimmed", :border => "0")
             - else
-              = link_to(image_tag("/images/icons/16/sort_down.png", :border => "0", :alt => (t = _("Move selected field down"))),
+              = link_to(image_tag(image_path('16/sort_down.png'), :border => "0", :alt => (t = _("Move selected field down"))),
                 {:action   => 'dialog_form_field_changed',
                  :button   => 'down',
                  :id       => @record.id || 'new',
@@ -58,7 +59,7 @@
                 'data-method' => :post,
                 :title        => t)
 
-            = link_to(image_tag("/images/toolbars/delete.png", :border => "0", :alt => (t = _("Click to delete this entry"))),
+            = link_to(image_tag(image_path('toolbars/delete.png'), :border => "0", :alt => (t = _("Click to delete this entry"))),
               {:action   => 'field_value_delete',
                :button   => 'down',
                :id       => @record.id || 'new',
@@ -71,7 +72,7 @@
       - else
         %td{:onclick => remote_function(:url => {:action => 'field_value_delete', :id => "#{@record.id || 'new'}", :entry_id => idx}),
           :title => _("Click to delete this entry")}
-          = image_tag("/images/toolbars/delete.png", :class => "rollover small")
+          = image_tag(image_path('toolbars/delete.png'), :class => "rollover small")
       %td{:onclick => remote_function(:url => {:action => 'field_value_select', :id => "#{@record.id || 'new'}", :entry_id => idx, :field => "value"}),
         :title => _("Click to update this entry")}
         = h(entry[0])

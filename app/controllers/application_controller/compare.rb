@@ -90,8 +90,9 @@ module ApplicationController::Compare
     else
       img_src = "squashed-all-true"
     end
-    render :update do |page|                    # Use RJS to update the display
-      page << "$('#expand_collapse').prop('src', '/images/toolbars/#{img_src}.png');"
+    render :update do |page| # Use RJS to update the display
+      asset = ActionController::Base.helpers.image_path("toolbars/#{img_src}.png")
+      page << "$('#expand_collapse').prop('src', '#{asset}');"
     end
   end
 
@@ -1452,9 +1453,10 @@ module ApplicationController::Compare
   end
 
   def drift_add_image_col(idx, img_src, img_bkg, val)
-    col = "<img src='/images/icons/#{img_src}' width='20' height='20' border='0'
-              align='middle' alt='#{val}' title='#{val}'>"
-    html_text = "<div class='#{img_bkg}'>#{col}</div>"
+    html_text = "<div class='#{img_bkg}'>
+                   <img src=\"#{ActionController::Base.helpers.image_path(img_src)}\" width=\"20\" height=\"20\"
+                    border=\"0\" align=\"middle\" alt=\"#{val}\" title=\"#{val}\"/>
+                 </div>"
     {"col#{idx + 1}".to_sym => html_text}
   end
 
@@ -1553,16 +1555,21 @@ module ApplicationController::Compare
     txt = h[:name].truncate(16)
     html_text = ""
     if %w(Vm VmOrTemplate).include?(@sb[:compare_db])
-      html_text << "<a  title='#{h[:name]}'
-        href='/#{controller_name}/show/#{h[:id]}'><img src='/images/icons/new/vendor-#{h[:vendor].downcase}.png'
-        align='middle' border='0' width='20' height='20'/></a>"
+      img = ActionController::Base.helpers.image_path("/100/vendor-#{h[:vendor].downcase}.png")
+      html_text << "<a title=\"#{h[:name]}\" href=\"/#{controller_name}/show/#{h[:id]}\">
+                      <img src=\"#{img}\" align=\"middle\" border=\"0\" width=\"20\" height=\"20\"/>
+                    </a>"
     elsif @sb[:compare_db] == "Host"
-      html_text << "<a href='/host/show/#{h[:id]}'><img src='/images/icons/new/vendor-#{h[:vmm_vendor].downcase}.png'
-        align='middle' border='0' width='20' height='20' /></a>"
+      img = ActionController::Base.helpers.image_path("/100/vendor-#{h[:vmm_vendor].downcase}.png")
+      html_text << "<a href=\"/host/show/#{h[:id]}\">
+                      <img src=\"#{img}\" align=\"middle\" border=\"0\" width=\"20\" height=\"20\" />
+                    </a>"
     else
+      img = ActionController::Base.helpers.image_path("/100/vendor-#{h[:compare_db].downcase}.png")
       html_text <<
-        "<a href='/ems_cluster/show/#{h[:id]}'><img src='/images/icons/new/#{@sb[:compare_db].downcase}.png'
-        align='middle' border='0' width='20' height='20'/></a>"
+        "<a href=\"/ems_cluster/show/#{h[:id]}\">
+          <img src=\"#{img}\" align=\"middle\" border=\"0\" width=\"20\" height=\"20\"/>
+        </a>"
     end
     if i == 0
       html_text << "<a title='#{h[:name]} is the base'> #{txt.truncate(16)}</a>"
@@ -1612,11 +1619,12 @@ module ApplicationController::Compare
       view.ids.each_with_index do |_id, idx|
         if idx != 0
           url = "/#{controller_name}/compare_remove/#{view.records[idx].id}"
-          html_text = "<a title='Remove this #{session[:db_title].singularize} from the comparison'
-            onclick=\"miqJqueryRequest('#{url}', {beforeSend: true, complete: true});
-            return false;\" href='#'><img src='/images/toolbars/delete.png' width='24'
-            alt='Remove this #{session[:db_title].singularize} from the comparison'
-            title='Remove this #{session[:db_title].singularize} from the comparison' align='middle' border='0' /></a>"
+          title = "Remove this #{session[:db_title].singularize} from the comparison"
+          html_text = "<a onclick=\"miqJqueryRequest('#{url}', {beforeSend: true, complete: true}); return false;\"
+                       title=\"#{title}\" href=\"#\">
+                         <img src=\"#{ActionController::Base.helpers.image_path('toolbars/delete.png')}\"
+                         width=\"24\" alt=\"#{title}\" title=\"#{title}\" align=\"middle\" border=\"0\" />
+                       </a>"
           row.merge!("col#{idx + 1}".to_sym => html_text)
         end
       end
@@ -1640,8 +1648,8 @@ module ApplicationController::Compare
     height = 25
     width = height = 24 if @compressed
     img_src = "new/piecharts/compare/#{image}.png"
-    col = "<img src='/images/icons/#{img_src}' width='#{width}' height='#{height}' border='0'
-              align='middle' alt='#{val}' title='#{val}'>"
+    col = "<img src=\"#{ActionController::Base.helpers.image_path(img_src)}\" width=\"#{width}\" height=\"#{height}\"
+           border=\"0\" align=\"middle\" alt=\"#{val}\" title=\"#{val}\">"
     html_text = "<div class='#{img_bkg}'>#{col}</div>"
     {"col#{idx + 1}".to_sym => html_text}
   end

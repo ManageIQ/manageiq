@@ -44,7 +44,7 @@
             - groups.sort_by { |g| g[:name].downcase }.each_with_index do |sr, k|
               %tr
                 %td
-                  = link_to(image_tag("/images/icons/16/notequal-red.png", :alt => _("Click to remove this Resource from the Catalog Item")),
+                  = link_to(image_tag(image_path('16/notequal-red.png'), :alt => _("Click to remove this Resource from the Catalog Item")),
                     {:action => "resource_delete",
                      :rec_id => sr[:id],
                      :id     => @edit[:rec_id] || "new",

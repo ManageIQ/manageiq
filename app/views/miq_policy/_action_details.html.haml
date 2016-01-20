@@ -218,7 +218,7 @@
                   %tr{:title => _('View This Alert'),
                     :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=alert")}
                     %td.narrow
-                      %img{:src => "/images/icons/new/miq_alert.png"}
+                      %img{:src => image_path('100/miq_alert.png')}
                     %td
                       = alert.description
           %hr
@@ -261,7 +261,7 @@
                     :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=policy")}
                     %td.narrow
                       - src = "#{p.towhat.downcase}#{p.active ? '' : '_inactive'}"
-                      %img{:src => "/images/icons/new/miq_policy_#{src}.png"}
+                      %img{:src => image_path("100/miq_policy_#{src}.png")}
                     %td
                       = p.description
           %hr

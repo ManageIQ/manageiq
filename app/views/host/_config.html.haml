@@ -9,7 +9,7 @@
             = h(item[:device])
           .col-md-10
             %p.form-control-static
-              %img{:src => "/images/icons/new/hardware-#{item[:icon].downcase}.png"}
+              %img{:src => image_path("100/hardware-#{item[:icon].downcase}.png")}
               = h(item[:description])
 - when "os_info"
   - if @osinfo

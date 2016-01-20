@@ -19,20 +19,20 @@
                   :id       => "seq_fields")
               %td{:width => "30", :align => "left", :valign => "middle"}
                 - if @edit[:new][:dashboard_order].length < 2
-                  = image_tag("/images/toolbars/up.png", :class => "dimmed small")
+                  = image_tag(image_path('toolbars/up.png'), :class => "dimmed small")
                 - else
                   - t = _("Move selected fields up")
-                  = link_to(image_tag("/images/toolbars/up.png", :class => "rollover small", :alt => t),
+                  = link_to(image_tag(image_path('toolbars/up.png'), :class => "rollover small", :alt => t),
                     {:action => 'db_form_field_changed', :button => 'up', :id => "seq"},
                     "data-submit" => "column_lists",
                     :remote       => true,
                     "data-method" => :post,
                     :title        => t)
                 - if @edit[:new][:dashboard_order].length < 2
-                  = image_tag("/images/toolbars/down.png", :class => "dimmed small")
+                  = image_tag(image_path('toolbars/down.png'), :class => "dimmed small")
                 - else
                   - t = _("Move selected fields down")
-                  = link_to(image_tag("/images/toolbars/down.png", :class => "rollover small", :alt => t),
+                  = link_to(image_tag(image_path('toolbars/down.png'), :class => "rollover small", :alt => t),
                     {:action => 'db_form_field_changed', :button => 'down', :id => "seq"},
                     "data-submit" => "column_lists",
                     :remote       => true,

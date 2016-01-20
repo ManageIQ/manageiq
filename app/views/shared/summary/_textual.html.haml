@@ -21,5 +21,5 @@
           = item[:label]
         %td
           - if item[:image]
-            %img{:src => File.absolute_path("#{item[:image]}#{File.extname(item[:image]).blank? ? '.png' : ''}", '/images/icons/new')}
+            %img{:src => image_path("100/#{item[:image]}#{File.extname(item[:image]).blank? ? '.png' : ''}")}
           = !item[:value].kind_of?(Array) ? item[:value] : render(:partial => "shared/summary/textual_multivalue", :locals => {:items => item[:value]})

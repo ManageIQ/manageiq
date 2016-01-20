@@ -46,7 +46,7 @@
                   %p
                 %td{:width => "20", :valign => "middle"}
                   - t = _("Move selected Policies into this Profile")
-                  = link_to(image_tag("/images/toolbars/right.png", :border => "0", :class  => "rollover small", :alt => t),
+                  = link_to(image_tag(image_path('toolbars/right.png'), :border => "0", :class  => "rollover small", :alt => t),
                     {:action => 'profile_edit', :button => 'move_right', :id => @profile},
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
@@ -55,7 +55,7 @@
                     "data-method"          => :post,
                     :title                 => t)
                   - t = _("Remove all Policies from this Profile")
-                  = link_to(image_tag("/images/toolbars/allleft.png", :border => "0", :class  => "rollover small", :alt => t),
+                  = link_to(image_tag(image_path('toolbars/allleft.png'), :border => "0", :class  => "rollover small", :alt => t),
                     {:action => 'profile_edit', :button => 'move_allleft', :id => @profile},
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
@@ -63,7 +63,7 @@
                     "data-method"          => :post,
                     :title                 => t)
                   - t = _("Remove selected Policies from this Profile")
-                  = link_to(image_tag("/images/toolbars/left.png", :border => "0", :class  => "rollover small", :alt => t),
+                  = link_to(image_tag(image_path('toolbars/left.png'), :border => "0", :class  => "rollover small", :alt => t),
                     {:action => 'profile_edit', :button => 'move_left', :id => @profile},
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
@@ -91,7 +91,7 @@
               %tr{:title => _("View this %s Policy") % ui_lookup(:model => p.towhat),
                 :onclick => "miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}_p-#{to_cid(p.id)}');"}
                 %td.narrow
-                  %img{:src => "/images/icons/new/miq_policy_#{p.towhat.downcase + (p.active ? '' : '_inactive')}.png"}
+                  %img{:src => image_path("100/miq_policy_#{p.towhat.downcase + (p.active ? '' : '_inactive')}.png")}
                 %td
                   %b
                     #{ui_lookup(:model => p.towhat)} #{p.mode.capitalize}:

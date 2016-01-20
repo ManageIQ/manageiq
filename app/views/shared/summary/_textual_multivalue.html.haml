@@ -5,5 +5,5 @@
         :onclick => item[:link] ? "DoNav('#{item[:link]}');" : ""}
       %td{:style => "border: 0px; margin: 0px; padding: 2px 0px 2px 0px;"}
         - if item[:image]
-          %img{:src => "/images/icons/new/#{item[:image]}.png"}
+          %img{:src => image_path("100/#{item[:image]}.png")}
         = item[:value]

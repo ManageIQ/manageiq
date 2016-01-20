@@ -5,7 +5,7 @@
 
       %li
         - t = _("Paste object details for use in a Button.")
-        = link_to(image_tag("/images/toolbars/paste.png", :border => "0", :class  => "", :alt => t),
+        = link_to(image_tag(image_path('toolbars/paste.png'), :border => "0", :class  => "", :alt => t),
           {:action => "resolve", :button => "paste"},
           "data-miq_sparkle_on"  => true,
           "data-miq_sparkle_off" => true,
@@ -13,7 +13,7 @@
           "data-method"          => :post,
           :title                 => t)
     - else
-      = image_tag("/images/toolbars/paste.png",
+      = image_tag(image_path('toolbars/paste.png'),
         :class => "dimmed",
         :title => _("Paste is not available, no object information has been copied from the Simulation screen"))
   = render :partial => "layouts/flash_msg"

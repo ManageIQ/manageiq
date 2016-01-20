@@ -11,31 +11,31 @@ describe AutomateImportJsonSerializer do
         :children => [{
           :title    => "Customer",
           :key      => "Customer",
-          :icon     => "/images/icons/new/ae_domain.png",
+          :icon     => ActionController::Base.helpers.image_path('100/ae_domain.png'),
           :children => [{
             :title    => "EVMApplications",
             :key      => "EVMApplications",
-            :icon     => "/images/icons/new/ae_namespace.png",
+            :icon     => ActionController::Base.helpers.image_path('100/ae_namespace.png'),
             :children => [{
               :title    => "Operations",
               :key      => "EVMApplications/Operations",
-              :icon     => "/images/icons/new/ae_namespace.png",
+              :icon     => ActionController::Base.helpers.image_path('100/ae_namespace.png'),
               :children => [{
                 :title    => "Profile",
                 :key      => "EVMApplications/Operations/Profile",
-                :icon     => "/images/icons/new/ae_namespace.png",
+                :icon     => ActionController::Base.helpers.image_path('100/ae_namespace.png'),
                 :children => [],
               }, {
                 :title => "Profile.class",
                 :key   => "EVMApplications/Operations/Profile.class",
-                :icon  => "/images/icons/new/ae_class.png"
+                :icon  => ActionController::Base.helpers.image_path('100/ae_class.png')
               }],
             }],
           }]
         }, {
           :title    => "ManageIQ",
           :key      => "ManageIQ",
-          :icon     => "/images/icons/new/ae_domain.png",
+          :icon     => ActionController::Base.helpers.image_path('100/ae_domain.png'),
           :children => []
         }]
       }.to_json

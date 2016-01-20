@@ -36,7 +36,7 @@ nobr { white-space: nowrap;}
   padding:0;
   width: 100%;
   height:100%;
-  background: url(/images/layout/overlay_dark.png);
+  background: image-url('layout/overlay_dark.png');
   color: #fff;
   text-align:center;
   text-shadow: #000 2px 2px 0;
@@ -52,7 +52,7 @@ nobr { white-space: nowrap;}
   padding: 100px 0 0 0;
   width: 100%;
   height: 100%;
-  background: url(/images/layout/overlay_dark.png);
+  background: image-url('layout/overlay_dark.png');
   color: #fff;
   text-shadow: #000 2px 2px 0;
 }
@@ -210,5 +210,5 @@ ul#toolbars { line-height: 0;}
   #toolbars img { width:24px; height: 24px;}
   #toolbars  img:hover, #toolbars  img:hover, #toolbars .active img, #toolbars.active img { background: #e4e4e4;}
 
-#spinner_div { margin-top: -45px; margin-left: -35px; width:180px; height: 180px; border-radius: 8px; background: url(/images/layout/overlay_dark.png);}
+#spinner_div { margin-top: -45px; margin-left: -35px; width:180px; height: 180px; border-radius: 8px; background: image-url('layout/overlay_dark.png');}
 #prov_vm_div {height: 150px;overflow:auto}

@@ -64,7 +64,7 @@
   .form-horizontal.static
     .form-group
       %label.col-md-3.control-labelimage
-        %img{:src => "/images/icons/new/role-#{rec.server_role.name}.png"}/
+        %img{:src => image_path("100/role-#{rec.server_role.name}.png")}/
       .col-md-9
         .form-group
           %label.col-md-3.control-label= _("Role")

@@ -12,7 +12,7 @@
             %tr{:title => _("View this Profile"),
               :onclick => "miqDynatreeActivateNode('policy_profile_tree', 'pp-#{to_cid(pp.id)}');"}
               %td.narrow
-                %img{:src => "/images/icons/new/policy_profile#{pp.active? ? '' : '_inactive'}.png"}
+                %img{:src => image_path("100/policy_profile#{pp.active? ? '' : '_inactive'}.png")}
               %td
                 = pp.description
 - else

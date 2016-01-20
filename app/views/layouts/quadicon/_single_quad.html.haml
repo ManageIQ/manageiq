@@ -11,9 +11,9 @@
   - else
     - img = item.class.base_class.to_s.underscore
   .flobj
-    %img{:src => "/images/icons/#{size}/base-single.png", :width => size, :height => size, :border => 0}
+    %img{:src => image_path("#{size}/base-single.png"), :width => size, :height => size, :border => 0}
   .flobj{:class => "e#{size}"}
-    %img{:src => "/images/icons/new/#{img}.png", :border => 0}
+    %img{:src => image_path("100/#{img}.png"), :border => 0}
 
   - unless typ == :listnav
     -# Listnav, no clear image needed
@@ -21,7 +21,7 @@
       - name = item.kind_of?(MiqCimInstance) ? item.evm_display_name : item.name
       - if !@embedded || @showlinks
         - if @explorer
-          = link_to(image_tag("/images/icons/#{size}/reflection.png", :width => size, :height => size, :title => h(name)),
+          = link_to(image_tag(image_path("#{size}/reflection.png"), :width => size, :height => size, :title => h(name)),
             {:action => 'x_show', :id => controller.send(:list_row_id, item)},
             "data-miq_sparkle_on"  => true,
             "data-miq_sparkle_off" => true,
@@ -29,16 +29,16 @@
             :remote                => true)
         - else
           %a{:href => url_for_record(item), :title => h(name)}
-            %img{:src => "/images/clearpix.gif", :width => size, :height => size}
+            %img{:src => image_path("clearpix.gif"), :width => size, :height => size}
       - else
         %a{:title => h(name)}
-          %img{:src => "/images/clearpix.gif", :width => size, :height => size}
+          %img{:src => image_path("clearpix.gif"), :width => size, :height => size}
 - else
   - width = size == 150 ? 54 : 35
   .flobj
-    %img{:src => "/images/icons/#{size}/base-single.png", :border => 0, :width => size, :height => size}
+    %img{:src => image_path("#{size}/base-single.png"), :border => 0, :width => size, :height => size}
   .flobj{:class => "e#{size}"}
-    %img{:src => "/images/icons/new/#{@listicon}.png", :width => width * 1.8, :border => 0}
+    %img{:src => image_path("100/#{@listicon}.png"), :width => width * 1.8, :border => 0}
 
   - unless typ == :listnav
     -# Listnav, no clear image needed
@@ -53,7 +53,7 @@
           - name = item.name
         - l = url_for(:controller => @parent.class.base_class.to_s.underscore, :action => @lastaction, :id => @parent.id, :show => item.id)
         %a{:href => l, :title => h(name)}
-          %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
+          %img{:src => image_path("#{size}/reflection.png"), :width => size, :height => size}
       - else
         %a{:title => h(item.name)}
-          %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
+          %img{:src => image_path("#{size}/reflection.png"), :width => size, :height => size}

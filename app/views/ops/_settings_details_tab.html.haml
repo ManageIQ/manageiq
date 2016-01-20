@@ -30,32 +30,32 @@
         - unless @edit
           %tr
             %td.narrow{:onclick => remote_function(:url => {:action => 'region_edit', :id => region.id}), :title => _("Edit this Region")}
-              %img{:src => "/images/icons/new/miq_region.png"}/
+              %img{:src => image_path('100/miq_region.png')}/
             %td{:onclick => remote_function(:url => {:action => 'region_edit', :id => region.id}), :title => _("Edit this Region")}
               = h(region.description)
               [#{h(region.region)}]
         %tr
           %td.narrow{:onclick => "miqDynatreeActivateNode('settings_tree', 'xx-sis');", :title => _("View Analysis Profiles")}
-            %img{:src => "/images/icons/new/scan_item_set.png"}>/
+            %img{:src => image_path('100/scan_item_set.png')}>/
           %td{:onclick => "miqDynatreeActivateNode('settings_tree', 'xx-sis');", :title => _("View Analysis Profiles")}
             = _("Analysis Profiles")
             (#{h(@scan_items.size)})
         %tr
           %td.narrow{:onclick => "miqDynatreeActivateNode('settings_tree', 'xx-z');", :title => _("View Zones")}
-            %img{:src => "/images/icons/new/zone.png"}>/
+            %img{:src => image_path('100/zone.png')}>/
           %td{:onclick => "miqDynatreeActivateNode('settings_tree', 'xx-z');", :title => _("View Zones")}
             = _("Zones")
             (#{h(@zones.size)})
         %tr
           %td.narrow{:onclick => "miqDynatreeActivateNode('settings_tree', 'xx-msc');", :title => _("View Schedules")}
-            %img{:src => "/images/icons/new/miq_schedule.png"}>/
+            %img{:src => image_path('100/miq_schedule.png')}>/
           %td{:onclick => "miqDynatreeActivateNode('settings_tree', 'xx-msc');", :title => _("View Schedules")}
             = _("Schedules")
             (#{h(@miq_schedules.size)})
         - if get_vmdb_config[:product][:new_ldap]
           %tr
             %td.narrow{:onclick => "miqDynatreeActivateNode('settings_tree', 'xx-l');", :title => _("View LDAP Regions")}
-              %img{:src => "/images/icons/new/ldap_region.png"}>/
+              %img{:src => image_path('100/ldap_region.png')}>/
             %td{:onclick => "miqDynatreeActivateNode('settings_tree', 'xx-l');", :title => _("View LDAP Regions")}
               = _("LDAP Regions")
               (#{h(@ldap_regions.size)})

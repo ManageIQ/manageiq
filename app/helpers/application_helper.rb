@@ -1292,7 +1292,6 @@ module ApplicationHelper
   end
 
   def listicon_image_tag(db, row)
-    img_path = "/images/icons/"
     img_attr = {:valign => "middle", :width => "20", :height => "20", :alt => nil, :border => "0"}
     if %w(Job MiqTask).include?(db)
       img_attr = {:valign => "middle", :width => "16", :height => "16", :alt => nil}
@@ -1341,7 +1340,7 @@ module ApplicationHelper
       image = db.underscore
     end
 
-    image_tag("#{img_path}new/#{image.downcase}.png", img_attr)
+    image_tag(ActionController::Base.helpers.image_path("100/#{image.downcase}.png"), img_attr)
   end
 
   def listicon_glyphicon_tag(db, row)

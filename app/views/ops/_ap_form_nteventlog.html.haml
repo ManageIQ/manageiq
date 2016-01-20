@@ -12,7 +12,7 @@
     %tbody
       - if (!params[:add] && session[:nteventlog_data].empty?) || params[:edit_entry]
         %tr#new_tr{:onclick => remote_function(:url => {:action => 'ap_ce_select', :add => 'new', :item1 => "nteventlog", :id => "#{@scan.id || "new"}"}), :title => _("Click to add a new entry")}
-          %td= image_tag("/images/toolbars/new.png", :class => "rollover small")
+          %td= image_tag(image_path('toolbars/new.png'), :class => "rollover small")
           %td= _("<New Entry>")
           %td= _("<Click on this row to create a new entry>")
           %td= _("<Click on this row to create a new entry>")
@@ -21,7 +21,7 @@
       - else
         %tr#new_tr
           %td
-            = image_submit_tag("/images/toolbars/import.png",
+            = image_submit_tag(image_path('toolbars/import.png'),
               :class     => "rollover small",
               :name      => "accept",
               :alt       => _("Add this entry"),
@@ -59,7 +59,7 @@
           - if session[:nteventlog_data][:name] == nteventlog[:name] && session[:nteventlog_data][:selected].to_i == i
             %tr{:id => "edit_tr"}
               %td
-                = image_submit_tag("/images/toolbars/import.png",
+                = image_submit_tag(image_path('toolbars/import.png'),
                   :class      => "rollover small",
                   :name       => "accept",
                   :edit_entry => 'edit_registry',
@@ -96,7 +96,7 @@
           - else
             %tr{:id => "#{i}_tr"}
               %td{:onclick => remote_function(:url => {:action => 'ap_ce_delete', :item2 => "nteventlog", :nteventlog_name => nteventlog[:name], :entry_id => i, :id => "#{@scan.id || "new"}"}), :title => _("Click to delete this entry")}
-                = image_tag("/images/toolbars/delete.png", :class => "rollover small")
+                = image_tag(image_path('toolbars/delete.png'), :class => "rollover small")
               %td{:onclick => remote_function(:url => {:action => 'ap_ce_select', :entry_id => i, :item2 => "nteventlog", :nteventlog_name => nteventlog[:name], :edit_entry => 'edit_nteventlog', :field => "name", :id => "#{@scan.id || "new"}"}), :title => _("Click to update this entry")}
                 = h(nteventlog[:name])
               %td{:onclick => remote_function(:url => {:action => 'ap_ce_select', :item2 => "nteventlog", :nteventlog_name => nteventlog[:name], :entry_id => i, :edit_entry => 'edit_nteventlog', :field => "name", :id => "#{@scan.id || "new"}"}), :title => _("Click to update this entry")}

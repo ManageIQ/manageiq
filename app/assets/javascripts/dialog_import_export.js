@@ -2,7 +2,7 @@
 
 var renderServiceDialogJson = function(rows_json, importFileUploadId) {
   var statusFormatter = function(row, cell, value, columnDef, dataContext) {
-    var status_img = "<img src=/images/icons/16/" + dataContext.status_icon + ".png >";
+    var status_img = "<img src=\"" + dataContext.status_icon + "\" />";
 
     return status_img + dataContext.status;
   };
@@ -44,7 +44,7 @@ var renderServiceDialogJson = function(rows_json, importFileUploadId) {
 
   var rowsToSelect = [];
   $.each(grid.getData().getItems(), function(index, item) {
-    if (item.status_icon === 'equal-green') {
+    if (item.status_icon.indexOf('/equal-green') > -1) {
       rowsToSelect.push(item.id);
     }
   });

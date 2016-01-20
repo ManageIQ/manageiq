@@ -24,7 +24,7 @@
                 .divider{:role => 'presentation'}
               - else
                 %a{:href => '#', :title => item[:title], 'data-click' => item[:id]}
-                  %img{:src => '/images/icons/24/' + item[:image].to_s}
+                  %img{:src => image_path("24/#{item[:image]}")}
                   = item[:text]
 
   - if @widgets_menu[:allow_reset]

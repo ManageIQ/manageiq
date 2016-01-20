@@ -208,11 +208,11 @@ module ReportController::Reports
                                 #                                       "end" => Time.now,
                                 #                                       "isDuration" => "true",
                                 "title" => tl_text,
-                                #         "icon"=>"/images/icons/16/16-event-vm_snapshot.png",
-                                "icon"  => "/images/icons/16/blue-circle.png",
-                                #         "image"=>"/images/icons/64/64-snapshot.png",
+                                #         "icon"=>"/images/16/16-event-vm_snapshot.png",
+                                "icon"  => ActionController::Base.helpers.image_path("16/blue-circle.png"),
+                                #         "image"=>"/images/64/64-snapshot.png",
                                 "color" => tl_color
-                               # "image"=>"/images/icons/64/64-vendor-#{vm.vendor.downcase}.png"
+                               # "image"=>"/images/64/64-vendor-#{vm.vendor.downcase}.png"
                                )
     event.text = tl_text
   end

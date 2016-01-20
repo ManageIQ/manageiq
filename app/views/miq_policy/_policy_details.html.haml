@@ -95,7 +95,7 @@
                         %p
                       %td{:width => "20", :valign => "middle"}
                         - t = _("Move selected Conditions into this Policy")
-                        = link_to(image_tag("/images/toolbars/right.png", :border => "0", :class  => "rollover small", :alt => t),
+                        = link_to(image_tag(image_path('toolbars/right.png'), :border => "0", :class  => "rollover small", :alt => t),
                           {:action => 'policy_edit', :button => 'move_right', :id => @policy},
                           "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
@@ -104,7 +104,7 @@
                           "data-method"          => :post,
                           :title                 => t)
                         - t = _("Remove all Conditions from this Policy")
-                        = link_to(image_tag("/images/toolbars/allleft.png", :border => "0", :class  => "rollover small", :alt => t),
+                        = link_to(image_tag(image_path('toolbars/allleft.png'), :border => "0", :class  => "rollover small", :alt => t),
                           {:action => 'policy_edit', :button => 'move_allleft', :id => @policy},
                           "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
@@ -112,7 +112,7 @@
                           "data-method"          => :post,
                           :title                 => t)
                         - t = _("Remove selected Conditions from this Policy")
-                        = link_to(image_tag("/images/toolbars/left.png", :border => "0", :class  => "rollover small", :alt => t),
+                        = link_to(image_tag(image_path('toolbars/left.png'), :border => "0", :class  => "rollover small", :alt => t),
                           {:action => 'policy_edit', :button => 'move_left', :id => @policy},
                           "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
@@ -196,7 +196,7 @@
                 %tr
                   %td.narrow{:title => _("View this Policy Event"),
                     :onclick => "miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}');"}
-                    %img{:src => "/images/icons/new/event-#{e.name}.png"}
+                    %img{:src => image_path("100/event-#{e.name}.png")}
                   %td{:title => _("View this Policy Event"),
                     :onclick => "miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}');"}
                     = h(e.description)
@@ -262,7 +262,7 @@
                   %tr{:title => _("View this Profile"),
                     :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=policy_profile")}
                     %td.narrow
-                      %img{:src => "/images/icons/new/policy_profile#{pp.active? ? '' : '_inactive'}.png"}
+                      %img{:src => image_path("100/policy_profile#{pp.active? ? '' : '_inactive'}.png")}
                     %td
                       = pp.description
   %br

@@ -13,7 +13,7 @@
               "data-method"          => :post,
               :remote                => true)
             - if @edit[:windows_image_columns][i] == @edit[:windows_image_sortcol]
-              %img{:src => "/images/icons/16/sort_#{(@edit[:windows_image_sortdir] == 'ASC') ? 'up' : 'down'}.png"}
+              %img{:src => image_path("16/sort_#{(@edit[:windows_image_sortdir] == 'ASC') ? 'up' : 'down'}.png")}
     %tbody
       - cls = @edit[:new][:windows_image_id] && @edit[:new][:windows_image_id][0].nil? ? "selected" : ""
       %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=__PXE_IMG__NONE__&id=#{id}');"}

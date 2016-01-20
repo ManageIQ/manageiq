@@ -17,7 +17,7 @@
                   "data-method"          => :post,
                   :remote                => true)
                 - if @edit[:vm_columns][i] == @edit[:vm_sortcol]
-                  %img{:src => "/images/icons/16/sort_#{@edit[:vm_sortdir] == 'ASC' ? 'up' : 'down'}.png"}
+                  %img{:src => image_path("16/sort_#{@edit[:vm_sortdir] == 'ASC' ? 'up' : 'down'}.png")}
       %tbody
         - unless [:clone_to_template, :clone_to_vm].include?(@edit[:wf].request_type)
           - cls = @edit[:new][:src_vm_id] && @edit[:new][:src_vm_id][0].nil? ? "selected" : ""

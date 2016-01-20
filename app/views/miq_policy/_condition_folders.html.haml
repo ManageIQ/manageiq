@@ -7,6 +7,6 @@
           %tr{:title => _("View Condition"),
             :onclick => "miqDynatreeActivateNode('condition_tree', 'xx-#{f.downcase}');"}
             %td.narrow
-              %img{:src => "/images/icons/new/#{f.downcase}.png"}
+              %img{:src => image_path("100/#{f.downcase}.png")}
             %td
               = _("%s Conditions") % ui_lookup(:model => f)

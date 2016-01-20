@@ -68,7 +68,7 @@
             - unless @edit[:fields_to_delete].include?(field["id"])
               %tr
                 %td
-                  = link_to(image_tag("/images/icons/16/notequal-red.png", :alt => (t = _("Click to delete this field from schema"))),
+                  = link_to(image_tag(image_path("16/notequal-red.png"), :alt => (t = _("Click to delete this field from schema"))),
                     {:action => "field_delete", :id => field['id'].to_s, :arr_id => i},
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
@@ -107,7 +107,7 @@
           - if !params[:add] && params[:add] != "new" && (session[:field_data].blank? || session[:field_data].empty?)
             %tr{:onclick => remote_function(:url => {:action => 'field_select', :add => 'new', :item => "field"})}
               %td
-                = image_tag("/images/icons/16/equal-green.png")
+                = image_tag(image_path("16/equal-green.png"))
               %td
                 = h("<#{_('New Field')}>")
               - 13.times do
@@ -119,7 +119,7 @@
 
             %tr
               %td
-                = link_to(image_tag("/images/icons/16/na.png", :alt => (t = _("Add this entry"))),
+                = link_to(image_tag(image_path("16/na.png"), :alt => (t = _("Add this entry"))),
                   {:action => "field_accept", :button => "accept"},
                   "data-miq_sparkle_on"  => true,
                   "data-miq_sparkle_off" => true,

@@ -131,7 +131,7 @@ describe ReportController do
       nodes = controller.send(:tree_add_child_nodes, 'xx-r')
       expected = [{:key     => "-#{controller.to_cid(widget.id)}",
                    :title   => "Foo",
-                   :icon    => "report_widget.png",
+                   :icon    => ActionController::Base.helpers.image_path('100/report_widget.png'),
                    :tooltip => "Foo"}]
       expect(nodes).to eq(expected)
     end

@@ -12,7 +12,7 @@
             %td.label
               = h(item[:osinfo])
             %td
-              %img{:src => "/images/icons/new/os-#{h(@record.os_image_name.downcase)}.png"}
+              %img{:src => image_path("100/os-#{h(@record.os_image_name.downcase)}.png")}
               = h(item[:description])
     %hr
   - regexosname = Regexp.new(/linux/)
@@ -61,7 +61,7 @@
             %td.label
               = h(item[:device])
             %td
-              %img{:src => "/images/icons/new/hardware-#{item[:icon].downcase}.png"}
+              %img{:src => image_path("100/hardware-#{item[:icon].downcase}.png")}
               = h(item[:description])
           - unless item[:mode].nil?
             %tr

@@ -6,12 +6,12 @@ module ApplicationController::TreeSupport
     item = "h_#{@record.name}"
     render :update do |page|
       if session[:squash_open] == false
-        page << "$('#squash_img').prop('src', '/images/toolbars/squashed-all-false.png')"
+        page << "$('#squash_img').prop('src', #{ActionController::Base.helpers.image_path('toolbars/squashed-all-false.png')})"
         page << "$('#squash_img').prop('title', 'Collapse All')"
         page << "miqDynatreeToggleExpand('#{j_str(session[:tree_name])}', true)"
         session[:squash_open] = true
       else
-        page << "$('#squash_img').prop('src', '/images/toolbars/squashed-all-true.png')"
+        page << "$('#squash_img').prop('src', #{ActionController::Base.helpers.image_path('toolbars/squashed-all-true.png')})"
         page << "$('#squash_img').prop('title', 'Expand All')"
         page << "miqDynatreeToggleExpand('#{j_str(session[:tree_name])}', false);"
         page << "miqDynatreeActivateNodeSilently('#{j_str(session[:tree_name])}', '#{item}');"
@@ -503,7 +503,7 @@ module ApplicationController::TreeSupport
           :title    => ems.name,
           :tooltip  => "#{ui_lookup(:table => "ems_infras")}: #{ems.name}",
           :addClass => "cfme-no-cursor-node",      # No cursor pointer
-          :icon     => "vendor-#{ems.image_name}.png"
+          :icon     => ActionController::Base.helpers.image_path("100/vendor-#{ems.image_name}.png")
         }
         if @vat || @rp_only
           ems_node[:hideCheckbox] = true
@@ -563,7 +563,7 @@ module ApplicationController::TreeSupport
     elsif folder.kind_of?(EmsFolder) && folder.is_datacenter
       node[:tooltip] = "Datacenter: #{folder.name}"
       node[:addClass] = "cfme-no-cursor-node"          # No cursor pointer
-      node[:icon] = "datacenter.png"
+      node[:icon] = ActionController::Base.helpers.image_path("100/datacenter.png")
       if @vat || @rp_only
         node[:hideCheckbox] = true
       else
@@ -629,12 +629,12 @@ module ApplicationController::TreeSupport
       node[:tooltip] = "Folder: #{folder.name}"
       node[:addClass] = "cfme-no-cursor-node"          # No cursor pointer
       if vat
-        node[:icon] = "blue_folder.png"
+        node[:icon] = ActionController::Base.helpers.image_path("100/blue_folder.png")
         if @edit && @edit[:new][:belongsto][node[:key]] != @edit[:current][:belongsto][node[:key]]  # Check new vs current
           node[:addClass] = "cfme-blue-bold-node"  # Show node as different
         end
       else
-        node[:icon] = "folder.png"
+        node[:icon] = ActionController::Base.helpers.image_path("100/folder.png")
         if @vat || @rp_only
           node[:hideCheckbox] = true
         else
@@ -679,7 +679,7 @@ module ApplicationController::TreeSupport
         if folder.parent_cluster || @rp_only                  # Host is under a cluster, no checkbox
           node[:hideCheckbox] = true
         end
-        node[:icon] = "host.png"
+        node[:icon] = ActionController::Base.helpers.image_path("100/host.png")
         h_kids = []
         folder.resource_pools.sort_by { |rp| rp.name.downcase }.each do |rp|
           kid_node, kid_checked = user_get_tree_node(rp, node[:key], vat)
@@ -699,7 +699,7 @@ module ApplicationController::TreeSupport
       if !@rp_only || (@rp_only && folder.resource_pools.count > 0)
         node[:tooltip] = "Cluster: #{folder.name}"
         node[:addClass] = "cfme-no-cursor-node"          # No cursor pointer
-        node[:icon] = "cluster.png"
+        node[:icon] = ActionController::Base.helpers.image_path("100/cluster.png")
         node[:hideCheckbox] = true if @vat || @rp_only
         node[:addClass] = "cfme-blue-bold-node" if @edit &&
                                                    @edit[:new][:belongsto][node[:key]] != @edit[:current][:belongsto][node[:key]]
@@ -735,7 +735,7 @@ module ApplicationController::TreeSupport
       if @edit && @edit[:new][:belongsto][node[:key]] != @edit[:current][:belongsto][node[:key]]  # Check new vs current
         node[:addClass] = "cfme-blue-bold-node"  # Show node as different
       end
-      node[:icon] = folder.vapp ? "vapp.png" : "resource_pool.png"
+      node[:icon] = ActionController::Base.helpers.image_path(folder.vapp ? "100/vapp.png" : "100/resource_pool.png")
       rp_kids = []
       folder.resource_pools.each do |rp|        # Get the resource pool nodes
         kid_node, kid_checked = user_get_tree_node(rp, node[:key])
