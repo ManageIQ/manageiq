@@ -77,7 +77,6 @@ cols:
 
 # Included tables (joined, has_one, has_many) and columns
 include:
-include:
   resource:
     columns:
     - cpu_usagemhz_rate_average_high_over_time_period
