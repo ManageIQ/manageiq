@@ -10,7 +10,6 @@ class ManageIQ::Providers::Foreman::Provider < ::Provider
           :dependent   => :destroy,
           :autosave    => true
 
-  # TODO: Does this even make sense?
   has_many :endpoints, :as => :resource, :dependent => :destroy, :autosave => true
 
   delegate :api_cached?, :ensure_api_cached, :to => :connect
