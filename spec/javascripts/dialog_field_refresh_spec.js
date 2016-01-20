@@ -106,6 +106,11 @@ describe('dialogFieldRefresh', function() {
       expect($.fn.selectpicker).toHaveBeenCalledWith('val', 'selectedValue');
     });
 
+    it('uses the correct selector', function() {
+      dialogFieldRefresh.initializeDialogSelectPicker(fieldName, fieldId, selectedValue, url);
+      expect($.fn.selectpicker.calls.mostRecent().object.selector).toEqual('#fieldName');
+    });
+
     it('sets up the select picker event', function() {
       dialogFieldRefresh.initializeDialogSelectPicker(fieldName, fieldId, selectedValue, url);
       expect(window.miqSelectPickerEvent).toHaveBeenCalledWith('fieldName', 'url');
