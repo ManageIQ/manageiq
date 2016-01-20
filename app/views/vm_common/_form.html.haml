@@ -66,45 +66,32 @@
             :size => 15,
             :style => "width: 400px",
             :id => "kids_chosen")
-      %td{:width => "20"}
-        = link_to(image_tag(image_path('toolbars/right.png'),
-            :class => "rollover small",
-            :style => "width: 28px; height: 28px",
-            :alt => (t = _("Move selected VMs to right"))),
-          {:action => 'form_field_changed',
-           :button => 'right',
-           :id     => @record.id || "new"},
-          "data-submit"         => 'main_div',
-          "data-miq_sparkle_on" => true,
-          :remote               => true,
-          "data-method"         => :post,
-          :title                => t)
-
-        = link_to(image_tag(image_path('toolbars/allright.png'),
-            :class => "rollover small",
-            :style => "width: 28px; height: 28px",
-            :alt => (t = _("Move all VMs to right"))),
-          {:action => 'form_field_changed',
-           :button => 'allright',
-           :id     => @record.id || "new"},
-          "data-submit"         => 'main_div',
-          "data-miq_sparkle_on" => true,
-          :remote               => true,
-          "data-method"         => :post,
-          :title                => t)
-
-        = link_to(image_tag(image_path('toolbars/left.png'),
-            :class => "rollover small",
-            :style => "width: 28px; height: 28px",
-            :alt   => (t = _("Move selected VMs to left"))),
-          {:action => 'form_field_changed',
-           :button => 'left',
-           :id     => @record.id || "new"},
-          "data-submit"         => 'main_div',
-          "data-miq_sparkle_on" => true,
-          :remote               => true,
-          "data-method"         => :post,
-          :title                => t)
+      %td.text-center{:width => "40"}
+        .btn-group-vertical
+          %button.btn.btn-default{:title => _("Move selected VMs to right"),
+            "data-submit"         => 'main_div',
+            "data-miq_sparkle_on" => true,
+            :remote               => true,
+            "data-method"         => :post,
+            'data-click_url' => {:url => "#{url}?button=right"}.to_json,
+            :id     => @record.id || "new"}
+            %i.fa.fa-angle-right.fa-lg
+          %button.btn.btn-default{:title => _("Move all VMs to right"),
+            "data-submit"         => 'main_div',
+            "data-miq_sparkle_on" => true,
+            :remote               => true,
+            "data-method"         => :post,
+            'data-click_url' => {:url => "#{url}?button=allright"}.to_json,
+            :id     => @record.id || "new"}
+            %i.fa.fa-angle-double-right.fa-lg
+          %button.btn.btn-default{:title => _("Move selected VMs to left"),
+            "data-submit"         => 'main_div',
+            "data-miq_sparkle_on" => true,
+            :remote               => true,
+            "data-method"         => :post,
+            'data-click_url' => {:url => "#{url}?button=left"}.to_json,
+            :id     => @record.id || "new"}
+            %i.fa.fa-angle-left.fa-lg
 
       %td{:align => "left", :valign => "top"}
         %div{:style => "overflow: auto; width: 400px; border: 1px solid #999999;"}
