@@ -8,13 +8,23 @@ ManageIQ.angularApplication.config([ '$httpProvider', '$stateProvider', '$urlRou
     .state('new', {
       url: '/repository/new',
       templateUrl: 'repository/form.html',
-      controller: 'repositoryFormController'
+      controller: 'repositoryFormController',
+      resolve: {
+        repositoryData: function (repositoryDataFactory) {
+          return repositoryDataFactory.getRepositoryData();
+        }
+      }
     });
   $stateProvider
     .state('edit', {
-      url: '/repository/edit/*id',
+      url: '/repository/edit/:repo_id',
       templateUrl: 'repository/form.html',
-      controller: 'repositoryFormController'
+      controller: 'repositoryFormController',
+      resolve: {
+        repositoryData: function (repositoryDataFactory, $stateParams) {
+          return repositoryDataFactory.getRepositoryData($stateParams.repo_id);
+        }
+      }
     });
 
   // default fall back route
@@ -22,4 +32,15 @@ ManageIQ.angularApplication.config([ '$httpProvider', '$stateProvider', '$urlRou
 
   // enable HTML5 Mode for SEO
   $locationProvider.html5Mode({enabled: true,requireBase: false});
+}]);
+
+ManageIQ.angularApplication.run(['$rootScope', 'miqService', function($root, miqService) {
+  $root.$on('$stateChangeStart', function() {
+    miqService.sparkleOn();
+  });
+
+  $root.$on('$stateChangeSuccess', function() {
+    miqService.sparkleOff();
+  });
+
 }]);

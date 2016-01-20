@@ -1,4 +1,4 @@
-ManageIQ.angular.app.controller('repositoryFormController', ['$http', '$scope', 'repositoryFormId', 'miqService', function($http, $scope, repositoryFormId, miqService) {
+ManageIQ.angularApplication.controller('repositoryFormController', ['$http', '$scope', 'repositoryFormId', 'miqService', 'repositoryData', function($http, $scope, repositoryFormId, miqService, repositoryData) {
   $scope.repoModel = { repo_name: '', repo_path: '' };
   $scope.path_type = '';
   $scope.formId = repositoryFormId;
@@ -13,16 +13,11 @@ ManageIQ.angular.app.controller('repositoryFormController', ['$http', '$scope', 
     $scope.repoModel.repo_path = "";
   } else {
     $scope.newRecord = false;
-      miqService.sparkleOn();
+    $scope.afterGet = true;
+    $scope.repoModel.repo_name = repositoryData.data.repo_name;
+    $scope.repoModel.repo_path = repositoryData.data.repo_path;
 
-      $http.get('/repository/repository_form_fields/' + repositoryFormId).success(function(data) {
-        $scope.afterGet = true;
-        $scope.repoModel.repo_name = data.repo_name;
-        $scope.repoModel.repo_path = data.repo_path;
-
-        $scope.modelCopy = angular.copy( $scope.repoModel );
-        miqService.sparkleOff();
-      });
+    $scope.modelCopy = angular.copy( $scope.repoModel );
    }
 
   $scope.$watch("repoModel.repo_name", function() {
@@ -55,6 +50,7 @@ ManageIQ.angular.app.controller('repositoryFormController', ['$http', '$scope', 
 
   $scope.resetClicked = function() {
     $scope.repoModel = angular.copy( $scope.modelCopy );
+    $scope.angularForm.$setUntouched(true);
     $scope.angularForm.$setPristine(true);
     miqService.miqFlash("warn", __("All changes have been reset"));
   };
