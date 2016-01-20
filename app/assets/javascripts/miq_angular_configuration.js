@@ -8,8 +8,13 @@ ManageIQ.angularApplication.config([ '$httpProvider', '$stateProvider', '$urlRou
     .state('new', {
       url: '/repository/new',
       templateUrl: 'repository/form.html',
-      controller: 'repositoryFormController',
-      repositoryFormId: "new"
+      controller: 'repositoryFormController'
+    });
+  $stateProvider
+    .state('edit', {
+      url: '/repository/edit/*id',
+      templateUrl: 'repository/form.html',
+      controller: 'repositoryFormController'
     });
 
   // default fall back route
