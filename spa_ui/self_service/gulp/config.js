@@ -401,6 +401,11 @@ module.exports = (function() {
     outputDir: 'client/gettext/json/',
   };
 
+  config.gettextCopy = {
+    inputs: 'client/gettext/json/*.json',
+    outputDir: build + 'gettext/json/',
+  };
+
   // task bump: Revs the package and bower files
   config.bump = {
     packages: [

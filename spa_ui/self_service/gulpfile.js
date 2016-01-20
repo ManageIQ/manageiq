@@ -46,13 +46,14 @@ gulp.task('dev-skin-images', ['dev-images'], task('images', {key: 'devSkinImages
 gulp.task('dev-imgs', task('images', {key: 'devImgs'}));
 gulp.task('gettext-extract', task('gettext-extract'));
 gulp.task('gettext-compile', task('gettext-compile'));
+gulp.task('gettext-copy', task('gettext-copy'));
 
 /**
  * Build tasks
  */
 gulp.task('inject', ['wiredep', 'sass', 'templatecache'], task('inject'));
 gulp.task('optimize', ['inject'], task('optimize'));
-gulp.task('build', ['optimize', 'images', 'imgs', 'skin-images', 'fonts'], task('build'));
+gulp.task('build', ['optimize', 'images', 'imgs', 'skin-images', 'fonts', 'gettext-copy'], task('build'));
 gulp.task('build-specs', ['templatecache'], task('buildSpecs'));
 
 /**
