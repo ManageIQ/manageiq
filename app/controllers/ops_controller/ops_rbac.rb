@@ -129,7 +129,7 @@ module OpsController::OpsRbac
       else
         AuditEvent.success(build_saved_audit_hash(old_tenant_attributes, tenant, params[:button] == "add"))
         add_flash(_("%{model} \"%{name}\" was saved") %
-                    {:model => tenant_type_title_string(params[:divisible] == "true"), :name => tenant.name})
+                    {:model => tenant_type_title_string(tenant.divisible), :name => tenant.name})
         if params[:button] == "add"
           rbac_tenants_list
           rbac_get_info(x_node)
@@ -349,9 +349,17 @@ module OpsController::OpsRbac
   def rbac_tenant_delete
     assert_privileges("rbac_tenant_delete")
     tenants = []
+    projects = []
     if !params[:id] # showing a tenants list
-      ids = find_checked_items.collect { |r| from_cid(r.split("-").last) }
-      tenants = Tenant.find_all_by_id(ids)
+      ids = find_checked_items
+      recs_to_delete = Tenant.find_all_by_id(ids)
+      recs_to_delete.each do |rec|
+        if rec.divisible
+          tenants.push(rec)
+        else
+          projects.push(rec)
+        end
+      end
       tenants.reject! do |t|
         t.parent.nil?
         add_flash(_("Default %{model} \"%{name}\" can not be deleted") % {:model => ui_lookup(:model => "Tenant"),
@@ -361,13 +369,19 @@ module OpsController::OpsRbac
       if params[:id].nil? || Tenant.find_by_id(params[:id]).nil?
         add_flash(_("%s no longer exists") % "Tenant", :error)
       else
-        tenants.push(params[:id])
+        if Tenant.find_by_id(params[:id]).divisible
+          tenants.push(params[:id])
+        else
+          projects.push(params[:id])
+        end
       end
       parent_id = Tenant.find_by_id(params[:id]).parent.id
       self.x_node = "tn-#{to_cid(parent_id)}"
     end
 
+    process_tenants(projects, "destroy", 'Project') unless projects.empty?
     process_tenants(tenants, "destroy") unless tenants.empty?
+
     get_node_info(x_node)
     replace_right_cell(x_node, [:rbac])
   end
@@ -845,8 +859,9 @@ module OpsController::OpsRbac
     process_elements(roles, MiqUserRole, task)
   end
 
-  def process_tenants(tenants, task)
-    process_elements(tenants, Tenant, task, "Tenant", "name")
+  def process_tenants(tenants, task, display_model = 'Tenant')
+    flash_opts = {:display_desc => false, :display_model => display_model}
+    process_elements(tenants, Tenant, task, "Tenant", "name", flash_opts)
   end
 
   # Build the main Access Control tree

@@ -942,7 +942,7 @@ module ApplicationController::CiProcessing
     end
   end
 
-  def process_elements(elements, klass, task, display_name = nil, order_field = nil)
+  def process_elements(elements, klass, task, display_name = nil, order_field = nil, flash_opts = {})
     ['name', 'description', 'title'].each { |key| order_field ||= key if klass.column_names.include?(key) }
 
     klass.where(:id => elements).order(order_field == "ems_id" ? order_field : "lower(#{order_field})").each do |elem|
@@ -957,18 +957,19 @@ module ApplicationController::CiProcessing
                  :userid       => session[:userid]}
       end
 
-      model_name = ui_lookup(:model => klass.name)  # Lookup friendly model name in dictionary
+      model_name = flash_opts[:display_model] || ui_lookup(:model => klass.name)  # Lookup friendly model name in dictionary
+      msg_name = flash_opts[:display_desc] ? description : name
       begin
         elem.send(task.to_sym) if elem.respond_to?(task)    # Run the task
       rescue => err
-        add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => model_name, :name => description, :task => (display_name || task)} << err.message,
+        add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => model_name, :name => msg_name, :task => (display_name || task)} << err.message,
                   :error)
       else
         if task == "destroy"
           AuditEvent.success(audit)
-          add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => model_name, :name => description})
+          add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => model_name, :name => msg_name})
         else
-          add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model => model_name, :name => description, :task => (display_name || task)})
+          add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model => model_name, :name => msg_name, :task => (display_name || task)})
         end
       end
     end
