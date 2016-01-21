@@ -1151,7 +1151,12 @@ class ApplicationController < ActionController::Base
   # Return the icon classname for the list view icon of a db,id pair
   # this always supersedes listicon_image if not nil
   def listicon_icon(item)
-    nil
+    case item
+    when ExtManagementSystem
+      item.decorate.fonticon
+    else
+      nil
+    end
   end
 
   # Return the image name for the list view icon of a db,id pair
