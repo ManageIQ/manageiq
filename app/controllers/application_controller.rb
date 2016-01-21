@@ -1151,38 +1151,22 @@ class ApplicationController < ActionController::Base
   # Return the icon classname for the list view icon of a db,id pair
   # this always supersedes listicon_image if not nil
   def listicon_icon(item)
-    case item
-    when ExtManagementSystem
-      item.decorate.fonticon
-    else
-      nil
-    end
+    item.decorate.try(:fonticon)
   end
 
   # Return the image name for the list view icon of a db,id pair
   def listicon_image(item, view)
     default = "100/#{(@listicon || view.db).underscore}.png"
+
     image = case item
-            when ExtManagementSystem   then "100/vendor-#{item.image_name}.png"
-            when Filesystem            then "ico/win/#{item.image_name.downcase}.ico"
-            when Host                  then "100/vendor-#{item.vmm_vendor.downcase}.png"
-            when MiqEventDefinition    then "100/event-#{item.name.downcase}.png"
+            when EventLog, OsProcess
+              "100/#{@listicon.downcase}.png"
+            when Storage
+              "100/piecharts/datastore/#{calculate_pct_img(item.v_free_space_percent_of_total)}.png"
             when MiqRequest
-              case item.request_status.to_s.downcase
-              when "ok"    then "100/checkmark.png"
-              when "error" then "100/x.png"
-              else              "100/#{@listicon.downcase}.png"
-              end
-            when RegistryItem          then "100/#{item.image_name.downcase}.png"
-            when ResourcePool          then "100/#{item.vapp ? "vapp" : "resource_pool"}.png"
-            when VmOrTemplate          then "100/vendor-#{item.vendor.downcase}.png"
-            when ServiceResource       then "100/#{item.resource_type.to_s == "VmOrTemplate" ? "vm" : "service_template"}.png"
-            when Storage               then "100/piecharts/datastore/#{calculate_pct_img(item.v_free_space_percent_of_total)}.png"
-            when OsProcess, EventLog   then "100/#{@listicon.downcase}.png"
-            when Service, ServiceTemplate
-              if item.try(:picture)
-                "/pictures/#{item.picture.basename}"
-              end
+              item.decorate.listicon_image || "100/#{@listicon.downcase}.png"
+            else
+              item.decorate.try(:listicon_image)
             end
 
     list_row_image(image || default, item)

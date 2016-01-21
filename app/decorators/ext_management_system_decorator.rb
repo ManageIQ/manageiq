@@ -4,4 +4,8 @@ class ExtManagementSystemDecorator < Draper::Decorator
   def fonticon
     nil
   end
+
+  def listicon_image
+    "100/vendor-#{image_name}.png"
+  end
 end
