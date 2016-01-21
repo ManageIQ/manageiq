@@ -366,7 +366,7 @@ class MiqAeCustomizationController < ApplicationController
       end
     end
 
-    presenter[:set_visible_elements][:toolbar] = h_tb.present? || c_tb.present?
+    presenter.set_visibility(h_tb.present? || c_tb.present?, :toolbar)
     presenter[:reload_toolbars][:history] = h_tb
     presenter[:reload_toolbars][:center]  = c_tb
   end

@@ -797,12 +797,12 @@ class ProviderForemanController < ApplicationController
     presenter[:reload_toolbars][:center]  = c_tb
     presenter[:reload_toolbars][:view]    = v_tb
 
-    presenter[:set_visible_elements][:toolbar] = h_tb.present? || c_tb.present? || v_tb.present?
+    presenter.set_visibility(h_tb.present? || c_tb.present? || v_tb.present?, :toolbar)
 
     presenter[:record_id] = @record ? @record.id : nil
 
     # Hide/show searchbox depending on if a list is showing
-    presenter[:set_visible_elements][:adv_searchbox_div] = display_adv_searchbox
+    presenter.set_visibility(display_adv_searchbox, :adv_searchbox_div)
 
     presenter.hide(:blocker_div) unless @edit && @edit[:adv_search_open]
     presenter.hide(:quicksearchbox)

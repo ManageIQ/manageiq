@@ -370,7 +370,7 @@ class MiqAeClassController < ApplicationController
     presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit
 
     if @record.kind_of?(MiqAeMethod) && !@in_a_form
-      presenter[:set_visible_elements][:params_div] = !@record.inputs.blank?
+      presenter.set_visibility(!@record.inputs.blank?, :params_div)
     end
 
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'

@@ -423,7 +423,7 @@ class ServiceController < ApplicationController
     presenter[:reload_toolbars][:view]    = v_tb
     presenter[:reload_toolbars][:custom]  = cb_tb
 
-    presenter[:set_visible_elements][:toolbar] = h_tb.present? || c_tb.present? || !v_tb.present?
+    presenter.set_visibility(h_tb.present? || c_tb.present? || !v_tb.present?, :toolbar)
 
     presenter[:record_id] = determine_record_id_for_presenter
 

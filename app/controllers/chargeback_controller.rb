@@ -779,7 +779,7 @@ class ChargebackController < ApplicationController
       if c_tb.present?
         presenter[:reload_toolbars][:center] = c_tb
       end
-      presenter[:set_visible_elements][:toolbar] = c_tb.present?
+      presenter.set_visibility(c_tb.present?, :toolbar)
       presenter[:update_partials][:main_div]   = r[:partial => 'rates_tabs']
       presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols']
     when :cb_assignments_tree

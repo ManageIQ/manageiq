@@ -534,7 +534,7 @@ class OpsController < ApplicationController
       # setting changed here to enable/disable Apply button
       @changed = @sb[:good] && @sb[:good] > 0 ? true : false
     end
-    presenter[:set_visible_elements][:buttons_on] = @changed if @in_a_form
+    presenter.set_visibility(@changed, :buttons_on) if @in_a_form
   end
 
   def settings_replace_right_cell(nodetype, presenter, r)
@@ -715,8 +715,7 @@ class OpsController < ApplicationController
     end
     # Rebuild the toolbars
     presenter[:reload_toolbars][:center] = c_tb
-    presenter[:set_visible_elements][:toolbar] = c_tb.present?
-    presenter.hide(:toolbar) if @sb[:center_tb_filename] == "blank_view_tb"
+    presenter.set_visibility(c_tb.present? && @sb[:center_tb_filename] != "blank_view_tb", :toolbar)
     presenter[:record_id] = determine_record_id_for_presenter
   end
 

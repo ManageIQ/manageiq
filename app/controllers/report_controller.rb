@@ -819,8 +819,7 @@ class ReportController < ApplicationController
         end
         presenter[:update_partials][:main_div] = r[:partial => partial]
         presenter[:element_updates][:menu1_legend] = {:legend => fieldset_title}
-        presenter.show(:menu_div1).hide(:menu_div2).show(:treeStatus)
-        presenter[:set_visible_elements][:flash_msg_div_menu_list] = "hide"
+        presenter.show(:menu_div1, :treeStatus).hide(:menu_div2, :flash_msg_div_menu_list)
         presenter[:element_updates][:folder_top]      = {:title => img_title_top}
         presenter[:element_updates][:folder_up]       = {:title => img_title_up}
         presenter[:element_updates][:folder_down]     = {:title => img_title_down}
@@ -917,7 +916,7 @@ class ReportController < ApplicationController
     if @sb[:active_tab] == 'report_info' && x_node.split('-').length == 5 && !@in_a_form
       presenter.hide(:paging_div)
     end
-    presenter[:set_visible_elements][:toolbar] = !@in_a_form
+    presenter.set_visibility(!@in_a_form, :toolbar)
 
     presenter[:reload_toolbars][:history] = h_tb
     presenter[:reload_toolbars][:center]  = c_tb

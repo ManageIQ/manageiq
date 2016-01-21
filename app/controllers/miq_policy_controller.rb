@@ -726,7 +726,7 @@ class MiqPolicyController < ApplicationController
     presenter[:replace_partials][:adv_searchbox_div] = r[:partial => 'layouts/x_adv_searchbox', :locals => {:nameonly => true}]
 
     # Hide/show searchbox depending on if a list is showing
-    presenter[:set_visible_elements][:adv_searchbox_div] = @show_adv_search
+    presenter.set_visibility(@show_adv_search, :adv_searchbox_div)
 
     presenter[:record_id] = @record.try(:id)
 

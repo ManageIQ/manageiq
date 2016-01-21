@@ -59,7 +59,7 @@ class ExplorerPresenter
     ).update(options)
   end
 
-  def set_visibility(value, elements)
+  def set_visibility(value, *elements)
     elements.each { |el| @options[:set_visible_elements][el] = value }
     self
   end
