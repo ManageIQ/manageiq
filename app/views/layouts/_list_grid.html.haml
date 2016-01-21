@@ -73,5 +73,8 @@
                                       :alt     => cell[:title]}
                 = cell[:text]
             - else
-              = image_tag(cell[:image], :alt => cell[:title], :title => cell[:title]) if cell[:image]
+              - if cell[:icon]
+                %i{:class => cell[:icon], :title => cell[:title]}
+              - elsif cell[:image]
+                = image_tag(image_path(cell[:image]), :alt => cell[:title], :title => cell[:title])
               = cell[:text]
