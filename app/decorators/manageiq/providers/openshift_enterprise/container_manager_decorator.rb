@@ -2,6 +2,6 @@ class ManageIQ::Providers::OpenshiftEnterprise::ContainerManagerDecorator < Drap
   delegate_all
 
   def fonticon
-    "pficon-openshift".freeze
+    "pficon pficon-openshift fa-lg".freeze
   end
 end
