@@ -105,18 +105,8 @@ class MiqRegion < ApplicationRecord
   cache_with_timeout(:my_region) { find_by(:region => my_region_number) }
 
   def self.seed
-    # Get the region by looking at an existing MiqDatabase instance's id
-    # (ie, 2000000000001 is region 2) and sync this to the file
-    my_region_id = my_region_number
-    db_region_id = MiqDatabase.first.try(:region_id)
-    if db_region_id && db_region_id != my_region_id
-      raise Exception,
-            _("Region [%{region_id}] does not match the database's region [%{db_id}]") % {:region_id => my_region_id,
-                                                                                          :db_id     => db_region_id}
-    end
-
-    create_with(:description => "Region #{my_region_id}").find_or_create_by!(:region => my_region_id) do
-      _log.info("Creating Region [#{my_region_id}]")
+    create_with(:description => "Region #{my_region_number}").find_or_create_by!(:region => my_region_number) do
+      _log.info("Creating Region [#{my_region_number}]")
     end
   end
 

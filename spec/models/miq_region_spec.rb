@@ -63,12 +63,6 @@ describe MiqRegion do
       MiqRegion.seed
       expect(MiqRegion.first.region).to eq(@region_number)
     end
-
-    it "raises Exception if db region_id doesn't match my_region_number" do
-      @db = FactoryGirl.create(:miq_database)
-      allow(MiqRegion).to receive_messages(:my_region_number => @region_number + 1)
-      expect { MiqRegion.seed }.to raise_error(Exception)
-    end
   end
 
   describe ".replication_type" do
