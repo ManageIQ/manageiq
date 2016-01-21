@@ -11,6 +11,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
       allow(@task).to receive_messages(:dest_cluster => FactoryGirl.create(:ems_cluster, :ext_management_system => ems))
     end
 
+    include_examples "common rhev state machine methods"
+
     it "#create_destination" do
       expect(@task).to receive(:determine_placement)
 
@@ -88,16 +90,6 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
 
         @task.autostart_destination
       end
-    end
-
-    it "#customize_destination" do
-      allow(@task).to receive(:get_provider_destination).and_return(nil)
-      allow(@task).to receive(:update_and_notify_parent)
-
-      expect(@task).to receive(:configure_container)
-      expect(@task).to receive(:configure_destination)
-
-      @task.customize_destination
     end
 
     it "#configure_destination" do

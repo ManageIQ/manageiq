@@ -9,14 +9,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionViaIso do
       @task = FactoryGirl.create(:miq_provision_redhat_via_iso, :source => template, :destination => vm, :state => 'pending', :status => 'Ok', :options => options)
     end
 
-    it "#customize_destination" do
-      allow(@task).to receive(:get_provider_destination).and_return(nil)
-      allow(@task).to receive(:update_and_notify_parent)
-
-      expect(@task).to receive(:configure_container)
-      expect(@task).to receive(:configure_destination)
-      @task.customize_destination
-    end
+    include_examples "common rhev state machine methods"
 
     it "#configure_destination" do
       expect(@task).to receive(:attach_floppy_payload)
