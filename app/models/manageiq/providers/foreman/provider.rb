@@ -12,6 +12,12 @@ class ManageIQ::Providers::Foreman::Provider < ::Provider
 
   has_many :endpoints, :as => :resource, :dependent => :destroy, :autosave => true
 
+  delegate :url,
+           :url=,
+           :to => :default_endpoint
+
+  virtual_column :url, :type => :string, :uses => :endpoints
+
   delegate :api_cached?, :ensure_api_cached, :to => :connect
 
   before_validation :ensure_managers
