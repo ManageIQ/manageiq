@@ -1141,6 +1141,7 @@ class ApplicationController < ActionController::Base
              klass.find(id)    # Read the record from the db
            end
 
+    default = "100/#{(@listicon || view.db).underscore}.png"
     image = case item
             when ExtManagementSystem   then "100/vendor-#{item.image_name}.png"
             when Filesystem            then "ico/win/#{item.image_name.downcase}.ico"
@@ -1163,7 +1164,8 @@ class ApplicationController < ActionController::Base
                 "/pictures/#{item.picture.basename}"
               end
             end
-    list_row_image("100/", image, (@listicon || view.db).underscore, item)
+
+    list_row_image(image || default, item)
   end
 
   def get_host_for_vm(vm)
@@ -2574,8 +2576,8 @@ class ApplicationController < ActionController::Base
     to_cid(row['id'])
   end
 
-  def list_row_image(image_path, image, model_image, _item)
-    ActionController::Base.helpers.image_path(image || "#{image_path}#{model_image}.png")
+  def list_row_image(image, _item)
+    image
   end
 
   def render_flash_not_applicable_to_model(type, model_type = "items")

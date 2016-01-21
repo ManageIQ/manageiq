@@ -883,9 +883,10 @@ class ProviderForemanController < ApplicationController
     end
   end
 
-  def list_row_image(image_path, image, model_image, item)
-    if item.name == _("Unassigned Profiles Group")
-      image_path ? "#{image_path}folder.png" : "folder"
+  def list_row_image(_image, item = nil)
+    # Unassigned Profiles Group
+    if item.kind_of?(ConfigurationProfile) && empty_configuration_profile_record?(item)
+      'folder'
     else
       super
     end
