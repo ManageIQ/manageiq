@@ -42,10 +42,10 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
 
      if ($scope.checkboxModel.value) {
        vertices.selectAll("text.attached-label")
-         .style("display", "block");
+         .classed("visible", true);
      } else {
        vertices.selectAll("text.attached-label")
-         .style("display", "none");
+         .classed("visible", false);
      }
   };
 
@@ -126,13 +126,14 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
       .text(function(d) {
         return d.item.name;
       })
-      .attr('class', 'attached-label')
-      .style("display", function(d) {
-        if ($scope.checkboxModel.value) {
-          return "block";
-        } else {
-          return "none";
-        }
+      .attr('class', function() {
+         var class_name = "attached-label";
+         if ($scope.checkboxModel.value) {
+           return class_name + ' visible';
+         }
+         else {
+           return class_name;
+         }
       });
 
     added.selectAll("title").text(function(d) {

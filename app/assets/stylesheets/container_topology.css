@@ -134,8 +134,13 @@ kubernetes-topology-icon svg {
 }
 
 .kube-topology g text.attached-label {
+    display: none;
+}
+
+.kube-topology g text.attached-label.visible {
     font-size: 12px;
     fill: black;
+    display: block;
 }
 
 .kube-topology g text.icon {
