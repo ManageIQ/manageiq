@@ -99,6 +99,7 @@ RSpec.describe "categories API" do
       end.to change { category.reload.description }.to("New description")
 
       expect_request_success
+      expect_result_to_have_keys(%w(id description name))
     end
 
     it "can delete a category through POST" do
