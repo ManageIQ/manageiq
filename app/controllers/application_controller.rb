@@ -1053,12 +1053,15 @@ class ApplicationController < ActionController::Base
 
     root = {:head => [], :rows => []}
 
+    has_checkbox = !@embedded && !@no_checkboxes
+    has_listicon = !%w(miqaeclass miqaeinstance).include?(view.db.downcase)  # do not add listicon for AE class show_list
+
     # Show checkbox or placeholder column
-    unless @embedded || @no_checkboxes
+    if has_checkbox
       root[:head] << {:is_narrow => true}
     end
 
-    unless %w(miqaeclass miqaeinstance).include?(view.db.downcase)  # do not add listicon for AE class show_list
+    if has_listicon
       # Icon column
       root[:head] << {:is_narrow => true}
     end
@@ -1082,13 +1085,12 @@ class ApplicationController < ActionController::Base
       new_row = {:id => list_row_id(row), :cells => []}
       root[:rows] << new_row
 
-      unless @embedded || @no_checkboxes
+      if has_checkbox
         new_row[:cells] << {:is_checkbox => true}
       end
 
       # Generate html for the list icon
-      # do not add listicon for AE class show_list
-      unless %w(miqaeclass miqaeinstance).include?(view.db.downcase)
+      if has_listicon
         item = listicon_item(view, row['id'])
 
         new_row[:cells] << {:title => 'View this item',
