@@ -49,8 +49,7 @@ module ApplianceConsole
     end
 
     def self.pg_status
-      system("service #{PostgresAdmin.service_name} status > /dev/null 2>&1")
-      $?.exitstatus == 0 ? "running" : "not running"
+      LinuxAdmin::Service.new(PostgresAdmin.service_name).running? ? "running" : "not running"
     end
 
     def self.test_network
