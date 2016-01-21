@@ -25,10 +25,6 @@ module ContainerImageHelper
     # Items
     #
 
-    def textual_name
-      @record.name
-    end
-
     def textual_tag
       @record.tag
     end

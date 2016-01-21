@@ -21,18 +21,6 @@ module ContainerReplicatorHelper::TextualSummary
   # Items
   #
 
-  def textual_name
-    @record.name
-  end
-
-  def textual_creation_timestamp
-    format_timezone(@record.creation_timestamp)
-  end
-
-  def textual_resource_version
-    @record.resource_version
-  end
-
   def textual_replicas
     {:label => "Requested pods", :value => @record.replicas}
   end

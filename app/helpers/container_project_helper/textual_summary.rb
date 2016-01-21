@@ -66,19 +66,7 @@ module ContainerProjectHelper::TextualSummary
   # Items
   #
 
-  def textual_name
-    @record.name
-  end
-
   def textual_display_name
     @record.display_name
-  end
-
-  def textual_creation_timestamp
-    format_timezone(@record.creation_timestamp)
-  end
-
-  def textual_resource_version
-    @record.resource_version
   end
 end

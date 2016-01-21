@@ -22,10 +22,6 @@ module ContainerHelper::TextualSummary
   # Items
   #
 
-  def textual_name
-    @record.name
-  end
-
   def textual_state
     @record.state
   end
