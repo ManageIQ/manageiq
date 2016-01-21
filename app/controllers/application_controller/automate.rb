@@ -164,7 +164,7 @@ module ApplicationController::Automate
     state_attrs = {'ae_state_retries' => ws.root['ae_state_retries'],
                    'ae_state'         => ws.root['ae_state']}
     state_attrs['ae_state_data'] = ws.persist_state_hash.to_yaml unless ws.persist_state_hash.empty?
-    state_attrs['ae_state_previous'] = ws.current_state_info unless ws.current_state_info.empty?
+    state_attrs['ae_state_previous'] = ws.current_state_info.to_yaml unless ws.current_state_info.empty?
     state_attrs
   end
 
