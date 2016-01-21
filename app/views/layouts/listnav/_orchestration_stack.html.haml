@@ -24,57 +24,35 @@
             = link_to("#{ui_lookup(:table => 'orchestration_template')}: #{@record.orchestration_template.name}", "#")
 
         - if role_allows(:feature => "vm_show_list")
-          - if @record.number_of(:vms) == 0
-            %li.disabled
-              = link_to(_("Instances (%s)") % @record.number_of(:vms), "#")
-          - else
-            %li
-              = link_to(_("Instances (%s)") % @record.number_of(:vms),
-                {:action => 'show', :id => @record, :display => 'instances'},
-                :title => _("Show all Instances"))
+          = li_link(:count => @record.number_of(:vms),
+            :text          => _("Instances"),
+            :record_id     => @record.id,
+            :display       => 'instances',
+            :title         => _("Show all Instances"))
 
         - if role_allows(:feature => "security_group_show_list")
-          - if @record.number_of(:security_groups) == 0
-            %li.disabled
-              = link_to(_("Security Groups (%s)") % @record.number_of(:security_groups), "#")
-          - else
-            %li
-              = link_to(_("Security Groups (%s)") % @record.number_of(:security_groups),
-                {:action => 'show', :id => @record, :display => 'security_groups'},
-                :title => _("Show all Security Groups"))
-
-        - if @record.number_of(:cloud_networks) == 0
-          %li.disabled
-            = link_to(_("Cloud Networks (%s)") % @record.number_of(:cloud_networks), "#")
-        - else
-          %li
-            = link_to(_("Cloud Networks (%s)") % @record.number_of(:cloud_networks),
-              {:action => 'cloud_networks', :id => @record},
-              :title => _("Show all Cloud Networks"))
-
-        - if @record.number_of(:parameters) == 0
-          %li.disabled
-            = link_to(_("Parameters (%s)") % @record.number_of(:parameters), "#")
-        - else
-          %li
-            = link_to(_("Parameters (%s)") % @record.number_of(:parameters),
-              {:action => 'parameters', :id => @record},
-              :title => _("Show all Parameters"))
-
-        - if @record.number_of(:outputs) == 0
-          %li.disabled
-            = link_to(_("Outputs (%s)") % @record.number_of(:outputs), "#")
-        - else
-          %li
-            = link_to(_("Outputs (%s)") % @record.number_of(:outputs),
-              {:action => 'outputs', :id => @record},
-              :title => _("Show all Outputs"))
-
-        - if @record.number_of(:resources) == 0
-          %li.disabled
-            = link_to(_("Resources (%s)") % @record.number_of(:resources), "#")
-        - else
-          %li
-            = link_to_with_icon(_("Resources (%s)") % @record.number_of(:resources),
-              {:action => 'resources', :id => @record},
-              :title => _("Show all Resources"))
+          = li_link(:count => @record.number_of(:security_groups),
+            :text          => _("Security Groups"),
+            :record_id     => @record.id,
+            :display       => 'security_groups',
+            :title         => _("Show all Security Groups"))
+        = li_link(:count => @record.number_of(:cloud_networks),
+          :text          => _("Cloud Networks"),
+          :action        => "cloud_networks",
+          :record_id     => @record.id,
+          :title         => _("Show all Cloud Networks"))
+        = li_link(:count => @record.number_of(:parameters),
+          :text          => _("Parameters"),
+          :action        => 'parameters',
+          :record_id     => @record.id,
+          :title         => _("Show all Parameters"))
+        = li_link(:count => @record.number_of(:outputs),
+          :text          => _("Outputs"),
+          :action        => 'outputs',
+          :record_id     => @record.id,
+          :title         => _("Show all Outputs"))
+        = li_link(:count => @record.number_of(:resources),
+          :text          => _("Resources"),
+          :action        => 'resources',
+          :record_id     => @record.id,
+          :title         => _("Show all Resources"))

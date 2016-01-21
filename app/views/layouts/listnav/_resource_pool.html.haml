@@ -14,51 +14,39 @@
     = miq_accordion_panel(_("Relationships"), false, "resource_pool_rel") do
       %ul.nav.nav-pills.nav-stacked
         - if role_allows(:feature => "ems_cluster_show")
-          - if @record.parent_cluster.nil?
-            %li.disabled
-              = link_to(_("Parent %s: None") % title_for_cluster, "#")
-          - else
-            %li
-              = link_to(_("Parent %s: %s") % [title_for_cluster, @record.parent_cluster.name],
-                {:controller => 'ems_cluster', :action => 'show', :id => @record.parent_cluster.id.to_s},
-                :title => _('Show VMs'))
+          = li_link(:if => !@record.parent_cluster.nil?,
+            :text       => _("Parent %{title}: %{name}") % {:title => title_for_cluster,
+              :name       => @record.parent_cluster.name},
+            :controller => 'ems_cluster',
+            :record_id  => @record.parent_cluster.id,
+            :title      => _('Show VMs'))
 
         - if role_allows(:feature => "host_show")
-          - if @record.parent_host.nil?
-            %li.disabled
-              = link_to(_("Parent %s: None") % host_title, "#")
-          - else
-            %li
-              = link_to(_("Parent %s: %s") % [host_title, @record.parent_host.name],
-                {:controller => 'host', :action => 'show', :id => @record.parent_host.id.to_s},
-                :title => _('Show Parent %s') % host_title)
+          - host = @record.parent_host
+          = li_link(:if => !@record.parent_host.nil?,
+            :text       => _("Parent %{title}: %{name}") % {:title => host_title,
+              :name       => (host.name if host)},
+            :controller => 'host',
+            :record_id  => (host.id if host),
+            :title      => _('Show Parent %{host}') % {:host => host_title})
 
         - if role_allows(:feature => "vm_show_list")
-          - if @record.v_direct_vms == 0
-            %li.disabled
-              = link_to(_("Direct VMs: 0"), "#")
-          - else
-            %li
-              = link_to(_("Direct VMs: %s") % @record.v_direct_vms,
-                {:action => 'show', :display => "vms", :id => @record.id.to_s},
-                :title => _('Show VMs in this Resource Pool, but not in Resource Pools below'))
+          = li_link(:count => @record.v_direct_vms,
+            :text          => _("Direct VMs"),
+            :display       => "vms",
+            :record_id     => @record.id,
+            :title         => _('Show VMs in this Resource Pool, but not in Resource Pools below'))
 
         - if role_allows(:feature => "vm_show_list")
-          - if @record.total_vms == 0
-            %li.disabled
-              = link_to(_("All VMs: 0"), "#")
-          - else
-            %li
-              = link_to(_("All VMs: %s") % @record.total_vms,
-                {:action => 'show', :display => "all_vms", :id => @record.id.to_s},
-                :title => _('Show all VMs in this Resource Pool'))
+          = li_link(:count => @record.total_vms,
+            :text          => _("All VMs"),
+            :display       => "all_vms",
+            :record_id     => @record.id,
+            :title         => _('Show all VMs in this Resource Pool'))
 
         - if role_allows(:feature => "_show_list")
-          - if @record.v_total_vms == 0
-            %li.disabled
-              = link_to(_("Total VMs: 0"), "#")
-          - else
-            %li
-              = link_to(_("All VMs (Tree View): %s") % @record.v_total_vms,
-                {:action => 'show', :display => "descendant_vms", :id => @record.id.to_s},
-                :title => _('Show tree of all VMs in this Resource Pool'))
+          = li_link(:count => @record.v_total_vms,
+            :text          => _("All VMs (Tree View)"),
+            :display       => "descendant_vms",
+            :record_id     => @record.id,
+            :title         => _('Show tree of all VMs in this Resource Pool'))

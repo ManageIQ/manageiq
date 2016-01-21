@@ -16,31 +16,20 @@
               ems_cloud_path(@record.ext_management_system.id),
               :title => _("Show this Cloud Tenant's parent %s") % ui_lookup(:table => "ems_cloud"))
         - if role_allows(:feature => "security_group_show_list")
-          - if @record.number_of(:security_groups) == 0
-            %li.disabled
-              = link_to(_("Security Groups (%s)") % @record.number_of(:security_groups), "#")
-          - else
-            %li
-              = link_to(_("Security Groups (%s)") % @record.number_of(:security_groups),
-                :action  => 'show',
-                :id      => @record,
-                :display => 'security_groups')
-
+          = li_link(:count => @record.number_of(:security_groups),
+            :text          => _("Security Groups"),
+            :record_id     => @record.id,
+            :display       => 'security_groups',
+            :title         => _("Show all Security Groups"))
         - if role_allows(:feature => "vm_show_list")
-          - if @record.number_of(:vms) == 0
-            %li.disabled
-              = link_to(_('Instances (%s)') % @record.number_of(:vms), "#")
-          - else
-            %li
-              = link_to(_("Instances (%s)") % @record.number_of(:vms),
-                {:action => 'show', :id => @record, :display => 'instances'},
-                :title => _("Show all Instances"))
+          = li_link(:count => @record.number_of(:vms),
+            :text          => _("Instances"),
+            :record_id     => @record.id,
+            :display       => 'instances',
+            :title         => _("Show all Instances"))
         - if role_allows(:feature => "miq_template_show_list")
-          - if @record.number_of(:miq_templates) == 0
-            %li.disabled
-              = link_to(_('Images (%s)') % @record.number_of(:miq_templates), "#")
-          - else
-            %li
-              = link_to_with_icon(_("Images (%s)") % @record.number_of(:miq_templates),
-                {:action => 'show', :id => @record, :display => 'images'},
-                :title => _("Show all Images"))
+          = li_link(:count => @record.number_of(:miq_templates),
+            :text          => _("Images"),
+            :record_id     => @record.id,
+            :display       => 'images',
+            :title         => _("Show all Images"))

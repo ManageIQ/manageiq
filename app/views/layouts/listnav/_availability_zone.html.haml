@@ -20,21 +20,13 @@
               ems_cloud_path(@record.ext_management_system.id),
               :title => _("Show this Availability Zone's parent %s") % ui_lookup(:table => "ems_cloud"))
         - if role_allows(:feature => "vm_show_list")
-          - if @record.number_of(:vms) == 0
-            %li.disabled
-              = link_to(_("Instances (%s)") % @record.number_of(:vms), "#")
-          - else
-            %li
-              = link_to(_("Instances (%s)") % @record.number_of(:vms),
-                {:action => 'show', :id => @record, :display => 'instances'},
-                :title => _("Show all Instances"))
+          = li_link(:count => @record.number_of(:vms),
+            :text          => _("Instances"),
+            :record        => @record,
+            :display       => 'instances',
+            :title         => _("Show all Instances"))
         - if role_allows(:feature => "cloud_volume_show_list")
-          - label = ui_lookup(:tables => 'cloud_volume')
-          - if @record.number_of(:vms) == 0
-            %li.disabled
-              = link_to(_("#{label} (%s)") % @record.number_of(:cloud_volumes), "#")
-          - else
-            %li
-              = link_to(_("#{label} (%s)") % @record.number_of(:vms),
-                {:action => 'show', :id => @record, :display => 'cloud_volumes'},
-                :title => _("Show all #{label}"))
+          = li_link(:count => @record.number_of(:cloud_volumes),
+            :tables        => 'cloud_volume',
+            :record        => @record,
+            :display       => 'cloud_volumes',)

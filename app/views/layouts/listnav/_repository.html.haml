@@ -13,20 +13,14 @@
     = miq_accordion_panel(_("Relationships"), false, "repo_rel") do
       %ul.nav.nav-pills.nav-stacked
         - if role_allows(:feature => "vm_show_list")
-          - if @record.number_of(:vms) == 0
-            %li.disabled
-              = link_to(_("Discovered VMs (%s)") % @record.number_of(:vms), "#")
-          - else
-            %li
-              = link_to(_("Discovered VMs (%s)") % @record.number_of(:vms),
-                {:action => 'show', :id => @record, :display => 'vms'},
-                :title => _("Show all discovered VMs"))
+          = li_link(:count => @record.number_of(:vms),
+            :text          => _("Discovered VMs"),
+            :record_id     => @record.id,
+            :display       => 'vms',
+            :title         => _("Show all discovered VMs"))
         - if role_allows(:feature => "miq_template_show_list")
-          - if @record.number_of(:miq_templates) == 0
-            %li.disabled
-              = link_to(_("Templates (%s)") % @record.number_of(:miq_templates), "#")
-          - else
-            %li
-              = link_to_with_icon(_("Templates (%s)") % @record.number_of(:miq_templates),
-                {:action => 'show', :id => @record, :display => 'miq_templates'},
-                :title => _("Show all discovered Templates"))
+          = li_link(:count => @record.number_of(:miq_templates),
+            :text          => _("Templates"),
+            :record_id     => @record.id,
+            :display       => 'miq_templates',
+            :title         => _("Show all discovered Templates"))

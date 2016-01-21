@@ -875,16 +875,6 @@ module ApplicationHelper
     end
   end
 
-  # Same as li_link_if_condition for cases where the condition is a zero equality
-  # test.
-  #
-  # args (same as link_if_condition) plus:
-  #   :count    --- fixnum  - the number to test and present
-  #
-  def li_link_if_nonzero(args)
-    li_link_if_condition(args.update(:condition => args[:count] != 0))
-  end
-
   # Function returns a HTML fragment that represents a link to related entity
   # or list of related entities of certain type in case of a condition being
   # met or information about non-existence of such entity if condition is not
@@ -903,21 +893,11 @@ module ApplicationHelper
   #     :[action]     --- controller action
   #     :record_id    --- id of record
   #
-  def li_link_if_condition(args)
-    if args.key?(:tables) # plural case
-      entity_name = ui_lookup(:tables => args[:tables])
-      link_text   = args.key?(:link_text) ? "#{args[:link_text]} (#{args[:count]})" : "#{entity_name} (#{args[:count]})"
-      none        = '(0)'
-      title       = "Show all #{entity_name}"
-    else                  # singular case
-      entity_name = ui_lookup(:table  => args[:table])
-      link_text   = args.key?(:link_text) ? args[:link_text] : entity_name
-      link_text   = "#{link_text} (#{args[:count]})" if args.key?(:count)
-      none        = '(0)'
-      title       = "Show #{entity_name}"
-    end
-    title = args[:title] if args.key?(:title)
-    if args[:condition]
+  def li_link(args)
+    args[:if] = (args[:count] != 0) if args[:count]
+    link_text, title = build_link_text(args)
+
+    if args[:if]
       link_params = {
         :action  => args[:action].present? ? args[:action] : 'show',
         :display => args[:display],
@@ -937,11 +917,27 @@ module ApplicationHelper
       end
     else
       content_tag(:li, :class => "disabled") do
-        content_tag(:a, :href => "#") do
-          "#{args.key?(:link_text) ? args[:link_text] : entity_name} #{none}"
-        end
+        link_to(link_text, "#")
       end
     end
+  end
+
+  def build_link_text(args)
+    if args.key?(:tables)
+      entity_name = ui_lookup(:tables => args[:tables])
+      link_text   = args.key?(:link_text) ? "#{args[:link_text]} (#{args[:count]})" : "#{entity_name} (#{args[:count]})"
+      title       = "Show all #{entity_name}"
+    elsif args.key?(:text)
+      count     = args[:count] ? "(#{args[:count]})" : ""
+      link_text = "#{args[:text]} #{count}"
+    elsif args.key?(:table)
+      entity_name = ui_lookup(:table => args[:table])
+      link_text   = args.key?(:link_text) ? args[:link_text] : entity_name
+      link_text   = "#{link_text} (#{args[:count]})" if args.key?(:count)
+      title       = "Show #{entity_name}"
+    end
+    title = args[:title] if args.key?(:title)
+    return link_text, title
   end
 
   # Function returns a HTML fragment that represents an image with certain
