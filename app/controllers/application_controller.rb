@@ -1094,7 +1094,8 @@ class ApplicationController < ActionController::Base
         item = listicon_item(view, row['id'])
 
         new_row[:cells] << {:title => 'View this item',
-                            :image => listicon_image(item, view)}
+                            :image => listicon_image(item, view),
+                            :icon  => listicon_icon(item)}
       end
 
       view.col_order.each_with_index do |col, col_idx|
@@ -1146,6 +1147,12 @@ class ApplicationController < ActionController::Base
     end
   end
   private :listicon_item
+
+  # Return the icon classname for the list view icon of a db,id pair
+  # this always supersedes listicon_image if not nil
+  def listicon_icon(item)
+    nil
+  end
 
   # Return the image name for the list view icon of a db,id pair
   def listicon_image(item, view)
