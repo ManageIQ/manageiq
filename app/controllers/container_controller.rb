@@ -297,20 +297,17 @@ class ContainerController < ApplicationController
       presenter[:update_partials][:main_div] = r[:partial => partial, :locals => partial_locals]
     elsif record_showing
       presenter[:update_partials][:main_div] = r[:partial => "container/container_show", :locals => {:controller => "container"}]
-      presenter.hide(:pc_div_1)
-      presenter.hide(:paging_div)
+      presenter.hide(:pc_div_1, :paging_div)
     else
       presenter[:update_partials][:main_div] = r[:partial => "layouts/x_gtl"]
       presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
       presenter.hide(:form_buttons_div)
-      presenter.show(:pc_div_1)
-      presenter.show(:paging_div)
+      presenter.show(:pc_div_1, :paging_div)
     end
 
     if %w(tag).include?(action)
       presenter.show(:form_buttons_div)
-      presenter.hide(:pc_div_1)
-      presenter.hide(:toolbar)
+      presenter.hide(:pc_div_1, :toolbar)
       presenter.show(:paging_div)
       locals = {:action_url => action_url}
       locals[:multi_record] = true # need save/cancel buttons on edit screen even tho @record.id is not there

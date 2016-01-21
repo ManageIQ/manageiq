@@ -399,8 +399,7 @@ class MiqAeCustomizationController < ApplicationController
 
     if x_active_tree == :dialogs_tree && @sb[:active_tab] == "sample_tab" && nodetype != "root" && @record.buttons
       presenter[:update_partials][:form_buttons_div] = render_proc[:partial => "dialog_sample_buttons"]
-      presenter.hide(:pc_div_1)
-      presenter.hide(:form_buttons_div)
+      presenter.hide(:pc_div_1, :form_buttons_div)
       presenter.show(:paging_div)
     end
   end

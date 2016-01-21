@@ -1899,8 +1899,7 @@ class CatalogController < ApplicationController
       elsif action == "dialog_provision"
         presenter.hide(:toolbar)
         # incase it was hidden for summary screen, and incase there were no records on show_list
-        presenter.show(:paging_div)
-        presenter.show(:form_buttons_div)
+        presenter.show(:paging_div, :form_buttons_div)
         presenter.hide(:pc_div_1)
         @record.dialog_fields.each do |field|
           if ["DialogFieldDateControl", "DialogFieldDateTimeControl"].include?(field.type)
@@ -1912,8 +1911,7 @@ class CatalogController < ApplicationController
         presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_dialog_buttons", :locals => {:action_url => "dialog_form_button_pressed", :record_id => @edit[:rec_id]}]
       elsif %w(ot_edit ot_copy ot_add service_dialog_from_ot).include?(action)
         presenter.hide(:toolbar)
-        presenter.show(:paging_div)
-        presenter.show(:form_buttons_div)
+        presenter.show(:paging_div, :form_buttons_div)
         presenter.hide(:pc_div_1)
         locals = {:record_id  => @edit[:rec_id],
                   :action_url => "#{action}_submit",
@@ -1932,10 +1930,7 @@ class CatalogController < ApplicationController
         presenter.hide(:paging_div)
       end
     else
-      presenter.show(:form_buttons_div)
-      presenter.show(:pc_div_1)
-      presenter.show(:toolbar)
-      presenter.show(:paging_div)
+      presenter.show(:form_buttons_div, :pc_div_1, :toolbar, :paging_div)
     end
 
     presenter[:reload_toolbars][:history] = h_tb

@@ -839,26 +839,22 @@ class ReportController < ApplicationController
           @sb[:role_list_flag] = true
           presenter.show(:treeStatus)
         end
-        presenter.hide(:menu_div1)
-        presenter.hide(:menu_div2)
+        presenter.hide(:menu_div1, :menu_div2)
         presenter.show(:menu_div3)
       end
     elsif nodetype == "menu_default" || nodetype == "menu_reset"
       presenter[:update_partials][:main_div]   = r[:partial => partial]
       presenter[:replace_partials][:menu_div1] = r[:partial => "menu_form1", :locals => {:folders => @grid_folders}]
-      presenter.hide(:menu_div1)
-      presenter.hide(:menu_div2)
+      presenter.hide(:menu_div1, :menu_div2)
       presenter.show(:menu_div3)
       presenter.hide(:treeStatus)
       # set changed to true if menu has been set to default
       session[:changed] = @sb[:menu_default] ? true : (@edit[:new] != @edit[:current])
     elsif nodetype == "menu_edit_reports"
       presenter[:replace_partials][:flash_msg_div_menu_list] = r[:partial => "layouts/flash_msg", :locals => {:div_num => "_menu_list"}] if @flash_array
-      presenter.show(:menu_div1)
-      presenter.show(:treeStatus)
+      presenter.show(:menu_div1, :treeStatus)
       presenter[:replace_partials][:menu_div2] = r[:partial => "menu_form2"]
-      presenter.hide(:menu_div1)
-      presenter.hide(:menu_div3)
+      presenter.hide(:menu_div1, :menu_div3)
       presenter.show(:menu_div2)
     elsif nodetype == "menu_commit_reports"
       presenter[:replace_partials][:flash_msg_div_menu_list] = r[:partial => "layouts/flash_msg", :locals => {:div_num => "_menu_list"}] if @flash_array
@@ -878,11 +874,9 @@ class ReportController < ApplicationController
         if params[:pressed] == "commit"
           presenter.hide(:flash_msg_div_menu_list)
           presenter.show(:menu_div3)
-          presenter.hide(:menu_div1)
-          presenter.hide(:menu_div2)
+          presenter.hide(:menu_div1, :menu_div2)
         else
-          presenter.hide(:menu_div1)
-          presenter.hide(:menu_div3)
+          presenter.hide(:menu_div1, :menu_div3)
           presenter.show(:menu_div2)
         end
         presenter.hide(:treeStatus)
@@ -898,12 +892,10 @@ class ReportController < ApplicationController
 
       if @sb[:tree_err]
         presenter.show(:menu_div1)
-        presenter.hide(:menu_div2)
-        presenter.hide(:menu_div3)
+        presenter.hide(:menu_div2, :menu_div3)
       else
         presenter[:replace_partials][:menu_roles_div] = r[:partial => "role_list"]
-        presenter.hide(:menu_div1)
-        presenter.hide(:menu_div2)
+        presenter.hide(:menu_div1, :menu_div2)
         presenter.show(:menu_div3)
         presenter.hide(:treeStatus)
       end
@@ -911,8 +903,7 @@ class ReportController < ApplicationController
     elsif nodetype == 'menu_discard_folders' || nodetype == 'menu_discard_reports'
       presenter[:replace_partials][:flash_msg_div_menu_list] = r[:partial => 'layouts/flash_msg', :locals => {:div_num => '_menu_list'}]
       presenter[:replace_partials][:menu_div1]               = r[:partial => 'menu_form1', :locals => {:folders => @grid_folders}]
-      presenter.hide(:menu_div1)
-      presenter.hide(:menu_div2)
+      presenter.hide(:menu_div1, :menu_div2)
       presenter.show(:menu_div3)
       presenter.hide(:treeStatus)
     end
@@ -927,13 +918,11 @@ class ReportController < ApplicationController
       if @pages
         @ajax_paging_buttons = true # FIXME: this should not be done this way
         presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols']
-        presenter.hide(:form_buttons_div)
-        presenter.hide(:rpb_div_1)
+        presenter.hide(:form_buttons_div, :rpb_div_1)
         presenter.show(:pc_div_1)
       elsif @in_a_form
         presenter[:update_partials][:form_buttons_div] = r[:partial => 'layouts/x_edit_buttons', :locals => locals]
-        presenter.hide(:pc_div_1)
-        presenter.hide(:rpb_div_1)
+        presenter.hide(:pc_div_1, :rpb_div_1)
         presenter.show(:form_buttons_div)
       elsif @sb[:pages]
         presenter[:update_partials][:paging_div] = r[:partial => 'layouts/saved_report_paging_bar', :locals => @sb[:pages]]

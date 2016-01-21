@@ -723,8 +723,7 @@ class OpsController < ApplicationController
   def handle_bottom_cell(nodetype, presenter, r, locals)
     # Handle bottom cell
     if nodetype == "log_depot_edit"
-      presenter.hide(:form_buttons_div)
-      presenter.hide(:pc_div_1)
+      presenter.hide(:form_buttons_div, :pc_div_1)
     elsif @pages || @in_a_form
       if @pages
         presenter.hide(:form_buttons_div)

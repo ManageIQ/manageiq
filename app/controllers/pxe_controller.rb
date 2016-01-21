@@ -237,8 +237,7 @@ class PxeController < ApplicationController
       if @in_a_form
         presenter.hide(:toolbar)
         # in case it was hidden for summary screen, and incase there were no records on show_list
-        presenter.show(:paging_div)
-        presenter.show(:form_buttons_div)
+        presenter.show(:paging_div, :form_buttons_div)
 
         action_url, multi_record = case x_active_tree
                                    when :pxe_servers_tree

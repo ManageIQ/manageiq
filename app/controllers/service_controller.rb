@@ -380,8 +380,7 @@ class ServiceController < ApplicationController
       end
     if %w(dialog_provision ownership service_edit tag).include?(action)
       presenter.show(:form_buttons_div)
-      presenter.hide(:pc_div_1)
-      presenter.hide(:toolbar)
+      presenter.hide(:pc_div_1, :toolbar)
       presenter.show(:paging_div)
       if action == "dialog_provision"
         presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_dialog_buttons",
@@ -408,9 +407,7 @@ class ServiceController < ApplicationController
       presenter.hide(:paging_div)
     else
       presenter.hide(:form_buttons_div)
-      presenter.show(:pc_div_1)
-      presenter.show(:toolbar)
-      presenter.show(:paging_div)
+      presenter.show(:pc_div_1, :toolbar, :paging_div)
     end
 
     # Clear the JS gtl_list_grid var if changing to a type other than list
