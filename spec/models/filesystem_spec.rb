@@ -20,6 +20,8 @@ my_ip=192.0.2.13
   end
 
   let(:filesystem_conf_file_non_ascii) { "abc\u{4242}" }
+  let(:filesystem_file_utf16_little_endian) { "\xff\xfe\r\x00\n\x00".force_encoding("ASCII-8BIT") }
+  let(:filesystem_file_utf16_big_endian) { "\xfe\xff\x00\r\x00\n".force_encoding("ASCII-8BIT") }
 
   context "#contents_displayable?" do
     it "filesystem with missing name is not displayable" do
@@ -67,6 +69,23 @@ my_ip=192.0.2.13
       filesystem = FactoryGirl.create(:filesystem_txt_file)
 
       expect(filesystem.contents_displayable?).to be_truthy
+    end
+  end
+
+  context "#displayable_contents" do
+    it "returns utf-8 encoded content for utf-16 little endian data" do
+      filesystem = FactoryGirl.create(:filesystem_txt_file, :contents => filesystem_file_utf16_little_endian)
+      expect(filesystem.displayable_contents).to eq("\r\n")
+    end
+
+    it "returns utf-8 encoded content for utf-16 big endian data" do
+      filesystem = FactoryGirl.create(:filesystem_txt_file, :contents => filesystem_file_utf16_big_endian)
+      expect(filesystem.displayable_contents).to eq("\r\n")
+    end
+
+    it "returns original blob for binary data" do
+      filesystem = FactoryGirl.create(:filesystem_binary_file)
+      expect(filesystem.displayable_contents).to eq(filesystem.contents)
     end
   end
 end

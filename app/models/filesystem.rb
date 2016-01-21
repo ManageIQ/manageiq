@@ -120,6 +120,16 @@ class Filesystem < ActiveRecord::Base
     !mime_type.binary?
   end
 
+  def displayable_contents
+    return nil unless has_contents?
+    bom = contents.byteslice(0, 2).bytes
+    if contents_displayable? && (bom == UTF_16BE_BOM || bom == UTF_16LE_BOM)
+      contents.force_encoding('UTF-16').encode('UTF-8')
+    else
+      contents
+    end
+  end
+
   [
     [:suid_bit,    04000],
     [:sgid_bit,    02000],
