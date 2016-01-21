@@ -11,6 +11,13 @@
     :title: Configuration
     :text: Configuration
     :items:
+    - :button: ems_container_refresh
+      :image: refresh
+      :text: 'Refresh Items and Relationships'
+      :title: 'Refresh Items and Relationships for all #{ui_lookup(:table=>"ems_containers")}'
+      :confirm: 'Refresh Items and Relationships related to  #{ui_lookup(:table=>"ems_containers")}?'
+      :url_parms: 'main_div'
+    - :separator:
     - :button: ems_container_new
       :icon: pficon pficon-add-circle-o fa-lg
       :url: '/new'
