@@ -1,6 +1,9 @@
 # Filter/search/expression methods included in application.rb
 module ApplicationController::Filter
   extend ActiveSupport::Concern
+  included do
+    helper_method :calendar_needed?  # because it is being called inside a render block
+  end
 
   # Handle buttons pressed in the expression editor
   def exp_button
@@ -118,10 +121,7 @@ module ApplicationController::Filter
           page << javascript_show("exp_buttons_on")
         end
 
-        if [:date, :datetime].include?(@edit.fetch_path(@expkey, :val1, :type)) ||
-           [:date, :datetime].include?(@edit.fetch_path(@expkey, :val2, :type))
-          page << "miqBuildCalendar();"
-        end
+        page << ENABLE_CALENDAR if calendar_needed?
 
         if @edit[@expkey][:exp_key] && @edit[@expkey][:exp_field]
           if @edit[@expkey][:val1][:type]
@@ -425,10 +425,7 @@ module ApplicationController::Filter
           page.replace("flash_msg_div" + div_num, :partial => "layouts/flash_msg", :locals => {:div_num => div_num})
           page.replace("exp_atom_editor_div", :partial => "layouts/exp_atom/editor")
 
-          if [:date, :datetime].include?(@edit.fetch_path(@expkey, :val1, :type)) ||
-             [:date, :datetime].include?(@edit.fetch_path(@expkey, :val2, :type))
-            page << "miqBuildCalendar();"
-          end
+          page << ENABLE_CALENDAR if calendar_needed?
           if @edit.fetch_path(@expkey, :val1, :type)
             page << "ManageIQ.expEditor.first.type = '#{@edit[@expkey][:val1][:type]}';"
             page << "ManageIQ.expEditor.first.title = '#{@edit[@expkey][:val1][:title]}';"
@@ -462,10 +459,7 @@ module ApplicationController::Filter
         page.replace("adv_search_body", :partial => "layouts/adv_search_body")
         page.replace("adv_search_footer", :partial => "layouts/adv_search_footer")
         page << "$('#adv_search_img').prop('src', #{ActionController::Base.helpers.image_path('toolbars/squashed-false.png')})"
-        if [:date, :datetime].include?(@edit.fetch_path(@expkey, :val1, :type)) ||
-           [:date, :datetime].include?(@edit.fetch_path(@expkey, :val2, :type))
-          page << "miqBuildCalendar();"
-        end
+        page << ENABLE_CALENDAR if calendar_needed?
         if @edit.fetch_path(@expkey, :val1, :type)
           page << "ManageIQ.expEditor.first.type = '#{@edit[@expkey][:val1][:type]}';"
           page << "ManageIQ.expEditor.first.title = '#{@edit[@expkey][:val1][:title]}';"
@@ -1793,4 +1787,11 @@ module ApplicationController::Filter
     exp[exp_value_key][exp_value_index] = "#{date}#{time}"
   end
   private :process_datetime_selector
+
+  ENABLE_CALENDAR = "miqBuildCalendar();".freeze
+  def calendar_needed?
+    return true if [:date, :datetime].include?(@edit.fetch_path(@expkey, :val1, :type))
+    return true if [:date, :datetime].include?(@edit.fetch_path(@expkey, :val2, :type))
+    false
+  end
 end
