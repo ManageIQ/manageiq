@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Redhat::InfraManager::ProvisionViaPxe do
   context "::StateMachine" do
     before do
@@ -12,14 +10,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionViaPxe do
                                  :state => 'pending', :status => 'Ok', :options => options)
     end
 
-    it "#customize_destination" do
-      allow(@task).to receive(:get_provider_destination).and_return(nil)
-      allow(@task).to receive(:update_and_notify_parent)
-
-      expect(@task).to receive(:configure_container)
-      expect(@task).to receive(:configure_destination)
-      @task.customize_destination
-    end
+    include_examples "common rhev state machine methods"
 
     it "#configure_destination" do
       expect(@task).to receive(:create_pxe_configuration_file)
