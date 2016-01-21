@@ -70,10 +70,6 @@ module ContainerGroupHelper::TextualSummary
   # Items
   #
 
-  def textual_name
-    @record.name
-  end
-
   def textual_phase
     @record.phase
   end
@@ -84,14 +80,6 @@ module ContainerGroupHelper::TextualSummary
 
   def textual_reason
     @record.reason
-  end
-
-  def textual_creation_timestamp
-    format_timezone(@record.creation_timestamp)
-  end
-
-  def textual_resource_version
-    @record.resource_version
   end
 
   def textual_restart_policy
