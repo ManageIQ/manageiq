@@ -480,22 +480,6 @@ module VmCloudHelper::TextualSummary
     attrs.collect { |a| {:label => a.name, :value => a.value} }
   end
 
-  def textual_compliance_status
-    h = {:label => "Status"}
-    if @record.number_of(:compliances) == 0
-      h[:value] = "Never Verified"
-    else
-      compliant = @record.last_compliance_status
-      date      = @record.last_compliance_timestamp
-      h[:image] = compliant ? "check" : "x"
-      h[:value] = "#{"Non-" unless compliant}Compliant as of #{time_ago_in_words(date.in_time_zone(Time.zone)).titleize} Ago"
-      h[:title] = "Show Details of Compliance Check on #{format_timezone(date)}"
-      h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => 'compliance_history', :count => 1)
-    end
-    h
-  end
-
   def textual_compliance_history
     h = {:label => "History"}
     if @record.number_of(:compliances) == 0
