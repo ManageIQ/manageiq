@@ -1896,6 +1896,7 @@ Vmdb::Application.routes.draw do
         download_data
         explorer
         retirement_info
+        reconfigure_form_fields
         retire
         service_form_fields
         show
@@ -2004,6 +2005,7 @@ Vmdb::Application.routes.draw do
         ownership
         policy_sim
         reconfigure
+        reconfigure_form_fields
         retire
         right_size
         show
@@ -2017,7 +2019,7 @@ Vmdb::Application.routes.draw do
         policy_sim_remove
         provision
         reconfigure
-        reconfigure_field_changed
+        reconfigure_form_fields
         reconfigure_update
         retire
         right_size
@@ -2038,6 +2040,7 @@ Vmdb::Application.routes.draw do
         explorer
         filesystem_download
         retirement_info
+        reconfigure_form_fields
         launch_html5_console
         perf_chart_chooser
         protect
@@ -2076,6 +2079,7 @@ Vmdb::Application.routes.draw do
         registry_items
         reload
         retire
+        reconfigure_update
         scan_histories
         sections_field_changed
         security_groups
@@ -2111,6 +2115,7 @@ Vmdb::Application.routes.draw do
         explorer
         filesystem_download
         retirement_info
+        reconfigure_form_fields
         launch_vmware_console
         launch_html5_console
         perf_chart_chooser
@@ -2200,6 +2205,7 @@ Vmdb::Application.routes.draw do
         explorer
         launch_html5_console
         retirement_info
+        reconfigure_form_fields
         launch_vmware_console
         protect
         retire
