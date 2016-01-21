@@ -320,4 +320,8 @@ class User < ActiveRecord::Base
   def self.current_user
     Thread.current[:user] ||= find_by_userid(current_userid)
   end
+
+  def self.with_current_user_groups
+    includes(:miq_groups).where(:miq_groups => {:id => current_user.miq_group_ids})
+  end
 end

@@ -196,4 +196,65 @@ describe ApplicationController do
       end
     end
   end
+
+  describe "#build_user_emails_for_edit" do
+    before :each do
+      EvmSpecHelper.local_miq_server
+      MiqUserRole.seed
+
+      role = MiqUserRole.find_by_name("EvmRole-operator")
+
+      group1 = FactoryGirl.create(:miq_group, :miq_user_role => role, :description => "Group1")
+      @user1 = FactoryGirl.create(:user, :userid => "User1", :miq_groups => [group1], :email => "user1@test.com")
+
+      group2 = FactoryGirl.create(:miq_group, :miq_user_role => role, :description => "Group2")
+      @user2 = FactoryGirl.create(:user, :userid => "User2", :miq_groups => [group2], :email => "user2@test.com")
+
+      current_group = FactoryGirl.create(:miq_group, :miq_user_role => role, :description => "Current Group")
+      @current_user = FactoryGirl.create(:user, :userid => "Current User", :miq_groups => [current_group, group1],
+                                                :email => "current_user@test.com")
+
+      login_as @current_user
+
+      @edit = {:new => {:email => {:to => []}}, :user_emails => []}
+    end
+
+    it "finds users with groups which belongs to current user's groups" do
+      user_ids = User.with_current_user_groups.collect(&:userid)
+      expect(user_ids).to include(@current_user.userid)
+      expect(user_ids).to include(@user1.userid)
+    end
+
+    it "listing users's emails which belongs to current user's groups" do
+      controller.instance_variable_set(:@edit, @edit)
+
+      expect do
+        controller.send(:build_user_emails_for_edit)
+        @edit = controller.instance_variable_get(:@edit)
+      end.to change { @edit[:user_emails].count }.from(0).to(2)
+
+      @edit = controller.instance_variable_get(:@edit)
+
+      expect(@edit[:user_emails]).not_to be_blank
+      expect(@edit[:user_emails]).to include(@current_user.email => "#{@current_user.name} (#{@current_user.email})")
+      expect(@edit[:user_emails]).to include(@user1.email => "#{@user1.name} (#{@user1.email})")
+      expect(@edit[:user_emails]).not_to include(@user2.email => "#{@user2.name} (#{@user2.email})")
+    end
+
+    it "listing users's emails which belongs to current user's groups and some of them was already selected" do
+      @edit[:new][:email][:to] = [@current_user.email] # selected users
+
+      controller.instance_variable_set(:@edit, @edit)
+
+      expect do
+        controller.send(:build_user_emails_for_edit)
+        @edit = controller.instance_variable_get(:@edit)
+      end.to change { @edit[:user_emails].count }.from(0).to(1)
+
+      expect(@edit[:user_emails]).not_to be_blank
+      current_user_hash = {@current_user.email => "#{@current_user.name} (#{@current_user.email})"}
+      expect(@edit[:user_emails]).not_to include(current_user_hash)
+      expect(@edit[:user_emails]).to include(@user1.email => "#{@user1.name} (#{@user1.email})")
+    end
+  end
 end
