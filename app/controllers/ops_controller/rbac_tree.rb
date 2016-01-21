@@ -16,7 +16,7 @@ class OpsController
       root = MiqProductFeature.feature_details(root_feature)
       root_node = {
         :key      => "#{@role.id ? to_cid(@role.id) : "new"}__#{root_feature}",
-        :icon     => "feature_node.png",
+        :icon     => ActionController::Base.helpers.image_path('100/feature_node.png'),
         :title    => root[:name],
         :tooltip  => root[:description] || root[:name],
         :addClass => "cfme-cursor-default",
@@ -27,7 +27,7 @@ class OpsController
       top_nodes = []
       @all_vm_node = { # FIXME: handle the below special name!
         :key      => "#{@role.id ? to_cid(@role.id) : "new"}___tab_all_vm_rules",
-        :icon     => "feature_node.png",
+        :icon     => ActionController::Base.helpers.image_path('100/feature_node.png'),
         :title    => t = _("Access Rules for all Virtual Machines"),
         :tooltip  => t,
         :children => [],
@@ -39,7 +39,7 @@ class OpsController
         t_kids = []
         t_node = {
           :key     => "#{@role.id ? to_cid(@role.id) : "new"}___tab_#{feature_title}",
-          :icon    => "feature_node.png",
+          :icon    => ActionController::Base.helpers.image_path('100/feature_node.png'),
           :title   => feature_title,
           :tooltip => feature_title + " Main Tab"
         }
@@ -82,7 +82,7 @@ class OpsController
         f_kids = [] # Array to hold node children
         f_node = {
           :key     => "#{@role.id ? to_cid(@role.id) : "new"}__#{feature}",
-          :icon    => "feature_#{details[:feature_type]}.png",
+          :icon    => ActionController::Base.helpers.image_path("feature_#{details[:feature_type]}.png"),
           :title   => details[:name],
           :tooltip => details[:description] || details[:name]
         }

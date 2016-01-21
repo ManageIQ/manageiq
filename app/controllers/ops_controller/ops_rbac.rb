@@ -1101,7 +1101,7 @@ module OpsController::OpsRbac
       cat_node[:title] = category.description
       cat_node[:tooltip] =  "Category: " + category.description
       cat_node[:addClass] = "cfme-no-cursor-node"      # No cursor pointer
-      cat_node[:icon] = "folder.png"
+      cat_node[:icon] = ActionController::Base.helpers.image_path('100/folder.png')
       cat_node[:hideCheckbox] = true
       cat_kids = []
       category.entries.sort_by { |e| e.description.downcase }.each do |tag|
@@ -1114,7 +1114,7 @@ module OpsController::OpsRbac
         else
           tag_node[:addClass] = "cfme-blue-node"            # Show node as different
         end
-        tag_node[:icon] = "tag.png"
+        tag_node[:icon] = ActionController::Base.helpers.image_path('100/tag.png')
         tag_node[:select] = true if (@edit && @edit[:new][:filters].key?(tag_node[:key])) || (@filters && @filters.key?(tag_node[:key])) # Check if tag is assigned
         kids_checked = true if tag_node[:select] == true
         cat_kids.push(tag_node)
