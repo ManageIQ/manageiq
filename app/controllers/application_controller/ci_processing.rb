@@ -353,43 +353,19 @@ module ApplicationController::CiProcessing
   def reconfigure
     @edit = session[:edit] unless @explorer
     @in_a_form = @reconfigure = true
-    reconfigure_build_screen
-    @edit[:current] = copy_hash(@edit[:new])
-    session[:edit] = @edit
     drop_breadcrumb(:name => "Reconfigure", :url => "/vm_common/reconfigure")
-    build_targets_hash(@reconfigureitems)
+    @reconfigitems = Vm.find(session[:reconfigure_items]).sort_by(&:name) # Get the db records
+    build_targets_hash(@reconfigitems)
+    @force_no_grid_xml   = true
+    @view, @pages = get_view(Vm, :view_suffix => "VmReconfigureRequest", :where_clause => ["vms.id IN (?)", session[:reconfigure_items]])  # Get the records (into a view) and the paginator
+    get_reconfig_limits
     unless @explorer
       render :action => "show"
     end
   end
 
-  def reconfigure_field_changed
-    return unless load_edit("reconfigure__new")
-    reconfigure_get_form_vars
-
-    render :update do |page|                    # Use JS to update the display
-      if @edit[:new][:cb_memory]
-        page << javascript_show("memory_div")
-      else
-        page << javascript_hide("memory_div")
-      end
-      if @edit[:new][:cb_cpu]
-        page << javascript_show("cpu_div")
-      else
-        page << javascript_hide("cpu_div")
-      end
-
-      @vccores = @edit[:new][:cores_per_socket_count].nil? ? 1 : @edit[:new][:cores_per_socket_count]
-      @vsockets = @edit[:new][:socket_count].nil? ? 1 : @edit[:new][:socket_count]
-
-      @total_cpus = @vccores.to_i * @vsockets.to_i
-      page << "$('#total_cpus').val('#{@total_cpus}');"
-    end
-  end
-
   def reconfigure_update
     return unless load_edit("reconfigure__new")
-    reconfigure_get_form_vars
     case params[:button]
     when "cancel"
       add_flash(_("VM Reconfigure Request was cancelled by the user"))
@@ -403,28 +379,6 @@ module ApplicationController::CiProcessing
         end
       end
     when "submit"
-      if !@edit[:new][:cb_cpu] && !@edit[:new][:cb_memory]
-        add_flash(_("At least one option must be selected to reconfigure"), :error)
-        render :update do |page|
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
-        return
-      end
-
-      # check to make sure memory is numeric
-      if @edit[:new][:cb_memory]
-        if @edit[:new][:old_memory].to_s == @edit[:new][:memory].to_s &&
-           @edit[:new][:old_mem_typ] == @edit[:new][:mem_typ]
-          add_flash(_("Change Memory value to submit reconfigure request"), :error)
-        elsif (@edit[:new][:memory] =~ /^[-+]?[0-9]*[0-9]+$/).nil?
-          add_flash(_("Memory must be an integer"), :error)
-        end
-      end
-
-      if @edit[:new][:cb_cpu] && @edit[:new][:old_socket_count].to_s == @edit[:new][:socket_count].to_s && @edit[:new][:old_cores_per_socket_count].to_s == @edit[:new][:cores_per_socket_count].to_s
-        add_flash(_("Change Processor Sockets or Cores Per Socket value to submit reconfigure request"), :error)
-      end
-
       if @flash_array
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
@@ -433,19 +387,11 @@ module ApplicationController::CiProcessing
       end
 
       options = {
-        :src_ids => @edit[:reconfigure_items]
+        :src_ids => session[:reconfigure_items]
       }
       # Convert memory to MB before passing on to model, don't multiply by 1024, if value is not numeric
-      options[:vm_memory] = @edit[:new][:mem_typ] == "MB" ? @edit[:new][:memory] : (@edit[:new][:memory].to_i.zero? ? @edit[:new][:memory] : @edit[:new][:memory].to_i * 1024) if @edit[:new][:cb_memory]
-      if @edit[:new][:cb_cpu]
-        options[:cores_per_socket]  = @edit[:new][:cores_per_socket_count].nil? ? 1 : @edit[:new][:cores_per_socket_count].to_i
-        options[:number_of_sockets] =@edit[:new][:socket_count].nil? ? 1 : @edit[:new][:socket_count].to_i
-        vccores = @edit[:new][:cores_per_socket_count].nil? ? 1 : @edit[:new][:cores_per_socket_count]
-        vsockets = @edit[:new][:socket_count].nil? ? 1 : @edit[:new][:socket_count]
-        options[:number_of_cpus]    = vccores.to_i * vsockets.to_i
-      end
-
-        valid = VmReconfigureRequest.validate_request(options)
+      # TO DO - send data to model
+      valid = VmReconfigureRequest.validate_request(options)
       if valid
         valid.each do |v|
           add_flash(v, :error)
@@ -456,7 +402,7 @@ module ApplicationController::CiProcessing
         return
       end
 
-      if VmReconfigureRequest.make_request(@edit[:req_id], options, current_user)
+      if VmReconfigureRequest.make_request(session[:req_id], options, current_user)
         flash = _("VM Reconfigure Request was saved")
         if role_allows(:feature => "miq_request_show_list", :any => true)
           render :update do |page|
@@ -469,12 +415,14 @@ module ApplicationController::CiProcessing
           end
         end
       else
-        @edit[:errors].each { |msg| add_flash(msg, :error) }
-        render :update do |page|
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        # TODO - is request ever nil? ?? - need to find other ways to flag/handle errors
       end
     end
+  end
+
+  def reconfigure_form_fields
+    request_hash = build_reconfigure_hash
+    render :json => request_hash
   end
 
   # edit single selected Object
@@ -1068,7 +1016,7 @@ module ApplicationController::CiProcessing
     recs = []
     # if coming in to edit from miq_request list view
     if !session[:checked_items].nil? && (@lastaction == "set_checked_items" || params[:pressed] == "miq_request_edit")
-      @edit[:req_id] = params[:id]
+      session[:req_id] = params[:id]
       recs = session[:checked_items]
     elsif !params[:id] || params[:pressed] == 'vm_reconfigure'
       recs = find_checked_items
@@ -1093,7 +1041,7 @@ module ApplicationController::CiProcessing
         render_flash_and_scroll
         return
       end
-      @edit[:reconfigure_items] = recs.collect(&:to_i)
+      session[:reconfigure_items] = recs.collect(&:to_i)
     end
     if @explorer
       reconfigure
@@ -1113,7 +1061,8 @@ module ApplicationController::CiProcessing
   alias_method :vm_reconfigure, :reconfigurevms
   alias_method :miq_template_reconfigure, :reconfigurevms
 
-  def set_memory_mb
+  def get_reconfig_info
+    @reconfigureitems = Vm.find(session[:reconfigure_items]).sort_by(&:name)
     # set memory to nil if multiple items were selected with different mem_cpu values
     memory = @reconfigureitems.first.mem_cpu
     memory = nil unless @reconfigureitems.all? { |vm| vm.mem_cpu == memory }
@@ -1124,47 +1073,42 @@ module ApplicationController::CiProcessing
     cores_per_socket = @reconfigureitems.first.cpu_cores_per_socket
     cores_per_socket = nil unless @reconfigureitems.all? { |vm| vm.cpu_cores_per_socket == cores_per_socket }
 
-    @edit[:new][:old_memory], @edit[:new][:old_mem_typ] = reconfigure_calculations(memory)
-    @edit[:new][:old_socket_count] = @edit[:new][:socket_count] = socket_count
-    @edit[:new][:old_cores_per_socket_count] = @edit[:new][:cores_per_socket_count] = cores_per_socket
+    { :memory => reconfigure_calculations(memory), :socket_count => socket_count, :cores_per_socket_count =>cores_per_socket}
   end
 
-  # Build the ownership assignment screen
-  def reconfigure_build_screen
-    @reconfigureitems = Vm.find(@edit[:reconfigure_items]).sort_by(&:name)  # Get the db records that are being tagged
-    if !@edit[:req_id]
-      set_memory_mb
-      @edit[:new][:memory] = @edit[:new][:old_memory]
-      @edit[:new][:mem_typ] = @edit[:new][:old_mem_typ]
+  def get_reconfig_limits
+    @reconfig_limits = VmReconfigureRequest.request_limits(:src_ids => session[:reconfigure_items])
+    mem1, fmt1 = reconfigure_calculations(@reconfig_limits[:min__vm_memory])
+    mem2, fmt2 = reconfigure_calculations(@reconfig_limits[:max__vm_memory])
+    @reconfig_memory_note = "Between #{mem1}#{fmt1} and #{mem2}#{fmt2}"
+
+    @socket_options = []
+    @reconfig_limits[:max__number_of_sockets].times do |tidx|
+      idx = tidx + @reconfig_limits[:min__number_of_sockets]
+      @socket_options.push(idx) if idx <= @reconfig_limits[:max__number_of_sockets]
+    end
+
+    @cores_options = []
+    @reconfig_limits[:max__cores_per_socket].times do |tidx|
+      idx = tidx + @reconfig_limits[:min__cores_per_socket]
+      @cores_options.push(idx) if idx <= @reconfig_limits[:max__cores_per_socket]
+    end
+  end
+
+  # Build the reconfigure data hash
+  def build_reconfigure_hash
+    if !session[:req_id]
+      @reconfig_values = get_reconfig_info
     else
-      @req = MiqRequest.find_by_id(@edit[:req_id])
-      @edit[:new][:memory], @edit[:new][:mem_typ] = reconfigure_calculations(@req.options[:vm_memory]) if @req.options[:vm_memory]
-      @edit[:new][:cores_per_socket_count] = @req.options[:cores_per_socket] if @req.options[:cores_per_socket]
-      @edit[:new][:socket_count] = @req.options[:number_of_sockets] if @req.options[:number_of_sockets]
+      @req = MiqRequest.find(session[:req_id])
+      @reconfig_values[:memory] = reconfigure_calculations(@req.options[:vm_memory]) if @req.options[:vm_memory]
+      @reconfig_values[:cores_per_socket_count] = @req.options[:cores_per_socket] if @req.options[:cores_per_socket]
+      @reconfig_values[:socket_count] = @req.options[:number_of_sockets] if @req.options[:number_of_sockets]
     end
 
-    @edit[:new][:cb_memory] = @req && @req.options[:vm_memory] ? true : false       # default for checkbox is false for new request
-    @edit[:new][:cb_cpu] = @req && ( @req.options[:number_of_sockets] || @req.options[:cores_per_socket]) ? true : false     # default for checkbox is false for new request
-
-    @edit[:options] = VmReconfigureRequest.request_limits(:src_ids => @edit[:reconfigure_items])
-    mem1, fmt1 = reconfigure_calculations(@edit[:options][:min__vm_memory])
-    mem2, fmt2 = reconfigure_calculations(@edit[:options][:max__vm_memory])
-    @edit[:memory_note] = "Between #{mem1}#{fmt1} and #{mem2}#{fmt2}"
-
-    @edit[:socket_options] = Array.new
-    @edit[:options][:max__number_of_sockets].times do |tidx|
-      idx = tidx + @edit[:options][:min__number_of_sockets]
-      @edit[:socket_options].push(idx) if idx <= @edit[:options][:max__number_of_sockets]
-    end
-
-    @edit[:cores_options] = []
-    @edit[:options][:max__cores_per_socket].times do |tidx|
-      idx = tidx + @edit[:options][:min__cores_per_socket]
-      @edit[:cores_options].push(idx) if idx <= @edit[:options][:max__cores_per_socket]
-    end
-
-    @force_no_grid_xml   = true
-    @view, @pages = get_view(Vm, :view_suffix => "VmReconfigureRequest", :where_clause => ["vms.id IN (?)", @edit[:reconfigure_items]])  # Get the records (into a view) and the paginator
+    @reconfig_values[:cb_memory] = @req && @req.options[:vm_memory] ? true : false       # default for checkbox is false for new request
+    @reconfig_values[:cb_cpu] =  @req && ( @req.options[:number_of_sockets] || @req.options[:cores_per_socket]) ? true : false     # default for checkbox is false for new request
+    @reconfig_values
   end
 
   def reconfigure_calculations(memory)
@@ -1176,15 +1120,6 @@ module ApplicationController::CiProcessing
       fmt = "MB"
     end
     return mem.to_s, fmt
-  end
-
-  def reconfigure_get_form_vars
-    @edit[:new][:cb_memory] = params[:cb_memory] == "1" if params[:cb_memory]
-    @edit[:new][:cb_cpu] = params[:cb_cpu] == "1" if params[:cb_cpu]
-    @edit[:new][:mem_typ] = params[:mem_typ] if params[:mem_typ]
-    @edit[:new][:memory] = params[:memory] if params[:memory]
-    @edit[:new][:socket_count] = params[:socket_count] if params[:socket_count]
-    @edit[:new][:cores_per_socket_count] = params[:cores_per_socket_count] if params[:cores_per_socket_count]
   end
 
   # Common VM button handler routines
