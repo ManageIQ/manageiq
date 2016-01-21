@@ -95,10 +95,15 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
       allow(@task).to receive(:update_and_notify_parent)
 
       expect(@task).to receive(:configure_container)
-      expect(@task).to receive(:configure_cloud_init)
-      expect(@task).to receive(:poll_destination_powered_off_in_provider)
+      expect(@task).to receive(:configure_destination)
 
       @task.customize_destination
+    end
+
+    it "#configure_destination" do
+      expect(@task).to receive(:configure_cloud_init)
+      expect(@task).to receive(:poll_destination_powered_off_in_provider)
+      @task.configure_destination
     end
 
     it "#poll_destination_powered_off_in_provider" do

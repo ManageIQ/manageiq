@@ -1,10 +1,5 @@
 module ManageIQ::Providers::Redhat::InfraManager::ProvisionViaPxe::StateMachine
-  def customize_destination
-    message = "Starting New #{destination_type} Customization"
-    _log.info("#{message} #{for_destination}")
-    update_and_notify_parent(:message => message)
-    configure_container
-
+  def configure_destination
     signal :create_pxe_configuration_file
   end
 

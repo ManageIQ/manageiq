@@ -1,12 +1,6 @@
 module ManageIQ::Providers::Redhat::InfraManager::ProvisionViaIso::StateMachine
-  def customize_destination
-    message = "Starting New #{destination_type} Customization"
-    _log.info("#{message} #{for_destination}")
-    update_and_notify_parent(:message => message)
-
-    configure_container
+  def configure_destination
     attach_floppy_payload
-
     signal :boot_from_cdrom
   end
 

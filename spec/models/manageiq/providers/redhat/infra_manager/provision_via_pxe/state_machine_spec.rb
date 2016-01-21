@@ -1,4 +1,6 @@
-describe ManageIQ::Providers::Redhat::InfraManager::ProvisionViaIso do
+require "spec_helper"
+
+describe ManageIQ::Providers::Redhat::InfraManager::ProvisionViaPxe do
   context "::StateMachine" do
     before do
       ems      = FactoryGirl.create(:ems_redhat_with_authentication)
@@ -6,7 +8,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionViaIso do
       vm       = FactoryGirl.create(:vm_redhat)
       options  = {:src_vm_id => template.id}
 
-      @task = FactoryGirl.create(:miq_provision_redhat_via_iso, :source => template, :destination => vm, :state => 'pending', :status => 'Ok', :options => options)
+      @task = FactoryGirl.create(:miq_provision_redhat_via_pxe, :source => template, :destination => vm,
+                                 :state => 'pending', :status => 'Ok', :options => options)
     end
 
     it "#customize_destination" do
@@ -19,8 +22,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionViaIso do
     end
 
     it "#configure_destination" do
-      expect(@task).to receive(:attach_floppy_payload)
-      expect(@task).to receive(:boot_from_cdrom)
+      expect(@task).to receive(:create_pxe_configuration_file)
       @task.configure_destination
     end
   end
