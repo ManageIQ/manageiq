@@ -901,13 +901,7 @@ module ApplicationController::Performance
           options = chart.merge(:zoom_url      => perf_zoom_url("perf_chart_chooser", idx.to_s),
                                 :link_data_url => "javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
                                 :axis_skip     => 3)
-          if chart[:trends] && rpt.extras && rpt.extras[:trend]
-            trendcol = perf_get_chart_trendcol(chart)
-            options[:trendtip] = chart[:trends].collect do|t|
-              t.split(":").last + ": " +
-              rpt.extras[:trend][trendcol + "|" + t.split(":").first]
-            end.join("\r") unless trendcol.nil?
-          end
+          process_chart_trends(chart, rpt, options)
           @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
           chart[:title] = rpt.title           # Grab title from chart in case formatting added units
           @charts.push(chart)
@@ -922,13 +916,7 @@ module ApplicationController::Performance
                               :link_data_url => "javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
                               :axis_skip => 3,
                               :width => 1000, :height => 700)
-        if chart[:trends] && rpt.extras && rpt.extras[:trend]
-          trendcol = perf_get_chart_trendcol(chart)
-          options[:trendtip] = chart[:trends].collect do|t|
-            t.split(":").last + ": " +
-            rpt.extras[:trend][trendcol + "|" + t.split(":").first]
-          end.join("\r") unless trendcol.nil?
-        end
+        process_chart_trends(chart, rpt, options)
         @chart_data.push(perf_gen_chart(rpt, options).merge(:menu => chart[:menu]))
         chart[:title] = rpt.title           # Grab title from chart in case formatting added units
         @charts.push(chart)
@@ -1467,13 +1455,7 @@ module ApplicationController::Performance
             options = chart.merge(:zoom_url      => perf_zoom_url("perf_chart_chooser", idx.to_s),
                                   :link_data_url => "javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
                                   :axis_skip     => 3)
-            if chart[:trends] && rpt.extras && rpt.extras[:trend]
-              trendcol = perf_get_chart_trendcol(chart)
-              options[:trendtip] = chart[:trends].collect do|t|
-                t.split(":").last + ": " +
-                rpt.extras[:trend][trendcol + "|" + t.split(":").first]
-              end.join("\r") unless trendcol.nil?
-            end
+            process_chart_trends(chart, rpt, options)
             menu_opts = perf_options[:model].starts_with?("Parent") ? {} : {:menu => chart[:menu]}
             chart_data.push(perf_gen_chart(rpt, options).merge(menu_opts))
             chart[:title] = rpt.title           # Grab title from chart in case formatting added units
@@ -1488,13 +1470,7 @@ module ApplicationController::Performance
                                 :link_data_url => "javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
                                 :axis_skip => 3,
                                 :width => 1000, :height => 700)
-          if chart[:trends] && rpt.extras && rpt.extras[:trend]
-            trendcol = perf_get_chart_trendcol(chart)
-            options[:trendtip] = chart[:trends].collect do|t|
-              t.split(":").last + ": " +
-              rpt.extras[:trend][trendcol + "|" + t.split(":").first]
-            end.join("\r") unless trendcol.nil?
-          end
+          process_chart_trends(chart, rpt, options)
           menu_opts = perf_options[:model].starts_with?("Parent") ? {} : {:menu => chart[:menu]}
           chart_data.push(perf_gen_chart(rpt, options).merge(menu_opts))
           chart[:title] = rpt.title           # Grab title from chart in case formatting added units
@@ -1703,4 +1679,15 @@ module ApplicationController::Performance
     end
     new_rpt
   end
+
+  def process_chart_trends(chart, rpt, options)
+    if chart[:trends] && rpt.extras && rpt.extras[:trend]
+      trendcol = perf_get_chart_trendcol(chart)
+      options[:trendtip] = chart[:trends].collect do|t|
+        t.split(":").last + ": " +
+        rpt.extras[:trend][trendcol + "|" + t.split(":").first]
+      end.join("\r") unless trendcol.nil?
+    end
+  end
+  private :process_chart_trends
 end
