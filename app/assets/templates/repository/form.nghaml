@@ -11,7 +11,8 @@
                             'ng-model'     => "repoModel.repo_name",
                             'ng-maxlength' => 10,
                             :required      => "",
-                            :checkchange   => true}
+                            :checkchange   => true,
+                            "auto-focus"  => ""}
         %span.help-block{"ng-show" => "angularForm.repo_name.$error.required"}
           = _("Required")
     .form-group{"ng-class" => "{'has-error': angularForm.repo_path.$error.required ||angularForm.repo_path.$error.checkpath }"}
