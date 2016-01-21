@@ -1,112 +1,129 @@
 #menu_div2
   - if @selected && @selected[1] && (!@edit[:selected_reports].blank? || !@edit[:available_reports].blank?)
-    = form_tag({:action => 'menu_update',
-                :id     => "report_menu_form2"},
-               :method => :post) do
-      %fieldset{:style => "height: 450px;"}
-        %h3
-          = _('Manage Reports')
-        #column_lists
-          %table.admintable
-            %tr
-              %td{:align => "left"}
-                = _('Selected Reports:')
-              %td
-              %td{:align => "left"}
-                = _('Available Reports:')
-              %td
-            %tr
-              %td{:align => "right"}
-                = select_tag('selected_reports[]',
-                  options_for_select(@edit[:selected_reports], @selected_reps),
-                  :multiple => true,
-                  :style    => "width: 280px; height: 310px;",
-                  :id       => "selected_reports")
-              %td{:width => "20", :valign => "middle"}
+    - url = url_for(:action => 'menu_field_changed')
+    %fieldset{:style => "height: 450px;"}
+      %h3
+        = _('Manage Reports')
+      #column_lists
+        %table
+          %tr
+            %td{:align => "left"}
+              = _('Selected Reports:')
+            %td
+            %td{:align => "left"}
+              = _('Available Reports:')
+            %td
+          %tr
+            %td{:align => "right"}
+              = select_tag('selected_reports[]',
+                options_for_select(@edit[:selected_reports], @selected_reps),
+                :multiple => true,
+                :style    => "width: 280px; height: 310px;",
+                :id       => "selected_reports")
+
+            %td.text-center{:width => "40"}
+              .btn-group-vertical
                 - if @edit[:available_reports].length == 0
-                  = image_tag(image_path('toolbars/left.png'), :class => "rollover small", :border => "0")
+                  %button.btn.btn-default.disabled
+                    %i.fa.fa-angle-left.fa-lg
                 - else
                   - t = _("Move selected reports left")
-                  = link_to(image_tag(image_path('toolbars/left.png'), :border => "0", :class => "rollover small", :alt => t),
-                    {:action => 'menu_field_changed', :button => 'left'},
-                    "data-submit" => "column_lists",
-                    :remote       => true,
-                    "data-method" => :post,
-                    :title        => t)
+                  %button.btn.btn-default{:title => t,
+                    "data-submit"         => 'column_lists',
+                    "data-miq_sparkle_on" => true,
+                    :remote               => true,
+                    "data-method"         => :post,
+                    'data-click_url'      => {:url => "#{url}?button=left"}.to_json}
+                    %i.fa.fa-angle-left.fa-lg
+
                 - if @edit[:selected_reports].length == 0
-                  = image_tag(image_path('toolbars/right.png'), :class => "rollover small", :border => "0")
                 - else
                   - t = _("Move selected reports right")
-                  = link_to(image_tag(image_path('toolbars/right.png'), :border => "0", :class => "rollover small", :alt => t),
-                    {:action => 'menu_field_changed', :button => 'right'},
-                    "data-submit" => "column_lists",
-                    :remote       => true,
-                    "data-method" => :post,
-                    :title        => t)
+                  %button.btn.btn-default{:title => t,
+                    "data-submit"         => 'column_lists',
+                    "data-miq_sparkle_on" => true,
+                    :remote               => true,
+                    "data-method"         => :post,
+                    'data-click_url'      => {:url => "#{url}?button=right"}.to_json}
+                    %i.fa.fa-angle-right.fa-lg
+
                 - if @edit[:selected_reports].length < 2
-                  = image_tag(image_path('toolbars/top.png'), :class => "rollover small", :border => "0")
+                  %button.btn.btn-default
+                    %i.fa.fa-angle-double-up.fa-lg
                 - else
                   - t = _("Move selected reports to top")
-                  = link_to(image_tag(image_path('toolbars/top.png'), :border => "0", :class => "rollover small", :alt => t),
-                    {:action => 'menu_field_changed', :button => 'top'},
-                    "data-submit" => "column_lists",
-                    :remote       => true,
-                    "data-method" => :post,
-                    :title        => t)
+                  %button.btn.btn-default{:title => t,
+                    "data-submit"         => 'column_lists',
+                    "data-miq_sparkle_on" => true,
+                    :remote               => true,
+                    "data-method"         => :post,
+                    'data-click_url'      => {:url => "#{url}?button=top"}.to_json}
+                    %i.fa.fa-angle-double-up.fa-lg
+
                 - if @edit[:selected_reports].length < 2
-                  = image_tag(image_path('toolbars/up.png'), :class => "rollover small", :border => "0")
+                  %button.btn.btn-default
+                    %i.fa.fa-angle-up.fa-lg
                 - else
                   - t = _("Move selected reports up")
-                  = link_to(image_tag(image_path('toolbars/up.png'), :border => "0", :class => "rollover small", :alt => t),
-                    {:action => 'menu_field_changed', :button => 'up'},
-                    "data-submit" => "column_lists",
-                    :remote       => true,
-                    "data-method" => :post,
-                    :title        => t)
+                  %button.btn.btn-default{:title => t,
+                    "data-submit"         => 'column_lists',
+                    "data-miq_sparkle_on" => true,
+                    :remote               => true,
+                    "data-method"         => :post,
+                    'data-click_url'      => {:url => "#{url}?button=up"}.to_json}
+                    %i.fa.fa-angle-up.fa-lg
+
                 - if @edit[:selected_reports].length < 2
-                  = image_tag(image_path('toolbars/down.png'), :class => "rollover small", :border => "0")
+                  %button.btn.btn-default
+                    %i.fa.fa-angle-down.fa-lg
                 - else
                   - t = _("Move selected reports down")
-                  = link_to(image_tag(image_path('toolbars/down.png'), :border => "0", :class => "rollover small", :alt => t),
-                    {:action => 'menu_field_changed', :button => 'down'},
-                    "data-submit" => "column_lists",
-                    :remote       => true,
-                    "data-method" => :post,
-                    :title        => t)
+                  %button.btn.btn-default{:title => t,
+                    "data-submit"         => 'column_lists',
+                    "data-miq_sparkle_on" => true,
+                    :remote               => true,
+                    "data-method"         => :post,
+                    'data-click_url'      => {:url => "#{url}?button=down"}.to_json}
+                    %i.fa.fa-angle-down.fa-lg
+
                 - if @edit[:selected_reports].length < 2
-                  = image_tag(image_path('toolbars/bottom.png'), :class => "rollover small", :border => "0")
+                  %button.btn.btn-default
+                    %i.fa.fa-angle-double-down.fa-lg
                 - else
                   - t = _("Move selected reports to bottom")
-                  = link_to(image_tag(image_path('toolbars/bottom.png'), :border => "0", :class => "rollover small", :alt => t),
-                    {:action => 'menu_field_changed', :button => 'bottom'},
-                    "data-submit" => "column_lists",
-                    :remote       => true,
-                    "data-method" => :post,
-                    :title        => 'Move selected reports to bottom')
-              %td{:align => "left"}
-                = select_tag('available_reports[]',
-                  options_for_select(@edit[:available_reports].sort),
-                  :multiple => true,
-                  :style    => "width: 280px; height: 310px;",
-                  :id       => "available_reports")
-            %tr
-              %td{:colspan => "3", :align => "right"}
-                %div{:style => "width: 67px; float: right; margin-bottom: 2px;"}
-                  - t = _('Commit report management changes')
-                  = link_to(image_tag(image_path('toolbars/commit.png'), :class => "rollover small", :alt => t),
-                    {:action => 'menu_field_changed', :pressed => 'commit'},
-                    "data-miq_sparkle_on"  => true,
-                    "data-miq_sparkle_off" => true,
-                    :remote                => true,
-                    "data-method"          => :post,
-                    :title                 => t)
-                  - t = _("Discard report management changes")
-                  = link_to(image_tag(image_path('toolbars/discard.png'), :class => "rollover small", :alt => t),
-                    {:action => 'discard_changes', :pressed => 'discard_reports'},
-                    "data-miq_sparkle_on"  => true,
-                    "data-miq_sparkle_off" => true,
-                    :remote                => true,
-                    "data-method"          => :post,
-                    :title                 => t)
-      - unless @edit[:user_typ]
-        = _('* Report is not owned by your group so it cannot be removed')
+                  %button.btn.btn-default{:title => t,
+                    "data-submit"         => 'column_lists',
+                    "data-miq_sparkle_on" => true,
+                    :remote               => true,
+                    "data-method"         => :post,
+                    'data-click_url'      => {:url => "#{url}?button=bottom"}.to_json}
+                    %i.fa.fa-angle-double-down.fa-lg
+
+            %td{:align => "left"}
+              = select_tag('available_reports[]',
+                options_for_select(@edit[:available_reports].sort),
+                :multiple => true,
+                :style    => "width: 280px; height: 310px;",
+                :id       => "available_reports")
+          %tr
+            %td{:colspan => "3", :align => "right"}
+              .form-group.pull-right
+                - t = _('Commit report management changes')
+                %button.btn.btn-primary{:title => t,
+                    "data-submit"         => 'column_lists',
+                    "data-miq_sparkle_on" => true,
+                    :remote               => true,
+                    "data-method"         => :post,
+                    'data-click_url'      => {:url => "#{url}?pressed=commit"}.to_json}
+                  = _('Commit')
+                - t = _("Discard report management changes")
+                - url2 = url_for(:action => 'discard_changes')
+                %button.btn.btn-default{:title => t,
+                    "data-submit"         => 'column_lists',
+                    "data-miq_sparkle_on" => true,
+                    :remote               => true,
+                    "data-method"         => :post,
+                    'data-click_url'      => {:url => "#{url2}?pressed=discard_reports"}.to_json}
+                  = _('Discard')
+    - unless @edit[:user_typ]
+      = _('* Report is not owned by your group so it cannot be removed')

@@ -26,9 +26,8 @@
                 :loading  => "miqSparkle(true);",
                 :complete => "miqSparkle(false);")
               %td{:onclick => cl, :title => t = _("Click to remove this assignment")}
-                = image_tag(image_path('toolbars/delete.png'),
-                  :class       => "rollover small pointer",
-                  :alt         => t)
+                %button.btn.btn-default
+                  %i.pficon.pficon-close.fa-lg
             - else
               %td
                 %ul#list

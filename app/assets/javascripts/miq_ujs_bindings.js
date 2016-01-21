@@ -6,6 +6,23 @@ $(document).ready(function () {
     return miqCheckForChanges();
   });
 
+  $(document).on('click', 'button[data-click_url]', function () {
+    var el = $(this);
+    var parms = $.parseJSON(el.attr('data-click_url'));
+    var url = parms.url;
+    var options = {};
+    if (el.attr('data-miq_sparkle_on')) {
+      options.beforeSend = true;
+    }
+    if (el.attr('data-miq_sparkle_off')) {
+      options.complete = true;
+    }
+    submit = el.attr('data-submit');
+    if (typeof submit != "undefined")
+      miqJqueryRequest(url, {data: miqSerializeForm(submit)});
+    else
+      miqJqueryRequest(url, options);
+  });
   // Bind call to check/display text area max length on keyup
   $(document).on('keyup', 'textarea[data-miq_check_max_length]', function () {
     miqCheckMaxLength(this);
