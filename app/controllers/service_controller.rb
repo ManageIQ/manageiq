@@ -379,10 +379,10 @@ class ServiceController < ApplicationController
         r[:partial => "layouts/x_gtl"]
       end
     if %w(dialog_provision ownership service_edit tag).include?(action)
-      presenter[:set_visible_elements][:form_buttons_div] = true
-      presenter[:set_visible_elements][:pc_div_1] = false
-      presenter[:set_visible_elements][:toolbar] = false
-      presenter[:set_visible_elements][:paging_div] = true
+      presenter.show(:form_buttons_div)
+      presenter.hide(:pc_div_1)
+      presenter.hide(:toolbar)
+      presenter.show(:paging_div)
       if action == "dialog_provision"
         presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_dialog_buttons",
                                                            :locals  => {:action_url => action_url,
@@ -403,14 +403,14 @@ class ServiceController < ApplicationController
         (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0)))
       # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box
       # when trying to change a node on tree after saving a record
-      presenter[:set_visible_elements][:buttons_on]  = false
-      presenter[:set_visible_elements][:toolbar]   = true
-      presenter[:set_visible_elements][:paging_div] = false
+      presenter.hide(:buttons_on)
+      presenter.show(:toolbar)
+      presenter.hide(:paging_div)
     else
-      presenter[:set_visible_elements][:form_buttons_div] = false
-      presenter[:set_visible_elements][:pc_div_1]         = true
-      presenter[:set_visible_elements][:toolbar]        = true
-      presenter[:set_visible_elements][:paging_div] = true
+      presenter.hide(:form_buttons_div)
+      presenter.show(:pc_div_1)
+      presenter.show(:toolbar)
+      presenter.show(:paging_div)
     end
 
     # Clear the JS gtl_list_grid var if changing to a type other than list

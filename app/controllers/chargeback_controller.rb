@@ -788,17 +788,17 @@ class ChargebackController < ApplicationController
     when :cb_reports_tree
       if c_tb.present?
         presenter[:reload_toolbars][:center] = c_tb
-        presenter[:set_visible_elements][:toolbar] = true
+        presenter.show(:toolbar)
       else
-        presenter[:set_visible_elements][:toolbar] = false
+        presenter.hide(:toolbar)
       end
       presenter[:update_partials][:main_div] = r[:partial => 'reports_list']
       if @html
         presenter[:update_partials][:paging_div] = r[:partial => 'layouts/saved_report_paging_bar',
                                                      :locals  => @sb[:pages]]
-        presenter[:set_visible_elements][:paging_div] = true
+        presenter.show(:paging_div)
       else
-        presenter[:set_visible_elements][:paging_div] = false
+        presenter.hide(:paging_div)
       end
     end
 
@@ -806,11 +806,11 @@ class ChargebackController < ApplicationController
        (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0))
       if ["chargeback_rates_copy", "chargeback_rates_edit", "chargeback_rates_new"].include?(@sb[:action]) ||
          (x_active_tree == :cb_assignments_tree && ["Compute", "Storage"].include?(x_node.split('-').last))
-        presenter[:set_visible_elements][:toolbar] = false
+        presenter.hide(:toolbar)
         # incase it was hidden for summary screen, and incase there were no records on show_list
-        presenter[:set_visible_elements][:paging_div] = true
-        presenter[:set_visible_elements][:form_buttons_div] = true
-        presenter[:set_visible_elements][:pc_div_1] = false
+        presenter.show(:paging_div)
+        presenter.show(:form_buttons_div)
+        presenter.hide(:pc_div_1)
         locals = {:record_id => @edit[:rec_id]}
         if x_active_tree == :cb_rates_tree
           locals[:action_url] = 'cb_rate_edit'
@@ -824,20 +824,20 @@ class ChargebackController < ApplicationController
         presenter[:update_partials][:form_buttons_div] = r[:partial => 'layouts/x_edit_buttons', :locals => locals]
       else
         # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box when trying to change a node on tree after saving a record
-        presenter[:set_visible_elements][:buttons_on] = false
-        presenter[:set_visible_elements][:toolbar] = true
-        presenter[:set_visible_elements][:paging_div] = false
+        presenter.hide(:buttons_on)
+        presenter.show(:toolbar)
+        presenter.hide(:paging_div)
       end
     else
-      presenter[:set_visible_elements][:form_buttons_div] = false
-      presenter[:set_visible_elements][:pc_div_1] = true
+      presenter.hide(:form_buttons_div)
+      presenter.show(:pc_div_1)
       if (x_active_tree == :cb_assignments_tree && x_node == "root") ||
          (x_active_tree == :cb_reports_tree && !@report) ||
          (x_active_tree == :cb_rates_tree && x_node == "root")
-        presenter[:set_visible_elements][:toolbar] = false
-        presenter[:set_visible_elements][:pc_div_1] = false
+        presenter.hide(:toolbar)
+        presenter.hide(:pc_div_1)
       end
-      presenter[:set_visible_elements][:paging_div] = true
+      presenter.show(:paging_div)
     end
 
     presenter[:record_id] = determine_record_id_for_presenter

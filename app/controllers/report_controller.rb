@@ -819,9 +819,9 @@ class ReportController < ApplicationController
         end
         presenter[:update_partials][:main_div] = r[:partial => partial]
         presenter[:element_updates][:menu1_legend] = {:legend => fieldset_title}
-        presenter[:set_visible_elements][:menu_div1]  = true
-        presenter[:set_visible_elements][:menu_div2]  = false
-        presenter[:set_visible_elements][:treeStatus] = true
+        presenter.show(:menu_div1)
+        presenter.hide(:menu_div2)
+        presenter.show(:treeStatus)
         presenter[:set_visible_elements][:flash_msg_div_menu_list] = "hide"
         presenter[:element_updates][:folder_top]      = {:title => img_title_top}
         presenter[:element_updates][:folder_up]       = {:title => img_title_up}
@@ -837,55 +837,55 @@ class ReportController < ApplicationController
         unless @sb[:role_list_flag]
           # we dont need to show the overlay on first time load
           @sb[:role_list_flag] = true
-          presenter[:set_visible_elements][:treeStatus] = true
+          presenter.show(:treeStatus)
         end
-        presenter[:set_visible_elements][:menu_div1] = false
-        presenter[:set_visible_elements][:menu_div2] = false
-        presenter[:set_visible_elements][:menu_div3] = true
+        presenter.hide(:menu_div1)
+        presenter.hide(:menu_div2)
+        presenter.show(:menu_div3)
       end
     elsif nodetype == "menu_default" || nodetype == "menu_reset"
       presenter[:update_partials][:main_div]   = r[:partial => partial]
       presenter[:replace_partials][:menu_div1] = r[:partial => "menu_form1", :locals => {:folders => @grid_folders}]
-      presenter[:set_visible_elements][:menu_div1]  = false
-      presenter[:set_visible_elements][:menu_div2]  = false
-      presenter[:set_visible_elements][:menu_div3]  = true
-      presenter[:set_visible_elements][:treeStatus] = false
+      presenter.hide(:menu_div1)
+      presenter.hide(:menu_div2)
+      presenter.show(:menu_div3)
+      presenter.hide(:treeStatus)
       # set changed to true if menu has been set to default
       session[:changed] = @sb[:menu_default] ? true : (@edit[:new] != @edit[:current])
     elsif nodetype == "menu_edit_reports"
       presenter[:replace_partials][:flash_msg_div_menu_list] = r[:partial => "layouts/flash_msg", :locals => {:div_num => "_menu_list"}] if @flash_array
-      presenter[:set_visible_elements][:menu_div1]  = true
-      presenter[:set_visible_elements][:treeStatus] = true
+      presenter.show(:menu_div1)
+      presenter.show(:treeStatus)
       presenter[:replace_partials][:menu_div2] = r[:partial => "menu_form2"]
-      presenter[:set_visible_elements][:menu_div1] = false
-      presenter[:set_visible_elements][:menu_div3] = false
-      presenter[:set_visible_elements][:menu_div2] = true
+      presenter.hide(:menu_div1)
+      presenter.hide(:menu_div3)
+      presenter.show(:menu_div2)
     elsif nodetype == "menu_commit_reports"
       presenter[:replace_partials][:flash_msg_div_menu_list] = r[:partial => "layouts/flash_msg", :locals => {:div_num => "_menu_list"}] if @flash_array
       if @refresh_div
-        presenter[:set_visible_elements][:flash_msg_div_menu_list] = false
+        presenter.hide(:flash_msg_div_menu_list)
         presenter[:replace_partials]["#{@refresh_div}".to_sym] = r[:partial => @refresh_partial, :locals => {:action_url => "menu_update"}]
-        presenter[:set_visible_elements][:menu_div1] = false
+        presenter.hide(:menu_div1)
         if params[:pressed] == "commit"
-          presenter[:set_visible_elements][:menu_div3] = true
-          presenter[:set_visible_elements][:menu_div2] = false
+          presenter.show(:menu_div3)
+          presenter.hide(:menu_div2)
         else
-          presenter[:set_visible_elements][:menu_div3] = false
-          presenter[:set_visible_elements][:menu_div2] = true
+          presenter.hide(:menu_div3)
+          presenter.show(:menu_div2)
         end
       elsif !@flash_array
         presenter[:replace_partials][:menu_roles_div] = r[:partial => "role_list"]
         if params[:pressed] == "commit"
-          presenter[:set_visible_elements][:flash_msg_div_menu_list] = false
-          presenter[:set_visible_elements][:menu_div3] = true
-          presenter[:set_visible_elements][:menu_div1] = false
-          presenter[:set_visible_elements][:menu_div2] = false
+          presenter.hide(:flash_msg_div_menu_list)
+          presenter.show(:menu_div3)
+          presenter.hide(:menu_div1)
+          presenter.hide(:menu_div2)
         else
-          presenter[:set_visible_elements][:menu_div1] = false
-          presenter[:set_visible_elements][:menu_div3] = false
-          presenter[:set_visible_elements][:menu_div2] = true
+          presenter.hide(:menu_div1)
+          presenter.hide(:menu_div3)
+          presenter.show(:menu_div2)
         end
-        presenter[:set_visible_elements][:treeStatus] = false
+        presenter.hide(:treeStatus)
       end
     elsif nodetype == 'menu_commit_folders'
       # Hide flash_msg if it's being shown from New folder add event
@@ -893,28 +893,28 @@ class ReportController < ApplicationController
         presenter[:replace_partials][:flash_msg_div_menu_list] = r[:partial => 'layouts/flash_msg',
                                                                    :locals  => {:div_num => '_menu_list'}]
       else
-        presenter[:set_visible_elements][:flash_msg_div_menu_list] = false
+        presenter.hide(:flash_msg_div_menu_list)
       end
 
       if @sb[:tree_err]
-        presenter[:set_visible_elements][:menu_div1] = true
-        presenter[:set_visible_elements][:menu_div2] = false
-        presenter[:set_visible_elements][:menu_div3] = false
+        presenter.show(:menu_div1)
+        presenter.hide(:menu_div2)
+        presenter.hide(:menu_div3)
       else
         presenter[:replace_partials][:menu_roles_div] = r[:partial => "role_list"]
-        presenter[:set_visible_elements][:menu_div1]  = false
-        presenter[:set_visible_elements][:menu_div2]  = false
-        presenter[:set_visible_elements][:menu_div3]  = true
-        presenter[:set_visible_elements][:treeStatus] = false
+        presenter.hide(:menu_div1)
+        presenter.hide(:menu_div2)
+        presenter.show(:menu_div3)
+        presenter.hide(:treeStatus)
       end
       @sb[:tree_err] = false
     elsif nodetype == 'menu_discard_folders' || nodetype == 'menu_discard_reports'
       presenter[:replace_partials][:flash_msg_div_menu_list] = r[:partial => 'layouts/flash_msg', :locals => {:div_num => '_menu_list'}]
       presenter[:replace_partials][:menu_div1]               = r[:partial => 'menu_form1', :locals => {:folders => @grid_folders}]
-      presenter[:set_visible_elements][:menu_div1]  = false
-      presenter[:set_visible_elements][:menu_div2]  = false
-      presenter[:set_visible_elements][:menu_div3]  = true
-      presenter[:set_visible_elements][:treeStatus] = false
+      presenter.hide(:menu_div1)
+      presenter.hide(:menu_div2)
+      presenter.show(:menu_div3)
+      presenter.hide(:treeStatus)
     end
 
     if x_active_tree == :roles_tree && x_node != "root"
@@ -927,26 +927,26 @@ class ReportController < ApplicationController
       if @pages
         @ajax_paging_buttons = true # FIXME: this should not be done this way
         presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols']
-        presenter[:set_visible_elements][:form_buttons_div] = false
-        presenter[:set_visible_elements][:rpb_div_1]        = false
-        presenter[:set_visible_elements][:pc_div_1]         = true
+        presenter.hide(:form_buttons_div)
+        presenter.hide(:rpb_div_1)
+        presenter.show(:pc_div_1)
       elsif @in_a_form
         presenter[:update_partials][:form_buttons_div] = r[:partial => 'layouts/x_edit_buttons', :locals => locals]
-        presenter[:set_visible_elements][:pc_div_1]         = false
-        presenter[:set_visible_elements][:rpb_div_1]        = false
-        presenter[:set_visible_elements][:form_buttons_div] = true
+        presenter.hide(:pc_div_1)
+        presenter.hide(:rpb_div_1)
+        presenter.show(:form_buttons_div)
       elsif @sb[:pages]
         presenter[:update_partials][:paging_div] = r[:partial => 'layouts/saved_report_paging_bar', :locals => @sb[:pages]]
-        presenter[:set_visible_elements][:form_buttons_div] = false
-        presenter[:set_visible_elements][:rpb_div_1]        = true
-        presenter[:set_visible_elements][:pc_div_1]         = false
+        presenter.hide(:form_buttons_div)
+        presenter.show(:rpb_div_1)
+        presenter.hide(:pc_div_1)
       end
-      presenter[:set_visible_elements][:paging_div] = true
+      presenter.show(:paging_div)
     else
-      presenter[:set_visible_elements][:paging_div] = false
+      presenter.hide(:paging_div)
     end
     if @sb[:active_tab] == 'report_info' && x_node.split('-').length == 5 && !@in_a_form
-      presenter[:set_visible_elements][:paging_div] = false
+      presenter.hide(:paging_div)
     end
     presenter[:set_visible_elements][:toolbar] = !@in_a_form
 

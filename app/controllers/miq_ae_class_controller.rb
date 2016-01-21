@@ -351,8 +351,8 @@ class MiqAeClassController < ApplicationController
     if @in_a_form
       action_url =  create_action_url(nodes.first)
       # incase it was hidden for summary screen, and incase there were no records on show_list
-      presenter[:set_visible_elements][:paging_div] = true
-      presenter[:set_visible_elements][:form_buttons_div] = true
+      presenter.show(:paging_div)
+      presenter.show(:form_buttons_div)
       presenter[:update_partials][:form_buttons_div] = r[
         :partial => "layouts/x_edit_buttons",
         :locals  => {
@@ -365,8 +365,8 @@ class MiqAeClassController < ApplicationController
       ]
     else
       # incase it was hidden for summary screen, and incase there were no records on show_list
-      presenter[:set_visible_elements][:paging_div] = false
-      presenter[:set_visible_elements][:form_buttons_div] = false
+      presenter.hide(:paging_div)
+      presenter.hide(:form_buttons_div)
     end
 
     presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit
@@ -380,10 +380,10 @@ class MiqAeClassController < ApplicationController
     # Rebuild the toolbars
     presenter[:reload_toolbars][:history] = h_tb
     if c_tb.present?
-      presenter[:set_visible_elements][:toolbar] = true
+      presenter.show(:toolbar)
       presenter[:reload_toolbars][:center] = c_tb
     else
-      presenter[:set_visible_elements][:toolbar] = false
+      presenter.hide(:toolbar)
     end
 
     presenter[:record_id] = determine_record_id_for_presenter

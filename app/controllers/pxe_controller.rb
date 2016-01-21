@@ -235,10 +235,10 @@ class PxeController < ApplicationController
     if !@view || @in_a_form ||
        (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0))
       if @in_a_form
-        presenter[:set_visible_elements][:toolbar] = false
+        presenter.hide(:toolbar)
         # in case it was hidden for summary screen, and incase there were no records on show_list
-        presenter[:set_visible_elements][:paging_div] = true
-        presenter[:set_visible_elements][:form_buttons_div] = true
+        presenter.show(:paging_div)
+        presenter.show(:form_buttons_div)
 
         action_url, multi_record = case x_active_tree
                                    when :pxe_servers_tree
@@ -277,12 +277,12 @@ class PxeController < ApplicationController
           }
         ]
       else
-        presenter[:set_visible_elements][:form_buttons_div] = false
+        presenter.hide(:form_buttons_div)
       end
-      presenter[:set_visible_elements][:pc_div_1] = false
+      presenter.hide(:pc_div_1)
     else
-      presenter[:set_visible_elements][:form_buttons_div] = false
-      presenter[:set_visible_elements][:pc_div_1] = true
+      presenter.hide(:form_buttons_div)
+      presenter.show(:pc_div_1)
     end
 
     presenter[:record_id] = determine_record_id_for_presenter

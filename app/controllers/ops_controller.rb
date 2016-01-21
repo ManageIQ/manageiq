@@ -716,28 +716,28 @@ class OpsController < ApplicationController
     # Rebuild the toolbars
     presenter[:reload_toolbars][:center] = c_tb
     presenter[:set_visible_elements][:toolbar] = c_tb.present?
-    presenter[:set_visible_elements][:toolbar] = false if @sb[:center_tb_filename] == "blank_view_tb"
+    presenter.hide(:toolbar) if @sb[:center_tb_filename] == "blank_view_tb"
     presenter[:record_id] = determine_record_id_for_presenter
   end
 
   def handle_bottom_cell(nodetype, presenter, r, locals)
     # Handle bottom cell
     if nodetype == "log_depot_edit"
-      presenter[:set_visible_elements][:form_buttons_div] = false
-      presenter[:set_visible_elements][:pc_div_1] = false
+      presenter.hide(:form_buttons_div)
+      presenter.hide(:pc_div_1)
     elsif @pages || @in_a_form
       if @pages
-        presenter[:set_visible_elements][:form_buttons_div] = false
-        presenter[:set_visible_elements][:pc_div_1] = true
+        presenter.hide(:form_buttons_div)
+        presenter.show(:pc_div_1)
         presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
       elsif @in_a_form
         presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
-        presenter[:set_visible_elements][:form_buttons_div] = true
-        presenter[:set_visible_elements][:pc_div_1] = false
+        presenter.show(:form_buttons_div)
+        presenter.hide(:pc_div_1)
       end
-      presenter[:set_visible_elements][:paging_div] = true
+      presenter.show(:paging_div)
     else
-      presenter[:set_visible_elements][:paging_div] = false
+      presenter.hide(:paging_div)
     end
   end
 

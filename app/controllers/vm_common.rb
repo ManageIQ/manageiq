@@ -1488,14 +1488,14 @@ module VmCommon
       :delete_node => @delete_node,      # Remove a new node from the tree
     )
 
-    presenter[:set_visible_elements][:default_left_cell] = true
-    presenter[:set_visible_elements][:custom_left_cell] = false
+    presenter.show(:default_left_cell)
+    presenter.hide(:custom_left_cell)
 
     r = proc { |opts| render_to_string(opts) }
 
     add_ajax = false
     if record_showing
-      presenter[:set_visible_elements][:form_buttons_div] = false
+      presenter.hide(:form_buttons_div)
       path_dir = @record.kind_of?(ManageIQ::Providers::CloudManager::Vm) || @record.kind_of?(ManageIQ::Providers::CloudManager::Template) ? "vm_cloud" : "vm_common"
       presenter[:update_partials][:main_div] = r[:partial => "#{path_dir}/main", :locals => {:controller => 'vm'}]
     elsif @in_a_form
@@ -1543,8 +1543,8 @@ module VmCommon
       if ['compare', 'drift'].include?(@sb[:action])
         presenter[:update_partials][:custom_left_cell] = r[
           :partial => 'layouts/listnav/x_compare_sections', :locals => {:truncate_length => 23}]
-        presenter[:set_visible_elements][:custom_left_cell] = true
-        presenter[:set_visible_elements][:default_left_cell] = false
+        presenter.show(:custom_left_cell)
+        presenter.hide(:default_left_cell)
       end
     elsif @sb[:action] || params[:display]
       partial_locals = {
@@ -1595,8 +1595,8 @@ module VmCommon
         else
           presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols']
         end
-        presenter[:set_visible_elements][:form_buttons_div] = false
-        presenter[:set_visible_elements][:pc_div_1] = true
+        presenter.hide(:form_buttons_div)
+        presenter.show(:pc_div_1)
       elsif @in_a_form
         if @sb[:action] == 'dialog_provision'
           presenter[:update_partials][:form_buttons_div] = r[
@@ -1609,12 +1609,12 @@ module VmCommon
         elsif action != "retire"
           presenter[:update_partials][:form_buttons_div] = r[:partial => 'layouts/x_edit_buttons', :locals => locals]
         end
-        presenter[:set_visible_elements][:pc_div_1] = false
-        presenter[:set_visible_elements][:form_buttons_div] = true
+        presenter.hide(:pc_div_1)
+        presenter.show(:form_buttons_div)
       end
-      presenter[:set_visible_elements][:paging_div] = true
+      presenter.show(:paging_div)
     else
-      presenter[:set_visible_elements][:paging_div] = false
+      presenter.hide(:paging_div)
     end
 
     presenter[:right_cell_text] = @right_cell_text
@@ -1634,7 +1634,7 @@ module VmCommon
 
     presenter[:osf_node] = x_node  # Open, select, and focus on this node
 
-    presenter[:set_visible_elements][:blocker_div] = false unless @edit && @edit[:adv_search_open]
+    presenter.hide(:blocker_div) unless @edit && @edit[:adv_search_open]
     presenter[:hide_modal] = true
     presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit
     # Render the JS responses to update the explorer screen

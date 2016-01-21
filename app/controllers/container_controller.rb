@@ -297,21 +297,21 @@ class ContainerController < ApplicationController
       presenter[:update_partials][:main_div] = r[:partial => partial, :locals => partial_locals]
     elsif record_showing
       presenter[:update_partials][:main_div] = r[:partial => "container/container_show", :locals => {:controller => "container"}]
-      presenter[:set_visible_elements][:pc_div_1] = false
-      presenter[:set_visible_elements][:paging_div] = false
+      presenter.hide(:pc_div_1)
+      presenter.hide(:paging_div)
     else
       presenter[:update_partials][:main_div] = r[:partial => "layouts/x_gtl"]
       presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
-      presenter[:set_visible_elements][:form_buttons_div] = false
-      presenter[:set_visible_elements][:pc_div_1] = true
-      presenter[:set_visible_elements][:paging_div] = true
+      presenter.hide(:form_buttons_div)
+      presenter.show(:pc_div_1)
+      presenter.show(:paging_div)
     end
 
     if %w(tag).include?(action)
-      presenter[:set_visible_elements][:form_buttons_div] = true
-      presenter[:set_visible_elements][:pc_div_1] = false
-      presenter[:set_visible_elements][:toolbar] = false
-      presenter[:set_visible_elements][:paging_div] = true
+      presenter.show(:form_buttons_div)
+      presenter.hide(:pc_div_1)
+      presenter.hide(:toolbar)
+      presenter.show(:paging_div)
       locals = {:action_url => action_url}
       locals[:multi_record] = true # need save/cancel buttons on edit screen even tho @record.id is not there
       locals[:record_id]    = @sb[:rec_id] || @edit[:object_ids] && @edit[:object_ids][0]
@@ -342,8 +342,8 @@ class ContainerController < ApplicationController
 
     presenter[:osf_node] = x_node  # Open, select, and focus on this node
 
-    presenter[:set_visible_elements][:blocker_div]    = false unless @edit && @edit[:adv_search_open]
-    presenter[:set_visible_elements][:quicksearchbox] = false
+    presenter.hide(:blocker_div) unless @edit && @edit[:adv_search_open]
+    presenter.hide(:quicksearchbox)
     presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit
     # Render the JS responses to update the explorer screen
     render :js => presenter.to_html

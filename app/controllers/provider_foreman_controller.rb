@@ -712,7 +712,7 @@ class ProviderForemanController < ApplicationController
   def update_partials(record_showing, presenter, r)
     if record_showing
       get_tagdata(@record)
-      presenter[:set_visible_elements][:form_buttons_div] = false
+      presenter.hide(:form_buttons_div)
       path_dir = "provider_foreman"
       presenter[:update_partials][:main_div] =
           r[:partial => "#{path_dir}/main", :locals => {:controller => 'provider_foreman'}]
@@ -726,7 +726,7 @@ class ProviderForemanController < ApplicationController
       partial = 'form'
       presenter[:update_partials][:main_div] = r[:partial => partial, :locals => partial_locals]
     elsif valid_configuration_profile_record?(@configuration_profile_record)
-      presenter[:set_visible_elements][:form_buttons_div] = false
+      presenter.hide(:form_buttons_div)
       presenter[:update_partials][:main_div] = r[:partial => "configuration_profile",
                                                  :locals  => {:controller => 'provider_foreman'}]
     else
@@ -757,15 +757,15 @@ class ProviderForemanController < ApplicationController
         else
           presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols']
         end
-        presenter[:set_visible_elements][:form_buttons_div] = false
-        presenter[:set_visible_elements][:pc_div_1] = true
+        presenter.hide(:form_buttons_div)
+        presenter.show(:pc_div_1)
       elsif @in_a_form
-        presenter[:set_visible_elements][:pc_div_1] = false
-        presenter[:set_visible_elements][:form_buttons_div] = true
+        presenter.hide(:pc_div_1)
+        presenter.show(:form_buttons_div)
       end
-      presenter[:set_visible_elements][:paging_div] = true
+      presenter.show(:paging_div)
     else
-      presenter[:set_visible_elements][:paging_div] = false
+      presenter.hide(:paging_div)
     end
   end
 
@@ -806,8 +806,8 @@ class ProviderForemanController < ApplicationController
     # Hide/show searchbox depending on if a list is showing
     presenter[:set_visible_elements][:adv_searchbox_div] = display_adv_searchbox
 
-    presenter[:set_visible_elements][:blocker_div]    = false unless @edit && @edit[:adv_search_open]
-    presenter[:set_visible_elements][:quicksearchbox] = false
+    presenter.hide(:blocker_div) unless @edit && @edit[:adv_search_open]
+    presenter.hide(:quicksearchbox)
     presenter[:lock_unlock_trees][x_active_tree] = @in_a_form
   end
 
