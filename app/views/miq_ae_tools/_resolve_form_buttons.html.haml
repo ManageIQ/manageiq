@@ -9,6 +9,15 @@
       :remote               => true,
       "data-method"         => :post,
       :title                => t)
+    - if @resolve[:ae_result] == 'retry'
+      - t = _("Retry state machine simulation, with preserved attributes")
+      = link_to(_("Retry"),
+      {:action => "resolve", :button => "retry"},
+      :class                => "btn btn-primary",
+      :alt                  => t,
+      "data-miq_sparkle_on" => true,
+      :remote               => true,
+      :title                => t)
     = link_to(_("Reset"),
       {:action => "resolve", :button => "reset"},
       :class                 => "btn btn-default",
