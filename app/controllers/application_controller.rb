@@ -1089,8 +1089,10 @@ class ApplicationController < ActionController::Base
       # Generate html for the list icon
       # do not add listicon for AE class show_list
       unless %w(miqaeclass miqaeinstance).include?(view.db.downcase)
+        item = listicon_item(view, row['id'])
+
         new_row[:cells] << {:title => 'View this item',
-                            :image => listicon_image(view, row['id'])}
+                            :image => listicon_image(item, view)}
       end
 
       view.col_order.each_with_index do |col, col_idx|
@@ -1131,16 +1133,20 @@ class ApplicationController < ActionController::Base
     val == 100 ? 20 : ((val + 2) / 5.25).round # val is the percentage value of free space
   end
 
-  # Return the image name for the list view icon of a db,id pair
-  def listicon_image(view, id = nil)
+  def listicon_item(view, id = nil)
     id = @id if id.nil?
-    item = if @targets_hash
-             @targets_hash[id] # Get the record from the view
-           else
-             klass = view.db.constantize
-             klass.find(id)    # Read the record from the db
-           end
 
+    if @targets_hash
+      @targets_hash[id] # Get the record from the view
+    else
+      klass = view.db.constantize
+      klass.find(id)    # Read the record from the db
+    end
+  end
+  private :listicon_item
+
+  # Return the image name for the list view icon of a db,id pair
+  def listicon_image(item, view)
     default = "100/#{(@listicon || view.db).underscore}.png"
     image = case item
             when ExtManagementSystem   then "100/vendor-#{item.image_name}.png"
