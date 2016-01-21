@@ -61,6 +61,7 @@ class ExplorerPresenter
 
   def set_visibility(value, elements)
     elements.each { |el| @options[:set_visible_elements][el] = value }
+    self
   end
 
   def hide(*elements)

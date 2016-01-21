@@ -726,13 +726,11 @@ class OpsController < ApplicationController
       presenter.hide(:form_buttons_div, :pc_div_1)
     elsif @pages || @in_a_form
       if @pages
-        presenter.hide(:form_buttons_div)
-        presenter.show(:pc_div_1)
+        presenter.hide(:form_buttons_div).show(:pc_div_1)
         presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
       elsif @in_a_form
         presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
-        presenter.show(:form_buttons_div)
-        presenter.hide(:pc_div_1)
+        presenter.show(:form_buttons_div).hide(:pc_div_1)
       end
       presenter.show(:paging_div)
     else

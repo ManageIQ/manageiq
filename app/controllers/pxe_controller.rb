@@ -280,8 +280,7 @@ class PxeController < ApplicationController
       end
       presenter.hide(:pc_div_1)
     else
-      presenter.hide(:form_buttons_div)
-      presenter.show(:pc_div_1)
+      presenter.hide(:form_buttons_div).show(:pc_div_1)
     end
 
     presenter[:record_id] = determine_record_id_for_presenter

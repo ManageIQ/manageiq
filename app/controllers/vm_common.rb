@@ -1488,8 +1488,7 @@ module VmCommon
       :delete_node => @delete_node,      # Remove a new node from the tree
     )
 
-    presenter.show(:default_left_cell)
-    presenter.hide(:custom_left_cell)
+    presenter.show(:default_left_cell).hide(:custom_left_cell)
 
     r = proc { |opts| render_to_string(opts) }
 
@@ -1543,8 +1542,7 @@ module VmCommon
       if ['compare', 'drift'].include?(@sb[:action])
         presenter[:update_partials][:custom_left_cell] = r[
           :partial => 'layouts/listnav/x_compare_sections', :locals => {:truncate_length => 23}]
-        presenter.show(:custom_left_cell)
-        presenter.hide(:default_left_cell)
+        presenter.show(:custom_left_cell).hide(:default_left_cell)
       end
     elsif @sb[:action] || params[:display]
       partial_locals = {
@@ -1595,8 +1593,7 @@ module VmCommon
         else
           presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols']
         end
-        presenter.hide(:form_buttons_div)
-        presenter.show(:pc_div_1)
+        presenter.hide(:form_buttons_div).show(:pc_div_1)
       elsif @in_a_form
         if @sb[:action] == 'dialog_provision'
           presenter[:update_partials][:form_buttons_div] = r[
@@ -1609,8 +1606,7 @@ module VmCommon
         elsif action != "retire"
           presenter[:update_partials][:form_buttons_div] = r[:partial => 'layouts/x_edit_buttons', :locals => locals]
         end
-        presenter.hide(:pc_div_1)
-        presenter.show(:form_buttons_div)
+        presenter.hide(:pc_div_1).show(:form_buttons_div)
       end
       presenter.show(:paging_div)
     else

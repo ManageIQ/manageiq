@@ -808,8 +808,7 @@ class ChargebackController < ApplicationController
          (x_active_tree == :cb_assignments_tree && ["Compute", "Storage"].include?(x_node.split('-').last))
         presenter.hide(:toolbar)
         # incase it was hidden for summary screen, and incase there were no records on show_list
-        presenter.show(:paging_div, :form_buttons_div)
-        presenter.hide(:pc_div_1)
+        presenter.show(:paging_div, :form_buttons_div).hide(:pc_div_1)
         locals = {:record_id => @edit[:rec_id]}
         if x_active_tree == :cb_rates_tree
           locals[:action_url] = 'cb_rate_edit'
@@ -823,13 +822,10 @@ class ChargebackController < ApplicationController
         presenter[:update_partials][:form_buttons_div] = r[:partial => 'layouts/x_edit_buttons', :locals => locals]
       else
         # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box when trying to change a node on tree after saving a record
-        presenter.hide(:buttons_on)
-        presenter.show(:toolbar)
-        presenter.hide(:paging_div)
+        presenter.hide(:buttons_on).show(:toolbar).hide(:paging_div)
       end
     else
-      presenter.hide(:form_buttons_div)
-      presenter.show(:pc_div_1)
+      presenter.hide(:form_buttons_div).show(:pc_div_1)
       if (x_active_tree == :cb_assignments_tree && x_node == "root") ||
          (x_active_tree == :cb_reports_tree && !@report) ||
          (x_active_tree == :cb_rates_tree && x_node == "root")

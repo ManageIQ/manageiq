@@ -757,11 +757,9 @@ class ProviderForemanController < ApplicationController
         else
           presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols']
         end
-        presenter.hide(:form_buttons_div)
-        presenter.show(:pc_div_1)
+        presenter.hide(:form_buttons_div).show(:pc_div_1)
       elsif @in_a_form
-        presenter.hide(:pc_div_1)
-        presenter.show(:form_buttons_div)
+        presenter.hide(:pc_div_1).show(:form_buttons_div)
       end
       presenter.show(:paging_div)
     else

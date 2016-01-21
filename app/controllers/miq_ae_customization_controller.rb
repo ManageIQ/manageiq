@@ -313,8 +313,7 @@ class MiqAeCustomizationController < ApplicationController
       if @pages
         @ajax_paging_buttons = true # FIXME: this should not be done this way
         presenter[:update_partials][:paging_div] = render_proc[:partial => 'layouts/x_pagingcontrols']
-        presenter.hide(:form_buttons_div)
-        presenter.show(:pc_div_1)
+        presenter.hide(:form_buttons_div).show(:pc_div_1)
       elsif @in_a_form && @sb[:action]
         action_url = case x_active_tree
                      when :old_dialogs_tree then 'old_dialogs_update'
@@ -335,8 +334,7 @@ class MiqAeCustomizationController < ApplicationController
           :multi_record => @sb[:action] == 'ab_group_reorder',
         }
         presenter[:update_partials][:form_buttons_div] = render_proc[:partial => "layouts/x_edit_buttons", :locals => locals]
-        presenter.hide(:pc_div_1)
-        presenter.show(:form_buttons_div)
+        presenter.hide(:pc_div_1).show(:form_buttons_div)
       end
       presenter.show(:paging_div)
     else
@@ -399,8 +397,7 @@ class MiqAeCustomizationController < ApplicationController
 
     if x_active_tree == :dialogs_tree && @sb[:active_tab] == "sample_tab" && nodetype != "root" && @record.buttons
       presenter[:update_partials][:form_buttons_div] = render_proc[:partial => "dialog_sample_buttons"]
-      presenter.hide(:pc_div_1, :form_buttons_div)
-      presenter.show(:paging_div)
+      presenter.hide(:pc_div_1, :form_buttons_div).show(:paging_div)
     end
   end
 
@@ -450,8 +447,7 @@ class MiqAeCustomizationController < ApplicationController
     presenter[:miq_widget_dd_url] = 'miq_ae_customization/dialog_res_reorder'
     presenter[:init_dashboard] = true
     presenter[:update_partials][:custom_left_cell] = render_proc[:partial => "dialog_edit_tree"]
-    presenter.show(:custom_left_cell)
-    presenter.hide(:default_left_cell)
+    presenter.show(:custom_left_cell).hide(:default_left_cell)
   end
 
   def setup_presenter_for_dialogs_tree(nodetype, presenter)
@@ -469,8 +465,7 @@ class MiqAeCustomizationController < ApplicationController
     if %w(save reset).include?(params[:button]) && is_browser_ie?
       presenter[:extra_js] << "ManageIQ.oneTransition.IEButtonPressed = true"
     end
-    presenter.hide(:custom_left_cell)
-    presenter.show(:default_left_cell)
+    presenter.hide(:custom_left_cell).show(:default_left_cell)
   end
 
   def setup_presenter_for_old_dialogs_tree(nodetype, presenter)
