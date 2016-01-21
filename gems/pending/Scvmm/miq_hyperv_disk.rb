@@ -36,7 +36,8 @@ class MiqHyperVDisk
     stat_script = <<-STAT_EOL
     (Get-Item "#{@virtual_disk}").length
 STAT_EOL
-    file_size, _stderr   = @parser.parse_single_powershell_value(@winrm.run_powershell_script(stat_script))
+    file_size, stderr = @parser.parse_single_powershell_value(@winrm.run_powershell_script(stat_script))
+    raise "Unable to obtain virtual disk size for #{vm_disk}" if stderr.include?("At line:")
     @file_size           = file_size.to_i
     @end_byte_addr       = @file_size - 1
     @size_in_blocks, rem = @file_size.divmod(@block_size)
