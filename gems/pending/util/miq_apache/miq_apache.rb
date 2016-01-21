@@ -205,9 +205,15 @@ module MiqApache
 
     def self.create_redirects_config(opts = {})
       opts[:redirects].to_miq_a.each_with_object("") do |redirect, content|
-        content << "ProxyPass /proxy_pages !\n" if redirect == "/"
-        content << "ProxyPass /self_service !\n" if redirect == "/"
-        content << "ProxyPass #{redirect} balancer://#{opts[:cluster]}#{redirect}\n"
+        if redirect == "/"
+          content << "RewriteRule ^/self_service(?!/(assets|images|img|styles|js|fonts)) /self_service/index.html [L]\n"
+          content << "RewriteCond \%{REQUEST_URI} !^/proxy_pages\n"
+          content << "RewriteCond \%{DOCUMENT_ROOT}/\%{REQUEST_FILENAME} !-f\n"
+          content << "RewriteRule ^#{redirect} balancer://#{opts[:cluster]}\%{REQUEST_URI} [P,QSA,L]\n"
+        else
+          content << "ProxyPass #{redirect} balancer://#{opts[:cluster]}#{redirect}\n"
+        end
+        # yes, we want ProxyPassReverse for both ProxyPass AND RewriteRule [P]
         content << "ProxyPassReverse #{redirect} balancer://#{opts[:cluster]}#{redirect}\n"
       end
     end
