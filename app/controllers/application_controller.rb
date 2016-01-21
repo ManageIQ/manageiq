@@ -1151,7 +1151,7 @@ class ApplicationController < ActionController::Base
   # Return the icon classname for the list view icon of a db,id pair
   # this always supersedes listicon_image if not nil
   def listicon_icon(item)
-    item.decorate.try(:fonticon)
+    item.decorate.try(:fonticon) if item.decorator_class?
   end
 
   # Return the image name for the list view icon of a db,id pair
@@ -1166,7 +1166,7 @@ class ApplicationController < ActionController::Base
             when MiqRequest
               item.decorate.listicon_image || "100/#{@listicon.downcase}.png"
             else
-              item.decorate.try(:listicon_image)
+              item.decorate.try(:listicon_image) if item.decorator_class?
             end
 
     list_row_image(image || default, item)
