@@ -619,7 +619,7 @@ class MiqPolicyController < ApplicationController
                   _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "MiqPolicySet"), :name => @profile.description.gsub(/'/, "\\'")}
         end
     when 'xx'
-      presenter[:update_partials][:main_div] =
+      presenter.update(:main_div,
         if @profiles
           r[:partial => 'profile_list']
         elsif @policies || (@view && @sb[:tree_typ] == 'policies')
@@ -634,6 +634,7 @@ class MiqPolicyController < ApplicationController
         elsif @alert_profiles
           r[:partial => 'alert_profile_list']
         end
+      )
     when 'p'
       presenter.update(:main_div, r[:partial => 'policy_details', :locals => {:read_only => true}])
       if @policy.id.blank?

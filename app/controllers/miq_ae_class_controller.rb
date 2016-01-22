@@ -347,12 +347,12 @@ class MiqAeClassController < ApplicationController
         :partial => "layouts/flash_msg",
         :locals  => {:div_num => replace_partial_div_num}
     ]) if replace_partial_div
-    presenter[:update_partials][update_partial_div] = r[:partial => update_partial] if update_partial
+    presenter.update(update_partial_div, r[:partial => update_partial]) if update_partial
     if @in_a_form
       action_url =  create_action_url(nodes.first)
       # incase it was hidden for summary screen, and incase there were no records on show_list
       presenter.show(:paging_div, :form_buttons_div)
-      presenter[:update_partials][:form_buttons_div] = r[
+      presenter.update(:form_buttons_div, r[
         :partial => "layouts/x_edit_buttons",
         :locals  => {
           :record_id    => @edit[:rec_id],
@@ -361,7 +361,7 @@ class MiqAeClassController < ApplicationController
           :multi_record => @sb[:action] == "miq_ae_domain_priority_edit",
           :serialize    => @sb[:active_tab] == 'methods',
         }
-      ]
+      ])
     else
       # incase it was hidden for summary screen, and incase there were no records on show_list
       presenter.hide(:paging_div, :form_buttons_div)

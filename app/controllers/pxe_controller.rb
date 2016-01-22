@@ -263,7 +263,7 @@ class PxeController < ApplicationController
                                      "template_create_update"
                                    end
 
-        presenter[:update_partials][:form_buttons_div] = r[
+        presenter.update(:form_buttons_div, r[
           :partial => "layouts/x_edit_buttons",
           :locals  => {
             :record_id    => @edit[:rec_id],
@@ -271,7 +271,7 @@ class PxeController < ApplicationController
             :multi_record => multi_record,
             :serialize    => true
           }
-        ]
+        ])
       else
         presenter.hide(:form_buttons_div)
       end

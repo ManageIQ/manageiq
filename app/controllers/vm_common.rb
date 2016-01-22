@@ -1540,8 +1540,8 @@ module VmCommon
       add_ajax = true
 
       if ['compare', 'drift'].include?(@sb[:action])
-        presenter[:update_partials][:custom_left_cell] = r[
-          :partial => 'layouts/listnav/x_compare_sections', :locals => {:truncate_length => 23}]
+        presenter.update(:custom_left_cell, r[
+          :partial => 'layouts/listnav/x_compare_sections', :locals => {:truncate_length => 23}])
         presenter.show(:custom_left_cell).hide(:default_left_cell)
       end
     elsif @sb[:action] || params[:display]
@@ -1582,27 +1582,27 @@ module VmCommon
       if @pages && !@in_a_form
         @ajax_paging_buttons = true # FIXME: this should not be done this way
         if @sb[:action] && @record  # Came in from an action link
-          presenter[:update_partials][:paging_div] = r[
+          presenter.update(:paging_div, r[
             :partial => 'layouts/x_pagingcontrols',
             :locals  => {
               :action_url    => @sb[:action],
               :action_method => @sb[:action], # FIXME: action method and url the same?!
               :action_id     => @record.id
             }
-          ]
+          ])
         else
           presenter.update(:paging_div, r[:partial => 'layouts/x_pagingcontrols'])
         end
         presenter.hide(:form_buttons_div).show(:pc_div_1)
       elsif @in_a_form
         if @sb[:action] == 'dialog_provision'
-          presenter[:update_partials][:form_buttons_div] = r[
+          presenter.update(:form_buttons_div, r[
             :partial => 'layouts/x_dialog_buttons',
             :locals  => {
               :action_url => action,
               :record_id  => @edit[:rec_id],
             }
-          ]
+          ])
         elsif action != "retire"
           presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons', :locals => locals])
         end

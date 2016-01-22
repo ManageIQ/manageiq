@@ -714,8 +714,8 @@ class ProviderForemanController < ApplicationController
       get_tagdata(@record)
       presenter.hide(:form_buttons_div)
       path_dir = "provider_foreman"
-      presenter[:update_partials][:main_div] =
-          r[:partial => "#{path_dir}/main", :locals => {:controller => 'provider_foreman'}]
+      presenter.update(:main_div, r[:partial => "#{path_dir}/main",
+                                    :locals => {:controller => 'provider_foreman'}])
     elsif @in_a_form
       partial_locals = {:controller => 'provider_foreman'}
       if @sb[:action] == "provider_foreman_add_provider"
@@ -727,8 +727,8 @@ class ProviderForemanController < ApplicationController
       presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])
     elsif valid_configuration_profile_record?(@configuration_profile_record)
       presenter.hide(:form_buttons_div)
-      presenter[:update_partials][:main_div] = r[:partial => "configuration_profile",
-                                                 :locals  => {:controller => 'provider_foreman'}]
+      presenter.update(:main_div, r[:partial => "configuration_profile",
+                                    :locals  => {:controller => 'provider_foreman'}])
     else
       presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
     end
@@ -748,12 +748,11 @@ class ProviderForemanController < ApplicationController
     if @pages || @in_a_form
       if @pages && !@in_a_form
         @ajax_paging_buttons = true
-        if @sb[:action] && @record  # Came in from an action link
-          presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols',
-                                                       :locals  => {:action_url    => @sb[:action],
-                                                                    :action_method => @sb[:action],
-                                                                    :action_id     => @record.id
-                                                       }]
+        if @sb[:action] && @record # Came in from an action link
+          presenter.update(:paging_div, r[:partial => 'layouts/x_pagingcontrols',
+                                          :locals  => {:action_url    => @sb[:action],
+                                                       :action_method => @sb[:action],
+                                                       :action_id     => @record.id}])
         else
           presenter.update(:paging_div, r[:partial => 'layouts/x_pagingcontrols'])
         end
@@ -835,10 +834,10 @@ class ProviderForemanController < ApplicationController
   end
 
   def update_tagging_partials(presenter, r)
-    presenter[:update_partials][:main_div] = r[:partial => 'layouts/tagging',
-                                               :locals  => locals_for_tagging]
-    presenter[:update_partials][:form_buttons_div] = r[:partial => 'layouts/x_edit_buttons',
-                                                       :locals  => locals_for_tagging]
+    presenter.update(:main_div, r[:partial => 'layouts/tagging',
+                                  :locals  => locals_for_tagging])
+    presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons',
+                                          :locals  => locals_for_tagging])
   end
 
   def clear_flash_msg

@@ -780,7 +780,7 @@ class ChargebackController < ApplicationController
         presenter.reload_toolbars(:center => c_tb)
       end
       presenter.set_visibility(c_tb.present?, :toolbar)
-      presenter[:update_partials][:main_div]   = r[:partial => 'rates_tabs']
+      presenter.update(:main_div, r[:partial => 'rates_tabs'])
       presenter.update(:paging_div, r[:partial => 'layouts/x_pagingcontrols'])
     when :cb_assignments_tree
       # Assignments accordion
@@ -794,8 +794,8 @@ class ChargebackController < ApplicationController
       end
       presenter.update(:main_div, r[:partial => 'reports_list'])
       if @html
-        presenter[:update_partials][:paging_div] = r[:partial => 'layouts/saved_report_paging_bar',
-                                                     :locals  => @sb[:pages]]
+        presenter.update(:paging_div, r[:partial => 'layouts/saved_report_paging_bar',
+                                        :locals  => @sb[:pages]])
         presenter.show(:paging_div)
       else
         presenter.hide(:paging_div)

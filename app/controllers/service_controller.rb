@@ -367,7 +367,7 @@ class ServiceController < ApplicationController
     presenter[:right_cell_text] = @right_cell_text
 
     # Replace right cell divs
-    presenter[:update_partials][:main_div] =
+    presenter.update(:main_div,
       if ["dialog_provision", "ownership", "retire", "service_edit", "tag"].include?(action)
         r[:partial => partial]
       elsif params[:display]
@@ -378,12 +378,13 @@ class ServiceController < ApplicationController
         presenter.update(:paging_div, r[:partial => "layouts/x_pagingcontrols"])
         r[:partial => "layouts/x_gtl"]
       end
+    )
     if %w(dialog_provision ownership service_edit tag).include?(action)
       presenter.show(:form_buttons_div).hide(:pc_div_1, :toolbar).show(:paging_div)
       if action == "dialog_provision"
-        presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_dialog_buttons",
-                                                           :locals  => {:action_url => action_url,
-                                                                        :record_id  => @edit[:rec_id]}]
+        presenter.update(:form_buttons_div, r[:partial => "layouts/x_dialog_buttons",
+                                              :locals  => {:action_url => action_url,
+                                                           :record_id  => @edit[:rec_id]}])
       else
         if action == "tag"
           locals = {:action_url => action_url}

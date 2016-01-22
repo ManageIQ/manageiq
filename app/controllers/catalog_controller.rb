@@ -1826,7 +1826,7 @@ class CatalogController < ApplicationController
     presenter[:right_cell_text] = right_cell_text
 
     # Replace right cell divs
-    presenter[:update_partials][:main_div] =
+    presenter.update(:main_div,
       if @tagging
         action_url = x_active_tree == :ot_tree ? "ot_tags_edit" : "st_tags_edit"
         r[:partial => "layouts/x_tagging", :locals => {:action_url => action_url}]
@@ -1852,6 +1852,7 @@ class CatalogController < ApplicationController
         presenter.update(:paging_div, r[:partial => "layouts/x_pagingcontrols"])
         r[:partial => "layouts/x_gtl"]
       end
+    )
 
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 
@@ -1903,7 +1904,7 @@ class CatalogController < ApplicationController
             }
           end
         end
-        presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_dialog_buttons", :locals => {:action_url => "dialog_form_button_pressed", :record_id => @edit[:rec_id]}]
+        presenter.update(:form_buttons_div, r[:partial => "layouts/x_dialog_buttons", :locals => {:action_url => "dialog_form_button_pressed", :record_id => @edit[:rec_id]}])
       elsif %w(ot_edit ot_copy ot_add service_dialog_from_ot).include?(action)
         presenter.hide(:toolbar).show(:paging_div, :form_buttons_div).hide(:pc_div_1)
         locals = {:record_id  => @edit[:rec_id],

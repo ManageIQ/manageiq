@@ -518,7 +518,7 @@ class OpsController < ApplicationController
       @right_cell_text = "Editing Log Depot settings"
       presenter.update(:diagnostics_collect_logs, r[:partial => "ops/log_collection"])
     else
-      presenter[:update_partials][@sb[:active_tab].to_sym] = r[:partial => "#{@sb[:active_tab]}_tab"]
+      presenter.update(@sb[:active_tab], r[:partial => "#{@sb[:active_tab]}_tab"])
     end
     # zone level
     presenter[:build_calendar] = {} if x_node.split("-").first == "z"

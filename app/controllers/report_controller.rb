@@ -839,7 +839,7 @@ class ReportController < ApplicationController
         presenter.hide(:menu_div1, :menu_div2).show(:menu_div3)
       end
     elsif nodetype == "menu_default" || nodetype == "menu_reset"
-      presenter[:update_partials][:main_div]   = r[:partial => partial]
+      presenter.update(:main_div, r[:partial => partial])
       presenter.replace(:menu_div1, r[:partial => "menu_form1", :locals => {:folders => @grid_folders}])
       presenter.hide(:menu_div1, :menu_div2).show(:menu_div3).hide(:treeStatus)
       # set changed to true if menu has been set to default
@@ -906,7 +906,7 @@ class ReportController < ApplicationController
         presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons', :locals => locals])
         presenter.hide(:pc_div_1, :rpb_div_1).show(:form_buttons_div)
       elsif @sb[:pages]
-        presenter[:update_partials][:paging_div] = r[:partial => 'layouts/saved_report_paging_bar', :locals => @sb[:pages]]
+        presenter.update(:paging_div, r[:partial => 'layouts/saved_report_paging_bar', :locals => @sb[:pages]])
         presenter.hide(:form_buttons_div).show(:rpb_div_1).hide(:pc_div_1)
       end
       presenter.show(:paging_div)
