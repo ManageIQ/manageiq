@@ -16,17 +16,11 @@ shared_examples "custom_report_with_custom_attributes" do |base_report, custom_a
     ae_result_key = 'foo'
     @user = FactoryGirl.create(:user_with_group)
 
-    if base_report == "Host"
-      type_of_resource = :host
-    else
-      type_of_resource = :vm_vmware
-    end
-
     # create custom attributes
     @key    = 'key1'
     @value  = 'value1'
 
-    @resource = FactoryGirl.create(type_of_resource)
+    @resource = base_report == "Host" ? FactoryGirl.create(:host) : FactoryGirl.create(:vm_vmware)
     FactoryGirl.create(custom_attribute_field, :resource => @resource, :name => @key, :value => @value)
 
     if custom_attribute_field == :ems_custom_attribute
@@ -38,20 +32,15 @@ shared_examples "custom_report_with_custom_attributes" do |base_report, custom_a
     method = "$evm.root['#{ae_result_key}'] = $evm.root['#{base_report_downcase}'].#{custom_get_method}('#{@key}')"
     @ae_method.update_attributes(:data => method)
     @ae_object = invoke_ae.root(ae_result_key)
+  end
 
-    if base_report == "Host"
-      db = "Host"
-    else
-      db = "ManageIQ::Providers::InfraManager::Vm"
-    end
-
-    # create report
-    @report = MiqReport.new(
+  let(:report) do
+    MiqReport.new(
       :name      => "Custom VM report",
       :title     => "Custom VM report",
       :rpt_group => "Custom",
       :rpt_type  => "Custom",
-      :db        => db,
+      :db        => base_report == "Host" ? "Host" : "ManageIQ::Providers::InfraManager::Vm",
       :cols      => %w(name),
       :include   => {"#{custom_attributes_field}" => {"columns" => %w(name value)}},
       :col_order => %w(miq_custom_attributes.name miq_custom_attributes.value name),
@@ -62,7 +51,7 @@ shared_examples "custom_report_with_custom_attributes" do |base_report, custom_a
   end
 
   it "creates custom report based on #{base_report} with #{custom_attribute_field} field of custom attributes" do
-    expect { @results, _attrs = @report.paged_view_search(options) }.not_to raise_error
+    expect { @results, _attrs = report.paged_view_search(options) }.not_to raise_error
 
     custom_attributes_name = "#{custom_attributes_field}.name"
     custom_attributes_value = "#{custom_attributes_field}.value"
@@ -390,7 +379,7 @@ describe MiqReport do
 
   describe "#generate_table" do
     before :each do
-      allow(MiqServer).to receive(:my_zone) { "Zone 1" }
+      EvmSpecHelper.local_miq_server
       FactoryGirl.create(:time_profile_utc)
     end
     let(:report) do
@@ -425,6 +414,24 @@ describe MiqReport do
                                   :report_source => "Requested by user")
           end.not_to raise_error
         end
+      end
+    end
+    context "performance reports" do
+      let(:report) do
+        MiqReport.new(
+          :title   => "vim_perf_daily.yaml",
+          :db      => "VimPerformanceDaily",
+          :cols    => %w(timestamp cpu_usagemhz_rate_average max_derived_cpu_available),
+          :include => { "metric_rollup" => {
+            "columns" => %w(cpu_usagemhz_rate_average_high_over_time_period
+                            cpu_usagemhz_rate_average_low_over_time_period
+                            derived_memory_used_high_over_time_period
+                            derived_memory_used_low_over_time_period)}})
+      end
+      let(:ems) { FactoryGirl.create(:ems_vmware, :zone => @server.zone) }
+
+      it "runs report" do
+        report.generate_table(:userid => "admin")
       end
     end
   end
