@@ -35,13 +35,5 @@ module ManageIQ::Providers
       open_timeout = open_timeout.to_i_with_method if open_timeout
       [read_timeout, open_timeout]
     end
-
-    #
-    # Helper proc to make sure any ems configs defined in template
-    # are merged in upon startup.
-    #
-    def self.merge_config_settings(cfg = VMDB::Config.new("vmdb"))
-      cfg.merge_from_template_if_missing(:ems, :ems_redhat, :service, :read_timeout)
-    end
   end
 end

@@ -491,10 +491,6 @@ class MiqWorker < ApplicationRecord
     attr_writer :config_settings_path
   end
 
-  def self.validate_config_settings(configuration = VMDB::Config.new("vmdb"))
-    configuration.merge_from_template_if_missing(*config_settings_path) unless config_settings_path.empty?
-  end
-
   def update_spid(spid = ActiveRecord::Base.connection.spid)
     self.sql_spid = spid
   end

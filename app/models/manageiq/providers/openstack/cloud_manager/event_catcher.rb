@@ -13,14 +13,4 @@ class ManageIQ::Providers::Openstack::CloudManager::EventCatcher < ::MiqEventCat
       end
     end
   end
-
-  def self.validate_config_settings(config = VMDB::Config.new("vmdb"))
-    super
-
-    # make sure that new configurations for :topics and :duration are loaded
-    config.merge_from_template_if_missing(:workers, :worker_base, :event_catcher, :event_catcher_openstack, :topics)
-    config.merge_from_template_if_missing(:workers, :worker_base, :event_catcher, :event_catcher_openstack, :duration)
-    config.merge_from_template_if_missing(:workers, :worker_base, :event_catcher, :event_catcher_openstack, :capacity)
-    config.merge_from_template_if_missing(:workers, :worker_base, :event_catcher, :event_catcher_openstack, :amqp_port)
-  end
 end
