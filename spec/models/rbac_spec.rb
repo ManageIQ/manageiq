@@ -199,7 +199,7 @@ describe Rbac do
     context "searching for hosts" do
       it "can filter results by vmm_vendor" do
         host = FactoryGirl.create(:host, :vmm_vendor => "vmware")
-        expression = MiqExpression.new("=" => {"field" => "Host-vmm_vendor", "value" => "VMware"})
+        expression = MiqExpression.new("=" => {"field" => "Host-vmm_vendor", "value" => "vmware"})
 
         results = Rbac.search(:class => "Host", :filter => expression).first
 

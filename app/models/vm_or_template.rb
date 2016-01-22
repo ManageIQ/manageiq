@@ -1001,7 +1001,7 @@ class VmOrTemplate < ApplicationRecord
 
       # VMware needs a VMware host to resolve datastore names
       if vendor == 'VMware'
-        hosts.delete_if { |h| h.vmm_vendor != 'VMware' }
+        hosts.delete_if { |h| !h.is_vmware? }
       end
     end
 

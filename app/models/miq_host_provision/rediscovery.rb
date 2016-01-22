@@ -6,7 +6,7 @@ module MiqHostProvision::Rediscovery
 
   def host_rediscovered?
     if pxe_image.try(:pxe_image_type).try(:esx?)
-      host && host.vmm_vendor.to_s.downcase != 'unknown'
+      host && host.vmm_vendor_display.to_s.downcase != 'unknown'
     else
       state == 'provisioned'
     end

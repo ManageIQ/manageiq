@@ -6,6 +6,6 @@ class HostDecorator < Draper::Decorator
   end
 
   def listicon_image
-    "100/vendor-#{vmm_vendor.downcase}.png"
+    "100/vendor-#{vmm_vendor_display.downcase}.png"
   end
 end
