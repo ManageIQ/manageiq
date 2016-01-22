@@ -6,15 +6,7 @@ module Vmdb
       load(dump(hash))
     end
 
-    def self.stringify!(h)
-      h.each_key { |k| h[k].stringify_keys! }.stringify_keys!
-    end
-
-    def self.symbolize!(h)
-      h.each_key { |k| h[k].symbolize_keys! }.symbolize_keys!
-    end
-
-    def self.load(data, symbolize_keys = true, &block)
+    def self.load(data, &block)
       return {} if data.blank?
 
       if defined?(Rails) && !Rails.env.production?
@@ -26,8 +18,6 @@ module Vmdb
       # shouldn't be necessary: fixes issue when data was double encoded
       hash = YAML.load(hash) if hash.kind_of?(String)
 
-      symbolize!(stringify!(hash)) if symbolize_keys
-
       if block_given?
         walk_nested_hashes(hash, &block)
       else
@@ -35,7 +25,7 @@ module Vmdb
       end
     end
 
-    def self.dump(hash, fd = nil, stringify_keys = true, &block)
+    def self.dump(hash, fd = nil, &block)
       hash = hash.deep_clone
 
       if block_given?
@@ -43,7 +33,7 @@ module Vmdb
       else
         encrypt_password_fields!(hash)
       end
-      stringify!(hash) if stringify_keys
+
       YAML.dump(hash, fd)
     end
 
