@@ -41,7 +41,7 @@ class PolicyEvent < ActiveRecord::Base
       end
 
       (r[:miq_actions] + r[:miq_policy_sets]).each do|c|
-        pe.contents << PolicyEventContent.new(:resource_id => c.id, :resource_type => c.class.name, :resource_description => c.description)
+        pe.contents << PolicyEventContent.new(:resource => c, :resource_description => c.description)
       end
       pe.save
     end

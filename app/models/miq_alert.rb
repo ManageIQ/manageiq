@@ -175,12 +175,14 @@ class MiqAlert < ActiveRecord::Base
   def postpone_evaluation?(target)
     # TODO: Are there some alerts that we always want to evaluate?
 
-    # If a miq alert status exists for our resource and alert, and it has not been delay_next_evaluation seconds since it was evaluated, return false so we can skip evaluation
+    # If a miq alert status exists for our resource and alert, and it has not been delay_next_evaluation seconds since
+    # it was evaluated, return true so we can skip evaluation
     delay_next_evaluation = (options || {}).fetch_path(:notifications, :delay_next_evaluation)
     start_skipping_at = Time.now.utc - (delay_next_evaluation || 10.minutes).to_i
+    statuses_not_expired = miq_alert_statuses.where(:resource => target, :result => true)
+                           .where(miq_alert_statuses.arel_table[:evaluated_on].gt(start_skipping_at))
 
-    statuses_not_expired = miq_alert_statuses.where("result = ? AND resource_type = ? AND resource_id = ? AND evaluated_on > ?", true, target.class.base_class.name, target.id, start_skipping_at).count
-    if statuses_not_expired > 0
+    if statuses_not_expired.count > 0
       _log.info("Skipping re-evaluation of Alert [#{description}] for target: [#{target.name}] with delay_next_evaluation [#{delay_next_evaluation}]")
       return true
     else
@@ -211,11 +213,9 @@ class MiqAlert < ActiveRecord::Base
   end
 
   def add_status_post_evaluate(target, result)
-    existing = miq_alert_statuses.find_by(:resource_type => target.class.base_class.name, :resource_id => target.id)
-    status = existing.nil? ? MiqAlertStatus.new : existing
+    status = miq_alert_statuses.find_or_initialize_by(:resource => target)
     status.result = result
     status.evaluated_on = Time.now.utc
-    status.resource = target
     status.save
     miq_alert_statuses << status
   end
@@ -651,7 +651,7 @@ class MiqAlert < ActiveRecord::Base
       return false
     end
 
-    status = miq_alert_statuses.find_by(:resource_type => target.class.base_class.name, :resource_id => target.id)
+    status = target.miq_alert_statuses.first
     if status
       since_last_eval = (Time.now.utc - status.evaluated_on)
       eval_options[:starting_on] = if (since_last_eval >= eval_options[:duration])

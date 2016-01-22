@@ -660,7 +660,7 @@ class MiqServer < ActiveRecord::Base
   def permitted_groups
     groups = miq_groups.order(:sequence).to_a
     groups = zone.miq_groups.order(:sequence).to_a if groups.empty?
-    groups = MiqGroup.where(:resource_id => nil, :resource_type => nil).order(:sequence).to_a if groups.empty?
+    groups = MiqGroup.where(:resource => nil).order(:sequence).to_a if groups.empty?
     groups
   end
 
