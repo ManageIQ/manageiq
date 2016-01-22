@@ -89,7 +89,7 @@ describe VMDB::Config do
                          :bind_pwd                    => "top_secret_bind_pwd",
                          :get_direct_groups           => true,
                          :group_memberships_max_depth => 2,
-                         :ldaphost                    => ["16.1.2.119"],
+                         :ldaphost                    => ["192.0.2.255"],
                          :ldapport                    => "389",
                          :mode                        => "ldap",
                          :user_suffix                 => "manageiq.com",
