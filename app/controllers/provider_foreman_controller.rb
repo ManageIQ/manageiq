@@ -601,7 +601,7 @@ class ProviderForemanController < ApplicationController
   def render_form
     presenter, r = rendering_objects
     @in_a_form = true
-    presenter[:update_partials][:main_div] = r[:partial => 'form', :locals => {:controller => 'provider_foreman'}]
+    presenter.update(:main_div, r[:partial => 'form', :locals => {:controller => 'provider_foreman'}])
     update_title(presenter)
     rebuild_toolbars(false, presenter)
     handle_bottom_cell(presenter, r)
@@ -627,7 +627,7 @@ class ProviderForemanController < ApplicationController
     presenter, r = rendering_objects
     replace_explorer_trees(replace_trees, presenter, r)
 
-    presenter[:update_partials][:main_div] = r[:partial => 'layouts/x_gtl']
+    presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
     rebuild_toolbars(false, presenter)
     handle_bottom_cell(presenter, r)
     render :js => presenter.to_html
@@ -724,13 +724,13 @@ class ProviderForemanController < ApplicationController
         @right_cell_text = _("Edit %s Provider") % ui_lookup(:ui_title => "foreman")
       end
       partial = 'form'
-      presenter[:update_partials][:main_div] = r[:partial => partial, :locals => partial_locals]
+      presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])
     elsif valid_configuration_profile_record?(@configuration_profile_record)
       presenter.hide(:form_buttons_div)
       presenter[:update_partials][:main_div] = r[:partial => "configuration_profile",
                                                  :locals  => {:controller => 'provider_foreman'}]
     else
-      presenter[:update_partials][:main_div] = r[:partial => 'layouts/x_gtl']
+      presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
     end
   end
 
@@ -755,7 +755,7 @@ class ProviderForemanController < ApplicationController
                                                                     :action_id     => @record.id
                                                        }]
         else
-          presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols']
+          presenter.update(:paging_div, r[:partial => 'layouts/x_pagingcontrols'])
         end
         presenter.hide(:form_buttons_div).show(:pc_div_1)
       elsif @in_a_form

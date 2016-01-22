@@ -375,7 +375,7 @@ class ServiceController < ApplicationController
       elsif record_showing
         r[:partial => "service/svcs_show", :locals => {:controller => "service"}]
       else
-        presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
+        presenter.update(:paging_div, r[:partial => "layouts/x_pagingcontrols"])
         r[:partial => "layouts/x_gtl"]
       end
     if %w(dialog_provision ownership service_edit tag).include?(action)
@@ -394,7 +394,7 @@ class ServiceController < ApplicationController
           # need save/cancel buttons on edit screen even tho @record.id is not there
           locals[:multi_record] = true if action == "ownership"
         end
-        presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
+        presenter.update(:form_buttons_div, r[:partial => "layouts/x_edit_buttons", :locals => locals])
       end
     elsif (action != "retire") && (record_showing ||
         (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0)))

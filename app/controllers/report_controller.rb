@@ -736,7 +736,7 @@ class ReportController < ApplicationController
     session[:changed] = (@edit[:new] != @edit[:current]) if @edit && @edit[:current] # to get save/reset buttons to highlight when something is changed
 
     if nodetype == 'root' || (nodetype != 'root' && x_active_tree != :roles_tree)
-      presenter[:update_partials][:main_div] = r[:partial => partial]
+      presenter.update(:main_div, r[:partial => partial])
       case x_active_tree
       when :db_tree
         if @in_a_form
@@ -817,7 +817,7 @@ class ReportController < ApplicationController
           img_title_commit  = "Commit folder management changes"
           img_title_discard = "Discard folder management changes"
         end
-        presenter[:update_partials][:main_div] = r[:partial => partial]
+        presenter.update(:main_div, r[:partial => partial])
         presenter[:element_updates][:menu1_legend] = {:legend => fieldset_title}
         presenter.show(:menu_div1, :treeStatus).hide(:menu_div2, :flash_msg_div_menu_list)
         presenter[:element_updates][:folder_top]      = {:title => img_title_top}
@@ -829,7 +829,7 @@ class ReportController < ApplicationController
         presenter[:element_updates][:folder_commit]   = {:title => img_title_commit}
         presenter[:element_updates][:folder_discard]  = {:title => img_title_discard}
       else
-        presenter[:update_partials][:main_div] = r[:partial => partial]
+        presenter.update(:main_div, r[:partial => partial])
         presenter[:clear_tree_cookies] = "edit_treeOpenStatex"
         unless @sb[:role_list_flag]
           # we dont need to show the overlay on first time load
@@ -900,10 +900,10 @@ class ReportController < ApplicationController
     if (@in_a_form || @pages) || (@sb[:pages] && @html)
       if @pages
         @ajax_paging_buttons = true # FIXME: this should not be done this way
-        presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols']
+        presenter.update(:paging_div, r[:partial => 'layouts/x_pagingcontrols'])
         presenter.hide(:form_buttons_div, :rpb_div_1).show(:pc_div_1)
       elsif @in_a_form
-        presenter[:update_partials][:form_buttons_div] = r[:partial => 'layouts/x_edit_buttons', :locals => locals]
+        presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons', :locals => locals])
         presenter.hide(:pc_div_1, :rpb_div_1).show(:form_buttons_div)
       elsif @sb[:pages]
         presenter[:update_partials][:paging_div] = r[:partial => 'layouts/saved_report_paging_bar', :locals => @sb[:pages]]

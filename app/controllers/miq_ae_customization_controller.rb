@@ -312,7 +312,7 @@ class MiqAeCustomizationController < ApplicationController
     if @pages || @in_a_form
       if @pages
         @ajax_paging_buttons = true # FIXME: this should not be done this way
-        presenter[:update_partials][:paging_div] = render_proc[:partial => 'layouts/x_pagingcontrols']
+        presenter.update(:paging_div, render_proc[:partial => 'layouts/x_pagingcontrols'])
         presenter.hide(:form_buttons_div).show(:pc_div_1)
       elsif @in_a_form && @sb[:action]
         action_url = case x_active_tree
@@ -333,7 +333,7 @@ class MiqAeCustomizationController < ApplicationController
           :serialize    => @sb[:action].starts_with?('old_dialogs_'),
           :multi_record => @sb[:action] == 'ab_group_reorder',
         }
-        presenter[:update_partials][:form_buttons_div] = render_proc[:partial => "layouts/x_edit_buttons", :locals => locals]
+        presenter.update(:form_buttons_div, render_proc[:partial => "layouts/x_edit_buttons", :locals => locals])
         presenter.hide(:pc_div_1).show(:form_buttons_div)
       end
       presenter.show(:paging_div)
@@ -395,7 +395,7 @@ class MiqAeCustomizationController < ApplicationController
     # TODO: move button from sample dialog to bottom cell
 
     if x_active_tree == :dialogs_tree && @sb[:active_tab] == "sample_tab" && nodetype != "root" && @record.buttons
-      presenter[:update_partials][:form_buttons_div] = render_proc[:partial => "dialog_sample_buttons"]
+      presenter.update(:form_buttons_div, render_proc[:partial => "dialog_sample_buttons"])
       presenter.hide(:pc_div_1, :form_buttons_div).show(:paging_div)
     end
   end
@@ -410,7 +410,7 @@ class MiqAeCustomizationController < ApplicationController
     elsif x_active_tree == :old_dialogs_tree
       setup_presenter_for_old_dialogs_tree(nodetype, presenter)
     elsif x_active_tree == :dialog_import_export_tree
-      presenter[:update_partials][:main_div] = render_proc[:partial => "dialog_import_export"]
+      presenter.update(:main_div, render_proc[:partial => "dialog_import_export"])
     end
   end
 
@@ -429,12 +429,12 @@ class MiqAeCustomizationController < ApplicationController
     end
 
     # Replace right side with based on selected tree node type
-    presenter[:update_partials][:main_div] = render_proc[:partial => "shared/buttons/ab_list"]
+    presenter.update(:main_div, render_proc[:partial => "shared/buttons/ab_list"])
     presenter[:lock_unlock_trees][:ab_tree] = !!@edit
   end
 
   def setup_presenter_for_dialog_edit_tree(presenter)
-    presenter[:update_partials][:main_div] = render_proc[:partial => "dialog_form"]
+    presenter.update(:main_div, render_proc[:partial => "dialog_form"])
     presenter[:cell_a_view] = 'custom'
 
     @right_cell_text = @record.id.blank? ?
@@ -445,17 +445,17 @@ class MiqAeCustomizationController < ApplicationController
     # url to be used in url in miqDropComplete method
     presenter[:miq_widget_dd_url] = 'miq_ae_customization/dialog_res_reorder'
     presenter[:init_dashboard] = true
-    presenter[:update_partials][:custom_left_cell] = render_proc[:partial => "dialog_edit_tree"]
+    presenter.update(:custom_left_cell, render_proc[:partial => "dialog_edit_tree"])
     presenter.show(:custom_left_cell).hide(:default_left_cell)
   end
 
   def setup_presenter_for_dialogs_tree(nodetype, presenter)
     nodes = nodetype.split("_")
     if nodetype == "root"
-      presenter[:update_partials][:main_div] = render_proc[:partial => "layouts/x_gtl"]
+      presenter.update(:main_div, render_proc[:partial => "layouts/x_gtl"])
     else
       @sb[:active_tab] = params[:tab_id] ? params[:tab_id] : "sample_tab"
-      presenter[:update_partials][:main_div] = render_proc[:partial => "dialog_details"]
+      presenter.update(:main_div, render_proc[:partial => "dialog_details"])
     end
 
     presenter[:build_calendar] = true
@@ -471,9 +471,9 @@ class MiqAeCustomizationController < ApplicationController
     nodes = nodetype.split("_")
     if nodetype == "root" || nodes[0].split('-').first != "odg"
       partial = nodetype == 'root' ? 'old_dialogs_list' : 'layouts/x_gtl'
-      presenter[:update_partials][:main_div] = render_proc[:partial => partial]
+      presenter.update(:main_div, render_proc[:partial => partial])
     else
-      presenter[:update_partials][:main_div] = render_proc[:partial => 'old_dialogs_details']
+      presenter.update(:main_div, render_proc[:partial => 'old_dialogs_details'])
       if @dialog.id.blank? && !@dialog.dialog_type
         @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "MiqDialog")
       else

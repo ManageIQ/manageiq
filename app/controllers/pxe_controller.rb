@@ -166,7 +166,7 @@ class PxeController < ApplicationController
     presenter.reload_toolbars(:history => h_tb)
     case x_active_tree
     when :pxe_servers_tree
-      presenter[:update_partials][:main_div] = r[:partial => "pxe_server_list"]
+      presenter.update(:main_div, r[:partial => "pxe_server_list"])
       if nodetype == "root"
         right_cell_text = _("All %s") % ui_lookup(:models => "PxeServer")
       else
@@ -185,7 +185,7 @@ class PxeController < ApplicationController
                           end
       end
     when :pxe_image_types_tree
-      presenter[:update_partials][:main_div] = r[:partial => "pxe_image_type_list"]
+      presenter.update(:main_div, r[:partial => "pxe_image_type_list"])
       right_cell_text = case nodetype
                         when 'root'
                           _("All %s") % ui_lookup(:models => "PxeImageType")
@@ -200,7 +200,7 @@ class PxeController < ApplicationController
                           _("%{model} \"%{name}\"") % {:name  => @pxe_image_type.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "PxeImageType")}
                         end
     when :customization_templates_tree
-      presenter[:update_partials][:main_div] = r[:partial => "template_list"]
+      presenter.update(:main_div, r[:partial => "template_list"])
       nodes = nodetype.split('_')
       if @in_a_form
         right_cell_text =
@@ -217,7 +217,7 @@ class PxeController < ApplicationController
         end
       end
     when :iso_datastores_tree
-      presenter[:update_partials][:main_div] = r[:partial => "iso_datastore_list"]
+      presenter.update(:main_div, r[:partial => "iso_datastore_list"])
       right_cell_text =
         case nodetype
         when 'root' then _("All %s") % ui_lookup(:models => "IsoDatastore")

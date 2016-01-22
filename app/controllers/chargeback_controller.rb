@@ -781,10 +781,10 @@ class ChargebackController < ApplicationController
       end
       presenter.set_visibility(c_tb.present?, :toolbar)
       presenter[:update_partials][:main_div]   = r[:partial => 'rates_tabs']
-      presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols']
+      presenter.update(:paging_div, r[:partial => 'layouts/x_pagingcontrols'])
     when :cb_assignments_tree
       # Assignments accordion
-      presenter[:update_partials][:main_div] = r[:partial => "assignments_tabs"]
+      presenter.update(:main_div, r[:partial => "assignments_tabs"])
     when :cb_reports_tree
       if c_tb.present?
         presenter.reload_toolbars(:center => c_tb)
@@ -792,7 +792,7 @@ class ChargebackController < ApplicationController
       else
         presenter.hide(:toolbar)
       end
-      presenter[:update_partials][:main_div] = r[:partial => 'reports_list']
+      presenter.update(:main_div, r[:partial => 'reports_list'])
       if @html
         presenter[:update_partials][:paging_div] = r[:partial => 'layouts/saved_report_paging_bar',
                                                      :locals  => @sb[:pages]]
@@ -819,7 +819,7 @@ class ChargebackController < ApplicationController
             :multi_record => true,
           )
         end
-        presenter[:update_partials][:form_buttons_div] = r[:partial => 'layouts/x_edit_buttons', :locals => locals]
+        presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons', :locals => locals])
       else
         # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box when trying to change a node on tree after saving a record
         presenter.hide(:buttons_on).show(:toolbar).hide(:paging_div)

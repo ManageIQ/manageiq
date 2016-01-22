@@ -1849,7 +1849,7 @@ class CatalogController < ApplicationController
       elsif @sb[:buttons_node]
         r[:partial => "shared/buttons/ab_list"]
       else
-        presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
+        presenter.update(:paging_div, r[:partial => "layouts/x_pagingcontrols"])
         r[:partial => "layouts/x_gtl"]
       end
 
@@ -1868,7 +1868,7 @@ class CatalogController < ApplicationController
         :ajax_buttons        => true
       }
       presenter.show(:form_buttons_div).hide(:pc_div_1)
-      presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
+      presenter.update(:form_buttons_div, r[:partial => "layouts/x_edit_buttons", :locals => locals])
     elsif record_showing || @in_a_form || @sb[:buttons_node] ||
           (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0))
       if ['button_edit', 'group_edit', 'group_reorder', 'at_st_new',
@@ -1891,7 +1891,7 @@ class CatalogController < ApplicationController
           locals[:action_url] = 'servicetemplate_edit'
           locals[:serialize] = true
         end
-        presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
+        presenter.update(:form_buttons_div, r[:partial => "layouts/x_edit_buttons", :locals => locals])
       elsif action == "dialog_provision"
         presenter.hide(:toolbar)
         # incase it was hidden for summary screen, and incase there were no records on show_list
@@ -1914,7 +1914,7 @@ class CatalogController < ApplicationController
           locals[:record_id] = nil
         end
         locals[:no_reset] = true if %w(ot_copy service_dialog_from_ot).include?(action)
-        presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
+        presenter.update(:form_buttons_div, r[:partial => "layouts/x_edit_buttons", :locals => locals])
       else
         # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box when trying to change a node on tree after saving a record
         presenter.hide(:buttons_on).show(:toolbar).hide(:paging_div)

@@ -1496,11 +1496,11 @@ module VmCommon
     if record_showing
       presenter.hide(:form_buttons_div)
       path_dir = @record.kind_of?(ManageIQ::Providers::CloudManager::Vm) || @record.kind_of?(ManageIQ::Providers::CloudManager::Template) ? "vm_cloud" : "vm_common"
-      presenter[:update_partials][:main_div] = r[:partial => "#{path_dir}/main", :locals => {:controller => 'vm'}]
+      presenter.update(:main_div, r[:partial => "#{path_dir}/main", :locals => {:controller => 'vm'}])
     elsif @in_a_form
       partial_locals = {:controller => 'vm'}
       partial_locals[:action_url] = @lastaction if partial == 'layouts/x_gtl'
-      presenter[:update_partials][:main_div] = r[:partial => partial, :locals => partial_locals]
+      presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])
 
       locals = {:action_url => action, :record_id => @record ? @record.id : nil}
       if %w(clone migrate miq_request_new pre_prov publish reconfigure).include?(@sb[:action])
@@ -1554,12 +1554,12 @@ module VmCommon
         presenter[:parent_id]    = @record.id           # Set parent rec id for JS function miqGridSort to build URL
         presenter[:parent_class] = request[:controller] # Set parent class for URL also
       end
-      presenter[:update_partials][:main_div] = r[:partial => partial, :locals => partial_locals]
+      presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])
 
       add_ajax = true
       presenter[:build_calendar] = true
     else
-      presenter[:update_partials][:main_div] = r[:partial => 'layouts/x_gtl']
+      presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
     end
 
     presenter[:ajax_action] = {
@@ -1591,7 +1591,7 @@ module VmCommon
             }
           ]
         else
-          presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols']
+          presenter.update(:paging_div, r[:partial => 'layouts/x_pagingcontrols'])
         end
         presenter.hide(:form_buttons_div).show(:pc_div_1)
       elsif @in_a_form
@@ -1604,7 +1604,7 @@ module VmCommon
             }
           ]
         elsif action != "retire"
-          presenter[:update_partials][:form_buttons_div] = r[:partial => 'layouts/x_edit_buttons', :locals => locals]
+          presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons', :locals => locals])
         end
         presenter.hide(:pc_div_1).show(:form_buttons_div)
       end

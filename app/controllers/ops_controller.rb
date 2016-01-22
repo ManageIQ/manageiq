@@ -516,7 +516,7 @@ class OpsController < ApplicationController
       presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
     elsif nodetype == "log_depot_edit"
       @right_cell_text = "Editing Log Depot settings"
-      presenter[:update_partials][:diagnostics_collect_logs] = r[:partial => "ops/log_collection"]
+      presenter.update(:diagnostics_collect_logs, r[:partial => "ops/log_collection"])
     else
       presenter[:update_partials][@sb[:active_tab].to_sym] = r[:partial => "#{@sb[:active_tab]}_tab"]
     end
@@ -528,7 +528,7 @@ class OpsController < ApplicationController
     if params[:action] == "accordion_select"
       presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
     else
-      presenter[:update_partials][:analytics_details] = r[:partial => "analytics_details_tab"]
+      presenter.update(:analytics_details, r[:partial => "analytics_details_tab"])
     end
     if %w(settings_import settings_import_tags).include?(@sb[:active_tab])
       # setting changed here to enable/disable Apply button
@@ -553,7 +553,7 @@ class OpsController < ApplicationController
       presenter[:update_partials][partial_div] = r[:partial => "zone_form"]
     when "ce"     # category edit
       # when editing/adding category in settings tree
-      presenter[:update_partials][:settings_co_categories] = r[:partial => "category_form"]
+      presenter.update(:settings_co_categories, r[:partial => "category_form"])
       if !@category
         @right_cell_text = _("Adding a new %s") % "Category"
       else
@@ -561,7 +561,7 @@ class OpsController < ApplicationController
       end
     when "sie"        # scanitemset edit
       #  editing/adding scanitem in settings tree
-      presenter[:update_partials][:settings_list] = r[:partial => "ap_form"]
+      presenter.update(:settings_list, r[:partial => "ap_form"])
       if !@scan.id
         @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "ScanItemSet")
       else
@@ -571,7 +571,7 @@ class OpsController < ApplicationController
       end
     when "se"         # schedule edit
       # when editing/adding schedule in settings tree
-      presenter[:update_partials][:settings_list] = r[:partial => "schedule_form"]
+      presenter.update(:settings_list, r[:partial => "schedule_form"])
       presenter[:build_calendar] = {
         :date_from => (Time.zone.now - 1.month).in_time_zone(@edit[:tz]),
       }
@@ -585,7 +585,7 @@ class OpsController < ApplicationController
       end
     when "lde"          # ldap_region edit
       # when editing/adding ldap domain in settings tree
-      presenter[:update_partials][:settings_list] = r[:partial => "ldap_domain_form"]
+      presenter.update(:settings_list, r[:partial => "ldap_domain_form"])
       if !@ldap_domain.id
         @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "LdapDomain")
       else
@@ -596,7 +596,7 @@ class OpsController < ApplicationController
       end
     when "lre"          # ldap_region edit
       # when edi ting/adding ldap region in settings tree
-      presenter[:update_partials][:settings_list] = r[:partial => "ldap_region_form"]
+      presenter.update(:settings_list, r[:partial => "ldap_region_form"])
       if !@ldap_region.id
         @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "LdapRegion")
       else
@@ -639,10 +639,10 @@ class OpsController < ApplicationController
       presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
     elsif nodetype == "group_seq"
       presenter.replace(:flash_msg_div, r[:partial => "layouts/flash_msg"])
-      presenter[:update_partials][:rbac_details] = r[:partial => "ldap_seq_form"]
+      presenter.update(:rbac_details, r[:partial => "ldap_seq_form"])
     elsif nodetype == "tenant_edit"         # schedule edit
       # when editing/adding schedule in settings tree
-      presenter[:update_partials][:rbac_details] = r[:partial => "tenant_form"]
+      presenter.update(:rbac_details, r[:partial => "tenant_form"])
       if !@tenant.id
         @right_cell_text = _("Adding a new %s") % tenant_type_title_string(params[:tenant_type] == "tenant")
       else
@@ -653,7 +653,7 @@ class OpsController < ApplicationController
       end
     elsif nodetype == "tenant_manage_quotas"         # manage quotas
       # when managing quotas for a tenant
-      presenter[:update_partials][:rbac_details] = r[:partial => "tenant_quota_form"]
+      presenter.update(:rbac_details, r[:partial => "tenant_quota_form"])
       model = tenant_type_title_string(@tenant.divisible)
       @right_cell_text = @edit ?
           _("Manage quotas for %{model} \"%{name}\"") % {:name => @tenant.name, :model => model} :
@@ -726,9 +726,9 @@ class OpsController < ApplicationController
     elsif @pages || @in_a_form
       if @pages
         presenter.hide(:form_buttons_div).show(:pc_div_1)
-        presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
+        presenter.update(:paging_div, r[:partial => "layouts/x_pagingcontrols"])
       elsif @in_a_form
-        presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
+        presenter.update(:form_buttons_div, r[:partial => "layouts/x_edit_buttons", :locals => locals])
         presenter.show(:form_buttons_div).hide(:pc_div_1)
       end
       presenter.show(:paging_div)
