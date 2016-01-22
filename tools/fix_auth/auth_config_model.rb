@@ -33,10 +33,10 @@ module FixAuth
       end
 
       def recrypt(old_value, options = {})
-        hash = Vmdb::ConfigurationEncoder.load(old_value, !symbol_keys) do |k, v, h|
+        hash = Vmdb::ConfigurationEncoder.load(old_value) do |k, v, h|
           h[k] = super(v, options) if password_field?(k) && v.present?
         end
-        Vmdb::ConfigurationEncoder.dump(hash, nil, !symbol_keys) { |_k, _v, _h| }
+        symbol_keys ? hash.deep_symbolize_keys : hash.deep_stringify_keys
       end
     end
   end

@@ -10,7 +10,7 @@ Rails::Application::Configuration.module_eval do
       yaml = Pathname.new(path) if path
 
       if yaml && yaml.exist?
-        Vmdb::ConfigurationEncoder.load(IO.read(yaml), false)
+        Vmdb::ConfigurationEncoder.load(IO.read(yaml))
       else
         super
       end
