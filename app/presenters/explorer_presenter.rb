@@ -84,6 +84,11 @@ class ExplorerPresenter
     self
   end
 
+  def update(div_name, content)
+    @options[:update_partials][div_name] = content
+    self
+  end
+
   def []=(key, value)
     @options[key] = value
   end
