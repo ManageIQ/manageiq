@@ -1328,7 +1328,7 @@ module ApplicationHelper
       image = "vendor-#{vendor}"
     elsif db == "Host"
       host = @targets_hash[@id] if @targets_hash
-      vendor = host ? host.vmm_vendor.downcase : "unknown"
+      vendor = host ? host.vmm_vendor_display.downcase : "unknown"
       image = "vendor-#{vendor}"
     elsif db == "MiqAction"
       action = @targets_hash[@id.to_i]

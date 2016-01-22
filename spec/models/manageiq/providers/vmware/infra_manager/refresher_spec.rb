@@ -170,18 +170,18 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
   def assert_specific_host
     @host = ManageIQ::Providers::Vmware::InfraManager::Host.find_by_name("VI4ESXM1.manageiq.com")
     expect(@host).to have_attributes(
-      :ems_ref          => "host-9",
-      :ems_ref_obj      => VimString.new("host-9", :HostSystem, :ManagedObjectReference),
-      :name             => "VI4ESXM1.manageiq.com",
-      :hostname         => "VI4ESXM1.manageiq.com",
-      :ipaddress        => "192.168.252.13",
-      :uid_ems          => "vi4esxm1.manageiq.com",
-      :vmm_vendor       => "VMware",
-      :vmm_version      => "4.1.0",
-      :vmm_product      => "ESXi",
-      :vmm_buildnumber  => "260247",
-      :power_state      => "on",
-      :connection_state => "connected"
+      :ems_ref            => "host-9",
+      :ems_ref_obj        => VimString.new("host-9", :HostSystem, :ManagedObjectReference),
+      :name               => "VI4ESXM1.manageiq.com",
+      :hostname           => "VI4ESXM1.manageiq.com",
+      :ipaddress          => "192.168.252.13",
+      :uid_ems            => "vi4esxm1.manageiq.com",
+      :vmm_vendor_display => "VMware",
+      :vmm_version        => "4.1.0",
+      :vmm_product        => "ESXi",
+      :vmm_buildnumber    => "260247",
+      :power_state        => "on",
+      :connection_state   => "connected"
     )
 
     expect(@host.ems_cluster).to eq(@cluster)

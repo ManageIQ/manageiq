@@ -110,23 +110,23 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       end
 
       new_result = {
-        :type             => 'ManageIQ::Providers::Redhat::InfraManager::Host',
-        :ems_ref          => host_inv[:href],
-        :ems_ref_obj      => host_inv[:href],
-        :name             => host_inv[:name] || hostname,
-        :hostname         => hostname,
-        :ipaddress        => ipaddress,
-        :uid_ems          => host_inv[:id],
-        :vmm_vendor       => 'redhat',
-        :vmm_product      => host_inv[:type],
-        :connection_state => connection_state,
-        :power_state      => power_state,
+        :type               => 'ManageIQ::Providers::Redhat::InfraManager::Host',
+        :ems_ref            => host_inv[:href],
+        :ems_ref_obj        => host_inv[:href],
+        :name               => host_inv[:name] || hostname,
+        :hostname           => hostname,
+        :ipaddress          => ipaddress,
+        :uid_ems            => host_inv[:id],
+        :vmm_vendor_display => 'RedHat',
+        :vmm_product        => host_inv[:type],
+        :connection_state   => connection_state,
+        :power_state        => power_state,
 
-        :operating_system => host_inv_to_os_hash(host_inv, hostname),
+        :operating_system   => host_inv_to_os_hash(host_inv, hostname),
 
-        :ems_cluster      => cluster_uids[host_inv.attributes.fetch_path(:cluster, :id)],
-        :hardware         => hardware,
-        :switches         => switches,
+        :ems_cluster        => cluster_uids[host_inv.attributes.fetch_path(:cluster, :id)],
+        :hardware           => hardware,
+        :switches           => switches,
 
       }
       new_result[:ipmi_address] = ipmi_address unless ipmi_address.blank?

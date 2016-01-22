@@ -248,7 +248,7 @@ class HostController < ApplicationController
       @host = Host.new
       old_host_attributes = @host.attributes.clone
       set_record_vars(@host, :validate)                        # Set the record variables, but don't save
-      @host.vmm_vendor = "unknown"
+      @host.vmm_vendor_display = "Unknown"
       if valid_record?(@host) && @host.save
         set_record_vars(@host)                                 # Save the authentication records for this host
         AuditEvent.success(build_saved_audit_hash_angular(old_host_attributes, @host, params[:button] == "add"))

@@ -14,10 +14,10 @@ describe MiqHostProvision do
     allow(mhp).to receive(:pxe_image).and_return(pxe_image)
     expect(mhp.host_rediscovered?).to be_falsey
 
-    mhp.host = FactoryGirl.create(:host, :vmm_vendor => 'unknown')
+    mhp.host = FactoryGirl.create(:host, :vmm_vendor_display => 'Unknown')
     expect(mhp.host_rediscovered?).to be_falsey
 
-    mhp.host.vmm_vendor = 'vmware'
+    mhp.host.vmm_vendor_display = 'VMware'
     expect(mhp.host_rediscovered?).to be_truthy
   end
 

@@ -96,7 +96,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
 
     expect(@host).to have_attributes(
       :ipmi_address     => nil,
-      :vmm_vendor       => "RedHat",
+      :vmm_vendor       => "redhat",
       :vmm_version      => nil,
       :vmm_product      => "rhel (No hypervisor, Host Type is Controller)",
       :power_state      => "on",

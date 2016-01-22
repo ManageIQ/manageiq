@@ -17,7 +17,7 @@ describe EmsEventHelper do
       @host      = FactoryGirl.create(:host,
                                       :name                  => 'host7',
                                       :ext_management_system => @ems,
-                                      :vmm_vendor            => 'vmware',
+                                      :vmm_vendor_display    => 'VMware',
                                       :vmm_version           => '4.0.0',
                                       :vmm_product           => 'ESX',
                                       :vmm_buildnumber       => 261974,

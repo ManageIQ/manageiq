@@ -27,7 +27,7 @@ module MiqHostProvision::Configuration
     if destination.is_vmware?
       set_maintenance_mode_vmware
     else
-      _log.warn "VMM Vendor [#{destination.vmm_vendor}] is not supported"
+      _log.warn "VMM Vendor [#{destination.vmm_vendor_display}] is not supported"
     end
   end
 
@@ -58,7 +58,7 @@ module MiqHostProvision::Configuration
     if destination.is_vmware?
       add_storage_vmware
     else
-      _log.warn "VMM Vendor [#{destination.vmm_vendor}] is not supported"
+      _log.warn "VMM Vendor [#{destination.vmm_vendor_display}] is not supported"
     end
   end
 end
