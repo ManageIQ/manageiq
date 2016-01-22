@@ -159,31 +159,24 @@ namespace :evm do
     task :region do
       require 'trollop'
       opts = Trollop.options(EvmDba.extract_command_options) do
-        opt :region, "Region number", :type => :integer, :required => true
+        opt :region, "Region number", :type => :integer, :required => ENV["REGION"].blank?
       end
 
       Dir.chdir(Rails.root)
       begin
-        #TODO: Raise an error if region is not valid
-        region = opts[:region]
-
-        region_file = Rails.root.join("REGION")
-        puts "Writing region: #{region} in #{region_file}..."
-
-        old_region = File.exist?(region_file) ? File.read(region_file) : 0
-        File.write(region_file, region)
+        region = opts[:region] || ENV["REGION"]
 
         puts "Resetting #{Rails.env} database..."
         ENV['VERBOSE'] = 'false' # Do not flood the output with migration details
+        ENV['REGION'] = region.to_s
         Rake::Task['evm:db:reset'].invoke
 
         puts "Initializing region and database..."
-        # Create the region from our REGION file, initialize a new miq_database row for this region
+        # initialize a new miq_database row for this region
         AwesomeSpawn.run!("bin/rails runner", :params => ["MiqDatabase.seed; MiqRegion.seed"])
       rescue => err
         message = err.kind_of?(AwesomeSpawn::CommandResultError) ? err.result.error : err.message
         STDERR.puts "Encountered issue setting up Database using region #{region}: #{message}\n"
-        File.write(region_file, old_region) if old_region
         raise
       end
 
