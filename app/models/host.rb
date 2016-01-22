@@ -643,13 +643,6 @@ class Host < ApplicationRecord
     VENDOR_TYPES[vmm_vendor]
   end
 
-  def vmm_vendor_display=(v)
-    v = VENDOR_TYPES.key(v) if      VENDOR_TYPES.value?(v)
-    v = nil                 unless  VENDOR_TYPES.key?(v)
-
-    self[:vmm_vendor] = v
-  end
-
   #
   # Relationship methods
   #
@@ -896,9 +889,9 @@ class Host < ApplicationRecord
     end
 
     make_smart # before_create callback
-    self.settings           = nil
-    self.name               = "IPMI <#{ipmi_address}>"
-    self.vmm_vendor_display = 'Unknown'
+    self.settings   = nil
+    self.name       = "IPMI <#{ipmi_address}>"
+    self.vmm_vendor = 'unknown'
     save!
 
     authentications.create(cred.attributes) unless cred.nil?
@@ -925,16 +918,16 @@ class Host < ApplicationRecord
   def detect_discovered_hypervisor(ost, ipaddr)
     find_method = :find_by_ipaddress
     if ost.hypervisor.include?(:hyperv)
-      self.name               = "Microsoft Hyper-V (#{ipaddr})"
-      self.type               = "ManageIQ::Providers::Microsoft::InfraManager::Host"
-      self.ipaddress          = ipaddr
-      self.vmm_vendor_display = "Microsoft"
-      self.vmm_product        = "Hyper-V"
+      self.name        = "Microsoft Hyper-V (#{ipaddr})"
+      self.type        = "ManageIQ::Providers::Microsoft::InfraManager::Host"
+      self.ipaddress   = ipaddr
+      self.vmm_vendor  = "microsoft"
+      self.vmm_product = "Hyper-V"
     elsif ost.hypervisor.include?(:esx)
-      self.name               = "VMware ESX Server (#{ipaddr})"
-      self.ipaddress          = ipaddr
-      self.vmm_vendor_display = "VMware"
-      self.vmm_product        = "Esx"
+      self.name        = "VMware ESX Server (#{ipaddr})"
+      self.ipaddress   = ipaddr
+      self.vmm_vendor  = "vmware"
+      self.vmm_product = "Esx"
       if has_credentials?(:ws)
         begin
           with_provider_connection(:ip => ipaddr) do |vim|
@@ -950,17 +943,17 @@ class Host < ApplicationRecord
       end
       self.type = %w(esx esxi).include?(vmm_product.to_s.downcase) ? "ManageIQ::Providers::Vmware::InfraManager::HostEsx" : "ManageIQ::Providers::Vmware::InfraManager::Host"
     elsif ost.hypervisor.include?(:ipmi)
-      find_method             = :find_by_ipmi_address
-      self.name               = "IPMI (#{ipaddr})"
-      self.type               = "Host"
-      self.vmm_vendor_display = "Unknown"
-      self.vmm_product        = nil
-      self.ipmi_address       = ipaddr
-      self.ipaddress          = nil
-      self.hostname           = nil
+      find_method       = :find_by_ipmi_address
+      self.name         = "IPMI (#{ipaddr})"
+      self.type         = "Host"
+      self.vmm_vendor   = "unknown"
+      self.vmm_product  = nil
+      self.ipmi_address = ipaddr
+      self.ipaddress    = nil
+      self.hostname     = nil
     else
-      self.vmm_vendor_display = ost.hypervisor.join(", ")
-      self.type               = "Host"
+      self.vmm_vendor = ost.hypervisor.join(", ")
+      self.type       = "Host"
     end
 
     find_method

@@ -74,7 +74,7 @@ describe "JobProxyDispatcherVmStorage2Hosts" do
         context "with a vmware vm on a non-vmware host which is also the only host on the vm's storage, " do
           before(:each) do
             @host = @hosts.first
-            @host.vmm_vendor_display = "Microsoft"
+            @host.vmm_vendor = "microsoft"
             @host.save
             @vm.host = @host
             vm_storage = @vm.storage
