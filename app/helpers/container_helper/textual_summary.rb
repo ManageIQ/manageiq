@@ -105,4 +105,22 @@ module ContainerHelper::TextualSummary
   def textual_run_as_non_root
     {:label => "Run As Non Root", :value => @record.container_definition.run_as_non_root} unless @record.container_definition.run_as_non_root.nil?
   end
+
+  def textual_group_env
+    {
+      :additional_table_class => "table-fixed",
+      :labels                 => [_("Name"), _("Type"), _("Value")],
+      :values                 => collect_env
+    }
+  end
+
+  def collect_env
+    @record.container_definition.container_env_vars.collect do |var|
+      [
+        var.name,
+        var.value.nil? ? "REFERENCE" : "VALUE",
+        {:value => var.value.nil? ? var.field_path : var.value, :expandable => true}
+      ]
+    end
+  end
 end
