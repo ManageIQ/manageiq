@@ -28,8 +28,6 @@ describe ActsAsArModel do
 
     it { expect(base_class).to respond_to(:virtual_columns) }
 
-    it { expect(base_class).to respond_to(:aar_columns) }
-
     it { expect(base_class.columns_hash.values[0]).to be_kind_of(ActsAsArModelColumn) }
     it { expect(base_class.columns_hash.keys).to      match_array(col_names_strs) }
     it { expect(base_class.column_names).to           match_array(col_names_strs) }

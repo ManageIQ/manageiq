@@ -630,8 +630,6 @@ module MiqReport::Generator
   def build_reportable_data(entry, options = {})
     rec = entry[:obj]
     data_records = [build_get_attributes_with_options(rec, options)]
-    rec.class.aar_columns |= data_records.first.keys
-
     data_records = build_add_includes(data_records, entry, options["include"]) if options["include"]
     data_records
   end
@@ -713,7 +711,6 @@ module MiqReport::Generator
             association_records.each do |assoc_record|
               data_records << existing_record.merge(assoc_record)
             end
-            entry[:obj].class.aar_columns |= data_records.last.keys
           end
         end
       end
