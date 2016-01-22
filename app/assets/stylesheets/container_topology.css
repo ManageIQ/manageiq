@@ -7,51 +7,16 @@ kubernetes-topology-graph {
 }
 
 .container_topology .legend {
+    padding-top: 5px;
     font-family: sans-serif;
     font-size: 15px;
     display: inline-block;
     vertical-align: middle;
 }
-
 .container_topology .legend label {
     font-weight: 400;
     cursor: pointer;
     vertical-align: 10px;
-}
-
-.container_topology .checkbox-inline {
-    font-size: 16px;
-    padding-right: 10px;
-}
-
-.refresh-topology {
-    display: inline-block;
-    width: 32px;
-    height: 35px;
-    padding: 0;
-    font-size: 24px;
-    line-height: 35px;
-    text-align: center;
-    vertical-align: middle;
-    color: #3F9C35;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.container_topology .refresh {
-    float: right;
-    font-size: 16px;
-}
-
-.topology_header {
-    position: relative;
-}
-
-.search-topology {
-    vertical-align: middle;
-    float: right;
-    margin-right: 15px;
-    text-align: center;
 }
 
 .container_topology #selected {
@@ -188,5 +153,3 @@ kubernetes-topology-icon svg {
     font-family: icomoon;
     fill: #0088ce;
 }
-
-

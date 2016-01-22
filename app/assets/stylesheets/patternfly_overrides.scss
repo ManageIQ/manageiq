@@ -8,6 +8,22 @@
   margin: 0;
 }
 
+/* overrides toolbar form group styling for pf-search */
+
+.toolbar-pf .form-group.search-button {
+  padding-left: 0;
+}
+
+.toolbar-pf .form-group.has-clear {
+  border-right: 0;
+  padding-right: 0;
+}
+
+.toolbar-pf .form-group.text {
+  line-height: 26px;
+}
+
+
 #main-content {
   overflow: auto;
 }
@@ -318,7 +334,7 @@ iframe, .iframe {
 
 /* Adds padding between buttons when they wrap */
 
-.toolbar-pf#toolbar .toolbar-pf-actions .form-group {
+.toolbar-pf .toolbar-pf-actions .form-group {
   margin-bottom: 10px !important
 }
 

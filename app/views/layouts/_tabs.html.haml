@@ -47,13 +47,14 @@
                 = link_to(tab[1], {:action => 'change_tab', :tab => tab[0], :id => @tabs[0][1]}, :onclick => "return miqCheckForChanges()")
   %br{:clear => "all"}/
 - if !@tabs && (@lastaction == "show_list" || !@edit && !session[:menu_click])
-  %h1
-    - if @edit && @edit[:adv_search_applied] != nil && !session[:menu_click]
+  - if @edit && @edit[:adv_search_applied] != nil && !session[:menu_click]
+    %h1
       = h(@title + @edit[:adv_search_applied][:text] + " ")
       - if (@default_search && @default_search.name != @edit[:adv_search_applied][:name]) || !@default_search
         (#{link_to("clear", {:action => 'adv_search_clear'}, :method => :post, :class => 'active')})
+  - else
+    - if @layout == "container_topology"
+      = ''
     - else
-      - if @layout == "container_topology"
-        = ''
-      - else
+      %h1
         = @title
