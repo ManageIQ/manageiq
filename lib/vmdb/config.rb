@@ -7,14 +7,17 @@ module VMDB
 
     require_relative 'configuration_encoder'
 
+
+    PASSWORD_KEYS = [:bind_pwd, :amazon_secret]
+
     def self.deep_clean_auth_for_log(log_auth)
       log_auth.each do |key, val|
         log_auth[key] = deep_clean_auth_for_log(val) if val.kind_of?(Hash)
 
-        log_auth[key] = "********" if [:bind_pwd, :amazon_secret].include? key
+        log_auth[key] = "********" if PASSWORD_KEYS.include? key
 
         log_auth[key].each do |p|
-          p.each { |key2, _val2| p[key2] = "********" if [:bind_pwd, :amazon_secret].include? key2 }
+          p.each { |key2, _val2| p[key2] = "********" if PASSWORD_KEYS.include? key2 }
         end if [:user_proxies].include? key
       end
       log_auth
