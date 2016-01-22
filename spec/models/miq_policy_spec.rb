@@ -248,10 +248,26 @@ describe MiqPolicy do
         allow(target).to receive(:get_policies).and_return(profiles)
         res = described_class.enforce_policy(target, events[0].name)
         expect(res[:result]).to be false
-        expect(res[:details][0]).to include(policies[0].attributes.merge('result' => false))
-        expect(res[:details][0]['conditions'][0])
-          .to include(conds[0].attributes.merge('result' => 'deny').except('expression'))
+        # to exclude timestamps which cause test failures in some systems due to precision
+        expected_detail = policies[0].attributes.except('created_on').except('updated_on')
+        expect(res[:details][0]).to include(expected_detail.merge('result' => false))
+
+        # also exclude expression that added a transient state during evaluation
+        expected_condition = conds[0].attributes.except('created_on').except('updated_on').except('expression')
+        expect(res[:details][0]['conditions'][0]).to include(expected_condition.merge('result' => 'deny'))
       end
+    end
+  end
+
+  describe ".built_in_policies" do
+    it 'creates built in policies' do
+      policy = described_class.built_in_policies[0]
+      %w(name description towhat active mode conditions).each do |m|
+        expect(policy.send(m)).not_to be_nil
+      end
+      expect(policy.events).not_to                      be_empty
+      expect(policy.actions_for_event).not_to           be_empty
+      expect(policy.applies_to?(double, double)).not_to be_nil
     end
   end
 end

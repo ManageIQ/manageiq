@@ -32,66 +32,43 @@ class MiqPolicy < ActiveRecord::Base
 
   attr_accessor :reserved
 
-  # Note: Built-in policies only support one event and one action.
-  @@built_in_policies = [
-    {:name        => "Stop Newly Retired Running VM",
-     :description => "Stop Newly Retired Running VM",
-     :towhat      => "Vm",
-     :event       => "vm_retired",
-     :applies_to? => true,
-     :active      => true,
-     :condition   => {"and" => [{"=" => {"field" => "Vm-retired", "value" => true}}, {"=" => {"field" => "Vm-power_state", "value" => "on"}}]},
-     :modifier    => "deny",
-     :mode        => "control",
-     :action      => "vm_stop"},
-    {:name        => "Prevent Retired VM from Starting",
-     :description => "Prevent Retired VM from starting",
-     :towhat      => "Vm",
-     :event       => "request_vm_start",
-     :applies_to? => true,
-     :active      => true,
-     :condition   => {"=" => {"field" => "Vm-retired", "value" => true}},
-     :modifier    => "deny",
-     :mode        => "control",
-     :action      => "prevent"},
-    {:name        => "Stop Retired VM",
-     :description => "Stop Retired VM",
-     :towhat      => "Vm",
-     :event       => "vm_start",
-     :applies_to? => true,
-     :active      => true,
-     :condition   => {"=" => {"field" => "Vm-retired", "value" => true}},
-     :modifier    => "deny",
-     :mode        => "control",
-     :action      => "vm_stop"},
-  ]
-  @@built_ins = nil
-
   cattr_accessor :associations_to_get_policies
 
-  def self.built_in_policies
-    return @@built_ins.dup unless @@built_ins.nil?
+  @@built_in_policies = nil
 
-    result = []
-    @@built_in_policies.each do|bp|
-      p = OpenStruct.new(bp)
-      p.attributes = {"name" => "(Built-in) " + bp[:name], "description" => "(Built-in) " + bp[:description], :applies_to? => true}
-      p.events = [MiqEventDefinition.find_by(:name => p.event)]
-      p.conditions = []
-      if p.condition
-        p.conditions = [Condition.new(
-          :name        => p.attributes["name"],
-          :description => p.attributes["description"],
-          :expression  => MiqExpression.new(p.condition),
-          :modifier    => p.modifier,
-          :towhat      => "Vm"
-        )]
-      end
-      p.actions_for_event = [MiqAction.find_by(:name => p.action)]
-      result.push(p)
+  def self.built_in_policies
+    return @@built_in_policies.dup unless @@built_in_policies.nil?
+
+    policy_hashes = YAML.load_file(Rails.root.join("config", "built_in_policies.yml"))
+
+    @@built_in_policies = policy_hashes.collect do |p_hash|
+      policy = OpenStruct.new(p_hash)
+      policy.attributes =
+        {
+          "name"        => "(Built-in) #{p_hash[:name]}",
+          "description" => "(Built-in) #{p_hash[:description]}",
+          :applies_to?  => p_hash[:applies_to?]
+        }
+      policy.events = [MiqEventDefinition.find_by(:name => policy.event)]
+      policy.conditions =
+        if policy.condition
+          [Condition.new(
+            :name        => policy.attributes["name"],
+            :description => policy.attributes["description"],
+            :expression  => MiqExpression.new(policy.condition),
+            :modifier    => policy.modifier,
+            :towhat      => "Vm"
+          )]
+        else
+          []
+        end
+      policy.actions_for_event = [MiqAction.find_by(:name => policy.action)]
+
+      p_metaclass = class << policy; self; end
+      p_metaclass.send(:define_method, :applies_to?) { |*_args| p_hash[:applies_to?] }
+      policy
     end
-    @@built_ins = result
-    @@built_ins.dup
+    @@built_in_policies.dup
   end
 
   CLEAN_ATTRS = %w(id guid name created_on updated_on miq_policy_id description)
@@ -424,7 +401,7 @@ class MiqPolicy < ActiveRecord::Base
   private_class_method :policy_active?
 
   def self.policy_applicable?(policy, target, inputs)
-    return true if policy.kind_of?(MiqPolicy) ? policy.applies_to?(target, inputs) : policy.applies_to?
+    return true if policy.applies_to?(target, inputs)
 
     logger.info("MIQ(policy-enforce_policy): Policy [#{policy.description}] does not apply, skipping...")
     false
